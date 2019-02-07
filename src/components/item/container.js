@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { connect } = require('react-redux')
-const { BufferedResizable } = require('../resizable')
+const { Resizable } = require('../resizable')
 const { Esper } = require('../esper')
 const { NotePad } = require('../note')
 const act = require('../../actions')
@@ -92,8 +92,9 @@ class ItemContainer extends React.PureComponent {
       <div
         className={cx('item-container', this.props.settings.layout)}
         onContextMenu={this.handleContextMenu}>
-        <BufferedResizable
+        <Resizable
           {...this.getResizableProps()}
+          isBuffered
           isRelative
           value={this.size}
           onChange={this.handleEsperResize}>
@@ -116,7 +117,7 @@ class ItemContainer extends React.PureComponent {
             onPhotoError={this.props.onPhotoError}
             onSelect={this.props.onPhotoSelect}
             onSelectionCreate={this.props.onSelectionCreate}/>
-        </BufferedResizable>
+        </Resizable>
         <NotePad {...this.props.notepad}
           ref={this.setNotePad}
           note={this.props.note}

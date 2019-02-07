@@ -227,11 +227,11 @@ class PanelGroup extends React.Component {
     let position = restrict(pageY, upper, lower)
     let delta = position - bounds(active.container).bottom
 
-    if (delta === 0) return
-
-    this.setState({
-      slots: this.resize(delta, active.props.id, position)
-    })
+    if (delta) {
+      this.setState({
+        slots: this.resize(delta, active.props.id, position)
+      })
+    }
   }
 
   handleDragStop = () => {
