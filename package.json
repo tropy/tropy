@@ -94,6 +94,7 @@
     "jsonld": "^1.5.1",
     "lodash.debounce": "^4.0.7",
     "lodash.throttle": "^4.1.1",
+    "memoize-one": "^5.0.0",
     "mkdirp": "^0.5.1",
     "ms": "^2.1.1",
     "n3": "^1.0.3",
