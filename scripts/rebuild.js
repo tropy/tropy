@@ -20,7 +20,7 @@ const CONFIG = [
 target.all = (args) => {
   target.sqlite3(args)
   target.sharp(args)
-  target.idle()
+  target.idle(args)
 }
 
 target.headers = () => {
