@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { IconSpin, IconXSmall } = require('./icons')
 const { FormattedMessage } = require('react-intl')
 const cx = require('classnames')
@@ -11,27 +10,11 @@ const { Button } = require('./button')
 
 
 const Activity = ({ type, progress, total, onCancel }) => {
-  const hasProgressBar = (progress != null || !isNaN(progress))
-  const hasCancelButton = false
-
-  let CancelButton, ProgressBar
-
-  if (hasCancelButton) {
-    CancelButton = (
-      <Button icon={<IconXSmall/>} onClick={onCancel}/>
-    )
-  }
-
-  if (hasProgressBar) {
-    ProgressBar = (
-      <div className="flex-row center">
-        <progress value={progress} max={total}/>
-      </div>
-    )
-  }
+  let hasProgressBar = (progress != null || !isNaN(progress))
+  let hasCancelButton = false
 
   return (
-    <div className={cx({ activity: true, type })}>
+    <div className={cx('activity', { type })}>
       <div className="activity-container">
         <div className="flex-row center">
           {!hasProgressBar && <IconSpin/>}
@@ -40,9 +23,14 @@ const Activity = ({ type, progress, total, onCancel }) => {
               id={`activity.${type}`}
               values={{ progress, total, hasProgressBar }}/>
           </div>
-          {CancelButton}
+          {hasCancelButton &&
+            <Button icon={<IconXSmall/>} onClick={onCancel}/>}
         </div>
-        {ProgressBar}
+        {hasProgressBar &&
+          <div className="flex-row center">
+            <progress value={progress} max={total}/>
+          </div>
+        }
       </div>
     </div>
   )
@@ -56,16 +44,12 @@ Activity.propTypes = {
 }
 
 
-class ActivityPane extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      activities: props.activities.filter(this.busy)
-    }
+class ActivityPane extends React.PureComponent {
+  componentDidMount() {
+    this.resume()
   }
 
-  componentDidMount() {
+  componentDidUpdate() {
     this.resume()
   }
 
@@ -73,35 +57,12 @@ class ActivityPane extends PureComponent {
     this.stop()
   }
 
-  componentWillReceiveProps(props) {
-    if (this.props.activities !== props.activities) {
-      this.setState({
-        activities: props.activities.filter(this.busy)
-      })
-
-      this.resume()
-    }
-  }
-
-  get hasPendingActivities() {
-    return this.state.activities.length < this.props.activities.length
-  }
-
-  get isBusy() {
-    return this.state.activities.length > 0
-  }
-
-  get style() {
-    return {
-      height: getHeight(this.state.activities.length)
-    }
-  }
-
   resume() {
     this.stop()
-
     if (this.hasPendingActivities) {
-      this.timeout = setTimeout(this.update, this.props.delay / 2)
+      this.timeout = setTimeout(() =>
+        this.forceUpdate(),
+        this.props.delay / 2)
     }
   }
 
@@ -110,31 +71,36 @@ class ActivityPane extends PureComponent {
     this.timeout = null
   }
 
-  update = () => {
-    const activities = this.props.activities.filter(this.busy)
-
-    if (activities.length > this.state.activities) {
-      this.setState({ activities })
-    }
-
-    this.resume()
+  getBusyActivities(now = Date.now(), delay = this.props.delay) {
+    return this.props.activities.filter(activity => (
+      !activity.done &&
+        (now - activity.init) > delay))
   }
 
-  busy = (activity) => (
-    !activity.done && (Date.now() - activity.init) > this.props.delay
-  )
-
   render() {
+    let activities = this.getBusyActivities()
+    let busy = activities.length > 0
+    let height = ActivityPane.getHeight(activities.length)
+
+    this.hasPendingActivities =
+      activities.length < this.props.activities.length
+
     return (
       <div
-        className={cx({ 'activity-pane': true, 'busy': this.isBusy })}
-        style={this.style}>
-
-        {this.state.activities.map(({ id, type, progress, total }) =>
-          <Activity key={id} type={type} progress={progress} total={total}/>)}
-
+        className={cx('activity-pane', { busy })}
+        style={{ height }}>
+        {activities.map(({ id, type, progress, total }) =>
+          <Activity
+            key={id}
+            type={type}
+            progress={progress}
+            total={total}/>)}
       </div>
     )
+  }
+
+  static getHeight(count) {
+    return count ? count * ACTIVITY.HEIGHT : 0
   }
 
   static propTypes = {
@@ -150,12 +116,8 @@ class ActivityPane extends PureComponent {
   }
 
   static defaultProps = {
-    delay: 500
+    delay: 400
   }
-}
-
-function getHeight(count) {
-  return count ? count * ACTIVITY.HEIGHT : 0
 }
 
 
