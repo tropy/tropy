@@ -200,6 +200,7 @@ class MetadataPanel extends React.PureComponent {
     return this.hasPhotoFields && (
       <MetadataSection
         onContextMenu={this.handlePhotoContextMenu}
+        separator
         title="panel.metadata.photo">
         <MetadataList
           ref={this.setPhotoFields}
@@ -223,6 +224,7 @@ class MetadataPanel extends React.PureComponent {
     return this.hasSelectionFields && (
       <MetadataSection
         onContextMenu={this.handleSelectionContextMenu}
+        separator
         title="panel.metadata.selection">
         <MetadataList
           ref={this.setSelectionFields}
