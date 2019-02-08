@@ -85,6 +85,7 @@ const getTemplatesByType = (type) => memo(
 
 const getItemTemplates = getTemplatesByType(TYPE.ITEM)
 const getPhotoTemplates = getTemplatesByType(TYPE.PHOTO)
+const getSelectionTemplates = getTemplatesByType(TYPE.SELECTION)
 
 const getItemTemplateProperties = memo(
   getItemTemplates,
@@ -177,6 +178,7 @@ module.exports = {
   getPhotoTemplate,
   getPhotoTemplates,
   getPropertyList,
+  getSelectionTemplates,
   getTemplateField,
   getTemplateFields,
   getTemplateList,
