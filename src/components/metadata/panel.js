@@ -17,16 +17,14 @@ const { arrayOf, bool, func, object, shape } = require('prop-types')
 
 const {
   getActiveSelection,
+  getAllTemplatesByType,
   getItemFields,
-  getItemTemplates,
   getPhotoFields,
-  getPhotoTemplates,
   getPropertyList,
   getSelectedItemTemplate,
   getSelectedItems,
   getSelectedPhoto,
-  getSelectionFields,
-  getSelectionTemplates
+  getSelectionFields
 } = require('../../selectors')
 
 
@@ -327,11 +325,7 @@ module.exports = {
       photo: getSelectedPhoto(state),
       selection: getActiveSelection(state),
       template: getSelectedItemTemplate(state),
-      templates: {
-        item: getItemTemplates(state),
-        photo: getPhotoTemplates(state),
-        selection: getSelectionTemplates(state)
-      }
+      templates: getAllTemplatesByType(state)
     }),
 
     (dispatch) => ({

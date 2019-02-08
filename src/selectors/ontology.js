@@ -5,7 +5,7 @@ const { entries, values } = Object
 const { by } = require('../collate')
 const { cat, compose, filter, into, map } = require('transducers.js')
 const { blank, get, homogenize } = require('../common/util')
-const { TYPE, ITEM, PHOTO } = require('../constants')
+const { TYPE, ITEM, PHOTO, SELECTION } = require('../constants')
 const { value }  = require('../value')
 
 const strip = (id, vocab) =>
@@ -87,6 +87,15 @@ const getItemTemplates = getTemplatesByType(TYPE.ITEM)
 const getPhotoTemplates = getTemplatesByType(TYPE.PHOTO)
 const getSelectionTemplates = getTemplatesByType(TYPE.SELECTION)
 
+const getAllTemplatesByType = memo(
+  getItemTemplates,
+  getPhotoTemplates,
+  getSelectionTemplates,
+  (item, photo, selection) => ({
+    item, photo, selection
+  })
+)
+
 const getItemTemplateProperties = memo(
   getItemTemplates,
   ({ ontology }) => ontology.props,
@@ -123,13 +132,20 @@ const getTemplateField = memo(
 
 const getItemTemplate = memo(
   ({ ontology }) => ontology.template,
-  ({ settings }) => settings.template,
+  ({ settings }) => settings.templates.item,
   (template, id) => template[id] || template[ITEM.TEMPLATE]
 )
 
 const getPhotoTemplate = memo(
   ({ ontology }) => ontology.template,
-  (template) => template[PHOTO.TEMPLATE]
+  ({ settings }) => settings.templates.photo,
+  (template, id) => template[id] || template[PHOTO.TEMPLATE]
+)
+
+const getSelectionTemplate = memo(
+  ({ ontology }) => ontology.template,
+  ({ settings }) => settings.templates.selection,
+  (template, id) => template[id] || template[SELECTION.TEMPLATE]
 )
 
 const getTemplateValues = (template) =>
@@ -171,6 +187,7 @@ module.exports = {
   getActivePhotoTemplate,
   getActiveSelectionTemplate,
   getAllTemplates,
+  getAllTemplatesByType,
   getDatatypeList,
   getItemTemplate,
   getItemTemplateProperties,
@@ -178,6 +195,7 @@ module.exports = {
   getPhotoTemplate,
   getPhotoTemplates,
   getPropertyList,
+  getSelectionTemplate,
   getSelectionTemplates,
   getTemplateField,
   getTemplateFields,

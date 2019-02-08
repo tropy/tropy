@@ -97,7 +97,11 @@ en:
           en: English
           fr: Français
           ja: 日本語
-      template: Default Template
+      templates:
+        label: Default Templates
+        item: Item
+        photo: Photo
+        selection: Selection
       debug: Enable Developer Mode
       localtime: Assume photo metadata use local timezone
       dup:

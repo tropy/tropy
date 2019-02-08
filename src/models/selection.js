@@ -1,11 +1,13 @@
 'use strict'
 
-const { list } = require('../common/util')
+const { empty, list } = require('../common/util')
 const { TEMPLATE } = require('../constants/selection')
 const { all } = require('bluebird')
 const { assign } = Object
 
 const mod = {
+  metadata: require('./metadata'),
+
   selection: {
     async load(db, ids) {
       const selections = {}
@@ -61,7 +63,17 @@ const mod = {
       return selections
     },
 
-    async create(db, template, { photo, x, y, width, height, angle, mirror }) {
+    async create(db, {
+        template,
+        photo,
+        x,
+        y,
+        width,
+        height,
+        angle,
+        mirror,
+        data
+      }) {
       const { id } = await db.run(`
         INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
 
@@ -72,6 +84,10 @@ const mod = {
       await db.run(`
         INSERT INTO selections (id, photo_id, x, y)
           VALUES (?,?,?,?)`, [id, photo, x, y])
+
+      if (!empty(data)) {
+        await mod.metadata.update(db, { id, data })
+      }
 
       return (await mod.selection.load(db, [id]))[id]
     },
