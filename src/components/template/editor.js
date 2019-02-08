@@ -236,7 +236,7 @@ class TemplateEditor extends PureComponent {
   }
 
   static defaultProps = {
-    types: [TYPE.ITEM, TYPE.PHOTO]
+    types: [TYPE.ITEM, TYPE.PHOTO, TYPE.SELECTION]
   }
 }
 
