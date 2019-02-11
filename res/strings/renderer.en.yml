@@ -471,6 +471,8 @@ en:
       tag:
         save: Failed to save tag.
         create: Failed to tag item. Tags must be unique per item.
+      template:
+        change: Failed to change item template.
     list:
       load: Failed to load lists.
       create: Failed to create list. List names must be unique.
@@ -482,6 +484,12 @@ en:
       consolidate: Failed to consolidate photos.
       create: Failed to import photo.
       save: Failed to save photo.
+      template:
+        change: Failed to change photo template.
+    selection:
+      create: Failed to create photo selection.
+      template:
+        change: Failed to change selection template.
     ontology:
       import: Failed to import vocabulary.
       vocab:
