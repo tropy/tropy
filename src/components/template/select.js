@@ -22,7 +22,10 @@ class TemplateSelect extends React.PureComponent {
   }
 
   toValue = (...args) => (
-    <>{this.props.icon}{Select.defaultProps.toText(...args)}</>
+    <span className="truncate">
+      {this.props.icon}
+      {Select.defaultProps.toText(...args)}
+    </span>
   )
 
   render() {
