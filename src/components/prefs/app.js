@@ -5,7 +5,7 @@ const { TemplateSelect } = require('../template/select')
 const { ipcRenderer: ipc } = require('electron')
 const { ESPER, ITEM } = require('../../constants')
 const { darwin } = require('../../common/os')
-const { IconPhoto } = require('../icons')
+const { IconItemSmall, IconPhoto, IconSelection } = require('../icons')
 
 const {
   array, arrayOf, bool, func, object, shape, string
@@ -61,6 +61,7 @@ class AppPrefs extends React.PureComponent {
         <div className="form-horizontal">
           <FormElement id="prefs.app.templates.label">
             <TemplateSelect
+              icon={<IconItemSmall/>}
               isRequired
               options={this.props.templates.item}
               value={this.props.settings.templates.item}
@@ -74,6 +75,7 @@ class AppPrefs extends React.PureComponent {
               tabIndex={0}
               onChange={this.handlePhotoTemplateChange}/>
             <TemplateSelect
+              icon={<IconSelection/>}
               isRequired
               options={this.props.templates.selection}
               value={this.props.settings.templates.selection}

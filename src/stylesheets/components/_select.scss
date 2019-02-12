@@ -69,6 +69,21 @@
       left: 0;
       top: 0;
     }
+
+    &.has-icon {
+      .value {
+        display: flex;
+        align-items: center;
+
+        .icon {
+          margin-right: $space-xs;
+        }
+      }
+
+      .values + .query {
+        left: $space-lg;
+      }
+    }
   }
 
   &.multi {
