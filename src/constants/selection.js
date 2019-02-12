@@ -13,5 +13,8 @@ module.exports = {
     REMOVE: 'selection.note.remove'
   },
 
-  TEMPLATE: 'https://tropy.org/v1/templates/selection'
+  TEMPLATE: {
+    CHANGE: 'selection.template.change',
+    DEFAULT: 'https://tropy.org/v1/templates/selection'
+  }
 }

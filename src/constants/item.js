@@ -14,7 +14,6 @@ module.exports = {
   OPEN: 'item.open',
   REMOVE: 'item.remove',
   RESTORE: 'item.restore',
-  SAVE: 'item.save',
   SELECT: 'item.select',
   SPLIT: 'item.split',
   UPDATE: 'item.update',
@@ -43,5 +42,8 @@ module.exports = {
     SIDE_BY_SIDE: 'side-by-side'
   },
 
-  TEMPLATE: 'https://tropy.org/v1/templates/generic'
+  TEMPLATE: {
+    CHANGE: 'item.template.change',
+    DEFAULT: 'https://tropy.org/v1/templates/generic'
+  }
 }

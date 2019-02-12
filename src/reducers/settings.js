@@ -11,9 +11,9 @@ const defaults = {
   locale: ARGS.locale,
   localtime: true,
   templates: {
-    item: ITEM.TEMPLATE,
-    photo: PHOTO.TEMPLATE,
-    selection: SELECTION.TEMPLATE
+    item: ITEM.TEMPLATE.DEFAULT,
+    photo: PHOTO.TEMPLATE.DEFAULT,
+    selection: SELECTION.TEMPLATE.DEFAULT
   },
   theme: ARGS.theme,
   overlayToolbars: ARGS.frameless,
