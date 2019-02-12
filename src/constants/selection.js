@@ -13,6 +13,10 @@ module.exports = {
     REMOVE: 'selection.note.remove'
   },
 
+  BULK: {
+    UPDATE: 'selection.bulk.update'
+  },
+
   TEMPLATE: {
     CHANGE: 'selection.template.change',
     DEFAULT: 'https://tropy.org/v1/templates/selection'

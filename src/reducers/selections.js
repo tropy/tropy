@@ -1,7 +1,7 @@
 'use strict'
 
 const { METADATA, SELECTION, PROJECT } = require('../constants')
-const { insert, nested, replace, touch } = require('./util')
+const { bulk, insert, nested, replace, touch } = require('./util')
 
 module.exports = {
   // eslint-disable-next-line complexity
@@ -29,6 +29,9 @@ module.exports = {
         return nested.add('notes', state, payload, meta)
       case SELECTION.NOTE.REMOVE:
         return nested.remove('notes', state, payload, meta)
+
+      case SELECTION.BULK.UPDATE:
+        return bulk.update(state, payload, meta)
 
       case METADATA.SAVE:
       case METADATA.RESTORE:

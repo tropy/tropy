@@ -133,19 +133,19 @@ const getTemplateField = memo(
 const getItemTemplate = memo(
   ({ ontology }) => ontology.template,
   ({ settings }) => settings.templates.item,
-  (template, id) => template[id] || template[ITEM.TEMPLATE]
+  (template, id) => template[id] || template[ITEM.TEMPLATE.DEFAULT]
 )
 
 const getPhotoTemplate = memo(
   ({ ontology }) => ontology.template,
   ({ settings }) => settings.templates.photo,
-  (template, id) => template[id] || template[PHOTO.TEMPLATE]
+  (template, id) => template[id] || template[PHOTO.TEMPLATE.DEFAULT]
 )
 
 const getSelectionTemplate = memo(
   ({ ontology }) => ontology.template,
   ({ settings }) => settings.templates.selection,
-  (template, id) => template[id] || template[SELECTION.TEMPLATE]
+  (template, id) => template[id] || template[SELECTION.TEMPLATE.DEFAULT]
 )
 
 const getTemplateValues = (template) =>
@@ -156,6 +156,11 @@ const getTemplateValues = (template) =>
 
     return acc
   }, {})
+
+const getTemplateDefaultValues = memo(
+  ({ ontology }, { template }) => ontology.template[template],
+  (template) => getTemplateValues(template)
+)
 
 const getActiveItemTemplate = memo(
   ({ ontology }) => ontology.template,
@@ -197,6 +202,7 @@ module.exports = {
   getPropertyList,
   getSelectionTemplate,
   getSelectionTemplates,
+  getTemplateDefaultValues,
   getTemplateField,
   getTemplateFields,
   getTemplateList,

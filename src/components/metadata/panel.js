@@ -113,23 +113,28 @@ class MetadataPanel extends React.PureComponent {
 
   handleItemTemplateChange = (template, hasChanged) => {
     if (hasChanged || this.isBulk) {
-      this.props.onItemSave({
+      this.props.onTemplateChange('item', {
         id: this.props.items.map(it => it.id),
-        property: 'template',
-        value: template.id
+        template: template.id
       })
     }
   }
 
   handlePhotoTemplateChange = (template, hasChanged) => {
     if (hasChanged) {
-      // TODO
+      this.props.onTemplateChange('photo', {
+        id: [this.props.photo.id],
+        template: template.id
+      })
     }
   }
 
   handleSelectionTemplateChange = (template, hasChanged) => {
     if (hasChanged) {
-      // TODO
+      this.props.onTemplateChange('selection', {
+        id: [this.props.selection.id],
+        template: template.id
+      })
     }
   }
 
@@ -303,11 +308,11 @@ class MetadataPanel extends React.PureComponent {
     onContextMenu: func.isRequired,
     onEdit: func,
     onEditCancel: func,
-    onItemSave: func.isRequired,
     onMetadataAdd: func.isRequired,
     onMetadataDelete: func.isRequired,
     onMetadataSave: func.isRequired,
-    onOpenInFolder: func.isRequired
+    onOpenInFolder: func.isRequired,
+    onTemplateChange: func.isRequired,
   }
 }
 
@@ -329,16 +334,16 @@ module.exports = {
     }),
 
     (dispatch) => ({
-      onItemSave(...args) {
-        dispatch(actions.item.save(...args))
-      },
-
       onMetadataAdd(...args) {
         dispatch(actions.metadata.add(...args))
       },
 
       onMetadataDelete(...args) {
         dispatch(actions.metadata.delete(...args))
+      },
+
+      onTemplateChange(type, ...args) {
+        dispatch(actions[type].template.change(...args))
       }
     }), null, { forwardRef: true }
   )(MetadataPanel)

@@ -112,14 +112,6 @@ module.exports = {
     }
   },
 
-  save({ id, property, value }, meta) {
-    return {
-      type: ITEM.SAVE,
-      payload: { id: array(id), property, value },
-      meta: { cmd: 'project', history: 'add', ...meta }
-    }
-  },
-
   update(payload, meta) {
     return {
       type: ITEM.UPDATE,
@@ -249,6 +241,24 @@ module.exports = {
         type: ITEM.PHOTO.REMOVE,
         payload,
         meta: { ...meta }
+      }
+    }
+  },
+
+  template: {
+    change({ id, template }, meta) {
+      return {
+        type: ITEM.TEMPLATE.CHANGE,
+        payload: {
+          id: array(id),
+          property: 'template',
+          value: template
+        },
+        meta: {
+          cmd: 'project',
+          history: 'add',
+          ...meta
+        }
       }
     }
   }
