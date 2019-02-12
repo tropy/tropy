@@ -35,7 +35,7 @@ class TemplateSelect extends React.PureComponent {
       <Select {...props}
         className={cx('template-select', {
           'mixed': isMixed,
-          'has-icon': !!icon
+          'has-icon': icon != null
         })}
         placeholder={this.placeholder}
         toValue={icon ? this.toValue : null}
