@@ -21,6 +21,15 @@ const {
 class TemplateEditor extends React.PureComponent {
   state = newTemplate()
 
+  componentDidUpdate(props) {
+    if (props.templates !== this.props.templates) {
+      let template = this.props.templates.find(t => t.id === this.state.id)
+      if (template != null) {
+        this.handleTemplateChange(template)
+      }
+    }
+  }
+
   get isPristine() {
     return this.state.created == null
   }
