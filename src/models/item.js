@@ -40,6 +40,7 @@ const SORT = `
 const ORDER = {
   [COLUMN.CREATED.id]: 'subjects.created',
   [COLUMN.MODIFIED.id]: 'subjects.modified',
+  [COLUMN.TEMPLATE.id]: 'subjects.template',
   [COLUMN.POSITION.id]: 'list_items.added'
 }
 
