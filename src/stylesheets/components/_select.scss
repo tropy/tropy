@@ -71,17 +71,21 @@
     }
 
     &.has-icon {
-      .value {
-        display: flex;
-        align-items: center;
+      display: flex;
+      align-items: center;
 
-        .icon {
-          margin-right: $space-xs;
-        }
+      .icon {
+        flex: 0 0 auto;
+        margin-right: $space-xs;
       }
 
-      .values + .query {
+      .values {
+        min-width: 0; // Fix truncation
+      }
+
+      .query {
         left: $space-lg;
+        width: calc(100% - #{$space-lg});
       }
     }
   }
