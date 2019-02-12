@@ -226,7 +226,7 @@ en:
     types:
       "https://tropy.org/v1/tropy#Item": Item Template
       "https://tropy.org/v1/tropy#Photo": Photo Template
-      "https://tropy.org/v1/tropy#Selection": Photo Selection Template
+      "https://tropy.org/v1/tropy#Selection": Selection Template
     field:
       property: Property
       label: Label
