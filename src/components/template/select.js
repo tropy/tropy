@@ -21,24 +21,13 @@ class TemplateSelect extends React.PureComponent {
     this.select = select
   }
 
-  toValue = (...args) => (
-    <span className="truncate">
-      {this.props.icon}
-      {Select.defaultProps.toText(...args)}
-    </span>
-  )
-
   render() {
-    let { isMixed, icon, ...props } = this.props
+    let { isMixed, ...props } = this.props
 
     return (
       <Select {...props}
-        className={cx('template-select', {
-          'mixed': isMixed,
-          'has-icon': icon != null
-        })}
+        className={cx('template-select', { mixed: isMixed })}
         placeholder={this.placeholder}
-        toValue={icon ? this.toValue : null}
         ref={this.setContainer}/>
     )
   }

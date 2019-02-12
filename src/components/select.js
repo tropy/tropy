@@ -115,6 +115,7 @@ class Select extends React.Component {
       'can-clear': !this.props.hideClearButton && this.state.canClearValue,
       'disabled': this.state.isDisabled,
       'focus': this.state.hasFocus,
+      'has-icon': this.props.icon != null,
       'invalid': this.state.isInvalid,
       'multi': this.state.isMulti,
       'open': this.state.isOpen,
@@ -345,7 +346,8 @@ class Select extends React.Component {
       return this.state.isOpen && (
         <Completions
           className={cx(this.props.className, {
-            invalid: this.state.isInvalid
+            'invalid': this.state.isInvalid,
+            'has-icon': this.props.icon != null
           })}
           completions={this.props.options}
           fadeIn={this.shouldPopupFadeIn}
@@ -377,6 +379,7 @@ class Select extends React.Component {
         onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
         ref={this.setContainer}>
+        {this.props.icon}
         {this.renderContent()}
         {this.renderInput()}
         {this.renderClearButton()}
@@ -389,6 +392,7 @@ class Select extends React.Component {
     canClearByBackspace: bool,
     className: string,
     hideClearButton: bool,
+    icon: node,
     id: string,
     isDisabled: bool,
     isInputHidden: bool,
