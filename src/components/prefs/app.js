@@ -5,6 +5,7 @@ const { TemplateSelect } = require('../template/select')
 const { ipcRenderer: ipc } = require('electron')
 const { ESPER, ITEM } = require('../../constants')
 const { darwin } = require('../../common/os')
+const { IconPhoto } = require('../icons')
 
 const {
   array, arrayOf, bool, func, object, shape, string
@@ -66,6 +67,7 @@ class AppPrefs extends React.PureComponent {
               tabIndex={0}
               onChange={this.handleItemTemplateChange}/>
             <TemplateSelect
+              icon={<IconPhoto/>}
               isRequired
               options={this.props.templates.photo}
               value={this.props.settings.templates.photo}
