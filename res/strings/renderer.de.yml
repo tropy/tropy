@@ -29,6 +29,8 @@ de:
 
           other {# Objekte}}
       selection: Ausschnitt
+      popup:
+        placeholder: Neues Feld …
     tags:
       tab: Tags
       add: >
@@ -226,6 +228,9 @@ de:
         value: "{value, number}°"
       saturation:
         label: Sättigung
+        value: "{value, number}"
+      sharpen:
+        label: Schärfe
         value: "{value, number}"
   notepad:
     placeholder: Notizen hier eintragen …
