@@ -98,7 +98,7 @@ en:
           fr: Français
           ja: 日本語
       templates:
-        label: Default Templates
+        label: Default templates
         item: Item
         photo: Photo
         selection: Selection
