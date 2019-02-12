@@ -21,9 +21,9 @@ class TemplateSelect extends React.PureComponent {
     this.select = select
   }
 
-  toValue = (...args) => ([
-    this.props.icon, Select.defaultProps.toText(...args)
-  ])
+  toValue = (...args) => (
+    <>{this.props.icon}{Select.defaultProps.toText(...args)}</>
+  )
 
   render() {
     let { isMixed, icon, ...props } = this.props
