@@ -1,48 +1,21 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { TemplateField } = require('./field')
 const { insert, move, remove } = require('../../common/util')
 const { arrayOf, bool, func, object, shape, string } = require('prop-types')
 const { TEXT } = require('../../constants/type')
+const memoize = require('memoize-one')
 
 
-let tmpId = -1
-
-const newField = () => ({
-  id: tmpId--,
-  value: '',
-  hint: '',
-  property: '',
-  datatype: TEXT,
-  isConstant: false,
-  isRequired: false
-})
-
-const updateFields = (props) => (
-  props.isDisabled || !props.template ?
-    props.fields :
-    props.fields.length > 0 ?
-      [...props.fields] :
-      [newField()]
-)
-
-
-class TemplateFieldList extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      fields: updateFields(props)
-    }
+class TemplateFieldList extends React.PureComponent {
+  state = {
+    fields: []
   }
 
-  componentWillReceiveProps(props) {
-    if (props.fields !== this.props.fields) {
-      this.setState({
-        fields: updateFields(props)
-      })
+  static getDerivedStateFromProps(props) {
+    return {
+      fields: newFieldList(props.fields, props.isDisabled, props.template)
     }
   }
 
@@ -109,7 +82,7 @@ class TemplateFieldList extends PureComponent {
 
   render() {
     if (this.props.template == null) return
-    const isSingle = this.state.fields.length === 1
+    let isSingle = this.state.fields.length === 1
 
     return (
       <ul className="template-field-list">
@@ -150,6 +123,26 @@ class TemplateFieldList extends PureComponent {
     onFieldSave: func.isRequired,
   }
 }
+
+
+let tmpId = -1
+
+const newField = () => ({
+  id: tmpId--,
+  value: '',
+  hint: '',
+  property: '',
+  datatype: TEXT,
+  isConstant: false,
+  isRequired: false
+})
+
+const newFieldList = memoize((fields, isDisabled, template) => (
+  (isDisabled || !template) ?
+    fields :
+    (fields.length > 0) ? [...fields] : [newField()]
+))
+
 
 module.exports = {
   TemplateFieldList
