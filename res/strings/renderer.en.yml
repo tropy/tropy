@@ -170,6 +170,7 @@ en:
   item:
     created: Date Added
     modified: Modified
+    template: Template
   photo:
     file: File
     size: Size

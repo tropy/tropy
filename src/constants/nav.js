@@ -26,6 +26,11 @@ module.exports = {
       protected: true,
       type: TYPE.DATE
     },
+    TEMPLATE: {
+      id: 'item.template',
+      protected: true,
+      type: TYPE.TEMPLATE
+    },
     POSITION: {
       id: 'added',
       label: '',
