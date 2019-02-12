@@ -1,13 +1,12 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { connect } = require('react-redux')
 const { TemplateFieldList } = require('./field-list')
 const { TemplateToolbar } = require('./toolbar')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, FormSelect } = require('../form')
-const { identify, omit, pick } = require('../../common/util')
+const { identify, pick } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 const actions = require('../../actions')
 const { TYPE } = require('../../constants')
@@ -18,35 +17,9 @@ const {
   getPropertyList
 } = require('../../selectors')
 
-const TEMPLATE = {
-  name: '',
-  type: TYPE.ITEM,
-  creator: '',
-  description: '',
-  created: null,
-  isProtected: false,
-  fields: []
-}
 
-const defaultId = () =>
-  `https://tropy.org/v1/templates/id#${identify()}`
-
-const makeTemplate = (template) => ({
-  id: (template || TEMPLATE).id || defaultId(), ...(template || TEMPLATE)
-})
-
-
-class TemplateEditor extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = makeTemplate()
-  }
-
-  componentWillReceiveProps({ templates }) {
-    if (this.state.id != null && this.props.templates !== templates) {
-      this.setState(makeTemplate(templates.find(t => t.id === this.state.id)))
-    }
-  }
+class TemplateEditor extends React.PureComponent {
+  state = newTemplate()
 
   get isPristine() {
     return this.state.created == null
@@ -57,22 +30,11 @@ class TemplateEditor extends PureComponent {
   }
 
   handleTemplateCopy = () => {
-    this.setState(makeTemplate({
+    this.setState(newTemplate({
       ...TEMPLATE,
-      name: this.state.name,
-      type: this.state.type,
-      creator: this.state.creator,
-      description: this.state.description,
-      fields: this.state.fields.map((f, idx) => ({
+      ...copyTemplate(this.state, (field, idx) => ({
         id: -(idx + 1),
-        ...pick(f, [
-          'property',
-          'label',
-          'datatype',
-          'isRequired',
-          'hint',
-          'constant'
-        ])
+        ...copyField(field)
       }))
     }))
   }
@@ -80,22 +42,14 @@ class TemplateEditor extends PureComponent {
   handleTemplateDelete = () => {
     if (this.state.id) {
       this.props.onDelete([this.state.id])
-      this.setState(makeTemplate())
+      this.setState(newTemplate())
     }
   }
 
   handleTemplateCreate = () => {
-    const { id, name, type, creator, description, fields } = this.state
-
+    let { id } = this.state
     this.props.onCreate({
-      [id]: {
-        id,
-        name,
-        type,
-        creator,
-        description,
-        fields: fields.map(field => omit(field, ['id']))
-      }
+      [id]: { id, ...copyTemplate(this.state) }
     })
   }
 
@@ -104,7 +58,7 @@ class TemplateEditor extends PureComponent {
   }
 
   handleTemplateChange = (template) => {
-    this.setState(makeTemplate(template))
+    this.setState(newTemplate(template))
   }
 
   handleTemplateUpdate = (template) => {
@@ -119,8 +73,7 @@ class TemplateEditor extends PureComponent {
   }
 
   render() {
-    const { isPristine } = this
-
+    let { isPristine } = this
     return (
       <div className="scroll-container">
         <div className="template-editor form-horizontal">
@@ -239,6 +192,41 @@ class TemplateEditor extends PureComponent {
     types: [TYPE.ITEM, TYPE.PHOTO, TYPE.SELECTION]
   }
 }
+
+const TEMPLATE = {
+  name: '',
+  type: TYPE.ITEM,
+  creator: '',
+  description: '',
+  created: null,
+  isProtected: false,
+  fields: []
+}
+
+const defaultId = () =>
+  `https://tropy.org/v1/templates/id#${identify()}`
+
+const newTemplate = (template) => ({
+  id: (template || TEMPLATE).id || defaultId(), ...(template || TEMPLATE)
+})
+
+const copyTemplate = (template, mapField = copyField) => ({
+  name: template.name,
+  type: template.type,
+  creator: template.creator,
+  description: template.description,
+  fields: template.fields.map(mapField)
+})
+
+const copyField = (field) => pick(field, [
+  'property',
+  'label',
+  'datatype',
+  'isRequired',
+  'hint',
+  'constant'
+])
+
 
 module.exports = {
   TemplateEditor: connect(
