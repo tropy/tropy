@@ -124,6 +124,10 @@
 
     @include input-btn-focus(".focus", $input-btn-invalid-color);
   }
+
+  & + .select {
+    margin-top: $space-min; // Space between multiple selects in one form-group
+  }
 }
 
 // Use flexbox only in more complex value/option layouts and let
