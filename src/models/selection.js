@@ -75,7 +75,8 @@ const mod = {
         data
       }) {
       const { id } = await db.run(`
-        INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
+        INSERT INTO subjects (template) VALUES (?)`,
+        template || TEMPLATE.DEFAULT)
 
       await db.run(`
         INSERT INTO images (id, width, height, angle, mirror)

@@ -229,7 +229,7 @@ module.exports = mod.item = {
 
   async create(db, template, data) {
     const { id } = await db.run(`
-      INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
+      INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE.DEFAULT)
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 
