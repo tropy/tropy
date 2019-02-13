@@ -1,8 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { ItemPanel } = require('./panel')
+const { ItemPanelGroup } = require('./panel')
 const { ItemContainer } = require('./container')
 const { Resizable } = require('../resizable')
 const { NOTE, PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
@@ -19,7 +18,7 @@ function getNoteTemplate() {
 }
 
 
-class ItemView extends PureComponent {
+class ItemView extends React.PureComponent {
   constructor(props) {
     super(props)
 
@@ -169,7 +168,6 @@ class ItemView extends PureComponent {
       offset,
       panel,
       photo,
-      selections,
       onPanelDragStop,
       isProjectClosing,
       isTrashSelected,
@@ -187,12 +185,11 @@ class ItemView extends PureComponent {
           max={PANEL.MAX_WIDTH}
           onResize={this.handlePanelResize}
           onDragStop={onPanelDragStop}>
-          <ItemPanel {...pick(props, ItemPanel.props)}
+          <ItemPanelGroup {...pick(props, ItemPanelGroup.props)}
             panel={panel}
             photo={photo}
             note={this.state.note}
             keymap={keymap}
-            selections={selections}
             isItemOpen={isItemOpen}
             isDisabled={isTrashSelected || isProjectClosing}
             onNoteCreate={this.handleNoteCreate}/>
@@ -206,7 +203,9 @@ class ItemView extends PureComponent {
           onContextMenu={this.props.onContextMenu}
           onNoteChange={this.handleNoteChange}
           onNoteCommit={this.handleNoteCommit}
+          onPhotoCreate={this.props.onPhotoCreate}
           onPhotoError={this.props.onPhotoError}
+          onPhotoSelect={this.props.onPhotoSelect}
           onUiUpdate={this.props.onUiUpdate}/>
       </section>
     )
@@ -214,7 +213,7 @@ class ItemView extends PureComponent {
 
 
   static propTypes = {
-    ...ItemPanel.propTypes,
+    ...ItemPanelGroup.propTypes,
 
     items: arrayOf(
       shape({
@@ -227,7 +226,6 @@ class ItemView extends PureComponent {
     keymap: object.isRequired,
     offset: number.isRequired,
     mode: string.isRequired,
-    selections: object.isRequired,
     isModeChanging: bool.isRequired,
     isTrashSelected: bool.isRequired,
     isProjectClosing: bool.isRequired,

@@ -162,5 +162,23 @@ module.exports = {
         meta: { ...meta }
       }
     }
+  },
+
+  template: {
+    change({ id, template }, meta) {
+      return {
+        type: PHOTO.TEMPLATE.CHANGE,
+        payload: {
+          id: array(id),
+          property: 'template',
+          value: template
+        },
+        meta: {
+          cmd: 'project',
+          history: 'add',
+          ...meta
+        }
+      }
+    }
   }
 }

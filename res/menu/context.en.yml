@@ -70,8 +70,6 @@ en:
         command: 'app:delete-item-tag'
         visible: false
         condition: 'hasMultipleItems'
-    notes: &notes
-      []
     note: &note
       - label: 'Delete Note'
         command: 'app:delete-note'
@@ -206,7 +204,6 @@ en:
     tags: *tags
     tag: *tag
     item-tag: *item-tag
-    notes: *notes
     note: *note
     notepad: *notepad
     items: *items
@@ -233,7 +230,6 @@ en:
     tags: *tags
     tag: *tag
     item-tag: *item-tag
-    notes: *notes
     note: *note
     notepad: *notepad
     items: *items

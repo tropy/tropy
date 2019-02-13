@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { Slider } = require('../slider')
 const { Button } = require('../button')
 const { bool, element, func, number, string } = require('prop-types')
@@ -13,11 +12,12 @@ const {
   IconSun,
   IconContrast,
   IconHue,
-  IconDrop
+  IconDrop,
+  IconSharpen
 } = require('../icons')
 
 
-class ColorSlider extends PureComponent {
+class ColorSlider extends React.PureComponent {
   handleChange = (value) => {
     this.props.onChange({ [this.props.type]: value })
   }
@@ -124,6 +124,18 @@ const EsperPanel = (props) => (
         onBlur={props.onBlur}
         onFocus={props.onFocus}
         onChange={props.onChange}/>
+      <ColorSlider
+        icon={<IconSharpen/>}
+        isDisabled={props.isDisabled || !props.isVisible}
+        tabIndex={TABS.EsperPanel}
+        type="sharpen"
+        min={0}
+        max={200}
+        origin={null}
+        value={props.sharpen}
+        onBlur={props.onBlur}
+        onFocus={props.onFocus}
+        onChange={props.onChange}/>
       <li className="adjustment">
         <FormToggle
           id="esper.panel.negative"
@@ -157,6 +169,7 @@ EsperPanel.propTypes = {
   hue: number.isRequired,
   negative: bool.isRequired,
   saturation: number.isRequired,
+  sharpen: number.isRequired,
   isDisabled: bool.isRequired,
   isVisible: bool.isRequired,
   onBlur: func,

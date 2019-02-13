@@ -40,6 +40,7 @@ const SORT = `
 const ORDER = {
   [COLUMN.CREATED.id]: 'subjects.created',
   [COLUMN.MODIFIED.id]: 'subjects.modified',
+  [COLUMN.TEMPLATE.id]: 'subjects.template',
   [COLUMN.POSITION.id]: 'list_items.added'
 }
 
@@ -229,7 +230,7 @@ module.exports = mod.item = {
 
   async create(db, template, data) {
     const { id } = await db.run(`
-      INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
+      INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE.DEFAULT)
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 

@@ -310,7 +310,7 @@ class Connection {
 
 
 Connection.defaults = {
-  busy_timeout: 2000,
+  busy_timeout: 5000,
   foreign_keys: 'on'
 }
 

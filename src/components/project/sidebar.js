@@ -5,7 +5,7 @@ const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
-const { BufferedResizable } = require('../resizable')
+const { Resizable } = require('../resizable')
 const { LastImportListNode, ListTree, TrashListNode } = require('../list')
 const { TagList } = require('../tag')
 const { Sidebar, SidebarBody } = require('../sidebar')
@@ -236,11 +236,12 @@ class ProjectSidebar extends React.PureComponent {
     let root = this.props.lists[this.props.root]
 
     return (
-      <BufferedResizable
+      <Resizable
         edge="right"
-        value={this.props.width}
+        isBuffered
         min={SIDEBAR.MIN_WIDTH}
         max={SIDEBAR.MAX_WIDTH}
+        value={this.props.width}
         onChange={this.props.onResize}>
         <Sidebar>
           {this.props.hasToolbar &&
@@ -319,7 +320,7 @@ class ProjectSidebar extends React.PureComponent {
           </SidebarBody>
           <ActivityPane activities={this.props.activities}/>
         </Sidebar>
-      </BufferedResizable>
+      </Resizable>
     )
   }
 

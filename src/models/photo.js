@@ -29,7 +29,7 @@ module.exports = {
   async create(db, { base, template }, { item, image, data, position }) {
     let { path, width, height, ...meta } = image.toJSON()
     let { id } = await db.run(
-      ...into('subjects').insert({ template: template || TEMPLATE })
+      ...into('subjects').insert({ template: template || TEMPLATE.DEFAULT })
     )
 
     if (base != null) {
@@ -97,6 +97,7 @@ module.exports = {
             contrast,
             hue,
             saturation,
+            sharpen,
             width,
             height,
             path,

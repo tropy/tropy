@@ -1,31 +1,30 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { Button } = require('./button')
 const { Draggable } = require('./draggable')
 const { bounds, borders } = require('../dom')
 const { restrict } = require('../common/util')
 const { round } = require('../common/math')
-const { arrayOf, bool, element, func, number, oneOf } = require('prop-types')
 const cx = require('classnames')
 const throttle = require('lodash.throttle')
+const { KeyMap } = require('../keymap')
+
+const {
+  arrayOf, bool, element, func, instanceOf, number, oneOf
+} = require('prop-types')
 
 
-class Slider extends PureComponent {
-  constructor(props) {
-    super(props)
+class Slider extends React.PureComponent {
+  track = React.createRef()
 
-    this.state = {
-      value: props.value
-    }
+  state = {
+    value: 0
   }
 
-  componentWillReceiveProps({ value, precision }) {
-    if (value !== this.props.value &&
-        value !== this.round(this.state.value, precision)) {
-      this.setState({ value })
-    }
+  static getDerivedStateFromProps(props, state) {
+    let value = round(props.value, props.precision)
+    return (value !== state.value) ? { value } : null
   }
 
   get origin() {
@@ -47,9 +46,13 @@ class Slider extends PureComponent {
     }]
   }
 
+  get tabIndex() {
+    return this.props.isDisabled ? null : this.props.tabIndex
+  }
+
   getNextStep() {
-    const { max, steps } = this.props
-    const { value } = this.props
+    let { max, steps } = this.props
+    let { value } = this.props
 
     if (steps.length === 0) return max
 
@@ -62,8 +65,8 @@ class Slider extends PureComponent {
   }
 
   getPrevStep() {
-    const { min, steps } = this.props
-    const { value } = this.props
+    let { min, steps } = this.props
+    let { value } = this.props
 
     if (steps.length === 0) return min
 
@@ -75,22 +78,14 @@ class Slider extends PureComponent {
     return Math.max(steps[i], min)
   }
 
-  setTrack = (track) => {
-    this.track = track
-  }
-
   set(value, reason) {
     value = restrict(value, this.props.min, this.props.max)
     this.setState({ value })
 
-    value  = this.round(value)
+    value  = round(value, this.props.precision)
     if (value !== this.props.value) {
       this.props.onChange(value, reason)
     }
-  }
-
-  round(value, precision = this.props.precision) {
-    return round(value, precision)
   }
 
   handleDragStart = (event) => {
@@ -98,12 +93,12 @@ class Slider extends PureComponent {
   }
 
   handleDrag = ({ pageX }, reason = 'drag') => {
-    const { min } = this.props
-    const box = bounds(this.track)
-    const border = borders(this.track)
+    let { min } = this.props
+    let box = bounds(this.track.current)
+    let border = borders(this.track.current)
 
-    const left = box.left + border.left
-    const width = box.width - border.left - border.right
+    let left = box.left + border.left
+    let width = box.width - border.left - border.right
 
     this.set(min + restrict((pageX - left) / width, 0, 1) * this.delta, reason)
   }
@@ -117,25 +112,24 @@ class Slider extends PureComponent {
   }, 100)
 
   handleKeyDown = (event) => {
-    const { value, precision, tabIndex } = this.props
+    let { value, precision, keymap, tabIndex } = this.props
 
     if (tabIndex == null) return
 
-    switch (event.key) {
-      case 'ArrowDown':
+    switch (keymap.match(event)) {
+      case 'down':
         this.set(this.getPrevStep(), 'key')
         break
-      case 'ArrowLeft':
+      case 'left':
         this.set(value - 1 / precision, 'key')
         break
-      case 'ArrowUp':
+      case 'up':
         this.set(this.getNextStep(), 'key')
         break
-      case 'ArrowRight':
+      case 'right':
         this.set(value + 1 / precision, 'key')
         break
-      case 'Space':
-      case 'Escape':
+      case 'reset':
         this.set(this.origin, 'key')
         break
       default:
@@ -148,8 +142,8 @@ class Slider extends PureComponent {
   }
 
   renderMinButton() {
-    const { min, minIcon } = this.props
-    const { value } = this.state
+    let { min, minIcon } = this.props
+    let { value } = this.state
 
     if (minIcon) {
       return (
@@ -164,8 +158,8 @@ class Slider extends PureComponent {
   }
 
   renderMaxButton() {
-    const { max, maxIcon } = this.props
-    const { value } = this.state
+    let { max, maxIcon } = this.props
+    let { value } = this.state
 
     if (maxIcon) {
       return (
@@ -188,20 +182,20 @@ class Slider extends PureComponent {
   }
 
   render() {
-    const { origin, delta, isDisabled } = this
+    let { origin, delta, isDisabled } = this
 
-    const abs = this.state.value - this.props.min
-    const off = origin - this.props.min
-    const adj = abs - off
+    let abs = this.state.value - this.props.min
+    let off = origin - this.props.min
+    let adj = abs - off
 
-    const offset = pct((adj < 0 ? off + adj : off) / delta)
-    const position = pct(abs / delta)
-    const width = pct(Math.abs(adj) / delta)
+    let offset = pct((adj < 0 ? off + adj : off) / delta)
+    let position = pct(abs / delta)
+    let width = pct(Math.abs(adj) / delta)
 
     return (
       <div
         className={cx(this.classes)}
-        tabIndex={this.props.tabIndex}
+        tabIndex={this.tabIndex}
         onBlur={this.props.onBlur}
         onFocus={this.props.onFocus}
         onKeyDown={this.handleKeyDown}>
@@ -211,7 +205,7 @@ class Slider extends PureComponent {
           isDisabled={isDisabled}
           onDrag={this.handleDrag}
           onDragStart={this.handleDragStart}>
-          <div ref={this.setTrack} className="slider-track">
+          <div ref={this.track} className="slider-track">
             <div className="slider-range" style={{ width, left: offset }}/>
             <div
               className="slider-handle"
@@ -227,6 +221,7 @@ class Slider extends PureComponent {
 
   static propTypes = {
     isDisabled: bool,
+    keymap: instanceOf(KeyMap).isRequired,
     max: number.isRequired,
     maxIcon: element,
     min: number.isRequired,
@@ -252,7 +247,15 @@ class Slider extends PureComponent {
     showCurrentValue: false,
     size: 'md',
     steps: [],
-    tabIndex: null
+    tabIndex: null,
+
+    keymap: new KeyMap({
+      up: 'ArrowUp',
+      down: 'ArrowDown',
+      left: 'ArrowLeft',
+      right: 'ArrowRight',
+      reset: ['Space', 'Escape']
+    })
   }
 }
 

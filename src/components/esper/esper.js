@@ -43,7 +43,8 @@ const IMAGE_PARAMS = [
   'contrast',
   'hue',
   'negative',
-  'saturation'
+  'saturation',
+  'sharpen'
 ]
 
 class Esper extends React.PureComponent {
@@ -293,12 +294,14 @@ class Esper extends React.PureComponent {
   getPhotoState() {
     const id = this.getActiveImageId()
     const { angle, mirror } = this.getRelativeRotation()
-    const { brightness, contrast, hue, negative, saturation } = this.state
+    const {
+      brightness, contrast, hue, negative, saturation, sharpen
+    } = this.state
 
     return (id == null) ? null : {
       id,
       data: {
-        angle, brightness, contrast, hue, mirror, negative, saturation
+        angle, brightness, contrast, hue, mirror, negative, saturation, sharpen
       }
     }
   }
@@ -318,7 +321,8 @@ class Esper extends React.PureComponent {
       hue: 0,
       negative: false,
       mirror: false,
-      saturation: 0
+      saturation: 0,
+      sharpen: 0
     }
 
     if (photo != null) {
@@ -749,6 +753,7 @@ class Esper extends React.PureComponent {
             hue={this.state.hue}
             negative={this.state.negative}
             saturation={this.state.saturation}
+            sharpen={this.state.sharpen}
             gamma={this.state.gamma}
             isDisabled={isDisabled}
             isVisible={this.props.isPanelVisible}

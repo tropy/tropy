@@ -7,6 +7,7 @@ const { DuplicateError } = require('../common/error')
 const { all, call, put, select, cps } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
+const { SaveCommand } = require('./subject')
 const { prompt, open, fail, save } = require('../dialog')
 const { Image } = require('../image')
 const act = require('../actions')
@@ -16,7 +17,6 @@ const { darwin } = require('../common/os')
 const { ITEM, DC } = require('../constants')
 const { MODE } = require('../constants/project')
 const { keys } = Object
-const { isArray } = Array
 const { writeFile: write } = require('fs')
 const { win } = require('../window')
 const { groupedByTemplate } = require('../export')
@@ -230,78 +230,9 @@ class Restore extends Command {
   }
 }
 
-class Save extends Command {
-  static get ACTION() { return ITEM.SAVE }
-
-  *exec() {
-    const { db } = this.options
-    const { payload, meta } = this.action
-
-    if (!isArray(payload)) {
-      const { id: ids, property, value } = this.action.payload
-
-      assert.equal(property, 'template')
-
-      const state = yield select(({ items, ontology, metadata }) => ({
-        items, templates: ontology.template, metadata
-      }))
-
-      const props = { [property]: value, modified: new Date(meta.now) }
-      const template = state.templates[value]
-
-      assert(template != null, 'unknown template')
-
-      const data = getTemplateValues(template)
-      const datakeys = data != null ? keys(data) : []
-      const hasData = datakeys.length > 0
-
-      const original = ids.map(id => [
-        id,
-        get(state.items, [id, property]),
-        hasData ? pick(state.metadata[id], datakeys, {}, true) : null
-      ])
-
-      yield call(db.transaction, async tx => {
-        await mod.item.update(tx, ids, props, meta.now)
-
-        if (hasData) {
-          await mod.metadata.update(tx, { id: ids, data })
-        }
-      })
-
-      yield put(act.item.bulk.update([ids, props]))
-
-      if (hasData) {
-        yield put(act.metadata.update({ ids, data }))
-      }
-
-      this.undo = { ...this.action, payload: original }
-
-    } else {
-
-      let hasData = false
-      let changed = { props: {}, data: {} }
-
-      yield call(db.transaction, async tx => {
-        for (let [id, template, data] of payload) {
-          changed.props[id] = { template, modified: new Date(meta.now) }
-          await mod.item.update(tx, [id], changed.props[id], meta.now)
-
-          if (data) {
-            hasData = true
-            changed.data[id] = data
-            await mod.metadata.update(tx, { id, data })
-          }
-        }
-      })
-
-      yield put(act.item.bulk.update(changed.props))
-
-      if (hasData) {
-        yield put(act.metadata.merge(changed.data))
-      }
-    }
-  }
+class TemplateChange extends SaveCommand {
+  static get ACTION() { return ITEM.TEMPLATE.CHANGE }
+  get type() { return 'item' }
 }
 
 class Merge extends Command {
@@ -614,7 +545,7 @@ module.exports = {
   Merge,
   Split,
   Restore,
-  Save,
+  TemplateChange,
   Preview,
   AddTag,
   RemoveTag,

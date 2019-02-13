@@ -313,13 +313,14 @@ class EsperView extends React.Component {
     }
   }
 
-  adjust({ brightness, contrast, hue, negative, saturation }) {
+  adjust({ brightness, contrast, hue, negative, saturation, sharpen }) {
     this.image
       .brightness(brightness)
       .contrast(contrast)
       .hue(hue)
       .negative(negative)
       .saturation(saturation)
+      .sharpen(sharpen)
     this.pixi.render()
   }
 

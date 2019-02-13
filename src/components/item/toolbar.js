@@ -1,32 +1,31 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { Toolbar, ToolGroup } = require('../toolbar')
+const { Toolbar, ToolbarLeft, ToolGroup } = require('../toolbar')
 const { IconChevron16 } = require('../icons')
 const { Button } = require('../button')
+const { Fade } = require('../fx')
 const { MODE } = require('../../constants/project')
-const { bool, func } = PropTypes
+const { bool, func } = require('prop-types')
 
 
-class ItemToolbar extends PureComponent {
-
-  handleModeChange = () => {
+class ItemToolbar extends React.PureComponent {
+  setProjectMode = () => {
     this.props.onModeChange(MODE.PROJECT)
   }
 
   render() {
     return (
       <Toolbar onDoubleClick={ARGS.frameless ? this.props.onMaximize : null}>
-        <div className="toolbar-left">
+        <ToolbarLeft>
           <ToolGroup>
-            {this.props.isItemOpen &&
+            <Fade in={this.props.isItemOpen}>
               <Button
                 icon={<IconChevron16/>}
-                onClick={this.handleModeChange}/>}
+                onClick={this.setProjectMode}/>
+            </Fade>
           </ToolGroup>
-        </div>
+        </ToolbarLeft>
       </Toolbar>
     )
   }

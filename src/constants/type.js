@@ -5,6 +5,7 @@ module.exports = {
   ITEM: 'https://tropy.org/v1/tropy#Item',
   LIST: 'https://tropy.org/v1/tropy#List',
   NOTE: 'https://tropy.org/v1/tropy#Note',
+  TEMPLATE: 'https://tropy.org/v1/tropy#Template',
   NUMBER: 'http://www.w3.org/2001/XMLSchema#integer',
   PHOTO: 'https://tropy.org/v1/tropy#Photo',
   SELECTION: 'https://tropy.org/v1/tropy#Selection',

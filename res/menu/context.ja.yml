@@ -177,6 +177,13 @@ ja:
           - label: 左右に配置
             id: side-by-side
             type: checkbox
+    metadata-list:
+      - label: New Field …
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Remove Field
+        command: 'app:delete-field'
+        condition: isExtra
     trash:
       - label: アイテムを完全に削除する
         command: 'app:destroy-item'
@@ -345,6 +352,13 @@ ja:
           - label: 左右に配置
             id: side-by-side
             type: checkbox
+    metadata-list:
+      - label: New Field …
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Remove Field
+        command: 'app:delete-field'
+        condition: isExtra
     trash:
       - label: アイテムを完全に削除する
         command: 'app:destroy-item'
@@ -534,6 +548,13 @@ ja:
           - label: 左右に配置
             id: side-by-side
             type: checkbox
+    metadata-list:
+      - label: New Field …
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Remove Field
+        command: 'app:delete-field'
+        condition: isExtra
     trash:
       - label: アイテムを完全に削除する
         command: 'app:destroy-item'

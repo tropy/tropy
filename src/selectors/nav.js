@@ -15,7 +15,8 @@ const DEFAULT_LIST_SORT =  { column: 'added', asc: true }
 
 const SPECIAL_COLUMNS = [
   COLUMN.CREATED,
-  COLUMN.MODIFIED
+  COLUMN.MODIFIED,
+  COLUMN.TEMPLATE
 ]
 
 const merge = (col, { label, name, prefix }) => ({

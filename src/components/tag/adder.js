@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { injectIntl, intlShape } = require('react-intl')
 const { Input } = require('../input')
 const { blank, noop } = require('../../common/util')
@@ -9,7 +8,9 @@ const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 const collate = require('../../collate')
 
 
-class TagAdder extends PureComponent {
+class TagAdder extends React.PureComponent {
+  input = React.createRef()
+
   get placeholder() {
     let { count, intl } = this.props
     return {
@@ -20,7 +21,7 @@ class TagAdder extends PureComponent {
   }
 
   focus() {
-    this.input.focus()
+    this.input.current.focus()
   }
 
   handleBlur = (event) => {
@@ -40,18 +41,14 @@ class TagAdder extends PureComponent {
       this.props.onCreate({ name })
     }
 
-    this.input.reset()
-  }
-
-  setInput = (input) => {
-    this.input = input
+    this.input.current.reset()
   }
 
   render() {
     return (
       <div className="add-tag-container" style={this.placeholder}>
         <Input
-          ref={this.setInput}
+          ref={this.input}
           className="form-control"
           completions={this.props.completions}
           isDisabled={this.props.isDisabled}
@@ -87,6 +84,7 @@ class TagAdder extends PureComponent {
     match: (value, query) => (
       collate.match(value.name || String(value), query, /\b\w/g)
     ),
+    onCancel: noop,
     onFocus: noop
   }
 }

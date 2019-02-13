@@ -9,25 +9,42 @@ const META = /^cmd|meta|m$/i
 const SHIFT = /^s(hift)$/i
 const MOD = /^mod|cmdorctrl$/i
 
-function compile(data) {
-  let map = {}
-
-  for (let component in data) {
-    map[component] = {}
-
-    for (let action in data[component]) {
-      let shortcut = data[component][action]
-
-      map[component][action] =
-        isArray(shortcut) ? shortcut.map(parse) : [parse(shortcut)]
+class KeyMap {
+  constructor(specs = {}) {
+    this.specs = {}
+    for (let name in specs) {
+      this.specs[name] = parse(specs[name])
     }
   }
 
+  *[Symbol.iterator]() {
+    for (let name in this.specs) {
+      for (let spec of this.specs[name]) {
+        yield [name, spec]
+      }
+    }
+  }
+
+  match(event) {
+    return match(this, event)
+  }
+}
+
+function compile(data) {
+  let map = {}
+  for (let component in data) {
+    map[component] = new KeyMap(data[component])
+  }
   return map
 }
 
-function parse(shortcut) {
-  let parts = shortcut.split(/[+-](?!$)/)
+
+function parse(input) {
+  return isArray(input) ?  input.map(p) : [p(input)]
+}
+
+function p(string) {
+  let parts = string.split(/[+-](?!$)/)
   let key = parts.pop()
 
   if (key === 'Space') key = ' '
@@ -55,16 +72,14 @@ function parse(shortcut) {
 }
 
 function match(map, event) {
-  for (let action in map) {
-    for (let shortcut of map[action]) {
-      if (shortcut.key !== event.key) continue
-      if (shortcut.alt !== event.altKey) continue
-      if (shortcut.ctrl !== event.ctrlKey) continue
-      if (shortcut.meta !== event.metaKey) continue
-      if (shortcut.shift !== event.shiftKey) continue
+  for (let [name, spec] of map) {
+    if (spec.key !== event.key) continue
+    if (spec.alt !== event.altKey) continue
+    if (spec.ctrl !== event.ctrlKey) continue
+    if (spec.meta !== event.metaKey) continue
+    if (spec.shift !== event.shiftKey) continue
 
-      return action
-    }
+    return name
   }
 
   return null
@@ -75,6 +90,7 @@ function isMeta(event) {
 }
 
 module.exports = {
+  KeyMap,
   compile,
   isMeta,
   parse,

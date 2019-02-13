@@ -177,6 +177,13 @@ de:
           - label: Nebeneinander
             id: side-by-side
             type: checkbox
+    metadata-list:
+      - label: Neues Feld …
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Feld entfernen
+        command: 'app:delete-field'
+        condition: isExtra
     trash:
       - label: Objekte vollständig löschen
         command: 'app:destroy-item'
@@ -345,6 +352,13 @@ de:
           - label: Nebeneinander
             id: side-by-side
             type: checkbox
+    metadata-list:
+      - label: Neues Feld …
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Feld entfernen
+        command: 'app:delete-field'
+        condition: isExtra
     trash:
       - label: Objekte vollständig löschen
         command: 'app:destroy-item'
@@ -534,6 +548,13 @@ de:
           - label: Nebeneinander
             id: side-by-side
             type: checkbox
+    metadata-list:
+      - label: Neues Feld …
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Feld entfernen
+        command: 'app:delete-field'
+        condition: isExtra
     trash:
       - label: Objekte vollständig löschen
         command: 'app:destroy-item'

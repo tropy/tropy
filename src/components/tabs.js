@@ -1,43 +1,94 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
-const { bool, node, func } = PropTypes
-const { only } = require('./util')
+const { FormattedMessage } = require('react-intl')
+const { arrayOf, bool, node, func, shape, string } = require('prop-types')
 const cx = require('classnames')
 
 
-const Tab = ({ children, isActive, isDisabled, onActivate }) => (
-  <li
-    className={cx({ tab: true, active: isActive, disabled: isDisabled })}
-    onClick={isDisabled ? null : onActivate}>
-    {children}
-  </li>
-)
+class Tab extends React.PureComponent {
+  get classes() {
+    return ['tab', {
+      active: this.props.isActive,
+      disabled: this.props.isDisabled
+    }]
+  }
 
-Tab.propTypes = {
-  children: node,
-  isActive: bool,
-  isDisabled: bool,
-  onActivate: func.isRequired
+  handleClick = () => {
+    if (!this.props.isDisabled && !this.props.isActive) {
+      this.props.onActivate(this.props.name)
+    }
+  }
+
+  render() {
+    return (
+      <li className={cx(this.classes)} onClick={this.handleClick}>
+        {this.props.icon}
+        <FormattedMessage id={this.props.label}/>
+      </li>
+    )
+  }
+
+  static propTypes = {
+    icon: node,
+    isActive: bool,
+    isDisabled: bool,
+    label: string.isRequired,
+    name: string.isRequired,
+    onActivate: func.isRequired
+  }
 }
 
 
-const Tabs = ({ children, justified }) => (
-  <nav>
-    <ul className={cx({ nav: true, tabs: true, justified })}>
-      {children}
-    </ul>
-  </nav>
-)
+class TabNav extends React.PureComponent {
+  activate = (name) => {
+    if (name !== this.props.active) {
+      this.props.onChange(name)
+    }
+  }
 
-Tabs.propTypes = {
-  justified: bool,
-  children: only(Tab)
+  render() {
+    return (
+      <nav>
+        <ul className={cx('nav', 'tabs', {
+          justified: this.props.justified
+        })}>
+          {this.props.tabs.map(tab =>
+            <Tab {...tab}
+              key={tab.name}
+              isActive={this.props.active === tab.name}
+              onActivate={this.activate}/>)}
+        </ul>
+      </nav>
+    )
+  }
+
+  static propTypes = {
+    justified: bool,
+    active: string,
+    onChange: func.isRequired,
+    tabs: arrayOf(shape({
+      label: string.isRequired,
+      name: string.isRequired
+    }))
+  }
 }
 
+const TabPane = ({ active, children, className, ...props }) => (
+  <div className={cx('tab-pane', active, className)}>
+    {children(active, props)}
+  </div>
+)
+
+
+TabPane.propTypes = {
+  active: string,
+  children: func.isRequired,
+  className: string
+}
 
 module.exports = {
   Tab,
-  Tabs
+  TabNav,
+  TabPane
 }

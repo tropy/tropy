@@ -51,9 +51,5 @@
     display: flex; // Prevent overflow
     flex-direction: column;
     contain: content;
-
-    &.over {
-      @extend %drop-target;
-    }
   }
 }

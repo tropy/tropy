@@ -97,7 +97,11 @@ en:
           en: English
           fr: Français
           ja: 日本語
-      template: Default Template
+      templates:
+        label: Default templates
+        item: Item
+        photo: Photo
+        selection: Selection
       debug: Enable Developer Mode
       localtime: Assume photo metadata use local timezone
       dup:
@@ -166,6 +170,7 @@ en:
   item:
     created: Date Added
     modified: Modified
+    template: Template
   photo:
     file: File
     size: Size
@@ -202,6 +207,9 @@ en:
       saturation:
         label: Saturation
         value: "{value, number}"
+      sharpen:
+        label: Sharpen
+        value: "{value, number}"
   notepad:
     placeholder: Add your notes here …
   completions:
@@ -219,7 +227,7 @@ en:
     types:
       "https://tropy.org/v1/tropy#Item": Item Template
       "https://tropy.org/v1/tropy#Photo": Photo Template
-      "https://tropy.org/v1/tropy#Selection": Photo Selection Template
+      "https://tropy.org/v1/tropy#Selection": Selection Template
     field:
       property: Property
       label: Label
@@ -464,6 +472,8 @@ en:
       tag:
         save: Failed to save tag.
         create: Failed to tag item. Tags must be unique per item.
+      template:
+        change: Failed to change item template.
     list:
       load: Failed to load lists.
       create: Failed to create list. List names must be unique.
@@ -475,6 +485,12 @@ en:
       consolidate: Failed to consolidate photos.
       create: Failed to import photo.
       save: Failed to save photo.
+      template:
+        change: Failed to change photo template.
+    selection:
+      create: Failed to create photo selection.
+      template:
+        change: Failed to change selection template.
     ontology:
       import: Failed to import vocabulary.
       vocab:

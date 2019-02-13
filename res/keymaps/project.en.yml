@@ -7,6 +7,8 @@ en:
       prevItem: Alt+ArrowUp
       nextPhoto: Alt+ArrowRight
       prevPhoto: Alt+ArrowLeft
+      nextTab: Ctrl+Tab
+      prevTab: Shift+Ctrl+Tab
     Esper: &Esper
       zoomIn:
         - CmdOrCtrl-+
@@ -105,10 +107,16 @@ en:
       end: End
       pageUp: PageUp
       pageDown: PageDown
-    MetadataList: &MetadataList
+    ItemPanel: &ItemPanel
       up: ArrowUp
-      down: ArrowDown
-      enter: Enter
+      down:
+        - ArrowDown
+      left:
+        - ArrowLeft
+        - Shift+Ctrl+Tab
+      right:
+        - ArrowRight
+        - Ctrl+Tab
     NoteList: &NoteList
       up: ArrowUp
       down: ArrowDown
@@ -234,7 +242,7 @@ en:
       end: End
       pageUp: PageUp
       pageDown: PageDown
-    MetadataList: *MetadataList
+    ItemPanel: *ItemPanel
     NoteList: *NoteList
     NotePad: *NotePad
     TagList: *TagList

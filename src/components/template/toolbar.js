@@ -8,7 +8,6 @@ const { FormGroup, Label } = require('../form')
 const { arrayOf, bool, func, shape, string } = require('prop-types')
 
 const {
-  IconNew,
   IconCopy,
   IconTrash,
   IconImport,
@@ -36,11 +35,6 @@ class TemplateToolbar extends PureComponent {
             tabIndex={0}
             onChange={this.props.onChange}/>
           <ButtonGroup>
-            <Button
-              icon={<IconNew/>}
-              title="prefs.template.tools.new"
-              isDisabled={this.props.isPristine}
-              onClick={this.props.onClear}/>
             <Button
               icon={<IconCopy/>}
               title="prefs.template.tools.copy"
@@ -75,7 +69,6 @@ class TemplateToolbar extends PureComponent {
     isPristine: bool,
     isProtected: bool,
     onChange: func.isRequired,
-    onClear: func.isRequired,
     onCopy: func.isRequired,
     onDelete: func.isRequired,
     onExport: func.isRequired,
