@@ -327,6 +327,14 @@ i('Import', (
   </svg>
 ))
 
+i('ItemSmall', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M15,3V15H1V3H15m1-1H0V16H16V2ZM2,1H14V0H2Z"/>
+    </g>
+  </svg>
+))
+
 i('Lift', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">

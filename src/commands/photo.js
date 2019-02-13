@@ -4,6 +4,7 @@ const assert = require('assert')
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
+const { SaveCommand } = require('./subject')
 const { fail, open } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
@@ -404,6 +405,12 @@ class Restore extends Command {
   }
 }
 
+class TemplateChange extends SaveCommand {
+  static get ACTION() { return PHOTO.TEMPLATE.CHANGE }
+  get type() { return 'photo' }
+}
+
+
 module.exports = {
   Consolidate,
   Create,
@@ -413,5 +420,6 @@ module.exports = {
   Move,
   Order,
   Restore,
-  Save
+  Save,
+  TemplateChange
 }

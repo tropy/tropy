@@ -2,15 +2,46 @@
 
 const { join, basename, extname } = require('path')
 const { createReadStream: stream } = require('fs')
-const { any, empty, get, pick, titlecase } = require('./util')
+const { any, empty, get, identify, pick, titlecase } = require('./util')
 const { Resource } = require('./res')
 const N3 = require('n3')
-const { RDF, RDFS, DC, TERMS, SKOS, OWL, VANN } = require('../constants')
+const { RDF, RDFS, DC, TERMS, SKOS, OWL, VANN, TYPE } = require('../constants')
 const { TEMPLATE } = require('../constants/ontology')
 const { readFileAsync: read, writeFileAsync: write } = require('fs')
 
 
 class Template {
+  static defaults = {
+    type: TYPE.ITEM,
+    name: '',
+    creator: '',
+    description: '',
+    created: null,
+    isProtected: false,
+    fields: []
+  }
+
+  static identify() {
+    return `https://tropy.org/v1/templates/id#${identify()}`
+  }
+
+  static make(template = Template.defaults) {
+    return {
+      ...template,
+      id: template.id || Template.identify(),
+      fields: [...template.fields]
+    }
+  }
+
+  static copy(template, mapField = Field.copy) {
+    return {
+      ...pick(template, Template.keys),
+      created: null,
+      isProtected: false,
+      fields: template.fields.map(mapField)
+    }
+  }
+
   static async open(path) {
     return JSON.parse(await read(path))
   }
@@ -23,25 +54,51 @@ class Template {
     return {
       '@context': TEMPLATE.CONTEXT,
       '@id': data.id,
-      '@type': TEMPLATE.TYPE,
+      '@type': TYPE.TEMPLATE,
       'type': data.type,
       'name': data.name,
       'version': data.version,
       'domain': data.domain,
       'creator': data.creator,
       'description': data.description,
-      'field': data.fields.map(field => pick(field, [
-        'property',
-        'label',
-        'datatype',
-        'hint',
-        'isRequired',
-        'isConstant',
-        'value'
-      ]))
+      'field': data.fields.map(Field.copy)
     }
   }
+
+  static keys = Object.keys(Template.defaults)
 }
+
+class Field {
+  static defaults = {
+    datatype: TYPE.TEXT,
+    hint: '',
+    isConstant: false,
+    isRequired: false,
+    label: '',
+    property: '',
+    value: ''
+  }
+
+  static identify() {
+    return Field.counter--
+  }
+
+  static make(field = Field.defaults) {
+    return {
+      id: field.id || Field.identify(),
+      ...field
+    }
+  }
+
+  static copy(field) {
+    return pick(field, Field.keys)
+  }
+
+  static counter = -1
+  static keys = Object.keys(Field.defaults)
+}
+
+Template.Field = Field
 
 
 class Ontology extends Resource {

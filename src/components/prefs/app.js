@@ -1,12 +1,15 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { array, arrayOf, bool, func, shape, string } = require('prop-types')
 const { TemplateSelect } = require('../template/select')
 const { ipcRenderer: ipc } = require('electron')
 const { ESPER, ITEM } = require('../../constants')
 const { darwin } = require('../../common/os')
+const { IconItemSmall, IconPhoto, IconSelection } = require('../icons')
+
+const {
+  array, arrayOf, bool, func, object, shape, string
+} = require('prop-types')
 
 const {
   FormElement,
@@ -17,7 +20,7 @@ const {
 } = require('../form')
 
 
-class AppPrefs extends PureComponent {
+class AppPrefs extends React.PureComponent {
   handleDebugChange() {
     ipc.send('cmd', 'app:toggle-debug-flag')
   }
@@ -34,21 +37,50 @@ class AppPrefs extends PureComponent {
     this.props.onSettingsUpdate({ localtime })
   }
 
-  handleTemplateChange = (template) => {
-    this.props.onSettingsUpdate({ template: template.id })
+  handleItemTemplateChange = (template) => {
+    this.handleTemplateChange('item', template)
+  }
+
+  handlePhotoTemplateChange = (template) => {
+    this.handleTemplateChange('photo', template)
+  }
+
+  handleSelectionTemplateChange = (template) => {
+    this.handleTemplateChange('selection', template)
+  }
+
+  handleTemplateChange(type, template) {
+    this.props.onSettingsUpdate({
+      templates: { [type]: template.id }
+    })
   }
 
   render() {
     return (
       <div className="scroll-container">
         <div className="form-horizontal">
-          <FormElement id="prefs.app.template">
+          <FormElement id="prefs.app.templates.label">
             <TemplateSelect
+              icon={<IconItemSmall/>}
               isRequired
-              options={this.props.templates}
-              value={this.props.settings.template}
+              options={this.props.templates.item}
+              value={this.props.settings.templates.item}
               tabIndex={0}
-              onChange={this.handleTemplateChange}/>
+              onChange={this.handleItemTemplateChange}/>
+            <TemplateSelect
+              icon={<IconPhoto/>}
+              isRequired
+              options={this.props.templates.photo}
+              value={this.props.settings.templates.photo}
+              tabIndex={0}
+              onChange={this.handlePhotoTemplateChange}/>
+            <TemplateSelect
+              icon={<IconSelection/>}
+              isRequired
+              options={this.props.templates.selection}
+              value={this.props.settings.templates.selection}
+              tabIndex={0}
+              onChange={this.handleSelectionTemplateChange}/>
           </FormElement>
           <hr/>
           <FormToggleGroup
@@ -128,12 +160,17 @@ class AppPrefs extends PureComponent {
   }
 
   static propTypes = {
-    templates: array.isRequired,
+    templates: shape({
+      item: array.isRequired,
+      photo: array.isRequired,
+      selection: array.isRequired
+    }).isRequired,
     settings: shape({
       debug: bool.isRequired,
       layout: string.isRequired,
       locale: string.isRequired,
       theme: string.isRequired,
+      templates: object.isRequired
     }).isRequired,
     layouts: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,

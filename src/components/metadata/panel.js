@@ -4,7 +4,6 @@ const React = require('react')
 const { connect } = require('react-redux')
 const { MetadataList } = require('./list')
 const { MetadataSection } = require('./section')
-const { TemplateSelect } = require('../template/select')
 const { PopupSelect } = require('../resource/popup')
 const { PhotoInfo } = require('../photo/info')
 const { ItemInfo } = require('../item/info')
@@ -18,14 +17,14 @@ const { arrayOf, bool, func, object, shape } = require('prop-types')
 
 const {
   getActiveSelection,
+  getAllTemplatesByType,
   getItemFields,
-  getItemTemplates,
   getPhotoFields,
   getPropertyList,
   getSelectedItemTemplate,
   getSelectedItems,
-  getSelectionFields,
-  getSelectedPhoto
+  getSelectedPhoto,
+  getSelectionFields
 } = require('../../selectors')
 
 
@@ -112,12 +111,29 @@ class MetadataPanel extends React.PureComponent {
     this.prev(1)
   }
 
-  handleTemplateChange = (template, hasChanged) => {
+  handleItemTemplateChange = (template, hasChanged) => {
     if (hasChanged || this.isBulk) {
-      this.props.onItemSave({
+      this.props.onTemplateChange('item', {
         id: this.props.items.map(it => it.id),
-        property: 'template',
-        value: template.id
+        template: template.id
+      })
+    }
+  }
+
+  handlePhotoTemplateChange = (template, hasChanged) => {
+    if (hasChanged) {
+      this.props.onTemplateChange('photo', {
+        id: [this.props.photo.id],
+        template: template.id
+      })
+    }
+  }
+
+  handleSelectionTemplateChange = (template, hasChanged) => {
+    if (hasChanged) {
+      this.props.onTemplateChange('selection', {
+        id: [this.props.selection.id],
+        template: template.id
       })
     }
   }
@@ -170,15 +186,13 @@ class MetadataPanel extends React.PureComponent {
     return !this.isEmpty && (
       <MetadataSection
         count={this.props.items.length}
-        onContextMenu={this.handleItemContextMenu}
-        title="panel.metadata.item">
-        <TemplateSelect
-          options={this.props.templates}
-          value={this.props.template.id}
-          isDisabled={this.props.isDisabled}
-          isMixed={this.props.template.mixed}
-          isRequired
-          onChange={this.handleTemplateChange}/>
+        isDisabled={this.props.isDisabled}
+        isMixed={this.props.template.mixed}
+        template={this.props.template.id}
+        templates={this.props.templates.item}
+        title="panel.metadata.item"
+        onTemplateChange={this.handleItemTemplateChange}
+        onContextMenu={this.handleItemContextMenu}>
         <MetadataList
           ref={this.setItemFields}
           edit={this.props.edit}
@@ -199,9 +213,12 @@ class MetadataPanel extends React.PureComponent {
   renderPhotoFields() {
     return this.hasPhotoFields && (
       <MetadataSection
-        onContextMenu={this.handlePhotoContextMenu}
-        separator
-        title="panel.metadata.photo">
+        isDisabled={this.props.isDisabled}
+        template={this.props.photo.template}
+        templates={this.props.templates.photo}
+        title="panel.metadata.photo"
+        onTemplateChange={this.handlePhotoTemplateChange}
+        onContextMenu={this.handlePhotoContextMenu}>
         <MetadataList
           ref={this.setPhotoFields}
           edit={this.props.edit}
@@ -223,9 +240,12 @@ class MetadataPanel extends React.PureComponent {
   renderSelectionFields() {
     return this.hasSelectionFields && (
       <MetadataSection
-        onContextMenu={this.handleSelectionContextMenu}
-        separator
-        title="panel.metadata.selection">
+        isDisabled={this.props.isDisabled}
+        template={this.props.selection.template}
+        templates={this.props.templates.selection}
+        title="panel.metadata.selection"
+        onTemplateChange={this.handleSelectionTemplateChange}
+        onContextMenu={this.handleSelectionContextMenu}>
         <MetadataList
           ref={this.setSelectionFields}
           edit={this.props.edit}
@@ -280,15 +300,19 @@ class MetadataPanel extends React.PureComponent {
     photo: shapes.subject,
     selection: shapes.subject,
     template: shapes.template,
-    templates: arrayOf(shapes.template).isRequired,
+    templates: shape({
+      item: arrayOf(shapes.template).isRequired,
+      photo: arrayOf(shapes.template).isRequired,
+      selection: arrayOf(shapes.template).isRequired
+    }).isRequired,
     onContextMenu: func.isRequired,
     onEdit: func,
     onEditCancel: func,
-    onItemSave: func.isRequired,
     onMetadataAdd: func.isRequired,
     onMetadataDelete: func.isRequired,
     onMetadataSave: func.isRequired,
-    onOpenInFolder: func.isRequired
+    onOpenInFolder: func.isRequired,
+    onTemplateChange: func.isRequired,
   }
 }
 
@@ -306,20 +330,20 @@ module.exports = {
       photo: getSelectedPhoto(state),
       selection: getActiveSelection(state),
       template: getSelectedItemTemplate(state),
-      templates: getItemTemplates(state)
+      templates: getAllTemplatesByType(state)
     }),
 
     (dispatch) => ({
-      onItemSave(...args) {
-        dispatch(actions.item.save(...args))
-      },
-
       onMetadataAdd(...args) {
         dispatch(actions.metadata.add(...args))
       },
 
       onMetadataDelete(...args) {
         dispatch(actions.metadata.delete(...args))
+      },
+
+      onTemplateChange(type, ...args) {
+        dispatch(actions[type].template.change(...args))
       }
     }), null, { forwardRef: true }
   )(MetadataPanel)

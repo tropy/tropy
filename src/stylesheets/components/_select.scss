@@ -69,6 +69,25 @@
       left: 0;
       top: 0;
     }
+
+    &.has-icon {
+      display: flex;
+      align-items: center;
+
+      .icon {
+        flex: 0 0 auto;
+        margin-right: $space-xs;
+      }
+
+      .values {
+        min-width: 0; // Fix truncation
+      }
+
+      .query {
+        left: $space-lg;
+        width: calc(100% - #{$space-lg});
+      }
+    }
   }
 
   &.multi {
@@ -123,6 +142,10 @@
     border-color: $input-btn-invalid-color;
 
     @include input-btn-focus(".focus", $input-btn-invalid-color);
+  }
+
+  & + .select {
+    margin-top: $space-min; // Space between multiple selects in one form-group
   }
 }
 

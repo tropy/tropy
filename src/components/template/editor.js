@@ -1,16 +1,16 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { connect } = require('react-redux')
 const { TemplateFieldList } = require('./field-list')
 const { TemplateToolbar } = require('./toolbar')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, FormSelect } = require('../form')
-const { identify, omit, pick } = require('../../common/util')
+const { Template } = require('../../common/ontology')
 const { arrayOf, func, shape, string } = require('prop-types')
 const actions = require('../../actions')
 const { TYPE } = require('../../constants')
+const { insert, move, remove } = require('../../common/util')
 
 const {
   getDatatypeList,
@@ -18,33 +18,16 @@ const {
   getPropertyList
 } = require('../../selectors')
 
-const TEMPLATE = {
-  name: '',
-  type: TYPE.ITEM,
-  creator: '',
-  description: '',
-  created: null,
-  isProtected: false,
-  fields: []
-}
 
-const defaultId = () =>
-  `https://tropy.org/v1/templates/id#${identify()}`
+class TemplateEditor extends React.PureComponent {
+  state = Template.make()
 
-const makeTemplate = (template) => ({
-  id: (template || TEMPLATE).id || defaultId(), ...(template || TEMPLATE)
-})
-
-
-class TemplateEditor extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = makeTemplate()
-  }
-
-  componentWillReceiveProps({ templates }) {
-    if (this.state.id != null && this.props.templates !== templates) {
-      this.setState(makeTemplate(templates.find(t => t.id === this.state.id)))
+  componentDidUpdate(props) {
+    if (props.templates !== this.props.templates) {
+      let template = this.props.templates.find(t => t.id === this.state.id)
+      if (template != null) {
+        this.handleTemplateChange(template)
+      }
     }
   }
 
@@ -57,22 +40,10 @@ class TemplateEditor extends PureComponent {
   }
 
   handleTemplateCopy = () => {
-    this.setState(makeTemplate({
-      ...TEMPLATE,
-      name: this.state.name,
-      type: this.state.type,
-      creator: this.state.creator,
-      description: this.state.description,
-      fields: this.state.fields.map((f, idx) => ({
+    this.setState(Template.make({
+      ...Template.copy(this.state, (field, idx) => ({
         id: -(idx + 1),
-        ...pick(f, [
-          'property',
-          'label',
-          'datatype',
-          'isRequired',
-          'hint',
-          'constant'
-        ])
+        ...Template.Field.copy(field)
       }))
     }))
   }
@@ -80,31 +51,25 @@ class TemplateEditor extends PureComponent {
   handleTemplateDelete = () => {
     if (this.state.id) {
       this.props.onDelete([this.state.id])
-      this.setState(makeTemplate())
+      this.setState(Template.make())
     }
   }
 
   handleTemplateCreate = () => {
-    const { id, name, type, creator, description, fields } = this.state
-
+    let { id } = this.state
     this.props.onCreate({
-      [id]: {
-        id,
-        name,
-        type,
-        creator,
-        description,
-        fields: fields.map(field => omit(field, ['id']))
-      }
+      [id]: { id, ...Template.copy(this.state) }
     })
   }
 
-  handleTemplateClear = () => {
-    this.handleTemplateChange()
-  }
-
   handleTemplateChange = (template) => {
-    this.setState(makeTemplate(template))
+    let state = Template.make(template || undefined)
+
+    if (state.created && !state.isProtected && state.fields.length === 0) {
+      state.fields.push(Template.Field.make())
+    }
+
+    this.setState(state)
   }
 
   handleTemplateUpdate = (template) => {
@@ -118,9 +83,69 @@ class TemplateEditor extends PureComponent {
     }
   }
 
-  render() {
-    const { isPristine } = this
+  handleFieldSave = (id, data, idx) => {
+    if (id < 0) {
+      this.props.onFieldAdd({
+        id: this.state.id,
+        field: { datatype: TYPE.TEXT, ...data }
+      }, { idx })
+    } else {
+      this.props.onFieldSave({
+        id: this.state.id,
+        field: { id, ...data }
+      })
+    }
+  }
 
+  handleFieldInsert = (field, at) => {
+    this.setState({
+      fields: insert(this.state.fields, at, Template.Field.make())
+    })
+  }
+
+  handleFieldRemove = (field) => {
+    if (field.id < 0) {
+      this.setState({
+        fields: remove(this.state.fields, field)
+      })
+    } else {
+      this.props.onFieldRemove({
+        id: this.state.id,
+        field: field.id
+      })
+    }
+  }
+
+  handleSortStart = () => {
+    this.__fields = this.state.fields
+  }
+
+  handleSort = (field) => {
+    this.__fields = null
+
+    if (field.id > 0) {
+      this.props.onFieldOrder({
+        id: this.state.id,
+        fields: this.state.fields
+          .map(f => f.id)
+          .filter(id => id > 0)
+      })
+    }
+  }
+
+  handleSortPreview = (from, to, offset) => {
+    this.setState({
+      fields: move(this.state.fields, from, to, offset)
+    })
+  }
+
+  handleSortReset = () => {
+    this.setState({ fields: this.__fields })
+    this.__fields = null
+  }
+
+  render() {
+    let { isPristine } = this
     return (
       <div className="scroll-container">
         <div className="template-editor form-horizontal">
@@ -131,7 +156,6 @@ class TemplateEditor extends PureComponent {
               isProtected={this.state.isProtected}
               isPristine={this.isPristine}
               onChange={this.handleTemplateChange}
-              onClear={this.handleTemplateClear}
               onCopy={this.handleTemplateCopy}
               onDelete={this.handleTemplateDelete}
               onExport={this.props.onExport}
@@ -203,10 +227,13 @@ class TemplateEditor extends PureComponent {
             datatypes={this.props.datatypes}
             properties={this.props.properties}
             isDisabled={this.state.isProtected || isPristine}
-            onFieldAdd={this.props.onFieldAdd}
-            onFieldOrder={this.props.onFieldOrder}
-            onFieldRemove={this.props.onFieldRemove}
-            onFieldSave={this.props.onFieldSave}/>
+            onInsert={this.handleFieldInsert}
+            onRemove={this.handleFieldRemove}
+            onSave={this.handleFieldSave}
+            onSort={this.handleSort}
+            onSortPreview={this.handleSortPreview}
+            onSortReset={this.handleSortReset}
+            onSortStart={this.handleSortStart}/>
         </div>
       </div>
     )
@@ -236,9 +263,10 @@ class TemplateEditor extends PureComponent {
   }
 
   static defaultProps = {
-    types: [TYPE.ITEM, TYPE.PHOTO]
+    types: [TYPE.ITEM, TYPE.PHOTO, TYPE.SELECTION]
   }
 }
+
 
 module.exports = {
   TemplateEditor: connect(
