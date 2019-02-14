@@ -9,12 +9,11 @@ const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { SaveCommand } = require('./subject')
 const { prompt, open, fail, save } = require('../dialog')
-const { Image } = require('../image')
 const act = require('../actions')
 const mod = require('../models')
-const { get, pluck, pick, remove } = require('../common/util')
+const { get, pluck, remove } = require('../common/util')
 const { darwin } = require('../common/os')
-const { ITEM, DC } = require('../constants')
+const { ITEM } = require('../constants')
 const { MODE } = require('../constants/project')
 const { keys } = Object
 const { writeFile: write } = require('fs')
@@ -25,8 +24,7 @@ const {
   getGroupedItems,
   getItemTemplate,
   getPhotoTemplate,
-  getTemplateProperties,
-  getTemplateValues,
+  getTemplateValues
 } = require('../selectors')
 
 
@@ -34,12 +32,12 @@ class Create extends Command {
   static get ACTION() { return ITEM.CREATE }
 
   *exec() {
-    const { db } = this.options
+    let { db } = this.options
 
-    const template = yield select(getItemTemplate)
-    const data = getTemplateValues(template)
+    let template = yield select(getItemTemplate)
+    let data = getTemplateValues(template)
 
-    const item = yield call(db.transaction, tx =>
+    let item = yield call(db.transaction, tx =>
       mod.item.create(tx, template.id, data))
 
     yield put(act.item.insert(item))
