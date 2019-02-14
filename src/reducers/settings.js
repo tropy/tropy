@@ -1,12 +1,17 @@
 'use strict'
 
-const { SETTINGS, ITEM, PHOTO, SELECTION, ESPER } = require('../constants')
+const { SETTINGS, ITEM, PHOTO, SELECTION, ESPER, DC } = require('../constants')
 const { merge } = require('../common/util')
 const { darwin } = require('../common/os')
 
 const defaults = {
   debug: ARGS.debug,
   dup: 'prompt',
+  filename: {
+    item: DC.TITLE,
+    photo: DC.TITLE,
+    force: false
+  },
   layout: ITEM.LAYOUT.STACKED,
   locale: ARGS.locale,
   localtime: true,
