@@ -102,6 +102,9 @@ en:
         item: Item
         photo: Photo
         selection: Selection
+      title:
+        label: Save file name as
+        force: Overwrite embedded photo metadata
       debug: Enable Developer Mode
       localtime: Assume photo metadata use local timezone
       dup:

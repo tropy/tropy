@@ -10,7 +10,7 @@ const { warn, verbose } = require('../common/log')
 const { prompt } = require('../dialog')
 const { Image } = require('../image')
 const { DC, TERMS } = require('../constants')
-const { date } = require('../value')
+const { date, text } = require('../value')
 
 const {
   getTemplateValues,
@@ -44,11 +44,11 @@ class ImportCommand extends Command {
       ...pick(image.data, props)
     }
 
-    let title = prefs.filename[type]
+    let title = prefs.title[type]
 
     if (title != null) {
-      if (prefs.filename.force || !(title in data)) {
-        data[title] = image.title
+      if (prefs.title.force || !(title in data)) {
+        data[title] = text(image.title)
       }
     }
 

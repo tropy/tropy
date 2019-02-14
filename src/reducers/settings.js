@@ -7,11 +7,6 @@ const { darwin } = require('../common/os')
 const defaults = {
   debug: ARGS.debug,
   dup: 'prompt',
-  filename: {
-    item: DC.TITLE,
-    photo: DC.TITLE,
-    force: false
-  },
   layout: ITEM.LAYOUT.STACKED,
   locale: ARGS.locale,
   localtime: true,
@@ -21,6 +16,11 @@ const defaults = {
     selection: SELECTION.TEMPLATE.DEFAULT
   },
   theme: ARGS.theme,
+  title: {
+    item: DC.title,
+    photo: DC.title,
+    force: false
+  },
   overlayToolbars: ARGS.frameless,
   invertScroll: true,
   invertZoom: darwin,

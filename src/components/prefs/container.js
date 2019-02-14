@@ -14,6 +14,7 @@ const { win } = require('../../window')
 
 const {
   getAllTemplatesByType,
+  getPropertyList,
   getVocabs
 } = require('../../selectors')
 
@@ -85,6 +86,7 @@ class PrefsContainer extends React.PureComponent {
             name="app"
             isActive={this.isActive('app')}>
             <AppPrefs
+              properties={this.props.properties}
               templates={this.props.templates}
               settings={this.props.settings}
               onSettingsUpdate={this.props.onSettingsUpdate}/>
@@ -127,6 +129,7 @@ class PrefsContainer extends React.PureComponent {
     isFrameless: bool,
     templates: object.isRequired,
     pane: string.isRequired,
+    properties: array.isRequired,
     settings: object.isRequired,
     vocab: array.isRequired,
     plugins: object.isRequired,
@@ -157,6 +160,7 @@ module.exports = {
       keymap: state.keymap,
       pane: state.prefs.pane,
       project: state.project,
+      properties: getPropertyList(state),
       settings: state.settings,
       vocab: getVocabs(state)
     }),
