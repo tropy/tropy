@@ -14,8 +14,6 @@ const { assign } = Object
 const { warn, debug } = require('../common/log')
 const { get, pick } = require('../common/util')
 const MIME = require('../constants/mime')
-const { DC } = require('../constants/rdf')
-const { text, date } = require('../value')
 
 
 class Image {
@@ -97,8 +95,6 @@ class Image {
 
   get data() {
     return {
-      [DC.title]: text(this.title),
-      [DC.date]: date(this.date),
       ...this.xmp[this.page]
     }
   }

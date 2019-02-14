@@ -5,11 +5,62 @@ const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const mod = require('../models')
 const act = require('../actions')
+const { pick } = require('../common/util')
 const { warn, verbose } = require('../common/log')
 const { prompt } = require('../dialog')
+const { Image } = require('../image')
+const { DC, TERMS } = require('../constants')
+const { date } = require('../value')
+
+const {
+  getTemplateValues,
+  getTemplateProperties
+} = require('../selectors')
 
 
 class ImportCommand extends Command {
+  *openImage(...args) {
+    let image = yield call(Image.open, ...args)
+    let prefs = yield select(state => state.settings)
+    image.setTimezoneOffset(prefs.localtime)
+    return image
+  }
+
+  *getMetadata(image, templates) {
+    let data = {}
+    let prefs = yield select(state => state.settings)
+
+    for (let type in templates) {
+      data[type] = this.getImageMetadata(type, image, templates[type], prefs)
+    }
+
+    return data
+  }
+
+  getImageMetadata(type, image, template, prefs) {
+    let props = getTemplateProperties(template)
+    let data = {
+      ...getTemplateValues(template),
+      ...pick(image.data, props)
+    }
+
+    let title = prefs.filename[type]
+
+    if (title != null) {
+      if (prefs.filename.force || !(title in data)) {
+        data[title] = image.title
+      }
+    }
+
+    if (type === 'photo') {
+      if (!(DC.date in data || TERMS.date in data)) {
+        data[DC.date] = date(image.date)
+      }
+    }
+
+    return data
+  }
+
   *createThumbnails(id, image, {
     overwrite = true,
     quality = 100,

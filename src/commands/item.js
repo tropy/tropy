@@ -25,6 +25,7 @@ const {
   getGroupedItems,
   getItemTemplate,
   getPhotoTemplate,
+  getTemplateProperties,
   getTemplateValues,
 } = require('../selectors')
 
@@ -69,18 +70,16 @@ class Import extends ImportCommand {
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
-    let [base, localtime, itemp, ptemp] = yield select(state => [
+    let [base, ttp] = yield select(state => [
       state.project.base,
-      state.settings.localtime,
-      getItemTemplate(state),
-      getPhotoTemplate(state)
+      {
+        item: getItemTemplate(state),
+        photo: getPhotoTemplate(state)
+      }
     ])
 
-    let defaultItemData = getTemplateValues(itemp)
-    let defaultPhotoData = getTemplateValues(ptemp)
-
     for (let i = 0, total = files.length; i < total; ++i) {
-      let file, image, item
+      let file, image, item, data
       let photos = []
 
       try {
@@ -88,22 +87,17 @@ class Import extends ImportCommand {
 
         file = files[i]
 
-        image = yield call(Image.open, file)
-        image.setTimezoneOffset(localtime)
+        image = yield* this.openImage(file)
         yield* this.handleDuplicate(image)
+        data = yield* this.getMetadata(image, ttp)
 
         yield call(db.transaction, async tx => {
-          item = await mod.item.create(tx, itemp.id, {
-            ...pick(image.data, [
-              DC.title, DC.creator, DC.rights, DC.description
-            ]),
-            ...defaultItemData
-          })
+          item = await mod.item.create(tx, ttp.item.id, data.item)
 
           while (!image.done) {
             let photo = await mod.photo.create(tx,
-              { base, template: ptemp.id },
-              { item: item.id, image, data: defaultPhotoData })
+              { base, template: ttp.photo.id },
+              { item: item.id, image, data: data.photo })
 
             if (list) {
               await mod.list.items.add(tx, list, [item.id])

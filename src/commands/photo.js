@@ -13,7 +13,7 @@ const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
 const { warn } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
-const { getPhotoTemplate, getTemplateValues } = require('../selectors')
+const { getPhotoTemplate } = require('../selectors')
 const { keys, values } = Object
 
 
@@ -134,23 +134,22 @@ class Create extends ImportCommand {
 
     if (!files) return []
 
-    let [base, localtime, template] = yield select(state => [
+    let [base, prefs, template] = yield select(state => [
       state.project.base,
-      state.settings.localtime,
+      state.settings,
       getPhotoTemplate(state)
     ])
 
-    let data = getTemplateValues(template)
 
     for (let i = 0, total = files.length; i < files.length; ++i) {
-      let file, image
+      let file, image, data
 
       try {
         file = files[i]
 
-        image = yield call(Image.open, file)
-        image.setTimezoneOffset(localtime)
+        image = yield* this.openImage(file)
         yield* this.handleDuplicate(image)
+        data = this.getImageMetadata('photo', image, template, prefs)
 
         total += (image.numPages - 1)
 
