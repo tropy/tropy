@@ -13,12 +13,12 @@ const tiff = require('tiff')
 const { assign } = Object
 const { warn, debug } = require('../common/log')
 const { get, pick } = require('../common/util')
-const MIME = require('../constants/mime')
+const { EXIF, MIME } = require('../constants')
 
 
 class Image {
-  static open(path, page = 0) {
-    return (new Image(path)).open(page)
+  static open({ path, page = 0, useLocalTimezone = false }) {
+    return (new Image(path, useLocalTimezone)).open(page)
   }
 
   static async check({
@@ -35,7 +35,7 @@ class Image {
       status.hasChanged = (mtime > (consolidated || created))
 
       if (force || created == null || status.hasChanged) {
-        status.image = await Image.open(path, page)
+        status.image = await Image.open({ path, page })
         status.hasChanged = (status.image.checksum !== checksum)
       }
     } catch (error) {
@@ -51,9 +51,9 @@ class Image {
     return status
   }
 
-  constructor(path) {
+  constructor(path, useLocalTimezone = false) {
     this.path = path
-    this.tz = 0
+    this.tz = useLocalTimezone ? (new Date().getTimezoneOffset()) : 0
   }
 
   get ext() {
@@ -77,7 +77,7 @@ class Image {
 
   get orientation() {
     return Orientation(
-      get(this.exif, [this.page, 'Orientation'], 1)
+      get(this.exif, [this.page, EXIF.orientation, 'text'], 1)
     )
   }
 
@@ -95,19 +95,15 @@ class Image {
 
   get data() {
     return {
-      ...this.xmp[this.page]
+      ...this.exif[this.page],
+      ...this.xmp[this.page],
     }
   }
 
   get date() {
     try {
-      let time = get(this.exif, [this.page, 'DateTimeOriginal'])
-      let offset = get(this.exif, [this.page, 'TimezoneOffset'], this.tz)
-
-      if (time != null && offset) {
-        time = new Date(time)
-        time.setUTCMinutes(time.getUTCMinutes() + offset)
-      }
+      let time = get(this.exif, [this.page, EXIF.dateTimeOriginal, 'text']) ||
+        get(this.exif, [this.page, EXIF.modifyDate, 'text'])
 
       // Temporarily return as string until we add value types.
       return (time || this.file.ctime).toISOString()
@@ -205,7 +201,7 @@ class Image {
             ])
 
             .then(([file, ...meta]) => assign(this, {
-              exif: meta.map(m => exif(m.exif)),
+              exif: meta.map(m => exif(m.exif, { timezoneOffset: this.tz })),
               file,
               meta,
               xmp: meta.map(m => xmp(m.xmp))
@@ -233,10 +229,6 @@ class Image {
     }
 
     return image
-  }
-
-  setTimezoneOffset(local) {
-    this.tz = local ? (new Date().getTimezoneOffset()) : 0
   }
 
   toJSON() {

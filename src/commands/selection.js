@@ -29,7 +29,7 @@ class Create extends ImportCommand {
       getSelectionTemplate(state)
     ]))
 
-    let image = yield call(Image.open, photo.path, photo.page)
+    let image = yield call(Image.open, photo)
     let idx = (meta.idx != null) ? meta.idx : [photo.selections.length]
 
     let data = getTemplateValues(template)

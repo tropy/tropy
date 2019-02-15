@@ -52,7 +52,7 @@ class Consolidate extends ImportCommand {
 
               image = (blank(paths)) ?
                 null :
-                yield call(Image.open, paths[0], photo.page)
+                yield call(Image.open, { path: paths[0], page: photo.page })
             }
           }
 
@@ -240,7 +240,7 @@ class Duplicate extends ImportCommand {
       const { template, path, page } = originals[i]
 
       try {
-        let image = yield call(Image.open, path, page)
+        let image = yield call(Image.open, { path, page })
 
         let photo = yield call(db.transaction, tx =>
           mod.photo.create(tx, { base, template }, {

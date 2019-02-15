@@ -19,10 +19,9 @@ const {
 
 
 class ImportCommand extends Command {
-  *openImage(...args) {
-    let image = yield call(Image.open, ...args)
-    let prefs = yield select(state => state.settings)
-    image.setTimezoneOffset(prefs.localtime)
+  *openImage(path) {
+    let useLocalTimezone = yield select(state => state.settings.localtime)
+    let image = yield call(Image.open, { path, useLocalTimezone })
     return image
   }
 
