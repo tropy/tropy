@@ -209,7 +209,7 @@ class FormSelect extends PureComponent {
           isRequired={this.props.isRequired}
           isSelectionHidden={this.props.isSelectionHidden}
           name={this.props.name}
-          onChange={this.handleChange}
+          onChange={this.props.onChange}
           options={this.props.options}
           placeholder={this.props.placeholder}
           tabIndex={this.props.tabIndex}
