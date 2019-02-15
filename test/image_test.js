@@ -27,8 +27,11 @@ describe('Image', () => {
     })
 
     it('computes exif data', () => {
-      expect(image.exif[0])
-        .to.contain.keys(['Orientation', 'DateTimeOriginal'])
+      console.log(Object.keys(image.exif[0]))
+      expect(image.exif[0]).to.contain.keys([
+        'http://www.w3.org/2003/12/exif/ns#orientation',
+        'http://www.w3.org/2003/12/exif/ns#modifyDate'
+      ])
     })
 
     it('computes file stats', () => {
