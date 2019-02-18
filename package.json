@@ -88,7 +88,7 @@
     "decompress": "^4.2.0",
     "desktop-idle": "^1.1.2",
     "edtf": "^2.5.0",
-    "exif-reader": "github:inukshuk/exif-reader#patched",
+    "exif.js": "github:inukshuk/exif-reader#master",
     "generic-pool": "^3.6.1",
     "js-yaml": "^3.12.1",
     "jsonld": "^1.5.1",

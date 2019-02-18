@@ -201,7 +201,7 @@ class Image {
             ])
 
             .then(([file, ...meta]) => assign(this, {
-              exif: meta.map(m => exif(m.exif, { timezoneOffset: this.tz })),
+              exif: meta.map(m => exif(m.exif, { timezone: this.tz })),
               file,
               meta,
               xmp: meta.map(m => xmp(m.xmp))
