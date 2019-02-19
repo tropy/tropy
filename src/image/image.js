@@ -103,7 +103,7 @@ class Image {
   get date() {
     try {
       let time = get(this.exif, [this.page, EXIF.dateTimeOriginal, 'text']) ||
-        get(this.exif, [this.page, EXIF.modifyDate, 'text'])
+        get(this.exif, [this.page, EXIF.dateTime, 'text'])
 
       // Temporarily return as string until we add value types.
       return (time || this.file.ctime).toISOString()

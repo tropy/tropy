@@ -52,10 +52,9 @@ module.exports = {
   },
 
   EXIF: {
-    ns: 'http://www.w3.org/2003/12/exif/ns#',
-    orientation: 'http://www.w3.org/2003/12/exif/ns#orientation',
+    dateTime: 'http://www.w3.org/2003/12/exif/ns#dateTime',
     dateTimeOriginal: 'http://www.w3.org/2003/12/exif/ns#dateTimeOriginal',
-    modifyDate: 'http://www.w3.org/2003/12/exif/ns#modifyDate'
+    orientation: 'http://www.w3.org/2003/12/exif/ns#orientation'
   },
 
   SKOS: {

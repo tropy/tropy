@@ -1,6 +1,6 @@
 'use strict'
 
-const exif = require('exif.js')
+const exif = require('@inukshuk/exif')
 const { debug, warn } = require('../common/log')
 const { blank } = require('../common/util')
 const { text, date } = require('../value')

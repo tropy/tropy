@@ -30,7 +30,7 @@ describe('Image', () => {
       expect(image.exif[0]).to.contain.keys([
         'http://www.w3.org/2003/12/exif/ns#orientation',
         'http://www.w3.org/2003/12/exif/ns#dateTimeOriginal',
-        'http://www.w3.org/2003/12/exif/ns#modifyDate'
+        'http://www.w3.org/2003/12/exif/ns#dateTime'
       ])
     })
 
