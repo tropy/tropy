@@ -135,7 +135,7 @@ class Select extends React.Component {
     if (this.state.canClearValue) {
       if (value != null) this.props.onRemove(this.props.toId(value))
       else this.props.onClear()
-      this.props.onChange(null, !this.state.isBlank)
+      this.handleChange(null, !this.state.isBlank)
       this.close()
     }
   }
@@ -150,7 +150,7 @@ class Select extends React.Component {
     if (this.state.isBlank) return this.open()
     let value = last(this.state.values)
     if (value == null || value.id == null) return this.open()
-    this.props.onChange(value, false)
+    this.handleChange(value, false)
   }
 
   delegate(cmd, ...args) {
@@ -175,6 +175,14 @@ class Select extends React.Component {
     this.props.onBlur(event)
     this.close()
   }
+
+  handleChange = (value, hasChanged) => {
+    if (this.props.name != null) {
+      value = { [this.props.name]: value }
+    }
+    this.props.onChange(value, hasChanged)
+  }
+
 
   handleContextMenu = (event) => {
     if (this.state.isOpen) {
@@ -254,10 +262,10 @@ class Select extends React.Component {
       let id = this.props.toId(value)
       if (this.state.values.includes(value)) {
         if (this.state.canClearValue) this.props.onRemove(id)
-        this.props.onChange(value, false)
+        this.handleChange(value, false)
       } else {
         this.props.onInsert(id)
-        this.props.onChange(value, true)
+        this.handleChange(value, true)
       }
       this.close()
     }
@@ -400,6 +408,7 @@ class Select extends React.Component {
     isStatic: bool,
     isSelectionHidden: bool,
     isValueHidden: bool,
+    name: string,
     match: func,
     maxRows: number,
     minFilterOptions: number.isRequired,

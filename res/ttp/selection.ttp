@@ -2,7 +2,7 @@
   "@context": "https://tropy.org/v1/contexts/template.jsonld",
   "@id": "https://tropy.org/v1/templates/selection",
   "@type": "https://tropy.org/v1/tropy#Template",
-  "name": "Tropy Photo Selection",
+  "name": "Tropy Selection",
   "version": "1.0.0",
   "type": "https://tropy.org/v1/tropy#Selection",
   "domain": [

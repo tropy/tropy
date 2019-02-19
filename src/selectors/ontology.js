@@ -153,9 +153,11 @@ const getTemplateValues = (template) =>
     if (!blank(field.value)) {
       acc[field.property] = value(field.value, field.datatype)
     }
-
     return acc
   }, {})
+
+const getTemplateProperties = (template) =>
+  template.fields.map(field => field.property)
 
 const getTemplateDefaultValues = memo(
   ({ ontology }, { template }) => ontology.template[template],
@@ -206,6 +208,7 @@ module.exports = {
   getTemplateField,
   getTemplateFields,
   getTemplateList,
+  getTemplateProperties,
   getTemplateValues,
   getVocabs
 }

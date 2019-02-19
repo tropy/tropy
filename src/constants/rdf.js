@@ -51,6 +51,13 @@ module.exports = {
     title: 'http://purl.org/dc/terms/title'
   },
 
+  EXIF: {
+    ns: 'http://www.w3.org/2003/12/exif/ns#',
+    orientation: 'http://www.w3.org/2003/12/exif/ns#orientation',
+    dateTimeOriginal: 'http://www.w3.org/2003/12/exif/ns#dateTimeOriginal',
+    modifyDate: 'http://www.w3.org/2003/12/exif/ns#modifyDate'
+  },
+
   SKOS: {
     definition: 'http://www.w3.org/2004/02/skos/core#definition'
   },

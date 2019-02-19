@@ -1,7 +1,6 @@
 'use strict'
 
 const { empty, list } = require('../common/util')
-const { TEMPLATE } = require('../constants/selection')
 const { all } = require('bluebird')
 const { assign } = Object
 
@@ -76,7 +75,7 @@ const mod = {
       }) {
       const { id } = await db.run(`
         INSERT INTO subjects (template) VALUES (?)`,
-        template || TEMPLATE.DEFAULT)
+        template)
 
       await db.run(`
         INSERT INTO images (id, width, height, angle, mirror)
