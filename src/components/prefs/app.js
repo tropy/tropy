@@ -109,7 +109,9 @@ class AppPrefs extends React.PureComponent {
             name="localtime"
             value={this.props.settings.localtime}
             onChange={this.handleLocalTimeChange}/>
-          <FormElement id="prefs.app.title.label">
+          <FormElement
+            id="prefs.app.title.label"
+            isCompact>
             <ResourceSelect
               icon={<IconItemSmall/>}
               options={this.props.properties}
