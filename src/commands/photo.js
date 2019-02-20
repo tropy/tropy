@@ -35,7 +35,8 @@ class Consolidate extends ImportCommand {
       let photo = photos[i]
 
       try {
-        let { image, hasChanged, error } = yield this.checkPhoto(photo, meta.force)
+        let { image, hasChanged, error } =
+          yield this.checkPhoto(photo, meta.force)
 
         if (meta.force || hasChanged) {
           if (error != null) {
