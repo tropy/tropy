@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1902202156;
+PRAGMA user_version=1902202219;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -31,16 +31,24 @@ CREATE TABLE vocabularies (
   CHECK (vocabulary_id != '' AND prefix != ''),
   UNIQUE (prefix)
 );
-INSERT INTO vocabularies VALUES('https://tropy.org/v1/tropy#','tropy','2019-02-20 21:10:21',NULL,1,'Tropy Vocabulary','The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates.',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/2001/XMLSchema#','xsd','2019-02-20 21:10:21',NULL,1,'XML Schema Definition Language (XSD) Datatypes','XML Schema: Datatypes is part 2 of the specification of the XML Schema language. It defines facilities for defining datatypes to be used in XML Schemas as well as other XML specifications. The datatype language, which is itself represented in XML, provides a superset of the capabilities found in XML document type definitions (DTDs) for specifying datatypes on elements and attributes.',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://purl.org/dc/elements/1.1/','dc','2019-02-20 21:10:21',NULL,1,'Dublin Core Metadata Element Set',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://purl.org/dc/terms/','dcterms','2019-02-20 21:10:21',NULL,1,'DCMI Metadata Terms',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/1999/02/22-rdf-syntax-ns#','rdf','2019-02-20 21:10:21',NULL,1,'RDF Concepts Vocabulary (RDF)','This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/2000/01/rdf-schema#','rdfs','2019-02-20 21:10:21',NULL,1,'RDF Schema Vocabulary (RDFS)',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.openarchives.org/ore/terms/','ore','2019-02-20 21:10:21',NULL,1,'OAI ORE Terms Vocabulary','The set of terms provided by the OAI ORE initiative',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.europeana.eu/schemas/edm/','edm','2019-02-20 21:10:22',NULL,1,'Europeana Data Model (EDM) Vocabulary','The Europeana Data Model (EDM) is aimed at being an integration medium for collecting, connecting and enriching the descriptions provided by Europeana data providers. The RDF vocabulary for http://www.europeana.eu/schemas/edm/ defines the elements introduced by EDM (as opposed to the ones EDM re-uses from other namespaces).',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/2003/12/exif/ns#','exif','2019-02-20 21:10:22',NULL,1,'Exif Vocabulary','Vocabulary to describe an Exif format picture data. All Exif 2.2 tags are defined as RDF properties, as well as several terms to help this schema.',NULL,NULL);
+INSERT INTO vocabularies VALUES('https://tropy.org/v1/tropy#','tropy','2019-02-20 21:40:45',NULL,1,'Tropy Vocabulary','The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/2001/XMLSchema#','xsd','2019-02-20 21:40:45',NULL,1,'XML Schema Definition Language (XSD) Datatypes','XML Schema: Datatypes is part 2 of the specification of the XML Schema language. It defines facilities for defining datatypes to be used in XML Schemas as well as other XML specifications. The datatype language, which is itself represented in XML, provides a superset of the capabilities found in XML document type definitions (DTDs) for specifying datatypes on elements and attributes.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://purl.org/dc/elements/1.1/','dc','2019-02-20 21:40:45',NULL,1,'Dublin Core Metadata Element Set',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://purl.org/dc/terms/','dcterms','2019-02-20 21:40:45',NULL,1,'DCMI Metadata Terms',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/1999/02/22-rdf-syntax-ns#','rdf','2019-02-20 21:40:45',NULL,1,'RDF Concepts Vocabulary (RDF)','This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/2000/01/rdf-schema#','rdfs','2019-02-20 21:40:45',NULL,1,'RDF Schema Vocabulary (RDFS)',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.openarchives.org/ore/terms/','ore','2019-02-20 21:40:45',NULL,1,'OAI ORE Terms Vocabulary','The set of terms provided by the OAI ORE initiative',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.europeana.eu/schemas/edm/','edm','2019-02-20 21:40:45',NULL,1,'Europeana Data Model (EDM) Vocabulary','The Europeana Data Model (EDM) is aimed at being an integration medium for collecting, connecting and enriching the descriptions provided by Europeana data providers. The RDF vocabulary for http://www.europeana.eu/schemas/edm/ defines the elements introduced by EDM (as opposed to the ones EDM re-uses from other namespaces).',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/2003/12/exif/ns#','exif','2019-02-20 21:40:45',NULL,1,'Exif Vocabulary','Vocabulary to describe an Exif format picture data. All Exif 2.2 tags are defined as RDF properties, as well as several terms to help this schema.',NULL,NULL);
 INSERT INTO vocabularies VALUES('http://www.w3.org/2004/02/skos/core#','skos','2019-02-20 20:51:13',NULL,1,'SKOS Vocabulary','An RDF vocabulary for describing the basic structure and content of concept schemes such as thesauri, classification schemes, subject heading lists, taxonomies, ''folksonomies'', other types of controlled vocabulary, and also concept schemes embedded in glossaries and terminologies.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://ns.adobe.com/xap/1.0/','xmp','2019-02-20 21:40:45',NULL,1,'XMP Vocabulary','The Extensible Metadata Platform (XMP) basic namespace contains properties that provide basic descriptive information.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://ns.adobe.com/xap/1.0/rights/','xmpRights','2019-02-20 21:40:45',NULL,1,'XMP Rights Management','The  XMP  Rights  Management  namespace  contains  properties  that  provide  information  regarding  the  legalrestrictions associated with a resource.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://ns.adobe.com/xap/1.0/mm/','xmpMM','2019-02-20 21:40:45',NULL,1,'XMP Media Management','The  XMP  Media  Management  namespace  contains  properties  that  provide  information  regarding  theidentification, composition, and history of a resource.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://ns.adobe.com/xmp/identifier/qual/1.0/','xmpidq','2019-02-20 21:40:45',NULL,1,'XMP xmpidq','The xmpidq namespace contains a single qualifier that defines the scheme used in the xmp:Identifier array.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://ns.adobe.com/photoshop/1.0/','photoshop','2019-02-20 21:40:45',NULL,1,'Photoshop Vocabulary','This namespace specifies properties used by Adobe Photoshop.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/','Ipct4xmpCore','2019-02-20 21:40:45',NULL,1,'IPTC Core Vocabulary','IPTC Photo Metadata provides data about photographs and the values can be processed by software. Each individual metadata entity is called a property and they are grouped into Administrative, Descriptive and Rights-related properties. The IPTC Core schema which is built from properties of the IPTC “Information Interchange Model” (IIM) standard.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/','Iptc4xmpExt','2019-02-20 21:40:45',NULL,1,'IPTC Extension Vocabulary','The IPTC Extension schema defines the semantics of a set of metadata properties and their technical expressions by the XMP format.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://ns.useplus.org/ldf/xmp/1.0/','plus','2019-02-20 21:40:45',NULL,1,'PLUS Vocabulary','Picture Licensing Universal System',NULL,NULL);
 CREATE TABLE properties (
   property_id     TEXT NOT NULL PRIMARY KEY,
   vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
@@ -405,6 +413,82 @@ INSERT INTO properties VALUES('http://www.w3.org/2003/12/exif/ns#fNumber','http:
 INSERT INTO properties VALUES('http://www.w3.org/2003/12/exif/ns#componentsConfiguration','http://www.w3.org/2003/12/exif/ns#',NULL,NULL,NULL,NULL,'Information specific to compressed data. The channels of each component are arranged in order from the 1st component to the 4th. For uncompressed data the data arrangement is given in the PhotometricInterpretation tag. However, since PhotometricInterpretation can only express the order of Y,Cb and Cr, this tag is provided for cases when compressed data uses components other than Y, Cb, and Cr and to enable support of other sequences.');
 INSERT INTO properties VALUES('http://www.w3.org/2003/12/exif/ns#exposureBiasValue','http://www.w3.org/2003/12/exif/ns#',NULL,NULL,NULL,NULL,'The exposure bias. The unit is the APEX value. Ordinarily it is given in the range of -99.99 to 99.99.');
 INSERT INTO properties VALUES('http://www.w3.org/2003/12/exif/ns#interoperabilityVersion','http://www.w3.org/2003/12/exif/ns#',NULL,NULL,NULL,NULL,'Interoperability Version');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/CreateDate','http://ns.adobe.com/xap/1.0/',NULL,NULL,NULL,NULL,'The date and time the resource was created. For a digital file, this need not match a file-system creation time. For a freshly created resource, it should be close to that time, modulo the time taken to write the file. Later file transfer, copying, and so on, can make the file-system time arbitrarily different.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/CreatorTool','http://ns.adobe.com/xap/1.0/',NULL,NULL,NULL,NULL,'The name of the first known tool used to create the resource.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/Identifier','http://ns.adobe.com/xap/1.0/',NULL,NULL,NULL,NULL,'An unordered array of text strings that unambiguously identify the resource within a given context. An array item may be qualified with xmpidq:Scheme (see 8.7, “xmpidq namespace”) to denote the formal identification system to which that identifier conforms. The xmp:Identifier property was added because dc:identifier has been defined in the original XMP specification as a single identifier instead of as an array, and changing dc:identifier to an array would break compatibility with existing XMP processors.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/Label','http://ns.adobe.com/xap/1.0/',NULL,NULL,NULL,NULL,'A word or short phrase that identifies a resource as a member of a user-defined collection. One anticipated usage is to organize resources in a file browser.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/MetadataDate','http://ns.adobe.com/xap/1.0/',NULL,NULL,NULL,NULL,'The date and time that any metadata for this resource was last changed. It should be the same as or more recent than xmp:ModifyDate. ');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/ModifyDate','http://ns.adobe.com/xap/1.0/',NULL,NULL,NULL,NULL,'The date and time the resource was last modified. The value of this property is not necessarily the same as the file’s system modification date because it is typically set before the file is saved.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/Rating','http://ns.adobe.com/xap/1.0/',NULL,NULL,NULL,NULL,'A user-assigned rating for this file. The value shall be -1 or in the range [0..5], where -1 indicates “rejected” and 0 indicates “unrated”. If xmp:Ratingis not present, a value of 0 should be assumed. Anticipated usage is for a typical “star rating” UI, with the addition of a notion of rejection.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/rights/','http://ns.adobe.com/xap/1.0/rights/',NULL,NULL,NULL,'The  XMP  Rights  Management  namespace  contains  properties  that  provide  information  regarding  the  legalrestrictions associated with a resource.','When true, indicates that this is a rights-managed resource. When false, indicates that this is a public-domain resource. Omit if the state is unknown.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/rights/Certificate','http://ns.adobe.com/xap/1.0/rights/',NULL,NULL,NULL,NULL,'A Web URL for a rights management certificate.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/rights/Owner','http://ns.adobe.com/xap/1.0/rights/',NULL,NULL,NULL,NULL,'A list of legal owners of the resource.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/rights/UsageTerms','http://ns.adobe.com/xap/1.0/rights/',NULL,NULL,NULL,NULL,'A collection of text instructions on how a resource can be legally used, given in a variety of languages.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/rights/WebStatement','http://ns.adobe.com/xap/1.0/rights/',NULL,NULL,NULL,NULL,'A Web URL for a statement of the ownership and usage rights for this resource.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/mm/DerivedFrom','http://ns.adobe.com/xap/1.0/mm/',NULL,NULL,NULL,NULL,'A reference to the resource from which this one is derived. This should be a minimal reference, in which missing components can be assumed to be unchanged. See definitions of rendition (3.7) and version (3.9).');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/mm/DocumentID','http://ns.adobe.com/xap/1.0/mm/',NULL,NULL,NULL,NULL,'The common identifier for all versions and renditions of a resource.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/mm/InstanceID','http://ns.adobe.com/xap/1.0/mm/',NULL,NULL,NULL,NULL,'An identifier for a specific incarnation of a resource, updated each time a file is saved. ');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/mm/OriginalDocumentID','http://ns.adobe.com/xap/1.0/mm/',NULL,NULL,NULL,NULL,'The common identifier for the original resource from which the current resource is derived. For example, if you save a resource to a different format, then save that one to another format, each save operation should generate a new xmpMM:DocumentID that uniquely identifies the resource in that format, but should retain the ID of the source file here.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/mm/RenditionClass','http://ns.adobe.com/xap/1.0/mm/',NULL,NULL,NULL,NULL,'The rendition class name for this resource. This property should be absent or set to default for a resource that is not a derived rendition.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xap/1.0/mm/RenditionParams','http://ns.adobe.com/xap/1.0/mm/',NULL,NULL,NULL,NULL,'Can be used to provide additional rendition parameters that are too complex or verbose to encode in xmpMM:RenditionClass.');
+INSERT INTO properties VALUES('http://ns.adobe.com/xmp/identifier/qual/1.0/Scheme','http://ns.adobe.com/xmp/identifier/qual/1.0/',NULL,NULL,NULL,NULL,'A qualifier providing the name of the formal identification scheme used for an item in the xmp:Identifier array.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/AncestorID','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'The unique identifier of a document.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/LayerName','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'The identifying name of the text layer.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/LayerText','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'The text content of the text layer.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/AuthorsPosition','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'By-line title.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/CaptionWriter','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'Writer/editor.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/Category','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'Category. Limited to 3-7 ASCII characters.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/City','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'City.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/ColorMode','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'The colour mode. One of: 0 = Bitmap1 = Gray scale2 = Indexed colour3 = RGB colour4 = CMYK colour7 = Multi-channel8 = Duotone9 = LAB colour.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/Country','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'Country/primary location.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/Credit','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'Credit.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/DateCreated','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'The date the intellectual content of the document was created, rather than the creation date of the physical representation.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/DocumentAncestors','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'If the source document for a copy-and-paste or place operation has a document ID, that ID is added to this list in the destination document''s XMP.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/Headline','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'Headline.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/History','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'The history that appears in the FileInfo panel, if activated in the application preferences.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/ICCProfile','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'The colour profile, such as AppleRGB, AdobeRGB1998.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/Instructions','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'Special instructions.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/Source','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'Source.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/State','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'Province/state.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/SupplementalCategories','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'Sopplemental Category.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/TextLayers','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'If a document has text layers, this property caches the text for each layer.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/TransmissionReference','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'Original transmission reference.');
+INSERT INTO properties VALUES('http://ns.adobe.com/photoshop/1.0/Urgency','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,NULL,NULL,'Urgency. Valid range is 1-8.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/IntellectualGenre','http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/',NULL,NULL,NULL,NULL,'Describes the nature, intellectual, artistic or journalistic characteristic of an image.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/Scene','http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/',NULL,NULL,NULL,NULL,'Describes the scene of a photo content. Specifies one ore more terms from the IPTC "Scene-NewsCodes". Each Scene is represented as a string of 6 digits in an unordered list.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/SubjectCode','http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/',NULL,NULL,NULL,NULL,'Specifies one or more Subjects from the IPTC Subject-NewsCodes taxonomy to categorise the image. Each Subject is represented as a string of 8 digits in an unordered list.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/CreatorContactInfo','http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/',NULL,NULL,NULL,NULL,'The creator’s contact information provides all necessary information to get in contact with the creator of this image and comprises a set of sub-properties for proper addressing.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/AddlModelInfo','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'Information about the ethnicity and other facets of the model(s) in a model-released image.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/ArtworkOrObject','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'A set of metadata about artwork or an object in the image.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/OrganisationInImageCode','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'Code from a controlled vocabulary for identifying the organisation or company which is featured in the image.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/OrganisationInImageName','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'Name of the organisation or company which is featured in the image.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/AboutCvTerm','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'One or more topics, themes or entities the content is about, each one expressed by a term from a Controlled Vocabulary.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/Genre','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'Artistic, style, journalistic, product or other genre(s) of the image (expressed by a term from any Controlled Vocabulary).');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/LocationShown','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'A location shown in the image.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/ModelAge','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'Age of the human model(s) at the time this image was taken in a model released image.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/PersonInImage','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'Name of a person shown in the image.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/PersonInImageWDetails','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'Details about a person the content is about.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/ProductInImage','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'A product the content is about.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/DigImageGUID','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'Globally unique identifier for this digital image. It is created and applied by the creator of the digital image at the time of its creation . This value shall not be changed after that time.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/DigitalSourceType','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'The type of the source of this digital image.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/Event','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'Names or describes the specific event at which the photo was taken.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/RegistryId','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'Both a Registry Item Id and a Registry Organisation Id to record any registration of this digital image with a registry.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/LocationCreated','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'The location the photo was taken.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/MaxAvailHeight','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'The maximum available height in pixels of the original photo from which this photo has been derived by downsizing.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/MaxAvailWidth','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'The maximum available width in pixels of the original photo from which this photo has been derived by downsizing.');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/EmbdEncRightsExpr','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'An embedded rights expression using any rights expression language');
+INSERT INTO properties VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/LinkedEncRightsExpr','http://iptc.org/std/Iptc4xmpExt/2008-02-29/',NULL,NULL,NULL,NULL,'A linked rights expression using any rights expression language.');
+INSERT INTO properties VALUES('http://ns.useplus.org/ldf/xmp/1.0/ImageSupplier','http://ns.useplus.org/ldf/xmp/1.0/',NULL,NULL,NULL,NULL,'Identifies the most recent supplier of the image, who is not necessarily its owner or creator.');
+INSERT INTO properties VALUES('http://ns.useplus.org/ldf/xmp/1.0/ImageSupplierImageID','http://ns.useplus.org/ldf/xmp/1.0/',NULL,NULL,NULL,NULL,'Optional identifier assigned by the Image Supplier to the image.');
+INSERT INTO properties VALUES('http://ns.useplus.org/ldf/xmp/1.0/Version','http://ns.useplus.org/ldf/xmp/1.0/',NULL,NULL,NULL,NULL,'The version number of the PLUS standards in place at the time of the transaction.');
+INSERT INTO properties VALUES('http://ns.useplus.org/ldf/xmp/1.0/CopyrightOwner','http://ns.useplus.org/ldf/xmp/1.0/',NULL,NULL,NULL,NULL,'Owner or owners of the copyright in the licensed image.');
+INSERT INTO properties VALUES('http://ns.useplus.org/ldf/xmp/1.0/ImageCreator','http://ns.useplus.org/ldf/xmp/1.0/',NULL,NULL,NULL,NULL,'Creator or creators of the image');
+INSERT INTO properties VALUES('http://ns.useplus.org/ldf/xmp/1.0/Licensor','http://ns.useplus.org/ldf/xmp/1.0/',NULL,NULL,NULL,NULL,'A person or company that should be contacted to obtain a licence for using the item or who has licensed the item.');
+INSERT INTO properties VALUES('http://ns.useplus.org/ldf/xmp/1.0/MinorModelAgeDisclosure','http://ns.useplus.org/ldf/xmp/1.0/',NULL,NULL,NULL,NULL,'Age of the youngest model pictured in the image, at the time that the image was made.');
+INSERT INTO properties VALUES('http://ns.useplus.org/ldf/xmp/1.0/ModelReleaseID','http://ns.useplus.org/ldf/xmp/1.0/',NULL,NULL,NULL,NULL,'Optional identifier associated with each Model Release.');
+INSERT INTO properties VALUES('http://ns.useplus.org/ldf/xmp/1.0/ModelReleaseStatus','http://ns.useplus.org/ldf/xmp/1.0/',NULL,NULL,NULL,NULL,'Summarises the availability and scope of model releases authorising usage of the likenesses of persons appearing in the photograph.');
+INSERT INTO properties VALUES('http://ns.useplus.org/ldf/xmp/1.0/PropertyReleaseID','http://ns.useplus.org/ldf/xmp/1.0/',NULL,NULL,NULL,NULL,'Optional identifier associated with each Property Release.');
+INSERT INTO properties VALUES('http://ns.useplus.org/ldf/xmp/1.0/PropertyReleaseStatus','http://ns.useplus.org/ldf/xmp/1.0/',NULL,NULL,NULL,NULL,'Summarises the availability and scope of property releases authorising usage of the properties appearing in the photograph.');
 CREATE TABLE classes (
   class_id        TEXT NOT NULL PRIMARY KEY,
   vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
@@ -477,6 +561,8 @@ INSERT INTO classes VALUES('http://www.openarchives.org/ore/terms/Aggregation','
 INSERT INTO classes VALUES('http://www.openarchives.org/ore/terms/Proxy','http://www.openarchives.org/ore/terms/',NULL,NULL,NULL);
 INSERT INTO classes VALUES('http://www.w3.org/2004/02/skos/core#Concept','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL);
 INSERT INTO classes VALUES('http://www.w3.org/2003/12/exif/ns#IFD','http://www.w3.org/2003/12/exif/ns#',NULL,NULL,'An Image File Directory');
+INSERT INTO classes VALUES('http://ns.adobe.com/photoshop/1.0/Ancestor','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,'A structure identifying a document that was copied or placed into the current document.');
+INSERT INTO classes VALUES('http://ns.adobe.com/photoshop/1.0/Layer','http://ns.adobe.com/photoshop/1.0/',NULL,NULL,'A structure associating an identifying name and text content with a text layer of a Photoshop document.');
 CREATE TABLE datatypes (
   datatype_id     TEXT NOT NULL PRIMARY KEY,
   vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
@@ -548,6 +634,84 @@ CREATE TABLE labels (
   CHECK (id != '' AND label != ''),
   CHECK (language != '' AND language = trim(lower(language)))
 ) WITHOUT ROWID;
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/CreatorContactInfo','en','Creator''s Contact Info');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/IntellectualGenre','en','Intellectual Genre');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/Scene','en','Scene Code');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/SubjectCode','en','Subject Code');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/AboutCvTerm','en','CV-Term About Image');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/AddlModelInfo','en','Additional Model Information');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/ArtworkOrObject','en','Artwork or Object in the Image');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/DigImageGUID','en','Digital Image GUID');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/DigitalSourceType','en','Digital Source Type');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/EmbdEncRightsExpr','en','Embedded Encoded Rights Expression');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/Event','en','Event');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/Genre','en','Genre');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/LinkedEncRightsExpr','en','Linked Encoded Rights Expression');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/LocationCreated','en','Location created');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/LocationShown','en','Location Shown in the Image');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/MaxAvailHeight','en','Max Avail Height');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/MaxAvailWidth','en','Max Avail Width');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/ModelAge','en','Model Age');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/OrganisationInImageCode','en','Code of Organisation Featured in the Image');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/OrganisationInImageName','en','Name of Organisation Featured in the Image');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/PersonInImage','en','Person Shown in the Image');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/PersonInImageWDetails','en','Person Shown in the Image with Details');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/ProductInImage','en','Product Shown in the Image');
+INSERT INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/RegistryId','en','Image Registry Entry');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Ancestor','en','Ancestor');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/AncestorID','en','Ancestor ID');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/AuthorsPosition','en','Author''s Position');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/CaptionWriter','en','Caption Writer');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Category','en','Category');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/City','en','City');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/ColorMode','en','Color Mode');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Country','en','Country');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Credit','en','Credit');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/DateCreated','en','Date Created');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/DocumentAncestors','en','Document Ancestors');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Headline','en','Headline');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/History','en','History');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/ICCProfile','en','ICC Profile');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Instructions','en','Instructions');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Layer','en','Layer');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/LayerName','en','Layer Name');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/LayerText','en','Layer Text');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Source','en','Source');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/State','en','State');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/SupplementalCategories','en','Supplemental Categories');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/TextLayers','en','Text Layers');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/TransmissionReference','en','Transmission Reference');
+INSERT INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Urgency','en','Urgency');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/CreateDate','en','Create Date');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/CreatorTool','en','Creator Tool');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/Identifier','en','Identifier');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/Label','en','Label');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/MetadataDate','en','Metadata Date');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/ModifyDate','en','Modify Date');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/Rating','en','Rating');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/DerivedFrom','en','Derived From');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/DocumentID','en','Document ID');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/InstanceID','en','Instance ID');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/OriginalDocumentID','en','Original Document ID');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/RenditionClass','en','Rendition Class');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/RenditionParams','en','Rendition Parameters');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/','en','Marked');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/Certificate','en','Certificate');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/Owner','en','Owner');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/UsageTerms','en','Usage Terms');
+INSERT INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/WebStatement','en','Web Statement');
+INSERT INTO labels VALUES('http://ns.adobe.com/xmp/identifier/qual/1.0/Scheme','en','Scheme');
+INSERT INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/CopyrightOwner','en','Copyright Owner');
+INSERT INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/ImageCreator','en','Image Creator');
+INSERT INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/ImageSupplier','en','Image Supplier');
+INSERT INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/ImageSupplierImageID','en','Image Supplier Image ID');
+INSERT INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/Licensor','en','Licensor');
+INSERT INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/MinorModelAgeDisclosure','en','Minor Model Age Disclosure');
+INSERT INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/ModelReleaseID','en','Model Release Id');
+INSERT INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/ModelReleaseStatus','en','Model Release Status');
+INSERT INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/PropertyReleaseID','en','Property Release Id');
+INSERT INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/PropertyReleaseStatus','en','Property Release Status');
+INSERT INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/Version','en','PLUS Version');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/contributor','de','Mitwirkende/r');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/contributor','en','Contributor');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/contributor','fr','Collaborateur');
@@ -1285,11 +1449,11 @@ CREATE TABLE templates (
   ))
   CHECK (name != '')
 );
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#Item','Tropy Generic','General template to fit a generic archival object','RRCHNM',1,'2019-02-20 21:10:22','2019-02-20 21:10:22','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#Item','Tropy Correspondence','Template meant to focus on correspondence','RRCHNM',1,'2019-02-20 21:10:22','2019-02-20 21:10:22','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/dc','https://tropy.org/v1/tropy#Item','Dublin Core','Generic template based on the Dublic Core Metadata Element Set','RRCHNM',1,'2019-02-20 21:10:22','2019-02-20 21:10:22','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/photo','https://tropy.org/v1/tropy#Photo','Tropy Photo',NULL,NULL,1,'2019-02-20 21:10:22','2019-02-20 21:10:22','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/selection','https://tropy.org/v1/tropy#Selection','Tropy Selection',NULL,NULL,1,'2019-02-20 21:10:22','2019-02-20 21:10:22','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#Item','Tropy Generic','General template to fit a generic archival object','RRCHNM',1,'2019-02-20 21:40:45','2019-02-20 21:40:45','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#Item','Tropy Correspondence','Template meant to focus on correspondence','RRCHNM',1,'2019-02-20 21:40:45','2019-02-20 21:40:45','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/dc','https://tropy.org/v1/tropy#Item','Dublin Core','Generic template based on the Dublic Core Metadata Element Set','RRCHNM',1,'2019-02-20 21:40:45','2019-02-20 21:40:45','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/photo','https://tropy.org/v1/tropy#Photo','Tropy Photo',NULL,NULL,1,'2019-02-20 21:40:45','2019-02-20 21:40:45','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/selection','https://tropy.org/v1/tropy#Selection','Tropy Selection',NULL,NULL,1,'2019-02-20 21:40:45','2019-02-20 21:40:45','1.0.0');
 CREATE TABLE domains (
   domain_id     INTEGER   PRIMARY KEY,
   template_id   TEXT      NOT NULL REFERENCES templates ON DELETE CASCADE,
