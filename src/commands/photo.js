@@ -25,9 +25,8 @@ class Consolidate extends ImportCommand {
     let { payload, meta } = this.action
     let consolidated = []
 
-    let [project, settings, photos, selections] = yield select(state => [
+    let [project, photos, selections] = yield select(state => [
       state.project,
-      state.settings,
       blank(payload) ? values(state.photos) : pluck(state.photos, payload),
       state.selections
     ])
@@ -36,7 +35,7 @@ class Consolidate extends ImportCommand {
       let photo = photos[i]
 
       try {
-        let { image, hasChanged, error } = yield call(Image.check, photo, meta)
+        let { image, hasChanged, error } = yield this.checkPhoto(photo, meta.force)
 
         if (meta.force || hasChanged) {
           if (error != null) {
@@ -73,7 +72,6 @@ class Consolidate extends ImportCommand {
                 }
               }
 
-              image.setTimezoneOffset(settings.localtime)
               let data = { id: photo.id, ...image.toJSON() }
 
               yield call(mod.photo.save, db, data, project)

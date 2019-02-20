@@ -27,7 +27,7 @@ class Image {
     consolidated,
     created,
     checksum
-  }, { force } = {}) {
+  }, { force, useLocalTimezone } = {}) {
     let status = {}
 
     try {
@@ -35,7 +35,7 @@ class Image {
       status.hasChanged = (mtime > (consolidated || created))
 
       if (force || created == null || status.hasChanged) {
-        status.image = await Image.open({ path, page })
+        status.image = await Image.open({ path, page, useLocalTimezone })
         status.hasChanged = (status.image.checksum !== checksum)
       }
     } catch (error) {
