@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1902151256;
+PRAGMA user_version=1902202156;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -31,17 +31,16 @@ CREATE TABLE vocabularies (
   CHECK (vocabulary_id != '' AND prefix != ''),
   UNIQUE (prefix)
 );
-INSERT INTO vocabularies VALUES('https://tropy.org/v1/tropy#','tropy','2019-02-15 11:58:56',NULL,1,'Tropy Vocabulary','The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates.',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/2001/XMLSchema#','xsd','2019-02-15 11:58:56',NULL,1,'XML Schema Definition Language (XSD) Datatypes','XML Schema: Datatypes is part 2 of the specification of the XML Schema language. It defines facilities for defining datatypes to be used in XML Schemas as well as other XML specifications. The datatype language, which is itself represented in XML, provides a superset of the capabilities found in XML document type definitions (DTDs) for specifying datatypes on elements and attributes.',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://purl.org/dc/elements/1.1/','dc','2019-02-15 11:58:56',NULL,1,'Dublin Core Metadata Element Set',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://purl.org/dc/terms/','dcterms','2019-02-15 11:58:56',NULL,1,'DCMI Metadata Terms',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/1999/02/22-rdf-syntax-ns#','rdf','2019-02-15 11:58:56',NULL,1,'RDF Concepts Vocabulary (RDF)','This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/2000/01/rdf-schema#','rdfs','2019-02-15 11:58:56',NULL,1,'RDF Schema Vocabulary (RDFS)',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.openarchives.org/ore/terms/','ore','2019-02-15 11:58:56',NULL,1,'OAI ORE Terms Vocabulary','The set of terms provided by the OAI ORE initiative',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/2004/02/skos/core','skos','2019-02-15 11:58:56',NULL,0,'SKOS Vocabulary','An RDF vocabulary for describing the basic structure and content of concept schemes such as thesauri, classification schemes, subject heading lists, taxonomies, ''folksonomies'', other types of controlled vocabulary, and also concept schemes embedded in glossaries and terminologies.',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.europeana.eu/schemas/edm/','edm','2019-02-15 11:58:56',NULL,1,'Europeana Data Model (EDM) Vocabulary','The Europeana Data Model (EDM) is aimed at being an integration medium for collecting, connecting and enriching the descriptions provided by Europeana data providers. The RDF vocabulary for http://www.europeana.eu/schemas/edm/ defines the elements introduced by EDM (as opposed to the ones EDM re-uses from other namespaces).',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/2004/02/skos/core#','edm3','2019-02-15 11:58:56',NULL,1,'http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/2003/12/exif/ns#','exif','2019-02-15 11:58:57',NULL,1,'Exif data description vocabulary','Vocabulary to describe an Exif format picture data. All Exif 2.2 tags are defined as RDF properties, as well as several terms to help this schema.',NULL,NULL);
+INSERT INTO vocabularies VALUES('https://tropy.org/v1/tropy#','tropy','2019-02-20 21:10:21',NULL,1,'Tropy Vocabulary','The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/2001/XMLSchema#','xsd','2019-02-20 21:10:21',NULL,1,'XML Schema Definition Language (XSD) Datatypes','XML Schema: Datatypes is part 2 of the specification of the XML Schema language. It defines facilities for defining datatypes to be used in XML Schemas as well as other XML specifications. The datatype language, which is itself represented in XML, provides a superset of the capabilities found in XML document type definitions (DTDs) for specifying datatypes on elements and attributes.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://purl.org/dc/elements/1.1/','dc','2019-02-20 21:10:21',NULL,1,'Dublin Core Metadata Element Set',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://purl.org/dc/terms/','dcterms','2019-02-20 21:10:21',NULL,1,'DCMI Metadata Terms',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/1999/02/22-rdf-syntax-ns#','rdf','2019-02-20 21:10:21',NULL,1,'RDF Concepts Vocabulary (RDF)','This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/2000/01/rdf-schema#','rdfs','2019-02-20 21:10:21',NULL,1,'RDF Schema Vocabulary (RDFS)',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.openarchives.org/ore/terms/','ore','2019-02-20 21:10:21',NULL,1,'OAI ORE Terms Vocabulary','The set of terms provided by the OAI ORE initiative',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.europeana.eu/schemas/edm/','edm','2019-02-20 21:10:22',NULL,1,'Europeana Data Model (EDM) Vocabulary','The Europeana Data Model (EDM) is aimed at being an integration medium for collecting, connecting and enriching the descriptions provided by Europeana data providers. The RDF vocabulary for http://www.europeana.eu/schemas/edm/ defines the elements introduced by EDM (as opposed to the ones EDM re-uses from other namespaces).',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/2003/12/exif/ns#','exif','2019-02-20 21:10:22',NULL,1,'Exif Vocabulary','Vocabulary to describe an Exif format picture data. All Exif 2.2 tags are defined as RDF properties, as well as several terms to help this schema.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/2004/02/skos/core#','skos','2019-02-20 20:51:13',NULL,1,'SKOS Vocabulary','An RDF vocabulary for describing the basic structure and content of concept schemes such as thesauri, classification schemes, subject heading lists, taxonomies, ''folksonomies'', other types of controlled vocabulary, and also concept schemes embedded in glossaries and terminologies.',NULL,NULL);
 CREATE TABLE properties (
   property_id     TEXT NOT NULL PRIMARY KEY,
   vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
@@ -183,34 +182,34 @@ INSERT INTO properties VALUES('http://www.openarchives.org/ore/terms/lineage','h
 INSERT INTO properties VALUES('http://www.openarchives.org/ore/terms/proxyFor','http://www.openarchives.org/ore/terms/',NULL,NULL,NULL,NULL,'Proxy objects are used to represent a Resource as it is aggregated in a particular Aggregation. The ore:proxyFor relationship is used to link the proxy to the Aggregated Resource it is a proxy for. The subject of the relationship is a Proxy object, and the object of the relationship is the Aggregated Resource.');
 INSERT INTO properties VALUES('http://www.openarchives.org/ore/terms/proxyIn','http://www.openarchives.org/ore/terms/',NULL,NULL,NULL,NULL,'Proxy objects must link to the Aggregation in which the resource being proxied is aggregated. The ore:proxyIn relationship is used for this purpose. The subject of the relationship is a Proxy object, and the object of the relationship is the Aggregation.');
 INSERT INTO properties VALUES('http://www.openarchives.org/ore/terms/similarTo','http://www.openarchives.org/ore/terms/',NULL,NULL,NULL,NULL,'The subject of this relationship MUST be an Aggregation.  This Aggregation should be considered an expression within the ORE context of the object of the relationship, as it is broadly equivalent to the resource. For example, the Aggregation may consist of the resources which, together, make up a journal article which has a DOI assigned to it. The Aggregation is not the article to which the DOI was assigned, but is a representation of it in some manner.');
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#definition','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#scopeNote','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#example','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#inScheme','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#hasTopConcept','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#topConceptOf','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#prefLabel','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,'A resource has no more than one value of skos:prefLabel per language tag, and no more than one value of skos:prefLabel without language tag.');
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#altLabel','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,'The range of skos:altLabel is the class of RDF plain literals.');
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#hiddenLabel','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,'skos:prefLabel, skos:altLabel and skos:hiddenLabel are pairwise disjoint properties.');
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#note','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#changeNote','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#editorialNote','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#historyNote','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#semanticRelation','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#broader','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,'Broader concepts are typically rendered as parents in a concept hierarchy (tree).');
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#narrower','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,'Narrower concepts are typically rendered as children in a concept hierarchy (tree).');
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#member','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#mappingRelation','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,'These concept mapping relations mirror semantic relations, and the data model defined below is similar (with the exception of skos:exactMatch) to the data model defined for semantic relations. A distinct vocabulary is provided for concept mapping relations, to provide a convenient way to differentiate links within a concept scheme from links between concept schemes. However, this pattern of usage is not a formal requirement of the SKOS data model, and relies on informal definitions of best practice.');
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#broadMatch','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#narrowMatch','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#notation','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#related','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,'skos:related is disjoint with skos:broaderTransitive');
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#relatedMatch','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#closeMatch','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#broaderTransitive','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#narrowerTransitive','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#exactMatch','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,'skos:exactMatch is disjoint with each of the properties skos:broadMatch and skos:relatedMatch.');
-INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#memberList','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL,NULL,replace('For any resource, every item in the list given as the value of the\n      skos:memberList property is also a value of the skos:member property.','\n',char(10)));
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#definition','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#scopeNote','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#example','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#inScheme','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#hasTopConcept','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#topConceptOf','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#prefLabel','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,'A resource has no more than one value of skos:prefLabel per language tag, and no more than one value of skos:prefLabel without language tag.');
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#altLabel','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,'The range of skos:altLabel is the class of RDF plain literals.');
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#hiddenLabel','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,'skos:prefLabel, skos:altLabel and skos:hiddenLabel are pairwise disjoint properties.');
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#note','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#changeNote','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#editorialNote','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#historyNote','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#semanticRelation','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#broader','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,'Broader concepts are typically rendered as parents in a concept hierarchy (tree).');
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#narrower','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,'Narrower concepts are typically rendered as children in a concept hierarchy (tree).');
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#member','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#mappingRelation','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,'These concept mapping relations mirror semantic relations, and the data model defined below is similar (with the exception of skos:exactMatch) to the data model defined for semantic relations. A distinct vocabulary is provided for concept mapping relations, to provide a convenient way to differentiate links within a concept scheme from links between concept schemes. However, this pattern of usage is not a formal requirement of the SKOS data model, and relies on informal definitions of best practice.');
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#broadMatch','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#narrowMatch','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#notation','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#related','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,'skos:related is disjoint with skos:broaderTransitive');
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#relatedMatch','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#closeMatch','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#broaderTransitive','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#narrowerTransitive','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#exactMatch','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,'skos:exactMatch is disjoint with each of the properties skos:broadMatch and skos:relatedMatch.');
+INSERT INTO properties VALUES('http://www.w3.org/2004/02/skos/core#memberList','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL,NULL,replace('For any resource, every item in the list given as the value of the\n      skos:memberList property is also a value of the skos:member property.','\n',char(10)));
 INSERT INTO properties VALUES('http://www.europeana.eu/schemas/edm/hasMet','http://www.europeana.eu/schemas/edm/',NULL,NULL,NULL,NULL,NULL);
 INSERT INTO properties VALUES('http://www.europeana.eu/schemas/edm/isRelatedTo','http://www.europeana.eu/schemas/edm/',NULL,NULL,NULL,NULL,NULL);
 INSERT INTO properties VALUES('http://www.europeana.eu/schemas/edm/isSimilarTo','http://www.europeana.eu/schemas/edm/',NULL,NULL,NULL,NULL,NULL);
@@ -460,9 +459,9 @@ INSERT INTO classes VALUES('http://www.w3.org/2000/01/rdf-schema#ContainerMember
 INSERT INTO classes VALUES('http://www.w3.org/2000/01/rdf-schema#Datatype','http://www.w3.org/2000/01/rdf-schema#',NULL,NULL,'The class of RDF datatypes.');
 INSERT INTO classes VALUES('http://www.openarchives.org/ore/terms/AggregatedResource','http://www.openarchives.org/ore/terms/',NULL,NULL,'A resource which is included in an Aggregation. Note that asserting that a resource is a member of the class of Aggregated Resources does not imply anything other than that it is aggregated by at least one Aggregation.');
 INSERT INTO classes VALUES('http://www.openarchives.org/ore/terms/ResourceMap','http://www.openarchives.org/ore/terms/',NULL,NULL,'A description of an Aggregation according to the OAI-ORE data model. Resource Maps are serialised to a machine readable format according to the implementation guidelines.');
-INSERT INTO classes VALUES('http://www.w3.org/2004/02/skos/core#ConceptScheme','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL);
-INSERT INTO classes VALUES('http://www.w3.org/2004/02/skos/core#Collection','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL);
-INSERT INTO classes VALUES('http://www.w3.org/2004/02/skos/core#OrderedCollection','http://www.w3.org/2004/02/skos/core',NULL,NULL,NULL);
+INSERT INTO classes VALUES('http://www.w3.org/2004/02/skos/core#ConceptScheme','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL);
+INSERT INTO classes VALUES('http://www.w3.org/2004/02/skos/core#Collection','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL);
+INSERT INTO classes VALUES('http://www.w3.org/2004/02/skos/core#OrderedCollection','http://www.w3.org/2004/02/skos/core#',NULL,NULL,NULL);
 INSERT INTO classes VALUES('http://www.europeana.eu/schemas/edm/Agent','http://www.europeana.eu/schemas/edm/',NULL,NULL,NULL);
 INSERT INTO classes VALUES('http://www.europeana.eu/schemas/edm/NonInformationResource','http://www.europeana.eu/schemas/edm/',NULL,NULL,NULL);
 INSERT INTO classes VALUES('http://www.europeana.eu/schemas/edm/EuropeanaAggregation','http://www.europeana.eu/schemas/edm/',NULL,NULL,NULL);
@@ -1286,11 +1285,11 @@ CREATE TABLE templates (
   ))
   CHECK (name != '')
 );
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#Item','Tropy Generic','General template to fit a generic archival object','RRCHNM',1,'2019-02-15 11:58:56','2019-02-15 11:58:56','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#Item','Tropy Correspondence','Template meant to focus on correspondence','RRCHNM',1,'2019-02-15 11:58:56','2019-02-15 11:58:56','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/dc','https://tropy.org/v1/tropy#Item','Dublin Core','Generic template based on the Dublic Core Metadata Element Set','RRCHNM',1,'2019-02-15 11:58:56','2019-02-15 11:58:56','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/photo','https://tropy.org/v1/tropy#Photo','Tropy Photo',NULL,NULL,1,'2019-02-15 11:58:56','2019-02-15 11:58:56','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/selection','https://tropy.org/v1/tropy#Selection','Tropy Selection',NULL,NULL,1,'2019-02-15 11:58:56','2019-02-15 11:58:56','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#Item','Tropy Generic','General template to fit a generic archival object','RRCHNM',1,'2019-02-20 21:10:22','2019-02-20 21:10:22','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#Item','Tropy Correspondence','Template meant to focus on correspondence','RRCHNM',1,'2019-02-20 21:10:22','2019-02-20 21:10:22','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/dc','https://tropy.org/v1/tropy#Item','Dublin Core','Generic template based on the Dublic Core Metadata Element Set','RRCHNM',1,'2019-02-20 21:10:22','2019-02-20 21:10:22','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/photo','https://tropy.org/v1/tropy#Photo','Tropy Photo',NULL,NULL,1,'2019-02-20 21:10:22','2019-02-20 21:10:22','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/selection','https://tropy.org/v1/tropy#Selection','Tropy Selection',NULL,NULL,1,'2019-02-20 21:10:22','2019-02-20 21:10:22','1.0.0');
 CREATE TABLE domains (
   domain_id     INTEGER   PRIMARY KEY,
   template_id   TEXT      NOT NULL REFERENCES templates ON DELETE CASCADE,
