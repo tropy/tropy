@@ -231,8 +231,8 @@ class Ontology extends Resource {
     title = getValue(any(data, DC.title, TERMS.title), locale) || title
     prefix = get(data, [VANN.preferredNamespacePrefix, 0, '@value'], prefix)
 
-    const seeAlso = get(data, [RDFS.seeAlso, 0, '@id'])
-    const description = getValue(
+    let seeAlso = get(data, [RDFS.seeAlso, 0, '@id'])
+    let description = getValue(
       any(data, DC.description, TERMS.description, RDFS.comment), locale
     )
 
@@ -305,7 +305,10 @@ function literal(data) {
 
 function isDefinedBy(id, data) {
   let ns = get(data, [RDFS.isDefinedBy, 0, '@id'])
-  return (ns == null) ? namespace(id) : ns.id || ns
+  if (ns == null) return namespace(id)
+  ns = ns.id || ns
+  if (!(/[#/]$/).test(ns)) ns += '#'
+  return ns
 }
 
 function namespace(id) {
