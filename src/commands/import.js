@@ -27,7 +27,8 @@ class ImportCommand extends Command {
 
   *checkPhoto(photo, force) {
     let useLocalTimezone = yield select(state => state.settings.localtime)
-    return call(Image.check, photo, { force, useLocalTimezone })
+    return yield call(Image.check, photo, { force, useLocalTimezone })
+
   }
 
   *getMetadata(image, templates) {
