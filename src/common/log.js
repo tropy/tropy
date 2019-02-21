@@ -8,7 +8,6 @@ const { version } = require('./release')
 const { sync: mkdir } = require('mkdirp')
 
 const ms = require('ms')
-const pad = require('string.prototype.padstart')
 const colors = require('colors/safe')
 
 const [SYMBOL, LABEL] = (process.type === 'renderer') ?
@@ -83,7 +82,7 @@ function *timer() {
 }
 
 function time() {
-  return colors.gray(pad(`+${ms(seq.next().value)}`, PADDING, ' '))
+  return colors.gray((`+${ms(seq.next().value)}`).padStart(PADDING, ' '))
 }
 
 function colorize(level, string = level) {

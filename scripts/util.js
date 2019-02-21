@@ -2,7 +2,6 @@
 
 const colors = require('colors/safe')
 const ms = require('ms')
-const pad = require('string.prototype.padstart')
 
 const COLOR = {
   warn: 'yellow',
@@ -31,7 +30,7 @@ function *timer() {
 const seq = timer()
 
 function time({ value }, padding = 8) {
-  return colors.gray(pad(`+${ms(value)}`, padding, ' '))
+  return colors.gray((`+${ms(value)}`).padStart(padding, ' '))
 }
 
 function format(msg, level, pre) {
