@@ -1,6 +1,6 @@
 'use strict'
 
-const PIXI = require('pixi.js/dist/pixi.js')
+const PIXI = require('pixi.js')
 const { Container, Graphics, Rectangle } = PIXI
 const BLANK = Object.freeze({})
 const { COLOR, TOOL } = require('../../constants/esper')
