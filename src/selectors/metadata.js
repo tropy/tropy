@@ -64,8 +64,8 @@ const getMetadataFields = memo(
   (_, { template }) => template,
   (_, { props }) => props,
   (data, template, props) => {
-    const fld = []
-    const idx = {}
+    let fld = []
+    let idx = {}
 
     if (template != null) {
       for (let f of template.fields) {
@@ -83,7 +83,7 @@ const getMetadataFields = memo(
       }
     }
 
-    const ext = fld.length
+    let ext = fld.length
 
     if (data != null) {
       for (let id in data) {
@@ -99,6 +99,7 @@ const getMetadataFields = memo(
       fld.id = data.id
     }
 
+    fld.key = Array.isArray(fld.id) ? 'bulk' : fld.id
     fld.idx = idx
     fld.ext = ext
 

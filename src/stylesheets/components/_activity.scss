@@ -47,6 +47,10 @@
     margin-bottom: 6px;
   }
 
+  .icon-spin {
+    margin-right: $space-xs;
+  }
+
   .activity-text {
     @include css-truncation;
     margin-right: auto;

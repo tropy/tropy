@@ -9,12 +9,11 @@ const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { SaveCommand } = require('./subject')
 const { prompt, open, fail, save } = require('../dialog')
-const { Image } = require('../image')
 const act = require('../actions')
 const mod = require('../models')
-const { get, pluck, pick, remove } = require('../common/util')
+const { get, pluck, remove } = require('../common/util')
 const { darwin } = require('../common/os')
-const { ITEM, DC } = require('../constants')
+const { ITEM } = require('../constants')
 const { MODE } = require('../constants/project')
 const { keys } = Object
 const { writeFile: write } = require('fs')
@@ -25,7 +24,7 @@ const {
   getGroupedItems,
   getItemTemplate,
   getPhotoTemplate,
-  getTemplateValues,
+  getTemplateValues
 } = require('../selectors')
 
 
@@ -33,12 +32,12 @@ class Create extends Command {
   static get ACTION() { return ITEM.CREATE }
 
   *exec() {
-    const { db } = this.options
+    let { db } = this.options
 
-    const template = yield select(getItemTemplate)
-    const data = getTemplateValues(template)
+    let template = yield select(getItemTemplate)
+    let data = getTemplateValues(template)
 
-    const item = yield call(db.transaction, tx =>
+    let item = yield call(db.transaction, tx =>
       mod.item.create(tx, template.id, data))
 
     yield put(act.item.insert(item))
@@ -69,18 +68,16 @@ class Import extends ImportCommand {
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
-    let [base, localtime, itemp, ptemp] = yield select(state => [
+    let [base, ttp] = yield select(state => [
       state.project.base,
-      state.settings.localtime,
-      getItemTemplate(state),
-      getPhotoTemplate(state)
+      {
+        item: getItemTemplate(state),
+        photo: getPhotoTemplate(state)
+      }
     ])
 
-    let defaultItemData = getTemplateValues(itemp)
-    let defaultPhotoData = getTemplateValues(ptemp)
-
     for (let i = 0, total = files.length; i < total; ++i) {
-      let file, image, item
+      let file, image, item, data
       let photos = []
 
       try {
@@ -88,22 +85,17 @@ class Import extends ImportCommand {
 
         file = files[i]
 
-        image = yield call(Image.open, file)
-        image.setTimezoneOffset(localtime)
+        image = yield* this.openImage(file)
         yield* this.handleDuplicate(image)
+        data = yield* this.getMetadata(image, ttp)
 
         yield call(db.transaction, async tx => {
-          item = await mod.item.create(tx, itemp.id, {
-            ...pick(image.data, [
-              DC.title, DC.creator, DC.rights, DC.description
-            ]),
-            ...defaultItemData
-          })
+          item = await mod.item.create(tx, ttp.item.id, data.item)
 
           while (!image.done) {
             let photo = await mod.photo.create(tx,
-              { base, template: ptemp.id },
-              { item: item.id, image, data: defaultPhotoData })
+              { base, template: ttp.photo.id },
+              { item: item.id, image, data: data.photo })
 
             if (list) {
               await mod.list.items.add(tx, list, [item.id])

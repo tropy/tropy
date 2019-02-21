@@ -197,12 +197,6 @@ class FormSelect extends PureComponent {
     })
   )
 
-  handleChange = (opt) => {
-    this.props.onChange({
-      [this.props.name]: opt
-    })
-  }
-
   render() {
     return (
       <FormElement
@@ -214,7 +208,8 @@ class FormSelect extends PureComponent {
           isDisabled={this.props.isDisabled}
           isRequired={this.props.isRequired}
           isSelectionHidden={this.props.isSelectionHidden}
-          onChange={this.handleChange}
+          name={this.props.name}
+          onChange={this.props.onChange}
           options={this.props.options}
           placeholder={this.props.placeholder}
           tabIndex={this.props.tabIndex}
@@ -247,11 +242,8 @@ class FormSelect extends PureComponent {
 
 
 class Toggle extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      isTabFocus: false
-    }
+  state = {
+    isTabFocus: false
   }
 
   componentDidMount() {
@@ -290,7 +282,7 @@ class Toggle extends PureComponent {
   handleChange = () => {
     this.props.onChange({
       [this.props.name]: !this.props.value
-    })
+    }, true)
   }
 
   render() {

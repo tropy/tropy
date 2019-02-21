@@ -1,6 +1,6 @@
 'use strict'
 
-const { SETTINGS, ITEM, PHOTO, SELECTION, ESPER } = require('../constants')
+const { SETTINGS, ITEM, PHOTO, SELECTION, ESPER, DC } = require('../constants')
 const { merge } = require('../common/util')
 const { darwin } = require('../common/os')
 
@@ -16,6 +16,11 @@ const defaults = {
     selection: SELECTION.TEMPLATE.DEFAULT
   },
   theme: ARGS.theme,
+  title: {
+    item: DC.title,
+    photo: DC.title,
+    force: false
+  },
   overlayToolbars: ARGS.frameless,
   invertScroll: true,
   invertZoom: darwin,

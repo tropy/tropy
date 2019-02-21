@@ -1,0 +1,203 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix Iptc4xmpCore: <http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/> .
+@prefix Iptc4xmpExt: <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> .
+@prefix plus: <http://ns.useplus.org/ldf/xmp/1.0/> .
+
+<http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/> a owl:Ontology ;
+	vann:preferredNamespacePrefix "Iptc4xmpCore" ;
+  dcterms:title "IPTC Core Vocabulary" ;
+	dcterms:publisher "IPTC Photo Metadata Working Group" ;
+	dcterms:description "IPTC Photo Metadata provides data about photographs and the values can be processed by software. Each individual metadata entity is called a property and they are grouped into Administrative, Descriptive and Rights-related properties. The IPTC Core schema which is built from properties of the IPTC “Information Interchange Model” (IIM) standard."@en .
+
+Iptc4xmpCore:IntellectualGenre a rdf:Property ;
+	rdfs:label "Intellectual Genre"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/> ;
+	rdfs:comment "Describes the nature, intellectual, artistic or journalistic characteristic of an image."@en .
+
+Iptc4xmpCore:Scene a rdf:Property ;
+	rdfs:label "Scene Code"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/> ;
+	rdfs:comment "Describes the scene of a photo content. Specifies one ore more terms from the IPTC \"Scene-NewsCodes\". Each Scene is represented as a string of 6 digits in an unordered list."@en .
+
+Iptc4xmpCore:SubjectCode a rdf:Property ;
+	rdfs:label "Subject Code"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/> ;
+	rdfs:comment "Specifies one or more Subjects from the IPTC Subject-NewsCodes taxonomy to categorise the image. Each Subject is represented as a string of 8 digits in an unordered list."@en .
+
+Iptc4xmpCore:CreatorContactInfo a rdf:Property ;
+	rdfs:label "Creator's Contact Info"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/> ;
+	rdfs:comment "The creator’s contact information provides all necessary information to get in contact with the creator of this image and comprises a set of sub-properties for proper addressing."@en .
+
+
+<http://iptc.org/std/Iptc4xmpExt/2008-02-29/> a owl:Ontology ;
+	vann:preferredNamespacePrefix "Iptc4xmpExt" ;
+  dcterms:title "IPTC Extension Vocabulary" ;
+	dcterms:publisher "IPTC Photo Metadata Working Group" ;
+	dcterms:description "The IPTC Extension schema defines the semantics of a set of metadata properties and their technical expressions by the XMP format."@en .
+
+Iptc4xmpExt:AddlModelInfo a rdf:Property ;
+	rdfs:label "Additional Model Information"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "Information about the ethnicity and other facets of the model(s) in a model-released image."@en .
+
+Iptc4xmpExt:ArtworkOrObject a rdf:Property ;
+	rdfs:label "Artwork or Object in the Image"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "A set of metadata about artwork or an object in the image."@en .
+
+Iptc4xmpExt:OrganisationInImageCode a rdf:Property ;
+	rdfs:label "Code of Organisation Featured in the Image"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "Code from a controlled vocabulary for identifying the organisation or company which is featured in the image."@en .
+
+Iptc4xmpExt:OrganisationInImageName a rdf:Property ;
+	rdfs:label "Name of Organisation Featured in the Image"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "Name of the organisation or company which is featured in the image."@en .
+
+Iptc4xmpExt:AboutCvTerm a rdf:Property ;
+	rdfs:label "CV-Term About Image"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "One or more topics, themes or entities the content is about, each one expressed by a term from a Controlled Vocabulary."@en .
+
+Iptc4xmpExt:Genre a rdf:Property ;
+	rdfs:label "Genre"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "Artistic, style, journalistic, product or other genre(s) of the image (expressed by a term from any Controlled Vocabulary)."@en .
+
+Iptc4xmpExt:LocationShown a rdf:Property ;
+	rdfs:label "Location Shown in the Image"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "A location shown in the image."@en .
+
+Iptc4xmpExt:ModelAge a rdf:Property ;
+	rdfs:label "Model Age"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "Age of the human model(s) at the time this image was taken in a model released image."@en .
+
+Iptc4xmpExt:PersonInImage a rdf:Property ;
+	rdfs:label "Person Shown in the Image"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "Name of a person shown in the image."@en .
+
+Iptc4xmpExt:PersonInImageWDetails a rdf:Property ;
+	rdfs:label "Person Shown in the Image with Details"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "Details about a person the content is about."@en .
+
+Iptc4xmpExt:ProductInImage a rdf:Property ;
+	rdfs:label "Product Shown in the Image"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "A product the content is about."@en .
+
+Iptc4xmpExt:DigImageGUID a rdf:Property ;
+	rdfs:label "Digital Image GUID"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "Globally unique identifier for this digital image. It is created and applied by the creator of the digital image at the time of its creation . This value shall not be changed after that time."@en .
+
+Iptc4xmpExt:DigitalSourceType a rdf:Property ;
+	rdfs:label "Digital Source Type"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "The type of the source of this digital image."@en .
+
+Iptc4xmpExt:Event a rdf:Property ;
+	rdfs:label "Event"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "Names or describes the specific event at which the photo was taken."@en .
+
+Iptc4xmpExt:RegistryId a rdf:Property ;
+	rdfs:label "Image Registry Entry"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "Both a Registry Item Id and a Registry Organisation Id to record any registration of this digital image with a registry."@en .
+
+Iptc4xmpExt:LocationCreated a rdf:Property ;
+	rdfs:label "Location created"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "The location the photo was taken."@en .
+
+Iptc4xmpExt:MaxAvailHeight a rdf:Property ;
+	rdfs:label "Max Avail Height"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "The maximum available height in pixels of the original photo from which this photo has been derived by downsizing."@en .
+
+Iptc4xmpExt:MaxAvailWidth a rdf:Property ;
+	rdfs:label "Max Avail Width"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "The maximum available width in pixels of the original photo from which this photo has been derived by downsizing."@en .
+
+Iptc4xmpExt:EmbdEncRightsExpr a rdf:Property ;
+	rdfs:label "Embedded Encoded Rights Expression"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "An embedded rights expression using any rights expression language"@en .
+
+Iptc4xmpExt:LinkedEncRightsExpr a rdf:Property ;
+	rdfs:label "Linked Encoded Rights Expression"@en ;
+	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
+	rdfs:comment "A linked rights expression using any rights expression language."@en .
+
+
+<http://ns.useplus.org/ldf/xmp/1.0/> a owl:Ontology ;
+	vann:preferredNamespacePrefix "plus" ;
+  dcterms:title "PLUS Vocabulary" ;
+	dcterms:publisher "PLUS Coalition" ;
+	dcterms:description "Picture Licensing Universal System"@en .
+
+plus:ImageSupplier a rdf:Property ;
+	rdfs:label "Image Supplier"@en ;
+	rdfs:isDefinedBy <http://ns.useplus.org/ldf/xmp/1.0/> ;
+	rdfs:comment "Identifies the most recent supplier of the image, who is not necessarily its owner or creator."@en .
+
+plus:ImageSupplierImageID a rdf:Property ;
+	rdfs:label "Image Supplier Image ID"@en ;
+	rdfs:isDefinedBy <http://ns.useplus.org/ldf/xmp/1.0/> ;
+	rdfs:comment "Optional identifier assigned by the Image Supplier to the image."@en .
+
+plus:Version a rdf:Property ;
+	rdfs:label "PLUS Version"@en ;
+	rdfs:isDefinedBy <http://ns.useplus.org/ldf/xmp/1.0/> ;
+	rdfs:comment "The version number of the PLUS standards in place at the time of the transaction."@en .
+
+plus:CopyrightOwner a rdf:Property ;
+	rdfs:label "Copyright Owner"@en ;
+	rdfs:isDefinedBy <http://ns.useplus.org/ldf/xmp/1.0/> ;
+	rdfs:comment "Owner or owners of the copyright in the licensed image."@en .
+
+plus:ImageCreator a rdf:Property ;
+	rdfs:label "Image Creator"@en ;
+	rdfs:isDefinedBy <http://ns.useplus.org/ldf/xmp/1.0/> ;
+	rdfs:comment "Creator or creators of the image"@en .
+
+plus:Licensor a rdf:Property ;
+	rdfs:label "Licensor"@en ;
+	rdfs:isDefinedBy <http://ns.useplus.org/ldf/xmp/1.0/> ;
+	rdfs:comment "A person or company that should be contacted to obtain a licence for using the item or who has licensed the item."@en .
+
+plus:MinorModelAgeDisclosure a rdf:Property ;
+	rdfs:label "Minor Model Age Disclosure"@en ;
+	rdfs:isDefinedBy <http://ns.useplus.org/ldf/xmp/1.0/> ;
+	rdfs:comment "Age of the youngest model pictured in the image, at the time that the image was made."@en .
+
+plus:ModelReleaseID a rdf:Property ;
+	rdfs:label "Model Release Id"@en ;
+	rdfs:isDefinedBy <http://ns.useplus.org/ldf/xmp/1.0/> ;
+	rdfs:comment "Optional identifier associated with each Model Release."@en .
+
+plus:ModelReleaseStatus a rdf:Property ;
+	rdfs:label "Model Release Status"@en ;
+	rdfs:isDefinedBy <http://ns.useplus.org/ldf/xmp/1.0/> ;
+	rdfs:comment "Summarises the availability and scope of model releases authorising usage of the likenesses of persons appearing in the photograph."@en .
+
+plus:PropertyReleaseID a rdf:Property ;
+	rdfs:label "Property Release Id"@en ;
+	rdfs:isDefinedBy <http://ns.useplus.org/ldf/xmp/1.0/> ;
+	rdfs:comment "Optional identifier associated with each Property Release."@en .
+
+plus:PropertyReleaseStatus a rdf:Property ;
+	rdfs:label "Property Release Status"@en ;
+	rdfs:isDefinedBy <http://ns.useplus.org/ldf/xmp/1.0/> ;
+	rdfs:comment "Summarises the availability and scope of property releases authorising usage of the properties appearing in the photograph."@en .

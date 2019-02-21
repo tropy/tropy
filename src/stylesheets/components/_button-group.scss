@@ -3,6 +3,8 @@
 // --------------------------------------------------
 
 .btn-group {
+  flex: 0 0 auto;
+
   .btn {
     &:not(:first-child) {
       border-top-left-radius: 0;

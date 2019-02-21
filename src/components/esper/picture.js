@@ -1,6 +1,6 @@
 'use strict'
 
-const PIXI = require('pixi.js/dist/pixi.js')
+const PIXI = require('pixi.js')
 const { Container, Sprite, Rectangle } = PIXI
 const { ColorMatrixFilter } = PIXI.filters
 const { AdjustmentFilter } = require('@pixi/filter-adjustment')

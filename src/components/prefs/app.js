@@ -2,10 +2,16 @@
 
 const React = require('react')
 const { TemplateSelect } = require('../template/select')
+const { ResourceSelect } = require('../resource/select')
 const { ipcRenderer: ipc } = require('electron')
 const { ESPER, ITEM } = require('../../constants')
 const { darwin } = require('../../common/os')
-const { IconItemSmall, IconPhoto, IconSelection } = require('../icons')
+
+const {
+  IconItemSmall,
+  IconPhoto,
+  IconSelection
+} = require('../icons')
 
 const {
   array, arrayOf, bool, func, object, shape, string
@@ -37,22 +43,27 @@ class AppPrefs extends React.PureComponent {
     this.props.onSettingsUpdate({ localtime })
   }
 
-  handleItemTemplateChange = (template) => {
-    this.handleTemplateChange('item', template)
+  handleTemplateChange = (values, hasChanged) => {
+    if (hasChanged) {
+      let [type, template] = Object.entries(values)[0]
+      this.props.onSettingsUpdate({
+        templates: {
+          [type]: template.id
+        }
+      })
+    }
   }
 
-  handlePhotoTemplateChange = (template) => {
-    this.handleTemplateChange('photo', template)
-  }
-
-  handleSelectionTemplateChange = (template) => {
-    this.handleTemplateChange('selection', template)
-  }
-
-  handleTemplateChange(type, template) {
-    this.props.onSettingsUpdate({
-      templates: { [type]: template.id }
-    })
+  handleTitleChange = (values, hasChanged) => {
+    if (hasChanged) {
+      let [name, value] = Object.entries(values)[0]
+      if (value && value.id) value = value.id
+      this.props.onSettingsUpdate({
+        title: {
+          [name]: value
+        }
+      })
+    }
   }
 
   render() {
@@ -63,24 +74,27 @@ class AppPrefs extends React.PureComponent {
             <TemplateSelect
               icon={<IconItemSmall/>}
               isRequired
+              name="item"
               options={this.props.templates.item}
               value={this.props.settings.templates.item}
               tabIndex={0}
-              onChange={this.handleItemTemplateChange}/>
+              onChange={this.handleTemplateChange}/>
             <TemplateSelect
               icon={<IconPhoto/>}
               isRequired
+              name="photo"
               options={this.props.templates.photo}
               value={this.props.settings.templates.photo}
               tabIndex={0}
-              onChange={this.handlePhotoTemplateChange}/>
+              onChange={this.handleTemplateChange}/>
             <TemplateSelect
               icon={<IconSelection/>}
               isRequired
+              name="selection"
               options={this.props.templates.selection}
               value={this.props.settings.templates.selection}
               tabIndex={0}
-              onChange={this.handleSelectionTemplateChange}/>
+              onChange={this.handleTemplateChange}/>
           </FormElement>
           <hr/>
           <FormToggleGroup
@@ -95,6 +109,29 @@ class AppPrefs extends React.PureComponent {
             name="localtime"
             value={this.props.settings.localtime}
             onChange={this.handleLocalTimeChange}/>
+          <FormElement
+            id="prefs.app.title.label"
+            isCompact>
+            <ResourceSelect
+              icon={<IconItemSmall/>}
+              options={this.props.properties}
+              name="item"
+              value={this.props.settings.title.item}
+              tabIndex={0}
+              onChange={this.handleTitleChange}/>
+            <ResourceSelect
+              icon={<IconPhoto/>}
+              options={this.props.properties}
+              name="photo"
+              value={this.props.settings.title.photo}
+              tabIndex={0}
+              onChange={this.handleTitleChange}/>
+          </FormElement>
+          <FormToggle
+            id="prefs.app.title.force"
+            name="force"
+            value={this.props.settings.title.force}
+            onChange={this.handleTitleChange}/>
           <hr/>
           <FormSelect
             id="prefs.app.style.theme"
@@ -160,6 +197,7 @@ class AppPrefs extends React.PureComponent {
   }
 
   static propTypes = {
+    properties: array.isRequired,
     templates: shape({
       item: array.isRequired,
       photo: array.isRequired,
