@@ -56,7 +56,7 @@
     "electron": "^4.0.5",
     "electron-devtools-installer": "^2.2.4",
     "electron-mocha": "^6.0.4",
-    "electron-packager": "^13.0.1",
+    "electron-packager": "^13.1.0",
     "electron-winstaller": "^2.7.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.9.1",
@@ -91,13 +91,13 @@
     "edtf": "^2.5.0",
     "generic-pool": "^3.6.1",
     "js-yaml": "^3.12.1",
-    "jsonld": "^1.5.1",
+    "jsonld": "^1.5.2",
     "lodash.debounce": "^4.0.7",
     "lodash.throttle": "^4.1.1",
     "memoize-one": "^5.0.0",
     "mkdirp": "^0.5.1",
     "ms": "^2.1.1",
-    "n3": "^1.0.3",
+    "n3": "^1.0.4",
     "node-fetch": "^2.3.0",
     "pixi.js": "^4.8.6",
     "prop-types": "^15.7.2",
@@ -109,13 +109,13 @@
     "prosemirror-schema-basic": "^1.0.0",
     "prosemirror-schema-list": "^1.0.2",
     "prosemirror-state": "^1.2.2",
-    "prosemirror-view": "^1.7.1",
+    "prosemirror-view": "^1.7.3",
     "react": "^16.8.2",
     "react-dnd": "^2.6.0",
     "react-dnd-electron-backend": "^1.6.1",
     "react-dom": "^16.8.2",
     "react-intl": "^2.8.0",
-    "react-redux": "^6.0.0",
+    "react-redux": "^6.0.1",
     "react-transition-group": "^2.5.3",
     "redux": "^4.0.1",
     "redux-saga": "^1.0.1",
@@ -133,9 +133,6 @@
     "winreg": "^1.2.4",
     "winston": "^2.4.4",
     "write-file-atomic": "^2.4.2",
-    "yargs": "^12.0.5"
-  },
-  "yargs": {
-    "short-option-groups": false
+    "yargs": "^13.2.1"
   }
 }

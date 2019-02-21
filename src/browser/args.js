@@ -5,6 +5,9 @@ const pkg = require('../../package')
 const exe = basename(process.argv[0])
 
 module.exports = require('yargs')
+  .parserConfiguration({
+    'short-option-groups': false
+  })
   .usage(`Usage: ${exe} [options]`)
   .wrap(78)
   .env(pkg.name.toUpperCase())
