@@ -8,6 +8,7 @@ const { createClickHandler } = require('../util')
 const { testFocusChange } = require('../../dom')
 const { isMeta } = require('../../keymap')
 const { auto } = require('../../format')
+const { noop } = require('../../common/util')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
 const {
@@ -170,8 +171,11 @@ class ItemTableCell extends React.PureComponent {
   }
 
   static defaultProps = {
+    position: 0,
     size: 48,
-    type: TYPE.TEXT
+    type: TYPE.TEXT,
+    getNextColumn: noop,
+    getPrevColumn: noop
   }
 }
 
