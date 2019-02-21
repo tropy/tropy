@@ -13,24 +13,22 @@ const {
 
 
 class ResourceSelect extends React.PureComponent {
+  select = React.createRef()
+
   get placeholder() {
     return this.props.placeholder != null &&
       <FormattedMessage id={this.props.placeholder}/>
   }
 
   focus = () => {
-    if (this.select != null) this.select.focus()
-  }
-
-  setSelect = (select) => {
-    this.select = select
+    if (this.select.current) this.select.current.focus()
   }
 
   render() {
     return (
       <Select {...this.props}
         placeholder={this.placeholder}
-        ref={this.setSelect}/>
+        ref={this.select}/>
     )
   }
 
@@ -110,15 +108,49 @@ Id.propTypes = {
 
 function match(res, query, prefix) {
   if (prefix != null) {
-    return (prefix === res.prefix) && (
-      m(res, query, 'name') ||
-      m(res, query, 'label', /\b\w/g)
-    )
+    return (prefix === res.prefix.toLowerCase()) &&
+      matchByNameAndLabel(res, query)
   }
 
-  return m(res, query, 'prefix') ||
-    m(res, query, 'name') ||
-    m(res, query, 'label', /\b\w/g)
+  let [first, ...rest] = query.split(' ')
+  let mdp = m(res, first, 'prefix')
+
+  if (mdp == null) {
+    return matchByNameAndLabel(res, query)
+  }
+
+  if (rest.length === 0) {
+    return mdp
+  }
+
+  let mdr = matchByNameAndLabel(res, rest.join(' '))
+
+  if (mdr == null) {
+    return null
+  }
+
+  return Object.assign(mdp, mdr)
+}
+
+function matchByNameAndLabel(res, query) {
+  let [first, ...rest] = query.split(' ')
+  let mdn = m(res, first, 'name')
+
+  if (mdn == null) {
+    return m(res, query, 'label', /\b\w/g)
+  }
+
+  if (rest.length === 0) {
+    return mdn
+  }
+
+  let mdl = m(res, rest.join(' '), 'label', /\b\w/g)
+
+  if (mdl == null) {
+    return null
+  }
+
+  return Object.assign(mdn, mdl)
 }
 
 function m(res, query, prop, at = /^\w/g) {
