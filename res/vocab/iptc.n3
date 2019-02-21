@@ -8,7 +8,7 @@
 @prefix plus: <http://ns.useplus.org/ldf/xmp/1.0/> .
 
 <http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/> a owl:Ontology ;
-	vann:preferredNamespacePrefix "Ipct4xmpCore" ;
+	vann:preferredNamespacePrefix "Iptc4xmpCore" ;
   dcterms:title "IPTC Core Vocabulary" ;
 	dcterms:publisher "IPTC Photo Metadata Working Group" ;
 	dcterms:description "IPTC Photo Metadata provides data about photographs and the values can be processed by software. Each individual metadata entity is called a property and they are grouped into Administrative, Descriptive and Rights-related properties. The IPTC Core schema which is built from properties of the IPTC “Information Interchange Model” (IIM) standard."@en .
