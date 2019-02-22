@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { bool, func, instanceOf } = require('prop-types')
-const { Toolbar, ToolbarContext, ToolGroup } = require('../toolbar')
+const { Toolbar, ToolGroup } = require('../toolbar')
 const { Button } = require('../button')
 const { EditorState } = require('prosemirror-state')
 const { LinkToolbar } = require('./link')
@@ -162,7 +162,7 @@ class EditorToolbar extends React.PureComponent {
   render() {
     return (
       <Toolbar isDraggable={this.props.isDraggable}>
-        <ToolbarContext
+        <Toolbar.Context
           className="default"
           isActive={this.hasDefaultContext}>
           <div className="toolbar-left">
@@ -218,7 +218,7 @@ class EditorToolbar extends React.PureComponent {
                 onMouseDown={this.handleLinkButtonClick}/>
             </ToolGroup>
           </div>
-        </ToolbarContext>
+        </Toolbar.Context>
         <LinkToolbar
           isActive={this.hasLinkContext}
           onCancel={this.setDefaultContext}

@@ -1,22 +1,23 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = require('react')
 const { bool, func } = require('prop-types')
 const { injectIntl, intlShape } = require('react-intl')
-const { ToolbarContext, ToolbarLeft } = require('../toolbar')
+const { Toolbar } = require('../toolbar')
 const { Input } = require('../input')
 const { ensure } = require('../../dom')
 
+class LinkToolbar extends React.PureComponent {
+  input = React.createRef()
+  container = React.createRef()
 
-class LinkToolbar extends PureComponent {
-  componentWillReceiveProps(props) {
-    if (!this.props.isActive && props.isActive) {
+  componentDidUpdate({ isActive: wasActive }) {
+    if (!wasActive && this.props.isActive) {
       ensure(
-        this.container,
+        this.container.current,
         'transitionend',
-        this.input.focus,
-        850)
+        this.input.current.focus,
+        650)
     }
   }
 
@@ -26,49 +27,45 @@ class LinkToolbar extends PureComponent {
     })
   }
 
-  handleBlur = () => true // cancel on blur
-
   handleTargetChange = (href) => {
     this.props.onCommit({ href })
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
-  setInput = (input) => {
-    this.input = input
-  }
-
   render() {
     return (
-      <ToolbarContext
+      <Toolbar.Context
         className="link"
-        dom={this.setContainer}
+        ref={this.container}
         isActive={this.props.isActive}>
-        <ToolbarLeft className="form-inline">
+        <Toolbar.Left className="form-inline">
           <Input
-            ref={this.setInput}
+            ref={this.input}
             className="form-control link-target"
             isDisabled={!this.props.isActive}
             isRequired
             placeholder={this.getLabelFor('target')}
             value=""
-            onBlur={this.handleBlur}
+            onBlur={this.props.onBlur}
             onCancel={this.props.onCancel}
             onCommit={this.handleTargetChange}/>
-        </ToolbarLeft>
-      </ToolbarContext>
+        </Toolbar.Left>
+      </Toolbar.Context>
     )
   }
 
   static propTypes = {
     isActive: bool.isRequired,
+    onBlur: func.isRequired,
     onCancel: func.isRequired,
     onCommit: func.isRequired,
     intl: intlShape.isRequired
   }
+
+  static defaultProps = {
+    onBlur: () => true // cancel on blur!
+  }
 }
+
 
 module.exports = {
   LinkToolbar: injectIntl(LinkToolbar)
