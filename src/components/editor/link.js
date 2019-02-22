@@ -7,7 +7,7 @@ const { Toolbar } = require('../toolbar')
 const { Input } = require('../input')
 const { ensure } = require('../../dom')
 
-class LinkToolbar extends React.PureComponent {
+class LinkContext extends React.PureComponent {
   input = React.createRef()
   container = React.createRef()
 
@@ -68,5 +68,5 @@ class LinkToolbar extends React.PureComponent {
 
 
 module.exports = {
-  LinkToolbar: injectIntl(LinkToolbar)
+  LinkContext: injectIntl(LinkContext)
 }
