@@ -35,9 +35,9 @@ class ItemTableCell extends React.PureComponent {
     )
   }
 
-  get title() {
-    return this.props.title ||
-      this.props.isMainColumn ? this.props.value : null
+  get display() {
+    return this.props.display ||
+      auto(this.props.value, this.props.type)
   }
 
   edit(property) {
@@ -123,11 +123,11 @@ class ItemTableCell extends React.PureComponent {
         <div className="flex-row center td-container">
           {this.renderCoverImage()}
           <Editable
-            display={auto(this.props.value, this.props.type)}
+            display={this.display}
             isActive={this.props.isEditing}
             isDisabled={isDisabled}
             resize
-            title={this.title}
+            title={this.props.title}
             value={isDisabled ? null : this.props.value}
             onCancel={this.props.onCancel}
             onChange={this.handleChange}
@@ -140,6 +140,7 @@ class ItemTableCell extends React.PureComponent {
 
   static propTypes = {
     cache: string,
+    display: string,
     id: string.isRequired,
     isDisabled: bool,
     isDragging: bool,

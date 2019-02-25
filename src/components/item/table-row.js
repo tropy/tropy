@@ -49,6 +49,7 @@ class ItemTableRow extends ItemIterable {
     if (isItemColumn) {
       type = column.type
       value = this.props.item[isItemColumn]
+
     } else {
       let data = this.props.data[column.id]
 
@@ -72,13 +73,19 @@ class ItemTableRow extends ItemIterable {
 
     if (isMainColumn) {
       pick(this.props, MainCellProps, props)
+      props.title = value
+    }
+
+    if (column.id === 'item.template') {
+      props.title = value
+      props.display = get(this.props.template, ['name'])
     }
 
     return props
   }
 
   getTemplateFieldType(id) {
-    let fields = this.props.template.fields
+    let fields = get(this.props.template, ['fields'])
     if (fields == null) return null
     let field = fields.find(f => f.property === id)
     if (field == null) return null
