@@ -10,7 +10,6 @@ const { isMeta } = require('../../keymap')
 const { auto } = require('../../format')
 const { noop } = require('../../common/util')
 const cx = require('classnames')
-const { TYPE } = require('../../constants')
 const {
   arrayOf, bool, func, instanceOf, number, object, oneOfType, shape, string
 } = require('prop-types')
@@ -47,11 +46,9 @@ class ItemTableCell extends React.PureComponent {
   }
 
   handleChange = (text) => {
-    this.props.onChange({
-      id: this.props.item.id,
-      data: {
-        [this.props.id]: { text, type: this.props.type }
-      }
+    this.props.onChange(this.props.id, {
+      text,
+      type: this.props.type
     })
   }
 
@@ -159,7 +156,7 @@ class ItemTableCell extends React.PureComponent {
     position: number.isRequired,
     size: number,
     tags: object,
-    type: string.isRequired,
+    type: string,
     value: oneOfType([string, number, instanceOf(Date)]),
     getSelection: func.isRequired,
     getNextColumn: func.isRequired,
@@ -173,7 +170,6 @@ class ItemTableCell extends React.PureComponent {
   static defaultProps = {
     position: 0,
     size: 48,
-    type: TYPE.TEXT,
     getNextColumn: noop,
     getPrevColumn: noop
   }

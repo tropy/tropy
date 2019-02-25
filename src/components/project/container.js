@@ -232,6 +232,7 @@ class ProjectContainer extends Component {
       photos,
       visiblePhotos,
       selection,
+      templates,
       ui,
       ...props
     } = this.props
@@ -251,6 +252,7 @@ class ProjectContainer extends Component {
           columns={columns}
           offset={this.state.offset}
           photos={photos}
+          templates={templates}
           zoom={ui.zoom}
           onMetadataSave={this.handleMetadataSave}/>
 
@@ -320,6 +322,7 @@ class ProjectContainer extends Component {
     cache: string.isRequired,
     sort: object.isRequired,
     tags: object.isRequired,
+    templates: object.isRequired,
 
     isOver: bool,
     canDrop: bool,
@@ -397,6 +400,7 @@ module.exports = {
       project: state.project,
       selection: getSelectedItems(state),
       sort: getSortColumn(state),
+      templates: state.ontology.template,
       tags: state.tags,
       ui: state.ui
     }),
