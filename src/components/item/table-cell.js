@@ -36,7 +36,8 @@ class ItemTableCell extends React.PureComponent {
   }
 
   get title() {
-    return this.props.isMainColumn ? this.props.value : null
+    return this.props.title ||
+      this.props.isMainColumn ? this.props.value : null
   }
 
   edit(property) {
@@ -156,6 +157,7 @@ class ItemTableCell extends React.PureComponent {
     position: number.isRequired,
     size: number,
     tags: object,
+    title: string,
     type: string,
     value: oneOfType([string, number, instanceOf(Date)]),
     getSelection: func.isRequired,
