@@ -5,7 +5,7 @@ const { entries, values } = Object
 const { by } = require('../collate')
 const { cat, compose, filter, into, map } = require('transducers.js')
 const { blank, get, homogenize } = require('../common/util')
-const { TYPE, ITEM, PHOTO, SELECTION } = require('../constants')
+const { TROPY, ITEM, PHOTO, SELECTION } = require('../constants')
 const { value }  = require('../value')
 
 const strip = (id, vocab) =>
@@ -83,9 +83,9 @@ const getTemplatesByType = (type) => memo(
   ).sort(by('name', 'id'))
 )
 
-const getItemTemplates = getTemplatesByType(TYPE.ITEM)
-const getPhotoTemplates = getTemplatesByType(TYPE.PHOTO)
-const getSelectionTemplates = getTemplatesByType(TYPE.SELECTION)
+const getItemTemplates = getTemplatesByType(TROPY.Item)
+const getPhotoTemplates = getTemplatesByType(TROPY.Photo)
+const getSelectionTemplates = getTemplatesByType(TROPY.Selection)
 
 const getAllTemplatesByType = memo(
   getItemTemplates,

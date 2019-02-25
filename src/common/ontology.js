@@ -5,14 +5,17 @@ const { createReadStream: stream } = require('fs')
 const { any, empty, get, identify, pick, titlecase } = require('./util')
 const { Resource } = require('./res')
 const N3 = require('n3')
-const { RDF, RDFS, DC, TERMS, SKOS, OWL, VANN, TYPE } = require('../constants')
 const { TEMPLATE } = require('../constants/ontology')
 const { readFileAsync: read, writeFileAsync: write } = require('fs')
+
+const {
+  RDF, RDFS, DC, TERMS, SKOS, OWL, VANN, TROPY, TYPE
+} = require('../constants')
 
 
 class Template {
   static defaults = {
-    type: TYPE.ITEM,
+    type: TROPY.Item,
     name: '',
     creator: '',
     description: '',
@@ -54,7 +57,7 @@ class Template {
     return {
       '@context': TEMPLATE.CONTEXT,
       '@id': data.id,
-      '@type': TYPE.TEMPLATE,
+      '@type': TROPY.Template,
       'type': data.type,
       'name': data.name,
       'version': data.version,

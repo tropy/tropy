@@ -1,6 +1,7 @@
 'use strict'
 
 const TYPE = require('./type')
+const { TROPY } = require('./rdf')
 
 module.exports = {
   PERSIST: 'nav.persist',
@@ -29,7 +30,7 @@ module.exports = {
     TEMPLATE: {
       id: 'item.template',
       protected: true,
-      type: TYPE.TEMPLATE
+      type: TROPY.Template
     },
     POSITION: {
       id: 'added',
