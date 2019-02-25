@@ -19,6 +19,7 @@ const IMAGE_PROPS = [
 ]
 
 const SELECTION_PROPS = [
+  'template',
   'x',
   'y',
   ...IMAGE_PROPS
@@ -28,7 +29,9 @@ const PHOTO_PROPS = [
   'checksum',
   'mimetype',
   'orientation',
+  'path',
   'size',
+  'template',
   ...IMAGE_PROPS
 ]
 
@@ -49,8 +52,8 @@ function makeContext(template, items, resources) {
       '@container': '@list',
       '@context': {
         note: {
-          '@container': '@list',
-          '@id': TROPY.note
+          '@id': TROPY.note,
+          '@container': '@list'
         },
         selection: {
           '@id': TROPY.selection,
@@ -108,7 +111,7 @@ function addSelections(template, photo, ids, resources) {
       let selection = { '@type': TROPY.Selection }
       const original = selections[sID]
       // add selection properties
-      Object.assign(selection, pick(original, SELECTION_PROPS))
+      pick(original, SELECTION_PROPS, selection)
 
       // add selection notes
       selection = addInfo(selection, original.notes, 'note', notes, makeNote)
@@ -143,12 +146,10 @@ function renderItem(item, template, resources) {
   result.photo = item.photos.map(photoID => {
     const p = photos[photoID]
 
-    let photo = {
+    let photo = pick(p, PHOTO_PROPS, {
       '@type': TROPY.Photo,
-      'path': p.path,
-      'selection': [],
-      ...pick(p, PHOTO_PROPS)
-    }
+      'selection': []
+    })
 
     photo = newProperties(metadata[p.id], photo, false, props, template)
 
