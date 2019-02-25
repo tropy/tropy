@@ -25,6 +25,7 @@ const EXPORT_MEDIA = [
   'mirror',
   'negative',
   'saturation',
+  'sharpen',
   'width',
 ]
 const EXPORT_PROPERTIES = {
