@@ -116,6 +116,7 @@ class Tropy extends EventEmitter {
         height: WIN.HEIGHT,
         minWidth: WIN.MIN_WIDTH * this.state.zoom,
         minHeight: WIN.MIN_HEIGHT * this.state.zoom,
+        backgroundColor: this.background,
         darkTheme: (this.state.theme === 'dark'),
         frame: !this.hash.frameless
       }, this.state.zoom)
@@ -213,6 +214,7 @@ class Tropy extends EventEmitter {
       minimizable: false,
       maximizable: false,
       fullscreenable: false,
+      backgroundColor: this.background,
       darkTheme: (this.state.theme === 'dark'),
       frame: !this.hash.frameless
     }, this.state.zoom)
@@ -236,6 +238,7 @@ class Tropy extends EventEmitter {
       minimizable: false,
       maximizable: false,
       fullscreenable: false,
+      backgroundColor: this.background,
       darkTheme: (this.state.theme === 'dark'),
       frame: !this.hash.frameless,
     }, this.state.zoom)
@@ -258,6 +261,7 @@ class Tropy extends EventEmitter {
       minimizable: false,
       maximizable: false,
       fullscreenable: false,
+      backgroundColor: this.background,
       darkTheme: (this.state.theme === 'dark'),
       frame: !this.hash.frameless
     }, this.state.zoom)
@@ -818,6 +822,15 @@ class Tropy extends EventEmitter {
 
   get name() {
     return product
+  }
+
+  get dark() {
+    return this.state.theme === 'dark' ||
+      this.state.theme === 'system' && pref.isDarkMode()
+  }
+
+  get background() {
+    return SASS.BODY[this.dark ? 'dark' : 'light']
   }
 
   get dev() {

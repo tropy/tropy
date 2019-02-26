@@ -12,6 +12,11 @@ const ABOUT = {
   HEIGHT: 300
 }
 
+const BODY = {
+  dark: '#2f2f2f',
+  light: '#ffffff'
+}
+
 const COLUMN = {
   MIN: 48,
   POSITION: 54,
@@ -228,6 +233,7 @@ const LIST = {
 module.exports =  {
   ABOUT,
   ACTIVITY,
+  BODY,
   COLUMN,
   EDITOR,
   ESPER,
