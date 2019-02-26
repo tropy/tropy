@@ -85,10 +85,8 @@ class ItemPanelGroup extends React.PureComponent {
     this.panel.current.focus()
   }
 
-  handleTagAddCancel = (hasChanged) => {
-    if (!hasChanged) {
-      this.panel.current.focus()
-    }
+  handleTagAddCancel = () => {
+    this.panel.current.focus()
   }
 
   handleNoteOpen = (note) => {
