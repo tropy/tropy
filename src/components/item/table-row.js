@@ -29,7 +29,6 @@ class ItemTableRow extends ItemIterable {
 
   getNextColumn = (at = 0, dir = 1) => {
     let { columns } = this.props
-
     for (let k = 1, N = columns.length; k < N; ++k) {
       let column = columns[(N + at + k * dir) % N]
       if (column.protected) continue

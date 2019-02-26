@@ -1,34 +1,43 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
 const { noop } = require('../common/util')
 const { AutoResizer } = require('./auto-resizer')
 const { Completions } = require('./completions')
 const { blank, get } = require('../common/util')
+
 const {
   array, bool, func, number, oneOf, oneOfType, string
 } = require('prop-types')
 
 
-class Input extends Component {
-  constructor(props) {
-    super(props)
-    this.state =  {
-      value: props.value,
+class Input extends React.PureComponent {
+  completions = React.createRef()
+  input = React.createRef()
+
+  state =  {
+    hasFocus: false,
+    key: this.props.value,
+    query: '',
+    value: this.props.value
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    return (props.value === state.key) ? null : {
+      key: props.value,
       query: '',
-      hasFocus: false
+      value: props.value
     }
   }
 
-  componentWillReceiveProps({ value }) {
-    if (value !== this.props.value) {
-      this.reset(value)
-    }
+  componentDidMount() {
+    if (this.props.autofocus)
+      this.input.current.focus()
   }
 
-  componentWillUnmount() {
-    this.clearResetTimeout()
+  get completionsClassName() {
+    return this.props.className ?
+      `${this.props.className}-completions` : null
   }
 
   get isValid() {
@@ -36,67 +45,69 @@ class Input extends Component {
   }
 
   get hasChanged() {
-    return this.state.value !== this.props.value
+    return this.state.value !== this.state.key
   }
 
   get hasCompletions() {
     return this.state.hasFocus && this.props.completions.length > 0
   }
 
-  setCompletions = (completions) => {
-    this.completions = completions
+  cancel = (isForced) => {
+    this.hasBeenCancelled = true
+    this.props.onCancel(this.hasChanged, isForced)
   }
 
-  setInput = (input) => {
-    if (input != null && this.props.autofocus) {
-      input.focus()
-      input.select()
-    }
-
-    this.input = input
-  }
-
-  focus = () => {
-    if (this.input != null) this.input.focus()
-  }
-
-  reset = (value = this.props.value) => {
-    this.hasBeenCommitted = false
-    this.hasBeenCancelled = false
-    this.setState({ value, query: '' })
-    this.clearResetTimeout()
-  }
-
-  commit(force) {
-    if (force || this.isValid) {
+  commit(isForced) {
+    if (isForced || this.isValid) {
       if (!this.hasBeenCommitted) {
         this.hasBeenCommitted = true
-        this.props.onCommit(this.state.value, this.hasChanged, force)
-
-        if (this.hasChanged && this.props.delay > 0) {
-          this.clearResetTimeout()
-          this.tm = setTimeout(this.reset, this.props.delay)
-        }
+        this.props.onCommit(this.state.value, this.hasChanged, isForced)
       }
-
     } else {
       this.cancel()
     }
   }
 
-  cancel = (force) => {
-    const { hasChanged } = this
-
-    this.reset()
-    this.hasBeenCancelled = true
-    this.props.onCancel(hasChanged, force)
+  focus = () => {
+    if (this.input.current)
+      this.input.current.focus()
   }
 
-  clearResetTimeout() {
-    if (this.tm != null) {
-      clearTimeout(this.tm)
-      this.tm = null
-    }
+  reset() {
+    this.hasBeenCancelled = false
+    this.hasBeenCommitted = false
+
+    this.setState({
+      key: this.props.value,
+      query: '',
+      value: this.props.value
+    })
+  }
+
+  handleBlur = (event) => {
+    let cancel = this.props.onBlur(event)
+    this.setState({ hasFocus: false })
+
+    if (this.hasBeenCancelled || this.hasBeenCommitted)
+      return
+    if (cancel)
+      this.cancel()
+    else
+      this.commit()
+  }
+
+  handleFocus = (event) => {
+    this.props.onFocus(event)
+
+    if (this.props.autoselect)
+      this.input.current.select()
+
+    this.hasBeenCancelled = false
+    this.hasBeenCommitted = false
+
+    this.setState({
+      hasFocus: true
+    })
   }
 
   handleChange = ({ target }) => {
@@ -105,34 +116,14 @@ class Input extends Component {
   }
 
   handleCompletion = (value) => {
-    this.setState({ value }, this.commit)
+    this.setState({ value }, () => this.commit(true))
     this.props.onChange(value)
-  }
-
-  handleBlur = (event) => {
-    this.setState({ hasFocus: false })
-
-    const cancel = this.props.onBlur(event)
-    if (this.hasBeenCancelled || this.hasBeenCommitted) return
-
-    if (cancel) {
-      this.cancel()
-    } else {
-      this.commit()
-    }
-  }
-
-  handleFocus = (event) => {
-    this.setState({ hasFocus: true })
-
-    this.hasBeenCancelled = false
-    this.hasBeenCommitted = false
-    this.props.onFocus(event)
   }
 
   handleKeyDown = (event) => {
     if (this.props.onKeyDown != null) {
-      if (this.props.onKeyDown(event, this)) return
+      if (this.props.onKeyDown(event, this))
+        return null
     }
 
     // TODO Some Editables (e.g., in ItemTable expect active Inputs
@@ -149,7 +140,7 @@ class Input extends Component {
           this.commit(true)
           break
         default:
-          return
+          return null
       }
     }
 
@@ -160,8 +151,10 @@ class Input extends Component {
 
   handleCompletionsKeyDown(event) {
     let opt = null
-    let { completions } = this
-    if (completions == null) return false
+    let completions = this.completions.current
+
+    if (completions == null)
+      return false
 
     switch (event.key) {
       case 'ArrowDown':
@@ -171,7 +164,9 @@ class Input extends Component {
         opt = completions.prev()
         break
       case 'Enter':
-        if (completions.state.active == null) return false
+        if (completions.state.active == null)
+          return false
+
         this.handleCompletion(completions.state.active)
         return true
       default:
@@ -185,64 +180,50 @@ class Input extends Component {
     return true
   }
 
-  renderCompletions() {
-    if (!this.hasCompletions) return null
-    const { className } = this.props
-
-    return (
-      <Completions
-        ref={this.setCompletions}
-        className={className ? `${className}-completions` : null}
-        completions={this.props.completions}
-        isAdvisory
-        isExactMatchHidden
-        match={this.props.match}
-        minQueryLength={1}
-        onClickOutside={this.cancel}
-        onSelect={this.handleCompletion}
-        parent={this.input}
-        query={this.state.query}/>
-    )
-  }
-
-  renderInput() {
-    const input = (
-      <input
-        id={this.props.id}
-        className={this.props.className}
-        disabled={this.props.isDisabled}
-        placeholder={this.props.placeholder}
-        ref={this.setInput}
-        readOnly={this.props.isReadOnly}
-        required={this.props.isRequired}
-        tabIndex={this.props.tabIndex}
-        type={this.props.type}
-        value={this.state.value}
-        onBlur={this.handleBlur}
-        onChange={this.handleChange}
-        onFocus={this.handleFocus}
-        onKeyDown={this.handleKeyDown}/>
-    )
-
-    return (this.props.resize) ?
-      <AutoResizer content={this.state.value}>{input}</AutoResizer> :
-      input
-  }
-
   render() {
     return (
       <div className="input-group">
-        {this.renderInput()}
-        {this.renderCompletions()}
+        <AutoResizer
+          content={this.state.value}
+          isDisabled={!this.props.resize}>
+          <input
+            className={this.props.className}
+            disabled={this.props.isDisabled}
+            id={this.props.id}
+            placeholder={this.props.placeholder}
+            readOnly={this.props.isReadOnly}
+            ref={this.input}
+            required={this.props.isRequired}
+            tabIndex={this.props.tabIndex}
+            type={this.props.type}
+            value={this.state.value}
+            onBlur={this.handleBlur}
+            onChange={this.handleChange}
+            onFocus={this.handleFocus}
+            onKeyDown={this.handleKeyDown}/>
+        </AutoResizer>
+        {this.hasCompletions &&
+          <Completions
+            className={this.completionsClassName}
+            completions={this.props.completions}
+            isAdvisory
+            isExactMatchHidden
+            match={this.props.match}
+            minQueryLength={1}
+            onClickOutside={this.cancel}
+            onSelect={this.handleCompletion}
+            parent={this.input.current}
+            query={this.state.query}
+            ref={this.completions}/>}
       </div>
     )
   }
 
   static propTypes = {
     autofocus: bool,
+    autoselect: bool,
     completions: array.isRequired,
     className: string,
-    delay: number.isRequired,
     id: string,
     isDisabled: bool,
     isReadOnly: bool,
@@ -263,7 +244,6 @@ class Input extends Component {
 
   static defaultProps = {
     completions: [],
-    delay: 100,
     match: Completions.defaultProps.match,
     tabIndex: -1,
     type: 'text',
