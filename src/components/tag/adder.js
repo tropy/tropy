@@ -26,7 +26,8 @@ class TagAdder extends React.PureComponent {
 
   handleBlur = (event) => {
     this.props.onBlur(event)
-    return true // cancel on blur
+    this.input.current.reset()
+    return true // Always cancel on blur!
   }
 
   handleChange = (name) => {

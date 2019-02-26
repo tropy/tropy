@@ -89,7 +89,7 @@ class Input extends React.PureComponent {
     this.setState({ hasFocus: false })
 
     if (this.hasBeenCancelled || this.hasBeenCommitted)
-      return
+      return null
     if (cancel)
       this.cancel()
     else
