@@ -29,6 +29,8 @@ ja:
 
           other {# アイテム}}
       selection: セレクション
+      popup:
+        placeholder: フィールド を追加
     tags:
       tab: タグ
       add: >
@@ -66,7 +68,7 @@ ja:
       title: ロイ・ローゼンツヴァイク歴史とニューディアセンター
       url: https://rrchnm.org
     cds:
-      title: デジタルスカラーシップコーポレーション
+      title: Corporation for Digital Scholarship
       url: http://digitalscholar.org
     text: >
         Tropyは、歴史教育リソースやデジタル展示、オープンソースソフトウェアの開発チームである{rrchnm}によって作成されています。
@@ -82,7 +84,7 @@ ja:
       url: https://tropy.org/credits
   project:
     none: プロジェクトファイルをここにドロップするか、あるいは{newProject}を作成してください
-    empty: Tropyに写真をドロップして始めてください
+    empty: まずは写真をTropyにドロップしてください
     new: 新規プロジェクト
   wizard:
     project:
@@ -108,7 +110,14 @@ ja:
           en: English
           fr: Français
           ja: 日本語
-      template: デフォルトテンプレート
+      templates:
+        label: デフォルトテンプレート
+        item: アイテム
+        photo: 写真
+        selection: セレクション
+      title:
+        label: 写真のファイル名へ反映する
+        force: 写真のメタデータに上書きする
       debug: デベロッパーモード
       localtime: メタデータにローカルタイムを設定する
       dup:
@@ -188,6 +197,7 @@ ja:
   item:
     created: 登録日
     modified: 更新日
+    template: テンプレート
   photo:
     file: ファイル
     size: サイズ
@@ -223,6 +233,9 @@ ja:
         value: "{value, number}°"
       saturation:
         label: 彩度
+        value: "{value, number}"
+      sharpen:
+        label: 鮮鋭化
         value: "{value, number}"
   notepad:
     placeholder: ノートを入力してください
@@ -267,9 +280,9 @@ ja:
     label: ラベル
     description: 内容記述
     comment: コメント
-  ok: はい
-  cancel: キャンセル
   dialog:
+    ok: はい
+    cancel: キャンセル
     prompt:
       item:
         destroy:
@@ -491,6 +504,8 @@ ja:
       tag:
         save: タグの保存に失敗しました
         create: アイテムのタグ付けに失敗しました。タグは一つのアイテムに一意のものにしてください。
+      template:
+        change: アイテムテンプレートの変更に失敗しました
     list:
       load: リストのロードに失敗しました
       create: リスト作成に失敗しました。リスト名は一意のものにしてください。
@@ -502,6 +517,12 @@ ja:
       consolidate: 写真の統合に失敗しました
       create: 写真のインポートに失敗しました
       save: 写真の保存に失敗しました
+      template:
+        change: 写真テンプレートの変更に失敗しました
+    selection:
+      create: フォト・セレクションの作成に失敗しました
+      template:
+        change: 選択テンプレートの変更に失敗しました
     ontology:
       import: 語彙のインポートに失敗しました
       vocab:
@@ -510,7 +531,7 @@ ja:
         import: テンプレートのインポートに失敗しました
         field:
           add: テンプレートへのフィールド追加に失敗しました
-          remove: テンプレートからフィールドの除去に失敗しました
+          remove: テンプレートからフィールドの削除に失敗しました
     tag:
       create: タグの作成に失敗しました。タグ名は一意のものにしてください。
   flash:

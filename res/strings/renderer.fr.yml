@@ -268,9 +268,9 @@ fr:
     label: Label
     description: Description
     comment: Commentaire
-  ok: Oui
-  cancel: Annuler
   dialog:
+    ok: Oui
+    cancel: Annuler
     prompt:
       item:
         destroy:

@@ -111,9 +111,15 @@ de:
           en: English
           fr: Français
           ja: 日本語
-      template: Standardvorlage
+      templates:
+        label: Standardvorlagen
+        item: Objekt
+        photo: Foto
+        selection: Ausschnitt
+      title:
+        label: Dateiname importieren als
+        force: Überschreibe dabei Foto-Metadaten
       debug: Entwicklermodus aktivieren
-      localtime: Foto-Metadaten nutzen lokale Zeitzone
       dup:
         label: Beim Importieren
         option:
@@ -193,6 +199,7 @@ de:
   item:
     created: Hinzugefügt
     modified: Bearbeitet
+    template: Vorlage
   photo:
     file: Datei
     size: Größe
@@ -275,9 +282,9 @@ de:
     label: Bezeichnung
     description: Beschreibung
     comment: Kommentar
-  ok: OK
-  cancel: Abbrechen
   dialog:
+    ok: OK
+    cancel: Abbrechen
     prompt:
       item:
         destroy:
@@ -501,6 +508,8 @@ de:
       tag:
         save: Tag konnte nicht gespeichert werden.
         create: Objekt konnte nicht getaggt werden.
+      template:
+        change: Vorlage konnte nicht gewechselt werden.
     list:
       load: Listen konnten nicht geladen werden.
       create: Liste konnte nicht erstellt werden. Listennamen müssen eindeutig sein.
@@ -512,6 +521,12 @@ de:
       consolidate: Fotos konnten nicht konsolidiert werden.
       create: Foto konnte nicht importiert werden.
       save: Foto konnte nicht gespeichert werden.
+      template:
+        change: Vorlage konnte nicht gewechselt werden.
+    selection:
+      create: Ausschnitt konnte nicht gespeichert werden.
+      template:
+        change: Vorlage konnte nicht gewechselt werden.
     ontology:
       import: Vokabular konnte nicht importiert werden.
       vocab:
@@ -530,7 +545,7 @@ de:
             Tropy {version} kann installiert werden. Jetzt installieren und neustarten?
         confirm: Jetzt neu starten
   plugin:
-    name: Projektname
+    name: Name
     plugin: Plugin
     options: Optionen
     hooks:
