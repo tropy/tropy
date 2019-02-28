@@ -120,6 +120,7 @@ de:
         label: Dateiname importieren als
         force: Überschreibe dabei Foto-Metadaten
       debug: Entwicklermodus aktivieren
+      localtime: 'Exif Datum und Zeit in lokale Zeitzone verschieben '
       dup:
         label: Beim Importieren
         option:
@@ -283,7 +284,7 @@ de:
     description: Beschreibung
     comment: Kommentar
   dialog:
-    ok: OK
+    ok: Ja
     cancel: Abbrechen
     prompt:
       item:
