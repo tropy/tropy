@@ -76,7 +76,7 @@ async function prompt(message, {
   checkbox,
   isChecked,
   detail,
-  prefix = '',
+  prefix = 'dialog.',
   ...options
 } = {}) {
   const { response, checked } = await show('message-box', {

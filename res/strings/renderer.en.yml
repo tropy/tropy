@@ -258,9 +258,9 @@ en:
     description: Description
     comment: Comment
 
-  ok: Yes
-  cancel: Cancel
   dialog:
+    ok: Yes
+    cancel: Cancel
     prompt:
       item:
         destroy:
