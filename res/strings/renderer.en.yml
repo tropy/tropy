@@ -495,6 +495,7 @@ en:
       template:
         change: Failed to change selection template.
     ontology:
+      migrate: Failed to upgrade your ontology database.
       import: Failed to import vocabulary.
       vocab:
         save: Failed to save vocabulary. Prefix must be unique.

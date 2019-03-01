@@ -65,7 +65,7 @@ function fail(error, message = 'Error') {
     type: 'error',
     title: 'Error',
     message: t(message, 'error.'),
-    detail: (message === error.message) ? null : error.message
+    detail: error.stack
   })
 }
 
