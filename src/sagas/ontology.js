@@ -40,7 +40,7 @@ function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
       try {
         yield call(db.migrate, ONTOLOGY.MIGRATIONS)
       } catch (error) {
-        warn('failed to migrate ontology database')
+        warn('failed to migrate ontology database', { stack: error.stack })
         yield call(fail, error, 'ontology.migrate')
       }
     }
