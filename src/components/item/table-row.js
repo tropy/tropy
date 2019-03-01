@@ -142,7 +142,7 @@ class ItemTableRow extends ItemIterable {
     edit: object,
     hasPositionColumn: bool,
     position: number.isRequired,
-    template: object.isRequired
+    template: object
   }
 
   static defaultProps = {
