@@ -46,17 +46,17 @@ Iptc4xmpExt:AddlModelInfo a rdf:Property ;
 	rdfs:comment "Information about the ethnicity and other facets of the model(s) in a model-released image."@en .
 
 Iptc4xmpExt:ArtworkOrObject a rdf:Property ;
-	rdfs:label "Artwork or Object in the Image"@en ;
+	rdfs:label "Artwork or Object"@en ;
 	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
 	rdfs:comment "A set of metadata about artwork or an object in the image."@en .
 
 Iptc4xmpExt:OrganisationInImageCode a rdf:Property ;
-	rdfs:label "Code of Organisation Featured in the Image"@en ;
+	rdfs:label "Code of Organisation Featured"@en ;
 	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
 	rdfs:comment "Code from a controlled vocabulary for identifying the organisation or company which is featured in the image."@en .
 
 Iptc4xmpExt:OrganisationInImageName a rdf:Property ;
-	rdfs:label "Name of Organisation Featured in the Image"@en ;
+	rdfs:label "Name of Organisation Featured"@en ;
 	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
 	rdfs:comment "Name of the organisation or company which is featured in the image."@en .
 
@@ -71,7 +71,7 @@ Iptc4xmpExt:Genre a rdf:Property ;
 	rdfs:comment "Artistic, style, journalistic, product or other genre(s) of the image (expressed by a term from any Controlled Vocabulary)."@en .
 
 Iptc4xmpExt:LocationShown a rdf:Property ;
-	rdfs:label "Location Shown in the Image"@en ;
+	rdfs:label "Location Shown"@en ;
 	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
 	rdfs:comment "A location shown in the image."@en .
 
@@ -81,22 +81,22 @@ Iptc4xmpExt:ModelAge a rdf:Property ;
 	rdfs:comment "Age of the human model(s) at the time this image was taken in a model released image."@en .
 
 Iptc4xmpExt:PersonInImage a rdf:Property ;
-	rdfs:label "Person Shown in the Image"@en ;
+	rdfs:label "Person Shown"@en ;
 	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
 	rdfs:comment "Name of a person shown in the image."@en .
 
 Iptc4xmpExt:PersonInImageWDetails a rdf:Property ;
-	rdfs:label "Person Shown in the Image with Details"@en ;
+	rdfs:label "Person Shown with Details"@en ;
 	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
 	rdfs:comment "Details about a person the content is about."@en .
 
 Iptc4xmpExt:ProductInImage a rdf:Property ;
-	rdfs:label "Product Shown in the Image"@en ;
+	rdfs:label "Product Shown"@en ;
 	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
 	rdfs:comment "A product the content is about."@en .
 
 Iptc4xmpExt:DigImageGUID a rdf:Property ;
-	rdfs:label "Digital Image GUID"@en ;
+	rdfs:label "Digital Image Identifier"@en ;
 	rdfs:isDefinedBy <http://iptc.org/std/Iptc4xmpExt/2008-02-29/> ;
 	rdfs:comment "Globally unique identifier for this digital image. It is created and applied by the creator of the digital image at the time of its creation . This value shall not be changed after that time."@en .
 
