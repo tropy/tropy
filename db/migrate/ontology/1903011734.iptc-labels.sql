@@ -15,7 +15,6 @@ REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/DigImageG
 --REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/DigitalSourceType','de','');
 --REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/EmbdEncRightsExpr','de','');
 REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/Event','de','Ereignis');
---REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/Genre','de','');
 --REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/LinkedEncRightsExpr','de','');
 REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/LocationCreated','de','Standort der Aufnahme');
 REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/LocationShown','de','Ort des Motivs');
@@ -59,12 +58,6 @@ REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/Identifier','de','Kennun
 --REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/MetadataDate','de','');
 REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/ModifyDate','de','Änderungsdatum');
 REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/Rating','de','Bewertung');
---REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/DerivedFrom','de','');
-REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/DocumentID','de','Dokumentkennung');
-REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/InstanceID','de','Instanzkennung');
-REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/OriginalDocumentID','de','Originale Dokumentkennung');
---REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/RenditionClass','de','');
---REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/RenditionParams','de','');
 REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/Marked','de','Copyright-Status');
 REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/Certificate','de','Zertifikat');
 REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/Owner','de','Copyright-Eigentümer');
@@ -141,12 +134,6 @@ REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/CreatorTool','fr','Appli
 --REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/MetadataDate','fr','');
 REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/ModifyDate','fr','Date de modification');
 REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/Rating','fr','Evaluation');
---REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/DerivedFrom','fr','');
---REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/DocumentID','fr','');
---REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/InstanceID','fr','');
---REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/OriginalDocumentID','fr','');
---REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/RenditionClass','fr','');
---REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/mm/RenditionParams','fr','');
 REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/Marked','fr','Etat du copyright');
 --REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/Certificate','fr','');
 REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/Owner','fr','Titulaire du droit d''auteur');
@@ -163,4 +150,39 @@ REPLACE INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/ModelReleaseID','f
 REPLACE INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/ModelReleaseStatus','fr','Etat de la publication du modèle');
 REPLACE INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/PropertyReleaseID','fr','ID de publication de propriété');
 REPLACE INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/PropertyReleaseStatus','fr','Etat de la publication de propriété');
---REPLACE INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/Version','fr','');
+REPLACE INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/Version','fr','Version PLUS');
+
+
+-- Japanese
+------------------------------------------------------------------------------
+REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/CreatorContactInfo','ja','作成者のコンタクト先');
+REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/IntellectualGenre','ja','ジャンル');
+REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/Scene','ja','IPTCシーンコード');
+REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/SubjectCode','ja','IPTC件名コード');
+REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/Event','ja','イベント');
+REPLACE INTO labels VALUES('http://iptc.org/std/Iptc4xmpExt/2008-02-29/Genre','ja','ジャンル');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/AuthorsPosition','ja','"作成者の役職');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/CaptionWriter','ja','説明記入者');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Category','ja','カテゴリー');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/City','ja','市区町村名');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Country','ja','国名');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Credit','ja','提供元');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/DateCreated','ja','作成日');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Headline','ja','見出し');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/History','ja','ヒストリー');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/ICCProfile','ja','ICCプロファイル');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Instructions','ja','説明');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Source','ja','所有者または著作権保有者');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/State','ja','郡道府県名');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/TransmissionReference','ja','送信記録');
+REPLACE INTO labels VALUES('http://ns.adobe.com/photoshop/1.0/Urgency','ja','重要度');
+REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/CreateDate','ja','作成日');
+REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/CreatorTool','ja','アプリケーション');
+REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/ModifyDate','ja','修正日');
+REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/Rating','ja','レート');
+REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/Marked','ja','著作権の状態');
+REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/Owner','ja','所有者');
+REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/UsageTerms','ja','使用権に関する規約');
+REPLACE INTO labels VALUES('http://ns.adobe.com/xap/1.0/rights/WebStatement','ja','著作権情報URL');
+REPLACE INTO labels VALUES('http://ns.useplus.org/ldf/xmp/1.0/CopyrightOwner','ja','著作権保持者');
+
