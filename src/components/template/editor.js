@@ -9,7 +9,7 @@ const { FormField, FormGroup, FormSelect } = require('../form')
 const { Template } = require('../../common/ontology')
 const { arrayOf, func, shape, string } = require('prop-types')
 const actions = require('../../actions')
-const { TYPE } = require('../../constants')
+const { TROPY, TYPE } = require('../../constants')
 const { insert, move, remove } = require('../../common/util')
 
 const {
@@ -263,7 +263,7 @@ class TemplateEditor extends React.PureComponent {
   }
 
   static defaultProps = {
-    types: [TYPE.ITEM, TYPE.PHOTO, TYPE.SELECTION]
+    types: [TROPY.Item, TROPY.Photo, TROPY.Selection]
   }
 }
 

@@ -354,7 +354,13 @@ const util = {
   },
 
   titlecase(string) {
-    return string.replace(/\b[a-z]/g, (match) => match.toUpperCase())
+    return string
+      .replace(/\b\p{Ll}/ug, (m) => m.toUpperCase())
+      .replace(/(\p{Ll})(\p{Lu})/ug, (m, p1, p2) => `${p1} ${p2}`)
+  },
+
+  capitalize(string) {
+    return string.replace(/^\p{Ll}/u, (m) => m.toUpperCase())
   },
 
   downcase(string) {
@@ -363,7 +369,7 @@ const util = {
 
   camelcase(str) {
     return str.replace(
-        /(?:^\w|[A-Z]|\b\w|\s+)/g,
+        /(?:^\w|\p{Lu}|\b\w|\s+)/ug,
       (match, index) => {
         if (+match === 0) return ''
         return index === 0 ? match.toLowerCase() : match.toUpperCase()

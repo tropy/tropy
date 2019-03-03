@@ -1,22 +1,11 @@
 'use strict'
 
 const { promises: jsonld } = require('jsonld')
-
 const { pick, pluck } = require('../common/util')
-const { ITEM, PHOTO, SELECTION } = require('../constants/type')
+const { TROPY } = require('../constants')
 const makeNote = require('./note')
 
-const TR = 'https://tropy.org/v1/tropy#'
-
-const PROP = {
-  TEMPLATE: `${TR}template`,
-  ITEM: `${TR}item`,
-  PHOTO: `${TR}photo`,
-  SELECTION: `${TR}selection`,
-  NOTE: `${TR}note`
-}
-
-const EXPORT_MEDIA = [
+const IMAGE_PROPS = [
   'angle',
   'brightness',
   'contrast',
@@ -25,22 +14,26 @@ const EXPORT_MEDIA = [
   'mirror',
   'negative',
   'saturation',
-  'width',
+  'sharpen',
+  'width'
 ]
-const EXPORT_PROPERTIES = {
-  SELECTION: [
-    'x',
-    'y',
-    ...EXPORT_MEDIA
-  ],
-  PHOTO: [
-    'checksum',
-    'mimetype',
-    'orientation',
-    'size',
-    ...EXPORT_MEDIA
-  ]
-}
+
+const SELECTION_PROPS = [
+  'template',
+  'x',
+  'y',
+  ...IMAGE_PROPS
+]
+
+const PHOTO_PROPS = [
+  'checksum',
+  'mimetype',
+  'orientation',
+  'path',
+  'size',
+  'template',
+  ...IMAGE_PROPS
+]
 
 const { newProperties } = require('./utils')
 
@@ -49,21 +42,21 @@ function makeContext(template, items, resources) {
   const flatten = (acc, ps) => acc.concat(ps)
   let result = {
     '@version': 1.1,
-    '@vocab': TR,
+    '@vocab': TROPY.ns,
     'template': {
-      '@id': PROP.TEMPLATE,
+      '@id': TROPY.template,
       '@type': '@id'
     },
     'photo': {
-      '@id': PROP.PHOTO,
+      '@id': TROPY.photo,
       '@container': '@list',
       '@context': {
         note: {
-          '@container': '@list',
-          '@id': PROP.NOTE
+          '@id': TROPY.note,
+          '@container': '@list'
         },
         selection: {
-          '@id': PROP.SELECTION,
+          '@id': TROPY.selection,
           '@container': '@list',
           '@context': {}
         }
@@ -115,10 +108,10 @@ function addSelections(template, photo, ids, resources) {
 
   if (ids) {
     photo.selection = ids.map(sID => {
-      let selection = { '@type': SELECTION }
+      let selection = { '@type': TROPY.Selection }
       const original = selections[sID]
       // add selection properties
-      Object.assign(selection, pick(original, EXPORT_PROPERTIES.SELECTION))
+      pick(original, SELECTION_PROPS, selection)
 
       // add selection notes
       selection = addInfo(selection, original.notes, 'note', notes, makeNote)
@@ -141,7 +134,7 @@ function renderItem(item, template, resources) {
   const [props, metadata, photos, lists, tags, notes] = resources
 
   // the item starts with a photo property, it may not be overwritten
-  let result = { '@type': ITEM, 'photo': [] }
+  let result = { '@type': TROPY.Item, 'photo': [] }
 
   result = addInfo(result, item.lists, 'list', lists)
   result = addInfo(result, item.tags, 'tag', tags)
@@ -153,12 +146,10 @@ function renderItem(item, template, resources) {
   result.photo = item.photos.map(photoID => {
     const p = photos[photoID]
 
-    let photo = {
-      '@type': PHOTO,
-      'path': p.path,
-      'selection': [],
-      ...pick(p, EXPORT_PROPERTIES.PHOTO)
-    }
+    let photo = pick(p, PHOTO_PROPS, {
+      '@type': TROPY.Photo,
+      'selection': []
+    })
 
     photo = newProperties(metadata[p.id], photo, false, props, template)
 

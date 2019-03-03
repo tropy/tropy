@@ -4,12 +4,9 @@ const React = require('react')
 const { FormattedMessage } = require('react-intl')
 const { Slider } = require('../slider')
 const { Button } = require('../button')
+const { Toolbar, ToolGroup } = require('../toolbar')
 const { number, bool, func } = require('prop-types')
 const { PHOTO } = require('../../constants/sass')
-
-const {
-  Toolbar, ToolGroup, ToolbarLeft, ToolbarRight
-} = require('../toolbar')
 
 const {
   IconPhoto, IconPlus, IconListSmall, IconGridSmall
@@ -18,16 +15,15 @@ const {
 
 const PhotoToolbar = (props) => (
   <Toolbar isDraggable={false}>
-    <ToolbarLeft>
+    <Toolbar.Left>
       <IconPhoto/>
       <h4>
         <FormattedMessage
           id="panel.photo.title"
           values={{ count: props.photos }}/>
       </h4>
-    </ToolbarLeft>
-
-    <ToolbarRight>
+    </Toolbar.Left>
+    <Toolbar.Right>
       {
         props.hasCreateButton &&
           <ToolGroup>
@@ -49,7 +45,7 @@ const PhotoToolbar = (props) => (
           tabIndex={-1}
           onChange={props.onZoomChange}/>
       </ToolGroup>
-    </ToolbarRight>
+    </Toolbar.Right>
   </Toolbar>
 )
 

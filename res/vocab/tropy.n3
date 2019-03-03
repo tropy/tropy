@@ -245,6 +245,12 @@ tropy:saturation a rdf:Property ;
   rdfs:domain tropy:Photo , tropy:Selection ;
 	rdfs:comment "Saturation adjustment of an image."@en .
 
+tropy:sharpen a rdf:Property ;
+	rdfs:label "Sharpen"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Intensity of the sharpen filter applied to an image."@en .
+
 
 # Custom Metadata Properties
 

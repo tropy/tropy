@@ -253,8 +253,13 @@ class Window extends EventEmitter {
 
       switch (event.key) {
         case 'z':
-          if (isInput(event.target)) this.undo()
-          else this.emit('app.undo')
+          if (event.shiftKey) {
+            if (isInput(event.target)) this.redo()
+            else this.emit('app.redo')
+          } else {
+            if (isInput(event.target)) this.undo()
+            else this.emit('app.undo')
+          }
           break
 
         case 'Z':

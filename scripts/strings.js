@@ -10,6 +10,7 @@ const yaml = require('js-yaml')
 
 const HOME = join(__dirname, '..')
 const MENU = join(HOME, 'res', 'menu')
+const STRINGS = join(HOME, 'res', 'strings')
 
 const load = (file) =>
   yaml.safeLoad(read(file))
@@ -68,23 +69,31 @@ target.export = () => {
 }
 
 target.import = (args = []) => {
-  const home = args[0] || HOME
+  let home = args[0] || HOME
 
   for (const file of ls(home)) {
-    const m = file.match(
+    let m = file.match(
       /^for_(use|translation)_tropy_(\w+)-menu_(\w{2}).yml$/)
 
-    if (m == null) continue
+    if (m != null) {
+      let name = m[2]
+      let locale = m[3]
 
-    const name = m[2]
-    const locale = m[3]
+      say(`importing ${locale} labels into ${name} menu...`)
+      let labels = load(join(home, file))[locale]
+      let menu = yaml.safeLoad(yaml.safeDump(open(name).en, { noRefs: true }))
+      translate(menu, labels)
+      save({ [locale]: menu }, name, locale)
+      rm(join(home, file))
 
-    say(`importing ${locale} labels into ${name} menu...`)
-    const labels = load(join(home, file))[locale]
-    const menu = yaml.safeLoad(yaml.safeDump(open(name).en, { noRefs: true }))
-    translate(menu, labels)
-    save({ [locale]: menu }, name, locale)
-    rm(join(home, file))
+    } else {
+      m = file.match(/^for_use_tropy_renderer_(\w{2}).yml$/)
+      if (m == null) continue
+
+      let locale = m[1]
+      say(`importing ${locale} renderer strings...`)
+      mv(join(home, file), join(STRINGS, `renderer.${locale}.yml`))
+    }
   }
 }
 

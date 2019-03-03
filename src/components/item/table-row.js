@@ -4,7 +4,7 @@ const React = require('react')
 const { ItemIterable } = require('./iterable')
 const { BlankTableCell, ItemTableCell } = require('./table-cell')
 const { get, pick } = require('../../common/util')
-const { NAV } = require('../../constants')
+const { NAV, TYPE } = require('../../constants')
 const cx = require('classnames')
 const { arrayOf, bool, number, object } = require('prop-types')
 
@@ -29,7 +29,6 @@ class ItemTableRow extends ItemIterable {
 
   getNextColumn = (at = 0, dir = 1) => {
     let { columns } = this.props
-
     for (let k = 1, N = columns.length; k < N; ++k) {
       let column = columns[(N + at + k * dir) % N]
       if (column.protected) continue
@@ -49,9 +48,14 @@ class ItemTableRow extends ItemIterable {
     if (isItemColumn) {
       type = column.type
       value = this.props.item[isItemColumn]
+
     } else {
-      type = get(this.props.data, [column.id, 'type'])
-      value = get(this.props.data, [column.id, 'text'])
+      let data = this.props.data[column.id]
+
+      if (data != null) {
+        type = data.type
+        value = data.text
+      }
     }
 
     let props = {
@@ -68,9 +72,35 @@ class ItemTableRow extends ItemIterable {
 
     if (isMainColumn) {
       pick(this.props, MainCellProps, props)
+      props.title = value
+    }
+
+    if (column.id === 'item.template') {
+      props.title = value
+      props.display = get(this.props.template, ['name'])
     }
 
     return props
+  }
+
+  getTemplateFieldType(id) {
+    let fields = get(this.props.template, ['fields'])
+    if (fields == null) return null
+    let field = fields.find(f => f.property === id)
+    if (field == null) return null
+    return field.datatype
+
+  }
+
+  handleChange = (id, value) => {
+    if (value.type == null) {
+      value.type = this.getTemplateFieldType(id) || TYPE.TEXT
+    }
+
+    this.props.onChange({
+      id: this.props.item.id,
+      data: { [id]: value }
+    })
   }
 
   render() {
@@ -96,7 +126,8 @@ class ItemTableRow extends ItemIterable {
             {...props}
             {...this.getColumnProps(column, idx)}
             getNextColumn={this.getNextColumn}
-            getPrevColumn={this.getPrevColumn}/>)}
+            getPrevColumn={this.getPrevColumn}
+            onChange={this.handleChange}/>)}
         <BlankTableCell/>
       </tr>
     )
@@ -110,7 +141,8 @@ class ItemTableRow extends ItemIterable {
     drop: number,
     edit: object,
     hasPositionColumn: bool,
-    position: number.isRequired
+    position: number.isRequired,
+    template: object
   }
 
   static defaultProps = {

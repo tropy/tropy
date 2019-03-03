@@ -1,73 +1,27 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { bool, func, node, string } = require('prop-types')
 const cx = require('classnames')
 
 
-const ToolbarContext = ({ children, className, dom, isActive }) => (
-  <div
-    ref={dom}
-    className={cx('toolbar-context', { active: isActive }, className)}>
-    {children}
-  </div>
-)
+class Toolbar extends React.PureComponent {
+  container = React.createRef()
 
-ToolbarContext.propTypes = {
-  children: node,
-  className: string,
-  isActive: bool,
-  dom: func
-}
-
-
-const ToolGroup = ({ children }) => (
-  <div className="tool-group">{children}</div>
-)
-
-ToolGroup.propTypes = {
-  children: node
-}
-
-const ToolbarLeft = ({ children, className }) => (
-  <div className={cx('toolbar-left', className)}>{children}</div>
-)
-
-ToolbarLeft.propTypes = {
-  children: node,
-  className: string
-}
-
-const ToolbarRight = ({ children, className }) => (
-  <div className={cx('toolbar-right', className)}>{children}</div>
-)
-
-ToolbarRight.propTypes = {
-  children: node,
-  className: string
-}
-
-
-
-class Toolbar extends PureComponent {
   handleDoubleClick = (event) => {
-    if (this.props.onDoubleClick && event.target === this.container) {
+    if (this.props.onDoubleClick &&
+      event.target === this.container.current) {
       this.props.onDoubleClick()
     }
-  }
-
-  setContainer = (container) => {
-    this.container = container
   }
 
   render() {
     return (
       <div
-        className={
-          cx({ 'toolbar': true, 'window-draggable': this.props.isDraggable })
-        }
-        ref={this.props.onDoubleClick ? this.setContainer : null}
+        className={cx('toolbar', {
+          'window-draggable': this.props.isDraggable
+        })}
+        ref={this.container}
         onDoubleClick={this.handleDoubleClick}>
         {this.props.children}
       </div>
@@ -86,10 +40,50 @@ class Toolbar extends PureComponent {
 }
 
 
+Toolbar.Context = React.forwardRef((props, ref) => (
+  <div
+    ref={ref}
+    className={cx('toolbar-context', props.className, {
+      active: props.isActive
+    })}>
+    {props.children}
+  </div>
+))
+
+Toolbar.Context.propTypes = {
+  children: node,
+  className: string,
+  isActive: bool,
+  dom: func
+}
+
+
+Toolbar.Left = ({ children, className }) =>
+  <div className={cx('toolbar-left', className)}>{children}</div>
+
+Toolbar.Left.propTypes = {
+  children: node,
+  className: string
+}
+
+Toolbar.Right = ({ children, className }) =>
+  <div className={cx('toolbar-right', className)}>{children}</div>
+
+Toolbar.Right.propTypes = {
+  children: node,
+  className: string
+}
+
+
+const ToolGroup = ({ children }) =>
+  <div className="tool-group">{children}</div>
+
+ToolGroup.propTypes = {
+  children: node
+}
+
+
 module.exports = {
   Toolbar,
-  ToolbarContext,
-  ToolbarLeft,
-  ToolbarRight,
   ToolGroup
 }

@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { Toolbar, ToolbarLeft, ToolGroup } = require('../toolbar')
+const { Toolbar, ToolGroup } = require('../toolbar')
 const { IconChevron16 } = require('../icons')
 const { Button } = require('../button')
 const { Fade } = require('../fx')
@@ -17,7 +17,7 @@ class ItemToolbar extends React.PureComponent {
   render() {
     return (
       <Toolbar onDoubleClick={ARGS.frameless ? this.props.onMaximize : null}>
-        <ToolbarLeft>
+        <Toolbar.Left>
           <ToolGroup>
             <Fade in={this.props.isItemOpen}>
               <Button
@@ -25,7 +25,7 @@ class ItemToolbar extends React.PureComponent {
                 onClick={this.setProjectMode}/>
             </Fade>
           </ToolGroup>
-        </ToolbarLeft>
+        </Toolbar.Left>
       </Toolbar>
     )
   }

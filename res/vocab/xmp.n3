@@ -61,7 +61,7 @@ xmpRights:Certificate a rdf:Property ;
 	rdfs:isDefinedBy <http://ns.adobe.com/xap/1.0/rights/> ;
 	rdfs:comment "A Web URL for a rights management certificate."@en .
 
-xmpRights: a rdf:Property ;
+xmpRights:Marked a rdf:Property ;
 	rdfs:label "Marked"@en ;
 	rdfs:isDefinedBy <http://ns.adobe.com/xap/1.0/rights/> ;
 	rdfs:comment "When true, indicates that this is a rights-managed resource. When false, indicates that this is a public-domain resource. Omit if the state is unknown."@en .

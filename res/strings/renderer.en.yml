@@ -106,7 +106,7 @@ en:
         label: Import file name as
         force: Overwrite embedded photo metadata
       debug: Enable Developer Mode
-      localtime: Assume photo metadata use local timezone
+      localtime: Assume Exif timestamps use local timezone
       dup:
         label: During import
         option:
@@ -258,9 +258,9 @@ en:
     description: Description
     comment: Comment
 
-  ok: Yes
-  cancel: Cancel
   dialog:
+    ok: Yes
+    cancel: Cancel
     prompt:
       item:
         destroy:
@@ -495,6 +495,7 @@ en:
       template:
         change: Failed to change selection template.
     ontology:
+      migrate: Failed to upgrade your ontology database.
       import: Failed to import vocabulary.
       vocab:
         save: Failed to save vocabulary. Prefix must be unique.

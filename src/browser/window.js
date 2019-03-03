@@ -49,7 +49,6 @@ function hasOverlayScrollBars() {
 }
 
 module.exports = {
-
   open(file, data = {}, options = {}, zoom = 1) {
     options = {
       ...DEFAULTS,

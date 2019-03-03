@@ -5,7 +5,7 @@ const { func, node, bool, number, oneOf, string } = require('prop-types')
 const { Draggable } = require('./draggable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
-const { noop, restrict, titlecase } = require('../common/util')
+const { capitalize, noop, restrict } = require('../common/util')
 const { round } = require('../common/math')
 const { keys } = Object
 
@@ -65,8 +65,8 @@ class Resizable extends React.Component {
     let { cssValue, cssMax, cssMin, dimension } = this
     return {
       [dimension]: cssValue,
-      [`min${titlecase(dimension)}`]: cssMin,
-      [`max${titlecase(dimension)}`]: cssMax
+      [`min${capitalize(dimension)}`]: cssMin,
+      [`max${capitalize(dimension)}`]: cssMax
     }
   }
 

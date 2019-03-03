@@ -24,22 +24,30 @@ class TagAdder extends React.PureComponent {
     this.input.current.focus()
   }
 
+  handleCancel = (hasChanged) => {
+    if (hasChanged)
+      this.input.current.reset()
+    else
+      this.props.onCancel()
+  }
+
   handleBlur = (event) => {
     this.props.onBlur(event)
-    return true // cancel on blur
+    this.input.current.reset()
+    return true // Always cancel on blur!
   }
 
   handleChange = (name) => {
-    if (blank(name)) return this.props.onCancel()
+    if (blank(name))
+      return this.props.onCancel()
 
-    const query = name.trim().toLowerCase()
-    const tag = this.props.tags.find(t => query === t.name.toLowerCase())
+    let query = name.trim().toLowerCase()
+    let tag = this.props.tags.find(t => query === t.name.toLowerCase())
 
-    if (tag) {
+    if (tag)
       this.props.onAdd(tag)
-    } else {
+    else
       this.props.onCreate({ name })
-    }
 
     this.input.current.reset()
   }
@@ -57,7 +65,7 @@ class TagAdder extends React.PureComponent {
           value=""
           onBlur={this.handleBlur}
           onFocus={this.props.onFocus}
-          onCancel={this.props.onCancel}
+          onCancel={this.handleCancel}
           onCommit={this.handleChange}/>
       </div>
     )

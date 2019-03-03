@@ -116,7 +116,7 @@ class Select extends React.Component {
       'disabled': this.state.isDisabled,
       'focus': this.state.hasFocus,
       'has-icon': this.props.icon != null,
-      'invalid': this.state.isInvalid,
+      'invalid': !this.state.isDisabled && this.state.isInvalid,
       'multi': this.state.isMulti,
       'open': this.state.isOpen,
       'single': !this.state.isMulti,

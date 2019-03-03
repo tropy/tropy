@@ -1,95 +1,38 @@
 'use strict'
 
 const React = require('react')
-const { bool, func, instanceOf } = require('prop-types')
-const { Toolbar, ToolbarContext, ToolGroup } = require('../toolbar')
+const { Toolbar, ToolGroup } = require('../toolbar')
 const { Button } = require('../button')
 const { EditorState } = require('prosemirror-state')
-const { LinkToolbar } = require('./link')
-
-
-const {
-  IconB,
-  IconI,
-  IconU,
-  IconO,
-  IconS,
-  IconQ,
-  IconSup,
-  IconSub,
-  IconAlignLeft,
-  IconAlignCenter,
-  IconAlignRight,
-  IconBulletList,
-  IconNumberedList,
-  IconSink,
-  IconLift,
-  IconLink
-} = require('../icons')
+const { LinkContext } = require('./link')
+const memoize = require('memoize-one')
+const { bool, func, instanceOf, string } = require('prop-types')
+const icons = require('../icons')
 
 
 class EditorToolbar extends React.PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      align: this.getActiveAlignment(props.state),
-      context: 'default',
-      marks: this.getActiveMarks(props.state),
-    }
-
-    this.cmd = {}
-
-    for (const action of [
-      'bold',
-      'italic',
-      'underline',
-      'overline',
-      'strikethrough',
-      'subscript',
-      'superscript',
-      'blockquote',
-      'ol',
-      'ul',
-      'liftListItem',
-      'sinkListItem',
-      'left',
-      'center',
-      'right'
-    ]) {
-      this.cmd[action] = () => this.props.onCommand(action)
-    }
+  state = {
+    context: 'default'
   }
 
-  componentWillReceiveProps(props) {
-    if (props.state !== this.props.state) {
-      this.setState({
-        align: this.getActiveAlignment(props.state),
-        marks: this.getActiveMarks(props.state)
-      })
+  get align() {
+    return this.getActiveAlignment(this.props.state)
+  }
+
+  get marks() {
+    return this.getActiveMarks(this.props.state)
+  }
+
+  getActiveMarks = memoize(state => {
+    let marks = {}
+    for (let mark in state.schema.marks) {
+      marks[mark] = isMarkActive(state.schema.marks[mark], state)
     }
-  }
-
-  get hasDefaultContext() {
-    return this.state.context === 'default'
-  }
-
-  get hasLinkContext() {
-    return this.state.context === 'link'
-  }
-
-  getActiveMarks(state = this.props.state) {
-    const marks = {}
-
-    for (const mark in state.schema.marks) {
-      marks[mark] = this.isMarkActive(state.schema.marks[mark], state)
-    }
-
     return marks
-  }
+  })
 
-  getActiveAlignment(state = this.props.state) {
-    const align = { left: false, right: false, center: false }
+  getActiveAlignment = memoize(state => {
+    let align = { left: false, right: false, center: false }
 
     state.doc.nodesBetween(
       state.selection.from,
@@ -101,40 +44,7 @@ class EditorToolbar extends React.PureComponent {
       })
 
     return align
-  }
-
-  isMarkActive(type, state = this.props.state) {
-    const { from, $from, to, empty } = state.selection
-
-    return (empty) ?
-      !!type.isInSet(state.storedMarks || $from.marks()) :
-      state.doc.rangeHasMark(from, to, type)
-  }
-
-  renderButton(name, props) {
-    return (
-      <Button
-        {...props}
-        noFocus
-        title={`editor.commands.${name}`}
-        onMouseDown={this.cmd[name]}/>
-    )
-  }
-
-  renderMarkButton(name, icon) {
-    return this.renderButton(name, {
-      icon,
-      isActive: this.state.marks[name]
-    })
-  }
-
-
-  renderAlignButton(name, icon) {
-    return this.renderButton(name, {
-      icon,
-      isActive: this.state.align[name]
-    })
-  }
+  })
 
   setDefaultContext = () => {
     this.setState({ context: 'default' })
@@ -144,9 +54,13 @@ class EditorToolbar extends React.PureComponent {
     this.setState({ context: 'link' })
   }
 
+  handleCommand(cmd) {
+    return () => this.props.onCommand(cmd)
+  }
+
   handleLinkToggle = (attrs) => {
-    // expand selection to include full link (only when deleting)
-    if (this.state.marks.link) {
+    // Expand selection to include full link (only when deleting)
+    if (this.marks.link) {
       this.props.onCommand('removeLink')
     } else {
       this.props.onCommand('insertLink', attrs)
@@ -155,72 +69,107 @@ class EditorToolbar extends React.PureComponent {
   }
 
   handleLinkButtonClick = () => {
-    if (this.state.marks.link) this.handleLinkToggle()
+    if (this.marks.link) this.handleLinkToggle()
     else this.setLinkContext()
   }
 
   render() {
     return (
       <Toolbar isDraggable={this.props.isDraggable}>
-        <ToolbarContext
+        <Toolbar.Context
           className="default"
-          isActive={this.hasDefaultContext}>
-          <div className="toolbar-left">
+          isActive={this.state.context === 'default'}>
+          <Toolbar.Left>
             <ToolGroup>
-              {this.renderMarkButton('bold', <IconB/>)}
-              {this.renderMarkButton('italic', <IconI/>)}
-              {this.renderMarkButton('underline', <IconU/>)}
-              {this.renderMarkButton('overline', <IconO/>)}
-              {this.renderMarkButton('strikethrough', <IconS/>)}
-              <Button
-                noFocus
-                icon={<IconQ/>}
+              <EditorButton
+                icon="IconB"
+                isActive={this.marks.bold}
+                title="editor.commands.bold"
+                onMouseDown={this.handleCommand('bold')}/>
+              <EditorButton
+                icon="IconI"
+                isActive={this.marks.italic}
+                title="editor.commands.italic"
+                onMouseDown={this.handleCommand('italic')}/>
+              <EditorButton
+                icon="IconU"
+                isActive={this.marks.underline}
+                title="editor.commands.underline"
+                onMouseDown={this.handleCommand('underline')}/>
+              <EditorButton
+                icon="IconO"
+                isActive={this.marks.overline}
+                title="editor.commands.overline"
+                onMouseDown={this.handleCommand('overline')}/>
+              <EditorButton
+                icon="IconS"
+                isActive={this.marks.strikethrough}
+                title="editor.commands.strikethrough"
+                onMouseDown={this.handleCommand('strikethrough')}/>
+              <EditorButton
+                icon={'IconQ'}
                 title="editor.commands.blockquote"
-                onMouseDown={this.cmd.blockquote}/>
+                onMouseDown={this.handleCommand('blockquote')}/>
             </ToolGroup>
             <ToolGroup>
-              {this.renderMarkButton('superscript', <IconSup/>)}
-              {this.renderMarkButton('subscript', <IconSub/>)}
+              <EditorButton
+                icon="IconSup"
+                isActive={this.marks.superscript}
+                title="editor.commands.superscript"
+                onMouseDown={this.handleCommand('superscript')}/>
+              <EditorButton
+                icon="IconSub"
+                isActive={this.marks.subscript}
+                title="editor.commands.subscript"
+                onMouseDown={this.handleCommand('subscript')}/>
             </ToolGroup>
             <ToolGroup>
-              {this.renderAlignButton('left', <IconAlignLeft/>)}
-              {this.renderAlignButton('center', <IconAlignCenter/>)}
-              {this.renderAlignButton('right', <IconAlignRight/>)}
+              <EditorButton
+                icon="IconAlignLeft"
+                isActive={this.align.left}
+                title="editor.commands.left"
+                onMouseDown={this.handleCommand('left')}/>
+              <EditorButton
+                icon="IconAlignCenter"
+                isActive={this.align.center}
+                title="editor.commands.center"
+                onMouseDown={this.handleCommand('center')}/>
+              <EditorButton
+                icon="IconAlignRight"
+                isActive={this.align.right}
+                title="editor.commands.right"
+                onMouseDown={this.handleCommand('right')}/>
             </ToolGroup>
             <ToolGroup>
-              <Button
-                noFocus
-                icon={<IconBulletList/>}
+              <EditorButton
+                icon="IconBulletList"
                 title="editor.commands.ul"
-                onMouseDown={this.cmd.ul}/>
-              <Button
-                noFocus
-                icon={<IconNumberedList/>}
+                onMouseDown={this.handleCommand('ul')}/>
+              <EditorButton
+                icon="IconNumberedList"
                 title="editor.commands.ol"
-                onMouseDown={this.cmd.ol}/>
-              <Button
-                noFocus
-                icon={<IconSink/>}
+                onMouseDown={this.handleCommand('ol')}/>
+              <EditorButton
+                icon="IconSink"
                 title="editor.commands.sinkListItem"
-                onMouseDown={this.cmd.sinkListItem}/>
-              <Button
+                onMouseDown={this.handleCommand('sinkListItem')}/>
+              <EditorButton
                 noFocus
-                icon={<IconLift/>}
+                icon="IconLift"
                 title="editor.commands.liftListItem"
-                onMouseDown={this.cmd.liftListItem}/>
+                onMouseDown={this.handleCommand('liftListItem')}/>
             </ToolGroup>
             <ToolGroup>
-              <Button
-                noFocus
-                isActive={this.state.marks.link}
+              <EditorButton
+                isActive={this.marks.link}
                 title="editor.commands.link.button"
-                icon={<IconLink/>}
+                icon="IconLink"
                 onMouseDown={this.handleLinkButtonClick}/>
             </ToolGroup>
-          </div>
-        </ToolbarContext>
-        <LinkToolbar
-          isActive={this.hasLinkContext}
+          </Toolbar.Left>
+        </Toolbar.Context>
+        <LinkContext
+          isActive={this.state.context === 'link'}
           onCancel={this.setDefaultContext}
           onCommit={this.handleLinkToggle}/>
       </Toolbar>
@@ -232,6 +181,24 @@ class EditorToolbar extends React.PureComponent {
     state: instanceOf(EditorState),
     onCommand: func.isRequired
   }
+}
+
+
+const EditorButton = ({ icon, ...props }) => {
+  let Icon = icons[icon]
+  return <Button {...props} noFocus icon={<Icon/>}/>
+}
+
+EditorButton.propTypes = {
+  icon: string.isRequired
+}
+
+
+function isMarkActive(type, state) {
+  let { from, $from, to, empty } = state.selection
+  return (empty) ?
+    !!type.isInSet(state.storedMarks || $from.marks()) :
+    state.doc.rangeHasMark(from, to, type)
 }
 
 module.exports = {

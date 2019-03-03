@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { FormattedMessage } = require('react-intl')
-const { Toolbar, ToolbarLeft, ToolbarRight, ToolGroup } = require('../toolbar')
+const { Toolbar, ToolGroup } = require('../toolbar')
 const { IconNote, IconPlus } = require('../icons')
 const { Button } = require('../button')
 const { bool, func, number } = require('prop-types')
@@ -10,15 +10,15 @@ const { bool, func, number } = require('prop-types')
 
 const NoteToolbar = ({ hasCreateButton, isDisabled, notes, onCreate }) => (
   <Toolbar isDraggable={false}>
-    <ToolbarLeft>
+    <Toolbar.Left>
       <IconNote/>
       <h4>
         <FormattedMessage
           id="panel.note.title"
           values={{ count: notes }}/>
       </h4>
-    </ToolbarLeft>
-    <ToolbarRight>
+    </Toolbar.Left>
+    <Toolbar.Right>
       {hasCreateButton &&
         <ToolGroup>
           <Button
@@ -27,7 +27,7 @@ const NoteToolbar = ({ hasCreateButton, isDisabled, notes, onCreate }) => (
             title="panel.note.create"
             onClick={onCreate}/>
         </ToolGroup>}
-    </ToolbarRight>
+    </Toolbar.Right>
   </Toolbar>
 )
 
@@ -42,4 +42,3 @@ NoteToolbar.propTypes = {
 module.exports = {
   NoteToolbar
 }
-

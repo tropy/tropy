@@ -70,7 +70,6 @@ ja:
         command: 'app:delete-item-tag'
         visible: false
         condition: hasMultipleItems
-    notes: []
     note:
       - label: ノートを削除
         command: 'app:delete-note'
@@ -178,10 +177,10 @@ ja:
             id: side-by-side
             type: checkbox
     metadata-list:
-      - label: New Field …
+      - label: 新規フィールド
         command: 'ctx:add-extra-field'
     metadata-field:
-      - label: Remove Field
+      - label: フィールドを削除
         command: 'app:delete-field'
         condition: isExtra
     trash:
@@ -266,7 +265,6 @@ ja:
         command: 'app:delete-item-tag'
         visible: false
         condition: hasMultipleItems
-    notes: {}
     note:
       - label: ノートを削除
         command: 'app:delete-note'
@@ -353,10 +351,10 @@ ja:
             id: side-by-side
             type: checkbox
     metadata-list:
-      - label: New Field …
+      - label: 新規フィールド
         command: 'ctx:add-extra-field'
     metadata-field:
-      - label: Remove Field
+      - label: フィールドを削除
         command: 'app:delete-field'
         condition: isExtra
     trash:
@@ -462,7 +460,6 @@ ja:
         command: 'app:delete-item-tag'
         visible: false
         condition: hasMultipleItems
-    notes: {}
     note:
       - label: ノートを削除
         command: 'app:delete-note'
@@ -549,10 +546,10 @@ ja:
             id: side-by-side
             type: checkbox
     metadata-list:
-      - label: New Field …
+      - label: 新規フィールド
         command: 'ctx:add-extra-field'
     metadata-field:
-      - label: Remove Field
+      - label: フィールドを削除
         command: 'app:delete-field'
         condition: isExtra
     trash:
