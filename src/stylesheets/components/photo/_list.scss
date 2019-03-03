@@ -8,6 +8,10 @@
   flex-direction: column;
   margin-bottom: $space-min;
 
+  &.over-file {
+    @extend %drop-target;
+  }
+
   .scroll-container {
     position: relative;
     z-index: 0;

@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, createElement: create } = React
+const { createElement: create } = React
 const { injectIntl, intlShape } = require('react-intl')
 const cx = require('classnames')
 const { on, off } = require('../dom')
@@ -19,12 +19,9 @@ ButtonGroup.propTypes = {
   children: node
 }
 
-class Button extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      hasTabFocus: false
-    }
+class Button extends React.PureComponent {
+  state = {
+    hasTabFocus: false
   }
 
   componentDidMount() {
@@ -149,6 +146,7 @@ class Button extends PureComponent {
     onBlur: noop,
     onFocus: noop,
     noFocus: false,
+    size: 'md',
     tabIndex: -1
   }
 }

@@ -53,10 +53,12 @@ class ItemIterable extends PureComponent {
   }
 
   handleSelect = (event) => {
-    this.props.onSelect(this.props.item, {
-      isMeta: isMeta(event),
-      isRange: event.shiftKey
-    })
+    if (!(event.button > 2)) {
+      this.props.onSelect(this.props.item, {
+        isMeta: isMeta(event),
+        isRange: event.shiftKey
+      })
+    }
   }
 
   handleContextMenu = (event) => {

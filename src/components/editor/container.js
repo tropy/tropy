@@ -16,30 +16,21 @@ const { SASS: { EDITOR } } = require('../../constants')
 
 
 class Editor extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      hasViewFocus: false
-    }
-  }
+  toolbar = React.createRef()
+  container = React.createRef()
 
-  setContainer = (container) => {
-    this.container = container
+  state = {
+    hasViewFocus: false
   }
 
   setView = (view) => {
     this.view = get(view, ['pm'])
   }
 
-  setToolbar = (toolbar) => {
-    this.toolbar = toolbar
-  }
-
   get classes() {
-    return {
-      'editor': true,
+    return ['editor', {
       'is-blurred': !this.state.hasViewFocus
-    }
+    }]
   }
 
   getEditorState({ state } = this.props) {
@@ -82,7 +73,9 @@ class Editor extends React.Component {
       case null:
         return
       case 'addLink':
-        this.toolbar.handleLinkButtonClick()
+        if (this.toolbar.current) {
+          this.toolbar.current.handleLinkButtonClick()
+        }
         break
       case 'lift':
         if (this.exec('liftListItem')) break
@@ -96,7 +89,7 @@ class Editor extends React.Component {
   }
 
   handleFocus = (event) => {
-    if (event.target === this.container) {
+    if (event.target === this.container.current) {
       setTimeout(this.focus, 0)
     }
   }
@@ -109,7 +102,7 @@ class Editor extends React.Component {
 
   handleResize = ({ width, height }) => {
     const dim = (this.props.mode !== 'horizontal') ? width : height
-    this.container.style.setProperty(
+    this.container.current.style.setProperty(
       '--editor-padding',
       `${restrict(Math.round(dim / 10), 0, EDITOR.MAX_PADDING)}px`
     )
@@ -132,7 +125,7 @@ class Editor extends React.Component {
 
     return (
       <div
-        ref={this.setContainer}
+        ref={this.container}
         className={cx(this.classes)}
         tabIndex={-1}
         onFocus={this.handleFocus}>
@@ -140,7 +133,7 @@ class Editor extends React.Component {
           <EditorToolbar
             isDraggable={isDraggable}
             state={state}
-            ref={this.setToolbar}
+            ref={this.toolbar}
             onCommand={this.handleCommand}/>
         }
 

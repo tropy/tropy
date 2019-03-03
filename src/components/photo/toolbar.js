@@ -4,11 +4,9 @@ const React = require('react')
 const { FormattedMessage } = require('react-intl')
 const { Slider } = require('../slider')
 const { Button } = require('../button')
+const { Toolbar, ToolGroup } = require('../toolbar')
 const { number, bool, func } = require('prop-types')
-
-const {
-  Toolbar, ToolGroup, ToolbarLeft, ToolbarRight
-} = require('../toolbar')
+const { PHOTO } = require('../../constants/sass')
 
 const {
   IconPhoto, IconPlus, IconListSmall, IconGridSmall
@@ -17,16 +15,15 @@ const {
 
 const PhotoToolbar = (props) => (
   <Toolbar isDraggable={false}>
-    <ToolbarLeft>
+    <Toolbar.Left>
       <IconPhoto/>
       <h4>
         <FormattedMessage
           id="panel.photo.title"
           values={{ count: props.photos }}/>
       </h4>
-    </ToolbarLeft>
-
-    <ToolbarRight>
+    </Toolbar.Left>
+    <Toolbar.Right>
       {
         props.hasCreateButton &&
           <ToolGroup>
@@ -44,11 +41,11 @@ const PhotoToolbar = (props) => (
           size="sm"
           minIcon={<IconListSmall/>}
           maxIcon={<IconGridSmall/>}
-          isDisabled={props.isDisabled}
+          isDisabled={props.isDisabled || props.photos === 0}
           tabIndex={-1}
           onChange={props.onZoomChange}/>
       </ToolGroup>
-    </ToolbarRight>
+    </Toolbar.Right>
   </Toolbar>
 )
 
@@ -57,10 +54,15 @@ PhotoToolbar.propTypes = {
   hasCreateButton: bool,
   isDisabled: bool,
   maxZoom: number.isRequired,
-  photos: number.isRequired,
-  zoom: number.isRequired,
   onCreate: func.isRequired,
-  onZoomChange: func.isRequired
+  onZoomChange: func.isRequired,
+  photos: number.isRequired,
+  zoom: number.isRequired
+}
+
+PhotoToolbar.defaultProps = {
+  maxZoom: PHOTO.ZOOM.length - 1,
+  photos: 0
 }
 
 module.exports = {

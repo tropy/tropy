@@ -1,7 +1,6 @@
 'use strict'
 
 const B = require('bluebird')
-const pad = require('string.prototype.padstart')
 const shortid = require('shortid')
 const { keys } = Object
 
@@ -355,7 +354,13 @@ const util = {
   },
 
   titlecase(string) {
-    return string.replace(/\b[a-z]/g, (match) => match.toUpperCase())
+    return string
+      .replace(/\b\p{Ll}/ug, (m) => m.toUpperCase())
+      .replace(/(\p{Ll})(\p{Lu})/ug, (m, p1, p2) => `${p1} ${p2}`)
+  },
+
+  capitalize(string) {
+    return string.replace(/^\p{Ll}/u, (m) => m.toUpperCase())
   },
 
   downcase(string) {
@@ -364,7 +369,7 @@ const util = {
 
   camelcase(str) {
     return str.replace(
-        /(?:^\w|[A-Z]|\b\w|\s+)/g,
+        /(?:^\w|\p{Lu}|\b\w|\s+)/ug,
       (match, index) => {
         if (+match === 0) return ''
         return index === 0 ? match.toLowerCase() : match.toUpperCase()
@@ -397,19 +402,19 @@ const util = {
     return format.replace(/%([YymdHMS])/g, (match, code) => {
       switch (code) {
         case 'Y':
-          return pad(date.getFullYear(), 4, '0')
+          return String(date.getFullYear()).padStart(4, '0')
         case 'y':
-          return pad(date.getFullYear() % 100, 2, '0')
+          return String(date.getFullYear() % 100).padStart(2, '0')
         case 'm':
-          return pad(date.getMonth() + 1, 2, '0')
+          return String(date.getMonth() + 1).padStart(2, '0')
         case 'd':
-          return pad(date.getDate(), 2, '0')
+          return String(date.getDate()).padStart(2, '0')
         case 'H':
-          return pad(date.getHours(), 2, '0')
+          return String(date.getHours()).padStart(2, '0')
         case 'M':
-          return pad(date.getMinutes(), 2, '0')
+          return String(date.getMinutes()).padStart(2, '0')
         case 'S':
-          return pad(date.getSeconds(), 2, '0')
+          return String(date.getSeconds()).padStart(2, '0')
         default:
           return match
       }

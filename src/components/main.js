@@ -6,7 +6,6 @@ const ReactIntl = require('react-intl')
 const { element, object } = require('prop-types')
 const { DragDropContext } = require('react-dnd')
 const ElectronBackend = require('react-dnd-electron-backend')
-const { ErrorBoundary } = require('./error-boundary')
 const { Flash } = require('./flash')
 
 const IntlProvider = connect(state => {
@@ -20,16 +19,14 @@ const IntlProvider = connect(state => {
 class Main extends React.Component {
   render() {
     return (
-      <ErrorBoundary>
-        <Provider store={this.props.store}>
-          <IntlProvider>
-            <div className="main-container">
-              {this.props.children}
-              <Flash/>
-            </div>
-          </IntlProvider>
-        </Provider>
-      </ErrorBoundary>
+      <Provider store={this.props.store}>
+        <IntlProvider>
+          <div className="main-container">
+            {this.props.children}
+            <Flash/>
+          </div>
+        </IntlProvider>
+      </Provider>
     )
   }
 

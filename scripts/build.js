@@ -53,6 +53,8 @@ const IGNORE = [
   /node_modules.prosemirror-model.dist.index\.js\.map/,
   /node_modules.sharp.build.[^R]/,
   /node_modules.sharp.build.Release.obj/,
+  /node_modules.jsonld.dist/,
+  /node_modules.pixi\.js.dist/,
   /appveyor\.yml/
 ]
 

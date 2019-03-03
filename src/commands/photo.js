@@ -4,6 +4,7 @@ const assert = require('assert')
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
+const { SaveCommand } = require('./subject')
 const { fail, open } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
@@ -12,7 +13,7 @@ const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
 const { warn } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
-const { getPhotoTemplate, getTemplateValues } = require('../selectors')
+const { getPhotoTemplate } = require('../selectors')
 const { keys, values } = Object
 
 
@@ -24,9 +25,8 @@ class Consolidate extends ImportCommand {
     let { payload, meta } = this.action
     let consolidated = []
 
-    let [project, settings, photos, selections] = yield select(state => [
+    let [project, photos, selections] = yield select(state => [
       state.project,
-      state.settings,
       blank(payload) ? values(state.photos) : pluck(state.photos, payload),
       state.selections
     ])
@@ -35,7 +35,8 @@ class Consolidate extends ImportCommand {
       let photo = photos[i]
 
       try {
-        let { image, hasChanged, error } = yield call(Image.check, photo, meta)
+        let { image, hasChanged, error } =
+          yield this.checkPhoto(photo, meta.force)
 
         if (meta.force || hasChanged) {
           if (error != null) {
@@ -51,7 +52,7 @@ class Consolidate extends ImportCommand {
 
               image = (blank(paths)) ?
                 null :
-                yield call(Image.open, paths[0], photo.page)
+                yield call(Image.open, { path: paths[0], page: photo.page })
             }
           }
 
@@ -72,7 +73,6 @@ class Consolidate extends ImportCommand {
                 }
               }
 
-              image.setTimezoneOffset(settings.localtime)
               let data = { id: photo.id, ...image.toJSON() }
 
               yield call(mod.photo.save, db, data, project)
@@ -133,23 +133,22 @@ class Create extends ImportCommand {
 
     if (!files) return []
 
-    let [base, localtime, template] = yield select(state => [
+    let [base, prefs, template] = yield select(state => [
       state.project.base,
-      state.settings.localtime,
+      state.settings,
       getPhotoTemplate(state)
     ])
 
-    let data = getTemplateValues(template)
 
     for (let i = 0, total = files.length; i < files.length; ++i) {
-      let file, image
+      let file, image, data
 
       try {
         file = files[i]
 
-        image = yield call(Image.open, file)
-        image.setTimezoneOffset(localtime)
+        image = yield* this.openImage(file)
         yield* this.handleDuplicate(image)
+        data = this.getImageMetadata('photo', image, template, prefs)
 
         total += (image.numPages - 1)
 
@@ -240,7 +239,7 @@ class Duplicate extends ImportCommand {
       const { template, path, page } = originals[i]
 
       try {
-        let image = yield call(Image.open, path, page)
+        let image = yield call(Image.open, { path, page })
 
         let photo = yield call(db.transaction, tx =>
           mod.photo.create(tx, { base, template }, {
@@ -404,6 +403,12 @@ class Restore extends Command {
   }
 }
 
+class TemplateChange extends SaveCommand {
+  static get ACTION() { return PHOTO.TEMPLATE.CHANGE }
+  get type() { return 'photo' }
+}
+
+
 module.exports = {
   Consolidate,
   Create,
@@ -413,5 +418,6 @@ module.exports = {
   Move,
   Order,
   Restore,
-  Save
+  Save,
+  TemplateChange
 }

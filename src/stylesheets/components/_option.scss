@@ -45,4 +45,8 @@
   &.no-matches {
     color: $option-no-matches-color;
   }
+
+  .has-icon & {
+    padding-left: $space-xl;
+  }
 }

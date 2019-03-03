@@ -70,7 +70,6 @@ fr:
         command: 'app:delete-item-tag'
         visible: false
         condition: hasMultipleItems
-    notes: []
     note:
       - label: Supprimer la note
         command: 'app:delete-note'
@@ -168,7 +167,7 @@ fr:
       - label: Supprimer définitivement les objets sélectionnés
         command: 'app:destroy-item'
     item-view:
-      - label: View Layout
+      - label: Mode d'affichage
         id: item-view-layout
         submenu:
           - label: Verticale
@@ -178,10 +177,10 @@ fr:
             id: side-by-side
             type: checkbox
     metadata-list:
-      - label: New Field …
+      - label: Nouveau champ…
         command: 'ctx:add-extra-field'
     metadata-field:
-      - label: Remove Field
+      - label: Supprimer le champ
         command: 'app:delete-field'
         condition: isExtra
     trash:
@@ -266,7 +265,6 @@ fr:
         command: 'app:delete-item-tag'
         visible: false
         condition: hasMultipleItems
-    notes: {}
     note:
       - label: Supprimer la note
         command: 'app:delete-note'
@@ -343,7 +341,7 @@ fr:
       - label: Supprimer définitivement les objets sélectionnés
         command: 'app:destroy-item'
     item-view:
-      - label: View Layout
+      - label: Mode d'affichage
         id: item-view-layout
         submenu:
           - label: Verticale
@@ -353,10 +351,10 @@ fr:
             id: side-by-side
             type: checkbox
     metadata-list:
-      - label: New Field …
+      - label: Nouveau champ…
         command: 'ctx:add-extra-field'
     metadata-field:
-      - label: Remove Field
+      - label: Supprimer le champ
         command: 'app:delete-field'
         condition: isExtra
     trash:
@@ -462,7 +460,6 @@ fr:
         command: 'app:delete-item-tag'
         visible: false
         condition: hasMultipleItems
-    notes: {}
     note:
       - label: Supprimer la note
         command: 'app:delete-note'
@@ -539,7 +536,7 @@ fr:
       - label: Supprimer définitivement les objets sélectionnés
         command: 'app:destroy-item'
     item-view:
-      - label: View Layout
+      - label: Mode d'affichage
         id: item-view-layout
         submenu:
           - label: Verticale
@@ -549,10 +546,10 @@ fr:
             id: side-by-side
             type: checkbox
     metadata-list:
-      - label: New Field …
+      - label: Nouveau champ…
         command: 'ctx:add-extra-field'
     metadata-field:
-      - label: Remove Field
+      - label: Supprimer le champ
         command: 'app:delete-field'
         condition: isExtra
     trash:

@@ -42,8 +42,7 @@ module.exports = {
       SAVE: 'ontology.template.field.save'
     },
 
-    CONTEXT: 'https://tropy.org/v1/contexts/template.jsonld',
-    TYPE: 'https://tropy.org/v1/tropy#Template'
+    CONTEXT: 'https://tropy.org/v1/contexts/template.jsonld'
   },
 
   VOCAB: {

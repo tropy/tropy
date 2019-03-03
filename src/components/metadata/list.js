@@ -3,20 +3,12 @@
 const React = require('react')
 const { MetadataField } = require('./field')
 const { get } = require('../../common/util')
-const { isArray } = Array
 const { arrayOf, bool, func, object, shape, string } =  require('prop-types')
 
 
 class MetadataList extends React.PureComponent {
-  constructor(props) {
-    super(props)
-    this.key = this.getEditKey(props)
-  }
-
-  componentWillReceiveProps(props) {
-    if (props.fields !== this.props.fields) {
-      this.key = this.getEditKey(props)
-    }
+  get isBulk() {
+    return this.props.fields.key === 'bulk'
   }
 
   get isEmpty() {
@@ -59,7 +51,8 @@ class MetadataList extends React.PureComponent {
   }
 
   isEditing(property) {
-    if (this.key != null && this.key === get(this.props.edit, [property])) {
+    let { key } = this.props.fields
+    if (key != null && key === get(this.props.edit, [property])) {
       this.head = property
       return true
     } else {
@@ -67,16 +60,12 @@ class MetadataList extends React.PureComponent {
     }
   }
 
-  getEditKey({ fields } = this.props) {
-    return (fields != null) ? (isArray(fields.id) ? 'bulk' : fields.id) : null
-  }
-
   edit = (property) => {
-    this.props.onEdit({ field: { [property]: this.key } })
+    this.props.onEdit({ field: { [property]: this.props.fields.key } })
   }
 
   handleChange = (data, hasChanged) => {
-    if (hasChanged || this.key === 'bulk') {
+    if (hasChanged || this.isBulk) {
       this.props.onChange({ id: this.props.fields.id, data })
     } else {
       this.props.onEditCancel()

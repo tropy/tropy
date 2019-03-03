@@ -1,16 +1,17 @@
 'use strict'
 
-const PIXI = require('pixi.js/dist/pixi.js')
+const PIXI = require('pixi.js')
 const { Container, Sprite, Rectangle } = PIXI
 const { ColorMatrixFilter } = PIXI.filters
 const { AdjustmentFilter } = require('@pixi/filter-adjustment')
+const { SharpenFilter } = require('../../esper/filter')
 const { SelectionLayer, SelectionOverlay } = require('./selection')
 const { restrict } = require('../../common/util')
 const { deg, isHorizontal } = require('../../common/math')
 const { floor, max } = Math
 
 const NEGATIVE = [
-  -1, 0, 0, 1, 0, 0, -1,  0, 1, 0, 0, 0, -1, 1, 0, 0, 0,  0, 1, 0
+  -1, 0, 0, 1, 0, 0, -1, 0, 1, 0, 0, 0, -1, 1, 0, 0, 0, 0, 1, 0
 ]
 
 
@@ -28,6 +29,7 @@ class Picture extends Container {
 
     this.bg.filters = [
       new AdjustmentFilter(),
+      new SharpenFilter(0, width, height),
       new ColorMatrixFilter()
     ]
 
@@ -49,7 +51,7 @@ class Picture extends Container {
   }
 
   get colors() {
-    return this.bg.filters[1]
+    return this.bg.filters[2]
   }
 
   getWidth(scale = this.scale.y) {
@@ -130,6 +132,11 @@ class Picture extends Container {
 
   saturation(value = 0) {
     this.adjust.saturation = 1 + value / 100
+    return this
+  }
+
+  sharpen(intensity = 0) {
+    this.bg.filters[1].intensity = intensity
     return this
   }
 }

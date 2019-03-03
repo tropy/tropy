@@ -12,6 +12,11 @@ const ABOUT = {
   HEIGHT: 300
 }
 
+const BODY = {
+  dark: '#2f2f2f',
+  light: '#ffffff'
+}
+
 const COLUMN = {
   MIN: 48,
   POSITION: 54,
@@ -134,7 +139,7 @@ const ESPER = {
   ZOOM_LINEAR_MAX: 1.96,
   ZOOM_SLIDER_PRECISION: 100,
   ZOOM_SLIDER_STEPS: [0.5, 1, 2, 3],
-  ZOOM_STEP_SIZE: 1.0,
+  ZOOM_STEP_SIZE: 0.5,
   ZOOM_DURATION: 300,
   ZOOM_PRECISION: 10000,
   ZOOM_WHEEL_FACTOR: 1 / 500,
@@ -228,6 +233,7 @@ const LIST = {
 module.exports =  {
   ABOUT,
   ACTIVITY,
+  BODY,
   COLUMN,
   EDITOR,
   ESPER,

@@ -7,16 +7,15 @@ const { DuplicateError } = require('../common/error')
 const { all, call, put, select, cps } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
+const { SaveCommand } = require('./subject')
 const { prompt, open, fail, save } = require('../dialog')
-const { Image } = require('../image')
 const act = require('../actions')
 const mod = require('../models')
-const { get, pluck, pick, remove } = require('../common/util')
+const { get, pluck, remove } = require('../common/util')
 const { darwin } = require('../common/os')
-const { ITEM, DC } = require('../constants')
+const { ITEM } = require('../constants')
 const { MODE } = require('../constants/project')
 const { keys } = Object
-const { isArray } = Array
 const { writeFile: write } = require('fs')
 const { win } = require('../window')
 const { groupedByTemplate } = require('../export')
@@ -25,7 +24,7 @@ const {
   getGroupedItems,
   getItemTemplate,
   getPhotoTemplate,
-  getTemplateValues,
+  getTemplateValues
 } = require('../selectors')
 
 
@@ -33,12 +32,12 @@ class Create extends Command {
   static get ACTION() { return ITEM.CREATE }
 
   *exec() {
-    const { db } = this.options
+    let { db } = this.options
 
-    const template = yield select(getItemTemplate)
-    const data = getTemplateValues(template)
+    let template = yield select(getItemTemplate)
+    let data = getTemplateValues(template)
 
-    const item = yield call(db.transaction, tx =>
+    let item = yield call(db.transaction, tx =>
       mod.item.create(tx, template.id, data))
 
     yield put(act.item.insert(item))
@@ -69,18 +68,16 @@ class Import extends ImportCommand {
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
-    let [base, localtime, itemp, ptemp] = yield select(state => [
+    let [base, ttp] = yield select(state => [
       state.project.base,
-      state.settings.localtime,
-      getItemTemplate(state),
-      getPhotoTemplate(state)
+      {
+        item: getItemTemplate(state),
+        photo: getPhotoTemplate(state)
+      }
     ])
 
-    let defaultItemData = getTemplateValues(itemp)
-    let defaultPhotoData = getTemplateValues(ptemp)
-
     for (let i = 0, total = files.length; i < total; ++i) {
-      let file, image, item
+      let file, image, item, data
       let photos = []
 
       try {
@@ -88,22 +85,17 @@ class Import extends ImportCommand {
 
         file = files[i]
 
-        image = yield call(Image.open, file)
-        image.setTimezoneOffset(localtime)
+        image = yield* this.openImage(file)
         yield* this.handleDuplicate(image)
+        data = yield* this.getMetadata(image, ttp)
 
         yield call(db.transaction, async tx => {
-          item = await mod.item.create(tx, itemp.id, {
-            ...pick(image.data, [
-              DC.title, DC.creator, DC.rights, DC.description
-            ]),
-            ...defaultItemData
-          })
+          item = await mod.item.create(tx, ttp.item.id, data.item)
 
           while (!image.done) {
             let photo = await mod.photo.create(tx,
-              { base, template: ptemp.id },
-              { item: item.id, image, data: defaultPhotoData })
+              { base, template: ttp.photo.id },
+              { item: item.id, image, data: data.photo })
 
             if (list) {
               await mod.list.items.add(tx, list, [item.id])
@@ -230,78 +222,9 @@ class Restore extends Command {
   }
 }
 
-class Save extends Command {
-  static get ACTION() { return ITEM.SAVE }
-
-  *exec() {
-    const { db } = this.options
-    const { payload, meta } = this.action
-
-    if (!isArray(payload)) {
-      const { id: ids, property, value } = this.action.payload
-
-      assert.equal(property, 'template')
-
-      const state = yield select(({ items, ontology, metadata }) => ({
-        items, templates: ontology.template, metadata
-      }))
-
-      const props = { [property]: value, modified: new Date(meta.now) }
-      const template = state.templates[value]
-
-      assert(template != null, 'unknown template')
-
-      const data = getTemplateValues(template)
-      const datakeys = data != null ? keys(data) : []
-      const hasData = datakeys.length > 0
-
-      const original = ids.map(id => [
-        id,
-        get(state.items, [id, property]),
-        hasData ? pick(state.metadata[id], datakeys, {}, true) : null
-      ])
-
-      yield call(db.transaction, async tx => {
-        await mod.item.update(tx, ids, props, meta.now)
-
-        if (hasData) {
-          await mod.metadata.update(tx, { id: ids, data })
-        }
-      })
-
-      yield put(act.item.bulk.update([ids, props]))
-
-      if (hasData) {
-        yield put(act.metadata.update({ ids, data }))
-      }
-
-      this.undo = { ...this.action, payload: original }
-
-    } else {
-
-      let hasData = false
-      let changed = { props: {}, data: {} }
-
-      yield call(db.transaction, async tx => {
-        for (let [id, template, data] of payload) {
-          changed.props[id] = { template, modified: new Date(meta.now) }
-          await mod.item.update(tx, [id], changed.props[id], meta.now)
-
-          if (data) {
-            hasData = true
-            changed.data[id] = data
-            await mod.metadata.update(tx, { id, data })
-          }
-        }
-      })
-
-      yield put(act.item.bulk.update(changed.props))
-
-      if (hasData) {
-        yield put(act.metadata.merge(changed.data))
-      }
-    }
-  }
+class TemplateChange extends SaveCommand {
+  static get ACTION() { return ITEM.TEMPLATE.CHANGE }
+  get type() { return 'item' }
 }
 
 class Merge extends Command {
@@ -614,7 +537,7 @@ module.exports = {
   Merge,
   Split,
   Restore,
-  Save,
+  TemplateChange,
   Preview,
   AddTag,
   RemoveTag,

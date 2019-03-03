@@ -8,6 +8,10 @@
   display: flex;
   flex-direction: column;
 
+  &.over-file {
+    @extend %drop-target;
+  }
+
   .over & {
     overflow: hidden;
   }

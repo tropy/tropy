@@ -1,8 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { Toolbar, ToolbarLeft, ToolbarRight, ToolGroup } = require('../toolbar')
+const { Toolbar, ToolGroup } = require('../toolbar')
 const { Button } = require('../button')
 const { Slider } = require('../slider')
 const { arrayOf, bool, func, number, string } = require('prop-types')
@@ -31,7 +30,7 @@ const {
 } = require('../icons')
 
 
-class EsperToolbar extends PureComponent {
+class EsperToolbar extends React.PureComponent {
   get isZoomToFill() {
     return this.props.mode === MODE.FILL
   }
@@ -79,7 +78,7 @@ class EsperToolbar extends PureComponent {
   render() {
     return (
       <Toolbar isDraggable={false}>
-        <ToolbarLeft>
+        <Toolbar.Left>
           <ToolGroup>
             <Button
               noFocus
@@ -145,8 +144,8 @@ class EsperToolbar extends PureComponent {
               isDisabled={this.props.isDisabled}
               onChange={this.handleZoomChange}/>
           </ToolGroup>
-        </ToolbarLeft>
-        <ToolbarRight>
+        </Toolbar.Left>
+        <Toolbar.Right>
           <ToolGroup>
             <Button
               noFocus
@@ -155,7 +154,7 @@ class EsperToolbar extends PureComponent {
               isActive={this.props.isPanelVisible}
               onClick={this.handlePanelToggle}/>
           </ToolGroup>
-        </ToolbarRight>
+        </Toolbar.Right>
       </Toolbar>
     )
   }

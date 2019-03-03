@@ -19,12 +19,14 @@ class ItemIterator extends Iterator {
     super.componentDidMount()
     on(document, 'global:next-item', this.handleNextItem)
     on(document, 'global:prev-item', this.handlePrevItem)
+    on(document, 'global:forward', this.handleItemOpen)
   }
 
   componentWillUnmount() {
     super.componentWillUnmount()
     off(document, 'global:next-item', this.handleNextItem)
     off(document, 'global:prev-item', this.handlePrevItem)
+    off(document, 'global:forward', this.handleItemOpen)
   }
 
   get tabIndex() {
@@ -117,6 +119,10 @@ class ItemIterator extends Iterator {
     }
   }
 
+  handleItemOpen = () => {
+    this.props.onItemOpen(this.current())
+  }
+
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
@@ -139,7 +145,7 @@ class ItemIterator extends Iterator {
         this.scrollPageDown()
         break
       case 'open':
-        this.props.onItemOpen(this.current())
+        this.handleItemOpen()
         break
       case 'preview':
         this.preview(this.current())

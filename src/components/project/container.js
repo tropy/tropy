@@ -23,7 +23,6 @@ const { IconSpin } = require('../icons')
 const {
   getCachePrefix,
   getAllColumns,
-  getExpandedPhotos,
   getSelectedItems,
   getSelectedPhoto,
   getSelectedNote,
@@ -54,11 +53,13 @@ class ProjectContainer extends Component {
 
   componentDidMount() {
     on(document, 'keydown', this.handleKeyDown)
+    on(document, 'global:back', this.handleBackButton)
   }
 
   componentWillUnmount() {
     this.projectWillChange.cancel()
     off(document, 'keydown', this.handleKeyDown)
+    off(document, 'global:back', this.handleBackButton)
   }
 
   componentWillReceiveProps({ nav, project, ui }) {
@@ -137,6 +138,12 @@ class ProjectContainer extends Component {
     return event.target.parentNode === this.container
   }
 
+  handleBackButton = () => {
+    if (this.state.mode !== MODE.PROJECT) {
+      this.handleModeChange(MODE.PROJECT)
+    }
+  }
+
   handleContextMenu = (event) => {
     this.props.onContextMenu(event)
   }
@@ -168,9 +175,7 @@ class ProjectContainer extends Component {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap.global, event)) {
       case 'back':
-        if (this.state.mode !== MODE.PROJECT) {
-          this.handleModeChange(MODE.PROJECT)
-        }
+        emit(document, 'global:back')
         break
       case 'nextItem':
         emit(document, 'global:next-item')
@@ -183,6 +188,12 @@ class ProjectContainer extends Component {
         break
       case 'prevPhoto':
         emit(document, 'global:prev-photo')
+        break
+      case 'nextTab':
+        emit(document, 'global:next-tab')
+        break
+      case 'prevTab':
+        emit(document, 'global:prev-tab')
         break
       default:
         return
@@ -213,7 +224,6 @@ class ProjectContainer extends Component {
       columns,
       data,
       dt,
-      expanded,
       items,
       nav,
       note,
@@ -222,7 +232,7 @@ class ProjectContainer extends Component {
       photos,
       visiblePhotos,
       selection,
-      selections,
+      templates,
       ui,
       ...props
     } = this.props
@@ -242,15 +252,14 @@ class ProjectContainer extends Component {
           columns={columns}
           offset={this.state.offset}
           photos={photos}
+          templates={templates}
           zoom={ui.zoom}
           onMetadataSave={this.handleMetadataSave}/>
 
         <ItemView {...props}
           items={selection}
           data={data}
-          expanded={expanded}
           activeSelection={nav.selection}
-          selections={selections}
           note={note}
           notes={notes}
           photo={photo}
@@ -279,7 +288,6 @@ class ProjectContainer extends Component {
 
 
   static propTypes = {
-    expanded: arrayOf(object).isRequired,
     project: shape({
       file: string
     }).isRequired,
@@ -292,7 +300,6 @@ class ProjectContainer extends Component {
     selection: arrayOf(
       shape({ id: number.isRequired })
     ),
-    selections: object.isRequired,
 
     photo: object,
     photos: object.isRequired,
@@ -315,6 +322,7 @@ class ProjectContainer extends Component {
     cache: string.isRequired,
     sort: object.isRequired,
     tags: object.isRequired,
+    templates: object.isRequired,
 
     isOver: bool,
     canDrop: bool,
@@ -380,7 +388,6 @@ module.exports = {
       columns: getAllColumns(state),
       data: state.metadata,
       edit: state.edit,
-      expanded: getExpandedPhotos(state),
       index: state.qr.index,
       items: getVisibleItems(state),
       keymap: state.keymap,
@@ -391,10 +398,9 @@ module.exports = {
       photos: state.photos,
       visiblePhotos: getVisiblePhotos(state),
       project: state.project,
-      properties: state.ontology.props,
       selection: getSelectedItems(state),
-      selections: state.selections,
       sort: getSortColumn(state),
+      templates: state.ontology.template,
       tags: state.tags,
       ui: state.ui
     }),
@@ -498,40 +504,20 @@ module.exports = {
         dispatch(actions.edit.cancel())
       },
 
-      onPhotoContract(...args) {
-        dispatch(actions.photo.contract(...args))
-      },
-
       onPhotoCreate(...args) {
         dispatch(actions.photo.create(...args))
-      },
-
-      onPhotoDelete(payload) {
-        if (payload.selections == null) {
-          dispatch(actions.photo.delete(payload))
-        } else {
-          dispatch(actions.selection.delete(payload))
-        }
-      },
-
-      onPhotoExpand(...args) {
-        dispatch(actions.photo.expand(...args))
       },
 
       onPhotoMove(...args) {
         dispatch(actions.photo.move(...args))
       },
 
-      onPhotoSort(...args) {
-        dispatch(actions.photo.order(...args))
+      onPhotoError(...args) {
+        dispatch(actions.photo.error(...args))
       },
 
       onPhotoSelect(...args) {
         dispatch(actions.photo.select(...args))
-      },
-
-      onPhotoError(...args) {
-        dispatch(actions.photo.error(...args))
       },
 
       onTagCreate(data) {
@@ -546,10 +532,6 @@ module.exports = {
 
       onTemplateImport(files) {
         dispatch(actions.ontology.template.import({ files }))
-      },
-
-      onSelectionSort(...args) {
-        dispatch(actions.selection.order(...args))
       },
 
       onNoteCreate(...args) {

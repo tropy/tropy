@@ -50,7 +50,9 @@ class NoteList extends Iterator {
 
   handleFocus = () => {
     // No auto-select, because that could change the active photo!
-    this.props.onTabFocus()
+    if (this.props.onTabFocus) {
+      this.props.onTabFocus()
+    }
   }
 
   handleKeyDown = (event) => {
@@ -129,8 +131,8 @@ class NoteList extends Iterator {
       id: number
     }),
     isDisabled: bool,
-    onBlur: func.isRequired,
-    onTabFocus: func.isRequired,
+    onBlur: func,
+    onTabFocus: func,
     onSelect: func.isRequired,
     onContextMenu: func.isRequired,
     onOpen: func.isRequired

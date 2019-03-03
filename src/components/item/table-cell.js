@@ -8,8 +8,8 @@ const { createClickHandler } = require('../util')
 const { testFocusChange } = require('../../dom')
 const { isMeta } = require('../../keymap')
 const { auto } = require('../../format')
+const { noop } = require('../../common/util')
 const cx = require('classnames')
-const { TYPE } = require('../../constants')
 const {
   arrayOf, bool, func, instanceOf, number, object, oneOfType, shape, string
 } = require('prop-types')
@@ -35,8 +35,9 @@ class ItemTableCell extends React.PureComponent {
     )
   }
 
-  get title() {
-    return this.props.isMainColumn ? this.props.value : null
+  get display() {
+    return this.props.display ||
+      auto(this.props.value, this.props.type)
   }
 
   edit(property) {
@@ -46,11 +47,9 @@ class ItemTableCell extends React.PureComponent {
   }
 
   handleChange = (text) => {
-    this.props.onChange({
-      id: this.props.item.id,
-      data: {
-        [this.props.id]: { text, type: this.props.type }
-      }
+    this.props.onChange(this.props.id, {
+      text,
+      type: this.props.type
     })
   }
 
@@ -124,11 +123,11 @@ class ItemTableCell extends React.PureComponent {
         <div className="flex-row center td-container">
           {this.renderCoverImage()}
           <Editable
-            display={auto(this.props.value, this.props.type)}
+            display={this.display}
             isActive={this.props.isEditing}
             isDisabled={isDisabled}
             resize
-            title={this.title}
+            title={this.props.title}
             value={isDisabled ? null : this.props.value}
             onCancel={this.props.onCancel}
             onChange={this.handleChange}
@@ -141,6 +140,7 @@ class ItemTableCell extends React.PureComponent {
 
   static propTypes = {
     cache: string,
+    display: string,
     id: string.isRequired,
     isDisabled: bool,
     isDragging: bool,
@@ -158,7 +158,8 @@ class ItemTableCell extends React.PureComponent {
     position: number.isRequired,
     size: number,
     tags: object,
-    type: string.isRequired,
+    title: string,
+    type: string,
     value: oneOfType([string, number, instanceOf(Date)]),
     getSelection: func.isRequired,
     getNextColumn: func.isRequired,
@@ -170,8 +171,10 @@ class ItemTableCell extends React.PureComponent {
   }
 
   static defaultProps = {
+    position: 0,
     size: 48,
-    type: TYPE.TEXT
+    getNextColumn: noop,
+    getPrevColumn: noop
   }
 }
 

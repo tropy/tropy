@@ -3,12 +3,18 @@
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
+const { SaveCommand } = require('./subject')
 const { Image } = require('../image')
 const mod = require('../models')
 const act = require('../actions')
 const { SELECTION } = require('../constants')
 const { pick, splice } = require('../common/util')
 const { keys } = Object
+
+const {
+  getSelectionTemplate,
+  getTemplateValues
+} = require('../selectors')
 
 
 class Create extends ImportCommand {
@@ -18,21 +24,31 @@ class Create extends ImportCommand {
     let { db } = this.options
     let { payload, meta } = this.action
 
-    let photo = yield select(state => state.photos[payload.photo])
-    let image = yield call(Image.open, photo.path, photo.page)
+    let [photo, template] = yield select(state => ([
+      state.photos[payload.photo],
+      getSelectionTemplate(state)
+    ]))
+
+    let image = yield call(Image.open, photo)
     let idx = (meta.idx != null) ? meta.idx : [photo.selections.length]
 
-    let selection = yield call(db.transaction, tx =>
-      mod.selection.create(tx, null, payload))
+    let data = getTemplateValues(template)
 
-    let data = { selections: [selection.id] }
+    let selection = yield call(db.transaction, tx =>
+      mod.selection.create(tx, {
+        data,
+        template: template.id,
+        ...payload
+      }))
 
     yield* this.createThumbnails(selection.id, image, { selection })
 
-    yield put(act.photo.selections.add({ id: photo.id, ...data }, { idx }))
+    let common = { selections: [selection.id] }
 
-    this.undo = act.selection.delete({ photo: photo.id, ...data }, { idx })
-    this.redo = act.selection.restore({ photo: photo.id, ...data }, { idx })
+    yield put(act.photo.selections.add({ id: photo.id, ...common }, { idx }))
+
+    this.undo = act.selection.delete({ photo: photo.id, ...common }, { idx })
+    this.redo = act.selection.restore({ photo: photo.id, ...common }, { idx })
 
     return selection
   }
@@ -140,6 +156,12 @@ class Save extends Command {
   }
 }
 
+class TemplateChange extends SaveCommand {
+  static get ACTION() { return SELECTION.TEMPLATE.CHANGE }
+  get type() { return 'selection' }
+}
+
+
 
 module.exports = {
   Create,
@@ -147,5 +169,6 @@ module.exports = {
   Load,
   Order,
   Restore,
-  Save
+  Save,
+  TemplateChange
 }

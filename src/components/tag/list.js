@@ -91,9 +91,9 @@ class TagList extends React.PureComponent {
     onContextMenu: func.isRequired,
     onCreate: func,
     onDropItems: func,
-    onEditCancel: func.isRequired,
+    onEditCancel: func,
     onRemove: func.isRequired,
-    onSave: func.isRequired,
+    onSave: func,
     onSelect: func.isRequired
   }
 

@@ -2,7 +2,6 @@
 
 const assert = require('assert')
 const { relative, resolve } = require('path')
-const { TEMPLATE } = require('../constants/photo')
 const { all } = require('bluebird')
 const metadata = require('./metadata')
 const bb = require('bluebird')
@@ -11,7 +10,6 @@ const subject = require('./subject')
 const { into, select, update } = require('../common/query')
 const { normalize } = require('../common/os')
 const { blank, empty, pick } = require('../common/util')
-const { DC } = require('../constants/rdf')
 
 const COLUMNS = [
   'checksum',
@@ -29,7 +27,7 @@ module.exports = {
   async create(db, { base, template }, { item, image, data, position }) {
     let { path, width, height, ...meta } = image.toJSON()
     let { id } = await db.run(
-      ...into('subjects').insert({ template: template || TEMPLATE })
+      ...into('subjects').insert({ template: template })
     )
 
     if (base != null) {
@@ -47,10 +45,7 @@ module.exports = {
         ...meta
       })),
 
-      metadata.update(db, {
-        id,
-        data: { ...data, ...pick(image.data, [DC.title, DC.date]) }
-      })
+      metadata.update(db, { id, data })
     ])
 
     return (await module.exports.load(db, [id], { base }))[id]
@@ -97,6 +92,7 @@ module.exports = {
             contrast,
             hue,
             saturation,
+            sharpen,
             width,
             height,
             path,

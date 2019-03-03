@@ -94,6 +94,7 @@ class Editable extends React.PureComponent {
       <Input
         ref={this.setInput}
         autofocus={this.props.autofocus}
+        autoselect={this.props.autoselect}
         className="editable-control"
         completions={this.props.getCompletions(window.state)}
         isRequired={this.props.isRequired}
@@ -122,6 +123,7 @@ class Editable extends React.PureComponent {
 
   static propTypes = {
     autofocus: bool,
+    autoselect: bool,
     getCompletions: func.isRequired,
     display: string,
     isActive: bool,
@@ -142,7 +144,9 @@ class Editable extends React.PureComponent {
 
   static defaultProps = {
     autofocus: true,
-    getCompletions: noop
+    autoselect: true,
+    getCompletions: noop,
+    onCancel: noop
   }
 }
 

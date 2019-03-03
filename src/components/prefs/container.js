@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { connect } = require('react-redux')
 const { array, bool, func, object, string } = require('prop-types')
 const { TitleBar } = require('../titlebar')
@@ -14,11 +13,12 @@ const actions = require('../../actions')
 const { win } = require('../../window')
 
 const {
-  getItemTemplates,
+  getAllTemplatesByType,
+  getPropertyList,
   getVocabs
 } = require('../../selectors')
 
-class PrefsContainer extends PureComponent {
+class PrefsContainer extends React.PureComponent {
   isActive(pane) {
     return this.props.pane === pane
   }
@@ -86,7 +86,8 @@ class PrefsContainer extends PureComponent {
             name="app"
             isActive={this.isActive('app')}>
             <AppPrefs
-              templates={this.props.itemTemplates}
+              properties={this.props.properties}
+              templates={this.props.templates}
               settings={this.props.settings}
               onSettingsUpdate={this.props.onSettingsUpdate}/>
           </PrefPane>
@@ -126,8 +127,9 @@ class PrefsContainer extends PureComponent {
   static propTypes = {
     edit: object.isRequired,
     isFrameless: bool,
-    itemTemplates: array.isRequired,
+    templates: object.isRequired,
     pane: string.isRequired,
+    properties: array.isRequired,
     settings: object.isRequired,
     vocab: array.isRequired,
     plugins: object.isRequired,
@@ -154,10 +156,11 @@ module.exports = {
   PrefsContainer: connect(
     state => ({
       edit: state.edit,
-      itemTemplates: getItemTemplates(state),
+      templates: getAllTemplatesByType(state),
       keymap: state.keymap,
       pane: state.prefs.pane,
       project: state.project,
+      properties: getPropertyList(state),
       settings: state.settings,
       vocab: getVocabs(state)
     }),

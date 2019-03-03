@@ -1,6 +1,6 @@
 'use strict'
 
-const { NOTE } = require('../constants/type')
+const { TROPY } = require('../constants')
 
 const { DOMSerializer } = require('prosemirror-model')
 const { schema } = require('../components/editor/schema')
@@ -31,7 +31,7 @@ function localize(val, lang) {
 module.exports = function (note) {
 
   return {
-    '@type': NOTE,
+    '@type': TROPY.Note,
     'text': localize(note.text, note.language),
     'html': localize(toHTML(note.state.doc), note.language)
   }

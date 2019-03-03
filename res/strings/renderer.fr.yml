@@ -29,6 +29,8 @@ fr:
 
           other {# objets}}
       selection: Sélection
+      popup:
+        placeholder: 'Ajouter nouveau champ… '
     tags:
       tab: Tags
       add: >
@@ -109,7 +111,14 @@ fr:
           en: English
           fr: Français
           ja: 日本語
-      template: Modèle de saisie par défaut
+      templates:
+        label: Modèles de saisie par défaut
+        item: Objet
+        photo: Photo
+        selection: Sélection
+      title:
+        label: Utiliser le nom de fichier comme
+        force: Écraser les métadonnées de photo incorporées
       debug: Autoriser le mode développeur
       localtime: Présupposer que les métadonnées des images utilisent l'heure locale.
       dup:
@@ -189,6 +198,7 @@ fr:
   item:
     created: Création
     modified: Modifié
+    template: Modèle de saisie
   photo:
     file: Fichier
     size: Taille
@@ -225,6 +235,9 @@ fr:
       saturation:
         label: Saturation
         value: "{value, number}"
+      sharpen:
+        label: Netteté
+        value: "{value, number}"
   notepad:
     placeholder: Ajoutez vos notes ici…
   completions:
@@ -242,7 +255,7 @@ fr:
     types:
       https://tropy.org/v1/tropy#Item: Modèle de saisie pour un objet
       https://tropy.org/v1/tropy#Photo: Modèle de saisie pour une photo
-      https://tropy.org/v1/tropy#Selection: Modèle de saisie pour une sélection de photos
+      https://tropy.org/v1/tropy#Selection: Modèle de saisie pour une sélection
     field:
       property: Propriété
       label: Label
@@ -268,9 +281,9 @@ fr:
     label: Label
     description: Description
     comment: Commentaire
-  ok: Oui
-  cancel: Annuler
   dialog:
+    ok: Oui
+    cancel: Annuler
     prompt:
       item:
         destroy:
@@ -506,6 +519,8 @@ fr:
       consolidate: Echec du regroupement des photos.
       create: Echec de l'importation de la (/des) photo(s).
       save: Echec de la sauvegarde de la (/des) photo(s).
+    selection:
+      create: Echec de la sauvegarde de la sélection
     ontology:
       import: Echec de l'importation du lexique.
       vocab:

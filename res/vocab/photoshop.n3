@@ -1,0 +1,139 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix photoshop: <http://ns.adobe.com/photoshop/1.0/> .
+
+<http://ns.adobe.com/photoshop/1.0/> a owl:Ontology ;
+	vann:preferredNamespacePrefix "photoshop" ;
+  dcterms:title "Photoshop Vocabulary" ;
+	dcterms:publisher "Adobe" ;
+	dcterms:description "This namespace specifies properties used by Adobe Photoshop."@en .
+
+photoshop:Ancestor a rdfs:Class ;
+  rdfs:subClassOf rdfs:Resource ;
+	rdfs:label "Ancestor"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "A structure identifying a document that was copied or placed into the current document."@en .
+
+photoshop:Layer a rdfs:Class ;
+  rdfs:subClassOf rdfs:Resource ;
+	rdfs:label "Layer"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "A structure associating an identifying name and text content with a text layer of a Photoshop document."@en .
+
+photoshop:AncestorID a rdf:Property ;
+  rdfs:domain photoshop:Ancestor ;
+	rdfs:label "Ancestor ID"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "The unique identifier of a document."@en .
+
+
+photoshop:LayerName a rdf:Property ;
+  rdfs:domain photoshop:Layer ;
+	rdfs:label "Layer Name"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "The identifying name of the text layer."@en .
+
+photoshop:LayerText a rdf:Property ;
+  rdfs:domain photoshop:Layer ;
+	rdfs:label "Layer Text"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "The text content of the text layer."@en .
+
+photoshop:AuthorsPosition a rdf:Property ;
+	rdfs:label "Author's Position"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "By-line title."@en .
+
+photoshop:CaptionWriter a rdf:Property ;
+	rdfs:label "Caption Writer"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "Writer/editor."@en .
+
+photoshop:Category a rdf:Property ;
+	rdfs:label "Category"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "Category. Limited to 3-7 ASCII characters."@en .
+
+photoshop:City a rdf:Property ;
+	rdfs:label "City"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "City."@en .
+
+photoshop:ColorMode a rdf:Property ;
+	rdfs:label "Color Mode"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "The colour mode. One of: 0 = Bitmap1 = Gray scale2 = Indexed colour3 = RGB colour4 = CMYK colour7 = Multi-channel8 = Duotone9 = LAB colour."@en .
+
+photoshop:Country a rdf:Property ;
+	rdfs:label "Country"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "Country/primary location."@en .
+
+photoshop:Credit a rdf:Property ;
+	rdfs:label "Credit"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "Credit."@en .
+
+photoshop:DateCreated a rdf:Property ;
+	rdfs:label "Date Created"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "The date the intellectual content of the document was created, rather than the creation date of the physical representation."@en .
+
+photoshop:DocumentAncestors a rdf:Property ;
+	rdfs:label "Document Ancestors"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "If the source document for a copy-and-paste or place operation has a document ID, that ID is added to this list in the destination document's XMP."@en .
+
+photoshop:Headline a rdf:Property ;
+	rdfs:label "Headline"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "Headline."@en .
+
+photoshop:History a rdf:Property ;
+	rdfs:label "History"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "The history that appears in the FileInfo panel, if activated in the application preferences."@en .
+
+photoshop:ICCProfile a rdf:Property ;
+	rdfs:label "ICC Profile"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "The colour profile, such as AppleRGB, AdobeRGB1998."@en .
+
+photoshop:Instructions a rdf:Property ;
+	rdfs:label "Instructions"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "Special instructions."@en .
+
+photoshop:Source a rdf:Property ;
+	rdfs:label "Source"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "Source."@en .
+
+photoshop:State a rdf:Property ;
+	rdfs:label "State"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "Province/state."@en .
+
+photoshop:SupplementalCategories a rdf:Property ;
+	rdfs:label "Supplemental Categories"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "Sopplemental Category."@en .
+
+photoshop:TextLayers a rdf:Property ;
+	rdfs:label "Text Layers"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "If a document has text layers, this property caches the text for each layer."@en .
+
+photoshop:TransmissionReference a rdf:Property ;
+	rdfs:label "Transmission Reference"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "Original transmission reference."@en .
+
+photoshop:Urgency a rdf:Property ;
+	rdfs:label "Urgency"@en ;
+	rdfs:isDefinedBy <http://ns.adobe.com/photoshop/1.0/> ;
+	rdfs:comment "Urgency. Valid range is 1-8."@en .
+

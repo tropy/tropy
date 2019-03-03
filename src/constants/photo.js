@@ -30,5 +30,9 @@ module.exports = {
     REMOVE: 'photo.selection.remove'
   },
 
-  TEMPLATE: 'https://tropy.org/v1/templates/photo'
+  TEMPLATE: {
+    CHANGE: 'photo.template.change',
+
+    DEFAULT: 'https://tropy.org/v1/templates/photo'
+  }
 }

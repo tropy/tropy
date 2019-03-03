@@ -2,29 +2,102 @@
 
 const React = require('react')
 const { ItemToolbar } = require('./toolbar')
-const { ItemTabHeader, ItemTabBody } = require('./tab')
-const { NotePanel } = require('../note')
+const { TabNav, TabPane } = require('../tabs')
+const { NoteList, NoteToolbar } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
-const { PhotoPanel } = require('../photo')
-const cx = require('classnames')
-const { get } = require('../../common/util')
+const { PhotoPanel, PhotoToolbar } = require('../photo')
+const { MetadataPanel } = require('../metadata')
+const { TagPanel } = require('../tag')
+const { IconMetadata, IconHangtag } = require('../icons')
+const { get, has } = require('../../common/util')
+const { on, off } = require('../../dom')
 const { keys } = Object
+const cx = require('classnames')
+
+const { PANEL } = require('../../constants/ui')
+const { TABS } = require('../../constants')
 
 const {
   array, bool, func, number, object, shape, string
 } = require('prop-types')
 
 
-class ItemPanel extends React.PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      hasFirstPanelFocus: false
-    }
+class ItemPanelGroup extends React.PureComponent {
+  panel = React.createRef()
+  tab = React.createRef()
+
+  componentDidMount() {
+    on(document, 'global:next-tab', this.toggleTabs)
+    on(document, 'global:prev-tab', this.toggleTabs)
   }
 
-  setPanel = (panel) => {
-    this.first = panel
+  componentWillUnmount() {
+    off(document, 'global:next-tab', this.toggleTabs)
+    off(document, 'global:prev-tab', this.toggleTabs)
+  }
+
+  get toolbar() {
+    return (
+      <ItemToolbar
+        isItemOpen={this.props.isItemOpen}
+        onMaximize={this.props.onMaximize}
+        onModeChange={this.props.onModeChange}/>
+    )
+  }
+
+  get keymap() {
+    return this.props.keymap.ItemPanel
+  }
+
+  handleKeyDown = (event) => {
+    switch (this.keymap.match(event)) {
+      case 'up':
+        if (this.tab.current) {
+          this.tab.current.prev()
+        }
+        break
+      case 'down':
+        if (this.tab.current) {
+          this.tab.current.next()
+        }
+        break
+      case 'left':
+      case 'right':
+        this.toggleTabs()
+        this.panel.current.focus()
+        break
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
+  }
+
+  handleEditCancel = () => {
+    this.props.onEditCancel()
+    this.panel.current.focus()
+  }
+
+  handleMetadataSave = (...args) => {
+    this.props.onMetadataSave(...args)
+    this.panel.current.focus()
+  }
+
+  handleTagAddCancel = () => {
+    this.panel.current.focus()
+  }
+
+  handleNoteOpen = (note) => {
+    if (note != null && !this.props.isItemOpen) {
+      this.props.onItemOpen({
+        id: this.props.items[0].id,
+        photos: [this.props.photo.id],
+        notes: [note.id],
+        selection: note.selection
+      })
+    }
   }
 
   handlePhotoCreate = (dropped) => {
@@ -46,135 +119,135 @@ class ItemPanel extends React.PureComponent {
     this.props.onUiUpdate({ panel: { zoom } })
   }
 
-  handleFirstPanelFocus = () => {
-    this.setState({ hasFirstPanelFocus: true })
-  }
-
-  handleFirstPanelBlur = () => {
-    this.setState({ hasFirstPanelFocus: false })
-  }
-
-  renderItemToolbar() {
-    return (
-      <ItemToolbar
-        isItemOpen={this.props.isItemOpen}
-        onMaximize={this.props.onMaximize}
-        onModeChange={this.props.onModeChange}/>
+  toggleTabs = () => {
+    this.handleTabChange(
+      this.props.panel.tab === PANEL.METADATA ? PANEL.TAGS : PANEL.METADATA
     )
   }
 
   render() {
-    const {
-      edit,
-      expanded,
-      activeSelection,
-      keymap,
-      note,
-      notes,
-      panel,
-      photo,
-      selections,
-      isDisabled,
-      isItemOpen,
-      onItemPreview,
-      onNoteCreate,
-      onNoteSelect,
-      onPhotoContract,
-      onPhotoDelete,
-      onPhotoError,
-      onPhotoExpand,
-      onPhotoSelect,
-      onPhotoSort,
-      onSelectionSort,
-      ...props
-    } = this.props
-
-    const hasMultipleItems = this.props.items.length > 1
-    const item = hasMultipleItems ? null : this.props.items[0]
+    let { isDisabled, photo, panel } = this.props
+    let hasMultipleItems = this.props.items.length > 1
+    let item = hasMultipleItems ? null : this.props.items[0]
+    let canCreatePhoto = !(isDisabled || item == null || hasMultipleItems)
 
     return (
       <PanelGroup
+        className="item-panel-group"
+        header={this.toolbar}
         slots={panel.slots}
-        onResize={this.handleResize}
-        header={this.renderItemToolbar()}>
+        onResize={this.handleResize}>
 
-        <Panel className={cx('item', 'panel', {
-          'nested-tab-focus': this.state.hasFirstPanelFocus
-        })}>
-          <ItemTabHeader
-            tab={panel.tab}
+        <Panel
+          className="item-panel"
+          ref={this.panel}
+          tabIndex={TABS.ItemPanel}
+          onKeyDown={this.handleKeyDown}>
+          <TabNav
+            active={panel.tab}
+            justified
+            tabs={this.props.tabs}
             onChange={this.handleTabChange}/>
-          <ItemTabBody {...props}
-            tab={panel.tab}
-            isDisabled={isDisabled}
-            isItemOpen={isItemOpen}
-            setPanel={this.setPanel}
-            onBlur={this.handleFirstPanelBlur}
-            onFocus={this.handleFirstPanelFocus}/>
+          <TabPane active={panel.tab}>
+            {(tab, props) => {
+              if (this.props.items.length === 0) return null
+
+              switch (tab) {
+                case PANEL.METADATA:
+                  return (
+                    <MetadataPanel
+                      {...props}
+                      ref={this.tab}
+                      isDisabled={isDisabled}
+                      onContextMenu={this.props.onContextMenu}
+                      onEdit={this.props.onEdit}
+                      onEditCancel={this.handleEditCancel}
+                      onMetadataSave={this.handleMetadataSave}
+                      onOpenInFolder={this.props.onOpenInFolder}/>
+                  )
+                case PANEL.TAGS:
+                  return (
+                    <TagPanel
+                      {...props}
+                      ref={this.tab}
+                      isDisabled={isDisabled}
+                      onCancel={this.handleTagAddCancel}
+                      onContextMenu={this.props.onContextMenu}
+                      onItemTagAdd={this.props.onItemTagAdd}
+                      onItemTagRemove={this.props.onItemTagRemove}
+                      onTagCreate={this.props.onTagCreate}/>
+                  )
+              }
+            }}
+          </TabPane>
         </Panel>
 
-        <PhotoPanel {...props}
-          isDisabled={isDisabled || !item || hasMultipleItems}
-          isItemOpen={isItemOpen}
-          edit={edit}
-          expanded={expanded}
-          keymap={keymap}
-          zoom={panel.zoom}
-          current={photo && photo.id}
-          selection={activeSelection}
-          selections={selections}
-          onContract={onPhotoContract}
-          onCreate={this.handlePhotoCreate}
-          onDelete={onPhotoDelete}
-          onError={onPhotoError}
-          onExpand={onPhotoExpand}
-          onItemPreview={onItemPreview}
-          onSelect={onPhotoSelect}
-          onSort={onPhotoSort}
-          onSelectionSort={onSelectionSort}
-          onZoomChange={this.handleZoomChange}/>
+        <Panel className={cx('photo-panel', {
+          'has-active': has(photo, ['id'])
+        })}>
+          <PhotoToolbar
+            canCreate={canCreatePhoto}
+            hasCreateButton
+            isDisabled={isDisabled || item == null}
+            photos={this.props.photos.length}
+            zoom={panel.zoom}
+            onCreate={this.handlePhotoCreate}
+            onZoomChange={this.handleZoomChange}/>
+          <PhotoPanel
+            canCreate
+            isDisabled={!canCreatePhoto}
+            isItemOpen={this.props.isItemOpen}
+            photos={this.props.photos}
+            zoom={panel.zoom}
+            onEdit={this.props.onEdit}
+            onEditCancel={this.props.onEditCancel}
+            onItemOpen={this.props.onItemOpen}
+            onChange={this.props.onMetadataSave}
+            onContextMenu={this.props.onContextMenu}
+            onCreate={this.handlePhotoCreate}
+            onError={this.props.onPhotoError}
+            onItemPreview={this.props.onItemPreview}
+            onSelect={this.props.onPhotoSelect}/>
+        </Panel>
 
-        <NotePanel {...props}
-          isDisabled={isDisabled || !photo || !item || hasMultipleItems}
-          isItemOpen={isItemOpen}
-          item={item && item.id}
-          keymap={keymap.NoteList}
-          photo={photo && photo.id}
-          notes={notes}
-          selection={note}
-          onCreate={onNoteCreate}
-          onSelect={onNoteSelect}/>
+        <Panel className={cx('note-panel', {
+          'has-active': has(this.props.note, ['id'])
+        })}>
+          <NoteToolbar
+            hasCreateButton
+            isDisabled={!canCreatePhoto || photo == null}
+            notes={this.props.notes.length}
+            onCreate={this.props.onNoteCreate}/>
+          <NoteList
+            isDisabled={!canCreatePhoto || photo == null}
+            keymap={this.props.keymap.NoteList}
+            notes={this.props.notes}
+            selection={this.props.note}
+            onContextMenu={this.props.onContextMenu}
+            onOpen={this.handleNoteOpen}
+            onSelect={this.props.onNoteSelect}/>
+        </Panel>
       </PanelGroup>
     )
   }
 
   static propTypes = {
-    cache: string.isRequired,
-    data: object.isRequired,
-    edit: object.isRequired,
-    expanded: array.isRequired,
-    activeSelection: number,
-    keymap: object.isRequired,
     isDisabled: bool.isRequired,
     isItemOpen: bool.isRequired,
     items: array.isRequired,
-
+    keymap: object.isRequired,
     note: object,
     notes: array.isRequired,
-    selections: object.isRequired,
-
     panel: shape({
       slots: array.isRequired,
       tab: string.isRequired,
       zoom: number.isRequired
     }).isRequired,
-
     photo: shape({
       id: number.isRequired
     }),
     photos: array.isRequired,
-    properties: object.isRequired,
-
+    tabs: array,
     onContextMenu: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func,
@@ -188,22 +261,32 @@ class ItemPanel extends React.PureComponent {
     onNoteCreate: func.isRequired,
     onNoteSelect: func.isRequired,
     onOpenInFolder: func.isRequired,
-    onPhotoContract: func.isRequired,
     onPhotoCreate: func.isRequired,
-    onPhotoDelete: func.isRequired,
     onPhotoError: func.isRequired,
-    onPhotoExpand: func.isRequired,
     onPhotoSelect: func.isRequired,
-    onPhotoSort: func.isRequired,
     onTagCreate: func.isRequired,
     onTagSave: func.isRequired,
-    onSelectionSort: func.isRequired,
     onUiUpdate: func.isRequired
   }
 
-  static props = keys(ItemPanel.propTypes)
+  static defaultProps = {
+    tabs: [
+      {
+        name: PANEL.METADATA,
+        label: 'panel.metadata.tab',
+        icon: <IconMetadata/>
+      },
+      {
+        name: PANEL.TAGS,
+        label: 'panel.tags.tab',
+        icon: <IconHangtag/>
+      }
+    ]
+  }
+
+  static props = keys(ItemPanelGroup.propTypes)
 }
 
 module.exports = {
-  ItemPanel
+  ItemPanelGroup
 }

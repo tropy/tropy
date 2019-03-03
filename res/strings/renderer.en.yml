@@ -97,9 +97,16 @@ en:
           en: English
           fr: Français
           ja: 日本語
-      template: Default Template
+      templates:
+        label: Default templates
+        item: Item
+        photo: Photo
+        selection: Selection
+      title:
+        label: Import file name as
+        force: Overwrite embedded photo metadata
       debug: Enable Developer Mode
-      localtime: Assume photo metadata use local timezone
+      localtime: Assume Exif timestamps use local timezone
       dup:
         label: During import
         option:
@@ -166,6 +173,7 @@ en:
   item:
     created: Date Added
     modified: Modified
+    template: Template
   photo:
     file: File
     size: Size
@@ -202,6 +210,9 @@ en:
       saturation:
         label: Saturation
         value: "{value, number}"
+      sharpen:
+        label: Sharpen
+        value: "{value, number}"
   notepad:
     placeholder: Add your notes here …
   completions:
@@ -219,7 +230,7 @@ en:
     types:
       "https://tropy.org/v1/tropy#Item": Item Template
       "https://tropy.org/v1/tropy#Photo": Photo Template
-      "https://tropy.org/v1/tropy#Selection": Photo Selection Template
+      "https://tropy.org/v1/tropy#Selection": Selection Template
     field:
       property: Property
       label: Label
@@ -247,9 +258,9 @@ en:
     description: Description
     comment: Comment
 
-  ok: Yes
-  cancel: Cancel
   dialog:
+    ok: Yes
+    cancel: Cancel
     prompt:
       item:
         destroy:
@@ -464,6 +475,8 @@ en:
       tag:
         save: Failed to save tag.
         create: Failed to tag item. Tags must be unique per item.
+      template:
+        change: Failed to change item template.
     list:
       load: Failed to load lists.
       create: Failed to create list. List names must be unique.
@@ -475,7 +488,14 @@ en:
       consolidate: Failed to consolidate photos.
       create: Failed to import photo.
       save: Failed to save photo.
+      template:
+        change: Failed to change photo template.
+    selection:
+      create: Failed to create photo selection.
+      template:
+        change: Failed to change selection template.
     ontology:
+      migrate: Failed to upgrade your ontology database.
       import: Failed to import vocabulary.
       vocab:
         save: Failed to save vocabulary. Prefix must be unique.

@@ -1,6 +1,7 @@
 'use strict'
 
-const { SETTINGS, ITEM, ESPER } = require('../constants')
+const { SETTINGS, ITEM, PHOTO, SELECTION, ESPER, DC } = require('../constants')
+const { merge } = require('../common/util')
 const { darwin } = require('../common/os')
 
 const defaults = {
@@ -9,8 +10,17 @@ const defaults = {
   layout: ITEM.LAYOUT.STACKED,
   locale: ARGS.locale,
   localtime: true,
-  template: ITEM.TEMPLATE,
+  templates: {
+    item: ITEM.TEMPLATE.DEFAULT,
+    photo: PHOTO.TEMPLATE.DEFAULT,
+    selection: SELECTION.TEMPLATE.DEFAULT
+  },
   theme: ARGS.theme,
+  title: {
+    item: DC.title,
+    photo: DC.title,
+    force: false
+  },
   overlayToolbars: ARGS.frameless,
   invertScroll: true,
   invertZoom: darwin,
@@ -22,13 +32,12 @@ module.exports = {
     switch (type) {
       case SETTINGS.RESTORE:
         return {
-          ...defaults,
-          ...payload,
+          ...merge(defaults, payload),
           theme: ARGS.theme,
           locale: ARGS.locale
         }
       case SETTINGS.UPDATE:
-        return { ...state, ...payload }
+        return merge(state, payload)
       default:
         return state
     }

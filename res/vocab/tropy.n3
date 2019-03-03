@@ -104,28 +104,28 @@ tropy:photo a rdf:Property ;
 	rdfs:label "Photo"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:range tropy:Photo ;
-	rdfs:comment "A Tropy photo."@en .
+	rdfs:comment "A photo in Tropy represents a digital image."@en .
 
 tropy:selection a rdf:Property ;
 	rdfs:label "Selection"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:domain tropy:Photo ;
   rdfs:range tropy:Selection ;
-	rdfs:comment "A Tropy photo selection."@en .
+	rdfs:comment "A selection in Tropy represents a portion of a photo."@en .
 
 tropy:list a rdf:Property ;
 	rdfs:label "List"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:domain tropy:Item ;
   rdfs:range tropy:List ;
-	rdfs:comment "A list containing the item."@en .
+	rdfs:comment "A list that contains this item."@en .
 
 tropy:tag a rdf:Property ;
 	rdfs:label "Tag"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:domain tropy:Item ;
   rdfs:range tropy:Tag ;
-	rdfs:comment "A tag applied to the item."@en .
+	rdfs:comment "A tag applied to this item."@en .
 
 tropy:note a rdf:Property ;
 	rdfs:label "Note"@en ;
@@ -244,6 +244,12 @@ tropy:saturation a rdf:Property ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:domain tropy:Photo , tropy:Selection ;
 	rdfs:comment "Saturation adjustment of an image."@en .
+
+tropy:sharpen a rdf:Property ;
+	rdfs:label "Sharpen"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Intensity of the sharpen filter applied to an image."@en .
 
 
 # Custom Metadata Properties

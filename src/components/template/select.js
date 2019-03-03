@@ -1,14 +1,13 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { Select } = require('../select')
 const { FormattedMessage } = require('react-intl')
 const collate = require('../../collate')
-const { bool, array, func, number, string } = require('prop-types')
+const { bool, array, func, node, number, string } = require('prop-types')
 const cx = require('classnames')
 
-class TemplateSelect extends PureComponent {
+class TemplateSelect extends React.PureComponent {
   get placeholder() {
     return this.props.placeholder != null &&
       <FormattedMessage id={this.props.placeholder}/>
@@ -24,6 +23,7 @@ class TemplateSelect extends PureComponent {
 
   render() {
     let { isMixed, ...props } = this.props
+
     return (
       <Select {...props}
         className={cx('template-select', { mixed: isMixed })}
@@ -33,6 +33,7 @@ class TemplateSelect extends PureComponent {
   }
 
   static propTypes = {
+    icon: node,
     isMixed: bool,
     match: func.isRequired,
     options: array.isRequired,

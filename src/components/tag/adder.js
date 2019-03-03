@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { injectIntl, intlShape } = require('react-intl')
 const { Input } = require('../input')
 const { blank, noop } = require('../../common/util')
@@ -9,7 +8,9 @@ const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 const collate = require('../../collate')
 
 
-class TagAdder extends PureComponent {
+class TagAdder extends React.PureComponent {
+  input = React.createRef()
+
   get placeholder() {
     let { count, intl } = this.props
     return {
@@ -20,38 +21,42 @@ class TagAdder extends PureComponent {
   }
 
   focus() {
-    this.input.focus()
+    this.input.current.focus()
+  }
+
+  handleCancel = (hasChanged) => {
+    if (hasChanged)
+      this.input.current.reset()
+    else
+      this.props.onCancel()
   }
 
   handleBlur = (event) => {
     this.props.onBlur(event)
-    return true // cancel on blur
+    this.input.current.reset()
+    return true // Always cancel on blur!
   }
 
   handleChange = (name) => {
-    if (blank(name)) return this.props.onCancel()
+    if (blank(name))
+      return this.props.onCancel()
 
-    const query = name.trim().toLowerCase()
-    const tag = this.props.tags.find(t => query === t.name.toLowerCase())
+    let query = name.trim().toLowerCase()
+    let tag = this.props.tags.find(t => query === t.name.toLowerCase())
 
-    if (tag) {
+    if (tag)
       this.props.onAdd(tag)
-    } else {
+    else
       this.props.onCreate({ name })
-    }
 
-    this.input.reset()
-  }
-
-  setInput = (input) => {
-    this.input = input
+    this.input.current.reset()
   }
 
   render() {
     return (
       <div className="add-tag-container" style={this.placeholder}>
         <Input
-          ref={this.setInput}
+          ref={this.input}
           className="form-control"
           completions={this.props.completions}
           isDisabled={this.props.isDisabled}
@@ -60,7 +65,7 @@ class TagAdder extends PureComponent {
           value=""
           onBlur={this.handleBlur}
           onFocus={this.props.onFocus}
-          onCancel={this.props.onCancel}
+          onCancel={this.handleCancel}
           onCommit={this.handleChange}/>
       </div>
     )
@@ -87,6 +92,7 @@ class TagAdder extends PureComponent {
     match: (value, query) => (
       collate.match(value.name || String(value), query, /\b\w/g)
     ),
+    onCancel: noop,
     onFocus: noop
   }
 }

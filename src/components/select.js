@@ -115,7 +115,8 @@ class Select extends React.Component {
       'can-clear': !this.props.hideClearButton && this.state.canClearValue,
       'disabled': this.state.isDisabled,
       'focus': this.state.hasFocus,
-      'invalid': this.state.isInvalid,
+      'has-icon': this.props.icon != null,
+      'invalid': !this.state.isDisabled && this.state.isInvalid,
       'multi': this.state.isMulti,
       'open': this.state.isOpen,
       'single': !this.state.isMulti,
@@ -134,7 +135,7 @@ class Select extends React.Component {
     if (this.state.canClearValue) {
       if (value != null) this.props.onRemove(this.props.toId(value))
       else this.props.onClear()
-      this.props.onChange(null, !this.state.isBlank)
+      this.handleChange(null, !this.state.isBlank)
       this.close()
     }
   }
@@ -149,7 +150,7 @@ class Select extends React.Component {
     if (this.state.isBlank) return this.open()
     let value = last(this.state.values)
     if (value == null || value.id == null) return this.open()
-    this.props.onChange(value, false)
+    this.handleChange(value, false)
   }
 
   delegate(cmd, ...args) {
@@ -174,6 +175,14 @@ class Select extends React.Component {
     this.props.onBlur(event)
     this.close()
   }
+
+  handleChange = (value, hasChanged) => {
+    if (this.props.name != null) {
+      value = { [this.props.name]: value }
+    }
+    this.props.onChange(value, hasChanged)
+  }
+
 
   handleContextMenu = (event) => {
     if (this.state.isOpen) {
@@ -253,10 +262,10 @@ class Select extends React.Component {
       let id = this.props.toId(value)
       if (this.state.values.includes(value)) {
         if (this.state.canClearValue) this.props.onRemove(id)
-        this.props.onChange(value, false)
+        this.handleChange(value, false)
       } else {
         this.props.onInsert(id)
-        this.props.onChange(value, true)
+        this.handleChange(value, true)
       }
       this.close()
     }
@@ -345,7 +354,8 @@ class Select extends React.Component {
       return this.state.isOpen && (
         <Completions
           className={cx(this.props.className, {
-            invalid: this.state.isInvalid
+            'invalid': this.state.isInvalid,
+            'has-icon': this.props.icon != null
           })}
           completions={this.props.options}
           fadeIn={this.shouldPopupFadeIn}
@@ -377,6 +387,7 @@ class Select extends React.Component {
         onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
         ref={this.setContainer}>
+        {this.props.icon}
         {this.renderContent()}
         {this.renderInput()}
         {this.renderClearButton()}
@@ -389,6 +400,7 @@ class Select extends React.Component {
     canClearByBackspace: bool,
     className: string,
     hideClearButton: bool,
+    icon: node,
     id: string,
     isDisabled: bool,
     isInputHidden: bool,
@@ -396,6 +408,7 @@ class Select extends React.Component {
     isStatic: bool,
     isSelectionHidden: bool,
     isValueHidden: bool,
+    name: string,
     match: func,
     maxRows: number,
     minFilterOptions: number.isRequired,

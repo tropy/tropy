@@ -1,6 +1,7 @@
 'use strict'
 
 const { SELECTION } = require('../constants')
+const { array } = require('../common/util')
 
 module.exports = {
   create(payload, meta) {
@@ -80,4 +81,32 @@ module.exports = {
     }
   },
 
+  bulk: {
+    update(payload, meta = {}) {
+      return {
+        type: SELECTION.BULK.UPDATE,
+        payload,
+        meta
+      }
+    }
+  },
+
+
+  template: {
+    change({ id, template }, meta) {
+      return {
+        type: SELECTION.TEMPLATE.CHANGE,
+        payload: {
+          id: array(id),
+          property: 'template',
+          value: template
+        },
+        meta: {
+          cmd: 'project',
+          history: 'add',
+          ...meta
+        }
+      }
+    }
+  }
 }

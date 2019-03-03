@@ -7,6 +7,7 @@ const { Database } = require('../common/db')
 const { verbose, warn } = require('../common/log')
 const { ONTOLOGY } = require('../constants')
 const { exec } = require('./cmd')
+const { fail } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
 const { call, cps, fork, take } = require('redux-saga/effects')
@@ -36,7 +37,12 @@ function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
     if (yield call(db.empty)) {
       yield call(mod.ontology.create, db)
     } else {
-      yield call(db.migrate, ONTOLOGY.MIGRATIONS)
+      try {
+        yield call(db.migrate, ONTOLOGY.MIGRATIONS)
+      } catch (error) {
+        warn('failed to migrate ontology database', { stack: error.stack })
+        yield call(fail, error, 'ontology.migrate')
+      }
     }
 
     yield call(exec, { db }, act.ontology.load())

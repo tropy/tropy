@@ -53,6 +53,7 @@ class Window extends EventEmitter {
         this.handleEditorCommands()
         this.handleModifierKeys()
         this.handleMouseEnter()
+        this.handleMouseButtons()
 
         addIdleObserver(this.handleIdleEvents, IDLE_SHORT)
 
@@ -174,14 +175,15 @@ class Window extends EventEmitter {
         this.reload()
       })
       .on('ctx', (_, action, detail) => {
-        // NB: delay triggering the event for the pointer
-        // position to be up-to-date!
+        // NB: delay event for pointer position to be up-to-date!
         setTimeout(() => {
           emit(document, `ctx:${action}`, {
             detail: { ...detail, ...this.pointer }
           })
-        }, 15)
-
+        }, 25)
+      })
+      .on('global', (_, action) => {
+        emit(document, `global:${action}`)
       })
   }
 
@@ -251,8 +253,13 @@ class Window extends EventEmitter {
 
       switch (event.key) {
         case 'z':
-          if (isInput(event.target)) this.undo()
-          else this.emit('app.undo')
+          if (event.shiftKey) {
+            if (isInput(event.target)) this.redo()
+            else this.emit('app.redo')
+          } else {
+            if (isInput(event.target)) this.undo()
+            else this.emit('app.undo')
+          }
           break
 
         case 'Z':
@@ -291,6 +298,23 @@ class Window extends EventEmitter {
     on(document, 'mouseenter', event => {
       this.pointer.x = event.clientX
       this.pointer.y = event.clientY
+    }, { passive: true, capture: false })
+  }
+
+  handleMouseButtons() {
+    on(document, 'mousedown', event => {
+      if (!event.defaultPrevented) {
+        switch (event.button) {
+          case 3:
+          case 8:
+            emit(document, 'global:back')
+            break
+          case 4:
+          case 9:
+            emit(document, 'global:forward')
+            break
+        }
+      }
     }, { passive: true, capture: false })
   }
 

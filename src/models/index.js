@@ -11,6 +11,7 @@ module.exports = {
   photo: require('./photo'),
   project: require('./project'),
   selection: require('./selection'),
+  subject: require('./subject'),
   tag: require('./tag'),
   value: require('./value')
 }

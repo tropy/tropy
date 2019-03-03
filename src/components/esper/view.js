@@ -6,7 +6,7 @@ const { append, bounds, createDragHandler, on, off } = require('../../dom')
 const css = require('../../css')
 const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
-const PIXI = require('pixi.js/dist/pixi.js')
+const PIXI = require('pixi.js')
 const { TextureCache, skipHello } = PIXI.utils
 const { constrain, Picture } = require('./picture')
 const { Selection  } = require('./selection')
@@ -313,13 +313,14 @@ class EsperView extends React.Component {
     }
   }
 
-  adjust({ brightness, contrast, hue, negative, saturation }) {
+  adjust({ brightness, contrast, hue, negative, saturation, sharpen }) {
     this.image
       .brightness(brightness)
       .contrast(contrast)
       .hue(hue)
       .negative(negative)
       .saturation(saturation)
+      .sharpen(sharpen)
     this.pixi.render()
   }
 

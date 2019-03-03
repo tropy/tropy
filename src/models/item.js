@@ -3,7 +3,7 @@
 const { all } = require('bluebird')
 const { assign } = Object
 const { array, blank, list: lst, remove, uniq } = require('../common/util')
-const { ITEM: { TEMPLATE }, NAV: { COLUMN } } = require('../constants')
+const { NAV: { COLUMN } } = require('../constants')
 const { select } = require('../common/query')
 
 const mod = {
@@ -40,6 +40,7 @@ const SORT = `
 const ORDER = {
   [COLUMN.CREATED.id]: 'subjects.created',
   [COLUMN.MODIFIED.id]: 'subjects.modified',
+  [COLUMN.TEMPLATE.id]: 'subjects.template',
   [COLUMN.POSITION.id]: 'list_items.added'
 }
 
@@ -229,7 +230,7 @@ module.exports = mod.item = {
 
   async create(db, template, data) {
     const { id } = await db.run(`
-      INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
+      INSERT INTO subjects (template) VALUES (?)`, template)
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 
