@@ -47,16 +47,14 @@ class TagPanel extends React.PureComponent {
   }
 
   handleTagRemove = (tag) => {
-    const id = this.getTaggedIds(tag)
-
+    let id = this.getTaggedIds(tag)
     if (id.length > 0) {
       this.props.onItemTagRemove({ id, tags: [tag.id] })
     }
   }
 
   handleTagAdd = (tag) => {
-    const id = this.getTaggedIds(tag, true)
-
+    let id = this.getTaggedIds(tag, true)
     if (id.length > 0) {
       this.props.onItemTagAdd({ id, tags: [tag.id] })
     }
@@ -82,8 +80,9 @@ class TagPanel extends React.PureComponent {
           keymap={this.props.keymap}
           tags={this.props.tags}
           hasFocusIcon
-          onRemove={this.handleTagRemove}
-          onContextMenu={this.handleContextMenu}/>
+          onCommit={this.handleTagAdd}
+          onContextMenu={this.handleContextMenu}
+          onRemove={this.handleTagRemove}/>
         <TagAdder
           ref={this.setAdder}
           isDisabled={this.props.isDisabled}
