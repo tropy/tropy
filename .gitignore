@@ -10,4 +10,5 @@ db/*.db
 *.tpy
 .vimrc
 scripts/appimagetool
+scripts/stats.js
 _book
