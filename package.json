@@ -69,7 +69,7 @@
     "nyc": "^13.3.0",
     "prosemirror-test-builder": "^1.0.1",
     "react-dnd-test-backend": "^2.6.0",
-    "react-test-renderer": "^16.8.3",
+    "react-test-renderer": "^16.8.4",
     "shelljs": "^0.8.3",
     "sinon": "^7.2.7",
     "sinon-chai": "^3.3.0",
@@ -110,10 +110,10 @@
     "prosemirror-schema-list": "^1.0.2",
     "prosemirror-state": "^1.2.2",
     "prosemirror-view": "^1.8.3",
-    "react": "^16.8.3",
+    "react": "^16.8.4",
     "react-dnd": "^2.6.0",
     "react-dnd-electron-backend": "^1.6.1",
-    "react-dom": "^16.8.3",
+    "react-dom": "^16.8.4",
     "react-intl": "^2.8.0",
     "react-redux": "^6.0.1",
     "react-transition-group": "^2.6.0",
@@ -132,6 +132,6 @@
     "winreg": "^1.2.4",
     "winston": "^2.4.4",
     "write-file-atomic": "^2.4.2",
-    "yargs": "^13.2.1"
+    "yargs": "^13.2.2"
   }
 }
