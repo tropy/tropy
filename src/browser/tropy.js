@@ -445,14 +445,14 @@ class Tropy extends EventEmitter {
         photo: target.id, selections: [target.selection]
       }), win))
 
-    this.on('app:create-list', (win, { target: parent } = {}) =>
-      this.dispatch(act.list.new({ parent }), win))
+    this.on('app:create-list', (win, { target } = {}) =>
+      this.dispatch(act.list.new({ parent: target.id }), win))
 
-    this.on('app:rename-list', (win, { target: id }) =>
-      this.dispatch(act.edit.start({ list: { id } }), win))
+    this.on('app:rename-list', (win, { target }) =>
+      this.dispatch(act.edit.start({ list: { id: target.id } }), win))
 
     this.on('app:delete-list', (win, { target }) =>
-      this.dispatch(act.list.delete(target), win))
+      this.dispatch(act.list.delete(target.id), win))
 
     this.on('app:create-tag', (win) =>
       this.dispatch(act.tag.new(), win))
@@ -460,8 +460,11 @@ class Tropy extends EventEmitter {
     this.on('app:rename-tag', (win, { target }) =>
       this.dispatch(act.tag.edit(target), win))
 
-    this.on('app:save-tag', (win, tag) =>
-      this.dispatch(act.tag.save(tag), win))
+    this.on('app:save-tag-color', (win, { target }, color) =>
+      this.dispatch(act.tag.save({ id: target.id, color }), win))
+
+    this.on('app:save-default-tag-color', (win, _, tagColor) =>
+      this.dispatch(act.settings.persist({ tagColor }), win))
 
     this.on('app:delete-item-tag', (win, { target }) =>
       this.dispatch(act.item.tags.delete({

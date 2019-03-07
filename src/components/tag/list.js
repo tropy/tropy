@@ -29,7 +29,10 @@ class TagList extends React.PureComponent {
       this.props.onSelect(tag.id, { mod: 'replace' })
     }
 
-    this.props.onContextMenu(event, tag)
+    this.props.onContextMenu(event, 'tag', {
+      id: tag.id,
+      color: tag.color
+    })
   }
 
   handleKeyDown = (event, tag) => {
