@@ -299,6 +299,7 @@ class ProjectSidebar extends React.PureComponent {
               <h2><FormattedMessage id="sidebar.tags"/></h2>
               <nav>
                 <TagList
+                  color={this.props.tagColor}
                   edit={this.props.edit.tag}
                   keymap={this.props.keymap.TagList}
                   selection={this.props.tagSelection}
@@ -437,8 +438,8 @@ module.exports = {
         }))
       },
 
-      onTagDelete(...args) {
-        dispatch(actions.tag.delete(...args))
+      onTagDelete(tag) {
+        dispatch(actions.tag.delete(tag.id))
       },
 
       onTagSelect(...args) {

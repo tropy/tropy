@@ -2,7 +2,8 @@
 
 const React = require('react')
 const { NewTag, Tag } = require('./tag')
-const { get, noop } = require('../../common/util')
+const { get, noop, sample } = require('../../common/util')
+const { SASS } = require('../../constants')
 const { match } = require('../../keymap')
 const {
   arrayOf, bool, number, string, shape, object, func
@@ -15,6 +16,11 @@ class TagList extends React.PureComponent {
       this.props.edit != null && this.props.edit.id == null
   }
 
+  get color() {
+    return (this.props.color === 'random') ?
+      sample(this.props.colors) : this.props.color
+  }
+
   isEditing(tag) {
     return get(this.props.edit, ['id']) === tag.id
   }
@@ -22,7 +28,6 @@ class TagList extends React.PureComponent {
   isSelected(tag) {
     return this.props.selection.includes(tag.id)
   }
-
 
   handleContextMenu = (event, tag) => {
     if (!this.isSelected(tag) || this.props.selection.length > 1) {
@@ -74,6 +79,7 @@ class TagList extends React.PureComponent {
             onContextMenu={this.handleContextMenu}/>)}
         {this.hasNewTag &&
           <NewTag
+            color={this.color}
             onCreate={this.props.onCreate}
             onCancel={this.props.onEditCancel}
             name={this.props.edit.name}/>}
@@ -82,6 +88,8 @@ class TagList extends React.PureComponent {
   }
 
   static propTypes = {
+    color: string,
+    colors: arrayOf(string).isRequired,
     edit: object,
     hasFocusIcon: bool,
     keymap: object.isRequired,
@@ -101,6 +109,7 @@ class TagList extends React.PureComponent {
   }
 
   static defaultProps = {
+    colors: SASS.TAG.COLORS,
     selection: [],
     onCommit: noop,
     onSelect: noop
