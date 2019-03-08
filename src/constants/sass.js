@@ -134,7 +134,12 @@ const TAG = {
     'green',
     'blue',
     'purple',
-    'gray'
+    'gray',
+    'brown',
+    'apricot',
+    'darkgreen',
+    'lightblue',
+    'lavender'
   ]
 }
 
