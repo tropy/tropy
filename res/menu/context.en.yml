@@ -29,34 +29,67 @@ en:
     tags: &tags
       - label: 'New Tag'
         command: 'app:create-tag'
+      - label: 'Default Tag Color'
+        submenu:
+          - label: 'None'
+            color: [null, 'tagColor', 'app:save-default-tag-color']
+          - label: 'Random Color'
+            color: ['random', 'tagColor', 'app:save-default-tag-color']
+          - type: separator
+          - label: 'Red'
+            color: ['red', 'tagColor', 'app:save-default-tag-color']
+          - label: 'Orange'
+            color: ['orange', 'tagColor', 'app:save-default-tag-color']
+          - label: 'Yellow'
+            color: ['yellow', 'tagColor', 'app:save-default-tag-color']
+          - label: 'Green'
+            color: ['green', 'tagColor', 'app:save-default-tag-color']
+          - label: 'Blue'
+            color: ['blue', 'tagColor', 'app:save-default-tag-color']
+          - label: 'Purple'
+            color: ['purple', 'tagColor', 'app:save-default-tag-color']
+          - label: 'Gray'
+            color: ['gray', 'tagColor', 'app:save-default-tag-color']
+          - label: 'Brown'
+            color: ['brown', 'color', 'app:save-default-tag-color']
+          - label: 'Apricot'
+            color: ['apricot', 'color', 'app:save-default-tag-color']
+          - label: 'Dark Green'
+            color: ['dark-green', 'color', 'app:save-default-tag-color']
+          - label: 'Light Blue'
+            color: ['light-blue', 'color', 'app:save-default-tag-color']
+          - label: 'Lavender'
+            color: ['lavender', 'color', 'app:save-default-tag-color']
     tag: &tag
       - label: 'Tag Color'
         submenu:
           - label: 'None'
-            color: null
-            type: checkbox
+            color: [null, 'color', 'app:save-tag-color']
           - type: separator
           - label: 'Red'
-            color: 'red'
-            type: checkbox
+            color: ['red', 'color', 'app:save-tag-color']
           - label: 'Orange'
-            color: 'orange'
-            type: checkbox
+            color: ['orange', 'color', 'app:save-tag-color']
           - label: 'Yellow'
-            color: 'yellow'
-            type: checkbox
+            color: ['yellow', 'color', 'app:save-tag-color']
           - label: 'Green'
-            color: 'green'
-            type: checkbox
+            color: ['green', 'color', 'app:save-tag-color']
           - label: 'Blue'
-            color: 'blue'
-            type: checkbox
+            color: ['blue', 'color', 'app:save-tag-color']
           - label: 'Purple'
-            color: 'purple'
-            type: checkbox
+            color: ['purple', 'color', 'app:save-tag-color']
           - label: 'Gray'
-            color: 'gray'
-            type: checkbox
+            color: ['gray', 'color', 'app:save-tag-color']
+          - label: 'Brown'
+            color: ['brown', 'color', 'app:save-tag-color']
+          - label: 'Apricot'
+            color: ['apricot', 'color', 'app:save-tag-color']
+          - label: 'Dark Green'
+            color: ['dark-green', 'color', 'app:save-tag-color']
+          - label: 'Light Blue'
+            color: ['light-blue', 'color', 'app:save-tag-color']
+          - label: 'Lavender'
+            color: ['lavender', 'color', 'app:save-tag-color']
       - label: 'Rename Tag'
         command: 'app:rename-tag'
       - label: 'Delete Tag'
