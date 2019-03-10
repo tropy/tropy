@@ -55,9 +55,9 @@ en:
           - label: 'Apricot'
             color: ['apricot', 'color', 'app:save-default-tag-color']
           - label: 'Dark Green'
-            color: ['darkgreen', 'color', 'app:save-default-tag-color']
+            color: ['dark-green', 'color', 'app:save-default-tag-color']
           - label: 'Light Blue'
-            color: ['lightblue', 'color', 'app:save-default-tag-color']
+            color: ['light-blue', 'color', 'app:save-default-tag-color']
           - label: 'Lavender'
             color: ['lavender', 'color', 'app:save-default-tag-color']
     tag: &tag
@@ -85,9 +85,9 @@ en:
           - label: 'Apricot'
             color: ['apricot', 'color', 'app:save-tag-color']
           - label: 'Dark Green'
-            color: ['darkgreen', 'color', 'app:save-tag-color']
+            color: ['dark-green', 'color', 'app:save-tag-color']
           - label: 'Light Blue'
-            color: ['lightblue', 'color', 'app:save-tag-color']
+            color: ['light-blue', 'color', 'app:save-tag-color']
           - label: 'Lavender'
             color: ['lavender', 'color', 'app:save-tag-color']
       - label: 'Rename Tag'
