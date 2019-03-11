@@ -2,7 +2,7 @@
 
 const res = require('../common/res')
 const { basename } = require('path')
-const { warn, verbose } = require('../common/log')
+const { warn } = require('../common/log')
 const { get } = require('../common/util')
 const { transduce, map, transformer } = require('transducers.js')
 const { BrowserWindow, Menu: M } = require('electron')
