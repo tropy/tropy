@@ -328,18 +328,23 @@ class ContextMenu extends Menu {
     ).slice(1)
   }
 
-  show({ scope, event }, win, options) {
-    try {
-      this.build(
-        this.prepare(this.template, ContextMenu.scopes[scope]),
-        win,
-        event
-      ).popup(win, { ...options, async: true })
+  show({ scope, event }, window) {
+    return new Promise((resolve, reject) =>  {
+      try {
+        this.build(
+          this.prepare(this.template, ContextMenu.scopes[scope]),
+          window,
+          event
+        ).popup({ window, callback: resolve })
 
-    } catch (error) {
-      warn(`failed to show context-menu for scope ${scope}: ${error.message}`)
-      verbose(error.stack)
-    }
+      } catch (error) {
+        warn(`failed to show context-menu: ${error.message}`, {
+          scope,
+          stack: error.stack
+        })
+        reject(error)
+      }
+    })
   }
 }
 

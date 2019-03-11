@@ -200,6 +200,14 @@ class Tropy extends EventEmitter {
     this.dispatch(act.item.import(), this.win)
   }
 
+  showContextMenu(options, win) {
+    this.ctx
+      .show(options, win)
+      .finally(() => {
+        this.dispatch(act.context.clear(), win)
+      })
+  }
+
   showAboutWindow() {
     if (this.about) return this.about.show(), this
 
@@ -712,7 +720,7 @@ class Tropy extends EventEmitter {
     })
 
     ipc.on(CONTEXT.SHOW, (event, payload) => {
-      this.ctx.show(payload, BrowserWindow.fromWebContents(event.sender))
+      this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
     dialog.start()
