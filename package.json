@@ -53,7 +53,7 @@
     "chai-as-promised": "^7.1.1",
     "chokidar": "^2.1.2",
     "devtron": "^1.0.0",
-    "electron": "^4.0.7",
+    "electron": "^4.0.8",
     "electron-devtools-installer": "^2.2.4",
     "electron-mocha": "^6.0.4",
     "electron-packager": "^13.1.1",
