@@ -177,6 +177,15 @@ save.project = (options) => save({
 })
 
 
+save.csv = (options) => save({
+  filters: [{
+    name: t('dialog.filter.csv'),
+    extensions: ['csv']
+  }],
+  properties: ['createDirectory'],
+  ...options
+})
+
 save.template = (options) => save({
   filters: [{
     name: t('dialog.filter.templates'),

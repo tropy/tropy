@@ -13,6 +13,19 @@ module.exports = {
     }
   },
 
+  create(payload, meta) {
+    return {
+      type: TAG.CREATE,
+      payload,
+      meta: {
+        cmd: 'project',
+        history: 'add',
+        ipc: TAG.CHANGED,
+        ...meta
+      }
+    }
+  },
+
   edit(payload, meta) {
     const context = (payload.items != null) ? 'tabTag' : 'tag'
 
@@ -25,14 +38,12 @@ module.exports = {
     }
   },
 
-  create(payload, meta) {
+  export(payload, meta) {
     return {
-      type: TAG.CREATE,
+      type: TAG.EXPORT,
       payload,
       meta: {
         cmd: 'project',
-        history: 'add',
-        ipc: TAG.CHANGED,
         ...meta
       }
     }

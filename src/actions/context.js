@@ -18,7 +18,7 @@ module.exports = {
     }
   },
 
-  clear(payload, meta = {}) {
+  clear(payload, meta) {
     return {
       type: CONTEXT.CLEAR,
       payload,

@@ -474,6 +474,9 @@ class Tropy extends EventEmitter {
     this.on('app:save-default-tag-color', (win, _, tagColor) =>
       this.dispatch(act.settings.persist({ tagColor }), win))
 
+    this.on('app:export-tags', (win) =>
+      this.dispatch(act.tag.export(), win))
+
     this.on('app:delete-item-tag', (win, { target }) =>
       this.dispatch(act.item.tags.delete({
         id: target.items, tags: [target.id]

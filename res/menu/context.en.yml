@@ -29,6 +29,8 @@ en:
     tags: &tags
       - label: 'New Tag'
         command: 'app:create-tag'
+      - label: 'Export All Tags …'
+        command: 'app:export-tags'
       - label: 'Default Tag Color'
         submenu:
           - label: 'None'
