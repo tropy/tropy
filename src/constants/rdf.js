@@ -83,6 +83,8 @@ module.exports = {
     template: 'https://tropy.org/v1/tropy#template'
   },
 
+  XMLNS: 'http://www.w3.org/2000/xmlns/',
+
   XSD: {
     integer: 'http://www.w3.org/2001/XMLSchema#integer',
     string: 'http://www.w3.org/2001/XMLSchema#string'
