@@ -83,6 +83,12 @@ class SelectionGrid extends SelectionIterator {
         this.delete(this.current())
         this.select(this.next() || this.prev())
         break
+      case 'rotateLeft':
+        this.props.onRotate(-90)
+        break
+      case 'rotateRight':
+        this.props.onRotate(90)
+        break
       default:
         return
     }

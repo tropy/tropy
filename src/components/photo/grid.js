@@ -152,10 +152,10 @@ class PhotoGrid extends PhotoIterator {
         this.select(this.next() || this.prev())
         break
       case 'rotateLeft':
-        this.rotate(this.current(), -90)
+        this.handleRotate(-90)
         break
       case 'rotateRight':
-        this.rotate(this.current(), 90)
+        this.handleRotate(90)
         break
       default:
         return
@@ -196,6 +196,7 @@ class PhotoGrid extends PhotoIterator {
           onDelete={this.handleDelete}
           onError={this.props.onError}
           onItemOpen={this.handleItemOpen}
+          onRotate={this.handleRotate}
           onSelect={this.select}
           onSort={this.props.onSelectionSort}
           photo={photo}

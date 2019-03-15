@@ -408,12 +408,12 @@ class Rotate extends Command {
 
   *exec() {
     let { db } = this.options
-    let { id, by } = this.action.payload
+    let { id, by, type = 'photo' } = this.action.payload
 
     let photos = yield call(mod.image.rotate, db, { id, by })
-    yield put(act.photo.bulk.update(photos))
+    yield put(act[type].bulk.update(photos))
 
-    this.undo = act.photo.rotate({ id, by: -by })
+    this.undo = act.photo.rotate({ id, by: -by, type })
 
     return photos
   }

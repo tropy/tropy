@@ -228,6 +228,13 @@ class PhotoIterator extends Iterator {
     this.select(this.prev(), { scrollIntoView: true, throttle: true })
   }
 
+  handleRotate = (by) => {
+    if (this.props.selection != null)
+      this.rotate(by, this.props.selection, 'selection')
+    else
+      this.rotate(by, this.props.current)
+  }
+
 
   getIterableProps(photo, index) {
     return {
@@ -257,8 +264,10 @@ class PhotoIterator extends Iterator {
     this.props.onItemPreview({ id: item, photos: [id] })
   }
 
-  rotate({ id }, by) {
-    this.props.onRotate({ id, by })
+  rotate(by, id, type = 'photo') {
+    if (!this.props.isDisabled && id != null) {
+      this.props.onRotate({ id, by, type })
+    }
   }
 
   connect(element) {
