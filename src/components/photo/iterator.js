@@ -257,6 +257,9 @@ class PhotoIterator extends Iterator {
     this.props.onItemPreview({ id: item, photos: [id] })
   }
 
+  rotate({ id }, by) {
+    this.props.onRotate({ id, by })
+  }
 
   connect(element) {
     return this.isDisabled ? element : this.props.dt(element)
@@ -304,6 +307,7 @@ class PhotoIterator extends Iterator {
     onTabFocus: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,
+    onRotate: func.isRequired,
     onSelect: func.isRequired,
     onSort: func.isRequired,
     onSelectionSort: func.isRequired
