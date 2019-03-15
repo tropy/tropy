@@ -196,8 +196,12 @@ class Tropy extends EventEmitter {
     this.emit('app:reload-menu')
   }
 
-  import() {
-    this.dispatch(act.item.import(), this.win)
+  import(files) {
+    this.dispatch(act.item.import({ files }), this.win)
+  }
+
+  importTemplates(files) {
+    this.dispatch(act.ontology.template.import({ files }))
   }
 
   showContextMenu(options, win) {

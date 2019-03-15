@@ -86,6 +86,11 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
               tropy.import([file])
             }
             break
+          case '.ttp':
+            if (READY && tropy.win) {
+              event.preventDefault()
+              tropy.importTemplates([file])
+            }
         }
       })
     }
