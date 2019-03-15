@@ -2,6 +2,8 @@
 
 const assert = require('assert')
 const subject = require('./subject')
+const { select, update } = require('../common/query')
+const { empty, pick } = require('../common/util')
 
 const COLUMNS = [
   'width',
@@ -17,24 +19,36 @@ const COLUMNS = [
 ]
 
 module.exports = {
-  async save(db, { id, timestamp, ...data }) {
-    const assignments = []
-    const params = { $id: id }
-
-    for (let column of COLUMNS) {
-      if (column in data) {
-        assignments.push(`${column} = $${column}`)
-        params[`$${column}`] = data[column]
-      }
-    }
+  async rotate(db, { id, by }) {
+    by = Number(by)
 
     assert(id != null, 'missing image id')
-    if (assignments.length === 0) return
+    assert(!isNaN(by), 'invalid angle')
 
-    await db.run(`
-      UPDATE images
-        SET ${assignments.join(', ')}
-        WHERE id = $id`, params)
+    await db.run(
+      ...update('images')
+        .set(`angle = ((360 + (angle + ${by})) % 360)`)
+        .where({ id }))
+
+    let images = {}
+
+    await db.each(
+      ...select('id', 'angle').from('images').where({ id }),
+      (image) => images[image.id] = { angle: image.angle })
+
+    return images
+  },
+
+  async save(db, { id, timestamp, ...data }) {
+    let image = pick(data, COLUMNS)
+    if (empty(image)) return
+
+    assert(id != null, 'missing image id')
+
+    await db.run(
+      ...update('images')
+        .set(image)
+        .where({ id }))
 
     if (timestamp != null) {
       await subject.touch(db, { id, timestamp })
