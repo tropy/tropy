@@ -424,6 +424,15 @@ class Tropy extends EventEmitter {
       }), win)
     })
 
+    this.on('app:rotate-item-left', (win, { target }) =>
+      this.dispatch(act.photo.rotate({ id: target.photos, by: -90 }), win))
+    this.on('app:rotate-item-right', (win, { target }) =>
+      this.dispatch(act.photo.rotate({ id: target.photos, by: 90 }), win))
+    this.on('app:rotate-photo-left', (win, { target }) =>
+      this.dispatch(act.photo.rotate({ id: target.id, by: -90 }), win))
+    this.on('app:rotate-photo-right', (win, { target }) =>
+      this.dispatch(act.photo.rotate({ id: target.id, by: 90 }), win))
+
     this.on('app:rename-photo', (win, { target }) =>
       this.dispatch(act.edit.start({ photo: target.id }), win))
     this.on('app:delete-photo', (win, { target }) =>
