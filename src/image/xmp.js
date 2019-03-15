@@ -3,8 +3,10 @@
 const { $, $$, parse } = require('../dom')
 const { debug, verbose } = require('../common/log')
 const { blank } = require('../common/util')
-const { text } = require('../value')
+const { text, date } = require('../value')
 const { XMLNS } = require('../constants')
+
+const DATES = /(^d|D)ate(\b|[A-Z])/
 
 module.exports = {
   xmp(buffer) {
@@ -24,7 +26,9 @@ module.exports = {
         if (desc) {
           for (let attr of desc.attributes) {
             if (attr.namespaceURI !== XMLNS)
-              data[uri(attr)] = text(attr.value)
+              data[uri(attr)] = DATES.test(attr.localName) ?
+                date(attr.value) :
+                text(attr.value)
           }
 
           for (let node of desc.children) {
@@ -57,8 +61,8 @@ function strip(buffer) {
   return buffer
 }
 
-function uri(prop) {
-  return [prop.namespaceURI, prop.localName].join('')
+function uri(node) {
+  return [node.namespaceURI, node.localName].join('')
 }
 
 function value(node) {
