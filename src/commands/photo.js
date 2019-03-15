@@ -403,6 +403,22 @@ class Restore extends Command {
   }
 }
 
+class Rotate extends Command {
+  static get ACTION() { return PHOTO.ROTATE }
+
+  *exec() {
+    let { db } = this.options
+    let { id, by } = this.action.payload
+
+    let photos = yield call(mod.image.rotate, db, { id, by })
+    yield put(act.photo.bulk.update(photos))
+
+    this.undo = act.photo.rotate({ id, by: -by })
+
+    return photos
+  }
+}
+
 class TemplateChange extends SaveCommand {
   static get ACTION() { return PHOTO.TEMPLATE.CHANGE }
   get type() { return 'photo' }
@@ -418,6 +434,7 @@ module.exports = {
   Move,
   Order,
   Restore,
+  Rotate,
   Save,
   TemplateChange
 }

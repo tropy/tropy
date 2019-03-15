@@ -70,6 +70,14 @@ module.exports = {
     }
   },
 
+  rotate(payload, meta) {
+    return {
+      type: PHOTO.ROTATE,
+      payload,
+      meta: { cmd: 'project', history: 'add', ...meta }
+    }
+  },
+
   save(payload, meta) {
     return {
       type: PHOTO.SAVE,
