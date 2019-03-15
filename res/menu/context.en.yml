@@ -154,7 +154,7 @@ en:
           - type: separator
       - label: 'Delete Item'
         command: 'app:delete-item'
-      - type: 'separator'
+    item-rotate: &item-rotate
       - label: 'Rotate Left'
         command: 'app:rotate-item-left'
       - label: 'Rotate Right'
@@ -169,11 +169,6 @@ en:
             command: 'app:export-item'
       - label: 'Delete Selected Items'
         command: 'app:delete-item'
-      - type: 'separator'
-      - label: 'Rotate Left'
-        command: 'app:rotate-item-left'
-      - label: 'Rotate Right'
-        command: 'app:rotate-item-right'
     item-list: &item-list
       - label: 'Remove Item From List'
         command: 'app:list-item-remove'
@@ -195,7 +190,7 @@ en:
         visible: false
       - label: 'Consolidate Photo'
         command: 'app:consolidate-photo'
-      - type: 'separator'
+    photo-rotate: &photo-rotate
       - label: 'Rotate Left'
         command: 'app:rotate-photo-left'
       - label: 'Rotate Right'
@@ -206,6 +201,11 @@ en:
       - label: 'Save Selection as Image …'
         command: 'app:save-selection'
         enabled: false
+    selection-rotate: &selection-rotate
+      - label: 'Rotate Left'
+        command: 'app:rotate-selection-left'
+      - label: 'Rotate Right'
+        command: 'app:rotate-selection-right'
     item-deleted: &item-deleted
       - label: 'Restore Item'
         command: 'app:restore-item'
@@ -264,11 +264,14 @@ en:
     item-deleted: *item-deleted
     item-bulk-deleted: *item-bulk-deleted
     item-view: *item-view
+    item-rotate: *item-rotate
     metadata-list: *metadata-list
     metadata-field: *metadata-field
     trash: *trash
     photo: *photo
+    photo-rotate: *photo-rotate
     selection: *selection
+    selection-rotate: *selection-rotate
     dev: *dev
 
   win32:
@@ -290,9 +293,12 @@ en:
     item-deleted: *item-deleted
     item-bulk-deleted: *item-bulk-deleted
     item-view: *item-view
+    item-rotate: *item-rotate
     metadata-list: *metadata-list
     metadata-field: *metadata-field
     trash: *trash
     photo: *photo
+    photo-rotate: *photo-rotate
     selection: *selection
+    selection-rotate: *selection-rotate
     dev: *dev
