@@ -142,6 +142,12 @@ class PhotoList extends PhotoIterator {
       case 'preview':
         this.preview(this.current())
         break
+      case 'rotateLeft':
+        this.handleRotate(-90)
+        break
+      case 'rotateRight':
+        this.handleRotate(90)
+        break
       case 'delete':
         this.handleDelete(this.current())
         this.select(this.next() || this.prev())

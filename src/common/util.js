@@ -66,6 +66,10 @@ const util = {
     return array.filter(it => items.indexOf(it) < 0)
   },
 
+  sample(array) {
+    return array[Math.floor(Math.random() * array.length)]
+  },
+
   sort(array, ...args) {
     return [...array].sort(...args)
   },

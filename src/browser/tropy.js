@@ -196,8 +196,20 @@ class Tropy extends EventEmitter {
     this.emit('app:reload-menu')
   }
 
-  import() {
-    this.dispatch(act.item.import(), this.win)
+  import(files) {
+    this.dispatch(act.item.import({ files }), this.win)
+  }
+
+  importTemplates(files) {
+    this.dispatch(act.ontology.template.import({ files }))
+  }
+
+  showContextMenu(options, win) {
+    this.ctx
+      .show(options, win)
+      .finally(() => {
+        this.dispatch(act.context.clear(), win)
+      })
   }
 
   showAboutWindow() {
@@ -416,6 +428,28 @@ class Tropy extends EventEmitter {
       }), win)
     })
 
+    this.on('app:rotate-item-left', (win, { target }) =>
+      this.dispatch(act.photo.rotate({ id: target.photos, by: -90 }), win))
+
+    this.on('app:rotate-item-right', (win, { target }) =>
+      this.dispatch(act.photo.rotate({ id: target.photos, by: 90 }), win))
+
+    this.on('app:rotate-photo-left', (win, { target }) =>
+      this.dispatch(act.photo.rotate({ id: target.id, by: -90 }), win))
+
+    this.on('app:rotate-photo-right', (win, { target }) =>
+      this.dispatch(act.photo.rotate({ id: target.id, by: 90 }), win))
+
+    this.on('app:rotate-selection-left', (win, { target }) =>
+      this.dispatch(act.photo.rotate({
+        id: target.selection, by: -90, type: 'selection'
+      }), win))
+
+    this.on('app:rotate-selection-right', (win, { target }) =>
+      this.dispatch(act.photo.rotate({
+        id: target.selection, by: 90, type: 'selection'
+      }), win))
+
     this.on('app:rename-photo', (win, { target }) =>
       this.dispatch(act.edit.start({ photo: target.id }), win))
     this.on('app:delete-photo', (win, { target }) =>
@@ -445,14 +479,14 @@ class Tropy extends EventEmitter {
         photo: target.id, selections: [target.selection]
       }), win))
 
-    this.on('app:create-list', (win, { target: parent } = {}) =>
-      this.dispatch(act.list.new({ parent }), win))
+    this.on('app:create-list', (win, { target } = {}) =>
+      this.dispatch(act.list.new({ parent: target.id }), win))
 
-    this.on('app:rename-list', (win, { target: id }) =>
-      this.dispatch(act.edit.start({ list: { id } }), win))
+    this.on('app:rename-list', (win, { target }) =>
+      this.dispatch(act.edit.start({ list: { id: target.id } }), win))
 
     this.on('app:delete-list', (win, { target }) =>
-      this.dispatch(act.list.delete(target), win))
+      this.dispatch(act.list.delete(target.id), win))
 
     this.on('app:create-tag', (win) =>
       this.dispatch(act.tag.new(), win))
@@ -460,8 +494,14 @@ class Tropy extends EventEmitter {
     this.on('app:rename-tag', (win, { target }) =>
       this.dispatch(act.tag.edit(target), win))
 
-    this.on('app:save-tag', (win, tag) =>
-      this.dispatch(act.tag.save(tag), win))
+    this.on('app:save-tag-color', (win, { target }, color) =>
+      this.dispatch(act.tag.save({ id: target.id, color }), win))
+
+    this.on('app:save-default-tag-color', (win, _, tagColor) =>
+      this.dispatch(act.settings.persist({ tagColor }), win))
+
+    this.on('app:export-tags', (win) =>
+      this.dispatch(act.tag.export(), win))
 
     this.on('app:delete-item-tag', (win, { target }) =>
       this.dispatch(act.item.tags.delete({
@@ -709,7 +749,7 @@ class Tropy extends EventEmitter {
     })
 
     ipc.on(CONTEXT.SHOW, (event, payload) => {
-      this.ctx.show(payload, BrowserWindow.fromWebContents(event.sender))
+      this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
     dialog.start()

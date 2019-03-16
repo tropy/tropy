@@ -2,7 +2,8 @@
 
 const res = require('../common/res')
 const { basename } = require('path')
-const { warn, verbose } = require('../common/log')
+const { warn } = require('../common/log')
+const { get } = require('../common/util')
 const { transduce, map, transformer } = require('transducers.js')
 const { BrowserWindow, Menu: M } = require('electron')
 
@@ -88,13 +89,13 @@ class Menu {
     )
   }
 
-  translate(template, win = BrowserWindow.getFocusedWindow(), ...params) {
+  translate(template, win = BrowserWindow.getFocusedWindow(), event = {}) {
     // eslint-disable-next-line complexity
     return template.map(item => {
       item = { ...item }
 
       if (item.command) {
-        item.click = this.responder(item.command, win, ...params)
+        item.click = this.responder(item.command, win, event)
       }
 
       if (item.label) {
@@ -102,23 +103,21 @@ class Menu {
           .replace(/%(\w+)/g, (_, prop) => this.app[prop])
       }
 
-      if (item.condition) {
-        item.enabled = check(item, ...params)
-        if (item.visible === false) item.visible = item.enabled
+      if (item.color) {
+        let [color, context, command] = item.color
+
+        item.type = 'checkbox'
+        item.checked = get(event.target, context) === color
+
+        if (color && color !== 'random')
+          item.icon = res.Icons.color(color)
+        if (command)
+          item.click = this.responder(command, win, event, color)
       }
 
-      if ('color' in item) {
-        const { target } = params[0]
-
-        if (item.color != null) {
-          item.icon = res.Icons.color(item.color)
-        }
-
-        item.checked = target.color === item.color
-        item.click = this.responder('app:save-tag', win, {
-          id: target.id,
-          color: item.color
-        })
+      if (item.condition) {
+        item.enabled = check(item, event)
+        if (item.visible === false) item.visible = item.enabled
       }
 
       switch (item.id) {
@@ -185,7 +184,7 @@ class Menu {
           break
 
         case 'export': {
-          const plugins = this.app.plugins.available('export')
+          let plugins = this.app.plugins.available('export')
           if (plugins.length > 0) {
             item.submenu = [
               ...item.submenu,
@@ -193,7 +192,7 @@ class Menu {
               ...plugins.map(({ id, name }) => ({
                 label: name,
                 click: this.responder('app:export-item', win, {
-                  target: params[0].target,
+                  target: event.target,
                   plugin: id
                 })
               }))
@@ -203,8 +202,8 @@ class Menu {
         }
 
         case 'tag': {
-          const { target } = params[0]
-          const tags = this.app.getTags(win)
+          let { target } = event
+          let tags = this.app.getTags(win)
 
           if (!tags.length) {
             item.enabled = false
@@ -237,42 +236,37 @@ class Menu {
 
           break
         }
-        case 'line-wrap': {
-          const { target } = params[0]
-          item.checked = !!target.wrap
+        case 'line-wrap':
+          item.checked = !!event.target.wrap
           break
-        }
-        case 'line-numbers': {
-          const { target } = params[0]
-          item.checked = !!target.numbers
+
+        case 'line-numbers':
+          item.checked = !!event.target.numbers
           break
-        }
-        case 'writing-mode': {
-          const { target } = params[0]
+
+        case 'writing-mode':
           item.submenu = item.submenu.map(li => ({
             ...li,
-            checked: li.mode === target.mode,
+            checked: li.mode === event.target.mode,
             click: this.responder('app:writing-mode', win, {
-              id: target.id, mode: li.mode
+              id: event.target.id, mode: li.mode
             })
           }))
           break
-        }
-        case 'item-view-layout': {
-          const { target } = params[0]
+
+        case 'item-view-layout':
           item.submenu = item.submenu.map(li => ({
             ...li,
-            checked: li.id === target.layout,
+            checked: li.id === event.target.layout,
             click: this.responder('app:settings-persist', win, {
               layout: li.id
             })
           }))
           break
-        }
       }
 
       if (item.submenu) {
-        item.submenu = this.translate(item.submenu, win, ...params)
+        item.submenu = this.translate(item.submenu, win, event)
       }
 
       return item
@@ -334,18 +328,30 @@ class ContextMenu extends Menu {
     ).slice(1)
   }
 
-  show({ scope, event }, win, options) {
-    try {
-      this.build(
-        this.prepare(this.template, ContextMenu.scopes[scope]),
-        win,
-        event
-      ).popup(win, { ...options, async: true })
+  show({ scope, event }, window) {
+    return new Promise((callback, reject) =>  {
+      let settings = ContextMenu.scopes[scope]
 
-    } catch (error) {
-      warn(`failed to show context-menu for scope ${scope}: ${error.message}`)
-      verbose(error.stack)
-    }
+      try {
+        let menu = this.build(
+          this.prepare(this.template, settings),
+          window,
+          event)
+
+        menu.popup({
+          window,
+          callback,
+          positioningItem: settings.position
+        })
+
+      } catch (error) {
+        warn(`failed to show context-menu: ${error.message}`, {
+          scope,
+          stack: error.stack
+        })
+        reject(error)
+      }
+    })
   }
 }
 
@@ -353,27 +359,72 @@ class ContextMenu extends Menu {
   const { scopes } = ContextMenu
 
   scopes.sidebar = [...scopes.global, 'project', 'lists', 'tags']
+  scopes.sidebar.position = 2
+
   scopes.lists = [...scopes.sidebar]
+  scopes.lists.position = 5
+
   scopes.list = [...scopes.global, 'project', 'lists', 'list', 'tags']
+  scopes.list.position = 5
+
   scopes.tags = [...scopes.sidebar]
+  scopes.tags.position = 7
+
   scopes.tag = [...scopes.sidebar, 'tag']
+  scopes.tag.position = 7
+
   scopes.items = [...scopes.global, 'items']
-  scopes.item = [...scopes.items, 'item']
+  scopes.items.position = 2
+
+  scopes.item = [...scopes.items, 'item', 'item-rotate']
+  scopes.item.position = 2
+
   scopes.trash = [...scopes.sidebar, 'trash']
-  scopes.photo = [...scopes.global, 'photo']
-  scopes.selection = [...scopes.photo, 'selection']
+  scopes.trash.position = 10
+
+  scopes.photo = [...scopes.global, 'photo', 'photo-rotate']
+  scopes.photo.position = 2
+
+  scopes.selection = [
+    ...scopes.global, 'photo', 'selection', 'selection-rotate'
+  ]
+  scopes.selection.position = 8
+
   scopes.note = [...scopes.global, 'note']
+  scopes.note.position = 2
+
   scopes['metadata-list'] = [...scopes.global, 'metadata-list']
+  scopes['metadata-list'].position = 2
+
   scopes['metadata-field'] = [...scopes['metadata-list'], 'metadata-field']
-  scopes['item-bulk'] = [...scopes.items, 'item-bulk']
-  scopes['item-list'] = [...scopes.items, 'item-list', 'item']
+  scopes['metadata-field'].position = 2
+
+  scopes['item-bulk'] = [...scopes.items, 'item-bulk', 'item-rotate']
+  scopes['item-bulk'].position = 2
+
+  scopes['item-list'] = [...scopes.items, 'item-list', 'item', 'item-rotate']
+  scopes['item-list'].position = 2
+
   scopes['item-bulk-list'] = [...scopes.items, 'item-bulk-list', 'item-bulk']
+  scopes['item-bulk-list'].position = 2
+
   scopes['item-deleted'] = [...scopes.global, 'item-deleted']
+  scopes['item-deleted'].position = 2
+
   scopes['item-bulk-deleted'] = [...scopes.global, 'item-bulk-deleted']
+  scopes['item-bulk-deleted'].position = 2
+
   scopes['item-tag'] = [...scopes.global, 'item-tag']
+  scopes['item-tag'].position = 2
+
   scopes['item-view'] = [...scopes.global, 'item-view']
+  scopes['item-view'].position = 2
+
   scopes.notepad = [...scopes['item-view'], 'notepad']
+  scopes.notepad.position = 2
+
   scopes.esper = [...scopes['item-view']]
+  scopes.esper.position = 2
 }
 
 module.exports = {

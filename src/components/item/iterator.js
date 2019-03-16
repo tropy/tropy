@@ -58,6 +58,13 @@ class ItemIterator extends Iterator {
 
   getSelection = () => this.props.selection
 
+  getSelectedPhotos({ items, selection } = this.props) {
+    return seq(selection, compose(
+        map(id => get(items, [this.indexOf(id), 'photos'])),
+        keep(),
+        cat))
+  }
+
   isSelected({ id }) {
     return this.props.selection.includes(id)
   }
@@ -75,20 +82,17 @@ class ItemIterator extends Iterator {
   }
 
   handleContextMenu = (event, item) => {
-    const { list, items, isDisabled, selection, onContextMenu } = this.props
+    let { list, isDisabled, selection, onContextMenu } = this.props
 
-    const context = ['item']
-    const target = {
+    let context = ['item']
+    let target = {
       id: item.id, photos: item.photos, tags: item.tags, list
     }
 
     if (selection.length > 1) {
       context.push('bulk')
       target.id = [...selection]
-      target.photos = seq(selection, compose(
-        map(id => get(items, [this.indexOf(id), 'photos'])),
-        keep(),
-        cat))
+      target.photos = this.getSelectedPhotos()
 
       if (!this.isSelected(item)) {
         target.id.push(item.id)
@@ -166,6 +170,12 @@ class ItemIterator extends Iterator {
       case 'merge':
         this.handleItemMerge(this.props.selection)
         break
+      case 'rotateLeft':
+        this.rotate(-90)
+        break
+      case 'rotateRight':
+        this.rotate(90)
+        break
       default:
         return
     }
@@ -227,6 +237,15 @@ class ItemIterator extends Iterator {
 
   preview({ id, photos }) {
     this.props.onItemPreview({ id, photos })
+  }
+
+  rotate(by) {
+    if (!this.props.isDisabled && this.props.selection.length > 0) {
+      this.props.onPhotoRotate({
+        id: this.getSelectedPhotos(),
+        by
+      })
+    }
   }
 
   connect(element) {
@@ -300,6 +319,7 @@ class ItemIterator extends Iterator {
     onItemPreview: func.isRequired,
     onPhotoError: func.isRequired,
     onPhotoMove: func.isRequired,
+    onPhotoRotate: func.isRequired,
     onSelect: func.isRequired,
     onSort: func.isRequired
   }

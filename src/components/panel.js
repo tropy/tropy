@@ -225,7 +225,7 @@ class PanelGroup extends React.Component {
     let { upper, lower } = this.limits
 
     let position = restrict(pageY, upper, lower)
-    let delta = position - bounds(active.container).bottom
+    let delta = position - bounds(active.container.current).bottom
 
     if (delta) {
       this.setState({

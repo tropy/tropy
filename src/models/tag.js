@@ -1,53 +1,45 @@
 'use strict'
 
-const assert = require('assert')
 const { list, pick } = require('../common/util')
-const { keys, values } = Object
-const mod = {}
+const { into, select, update } = require('../common/query')
 
-module.exports = mod.tag = {
+const COLUMNS = [
+  'name',
+  'color',
+  'created',
+  'modified'
+]
 
-  async load(db, ids) {
-    const tags = {}
 
-    await db.each(`
-      SELECT tag_id AS id, name, color, created, modified
-        FROM tags${
-          (ids != null) ? ` WHERE tag_id IN (${list(ids)})` : ''
-        }`,
-      (data) => { tags[data.id] = data })
+async function load(db, ids) {
+  let tags = {}
+  await db.each(
+    ...select({ id: 'tag_id' }, ...COLUMNS)
+      .from('tags')
+      .where({ tag_id: ids }),
+    (data) => { tags[data.id] = data })
 
-    return tags
-  },
+  return tags
+}
+
+
+module.exports = {
+  load,
 
   async create(db, data) {
-    const attr = pick(data, ['tag_id', 'name', 'created', 'modified'])
-    const cols = keys(attr)
+    let { id } = await db.run(
+      ...into('tags')
+        .insert(pick(data, COLUMNS, { tag_id: data.id })))
 
-    const { id } = await db.run(`
-      INSERT INTO tags (${cols.join(',')})
-        VALUES (${cols.map(() => '?').join(',')})`,
-      ...values(attr))
-
-    return (await mod.tag.load(db, [id]))[id]
+    return (await load(db, [id]))[id]
   },
 
   async save(db, { id, ...data }) {
-    const assign = []
-    const params = { $id: id }
-
-    for (let attr in data) {
-      assign.push(`${attr} = $${attr}`)
-      params[`$${attr}`] = data[attr]
-    }
-
-    assert(id != null, 'missing tag id')
-    assert(assign.length > 0, 'missing valid assignments')
-
-    return db.run(`
-      UPDATE tags
-        SET ${assign.join(', ')}, modified = datetime("now")
-        WHERE tag_id = $id`, params)
+    return db.run(
+      ...update('tags')
+        .set(data)
+        .set('modified = datetime("now")')
+        .where({ tag_id: id }))
   },
 
   async delete(db, ids) {
@@ -56,10 +48,11 @@ module.exports = mod.tag = {
   },
 
   async items(db, id) {
-    const items = []
-
-    await db.each(`
-      SELECT id FROM taggings WHERE tag_id = ?`, id,
+    let items = []
+    await db.each(
+      ...select('id')
+        .from('taggings')
+        .where({ tag_id: id }),
       (item) => { items.push(item.id) })
 
     return items

@@ -5,14 +5,12 @@ ja:
         label: 元に戻す
         command: 'app:undo'
         enabled: false
+        accelerator: CmdOrCtrl+Z
       - id: redo
         label: やり直す
         command: 'app:redo'
         enabled: false
-    sidebar:
-      - label: サイドバーを非表示
-        command: 'app:hide-sidebar'
-        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: プロジェクト名を変更
         command: 'app:rename-project'
@@ -21,6 +19,7 @@ ja:
     lists:
       - label: 新規リスト
         command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
     list:
       - label: リスト名を変更
         command: 'app:rename-list'
@@ -29,34 +28,151 @@ ja:
     tags:
       - label: 新規タグ
         command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Export Tags …
+        command: 'app:export-tags'
+      - label: Default Tag Color
+        submenu:
+          - label: 指定なし
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Random Color
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: レッド
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: オレンジ
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: イエロー
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: グリーン
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: ブルー
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: パープル
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: グレー
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Brown
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Apricot
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Dark Green
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Light Blue
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavender
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
     tag:
       - label: タグの色
         submenu:
           - label: 色指定なし
-            color: null
-            type: checkbox
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
           - type: separator
           - label: レッド
-            color: red
-            type: checkbox
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
           - label: オレンジ
-            color: orange
-            type: checkbox
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
           - label: イエロー
-            color: yellow
-            type: checkbox
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
           - label: グリーン
-            color: green
-            type: checkbox
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
           - label: ブルー
-            color: blue
-            type: checkbox
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
           - label: パープル
-            color: purple
-            type: checkbox
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
           - label: グレー
-            color: gray
-            type: checkbox
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Brown
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Apricot
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Dark Green
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Light Blue
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavender
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
       - label: タグを再設定
         command: 'app:rename-tag'
       - label: タグを削除
@@ -98,6 +214,7 @@ ja:
     items:
       - label: 新規アイテム
         command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
     item:
       - label: 個別のアイテムに分割する
         command: 'app:explode-item'
@@ -119,6 +236,13 @@ ja:
           - type: separator
       - label: アイテムを削除
         command: 'app:delete-item'
+    item-rotate:
+      - label: Rotate Left
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotate Right
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
     item-bulk:
       - label: 選択したアイテムを統合
         command: 'app:merge-item'
@@ -136,26 +260,40 @@ ja:
       - label: リストから選択したアイテムを削除
         command: 'app:list-item-remove'
     photo:
-      - label: 写真を削除
-        command: 'app:delete-photo'
       - label: 写真を複製する
         command: 'app:duplicate-photo'
       - label: 写真を新規アイテムへ移動
         command: 'app:explode-photo'
       - label: フォルダ内の写真を表示
         command: 'app:show-in-folder'
+      - label: 写真を削除
+        command: 'app:delete-photo'
       - label: 表紙画像として写真を利用
         command: 'app:update-cover-image'
         enabled: false
         visible: false
       - label: 写真を整理
         command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Rotate Left
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotate Right
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
     selection:
       - label: 選択を削除
         command: 'app:delete-selection'
       - label: 選択したものをイメージとして保存
         command: 'app:save-selection'
         enabled: false
+    selection-rotate:
+      - label: Rotate Left
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotate Right
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
     item-deleted:
       - label: アイテムを復元する
         command: 'app:restore-item'
@@ -189,25 +327,26 @@ ja:
     dev:
       - label: リロード
         command: 'win:reload'
+        accelerator: CmdOrCtrl+R
       - label: スタイルをリロード
         command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
       - type: separator
       - label: 調査
         command: 'app:inspect'
+        accelerator: CmdOrCtrl+D
   darwin:
     history:
       - id: undo
         label: 元に戻す
         command: 'app:undo'
         enabled: false
+        accelerator: CmdOrCtrl+Z
       - id: redo
         label: やり直す
         command: 'app:redo'
         enabled: false
-    sidebar:
-      - label: サイドバーを非表示
-        command: 'app:hide-sidebar'
-        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: プロジェクト名を変更
         command: 'app:rename-project'
@@ -216,6 +355,7 @@ ja:
     lists:
       - label: 新規リスト
         command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
     list:
       - label: リスト名を変更
         command: 'app:rename-list'
@@ -224,34 +364,151 @@ ja:
     tags:
       - label: 新規タグ
         command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Export Tags …
+        command: 'app:export-tags'
+      - label: Default Tag Color
+        submenu:
+          - label: 指定なし
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Random Color
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: レッド
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: オレンジ
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: イエロー
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: グリーン
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: ブルー
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: パープル
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: グレー
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Brown
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Apricot
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Dark Green
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Light Blue
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavender
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
     tag:
       - label: タグカラー
         submenu:
           - label: 色指定なし
-            color: null
-            type: checkbox
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
           - type: separator
           - label: レッド
-            color: red
-            type: checkbox
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
           - label: オレンジ
-            color: orange
-            type: checkbox
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
           - label: イエロー
-            color: yellow
-            type: checkbox
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
           - label: グリーン
-            color: green
-            type: checkbox
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
           - label: ブルー
-            color: blue
-            type: checkbox
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
           - label: パープル
-            color: purple
-            type: checkbox
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
           - label: グレー
-            color: gray
-            type: checkbox
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Brown
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Apricot
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Dark Green
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Light Blue
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavender
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
       - label: タグを再設定
         command: 'app:rename-tag'
       - label: タグを削除
@@ -293,6 +550,7 @@ ja:
     items:
       - label: 新規アイテム
         command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
     item:
       - label: 個別のアイテムに分割する
         command: 'app:explode-item'
@@ -350,6 +608,13 @@ ja:
           - label: 左右に配置
             id: side-by-side
             type: checkbox
+    item-rotate:
+      - label: Rotate Left
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotate Right
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: 新規フィールド
         command: 'ctx:add-extra-field'
@@ -361,48 +626,63 @@ ja:
       - label: アイテムを完全に削除する
         command: 'app:destroy-item'
     photo:
-      - label: 写真を削除
-        command: 'app:delete-photo'
       - label: 写真を複製する
         command: 'app:duplicate-photo'
       - label: 写真を新規アイテムへ移動
         command: 'app:explode-photo'
       - label: フォルダ内の写真を表示
         command: 'app:show-in-folder'
+      - label: 写真を削除
+        command: 'app:delete-photo'
       - label: 表紙画像として写真を利用
         command: 'app:update-cover-image'
         enabled: false
         visible: false
       - label: 写真を整理
         command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Rotate Left
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotate Right
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
     selection:
       - label: 選択を削除
         command: 'app:delete-selection'
       - label: 選択したものをイメージとして保存
         command: 'app:save-selection'
         enabled: false
+    selection-rotate:
+      - label: Rotate Left
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotate Right
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
     dev:
       - label: リロード
         command: 'win:reload'
+        accelerator: CmdOrCtrl+R
       - label: スタイルをリロード
         command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
       - type: separator
       - label: 調査
         command: 'app:inspect'
+        accelerator: CmdOrCtrl+D
   win32:
     history:
       - id: undo
         label: 元に戻す
         command: 'app:undo'
         enabled: false
+        accelerator: CmdOrCtrl+Z
       - id: redo
         label: やり直す
         command: 'app:redo'
         enabled: false
-    sidebar:
-      - label: サイドバーを非表示
-        command: 'app:hide-sidebar'
-        enabled: false
+        accelerator: Control+Y
     project:
       - label: プロジェクト名を変更
         command: 'app:rename-project'
@@ -411,6 +691,7 @@ ja:
     lists:
       - label: 新規リスト
         command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
     list:
       - label: リスト名を変更
         command: 'app:rename-list'
@@ -419,34 +700,151 @@ ja:
     tags:
       - label: 新規タグ
         command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Export Tags …
+        command: 'app:export-tags'
+      - label: Default Tag Color
+        submenu:
+          - label: 指定なし
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Random Color
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: レッド
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: オレンジ
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: イエロー
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: グリーン
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: ブルー
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: パープル
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: グレー
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Brown
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Apricot
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Dark Green
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Light Blue
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavender
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
     tag:
       - label: タグカラー
         submenu:
           - label: 色指定なし
-            color: null
-            type: checkbox
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
           - type: separator
           - label: レッド
-            color: red
-            type: checkbox
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
           - label: オレンジ
-            color: orange
-            type: checkbox
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
           - label: イエロー
-            color: yellow
-            type: checkbox
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
           - label: グリーン
-            color: green
-            type: checkbox
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
           - label: ブルー
-            color: blue
-            type: checkbox
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
           - label: パープル
-            color: purple
-            type: checkbox
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
           - label: グレー
-            color: gray
-            type: checkbox
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Brown
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Apricot
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Dark Green
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Light Blue
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavender
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
       - label: タグを再設定
         command: 'app:rename-tag'
       - label: タグを削除
@@ -488,6 +886,7 @@ ja:
     items:
       - label: 新規アイテム
         command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
     item:
       - label: 個別のアイテムに分割する
         command: 'app:explode-item'
@@ -545,6 +944,13 @@ ja:
           - label: 左右に配置
             id: side-by-side
             type: checkbox
+    item-rotate:
+      - label: Rotate Left
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotate Right
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: 新規フィールド
         command: 'ctx:add-extra-field'
@@ -556,31 +962,48 @@ ja:
       - label: アイテムを完全に削除する
         command: 'app:destroy-item'
     photo:
-      - label: 写真を削除
-        command: 'app:delete-photo'
       - label: 写真を複製する
         command: 'app:duplicate-photo'
       - label: 写真を新規アイテムへ移動
         command: 'app:explode-photo'
       - label: フォルダ内の写真を表示
         command: 'app:show-in-folder'
+      - label: 写真を削除
+        command: 'app:delete-photo'
       - label: 表紙画像として写真を利用
         command: 'app:update-cover-image'
         enabled: false
         visible: false
       - label: 写真を整理
         command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Rotate Left
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotate Right
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
     selection:
       - label: 選択を削除
         command: 'app:delete-selection'
       - label: 選択したものをイメージとして保存
         command: 'app:save-selection'
         enabled: false
+    selection-rotate:
+      - label: Rotate Left
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotate Right
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
     dev:
       - label: リロード
         command: 'win:reload'
+        accelerator: CmdOrCtrl+R
       - label: スタイルをリロード
         command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
       - type: separator
       - label: 調査
         command: 'app:inspect'
+        accelerator: CmdOrCtrl+D

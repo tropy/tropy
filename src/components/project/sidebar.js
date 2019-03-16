@@ -221,14 +221,10 @@ class ProjectSidebar extends React.PureComponent {
     event.stopPropagation()
   }
 
-  handleContextMenu = (event) => {
-    this.props.onContextMenu(event, 'sidebar')
-  }
-
-  handleTagContextMenu = (event, tag) => {
-    this.props.onContextMenu(event, 'tag', {
-      id: tag.id,
-      color: tag.color
+  handleContextMenu = (event, scope = 'sidebar', target = {}) => {
+    this.props.onContextMenu(event, scope, {
+      ...target,
+      tagColor: this.props.tagColor
     })
   }
 
@@ -276,7 +272,7 @@ class ProjectSidebar extends React.PureComponent {
                     hold={this.props.hold}
                     isExpanded
                     selection={this.props.list}
-                    onContextMenu={this.props.onContextMenu}
+                    onContextMenu={this.handleContextMenu}
                     onDropFiles={this.props.onItemImport}
                     onDropItems={this.props.onListItemsAdd}
                     onClick={this.handleListClick}
@@ -292,7 +288,7 @@ class ProjectSidebar extends React.PureComponent {
                       onClick={this.handleLastImportSelect}/>}
                   <TrashListNode
                     isSelected={this.props.isTrashSelected}
-                    onContextMenu={this.props.onContextMenu}
+                    onContextMenu={this.handleContextMenu}
                     onDropItems={this.handleTrashDropItems}
                     onClick={this.handleTrashSelect}/>
                 </ol>
@@ -303,11 +299,12 @@ class ProjectSidebar extends React.PureComponent {
               <h2><FormattedMessage id="sidebar.tags"/></h2>
               <nav>
                 <TagList
+                  color={this.props.tagColor}
                   edit={this.props.edit.tag}
                   keymap={this.props.keymap.TagList}
                   selection={this.props.tagSelection}
                   tags={this.props.tags}
-                  onContextMenu={this.handleTagContextMenu}
+                  onContextMenu={this.handleContextMenu}
                   onCreate={this.props.onTagCreate}
                   onDropItems={this.props.onItemTagAdd}
                   onEditCancel={this.props.onEditCancel}
@@ -344,6 +341,7 @@ class ProjectSidebar extends React.PureComponent {
       items: number
     }).isRequired,
     root: number.isRequired,
+    tagColor: string,
     tags: arrayOf(object).isRequired,
     tagSelection: arrayOf(number).isRequired,
     width: number.isRequired,
@@ -393,6 +391,7 @@ module.exports = {
       listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
       project: state.project,
       tags: getAllTags(state),
+      tagColor: state.settings.tagColor,
       tagSelection: state.nav.tags,
       width: state.ui.sidebar.width
     }),
@@ -439,8 +438,8 @@ module.exports = {
         }))
       },
 
-      onTagDelete(...args) {
-        dispatch(actions.tag.delete(...args))
+      onTagDelete(tag) {
+        dispatch(actions.tag.delete(tag.id))
       },
 
       onTagSelect(...args) {

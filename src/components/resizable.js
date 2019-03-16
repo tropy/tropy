@@ -9,7 +9,6 @@ const { capitalize, noop, restrict } = require('../common/util')
 const { round } = require('../common/math')
 const { keys } = Object
 
-
 const DIR = {
   top: 'row', right: 'col', bottom: 'row', left: 'col'
 }
@@ -28,6 +27,8 @@ const AXS = {
 
 
 class Resizable extends React.Component {
+  container = React.createRef()
+
   state = {
     isResizing: false
   }
@@ -44,9 +45,22 @@ class Resizable extends React.Component {
   }
 
   get value() {
-    return this.props.isBuffered && this.state.isResizing ?
-      this.state.value :
-      restrict(this.props.value, this.props.min, this.props.max)
+    if (this.props.isBuffered && this.state.isResizing)
+      return this.state.value
+
+    let { value, min } = this.props
+
+    if (this.props.isRelative) {
+      if (!this.container.current)
+        return value
+
+      let { scale, max } = this.updateScaleMax()
+      let px = restrict(value * scale, min, max)
+
+      return restrict(round(px / scale, 100), null, 100)
+    }
+
+    return restrict(value, min, this.props.max)
   }
 
   get cssValue() {
@@ -74,6 +88,33 @@ class Resizable extends React.Component {
     return this.props.edge === 'left' || this.props.edge === 'top'
   }
 
+  updateScaleMax() {
+    let { edge, min, max, margin } = this.props
+    let scale = 1
+
+    if (this.container.current) {
+      let dist = bounds(
+        this.container.current.parentElement
+      )[DIM[edge]]
+
+      if (margin)
+        max = restrict(dist - margin, min)
+
+      scale = dist / 100
+    }
+
+    this.max = max
+    this.scale = scale
+
+    return {
+      max, scale
+    }
+  }
+
+  getOuterBounds() {
+    return bounds(this.container.current.parentElement)
+  }
+
   getNewValue(event) {
     let { edge, min, isRelative } = this.props
     let { isInverse, origin, scale, max } = this
@@ -88,17 +129,10 @@ class Resizable extends React.Component {
     }
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
   handleDragStart = (event) => {
-    let { edge, onDragStart, isRelative, value, margin, max } = this.props
-    let dist = bounds(this.container.parentElement)[DIM[edge]]
-
-    this.max = margin ? restrict(dist - margin, this.props.min) : max
-    this.scale = dist / 100
-    this.origin = bounds(this.container)[OPP[edge]]
+    let { isRelative, value } = this.props
+    this.updateScaleMax()
+    this.origin = bounds(this.container.current)[OPP[this.props.edge]]
 
     if (!isRelative) {
       this.origin -= (value - this.getNewValue(event).value)
@@ -109,8 +143,8 @@ class Resizable extends React.Component {
       value
     })
 
-    if (onDragStart) {
-      return onDragStart(event, this)
+    if (this.props.onDragStart) {
+      return this.props.onDragStart(event, this)
     }
   }
 
@@ -161,7 +195,7 @@ class Resizable extends React.Component {
   render() {
     return React.createElement(this.props.node, {
       className: cx(this.classes),
-      ref: this.setContainer,
+      ref: this.container,
       style: this.style
     }, this.props.children, this.renderHandle())
   }

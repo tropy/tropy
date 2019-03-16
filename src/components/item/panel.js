@@ -207,6 +207,7 @@ class ItemPanelGroup extends React.PureComponent {
             onCreate={this.handlePhotoCreate}
             onError={this.props.onPhotoError}
             onItemPreview={this.props.onItemPreview}
+            onRotate={this.props.onPhotoRotate}
             onSelect={this.props.onPhotoSelect}/>
         </Panel>
 
@@ -263,6 +264,7 @@ class ItemPanelGroup extends React.PureComponent {
     onOpenInFolder: func.isRequired,
     onPhotoCreate: func.isRequired,
     onPhotoError: func.isRequired,
+    onPhotoRotate: func.isRequired,
     onPhotoSelect: func.isRequired,
     onTagCreate: func.isRequired,
     onTagSave: func.isRequired,

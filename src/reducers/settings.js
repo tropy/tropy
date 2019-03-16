@@ -10,6 +10,7 @@ const defaults = {
   layout: ITEM.LAYOUT.STACKED,
   locale: ARGS.locale,
   localtime: true,
+  tagColor: null,
   templates: {
     item: ITEM.TEMPLATE.DEFAULT,
     photo: PHOTO.TEMPLATE.DEFAULT,

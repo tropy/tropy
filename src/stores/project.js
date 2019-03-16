@@ -11,6 +11,7 @@ const { seq, debounce, throttle, log } = require('../middleware')
 
 const {
   activities,
+  context,
   edit,
   esper,
   flash,
@@ -53,6 +54,7 @@ module.exports = {
 
     let reducer = combineReducers({
       activities,
+      context,
       edit,
       esper,
       flash,

@@ -116,11 +116,13 @@ class ConditionalQuery extends Query {
         conditions.push(input)
       } else {
         for (let lhs in input) {
-          let rhs = input[lhs]
           let cmp
+          let rhs = input[lhs]
+
+          if (rhs === undefined) continue
 
           switch (true) {
-            case (rhs == null):
+            case (rhs === null):
               rhs = 'NULL'
               cmp = forAssignment ? '=' : this.isNegated ? 'IS NOT' : 'IS'
               break

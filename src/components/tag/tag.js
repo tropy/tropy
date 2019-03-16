@@ -12,10 +12,11 @@ const { DND } = require('../../constants')
 const { pure } = require('../util')
 const { shape, number, string, bool, func } = require('prop-types')
 
+const ccx = (color) => color && `color-${color}`
 
 const NewTag = (props) => (
   <li className="tag" tabIndex={-1}>
-    <IconTag/>
+    <IconTag className={ccx(props.color)}/>
     <div className="name">
       <Editable
         value={props.name}
@@ -23,12 +24,13 @@ const NewTag = (props) => (
         resize
         isActive
         onCancel={props.onCancel}
-        onChange={(name) => props.onCreate({ name })}/>
+        onChange={(name) => props.onCreate({ name, color: props.color })}/>
     </div>
   </li>
 )
 
 NewTag.propTypes = {
+  color: string,
   name: string.isRequired,
   onCreate: func.isRequired,
   onCancel: func.isRequired
@@ -46,12 +48,6 @@ class Tag extends React.PureComponent {
       mixed: !!this.props.tag.mixed,
       over: this.props.isOver
     }]
-  }
-
-  get color() {
-    return (this.props.tag.color) ?
-      `color-${this.props.tag.color}` :
-      null
   }
 
   get isDropTarget() {
@@ -103,7 +99,7 @@ class Tag extends React.PureComponent {
         onContextMenu={isEditing ? null : this.handleContextMenu}
         onMouseDown={isEditing ? null : this.handleClick}
         onKeyDown={isEditing ? null : this.handleKeyDown}>
-        <IconTag className={this.color}/>
+        <IconTag className={ccx(tag.color)}/>
         <div className="name">
           <Editable
             value={tag.name}

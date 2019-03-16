@@ -308,6 +308,7 @@ de:
               Diesen Plugin samt Konfiguration vollständig entfernen? Dies kann nicht
               mehr rückgängig gemacht werden.
     filter:
+      csv: CSV
       templates: Tropy-Vorlagen
       images: Bilder
       items: Tropy Objekte
@@ -529,6 +530,7 @@ de:
       template:
         change: Vorlage konnte nicht gewechselt werden.
     ontology:
+      migrate: Update der Ontologie-Datenbank fehlgeschlagen.
       import: Vokabular konnte nicht importiert werden.
       vocab:
         save: Vokabular konnte nicht gespeichert werden.
