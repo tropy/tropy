@@ -329,13 +329,20 @@ class ContextMenu extends Menu {
   }
 
   show({ scope, event }, window) {
-    return new Promise((resolve, reject) =>  {
+    return new Promise((callback, reject) =>  {
+      let settings = ContextMenu.scopes[scope]
+
       try {
-        this.build(
-          this.prepare(this.template, ContextMenu.scopes[scope]),
+        let menu = this.build(
+          this.prepare(this.template, settings),
           window,
-          event
-        ).popup({ window, callback: resolve })
+          event)
+
+        menu.popup({
+          window,
+          callback,
+          positioningItem: settings.position
+        })
 
       } catch (error) {
         warn(`failed to show context-menu: ${error.message}`, {
@@ -352,29 +359,72 @@ class ContextMenu extends Menu {
   const { scopes } = ContextMenu
 
   scopes.sidebar = [...scopes.global, 'project', 'lists', 'tags']
+  scopes.sidebar.position = 2
+
   scopes.lists = [...scopes.sidebar]
+  scopes.lists.position = 5
+
   scopes.list = [...scopes.global, 'project', 'lists', 'list', 'tags']
+  scopes.list.position = 5
+
   scopes.tags = [...scopes.sidebar]
+  scopes.tags.position = 7
+
   scopes.tag = [...scopes.sidebar, 'tag']
+  scopes.tag.position = 7
+
   scopes.items = [...scopes.global, 'items']
+  scopes.items.position = 2
+
   scopes.item = [...scopes.items, 'item', 'item-rotate']
+  scopes.item.position = 2
+
   scopes.trash = [...scopes.sidebar, 'trash']
+  scopes.trash.position = 10
+
   scopes.photo = [...scopes.global, 'photo', 'photo-rotate']
+  scopes.photo.position = 2
+
   scopes.selection = [
     ...scopes.global, 'photo', 'selection', 'selection-rotate'
   ]
+  scopes.selection.position = 8
+
   scopes.note = [...scopes.global, 'note']
+  scopes.note.position = 2
+
   scopes['metadata-list'] = [...scopes.global, 'metadata-list']
+  scopes['metadata-list'].position = 2
+
   scopes['metadata-field'] = [...scopes['metadata-list'], 'metadata-field']
+  scopes['metadata-field'].position = 2
+
   scopes['item-bulk'] = [...scopes.items, 'item-bulk', 'item-rotate']
+  scopes['item-bulk'].position = 2
+
   scopes['item-list'] = [...scopes.items, 'item-list', 'item', 'item-rotate']
+  scopes['item-list'].position = 2
+
   scopes['item-bulk-list'] = [...scopes.items, 'item-bulk-list', 'item-bulk']
+  scopes['item-bulk-list'].position = 2
+
   scopes['item-deleted'] = [...scopes.global, 'item-deleted']
+  scopes['item-deleted'].position = 2
+
   scopes['item-bulk-deleted'] = [...scopes.global, 'item-bulk-deleted']
+  scopes['item-bulk-deleted'].position = 2
+
   scopes['item-tag'] = [...scopes.global, 'item-tag']
+  scopes['item-tag'].position = 2
+
   scopes['item-view'] = [...scopes.global, 'item-view']
+  scopes['item-view'].position = 2
+
   scopes.notepad = [...scopes['item-view'], 'notepad']
+  scopes.notepad.position = 2
+
   scopes.esper = [...scopes['item-view']]
+  scopes.esper.position = 2
 }
 
 module.exports = {
