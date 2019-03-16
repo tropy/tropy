@@ -1,18 +1,18 @@
 en:
   linux:
-    history: &history
-      - id: 'undo'
+    history:
+      - &undo
+        id: 'undo'
         label: 'Undo'
         command: 'app:undo'
         enabled: false
-      - id: 'redo'
+        accelerator: 'CmdOrCtrl+Z'
+      - &redo
+        id: 'redo'
         label: 'Redo'
         command: 'app:redo'
         enabled: false
-    sidebar: &sidebar
-      - label: 'Hide Sidebar'
-        command: 'app:hide-sidebar'
-        enabled: false
+        accelerator: 'Shift+CmdOrCtrl+Z'
     project: &project
       - label: 'Rename Project'
         command: 'app:rename-project'
@@ -21,6 +21,7 @@ en:
     lists: &lists
       - label: 'New List'
         command: 'app:create-list'
+        accelerator: 'CmdOrCtrl+Shift+L'
     list: &list
       - label: 'Rename List'
         command: 'app:rename-list'
@@ -29,7 +30,8 @@ en:
     tags: &tags
       - label: 'New Tag'
         command: 'app:create-tag'
-      - label: 'Export All Tags …'
+        accelerator: 'CmdOrCtrl+Shift+A'
+      - label: 'Export Tags …'
         command: 'app:export-tags'
       - label: 'Default Tag Color'
         submenu:
@@ -133,6 +135,7 @@ en:
     items: &items
       - label: 'New Item'
         command: 'app:create-item'
+        accelerator: 'CmdOrCtrl+Shift+N'
     item: &item
       - label: 'Explode Item'
         command: 'app:explode-item'
@@ -157,8 +160,10 @@ en:
     item-rotate: &item-rotate
       - label: 'Rotate Left'
         command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
       - label: 'Rotate Right'
         command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
     item-bulk: &item-bulk
       - label: 'Merge Selected Items'
         command: 'app:merge-item'
@@ -193,8 +198,10 @@ en:
     photo-rotate: &photo-rotate
       - label: 'Rotate Left'
         command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
       - label: 'Rotate Right'
         command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
     selection: &selection
       - label: 'Delete Selection'
         command: 'app:delete-selection'
@@ -204,8 +211,10 @@ en:
     selection-rotate: &selection-rotate
       - label: 'Rotate Left'
         command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
       - label: 'Rotate Right'
         command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
     item-deleted: &item-deleted
       - label: 'Restore Item'
         command: 'app:restore-item'
@@ -239,15 +248,19 @@ en:
     dev: &dev
       - label: 'Reload'
         command: 'win:reload'
+        accelerator: 'CmdOrCtrl+R'
       - label: 'Reload Styles'
         command: 'win:refresh'
+        accelerator: 'CmdOrCtrl+S'
       - type: 'separator'
       - label: 'Inspect'
         command: 'app:inspect'
+        accelerator: 'CmdOrCtrl+D'
 
   darwin:
-    history: *history
-    sidebar: *sidebar
+    history:
+      - *undo
+      - *redo
     project: *project
     lists: *lists
     list: *list
@@ -275,8 +288,10 @@ en:
     dev: *dev
 
   win32:
-    history: *history
-    sidebar: *sidebar
+    history:
+      - *undo
+      - <<: *redo
+        accelerator: 'Control+Y'
     project: *project
     lists: *lists
     list: *list
