@@ -307,6 +307,7 @@ fr:
               Souhaitez-vous vraiment supprimer ce plugin ? Le plugin et sa configuration
               seront supprimés de manière irréversible.
     filter:
+      csv: CSV
       templates: Modèle de saisie Tropy
       images: Images
       items: Images et objets Tropy
