@@ -32,7 +32,6 @@ class Panel extends React.PureComponent {
     off(this.container.current, 'tab:focus', this.handleTabFocus)
   }
 
-
   get classes() {
     return ['panel', this.props.className, {
       'nested-tab-focus': this.state.hasTabFocus,
@@ -438,6 +437,10 @@ const getLayout = memoize((panels, height) => {
     for (let i = slots.length - 1, offset = 0; i >= 0; --i) {
       let slot = slots[i]
 
+      slot.isDisabled = slot.isDisabled || numOpen < 1
+      slot.lower = offset
+      offset = offset + slot.min
+
       if (slot.isClosed) {
         slot.height = round((scale + slot.min) * slot.height / 100)
         surplus = surplus - slot.min
@@ -447,11 +450,6 @@ const getLayout = memoize((panels, height) => {
         surplus = surplus - slot.height
         numOpen++
       }
-
-      slot.isDisabled = slot.isDisabled || numOpen < 1
-
-      slot.lower = offset
-      offset = offset + slot.min
     }
 
     if (surplus !== 0) fixLayout(slots, surplus)
