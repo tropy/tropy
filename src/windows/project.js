@@ -51,7 +51,7 @@ win.on('idle', ({ type, time }) => {
 
 win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (
-  store.dispatch(act.project.close()), tasks.done
+  store.dispatch(act.project.close()), tasks.toPromise()
 ))
 
 Object.defineProperty(window, 'store', { get: () => store })
