@@ -61,21 +61,18 @@ class Window extends EventEmitter {
 
         let { aqua, frameless } = this.state
 
-        if (aqua) {
+        if (aqua)
           toggle(document.body, aqua, true)
-        }
 
         this.setScrollBarStyle()
 
         if (frameless) {
           toggle(document.body, 'frameless', true)
 
-          if (EL_CAPITAN) {
+          if (EL_CAPITAN)
             toggle(document.body, 'el-capitan', true)
-
-          } else {
+          else
             this.createWindowControls()
-          }
         }
 
         this.style(false, () => {
@@ -88,7 +85,7 @@ class Window extends EventEmitter {
   }
 
   show = () => {
-    const { current } = this
+    let { current } = this
     current.show()
     current.focus()
   }
@@ -203,10 +200,7 @@ class Window extends EventEmitter {
 
       toggle(document.body, 'quitting', true)
 
-      each(this.unloaders, unload => {
-        let res = unload()
-        return res
-      })
+      each(this.unloaders, unload => unload())
         .finally(() => {
           this.hasFinishedUnloading = true
 
