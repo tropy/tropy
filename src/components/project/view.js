@@ -80,12 +80,12 @@ class ProjectView extends Component {
           <section className="items" style={this.style}>
             <header>
               <ProjectToolbar
-                query={nav.query}
-                zoom={zoom}
-                items={items.length}
-                maxZoom={maxZoom}
+                count={items.length}
                 canCreateItems={!nav.trash}
                 isDisabled={!isActive}
+                maxZoom={maxZoom}
+                query={nav.query}
+                zoom={zoom}
                 onItemCreate={this.handleItemImport}
                 onDoubleClick={ARGS.frameless ? onMaximize : null}
                 onSearch={onSearch}

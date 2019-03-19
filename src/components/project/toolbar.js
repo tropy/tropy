@@ -1,90 +1,76 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { FormattedMessage } = require('react-intl')
 const { bool, func, number, string } = require('prop-types')
-const { Toolbar } = require('../toolbar')
-const { IconPlus, IconList, IconGrid } = require('../icons')
+const { Toolbar, ToolGroup } = require('../toolbar')
 const { Slider } = require('../slider')
 const { SearchField } = require('../search')
 const { Button } = require('../button')
 
+const {
+  IconPlus,
+  IconList,
+  IconGrid
+} = require('../icons')
 
-class ProjectToolbar extends PureComponent {
-  get isEmpty() {
-    return this.props.items.length === 0
-  }
 
-  render() {
-    const {
-      canCreateItems,
-      isDisabled,
-      isDraggable,
-      items,
-      query,
-      zoom,
-      maxZoom,
-      onDoubleClick,
-      onSearch,
-      onZoomChange,
-    } = this.props
+const ProjectToolbar = (props) => (
+  <Toolbar
+    isDraggable={props.isDraggable}
+    onDoubleClick={props.onDoubleClick}>
+    <Toolbar.Left>
+      <ToolGroup>
+        <Slider
+          value={props.zoom}
+          max={props.maxZoom}
+          isDisabled={props.isDisabled || props.count === 0}
+          onChange={props.onZoomChange}
+          minIcon={<IconList/>}
+          maxIcon={<IconGrid/>}
+          tabIndex={-1}/>
+      </ToolGroup>
+      <ToolGroup>
+        <Button
+          icon={<IconPlus/>}
+          isDisabled={props.isDisabled || !props.canCreateItems}
+          title="toolbar.import"
+          onClick={props.onItemCreate}/>
+      </ToolGroup>
+    </Toolbar.Left>
+    <Toolbar.Center>
+      <div className="item-count">
+        <FormattedMessage
+          id="toolbar.items"
+          values={{ count: props.count }}/>
+      </div>
+    </Toolbar.Center>
+    <Toolbar.Right>
+      <SearchField
+        query={props.query}
+        isDisabled={props.isDisabled}
+        onSearch={props.onSearch}/>
+    </Toolbar.Right>
+  </Toolbar>
+)
 
-    return (
-      <Toolbar isDraggable={isDraggable} onDoubleClick={onDoubleClick}>
-        <div className="toolbar-left">
-          <div className="tool-group">
-            <Slider
-              value={zoom}
-              max={maxZoom}
-              isDisabled={this.isEmpty || isDisabled}
-              onChange={onZoomChange}
-              minIcon={<IconList/>}
-              maxIcon={<IconGrid/>}
-              tabIndex={-1}/>
-          </div>
-          <div className="tool-group">
-            <Button
-              icon={<IconPlus/>}
-              isDisabled={isDisabled || !canCreateItems}
-              title="toolbar.import"
-              onClick={this.props.onItemCreate}/>
-          </div>
-        </div>
-        <div className="toolbar-center">
-          <div className="item-count">
-            <FormattedMessage id="toolbar.items" values={{ count: items }}/>
-          </div>
-        </div>
-        <div className="toolbar-right">
-          <SearchField
-            query={query}
-            isDisabled={isDisabled}
-            onSearch={onSearch}/>
-        </div>
-      </Toolbar>
-    )
-  }
-
-  static propTypes = {
-    canCreateItems: bool,
-    isDraggable: bool,
-    isDisabled: bool,
-    items: number.isRequired,
-    query: string.isRequired,
-    maxZoom: number.isRequired,
-    zoom: number.isRequired,
-    onDoubleClick: func,
-    onItemCreate: func.isRequired,
-    onSearch: func.isRequired,
-    onZoomChange: func.isRequired
-  }
-
-  static defaultProps = {
-    isDraggable: ARGS.frameless
-  }
+ProjectToolbar.propTypes = {
+  canCreateItems: bool,
+  count: number.isRequired,
+  isDisabled: bool,
+  isDraggable: bool,
+  maxZoom: number.isRequired,
+  query: string.isRequired,
+  zoom: number.isRequired,
+  onDoubleClick: func,
+  onItemCreate: func.isRequired,
+  onSearch: func.isRequired,
+  onZoomChange: func.isRequired
 }
 
+ProjectToolbar.defaultProps = {
+  isDraggable: ARGS.frameless
+}
 
 module.exports = {
   ProjectToolbar

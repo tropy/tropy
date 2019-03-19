@@ -19,6 +19,7 @@ class Slider extends React.PureComponent {
   track = React.createRef()
 
   state = {
+    hasFocus: false,
     value: 0
   }
 
@@ -111,6 +112,14 @@ class Slider extends React.PureComponent {
     this.set(this.getNextStep(), 'button')
   }, 100)
 
+  handleBlur = () => {
+    this.setState({ hasFocus: false })
+  }
+
+  handleFocus = () => {
+    this.setState({ hasFocus: true })
+  }
+
   handleKeyDown = (event) => {
     let { value, precision, keymap, tabIndex } = this.props
 
@@ -139,6 +148,15 @@ class Slider extends React.PureComponent {
     event.preventDefault()
     event.stopPropagation()
     event.nativeEvent.stopImmediatePropagation()
+  }
+
+  handleWheel = (event) => {
+    if (this.state.hasFocus) {
+      let { value, precision } = this.props
+      let delta = event.deltaY || event.deltaX
+
+      this.set(value + (delta < 0 ? -1 : 1) / precision, 'wheel')
+    }
   }
 
   renderMinButton() {
@@ -196,9 +214,10 @@ class Slider extends React.PureComponent {
       <div
         className={cx(this.classes)}
         tabIndex={this.tabIndex}
-        onBlur={this.props.onBlur}
-        onFocus={this.props.onFocus}
-        onKeyDown={this.handleKeyDown}>
+        onBlur={this.handleBlur}
+        onFocus={this.handleFocus}
+        onKeyDown={this.handleKeyDown}
+        onWheel={this.handleWheel}>
         {this.renderMinButton()}
         <Draggable
           delay={15}

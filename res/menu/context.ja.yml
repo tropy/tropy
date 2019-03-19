@@ -44,7 +44,7 @@ ja:
               - tagColor
               - 'app:save-default-tag-color'
           - type: separator
-          - label: レッド
+          - label: 赤
             color:
               - red
               - tagColor
@@ -54,52 +54,52 @@ ja:
               - orange
               - tagColor
               - 'app:save-default-tag-color'
-          - label: イエロー
+          - label: 黄色
             color:
               - yellow
               - tagColor
               - 'app:save-default-tag-color'
-          - label: グリーン
+          - label: 緑
             color:
               - green
               - tagColor
               - 'app:save-default-tag-color'
-          - label: ブルー
+          - label: 青
             color:
               - blue
               - tagColor
               - 'app:save-default-tag-color'
-          - label: パープル
+          - label: 紫
             color:
               - purple
               - tagColor
               - 'app:save-default-tag-color'
-          - label: グレー
+          - label: 灰色
             color:
               - gray
               - tagColor
               - 'app:save-default-tag-color'
-          - label: Brown
+          - label: 茶色
             color:
               - brown
               - color
               - 'app:save-default-tag-color'
-          - label: Apricot
+          - label: アプリコット
             color:
               - apricot
               - color
               - 'app:save-default-tag-color'
-          - label: Dark Green
+          - label: 濃緑
             color:
               - dark-green
               - color
               - 'app:save-default-tag-color'
-          - label: Light Blue
+          - label: 水色
             color:
               - light-blue
               - color
               - 'app:save-default-tag-color'
-          - label: Lavender
+          - label: ラベンダー
             color:
               - lavender
               - color
@@ -113,7 +113,7 @@ ja:
               - color
               - 'app:save-tag-color'
           - type: separator
-          - label: レッド
+          - label: 赤
             color:
               - red
               - color
@@ -123,52 +123,52 @@ ja:
               - orange
               - color
               - 'app:save-tag-color'
-          - label: イエロー
+          - label: 黄色
             color:
               - yellow
               - color
               - 'app:save-tag-color'
-          - label: グリーン
+          - label: 緑
             color:
               - green
               - color
               - 'app:save-tag-color'
-          - label: ブルー
+          - label: 青
             color:
               - blue
               - color
               - 'app:save-tag-color'
-          - label: パープル
+          - label: 紫
             color:
               - purple
               - color
               - 'app:save-tag-color'
-          - label: グレー
+          - label: 灰色
             color:
               - gray
               - color
               - 'app:save-tag-color'
-          - label: Brown
+          - label: 茶色
             color:
               - brown
               - color
               - 'app:save-tag-color'
-          - label: Apricot
+          - label: アプリコット
             color:
               - apricot
               - color
               - 'app:save-tag-color'
-          - label: Dark Green
+          - label: 濃緑
             color:
               - dark-green
               - color
               - 'app:save-tag-color'
-          - label: Light Blue
+          - label: 水色
             color:
               - light-blue
               - color
               - 'app:save-tag-color'
-          - label: Lavender
+          - label: ラベンダー
             color:
               - lavender
               - color
@@ -390,52 +390,52 @@ ja:
               - orange
               - tagColor
               - 'app:save-default-tag-color'
-          - label: イエロー
+          - label: 黄色
             color:
               - yellow
               - tagColor
               - 'app:save-default-tag-color'
-          - label: グリーン
+          - label: 緑
             color:
               - green
               - tagColor
               - 'app:save-default-tag-color'
-          - label: ブルー
+          - label: 青
             color:
               - blue
               - tagColor
               - 'app:save-default-tag-color'
-          - label: パープル
+          - label: 紫
             color:
               - purple
               - tagColor
               - 'app:save-default-tag-color'
-          - label: グレー
+          - label: 灰色
             color:
               - gray
               - tagColor
               - 'app:save-default-tag-color'
-          - label: Brown
+          - label: 茶色
             color:
               - brown
               - color
               - 'app:save-default-tag-color'
-          - label: Apricot
+          - label: アプリコット
             color:
               - apricot
               - color
               - 'app:save-default-tag-color'
-          - label: Dark Green
+          - label: 濃緑
             color:
               - dark-green
               - color
               - 'app:save-default-tag-color'
-          - label: Light Blue
+          - label: 水色
             color:
               - light-blue
               - color
               - 'app:save-default-tag-color'
-          - label: Lavender
+          - label: ラベンダー
             color:
               - lavender
               - color
@@ -449,7 +449,7 @@ ja:
               - color
               - 'app:save-tag-color'
           - type: separator
-          - label: レッド
+          - label: 赤
             color:
               - red
               - color
@@ -459,52 +459,52 @@ ja:
               - orange
               - color
               - 'app:save-tag-color'
-          - label: イエロー
+          - label: 黄色
             color:
               - yellow
               - color
               - 'app:save-tag-color'
-          - label: グリーン
+          - label: 緑
             color:
               - green
               - color
               - 'app:save-tag-color'
-          - label: ブルー
+          - label: 青
             color:
               - blue
               - color
               - 'app:save-tag-color'
-          - label: パープル
+          - label: 紫
             color:
               - purple
               - color
               - 'app:save-tag-color'
-          - label: グレー
+          - label: 灰色
             color:
               - gray
               - color
               - 'app:save-tag-color'
-          - label: Brown
+          - label: 茶色
             color:
               - brown
               - color
               - 'app:save-tag-color'
-          - label: Apricot
+          - label: アプリコット
             color:
               - apricot
               - color
               - 'app:save-tag-color'
-          - label: Dark Green
+          - label: 濃緑
             color:
               - dark-green
               - color
               - 'app:save-tag-color'
-          - label: Light Blue
+          - label: 水色
             color:
               - light-blue
               - color
               - 'app:save-tag-color'
-          - label: Lavender
+          - label: ラベンダー
             color:
               - lavender
               - color
@@ -716,7 +716,7 @@ ja:
               - tagColor
               - 'app:save-default-tag-color'
           - type: separator
-          - label: レッド
+          - label: 赤
             color:
               - red
               - tagColor
@@ -726,52 +726,52 @@ ja:
               - orange
               - tagColor
               - 'app:save-default-tag-color'
-          - label: イエロー
+          - label: 黄色
             color:
               - yellow
               - tagColor
               - 'app:save-default-tag-color'
-          - label: グリーン
+          - label: 緑
             color:
               - green
               - tagColor
               - 'app:save-default-tag-color'
-          - label: ブルー
+          - label: 青
             color:
               - blue
               - tagColor
               - 'app:save-default-tag-color'
-          - label: パープル
+          - label: 紫
             color:
               - purple
               - tagColor
               - 'app:save-default-tag-color'
-          - label: グレー
+          - label: 灰色
             color:
               - gray
               - tagColor
               - 'app:save-default-tag-color'
-          - label: Brown
+          - label: 茶色
             color:
               - brown
               - color
               - 'app:save-default-tag-color'
-          - label: Apricot
+          - label: アプリコット
             color:
               - apricot
               - color
               - 'app:save-default-tag-color'
-          - label: Dark Green
+          - label: 濃緑
             color:
               - dark-green
               - color
               - 'app:save-default-tag-color'
-          - label: Light Blue
+          - label: 水色
             color:
               - light-blue
               - color
               - 'app:save-default-tag-color'
-          - label: Lavender
+          - label: ラベンダー
             color:
               - lavender
               - color
@@ -785,7 +785,7 @@ ja:
               - color
               - 'app:save-tag-color'
           - type: separator
-          - label: レッド
+          - label: 赤
             color:
               - red
               - color
@@ -795,52 +795,52 @@ ja:
               - orange
               - color
               - 'app:save-tag-color'
-          - label: イエロー
+          - label: 黄色
             color:
               - yellow
               - color
               - 'app:save-tag-color'
-          - label: グリーン
+          - label: 緑
             color:
               - green
               - color
               - 'app:save-tag-color'
-          - label: ブルー
+          - label: 青
             color:
               - blue
               - color
               - 'app:save-tag-color'
-          - label: パープル
+          - label: 紫
             color:
               - purple
               - color
               - 'app:save-tag-color'
-          - label: グレー
+          - label: 灰色
             color:
               - gray
               - color
               - 'app:save-tag-color'
-          - label: Brown
+          - label: 茶色
             color:
               - brown
               - color
               - 'app:save-tag-color'
-          - label: Apricot
+          - label: アプリコット
             color:
               - apricot
               - color
               - 'app:save-tag-color'
-          - label: Dark Green
+          - label: 濃緑
             color:
               - dark-green
               - color
               - 'app:save-tag-color'
-          - label: Light Blue
+          - label: 水色
             color:
               - light-blue
               - color
               - 'app:save-tag-color'
-          - label: Lavender
+          - label: ラベンダー
             color:
               - lavender
               - color

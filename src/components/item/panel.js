@@ -129,7 +129,9 @@ class ItemPanelGroup extends React.PureComponent {
     let { isDisabled, photo, panel } = this.props
     let hasMultipleItems = this.props.items.length > 1
     let item = hasMultipleItems ? null : this.props.items[0]
-    let canCreatePhoto = !(isDisabled || item == null || hasMultipleItems)
+
+    let isPhotosDisabled = isDisabled || item == null || hasMultipleItems
+    let isNotesDisabled = isPhotosDisabled || photo == null
 
     return (
       <PanelGroup
@@ -186,16 +188,15 @@ class ItemPanelGroup extends React.PureComponent {
           'has-active': has(photo, ['id'])
         })}>
           <PhotoToolbar
-            canCreate={canCreatePhoto}
             hasCreateButton
-            isDisabled={isDisabled || item == null}
+            isDisabled={isPhotosDisabled}
             photos={this.props.photos.length}
             zoom={panel.zoom}
             onCreate={this.handlePhotoCreate}
             onZoomChange={this.handleZoomChange}/>
           <PhotoPanel
             canCreate
-            isDisabled={!canCreatePhoto}
+            isDisabled={isPhotosDisabled}
             isItemOpen={this.props.isItemOpen}
             photos={this.props.photos}
             zoom={panel.zoom}
@@ -216,11 +217,11 @@ class ItemPanelGroup extends React.PureComponent {
         })}>
           <NoteToolbar
             hasCreateButton
-            isDisabled={!canCreatePhoto || photo == null}
+            isDisabled={isNotesDisabled}
             notes={this.props.notes.length}
             onCreate={this.props.onNoteCreate}/>
           <NoteList
-            isDisabled={!canCreatePhoto || photo == null}
+            isDisabled={isNotesDisabled}
             keymap={this.props.keymap.NoteList}
             notes={this.props.notes}
             selection={this.props.note}
