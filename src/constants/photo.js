@@ -12,6 +12,7 @@ module.exports = {
   MOVE: 'photo.move',
   ORDER: 'photo.order',
   RESTORE: 'photo.restore',
+  ROTATE: 'photo.rotate',
   SAVE: 'photo.save',
   SELECT: 'photo.select',
   UPDATE: 'photo.update',

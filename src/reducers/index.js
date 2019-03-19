@@ -2,6 +2,7 @@
 
 module.exports = {
   ...require('./activity'),
+  ...require('./context'),
   ...require('./edit'),
   ...require('./esper'),
   ...require('./flash'),

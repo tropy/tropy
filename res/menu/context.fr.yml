@@ -5,14 +5,12 @@ fr:
         label: Annuler
         command: 'app:undo'
         enabled: false
+        accelerator: CmdOrCtrl+Z
       - id: redo
         label: Rétablir
         command: 'app:redo'
         enabled: false
-    sidebar:
-      - label: Cacher la barre latérale
-        command: 'app:hide-sidebar'
-        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: Renommer le projet
         command: 'app:rename-project'
@@ -21,6 +19,7 @@ fr:
     lists:
       - label: Nouvelle liste
         command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
     list:
       - label: Renommer la liste
         command: 'app:rename-list'
@@ -29,34 +28,151 @@ fr:
     tags:
       - label: Nouveau marqueur
         command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Exporter les tags…
+        command: 'app:export-tags'
+      - label: Default Tag Color
+        submenu:
+          - label: Aucun
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Couleur aléatoire
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: Rouge
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Orange
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Jaune
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Vert
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Bleu
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Violet
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Gris
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Marron
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Abricot
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Vert foncé
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Bleu clair
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavande
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
     tag:
       - label: Couleur du marqueur
         submenu:
           - label: Aucune
-            color: null
-            type: checkbox
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
           - type: separator
           - label: Rouge
-            color: red
-            type: checkbox
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
           - label: Orange
-            color: orange
-            type: checkbox
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
           - label: Jaune
-            color: yellow
-            type: checkbox
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
           - label: Vert
-            color: green
-            type: checkbox
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
           - label: Bleu
-            color: blue
-            type: checkbox
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
           - label: Violet
-            color: purple
-            type: checkbox
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
           - label: Gris
-            color: gray
-            type: checkbox
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Marron
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Abricot
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Vert foncé
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Bleu clair
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavande
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
       - label: Renommer le marqueur
         command: 'app:rename-tag'
       - label: Supprimer le marqueur
@@ -98,6 +214,7 @@ fr:
     items:
       - label: Nouvel objet
         command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
     item:
       - label: Exploser l'objet
         command: 'app:explode-item'
@@ -109,7 +226,7 @@ fr:
             command: 'app:export-item'
       - label: Ajouter une photo…
         command: 'app:create-item-photo'
-      - label: Marqueurs
+      - label: Tags
         id: tag
         submenu:
           - label: Aucun
@@ -119,6 +236,13 @@ fr:
           - type: separator
       - label: Supprimer l'objet
         command: 'app:delete-item'
+    item-rotate:
+      - label: Tourner à gauche
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Tourner à droite
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
     item-bulk:
       - label: Fusionner les objets sélectionnés
         command: 'app:merge-item'
@@ -136,26 +260,40 @@ fr:
       - label: Enlever les objets sélectionnés de la liste
         command: 'app:list-item-remove'
     photo:
-      - label: Supprimer la photo
-        command: 'app:delete-photo'
       - label: Dupliquer la photo
         command: 'app:duplicate-photo'
       - label: Déplacer la photo vers un nouvel objet
         command: 'app:explode-photo'
       - label: Montrer la photo dans son répertoire…
         command: 'app:show-in-folder'
+      - label: Supprimer la photo
+        command: 'app:delete-photo'
       - label: Utiliser la photo comme image de couverture
         command: 'app:update-cover-image'
         enabled: false
         visible: false
       - label: Regrouper les photos
         command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Tourner à gauche
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Tourner à droite
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
     selection:
       - label: Supprimer la sélection
         command: 'app:delete-selection'
       - label: Sauvegarder la sélection comme une image…
         command: 'app:save-selection'
         enabled: false
+    selection-rotate:
+      - label: Tourner à gauche
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Tourner à droite
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
     item-deleted:
       - label: Restaurer l'objet
         command: 'app:restore-item'
@@ -189,25 +327,26 @@ fr:
     dev:
       - label: Recharger
         command: 'win:reload'
+        accelerator: CmdOrCtrl+R
       - label: Recharger les styles
         command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
       - type: separator
       - label: Inspecter
         command: 'app:inspect'
+        accelerator: CmdOrCtrl+D
   darwin:
     history:
       - id: undo
         label: Annuler
         command: 'app:undo'
         enabled: false
+        accelerator: CmdOrCtrl+Z
       - id: redo
         label: Rétablir
         command: 'app:redo'
         enabled: false
-    sidebar:
-      - label: Cacher la barre latérale
-        command: 'app:hide-sidebar'
-        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: Renommer le projet
         command: 'app:rename-project'
@@ -216,6 +355,7 @@ fr:
     lists:
       - label: Nouvelle liste
         command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
     list:
       - label: Renommer la liste
         command: 'app:rename-list'
@@ -224,34 +364,151 @@ fr:
     tags:
       - label: Nouveau marqueur
         command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Exporter les tags…
+        command: 'app:export-tags'
+      - label: Default Tag Color
+        submenu:
+          - label: Aucun
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Couleur aléatoire
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: Rouge
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Orange
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Jaune
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Vert
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Bleu
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Violet
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Gris
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Marron
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Abricot
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Vert foncé
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Bleu clair
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavande
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
     tag:
       - label: Couleur du marqueur
         submenu:
           - label: Aucune
-            color: null
-            type: checkbox
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
           - type: separator
           - label: Rouge
-            color: red
-            type: checkbox
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
           - label: Orange
-            color: orange
-            type: checkbox
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
           - label: Jaune
-            color: yellow
-            type: checkbox
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
           - label: Vert
-            color: green
-            type: checkbox
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
           - label: Bleu
-            color: blue
-            type: checkbox
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
           - label: Violet
-            color: purple
-            type: checkbox
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
           - label: Gris
-            color: gray
-            type: checkbox
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Marron
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Abricot
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Vert foncé
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Bleu clair
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavande
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
       - label: Renommer le marqueur
         command: 'app:rename-tag'
       - label: Supprimer le marqueur
@@ -293,6 +550,7 @@ fr:
     items:
       - label: Nouvel objet
         command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
     item:
       - label: Exploser l'objet
         command: 'app:explode-item'
@@ -304,7 +562,7 @@ fr:
             command: 'app:export-item'
       - label: Ajouter une photo…
         command: 'app:create-item-photo'
-      - label: Marqueurs
+      - label: Tags
         id: tag
         submenu:
           - label: Aucun
@@ -350,6 +608,13 @@ fr:
           - label: Côte à côte
             id: side-by-side
             type: checkbox
+    item-rotate:
+      - label: Tourne à gouche
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Tourner à droite
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: Nouveau champ…
         command: 'ctx:add-extra-field'
@@ -361,48 +626,63 @@ fr:
       - label: Supprimer définitivement les objets
         command: 'app:destroy-item'
     photo:
-      - label: Supprimer la photo
-        command: 'app:delete-photo'
       - label: Dupliquer la photo
         command: 'app:duplicate-photo'
       - label: Déplacer la photo vers un nouvel objet
         command: 'app:explode-photo'
       - label: Montrer la photo dans son répertoire…
         command: 'app:show-in-folder'
+      - label: Supprimer la photo
+        command: 'app:delete-photo'
       - label: Utiliser la photo comme image de couverture
         command: 'app:update-cover-image'
         enabled: false
         visible: false
       - label: Regrouper les photos
         command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Tourne à gouche
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Tourner à droite
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
     selection:
       - label: Supprimer la sélection
         command: 'app:delete-selection'
       - label: Sauvegarder la sélection comme une image…
         command: 'app:save-selection'
         enabled: false
+    selection-rotate:
+      - label: Tourner à gauche
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Tourner à droite
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
     dev:
       - label: Recharger
         command: 'win:reload'
+        accelerator: CmdOrCtrl+R
       - label: Recharger les styles
         command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
       - type: separator
       - label: Inspecter
         command: 'app:inspect'
+        accelerator: CmdOrCtrl+D
   win32:
     history:
       - id: undo
         label: Annuler
         command: 'app:undo'
         enabled: false
+        accelerator: CmdOrCtrl+Z
       - id: redo
         label: Rétablir
         command: 'app:redo'
         enabled: false
-    sidebar:
-      - label: Cacher la barre latérale
-        command: 'app:hide-sidebar'
-        enabled: false
+        accelerator: Control+Y
     project:
       - label: Renommer le projet
         command: 'app:rename-project'
@@ -411,6 +691,7 @@ fr:
     lists:
       - label: Nouvelle liste
         command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
     list:
       - label: Renommer la liste
         command: 'app:rename-list'
@@ -419,34 +700,151 @@ fr:
     tags:
       - label: Nouveau marqueur
         command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Exporter les tags…
+        command: 'app:export-tags'
+      - label: Default Tag Color
+        submenu:
+          - label: Aucun
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Couleur aléatoire
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: Rouge
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Orange
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Jaune
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Vert
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Bleu
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Violet
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Gris
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Marron
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Abricot
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Vert foncé
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Bleu clair
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavande
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
     tag:
       - label: Couleur du marqueur
         submenu:
           - label: Aucune
-            color: null
-            type: checkbox
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
           - type: separator
           - label: Rouge
-            color: red
-            type: checkbox
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
           - label: Orange
-            color: orange
-            type: checkbox
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
           - label: Jaune
-            color: yellow
-            type: checkbox
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
           - label: Vert
-            color: green
-            type: checkbox
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
           - label: Bleu
-            color: blue
-            type: checkbox
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
           - label: Violet
-            color: purple
-            type: checkbox
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
           - label: Gris
-            color: gray
-            type: checkbox
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Marron
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Abricot
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Vert foncé
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Bleu clair
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavande
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
       - label: Renommer le marqueur
         command: 'app:rename-tag'
       - label: Supprimer le marqueur
@@ -488,6 +886,7 @@ fr:
     items:
       - label: Nouvel objet
         command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
     item:
       - label: Exploser l'objet
         command: 'app:explode-item'
@@ -499,7 +898,7 @@ fr:
             command: 'app:export-item'
       - label: Ajouter une photo…
         command: 'app:create-item-photo'
-      - label: Marqueurs
+      - label: Tags
         id: tag
         submenu:
           - label: Aucun
@@ -545,6 +944,13 @@ fr:
           - label: Côte à côte
             id: side-by-side
             type: checkbox
+    item-rotate:
+      - label: Tourner à gauche
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Tourner à droite
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: Nouveau champ…
         command: 'ctx:add-extra-field'
@@ -556,31 +962,48 @@ fr:
       - label: Supprimer définitivement les objets
         command: 'app:destroy-item'
     photo:
-      - label: Supprimer la photo
-        command: 'app:delete-photo'
       - label: Dupliquer la photo
         command: 'app:duplicate-photo'
       - label: Déplacer la photo vers un nouvel objet
         command: 'app:explode-photo'
       - label: Montrer la photo dans son répertoire…
         command: 'app:show-in-folder'
+      - label: Supprimer la photo
+        command: 'app:delete-photo'
       - label: Utiliser la photo comme image de couverture
         command: 'app:update-cover-image'
         enabled: false
         visible: false
       - label: Regrouper les photos
         command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Tourner à gauche
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Tourner à droite
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
     selection:
       - label: Supprimer la sélection
         command: 'app:delete-selection'
       - label: Sauvegarder la sélection comme une image…
         command: 'app:save-selection'
         enabled: false
+    selection-rotate:
+      - label: Tourner à gauche
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Tourner à droite
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
     dev:
       - label: Recharger
         command: 'win:reload'
+        accelerator: CmdOrCtrl+R
       - label: Recharger les styles
         command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
       - type: separator
       - label: Inspecter
         command: 'app:inspect'
+        accelerator: CmdOrCtrl+D

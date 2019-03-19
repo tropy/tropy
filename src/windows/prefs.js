@@ -43,7 +43,7 @@ win.on('settings.update', (settings) => {
 
 win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (
-  store.dispatch(act.prefs.close()), tasks.done
+  store.dispatch(act.prefs.close()), tasks.toPromise()
 ))
 
 if (ARGS.dev || ARGS.debug) {

@@ -284,6 +284,7 @@ en:
             Are you sure you want to delete the plugin?
             This will permanently remove the plugin and its configuration.
     filter:
+      csv: CSV
       templates: Tropy Templates
       images: Images
       items: Images and Tropy Items

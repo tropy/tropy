@@ -66,6 +66,14 @@ Toolbar.Left.propTypes = {
   className: string
 }
 
+Toolbar.Center = ({ children, className }) =>
+  <div className={cx('toolbar-center', className)}>{children}</div>
+
+Toolbar.Center.propTypes = {
+  children: node,
+  className: string
+}
+
 Toolbar.Right = ({ children, className }) =>
   <div className={cx('toolbar-right', className)}>{children}</div>
 

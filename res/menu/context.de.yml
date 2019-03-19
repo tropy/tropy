@@ -5,14 +5,12 @@ de:
         label: Widerrufen
         command: 'app:undo'
         enabled: false
+        accelerator: CmdOrCtrl+Z
       - id: redo
         label: Wiederholen
         command: 'app:redo'
         enabled: false
-    sidebar:
-      - label: Seitenleiste ausblenden
-        command: 'app:hide-sidebar'
-        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: Projekt umbennen
         command: 'app:rename-project'
@@ -21,6 +19,7 @@ de:
     lists:
       - label: Neue Liste
         command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
     list:
       - label: Liste umbenennen
         command: 'app:rename-list'
@@ -29,34 +28,151 @@ de:
     tags:
       - label: Neues Tag
         command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Tags exportieren …
+        command: 'app:export-tags'
+      - label: Standard Tag-Farbe
+        submenu:
+          - label: Keine
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Zufallsfarbe
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: Rot
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Orange
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Gelb
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Grün
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Blau
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Violett
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Grau
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Braun
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Marille
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Dunkelgrün
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Hellblau
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
     tag:
       - label: Tag-Farbe
         submenu:
           - label: Keine
-            color: null
-            type: checkbox
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
           - type: separator
           - label: Rot
-            color: red
-            type: checkbox
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
           - label: Orange
-            color: orange
-            type: checkbox
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
           - label: Gelb
-            color: yellow
-            type: checkbox
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
           - label: Grün
-            color: green
-            type: checkbox
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
           - label: Blau
-            color: blue
-            type: checkbox
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
           - label: Violett
-            color: purple
-            type: checkbox
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
           - label: Grau
-            color: gray
-            type: checkbox
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Braun
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Marille
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Dunkelgrün
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Hellblau
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
       - label: Tag umbenennen
         command: 'app:rename-tag'
       - label: Tag löschen
@@ -98,6 +214,7 @@ de:
     items:
       - label: Neues Objekt
         command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
     item:
       - label: Objekt zerteilen
         command: 'app:explode-item'
@@ -119,6 +236,13 @@ de:
           - type: separator
       - label: Objekt löschen
         command: 'app:delete-item'
+    item-rotate:
+      - label: Linksdrehen
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rechtsdrehen
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
     item-bulk:
       - label: Ausgewählte Objekte zusammenfügen
         command: 'app:merge-item'
@@ -136,26 +260,40 @@ de:
       - label: Ausgewählte Objekte aus Liste entfernen
         command: 'app:list-item-remove'
     photo:
-      - label: Foto löschen
-        command: 'app:delete-photo'
       - label: Foto duplizieren
         command: 'app:duplicate-photo'
       - label: Foto in neues Objekt verschieben
         command: 'app:explode-photo'
-      - label: Original Foto in Ordner anzeigen …
+      - label: In Finder anzeigen
         command: 'app:show-in-folder'
+      - label: Foto löschen
+        command: 'app:delete-photo'
       - label: Foto als Titelbild verwenden
         command: 'app:update-cover-image'
         enabled: false
         visible: false
       - label: Foto konsolidieren
         command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Linksdrehen
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rechtsdrehen
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
     selection:
       - label: Ausschnitt löschen
         command: 'app:delete-selection'
       - label: Ausschnitt als Bild speichern …
         command: 'app:save-selection'
         enabled: false
+    selection-rotate:
+      - label: Linksdrehen
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rechtsdrehen
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
     item-deleted:
       - label: Objekt wiederherstellen
         command: 'app:restore-item'
@@ -189,25 +327,26 @@ de:
     dev:
       - label: Neu laden
         command: 'win:reload'
+        accelerator: CmdOrCtrl+R
       - label: Stile neu laden
         command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
       - type: separator
       - label: Untersuchen
         command: 'app:inspect'
+        accelerator: CmdOrCtrl+D
   darwin:
     history:
       - id: undo
         label: Widerrufen
         command: 'app:undo'
         enabled: false
+        accelerator: CmdOrCtrl+Z
       - id: redo
         label: Wiederholen
         command: 'app:redo'
         enabled: false
-    sidebar:
-      - label: Seitenleiste ausblenden
-        command: 'app:hide-sidebar'
-        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: Projekt umbennen
         command: 'app:rename-project'
@@ -216,6 +355,7 @@ de:
     lists:
       - label: Neue Liste
         command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
     list:
       - label: Liste umbenennen
         command: 'app:rename-list'
@@ -224,34 +364,151 @@ de:
     tags:
       - label: Neues Tag
         command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Tags exportieren …
+        command: 'app:export-tags'
+      - label: Standard Tag-Farbe
+        submenu:
+          - label: Keine
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Zufallsfarbe
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: Rot
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Orange
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Gelb
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Grün
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Blau
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Violett
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Grau
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Braun
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Marille
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Dunkelgrün
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Hellblau
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
     tag:
       - label: Tag-Farbe
         submenu:
           - label: Keine
-            color: null
-            type: checkbox
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
           - type: separator
           - label: Rot
-            color: red
-            type: checkbox
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
           - label: Orange
-            color: orange
-            type: checkbox
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
           - label: Gelb
-            color: yellow
-            type: checkbox
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
           - label: Grün
-            color: green
-            type: checkbox
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
           - label: Blau
-            color: blue
-            type: checkbox
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
           - label: Violett
-            color: purple
-            type: checkbox
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
           - label: Grau
-            color: gray
-            type: checkbox
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Braun
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Marille
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Dunkelgrün
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Hellblau
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
       - label: Tag umbenennen
         command: 'app:rename-tag'
       - label: Tag löschen
@@ -293,6 +550,7 @@ de:
     items:
       - label: Neues Objekt
         command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
     item:
       - label: Objekt zerteilen
         command: 'app:explode-item'
@@ -350,6 +608,13 @@ de:
           - label: Nebeneinander
             id: side-by-side
             type: checkbox
+    item-rotate:
+      - label: Rechtsdrehen
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rechtsdrehen
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: Neues Feld …
         command: 'ctx:add-extra-field'
@@ -361,48 +626,63 @@ de:
       - label: Objekte vollständig löschen
         command: 'app:destroy-item'
     photo:
-      - label: Foto löschen
-        command: 'app:delete-photo'
       - label: Foto duplizieren
         command: 'app:duplicate-photo'
       - label: Foto in neues Objekt verschieben
         command: 'app:explode-photo'
       - label: In Finder anzeigen
         command: 'app:show-in-folder'
+      - label: Foto löschen
+        command: 'app:delete-photo'
       - label: Foto als Signaturbild verwenden
         command: 'app:update-cover-image'
         enabled: false
         visible: false
       - label: Foto konsolidieren
         command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Rechtsdrehen
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rechtsdrehen
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
     selection:
       - label: Ausschnitt löschen
         command: 'app:delete-selection'
       - label: Ausschnitt als Bild speichern …
         command: 'app:save-selection'
         enabled: false
+    selection-rotate:
+      - label: Rechtsdrehen
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rechtsdrehen
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
     dev:
       - label: Neu laden
         command: 'win:reload'
+        accelerator: CmdOrCtrl+R
       - label: Stile neu laden
         command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
       - type: separator
       - label: Inspizieren
         command: 'app:inspect'
+        accelerator: CmdOrCtrl+D
   win32:
     history:
       - id: undo
         label: Widerrufen
         command: 'app:undo'
         enabled: false
+        accelerator: CmdOrCtrl+Z
       - id: redo
         label: Wiederholen
         command: 'app:redo'
         enabled: false
-    sidebar:
-      - label: Seitenleiste ausblenden
-        command: 'app:hide-sidebar'
-        enabled: false
+        accelerator: Control+Y
     project:
       - label: Projekt umbennen
         command: 'app:rename-project'
@@ -411,6 +691,7 @@ de:
     lists:
       - label: Neue Liste
         command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
     list:
       - label: Liste umbenennen
         command: 'app:rename-list'
@@ -419,34 +700,151 @@ de:
     tags:
       - label: Neuer Tag
         command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Tags exportieren …
+        command: 'app:export-tags'
+      - label: Standard Tag-Farbe
+        submenu:
+          - label: Keine
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Zufallsfarbe
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: Rot
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Orange
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Gelb
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Grün
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Blau
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Violett
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Grau
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Braun
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Marille
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Dunkelgrün
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Hellblau
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
     tag:
       - label: Tagfarbe
         submenu:
           - label: Keine
-            color: null
-            type: checkbox
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
           - type: separator
           - label: Rot
-            color: red
-            type: checkbox
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
           - label: Orange
-            color: orange
-            type: checkbox
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
           - label: Gelb
-            color: yellow
-            type: checkbox
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
           - label: Grün
-            color: green
-            type: checkbox
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
           - label: Blau
-            color: blue
-            type: checkbox
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
           - label: Violett
-            color: purple
-            type: checkbox
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
           - label: Grau
-            color: gray
-            type: checkbox
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Braun
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Marille
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Dunkelgrün
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Hellblau
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
       - label: Tag umbenennen
         command: 'app:rename-tag'
       - label: Tag löschen
@@ -488,6 +886,7 @@ de:
     items:
       - label: Neues Objekt
         command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
     item:
       - label: Objektfotos aufsplitten
         command: 'app:explode-item'
@@ -545,6 +944,13 @@ de:
           - label: Nebeneinander
             id: side-by-side
             type: checkbox
+    item-rotate:
+      - label: Rechtsdrehen
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rechtsdrehen
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: Neues Feld …
         command: 'ctx:add-extra-field'
@@ -556,31 +962,48 @@ de:
       - label: Objekte vollständig löschen
         command: 'app:destroy-item'
     photo:
-      - label: Foto löschen
-        command: 'app:delete-photo'
       - label: Foto duplizieren
         command: 'app:duplicate-photo'
       - label: Foto in neues Objekt verschieben
         command: 'app:explode-photo'
-      - label: Original Foto in Order anzeigen …
+      - label: In Finder anzeigen
         command: 'app:show-in-folder'
+      - label: Foto löschen
+        command: 'app:delete-photo'
       - label: Foto als Signaturbild verwenden
         command: 'app:update-cover-image'
         enabled: false
         visible: false
       - label: Foto konsolidieren
         command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Rechtsdrehen
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rechtsdrehen
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
     selection:
       - label: Ausschnitt löschen
         command: 'app:delete-selection'
       - label: Ausschnitt als Bild speichern …
         command: 'app:save-selection'
         enabled: false
+    selection-rotate:
+      - label: Rechtsdrehen
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rechtsdrehen
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
     dev:
       - label: Neu laden
         command: 'win:reload'
+        accelerator: CmdOrCtrl+R
       - label: Stile neu laden
         command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
       - type: separator
       - label: Inspizieren
         command: 'app:inspect'
+        accelerator: CmdOrCtrl+D

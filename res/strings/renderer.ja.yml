@@ -303,6 +303,7 @@ ja:
           message: >
               このプラグインを本当に削除してよろしいでしょうか？この操作によって、このプラグインとその設定は完全に削除されます。
     filter:
+      csv: CSV
       templates: Tropyテンプレート
       images: イメージ
       items: 画像とTropyアイテム

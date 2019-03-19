@@ -69,13 +69,14 @@ function *open(file) {
       yield call(close, db, project, access, cache)
     }
   } catch (error) {
-    warn(`unexpected error in *open: ${error.message}`, { stack: error.stack })
+    warn(`unexpected error in *open: ${error.message}`, {
+      stack: error.stack
+    })
     yield call(fail, error, db.path)
 
   } finally {
     yield call(db.close)
     yield put(act.project.closed())
-    yield cancel()
 
     debug('*open terminated')
   }
@@ -113,7 +114,9 @@ function *setup(db, project) {
     yield put(act.cache.purge())
 
   } catch (error) {
-    warn(`unexpected error in *setup: ${error.message}`, { stack: error.stack })
+    warn(`unexpected error in *setup: ${error.message}`, {
+      stack: error.stack
+    })
     yield call(fail, error, db.path)
 
   } finally {
@@ -182,7 +185,8 @@ function *main() {
         task = null
       }
 
-      if (type === CLOSE && !(error || payload === 'debug')) break
+      if (type === CLOSE && !(error || payload === 'debug'))
+        break
 
       if (type === OPEN) {
         task = yield fork(open, payload)
@@ -190,8 +194,10 @@ function *main() {
     }
 
   } catch (error) {
-    warn(`unexpected error in *main: ${error.message}`, { stack: error.stack })
     crash = error
+    warn(`unexpected error in *main: ${error.message}`, {
+      stack: error.stack
+    })
 
   } finally {
     yield all([
@@ -201,11 +207,14 @@ function *main() {
     ])
 
     yield all(aux.map(bg => {
-      if (bg != null && bg.isRunning()) return cancel(bg)
+      if (bg != null && bg.isRunning())
+        return cancel(bg)
     }))
 
+    if (crash != null)
+      process.crash()
+
     debug('*main terminated')
-    if (crash != null) process.crash()
   }
 }
 

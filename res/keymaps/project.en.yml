@@ -30,9 +30,9 @@ en:
         - p
       quicktool: Space
       rotate:
-        - CmdOrCtrl+]
-        - CmdOrCtrl+Shift+]
-        - CmdOrCtrl+Alt+]
+        - CmdOrCtrl+[
+        - CmdOrCtrl+Shift+[
+        - CmdOrCtrl+Alt+[
         - r
         - l
     Sidebar: &Sidebar
@@ -66,6 +66,14 @@ en:
       delete:
         - Backspace
         - Delete
+      rotateLeft:
+        - CmdOrCtrl+[
+        - CmdOrCtrl+Shift+[
+        - CmdOrCtrl+Alt+[
+      rotateRight:
+        - CmdOrCtrl+]
+        - CmdOrCtrl+Shift+]
+        - CmdOrCtrl+Alt+]
       all: Ctrl+a
       home: Home
       end: End
@@ -90,6 +98,14 @@ en:
         - CmdOrCtrl+ArrowUp
         - CmdOrCtrl+ArrowLeft
         - Escape
+      rotateLeft:
+        - CmdOrCtrl+[
+        - CmdOrCtrl+Shift+[
+        - CmdOrCtrl+Alt+[
+      rotateRight:
+        - CmdOrCtrl+]
+        - CmdOrCtrl+Shift+]
+        - CmdOrCtrl+Alt+]
       home: Home
       end: End
       pageUp: PageUp
@@ -103,6 +119,14 @@ en:
       delete:
         - Backspace
         - Delete
+      rotateLeft:
+        - CmdOrCtrl+[
+        - CmdOrCtrl+Shift+[
+        - CmdOrCtrl+Alt+[
+      rotateRight:
+        - CmdOrCtrl+]
+        - CmdOrCtrl+Shift+]
+        - CmdOrCtrl+Alt+]
       home: Home
       end: End
       pageUp: PageUp
@@ -204,6 +228,14 @@ en:
         - Delete
       copy: Cmd+c
       merge: Cmd+Shift+M
+      rotateLeft:
+        - Cmd+[
+        - Cmd+Shift+[
+        - Cmd+Alt+[
+      rotateRight:
+        - Cmd+]
+        - Cmd+Shift+]
+        - Cmd+Alt+]
       all: Cmd+a
       home: Home
       end: End
@@ -223,6 +255,14 @@ en:
       enter: Enter
       preview: Space
       contract: Escape
+      rotateLeft:
+        - Cmd+[
+        - Cmd+Shift+[
+        - Cmd+Alt+[
+      rotateRight:
+        - Cmd+]
+        - Cmd+Shift+]
+        - Cmd+Alt+]
       home: Home
       end: End
       pageUp: PageUp
@@ -238,6 +278,14 @@ en:
       delete:
         - Backspace
         - Delete
+      rotateLeft:
+        - Cmd+[
+        - Cmd+Shift+[
+        - Cmd+Alt+[
+      rotateRight:
+        - Cmd+]
+        - Cmd+Shift+]
+        - Cmd+Alt+]
       home: Home
       end: End
       pageUp: PageUp

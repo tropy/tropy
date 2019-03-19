@@ -10,6 +10,7 @@ const { log: logger, warn, debug } = require('../common/log')
 const { seq, debounce, throttle, log } = require('../middleware')
 
 const {
+  context,
   edit,
   flash,
   history,
@@ -36,6 +37,7 @@ module.exports = {
     })
 
     let reducer = combineReducers({
+      context,
       edit,
       flash,
       history,

@@ -98,13 +98,18 @@ $shade-10: #000; // Black
 // --------------------------------------------------
 
 $tag-colors: (
-  color-red:    #f66,
-  color-orange: #ff8c19,
-  color-yellow: #ffc200,
-  color-green:  #5fb236,
-  color-blue:   #576dd9,
-  color-purple: #a6507b,
-  color-gray:   #999
+  color-red:        #f66,
+  color-orange:     #ff8c19,
+  color-yellow:     #ffc200,
+  color-green:      #66bf39,
+  color-blue:       #5c73e6,
+  color-purple:     #a6507b,
+  color-gray:       #999,
+  color-brown:      #b37459,
+  color-apricot:    #ebc2a7,
+  color-dark-green: #0f9468,
+  color-light-blue: #4dbeff,
+  color-lavender:   #a28ae6
 );
 
 @each $key, $val in $tag-colors {

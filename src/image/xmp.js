@@ -3,7 +3,10 @@
 const { $, $$, parse } = require('../dom')
 const { debug, verbose } = require('../common/log')
 const { blank } = require('../common/util')
-const { text } = require('../value')
+const { text, date } = require('../value')
+const { XMLNS } = require('../constants')
+
+const DATES = /(^d|D)ate(\b|[A-Z])/
 
 module.exports = {
   xmp(buffer) {
@@ -18,19 +21,25 @@ module.exports = {
           throw new Error('no XMP meta node found')
         }
 
-        for (let prop of $$('Description > *', main)) {
-          let values = Array
-            .from($$('li', prop), li => li.textContent)
-            .filter(v => !blank(v))
+        let desc = $('Description', main)
 
-          if (blank(values)) continue
+        if (desc) {
+          for (let attr of desc.attributes) {
+            if (attr.namespaceURI !== XMLNS)
+              data[uri(attr)] = DATES.test(attr.localName) ?
+                date(attr.value) :
+                text(attr.value)
+          }
 
-          let id = [
-            prop.lookupNamespaceURI(prop.prefix),
-            prop.localName
-          ].join('')
+          for (let node of desc.children) {
+            let values = Array
+              .from($$('li', node), value)
+              .filter(v => !blank(v))
 
-          data[id] = text(values.join('; '))
+            if (blank(values)) continue
+
+            data[uri(node)] = text(values.join('; '))
+          }
         }
 
         return data
@@ -50,4 +59,13 @@ function strip(buffer) {
     }
   }
   return buffer
+}
+
+function uri(node) {
+  return [node.namespaceURI, node.localName].join('')
+}
+
+function value(node) {
+  // TODO parse attributes into object
+  return node.textContent
 }

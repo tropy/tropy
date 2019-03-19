@@ -29,7 +29,7 @@ const PhotoToolbar = (props) => (
           <ToolGroup>
             <Button
               icon={<IconPlus/>}
-              isDisabled={!props.canCreate}
+              isDisabled={props.isDisabled}
               title="panel.photo.create"
               onClick={props.onCreate}/>
           </ToolGroup>
@@ -41,7 +41,7 @@ const PhotoToolbar = (props) => (
           size="sm"
           minIcon={<IconListSmall/>}
           maxIcon={<IconGridSmall/>}
-          isDisabled={props.isDisabled || props.photos === 0}
+          isDisabled={props.isClosed || props.photos === 0}
           tabIndex={-1}
           onChange={props.onZoomChange}/>
       </ToolGroup>
@@ -50,8 +50,8 @@ const PhotoToolbar = (props) => (
 )
 
 PhotoToolbar.propTypes = {
-  canCreate: bool,
   hasCreateButton: bool,
+  isClosed: bool,
   isDisabled: bool,
   maxZoom: number.isRequired,
   onCreate: func.isRequired,

@@ -91,7 +91,6 @@ module.exports = {
     }
   },
 
-
   template: {
     change({ id, template }, meta) {
       return {
