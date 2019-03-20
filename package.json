@@ -42,11 +42,11 @@
     "watch": "node scripts/watch"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/core": "^7.4.0",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
-    "@babel/register": "^7.0.0",
+    "@babel/register": "^7.4.0",
     "babel-eslint": "^10.0.1",
     "babel-plugin-istanbul": "^5.1.1",
     "chai": "^4.2.0",
@@ -109,7 +109,7 @@
     "prosemirror-schema-basic": "^1.0.0",
     "prosemirror-schema-list": "^1.0.2",
     "prosemirror-state": "^1.2.2",
-    "prosemirror-view": "^1.8.3",
+    "prosemirror-view": "^1.8.4",
     "react": "^16.8.4",
     "react-dnd": "^2.6.0",
     "react-dnd-electron-backend": "^1.6.1",
