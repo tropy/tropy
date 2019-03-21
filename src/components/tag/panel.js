@@ -64,11 +64,9 @@ class TagPanel extends React.PureComponent {
     this.props.onTagCreate({ ...tag, items: this.props.items.map(toId) })
   }
 
-  handleContextMenu = (event, tag) => {
+  handleContextMenu = (event, _, target) => {
     this.props.onContextMenu(event, 'item-tag', {
-      id: tag.id,
-      color: tag.color,
-      mixed: tag.mixed,
+      ...target,
       items: this.props.items.map(toId)
     })
   }

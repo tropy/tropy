@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { NewTag, Tag } = require('./tag')
-const { get, noop, sample } = require('../../common/util')
+const { get, noop, pick, sample } = require('../../common/util')
 const { SASS } = require('../../constants')
 const { match } = require('../../keymap')
 const {
@@ -34,10 +34,9 @@ class TagList extends React.PureComponent {
       this.props.onSelect(tag.id, { mod: 'replace' })
     }
 
-    this.props.onContextMenu(event, 'tag', {
-      id: tag.id,
-      color: tag.color
-    })
+    this.props.onContextMenu(event,
+      'tag',
+      pick(tag, ['id', 'color', 'mixed']))
   }
 
   handleKeyDown = (event, tag) => {
