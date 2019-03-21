@@ -16,16 +16,16 @@ env:
 matrix:
   include:
     - os: linux
-      dist: trusty
+      dist: xenial
       sudo: required
       env: CC=gcc-7 CXX=g++-7 DISPLAY=:99.0
       addons:
         apt:
           sources:
-            - build-essential
-            - ubuntu-toolchain-r-test
-            - libx11-dev
+            - ppa:ubuntu-toolchain-r/test
           packages:
+            - build-essential
+            - libxss-dev
             - g++-7
     - os: osx
       osx_image: xcode8.3
