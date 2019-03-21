@@ -22,7 +22,7 @@ matrix:
       addons:
         apt:
           sources:
-            - ppa:ubuntu-toolchain-r/test
+            - ubuntu-toolchain-r-test
           packages:
             - build-essential
             - libxss-dev
