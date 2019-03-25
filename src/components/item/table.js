@@ -332,7 +332,7 @@ class ItemTable extends ItemIterator {
           onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
             <div className="table viewport" style={{
-              ...transform,
+              transform,
               gridTemplateColumns
             }}>
               {this.mapIterableRange(({ item, index, ...props }) =>
