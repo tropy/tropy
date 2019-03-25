@@ -19,7 +19,7 @@
   }
 
   &.dragging-column {
-    .th,
+    th,
     .td {
       transition: transform $column-transition;
 
@@ -225,10 +225,6 @@
     &.over {
       @extend %drop-target;
     }
-
-    .tr {
-      display: contents;
-    }
   }
 
   .scroll-container {
@@ -254,13 +250,14 @@
 
   .viewport {
     width: 100%;
-    display: grid;
-    grid-template-rows: auto;
     contain: content;
     will-change: transform;
   }
 
   .item {
+    display: grid;
+    grid-template-columns: var(--item-template-columns);
+    height: $row-height;
     contain: layout size style;
 
     &.active {
@@ -274,8 +271,6 @@
     .td {
       display: flex;
       align-items: center;
-      height: $row-height;
-
 
       // Fix 'gap' rendering bug
       @include state(".item-table.dragging-column") {
