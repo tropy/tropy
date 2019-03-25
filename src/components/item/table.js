@@ -376,7 +376,7 @@ class ItemTable extends ItemIterator {
           'max-scroll-left': this.state.hasMaxScrollLeft
         })}
         style={{
-          '--item-min-width': this.state.mindWidth,
+          '--item-min-width': this.state.minWidth + 'px',
           '--item-template-columns': this.getTemplateColumns()
         }}>
         <ItemTableHead

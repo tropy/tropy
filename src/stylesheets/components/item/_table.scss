@@ -35,10 +35,14 @@
     }
   }
 
+  .table-head,
+  .table-body {
+    min-width: var(--item-min-width);
+  }
+
   .table-head {
     display: grid;
     grid-template-columns: var(--item-template-columns);
-    width: 100%; // If not in sync with the width of table-body, set the same min-width inline style as on table-body
     color: $item-table-header-color;
     height: $item-table-header-height;
     border: {
