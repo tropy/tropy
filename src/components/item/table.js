@@ -333,7 +333,7 @@ class ItemTable extends ItemIterator {
           <div className="runway click-catcher" style={{ height }}>
             <div className="table viewport" style={{
               transform,
-              gridTemplateColumns
+              '--item-template-columns': gridTemplateColumns
             }}>
               {this.mapIterableRange(({ item, index, ...props }) =>
                 <ItemTableRow {...props}
