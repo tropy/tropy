@@ -258,7 +258,7 @@
     display: grid;
     grid-template-columns: var(--item-template-columns);
     height: $row-height;
-    contain: layout size style;
+    contain: strict;
 
     &.active {
 
