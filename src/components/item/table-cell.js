@@ -174,7 +174,11 @@ class ItemTableCell extends React.PureComponent {
   }
 }
 
+const BlankTableCell = () => (
+  <div className="blank"/>
+)
 
 module.exports = {
+  BlankTableCell,
   ItemTableCell
 }

@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { ItemIterable } = require('./iterable')
-const { ItemTableCell } = require('./table-cell')
+const { BlankTableCell, ItemTableCell } = require('./table-cell')
 const { get, pick } = require('../../common/util')
 const { NAV, TYPE } = require('../../constants')
 const cx = require('classnames')
@@ -128,6 +128,7 @@ class ItemTableRow extends ItemIterable {
             getNextColumn={this.getNextColumn}
             getPrevColumn={this.getPrevColumn}
             onChange={this.handleChange}/>)}
+        <BlankTableCell/>
       </div>
     )
   }
