@@ -12,15 +12,15 @@
   overflow-y: hidden; // Prevent horizontal scrollbar due to column borders
   contain: strict;
 
-  th,
-  td {
+  .th,
+  .td {
     padding: 0;
     position: relative;
   }
 
   &.dragging-column {
-    th,
-    td {
+    .th,
+    .td {
       transition: transform $column-transition;
 
       &.dragging {
@@ -225,6 +225,10 @@
     &.over {
       @extend %drop-target;
     }
+
+    .tr {
+      display: contents;
+    }
   }
 
   .scroll-container {
@@ -250,8 +254,8 @@
 
   .viewport {
     width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
+    display: grid;
+    grid-template-rows: auto;
     contain: content;
     will-change: transform;
   }
@@ -267,8 +271,11 @@
       }
     }
 
-    td {
+    .td {
+      display: flex;
+      align-items: center;
       height: $row-height;
+
 
       // Fix 'gap' rendering bug
       @include state(".item-table.dragging-column") {
