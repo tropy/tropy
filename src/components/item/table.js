@@ -319,7 +319,7 @@ class ItemTable extends ItemIterator {
     const { data, edit, templates } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { columns, height, minWidth } = this.state
+    const { columns, height } = this.state
     const { transform } = this
 
     const hasPositionColumn = this.hasPositionColumn()
@@ -327,7 +327,6 @@ class ItemTable extends ItemIterator {
     return this.connect(
       <div
         className={cx(this.classes)}
-        style={{ minWidth }}
         onClick={this.handleClickOutside}>
         <div
           className="scroll-container"
@@ -377,6 +376,7 @@ class ItemTable extends ItemIterator {
           'max-scroll-left': this.state.hasMaxScrollLeft
         })}
         style={{
+          '--item-min-width': this.state.mindWidth,
           '--item-template-columns': this.getTemplateColumns()
         }}>
         <ItemTableHead
