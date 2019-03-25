@@ -311,18 +311,14 @@ class ItemTable extends ItemIterator {
     const { data, edit, templates } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { columns, /* colwidth, */ height, minWidth } = this.state
+    const { columns, colwidth, height, minWidth } = this.state
     const { transform } = this
 
     const hasPositionColumn = this.hasPositionColumn()
 
-    //  <ItemTableSpacer
-    //    columns={columns}
-    //    colwidth={colwidth}
-    //    hasPositionColumn={hasPositionColumn}/>
-    const grid = {
-      gridTemplateColumns: '2fr 1fr 1fr'
-    }
+    let gridTemplateColumns = colwidth.reduce((gtc, width) => (
+      gtc + width + 'px '
+    ), hasPositionColumn ? `${NAV.COLUMN.POSITION.width}px ` : '') + 'auto'
 
     return this.connect(
       <div
@@ -335,7 +331,10 @@ class ItemTable extends ItemIterator {
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
-            <div className="table viewport" style={{ ...transform, ...grid }}>
+            <div className="table viewport" style={{
+              ...transform,
+              gridTemplateColumns
+            }}>
               {this.mapIterableRange(({ item, index, ...props }) =>
                 <ItemTableRow {...props}
                   key={item.id}
