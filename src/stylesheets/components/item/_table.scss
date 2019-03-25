@@ -12,14 +12,14 @@
   overflow-y: hidden; // Prevent horizontal scrollbar due to column borders
   contain: strict;
 
-  .th,
+  .metadata-head,
   .td {
     padding: 0;
     position: relative;
   }
 
   &.dragging-column {
-    th,
+    .metadata-head,
     .td {
       transition: transform $column-transition;
 
@@ -36,10 +36,9 @@
   }
 
   .table-head {
+    display: grid;
+    grid-template-columns: var(--item-template-columns);
     width: 100%; // If not in sync with the width of table-body, set the same min-width inline style as on table-body
-    table-layout: fixed;
-    // border-collapse: collapse causes 'gap' rendering glitch on Linux
-    border-spacing: 0;
     color: $item-table-header-color;
     height: $item-table-header-height;
     border: {
@@ -57,8 +56,7 @@
       overflow: visible;
     }
 
-    th {
-      display: table-cell; // Reset resizable
+    .metadata-head {
       text-align: justify;
       font-weight: 400;
       padding: 0 $space-min; // Prevent overlap of th-container and resize handle
@@ -180,7 +178,7 @@
         align-items: center;
         padding: 0 $space-min 0 ($space-min + 1px);
 
-        @include variant("th:first-child") {
+        @include variant(".metadata-head:first-child") {
           padding-left: $space-xs;
         }
       }
@@ -190,7 +188,7 @@
         flex: 1 1 auto;
         padding-right: $space-min;
 
-        @include variant("th[class*='integer']") {
+        @include variant(".metadata-head[class*='integer']") {
           padding-left: $space-min;
           padding-right: 0;
         }
@@ -200,15 +198,15 @@
         display: none;
         margin: 0 -4px 0 -5px;
 
-        @include state("th.ascending", "th.descending") {
+        @include state(".metadata-head.ascending", ".metadata-head.descending") {
           display: block;
         }
 
-        @include state("th.descending") {
+        @include state(".metadata-head.descending") {
           transform: scaleY(-1);
         }
 
-        @include variant("th[class*='integer']") {
+        @include variant(".metadata-head[class*='integer']") {
           order: -1;
         }
       }
