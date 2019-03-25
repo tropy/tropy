@@ -55,7 +55,7 @@
           'outputs': [
             '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/sqlite3.c'
           ],
-          'action': ['python','./extract.py','./sqlite-autoconf-<@(sqlite_version).tar.gz','<(SHARED_INTERMEDIATE_DIR)']
+          'action': ['<!(node -p "process.env.npm_config_python || \\"python\\"")','./extract.py','./sqlite-autoconf-<@(sqlite_version).tar.gz','<(SHARED_INTERMEDIATE_DIR)']
         }
       ],
       'direct_dependent_settings': {
@@ -71,28 +71,26 @@
       'dependencies': [
         'action_before_build'
       ],
-      'cflags': [ '-include ../src/gcc-preinclude.h' ],
       'sources': [
         '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/sqlite3.c'
       ],
       'direct_dependent_settings': {
         'include_dirs': [ '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/' ],
         'defines': [
-          'HAVE_USLEEP',
           'SQLITE_THREADSAFE=1',
+          'HAVE_USLEEP=1',
           'SQLITE_ENABLE_FTS5',
           'SQLITE_ENABLE_JSON1',
           'SQLITE_ENABLE_RTREE'
         ],
       },
       'cflags_cc': [
-          '-Wno-unused-value',
-          '-include ../src/gcc-preinclude.h'
+          '-Wno-unused-value'
       ],
       'defines': [
         '_REENTRANT=1',
-        'HAVE_USLEEP',
         'SQLITE_THREADSAFE=1',
+        'HAVE_USLEEP=1',
         'SQLITE_ENABLE_FTS5',
         'SQLITE_ENABLE_JSON1',
         'SQLITE_ENABLE_RTREE'
