@@ -141,6 +141,14 @@ class ItemTable extends ItemIterator {
     return ROW.HEIGHT
   }
 
+  getTemplateColumns() {
+    let gtc = this.hasPositionColumn() ?
+      `${NAV.COLUMN.POSITION.width}px ` : ''
+    for (let width of this.state.colwidth)
+      gtc += width + 'px '
+    return gtc + 'auto'
+  }
+
   hasMaxScrollLeft(props = this.props) {
     return props.hasScrollbars &&
       this.table != null &&
@@ -311,14 +319,10 @@ class ItemTable extends ItemIterator {
     const { data, edit, templates } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { columns, colwidth, height, minWidth } = this.state
+    const { columns, height, minWidth } = this.state
     const { transform } = this
 
     const hasPositionColumn = this.hasPositionColumn()
-
-    let gridTemplateColumns = colwidth.reduce((gtc, width) => (
-      gtc + width + 'px '
-    ), hasPositionColumn ? `${NAV.COLUMN.POSITION.width}px ` : '') + 'auto'
 
     return this.connect(
       <div
@@ -331,10 +335,7 @@ class ItemTable extends ItemIterator {
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
-            <div className="table viewport" style={{
-              transform,
-              '--item-template-columns': gridTemplateColumns
-            }}>
+            <div className="table viewport" style={{ transform }}>
               {this.mapIterableRange(({ item, index, ...props }) =>
                 <ItemTableRow {...props}
                   key={item.id}
@@ -374,7 +375,10 @@ class ItemTable extends ItemIterator {
         className={cx('item-table', {
           'dragging-column': this.state.drop != null,
           'max-scroll-left': this.state.hasMaxScrollLeft
-        })}>
+        })}
+        style={{
+          '--item-template-columns': this.getTemplateColumns()
+        }}>
         <ItemTableHead
           columns={this.state.columns}
           colwidth={this.state.colwidth}
