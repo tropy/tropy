@@ -4,7 +4,6 @@ const React = require('react')
 const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
-const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
 const { ColumnContextMenu } = require('./column')
 const cx = require('classnames')
@@ -312,10 +311,18 @@ class ItemTable extends ItemIterator {
     const { data, edit, templates } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { columns, colwidth, height, minWidth } = this.state
+    const { columns, /* colwidth, */ height, minWidth } = this.state
     const { transform } = this
 
     const hasPositionColumn = this.hasPositionColumn()
+
+    //  <ItemTableSpacer
+    //    columns={columns}
+    //    colwidth={colwidth}
+    //    hasPositionColumn={hasPositionColumn}/>
+    const grid = {
+      gridTemplateColumns: '2fr 1fr 1fr'
+    }
 
     return this.connect(
       <div
@@ -328,29 +335,23 @@ class ItemTable extends ItemIterator {
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
-            <table className="viewport" style={{ transform }}>
-              <ItemTableSpacer
-                columns={columns}
-                colwidth={colwidth}
-                hasPositionColumn={hasPositionColumn}/>
-              <tbody>
-                {this.mapIterableRange(({ item, index, ...props }) =>
-                  <ItemTableRow {...props}
-                    key={item.id}
-                    columns={columns}
-                    data={data[item.id]}
-                    drag={this.state.drag}
-                    drop={this.state.drop}
-                    edit={edit}
-                    hasPositionColumn={hasPositionColumn}
-                    item={item}
-                    position={this.getPosition(index)}
-                    template={templates[item.template]}
-                    onCancel={this.handleEditCancel}
-                    onChange={this.handleChange}
-                    onEdit={onEdit}/>)}
-              </tbody>
-            </table>
+            <div className="table viewport" style={{ ...transform, ...grid }}>
+              {this.mapIterableRange(({ item, index, ...props }) =>
+                <ItemTableRow {...props}
+                  key={item.id}
+                  columns={columns}
+                  data={data[item.id]}
+                  drag={this.state.drag}
+                  drop={this.state.drop}
+                  edit={edit}
+                  hasPositionColumn={hasPositionColumn}
+                  item={item}
+                  position={this.getPosition(index)}
+                  template={templates[item.template]}
+                  onCancel={this.handleEditCancel}
+                  onChange={this.handleChange}
+                  onEdit={onEdit}/>)}
+            </div>
           </div>
         </div>
       </div>
