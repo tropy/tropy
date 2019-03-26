@@ -20,8 +20,9 @@ const SHARP = join('node_modules', 'sharp', 'vendor', 'lib')
 
 const IGNORE = [
   /\.js\.map/,
+  /\.css\.map/,
   /\.DS_Store/,
-  /\.babelrc.js/,
+  /\.babelrc\.js/,
   /\.editorconfig/,
   /\.eslintrc/,
   /\.gitignore/,
@@ -49,6 +50,7 @@ const IGNORE = [
   /^\/test/,
   /^\/tmp/,
   /node_modules.\.bin/,
+  /node_modules.\.cache/,
   /node_modules.sqlite3.build/,
   /node_modules.sqlite3.deps/,
   /node_modules.sqlite3.lib.binding.node/,
@@ -66,6 +68,8 @@ const IGNORE = [
   /node_modules.intl-messageformat-parser.dist/,
   /node_modules.rdf-canonize.dist/,
   /node_modules.node-forge/,
+  /node_modules.node-fetch/,
+  /node_modules.iconv-lite/,
   /node_modules.ajv.dist/,
   /node_modules.react-dnd.dist/,
   /node_modules.react-dnd.lib.esm/,
@@ -118,7 +122,6 @@ target.all = async (args = []) => {
       extendInfo: join(res, 'ext.plist'),
       extraResource,
       darwinDarkModeSupport: true,
-      derefSymlinks: platform === 'win32',
       win32metadata: {
         CompanyName: author.name,
         ProductName: qualified.product
