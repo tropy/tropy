@@ -52,7 +52,7 @@ function toN3(vocab, ontology, prefixes = {}) {
       prefixes[vocab.prefix] = vocab.id
     }
 
-    let out = N3.Writer({ prefixes: { ...PREFIXES, ...prefixes } })
+    let out = new N3.Writer({ prefixes: { ...PREFIXES, ...prefixes } })
     let id = namedNode(vocab.id)
 
     out.addQuad(id,
