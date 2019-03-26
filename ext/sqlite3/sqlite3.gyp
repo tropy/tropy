@@ -1,10 +1,10 @@
 {
   'includes': [ 'common-sqlite.gypi' ],
+  'cflags': [
+    '-std=c99'
+  ],
   'target_defaults': {
     'default_configuration': 'Release',
-    'cflags':[
-      '-std=c99'
-    ],
     'configurations': {
       'Debug': {
         'defines': [ 'DEBUG', '_DEBUG' ],
@@ -55,48 +55,36 @@
           'outputs': [
             '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/sqlite3.c'
           ],
-          'action': ['<!(node -p "process.env.npm_config_python || \\"python\\"")','./extract.py','./sqlite-autoconf-<@(sqlite_version).tar.gz','<(SHARED_INTERMEDIATE_DIR)']
+          'action': [
+            '<!(node -p "process.env.npm_config_python || \\"python\\"")',
+            './extract.py','./sqlite-autoconf-<@(sqlite_version).tar.gz',
+            '<(SHARED_INTERMEDIATE_DIR)'
+          ]
         }
-      ],
-      'direct_dependent_settings': {
-        'include_dirs': [
-          '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/',
-        ]
-      },
+      ]
     },
     {
       'target_name': 'sqlite3',
       'type': 'static_library',
-      'include_dirs': [ '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/' ],
       'dependencies': [
         'action_before_build'
+      ],
+      'include_dirs': [
+        '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/'
       ],
       'sources': [
         '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/sqlite3.c'
       ],
-      'direct_dependent_settings': {
-        'include_dirs': [ '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/' ],
-        'defines': [
-          'SQLITE_THREADSAFE=1',
-          'HAVE_USLEEP=1',
-          'SQLITE_ENABLE_FTS5',
-          'SQLITE_ENABLE_JSON1',
-          'SQLITE_ENABLE_RTREE'
-        ],
-      },
       'cflags_cc': [
-          '-Wno-unused-value'
+        '-Wno-implicit-fallthrough'
       ],
       'defines': [
         '_REENTRANT=1',
         'SQLITE_THREADSAFE=1',
-        'HAVE_USLEEP=1',
+        'HAVE_USLEEP',
         'SQLITE_ENABLE_FTS5',
         'SQLITE_ENABLE_JSON1',
         'SQLITE_ENABLE_RTREE'
-      ],
-      'export_dependent_settings': [
-        'action_before_build',
       ]
     }
   ]
