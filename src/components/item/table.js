@@ -334,7 +334,7 @@ class ItemTable extends ItemIterator {
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
-            <div className="table viewport" style={{ transform }}>
+            <div className="viewport" style={{ transform }}>
               {this.mapIterableRange(({ item, index, ...props }) =>
                 <ItemTableRow {...props}
                   key={item.id}
