@@ -4,7 +4,6 @@ const React = require('react')
 const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
-const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
 const { ColumnContextMenu } = require('./column')
 const cx = require('classnames')
@@ -140,6 +139,14 @@ class ItemTable extends ItemIterator {
 
   getRowHeight() {
     return ROW.HEIGHT
+  }
+
+  getTemplateColumns() {
+    let gtc = this.hasPositionColumn() ?
+      `${NAV.COLUMN.POSITION.width}px ` : ''
+    for (let width of this.state.colwidth)
+      gtc += width + 'px '
+    return gtc + 'auto'
   }
 
   hasMaxScrollLeft(props = this.props) {
@@ -312,7 +319,7 @@ class ItemTable extends ItemIterator {
     const { data, edit, templates } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { columns, colwidth, height, minWidth } = this.state
+    const { columns, height } = this.state
     const { transform } = this
 
     const hasPositionColumn = this.hasPositionColumn()
@@ -320,7 +327,6 @@ class ItemTable extends ItemIterator {
     return this.connect(
       <div
         className={cx(this.classes)}
-        style={{ minWidth }}
         onClick={this.handleClickOutside}>
         <div
           className="scroll-container"
@@ -328,29 +334,23 @@ class ItemTable extends ItemIterator {
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
-            <table className="viewport" style={{ transform }}>
-              <ItemTableSpacer
-                columns={columns}
-                colwidth={colwidth}
-                hasPositionColumn={hasPositionColumn}/>
-              <tbody>
-                {this.mapIterableRange(({ item, index, ...props }) =>
-                  <ItemTableRow {...props}
-                    key={item.id}
-                    columns={columns}
-                    data={data[item.id]}
-                    drag={this.state.drag}
-                    drop={this.state.drop}
-                    edit={edit}
-                    hasPositionColumn={hasPositionColumn}
-                    item={item}
-                    position={this.getPosition(index)}
-                    template={templates[item.template]}
-                    onCancel={this.handleEditCancel}
-                    onChange={this.handleChange}
-                    onEdit={onEdit}/>)}
-              </tbody>
-            </table>
+            <div className="viewport" style={{ transform }}>
+              {this.mapIterableRange(({ item, index, ...props }) =>
+                <ItemTableRow {...props}
+                  key={item.id}
+                  columns={columns}
+                  data={data[item.id]}
+                  drag={this.state.drag}
+                  drop={this.state.drop}
+                  edit={edit}
+                  hasPositionColumn={hasPositionColumn}
+                  item={item}
+                  position={this.getPosition(index)}
+                  template={templates[item.template]}
+                  onCancel={this.handleEditCancel}
+                  onChange={this.handleChange}
+                  onEdit={onEdit}/>)}
+            </div>
           </div>
         </div>
       </div>
@@ -374,7 +374,11 @@ class ItemTable extends ItemIterator {
         className={cx('item-table', {
           'dragging-column': this.state.drop != null,
           'max-scroll-left': this.state.hasMaxScrollLeft
-        })}>
+        })}
+        style={{
+          '--item-min-width': this.state.minWidth + 'px',
+          '--item-template-columns': this.getTemplateColumns()
+        }}>
         <ItemTableHead
           columns={this.state.columns}
           colwidth={this.state.colwidth}

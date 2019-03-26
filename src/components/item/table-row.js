@@ -107,8 +107,8 @@ class ItemTableRow extends ItemIterable {
     let props = pick(this.props, CellProps)
 
     return this.connect(
-      <tr
-        className={cx(this.classes)}
+      <div
+        className={cx('tr', this.classes)}
         ref={this.setContainer}
         onMouseDown={this.handleMouseDown}
         onClick={this.handleClick}
@@ -129,7 +129,7 @@ class ItemTableRow extends ItemIterable {
             getPrevColumn={this.getPrevColumn}
             onChange={this.handleChange}/>)}
         <BlankTableCell/>
-      </tr>
+      </div>
     )
   }
 

@@ -15,10 +15,6 @@ const {
 } = require('prop-types')
 
 
-const BlankTableCell = () => (
-  <td className="blank"/>
-)
-
 class ItemTableCell extends React.PureComponent {
   get classes() {
     return ['metadata', this.props.type, {
@@ -116,8 +112,8 @@ class ItemTableCell extends React.PureComponent {
   render() {
     let isDisabled = this.props.isDisabled || this.props.isReadOnly
     return (
-      <td
-        className={cx(this.classes)}
+      <div
+        className={cx('td', this.classes)}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
         <div className="flex-row center td-container">
@@ -134,7 +130,7 @@ class ItemTableCell extends React.PureComponent {
             onKeyDown={this.handleKeyDown}/>
           {this.renderTagColors()}
         </div>
-      </td>
+      </div>
     )
   }
 
@@ -178,6 +174,9 @@ class ItemTableCell extends React.PureComponent {
   }
 }
 
+const BlankTableCell = () => (
+  <div className="td blank"/>
+)
 
 module.exports = {
   BlankTableCell,
