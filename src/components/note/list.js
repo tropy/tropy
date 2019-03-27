@@ -64,16 +64,16 @@ class NoteList extends Iterator {
         this.select(this.next(), { scrollIntoView: true, throttle: true })
         break
       case 'home':
-        this.scroll(0)
+        this.select(this.first(), { scrollIntoView: true, throttle: true })
         break
       case 'end':
-        this.scrollToEnd()
+        this.select(this.last(), { scrollIntoView: true, throttle: true })
         break
       case 'pageUp':
-        this.scrollPageUp()
+        this.select(this.pageUp(), { scrollIntoView: true, throttle: true })
         break
       case 'pageDown':
-        this.scrollPageDown()
+        this.select(this.pageDown(), { scrollIntoView: true, throttle: true })
         break
       case 'open':
         this.props.onOpen(this.current())

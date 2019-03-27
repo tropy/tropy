@@ -65,16 +65,16 @@ class SelectionGrid extends SelectionIterator {
         this.select(this.next(this.props.cols))
         break
       case 'home':
-        this.scroll(0)
+        this.select(this.first())
         break
       case 'end':
-        this.scrollToEnd()
+        this.select(this.last())
         break
       case 'pageUp':
-        this.scrollPageUp()
+        this.select(this.pageUp())
         break
       case 'pageDown':
-        this.scrollPageDown()
+        this.select(this.pageDown())
         break
       case 'open':
         this.open(this.current())

@@ -123,16 +123,16 @@ class PhotoGrid extends PhotoIterator {
         })
         break
       case 'home':
-        this.scroll(0)
+        this.handleSelectPhoto(this.first())
         break
       case 'end':
-        this.scrollToEnd()
+        this.handleSelectPhoto(this.last())
         break
       case 'pageUp':
-        this.scrollPageUp()
+        this.handleSelectPhoto(this.pageUp())
         break
       case 'pageDown':
-        this.scrollPageDown()
+        this.handleSelectPhoto(this.pageDown())
         break
       case 'open':
         this.handleItemOpen(this.current())
