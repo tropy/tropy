@@ -246,6 +246,10 @@ class Iterator extends PureComponent {
     return round(size * TILE.FACTOR)
   }
 
+  getIterablesPerPage() {
+    return this.state.cols * this.state.viewportRows
+  }
+
   getIterableRange() {
     const { cols, offset, overscan, rowHeight } = this.state
 
@@ -315,6 +319,14 @@ class Iterator extends PureComponent {
   last() {
     const items = this.getIterables()
     return items[items.length - 1]
+  }
+
+  pageDown() {
+    return this.next(this.getIterablesPerPage())
+  }
+
+  pageUp() {
+    return this.prev(this.getIterablesPerPage())
   }
 
   isSelected() {

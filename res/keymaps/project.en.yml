@@ -33,7 +33,6 @@ en:
         - CmdOrCtrl+[
         - CmdOrCtrl+Shift+[
         - CmdOrCtrl+Alt+[
-        - r
         - l
     Sidebar: &Sidebar
       next: ArrowDown
@@ -66,19 +65,31 @@ en:
       delete:
         - Backspace
         - Delete
-      rotateLeft:
+      rotateLeft: &rotateLeft
         - CmdOrCtrl+[
         - CmdOrCtrl+Shift+[
         - CmdOrCtrl+Alt+[
-      rotateRight:
+      rotateRight: &rotateRight
         - CmdOrCtrl+]
         - CmdOrCtrl+Shift+]
         - CmdOrCtrl+Alt+]
       all: Ctrl+a
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      home: &home
+        - Home
+        - Shift+Home
+        - CmdOrCtrl+Home
+      end: &end
+        - End
+        - Shift+End
+        - CmdOrCtrl+End
+      pageUp: &pageUp
+        - PageUp
+        - Shift+PageUp
+        - CmdOrCtrl+PageUp
+      pageDown: &pageDown
+        - PageDown
+        - Shift+PageDown
+        - CmdOrCtrl+PageDown
       copy: Ctrl+c
       merge: Ctrl+Shift+M
     PhotoIterator: &PhotoIterator
@@ -98,14 +109,8 @@ en:
         - CmdOrCtrl+ArrowUp
         - CmdOrCtrl+ArrowLeft
         - Escape
-      rotateLeft:
-        - CmdOrCtrl+[
-        - CmdOrCtrl+Shift+[
-        - CmdOrCtrl+Alt+[
-      rotateRight:
-        - CmdOrCtrl+]
-        - CmdOrCtrl+Shift+]
-        - CmdOrCtrl+Alt+]
+      rotateLeft: *rotateLeft
+      rotateRight: *rotateRight
       home: Home
       end: End
       pageUp: PageUp
@@ -119,14 +124,8 @@ en:
       delete:
         - Backspace
         - Delete
-      rotateLeft:
-        - CmdOrCtrl+[
-        - CmdOrCtrl+Shift+[
-        - CmdOrCtrl+Alt+[
-      rotateRight:
-        - CmdOrCtrl+]
-        - CmdOrCtrl+Shift+]
-        - CmdOrCtrl+Alt+]
+      rotateLeft: *rotateLeft
+      rotateRight: *rotateRight
       home: Home
       end: End
       pageUp: PageUp
@@ -228,14 +227,8 @@ en:
         - Delete
       copy: Cmd+c
       merge: Cmd+Shift+M
-      rotateLeft:
-        - Cmd+[
-        - Cmd+Shift+[
-        - Cmd+Alt+[
-      rotateRight:
-        - Cmd+]
-        - Cmd+Shift+]
-        - Cmd+Alt+]
+      rotateLeft: *rotateLeft
+      rotateRight: *rotateRight
       all: Cmd+a
       home: Home
       end: End
@@ -255,14 +248,8 @@ en:
       enter: Enter
       preview: Space
       contract: Escape
-      rotateLeft:
-        - Cmd+[
-        - Cmd+Shift+[
-        - Cmd+Alt+[
-      rotateRight:
-        - Cmd+]
-        - Cmd+Shift+]
-        - Cmd+Alt+]
+      rotateLeft: *rotateLeft
+      rotateRight: *rotateRight
       home: Home
       end: End
       pageUp: PageUp
@@ -278,14 +265,8 @@ en:
       delete:
         - Backspace
         - Delete
-      rotateLeft:
-        - Cmd+[
-        - Cmd+Shift+[
-        - Cmd+Alt+[
-      rotateRight:
-        - Cmd+]
-        - Cmd+Shift+]
-        - Cmd+Alt+]
+      rotateLeft: *rotateLeft
+      rotateRight: *rotateRight
       home: Home
       end: End
       pageUp: PageUp
