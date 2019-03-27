@@ -39,22 +39,24 @@ en:
       prev: ArrowUp
       expand: ArrowRight
       collapse: ArrowLeft
-      clear: Escape
+      clear:
+        - Escape
+        - Home
       edit: F2
     ItemIterator: &ItemIterator
-      up:
+      up: &up
         - ArrowUp
         - Shift+ArrowUp
         - Ctrl+ArrowUp
-      down:
+      down: &down
         - ArrowDown
         - Shift+ArrowDown
         - Ctrl+ArrowDown
-      left:
+      left: &left
         - ArrowLeft
         - Shift+ArrowLeft
         - Ctrl+ArrowLeft
-      right:
+      right: &right
         - ArrowRight
         - Shift+ArrowRight
         - Ctrl+ArrowRight
@@ -201,21 +203,15 @@ en:
       prev: ArrowUp
       expand: ArrowRight
       collapse: ArrowLeft
-      clear: Escape
+      clear:
+        - Escape
+        - Home
       edit: Enter
     ItemIterator:
-      up:
-        - ArrowUp
-        - Shift+ArrowUp
-      down:
-        - ArrowDown
-        - Shift+ArrowDown
-      left:
-        - ArrowLeft
-        - Shift+ArrowLeft
-      right:
-        - ArrowRight
-        - Shift+ArrowRight
+      up: *up
+      down: *down
+      left: *left
+      right: *right
       preview: Space
       open:
         - Cmd+ArrowDown
@@ -250,10 +246,10 @@ en:
       contract: Escape
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     SelectionGrid:
       up: ArrowUp
       down: ArrowDown
