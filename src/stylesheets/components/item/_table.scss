@@ -88,15 +88,6 @@
         box-shadow: 1px 0 $item-table-header-border-color;
       }
 
-      &:last-child {
-        background-color: transparent;
-
-        &::before,
-        &::after {
-          content: none;
-        }
-      }
-
       &:first-child {
         &::before {
           content: none;
@@ -108,7 +99,7 @@
         color: $item-table-header-sort-color;
       }
 
-      &:active:not(.resizing):not(.blank):not(.dragging) {
+      &:active:not(.resizing):not(.dragging) {
         background-color: $item-table-header-active-bg;
 
         &::before,
@@ -263,30 +254,23 @@
     contain: strict;
 
     &.active {
+      background: $items-active-bg;
+    }
 
-      // Fix 'gap' rendering bug
-      @include state(".item-table.dragging-column") {
-        background: $items-active-bg;
-      }
+    @include state(".scroll-container:focus .item.active") {
+      background: $items-focus-bg;
     }
 
     .td {
       display: flex;
       align-items: center;
 
-      // Fix 'gap' rendering bug
-      @include state(".item-table.dragging-column") {
-        background: transparent;
-      }
-
       @include state(".item.active") {
         color: $items-active-color;
-        background: $items-active-bg;
       }
 
       @include state(".scroll-container:focus .item.active") {
         color: $items-focus-color;
-        background: $items-focus-bg;
 
         .icon-circle,
         .icon-crescentcircle {

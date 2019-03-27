@@ -3,7 +3,6 @@
 const React = require('react')
 const { PureComponent } = React
 const { ItemTableHeadCell } = require('./table-head-cell')
-const { BlankTableCell } = require('./table-cell')
 const { titlecase } = require('../../common/util')
 const { NAV } = require('../../constants')
 const { arrayOf, bool, func, number, shape, string } = require('prop-types')
@@ -60,7 +59,6 @@ class ItemTableHead extends PureComponent {
             onOrderStart={this.props.onOrderStart}
             onOrderStop={this.props.onOrderStop}
             onResize={this.props.onResize}/>)}
-        <BlankTableCell/>
       </div>
     )
   }
