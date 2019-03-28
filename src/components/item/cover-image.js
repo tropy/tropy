@@ -25,7 +25,7 @@ class CoverImage extends React.PureComponent {
   }
 
   get cover() {
-    return this.props.item.cover || get(this.props.item.photos, [0])
+    return this.props.item.cover || this.props.item.photos[0]
   }
 
   getPhotoProps() {
