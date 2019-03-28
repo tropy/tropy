@@ -1,60 +1,49 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { arrayOf, bool, number, object, string } = require('prop-types')
 const { get } = require('../common/util')
 const { IconCircle, IconCrescentCircle } = require('./icons')
 
-function Circle({ color, isCrescent }) {
-  return (isCrescent) ?
+const Circle = ({ color, isCrescent }) =>
+  isCrescent ?
     <IconCrescentCircle className={`color-${color}`}/> :
     <IconCircle className={`color-${color}`}/>
-}
 
 Circle.propTypes = {
   color: string.isRequired,
   isCrescent: bool
 }
 
+const TagColors = (props) => {
+  let colors = getColors(props)
 
-class TagColors extends PureComponent {
+  return (colors.length === 0) ? null : (
+    <div className="tag-colors">
+      {colors.map((color, idx) =>
+        <Circle key={color} color={color} isCrescent={idx > 0}/>)}
+    </div>
+  )
+}
 
-  getColors() {
-    const skip = {}
-    const colors = []
+TagColors.propTypes = {
+  selection: arrayOf(number).isRequired,
+  tags: object
+}
 
-    for (let id of this.props.selection) {
-      let color = get(this.props.tags, [id, 'color'])
-      if (color && !skip[color]) {
-        skip[color] = true
-        colors.push(color)
-      }
-    }
+function getColors(props) {
+  let skip = {}
+  let colors = []
 
-    return colors
-  }
-
-  render() {
-    const colors = this.getColors()
-
-    return (colors.length === 0) ? null : (
-      <div className="tag-colors">
-        {colors.map((color, idx) =>
-          <Circle key={color} color={color} isCrescent={idx > 0}/>)}
-      </div>
-    )
-  }
-
-  static propTypes = {
-    selection: arrayOf(number).isRequired,
-    tags: object.isRequired
-  }
-
-  static defaultProps = {
-    colors: {
+  for (let id of props.selection) {
+    let color = get(props.tags, [id, 'color'])
+    if (color && !(color in skip)) {
+      colors.push(color)
+      skip[color] = true
     }
   }
+
+  return colors
 }
 
 module.exports = {

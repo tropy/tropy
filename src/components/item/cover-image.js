@@ -1,29 +1,27 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { Thumbnail } = require('../photo')
 const { TagColors } = require('../colors')
 const { pick, get } = require('../../common/util')
-const { arrayOf, number, object, shape } = require('prop-types')
+const { arrayOf, bool, number, object, shape } = require('prop-types')
 
 const ThumbProps = Object.keys(Thumbnail.propTypes)
 
-const stack = (
+const StackLines = ({ isStack }) => isStack && (
   <div className="stack-lines">
     <div className="line line-2"/>
     <div className="line line-1"/>
   </div>
 )
 
-class CoverImage extends PureComponent {
-  get isStack() {
-    const { photos } = this.props.item
-    return photos && photos.length > 1
-  }
+StackLines.propTypes = {
+  isStack: bool
+}
 
-  get hasTags() {
-    return this.props.tags != null && this.props.item.tags.length > 0
+class CoverImage extends React.PureComponent {
+  get isStack() {
+    return this.props.item.photos.length > 1
   }
 
   get cover() {
@@ -32,23 +30,22 @@ class CoverImage extends PureComponent {
 
   getPhotoProps() {
     return pick(get(this.props.photos, [this.cover]), [
-      'angle', 'mirror', 'mimetype', 'orientation', 'broken'
+      'angle', 'consolidated', 'mirror', 'mimetype', 'orientation', 'broken'
     ])
   }
 
   render() {
     return (
       <div className="cover-image">
-        {this.isStack && stack }
+        <StackLines isStack={this.isStack}/>
         <Thumbnail {...pick(this.props, ThumbProps)}
           id={this.cover}
           {...this.getPhotoProps()}
           onLoad={this.props.onLoad}
           onError={this.props.onError}/>
-        {this.hasTags &&
-          <TagColors
-            selection={this.props.item.tags}
-            tags={this.props.tags}/>}
+        <TagColors
+          selection={this.props.item.tags}
+          tags={this.props.tags}/>
       </div>
     )
   }

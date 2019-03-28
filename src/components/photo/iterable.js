@@ -101,6 +101,7 @@ class PhotoIterable extends React.PureComponent {
         id={this.props.photo.id}
         angle={this.props.photo.angle}
         broken={this.props.photo.broken}
+        consolidated={this.props.photo.consolidated}
         mirror={this.props.photo.mirror}
         mimetype={this.props.photo.mimetype}
         orientation={this.props.photo.orientation}

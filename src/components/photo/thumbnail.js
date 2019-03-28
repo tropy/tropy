@@ -3,7 +3,7 @@
 const React = require('react')
 const { IconPhoto } = require('../icons')
 const { Cache } = require('../../common/cache')
-const { bool, func, number, string } = require('prop-types')
+const { bool, func, instanceOf, number, string } = require('prop-types')
 const { ICON } = require('../../constants/sass')
 const { Rotation } = require('../../common/iiif')
 
@@ -12,7 +12,7 @@ class Thumbnail extends React.Component {
   state = {
     src: null,
     rotation: '0',
-    hasBeenFixed: false,
+    consolidated: null,
     hasFinishedLoading: false,
     isBroken: false
   }
@@ -21,17 +21,16 @@ class Thumbnail extends React.Component {
     let src = Thumbnail.getUrl(props)
     let rotation = Thumbnail.getRotation(props)
     let isBroken = props.broken
+    let consolidated = props.consolidated
 
-    let hasImageChanged = src !== state.src
-
-    let hasBeenFixed =
-      !hasImageChanged && (!isBroken && state.isBroken)
+    let hasImageChanged = src !== state.src ||
+      consolidated > state.consolidated
 
     let hasFinishedLoading = (src != null) &&
-      (!(hasImageChanged || hasBeenFixed) || state.hasFinishedLoading)
+      (!(hasImageChanged || isBroken) || state.hasFinishedLoading)
 
     return {
-      src, rotation, hasBeenFixed, hasFinishedLoading, isBroken
+      src, rotation, consolidated, hasFinishedLoading, isBroken
     }
   }
 
@@ -53,8 +52,9 @@ class Thumbnail extends React.Component {
   }
 
   get src() {
-    return this.state.hasBeenFixed ?
-      `${this.state.src}?fixed=true` : this.state.src
+    return (this.state.consolidated == null) ?
+      this.state.src :
+      `${this.state.src}?c=${this.state.consolidated.getTime()}`
   }
 
   handleLoad = () => {
@@ -90,6 +90,7 @@ class Thumbnail extends React.Component {
     angle: number,
     broken: bool,
     cache: string.isRequired,
+    consolidated: instanceOf(Date),
     id: number,
     mimetype: string,
     mirror: bool,
@@ -106,7 +107,6 @@ class Thumbnail extends React.Component {
     size: ICON.SIZE
   }
 }
-
 
 module.exports = {
   Thumbnail
