@@ -113,10 +113,10 @@ en:
         - Escape
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     SelectionGrid: &SelectionGrid
       up: ArrowUp
       down: ArrowDown
@@ -128,10 +128,10 @@ en:
         - Delete
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     ItemPanel: &ItemPanel
       up: ArrowUp
       down:
@@ -149,10 +149,10 @@ en:
         - Enter
         - Cmd+ArrowDown
         - Cmd+ArrowRight
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     NotePad: &NotePad
       break: Enter
       br:
@@ -226,10 +226,10 @@ en:
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
       all: Cmd+a
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     PhotoIterator:
       up: ArrowUp
       down: ArrowDown
@@ -263,10 +263,10 @@ en:
         - Delete
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     ItemPanel: *ItemPanel
     NoteList: *NoteList
     NotePad: *NotePad

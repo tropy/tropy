@@ -137,16 +137,16 @@ class ItemIterator extends Iterator {
         this.handleNextItem(event)
         break
       case 'home':
-        this.handleSelectItem(this.first(), event)
+        this.handleHomeKey(event)
         break
       case 'end':
-        this.handleSelectItem(this.last(), event)
+        this.handleEndKey(event)
         break
       case 'pageUp':
-        this.handleSelectItem(this.pageUp(), event)
+        this.handlePageUp(event)
         break
       case 'pageDown':
-        this.handleSelectItem(this.pageDown(), event)
+        this.handlePageDown(event)
         break
       case 'open':
         this.handleItemOpen()

@@ -113,16 +113,16 @@ class PhotoList extends PhotoIterator {
         this.handleNextPhoto(event)
         break
       case 'home':
-        this.handleSelectPhoto(this.first())
+        this.handleHomeKey(event)
         break
       case 'end':
-        this.handleSelectPhoto(this.last())
+        this.handleEndKey(event)
         break
       case 'pageUp':
-        this.handleSelectPhoto(this.pageUp())
+        this.handlePageUp(event)
         break
       case 'pageDown':
-        this.handleSelectPhoto(this.pageDown())
+        this.handlePageDown(event)
         break
       case 'left':
       case 'contract':
