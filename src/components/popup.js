@@ -3,7 +3,7 @@
 const React = require('react')
 const { createPortal } = require('react-dom')
 const { bool, func, node, number, oneOf, shape, string } = require('prop-types')
-const { $, append, classes, element, on, off, remove } = require('../dom')
+const { $, append, classes, element, has, on, off, remove } = require('../dom')
 const { noop } = require('../common/util')
 const cx = require('classnames')
 const throttle = require('lodash.throttle')
@@ -70,6 +70,10 @@ class Popup extends React.Component {
       if (event.button === 0) {
         this.props.onClickOutside(event)
       }
+
+    } else if (this.isClickToScroll(event)) {
+      event.stopPropagation()
+      event.preventDefault()
     }
   }
 
@@ -83,6 +87,10 @@ class Popup extends React.Component {
 
   isOutside({ target }) {
     return target === this.dom
+  }
+
+  isClickToScroll({ target }) {
+    return has(target, 'scroll-container')
   }
 
   handleResize = throttle(() => { this.props.onResize() }, 25)
