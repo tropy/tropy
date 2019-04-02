@@ -317,9 +317,13 @@
     }
   }
 
+  .editable {
+    flex: 0 10000 auto; // Shrink before tags
+  }
+
   .tag-colors {
     margin-left: $space-xs;
-    flex: 0 0 auto;
+    flex: 0 1 auto; // Shrink after editable
 
     .icon-circle,
     .icon-crescentcircle {
