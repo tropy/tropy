@@ -318,7 +318,7 @@
   }
 
   .editable {
-    flex: 0 10000 auto; // Shrink before tags
+    flex-shrink: 10000; // Shrink before tags
   }
 
   .tag-colors {
