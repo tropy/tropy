@@ -260,6 +260,10 @@
       background: $items-focus-bg;
     }
 
+    &.over {
+      @extend %drop-target;
+    }
+
     .td {
       display: flex;
       align-items: center;
@@ -281,10 +285,6 @@
 
       &.moving {
         transform: translateX(var(--drop-offset));
-      }
-
-      @include state(".item.over") {
-        @extend %drop-target;
       }
 
       &[class*="integer"] {
