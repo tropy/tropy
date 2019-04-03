@@ -1,8 +1,5 @@
 {
   'includes': [ 'common-sqlite.gypi' ],
-  'cflags': [
-    '-std=c99'
-  ],
   'target_defaults': {
     'default_configuration': 'Release',
     'configurations': {
@@ -75,8 +72,11 @@
       'sources': [
         '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/sqlite3.c'
       ],
-      'cflags_cc': [
-        '-Wno-implicit-fallthrough'
+      'cflags': [
+        '-std=c99',
+        '-Wno-cast-function-type',
+        '-Wno-implicit-fallthrough',
+        '-Wno-unused-variable'
       ],
       'defines': [
         '_REENTRANT=1',
