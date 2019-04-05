@@ -1,3 +1,4 @@
+--color
 --reporter dot
 --recursive
 --require @babel/register
