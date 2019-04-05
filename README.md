@@ -3,6 +3,7 @@
 [![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/tropy/tropy?branch=master&svg=true)](https://ci.appveyor.com/project/inukshuk/tropy)
 [![Coverage Status](https://coveralls.io/repos/tropy/tropy/badge.svg?branch=master&service=github)](https://coveralls.io/github/tropy/tropy?branch=master)
 [![License AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](https://opensource.org/licenses/AGPL-3.0)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftropy%2Ftropy.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftropy%2Ftropy?ref=badge_shield)
 
 Bring order to your research — use the power of Tropy to organize and describe
 your research photos so you can quickly find your sources whenever you need them.
@@ -42,3 +43,7 @@ This will create a dev build of Tropy in the `dist` folder.
 ## Running in Dev Mode
 Alternatively, you can start Tropy in dev mode directly in the
 repository, by running `npm start`.
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftropy%2Ftropy.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftropy%2Ftropy?ref=badge_large)
