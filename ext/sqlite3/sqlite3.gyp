@@ -2,6 +2,12 @@
   'includes': [ 'common-sqlite.gypi' ],
   'target_defaults': {
     'default_configuration': 'Release',
+    'cflags': [
+      '-std=c99',
+      '-Wno-cast-function-type',
+      '-Wno-implicit-fallthrough',
+      '-Wno-unused-variable'
+    ],
     'configurations': {
       'Debug': {
         'defines': [ 'DEBUG', '_DEBUG' ],
@@ -55,8 +61,7 @@
           'action': [
             '<!(node -p "process.env.npm_config_python || \\"python\\"")',
             './extract.py','./sqlite-autoconf-<@(sqlite_version).tar.gz',
-            '<(SHARED_INTERMEDIATE_DIR)'
-          ]
+            '<(SHARED_INTERMEDIATE_DIR)']
         }
       ]
     },
@@ -72,12 +77,18 @@
       'sources': [
         '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/sqlite3.c'
       ],
-      'cflags': [
-        '-std=c99',
-        '-Wno-cast-function-type',
-        '-Wno-implicit-fallthrough',
-        '-Wno-unused-variable'
-      ],
+      'direct_dependent_settings': {
+        'include_dirs': [
+          '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/'
+        ],
+        'defines': [
+          'SQLITE_THREADSAFE=1',
+          'HAVE_USLEEP',
+          'SQLITE_ENABLE_FTS5',
+          'SQLITE_ENABLE_JSON1',
+          'SQLITE_ENABLE_RTREE'
+        ]
+      },
       'defines': [
         '_REENTRANT=1',
         'SQLITE_THREADSAFE=1',
