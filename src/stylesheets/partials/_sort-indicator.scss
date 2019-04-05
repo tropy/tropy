@@ -10,6 +10,7 @@
   &::after {
     position: absolute;
     outline: 1px solid $sort-indicator;
+    z-index: 1;
   }
 
   &.before {
@@ -26,7 +27,6 @@
 
   &.over {
     position: relative;
-    z-index: 1;
   }
 
   .vertical & {
