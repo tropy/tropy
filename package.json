@@ -45,8 +45,8 @@
     "coverage": "env COVERAGE=true npm run -s test",
     "postcoverage": "nyc report -r text-summary -r html -r lcov",
     "test": "npm run -s test:main && npm run -s test:renderer",
-    "test:main": "electron-mocha 'test/{browser,common}/**/*_test.js'",
-    "test:renderer": "electron-mocha --renderer 'test/{,!(browser)/**}/*_test.js'",
+    "test:main": "electron-mocha \"test/{browser,common}/**/*_test.js\"",
+    "test:renderer": "electron-mocha --renderer \"test/{,!(browser)/**}/*_test.js\"",
     "watch": "node scripts/watch"
   },
   "devDependencies": {
