@@ -119,7 +119,7 @@
     "prosemirror-view": "^1.8.6",
     "react": "^16.8.6",
     "react-dnd": "^7.4.5",
-    "react-dnd-electron-backend": "^1.6.1",
+    "react-dnd-electron-backend": "^1.7.0",
     "react-dom": "^16.8.6",
     "react-intl": "^2.8.0",
     "react-redux": "^6.0.1",
