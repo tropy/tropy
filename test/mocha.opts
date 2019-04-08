@@ -1,6 +1,8 @@
+--color
 --reporter dot
 --recursive
 --require @babel/register
+--require test/support/coverage
 --require test/support/mode
 --require test/support/src
 --require test/support/chai

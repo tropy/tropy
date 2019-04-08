@@ -33,29 +33,30 @@ en:
         - CmdOrCtrl+[
         - CmdOrCtrl+Shift+[
         - CmdOrCtrl+Alt+[
-        - r
         - l
     Sidebar: &Sidebar
       next: ArrowDown
       prev: ArrowUp
       expand: ArrowRight
       collapse: ArrowLeft
-      clear: Escape
+      clear:
+        - Escape
+        - Home
       edit: F2
     ItemIterator: &ItemIterator
-      up:
+      up: &up
         - ArrowUp
         - Shift+ArrowUp
         - Ctrl+ArrowUp
-      down:
+      down: &down
         - ArrowDown
         - Shift+ArrowDown
         - Ctrl+ArrowDown
-      left:
+      left: &left
         - ArrowLeft
         - Shift+ArrowLeft
         - Ctrl+ArrowLeft
-      right:
+      right: &right
         - ArrowRight
         - Shift+ArrowRight
         - Ctrl+ArrowRight
@@ -66,19 +67,31 @@ en:
       delete:
         - Backspace
         - Delete
-      rotateLeft:
+      rotateLeft: &rotateLeft
         - CmdOrCtrl+[
         - CmdOrCtrl+Shift+[
         - CmdOrCtrl+Alt+[
-      rotateRight:
+      rotateRight: &rotateRight
         - CmdOrCtrl+]
         - CmdOrCtrl+Shift+]
         - CmdOrCtrl+Alt+]
       all: Ctrl+a
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      home: &home
+        - Home
+        - Shift+Home
+        - CmdOrCtrl+Home
+      end: &end
+        - End
+        - Shift+End
+        - CmdOrCtrl+End
+      pageUp: &pageUp
+        - PageUp
+        - Shift+PageUp
+        - CmdOrCtrl+PageUp
+      pageDown: &pageDown
+        - PageDown
+        - Shift+PageDown
+        - CmdOrCtrl+PageDown
       copy: Ctrl+c
       merge: Ctrl+Shift+M
     PhotoIterator: &PhotoIterator
@@ -98,18 +111,12 @@ en:
         - CmdOrCtrl+ArrowUp
         - CmdOrCtrl+ArrowLeft
         - Escape
-      rotateLeft:
-        - CmdOrCtrl+[
-        - CmdOrCtrl+Shift+[
-        - CmdOrCtrl+Alt+[
-      rotateRight:
-        - CmdOrCtrl+]
-        - CmdOrCtrl+Shift+]
-        - CmdOrCtrl+Alt+]
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      rotateLeft: *rotateLeft
+      rotateRight: *rotateRight
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     SelectionGrid: &SelectionGrid
       up: ArrowUp
       down: ArrowDown
@@ -119,18 +126,12 @@ en:
       delete:
         - Backspace
         - Delete
-      rotateLeft:
-        - CmdOrCtrl+[
-        - CmdOrCtrl+Shift+[
-        - CmdOrCtrl+Alt+[
-      rotateRight:
-        - CmdOrCtrl+]
-        - CmdOrCtrl+Shift+]
-        - CmdOrCtrl+Alt+]
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      rotateLeft: *rotateLeft
+      rotateRight: *rotateRight
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     ItemPanel: &ItemPanel
       up: ArrowUp
       down:
@@ -148,10 +149,10 @@ en:
         - Enter
         - Cmd+ArrowDown
         - Cmd+ArrowRight
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     NotePad: &NotePad
       break: Enter
       br:
@@ -202,21 +203,15 @@ en:
       prev: ArrowUp
       expand: ArrowRight
       collapse: ArrowLeft
-      clear: Escape
+      clear:
+        - Escape
+        - Home
       edit: Enter
     ItemIterator:
-      up:
-        - ArrowUp
-        - Shift+ArrowUp
-      down:
-        - ArrowDown
-        - Shift+ArrowDown
-      left:
-        - ArrowLeft
-        - Shift+ArrowLeft
-      right:
-        - ArrowRight
-        - Shift+ArrowRight
+      up: *up
+      down: *down
+      left: *left
+      right: *right
       preview: Space
       open:
         - Cmd+ArrowDown
@@ -228,19 +223,13 @@ en:
         - Delete
       copy: Cmd+c
       merge: Cmd+Shift+M
-      rotateLeft:
-        - Cmd+[
-        - Cmd+Shift+[
-        - Cmd+Alt+[
-      rotateRight:
-        - Cmd+]
-        - Cmd+Shift+]
-        - Cmd+Alt+]
+      rotateLeft: *rotateLeft
+      rotateRight: *rotateRight
       all: Cmd+a
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     PhotoIterator:
       up: ArrowUp
       down: ArrowDown
@@ -255,18 +244,12 @@ en:
       enter: Enter
       preview: Space
       contract: Escape
-      rotateLeft:
-        - Cmd+[
-        - Cmd+Shift+[
-        - Cmd+Alt+[
-      rotateRight:
-        - Cmd+]
-        - Cmd+Shift+]
-        - Cmd+Alt+]
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      rotateLeft: *rotateLeft
+      rotateRight: *rotateRight
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     SelectionGrid:
       up: ArrowUp
       down: ArrowDown
@@ -278,18 +261,12 @@ en:
       delete:
         - Backspace
         - Delete
-      rotateLeft:
-        - Cmd+[
-        - Cmd+Shift+[
-        - Cmd+Alt+[
-      rotateRight:
-        - Cmd+]
-        - Cmd+Shift+]
-        - Cmd+Alt+]
-      home: Home
-      end: End
-      pageUp: PageUp
-      pageDown: PageDown
+      rotateLeft: *rotateLeft
+      rotateRight: *rotateRight
+      home: *home
+      end: *end
+      pageUp: *pageUp
+      pageDown: *pageDown
     ItemPanel: *ItemPanel
     NoteList: *NoteList
     NotePad: *NotePad

@@ -170,6 +170,14 @@ class Completions extends React.Component {
     return this.activate(this.ol && this.ol.last())
   }
 
+  pageUp() {
+    return this.activate(this.ol && this.ol.pageUp())
+  }
+
+  pageDown() {
+    return this.activate(this.ol && this.ol.pageDown())
+  }
+
   activate(option, scrollIntoView = true) {
     if (option != null) this.handleActivate(option, scrollIntoView)
     else if (this.props.isAdvisory) this.setState({ active: null })

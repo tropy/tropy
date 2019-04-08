@@ -5,7 +5,7 @@ const { Provider, connect } = require('react-redux')
 const ReactIntl = require('react-intl')
 const { element, object } = require('prop-types')
 const { DragDropContext } = require('react-dnd')
-const ElectronBackend = require('react-dnd-electron-backend')
+const { default: ElectronBackend } = require('react-dnd-electron-backend')
 const { Flash } = require('./flash')
 
 const IntlProvider = connect(state => {

@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { BlankTableHeadCell, ItemTableHeadCell } = require('./table-head-cell')
+const { ItemTableHeadCell } = require('./table-head-cell')
 const { titlecase } = require('../../common/util')
 const { NAV } = require('../../constants')
 const { arrayOf, bool, func, number, shape, string } = require('prop-types')
@@ -27,44 +27,39 @@ class ItemTableHead extends PureComponent {
   }
 
   render() {
-    const isFixedColumn = 1 >= this.props.columns.length
+    let isFixedColumn = 1 >= this.props.columns.length
 
     return (
-      <table
+      <div
         className="table-head"
         onContextMenu={this.props.onContextMenu}>
-        <tbody>
-          <tr>
-            {this.props.hasPositionColumn &&
-              <ItemTableHeadCell
-                {...NAV.COLUMN.POSITION}
-                isActive={this.isActive(NAV.COLUMN.POSITION)}
-                isAscending={this.isAscending}
-                isFixedColumn
-                onClick={this.props.onSort}/>}
-            {this.props.columns.map((col, idx) =>
-              <ItemTableHeadCell
-                key={col.id}
-                id={col.id}
-                position={idx}
-                label={col.label || titlecase(col.name || col.id)}
-                width={this.props.colwidth[idx]}
-                minWidth={this.props[idx === 0 ? 'minWidthMain' : 'minWidth']}
-                isActive={this.isActive(col)}
-                isAscending={this.isAscending}
-                isDragging={this.isDragging(idx)}
-                isMoving={this.isMoving(idx)}
-                isFixedColumn={isFixedColumn}
-                onClick={this.props.onSort}
-                onOrder={this.props.onOrder}
-                onOrderReset={this.props.onOrderReset}
-                onOrderStart={this.props.onOrderStart}
-                onOrderStop={this.props.onOrderStop}
-                onResize={this.props.onResize}/>)}
-            <BlankTableHeadCell/>
-          </tr>
-        </tbody>
-      </table>
+        {this.props.hasPositionColumn &&
+          <ItemTableHeadCell
+            {...NAV.COLUMN.POSITION}
+            isActive={this.isActive(NAV.COLUMN.POSITION)}
+            isAscending={this.isAscending}
+            isFixedColumn
+            onClick={this.props.onSort}/>}
+        {this.props.columns.map((col, idx) =>
+          <ItemTableHeadCell
+            key={col.id}
+            id={col.id}
+            position={idx}
+            label={col.label || titlecase(col.name || col.id)}
+            width={this.props.colwidth[idx]}
+            minWidth={this.props[idx === 0 ? 'minWidthMain' : 'minWidth']}
+            isActive={this.isActive(col)}
+            isAscending={this.isAscending}
+            isDragging={this.isDragging(idx)}
+            isMoving={this.isMoving(idx)}
+            isFixedColumn={isFixedColumn}
+            onClick={this.props.onSort}
+            onOrder={this.props.onOrder}
+            onOrderReset={this.props.onOrderReset}
+            onOrderStart={this.props.onOrderStart}
+            onOrderStop={this.props.onOrderStop}
+            onResize={this.props.onResize}/>)}
+      </div>
     )
   }
 

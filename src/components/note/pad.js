@@ -31,7 +31,7 @@ class NotePad extends React.PureComponent {
     const note = { ...this.props.note, state }
 
     if (hasDocChanged) {
-      note.text = state.doc.textBetween(0, state.doc.content.size, ' ')
+      note.text = state.doc.textBetween(0, state.doc.content.size, ' ', ' ')
     }
 
     this.props.onChange(note, hasDocChanged, note.text.length === 0)

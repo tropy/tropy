@@ -159,8 +159,8 @@ const getActiveDatatype = memo(
 
 const makeCompletionFilter = (prop, datatype, perField = false) =>
   perField ?
-    ([id, value]) => id === prop && !!(value.text) && value.type === datatype :
-    ([id, value]) => id !== 'id' && !!(value.text) && value.type === datatype
+    ([id, v]) => id === prop && v && !!(v.text) && v.type === datatype :
+    ([id, v]) => id !== 'id' && v && !!(v.text) && v.type === datatype
 
 const getMetadataCompletions = memo(
   getMetadata, getActiveProperty, getActiveDatatype,

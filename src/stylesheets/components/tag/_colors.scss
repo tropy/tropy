@@ -5,6 +5,8 @@
 .tag-colors {
   display: flex;
   flex-direction: row;
+  min-width: 0;
+  overflow: hidden;
 
   .icon-crescentcircle {
     margin-left: -2px;

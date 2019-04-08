@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const TestBackend = require('react-dnd-test-backend')
+const { default: TestBackend } = require('react-dnd-test-backend')
 const { DragDropContext } = require('react-dnd')
 
 function wrap(DecoratedComponent) {

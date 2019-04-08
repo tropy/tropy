@@ -108,7 +108,8 @@ Id.propTypes = {
 
 function match(res, query, prefix) {
   if (prefix != null) {
-    return (prefix === res.prefix.toLowerCase()) &&
+    return res.prefix &&
+      res.prefix.toLowerCase() === prefix &&
       matchByNameAndLabel(res, query)
   }
 

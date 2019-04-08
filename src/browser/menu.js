@@ -286,7 +286,7 @@ class AppMenu extends Menu {
   }
 
   reload() {
-    const old = this.menu
+    let old = this.menu
 
     if (this.template != null) {
       this.menu = this.build(this.template)
@@ -329,19 +329,23 @@ class ContextMenu extends Menu {
   }
 
   show({ scope, event }, window) {
-    return new Promise((callback, reject) =>  {
+    return new Promise((resolve, reject) =>  {
       let settings = ContextMenu.scopes[scope]
 
       try {
-        let menu = this.build(
+        this.menu = this.build(
           this.prepare(this.template, settings),
           window,
           event)
 
-        menu.popup({
+        this.menu.popup({
           window,
-          callback,
-          positioningItem: settings.position
+          positioningItem: settings.position,
+          callback: () => {
+            this.menu.destroy()
+            this.menu = null
+            resolve()
+          }
         })
 
       } catch (error) {

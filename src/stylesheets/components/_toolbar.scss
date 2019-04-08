@@ -50,6 +50,19 @@
     align-items: center;
   }
 
+  .toolbar-left,
+  .toolbar-right {
+    flex: 1 0 0;
+  }
+
+  .toolbar-center {
+    flex: 0 0 auto;
+  }
+
+  .toolbar-right {
+    justify-content: flex-end;
+  }
+
   .tool-group {
     white-space: nowrap;
 

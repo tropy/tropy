@@ -19,16 +19,20 @@ const mime = resolve(res, 'icons', 'mime')
 const SHARP = join('node_modules', 'sharp', 'vendor', 'lib')
 
 const IGNORE = [
-  /.DS_Store/,
-  /.babelrc.js/,
-  /.editorconfig/,
-  /.eslintrc/,
-  /.gitignore/,
-  /.nvmrc/,
-  /.nyc_output/,
-  /.sass-lint\.yml/,
-  /.travis\.yml/,
-  /.vimrc/,
+  /\.(js|css)\.map$/,
+  /\.(umd|esm|esmodules-browsers)\.js$/,
+  /(CHANGELOG|README)/,
+  /yarn\.lock/,
+  /\.DS_Store/,
+  /\.babelrc\.js/,
+  /\.editorconfig/,
+  /\.eslintrc/,
+  /\.gitignore/,
+  /\.nvmrc/,
+  /\.nyc_output/,
+  /\.sass-lint\.yml/,
+  /\.travis\.yml/,
+  /\.vimrc/,
   /^\/coverage/,
   /^\/db.test/,
   /^\/dist/,
@@ -47,14 +51,32 @@ const IGNORE = [
   /^\/src/,
   /^\/test/,
   /^\/tmp/,
-  /node_modules.\.bin/,
-  /node_modules.sqlite3.build/,
-  /node_modules.sqlite3.deps/,
-  /node_modules.prosemirror-model.dist.index\.js\.map/,
+  /node_modules.\.(bin|cache)/,
+  /node_modules.sqlite3.(build|deps|binding.node)/,
   /node_modules.sharp.build.[^R]/,
   /node_modules.sharp.build.Release.obj/,
+  /node_modules.sharp.vendor.include/,
+  /node_modules.react.umd/,
+  /node_modules.react-dom.umd/,
   /node_modules.jsonld.dist/,
   /node_modules.pixi\.js.dist/,
+  /node_modules.pixi-gl-core.bin/,
+  /node_modules.resource-loader.dist/,
+  /node_modules.(react-)?redux.(dist|es|src)/,
+  /node_modules.react-transition-group.dist/,
+  /node_modules.react-intl.dist/,
+  /node_modules.intl-relativeformat.dist/,
+  /node_modules.intl-messageformat.dist/,
+  /node_modules.intl-messageformat-parser.dist/,
+  /node_modules.rdf-canonize.dist/,
+  /node_modules.node-forge/,
+  /node_modules.ajv.dist/,
+  /node_modules.psl.dist/,
+  /node_modules.nan.doc/,
+  /node_modules.react-dom.(cjs.react-dom-)?(server|unstable|profiling|test|unstable)/,
+  /node_modules.react-dnd.dist/,
+  /node_modules.(react-dnd|dnd-core).lib.esm/,
+  /node_modules.bluebird.js.browser/,
   /appveyor\.yml/
 ]
 
@@ -108,7 +130,7 @@ target.all = async (args = []) => {
       },
       asar: {
         unpack: `**/{${[
-          '*.{node,dll,dylib}',
+          '*.{node,dll,dylib,so}',
           'lib/stylesheets/**/*',
           'res/icons/mime/*.ico',
           'res/{menu,strings,keymaps}/*',
@@ -122,10 +144,12 @@ target.all = async (args = []) => {
 
     switch (platform) {
       case 'linux': {
-        say('fix unpacked symlinks...')
-        cp('-r',
-          join(dir, SHARP, '*'),
-          join(dst, 'resources', 'app.asar.unpacked', SHARP))
+        let unpacked = join(dst, 'resources', 'app.asar.unpacked')
+
+        if (test('-d', unpacked)) {
+          say('fix unpacked symlinks...')
+          cp('-r', join(dir, SHARP, '*'), join(unpacked, SHARP))
+        }
 
         say(`renaming executable to ${qualified.name}...`)
         rename(dst, qualified.product, qualified.name)
@@ -143,13 +167,16 @@ target.all = async (args = []) => {
         break
       }
       case 'darwin': {
-        say('fix unpacked symlinks...')
-        cp('-r', join(dir, SHARP, '*'), join(dst,
-          `${qualified.product}.app`,
-          'Contents',
-          'Resources',
-          'app.asar.unpacked',
-          SHARP))
+        let unpacked = join(dst,
+            `${qualified.product}.app`,
+            'Contents',
+            'Resources',
+            'app.asar.unpacked')
+
+        if (test('-d', unpacked)) {
+          say('fix unpacked symlinks...')
+          cp('-r', join(dir, SHARP, '*'), join(unpacked, SHARP))
+        }
         break
       }
       case 'win32': {
