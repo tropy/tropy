@@ -1,36 +1,27 @@
 branches:
   only:
     - master
-
 skip_tags: true
-
 init:
   - git config --global core.autocrlf true
-
 clone_depth: 8
 os: unstable
-
 environment:
   ELECTRON_NO_ATTACH_CONSOLE: true
   nodejs_version: 10
-
 platform:
   - x64
-  #- x86
-
 cache:
   #- node_modules -> package.json
   #- '%APPDATA%\npm-cache' -> package.json
-
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
   - chcp 65001
   - node --version
   - npm --version
   - npm install --no-optional --no-color --no-progress
-
 test_script:
-  - node scripts\make.js compile
-  - node scripts\make.js test -- -C -t 8000 -s 2000
-
+  - npm run -s compile
+  - npm run -s test:main -- -C -t 8000 -s 2000
+  - npm run -s test:renderer -- -C -t 8000 -s 2000
 build: off

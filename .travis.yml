@@ -50,12 +50,12 @@ install:
   - npm install --no-progress --silent
 
 script:
-  - node scripts/make lint -- true
-  - node scripts/make compile
+  - npm run lint
+  - npm run compile
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      LD_PRELOAD=node_modules/sharp/vendor/lib/libz.so node scripts/make cover;
+      LD_PRELOAD=node_modules/sharp/vendor/lib/libz.so npm run coverage;
     else
-      node scripts/make cover;
+      npm run coverage;
     fi
 
 after_success:
