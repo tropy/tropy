@@ -23,7 +23,6 @@
     }
   }
 
-  // stylelint-disable no-descending-specificity
   .sidebar & {
     .tag {
       display: flex;
@@ -135,7 +134,6 @@
       }
     }
   }
-  /* stylelint-enable */
 }
 
 .add-tag-container {
