@@ -77,19 +77,22 @@
       padding: 0 $default-padding-horizontal;
 
       &.mixed {
-        color: $mixed-color;
+        .editable:not(.active) {
+          display: flex;
 
-        .icon-tag {
-          opacity: 0.5;
+          &::after {
+            content: "+";
+            flex: 0 0 auto;
+          }
+
+          .truncate {
+            flex: 0 1 auto;
+          }
         }
 
         &:focus {
           .icon-pluscircles {
             display: block;
-          }
-
-          .icon-tag {
-            opacity: 1;
           }
         }
       }
