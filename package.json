@@ -36,7 +36,7 @@
     "postbuild": "node scripts/sign",
     "prepack": "npm run -s build",
     "pack": "node scripts/pack",
-    "purge": "npm run -s clean && rimraf node_modules",
+    "purge": "npm run -s clean && rimraf dist",
     "devtools:install": "electron ./scripts/devtools ./tmp",
     "lint": "npm run -s lint:js && npm run -s lint:css",
     "lint:js": "eslint --color src test scripts",
