@@ -51,6 +51,12 @@ $default-padding-horizontal: 12px !default;
           icon-url("project/icon-chevron7-mixed-light-theme.svg"),
           icon-url("project/icon-chevron7-mixed-dark-theme.svg")
         );
+
+      .value {
+        &::after {
+          content: "+";
+        }
+      }
     }
 
     .scrollbar-style-old-school & {
@@ -75,7 +81,18 @@ $default-padding-horizontal: 12px !default;
     line-height: $metadata-line-height;
 
     &.mixed {
-      color: $metadata-field-mixed-color;
+      .editable:not(.active) {
+        display: flex;
+
+        &::after {
+          content: "+";
+          flex: 0 0 auto;
+        }
+
+        .truncate {
+          flex: 0 1 auto;
+        }
+      }
     }
   }
 
