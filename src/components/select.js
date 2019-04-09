@@ -210,10 +210,10 @@ class Select extends React.Component {
           this.commit()
           break
         case 'PageDown':
-          this.delegate('next', this.props.maxRows)
+          this.delegate('pageDown')
           break
         case 'PageUp':
-          this.delegate('prev', this.props.maxRows)
+          this.delegate('pageUp')
           break
         case 'Home':
           this.delegate('first')

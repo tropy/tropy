@@ -4,6 +4,8 @@ require('shelljs/make')
 
 const { say } = require('./util')('rebuild')
 const { join, resolve } = require('path')
+const fetch = require('node-fetch')
+const { writeFileSync: write } = require('fs')
 
 const home = resolve(__dirname, '..')
 const mods = join(home, 'node_modules')
@@ -17,24 +19,45 @@ const CONFIG = [
   `--target=${ELECTRON.join('.')}`
 ]
 
-target.all = (args) => {
-  target.sqlite3(args)
-  target.sharp(args)
-  target.idle(args)
+target.all = async (args) => {
+  await target.sqlite3(args)
+  await target.sharp(args)
+  await target.idle(args)
 }
 
 target.headers = () => {
   exec(`node-gyp install --dist-url=${HEADERS} ${CONFIG.join(' ')}`)
 }
 
-target.sqlite3 = (force) => {
+target.sqlite3 = async (force) => {
   let mod = 'sqlite3'
 
   if (force || !test('-d', preGypBinding(mod))) {
     say(`${mod} ${force ? '(forced)' : ''}...`)
 
+    let ext = join(home, 'ext', mod)
+    let dep = join(mods, mod, 'deps')
+
+    let url = cat(join(ext, 'version.txt')).trim()
+    let tar = join(dep, url.split('/').pop())
+    let version = (/-(\d+)\.tar\.gz/).exec(url)[1]
+
+    if (!test('-f', tar)) {
+      say(`${mod} fetching version ${version}...`)
+      let res = await fetch(url)
+      if (res.status !== 200)
+        throw new Error(`download failed: ${res.status} ${res.statusText}`)
+
+      write(tar, await res.buffer())
+    }
+
     say(`${mod} patching...`)
-    cp(join(home, 'ext', mod, '*'), join(mods, mod, 'deps'))
+    sed('-i',
+      /'sqlite_version%':'\d+',/,
+      `'sqlite_version%':'${version}',`,
+      join(dep, 'common-sqlite.gypi'))
+
+    cp(join(home, 'ext', mod, 'sqlite3.gyp'), dep)
 
     rebuild(mod, {
       params: '--build-from-source'

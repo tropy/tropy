@@ -9,7 +9,7 @@ module.exports = require('yargs')
     'short-option-groups': false
   })
   .usage(`Usage: ${exe} [options]`)
-  .wrap(78)
+  .wrap(process.stdout.columns ? Math.min(process.stdout.columns, 80) : 80)
   .env(pkg.name.toUpperCase())
 
   .demand(0, 1)

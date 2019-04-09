@@ -4,7 +4,6 @@ require('shelljs/make')
 
 const chokidar = require('chokidar')
 const { relative, extname, basename } = require('path')
-const { mocha: runMocha } = require('./test')
 const compile = require('./compile')
 const { error, green, red, say } = require('./util')('watch')
 const cwd = process.cwd()
@@ -69,9 +68,11 @@ target.test = () => {
 }
 
 function mocha(file) {
-  const args = (/browser|common/).test(file) ?
+  let args = (/browser|common/).test(file) ?
     [file] : ['--renderer', file]
 
-  if (runMocha(args) === 0) green(file)
-  else red(file)
+  if (exec(`npx electron-mocha ${args.join(' ')}`).code === 0)
+    green(file)
+  else
+    red(file)
 }

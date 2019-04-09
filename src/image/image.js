@@ -283,6 +283,7 @@ const magic = (buffer) => {
     if (isJPEG(buffer)) return MIME.JPEG
     if (isPNG(buffer)) return MIME.PNG
     if (isTIFF(buffer)) return MIME.TIFF
+    if (isPDF(buffer)) return MIME.PDF
     if (isGIF(buffer)) return MIME.GIF
     if (isSVG(buffer)) return MIME.SVG
     if (isWebP(buffer)) return MIME.WEBP
@@ -297,6 +298,9 @@ const isJPEG = (buffer) =>
 
 const isPNG = (buffer) =>
   check(buffer, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+
+const isPDF = (buffer) =>
+  check(buffer, [0x25, 0x50, 0x44, 0x46])
 
 const isTIFF = (buffer) =>
   check(buffer, [0x49, 0x49, 42, 0]) || check(buffer, [0x4d, 0x4d, 0, 42])

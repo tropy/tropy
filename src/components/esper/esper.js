@@ -34,6 +34,7 @@ const {
     ZOOM_DURATION,
     ZOOM_STEP_SIZE,
     ZOOM_WHEEL_FACTOR,
+    ZOOM_PINCH_BOOST,
     ZOOM_PRECISION
   }
 } = require('../../constants/sass')
@@ -511,15 +512,16 @@ class Esper extends React.PureComponent {
     })
   }
 
-  handleWheel = ({ x, y, dy, dx, ctrl }) => {
+  handleWheel = ({ x, y, dy, dx, ctrl, pinch }) => {
     if (ctrl) {
-      const mw = this.props.invertZoom ? -1 : 1
+      let mw = pinch || this.props.invertZoom ? -1 : 1
+      if (pinch) dy = round(dy * ZOOM_PINCH_BOOST)
 
       this.handleZoomChange({
         x, y, zoom: this.state.zoom + dy * mw * ZOOM_WHEEL_FACTOR
       })
     } else {
-      const mw = this.props.invertScroll ? -1 : 1
+      let mw = this.props.invertScroll ? -1 : 1
 
       this.handlePositionChange({
         x: this.view.image.x + floor(dx * mw),

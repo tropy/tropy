@@ -12,10 +12,6 @@ const { blank, noop } = require('../../common/util')
 
 const MIN_WIDTH = 40
 
-const BlankTableHeadCell = () => (
-  <th className="blank"/>
-)
-
 class ItemTableHeadCell extends PureComponent {
   get classes() {
     return ['metadata-head', this.props.type, {
@@ -79,7 +75,6 @@ class ItemTableHeadCell extends PureComponent {
         isDisabled={!this.isResizable}
         max={this.props.maxWidth}
         min={this.props.minWidth}
-        node="th"
         onDragStop={this.handleResizeStop}
         onResize={this.handleResize}
         value={this.props.width}>
@@ -128,6 +123,5 @@ class ItemTableHeadCell extends PureComponent {
 }
 
 module.exports = {
-  BlankTableHeadCell,
   ItemTableHeadCell
 }

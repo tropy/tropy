@@ -5,6 +5,7 @@ const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, restrict } = require('../common/util')
 const { has, on, off } = require('../dom')
+const { isMeta } = require('../keymap')
 const { ceil, floor, max, min, round } = Math
 const { bool, number, oneOf } = require('prop-types')
 const throttle = require('lodash.throttle')
@@ -246,6 +247,10 @@ class Iterator extends PureComponent {
     return round(size * TILE.FACTOR)
   }
 
+  getIterablesPerPage() {
+    return this.state.cols * this.state.viewportRows
+  }
+
   getIterableRange() {
     const { cols, offset, overscan, rowHeight } = this.state
 
@@ -279,7 +284,7 @@ class Iterator extends PureComponent {
       items.findIndex(it => it.id === id)
   }
 
-  next(offset = 1) {
+  next(offset = 1, mode = this.props.restrict) {
     const items = this.getIterables()
     if (!items.length) return null
 
@@ -293,11 +298,11 @@ class Iterator extends PureComponent {
       return (offset > 0) ? items[0] : items[items.length - 1]
     }
 
-    return this.getIterableAt(idx + offset, items)
+    return this.getIterableAt(idx + offset, items, mode)
   }
 
-  prev(offset = 1) {
-    return this.next(-offset)
+  prev(offset = 1, mode = this.props.restrict) {
+    return this.next(-offset, mode)
   }
 
   current() {
@@ -315,6 +320,14 @@ class Iterator extends PureComponent {
   last() {
     const items = this.getIterables()
     return items[items.length - 1]
+  }
+
+  pageDown() {
+    return this.next(this.getIterablesPerPage(), 'bounds')
+  }
+
+  pageUp() {
+    return this.prev(this.getIterablesPerPage(), 'bounds')
   }
 
   isSelected() {
@@ -417,6 +430,54 @@ class Iterator extends PureComponent {
       this.scrollIntoView(item, false)
     } else {
       this.select(item, { scrollIntoView: true })
+    }
+  }
+
+  handlePageDown(event = {}) {
+    if (event.shiftKey || isMeta(event)) {
+      this.select(this.pageDown(), {
+        isRange: event.shiftKey,
+        scrollIntoView: true,
+        throttle: true
+      })
+    } else {
+      this.scrollPageDown()
+    }
+  }
+
+  handlePageUp(event = {}) {
+    if (event.shiftKey || isMeta(event)) {
+      this.select(this.pageUp(), {
+        isRange: event.shiftKey,
+        scrollIntoView: true,
+        throttle: true
+      })
+    } else {
+      this.scrollPageUp()
+    }
+  }
+
+  handleHomeKey(event = {}) {
+    if (event.shiftKey || isMeta(event)) {
+      this.select(this.first(), {
+        isRange: event.shiftKey,
+        scrollIntoView: true,
+        throttle: true
+      })
+    } else {
+      this.scroll(0)
+    }
+  }
+
+  handleEndKey(event = {}) {
+    if (event.shiftKey || isMeta(event)) {
+      this.select(this.last(), {
+        isRange: event.shiftKey,
+        scrollIntoView: true,
+        throttle: true
+      })
+    } else {
+      this.scrollToEnd()
     }
   }
 

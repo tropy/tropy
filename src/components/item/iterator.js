@@ -137,16 +137,16 @@ class ItemIterator extends Iterator {
         this.handleNextItem(event)
         break
       case 'home':
-        this.scroll(0)
+        this.handleHomeKey(event)
         break
       case 'end':
-        this.scrollToEnd()
+        this.handleEndKey(event)
         break
       case 'pageUp':
-        this.scrollPageUp()
+        this.handlePageUp(event)
         break
       case 'pageDown':
-        this.scrollPageDown()
+        this.handlePageDown(event)
         break
       case 'open':
         this.handleItemOpen()
@@ -186,16 +186,15 @@ class ItemIterator extends Iterator {
   }
 
   handleNextItem = (event) => {
-    this.select(this.next(), {
-      isMeta: meta(event),
-      isRange: event.shiftKey,
-      scrollIntoView: true,
-      throttle: true
-    })
+    this.handleSelectItem(this.next(), event)
   }
 
   handlePrevItem = (event) => {
-    this.select(this.prev(), {
+    this.handleSelectItem(this.prev(), event)
+  }
+
+  handleSelectItem(item, event) {
+    this.select(item, {
       isMeta: meta(event),
       isRange: event.shiftKey,
       scrollIntoView: true,

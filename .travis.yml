@@ -1,8 +1,6 @@
 language: c
-
 git:
   depth: 9
-
 cache:
   apt: true
   directories:
@@ -16,24 +14,23 @@ env:
 matrix:
   include:
     - os: linux
-      dist: trusty
+      dist: xenial
       sudo: required
+      env: CC=gcc-7 CXX=g++-7 DISPLAY=:99.0
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - build-essential
+            - libxss-dev
             - g++-7
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-
 before_install:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      export CC=gcc-7
-      export CXX=g++-7
-      export DISPLAY=:99.0;
-      Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+      Xvfb :99 -ac -screen 0 1024x768x24 > /dev/null 2>&1 &
     fi
   - if [[ ! -d $NVM/.git ]]; then
       rm -rf $NVM;
@@ -44,26 +41,22 @@ before_install:
   - source $NVM/nvm.sh || true
   - nvm install
   - node --version && npm --version
-
 install:
   - npm install -g node-gyp --no-progress --silent
   - npm install --no-progress --silent
-
 script:
-  - node scripts/make lint -- true
-  - node scripts/make compile
+  - npm run lint
+  - npm run compile
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      LD_PRELOAD=node_modules/sharp/vendor/lib/libz.so node scripts/make cover;
+      LD_PRELOAD=node_modules/sharp/vendor/lib/libz.so npm run coverage;
     else
-      node scripts/make cover;
+      npm run coverage;
     fi
-
 after_success:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-    npm install -g coveralls --no-progress;
+      npm install -g coveralls --no-progress;
       cat ./coverage/lcov.info | coveralls;
     fi
-
 notifications:
   email: false
   slack:

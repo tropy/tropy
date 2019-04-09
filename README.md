@@ -19,7 +19,7 @@ find more details below. Happy hacking!
 
 ## Install from Source
 Install the latest version of [Node.js](https://nodejs.org) (at least the
-version that ships with the current [Electron](https://electron.atom.io)
+version that ships with the current [Electron](https://electronjs.org)
 release) with [`node-gyp`](https://www.npmjs.com/package/node-gyp) and all
 its requirements for your platform. On Linux you will also need to install
 the X ScreenSaver package (typically, `libxss` or `libxss-dev`).
@@ -28,17 +28,10 @@ Then clone [this repository](https://github.com/tropy/tropy.git) and run
 `npm install` to install all of Tropy's dependencies.
 
 ## Creating Builds
-To create a dev build for your current platform run the following scripts
-in order at the root of the repository:
+To create a dev-build for your current platform run `npm run build` at the
+root of the repository. This will create a dev-build of Tropy in the `dist`
+folder.
 
-```bash
-node scripts/make clean
-node scripts/make compile
-node scripts/build
-```
-
-This will create a dev build of Tropy in the `dist` folder.
-
-## Running in Dev Mode
-Alternatively, you can start Tropy in dev mode directly in the
+## Running in Dev-Mode
+Alternatively, you can start Tropy in dev-mode directly from the root of the
 repository, by running `npm start`.

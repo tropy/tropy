@@ -18,8 +18,8 @@ describe('Export Vocabularies', () => {
     })
 
     it('can be parsed', () => {
-      let parser = N3.Parser({ format: 'N3' })
-      let store = N3.Store()
+      let parser = new N3.Parser({ format: 'N3' })
+      let store = new N3.Store()
       store.addQuads(parser.parse(output))
 
       expect(store.getQuads('http://example.com/vocab')).to.have.length(6)

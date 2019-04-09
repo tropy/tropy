@@ -163,6 +163,18 @@ class Input extends React.PureComponent {
       case 'ArrowUp':
         opt = completions.prev()
         break
+      case 'Home':
+        opt = completions.first()
+        break
+      case 'End':
+        opt = completions.last()
+        break
+      case 'PageUp':
+        opt = completions.pageUp()
+        break
+      case 'PageDown':
+        opt = completions.pageDown()
+        break
       case 'Enter':
         if (completions.state.active == null)
           return false

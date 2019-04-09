@@ -220,12 +220,16 @@ class PhotoIterator extends Iterator {
     onSort({ item, photos: order })
   }
 
+  handleSelectPhoto(photo) {
+    this.select(photo, { scrollIntoView: true, throttle: true })
+  }
+
   handleNextPhoto = () => {
-    this.select(this.next(), { scrollIntoView: true, throttle: true })
+    this.handleSelectPhoto(this.next())
   }
 
   handlePrevPhoto = () => {
-    this.select(this.prev(), { scrollIntoView: true, throttle: true })
+    this.handleSelectPhoto(this.prev())
   }
 
   handleRotate = (by) => {

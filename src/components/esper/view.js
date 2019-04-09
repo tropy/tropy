@@ -5,6 +5,7 @@ const { array, func, number, object, string } = require('prop-types')
 const { append, bounds, createDragHandler, on, off } = require('../../dom')
 const css = require('../../css')
 const { restrict } = require('../../common/util')
+const { darwin } = require('../../common/os')
 const { rad } = require('../../common/math')
 const PIXI = require('pixi.js')
 const { TextureCache, skipHello } = PIXI.utils
@@ -603,8 +604,16 @@ function coords(e) {
     dx: e.deltaX,
     dy: e.deltaY,
     ctrl: e.ctrlKey || e.metaKey,
-    shift: e.shiftKey
+    shift: e.shiftKey,
+    pinch: isPinchToZoom(e)
   }
+}
+
+function isPinchToZoom(e) {
+  return darwin &&
+    e.type === 'wheel' &&
+    e.ctrlKey &&
+    !(e.metaKey || e.shiftKey)
 }
 
 function equal(p1, p2) {
