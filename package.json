@@ -126,7 +126,7 @@
     "react-dnd-electron-backend": "^1.7.0",
     "react-dom": "^16.8.6",
     "react-intl": "^2.8.0",
-    "react-redux": "^6.0.1",
+    "react-redux": "^7.0.1",
     "react-transition-group": "^2.9.0",
     "redux": "^4.0.1",
     "redux-saga": "^1.0.2",
