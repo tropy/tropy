@@ -57,7 +57,7 @@ function check(predicate, pre, msg = 'assertion failed', ...args) {
 
 function bail(...args) {
   error(...args)
-  exit(1)
+  process.exit(1)
 }
 
 function print(level = 'log', pre, msg, ...args) {
