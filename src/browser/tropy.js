@@ -764,7 +764,6 @@ class Tropy extends EventEmitter {
       debug: this.debug,
       dev: this.dev,
       home: app.getPath('userData'),
-      user: app.getPath('home'),
       documents: app.getPath('documents'),
       pictures: app.getPath('pictures'),
       cache: this.cache.root,
