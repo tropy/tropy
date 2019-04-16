@@ -12,16 +12,12 @@ const SCHEMA = join(home, 'db', 'schema')
 const MIGRATE = join(home, 'db', 'migrate')
 
 global.ARGS = global.ARGS || {
-  debug: false,
   environment: 'production',
   locale: 'en'
 }
 
 target.create = async (args = []) => {
   const { Database } = require('../lib/common/db')
-  const project = require('../lib/models/project')
-  const ontology = require('../lib/models/ontology')
-
   const domain = args[0] || 'project'
   const file = args[1] || join(home, 'db', `${domain}.db`)
 
@@ -29,14 +25,16 @@ target.create = async (args = []) => {
 
   switch (domain) {
     case 'project': {
+      const { create } = require('../lib/models/project')
       const name = args[2] || 'Minos'
-      const path = await Database.create(file, project.create, { name })
+      const path = await Database.create(file, create, { name })
       say(`created project "${name}" as ${relative(cwd, path)}`)
       break
     }
 
     case 'ontology': {
-      const path = await Database.create(file, ontology.create)
+      const { create } = require('../lib/models/ontology')
+      const path = await Database.create(file, create)
       say(`created ontology as ${relative(cwd, path)}`)
       break
     }
