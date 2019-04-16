@@ -2,14 +2,11 @@
 
 require('shelljs/make')
 
-const { rules, say, warn } = require('./util')('make')
-const { existsSync: exists } = require('fs')
+const { say, warn } = require('./util')('make')
+const { existsSync: exists, writeFileSync: write } = require('fs')
 const { join, resolve } = require('path')
 
 const home = resolve(__dirname, '..')
-
-config.fatal = false
-config.silent = false
 
 target.window = ([name]) => {
   template(join(home, 'static', `${name}.html`),
@@ -45,13 +42,9 @@ target.window = ([name]) => {
 
 function template(path, content) {
   if (!exists(path)) {
-    content.to(path)
+    write(path, content)
     say(path)
   } else {
     warn(path)
   }
 }
-
-target.rules = () =>
-  rules(target)
-

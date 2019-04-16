@@ -1,6 +1,7 @@
 'use strict'
 
 require('shelljs/make')
+config.fatal = false
 
 const chokidar = require('chokidar')
 const { relative, extname, basename } = require('path')
