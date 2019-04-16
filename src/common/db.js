@@ -295,10 +295,8 @@ class Connection {
   }
 
   check(table) {
-    table = table ? `('${table}')` : ''
-
     return this
-      .all(`PRAGMA foreign_key_check${table}`)
+      .all(`PRAGMA foreign_key_check${table ? `('${table}')` : ''}`)
       .then(errors => {
         if (!errors.length) return this
 
