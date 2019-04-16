@@ -21,7 +21,16 @@ function update(db, { id, template, timestamp = Date.now() }) {
       WHERE id IN (${list(array(id))})`, params)
 }
 
+function prune(db) {
+  return db.run(`
+    DELETE FROM subjects
+      WHERE id IN (
+        SELECT id FROM trash WHERE reason = 'auto'
+      )`)
+}
+
 module.exports = {
+  prune,
   touch,
   update
 }
