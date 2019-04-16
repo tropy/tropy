@@ -15,7 +15,7 @@ const dom = {
 
   ready: (document.readyState !== 'loading') ?
     Promise.resolve() :
-    once(document, 'DOMContentLoaded'),
+    once(document, 'DOMContentLoaded').then(() => {}),
 
   element: document.createElement.bind(document),
 
