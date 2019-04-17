@@ -18,7 +18,7 @@ module.exports = {
 
     try {
       aux = yield all([
-        fork(ontology),
+        fork(ontology, { max: 2 }),
         fork(history),
         fork(ipc),
         fork(shell)

@@ -3,7 +3,7 @@
 const { all } = require('../common/promisify')
 const React = require('react')
 const { render } = require('react-dom')
-const { ready, $ } = require('../dom')
+const { $ } = require('../dom')
 const { create } = require('../stores/project')
 const { Main } = require('../components/main')
 const { ProjectContainer } = require('../components/project')
@@ -19,8 +19,7 @@ const { locale, file } = ARGS
 
 all([
   store.dispatch(act.intl.load({ locale })),
-  store.dispatch(act.keymap.load({ name: 'project', locale })),
-  ready
+  store.dispatch(act.keymap.load({ name: 'project', locale }))
 ])
   .then(() => {
     store.dispatch(act.project.open(file))

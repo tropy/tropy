@@ -30,9 +30,9 @@ function *reset(db) {
   return db
 }
 
-function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
+function *ontology({ file = join(ARGS.home, ONTOLOGY.DB), ...opts } = {}) {
   try {
-    var db = new Database(file)
+    var db = new Database(file, 'w+', opts)
 
     if (yield call(db.empty)) {
       yield call(mod.ontology.create, db)

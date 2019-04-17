@@ -11,20 +11,26 @@ try {
   const { ready } = require('./dom')
 
   const { win } = require('./window')
-  verbose(`initializing ${win.type} window...`)
+  verbose(`init ${win.type} window...`)
 
   ready
     .then(() => performance.now())
-    .then(READY =>
-      win.init(() => {
-        requestIdleCallback(win.show, { timeout: 500 })
+    .then((READY) =>
+      win.init((INIT) => {
+        require(`./windows/${win.type}`)
+        const LOAD = performance.now()
 
-        let DONE = performance.now()
+        requestIdleCallback(() => {
+          win.show()
 
-        verbose('%s ready after %dms (%dms)', win.type,
-          (DONE - START).toFixed(3),
-          (DONE - READY).toFixed(3))
+          verbose('%s ready %dms [%dms %dms %dms]', win.type,
+            (performance.now() - START).toFixed(3),
+            (READY - START).toFixed(3),
+            (INIT - READY).toFixed(3),
+            (LOAD - INIT).toFixed(3))
+        }, { timeout: 500 })
       }))
+
     .catch(error => {
       warn(`failed initializing ${win.type}: ${error.message}`)
       warn(error.stack)

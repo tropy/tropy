@@ -159,7 +159,7 @@ function *main() {
 
   try {
     aux = yield all([
-      fork(ontology),
+      fork(ontology, { max: 1 }),
       fork(ipc),
       fork(history),
       fork(shell),

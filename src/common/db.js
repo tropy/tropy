@@ -63,7 +63,7 @@ class Database extends EventEmitter {
       min: 0,
       max: 4,
       idleTimeoutMillis: 1000 * 60 * 5,
-      acquireTimeoutMillis: 1000 * 3,
+      acquireTimeoutMillis: 1000 * 10,
       Promise: Bluebird,
       ...options,
       validate: (conn) => Bluebird.resolve(conn.db.open)

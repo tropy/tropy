@@ -76,18 +76,16 @@ class Window extends EventEmitter {
         }
 
         this.style(false, () => {
-          if (typeof done === 'function') done()
+          if (typeof done === 'function') done(performance.now())
           resolve(this)
         })
-        require(`./windows/${this.type}`)
       })
     ])
   }
 
-  show = () => {
+  show() {
     let { current } = this
     current.show()
-    current.focus()
   }
 
   undo() {
