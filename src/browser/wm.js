@@ -7,146 +7,178 @@ const { BrowserWindow } = require('electron')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
 const { warn } = require('../common/log')
-const { remove } = require('../common/util')
+const { array, blank, get, remove } = require('../common/util')
 const { BODY, PANEL, ESPER } = require('../constants/sass')
 
 
 class WindowManager extends EventEmitter {
-  constructor(app) {
+  constructor() {
     super()
-    this.app = app
     this.windows = {}
   }
 
-  get current() {
-    return BrowserWindow.getFocusedWindow()
-  }
-
-  register(type, win) {
-    win.on('page-title-updated', (event) => {
-      event.preventDefault()
-    })
-
-    win.on('app-command', (_, name) => {
-      if (name in APP_CMD)
-        win.webContents.send(`global:${APP_CMD[name]}`)
-    })
-
-    win.on('unresponsive', () => {
-      warn(`${type}[${win.id}] has become unresponsive`)
-      this.emit('unresponsive', type, win)
-    })
-
-    win.once('close', () => {
-      this.emit('close', type, win)
-    })
-
-    webContentsForward(win, [
-      'focus',
-      'blur',
-      'maximize',
-      'unmaximize',
-      'enter-full-screen',
-      'leave-full-screen',
-      'show'
-    ])
-
-    win.webContents
-      .on('devtools-reload-page', (event) => {
-        event.preventDefault()
-        win.webContents.send('reload')
-      })
-      .on('did-finish-load', () => {
-        win.webContents.setVisualZoomLevelLimits(1, 1)
-      })
-      .on('will-navigate', handleWillNavigate)
-      .on('crashed', () => {
-        warn(`${type}[${win.id}] contents crashed`)
-        this.emit('crashed', type, win)
-      })
-
-    win.once('closed', () => {
-      this.emit('closed', type, win)
-      this.windows[type] = remove(this.windows[type], win)
-    })
-
-    this.windows[type] = [win, ...this.windows[type]]
-    this.emit('created', type, win)
-    return win
+  broadcast(...args) {
+    for (let win of this) win.webContents.send(...args)
   }
 
   // eslint-disable-next-line complexity
   create(type, args, opts) {
-    opts = WindowManager.configure(opts, type)
+    try {
+      opts = WindowManager.configure(opts, type)
 
-    if (args.zoom > 1) {
-      opts.webPreferences.zoomFactor = args.zoom
+      if (args.zoom > 1) {
+        opts.webPreferences.zoomFactor = args.zoom
 
-      if (!opts.resizable) {
-        opts.width *= args.zoom
-        opts.height *= args.zoom
-      }
-
-      for (let dim of ['minWidth', 'minHeight']) {
-        if (opts[dim]) opts[dim] *= args.zoom
-      }
-    }
-
-    if (args.frameless) {
-      opts.title = ''
-      opts.frame = false
-    }
-
-    let isDark = args.theme === 'dark' || args.theme === 'system' && args.dark
-    opts.backgroundColor = BODY[isDark ? 'dark' : 'light']
-
-    switch (process.platform) {
-      case 'linux':
-        opts.icon = join(ICONS, '512x512.png')
-        opts.darkTheme = opts.darkTheme || isDark
-        break
-      case 'darwin':
-        if (!opts.frame && EL_CAPITAN) {
-          opts.frame = true
-          opts.titleBarStyle = opts.titleBarStyle || 'hiddenInset'
+        if (!opts.resizable) {
+          opts.width *= args.zoom
+          opts.height *= args.zoom
         }
-        break
-    }
 
-    return this.register(type, new BrowserWindow(opts))
+        for (let dim of ['minWidth', 'minHeight']) {
+          if (opts[dim]) opts[dim] *= args.zoom
+        }
+      }
+
+      if (args.frameless) {
+        opts.title = ''
+        opts.frame = false
+      }
+
+      let isDark = args.theme === 'dark' || args.theme === 'system' && args.dark
+      opts.backgroundColor = BODY[isDark ? 'dark' : 'light']
+
+      switch (process.platform) {
+        case 'linux':
+          opts.icon = join(ICONS, '512x512.png')
+          opts.darkTheme = opts.darkTheme || isDark
+          break
+        case 'darwin':
+          if (!opts.frame && EL_CAPITAN) {
+            opts.frame = true
+            opts.titleBarStyle = opts.titleBarStyle || 'hiddenInset'
+          }
+          break
+      }
+
+      var win = new BrowserWindow(opts)
+
+      this.register(type, win)
+      this.emit('created', type, win)
+
+      return win
+
+    } catch (error) {
+      if (win != null) win.destroy()
+      throw error
+    }
+  }
+
+  current(type = 'project') {
+    return get(this.windows, [type, 0])
+  }
+
+  each(type, fn) {
+    for (let win of this.values(type)) fn(win)
+  }
+
+  has(type) {
+    return !blank(this.windows[type])
   }
 
   open(type, args, opts) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       let win = this.create(type, args, opts)
-
-      win.once('ready-to-show', () => {
-        this.emit('ready-to-show', type, win)
-        resolve(win)
-      })
 
       win.loadFile(join(ROOT, `${type}.html`), {
         hash: encodeURIComponent(JSON.stringify(args))
       })
+
+      win.once('closed', reject)
+      win.once('ready-to-show', () => {
+        win.removeListener('closed', reject)
+        this.emit('ready-to-show', type, win)
+        resolve(win)
+      })
     })
   }
 
-  dispatch(action, win = this.current) {
-    if (win != null) {
-      win.webContents.send('dispatch', action)
+  register(type, win) {
+    try {
+      win
+        .on('app-command', handleAppCommand)
+        .on('focus', () => this.handleFocus(type, win))
+        .on('page-title-updated', (event) => {
+          event.preventDefault()
+        })
+        .on('unresponsive', () => {
+          warn(`${type}[${win.id}] has become unresponsive`)
+          this.emit('unresponsive', type, win)
+        })
+
+      webContentsForward(win, [
+        'focus',
+        'blur',
+        'maximize',
+        'unmaximize',
+        'enter-full-screen',
+        'leave-full-screen',
+        'show'
+      ])
+
+      win.webContents
+        .on('devtools-reload-page', (event) => {
+          event.preventDefault()
+          win.webContents.send('reload')
+        })
+        .on('did-finish-load', () => {
+          win.webContents.setVisualZoomLevelLimits(1, 1)
+        })
+        .on('will-navigate', handleWillNavigate)
+        .on('crashed', () => {
+          warn(`${type}[${win.id}] contents crashed`)
+          this.emit('crashed', type, win)
+        })
+
+      win
+        .once('close', () => {
+          this.emit('close', type, win)
+        })
+        .once('closed', () => {
+          this.emit('closed', type, win)
+          this.unref(type, win)
+        })
+
+      this.windows[type] = [win, ...array(this.windows[type])]
+
+    } catch (error) {
+      this.unref(type, win)
+      throw error
     }
   }
 
-  broadcast(...args) {
-    for (let win of this) {
-      win.webContents.send(...args)
+  send(type, ...args) {
+    this.each(type, win => win.webContents.send(...args))
+  }
+
+  async show(type, ...args) {
+    let win = this.current(type) || await this.open(type, ...args)
+    win.show()
+    return win
+  }
+
+  unref(type, win) {
+    this.windows[type] = remove(array(this.windows[type]), win)
+  }
+
+  *values(types = Object.keys(this.windows)) {
+    for (let type of array(types)) {
+      if (type in this.windows)
+        yield* this.windows[type].values()
     }
   }
 
   *[Symbol.iterator]() {
-    for (let win of BrowserWindow.getAlLWindows()) {
-      yield win
-    }
+    yield* this.values()
   }
 
   static configure(opts, type) {
@@ -211,10 +243,9 @@ const APP_CMD = {
   'browser-forward': 'forward'
 }
 
-function webContentsForward(win, events) {
-  for (let event of events) {
-    win.on(event, () => { win.webContents.send('win', event) })
-  }
+function handleAppCommand(_, name) {
+  if (name in APP_CMD)
+    this.webContents.send(`global:${APP_CMD[name]}`)
 }
 
 function handleWillNavigate(event, url) {
@@ -233,5 +264,12 @@ function handleWillNavigate(event, url) {
     })
   }
 }
+
+function webContentsForward(win, events) {
+  for (let event of events) {
+    win.on(event, () => { win.webContents.send('win', event) })
+  }
+}
+
 
 module.exports = WindowManager
