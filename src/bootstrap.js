@@ -10,19 +10,20 @@ try {
   const { verbose, warn } = require('./common/log')(LOGDIR, opts)
   const { ready } = require('./dom')
 
+  const { ipcRenderer: ipc } = require('electron')
   const { win } = require('./window')
   verbose(`init ${win.type} window...`)
 
   ready
     .then(() => performance.now())
     .then((READY) =>
-      win.init((INIT) => {
+      win.init().then((INIT) => {
         require(`./windows/${win.type}`)
         const LOAD = performance.now()
 
         requestIdleCallback(() => {
           win.show()
-
+          ipc.send('wm', 'ready')
           verbose('%s ready %dms [%dms %dms %dms]', win.type,
             (performance.now() - START).toFixed(3),
             (READY - START).toFixed(3),
@@ -36,7 +37,7 @@ try {
       warn(error.stack)
 
       if (!opts.dev) {
-        win.current.close()
+        win.current.destroy()
       }
     })
 
@@ -51,4 +52,5 @@ try {
 
 } catch (error) {
   process.stderr.write(`Uncaught error in bootstrap: ${error.message}\n`)
+  process.stderr.write(error.stack)
 }

@@ -40,11 +40,11 @@ class Window extends EventEmitter {
     this.hasFinishedUnloading = false
   }
 
-  init(done) {
+  init() {
     return Promise.all([
       this.plugins.reload().then(p => p.create().emit('change')),
 
-      new Promise((resolve) => {
+      new Promise((resolve, reject) => {
         this.unloaders.push(this.plugins.flush)
 
         this.handleUnload()
@@ -76,8 +76,12 @@ class Window extends EventEmitter {
         }
 
         this.style(false, () => {
-          if (typeof done === 'function') done(performance.now())
-          resolve(this)
+          try {
+            ipc.send('wm', 'initialized')
+            resolve(performance.now())
+          } catch (error) {
+            reject(error)
+          }
         })
       })
     ])
@@ -366,14 +370,13 @@ class Window extends EventEmitter {
 
     if (done == null) return
 
-    let limit = Date.now() + 600
+    let limit = Date.now() + 250
     let ti = setInterval(() => {
       if (document.styleSheets.length === count || Date.now() > limit) {
         clearInterval(ti)
         done()
       }
     }, 15)
-
   }
 
   toggle(state) {
