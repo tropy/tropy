@@ -1,7 +1,7 @@
 'use strict'
 
 const { FLASH } = require('../constants')
-const init = (ARGS.update != null) ? [ARGS.update] : []
+const init = (ARGS.update && ARGS.update.id) ? [ARGS.update] : []
 
 module.exports = {
   flash(state = init, { type, payload }) {
