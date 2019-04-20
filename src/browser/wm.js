@@ -3,7 +3,8 @@
 const { EventEmitter } = require('events')
 const { join } = require('path')
 const { URL } = require('url')
-const { BrowserWindow } = require('electron')
+const { app, BrowserWindow, systemPreferences } = require('electron')
+const { getUserDefault } = systemPreferences
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
 const { warn } = require('../common/log')
@@ -12,8 +13,22 @@ const { BODY, PANEL, ESPER } = require('../constants/sass')
 
 
 class WindowManager extends EventEmitter {
-  constructor() {
+  constructor(defaults = {}) {
     super()
+
+    this.defaults = {
+      show: false,
+      useContentSize: false,
+      disableAutoHideCursor: darwin,
+      webPreferences: {
+        contextIsolation: false,
+        defaultEncoding: 'UTF-8',
+        nodeIntegration: true,
+        preload: join(__dirname, '..', 'bootstrap.js'),
+        ...defaults.webPreferences
+      }
+    }
+
     this.windows = {}
   }
 
@@ -21,10 +36,23 @@ class WindowManager extends EventEmitter {
     for (let win of this) win.webContents.send(...args)
   }
 
+  configure(type, opts = {}) {
+    return {
+      ...this.defaults,
+      ...WindowManager.defaults[type],
+      ...opts,
+      webPreferences: {
+        ...this.defaults.webPreferences,
+        ...WindowManager.defaults[type].webPreferences,
+        ...opts.webPreferences
+      }
+    }
+  }
+
   // eslint-disable-next-line complexity
-  create(type, args, opts) {
+  create(type, args = {}, opts) {
     try {
-      opts = WindowManager.configure(opts, type)
+      opts = this.configure(type, opts)
 
       if (args.zoom > 1) {
         opts.webPreferences.zoomFactor = args.zoom
@@ -44,7 +72,9 @@ class WindowManager extends EventEmitter {
         opts.frame = false
       }
 
-      let isDark = args.theme === 'dark' || args.theme === 'system' && args.dark
+      let isDark = args.theme === 'dark' ||
+        args.theme === 'system' && systemPreferences.isDarkMode()
+
       opts.backgroundColor = BODY[isDark ? 'dark' : 'light']
 
       switch (process.platform) {
@@ -73,28 +103,59 @@ class WindowManager extends EventEmitter {
     }
   }
 
+  close(type) {
+    return Promise.all(this.map(type, win =>
+      new Promise((resolve) => {
+        win.once('closed', resolve)
+        win.close()
+      })
+    ))
+  }
+
   current(type = 'project') {
     return get(this.windows, [type, 0])
   }
 
-  each(type, fn) {
-    for (let win of this.values(type)) fn(win)
+  each(...args) {
+    return this.map(...args), this
   }
 
   has(type) {
     return !blank(this.windows[type])
   }
 
-  open(type, args, opts) {
+  handleScrollBarsChange = () => {
+    this.broadcast('scrollbars', !WindowManager.hasOverlayScrollBars())
+  }
+
+  map(type, fn) {
+    if (typeof type === 'function') {
+      fn = type
+      type = undefined
+    }
+
+    return Array.from(this.values(type), fn)
+  }
+
+  open(type, args, opts = {}) {
     return new Promise((resolve, reject) => {
       let win = this.create(type, args, opts)
 
       win.loadFile(join(ROOT, `${type}.html`), {
-        hash: encodeURIComponent(JSON.stringify(args))
+        hash: encodeURIComponent(JSON.stringify({
+          aqua: WindowManager.getAquaColorVariant(),
+          dark: systemPreferences.isDarkMode(),
+          environment: process.env.NODE_ENV,
+          home: app.getPath('userData'),
+          documents: app.getPath('documents'),
+          pictures: app.getPath('pictures'),
+          scrollbars: !WindowManager.hasOverlayScrollBars(),
+          ...args
+        }))
       })
 
       win.once('closed', reject)
-      win.once('ready-to-show', () => {
+      win.once('show', () => {
         win.removeListener('closed', reject)
         this.emit('ready-to-show', type, win)
         resolve(win)
@@ -106,7 +167,7 @@ class WindowManager extends EventEmitter {
     try {
       win
         .on('app-command', handleAppCommand)
-        .on('focus', () => this.handleFocus(type, win))
+        //.on('focus', () => this.handleFocus(type, win))
         .on('page-title-updated', (event) => {
           event.preventDefault()
         })
@@ -181,21 +242,6 @@ class WindowManager extends EventEmitter {
     yield* this.values()
   }
 
-  static configure(opts, type) {
-    return {
-      show: false,
-      useContentSize: false,
-      disableAutoHideCursor: darwin,
-      ...WindowManager.defaults[type],
-      ...opts,
-      webPreferences: {
-        ...WindowManager.webPreferences,
-        ...WindowManager.defaults[type].webPreferences,
-        ...opts.webPreferences
-      }
-    }
-  }
-
   static defaults = {
     about: {
       width: 600,
@@ -222,21 +268,21 @@ class WindowManager extends EventEmitter {
     }
   }
 
-  static webPreferences = {
-    contextIsolation: false,
-    defaultEncoding: 'UTF-8',
-    nodeIntegration: true,
-    preload: join(__dirname, '..', 'bootstrap.js')
+  static getAquaColorVariant() {
+    return darwin && AQUA[getUserDefault('AppleAquaColorVariant', 'integer')]
   }
 
-  static get types() {
-    return Object.keys(WindowManager.defaults)
+  static hasOverlayScrollBars() {
+    return darwin &&
+      getUserDefault('AppleShowScrollBars', 'string') === 'WhenScrolling'
   }
 }
 
 
 const ROOT = join(__dirname, '..', '..', 'static')
 const ICONS = join(__dirname, '..', '..', 'res', 'icons', channel, 'tropy')
+
+const AQUA = { 1: 'blue', 6: 'graphite' }
 
 const APP_CMD = {
   'browser-backward': 'back',
