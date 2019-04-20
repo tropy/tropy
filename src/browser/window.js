@@ -111,7 +111,6 @@ module.exports = {
     }
 
     win.on('app-command', (_, name) => {
-      warn(name)
       if (name in APP_COMMANDS) {
         win.webContents.send(`global:${APP_COMMANDS[name]}`)
       }
