@@ -1,19 +1,22 @@
 'use strict'
 
 const {
-  applyMiddleware, createStore, combineReducers, compose
+  applyMiddleware,
+  createStore,
+  combineReducers,
+  compose
 } = require('redux')
 
 const { default: thunk } = require('redux-thunk')
-const { flash, intl } = require('../reducers')
+const { intl } = require('../reducers/intl')
+const { flash } = require('../reducers/flash')
 
 const devtools = (ARGS.dev || ARGS.debug) &&
   window.__REDUX_DEVTOOLS_EXTENSION__
 
 module.exports = {
   create(init = {}) {
-
-    const reducer = combineReducers({
+    let reducer = combineReducers({
       flash,
       intl
     })
@@ -26,8 +29,6 @@ module.exports = {
       middleware = compose(middleware, devtools())
     }
 
-    const store = createStore(reducer, init, middleware)
-
-    return store
+    return createStore(reducer, init, middleware)
   }
 }
