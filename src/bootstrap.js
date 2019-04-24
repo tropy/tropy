@@ -17,13 +17,21 @@ try {
   ready
     .then(() => performance.now())
     .then((READY) =>
-      win.init().then((INIT) => {
+      win.init().then(() => {
+        const { type } = win
+
+        const INIT = performance.now()
+        ipc.send('wm', type, 'init')
+
         require(`./windows/${win.type}`)
+
         const LOAD = performance.now()
+        ipc.send('wm', type, 'load')
 
         requestIdleCallback(() => {
           win.show()
-          ipc.send('wm', 'ready')
+          ipc.send('wm', win.type, 'ready')
+
           verbose('%s ready %dms [%dms %dms %dms]', win.type,
             (performance.now() - START).toFixed(3),
             (READY - START).toFixed(3),
@@ -31,14 +39,11 @@ try {
             (LOAD - INIT).toFixed(3))
         }, { timeout: 500 })
       }))
-
     .catch(error => {
       warn(`failed initializing ${win.type}: ${error.message}`)
       warn(error.stack)
 
-      if (!opts.dev) {
-        win.current.destroy()
-      }
+      win.current.destroy()
     })
 
   // eslint-disable-next-line

@@ -44,7 +44,7 @@ class Window extends EventEmitter {
     return Promise.all([
       this.plugins.reload().then(p => p.create().emit('change')),
 
-      new Promise((resolve, reject) => {
+      new Promise((resolve) => {
         this.unloaders.push(this.plugins.flush)
 
         this.handleUnload()
@@ -75,15 +75,10 @@ class Window extends EventEmitter {
             this.createWindowControls()
         }
 
-        this.style(false, () => {
-          try {
-            ipc.send('wm', 'initialized')
-            resolve(performance.now())
-          } catch (error) {
-            reject(error)
-          }
-        })
-      })
+        resolve()
+      }),
+
+      this.style(false)
     ])
   }
 
@@ -352,31 +347,36 @@ class Window extends EventEmitter {
     this.current.reload()
   }
 
-  style(prune = false, done) {
-    if (prune) {
-      for (let css of $$('head > link[rel="stylesheet"]')) remove(css)
-    }
-
-    let count = document.styleSheets.length
-
-    for (let css of this.stylesheets) {
-      if (exists(resolve(__dirname, css))) {
-        ++count
-        append(stylesheet(css), document.head)
+  style(prune = false) {
+    return new Promise((resolve, reject) => {
+      if (prune) {
+        for (let css of $$('head > link[rel="stylesheet"]'))
+          remove(css)
       }
-    }
 
-    this.emit('settings.update', { theme: this.state.theme })
+      let count = document.styleSheets.length
 
-    if (done == null) return
-
-    let limit = Date.now() + 250
-    let ti = setInterval(() => {
-      if (document.styleSheets.length === count || Date.now() > limit) {
-        clearInterval(ti)
-        done()
+      for (let css of this.stylesheets) {
+        if (exists(resolve(__dirname, css))) {
+          ++count
+          append(stylesheet(css), document.head)
+        }
       }
-    }, 15)
+
+      this.emit('settings.update', { theme: this.state.theme })
+
+      let limit = Date.now() + 250
+      let ti = setInterval(() => {
+        try {
+          if (document.styleSheets.length === count || Date.now() > limit) {
+            clearInterval(ti)
+            resolve()
+          }
+        } catch (error) {
+          reject(error)
+        }
+      }, 15)
+    })
   }
 
   toggle(state) {
