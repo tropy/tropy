@@ -3,7 +3,7 @@
 const { EventEmitter } = require('events')
 const { join } = require('path')
 const { URL } = require('url')
-const { app, BrowserWindow, systemPreferences } = require('electron')
+const { app, BrowserWindow, ipcMain, systemPreferences } = require('electron')
 const { getUserDefault } = systemPreferences
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
@@ -30,6 +30,8 @@ class WindowManager extends EventEmitter {
     }
 
     this.windows = {}
+
+    ipcMain.on('wm', this.handleIpcMessage)
   }
 
   broadcast(...args) {
@@ -41,6 +43,7 @@ class WindowManager extends EventEmitter {
       ...this.defaults,
       ...WindowManager.defaults[type],
       ...opts,
+      show: false,
       webPreferences: {
         ...this.defaults.webPreferences,
         ...WindowManager.defaults[type].webPreferences,
@@ -68,7 +71,6 @@ class WindowManager extends EventEmitter {
       }
 
       if (args.frameless) {
-        opts.title = ''
         opts.frame = false
       }
 
@@ -85,6 +87,7 @@ class WindowManager extends EventEmitter {
         case 'darwin':
           if (!opts.frame && EL_CAPITAN) {
             opts.frame = true
+            opts.title = ''
             opts.titleBarStyle = opts.titleBarStyle || 'hiddenInset'
           }
           break
@@ -116,12 +119,26 @@ class WindowManager extends EventEmitter {
     return get(this.windows, [type, 0])
   }
 
+  async destroy() {
+    await this.close()
+    ipcMain.removeListener('wm', this.handleIpcMessage)
+  }
+
   each(...args) {
     return this.map(...args), this
   }
 
   has(type) {
     return !blank(this.windows[type])
+  }
+
+  handleIpcMessage = (event, type, message, ...args) => {
+    let win = BrowserWindow.fromWebContents(event.sender)
+    // Note: assuming we would want to use multiple WindowManagers,
+    // add a check here to make sure the window is controlled
+    // by this manager instance!
+    this.emit(message, type, win, ...args)
+    win.emit(`wm-${message}`, ...args)
   }
 
   handleScrollBarsChange = () => {
@@ -139,6 +156,7 @@ class WindowManager extends EventEmitter {
 
   open(type, args, opts = {}) {
     return new Promise((resolve, reject) => {
+      let ready = opts.openResolvesWhen || 'wm-ready'
       let win = this.create(type, args, opts)
 
       win.loadFile(join(ROOT, `${type}.html`), {
@@ -154,12 +172,18 @@ class WindowManager extends EventEmitter {
         }))
       })
 
-      win.once('closed', reject)
-      win.once('show', () => {
-        win.removeListener('closed', reject)
-        this.emit('ready-to-show', type, win)
+      let cancel = () => {
+        win.removeListener(ready, done)
+        reject(new Error(`${type}[${win.id}] closed prematurely`))
+      }
+
+      let done = () => {
+        win.removeListener('closed', cancel)
         resolve(win)
-      })
+      }
+
+      win.once('closed', cancel)
+      win.once(ready, done)
     })
   }
 
@@ -219,6 +243,12 @@ class WindowManager extends EventEmitter {
 
   send(type, ...args) {
     this.each(type, win => win.webContents.send(...args))
+  }
+
+  setTitle(type, title, frameless = false) {
+    if (!frameless || !(darwin && EL_CAPITAN)) {
+      this.each(type, win => win.setTitle(title))
+    }
   }
 
   async show(type, ...args) {
