@@ -2,7 +2,7 @@
 
 const { each } = require('bluebird')
 const { remote, ipcRenderer: ipc } = require('electron')
-const { basename, join, resolve } = require('path')
+const { basename, join } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
 const { Plugins } = require('./common/plugins')
@@ -357,7 +357,7 @@ class Window extends EventEmitter {
       let count = document.styleSheets.length
 
       for (let css of this.stylesheets) {
-        if (exists(resolve(__dirname, css))) {
+        if (exists(join(__dirname, css))) {
           ++count
           append(stylesheet(css), document.head)
         }
