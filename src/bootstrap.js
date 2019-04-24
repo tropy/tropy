@@ -8,7 +8,7 @@ try {
   const LOGDIR = join(opts.home, 'log')
 
   const { verbose, warn } = require('./common/log')(LOGDIR, opts)
-  const { ready } = require('./dom')
+  const { ready, toggle } = require('./dom')
 
   const { ipcRenderer: ipc } = require('electron')
   const { win } = require('./window')
@@ -30,6 +30,7 @@ try {
 
         requestIdleCallback(() => {
           ipc.send('wm', win.type, 'ready')
+          toggle(document.body, 'ready', true)
 
           verbose('%s ready %dms [%dms %dms %dms]', win.type,
             (performance.now() - START).toFixed(3),

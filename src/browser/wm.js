@@ -158,7 +158,7 @@ class WindowManager extends EventEmitter {
 
   open(type, args, opts = {}) {
     return new Promise((resolve, reject) => {
-      let ready = opts.openResolvesWhen || 'wm-ready'
+      let ready = opts.openResolvesWhen || 'wm-init'
       let win = this.create(type, args, opts)
 
       win.loadFile(join(ROOT, `${type}.html`), {
