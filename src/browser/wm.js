@@ -18,8 +18,9 @@ class WindowManager extends EventEmitter {
 
     this.defaults = {
       show: false,
-      useContentSize: false,
       disableAutoHideCursor: darwin,
+      resizable: true,
+      useContentSize: false,
       webPreferences: {
         contextIsolation: false,
         defaultEncoding: 'UTF-8',
@@ -30,12 +31,14 @@ class WindowManager extends EventEmitter {
     }
 
     this.windows = {}
-
-    ipcMain.on('wm', this.handleIpcMessage)
   }
 
   broadcast(...args) {
-    for (let win of this) win.webContents.send(...args)
+    this.each(win => win.webContents.send(...args))
+  }
+
+  center() {
+    this.each(win => win.center())
   }
 
   configure(type, opts = {}) {
@@ -61,12 +64,12 @@ class WindowManager extends EventEmitter {
         opts.webPreferences.zoomFactor = args.zoom
 
         if (!opts.resizable) {
-          opts.width *= args.zoom
-          opts.height *= args.zoom
+          opts.width = Math.round(opts.width * args.zoom)
+          opts.height = Math.round(opts.height * args.zoom)
         }
 
         for (let dim of ['minWidth', 'minHeight']) {
-          if (opts[dim]) opts[dim] *= args.zoom
+          if (opts[dim]) opts[dim] = Math.round(opts[dim] * args.zoom)
         }
       }
 
@@ -93,10 +96,11 @@ class WindowManager extends EventEmitter {
           break
       }
 
+      // TODO check position on display!
       var win = new BrowserWindow(opts)
 
       this.register(type, win)
-      this.emit('created', type, win)
+      this.emit('create', type, win)
 
       return win
 
@@ -119,17 +123,16 @@ class WindowManager extends EventEmitter {
     return get(this.windows, [type, 0])
   }
 
-  async destroy() {
-    await this.close()
-    ipcMain.removeListener('wm', this.handleIpcMessage)
-  }
-
   each(...args) {
     return this.map(...args), this
   }
 
+  first(type) {
+    return this.values(type).next().value
+  }
+
   has(type) {
-    return !blank(this.windows[type])
+    return array(type).some(t => !blank(this.windows[t]))
   }
 
   handleIpcMessage = (event, type, message, ...args) => {
@@ -137,7 +140,6 @@ class WindowManager extends EventEmitter {
     // Note: assuming we would want to use multiple WindowManagers,
     // add a check here to make sure the window is controlled
     // by this manager instance!
-    this.emit(message, type, win, ...args)
     win.emit(`wm-${message}`, ...args)
   }
 
@@ -174,7 +176,7 @@ class WindowManager extends EventEmitter {
 
       let cancel = () => {
         win.removeListener(ready, done)
-        reject(new Error(`${type}[${win.id}] closed prematurely`))
+        reject(new Error(`${type} closed prematurely`))
       }
 
       let done = () => {
@@ -257,14 +259,23 @@ class WindowManager extends EventEmitter {
     return win
   }
 
+  async start() {
+    ipcMain.on('wm', this.handleIpcMessage)
+  }
+
+  async stop() {
+    ipcMain.removeListener('wm', this.handleIpcMessage)
+    await this.close()
+  }
+
   unref(type, win) {
     this.windows[type] = remove(array(this.windows[type]), win)
   }
 
-  *values(types = Object.keys(this.windows)) {
-    for (let type of array(types)) {
-      if (type in this.windows)
-        yield* this.windows[type].values()
+  *values(type = Object.keys(this.windows)) {
+    for (let t of array(type)) {
+      if (t in this.windows)
+        yield* this.windows[t].values()
     }
   }
 
@@ -284,7 +295,12 @@ class WindowManager extends EventEmitter {
     },
     prefs: {
       width: 600,
-      height: 580
+      height: 580,
+      autoHideMenuBar: true,
+      fullscreenable: false,
+      maximizable: false,
+      minimizable: false,
+      resizable: false
     },
     project: {
       width: 1280,
@@ -294,7 +310,12 @@ class WindowManager extends EventEmitter {
     },
     wizard: {
       width: 456,
-      height: 580
+      height: 580,
+      autoHideMenuBar: true,
+      fullscreenable: false,
+      maximizable: false,
+      minimizable: false,
+      resizable: false
     }
   }
 

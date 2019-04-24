@@ -82,11 +82,6 @@ class Window extends EventEmitter {
     ])
   }
 
-  show() {
-    let { current } = this
-    current.show()
-  }
-
   undo() {
     this.current.webContents.undo()
   }

@@ -4,11 +4,14 @@ const { EventEmitter } = require('events')
 const { resolve } = require('path')
 
 const {
-  app, shell, ipcMain: ipc, BrowserWindow, systemPreferences: pref
+  app,
+  shell,
+  ipcMain: ipc,
+  BrowserWindow,
+  systemPreferences
 } = require('electron')
 
 const { verbose, warn } = require('../common/log')
-const { open, hasOverlayScrollBars } = require('./window')
 const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
 const { join } = require('path')
@@ -23,21 +26,17 @@ const { Strings } = require('../common/res')
 const Storage = require('./storage')
 const Updater = require('./updater')
 const dialog = require('./dialog')
+const WindowManager = require('./wm')
 
 const { defineProperty: prop } = Object
 const act = require('../actions')
-const { darwin } = require('../common/os')
+const { darwin, linux } = require('../common/os')
 const { channel, product, version } = require('../common/release')
 const { restrict } = require('../common/util')
 
 const {
-  FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS, LOCALE
+  FLASH, HISTORY, TAG, PROJECT, CONTEXT, LOCALE
 } = require('../constants')
-
-const WIN = SASS.PROJECT
-const WIZ = SASS.WIZARD
-const ABT = SASS.ABOUT
-const PREFS = SASS.PREFS
 
 const H = new WeakMap()
 const T = new WeakMap()
@@ -65,8 +64,8 @@ class Tropy extends EventEmitter {
 
     this.menu = new AppMenu(this)
     this.ctx = new ContextMenu(this)
-
     this.updater = new Updater(this)
+    this.wm = new WindowManager()
 
     prop(this, 'cache', {
       value: new Cache(app.getPath('userData'), 'cache')
@@ -86,108 +85,56 @@ class Tropy extends EventEmitter {
   }
 
   open(file) {
-    if (!file) {
-      if (this.win) return this.win.show(), this
+    let win = this.wm.current()
 
-      for (let recent of this.state.recent) {
-        if (!exists(recent)) continue
-        file = recent
-        break
+    if (file == null) {
+      if (win != null) {
+        win.show()
+      } else {
+        for (let recent of this.state.recent) {
+          if (exists(recent)) return this.open(recent)
+        }
+        this.showWizardWindow()
       }
 
-      if (!file) return this.showWizard()
-    }
-
-    try {
+    } else {
       file = resolve(file)
       verbose(`opening ${file}...`)
 
-      if (this.win) {
-        if (file) {
-          this.dispatch(act.project.open(file), this.win)
-        }
-
-        return this.win.show(), this
+      if (win == null) {
+        this.wm.show('project', { file, ...this.hash }, {
+          title: '',
+          ...this.state.win.bounds
+        }).finally(() => {
+          this.emit('app:reload-menu')
+        })
+      } else {
+        this.dispatch(act.project.open(file), win)
+        win.show()
+        this.emit('app:reload-menu')
       }
-
-      this.win = open('project', { file, ...this.hash }, {
-        title: '',
-        width: WIN.WIDTH,
-        height: WIN.HEIGHT,
-        minWidth: WIN.MIN_WIDTH * this.state.zoom,
-        minHeight: WIN.MIN_HEIGHT * this.state.zoom,
-        backgroundColor: this.background,
-        darkTheme: (this.state.theme === 'dark'),
-        frame: !this.hash.frameless
-      }, this.state.zoom)
-
-      this.win
-        .on('unresponsive', async () => {
-          warn(`win#${this.win.id} has become unresponsive`)
-
-          let { response } = await dialog.show('message-box', this.win, {
-            type: 'warning',
-            ...this.dict.dialogs.unresponsive
-          })
-
-          switch (response) {
-            case 0: return this.win.destroy()
-          }
-        })
-        .on('close', () => {
-          this.state.win.bounds = this.win.getNormalBounds()
-        })
-        .on('closed', () => { this.win = undefined })
-
-      this.win.webContents
-        .on('crashed', async () => {
-          warn(`win#${this.win.id} contents crashed`)
-
-          let { response } = await dialog.show('message-box', this.win, {
-            type: 'warning',
-            ...this.dict.dialogs.crashed
-          })
-
-          switch (response) {
-            case 0:
-              this.win.destroy()
-              break
-            case 1:
-              app.relaunch()
-              app.exit(0)
-              break
-            default:
-              this.win.show()
-              break
-          }
-        })
-
-
-      if (this.state.win.bounds) {
-        this.win.setBounds(this.state.win.bounds)
-      }
-
-      return this
-
-    } finally {
-      this.emit('app:reload-menu')
     }
   }
 
-  hasOpened({ file, name }) {
-    if (this.wiz) this.wiz.close()
-    if (this.prefs) this.prefs.close()
+  hasOpened({ file, name }, win) {
+    this.wm.close(['wizard', 'prefs'])
 
     this.state.recent = into(
       [file],
       compose(remove(f => f === file), take(9)),
       this.state.recent)
 
-    // if (darwin) this.win.setRepresentedFilename(file)
-    this.setTitle(name, this.win)
+    if (!this.state.frameless) {
+      win.setTitle(name)
+    }
 
     switch (process.platform) {
       case 'darwin':
+        if (!this.state.frameless) {
+          win.setRepresentedFilename(file)
+        }
+        app.addRecentDocument(file)
+        break
       case 'win32':
         app.addRecentDocument(file)
         break
@@ -197,7 +144,7 @@ class Tropy extends EventEmitter {
   }
 
   import(files) {
-    this.dispatch(act.item.import({ files }), this.win)
+    this.dispatch(act.item.import({ files }), this.wm.current())
   }
 
   importTemplates(files) {
@@ -213,77 +160,27 @@ class Tropy extends EventEmitter {
   }
 
   showAboutWindow() {
-    if (this.about) return this.about.show(), this
-
-    this.about = open('about', this.hash, {
-      title: this.hash.frameless ? '' : this.dict.windows.about.title,
-      width: ABT.WIDTH * this.state.zoom,
-      height: ABT.HEIGHT * this.state.zoom,
-      parent: darwin ? null : this.win,
-      modal: !darwin && !!this.win,
-      autoHideMenuBar: true,
-      resizable: false,
-      minimizable: false,
-      maximizable: false,
-      fullscreenable: false,
-      backgroundColor: this.background,
-      darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless
-    }, this.state.zoom)
-      .once('closed', () => { this.about = undefined })
-
-    return this
+    this.wm.show('about', this.hash, {
+      title: this.dict.windows.about.title,
+      parent: this.wm.current(),
+      modal: linux
+    })
   }
 
-  showWizard() {
-    if (this.prefs) this.prefs.close()
-    if (this.wiz) return this.wiz.show(), this
-
-    this.wiz = open('wizard', this.hash, {
-      title: this.hash.frameless ? '' : this.dict.windows.wizard.title,
-      width: WIZ.WIDTH * this.state.zoom,
-      height: WIZ.HEIGHT * this.state.zoom,
-      parent: darwin ? null : this.win,
-      modal: !darwin && !!this.win,
-      autoHideMenuBar: true,
-      resizable: false,
-      minimizable: false,
-      maximizable: false,
-      fullscreenable: false,
-      backgroundColor: this.background,
-      darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless,
-    }, this.state.zoom)
-      .once('closed', () => { this.wiz = undefined })
-
-    return this
+  showWizardWindow() {
+    this.wm.close('prefs')
+    this.wm.show('wizard', this.hash, {
+      title: this.dict.windows.wizard.title,
+      parent: this.wm.current(),
+      modal: linux
+    })
   }
 
-  showPreferences() {
-    if (this.prefs) return this.prefs.show(), this
-
-    this.prefs = open('prefs', this.hash, {
-      title: this.hash.frameless ? '' : this.dict.windows.prefs.title,
-      width: PREFS.WIDTH * this.state.zoom,
-      height: PREFS.HEIGHT * this.state.zoom,
-      parent: darwin ? null : this.win,
-      modal: !darwin && !!this.win,
-      autoHideMenuBar: true,
-      resizable: false,
-      minimizable: false,
-      maximizable: false,
-      fullscreenable: false,
-      backgroundColor: this.background,
-      darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless
-    }, this.state.zoom)
-      .once('closed', () => {
-        this.prefs = undefined
-        this.dispatch(act.ontology.load(), this.win)
-        this.dispatch(act.storage.reload([['settings']]), this.win)
-      })
-
-    return this
+  showPreferencesWindow() {
+    this.wm.show('prefs', this.hash, {
+      title: this.dict.windows.prefs.title,
+      parent: this.wm.current()
+    })
   }
 
   restore() {
@@ -307,7 +204,7 @@ class Tropy extends EventEmitter {
 
       .tap(state => {
         if (darwin) {
-          pref.setAppLevelAppearance(
+          systemPreferences.setAppLevelAppearance(
             state.theme === 'system' ? null : state.theme
           )
         }
@@ -349,18 +246,18 @@ class Tropy extends EventEmitter {
       this.showAboutWindow())
 
     this.on('app:create-project', () =>
-      this.showWizard())
+      this.showWizardWindow())
 
     this.on('app:close-project', () =>
-      this.dispatch(act.project.close(), this.win))
+      this.dispatch(act.project.close(), this.wm.current()))
 
     this.on('app:optimize-cache', () => {
-      this.dispatch(act.cache.prune(), this.win)
-      this.dispatch(act.cache.purge(), this.win)
+      this.dispatch(act.cache.prune(), this.wm.current())
+      this.dispatch(act.cache.purge(), this.wm.current())
     })
 
     this.on('app:rebase-project', () =>
-      this.dispatch(act.project.rebase(), this.win))
+      this.dispatch(act.project.rebase(), this.wm.current()))
 
     this.on('app:import-photos', () =>
       this.import())
@@ -375,13 +272,13 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:center-window', () =>
-      this.center())
+      this.wm.center())
 
     this.on('app:show-in-folder', (_, { target }) =>
       shell.showItemInFolder(target.path))
 
     this.on('app:create-item', () =>
-      this.dispatch(act.item.create(), this.win))
+      this.dispatch(act.item.create(), this.wm.current()))
 
     this.on('app:delete-item', (win, { target }) =>
       this.dispatch(act.item.delete(target.id), win))
@@ -461,7 +358,8 @@ class Tropy extends EventEmitter {
         item: target.item, photos: [target.id]
       }), win))
     this.on('app:consolidate-photo-library', () =>
-      this.dispatch(act.photo.consolidate(null, { force: true }), this.win))
+      this.dispatch(act.photo.consolidate(null, { force: true }),
+        this.wm.current()))
 
     this.on('app:consolidate-photo', (win, { target }) =>
       this.dispatch(act.photo.consolidate([target.id], {
@@ -560,7 +458,7 @@ class Tropy extends EventEmitter {
     this.on('app:toggle-debug-flag', () => {
       verbose('toggling dev/debug mode...')
       this.state.debug = !this.state.debug
-      this.broadcast('debug', this.state.debug)
+      this.wm.broadcast('debug', this.state.debug)
       this.emit('app:reload-menu')
     })
 
@@ -580,20 +478,20 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:undo', (win) => {
-      if (this.getHistory(win || this.win).past) {
+      if (this.getHistory(win).past) {
         this.dispatch({
           type: HISTORY.UNDO,
           meta: { ipc: HISTORY.CHANGED }
-        }, win || this.win)
+        }, win)
       }
     })
 
     this.on('app:redo', (win) => {
-      if (this.getHistory(win || this.win).future) {
+      if (this.getHistory(win).future) {
         this.dispatch({
           type: HISTORY.REDO,
           meta: { ipc: HISTORY.CHANGED }
-        }, win || this.win)
+        }, win)
       }
     })
 
@@ -602,7 +500,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-preferences', () => {
-      this.showPreferences()
+      this.showPreferencesWindow()
     })
 
     this.on('app:open-license', () => {
@@ -644,11 +542,10 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:reset-ontology-db', () => {
-      if (this.win || this.prefs) {
-        this.dispatch(act.ontology.reset())
-      } else {
+      if (this.wm.has(['project', 'prefs']))
+        warn('cannot reset ontology db while in use')
+      else
         rm.sync(join(app.getPath('userData'), 'ontology.db'))
-      }
     })
 
     this.on('app:open-dialog', (win, options = {}) => {
@@ -673,11 +570,11 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:zoom-reset', () => {
-      this.zoom(1.0)
+      this.zoom(1)
     })
 
     this.plugins.on('change', () => {
-      this.broadcast('plugins-reload')
+      this.wm.broadcast('plugins-reload')
       this.emit('app:reload-menu')
     })
 
@@ -708,15 +605,17 @@ class Tropy extends EventEmitter {
       app.on('activate', () => this.open())
 
       let ids = [
-        pref.subscribeNotification(
-          'AppleShowScrollBarsSettingChanged', () =>
-            this.broadcast('scrollbars', !hasOverlayScrollBars())),
-        pref.subscribeNotification(
-          'AppleInterfaceThemeChangedNotification', () => this.setTheme())
+        systemPreferences.subscribeNotification(
+          'AppleShowScrollBarsSettingChanged',
+          this.wm.handleScrollBarsChange),
+        systemPreferences.subscribeNotification(
+          'AppleInterfaceThemeChangedNotification',
+          () => this.setTheme())
       ]
 
       app.on('quit', () => {
-        for (let id of ids) pref.unsubscribeNotification(id)
+        for (let id of ids)
+          systemPreferences.unsubscribeNotification(id)
       })
     }
 
@@ -724,8 +623,10 @@ class Tropy extends EventEmitter {
       this.emit(command, BrowserWindow.fromWebContents(event.sender), ...params)
     })
 
-    ipc.on(PROJECT.OPENED, (_, project) => this.hasOpened(project))
-    ipc.on(PROJECT.CREATE, () => this.showWizard())
+    ipc.on(PROJECT.OPENED, (event, project) =>
+      this.hasOpened(project, BrowserWindow.fromWebContents(event.sender)))
+
+    ipc.on(PROJECT.CREATE, () => this.showWizardWindow())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
 
     ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
@@ -734,8 +635,9 @@ class Tropy extends EventEmitter {
       }
     })
 
-    ipc.on(PROJECT.UPDATE, (_, { name }) => {
-      this.setTitle(name, this.win)
+    ipc.on(PROJECT.UPDATE, (event, { name }) => {
+      if (!this.state.frameless)
+        BrowserWindow.fromWebContents(event.sender).setTitle(name)
     })
 
     ipc.on(HISTORY.CHANGED, (event, history) => {
@@ -752,6 +654,52 @@ class Tropy extends EventEmitter {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
+    this.wm.on('close', (type, win) => {
+      if (type === 'project') {
+        this.state.win.bounds = win.getNormalBounds()
+      }
+    })
+
+    this.wm.on('closed', (type) => {
+      if (type === 'prefs') {
+        this.wm.send('project', 'dispatch',
+          act.ontology.load(),
+          act.storage.reload([['settings']]))
+      }
+    })
+
+    this.wm.on('unresponsive', async (_, win) => {
+      let { response } = await dialog.show('message-box', win, {
+        type: 'warning',
+        ...this.dict.dialogs.unresponsive
+      })
+
+      switch (response) {
+        case 0: return win.destroy()
+      }
+    })
+
+    this.wm.on('crashed', async (_, win) => {
+      let { response } = await dialog.show('message-box', win, {
+        type: 'warning',
+        ...this.dict.dialogs.crashed
+      })
+
+      switch (response) {
+        case 0:
+          win.destroy()
+          break
+        case 1:
+          app.relaunch()
+          app.exit(0)
+          break
+        default:
+          win.show()
+          break
+      }
+    })
+
+    this.wm.start()
     dialog.start()
 
     return this
@@ -759,13 +707,8 @@ class Tropy extends EventEmitter {
 
   get hash() {
     return {
-      environment: ARGS.environment,
-      dark: pref.isDarkMode(),
       debug: this.debug,
       dev: this.dev,
-      home: app.getPath('userData'),
-      documents: app.getPath('documents'),
-      pictures: app.getPath('pictures'),
       cache: this.cache.root,
       plugins: this.plugins.root,
       frameless: this.state.frameless,
@@ -774,13 +717,8 @@ class Tropy extends EventEmitter {
       uuid: this.state.uuid,
       update: this.updater.release,
       version,
-      webgl: this.state.webgl
-    }
-  }
-
-  center(windows = BrowserWindow.getAllWindows()) {
-    for (let win of windows) {
-      win.center()
+      webgl: this.state.webgl,
+      zoom: this.state.zoom
     }
   }
 
@@ -793,11 +731,10 @@ class Tropy extends EventEmitter {
   }
 
   updateWindowLocale() {
-    let { dict, state, about, prefs, wiz } = this
-    this.setTitle(dict.windows.about.title, about)
-    this.setTitle(dict.windows.prefs.title, prefs)
-    this.setTitle(dict.windows.wizard.title, wiz)
-    this.broadcast('locale', state.locale)
+    this.wm.setTitle('about', this.dict.windows.about.title)
+    this.wm.setTitle('prefs', this.dict.windows.prefs.title)
+    this.wm.setTitle('wizard', this.dict.windows.wizard.title)
+    this.wm.broadcast('locale', this.state.locale)
   }
 
   setTheme(theme = this.state.theme) {
@@ -805,28 +742,18 @@ class Tropy extends EventEmitter {
     this.state.theme = theme
 
     if (darwin) {
-      pref.setAppLevelAppearance(theme === 'system' ? null : theme)
+      systemPreferences.setAppLevelAppearance(
+        theme === 'system' ? null : theme
+      )
     }
 
-    this.broadcast('theme', theme, pref.isDarkMode())
+    this.wm.broadcast('theme', theme, systemPreferences.isDarkMode())
     this.emit('app:reload-menu')
-  }
-
-  setTitle(title, win) {
-    if (win != null) {
-      win.setTitle(this.hash.frameless ? '' : title)
-    }
   }
 
   dispatch(action, win = BrowserWindow.getFocusedWindow()) {
     if (win != null) {
       win.webContents.send('dispatch', action)
-    }
-  }
-
-  broadcast(...args) {
-    for (const win of BrowserWindow.getAllWindows()) {
-      win.webContents.send(...args)
     }
   }
 
@@ -861,15 +788,6 @@ class Tropy extends EventEmitter {
 
   get name() {
     return product
-  }
-
-  get dark() {
-    return this.state.theme === 'dark' ||
-      this.state.theme === 'system' && pref.isDarkMode()
-  }
-
-  get background() {
-    return SASS.BODY[this.dark ? 'dark' : 'light']
   }
 
   get dev() {

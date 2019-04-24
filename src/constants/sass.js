@@ -7,11 +7,6 @@ const ACTIVITY = {
   HEIGHT: 43
 }
 
-const ABOUT = {
-  WIDTH: 600,
-  HEIGHT: 300
-}
-
 const BODY = {
   dark: '#2f2f2f',
   light: '#ffffff'
@@ -202,13 +197,6 @@ const ESPER = {
   }
 }
 
-const PROJECT = {
-  WIDTH: 1280,
-  HEIGHT: 720,
-  MIN_WIDTH: PANEL.MIN_WIDTH + ESPER.MIN_WIDTH * 2,
-  MIN_HEIGHT: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN
-}
-
 const EDITOR = {
   MAX_PADDING: 48
 }
@@ -231,25 +219,13 @@ const POPUP = {
   PADDING: 2
 }
 
-const PREFS = {
-  WIDTH: 600,
-  HEIGHT: 580
-}
-
-const WIZARD = {
-  WIDTH: 456,
-  HEIGHT: 580
-}
-
 const LIST = {
   HEIGHT: 26,
   INDENT: 12,
   PADDING: 16
 }
 
-
 module.exports =  {
-  ABOUT,
   ACTIVITY,
   BODY,
   COLUMN,
@@ -266,12 +242,9 @@ module.exports =  {
   PANEL,
   PHOTO,
   POPUP,
-  PREFS,
-  PROJECT,
   ROW,
   SCROLLBAR,
   SIDEBAR,
   TAG,
-  TILE,
-  WIZARD
+  TILE
 }

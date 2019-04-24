@@ -29,7 +29,6 @@ try {
         ipc.send('wm', type, 'load')
 
         requestIdleCallback(() => {
-          win.show()
           ipc.send('wm', win.type, 'ready')
 
           verbose('%s ready %dms [%dms %dms %dms]', win.type,
