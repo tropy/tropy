@@ -30,6 +30,7 @@ class WindowManager extends EventEmitter {
       webPreferences: {
         contextIsolation: false,
         defaultEncoding: 'UTF-8',
+        enableRemoteModule: true,
         nodeIntegration: true,
         preload: join(__dirname, '..', 'bootstrap.js'),
         ...defaults.webPreferences
@@ -52,7 +53,6 @@ class WindowManager extends EventEmitter {
       ...this.defaults,
       ...WindowManager.defaults[type],
       ...opts,
-      show: false,
       webPreferences: {
         ...this.defaults.webPreferences,
         ...WindowManager.defaults[type].webPreferences,
@@ -141,12 +141,31 @@ class WindowManager extends EventEmitter {
     return array(type).some(t => !blank(this.windows[t]))
   }
 
-  handleIpcMessage = (event, type, message, ...args) => {
-    let win = BrowserWindow.fromWebContents(event.sender)
+  handleIpcMessage = (event, type, ...args) => {
     // Note: assuming we would want to use multiple WindowManagers,
     // add a check here to make sure the window is controlled
     // by this manager instance!
-    win.emit(`wm-${message}`, ...args)
+    let win = BrowserWindow.fromWebContents(event.sender)
+
+    switch (type) {
+      case 'close':
+        win.close()
+        break
+      case 'destroy':
+        win.destroy()
+        break
+      case 'reload':
+        win.reload()
+        break
+      case 'undo':
+        win.webContents.undo()
+        break
+      case 'redo':
+        win.webContents.redo()
+        break
+      default:
+        win.emit(`wm-${type}`, ...args)
+    }
   }
 
   handleScrollBarsChange = () => {
@@ -174,6 +193,8 @@ class WindowManager extends EventEmitter {
           environment: process.env.NODE_ENV,
           home: app.getPath('userData'),
           documents: app.getPath('documents'),
+          maximizable: win.isMaximizable(),
+          minimizable: win.isMinimizable(),
           pictures: app.getPath('pictures'),
           scrollbars: !WindowManager.hasOverlayScrollBars(),
           ...args
