@@ -8,7 +8,7 @@ const {
   shell,
   ipcMain: ipc,
   BrowserWindow,
-  systemPreferences
+  systemPreferences: prefs
 } = require('electron')
 
 const { verbose, warn } = require('../common/log')
@@ -204,7 +204,7 @@ class Tropy extends EventEmitter {
 
       .tap(state => {
         if (darwin) {
-          systemPreferences.setAppLevelAppearance(
+          prefs.setAppLevelAppearance(
             state.theme === 'system' ? null : state.theme
           )
         }
@@ -605,17 +605,17 @@ class Tropy extends EventEmitter {
       app.on('activate', () => this.open())
 
       let ids = [
-        systemPreferences.subscribeNotification(
+        prefs.subscribeNotification(
           'AppleShowScrollBarsSettingChanged',
           this.wm.handleScrollBarsChange),
-        systemPreferences.subscribeNotification(
+        prefs.subscribeNotification(
           'AppleInterfaceThemeChangedNotification',
           () => this.setTheme())
       ]
 
       app.on('quit', () => {
         for (let id of ids)
-          systemPreferences.unsubscribeNotification(id)
+          prefs.unsubscribeNotification(id)
       })
     }
 
@@ -742,12 +742,12 @@ class Tropy extends EventEmitter {
     this.state.theme = theme
 
     if (darwin) {
-      systemPreferences.setAppLevelAppearance(
+      prefs.setAppLevelAppearance(
         theme === 'system' ? null : theme
       )
     }
 
-    this.wm.broadcast('theme', theme, systemPreferences.isDarkMode())
+    this.wm.broadcast('theme', theme, prefs.isDarkMode())
     this.emit('app:reload-menu')
   }
 

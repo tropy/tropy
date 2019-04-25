@@ -3,13 +3,19 @@
 const { EventEmitter } = require('events')
 const { join } = require('path')
 const { URL } = require('url')
-const { app, BrowserWindow, ipcMain, systemPreferences } = require('electron')
-const { getUserDefault } = systemPreferences
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
 const { warn } = require('../common/log')
 const { array, blank, get, remove } = require('../common/util')
 const { BODY, PANEL, ESPER } = require('../constants/sass')
+
+const {
+  app,
+  BrowserWindow,
+  ipcMain: ipc,
+  systemPreferences: prefs
+} = require('electron')
+
 
 
 class WindowManager extends EventEmitter {
@@ -78,7 +84,7 @@ class WindowManager extends EventEmitter {
       }
 
       let isDark = args.theme === 'dark' ||
-        args.theme === 'system' && systemPreferences.isDarkMode()
+        args.theme === 'system' && prefs.isDarkMode()
 
       opts.backgroundColor = BODY[isDark ? 'dark' : 'light']
 
@@ -164,7 +170,7 @@ class WindowManager extends EventEmitter {
       win.loadFile(join(ROOT, `${type}.html`), {
         hash: encodeURIComponent(JSON.stringify({
           aqua: WindowManager.getAquaColorVariant(),
-          dark: systemPreferences.isDarkMode(),
+          dark: prefs.isDarkMode(),
           environment: process.env.NODE_ENV,
           home: app.getPath('userData'),
           documents: app.getPath('documents'),
@@ -260,11 +266,11 @@ class WindowManager extends EventEmitter {
   }
 
   async start() {
-    ipcMain.on('wm', this.handleIpcMessage)
+    ipc.on('wm', this.handleIpcMessage)
   }
 
   async stop() {
-    ipcMain.removeListener('wm', this.handleIpcMessage)
+    ipc.removeListener('wm', this.handleIpcMessage)
     await this.close()
   }
 
@@ -320,12 +326,14 @@ class WindowManager extends EventEmitter {
   }
 
   static getAquaColorVariant() {
-    return darwin && AQUA[getUserDefault('AppleAquaColorVariant', 'integer')]
+    return darwin && AQUA[
+      prefs.getUserDefault('AppleAquaColorVariant', 'integer')
+    ]
   }
 
   static hasOverlayScrollBars() {
     return darwin &&
-      getUserDefault('AppleShowScrollBars', 'string') === 'WhenScrolling'
+      prefs.getUserDefault('AppleShowScrollBars', 'string') === 'WhenScrolling'
   }
 }
 
