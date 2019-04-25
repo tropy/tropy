@@ -11,7 +11,8 @@
 @import
   "../abstracts/variables",
   "../abstracts/mixins",
-  "../abstracts/functions";
+  "../abstracts/functions",
+  "../abstracts/placeholders";
 
 
 // Scaffolding
@@ -28,7 +29,8 @@
 
 @import
   "../partials/window-controls",
-  "../partials/window-draggable";
+  "../partials/window-draggable",
+  "../partials/quitting-backdrop";
 
 
 // Components

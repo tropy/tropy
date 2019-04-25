@@ -1,0 +1,11 @@
+//
+// Quitting backdrop
+// --------------------------------------------------
+
+.quitting-backdrop {
+  @extend %backdrop;
+
+  .quitting & {
+    display: flex;
+  }
+}

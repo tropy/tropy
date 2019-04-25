@@ -1,0 +1,27 @@
+//
+// Backdrop
+// --------------------------------------------------
+
+%backdrop {
+  position: fixed;
+  z-index: $zindex-backdrop;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: $backdrop-color;
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  .icon-spin {
+    svg {
+      width: $space-xl;
+      height: $space-xl;
+
+      path {
+        stroke-width: 1px;
+      }
+    }
+  }
+}

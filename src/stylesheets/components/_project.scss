@@ -20,23 +20,7 @@
   }
 
   .closing-backdrop {
-    position: absolute;
-    z-index: $zindex-closing-backdrop;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: $project-closing-backdrop;
-    display: none;
-    justify-content: center;
-    align-items: center;
-
-    .icon-spin {
-      svg {
-        width: $space-xl;
-        height: $space-xl;
-      }
-    }
+    @extend %backdrop;
   }
 
   &.closing {
