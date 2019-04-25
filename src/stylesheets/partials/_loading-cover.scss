@@ -3,7 +3,15 @@
 // --------------------------------------------------
 
 .loading-cover {
-  body.ready & {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $zindex-loading-cover;
+  background-color: $loading-cover-bg;
+
+  .ready & {
     display: none;
   }
 }
