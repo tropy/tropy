@@ -2,9 +2,65 @@
 <html>
 <head>
   <meta http-equiv="Content-Security-Policy" content="script-src 'unsafe-inline' 'unsafe-eval'; base-uri 'none'; form-action 'none'">
+	<style>
+		.loading-cover {
+			position: fixed;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 1080;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: #fff;
+			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), z-index 0s linear 0.8s;
+		}
+
+		.loading-cover.dark {
+			background-color: #2f2f2f;
+		}
+
+		.loading-cover.dark .progress-bar {
+			stroke: #000;
+		}
+
+		.loading-cover.dark .progress-value {
+			stroke: #395bac;
+		}
+
+		@keyframes progress {
+			0% {
+				stroke-dashoffset: -450;
+			}
+
+			100% {
+				stroke-dashoffset: 0;
+			}
+		}
+
+		.progress-value.animated {
+			stroke-dasharray: 450;
+			stroke-dashoffset: -450;
+			animation: progress 1s steps(4, end) forwards;
+		}
+	</style>
 </head>
 <body tabindex="-1" id="project">
   <main></main>
   <div id="popup-root"></div>
+  <div class="loading-cover">
+		<svg width="144" height="144" viewBox="0 0 144 144">
+		  <defs>
+		    <clipPath id="clip-path">
+		      <path d="M0,0V144H144V0ZM34,65H18V49H34ZM81,80.679,73,66.823l13.856-8,8,13.856Z" fill="none"/>
+		    </clipPath>
+		  </defs>
+		  <g clip-path="url(#clip-path)">
+		    <polyline class="progress-bar" points="89 72 89 111.37 55 131 55 47 120.37 47 140 13 4 13 27.094 53" fill="none" stroke="#e6e6e6" stroke-miterlimit="10" stroke-width="4"/>
+		    <polyline class="progress-value animated" points="89 72 89 111.37 55 131 55 47 120.37 47 140 13 4 13 27.094 53" fill="none" stroke="#5c93e5" stroke-miterlimit="10" stroke-width="4"/>
+		  </g>
+		</svg>
+	<div>
 </body>
 </html>

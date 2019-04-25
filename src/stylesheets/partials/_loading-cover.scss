@@ -1,0 +1,10 @@
+//
+// Loading cover
+// --------------------------------------------------
+
+.loading-cover {
+  body.ready & {
+    opacity: 0;
+    z-index: -1;
+  }
+}
