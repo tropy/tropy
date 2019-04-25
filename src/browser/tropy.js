@@ -690,8 +690,8 @@ class Tropy extends EventEmitter {
           win.destroy()
           break
         case 1:
-          app.relaunch()
-          app.exit(0)
+          win.show()
+          win.reload()
           break
         default:
           win.show()
