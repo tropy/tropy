@@ -83,9 +83,9 @@ class Plugins extends EventEmitter {
     return this.exec({ id, action: 'export' }, ...args)
   }
 
-  flush = () => {
+  flush = async () => {
     if (this.changes != null) { // TODO check if the config is different!
-      this.save(this.changes)
+      await this.save(this.changes)
       this.changes = null
     }
   }
