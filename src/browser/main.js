@@ -14,7 +14,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   process.env.NODE_ENV = opts.environment
   global.ARGS = opts
 
-  const { app, session }  = require('electron')
+  const { app }  = require('electron')
   const { extname, join } = require('path')
   const { qualified }  = require('../common/release')
   const { linux, darwin } = require('../common/os')
@@ -100,20 +100,6 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
       once(tropy, 'app:restored')
 
     ]).then(() => {
-      session.defaultSession.webRequest.onHeadersReceived((res, cb) => {
-        cb({
-          responseHeaders: {
-            ...res.responseHeaders,
-            'Content-Security-Policy': [
-              "default-src 'none'",
-              "base-uri 'none'",
-              "form-action 'none'",
-              "frame-ancestors 'none'"
-            ].join('; ')
-          }
-        })
-      })
-
       READY = Date.now()
       info('ready after %sms', READY - START)
       tropy.open(...opts._)
