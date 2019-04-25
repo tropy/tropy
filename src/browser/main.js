@@ -45,7 +45,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   if (!require('./squirrel')()) {
     const { all }  = require('bluebird')
     const { once } = require('../common/util')
-    const { info, verbose } = require('../common/log')(LOGDIR, opts)
+    const { info, warn, verbose } = require('../common/log')(LOGDIR, opts)
 
     if (opts.environment !== 'test') {
       if (!app.requestSingleInstanceLock()) {
@@ -125,6 +125,13 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
 
     app.on('quit', (_, code) => {
       verbose(`quit with exit code ${code}`)
+    })
+
+    app.on('web-contents-created', (_, contents) => {
+      contents.on('new-window', (event, url) => {
+        warn(`prevented loading ${url}`)
+        event.preventDefault()
+      })
     })
   }
 }
