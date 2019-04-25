@@ -47,7 +47,6 @@ describe('WindowManager', () => {
           it('can be closed', async () => {
             await wm.close(type)
             expect(wm.has(type)).to.be.false
-            expect([...wm]).to.be.empty
             expect(win.isDestroyed()).to.be.true
           })
         })

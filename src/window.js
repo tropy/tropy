@@ -206,7 +206,10 @@ class Window extends EventEmitter {
       each(this.unloaders, unload => unload())
         .finally(() => {
           this.hasFinishedUnloading = true
-          ipc.send('wm', this.unloader)
+
+          // Possibly related to electron#7977 closing the window
+          // a second time is unreliable if it happens to soon.
+          setTimeout(() => ipc.send('wm', this.unloader), 25)
         })
     })
   }
