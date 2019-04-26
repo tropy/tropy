@@ -1,62 +1,64 @@
 'use strict'
 
 const { basename } = require('path')
-const pkg = require('../../package')
-const exe = basename(process.argv[0])
+const { version } = require('../../package')
+const yargs = require('yargs')()
 
-module.exports = require('yargs')
-  .parserConfiguration({
-    'short-option-groups': false
-  })
-  .usage(`Usage: ${exe} [options]`)
-  .wrap(process.stdout.columns ? Math.min(process.stdout.columns, 80) : 80)
-  .env(pkg.name.toUpperCase())
+module.exports =
+  yargs
+    .parserConfiguration({
+      'short-option-groups': false
+    })
 
-  .demand(0, 1)
+    .usage(`Usage: ${basename(process.argv[0])} [options]`)
+    .wrap(process.stdout.columns ? Math.min(process.stdout.columns, 80) : 80)
+    .env('TROPY')
 
-  .option('dir', {
-    type: 'string',
-    normalize: true,
-    describe: 'Set user data directory'
-  })
+    .demand(0, 1)
 
-  .option('environment', {
-    alias: 'env',
-    type: 'string',
-    describe: 'Set environment',
-    choices: ['development', 'test', 'production']
-  })
-  .default('environment',
-      () => (process.env.NODE_ENV || 'production'), '"production"')
+    .option('dir', {
+      type: 'string',
+      normalize: true,
+      describe: 'Set user data directory'
+    })
 
-  .option('scale', {
-    alias: 'force-device-scale-factor',
-    type: 'number',
-    describe: 'Set the device scale factor'
-  })
+    .option('environment', {
+      alias: 'env',
+      type: 'string',
+      describe: 'Set environment',
+      choices: ['development', 'test', 'production']
+    })
+    .default('environment',
+        () => (process.env.NODE_ENV || 'production'), '"production"')
 
-  .option('auto-updates', {
-    type: 'boolean',
-    describe: 'Automatically check for updates',
-    default: true
-  })
+    .option('scale', {
+      alias: 'force-device-scale-factor',
+      type: 'number',
+      describe: 'Set the device scale factor'
+    })
 
-  .option('ignore-gpu-blacklist', {
-    type: 'boolean',
-    describe: 'Do not blacklist certain GPUs known to cause issues',
-    default: false
-  })
+    .option('auto-updates', {
+      type: 'boolean',
+      describe: 'Automatically check for updates',
+      default: true
+    })
 
-  .option('debug', {
-    type: 'boolean',
-    describe: 'Set debug flag',
-    default: false
-  })
+    .option('ignore-gpu-blacklist', {
+      type: 'boolean',
+      describe: 'Do not blacklist certain GPUs known to cause issues',
+      default: false
+    })
 
-  .help('help')
-  .version(pkg.version)
+    .option('debug', {
+      type: 'boolean',
+      describe: 'Set debug flag',
+      default: false
+    })
 
-  .epilogue([
-    'Environment Variables:',
-    '  NODE_ENV  Set default environment'
-  ].join('\n'))
+    .help('help')
+    .version(version)
+
+    .epilogue([
+      'Environment Variables:',
+      '  NODE_ENV  Set default environment'
+    ].join('\n'))
