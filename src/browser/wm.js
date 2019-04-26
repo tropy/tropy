@@ -5,7 +5,7 @@ const { join } = require('path')
 const { URL } = require('url')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
-const { info, warn } = require('../common/log')
+const { warn } = require('../common/log')
 const { array, blank, get, once, remove } = require('../common/util')
 const { BODY, PANEL, ESPER } = require('../constants/sass')
 
