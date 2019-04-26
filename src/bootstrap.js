@@ -38,6 +38,7 @@ try {
     .catch(e => {
       error(`Failed initializing ${win.type}: ${e.message}`)
       error(e.stack)
+      process.stderr.write(e.stack)
       process.crash()
     })
 
