@@ -70,11 +70,6 @@ target.sqlite3 = async (force) => {
   }
 }
 
-target.inspector = () => {
-  rebuild('v8-debug', { params: '--build-from-source' })
-  rebuild('v8-profiler', { params: '--build-from-source' })
-}
-
 target.sharp = (force) => {
   let mod = 'sharp'
 
