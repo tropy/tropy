@@ -22,7 +22,9 @@ all([
   store.dispatch(act.keymap.load({ name: 'project', locale }))
 ])
   .then(() => {
-    store.dispatch(act.project.open(file))
+    if (file != null) {
+      store.dispatch(act.project.open(file))
+    }
 
     render(
       <Main store={store}><ProjectContainer/></Main>,

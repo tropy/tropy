@@ -218,7 +218,8 @@ class ProjectContainer extends Component {
     )
   }
   render() {
-    if (this.state.isClosed) return this.renderNoProject()
+    if (this.state.isClosed || !this.props.project.file)
+      return this.renderNoProject()
 
     const {
       columns,
