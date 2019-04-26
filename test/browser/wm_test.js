@@ -8,7 +8,6 @@ describe('WindowManager', () => {
 
   describe('instance', () => {
     let wm = new WindowManager({
-      openResolvesWhen: 'wm-ready',
       webPreferences: {
         preload: join(__dirname, '..', 'support', 'bootstrap.js')
       }
@@ -28,7 +27,7 @@ describe('WindowManager', () => {
           let win
 
           before(async () => {
-            win = await wm.open(type)
+            win = await wm.open(type, {}, { resolves: 'wm-ready' })
           })
 
           after(() => win = null)

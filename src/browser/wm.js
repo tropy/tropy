@@ -180,7 +180,7 @@ class WindowManager extends EventEmitter {
 
   open(type, args, opts = {}) {
     return new Promise((resolve, reject) => {
-      let ready = opts.openResolvesWhen || 'wm-init'
+      let ready = opts.resolves || 'wm-init'
       let win = this.create(type, args, opts)
 
       win.loadFile(join(ROOT, `${type}.html`), {
@@ -199,17 +199,19 @@ class WindowManager extends EventEmitter {
       })
 
       let cancel = () => {
+        win.removeListener('closed', cancel)
         win.removeListener(ready, done)
         reject(new Error(`${type} closed prematurely`))
       }
 
       let done = () => {
         win.removeListener('closed', cancel)
+        win.removeListener(ready, done)
         resolve(win)
       }
 
-      win.once('closed', cancel)
-      win.once(ready, done)
+      win.on('closed', cancel)
+      win.on(ready, done)
     })
   }
 
