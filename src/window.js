@@ -93,10 +93,6 @@ class Window extends EventEmitter {
     ipc.send('wm', 'close')
   }
 
-  destroy() {
-    ipc.send('wm', 'destroy')
-  }
-
   undo() {
     ipc.send('wm', 'undo')
   }
@@ -194,11 +190,9 @@ class Window extends EventEmitter {
   handleUnload() {
     on(window, 'beforeunload', event => {
       if (this.hasFinishedUnloading) return
-
       event.returnValue = false
 
       if (this.isUnloading) return
-
       this.isUnloading = true
 
       toggle(document.body, 'quitting', true)

@@ -151,9 +151,6 @@ class WindowManager extends EventEmitter {
       case 'close':
         win.close()
         break
-      case 'destroy':
-        win.destroy()
-        break
       case 'reload':
         win.reload()
         break
