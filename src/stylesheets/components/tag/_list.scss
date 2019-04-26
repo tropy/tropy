@@ -30,34 +30,34 @@
       align-items: center;
       height: $line-height-large;
       padding: 0 $default-padding-horizontal 0 $list-tree-padding-left;
-    }
 
-    .active {
-      background: $tag-list-active-bg;
+      &.active {
+        background: $tag-list-active-bg;
 
-      .icon-tag:not([class*="color"]) {
-        .color {
-          color: $tag-list-active-bg;
-        }
-
-        .border {
-          color: $tag-list-active-border;
-        }
-      }
-
-      &:focus {
-        background: $tag-list-focus-bg;
-        color: $tag-list-focus-color;
-
-        .icon-tag {
-          &:not([class*="color"]) {
-            .color {
-              color: $tag-list-focus-bg;
-            }
+        .icon-tag:not([class*="color"]) {
+          .color {
+            color: $tag-list-active-bg;
           }
 
           .border {
-            color: $tag-list-focus-color;
+            color: $tag-list-active-border;
+          }
+        }
+
+        &:focus {
+          background: $tag-list-focus-bg;
+          color: $tag-list-focus-color;
+
+          .icon-tag {
+            &:not([class*="color"]) {
+              .color {
+                color: $tag-list-focus-bg;
+              }
+            }
+
+            .border {
+              color: $tag-list-focus-color;
+            }
           }
         }
       }
