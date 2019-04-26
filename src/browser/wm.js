@@ -5,8 +5,8 @@ const { join } = require('path')
 const { URL } = require('url')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
-const { warn } = require('../common/log')
-const { array, blank, get, remove } = require('../common/util')
+const { info, warn } = require('../common/log')
+const { array, blank, get, once, remove } = require('../common/util')
 const { BODY, PANEL, ESPER } = require('../constants/sass')
 
 const {
@@ -23,10 +23,10 @@ class WindowManager extends EventEmitter {
     super()
 
     this.defaults = {
-      show: false,
       disableAutoHideCursor: darwin,
       resizable: true,
       useContentSize: false,
+      show: false,
       webPreferences: {
         contextIsolation: false,
         defaultEncoding: 'UTF-8',
@@ -102,8 +102,15 @@ class WindowManager extends EventEmitter {
           break
       }
 
+      let { show } = opts
+      opts.show = (show === true)
+
       // TODO check position on display!
       var win = new BrowserWindow(opts)
+
+      if (typeof show === 'string') {
+        win.once(show, () => win.show())
+      }
 
       this.register(type, win)
       this.emit('create', type, win)
@@ -161,7 +168,7 @@ class WindowManager extends EventEmitter {
         win.webContents.redo()
         break
       default:
-        win.emit(`wm-${type}`, ...args)
+        win.emit(type, ...args)
     }
   }
 
@@ -178,41 +185,26 @@ class WindowManager extends EventEmitter {
     return Array.from(this.values(type), fn)
   }
 
-  open(type, args, opts = {}) {
-    return new Promise((resolve, reject) => {
-      let ready = opts.resolves || 'wm-init'
-      let win = this.create(type, args, opts)
+  async open(type, args, opts = {}) {
+    let win = this.create(type, args, opts)
 
-      win.loadFile(join(ROOT, `${type}.html`), {
-        hash: encodeURIComponent(JSON.stringify({
-          aqua: WindowManager.getAquaColorVariant(),
-          dark: prefs.isDarkMode(),
-          environment: process.env.NODE_ENV,
-          home: app.getPath('userData'),
-          documents: app.getPath('documents'),
-          maximizable: win.isMaximizable(),
-          minimizable: win.isMinimizable(),
-          pictures: app.getPath('pictures'),
-          scrollbars: !WindowManager.hasOverlayScrollBars(),
-          ...args
-        }))
-      })
-
-      let cancel = () => {
-        win.removeListener('closed', cancel)
-        win.removeListener(ready, done)
-        reject(new Error(`${type} closed prematurely`))
-      }
-
-      let done = () => {
-        win.removeListener('closed', cancel)
-        win.removeListener(ready, done)
-        resolve(win)
-      }
-
-      win.on('closed', cancel)
-      win.on(ready, done)
+    win.loadFile(join(ROOT, `${type}.html`), {
+      hash: encodeURIComponent(JSON.stringify({
+        aqua: WindowManager.getAquaColorVariant(),
+        dark: prefs.isDarkMode(),
+        environment: process.env.NODE_ENV,
+        home: app.getPath('userData'),
+        documents: app.getPath('documents'),
+        maximizable: win.isMaximizable(),
+        minimizable: win.isMinimizable(),
+        pictures: app.getPath('pictures'),
+        scrollbars: !WindowManager.hasOverlayScrollBars(),
+        ...args
+      }))
     })
+
+    await once(win, 'did-finish-load')
+    return win
   }
 
   register(type, win) {
@@ -244,12 +236,17 @@ class WindowManager extends EventEmitter {
           win.webContents.send('reload')
         })
         .on('did-finish-load', () => {
+          win.emit('did-finish-load')
           win.webContents.setVisualZoomLevelLimits(1, 1)
+        })
+        .on('did-fail-load', () => {
+          win.emit('error', 'did-fail-load')
         })
         .on('will-navigate', handleWillNavigate)
         .on('crashed', () => {
           warn(`${type}[${win.id}] contents crashed`)
           this.emit('crashed', type, win)
+          win.emit('error', 'crashed')
         })
 
       win
@@ -279,9 +276,14 @@ class WindowManager extends EventEmitter {
     }
   }
 
-  async show(type, ...args) {
-    let win = this.current(type) || await this.open(type, ...args)
-    win.show()
+  async show(type, args, opts) {
+    let win = this.current(type)
+    if (win) {
+      win.show()
+    } else {
+      win = await this.open(type, args, { show: 'initialized', ...opts })
+      await once(win, 'show')
+    }
     return win
   }
 
@@ -391,8 +393,8 @@ function handleWillNavigate(event, url) {
 }
 
 function webContentsForward(win, events) {
-  for (let event of events) {
-    win.on(event, () => { win.webContents.send('win', event) })
+  for (let type of events) {
+    win.on(type, () => { win.webContents.send('win', type) })
   }
 }
 

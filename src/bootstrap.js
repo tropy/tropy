@@ -12,19 +12,17 @@ try {
 
   const { ipcRenderer: ipc } = require('electron')
   const { win } = require('./window')
-  info(`init ${win.type} window...`)
+  info(`initialize ${win.type} window...`)
 
   ready
     .then(() => performance.now())
     .then((READY) =>
       win.init().then(() => {
         const INIT = performance.now()
-        ipc.send('wm', 'init')
+        ipc.send('wm', 'initialized')
 
         require(`./windows/${win.type}`)
-
-        const LOAD = performance.now()
-        ipc.send('wm', 'load')
+        const REQUIRE = performance.now()
 
         requestIdleCallback(() => {
           ipc.send('wm', 'ready')
@@ -34,7 +32,7 @@ try {
             (performance.now() - START).toFixed(3),
             (READY - START).toFixed(3),
             (INIT - READY).toFixed(3),
-            (LOAD - INIT).toFixed(3))
+            (REQUIRE - INIT).toFixed(3))
         }, { timeout: 1000 })
       }))
     .catch(e => {

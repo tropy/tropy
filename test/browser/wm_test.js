@@ -2,6 +2,7 @@
 
 const { join } = require('path')
 const { BrowserWindow } = require('electron')
+const { once } = __require('common/util')
 
 describe('WindowManager', () => {
   const WindowManager = __require('browser/wm')
@@ -20,36 +21,44 @@ describe('WindowManager', () => {
       expect([...wm]).to.be.empty
     })
 
-    describe('window', () => {
-      for (let type of ['about', 'prefs', 'project', 'wizard']) {
-        describe(type, function () {
-          this.timeout(20000)
-          let win
+    for (let type of ['about', 'prefs', 'project', 'wizard']) {
+      describe(`open('${type}')`, function () {
+        this.timeout(12000)
 
-          before(async () => {
-            win = await wm.open(type, {}, { resolves: 'wm-ready' })
-          })
+        let win
+        let initialized, ready
 
-          after(() => win = null)
-
-          it('is opens a browser window', () => {
-            expect(win).to.be.instanceOf(BrowserWindow)
-          })
-
-          it('registers the window by type', () => {
-            expect(wm.has(type)).to.be.true
-            expect(wm.current(type)).to.equal(win)
-            expect([...wm]).to.contain(win)
-          })
-
-          // Run this test last!
-          it('can be closed', async () => {
-            await wm.close(type)
-            expect(wm.has(type)).to.be.false
-            expect(win.isDestroyed()).to.be.true
-          })
+        before(async () => {
+          win = await wm.open(type)
+          initialized = once(win, 'initialized')
+          ready = once(win, 'ready')
         })
-      }
-    })
+
+        after(() => win = null)
+
+        it('opens a browser window', () => {
+          expect(win).to.be.instanceOf(BrowserWindow)
+        })
+
+        it('registers the window by type', () => {
+          expect(wm.has(type)).to.be.true
+          expect(wm.current(type)).to.equal(win)
+          expect([...wm]).to.contain(win)
+        })
+
+        it('reports "initialized"', () =>
+          expect(initialized).to.eventually.to.be.fulfilled)
+
+        it('reports "ready"', () =>
+          expect(ready).to.eventually.be.fulfilled)
+
+        // Run this test last!
+        it('can be closed', async () => {
+          await wm.close(type)
+          expect(wm.has(type)).to.be.false
+          expect(win.isDestroyed()).to.be.true
+        })
+      })
+    }
   })
 })
