@@ -1,38 +1,38 @@
 'use strict'
 
 try {
-  const START = performance.now()
+  const START = Date.now()
 
   const opts = require('./args').parse()
   const { join } = require('path')
   const LOGDIR = join(opts.home, 'log')
 
   const { info, error } = require('./common/log')(LOGDIR, opts)
-  const { ready, toggle } = require('./dom')
+  const { ready } = require('./dom')
 
   const { ipcRenderer: ipc } = require('electron')
   const { win } = require('./window')
   info(`initialize ${win.type} window...`)
 
   ready
-    .then(() => performance.now())
+    .then(() => Date.now())
     .then((READY) =>
       win.init().then(() => {
-        const INIT = performance.now()
+        const INIT = Date.now()
         ipc.send('wm', 'initialized')
 
         require(`./windows/${win.type}`)
-        const REQUIRE = performance.now()
+        const REQUIRE = Date.now()
 
         requestIdleCallback(() => {
           ipc.send('wm', 'ready')
           win.toggle('ready')
 
           info('%s ready %dms [%dms %dms %dms]', win.type,
-            (performance.now() - START).toFixed(3),
-            (READY - START).toFixed(3),
-            (INIT - READY).toFixed(3),
-            (REQUIRE - INIT).toFixed(3))
+            (Date.now() - START),
+            (READY - START),
+            (INIT - READY),
+            (REQUIRE - INIT))
         }, { timeout: 1000 })
       }))
     .catch(e => {
