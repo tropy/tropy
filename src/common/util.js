@@ -15,15 +15,13 @@ const util = {
       function success(...args) {
         off(event, success)
         off('error', failure)
-
         resolve(...args)
       }
 
-      function failure(...args) {
+      function failure(reason) {
         off(event, success)
         off('error', failure)
-
-        reject(...args)
+        reject(reason instanceof Error ? reason : new Error(reason))
       }
 
       on('error', failure)
