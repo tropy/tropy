@@ -11,7 +11,6 @@ global.ARGS = opts
 const { app }  = require('electron')
 const { join } = require('path')
 const { qualified }  = require('../common/release')
-const { linux } = require('../common/os')
 
 let USERDATA = opts.dir
 let LOGDIR
@@ -24,7 +23,7 @@ if (!USERDATA) {
     case 'production':
       USERDATA = join(
         app.getPath('appData'),
-        qualified[linux ? 'name' : 'product'])
+        qualified[process.platform === 'linux' ? 'name' : 'product'])
       break
   }
 }
@@ -37,7 +36,6 @@ if (USERDATA) {
 }
 
 if (!require('./squirrel')()) {
-  const { all }  = require('bluebird')
   const { once } = require('../common/util')
   const { info, warn, verbose } = require('../common/log')(LOGDIR, opts)
 
@@ -58,19 +56,19 @@ if (!require('./squirrel')()) {
 
   verbose(`using ${app.getPath('userData')}`)
 
-  var tropy = new (require('./tropy'))()
+  const tropy = new (require('./tropy'))()
 
   tropy.listen()
   tropy.restore()
 
-  all([
+  Promise.all([
     once(app, 'ready'),
     once(tropy, 'app:restored')
-
-  ]).then(() => {
-    info('ready after %sms', Date.now() - START)
-    tropy.open(...opts._)
-  })
+  ])
+    .then(() => {
+      info('ready after %sms', Date.now() - START)
+      tropy.open(...opts._)
+    })
 
   app.on('second-instance', (_, argv) => {
     tropy.open(...args.parse(argv.slice(1))._)
