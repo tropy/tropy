@@ -23,7 +23,7 @@ describe('WindowManager', () => {
     describe('window', () => {
       for (let type of ['about', 'prefs', 'project', 'wizard']) {
         describe(type, function () {
-          this.timeout(10000)
+          this.timeout(20000)
           let win
 
           before(async () => {
