@@ -64,8 +64,7 @@ function init(dir, {
     case 'test':
       logger.add(transports.Console, {
         handleExceptions: true,
-        humanReadableUnhandledException: true,
-        formatter
+        humanReadableUnhandledException: true
       })
       logger.level = 'error'
       break
