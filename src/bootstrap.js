@@ -7,12 +7,12 @@ try {
   const { join } = require('path')
   const LOGDIR = join(opts.home, 'log')
 
-  const { verbose, warn } = require('./common/log')(LOGDIR, opts)
+  const { info, error } = require('./common/log')(LOGDIR, opts)
   const { ready, toggle } = require('./dom')
 
   const { ipcRenderer: ipc } = require('electron')
   const { win } = require('./window')
-  verbose(`init ${win.type} window...`)
+  info(`init ${win.type} window...`)
 
   ready
     .then(() => performance.now())
@@ -30,18 +30,17 @@ try {
           ipc.send('wm', 'ready')
           toggle(document.body, 'ready', true)
 
-          verbose('%s ready %dms [%dms %dms %dms]', win.type,
+          info('%s ready %dms [%dms %dms %dms]', win.type,
             (performance.now() - START).toFixed(3),
             (READY - START).toFixed(3),
             (INIT - READY).toFixed(3),
             (LOAD - INIT).toFixed(3))
-        }, { timeout: 500 })
+        }, { timeout: 1000 })
       }))
-    .catch(error => {
-      warn(`failed initializing ${win.type}: ${error.message}`)
-      warn(error.stack)
-
-      win.destroy()
+    .catch(e => {
+      error(`Failed initializing ${win.type}: ${e.message}`)
+      error(e.stack)
+      process.crash()
     })
 
   // eslint-disable-next-line
@@ -53,7 +52,8 @@ try {
     global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
   }
 
-} catch (error) {
-  process.stderr.write(`Uncaught error in bootstrap: ${error.message}\n`)
-  process.stderr.write(error.stack)
+} catch (e) {
+  process.stderr.write(`Uncaught error in bootstrap: ${e.message}\n`)
+  process.stderr.write(e.stack)
+  process.crash()
 }
