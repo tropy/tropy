@@ -32,7 +32,6 @@ describe('main process', () => {
 
     app.once.restore()
     app.on.restore()
-
   })
 
   describe('when required', () => {
@@ -51,5 +50,4 @@ describe('main process', () => {
       expect(Tropy.instance.restore).to.have.been.calledOnce
     })
   })
-
 })
