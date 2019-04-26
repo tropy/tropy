@@ -26,7 +26,7 @@ try {
 
         requestIdleCallback(() => {
           ipc.send('wm', 'ready')
-          toggle(document.body, 'ready', true)
+          win.toggle('ready')
 
           info('%s ready %dms [%dms %dms %dms]', win.type,
             (performance.now() - START).toFixed(3),

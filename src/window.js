@@ -1,6 +1,5 @@
 'use strict'
 
-const { each } = require('bluebird')
 const { ipcRenderer: ipc } = require('electron')
 const { basename, join } = require('path')
 const { existsSync: exists } = require('fs')
@@ -195,9 +194,10 @@ class Window extends EventEmitter {
       if (this.isUnloading) return
       this.isUnloading = true
 
-      toggle(document.body, 'quitting', true)
+      this.toggle('unload')
 
-      each(this.unloaders, unload => unload())
+      Promise
+        .all(this.unloaders.map(unload => unload()))
         .finally(() => {
           this.hasFinishedUnloading = true
 
@@ -386,6 +386,16 @@ class Window extends EventEmitter {
         break
       case 'unmaximize':
         toggle(document.body, 'is-maximized', false)
+        break
+      case 'ready':
+        toggle(document.body, 'ready', true)
+        break
+      case 'disable':
+      case 'unload':
+        toggle(document.body, 'inactive', true)
+        break
+      case 'enable':
+        toggle(document.body, 'inactive', false)
         break
       case 'enter-full-screen':
         toggle(document.body, 'is-full-screen', true)
