@@ -60,7 +60,14 @@ function init(dir, {
           options: { flags: 'w' }
         })
       }
-
+      break
+    case 'test':
+      logger.add(transports.Console, {
+        handleExceptions: true,
+        humanReadableUnhandledException: true,
+        formatter
+      })
+      logger.level = 'error'
       break
   }
 
