@@ -9,7 +9,7 @@ const ACTIVITY = {
 
 const BODY = {
   dark: '#2f2f2f',
-  light: '#ffffff'
+  light: '#f6f6f6'
 }
 
 const COLUMN = {
