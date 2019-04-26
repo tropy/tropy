@@ -5,7 +5,7 @@ const { createSelector: memo } = require('reselect')
 
 const getCachePrefix = memo(
   (state) => state.project,
-  (project) => join(ARGS.cache, `${project.id}`)
+  (project) => (ARGS.cache) ? join(ARGS.cache, `${project.id}`) : null
 )
 
 module.exports = {
