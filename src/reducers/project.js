@@ -1,7 +1,7 @@
 'use strict'
 
 const { PROJECT, ITEM } = require('../constants')
-const INIT = { name: '', items: 0 }
+const INIT = { name: '', items: 0, file: ARGS.file }
 
 function dec(state, by = 1) {
   return { ...state, items: Math.max(0, state.items - by) }
