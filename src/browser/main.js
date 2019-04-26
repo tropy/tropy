@@ -2,8 +2,6 @@
 
 const START = Date.now()
 
-let READY = undefined
-
 const args = require('./args')
 const opts = args.parse(process.argv.slice(1))
 
@@ -11,9 +9,9 @@ process.env.NODE_ENV = opts.environment
 global.ARGS = opts
 
 const { app }  = require('electron')
-const { extname, join } = require('path')
+const { join } = require('path')
 const { qualified }  = require('../common/release')
-const { linux, darwin } = require('../common/os')
+const { linux } = require('../common/os')
 
 let USERDATA = opts.dir
 let LOGDIR
@@ -65,39 +63,12 @@ if (!require('./squirrel')()) {
   tropy.listen()
   tropy.restore()
 
-  if (darwin) {
-    app.on('open-file', (event, file) => {
-      switch (extname(file)) {
-        case '.tpy':
-          event.preventDefault()
-          if (!READY) opts._ = [file]
-          else tropy.open(file)
-          break
-        case '.jpg':
-        case '.jpeg':
-        case '.png':
-        case '.svg':
-          if (READY && tropy.win) {
-            event.preventDefault()
-            tropy.import([file])
-          }
-          break
-        case '.ttp':
-          if (READY && tropy.win) {
-            event.preventDefault()
-            tropy.importTemplates([file])
-          }
-      }
-    })
-  }
-
   all([
     once(app, 'ready'),
     once(tropy, 'app:restored')
 
   ]).then(() => {
-    READY = Date.now()
-    info('ready after %sms', READY - START)
+    info('ready after %sms', Date.now() - START)
     tropy.open(...opts._)
   })
 

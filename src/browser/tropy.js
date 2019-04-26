@@ -1,7 +1,7 @@
 'use strict'
 
 const { EventEmitter } = require('events')
-const { resolve } = require('path')
+const { extname, join, resolve } = require('path')
 
 const {
   app,
@@ -14,7 +14,6 @@ const {
 const { verbose, warn } = require('../common/log')
 const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
-const { join } = require('path')
 const { into, compose, remove, take } = require('transducers.js')
 const rm = require('rimraf')
 const uuid = require('uuid/v1')
@@ -76,7 +75,7 @@ class Tropy extends EventEmitter {
     prop(this, 'projects', { value: new Map() })
 
     prop(this, 'home', {
-      value: resolve(__dirname, '..', '..')
+      value: join(__dirname, '..', '..')
     })
 
     prop(this, 'plugins', {
@@ -603,6 +602,26 @@ class Tropy extends EventEmitter {
 
     if (darwin) {
       app.on('activate', () => this.open())
+
+      app.on('open-file', (event, file) => {
+        switch (extname(file)) {
+          case '.tpy':
+            this.open(file)
+            break
+          case '.jpg':
+          case '.jpeg':
+          case '.png':
+          case '.svg':
+            this.import([file])
+            break
+          case '.ttp':
+            this.importTemplates([file])
+            break
+          default:
+            return
+        }
+        event.preventDefault()
+      })
 
       let ids = [
         prefs.subscribeNotification(
