@@ -26,11 +26,10 @@ describe('WindowManager', () => {
         this.timeout(12000)
 
         let win
-        let initialized, ready
+        let ready
 
         before(async () => {
           win = await wm.open(type)
-          initialized = once(win, 'initialized')
           ready = once(win, 'ready')
         })
 
@@ -45,9 +44,6 @@ describe('WindowManager', () => {
           expect(wm.current(type)).to.equal(win)
           expect([...wm]).to.contain(win)
         })
-
-        it('reports "initialized"', () =>
-          expect(initialized).to.eventually.to.be.fulfilled)
 
         it('reports "ready"', () =>
           expect(ready).to.eventually.be.fulfilled)
