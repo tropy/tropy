@@ -10,14 +10,14 @@ const css = {
     })`
   },
 
-  url(path) {
-    return `url(${res('images', path)})`
+  url(string) {
+    return `url(${string})`
   },
 
   cursor(path, { x = 1, y = 1, fallback = 'default' } = {}) {
     return `${isArray(path) ?
-      css.imageSet(...path) :
-      css.url(path)} ${x} ${y}, ${fallback}`
+      css.imageSet(...path.map(p => res('cursors', p))) :
+      css.url(res('cursors', path))} ${x} ${y}, ${fallback}`
   }
 }
 

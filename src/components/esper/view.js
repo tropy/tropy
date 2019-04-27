@@ -622,7 +622,7 @@ function equal(p1, p2) {
 
 
 function svg(name) {
-  return [`esper/${name}@1x.svg`, `esper/${name}@2x.svg`]
+  return [`${name}@1x.svg`, `${name}@2x.svg`]
 }
 
 function addCursorStyle(styles, name, cursor = CURSOR[name]) {
