@@ -240,6 +240,13 @@ const dom = {
       img.onerror = reject
       img.src = src
     })
+  },
+
+  load(node) {
+    return new Promise((resolve, reject) => {
+      node.onload = resolve
+      node.onerror = reject
+    })
   }
 }
 

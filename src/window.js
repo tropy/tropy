@@ -6,13 +6,23 @@ const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
 const { Plugins } = require('./common/plugins')
 const { addIdleObserver } = require('./common/idle')
-const { pick } = require('./common/util')
+const { delay, noop, pick } = require('./common/util')
 const { EventEmitter } = require('events')
 const args = require('./args')
 const path = require('./path')
 
 const {
-  $$, append, emit, create, isInput, on, off, toggle, stylesheet, remove
+  $$,
+  append,
+  emit,
+  create,
+  isInput,
+  load,
+  on,
+  off,
+  toggle,
+  stylesheet,
+  remove
 } = require('./dom')
 
 const isCommand = darwin ?
@@ -170,11 +180,11 @@ class Window extends EventEmitter {
       })
       .on('ctx', (_, action, detail) => {
         // NB: delay event for pointer position to be up-to-date!
-        setTimeout(() => {
+        delay(25).then(() => {
           emit(document, `ctx:${action}`, {
             detail: { ...detail, ...this.pointer }
           })
-        }, 25)
+        })
       })
       .on('global', (_, action) => {
         emit(document, `global:${action}`)
@@ -202,7 +212,7 @@ class Window extends EventEmitter {
 
           // Possibly related to electron#7977 closing the window
           // a second time is unreliable if it happens to soon.
-          setTimeout(() => ipc.send('wm', this.unloader), 25)
+          return delay(25).then(() => ipc.send('wm', this.unloader))
         })
     })
   }
@@ -340,39 +350,29 @@ class Window extends EventEmitter {
     ipc.send('wm', 'reload')
   }
 
-  style(prune = false) {
-    return new Promise((resolve, reject) => {
-      if (prune) {
-        for (let css of $$('head > link[rel="stylesheet"]'))
-          remove(css)
+  async style(prune = false) {
+    if (prune) {
+      for (let css of $$('head > link[rel="stylesheet"]'))
+        remove(css)
+    }
+
+    let { stylesheets } = this
+    let loaded = []
+
+    for (let i = 0; i < stylesheets.length; ++i) {
+      if (i === 0 || exists(stylesheets[i])) {
+        let css = stylesheet(stylesheets[i])
+        loaded.push(load(css))
+        append(css, document.head)
       }
+    }
 
-      let { stylesheets } = this
-      let count = document.styleSheets.length + 1
+    this.emit('settings.update', { theme: this.state.theme })
 
-      append(stylesheet(stylesheets.shift()), document.head)
-
-      for (let css of this.stylesheets) {
-        if (exists(css)) {
-          ++count
-          append(stylesheet(css), document.head)
-        }
-      }
-
-      this.emit('settings.update', { theme: this.state.theme })
-
-      let limit = Date.now() + 250
-      let ti = setInterval(() => {
-        try {
-          if (document.styleSheets.length === count || Date.now() > limit) {
-            clearInterval(ti)
-            resolve()
-          }
-        } catch (error) {
-          reject(error)
-        }
-      }, 15)
-    })
+    await Promise.race([
+      Promise.all(loaded).catch(noop),
+      delay(250)
+    ])
   }
 
   toggle(state) {
