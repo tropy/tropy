@@ -13,7 +13,7 @@ try {
   const { Window } = require('./window')
 
   const win = new Window(opts)
-  info(`initialize ${win.type} window...`)
+  info(`${win.type}.init...`)
 
   ready
     .then(() => Date.now())
@@ -23,17 +23,17 @@ try {
         ipc.send('wm', 'initialized')
 
         require(`./windows/${win.type}`)
-        const REQUIRE = Date.now()
+        const LOAD = Date.now()
 
         requestIdleCallback(() => {
           ipc.send('wm', 'ready')
           win.toggle('ready')
 
-          info('%s ready %dms [%dms %dms %dms]', win.type,
+          info('%s ready %dms [R:%dms I:%dms L:%dms]', win.type,
             (Date.now() - START),
             (READY - START),
             (INIT - READY),
-            (REQUIRE - INIT))
+            (LOAD - INIT))
         }, { timeout: 1000 })
       }))
     .catch(e => {
