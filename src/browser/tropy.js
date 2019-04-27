@@ -74,10 +74,6 @@ class Tropy extends EventEmitter {
 
     prop(this, 'projects', { value: new Map() })
 
-    prop(this, 'home', {
-      value: join(__dirname, '..', '..')
-    })
-
     prop(this, 'plugins', {
       value: new Plugins(join(app.getPath('userData'), 'plugins'))
     })

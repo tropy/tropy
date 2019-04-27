@@ -4,14 +4,15 @@ try {
   const START = Date.now()
 
   const opts = require('./args').parse()
-  const { join } = require('path')
-  const LOGDIR = join(opts.home, 'log')
+  const { user } = require('./path')
+  const LOGDIR = user('log')
 
   const { info, error } = require('./common/log')(LOGDIR, opts)
   const { ready } = require('./dom')
-
   const { ipcRenderer: ipc } = require('electron')
-  const { win } = require('./window')
+  const { Window } = require('./window')
+
+  const win = new Window(opts)
   info(`initialize ${win.type} window...`)
 
   ready
@@ -43,7 +44,7 @@ try {
     })
 
   // eslint-disable-next-line
-  global.eval = function () {
+  global.eval = () => {
     throw new Error('use of eval() is prohibited')
   }
 

@@ -2,12 +2,12 @@
 
 require('../common/promisify')
 
-const { join } = require('path')
 const { Database } = require('../common/db')
 const { verbose, warn } = require('../common/log')
 const { ONTOLOGY } = require('../constants')
 const { exec } = require('./cmd')
 const { fail } = require('../dialog')
+const { user } = require('../path')
 const mod = require('../models')
 const act = require('../actions')
 const { call, cps, fork, take } = require('redux-saga/effects')
@@ -30,7 +30,7 @@ function *reset(db) {
   return db
 }
 
-function *ontology({ file = join(ARGS.home, ONTOLOGY.DB), ...opts } = {}) {
+function *ontology({ file = user(ONTOLOGY.DB), ...opts } = {}) {
   try {
     var db = new Database(file, 'w+', opts)
 

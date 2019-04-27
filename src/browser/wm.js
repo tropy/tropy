@@ -193,12 +193,12 @@ class WindowManager extends EventEmitter {
         aqua: WindowManager.getAquaColorVariant(),
         dark: prefs.isDarkMode(),
         environment: process.env.NODE_ENV,
-        home: app.getPath('userData'),
         documents: app.getPath('documents'),
         maximizable: win.isMaximizable(),
         minimizable: win.isMinimizable(),
         pictures: app.getPath('pictures'),
         scrollbars: !WindowManager.hasOverlayScrollBars(),
+        user: app.getPath('userData'),
         ...args
       }))
     })

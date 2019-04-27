@@ -1,6 +1,7 @@
 'use strict'
 
 const { isArray } = Array
+const { res } = require('./path')
 
 const css = {
   imageSet(...paths) {
@@ -9,8 +10,8 @@ const css = {
     })`
   },
 
-  url(path, root = './images/') {
-    return `url(${root}${path})`
+  url(path) {
+    return `url(${res('images', path)})`
   },
 
   cursor(path, { x = 1, y = 1, fallback = 'default' } = {}) {

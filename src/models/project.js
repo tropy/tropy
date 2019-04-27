@@ -36,7 +36,7 @@ module.exports = {
       case 'project':
         project.base = dirname(db.path)
         break
-      case 'user':
+      case 'home':
         project.base = os.home
         break
       case 'documents':

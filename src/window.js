@@ -1,7 +1,7 @@
 'use strict'
 
 const { ipcRenderer: ipc } = require('electron')
-const { basename, join } = require('path')
+const { basename } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
 const { Plugins } = require('./common/plugins')
@@ -9,6 +9,7 @@ const { addIdleObserver } = require('./common/idle')
 const { pick } = require('./common/util')
 const { EventEmitter } = require('events')
 const args = require('./args')
+const path = require('./path')
 
 const {
   $$, append, emit, create, isInput, on, off, toggle, stylesheet, remove
@@ -21,13 +22,15 @@ const isCommand = darwin ?
 const IDLE_SHORT = 60
 
 class Window extends EventEmitter {
-  constructor(opts = ARGS) {
+  constructor(opts) {
     if (Window.instance) {
       throw Error('Singleton Window constructor called multiple times')
     }
 
     super()
     Window.instance = this
+
+    this.type = basename(location.pathname, '.html')
 
     this.state = pick(opts, [
       'aqua',
@@ -40,7 +43,7 @@ class Window extends EventEmitter {
     ])
 
     this.pointer = {}
-    this.plugins = new Plugins(ARGS.plugins)
+    this.plugins = new Plugins(opts.plugins)
     this.unloader = 'close'
     this.unloaders = []
     this.hasFinishedUnloading = false
@@ -100,10 +103,6 @@ class Window extends EventEmitter {
     ipc.send('wm', 'redo')
   }
 
-  get type() {
-    return basename(window.location.pathname, '.html')
-  }
-
   get theme() {
     return (this.state.theme !== 'system') ?
       this.state.theme :
@@ -113,9 +112,9 @@ class Window extends EventEmitter {
   get stylesheets() {
     let { theme } = this
     return [
-      `../lib/stylesheets/${process.platform}/${this.type}-${theme}.css`,
-      join(ARGS.home, 'style.css'),
-      join(ARGS.home, `style-${theme}.css`)
+      path.styles(process.platform, `${this.type}-${theme}.css`),
+      path.user('style.css'),
+      path.user(`style-${theme}.css`)
     ]
   }
 
@@ -351,7 +350,7 @@ class Window extends EventEmitter {
       let count = document.styleSheets.length
 
       for (let css of this.stylesheets) {
-        if (exists(join(__dirname, css))) {
+        if (exists(css)) {
           ++count
           append(stylesheet(css), document.head)
         }
@@ -418,5 +417,5 @@ class Window extends EventEmitter {
 module.exports = {
   Window,
 
-  get win() { return Window.instance || new Window() }
+  get win() { return Window.instance || new Window(ARGS) }
 }
