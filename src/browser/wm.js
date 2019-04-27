@@ -198,6 +198,7 @@ class WindowManager extends EventEmitter {
         minimizable: win.isMinimizable(),
         pictures: app.getPath('pictures'),
         scrollbars: !WindowManager.hasOverlayScrollBars(),
+        theme: 'light',
         user: app.getPath('userData'),
         ...args
       }))
