@@ -360,9 +360,10 @@ class Window extends EventEmitter {
     let loaded = []
 
     for (let i = 0; i < stylesheets.length; ++i) {
-      if (i === 0 || exists(stylesheets[i])) {
-        let css = stylesheet(stylesheets[i])
-        loaded.push(load(css))
+      let src = stylesheets[i]
+      if (i === 0 || exists(src)) {
+        let css = stylesheet(src)
+        loaded.push(load(css, `Load error: ${src}`))
         append(css, document.head)
       }
     }
@@ -370,7 +371,7 @@ class Window extends EventEmitter {
     this.emit('settings.update', { theme: this.state.theme })
 
     await Promise.race([
-      Promise.all(loaded).catch(noop),
+      Promise.all(loaded),
       delay(250)
     ])
   }

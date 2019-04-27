@@ -242,10 +242,10 @@ const dom = {
     })
   },
 
-  load(node) {
+  load(node, message = 'Load Error') {
     return new Promise((resolve, reject) => {
-      node.onload = resolve
-      node.onerror = reject
+      node.onload = () => resolve(node)
+      node.onerror = () => reject(new Error(message))
     })
   }
 }
