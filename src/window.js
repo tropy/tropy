@@ -347,7 +347,10 @@ class Window extends EventEmitter {
           remove(css)
       }
 
-      let count = document.styleSheets.length
+      let { stylesheets } = this
+      let count = document.styleSheets.length + 1
+
+      append(stylesheet(stylesheets.shift()), document.head)
 
       for (let css of this.stylesheets) {
         if (exists(css)) {
