@@ -18,16 +18,6 @@
     flex: 1 1 0;
     min-width: 0; // Prevent horizontal scrollbar in project-view
   }
-
-  .closing-backdrop {
-    @extend %backdrop;
-  }
-
-  &.closing {
-    .closing-backdrop {
-      display: flex;
-    }
-  }
 }
 
 .no-project {

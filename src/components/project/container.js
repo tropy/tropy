@@ -280,9 +280,7 @@ class ProjectContainer extends Component {
           photos={photos}
           tags={props.tags}
           onPhotoError={props.onPhotoError}/>
-        <div className="closing-backdrop">
-          <IconSpin/>
-        </div>
+        <div className="cover" />
       </div>
     )
   }

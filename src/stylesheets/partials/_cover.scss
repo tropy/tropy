@@ -1,17 +1,23 @@
 //
-// Loading cover
+// Cover
 // --------------------------------------------------
 
-.loading-cover {
+.cover {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: $zindex-backdrop;
-  background-color: $loading-cover-bg;
+  z-index: $zindex-cover;
+  background-color: $cover-color;
 
   .ready & {
     display: none;
+  }
+
+  .inactive &,
+  .closing & {
+    display: block;
+    opacity: 0.6;
   }
 }

@@ -144,7 +144,7 @@ $body-bg:          var(--shade-3);
 $text-color:       var(--shade-9);
 $soft-text-color:  var(--shade-8);
 $muted-text-color: var(--shade-7);
-$backdrop-color:   var(--shade-3-60);
+$cover-color:      var(--shade-3);
 
 
 // Typography
@@ -252,9 +252,6 @@ $list-active-icon-color: var(--shade-8);
 // Accordion
 $accordion-bg:        var(--shade-4-lighten-2);
 $accordion-active-bg: var(--shade-4-lighten-4);
-
-// Loading cover
-$loading-cover-bg: var(--shade-3);
 
 
 // Components
