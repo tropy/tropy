@@ -43,8 +43,7 @@ function init(dir, {
   switch (environment) {
     case 'development':
       logger.add(transports.Console, {
-        handleExceptions: true,
-        humanReadableUnhandledException: true,
+        handleExceptions: false,
         formatter
       })
       // eslint-disable-next-line no-fallthrough
@@ -54,9 +53,7 @@ function init(dir, {
         logger.add(transports.File, {
           label: LABEL,
           filename: join(dir, `${LABEL}.log`),
-          tailable: true,
-          handleExceptions: true,
-          humanReadableUnhandledException: true,
+          handleExceptions: false,
           options: { flags: 'w' }
         })
       }

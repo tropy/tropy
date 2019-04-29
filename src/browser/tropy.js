@@ -5,13 +5,14 @@ const { extname, join, resolve } = require('path')
 
 const {
   app,
+  clipboard,
   shell,
   ipcMain: ipc,
   BrowserWindow,
   systemPreferences: prefs
 } = require('electron')
 
-const { info } = require('../common/log')
+const { error, info } = require('../common/log')
 const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
@@ -29,7 +30,7 @@ const WindowManager = require('./wm')
 
 const { defineProperty: prop } = Object
 const act = require('../actions')
-const { darwin, linux } = require('../common/os')
+const { darwin, linux, system } = require('../common/os')
 const { channel, product, version } = require('../common/release')
 const { restrict } = require('../common/util')
 
@@ -636,8 +637,14 @@ class Tropy extends EventEmitter {
       })
     }
 
-    ipc.on('cmd', (event, command, ...params) => {
-      this.emit(command, BrowserWindow.fromWebContents(event.sender), ...params)
+    ipc.on('cmd', (event, cmd, ...args) => {
+      this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
+    })
+
+    ipc.on('error', (event, error) => {
+      this.handleUncaughtException(
+        error,
+        BrowserWindow.fromWebContents(event.sender))
     })
 
     ipc.on(PROJECT.OPENED, (event, project) =>
@@ -700,8 +707,8 @@ class Tropy extends EventEmitter {
     this.wm.on('crashed', (_, win) => {
       dialog
         .warn(win, this.dict.dialogs.crashed)
-        .then(res => {
-          switch (res) {
+        .then(({ response }) => {
+          switch (response) {
             case 0:
               win.destroy()
               break
@@ -716,6 +723,28 @@ class Tropy extends EventEmitter {
     })
 
     return this
+  }
+
+  handleUncaughtException(e, win = BrowserWindow.getFocusedWindow()) {
+    error(`unhandled error: ${e.message}`, { stack: e.stack })
+
+    if (this.production) {
+      dialog
+        .alert(win, {
+          ...this.dict.dialogs.unhandled,
+          detail: e.stack
+        })
+        .then(({ response }) => {
+          switch (response) {
+            case 1:
+              shell.openItem(join(app.getPath('userData'), 'log', 'main.log'))
+              break
+            case 2:
+              clipboard.write({ text: Tropy.crashReport(e) })
+              break
+          }
+        })
+    }
   }
 
   get hash() {
@@ -809,7 +838,7 @@ class Tropy extends EventEmitter {
     return channel === 'dev' || ARGS.environment === 'development'
   }
 
-  get isBuild() {
+  get production() {
     return ARGS.environment === 'production'
   }
 
@@ -819,6 +848,19 @@ class Tropy extends EventEmitter {
 
   get version() {
     return version
+  }
+
+  static crashReport(e) {
+    return `
+Tropy Crash Report
+----------------------------------------
+Version: ${version}
+OS: ${system}
+Time: ${new Date().toISOString()}
+
+Error
+----------------------------------------
+${e.stack}`
   }
 }
 

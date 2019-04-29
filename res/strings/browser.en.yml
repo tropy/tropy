@@ -17,15 +17,10 @@ en:
         Would you like to close this window or keep waiting?
     unhandled:
       buttons:
-        - Copy Crash Report
-        - Relaunch
-        - Quit
-      message: >
-        Tropy has crashed.
-        Please report this issue at https://github.com/tropy/tropy
-        or on the Tropy forums at https://forums.tropy.org
-    fatal:
-
+        - OK
+        - Show Logs
+        - Copy Error
+      message: An unhandled error occured
   windows:
     prefs:
       title: Tropy Preferences

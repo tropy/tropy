@@ -10,6 +10,7 @@ const { delay, pick } = require('./common/util')
 const { EventEmitter } = require('events')
 const args = require('./args')
 const path = require('./path')
+const debounce = require('lodash.debounce')
 
 const {
   $$,
@@ -73,6 +74,7 @@ class Window extends EventEmitter {
         this.handleModifierKeys()
         this.handleMouseEnter()
         this.handleMouseButtons()
+        this.handleUncaughtExceptions()
 
         addIdleObserver(this.handleIdleEvents, IDLE_SHORT)
 
@@ -316,6 +318,22 @@ class Window extends EventEmitter {
         }
       }
     }, { passive: true, capture: false })
+  }
+
+  handleUncaughtExceptions() {
+    let handleError = debounce(({ message, stack }) => {
+      ipc.send('error', { message, stack })
+    }, 250)
+
+    on(window, 'error', (event) => {
+      event.preventDefault()
+      handleError(event.error)
+    })
+
+    on(window, 'unhandledrejection', (event) => {
+      event.preventDefault()
+      handleError(event.reason)
+    })
   }
 
   createWindowControls() {
