@@ -23,6 +23,13 @@ function show(type, win, opts) {
 }
 
 module.exports = {
+  alert(win, opts) {
+    return show('message-box', win, {
+      type: 'error',
+      ...opts
+    })
+  },
+
   open(win, opts) {
     return show('file', win, {
       properties: ['openFile'],
