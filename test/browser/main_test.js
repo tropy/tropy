@@ -12,15 +12,15 @@ describe('main process', () => {
 
   before(() => {
     sinon.spy(args, 'parse')
+    sinon.spy(app, 'whenReady')
+    sinon.spy(app, 'setName')
     sinon.stub(app, 'on').returns(app)
-    sinon.stub(app, 'whenReady').returns(Promise.resolve())
 
     Tropy.instance = sinon.createStubInstance(EventEmitter)
+    Tropy.instance.start = sinon.stub().returns(Promise.resolve())
+    Tropy.instance.open = sinon.stub()
 
-    Tropy.instance.listen = sinon.stub()
-    Tropy.instance.restore = sinon.stub()
-
-    process.argv = ['electron']
+    process.argv = ['tropy', 'file.tpy']
   })
 
   after(() => {
@@ -29,6 +29,7 @@ describe('main process', () => {
     args.parse.restore()
     app.on.restore()
     app.whenReady.restore()
+    app.setName.restore()
   })
 
   describe('when required', () => {
@@ -38,13 +39,12 @@ describe('main process', () => {
       expect(args.parse).to.have.been.calledOnce
     })
 
-    it('registers event listeners', () => {
+    it('starts Tropy instance', () => {
+      expect(app.setName).to.have.been.called
       expect(app.whenReady).to.have.been.called
-      expect(Tropy.instance.listen).to.have.been.calledOnce
-    })
-
-    it('restores state', () => {
-      expect(Tropy.instance.restore).to.have.been.calledOnce
+      expect(Tropy.instance.start).to.have.been.calledOnce
+      expect(Tropy.instance.open).to.have.been.calledOnceWith('file.tpy')
+      expect(Tropy.instance.isReady).to.be.true
     })
   })
 })

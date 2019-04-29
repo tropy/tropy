@@ -37,12 +37,11 @@ if (USERDATA) {
 }
 
 if (!require('./squirrel')()) {
-  const { once } = require('../common/util')
-  const { info, warn, verbose } = require('../common/log')(LOGDIR, opts)
+  const { info, warn } = require('../common/log')(LOGDIR, opts)
 
   if (opts.environment !== 'test') {
     if (!app.requestSingleInstanceLock()) {
-      verbose('other instance detected, exiting...')
+      info('other instance detected, exiting...')
       app.exit(0)
     }
   }
@@ -55,25 +54,24 @@ if (!require('./squirrel')()) {
     app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
   }
 
-  verbose(`using ${app.getPath('userData')}`)
+  info(`using ${app.getPath('userData')}`)
 
-  const tropy = new (require('./tropy'))()
-
-  tropy.listen()
-  tropy.restore()
+  const Tropy = require('./tropy')
+  const tropy = new Tropy()
 
   Promise.all([
     app.whenReady(),
-    once(tropy, 'app:restored')
+    tropy.start()
   ])
     .then(() => {
       info('ready after %sms', Date.now() - START)
-      tropy.openProject(...opts._)
+      tropy.isReady = true
+      tropy.open(...opts._)
     })
 
   if (darwin) {
     app.on('open-file', (event, file) => {
-      if (app.isReady()) {
+      if (tropy.isReady) {
         if (tropy.open(file))
           event.preventDefault()
       } else {
@@ -89,14 +87,19 @@ if (!require('./squirrel')()) {
     tropy.open(...args.parse(argv.slice(1))._)
   })
 
-  app.on('quit', (_, code) => {
-    verbose(`quit with exit code ${code}`)
-  })
-
   app.on('web-contents-created', (_, contents) => {
     contents.on('new-window', (event, url) => {
       warn(`prevented loading ${url}`)
       event.preventDefault()
     })
+  })
+
+  app.on('window-all-closed', () => {
+    if (!darwin) app.quit()
+  })
+
+  app.on('quit', (_, code) => {
+    tropy.stop()
+    info(`quit with exit code ${code}`)
   })
 }

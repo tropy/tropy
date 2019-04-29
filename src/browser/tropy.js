@@ -11,7 +11,7 @@ const {
   systemPreferences: prefs
 } = require('electron')
 
-const { verbose, warn } = require('../common/log')
+const { info } = require('../common/log')
 const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
@@ -79,7 +79,34 @@ class Tropy extends EventEmitter {
     })
   }
 
+  async start() {
+    await this.restore()
+    this.listen()
+    this.wm.start()
+  }
+
+  stop() {
+    this.updater.stop()
+    this.plugins.stop()
+    this.persist()
+  }
+
   open(file) {
+    if (file == null) {
+      let win = this.wm.current()
+      if (win != null) {
+        return (win.show(), false)
+      }
+
+      for (let recent of this.state.recent) {
+        if (exists(recent))
+          return (this.openProject(recent), false)
+      }
+
+      this.showWizardWindow()
+      return false
+    }
+
     switch (extname(file)) {
       case '.tpy':
         this.openProject(file)
@@ -99,35 +126,21 @@ class Tropy extends EventEmitter {
     return true
   }
 
-  openProject(file) {
-    let win = this.wm.current()
+  openProject(file, win = this.wm.current()) {
+    file = resolve(file)
+    info(`opening ${file}...`)
 
-    if (file == null) {
-      if (win != null) {
-        win.show()
-      } else {
-        for (let recent of this.state.recent) {
-          if (exists(recent)) return this.openProject(recent)
-        }
-        this.showWizardWindow()
-      }
-
-    } else {
-      file = resolve(file)
-      verbose(`opening ${file}...`)
-
-      if (win == null) {
-        this.wm.show('project', { file, ...this.hash }, {
-          title: '',
-          ...this.state.win.bounds
-        }).finally(() => {
-          this.emit('app:reload-menu')
-        })
-      } else {
-        this.dispatch(act.project.open(file), win)
-        win.show()
+    if (win == null) {
+      this.wm.show('project', { file, ...this.hash }, {
+        title: '',
+        ...this.state.win.bounds
+      }).finally(() => {
         this.emit('app:reload-menu')
-      }
+      })
+    } else {
+      this.dispatch(act.project.open(file), win)
+      win.show()
+      this.emit('app:reload-menu')
     }
   }
 
@@ -228,7 +241,7 @@ class Tropy extends EventEmitter {
       })
 
       .tap(() => this.emit('app:restored'))
-      .tap(() => verbose('app state restored'))
+      .tap(() => info('app state restored'))
   }
 
   load() {
@@ -249,7 +262,7 @@ class Tropy extends EventEmitter {
   }
 
   persist() {
-    verbose('saving app state')
+    info('saving app state')
 
     if (this.state != null) {
       this.store.save.sync('state.json', this.state)
@@ -455,7 +468,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:clear-recent-projects', () => {
-      verbose('clearing recent projects...')
+      info('clearing recent projects...')
       this.state.recent = []
       this.emit('app:reload-menu')
     })
@@ -465,7 +478,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:switch-locale', async (_, locale) => {
-      verbose(`switching to "${locale}" locale...`)
+      info(`switching to "${locale}" locale...`)
       this.state.locale = locale
       await this.load()
       this.updateWindowLocale()
@@ -473,7 +486,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:toggle-debug-flag', () => {
-      verbose('toggling dev/debug mode...')
+      info('toggling dev/debug mode...')
       this.state.debug = !this.state.debug
       this.wm.broadcast('debug', this.state.debug)
       this.emit('app:reload-menu')
@@ -561,7 +574,9 @@ class Tropy extends EventEmitter {
 
     this.on('app:reset-ontology-db', () => {
       if (this.wm.has(['project', 'prefs']))
-        warn('cannot reset ontology db while in use')
+        dialog.warn(this.wm.first(['prefs', 'project']), {
+          message: 'Cannot reset ontology db while in use!'
+        })
       else
         rm.sync(join(app.getPath('userData'), 'ontology.db'))
     })
@@ -574,7 +589,7 @@ class Tropy extends EventEmitter {
           filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }]
         })
         .then(files => {
-          if (files) this.openProject(...files)
+          if (files) this.openProject(files[0])
         })
     })
 
@@ -595,27 +610,13 @@ class Tropy extends EventEmitter {
       this.emit('app:reload-menu')
     })
 
-    let quit = false
     let winId
-
     app.on('browser-window-focus', (_, win) => {
       try {
         if (winId !== win.id) this.emit('app:reload-menu')
       } finally {
         winId = win.id
       }
-    })
-
-    app.once('before-quit', () => { quit = true })
-
-    app.on('window-all-closed', () => {
-      if (quit || !darwin) app.quit()
-    })
-
-    app.on('quit', () => {
-      this.updater.stop()
-      this.plugins.stop()
-      this.persist()
     })
 
     if (darwin) {
@@ -631,8 +632,7 @@ class Tropy extends EventEmitter {
       ]
 
       app.on('quit', () => {
-        for (let id of ids)
-          prefs.unsubscribeNotification(id)
+        for (let id of ids) prefs.unsubscribeNotification(id)
       })
     }
 
@@ -641,7 +641,9 @@ class Tropy extends EventEmitter {
     })
 
     ipc.on(PROJECT.OPENED, (event, project) =>
-      this.hasOpenedProject(project, BrowserWindow.fromWebContents(event.sender)))
+      this.hasOpenedProject(
+        project,
+        BrowserWindow.fromWebContents(event.sender)))
 
     ipc.on(PROJECT.CREATE, () => this.showWizardWindow())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.openProject(file))
@@ -713,8 +715,6 @@ class Tropy extends EventEmitter {
         })
     })
 
-    this.wm.start()
-
     return this
   }
 
@@ -751,7 +751,7 @@ class Tropy extends EventEmitter {
   }
 
   setTheme(theme = this.state.theme) {
-    verbose(`switching to "${theme}" theme...`)
+    info(`switching to "${theme}" theme...`)
     this.state.theme = theme
 
     if (darwin) {

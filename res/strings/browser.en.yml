@@ -9,12 +9,23 @@ en:
       detail: Please report this issue at https://github.com/tropy/tropy
     unresponsive:
       buttons:
-        - Close
+        - Close Window
         - Keep Waiting
       message: Tropy is not responding
       detail: >
         Tropy is not responding.
-        Would you like to force close it or just keep waiting?
+        Would you like to close this window or keep waiting?
+    unhandled:
+      buttons:
+        - Copy Crash Report
+        - Relaunch
+        - Quit
+      message: >
+        Tropy has crashed.
+        Please report this issue at https://github.com/tropy/tropy
+        or on the Tropy forums at https://forums.tropy.org
+    fatal:
+
   windows:
     prefs:
       title: Tropy Preferences
