@@ -99,7 +99,7 @@ function quit() {
 
 function handleSquirrelEvent() {
   if (process.platform !== 'win32') return false
-  if (global.ARGS.environment === 'development') return false
+  if (process.env.NODE_ENV === 'development') return false
   if (process.argv.length === 1) return false
 
   for (let arg of process.argv) {

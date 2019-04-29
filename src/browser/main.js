@@ -10,8 +10,15 @@ global.ARGS = opts
 
 const { app }  = require('electron')
 const { extname, join } = require('path')
-const { darwin }  = require('../common/os')
+const { darwin, win32 }  = require('../common/os')
 const { qualified }  = require('../common/release')
+
+if (opts.environment !== 'test') {
+  if (!app.requestSingleInstanceLock()) {
+    process.stderr.write('other instance detected, exiting...\n')
+    app.exit(0)
+  }
+}
 
 let USERDATA = opts.dir
 let LOGDIR
@@ -36,15 +43,8 @@ if (USERDATA) {
   LOGDIR = join(USERDATA, 'log')
 }
 
-if (!require('./squirrel')()) {
+if (!(win32 && require('./squirrel')())) {
   const { info, warn } = require('../common/log')(LOGDIR, opts)
-
-  if (opts.environment !== 'test') {
-    if (!app.requestSingleInstanceLock()) {
-      info('other instance detected, exiting...')
-      app.exit(0)
-    }
-  }
 
   if (opts.ignoreGpuBlacklist) {
     app.commandLine.appendSwitch('ignore-gpu-blacklist')
