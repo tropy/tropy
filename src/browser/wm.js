@@ -6,7 +6,7 @@ const { URL } = require('url')
 const dialog = require('./dialog')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
-const { warn } = require('../common/log')
+const { info, warn } = require('../common/log')
 const { array, blank, get, once, remove } = require('../common/util')
 const { BODY, PANEL, ESPER } = require('../constants/sass')
 
@@ -64,6 +64,8 @@ class WindowManager extends EventEmitter {
 
   // eslint-disable-next-line complexity
   create(type, args = {}, opts) {
+    let NOW = Date.now()
+
     try {
       opts = this.configure(type, opts)
 
@@ -110,7 +112,10 @@ class WindowManager extends EventEmitter {
       var win = new BrowserWindow(opts)
 
       if (typeof show === 'string') {
-        win.once(show, () => win.show())
+        win.once(show, () => {
+          win.show()
+          info(`show ${type} win after ${Date.now() - NOW}ms`)
+        })
       }
 
       this.register(type, win)
@@ -224,6 +229,7 @@ class WindowManager extends EventEmitter {
     })
 
     await once(win, 'did-finish-load')
+
     return win
   }
 

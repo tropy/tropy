@@ -56,15 +56,17 @@ if (!(win32 && require('./squirrel')())) {
 
   info(`using ${app.getPath('userData')}`)
 
+  const T1 = Date.now()
   const Tropy = require('./tropy')
   const tropy = new Tropy()
+  const T2 = Date.now()
 
   Promise.all([
     app.whenReady(),
     tropy.start()
   ])
     .then(() => {
-      info('ready after %sms', Date.now() - START)
+      info('ready after %sms [req:%sms]', Date.now() - START, T2 - T1)
       tropy.isReady = true
       tropy.open(...opts._)
     })

@@ -19,9 +19,8 @@ try {
     .then(() => Date.now())
     .then((READY) =>
       win.init().then(() => {
-        const INIT = Date.now()
         ipc.send('wm', 'initialized')
-
+        const INIT = Date.now()
         require(`./windows/${win.type}`)
         const LOAD = Date.now()
 
@@ -29,7 +28,7 @@ try {
           ipc.send('wm', 'ready')
           win.toggle('ready')
 
-          info('%s ready %dms [R:%dms I:%dms L:%dms]', win.type,
+          info('%s ready %dms [dom:%dms win:%dms req:%dms]', win.type,
             (Date.now() - START),
             (READY - START),
             (INIT - READY),
