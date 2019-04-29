@@ -80,6 +80,26 @@ class Tropy extends EventEmitter {
   }
 
   open(file) {
+    switch (extname(file)) {
+      case '.tpy':
+        this.openProject(file)
+        break
+      case '.jpg':
+      case '.jpeg':
+      case '.png':
+      case '.svg':
+        this.import([file])
+        break
+      case '.ttp':
+        this.importTemplates([file])
+        break
+      default:
+        return false
+    }
+    return true
+  }
+
+  openProject(file) {
     let win = this.wm.current()
 
     if (file == null) {
@@ -87,7 +107,7 @@ class Tropy extends EventEmitter {
         win.show()
       } else {
         for (let recent of this.state.recent) {
-          if (exists(recent)) return this.open(recent)
+          if (exists(recent)) return this.openProject(recent)
         }
         this.showWizardWindow()
       }
@@ -111,7 +131,7 @@ class Tropy extends EventEmitter {
     }
   }
 
-  hasOpened({ file, name }, win) {
+  hasOpenedProject({ file, name }, win) {
     this.wm.close(['wizard', 'prefs'])
 
     this.state.recent = into(
@@ -139,11 +159,13 @@ class Tropy extends EventEmitter {
   }
 
   import(files) {
-    this.dispatch(act.item.import({ files }), this.wm.current())
+    return this.dispatch(act.item.import({ files }), this.wm.current())
   }
 
   importTemplates(files) {
-    this.dispatch(act.ontology.template.import({ files }))
+    return this.dispatch(
+      act.ontology.template.import({ files }),
+      this.wm.first(['prefs', 'project']))
   }
 
   showContextMenu(options, win) {
@@ -552,7 +574,7 @@ class Tropy extends EventEmitter {
           properties: ['openFile']
 
         }).then(files => {
-          if (files) this.open(...files)
+          if (files) this.openProject(...files)
         })
     })
 
@@ -597,27 +619,7 @@ class Tropy extends EventEmitter {
     })
 
     if (darwin) {
-      app.on('activate', () => this.open())
-
-      app.on('open-file', (event, file) => {
-        switch (extname(file)) {
-          case '.tpy':
-            this.open(file)
-            break
-          case '.jpg':
-          case '.jpeg':
-          case '.png':
-          case '.svg':
-            this.import([file])
-            break
-          case '.ttp':
-            this.importTemplates([file])
-            break
-          default:
-            return
-        }
-        event.preventDefault()
-      })
+      app.on('activate', () => this.openProject())
 
       let ids = [
         prefs.subscribeNotification(
@@ -639,10 +641,10 @@ class Tropy extends EventEmitter {
     })
 
     ipc.on(PROJECT.OPENED, (event, project) =>
-      this.hasOpened(project, BrowserWindow.fromWebContents(event.sender)))
+      this.hasOpenedProject(project, BrowserWindow.fromWebContents(event.sender)))
 
     ipc.on(PROJECT.CREATE, () => this.showWizardWindow())
-    ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
+    ipc.on(PROJECT.CREATED, (_, { file }) => this.openProject(file))
 
     ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
       if (id === 'update.ready' && confirm) {
@@ -769,7 +771,9 @@ class Tropy extends EventEmitter {
   dispatch(action, win = BrowserWindow.getFocusedWindow()) {
     if (win != null) {
       win.webContents.send('dispatch', action)
+      return true
     }
+    return false
   }
 
   getLocale(locale) {

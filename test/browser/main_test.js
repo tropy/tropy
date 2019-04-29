@@ -12,9 +12,8 @@ describe('main process', () => {
 
   before(() => {
     sinon.spy(args, 'parse')
-
-    sinon.stub(app, 'once').returns(app)
     sinon.stub(app, 'on').returns(app)
+    sinon.stub(app, 'whenReady').returns(Promise.resolve())
 
     Tropy.instance = sinon.createStubInstance(EventEmitter)
 
@@ -27,11 +26,9 @@ describe('main process', () => {
   after(() => {
     Tropy.instance = tropy
     process.argv = argv
-
     args.parse.restore()
-
-    app.once.restore()
     app.on.restore()
+    app.whenReady.restore()
   })
 
   describe('when required', () => {
@@ -42,7 +39,7 @@ describe('main process', () => {
     })
 
     it('registers event listeners', () => {
-      expect(app.on).to.have.been.calledWith('ready')
+      expect(app.whenReady).to.have.been.called
       expect(Tropy.instance.listen).to.have.been.calledOnce
     })
 

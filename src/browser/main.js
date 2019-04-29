@@ -9,7 +9,8 @@ process.env.NODE_ENV = opts.environment
 global.ARGS = opts
 
 const { app }  = require('electron')
-const { join } = require('path')
+const { extname, join } = require('path')
+const { darwin }  = require('../common/os')
 const { qualified }  = require('../common/release')
 
 let USERDATA = opts.dir
@@ -62,13 +63,27 @@ if (!require('./squirrel')()) {
   tropy.restore()
 
   Promise.all([
-    once(app, 'ready'),
+    app.whenReady(),
     once(tropy, 'app:restored')
   ])
     .then(() => {
       info('ready after %sms', Date.now() - START)
-      tropy.open(...opts._)
+      tropy.openProject(...opts._)
     })
+
+  if (darwin) {
+    app.on('open-file', (event, file) => {
+      if (app.isReady()) {
+        if (tropy.open(file))
+          event.preventDefault()
+      } else {
+        if (extname(file) === '.tpy') {
+          opts._.push(file)
+          event.preventDefault()
+        }
+      }
+    })
+  }
 
   app.on('second-instance', (_, argv) => {
     tropy.open(...args.parse(argv.slice(1))._)
