@@ -53,8 +53,8 @@
     background-image:
       if(
         $theme == "light",
-        image-url("project/icon-chevron7-light-theme.svg"),
-        image-url("project/icon-chevron7-dark-theme.svg")
+        icon-url("project/icon-chevron7-light-theme.svg"),
+        icon-url("project/icon-chevron7-dark-theme.svg")
       );
     padding-right: $space-lg;
 
