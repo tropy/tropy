@@ -37,10 +37,8 @@ function stop() {
 function onClosed(_, { id, payload, error }) {
   try {
     pending[id][error ? 'reject' : 'resolve'](payload)
-
   } catch (error) {
     warn(`failed to resolve dialog #${id}: ${error.message}`)
-
   } finally {
     delete pending[id]
   }
@@ -49,7 +47,7 @@ function onClosed(_, { id, payload, error }) {
 function show(type, options = {}) {
   return new Promise((resolve, reject) => {
     const id = seq.next().value
-    ipc.send('dialog', { id, type, options })
+    ipc.send('wm', 'dialog', { id, type, options })
     pending[id] = { resolve, reject }
   })
 }

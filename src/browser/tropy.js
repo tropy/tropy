@@ -548,14 +548,15 @@ class Tropy extends EventEmitter {
       shell.showItemInFolder(this.plugins.configFile)
     })
 
-    this.on('app:install-plugin', async (win) => {
-      const plugins = await dialog.show('file', darwin ? null : win, {
-        defaultPath: app.getPath('downloads'),
-        filters: [{ name: 'Tropy Plugin', extensions: Plugins.ext }],
-        properties: ['openFile']
-      })
-
-      if (plugins != null) await this.plugins.install(...plugins)
+    this.on('app:install-plugin', (win) => {
+      dialog
+        .open(darwin ? null : win, {
+          defaultPath: app.getPath('downloads'),
+          filters: [{ name: 'Tropy Plugin', extensions: Plugins.ext }],
+        })
+        .then(plugins => {
+          if (plugins) return this.plugins.install(...plugins)
+        })
     })
 
     this.on('app:reset-ontology-db', () => {
@@ -565,15 +566,14 @@ class Tropy extends EventEmitter {
         rm.sync(join(app.getPath('userData'), 'ontology.db'))
     })
 
-    this.on('app:open-dialog', (win, options = {}) => {
+    this.on('app:open-dialog', (win, opts = {}) => {
       dialog
-        .show('file', win, {
-          ...options,
+        .open(win, {
+          ...opts,
           defaultPath: app.getPath('documents'),
-          filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }],
-          properties: ['openFile']
-
-        }).then(files => {
+          filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }]
+        })
+        .then(files => {
           if (files) this.openProject(...files)
         })
     })
@@ -685,39 +685,35 @@ class Tropy extends EventEmitter {
       }
     })
 
-    this.wm.on('unresponsive', async (_, win) => {
-      let { response } = await dialog.show('message-box', win, {
-        type: 'warning',
-        ...this.dict.dialogs.unresponsive
-      })
-
-      switch (response) {
-        case 0: return win.destroy()
-      }
+    this.wm.on('unresponsive', (_, win) => {
+      dialog
+        .warn(win, this.dict.dialogs.unresponsive)
+        .then(res => {
+          switch (res) {
+            case 0: return win.destroy()
+          }
+        })
     })
 
-    this.wm.on('crashed', async (_, win) => {
-      let { response } = await dialog.show('message-box', win, {
-        type: 'warning',
-        ...this.dict.dialogs.crashed
-      })
-
-      switch (response) {
-        case 0:
-          win.destroy()
-          break
-        case 1:
-          win.show()
-          win.reload()
-          break
-        default:
-          win.show()
-          break
-      }
+    this.wm.on('crashed', (_, win) => {
+      dialog
+        .warn(win, this.dict.dialogs.crashed)
+        .then(res => {
+          switch (res) {
+            case 0:
+              win.destroy()
+              break
+            case 1:
+              win.show()
+              win.reload()
+              break
+            default:
+              win.show()
+          }
+        })
     })
 
     this.wm.start()
-    dialog.start()
 
     return this
   }

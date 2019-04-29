@@ -3,6 +3,7 @@
 const { EventEmitter } = require('events')
 const { join } = require('path')
 const { URL } = require('url')
+const dialog = require('./dialog')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
 const { warn } = require('../common/log')
@@ -167,6 +168,9 @@ class WindowManager extends EventEmitter {
       case 'redo':
         win.webContents.redo()
         break
+      case 'dialog':
+        this.handleShowDialog(win, ...args)
+        break
       default:
         win.emit(type, ...args)
     }
@@ -174,6 +178,21 @@ class WindowManager extends EventEmitter {
 
   handleScrollBarsChange = () => {
     this.broadcast('scrollbars', !WindowManager.hasOverlayScrollBars())
+  }
+
+  async handleShowDialog(win, { id, type, options }) {
+    dialog
+      .show(type, win, options)
+      .then(payload => {
+        win.webContents.send('dialog', { id, payload })
+      })
+      .catch(({ message }) => {
+        win.webContents.send('dialog', {
+          error: true,
+          id,
+          payload: { message }
+        })
+      })
   }
 
   map(type, fn) {
