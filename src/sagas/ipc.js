@@ -45,7 +45,6 @@ module.exports = {
   },
 
   *ipc() {
-    debug('*history started')
     yield every(({ meta }) => meta && meta.ipc, module.exports.forward, FILTER)
     yield fork(module.exports.receive)
   }
