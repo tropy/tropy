@@ -18,7 +18,6 @@ const { values } = Object
 const actions = require('../../actions')
 const debounce = require('lodash.debounce')
 const { match } = require('../../keymap')
-const { IconSpin } = require('../icons')
 
 const {
   getCachePrefix,
