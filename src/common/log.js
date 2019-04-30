@@ -63,7 +63,7 @@ function init(dir, {
         handleExceptions: true,
         humanReadableUnhandledException: true
       })
-      logger.level = 'debug'
+      logger.level = 'verbose'
       break
   }
 

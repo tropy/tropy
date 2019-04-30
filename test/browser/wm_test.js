@@ -27,7 +27,7 @@ describe('WindowManager', () => {
 
     for (let type of ['about', 'prefs', 'project', 'wizard']) {
       describe(`open('${type}')`, function () {
-        this.timeout(12000)
+        this.timeout(40000)
 
         let win
         let ready
