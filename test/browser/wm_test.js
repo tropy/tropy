@@ -1,11 +1,12 @@
 'use strict'
 
 const { join } = require('path')
-const { BrowserWindow } = require('electron')
+const { app, BrowserWindow } = require('electron')
 const { once } = __require('common/util')
 
 describe('WindowManager', () => {
   const WindowManager = __require('browser/wm')
+  const { Plugins } = __require('common/plugins')
 
   describe('instance', () => {
     let wm = new WindowManager({
@@ -14,6 +15,9 @@ describe('WindowManager', () => {
       }
     })
 
+    let plugins = new Plugins(join(app.getPath('userData'), 'plugins'))
+
+    before(() => plugins.init())
     before(() => wm.start())
     after(() => wm.stop())
 
@@ -29,7 +33,9 @@ describe('WindowManager', () => {
         let ready
 
         before(async () => {
-          win = await wm.open(type)
+          win = await wm.open(type, {
+            plugins: plugins.root
+          })
           ready = once(win, 'ready')
         })
 
