@@ -3,7 +3,7 @@
 require('../common/promisify')
 
 const { Database } = require('../common/db')
-const { verbose, warn } = require('../common/log')
+const { debug, info, warn } = require('../common/log')
 const { ONTOLOGY } = require('../constants')
 const { exec } = require('./cmd')
 const { fail } = require('../dialog')
@@ -18,7 +18,7 @@ const command = ({ type, error, meta }) =>
 
 
 function *reset(db) {
-  verbose('*ontology resetting db...')
+  info('*ontology resetting db...')
 
   yield call(db.close)
   yield cps(unlink, db.path)
@@ -32,6 +32,7 @@ function *reset(db) {
 
 function *ontology({ file = user(ONTOLOGY.DB), ...opts } = {}) {
   try {
+    debug('*ontology started')
     var db = new Database(file, 'w+', opts)
 
     if (yield call(db.empty)) {
@@ -59,9 +60,10 @@ function *ontology({ file = user(ONTOLOGY.DB), ...opts } = {}) {
       }
     }
 
-  } catch (error) {
-    warn(`unexpected error in *ontology: ${error.message}`)
-    verbose(error.stack)
+  } catch (e) {
+    warn(`unexpected error in *ontology: ${e.message}`, {
+      stack: e.stack
+    })
 
   } finally {
     if (db) {
@@ -70,7 +72,7 @@ function *ontology({ file = user(ONTOLOGY.DB), ...opts } = {}) {
       yield call(db.close)
     }
 
-    verbose('*ontology terminated')
+    debug('*ontology terminated')
   }
 }
 

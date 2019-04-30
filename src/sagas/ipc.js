@@ -37,13 +37,15 @@ module.exports = {
         yield put(action)
 
       } catch (error) {
-        warn(`unexpected error in ipc:receive: ${error.message}`)
-        debug(error.message, error.stack)
+        warn(`unexpected error in ipc:receive: ${error.message}`, {
+          stack: error.stack
+        })
       }
     }
   },
 
   *ipc() {
+    debug('*history started')
     yield every(({ meta }) => meta && meta.ipc, module.exports.forward, FILTER)
     yield fork(module.exports.receive)
   }

@@ -8,14 +8,17 @@ const { values } = Object
 
 module.exports = {
   *shell() {
+    debug('*shell started')
+
     while (true) {
       try {
         const { type, payload } = yield take(values(SHELL))
         shell[type.split('.').pop()](...payload)
 
       } catch (error) {
-        warn(`unexpected error in *prefs.main: ${error.message}`)
-        debug(error.stack)
+        warn(`unexpected error in *shell: ${error.message}`, {
+          stack: error.stack
+        })
       }
     }
   }

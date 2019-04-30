@@ -5,7 +5,7 @@ const { ontology } = require('./ontology')
 const { history } = require('./history')
 const { ipc } = require('./ipc')
 const { shell } = require('./shell')
-const { warn, debug, verbose } = require('../common/log')
+const { debug, warn } = require('../common/log')
 const storage = require('./storage')
 
 const {
@@ -14,6 +14,7 @@ const {
 
 module.exports = {
   *main() {
+    debug('*prefs.main started')
     let aux
 
     try {
@@ -31,9 +32,10 @@ module.exports = {
 
       yield take(CLOSE)
 
-    } catch (error) {
-      warn(`unexpected error in *prefs.main: ${error.message}`)
-      debug(error.stack)
+    } catch (e) {
+      warn(`unexpected error in *prefs.main: ${e.message}`, {
+        stack: e.stack
+      })
 
     } finally {
       yield all([
@@ -45,7 +47,7 @@ module.exports = {
         yield all(aux.map(t => cancel(t)))
       }
 
-      verbose('*prefs.main terminated')
+      debug('*prefs.main terminated')
     }
   }
 }

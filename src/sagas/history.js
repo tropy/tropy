@@ -29,6 +29,7 @@ const history = {
   },
 
   *history() {
+    debug('*history started')
     yield every(UNDO, history.undo)
     yield every(REDO, history.redo)
   }
