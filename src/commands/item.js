@@ -26,7 +26,6 @@ const {
   getPhotoTemplate,
   getTemplateValues
 } = require('../selectors')
-debug('ITEM 20')
 
 
 class Create extends Command {

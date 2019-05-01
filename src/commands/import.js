@@ -1,26 +1,16 @@
 'use strict'
 
 const { debug, warn } = require('../common/log')
-debug('IMPORT 1')
 const { DuplicateError } = require('../common/error')
-debug('IMPORT 2')
 const { call, put, select } = require('redux-saga/effects')
-debug('IMPORT 3')
 const { Command } = require('./command')
-debug('IMPORT 4')
 const mod = require('../models')
-debug('IMPORT 5')
 const act = require('../actions')
-debug('IMPORT 6')
 const { pick } = require('../common/util')
-debug('IMPORT 7')
 const { prompt } = require('../dialog')
-debug('IMPORT 8')
 const { Image } = require('../image')
-debug('IMPORT 9')
 const { DC, TERMS } = require('../constants')
 const { date, text } = require('../value')
-debug('IMPORT 10')
 
 const {
   getTemplateValues,
