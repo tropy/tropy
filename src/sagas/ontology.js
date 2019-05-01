@@ -1,20 +1,29 @@
 'use strict'
 
-require('../common/promisify')
-
-const { Database } = require('../common/db')
 const { debug, warn } = require('../common/log')
+
+debug('ontology 1')
+const { Database } = require('../common/db')
+debug('ontology 2')
 const { ONTOLOGY } = require('../constants')
+debug('ontology 3')
 const { exec } = require('./cmd')
+debug('ontology 4')
 const { fail } = require('../dialog')
+debug('ontology 5')
 const { user } = require('../path')
+debug('ontology 6')
 const mod = require('../models')
+debug('ontology 7')
 const act = require('../actions')
+debug('ontology 8')
 const { call, fork, take } = require('redux-saga/effects')
+debug('ontology 9')
 
 const command = ({ error, meta }) =>
   (!error && meta && meta.cmd === 'ontology')
 
+debug('ontology 10')
 function *ontology({ file = user(ONTOLOGY.DB), ...opts } = {}) {
   try {
     var db = new Database(file, 'w+', opts)
@@ -52,6 +61,8 @@ function *ontology({ file = user(ONTOLOGY.DB), ...opts } = {}) {
     debug('*ontology terminated')
   }
 }
+
+debug('ontology 11')
 
 module.exports = {
   ontology
