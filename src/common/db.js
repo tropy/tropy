@@ -87,7 +87,6 @@ class Database extends EventEmitter {
       info(`open db ${this.path}`)
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
-        debug(`db connection ${error ? 'failed' : 'established'}`)
         if (error) {
           this.emit('error', error)
           return reject(error)

@@ -14,6 +14,7 @@ const {
 
 module.exports = {
   *main() {
+    debug('*prefs.main start')
     let aux
 
     try {
@@ -23,11 +24,13 @@ module.exports = {
         fork(ipc),
         fork(shell)
       ])
+      debug('*prefs.main fork complete')
 
       yield all([
         call(storage.restore, 'prefs'),
         call(storage.restore, 'settings')
       ])
+      debug('*prefs.main waiting for close')
 
       yield take(CLOSE)
 

@@ -11,9 +11,12 @@ const { main } = require('../sagas/prefs')
 const { win } = require('../window')
 const act = require('../actions')
 const dialog = require('../dialog')
+const { debug } = require('../common/log')
 
 const store = create()
+debug('prefs store created')
 const tasks = store.saga.run(main)
+debug('prefs saga started')
 
 const { locale } = ARGS
 
@@ -50,3 +53,5 @@ if (ARGS.dev || ARGS.debug) {
   Object.defineProperty(window, 'store', { get: () => store })
   Object.defineProperty(window, 'state', { get: () => store.getState() })
 }
+
+debug('static setup prefs done')
