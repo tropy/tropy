@@ -59,7 +59,7 @@ class Database extends EventEmitter {
       destroy: (conn) => this.destroy(conn)
     }, {
       min: 0,
-      max: 4,
+      max: 3,
       idleTimeoutMillis: 1000 * 60 * 5,
       acquireTimeoutMillis: 1000 * 10,
       Promise: Bluebird,
