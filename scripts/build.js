@@ -37,7 +37,7 @@ const IGNORE = [
   /^\/db.test/,
   /^\/dist/,
   /^\/doc/,
-  /^\/ext/,
+  /^\/vendor/,
   /^\/res.ext/,
   /^\/res.mime/,
   /^\/res.icons.dev/,
