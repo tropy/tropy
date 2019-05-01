@@ -1,6 +1,5 @@
 'use strict'
 
-const { all } = require('../common/promisify')
 const React = require('react')
 const { render } = require('react-dom')
 const { $ } = require('../dom')
@@ -17,7 +16,7 @@ const tasks = store.saga.run(main)
 
 const { locale, file } = ARGS
 
-all([
+Promise.all([
   store.dispatch(act.intl.load({ locale })),
   store.dispatch(act.keymap.load({ name: 'project', locale }))
 ])

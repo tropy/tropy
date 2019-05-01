@@ -1,28 +1,15 @@
 'use strict'
 
-const { debug } = require('../common/log')
-debug('prefs window 1')
-
 const React = require('react')
-debug('prefs window 2')
 const { render } = require('react-dom')
-debug('prefs window 3')
 const { $ } = require('../dom')
-debug('prefs window 4')
 const { create } = require('../stores/prefs')
-debug('prefs window 5')
 const { Main } = require('../components/main')
-debug('prefs window 6')
 const { PrefsContainer } = require('../components/prefs')
-debug('prefs window 7')
 const { main } = require('../sagas/prefs')
-debug('prefs window 8')
 const { win } = require('../window')
-debug('prefs window 9')
 const act = require('../actions')
-debug('prefs window 10')
 const dialog = require('../dialog')
-debug('prefs window 11')
 
 const store = create()
 const tasks = store.saga.run(main)

@@ -2,8 +2,7 @@
 
 const React = require('react')
 const { render } = require('react-dom')
-const { all } = require('bluebird')
-const { ready, $ } = require('../dom')
+const { $ } = require('../dom')
 const { create } = require('../stores/wizard')
 const { Main } = require('../components/main')
 const { WizardContainer } = require('../components/wizard')
@@ -15,9 +14,8 @@ const store = create()
 
 const { locale } = ARGS
 
-all([
-  store.dispatch(act.intl.load({ locale })),
-  ready
+Promise.all([
+  store.dispatch(act.intl.load({ locale }))
 ])
   .then(() => {
     render(
@@ -39,7 +37,5 @@ win.on('settings.update', (settings) => {
   store.dispatch(act.settings.update(settings))
 })
 
-if (ARGS.dev || ARGS.debug) {
-  Object.defineProperty(window, 'store', { get: () => store })
-  Object.defineProperty(window, 'state', { get: () => store.getState() })
-}
+Object.defineProperty(window, 'store', { get: () => store })
+Object.defineProperty(window, 'state', { get: () => store.getState() })
