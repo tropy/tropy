@@ -1,26 +1,19 @@
 'use strict'
 
-const { debug } = require('../common/log')
-debug('IMG 1')
 require('../common/promisify')
 
 const { basename, extname } = require('path')
 const { createReadStream, statAsync: stat } = require('fs')
 const { createHash } = require('crypto')
 const { exif } = require('./exif')
-debug('IMG 2')
 const { xmp } = require('./xmp')
-debug('IMG 3')
 const { isSVG } = require('./svg')
-debug('IMG 4')
-const sharp = window.sharp || require('sharp')
-debug('IMG 5')
+const sharp = require('sharp')
 const tiff = require('tiff')
 const { assign } = Object
 const { warn } = require('../common/log')
 const { get, pick } = require('../common/util')
 const { EXIF, MIME } = require('../constants')
-debug('IMG 6')
 
 
 class Image {
