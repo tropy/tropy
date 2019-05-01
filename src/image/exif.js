@@ -1,13 +1,9 @@
 'use strict'
 
 const { debug, warn } = require('../common/log')
-debug('EXIF 1')
 const exif = require('@inukshuk/exif')
-debug('EXIF 2')
 const { blank } = require('../common/util')
-debug('EXIF 3')
 const { text, date } = require('../value')
-debug('EXIF 4')
 
 const DEFAULTS = {
   strict: false,
