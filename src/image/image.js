@@ -13,7 +13,7 @@ const { xmp } = require('./xmp')
 debug('IMG 3')
 const { isSVG } = require('./svg')
 debug('IMG 4')
-const sharp = require('sharp')
+const sharp = window.sharp || require('sharp')
 debug('IMG 5')
 const tiff = require('tiff')
 const { assign } = Object
