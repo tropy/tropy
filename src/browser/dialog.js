@@ -12,9 +12,10 @@ function show(type, win, opts) {
         dialog.showOpenDialog(win, opts, resolve)
         break
       case 'message-box':
-        dialog.showMessageBox(win, opts, (response, checked) => {
-          resolve({ response, checked })
-        })
+        dialog.showMessageBox(win, { buttons: ['OK'], ...opts },
+          (response, checked) => {
+            resolve({ response, checked })
+          })
         break
       default:
         reject(new Error(`unknown dialog type: ${type}`))
