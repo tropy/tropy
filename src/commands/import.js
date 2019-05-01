@@ -6,7 +6,7 @@ const { Command } = require('./command')
 const mod = require('../models')
 const act = require('../actions')
 const { pick } = require('../common/util')
-const { warn, verbose } = require('../common/log')
+const { debug, warn } = require('../common/log')
 const { prompt } = require('../dialog')
 const { Image } = require('../image')
 const { DC, TERMS } = require('../constants')
@@ -98,7 +98,7 @@ class ImportCommand extends Command {
           yield call([dup, dup.toFile], cache.expand(path))
 
         } else {
-          verbose(`Skipping ${v.name} thumbnail for #${id}: already exists`)
+          debug(`Skipping ${v.name} thumbnail for #${id}: already exists`)
         }
       }
     } catch (error) {

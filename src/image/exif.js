@@ -33,8 +33,9 @@ module.exports = {
         return ifd.flatten(true, toValue)
 
       } catch (error) {
-        warn(`EXIF extraction failed: ${error.message}`)
-        debug(error.stack)
+        warn(`EXIF extraction failed: ${error.message}`, {
+          stack: error.stack
+        })
       }
     }
   }

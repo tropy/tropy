@@ -2,7 +2,7 @@
 
 const { clipboard } = require('electron')
 const assert = require('assert')
-const { warn, verbose } = require('../common/log')
+const { debug, warn } = require('../common/log')
 const { DuplicateError } = require('../common/error')
 const { all, call, put, select, cps } = require('redux-saga/effects')
 const { Command } = require('./command')
@@ -125,13 +125,13 @@ class Import extends ImportCommand {
 
       } catch (error) {
         if (error instanceof DuplicateError) {
-          verbose(`Skipping duplicate "${file}"...`)
+          debug(`Skipping duplicate "${file}"...`)
           continue
         }
 
-        warn(`Failed to import "${file}": ${error.message}`)
-        verbose(error.stack)
-
+        warn(`Failed to import "${file}": ${error.message}`, {
+          stack: error.stack
+        })
         fail(error, this.action.type)
       }
     }
@@ -420,9 +420,9 @@ class Export extends Command {
           yield cps(write, target, asString)
       }
     } catch (error) {
-      warn(`Failed to export items to ${target}: ${error.message}`)
-      verbose(error.stack)
-
+      warn(`Failed to export items to ${target}: ${error.message}`, {
+        stack: error.stack
+      })
       fail(error, this.action.type)
     }
   }

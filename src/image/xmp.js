@@ -1,7 +1,7 @@
 'use strict'
 
 const { $, $$, parse } = require('../dom')
-const { debug, verbose } = require('../common/log')
+const { warn } = require('../common/log')
 const { blank } = require('../common/util')
 const { text, date } = require('../value')
 const { XMLNS } = require('../constants')
@@ -45,8 +45,9 @@ module.exports = {
         return data
       }
     } catch (error) {
-      verbose(`XMP extraction failed: ${error.message}`)
-      debug(error.stack)
+      warn(`XMP extraction failed: ${error.message}`, {
+        stack: error.stack
+      })
     }
   }
 }

@@ -7,7 +7,7 @@ const { fail, save } = require('../dialog')
 const { PROJECT, WIZARD } = require('../constants')
 const { create } = require('../models/project')
 const { unlinkAsync } = require('fs')
-const { debug, info, warn } = require('../common/log')
+const { info, warn } = require('../common/log')
 
 async function rm(file) {
   try {
@@ -30,8 +30,9 @@ module.exports = {
         ipc.send(PROJECT.CREATED, { file })
 
       } catch (error) {
-        warn(`failed to create project: ${error.message}`)
-        debug(error.stack)
+        warn(`failed to create project: ${error.message}`, {
+          stack: error.stack
+        })
 
         fail(error, PROJECT.CREATED)
       }

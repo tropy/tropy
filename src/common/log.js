@@ -17,17 +17,18 @@ const [SYMBOL, LABEL] = (process.type === 'renderer') ?
 const PADDING = 8
 
 const COLORS = {
+  fatal: 'red',
   error: 'red',
   warn: 'yellow',
   info: 'blue',
-  verbose: 'magenta',
-  debug: 'green'
+  debug: 'green',
+  trace: 'magenta'
 }
 
 const seq = timer()
 
 const logger = new Logger({
-  level: 'verbose',
+  level: 'info',
   transports: []
 })
 
@@ -63,7 +64,7 @@ function init(dir, {
         handleExceptions: true,
         humanReadableUnhandledException: true
       })
-      logger.level = 'verbose'
+      logger.level = 'debug'
       break
   }
 
@@ -110,12 +111,7 @@ function formatter(options) {
 
 module.exports = assign(init, {
   logger,
-
-  query: logger.query.bind(logger),
-  profile: logger.profile.bind(logger),
   log: logger.log.bind(logger),
-  verbose: logger.verbose.bind(logger),
-
   fatal: logger.error.bind(logger),
   error: logger.error.bind(logger),
   warn: logger.warn.bind(logger),

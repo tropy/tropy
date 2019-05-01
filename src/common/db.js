@@ -3,7 +3,6 @@
 require('./promisify')
 
 const sqlite = require('sqlite3')
-const ms = require('ms')
 const { EventEmitter } = require('events')
 const { Migration } = require('./migration')
 const { normalize } = require('path')
@@ -11,8 +10,7 @@ const Bluebird = require('bluebird')
 const { using } = Bluebird
 const { readFileAsync: read } = require('fs')
 const { createPool } = require('generic-pool')
-const { debug, verbose, warn } = require('./log')
-const { entries } = Object
+const { debug, info, trace, warn } = require('./log')
 
 const M = {
   'r': sqlite.OPEN_READONLY,
@@ -51,8 +49,8 @@ class Database extends EventEmitter {
   }
 
   constructor(path = ':memory:', mode = 'w+', options = {}) {
-    super()
     debug(`init db ${path}`)
+    super()
 
     this.path = path
 
@@ -87,7 +85,7 @@ class Database extends EventEmitter {
 
   create(mode) {
     return new Promise((resolve, reject) => {
-      verbose(`opening db ${this.path}`)
+      info(`opening db ${this.path}`)
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
         if (error) {
@@ -101,26 +99,26 @@ class Database extends EventEmitter {
           .then(resolve, reject)
       })
 
-      // db.on('trace', query => debug(query))
+      // db.on('trace', query => trace(query))
 
       db.on('profile', (query, time) => {
-        const message = `db query took ${ms(time)}`
+        let message = `db query took ${time}ms`
 
-        if (ms > 100) {
+        if (time > 100) {
           return warn(`SLOW: ${message}`, { query, time })
         }
 
-        if (ms > 25) {
-          return verbose(message, { query, time })
+        if (time > 25) {
+          return info(message, { query, time })
         }
 
-        debug(message, { query, time })
+        trace(message, { query, time })
       })
     })
   }
 
   async destroy(conn) {
-    verbose(`closing db ${this.path}`)
+    info(`closing db ${this.path}`)
 
     await conn.optimize()
     await conn.close()
@@ -229,9 +227,11 @@ class Connection {
   }
 
   configure(pragma = Connection.defaults) {
-    return this.exec(entries(pragma)
-      .map(nv => `PRAGMA ${nv.join(' = ')};`)
-      .join('\n'))
+    return this.exec(
+      Object
+        .entries(pragma)
+        .map(nv => `PRAGMA ${nv.join(' = ')};`)
+        .join('\n'))
   }
 
   optimize() {
@@ -300,7 +300,7 @@ class Connection {
       .then(errors => {
         if (!errors.length) return this
 
-        debug('FK constraint violations detected', { errors })
+        warn('FK constraint violations detected', { errors })
         throw new Error('FK constraint violations detected')
       })
   }

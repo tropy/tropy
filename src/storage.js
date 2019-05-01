@@ -1,6 +1,6 @@
 'use strict'
 
-const { verbose } = require('./common/log')
+const { info } = require('./common/log')
 
 class Storage {
   static load(name, ...args) {
@@ -16,14 +16,14 @@ class Storage {
   }
 
   load(name) {
-    verbose(`restoring ${this.expand(name)}...`)
+    info(`restore ${this.expand(name)}...`)
     return JSON.parse(localStorage.getItem(this.expand(name)))
   }
 
   save(name, object) {
     if (object != null) {
+      info(`persist ${this.expand(name)}`)
       localStorage.setItem(this.expand(name), JSON.stringify(object))
-      verbose(`${this.expand(name)} persisted`)
     }
 
     return this

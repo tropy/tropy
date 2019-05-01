@@ -7,7 +7,7 @@ try {
   const { user } = require('./path')
   const LOGDIR = user('log')
 
-  const { info, error } = require('./common/log')(LOGDIR, opts)
+  const { info, fatal } = require('./common/log')(LOGDIR, opts)
   const { ready } = require('./dom')
   const { ipcRenderer: ipc } = require('electron')
   const { Window } = require('./window')
@@ -35,11 +35,8 @@ try {
             (LOAD - INIT))
         }, { timeout: 1000 })
       }))
-    .catch(e => {
-      error(`Failed initializing ${win.type}: ${e.message}`, {
-        stack: e.stack
-      })
-
+    .catch(({ message, stack }) => {
+      fatal(`${win.type}.init failed: ${message}`, { stack })
       if (!opts.dev) process.crash()
     })
 
@@ -53,7 +50,7 @@ try {
   }
 
 } catch (e) {
-  process.stderr.write(`Uncaught error in bootstrap: ${e.message}\n`)
-  process.stderr.write(e.stack)
+  process.stderr.write(
+    `Uncaught error in bootstrap: ${e.message}\n${e.stack}\n`)
   process.crash()
 }

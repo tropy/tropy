@@ -20,7 +20,7 @@ module.exports = {
           warn(`${type} failed: ${payload.message}`, { error: payload, meta })
           break
         default:
-          log(meta.log || 'verbose', format(type, meta))
+          log(meta.log || 'debug', format(type, meta))
       }
 
       return next(action)

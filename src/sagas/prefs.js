@@ -14,7 +14,6 @@ const {
 
 module.exports = {
   *main() {
-    debug('*prefs.main started')
     let aux
 
     try {

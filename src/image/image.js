@@ -11,7 +11,7 @@ const { isSVG } = require('./svg')
 const sharp = require('sharp')
 const tiff = require('tiff')
 const { assign } = Object
-const { warn, debug } = require('../common/log')
+const { warn } = require('../common/log')
 const { get, pick } = require('../common/util')
 const { EXIF, MIME } = require('../constants')
 
@@ -39,7 +39,7 @@ class Image {
         status.hasChanged = (status.image.checksum !== checksum)
       }
     } catch (error) {
-      debug(`image check failed for ${path}: ${error.message}`, {
+      warn(`image check failed for ${path}: ${error.message}`, {
         stack: error.stack
       })
 
@@ -109,8 +109,9 @@ class Image {
       return (time || this.file.ctime).toISOString()
 
     } catch (error) {
-      warn(`failed to convert image date: ${error.message}`)
-      debug(error.stack)
+      warn(`failed to convert image date: ${error.message}`, {
+        stack: error.stack
+      })
 
       return new Date().toISOString()
     }

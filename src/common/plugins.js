@@ -14,7 +14,7 @@ const {
 const { shell } = require('electron')
 const { EventEmitter } = require('events')
 const { basename, join } = require('path')
-const { warn, verbose, logger } = require('./log')
+const { info, warn, logger } = require('./log')
 const { blank, get, omit, uniq } = require('./util')
 const { keys } = Object
 const debounce = require('lodash.debounce')
@@ -71,7 +71,7 @@ class Plugins extends EventEmitter {
       }
       return acc
     }, {})
-    verbose(`plugins loaded: ${keys(this.instances).length}`)
+    info(`plugins loaded: ${keys(this.instances).length}`)
     return this
   }
 
@@ -113,7 +113,7 @@ class Plugins extends EventEmitter {
       const spec = (await this.scan([plugin]))[plugin] || {}
       await this.reload()
       this.emit('change')
-      verbose(`installed plugin ${spec.name || plugin} ${spec.version}`)
+      info(`installed plugin ${spec.name || plugin} ${spec.version}`)
     } catch (error) {
       warn(`failed to install plugin: ${error.message}`)
     }
@@ -144,7 +144,7 @@ class Plugins extends EventEmitter {
       }
     }
     this.spec = await this.scan()
-    verbose(`plugins scanned: ${keys(this.spec).length}`)
+    info(`plugins scanned: ${keys(this.spec).length}`)
     return this
   }
 

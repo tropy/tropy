@@ -6,7 +6,7 @@ const {
 } = require('redux-saga/effects')
 
 const { ipcRenderer: ipc } = require('electron')
-const { warn, debug } = require('../common/log')
+const { warn } = require('../common/log')
 const { identity } = require('../common/util')
 const history = require('../selectors/history')
 const { getAllTags } = require('../selectors')
@@ -23,8 +23,9 @@ module.exports = {
       yield call([ipc, ipc.send], event, data)
 
     } catch (error) {
-      warn(`unexpected error in ipc:forward: ${error.message}`)
-      debug(error.message, error.stack)
+      warn(`unexpected error in ipc:forward: ${error.message}`, {
+        stack: error.stack
+      })
     }
   },
 
@@ -79,8 +80,9 @@ function channel(name) {
       try {
         for (let action of actions) emitter(action)
       } catch (error) {
-        warn(`unexpected error in channel "${name}": ${error}`)
-        debug(error.stack)
+        warn(`unexpected error in channel "${name}": ${error}`, {
+          stack: error.stack
+        })
       }
     }
 
