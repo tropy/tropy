@@ -105,16 +105,19 @@ if (!(win32 && require('./squirrel')())) {
     info(`quit with exit code ${code}`)
   })
 
-  const handleError = (error) => {
-    if (tropy.isReady) {
-      tropy.handleUncaughtException(error)
-
-    } else {
+  const handleError = (error, isFatal = false) => {
+    if (isFatal || !tropy.isReady) {
       require('electron')
         .dialog
         .showErrorBox('Unhandled Error', error.stack)
 
       app.exit(42)
+    }
+
+    try {
+      tropy.handleUncaughtException(error)
+    } catch (_) {
+      handleError(_, true)
     }
   }
 

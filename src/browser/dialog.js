@@ -44,5 +44,5 @@ module.exports = {
       type: 'warning',
       ...opts
     })
-  },
+  }
 }
