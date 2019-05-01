@@ -61,6 +61,7 @@ const IGNORE = [
   /node_modules.jsonld.dist/,
   /node_modules.pixi\.js.dist/,
   /node_modules.pixi-gl-core.bin/,
+  /node_modules.@pixi[/\\].+[/\\]dist/,
   /node_modules.resource-loader.dist/,
   /node_modules.(react-)?redux.(dist|es|src)/,
   /node_modules.react-transition-group.dist/,
