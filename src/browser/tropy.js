@@ -12,7 +12,7 @@ const {
   systemPreferences: prefs
 } = require('electron')
 
-const { error, info } = require('../common/log')
+const { fatal, info } = require('../common/log')
 const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
@@ -726,7 +726,7 @@ class Tropy extends EventEmitter {
   }
 
   handleUncaughtException(e, win = BrowserWindow.getFocusedWindow()) {
-    error(`unhandled error: ${e.message}`, { stack: e.stack })
+    fatal(`unhandled error: ${e.message}`, { stack: e.stack })
 
     if (this.production) {
       dialog
