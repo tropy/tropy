@@ -35,11 +35,9 @@ target.sqlite3 = async (force) => {
   if (force || !test('-d', preGypBinding(mod))) {
     say(`${mod} ${force ? '(forced)' : ''}...`)
 
-    let vnd = join(home, 'vendor', mod)
-    let dep = join(mods, mod, 'deps')
-
-    let url = cat(join(vnd, 'version.txt')).trim()
-    let tar = join(dep, url.split('/').pop())
+    let deps = join(mods, mod, 'deps')
+    let url = cat(join(home, 'vendor', mod, 'version.txt')).trim()
+    let tar = join(deps, url.split('/').pop())
     let version = (/-(\d+)\.tar\.gz/).exec(url)[1]
 
     if (!test('-f', tar)) {
@@ -55,9 +53,9 @@ target.sqlite3 = async (force) => {
     sed('-i',
       /'sqlite_version%':'\d+',/,
       `'sqlite_version%':'${version}',`,
-      join(dep, 'common-sqlite.gypi'))
+      join(deps, 'common-sqlite.gypi'))
 
-    cp(join(home, 'vnd', mod, 'sqlite3.gyp'), dep)
+    cp(join(home, 'vendor', mod, 'sqlite3.gyp'), deps)
 
     rebuild(mod, {
       params: '--build-from-source'
