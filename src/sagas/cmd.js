@@ -1,16 +1,11 @@
 'use strict'
 
-const { debug, warn } = require('../common/log')
-debug('cmd 1')
+const { warn } = require('../common/log')
 const { exec } = require('../commands')
-debug('cmd 2')
 const { fail } = require('../dialog')
-debug('cmd 3')
 const { put } = require('redux-saga/effects')
-debug('cmd 4')
 const activity = require('../actions/activity')
 const history = require('../actions/history')
-debug('cmd 5')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
@@ -36,4 +31,3 @@ module.exports = {
     }
   }
 }
-debug('cmd 6')

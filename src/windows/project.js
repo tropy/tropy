@@ -1,20 +1,25 @@
 'use strict'
 
+const { debug } = require('../common/log')
+debug('P1')
 const React = require('react')
 const { render } = require('react-dom')
 const { $ } = require('../dom')
 const { create } = require('../stores/project')
+debug('P2')
 const { Main } = require('../components/main')
 const { ProjectContainer } = require('../components/project')
 const { main } = require('../sagas/project')
 const { win } = require('../window')
 const act = require('../actions')
 const dialog = require('../dialog')
+debug('P3')
 
 const store = create()
 const tasks = store.saga.run(main)
 
 const { locale, file } = ARGS
+debug('P4')
 
 Promise.all([
   store.dispatch(act.intl.load({ locale })),
