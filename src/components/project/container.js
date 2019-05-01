@@ -1,30 +1,23 @@
 'use strict'
 
-const { debug } = require('../../common/log')
-debug('PC1')
 const React = require('react')
 const { Component } = React
 const { connect } = require('react-redux')
-debug('PC2')
 const { ProjectView } = require('./view')
 const { ItemView } = require('../item')
 const { DragLayer } = require('../drag-layer')
-debug('PC3')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { NoProject } = require('./none')
 const { extname } = require('path')
-debug('PC4')
 const { MODE } = require('../../constants/project')
 const { emit, on, off, ensure, reflow } = require('../../dom')
 const { win } = require('../../window')
-debug('PC5')
 const cx = require('classnames')
 const { values } = Object
 const actions = require('../../actions')
 const debounce = require('lodash.debounce')
 const { match } = require('../../keymap')
-debug('PC6')
 
 const {
   getCachePrefix,

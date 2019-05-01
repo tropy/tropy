@@ -1,6 +1,5 @@
 'use strict'
 
-require('../common/log').debug('IMG 0')
 const MIME = require('../constants/mime')
 
 const SUPPORTED = {

@@ -1,9 +1,14 @@
 'use strict'
 
+const { debug } = require('../common/log')
+debug('SVG 1')
 const { nativeImage } = require('electron')
+debug('SVG 2')
 const { loadImage } = require('../dom')
+debug('SVG 3')
 
 const MIME = require('../constants/mime')
+debug('SVG 4')
 
 // eslint-disable-next-line max-len
 const SVG = /^\s*(?:<\?xml[^>]*>\s*)?(?:<!doctype svg[^>]*\s*(?:<![^>]*>)*[^>]*>\s*)?<svg[^>]*>/i

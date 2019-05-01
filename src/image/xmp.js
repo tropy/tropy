@@ -1,12 +1,17 @@
 'use strict'
 
+const { debug } = require('../common/log')
+debug('XMP 1')
 const { $, $$, parse } = require('../dom')
+debug('XMP 2')
 const { warn } = require('../common/log')
 const { blank } = require('../common/util')
+debug('XMP 3')
 const { text, date } = require('../value')
 const { XMLNS } = require('../constants')
 
 const DATES = /(^d|D)ate(\b|[A-Z])/
+debug('XMP 4')
 
 module.exports = {
   xmp(buffer) {
