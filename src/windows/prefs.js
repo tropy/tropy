@@ -1,29 +1,37 @@
 'use strict'
 
-const React = require('react')
-const { render } = require('react-dom')
-const { all } = require('bluebird')
-const { ready, $ } = require('../dom')
-const { create } = require('../stores/prefs')
-const { Main } = require('../components/main')
-const { PrefsContainer } = require('../components/prefs')
-const { main } = require('../sagas/prefs')
-const { win } = require('../window')
-const act = require('../actions')
-const dialog = require('../dialog')
 const { debug } = require('../common/log')
+debug('prefs window 1')
+
+const React = require('react')
+debug('prefs window 2')
+const { render } = require('react-dom')
+debug('prefs window 3')
+const { $ } = require('../dom')
+debug('prefs window 4')
+const { create } = require('../stores/prefs')
+debug('prefs window 5')
+const { Main } = require('../components/main')
+debug('prefs window 6')
+const { PrefsContainer } = require('../components/prefs')
+debug('prefs window 7')
+const { main } = require('../sagas/prefs')
+debug('prefs window 8')
+const { win } = require('../window')
+debug('prefs window 9')
+const act = require('../actions')
+debug('prefs window 10')
+const dialog = require('../dialog')
+debug('prefs window 11')
 
 const store = create()
-debug('prefs store created')
 const tasks = store.saga.run(main)
-debug('prefs saga started')
 
 const { locale } = ARGS
 
-all([
+Promise.all([
   store.dispatch(act.intl.load({ locale })),
-  store.dispatch(act.keymap.load({ name: 'project', locale })),
-  ready
+  store.dispatch(act.keymap.load({ name: 'project', locale }))
 ])
   .then(() => {
     render(<Main store={store}><PrefsContainer/></Main>, $('main'))
@@ -53,5 +61,3 @@ if (ARGS.dev || ARGS.debug) {
   Object.defineProperty(window, 'store', { get: () => store })
   Object.defineProperty(window, 'state', { get: () => store.getState() })
 }
-
-debug('static setup prefs done')
