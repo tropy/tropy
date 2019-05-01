@@ -3,32 +3,17 @@
 require('../common/promisify')
 
 const { Database } = require('../common/db')
-const { debug, info, warn } = require('../common/log')
+const { debug, warn } = require('../common/log')
 const { ONTOLOGY } = require('../constants')
 const { exec } = require('./cmd')
 const { fail } = require('../dialog')
 const { user } = require('../path')
 const mod = require('../models')
 const act = require('../actions')
-const { call, cps, fork, take } = require('redux-saga/effects')
-const { unlink } = require('fs')
+const { call, fork, take } = require('redux-saga/effects')
 
-const command = ({ type, error, meta }) =>
-  (!error && meta && meta.cmd === 'ontology') || type === ONTOLOGY.RESET
-
-
-function *reset(db) {
-  info('*ontology resetting db...')
-
-  yield call(db.close)
-  yield cps(unlink, db.path)
-
-  db = new Database(db.path)
-  yield call(mod.ontology.create, db)
-  yield call(exec, { db }, act.ontology.load())
-
-  return db
-}
+const command = ({ error, meta }) =>
+  (!error && meta && meta.cmd === 'ontology')
 
 function *ontology({ file = user(ONTOLOGY.DB), ...opts } = {}) {
   try {
@@ -49,15 +34,8 @@ function *ontology({ file = user(ONTOLOGY.DB), ...opts } = {}) {
     yield call(exec, { db }, act.ontology.load())
 
     while (true) {
-      const action = yield take(command)
-
-      switch (action.type) {
-        case ONTOLOGY.RESET:
-          db = yield call(reset, db)
-          break
-        default:
-          yield fork(exec, { db }, action)
-      }
+      let action = yield take(command)
+      yield fork(exec, { db }, action)
     }
 
   } catch (e) {

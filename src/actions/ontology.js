@@ -13,10 +13,6 @@ module.exports = {
     }
   },
 
-  reset(payload = {}, meta = {}) {
-    return { type: ONTOLOGY.RESET, payload, meta }
-  },
-
   load(payload = {}, meta) {
     return {
       type: ONTOLOGY.LOAD,
