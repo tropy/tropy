@@ -13,5 +13,9 @@ module.exports = {
   presets: [
     '@babel/preset-react'
   ],
+  only: [
+    './src',
+    './test'
+  ],
   plugins
 }
