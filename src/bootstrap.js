@@ -36,10 +36,11 @@ try {
         }, { timeout: 1000 })
       }))
     .catch(e => {
-      error(`Failed initializing ${win.type}: ${e.message}`)
-      error(e.stack)
-      process.stderr.write(e.stack)
-      process.crash()
+      error(`Failed initializing ${win.type}: ${e.message}`, {
+        stack: e.stack
+      })
+
+      if (!opts.dev) process.crash()
     })
 
   // eslint-disable-next-line
