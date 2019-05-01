@@ -63,14 +63,13 @@ class Database extends EventEmitter {
       idleTimeoutMillis: 1000 * 60 * 5,
       acquireTimeoutMillis: 1000 * 10,
       Promise: Bluebird,
-      ...options,
-      validate: (conn) => Bluebird.resolve(conn.db.open)
+      ...options
     })
   }
 
   migrate = async (...args) => {
-    const version = await this.version()
-    const migrations = await Migration.since(version, ...args)
+    let version = await this.version()
+    let migrations = await Migration.since(version, ...args)
 
     for (let migration of migrations) {
       await migration.up(this)
@@ -85,9 +84,10 @@ class Database extends EventEmitter {
 
   create(mode) {
     return new Promise((resolve, reject) => {
-      info(`opening db ${this.path}`)
+      info(`open db ${this.path}`)
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
+        debug(`db connection ${error ? 'failed' : 'established'}`)
         if (error) {
           this.emit('error', error)
           return reject(error)
@@ -118,7 +118,7 @@ class Database extends EventEmitter {
   }
 
   async destroy(conn) {
-    info(`closing db ${this.path}`)
+    info(`close db ${this.path}`)
 
     await conn.optimize()
     await conn.close()

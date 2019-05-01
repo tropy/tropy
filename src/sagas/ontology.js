@@ -17,7 +17,6 @@ const command = ({ error, meta }) =>
 
 function *ontology({ file = user(ONTOLOGY.DB), ...opts } = {}) {
   try {
-    debug('*ontology started')
     var db = new Database(file, 'w+', opts)
 
     if (yield call(db.empty)) {
