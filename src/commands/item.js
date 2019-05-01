@@ -1,43 +1,24 @@
 'use strict'
 
 const { debug, warn } = require('../common/log')
-debug('ITEM 1')
 const { clipboard } = require('electron')
-debug('ITEM 2')
 const assert = require('assert')
-debug('ITEM 3')
 const { DuplicateError } = require('../common/error')
-debug('ITEM 4')
 const { all, call, put, select, cps } = require('redux-saga/effects')
-debug('ITEM 5')
 const { Command } = require('./command')
-debug('ITEM 6')
 const { ImportCommand } = require('./import')
-debug('ITEM 7')
 const { SaveCommand } = require('./subject')
-debug('ITEM 8')
 const { prompt, open, fail, save } = require('../dialog')
-debug('ITEM 9')
 const act = require('../actions')
-debug('ITEM 10')
 const mod = require('../models')
-debug('ITEM 11')
 const { get, pluck, remove } = require('../common/util')
-debug('ITEM 12')
 const { darwin } = require('../common/os')
-debug('ITEM 13')
 const { ITEM } = require('../constants')
-debug('ITEM 14')
 const { MODE } = require('../constants/project')
-debug('ITEM 15')
 const { keys } = Object
-debug('ITEM 16')
 const { writeFile: write } = require('fs')
-debug('ITEM 17')
 const { win } = require('../window')
-debug('ITEM 18')
 const { groupedByTemplate } = require('../export')
-debug('ITEM 19')
 
 const {
   getGroupedItems,
@@ -544,8 +525,6 @@ class ClearTags extends Command {
     this.undo = act.item.tags.toggle({ id, tags })
   }
 }
-
-debug('ITEM 21')
 
 module.exports = {
   Create,
