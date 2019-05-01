@@ -114,9 +114,12 @@ module.exports = assign(init, {
   query: logger.query.bind(logger),
   profile: logger.profile.bind(logger),
   log: logger.log.bind(logger),
-  debug: logger.debug.bind(logger),
   verbose: logger.verbose.bind(logger),
-  info: logger.info.bind(logger),
+
+  fatal: logger.error.bind(logger),
+  error: logger.error.bind(logger),
   warn: logger.warn.bind(logger),
-  error: logger.error.bind(logger)
+  info: logger.info.bind(logger),
+  debug: logger.debug.bind(logger),
+  trace: logger.silly.bind(logger)
 })
