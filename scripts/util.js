@@ -1,6 +1,6 @@
 'use strict'
 
-const colors = require('colors/safe')
+const chalk = require('chalk')
 const ms = require('ms')
 
 const COLOR = {
@@ -13,24 +13,19 @@ const COLOR = {
 
 
 function colorize(level, text) {
-  return colors[COLOR[level] || 'gray'](text || level)
+  return chalk[COLOR[level] || 'gray'](text || level)
 }
 
-function *timer() {
-  let a = Date.now()
-  let b
-
+const seq = (function * (prev = Date.now()) {
   while (true) {
-    b = Date.now()
-    yield b - a
-    a = b
+    let now = Date.now()
+    yield now - prev
+    prev = now
   }
-}
-
-const seq = timer()
+})()
 
 function time({ value }, padding = 8) {
-  return colors.gray((`+${ms(value)}`).padStart(padding, ' '))
+  return chalk.gray((`+${ms(value)}`).padStart(padding, ' '))
 }
 
 function format(msg, level, pre) {
