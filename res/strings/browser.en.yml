@@ -1,27 +1,29 @@
 en:
-  dialogs:
+  dialog:
     crashed:
       buttons:
         - Close Window
-        - Reload
-        - Keep It Open
+        - Restart Tropy
+        - Show Logs
       message: Tropy has crashed
-      detail: Please report this issue at https://github.com/tropy/tropy
+      detail: >
+        Unfortunately, this Tropy window has crashed.
+        You can help by reporting this issue at https://github.com/tropy/tropy
     unresponsive:
       buttons:
         - Close Window
         - Keep Waiting
       message: Tropy is not responding
       detail: >
-        Tropy is not responding.
-        Would you like to close this window or keep waiting?
+        This Tropy window is not responding.
+        Would you like to close it or keep waiting?
     unhandled:
       buttons:
         - OK
-        - Show Logs
         - Copy Error
-      message: An unhandled error occured
-  windows:
+        - Show Logs
+      message: Unhandled Error
+  window:
     prefs:
       title: Tropy Preferences
     wizard:

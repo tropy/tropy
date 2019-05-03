@@ -192,7 +192,7 @@ class Tropy extends EventEmitter {
 
   showAboutWindow() {
     this.wm.show('about', this.hash, {
-      title: this.dict.windows.about.title,
+      title: this.dict.window.about.title,
       parent: this.wm.current(),
       modal: linux
     })
@@ -201,7 +201,7 @@ class Tropy extends EventEmitter {
   showWizardWindow() {
     this.wm.close('prefs')
     this.wm.show('wizard', this.hash, {
-      title: this.dict.windows.wizard.title,
+      title: this.dict.window.wizard.title,
       parent: this.wm.current(),
       modal: linux
     })
@@ -209,7 +209,7 @@ class Tropy extends EventEmitter {
 
   showPreferencesWindow() {
     this.wm.show('prefs', this.hash, {
-      title: this.dict.windows.prefs.title,
+      title: this.dict.window.prefs.title,
       parent: this.wm.current()
     })
   }
@@ -696,7 +696,7 @@ class Tropy extends EventEmitter {
 
     this.wm.on('unresponsive', (_, win) => {
       dialog
-        .warn(win, this.dict.dialogs.unresponsive)
+        .warn(win, this.dict.dialog.unresponsive)
         .then(res => {
           switch (res) {
             case 0: return win.destroy()
@@ -706,18 +706,19 @@ class Tropy extends EventEmitter {
 
     this.wm.on('crashed', (_, win) => {
       dialog
-        .warn(win, this.dict.dialogs.crashed)
+        .warn(win, this.dict.dialog.crashed)
         .then(({ response }) => {
           switch (response) {
             case 0:
               win.destroy()
               break
             case 1:
-              win.show()
-              win.reload()
+              app.relaunch()
+              app.quit()
               break
-            default:
-              win.show()
+            case 2:
+              shell.openItem(this.log)
+              break
           }
         })
     })
@@ -731,7 +732,7 @@ class Tropy extends EventEmitter {
     if (this.production) {
       dialog
         .alert(win, {
-          ...this.dict.dialogs.unhandled,
+          ...this.dict.dialog.unhandled,
           detail: e.stack
         })
         .then(({ response }) => {
@@ -774,9 +775,9 @@ class Tropy extends EventEmitter {
   }
 
   updateWindowLocale() {
-    this.wm.setTitle('about', this.dict.windows.about.title)
-    this.wm.setTitle('prefs', this.dict.windows.prefs.title)
-    this.wm.setTitle('wizard', this.dict.windows.wizard.title)
+    this.wm.setTitle('about', this.dict.window.about.title)
+    this.wm.setTitle('prefs', this.dict.window.prefs.title)
+    this.wm.setTitle('wizard', this.dict.window.wizard.title)
     this.wm.broadcast('locale', this.state.locale)
   }
 
@@ -856,16 +857,17 @@ class Tropy extends EventEmitter {
   }
 
   static crashReport(e) {
-    return `
-Tropy Crash Report
-----------------------------------------
-Version: ${version}
-OS: ${system}
-Time: ${new Date().toISOString()}
-
-Error
-----------------------------------------
-${e.stack}`
+    try {
+      return JSON.stringify({
+        msg: `unhandled error: ${e.message}`,
+        stack: e.stack,
+        system,
+        time: Date.now(),
+        version
+      })
+    } catch (_) {
+      return (e || _).stack
+    }
   }
 }
 
