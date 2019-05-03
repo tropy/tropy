@@ -48,9 +48,9 @@ script:
   - npm run lint
   - npm run compile
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      ls node_modules/sharp/vendor/lib/libz.so;
-      LD_PRELOAD=node_modules/sharp/vendor/lib/libz.so npm test:browser;
-      LD_PRELOAD=node_modules/sharp/vendor/lib/libz.so npm test:renderer;
+      ls -l node_modules/sharp/vendor/lib/libz.so;
+      LD_PRELOAD=node_modules/sharp/vendor/lib/libz.so npm run test:browser;
+      LD_PRELOAD=node_modules/sharp/vendor/lib/libz.so npm run test:renderer;
     else
       npm run coverage;
     fi
