@@ -566,7 +566,10 @@ class Tropy extends EventEmitter {
       dialog
         .open(darwin ? null : win, {
           defaultPath: app.getPath('downloads'),
-          filters: [{ name: 'Tropy Plugin', extensions: Plugins.ext }],
+          filters: [{
+            name: this.dict.dialog.file.plugin,
+            extensions: Plugins.ext
+          }]
         })
         .then(plugins => {
           if (plugins) return this.plugins.install(...plugins)
@@ -587,7 +590,10 @@ class Tropy extends EventEmitter {
         .open(win, {
           ...opts,
           defaultPath: app.getPath('documents'),
-          filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }]
+          filters: [{
+            name: this.dict.dialog.file.project,
+            extensions: ['tpy']
+          }]
         })
         .then(files => {
           if (files) this.openProject(files[0])

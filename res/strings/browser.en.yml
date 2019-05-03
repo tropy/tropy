@@ -1,5 +1,8 @@
 en:
   dialog:
+    file:
+      project: Tropy Projects
+      plugin: Tropy Plugins
     crashed:
       buttons:
         - Close Window
