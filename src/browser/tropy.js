@@ -551,7 +551,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-logs', () => {
-      shell.showItemInFolder(join(app.getPath('userData'), 'log', 'main.log'))
+      shell.showItemInFolder(this.log)
     })
 
     this.on('app:open-user-data', () => {
@@ -737,7 +737,7 @@ class Tropy extends EventEmitter {
         .then(({ response }) => {
           switch (response) {
             case 1:
-              shell.openItem(join(app.getPath('userData'), 'log', 'main.log'))
+              shell.openItem(this.log)
               break
             case 2:
               clipboard.write({ text: Tropy.crashReport(e) })
@@ -756,6 +756,7 @@ class Tropy extends EventEmitter {
       frameless: this.state.frameless,
       theme: this.state.theme,
       locale: this.state.locale,
+      log: this.log,
       uuid: this.state.uuid,
       update: this.updater.release,
       version,
@@ -828,6 +829,10 @@ class Tropy extends EventEmitter {
 
   get dict() {
     return this.strings.dict
+  }
+
+  get log() {
+    return join(app.getPath('logs'), 'tropy.log')
   }
 
   get name() {

@@ -42,7 +42,7 @@ class Plugins extends EventEmitter {
 
   get context() {
     return {
-      logger,
+      logger: logger.child({ module: 'plugin' }),
       require: proxyRequire
     }
   }

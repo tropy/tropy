@@ -10,8 +10,8 @@ global.ARGS = opts
 
 const { app }  = require('electron')
 const { extname, join } = require('path')
-const { darwin, win32 }  = require('../common/os')
-const { qualified }  = require('../common/release')
+const { darwin, linux, win32, system }  = require('../common/os')
+const { qualified, version }  = require('../common/release')
 
 if (opts.environment !== 'test') {
   if (!app.requestSingleInstanceLock()) {
@@ -31,7 +31,7 @@ if (!USERDATA) {
     case 'production':
       USERDATA = join(
         app.getPath('appData'),
-        qualified[process.platform === 'linux' ? 'name' : 'product'])
+        qualified[linux ? 'name' : 'product'])
       break
   }
 }
@@ -40,11 +40,20 @@ if (!USERDATA) {
 app.setName(qualified.product)
 if (USERDATA) {
   app.setPath('userData', USERDATA)
-  LOGDIR = join(USERDATA, 'log')
+}
+
+try {
+  LOGDIR = app.getPath('logs')
+} catch (_) {
+  LOGDIR = join(app.getPath('userData'), 'log')
+  app.setPath('logs', LOGDIR)
 }
 
 if (!(win32 && require('./squirrel')())) {
-  const { info, warn } = require('../common/log')(LOGDIR, opts)
+  const { info, warn } = require('../common/log')({
+    dest: join(LOGDIR, 'tropy.log'),
+    name: 'main'
+  })
 
   if (opts.ignoreGpuBlacklist) {
     app.commandLine.appendSwitch('ignore-gpu-blacklist')
@@ -54,7 +63,11 @@ if (!(win32 && require('./squirrel')())) {
     app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
   }
 
-  info(`using ${app.getPath('userData')}`)
+  info(`main.init ${version} ${system}`, {
+    env: opts.environment,
+    user: app.getPath('userData'),
+    version
+  })
 
   const T1 = Date.now()
   const Tropy = require('./tropy')
@@ -66,7 +79,7 @@ if (!(win32 && require('./squirrel')())) {
     tropy.start()
   ])
     .then(() => {
-      info('ready after %sms [req:%sms]', Date.now() - START, T2 - T1)
+      info(`ready after ${Date.now() - START}ms [req:${T2 - T1}ms]`)
       tropy.isReady = true
       tropy.open(...opts._)
     })
@@ -86,7 +99,8 @@ if (!(win32 && require('./squirrel')())) {
   }
 
   app.on('second-instance', (_, argv) => {
-    tropy.open(...args.parse(argv.slice(1))._)
+    if (tropy.isReady)
+      tropy.open(...args.parse(argv.slice(1))._)
   })
 
   app.on('web-contents-created', (_, contents) => {
@@ -100,9 +114,10 @@ if (!(win32 && require('./squirrel')())) {
     if (!darwin) app.quit()
   })
 
+  // TODO handle win32 logout/shutdown which does not trigger quit event!
   app.on('quit', (_, code) => {
     if (tropy.isReady) tropy.stop()
-    info(`quit with exit code ${code}`)
+    info(`quit with exit code ${code}`, { quit: true, code })
   })
 
   const handleError = (error, isFatal = false) => {

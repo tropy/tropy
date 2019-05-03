@@ -1,6 +1,6 @@
 'use strict'
 
-const { info, warn } = require('../common/log')
+const { debug, warn } = require('../common/log')
 const { call, put, select } = require('redux-saga/effects')
 const { getSortColumn } = require('../selectors')
 const mod = require('../models')
@@ -39,12 +39,12 @@ module.exports = {
           result = yield call(mod.item.all, db, { tags, sort, query })
       }
 
-      info(`*search query took ${Date.now() - START}ms`)
+      debug(`*search query took ${Date.now() - START}ms`)
 
       yield put(act.qr.update(result))
 
     } catch (error) {
-      warn(`unexpectedly failed in *search: ${error.message}`, {
+      warn(`*search failed: ${error.message}`, {
         stack: error.stack
       })
     }

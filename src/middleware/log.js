@@ -1,14 +1,6 @@
 'use strict'
 
-const { warn, log } = require('../common/log')
-const { gray } = require('colors/safe')
-const ms = require('ms')
-
-function format(type, meta) {
-  return (meta.rel) ?
-    `${type} ${gray(`#${meta.seq}(${meta.rel}) Δ${ms(meta.now - meta.was)}`)}` :
-    `${type} ${gray('#' + meta.seq)}`
-}
+const { logger } = require('../common/log')
 
 module.exports = {
   log() {
@@ -17,10 +9,17 @@ module.exports = {
 
       switch (true) {
         case !!error:
-          warn(`${type} failed: ${payload.message}`, { error: payload, meta })
+          logger.warn({
+            action: type,
+            meta,
+            stack: payload.stack,
+          }, `${type} failed: ${payload.message}`)
           break
         default:
-          log(meta.log || 'debug', format(type, meta))
+          logger[meta.log || 'debug']({
+            action: type,
+            meta
+          })
       }
 
       return next(action)

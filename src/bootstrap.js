@@ -4,16 +4,20 @@ try {
   const START = Date.now()
 
   const opts = require('./args').parse()
-  const { user } = require('./path')
-  const LOGDIR = user('log')
-
-  const { info, fatal } = require('./common/log')(LOGDIR, opts)
+  const { Window } = require('./window')
   const { ready } = require('./dom')
   const { ipcRenderer: ipc } = require('electron')
-  const { Window } = require('./window')
 
   const win = new Window(opts)
-  info(`${win.type}.init...`)
+  const log = require('./common/log')({
+    dest: opts.log,
+    name: win.type
+  })
+
+  log.instance.info({
+    dpx: window.devicePixelRatio,
+    opts
+  }, `${win.type}.init`)
 
   ready
     .then(() => Date.now())
@@ -28,7 +32,8 @@ try {
           ipc.send('wm', 'ready')
           win.toggle('ready')
 
-          info('%s ready %dms [dom:%dms win:%dms req:%dms]', win.type,
+          log.instance.info('%s ready %dms [dom:%dms win:%dms req:%dms]',
+            win.type,
             (Date.now() - START),
             (READY - START),
             (INIT - READY),
@@ -36,7 +41,7 @@ try {
         }, { timeout: 1000 })
       }))
     .catch(({ message, stack }) => {
-      fatal(`${win.type}.init failed: ${message}`, { stack })
+      log.instance.fatal({ stack }, `${win.type}.init failed: ${message}`)
       if (!opts.dev) process.crash()
     })
 

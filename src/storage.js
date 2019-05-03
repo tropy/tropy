@@ -16,13 +16,13 @@ class Storage {
   }
 
   load(name) {
-    info(`restore ${this.expand(name)}...`)
+    info(`restoring ${this.expand(name)}`)
     return JSON.parse(localStorage.getItem(this.expand(name)))
   }
 
   save(name, object) {
     if (object != null) {
-      info(`persist ${this.expand(name)}`)
+      info(`persisting ${this.expand(name)}`)
       localStorage.setItem(this.expand(name), JSON.stringify(object))
     }
 

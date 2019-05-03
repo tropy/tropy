@@ -12,7 +12,10 @@ const ms = require('ms')
 const CWD = new RegExp(process.cwd() + '.')
 
 const format = log =>
-  `${header(log)} ${body(log)}${error(log)}\n`
+  `${header(log)} ${body(log)}${error(log)}${end(log)}`
+
+const end = log =>
+  log.quit ? '\n\n' : '\n'
 
 const body = log =>
   log.action ?
@@ -41,8 +44,8 @@ const symbol = log =>
 const SYMBOL = {
   about: 'α',
   main: 'β',
-  prefs: 'ρ',
-  project: 'μ',
+  prefs: 'π',
+  project: 'ρ',
   wizard: 'φ'
 }
 

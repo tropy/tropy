@@ -1,7 +1,7 @@
 'use strict'
 
 require('./promisify')
-const { join } = require('path')
+const { basename, join } = require('path')
 const { readFileAsync: read, readFileSync } = require('fs')
 const { get, flatten } = require('./util')
 const yaml = require('js-yaml')
@@ -23,7 +23,7 @@ class Resource {
 
   static async open(locale, name, ...args) {
     const res = this.expand(name, locale)
-    debug(`open resource ${res}`)
+    debug(`opening resource ${basename(res)}`)
 
     return new this(this.parse(await read(res)), locale, ...args)
   }

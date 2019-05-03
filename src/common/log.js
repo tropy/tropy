@@ -1,121 +1,72 @@
 'use strict'
 
-const { Logger, transports } = require('winston')
-const { basename, join } = require('path')
-const { assign } = Object
-const { system } = require('./os')
-const { version } = require('./release')
-const { sync: mkdir } = require('mkdirp')
+const pino = require('pino')
+//const { basename, join } = require('path')
+//const { sync: mkdir } = require('mkdirp')
 
-const ms = require('ms')
-const colors = require('colors/safe')
+let instance
 
-const [SYMBOL, LABEL] = (process.type === 'renderer') ?
-  ['ρ', `${basename(window.location.pathname, '.html')}`] :
-  ['β', 'main']
-
-const PADDING = 8
-
-const COLORS = {
-  fatal: 'red',
-  error: 'red',
-  warn: 'yellow',
-  info: 'blue',
-  debug: 'green',
-  trace: 'magenta'
-}
-
-const seq = timer()
-
-const logger = new Logger({
-  level: 'info',
-  transports: []
-})
-
-
-function init(dir, {
-  debug,
-  environment,
-  locale
-} = {}) {
-  logger.clear()
-  if (debug) logger.level = 'debug'
-
-  switch (environment) {
-    case 'development':
-      logger.add(transports.Console, {
-        handleExceptions: false,
-        formatter
-      })
-      // eslint-disable-next-line no-fallthrough
+function log({ dest = 2, level, name = 'log' } = {}) {
+  switch (process.env.NODE_ENV) {
     case 'production':
-      if (dir) {
-        mkdir(dir)
-        logger.add(transports.File, {
-          label: LABEL,
-          filename: join(dir, `${LABEL}.log`),
-          handleExceptions: false,
-          options: { flags: 'w' }
-        })
-      }
+      level = level || 'info'
+      break
+    case 'development':
+      level = level || 'debug'
       break
     case 'test':
-      logger.add(transports.Console, {
-        handleExceptions: true,
-        humanReadableUnhandledException: true
-      })
-      logger.level = 'debug'
+      level = level || 'error'
+      dest = 2
       break
   }
 
-  logger.info(`log.init ${version}`, {
-    dpx: global.devicePixelRatio,
-    environment,
-    locale,
-    system,
-    version
-  })
+  //if (name === 'main' && typeof dest === 'string') {
+  //  // rotate // mkdir?
+  //}
 
-  return module.exports
+  instance = pino({
+    level,
+    base: {
+      type: process.type,
+      name
+    }
+  }, pino.destination(dest))
+
+  return log
 }
 
-function *timer() {
-  for (let a = Date.now(), b;; a = b) {
-    yield ((b = Date.now()), b - a)
+Object.defineProperties(log, {
+  instance: {
+    get() {
+      if (instance == null) log()
+      return instance
+    }
+  },
+
+  logger: {
+    get() {
+      return this.instance
+    }
   }
-}
+})
 
-function time() {
-  return colors.gray((`+${ms(seq.next().value)}`).padStart(PADDING, ' '))
-}
-
-function colorize(level, string = level) {
-  return colors[COLORS[level] || 'gray'](string)
-}
-
-function text(options) {
-  let meta = assign({}, options.meta)
-  let message = options.message
-
-  if (meta.module) {
-    message = `[${meta.module}] ${message}`
+module.exports = Object.assign(log, {
+  fatal(...args) {
+    log.instance.fatal(...args.reverse())
+  },
+  error(...args) {
+    log.instance.error(...args.reverse())
+  },
+  warn(...args) {
+    log.instance.warn(...args.reverse())
+  },
+  info(...args) {
+    log.instance.info(...args.reverse())
+  },
+  debug(...args) {
+    log.instance.debug(...args.reverse())
+  },
+  trace(...args) {
+    log.instance.trace(...args.reverse())
   }
-
-  return message
-}
-
-function formatter(options) {
-  return `${time()} ${colorize(options.level, SYMBOL)} ${text(options)}`
-}
-
-
-module.exports = assign(init, {
-  logger,
-  log: logger.log.bind(logger),
-  fatal: logger.error.bind(logger),
-  error: logger.error.bind(logger),
-  warn: logger.warn.bind(logger),
-  info: logger.info.bind(logger),
-  debug: logger.debug.bind(logger),
-  trace: logger.silly.bind(logger)
 })
