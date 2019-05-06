@@ -1,8 +1,6 @@
 'use strict'
 
 const pino = require('pino')
-//const { basename, join } = require('path')
-//const { sync: mkdir } = require('mkdirp')
 
 let instance
 
@@ -22,10 +20,6 @@ function log({ dest = 2, level, name = 'log', debug, trace } = {}) {
       dest = 2
       break
   }
-
-  //if (name === 'main' && typeof dest === 'string') {
-  //  // rotate // mkdir?
-  //}
 
   instance = pino({
     level,
