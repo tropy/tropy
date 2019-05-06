@@ -2,39 +2,37 @@
 
 const React = require('react')
 const { render } = require('react-dom')
-const { $ } = require('../dom')
 const { create } = require('../stores/wizard')
 const { Main } = require('../components/main')
 const { WizardContainer } = require('../components/wizard')
-const act = require('../actions')
 const { win } = require('../window')
 const dialog = require('../dialog')
+const intl = require('../actions/intl')
+const history = require('../actions/history')
+const settings = require('../actions/settings')
 
 const store = create()
-
 const { locale } = ARGS
 
-Promise.all([
-  store.dispatch(act.intl.load({ locale }))
-])
+store
+  .dispatch(intl.load({ locale }))
   .then(() => {
     render(
       <Main store={store}><WizardContainer/></Main>,
-      $('main')
-    )
+      document.getElementById('main'))
   })
 
 dialog.start(store)
 win.unloaders.push(dialog.stop)
 
 win.on('app.undo', () => {
-  store.dispatch(act.history.undo())
+  store.dispatch(history.undo())
 })
 win.on('app.redo', () => {
-  store.dispatch(act.history.redo())
+  store.dispatch(history.redo())
 })
-win.on('settings.update', (settings) => {
-  store.dispatch(act.settings.update(settings))
+win.on('settings.update', (data) => {
+  store.dispatch(settings.update(data))
 })
 
 Object.defineProperty(window, 'store', { get: () => store })

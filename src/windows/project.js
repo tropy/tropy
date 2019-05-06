@@ -2,10 +2,9 @@
 
 const React = require('react')
 const { render } = require('react-dom')
-const { $ } = require('../dom')
-const { create } = require('../stores/project')
 const { Main } = require('../components/main')
 const { ProjectContainer } = require('../components/project/container')
+const { create } = require('../stores/project')
 const { main } = require('../sagas/project')
 const { win } = require('../window')
 const act = require('../actions')
@@ -27,7 +26,7 @@ Promise.all([
 
     render(
       <Main store={store}><ProjectContainer/></Main>,
-      $('main')
+      document.getElementById('main')
     )
   })
 

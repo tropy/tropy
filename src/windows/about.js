@@ -2,7 +2,6 @@
 
 const React = require('react')
 const { render } = require('react-dom')
-const { $ } = require('../dom')
 const { create } = require('../stores/about')
 const { Main } = require('../components/main')
 const { About } = require('../components/about')
@@ -14,7 +13,9 @@ const { locale } = ARGS
 store
   .dispatch(load({ locale }))
   .then(() => {
-    render(<Main store={store}><About/></Main>, $('main'))
+    render(
+      <Main store={store}><About/></Main>,
+      document.getElementById('main'))
   })
 
 Object.defineProperty(window, 'store', { get: () => store })

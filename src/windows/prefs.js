@@ -2,7 +2,6 @@
 
 const React = require('react')
 const { render } = require('react-dom')
-const { $ } = require('../dom')
 const { create } = require('../stores/prefs')
 const { Main } = require('../components/main')
 const { PrefsContainer } = require('../components/prefs')
@@ -21,7 +20,9 @@ Promise.all([
   store.dispatch(act.keymap.load({ name: 'project', locale }))
 ])
   .then(() => {
-    render(<Main store={store}><PrefsContainer/></Main>, $('main'))
+    render(
+      <Main store={store}><PrefsContainer/></Main>,
+      document.getElementById('main'))
   })
 
 dialog.start(store)
