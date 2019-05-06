@@ -6,8 +6,11 @@ config.fatal = false
 const chokidar = require('chokidar')
 const { relative, extname, basename } = require('path')
 const compile = require('./compile')
-const { error, green, red, say } = require('./util')('watch')
+const { error, green, red, say } = require('./util')('ω')
 const cwd = process.cwd()
+const debounce = require('lodash.debounce')
+
+const css = debounce(compile.css, 500)
 
 target.all = () => {
   target.src()
@@ -39,7 +42,7 @@ target.src = () => {
       }
 
       if ((/^\.jsx?$/).test(extname(file))) {
-        compile.js(file)
+        compile.jsRender(file, true)
 
         if (event === 'change') {
           const spec = file
@@ -50,8 +53,8 @@ target.src = () => {
         }
 
       } else {
-        if ((basename(file)[0] === '_')) compile.css()
-        else compile.css(file)
+        if ((basename(file)[0] === '_')) css()
+        else compile.cssRender(file, true)
       }
     })
 }

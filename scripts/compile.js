@@ -1,88 +1,95 @@
-'use strict'
+#!/usr/bin/env node
 
-require('shelljs/make')
+'use strict'
 
 const babel = require('@babel/core')
 const sass = require('node-sass')
 const { Glob } = require('glob')
-const { join, resolve, relative, dirname } = require('path')
-const { statSync: stat } = require('fs')
-const { check, error, say } = require('./util')('compile')
-const home = resolve(__dirname, '..')
+const { join, relative, dirname } = require('path')
+const { statSync: stat, writeFileSync: write } = require('fs')
+const { sync: mkdir } = require('mkdirp')
+const { check, error, say } = require('./util')('λ')
 
-target.all = () =>
-  Promise.all([js(), css()])
+const HOME = join(__dirname, '..')
 
-function js(pattern = 'src/**/*.{js,jsx}') {
-  return new Promise((resolve, reject) => {
+const js = (pattern = 'src/**/*.{js,jsx}') =>
+  new Promise((resolve, reject) => {
+    say('compile javascripts...')
     new Glob(pattern)
       .on('end', resolve)
       .on('error', reject)
-
       .on('match', (file) => {
-        let src = relative(home, file)
-        let dst = swap(src, 'src', 'lib', '.js')
-
+        let src = relative(HOME, file)
         check(src.startsWith('src'), 'not a src path')
-        if (fresh(src, dst)) return
 
-        say(dst)
-
-        babel.transformFile(src, (err, result) => {
-          if (err) return error(err)
-          mkdir('-p', dirname(dst))
-          result.code.to(dst)
-        })
+        jsRender(src)
+          .catch((reason) => { error(reason ) })
       })
   })
-}
 
-function css(pattern = 'src/stylesheets/**/!(_*).{sass,scss}') {
-  return new Promise((resolve, reject) => {
+const jsRender = (src, verbose = false, force = false) =>
+  new Promise((resolve, reject) => {
+    let dst = swap(src, 'src', 'lib', '.js')
+    if (force || !fresh(src, dst)) {
+      if (verbose) say(dst)
+      babel.transformFile(src, (err, result) => {
+        if (err) return reject(err)
+        mkdir(dirname(dst))
+        write(dst, result.code, 'utf-8')
+      })
+    } else {
+      resolve()
+    }
+  })
+
+const css = (pattern = 'src/stylesheets/**/!(_*).{sass,scss}') =>
+  new Promise((resolve, reject) => {
+    say('compile stylesheets...')
     new Glob(pattern)
       .on('end', resolve)
       .on('error', reject)
-
       .on('match', (file) => {
-        let src = relative(home, file)
-        let dst = swap(src, 'src', 'lib', '.css')
-
+        let src = relative(HOME, file)
         check(src.startsWith(join('src', 'stylesheets')))
-        say(dst)
 
-        let options = {
-          file: src,
-          functions: SassExtensions,
-          includePaths: SassIncludePath,
-          outFile: dst,
-          outputStyle: 'compressed',
-          sourceMap: true
-        }
-
-        sass.render(options, (err, result) => {
-          if (err) return error(`${err.line}: ${err.message}`)
-
-          mkdir('-p', dirname(dst))
-          String(result.css).to(dst)
-          String(result.map).to(`${dst}.map`)
-        })
+        cssRender(src)
+          .catch(({ line, message }) => {
+            error(`${line}: ${message}`)
+          })
       })
   })
+
+const cssRender = (file, verbose = false, opts = SassDefaults) =>
+  new Promise((resolve, reject) => {
+    let outFile = swap(file, 'src', 'lib', '.css')
+    if (verbose) say(outFile)
+    sass.render({ ...opts, file, outFile }, (err, result) => {
+      if (err) return reject(err)
+      mkdir(dirname(outFile))
+      write(outFile, result.css, 'utf-8')
+      write(`${outFile}.map`, result.map, 'utf-8')
+    })
+  })
+
+
+const SassDefaults = {
+  includePaths: [
+    join(HOME, 'node_modules')
+  ],
+
+  functions: {
+    'const($name, $unit:"")'(name, unit) {
+      const SASS = require('../src/constants/sass')
+      const { get } = require('../src/common/util')
+      return toSass(get(SASS, name.getValue()), unit.getValue())
+    }
+  },
+
+  outputStyle: 'compressed',
+  sourceMap: true
 }
 
-const SassIncludePath = [
-  join(home, 'node_modules')
-]
-
-const SassExtensions = {
-  'const($name, $unit:"")'(name, unit) {
-    const SASS = require('../src/constants/sass')
-    const { get } = require('../src/common/util')
-    return toSass(get(SASS, name.getValue()), unit.getValue())
-  }
-}
-
-function toSass(value, unit) {
+const toSass = (value, unit) => {
   if (typeof value === 'number') {
     return new sass.types.Number(value, unit)
   }
@@ -109,7 +116,7 @@ function toSass(value, unit) {
   return sass.types.Null.NULL
 }
 
-function fresh(src, dst) {
+const fresh = (src, dst) => {
   try {
     return stat(dst).mtime > stat(src).mtime
   } catch (_) {
@@ -117,12 +124,30 @@ function fresh(src, dst) {
   }
 }
 
-function swap(filename, src, dst, ext) {
-  return filename
+const swap = (filename, src, dst, ext) =>
+  filename
     .replace(src, dst)
     .replace(/(\..+)$/, m => ext || m[1])
+
+if (require.main === module) {
+  require('yargs')
+    .command('*', 'compile js and css', () => {
+      css()
+      js()
+    })
+    .command('js [glob]', 'compile js', opts => {
+      js(opts.glob)
+    })
+    .command('css [glob]', 'compile css', opts => {
+      css(opts.glob)
+    })
+    .help()
+    .argv
 }
 
 module.exports = {
-  js, css
+  js,
+  jsRender,
+  css,
+  cssRender
 }
