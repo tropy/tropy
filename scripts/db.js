@@ -3,7 +3,7 @@
 require('shelljs/make')
 
 const pkg = require('../package')
-const { check, say, rules } = require('./util')('db')
+const { check, say } = require('./util')('db')
 const { join, dirname, relative } = require('path')
 const { compact, strftime } = require('../src/common/util')
 const home = join(__dirname, '..')
@@ -150,10 +150,6 @@ target.all = async (args = []) => {
   await target.create(args)
   await target.viz(args)
 }
-
-target.rules = () =>
-  rules(target)
-
 
 function migration(name, type) {
   check(type === 'sql' || type === 'js',
