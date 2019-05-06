@@ -13,7 +13,6 @@ const {
 } = require('electron')
 
 const { fatal, info, logger } = require('../common/log')
-const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 const rm = require('rimraf')
@@ -217,39 +216,33 @@ class Tropy extends EventEmitter {
     })
   }
 
-  restore() {
-    return all([
-      this.store.load('state.json')
+  async restore() {
+    this.state = await this.migrate(
+      await this.store.load('state.json', Tropy.defaults))
+
+    await Promise.all([
+      this.load(),
+      this.cache.init(),
+      this.plugins.init()
     ])
-      .then(([state]) => ({ ...Tropy.defaults, ...state }))
-      .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
-      .then(state => this.migrate(state))
-      .tap(state => this.state = state)
+    this.plugins.watch()
 
-      .tap(() => all([
-        this.load(),
-        this.cache.init(),
-        this.plugins.init()
-      ]))
+    if (this.state.updater) {
+      this.updater.start()
+    }
 
-      .tap(() => this.plugins.watch())
-      .tap(state => state.updater && this.updater.start())
+    if (darwin) {
+      prefs.setAppLevelAppearance(
+        this.state.theme === 'system' ? null : this.state.theme
+      )
+    }
 
-      .tap(state => {
-        if (darwin) {
-          prefs.setAppLevelAppearance(
-            state.theme === 'system' ? null : state.theme
-          )
-        }
-      })
-
-      .tap(() => this.emit('app:restored'))
-      .tap(() => info('app state restored'))
+    info('app state restored')
   }
 
   load() {
-    return all([
+    return Promise.all([
       this.menu.load(),
       this.ctx.load(),
       Strings

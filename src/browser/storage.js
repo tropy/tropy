@@ -15,8 +15,17 @@ class Storage {
       write.sync(this.expand(name), JSON.stringify(object))
   }
 
-  async load(name) {
-    return JSON.parse(await read(this.expand(name)))
+  async load(name, defaults) {
+    try {
+      return {
+        ...defaults,
+        ...JSON.parse(await read(this.expand(name)))
+      }
+    } catch (error) {
+      if (defaults != null && error.code === 'ENOENT')
+        return { ...defaults }
+      else throw error
+    }
   }
 
   async save(name, object) {

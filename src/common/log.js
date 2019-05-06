@@ -35,8 +35,6 @@ function log({ dest = 2, level, name = 'log', debug, trace } = {}) {
     }
   }, pino.destination(dest))
 
-  instance.debug(`log.init at level ${level}`)
-
   return log
 }
 

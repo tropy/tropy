@@ -1,12 +1,11 @@
 'use strict'
 
-const B = require('bluebird')
 const shortid = require('shortid')
 const { keys } = Object
 
 const util = {
   once(emitter, event) {
-    return new B((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const on =
         (emitter.on || emitter.addEventListener).bind(emitter)
       const off =
