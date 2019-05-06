@@ -58,7 +58,11 @@ class Tropy extends EventEmitter {
   constructor(opts = {}) {
     super()
 
-    if (Tropy.instance) return Tropy.instance
+    if (Tropy.instance)
+      return Tropy.instance
+    if (!opts['user-data'])
+      throw new Error('missing user-data folder')
+
     Tropy.instance = this
 
     this.opts = opts
@@ -66,19 +70,23 @@ class Tropy extends EventEmitter {
     this.ctx = new ContextMenu(this)
     this.wm = new WindowManager()
     this.updater = new Updater({
-      enable: opts.environment === 'production' && opts['auto-updates']
+      enable: process.env.NODE_ENV === 'production' && opts['auto-updates']
     })
 
     prop(this, 'cache', {
-      value: new Cache(app.getPath('userData'), 'cache')
+      value: new Cache(opts['user-data'], 'cache')
     })
 
-    prop(this, 'store', { value: new Storage() })
+    prop(this, 'store', {
+      value: new Storage(opts['user-data'])
+    })
 
-    prop(this, 'projects', { value: new Map() })
+    prop(this, 'projects', {
+      value: new Map()
+    })
 
     prop(this, 'plugins', {
-      value: new Plugins(join(app.getPath('userData'), 'plugins'))
+      value: new Plugins(join(opts['user-data'], 'plugins'))
     })
   }
 
@@ -551,7 +559,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-user-data', () => {
-      shell.showItemInFolder(join(app.getPath('userData'), 'state.json'))
+      shell.showItemInFolder(join(this.opts['user-data'], 'state.json'))
     })
 
     this.on('app:open-plugins-folder', () => {
@@ -578,7 +586,7 @@ class Tropy extends EventEmitter {
           message: 'Cannot reset ontology db while in use!'
         })
       else
-        rm.sync(join(app.getPath('userData'), 'ontology.db'))
+        rm.sync(join(this.opts['user-data'], 'ontology.db'))
     })
 
     this.on('app:open-dialog', (win, opts = {}) => {
@@ -773,6 +781,7 @@ class Tropy extends EventEmitter {
       locale: this.state.locale,
       log: this.log,
       uuid: this.state.uuid,
+      user: this.opts['user-data'],
       update: this.updater.release,
       version,
       webgl: this.state.webgl,

@@ -16,6 +16,8 @@ describe('main process', () => {
     sinon.spy(args, 'parse')
     sinon.spy(app, 'whenReady')
     sinon.spy(app, 'setName')
+    sinon.spy(app, 'setPath')
+    sinon.stub(app, 'requestSingleInstanceLock').returns(true)
     sinon.stub(app, 'on').returns(app)
     Tropy.instance = sinon.createStubInstance(EventEmitter)
     Tropy.instance.start = sinon.stub().returns(Promise.resolve())
@@ -28,8 +30,10 @@ describe('main process', () => {
     process.on.restore()
     args.parse.restore()
     app.on.restore()
-    app.whenReady.restore()
+    app.requestSingleInstanceLock.restore()
     app.setName.restore()
+    app.setPath.restore()
+    app.whenReady.restore()
   })
 
   describe('when required', () => {
@@ -41,6 +45,14 @@ describe('main process', () => {
 
     it('sets the app name', () => {
       expect(app.setName).to.have.been.called
+    })
+
+    it('sets the user data path', () => {
+      expect(app.setPath).to.have.been.calledWith('userData')
+    })
+
+    it('requests single instance lock', () => {
+      expect(app.requestSingleInstanceLock).to.have.been.called
     })
 
     it('waits for app "ready"', () => {

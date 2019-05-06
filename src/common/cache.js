@@ -2,7 +2,7 @@
 
 require('./promisify')
 
-const { join, resolve, extname, basename } = require('path')
+const { join, extname, basename } = require('path')
 const { format } = require('url')
 
 const {
@@ -15,7 +15,7 @@ const {
 
 class Cache {
   constructor(...args) {
-    this.root = resolve(...args)
+    this.root = join(...args)
   }
 
   get name() {

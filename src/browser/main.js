@@ -8,48 +8,39 @@ const opts = args.parse(process.argv.slice(1))
 process.env.NODE_ENV = opts.environment
 
 const { app }  = require('electron')
-const { extname, join, resolve } = require('path')
+
+if (!app.requestSingleInstanceLock()) {
+  process.stderr.write('other instance detected, exiting...\n')
+  app.exit(0)
+}
+
+const { extname, join } = require('path')
 const { darwin, linux, win32, system }  = require('../common/os')
 const { qualified, version }  = require('../common/release')
 
-if (opts.environment !== 'test') {
-  if (!app.requestSingleInstanceLock()) {
-    process.stderr.write('other instance detected, exiting...\n')
-    app.exit(0)
-  }
-}
+// Set app name and user-data as soon as possible!
+app.setName(qualified.product)
 
-let USERDATA = opts['user-data']
-let LOGDIR
-
-if (!USERDATA && opts.environment === 'production') {
-  USERDATA = join(
+if (!opts['user-data']) {
+  opts['user-data'] = join(
     app.getPath('appData'),
     qualified[linux ? 'name' : 'product'])
 }
 
-// Set app name and data location as soon as possible!
-app.setName(qualified.product)
-if (USERDATA) {
-  app.setPath('userData', resolve(USERDATA))
-}
+let logs = join(opts['user-data'], 'log')
 
-try {
-  LOGDIR = app.getPath('logs')
-} catch (_) {
-  LOGDIR = join(app.getPath('userData'), 'log')
-  app.setPath('logs', LOGDIR)
-}
+app.setPath('userData', join(opts['user-data'], 'electron'))
+app.setPath('logs', join(opts['user-data'], 'log'))
 
-if (!(win32 && require('./squirrel')())) {
+if (!(win32 && require('./squirrel')(opts['user-data']))) {
   const { info, warn } = require('../common/log')({
-    dest: join(LOGDIR, 'tropy.log'),
+    dest: join(logs, 'tropy.log'),
     name: 'main',
     debug: opts.debug,
     trace: opts.trace
   })
 
-  if (opts.ignoreGpuBlacklist) {
+  if (opts['ignore-gpu-blacklist']) {
     app.commandLine.appendSwitch('ignore-gpu-blacklist')
   }
 
@@ -58,8 +49,7 @@ if (!(win32 && require('./squirrel')())) {
   }
 
   info(`main.init ${version} ${system}`, {
-    env: opts.environment,
-    user: app.getPath('userData'),
+    opts,
     version
   })
 

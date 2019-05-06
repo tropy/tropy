@@ -34,7 +34,8 @@ describe('WindowManager', () => {
 
         before(async () => {
           win = await wm.open(type, {
-            plugins: plugins.root
+            plugins: plugins.root,
+            user: app.getPath('userData')
           })
           ready = once(win, 'ready')
         })

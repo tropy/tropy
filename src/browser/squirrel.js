@@ -97,7 +97,7 @@ function quit() {
   app.quit()
 }
 
-function handleSquirrelEvent() {
+function handleSquirrelEvent(userData) {
   if (process.platform !== 'win32') return false
   if (process.env.NODE_ENV === 'development') return false
   if (process.argv.length === 1) return false
@@ -119,7 +119,7 @@ function handleSquirrelEvent() {
         try {
           rm(DESKTOP)
           rm(START_MENU)
-          rm(app.getPath('userData'))
+          rm(userData)
 
         } finally {
           clearMimeType('tpy', 'ttp').then(quit, quit)

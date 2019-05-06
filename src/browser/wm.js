@@ -223,7 +223,6 @@ class WindowManager extends EventEmitter {
         pictures: app.getPath('pictures'),
         scrollbars: !WindowManager.hasOverlayScrollBars(),
         theme: 'light',
-        user: app.getPath('userData'),
         ...args
       }))
     })

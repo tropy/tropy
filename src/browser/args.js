@@ -1,12 +1,13 @@
 'use strict'
 
-const { basename } = require('path')
-const { version } = require('../../package')
+const { basename, resolve } = require('path')
+const { version } = require('../common/release')
 const yargs = require('yargs')()
 
 module.exports =
   yargs
     .parserConfiguration({
+      'camel-case-expansion': false,
       'short-option-groups': false
     })
 
@@ -18,7 +19,7 @@ module.exports =
 
     .option('user-data', {
       type: 'string',
-      normalize: true,
+      coerce: resolve,
       describe: 'Set user data directory'
     })
 
@@ -29,7 +30,8 @@ module.exports =
       choices: ['development', 'test', 'production']
     })
     .default('environment',
-        () => (process.env.NODE_ENV || 'production'), '"production"')
+      () => (process.env.NODE_ENV || 'production'),
+      '"production"')
 
     .option('scale', {
       alias: 'force-device-scale-factor',

@@ -2,14 +2,12 @@
 
 require('../common/promisify')
 
-const { app } = require('electron')
 const { join } = require('path')
 const { readFileAsync: read } = require('fs')
 const { write } = require('../common/atomic')
 
-
 class Storage {
-  constructor(path = app.getPath('userData')) {
+  constructor(path) {
     this.path = path
     this.save.sync = (name, object) =>
       write.sync(this.expand(name), JSON.stringify(object))
