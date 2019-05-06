@@ -3,17 +3,9 @@
 const { join, resolve } = require('path')
 const  rm = require('rimraf')
 const { app, net, BrowserWindow } = require('electron')
-const { check, error, say, warn } = require('./util')('δ')
+const { check, error, say } = require('./util')('δ')
 const { argv } = require('yargs')
-
-const unzip = async (...args) => {
-  try {
-    return require('unzip-crx')(...args)
-  } catch (e) {
-    warn('missing `unzip-crx`: npm i unzip-crx --no-save')
-    throw e
-  }
-}
+const unzip = require('unzip-crx')
 
 const {
   existsSync: exists,
