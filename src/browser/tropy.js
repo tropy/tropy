@@ -15,8 +15,6 @@ const {
 const { fatal, info, logger } = require('../common/log')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
-const rm = require('rimraf')
-const uuid = require('uuid/v1')
 
 const { AppMenu, ContextMenu } = require('./menu')
 const { Cache } = require('../common/cache')
@@ -262,7 +260,7 @@ class Tropy extends EventEmitter {
   migrate(state) {
     state.locale = this.getLocale(state.locale)
     state.version = this.version
-    state.uuid = state.uuid || uuid()
+    state.uuid = state.uuid || require('uuid/v1')()
     return state
   }
 
@@ -586,7 +584,8 @@ class Tropy extends EventEmitter {
           message: 'Cannot reset ontology db while in use!'
         })
       else
-        rm.sync(join(this.opts['user-data'], 'ontology.db'))
+        require('rimraf')
+          .sync(join(this.opts['user-data'], 'ontology.db'))
     })
 
     this.on('app:open-dialog', (win, opts = {}) => {
