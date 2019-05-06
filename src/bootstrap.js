@@ -11,6 +11,7 @@ try {
   const win = new Window(opts)
   const log = require('./common/log')({
     dest: opts.log,
+    level: opts.level,
     name: win.type
   })
 

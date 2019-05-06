@@ -6,10 +6,9 @@ const args = require('./args')
 const opts = args.parse(process.argv.slice(1))
 
 process.env.NODE_ENV = opts.environment
-global.ARGS = opts
 
 const { app }  = require('electron')
-const { extname, join } = require('path')
+const { extname, join, resolve } = require('path')
 const { darwin, linux, win32, system }  = require('../common/os')
 const { qualified, version }  = require('../common/release')
 
@@ -20,26 +19,19 @@ if (opts.environment !== 'test') {
   }
 }
 
-let USERDATA = opts.dir
+let USERDATA = opts['user-data']
 let LOGDIR
 
-if (!USERDATA) {
-  switch (opts.environment) {
-    case 'development':
-      USERDATA = join(process.cwd(), 'tmp')
-      break
-    case 'production':
-      USERDATA = join(
-        app.getPath('appData'),
-        qualified[linux ? 'name' : 'product'])
-      break
-  }
+if (!USERDATA && opts.environment === 'production') {
+  USERDATA = join(
+    app.getPath('appData'),
+    qualified[linux ? 'name' : 'product'])
 }
 
 // Set app name and data location as soon as possible!
 app.setName(qualified.product)
 if (USERDATA) {
-  app.setPath('userData', USERDATA)
+  app.setPath('userData', resolve(USERDATA))
 }
 
 try {
@@ -52,7 +44,9 @@ try {
 if (!(win32 && require('./squirrel')())) {
   const { info, warn } = require('../common/log')({
     dest: join(LOGDIR, 'tropy.log'),
-    name: 'main'
+    name: 'main',
+    debug: opts.debug,
+    trace: opts.trace
   })
 
   if (opts.ignoreGpuBlacklist) {
@@ -71,7 +65,7 @@ if (!(win32 && require('./squirrel')())) {
 
   const T1 = Date.now()
   const Tropy = require('./tropy')
-  const tropy = new Tropy()
+  const tropy = new Tropy(opts)
   const T2 = Date.now()
 
   Promise.all([

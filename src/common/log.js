@@ -6,7 +6,10 @@ const pino = require('pino')
 
 let instance
 
-function log({ dest = 2, level, name = 'log' } = {}) {
+function log({ dest = 2, level, name = 'log', debug, trace } = {}) {
+  if (!level && trace) level = 'trace'
+  if (!level && debug) level = 'debug'
+
   switch (process.env.NODE_ENV) {
     case 'production':
       level = level || 'info'
@@ -31,6 +34,8 @@ function log({ dest = 2, level, name = 'log' } = {}) {
       name
     }
   }, pino.destination(dest))
+
+  instance.debug(`log.init at level ${level}`)
 
   return log
 }

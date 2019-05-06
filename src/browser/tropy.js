@@ -12,7 +12,7 @@ const {
   systemPreferences: prefs
 } = require('electron')
 
-const { fatal, info } = require('../common/log')
+const { fatal, info, logger } = require('../common/log')
 const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
@@ -56,16 +56,19 @@ class Tropy extends EventEmitter {
     zoom: 1.0
   }
 
-  constructor() {
+  constructor(opts = {}) {
     super()
 
     if (Tropy.instance) return Tropy.instance
     Tropy.instance = this
 
+    this.opts = opts
     this.menu = new AppMenu(this)
     this.ctx = new ContextMenu(this)
-    this.updater = new Updater(this)
     this.wm = new WindowManager()
+    this.updater = new Updater({
+      enable: opts.environment === 'production' && opts['auto-updates']
+    })
 
     prop(this, 'cache', {
       value: new Cache(app.getPath('userData'), 'cache')
@@ -729,13 +732,24 @@ class Tropy extends EventEmitter {
         })
     })
 
+    this.updater
+      .on('checking-for-updates', () => {
+        this.emit('app:reload-menu')
+      })
+      .on('update-not-available', () => {
+        this.emit('app:reload-menu')
+      })
+      .on('update-ready', (release) => {
+        this.wm.broadcast('dispatch', act.flash.show(release))
+      })
+
     return this
   }
 
   handleUncaughtException(e, win = BrowserWindow.getFocusedWindow()) {
     fatal(`unhandled error: ${e.message}`, { stack: e.stack })
 
-    if (this.production) {
+    if (!this.dev) {
       dialog
         .alert(win, {
           ...this.dict.dialog.unhandled,
@@ -762,6 +776,7 @@ class Tropy extends EventEmitter {
       plugins: this.plugins.root,
       frameless: this.state.frameless,
       theme: this.state.theme,
+      level: logger.level,
       locale: this.state.locale,
       log: this.log,
       uuid: this.state.uuid,
@@ -847,15 +862,11 @@ class Tropy extends EventEmitter {
   }
 
   get dev() {
-    return channel === 'dev' || ARGS.environment === 'development'
-  }
-
-  get production() {
-    return ARGS.environment === 'production'
+    return channel === 'dev' || process.env.NODE_ENV === 'development'
   }
 
   get debug() {
-    return ARGS.debug || this.state.debug
+    return this.opts.debug || this.state.debug
   }
 
   get version() {

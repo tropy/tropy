@@ -44,7 +44,7 @@
     "log:view": "cat tmp/log/tropy.log | node scripts/log-viewer",
     "log:tail": "tail -f tmp/log/tropy.log | node scripts/log-viewer",
     "prestart": "npm run -s compile",
-    "start": "electron --app . --env development",
+    "start": "electron --app . --env development --user-data tmp",
     "rebuild": "node scripts/rebuild",
     "postinstall": "npm run -s rebuild",
     "precoverage": "rimraf coverage .nyc_output && mkdir .nyc_output",

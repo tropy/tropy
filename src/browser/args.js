@@ -16,7 +16,7 @@ module.exports =
 
     .demand(0, 1)
 
-    .option('dir', {
+    .option('user-data', {
       type: 'string',
       normalize: true,
       describe: 'Set user data directory'
@@ -52,6 +52,12 @@ module.exports =
     .option('debug', {
       type: 'boolean',
       describe: 'Set debug flag',
+      default: false
+    })
+
+    .option('trace', {
+      type: 'boolean',
+      describe: 'Set trace flag',
       default: false
     })
 

@@ -1,19 +1,20 @@
 'use strict'
 
+const { EventEmitter } = require('events')
 const { autoUpdater } = require('electron')
 const { feed } = require('../common/release')
 const { linux, win32 } = require('../common/os')
 const { warn, info } = require('../common/log')
-const flash  = require('../actions/flash')
 
 const MIN = 1000 * 60
 
-class Updater {
-  constructor(app, timeout = 90 * MIN) {
-    this.isSupported = !linux && app.isBuild && ARGS.autoUpdates
+class Updater extends EventEmitter {
+  constructor({ enable = true,  interval = 90 * MIN } = {}) {
+    super()
 
-    this.app = app
-    this.timeout = timeout
+    this.isSupported = !linux && enable
+
+    this.timeout = interval
     this.release = {}
 
     this.isChecking = false
@@ -93,14 +94,14 @@ class Updater {
     info('checking for updates...')
     this.lastCheck = new Date()
     this.isChecking = true
-    this.app.emit('app:reload-menu')
+    this.emit('checking-for-update')
   }
 
   onUpdateNotAvailable = () => {
     info('no updates available')
     this.isUpdateAvailable = false
     this.isChecking = false
-    this.app.emit('app:reload-menu')
+    this.emit('update-not-available')
   }
 
   onUpdateAvailable = () => {
@@ -113,8 +114,8 @@ class Updater {
     this.release = release
     this.isUpdateReady = true
     this.isChecking = false
-    this.app.wm.broadcast('dispatch', flash.show(release))
     this.stop()
+    this.emit('update-ready', release)
   }
 }
 
