@@ -73,8 +73,11 @@ function mocha(file) {
   let args = (/browser|common/).test(file) ?
     [file] : ['--renderer', file]
 
-  if (exec(`npx electron-mocha ${args.join(' ')}`).code === 0)
+  let result = exec(`npx electron-mocha ${args.join(' ')}`, { silent: true })
+  if (result.code === 0) {
     green(file)
-  else
+  } else {
     red(file)
+    console.log(result.stdout)
+  }
 }
