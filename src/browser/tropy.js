@@ -29,7 +29,7 @@ const dialog = require('./dialog')
 const WindowManager = require('./wm')
 
 const { defineProperty: prop } = Object
-const act = require('../actions')
+const act = require('./actions')
 const { darwin, linux, system } = require('../common/os')
 const { channel, product, version } = require('../common/release')
 const { restrict } = require('../common/util')
