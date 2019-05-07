@@ -9,13 +9,13 @@ try {
   const { ipcRenderer: ipc } = require('electron')
 
   const win = new Window(opts)
-  const log = require('./common/log')({
+  const { fatal, info } = require('./common/log')({
     dest: opts.log,
     level: opts.level,
     name: win.type
   })
 
-  log.instance.info({
+  info({
     dpx: window.devicePixelRatio,
     opts
   }, `${win.type}.init`)
@@ -32,17 +32,18 @@ try {
         requestIdleCallback(() => {
           ipc.send('wm', 'ready')
           win.toggle('ready')
+          win.ready = Date.now()
 
-          log.instance.info('%s ready %dms [dom:%dms win:%dms req:%dms]',
+          info('%s ready %dms [dom:%dms win:%dms req:%dms]',
             win.type,
-            (Date.now() - START),
-            (READY - START),
-            (INIT - READY),
-            (LOAD - INIT))
+            win.ready - START,
+            READY - START,
+            INIT - READY,
+            LOAD - INIT)
         }, { timeout: 1000 })
       }))
-    .catch(({ message, stack }) => {
-      log.instance.fatal({ stack }, `${win.type}.init failed: ${message}`)
+    .catch((e) => {
+      fatal({ stack: e.stack }, `${win.type}.init failed`)
       if (!opts.dev) process.crash()
     })
 

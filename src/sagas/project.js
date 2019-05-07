@@ -68,11 +68,9 @@ function *open(file) {
     } finally {
       yield call(close, db, project, access, cache)
     }
-  } catch (error) {
-    warn(`unexpected error in *open: ${error.message}`, {
-      stack: error.stack
-    })
-    yield call(fail, error, db.path)
+  } catch (e) {
+    warn({ stack: e.stack }, 'unexpected error in *open')
+    yield call(fail, e, db.path)
 
   } finally {
     yield call(db.close)
@@ -113,11 +111,9 @@ function *setup(db, project) {
     yield put(act.cache.prune())
     yield put(act.cache.purge())
 
-  } catch (error) {
-    warn(`unexpected error in *setup: ${error.message}`, {
-      stack: error.stack
-    })
-    yield call(fail, error, db.path)
+  } catch (e) {
+    warn({ stack: e.stack }, 'unexpected error in *setup')
+    yield call(fail, e, db.path)
 
   } finally {
     debug('*setup terminated')
@@ -194,11 +190,9 @@ function *main() {
       }
     }
 
-  } catch (error) {
-    crash = error
-    warn(`unexpected error in *main: ${error.message}`, {
-      stack: error.stack
-    })
+  } catch (e) {
+    crash = e
+    warn({ stack: e.stack }, 'unexpected error in *main')
 
   } finally {
     yield all([

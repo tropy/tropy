@@ -23,9 +23,9 @@ module.exports = {
       } else {
         try {
           yield call(db.migrate, ONTOLOGY.MIGRATIONS)
-        } catch (error) {
-          warn('failed to migrate ontology database', { stack: error.stack })
-          yield call(fail, error, 'ontology.migrate')
+        } catch (e) {
+          warn({ stack: e.stack }, 'failed to migrate ontology database')
+          yield call(fail, e, 'ontology.migrate')
         }
       }
 
@@ -37,9 +37,7 @@ module.exports = {
       }
 
     } catch (e) {
-      warn(`unexpected error in *ontology: ${e.message}`, {
-        stack: e.stack
-      })
+      warn({ stack: e.stack }, 'unexpected error in *ontology')
 
     } finally {
       if (db) {

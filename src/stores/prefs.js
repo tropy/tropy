@@ -30,9 +30,7 @@ module.exports = {
   create(init = {}) {
     let saga = createSagaMiddleware({
       onError(e) {
-        error(`unhandled error in saga middleware: ${e.message}`, {
-          stack: e.stack
-        })
+        error({ stack: e.stack }, 'unhandled error in saga middleware')
       }
     })
 

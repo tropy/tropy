@@ -24,10 +24,8 @@ module.exports = {
       if (cmd.error) fail(cmd.error, type)
       if (!cmd.isInteractive && cmd.duration > TOO_LONG) warn(`SLOW: ${type}`)
 
-    } catch (error) {
-      warn(`${action.type} failed in *exec: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
+      warn({ stack: e.stack }, `${action.type} failed in *exec`)
     }
   }
 }

@@ -7,7 +7,10 @@ module.exports = {
     return {
       type: QR.UPDATE,
       payload,
-      meta
+      meta: {
+        log: 'trace',
+        ...meta
+      }
     }
   }
 }

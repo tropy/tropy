@@ -11,10 +11,8 @@ const history = {
       let action = yield select(undo)
       if (action != null) yield put(action)
 
-    } catch (error) {
-      warn(`unexpected error in history:undo: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
+      warn({ stack: e.stack }, 'unexpected error in *history:undo')
     }
   },
 
@@ -23,10 +21,8 @@ const history = {
       let action = yield select(redo)
       if (action != null) yield put(action)
 
-    } catch (error) {
-      warn(`unexpected error in history:undo: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
+      warn({ stack: e.stack }, 'unexpected error in *history:redo')
     }
   },
 

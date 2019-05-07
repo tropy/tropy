@@ -56,21 +56,21 @@ Object.defineProperties(log, {
 
 module.exports = Object.assign(log, {
   fatal(...args) {
-    log.instance.fatal(...args.reverse())
+    log.instance.fatal(...args)
   },
   error(...args) {
-    log.instance.error(...args.reverse())
+    log.instance.error(...args)
   },
   warn(...args) {
-    log.instance.warn(...args.reverse())
+    log.instance.warn(...args)
   },
   info(...args) {
-    log.instance.info(...args.reverse())
+    log.instance.info(...args)
   },
   debug(...args) {
-    log.instance.debug(...args.reverse())
+    log.instance.debug(...args)
   },
   trace(...args) {
-    log.instance.trace(...args.reverse())
+    log.instance.trace(...args)
   }
 })

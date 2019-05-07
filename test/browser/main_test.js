@@ -62,7 +62,7 @@ describe('main process', () => {
     it('starts Tropy instance', () => {
       expect(Tropy.instance.start).to.have.been.calledOnce
       expect(Tropy.instance.open).to.have.been.calledOnceWith('file.tpy')
-      expect(Tropy.instance.isReady).to.be.true
+      expect(Tropy.instance.ready).to.be.ok
     })
 
     it('handles uncaught errors', () => {

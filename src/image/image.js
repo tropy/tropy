@@ -38,14 +38,12 @@ class Image {
         status.image = await Image.open({ path, page, useLocalTimezone })
         status.hasChanged = (status.image.checksum !== checksum)
       }
-    } catch (error) {
-      warn(`image check failed for ${path}: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
+      warn({ stack: e.stack }, `image check failed for ${path}`)
 
       status.hasChanged = true
       status.image = null
-      status.error = error
+      status.error = e
     }
 
     return status
@@ -108,11 +106,8 @@ class Image {
       // Temporarily return as string until we add value types.
       return (time || this.file.ctime).toISOString()
 
-    } catch (error) {
-      warn(`failed to convert image date: ${error.message}`, {
-        stack: error.stack
-      })
-
+    } catch (e) {
+      warn({ stack: e.stack }, 'failed to convert image date')
       return new Date().toISOString()
     }
   }

@@ -55,21 +55,17 @@ class Import extends Command {
 
               vocabs.push(id)
 
-            } catch (error) {
-              warn(`Failed to import "${id}": ${error.message}`, {
-                stack: error.stack
-              })
-              dialog.fail(error, this.action.type)
+            } catch (e) {
+              warn({ stack: e.stack }, `failed to import "${id}"`)
+              dialog.fail(e, this.action.type)
             }
           }
         })
 
 
-      } catch (error) {
-        warn(`Failed to import "${file}": ${error.message}`, {
-          stack: error.stack
-        })
-        dialog.fail(error, this.action.type)
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to import "${file}"`)
+        dialog.fail(e, this.action.type)
       }
     }
 
@@ -269,11 +265,9 @@ class TemplateImport extends Command {
           isProtected
         }, meta))
 
-      } catch (error) {
-        warn(`Failed to import "${file}": ${error.message}`, {
-          stack: error.stack
-        })
-        dialog.fail(error, this.action.type)
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to import "${file}"`)
+        dialog.fail(e, this.action.type)
       }
     }
 
@@ -312,11 +306,9 @@ class TemplateExport extends Command {
 
       yield call(Template.save, data, path)
 
-    } catch (error) {
-      warn(`Failed to export template ${id} to ${path}: ${error.message}`, {
-        stack: error.stack
-      })
-      dialog.fail(error, this.action.type)
+    } catch (e) {
+      warn({ stack: e.stack }, `failed to export template ${id} to ${path}`)
+      dialog.fail(e, this.action.type)
     }
   }
 }
@@ -336,11 +328,9 @@ class TemplateCreate extends Command {
         yield call(createTemplate, db, { ...payload[id], id }, meta)
         ids.push(id)
 
-      } catch (error) {
-        warn(`Failed to create template "${id}": ${error.message}`, {
-          stack: error.stack
-        })
-        dialog.fail(error, this.action.type)
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to create template "${id}"`)
+        dialog.fail(e, this.action.type)
       }
     }
 

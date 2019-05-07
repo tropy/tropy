@@ -4,7 +4,7 @@ const { EventEmitter } = require('events')
 const { autoUpdater } = require('electron')
 const { feed } = require('../common/release')
 const { linux, win32 } = require('../common/os')
-const { warn, info } = require('../common/log')
+const { error, info } = require('../common/log')
 
 const MIN = 1000 * 60
 
@@ -38,11 +38,12 @@ class Updater extends EventEmitter {
         })
       })
 
-    } catch (error) {
-      warn(`failed to setup auto updater: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
       this.isSupported = false
+
+      error({
+        stack: e.stack
+      }, `failed to setup auto updater: ${e.message}`)
     }
   }
 
@@ -80,14 +81,14 @@ class Updater extends EventEmitter {
     }
   }
 
-  onError(error) {
+  onError(e) {
     this.isChecking = false
     this.isUpdateAvailable = false
     this.isUpdateReady = false
 
-    warn(`failed to fetch update: ${error.message}`, {
-      stack: error.stack
-    })
+    error({
+      stack: e.stack
+    }, `failed to fetch update: ${e.message}`)
   }
 
   onCheckingForUpdate = () =>{

@@ -10,13 +10,10 @@ module.exports = {
   *shell() {
     while (true) {
       try {
-        const { type, payload } = yield take(values(SHELL))
+        let { type, payload } = yield take(values(SHELL))
         shell[type.split('.').pop()](...payload)
-
-      } catch (error) {
-        warn(`unexpected error in *shell: ${error.message}`, {
-          stack: error.stack
-        })
+      } catch (e) {
+        warn({ stack: e.stack }, 'unexpected error in *shell')
       }
     }
   }

@@ -12,14 +12,18 @@ module.exports = {
           logger.warn({
             action: type,
             meta,
-            stack: payload.stack,
-          }, `${type} failed: ${payload.message}`)
+            msg: `${type} failed: ${payload.message}`,
+            stack: payload.stack
+          })
           break
         default:
-          logger[meta.log || 'debug']({
-            action: type,
-            meta
-          })
+          if (meta.log !== false) {
+            logger[meta.log || 'debug']({
+              action: type,
+              meta,
+              // TODO log payload?
+            })
+          }
       }
 
       return next(action)

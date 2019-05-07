@@ -620,6 +620,7 @@ class Tropy extends EventEmitter {
       this.emit('app:reload-menu')
     })
 
+    // TODO -> move to wm and send event focus-change
     let winId
     app.on('browser-window-focus', (_, win) => {
       try {
@@ -627,6 +628,12 @@ class Tropy extends EventEmitter {
       } finally {
         winId = win.id
       }
+    })
+
+    app.on('gpu-process-crashed', (_, killed) => {
+      if (!killed)
+        this.handleUncaughtException(
+          new Error('GPU process crashed unexpectedly'))
     })
 
     if (darwin) {
@@ -747,7 +754,7 @@ class Tropy extends EventEmitter {
   }
 
   handleUncaughtException(e, win = BrowserWindow.getFocusedWindow()) {
-    fatal(`unhandled error: ${e.message}`, { stack: e.stack })
+    fatal(e)
 
     if (!this.dev) {
       dialog

@@ -48,8 +48,8 @@ class Database extends EventEmitter {
     return cache[path]
   }
 
-  constructor(path = ':memory:', mode = 'w+', options = {}) {
-    debug(`init db ${path}`)
+  constructor(path = ':memory:', mode = 'w+', opts = {}) {
+    debug({ path, mode }, 'init db')
     super()
 
     this.path = path
@@ -63,7 +63,7 @@ class Database extends EventEmitter {
       idleTimeoutMillis: 1000 * 60 * 5,
       acquireTimeoutMillis: 1000 * 10,
       Promise: Bluebird,
-      ...options
+      ...opts
     })
   }
 
@@ -101,23 +101,23 @@ class Database extends EventEmitter {
       // db.on('trace', query => trace(query))
 
       db.on('profile', (query, ms) => {
-        let message = `db query took ${ms}ms`
+        let msg = `db query took ${ms}ms`
 
         if (ms > 150) {
-          return warn(`SLOW: ${message}`, { query, ms })
+          return warn({ query, ms }, `SLOW: ${msg}`)
         }
 
         if (ms > 50) {
-          return info(message, { query, ms })
+          return info({ msg, query, ms })
         }
 
-        trace(message, { query, ms })
+        trace({ msg, query, ms })
       })
     })
   }
 
   async destroy(conn) {
-    info(`close db ${this.path}`)
+    debug({ path: this.path }, 'close db')
 
     await conn.optimize()
     await conn.close()
@@ -296,11 +296,12 @@ class Connection {
   check(table) {
     return this
       .all(`PRAGMA foreign_key_check${table ? `('${table}')` : ''}`)
-      .then(errors => {
-        if (!errors.length) return this
+      .then(stack => {
+        if (!stack.length)
+          return this
 
-        warn('FK constraint violations detected', { errors })
-        throw new Error('FK constraint violations detected')
+        warn({ stack }, 'foreign key check failed!')
+        throw new Error(`${stack.length} foreign key check(s) failed`)
       })
   }
 }

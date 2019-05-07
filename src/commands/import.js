@@ -98,13 +98,11 @@ class ImportCommand extends Command {
           yield call([dup, dup.toFile], cache.expand(path))
 
         } else {
-          debug(`Skipping ${v.name} thumbnail for #${id}: already exists`)
+          debug(`skipping ${v.name} thumbnail for #${id}: already exists`)
         }
       }
-    } catch (error) {
-      warn(`Failed to create thumbnail: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
+      warn({ stack: e.stack }, 'failed to create thumbnail')
     }
   }
 

@@ -123,16 +123,14 @@ class Import extends ImportCommand {
         yield put(act.item.insert(item))
         items.push(item.id)
 
-      } catch (error) {
-        if (error instanceof DuplicateError) {
-          debug(`Skipping duplicate "${file}"...`)
+      } catch (e) {
+        if (e instanceof DuplicateError) {
+          debug(`skipping duplicate "${file}"...`)
           continue
         }
 
-        warn(`Failed to import "${file}": ${error.message}`, {
-          stack: error.stack
-        })
-        fail(error, this.action.type)
+        warn({ stack: e.stack }, `failed to import "${file}"`)
+        fail(e, this.action.type)
       }
     }
 
@@ -419,11 +417,9 @@ class Export extends Command {
         default:
           yield cps(write, target, asString)
       }
-    } catch (error) {
-      warn(`Failed to export items to ${target}: ${error.message}`, {
-        stack: error.stack
-      })
-      fail(error, this.action.type)
+    } catch (e) {
+      warn({ stack: e.stack }, `failed to export items to ${target}`)
+      fail(e, this.action.type)
     }
   }
 }

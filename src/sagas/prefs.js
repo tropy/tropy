@@ -33,9 +33,7 @@ module.exports = {
       yield take(CLOSE)
 
     } catch (e) {
-      warn(`unexpected error in *prefs.main: ${e.message}`, {
-        stack: e.stack
-      })
+      warn({ stack: e.stack }, 'unexpected error in *prefs.main')
 
     } finally {
       yield all([

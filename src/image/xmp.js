@@ -44,10 +44,8 @@ module.exports = {
 
         return data
       }
-    } catch (error) {
-      warn(`XMP extraction failed: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
+      warn({ stack: e.stack }, 'XMP extraction failed')
     }
   }
 }

@@ -30,10 +30,7 @@ module.exports = {
         ipc.send(PROJECT.CREATED, { file })
 
       } catch (error) {
-        warn(`failed to create project: ${error.message}`, {
-          stack: error.stack
-        })
-
+        warn(error)
         fail(error, PROJECT.CREATED)
       }
     }

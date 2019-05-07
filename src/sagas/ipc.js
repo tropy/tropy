@@ -22,10 +22,8 @@ module.exports = {
 
       yield call([ipc, ipc.send], event, data)
 
-    } catch (error) {
-      warn(`unexpected error in ipc:forward: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
+      warn({ stack: e.stack }, 'unexpected error in *ipc:forward')
     }
   },
 
@@ -37,10 +35,8 @@ module.exports = {
         const action = yield take(disp)
         yield put(action)
 
-      } catch (error) {
-        warn(`unexpected error in ipc:receive: ${error.message}`, {
-          stack: error.stack
-        })
+      } catch (e) {
+        warn({ stack: e.stack }, 'unexpected error in *ipc:receive')
       }
     }
   },
@@ -79,10 +75,8 @@ function channel(name) {
     const listener = (_, ...actions) => {
       try {
         for (let action of actions) emitter(action)
-      } catch (error) {
-        warn(`unexpected error in channel "${name}": ${error}`, {
-          stack: error.stack
-        })
+      } catch (e) {
+        warn({ stack: e.stack }, `unexpected error in channel "${name}"`)
       }
     }
 

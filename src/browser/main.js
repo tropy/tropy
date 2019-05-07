@@ -48,10 +48,10 @@ if (!(win32 && require('./squirrel')(opts['user-data']))) {
     app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
   }
 
-  info(`main.init ${version} ${system}`, {
+  info({
     opts,
     version
-  })
+  }, `main.init ${version} ${system}`)
 
   const T1 = Date.now()
   const Tropy = require('./tropy')
@@ -63,14 +63,15 @@ if (!(win32 && require('./squirrel')(opts['user-data']))) {
     tropy.start()
   ])
     .then(() => {
-      info(`ready after ${Date.now() - START}ms [req:${T2 - T1}ms]`)
-      tropy.isReady = true
+      tropy.ready = Date.now()
       tropy.open(...opts._)
+
+      info(`ready after ${tropy.ready - START}ms [req:${T2 - T1}ms]`)
     })
 
   if (darwin) {
     app.on('open-file', (event, file) => {
-      if (tropy.isReady) {
+      if (tropy.ready) {
         if (tropy.open(file))
           event.preventDefault()
       } else {
@@ -83,7 +84,7 @@ if (!(win32 && require('./squirrel')(opts['user-data']))) {
   }
 
   app.on('second-instance', (_, argv) => {
-    if (tropy.isReady)
+    if (tropy.ready)
       tropy.open(...args.parse(argv.slice(1))._)
   })
 
@@ -100,16 +101,15 @@ if (!(win32 && require('./squirrel')(opts['user-data']))) {
 
   // TODO handle win32 logout/shutdown which does not trigger quit event!
   app.on('quit', (_, code) => {
-    if (tropy.isReady) tropy.stop()
-    info(`quit with exit code ${code}`, { quit: true, code })
+    if (tropy.ready) tropy.stop()
+    info({ quit: true, code }, `quit with exit code ${code}`)
   })
 
   const handleError = (error, isFatal = false) => {
-    if (isFatal || !tropy.isReady) {
+    if (isFatal || !tropy.ready) {
       require('electron')
         .dialog
         .showErrorBox('Unhandled Error', error.stack)
-
       app.exit(42)
     }
 

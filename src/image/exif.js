@@ -25,17 +25,15 @@ module.exports = {
       try {
         let ifd = exif(buffer, { ...DEFAULTS, ...opts })
         if (ifd.errors) {
-          debug('EXIF extraction errors', {
-            errors: ifd.errors.map(e => [e.offset, e.message])
-          })
+          debug({
+            stack: ifd.errors.map(e => [e.offset, e.message])
+          }, 'EXIF extraction errors')
         }
 
         return ifd.flatten(true, toValue)
 
-      } catch (error) {
-        warn(`EXIF extraction failed: ${error.message}`, {
-          stack: error.stack
-        })
+      } catch (e) {
+        warn({ stack: e.stack }, 'EXIF extraction failed')
       }
     }
   }

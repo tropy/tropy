@@ -6,7 +6,7 @@ const { URL } = require('url')
 const dialog = require('./dialog')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
-const { info, warn } = require('../common/log')
+const { debug, error, warn } = require('../common/log')
 const { array, blank, get, once, remove } = require('../common/util')
 const { BODY, PANEL, ESPER } = require('../constants/sass')
 
@@ -116,7 +116,7 @@ class WindowManager extends EventEmitter {
       if (typeof show === 'string') {
         win.once(show, () => {
           win.show()
-          info(`show ${type} win after ${Date.now() - NOW}ms`)
+          debug(`show ${type} win after ${Date.now() - NOW}ms`)
         })
       }
 
@@ -125,9 +125,9 @@ class WindowManager extends EventEmitter {
 
       return win
 
-    } catch (error) {
+    } catch (e) {
       if (win != null) win.destroy()
-      throw error
+      throw e
     }
   }
 
@@ -267,7 +267,6 @@ class WindowManager extends EventEmitter {
         .on('crashed', () => {
           warn(`${type}[${win.id}] contents crashed`)
           this.emit('crashed', type, win)
-          win.emit('error', 'crashed')
         })
 
       win
@@ -281,9 +280,9 @@ class WindowManager extends EventEmitter {
 
       this.windows[type] = [win, ...array(this.windows[type])]
 
-    } catch (error) {
+    } catch (e) {
       this.unref(type, win)
-      throw error
+      throw e
     }
   }
 
@@ -404,11 +403,9 @@ function handleWillNavigate(event, url) {
       warn(`win#${this.id} attempted to navigate to ${url}`)
       event.preventDefault()
     }
-  } catch (error) {
+  } catch (e) {
     event.preventDefault()
-    warn(`win#${this.id} attempted to navigate to ${url}`, {
-      stack: error.stack
-    })
+    error(e)
   }
 }
 
