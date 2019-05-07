@@ -24,7 +24,7 @@ if (argv.userData) {
     `user data directory not found: ${argv.userData}`)
 
   userData = argv.userData
-  app.setPath('userData', resolve(argv.userData, 'electron'))
+  app.setPath('userData', resolve(userData, 'electron'))
 } else {
   userData = app.getPath('userData')
 }
@@ -72,7 +72,7 @@ app.once('ready', async () => {
 })
 
 const download = async (id) => {
-  let root = join(userData, 'extensions')
+  let root = resolve(userData, 'extensions')
   let path = join(root, id)
   let url = CRX(id)
   let crx = `${path}.crx`
