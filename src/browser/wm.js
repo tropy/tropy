@@ -23,6 +23,8 @@ class WindowManager extends EventEmitter {
   constructor(defaults = {}) {
     super()
 
+    this.root = defaults.root || 'static'
+
     this.defaults = {
       disableAutoHideCursor: darwin,
       resizable: true,
@@ -212,7 +214,7 @@ class WindowManager extends EventEmitter {
   async open(type, args, opts = {}) {
     let win = this.create(type, args, opts)
 
-    win.loadFile(join(ROOT, `${type}.html`), {
+    await win.loadFile(`${this.root}/${type}.html`, {
       hash: encodeURIComponent(JSON.stringify({
         aqua: WindowManager.getAquaColorVariant(),
         dark: prefs.isDarkMode(),
@@ -226,8 +228,6 @@ class WindowManager extends EventEmitter {
         ...args
       }))
     })
-
-    await once(win, 'did-finish-load')
 
     return win
   }
@@ -261,11 +261,7 @@ class WindowManager extends EventEmitter {
           win.webContents.send('reload')
         })
         .on('did-finish-load', () => {
-          win.emit('did-finish-load')
           win.webContents.setVisualZoomLevelLimits(1, 1)
-        })
-        .on('did-fail-load', () => {
-          win.emit('error', 'did-fail-load')
         })
         .on('will-navigate', handleWillNavigate)
         .on('crashed', () => {
@@ -385,7 +381,6 @@ class WindowManager extends EventEmitter {
 }
 
 
-const ROOT = join(__dirname, '..', '..', 'static')
 const ICONS = join(__dirname, '..', '..', 'res', 'icons', channel, 'tropy')
 
 const AQUA = { 1: 'blue', 6: 'graphite' }
