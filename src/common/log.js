@@ -4,7 +4,14 @@ const pino = require('pino')
 
 let instance
 
-function log({ dest = 2, level, name = 'log', debug, trace } = {}) {
+function log({
+  dest = 2,
+  level,
+  name = 'log',
+  debug = process.env.TROPY_DEBUG,
+  trace = process.env.TROPY_TRACE
+} = {}) {
+
   if (!level && trace) level = 'trace'
   if (!level && debug) level = 'debug'
 
