@@ -3,6 +3,7 @@
 const { join } = require('path')
 const { app, BrowserWindow } = require('electron')
 const { once } = __require('common/util')
+const res = __require('common/res')
 
 describe('WindowManager', () => {
   const WindowManager = __require('browser/wm')
@@ -27,12 +28,19 @@ describe('WindowManager', () => {
 
     for (let type of ['about', 'prefs', 'project', 'wizard']) {
       describe(`open('${type}')`, function () {
-        this.timeout(40000)
+        // Integration tests with on-the-fly code instrumentation take some time!
+        this.timeout(process.env.CI ? 40000 : 10000)
 
         let win
         let ready
 
         before(async () => {
+          if (process.env.COVERAGE) {
+            sinon
+              .stub(res.view, 'expand')
+              .callsFake(name => F.views(`${name}.html`).path)
+          }
+
           win = await wm.open(type, {
             plugins: plugins.root,
             user: app.getPath('userData')
@@ -40,7 +48,13 @@ describe('WindowManager', () => {
           ready = once(win, 'ready')
         })
 
-        after(() => win = null)
+        after(() => {
+          if (process.env.COVERAGE) {
+            res.view.expand.restore()
+          }
+
+          win = null
+        })
 
         it('opens a browser window', () => {
           expect(win).to.be.instanceOf(BrowserWindow)
