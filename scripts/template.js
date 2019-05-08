@@ -25,11 +25,19 @@ const create = (path, content) => {
     warn(`skipping ${path}`)
   }
 }
-
 const html = name => (
 `<!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="Content-Security-Policy" content="${[
+    "default-src 'none'",
+    // DevTools Extensions currently require 'unsafe-inline'; adding the
+    // digest temporarily to see if that is a stable workaround.
+    "script-src 'sha256-++gna1tMQ08GGn4M8jnPXPgLA3Il1y2LY+JVA4NpYKk='",
+    "style-src 'self'",
+    "img-src 'self' data:",
+    "form-action 'none'"
+  ].join('; ')}">
 </head>
 <body id="${name}" tabindex="-1">
   <main id="main"></main>
@@ -54,35 +62,39 @@ $theme: "${theme}";
 
 if (require.main === module) {
   require('yargs')
-    .command('new name', 'create new window template', noop, ({ name }) => {
-      create(join(HOME, 'res', 'views', `${name}.html`), html(name))
-      create(join(HOME, 'src', 'views', `${name}.js`), script(name))
+    .command('new name', 'create new window template', noop, opts => {
+      for (let name of opts.name.split(',')) {
+        create(join(HOME, 'res', 'views', `${name}.html`), html(name))
+        create(join(HOME, 'src', 'views', `${name}.js`), script(name))
 
-      for (let platform of PLATFORMS) {
-        for (let theme of THEMES) {
-          create(
-            join(
-              HOME,
-              'src',
-              'stylesheets',
-              platform,
-              `${name}-${theme}.scss`),
-            stylesheet(platform, theme))
+        for (let platform of PLATFORMS) {
+          for (let theme of THEMES) {
+            create(
+              join(
+                HOME,
+                'src',
+                'stylesheets',
+                platform,
+                `${name}-${theme}.scss`),
+              stylesheet(platform, theme))
+          }
         }
       }
     })
-    .command('rm name', 'delete window template', noop, ({ name }) => {
-      rm(join(HOME, 'res', 'views', `${name}.html`))
-      rm(join(HOME, 'src', 'views', `${name}.js`))
+    .command('rm name', 'delete window template', noop, opts => {
+      for (let name of opts.name.split(',')) {
+        rm(join(HOME, 'res', 'views', `${name}.html`))
+        rm(join(HOME, 'src', 'views', `${name}.js`))
 
-      for (let platform of PLATFORMS) {
-        for (let theme of THEMES) {
-          rm(
-            join(HOME,
-              'src',
-              'stylesheets',
-              platform,
-              `${name}-${theme}.scss`))
+        for (let platform of PLATFORMS) {
+          for (let theme of THEMES) {
+            rm(
+              join(HOME,
+                'src',
+                'stylesheets',
+                platform,
+                `${name}-${theme}.scss`))
+          }
         }
       }
     })
