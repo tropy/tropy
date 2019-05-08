@@ -44,7 +44,11 @@ try {
       }))
     .catch((e) => {
       fatal({ stack: e.stack }, `${win.type}.init failed`)
-      if (!opts.dev) process.crash()
+
+      if (opts.dev)
+        ipc.send('wm', 'show')
+      else
+        process.crash()
     })
 
   // eslint-disable-next-line
