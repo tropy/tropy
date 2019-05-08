@@ -36,7 +36,8 @@ const html = name => (
   <div id="popup-root"></div>
   <div id="cover" class="cover"></div>
 </body>
-</html>`)
+</html>
+`)
 
 const script = () => (
 `'use strict'
