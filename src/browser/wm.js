@@ -168,6 +168,9 @@ class WindowManager extends EventEmitter {
       case 'reload':
         win.reload()
         break
+      case 'show':
+        win.show()
+        break
       case 'undo':
         win.webContents.undo()
         break
