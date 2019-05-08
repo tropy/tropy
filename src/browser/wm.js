@@ -30,7 +30,6 @@ class WindowManager extends EventEmitter {
       useContentSize: false,
       show: false,
       webPreferences: {
-        contextIsolation: false,
         defaultEncoding: 'UTF-8',
         enableRemoteModule: true,
         nodeIntegration: true,
