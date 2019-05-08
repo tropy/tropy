@@ -121,5 +121,5 @@ if (!(win32 && require('./squirrel')(opts['user-data']))) {
   }
 
   process.on('uncaughtException', handleError)
-  process.on('unhandledRejection', handleError)
+  process.on('unhandledRejection', (reason) => handleError(reason))
 }
