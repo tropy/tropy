@@ -10,7 +10,7 @@ const { error, green, red, say } = require('./util')('ω')
 const cwd = process.cwd()
 const debounce = require('lodash.debounce')
 
-const css = debounce(compile.css, 500)
+const css = debounce(compile.css, 1000)
 
 target.all = () => {
   target.src()
