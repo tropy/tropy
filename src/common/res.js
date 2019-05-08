@@ -89,23 +89,35 @@ class KeyMap extends Resource {
   }
 }
 
-const Icons = {
+const icon = {
+  base: join(Resource.base, 'icons'),
+
   color(name, ext = '.png', variant = '') {
     return join(
       Resource.base,
       'icons',
       'colors',
       `${name}${variant}${ext}`)
+  },
+
+  expand(...args) {
+    return join(icon.base, ...args)
   }
 }
 
-const Shader = {
-  get base() {
-    return join(__dirname, '..', '..', 'res', 'shader')
-  },
+const shader = {
+  base: join(Resource.base, 'shaders'),
 
   load(name) {
-    return readFileSync(join(Shader.base, name), 'utf-8')
+    return readFileSync(join(shader.base, name), 'utf-8')
+  }
+}
+
+const view = {
+  base: join(Resource.base, 'views'),
+
+  expand(name) {
+    return join(view.base, `${name}.html`)
   }
 }
 
@@ -113,8 +125,9 @@ const Shader = {
 module.exports = {
   Resource,
   Menu,
-  Shader,
+  shader,
   Strings,
   KeyMap,
-  Icons
+  icon,
+  view,
 }

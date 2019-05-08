@@ -110,7 +110,7 @@ class Menu {
         item.checked = get(event.target, context) === color
 
         if (color && color !== 'random')
-          item.icon = res.Icons.color(color)
+          item.icon = res.icon.color(color)
         if (command)
           item.click = this.responder(command, win, event, color)
       }

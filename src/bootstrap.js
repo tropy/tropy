@@ -26,7 +26,7 @@ try {
       win.init().then(() => {
         ipc.send('wm', 'initialized')
         const INIT = Date.now()
-        require(`./windows/${win.type}`)
+        require(`./views/${win.type}`)
         const LOAD = Date.now()
 
         requestIdleCallback(() => {

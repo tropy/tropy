@@ -4,9 +4,10 @@ const { EventEmitter } = require('events')
 const { join } = require('path')
 const { URL } = require('url')
 const dialog = require('./dialog')
+const { debug, error, warn } = require('../common/log')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
-const { debug, error, warn } = require('../common/log')
+const res = require('../common/res')
 const { array, blank, get, once, remove } = require('../common/util')
 const { BODY, PANEL, ESPER } = require('../constants/sass')
 
@@ -22,8 +23,6 @@ const {
 class WindowManager extends EventEmitter {
   constructor(defaults = {}) {
     super()
-
-    this.root = defaults.root || 'static'
 
     this.defaults = {
       disableAutoHideCursor: darwin,
@@ -95,7 +94,7 @@ class WindowManager extends EventEmitter {
 
       switch (process.platform) {
         case 'linux':
-          opts.icon = join(ICONS, '512x512.png')
+          opts.icon = res.icon.expand(channel, 'tropy', '512x512.png')
           opts.darkTheme = opts.darkTheme || isDark
           break
         case 'darwin':
@@ -214,7 +213,7 @@ class WindowManager extends EventEmitter {
   async open(type, args, opts = {}) {
     let win = this.create(type, args, opts)
 
-    await win.loadFile(`${this.root}/${type}.html`, {
+    await win.loadFile(res.view.expand(type), {
       hash: encodeURIComponent(JSON.stringify({
         aqua: WindowManager.getAquaColorVariant(),
         dark: prefs.isDarkMode(),
@@ -379,8 +378,6 @@ class WindowManager extends EventEmitter {
   }
 }
 
-
-const ICONS = join(__dirname, '..', '..', 'res', 'icons', channel, 'tropy')
 
 const AQUA = { 1: 'blue', 6: 'graphite' }
 

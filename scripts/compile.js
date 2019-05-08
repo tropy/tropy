@@ -9,6 +9,7 @@ const { join, relative, dirname } = require('path')
 const { statSync: stat, writeFileSync: write } = require('fs')
 const { sync: mkdir } = require('mkdirp')
 const { check, error, say } = require('./util')('λ')
+const noop = () => {}
 
 const HOME = join(__dirname, '..')
 
@@ -131,14 +132,14 @@ const swap = (filename, src, dst, ext) =>
 
 if (require.main === module) {
   require('yargs')
-    .command('*', 'compile js and css', () => {
+    .command('*', 'compile js and css', noop, () => {
       css()
       js()
     })
-    .command('js [glob]', 'compile js', opts => {
+    .command('js [glob]', 'compile js', noop, opts => {
       js(opts.glob)
     })
-    .command('css [glob]', 'compile css', opts => {
+    .command('css [glob]', 'compile css', noop, opts => {
       css(opts.glob)
     })
     .help()

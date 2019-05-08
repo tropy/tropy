@@ -10,7 +10,6 @@ describe('WindowManager', () => {
 
   describe('instance', () => {
     let wm = new WindowManager({
-      root: join(__dirname, '..', '..', 'static'),
       webPreferences: {
         preload: join(__dirname, '..', 'support', 'bootstrap.js')
       }
