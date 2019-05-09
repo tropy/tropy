@@ -5,7 +5,6 @@ const { basename } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
 const { Plugins } = require('./common/plugins')
-const { addIdleObserver } = require('./common/idle')
 const { delay, pick } = require('./common/util')
 const { EventEmitter } = require('events')
 const args = require('./args')
@@ -29,8 +28,6 @@ const {
 const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
   e => e.ctrlKey && !e.altKey && !e.metaKey
-
-const IDLE_SHORT = 60
 
 class Window extends EventEmitter {
   constructor(opts) {
@@ -75,8 +72,6 @@ class Window extends EventEmitter {
         this.handleMouseEnter()
         this.handleMouseButtons()
         this.handleUncaughtExceptions()
-
-        addIdleObserver(this.handleIdleEvents, IDLE_SHORT)
 
         toggle(document.body, process.platform, true)
 
@@ -165,6 +160,9 @@ class Window extends EventEmitter {
       .on('reload', () => {
         this.reload()
       })
+      .on('idle', (_, state) => {
+        this.emit('idle', state)
+      })
       .on('plugins-reload', async () => {
         this.plugins.clearModuleCache()
         await this.plugins.reload()
@@ -191,10 +189,6 @@ class Window extends EventEmitter {
       .on('global', (_, action) => {
         emit(document, `global:${action}`)
       })
-  }
-
-  handleIdleEvents = (_, type, time) => {
-    this.emit('idle', { type, time })
   }
 
   handleUnload() {

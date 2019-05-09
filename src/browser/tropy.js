@@ -24,6 +24,7 @@ const Storage = require('./storage')
 const Updater = require('./updater')
 const dialog = require('./dialog')
 const WindowManager = require('./wm')
+const { addIdleObserver } = require('./idle')
 
 const { defineProperty: prop } = Object
 const act = require('./actions')
@@ -749,6 +750,10 @@ class Tropy extends EventEmitter {
       .on('update-ready', (release) => {
         this.wm.broadcast('dispatch', act.flash.show(release))
       })
+
+    addIdleObserver((_, type, time) => {
+      this.wm.broadcast('idle', { type, time })
+    }, 60)
 
     return this
   }
