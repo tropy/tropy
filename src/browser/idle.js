@@ -1,7 +1,8 @@
 'use strict'
 
 const assert = require('assert')
-const { getIdleTime } = require('desktop-idle')
+const electron = require('electron')
+const { warn } = require('../common/log')
 
 const byTime = (a, b) =>
 	(a.time < b.time) ? -1 : (a.time > b.time) ? 1 :
@@ -19,7 +20,9 @@ class IOQ {
   }
 
   getIdleTime() {
-    return getIdleTime()
+    return new Promise((resolve) => {
+      electron.powerMonitor.querySystemIdleTime(resolve)
+    })
   }
 
   add(observe, time) {
@@ -49,11 +52,15 @@ class IOQ {
       let cur
       let was = 0
 
-      this.pi = setInterval(() => {
-        cur = this.getIdleTime()
-        if (cur < was) this.activate()
-        if (cur >= min) this.idle(cur)
-        was = Math.max(0, cur - min)
+      this.pi = setInterval(async () => {
+        try {
+          cur = await this.getIdleTime()
+          if (cur < was) this.activate()
+          if (cur >= min) this.idle(cur)
+          was = Math.max(0, cur - min)
+        } catch (e) {
+          warn({ stack: e.stack }, 'failed to query idle time')
+        }
       }, min * 1000)
     }
 
@@ -70,17 +77,25 @@ class IOQ {
 
   activate() {
     for (let obs of this.observers) {
-      if (obs.done) obs.observe(this, 'active', 0)
-      obs.done = false
+      try {
+        if (obs.done) obs.observe(this, 'active', 0)
+        obs.done = false
+      } catch (e) {
+        warn({ stack: e.stack }, 'unhandled error in idle observer')
+      }
     }
   }
 
   idle(time) {
     for (let obs of this.observers) {
-      if (time < obs.time) break
-      if (obs.done) continue
-      obs.observe(this, 'idle', time)
-      obs.done = true
+      try {
+        if (time < obs.time) break
+        if (obs.done) continue
+        obs.observe(this, 'idle', time)
+        obs.done = true
+      } catch (e) {
+        warn({ stack: e.stack }, 'unhandled error in idle observer')
+      }
     }
   }
 }

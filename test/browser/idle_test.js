@@ -1,7 +1,7 @@
 'use strict'
 
 describe('idle', () => {
-  const idleService = __require('common/idle')
+  const idleService = __require('browser/idle')
   const ioq = idleService.IOQ.global
 
   describe('Adding and removing observers', () => {
@@ -66,13 +66,13 @@ describe('idle', () => {
     describe('Callbacks', () => {
       let clock, idle
 
-      function tick(rt = 1, it = 0) {
+      const tick = async (rt = 1, it = 0) => {
         idle = it
         clock.tick(ioq.precision * 1000 * rt)
       }
 
       beforeEach(() => {
-        sinon.stub(ioq, 'getIdleTime').callsFake(() => idle)
+        sinon.stub(ioq, 'getIdleTime').callsFake(async () => idle)
         clock = sinon.useFakeTimers()
         idle = 0
         idleService.addIdleObserver(o1, 50)
@@ -85,38 +85,38 @@ describe('idle', () => {
         clock.restore()
       })
 
-      it('idle', () => {
-        tick(20, 10)
+      it('idle', async () => {
+        await tick(20, 10)
         expect(o1).not.to.have.been.called
         expect(o2).not.to.have.been.called
-        tick(5, 30)
+        await tick(5, 30)
         expect(o1).to.have.been.calledOnce
         expect(o1.args[0][1]).to.eql('idle')
         expect(o2).not.to.have.been.called
-        tick(5, 40)
+        await tick(5, 40)
         expect(o1).to.have.been.calledOnce
         expect(o2).to.have.been.calledOnce
         expect(o2.args[0][1]).to.eql('idle')
-        tick(5, 50)
+        await tick(5, 50)
         expect(o1).to.have.been.calledTwice
         expect(o1.args[1][1]).to.eql('idle')
         expect(o2).to.have.been.calledOnce
       })
 
-      it('active', () => {
-        tick(5, 100)
+      it('active', async () => {
+        await tick(5, 100)
         expect(o1.callCount).to.eql(2)
         expect(o2.callCount).to.eql(1)
-        tick(5, 0)
+        await tick(5, 0)
         expect(o1.callCount).to.eql(4)
         expect(o2.callCount).to.eql(2)
         expect(o1.args[2][1]).to.eql('active')
         expect(o1.args[3][1]).to.eql('active')
         expect(o2.args[1][1]).to.eql('active')
-        tick(5, 40)
+        await tick(5, 40)
         expect(o1.callCount).to.eql(5)
         expect(o2.callCount).to.eql(3)
-        tick(5, 0)
+        await tick(5, 0)
         expect(o1.callCount).to.eql(6)
         expect(o2.callCount).to.eql(4)
         expect(o1.args[4][1]).to.eql('idle')
