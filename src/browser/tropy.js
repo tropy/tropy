@@ -751,9 +751,11 @@ class Tropy extends EventEmitter {
         this.wm.broadcast('dispatch', act.flash.show(release))
       })
 
-    addIdleObserver((_, type, time) => {
-      this.wm.broadcast('idle', { type, time })
-    }, 60)
+    app.whenReady().then(() => {
+      addIdleObserver((_, type, time) => {
+        this.wm.broadcast('idle', { type, time })
+      }, 60)
+    })
 
     return this
   }
