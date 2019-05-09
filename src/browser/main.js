@@ -7,7 +7,8 @@ const opts = args.parse(process.argv.slice(1))
 
 process.env.NODE_ENV = opts.environment
 
-const { app }  = require('electron')
+const electron = require('electron')
+const { app }  = electron
 
 if (!app.requestSingleInstanceLock()) {
   process.stderr.write('other instance detected, exiting...\n')
@@ -66,6 +67,11 @@ if (!(win32 && require('./squirrel')(opts['user-data']))) {
       tropy.ready = Date.now()
       tropy.open(...opts._)
 
+      electron.powerMonitor.on('shutdown', (event) => {
+        event.preventDefault()
+        app.quit()
+      })
+
       info(`ready after ${tropy.ready - START}ms [req:${T2 - T1}ms]`)
     })
 
@@ -99,7 +105,6 @@ if (!(win32 && require('./squirrel')(opts['user-data']))) {
     if (!darwin) app.quit()
   })
 
-  // TODO handle win32 logout/shutdown which does not trigger quit event!
   app.on('quit', (_, code) => {
     if (tropy.ready) tropy.stop()
     info({ quit: true, code }, `quit with exit code ${code}`)
