@@ -104,7 +104,6 @@
     "bluebird": "^3.5.4",
     "classnames": "^2.2.6",
     "decompress": "^4.2.0",
-    "desktop-idle": "^1.1.2",
     "edtf": "^2.6.1",
     "generic-pool": "^3.7.1",
     "js-yaml": "^3.13.1",

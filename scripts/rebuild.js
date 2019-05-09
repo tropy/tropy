@@ -22,7 +22,6 @@ const CONFIG = [
 target.all = async (args) => {
   await target.sqlite3(args)
   await target.sharp(args)
-  await target.idle(args)
 }
 
 target.headers = () => {
@@ -77,22 +76,6 @@ target.sharp = (force) => {
     })
     say(`${mod} ...done`)
 
-  } else {
-    say(`${mod} skipped`)
-  }
-}
-
-target.idle = (force) => {
-  let mod = 'desktop-idle'
-  let version = ELECTRON.join('.')
-  let marker = join(mods, mod, '.tropy_rebuild')
-
-  if (force || !test('-f', marker) || cat(marker).trim() !== version) {
-    rebuild(mod, {
-      params: '--build-from-source'
-    })
-    version.to(marker)
-    say(`${mod} ...done`)
   } else {
     say(`${mod} skipped`)
   }
