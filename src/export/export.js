@@ -39,7 +39,6 @@ const { newProperties } = require('./utils')
 
 function makeContext(template, items, resources) {
   const [props, metadata, photos] = resources
-  const flatten = (acc, ps) => acc.concat(ps)
   let result = {
     '@version': 1.1,
     '@vocab': TROPY.ns,
@@ -69,7 +68,7 @@ function makeContext(template, items, resources) {
   result = newProperties(metadataOfItems, result, true, props, template)
 
   // add Photo metadata fields to context from all selected photos
-  const photoIDs = items.map(i => i.photos).reduce(flatten, [])
+  const photoIDs = items.flatMap(i => i.photos)
   const metadataOfPhotos = pluck(metadata, photoIDs)
   const photoContext = result['photo']['@context']
   const newPhotoProperties = newProperties(
@@ -78,7 +77,7 @@ function makeContext(template, items, resources) {
 
   // add Selection metadata fields to context from all selections metadata
   const selectionIDs = pluck(photos, photoIDs)
-        .map(p => p.selections).reduce(flatten, [])
+        .flatMap(p => p.selections)
   const metadataOfSelections = pluck(metadata, selectionIDs)
   const newSelectionProperties = newProperties(
     metadataOfSelections, {}, true, props, template)
