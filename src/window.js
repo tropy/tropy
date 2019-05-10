@@ -402,6 +402,9 @@ class Window extends EventEmitter {
       case 'unmaximize':
         toggle(document.body, 'is-maximized', false)
         break
+      case 'init':
+        toggle(document.body, 'init', true)
+        break
       case 'ready':
         toggle(document.body, 'ready', true)
         break

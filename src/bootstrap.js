@@ -25,6 +25,7 @@ try {
     .then((READY) =>
       win.init().then(() => {
         ipc.send('wm', 'initialized')
+        win.toggle('init')
         const INIT = Date.now()
         require(`./views/${win.type}`)
         const LOAD = Date.now()
