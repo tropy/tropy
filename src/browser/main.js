@@ -37,6 +37,7 @@ if (!(win32 && require('./squirrel')(opts['user-data']))) {
   const { info, warn } = require('../common/log')({
     dest: join(logs, 'tropy.log'),
     name: 'main',
+    rotate: true,
     debug: opts.debug,
     trace: opts.trace
   })

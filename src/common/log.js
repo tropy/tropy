@@ -4,10 +4,21 @@ const pino = require('pino')
 
 let instance
 
+function logRotate(file, suffix = '.1') {
+  try {
+    const fs = require('fs')
+    fs.copyFileSync(file, file + suffix)
+    fs.truncateSync(file)
+  } catch (e) {
+    if (e.code !== 'ENOENT') throw e
+  }
+}
+
 function log({
   dest = 2,
   level,
   name = 'log',
+  rotate = false,
   debug = process.env.TROPY_DEBUG,
   trace = process.env.TROPY_TRACE
 } = {}) {
@@ -26,6 +37,12 @@ function log({
       level = level || 'error'
       dest = 2
       break
+  }
+
+  if (rotate && typeof dest === 'string') {
+    // Pending electron#18244
+    require('mkdirp').sync(require('path').dirname(dest))
+    logRotate(dest)
   }
 
   instance = pino({
