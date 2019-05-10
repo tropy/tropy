@@ -21,7 +21,8 @@ module.exports = {
             logger[meta.log || 'debug']({
               action: type,
               meta,
-              // TODO log payload?
+              payload: logger.level === 'trace' ?
+                payload : undefined
             })
           }
       }
