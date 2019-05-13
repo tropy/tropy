@@ -1,15 +1,15 @@
 'use strict'
 
-require('./promisify')
+const fs = require('fs')
 
 const {
-  mkdirAsync: mkdir,
-  readFileAsync: read,
-  writeFileAsync: write,
-  readdirAsync: readdir,
-  statAsync: stat,
-  watch
-} = require('fs')
+  mkdir,
+  readFile: read,
+  writeFil: write,
+  readdir: readdir,
+  stat: stat
+} = fs.promises
+
 
 const { shell } = require('electron')
 const { EventEmitter } = require('events')
@@ -237,7 +237,7 @@ class Plugins extends EventEmitter {
 
   watch() {
     if (this.cfw != null) this.cfw.close()
-    this.cfw = watch(this.root, (_, file) => {
+    this.cfw = fs.watch(this.root, (_, file) => {
       if (file === 'config.json') this.handleConfigFileChange()
     })
     return this

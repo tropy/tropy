@@ -1,17 +1,16 @@
 'use strict'
 
-require('../common/promisify')
 const { Database } = require('../common/db')
 const { ipcRenderer: ipc } = require('electron')
 const { fail, save } = require('../dialog')
 const { PROJECT, WIZARD } = require('../constants')
 const { create } = require('../models/project')
-const { unlinkAsync } = require('fs')
+const { unlink } = require('fs').promises
 const { info, warn } = require('../common/log')
 
 async function rm(file) {
   try {
-    await unlinkAsync(file)
+    await unlink(file)
   } catch (error) {
     if (error.code !== 'ENOENT') throw error
   }

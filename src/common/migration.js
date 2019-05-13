@@ -1,8 +1,6 @@
 'use strict'
 
-require('./promisify')
-
-const { readdirAsync: ls, readFileAsync: read } = require('fs')
+const { readdir: ls, readFile: read } = require('fs').promises
 const { basename, extname, join } = require('path')
 const { info } = require('./log')
 

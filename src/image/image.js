@@ -1,9 +1,8 @@
 'use strict'
 
-require('../common/promisify')
-
+const fs = require('fs')
+const { stat } = fs.promises
 const { basename, extname } = require('path')
-const { createReadStream, statAsync: stat } = require('fs')
 const { createHash } = require('crypto')
 const { exif } = require('./exif')
 const { xmp } = require('./xmp')
@@ -155,7 +154,7 @@ class Image {
 
       let chunks = []
 
-      createReadStream(this.path)
+      fs.createReadStream(this.path)
         .on('error', reject)
 
         .on('data', chunk => {

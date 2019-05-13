@@ -1,8 +1,8 @@
 'use strict'
 
-require('./promisify')
 const { basename, join } = require('path')
-const { readFileAsync: read, readFileSync } = require('fs')
+const fs = require('fs')
+const { readFile: read } = fs.promises
 const { get, flatten } = require('./util')
 const yaml = require('js-yaml')
 const { debug } = require('./log')
@@ -109,7 +109,7 @@ const shader = {
   base: join(Resource.base, 'shaders'),
 
   load(name) {
-    return readFileSync(join(shader.base, name), 'utf-8')
+    return fs.readFileSync(join(shader.base, name), 'utf-8')
   }
 }
 

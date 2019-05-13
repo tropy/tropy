@@ -1,9 +1,7 @@
 'use strict'
 
-require('../common/promisify')
-
 const { join } = require('path')
-const { readFileAsync: read } = require('fs')
+const { readFile: read } = require('fs').promises
 const { write } = require('../common/atomic')
 
 class Storage {

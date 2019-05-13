@@ -8,7 +8,7 @@ const { Migration } = require('./migration')
 const { normalize } = require('path')
 const Bluebird = require('bluebird')
 const { using } = Bluebird
-const { readFileAsync: read } = require('fs')
+const { readFile: read } = require('fs').promises
 const { createPool } = require('generic-pool')
 const { debug, info, trace, warn } = require('./log')
 

@@ -1,12 +1,12 @@
 'use strict'
 
+const fs = require('fs')
+const { readFile: read, writeFile: write } = fs.promises
 const { join, basename, extname } = require('path')
-const { createReadStream: stream } = require('fs')
 const { any, empty, get, identify, pick, titlecase } = require('./util')
 const { Resource } = require('./res')
 const N3 = require('n3')
 const { TEMPLATE } = require('../constants/ontology')
-const { readFileAsync: read, writeFileAsync: write } = require('fs')
 
 const {
   RDF, RDFS, DC, TERMS, SKOS, OWL, VANN, TROPY, TYPE
@@ -130,7 +130,7 @@ class Ontology extends Resource {
     const [path, name] = expand ?
       [Ontology.expand(input), input] : [input, basename(input, extname(input))]
 
-    return new Ontology(await Ontology.parse(stream(path)), name)
+    return new Ontology(await Ontology.parse(fs.createReadStream(path)), name)
   }
 
   static expand(name) {
