@@ -16,26 +16,35 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 const { extname, join } = require('path')
-const { darwin, linux, win32, system }  = require('../common/os')
-const { qualified, version }  = require('../common/release')
+const { darwin, win32, system }  = require('../common/os')
+const { exe, qualified, version }  = require('../common/release')
 
-// Set app name and user-data as soon as possible!
+// Set app name and paths as soon as possible!
 app.setName(qualified.product)
 
-if (!opts['user-data']) {
-  opts['user-data'] = join(
-    app.getPath('appData'),
-    qualified[linux ? 'name' : 'product'])
+if (!opts.data) {
+  opts.data = join(app.getPath('appData'), exe)
 }
+app.setPath('userData', join(opts.data, 'electron'))
 
-let logs = join(opts['user-data'], 'log')
+if (!opts.cache) {
+  opts.cache = join(app.getPath('cache'), exe)
+}
+app.setPath('userCache', opts.cache)
 
-app.setPath('userData', join(opts['user-data'], 'electron'))
-app.setPath('logs', join(opts['user-data'], 'log'))
+if (!opts.logs) {
+  try {
+    opts.logs = join(app.getPath('logs', '..', exe))
+  } catch (_) {
+    opts.logs = join(opts.data, 'log')
+  }
+}
+app.setPath('logs', opts.logs)
 
-if (!(win32 && require('./squirrel')(opts['user-data']))) {
+
+if (!(win32 && require('./squirrel')(opts))) {
   const { info, warn } = require('../common/log')({
-    dest: join(logs, 'tropy.log'),
+    dest: join(opts.logs, 'tropy.log'),
     name: 'main',
     rotate: true,
     debug: opts.debug,

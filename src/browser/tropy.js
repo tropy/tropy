@@ -59,8 +59,8 @@ class Tropy extends EventEmitter {
 
     if (Tropy.instance)
       return Tropy.instance
-    if (!opts['user-data'])
-      throw new Error('missing user-data folder')
+    if (!opts.data)
+      throw new Error('missing data folder')
 
     Tropy.instance = this
 
@@ -73,11 +73,11 @@ class Tropy extends EventEmitter {
     })
 
     prop(this, 'cache', {
-      value: new Cache(opts['user-data'], 'cache')
+      value: new Cache(opts.cache || join(opts.data, 'cache'))
     })
 
     prop(this, 'store', {
-      value: new Storage(opts['user-data'])
+      value: new Storage(opts.data)
     })
 
     prop(this, 'projects', {
@@ -85,7 +85,7 @@ class Tropy extends EventEmitter {
     })
 
     prop(this, 'plugins', {
-      value: new Plugins(join(opts['user-data'], 'plugins'))
+      value: new Plugins(join(opts.data, 'plugins'))
     })
   }
 
@@ -558,7 +558,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-user-data', () => {
-      shell.showItemInFolder(join(this.opts['user-data'], 'state.json'))
+      shell.showItemInFolder(join(this.opts.data, 'state.json'))
     })
 
     this.on('app:open-plugins-folder', () => {
@@ -586,7 +586,7 @@ class Tropy extends EventEmitter {
         })
       else
         require('rimraf')
-          .sync(join(this.opts['user-data'], 'ontology.db'))
+          .sync(join(this.opts.data, 'ontology.db'))
     })
 
     this.on('app:open-dialog', (win, opts = {}) => {
@@ -784,6 +784,7 @@ class Tropy extends EventEmitter {
 
   get hash() {
     return {
+      data: this.opts.data,
       debug: this.debug,
       dev: this.dev,
       cache: this.cache.root,
@@ -794,7 +795,6 @@ class Tropy extends EventEmitter {
       locale: this.state.locale,
       log: this.log,
       uuid: this.state.uuid,
-      user: this.opts['user-data'],
       update: this.updater.release,
       version,
       webgl: this.state.webgl,

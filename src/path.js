@@ -15,6 +15,6 @@ module.exports = {
   },
 
   user(...args) {
-    return join(ARGS.user, ...args)
+    return join(ARGS.data, ...args)
   }
 }

@@ -17,16 +17,16 @@ const {
 const REACT_DEVTOOLS = 'fmkadmapgofadopljbjfkapdkoienihi'
 const REDUX_DEVTOOLS = 'lmhkpmbekcpmknklioeibfkpmmfibljd'
 
-let userData
+let data
 
-if (argv.userData) {
-  check(exists(argv.userData),
-    `user data directory not found: ${argv.userData}`)
+if (argv.data) {
+  check(exists(argv.data),
+    `user data directory not found: ${argv.data}`)
 
-  userData = argv.userData
-  app.setPath('userData', resolve(userData, 'electron'))
+  data = argv.data
+  app.setPath('userData', resolve(data, 'electron'))
 } else {
-  userData = app.getPath('userData')
+  data = app.getPath('userData')
 }
 
 app.once('ready', async () => {
@@ -72,7 +72,7 @@ app.once('ready', async () => {
 })
 
 const download = async (id) => {
-  let root = resolve(userData, 'extensions')
+  let root = resolve(data, 'extensions')
   let path = join(root, id)
   let url = CRX(id)
   let crx = `${path}.crx`

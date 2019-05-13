@@ -1,7 +1,7 @@
 'use strict'
 
-const { basename, resolve } = require('path')
-const { version } = require('../common/release')
+const { resolve } = require('path')
+const { exe, version } = require('../common/release')
 const yargs = require('yargs')()
 
 module.exports =
@@ -11,16 +11,26 @@ module.exports =
       'short-option-groups': false
     })
 
-    .usage(`Usage: ${basename(process.argv[0])} [options]`)
+    .usage(`Usage: ${exe} [options] [project]`)
     .wrap(process.stdout.columns ? Math.min(process.stdout.columns, 80) : 80)
     .env('TROPY')
 
     .demand(0, 1)
 
-    .option('user-data', {
+    .option('data', {
       type: 'string',
       coerce: resolve,
-      describe: 'Set user data directory'
+      describe: 'Set data directory'
+    })
+    .option('cache', {
+      type: 'string',
+      coerce: resolve,
+      describe: 'Set cache directory'
+    })
+    .option('logs', {
+      type: 'string',
+      coerce: resolve,
+      describe: 'Set log directory'
     })
 
     .option('environment', {
@@ -34,7 +44,6 @@ module.exports =
       '"production"')
 
     .option('scale', {
-      alias: 'force-device-scale-factor',
       type: 'number',
       describe: 'Set the device scale factor'
     })

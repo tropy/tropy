@@ -10,7 +10,7 @@ describe('Tropy', () => {
 
   it('is a singleton class', () => {
     let tropy = new Tropy({
-      'user-data': app.getPath('userData')
+      data: app.getPath('userData')
     })
 
     expect(tropy).to.equal(Tropy.instance)

@@ -1,6 +1,6 @@
 'use strict'
 
-const { basename, dirname, resolve, join } = require('path')
+const { basename, dirname, join } = require('path')
 const { app, shell } = require('electron')
 const { sync: rm } = require('rimraf')
 const ChildProcess = require('child_process')
@@ -8,7 +8,7 @@ const { existsSync: exists } = require('fs')
 const { sync: mkdir } = require('mkdirp')
 const { product, qualified } = require('../common/release')
 
-const START_MENU = resolve(
+const START_MENU = join(
   app.getPath('appData'),
   '..',
   'Roaming',
@@ -20,14 +20,14 @@ const START_MENU = resolve(
   `${qualified.product}.lnk`
 )
 
-const DESKTOP = resolve(
+const DESKTOP = join(
   app.getPath('home'),
   'Desktop',
   `${qualified.product}.lnk`
 )
 
-const root = resolve(process.execPath, '..', '..')
-const mime = resolve(process.execPath, '..', 'res', 'icons', 'mime')
+const root = join(process.execPath, '..', '..')
+const mime = join(process.execPath, '..', 'res', 'icons', 'mime')
 const update = join(root, 'Update.exe')
 const exe = basename(process.execPath)
 
@@ -97,7 +97,7 @@ function quit() {
   app.quit()
 }
 
-function handleSquirrelEvent(userData) {
+function handleSquirrelEvent({ data, cache, logs } = {}) {
   if (process.platform !== 'win32') return false
   if (process.env.NODE_ENV === 'development') return false
   if (process.argv.length === 1) return false
@@ -119,7 +119,9 @@ function handleSquirrelEvent(userData) {
         try {
           rm(DESKTOP)
           rm(START_MENU)
-          rm(userData)
+          if (logs) rm(logs)
+          if (cache) rm(cache)
+          if (data) rm(data)
 
         } finally {
           clearMimeType('tpy', 'ttp').then(quit, quit)
