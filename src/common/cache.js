@@ -1,16 +1,7 @@
 'use strict'
 
-require('./promisify')
-
+const { mkdir, readdir, stat, writeFile } = require('fs').promises
 const { join, extname, basename } = require('path')
-
-const {
-  mkdirAsync: mkdir,
-  readdirAsync: readdir,
-  statAsync: stat,
-  writeFileAsync: write
-} = require('fs')
-
 
 class Cache {
   constructor(...args) {
@@ -23,7 +14,7 @@ class Cache {
 
   init = async () => {
     try {
-      await mkdir(this.root)
+      await mkdir(this.root, { recursive: true })
     } catch (error) {
       if (error.code !== 'EEXIST') throw error
     }
@@ -32,10 +23,11 @@ class Cache {
   }
 
   save = (name, data) =>
-    write(this.expand(name), data)
+    writeFile(this.expand(name), data)
 
   exists = (name = '', expand = true) =>
-    stat(expand ? this.expand(name) : name).then(() => true, () => false)
+    stat(expand ? this.expand(name) : name)
+      .then(() => true, () => false)
 
   list = (opts = {}) =>
     readdir(this.root, opts)
