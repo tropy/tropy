@@ -73,7 +73,7 @@
     "electron-packager": "^13.1.1",
     "electron-winstaller": "^3.0.4",
     "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.12.1",
+    "enzyme-adapter-react-16": "^1.13.0",
     "eslint": "^5.16.0",
     "eslint-plugin-react": "^7.13.0",
     "glob": "^7.1.4",
@@ -124,7 +124,7 @@
     "prosemirror-schema-basic": "^1.0.1",
     "prosemirror-schema-list": "^1.0.3",
     "prosemirror-state": "^1.2.3",
-    "prosemirror-view": "^1.9.2",
+    "prosemirror-view": "^1.9.4",
     "react": "^16.8.6",
     "react-dnd": "^7.4.5",
     "react-dnd-electron-backend": "^1.7.0",
@@ -140,12 +140,12 @@
     "sanitize-filename": "^1.6.1",
     "sharp": "^0.22.1",
     "shortid": "^2.2.14",
-    "sqlite3": "^4.0.7",
+    "sqlite3": "^4.0.8",
     "tiff": "^3.0.1",
     "transducers.js": "^0.3.2",
     "uuid": "^3.3.2",
     "winreg": "^1.2.4",
     "write-file-atomic": "^2.4.2",
-    "yargs": "^13.2.2"
+    "yargs": "^13.2.4"
   }
 }
