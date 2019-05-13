@@ -3,7 +3,6 @@
 require('./promisify')
 
 const { join, extname, basename } = require('path')
-const { format } = require('url')
 
 const {
   mkdirAsync: mkdir,
@@ -86,11 +85,9 @@ class Cache {
   }
 
   static url(root, id, variant, mimetype) {
-    return format({
-      protocol: 'file',
-      pathname: join(root,
-        Cache.path(id, variant, Cache.extname(mimetype)))
-    })
+    return `file://${
+      join(root, Cache.path(id, variant, Cache.extname(mimetype)))
+    }`
   }
 }
 
