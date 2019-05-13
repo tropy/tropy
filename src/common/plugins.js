@@ -5,9 +5,9 @@ const fs = require('fs')
 const {
   mkdir,
   readFile: read,
-  writeFil: write,
-  readdir: readdir,
-  stat: stat
+  writeFile: write,
+  readdir,
+  stat
 } = fs.promises
 
 
@@ -16,7 +16,6 @@ const { EventEmitter } = require('events')
 const { basename, join } = require('path')
 const { info, warn, logger } = require('./log')
 const { blank, get, omit, uniq } = require('./util')
-const { keys } = Object
 const debounce = require('lodash.debounce')
 
 const load = async file => JSON.parse(await read(file))
@@ -25,8 +24,13 @@ const save = (file, data) => write(file, JSON.stringify(data, null, 2))
 const decompress = (...args) => require('decompress')(...args)
 const proxyRequire = (mod) => require(mod)
 
-const subdirs = root => readdir(root).filter(async (dir) =>
-      dir !== 'node_modules' && (await stat(join(root, dir))).isDirectory())
+const subdirs = async root => (
+  (await readdir(root, { withFileTypes: true }))
+    .reduce((acc, d) => {
+      if (d.name !== 'node_modules' && d.isDirectory())
+        acc.push(d.name)
+      return acc
+    }, []))
 
 
 class Plugins extends EventEmitter {
@@ -71,7 +75,7 @@ class Plugins extends EventEmitter {
       }
       return acc
     }, {})
-    info(`plugins loaded: ${keys(this.instances).length}`)
+    info(`plugins loaded: ${Object.keys(this.instances).length}`)
     return this
   }
 
@@ -144,7 +148,7 @@ class Plugins extends EventEmitter {
       }
     }
     this.spec = await this.scan()
-    info(`plugins scanned: ${keys(this.spec).length}`)
+    info(`plugins scanned: ${Object.keys(this.spec).length}`)
     return this
   }
 
@@ -254,7 +258,7 @@ class Plugins extends EventEmitter {
 
 const deps = async pkg => {
   try {
-    return keys((await load(pkg)).dependencies)
+    return Object.keys((await load(pkg)).dependencies)
   } catch (_) {
     return []
   }
