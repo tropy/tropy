@@ -2,7 +2,16 @@
 
 const React = require('react')
 const { array, func, number, object, string } = require('prop-types')
-const { append, bounds, createDragHandler, on, off } = require('../../dom')
+
+const {
+  append,
+  bounds,
+  createDragHandler,
+  encodeFileURL,
+  on,
+  off
+} = require('../../dom')
+
 const css = require('../../css')
 const { restrict } = require('../../common/util')
 const { darwin } = require('../../common/os')
@@ -363,7 +372,7 @@ class EsperView extends React.Component {
 
   load(url) {
     return new Promise((resolve, reject) => {
-      url = url.replace(/#/g, '%23')
+      url = encodeFileURL(url)
 
       if (TextureCache[url]) {
         return resolve(TextureCache[url])
