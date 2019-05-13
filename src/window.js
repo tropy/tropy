@@ -119,6 +119,7 @@ class Window extends EventEmitter {
   get stylesheets() {
     let { theme } = this
     return [
+      //path.styles(process.platform, `win-${theme}.css`),
       path.styles(process.platform, `${this.type}-${theme}.css`),
       path.user('style.css'),
       path.user(`style-${theme}.css`)
@@ -373,7 +374,7 @@ class Window extends EventEmitter {
 
     for (let i = 0; i < stylesheets.length; ++i) {
       let src = stylesheets[i]
-      if (i === 0 || exists(src)) {
+      if (i <= 1 || exists(src)) {
         let css = stylesheet(src)
         loaded.push(load(css, `Load error: ${src}`))
         append(css, document.head)
