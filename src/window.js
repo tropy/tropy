@@ -119,7 +119,7 @@ class Window extends EventEmitter {
   get stylesheets() {
     let { theme } = this
     return [
-      //path.styles(process.platform, `win-${theme}.css`),
+      path.styles(process.platform, `window-${theme}.css`),
       path.styles(process.platform, `${this.type}-${theme}.css`),
       path.user('style.css'),
       path.user(`style-${theme}.css`)

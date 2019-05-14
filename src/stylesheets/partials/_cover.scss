@@ -12,7 +12,7 @@
   justify-content: center;
   align-items: center;
   z-index: $zindex-cover;
-  background-color: $cover-color;
+  background-color: $cover-bg;
 
   .ready & {
     display: none;
@@ -24,17 +24,17 @@
     opacity: 0.6;
   }
 
+  @keyframes tropy-icon {
+    100% {
+      fill: $tropy-icon-color;
+    }
+  }
+
   @include variant("#project .cover") {
-    &::after {
-      content: "";
-      width: 144px;
-      height: 144px;
-      background:
-        if(
-          $theme == "dark",
-          icon-url("cover/tropy-icon-dark.svg") no-repeat,
-          icon-url("cover/tropy-icon-light.svg") no-repeat
-        );
+    .tropy-icon {
+      polygon {
+        animation: tropy-icon 0s linear forwards 0.5s;
+      }
 
       @include state("#project.inactive", "#project.closing") {
         display: none;

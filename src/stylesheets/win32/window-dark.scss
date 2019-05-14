@@ -1,0 +1,33 @@
+/* stylelint-disable max-empty-lines */
+
+//
+// Dark window
+// --------------------------------------------------
+
+$platform: "win32";
+$theme: "dark";
+
+
+// Colors
+// --------------------------------------------------
+
+@import
+  "../themes/dark",
+  "../themes/colors-dark";
+
+
+// Abstracts
+// --------------------------------------------------
+
+@import
+  "../abstracts/variables",
+  "../abstracts/mixins",
+  "../abstracts/functions",
+  "../abstracts/placeholders";
+
+
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/cover";
