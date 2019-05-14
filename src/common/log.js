@@ -1,7 +1,6 @@
 'use strict'
 
 const pino = require('pino')
-
 let instance
 
 function logRotate(file, suffix = '.1') {
@@ -40,8 +39,6 @@ function log({
   }
 
   if (rotate && typeof dest === 'string') {
-    // Pending electron#18244
-    require('mkdirp').sync(require('path').dirname(dest))
     logRotate(dest)
   }
 

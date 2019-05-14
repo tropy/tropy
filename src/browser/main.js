@@ -41,8 +41,10 @@ if (!opts.logs) {
 }
 app.setPath('logs', opts.logs)
 
-
 if (!(win32 && require('./squirrel')(opts))) {
+  const { sync: mkdir } = require('mkdirp')
+  mkdir(opts.log)
+
   const { info, warn } = require('../common/log')({
     dest: join(opts.logs, 'tropy.log'),
     name: 'main',
