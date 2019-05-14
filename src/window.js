@@ -374,7 +374,7 @@ class Window extends EventEmitter {
 
     for (let i = 0; i < stylesheets.length; ++i) {
       let src = stylesheets[i]
-      if (i < 1 || exists(src)) {
+      if (i < 2 || exists(src)) {
         let css = stylesheet(src)
         loaded.push(load(css, `Load error: ${src}`))
         append(css, document.head)
