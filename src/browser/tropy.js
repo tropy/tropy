@@ -25,6 +25,7 @@ const Updater = require('./updater')
 const dialog = require('./dialog')
 const WindowManager = require('./wm')
 const { addIdleObserver } = require('./idle')
+const { migrate } = require('./migrate')
 
 const { defineProperty: prop } = Object
 const act = require('./actions')
@@ -259,9 +260,14 @@ class Tropy extends EventEmitter {
   }
 
   migrate(state) {
+    if (state.version != null) {
+      migrate(this, state, state.version)
+    }
+
     state.locale = this.getLocale(state.locale)
-    state.version = this.version
     state.uuid = state.uuid || require('uuid/v1')()
+    state.version = this.version
+
     return state
   }
 
