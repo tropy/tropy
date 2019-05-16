@@ -214,7 +214,6 @@ class Window extends EventEmitter {
     })
   }
 
-
   handleTabFocus() {
     on(document, 'keydown', event => {
       if (event.key === 'Tab' && !event.defaultPrevented) {

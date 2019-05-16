@@ -179,6 +179,18 @@ class WindowManager extends EventEmitter {
       case 'dialog':
         this.handleShowDialog(win, ...args)
         break
+      case 'maximize':
+        if (win.isMazimized())
+          win.unmaximize()
+        else
+          win.maximize()
+        break
+      case 'minimize':
+        if (win.isMinimized())
+          win.unminimize()
+        else
+          win.minimize()
+        break
       default:
         win.emit(type, ...args)
     }

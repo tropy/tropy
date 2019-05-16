@@ -1,15 +1,13 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { FormattedMessage, injectIntl, intlShape } = require('react-intl')
 const { shell } = require('electron')
 const { product, version } = require('../common/release')
-const { bool } = require('prop-types')
-const { Toolbar } = require('./toolbar')
+const { Titlebar } = require('./toolbar')
 
 
-class About extends PureComponent {
+class About extends React.PureComponent {
   renderLink(id, ...options) {
     const { intl } = this.props
 
@@ -22,14 +20,10 @@ class About extends PureComponent {
     )
   }
 
-  renderToolbar() {
-    return this.props.showToolbar && <Toolbar/>
-  }
-
   render() {
     return (
       <div className="about-view">
-        {this.renderToolbar()}
+        <Titlebar isOptional/>
         <figure className="app-icon"/>
         <div className="flex-row center">
           <h1><span className="product">{product}</span></h1>
@@ -58,11 +52,6 @@ class About extends PureComponent {
 
   static propTypes = {
     intl: intlShape.isRequired,
-    showToolbar: bool.isRequired
-  }
-
-  static defaultProps = {
-    showToolbar: ARGS.frameless
   }
 }
 

@@ -1,44 +1,24 @@
 'use strict'
 
 const React = require('react')
+const { WindowContext } = require('./main')
 const { bool, func, node, string } = require('prop-types')
 const cx = require('classnames')
 
+const Toolbar = React.forwardRef((props, ref) =>
+  <div
+    ref={ref}
+    className={cx('toolbar', props.className)}
+    onDoubleClick={props.onDoubleClick}>
+    {props.children}
+  </div>
+)
 
-class Toolbar extends React.PureComponent {
-  container = React.createRef()
-
-  handleDoubleClick = (event) => {
-    if (this.props.onDoubleClick &&
-      event.target === this.container.current) {
-      this.props.onDoubleClick()
-    }
-  }
-
-  render() {
-    return (
-      <div
-        className={cx('toolbar', {
-          'window-draggable': this.props.isDraggable
-        })}
-        ref={this.container}
-        onDoubleClick={this.handleDoubleClick}>
-        {this.props.children}
-      </div>
-    )
-  }
-
-  static propTypes = {
-    children: node,
-    isDraggable: bool.isRequired,
-    onDoubleClick: func
-  }
-
-  static defaultProps = {
-    isDraggable: ARGS.frameless
-  }
+Toolbar.propTypes = {
+  children: node,
+  className: string,
+  onDoubleClick: func
 }
-
 
 Toolbar.Context = React.forwardRef((props, ref) => (
   <div
@@ -53,8 +33,7 @@ Toolbar.Context = React.forwardRef((props, ref) => (
 Toolbar.Context.propTypes = {
   children: node,
   className: string,
-  isActive: bool,
-  dom: func
+  isActive: bool
 }
 
 
@@ -91,7 +70,40 @@ ToolGroup.propTypes = {
 }
 
 
+class Titlebar extends React.PureComponent {
+  container = React.createRef()
+
+  handleDoubleClick = (event) => {
+    if (this.context.state.frameless &&
+      event.target === this.container.current) {
+      this.context.maximize()
+    }
+  }
+
+  render() {
+    return (!this.props.isOptional || this.context.state.frameless) && (
+      <Toolbar
+        className={cx(
+          'titlebar',
+          this.context.state.frameless ? 'window-draggable' : null
+        )}
+        onDoubleClick={this.handleDoubleClick}
+        ref={this.container}>
+        {this.props.children}
+      </Toolbar>
+    )
+  }
+
+  static contextType = WindowContext
+
+  static propTypes = {
+    children: node,
+    isOptional: bool
+  }
+}
+
 module.exports = {
   Toolbar,
-  ToolGroup
+  ToolGroup,
+  Titlebar
 }

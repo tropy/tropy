@@ -3,7 +3,7 @@
 const React = require('react')
 const { FormattedMessage } = require('react-intl')
 const { bool, func, number, string } = require('prop-types')
-const { Toolbar, ToolGroup } = require('../toolbar')
+const { Titlebar, Toolbar, ToolGroup } = require('../toolbar')
 const { Slider } = require('../slider')
 const { SearchField } = require('../search')
 const { Button } = require('../button')
@@ -16,9 +16,7 @@ const {
 
 
 const ProjectToolbar = (props) => (
-  <Toolbar
-    isDraggable={props.isDraggable}
-    onDoubleClick={props.onDoubleClick}>
+  <Titlebar>
     <Toolbar.Left>
       <ToolGroup>
         <Slider
@@ -51,25 +49,19 @@ const ProjectToolbar = (props) => (
         isDisabled={props.isDisabled}
         onSearch={props.onSearch}/>
     </Toolbar.Right>
-  </Toolbar>
+  </Titlebar>
 )
 
 ProjectToolbar.propTypes = {
   canCreateItems: bool,
   count: number.isRequired,
   isDisabled: bool,
-  isDraggable: bool,
   maxZoom: number.isRequired,
   query: string.isRequired,
   zoom: number.isRequired,
-  onDoubleClick: func,
   onItemCreate: func.isRequired,
   onSearch: func.isRequired,
   onZoomChange: func.isRequired
-}
-
-ProjectToolbar.defaultProps = {
-  isDraggable: ARGS.frameless
 }
 
 module.exports = {

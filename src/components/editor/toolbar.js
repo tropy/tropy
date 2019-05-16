@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { Toolbar, ToolGroup } = require('../toolbar')
+const { Titlebar, Toolbar, ToolGroup } = require('../toolbar')
 const { Button } = require('../button')
 const { EditorState } = require('prosemirror-state')
 const { LinkContext } = require('./link')
@@ -74,8 +74,10 @@ class EditorToolbar extends React.PureComponent {
   }
 
   render() {
+    let T = this.props.isTitlebar ? Titlebar : Toolbar
+
     return (
-      <Toolbar isDraggable={this.props.isDraggable}>
+      <T>
         <Toolbar.Context
           className="default"
           isActive={this.state.context === 'default'}>
@@ -172,12 +174,12 @@ class EditorToolbar extends React.PureComponent {
           isActive={this.state.context === 'link'}
           onCancel={this.setDefaultContext}
           onCommit={this.handleLinkToggle}/>
-      </Toolbar>
+      </T>
     )
   }
 
   static propTypes = {
-    isDraggable: bool,
+    isTitlebar: bool,
     state: instanceOf(EditorState),
     onCommand: func.isRequired
   }

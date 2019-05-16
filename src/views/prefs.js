@@ -21,7 +21,9 @@ Promise.all([
 ])
   .then(() => {
     render(
-      <Main store={store}><PrefsContainer/></Main>,
+      <Main store={store} window={win}>
+        <PrefsContainer/>
+      </Main>,
       document.getElementById('main'))
   })
 

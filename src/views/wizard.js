@@ -18,7 +18,9 @@ store
   .dispatch(intl.load({ locale }))
   .then(() => {
     render(
-      <Main store={store}><WizardContainer/></Main>,
+      <Main store={store} window={win}>
+        <WizardContainer/>
+      </Main>,
       document.getElementById('main'))
   })
 

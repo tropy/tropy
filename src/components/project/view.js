@@ -64,7 +64,6 @@ class ProjectView extends Component {
       photos,
       tags,
       zoom,
-      onMaximize,
       onItemCreate,
       onItemSelect,
       onSearch,
@@ -87,7 +86,6 @@ class ProjectView extends Component {
                 query={nav.query}
                 zoom={zoom}
                 onItemCreate={this.handleItemImport}
-                onDoubleClick={ARGS.frameless ? onMaximize : null}
                 onSearch={onSearch}
                 onZoomChange={this.handleZoomChange}/>
             </header>
@@ -132,7 +130,6 @@ class ProjectView extends Component {
     onItemImport: func.isRequired,
     onItemSelect: func.isRequired,
     onItemTagAdd: func.isRequired,
-    onMaximize: func.isRequired,
     onSearch: func.isRequired,
     onSort: func.isRequired,
     onUiUpdate: func.isRequired

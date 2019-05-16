@@ -25,7 +25,9 @@ Promise.all([
     }
 
     render(
-      <Main store={store}><ProjectContainer/></Main>,
+      <Main store={store} window={win}>
+        <ProjectContainer/>
+      </Main>,
       document.getElementById('main')
     )
   })

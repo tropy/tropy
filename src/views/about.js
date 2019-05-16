@@ -6,6 +6,7 @@ const { create } = require('../stores/about')
 const { Main } = require('../components/main')
 const { About } = require('../components/about')
 const { load } = require('../actions/intl')
+const { win } = require('../window')
 
 const store = create()
 const { locale } = ARGS
@@ -14,7 +15,9 @@ store
   .dispatch(load({ locale }))
   .then(() => {
     render(
-      <Main store={store}><About/></Main>,
+      <Main store={store} window={win}>
+        <About/>
+      </Main>,
       document.getElementById('main'))
   })
 
