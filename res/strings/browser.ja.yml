@@ -1,12 +1,11 @@
 ja:
-  dialogs:
+  dialog:
+    file:
+      project: Tropyプロジェクト
     crashed:
-      buttons:
-      - ウィンドウを閉じる
-      - リロード
-      - 開いたままにする
-      message: Tropyはクラッシュしました
-      detail: この問題を https://github.com/tropy/tropy で報告してください
+      message: Tropyがクラッシュしました
+      detail: >
+          この問題を https://github.com/tropy/tropy で報告してください
     unresponsive:
       buttons:
       - 閉じる
@@ -14,7 +13,7 @@ ja:
       message: Tropyが応答していません
       detail: >
           Tropyが応答していません。強制終了しますか？応答を待ちますか？
-  windows:
+  window:
     prefs:
       title: Tropy設定
     wizard:
