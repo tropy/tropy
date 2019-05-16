@@ -3,6 +3,8 @@
 try {
   const START = Date.now()
 
+  require('module').globalPaths.push(__dirname)
+
   const opts = require('./args').parse()
   const { Window } = require('./window')
   const { ready } = require('./dom')
