@@ -18,7 +18,6 @@ const { MODE } = require('../constants/project')
 const { keys } = Object
 const { writeFile: write } = require('fs')
 const { win } = require('../window')
-const { groupedByTemplate } = require('../export')
 
 const {
   getGroupedItems,
@@ -403,6 +402,9 @@ class Export extends Command {
       if (!target) return
 
       const [templateItems, ...resources] = yield select(getGroupedItems(ids))
+
+      // NB: load on-demand because jsonld is huge!
+      const { groupedByTemplate } = require('../export')
 
       const results = yield call(groupedByTemplate, templateItems, resources)
       const asString = JSON.stringify(results, null, 2)

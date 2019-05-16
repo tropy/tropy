@@ -7,9 +7,9 @@ const { NativeTypes } = require('react-dnd-electron-backend')
 const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
-const { isImageSupported } = require('../../image')
 const { pick, } = require('../../common/util')
 const { array, bool, func, object, number } = require('prop-types')
+const { isImageSupported } = require('../../constants/mime')
 const { ITEM } = require('../../constants/sass')
 
 

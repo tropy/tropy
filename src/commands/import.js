@@ -8,7 +8,6 @@ const mod = require('../models')
 const act = require('../actions')
 const { pick } = require('../common/util')
 const { prompt } = require('../dialog')
-const { Image } = require('../image')
 const { DC, TERMS } = require('../constants')
 const { date, text } = require('../value')
 
@@ -20,12 +19,14 @@ const {
 
 class ImportCommand extends Command {
   *openImage(path) {
+    let { Image } = require('../image')
     let useLocalTimezone = yield select(state => state.settings.localtime)
     let image = yield call(Image.open, { path, useLocalTimezone })
     return image
   }
 
   *checkPhoto(photo, force) {
+    let { Image } = require('../image')
     let useLocalTimezone = yield select(state => state.settings.localtime)
     return yield call(Image.check, photo, { force, useLocalTimezone })
 

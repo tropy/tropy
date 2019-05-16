@@ -474,6 +474,22 @@ const util = {
       acc[obj[key]].push(obj)
       return acc
     }, {})
+  },
+
+  URI: {
+    namespace(uri) {
+      return util.URI.split(uri)[0]
+    },
+
+    getLabel(uri) {
+      return util.titlecase(util.URI.split(uri)[1]) || uri
+    },
+
+    split(uri) {
+      let ns = uri.split(/(#|\/)/)
+      let nm = ns.pop()
+      return [ns.join(''), nm]
+    }
   }
 }
 

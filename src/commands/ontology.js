@@ -4,7 +4,6 @@ const assert = require('assert')
 const { Command } = require('./command')
 const { ONTOLOGY } = require('../constants')
 const { VOCAB, PROPS, CLASS, LABEL, TEMPLATE } = ONTOLOGY
-const { Ontology, Template } = require('../common/ontology')
 const { warn } = require('../common/log')
 const { get, pick, pluck } = require('../common/util')
 const { all, call, select, cps } = require('redux-saga/effects')
@@ -16,13 +15,13 @@ const { join } = require('path')
 const { keys } = Object
 const dialog = require('../dialog')
 const { writeFile: write } = require('fs')
-const { toN3 } = require('../export/vocab')
 
 
 class Import extends Command {
   static get ACTION() { return ONTOLOGY.IMPORT }
 
   *exec() {
+    const { Ontology } = require('../common/ontology')
     const { db } = this.options
     let { files, isProtected } = this.action.payload
 
@@ -115,6 +114,8 @@ class VocabExport extends Command {
   static get ACTION() { return VOCAB.EXPORT }
 
   *exec() {
+    let { toN3 } = require('../export/vocab')
+
     let { payload } = this.action
     let [vocab, ontology] = yield select(state => [
       pluck(state.ontology.vocab, payload),
@@ -226,6 +227,7 @@ class TemplateImport extends Command {
   static get ACTION() { return TEMPLATE.IMPORT }
 
   *exec() {
+    const { Template } = require('../common/ontology')
     const { db } = this.options
     const { payload, meta } = this.action
     let { files, isProtected } = payload
@@ -286,6 +288,7 @@ class TemplateExport extends Command {
   static get ACTION() { return TEMPLATE.EXPORT }
 
   *exec() {
+    const { Template } = require('../common/ontology')
     let { id, path } = this.action.payload
 
     try {

@@ -3,7 +3,7 @@
 const fs = require('fs')
 const { readFile: read, writeFile: write } = fs.promises
 const { join, basename, extname } = require('path')
-const { any, empty, get, identify, pick, titlecase } = require('./util')
+const { any, empty, get, identify, pick, URI } = require('./util')
 const { Resource } = require('./res')
 const N3 = require('n3')
 const { TEMPLATE } = require('../constants/ontology')
@@ -308,33 +308,16 @@ function literal(data) {
 
 function isDefinedBy(id, data) {
   let ns = get(data, [RDFS.isDefinedBy, 0, '@id'])
-  if (ns == null) return namespace(id)
+  if (ns == null) return URI.namespace(id)
   ns = ns.id || ns
   if (!(/[#/]$/).test(ns)) ns += '#'
   return ns
 }
 
-function namespace(id) {
-  return split(id)[0]
-}
-
-function getLabel(id) {
-  return titlecase(split(id)[1]) || id
-}
-
-function split(id) {
-  let ns = id.split(/(#|\/)/)
-  let nm = ns.pop()
-  return [ns.join(''), nm]
-}
-
-
 module.exports = {
-  getLabel,
   info,
   isDefinedBy,
   literal,
-  namespace,
   Ontology,
   Template
 }

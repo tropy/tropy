@@ -1,7 +1,7 @@
 'use strict'
 
 describe('linked-data helpers', () => {
-  const { shortenLabel, propertyLabel } = __require('export/utils')
+  const { shortenLabel, propertyLabel } = __require('export/util')
 
   it('parse propertyLabel arguments', () => {
     expect(propertyLabel('x')).to.be.undefined
@@ -33,7 +33,7 @@ describe('linked-data helpers', () => {
 })
 
 describe('newKey', () => {
-  const { newKey } = __require('export/utils')
+  const { newKey } = __require('export/util')
   it('no number', () => {
     expect(newKey('foo')).to.equal('foo2')
   })
@@ -43,7 +43,7 @@ describe('newKey', () => {
 })
 
 describe('newProperties', () => {
-  const { newProperties } = __require('export/utils')
+  const { newProperties } = __require('export/util')
   // const { assign } = Object
   const { template, metadata, props } = require('../fixtures/export')
 

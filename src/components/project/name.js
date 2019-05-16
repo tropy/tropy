@@ -5,7 +5,7 @@ const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { IconMaze } = require('../icons')
 const { Editable } = require('../editable')
-const { isImageSupported } = require('../../image')
+const { isImageSupported } = require('../../constants/mime')
 const cx = require('classnames')
 const { bool, func, string } = require('prop-types')
 

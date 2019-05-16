@@ -1,6 +1,7 @@
 'use strict'
 
-const { promises: jsonld } = require('jsonld')
+const jsonld = require('jsonld').promises
+const { newProperties } = require('./util')
 const { pick, pluck } = require('../common/util')
 const { TROPY } = require('../constants')
 const makeNote = require('./note')
@@ -35,7 +36,6 @@ const PHOTO_PROPS = [
   ...IMAGE_PROPS
 ]
 
-const { newProperties } = require('./utils')
 
 function makeContext(template, items, resources) {
   const [props, metadata, photos] = resources

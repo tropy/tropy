@@ -4,7 +4,6 @@ const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { SaveCommand } = require('./subject')
-const { Image } = require('../image')
 const mod = require('../models')
 const act = require('../actions')
 const { SELECTION } = require('../constants')
@@ -21,6 +20,7 @@ class Create extends ImportCommand {
   static get ACTION() { return SELECTION.CREATE }
 
   *exec() {
+    let { Image } = require('../image')
     let { db } = this.options
     let { payload, meta } = this.action
 

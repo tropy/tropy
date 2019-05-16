@@ -1,7 +1,6 @@
 'use strict'
 
-const { array, camelcase } = require('../common/util')
-const { getLabel } = require('../common/ontology')
+const { array, camelcase, URI } = require('../common/util')
 const { entries, values } = Object
 
 function propertyLabel(property, props, template) {
@@ -15,7 +14,7 @@ function propertyLabel(property, props, template) {
       label = props[property] && props[property].label
     }
     if (!label) {
-      label = getLabel(field.id)
+      label = URI.getLabel(field.id)
     }
     return label
   } catch (_) { return label }
