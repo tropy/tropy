@@ -17,7 +17,7 @@ const cx = require('classnames')
 const { floor, min } = Math
 
 const {
-  arrayOf, bool, func, node, number, object, shape, string
+  arrayOf, bool, func, number, object, shape, string
 } = require('prop-types')
 
 const { TABS, MIME } = require('../../constants')

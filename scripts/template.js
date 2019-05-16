@@ -25,6 +25,8 @@ const create = (path, content) => {
     warn(`skipping ${path}`)
   }
 }
+
+/* eslint-disable max-len */
 const html = name => (
 `<!DOCTYPE html>
 <html>
@@ -50,6 +52,7 @@ const html = name => (
 </body>
 </html>
 `)
+/* eslint-enable max-len */
 
 const script = () => (
 `'use strict'
