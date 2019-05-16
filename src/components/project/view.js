@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
+const { WindowContext } = require('../main')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { ItemGrid, ItemTable } = require('../item')
@@ -13,7 +13,7 @@ const { array, bool, func, object, number } = require('prop-types')
 const { ITEM } = require('../../constants/sass')
 
 
-class ProjectView extends Component {
+class ProjectView extends React.Component {
   get size() {
     return ITEM.ZOOM[this.props.zoom]
   }
@@ -100,6 +100,7 @@ class ProjectView extends Component {
               selection={nav.items}
               size={size}
               tags={tags}
+              hasScrollbars={this.context.state.scrollbars}
               isDisabled={nav.trash}
               isOver={isOver && canDrop}
               onCreate={onItemCreate}
@@ -111,6 +112,8 @@ class ProjectView extends Component {
       </div>
     )
   }
+
+  static contextType = WindowContext
 
   static propTypes = {
     canDrop: bool,
