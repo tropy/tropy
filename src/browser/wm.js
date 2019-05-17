@@ -8,7 +8,7 @@ const { debug, error, warn } = require('../common/log')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
 const res = require('../common/res')
-const { array, blank, get, once, remove } = require('../common/util')
+const { array, blank, get, once, remove, restrict } = require('../common/util')
 const { BODY, PANEL, ESPER } = require('../constants/sass')
 
 const {
@@ -69,9 +69,7 @@ class WindowManager extends EventEmitter {
     try {
       opts = this.configure(type, opts)
 
-      if (args.zoom > 1) {
-        opts.webPreferences.zoomFactor = args.zoom
-
+      if (args.zoom) {
         if (!opts.resizable) {
           opts.width = Math.round(opts.width * args.zoom)
           opts.height = Math.round(opts.height * args.zoom)
@@ -110,6 +108,11 @@ class WindowManager extends EventEmitter {
 
       // TODO check position on display!
       var win = new BrowserWindow(opts)
+
+      win.webContents.once('did-finish-load', () => {
+        win.webContents.setVisualZoomLevelLimits(1, 1)
+        win.webContents.setZoomFactor(args.zoom || 1)
+      })
 
       if (typeof show === 'string') {
         win.once(show, () => {
@@ -273,9 +276,6 @@ class WindowManager extends EventEmitter {
           event.preventDefault()
           win.webContents.send('reload')
         })
-        .on('did-finish-load', () => {
-          win.webContents.setVisualZoomLevelLimits(1, 1)
-        })
         .on('will-navigate', handleWillNavigate)
         .on('crashed', () => {
           warn(`${type}[${win.id}] contents crashed`)
@@ -333,6 +333,33 @@ class WindowManager extends EventEmitter {
     this.windows[type] = remove(array(this.windows[type]), win)
   }
 
+  zoom(factor) {
+    factor = restrict(factor, this.MIN_ZOOM, this.MAX_ZOOM)
+
+    for (let win of this.values()) {
+      let old = win.webContents.getZoomFactor()
+      if (old === factor) continue
+
+      win.webContents.setZoomFactor(factor)
+
+      if (win.isResizable()) {
+        let [minWidth, minHeight] = win.getMinimumSize()
+
+        minWidth = Math.round((minWidth / old) * factor)
+        minHeight = Math.round((minHeight / old) * factor)
+        win.setMinimumSize(minWidth, minHeight)
+
+      } else {
+        let [width, height] = win.getContentSize()
+        win.setContentSize(
+          Math.round((width / old) * factor),
+          Math.round((height / old) * factor))
+      }
+    }
+
+    return factor
+  }
+
   *values(type = Object.keys(this.windows)) {
     for (let t of array(type)) {
       if (t in this.windows)
@@ -379,6 +406,9 @@ class WindowManager extends EventEmitter {
       resizable: false
     }
   }
+
+  MIN_ZOOM = 0.75
+  MAX_ZOOM = 2
 
   static getAquaColorVariant() {
     return darwin && AQUA[

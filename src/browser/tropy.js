@@ -31,7 +31,6 @@ const { defineProperty: prop } = Object
 const act = require('./actions')
 const { darwin, linux, system } = require('../common/os')
 const { channel, product, version } = require('../common/release')
-const { restrict } = require('../common/util')
 
 const {
   FLASH, HISTORY, TAG, PROJECT, CONTEXT, LOCALE
@@ -39,8 +38,6 @@ const {
 
 const H = new WeakMap()
 const T = new WeakMap()
-
-const ZOOM = { STEP: 0.25, MAX: 2, MIN: 0.75 }
 
 
 class Tropy extends EventEmitter {
@@ -611,15 +608,15 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:zoom-in', () => {
-      this.zoom(this.state.zoom + ZOOM.STEP)
+      this.state.zoom = this.wm.zoom(this.state.zoom + 0.25)
     })
 
     this.on('app:zoom-out', () => {
-      this.zoom(this.state.zoom - ZOOM.STEP)
+      this.state.zoom = this.wm.zoom(this.state.zoom - 0.25)
     })
 
     this.on('app:zoom-reset', () => {
-      this.zoom(1)
+      this.state.zoom = this.wm.zoom(1)
     })
 
     this.plugins.on('change', () => {
@@ -805,14 +802,6 @@ class Tropy extends EventEmitter {
       version,
       webgl: this.state.webgl,
       zoom: this.state.zoom
-    }
-  }
-
-  zoom(factor) {
-    this.state.zoom = restrict(factor, ZOOM.MIN, ZOOM.MAX)
-
-    for (let win of BrowserWindow.getAllWindows()) {
-      win.webContents.setZoomFactor(this.state.zoom)
     }
   }
 
