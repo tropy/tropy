@@ -9,6 +9,7 @@ const { fail, open } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
 const { PHOTO } = require('../constants')
+const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
 const { warn } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
@@ -211,8 +212,6 @@ class Duplicate extends ImportCommand {
   static get ACTION() { return PHOTO.DUPLICATE }
 
   *exec() {
-    let { Image } = require('../image')
-
     let { db } = this.options
     let { payload } = this.action
     let { item } = payload
