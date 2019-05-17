@@ -1,14 +1,13 @@
 'use strict'
 
 const { ipcRenderer: ipc } = require('electron')
-const { basename } = require('path')
+const { basename, join } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
 const { Plugins } = require('./common/plugins')
 const { delay, pick } = require('./common/util')
 const { EventEmitter } = require('events')
 const args = require('./args')
-const path = require('./path')
 const debounce = require('lodash.debounce')
 
 const {
@@ -29,6 +28,8 @@ const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
   e => e.ctrlKey && !e.altKey && !e.metaKey
 
+const STYLES = join(__dirname, '..', 'lib', 'stylesheets', process.platform)
+
 class Window extends EventEmitter {
   constructor(opts) {
     if (Window.instance) {
@@ -42,6 +43,7 @@ class Window extends EventEmitter {
 
     this.state = pick(opts, [
       'aqua',
+      'data',
       'frameless',
       'scrollbars',
       'theme',
@@ -119,10 +121,10 @@ class Window extends EventEmitter {
   get stylesheets() {
     let { theme } = this
     return [
-      path.styles(process.platform, `window-${theme}.css`),
-      path.styles(process.platform, `${this.type}-${theme}.css`),
-      path.user('style.css'),
-      path.user(`style-${theme}.css`)
+      join(STYLES, `window-${theme}.css`),
+      join(STYLES, `${this.type}-${theme}.css`),
+      join(this.state.data, 'style.css'),
+      join(this.state.data, `style-${theme}.css`)
     ]
   }
 
