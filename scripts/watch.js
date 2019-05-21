@@ -10,7 +10,7 @@ const { error, green, red, say } = require('./util')('ω')
 const cwd = process.cwd()
 const debounce = require('lodash.debounce')
 
-const css = debounce(compile.css, 1000)
+const css = debounce(compile.css, 500)
 
 target.all = () => {
   target.src()
@@ -20,7 +20,8 @@ target.all = () => {
 target.src = () => {
   chokidar
     .watch('src/**/*.{js,jsx,scss,sass}', {
-      persistent: true
+      persistent: true,
+      ignoreInitial: true
     })
     .on('all', (event, file) => {
       file = relative(cwd, file)
