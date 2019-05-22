@@ -11,8 +11,8 @@ const { info, warn } = require('../common/log')
 async function rm(file) {
   try {
     await unlink(file)
-  } catch (error) {
-    if (error.code !== 'ENOENT') throw error
+  } catch (e) {
+    if (e.code !== 'ENOENT') throw e
   }
 }
 
@@ -28,9 +28,10 @@ module.exports = {
         file = await Database.create(file, create, { name, base })
         ipc.send(PROJECT.CREATED, { file })
 
-      } catch (error) {
-        warn(error)
-        fail(error, PROJECT.CREATED)
+      } catch (e) {
+        warn(e)
+        await fail(e, PROJECT.CREATED)
+        if (meta.truncate) await rm(payload.file)
       }
     }
   },

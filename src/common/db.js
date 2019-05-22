@@ -15,7 +15,8 @@ const { debug, info, trace, warn } = require('./log')
 const M = {
   'r': sqlite.OPEN_READONLY,
   'w': sqlite.OPEN_READWRITE,
-  'w+': sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE
+  'w+': sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE,
+  'wx+': sqlite.OPEN_CREATE
 }
 
 const cache = {}
@@ -27,7 +28,7 @@ class Database extends EventEmitter {
     try {
       var db = new Database(path, 'w+', { max: 1 })
 
-      const isEmpty = await db.empty()
+      let isEmpty = await db.empty()
       if (isEmpty && script) await script(db, ...args)
 
       return db.path
