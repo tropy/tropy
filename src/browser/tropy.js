@@ -641,7 +641,7 @@ class Tropy extends EventEmitter {
     })
 
     if (darwin) {
-      app.on('activate', () => this.openProject())
+      app.on('activate', () => this.open())
 
       let ids = [
         prefs.subscribeNotification(
