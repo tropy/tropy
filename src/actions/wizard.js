@@ -46,13 +46,9 @@ module.exports = {
 
     save(payload) {
       return async (dispatch) => {
-        try {
-          let file = await save.project({ defaultPath: payload })
-          if (file) {
-            dispatch(module.exports.project.update({ file }))
-          }
-        } catch (error) {
-          fail(error)
+        let file = await save.project({ defaultPath: payload })
+        if (file) {
+          dispatch(module.exports.project.update({ file }))
         }
       }
     }

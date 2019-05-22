@@ -20,7 +20,7 @@ const end = log =>
 const body = log =>
   log.action ?
     `${log.action} ${chalk.gray(meta(log))}` :
-    log.msg
+    log.msg || log.message
 
 const error = ({ stack }) =>
   stack ?
@@ -55,7 +55,7 @@ const COLOR = [
   'blue',
   'red',
   'redBright',
-  'yellow'
+  'redBright'
 ]
 
 const colorize = (level, text) => {

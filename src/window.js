@@ -317,7 +317,7 @@ class Window extends EventEmitter {
   }
 
   handleUncaughtExceptions() {
-    let handleError = debounce(({ message, stack }) => {
+    let handleError = debounce(({ message, stack } = {}) => {
       ipc.send('error', { message, stack })
     }, 250)
 
