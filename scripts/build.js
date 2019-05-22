@@ -152,18 +152,21 @@ target.all = async (args = []) => {
           cp('-r', join(dir, SHARP, '*'), join(unpacked, SHARP))
         }
 
-        say(`renaming executable to ${qualified.name}...`)
+        say(`rename executable to ${qualified.name}...`)
         rename(dst, qualified.product, qualified.name)
 
-        say('creating .desktop file...')
+        say('create .desktop file...')
         desktop().to(join(dst, `${qualified.name}.desktop`))
 
-        say('copying icons...')
+        say('copy icons...')
         copyIcons(dst)
 
-        say('copying mime types...')
+        say('copy mime types...')
         mkdir('-p', join(dst, 'mime', 'packages'))
         cp(join(res, 'mime', '*.xml'), join(dst, 'mime', 'packages'))
+
+        say('copy installation instructions...')
+        cp(join(res, 'INSTALL'), dst)
 
         break
       }

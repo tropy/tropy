@@ -1,0 +1,36 @@
+Installation Instructions
+*************************
+
+Tropy is Copyright (c) 2015, 2016, 2017, 2018, 2019
+Roy Rosenzweig Center for History and New Media, George Mason University
+
+Basic Installation
+==================
+  Briefly, this distribution package requires no installation step. You
+can move this directory to any suitable location, which we will refer to as
+TROPY_PATH (for example, `/opt/tropy`), and start the `tropy` binary there.
+
+  For better desktop integration, please follow these instructions:
+
+1. Move this directory to TROPY_PATH
+2. Add TROPY_PATH to your PATH environment variable
+3. Copy the Tropy icons:
+   cp -r $TROPY_PATH/icons ~/.local/share/
+4. Register Tropy's mimetypes:
+   cp -r $TROPY_PATH/mime ~/.local/share/
+5. Copy the file `tropy.desktop` file:
+   cp $TROPY_PATH/tropy.desktop ~/.local/applications/
+
+Updating
+========
+  When updating to newer version of Tropy, simply replace your
+the entire installation directory with the new one.
+
+Sandbox
+=======
+  By default, Tropy requires your kernel to be configured with
+`CONFIG_USER_NS` and `sysctl kernel.unprivileged_userns_clone=1`.
+
+  As a fallback, you can `sudo chown root chrome-sandbox` and
+`chmod 4755 chrome-sandbox` to use the SETUID sandbox instead, or start
+Tropy with the `--no-sandbox` flag.
