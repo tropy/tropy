@@ -11,13 +11,15 @@ const cwd = process.cwd()
 const SCHEMA = join(home, 'db', 'schema')
 const MIGRATE = join(home, 'db', 'migrate')
 
+require('../src/common/log')({ level: 'warn' })
+
 global.ARGS = global.ARGS || {
   environment: 'production',
   locale: 'en'
 }
 
 target.create = async (args = []) => {
-  const { Database } = require('../lib/common/db')
+  const { Database } = require('../src/common/db')
   const domain = args[0] || 'project'
   const file = args[1] || join(home, 'db', `${domain}.db`)
 
@@ -25,7 +27,7 @@ target.create = async (args = []) => {
 
   switch (domain) {
     case 'project': {
-      const { create } = require('../lib/models/project')
+      const { create } = require('../src/models/project')
       const name = args[2] || 'Minos'
       const path = await Database.create(file, create, { name })
       say(`created project "${name}" as ${relative(cwd, path)}`)
@@ -33,7 +35,7 @@ target.create = async (args = []) => {
     }
 
     case 'ontology': {
-      const { create } = require('../lib/models/ontology')
+      const { create } = require('../src/models/ontology')
       const path = await Database.create(file, create)
       say(`created ontology as ${relative(cwd, path)}`)
       break
@@ -42,7 +44,7 @@ target.create = async (args = []) => {
 }
 
 target.migrate = async (args = []) => {
-  const { Database } = require('../lib/common/db')
+  const { Database } = require('../src/common/db')
 
   const domain = args[0] || 'project'
   const schema = join(SCHEMA, `${domain}.sql`)
@@ -93,7 +95,7 @@ PRAGMA user_version=${version};
 }
 
 target.viz = async (args = []) => {
-  const { Database } = require('../lib/common/db')
+  const { Database } = require('../src/common/db')
 
   const domain = args[0] || 'project'
   const file = args[1] || join(home, 'db', `${domain}.db`)
