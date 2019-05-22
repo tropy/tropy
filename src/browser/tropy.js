@@ -775,10 +775,10 @@ class Tropy extends EventEmitter {
         .then(({ response }) => {
           switch (response) {
             case 1:
-              shell.openItem(this.log)
+              clipboard.write({ text: Tropy.crashReport(e) })
               break
             case 2:
-              clipboard.write({ text: Tropy.crashReport(e) })
+              shell.openItem(this.log)
               break
           }
         })

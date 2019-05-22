@@ -165,12 +165,10 @@ class Destroy extends Command {
     const { db } = this.options
     const ids = this.action.payload
 
-    const { cancel } = yield call(prompt, 'message', {
-      prefix: 'dialog.prompt.item.destroy.'
-    })
+    const { cancel } = yield call(prompt, 'item.destroy')
+    if (cancel) return
 
     this.init = performance.now()
-    if (cancel) return
 
     try {
       if (ids.length) {

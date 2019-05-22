@@ -1,5 +1,6 @@
 'use strict'
 
+const { basename } = require('path')
 const { debug, warn } = require('../common/log')
 const { DuplicateError } = require('../common/error')
 const { call, put, select } = require('redux-saga/effects')
@@ -133,7 +134,9 @@ class ImportCommand extends Command {
       switch (handler) {
         case 'prompt': {
           this.isInteractive = true
-          const { ok, isChecked } = yield call(prompt.dup, image.path)
+          const { ok, isChecked } = yield call(prompt, 'dup', {
+            message: basename(image.path)
+          })
 
           if (isChecked) {
             yield* this.setDuplicateHandler(ok ? 'import' : 'skip')
