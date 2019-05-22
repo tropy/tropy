@@ -96,6 +96,15 @@ if (!(win32 && require('./squirrel')(opts))) {
         }
       }
     })
+
+    let quit = false
+
+    app.on('before-quit', () => {
+      quit = true
+    })
+    app.on('window-all-closed', () => {
+      if (quit) app.quit()
+    })
   }
 
   app.on('second-instance', (_, argv) => {
@@ -108,10 +117,6 @@ if (!(win32 && require('./squirrel')(opts))) {
       warn(`prevented loading ${url}`)
       event.preventDefault()
     })
-  })
-
-  app.on('window-all-closed', () => {
-    if (!darwin) app.quit()
   })
 
   app.on('quit', (_, code) => {
