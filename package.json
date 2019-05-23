@@ -57,7 +57,7 @@
     "watch": "node scripts/watch"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.4",
+    "@babel/core": "^7.4.5",
     "@babel/plugin-syntax-class-properties": "^7.2.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
@@ -108,7 +108,7 @@
     "edtf": "^2.6.1",
     "generic-pool": "^3.7.1",
     "js-yaml": "^3.13.1",
-    "jsonld": "^1.6.1",
+    "jsonld": "^1.6.2",
     "lodash.debounce": "^4.0.7",
     "lodash.throttle": "^4.1.1",
     "memoize-one": "^5.0.4",
