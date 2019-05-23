@@ -1,6 +1,5 @@
 'use strict'
 
-
 const decode = decodeURIComponent
 const encode = encodeURIComponent
 

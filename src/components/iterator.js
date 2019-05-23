@@ -15,7 +15,7 @@ const EMPTY = []
 class Iterator extends PureComponent {
   constructor(props) {
     super(props)
-    this.viewport = { widht: 0, height: 0 }
+    this.viewport = { width: 0, height: 0 }
     this.state = this.getStateFromProps()
   }
 

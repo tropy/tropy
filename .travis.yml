@@ -1,8 +1,6 @@
 language: c
-
 git:
   depth: 9
-
 cache:
   apt: true
   directories:
@@ -30,7 +28,6 @@ matrix:
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-
 before_install:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
       Xvfb :99 -ac -screen 0 1024x768x24 > /dev/null 2>&1 &
@@ -44,26 +41,23 @@ before_install:
   - source $NVM/nvm.sh || true
   - nvm install
   - node --version && npm --version
-
 install:
   - npm install -g node-gyp --no-progress --silent
   - npm install --no-progress --silent
-
 script:
   - npm run lint
   - npm run compile
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      LD_PRELOAD=node_modules/sharp/vendor/lib/libz.so npm run coverage;
+      npm run test:main;
+      npm run test:renderer;
     else
       npm run coverage;
     fi
-
 after_success:
-  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-    npm install -g coveralls --no-progress;
+  - if [[ $TRAVIS_OS_NAME = "osx" ]]; then
+      npm install -g coveralls --no-progress;
       cat ./coverage/lcov.info | coveralls;
     fi
-
 notifications:
   email: false
   slack:

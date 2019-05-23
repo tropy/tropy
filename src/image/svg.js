@@ -2,7 +2,6 @@
 
 const { nativeImage } = require('electron')
 const { loadImage } = require('../dom')
-
 const MIME = require('../constants/mime')
 
 // eslint-disable-next-line max-len

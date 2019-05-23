@@ -68,11 +68,9 @@ function *open(file) {
     } finally {
       yield call(close, db, project, access, cache)
     }
-  } catch (error) {
-    warn(`unexpected error in *open: ${error.message}`, {
-      stack: error.stack
-    })
-    yield call(fail, error, db.path)
+  } catch (e) {
+    warn({ stack: e.stack }, 'unexpected error in *open')
+    yield call(fail, e, db.path)
 
   } finally {
     yield call(db.close)
@@ -113,11 +111,9 @@ function *setup(db, project) {
     yield put(act.cache.prune())
     yield put(act.cache.purge())
 
-  } catch (error) {
-    warn(`unexpected error in *setup: ${error.message}`, {
-      stack: error.stack
-    })
-    yield call(fail, error, db.path)
+  } catch (e) {
+    warn({ stack: e.stack }, 'unexpected error in *setup')
+    yield call(fail, e, db.path)
 
   } finally {
     debug('*setup terminated')
@@ -145,6 +141,7 @@ function *close(db, project, access) {
   yield call(mod.photo.prune, db)
   yield call(mod.selection.prune, db)
   yield call(mod.note.prune, db)
+  yield call(mod.subject.prune, db)
   yield call(mod.access.prune, db)
 
   debug('*close terminated')
@@ -158,7 +155,7 @@ function *main() {
 
   try {
     aux = yield all([
-      fork(ontology),
+      fork(ontology, { max: 1 }),
       fork(ipc),
       fork(history),
       fork(shell),
@@ -193,11 +190,9 @@ function *main() {
       }
     }
 
-  } catch (error) {
-    crash = error
-    warn(`unexpected error in *main: ${error.message}`, {
-      stack: error.stack
-    })
+  } catch (e) {
+    crash = e
+    warn({ stack: e.stack }, 'unexpected error in *main')
 
   } finally {
     yield all([

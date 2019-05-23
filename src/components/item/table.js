@@ -410,7 +410,7 @@ class ItemTable extends ItemIterator {
     }).isRequired,
     edit: object,
     data: object.isRequired,
-    hasScrollbars: bool.isRequired,
+    hasScrollbars: bool,
     minColWidth: number.isRequired,
     minMainColWidth: number.isRequired,
     templates: object.isRequired,
@@ -426,7 +426,6 @@ class ItemTable extends ItemIterator {
   static defaultProps = {
     ...ItemIterator.defaultProps,
     overscan: 2,
-    hasScrollbars: ARGS.scrollbars,
     minColWidth: 40,
     minMainColWidth: 100
   }

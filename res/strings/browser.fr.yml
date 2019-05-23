@@ -1,12 +1,9 @@
 fr:
-  dialogs:
+  dialog:
+    file:
+      project: Projets Tropy
     crashed:
-      buttons:
-      - Fermer la fenêtre
-      - Relancer
-      - Garder Tropy ouvert
       message: Tropy a planté
-      detail: Merci de reporter cet incident à https://github.com/tropy/tropy
     unresponsive:
       buttons:
       - Fermer
@@ -15,7 +12,7 @@ fr:
       detail: >
           Tropy ne répond plus. Voulez-vous forcer sa fermeture ou bien continuer
           d'attendre?
-  windows:
+  window:
     prefs:
       title: Préférences
     wizard:

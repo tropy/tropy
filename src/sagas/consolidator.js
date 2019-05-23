@@ -21,10 +21,8 @@ const consolidator = {
         yield put(act.photo.consolidate(photos, { force: true }))
       }
 
-    } catch (error) {
-      warn(`unexpected error in consolidate: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
+      warn({ stack: e.stack }, 'unexpected error in *consolidate')
     }
   },
 

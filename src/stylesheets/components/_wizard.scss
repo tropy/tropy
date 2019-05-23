@@ -21,8 +21,8 @@
     background:
       if(
         $theme == "dark",
-        image-url("wizard/tropy-icon-dark.svg") no-repeat 0 0,
-        image-url("wizard/tropy-icon-light.svg") no-repeat 0 0
+        icon-url("wizard/tropy-icon-dark.svg") no-repeat 0 0,
+        icon-url("wizard/tropy-icon-light.svg") no-repeat 0 0
       );
   }
 

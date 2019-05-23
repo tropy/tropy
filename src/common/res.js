@@ -1,8 +1,8 @@
 'use strict'
 
-require('./promisify')
-const { join } = require('path')
-const { readFileAsync: read, readFileSync } = require('fs')
+const { basename, join } = require('path')
+const fs = require('fs')
+const { readFile: read } = fs.promises
 const { get, flatten } = require('./util')
 const yaml = require('js-yaml')
 const { debug } = require('./log')
@@ -23,7 +23,7 @@ class Resource {
 
   static async open(locale, name, ...args) {
     const res = this.expand(name, locale)
-    debug(`open resource ${res}`)
+    debug(`opening resource ${basename(res)}`)
 
     return new this(this.parse(await read(res)), locale, ...args)
   }
@@ -89,23 +89,35 @@ class KeyMap extends Resource {
   }
 }
 
-const Icons = {
+const icon = {
+  base: join(Resource.base, 'icons'),
+
   color(name, ext = '.png', variant = '') {
     return join(
       Resource.base,
       'icons',
       'colors',
       `${name}${variant}${ext}`)
+  },
+
+  expand(...args) {
+    return join(icon.base, ...args)
   }
 }
 
-const Shader = {
-  get base() {
-    return join(__dirname, '..', '..', 'res', 'shader')
-  },
+const shader = {
+  base: join(Resource.base, 'shaders'),
 
   load(name) {
-    return readFileSync(join(Shader.base, name), 'utf-8')
+    return fs.readFileSync(join(shader.base, name), 'utf-8')
+  }
+}
+
+const view = {
+  base: join(Resource.base, 'views'),
+
+  expand(name) {
+    return join(view.base, `${name}.html`)
   }
 }
 
@@ -113,8 +125,9 @@ const Shader = {
 module.exports = {
   Resource,
   Menu,
-  Shader,
+  shader,
   Strings,
   KeyMap,
-  Icons
+  icon,
+  view,
 }

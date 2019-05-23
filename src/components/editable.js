@@ -13,10 +13,10 @@ class Editable extends React.PureComponent {
   }
 
   get classes() {
-    return {
-      editable: true,
+    return ['editable', {
+      active: this.isActive,
       disabled: this.props.isDisabled
-    }
+    }]
   }
 
   get content() {

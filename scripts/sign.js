@@ -14,33 +14,39 @@ target.all = (...args) => {
   target[platform](...args)
 }
 
-
-target.win32 = (args = []) => {
-  check(platform === 'win32', 'must be run on Windows')
-
-  let [cert, pass] = args
-  cert = cert || env.SIGN_WIN32_CERT
-  pass = pass || env.SIGN_WIN32_PASS
-
-  check(pass, 'missing password')
-  check(cert, 'missing certificate')
-  check(test('-f', cert), `certificate not found: ${cert}`)
-
-  const signtool = getSignTool()
-  const params = getSignToolParams(cert, pass)
-  check(signtool, `missing dependency: ${signtool}`)
-
-  const targets = ls('-d', join(dir, 'dist', '*-win32-*'))
-  check(targets.length, 'no targets found')
-
-  for (let target of targets) {
-    for (let file of ls(join(target, '*.exe'))) {
-      exec(`"${signtool}" sign ${params} "${file}"`)
-      exec(`"${signtool}" verify /pa "${file}"`)
-    }
-  }
+target.linux = () => {
+  say('skipping linux code-signing...')
 }
 
+target.win32 = (args = []) => {
+  if (args[0] === 'force') {
+    check(platform === 'win32', 'must be run on Windows')
+
+    let [, cert, pass] = args
+    cert = cert || env.SIGN_WIN32_CERT
+    pass = pass || env.SIGN_WIN32_PASS
+
+    check(pass, 'missing password')
+    check(cert, 'missing certificate')
+    check(test('-f', cert), `certificate not found: ${cert}`)
+
+    const signtool = getSignTool()
+    const params = getSignToolParams(cert, pass)
+    check(signtool, `missing dependency: ${signtool}`)
+
+    const targets = ls('-d', join(dir, 'dist', '*-win32-*'))
+    check(targets.length, 'no targets found')
+
+    for (let target of targets) {
+      for (let file of ls(join(target, '*.exe'))) {
+        exec(`"${signtool}" sign ${params} "${file}"`)
+        exec(`"${signtool}" verify /pa "${file}"`)
+      }
+    }
+  } else {
+    say('win32 code-signing not forced, skipping...')
+  }
+}
 
 target.darwin = (args = []) => {
   check(platform === 'darwin', 'must be run on macOS')

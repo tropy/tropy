@@ -3,7 +3,7 @@
 const React = require('react')
 const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
-const { Toolbar } = require('../toolbar')
+const { Titlebar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
 const { Resizable } = require('../resizable')
 const { LastImportListNode, ListTree, TrashListNode } = require('../list')
@@ -240,9 +240,7 @@ class ProjectSidebar extends React.PureComponent {
         value={this.props.width}
         onChange={this.props.onResize}>
         <Sidebar>
-          {this.props.hasToolbar &&
-            <Toolbar onDoubleClick={this.props.onMaximize}/>}
-
+          <Titlebar isOptional/>
           <SidebarBody onContextMenu={this.handleContextMenu}>
             <section
               tabIndex={this.tabIndex}
@@ -326,7 +324,6 @@ class ProjectSidebar extends React.PureComponent {
     edit: object.isRequired,
     expand: object.isRequired,
     hasLastImport: bool.isRequired,
-    hasToolbar: bool,
     hold: object.isRequired,
     isDisabled: bool,
     isLastImportSelected: bool,
@@ -357,7 +354,6 @@ class ProjectSidebar extends React.PureComponent {
     onListItemsAdd: func.isRequired,
     onListMove: func.isRequired,
     onListSave: func.isRequired,
-    onMaximize: func.isRequired,
     onProjectEdit: func.isRequired,
     onProjectSave: func.isRequired,
     onResize: func.isRequired,
@@ -369,7 +365,6 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   static defaultProps = {
-    hasToolbar: ARGS.frameless,
     root: LIST.ROOT
   }
 

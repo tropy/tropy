@@ -2,7 +2,7 @@
 
 const res = require('../common/res')
 const { basename } = require('path')
-const { warn } = require('../common/log')
+const { error, warn } = require('../common/log')
 const { get } = require('../common/util')
 const { transduce, map, transformer } = require('transducers.js')
 const { BrowserWindow, Menu: M } = require('electron')
@@ -110,7 +110,7 @@ class Menu {
         item.checked = get(event.target, context) === color
 
         if (color && color !== 'random')
-          item.icon = res.Icons.color(color)
+          item.icon = res.icon.color(color)
         if (command)
           item.click = this.responder(command, win, event, color)
       }
@@ -278,8 +278,6 @@ class AppMenu extends Menu {
   async load(name = 'app') {
     try {
       return (await super.load(name))
-    } catch (error) {
-      throw error
     } finally {
       this.reload()
     }
@@ -348,12 +346,10 @@ class ContextMenu extends Menu {
           }
         })
 
-      } catch (error) {
-        warn(`failed to show context-menu: ${error.message}`, {
-          scope,
-          stack: error.stack
-        })
-        reject(error)
+      } catch (e) {
+        error({ stack: e.stack, scope },
+          `failed to show context-menu: ${e.message}`)
+        reject(e)
       }
     })
   }

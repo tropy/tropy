@@ -1,12 +1,16 @@
 'use strict'
 
 require('shelljs/make')
+config.fatal = false
 
 const chokidar = require('chokidar')
 const { relative, extname, basename } = require('path')
 const compile = require('./compile')
-const { error, green, red, say } = require('./util')('watch')
+const { error, green, red, say } = require('./util')('ω')
 const cwd = process.cwd()
+const debounce = require('lodash.debounce')
+
+const css = debounce(compile.css, 500)
 
 target.all = () => {
   target.src()
@@ -14,11 +18,10 @@ target.all = () => {
 }
 
 target.src = () => {
-  process.env.TROPY_RUN_UNIT_TESTS = 'true'
-
   chokidar
     .watch('src/**/*.{js,jsx,scss,sass}', {
-      persistent: true
+      persistent: true,
+      ignoreInitial: true
     })
     .on('all', (event, file) => {
       file = relative(cwd, file)
@@ -40,7 +43,7 @@ target.src = () => {
       }
 
       if ((/^\.jsx?$/).test(extname(file))) {
-        compile.js(file)
+        compile.jsRender(file, true)
 
         if (event === 'change') {
           const spec = file
@@ -51,8 +54,8 @@ target.src = () => {
         }
 
       } else {
-        if ((basename(file)[0] === '_')) compile.css()
-        else compile.css(file)
+        if ((basename(file)[0] === '_')) css()
+        else compile.cssRender(file, true)
       }
     })
 }
@@ -71,8 +74,11 @@ function mocha(file) {
   let args = (/browser|common/).test(file) ?
     [file] : ['--renderer', file]
 
-  if (exec(`npx electron-mocha ${args.join(' ')}`).code === 0)
+  let result = exec(`npx electron-mocha ${args.join(' ')}`, { silent: true })
+  if (result.code === 0) {
     green(file)
-  else
+  } else {
     red(file)
+    console.log(result.stdout)
+  }
 }

@@ -12,13 +12,11 @@ const { NoProject } = require('./none')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
 const { emit, on, off, ensure, reflow } = require('../../dom')
-const { win } = require('../../window')
 const cx = require('classnames')
 const { values } = Object
 const actions = require('../../actions')
 const debounce = require('lodash.debounce')
 const { match } = require('../../keymap')
-const { IconSpin } = require('../icons')
 
 const {
   getCachePrefix,
@@ -213,12 +211,12 @@ class ProjectContainer extends Component {
         connect={this.props.dt}
         canDrop={this.props.canDrop}
         isOver={this.props.isOver}
-        onProjectCreate={this.props.onProjectCreate}
-        onToolbarDoubleClick={this.props.onMaximize}/>
+        onProjectCreate={this.props.onProjectCreate}/>
     )
   }
   render() {
-    if (this.state.isClosed) return this.renderNoProject()
+    if (this.state.isClosed || !this.props.project.file)
+      return this.renderNoProject()
 
     const {
       columns,
@@ -279,9 +277,7 @@ class ProjectContainer extends Component {
           photos={photos}
           tags={props.tags}
           onPhotoError={props.onPhotoError}/>
-        <div className="closing-backdrop">
-          <IconSpin/>
-        </div>
+        <div className="cover" />
       </div>
     )
   }
@@ -332,7 +328,6 @@ class ProjectContainer extends Component {
     onPhotoError: func.isRequired,
     onProjectCreate: func.isRequired,
     onProjectOpen: func.isRequired,
-    onMaximize: func.isRequired,
     onModeChange: func.isRequired,
     onMetadataSave: func.isRequired,
     onSort: func.isRequired,
@@ -406,10 +401,6 @@ module.exports = {
     }),
 
     dispatch => ({
-      onMaximize() {
-        win.maximize()
-      },
-
       onContextMenu(event, ...args) {
         event.stopPropagation()
         dispatch(actions.context.show(event, ...args))

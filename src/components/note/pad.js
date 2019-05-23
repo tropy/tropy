@@ -64,8 +64,8 @@ class NotePad extends React.PureComponent {
           keymap={this.props.keymap}
           mode={this.props.mode}
           placeholder="notepad.placeholder"
+          hasTitlebar={this.props.hasTitlebar}
           isDisabled={this.isDisabled}
-          isDraggable={this.props.isDraggable}
           tabIndex={this.props.tabIndex}
           onBlur={this.handleEditorBlur}
           onChange={this.handleChange}/>
@@ -74,8 +74,8 @@ class NotePad extends React.PureComponent {
   }
 
   static propTypes = {
+    hasTitlebar: bool,
     isDisabled: bool,
-    isDraggable: bool,
     isItemOpen: bool,
     keymap: object.isRequired,
     note: shape({

@@ -2,129 +2,143 @@
 
 const START = Date.now()
 
-if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
-  require('electron-mocha')
+const args = require('./args')
+const opts = args.parse(process.argv.slice(1))
 
-} else {
-  let READY = undefined
+process.env.NODE_ENV = opts.environment
 
-  const args = require('./args')
-  const opts = args.parse(process.argv.slice(1))
+const electron = require('electron')
+const { app }  = electron
 
-  process.env.NODE_ENV = opts.environment
-  global.ARGS = opts
+if (!app.requestSingleInstanceLock()) {
+  process.stderr.write('other instance detected, exiting...\n')
+  app.exit(0)
+}
 
-  const { app, session }  = require('electron')
-  const { extname, join } = require('path')
-  const { qualified }  = require('../common/release')
-  const { linux, darwin } = require('../common/os')
+const { extname, join } = require('path')
+const { darwin, win32, system }  = require('../common/os')
+const { exe, qualified, version }  = require('../common/release')
 
-  let USERDATA = opts.dir
-  let LOGDIR
+// Set app name and paths as soon as possible!
+app.setName(qualified.product)
 
-  if (!USERDATA) {
-    switch (opts.environment) {
-      case 'development':
-        USERDATA = join(process.cwd(), 'tmp')
-        break
-      case 'production':
-        USERDATA = join(
-          app.getPath('appData'),
-          qualified[linux ? 'name' : 'product'])
-        break
-    }
+if (!opts.data) {
+  opts.data = join(app.getPath('appData'), exe)
+}
+app.setPath('userData', join(opts.data, 'electron'))
+
+if (!opts.cache) {
+  opts.cache = join(app.getPath('cache'), exe)
+}
+app.setPath('userCache', opts.cache)
+
+if (!opts.logs) {
+  try {
+    opts.logs = join(app.getPath('logs', '..', exe))
+  } catch (_) {
+    opts.logs = join(opts.data, 'log')
+  }
+}
+app.setPath('logs', opts.logs)
+
+if (!(win32 && require('./squirrel')(opts))) {
+  const { info, warn } = require('../common/log')({
+    dest: join(opts.logs, 'tropy.log'),
+    name: 'main',
+    rotate: true,
+    debug: opts.debug,
+    trace: opts.trace
+  })
+
+  if (opts['ignore-gpu-blacklist']) {
+    app.commandLine.appendSwitch('ignore-gpu-blacklist')
   }
 
-  // Set app name and data location as soon as possible!
-  app.setName(qualified.product)
-  if (USERDATA) {
-    app.setPath('userData', USERDATA)
-    LOGDIR = join(USERDATA, 'log')
+  if (opts.scale) {
+    app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
   }
 
-  if (!require('./squirrel')()) {
-    const { all }  = require('bluebird')
-    const { once } = require('../common/util')
-    const { info, verbose } = require('../common/log')(LOGDIR, opts)
+  info({
+    opts,
+    version
+  }, `main.init ${version} ${system}`)
 
-    if (opts.environment !== 'test') {
-      if (!app.requestSingleInstanceLock()) {
-        verbose('other instance detected, exiting...')
-        app.exit(0)
-      }
-    }
+  const T1 = Date.now()
+  const Tropy = require('./tropy')
+  const tropy = new Tropy(opts)
+  const T2 = Date.now()
 
-    if (opts.ignoreGpuBlacklist) {
-      app.commandLine.appendSwitch('ignore-gpu-blacklist')
-    }
-
-    if (opts.scale) {
-      app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
-    }
-
-    verbose(`using ${app.getPath('userData')}`)
-
-    var tropy = new (require('./tropy'))()
-
-    tropy.listen()
-    tropy.restore()
-
-    if (darwin) {
-      app.on('open-file', (event, file) => {
-        switch (extname(file)) {
-          case '.tpy':
-            event.preventDefault()
-            if (!READY) opts._ = [file]
-            else tropy.open(file)
-            break
-          case '.jpg':
-          case '.jpeg':
-          case '.png':
-          case '.svg':
-            if (READY && tropy.win) {
-              event.preventDefault()
-              tropy.import([file])
-            }
-            break
-          case '.ttp':
-            if (READY && tropy.win) {
-              event.preventDefault()
-              tropy.importTemplates([file])
-            }
-        }
-      })
-    }
-
-    all([
-      once(app, 'ready'),
-      once(tropy, 'app:restored')
-
-    ]).then(() => {
-      session.defaultSession.webRequest.onHeadersReceived((res, cb) => {
-        cb({
-          responseHeaders: {
-            ...res.responseHeaders,
-            'Content-Security-Policy': [
-              "default-src 'none'",
-              "base-uri 'none'",
-              "form-action 'none'",
-              "frame-ancestors 'none'"
-            ].join('; ')
-          }
-        })
-      })
-
-      READY = Date.now()
-      info('ready after %sms', READY - START)
+  Promise.all([
+    app.whenReady(),
+    tropy.start()
+  ])
+    .then(() => {
+      tropy.ready = Date.now()
       tropy.open(...opts._)
+
+      electron.powerMonitor.on('shutdown', (event) => {
+        event.preventDefault()
+        app.quit()
+      })
+
+      info(`ready after ${tropy.ready - START}ms [req:${T2 - T1}ms]`)
     })
 
-    app.on('second-instance', (_, argv) => {
-      tropy.open(...args.parse(argv.slice(1))._)
+  if (darwin) {
+    app.on('open-file', (event, file) => {
+      if (tropy.ready) {
+        if (tropy.open(file))
+          event.preventDefault()
+      } else {
+        if (extname(file) === '.tpy') {
+          opts._.push(file)
+          event.preventDefault()
+        }
+      }
     })
 
-    app.on('quit', (_, code) => {
-      verbose(`quit with exit code ${code}`)
+    let quit = false
+
+    app.on('before-quit', () => {
+      quit = true
+    })
+    app.on('window-all-closed', () => {
+      if (quit) app.quit()
     })
   }
+
+  app.on('second-instance', (_, argv) => {
+    if (tropy.ready)
+      tropy.open(...args.parse(argv.slice(1))._)
+  })
+
+  app.on('web-contents-created', (_, contents) => {
+    contents.on('new-window', (event, url) => {
+      warn(`prevented loading ${url}`)
+      event.preventDefault()
+    })
+  })
+
+  app.on('quit', (_, code) => {
+    if (tropy.ready) tropy.stop()
+    info({ quit: true, code }, `quit with exit code ${code}`)
+  })
+
+  const handleError = (error, isFatal = false) => {
+    if (isFatal || !tropy.ready) {
+      require('electron')
+        .dialog
+        .showErrorBox('Unhandled Error', error.stack)
+      app.exit(42)
+    }
+
+    try {
+      tropy.handleUncaughtException(error)
+    } catch (_) {
+      handleError(_, true)
+    }
+  }
+
+  process.on('uncaughtException', handleError)
+  process.on('unhandledRejection', (reason) => handleError(reason))
 }

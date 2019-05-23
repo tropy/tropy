@@ -1,0 +1,34 @@
+/* stylelint-disable max-empty-lines */
+
+//
+// Dark window
+// --------------------------------------------------
+
+$platform: "darwin";
+$theme: "dark";
+
+
+// Colors
+// --------------------------------------------------
+
+@import
+  "../themes/dark",
+  "../themes/colors-dark";
+
+
+// Abstracts
+// --------------------------------------------------
+
+@import
+  "../abstracts/variables",
+  "../abstracts/mixins",
+  "../abstracts/functions",
+  "../abstracts/placeholders";
+
+
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/cover",
+  "../partials/window-controls";

@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { Toolbar, ToolGroup } = require('../toolbar')
+const { Titlebar, Toolbar, ToolGroup } = require('../toolbar')
 const { Button } = require('../button')
 const { Slider } = require('../slider')
 const { arrayOf, bool, func, number, string } = require('prop-types')
@@ -77,7 +77,7 @@ class EsperToolbar extends React.PureComponent {
 
   render() {
     return (
-      <Toolbar isDraggable={false}>
+      <Titlebar>
         <Toolbar.Left>
           <ToolGroup>
             <Button
@@ -155,7 +155,7 @@ class EsperToolbar extends React.PureComponent {
               onClick={this.handlePanelToggle}/>
           </ToolGroup>
         </Toolbar.Right>
-      </Toolbar>
+      </Titlebar>
     )
   }
 

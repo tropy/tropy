@@ -9,6 +9,10 @@ module.exports = {
     return platform === 'darwin' && os.release() > '15'
   },
 
+  get home() {
+    return os.homedir()
+  },
+
   get darwin() {
     return platform === 'darwin'
   },

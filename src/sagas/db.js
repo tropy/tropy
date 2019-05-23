@@ -20,7 +20,8 @@ function onErrorPut(action, times = 1) {
     const channel = yield call(ErrorChannel, db)
     const { error } = yield take(channel)
 
-    warn(`unexpected db error: ${error.message}`, {
+    warn({
+      msg: 'unexpected db error',
       stack: error.stack
     })
 

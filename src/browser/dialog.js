@@ -1,53 +1,49 @@
 'use strict'
 
-const { dialog, ipcMain: ipc, BrowserWindow } = require('electron')
-const { warn, verbose } = require('../common/log')
+const { dialog } = require('electron')
 
-
-function show(type, win, options) {
+function show(type, win, opts) {
   return new Promise((resolve, reject) => {
     switch (type) {
       case 'save':
-        dialog.showSaveDialog(win, options, resolve)
+        dialog.showSaveDialog(win, opts, resolve)
         break
       case 'file':
-        dialog.showOpenDialog(win, options, resolve)
+        dialog.showOpenDialog(win, opts, resolve)
         break
       case 'message-box':
-        dialog.showMessageBox(win, options, (response, checked) => {
-          resolve({ response, checked })
-        })
+        dialog.showMessageBox(win, { buttons: ['OK'], ...opts },
+          (response, checked) => {
+            resolve({ response, checked })
+          })
         break
       default:
-        reject(`unknown dialog type: ${type}`)
+        reject(new Error(`unknown dialog type: ${type}`))
     }
   })
 }
 
-function onOpen({ sender }, { id, type, options }) {
-  show(type, BrowserWindow.fromWebContents(sender), options)
-    .then(payload => {
-      sender.send('dialog', { id, payload })
-    })
-    .catch(error => {
-      warn(`dialog open failed: ${error.message}`)
-      verbose(error.stack)
-
-      sender.send('dialog', { id, payload: {
-        message: error.message
-      }, error: true })
-    })
-}
-
 module.exports = {
-  start() {
-    ipc.on('dialog', onOpen)
+  alert(win, opts) {
+    return show('message-box', win, {
+      type: 'error',
+      ...opts
+    })
   },
 
-  stop() {
-    ipc.removeListener('dialog', onOpen)
+  open(win, opts) {
+    return show('file', win, {
+      properties: ['openFile'],
+      ...opts
+    })
   },
 
-  onOpen,
-  show
+  show,
+
+  warn(win, opts) {
+    return show('message-box', win, {
+      type: 'warning',
+      ...opts
+    })
+  }
 }

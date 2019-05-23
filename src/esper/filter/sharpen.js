@@ -2,8 +2,8 @@
 
 const PIXI = require('pixi.js')
 const { restrict } = require('../../common/util')
-const { Shader } = require('../../common/res')
-const frag = Shader.load('sharpen.frag')
+const res = require('../../common/res')
+const frag = res.shader.load('sharpen.frag')
 
 
 class SharpenFilter extends PIXI.Filter {

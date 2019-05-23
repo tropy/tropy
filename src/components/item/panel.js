@@ -40,7 +40,6 @@ class ItemPanelGroup extends React.PureComponent {
     return (
       <ItemToolbar
         isItemOpen={this.props.isItemOpen}
-        onMaximize={this.props.onMaximize}
         onModeChange={this.props.onModeChange}/>
     )
   }
@@ -257,7 +256,6 @@ class ItemPanelGroup extends React.PureComponent {
     onItemPreview: func.isRequired,
     onItemTagAdd: func.isRequired,
     onItemTagRemove: func.isRequired,
-    onMaximize: func.isRequired,
     onMetadataSave: func.isRequired,
     onModeChange: func.isRequired,
     onNoteCreate: func.isRequired,

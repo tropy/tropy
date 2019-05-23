@@ -3,7 +3,7 @@
 require('shelljs/make')
 
 const pkg = require('../package')
-const { check, say, rules } = require('./util')('db')
+const { check, say } = require('./util')('db')
 const { join, dirname, relative } = require('path')
 const { compact, strftime } = require('../src/common/util')
 const home = join(__dirname, '..')
@@ -11,17 +11,15 @@ const cwd = process.cwd()
 const SCHEMA = join(home, 'db', 'schema')
 const MIGRATE = join(home, 'db', 'migrate')
 
+require('../src/common/log')({ level: 'warn' })
+
 global.ARGS = global.ARGS || {
-  debug: false,
   environment: 'production',
   locale: 'en'
 }
 
 target.create = async (args = []) => {
-  const { Database } = require('../lib/common/db')
-  const project = require('../lib/models/project')
-  const ontology = require('../lib/models/ontology')
-
+  const { Database } = require('../src/common/db')
   const domain = args[0] || 'project'
   const file = args[1] || join(home, 'db', `${domain}.db`)
 
@@ -29,14 +27,16 @@ target.create = async (args = []) => {
 
   switch (domain) {
     case 'project': {
+      const { create } = require('../src/models/project')
       const name = args[2] || 'Minos'
-      const path = await Database.create(file, project.create, { name })
+      const path = await Database.create(file, create, { name })
       say(`created project "${name}" as ${relative(cwd, path)}`)
       break
     }
 
     case 'ontology': {
-      const path = await Database.create(file, ontology.create)
+      const { create } = require('../src/models/ontology')
+      const path = await Database.create(file, create)
       say(`created ontology as ${relative(cwd, path)}`)
       break
     }
@@ -44,7 +44,7 @@ target.create = async (args = []) => {
 }
 
 target.migrate = async (args = []) => {
-  const { Database } = require('../lib/common/db')
+  const { Database } = require('../src/common/db')
 
   const domain = args[0] || 'project'
   const schema = join(SCHEMA, `${domain}.sql`)
@@ -95,7 +95,7 @@ PRAGMA user_version=${version};
 }
 
 target.viz = async (args = []) => {
-  const { Database } = require('../lib/common/db')
+  const { Database } = require('../src/common/db')
 
   const domain = args[0] || 'project'
   const file = args[1] || join(home, 'db', `${domain}.db`)
@@ -152,10 +152,6 @@ target.all = async (args = []) => {
   await target.create(args)
   await target.viz(args)
 }
-
-target.rules = () =>
-  rules(target)
-
 
 function migration(name, type) {
   check(type === 'sql' || type === 'js',

@@ -3,11 +3,19 @@
 // --------------------------------------------------
 
 @function asset-url($type, $path) {
-  @return url(unquote("../../../static/#{$type}/#{$path}"));
+  @return url(unquote("../../../res/#{$type}/#{$path}"));
+}
+
+@function icon-url($path) {
+  @return asset-url("icons", $path);
 }
 
 @function image-url($path) {
   @return asset-url("images", $path);
+}
+
+@function cursor-url($path) {
+  @return asset-url("cursors", $path);
 }
 
 @function font-url($path) {

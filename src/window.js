@@ -1,27 +1,37 @@
 'use strict'
 
-const { each } = require('bluebird')
-const { remote, ipcRenderer: ipc } = require('electron')
-const { basename, join, resolve } = require('path')
+const { ipcRenderer: ipc } = require('electron')
+const { basename, join } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
 const { Plugins } = require('./common/plugins')
-const { addIdleObserver } = require('./common/idle')
+const { delay, pick } = require('./common/util')
 const { EventEmitter } = require('events')
 const args = require('./args')
+const debounce = require('lodash.debounce')
 
 const {
-  $$, append, emit, create, isInput, on, off, toggle, stylesheet, remove
+  $$,
+  append,
+  emit,
+  create,
+  isInput,
+  load,
+  on,
+  off,
+  toggle,
+  stylesheet,
+  remove
 } = require('./dom')
 
 const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
   e => e.ctrlKey && !e.altKey && !e.metaKey
 
-const IDLE_SHORT = 60
+const STYLES = join(__dirname, '..', 'lib', 'stylesheets', process.platform)
 
 class Window extends EventEmitter {
-  constructor({ dark, theme, frameless, scrollbars, aqua } = ARGS) {
+  constructor(opts) {
     if (Window.instance) {
       throw Error('Singleton Window constructor called multiple times')
     }
@@ -29,18 +39,27 @@ class Window extends EventEmitter {
     super()
     Window.instance = this
 
-    this.state = {
-      aqua, frameless, scrollbars, theme, dark
-    }
+    this.type = basename(location.pathname, '.html')
+
+    this.state = pick(opts, [
+      'aqua',
+      'data',
+      'frameless',
+      'scrollbars',
+      'theme',
+      'dark',
+      'maximizable',
+      'minimizable'
+    ])
 
     this.pointer = {}
-    this.plugins = new Plugins(ARGS.plugins)
+    this.plugins = new Plugins(opts.plugins)
     this.unloader = 'close'
     this.unloaders = []
     this.hasFinishedUnloading = false
   }
 
-  init(done) {
+  init() {
     return Promise.all([
       this.plugins.reload().then(p => p.create().emit('change')),
 
@@ -54,8 +73,7 @@ class Window extends EventEmitter {
         this.handleModifierKeys()
         this.handleMouseEnter()
         this.handleMouseButtons()
-
-        addIdleObserver(this.handleIdleEvents, IDLE_SHORT)
+        this.handleUncaughtExceptions()
 
         toggle(document.body, process.platform, true)
 
@@ -75,35 +93,23 @@ class Window extends EventEmitter {
             this.createWindowControls()
         }
 
-        this.style(false, () => {
-          if (typeof done === 'function') done()
-          resolve(this)
-        })
-        require(`./windows/${this.type}`)
-      })
+        resolve()
+      }),
+
+      this.style(false)
     ])
   }
 
-  show = () => {
-    let { current } = this
-    current.show()
-    current.focus()
+  close() {
+    ipc.send('wm', 'close')
   }
 
   undo() {
-    this.current.webContents.undo()
+    ipc.send('wm', 'undo')
   }
 
   redo() {
-    this.current.webContents.redo()
-  }
-
-  get current() {
-    return remote.getCurrentWindow()
-  }
-
-  get type() {
-    return basename(window.location.pathname, '.html')
+    ipc.send('wm', 'redo')
   }
 
   get theme() {
@@ -115,9 +121,10 @@ class Window extends EventEmitter {
   get stylesheets() {
     let { theme } = this
     return [
-      `../lib/stylesheets/${process.platform}/${this.type}-${theme}.css`,
-      join(ARGS.home, 'style.css'),
-      join(ARGS.home, `style-${theme}.css`)
+      join(STYLES, `window-${theme}.css`),
+      join(STYLES, `${this.type}-${theme}.css`),
+      join(this.state.data, 'style.css'),
+      join(this.state.data, `style-${theme}.css`)
     ]
   }
 
@@ -156,6 +163,9 @@ class Window extends EventEmitter {
       .on('reload', () => {
         this.reload()
       })
+      .on('idle', (_, state) => {
+        this.emit('idle', state)
+      })
       .on('plugins-reload', async () => {
         this.plugins.clearModuleCache()
         await this.plugins.reload()
@@ -173,44 +183,38 @@ class Window extends EventEmitter {
       })
       .on('ctx', (_, action, detail) => {
         // NB: delay event for pointer position to be up-to-date!
-        setTimeout(() => {
+        delay(25).then(() => {
           emit(document, `ctx:${action}`, {
             detail: { ...detail, ...this.pointer }
           })
-        }, 25)
+        })
       })
       .on('global', (_, action) => {
         emit(document, `global:${action}`)
       })
   }
 
-  handleIdleEvents = (_, type, time) => {
-    this.emit('idle', { type, time })
-  }
-
   handleUnload() {
     on(window, 'beforeunload', event => {
       if (this.hasFinishedUnloading) return
-
       event.returnValue = false
 
       if (this.isUnloading) return
-
       this.isUnloading = true
 
-      toggle(document.body, 'quitting', true)
+      this.toggle('unload')
 
-      each(this.unloaders, unload => unload())
+      Promise
+        .all(this.unloaders.map(unload => unload()))
         .finally(() => {
           this.hasFinishedUnloading = true
 
-          // Calling reload/close immediately does not work reliably.
-          // See Electron #7977
-          setTimeout(() => this.current[this.unloader](), 25)
+          // Possibly related to electron#7977 closing the window
+          // a second time is unreliable if it happens to soon.
+          return delay(25).then(() => ipc.send('wm', this.unloader))
         })
     })
   }
-
 
   handleTabFocus() {
     on(document, 'keydown', event => {
@@ -312,6 +316,22 @@ class Window extends EventEmitter {
     }, { passive: true, capture: false })
   }
 
+  handleUncaughtExceptions() {
+    let handleError = debounce(({ message, stack } = {}) => {
+      ipc.send('error', { message, stack })
+    }, 250)
+
+    on(window, 'error', (event) => {
+      event.preventDefault()
+      handleError(event.error)
+    })
+
+    on(window, 'unhandledrejection', (event) => {
+      event.preventDefault()
+      handleError(event.reason)
+    })
+  }
+
   createWindowControls() {
     this.controls = {
       close: create('button', { tabindex: '-1', class: 'close' }),
@@ -319,63 +339,55 @@ class Window extends EventEmitter {
       max: create('button', { tabindex: '-1', class: 'maximize' })
     }
 
-    on(this.controls.close, 'click', () =>
-      this.current.close())
+    on(this.controls.close, 'click', this.close)
 
-    if (this.current.isMinimizable()) {
-      on(this.controls.min, 'click', () => this.minimize())
-
-    } else {
+    if (this.state.minimizable)
+      on(this.controls.min, 'click', this.minimize)
+    else
       toggle(document.body, 'not-minimizable', true)
-    }
 
-    if (this.current.isMaximizable()) {
-      on(this.controls.max, 'click', () => this.maximize())
-
-    } else {
+    if (this.state.maximizable)
+      on(this.controls.max, 'click', this.maximize)
+    else
       toggle(document.body, 'not-maximizable', true)
-    }
 
-    const div = create('div', { class: 'window-controls' })
+    let div = create('div', { class: 'window-controls' })
 
     append(this.controls.close, div)
     append(this.controls.min, div)
     append(this.controls.max, div)
-
     append(div, document.body)
   }
 
   reload() {
     this.unloader = 'reload'
-    this.current.reload()
+    ipc.send('wm', 'reload')
   }
 
-  style(prune = false, done) {
+  async style(prune = false) {
     if (prune) {
-      for (let css of $$('head > link[rel="stylesheet"]')) remove(css)
+      for (let css of $$('head > link[rel="stylesheet"]'))
+        remove(css)
     }
 
-    let count = document.styleSheets.length
+    let { stylesheets } = this
+    let loaded = []
 
-    for (let css of this.stylesheets) {
-      if (exists(resolve(__dirname, css))) {
-        ++count
-        append(stylesheet(css), document.head)
+    for (let i = 0; i < stylesheets.length; ++i) {
+      let src = stylesheets[i]
+      if (i < 2 || exists(src)) {
+        let css = stylesheet(src)
+        loaded.push(load(css, `Load error: ${src}`))
+        append(css, document.head)
       }
     }
 
     this.emit('settings.update', { theme: this.state.theme })
 
-    if (done == null) return
-
-    let limit = Date.now() + 600
-    let ti = setInterval(() => {
-      if (document.styleSheets.length === count || Date.now() > limit) {
-        clearInterval(ti)
-        done()
-      }
-    }, 15)
-
+    await Promise.race([
+      Promise.all(loaded),
+      delay(250)
+    ])
   }
 
   toggle(state) {
@@ -392,6 +404,19 @@ class Window extends EventEmitter {
       case 'unmaximize':
         toggle(document.body, 'is-maximized', false)
         break
+      case 'init':
+        toggle(document.body, 'init', true)
+        break
+      case 'ready':
+        toggle(document.body, 'ready', true)
+        break
+      case 'disable':
+      case 'unload':
+        toggle(document.body, 'inactive', true)
+        break
+      case 'enable':
+        toggle(document.body, 'inactive', false)
+        break
       case 'enter-full-screen':
         toggle(document.body, 'is-full-screen', true)
         break
@@ -401,18 +426,17 @@ class Window extends EventEmitter {
     }
   }
 
-  maximize = () => {
-    this.current.isMaximized() ?
-      this.current.unmaximize() : this.current.maximize()
+  maximize() {
+    ipc.send('wm', 'maximize')
   }
 
   minimize() {
-    this.current.minimize()
+    ipc.send('wm', 'minimize')
   }
 }
 
 module.exports = {
   Window,
 
-  get win() { return Window.instance || new Window() }
+  get win() { return Window.instance || new Window(ARGS) }
 }

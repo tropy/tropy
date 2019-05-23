@@ -118,7 +118,7 @@ class Editor extends React.Component {
   }
 
   render() {
-    let { isDisabled, isDraggable, placeholder, tabIndex } = this.props
+    let { isDisabled, hasTitlebar, placeholder, tabIndex } = this.props
     let { hasViewFocus } = this.state
     let state = this.getEditorState()
     let showPlaceholder = placeholder != null && this.isBlank(state.doc)
@@ -129,9 +129,9 @@ class Editor extends React.Component {
         className={cx(this.classes)}
         tabIndex={-1}
         onFocus={this.handleFocus}>
-        {(isDraggable || !isDisabled) &&
+        {(hasTitlebar || !isDisabled) &&
           <EditorToolbar
-            isDraggable={isDraggable}
+            isTitlebar={hasTitlebar}
             state={state}
             ref={this.toolbar}
             onCommand={this.handleCommand}/>
@@ -156,8 +156,8 @@ class Editor extends React.Component {
   }
 
   static propTypes = {
+    hasTitlebar: bool,
     isDisabled: bool,
-    isDraggable: bool,
     keymap: object.isRequired,
     mode: string.isRequired,
     onBlur: func.isRequired,

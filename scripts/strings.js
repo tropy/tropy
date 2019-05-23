@@ -2,7 +2,7 @@
 
 require('shelljs/make')
 
-const { rules, say } = require('./util')('make')
+const { say } = require('./util')('make')
 const { join } = require('path')
 const { readFileSync: read, writeFileSync: write } = require('fs')
 const { isArray } = Array
@@ -96,6 +96,3 @@ target.import = (args = []) => {
     }
   }
 }
-
-target.rules = () =>
-  rules(target)

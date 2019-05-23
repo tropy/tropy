@@ -3,21 +3,20 @@
 require('./promisify')
 
 const sqlite = require('sqlite3')
-const ms = require('ms')
 const { EventEmitter } = require('events')
 const { Migration } = require('./migration')
 const { normalize } = require('path')
 const Bluebird = require('bluebird')
 const { using } = Bluebird
-const { readFileAsync: read } = require('fs')
+const { readFile: read } = require('fs').promises
 const { createPool } = require('generic-pool')
-const { debug, verbose, warn } = require('./log')
-const { entries } = Object
+const { debug, info, trace, warn } = require('./log')
 
 const M = {
   'r': sqlite.OPEN_READONLY,
   'w': sqlite.OPEN_READWRITE,
-  'w+': sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE
+  'w+': sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE,
+  'wx+': sqlite.OPEN_CREATE
 }
 
 const cache = {}
@@ -29,7 +28,7 @@ class Database extends EventEmitter {
     try {
       var db = new Database(path, 'w+', { max: 1 })
 
-      const isEmpty = await db.empty()
+      let isEmpty = await db.empty()
       if (isEmpty && script) await script(db, ...args)
 
       return db.path
@@ -50,9 +49,9 @@ class Database extends EventEmitter {
     return cache[path]
   }
 
-  constructor(path = ':memory:', mode = 'w+', options = {}) {
+  constructor(path = ':memory:', mode = 'w+', opts = {}) {
+    debug({ path, mode }, 'init db')
     super()
-    debug(`init db ${path}`)
 
     this.path = path
 
@@ -61,18 +60,17 @@ class Database extends EventEmitter {
       destroy: (conn) => this.destroy(conn)
     }, {
       min: 0,
-      max: 4,
+      max: 3,
       idleTimeoutMillis: 1000 * 60 * 5,
-      acquireTimeoutMillis: 1000 * 3,
+      acquireTimeoutMillis: 1000 * 10,
       Promise: Bluebird,
-      ...options,
-      validate: (conn) => Bluebird.resolve(conn.db.open)
+      ...opts
     })
   }
 
   migrate = async (...args) => {
-    const version = await this.version()
-    const migrations = await Migration.since(version, ...args)
+    let version = await this.version()
+    let migrations = await Migration.since(version, ...args)
 
     for (let migration of migrations) {
       await migration.up(this)
@@ -87,7 +85,7 @@ class Database extends EventEmitter {
 
   create(mode) {
     return new Promise((resolve, reject) => {
-      verbose(`opening db ${this.path}`)
+      info(`open db ${this.path}`)
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
         if (error) {
@@ -101,26 +99,26 @@ class Database extends EventEmitter {
           .then(resolve, reject)
       })
 
-      // db.on('trace', query => debug(query))
+      // db.on('trace', query => trace(query))
 
-      db.on('profile', (query, time) => {
-        const message = `db query took ${ms(time)}`
+      db.on('profile', (query, ms) => {
+        let msg = `db query took ${ms}ms`
 
-        if (ms > 100) {
-          return warn(`SLOW: ${message}`, { query, time })
+        if (ms > 150) {
+          return warn({ query, ms }, `SLOW: ${msg}`)
         }
 
-        if (ms > 25) {
-          return verbose(message, { query, time })
+        if (ms > 50) {
+          return info({ msg, query, ms })
         }
 
-        debug(message, { query, time })
+        trace({ msg, query, ms })
       })
     })
   }
 
   async destroy(conn) {
-    verbose(`closing db ${this.path}`)
+    debug({ path: this.path }, 'close db')
 
     await conn.optimize()
     await conn.close()
@@ -229,9 +227,11 @@ class Connection {
   }
 
   configure(pragma = Connection.defaults) {
-    return this.exec(entries(pragma)
-      .map(nv => `PRAGMA ${nv.join(' = ')};`)
-      .join('\n'))
+    return this.exec(
+      Object
+        .entries(pragma)
+        .map(nv => `PRAGMA ${nv.join(' = ')};`)
+        .join('\n'))
   }
 
   optimize() {
@@ -295,15 +295,14 @@ class Connection {
   }
 
   check(table) {
-    table = table ? `('${table}')` : ''
-
     return this
-      .all(`PRAGMA foreign_key_check${table}`)
-      .then(errors => {
-        if (!errors.length) return this
+      .all(`PRAGMA foreign_key_check${table ? `('${table}')` : ''}`)
+      .then(stack => {
+        if (!stack.length)
+          return this
 
-        debug('FK constraint violations detected', { errors })
-        throw new Error('FK constraint violations detected')
+        warn({ stack }, 'foreign key check failed!')
+        throw new Error(`${stack.length} foreign key check(s) failed`)
       })
   }
 }

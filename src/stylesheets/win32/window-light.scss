@@ -1,0 +1,33 @@
+/* stylelint-disable max-empty-lines */
+
+//
+// Light window
+// --------------------------------------------------
+
+$platform: "win32";
+$theme: "light";
+
+
+// Colors
+// --------------------------------------------------
+
+@import
+  "../themes/light",
+  "../themes/colors-light";
+
+
+// Abstracts
+// --------------------------------------------------
+
+@import
+  "../abstracts/variables",
+  "../abstracts/mixins",
+  "../abstracts/functions",
+  "../abstracts/placeholders";
+
+
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/cover";

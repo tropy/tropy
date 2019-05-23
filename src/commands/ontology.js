@@ -4,8 +4,7 @@ const assert = require('assert')
 const { Command } = require('./command')
 const { ONTOLOGY } = require('../constants')
 const { VOCAB, PROPS, CLASS, LABEL, TEMPLATE } = ONTOLOGY
-const { Ontology, Template } = require('../common/ontology')
-const { verbose, warn } = require('../common/log')
+const { warn } = require('../common/log')
 const { get, pick, pluck } = require('../common/util')
 const { all, call, select, cps } = require('redux-saga/effects')
 const { getTemplateField, getTemplateFields } = require('../selectors')
@@ -16,13 +15,13 @@ const { join } = require('path')
 const { keys } = Object
 const dialog = require('../dialog')
 const { writeFile: write } = require('fs')
-const { toN3 } = require('../export/vocab')
 
 
 class Import extends Command {
   static get ACTION() { return ONTOLOGY.IMPORT }
 
   *exec() {
+    const { Ontology } = require('../common/ontology')
     const { db } = this.options
     let { files, isProtected } = this.action.payload
 
@@ -55,19 +54,17 @@ class Import extends Command {
 
               vocabs.push(id)
 
-            } catch (error) {
-              warn(`Failed to import "${id}": ${error.message}`)
-              verbose(error.stack)
-              dialog.fail(error, this.action.type)
+            } catch (e) {
+              warn({ stack: e.stack }, `failed to import "${id}"`)
+              dialog.fail(e, this.action.type)
             }
           }
         })
 
 
-      } catch (error) {
-        warn(`Failed to import "${file}": ${error.message}`)
-        verbose(error.stack)
-        dialog.fail(error, this.action.type)
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to import "${file}"`)
+        dialog.fail(e, this.action.type)
       }
     }
 
@@ -117,6 +114,8 @@ class VocabExport extends Command {
   static get ACTION() { return VOCAB.EXPORT }
 
   *exec() {
+    let { toN3 } = require('../export/vocab')
+
     let { payload } = this.action
     let [vocab, ontology] = yield select(state => [
       pluck(state.ontology.vocab, payload),
@@ -228,6 +227,7 @@ class TemplateImport extends Command {
   static get ACTION() { return TEMPLATE.IMPORT }
 
   *exec() {
+    const { Template } = require('../common/ontology')
     const { db } = this.options
     const { payload, meta } = this.action
     let { files, isProtected } = payload
@@ -267,11 +267,9 @@ class TemplateImport extends Command {
           isProtected
         }, meta))
 
-      } catch (error) {
-        warn(`Failed to import "${file}": ${error.message}`)
-        verbose(error.stack)
-
-        dialog.fail(error, this.action.type)
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to import "${file}"`)
+        dialog.fail(e, this.action.type)
       }
     }
 
@@ -290,6 +288,7 @@ class TemplateExport extends Command {
   static get ACTION() { return TEMPLATE.EXPORT }
 
   *exec() {
+    const { Template } = require('../common/ontology')
     let { id, path } = this.action.payload
 
     try {
@@ -310,11 +309,9 @@ class TemplateExport extends Command {
 
       yield call(Template.save, data, path)
 
-    } catch (error) {
-      warn(`Failed to export template ${id} to ${path}: ${error.message}`)
-      verbose(error.stack)
-
-      dialog.fail(error, this.action.type)
+    } catch (e) {
+      warn({ stack: e.stack }, `failed to export template ${id} to ${path}`)
+      dialog.fail(e, this.action.type)
     }
   }
 }
@@ -334,11 +331,9 @@ class TemplateCreate extends Command {
         yield call(createTemplate, db, { ...payload[id], id }, meta)
         ids.push(id)
 
-      } catch (error) {
-        warn(`Failed to create template "${id}": ${error.message}`)
-        verbose(error.stack)
-
-        dialog.fail(error, this.action.type)
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to create template "${id}"`)
+        dialog.fail(e, this.action.type)
       }
     }
 

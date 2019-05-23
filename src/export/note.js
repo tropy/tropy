@@ -15,8 +15,8 @@ function toHTML(doc) {
     return Array
       .from(docFragment.children)
       .map(x => x.outerHTML).join('')
-  } catch (error) {
-    warn('Could not convert note to html', { error, doc })
+  } catch (e) {
+    warn({ stack: e.stack }, 'failed to convert note to HTML')
     return ''
   }
 }

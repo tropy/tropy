@@ -1,9 +1,8 @@
 'use strict'
 
-require('../common/promisify')
-
+const fs = require('fs')
+const { stat } = fs.promises
 const { basename, extname } = require('path')
-const { createReadStream, statAsync: stat } = require('fs')
 const { createHash } = require('crypto')
 const { exif } = require('./exif')
 const { xmp } = require('./xmp')
@@ -11,7 +10,7 @@ const { isSVG } = require('./svg')
 const sharp = require('sharp')
 const tiff = require('tiff')
 const { assign } = Object
-const { warn, debug } = require('../common/log')
+const { warn } = require('../common/log')
 const { get, pick } = require('../common/util')
 const { EXIF, MIME } = require('../constants')
 
@@ -38,14 +37,12 @@ class Image {
         status.image = await Image.open({ path, page, useLocalTimezone })
         status.hasChanged = (status.image.checksum !== checksum)
       }
-    } catch (error) {
-      debug(`image check failed for ${path}: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
+      warn({ stack: e.stack }, `image check failed for ${path}`)
 
       status.hasChanged = true
       status.image = null
-      status.error = error
+      status.error = e
     }
 
     return status
@@ -108,10 +105,8 @@ class Image {
       // Temporarily return as string until we add value types.
       return (time || this.file.ctime).toISOString()
 
-    } catch (error) {
-      warn(`failed to convert image date: ${error.message}`)
-      debug(error.stack)
-
+    } catch (e) {
+      warn({ stack: e.stack }, 'failed to convert image date')
       return new Date().toISOString()
     }
   }
@@ -159,7 +154,7 @@ class Image {
 
       let chunks = []
 
-      createReadStream(this.path)
+      fs.createReadStream(this.path)
         .on('error', reject)
 
         .on('data', chunk => {

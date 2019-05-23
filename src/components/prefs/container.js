@@ -2,15 +2,15 @@
 
 const React = require('react')
 const { connect } = require('react-redux')
-const { array, bool, func, object, string } = require('prop-types')
-const { TitleBar } = require('../titlebar')
+const { FormattedMessage } = require('react-intl')
+const { array, func, object, string } = require('prop-types')
+const { Titlebar } = require('../toolbar')
 const { TemplateEditor } = require('../template')
 const { VocabPane } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const { AppPrefs } = require('./app')
 const { PluginsPane } = require('../plugin')
 const actions = require('../../actions')
-const { win } = require('../../window')
 
 const {
   getAllTemplatesByType,
@@ -23,12 +23,6 @@ class PrefsContainer extends React.PureComponent {
     return this.props.pane === pane
   }
 
-  renderTitleBar() {
-    return (!this.props.isFrameless) ? null : (
-      <TitleBar title="prefs.title"/>
-    )
-  }
-
   toggle = (pane) => {
     this.props.onPrefsUpdate({ pane })
   }
@@ -38,8 +32,10 @@ class PrefsContainer extends React.PureComponent {
       <div
         className="prefs"
         onContextMenu={this.props.onContextMenu}>
-        <header className="prefs-header window-draggable">
-          {this.renderTitleBar()}
+        <header className="prefs-header">
+          <Titlebar isOptional>
+            <FormattedMessage id="prefs.title"/>
+          </Titlebar>
           <nav className="prefs-nav">
             <ul>
               <li>
@@ -115,7 +111,6 @@ class PrefsContainer extends React.PureComponent {
 
           <PluginsPane
             name="plugins"
-            plugins={this.props.plugins}
             onUninstall={this.props.onPluginUninstall}
             onOpenLink={this.props.onOpenLink}
             isActive={this.isActive('plugins')}/>
@@ -126,13 +121,11 @@ class PrefsContainer extends React.PureComponent {
 
   static propTypes = {
     edit: object.isRequired,
-    isFrameless: bool,
     templates: object.isRequired,
     pane: string.isRequired,
     properties: array.isRequired,
     settings: object.isRequired,
     vocab: array.isRequired,
-    plugins: object.isRequired,
     onClassSave: func.isRequired,
     onContextMenu: func.isRequired,
     onOpenLink: func.isRequired,
@@ -144,11 +137,6 @@ class PrefsContainer extends React.PureComponent {
     onVocabSave: func.isRequired,
     onOntologyImport: func.isRequired,
     onPluginUninstall: func.isRequired
-  }
-
-  static defaultProps = {
-    isFrameless: ARGS.frameless,
-    plugins: win.plugins
   }
 }
 
