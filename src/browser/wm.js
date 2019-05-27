@@ -114,6 +114,20 @@ class WindowManager extends EventEmitter {
         win.webContents.setZoomFactor(args.zoom || 1)
       })
 
+      if (opts.exclusive) {
+        win
+          .once('show', () => {
+            this.each(w => {
+              if (w !== win) w.setEnabled(false)
+            })
+          })
+          .once('closed', () => {
+            this.each(w => {
+              if (w !== win) w.setEnabled(true)
+            })
+          })
+      }
+
       if (typeof show === 'string') {
         win.once(show, () => {
           win.show()
@@ -283,7 +297,10 @@ class WindowManager extends EventEmitter {
         })
 
       win
-        .once('close', () => {
+        .on('show', () => {
+          this.emit('show', type, win)
+        })
+        .on('close', () => {
           this.emit('close', type, win)
         })
         .once('closed', () => {
