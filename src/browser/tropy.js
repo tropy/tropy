@@ -216,6 +216,7 @@ class Tropy extends EventEmitter {
 
   showPreferencesWindow() {
     this.wm.show('prefs', this.hash, {
+      exclusive: true,
       title: this.dict.window.prefs.title,
       parent: this.wm.current()
     })
@@ -704,6 +705,10 @@ class Tropy extends EventEmitter {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
+    this.wm.on('show', () => {
+      this.emit('app:reload-menu')
+    })
+
     this.wm.on('close', (type, win) => {
       if (type === 'project') {
         this.state.win.bounds = win.getNormalBounds()
@@ -716,6 +721,7 @@ class Tropy extends EventEmitter {
           act.ontology.load(),
           act.storage.reload([['settings']]))
       }
+      this.emit('app:reload-menu')
     })
 
     this.wm.on('unresponsive', (_, win) => {
