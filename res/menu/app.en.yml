@@ -171,6 +171,9 @@ en:
         - &userData
           label: 'Show User-Data Folder'
           command: 'app:open-user-data'
+        - &cache
+          label: 'Show Cache Folder'
+          command: 'app:open-cache-folder'
         - type: 'separator'
         - &updaterCheck
           id: 'updater-check'
@@ -265,6 +268,7 @@ en:
         - *logs
         - *plugins
         - *userData
+        - *cache
         - type: 'separator'
         - *updaterCheck
         - *updaterIsChecking

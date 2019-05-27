@@ -568,6 +568,10 @@ class Tropy extends EventEmitter {
       shell.showItemInFolder(this.plugins.configFile)
     })
 
+    this.on('app:open-cache-folder', () => {
+      shell.openItem(this.cache.root)
+    })
+
     this.on('app:install-plugin', (win) => {
       dialog
         .open(darwin ? null : win, {
