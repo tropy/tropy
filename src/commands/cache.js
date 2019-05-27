@@ -9,6 +9,7 @@ const { rm } = require('../common/rm')
 const { get } = require('../common/util')
 const { debug, info } = require('../common/log')
 
+const UUID = /^[0-9a-f]{8}(-[0-9a-f]+){4}$/i
 
 class Prune extends Command {
   static get ACTION() { return CACHE.PRUNE }
@@ -62,15 +63,14 @@ class Purge extends Command {
     let exists = yield call(cache.exists)
 
     assert(exists, 'cache doese not exist')
-    assert(cache.name === 'cache', 'not a valid cache root')
     assert(state.recent != null, 'cannot purge caches without state')
 
     info(`purging cache ${cache.root}`)
-
     let stats = yield call(cache.stats)
 
     for (let [id, stat] of stats) {
       if (!stat.isDirectory()) continue
+      if (!UUID.test(id)) continue
 
       let timestamp = get(state.recent, [id, 'opened'], stat.ctimeMs)
       assert(timestamp > 0, 'invalid cache directory timestamp')
