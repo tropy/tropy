@@ -69,12 +69,12 @@
     "chalk": "^2.4.2",
     "chokidar": "^3.0.0",
     "devtron": "^1.0.0",
-    "electron": "^5.0.1",
+    "electron": "^5.0.2",
     "electron-mocha": "^8.0.2",
     "electron-packager": "^13.1.1",
     "electron-winstaller": "^3.0.4",
     "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.13.1",
+    "enzyme-adapter-react-16": "^1.13.2",
     "eslint": "^5.16.0",
     "eslint-plugin-react": "^7.13.0",
     "glob": "^7.1.4",
@@ -101,8 +101,8 @@
   "dependencies": {
     "@inukshuk/exif": "^2.0.0",
     "@pixi/filter-adjustment": "^2.7.0",
-    "@tweenjs/tween.js": "^17.3.0",
-    "bluebird": "^3.5.4",
+    "@tweenjs/tween.js": "^17.3.2",
+    "bluebird": "^3.5.5",
     "classnames": "^2.2.6",
     "decompress": "^4.2.0",
     "edtf": "^2.6.1",
@@ -114,7 +114,7 @@
     "memoize-one": "^5.0.4",
     "mkdirp": "^0.5.1",
     "n3": "^1.1.1",
-    "pino": "^5.12.5",
+    "pino": "^5.12.6",
     "pixi.js": "^4.8.7",
     "prop-types": "^15.7.2",
     "prosemirror-commands": "^1.0.8",
@@ -146,7 +146,7 @@
     "transducers.js": "^0.3.2",
     "uuid": "^3.3.2",
     "winreg": "^1.2.4",
-    "write-file-atomic": "^2.4.2",
+    "write-file-atomic": "^2.4.3",
     "yargs": "^13.2.4"
   }
 }
