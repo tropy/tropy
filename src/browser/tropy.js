@@ -216,7 +216,8 @@ class Tropy extends EventEmitter {
 
   showPreferencesWindow() {
     this.wm.show('prefs', this.hash, {
-      exclusive: true,
+      alwaysOnTop: darwin,
+      isExclusive: !darwin,
       title: this.dict.window.prefs.title,
       parent: this.wm.current()
     })

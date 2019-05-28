@@ -114,7 +114,7 @@ class WindowManager extends EventEmitter {
         win.webContents.setZoomFactor(args.zoom || 1)
       })
 
-      if (opts.exclusive) {
+      if (opts.isExclusive) {
         win
           .once('show', () => {
             this.each(w => {
@@ -304,8 +304,8 @@ class WindowManager extends EventEmitter {
           this.emit('close', type, win)
         })
         .once('closed', () => {
-          this.emit('closed', type, win)
           this.unref(type, win)
+          this.emit('closed', type, win)
         })
 
       this.windows[type] = [win, ...array(this.windows[type])]
