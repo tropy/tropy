@@ -103,8 +103,14 @@ class WindowManager extends EventEmitter {
           break
       }
 
-      let { show } = opts
+      let { show, parent } = opts
       opts.show = (show === true)
+
+      if (parent != null && !opts.modal) {
+        let { x, y, width, height } = parent.getBounds()
+        opts.x = Math.floor((x + width / 2) - opts.width / 2)
+        opts.y = Math.floor((y + height / 2) - opts.height / 2)
+      }
 
       // TODO check position on display!
       var win = new BrowserWindow(opts)
