@@ -101,7 +101,7 @@
   "dependencies": {
     "@inukshuk/exif": "^2.0.0",
     "@pixi/filter-adjustment": "^2.7.0",
-    "@tweenjs/tween.js": "^17.3.2",
+    "@tweenjs/tween.js": "^17.4.0",
     "bluebird": "^3.5.5",
     "classnames": "^2.2.6",
     "decompress": "^4.2.0",
@@ -146,7 +146,7 @@
     "transducers.js": "^0.3.2",
     "uuid": "^3.3.2",
     "winreg": "^1.2.4",
-    "write-file-atomic": "^2.4.3",
+    "write-file-atomic": "^3.0.0",
     "yargs": "^13.2.4"
   }
 }
