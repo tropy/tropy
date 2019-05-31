@@ -24,9 +24,13 @@ en:
               condition: 'project'
         - type: 'separator'
         - &open
-          label: 'Open'
+          label: 'Open…'
           accelerator: 'CmdOrCtrl+O'
           command: 'app:open-dialog'
+        - &open-new-window
+          label: 'Open In New Window…'
+          accelerator: 'Shift+CmdOrCtrl+O'
+          command: 'app:open-new-dialog'
         - &recent
           label: 'Recent Projects'
           id: 'recent'

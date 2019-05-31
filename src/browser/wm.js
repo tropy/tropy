@@ -338,7 +338,7 @@ class WindowManager extends EventEmitter {
     if (win) {
       win.show()
     } else {
-      win = await this.open(type, args, { show: 'initialized', ...opts })
+      win = await this.open(type, args, { show: 'init', ...opts })
       await once(win, 'show')
     }
     return win

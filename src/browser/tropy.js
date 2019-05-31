@@ -134,22 +134,36 @@ class Tropy extends EventEmitter {
     return true
   }
 
-  openProject(file, win = this.wm.current()) {
+  async showOpenDialog(win = this.wm.current()) {
+    let files = await dialog.open(win, {
+      defaultPath: app.getPath('documents'),
+      filters: [{
+        name: this.dict.dialog.file.project,
+        extensions: ['tpy']
+      }]
+    })
+
+    if (files) {
+      await this.openProject(files[0], win)
+    }
+  }
+
+  async openProject(file, win = this.wm.current()) {
     file = resolve(file)
     info(`opening ${file}...`)
 
     if (win == null) {
-      this.wm.show('project', { file, ...this.hash }, {
+      await this.wm.open('project', { file, ...this.hash }, {
+        show: 'init',
         title: '',
         ...this.state.win.bounds
-      }).finally(() => {
-        this.emit('app:reload-menu')
       })
     } else {
       this.dispatch(act.project.open(file), win)
       win.show()
-      this.emit('app:reload-menu')
     }
+
+    this.emit('app:reload-menu')
   }
 
   hasOpenedProject({ file, name }, win) {
@@ -598,19 +612,12 @@ class Tropy extends EventEmitter {
           .sync(join(this.opts.data, 'ontology.db'))
     })
 
-    this.on('app:open-dialog', (win, opts = {}) => {
-      dialog
-        .open(win, {
-          ...opts,
-          defaultPath: app.getPath('documents'),
-          filters: [{
-            name: this.dict.dialog.file.project,
-            extensions: ['tpy']
-          }]
-        })
-        .then(files => {
-          if (files) this.openProject(files[0])
-        })
+    this.on('app:open-dialog', (win) => {
+      this.showOpenDialog(win)
+    })
+
+    this.on('app:open-new-dialog', () => {
+      this.showOpenDialog(null)
     })
 
     this.on('app:zoom-in', () => {
