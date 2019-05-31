@@ -30,9 +30,34 @@ const getSelectedItemTemplate = memo(
   }
 )
 
+const expandPhoto = (photo, metadata) => (
+  (photo == null) ? null : {
+    ...photo,
+    data: metadata[photo.id]
+  }
+)
+
+const expandItem = (item, photos, metadata) => (
+  (item == null) ? null : {
+    ...item,
+    data: metadata[item.id],
+    photos: item.photos.map(id => expandPhoto(photos[id], metadata))
+  }
+)
+
+const getPrintableItems = memo(
+  ({ nav, qr }) => (nav.items.length > 0 ? nav.items : qr.items),
+  ({ items }) => items,
+  ({ photos }) => photos,
+  ({ metadata }) => metadata,
+  (ids, items, photos, metadata) =>
+    ids.map(id => expandItem(items[id], photos, metadata))
+)
+
 module.exports = {
   getItems,
   getListHold,
+  getPrintableItems,
   getSelectedItems,
   getSelectedItemTemplate,
   getVisibleItems

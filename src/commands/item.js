@@ -1,7 +1,7 @@
 'use strict'
 
 const { debug, warn } = require('../common/log')
-const { clipboard } = require('electron')
+const { clipboard, ipcRenderer: ipc } = require('electron')
 const assert = require('assert')
 const { DuplicateError } = require('../common/error')
 const { all, call, put, select, cps } = require('redux-saga/effects')
@@ -23,6 +23,7 @@ const {
   getGroupedItems,
   getItemTemplate,
   getPhotoTemplate,
+  getPrintableItems,
   getTemplateValues
 } = require('../selectors')
 
@@ -470,6 +471,17 @@ class Preview extends Command {
   }
 }
 
+class Print extends Command {
+  static get ACTION() { return ITEM.PRINT }
+
+  *exec() {
+    let items = yield select(getPrintableItems)
+    if (items.length) {
+      ipc.send('print', items)
+    }
+  }
+}
+
 class AddTag extends Command {
   static get ACTION() { return ITEM.TAG.CREATE }
 
@@ -535,6 +547,7 @@ module.exports = {
   Restore,
   TemplateChange,
   Preview,
+  Print,
   AddTag,
   RemoveTag,
   ToggleTags,

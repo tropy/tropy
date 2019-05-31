@@ -18,6 +18,7 @@ module.exports = {
   SPLIT: 'item.split',
   UPDATE: 'item.update',
   PREVIEW: 'item.preview',
+  PRINT: 'item.print',
 
   BULK: {
     UPDATE: 'item.bulk.update'
