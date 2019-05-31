@@ -433,6 +433,10 @@ class Window extends EventEmitter {
   minimize() {
     ipc.send('wm', 'minimize')
   }
+
+  preview(file) {
+    ipc.send('wm', 'preview', file)
+  }
 }
 
 module.exports = {

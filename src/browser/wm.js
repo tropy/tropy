@@ -4,7 +4,7 @@ const { EventEmitter } = require('events')
 const { join } = require('path')
 const { URL } = require('url')
 const dialog = require('./dialog')
-const { debug, error, warn } = require('../common/log')
+const { debug, error, trace, warn } = require('../common/log')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
 const res = require('../common/res')
@@ -178,9 +178,7 @@ class WindowManager extends EventEmitter {
   }
 
   handleIpcMessage = (event, type, ...args) => {
-    // Note: assuming we would want to use multiple WindowManagers,
-    // add a check here to make sure the window is controlled
-    // by this manager instance!
+    trace({ args }, `ipc.${type} received`)
     let win = BrowserWindow.fromWebContents(event.sender)
 
     switch (type) {
@@ -201,6 +199,9 @@ class WindowManager extends EventEmitter {
         break
       case 'dialog':
         this.handleShowDialog(win, ...args)
+        break
+      case 'preview':
+        win.previewFile(...args)
         break
       case 'maximize':
         if (win.isMazimized())
