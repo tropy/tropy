@@ -1,2 +1,14 @@
+/* stylelint-disable max-empty-lines */
+
+//
+// Print window
+// --------------------------------------------------
+
 $platform: "linux";
 $theme: "light";
+
+
+// Components
+// --------------------------------------------------
+
+@import "../components/print";

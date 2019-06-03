@@ -1,2 +1,14 @@
+/* stylelint-disable max-empty-lines */
+
+//
+// Print window
+// --------------------------------------------------
+
 $platform: "win32";
 $theme: "dark";
+
+
+// Components
+// --------------------------------------------------
+
+@import "../components/print";

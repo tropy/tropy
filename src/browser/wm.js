@@ -429,6 +429,10 @@ class WindowManager extends EventEmitter {
       minimizable: false,
       resizable: false
     },
+    print: {
+      width: 600,
+      height: 300
+    },
     project: {
       width: 1280,
       height: 720,

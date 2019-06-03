@@ -1,7 +1,7 @@
 'use strict'
 
 const { URL } = require('url')
-const { rotate } = require('./math')
+const { rotate, isHorizontal } = require('./math')
 
 
 class Rotation {
@@ -42,6 +42,10 @@ class Rotation {
 
   format(symbol = '!') {
     return `${this.mirror ? symbol : ''}${this.angle}`
+  }
+
+  get isHorizontal() {
+    return isHorizontal(this.angle)
   }
 
   get orientation() {

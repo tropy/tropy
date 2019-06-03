@@ -13,6 +13,7 @@ const {
 } = require('electron')
 
 const { fatal, info, warn, logger, crashReport } = require('../common/log')
+const { once } = require('../common/util')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 
@@ -644,6 +645,10 @@ class Tropy extends EventEmitter {
       this.showOpenDialog(null)
     })
 
+    this.on('app:print', () => {
+      this.dispatch(act.item.print(), this.wm.current())
+    })
+
     this.on('app:zoom-in', () => {
       this.state.zoom = this.wm.zoom(this.state.zoom + 0.25)
     })
@@ -686,6 +691,20 @@ class Tropy extends EventEmitter {
 
     ipc.on('cmd', (event, cmd, ...args) => {
       this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
+    })
+
+    ipc.on('print', async (_, items) => {
+      let win = await this.wm.open('print', this.hash)
+      await once(win, 'react:ready')
+      win.show()
+      win.send('print', items)
+      await once(win, 'print:ready')
+
+      info('printing...')
+      win.webContents.print({}, (success) => {
+        info(`print callback: ${success}`)
+        //win.close()
+      })
     })
 
     ipc.on('error', (event, error) => {
