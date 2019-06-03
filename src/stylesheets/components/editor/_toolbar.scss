@@ -25,6 +25,12 @@
     height: $toolbar-height + 1px;
     //display: none;
 
+    .side-by-side & {
+      .frameless & {
+        -webkit-app-region: drag;
+      }
+    }
+
     .tool-group {
       & + .tool-group {
         margin-left: $space-lg;

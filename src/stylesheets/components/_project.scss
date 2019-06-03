@@ -26,12 +26,13 @@
   justify-content: center;
   align-items: center;
 
-  .toolbar.window-draggable {
+  .toolbar {
     .frameless & {
       position: fixed;
       left: 0;
       top: 0;
       right: 0;
+      -webkit-app-region: drag;
     }
   }
 
@@ -92,7 +93,7 @@
     bottom: 0;
     left: 0;
     background: $project-darken-color;
-    z-index: $zindex-draggable;
+    z-index: $zindex-item;
     opacity: 0;
   }
 
@@ -133,6 +134,12 @@
 
   .scrollbar-style-old-school & {
     padding-right: 0;
+  }
+
+  .toolbar {
+    .frameless & {
+      -webkit-app-region: drag;
+    }
   }
 
   .item-count {
@@ -195,7 +202,7 @@
   right: 0;
   height: 100%;
   background: $body-bg;
-  z-index: $zindex-draggable;
+  z-index: $zindex-item;
 
   .max-scroll-left + & {
     height: $toolbar-height;

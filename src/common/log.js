@@ -1,6 +1,9 @@
 'use strict'
 
 const pino = require('pino')
+const { system } = require('./os')
+const { version } = require('./release')
+
 let instance
 
 function logRotate(file, suffix = '.1') {
@@ -90,5 +93,19 @@ module.exports = Object.assign(log, {
   },
   trace(...args) {
     log.instance.trace(...args)
+  },
+
+  crashReport(e, msg) {
+    try {
+      return JSON.stringify({
+        msg: msg || `unhandled error: ${e.message}`,
+        stack: e.stack,
+        system,
+        time: Date.now(),
+        version
+      })
+    } catch (_) {
+      return JSON.stringify({ stack: (e || _).stack })
+    }
   }
 })

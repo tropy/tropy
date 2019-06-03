@@ -4,7 +4,7 @@ const { EventEmitter } = require('events')
 const { join } = require('path')
 const { URL } = require('url')
 const dialog = require('./dialog')
-const { debug, error, warn } = require('../common/log')
+const { debug, error, trace, warn } = require('../common/log')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
 const res = require('../common/res')
@@ -103,8 +103,14 @@ class WindowManager extends EventEmitter {
           break
       }
 
-      let { show } = opts
+      let { show, parent } = opts
       opts.show = (show === true)
+
+      if (parent != null && !opts.modal) {
+        let { x, y, width, height } = parent.getBounds()
+        opts.x = Math.floor((x + width / 2) - opts.width / 2)
+        opts.y = Math.floor((y + height / 2) - opts.height / 2)
+      }
 
       // TODO check position on display!
       var win = new BrowserWindow(opts)
@@ -113,6 +119,20 @@ class WindowManager extends EventEmitter {
         win.webContents.setVisualZoomLevelLimits(1, 1)
         win.webContents.setZoomFactor(args.zoom || 1)
       })
+
+      if (opts.isExclusive) {
+        win
+          .once('show', () => {
+            this.each(w => {
+              if (w !== win) w.setEnabled(false)
+            })
+          })
+          .once('closed', () => {
+            this.each(w => {
+              if (w !== win) w.setEnabled(true)
+            })
+          })
+      }
 
       if (typeof show === 'string') {
         win.once(show, () => {
@@ -158,9 +178,7 @@ class WindowManager extends EventEmitter {
   }
 
   handleIpcMessage = (event, type, ...args) => {
-    // Note: assuming we would want to use multiple WindowManagers,
-    // add a check here to make sure the window is controlled
-    // by this manager instance!
+    trace({ args }, `ipc.${type} received`)
     let win = BrowserWindow.fromWebContents(event.sender)
 
     switch (type) {
@@ -181,6 +199,9 @@ class WindowManager extends EventEmitter {
         break
       case 'dialog':
         this.handleShowDialog(win, ...args)
+        break
+      case 'preview':
+        win.previewFile(...args)
         break
       case 'maximize':
         if (win.isMazimized())
@@ -283,12 +304,15 @@ class WindowManager extends EventEmitter {
         })
 
       win
-        .once('close', () => {
+        .on('show', () => {
+          this.emit('show', type, win)
+        })
+        .on('close', () => {
           this.emit('close', type, win)
         })
         .once('closed', () => {
-          this.emit('closed', type, win)
           this.unref(type, win)
+          this.emit('closed', type, win)
         })
 
       this.windows[type] = [win, ...array(this.windows[type])]
@@ -314,7 +338,7 @@ class WindowManager extends EventEmitter {
     if (win) {
       win.show()
     } else {
-      win = await this.open(type, args, { show: 'initialized', ...opts })
+      win = await this.open(type, args, { show: 'init', ...opts })
       await once(win, 'show')
     }
     return win

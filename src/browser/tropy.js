@@ -12,7 +12,7 @@ const {
   systemPreferences: prefs
 } = require('electron')
 
-const { fatal, info, logger } = require('../common/log')
+const { fatal, info, logger, crashReport } = require('../common/log')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 
@@ -29,7 +29,7 @@ const { migrate } = require('./migrate')
 
 const { defineProperty: prop } = Object
 const act = require('./actions')
-const { darwin, linux, system } = require('../common/os')
+const { darwin, linux } = require('../common/os')
 const { channel, product, version } = require('../common/release')
 
 const {
@@ -134,22 +134,36 @@ class Tropy extends EventEmitter {
     return true
   }
 
-  openProject(file, win = this.wm.current()) {
+  async showOpenDialog(win = this.wm.current()) {
+    let files = await dialog.open(win, {
+      defaultPath: app.getPath('documents'),
+      filters: [{
+        name: this.dict.dialog.file.project,
+        extensions: ['tpy']
+      }]
+    })
+
+    if (files) {
+      await this.openProject(files[0], win)
+    }
+  }
+
+  async openProject(file, win = this.wm.current()) {
     file = resolve(file)
     info(`opening ${file}...`)
 
     if (win == null) {
-      this.wm.show('project', { file, ...this.hash }, {
+      await this.wm.open('project', { file, ...this.hash }, {
+        show: 'init',
         title: '',
         ...this.state.win.bounds
-      }).finally(() => {
-        this.emit('app:reload-menu')
       })
     } else {
       this.dispatch(act.project.open(file), win)
       win.show()
-      this.emit('app:reload-menu')
     }
+
+    this.emit('app:reload-menu')
   }
 
   hasOpenedProject({ file, name }, win) {
@@ -216,6 +230,8 @@ class Tropy extends EventEmitter {
 
   showPreferencesWindow() {
     this.wm.show('prefs', this.hash, {
+      alwaysOnTop: darwin,
+      isExclusive: !darwin,
       title: this.dict.window.prefs.title,
       parent: this.wm.current()
     })
@@ -286,7 +302,7 @@ class Tropy extends EventEmitter {
       this.showWizardWindow())
 
     this.on('app:close-project', () =>
-      this.dispatch(act.project.close(), this.wm.current()))
+      this.dispatch(act.project.close('user'), this.wm.current()))
 
     this.on('app:optimize-cache', () => {
       this.dispatch(act.cache.prune(), this.wm.current())
@@ -568,6 +584,10 @@ class Tropy extends EventEmitter {
       shell.showItemInFolder(this.plugins.configFile)
     })
 
+    this.on('app:open-cache-folder', () => {
+      shell.openItem(this.cache.root)
+    })
+
     this.on('app:install-plugin', (win) => {
       dialog
         .open(darwin ? null : win, {
@@ -592,19 +612,12 @@ class Tropy extends EventEmitter {
           .sync(join(this.opts.data, 'ontology.db'))
     })
 
-    this.on('app:open-dialog', (win, opts = {}) => {
-      dialog
-        .open(win, {
-          ...opts,
-          defaultPath: app.getPath('documents'),
-          filters: [{
-            name: this.dict.dialog.file.project,
-            extensions: ['tpy']
-          }]
-        })
-        .then(files => {
-          if (files) this.openProject(files[0])
-        })
+    this.on('app:open-dialog', (win) => {
+      this.showOpenDialog(win)
+    })
+
+    this.on('app:open-new-dialog', () => {
+      this.showOpenDialog(null)
     })
 
     this.on('app:zoom-in', () => {
@@ -700,6 +713,10 @@ class Tropy extends EventEmitter {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
+    this.wm.on('show', () => {
+      this.emit('app:reload-menu')
+    })
+
     this.wm.on('close', (type, win) => {
       if (type === 'project') {
         this.state.win.bounds = win.getNormalBounds()
@@ -712,6 +729,7 @@ class Tropy extends EventEmitter {
           act.ontology.load(),
           act.storage.reload([['settings']]))
       }
+      this.emit('app:reload-menu')
     })
 
     this.wm.on('unresponsive', (_, win) => {
@@ -775,7 +793,7 @@ class Tropy extends EventEmitter {
         .then(({ response }) => {
           switch (response) {
             case 1:
-              clipboard.write({ text: Tropy.crashReport(e) })
+              clipboard.write({ text: crashReport(e) })
               break
             case 2:
               shell.openItem(this.log)
@@ -881,20 +899,6 @@ class Tropy extends EventEmitter {
 
   get version() {
     return version
-  }
-
-  static crashReport(e) {
-    try {
-      return JSON.stringify({
-        msg: `unhandled error: ${e.message}`,
-        stack: e.stack,
-        system,
-        time: Date.now(),
-        version
-      })
-    } catch (_) {
-      return (e || _).stack
-    }
   }
 }
 

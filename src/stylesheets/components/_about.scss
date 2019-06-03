@@ -11,12 +11,13 @@
   font-size: 11px;
   line-height: 19px;
 
-  .toolbar.window-draggable {
+  .toolbar {
     .frameless & {
       position: fixed;
       left: 0;
       top: 0;
       right: 0;
+      -webkit-app-region: drag;
     }
   }
 

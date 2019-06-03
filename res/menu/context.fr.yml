@@ -26,7 +26,7 @@ fr:
       - label: Supprimer la liste
         command: 'app:delete-list'
     tags:
-      - label: Nouveau marqueur
+      - label: Nouveau tag
         command: 'app:create-tag'
         accelerator: CmdOrCtrl+Shift+A
       - label: Exporter les tags…
@@ -105,7 +105,7 @@ fr:
               - color
               - 'app:save-default-tag-color'
     tag:
-      - label: Couleur du marqueur
+      - label: Couleur du tag
         submenu:
           - label: Aucune
             color:
@@ -173,12 +173,12 @@ fr:
               - lavender
               - color
               - 'app:save-tag-color'
-      - label: Renommer le marqueur
+      - label: Renommer le tag
         command: 'app:rename-tag'
-      - label: Supprimer le marqueur
+      - label: Supprimer le tag
         command: 'app:delete-tag'
     item-tag:
-      - label: Enlever le marqueur de l'objet
+      - label: Enlever le tag de l'objet
         command: 'app:delete-item-tag'
         visible: false
         condition: hasSingleItem
@@ -362,7 +362,7 @@ fr:
       - label: Supprimer la liste
         command: 'app:delete-list'
     tags:
-      - label: Nouveau marqueur
+      - label: Nouveau tag
         command: 'app:create-tag'
         accelerator: CmdOrCtrl+Shift+A
       - label: Exporter les tags…
@@ -441,7 +441,7 @@ fr:
               - color
               - 'app:save-default-tag-color'
     tag:
-      - label: Couleur du marqueur
+      - label: Couleur du tag
         submenu:
           - label: Aucune
             color:
@@ -509,12 +509,12 @@ fr:
               - lavender
               - color
               - 'app:save-tag-color'
-      - label: Renommer le marqueur
+      - label: Renommer le tag
         command: 'app:rename-tag'
-      - label: Supprimer le marqueur
+      - label: Supprimer le tag
         command: 'app:delete-tag'
     item-tag:
-      - label: Enlever le marqueur de l'objet
+      - label: Enlever le tag de l'objet
         command: 'app:delete-item-tag'
         visible: false
         condition: hasSingleItem
@@ -698,7 +698,7 @@ fr:
       - label: Supprimer la liste
         command: 'app:delete-list'
     tags:
-      - label: Nouveau marqueur
+      - label: Nouveau tag
         command: 'app:create-tag'
         accelerator: CmdOrCtrl+Shift+A
       - label: Exporter les tags…
@@ -777,7 +777,7 @@ fr:
               - color
               - 'app:save-default-tag-color'
     tag:
-      - label: Couleur du marqueur
+      - label: Couleur du tag
         submenu:
           - label: Aucune
             color:
@@ -845,12 +845,12 @@ fr:
               - lavender
               - color
               - 'app:save-tag-color'
-      - label: Renommer le marqueur
+      - label: Renommer le tag
         command: 'app:rename-tag'
-      - label: Supprimer le marqueur
+      - label: Supprimer le tag
         command: 'app:delete-tag'
     item-tag:
-      - label: Enlever le marqueur de l'objet
+      - label: Enlever le tag de l'objet
         command: 'app:delete-item-tag'
         visible: false
         condition: hasSingleItem

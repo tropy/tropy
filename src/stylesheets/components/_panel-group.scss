@@ -10,6 +10,10 @@
   .panel-group-header {
     .toolbar {
       background: $panels-bg;
+
+      .frameless & {
+        -webkit-app-region: drag;
+      }
     }
   }
 

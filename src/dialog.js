@@ -3,8 +3,7 @@
 const assert = require('assert')
 const { ipcRenderer: ipc, shell, clipboard } = require('electron')
 const { counter, get } = require('./common/util')
-const { system } = require('./common/os')
-const { warn } = require('./common/log')
+const { crashReport, warn } = require('./common/log')
 
 const IMAGE_EXTENSIONS = [
   'gif', 'jpg', 'jpeg', 'png', 'svg', 'tif', 'tiff', 'webp'
@@ -69,14 +68,7 @@ function fail(e, msg) {
   }).then(({ response }) => {
     switch (response) {
       case 1:
-        clipboard.write({
-          text: JSON.stringify({
-            msg: msg || e.message,
-            time: Date.now(),
-            stack: e.stack,
-            system
-          })
-        })
+        clipboard.write({ text: crashReport(e, msg) })
         break
       case 2:
         shell.openItem(ARGS.log)

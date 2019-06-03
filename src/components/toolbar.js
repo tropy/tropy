@@ -83,10 +83,7 @@ class Titlebar extends React.PureComponent {
   render() {
     return (!this.props.isOptional || this.context.state.frameless) && (
       <Toolbar
-        className={cx(
-          'titlebar',
-          this.context.state.frameless ? 'window-draggable' : null
-        )}
+        className="titlebar"
         onDoubleClick={this.handleDoubleClick}
         ref={this.container}>
         {this.props.children}

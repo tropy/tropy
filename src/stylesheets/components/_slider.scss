@@ -20,7 +20,7 @@
     align-items: center;
     height: $slider-handle-size + 2px;
 
-    .frameless .window-draggable & {
+    .frameless & {
       -webkit-app-region: no-drag;
     }
   }
@@ -125,7 +125,7 @@
     color: $slider-overlay-value-color;
   }
 
-  .frameless .window-draggable & {
+  .frameless & {
     -webkit-app-region: no-drag;
   }
 

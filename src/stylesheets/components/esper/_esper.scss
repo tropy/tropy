@@ -65,6 +65,10 @@
     position: relative;
     z-index: $zindex-esper-header;
     height: $toolbar-height;
+
+    .frameless & {
+      -webkit-app-region: drag;
+    }
   }
 
   &.overlay-mode {

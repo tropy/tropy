@@ -282,28 +282,21 @@ fr:
     description: Description
     comment: Commentaire
   dialog:
-    ok: Oui
-    cancel: Annuler
     prompt:
       item:
         destroy:
-          ok: Supprimer
-          cancel: Annuler
           message: >
               Êtes-vous sûr.e de vouloir effacer définitivement ces objets ? Cette
               action ne peut pas être annulée.
       dup:
-        message: >
+        detail: >
             Cette photo existe déjà dans votre projet. Voulez-vous vraiment l'importer
             de nouveau?
-        checkbox: Se souvenir de mon choix
-        cancel: Passer
-        ok: Importer tout de même
+        checkboxLabel: Se souvenir de mon choix
       plugin:
         uninstall:
-          ok: Supprimer
-          cancel: Annuler
-          message: >
+          type: warning
+          detail: >
               Souhaitez-vous vraiment supprimer ce plugin ? Le plugin et sa configuration
               seront supprimés de manière irréversible.
     filter:
@@ -532,7 +525,7 @@ fr:
           add: Echec de l'adjonction du champ dans le modèle de saisie.
           remove: Echec de la suppression du champ du modèle de saisie.
     tag:
-      create: Impossible de créer le mot-clé. Les mots-clés doivent être uniques.
+      create: Impossible de créer le tag. Les tags doivent être uniques.
   flash:
     update:
       ready:
