@@ -35,7 +35,9 @@ const {
 } = require('prop-types')
 
 
-class ProjectContainer extends Component {
+class ProjectContainer extends React.Component {
+  container = React.createRef()
+
   constructor(props) {
     super(props)
 
@@ -103,17 +105,22 @@ class ProjectContainer extends Component {
     if (this.state.willModeChange) return
 
     this.setState({ willModeChange: true, isModeChanging: false }, () => {
-      reflow(this.container)
+      if (this.container.current) {
+        let node = this.container.current
+        reflow(node)
 
-      requestAnimationFrame(() => {
-        this.setState({ isModeChanging: true })
-        ensure(
-          this.container,
-          'transitionend',
-          this.modeDidChange,
-          3000,
-          this.isMainView)
-      })
+        requestAnimationFrame(() => {
+          this.setState({ isModeChanging: true })
+          ensure(
+            node,
+            'transitionend',
+            this.modeDidChange,
+            3000,
+            event => event.target.parentNode === node)
+        })
+      } else {
+        this.modeDidChange()
+      }
     })
   }
 
@@ -132,9 +139,6 @@ class ProjectContainer extends Component {
     })
   }, 750, { leading: false })
 
-  isMainView = (event) => {
-    return event.target.parentNode === this.container
-  }
 
   handleBackButton = () => {
     if (this.state.mode !== MODE.PROJECT) {
@@ -201,10 +205,6 @@ class ProjectContainer extends Component {
     event.preventDefault()
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
   renderNoProject() {
     return (
       <NoProject
@@ -238,7 +238,7 @@ class ProjectContainer extends Component {
     return dt(
       <div
         className={cx(this.classes)}
-        ref={this.setContainer}
+        ref={this.container}
         onContextMenu={this.handleContextMenu}>
 
         <ProjectView {...props}
