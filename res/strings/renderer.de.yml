@@ -284,29 +284,40 @@ de:
     description: Beschreibung
     comment: Kommentar
   dialog:
-    ok: Ja
-    cancel: Abbrechen
+    notify:
+      buttons:
+      - OK
+    error:
+      title: Fehler
+      buttons:
+      - OK
+      - Fehlermeldung kopieren
+      - Logs anzeigen
     prompt:
       item:
         destroy:
-          ok: Löschen
-          cancel: Abbrechen
           message: >
               Objekte vollständig löschen? Dies kann nicht mehr rückgängig gemacht
               werden.
+          buttons:
+          - Abbrechen
+          - Löschen
       dup:
-        message: >
+        detail: >
             Dieses Foto ist bereits im Projekt vorhanden. Nochmals importieren?
-        checkbox: Auswahl merken
-        cancel: Überspringen
-        ok: Nochmals importieren
+        checkboxLabel: Auswahl merken
+        buttons:
+        - Überspringen
+        - Nochmals importieren
       plugin:
         uninstall:
-          ok: Löschen
-          cancel: Abbrechen
-          message: >
+          type: warning
+          detail: >
               Diesen Plugin samt Konfiguration vollständig entfernen? Dies kann nicht
               mehr rückgängig gemacht werden.
+          buttons:
+          - Abbrechen
+          - Löschen
     filter:
       csv: CSV
       templates: Tropy-Vorlagen

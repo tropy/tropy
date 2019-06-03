@@ -281,26 +281,19 @@ ja:
     description: 内容記述
     comment: コメント
   dialog:
-    ok: はい
-    cancel: キャンセル
     prompt:
       item:
         destroy:
-          ok: 削除
-          cancel: キャンセル
           message: >
               アイテムを完全に削除しますか？削除後は元に戻せません。
       dup:
-        message: >
+        detail: >
             この写真はすでにプロジェクトにあります。再度インポートしますか？
-        checkbox: この選択を記憶する
-        cancel: スキップ
-        ok: インポートする
+        checkboxLabel: この選択を記憶する
       plugin:
         uninstall:
-          ok: 削除
-          cancel: キャンセル
-          message: >
+          type: warning
+          detail: >
               このプラグインを本当に削除してよろしいでしょうか？この操作によって、このプラグインとその設定は完全に削除されます。
     filter:
       csv: CSV

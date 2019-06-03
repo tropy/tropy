@@ -59,7 +59,8 @@ en:
         - label: 'Close Window'
           accelerator: 'Ctrl+W'
           role: 'close'
-        - label: 'Quit'
+        - &quit
+          label: 'Quit %name'
           accelerator: 'CmdOrCtrl+Q'
           role: 'quit'
     - &edit
@@ -229,9 +230,7 @@ en:
         - label: 'Show All'
           role: 'unhide'
         - type: 'separator'
-        - label: 'Quit %name'
-          accelerator: 'Command+Q'
-          role: 'quit'
+        - *quit
     - label: 'File'
       submenu:
         - *new
