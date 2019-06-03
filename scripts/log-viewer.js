@@ -44,7 +44,8 @@ const symbol = log =>
 const SYMBOL = {
   about: 'α',
   main: 'β',
-  prefs: 'π',
+  prefs: 'σ',
+  print: 'π',
   project: 'ρ',
   wizard: 'φ'
 }
