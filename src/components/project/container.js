@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
 const { connect } = require('react-redux')
 const { ProjectView } = require('./view')
 const { ItemView } = require('../item')
