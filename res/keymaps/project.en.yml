@@ -12,12 +12,11 @@ en:
     Esper: &Esper
       zoomIn:
         - CmdOrCtrl-+
+        - Shift+CmdOrCtrl-+
         - CmdOrCtrl-=
-        - Shift-CmdOrCtrl-+
       zoomOut:
         - CmdOrCtrl+-
         - Shift+CmdOrCtrl+_
-        - Shift+CmdOrCtrl+-
       zoomToFit:
         - CmdOrCtrl+0
       zoomToFill:
