@@ -12,7 +12,7 @@ const {
   systemPreferences: prefs
 } = require('electron')
 
-const { fatal, info, logger } = require('../common/log')
+const { fatal, info, logger, crashReport } = require('../common/log')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 
@@ -29,7 +29,7 @@ const { migrate } = require('./migrate')
 
 const { defineProperty: prop } = Object
 const act = require('./actions')
-const { darwin, linux, system } = require('../common/os')
+const { darwin, linux } = require('../common/os')
 const { channel, product, version } = require('../common/release')
 
 const {
@@ -793,7 +793,7 @@ class Tropy extends EventEmitter {
         .then(({ response }) => {
           switch (response) {
             case 1:
-              clipboard.write({ text: Tropy.crashReport(e) })
+              clipboard.write({ text: crashReport(e) })
               break
             case 2:
               shell.openItem(this.log)
@@ -899,20 +899,6 @@ class Tropy extends EventEmitter {
 
   get version() {
     return version
-  }
-
-  static crashReport(e) {
-    try {
-      return JSON.stringify({
-        msg: `unhandled error: ${e.message}`,
-        stack: e.stack,
-        system,
-        time: Date.now(),
-        version
-      })
-    } catch (_) {
-      return (e || _).stack
-    }
   }
 }
 
