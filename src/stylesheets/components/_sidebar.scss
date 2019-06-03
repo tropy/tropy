@@ -14,6 +14,10 @@
     .is-full-screen & {
       display: none;
     }
+
+    .frameless & {
+      -webkit-app-region: drag;
+    }
   }
 
   .sidebar-body {

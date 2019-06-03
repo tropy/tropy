@@ -5,13 +5,22 @@
 .wizard {
   height: 100%;
   text-align: center;
-  padding: 0 $space-xxl;
   background:
     if(
       $theme == "dark",
       image-url("wizard/key-visual-dark.svg") no-repeat center bottom / auto 131px,
       image-url("wizard/key-visual-light.svg") no-repeat center bottom / auto 131px
     );
+
+  .toolbar {
+    .frameless & {
+      -webkit-app-region: drag;
+    }
+  }
+
+  .steps {
+    padding: 0 $space-xxl;
+  }
 
   .tropy-icon {
     display: inline-block;
