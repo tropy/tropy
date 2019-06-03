@@ -302,7 +302,7 @@ class Tropy extends EventEmitter {
       this.showWizardWindow())
 
     this.on('app:close-project', () =>
-      this.dispatch(act.project.close(), this.wm.current()))
+      this.dispatch(act.project.close('user'), this.wm.current()))
 
     this.on('app:optimize-cache', () => {
       this.dispatch(act.cache.prune(), this.wm.current())

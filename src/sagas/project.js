@@ -170,7 +170,7 @@ function *main() {
     ])
 
     while (true) {
-      let { type, payload, error } = yield take([OPEN, CLOSE])
+      let { type, payload } = yield take([OPEN, CLOSE])
 
       if (task != null && task.isRunning()) {
         yield cancel(task)
@@ -182,7 +182,7 @@ function *main() {
         task = null
       }
 
-      if (type === CLOSE && !(error || payload === 'debug'))
+      if (type === CLOSE && payload !== 'user')
         break
 
       if (type === OPEN) {
