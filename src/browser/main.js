@@ -29,6 +29,9 @@ app.setPath('userData', join(opts.data, 'electron'))
 
 if (!opts.cache) {
   opts.cache = join(app.getPath('cache'), exe)
+
+  if (opts.cache === opts.data)
+    opts.cache = join(opts.data, 'cache')
 }
 app.setPath('userCache', opts.cache)
 
