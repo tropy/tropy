@@ -121,7 +121,9 @@ class Editor extends React.Component {
     let { isDisabled, hasTitlebar, placeholder, tabIndex } = this.props
     let { hasViewFocus } = this.state
     let state = this.getEditorState()
-    let showPlaceholder = placeholder != null && this.isBlank(state.doc)
+
+    let showPlaceholder =
+      !(isDisabled || placeholder == null) && this.isBlank(state.doc)
 
     return (
       <div
