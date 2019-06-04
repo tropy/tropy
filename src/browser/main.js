@@ -58,6 +58,9 @@ if (!(win32 && require('./squirrel')(opts))) {
     app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
   }
 
+  // See electron#17942
+  app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', true)
+
   info({
     opts,
     version
