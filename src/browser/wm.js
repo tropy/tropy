@@ -181,6 +181,9 @@ class WindowManager extends EventEmitter {
     trace({ args }, `ipc.${type} received`)
     let win = BrowserWindow.fromWebContents(event.sender)
 
+    if (type === 'double-click')
+      type = WindowManager.getActionOnDoubleClick()
+
     switch (type) {
       case 'close':
         win.close()
@@ -204,7 +207,7 @@ class WindowManager extends EventEmitter {
         win.previewFile(...args)
         break
       case 'maximize':
-        if (win.isMazimized())
+        if (win.isMaximized())
           win.unmaximize()
         else
           win.maximize()
@@ -443,6 +446,13 @@ class WindowManager extends EventEmitter {
   static hasOverlayScrollBars() {
     return darwin &&
       prefs.getUserDefault('AppleShowScrollBars', 'string') === 'WhenScrolling'
+  }
+
+  static getActionOnDoubleClick() {
+    return !darwin ? 'maximize' :
+      prefs
+        .getUserDefault('AppleActionOnDoubleClick', 'string')
+        .toLowerCase()
   }
 }
 

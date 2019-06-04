@@ -76,7 +76,7 @@ class Titlebar extends React.PureComponent {
   handleDoubleClick = (event) => {
     if (this.context.state.frameless &&
       event.target === this.container.current) {
-      this.context.maximize()
+      this.context.send('double-click')
     }
   }
 

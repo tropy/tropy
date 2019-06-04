@@ -427,15 +427,19 @@ class Window extends EventEmitter {
   }
 
   maximize() {
-    ipc.send('wm', 'maximize')
+    this.send('maximize')
   }
 
   minimize() {
-    ipc.send('wm', 'minimize')
+    this.send('minimize')
   }
 
   preview(file) {
-    ipc.send('wm', 'preview', file)
+    this.send('preview', file)
+  }
+
+  send(type, ...params) {
+    ipc.send('wm', type, ...params)
   }
 }
 
