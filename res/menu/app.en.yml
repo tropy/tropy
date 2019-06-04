@@ -106,7 +106,6 @@ en:
           label: '&Reload'
           accelerator: 'CmdOrCtrl+R'
           command: 'win:reload'
-          condition: 'window'
         - type: 'separator'
         - label: 'Toggle &Menu Bar'
           command: 'app:toggle-menu-bar'
