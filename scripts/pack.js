@@ -6,7 +6,7 @@ const { check, error, say } = require('./util')('pack')
 const { join, resolve } = require('path')
 const { arch, platform } = process
 const { getSignToolParams } = require('./sign')
-const { repository } = require('../package')
+const pkg = require('../package')
 
 const {
   author, channel, qualified, name, product, version
@@ -143,7 +143,7 @@ target.win32 = async (args = []) => {
     setupExe: `setup-${name}-${version}-${arch}.exe`,
     setupIcon: join(res, 'icons', channel, `${name}.ico`),
     iconUrl: join(res, 'icons', channel, `${name}.ico`),
-    // remoteReleases: repository.url,
+    // remoteReleases: pkg.repository.url,
     noDelta: true,
     noMsi: true
   })
