@@ -143,7 +143,7 @@ target.win32 = async (args = []) => {
     setupExe: `setup-${name}-${version}-${arch}.exe`,
     setupIcon: join(res, 'icons', channel, `${name}.ico`),
     iconUrl: join(res, 'icons', channel, `${name}.ico`),
-    remoteReleases: repository.url,
+    // remoteReleases: repository.url,
     noDelta: true,
     noMsi: true
   })
