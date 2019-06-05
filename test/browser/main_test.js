@@ -2,6 +2,7 @@
 
 const { app } = require('electron')
 const { EventEmitter } = require('events')
+const { resolve } = require('path')
 
 describe('main process', () => {
   const Tropy = __require('browser/tropy')
@@ -64,8 +65,9 @@ describe('main process', () => {
 
     it('starts Tropy instance', () => {
       expect(Tropy.instance.start).to.have.been.calledOnce
-      expect(Tropy.instance.open).to.have.been.calledOnceWith('file.tpy')
       expect(Tropy.instance.ready).to.be.ok
+      expect(Tropy.instance.open)
+        .to.have.been.calledOnceWith(resolve('file.tpy'))
     })
 
     it('handles uncaught errors', () => {

@@ -145,6 +145,9 @@ class Window extends EventEmitter {
         this.state.dark = dark
         this.style(true)
       })
+      .on('recent', (_, recent) => {
+        args.update({ recent })
+      })
       .on('locale', (_, locale) => {
         args.update({ locale })
         this.emit('settings.update', { locale })

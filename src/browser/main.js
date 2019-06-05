@@ -15,7 +15,7 @@ if (!app.requestSingleInstanceLock()) {
   app.exit(0)
 }
 
-const { extname, join } = require('path')
+const { extname, join, resolve } = require('path')
 const { sync: mkdir } = require('mkdirp')
 const { darwin, win32, system }  = require('../common/os')
 const { exe, qualified, version }  = require('../common/release')
@@ -85,7 +85,7 @@ if (!(win32 && require('./squirrel')(opts))) {
   ])
     .then(() => {
       tropy.ready = Date.now()
-      tropy.open(...opts._)
+      tropy.open(...opts._.map(f => resolve(f)))
 
       electron.powerMonitor.on('shutdown', (event) => {
         event.preventDefault()
