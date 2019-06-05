@@ -176,6 +176,7 @@ $window-controls-margin: 4px;
 // Sidebar
 // --------------------------------------------------
 
+$sidebar-width:                       const("SIDEBAR.DEFAULT_WIDTH") * 1px;
 $activity-height:                     const("ACTIVITY.HEIGHT") * 1px;
 $activity-transition-duration:        0.125s;
 $activity-transition-timing-function: ease-out;
