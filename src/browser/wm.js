@@ -87,7 +87,7 @@ class WindowManager extends EventEmitter {
       let isDark = args.theme === 'dark' ||
         args.theme === 'system' && prefs.isDarkMode()
 
-      opts.backgroundColor = BODY[isDark ? 'dark' : 'light']
+      opts.backgroundColor = BODY[process.platform][isDark ? 'dark' : 'light']
 
       switch (process.platform) {
         case 'linux':
