@@ -323,12 +323,12 @@ class Window extends EventEmitter {
 
     on(window, 'error', (event) => {
       event.preventDefault()
-      handleError(event.error)
+      handleError(event.error || event)
     })
 
     on(window, 'unhandledrejection', (event) => {
       event.preventDefault()
-      handleError(event.reason)
+      handleError(event.reason || event)
     })
   }
 
