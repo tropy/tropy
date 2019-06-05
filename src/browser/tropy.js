@@ -108,17 +108,15 @@ class Tropy extends EventEmitter {
     if (win != null) {
       win.show()
 
+    } else if (this.state.recent.length === 0) {
+      this.showWizardWindow()
+
     } else {
       let recent = this.state.recent[0]
-      if (recent != null && exists(recent)) {
+      if (exists(recent))
         this.showProjectWindow(recent)
-
-      } else {
-        if (this.isFirstRun)
-          this.showWizardWindow()
-        else
-          this.showProjectWindow()
-      }
+      else
+        this.showProjectWindow()
     }
 
     return false
