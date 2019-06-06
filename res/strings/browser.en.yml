@@ -22,7 +22,7 @@ en:
         Would you like to close it or keep waiting?
     unhandled:
       buttons:
-        - OK
+        - Dismiss
         - Copy Error
         - Show Logs
       message: Unhandled Error

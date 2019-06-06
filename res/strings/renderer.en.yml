@@ -266,7 +266,7 @@ en:
     error:
       title: Error
       buttons:
-        - OK
+        - Dismiss
         - Copy Error
         - Show Logs
     prompt:
