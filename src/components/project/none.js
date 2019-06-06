@@ -2,9 +2,11 @@
 
 const React = require('react')
 const { FormattedMessage } = require('react-intl')
+const { Sidebar, SidebarBody } = require('../sidebar')
 const { Titlebar } = require('../toolbar')
 const { IconMaze } = require('../icons')
-const { bool, func } = require('prop-types')
+const { arrayOf, bool, func, string } = require('prop-types')
+const { basename } = require('path')
 const cx = require('classnames')
 
 const NoProject = ({ connect, ...props }) => connect(
@@ -12,45 +14,26 @@ const NoProject = ({ connect, ...props }) => connect(
     over: props.isOver && props.canDrop
   })}>
     <Titlebar isOptional/>
-    <header className="sidebar">
-      <div className="sidebar-body">
+    <Sidebar>
+      <SidebarBody>
         <h3>
-          <FormattedMessage id="project.recent_projects"/>
+          <FormattedMessage id="project.recent"/>
         </h3>
         <nav>
-          <ol reversed className="recent-projects">
-            <li className="project-name">
-              <IconMaze />
-              <div className="truncate">Recent Project 7</div>
-            </li>
-            <li className="project-name">
-              <IconMaze />
-              <div className="truncate">Recent Project 6</div>
-            </li>
-            <li className="project-name">
-              <IconMaze />
-              <div className="truncate">Recent Project 5</div>
-            </li>
-            <li className="project-name">
-              <IconMaze />
-              <div className="truncate">Recent Project 4</div>
-            </li>
-            <li className="project-name">
-              <IconMaze />
-              <div className="truncate">Recent Project 3</div>
-            </li>
-            <li className="project-name">
-              <IconMaze />
-              <div className="truncate">Recent Project 2</div>
-            </li>
-            <li className="project-name">
-              <IconMaze />
-              <div className="truncate">Recent Project 1</div>
-            </li>
+          <ol className="recent-projects">
+            {props.recent.map(path =>
+              <li
+                className="project-name"
+                key={path}
+                onClick={() => props.onProjectOpen(path)}
+                title={path}>
+                <IconMaze/>
+                <div className="truncate">{basename(path)}</div>
+              </li>)}
           </ol>
         </nav>
-      </div>
-    </header>
+      </SidebarBody>
+    </Sidebar>
     <div className="no-project-container">
       <figure className="no-project-illustration"/>
       <h1>
@@ -72,7 +55,9 @@ NoProject.propTypes = {
   canDrop: bool,
   isOver: bool,
   connect: func.isRequired,
-  onProjectCreate: func.isRequired
+  onProjectCreate: func.isRequired,
+  onProjectOpen: func.isRequired,
+  recent: arrayOf(string).isRequired
 }
 
 module.exports = {

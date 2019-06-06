@@ -210,7 +210,9 @@ class ProjectContainer extends React.Component {
         connect={this.props.dt}
         canDrop={this.props.canDrop}
         isOver={this.props.isOver}
-        onProjectCreate={this.props.onProjectCreate}/>
+        onProjectCreate={this.props.onProjectCreate}
+        onProjectOpen={this.props.onProjectOpen}
+        recent={ARGS.recent}/>
     )
   }
   render() {

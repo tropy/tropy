@@ -73,7 +73,7 @@ en:
     none: Drop a project file here or create a {newProject}
     empty: Drop your photos into Tropy to get started
     new: new project
-    recent_projects: Recent Projects
+    recent: Recent Projects
   wizard:
     project:
       title: Create a new project
