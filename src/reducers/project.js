@@ -24,7 +24,7 @@ module.exports = {
       case PROJECT.CLOSE:
         return { ...state, closing: true }
       case PROJECT.CLOSED:
-        return { ...state, closed: new Date() }
+        return { ...state, closing: false, closed: new Date() }
       case ITEM.INSERT:
         return inc(state)
       case ITEM.RESTORE:
