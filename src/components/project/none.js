@@ -16,26 +16,10 @@ const NoProject = ({ connect, ...props }) => connect(
       <div className="sidebar-body">
         <h3>Recent Projects</h3>
         <nav>
-          <ol className="recent-projects">
+          <ol reversed className="recent-projects">
             <li className="project-name">
               <IconMaze />
-              <div className="truncate">Recent Project 1</div>
-            </li>
-            <li className="project-name">
-              <IconMaze />
-              <div className="truncate">Recent Project 2</div>
-            </li>
-            <li className="project-name">
-              <IconMaze />
-              <div className="truncate">Recent Project 3</div>
-            </li>
-            <li className="project-name">
-              <IconMaze />
-              <div className="truncate">Recent Project 4</div>
-            </li>
-            <li className="project-name">
-              <IconMaze />
-              <div className="truncate">Recent Project 5</div>
+              <div className="truncate">Recent Project 7</div>
             </li>
             <li className="project-name">
               <IconMaze />
@@ -43,7 +27,23 @@ const NoProject = ({ connect, ...props }) => connect(
             </li>
             <li className="project-name">
               <IconMaze />
-              <div className="truncate">Recent Project 7</div>
+              <div className="truncate">Recent Project 5</div>
+            </li>
+            <li className="project-name">
+              <IconMaze />
+              <div className="truncate">Recent Project 4</div>
+            </li>
+            <li className="project-name">
+              <IconMaze />
+              <div className="truncate">Recent Project 3</div>
+            </li>
+            <li className="project-name">
+              <IconMaze />
+              <div className="truncate">Recent Project 2</div>
+            </li>
+            <li className="project-name">
+              <IconMaze />
+              <div className="truncate">Recent Project 1</div>
             </li>
           </ol>
         </nav>
