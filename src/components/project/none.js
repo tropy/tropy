@@ -14,7 +14,9 @@ const NoProject = ({ connect, ...props }) => connect(
     <Titlebar isOptional/>
     <header className="sidebar">
       <div className="sidebar-body">
-        <h3>Recent Projects</h3>
+        <h3>
+          <FormattedMessage id="project.recent_projects"/>
+        </h3>
         <nav>
           <ol reversed className="recent-projects">
             <li className="project-name">
