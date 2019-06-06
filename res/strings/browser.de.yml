@@ -21,7 +21,7 @@ de:
           warten?
     unhandled:
       buttons:
-      - OK
+      - Ausblenden
       - Fehlermeldung kopieren
       - Logs anzeigen
       message: Unerwarteter Fehler

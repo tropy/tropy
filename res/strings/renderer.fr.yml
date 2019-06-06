@@ -87,6 +87,7 @@ fr:
     none: Faire glisser ici un fichier de projet ou créer un {newProject}
     empty: Pour commencer, faire glisser vos photos dans Tropy
     new: Nouveau projet
+    recent: Projets récents
   wizard:
     project:
       title: Créer un nouveau projet
@@ -282,23 +283,41 @@ fr:
     description: Description
     comment: Commentaire
   dialog:
+    notify:
+      buttons:
+      - OK
+    error:
+      title: Erreur
+      buttons:
+      - Fermer
+      - Copier l'erreur
+      - Afficher les logs
     prompt:
       item:
         destroy:
           message: >
               Êtes-vous sûr.e de vouloir effacer définitivement ces objets ? Cette
               action ne peut pas être annulée.
+          buttons:
+          - Annuler
+          - Supprimer
       dup:
         detail: >
             Cette photo existe déjà dans votre projet. Voulez-vous vraiment l'importer
             de nouveau?
         checkboxLabel: Se souvenir de mon choix
+        buttons:
+        - Passer les photos en double
+        - Importer tout de même
       plugin:
         uninstall:
           type: warning
           detail: >
               Souhaitez-vous vraiment supprimer ce plugin ? Le plugin et sa configuration
               seront supprimés de manière irréversible.
+          buttons:
+          - Annuler
+          - Supprimer
     filter:
       csv: CSV
       templates: Modèle de saisie Tropy
@@ -461,12 +480,13 @@ fr:
       save: Sauvegarde de la photo…
       restore: Restauration des photos…
     note:
-      create: Creation note…
+      create: Création note…
       delete: Suppression de la note…
       load: Chargement des notes…
       order: Tri des notes en cours…
       restore: Restauration des notes…
     selection:
+      create: Création sélection …
       load: Chargement de la sélection de photos…
   editor:
     commands:
@@ -494,36 +514,43 @@ fr:
       prune: Échec de l'optimisation du cache du projet
       purge: Échec de la suppression du cache des anciens projets
     project:
-      created: Echec de la création du projet.
+      created: Échec de la création du projet.
     item:
-      export: Echec de l'exportation des objets.
-      merge: Echec de la fusion des objets.
-      import: Echec de l'importation des objets.
+      export: Échec de l'exportation des objets.
+      merge: Échec de la fusion des objets.
+      import: Échec de l'importation des objets.
       tag:
-        save: Echec de la sauvegarde du tag.
-        create: Echec du marquage de l'objet. Chaque tag est unique pour un même objet.
+        save: Échec de la sauvegarde du tag.
+        create: Échec du marquage de l'objet. Chaque tag est unique pour un même objet.
+      template:
+        change: Échec du le changement de modèle de saisie.
     list:
       load: Échec du chargement des listes.
       create: Création de liste impossible. Le nom des listes doit être unique.
       move: Impossible de déplacer la liste. Le nom doit être unique au sein du niveau.
-      save: Echec de la sauvegarde de la liste.
+      save: Échec de la sauvegarde de la liste.
       item:
-        add: Echec de l'adjonction de l' (des) objet(s) à la liste.
+        add: Échec de l'adjonction de l' (des) objet(s) à la liste.
     photo:
-      consolidate: Echec du regroupement des photos.
-      create: Echec de l'importation de la (/des) photo(s).
-      save: Echec de la sauvegarde de la (/des) photo(s).
+      consolidate: Échec du regroupement des photos.
+      create: Échec de l'importation de la (/des) photo(s).
+      save: Échec de la sauvegarde de la (/des) photo(s).
+      template:
+        change: Échec du le changement de modèle de saisie.
     selection:
       create: Echec de la sauvegarde de la sélection
-    ontology:
-      import: Echec de l'importation du lexique.
-      vocab:
-        save: Echec de la sauvegarde du lexique. Le préfixe doit être unique.
       template:
-        import: Echec de l'importation du modèle de saisie.
+        change: Échec du le changement de modèle de saisie.
+    ontology:
+      migrate: Échec de mise à jour la base de données des ontologies
+      import: Échec de l'importation du lexique.
+      vocab:
+        save: Échec de la sauvegarde du lexique. Le préfixe doit être unique.
+      template:
+        import: Échec de l'importation du modèle de saisie.
         field:
-          add: Echec de l'adjonction du champ dans le modèle de saisie.
-          remove: Echec de la suppression du champ du modèle de saisie.
+          add: Échec de l'adjonction du champ dans le modèle de saisie.
+          remove: Échec de la suppression du champ du modèle de saisie.
     tag:
       create: Impossible de créer le tag. Les tags doivent être uniques.
   flash:

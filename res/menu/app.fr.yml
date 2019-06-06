@@ -21,10 +21,10 @@ fr:
               accelerator: CmdOrCtrl+Shift+A
               condition: project
         - type: separator
-        - label: Ouvrir
+        - label: Ouvrir …
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
-        - label: Open In New Window…
+        - label: Ouvrir dans une Nouvelle Fenetre …
           accelerator: Shift+CmdOrCtrl+O
           command: 'app:open-new-dialog'
         - label: Projets récents
@@ -48,7 +48,7 @@ fr:
           command: 'app:close-project'
           condition: project
         - type: separator
-        - label: Close Window
+        - label: Fermer la fenêtre
           accelerator: Ctrl+W
           role: close
         - label: Quitter %name
@@ -87,15 +87,14 @@ fr:
         - label: Rafraîchir
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-          condition: window
         - type: separator
-        - label: Toggle &Menu Bar
+        - label: Cacher la barre de menu
           command: 'app:toggle-menu-bar'
         - label: Centrer
           command: 'app:center-window'
           condition: window
         - type: separator
-        - label: Actual Size
+        - label: Taille Réelle
           command: 'app:zoom-reset'
           accelerator: CmdOrCtrl+0
         - label: Agrandir
@@ -105,7 +104,7 @@ fr:
           command: 'app:zoom-out'
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: Enter &Full Screen
+        - label: Basculer en plein écran
           role: togglefullscreen
           condition: window
     - label: Développeur
@@ -154,7 +153,7 @@ fr:
           command: 'app:open-plugins-folder'
         - label: Afficher le répertoire des données utilisateur
           command: 'app:open-user-data'
-        - label: Show Cache Folder
+        - label: Afficher le dossier de cache
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
@@ -217,10 +216,10 @@ fr:
               accelerator: CmdOrCtrl+Shift+A
               condition: project
         - type: separator
-        - label: Ouvrir
+        - label: Ouvrir …
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
-        - label: Open In New Window…
+        - label: Ouvrir dans une Nouvelle Fenetre …
           accelerator: Shift+CmdOrCtrl+O
           command: 'app:open-new-dialog'
         - label: Projets récents
@@ -272,9 +271,8 @@ fr:
         - label: Rafraîchir
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-          condition: window
         - type: separator
-        - label: Actual Size
+        - label: Taille Réelle
           command: 'app:zoom-reset'
           accelerator: CmdOrCtrl+0
         - label: Agrandir
@@ -284,7 +282,7 @@ fr:
           command: 'app:zoom-out'
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: Enter &Full Screen
+        - label: Basculer en plein écran
           role: togglefullscreen
           condition: window
     - label: Fenêtre
@@ -351,13 +349,13 @@ fr:
         - label: Licence
           command: 'app:open-license'
         - type: separator
-        - label: Afficher les logs
+        - label: Afficher les fichiers de log
           command: 'app:open-logs'
         - label: Afficher les fichiers des plugins
           command: 'app:open-plugins-folder'
         - label: Afficher le répertoire des données utilisateur
           command: 'app:open-user-data'
-        - label: Show Cache Folder
+        - label: Afficher le dossier de cache
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
@@ -395,10 +393,10 @@ fr:
               accelerator: CmdOrCtrl+Shift+A
               condition: project
         - type: separator
-        - label: Ouvrir
+        - label: Ouvrir …
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
-        - label: Open In New Window…
+        - label: Ouvrir dans une Nouvelle Fenetre …
           accelerator: Shift+CmdOrCtrl+O
           command: 'app:open-new-dialog'
         - label: Projets récents
@@ -422,7 +420,7 @@ fr:
           command: 'app:close-project'
           condition: project
         - type: separator
-        - label: Close Window
+        - label: Fermer la fenêtre
           accelerator: Ctrl+W
           role: close
         - label: Quitter %name
@@ -458,15 +456,14 @@ fr:
         - label: Rafraîchir
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-          condition: window
         - type: separator
-        - label: Toggle &Menu Bar
+        - label: Cacher la barre de menu
           command: 'app:toggle-menu-bar'
         - label: Centrer
           command: 'app:center-window'
           condition: window
         - type: separator
-        - label: Actual Size
+        - label: Taille Réelle
           command: 'app:zoom-reset'
           accelerator: CmdOrCtrl+0
         - label: Agrandir
@@ -476,7 +473,7 @@ fr:
           command: 'app:zoom-out'
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: Enter &Full Screen
+        - label: Basculer en plein écran
           role: togglefullscreen
           condition: window
     - label: Développeur
@@ -525,7 +522,7 @@ fr:
           command: 'app:open-plugins-folder'
         - label: Afficher le répertoire des données utilisateur
           command: 'app:open-user-data'
-        - label: Show Cache Folder
+        - label: Afficher le dossier de cache
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check

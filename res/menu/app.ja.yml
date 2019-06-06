@@ -87,7 +87,6 @@ ja:
         - label: リロード
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-          condition: window
         - type: separator
         - label: メニューバーを隠す
           command: 'app:toggle-menu-bar'
@@ -272,7 +271,6 @@ ja:
         - label: リロード
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-          condition: window
         - type: separator
         - label: Actual Size
           command: 'app:zoom-reset'
@@ -458,7 +456,6 @@ ja:
         - label: リロード
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-          condition: window
         - type: separator
         - label: メニューバーを隠す
           command: 'app:toggle-menu-bar'

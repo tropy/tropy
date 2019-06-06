@@ -86,6 +86,7 @@ ja:
     none: プロジェクトファイルをここにドロップするか、あるいは{newProject}を作成してください
     empty: まずは写真をTropyにドロップしてください
     new: 新規プロジェクト
+    recent: 最近のプロジェクト
   wizard:
     project:
       title: 新規プロジェクトを作成
@@ -281,20 +282,38 @@ ja:
     description: 内容記述
     comment: コメント
   dialog:
+    notify:
+      buttons:
+      - OK
+    error:
+      title: Error
+      buttons:
+      - Dismiss
+      - Copy Error
+      - Show Logs
     prompt:
       item:
         destroy:
           message: >
               アイテムを完全に削除しますか？削除後は元に戻せません。
+          buttons:
+          - キャンセル
+          - 削除
       dup:
         detail: >
             この写真はすでにプロジェクトにあります。再度インポートしますか？
         checkboxLabel: この選択を記憶する
+        buttons:
+        - 重複する写真をスキップ
+        - 写真の重複を認める
       plugin:
         uninstall:
           type: warning
           detail: >
               このプラグインを本当に削除してよろしいでしょうか？この操作によって、このプラグインとその設定は完全に削除されます。
+          buttons:
+          - キャンセル
+          - 削除
     filter:
       csv: CSV
       templates: Tropyテンプレート

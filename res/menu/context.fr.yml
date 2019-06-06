@@ -31,7 +31,7 @@ fr:
         accelerator: CmdOrCtrl+Shift+A
       - label: Exporter les tags…
         command: 'app:export-tags'
-      - label: Default Tag Color
+      - label: Couleur du tag par défaut
         submenu:
           - label: Aucun
             color:
@@ -367,7 +367,7 @@ fr:
         accelerator: CmdOrCtrl+Shift+A
       - label: Exporter les tags…
         command: 'app:export-tags'
-      - label: Default Tag Color
+      - label: Couleur du tag par défaut
         submenu:
           - label: Aucun
             color:
@@ -703,7 +703,7 @@ fr:
         accelerator: CmdOrCtrl+Shift+A
       - label: Exporter les tags…
         command: 'app:export-tags'
-      - label: Default Tag Color
+      - label: Couleur du tag par défaut
         submenu:
           - label: Aucun
             color:

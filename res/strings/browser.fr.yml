@@ -2,8 +2,15 @@ fr:
   dialog:
     file:
       project: Projets Tropy
+      plugin: Plugins Tropy
     crashed:
+      buttons:
+      - Fermer la fenêtre
+      - Relancer Tropy
+      - Afficher les logs
       message: Tropy a planté
+      detail: >
+          Merci de reporter cet incident à https://github.com/tropy/tropy
     unresponsive:
       buttons:
       - Fermer
@@ -12,6 +19,12 @@ fr:
       detail: >
           Tropy ne répond plus. Voulez-vous forcer sa fermeture ou bien continuer
           d'attendre?
+    unhandled:
+      buttons:
+      - Fermer
+      - Copier l'erreur
+      - Afficher les logs
+      message: Erreur non interceptée
   window:
     prefs:
       title: Préférences
