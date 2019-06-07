@@ -118,9 +118,9 @@ function getSignTool() {
   ].find(signtool => test('-f', signtool))
 }
 
-function getSignToolParams(cert, pass, ts = 'http://timestamp.comodoca.com') {
+function getSignToolParams(cert, pass) {
   return [
-    `/t ${ts}`, '/fd SHA256', `/f ${cert}`, `/p ${pass}`
+    '/fd SHA256', `/f ${cert}`, `/p "${pass}"`
   ].join(' ')
 }
 

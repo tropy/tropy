@@ -15,7 +15,8 @@ if (!app.requestSingleInstanceLock()) {
   app.exit(0)
 }
 
-const { extname, join } = require('path')
+const { extname, join, resolve } = require('path')
+const { sync: mkdir } = require('mkdirp')
 const { darwin, win32, system }  = require('../common/os')
 const { exe, qualified, version }  = require('../common/release')
 
@@ -25,11 +26,17 @@ app.setName(qualified.product)
 if (!opts.data) {
   opts.data = join(app.getPath('appData'), exe)
 }
-app.setPath('userData', join(opts.data, 'electron'))
+let userData = join(opts.data, 'electron')
+mkdir(userData)
+app.setPath('userData', userData)
 
 if (!opts.cache) {
   opts.cache = join(app.getPath('cache'), exe)
+
+  if (opts.cache === opts.data)
+    opts.cache = join(opts.data, 'cache')
 }
+mkdir(opts.cache)
 app.setPath('userCache', opts.cache)
 
 if (!opts.logs) {
@@ -39,6 +46,7 @@ if (!opts.logs) {
     opts.logs = join(opts.data, 'log')
   }
 }
+mkdir(opts.logs)
 app.setPath('logs', opts.logs)
 
 if (!(win32 && require('./squirrel')(opts))) {
@@ -58,6 +66,9 @@ if (!(win32 && require('./squirrel')(opts))) {
     app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
   }
 
+  // See electron#17942
+  app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', true)
+
   info({
     opts,
     version
@@ -74,7 +85,7 @@ if (!(win32 && require('./squirrel')(opts))) {
   ])
     .then(() => {
       tropy.ready = Date.now()
-      tropy.open(...opts._)
+      tropy.open(...opts._.map(f => resolve(f)))
 
       electron.powerMonitor.on('shutdown', (event) => {
         event.preventDefault()

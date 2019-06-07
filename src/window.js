@@ -145,6 +145,9 @@ class Window extends EventEmitter {
         this.state.dark = dark
         this.style(true)
       })
+      .on('recent', (_, recent) => {
+        args.update({ recent })
+      })
       .on('locale', (_, locale) => {
         args.update({ locale })
         this.emit('settings.update', { locale })
@@ -323,12 +326,12 @@ class Window extends EventEmitter {
 
     on(window, 'error', (event) => {
       event.preventDefault()
-      handleError(event.error)
+      handleError(event.error || event)
     })
 
     on(window, 'unhandledrejection', (event) => {
       event.preventDefault()
-      handleError(event.reason)
+      handleError(event.reason || event)
     })
   }
 
@@ -427,15 +430,19 @@ class Window extends EventEmitter {
   }
 
   maximize() {
-    ipc.send('wm', 'maximize')
+    this.send('maximize')
   }
 
   minimize() {
-    ipc.send('wm', 'minimize')
+    this.send('minimize')
   }
 
   preview(file) {
-    ipc.send('wm', 'preview', file)
+    this.send('preview', file)
+  }
+
+  send(type, ...params) {
+    ipc.send('wm', type, ...params)
   }
 }
 

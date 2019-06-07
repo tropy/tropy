@@ -337,7 +337,7 @@ $editor-pseudo-selection-bg: var(--brand-primary-light-10);
 
 $blockquote-border-color: var(--shade-8);
 $selected-node-color:     var(--brand-primary);
-$editor-hr-border-color:  var(--shade-8);
+$editor-hr-border-color:  var(--shade-1);
 $line-number-color:       var(--shade-6);;
 
 // Preferences
@@ -382,3 +382,6 @@ $option-active-bg:        var(--shade-4);
 $option-selected-bg:      var(--shade-5);
 $option-no-matches-color: var(--shade-6);
 $option-separator-color:  var(--shade-1);
+
+// Recent projects
+$project-name-hover-bg: var(--shade-4-lighten-2);

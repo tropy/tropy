@@ -16,6 +16,7 @@ const css = require('../../css')
 const { restrict } = require('../../common/util')
 const { darwin } = require('../../common/os')
 const { rad } = require('../../common/math')
+const { info } = require('../../common/log')
 const PIXI = require('pixi.js')
 const { TextureCache, skipHello } = PIXI.utils
 const { constrain, Picture } = require('./picture')
@@ -67,6 +68,10 @@ class EsperView extends React.Component {
     append(this.pixi.view, this.container)
 
     on(this.container, 'wheel', this.handleWheel, { passive: true })
+
+    info(`esper using ${
+      this.pixi.renderer instanceof PIXI.WebGLRenderer ? 'webgl' : 'canvas'
+    } renderer`)
   }
 
   componentWillUnmount() {

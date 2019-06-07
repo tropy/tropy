@@ -41,7 +41,6 @@ class ProjectContainer extends React.Component {
     super(props)
 
     this.state = {
-      isClosed: props.project.closed != null,
       isClosing: this.isClosing(props),
       mode: props.nav.mode,
       offset: props.ui.panel.width,
@@ -134,7 +133,6 @@ class ProjectContainer extends React.Component {
   projectWillChange = debounce(project => {
     this.setState({
       isClosing: this.isClosing({ project }),
-      isClosed: (project.closed != null)
     })
   }, 750, { leading: false })
 
@@ -210,11 +208,13 @@ class ProjectContainer extends React.Component {
         connect={this.props.dt}
         canDrop={this.props.canDrop}
         isOver={this.props.isOver}
-        onProjectCreate={this.props.onProjectCreate}/>
+        onProjectCreate={this.props.onProjectCreate}
+        onProjectOpen={this.props.onProjectOpen}
+        recent={ARGS.recent}/>
     )
   }
   render() {
-    if (this.state.isClosed || !this.props.project.file)
+    if (!this.props.project.file || this.props.project.closed)
       return this.renderNoProject()
 
     const {

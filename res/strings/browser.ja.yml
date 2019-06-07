@@ -2,7 +2,12 @@ ja:
   dialog:
     file:
       project: Tropyプロジェクト
+      plugin: プラグイン
     crashed:
+      buttons:
+      - Close Window
+      - Restart Tropy
+      - Show Logs
       message: Tropyがクラッシュしました
       detail: >
           この問題を https://github.com/tropy/tropy で報告してください
@@ -13,6 +18,12 @@ ja:
       message: Tropyが応答していません
       detail: >
           Tropyが応答していません。強制終了しますか？応答を待ちますか？
+    unhandled:
+      buttons:
+      - Dismiss
+      - Copy Error
+      - Show Logs
+      message: Unhandled Error
   window:
     prefs:
       title: Tropy設定

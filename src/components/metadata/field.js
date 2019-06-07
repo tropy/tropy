@@ -150,7 +150,7 @@ class StaticField extends React.PureComponent {
   }
 
   render() {
-    return this.props.value && (
+    return (this.props.value == null) ? null : (
       <li className={cx(this.classes)}>
         <label>
           <FormattedMessage id={this.props.label}/>

@@ -1,7 +1,7 @@
 'use strict'
 
 const { EventEmitter } = require('events')
-const { extname, join, resolve } = require('path')
+const { extname, join } = require('path')
 
 const {
   app,
@@ -100,24 +100,32 @@ class Tropy extends EventEmitter {
   }
 
   open(file) {
-    if (file == null) {
-      let win = this.wm.current()
-      if (win != null) {
-        return (win.show(), false)
-      }
-
-      for (let recent of this.state.recent) {
-        if (exists(recent))
-          return (this.openProject(recent), false)
-      }
-
-      this.showWizardWindow()
-      return false
+    if (file != null) {
+      return this.openFile(file)
     }
 
+    let win = this.wm.current()
+    if (win != null) {
+      win.show()
+
+    } else if (this.state.recent.length === 0) {
+      this.showWizardWindow()
+
+    } else {
+      let recent = this.state.recent[0]
+      if (exists(recent))
+        this.showProjectWindow(recent)
+      else
+        this.showProjectWindow()
+    }
+
+    return false
+  }
+
+  openFile(file) {
     switch (extname(file)) {
       case '.tpy':
-        this.openProject(file)
+        this.showProjectWindow(file)
         break
       case '.jpg':
       case '.jpeg':
@@ -144,22 +152,30 @@ class Tropy extends EventEmitter {
     })
 
     if (files) {
-      await this.openProject(files[0], win)
+      await this.showProjectWindow(files[0], win)
     }
   }
 
-  async openProject(file, win = this.wm.current()) {
-    file = resolve(file)
-    info(`opening ${file}...`)
+  async showProjectWindow(file, win = this.wm.current()) {
+    info(`open project ${file}`)
 
     if (win == null) {
-      await this.wm.open('project', { file, ...this.hash }, {
+      let args = {
+        file,
+        recent: this.state.recent,
+        ...this.hash
+      }
+
+      await this.wm.open('project', args, {
         show: 'init',
         title: '',
         ...this.state.win.bounds
       })
     } else {
-      this.dispatch(act.project.open(file), win)
+      if (file) {
+        this.dispatch(act.project.open(file), win)
+      }
+
       win.show()
     }
 
@@ -190,6 +206,7 @@ class Tropy extends EventEmitter {
         break
     }
 
+    this.wm.send('project', 'recent', this.state.recent)
     this.emit('app:reload-menu')
   }
 
@@ -273,9 +290,10 @@ class Tropy extends EventEmitter {
   }
 
   migrate(state) {
-    if (state.version != null) {
+    if (state.version == null)
+      this.isFirstRun = true
+    else
       migrate(this, state, state.version)
-    }
 
     state.locale = this.getLocale(state.locale)
     state.uuid = state.uuid || require('uuid/v1')()
@@ -491,7 +509,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:clear-recent-projects', () => {
-      info('clearing recent projects...')
+      info('clear recent projects')
       this.state.recent = []
       this.emit('app:reload-menu')
     })
@@ -501,7 +519,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:switch-locale', async (_, locale) => {
-      info(`switching to "${locale}" locale...`)
+      info(`switch to "${locale}" locale`)
       this.state.locale = locale
       await this.load()
       this.updateWindowLocale()
@@ -686,7 +704,7 @@ class Tropy extends EventEmitter {
         BrowserWindow.fromWebContents(event.sender)))
 
     ipc.on(PROJECT.CREATE, () => this.showWizardWindow())
-    ipc.on(PROJECT.CREATED, (_, { file }) => this.openProject(file))
+    ipc.on(PROJECT.CREATED, (_, { file }) => this.showProjectWindow(file))
 
     ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
       if (id === 'update.ready' && confirm) {
@@ -831,7 +849,7 @@ class Tropy extends EventEmitter {
   }
 
   setTheme(theme = this.state.theme) {
-    info(`switching to "${theme}" theme...`)
+    info(`switch to "${theme}" theme`)
     this.state.theme = theme
 
     if (darwin) {

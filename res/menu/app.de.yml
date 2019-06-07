@@ -87,7 +87,6 @@ de:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-          condition: window
         - type: separator
         - label: Menüleiste ausblenden
           command: 'app:toggle-menu-bar'
@@ -272,7 +271,6 @@ de:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-          condition: window
         - type: separator
         - label: Echte Größe
           command: 'app:zoom-reset'
@@ -458,7 +456,6 @@ de:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-          condition: window
         - type: separator
         - label: Menüleiste ausblenden
           command: 'app:toggle-menu-bar'

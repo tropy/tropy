@@ -8,8 +8,18 @@ const ACTIVITY = {
 }
 
 const BODY = {
-  dark: '#2f2f2f',
-  light: '#f6f6f6'
+  linux: {
+    dark: '#333333',
+    light: '#f6f6f6'
+  },
+  darwin: {
+    dark: '#333333',
+    light: '#f6f6f6'
+  },
+  win32: {
+    dark: '#333333',
+    light: '#f0f0f0'
+  }
 }
 
 const COLUMN = {

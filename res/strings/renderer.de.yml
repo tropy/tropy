@@ -87,6 +87,7 @@ de:
     none: Ziehen Sie eine Projektdatei hierher oder erstellen Sie ein {newProject}
     empty: Fotos ins Tropy Fenster ziehen und los geht’s!
     new: neues Projekt
+    recent: Benutzte Projekte
   wizard:
     project:
       title: Neues Projekt erstellen
@@ -290,7 +291,7 @@ de:
     error:
       title: Fehler
       buttons:
-      - OK
+      - Ausblenden
       - Fehlermeldung kopieren
       - Logs anzeigen
     prompt:
@@ -486,6 +487,7 @@ de:
       order: Notizen sortieren …
       restore: Notizen wiederherstellen …
     selection:
+      create: Ausschnitt erstellen …
       load: Ausschnitte laden …
   editor:
     commands:

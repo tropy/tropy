@@ -42,10 +42,6 @@ function log({
   }
 
   if (rotate && typeof dest === 'string') {
-    const path = require('path')
-    const mkdir = require('mkdirp')
-
-    mkdir.sync(path.dirname(dest))
     logRotate(dest)
   }
 
