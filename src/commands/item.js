@@ -1,8 +1,8 @@
 'use strict'
 
+const { debug, warn } = require('../common/log')
 const { clipboard } = require('electron')
 const assert = require('assert')
-const { warn, verbose } = require('../common/log')
 const { DuplicateError } = require('../common/error')
 const { all, call, put, select, cps } = require('redux-saga/effects')
 const { Command } = require('./command')
@@ -18,7 +18,6 @@ const { MODE } = require('../constants/project')
 const { keys } = Object
 const { writeFile: write } = require('fs')
 const { win } = require('../window')
-const { groupedByTemplate } = require('../export')
 
 const {
   getGroupedItems,
@@ -123,16 +122,14 @@ class Import extends ImportCommand {
         yield put(act.item.insert(item))
         items.push(item.id)
 
-      } catch (error) {
-        if (error instanceof DuplicateError) {
-          verbose(`Skipping duplicate "${file}"...`)
+      } catch (e) {
+        if (e instanceof DuplicateError) {
+          debug(`skipping duplicate "${file}"...`)
           continue
         }
 
-        warn(`Failed to import "${file}": ${error.message}`)
-        verbose(error.stack)
-
-        fail(error, this.action.type)
+        warn({ stack: e.stack }, `failed to import "${file}"`)
+        fail(e, this.action.type)
       }
     }
 
@@ -168,12 +165,10 @@ class Destroy extends Command {
     const { db } = this.options
     const ids = this.action.payload
 
-    const { cancel } = yield call(prompt, 'message', {
-      prefix: 'dialog.prompt.item.destroy.'
-    })
+    const { cancel } = yield call(prompt, 'item.destroy')
+    if (cancel) return
 
     this.init = performance.now()
-    if (cancel) return
 
     try {
       if (ids.length) {
@@ -406,6 +401,9 @@ class Export extends Command {
 
       const [templateItems, ...resources] = yield select(getGroupedItems(ids))
 
+      // NB: load on-demand because jsonld is huge!
+      const { groupedByTemplate } = require('../export')
+
       const results = yield call(groupedByTemplate, templateItems, resources)
       const asString = JSON.stringify(results, null, 2)
 
@@ -419,11 +417,9 @@ class Export extends Command {
         default:
           yield cps(write, target, asString)
       }
-    } catch (error) {
-      warn(`Failed to export items to ${target}: ${error.message}`)
-      verbose(error.stack)
-
-      fail(error, this.action.type)
+    } catch (e) {
+      warn({ stack: e.stack }, `failed to export items to ${target}`)
+      fail(e, this.action.type)
     }
   }
 }
@@ -464,12 +460,12 @@ class Preview extends Command {
   *exec() {
     if (!darwin) return
 
-    const { photos } = this.action.payload
-    const paths = yield select(state =>
+    let { photos } = this.action.payload
+    let paths = yield select(state =>
       photos.map(id => get(state.photos, [id, 'path'])))
 
     if (paths.length > 0) {
-      win.current.previewFile(paths[0])
+      win.preview(paths[0])
     }
   }
 }

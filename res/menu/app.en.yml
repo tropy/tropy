@@ -13,20 +13,28 @@ en:
             - label: 'Item'
               command: 'app:create-item'
               accelerator: 'CmdOrCtrl+Shift+N'
+              condition: 'project'
             - label: 'List'
               command: 'app:create-list'
               accelerator: 'CmdOrCtrl+Shift+L'
+              condition: 'project'
             - label: 'Tag'
               command: 'app:create-tag'
               accelerator: 'CmdOrCtrl+Shift+A'
+              condition: 'project'
         - type: 'separator'
         - &open
-          label: 'Open'
+          label: 'Open…'
           accelerator: 'CmdOrCtrl+O'
           command: 'app:open-dialog'
+        - &open-new
+          label: 'Open In New Window…'
+          accelerator: 'Shift+CmdOrCtrl+O'
+          command: 'app:open-new-dialog'
         - &recent
           label: 'Recent Projects'
           id: 'recent'
+          role: 'recentDocuments'
           enabled: false
           submenu:
             - type: 'separator'
@@ -37,15 +45,22 @@ en:
           label: 'Import Photos…'
           command: 'app:import-photos'
           accelerator: 'CmdOrCtrl+Shift+I'
+          condition: 'project'
         - &consolidate
           label: 'Consolidate Photo Library'
           command: 'app:consolidate-photo-library'
+          condition: 'project'
         - type: 'separator'
-        - label: 'Close'
-          accelerator: 'CmdOrCtrl+W'
+        - &close
+          label: 'Close Project'
+          command: 'app:close-project'
+          condition: 'project'
+        - type: 'separator'
+        - label: 'Close Window'
+          accelerator: 'Ctrl+W'
           role: 'close'
-        - type: 'separator'
-        - label: 'Quit'
+        - &quit
+          label: 'Quit %name'
           accelerator: 'CmdOrCtrl+Q'
           role: 'quit'
     - &edit
@@ -87,39 +102,40 @@ en:
     - &view
       label: '&View'
       submenu:
-        - &fullscreen
-          label: 'Toggle &Full Screen'
-          role: 'togglefullscreen'
-        - label: 'Toggle Hide &Menu Bar'
-          command: 'app:toggle-menu-bar'
+        - &reload
+          label: '&Reload'
+          accelerator: 'CmdOrCtrl+R'
+          command: 'win:reload'
         - type: 'separator'
-        - &zoom
-          label: 'Zoom'
-          submenu:
-            - label: 'Zoom In'
-              command: 'app:zoom-in'
-            - label: 'Zoom Out'
-              command: 'app:zoom-out'
-            - type: 'separator'
-            - label: 'Reset'
-              command: 'app:zoom-reset'
-    - &win
-      label: 'Window'
-      submenu:
-        - label: 'Minimize'
-          accelerator: 'CmdOrCtrl+M'
-          role: 'minimize'
-        - label: 'Move to Center'
+        - label: 'Toggle &Menu Bar'
+          command: 'app:toggle-menu-bar'
+        - &center-window
+          label: 'Move to Center'
           command: 'app:center-window'
+          condition: 'window'
+        - type: 'separator'
+        - &zoom-reset
+          label: 'Actual Size'
+          command: 'app:zoom-reset'
+          accelerator: 'CmdOrCtrl+0'
+        - &zoom-in
+          label: 'Zoom In'
+          command: 'app:zoom-in'
+          accelerator: 'CmdOrCtrl+Plus'
+        - &zoom-out
+          label: 'Zoom Out'
+          command: 'app:zoom-out'
+          accelerator: 'CmdOrCtrl+-'
+        - type: 'separator'
+        - &fullscreen
+          label: 'Enter &Full Screen'
+          role: 'togglefullscreen'
+          condition: 'window'
     - &dev
       label: 'Developer'
       id: 'dev'
       submenu:
-        - label: '&Reload'
-          accelerator: 'CmdOrCtrl+R'
-          command: 'win:reload'
         - label: 'Reload &Styles'
-          accelerator: 'CmdOrCtrl+S'
           command: 'win:refresh'
         - label: 'Toggle &Developer Tools'
           accelerator: 'CmdOrCtrl+D'
@@ -134,8 +150,6 @@ en:
         - type: 'separator'
         - label: 'Rebase Project'
           command: 'app:rebase-project'
-        - label: 'Close Project'
-          command: 'app:close-project'
         - type: 'separator'
         - label: 'Theme'
           id: 'theme'
@@ -171,6 +185,9 @@ en:
         - &userData
           label: 'Show User-Data Folder'
           command: 'app:open-user-data'
+        - &cache
+          label: 'Show Cache Folder'
+          command: 'app:open-cache-folder'
         - type: 'separator'
         - &updaterCheck
           id: 'updater-check'
@@ -191,11 +208,13 @@ en:
         - type: 'separator'
         - label: 'About %name'
           command: 'app:about'
+          condition: '!prefs'
   darwin:
     - label: '%name'
       submenu:
         - label: 'About %name'
           command: 'app:about'
+          condition: '!prefs'
         - type: 'separator'
         - label: 'Preferences…'
           accelerator: 'Command+,'
@@ -210,22 +229,19 @@ en:
         - label: 'Show All'
           role: 'unhide'
         - type: 'separator'
-        - label: 'Quit'
-          accelerator: 'Command+Q'
-          role: 'quit'
+        - *quit
     - label: 'File'
       submenu:
         - *new
         - type: 'separator'
         - *open
+        - *open-new
         - *recent
         - type: 'separator'
         - *import
         - *consolidate
         - type: 'separator'
-        - label: 'Close'
-          accelerator: 'Command+W'
-          role: 'close'
+        - *close
     - label: 'Edit'
       submenu:
         - *undo
@@ -237,23 +253,34 @@ en:
         - *all
     - label: 'View'
       submenu:
-        - *fullscreen
+        - *reload
         - type: 'separator'
-        - *zoom
+        - *zoom-reset
+        - *zoom-in
+        - *zoom-out
+        - type: 'separator'
+        - *fullscreen
     - label: 'Window'
       role: 'window'
       submenu:
         - label: 'Minimize'
-          accelerator: 'CmdOrCtrl+M'
+          accelerator: 'Cmd+M'
           role: 'minimize'
-        - label: 'Move to Center'
-          command: 'app:center-window'
-        - label: 'Close'
-          accelerator: 'CmdOrCtrl+W'
-          role: 'close'
+          condition: 'window'
+        - label: 'Zoom'
+          accelerator: 'Ctrl+Cmd+Z'
+          role: 'zoom'
+          condition: 'window'
+        - type: 'separator'
+        - *center-window
         - type: 'separator'
         - label: 'Bring All to Front'
           role: 'front'
+        - type: 'separator'
+        - label: 'Close'
+          accelerator: 'Cmd+W'
+          role: 'close'
+          condition: 'window'
     - *dev
     - label: 'Help'
       role: 'help'
@@ -265,6 +292,7 @@ en:
         - *logs
         - *plugins
         - *userData
+        - *cache
         - type: 'separator'
         - *updaterCheck
         - *updaterIsChecking
@@ -283,6 +311,5 @@ en:
         - *paste
         - *preferences
     - *view
-    - *win
     - *dev
     - *help

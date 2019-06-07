@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = {
+const MIME = {
   GIF: 'image/gif',
   JPG: 'image/jpeg',
   JPEG: 'image/jpeg',
@@ -11,3 +11,16 @@ module.exports = {
   TIFF: 'image/tiff',
   WEBP: 'image/webp'
 }
+
+const SUPPORTED_IMAGE = {
+  [MIME.GIF]: true,
+  [MIME.JPEG]: true,
+  [MIME.PNG]: true,
+  [MIME.SVG]: true,
+  [MIME.TIFF]: true,
+  [MIME.WEBP]: true
+}
+
+MIME.isImageSupported = (file) => SUPPORTED_IMAGE[file.type]
+
+module.exports = MIME

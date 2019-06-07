@@ -1,119 +1,107 @@
 'use strict'
 
-const { Logger, transports } = require('winston')
-const { basename, join } = require('path')
-const { assign } = Object
+const pino = require('pino')
 const { system } = require('./os')
 const { version } = require('./release')
-const { sync: mkdir } = require('mkdirp')
 
-const ms = require('ms')
-const colors = require('colors/safe')
+let instance
 
-const [SYMBOL, LABEL] = (process.type === 'renderer') ?
-  ['ρ', `${basename(window.location.pathname, '.html')}`] :
-  ['β', 'main']
-
-const PADDING = 8
-
-const COLORS = {
-  error: 'red',
-  warn: 'yellow',
-  info: 'blue',
-  verbose: 'magenta',
-  debug: 'green'
+function logRotate(file, suffix = '.1') {
+  try {
+    const fs = require('fs')
+    fs.copyFileSync(file, file + suffix)
+    fs.truncateSync(file)
+  } catch (e) {
+    if (e.code !== 'ENOENT') throw e
+  }
 }
 
-const seq = timer()
-
-const logger = new Logger({
-  level: 'verbose',
-  transports: []
-})
-
-
-function init(dir, {
-  debug,
-  environment,
-  locale
+function log({
+  dest = 2,
+  level,
+  name = 'log',
+  rotate = false,
+  debug = process.env.TROPY_DEBUG,
+  trace = process.env.TROPY_TRACE
 } = {}) {
-  logger.clear()
-  if (debug) logger.level = 'debug'
 
-  switch (environment) {
-    case 'development':
-      logger.add(transports.Console, {
-        handleExceptions: true,
-        humanReadableUnhandledException: true,
-        formatter
-      })
-      // eslint-disable-next-line no-fallthrough
+  if (!level && trace) level = 'trace'
+  if (!level && debug) level = 'debug'
+
+  switch (process.env.NODE_ENV) {
     case 'production':
-      if (dir) {
-        mkdir(dir)
-        logger.add(transports.File, {
-          label: LABEL,
-          filename: join(dir, `${LABEL}.log`),
-          tailable: true,
-          handleExceptions: true,
-          humanReadableUnhandledException: true,
-          options: { flags: 'w' }
-        })
-      }
-
+      level = level || 'info'
+      break
+    case 'development':
+      level = level || 'debug'
+      break
+    case 'test':
+      level = level || 'error'
+      dest = 2
       break
   }
 
-  logger.info(`log.init ${version}`, {
-    dpx: global.devicePixelRatio,
-    environment,
-    locale,
-    system,
-    version
-  })
-
-  return module.exports
-}
-
-function *timer() {
-  for (let a = Date.now(), b;; a = b) {
-    yield ((b = Date.now()), b - a)
-  }
-}
-
-function time() {
-  return colors.gray((`+${ms(seq.next().value)}`).padStart(PADDING, ' '))
-}
-
-function colorize(level, string = level) {
-  return colors[COLORS[level] || 'gray'](string)
-}
-
-function text(options) {
-  let meta = assign({}, options.meta)
-  let message = options.message
-
-  if (meta.module) {
-    message = `[${meta.module}] ${message}`
+  if (rotate && typeof dest === 'string') {
+    logRotate(dest)
   }
 
-  return message
+  instance = pino({
+    level,
+    base: {
+      type: process.type,
+      name
+    }
+  }, pino.destination(dest))
+
+  return log
 }
 
-function formatter(options) {
-  return `${time()} ${colorize(options.level, SYMBOL)} ${text(options)}`
-}
+Object.defineProperties(log, {
+  instance: {
+    get() {
+      if (instance == null) log()
+      return instance
+    }
+  },
 
+  logger: {
+    get() {
+      return this.instance
+    }
+  }
+})
 
-module.exports = assign(init, {
-  logger,
+module.exports = Object.assign(log, {
+  fatal(...args) {
+    log.instance.fatal(...args)
+  },
+  error(...args) {
+    log.instance.error(...args)
+  },
+  warn(...args) {
+    log.instance.warn(...args)
+  },
+  info(...args) {
+    log.instance.info(...args)
+  },
+  debug(...args) {
+    log.instance.debug(...args)
+  },
+  trace(...args) {
+    log.instance.trace(...args)
+  },
 
-  query: logger.query.bind(logger),
-  profile: logger.profile.bind(logger),
-  log: logger.log.bind(logger),
-  debug: logger.debug.bind(logger),
-  verbose: logger.verbose.bind(logger),
-  info: logger.info.bind(logger),
-  warn: logger.warn.bind(logger),
-  error: logger.error.bind(logger)
+  crashReport(e, msg) {
+    try {
+      return JSON.stringify({
+        msg: msg || `unhandled error: ${e.message}`,
+        stack: e.stack,
+        system,
+        time: Date.now(),
+        version
+      })
+    } catch (_) {
+      return JSON.stringify({ stack: (e || _).stack })
+    }
+  }
 })

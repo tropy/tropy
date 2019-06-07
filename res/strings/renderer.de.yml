@@ -87,6 +87,7 @@ de:
     none: Ziehen Sie eine Projektdatei hierher oder erstellen Sie ein {newProject}
     empty: Fotos ins Tropy Fenster ziehen und los geht’s!
     new: neues Projekt
+    recent: Benutzte Projekte
   wizard:
     project:
       title: Neues Projekt erstellen
@@ -284,29 +285,40 @@ de:
     description: Beschreibung
     comment: Kommentar
   dialog:
-    ok: Ja
-    cancel: Abbrechen
+    notify:
+      buttons:
+      - OK
+    error:
+      title: Fehler
+      buttons:
+      - Ausblenden
+      - Fehlermeldung kopieren
+      - Logs anzeigen
     prompt:
       item:
         destroy:
-          ok: Löschen
-          cancel: Abbrechen
           message: >
               Objekte vollständig löschen? Dies kann nicht mehr rückgängig gemacht
               werden.
+          buttons:
+          - Abbrechen
+          - Löschen
       dup:
-        message: >
+        detail: >
             Dieses Foto ist bereits im Projekt vorhanden. Nochmals importieren?
-        checkbox: Auswahl merken
-        cancel: Überspringen
-        ok: Nochmals importieren
+        checkboxLabel: Auswahl merken
+        buttons:
+        - Überspringen
+        - Nochmals importieren
       plugin:
         uninstall:
-          ok: Löschen
-          cancel: Abbrechen
-          message: >
+          type: warning
+          detail: >
               Diesen Plugin samt Konfiguration vollständig entfernen? Dies kann nicht
               mehr rückgängig gemacht werden.
+          buttons:
+          - Abbrechen
+          - Löschen
     filter:
       csv: CSV
       templates: Tropy-Vorlagen
@@ -475,6 +487,7 @@ de:
       order: Notizen sortieren …
       restore: Notizen wiederherstellen …
     selection:
+      create: Ausschnitt erstellen …
       load: Ausschnitte laden …
   editor:
     commands:

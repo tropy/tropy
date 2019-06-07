@@ -14,7 +14,7 @@ const {
 
 
 const PhotoToolbar = (props) => (
-  <Toolbar isDraggable={false}>
+  <Toolbar>
     <Toolbar.Left>
       <IconPhoto/>
       <h4>

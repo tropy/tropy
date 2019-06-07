@@ -37,7 +37,7 @@ const IGNORE = [
   /^\/db.test/,
   /^\/dist/,
   /^\/doc/,
-  /^\/ext/,
+  /^\/vendor/,
   /^\/res.ext/,
   /^\/res.mime/,
   /^\/res.icons.dev/,
@@ -61,6 +61,7 @@ const IGNORE = [
   /node_modules.jsonld.dist/,
   /node_modules.pixi\.js.dist/,
   /node_modules.pixi-gl-core.bin/,
+  /node_modules.@pixi[/\\].+[/\\]dist/,
   /node_modules.resource-loader.dist/,
   /node_modules.(react-)?redux.(dist|es|src)/,
   /node_modules.react-transition-group.dist/,
@@ -151,18 +152,21 @@ target.all = async (args = []) => {
           cp('-r', join(dir, SHARP, '*'), join(unpacked, SHARP))
         }
 
-        say(`renaming executable to ${qualified.name}...`)
+        say(`rename executable to ${qualified.name}...`)
         rename(dst, qualified.product, qualified.name)
 
-        say('creating .desktop file...')
+        say('create .desktop file...')
         desktop().to(join(dst, `${qualified.name}.desktop`))
 
-        say('copying icons...')
+        say('copy icons...')
         copyIcons(dst)
 
-        say('copying mime types...')
+        say('copy mime types...')
         mkdir('-p', join(dst, 'mime', 'packages'))
         cp(join(res, 'mime', '*.xml'), join(dst, 'mime', 'packages'))
+
+        say('copy installation instructions...')
+        cp(join(res, 'INSTALL'), dst)
 
         break
       }

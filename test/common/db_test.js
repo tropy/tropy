@@ -2,10 +2,8 @@
 
 __require('common/promisify')
 
-const { mkdtmp } = require('../support/tmpdir')
+const { mktmp } = require('../support/tmp')
 const { rm } = require('../support/rm')
-
-const { join } = require('path')
 const { all, map, using } = require('bluebird')
 const { times } = __require('common/util')
 const { Database, Connection, Statement } = __require('common/db')
@@ -14,8 +12,8 @@ function failure() { throw new Error() }
 
 describe('Database', () => {
   describe('given a database file', () => {
+    const dbFile = mktmp('db_test.sqlite')
     let db
-    const dbFile = join(mkdtmp(), 'db_test.sqlite')
 
     beforeEach(() => {
       db = new Database(dbFile)
@@ -141,16 +139,16 @@ describe('Database', () => {
 
     describe('#seq()', () => {
       it('exposes a connection', () =>
-        expect(db.seq(conn => {
-          let ps = []
+        db.seq(async conn => {
+          let spy = sinon.spy()
 
           expect(db.busy).to.eql(1)
-          ps.push(conn.run('SELECT * FROM sqlite_master'))
-          ps.push(conn.run('SELECT * FROM sqlite_master'))
+          await conn.run('CREATE TABLE a (x)')
+          await conn.run('CREATE TABLE b (x)')
+          await conn.each('SELECT * FROM sqlite_master', spy)
+          expect(spy).to.have.been.calledTwice
           expect(db.busy).to.eql(1)
-
-          return all(ps)
-        })).to.eventually.be.fulfilled)
+        }))
 
       it('rejects on error', () =>
         expect(db.seq(failure)).to.eventually.be.rejected)
@@ -281,9 +279,8 @@ describe('Database', () => {
   })
 
   describe('Instance Cache', () => {
-    const tmp = mkdtmp()
-    const db1 = join(tmp, 'db1.sqlite')
-    const db2 = join(tmp, 'db2.sqlite')
+    const db1 = mktmp('db1.sqlite')
+    const db2 = mktmp('db2.sqlite')
 
     it('caches db pool instances for each file', (done) => {
       const a = Database.cached(db1)

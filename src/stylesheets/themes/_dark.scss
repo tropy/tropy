@@ -22,23 +22,6 @@ $brand-primary-dark: $blue-dark;
 $brand-primary-light: $blue-light;
 $brand-primary-overlay: $blue-overlay;
 
-:root {
-  #{--brand-primary}:            $brand-primary;
-  #{--brand-primary-30}:         rgba($brand-primary, 0.3);
-  #{--brand-primary-35}:         rgba($brand-primary, 0.35);
-  #{--brand-primary-60}:         rgba($brand-primary, 0.6);
-  #{--brand-primary-darken-2}:   darken($brand-primary, 2%);
-  #{--brand-primary-dark}:       $brand-primary-dark;
-  #{--brand-primary-light}:      $brand-primary-light;
-  #{--brand-primary-light-10}:   rgba($brand-primary-light, 0.1);
-  #{--brand-primary-light-76}:   rgba($blue-light, 0.76);
-  #{--brand-primary-lighten-14}: saturate(lighten($brand-primary, 14%), 14%);
-  #{--brand-primary-overlay}:    $brand-primary-overlay;
-  #{--red}:                      $red;
-  #{--red-64}:                   rgba($red, 0.64);
-  #{--green}:                    $green;
-}
-
 
 // Grays
 // --------------------------------------------------
@@ -56,49 +39,6 @@ $shade-7:  #777; // Icon color, sidebar headings
 $shade-8:  #999; // Softened text, active icon
 $shade-9:  #bbb; // Text color
 $shade-10: #fff; // White
-
-:root {
-  #{--transparent}:        $transparent;
-  #{--shade-0}:            $shade-0;
-  #{--shade-0-20}:         rgba($shade-0, 0.2);
-  #{--shade-0-80}:         rgba($shade-0, 0.8);
-  #{--shade-1}:            $shade-1;
-  #{--shade-1-lighten-2}:  lighten($shade-1, 2%);
-  #{--shade-1-lighten-4}:  lighten($shade-1, 4%);
-  #{--shade-1-lighten-6}:  lighten($shade-1, 6%);
-  #{--shade-1-darken-10}:  darken($shade-1, 10%);
-  #{--shade-2}:            $shade-2;
-  #{--shade-3}:            $shade-3;
-  #{--shade-3-50}:         rgba($shade-3, 0.5);
-  #{--shade-3-60}:         rgba($shade-3, 0.6);
-  #{--shade-4}:            $shade-4;
-  #{--shade-4-lighten-2}:  lighten($shade-4, 2%);
-  #{--shade-4-lighten-4}:  lighten($shade-4, 4%);
-  #{--shade-4-lighten-6}:  lighten($shade-4, 6%);
-  #{--shade-4-lighten-8}:  lighten($shade-4, 8%);
-  #{--shade-5}:            $shade-5;
-  #{--shade-5-50}:         rgba($shade-5, 0.5);
-  #{--shade-5-lighten-5}:  lighten($shade-5, 5%);
-  #{--shade-6}:            $shade-6;
-  #{--shade-6-lighten-2}:  lighten($shade-6, 2%);
-  #{--shade-6-lighten-5}:  lighten($shade-6, 5%);
-  #{--shade-7}:            $shade-7;
-  #{--shade-7-darken-5}:   darken($shade-7, 5%);
-  #{--shade-7-50}:         rgba($shade-7, 0.5);
-  #{--shade-8}:            $shade-8;
-  #{--shade-8-darken-5}:   darken($shade-8, 5%);
-  #{--shade-9}:            $shade-9;
-  #{--shade-10}:           $shade-10;
-  #{--shade-10-2}:         rgba($shade-10, 0.02);
-  #{--shade-10-5}:         rgba($shade-10, 0.05);
-  #{--shade-10-10}:        rgba($shade-10, 0.1);
-  #{--shade-10-20}:        rgba($shade-10, 0.2);
-  #{--shade-10-16}:        rgba($shade-10, 0.16);
-  #{--shade-10-50}:        rgba($shade-10, 0.5);
-  #{--shade-10-darken-4}:  darken($shade-10, 4%);
-  #{--shade-10-darken-14}: darken($shade-10, 14%);
-  #{--shade-10-darken-19}: darken($shade-10, 24%); // Darken shade-10-darken-14 by 10%
-}
 
 
 // Tag colors
@@ -119,14 +59,11 @@ $tag-colors: (
   color-lavender:   #a28ae6
 );
 
-@each $key, $val in $tag-colors {
-  :root {
-    #{--#{$key}}: $val;
-    #{--#{$key}-dark}: mix(#000, $val, 20%);
-  }
+$tag-color-shades: ();
 
-  $tag-colors: map-merge(
-    $tag-colors,
+@each $key, $val in $tag-colors {
+  $tag-color-shades: map-merge(
+    $tag-color-shades,
     (
       $key: (
         color-base: var(--#{$key}),
@@ -140,11 +77,13 @@ $tag-colors: (
 // Scaffolding
 // --------------------------------------------------
 
-$body-bg:                  var(--shade-3);
-$text-color:               var(--shade-9);
-$soft-text-color:          var(--shade-8);
-$muted-text-color:         var(--shade-7);
-$project-closing-backdrop: var(--shade-3-60);
+$body-bg:          var(--shade-3);
+$text-color:       var(--shade-9);
+$soft-text-color:  var(--shade-8);
+$muted-text-color: var(--shade-7);
+$tropy-icon-color: var(--shade-1);
+$cover-bg:         var(--shade-3);
+
 
 // Typography
 // --------------------------------------------------
@@ -186,30 +125,6 @@ $checkbox-overlay-checked-active-bg:     var(--shade-10-darken-19);
 $checkbox-checked-active-border:         var(--shade-8-darken-5);
 $checkbox-overlay-checked-active-border: var(--shade-10-darken-19);
 $tick-color:                             var(--shade-4);
-
-:root {
-
-  // Level 2
-  #{--level-2-border}:                var(--shade-1-lighten-2);
-  #{--level-2-bg}:                    var(--shade-4);
-  #{--level-2-input-bg-readonly}:     var(--shade-4-lighten-4);
-  #{--level-2-fieldset-bg}:           var(--shade-4-lighten-4);
-  #{--level-2-btn-default-active-bg}: var(--shade-3);
-
-  // Level 3
-  #{--level-3-border}:                var(--shade-1-lighten-4);
-  #{--level-3-bg}:                    var(--shade-4-lighten-2);
-  #{--level-3-input-bg-readonly}:     var(--shade-4-lighten-6);
-  #{--level-3-fieldset-bg}:           var(--shade-4-lighten-6);
-  #{--level-3-btn-default-active-bg}: var(--shade-4);
-
-  // Level 4
-  #{--level-4-border}:                var(--shade-1-lighten-6);
-  #{--level-4-bg}:                    var(--shade-4-lighten-4);
-  #{--level-4-input-bg-readonly}:     var(--shade-4-lighten-8);
-  #{--level-4-fieldset-bg}:           var(--shade-4-lighten-8);
-  #{--level-4-btn-default-active-bg}: var(--shade-4-lighten-2);
-}
 
 // Badge
 $badge-color: var(--shade-10);
@@ -422,7 +337,7 @@ $editor-pseudo-selection-bg: var(--brand-primary-light-10);
 
 $blockquote-border-color: var(--shade-8);
 $selected-node-color:     var(--brand-primary);
-$editor-hr-border-color:  var(--shade-8);
+$editor-hr-border-color:  var(--shade-1);
 $line-number-color:       var(--shade-6);;
 
 // Preferences
@@ -467,3 +382,6 @@ $option-active-bg:        var(--shade-4);
 $option-selected-bg:      var(--shade-5);
 $option-no-matches-color: var(--shade-6);
 $option-separator-color:  var(--shade-1);
+
+// Recent projects
+$project-name-hover-bg: var(--shade-4-lighten-2);

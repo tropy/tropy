@@ -11,18 +11,25 @@ ja:
             - label: アイテム
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
+              condition: project
             - label: リスト
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
+              condition: project
             - label: タグ
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
+              condition: project
         - type: separator
-        - label: ファイルを開く
+        - label: 開く
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
+        - label: Open In New Window…
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
         - label: 最近のプロジェクト
           id: recent
+          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -32,14 +39,19 @@ ja:
         - label: 写真をインポートする
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
+          condition: project
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
+          condition: project
         - type: separator
-        - label: 閉じる
-          accelerator: CmdOrCtrl+W
+        - label: プロジェクトを閉じる
+          command: 'app:close-project'
+          condition: project
+        - type: separator
+        - label: Close Window
+          accelerator: Ctrl+W
           role: close
-        - type: separator
-        - label: 終了
+        - label: 終了 %name
           accelerator: CmdOrCtrl+Q
           role: quit
     - label: 編集
@@ -72,35 +84,33 @@ ja:
           command: 'app:open-preferences'
     - label: 表示
       submenu:
-        - label: 全画面表示にする
-          role: togglefullscreen
-        - label: メニューバーを非表示
-          command: 'app:toggle-menu-bar'
-        - type: separator
-        - label: ズーム
-          submenu:
-            - label: ズームイン
-              command: 'app:zoom-in'
-            - label: ズームアウト
-              command: 'app:zoom-out'
-            - type: separator
-            - label: リセット
-              command: 'app:zoom-reset'
-    - label: ウィンドウ
-      submenu:
-        - label: 最小化
-          accelerator: CmdOrCtrl+M
-          role: minimize
-        - label: 画面中央に寄せる
-          command: 'app:center-window'
-    - label: 開発者向け
-      id: dev
-      submenu:
         - label: リロード
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+        - type: separator
+        - label: メニューバーを隠す
+          command: 'app:toggle-menu-bar'
+        - label: 画面中央に寄せる
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: Actual Size
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: ズームイン
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: ズームアウト
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: 全画面表示にする
+          role: togglefullscreen
+          condition: window
+    - label: 開発者向け
+      id: dev
+      submenu:
         - label: スタイルをリロード
-          accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
@@ -115,8 +125,6 @@ ja:
         - type: separator
         - label: プロジェクトをリベースする
           command: 'app:rebase-project'
-        - label: プロジェクトを閉じる
-          command: 'app:close-project'
         - type: separator
         - label: テーマ
           id: theme
@@ -145,6 +153,8 @@ ja:
           command: 'app:open-plugins-folder'
         - label: ユーザーデータフォルダーを開く
           command: 'app:open-user-data'
+        - label: Show Cache Folder
+          command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
           label: アップデートの確認
@@ -162,11 +172,13 @@ ja:
         - type: separator
         - label: Tropyについて
           command: 'app:about'
+          condition: '!prefs'
   darwin:
     - label: Tropy
       submenu:
         - label: Tropyについて
           command: 'app:about'
+          condition: '!prefs'
         - type: separator
         - label: 設定
           accelerator: 'Command+,'
@@ -181,8 +193,8 @@ ja:
         - label: 全てを表示
           role: unhide
         - type: separator
-        - label: Tropyを終了する
-          accelerator: Command+Q
+        - label: 終了 %name
+          accelerator: CmdOrCtrl+Q
           role: quit
     - label: ファイル
       submenu:
@@ -194,18 +206,25 @@ ja:
             - label: アイテム
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
+              condition: project
             - label: リスト
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
+              condition: project
             - label: タグ
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
+              condition: project
         - type: separator
         - label: 開く
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
+        - label: Open In New Window…
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
         - label: 最近のプロジェクト
           id: recent
+          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -215,12 +234,14 @@ ja:
         - label: 写真をインポートする
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
+          condition: project
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
+          condition: project
         - type: separator
-        - label: プロジェクトを終了する
-          accelerator: Command+W
-          role: close
+        - label: プロジェクトを閉じる
+          command: 'app:close-project'
+          condition: project
     - label: 編集
       submenu:
         - id: undo
@@ -247,40 +268,50 @@ ja:
           role: selectall
     - label: 表示
       submenu:
+        - label: リロード
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - type: separator
+        - label: Actual Size
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: ズームイン
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: ズームアウト
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
         - label: 全画面表示にする
           role: togglefullscreen
-        - type: separator
-        - label: ズーム
-          submenu:
-            - label: ズームイン
-              command: 'app:zoom-in'
-            - label: ズームアウト
-              command: 'app:zoom-out'
-            - type: separator
-            - label: リセット
-              command: 'app:zoom-reset'
+          condition: window
     - label: ウィンドウ
       role: window
       submenu:
         - label: 最小化
-          accelerator: CmdOrCtrl+M
+          accelerator: Cmd+M
           role: minimize
+          condition: window
+        - label: ズーム
+          accelerator: Ctrl+Cmd+Z
+          role: zoom
+          condition: window
+        - type: separator
         - label: 画面中央に寄せる
           command: 'app:center-window'
-        - label: 閉じる
-          accelerator: CmdOrCtrl+W
-          role: close
+          condition: window
         - type: separator
         - label: 全て全面に表示
           role: front
+        - type: separator
+        - label: 閉じる
+          accelerator: Cmd+W
+          role: close
+          condition: window
     - label: 開発者向け
       id: dev
       submenu:
-        - label: リロード
-          accelerator: CmdOrCtrl+R
-          command: 'win:reload'
         - label: スタイルをリロード
-          accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
@@ -295,8 +326,6 @@ ja:
         - type: separator
         - label: プロジェクトをリベースする
           command: 'app:rebase-project'
-        - label: プロジェクトを閉じる
-          command: 'app:close-project'
         - type: separator
         - label: テーマ
           id: theme
@@ -326,6 +355,8 @@ ja:
           command: 'app:open-plugins-folder'
         - label: ユーザーデータフォルダーを開く
           command: 'app:open-user-data'
+        - label: Show Cache Folder
+          command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
           label: アップデートの確認
@@ -352,18 +383,25 @@ ja:
             - label: アイテム
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
+              condition: project
             - label: リスト
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
+              condition: project
             - label: タグ
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
+              condition: project
         - type: separator
         - label: 開く
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
+        - label: Open In New Window…
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
         - label: 最近のプロジェクト
           id: recent
+          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -373,14 +411,19 @@ ja:
         - label: 写真をインポートする
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
+          condition: project
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
+          condition: project
         - type: separator
-        - label: プロジェクトを終了する
-          accelerator: CmdOrCtrl+W
+        - label: プロジェクトを閉じる
+          command: 'app:close-project'
+          condition: project
+        - type: separator
+        - label: Close Window
+          accelerator: Ctrl+W
           role: close
-        - type: separator
-        - label: Tropyを終了する
+        - label: 終了 %name
           accelerator: CmdOrCtrl+Q
           role: quit
     - label: 編集
@@ -410,35 +453,33 @@ ja:
           command: 'app:open-preferences'
     - label: 表示
       submenu:
-        - label: 全画面表示にする
-          role: togglefullscreen
-        - label: メニューバーを隠す
-          command: 'app:toggle-menu-bar'
-        - type: separator
-        - label: ズーム
-          submenu:
-            - label: ズームイン
-              command: 'app:zoom-in'
-            - label: ズームアウト
-              command: 'app:zoom-out'
-            - type: separator
-            - label: リセット
-              command: 'app:zoom-reset'
-    - label: ウィンドウ
-      submenu:
-        - label: 最小化
-          accelerator: CmdOrCtrl+M
-          role: minimize
-        - label: 画面中央に寄せる
-          command: 'app:center-window'
-    - label: 開発者向け
-      id: dev
-      submenu:
         - label: リロード
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+        - type: separator
+        - label: メニューバーを隠す
+          command: 'app:toggle-menu-bar'
+        - label: 画面中央に寄せる
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: Actual Size
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: ズームイン
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: ズームアウト
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: 全画面表示にする
+          role: togglefullscreen
+          condition: window
+    - label: 開発者向け
+      id: dev
+      submenu:
         - label: スタイルをリロード
-          accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
@@ -453,8 +494,6 @@ ja:
         - type: separator
         - label: プロジェクトをリベースする
           command: 'app:rebase-project'
-        - label: プロジェクトを閉じる
-          command: 'app:close-project'
         - type: separator
         - label: テーマ
           id: theme
@@ -483,6 +522,8 @@ ja:
           command: 'app:open-plugins-folder'
         - label: ユーザーデータフォルダーを開く
           command: 'app:open-user-data'
+        - label: Show Cache Folder
+          command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
           label: アップデートの確認
@@ -500,3 +541,4 @@ ja:
         - type: separator
         - label: Tropyについて
           command: 'app:about'
+          condition: '!prefs'

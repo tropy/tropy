@@ -1,0 +1,158 @@
+//
+// Project
+// --------------------------------------------------
+
+.project,
+.no-project {
+  height: 100%;
+  overflow: hidden;
+
+  &.over {
+    @extend %drop-target;
+  }
+}
+
+.project {
+  .main {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0; // Prevent horizontal scrollbar in project-view
+  }
+}
+
+#project-view {
+  display: flex;
+  height: 100%;
+  position: relative;
+  transform: translate3d(0, 0, 0);
+  z-index: $zindex-project;
+  contain: strict;
+  will-change: transform;
+
+  &::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: $project-darken-color;
+    z-index: $zindex-item;
+    opacity: 0;
+  }
+
+  .project-mode-leave &,
+  .project-mode-enter & {
+    transition: transform $mode-transition;
+
+    &::after {
+      content: "";
+      transition: opacity $mode-transition;
+    }
+  }
+
+  .item-mode &,
+  .project-mode-leave-active & {
+    transform: translate3d(-25%, 0, 0);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  .project-mode-enter-active & {
+    transform: translate3d(0, 0, 0);
+
+    &::after {
+      opacity: 0;
+    }
+  }
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; // Needed for horizontal scrollbar in .item-table
+  padding: 0 $space-min;
+  position: relative;
+
+  .scrollbar-style-old-school & {
+    padding-right: 0;
+  }
+
+  .toolbar {
+    .frameless & {
+      -webkit-app-region: drag;
+    }
+  }
+
+  .item-count {
+    color: $item-count-color;
+    white-space: nowrap;
+    padding: 0 $space-md;
+  }
+
+  .no-items {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid $item-table-header-border-color;
+    margin: 0 $space-min;
+    position: relative;
+
+    &.over {
+      @extend %drop-target;
+    }
+
+    .no-items-illustration {
+      flex: 0 0 auto;
+      width: 200px;
+      height: 200px;
+      margin-top: 11px;
+      margin-bottom: 48px; // 60px
+      background:
+        if(
+          $theme == "dark",
+          image-url("project/no-items-dark.svg") no-repeat 0 0,
+          image-url("project/no-items-light.svg") no-repeat 0 0
+        );
+
+      @media (max-height: 540px) {
+        display: none;
+      }
+    }
+
+    h1 {
+      font: {
+        family: "HelveticaNeue-Thin", $font-family-base;
+        weight: 200;
+        size: 32px;
+      }
+      line-height: 1.1;
+      text-align: center;
+      color: $project-heading-color;
+      max-width: 380px;
+      margin-bottom: 49px; // Geometric center (incl. toolbar)
+    }
+  }
+}
+
+.fake-gap {
+  position: absolute;
+  width: 4px;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background: $body-bg;
+  z-index: $zindex-item;
+
+  .max-scroll-left + & {
+    height: $toolbar-height;
+  }
+
+  .item-grid + &,
+  body:not(.scrollbar-style-old-school) & {
+    display: none;
+  }
+}

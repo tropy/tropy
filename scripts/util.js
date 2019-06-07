@@ -1,6 +1,6 @@
 'use strict'
 
-const colors = require('colors/safe')
+const chalk = require('chalk')
 const ms = require('ms')
 
 const COLOR = {
@@ -11,82 +11,59 @@ const COLOR = {
   log: 'blue'
 }
 
+const colorize = (level, text) =>
+  chalk[COLOR[level] || 'gray'](text || level)
 
-function colorize(level, text) {
-  return colors[COLOR[level] || 'gray'](text || level)
-}
-
-function *timer() {
-  let a = Date.now()
-  let b
-
+const seq = (function * (prev = Date.now(), padding = 8) {
   while (true) {
-    b = Date.now()
-    yield b - a
-    a = b
+    let now = Date.now()
+    yield chalk.gray((`+${ms(now - prev)}`).padStart(padding, ' '))
+    prev = now
   }
-}
+})()
 
-const seq = timer()
-
-function time({ value }, padding = 8) {
-  return colors.gray((`+${ms(value)}`).padStart(padding, ' '))
-}
-
-function format(msg, level, pre) {
-  return (pre) ?
-    `${time(seq.next())} ${colorize(level, pre)} ${msg}` :
+const format = (msg, level, prefix) =>
+  (prefix) ?
+    `${seq.next().value} ${colorize(level, prefix)} ${msg}` :
     `  ${msg}`
-}
 
-function log(...args) {
+const log = (...args) =>
   print('log', ...args)
-}
 
-function error(...args) {
+const error = (...args) =>
   print('error', ...args)
-}
 
-function warn(...args) {
+const warn = (...args) =>
   print('warn', ...args)
+
+const check = (predicate, prefix, msg = 'assertion failed', ...args) => {
+  if (!predicate) bail(prefix, msg, ...args)
 }
 
-function check(predicate, pre, msg = 'assertion failed', ...args) {
-  if (!predicate) bail(pre, msg, ...args)
-}
-
-function bail(...args) {
+const bail = (...args) => {
   error(...args)
-  exit(1)
+  process.exit(1)
 }
 
-function print(level = 'log', pre, msg, ...args) {
+const print = (level = 'log', pre, msg, ...args) => {
   console[level](format(msg, level, pre), ...args)
 }
 
-function red(pre, msg, ...args) {
+const red = (pre, msg, ...args) =>
   console.log(format(msg, 'red', pre), ...args)
-}
 
-function green(pre, msg, ...args) {
+const green = (pre, msg, ...args) =>
   console.log(format(msg, 'green', pre), ...args)
-}
 
-module.exports = function (name) {
-  return {
-    check(predicate, ...args) {
-      check(predicate, name, ...args)
-    },
 
-    rules(target) {
-      for (let rule in target) log(false, `-> ${rule}`)
-    },
+module.exports = (name) => ({
+  check(predicate, ...args) {
+    check(predicate, name, ...args)
+  },
 
-    say(...args) { log(name, ...args) },
-    warn(...args) { warn(name, ...args) },
-    error(...args) { error(name, ...args) },
-    red(...args) { red(name, ...args) },
-    green(...args) { green(name, ...args) }
-  }
-}
-
+  say(...args) { log(name, ...args) },
+  warn(...args) { warn(name, ...args) },
+  error(...args) { error(name, ...args) },
+  red(...args) { red(name, ...args) },
+  green(...args) { green(name, ...args) }
+})

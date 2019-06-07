@@ -2,11 +2,21 @@
 
 const React = require('react')
 const { array, func, number, object, string } = require('prop-types')
-const { append, bounds, createDragHandler, on, off } = require('../../dom')
+
+const {
+  append,
+  bounds,
+  createDragHandler,
+  encodeFileURL,
+  on,
+  off
+} = require('../../dom')
+
 const css = require('../../css')
 const { restrict } = require('../../common/util')
 const { darwin } = require('../../common/os')
 const { rad } = require('../../common/math')
+const { info } = require('../../common/log')
 const PIXI = require('pixi.js')
 const { TextureCache, skipHello } = PIXI.utils
 const { constrain, Picture } = require('./picture')
@@ -58,6 +68,10 @@ class EsperView extends React.Component {
     append(this.pixi.view, this.container)
 
     on(this.container, 'wheel', this.handleWheel, { passive: true })
+
+    info(`esper using ${
+      this.pixi.renderer instanceof PIXI.WebGLRenderer ? 'webgl' : 'canvas'
+    } renderer`)
   }
 
   componentWillUnmount() {
@@ -363,7 +377,7 @@ class EsperView extends React.Component {
 
   load(url) {
     return new Promise((resolve, reject) => {
-      url = url.replace(/#/g, '%23')
+      url = encodeFileURL(url)
 
       if (TextureCache[url]) {
         return resolve(TextureCache[url])
@@ -622,7 +636,7 @@ function equal(p1, p2) {
 
 
 function svg(name) {
-  return [`esper/${name}@1x.svg`, `esper/${name}@2x.svg`]
+  return [`${name}@1x.svg`, `${name}@2x.svg`]
 }
 
 function addCursorStyle(styles, name, cursor = CURSOR[name]) {

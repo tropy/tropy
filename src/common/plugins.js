@@ -1,22 +1,21 @@
 'use strict'
 
-require('./promisify')
+const fs = require('fs')
 
 const {
-  mkdirAsync: mkdir,
-  readFileAsync: read,
-  writeFileAsync: write,
-  readdirAsync: readdir,
-  statAsync: stat,
-  watch
-} = require('fs')
+  mkdir,
+  readFile: read,
+  writeFile: write,
+  readdir,
+  stat
+} = fs.promises
+
 
 const { shell } = require('electron')
 const { EventEmitter } = require('events')
 const { basename, join } = require('path')
-const { warn, verbose, logger } = require('./log')
+const { info, warn, logger } = require('./log')
 const { blank, get, omit, uniq } = require('./util')
-const { keys } = Object
 const debounce = require('lodash.debounce')
 
 const load = async file => JSON.parse(await read(file))
@@ -25,8 +24,13 @@ const save = (file, data) => write(file, JSON.stringify(data, null, 2))
 const decompress = (...args) => require('decompress')(...args)
 const proxyRequire = (mod) => require(mod)
 
-const subdirs = root => readdir(root).filter(async (dir) =>
-      dir !== 'node_modules' && (await stat(join(root, dir))).isDirectory())
+const subdirs = async root => (
+  (await readdir(root, { withFileTypes: true }))
+    .reduce((acc, d) => {
+      if (d.name !== 'node_modules' && d.isDirectory())
+        acc.push(d.name)
+      return acc
+    }, []))
 
 
 class Plugins extends EventEmitter {
@@ -42,7 +46,7 @@ class Plugins extends EventEmitter {
 
   get context() {
     return {
-      logger,
+      logger: logger.child({ module: 'plugin' }),
       require: proxyRequire
     }
   }
@@ -71,7 +75,7 @@ class Plugins extends EventEmitter {
       }
       return acc
     }, {})
-    verbose(`plugins loaded: ${keys(this.instances).length}`)
+    info(`plugins loaded: ${Object.keys(this.instances).length}`)
     return this
   }
 
@@ -83,9 +87,9 @@ class Plugins extends EventEmitter {
     return this.exec({ id, action: 'export' }, ...args)
   }
 
-  flush = () => {
+  flush = async () => {
     if (this.changes != null) { // TODO check if the config is different!
-      this.save(this.changes)
+      await this.save(this.changes)
       this.changes = null
     }
   }
@@ -113,7 +117,7 @@ class Plugins extends EventEmitter {
       const spec = (await this.scan([plugin]))[plugin] || {}
       await this.reload()
       this.emit('change')
-      verbose(`installed plugin ${spec.name || plugin} ${spec.version}`)
+      info(`installed plugin ${spec.name || plugin} ${spec.version}`)
     } catch (error) {
       warn(`failed to install plugin: ${error.message}`)
     }
@@ -144,7 +148,7 @@ class Plugins extends EventEmitter {
       }
     }
     this.spec = await this.scan()
-    verbose(`plugins scanned: ${keys(this.spec).length}`)
+    info(`plugins scanned: ${Object.keys(this.spec).length}`)
     return this
   }
 
@@ -237,7 +241,7 @@ class Plugins extends EventEmitter {
 
   watch() {
     if (this.cfw != null) this.cfw.close()
-    this.cfw = watch(this.root, (_, file) => {
+    this.cfw = fs.watch(this.root, (_, file) => {
       if (file === 'config.json') this.handleConfigFileChange()
     })
     return this
@@ -254,7 +258,7 @@ class Plugins extends EventEmitter {
 
 const deps = async pkg => {
   try {
-    return keys((await load(pkg)).dependencies)
+    return Object.keys((await load(pkg)).dependencies)
   } catch (_) {
     return []
   }

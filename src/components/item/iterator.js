@@ -123,7 +123,7 @@ class ItemIterator extends Iterator {
     }
   }
 
-  handleItemOpen = () => {
+  handleItemOpen = async () => {
     this.props.onItemOpen(this.current())
   }
 

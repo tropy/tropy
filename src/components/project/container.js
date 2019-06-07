@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
 const { connect } = require('react-redux')
 const { ProjectView } = require('./view')
 const { ItemView } = require('../item')
@@ -12,13 +11,11 @@ const { NoProject } = require('./none')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
 const { emit, on, off, ensure, reflow } = require('../../dom')
-const { win } = require('../../window')
 const cx = require('classnames')
 const { values } = Object
 const actions = require('../../actions')
 const debounce = require('lodash.debounce')
 const { match } = require('../../keymap')
-const { IconSpin } = require('../icons')
 
 const {
   getCachePrefix,
@@ -37,12 +34,13 @@ const {
 } = require('prop-types')
 
 
-class ProjectContainer extends Component {
+class ProjectContainer extends React.Component {
+  container = React.createRef()
+
   constructor(props) {
     super(props)
 
     this.state = {
-      isClosed: props.project.closed != null,
       isClosing: this.isClosing(props),
       mode: props.nav.mode,
       offset: props.ui.panel.width,
@@ -105,17 +103,22 @@ class ProjectContainer extends Component {
     if (this.state.willModeChange) return
 
     this.setState({ willModeChange: true, isModeChanging: false }, () => {
-      reflow(this.container)
+      if (this.container.current) {
+        let node = this.container.current
+        reflow(node)
 
-      requestAnimationFrame(() => {
-        this.setState({ isModeChanging: true })
-        ensure(
-          this.container,
-          'transitionend',
-          this.modeDidChange,
-          3000,
-          this.isMainView)
-      })
+        requestAnimationFrame(() => {
+          this.setState({ isModeChanging: true })
+          ensure(
+            node,
+            'transitionend',
+            this.modeDidChange,
+            3000,
+            event => event.target.parentNode === node)
+        })
+      } else {
+        this.modeDidChange()
+      }
     })
   }
 
@@ -130,13 +133,9 @@ class ProjectContainer extends Component {
   projectWillChange = debounce(project => {
     this.setState({
       isClosing: this.isClosing({ project }),
-      isClosed: (project.closed != null)
     })
   }, 750, { leading: false })
 
-  isMainView = (event) => {
-    return event.target.parentNode === this.container
-  }
 
   handleBackButton = () => {
     if (this.state.mode !== MODE.PROJECT) {
@@ -203,10 +202,6 @@ class ProjectContainer extends Component {
     event.preventDefault()
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
   renderNoProject() {
     return (
       <NoProject
@@ -214,11 +209,13 @@ class ProjectContainer extends Component {
         canDrop={this.props.canDrop}
         isOver={this.props.isOver}
         onProjectCreate={this.props.onProjectCreate}
-        onToolbarDoubleClick={this.props.onMaximize}/>
+        onProjectOpen={this.props.onProjectOpen}
+        recent={ARGS.recent}/>
     )
   }
   render() {
-    if (this.state.isClosed) return this.renderNoProject()
+    if (!this.props.project.file || this.props.project.closed)
+      return this.renderNoProject()
 
     const {
       columns,
@@ -240,7 +237,7 @@ class ProjectContainer extends Component {
     return dt(
       <div
         className={cx(this.classes)}
-        ref={this.setContainer}
+        ref={this.container}
         onContextMenu={this.handleContextMenu}>
 
         <ProjectView {...props}
@@ -279,9 +276,7 @@ class ProjectContainer extends Component {
           photos={photos}
           tags={props.tags}
           onPhotoError={props.onPhotoError}/>
-        <div className="closing-backdrop">
-          <IconSpin/>
-        </div>
+        <div className="cover" />
       </div>
     )
   }
@@ -332,7 +327,6 @@ class ProjectContainer extends Component {
     onPhotoError: func.isRequired,
     onProjectCreate: func.isRequired,
     onProjectOpen: func.isRequired,
-    onMaximize: func.isRequired,
     onModeChange: func.isRequired,
     onMetadataSave: func.isRequired,
     onSort: func.isRequired,
@@ -406,10 +400,6 @@ module.exports = {
     }),
 
     dispatch => ({
-      onMaximize() {
-        win.maximize()
-      },
-
       onContextMenu(event, ...args) {
         event.stopPropagation()
         dispatch(actions.context.show(event, ...args))

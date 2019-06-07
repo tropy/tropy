@@ -14,7 +14,7 @@
     .icon-circle,
     .icon-crescentcircle {
       @if $theme == "light" {
-        @each $key, $val in $tag-colors {
+        @each $key, $val in $tag-color-shades {
           &.#{$key} {
             .color {
               color: map-get($val, "color-base");
@@ -26,7 +26,7 @@
           }
         }
       } @else {
-        @each $key, $val in $tag-colors {
+        @each $key, $val in $tag-color-shades {
           &.#{$key} {
             .color {
               color: map-get($val, "color-dark");

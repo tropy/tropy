@@ -1,10 +1,11 @@
 'use strict'
 
+const { warn } = require('../common/log')
 const { exec } = require('../commands')
 const { fail } = require('../dialog')
-const { warn } = require('../common/log')
 const { put } = require('redux-saga/effects')
-const { activity, history } = require('../actions')
+const activity = require('../actions/activity')
+const history = require('../actions/history')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
@@ -23,10 +24,8 @@ module.exports = {
       if (cmd.error) fail(cmd.error, type)
       if (!cmd.isInteractive && cmd.duration > TOO_LONG) warn(`SLOW: ${type}`)
 
-    } catch (error) {
-      warn(`${action.type} failed in *exec: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
+      warn({ stack: e.stack }, `${action.type} failed in *exec`)
     }
   }
 }

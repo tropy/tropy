@@ -21,8 +21,7 @@ find more details below. Happy hacking!
 Install the latest version of [Node.js](https://nodejs.org) (at least the
 version that ships with the current [Electron](https://electronjs.org)
 release) with [`node-gyp`](https://www.npmjs.com/package/node-gyp) and all
-its requirements for your platform. On Linux you will also need to install
-the X ScreenSaver package (typically, `libxss` or `libxss-dev`).
+its requirements for your platform.
 
 Then clone [this repository](https://github.com/tropy/tropy.git) and run
 `npm install` to install all of Tropy's dependencies.

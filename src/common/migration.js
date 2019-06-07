@@ -1,8 +1,6 @@
 'use strict'
 
-require('./promisify')
-
-const { readdirAsync: ls, readFileAsync: read } = require('fs')
+const { readdir: ls, readFile: read } = require('fs').promises
 const { basename, extname, join } = require('path')
 const { info } = require('./log')
 
@@ -26,7 +24,7 @@ class Migration {
   }
 
   up(db) {
-    info(`migrating ${db.path} to #${this.number}`)
+    info(`migrating ${basename(db.path)} to #${this.number}`)
 
     return db
       .migration(async (tx) => {

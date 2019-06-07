@@ -1,19 +1,18 @@
 'use strict'
 
-require('../common/promisify')
 const { Database } = require('../common/db')
 const { ipcRenderer: ipc } = require('electron')
 const { fail, save } = require('../dialog')
 const { PROJECT, WIZARD } = require('../constants')
 const { create } = require('../models/project')
-const { unlinkAsync } = require('fs')
-const { debug, info, warn } = require('../common/log')
+const { unlink } = require('fs').promises
+const { info, warn } = require('../common/log')
 
 async function rm(file) {
   try {
-    await unlinkAsync(file)
-  } catch (error) {
-    if (error.code !== 'ENOENT') throw error
+    await unlink(file)
+  } catch (e) {
+    if (e.code !== 'ENOENT') throw e
   }
 }
 
@@ -29,11 +28,10 @@ module.exports = {
         file = await Database.create(file, create, { name, base })
         ipc.send(PROJECT.CREATED, { file })
 
-      } catch (error) {
-        warn(`failed to create project: ${error.message}`)
-        debug(error.stack)
-
-        fail(error, PROJECT.CREATED)
+      } catch (e) {
+        warn(e)
+        await fail(e, PROJECT.CREATED)
+        if (meta.truncate) await rm(payload.file)
       }
     }
   },
@@ -48,13 +46,9 @@ module.exports = {
 
     save(payload) {
       return async (dispatch) => {
-        try {
-          let file = await save.project({ defaultPath: payload })
-          if (file) {
-            dispatch(module.exports.project.update({ file }))
-          }
-        } catch (error) {
-          fail(error)
+        let file = await save.project({ defaultPath: payload })
+        if (file) {
+          dispatch(module.exports.project.update({ file }))
         }
       }
     }

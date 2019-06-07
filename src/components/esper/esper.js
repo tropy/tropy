@@ -17,7 +17,7 @@ const cx = require('classnames')
 const { floor, min } = Math
 
 const {
-  arrayOf, bool, func, node, number, object, shape, string
+  arrayOf, bool, func, number, object, shape, string
 } = require('prop-types')
 
 const { TABS, MIME } = require('../../constants')
@@ -715,7 +715,7 @@ class Esper extends React.PureComponent {
         onMouseMove={this.handleMouseMove}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
-        <EsperHeader>
+        <header className="esper-header">
           <EsperToolbar
             isDisabled={isDisabled}
             isSelectionActive={isSelectionActive}
@@ -732,7 +732,7 @@ class Esper extends React.PureComponent {
             onToolChange={this.handleToolChange}
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
-        </EsperHeader>
+        </header>
         <div className="esper-container">
           <EsperView
             ref={this.setView}
@@ -810,17 +810,6 @@ class Esper extends React.PureComponent {
   }
 }
 
-
-const EsperHeader = ({ children }) => (
-  <header className="esper-header window-draggable">{children}</header>
-)
-
-EsperHeader.propTypes = {
-  children: node
-}
-
-
 module.exports = {
-  EsperHeader,
   Esper
 }

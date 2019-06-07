@@ -2,8 +2,8 @@
 
 const res = require('../common/res')
 const { basename } = require('path')
-const { warn } = require('../common/log')
-const { get } = require('../common/util')
+const { error, warn } = require('../common/log')
+const { blank, get } = require('../common/util')
 const { transduce, map, transformer } = require('transducers.js')
 const { BrowserWindow, Menu: M } = require('electron')
 
@@ -15,23 +15,36 @@ function withWindow(win, cmd, fn) {
 }
 
 const CHECK = {
-  hasMultiplePhotos(_, e) {
-    return e && e.target && e.target.photos && e.target.photos.length > 1
+  hasMultiplePhotos({ target }) {
+    return target && target.photos && target.photos.length > 1
   },
 
-  hasMultipleItems(_, e) {
-    return e && e.target && e.target.items && e.target.items.length > 1
+  hasMultipleItems({ target }) {
+    return target && target.items && target.items.length > 1
   },
 
-  hasSingleItem(...args) {
-    return !CHECK.hasMultipleItems(...args)
+  hasSingleItem(opts) {
+    return !CHECK.hasMultipleItems(opts)
+  },
+
+  project({ app }) {
+    return !blank(app.wm.windows.project) && blank(app.wm.windows.prefs)
+  },
+
+  ['!prefs']({ app }) {
+    return blank(app.wm.windows.prefs)
+  },
+
+  window({ win }) {
+    return win != null
   }
 }
 
-function check(item, event) {
-  return (item.condition in CHECK) ?
-    CHECK[item.condition](item, event) :
-    event && event.target && !!event.target[item.condition]
+function check(item, opts = {}) {
+  if (item.condition in CHECK)
+    return CHECK[item.condition](opts)
+  else
+    return opts.target && !!opts.target[item.condition]
 }
 
 
@@ -110,14 +123,20 @@ class Menu {
         item.checked = get(event.target, context) === color
 
         if (color && color !== 'random')
-          item.icon = res.Icons.color(color)
+          item.icon = res.icon.color(color)
         if (command)
           item.click = this.responder(command, win, event, color)
       }
 
       if (item.condition) {
-        item.enabled = check(item, event)
-        if (item.visible === false) item.visible = item.enabled
+        item.enabled = check(item, {
+          target: event.target,
+          win,
+          app: this.app
+        })
+
+        if (item.visible === false)
+          item.visible = item.enabled
       }
 
       switch (item.id) {
@@ -278,8 +297,6 @@ class AppMenu extends Menu {
   async load(name = 'app') {
     try {
       return (await super.load(name))
-    } catch (error) {
-      throw error
     } finally {
       this.reload()
     }
@@ -348,12 +365,10 @@ class ContextMenu extends Menu {
           }
         })
 
-      } catch (error) {
-        warn(`failed to show context-menu: ${error.message}`, {
-          scope,
-          stack: error.stack
-        })
-        reject(error)
+      } catch (e) {
+        error({ stack: e.stack, scope },
+          `failed to show context-menu: ${e.message}`)
+        reject(e)
       }
     })
   }

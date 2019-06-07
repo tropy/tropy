@@ -1,12 +1,11 @@
 'use strict'
 
-const B = require('bluebird')
 const shortid = require('shortid')
 const { keys } = Object
 
 const util = {
   once(emitter, event) {
-    return new B((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const on =
         (emitter.on || emitter.addEventListener).bind(emitter)
       const off =
@@ -15,15 +14,13 @@ const util = {
       function success(...args) {
         off(event, success)
         off('error', failure)
-
         resolve(...args)
       }
 
-      function failure(...args) {
+      function failure(reason) {
         off(event, success)
         off('error', failure)
-
-        reject(...args)
+        reject(reason instanceof Error ? reason : new Error(reason))
       }
 
       on('error', failure)
@@ -477,6 +474,22 @@ const util = {
       acc[obj[key]].push(obj)
       return acc
     }, {})
+  },
+
+  URI: {
+    namespace(uri) {
+      return util.URI.split(uri)[0]
+    },
+
+    getLabel(uri) {
+      return util.titlecase(util.URI.split(uri)[1]) || uri
+    },
+
+    split(uri) {
+      let ns = uri.split(/(#|\/)/)
+      let nm = ns.pop()
+      return [ns.join(''), nm]
+    }
   }
 }
 

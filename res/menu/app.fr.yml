@@ -11,18 +11,25 @@ fr:
             - label: Objet
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
+              condition: project
             - label: Liste
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
+              condition: project
             - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
+              condition: project
         - type: separator
-        - label: Ouvrir
+        - label: Ouvrir …
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
+        - label: Ouvrir dans une Nouvelle Fenetre …
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
         - label: Projets récents
           id: recent
+          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -32,14 +39,19 @@ fr:
         - label: Importer des photos …
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
+          condition: project
         - label: Regrouper la photothèque
           command: 'app:consolidate-photo-library'
+          condition: project
         - type: separator
-        - label: Fermer
-          accelerator: CmdOrCtrl+W
+        - label: Fermer le projet
+          command: 'app:close-project'
+          condition: project
+        - type: separator
+        - label: Fermer la fenêtre
+          accelerator: Ctrl+W
           role: close
-        - type: separator
-        - label: Quitter
+        - label: Quitter %name
           accelerator: CmdOrCtrl+Q
           role: quit
     - label: Édition
@@ -72,35 +84,33 @@ fr:
           command: 'app:open-preferences'
     - label: Affichage
       submenu:
-        - label: Basculer en plein écran
-          role: togglefullscreen
-        - label: Cacher la barre de menu
-          command: 'app:toggle-menu-bar'
-        - type: separator
-        - label: Zoom
-          submenu:
-            - label: Agrandir
-              command: 'app:zoom-in'
-            - label: Réduire
-              command: 'app:zoom-out'
-            - type: separator
-            - label: Taille réelle
-              command: 'app:zoom-reset'
-    - label: Fenêtre
-      submenu:
-        - label: Réduire
-          accelerator: CmdOrCtrl+M
-          role: minimize
-        - label: Centrer
-          command: 'app:center-window'
-    - label: Développeur
-      id: dev
-      submenu:
         - label: Rafraîchir
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+        - type: separator
+        - label: Cacher la barre de menu
+          command: 'app:toggle-menu-bar'
+        - label: Centrer
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: Taille Réelle
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: Agrandir
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: Réduire
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: Basculer en plein écran
+          role: togglefullscreen
+          condition: window
+    - label: Développeur
+      id: dev
+      submenu:
         - label: Rafraîchir les &styles
-          accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: Afficher les outils de développement
           accelerator: CmdOrCtrl+D
@@ -115,8 +125,6 @@ fr:
         - type: separator
         - label: Recombiner le projet
           command: 'app:rebase-project'
-        - label: Fermer le projet
-          command: 'app:close-project'
         - type: separator
         - label: Thème
           id: theme
@@ -145,6 +153,8 @@ fr:
           command: 'app:open-plugins-folder'
         - label: Afficher le répertoire des données utilisateur
           command: 'app:open-user-data'
+        - label: Afficher le dossier de cache
+          command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
           label: Afficher les fichiers des plugins
@@ -162,11 +172,13 @@ fr:
         - type: separator
         - label: À propos de %name
           command: 'app:about'
+          condition: '!prefs'
   darwin:
     - label: '%name'
       submenu:
         - label: À propos de %name
           command: 'app:about'
+          condition: '!prefs'
         - type: separator
         - label: Préférences ...
           accelerator: 'Command+,'
@@ -181,8 +193,8 @@ fr:
         - label: Tout montrer
           role: unhide
         - type: separator
-        - label: Quitter
-          accelerator: Command+Q
+        - label: Quitter %name
+          accelerator: CmdOrCtrl+Q
           role: quit
     - label: Fichier
       submenu:
@@ -194,18 +206,25 @@ fr:
             - label: Objet
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
+              condition: project
             - label: Liste
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
+              condition: project
             - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
+              condition: project
         - type: separator
-        - label: Ouvrir
+        - label: Ouvrir …
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
+        - label: Ouvrir dans une Nouvelle Fenetre …
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
         - label: Projets récents
           id: recent
+          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -215,12 +234,14 @@ fr:
         - label: Importer des photos …
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
+          condition: project
         - label: Regrouper la photothèque
           command: 'app:consolidate-photo-library'
+          condition: project
         - type: separator
-        - label: Fermer
-          accelerator: Command+W
-          role: close
+        - label: Fermer le projet
+          command: 'app:close-project'
+          condition: project
     - label: Édition
       submenu:
         - id: undo
@@ -247,40 +268,50 @@ fr:
           role: selectall
     - label: Affichage
       submenu:
+        - label: Rafraîchir
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - type: separator
+        - label: Taille Réelle
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: Agrandir
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: Réduire
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
         - label: Basculer en plein écran
           role: togglefullscreen
-        - type: separator
-        - label: Zoom
-          submenu:
-            - label: Agrandir
-              command: 'app:zoom-in'
-            - label: Réduire
-              command: 'app:zoom-out'
-            - type: separator
-            - label: Taille réelle
-              command: 'app:zoom-reset'
+          condition: window
     - label: Fenêtre
       role: window
       submenu:
         - label: Réduire
-          accelerator: CmdOrCtrl+M
+          accelerator: Cmd+M
           role: minimize
+          condition: window
+        - label: Zoom
+          accelerator: Ctrl+Cmd+Z
+          role: zoom
+          condition: window
+        - type: separator
         - label: Centrer
           command: 'app:center-window'
-        - label: Fermer
-          accelerator: CmdOrCtrl+W
-          role: close
+          condition: window
         - type: separator
         - label: Mettre au premier plan
           role: front
+        - type: separator
+        - label: Fermer
+          accelerator: Cmd+W
+          role: close
+          condition: window
     - label: Développeur
       id: dev
       submenu:
-        - label: Rafraîchir
-          accelerator: CmdOrCtrl+R
-          command: 'win:reload'
         - label: Rafraîchir les &styles
-          accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: Afficher les outils de développement
           accelerator: CmdOrCtrl+D
@@ -295,8 +326,6 @@ fr:
         - type: separator
         - label: Recombiner le projet
           command: 'app:rebase-project'
-        - label: Fermer le projet
-          command: 'app:close-project'
         - type: separator
         - label: Thème
           id: theme
@@ -320,12 +349,14 @@ fr:
         - label: Licence
           command: 'app:open-license'
         - type: separator
-        - label: Afficher les logs
+        - label: Afficher les fichiers de log
           command: 'app:open-logs'
         - label: Afficher les fichiers des plugins
           command: 'app:open-plugins-folder'
         - label: Afficher le répertoire des données utilisateur
           command: 'app:open-user-data'
+        - label: Afficher le dossier de cache
+          command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
           label: Afficher les fichiers des plugins
@@ -352,18 +383,25 @@ fr:
             - label: Objet
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
+              condition: project
             - label: Liste
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
+              condition: project
             - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
+              condition: project
         - type: separator
-        - label: Ouvrir
+        - label: Ouvrir …
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
+        - label: Ouvrir dans une Nouvelle Fenetre …
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
         - label: Projets récents
           id: recent
+          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -373,14 +411,19 @@ fr:
         - label: Importer des photos …
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
+          condition: project
         - label: Regrouper la photothèque
           command: 'app:consolidate-photo-library'
+          condition: project
         - type: separator
-        - label: Fermer
-          accelerator: CmdOrCtrl+W
+        - label: Fermer le projet
+          command: 'app:close-project'
+          condition: project
+        - type: separator
+        - label: Fermer la fenêtre
+          accelerator: Ctrl+W
           role: close
-        - type: separator
-        - label: Quitter
+        - label: Quitter %name
           accelerator: CmdOrCtrl+Q
           role: quit
     - label: Édition
@@ -410,35 +453,33 @@ fr:
           command: 'app:open-preferences'
     - label: Affichage
       submenu:
-        - label: Basculer en plein écran
-          role: togglefullscreen
-        - label: Cacher la barre de menu
-          command: 'app:toggle-menu-bar'
-        - type: separator
-        - label: Zoom
-          submenu:
-            - label: Agrandir
-              command: 'app:zoom-in'
-            - label: Réduire
-              command: 'app:zoom-out'
-            - type: separator
-            - label: Taille réelle
-              command: 'app:zoom-reset'
-    - label: Fenêtre
-      submenu:
-        - label: Réduire
-          accelerator: CmdOrCtrl+M
-          role: minimize
-        - label: Centrer
-          command: 'app:center-window'
-    - label: Développeur
-      id: dev
-      submenu:
         - label: Rafraîchir
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+        - type: separator
+        - label: Cacher la barre de menu
+          command: 'app:toggle-menu-bar'
+        - label: Centrer
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: Taille Réelle
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: Agrandir
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: Réduire
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: Basculer en plein écran
+          role: togglefullscreen
+          condition: window
+    - label: Développeur
+      id: dev
+      submenu:
         - label: Rafraîchir les &styles
-          accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: Afficher les outils de développement
           accelerator: CmdOrCtrl+D
@@ -453,8 +494,6 @@ fr:
         - type: separator
         - label: Recombiner le projet
           command: 'app:rebase-project'
-        - label: Fermer le projet
-          command: 'app:close-project'
         - type: separator
         - label: Thème
           id: theme
@@ -483,6 +522,8 @@ fr:
           command: 'app:open-plugins-folder'
         - label: Afficher le répertoire des données utilisateur
           command: 'app:open-user-data'
+        - label: Afficher le dossier de cache
+          command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
           label: Afficher les fichiers des plugins
@@ -500,3 +541,4 @@ fr:
         - type: separator
         - label: À propos de %name
           command: 'app:about'
+          condition: '!prefs'

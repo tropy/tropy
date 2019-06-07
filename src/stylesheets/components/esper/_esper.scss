@@ -65,6 +65,10 @@
     position: relative;
     z-index: $zindex-esper-header;
     height: $toolbar-height;
+
+    .frameless & {
+      -webkit-app-region: drag;
+    }
   }
 
   &.overlay-mode {
@@ -93,8 +97,8 @@
       .esper-view {
         cursor:
           -webkit-image-set(
-            image-url("esper/#{map-get($val, 'default')}@1x.svg") 1x,
-            image-url("esper/#{map-get($val, 'default')}@2x.svg") 2x
+            cursor-url("#{map-get($val, 'default')}@1x.svg") 1x,
+            cursor-url("#{map-get($val, 'default')}@2x.svg") 2x
           )
           map-get($val, "x") map-get($val, "y"),
           default;

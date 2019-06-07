@@ -2,7 +2,7 @@
 
 require('shelljs/make')
 
-const { rules, say } = require('./util')('make')
+const { say } = require('./util')('make')
 const { join } = require('path')
 const { readFileSync: read, writeFileSync: write } = require('fs')
 const { isArray } = Array
@@ -87,15 +87,13 @@ target.import = (args = []) => {
       rm(join(home, file))
 
     } else {
-      m = file.match(/^for_use_tropy_renderer_(\w{2}).yml$/)
+      m = file.match(/^for_use_tropy_(renderer|browser)_(\w{2}).yml$/)
       if (m == null) continue
 
-      let locale = m[1]
-      say(`importing ${locale} renderer strings...`)
-      mv(join(home, file), join(STRINGS, `renderer.${locale}.yml`))
+      let type = m[1]
+      let locale = m[2]
+      say(`importing ${locale} ${type} strings...`)
+      mv(join(home, file), join(STRINGS, `${type}.${locale}.yml`))
     }
   }
 }
-
-target.rules = () =>
-  rules(target)

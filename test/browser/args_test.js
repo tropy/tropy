@@ -4,7 +4,6 @@ describe('args', () => {
   const args = __require('browser/args')
 
   describe('--environment', () => {
-
     beforeEach(() => {
       sinon.stub(console, 'error')
       sinon.stub(process, 'exit')

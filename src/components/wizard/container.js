@@ -4,7 +4,7 @@ const React = require('react')
 const { func, shape, string } = require('prop-types')
 const { connect } = require('react-redux')
 const { Steps } = require('../steps')
-const { Toolbar } = require('../toolbar')
+const { Titlebar } = require('../toolbar')
 const { ProjectStep } = require('./project')
 const { join } = require('path')
 const actions = require('../../actions')
@@ -53,7 +53,7 @@ class WizardContainer extends React.PureComponent {
   render() {
     return (
       <div className="wizard">
-        <Toolbar/>
+        <Titlebar isOptional/>
         <Steps>
           <ProjectStep {...this.props.project}
             hasDefaultFilename={this.hasDefaultFilename}

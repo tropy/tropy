@@ -6,7 +6,10 @@ const { UPDATE } = require('../constants/intl')
 function load({ locale }) {
   return async function (dispatch) {
     const strings = await Strings.openWithFallback('en', locale)
-    const messages = strings.flatten()
+    const messages = {
+      ...strings.flatten(),
+      dialog: strings.dict.dialog
+    }
 
     dispatch(update({ locale, messages }))
 

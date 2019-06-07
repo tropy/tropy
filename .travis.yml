@@ -48,12 +48,13 @@ script:
   - npm run lint
   - npm run compile
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      LD_PRELOAD=node_modules/sharp/vendor/lib/libz.so npm run coverage;
+      npm run test:main;
+      npm run test:renderer;
     else
       npm run coverage;
     fi
 after_success:
-  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
+  - if [[ $TRAVIS_OS_NAME = "osx" ]]; then
       npm install -g coveralls --no-progress;
       cat ./coverage/lcov.info | coveralls;
     fi

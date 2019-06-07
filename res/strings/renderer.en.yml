@@ -73,6 +73,7 @@ en:
     none: Drop a project file here or create a {newProject}
     empty: Drop your photos into Tropy to get started
     new: new project
+    recent: Recent Projects
   wizard:
     project:
       title: Create a new project
@@ -259,30 +260,41 @@ en:
     comment: Comment
 
   dialog:
-    ok: Yes
-    cancel: Cancel
+    notify:
+      buttons:
+        - OK
+    error:
+      title: Error
+      buttons:
+        - Dismiss
+        - Copy Error
+        - Show Logs
     prompt:
       item:
         destroy:
-          ok: Delete
-          cancel: Cancel
           message: >
             Are your sure you want to permanently delete items?
             This action cannot be undone.
+          buttons:
+            - Cancel
+            - Delete
       dup:
-        message: >
+        detail: >
           This photo already exists in your project. Are you sure
           you want to import it again?
-        checkbox: Remember this choice
-        cancel: Skip
-        ok: Import Anyway
+        checkboxLabel: Remember this choice
+        buttons:
+          - Skip
+          - Import Anyway
       plugin:
         uninstall:
-          ok: Delete
-          cancel: Cancel
-          message: >
+          type: warning
+          detail: >
             Are you sure you want to delete the plugin?
             This will permanently remove the plugin and its configuration.
+          buttons:
+            - Cancel
+            - Delete
     filter:
       csv: CSV
       templates: Tropy Templates
@@ -441,6 +453,7 @@ en:
       order: Sorting notes …
       restore: Restoring notes …
     selection:
+      create: Creating photo selection …
       load: Loading photo selections …
   editor:
     commands:

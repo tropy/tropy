@@ -9,7 +9,7 @@ const { bool, func, number } = require('prop-types')
 
 
 const NoteToolbar = ({ hasCreateButton, isDisabled, notes, onCreate }) => (
-  <Toolbar isDraggable={false}>
+  <Toolbar>
     <Toolbar.Left>
       <IconNote/>
       <h4>

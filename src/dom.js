@@ -15,7 +15,7 @@ const dom = {
 
   ready: (document.readyState !== 'loading') ?
     Promise.resolve() :
-    once(document, 'DOMContentLoaded'),
+    once(document, 'DOMContentLoaded').then(() => {}),
 
   element: document.createElement.bind(document),
 
@@ -233,12 +233,29 @@ const dom = {
     return offset > 0 && offset < node.offsetParent.offsetHeight
   },
 
+  encodeFileURL(url) {
+    return url.replace(/[#?&]/g, (m) => {
+      switch (m) {
+        case '#': return '%23'
+        case '?': return '%3F'
+        case '&': return '%26'
+      }
+    })
+  },
+
   loadImage(src) {
     return new Promise((resolve, reject) => {
       let img = new Image()
       img.onload = () => resolve(img)
       img.onerror = reject
       img.src = src
+    })
+  },
+
+  load(node, message = 'Load Error') {
+    return new Promise((resolve, reject) => {
+      node.onload = () => resolve(node)
+      node.onerror = () => reject(new Error(message))
     })
   }
 }

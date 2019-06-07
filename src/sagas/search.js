@@ -1,11 +1,10 @@
 'use strict'
 
-const { warn, verbose } = require('../common/log')
+const { warn } = require('../common/log')
 const { call, put, select } = require('redux-saga/effects')
 const { getSortColumn } = require('../selectors')
 const mod = require('../models')
 const act = require('../actions')
-const ms = require('ms')
 
 module.exports = {
   *search(db) {
@@ -16,7 +15,7 @@ module.exports = {
         sort: getSortColumn(state)
       }))
 
-      let { list, tags, trash, query } = nav
+      var { list, tags, trash, query } = nav
 
       let START = Date.now()
 
@@ -40,13 +39,27 @@ module.exports = {
           result = yield call(mod.item.all, db, { tags, sort, query })
       }
 
-      verbose(`*search query took ${ms(Date.now() - START)}`)
+      let ms = Date.now() - START
+      if (ms > 300) {
+        warn({
+          ms,
+          list: list != null,
+          query,
+          tags: tags.length > 0,
+          trash
+        }, `SLOW: *search query "${query}" took ${ms}ms`)
+      }
 
       yield put(act.qr.update(result))
 
-    } catch (error) {
-      warn(`unexpectedly failed in *search: ${error.message}`)
-      verbose(error.stack)
+    } catch (e) {
+      warn({
+        list: list != null,
+        query,
+        tags: tags.length > 0,
+        stack: e.stack,
+        trash
+      }, '*search failed')
     }
   }
 }

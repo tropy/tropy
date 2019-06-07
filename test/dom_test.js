@@ -20,6 +20,9 @@ describe('dom', () => {
   describe('ready', () => {
     it('resolves eventually', () =>
       expect(dom.ready).eventually.to.be.fulfilled)
+
+    it('resolves to nothing', () =>
+      expect(dom.ready).eventually.to.be.undefined)
   })
 
   describe('.attr()', () => {
@@ -128,5 +131,15 @@ describe('dom', () => {
         expect(listener).to.have.been.calledOnce
       })
     })
+  })
+
+  describe('.loadImage()', () => {
+    it('resolves when the image has loaded', () =>
+      expect(dom.loadImage(F.images('PA140105.JPG').path))
+        .to.eventually.be.fulfilled)
+
+    it('rejects when the image fails to load', () =>
+      expect(dom.loadImage(F.images('404.png').path))
+        .to.eventually.be.rejected)
   })
 })

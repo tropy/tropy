@@ -73,6 +73,7 @@ class AppPrefs extends React.PureComponent {
           <FormElement id="prefs.app.templates.label">
             <TemplateSelect
               icon={<IconItemSmall/>}
+              id="prefs.app.templates.label"
               isRequired
               name="item"
               options={this.props.templates.item}
@@ -114,6 +115,7 @@ class AppPrefs extends React.PureComponent {
             isCompact>
             <ResourceSelect
               icon={<IconItemSmall/>}
+              id="prefs.app.title.label"
               options={this.props.properties}
               name="item"
               value={this.props.settings.title.item}

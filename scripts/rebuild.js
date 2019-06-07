@@ -22,7 +22,6 @@ const CONFIG = [
 target.all = async (args) => {
   await target.sqlite3(args)
   await target.sharp(args)
-  await target.idle(args)
 }
 
 target.headers = () => {
@@ -35,11 +34,9 @@ target.sqlite3 = async (force) => {
   if (force || !test('-d', preGypBinding(mod))) {
     say(`${mod} ${force ? '(forced)' : ''}...`)
 
-    let ext = join(home, 'ext', mod)
-    let dep = join(mods, mod, 'deps')
-
-    let url = cat(join(ext, 'version.txt')).trim()
-    let tar = join(dep, url.split('/').pop())
+    let deps = join(mods, mod, 'deps')
+    let url = cat(join(home, 'vendor', mod, 'version.txt')).trim()
+    let tar = join(deps, url.split('/').pop())
     let version = (/-(\d+)\.tar\.gz/).exec(url)[1]
 
     if (!test('-f', tar)) {
@@ -55,9 +52,9 @@ target.sqlite3 = async (force) => {
     sed('-i',
       /'sqlite_version%':'\d+',/,
       `'sqlite_version%':'${version}',`,
-      join(dep, 'common-sqlite.gypi'))
+      join(deps, 'common-sqlite.gypi'))
 
-    cp(join(home, 'ext', mod, 'sqlite3.gyp'), dep)
+    cp(join(home, 'vendor', mod, 'sqlite3.gyp'), deps)
 
     rebuild(mod, {
       params: '--build-from-source'
@@ -68,11 +65,6 @@ target.sqlite3 = async (force) => {
   } else {
     say(`${mod} skipped`)
   }
-}
-
-target.inspector = () => {
-  rebuild('v8-debug', { params: '--build-from-source' })
-  rebuild('v8-profiler', { params: '--build-from-source' })
 }
 
 target.sharp = (force) => {
@@ -80,26 +72,10 @@ target.sharp = (force) => {
 
   if (force || !test('-d', buildFragments(mod))) {
     rebuild(mod, {
-      params: '--build-from-source'
+      // params: '--build-from-source'
     })
     say(`${mod} ...done`)
 
-  } else {
-    say(`${mod} skipped`)
-  }
-}
-
-target.idle = (force) => {
-  let mod = 'desktop-idle'
-  let version = ELECTRON.join('.')
-  let marker = join(mods, mod, '.tropy_rebuild')
-
-  if (force || !test('-f', marker) || cat(marker).trim() !== version) {
-    rebuild(mod, {
-      params: '--build-from-source'
-    })
-    version.to(marker)
-    say(`${mod} ...done`)
   } else {
     say(`${mod} skipped`)
   }

@@ -25,10 +25,12 @@ class TemplateToolbar extends PureComponent {
   render() {
     return (
       <FormGroup className="select-template">
-        <Label id="prefs.template.select"
+        <Label
+          id="prefs.template.select"
           size={3}/>
         <div className="col-9 flex-row center">
           <TemplateSelect
+            id="prefs.template.select"
             options={this.props.templates}
             value={this.props.selected}
             placeholder="prefs.template.new"

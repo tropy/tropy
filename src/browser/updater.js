@@ -1,19 +1,20 @@
 'use strict'
 
+const { EventEmitter } = require('events')
 const { autoUpdater } = require('electron')
 const { feed } = require('../common/release')
 const { linux, win32 } = require('../common/os')
-const { warn, info, verbose } = require('../common/log')
-const flash  = require('../actions/flash')
+const { error, info } = require('../common/log')
 
 const MIN = 1000 * 60
 
-class Updater {
-  constructor(app, timeout = 90 * MIN) {
-    this.isSupported = !linux && app.isBuild && ARGS.autoUpdates
+class Updater extends EventEmitter {
+  constructor({ enable = true,  interval = 90 * MIN } = {}) {
+    super()
 
-    this.app = app
-    this.timeout = timeout
+    this.isSupported = !linux && enable
+
+    this.timeout = interval
     this.release = {}
 
     this.isChecking = false
@@ -37,11 +38,12 @@ class Updater {
         })
       })
 
-    } catch (error) {
-      warn(`failed to setup auto updater: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
       this.isSupported = false
+
+      error({
+        stack: e.stack
+      }, `failed to setup auto updater: ${e.message}`)
     }
   }
 
@@ -79,28 +81,28 @@ class Updater {
     }
   }
 
-  onError(error) {
+  onError(e) {
     this.isChecking = false
     this.isUpdateAvailable = false
     this.isUpdateReady = false
 
-    warn(`Failed to fetch update: ${error.message}`, {
-      stack: error.stack
-    })
+    error({
+      stack: e.stack
+    }, `failed to fetch update: ${e.message}`)
   }
 
   onCheckingForUpdate = () =>{
-    verbose('checking for updates...')
+    info('checking for updates...')
     this.lastCheck = new Date()
     this.isChecking = true
-    this.app.emit('app:reload-menu')
+    this.emit('checking-for-update')
   }
 
   onUpdateNotAvailable = () => {
-    verbose('no updates available')
+    info('no updates available')
     this.isUpdateAvailable = false
     this.isChecking = false
-    this.app.emit('app:reload-menu')
+    this.emit('update-not-available')
   }
 
   onUpdateAvailable = () => {
@@ -113,8 +115,8 @@ class Updater {
     this.release = release
     this.isUpdateReady = true
     this.isChecking = false
-    this.app.broadcast('dispatch', flash.show(release))
     this.stop()
+    this.emit('update-ready', release)
   }
 }
 

@@ -1,41 +1,61 @@
 'use strict'
 
 try {
-  const START = performance.now()
+  const START = Date.now()
+
+  require('module').globalPaths.push(__dirname)
 
   const opts = require('./args').parse()
-  const { join } = require('path')
-  const LOGDIR = join(opts.home, 'log')
-
-  const { verbose, warn } = require('./common/log')(LOGDIR, opts)
+  const { Window } = require('./window')
   const { ready } = require('./dom')
+  const { ipcRenderer: ipc } = require('electron')
 
-  const { win } = require('./window')
-  verbose(`initializing ${win.type} window...`)
+  const win = new Window(opts)
+  const { fatal, info } = require('./common/log')({
+    dest: opts.log,
+    level: opts.level,
+    name: win.type
+  })
+
+  info({
+    dpx: window.devicePixelRatio,
+    opts
+  }, `${win.type}.init`)
 
   ready
-    .then(() => performance.now())
-    .then(READY =>
-      win.init(() => {
-        requestIdleCallback(win.show, { timeout: 500 })
+    .then(() => Date.now())
+    .then((READY) =>
+      win.init().then(() => {
+        ipc.send('wm', 'init')
+        win.toggle('init')
+        const INIT = Date.now()
+        require(`./views/${win.type}`)
+        const LOAD = Date.now()
 
-        let DONE = performance.now()
+        requestIdleCallback(() => {
+          ipc.send('wm', 'ready')
+          win.toggle('ready')
+          win.ready = Date.now()
 
-        verbose('%s ready after %dms (%dms)', win.type,
-          (DONE - START).toFixed(3),
-          (DONE - READY).toFixed(3))
+          info('%s ready %dms [dom:%dms win:%dms req:%dms]',
+            win.type,
+            win.ready - START,
+            READY - START,
+            INIT - READY,
+            LOAD - INIT)
+        }, { timeout: 1000 })
       }))
-    .catch(error => {
-      warn(`failed initializing ${win.type}: ${error.message}`)
-      warn(error.stack)
+    .catch((e) => {
+      fatal({ stack: e.stack }, `${win.type}.init failed`)
 
-      if (!opts.dev) {
-        win.current.close()
-      }
+      if (opts.dev)
+        ipc.send('wm', 'show')
+      else
+        process.crash()
     })
 
   // eslint-disable-next-line
-  global.eval = function () {
+  global.eval = () => {
     throw new Error('use of eval() is prohibited')
   }
 
@@ -43,6 +63,8 @@ try {
     global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
   }
 
-} catch (error) {
-  process.stderr.write(`Uncaught error in bootstrap: ${error.message}\n`)
+} catch (e) {
+  process.stderr.write(
+    `Uncaught error in bootstrap: ${e.message}\n${e.stack}\n`)
+  process.crash()
 }

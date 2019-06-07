@@ -9,20 +9,20 @@ const channel =
     version.includes('dev') ? 'dev' :
       'stable'
 
+const qualified = {
+  product: (channel === 'stable') ?
+  productName : `${productName} ${titlecase(channel)}`,
+  name: (channel === 'stable') ? name : `${name}-${channel}`,
+}
+
 module.exports = {
   version,
   author,
   name,
   product: productName,
   channel,
-
-  qualified: {
-    product: (channel === 'stable') ?
-      productName : `${productName} ${titlecase(channel)}`,
-
-    name: (channel === 'stable') ? name : `${name}-${channel}`
-  },
-
+  qualified,
+  exe: (platform === 'linux') ? qualified.name : qualified.product,
   feed: (platform === 'win32') ?
     `https://tropy.org/update/${channel}/${platform}` :
     `https://tropy.org/update/${channel}/${platform}/${version}`

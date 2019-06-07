@@ -4,7 +4,6 @@ const { TAG, PROJECT } = require('../constants')
 const { insert, load, remove, update } = require('./util')
 
 module.exports = {
-  // eslint-disable-next-line complexity
   tags(state = {}, { type, payload, error, meta }) {
     switch (type) {
       case PROJECT.OPEN:

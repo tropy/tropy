@@ -21,10 +21,8 @@
     opacity: $btn-disabled-opacity;
   }
 
-  .window-draggable & {
-    .frameless & {
-      -webkit-app-region: no-drag;
-    }
+  .frameless & {
+    -webkit-app-region: no-drag;
   }
 
   &.min-width {

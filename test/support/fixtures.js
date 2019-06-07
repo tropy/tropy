@@ -1,8 +1,7 @@
 'use strict'
 
-const { resolve, join } = require('path')
-
-const ROOT = resolve(__dirname, '..', 'fixtures')
+const { join } = require('path')
+const ROOT = join(__dirname, '..', 'fixtures')
 
 global.F = {
   images(name) {
@@ -14,6 +13,12 @@ global.F = {
   plugins(...args) {
     return {
       path: join(ROOT, 'plugins', ...args)
+    }
+  },
+
+  views(...args) {
+    return {
+      path: join(ROOT, 'views', ...args)
     }
   }
 }

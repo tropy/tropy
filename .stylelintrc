@@ -9,3 +9,5 @@ rules:
   block-closing-brace-newline-after: null
   unit-no-unknown: [true, { ignoreFunctions: ["-webkit-image-set"] }]
   selector-pseudo-element-no-unknown: [true, { ignorePseudoElements: ["-webkit"] }]
+  no-descending-specificity: null
+

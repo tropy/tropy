@@ -1,20 +1,20 @@
 'use strict'
 
 const { EventEmitter } = require('events')
-const { resolve } = require('path')
+const { extname, join } = require('path')
 
 const {
-  app, shell, ipcMain: ipc, BrowserWindow, systemPreferences: pref
+  app,
+  clipboard,
+  shell,
+  ipcMain: ipc,
+  BrowserWindow,
+  systemPreferences: prefs
 } = require('electron')
 
-const { verbose, warn } = require('../common/log')
-const { open, hasOverlayScrollBars } = require('./window')
-const { all } = require('bluebird')
+const { fatal, info, logger, crashReport } = require('../common/log')
 const { existsSync: exists } = require('fs')
-const { join } = require('path')
 const { into, compose, remove, take } = require('transducers.js')
-const rm = require('rimraf')
-const uuid = require('uuid/v1')
 
 const { AppMenu, ContextMenu } = require('./menu')
 const { Cache } = require('../common/cache')
@@ -23,26 +23,21 @@ const { Strings } = require('../common/res')
 const Storage = require('./storage')
 const Updater = require('./updater')
 const dialog = require('./dialog')
+const WindowManager = require('./wm')
+const { addIdleObserver } = require('./idle')
+const { migrate } = require('./migrate')
 
 const { defineProperty: prop } = Object
-const act = require('../actions')
-const { darwin } = require('../common/os')
+const act = require('./actions')
+const { darwin, linux } = require('../common/os')
 const { channel, product, version } = require('../common/release')
-const { restrict } = require('../common/util')
 
 const {
-  FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS, LOCALE
+  FLASH, HISTORY, TAG, PROJECT, CONTEXT, LOCALE
 } = require('../constants')
-
-const WIN = SASS.PROJECT
-const WIZ = SASS.WIZARD
-const ABT = SASS.ABOUT
-const PREFS = SASS.PREFS
 
 const H = new WeakMap()
 const T = new WeakMap()
-
-const ZOOM = { STEP: 0.25, MAX: 2, MIN: 0.75 }
 
 
 class Tropy extends EventEmitter {
@@ -57,151 +52,172 @@ class Tropy extends EventEmitter {
     zoom: 1.0
   }
 
-  constructor() {
+  constructor(opts = {}) {
     super()
 
-    if (Tropy.instance) return Tropy.instance
+    if (Tropy.instance)
+      return Tropy.instance
+    if (!opts.data)
+      throw new Error('missing data folder')
+
     Tropy.instance = this
 
+    this.opts = opts
     this.menu = new AppMenu(this)
     this.ctx = new ContextMenu(this)
-
-    this.updater = new Updater(this)
-
-    prop(this, 'cache', {
-      value: new Cache(app.getPath('userData'), 'cache')
+    this.wm = new WindowManager()
+    this.updater = new Updater({
+      enable: process.env.NODE_ENV === 'production' && opts['auto-updates']
     })
 
-    prop(this, 'store', { value: new Storage() })
+    prop(this, 'cache', {
+      value: new Cache(opts.cache || join(opts.data, 'cache'))
+    })
 
-    prop(this, 'projects', { value: new Map() })
+    prop(this, 'store', {
+      value: new Storage(opts.data)
+    })
 
-    prop(this, 'home', {
-      value: resolve(__dirname, '..', '..')
+    prop(this, 'projects', {
+      value: new Map()
     })
 
     prop(this, 'plugins', {
-      value: new Plugins(join(app.getPath('userData'), 'plugins'))
+      value: new Plugins(join(opts.data, 'plugins'))
     })
   }
 
+  async start() {
+    await this.restore()
+    this.listen()
+    this.wm.start()
+  }
+
+  stop() {
+    this.updater.stop()
+    this.plugins.stop()
+    this.persist()
+  }
+
   open(file) {
-    if (!file) {
-      if (this.win) return this.win.show(), this
-
-      for (let recent of this.state.recent) {
-        if (!exists(recent)) continue
-        file = recent
-        break
-      }
-
-      if (!file) return this.showWizard()
+    if (file != null) {
+      return this.openFile(file)
     }
 
-    try {
-      file = resolve(file)
-      verbose(`opening ${file}...`)
+    let win = this.wm.current()
+    if (win != null) {
+      win.show()
 
-      if (this.win) {
-        if (file) {
-          this.dispatch(act.project.open(file), this.win)
-        }
+    } else if (this.state.recent.length === 0) {
+      this.showWizardWindow()
 
-        return this.win.show(), this
-      }
+    } else {
+      let recent = this.state.recent[0]
+      if (exists(recent))
+        this.showProjectWindow(recent)
+      else
+        this.showProjectWindow()
+    }
 
-      this.win = open('project', { file, ...this.hash }, {
-        title: '',
-        width: WIN.WIDTH,
-        height: WIN.HEIGHT,
-        minWidth: WIN.MIN_WIDTH * this.state.zoom,
-        minHeight: WIN.MIN_HEIGHT * this.state.zoom,
-        backgroundColor: this.background,
-        darkTheme: (this.state.theme === 'dark'),
-        frame: !this.hash.frameless
-      }, this.state.zoom)
+    return false
+  }
 
-      this.win
-        .on('unresponsive', async () => {
-          warn(`win#${this.win.id} has become unresponsive`)
+  openFile(file) {
+    switch (extname(file)) {
+      case '.tpy':
+        this.showProjectWindow(file)
+        break
+      case '.jpg':
+      case '.jpeg':
+      case '.png':
+      case '.svg':
+        this.import([file])
+        break
+      case '.ttp':
+        this.importTemplates([file])
+        break
+      default:
+        return false
+    }
+    return true
+  }
 
-          let { response } = await dialog.show('message-box', this.win, {
-            type: 'warning',
-            ...this.dict.dialogs.unresponsive
-          })
+  async showOpenDialog(win = this.wm.current()) {
+    let files = await dialog.open(win, {
+      defaultPath: app.getPath('documents'),
+      filters: [{
+        name: this.dict.dialog.file.project,
+        extensions: ['tpy']
+      }]
+    })
 
-          switch (response) {
-            case 0: return this.win.destroy()
-          }
-        })
-        .on('close', () => {
-          this.state.win.bounds = this.win.getNormalBounds()
-        })
-        .on('closed', () => { this.win = undefined })
-
-      this.win.webContents
-        .on('crashed', async () => {
-          warn(`win#${this.win.id} contents crashed`)
-
-          let { response } = await dialog.show('message-box', this.win, {
-            type: 'warning',
-            ...this.dict.dialogs.crashed
-          })
-
-          switch (response) {
-            case 0:
-              this.win.destroy()
-              break
-            case 1:
-              app.relaunch()
-              app.exit(0)
-              break
-            default:
-              this.win.show()
-              break
-          }
-        })
-
-
-      if (this.state.win.bounds) {
-        this.win.setBounds(this.state.win.bounds)
-      }
-
-      return this
-
-    } finally {
-      this.emit('app:reload-menu')
+    if (files) {
+      await this.showProjectWindow(files[0], win)
     }
   }
 
-  hasOpened({ file, name }) {
-    if (this.wiz) this.wiz.close()
-    if (this.prefs) this.prefs.close()
+  async showProjectWindow(file, win = this.wm.current()) {
+    info(`open project ${file}`)
+
+    if (win == null) {
+      let args = {
+        file,
+        recent: this.state.recent,
+        ...this.hash
+      }
+
+      await this.wm.open('project', args, {
+        show: 'init',
+        title: '',
+        ...this.state.win.bounds
+      })
+    } else {
+      if (file) {
+        this.dispatch(act.project.open(file), win)
+      }
+
+      win.show()
+    }
+
+    this.emit('app:reload-menu')
+  }
+
+  hasOpenedProject({ file, name }, win) {
+    this.wm.close(['wizard', 'prefs'])
 
     this.state.recent = into(
       [file],
       compose(remove(f => f === file), take(9)),
       this.state.recent)
 
-    // if (darwin) this.win.setRepresentedFilename(file)
-    this.setTitle(name, this.win)
+    if (!this.state.frameless) {
+      win.setTitle(name)
+    }
 
     switch (process.platform) {
       case 'darwin':
+        if (!this.state.frameless) {
+          win.setRepresentedFilename(file)
+        }
+        app.addRecentDocument(file)
+        break
       case 'win32':
         app.addRecentDocument(file)
         break
     }
 
+    this.wm.send('project', 'recent', this.state.recent)
     this.emit('app:reload-menu')
   }
 
   import(files) {
-    this.dispatch(act.item.import({ files }), this.win)
+    return this.dispatch(act.item.import({ files }), this.wm.current())
   }
 
   importTemplates(files) {
-    this.dispatch(act.ontology.template.import({ files }))
+    return this.dispatch(
+      act.ontology.template.import({ files }),
+      this.wm.first(['prefs', 'project']))
   }
 
   showContextMenu(options, win) {
@@ -213,112 +229,58 @@ class Tropy extends EventEmitter {
   }
 
   showAboutWindow() {
-    if (this.about) return this.about.show(), this
-
-    this.about = open('about', this.hash, {
-      title: this.hash.frameless ? '' : this.dict.windows.about.title,
-      width: ABT.WIDTH * this.state.zoom,
-      height: ABT.HEIGHT * this.state.zoom,
-      parent: darwin ? null : this.win,
-      modal: !darwin && !!this.win,
-      autoHideMenuBar: true,
-      resizable: false,
-      minimizable: false,
-      maximizable: false,
-      fullscreenable: false,
-      backgroundColor: this.background,
-      darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless
-    }, this.state.zoom)
-      .once('closed', () => { this.about = undefined })
-
-    return this
+    this.wm.show('about', this.hash, {
+      title: this.dict.window.about.title,
+      parent: this.wm.current(),
+      modal: linux
+    })
   }
 
-  showWizard() {
-    if (this.prefs) this.prefs.close()
-    if (this.wiz) return this.wiz.show(), this
-
-    this.wiz = open('wizard', this.hash, {
-      title: this.hash.frameless ? '' : this.dict.windows.wizard.title,
-      width: WIZ.WIDTH * this.state.zoom,
-      height: WIZ.HEIGHT * this.state.zoom,
-      parent: darwin ? null : this.win,
-      modal: !darwin && !!this.win,
-      autoHideMenuBar: true,
-      resizable: false,
-      minimizable: false,
-      maximizable: false,
-      fullscreenable: false,
-      backgroundColor: this.background,
-      darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless,
-    }, this.state.zoom)
-      .once('closed', () => { this.wiz = undefined })
-
-    return this
+  showWizardWindow() {
+    this.wm.close('prefs')
+    this.wm.show('wizard', this.hash, {
+      title: this.dict.window.wizard.title,
+      parent: this.wm.current(),
+      modal: linux
+    })
   }
 
-  showPreferences() {
-    if (this.prefs) return this.prefs.show(), this
-
-    this.prefs = open('prefs', this.hash, {
-      title: this.hash.frameless ? '' : this.dict.windows.prefs.title,
-      width: PREFS.WIDTH * this.state.zoom,
-      height: PREFS.HEIGHT * this.state.zoom,
-      parent: darwin ? null : this.win,
-      modal: !darwin && !!this.win,
-      autoHideMenuBar: true,
-      resizable: false,
-      minimizable: false,
-      maximizable: false,
-      fullscreenable: false,
-      backgroundColor: this.background,
-      darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless
-    }, this.state.zoom)
-      .once('closed', () => {
-        this.prefs = undefined
-        this.dispatch(act.ontology.load(), this.win)
-        this.dispatch(act.storage.reload([['settings']]), this.win)
-      })
-
-    return this
+  showPreferencesWindow() {
+    this.wm.show('prefs', this.hash, {
+      alwaysOnTop: darwin,
+      isExclusive: !darwin,
+      title: this.dict.window.prefs.title,
+      parent: this.wm.current()
+    })
   }
 
-  restore() {
-    return all([
-      this.store.load('state.json')
+  async restore() {
+    this.state = await this.migrate(
+      await this.store.load('state.json', Tropy.defaults))
+
+    await Promise.all([
+      this.load(),
+      this.cache.init(),
+      this.plugins.init()
     ])
-      .then(([state]) => ({ ...Tropy.defaults, ...state }))
-      .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
-      .then(state => this.migrate(state))
-      .tap(state => this.state = state)
+    this.plugins.watch()
 
-      .tap(() => all([
-        this.load(),
-        this.cache.init(),
-        this.plugins.init()
-      ]))
+    if (this.state.updater) {
+      this.updater.start()
+    }
 
-      .tap(() => this.plugins.watch())
-      .tap(state => state.updater && this.updater.start())
+    if (darwin) {
+      prefs.setAppLevelAppearance(
+        this.state.theme === 'system' ? null : this.state.theme
+      )
+    }
 
-      .tap(state => {
-        if (darwin) {
-          pref.setAppLevelAppearance(
-            state.theme === 'system' ? null : state.theme
-          )
-        }
-      })
-
-      .tap(() => this.emit('app:restored'))
-      .tap(() => verbose('app state restored'))
+    info('app state restored')
   }
 
   load() {
-    return all([
+    return Promise.all([
       this.menu.load(),
       this.ctx.load(),
       Strings
@@ -328,14 +290,20 @@ class Tropy extends EventEmitter {
   }
 
   migrate(state) {
+    if (state.version == null)
+      this.isFirstRun = true
+    else
+      migrate(this, state, state.version)
+
     state.locale = this.getLocale(state.locale)
+    state.uuid = state.uuid || require('uuid/v1')()
     state.version = this.version
-    state.uuid = state.uuid || uuid()
+
     return state
   }
 
   persist() {
-    verbose('saving app state')
+    info('saving app state')
 
     if (this.state != null) {
       this.store.save.sync('state.json', this.state)
@@ -349,18 +317,18 @@ class Tropy extends EventEmitter {
       this.showAboutWindow())
 
     this.on('app:create-project', () =>
-      this.showWizard())
+      this.showWizardWindow())
 
     this.on('app:close-project', () =>
-      this.dispatch(act.project.close(), this.win))
+      this.dispatch(act.project.close('user'), this.wm.current()))
 
     this.on('app:optimize-cache', () => {
-      this.dispatch(act.cache.prune(), this.win)
-      this.dispatch(act.cache.purge(), this.win)
+      this.dispatch(act.cache.prune(), this.wm.current())
+      this.dispatch(act.cache.purge(), this.wm.current())
     })
 
     this.on('app:rebase-project', () =>
-      this.dispatch(act.project.rebase(), this.win))
+      this.dispatch(act.project.rebase(), this.wm.current()))
 
     this.on('app:import-photos', () =>
       this.import())
@@ -375,13 +343,13 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:center-window', () =>
-      this.center())
+      this.wm.center())
 
     this.on('app:show-in-folder', (_, { target }) =>
       shell.showItemInFolder(target.path))
 
     this.on('app:create-item', () =>
-      this.dispatch(act.item.create(), this.win))
+      this.dispatch(act.item.create(), this.wm.current()))
 
     this.on('app:delete-item', (win, { target }) =>
       this.dispatch(act.item.delete(target.id), win))
@@ -461,7 +429,8 @@ class Tropy extends EventEmitter {
         item: target.item, photos: [target.id]
       }), win))
     this.on('app:consolidate-photo-library', () =>
-      this.dispatch(act.photo.consolidate(null, { force: true }), this.win))
+      this.dispatch(act.photo.consolidate(null, { force: true }),
+        this.wm.current()))
 
     this.on('app:consolidate-photo', (win, { target }) =>
       this.dispatch(act.photo.consolidate([target.id], {
@@ -540,7 +509,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:clear-recent-projects', () => {
-      verbose('clearing recent projects...')
+      info('clear recent projects')
       this.state.recent = []
       this.emit('app:reload-menu')
     })
@@ -550,7 +519,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:switch-locale', async (_, locale) => {
-      verbose(`switching to "${locale}" locale...`)
+      info(`switch to "${locale}" locale`)
       this.state.locale = locale
       await this.load()
       this.updateWindowLocale()
@@ -558,9 +527,9 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:toggle-debug-flag', () => {
-      verbose('toggling dev/debug mode...')
+      info('toggling dev/debug mode...')
       this.state.debug = !this.state.debug
-      this.broadcast('debug', this.state.debug)
+      this.wm.broadcast('debug', this.state.debug)
       this.emit('app:reload-menu')
     })
 
@@ -580,20 +549,20 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:undo', (win) => {
-      if (this.getHistory(win || this.win).past) {
+      if (this.getHistory(win).past) {
         this.dispatch({
           type: HISTORY.UNDO,
           meta: { ipc: HISTORY.CHANGED }
-        }, win || this.win)
+        }, win)
       }
     })
 
     this.on('app:redo', (win) => {
-      if (this.getHistory(win || this.win).future) {
+      if (this.getHistory(win).future) {
         this.dispatch({
           type: HISTORY.REDO,
           meta: { ipc: HISTORY.CHANGED }
-        }, win || this.win)
+        }, win)
       }
     })
 
@@ -602,7 +571,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-preferences', () => {
-      this.showPreferences()
+      this.showPreferencesWindow()
     })
 
     this.on('app:open-license', () => {
@@ -622,68 +591,72 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-logs', () => {
-      shell.showItemInFolder(join(app.getPath('userData'), 'log', 'main.log'))
+      shell.showItemInFolder(this.log)
     })
 
     this.on('app:open-user-data', () => {
-      shell.showItemInFolder(join(app.getPath('userData'), 'state.json'))
+      shell.showItemInFolder(join(this.opts.data, 'state.json'))
     })
 
     this.on('app:open-plugins-folder', () => {
       shell.showItemInFolder(this.plugins.configFile)
     })
 
-    this.on('app:install-plugin', async (win) => {
-      const plugins = await dialog.show('file', darwin ? null : win, {
-        defaultPath: app.getPath('downloads'),
-        filters: [{ name: 'Tropy Plugin', extensions: Plugins.ext }],
-        properties: ['openFile']
-      })
-
-      if (plugins != null) await this.plugins.install(...plugins)
+    this.on('app:open-cache-folder', () => {
+      shell.openItem(this.cache.root)
     })
 
-    this.on('app:reset-ontology-db', () => {
-      if (this.win || this.prefs) {
-        this.dispatch(act.ontology.reset())
-      } else {
-        rm.sync(join(app.getPath('userData'), 'ontology.db'))
-      }
-    })
-
-    this.on('app:open-dialog', (win, options = {}) => {
+    this.on('app:install-plugin', (win) => {
       dialog
-        .show('file', win, {
-          ...options,
-          defaultPath: app.getPath('documents'),
-          filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }],
-          properties: ['openFile']
-
-        }).then(files => {
-          if (files) this.open(...files)
+        .open(darwin ? null : win, {
+          defaultPath: app.getPath('downloads'),
+          filters: [{
+            name: this.dict.dialog.file.plugin,
+            extensions: Plugins.ext
+          }]
+        })
+        .then(plugins => {
+          if (plugins) return this.plugins.install(...plugins)
         })
     })
 
+    this.on('app:reset-ontology-db', () => {
+      if (this.wm.has(['project', 'prefs']))
+        dialog.warn(this.wm.first(['prefs', 'project']), {
+          message: 'Cannot reset ontology db while in use!'
+        })
+      else
+        require('rimraf')
+          .sync(join(this.opts.data, 'ontology.db'))
+    })
+
+    this.on('app:open-dialog', (win) => {
+      this.showOpenDialog(win)
+    })
+
+    this.on('app:open-new-dialog', () => {
+      this.showOpenDialog(null)
+    })
+
     this.on('app:zoom-in', () => {
-      this.zoom(this.state.zoom + ZOOM.STEP)
+      this.state.zoom = this.wm.zoom(this.state.zoom + 0.25)
     })
 
     this.on('app:zoom-out', () => {
-      this.zoom(this.state.zoom - ZOOM.STEP)
+      this.state.zoom = this.wm.zoom(this.state.zoom - 0.25)
     })
 
     this.on('app:zoom-reset', () => {
-      this.zoom(1.0)
+      this.state.zoom = this.wm.zoom(1)
     })
 
     this.plugins.on('change', () => {
-      this.broadcast('plugins-reload')
+      this.wm.broadcast('plugins-reload')
       this.emit('app:reload-menu')
     })
 
-    let quit = false
+    // TODO -> move to wm and send event focus-change
     let winId
-
     app.on('browser-window-focus', (_, win) => {
       try {
         if (winId !== win.id) this.emit('app:reload-menu')
@@ -692,41 +665,46 @@ class Tropy extends EventEmitter {
       }
     })
 
-    app.once('before-quit', () => { quit = true })
-
-    app.on('window-all-closed', () => {
-      if (quit || !darwin) app.quit()
-    })
-
-    app.on('quit', () => {
-      this.updater.stop()
-      this.plugins.stop()
-      this.persist()
+    app.on('gpu-process-crashed', (_, killed) => {
+      if (!killed)
+        this.handleUncaughtException(
+          new Error('GPU process crashed unexpectedly'))
     })
 
     if (darwin) {
       app.on('activate', () => this.open())
 
       let ids = [
-        pref.subscribeNotification(
-          'AppleShowScrollBarsSettingChanged', () =>
-            this.broadcast('scrollbars', !hasOverlayScrollBars())),
-        pref.subscribeNotification(
-          'AppleInterfaceThemeChangedNotification', () => this.setTheme())
+        prefs.subscribeNotification(
+          'AppleShowScrollBarsSettingChanged',
+          this.wm.handleScrollBarsChange),
+        prefs.subscribeNotification(
+          'AppleInterfaceThemeChangedNotification',
+          () => this.setTheme())
       ]
 
       app.on('quit', () => {
-        for (let id of ids) pref.unsubscribeNotification(id)
+        for (let id of ids) prefs.unsubscribeNotification(id)
       })
     }
 
-    ipc.on('cmd', (event, command, ...params) => {
-      this.emit(command, BrowserWindow.fromWebContents(event.sender), ...params)
+    ipc.on('cmd', (event, cmd, ...args) => {
+      this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
     })
 
-    ipc.on(PROJECT.OPENED, (_, project) => this.hasOpened(project))
-    ipc.on(PROJECT.CREATE, () => this.showWizard())
-    ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
+    ipc.on('error', (event, error) => {
+      this.handleUncaughtException(
+        error,
+        BrowserWindow.fromWebContents(event.sender))
+    })
+
+    ipc.on(PROJECT.OPENED, (event, project) =>
+      this.hasOpenedProject(
+        project,
+        BrowserWindow.fromWebContents(event.sender)))
+
+    ipc.on(PROJECT.CREATE, () => this.showWizardWindow())
+    ipc.on(PROJECT.CREATED, (_, { file }) => this.showProjectWindow(file))
 
     ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
       if (id === 'update.ready' && confirm) {
@@ -734,8 +712,9 @@ class Tropy extends EventEmitter {
       }
     })
 
-    ipc.on(PROJECT.UPDATE, (_, { name }) => {
-      this.setTitle(name, this.win)
+    ipc.on(PROJECT.UPDATE, (event, { name }) => {
+      if (!this.state.frameless)
+        BrowserWindow.fromWebContents(event.sender).setTitle(name)
     })
 
     ipc.on(HISTORY.CHANGED, (event, history) => {
@@ -752,83 +731,143 @@ class Tropy extends EventEmitter {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
-    dialog.start()
+    this.wm.on('show', () => {
+      this.emit('app:reload-menu')
+    })
+
+    this.wm.on('close', (type, win) => {
+      if (type === 'project') {
+        this.state.win.bounds = win.getNormalBounds()
+      }
+    })
+
+    this.wm.on('closed', (type) => {
+      if (type === 'prefs') {
+        this.wm.send('project', 'dispatch',
+          act.ontology.load(),
+          act.storage.reload([['settings']]))
+      }
+      this.emit('app:reload-menu')
+    })
+
+    this.wm.on('unresponsive', (_, win) => {
+      dialog
+        .warn(win, this.dict.dialog.unresponsive)
+        .then(res => {
+          switch (res) {
+            case 0: return win.destroy()
+          }
+        })
+    })
+
+    this.wm.on('crashed', (_, win) => {
+      dialog
+        .warn(win, this.dict.dialog.crashed)
+        .then(({ response }) => {
+          switch (response) {
+            case 0:
+              win.destroy()
+              break
+            case 1:
+              app.relaunch()
+              app.quit()
+              break
+            case 2:
+              shell.openItem(this.log)
+              break
+          }
+        })
+    })
+
+    this.updater
+      .on('checking-for-updates', () => {
+        this.emit('app:reload-menu')
+      })
+      .on('update-not-available', () => {
+        this.emit('app:reload-menu')
+      })
+      .on('update-ready', (release) => {
+        this.wm.broadcast('dispatch', act.flash.show(release))
+      })
+
+    app.whenReady().then(() => {
+      addIdleObserver((_, type, time) => {
+        this.wm.broadcast('idle', { type, time })
+      }, 60)
+    })
 
     return this
   }
 
+  handleUncaughtException(e, win = BrowserWindow.getFocusedWindow()) {
+    fatal(e)
+
+    if (!this.dev) {
+      dialog
+        .alert(win, {
+          ...this.dict.dialog.unhandled,
+          detail: e.stack
+        })
+        .then(({ response }) => {
+          switch (response) {
+            case 1:
+              clipboard.write({ text: crashReport(e) })
+              break
+            case 2:
+              shell.openItem(this.log)
+              break
+          }
+        })
+    }
+  }
+
   get hash() {
     return {
-      environment: ARGS.environment,
-      dark: pref.isDarkMode(),
+      data: this.opts.data,
       debug: this.debug,
       dev: this.dev,
-      home: app.getPath('userData'),
-      user: app.getPath('home'),
-      documents: app.getPath('documents'),
-      pictures: app.getPath('pictures'),
       cache: this.cache.root,
       plugins: this.plugins.root,
       frameless: this.state.frameless,
       theme: this.state.theme,
+      level: logger.level,
       locale: this.state.locale,
+      log: this.log,
       uuid: this.state.uuid,
       update: this.updater.release,
       version,
-      webgl: this.state.webgl
-    }
-  }
-
-  center(windows = BrowserWindow.getAllWindows()) {
-    for (let win of windows) {
-      win.center()
-    }
-  }
-
-  zoom(factor) {
-    this.state.zoom = restrict(factor, ZOOM.MIN, ZOOM.MAX)
-
-    for (let win of BrowserWindow.getAllWindows()) {
-      win.webContents.setZoomFactor(this.state.zoom)
+      webgl: this.state.webgl,
+      zoom: this.state.zoom
     }
   }
 
   updateWindowLocale() {
-    let { dict, state, about, prefs, wiz } = this
-    this.setTitle(dict.windows.about.title, about)
-    this.setTitle(dict.windows.prefs.title, prefs)
-    this.setTitle(dict.windows.wizard.title, wiz)
-    this.broadcast('locale', state.locale)
+    this.wm.setTitle('about', this.dict.window.about.title)
+    this.wm.setTitle('prefs', this.dict.window.prefs.title)
+    this.wm.setTitle('wizard', this.dict.window.wizard.title)
+    this.wm.broadcast('locale', this.state.locale)
   }
 
   setTheme(theme = this.state.theme) {
-    verbose(`switching to "${theme}" theme...`)
+    info(`switch to "${theme}" theme`)
     this.state.theme = theme
 
     if (darwin) {
-      pref.setAppLevelAppearance(theme === 'system' ? null : theme)
+      prefs.setAppLevelAppearance(
+        theme === 'system' ? null : theme
+      )
     }
 
-    this.broadcast('theme', theme, pref.isDarkMode())
+    this.wm.broadcast('theme', theme, prefs.isDarkMode())
     this.emit('app:reload-menu')
-  }
-
-  setTitle(title, win) {
-    if (win != null) {
-      win.setTitle(this.hash.frameless ? '' : title)
-    }
   }
 
   dispatch(action, win = BrowserWindow.getFocusedWindow()) {
     if (win != null) {
       win.webContents.send('dispatch', action)
+      return true
     }
-  }
-
-  broadcast(...args) {
-    for (const win of BrowserWindow.getAllWindows()) {
-      win.webContents.send(...args)
-    }
+    return false
   }
 
   getLocale(locale) {
@@ -860,29 +899,20 @@ class Tropy extends EventEmitter {
     return this.strings.dict
   }
 
+  get log() {
+    return join(app.getPath('logs'), 'tropy.log')
+  }
+
   get name() {
     return product
   }
 
-  get dark() {
-    return this.state.theme === 'dark' ||
-      this.state.theme === 'system' && pref.isDarkMode()
-  }
-
-  get background() {
-    return SASS.BODY[this.dark ? 'dark' : 'light']
-  }
-
   get dev() {
-    return channel === 'dev' || ARGS.environment === 'development'
-  }
-
-  get isBuild() {
-    return ARGS.environment === 'production'
+    return channel === 'dev' || process.env.NODE_ENV === 'development'
   }
 
   get debug() {
-    return ARGS.debug || this.state.debug
+    return this.opts.debug || this.state.debug
   }
 
   get version() {

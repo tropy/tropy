@@ -1,12 +1,13 @@
 'use strict'
 
+const { basename } = require('path')
+const { debug, warn } = require('../common/log')
 const { DuplicateError } = require('../common/error')
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const mod = require('../models')
 const act = require('../actions')
 const { pick } = require('../common/util')
-const { warn, verbose } = require('../common/log')
 const { prompt } = require('../dialog')
 const { Image } = require('../image')
 const { DC, TERMS } = require('../constants')
@@ -98,13 +99,11 @@ class ImportCommand extends Command {
           yield call([dup, dup.toFile], cache.expand(path))
 
         } else {
-          verbose(`Skipping ${v.name} thumbnail for #${id}: already exists`)
+          debug(`skipping ${v.name} thumbnail for #${id}: already exists`)
         }
       }
-    } catch (error) {
-      warn(`Failed to create thumbnail: ${error.message}`, {
-        stack: error.stack
-      })
+    } catch (e) {
+      warn({ stack: e.stack }, 'failed to create thumbnail')
     }
   }
 
@@ -135,7 +134,9 @@ class ImportCommand extends Command {
       switch (handler) {
         case 'prompt': {
           this.isInteractive = true
-          const { ok, isChecked } = yield call(prompt.dup, image.path)
+          const { ok, isChecked } = yield call(prompt, 'dup', {
+            message: basename(image.path)
+          })
 
           if (isChecked) {
             yield* this.setDuplicateHandler(ok ? 'import' : 'skip')

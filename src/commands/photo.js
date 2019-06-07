@@ -40,7 +40,7 @@ class Consolidate extends ImportCommand {
 
         if (meta.force || hasChanged) {
           if (error != null) {
-            warn(`failed to open photo ${photo.id}`, { stack: error.stack })
+            warn({ stack: error.stack }, `failed to open photo ${photo.id}`)
 
             // TODO Figure out where it is!
 
@@ -96,12 +96,9 @@ class Consolidate extends ImportCommand {
             }))
           }
         }
-      } catch (error) {
-        warn(`Failed to consolidate photo ${photo.id}`, {
-          stack: error.stack
-        })
-
-        fail(error, this.action.type)
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
+        fail(e, this.action.type)
       }
 
       yield put(act.activity.update(this.action, { total, progress: i + 1 }))
@@ -171,14 +168,11 @@ class Create extends ImportCommand {
 
           image.next()
         }
-      } catch (error) {
-        if (error instanceof DuplicateError) continue
+      } catch (e) {
+        if (e instanceof DuplicateError) continue
 
-        warn(`Failed to import "${file}": ${error.message}`, {
-          stack: error.stack
-        })
-
-        fail(error, this.action.type)
+        warn({ stack: e.stack }, `failed to import "${file}"`)
+        fail(e, this.action.type)
       }
     }
 
@@ -258,12 +252,9 @@ class Duplicate extends ImportCommand {
         photos.push(photo.id)
         yield* this.createThumbnails(photo.id, image)
 
-      } catch (error) {
-        warn(`Failed to duplicate "${path}": ${error.message}`, {
-          stack: error.stack
-        })
-
-        fail(error, this.action.type)
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to duplicate "${path}"`)
+        fail(e, this.action.type)
       }
     }
 

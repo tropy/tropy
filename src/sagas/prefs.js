@@ -1,11 +1,11 @@
 'use strict'
 
+const { debug, warn } = require('../common/log')
 const { CLOSE } = require('../constants/prefs')
 const { ontology } = require('./ontology')
 const { history } = require('./history')
 const { ipc } = require('./ipc')
 const { shell } = require('./shell')
-const { warn, debug, verbose } = require('../common/log')
 const storage = require('./storage')
 
 const {
@@ -18,7 +18,7 @@ module.exports = {
 
     try {
       aux = yield all([
-        fork(ontology),
+        fork(ontology, { max: 2 }),
         fork(history),
         fork(ipc),
         fork(shell)
@@ -29,11 +29,11 @@ module.exports = {
         call(storage.restore, 'settings')
       ])
 
+      debug('*prefs.main ready')
       yield take(CLOSE)
 
-    } catch (error) {
-      warn(`unexpected error in *prefs.main: ${error.message}`)
-      debug(error.stack)
+    } catch (e) {
+      warn({ stack: e.stack }, 'unexpected error in *prefs.main')
 
     } finally {
       yield all([
@@ -45,7 +45,7 @@ module.exports = {
         yield all(aux.map(t => cancel(t)))
       }
 
-      verbose('*prefs.main terminated')
+      debug('*prefs.main terminated')
     }
   }
 }

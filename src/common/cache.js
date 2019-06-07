@@ -1,21 +1,11 @@
 'use strict'
 
-require('./promisify')
-
-const { join, resolve, extname, basename } = require('path')
-const { format } = require('url')
-
-const {
-  mkdirAsync: mkdir,
-  readdirAsync: readdir,
-  statAsync: stat,
-  writeFileAsync: write
-} = require('fs')
-
+const { mkdir, readdir, stat, writeFile } = require('fs').promises
+const { join, extname, basename } = require('path')
 
 class Cache {
   constructor(...args) {
-    this.root = resolve(...args)
+    this.root = join(...args)
   }
 
   get name() {
@@ -24,7 +14,7 @@ class Cache {
 
   init = async () => {
     try {
-      await mkdir(this.root)
+      await mkdir(this.root, { recursive: true })
     } catch (error) {
       if (error.code !== 'EEXIST') throw error
     }
@@ -33,10 +23,11 @@ class Cache {
   }
 
   save = (name, data) =>
-    write(this.expand(name), data)
+    writeFile(this.expand(name), data)
 
   exists = (name = '', expand = true) =>
-    stat(expand ? this.expand(name) : name).then(() => true, () => false)
+    stat(expand ? this.expand(name) : name)
+      .then(() => true, () => false)
 
   list = (opts = {}) =>
     readdir(this.root, opts)
@@ -86,11 +77,9 @@ class Cache {
   }
 
   static url(root, id, variant, mimetype) {
-    return format({
-      protocol: 'file',
-      pathname: join(root,
-        Cache.path(id, variant, Cache.extname(mimetype)))
-    })
+    return `file://${
+      join(root, Cache.path(id, variant, Cache.extname(mimetype)))
+    }`
   }
 }
 

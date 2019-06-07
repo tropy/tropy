@@ -327,6 +327,7 @@ class Select extends React.Component {
       <input
         className={cx('query', { live: this.state.isOpen && !isInputHidden })}
         disabled={this.state.isDisabled}
+        id={this.props.id}
         onBlur={this.handleBlur}
         onChange={isInputHidden ? null : this.handleQueryChange}
         onFocus={this.handleFocus}
@@ -383,7 +384,6 @@ class Select extends React.Component {
     return (
       <div
         className={cx(this.classes)}
-        id={this.props.id}
         onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
         ref={this.setContainer}>

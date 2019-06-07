@@ -6,6 +6,7 @@ const uuid = require('uuid/v4')
 const { all } = require('bluebird')
 const { into, update } = require('../common/query')
 const { info } = require('../common/log')
+const os = require('../common/os')
 const { PROJECT } = require('../constants')
 
 module.exports = {
@@ -35,7 +36,9 @@ module.exports = {
       case 'project':
         project.base = dirname(db.path)
         break
-      case 'user':
+      case 'home':
+        project.base = os.home
+        break
       case 'documents':
       case 'pictures':
         project.base = ARGS[project.base]

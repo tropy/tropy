@@ -12,13 +12,14 @@
     flex: 0 0 auto;
     border-bottom: 1px solid $prefs-header-border;
 
-    &.draggable {
-      .frameless & {
-        -webkit-app-region: drag;
-        position: relative;
-        z-index: $zindex-draggable;
-      }
+    .frameless & {
+      -webkit-app-region: drag;
     }
+  }
+
+  .toolbar {
+    text-align: center;
+    padding: 1px 0;
   }
 
   .prefs-nav {

@@ -3,8 +3,7 @@
 const React = require('react')
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
-const { blank, noop, pluck } = require('../../common/util')
-const { getLabel } = require('../../common/ontology')
+const { blank, noop, pluck, URI } = require('../../common/util')
 const { IconLock, IconWarningSm } = require('../icons')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
@@ -29,7 +28,7 @@ class MetadataField extends React.PureComponent {
   get label() {
     return this.props.label ||
       this.props.property.label ||
-      getLabel(this.props.property.id)
+      URI.getLabel(this.props.property.id)
   }
 
   get property() {
@@ -151,7 +150,7 @@ class StaticField extends React.PureComponent {
   }
 
   render() {
-    return this.props.value && (
+    return (this.props.value == null) ? null : (
       <li className={cx(this.classes)}>
         <label>
           <FormattedMessage id={this.props.label}/>
