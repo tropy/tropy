@@ -67,7 +67,7 @@ if (!(win32 && require('./squirrel')(opts))) {
   }
 
   // See electron#17942
-  app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', true)
+  // app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', true)
 
   info({
     opts,
