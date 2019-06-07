@@ -157,21 +157,27 @@ class Tropy extends EventEmitter {
   }
 
   async showProjectWindow(file, win = this.wm.current()) {
-    info(`open project ${file}`)
-
     if (win == null) {
+      info({ file }, 'open new project window')
+
       let args = {
         file,
         recent: this.state.recent,
         ...this.hash
       }
 
+      let bounds = this.wm.has('project') ?
+        {} : this.state.win.bounds
+
       await this.wm.open('project', args, {
         show: 'init',
         title: '',
-        ...this.state.win.bounds
+        ...bounds
       })
+
     } else {
+      info({ file }, 'open project in current window')
+
       if (file) {
         this.dispatch(act.project.open(file), win)
       }
@@ -630,8 +636,8 @@ class Tropy extends EventEmitter {
           .sync(join(this.opts.data, 'ontology.db'))
     })
 
-    this.on('app:open-dialog', (win) => {
-      this.showOpenDialog(win)
+    this.on('app:open-dialog', () => {
+      this.showOpenDialog()
     })
 
     this.on('app:open-new-dialog', () => {
