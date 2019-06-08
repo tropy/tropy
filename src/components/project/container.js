@@ -41,7 +41,8 @@ class ProjectContainer extends React.Component {
     super(props)
 
     this.state = {
-      isClosing: this.isClosing(props),
+      isProjectClosed: false,
+      willProjectClose: false,
       mode: props.nav.mode,
       offset: props.ui.panel.width,
       willModeChange: false,
@@ -71,15 +72,18 @@ class ProjectContainer extends React.Component {
 
     if (project !== this.props.project) {
       this.projectWillChange(project)
+      if (this.state.isProjectClosed) {
+        this.projectWillChange.flush()
+      }
     }
   }
 
   get classes() {
     const { isOver, canDrop, nav } = this.props
-    const { isClosing, mode, willModeChange, isModeChanging } = this.state
+    const { mode, willModeChange, isModeChanging } = this.state
 
     return ['project', {
-      closing: isClosing,
+      closing: this.state.willProjectClose,
       empty: this.isEmpty,
       over: isOver && canDrop,
       [`${mode}-mode`]: true,
@@ -88,10 +92,6 @@ class ProjectContainer extends React.Component {
       [`${nav.mode}-mode-enter`]: willModeChange,
       [`${nav.mode}-mode-enter-active`]: isModeChanging
     }]
-  }
-
-  isClosing({ project } = this.props) {
-    return !!(project.closing && project.id != null)
   }
 
   get isEmpty() {
@@ -132,7 +132,8 @@ class ProjectContainer extends React.Component {
 
   projectWillChange = debounce(project => {
     this.setState({
-      isClosing: this.isClosing({ project }),
+      isProjectClosed: !!project.closed,
+      willProjectClose: project.closing,
     })
   }, 750, { leading: false })
 
@@ -214,8 +215,9 @@ class ProjectContainer extends React.Component {
     )
   }
   render() {
-    if (!this.props.project.file || this.props.project.closed)
+    if (!this.props.project.file || this.state.isProjectClosed) {
       return this.renderNoProject()
+    }
 
     const {
       columns,
@@ -227,6 +229,7 @@ class ProjectContainer extends React.Component {
       notes,
       photo,
       photos,
+      project,
       visiblePhotos,
       selection,
       templates,
@@ -244,7 +247,7 @@ class ProjectContainer extends React.Component {
           nav={nav}
           items={items}
           data={data}
-          isActive={this.state.mode === MODE.PROJECT && !this.isClosing()}
+          isActive={this.state.mode === MODE.PROJECT && !project.closing}
           isEmpty={this.isEmpty}
           columns={columns}
           offset={this.state.offset}
@@ -266,7 +269,7 @@ class ProjectContainer extends React.Component {
           mode={this.state.mode}
           isModeChanging={this.state.isModeChanging}
           isTrashSelected={!!nav.trash}
-          isProjectClosing={this.isClosing()}
+          isProjectClosing={project.closing}
           onPanelResize={this.handlePanelResize}
           onPanelDragStop={this.handlePanelDragStop}
           onMetadataSave={this.handleMetadataSave}/>

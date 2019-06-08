@@ -34,7 +34,10 @@ $default-padding-horizontal: 12px !default;
     margin: auto;
     border-color: $template-select-border;
     margin-bottom: (($metadata-line-height - 10px) / 2);
-    background-color: $template-select-bg; // 'Transparent' causes border/box-shadow issue
+
+    &:not(.disabled) {
+      background-color: $template-select-bg; // 'Transparent' causes border/box-shadow issue
+    }
 
     &.focus {
       background-color: $input-bg;
