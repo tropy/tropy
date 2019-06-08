@@ -178,8 +178,8 @@ class WindowManager extends EventEmitter {
   }
 
   handleFocus = (type, win) => {
-    if (this.windows.current !== win.id) {
-      this.windows.current = win.id
+    if (this._cid !== win.id) {
+      this._cid = win.id
 
       if (this.windows[type][0] !== win) {
         this.windows[type] = [win, ...remove(this.windows[type], win)]
