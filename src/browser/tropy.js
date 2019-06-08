@@ -661,20 +661,11 @@ class Tropy extends EventEmitter {
       this.emit('app:reload-menu')
     })
 
-    // TODO -> move to wm and send event focus-change
-    let winId
-    app.on('browser-window-focus', (_, win) => {
-      try {
-        if (winId !== win.id) this.emit('app:reload-menu')
-      } finally {
-        winId = win.id
-      }
-    })
-
     app.on('gpu-process-crashed', (_, killed) => {
-      if (!killed)
+      if (!killed) {
         this.handleUncaughtException(
           new Error('GPU process crashed unexpectedly'))
+      }
     })
 
     if (darwin) {
@@ -738,6 +729,10 @@ class Tropy extends EventEmitter {
     })
 
     this.wm.on('show', () => {
+      this.emit('app:reload-menu')
+    })
+
+    this.wm.on('focus-change', () => {
       this.emit('app:reload-menu')
     })
 
