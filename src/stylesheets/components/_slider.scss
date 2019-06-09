@@ -34,151 +34,150 @@
       // Icon overlay colors are defined by the toolbar
     }
   }
-}
-
-.slider-track {
-  flex: 1 1 0;
-  height: $slider-track-height;
-  background-color: $slider-track-bg;
-  border-radius: $slider-track-height / 2;
-  margin: 0 ($space-min - $shim);
-  position: relative;
-  border-left: ($slider-handle-size / 2) solid transparent;
-  border-right: ($slider-handle-size / 2) solid transparent;
-
-  &:only-child {
-    margin: 0;
-  }
-
-  .overlay-mode & {
-    background-color: $slider-overlay-track-bg;
-
-    @include state(".disabled .slider-track") {
-      opacity: $slider-overlay-track-disabled-opacity;
-      background-color: $slider-overlay-disabled-bg;
-    }
-  }
-}
-
-.slider-range {
-  box-sizing: content-box;
-  background-color: $slider-range-bg;
-  height: $slider-track-height;
-  border-radius: $slider-track-height / 2;
-  border-left: ($slider-handle-size / 2) solid transparent;
-  border-right: ($slider-handle-size / 2) solid transparent;
-  margin-left: -($slider-handle-size / 2);
-  position: absolute;
-
-  .slider.origin & {
-    border-radius: 0;
-    border-left: 0;
-    border-right: 0;
-    margin-left: 0;
-  }
-
-  .slider:focus & {
-    background-color: $slider-focus-bg;
-  }
-
-  .slider.disabled & {
-    opacity: $slider-range-disabled-opacity;
-  }
-
-  .overlay-mode & {
-    background-color: $slider-overlay-range-bg;
-
-    @include state(":focus .slider-range") {
-      background-color: $slider-overlay-focus-bg;
-    }
-
-    @include state(".disabled .slider-range") {
-      background-color: $slider-overlay-disabled-bg;
-    }
-  }
-}
-
-.slider-handle {
-  box-sizing: content-box;
-  width: $slider-handle-size;
-  height: $slider-handle-size;
-  background-color: $slider-handle-bg;
-  background-clip: content-box;
-  border: 1px solid $slider-handle-border;
-  border-radius: 50%;
-  position: absolute;
-  top: -($slider-handle-size / 2 + 1px - $slider-track-height / 2);
-  margin-left: -($slider-handle-size / 2 + 1px);
-
-  .slider:focus & {
-    background-color: $slider-focus-bg;
-    border-color: transparent;
-  }
-
-  .slider.disabled & {
-    background-color: $slider-handle-disabled-bg;
-  }
-
-  .overlay-mode & {
-    background-color: $slider-overlay-handle-bg;
-    border-color: $slider-overlay-handle-border;
-
-    @include state(".disabled .slider-handle") {
-      background-color: $slider-overlay-disabled-bg;
-    }
-  }
-}
-
-.slider-value {
-  position: absolute;
-  left: 50%;
-  bottom: 100%;
-  width: 32px;        // Use fixed width in order to work around buggy
-  margin-left: -16px; // antialiasing (translateX + transition).
-  font-size: 10px;
-  text-align: center;
-  line-height: $toolbar-height / 2 - $slider-handle-size / 2;
-  color: $slider-value-color;
-  opacity: 0;
-  transition: opacity $slider-value-transition;
-
-  .overlay-mode & {
-    color: $slider-overlay-value-color;
-  }
-
-  .frameless & {
-    -webkit-app-region: no-drag;
-  }
-
-  .slider:hover &,
-  .slider-handle:active {
-    opacity: 1;
-  }
-}
-
-// Small slider
-.slider-sm {
-  width: $slider-width-sm + 2px; // Work around containment
 
   .slider-track {
-    border-left-width: ($slider-handle-size-sm / 2);
-    border-right-width: ($slider-handle-size-sm / 2);
+    flex: 1 1 0;
+    height: $slider-track-height;
+    background-color: $slider-track-bg;
+    border-radius: $slider-track-height / 2;
+    margin: 0 ($space-min - $shim);
+    position: relative;
+    border-left: ($slider-handle-size / 2) solid transparent;
+    border-right: ($slider-handle-size / 2) solid transparent;
+
+    &:only-child {
+      margin: 0;
+    }
+
+    .overlay-mode & {
+      background-color: $slider-overlay-track-bg;
+
+      @include state(".slider.disabled") {
+        opacity: $slider-overlay-track-disabled-opacity;
+        background-color: $slider-overlay-disabled-bg;
+      }
+    }
   }
 
   .slider-range {
-    border-left-width: ($slider-handle-size-sm / 2);
-    border-right-width: ($slider-handle-size-sm / 2);
-    margin-left: -($slider-handle-size-sm / 2);
+    box-sizing: content-box;
+    background-color: $slider-range-bg;
+    height: $slider-track-height;
+    border-radius: $slider-track-height / 2;
+    border-left: ($slider-handle-size / 2) solid transparent;
+    border-right: ($slider-handle-size / 2) solid transparent;
+    margin-left: -($slider-handle-size / 2);
+    position: absolute;
+
+    @include variant(".slider.origin") {
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+      margin-left: 0;
+    }
+
+    @include state(".slider:focus") {
+      background-color: $slider-focus-bg;
+    }
+
+    @include state(".slider.disabled") {
+      opacity: $slider-range-disabled-opacity;
+    }
+
+    .overlay-mode & {
+      background-color: $slider-overlay-range-bg;
+
+      @include state(".slider:focus") {
+        background-color: $slider-overlay-focus-bg;
+      }
+
+      @include state(".slider.disabled") {
+        background-color: $slider-overlay-disabled-bg;
+      }
+    }
   }
 
   .slider-handle {
-    width: $slider-handle-size-sm;
-    height: $slider-handle-size-sm;
-    top: -($slider-handle-size-sm / 2 + 1px - $slider-track-height / 2);
-    margin-left: -($slider-handle-size-sm / 2 + 1px);
+    box-sizing: content-box;
+    width: $slider-handle-size;
+    height: $slider-handle-size;
+    background-color: $slider-handle-bg;
+    background-clip: content-box;
+    border: 1px solid $slider-handle-border;
+    border-radius: 50%;
+    position: absolute;
+    top: -($slider-handle-size / 2 + 1px - $slider-track-height / 2);
+    margin-left: -($slider-handle-size / 2 + 1px);
+
+    @include state(".slider:focus") {
+      background-color: $slider-focus-bg;
+      border-color: transparent;
+    }
+
+    @include state(".slider.disabled") {
+      background-color: $slider-handle-disabled-bg;
+    }
+
+    .overlay-mode & {
+      background-color: $slider-overlay-handle-bg;
+      border-color: $slider-overlay-handle-border;
+
+      @include state(".slider.disabled") {
+        background-color: $slider-overlay-disabled-bg;
+      }
+    }
   }
 
   .slider-value {
-    display: none;
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: 32px;        // Use fixed width in order to work around buggy
+    margin-left: -16px; // antialiasing (translateX + transition).
+    font-size: 10px;
+    text-align: center;
+    line-height: $toolbar-height / 2 - $slider-handle-size / 2;
+    color: $slider-value-color;
+    opacity: 0;
+    transition: opacity $slider-value-transition;
+
+    .overlay-mode & {
+      color: $slider-overlay-value-color;
+    }
+
+    .frameless & {
+      -webkit-app-region: no-drag;
+    }
+
+    @include state(".slider:hover", ".slider-handle:active .slider-value") {
+      opacity: 1;
+    }
+  }
+
+  // Small slider
+  &.slider-sm {
+    width: $slider-width-sm + 2px; // Work around containment
+
+    .slider-track {
+      border-left-width: ($slider-handle-size-sm / 2);
+      border-right-width: ($slider-handle-size-sm / 2);
+    }
+
+    .slider-range {
+      border-left-width: ($slider-handle-size-sm / 2);
+      border-right-width: ($slider-handle-size-sm / 2);
+      margin-left: -($slider-handle-size-sm / 2);
+    }
+
+    .slider-handle {
+      width: $slider-handle-size-sm;
+      height: $slider-handle-size-sm;
+      top: -($slider-handle-size-sm / 2 + 1px - $slider-track-height / 2);
+      margin-left: -($slider-handle-size-sm / 2 + 1px);
+    }
+
+    .slider-value {
+      display: none;
+    }
   }
 }
