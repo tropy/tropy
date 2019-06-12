@@ -72,6 +72,10 @@ function *open(file) {
     warn({ stack: e.stack }, 'unexpected error in *open')
     yield call(fail, e, db.path)
 
+    // Mark the task as cancelled. Otherwise the task will appear to be
+    // running event after the finally block completes.
+    yield cancel()
+
   } finally {
     yield call(db.close)
     yield put(act.project.closed())
@@ -171,6 +175,8 @@ function *main() {
 
     while (true) {
       let { type, payload } = yield take([OPEN, CLOSE])
+
+      debug(`*main "${type}" received`)
 
       if (task != null && task.isRunning()) {
         yield cancel(task)
