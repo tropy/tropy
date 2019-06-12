@@ -233,7 +233,7 @@ class ItemPanelGroup extends React.PureComponent {
   }
 
   static propTypes = {
-    isDisabled: bool.isRequired,
+    isDisabled: bool,
     isItemOpen: bool.isRequired,
     items: array.isRequired,
     keymap: object.isRequired,
