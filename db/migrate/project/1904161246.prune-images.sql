@@ -1,6 +1,6 @@
 -- Prune images
 -- ------------------------------------------------------------
-INSERT INTO trash (id, reason)
+REPLACE INTO trash (id, reason)
   SELECT id, 'auto' AS reason
     FROM images
     WHERE id NOT IN (
