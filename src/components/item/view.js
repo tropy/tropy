@@ -228,7 +228,7 @@ class ItemView extends React.PureComponent {
     mode: string.isRequired,
     isModeChanging: bool.isRequired,
     isTrashSelected: bool.isRequired,
-    isProjectClosing: bool.isRequired,
+    isProjectClosing: bool,
 
     onNoteCreate: func.isRequired,
     onNoteDelete: func.isRequired,

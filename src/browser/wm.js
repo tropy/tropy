@@ -177,6 +177,18 @@ class WindowManager extends EventEmitter {
     return array(type).some(t => !blank(this.windows[t]))
   }
 
+  handleFocus = (type, win) => {
+    if (this._cid !== win.id) {
+      this._cid = win.id
+
+      if (this.windows[type][0] !== win) {
+        this.windows[type] = [win, ...remove(this.windows[type], win)]
+      }
+
+      this.emit('focus-change', type, win)
+    }
+  }
+
   handleIpcMessage = (event, type, ...args) => {
     trace({ args }, `ipc.${type} received`)
     let win = BrowserWindow.fromWebContents(event.sender)
@@ -276,7 +288,7 @@ class WindowManager extends EventEmitter {
     try {
       win
         .on('app-command', handleAppCommand)
-        //.on('focus', () => this.handleFocus(type, win))
+        .on('focus', () => this.handleFocus(type, win))
         .on('page-title-updated', (event) => {
           event.preventDefault()
         })

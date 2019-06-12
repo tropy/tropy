@@ -140,8 +140,8 @@ class ItemContainer extends React.PureComponent {
       tool: string.isRequired
     }).isRequired,
     view: object.isRequired,
-    isDisabled: bool.isRequired,
-    isOpen: bool.isRequired,
+    isDisabled: bool,
+    isOpen: bool,
     keymap: object.isRequired,
     note: object,
     notepad: object.isRequired,

@@ -157,21 +157,27 @@ class Tropy extends EventEmitter {
   }
 
   async showProjectWindow(file, win = this.wm.current()) {
-    info(`open project ${file}`)
-
     if (win == null) {
+      info({ file }, 'open new project window')
+
       let args = {
         file,
         recent: this.state.recent,
         ...this.hash
       }
 
+      let bounds = this.wm.has('project') ?
+        {} : this.state.win.bounds
+
       await this.wm.open('project', args, {
         show: 'init',
         title: '',
-        ...this.state.win.bounds
+        ...bounds
       })
+
     } else {
+      info({ file }, 'open project in current window')
+
       if (file) {
         this.dispatch(act.project.open(file), win)
       }
@@ -630,8 +636,8 @@ class Tropy extends EventEmitter {
           .sync(join(this.opts.data, 'ontology.db'))
     })
 
-    this.on('app:open-dialog', (win) => {
-      this.showOpenDialog(win)
+    this.on('app:open-dialog', () => {
+      this.showOpenDialog()
     })
 
     this.on('app:open-new-dialog', () => {
@@ -655,20 +661,11 @@ class Tropy extends EventEmitter {
       this.emit('app:reload-menu')
     })
 
-    // TODO -> move to wm and send event focus-change
-    let winId
-    app.on('browser-window-focus', (_, win) => {
-      try {
-        if (winId !== win.id) this.emit('app:reload-menu')
-      } finally {
-        winId = win.id
-      }
-    })
-
     app.on('gpu-process-crashed', (_, killed) => {
-      if (!killed)
+      if (!killed) {
         this.handleUncaughtException(
           new Error('GPU process crashed unexpectedly'))
+      }
     })
 
     if (darwin) {
@@ -732,6 +729,10 @@ class Tropy extends EventEmitter {
     })
 
     this.wm.on('show', () => {
+      this.emit('app:reload-menu')
+    })
+
+    this.wm.on('focus-change', () => {
       this.emit('app:reload-menu')
     })
 
