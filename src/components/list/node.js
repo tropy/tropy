@@ -88,7 +88,7 @@ class ListNode extends React.PureComponent {
 
   get direction() {
     let { props, state } = this
-    return (!props.isOver || state.offset == null) ?  null :
+    return (!this.isOver || state.offset == null) ?  null :
       (state.offset < 1) ? 'before' :
       (props.isLast && !props.isExpanded && state.depth < props.depth) ?
         ['after', `depth-${props.depth - this.getDropDepth()}`] : 'after'
@@ -104,7 +104,7 @@ class ListNode extends React.PureComponent {
   }
 
   get isDragSource() {
-    return !this.props.isEditing
+    return !(this.props.isEditing || this.props.isDraggingParent)
   }
 
   get isDropTarget() {
@@ -209,6 +209,7 @@ class ListNode extends React.PureComponent {
     else this.expand()
 
   }
+
   collapse = () => {
     this.props.onCollapse(this.props.list.id, {
       select: this.isChildNodeSelected()
@@ -356,6 +357,8 @@ const DropTargetSpec = {
     switch (type) {
       case NativeTypes.FILE:
         return !!item.types.find(t => isImageSupported({ type: t }))
+      case DND.LIST:
+        return !(props.isDragging || props.isDraggingParent)
       default:
         return true
     }
