@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1904161246;
+PRAGMA user_version=1906131635;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -213,27 +213,6 @@ CREATE TRIGGER update_lists_trim_name
     UPDATE lists SET name = trim(name)
       WHERE list_id = NEW.list_id;
   END;
-CREATE TRIGGER update_lists_cycle_check
-  BEFORE UPDATE OF parent_list_id ON lists
-  FOR EACH ROW WHEN NEW.parent_list_id NOT NULL
-  BEGIN
-    SELECT CASE (
-        WITH RECURSIVE
-          ancestors(id) AS (
-            SELECT parent_list_id
-              FROM lists
-              WHERE list_id = OLD.list_id
-            UNION
-            SELECT parent_list_id
-              FROM lists, ancestors
-              WHERE lists.list_id = ancestors.id
-          )
-          SELECT count(*) FROM ancestors WHERE id = OLD.list_id LIMIT 1
-      )
-      WHEN 1 THEN
-        RAISE(ABORT, 'Lists may not contain cycles')
-      END;
-  END;
 CREATE TRIGGER update_metadata_values_abort
   BEFORE UPDATE ON metadata_values
   BEGIN
@@ -298,6 +277,27 @@ CREATE TRIGGER delete_selections_prune_images
   AFTER DELETE ON selections
   BEGIN
     DELETE FROM subjects WHERE id = OLD.id;
+  END;
+CREATE TRIGGER update_lists_cycle_check
+  BEFORE UPDATE OF parent_list_id ON lists
+  FOR EACH ROW WHEN NEW.parent_list_id NOT NULL
+  BEGIN
+    SELECT CASE (
+        WITH RECURSIVE
+          ancestors(id) AS (
+            SELECT parent_list_id
+              FROM lists
+              WHERE list_id = NEW.parent_list_id
+            UNION
+            SELECT parent_list_id
+              FROM lists, ancestors
+              WHERE lists.list_id = ancestors.id
+          )
+          SELECT count(*) FROM ancestors WHERE id = OLD.list_id
+      )
+      WHEN 1 THEN
+        RAISE(ABORT, 'Lists may not contain cycles')
+      END;
   END;
 PRAGMA writable_schema=OFF;
 COMMIT;
