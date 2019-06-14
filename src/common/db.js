@@ -297,12 +297,17 @@ class Connection {
   check(table) {
     return this
       .all(`PRAGMA foreign_key_check${table ? `('${table}')` : ''}`)
-      .then(stack => {
-        if (!stack.length)
+      .then(violations => {
+        if (!violations.length)
           return this
 
-        warn({ stack }, 'foreign key check failed!')
-        throw new Error(`${stack.length} foreign key check(s) failed`)
+        warn({
+          stack: violations
+            .map(v => `${v.table}[${v.rowid}] -> ${v.parent}#${v.fkid}`)
+            .join('\n')
+        }, 'foreign key check failed!')
+
+        throw new Error(`${violations.length} foreign key check(s) failed`)
       })
   }
 }
