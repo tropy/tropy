@@ -38,8 +38,6 @@ class Image {
         status.hasChanged = (status.image.checksum !== checksum)
       }
     } catch (e) {
-      warn({ stack: e.stack }, `image check failed for ${path}`)
-
       status.hasChanged = true
       status.image = null
       status.error = e

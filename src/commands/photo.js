@@ -1,6 +1,8 @@
 'use strict'
 
 const assert = require('assert')
+const { basename, dirname, join, relative, resolve } = require('path')
+const { stat } = require('fs').promises
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
@@ -11,7 +13,7 @@ const act = require('../actions')
 const { PHOTO } = require('../constants')
 const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
-const { warn } = require('../common/log')
+const { info, warn } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
 const { getPhotoTemplate } = require('../selectors')
 const { keys, values } = Object
@@ -19,6 +21,46 @@ const { keys, values } = Object
 
 class Consolidate extends ImportCommand {
   static get ACTION() { return PHOTO.CONSOLIDATE }
+
+  static paths = new Map()
+
+  static addResolution(from, to) {
+    let a = dirname(from)
+    let b = dirname(to)
+
+    if (a === b) return
+
+    let p = this.paths.get(a) || []
+
+    if (!p.includes(b)) {
+      p.push(b)
+      this.paths.set(a, p)
+    }
+  }
+
+  static *find(photo) {
+    let dir = dirname(photo.path)
+    let file = basename(photo.path)
+
+    for (let [from, paths] of this.paths.entries()) {
+      let rel = relative(from, dir)
+
+      for (let to of paths) {
+        try {
+          let candidate = join(resolve(to, rel), file)
+          let { size } = yield call(stat, candidate)
+
+          if (size === photo.size) {
+            return candidate
+          } else {
+            info('skipping consolidation candidate because of size mismatch')
+          }
+        } catch (e) {
+          if (e.code !== 'ENOENT') throw e
+        }
+      }
+    }
+  }
 
   *exec() {
     let { db } = this.options
@@ -40,19 +82,27 @@ class Consolidate extends ImportCommand {
 
         if (meta.force || hasChanged) {
           if (error != null) {
-            warn({ stack: error.stack }, `failed to open photo ${photo.id}`)
+            warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
 
-            // TODO Figure out where it is!
+            let path = yield Consolidate.find(photo)
+            if (path) {
+              image = yield call(Image.open, { path, page: photo.page })
 
-            if (meta.prompt) {
-              this.isInteractive = true
-              const paths = yield call(open.images, {
-                properties: ['openFile']
-              })
+            } else {
+              if (meta.prompt) {
+                this.isInteractive = true
+                let paths = yield call(open.images, {
+                  properties: ['openFile']
+                })
 
-              image = (blank(paths)) ?
-                null :
-                yield call(Image.open, { path: paths[0], page: photo.page })
+                if (!blank(paths)) {
+                  image = yield call(Image.open, {
+                    path: paths[0],
+                    page: photo.page
+                  })
+                  Consolidate.addResolution(photo.path, paths[0])
+                }
+              }
             }
           }
 
