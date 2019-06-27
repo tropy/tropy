@@ -38,7 +38,7 @@ class Consolidate extends ImportCommand {
     }
   }
 
-  static *find(photo) {
+  static find = async (photo, { checkFileSize } = {}) => {
     let dir = dirname(photo.path)
     let file = basename(photo.path)
 
@@ -48,18 +48,49 @@ class Consolidate extends ImportCommand {
       for (let to of paths) {
         try {
           let candidate = join(resolve(to, rel), file)
-          let { size } = yield call(stat, candidate)
+          let { size } = await stat(candidate)
+          let isMatch = !checkFileSize || (size === photo.size)
 
-          if (size === photo.size) {
+          if (isMatch) {
             return candidate
           } else {
-            info('skipping consolidation candidate because of size mismatch')
+            info({ path: candidate }, 'skipped consolidation candidate')
           }
         } catch (e) {
           if (e.code !== 'ENOENT') throw e
         }
       }
     }
+  }
+
+  prompt = async () => {
+    try {
+      this.suspend()
+      var paths = await open.images({
+        properties: ['openFile']
+      })
+
+      return (paths != null) ? paths[0] : null
+
+    } finally {
+      this.resume()
+    }
+  }
+
+  resolve = async (photo, { prompt } = {}) => {
+    let path
+
+    path = await Consolidate.find(photo, { checkFileSize: true })
+
+    if (!path && prompt) {
+      path = await this.prompt()
+
+      if (path) {
+        Consolidate.addResolution(photo.path, path)
+      }
+    }
+
+    return path
   }
 
   *exec() {
@@ -84,25 +115,9 @@ class Consolidate extends ImportCommand {
           if (error != null) {
             warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
 
-            let path = yield Consolidate.find(photo)
+            let path = yield call(this.resolve, photo, meta)
             if (path) {
               image = yield call(Image.open, { path, page: photo.page })
-
-            } else {
-              if (meta.prompt) {
-                this.isInteractive = true
-                let paths = yield call(open.images, {
-                  properties: ['openFile']
-                })
-
-                if (!blank(paths)) {
-                  image = yield call(Image.open, {
-                    path: paths[0],
-                    page: photo.page
-                  })
-                  Consolidate.addResolution(photo.path, paths[0])
-                }
-              }
             }
           }
 
@@ -165,13 +180,10 @@ class Create extends ImportCommand {
   *exec() {
     let { db } = this.options
     let { item, files } = this.action.payload
-    let { idx } = this.action.meta
-
     let photos = []
 
-    if (idx == null) {
-      idx = [yield select(state => state.items[item].photos.length)]
-    }
+    let idx = this.action.meta.idx ||
+      [yield select(({ items }) => items[item].photos.length)]
 
     if (!files) {
       this.isInteractive = true
