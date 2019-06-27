@@ -269,7 +269,7 @@ Image.SELECTION_SIZE = {
   }
 }
 
-const Orientation = (o) => (o > 0 && o < 9) ? o : 1
+const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
 
 const magic = (buffer) => {
   if (buffer != null) {
