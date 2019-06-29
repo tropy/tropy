@@ -278,6 +278,14 @@ en:
           buttons:
             - Cancel
             - Delete
+      photo:
+        consolidate:
+          message: >
+            Do you want Tropy to use this location to resolve other
+            missing photos automatically?
+          buttons:
+            - No
+            - Yes
       dup:
         detail: >
           This photo already exists in your project. Are you sure

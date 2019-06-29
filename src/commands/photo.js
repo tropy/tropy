@@ -7,7 +7,7 @@ const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { SaveCommand } = require('./subject')
-const { fail, open } = require('../dialog')
+const { fail, open, prompt } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
 const { PHOTO } = require('../constants')
@@ -22,32 +22,16 @@ const { keys, values } = Object
 class Consolidate extends ImportCommand {
   static get ACTION() { return PHOTO.CONSOLIDATE }
 
-  static paths = new Map()
-
-  static addResolution(from, to) {
-    let a = dirname(from)
-    let b = dirname(to)
-
-    if (a === b) return
-
-    let p = this.paths.get(a) || []
-
-    if (!p.includes(b)) {
-      p.push(b)
-      this.paths.set(a, p)
-    }
-  }
-
-  static find = async (photo, { checkFileSize } = {}) => {
+  lookup = async (photo, paths = {}, checkFileSize) => {
     let dir = dirname(photo.path)
     let file = basename(photo.path)
 
-    for (let [from, paths] of this.paths.entries()) {
+    for (let [from, to] of Object.entries(paths)) {
       let rel = relative(from, dir)
 
-      for (let to of paths) {
+      for (let x of to) {
         try {
-          let candidate = join(resolve(to, rel), file)
+          let candidate = join(resolve(x, rel), file)
           let { size } = await stat(candidate)
           let isMatch = !checkFileSize || (size === photo.size)
 
@@ -63,30 +47,34 @@ class Consolidate extends ImportCommand {
     }
   }
 
-  prompt = async () => {
-    try {
-      this.suspend()
-      var paths = await open.images({
-        properties: ['openFile']
-      })
+  *resolve(photo) {
+    let { meta } = this.action
+    let path = yield call(this.lookup, photo, meta.paths, true)
 
-      return (paths != null) ? paths[0] : null
+    if (!path && meta.prompt) {
+      try {
+        this.suspend()
 
-    } finally {
-      this.resume()
-    }
-  }
+        let paths = yield call(open.images, {
+          properties: ['openFile']
+        })
+        path = (paths != null) ? paths[0] : null
 
-  resolve = async (photo, { prompt } = {}) => {
-    let path
+        if (path) {
+          let from = dirname(photo.path)
+          let to = dirname(path)
 
-    path = await Consolidate.find(photo, { checkFileSize: true })
-
-    if (!path && prompt) {
-      path = await this.prompt()
-
-      if (path) {
-        Consolidate.addResolution(photo.path, path)
+          if (from !== to && basename(photo.path) === basename(path)) {
+            let res = yield call(prompt, 'photo.consolidate')
+            if (res.ok) {
+              yield put(act.photo.consolidate(null, {
+                paths: { [from]: [to] }
+              }))
+            }
+          }
+        }
+      } finally {
+        this.resume()
       }
     }
 
@@ -115,14 +103,15 @@ class Consolidate extends ImportCommand {
           if (error != null) {
             warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
 
-            let path = yield call(this.resolve, photo, meta)
+            let path = yield this.resolve(photo)
             if (path) {
               image = yield call(Image.open, { path, page: photo.page })
             }
           }
 
           if (image != null) {
-            hasChanged = (image.checksum !== photo.checksum)
+            hasChanged = (image.checksum !== photo.checksum) ||
+              (image.path !== photo.path)
 
             if (meta.force || hasChanged) {
               yield* this.createThumbnails(photo.id, image, {
