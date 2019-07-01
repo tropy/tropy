@@ -136,7 +136,7 @@ module.exports = {
 
       db.each(`
         SELECT id, note_id AS note
-          FROM notes
+          FROM notes JOIN photos using (id)
           WHERE ${ids != null ? `id IN (${ids}) AND` : ''} deleted IS NULL
           ORDER BY id, created`,
         ({ id, note }) => {

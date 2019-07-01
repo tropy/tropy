@@ -16,7 +16,9 @@ matrix:
     - os: linux
       dist: xenial
       sudo: required
-      env: CC=gcc-7 CXX=g++-7 DISPLAY=:99.0
+      env: CC=gcc-7 CXX=g++-7
+      services:
+        - xvfb
       addons:
         apt:
           sources:
@@ -29,9 +31,6 @@ matrix:
       osx_image: xcode8.3
       compiler: clang
 before_install:
-  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      Xvfb :99 -ac -screen 0 1024x768x24 > /dev/null 2>&1 &
-    fi
   - if [[ ! -d $NVM/.git ]]; then
       rm -rf $NVM;
       git clone https://github.com/creationix/nvm.git $NVM;

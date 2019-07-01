@@ -205,7 +205,7 @@ const util = {
     let i, ii
 
     for (i = 0, ii = parts.length; i < ii; ++i) {
-      if (!obj.propertyIsEnumerable(parts[i])) {
+      if (!Object.prototype.propertyIsEnumerable.call(obj, parts[i])) {
         return value
       }
 
@@ -250,11 +250,15 @@ const util = {
     return true
   },
 
+  own(obj, key) {
+    return Object.prototype.hasOwnProperty.call(obj, key)
+  },
+
   pluck(src, props = [], into = [], expand = false) {
     return props.reduce((res, key) => {
       const value = src[key]
 
-      if (expand || typeof value !== 'undefined' || src.hasOwnProperty(key)) {
+      if (expand || typeof value !== 'undefined' || util.own(src, key)) {
         res.push(src[key])
       }
 
@@ -265,7 +269,7 @@ const util = {
 
   any(src, ...props) {
     for (let prop of props) {
-      if (src.hasOwnProperty(prop)) return src[prop]
+      if (util.own(src, prop)) return src[prop]
       if (typeof src[prop] !== 'undefined') return src[prop]
     }
   },
@@ -276,7 +280,7 @@ const util = {
       props.reduce((res, key) => {
         const value = src[key]
 
-        if (expand || typeof value !== 'undefined' || src.hasOwnProperty(key)) {
+        if (expand || typeof value !== 'undefined' || util.own(src, key)) {
           res[key] = value
         }
 
@@ -295,7 +299,7 @@ const util = {
     if (a !== into) Object.assign(into, a)
 
     for (let prop in b) {
-      if (b.hasOwnProperty(prop)) {
+      if (util.own(b, prop)) {
         let value = b[prop]
         let type = typeof value
 
@@ -331,7 +335,7 @@ const util = {
     //if (typeof fn !== 'function') fn = () => fn
 
     for (let prop in src) {
-      if (src.hasOwnProperty(prop)) {
+      if (util.own(src, prop)) {
         into[prop] = fn(prop, src[prop], src)
       }
     }

@@ -7,14 +7,24 @@ class Command {
   constructor(action, options) {
     this.action = action
     this.options = options
+    this.adjtime = 0
   }
 
   get duration() {
-    return this.done ? this.done - this.init : 0
+    return this.done ? this.done - this.init - this.adjtime : 0
   }
 
   get isomorph() {
     return !this.error && this.undo
+  }
+
+  suspend() {
+    this._adjtime = Date.now()
+  }
+
+  resume() {
+    this.adj += (Date.now() - this._adjtime)
+    delete this._adjtime
   }
 
   *execute() {

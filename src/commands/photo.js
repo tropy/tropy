@@ -1,17 +1,19 @@
 'use strict'
 
 const assert = require('assert')
+const { basename, dirname, join, relative, resolve } = require('path')
+const { stat } = require('fs').promises
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { SaveCommand } = require('./subject')
-const { fail, open } = require('../dialog')
+const { fail, open, prompt } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
 const { PHOTO } = require('../constants')
 const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
-const { warn } = require('../common/log')
+const { info, warn } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
 const { getPhotoTemplate } = require('../selectors')
 const { keys, values } = Object
@@ -19,6 +21,65 @@ const { keys, values } = Object
 
 class Consolidate extends ImportCommand {
   static get ACTION() { return PHOTO.CONSOLIDATE }
+
+  lookup = async (photo, paths = {}, checkFileSize) => {
+    let dir = dirname(photo.path)
+    let file = basename(photo.path)
+
+    for (let [from, to] of Object.entries(paths)) {
+      let rel = relative(from, dir)
+
+      for (let x of to) {
+        try {
+          let candidate = join(resolve(x, rel), file)
+          let { size } = await stat(candidate)
+          let isMatch = !checkFileSize || (size === photo.size)
+
+          if (isMatch) {
+            return candidate
+          } else {
+            info({ path: candidate }, 'skipped consolidation candidate')
+          }
+        } catch (e) {
+          if (e.code !== 'ENOENT') throw e
+        }
+      }
+    }
+  }
+
+  *resolve(photo) {
+    let { meta } = this.action
+    let path = yield call(this.lookup, photo, meta.paths, true)
+
+    if (!path && meta.prompt) {
+      try {
+        this.suspend()
+
+        let paths = yield call(open.images, {
+          properties: ['openFile']
+        })
+        path = (paths != null) ? paths[0] : null
+
+        if (path) {
+          let from = dirname(photo.path)
+          let to = dirname(path)
+
+          if (from !== to && basename(photo.path) === basename(path)) {
+            let res = yield call(prompt, 'photo.consolidate')
+            if (res.ok) {
+              yield put(act.photo.consolidate(null, {
+                paths: { [from]: [to] }
+              }))
+            }
+          }
+        }
+      } finally {
+        this.resume()
+      }
+    }
+
+    return path
+  }
 
   *exec() {
     let { db } = this.options
@@ -40,24 +101,17 @@ class Consolidate extends ImportCommand {
 
         if (meta.force || hasChanged) {
           if (error != null) {
-            warn({ stack: error.stack }, `failed to open photo ${photo.id}`)
+            warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
 
-            // TODO Figure out where it is!
-
-            if (meta.prompt) {
-              this.isInteractive = true
-              const paths = yield call(open.images, {
-                properties: ['openFile']
-              })
-
-              image = (blank(paths)) ?
-                null :
-                yield call(Image.open, { path: paths[0], page: photo.page })
+            let path = yield this.resolve(photo)
+            if (path) {
+              image = yield call(Image.open, { path, page: photo.page })
             }
           }
 
           if (image != null) {
-            hasChanged = (image.checksum !== photo.checksum)
+            hasChanged = (image.checksum !== photo.checksum) ||
+              (image.path !== photo.path)
 
             if (meta.force || hasChanged) {
               yield* this.createThumbnails(photo.id, image, {
@@ -115,13 +169,10 @@ class Create extends ImportCommand {
   *exec() {
     let { db } = this.options
     let { item, files } = this.action.payload
-    let { idx } = this.action.meta
-
     let photos = []
 
-    if (idx == null) {
-      idx = [yield select(state => state.items[item].photos.length)]
-    }
+    let idx = this.action.meta.idx ||
+      [yield select(({ items }) => items[item].photos.length)]
 
     if (!files) {
       this.isInteractive = true
