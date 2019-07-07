@@ -284,8 +284,8 @@ en:
             Do you want Tropy to automatically check and resolve further
             missing photos at this location?
           buttons:
-            - No
-            - Yes
+            - "No"
+            - "Yes"
       dup:
         detail: >
           This photo already exists in your project. Are you sure
