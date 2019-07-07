@@ -299,6 +299,14 @@ ja:
           buttons:
           - キャンセル
           - 削除
+      photo:
+        consolidate:
+          message: >
+            Do you want Tropy to automatically check and resolve further
+            missing photos at this location?
+          buttons:
+          - いいえ
+          - はい
       dup:
         detail: >
             この写真はすでにプロジェクトにあります。再度インポートしますか？

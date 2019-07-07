@@ -12,7 +12,7 @@ const {
   systemPreferences: prefs
 } = require('electron')
 
-const { fatal, info, logger, crashReport } = require('../common/log')
+const { fatal, info, warn, logger, crashReport } = require('../common/log')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 
@@ -663,8 +663,7 @@ class Tropy extends EventEmitter {
 
     app.on('gpu-process-crashed', (_, killed) => {
       if (!killed) {
-        this.handleUncaughtException(
-          new Error('GPU process crashed unexpectedly'))
+        warn('GPU process crashed unexpectedly')
       }
     })
 

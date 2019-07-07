@@ -38,6 +38,7 @@ const html = name => (
     "script-src 'sha256-++gna1tMQ08GGn4M8jnPXPgLA3Il1y2LY+JVA4NpYKk='",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data:",
+    'connect-src http: https:',
     "form-action 'none'"
   ].join('; ')}">
 </head>

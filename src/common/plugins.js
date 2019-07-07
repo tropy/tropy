@@ -14,7 +14,7 @@ const {
 const { shell } = require('electron')
 const { EventEmitter } = require('events')
 const { basename, join } = require('path')
-const { info, warn, logger } = require('./log')
+const { info, warn } = require('./log')
 const { blank, get, omit, uniq } = require('./util')
 const debounce = require('lodash.debounce')
 
@@ -44,9 +44,9 @@ class Plugins extends EventEmitter {
     return join(this.root, 'config.json')
   }
 
-  get context() {
+  getContext(plugin) {
     return {
-      logger: logger.child({ module: 'plugin' }),
+      logger: require('./log').logger.child({ plugin }),
       require: proxyRequire
     }
   }
@@ -67,11 +67,13 @@ class Plugins extends EventEmitter {
   }
 
   create(config = this.config) {
-    this.instances = config.reduce((acc, { plugin, options }, id) => {
+    this.instances = config.reduce((acc, { plugin, options, name }, id) => {
       try {
-        acc[id] = new (this.require(plugin))(options || {}, this.context)
-      } catch (error) {
-        warn(`failed to create ${plugin} plugin: ${error.message}`)
+        acc[id] = new (this.require(plugin))(
+          options || {},
+          this.getContext(plugin))
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to create plugin ${plugin} "${name}"`)
       }
       return acc
     }, {})

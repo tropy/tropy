@@ -38,8 +38,6 @@ class Image {
         status.hasChanged = (status.image.checksum !== checksum)
       }
     } catch (e) {
-      warn({ stack: e.stack }, `image check failed for ${path}`)
-
       status.hasChanged = true
       status.image = null
       status.error = e
@@ -271,7 +269,7 @@ Image.SELECTION_SIZE = {
   }
 }
 
-const Orientation = (o) => (o > 0 && o < 9) ? o : 1
+const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
 
 const magic = (buffer) => {
   if (buffer != null) {

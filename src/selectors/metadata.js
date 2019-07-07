@@ -2,7 +2,7 @@
 
 const { createSelector: memo } = require('reselect')
 const { pluck } = require('./util')
-const { get } = require('../common/util')
+const { get, own } = require('../common/util')
 const { equal } = require('../value')
 const { compare } = require('../collate')
 const {
@@ -20,7 +20,7 @@ const {
 
 const collect = transformer((data, [key, value]) => {
   if (value != null) {
-    if (data.hasOwnProperty(key)) {
+    if (own(data, key)) {
       if (equal(data[key], value)) data[key].count++
 
     } else {
