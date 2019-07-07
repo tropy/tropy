@@ -56,7 +56,8 @@ class Consolidate extends ImportCommand {
         this.suspend()
 
         let paths = yield call(open.images, {
-          properties: ['openFile']
+          properties: ['openFile'],
+          message: photo.path
         })
         path = (paths != null) ? paths[0] : null
 
