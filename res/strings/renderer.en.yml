@@ -281,7 +281,7 @@ en:
       photo:
         consolidate:
           message: >
-            Do you want Tropy to check your projects for further
+            Do you want Tropy to check your project for further
             missing photos at this location?
           buttons:
             - No
