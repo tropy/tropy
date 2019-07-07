@@ -57,7 +57,7 @@
     "watch": "node scripts/watch"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
+    "@babel/core": "^7.5.0",
     "@babel/plugin-syntax-class-properties": "^7.2.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
@@ -67,7 +67,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chalk": "^2.4.2",
-    "chokidar": "^3.0.1",
+    "chokidar": "^3.0.2",
     "devtron": "^1.0.0",
     "electron": "^5.0.6",
     "electron-mocha": "^8.0.3",
