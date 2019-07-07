@@ -303,6 +303,14 @@ de:
           buttons:
           - Abbrechen
           - Löschen
+      photo:
+        consolidate:
+          message: >
+              Soll Tropy nach weiteren ähnlichen Fotos suchen und diese automatisch
+              konsolidieren?
+          buttons:
+          - Nein
+          - Ja"
       dup:
         detail: >
             Dieses Foto ist bereits im Projekt vorhanden. Nochmals importieren?

@@ -301,6 +301,14 @@ fr:
           buttons:
           - Annuler
           - Supprimer
+      photo:
+        consolidate:
+          message: >
+            Do you want Tropy to automatically check and resolve further
+            missing photos at this location?
+          buttons:
+          - Non
+          - Oui
       dup:
         detail: >
             Cette photo existe déjà dans votre projet. Voulez-vous vraiment l'importer
