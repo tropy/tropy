@@ -281,8 +281,8 @@ en:
       photo:
         consolidate:
           message: >
-            Do you want Tropy to use this location to resolve other
-            missing photos automatically?
+            Do you want Tropy to check your projects for further
+            missing photos at this location?
           buttons:
             - No
             - Yes
