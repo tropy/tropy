@@ -5,8 +5,8 @@ const { PureComponent } = React
 const { element, string } = require('prop-types')
 const cx = require('classnames')
 
-const Icon = ({ children, className, name }) => (
-  <span className={cx('icon', `icon-${name}`, className)}>
+const Icon = ({ children, className, name, title }) => (
+  <span className={cx('icon', `icon-${name}`, className)} title={title}>
     {children}
   </span>
 )
@@ -14,7 +14,8 @@ const Icon = ({ children, className, name }) => (
 Icon.propTypes = {
   children: element.isRequired,
   className: string,
-  name: string.isRequired
+  name: string.isRequired,
+  title: string
 }
 
 module.exports = { Icon }
@@ -23,16 +24,22 @@ module.exports = { Icon }
 function i(name, svg) {
   const icon = class extends PureComponent {
     render() {
-      const { className } = this.props
+      const { className, title } = this.props
 
       return (
-        <Icon className={className} name={name.toLowerCase()}>{svg}</Icon>
+        <Icon
+          className={className}
+          name={name.toLowerCase()}
+          title={title}>
+          {svg}
+        </Icon>
       )
     }
   }
 
   icon.propTypes = {
-    className: string
+    className: string,
+    title: string
   }
 
   icon.displayName = `Icon${name}`

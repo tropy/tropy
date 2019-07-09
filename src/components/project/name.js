@@ -3,7 +3,7 @@
 const React = require('react')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
-const { IconMaze } = require('../icons')
+const { IconMaze, IconWarningSm } = require('../icons')
 const { Editable } = require('../editable')
 const { isImageSupported } = require('../../constants/mime')
 const cx = require('classnames')
@@ -33,6 +33,7 @@ class ProjectName extends React.PureComponent {
               onCancel={this.props.onEditCancel}
               onChange={this.props.onChange}/>
           </div>
+          <IconWarningSm title="Database integrity warning"/>
         </div>
       </li>
     )
