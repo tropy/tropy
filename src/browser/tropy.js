@@ -13,7 +13,7 @@ const {
 } = require('electron')
 
 const { fatal, info, warn, logger, crashReport } = require('../common/log')
-const { once } = require('../common/util')
+const { delay, once } = require('../common/util')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 
@@ -694,16 +694,22 @@ class Tropy extends EventEmitter {
     })
 
     ipc.on('print', async (_, items) => {
-      let win = await this.wm.open('print', this.hash)
-      await once(win, 'react:ready')
-      win.show()
-      win.send('print', items)
-      await once(win, 'print:ready')
+      if (!items.length) return
 
-      info('printing...')
+      let win = await this.wm.open('print', this.hash)
+
+      await once(win, 'react:ready')
+      info(`will print ${items.length} item(s)`)
+      win.send('print', items)
+
+      await Promise.race([
+        once(win, 'print:ready'),
+        delay(5000)
+      ])
+
       win.webContents.print({}, (success) => {
-        info(`print callback: ${success}`)
-        //win.close()
+        info(`printing ${success ? 'confirmed' : 'aborted'}`)
+        win.close()
       })
     })
 

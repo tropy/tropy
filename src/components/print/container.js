@@ -3,6 +3,7 @@
 const React = require('react')
 const { Item } = require('./item')
 const { WindowContext } = require('../main')
+const debounce = require('lodash.debounce')
 
 class PrintContainer extends React.Component {
   state = {
@@ -19,9 +20,13 @@ class PrintContainer extends React.Component {
 
   componentDidUpdate(_, state) {
     if (this.state.items !== state.items) {
-      this.context.send('print:ready')
+      this.print()
     }
   }
+
+  print = debounce(() => {
+    this.context.send('print:ready')
+  }, 500)
 
   onPrint = (items) => {
     this.setState({ items })
