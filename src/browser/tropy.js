@@ -694,23 +694,30 @@ class Tropy extends EventEmitter {
     })
 
     ipc.on('print', async (_, items) => {
-      if (!items.length) return
+      try {
+        if (!items.length) return
 
-      let win = await this.wm.open('print', this.hash)
+        var win = await this.wm.open('print', this.hash)
 
-      await once(win, 'react:ready')
-      info(`will print ${items.length} item(s)`)
-      win.send('print', items)
+        await Promise.race([
+          once(win, 'react:ready'),
+          delay(2000)
+        ])
 
-      await Promise.race([
-        once(win, 'print:ready'),
-        delay(5000)
-      ])
+        info(`will print ${items.length} item(s)`)
+        win.send('print', items)
 
-      win.webContents.print({}, (success) => {
-        info(`printing ${success ? 'confirmed' : 'aborted'}`)
-        win.close()
-      })
+        await Promise.race([
+          once(win, 'print:ready'),
+          delay(5000)
+        ])
+
+        let result = await WindowManager.print(win)
+        info(`printing ${result ? 'confirmed' : 'aborted'}`)
+
+      } finally {
+        if (win != null) win.close()
+      }
     })
 
     ipc.on('error', (event, error) => {

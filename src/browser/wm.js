@@ -470,6 +470,12 @@ class WindowManager extends EventEmitter {
         .getUserDefault('AppleActionOnDoubleClick', 'string')
         .toLowerCase()
   }
+
+  static print(win, opts = {}) {
+    return new Promise((resolve) => {
+      win.webContents.print(opts, resolve)
+    })
+  }
 }
 
 
