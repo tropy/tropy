@@ -44,6 +44,8 @@ body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  outline: 1px solid #000; // Debug only
+  outline-offset: -1px; // …
 
   .show-metadata & {
     @media (orientation: portrait) {
