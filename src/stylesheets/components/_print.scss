@@ -79,9 +79,25 @@ img {
 }
 
 .metadata-heading {
+  display: flex;
+  align-items: flex-end;
   font-size: inherit;
   font-weight: 400;
-  border-bottom: 0.05px solid #000;
+  margin: 0;
+  height: 1cm;
+  position: relative;
+
+  // Hairline hack
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: 1pt solid #000;
+    transform: scaleY(0.5);
+    transform-origin: bottom;
+  }
 }
 
 .metadata-fields {
