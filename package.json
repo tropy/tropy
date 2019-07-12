@@ -57,7 +57,7 @@
     "watch": "node scripts/watch"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.0",
+    "@babel/core": "^7.5.4",
     "@babel/plugin-syntax-class-properties": "^7.2.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
@@ -95,7 +95,7 @@
     "stylelint": "^10.1.0",
     "stylelint-config-recommended-scss": "^3.3.0",
     "stylelint-config-standard": "^18.3.0",
-    "stylelint-scss": "^3.9.0",
+    "stylelint-scss": "^3.9.1",
     "unzip-crx": "^0.2.0"
   },
   "dependencies": {
@@ -111,7 +111,7 @@
     "jsonld": "^1.6.2",
     "lodash.debounce": "^4.0.7",
     "lodash.throttle": "^4.1.1",
-    "memoize-one": "^5.0.4",
+    "memoize-one": "^5.0.5",
     "mkdirp": "^0.5.1",
     "n3": "^1.1.1",
     "pino": "^5.12.6",
@@ -133,7 +133,7 @@
     "react-intl": "^2.9.0",
     "react-redux": "^7.1.0",
     "react-transition-group": "^4.2.1",
-    "redux": "^4.0.1",
+    "redux": "^4.0.4",
     "redux-saga": "^1.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
