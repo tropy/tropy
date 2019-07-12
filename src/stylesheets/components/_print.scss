@@ -16,7 +16,7 @@ main,
 html {
   font-family: system-ui;
   font-size: 7pt;
-  line-height: 1.55;
+  line-height: 7pt * 1.5; // Needs unit for some reason to be correct
   letter-spacing: 0.015em;
 }
 
