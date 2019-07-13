@@ -125,21 +125,21 @@ class Database extends EventEmitter {
     this.emit('destroy')
   }
 
-  acquire() {
-    return this.pool.acquire()
-      .disposer(conn => this.release(conn))
+  acquire(opts = {}) {
+    return this.pool.acquire().disposer(conn =>
+      this.release(conn, opts.destroy))
   }
 
-  release(conn) {
+  release(conn, destroy = false) {
     conn.parallelize()
-    return this.pool.release(conn)
+    return destroy ?
+      this.pool.destroy(conn) :
+      this.pool.release(conn)
   }
-
 
   close = async () => {
     await this.pool.drain()
     await this.pool.clear()
-
     this.emit('close')
   }
 
@@ -150,8 +150,8 @@ class Database extends EventEmitter {
     return count === 0
   }
 
-  seq = (fn) =>
-    using(this.acquire(), fn)
+  seq = (fn, opts) =>
+    using(this.acquire(opts), fn)
 
   transaction = (fn) =>
     this.seq(conn => using(transaction(conn), fn))
@@ -301,8 +301,7 @@ class Connection {
 
       if (result.length !== 1 || result[0].integrity_check !== 'ok') {
         warn({
-          stack: result.map(f => `${f.integrity_check}`).join('\n'),
-          path: this.db.path
+          stack: result.map(f => `${f.integrity_check}`).join('\n')
         }, 'integrity check failed!')
 
         throw new Error(`${result.length} integrity check(s) failed`)
@@ -317,8 +316,7 @@ class Connection {
       warn({
         stack: violations
           .map(v => `${v.table}[${v.rowid}] -> ${v.parent}#${v.fkid}`)
-          .join('\n'),
-        path: this.db.path
+          .join('\n')
       }, 'foreign key check failed!')
 
       throw new Error(`${violations.length} foreign key check(s) failed`)
