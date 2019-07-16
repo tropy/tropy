@@ -33,7 +33,8 @@ class ProjectName extends React.PureComponent {
               onCancel={this.props.onEditCancel}
               onChange={this.props.onChange}/>
           </div>
-          <IconWarningSm title="Database integrity warning"/>
+          {this.props.isCorrupted &&
+            <IconWarningSm title="project.corrupted"/>}
         </div>
       </li>
     )
@@ -42,6 +43,7 @@ class ProjectName extends React.PureComponent {
 
   static propTypes = {
     name: string.isRequired,
+    isCorrupted: bool,
     isEditing: bool,
     isSelected: bool,
     isOver: bool,
