@@ -206,7 +206,7 @@ class Database extends EventEmitter {
     return this.seq(conn => conn.version(...args))
   }
 
-  check(...args) {
+  check = (...args) => {
     return this.seq(conn => conn.check(...args))
   }
 
