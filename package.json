@@ -69,7 +69,7 @@
     "chalk": "^2.4.2",
     "chokidar": "^3.0.2",
     "devtron": "^1.0.0",
-    "electron": "^5.0.6",
+    "electron": "^5.0.7",
     "electron-mocha": "^8.0.3",
     "electron-packager": "^14.0.1",
     "electron-winstaller": "^3.0.4",
@@ -125,7 +125,7 @@
     "prosemirror-schema-basic": "^1.0.1",
     "prosemirror-schema-list": "^1.0.3",
     "prosemirror-state": "^1.2.3",
-    "prosemirror-view": "^1.9.11",
+    "prosemirror-view": "^1.9.12",
     "react": "^16.8.6",
     "react-dnd": "7.4.5",
     "react-dnd-electron-backend": "^1.7.0",
@@ -147,6 +147,6 @@
     "uuid": "^3.3.2",
     "winreg": "^1.2.4",
     "write-file-atomic": "^3.0.0",
-    "yargs": "^13.2.4"
+    "yargs": "^13.3.0"
   }
 }
