@@ -75,7 +75,12 @@ const getMetadataFields = memo(
 
     if (template != null) {
       for (let f of template.fields) {
+        if (compact && (data == null || !(f.property in data))) {
+          continue
+        }
+
         idx[f.property] = fld.length
+
         fld.push({
           isExtra: false,
           isRequired: f.isRequired,
