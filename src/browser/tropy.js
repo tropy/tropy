@@ -716,7 +716,7 @@ class Tropy extends EventEmitter {
         info(`printing ${result ? 'confirmed' : 'aborted'}`)
 
       } finally {
-        if (win != null) win.close()
+        if (win != null) win.destroy()
       }
     })
 
