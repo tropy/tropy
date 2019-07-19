@@ -1,6 +1,7 @@
 'use strict'
 
 const { createSelector: memo } = require('reselect')
+const { getMetadataFields } = require('./metadata')
 const { pluck } = require('./util')
 const EMPTY = {}
 
@@ -30,18 +31,29 @@ const getSelectedItemTemplate = memo(
   }
 )
 
-const expandPhoto = (photo, metadata) => (
+const expandPhoto = (photo, metadata, ontology) => (
   (photo == null) ? null : {
     ...photo,
-    data: metadata[photo.id]
+    data: getMetadataFields(null, {
+      compact: true,
+      data: metadata[photo.id],
+      props: ontology.props,
+      template: ontology.template[photo.template]
+    })
   }
 )
 
-const expandItem = (item, photos, metadata) => (
+const expandItem = (item, photos, metadata, ontology) => (
   (item == null) ? null : {
     ...item,
-    data: metadata[item.id],
-    photos: item.photos.map(id => expandPhoto(photos[id], metadata))
+    data: getMetadataFields(null, {
+      compact: true,
+      data: metadata[item.id],
+      props: ontology.props,
+      template: ontology.template[item.template]
+    }),
+    photos: item.photos.map(id =>
+      expandPhoto(photos[id], metadata, ontology))
   }
 )
 
@@ -50,8 +62,9 @@ const getPrintableItems = memo(
   ({ items }) => items,
   ({ photos }) => photos,
   ({ metadata }) => metadata,
-  (ids, items, photos, metadata) =>
-    ids.map(id => expandItem(items[id], photos, metadata))
+  ({ ontology }) => ontology,
+  (ids, items, photos, metadata, ontology) =>
+    ids.map(id => expandItem(items[id], photos, metadata, ontology))
 )
 
 module.exports = {
