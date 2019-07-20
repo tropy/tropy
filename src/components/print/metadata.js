@@ -2,6 +2,7 @@
 
 const React = require('react')
 const cx = require('classnames')
+const { FormattedMessage } = require('react-intl')
 const { auto } = require('../../format')
 
 const {
@@ -28,7 +29,9 @@ MetadataField.propTypes = {
 
 const MetadataSection = ({ fields, title }) => (
   <section>
-    <h5 className="metadata-heading">{title}</h5>
+    <h5 className="metadata-heading">
+      <FormattedMessage id={title} values={{ count: 1 }}/>
+    </h5>
     <ol className="metadata-fields">
       {fields.map((f, idx) =>
         <MetadataField

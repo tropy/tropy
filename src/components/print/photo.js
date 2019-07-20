@@ -28,10 +28,10 @@ const Photo = ({ angle, data, height, mirror, orientation, path, width }) => {
       </div>
       <div className="metadata-container">
         <div className="col">
-          <MetadataSection title="Item" fields={[]}/>
+          <MetadataSection title="panel.metadata.item" fields={[]}/>
         </div>
         <div className="col">
-          <MetadataSection title="Photo" fields={data}/>
+          <MetadataSection title="panel.metadata.photo" fields={data}/>
         </div>
       </div>
     </div>
