@@ -2,6 +2,7 @@
 
 const React = require('react')
 const cx = require('classnames')
+const { auto } = require('../../format')
 
 const {
   arrayOf,
@@ -11,17 +12,18 @@ const {
 } = require('prop-types')
 
 
-const MetadataField = ({ isExtra, label, value }) => (
+const MetadataField = ({ isExtra, label, text, type }) => (
   <li className={cx('metadata-field', { extra: isExtra })}>
     <label>{label}</label>
-    <div className="value">{value}</div>
+    <div className="value">{auto(text, type)}</div>
   </li>
 )
 
 MetadataField.propTypes = {
   isExtra: bool,
   label: string.isRequired,
-  value: string
+  text: string,
+  type: string.isRequired
 }
 
 const MetadataSection = ({ fields, title }) => (
@@ -33,7 +35,8 @@ const MetadataSection = ({ fields, title }) => (
           key={idx}
           isExtra={f.isExtra}
           label={f.label || f.property.label}
-          value={f.value.text}/>)}
+          text={f.value.text}
+          type={f.value.type || f.type}/>)}
     </ol>
   </section>
 )
