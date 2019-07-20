@@ -70,7 +70,7 @@
     "chokidar": "^3.0.2",
     "devtron": "^1.0.0",
     "electron": "^5.0.7",
-    "electron-mocha": "^8.0.3",
+    "electron-mocha": "^8.1.0",
     "electron-packager": "^14.0.2",
     "electron-winstaller": "^3.0.4",
     "enzyme": "^3.10.0",
