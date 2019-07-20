@@ -28,8 +28,10 @@ const getPhotoExpanded = (photo, metadata, notes, ontology) => (
       props: ontology.props,
       template: ontology.template[photo.template]
     }),
-    notes: photo.notes.map(id =>
-      getNoteSerialized(notes[id], ['html']))
+    notes: photo.notes.map(id => ({
+      id,
+      ...getNoteSerialized(notes[id], ['html'])
+    }))
   }
 )
 

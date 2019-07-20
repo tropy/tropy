@@ -46,6 +46,13 @@ const Photo = ({ photo, item }) => {
           <PhotoInfo photo={photo}/>
         </div>
       </div>
+      <div className="note-container">
+        {photo.notes.map(n =>
+          <div
+            key={n.id}
+            className="note"
+            dangerouslySetInnerHTML={{ __html: n.html }}/>)}
+      </div>
     </div>
   )
 }
