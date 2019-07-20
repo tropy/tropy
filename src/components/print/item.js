@@ -2,15 +2,17 @@
 
 const React = require('react')
 const { Photo } = require('./photo')
-const { arrayOf, object } = require('prop-types')
+const { arrayOf, object, shape } = require('prop-types')
 
-const Item = ({ photos }) => (
-  photos.map(photo =>
-    <Photo {...photo} key={photo.id}/>)
+const Item = ({ item }) => (
+  item.photos.map(photo =>
+    <Photo key={photo.id} item={item} photo={photo}/>)
 )
 
 Item.propTypes = {
-  photos: arrayOf(object).isRequired
+  item: shape({
+    photos: arrayOf(object).isRequired
+  }).isRequired,
 }
 
 module.exports = {

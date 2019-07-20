@@ -35,10 +35,7 @@ class PrintContainer extends React.Component {
   render() {
     return (
       this.state.items.map(item =>
-        <Item
-          key={item.id}
-          data={item.data}
-          photos={item.photos}/>)
+        <Item key={item.id} item={item}/>)
     )
   }
 

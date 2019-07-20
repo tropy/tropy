@@ -33,9 +33,9 @@ const MetadataSection = ({ fields, title }) => (
       <FormattedMessage id={title} values={{ count: 1 }}/>
     </h5>
     <ol className="metadata-fields">
-      {fields.map((f, idx) =>
+      {fields.map(f =>
         <MetadataField
-          key={idx}
+          key={f.property.id}
           isExtra={f.isExtra}
           label={f.label || f.property.label}
           text={f.value.text}
