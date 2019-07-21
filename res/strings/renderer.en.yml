@@ -94,6 +94,15 @@ en:
           light: Light
           dark: Dark
           system: Follow system preference
+      print:
+        mode: Print
+        modes:
+          item: One item per page
+          photo: One photo per page
+          selection: One selection per page
+        metadata: Include metadata
+        notes: Include notes
+        overflow: Allow content to take up more than one page
       locale:
         locale: Locale
         locales:

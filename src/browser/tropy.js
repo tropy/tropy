@@ -693,9 +693,9 @@ class Tropy extends EventEmitter {
       this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
     })
 
-    ipc.on('print', async (_, items) => {
+    ipc.on('print', async (_, opts) => {
       try {
-        if (!items.length) return
+        if (!opts.items.length) return
 
         var win = await this.wm.open('print', this.hash)
 
@@ -704,19 +704,20 @@ class Tropy extends EventEmitter {
           delay(2000)
         ])
 
-        info(`will print ${items.length} item(s)`)
-        win.send('print', items)
+        info(`will print ${opts.items.length} item(s)`)
+        win.send('print', opts)
+        win.show()
 
         await Promise.race([
           once(win, 'print:ready'),
           delay(5000)
         ])
 
-        let result = await WindowManager.print(win)
-        info(`printing ${result ? 'confirmed' : 'aborted'}`)
+        //let result = await WindowManager.print(win)
+        //info(`printing ${result ? 'confirmed' : 'aborted'}`)
 
       } finally {
-        if (win != null) win.destroy()
+        //if (win != null) win.destroy()
       }
     })
 
