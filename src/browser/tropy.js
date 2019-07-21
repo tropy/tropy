@@ -706,18 +706,17 @@ class Tropy extends EventEmitter {
 
         info(`will print ${opts.items.length} item(s)`)
         win.send('print', opts)
-        win.show()
 
         await Promise.race([
           once(win, 'print:ready'),
           delay(5000)
         ])
 
-        //let result = await WindowManager.print(win)
-        //info(`printing ${result ? 'confirmed' : 'aborted'}`)
+        let result = await WindowManager.print(win)
+        info(`printing ${result ? 'confirmed' : 'aborted'}`)
 
       } finally {
-        //if (win != null) win.destroy()
+        if (win != null) win.destroy()
       }
     })
 
