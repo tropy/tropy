@@ -23,6 +23,12 @@ const defaults = {
     force: false
   },
   overlayToolbars: ARGS.frameless,
+  print: {
+    mode: 'photo',
+    metadata: true,
+    notes: true,
+    overflow: false
+  },
   invertScroll: true,
   invertZoom: darwin,
   zoomMode: ESPER.MODE.FIT

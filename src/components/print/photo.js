@@ -17,7 +17,7 @@ const {
 } = require('prop-types')
 
 
-const Photo = ({ photo, item }) => {
+const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo }) => {
   let rotation = Rotation
     .fromExifOrientation(photo.orientation)
     .add(photo)
@@ -31,33 +31,38 @@ const Photo = ({ photo, item }) => {
           className={`iiif rot-${rotation.format('x')}`}
           src={photo.path}/>
       </div>
-      <div className="metadata-container">
-        {item &&
+      {hasMetadata &&
+        <div className={cx('metadata-container', { overflow: canOverflow })}>
+          {item &&
+            <div className="col">
+              <MetadataSection
+                title="panel.metadata.item"
+                fields={item.data}/>
+              <ItemInfo item={item}/>
+            </div>}
           <div className="col">
             <MetadataSection
-              title="panel.metadata.item"
-              fields={item.data}/>
-            <ItemInfo item={item}/>
-          </div>}
-        <div className="col">
-          <MetadataSection
-            title="panel.metadata.photo"
-            fields={photo.data}/>
-          <PhotoInfo photo={photo}/>
-        </div>
-      </div>
-      <div className="note-container">
-        {photo.notes.map(n =>
-          <div
-            key={n.id}
-            className="note"
-            dangerouslySetInnerHTML={{ __html: n.html }}/>)}
-      </div>
+              title="panel.metadata.photo"
+              fields={photo.data}/>
+            <PhotoInfo photo={photo}/>
+          </div>
+        </div>}
+      {hasNotes &&
+        <div className={cx('note-container', { overflow: canOverflow })}>
+          {photo.notes.map(n =>
+            <div
+              key={n.id}
+              className="note"
+              dangerouslySetInnerHTML={{ __html: n.html }}/>)}
+        </div>}
     </div>
   )
 }
 
 Photo.propTypes = {
+  canOverflow: bool,
+  hasMetadata: bool,
+  hasNotes: bool,
   item: object,
   photo: shape({
     angle: number.isRequired,

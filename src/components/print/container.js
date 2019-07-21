@@ -28,14 +28,24 @@ class PrintContainer extends React.Component {
     this.context.send('print:ready')
   }, 500)
 
-  onPrint = (items) => {
-    this.setState({ items })
+  onPrint = (opts) => {
+    this.setState({
+      canOverflow: opts.overflow,
+      hasMetadata: opts.metadata,
+      hasNotes: opts.notes,
+      items: opts.items
+    })
   }
 
   render() {
     return (
       this.state.items.map(item =>
-        <Item key={item.id} item={item}/>)
+        <Item
+          key={item.id}
+          item={item}
+          canOverflow={this.state.canOverflow}
+          hasMetadata={this.state.hasMetadata}
+          hasNotes={this.state.hasNotes}/>)
     )
   }
 

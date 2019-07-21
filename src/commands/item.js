@@ -475,9 +475,13 @@ class Print extends Command {
   static get ACTION() { return ITEM.PRINT }
 
   *exec() {
-    let items = yield select(getPrintableItems)
+    let [prefs, items] = yield select(state => ([
+      state.settings.print,
+      getPrintableItems(state)
+    ]))
+
     if (items.length) {
-      ipc.send('print', items)
+      ipc.send('print', { ...prefs, items })
     }
   }
 }
