@@ -709,7 +709,7 @@ class Tropy extends EventEmitter {
 
         await Promise.race([
           once(win, 'print:ready'),
-          delay(5000)
+          delay(60000)
         ])
 
         let result = await WindowManager.print(win)

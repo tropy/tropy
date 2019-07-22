@@ -3,7 +3,9 @@
 const React = require('react')
 const { Item } = require('./item')
 const { WindowContext } = require('../main')
-const debounce = require('lodash.debounce')
+const { noop } = require('../../common/util')
+const { loadImage } = require('../../dom')
+
 
 class PrintContainer extends React.Component {
   state = {
@@ -18,23 +20,27 @@ class PrintContainer extends React.Component {
     this.context.removeListener('print', this.onPrint)
   }
 
-  componentDidUpdate(_, state) {
-    if (this.state.items !== state.items) {
-      this.print()
-    }
-  }
-
-  print = debounce(() => {
-    this.context.send('print:ready')
-  }, 500)
-
   onPrint = (opts) => {
     this.setState({
       canOverflow: opts.overflow,
       hasMetadata: opts.metadata,
       hasNotes: opts.notes,
       items: opts.items
-    })
+    }, this.handleItemsReceived)
+  }
+
+  handleItemsReceived = async () => {
+    let p = []
+
+    for (let item of this.state.items) {
+      for (let photo of item.photos) {
+        p.push(loadImage(photo.path).catch(noop))
+      }
+    }
+
+    await Promise.all(p)
+
+    this.context.send('print:ready')
   }
 
   render() {
@@ -51,6 +57,7 @@ class PrintContainer extends React.Component {
 
   static contextType = WindowContext
 }
+
 
 module.exports = {
   PrintContainer
