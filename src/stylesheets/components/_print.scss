@@ -13,7 +13,7 @@
 html,
 body,
 main,
-.page {
+.container {
   height: 100%;
 }
 
@@ -29,7 +29,7 @@ body {
   background-color: #fff;
 }
 
-.page {
+.container {
   display: flex;
   page-break-after: always;
 

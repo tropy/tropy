@@ -77,8 +77,9 @@ Photo.propTypes = {
 
 const classes = (isPortrait, isHorizontal) => cx(
   'photo',
-  'page',
+  'container',
   'show-metadata',
+  'overflow',
   isPortrait ?
     (isHorizontal ? 'portrait' : 'landscape') :
     (isHorizontal ? 'landscape' : 'portrait')
