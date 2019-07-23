@@ -32,9 +32,21 @@ body {
 .container {
   display: flex;
   page-break-after: always;
+  outline: 3px solid blue;
+  outline-offset: -3px;
+  overflow: hidden;
 
   @media (orientation: portrait) {
     flex-direction: column;
+  }
+
+  &.overflow {
+    height: auto;
+    overflow: visible;
+
+    @media (orientation: landscape) {
+      flex-wrap: wrap;
+    }
   }
 }
 
@@ -50,10 +62,12 @@ body {
   .metadata & {
     @media (orientation: portrait) {
       flex: 0 1 100vw;
+      min-height: 50vh;
     }
 
     @media (orientation: landscape) {
       flex: 0 0 100vh;
+      height: 100vh;
     }
   }
 }
@@ -73,6 +87,16 @@ img {
     flex: 1 1 auto;
     flex-direction: column;
     padding-left: 1cm;
+  }
+
+  .overflow & {
+    @media (orientation: portrait) {
+      min-height: calc(100vh - 100vw);
+    }
+
+    @media (orientation: landscape) {
+      flex: 0 0 calc(100vw - 100vh);
+    }
   }
 }
 
@@ -132,4 +156,11 @@ label {
   flex: 0 0 67%;
   padding-left: 1.25mm;
   word-break: break-word;
+}
+
+.note-container {
+  .overflow & {
+    font-size: 12px;
+    line-height: 12px * 2;
+  }
 }
