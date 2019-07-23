@@ -47,7 +47,7 @@ body {
   outline: 1px solid #000; // Debug only
   outline-offset: -1px; // …
 
-  .show-metadata & {
+  .metadata & {
     @media (orientation: portrait) {
       flex: 0 1 100vw;
     }

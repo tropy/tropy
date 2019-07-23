@@ -23,16 +23,16 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo }) => {
     .add(photo)
 
   return (
-    <div className={
-      classes(photo.width < photo.height, rotation.isHorizontal)
-    }>
+    <div className={cx('photo', 'container',
+      o(photo.width < photo.height, rotation.isHorizontal),
+      { overflow: canOverflow, metadata: hasMetadata || hasNotes })}>
       <div className="photo-container">
         <img
           className={`iiif rot-${rotation.format('x')}`}
           src={photo.path}/>
       </div>
       {hasMetadata &&
-        <div className={cx('metadata-container', { overflow: canOverflow })}>
+        <div className={cx('metadata-container')}>
           {item &&
             <div className="col">
               <MetadataSection
@@ -48,7 +48,7 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo }) => {
           </div>
         </div>}
       {hasNotes &&
-        <div className={cx('note-container', { overflow: canOverflow })}>
+        <div className={cx('note-container')}>
           {photo.notes.map(n =>
             <div
               key={n.id}
@@ -75,15 +75,10 @@ Photo.propTypes = {
   })
 }
 
-const classes = (isPortrait, isHorizontal) => cx(
-  'photo',
-  'container',
-  'show-metadata',
-  'overflow',
+const o = (isPortrait, isHorizontal) =>
   isPortrait ?
     (isHorizontal ? 'portrait' : 'landscape') :
     (isHorizontal ? 'landscape' : 'portrait')
-)
 
 module.exports = {
   Photo
