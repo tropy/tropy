@@ -32,8 +32,6 @@ body {
 .container {
   display: flex;
   page-break-after: always;
-  outline: 3px solid blue;
-  outline-offset: -3px;
   overflow: hidden;
 
   @media (orientation: portrait) {
@@ -56,8 +54,6 @@ body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  outline: 1px solid #000; // Debug only
-  outline-offset: -1px; // …
 
   .metadata & {
     @media (orientation: portrait) {
@@ -119,7 +115,8 @@ img {
   align-items: flex-end;
   font-size: inherit;
   font-weight: 400;
-  margin: 0;
+  padding-bottom: (7pt / 4 + 0.5pt);
+  margin: 0 0 (7pt / 2) 0;
   height: 1cm;
   position: relative;
 
@@ -138,6 +135,7 @@ img {
 
 .metadata-fields {
   list-style-type: none;
+  margin: 0;
   padding: 0;
 }
 
@@ -159,8 +157,20 @@ label {
 }
 
 .note-container {
+  .container:not(.overflow) & {
+    .metadata-field {
+      margin-bottom: 7pt;
+    }
+  }
+
   .overflow & {
     font-size: 12pt;
     line-height: 12pt * 2;
+  }
+}
+
+.note {
+  * {
+    margin: 0;
   }
 }

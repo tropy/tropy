@@ -47,11 +47,15 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo }) => {
             <PhotoInfo photo={photo}/>
             {hasNotes && !canOverflow &&
               <div className={cx('note-container')}>
+                <h5 className="metadata-heading">Notes</h5>
                 {photo.notes.map(n =>
-                  <div
-                    key={n.id}
-                    className="note"
-                    dangerouslySetInnerHTML={{ __html: n.html }}/>)}
+                  <div className="metadata-field">
+                    <label>Note 1</label>
+                    <div
+                      key={n.id}
+                      className="value note"
+                      dangerouslySetInnerHTML={{ __html: n.html }}/>
+                  </div>)}
               </div>}
 
           </div>
