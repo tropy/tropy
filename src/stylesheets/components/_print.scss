@@ -159,7 +159,7 @@ label {
 .note-container {
   .container:not(.overflow) & {
     .metadata-field {
-      margin-bottom: 7pt;
+      margin-bottom: (7pt * 1.5);
     }
   }
 
@@ -172,5 +172,13 @@ label {
 .note {
   * {
     margin: 0;
+  }
+
+  p {
+    &:empty {
+      &::before {
+        content: "\a0";
+      }
+    }
   }
 }
