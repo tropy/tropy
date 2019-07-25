@@ -8,7 +8,15 @@ $platform: "linux";
 $theme: "light";
 
 
-// Components
+// Window
 // --------------------------------------------------
 
-@import "../components/print";
+@import
+  "../windows/print";
+
+
+// Operating system specific styles
+// --------------------------------------------------
+
+@import
+  "os";

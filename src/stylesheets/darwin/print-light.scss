@@ -8,14 +8,15 @@ $platform: "darwin";
 $theme: "light";
 
 
-// Abstracts
+// Window
 // --------------------------------------------------
 
 @import
-  "../abstracts/variables";
+  "../windows/print";
 
 
-// Components
+// Operating system specific styles
 // --------------------------------------------------
 
-@import "../components/print";
+@import
+  "os";

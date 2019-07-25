@@ -4,19 +4,16 @@
 // Print window
 // --------------------------------------------------
 
-$platform: "win32";
-$theme: "light";
 
-
-// Window
+// Abstracts
 // --------------------------------------------------
 
 @import
-  "../windows/print";
+  "../abstracts/variables";
 
 
-// Operating system specific styles
+// Components
 // --------------------------------------------------
 
 @import
-  "os";
+  "../components/print";
