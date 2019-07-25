@@ -118,7 +118,6 @@ img {
   font-weight: 400;
   padding-bottom: ($print-font-size / 4 + 0.5pt);
   margin: 0 0 ($print-font-size / 2) 0;
-  height: $print-page-margin / 2;
   position: relative;
 
   // Hairline hack
@@ -132,6 +131,10 @@ img {
     transform: scaleY(0.5);
     transform-origin: bottom;
   }
+}
+
+.metadata-heading {
+  height: $print-page-margin;
 }
 
 .metadata-fields {
@@ -162,8 +165,8 @@ label {
   counter-reset: note;
 
   .container:not(.overflow) & {
-    .note-container {
-      margin-bottom: ($print-font-size * $print-line-height);
+    .note-container + .note-container {
+      margin-top: ($print-font-size * $print-line-height);
     }
   }
 
@@ -199,6 +202,10 @@ label {
       margin-top: ($print-font-size-large * $print-line-height-large);
     }
   }
+}
+
+.notes-heading {
+  height: $print-page-margin / 2 - $print-font-size / 2;
 }
 
 .note {
