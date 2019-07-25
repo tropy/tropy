@@ -110,7 +110,8 @@ img {
   }
 }
 
-.metadata-heading {
+.metadata-heading,
+.notes-heading {
   display: flex;
   align-items: flex-end;
   font-size: inherit;
@@ -150,15 +151,18 @@ label {
   font-weight: 300;
 }
 
-.value {
+.value,
+.note {
   flex: 0 0 67%;
   padding-left: ($print-page-margin / 16);
   word-break: break-word;
 }
 
-.note-container {
+.notes {
+  counter-reset: note;
+
   .container:not(.overflow) & {
-    .metadata-field {
+    .note-container {
       margin-bottom: ($print-font-size * $print-line-height);
     }
   }
@@ -168,9 +172,40 @@ label {
     line-height: $print-font-size-large * $print-line-height-large;
     letter-spacing: 0;
   }
+
+  label {
+    &::after {
+      content: " " counter(note);
+      counter-increment: note;
+    }
+
+    .overflow & {
+      display: block;
+      font-size: $print-font-size;
+      font-weight: 400;
+      text-align: left;
+      padding: 0;
+    }
+  }
+}
+
+.note-container {
+  display: flex;
+
+  .overflow & {
+    display: block;
+
+    & + .note-container {
+      margin-top: ($print-font-size-large * $print-line-height-large);
+    }
+  }
 }
 
 .note {
+  .overflow & {
+    padding: 0;
+  }
+
   * {
     margin: 0;
   }

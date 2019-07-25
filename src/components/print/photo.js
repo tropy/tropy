@@ -46,14 +46,14 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo }) => {
               fields={photo.data}/>
             <PhotoInfo photo={photo}/>
             {hasNotes && !canOverflow &&
-              <div className={cx('note-container')}>
-                <h5 className="metadata-heading">Notes</h5>
+              <div className={cx('notes')}>
+                <h5 className="notes-heading">Notes</h5>
                 {photo.notes.map(n =>
-                  <div className="metadata-field">
-                    <label>Note 1</label>
+                  <div className="note-container">
+                    <label>Note</label>
                     <div
                       key={n.id}
-                      className="value note"
+                      className="note"
                       dangerouslySetInnerHTML={{ __html: n.html }}/>
                   </div>)}
               </div>}
@@ -61,12 +61,15 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo }) => {
           </div>
         </div>}
       {hasNotes && canOverflow &&
-        <div className={cx('note-container')}>
+        <div className={cx('notes')}>
           {photo.notes.map(n =>
-            <div
-              key={n.id}
-              className="note"
-              dangerouslySetInnerHTML={{ __html: n.html }}/>)}
+            <div className="note-container">
+              <label>Note</label>
+              <div
+                key={n.id}
+                className="note"
+                dangerouslySetInnerHTML={{ __html: n.html }}/>
+            </div>)}
         </div>}
     </div>
   )
