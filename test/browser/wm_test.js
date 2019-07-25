@@ -26,7 +26,7 @@ describe('WindowManager', () => {
       expect([...wm]).to.be.empty
     })
 
-    for (let type of ['about', 'prefs', 'project', 'wizard']) {
+    for (let type of ['about', 'prefs', 'print', 'project', 'wizard']) {
       describe(`open('${type}')`, function () {
         // Integration tests with on-the-fly code instrumentation take some time!
         this.timeout(process.env.CI ? 40000 : 10000)

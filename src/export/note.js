@@ -1,25 +1,7 @@
 'use strict'
 
 const { TROPY } = require('../constants')
-
-const { DOMSerializer } = require('prosemirror-model')
-const { schema } = require('../components/editor/schema')
-const { warn } = require('../common/log')
-
-const serializer = DOMSerializer.fromSchema(schema)
-
-function toHTML(doc) {
-  try {
-    const node = schema.nodeFromJSON(doc)
-    const docFragment = serializer.serializeFragment(node)
-    return Array
-      .from(docFragment.children)
-      .map(x => x.outerHTML).join('')
-  } catch (e) {
-    warn({ stack: e.stack }, 'failed to convert note to HTML')
-    return ''
-  }
-}
+const { toHTML } = require('../components/editor/serialize')
 
 function localize(val, lang) {
   return lang ? {
@@ -29,7 +11,6 @@ function localize(val, lang) {
 }
 
 module.exports = function (note) {
-
   return {
     '@type': TROPY.Note,
     'text': localize(note.text, note.language),

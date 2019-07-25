@@ -429,6 +429,10 @@ class WindowManager extends EventEmitter {
       minimizable: false,
       resizable: false
     },
+    print: {
+      width: 600,
+      height: 300
+    },
     project: {
       width: 1280,
       height: 720,
@@ -465,6 +469,12 @@ class WindowManager extends EventEmitter {
       prefs
         .getUserDefault('AppleActionOnDoubleClick', 'string')
         .toLowerCase()
+  }
+
+  static print(win, opts = {}) {
+    return new Promise((resolve) => {
+      win.webContents.print(opts, resolve)
+    })
   }
 }
 

@@ -19,7 +19,9 @@ class PhotoInfo extends PureComponent {
   }
 
   handleFileClick = () => {
-    this.props.onOpenInFolder(this.props.photo.path)
+    if (this.props.onOpenInFolder) {
+      this.props.onOpenInFolder(this.props.photo.path)
+    }
   }
 
   render() {
@@ -45,7 +47,7 @@ class PhotoInfo extends PureComponent {
 
   static propTypes = {
     photo: object.isRequired,
-    onOpenInFolder: func.isRequired
+    onOpenInFolder: func
   }
 }
 

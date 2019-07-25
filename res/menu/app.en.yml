@@ -51,6 +51,12 @@ en:
           command: 'app:consolidate-photo-library'
           condition: 'project'
         - type: 'separator'
+        - &print
+          label: 'Print'
+          command: 'app:print'
+          accelerator: 'CmdOrCtrl+P'
+          condition: 'project'
+        - type: 'separator'
         - &close
           label: 'Close Project'
           command: 'app:close-project'
@@ -130,6 +136,11 @@ en:
         - &fullscreen
           label: 'Enter &Full Screen'
           role: 'togglefullscreen'
+          condition: 'window'
+        - type: 'separator'
+        - label: 'Close'
+          accelerator: 'Ctrl+W'
+          role: 'close'
           condition: 'window'
     - &dev
       label: 'Developer'
@@ -241,6 +252,8 @@ en:
         - *import
         - *consolidate
         - type: 'separator'
+        - *print
+        - type: 'separator'
         - *close
     - label: 'Edit'
       submenu:
@@ -270,6 +283,8 @@ en:
         - label: 'Zoom'
           accelerator: 'Ctrl+Cmd+Z'
           role: 'zoom'
+        - label: 'Move to Center'
+          command: 'app:center-window'
           condition: 'window'
         - type: 'separator'
         - *center-window

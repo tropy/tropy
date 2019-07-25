@@ -101,15 +101,15 @@ class Window extends EventEmitter {
   }
 
   close() {
-    ipc.send('wm', 'close')
+    this.send('close')
   }
 
   undo() {
-    ipc.send('wm', 'undo')
+    this.send('undo')
   }
 
   redo() {
-    ipc.send('wm', 'redo')
+    this.send('redo')
   }
 
   get theme() {
@@ -169,6 +169,9 @@ class Window extends EventEmitter {
       .on('idle', (_, state) => {
         this.emit('idle', state)
       })
+      .on('print', (_, data) => {
+        this.emit('print', data)
+      })
       .on('plugins-reload', async () => {
         this.plugins.clearModuleCache()
         await this.plugins.reload()
@@ -214,7 +217,7 @@ class Window extends EventEmitter {
 
           // Possibly related to electron#7977 closing the window
           // a second time is unreliable if it happens to soon.
-          return delay(25).then(() => ipc.send('wm', this.unloader))
+          return delay(25).then(() => this.send(this.unloader))
         })
     })
   }
@@ -364,7 +367,7 @@ class Window extends EventEmitter {
 
   reload() {
     this.unloader = 'reload'
-    ipc.send('wm', 'reload')
+    this.send('reload')
   }
 
   async style(prune = false) {

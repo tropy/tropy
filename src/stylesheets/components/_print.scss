@@ -1,0 +1,227 @@
+//
+// Print
+// --------------------------------------------------
+
+@page {
+  margin: $print-page-margin; // Set default margin
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+main,
+.container {
+  height: 100%;
+}
+
+html {
+  font-family: system-ui;
+  font-size: $print-font-size;
+  line-height: $print-font-size * $print-line-height; // Needs unit for some reason to be correct
+  letter-spacing: 0.015em;
+}
+
+body {
+  margin: 0;
+  background-color: #fff;
+}
+
+.container {
+  display: flex;
+  page-break-after: always;
+  overflow: hidden;
+
+  @media (orientation: portrait) {
+    flex-direction: column;
+  }
+
+  &.overflow {
+    height: auto;
+    overflow: visible;
+
+    @media (orientation: landscape) {
+      flex-wrap: wrap;
+    }
+  }
+}
+
+.photo-container {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  .metadata & {
+    @media (orientation: portrait) {
+      flex: 0 1 100vw;
+      min-height: 50vh;
+    }
+
+    @media (orientation: landscape) {
+      flex: 0 0 100vh;
+      height: 100vh;
+    }
+  }
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.metadata-container {
+  flex: 1 0 auto;
+  display: flex;
+
+  @media (orientation: landscape) {
+    flex: 1 1 auto;
+    flex-direction: column;
+    padding-left: ($print-page-margin / 2);
+  }
+
+  .overflow & {
+    @media (orientation: portrait) {
+      min-height: calc(100vh - 100vw);
+    }
+
+    @media (orientation: landscape) {
+      flex: 0 0 calc(100vw - 100vh);
+    }
+  }
+}
+
+.col {
+  @media (orientation: portrait) {
+    flex: 0 0 50%;
+
+    &:first-child {
+      padding-right: ($print-page-margin / 4);
+    }
+
+    &:last-child {
+      padding-left: ($print-page-margin / 4);
+    }
+  }
+}
+
+.metadata-heading,
+.notes-heading {
+  display: flex;
+  align-items: flex-end;
+  font-size: inherit;
+  font-weight: 400;
+  padding-bottom: ($print-font-size / 4 + 0.5pt);
+  margin: 0 0 ($print-font-size / 2) 0;
+  position: relative;
+
+  // Hairline hack
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: 1pt solid #000;
+    transform: scaleY(0.5);
+    transform-origin: bottom;
+  }
+}
+
+.metadata-heading {
+  height: $print-page-margin;
+}
+
+.metadata-fields {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.metadata-field {
+  display: flex;
+}
+
+label {
+  flex: 0 0 33%;
+  text-align: right;
+  padding-right: ($print-page-margin / 16);
+  font-weight: 300;
+}
+
+.value,
+.note {
+  flex: 0 0 67%;
+  padding-left: ($print-page-margin / 16);
+  word-break: break-word;
+}
+
+.notes {
+  counter-reset: note;
+
+  .container:not(.overflow) & {
+    .note-container + .note-container {
+      margin-top: ($print-font-size * $print-line-height);
+    }
+  }
+
+  .overflow & {
+    font-size: $print-font-size-large;
+    line-height: $print-font-size-large * $print-line-height-large;
+    letter-spacing: 0;
+  }
+
+  label {
+    &::after {
+      content: " " counter(note);
+      counter-increment: note;
+    }
+
+    .overflow & {
+      display: block;
+      font-size: $print-font-size;
+      font-weight: 400;
+      text-align: left;
+      padding: 0;
+    }
+  }
+}
+
+.note-container {
+  display: flex;
+
+  .overflow & {
+    display: block;
+
+    & + .note-container {
+      margin-top: ($print-font-size-large * $print-line-height-large);
+    }
+  }
+}
+
+.notes-heading {
+  height: $print-page-margin / 2 - $print-font-size / 2;
+}
+
+.note {
+  .overflow & {
+    padding: 0;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  p {
+    &:empty {
+      &::before {
+        content: "\a0";
+      }
+    }
+  }
+}
