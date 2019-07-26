@@ -13,6 +13,7 @@ module.exports = {
   ...require('./ontology'),
   ...require('./panel'),
   ...require('./photos'),
+  ...require('./print'),
   ...require('./project'),
   ...require('./selections'),
   ...require('./tags')

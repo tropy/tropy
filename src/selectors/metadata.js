@@ -59,24 +59,35 @@ const getVisibleMetadata = memo(
   ({ items }) => items, ({ qr }) => (qr.items), pluck
 )
 
+const getProperty = (id, props, compact) =>
+  (!(id in props)) ?
+    { id } : (!compact) ?
+      props[id] : { id, label: props[id].label }
+
 const getMetadataFields = memo(
   (_, { data }) => data,
   (_, { template }) => template,
   (_, { props }) => props,
-  (data, template, props) => {
+  (_, { compact }) => compact,
+  (data, template, props, compact) => {
     let fld = []
     let idx = {}
 
     if (template != null) {
       for (let f of template.fields) {
+        if (compact && (data == null || !(f.property in data))) {
+          continue
+        }
+
         idx[f.property] = fld.length
+
         fld.push({
           isExtra: false,
           isRequired: f.isRequired,
           isReadOnly: f.isConstant,
           label: f.label,
           placeholder: f.hint,
-          property: props[f.property] || { id: f.property },
+          property: getProperty(f.property, props, compact),
           type: f.datatype,
           value: data != null && data[f.property] || {}
         })

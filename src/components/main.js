@@ -21,15 +21,19 @@ const IntlProvider = connect(state => {
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Main extends React.Component {
+  componentDidMount() {
+    this.props.window.send('react:ready')
+  }
+
   render() {
     return (
       <WindowContext.Provider value={this.props.window}>
         <Provider store={this.props.store}>
           <IntlProvider>
-            <div className="main-container">
+            <React.Fragment>
               {this.props.children}
               <Flash/>
-            </div>
+            </React.Fragment>
           </IntlProvider>
         </Provider>
       </WindowContext.Provider>

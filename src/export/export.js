@@ -3,8 +3,8 @@
 const jsonld = require('jsonld').promises
 const { newProperties } = require('./util')
 const { pick, pluck } = require('../common/util')
+const { serialize } = require('./note')
 const { TROPY } = require('../constants')
-const makeNote = require('./note')
 
 const IMAGE_PROPS = [
   'angle',
@@ -36,6 +36,10 @@ const PHOTO_PROPS = [
   ...IMAGE_PROPS
 ]
 
+const makeNote = (note, opts) => ({
+  '@type': TROPY.Note,
+  ...serialize(note, opts)
+})
 
 function makeContext(template, items, resources) {
   const [props, metadata, photos] = resources
@@ -87,10 +91,10 @@ function makeContext(template, items, resources) {
   return result
 }
 
-function addInfo(target, ids, key, state, fn = x => x.name) {
+function addInfo(target, ids, key, state, fn = x => x.name, ...args) {
   if (ids && ids.length) {
     // extract relevant data from related subjects
-    target[key] = pluck(state, ids).map(fn)
+    target[key] = pluck(state, ids).map(x => fn(x, ...args))
     if (target[key].length === 1) {
       // extract single item from list
       target[key] = target[key][0]
@@ -102,7 +106,7 @@ function addInfo(target, ids, key, state, fn = x => x.name) {
   return target
 }
 
-function addSelections(template, photo, ids, resources) {
+function addSelections(template, photo, ids, resources, opts) {
   const [props, metadata,,,, notes, selections] = resources
 
   if (ids) {
@@ -113,7 +117,13 @@ function addSelections(template, photo, ids, resources) {
       pick(original, SELECTION_PROPS, selection)
 
       // add selection notes
-      selection = addInfo(selection, original.notes, 'note', notes, makeNote)
+      selection = addInfo(
+        selection,
+        original.notes,
+        'note',
+        notes,
+        makeNote,
+        opts.note)
 
       // add selection metadata
       selection = newProperties(
@@ -129,7 +139,7 @@ function addSelections(template, photo, ids, resources) {
   return photo
 }
 
-function renderItem(item, template, resources) {
+function renderItem(item, template, resources, opts) {
   const [props, metadata, photos, lists, tags, notes] = resources
 
   // the item starts with a photo property, it may not be overwritten
@@ -152,9 +162,9 @@ function renderItem(item, template, resources) {
 
     photo = newProperties(metadata[p.id], photo, false, props, template)
 
-    photo = addInfo(photo, p.notes, 'note', notes, makeNote)
+    photo = addInfo(photo, p.notes, 'note', notes, makeNote, opts.note)
 
-    photo = addSelections(template, photo, p.selections, resources)
+    photo = addSelections(template, photo, p.selections, resources, opts)
 
     return photo
   })
@@ -167,24 +177,24 @@ function renderItem(item, template, resources) {
   return result
 }
 
-function makeDocument(template, items, resources) {
+function makeDocument(template, items, resources, opts) {
   const result = {
     'template': template.id,
     '@graph': []
   }
   for (const item of items) {
-    const rendered = renderItem(item, template, resources)
+    const rendered = renderItem(item, template, resources, opts)
     result['@graph'].push(rendered)
   }
   return result
 }
 
-async function groupedByTemplate(templateItems, resources) {
+async function groupedByTemplate(templateItems, resources, opts = {}) {
   const results = []
   for (const templateID in templateItems) {
     const { items, template } = templateItems[templateID]
     const context = makeContext(template, items, resources)
-    const document = makeDocument(template, items, resources)
+    const document = makeDocument(template, items, resources, opts)
     document['@context'] = context
     results.push(await jsonld.compact(document, context))
   }

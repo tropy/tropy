@@ -7,6 +7,16 @@ const { darwin } = require('../common/os')
 const defaults = {
   debug: ARGS.debug,
   dup: 'prompt',
+  export: {
+    note: {
+      format: {
+        text: true,
+        html: true,
+        markdown: false
+      },
+      localize: true
+    }
+  },
   layout: ITEM.LAYOUT.STACKED,
   locale: ARGS.locale,
   localtime: true,
@@ -23,6 +33,12 @@ const defaults = {
     force: false
   },
   overlayToolbars: ARGS.frameless,
+  print: {
+    mode: 'photo',
+    metadata: true,
+    notes: true,
+    overflow: false
+  },
   invertScroll: true,
   invertZoom: darwin,
   zoomMode: ESPER.MODE.FIT

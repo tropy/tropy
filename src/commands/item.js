@@ -1,7 +1,7 @@
 'use strict'
 
 const { debug, warn } = require('../common/log')
-const { clipboard } = require('electron')
+const { clipboard, ipcRenderer: ipc } = require('electron')
 const assert = require('assert')
 const { DuplicateError } = require('../common/error')
 const { all, call, put, select, cps } = require('redux-saga/effects')
@@ -23,6 +23,7 @@ const {
   getGroupedItems,
   getItemTemplate,
   getPhotoTemplate,
+  getPrintableItems,
   getTemplateValues
 } = require('../selectors')
 
@@ -388,24 +389,29 @@ class Export extends Command {
 
   *exec() {
     let { target, plugin } = this.action.meta
-    const ids = this.action.payload
+    let ids = this.action.payload
+
     if (plugin) target = ':plugin:'
 
     try {
       if (!target) {
-        this.isInteractive = true
+        this.suspend()
         target = yield call(save.items, {})
+        this.resume()
       }
 
       if (!target) return
 
-      const [templateItems, ...resources] = yield select(getGroupedItems(ids))
+      let [opts, [items, ...resources]] = yield select(state => ([
+        state.settings.export,
+        getGroupedItems(ids)(state)
+      ]))
 
       // NB: load on-demand because jsonld is huge!
       const { groupedByTemplate } = require('../export')
 
-      const results = yield call(groupedByTemplate, templateItems, resources)
-      const asString = JSON.stringify(results, null, 2)
+      let results = yield call(groupedByTemplate, items, resources, opts)
+      let asString = JSON.stringify(results, null, 2)
 
       switch (target) {
         case ':clipboard:':
@@ -466,6 +472,21 @@ class Preview extends Command {
 
     if (paths.length > 0) {
       win.preview(paths[0])
+    }
+  }
+}
+
+class Print extends Command {
+  static get ACTION() { return ITEM.PRINT }
+
+  *exec() {
+    let [prefs, items] = yield select(state => ([
+      state.settings.print,
+      getPrintableItems(state)
+    ]))
+
+    if (items.length) {
+      ipc.send('print', { ...prefs, items })
     }
   }
 }
@@ -535,6 +556,7 @@ module.exports = {
   Restore,
   TemplateChange,
   Preview,
+  Print,
   AddTag,
   RemoveTag,
   ToggleTags,

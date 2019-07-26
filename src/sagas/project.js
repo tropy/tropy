@@ -40,12 +40,21 @@ function *open(file) {
     var db = new Database(file, 'w')
 
     yield fork(onErrorClose, db)
-    yield call(db.migrate, MIGRATIONS)
+    let migrations = yield call(db.migrate, MIGRATIONS)
 
     let project = yield call(mod.project.load, db)
     let access = yield call(mod.access.open, db)
 
     assert(project != null && project.id != null, 'invalid project')
+
+    if (migrations.length === 0) {
+      try {
+        yield call(db.check)
+      } catch (_) {
+        warn('project file may be corrupted!')
+        project.corrupted = true
+      }
+    }
 
     // Update window's global ARGS to allow reloading the project!
     if (db.path !== ARGS.file) {

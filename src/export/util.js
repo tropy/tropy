@@ -69,7 +69,15 @@ function newProperties(src, dest, toContext, props, template) {
   return dest
 }
 
+const localize = (value, language) =>
+  !language ? value : {
+    '@value': value,
+    '@language': language
+  }
+
+
 module.exports = {
+  localize,
   shortenLabel,
   propertyLabel,
   shorten,

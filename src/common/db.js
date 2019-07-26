@@ -23,7 +23,6 @@ const cache = {}
 
 
 class Database extends EventEmitter {
-
   static async create(path, script, ...args) {
     try {
       var db = new Database(path, 'w+', { max: 1 })
@@ -126,21 +125,21 @@ class Database extends EventEmitter {
     this.emit('destroy')
   }
 
-  acquire() {
-    return this.pool.acquire()
-      .disposer(conn => this.release(conn))
+  acquire(opts = {}) {
+    return this.pool.acquire().disposer(conn =>
+      this.release(conn, opts.destroy))
   }
 
-  release(conn) {
+  release(conn, destroy = false) {
     conn.parallelize()
-    return this.pool.release(conn)
+    return destroy ?
+      this.pool.destroy(conn) :
+      this.pool.release(conn)
   }
-
 
   close = async () => {
     await this.pool.drain()
     await this.pool.clear()
-
     this.emit('close')
   }
 
@@ -151,8 +150,8 @@ class Database extends EventEmitter {
     return count === 0
   }
 
-  seq = (fn) =>
-    using(this.acquire(), fn)
+  seq = (fn, opts) =>
+    using(this.acquire(opts), fn)
 
   transaction = (fn) =>
     this.seq(conn => using(transaction(conn), fn))
@@ -183,7 +182,6 @@ class Database extends EventEmitter {
       using(Statement.disposable(conn, ...args), stmt => fn(stmt, conn)))
   }
 
-
   all(...args) {
     return this.seq(conn => conn.all(...args))
   }
@@ -204,20 +202,22 @@ class Database extends EventEmitter {
     return this.seq(conn => conn.exec(...args)).return(this)
   }
 
-
   version(...args) {
     return this.seq(conn => conn.version(...args))
+  }
+
+  check = (...args) => {
+    return this.seq(conn => conn.check(...args))
   }
 
   async read(file) {
     return this.exec(String(await read(file)))
   }
-}
 
-
-Database.defaults = {
-  application_id: '0xDAEDA105',
-  encoding: 'UTF-8'
+  static defaults = {
+    application_id: '0xDAEDA105',
+    encoding: 'UTF-8'
+  }
 }
 
 
@@ -275,7 +275,6 @@ class Connection {
     return this.db.execAsync(sql).return(this)
   }
 
-
   version(version) {
     return (version) ?
       this.exec(`PRAGMA user_version = ${version}`) :
@@ -294,33 +293,46 @@ class Connection {
     return this.exec('ROLLBACK TRANSACTION')
   }
 
-  check(table) {
-    return this
-      .all(`PRAGMA foreign_key_check${table ? `('${table}')` : ''}`)
-      .then(violations => {
-        if (!violations.length)
-          return this
+  async check(table, { maxIntErrors = 10 } = {}) {
+    if (maxIntErrors > 0) {
+      let result = await this.all(
+        `PRAGMA integrity_check(${maxIntErrors})`
+      )
 
+      if (result.length !== 1 || result[0].integrity_check !== 'ok') {
         warn({
-          stack: violations
-            .map(v => `${v.table}[${v.rowid}] -> ${v.parent}#${v.fkid}`)
-            .join('\n')
-        }, 'foreign key check failed!')
+          stack: result.map(f => `${f.integrity_check}`).join('\n')
+        }, 'integrity check failed!')
 
-        throw new Error(`${violations.length} foreign key check(s) failed`)
-      })
+        throw new Error(`${result.length} integrity check(s) failed`)
+      }
+    }
+
+    let violations = await this.all(
+      `PRAGMA foreign_key_check${table ? `('${table}')` : ''}`
+    )
+
+    if (violations.length > 0) {
+      warn({
+        stack: violations
+          .map(v => `${v.table}[${v.rowid}] -> ${v.parent}#${v.fkid}`)
+          .join('\n')
+      }, 'foreign key check failed!')
+
+      throw new Error(`${violations.length} foreign key check(s) failed`)
+    }
+
+    return this
+  }
+
+  static defaults = {
+    busy_timeout: 5000,
+    foreign_keys: 'on'
   }
 }
 
 
-Connection.defaults = {
-  busy_timeout: 5000,
-  foreign_keys: 'on'
-}
-
-
 class Statement {
-
   static disposable(conn, sql, ...params) {
     return conn.db.prepareAsync(sql, flatten(params))
       .then(stmt => new Statement(stmt))

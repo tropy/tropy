@@ -6,16 +6,18 @@ try {
   require('module').globalPaths.push(__dirname)
 
   const opts = require('./args').parse()
-  const { Window } = require('./window')
-  const { ready } = require('./dom')
-  const { ipcRenderer: ipc } = require('electron')
-
-  const win = new Window(opts)
+  const { basename } = require('path')
   const { fatal, info } = require('./common/log')({
     dest: opts.log,
     level: opts.level,
-    name: win.type
+    name: basename(location.pathname, '.html')
   })
+
+  const { ipcRenderer: ipc } = require('electron')
+  const { ready } = require('./dom')
+  const { Window } = require('./window')
+
+  const win = new Window(opts)
 
   info({
     dpx: window.devicePixelRatio,
