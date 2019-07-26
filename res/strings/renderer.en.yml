@@ -126,6 +126,12 @@ en:
           skip: Skip duplicate photos
           import: Accept duplicate photos
           prompt: Ask me every time
+      export:
+        label: Export
+        note:
+          format:
+            html: Export notes as HTML
+            markdown: Export notes as Markdown
       ui:
         label: Interface
         option:

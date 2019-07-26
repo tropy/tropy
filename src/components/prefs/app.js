@@ -70,6 +70,10 @@ class AppPrefs extends React.PureComponent {
     this.props.onSettingsUpdate({ print })
   }
 
+  handleNoteFormatChange = (format) => {
+    this.props.onSettingsUpdate({ export: { note: { format } } })
+  }
+
   render() {
     return (
       <div className="scroll-container">
@@ -190,6 +194,21 @@ class AppPrefs extends React.PureComponent {
             value={this.props.settings.layout}
             options={this.props.layouts}
             onChange={this.props.onSettingsUpdate}/>
+          <hr/>
+          <FormElement
+            id="prefs.app.export.label"
+            isCompact>
+            <Toggle
+              id="prefs.app.export.note.format.html"
+              name="html"
+              value={this.props.settings.export.note.format.html}
+              onChange={this.handleNoteFormatChange}/>
+            <Toggle
+              id="prefs.app.export.note.format.markdown"
+              name="markdown"
+              value={this.props.settings.export.note.format.markdown}
+              onChange={this.handleNoteFormatChange}/>
+          </FormElement>
           <hr/>
           <FormSelect
             id="prefs.app.print.mode"
