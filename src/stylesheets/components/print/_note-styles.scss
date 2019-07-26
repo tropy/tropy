@@ -1,0 +1,130 @@
+//
+// Note styles
+// --------------------------------------------------
+
+.note {
+  counter-reset: line-numbers;
+  position: relative; // Needed for line numbers
+
+  &.numbers {
+    padding-left: $space-xxl + $space-md !important; // Revisit
+  }
+
+  .overflow & {
+    padding: 0;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  p,
+  .line-break {
+    @include variant(".note.numbers") {
+      &::before {
+        content: counter(line-numbers);
+        counter-increment: line-numbers;
+        position: absolute;
+        white-space: nowrap;
+        text-align: right;
+        color: #bbb;
+        user-select: none;
+        left: 0;
+        width: $space-xxl; // Revisit
+      }
+    }
+  }
+
+  p {
+    &:empty {
+      &::before {
+        content: "\a0";
+      }
+    }
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  blockquote {
+    padding-left: $blockquote-padding;
+    border-left: $blockquote-border solid #e6e6e6;
+  }
+
+  ul,
+  ol {
+    padding-left: 3 * $print-font-size;
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  ul ul,
+  ol ul {
+    list-style: circle;
+  }
+
+  ul ul ul,
+  ol ul ul,
+  ul ol ul,
+  ol ol ul {
+    list-style: square;
+  }
+
+  ol {
+    counter-reset: ol;
+    list-style: decimal;
+  }
+
+  li {
+    display: block;
+    position: static;
+
+    p {
+      display: list-item;
+
+      @each $alignment in center, right {
+        &[style*="#{$alignment}"] {
+          list-style-position: inside;
+        }
+      }
+    }
+  }
+
+  .line-break {
+    &::before {
+      margin-top: ($print-font-size * $print-line-height);
+
+      .overflow & {
+        margin-top: ($print-font-size-large * $print-line-height-large);
+      }
+    }
+  }
+
+  hr {
+    border: 0;
+    border-top: $editor-hr-border solid #e6e6e6;
+    margin: ($print-font-size * $print-line-height / 2 - $editor-hr-border / 2) 0;
+
+    .overflow & {
+      margin: ($print-font-size-large * $print-line-height-large / 2 - $editor-hr-border / 2) 0;
+    }
+  }
+
+  sup,
+  sub {
+    line-height: 1;
+    font-size: $sup-and-sub-font-size;
+  }
+}
