@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { MetadataSection } = require('./metadata')
+const { NoteList } = require('./note')
 const { ItemInfo } = require('../item/info')
 const { PhotoInfo } = require('../photo/info')
 const cx = require('classnames')
@@ -36,41 +37,23 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo }) => {
           {item &&
             <div className="col">
               <MetadataSection
-                title="panel.metadata.item"
+                title="print.item"
                 fields={item.data}/>
               <ItemInfo item={item}/>
             </div>}
           <div className="col">
             <MetadataSection
-              title="panel.metadata.photo"
+              title="print.photo"
               fields={photo.data}/>
             <PhotoInfo photo={photo}/>
             {hasNotes && !canOverflow &&
-              <div className={cx('notes')}>
-                <h5 className="notes-heading">Notes</h5>
-                {photo.notes.map(n =>
-                  <div className="note-container">
-                    <label>Note</label>
-                    <div
-                      key={n.id}
-                      className="note"
-                      dangerouslySetInnerHTML={{ __html: n.html }}/>
-                  </div>)}
-              </div>}
-
+              <NoteList
+                notes={photo.notes}
+                heading="print.notes"/>}
           </div>
         </div>}
       {hasNotes && canOverflow &&
-        <div className={cx('notes')}>
-          {photo.notes.map(n =>
-            <div className="note-container">
-              <label>Note</label>
-              <div
-                key={n.id}
-                className="note"
-                dangerouslySetInnerHTML={{ __html: n.html }}/>
-            </div>)}
-        </div>}
+        <NoteList notes={photo.notes}/>}
     </div>
   )
 }

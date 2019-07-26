@@ -162,8 +162,6 @@ label {
 }
 
 .notes {
-  counter-reset: note;
-
   .container:not(.overflow) & {
     .note-container + .note-container {
       margin-top: ($print-font-size * $print-line-height);
@@ -177,11 +175,6 @@ label {
   }
 
   label {
-    &::after {
-      content: " " counter(note);
-      counter-increment: note;
-    }
-
     .overflow & {
       display: block;
       font-size: $print-font-size;
