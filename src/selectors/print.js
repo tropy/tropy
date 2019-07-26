@@ -2,22 +2,7 @@
 
 const { createSelector: memo } = require('reselect')
 const { getMetadataFields } = require('./metadata')
-const { toHTML } = require('../components/editor/serialize')
-
-
-const getNoteSerialized = (note, format = ['text']) => (
-  (note == null) ? null : format.reduce((acc, fmt) => {
-    switch (fmt) {
-      case 'text':
-        acc.text = note.text
-        break
-      case 'html':
-        acc.html = toHTML(note.state.doc)
-        break
-    }
-    return acc
-  }, {})
-)
+const { serialize } = require('../export/note')
 
 const getPhotoExpanded = (photo, metadata, notes, ontology) => (
   (photo == null) ? null : {
@@ -30,7 +15,7 @@ const getPhotoExpanded = (photo, metadata, notes, ontology) => (
     }),
     notes: photo.notes.map(id => ({
       id,
-      ...getNoteSerialized(notes[id], ['html'])
+      ...serialize(notes[id], { format: { html: true }, localize: false })
     }))
   }
 )
@@ -62,6 +47,5 @@ const getPrintableItems = memo(
 )
 
 module.exports = {
-  getNoteSerialized,
   getPrintableItems
 }

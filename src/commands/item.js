@@ -389,24 +389,29 @@ class Export extends Command {
 
   *exec() {
     let { target, plugin } = this.action.meta
-    const ids = this.action.payload
+    let ids = this.action.payload
+
     if (plugin) target = ':plugin:'
 
     try {
       if (!target) {
-        this.isInteractive = true
+        this.suspend()
         target = yield call(save.items, {})
+        this.resume()
       }
 
       if (!target) return
 
-      const [templateItems, ...resources] = yield select(getGroupedItems(ids))
+      let [opts, [items, ...resources]] = yield select(state => ([
+        state.settings.export,
+        getGroupedItems(ids)(state)
+      ]))
 
       // NB: load on-demand because jsonld is huge!
       const { groupedByTemplate } = require('../export')
 
-      const results = yield call(groupedByTemplate, templateItems, resources)
-      const asString = JSON.stringify(results, null, 2)
+      let results = yield call(groupedByTemplate, items, resources, opts)
+      let asString = JSON.stringify(results, null, 2)
 
       switch (target) {
         case ':clipboard:':

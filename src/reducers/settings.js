@@ -13,7 +13,8 @@ const defaults = {
         text: true,
         html: true,
         markdown: false
-      }
+      },
+      localize: true
     }
   },
   layout: ITEM.LAYOUT.STACKED,
