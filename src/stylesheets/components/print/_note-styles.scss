@@ -128,11 +128,12 @@
 
   hr {
     border: 0;
-    border-top: $editor-hr-border solid #e6e6e6;
-    margin: ($print-font-size * $print-line-height / 2 - $editor-hr-border / 2) 0;
+    border-top: 1pt solid #000;
+    margin: ($print-font-size * $print-line-height / 2 - 1pt / 2) 0;
+    transform: scaleY(0.5); // Hairline hack
 
     .overflow & {
-      margin: ($print-font-size-large * $print-line-height-large / 2 - $editor-hr-border / 2) 0;
+      margin: ($print-font-size-large * $print-line-height-large / 2 - 1pt / 2) 0;
     }
   }
 
