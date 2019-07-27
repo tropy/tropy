@@ -7,7 +7,14 @@
   position: relative; // Needed for line numbers
 
   &.numbers {
-    padding-left: $space-xxl + $space-md !important; // Revisit
+    padding-left:
+      ($space-xxl + $space-md)
+      * strip-unit($print-font-size) * 96 / 72
+      / strip-unit($editor-font-size);
+
+    .overflow & {
+      padding-left: ($space-xxl + $space-md) * 16 / 18 !important;
+    }
   }
 
   .overflow & {
@@ -27,10 +34,17 @@
         position: absolute;
         white-space: nowrap;
         text-align: right;
-        color: #bbb;
+        font-weight: 300;
         user-select: none;
         left: 0;
-        width: $space-xxl; // Revisit
+        width:
+          $space-xxl
+          * strip-unit($print-font-size) * 96 / 72
+          / strip-unit($editor-font-size);
+
+        .overflow & {
+          width: $space-xxl * 16 / strip-unit($editor-font-size);
+        }
       }
     }
   }
