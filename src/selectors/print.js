@@ -4,7 +4,7 @@ const { createSelector: memo } = require('reselect')
 const { getMetadataFields } = require('./metadata')
 const { serialize } = require('../export/note')
 
-const getPhotoExpanded = (photo, metadata, notes, ontology) => (
+const getPhotoExpanded = (photo, metadata, notes, notepad, ontology) => (
   (photo == null) ? null : {
     ...photo,
     data: getMetadataFields(null, {
@@ -15,12 +15,13 @@ const getPhotoExpanded = (photo, metadata, notes, ontology) => (
     }),
     notes: photo.notes.map(id => ({
       id,
-      ...serialize(notes[id], { format: { html: true }, localize: false })
+      ...serialize(notes[id], { format: { html: true }, localize: false }),
+      ...notepad[id]
     }))
   }
 )
 
-const getItemExpanded = (item, photos, metadata, notes, ontology) => (
+const getItemExpanded = (item, photos, metadata, notes, notepad, ontology) => (
   (item == null) ? null : {
     ...item,
     data: getMetadataFields(null, {
@@ -30,7 +31,7 @@ const getItemExpanded = (item, photos, metadata, notes, ontology) => (
       template: ontology.template[item.template]
     }),
     photos: item.photos.map(id =>
-      getPhotoExpanded(photos[id], metadata, notes, ontology))
+      getPhotoExpanded(photos[id], metadata, notes, notepad, ontology))
   }
 )
 
@@ -40,10 +41,11 @@ const getPrintableItems = memo(
   ({ photos }) => photos,
   ({ metadata }) => metadata,
   ({ notes }) => notes,
+  ({ notepad }) => notepad,
   ({ ontology }) => ontology,
-  (ids, items, photos, metadata, notes, ontology) =>
+  (ids, items, photos, metadata, notes, notepad, ontology) =>
   ids.map(id =>
-    getItemExpanded(items[id], photos, metadata, notes, ontology))
+    getItemExpanded(items[id], photos, metadata, notes, notepad, ontology))
 )
 
 module.exports = {
