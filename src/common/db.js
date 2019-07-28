@@ -137,6 +137,16 @@ class Database extends EventEmitter {
       this.pool.release(conn)
   }
 
+  clear = async () => {
+    await this.pool.clear()
+
+    while (this.pool.available > this.pool.size) {
+      this.pool._availableObjects.pop()
+    }
+
+    this.emit('clear')
+  }
+
   close = async () => {
     await this.pool.drain()
     await this.pool.clear()
