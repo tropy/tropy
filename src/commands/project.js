@@ -38,6 +38,8 @@ class Reindex extends Command {
     let { meta } = this.action
     let { db } = this.options
 
+    yield call(db.clear)
+
     yield call(db.seq, conn =>
       mod.project.reindex(conn, meta))
   }
