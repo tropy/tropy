@@ -29,6 +29,20 @@ class Rebase extends Command {
   }
 }
 
+class Reindex extends Command {
+  static get ACTION() {
+    return PROJECT.REINDEX
+  }
+
+  *exec() {
+    let { meta } = this.action
+    let { db } = this.options
+
+    yield call(db.seq, conn =>
+      mod.project.reindex(conn, meta))
+  }
+}
+
 class Save extends Command {
   static get ACTION() { return PROJECT.SAVE }
 
@@ -56,5 +70,6 @@ class Save extends Command {
 
 module.exports = {
   Rebase,
+  Reindex,
   Save
 }

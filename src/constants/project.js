@@ -10,6 +10,7 @@ module.exports = {
   OPEN: 'project.open',
   OPENED: 'project.opened',
   REBASE: 'project.rebase',
+  REINDEX: 'project.reindex',
   SAVE: 'project.save',
   UPDATE: 'project.update',
 

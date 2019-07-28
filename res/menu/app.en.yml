@@ -159,6 +159,8 @@ en:
         - label: 'Optimize Project Caches'
           command: 'app:optimize-cache'
         - type: 'separator'
+        - label: 'Reindex Project'
+          command: 'app:reindex-project'
         - label: 'Rebase Project'
           command: 'app:rebase-project'
         - type: 'separator'

@@ -50,6 +50,15 @@ module.exports = {
     return project
   },
 
+  async reindex(db, { check } = {}) {
+    if (check) {
+      await db.check()
+    }
+
+    await db.exec('reindex')
+    await db.exec('vacuum')
+  },
+
   save(db, { id, ...props }) {
     return db.run(
       ...update('project').set(props).where({ project_id: id })

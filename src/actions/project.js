@@ -50,6 +50,18 @@ module.exports = {
     }
   },
 
+  reindex(payload = {}, meta = {}) {
+    return {
+      type: PROJECT.REINDEX,
+      payload,
+      meta: {
+        cmd: 'project',
+        check: true,
+        ...meta
+      }
+    }
+  },
+
   save(payload, meta = {}) {
     return {
       type: PROJECT.SAVE,
