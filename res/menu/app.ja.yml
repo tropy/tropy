@@ -44,6 +44,11 @@ ja:
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: Print
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
         - label: プロジェクトを閉じる
           command: 'app:close-project'
           condition: project
@@ -107,6 +112,11 @@ ja:
         - label: 全画面表示にする
           role: togglefullscreen
           condition: window
+        - type: separator
+        - label: 閉じる
+          accelerator: Ctrl+W
+          role: close
+          condition: window
     - label: 開発者向け
       id: dev
       submenu:
@@ -123,6 +133,8 @@ ja:
         - label: プロジェクトのキャッシュを最適化
           command: 'app:optimize-cache'
         - type: separator
+        - label: Reindex Project
+          command: 'app:reindex-project'
         - label: プロジェクトをリベースする
           command: 'app:rebase-project'
         - type: separator
@@ -239,6 +251,11 @@ ja:
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: Print
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
         - label: プロジェクトを閉じる
           command: 'app:close-project'
           condition: project
@@ -295,6 +312,8 @@ ja:
         - label: ズーム
           accelerator: Ctrl+Cmd+Z
           role: zoom
+        - label: 画面中央に寄せる
+          command: 'app:center-window'
           condition: window
         - type: separator
         - label: 画面中央に寄せる
@@ -324,6 +343,8 @@ ja:
         - label: プロジェクトのキャッシュを最適化
           command: 'app:optimize-cache'
         - type: separator
+        - label: Reindex Project
+          command: 'app:reindex-project'
         - label: プロジェクトをリベースする
           command: 'app:rebase-project'
         - type: separator
@@ -416,6 +437,11 @@ ja:
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: Print
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
         - label: プロジェクトを閉じる
           command: 'app:close-project'
           condition: project
@@ -476,6 +502,11 @@ ja:
         - label: 全画面表示にする
           role: togglefullscreen
           condition: window
+        - type: separator
+        - label: 閉じる
+          accelerator: Ctrl+W
+          role: close
+          condition: window
     - label: 開発者向け
       id: dev
       submenu:
@@ -492,6 +523,8 @@ ja:
         - label: プロジェクトのキャッシュを最適化
           command: 'app:optimize-cache'
         - type: separator
+        - label: Reindex Project
+          command: 'app:reindex-project'
         - label: プロジェクトをリベースする
           command: 'app:rebase-project'
         - type: separator

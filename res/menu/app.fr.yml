@@ -44,6 +44,11 @@ fr:
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: Imprimer
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
         - label: Fermer le projet
           command: 'app:close-project'
           condition: project
@@ -107,6 +112,11 @@ fr:
         - label: Basculer en plein écran
           role: togglefullscreen
           condition: window
+        - type: separator
+        - label: Fermer
+          accelerator: Ctrl+W
+          role: close
+          condition: window
     - label: Développeur
       id: dev
       submenu:
@@ -123,6 +133,8 @@ fr:
         - label: Optimiser le cache du project
           command: 'app:optimize-cache'
         - type: separator
+        - label: Reindex Project
+          command: 'app:reindex-project'
         - label: Recombiner le projet
           command: 'app:rebase-project'
         - type: separator
@@ -239,6 +251,11 @@ fr:
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: Imprimer
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
         - label: Fermer le projet
           command: 'app:close-project'
           condition: project
@@ -295,6 +312,8 @@ fr:
         - label: Zoom
           accelerator: Ctrl+Cmd+Z
           role: zoom
+        - label: Centrer
+          command: 'app:center-window'
           condition: window
         - type: separator
         - label: Centrer
@@ -324,6 +343,8 @@ fr:
         - label: Optimiser le cache du project
           command: 'app:optimize-cache'
         - type: separator
+        - label: Reindex Project
+          command: 'app:reindex-project'
         - label: Recombiner le projet
           command: 'app:rebase-project'
         - type: separator
@@ -416,6 +437,11 @@ fr:
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: Imprimer
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
         - label: Fermer le projet
           command: 'app:close-project'
           condition: project
@@ -476,6 +502,11 @@ fr:
         - label: Basculer en plein écran
           role: togglefullscreen
           condition: window
+        - type: separator
+        - label: Fermer
+          accelerator: Ctrl+W
+          role: close
+          condition: window
     - label: Développeur
       id: dev
       submenu:
@@ -492,6 +523,8 @@ fr:
         - label: Optimiser le cache du project
           command: 'app:optimize-cache'
         - type: separator
+        - label: Reindex Project
+          command: 'app:reindex-project'
         - label: Recombiner le projet
           command: 'app:rebase-project'
         - type: separator
