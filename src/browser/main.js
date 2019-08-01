@@ -9,12 +9,6 @@ process.env.NODE_ENV = opts.environment
 
 const electron = require('electron')
 const { app }  = electron
-
-if (!app.requestSingleInstanceLock()) {
-  process.stderr.write('other instance detected, exiting...\n')
-  app.exit(0)
-}
-
 const { extname, join, resolve } = require('path')
 const { sync: mkdir } = require('mkdirp')
 const { darwin, win32, system }  = require('../common/os')
@@ -48,6 +42,11 @@ if (!opts.logs) {
 }
 mkdir(opts.logs)
 app.setPath('logs', opts.logs)
+
+if (!app.requestSingleInstanceLock()) {
+  process.stderr.write('other instance detected, exiting...\n')
+  app.exit(0)
+}
 
 if (!(win32 && require('./squirrel')(opts))) {
   const { info, warn } = require('../common/log')({
