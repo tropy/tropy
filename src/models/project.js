@@ -52,9 +52,9 @@ module.exports = {
 
   async optimize(db) {
     await db.exec(
-      'INSERT INTO fts_notes(fts_notes) VALUES ("optimize")')
+      "INSERT INTO fts_notes(fts_notes) VALUES ('optimize')")
     await db.exec(
-      'INSERT INTO fts_metadata(fts_metadata) VALUES ("optimize")')
+      "INSERT INTO fts_metadata(fts_metadata) VALUES ('optimize')")
     await db.exec(
       'VACUUM')
   },
@@ -66,9 +66,9 @@ module.exports = {
     await db.exec(
       'REINDEX')
     await db.exec(
-      'INSERT INTO fts_notes(fts_notes) VALUES ("rebuild")')
+      "INSERT INTO fts_notes(fts_notes) VALUES ('rebuild')")
     await db.exec(
-      'INSERT INTO fts_metadata(fts_metadata) VALUES ("rebuild")')
+      "INSERT INTO fts_metadata(fts_metadata) VALUES ('rebuild')")
   },
 
   save(db, { id, ...props }) {
