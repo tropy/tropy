@@ -38,6 +38,17 @@ module.exports = {
     }
   },
 
+  optimize(payload = {}, meta = {}) {
+    return {
+      type: PROJECT.OPTIMIZE,
+      payload,
+      meta: {
+        cmd: 'project',
+        ...meta
+      }
+    }
+  },
+
   rebase(payload = {}, meta = {}) {
     return {
       type: PROJECT.REBASE,

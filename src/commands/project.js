@@ -9,6 +9,20 @@ const act = require('../actions')
 const mod = require('../models')
 
 
+class Optimize extends Command {
+  static get ACTION() {
+    return PROJECT.OPTIMIZE
+  }
+
+  *exec() {
+    let { db } = this.options
+
+    yield call(db.clear)
+    yield call(db.seq, conn =>
+      mod.project.optimize(conn))
+  }
+}
+
 class Rebase extends Command {
   static get ACTION() { return PROJECT.REBASE }
 
@@ -71,6 +85,7 @@ class Save extends Command {
 }
 
 module.exports = {
+  Optimize,
   Rebase,
   Reindex,
   Save

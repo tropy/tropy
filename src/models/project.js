@@ -50,13 +50,25 @@ module.exports = {
     return project
   },
 
+  async optimize(db) {
+    await db.exec(
+      'INSERT INTO fts_notes(fts_notes) VALUES ("optimize")')
+    await db.exec(
+      'INSERT INTO fts_metadata(fts_metadata) VALUES ("optimize")')
+    await db.exec(
+      'VACUUM')
+  },
+
   async reindex(db, { check } = {}) {
     if (check) {
       await db.check()
     }
-
-    await db.exec('reindex')
-    await db.exec('vacuum')
+    await db.exec(
+      'REINDEX')
+    await db.exec(
+      'INSERT INTO fts_notes(fts_notes) VALUES ("rebuild")')
+    await db.exec(
+      'INSERT INTO fts_metadata(fts_metadata) VALUES ("rebuild")')
   },
 
   save(db, { id, ...props }) {
