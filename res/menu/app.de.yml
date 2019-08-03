@@ -132,9 +132,11 @@ de:
           command: 'app:reset-ontology-db'
         - label: Projekt-Cache optimieren
           command: 'app:optimize-cache'
-        - type: separator
-        - label: Projektindex wiederherstellen
+        - label: Projekt-Datenbank optimieren
+          command: 'app:optimize-project'
+        - label: Projekt-Datenbank indexieren
           command: 'app:reindex-project'
+        - type: separator
         - label: Projekt portieren
           command: 'app:rebase-project'
         - type: separator
@@ -342,9 +344,11 @@ de:
           command: 'app:reset-ontology-db'
         - label: Projekt-Cache optimieren
           command: 'app:optimize-cache'
-        - type: separator
-        - label: Projektindex wiederherstellen
+        - label: Projekt-Datenbank optimieren
+          command: 'app:optimize-project'
+        - label: Projekt-Datenbank indexieren
           command: 'app:reindex-project'
+        - type: separator
         - label: Projekt portieren
           command: 'app:rebase-project'
         - type: separator
@@ -522,9 +526,11 @@ de:
           command: 'app:reset-ontology-db'
         - label: Projekt-Cache optimieren
           command: 'app:optimize-cache'
-        - type: separator
-        - label: Projektindex wiederherstellen
+        - label: Projekt-Datenbank optimieren
+          command: 'app:optimize-project'
+        - label: Projekt-Datenbank indexieren
           command: 'app:reindex-project'
+        - type: separator
         - label: Projekt portieren
           command: 'app:rebase-project'
         - type: separator
