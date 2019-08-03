@@ -135,8 +135,8 @@ en:
         label: Export
         note:
           format:
-            html: Notes in HTML
-            markdown: Notes in Markdown
+            html: Notes as HTML
+            markdown: Notes as Markdown
       ui:
         label: Interface
         option:

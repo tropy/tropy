@@ -137,6 +137,16 @@ class Database extends EventEmitter {
       this.pool.release(conn)
   }
 
+  clear = async () => {
+    await this.pool.clear()
+
+    while (this.pool.available > this.pool.size) {
+      this.pool._availableObjects.pop()
+    }
+
+    this.emit('clear')
+  }
+
   close = async () => {
     await this.pool.drain()
     await this.pool.clear()
@@ -198,17 +208,15 @@ class Database extends EventEmitter {
     return this.seq(conn => conn.run(...args))
   }
 
-  exec(...args) {
-    return this.seq(conn => conn.exec(...args)).return(this)
-  }
+  exec = (...args) =>
+    this.seq(conn => conn.exec(...args)).return(this)
 
   version(...args) {
     return this.seq(conn => conn.version(...args))
   }
 
-  check = (...args) => {
-    return this.seq(conn => conn.check(...args))
-  }
+  check = (...args) =>
+    this.seq(conn => conn.check(...args))
 
   async read(file) {
     return this.exec(String(await read(file)))

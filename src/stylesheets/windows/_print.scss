@@ -9,11 +9,19 @@
 // --------------------------------------------------
 
 @import
-  "../abstracts/variables";
-
+  "../abstracts/variables",
+  "../abstracts/mixins",
+  "../abstracts/functions";
 
 // Components
 // --------------------------------------------------
 
 @import
-  "../components/print";
+  "../components/print/print",
+  "../components/print/note-styles";
+
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/orientation";

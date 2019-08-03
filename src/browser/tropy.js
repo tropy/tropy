@@ -337,6 +337,12 @@ class Tropy extends EventEmitter {
     this.on('app:rebase-project', () =>
       this.dispatch(act.project.rebase(), this.wm.current()))
 
+    this.on('app:reindex-project', () =>
+      this.dispatch(act.project.reindex(), this.wm.current()))
+
+    this.on('app:optimize-project', () =>
+      this.dispatch(act.project.optimize(), this.wm.current()))
+
     this.on('app:import-photos', () =>
       this.import())
 

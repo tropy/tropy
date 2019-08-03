@@ -131,8 +131,10 @@
       &:first-child {
         margin-right: $space-xs;
       }
+    }
 
-      &:last-child {
+    .project-name {
+      .icon:last-child {
         margin-left: $space-xs;
       }
     }

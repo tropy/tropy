@@ -134,7 +134,17 @@ img {
 }
 
 .metadata-heading {
-  height: $print-page-margin;
+  @media (orientation: portrait) {
+    height: $print-page-margin;
+  }
+
+  @media (orientation: landscape) {
+    height: $print-page-margin / 2 - $print-font-size / 2;
+
+    .col:first-child > :first-child & {
+      height: $print-page-margin / 2;
+    }
+  }
 }
 
 .metadata-fields {
@@ -199,22 +209,4 @@ label {
 
 .notes-heading {
   height: $print-page-margin / 2 - $print-font-size / 2;
-}
-
-.note {
-  .overflow & {
-    padding: 0;
-  }
-
-  * {
-    margin: 0;
-  }
-
-  p {
-    &:empty {
-      &::before {
-        content: "\a0";
-      }
-    }
-  }
 }

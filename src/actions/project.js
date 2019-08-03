@@ -38,6 +38,17 @@ module.exports = {
     }
   },
 
+  optimize(payload = {}, meta = {}) {
+    return {
+      type: PROJECT.OPTIMIZE,
+      payload,
+      meta: {
+        cmd: 'project',
+        ...meta
+      }
+    }
+  },
+
   rebase(payload = {}, meta = {}) {
     return {
       type: PROJECT.REBASE,
@@ -45,6 +56,18 @@ module.exports = {
       meta: {
         cmd: 'project',
         history: 'add',
+        ...meta
+      }
+    }
+  },
+
+  reindex(payload = {}, meta = {}) {
+    return {
+      type: PROJECT.REINDEX,
+      payload,
+      meta: {
+        cmd: 'project',
+        check: true,
         ...meta
       }
     }

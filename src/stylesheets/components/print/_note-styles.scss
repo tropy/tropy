@@ -1,0 +1,145 @@
+//
+// Note styles
+// --------------------------------------------------
+
+.note {
+  counter-reset: line-numbers;
+  position: relative; // Needed for line numbers
+
+  &.numbers {
+    padding-left:
+      ($space-xxl + $space-md)
+      * strip-unit($print-font-size) * 96 / 72
+      / strip-unit($editor-font-size);
+
+    .overflow & {
+      padding-left: ($space-xxl + $space-md) * 16 / 18 !important;
+    }
+  }
+
+  .overflow & {
+    padding: 0;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  p,
+  .line-break {
+    @include variant(".note.numbers") {
+      &::before {
+        content: counter(line-numbers);
+        counter-increment: line-numbers;
+        position: absolute;
+        white-space: nowrap;
+        text-align: right;
+        font-weight: 300;
+        user-select: none;
+        left: 0;
+        width:
+          $space-xxl
+          * strip-unit($print-font-size) * 96 / 72
+          / strip-unit($editor-font-size);
+
+        .overflow & {
+          width: $space-xxl * 16 / strip-unit($editor-font-size);
+        }
+      }
+    }
+  }
+
+  p {
+    &:empty {
+      &::before {
+        content: "\a0";
+      }
+    }
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  blockquote {
+    padding-left: $blockquote-padding;
+    border-left: $blockquote-border solid rgba(0, 0, 0, 0.1); // Use opacity instead of #e6e6e6 to ensure 100K black for entire note text
+  }
+
+  ul,
+  ol {
+    padding-left: 3 * $print-font-size;
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  ul ul,
+  ol ul {
+    list-style: circle;
+  }
+
+  ul ul ul,
+  ol ul ul,
+  ul ol ul,
+  ol ol ul {
+    list-style: square;
+  }
+
+  ol {
+    counter-reset: ol;
+    list-style: decimal;
+  }
+
+  li {
+    display: block;
+    position: static;
+
+    p {
+      display: list-item;
+
+      @each $alignment in center, right {
+        &[style*="#{$alignment}"] {
+          list-style-position: inside;
+        }
+      }
+    }
+  }
+
+  .line-break {
+    &::before {
+      margin-top: ($print-font-size * $print-line-height);
+
+      .overflow & {
+        margin-top: ($print-font-size-large * $print-line-height-large);
+      }
+    }
+  }
+
+  hr {
+    border: 0;
+    border-top: 1pt solid #000;
+    margin: ($print-font-size * $print-line-height / 2 - 1pt / 2) 0;
+    transform: scaleY(0.5); // Hairline hack
+
+    .overflow & {
+      margin: ($print-font-size-large * $print-line-height-large / 2 - 1pt / 2) 0;
+    }
+  }
+
+  sup,
+  sub {
+    line-height: 1;
+    font-size: $sup-and-sub-font-size;
+  }
+}

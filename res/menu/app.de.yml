@@ -44,6 +44,11 @@ de:
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: Drucken
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
         - label: Projekt schließen
           command: 'app:close-project'
           condition: project
@@ -107,6 +112,11 @@ de:
         - label: Vollbildmodus
           role: togglefullscreen
           condition: window
+        - type: separator
+        - label: Schließen
+          accelerator: Ctrl+W
+          role: close
+          condition: window
     - label: Entwickler
       id: dev
       submenu:
@@ -122,6 +132,10 @@ de:
           command: 'app:reset-ontology-db'
         - label: Projekt-Cache optimieren
           command: 'app:optimize-cache'
+        - label: Projekt-Datenbank optimieren
+          command: 'app:optimize-project'
+        - label: Projekt-Datenbank indexieren
+          command: 'app:reindex-project'
         - type: separator
         - label: Projekt portieren
           command: 'app:rebase-project'
@@ -239,6 +253,11 @@ de:
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: Drucken
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
         - label: Projekt schließen
           command: 'app:close-project'
           condition: project
@@ -295,6 +314,8 @@ de:
         - label: Zoom
           accelerator: Ctrl+Cmd+Z
           role: zoom
+        - label: Zentrieren
+          command: 'app:center-window'
           condition: window
         - type: separator
         - label: Zentrieren
@@ -323,6 +344,10 @@ de:
           command: 'app:reset-ontology-db'
         - label: Projekt-Cache optimieren
           command: 'app:optimize-cache'
+        - label: Projekt-Datenbank optimieren
+          command: 'app:optimize-project'
+        - label: Projekt-Datenbank indexieren
+          command: 'app:reindex-project'
         - type: separator
         - label: Projekt portieren
           command: 'app:rebase-project'
@@ -416,6 +441,11 @@ de:
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: Drucken
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
         - label: Projekt schließen
           command: 'app:close-project'
           condition: project
@@ -476,6 +506,11 @@ de:
         - label: Vollbildmodus
           role: togglefullscreen
           condition: window
+        - type: separator
+        - label: Schließen
+          accelerator: Ctrl+W
+          role: close
+          condition: window
     - label: Entwickler
       id: dev
       submenu:
@@ -491,6 +526,10 @@ de:
           command: 'app:reset-ontology-db'
         - label: Projekt-Cache optimieren
           command: 'app:optimize-cache'
+        - label: Projekt-Datenbank optimieren
+          command: 'app:optimize-project'
+        - label: Projekt-Datenbank indexieren
+          command: 'app:reindex-project'
         - type: separator
         - label: Projekt portieren
           command: 'app:rebase-project'
