@@ -43,7 +43,6 @@ const getVisibleNotes = memo(
     ))
 )
 
-
 module.exports = {
   getSelectableNoteId,
   getSelectedNote,

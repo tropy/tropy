@@ -13,6 +13,7 @@ const {
 } = require('electron')
 
 const { fatal, info, warn, logger, crashReport } = require('../common/log')
+const { delay, once } = require('../common/util')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 
@@ -336,6 +337,12 @@ class Tropy extends EventEmitter {
     this.on('app:rebase-project', () =>
       this.dispatch(act.project.rebase(), this.wm.current()))
 
+    this.on('app:reindex-project', () =>
+      this.dispatch(act.project.reindex(), this.wm.current()))
+
+    this.on('app:optimize-project', () =>
+      this.dispatch(act.project.optimize(), this.wm.current()))
+
     this.on('app:import-photos', () =>
       this.import())
 
@@ -644,6 +651,10 @@ class Tropy extends EventEmitter {
       this.showOpenDialog(null)
     })
 
+    this.on('app:print', () => {
+      this.dispatch(act.item.print(), this.wm.current())
+    })
+
     this.on('app:zoom-in', () => {
       this.state.zoom = this.wm.zoom(this.state.zoom + 0.25)
     })
@@ -686,6 +697,33 @@ class Tropy extends EventEmitter {
 
     ipc.on('cmd', (event, cmd, ...args) => {
       this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
+    })
+
+    ipc.on('print', async (_, opts) => {
+      try {
+        if (!opts.items.length) return
+
+        var win = await this.wm.open('print', this.hash)
+
+        await Promise.race([
+          once(win, 'react:ready'),
+          delay(2000)
+        ])
+
+        info(`will print ${opts.items.length} item(s)`)
+        win.send('print', opts)
+
+        await Promise.race([
+          once(win, 'print:ready'),
+          delay(60000)
+        ])
+
+        let result = await WindowManager.print(win)
+        info(`printing ${result ? 'confirmed' : 'aborted'}`)
+
+      } finally {
+        if (win != null) win.destroy()
+      }
     })
 
     ipc.on('error', (event, error) => {

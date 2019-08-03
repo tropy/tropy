@@ -127,7 +127,16 @@
 
     .icon {
       flex: 0 0 auto;
-      margin-right: $space-xs;
+
+      &:first-child {
+        margin-right: $space-xs;
+      }
+    }
+
+    .project-name {
+      .icon:last-child {
+        margin-left: $space-xs;
+      }
     }
 
     .btn-icon {

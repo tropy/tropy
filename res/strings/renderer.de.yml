@@ -62,6 +62,11 @@ de:
 
           other {# Notizen}}
       create: Notiz hinzufügen
+  print:
+    item: Objekt
+    photo: Foto
+    notes: Notizen
+    note: Notiz {idx, number}
   about:
     version: Version {version}
     rrchnm:
@@ -88,6 +93,9 @@ de:
     empty: Fotos ins Tropy Fenster ziehen und los geht’s!
     new: neues Projekt
     recent: Benutzte Projekte
+    corrupted: >
+        Die Projektdatenbank ist möglicherweise beschädigt und sollte manuell geprüft
+        werden.
   wizard:
     project:
       title: Neues Projekt erstellen
@@ -105,6 +113,15 @@ de:
           light: Hell
           dark: Dunkel
           system: Folge der Systemeinstellung
+      print:
+        mode: Drucken
+        modes:
+          item: Ein Objekt pro Seite
+          photo: Ein Foto pro Seite
+          selection: Ein Ausschnitt pro Seite
+        metadata: Inklusive Metadaten
+        notes: Inklusive Notizen
+        overflow: Inhalt gegebenenfalls auf mehrere Seiten aufteilen
       locale:
         locale: Sprache
         locales:
@@ -128,6 +145,12 @@ de:
           skip: Zuvor importiere Fotos überspringen
           import: Zuvor importierte Fotos nochmals importieren
           prompt: Jedes Mal nachfragen
+      export:
+        label: Exportieren
+        note:
+          format:
+            html: Notizen als HTML
+            markdown: Notizen als Markdown
       ui:
         label: Benutzeroberfläche
         option:

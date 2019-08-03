@@ -66,6 +66,14 @@ class AppPrefs extends React.PureComponent {
     }
   }
 
+  handlePrintSettingsChange = (print) => {
+    this.props.onSettingsUpdate({ print })
+  }
+
+  handleNoteFormatChange = (format) => {
+    this.props.onSettingsUpdate({ export: { note: { format } } })
+  }
+
   render() {
     return (
       <div className="scroll-container">
@@ -187,6 +195,52 @@ class AppPrefs extends React.PureComponent {
             options={this.props.layouts}
             onChange={this.props.onSettingsUpdate}/>
           <hr/>
+          <FormElement
+            id="prefs.app.export.label"
+            isCompact>
+            <Toggle
+              id="prefs.app.export.note.format.html"
+              name="html"
+              value={this.props.settings.export.note.format.html}
+              onChange={this.handleNoteFormatChange}/>
+            <Toggle
+              id="prefs.app.export.note.format.markdown"
+              name="markdown"
+              value={this.props.settings.export.note.format.markdown}
+              onChange={this.handleNoteFormatChange}/>
+          </FormElement>
+          <hr/>
+          <FormSelect
+            id="prefs.app.print.mode"
+            name="mode"
+            isDisabled
+            isRequired
+            isSelectionHidden
+            value={this.props.settings.print.mode}
+            options={this.props.printModes}
+            onChange={this.handlePrintSettingsChange}/>
+          <FormElement isCompact>
+            <Toggle
+              id="prefs.app.print.metadata"
+              name="metadata"
+              value={this.props.settings.print.metadata}
+              onChange={this.handlePrintSettingsChange}/>
+            <Toggle
+              id="prefs.app.print.notes"
+              name="notes"
+              value={this.props.settings.print.notes}
+              onChange={this.handlePrintSettingsChange}/>
+            <Toggle
+              id="prefs.app.print.overflow"
+              isDisabled={!(
+                this.props.settings.print.metadata ||
+                this.props.settings.print.notes
+              )}
+              name="overflow"
+              value={this.props.settings.print.overflow}
+              onChange={this.handlePrintSettingsChange}/>
+          </FormElement>
+          <hr/>
           <FormToggle
             id="prefs.app.debug"
             name="debug"
@@ -217,6 +271,7 @@ class AppPrefs extends React.PureComponent {
     themes: arrayOf(string).isRequired,
     dupOptions: arrayOf(string).isRequired,
     zoomModes: arrayOf(string).isRequired,
+    printModes: arrayOf(string).isRequired,
     onSettingsUpdate: func.isRequired
   }
 
@@ -225,7 +280,8 @@ class AppPrefs extends React.PureComponent {
     layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
     locales: ['de', 'en', 'fr', 'ja'],
     dupOptions: ['skip', 'import', 'prompt'],
-    zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL]
+    zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL],
+    printModes: ['item', 'photo', 'selection']
   }
 }
 

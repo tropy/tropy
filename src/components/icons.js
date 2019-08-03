@@ -1,12 +1,12 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { element, string } = require('prop-types')
 const cx = require('classnames')
+const { injectIntl, intlShape } = require('react-intl')
 
-const Icon = ({ children, className, name }) => (
-  <span className={cx('icon', `icon-${name}`, className)}>
+const Icon = ({ children, className, name, title }) => (
+  <span className={cx('icon', `icon-${name}`, className)} title={title}>
     {children}
   </span>
 )
@@ -14,30 +14,48 @@ const Icon = ({ children, className, name }) => (
 Icon.propTypes = {
   children: element.isRequired,
   className: string,
-  name: string.isRequired
+  name: string.isRequired,
+  title: string
 }
+
 
 module.exports = { Icon }
 
 
-function i(name, svg) {
-  const icon = class extends PureComponent {
-    render() {
-      const { className } = this.props
+function i(name, svg, intl = false) {
+  const icon = class extends React.PureComponent {
+    get title() {
+      return (this.props.title && this.props.intl) ?
+        this.props.intl.formatMessage({ id: this.props.title }) :
+        this.props.title
+    }
 
+    render() {
       return (
-        <Icon className={className} name={name.toLowerCase()}>{svg}</Icon>
+        <Icon
+          className={this.props.className}
+          name={name.toLowerCase()}
+          title={this.title}>
+          {svg}
+        </Icon>
       )
     }
   }
 
   icon.propTypes = {
-    className: string
+    className: string,
+    title: string
   }
 
   icon.displayName = `Icon${name}`
 
-  module.exports[icon.displayName] = icon
+  if (intl) {
+    icon.propTypes.intl = intlShape
+  }
+
+  module.exports[icon.displayName] = intl ?
+    injectIntl(icon) :
+    icon
 }
 
 /* eslint-disable max-len */
@@ -74,7 +92,7 @@ i('WarningSm', (
       <path d="M11.606,10.211,6.894.789C6.4-.2,5.6-.2,5.106.789L.394,10.211A1.139,1.139,0,0,0,1.5,12h9A1.139,1.139,0,0,0,11.606,10.211ZM7,10.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5v-1A.5.5,0,0,1,5.5,9h1a.5.5,0,0,1,.5.5Zm0-3a.5.5,0,0,1-.5.5h-1A.5.5,0,0,1,5,7.5v-4A.5.5,0,0,1,5.5,3h1a.5.5,0,0,1,.5.5Z"/>
     </g>
   </svg>
-))
+), true)
 
 i('Warning', (
   <svg width="16" height="16">

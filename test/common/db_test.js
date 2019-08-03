@@ -12,7 +12,7 @@ function failure() { throw new Error() }
 
 describe('Database', () => {
   describe('given a database file', () => {
-    const dbFile = mktmp('db_test.sqlite')
+    let dbFile = mktmp('db_test.sqlite')
     let db
 
     beforeEach(() => {
@@ -200,6 +200,59 @@ describe('Database', () => {
         ).to.eventually.be.fulfilled
           .and.have.property('a', 42)
       ))
+    })
+
+    describe('#check()', () => {
+      beforeEach(() => db.seq(async conn => {
+        await conn.exec('CREATE TABLE t1 (id INTEGER PRIMARY KEY, name)')
+        await conn.exec('CREATE TABLE t2 (t1_id REFERENCES t1(id))')
+      }))
+
+      it('passes an empty database', () =>
+        expect(db.check()).to.eventually.be.fulfilled)
+
+      describe('given data', () => {
+        beforeEach(() => db.seq(async conn => {
+          await conn.exec('INSERT INTO t1 VALUES (1,"one")')
+          await conn.exec('INSERT INTO t1 VALUES (2,"two")')
+          await conn.exec('INSERT INTO t1 VALUES (3,"two")')
+          await conn.exec('INSERT INTO t1 VALUES (4,null)')
+          await conn.exec('INSERT INTO t2 VALUES (1)')
+          await conn.exec('INSERT INTO t2 VALUES (2)')
+          await conn.exec('INSERT INTO t2 VALUES (1)')
+        }))
+
+        it('still passes', () =>
+          expect(db.check()).to.eventually.be.fulfilled)
+
+        describe('with foreign key violations', () => {
+          beforeEach(() => db.seq(async conn => {
+            await conn.configure({ foreign_keys: 'off' })
+            await conn.exec('DELETE FROM t1 WHERE id = 1')
+            await conn.configure({ foreign_keys: 'on' })
+          }))
+
+          it('fails with the number of violations', () =>
+            expect(db.check())
+              .to.eventually.be.rejectedWith('2 foreign key check(s) failed'))
+        })
+
+        describe('with null violations', () => {
+          beforeEach(async () => {
+            await db.seq(async conn => {
+              await conn.configure({ writable_schema: 'on' })
+              await conn.run(
+                `UPDATE sqlite_master
+                  SET sql = 'CREATE TABLE t1 (id INTEGER PRIMARY KEY, name NOT NULL)'
+                  WHERE type = 'table' AND name = 't1'`)
+            }, { destroy: true })
+          })
+
+          it('fails with the number of violations', () =>
+            expect(db.check())
+              .to.eventually.be.rejectedWith('1 integrity check(s) failed'))
+        })
+      })
     })
 
     describe('#migration()', () => {
