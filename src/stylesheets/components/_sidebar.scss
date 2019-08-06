@@ -131,10 +131,8 @@
       &:first-child {
         margin-right: $space-xs;
       }
-    }
 
-    .project-name {
-      .icon:last-child {
+      @include variant(".name + .icon") {
         margin-left: $space-xs;
       }
     }
