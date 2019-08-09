@@ -46,7 +46,6 @@ rules:
   max-depth: [1, 6]
   max-len: [1, 80, 2, { ignoreComments: true, ignoreUrls: true, ignorePattern: "[`'\"\/],?$" }]
   max-nested-callbacks: [1, 4]
-  new-parens: 2
   no-caller: 2
   no-constant-condition: [2, { checkLoops: false }]
   no-eval: 2
