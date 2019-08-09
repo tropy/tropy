@@ -52,6 +52,7 @@ en:
     photo: Photo
     notes: Notes
     note: Note {idx, number}
+    tags: Tags
   about:
       version: Version {version}
       rrchnm:

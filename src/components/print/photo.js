@@ -38,7 +38,8 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo }) => {
             <div className="col">
               <MetadataSection
                 title="print.item"
-                fields={item.data}/>
+                fields={item.data}
+                tags={item.tags}/>
               <ItemInfo item={item}/>
             </div>}
           <div className="col">
