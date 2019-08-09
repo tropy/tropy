@@ -3,6 +3,8 @@
 const { Ontology } = require('../../../lib/common/ontology')
 const mod = require('../../../lib/models/ontology')
 
+const created = '2019-03-02 21:01:44'
+
 module.exports = {
   async up(tx) {
     for (let file of ['xmp', 'photoshop', 'iptc']) {
@@ -11,6 +13,7 @@ module.exports = {
       for (let id in data) {
         await mod.vocab.create(tx, {
           ...data[id],
+          created,
           isProtected: true
         })
 
