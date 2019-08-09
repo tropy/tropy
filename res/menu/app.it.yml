@@ -1,0 +1,583 @@
+it:
+  linux:
+    - label: '&File'
+      id: file
+      submenu:
+        - label: Nuovo
+          submenu:
+            - label: Progetto
+              command: 'app:create-project'
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Elemento
+              command: 'app:create-item'
+              accelerator: CmdOrCtrl+Shift+N
+              condition: project
+            - label: Lista
+              command: 'app:create-list'
+              accelerator: CmdOrCtrl+Shift+L
+              condition: project
+            - label: Tag
+              command: 'app:create-tag'
+              accelerator: CmdOrCtrl+Shift+A
+              condition: project
+        - type: separator
+        - label: Apri...
+          accelerator: CmdOrCtrl+O
+          command: 'app:open-dialog'
+        - label: Apri in nuova finestra...
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
+        - label: Progetti recenti
+          id: recent
+          role: recentDocuments
+          enabled: false
+          submenu:
+            - type: separator
+            - label: Svuota lista
+              command: 'app:clear-recent-projects'
+        - type: separator
+        - label: Importa foto...
+          command: 'app:import-photos'
+          accelerator: CmdOrCtrl+Shift+I
+          condition: project
+        - label: Consolida raccolta foto
+          command: 'app:consolidate-photo-library'
+          condition: project
+        - type: separator
+        - label: Stampa
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
+        - label: Chiudi progetto
+          command: 'app:close-project'
+          condition: project
+        - type: separator
+        - label: Chiudi finestra
+          accelerator: Ctrl+W
+          role: close
+        - label: Chiudi Tropy
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: '&Modifica'
+      submenu:
+        - id: undo
+          label: '&Annulla'
+          accelerator: CmdOrCtrl+Z
+          command: 'app:undo'
+          enabled: false
+        - id: redo
+          label: '&Ripristina'
+          accelerator: Shift+CmdOrCtrl+Z
+          command: 'app:redo'
+          enabled: false
+        - type: separator
+        - label: Taglia
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: '&Copia'
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: '&Incolla'
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: Seleziona tutto
+          role: selectall
+        - type: separator
+        - label: 'Prefere&nze… '
+          accelerator: Shift+Control+S
+          command: 'app:open-preferences'
+    - label: '&Vista'
+      submenu:
+        - label: '&Ricarica'
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - type: separator
+        - label: Mostra/nascondi barra dei &menu
+          command: 'app:toggle-menu-bar'
+        - label: Sposta in centro
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: Dimensione effettiva
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: Ingrandisci
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: Rimpicciolisci
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: Visualizza a &schermo intero
+          role: togglefullscreen
+          condition: window
+        - type: separator
+        - label: Chiudi
+          accelerator: Ctrl+W
+          role: close
+          condition: window
+    - label: Sviluppatore
+      id: dev
+      submenu:
+        - label: Ricarica &stili
+          command: 'win:refresh'
+        - label: Mostra/nascondi strumenti per sviluppatori
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - label: Mostra/nascondi strumenti di performance
+          command: 'win:toggle-perf-tools'
+        - type: separator
+        - label: Ripristina il database dell'ontologia
+          command: 'app:reset-ontology-db'
+        - label: Ottimizza la cache del progetto
+          command: 'app:optimize-cache'
+        - label: Ottimizza il database del progetto
+          command: 'app:optimize-project'
+        - label: Reindicizza il database del progetto
+          command: 'app:reindex-project'
+        - type: separator
+        - label: Rebase del progetto
+          command: 'app:rebase-project'
+        - type: separator
+        - label: Tema
+          id: theme
+          submenu:
+            - label: Luminoso
+              id: light
+              type: checkbox
+            - label: Scuro
+              id: dark
+              type: checkbox
+            - label: Segui le preferenze di sistema
+              id: system
+              type: checkbox
+    - label: Aiuto
+      submenu:
+        - label: Guida utente
+          command: 'app:open-docs'
+        - label: Forum di assistenza
+          command: 'app:open-forums'
+        - label: '&Licenza software'
+          command: 'app:open-license'
+        - type: separator
+        - label: Mostra i file di log
+          command: 'app:open-logs'
+        - label: Mostra la cartella dei plugin
+          command: 'app:open-plugins-folder'
+        - label: Mostra la cartella con i dati utente
+          command: 'app:open-user-data'
+        - label: Mostra la cartella della cache
+          command: 'app:open-cache-folder'
+        - type: separator
+        - id: updater-check
+          label: Controlla aggiornamenti...
+          command: 'app:check-for-updates'
+          enabled: false
+        - id: updater-is-checking
+          label: Scaricamento dell'aggiornamento più recente
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Installa aggiornamenti...
+          command: 'app:install-updates'
+          enabled: false
+          visible: false
+        - type: separator
+        - label: Informazioni su Tropy
+          command: 'app:about'
+          condition: '!prefs'
+  darwin:
+    - label: Tropy
+      submenu:
+        - label: Informazioni su Tropy
+          command: 'app:about'
+          condition: '!prefs'
+        - type: separator
+        - label: Preferenze
+          accelerator: 'Command+,'
+          command: 'app:open-preferences'
+        - type: separator
+        - label: Nascondi Tropy
+          accelerator: Command+H
+          role: hide
+        - label: Nascondi il resto
+          accelerator: Command+Shift+H
+          role: hideothers
+        - label: Mostra tutto
+          role: unhide
+        - type: separator
+        - label: Chiudi Tropy
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: File
+      submenu:
+        - label: Nuovo
+          submenu:
+            - label: Progetto
+              command: 'app:create-project'
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Elemento
+              command: 'app:create-item'
+              accelerator: CmdOrCtrl+Shift+N
+              condition: project
+            - label: Lista
+              command: 'app:create-list'
+              accelerator: CmdOrCtrl+Shift+L
+              condition: project
+            - label: Tag
+              command: 'app:create-tag'
+              accelerator: CmdOrCtrl+Shift+A
+              condition: project
+        - type: separator
+        - label: Apri...
+          accelerator: CmdOrCtrl+O
+          command: 'app:open-dialog'
+        - label: Apri in nuova finestra...
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
+        - label: Progetti recenti
+          id: recent
+          role: recentDocuments
+          enabled: false
+          submenu:
+            - type: separator
+            - label: Svuota lista
+              command: 'app:clear-recent-projects'
+        - type: separator
+        - label: Importa foto...
+          command: 'app:import-photos'
+          accelerator: CmdOrCtrl+Shift+I
+          condition: project
+        - label: Consolida raccolta foto
+          command: 'app:consolidate-photo-library'
+          condition: project
+        - type: separator
+        - label: Stampa
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
+        - label: Chiudi progetto
+          command: 'app:close-project'
+          condition: project
+    - label: Modifica
+      submenu:
+        - id: undo
+          label: '&Annulla'
+          accelerator: CmdOrCtrl+Z
+          command: 'app:undo'
+          enabled: false
+        - id: redo
+          label: '&Ripristina'
+          accelerator: Shift+CmdOrCtrl+Z
+          command: 'app:redo'
+          enabled: false
+        - type: separator
+        - label: '&Taglia'
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: '&Copia'
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: '&Incolla'
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: Seleziona tutto
+          role: selectall
+    - label: Vista
+      submenu:
+        - label: '&Ricarica'
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - type: separator
+        - label: Dimensione effettiva
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: Ingrandisci
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: Rimpicciolisci
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: Visualizza a &schermo intero
+          role: togglefullscreen
+          condition: window
+    - label: Finestra
+      role: window
+      submenu:
+        - label: Minimizza
+          accelerator: Cmd+M
+          role: minimize
+          condition: window
+        - label: Ingrandisci
+          accelerator: Ctrl+Cmd+Z
+          role: zoom
+        - label: Sposta in centro
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: Sposta in centro
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: Porta tutto davanti
+          role: front
+        - type: separator
+        - label: Chiudi
+          accelerator: Cmd+W
+          role: close
+          condition: window
+    - label: Sviluppatore
+      id: dev
+      submenu:
+        - label: Ricarica &stili
+          command: 'win:refresh'
+        - label: Mostra/nascondi strumenti per sviluppatori
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - label: Mostra/nascondi strumenti di performance
+          command: 'win:toggle-perf-tools'
+        - type: separator
+        - label: Ripristina il database dell'ontologia
+          command: 'app:reset-ontology-db'
+        - label: Ottimizza la cache del progetto
+          command: 'app:optimize-cache'
+        - label: Ottimizza il database del progetto
+          command: 'app:optimize-project'
+        - label: Reindicizza il database del progetto
+          command: 'app:reindex-project'
+        - type: separator
+        - label: Rebase del progetto
+          command: 'app:rebase-project'
+        - type: separator
+        - label: Tema
+          id: theme
+          submenu:
+            - label: Luminoso
+              id: light
+              type: checkbox
+            - label: Scuro
+              id: dark
+              type: checkbox
+            - label: Segui le preferenze di sistema
+              id: system
+              type: checkbox
+    - label: Aiuto
+      role: help
+      submenu:
+        - label: Guida utente
+          command: 'app:open-docs'
+        - label: Forum di assistenza
+          command: 'app:open-forums'
+        - label: '&Licenza software'
+          command: 'app:open-license'
+        - type: separator
+        - label: Mostra i file di log
+          command: 'app:open-logs'
+        - label: Mostra la cartella dei plugin
+          command: 'app:open-plugins-folder'
+        - label: Mostra la cartella con i dati utente
+          command: 'app:open-user-data'
+        - label: Mostra la cartella della cache
+          command: 'app:open-cache-folder'
+        - type: separator
+        - id: updater-check
+          label: Controlla aggiornamenti...
+          command: 'app:check-for-updates'
+          enabled: false
+        - id: updater-is-checking
+          label: Scaricamento dell'aggiornamento più recente
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Installa aggiornamenti...
+          command: 'app:install-updates'
+          enabled: false
+          visible: false
+  win32:
+    - label: '&File'
+      id: file
+      submenu:
+        - label: Nuovo
+          submenu:
+            - label: Progetto
+              command: 'app:create-project'
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Elemento
+              command: 'app:create-item'
+              accelerator: CmdOrCtrl+Shift+N
+              condition: project
+            - label: Lista
+              command: 'app:create-list'
+              accelerator: CmdOrCtrl+Shift+L
+              condition: project
+            - label: Tag
+              command: 'app:create-tag'
+              accelerator: CmdOrCtrl+Shift+A
+              condition: project
+        - type: separator
+        - label: Apri...
+          accelerator: CmdOrCtrl+O
+          command: 'app:open-dialog'
+        - label: Apri in nuova finestra...
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
+        - label: Progetti recenti
+          id: recent
+          role: recentDocuments
+          enabled: false
+          submenu:
+            - type: separator
+            - label: Svuota lista
+              command: 'app:clear-recent-projects'
+        - type: separator
+        - label: Importa foto...
+          command: 'app:import-photos'
+          accelerator: CmdOrCtrl+Shift+I
+          condition: project
+        - label: Consolida raccolta foto
+          command: 'app:consolidate-photo-library'
+          condition: project
+        - type: separator
+        - label: Stampa
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
+        - label: Chiudi progetto
+          command: 'app:close-project'
+          condition: project
+        - type: separator
+        - label: Chiudi finestra
+          accelerator: Ctrl+W
+          role: close
+        - label: Chiudi Tropy
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: '&Modifica'
+      submenu:
+        - id: undo
+          label: '&Annulla'
+          accelerator: CmdOrCtrl+Z
+          command: 'app:undo'
+          enabled: false
+        - id: redo
+          label: '&Ripristina'
+          accelerator: Control+Y
+          command: 'app:redo'
+          enabled: false
+        - type: separator
+        - label: Taglia
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: '&Copia'
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: '&Incolla'
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: 'Prefere&nze… '
+          accelerator: Shift+Control+S
+          command: 'app:open-preferences'
+    - label: '&Visualizza'
+      submenu:
+        - label: '&Ricarica'
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - type: separator
+        - label: Mostra/nascondi barra dei &menu
+          command: 'app:toggle-menu-bar'
+        - label: Sposta in centro
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: Dimensione effettiva
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: Ingrandisci
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: Rimpicciolisci
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: Visualizza a &schermo intero
+          role: togglefullscreen
+          condition: window
+        - type: separator
+        - label: Chiudi
+          accelerator: Ctrl+W
+          role: close
+          condition: window
+    - label: Sviluppatore
+      id: dev
+      submenu:
+        - label: Ricarica &stili
+          command: 'win:refresh'
+        - label: Mostra/nascondi strumenti per sviluppatori
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - label: Mostra/nascondi strumenti di performance
+          command: 'win:toggle-perf-tools'
+        - type: separator
+        - label: Ripristina il database dell'ontologia
+          command: 'app:reset-ontology-db'
+        - label: Ottimizza la cache del progetto
+          command: 'app:optimize-cache'
+        - label: Ottimizza il database del progetto
+          command: 'app:optimize-project'
+        - label: Reindicizza il database del progetto
+          command: 'app:reindex-project'
+        - type: separator
+        - label: Rebase del progetto
+          command: 'app:rebase-project'
+        - type: separator
+        - label: Tema
+          id: theme
+          submenu:
+            - label: Luminoso
+              id: light
+              type: checkbox
+            - label: Scuro
+              id: dark
+              type: checkbox
+            - label: Segui le preferenze di sistema
+              id: system
+              type: checkbox
+    - label: Aiuto
+      submenu:
+        - label: Guida utente
+          command: 'app:open-docs'
+        - label: Forum di assistenza
+          command: 'app:open-forums'
+        - label: '&Licenza software'
+          command: 'app:open-license'
+        - type: separator
+        - label: Mostra i file di log
+          command: 'app:open-logs'
+        - label: Mostra la cartella dei plugin
+          command: 'app:open-plugins-folder'
+        - label: Mostra la cartella con i dati utente
+          command: 'app:open-user-data'
+        - label: Mostra la cartella della cache
+          command: 'app:open-cache-folder'
+        - type: separator
+        - id: updater-check
+          label: Controlla aggiornamenti...
+          command: 'app:check-for-updates'
+          enabled: false
+        - id: updater-is-checking
+          label: Scaricamento dell'aggiornamento più recente
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Installa aggiornamenti...
+          command: 'app:install-updates'
+          enabled: false
+          visible: false
+        - type: separator
+        - label: Informazioni su Tropy
+          command: 'app:about'
+          condition: '!prefs'
