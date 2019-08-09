@@ -105,7 +105,7 @@
     "bluebird": "^3.5.5",
     "classnames": "^2.2.6",
     "decompress": "^4.2.0",
-    "edtf": "^2.6.1",
+    "edtf": "^2.6.3",
     "generic-pool": "^3.7.1",
     "js-yaml": "^3.13.1",
     "jsonld": "^1.6.2",
