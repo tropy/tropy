@@ -36,10 +36,6 @@ class Migration {
 
         await tx.version(this.number)
       })
-
-      .catch(error => {
-        throw new Error(`Migration #${this.number} failed: ${error.message}`)
-      })
   }
 
   fresh(number) {
