@@ -12,7 +12,7 @@ REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#name', 'it', "Nome");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#template', 'it', "Modello");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#photo', 'it', "Foto");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#selection', 'it', "Selezione");
-REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#box', 'it', "Riquardo");
+REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#box', 'it', "Scatolone");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#folder', 'it', "Cartella");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#piece', 'it', "Pezzo");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#collection', 'it', "Collezione");
@@ -26,7 +26,7 @@ REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#isRequired', 'it', "È r
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#constant', 'it', "Costante");
 
 -- DC elements and DC terms
--- http://www.websemantico.org/traduzioni/dc/termini.php
+-- Originally based on http://www.websemantico.org/traduzioni/dc/termini.php
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/contributor', 'it', "Autore di contributo subordinato");
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/coverage', 'it', "Copertura");
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/creator', 'it', "Creatore");
@@ -37,7 +37,7 @@ REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/identifier', 'it', 
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/language', 'it', "Lingua");
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/publisher', 'it', "Editore");
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/relation', 'it', "Relazione");
-REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/rights', 'it', "Gestione dei diritti");
+REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/rights', 'it', "Diritti");
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/source', 'it', "Fonte");
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/subject', 'it', "Soggetto e parole chiavi");
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/title', 'it', "Titolo");
@@ -67,7 +67,7 @@ REPLACE INTO labels VALUES ('http://purl.org/dc/terms/hasVersion', 'it', "Ha ver
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/identifier', 'it', "Identificatore della risorsa");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/isFormatOf', 'it', "È formato di");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/isPartOf', 'it', "È parte di");
-REPLACE INTO labels VALUES ('http://purl.org/dc/terms/isReferencedBy', 'it', "È riferota da");
+REPLACE INTO labels VALUES ('http://purl.org/dc/terms/isReferencedBy', 'it', "È citata da");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/isReplacedBy', 'it', "È sostituita da");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/isRequiredBy', 'it', "È richiesta da");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/issued', 'it', "Emissione");
@@ -83,11 +83,11 @@ REPLACE INTO labels VALUES ('http://purl.org/dc/terms/references', 'it', "Referi
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/relation', 'it', "Relatione");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/replaces', 'it', "Sostituisce");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/requires', 'it', "Richiede");
-REPLACE INTO labels VALUES ('http://purl.org/dc/terms/rights', 'it', "Gestione dei diritti");
+REPLACE INTO labels VALUES ('http://purl.org/dc/terms/rights', 'it', "Diritti");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/rightsHolder', 'it', "Chi detiene i diritti");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/source', 'it', "Fonte");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/spatial', 'it', "Caratteristiche spaziali");
-REPLACE INTO labels VALUES ('http://purl.org/dc/terms/subject', 'it', "Soggetto e parole chiavi");
+REPLACE INTO labels VALUES ('http://purl.org/dc/terms/subject', 'it', "Soggetto e parole chiave");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/tableOfContents', 'it', "Elenco del contenuto");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/temporal', 'it', "Caratteristiche temporali");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/title', 'it', "Titolo");
