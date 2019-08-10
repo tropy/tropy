@@ -39,7 +39,7 @@ REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/publisher', 'it', "
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/relation', 'it', "Relazione");
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/rights', 'it', "Diritti");
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/source', 'it', "Fonte");
-REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/subject', 'it', "Soggetto e parole chiavi");
+REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/subject', 'it', "Soggetto e parole chiave");
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/title', 'it', "Titolo");
 REPLACE INTO labels VALUES ('http://purl.org/dc/elements/1.1/type', 'it', "Tipo di risorsa");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/abstract', 'it', "Riassunto");
