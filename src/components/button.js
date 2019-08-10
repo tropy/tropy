@@ -2,12 +2,12 @@
 
 const React = require('react')
 const { createElement: create } = React
-const { injectIntl, intlShape } = require('react-intl')
+const { injectIntl } = require('react-intl')
 const cx = require('classnames')
 const { on, off } = require('../dom')
 const { noop } = require('../common/util')
 const {
-  bool, element, func, node, number, oneOf, string
+  bool, element, func, node, number, object, oneOf, string
 } = require('prop-types')
 
 
@@ -125,7 +125,7 @@ class Button extends React.PureComponent {
   static propTypes = {
     className: string,
     icon: element,
-    intl: intlShape.isRequired,
+    intl: object.isRequired,
     isActive: bool,
     isBlock: bool,
     isDefault: bool,

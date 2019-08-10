@@ -53,7 +53,7 @@ class Select extends React.Component {
     }
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     if (!shallow(this.props, props, [
       'isDisabled',
       'isRequired',

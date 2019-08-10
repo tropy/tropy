@@ -1,21 +1,19 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { FormattedMessage } = require('react-intl')
+const { FormattedMessage, useIntl } = require('react-intl')
 const { Input } = require('./input')
 const { Select } = require('./select')
 const cx = require('classnames')
 const {
-  arrayOf, bool, func, node, oneOf, number, string
+  arrayOf, bool, func, node, number, oneOf, string
 } = require('prop-types')
 const { noop } = require('../common/util')
 const { GRID } = require('../constants/sass')
-const { injectIntl, intlShape } = require('react-intl')
 const { on, off } = require('../dom')
 
 
-class FormGroup extends PureComponent {
+class FormGroup extends React.PureComponent {
   get classes() {
     return {
       'form-group': true,
@@ -39,7 +37,7 @@ class FormGroup extends PureComponent {
 }
 
 
-class Label extends PureComponent {
+class Label extends React.PureComponent {
   get value() {
     return this.props.value || <FormattedMessage id={this.props.id}/>
   }
@@ -67,7 +65,7 @@ class Label extends PureComponent {
   }
 }
 
-class FormElement extends PureComponent {
+class FormElement extends React.PureComponent {
   get hasLabel() {
     return this.props.label || this.props.id != null
   }
@@ -111,7 +109,7 @@ class FormElement extends PureComponent {
 }
 
 
-class FormField extends PureComponent {
+class FormField extends React.PureComponent {
   reset() {
     if (this.input != null) this.input.reset()
   }
@@ -190,58 +188,50 @@ class FormField extends PureComponent {
   }
 }
 
-class FormSelect extends PureComponent {
-  optLabel = (opt) => (
-    this.props.intl.formatMessage({
-      id: `${this.props.id}s.${opt}`
-    })
+const FormSelect = (props) => {
+  const intl = useIntl()
+
+  return (
+    <FormElement
+      id={props.id}
+      size={props.size}
+      isCompact={props.isCompact}>
+      <Select
+        id={props.id}
+        isDisabled={props.isDisabled}
+        isRequired={props.isRequired}
+        isSelectionHidden={props.isSelectionHidden}
+        name={props.name}
+        onChange={props.onChange}
+        options={props.options}
+        placeholder={props.placeholder}
+        tabIndex={props.tabIndex}
+        toText={opt => intl.formatMessage({ id: `${props.id}s.${opt}` })}
+        value={props.value}/>
+    </FormElement>
   )
-
-  render() {
-    return (
-      <FormElement
-        id={this.props.id}
-        size={this.props.size}
-        isCompact={this.props.isCompact}>
-        <Select
-          id={this.props.id}
-          isDisabled={this.props.isDisabled}
-          isRequired={this.props.isRequired}
-          isSelectionHidden={this.props.isSelectionHidden}
-          name={this.props.name}
-          onChange={this.props.onChange}
-          options={this.props.options}
-          placeholder={this.props.placeholder}
-          tabIndex={this.props.tabIndex}
-          toText={this.optLabel}
-          value={this.props.value}/>
-      </FormElement>
-    )
-  }
-
-  static propTypes = {
-    id: string.isRequired,
-    intl: intlShape,
-    isCompact: bool,
-    isDisabled: bool,
-    isRequired: bool,
-    isSelectionHidden: bool,
-    name: string.isRequired,
-    options: arrayOf(string).isRequired,
-    placeholder: node,
-    size: number.isRequired,
-    tabIndex: number,
-    value: string.isRequired,
-    onChange: func.isRequired
-  }
-
-  static defaultProps = {
-    size: 8
-  }
 }
 
+FormSelect.propTypes = {
+  id: string.isRequired,
+  isCompact: bool,
+  isDisabled: bool,
+  isRequired: bool,
+  isSelectionHidden: bool,
+  name: string.isRequired,
+  options: arrayOf(string).isRequired,
+  placeholder: node,
+  size: number.isRequired,
+  tabIndex: number,
+  value: string.isRequired,
+  onChange: func.isRequired
+}
 
-class Toggle extends PureComponent {
+FormSelect.defaultProps = {
+  size: 8
+}
+
+class Toggle extends React.PureComponent {
   state = {
     isTabFocus: false
   }
@@ -326,7 +316,7 @@ class Toggle extends PureComponent {
 }
 
 
-class FormToggle extends PureComponent {
+class FormToggle extends React.PureComponent {
   get classes() {
     return [
       `col-${this.props.size}`,
@@ -357,7 +347,7 @@ class FormToggle extends PureComponent {
   }
 }
 
-class FormToggleGroup extends PureComponent {
+class FormToggleGroup extends React.PureComponent {
   handleChange = (option) => {
     for (let value in option) {
       if (option[value]) {
@@ -402,7 +392,7 @@ class FormToggleGroup extends PureComponent {
   }
 }
 
-class FormText extends PureComponent {
+class FormText extends React.PureComponent {
   get isVisible() {
     return this.props.value || !this.props.isOptional
   }
@@ -433,7 +423,7 @@ class FormText extends PureComponent {
   }
 }
 
-class FormLink extends PureComponent {
+class FormLink extends React.PureComponent {
   get isVisible() {
     return this.props.value || !this.props.isOptional
   }
@@ -480,7 +470,7 @@ module.exports = {
   FormField,
   FormGroup,
   FormLink,
-  FormSelect: injectIntl(FormSelect),
+  FormSelect,
   FormText,
   FormToggle,
   FormToggleGroup,

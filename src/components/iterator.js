@@ -48,7 +48,7 @@ class Iterator extends PureComponent {
     }
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     if (this.props.size !== props.size ||
       this.getIterables(props).length !== this.size) {
       this.update(props)

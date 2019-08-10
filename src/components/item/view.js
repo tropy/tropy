@@ -27,7 +27,7 @@ class ItemView extends React.PureComponent {
     }
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     if (props.note !== this.props.note) {
       if (props.note == null) this.handleNoteReset()
       else this.handleNoteUpdate(props.note)

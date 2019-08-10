@@ -82,7 +82,7 @@ class EsperView extends React.Component {
     if (this.drag.current) this.drag.stop()
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     if (this.image != null) {
       this.image.overlay.sync(props)
       this.image.selections.sync(props)

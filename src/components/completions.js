@@ -46,7 +46,7 @@ class Completions extends React.Component {
     this.state = this.getStateFromProps(props)
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     if (!shallow(props, this.props)) {
       this.setState(this.getStateFromProps(props))
     }

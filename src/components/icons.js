@@ -1,9 +1,9 @@
 'use strict'
 
 const React = require('react')
-const { element, string } = require('prop-types')
+const { element, object, string } = require('prop-types')
 const cx = require('classnames')
-const { injectIntl, intlShape } = require('react-intl')
+const { injectIntl } = require('react-intl')
 
 const Icon = ({ children, className, name, title }) => (
   <span className={cx('icon', `icon-${name}`, className)} title={title}>
@@ -50,7 +50,7 @@ function i(name, svg, intl = false) {
   icon.displayName = `Icon${name}`
 
   if (intl) {
-    icon.propTypes.intl = intlShape
+    icon.propTypes.intl = object
   }
 
   module.exports[icon.displayName] = intl ?

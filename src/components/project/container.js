@@ -61,7 +61,7 @@ class ProjectContainer extends React.Component {
     off(document, 'global:back', this.handleBackButton)
   }
 
-  componentWillReceiveProps({ nav, project, ui }) {
+  UNSAFE_componentWillReceiveProps({ nav, project, ui }) {
     if (nav.mode !== this.props.nav.mode) {
       this.modeWillChange()
     }

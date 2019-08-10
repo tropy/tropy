@@ -61,13 +61,15 @@ class ListNode extends React.PureComponent {
     offset: null
   }
 
-  componentDidMount() {
-    this.props.connectDragPreview(getEmptyImage())
+  constructor(props) {
+    super(props)
+
+    this.isHalloween = props.isHalloween &&
+      Math.round(Math.random() * props.depth) > (props.depth * 0.666)
   }
 
-  componentWillMount() {
-    this.isHalloween = this.props.isHalloween &&
-      Math.round(Math.random() * this.props.depth) > (this.props.depth * 0.666)
+  componentDidMount() {
+    this.props.connectDragPreview(getEmptyImage())
   }
 
   get classes() {
