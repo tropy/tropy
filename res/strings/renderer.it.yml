@@ -25,7 +25,7 @@ it:
 
           =0 {}
 
-          one {elemento}
+          one {Elemento}
 
           other {# elementi}}
       selection: Selezione
@@ -67,6 +67,7 @@ it:
     photo: Foto
     notes: Note
     note: Note {idx, number}
+    tags: Tag
   about:
     version: Versione {version}
     rrchnm:
@@ -110,7 +111,7 @@ it:
       style:
         theme: Tema
         themes:
-          light: Luminoso
+          light: Chiaro
           dark: Scuro
           system: Segui le preferenze di sistema
       print:
@@ -131,7 +132,7 @@ it:
           it: Italiano
           ja: 日本語
       templates:
-        label: Template predefiniti
+        label: Modelli predefiniti
         item: Elemento
         photo: Foto
         selection: Selezione
@@ -159,10 +160,10 @@ it:
           invertZoom: Inverti la direzione mentre fai zoom sulle foto
           overlayToolbars: Mostra e nascondi le barre degli strumenti automaticamente
       zoomMode:
-        label: Di default
+        label: Come impostazione predefinita
         option:
-          fit: Fai zoom delle foto per farle stare
-          fill: Fai zoom delle foto per riempire
+          fit: Imposta lo zoom per mostrare la foto per intero
+          fill: Imposta lo zoom per riempire lo spazio disponibile
       layout:
         label: Layout della visualizzazione dell'elemento
         option:
@@ -362,7 +363,7 @@ it:
     project:
       save: Salva progetto
     list:
-      create: Creat lista
+      create: Crea lista
       delete: Elimina lista
       item:
         add: Aggiungi elementi a lista

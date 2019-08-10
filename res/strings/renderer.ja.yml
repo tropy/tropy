@@ -67,6 +67,7 @@ ja:
     photo: 写真
     notes: ノート
     note: ノート {idx, number}
+    tags: タグ
   about:
     version: バージョン {version}
     rrchnm:

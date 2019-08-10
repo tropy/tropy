@@ -67,6 +67,7 @@ de:
     photo: Foto
     notes: Notizen
     note: Notiz {idx, number}
+    tags: Tags
   about:
     version: Version {version}
     rrchnm:
