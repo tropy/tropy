@@ -20,7 +20,7 @@
     line-height: 19px;
     position: relative;
 
-    > span {
+    .text-container {
       mix-blend-mode: if($theme == "light", multiply, inherit);
       padding: 9px 0;
     }
