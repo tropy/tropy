@@ -94,12 +94,8 @@
     color: $item-count-color;
     white-space: nowrap;
     padding: 0 $space-md;
+    @include css-truncation;
     min-width: 0; // Fix truncation
-
-    span {
-      display: block;
-      @include css-truncation;
-    }
   }
 
   .no-items {

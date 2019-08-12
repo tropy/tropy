@@ -38,11 +38,9 @@ const ProjectToolbar = (props) => (
     </Toolbar.Left>
     <Toolbar.Center>
       <div className="item-count">
-        <span>
-          <FormattedMessage
-            id="toolbar.items"
-            values={{ count: props.count }}/>
-        </span>
+        <FormattedMessage
+          id="toolbar.items"
+          values={{ count: props.count }}/>
       </div>
     </Toolbar.Center>
     <Toolbar.Right>

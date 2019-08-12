@@ -278,18 +278,19 @@ class Toggle extends React.PureComponent {
   render() {
     return (
       <div className={cx(...this.classes)}>
-        <label>
-          <input
-            ref={this.setInput}
-            name={this.props.name}
-            type={this.props.type}
-            value={this.props.value}
-            checked={!!this.props.value}
-            disabled={this.props.isDisabled}
-            tabIndex={this.props.tabIndex}
-            onBlur={this.handleBlur}
-            onFocus={this.props.onFocus}
-            onChange={this.handleChange}/>
+        <input
+          id={this.props.id}
+          ref={this.setInput}
+          name={this.props.name}
+          type={this.props.type}
+          value={this.props.value}
+          checked={!!this.props.value}
+          disabled={this.props.isDisabled}
+          tabIndex={this.props.tabIndex}
+          onBlur={this.handleBlur}
+          onFocus={this.props.onFocus}
+          onChange={this.handleChange}/>
+        <label htmlFor={this.props.id}>
           {this.label}
         </label>
       </div>

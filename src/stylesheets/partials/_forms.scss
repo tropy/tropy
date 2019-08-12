@@ -118,6 +118,7 @@ fieldset {
 .checkbox,
 .radio {
   display: flex;
+  padding-right: $padding-base-horizontal;
 
   &:first-child {
     padding-top: ($input-height-base - $line-height-computed) / 2;
@@ -125,12 +126,6 @@ fieldset {
 
   &:last-child {
     padding-bottom: ($input-height-base - $line-height-computed) / 2;
-  }
-
-  label {
-    flex: 1 1 auto;
-    display: flex;
-    padding-right: $padding-base-horizontal;
   }
 
   [type] {
@@ -154,7 +149,7 @@ fieldset {
       border-color: $input-border;
 
       // Soften labels of disabled checkboxes/radios
-      & + span {
+      & + label {
         opacity: 0.5;
       }
     }

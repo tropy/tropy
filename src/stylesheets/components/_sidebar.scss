@@ -146,10 +146,6 @@
       flex: 1 100000000 auto;
       display: flex;
       min-width: 0; // Fix truncation
-
-      span {
-        @include css-truncation;
-      }
     }
   }
 
