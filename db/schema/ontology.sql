@@ -907,7 +907,7 @@ INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/relation','ja','関�
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/rights','de','Rechteverwaltung');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/rights','en','Rights');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/rights','fr','Droits');
-INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/rights','it','Gestione dei diritti');
+INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/rights','it','Diritti');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/rights','ja','権利管理');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/source','de','Quelle');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/source','en','Source');
@@ -917,7 +917,7 @@ INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/source','ja','出処'
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/subject','de','Thema');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/subject','en','Subject');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/subject','fr','Sujet');
-INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/subject','it','Soggetto e parole chiavi');
+INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/subject','it','Soggetto e parole chiave');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/subject','ja','キーワード');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/title','de','Titel');
 INSERT INTO labels VALUES('http://purl.org/dc/elements/1.1/title','en','Title');
@@ -1102,7 +1102,7 @@ INSERT INTO labels VALUES('http://purl.org/dc/terms/isPartOf','ja','部分であ
 INSERT INTO labels VALUES('http://purl.org/dc/terms/isReferencedBy','de','Wird referenziert von');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/isReferencedBy','en','Is Referenced By');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/isReferencedBy','fr','Est référencé par');
-INSERT INTO labels VALUES('http://purl.org/dc/terms/isReferencedBy','it','È riferota da');
+INSERT INTO labels VALUES('http://purl.org/dc/terms/isReferencedBy','it','È citata da');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/isReferencedBy','ja','参照されている');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/isReplacedBy','de','Wird ersetzt durch');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/isReplacedBy','en','Is Replaced By');
@@ -1182,7 +1182,7 @@ INSERT INTO labels VALUES('http://purl.org/dc/terms/requires','ja','必要とす
 INSERT INTO labels VALUES('http://purl.org/dc/terms/rights','de','Rechteverwaltung');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/rights','en','Rights');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/rights','fr','Droits');
-INSERT INTO labels VALUES('http://purl.org/dc/terms/rights','it','Gestione dei diritti');
+INSERT INTO labels VALUES('http://purl.org/dc/terms/rights','it','Diritti');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/rights','ja','権利管理');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/rightsHolder','de','Rechteinhaber/in');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/rightsHolder','en','Rights Holder');
@@ -1202,7 +1202,7 @@ INSERT INTO labels VALUES('http://purl.org/dc/terms/spatial','ja','空間的範�
 INSERT INTO labels VALUES('http://purl.org/dc/terms/subject','de','Thema');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/subject','en','Subject');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/subject','fr','Sujet');
-INSERT INTO labels VALUES('http://purl.org/dc/terms/subject','it','Soggetto e parole chiavi');
+INSERT INTO labels VALUES('http://purl.org/dc/terms/subject','it','Soggetto e parole chiave');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/subject','ja','キーワード');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/tableOfContents','de','Inhaltsverzeichnis');
 INSERT INTO labels VALUES('http://purl.org/dc/terms/tableOfContents','en','Table Of Contents');
@@ -1696,7 +1696,7 @@ INSERT INTO labels VALUES('https://tropy.org/v1/tropy#angle','en','Angle');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#box','de','Karton');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#box','en','Box');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#box','fr','Carton');
-INSERT INTO labels VALUES('https://tropy.org/v1/tropy#box','it','Riquardo');
+INSERT INTO labels VALUES('https://tropy.org/v1/tropy#box','it','Scatolone');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#box','ja','ボックス');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#brightness','en','Brightness');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#checksum','en','Checksum');
