@@ -1,16 +1,15 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
-const { bool, func, string } = require('prop-types')
-const { FormattedMessage, intlShape, injectIntl } = require('react-intl')
+const { bool, func, object, string } = require('prop-types')
+const { FormattedMessage, injectIntl } = require('react-intl')
 const { Step } = require('../steps')
 const { Button } = require('../button')
 const { FormElement, FormGroup } = require('../form')
 const cx = require('classnames')
 
 
-const ProjectName = injectIntl(class extends Component {
+const ProjectName = injectIntl(class extends React.Component {
   get isBlank() {
     return !this.props.value
   }
@@ -54,7 +53,7 @@ const ProjectName = injectIntl(class extends Component {
   }
 
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: object.isRequired,
     onChange: func.isRequired,
     onCommit: func.isRequired,
     value: string.isRequired

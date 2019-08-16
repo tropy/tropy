@@ -1,8 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { bool, func } = require('prop-types')
-const { injectIntl, intlShape } = require('react-intl')
+const { bool, func, object } = require('prop-types')
+const { injectIntl } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { Input } = require('../input')
 const { ensure } = require('../../dom')
@@ -58,7 +58,7 @@ class LinkContext extends React.PureComponent {
     onBlur: func.isRequired,
     onCancel: func.isRequired,
     onCommit: func.isRequired,
-    intl: intlShape.isRequired
+    intl: object.isRequired
   }
 
   static defaultProps = {

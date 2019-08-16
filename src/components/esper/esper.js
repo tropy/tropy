@@ -94,7 +94,7 @@ class Esper extends React.PureComponent {
     }
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     if (!shallow(props, this.props)) {
       const state = this.getStateFromProps(props)
 

@@ -31,7 +31,7 @@ class PhotoIterator extends Iterator {
     off(document, 'global:prev-photo', this.handlePrevPhoto)
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     if (this.props.size !== props.size ||
       this.props.photos !== props.photos ||
       this.props.expanded !== props.expanded) {

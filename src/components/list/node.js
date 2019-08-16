@@ -21,43 +21,37 @@ const {
 const { INDENT, PADDING } = SASS.LIST
 
 
-class NewListNode extends React.Component {
-  handleChange = (name) => {
-    this.props.onSave({ parent: this.props.parent, name })
-  }
+const NewListNode = (props) => (
+  <li className="list-node">
+    <div className="list new-list list-node-container">
+      <div className="icon-truncate">
+        <IconFolder/>
+      </div>
+      <div className="name">
+        <Editable
+          isActive
+          isRequired
+          resize
+          value={props.name}
+          onCancel={props.onCancel}
+          onChange={(name) =>
+            props.onSave({ parent: props.parent, name })
+          }/>
+      </div>
+    </div>
+  </li>
+)
 
-  render() {
-    return (
-      <li className="list-node">
-        <div className="list new-list list-node-container">
-          <div className="icon-truncate">
-            <IconFolder/>
-          </div>
-          <div className="name">
-            <Editable
-              isActive
-              isRequired
-              resize
-              value={this.props.name}
-              onCancel={this.props.onCancel}
-              onChange={this.handleChange}/>
-          </div>
-        </div>
-      </li>
-    )
-  }
+NewListNode.propTypes = {
+  parent: number.isRequired,
+  name: string.isRequired,
+  onCancel: func.isRequired,
+  onSave: func.isRequired
+}
 
-  static propTypes = {
-    parent: number.isRequired,
-    name: string.isRequired,
-    onCancel: func.isRequired,
-    onSave: func.isRequired
-  }
-
-  static defaultProps = {
-    name: '',
-    parent: LIST.ROOT
-  }
+NewListNode.defaultProps = {
+  name: '',
+  parent: LIST.ROOT
 }
 
 
@@ -67,13 +61,15 @@ class ListNode extends React.PureComponent {
     offset: null
   }
 
-  componentDidMount() {
-    this.props.connectDragPreview(getEmptyImage())
+  constructor(props) {
+    super(props)
+
+    this.isHalloween = props.isHalloween &&
+      Math.round(Math.random() * props.depth) > (props.depth * 0.666)
   }
 
-  componentWillMount() {
-    this.isHalloween = this.props.isHalloween &&
-      Math.round(Math.random() * this.props.depth) > (this.props.depth * 0.666)
+  componentDidMount() {
+    this.props.connectDragPreview(getEmptyImage())
   }
 
   get classes() {

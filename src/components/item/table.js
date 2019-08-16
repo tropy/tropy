@@ -60,8 +60,8 @@ class ItemTable extends ItemIterator {
     }
   }
 
-  componentWillReceiveProps(props, ...args) {
-    super.componentWillReceiveProps(props, ...args)
+  UNSAFE_componentWillReceiveProps(props, ...args) {
+    super.UNSAFE_componentWillReceiveProps(props, ...args)
     if (!shallow(this.props, props, ['columns', 'list'])) {
       this.setState({
         ...this.getColumnState(props),

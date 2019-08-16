@@ -1,9 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { injectIntl, intlShape } = require('react-intl')
-const { bool, func, string } = require('prop-types')
+const { injectIntl } = require('react-intl')
+const { bool, func, object, string } = require('prop-types')
 const { IconSearch, IconXSmall } = require('../icons')
 const { Button } = require('../button')
 const { Input } = require('../input')
@@ -12,7 +11,7 @@ const { blank } = require('../../common/util')
 const debounce = require('lodash.debounce')
 
 
-class SearchField extends PureComponent {
+class SearchField extends React.PureComponent {
   get placeholder() {
     return this.props.intl.formatMessage({ id: 'toolbar.search.placeholder' })
   }
@@ -55,7 +54,7 @@ class SearchField extends PureComponent {
   }
 
   static propTypes = {
-    intl: intlShape,
+    intl: object,
     isDisabled: bool,
     query: string.isRequired,
     onSearch: func.isRequired

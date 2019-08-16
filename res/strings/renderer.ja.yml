@@ -67,6 +67,7 @@ ja:
     photo: 写真
     notes: ノート
     note: ノート {idx, number}
+    tags: タグ
   about:
     version: バージョン {version}
     rrchnm:
@@ -118,6 +119,7 @@ ja:
           de: Deutsch
           en: English
           fr: Français
+          it: Italiano
           ja: 日本語
       templates:
         label: デフォルトテンプレート

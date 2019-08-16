@@ -52,6 +52,7 @@ en:
     photo: Photo
     notes: Notes
     note: Note {idx, number}
+    tags: Tags
   about:
       version: Version {version}
       rrchnm:
@@ -114,6 +115,7 @@ en:
           de: Deutsch
           en: English
           fr: Français
+          it: Italiano
           ja: 日本語
       templates:
         label: Default templates

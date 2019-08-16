@@ -4,11 +4,12 @@ const React = require('react')
 const { FormattedMessage } = require('react-intl')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
-const { blank, last, shallow } = require('../common/util')
+const { last } = require('../common/util')
 const { translate } = require('../common/math')
 const { bounds, viewport } = require('../dom')
 const collate = require('../collate')
 const cx = require('classnames')
+const memoize = require('memoize-one')
 
 const {
   array, arrayOf, bool, func, instanceOf, number, oneOfType, string
@@ -41,16 +42,71 @@ Highlight.propTypes = {
 
 
 class Completions extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = this.getStateFromProps(props)
+  state = {
+    options: [],
+    active: null
   }
 
-  componentWillReceiveProps(props) {
-    if (!shallow(props, this.props)) {
-      this.setState(this.getStateFromProps(props))
+  static getDerivedStateFromProps(props, state) {
+    let query = props.query.trim().toLowerCase()
+
+    let options = Completions.filter(
+      props.completions,
+      query,
+      props.selection,
+      props.isExactMatchHidden,
+      props.isSelectionHidden,
+      props.match,
+      props.toId,
+      props.toText)
+
+    let active = (state.options === options) ?
+      state.active :
+      (!query.length && !props.isSelectionHidden) ?
+        last(props.selection) : null
+
+    if (!active && !props.isAdvisory && options.length > 0) {
+      active = options[0].id
     }
+
+    return { active, options }
   }
+
+  static filter = memoize(
+    (
+      completions,
+      query,
+      selection,
+      isExactMatchHidden,
+      isSelectionHidden,
+      match,
+      toId,
+      toText
+    ) => {
+      let options = []
+
+      options.idx = {}
+
+      completions.forEach((value, idx) => {
+        let id = toId(value)
+        let isSelected = selection.includes(id)
+        let isHidden = (isSelectionHidden && isSelected) ||
+          (isExactMatchHidden && id === query)
+
+        if (!isHidden) {
+          let m = !query.length || match(value, query)
+          if (m != null && m !== false) {
+            options.idx[id] = options.length
+            options.push({
+              id, idx, value, text: toText(value, { isSelected, matchData: m })
+            })
+          }
+        }
+      })
+
+      return options
+    }
+  )
 
   componentDidUpdate(_, state) {
     if (state.options.length !== this.state.options.length) {
@@ -60,47 +116,6 @@ class Completions extends React.Component {
         })
       }
     }
-  }
-
-  getStateFromProps({
-    completions,
-    isAdvisory,
-    isExactMatchHidden,
-    isSelectionHidden,
-    match,
-    query,
-    selection,
-    toId,
-    toText
-  } = this.props) {
-    let q = query.trim().toLowerCase()
-    let matchAll = blank(q)
-    let options = []
-    let active = (matchAll && !isSelectionHidden) ? last(selection) : null
-    options.idx = {}
-
-    completions.forEach((value, idx) => {
-      let id = toId(value)
-      let isSelected = selection.includes(id)
-      let isHidden = (isSelectionHidden && isSelected) ||
-        (isExactMatchHidden && id === query)
-
-      if (!isHidden) {
-        let m = matchAll || match(value, q)
-        if (m != null && m !== false) {
-          options.idx[id] = options.length
-          options.push({
-            id, idx, value, text: toText(value, { isSelected, matchData: m })
-          })
-        }
-      }
-    })
-
-    if (!active && !isAdvisory && options.length > 0) {
-      active = options[0].id
-    }
-
-    return { active, options }
   }
 
   getPopupBounds() {

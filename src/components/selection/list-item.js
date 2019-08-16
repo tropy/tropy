@@ -4,7 +4,7 @@
 const React = require('react')
 const { SelectionIterable } = require('./iterable')
 const { Editable } = require('../editable')
-const { injectIntl, intlShape } = require('react-intl')
+const { injectIntl } = require('react-intl')
 const { createClickHandler } = require('../util')
 const { testFocusChange } = require('../../dom')
 const cx = require('classnames')
@@ -91,7 +91,7 @@ class SelectionListItem extends SelectionIterable {
 
   static propTypes = {
     ...SelectionIterable.propTypes,
-    intl: intlShape.isRequired,
+    intl: object.isRequired,
     title: string.isRequired,
     data: object.isRequired,
     isEditing: bool.isRequired,

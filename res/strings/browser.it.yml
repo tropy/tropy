@@ -1,0 +1,35 @@
+it:
+  dialog:
+    file:
+      project: Progetti Tropy
+      plugin: Estensioni per Tropy
+    crashed:
+      buttons:
+      - Chiudi finestra
+      - Riavvia Tropy
+      - Mostra i log
+      message: Tropy si è bloccato
+      detail: >
+          Putroppo, questa finestra di Tropy si è bloccata. Puoi aiutare segnalando
+          questo problema su https://github.com/tropy/tropy
+    unresponsive:
+      buttons:
+      - Chiudi finestra
+      - Continua ad aspettare
+      message: Tropy non risponde
+      detail: >
+          Questa finestra di Tropy non risponde. Vuoi chiuderla o preferisci continuare
+          ad aspettare?
+    unhandled:
+      buttons:
+      - Abbandona
+      - Copia l'errore
+      - Mostra i log
+      message: Errore non gestito
+  window:
+    prefs:
+      title: Preferenze di Tropy
+    wizard:
+      title: Benvenuti in Tropy
+    about:
+      title: Informazioni su Tropy
