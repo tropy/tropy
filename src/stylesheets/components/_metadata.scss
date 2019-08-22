@@ -44,14 +44,6 @@ $default-padding-horizontal: 12px !default;
     }
 
     &.mixed {
-      color: $metadata-field-mixed-color;
-      background-image:
-        if(
-          $theme == "light",
-          icon-url("project/icon-chevron7-mixed-light-theme.svg"),
-          icon-url("project/icon-chevron7-mixed-dark-theme.svg")
-        );
-
       .value {
         &::after {
           content: "+";
