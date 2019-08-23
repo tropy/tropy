@@ -4,9 +4,10 @@ const React = require('react')
 const { Completions } = require('./completions')
 const { IconXSmall, IconXMedium } = require('./icons')
 const { Button } = require('./button')
-const { blank, last, noop, shallow } = require('../common/util')
+const { blank, last, noop } = require('../common/util')
 const { on, off } = require('../dom')
 const cx = require('classnames')
+const memoize = require('memoize-one')
 const {
   array, arrayOf, bool, func, object, oneOfType, node, number, string
 } = require('prop-types')
@@ -42,26 +43,15 @@ class Value extends React.Component {
 }
 
 class Select extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = this.getStateFromProps(props)
+  state = {
+    query: '',
+    selection: [],
+    values: []
   }
 
   componentDidUpdate(_, state) {
     if (this.state.isInvalid  !== state.Invalid) {
       this.props.onValidate(!this.state.isInvalid)
-    }
-  }
-
-  componentWillReceiveProps(props) {
-    if (!shallow(this.props, props, [
-      'isDisabled',
-      'isRequired',
-      'isStatic',
-      'options',
-      'value'
-    ])) {
-      this.setState(this.getStateFromProps(props))
     }
   }
 
@@ -71,54 +61,32 @@ class Select extends React.Component {
     }
   }
 
-  getStateFromProps({
-    isDisabled,
+  static getDerivedStateFromProps({
     isRequired,
-    isStatic: isOpen,
     options,
     toId,
     value
-  } = this.props) {
-    let isBlank = blank(value)
-    let isMulti = Array.isArray(value)
-    let isInvalid = false
-    let values = []
-    let selection = isMulti ? value : isBlank ? [] : [value]
+  }) {
+    return getDerivedState(value, options, isRequired, toId)
+  }
 
-    if (!isBlank) {
-      for (let id of selection) {
-        let v = options.find(opt => toId(opt) === id)
-        if (v != null) {
-          values.push(v)
-        } else {
-          values.push(id)
-          isInvalid = true
-        }
-      }
-    }
+  get isOpen() {
+    return this.state.isOpen || this.props.isStatic
+  }
 
-    return {
-      canClearValue: !isBlank && (!isRequired || isMulti && values.length > 1),
-      isBlank,
-      isDisabled: isDisabled || options.length === 0,
-      isInvalid,
-      isMulti,
-      isOpen,
-      query: '',
-      selection,
-      values
-    }
+  get isDisabled() {
+    return this.props.isDisabled || this.props.options.length === 0
   }
 
   get classes() {
     return ['select', this.props.className, {
       'can-clear': !this.props.hideClearButton && this.state.canClearValue,
-      'disabled': this.state.isDisabled,
+      'disabled': this.isDisabled,
       'focus': this.state.hasFocus,
       'has-icon': this.props.icon != null,
-      'invalid': !this.state.isDisabled && this.state.isInvalid,
+      'invalid': !this.isDisabled && this.state.isInvalid,
       'multi': this.state.isMulti,
-      'open': this.state.isOpen,
+      'open': this.isOpen,
       'single': !this.state.isMulti,
       'static': this.props.isStatic,
       'tab-focus': this.state.hasTabFocus,
@@ -141,7 +109,7 @@ class Select extends React.Component {
   }
 
   close = () => {
-    this.setState({ isOpen: this.props.isStatic, query: '' })
+    this.setState({ isOpen: false, query: '' })
     this.props.onClose()
   }
 
@@ -163,7 +131,7 @@ class Select extends React.Component {
   }
 
   open() {
-    if (!this.state.isDisabled) {
+    if (!this.isDisabled) {
       this.shouldPopupFadeIn = !this.state.hasFocus
       this.setState({ isOpen: true })
       this.props.onOpen()
@@ -183,9 +151,8 @@ class Select extends React.Component {
     this.props.onChange(value, hasChanged)
   }
 
-
   handleContextMenu = (event) => {
-    if (this.state.isOpen) {
+    if (this.isOpen) {
       event.stopPropagation()
     }
   }
@@ -245,7 +212,7 @@ class Select extends React.Component {
 
   handleMouseDown = (event) => {
     if (event.button === 0 && !this.props.isStatic) {
-      if (!this.state.isOpen) this.open()
+      if (!this.isOpen) this.open()
       else if (this.state.query.length === 0) this.close()
     }
     if (this.input != null) {
@@ -325,8 +292,8 @@ class Select extends React.Component {
     let { isInputHidden } = this
     return (
       <input
-        className={cx('query', { live: this.state.isOpen && !isInputHidden })}
-        disabled={this.state.isDisabled}
+        className={cx('query', { live: this.isOpen && !isInputHidden })}
+        disabled={this.isDisabled}
         id={this.props.id}
         onBlur={this.handleBlur}
         onChange={isInputHidden ? null : this.handleQueryChange}
@@ -352,7 +319,7 @@ class Select extends React.Component {
 
   renderCompletions() {
     try {
-      return this.state.isOpen && (
+      return this.isOpen && (
         <Completions
           className={cx(this.props.className, {
             'invalid': this.state.isInvalid,
@@ -453,6 +420,36 @@ class Select extends React.Component {
     toText: Completions.defaultProps.toText
   }
 }
+
+const getDerivedState = memoize((value, options, isRequired, toId) => {
+  let isBlank = blank(value)
+  let isMulti = Array.isArray(value)
+  let isInvalid = false
+  let values = []
+  let selection = isMulti ? value : isBlank ? [] : [value]
+
+  if (!isBlank) {
+    for (let id of selection) {
+      let v = options.find(opt => toId(opt) === id)
+      if (v != null) {
+        values.push(v)
+      } else {
+        values.push(id)
+        isInvalid = true
+      }
+    }
+  }
+
+  return {
+    canClearValue: !isBlank && (!isRequired || isMulti && values.length > 1),
+    isBlank,
+    isInvalid,
+    isMulti,
+    selection,
+    values
+  }
+})
+
 
 module.exports = {
   Select

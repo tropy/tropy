@@ -5,6 +5,8 @@ const { Ontology, Template } = require('../../../lib/common/ontology')
 const mod = require('../../../lib/models/ontology')
 const { join } = require('path')
 
+const created = '2019-03-02 21:01:44'
+
 module.exports = {
   async up(tx) {
     const files = [
@@ -33,7 +35,7 @@ module.exports = {
       assert(type != null, 'missing template type')
 
       await mod.template.create(tx, {
-        id, type, name, version, creator, description, isProtected
+        id, type, name, version, created, creator, description, isProtected
       })
 
       if (fields != null && fields.length > 0) {

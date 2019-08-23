@@ -131,10 +131,8 @@
       &:first-child {
         margin-right: $space-xs;
       }
-    }
 
-    .project-name {
-      .icon:last-child {
+      @include variant(".name + .icon") {
         margin-left: $space-xs;
       }
     }
@@ -148,10 +146,6 @@
       flex: 1 100000000 auto;
       display: flex;
       min-width: 0; // Fix truncation
-
-      span {
-        @include css-truncation;
-      }
     }
   }
 

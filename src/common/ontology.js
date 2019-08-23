@@ -19,7 +19,7 @@ class Template {
     name: '',
     creator: '',
     description: '',
-    created: null,
+    created: undefined,
     isProtected: false,
     fields: []
   }
@@ -39,7 +39,7 @@ class Template {
   static copy(template, mapField = Field.copy) {
     return {
       ...pick(template, Template.keys),
-      created: null,
+      created: undefined,
       isProtected: false,
       fields: template.fields.map(mapField)
     }

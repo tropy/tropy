@@ -2,7 +2,8 @@
 
 const { Ontology } = require('../../../lib/common/ontology')
 const mod = require('../../../lib/models/ontology')
-const { assign } = Object
+
+const created = '2019-03-02 21:01:44'
 
 module.exports = {
   async up(tx) {
@@ -22,7 +23,7 @@ module.exports = {
       let data = (await Ontology.open(file, false)).toJSON()
 
       for (let id in data) {
-        await mod.vocab.create(tx, assign(data[id], { isProtected }))
+        await mod.vocab.create(tx, { ...data[id], isProtected, created })
 
         await Promise.all([
           mod.props.create(tx, ...data[id].properties),

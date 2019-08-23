@@ -67,6 +67,7 @@ fr:
     photo: Photo
     notes: Les notes
     note: Note {idx, number}
+    tags: Tags
   about:
     version: Version {version}
     rrchnm:
@@ -129,6 +130,7 @@ fr:
           de: Deutsch
           en: English
           fr: Français
+          it: Italiano
           ja: 日本語
       templates:
         label: Modèles de saisie par défaut

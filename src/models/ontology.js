@@ -77,6 +77,7 @@ const ontology = {
       title,
       description,
       comment,
+      created = (new Date).toISOString(),
       seeAlso,
       isProtected
     }) {
@@ -99,9 +100,17 @@ const ontology = {
           title,
           description,
           comment,
+          created,
           see_also,
-          protected) VALUES (?, ?, ?, ?, ?, ?, ?)`, [
-            id, prefix, title, description, comment, seeAlso, !!isProtected
+          protected) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [
+            id,
+            prefix,
+            title,
+            description,
+            comment,
+            created,
+            seeAlso,
+            !!isProtected
           ]
       )
     },
@@ -376,6 +385,7 @@ const ontology = {
       type,
       name,
       version,
+      created = (new Date).toISOString(),
       creator,
       description,
       isProtected
@@ -391,11 +401,21 @@ const ontology = {
             template_type,
             name,
             version,
+            created,
+            modified,
             creator,
             description,
             protected)
-          VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [id, type, name, version, creator, description, !!isProtected]
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [
+            id,
+            type,
+            name,
+            version,
+            created,
+            created,
+            creator,
+            description,
+            !!isProtected]
       )
     },
 

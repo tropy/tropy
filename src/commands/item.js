@@ -99,7 +99,7 @@ class Import extends ImportCommand {
 
             if (list) {
               await mod.list.items.add(tx, list, [item.id])
-              // item.lists.push(list)
+              item.lists.push(list)
             }
 
             item.photos.push(photo.id)

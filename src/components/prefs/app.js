@@ -278,7 +278,7 @@ class AppPrefs extends React.PureComponent {
   static defaultProps = {
     themes: ['light', 'dark'],
     layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
-    locales: ['de', 'en', 'fr', 'ja'],
+    locales: ['de', 'en', 'fr', 'it', 'ja'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL],
     printModes: ['item', 'photo', 'selection']

@@ -1,11 +1,20 @@
 'use strict'
 
 const React = require('react')
-const { injectIntl, intlShape } = require('react-intl')
+const { injectIntl } = require('react-intl')
 const { Input } = require('../input')
 const { blank, noop } = require('../../common/util')
-const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 const collate = require('../../collate')
+
+const {
+  arrayOf,
+  bool,
+  func,
+  number,
+  object,
+  shape,
+  string
+} = require('prop-types')
 
 
 class TagAdder extends React.PureComponent {
@@ -74,7 +83,7 @@ class TagAdder extends React.PureComponent {
   static propTypes = {
     count: number.isRequired,
     completions: arrayOf(string).isRequired,
-    intl: intlShape.isRequired,
+    intl: object.isRequired,
     isDisabled: bool,
     match: func.isRequired,
     tags: arrayOf(shape({
@@ -98,5 +107,5 @@ class TagAdder extends React.PureComponent {
 }
 
 module.exports = {
-  TagAdder: injectIntl(TagAdder, { withRef: true })
+  TagAdder: injectIntl(TagAdder, { forwardRef: true })
 }

@@ -22,9 +22,11 @@ class FlashMessage extends PureComponent {
   render() {
     return (
       <li className="flash-message">
-        <FormattedMessage
-          id={`flash.${this.props.id}.message`}
-          values={this.props.values}/>
+        <span className="text-container">
+          <FormattedMessage
+            id={`flash.${this.props.id}.message`}
+            values={this.props.values}/>
+        </span>
 
         <button className="btn btn-primary" onClick={this.handleConfirm}>
           <FormattedMessage id={`flash.${this.props.id}.confirm`}/>

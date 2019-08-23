@@ -55,27 +55,29 @@ class ProjectContainer extends React.Component {
     on(document, 'global:back', this.handleBackButton)
   }
 
-  componentWillUnmount() {
-    this.projectWillChange.cancel()
-    off(document, 'keydown', this.handleKeyDown)
-    off(document, 'global:back', this.handleBackButton)
-  }
-
-  componentWillReceiveProps({ nav, project, ui }) {
+  componentDidUpdate({ project, nav, ui }) {
     if (nav.mode !== this.props.nav.mode) {
       this.modeWillChange()
     }
 
-    if (this.props.ui.panel !== ui.panel) {
-      this.setState({ offset: ui.panel.width })
+    if (ui.panel !== this.props.ui.panel) {
+      this.setState({
+        offset: this.props.ui.panel.width
+      })
     }
 
     if (project !== this.props.project) {
-      this.projectWillChange(project)
+      this.projectWillChange(this.props.project)
       if (this.state.isProjectClosed) {
         this.projectWillChange.flush()
       }
     }
+  }
+
+  componentWillUnmount() {
+    this.projectWillChange.cancel()
+    off(document, 'keydown', this.handleKeyDown)
+    off(document, 'global:back', this.handleBackButton)
   }
 
   get classes() {

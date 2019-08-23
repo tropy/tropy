@@ -18,6 +18,8 @@ const {
 
 
 class TagPanel extends React.PureComponent {
+  adder = React.createRef()
+
   getTaggedIds(tag, invert = false) {
     return this.props.items.reduce((ids, item) => {
       if (item.tags.includes(tag.id) !== invert) {
@@ -28,12 +30,8 @@ class TagPanel extends React.PureComponent {
     }, [])
   }
 
-  setAdder = (adder) => {
-    this.adder = (adder == null) ? null : adder.getWrappedInstance()
-  }
-
   next = () => {
-    this.adder.focus()
+    this.adder.current.focus()
   }
 
   prev = () => {
@@ -82,7 +80,7 @@ class TagPanel extends React.PureComponent {
           onContextMenu={this.handleContextMenu}
           onRemove={this.handleTagRemove}/>
         <TagAdder
-          ref={this.setAdder}
+          ref={this.adder}
           isDisabled={this.props.isDisabled}
           completions={this.props.completions}
           count={this.props.items.length}

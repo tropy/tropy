@@ -21,7 +21,8 @@ const getPhotoExpanded = (photo, metadata, notes, notepad, ontology) => (
   }
 )
 
-const getItemExpanded = (item, photos, metadata, notes, notepad, ontology) => (
+const getItemExpanded =
+  (item, photos, metadata, notes, notepad, tags, ontology) => (
   (item == null) ? null : {
     ...item,
     data: getMetadataFields(null, {
@@ -31,7 +32,8 @@ const getItemExpanded = (item, photos, metadata, notes, notepad, ontology) => (
       template: ontology.template[item.template]
     }),
     photos: item.photos.map(id =>
-      getPhotoExpanded(photos[id], metadata, notes, notepad, ontology))
+      getPhotoExpanded(photos[id], metadata, notes, notepad, ontology)),
+    tags: item.tags.map(t => tags[t].name)
   }
 )
 
@@ -42,10 +44,17 @@ const getPrintableItems = memo(
   ({ metadata }) => metadata,
   ({ notes }) => notes,
   ({ notepad }) => notepad,
+  ({ tags }) => tags,
   ({ ontology }) => ontology,
-  (ids, items, photos, metadata, notes, notepad, ontology) =>
+  (ids, items, photos, metadata, notes, notepad, tags, ontology) =>
   ids.map(id =>
-    getItemExpanded(items[id], photos, metadata, notes, notepad, ontology))
+    getItemExpanded(items[id],
+      photos,
+      metadata,
+      notes,
+      notepad,
+      tags,
+      ontology))
 )
 
 module.exports = {
