@@ -2,11 +2,12 @@
 
 const React = require('react')
 const { Editable } = require('../editable')
+const { DragSource, DropTarget } = require('react-dnd')
 const { FormattedMessage } = require('react-intl')
 const { blank, noop, pluck, URI } = require('../../common/util')
 const { IconLock, IconWarningSm } = require('../icons')
 const cx = require('classnames')
-const { TYPE } = require('../../constants')
+const { TYPE, DND } = require('../../constants')
 const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
 const { bool, func, number, oneOfType, shape, string } = require('prop-types')
@@ -78,11 +79,16 @@ class MetadataField extends React.PureComponent {
     }
   }
 
+  connect(element) {
+    element = this.props.ds(element)
+    element = this.props.dt(element)
+    return element
+  }
 
   render() {
     let { classes, details, label, isInvalid } = this
 
-    return (
+    return this.connect(
       <li
         className={cx(classes)}
         onContextMenu={this.handleContextMenu}>
@@ -105,10 +111,10 @@ class MetadataField extends React.PureComponent {
     )
   }
 
-
   static propTypes = {
     isEditing: bool,
     isDisabled: bool,
+    isDragging: bool,
     isExtra: bool.isRequired,
     isMixed: bool,
     isRequired: bool,
@@ -126,6 +132,10 @@ class MetadataField extends React.PureComponent {
     placeholder: string,
     text: string,
     type: string.isRequired,
+
+    ds: func.isRequired,
+    dp: func.isRequired,
+    dt: func.isRequired,
 
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
@@ -174,7 +184,45 @@ class StaticField extends React.PureComponent {
 }
 
 
-module.exports = {
-  MetadataField,
-  StaticField
+
+
+const DragSourceSpec = {
+  beginDrag({ property, isMixed  }) {
+    console.log('!!! beginDrag', property, isMixed)
+    return {
+      ...property
+    }
+  }
+
+
 }
+
+const DragSourceCollect = (connect, monitor) => ({
+  ds: connect.dragSource(),
+  dp: connect.dragPreview(),
+  isDragging: monitor.isDragging()
+})
+
+const DropTargetSpec = {
+  // hover({ property }, monitor, component) {
+  //   let offset = null
+  //   component.setState({ offset })
+  // },
+
+  drop({ property }, monitor, component) {
+    console.log('!!! DROP', property)
+  }
+}
+
+const DropTargetCollect = (connect, monitor) => ({
+  dt: connect.dropTarget(),
+  isOver: monitor.isOver(),
+})
+
+
+
+module.exports.StaticField = StaticField
+
+module.exports.MetadataField = DragSource(
+      DND.FIELD, DragSourceSpec, DragSourceCollect
+    )(DropTarget(DND.FIELD, DropTargetSpec, DropTargetCollect)(MetadataField))
