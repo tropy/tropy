@@ -133,6 +133,7 @@ class MetadataField extends React.PureComponent {
     text: string,
     type: string.isRequired,
 
+    itemsSelected: number,
     ds: func.isRequired,
     dp: func.isRequired,
     dt: func.isRequired,
@@ -187,10 +188,12 @@ class StaticField extends React.PureComponent {
 
 
 const DragSourceSpec = {
-  beginDrag({ property, isMixed  }) {
-    console.log('!!! beginDrag', property, isMixed)
+  beginDrag({ property, isMixed, itemsSelected, text  }) {
     return {
-      ...property
+      ...property,
+      isMixed,
+      itemsSelected,
+      text
     }
   }
 

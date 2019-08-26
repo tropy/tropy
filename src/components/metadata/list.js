@@ -3,7 +3,8 @@
 const React = require('react')
 const { MetadataField } = require('./field')
 const { get } = require('../../common/util')
-const { arrayOf, bool, func, object, shape, string } =  require('prop-types')
+const { arrayOf, bool, func, object,
+  shape, string, number } =  require('prop-types')
 
 
 class MetadataList extends React.PureComponent {
@@ -95,6 +96,7 @@ class MetadataList extends React.PureComponent {
             isDisabled={this.props.isDisabled}
             isEditing={this.isEditing(property.id)}
             isMixed={!!value.mixed}
+            itemsSelected={this.props.itemsSelected}
             property={property}
             text={value.text}
             type={value.type || type}
@@ -112,6 +114,7 @@ class MetadataList extends React.PureComponent {
   static propTypes = {
     isDisabled: bool,
     edit: object,
+    itemsSelected: number,
     fields: arrayOf(shape({
       isExtra: bool.isRequired,
       isRequired: bool,
