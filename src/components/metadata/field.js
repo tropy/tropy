@@ -10,7 +10,9 @@ const cx = require('classnames')
 const { TYPE, DND } = require('../../constants')
 const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
+const { getEmptyImage } = require('react-dnd-electron-backend')
 const { bool, func, number, oneOfType, shape, string } = require('prop-types')
+
 
 
 class MetadataField extends React.PureComponent {
@@ -77,6 +79,10 @@ class MetadataField extends React.PureComponent {
       if (event.shiftKey) this.props.onPrev()
       else this.props.onNext()
     }
+  }
+
+  componentDidMount() {
+    this.props.dp(getEmptyImage())
   }
 
   connect(element) {
@@ -228,4 +234,6 @@ module.exports.StaticField = StaticField
 
 module.exports.MetadataField = DragSource(
       DND.FIELD, DragSourceSpec, DragSourceCollect
-    )(DropTarget(DND.FIELD, DropTargetSpec, DropTargetCollect)(MetadataField))
+    )(DropTarget(
+      DND.FIELD, DropTargetSpec, DropTargetCollect
+    )(MetadataField))
