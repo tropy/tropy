@@ -6,6 +6,7 @@ const { ItemDragPreview } = require('./item')
 const { PhotoDragPreview } = require('./photo')
 const { SelectionDragPreview } = require('./selection')
 const { ListDragPreview } = require('./list')
+const { FieldDragPreview } = require('./metadata')
 const { DND } = require('../constants')
 const { bool, number, object, shape, string } = require('prop-types')
 
@@ -66,6 +67,8 @@ class DragLayer extends React.Component {
         return <SelectionDragPreview {...props} items={[item]}/>
       case DND.LIST:
         return <ListDragPreview list={item}/>
+      case DND.FIELD:
+        return <FieldDragPreview {...props} items={[item]}/>
     }
   }
 
