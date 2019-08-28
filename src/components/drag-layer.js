@@ -68,7 +68,7 @@ class DragLayer extends React.Component {
       case DND.LIST:
         return <ListDragPreview list={item}/>
       case DND.FIELD:
-        return <FieldDragPreview {...props} items={[item]}/>
+        return <FieldDragPreview {...props} field={item}/>
     }
   }
 
