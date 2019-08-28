@@ -81,7 +81,7 @@ async function search(db, query, params) {
     items.push(id)
   })
 
-  return { items }
+  return { items: Object.freeze(items) }
 }
 
 
