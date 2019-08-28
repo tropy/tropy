@@ -7,13 +7,20 @@
   background: $badge-bg;
   font-size: 11px;
   text-align: center;
-  padding: 1px 6px 2px;
+  padding: 1px 6px;
   border-radius: 9px;
   min-width: 18px;
+  float: left; // Collapse for metadata drag-preview
 
   .drag-preview & {
     position: absolute;
     top: 100%;
     left: 100%;
+  }
+
+  .drag-preview.metadata-field + & {
+    position: absolute;
+    top: 11px;
+    left: 0;
   }
 }
