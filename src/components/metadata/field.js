@@ -11,7 +11,8 @@ const { TYPE, DND } = require('../../constants')
 const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
 const { getEmptyImage } = require('react-dnd-electron-backend')
-const { bool, func, number, oneOfType, shape, string } = require('prop-types')
+const { shapes } = require('../util')
+const { bool, func, number, oneOfType, shape, string, arrayOf } = require('prop-types')
 
 
 
@@ -94,12 +95,12 @@ class MetadataField extends React.PureComponent {
   render() {
     let { classes, details, label, isInvalid } = this
 
-    return this.connect(
+    return (
       <li
         className={cx(classes)}
         onContextMenu={this.handleContextMenu}>
         <label title={details.join('\n\n')}>{label}</label>
-        <div className="value" onClick={this.handleClick}>
+        {this.connect(<div className="value" onClick={this.handleClick}>
           <Editable
             value={this.props.text}
             getCompletions={getMetadataCompletions}
@@ -112,7 +113,7 @@ class MetadataField extends React.PureComponent {
             onKeyDown={this.handleKeyDown}/>
           {isInvalid && <IconWarningSm/>}
           {this.props.isReadOnly && <IconLock/>}
-        </div>
+        </div>)}
       </li>
     )
   }
@@ -139,7 +140,7 @@ class MetadataField extends React.PureComponent {
     text: string,
     type: string.isRequired,
 
-    itemsSelected: number,
+    itemsSelected: arrayOf(shapes.subject),
     ds: func.isRequired,
     dp: func.isRequired,
     dt: func.isRequired,
@@ -161,7 +162,7 @@ class MetadataField extends React.PureComponent {
 
 class StaticField extends React.PureComponent {
   get classes() {
-    return ['metadata-field', 'static', {
+    return ['metadata-field', 'static','over', {
       clickable: this.props.onClick != null
     }]
   }
@@ -195,6 +196,7 @@ class StaticField extends React.PureComponent {
 
 const DragSourceSpec = {
   beginDrag({ property, isMixed, itemsSelected, text  }) {
+    console.log('DRAG', property.id)
     return {
       ...property,
       isMixed,
@@ -219,7 +221,7 @@ const DropTargetSpec = {
   // },
 
   drop({ property }, monitor, component) {
-    console.log('!!! DROP', property)
+    console.log('!!! DROP', property.id)
   }
 }
 

@@ -196,7 +196,7 @@ class MetadataPanel extends React.PureComponent {
         <MetadataList
           ref={this.setItemFields}
           edit={this.props.edit}
-          itemsSelected={this.props.items.length}
+          itemsSelected={this.props.items}
           fields={this.props.fields.item}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
