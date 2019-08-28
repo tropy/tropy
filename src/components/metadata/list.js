@@ -3,7 +3,7 @@
 const React = require('react')
 const { MetadataField } = require('./field')
 const { get } = require('../../common/util')
-const { shapes } = require('../util')
+
 const { arrayOf, bool, func, object, shape, string } =  require('prop-types')
 
 
@@ -93,14 +93,15 @@ class MetadataList extends React.PureComponent {
         {this.props.fields.map(({ property, value, type, ...props }) =>
           <MetadataField {...props}
             key={property.id}
+            id={this.props.fields.id}
             isDisabled={this.props.isDisabled}
             isEditing={this.isEditing(property.id)}
             isMixed={!!value.mixed}
-            itemsSelected={this.props.itemsSelected}
             property={property}
             text={value.text}
             type={value.type || type}
             onContextMenu={this.props.onContextMenu}
+            onCopy={this.props.onCopy}
             onChange={this.handleChange}
             onEdit={this.edit}
             onEditCancel={this.props.onEditCancel}
@@ -114,7 +115,6 @@ class MetadataList extends React.PureComponent {
   static propTypes = {
     isDisabled: bool,
     edit: object,
-    itemsSelected: arrayOf(shapes.subject),
     fields: arrayOf(shape({
       isExtra: bool.isRequired,
       isRequired: bool,
@@ -127,6 +127,7 @@ class MetadataList extends React.PureComponent {
     onEdit: func,
     onEditCancel: func,
     onContextMenu: func,
+    onCopy: func.isRequired,
     onChange: func.isRequired
   }
 }

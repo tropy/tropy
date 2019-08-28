@@ -2,7 +2,14 @@
 
 const React = require('react')
 const cx = require('classnames')
-const { arrayOf, shape, string } = require('prop-types')
+
+const {
+  arrayOf,
+  number,
+  oneOfType,
+  shape,
+  string
+} = require('prop-types')
 
 
 class FieldDragPreview extends React.PureComponent {
@@ -15,11 +22,11 @@ class FieldDragPreview extends React.PureComponent {
     return (
       <div className={cx(this.classes)}>
         <div>
-          {item.text}
+          {item.value}
           {item.isMixed && <span>+</span>}
         </div>
-        {item.itemsSelected.length > 1 &&
-          <div className="badge">{item.itemsSelected.length}</div>
+        {item.id.length &&
+          <div className="badge">{item.id.length}</div>
         }
       </div>
     )
@@ -28,8 +35,8 @@ class FieldDragPreview extends React.PureComponent {
 
   static propTypes = {
     items: arrayOf(shape({
-      id: string.isRequired,
-      label: string.isRequired
+      id: oneOfType([number, arrayOf(number)]).isRequired,
+      value: string.isRequired
     })).isRequired,
   }
 

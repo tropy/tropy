@@ -100,25 +100,33 @@ class MetadataField extends React.PureComponent {
         className={cx(classes)}
         onContextMenu={this.handleContextMenu}>
         <label title={details.join('\n\n')}>{label}</label>
-        {this.connect(<div className="value" onClick={this.handleClick}>
-          <Editable
-            value={this.props.text}
-            getCompletions={getMetadataCompletions}
-            display={auto(this.props.text, this.props.type)}
-            placeholder={this.props.placeholder}
-            isActive={this.props.isEditing}
-            isRequired={this.props.isRequired}
-            onCancel={this.handleCancel}
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyDown}/>
-          {isInvalid && <IconWarningSm/>}
-          {this.props.isReadOnly && <IconLock/>}
-        </div>)}
+        {this.connect(
+          <div
+            className={cx('value', { over: this.props.isOver })}
+            onClick={this.handleClick}>
+            <Editable
+              value={this.props.text}
+              getCompletions={getMetadataCompletions}
+              display={auto(this.props.text, this.props.type)}
+              placeholder={this.props.placeholder}
+              isActive={this.props.isEditing}
+              isRequired={this.props.isRequired}
+              onCancel={this.handleCancel}
+              onChange={this.handleChange}
+              onKeyDown={this.handleKeyDown}/>
+            {isInvalid && <IconWarningSm/>}
+            {this.props.isReadOnly && <IconLock/>}
+          </div>)}
       </li>
     )
   }
 
   static propTypes = {
+    id: oneOfType([
+      number,
+      arrayOf(number)
+    ]),
+
     isEditing: bool,
     isDisabled: bool,
     isDragging: bool,
@@ -126,6 +134,7 @@ class MetadataField extends React.PureComponent {
     isMixed: bool,
     isRequired: bool,
     isReadOnly: bool,
+    isOver: bool,
 
     property: shape({
       id: string.isRequired,
@@ -140,7 +149,6 @@ class MetadataField extends React.PureComponent {
     text: string,
     type: string.isRequired,
 
-    itemsSelected: arrayOf(shapes.subject),
     ds: func.isRequired,
     dp: func.isRequired,
     dt: func.isRequired,
@@ -148,7 +156,8 @@ class MetadataField extends React.PureComponent {
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
     onChange: func.isRequired,
-    onContextMenu: func,
+    onContextMenu: func.isRequired,
+    onCopy: func.isRequired,
     onNext: func.isRequired,
     onPrev: func.isRequired
   }
@@ -162,7 +171,7 @@ class MetadataField extends React.PureComponent {
 
 class StaticField extends React.PureComponent {
   get classes() {
-    return ['metadata-field', 'static','over', {
+    return ['metadata-field', 'static', {
       clickable: this.props.onClick != null
     }]
   }
@@ -195,17 +204,14 @@ class StaticField extends React.PureComponent {
 
 
 const DragSourceSpec = {
-  beginDrag({ property, isMixed, itemsSelected, text  }) {
-    console.log('DRAG', property.id)
+  beginDrag({ id, isMixed, property, text, type }) {
     return {
-      ...property,
+      id,
       isMixed,
-      itemsSelected,
-      text
+      property: property.id,
+      value: auto(text, type)
     }
   }
-
-
 }
 
 const DragSourceCollect = (connect, monitor) => ({
@@ -215,19 +221,19 @@ const DragSourceCollect = (connect, monitor) => ({
 })
 
 const DropTargetSpec = {
-  // hover({ property }, monitor, component) {
-  //   let offset = null
-  //   component.setState({ offset })
-  // },
+  canDrop({ id, property }, monitor) {
+    let item = monitor.getItem()
+    return id === item.id && property.id !== item.property
+  },
 
-  drop({ property }, monitor, component) {
-    console.log('!!! DROP', property.id)
+  drop({ property }, monitor) {
+    console.log(property.id, monitor.getItem())
   }
 }
 
 const DropTargetCollect = (connect, monitor) => ({
   dt: connect.dropTarget(),
-  isOver: monitor.isOver(),
+  isOver: monitor.canDrop() && monitor.isOver()
 })
 
 
