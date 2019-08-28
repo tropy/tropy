@@ -29,7 +29,6 @@ ja:
           command: 'app:open-new-dialog'
         - label: 最近のプロジェクト
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -238,7 +237,6 @@ ja:
           command: 'app:open-new-dialog'
         - label: 最近のプロジェクト
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -426,7 +424,6 @@ ja:
           command: 'app:open-new-dialog'
         - label: 最近のプロジェクト
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator

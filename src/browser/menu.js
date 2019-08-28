@@ -146,7 +146,7 @@ class Menu {
         case 'recent':
           if (item.id === 'recent') {
             if (this.app.state.recent.length) {
-              item.enabled =  true
+              item.enabled = true
 
               item.submenu = [
                 ...this.app.state.recent.map((file, idx) => ({

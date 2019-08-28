@@ -34,7 +34,6 @@ en:
         - &recent
           label: 'Recent Projects'
           id: 'recent'
-          role: 'recentDocuments'
           enabled: false
           submenu:
             - type: 'separator'
