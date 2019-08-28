@@ -291,6 +291,9 @@ class Window extends EventEmitter {
     on(document, 'keyup', up, { passive: true, capture: true })
     on(window, 'blur', up, { passive: true })
 
+    on(document, 'drag', up, { passive: true, capture: true })
+    on(window, 'drag', up, { passive: true })
+
     function up(event) {
       toggle(document.body, 'alt-key', event.altKey === true)
       toggle(document.body, 'meta-key', event.metaKey === true)
