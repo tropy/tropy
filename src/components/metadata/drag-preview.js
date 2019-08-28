@@ -18,8 +18,8 @@ class FieldDragPreview extends React.PureComponent {
           {item.text}
           {item.isMixed && <span>+</span>}
         </div>
-        {item.itemsSelected > 1 &&
-          <div className="badge">{item.itemsSelected}</div>
+        {item.itemsSelected.length > 1 &&
+          <div className="badge">{item.itemsSelected.length}</div>
         }
       </div>
     )
