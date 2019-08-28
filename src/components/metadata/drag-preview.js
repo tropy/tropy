@@ -16,17 +16,18 @@ class FieldDragPreview extends React.PureComponent {
   render() {
     const item = this.props.items[0]
     return (
-      <div className="metadata-field drag-preview copy">
-        <div>
-          {item.value}
-          {item.isMixed && <span>+</span>}
+      <React.Fragment>
+        <div className="metadata-field drag-preview">
+          <div>
+            {item.value}
+            {item.isMixed && <span>+</span>}
+          </div>
         </div>
         {item.id.length &&
           <div className="badge">{item.id.length}</div>
         }
-      </div>
+      </React.Fragment>
     )
-
   }
 
   static propTypes = {
