@@ -14,27 +14,27 @@ const {
 class FieldDragPreview extends React.PureComponent {
 
   render() {
-    const item = this.props.items[0]
+    const field = this.props.field
     return (
       <React.Fragment>
         <div className="metadata-field drag-preview">
           <div>
-            {item.value}
-            {item.isMixed && <span>+</span>}
+            {field.value}
+            {field.isMixed && <span>+</span>}
           </div>
         </div>
-        {item.id.length &&
-          <div className="badge">{item.id.length}</div>
+        {field.id.length &&
+          <div className="badge">{field.id.length}</div>
         }
       </React.Fragment>
     )
   }
 
   static propTypes = {
-    items: arrayOf(shape({
+    field: shape({
       id: oneOfType([number, arrayOf(number)]).isRequired,
       value: string.isRequired
-    })).isRequired,
+    }).isRequired,
   }
 
 }
