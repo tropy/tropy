@@ -207,7 +207,8 @@ const DragSourceSpec = {
       id,
       isMixed,
       property: property.id,
-      value: auto(text, type)
+      value: auto(text, type),
+      position: 'relative'
     }
   },
 
