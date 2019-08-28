@@ -201,8 +201,6 @@ class StaticField extends React.PureComponent {
 }
 
 
-
-
 const DragSourceSpec = {
   beginDrag({ id, isMixed, property, text, type }) {
     return {
@@ -210,6 +208,19 @@ const DragSourceSpec = {
       isMixed,
       property: property.id,
       value: auto(text, type)
+    }
+  },
+
+  endDrag({ onCopy }, monitor) {
+    if (monitor.didDrop()) {
+      let item = monitor.getItem()
+      let drop = monitor.getDropResult()
+
+      onCopy({
+        id: item.id,
+        from: item.property,
+        to: drop.property
+      }, { cut: drop.dropEffect === 'move' })
     }
   }
 }
@@ -226,8 +237,8 @@ const DropTargetSpec = {
     return id === item.id && property.id !== item.property
   },
 
-  drop({ property }, monitor) {
-    console.log(property.id, monitor.getItem())
+  drop({ property }) {
+    return { property: property.id }
   }
 }
 
