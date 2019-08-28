@@ -196,12 +196,12 @@ class MetadataPanel extends React.PureComponent {
         <MetadataList
           ref={this.setItemFields}
           edit={this.props.edit}
-          itemsSelected={this.props.items}
           fields={this.props.fields.item}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
           onEditCancel={this.props.onEditCancel}
           onContextMenu={this.handleItemContextMenu}
+          onCopy={this.props.onMetadataCopy}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterItemFields}
           onBefore={this.handleBeforeItemFields}/>
@@ -228,6 +228,7 @@ class MetadataPanel extends React.PureComponent {
           onEdit={this.props.onEdit}
           onEditCancel={this.props.onEditCancel}
           onContextMenu={this.handlePhotoContextMenu}
+          onCopy={this.props.onMetadataCopy}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterPhotoFields}
           onBefore={this.handleBeforePhotoFields}/>
@@ -255,6 +256,7 @@ class MetadataPanel extends React.PureComponent {
           onEdit={this.props.onEdit}
           onEditCancel={this.props.onEditCancel}
           onContextMenu={this.handleSelectionContextMenu}
+          onCopy={this.props.onMetadataCopy}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterSelectionFields}
           onBefore={this.handleBeforeSelectionFields}/>
@@ -310,6 +312,7 @@ class MetadataPanel extends React.PureComponent {
     onEdit: func,
     onEditCancel: func,
     onMetadataAdd: func.isRequired,
+    onMetadataCopy: func.isRequired,
     onMetadataDelete: func.isRequired,
     onMetadataSave: func.isRequired,
     onOpenInFolder: func.isRequired,
@@ -337,6 +340,10 @@ module.exports = {
     (dispatch) => ({
       onMetadataAdd(...args) {
         dispatch(actions.metadata.add(...args))
+      },
+
+      onMetadataCopy(...args) {
+        dispatch(actions.metadata.copy(...args))
       },
 
       onMetadataDelete(...args) {
