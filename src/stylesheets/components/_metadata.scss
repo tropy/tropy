@@ -112,6 +112,11 @@ $default-padding-horizontal: 12px !default;
     padding-left: $metadata-gutter / 2;
     padding-right: $default-padding-horizontal;
     min-width: 0; // Fix truncation
+    position: relative;
+
+    &.over {
+      @extend %drop-target;
+    }
 
     .scrollbar-style-old-school & {
       padding-right: ($default-padding-horizontal - $scrollbar-size / 3);
