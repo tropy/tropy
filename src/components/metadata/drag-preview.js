@@ -13,7 +13,7 @@ const {
 } = require('prop-types')
 
 const FieldDragPreview = ({ field, isOver }) => (
-  <div className={cx('metadata-field drag-preview', {isOver: 'over'})}>
+  <div className={cx('metadata-field drag-preview', {over: isOver})}>
     <div className="drag-preview-container">
       {field.value}
       {field.isMixed && <span>+</span>}
