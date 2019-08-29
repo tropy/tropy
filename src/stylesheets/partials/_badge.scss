@@ -17,6 +17,7 @@
     position: absolute;
     top: 100%;
     left: 100%;
+    opacity: $badge-opacity;
   }
 
   .drag-preview.metadata-field & {

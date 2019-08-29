@@ -15,9 +15,11 @@ class ListDragPreview extends React.PureComponent {
   render() {
     return (
       <div className="list drag-preview" style={this.style}>
-        <IconFolder/>
-        <div className="name">
-          {this.props.list.name}
+        <div className="drag-preview-container">
+          <IconFolder/>
+          <div className="name">
+            {this.props.list.name}
+          </div>
         </div>
       </div>
     )

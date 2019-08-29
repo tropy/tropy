@@ -128,8 +128,9 @@ $checkbox-overlay-checked-active-border: var(--shade-10-darken-19);
 $tick-color:                             var(--shade-4);
 
 // Badge
-$badge-color: var(--shade-10);
-$badge-bg:    var(--red);
+$badge-color:   var(--shade-10);
+$badge-bg:      var(--red);
+$badge-opacity: 0.64;
 
 // Drop target
 $drop-target-color: var(--brand-primary-35);
@@ -316,7 +317,7 @@ $esper-btn-default-active-bg:            var(--shade-2);
 
 // Drag preview
 $drag-preview-opacity:           0.64;
-$drag-preview-thumbnail-opacity: 1;
+$drag-preview-thumbnail-opacity: 0.64;
 
 // Thumbnail
 $thumbnail-color: var(--shade-7-50);

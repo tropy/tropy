@@ -13,8 +13,10 @@ const {
 
 const FieldDragPreview = ({ field }) => (
   <div className="metadata-field drag-preview">
-    {field.value}
-    {field.isMixed && <span>+</span>}
+    <div className="drag-preview-container">
+      {field.value}
+      {field.isMixed && <span>+</span>}
+    </div>
     {field.id.length &&
       <div className="badge">{field.id.length}</div>
     }

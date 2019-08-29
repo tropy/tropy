@@ -127,6 +127,7 @@ $tick-color:                             var(--shade-0);
 // Badge
 $badge-color: var(--shade-0);
 $badge-bg:    var(--red);
+$badge-opacity: 0.8;
 
 // Drop target
 $drop-target-color: var(--brand-primary-30);
@@ -312,7 +313,7 @@ $esper-btn-default-border:               var(--shade-2-darken-10);
 $esper-btn-default-active-bg:            var(--shade-2-darken-4);
 
 // Drag preview
-$drag-preview-opacity:           0.8;
+$drag-preview-opacity:           0.6;
 $drag-preview-thumbnail-opacity: 0.8;
 
 // Thumbnail
