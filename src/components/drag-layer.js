@@ -44,11 +44,14 @@ class DragLayer extends React.Component {
     let origin = this.props.initialSourceClientOffset
     let cursor = this.props.initialClientOffset
 
-    return {
-      x: cursor.x - origin.x,
-      y: cursor.y - origin.y
+    if ( origin && cursor) {
+      return {
+        x: cursor.x - origin.x,
+        y: cursor.y - origin.y
+      }
     }
 
+<<<<<<< HEAD
   }
 
   get style() {
@@ -63,6 +66,20 @@ class DragLayer extends React.Component {
         result['--offset-y'] = `${off.y}px`
       }
       return result
+=======
+    return { x: -100, y: -100 }
+
+  }
+
+  get style() {
+    let { x, y } = this.position
+    let off = this.offset
+
+    return {
+      '--offset-x': `${off.x}px`,
+      '--offset-y': `${off.y}px`,
+      'transform': `translate(${x}px, ${y}px)`
+>>>>>>> ddd7442213c9d1c799a0c8fc05662567d94bead3
     }
     return null
   }

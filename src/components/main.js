@@ -30,10 +30,10 @@ class Main extends React.Component {
       <WindowContext.Provider value={this.props.window}>
         <Provider store={this.props.store}>
           <IntlProvider>
-            <React.Fragment>
+            <>
               {this.props.children}
               <Flash/>
-            </React.Fragment>
+            </>
           </IntlProvider>
         </Provider>
       </WindowContext.Provider>
