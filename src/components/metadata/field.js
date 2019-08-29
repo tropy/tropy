@@ -11,9 +11,9 @@ const { TYPE, DND } = require('../../constants')
 const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
 const { getEmptyImage } = require('react-dnd-electron-backend')
-const { shapes } = require('../util')
-const { bool, func, number, oneOfType, shape, string, arrayOf } = require('prop-types')
-
+const {
+  bool, func, number, oneOfType, shape, string, arrayOf
+} = require('prop-types')
 
 
 class MetadataField extends React.PureComponent {
@@ -249,11 +249,10 @@ const DropTargetCollect = (connect, monitor) => ({
 })
 
 
-
 module.exports.StaticField = StaticField
 
 module.exports.MetadataField = DragSource(
-      DND.FIELD, DragSourceSpec, DragSourceCollect
-    )(DropTarget(
-      DND.FIELD, DropTargetSpec, DropTargetCollect
-    )(MetadataField))
+  DND.FIELD, DragSourceSpec, DragSourceCollect
+)(DropTarget(
+  DND.FIELD, DropTargetSpec, DropTargetCollect
+)(MetadataField))
