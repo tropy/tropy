@@ -225,7 +225,7 @@ const DragSourceSpec = {
   }
 }
 
-const DragSourceCollect = (connect, monitor) => ({
+const DragSourceCollect = (connect) => ({
   ds: connect.dragSource(),
   dp: connect.dragPreview(),
 })
