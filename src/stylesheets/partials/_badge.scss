@@ -11,6 +11,7 @@
   border-radius: 9px;
   min-width: 18px;
   float: left; // Collapse for metadata drag-preview
+  line-height: $line-height-base; // Reset
 
   .drag-preview & {
     position: absolute;
@@ -18,9 +19,9 @@
     left: 100%;
   }
 
-  .drag-preview.metadata-field + & {
+  .drag-preview.metadata-field & {
     position: absolute;
-    top: 11px;
+    top: 0;
     left: 0;
   }
 }

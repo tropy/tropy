@@ -12,17 +12,13 @@ const {
 } = require('prop-types')
 
 const FieldDragPreview = ({ field }) => (
-  <>
-    <div className="metadata-field drag-preview">
-      <div>
-        {field.value}
-        {field.isMixed && <span>+</span>}
-      </div>
-    </div>
+  <div className="metadata-field drag-preview">
+    {field.value}
+    {field.isMixed && <span>+</span>}
     {field.id.length &&
       <div className="badge">{field.id.length}</div>
     }
-  </>
+  </div>
 )
 
 FieldDragPreview.propTypes = {

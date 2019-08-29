@@ -1,1 +1,8 @@
 /* stylelint-disable no-empty-source */
+
+.badge {
+  .drag-preview.metadata-field & {
+    position: static;
+    margin-left: $space-min;
+  }
+}
