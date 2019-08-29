@@ -13,28 +13,31 @@
 }
 
 .drag-preview {
-  opacity: $drag-preview-opacity;
   position: absolute; // Collapse width
 
   &.center {
     transform: translate(-50%, -50%);
   }
 
-  &.list {
-    display: flex;
-    align-items: center;
-    height: $line-height-large;
+  .drag-preview-container {
+    opacity: $drag-preview-opacity;
 
-    .icon {
-      margin-right: $space-xs;
+    @include variant(".drag-preview.list") {
+      display: flex;
+      align-items: center;
+      height: $line-height-large;
+
+      .icon {
+        margin-right: $space-xs;
+      }
     }
-  }
 
-  &.metadata-field {
-    display: flex;
-    align-items: center;
-    line-height: $metadata-line-height;
-    padding-left: $metadata-gutter / 2;
+    @include variant(".drag-preview.metadata-field") {
+      display: flex;
+      align-items: center;
+      line-height: $metadata-line-height;
+      padding-left: $metadata-gutter / 2;
+    }
   }
 
   .thumbnail {
