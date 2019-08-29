@@ -1,1 +1,18 @@
-/* stylelint-disable no-empty-source */
+//
+// Operating system specific styles
+// --------------------------------------------------
+
+.badge {
+  -webkit-font-smoothing: auto;
+
+  .drag-preview.metadata-field & {
+    left: 18px;
+    top: 11px;
+
+    @include state(".drag-preview.over") {
+      .alt-key & {
+        left: 24px;
+      }
+    }
+  }
+}
