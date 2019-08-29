@@ -12,8 +12,8 @@ const {
 } = require('prop-types')
 
 const FieldDragPreview = ({ field, isOver }) => (
-  <div className="metadata-field drag-preview">
-    <div className={'drag-preview-container' + (isOver && 'is-over')}>
+  <div className={'metadata-field drag-preview' + (isOver && 'is-over')}>
+    <div className="drag-preview-container">
       {field.value}
       {field.isMixed && <span>+</span>}
     </div>
