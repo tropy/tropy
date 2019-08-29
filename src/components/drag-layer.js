@@ -115,6 +115,7 @@ module.exports = {
     initialClientOffset: monitor.getInitialClientOffset(),
     initialSourceClientOffset: monitor.getInitialSourceClientOffset(),
     position: monitor.getClientOffset(),
-    isDragging: monitor.isDragging()
+    isDragging: monitor.isDragging(),
+    isOver: monitor.getTargetIds().length > 0
   }))(DragLayer)
 }
