@@ -23,7 +23,5 @@
   .drag-preview.metadata-field & {
     transform: translate(var(--offset-x), var(--offset-y));
     position: absolute;
-    top: 0;
-    left: 0;
   }
 }
