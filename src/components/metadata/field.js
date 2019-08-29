@@ -129,7 +129,6 @@ class MetadataField extends React.PureComponent {
 
     isEditing: bool,
     isDisabled: bool,
-    isDragging: bool,
     isExtra: bool.isRequired,
     isMixed: bool,
     isRequired: bool,
@@ -229,7 +228,6 @@ const DragSourceSpec = {
 const DragSourceCollect = (connect, monitor) => ({
   ds: connect.dragSource(),
   dp: connect.dragPreview(),
-  isDragging: monitor.isDragging()
 })
 
 const DropTargetSpec = {
