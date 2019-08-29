@@ -23,4 +23,13 @@ body {
 
 .badge {
   -webkit-font-smoothing: auto;
+
+  .drag-preview.metadata-field & {
+    left: 0;
+    top: 11px;
+
+    .alt-key & {
+      left: 21px;
+    }
+  }
 }
