@@ -68,6 +68,11 @@ target.darwin = (args = []) => {
     cnt = join(app, 'Contents')
     check(test('-d', app), `app not found: ${app}`)
 
+    // Clear temporary files from previous signing
+    for (let file of find(`"${app}" -name "*.cstemp" -type f`)) {
+      if (file) rm(file)
+    }
+
     say(`signing ${relative(dir, app)} with ${identity}...`)
 
     for (let file of find(`"${join(cnt, 'Resources')}" -perm +111 -type f`)) {
@@ -78,17 +83,18 @@ target.darwin = (args = []) => {
       sign(file)
     }
 
+    for (let file of find(`"${cnt}" -name "*.app" -type d`)) {
+      sign(file)
+    }
+
+    for (let file of find(`"${cnt}" -name "*.framework" -type d`)) {
+      sign(file)
+    }
+
     for (let file of find(`"${join(cnt, 'MacOS')}" -perm +111 -type f`)) {
       sign(file)
     }
 
-    for (let file of find(`"${cnt}" -name "*.framework"`)) {
-      sign(file)
-    }
-
-    for (let file of find(`"${cnt}" -name "*.app"`)) {
-      sign(file)
-    }
 
     sign(app)
     verify(app)

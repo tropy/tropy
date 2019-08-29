@@ -52,7 +52,7 @@ const IGNORE = [
   /^\/test/,
   /^\/tmp/,
   /node_modules.\.(bin|cache)/,
-  /node_modules.sqlite3.(build|deps|binding.node)/,
+  /node_modules.sqlite3.(build|deps|lib.binding.node)/,
   /node_modules.sharp.build.[^R]/,
   /node_modules.sharp.build.Release.obj/,
   /node_modules.sharp.vendor.include/,
