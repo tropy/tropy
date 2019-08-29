@@ -18,8 +18,8 @@ const coords = shape({
 class DragLayer extends React.Component {
   get position() {
     let { position, item } = this.props
-    let x = 0
-    let y = 0
+    let x
+    let y
 
     if (position) {
       x = position.x
@@ -33,35 +33,38 @@ class DragLayer extends React.Component {
           break
         }
       }
+
+      return { x, y }
     }
 
-    return { x, y }
+    return  null
   }
 
   get offset() {
     let origin = this.props.initialSourceClientOffset
     let cursor = this.props.initialClientOffset
 
-    if ( origin && cursor) {
-      return {
-        x: cursor.x - origin.x,
-        y: cursor.y - origin.y
-      }
+    return {
+      x: cursor.x - origin.x,
+      y: cursor.y - origin.y
     }
-
-    return { x: -100, y: -100 }
 
   }
 
   get style() {
-    let { x, y } = this.position
-    let off = this.offset
-
-    return {
-      '--offset-x': `${off.x}px`,
-      '--offset-y': `${off.y}px`,
-      'transform': `translate(${x}px, ${y}px)`
+    if ( this.props.position ) {
+      let { x, y } = this.position
+      let result = {
+        transform: `translate(${x}px, ${y}px)`
+      }
+      if (this.props.item.position === 'relative') {
+        let off = this.offset
+        result['--offset-x'] = `${off.x}px`
+        result['--offset-y'] = `${off.y}px`
+      }
+      return result
     }
+    return null
   }
 
   renderItemPreview() {

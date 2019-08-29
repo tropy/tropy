@@ -27,7 +27,7 @@ FieldDragPreview.propTypes = {
   field: shape({
     id: oneOfType([number, arrayOf(number)]).isRequired,
     isMixed: bool,
-    value: string.isRequired
+    value: string
   }).isRequired,
 }
 
