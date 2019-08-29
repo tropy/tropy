@@ -2,6 +2,7 @@
 
 .badge {
   .drag-preview.metadata-field & {
+    transform: none;
     position: static;
     margin-left: $space-min;
   }
