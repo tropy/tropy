@@ -51,7 +51,9 @@ class DragLayer extends React.Component {
   get style() {
     let { x, y } = this.position
     return {
-      transform: `translate(${x}px, ${y}px)`
+      '--offset-x': `${x}px`,
+      '--offset-y': `${y}px`,
+      'transform': `translate(${x}px, ${y}px)`
     }
   }
 
