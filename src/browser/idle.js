@@ -20,9 +20,7 @@ class IOQ {
   }
 
   getIdleTime() {
-    return new Promise((resolve) => {
-      electron.powerMonitor.querySystemIdleTime(resolve)
-    })
+    return electron.powerMonitor.getSystemIdleTime()
   }
 
   add(observe, time) {
@@ -52,9 +50,9 @@ class IOQ {
       let cur
       let was = 0
 
-      this.pi = setInterval(async () => {
+      this.pi = setInterval(() => {
         try {
-          cur = await this.getIdleTime()
+          cur = this.getIdleTime()
           if (cur < was) this.activate()
           if (cur >= min) this.idle(cur)
           was = Math.max(0, cur - min)

@@ -29,7 +29,6 @@ de:
           command: 'app:open-new-dialog'
         - label: Benutzte Projekte
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -238,7 +237,6 @@ de:
           command: 'app:open-new-dialog'
         - label: Benutzte Projekte
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -426,7 +424,6 @@ de:
           command: 'app:open-new-dialog'
         - label: Benutzte Projekte
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
