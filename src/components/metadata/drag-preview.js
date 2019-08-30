@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const cx = require('classnames')
 
 const {
   arrayOf,
@@ -12,8 +11,8 @@ const {
   string
 } = require('prop-types')
 
-const FieldDragPreview = ({ field, isOver }) => (
-  <div className={cx('metadata-field drag-preview', {over: isOver})}>
+const FieldDragPreview = ({ field }) => (
+  <div className="metadata-field drag-preview">
     <div className="drag-preview-container">
       {field.value}
       {field.isMixed && <span>+</span>}
@@ -25,7 +24,6 @@ const FieldDragPreview = ({ field, isOver }) => (
 )
 
 FieldDragPreview.propTypes = {
-  isOver: bool,
   field: shape({
     id: oneOfType([number, arrayOf(number)]).isRequired,
     isMixed: bool,

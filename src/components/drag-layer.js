@@ -8,6 +8,8 @@ const { SelectionDragPreview } = require('./selection')
 const { ListDragPreview } = require('./list')
 const { FieldDragPreview } = require('./metadata')
 const { DND } = require('../constants')
+const { on, off } = require('../dom')
+const throttle = require('lodash.throttle')
 const { bool, number, object, shape, string } = require('prop-types')
 
 const coords = shape({
@@ -16,6 +18,18 @@ const coords = shape({
 })
 
 class DragLayer extends React.Component {
+  state = {
+    dropEffect: 'none'
+  }
+
+  componentDidMount() {
+    on(window, 'dragover', this.handleDragOver, { passive: true })
+  }
+
+  componentWillUnmount() {
+    off(window, 'dragover', this.handleDragOver, { passive: true })
+  }
+
   get position() {
     let { position, item } = this.props
     let x
@@ -57,14 +71,21 @@ class DragLayer extends React.Component {
         transform: `translate(${x}px, ${y}px)`
       }
       if (this.props.item.position === 'relative') {
-        let off = this.offset
-        result['--offset-x'] = `${off.x}px`
-        result['--offset-y'] = `${off.y}px`
+        let offset = this.offset
+        result['--offset-x'] = `${offset.x}px`
+        result['--offset-y'] = `${offset.y}px`
       }
       return result
     }
     return null
   }
+
+  handleDragOver = throttle((event) => {
+    let { dropEffect } = event.dataTransfer
+    if (dropEffect !== this.state.dropEffect) {
+      this.setState({ dropEffect })
+    }
+  }, 100)
 
   renderItemPreview() {
     let { item, type, ...props } = this.props
@@ -88,7 +109,7 @@ class DragLayer extends React.Component {
     let preview = isDragging && type && this.renderItemPreview()
 
     return (!preview) ? null : (
-      <div id="project-drag-layer" className="drag-layer">
+      <div className={`drag-layer on-drop-${this.state.dropEffect}`}>
         <div className="drag-preview-positioner" style={this.style}>
           {preview}
         </div>
@@ -104,7 +125,7 @@ class DragLayer extends React.Component {
     initialClientOffset: coords,
     initialSourceClientOffset: coords,
     tags: object.isRequired,
-    type: string,
+    type: string
   }
 }
 
@@ -115,7 +136,6 @@ module.exports = {
     initialClientOffset: monitor.getInitialClientOffset(),
     initialSourceClientOffset: monitor.getInitialSourceClientOffset(),
     position: monitor.getClientOffset(),
-    isDragging: monitor.isDragging(),
-    isOver: monitor.getTargetIds().length > 0
+    isDragging: monitor.isDragging()
   }))(DragLayer)
 }
