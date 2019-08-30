@@ -65,7 +65,7 @@ class DragLayer extends React.Component {
   }
 
   get style() {
-    if ( this.props.position ) {
+    if (this.props.position) {
       let { x, y } = this.position
       let result = {
         transform: `translate(${x}px, ${y}px)`

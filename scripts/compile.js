@@ -24,7 +24,7 @@ const js = (pattern = 'src/**/*.{js,jsx}') =>
         check(src.startsWith('src'), 'not a src path')
 
         jsRender(src)
-          .catch((reason) => { error(reason ) })
+          .catch((reason) => { error(reason) })
       })
   })
 
