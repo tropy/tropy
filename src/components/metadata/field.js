@@ -18,10 +18,9 @@ const {
 
 class MetadataField extends React.PureComponent {
   get classes() {
-    return ['metadata-field', {
+    return ['metadata-field', this.props.type, {
       extra: this.props.isExtra,
-      mixed: this.props.isMixed,
-      [this.props.type]: true
+      mixed: this.props.isMixed
     }]
   }
 
@@ -41,6 +40,10 @@ class MetadataField extends React.PureComponent {
 
   get details() {
     return pluck(this.props.property, ['id', 'description', 'comment'])
+  }
+
+  get isDraggable() {
+    return !blank(this.props.text)
   }
 
   handleClick = () => {
@@ -83,12 +86,15 @@ class MetadataField extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.dp(getEmptyImage())
+    this.props.connectDragPreview(getEmptyImage())
   }
 
   connect(element) {
-    element = this.props.ds(element)
-    element = this.props.dt(element)
+    if (this.isDraggable)
+      element = this.props.connectDragSource(element)
+
+    element = this.props.connectDropTarget(element)
+
     return element
   }
 
@@ -148,9 +154,9 @@ class MetadataField extends React.PureComponent {
     text: string,
     type: string.isRequired,
 
-    ds: func.isRequired,
-    dp: func.isRequired,
-    dt: func.isRequired,
+    connectDragSource: func.isRequired,
+    connectDragPreview: func.isRequired,
+    connectDropTarget: func.isRequired,
 
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
@@ -226,8 +232,8 @@ const DragSourceSpec = {
 }
 
 const DragSourceCollect = (connect) => ({
-  ds: connect.dragSource(),
-  dp: connect.dragPreview(),
+  connectDragSource: connect.dragSource(),
+  connectDragPreview: connect.dragPreview(),
 })
 
 const DropTargetSpec = {
@@ -242,7 +248,7 @@ const DropTargetSpec = {
 }
 
 const DropTargetCollect = (connect, monitor) => ({
-  dt: connect.dropTarget(),
+  connectDropTarget: connect.dropTarget(),
   isOver: monitor.canDrop() && monitor.isOver()
 })
 
