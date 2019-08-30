@@ -30,30 +30,6 @@ class DragLayer extends React.Component {
     off(window, 'dragover', this.handleDragOver, { passive: true })
   }
 
-  get position() {
-    let { position, item } = this.props
-    let x
-    let y
-
-    if (position) {
-      x = position.x
-      y = position.y
-
-      switch (item.position) {
-        case 'relative': {
-          let { offset } = this
-          x -= offset.x
-          y -= offset.y
-          break
-        }
-      }
-
-      return { x, y }
-    }
-
-    return  null
-  }
-
   get offset() {
     let origin = this.props.initialSourceClientOffset
     let cursor = this.props.initialClientOffset
@@ -65,19 +41,25 @@ class DragLayer extends React.Component {
   }
 
   get style() {
-    if (this.props.position) {
-      let { x, y } = this.position
-      let result = {
-        transform: `translate(${x}px, ${y}px)`
-      }
-      if (this.props.item.position === 'relative') {
-        let offset = this.offset
-        result['--offset-x'] = `${offset.x}px`
-        result['--offset-y'] = `${offset.y}px`
-      }
-      return result
+    let { position, item } = this.props
+
+    if (position == null || item == null)
+      return null
+
+    let style = {}
+    let { x, y } = position
+
+    if (item.position === 'relative') {
+      let { offset } = this
+      style['--offset-x'] = `${offset.x}px`
+      style['--offset-y'] = `${offset.y}px`
+      x -= offset.x
+      y -= offset.y
     }
-    return null
+
+    style.transform = `translate(${x}px, ${y}px)`
+
+    return style
   }
 
   handleDragOver = throttle((event) => {
