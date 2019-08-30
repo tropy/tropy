@@ -118,7 +118,7 @@ target.all = async (args = []) => {
       appCopyright:
         `Copyright (c) 2015-${new Date().getFullYear()} ` +
         `${author.name}. All rights not expressly granted are reserved.`,
-      extendInfo: join(res, 'ext.plist'),
+      extendInfo: join(res, 'darwin', 'ext.plist'),
       extraResource,
       darwinDarkModeSupport: true,
       win32metadata: {
