@@ -51,11 +51,15 @@ target.win32 = (args = []) => {
 target.darwin = (args = []) => {
   check(platform === 'darwin', 'must be run on macOS')
 
-  check(which('codesign'), 'missing dependency: codesign')
-  check(which('spctl'), 'missing dependency: spctl')
+  let codesign = which('codesign')
+  let spctl = which('spctl')
 
-  const targets = ls('-d', join(dir, 'dist', '*-darwin-*'))
-  const identity = args[0] || env.SIGN_DARWIN_IDENTITY
+  check(codesign, 'missing dependency: codesign')
+  check(spctl, 'missing dependency: spctl')
+
+  let targets = ls('-d', join(dir, 'dist', '*-darwin-*'))
+  let identity = args[0] || env.SIGN_DARWIN_IDENTITY
+  let entitlements = join(dir, 'res', 'darwin', 'entitlements.plist')
 
   check(targets.length, 'no targets found')
   check(identity, 'missing identity')
@@ -100,15 +104,23 @@ target.darwin = (args = []) => {
     verify(app)
   }
 
+  let options = [
+    `--sign ${identity}`,
+    '--options runtime',
+    '--force',
+    '--verbose',
+    `--entitlements ${entitlements}`
+  ].join(' ')
+
   function sign(file) {
     say(`${relative(app, file)}`)
-    exec(`codesign --sign ${identity} -fv "${file}"`, { silent: true })
+    exec(`${codesign} ${options} "${file}"`, { silent: true })
   }
 
   function verify(file) {
     say(`verify ${relative(app, file)}`)
-    exec(`codesign --verify --deep --display --verbose=2 "${file}"`)
-    exec(`spctl --ignore-cache --no-cache --assess -t execute --v "${file}"`)
+    exec(`${codesign} --verify --deep --display --verbose=2 "${file}"`)
+    exec(`${spctl} --ignore-cache --no-cache --assess -t execute --v "${file}"`)
   }
 }
 
