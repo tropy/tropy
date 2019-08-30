@@ -45,9 +45,7 @@ $default-padding-horizontal: 12px !default;
 
     &.mixed {
       .value {
-        &::after {
-          content: "+";
-        }
+        @extend %mixed-indicator;
       }
     }
 
@@ -75,11 +73,7 @@ $default-padding-horizontal: 12px !default;
     &.mixed {
       .editable:not(.active) {
         display: flex;
-
-        &::after {
-          content: "+";
-          flex: 0 0 auto;
-        }
+        @extend %mixed-indicator;
 
         .truncate {
           flex: 0 1 auto;

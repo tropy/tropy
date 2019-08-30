@@ -1,0 +1,12 @@
+//
+// Mixed indicator
+// --------------------------------------------------
+
+%mixed-indicator {
+  &::after {
+    box-sizing: border-box;
+    content: "+";
+    flex: 0 0 auto;
+    margin-left: $space-min / 2;
+  }
+}

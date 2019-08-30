@@ -78,11 +78,7 @@
       &.mixed {
         .editable:not(.active) {
           display: flex;
-
-          &::after {
-            content: "+";
-            flex: 0 0 auto;
-          }
+          @extend %mixed-indicator;
 
           .truncate {
             flex: 0 1 auto;
