@@ -118,7 +118,7 @@ class Ontology extends Resource {
       const store = new N3.Store()
 
       new N3.Parser({ format: 'N3' })
-        .parse(is, (error, quad ) => {
+        .parse(is, (error, quad) => {
           if (error) return reject(error)
           if (quad) return store.addQuad(quad)
           resolve(store)

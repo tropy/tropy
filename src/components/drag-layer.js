@@ -6,7 +6,10 @@ const { ItemDragPreview } = require('./item')
 const { PhotoDragPreview } = require('./photo')
 const { SelectionDragPreview } = require('./selection')
 const { ListDragPreview } = require('./list')
+const { FieldDragPreview } = require('./metadata')
 const { DND } = require('../constants')
+const { on, off } = require('../dom')
+const throttle = require('lodash.throttle')
 const { bool, number, object, shape, string } = require('prop-types')
 
 const coords = shape({
@@ -15,26 +18,16 @@ const coords = shape({
 })
 
 class DragLayer extends React.Component {
-  get position() {
-    let { position, item } = this.props
-    let x = 0
-    let y = 0
+  state = {
+    dropEffect: 'none'
+  }
 
-    if (position) {
-      x = position.x
-      y = position.y
+  componentDidMount() {
+    on(window, 'dragover', this.handleDragOver, { passive: true })
+  }
 
-      switch (item.position) {
-        case 'relative': {
-          let { offset } = this
-          x -= offset.x
-          y -= offset.y
-          break
-        }
-      }
-    }
-
-    return { x, y }
+  componentWillUnmount() {
+    off(window, 'dragover', this.handleDragOver, { passive: true })
   }
 
   get offset() {
@@ -48,11 +41,33 @@ class DragLayer extends React.Component {
   }
 
   get style() {
-    let { x, y } = this.position
-    return {
-      transform: `translate(${x}px, ${y}px)`
+    let { position, item } = this.props
+
+    if (position == null || item == null)
+      return null
+
+    let style = {}
+    let { x, y } = position
+
+    if (item.position === 'relative') {
+      let { offset } = this
+      style['--offset-x'] = `${offset.x}px`
+      style['--offset-y'] = `${offset.y}px`
+      x -= offset.x
+      y -= offset.y
     }
+
+    style.transform = `translate(${x}px, ${y}px)`
+
+    return style
   }
+
+  handleDragOver = throttle((event) => {
+    let { dropEffect } = event.dataTransfer
+    if (dropEffect !== this.state.dropEffect) {
+      this.setState({ dropEffect })
+    }
+  }, 100)
 
   renderItemPreview() {
     let { item, type, ...props } = this.props
@@ -66,6 +81,8 @@ class DragLayer extends React.Component {
         return <SelectionDragPreview {...props} items={[item]}/>
       case DND.LIST:
         return <ListDragPreview list={item}/>
+      case DND.FIELD:
+        return <FieldDragPreview {...props} field={item}/>
     }
   }
 
@@ -74,7 +91,7 @@ class DragLayer extends React.Component {
     let preview = isDragging && type && this.renderItemPreview()
 
     return (!preview) ? null : (
-      <div id="project-drag-layer" className="drag-layer">
+      <div className={`drag-layer on-drop-${this.state.dropEffect}`}>
         <div className="drag-preview-positioner" style={this.style}>
           {preview}
         </div>
@@ -90,7 +107,7 @@ class DragLayer extends React.Component {
     initialClientOffset: coords,
     initialSourceClientOffset: coords,
     tags: object.isRequired,
-    type: string,
+    type: string
   }
 }
 

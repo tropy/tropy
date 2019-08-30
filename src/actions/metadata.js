@@ -12,6 +12,14 @@ module.exports = {
     }
   },
 
+  copy({ id, ...payload }, meta) {
+    return {
+      type: METADATA.COPY,
+      payload: { id: array(id), ...payload },
+      meta: { cmd: 'project', history: 'add', ...meta }
+    }
+  },
+
   delete(payload, meta) {
     return {
       type: METADATA.DELETE,

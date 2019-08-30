@@ -11,7 +11,6 @@
   overflow: hidden;
   contain: strict;
 
-  /* stylelint-disable no-descending-specificity */
   &:not(:focus):not(.nested-focus) {
     .toolbar-left,
     .toolbar-right,
@@ -29,7 +28,6 @@
       color: $esper-slider-value-color;
     }
   }
-  /* stylelint-enable */
 
   .slider:focus {
     .slider-handle {

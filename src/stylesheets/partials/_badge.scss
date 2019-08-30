@@ -7,13 +7,21 @@
   background: $badge-bg;
   font-size: 11px;
   text-align: center;
-  padding: 1px 6px 2px;
+  padding: 1px 6px;
   border-radius: 9px;
   min-width: 18px;
+  float: left; // Collapse for metadata drag-preview
+  line-height: $line-height-base; // Reset
 
   .drag-preview & {
     position: absolute;
     top: 100%;
     left: 100%;
+    opacity: $badge-opacity;
+  }
+
+  .drag-preview.metadata-field & {
+    transform: translate(var(--offset-x), var(--offset-y));
+    position: absolute;
   }
 }
