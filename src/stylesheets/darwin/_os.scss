@@ -28,10 +28,8 @@ body {
     left: 0;
     top: 11px;
 
-    @include state(".drag-preview") {
-      .on-drop-copy & {
-        left: 21px;
-      }
+    .on-drop-copy & {
+      left: 21px;
     }
   }
 }

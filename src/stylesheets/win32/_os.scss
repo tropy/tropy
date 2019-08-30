@@ -7,10 +7,8 @@
     left: 18px;
     top: 11px;
 
-    @include state(".drag-preview") {
-      .on-drop-copy & {
-        left: 24px;
-      }
+    .on-drop-copy & {
+      left: 24px;
     }
   }
 }
