@@ -119,7 +119,8 @@ target.darwin = async (args = []) => {
         appBundleId: 'org.tropy.tropy',
         appPath: app,
         appleId,
-        appleIdPassword: '@keychain:TROPY_DEV_PASSWORD'
+        appleIdPassword: '@keychain:TROPY_DEV_PASSWORD',
+        ascProvider: 'CorporationforDigitalScholarship'
       })
     } else {
       say('apple id missing, skipping notarization...')
