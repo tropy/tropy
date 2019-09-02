@@ -95,6 +95,9 @@ target.darwin = async (args = []) => {
     for (let file of find(`"${join(cnt, 'Resources')}" -perm +111 -type f`)) {
       sign(file)
     }
+    for (let file of find(`"${join(cnt, 'Resources')}" -name "*.dylib"`)) {
+      sign(file)
+    }
     for (let file of find(`"${join(cnt, 'Frameworks')}" -perm +111 -type f`)) {
       sign(file)
     }
@@ -116,7 +119,7 @@ target.darwin = async (args = []) => {
         appBundleId: 'org.tropy.tropy',
         appPath: app,
         appleId,
-        appleIdPassword: '@keychain:TROPY_PASSWORD'
+        appleIdPassword: '@keychain:TROPY_DEV_PASSWORD'
       })
     } else {
       say('apple id missing, skipping notarization...')
