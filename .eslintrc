@@ -86,5 +86,6 @@ rules:
   space-before-function-paren: [2, { anonymous: 'always', named: 'never' }]
   space-infix-ops: 2
   space-unary-ops: 2
+  space-in-parens: 2
   strict: [2, 'global']
   wrap-regex: 2

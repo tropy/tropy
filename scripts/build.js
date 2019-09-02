@@ -52,7 +52,7 @@ const IGNORE = [
   /^\/test/,
   /^\/tmp/,
   /node_modules.\.(bin|cache)/,
-  /node_modules.sqlite3.(build|deps|binding.node)/,
+  /node_modules.sqlite3.(build|deps|lib.binding.node)/,
   /node_modules.sharp.build.[^R]/,
   /node_modules.sharp.build.Release.obj/,
   /node_modules.sharp.vendor.include/,
@@ -118,7 +118,7 @@ target.all = async (args = []) => {
       appCopyright:
         `Copyright (c) 2015-${new Date().getFullYear()} ` +
         `${author.name}. All rights not expressly granted are reserved.`,
-      extendInfo: join(res, 'ext.plist'),
+      extendInfo: join(res, 'darwin', 'ext.plist'),
       extraResource,
       darwinDarkModeSupport: true,
       win32metadata: {

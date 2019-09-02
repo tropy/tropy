@@ -35,6 +35,7 @@ app.setPath('userCache', opts.cache)
 
 if (!opts.logs) {
   try {
+    app.setAppLogsPath()
     opts.logs = join(app.getPath('logs', '..', exe))
   } catch (_) {
     opts.logs = join(opts.data, 'log')

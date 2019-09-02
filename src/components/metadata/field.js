@@ -2,22 +2,25 @@
 
 const React = require('react')
 const { Editable } = require('../editable')
+const { DragSource, DropTarget } = require('react-dnd')
 const { FormattedMessage } = require('react-intl')
 const { blank, noop, pluck, URI } = require('../../common/util')
 const { IconLock, IconWarningSm } = require('../icons')
 const cx = require('classnames')
-const { TYPE } = require('../../constants')
+const { TYPE, DND } = require('../../constants')
 const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
-const { bool, func, number, oneOfType, shape, string } = require('prop-types')
+const { getEmptyImage } = require('react-dnd-electron-backend')
+const {
+  bool, func, number, oneOfType, shape, string, arrayOf
+} = require('prop-types')
 
 
 class MetadataField extends React.PureComponent {
   get classes() {
-    return ['metadata-field', {
+    return ['metadata-field', this.props.type, {
       extra: this.props.isExtra,
-      mixed: this.props.isMixed,
-      [this.props.type]: true
+      mixed: this.props.isMixed
     }]
   }
 
@@ -37,6 +40,10 @@ class MetadataField extends React.PureComponent {
 
   get details() {
     return pluck(this.props.property, ['id', 'description', 'comment'])
+  }
+
+  get isDraggable() {
+    return !blank(this.props.text)
   }
 
   handleClick = () => {
@@ -78,6 +85,18 @@ class MetadataField extends React.PureComponent {
     }
   }
 
+  componentDidMount() {
+    this.props.connectDragPreview(getEmptyImage())
+  }
+
+  connect(element) {
+    if (this.isDraggable)
+      element = this.props.connectDragSource(element)
+
+    element = this.props.connectDropTarget(element)
+
+    return element
+  }
 
   render() {
     let { classes, details, label, isInvalid } = this
@@ -87,32 +106,40 @@ class MetadataField extends React.PureComponent {
         className={cx(classes)}
         onContextMenu={this.handleContextMenu}>
         <label title={details.join('\n\n')}>{label}</label>
-        <div className="value" onClick={this.handleClick}>
-          <Editable
-            value={this.props.text}
-            getCompletions={getMetadataCompletions}
-            display={auto(this.props.text, this.props.type)}
-            placeholder={this.props.placeholder}
-            isActive={this.props.isEditing}
-            isRequired={this.props.isRequired}
-            onCancel={this.handleCancel}
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyDown}/>
-          {isInvalid && <IconWarningSm/>}
-          {this.props.isReadOnly && <IconLock/>}
-        </div>
+        {this.connect(
+          <div
+            className={cx('value', { over: this.props.isOver })}
+            onClick={this.handleClick}>
+            <Editable
+              value={this.props.text}
+              getCompletions={getMetadataCompletions}
+              display={auto(this.props.text, this.props.type)}
+              placeholder={this.props.placeholder}
+              isActive={this.props.isEditing}
+              isRequired={this.props.isRequired}
+              onCancel={this.handleCancel}
+              onChange={this.handleChange}
+              onKeyDown={this.handleKeyDown}/>
+            {isInvalid && <IconWarningSm/>}
+            {this.props.isReadOnly && <IconLock/>}
+          </div>)}
       </li>
     )
   }
 
-
   static propTypes = {
+    id: oneOfType([
+      number,
+      arrayOf(number)
+    ]),
+
     isEditing: bool,
     isDisabled: bool,
     isExtra: bool.isRequired,
     isMixed: bool,
     isRequired: bool,
     isReadOnly: bool,
+    isOver: bool,
 
     property: shape({
       id: string.isRequired,
@@ -127,10 +154,15 @@ class MetadataField extends React.PureComponent {
     text: string,
     type: string.isRequired,
 
+    connectDragSource: func.isRequired,
+    connectDragPreview: func.isRequired,
+    connectDropTarget: func.isRequired,
+
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
     onChange: func.isRequired,
-    onContextMenu: func,
+    onContextMenu: func.isRequired,
+    onCopy: func.isRequired,
     onNext: func.isRequired,
     onPrev: func.isRequired
   }
@@ -174,7 +206,57 @@ class StaticField extends React.PureComponent {
 }
 
 
-module.exports = {
-  MetadataField,
-  StaticField
+const DragSourceSpec = {
+  beginDrag({ id, isMixed, property, text, type }) {
+    return {
+      id,
+      isMixed,
+      property: property.id,
+      value: auto(text, type),
+      position: 'relative'
+    }
+  },
+
+  endDrag({ onCopy }, monitor) {
+    if (monitor.didDrop()) {
+      let item = monitor.getItem()
+      let drop = monitor.getDropResult()
+
+      onCopy({
+        id: item.id,
+        from: item.property,
+        to: drop.property
+      }, { cut: drop.dropEffect === 'move' })
+    }
+  }
 }
+
+const DragSourceCollect = (connect) => ({
+  connectDragSource: connect.dragSource(),
+  connectDragPreview: connect.dragPreview(),
+})
+
+const DropTargetSpec = {
+  canDrop({ id, property }, monitor) {
+    let item = monitor.getItem()
+    return id === item.id && property.id !== item.property
+  },
+
+  drop({ property }) {
+    return { property: property.id }
+  }
+}
+
+const DropTargetCollect = (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.canDrop() && monitor.isOver()
+})
+
+
+module.exports.StaticField = StaticField
+
+module.exports.MetadataField = DragSource(
+  DND.FIELD, DragSourceSpec, DragSourceCollect
+)(DropTarget(
+  DND.FIELD, DropTargetSpec, DropTargetCollect
+)(MetadataField))

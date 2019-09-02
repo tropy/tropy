@@ -53,6 +53,7 @@
   .adjustments {
     flex: 1 1 0;
     overflow-y: scroll;
+    overscroll-behavior: contain;
     padding: 19px $default-padding-horizontal 0; // todo
     margin: auto;
     width: 100%;

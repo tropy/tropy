@@ -23,6 +23,7 @@
   .sidebar-body {
     flex: 1 1 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding-top: $space-xs;
 
     .frameless:not(.is-full-screen) & {

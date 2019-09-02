@@ -2,7 +2,7 @@
 
 require('shelljs/make')
 
-const { check, say } = require('./util')('sign')
+const { check, say } = require('./util')('ξ')
 const { join, resolve, relative } = require('path')
 const { qualified } = require('../lib/common/release')
 const { arch, platform } = process
@@ -48,14 +48,31 @@ target.win32 = (args = []) => {
   }
 }
 
-target.darwin = (args = []) => {
+target.darwin = async (args = []) => {
   check(platform === 'darwin', 'must be run on macOS')
+  const { notarize } = require('electron-notarize')
 
-  check(which('codesign'), 'missing dependency: codesign')
-  check(which('spctl'), 'missing dependency: spctl')
+  let codesign = which('codesign')
+  let spctl = which('spctl')
+  let xcrun = which('xcrun')
 
-  const targets = ls('-d', join(dir, 'dist', '*-darwin-*'))
-  const identity = args[0] || env.SIGN_DARWIN_IDENTITY
+  check(codesign, 'missing dependency: codesign')
+  check(spctl, 'missing dependency: spctl')
+  check(xcrun, 'missing dependency: xcrun')
+
+  let targets = ls('-d', join(dir, 'dist', '*-darwin-*'))
+  let identity = args[0] || env.SIGN_CERT
+  let appleId = args[1] || env.SIGN_USER
+  let entitlements = join(dir, 'res', 'darwin', 'entitlements.plist')
+
+  let options = [
+    `--sign ${identity}`,
+    '--options runtime',
+    '--force',
+    '--verbose',
+    '--timestamp',
+    `--entitlements ${entitlements}`
+  ].join(' ')
 
   check(targets.length, 'no targets found')
   check(identity, 'missing identity')
@@ -68,41 +85,58 @@ target.darwin = (args = []) => {
     cnt = join(app, 'Contents')
     check(test('-d', app), `app not found: ${app}`)
 
-    say(`signing ${relative(dir, app)} with ${identity}...`)
+    // clear temporary files from previous signing
+    for (let file of find(`"${app}" -name "*.cstemp" -type f`)) {
+      if (file) rm(file)
+    }
+
+    say(`signing ${relative(dir, app)}...`)
 
     for (let file of find(`"${join(cnt, 'Resources')}" -perm +111 -type f`)) {
       sign(file)
     }
-
+    for (let file of find(`"${join(cnt, 'Resources')}" -name "*.dylib"`)) {
+      sign(file)
+    }
     for (let file of find(`"${join(cnt, 'Frameworks')}" -perm +111 -type f`)) {
       sign(file)
     }
-
+    for (let file of find(`"${cnt}" -name "*.app" -type d`)) {
+      sign(file)
+    }
+    for (let file of find(`"${cnt}" -name "*.framework" -type d`)) {
+      sign(file)
+    }
     for (let file of find(`"${join(cnt, 'MacOS')}" -perm +111 -type f`)) {
       sign(file)
     }
 
-    for (let file of find(`"${cnt}" -name "*.framework"`)) {
-      sign(file)
-    }
-
-    for (let file of find(`"${cnt}" -name "*.app"`)) {
-      sign(file)
-    }
-
     sign(app)
+
+    if (appleId != null) {
+      say(`notarize ${relative(dir, app)}...`)
+      await notarize({
+        appBundleId: 'org.tropy.tropy',
+        appPath: app,
+        appleId,
+        appleIdPassword: '@keychain:TROPY_DEV_PASSWORD'
+      })
+    } else {
+      say('apple id missing, skipping notarization...')
+    }
+
+    say(`verify ${relative(dir, app)}...`)
     verify(app)
   }
 
   function sign(file) {
-    say(`${relative(app, file)}`)
-    exec(`codesign --sign ${identity} -fv "${file}"`, { silent: true })
+    say(`${app !== file ? relative(app, file) : '.'}`)
+    exec(`${codesign} ${options} "${file}"`, { silent: true })
   }
 
   function verify(file) {
-    say(`verify ${relative(app, file)}`)
-    exec(`codesign --verify --deep --display --verbose=2 "${file}"`)
-    exec(`spctl --ignore-cache --no-cache --assess -t execute --v "${file}"`)
+    exec(`${codesign} --verify --deep --display --verbose=2 "${file}"`)
+    exec(`${spctl} --ignore-cache --no-cache --assess -t execute --v "${file}"`)
   }
 }
 

@@ -1,1 +1,14 @@
-/* stylelint-disable no-empty-source */
+//
+// Operating system specific styles
+// --------------------------------------------------
+
+.badge {
+  .drag-preview.metadata-field & {
+    left: 18px;
+    top: 11px;
+
+    .on-drop-copy & {
+      left: 24px;
+    }
+  }
+}

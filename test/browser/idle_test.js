@@ -72,7 +72,7 @@ describe('idle', () => {
       }
 
       beforeEach(() => {
-        sinon.stub(ioq, 'getIdleTime').callsFake(async () => idle)
+        sinon.stub(ioq, 'getIdleTime').callsFake(() => idle)
         clock = sinon.useFakeTimers()
         idle = 0
         idleService.addIdleObserver(o1, 50)

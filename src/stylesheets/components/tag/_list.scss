@@ -23,7 +23,6 @@
     }
   }
 
-  // stylelint-disable no-descending-specificity
   .sidebar & {
     .tag {
       display: flex;
@@ -67,6 +66,7 @@
   .panel & {
     flex: 1 1 0;
     overflow-y: scroll;
+    overscroll-behavior: contain;
     padding: $space-min 0 0;
     position: relative;
 
@@ -77,19 +77,18 @@
       padding: 0 $default-padding-horizontal;
 
       &.mixed {
-        color: $mixed-color;
+        .editable:not(.active) {
+          display: flex;
+          @extend %mixed-indicator;
 
-        .icon-tag {
-          opacity: 0.5;
+          .truncate {
+            flex: 0 1 auto;
+          }
         }
 
         &:focus {
           .icon-pluscircles {
             display: block;
-          }
-
-          .icon-tag {
-            opacity: 1;
           }
         }
       }
@@ -132,7 +131,6 @@
       }
     }
   }
-  /* stylelint-enable */
 }
 
 .add-tag-container {

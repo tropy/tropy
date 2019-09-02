@@ -7,5 +7,6 @@ module.exports = {
   SELECTION: 'selection',
   TEMPLATE: {
     FIELD: 'template.field'
-  }
+  },
+  FIELD: 'field'
 }

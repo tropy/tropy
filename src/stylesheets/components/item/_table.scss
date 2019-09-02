@@ -10,6 +10,7 @@
   height: 100%; // Prevent vertical scrollbar due to horizontal scrollbar
   overflow-x: auto;
   overflow-y: hidden; // Prevent horizontal scrollbar due to column borders
+  overscroll-behavior: contain;
   contain: strict;
 
   .metadata-head,
