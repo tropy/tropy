@@ -362,14 +362,13 @@ const DropTargetSpec = {
     return { files }
   },
 
-  canDrop({ project }, monitor) {
+  canDrop(_, monitor) {
     const { types } = monitor.getItem()
 
     if (types.length < 1) return false
 
     switch (types[0]) {
       case 'application-vnd.tropy.tpy':
-        return project.closed //|| files[0].path !== project.file
       case 'application-vnd.tropy.ttp':
         return true
       default:

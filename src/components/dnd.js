@@ -18,16 +18,6 @@ const {
 const NativeDragSources =
   require('react-dnd-html5-backend-cjs/lib/NativeDragSources')
 
-const {
-  nativeTypesConfig
-} = require(
-'react-dnd-html5-backend-cjs/lib/NativeDragSources/nativeTypesConfig'
-)
-
-nativeTypesConfig[NativeTypes.FILE]
-  .exposeProperties
-  .types = (dataTransfer) => dataTransfer.types
-
 
 let currentDataTransfer
 
@@ -36,8 +26,10 @@ refine(NativeDragSources,
   (_, dragSource) => {
     if (currentDataTransfer) {
       dragSource.mutateItemByReadingDataTransfer(currentDataTransfer)
-      dragSource.item.dataTransfer = currentDataTransfer
+      dragSource.item.types =
+        Array.from(currentDataTransfer.items, (item) => item.type)
     }
+
     return dragSource
   })
 
