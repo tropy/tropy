@@ -23,6 +23,7 @@ const IGNORE = [
   /\.(umd|esm|esmodules-browsers)\.js$/,
   /(CHANGELOG|README)/,
   /yarn\.lock/,
+  /tsconfig.tsbuildinfo$/,
   /\.DS_Store/,
   /\.babelrc\.js/,
   /\.editorconfig/,
@@ -71,8 +72,6 @@ const IGNORE = [
   /node_modules.psl.dist/,
   /node_modules.nan.doc/,
   /node_modules.react-dom.(cjs.react-dom-)?(server|unstable|profiling|test|unstable)/,
-  /node_modules.react-dnd.dist/,
-  /node_modules.(react-dnd|dnd-core).lib.esm/,
   /node_modules.bluebird.js.browser/,
   /appveyor\.yml/
 ]
