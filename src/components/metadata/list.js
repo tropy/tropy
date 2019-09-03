@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { MetadataField } = require('./field')
+const { NewMetadataField, MetadataField } = require('./field')
 const { get } = require('../../common/util')
 
 const { arrayOf, bool, func, object, shape, string } =  require('prop-types')
@@ -14,6 +14,10 @@ class MetadataList extends React.PureComponent {
 
   get isEmpty() {
     return this.props.fields.length === 0
+  }
+
+  get hasNewMetadataField() {
+    return this.props.onCreate != null
   }
 
   indexOf(id) {
@@ -90,6 +94,10 @@ class MetadataList extends React.PureComponent {
 
     return (
       <ol className="metadata-fields">
+
+        {this.props.newField != null && <NewMetadataField
+          options={this.props.options}
+          newField={this.props.newField}/>}
         {this.props.fields.map(({ property, value, type, ...props }) =>
           <MetadataField {...props}
             key={property.id}
@@ -122,6 +130,7 @@ class MetadataList extends React.PureComponent {
       property: object.isRequired,
       value: object
     })).isRequired,
+    options: arrayOf(object).isRequired,
     onAfter: func.isRequired,
     onBefore: func.isRequired,
     onEdit: func,
@@ -129,6 +138,10 @@ class MetadataList extends React.PureComponent {
     onContextMenu: func,
     onCopy: func.isRequired,
     onChange: func.isRequired
+  }
+
+  static defaultProps = {
+    options: []
   }
 }
 

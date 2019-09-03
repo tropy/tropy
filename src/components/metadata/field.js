@@ -10,10 +10,38 @@ const cx = require('classnames')
 const { TYPE, DND } = require('../../constants')
 const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
-const {
-  bool, func, number, oneOfType, shape, string, arrayOf
-} = require('prop-types')
+const { arrayOf, bool, func, number, oneOfType, shape, string, object } = require('prop-types')
+const { ResourceSelect } = require('../resource/select')
 
+class NewMetadataField extends React.PureComponent {
+
+  render() {
+    return (
+      <li>
+        <ResourceSelect
+          canClearByBackspace={false}
+          maxRows={6}
+          autofocus
+          onInsert={this.props.newField.onInsert}
+          onClose={this.props.newField.onClose}
+          options={this.props.options}/>
+      </li>
+    )
+  }
+
+
+  static propTypes = {
+    name: string.isRequired,
+    options: arrayOf(object).isRequired,
+    onClickOutside: func,
+    onCreate: func,
+    onCancel: func
+  }
+
+  static defaultProps = {
+    name: ''
+  }
+}
 
 class MetadataField extends React.PureComponent {
   get classes() {
@@ -253,6 +281,7 @@ const DropTargetCollect = (connect, monitor) => ({
 
 
 module.exports.StaticField = StaticField
+module.exports.NewMetadataField = NewMetadataField
 
 module.exports.MetadataField = DragSource(
   DND.FIELD, DragSourceSpec, DragSourceCollect

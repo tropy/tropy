@@ -49,6 +49,12 @@ class Select extends React.Component {
     values: []
   }
 
+  componentDidMount() {
+    if (this.props.autofocus) {
+      this.open()
+    }
+  }
+
   componentDidUpdate(_, state) {
     if (this.state.isInvalid  !== state.Invalid) {
       this.props.onValidate(!this.state.isInvalid)
@@ -294,6 +300,7 @@ class Select extends React.Component {
       <input
         className={cx('query', { live: this.isOpen && !isInputHidden })}
         disabled={this.isDisabled}
+        autoFocus={this.props.autofocus}
         id={this.props.id}
         onBlur={this.handleBlur}
         onChange={isInputHidden ? null : this.handleQueryChange}
@@ -364,6 +371,7 @@ class Select extends React.Component {
   }
 
   static propTypes = {
+    autofocus: bool,
     canClearByBackspace: bool,
     className: string,
     hideClearButton: bool,

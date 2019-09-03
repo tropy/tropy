@@ -27,12 +27,14 @@ class ResourceSelect extends React.PureComponent {
   render() {
     return (
       <Select {...this.props}
+        autofocus={this.props.autofocus}
         placeholder={this.placeholder}
         ref={this.select}/>
     )
   }
 
   static propTypes = {
+    autofocus: bool,
     className: string.isRequired,
     match: func.isRequired,
     placeholder: string,

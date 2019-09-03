@@ -4,7 +4,6 @@ const React = require('react')
 const { connect } = require('react-redux')
 const { MetadataList } = require('./list')
 const { MetadataSection } = require('./section')
-const { PopupSelect } = require('../resource/popup')
 const { PhotoInfo } = require('../photo/info')
 const { ItemInfo } = require('../item/info')
 const { SelectionInfo } = require('../selection/info')
@@ -32,15 +31,15 @@ class MetadataPanel extends React.PureComponent {
   fields = [null, null, null]
 
   state = {
-    fieldPopup: null
+    newField: null
   }
 
   componentDidMount() {
-    on(document, 'ctx:add-extra-field', this.showFieldPopup)
+    on(document, 'ctx:add-extra-field', this.showNewMetadataField)
   }
 
   componentWillUnmount() {
-    off(document, 'ctx:add-extra-fields', this.showFieldPopup)
+    off(document, 'ctx:add-extra-fields', this.showNewMetadataField)
   }
 
   get isEmpty() {
@@ -163,23 +162,25 @@ class MetadataPanel extends React.PureComponent {
     }
   }
 
-  showFieldPopup = ({ detail }) => {
+  showNewMetadataField = ({ detail }) => {
+    console.log ('showfield newField detail:', detail)
     let { id, type } = detail.target
 
     this.setState({
-      fieldPopup: {
-        left: detail.x,
-        top: detail.y,
+      newField: {
         value: this.props.fields[type].map(f => f.property.id),
         onInsert: (property) => {
           this.props.onMetadataAdd({ id, property })
+        },
+        onClose: () => {
+          this.hideNewField()
         }
       }
     })
   }
 
-  hideFieldPopup = () => {
-    this.setState({ fieldPopup: null })
+  hideNewField = () => {
+    this.setState({ newField: null })
   }
 
   renderItemFields() {
@@ -204,7 +205,11 @@ class MetadataPanel extends React.PureComponent {
           onCopy={this.props.onMetadataCopy}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterItemFields}
-          onBefore={this.handleBeforeItemFields}/>
+          onBefore={this.handleBeforeItemFields}
+          newField={this.state.newField}
+
+          options={this.props.fields.available}
+          />
         {!this.isBulk &&
           <ItemInfo item={this.props.items[0]}/>}
       </MetadataSection>
@@ -266,17 +271,6 @@ class MetadataPanel extends React.PureComponent {
     )
   }
 
-  renderFieldPopup() {
-    return this.state.fieldPopup != null && (
-      <PopupSelect
-        {...this.state.fieldPopup}
-        isSelectionHidden
-        maxRows={6}
-        options={this.props.fields.available}
-        onClose={this.hideFieldPopup}
-        placeholder="panel.metadata.popup.placeholder"/>
-    )
-  }
 
   render() {
     return (
@@ -284,7 +278,6 @@ class MetadataPanel extends React.PureComponent {
         {this.renderItemFields()}
         {this.renderPhotoFields()}
         {this.renderSelectionFields()}
-        {this.renderFieldPopup()}
       </div>
     )
   }
