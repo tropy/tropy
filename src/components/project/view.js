@@ -2,8 +2,7 @@
 
 const React = require('react')
 const { WindowContext } = require('../main')
-const { DropTarget } = require('react-dnd')
-const { NativeTypes } = require('react-dnd-electron-backend')
+const { DropTarget, NativeTypes } = require('../dnd')
 const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')

@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const ReactDnD = require('react-dnd')
+const { DragLayer } = require('./dnd')
 const { ItemDragPreview } = require('./item')
 const { PhotoDragPreview } = require('./photo')
 const { SelectionDragPreview } = require('./selection')
@@ -17,7 +17,7 @@ const coords = shape({
   y: number.isRequired
 })
 
-class DragLayer extends React.Component {
+class CustomDragLayer extends React.Component {
   state = {
     dropEffect: 'none'
   }
@@ -112,12 +112,12 @@ class DragLayer extends React.Component {
 }
 
 module.exports = {
-  DragLayer: ReactDnD.DragLayer((monitor) => ({
+  DragLayer: DragLayer((monitor) => ({
     item: monitor.getItem(),
     type: monitor.getItemType(),
     initialClientOffset: monitor.getInitialClientOffset(),
     initialSourceClientOffset: monitor.getInitialSourceClientOffset(),
     position: monitor.getClientOffset(),
     isDragging: monitor.isDragging()
-  }))(DragLayer)
+  }))(CustomDragLayer)
 }

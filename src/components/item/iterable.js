@@ -1,18 +1,18 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { bool, func, number, object, shape, arrayOf } = PropTypes
-const { DragSource, DropTarget } = require('react-dnd')
-const { getEmptyImage } = require('react-dnd-electron-backend')
+const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { compose, map, filter, into } = require('transducers.js')
 const { DND } = require('../../constants')
 const { isMeta } = require('../../keymap')
 const { pure } = require('../util')
 
+const {
+  bool, func, number, object, shape, arrayOf
+} = require('prop-types')
 
-class ItemIterable extends PureComponent {
+
+class ItemIterable extends React.PureComponent {
   componentDidMount() {
     this.props.dp(getEmptyImage())
   }

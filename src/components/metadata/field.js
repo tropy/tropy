@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Editable } = require('../editable')
-const { DragSource, DropTarget } = require('react-dnd')
+const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { FormattedMessage } = require('react-intl')
 const { blank, noop, pluck, URI } = require('../../common/util')
 const { IconLock, IconWarningSm } = require('../icons')
@@ -10,7 +10,6 @@ const cx = require('classnames')
 const { TYPE, DND } = require('../../constants')
 const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
-const { getEmptyImage } = require('react-dnd-electron-backend')
 const {
   bool, func, number, oneOfType, shape, string, arrayOf
 } = require('prop-types')

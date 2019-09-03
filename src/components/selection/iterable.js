@@ -2,8 +2,7 @@
 
 const React = require('react')
 const { Thumbnail } = require('../photo/thumbnail')
-const { DragSource, DropTarget } = require('react-dnd')
-const { getEmptyImage } = require('react-dnd-electron-backend')
+const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { bool, func, number, shape, string } = require('prop-types')
 const { pure } = require('../util')
 const { bounds } = require('../../dom')

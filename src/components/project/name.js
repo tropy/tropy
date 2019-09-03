@@ -1,8 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { DropTarget } = require('react-dnd')
-const { NativeTypes } = require('react-dnd-electron-backend')
+const { DropTarget, NativeTypes } = require('../dnd')
 const { IconMaze, IconWarningSm } = require('../icons')
 const { Editable } = require('../editable')
 const { isImageSupported } = require('../../constants/mime')

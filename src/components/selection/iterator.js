@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Iterator } = require('../iterator')
-const { DropTarget } = require('react-dnd')
+const { DropTarget } = require('../dnd')
 const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 const { DND } = require('../../constants')
 const { move } = require('../../common/util')

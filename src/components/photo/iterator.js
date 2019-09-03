@@ -2,8 +2,7 @@
 
 const React = require('react')
 const { Iterator } = require('../iterator')
-const { DropTarget } = require('react-dnd')
-const { NativeTypes } = require('react-dnd-electron-backend')
+const { DropTarget, NativeTypes } = require('../dnd')
 const { DND, MIME } = require('../../constants')
 const { isImageSupported } = MIME
 const { move } = require('../../common/util')
