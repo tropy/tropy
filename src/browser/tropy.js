@@ -456,6 +456,12 @@ class Tropy extends EventEmitter {
         property: target.property
       }), win))
 
+    this.on('app:create-field', (win, { target }) =>
+      this.dispatch(act.metadata.new({
+        id: target.id,
+        property: target.property
+      }), win))
+
     this.on('app:delete-selection', (win, { target }) =>
       this.dispatch(act.selection.delete({
         photo: target.id, selections: [target.selection]

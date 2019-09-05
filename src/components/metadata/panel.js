@@ -7,7 +7,6 @@ const { MetadataSection } = require('./section')
 const { PhotoInfo } = require('../photo/info')
 const { ItemInfo } = require('../item/info')
 const { SelectionInfo } = require('../selection/info')
-const { on, off } = require('../../dom')
 const { get } = require('../../common/util')
 const actions = require('../../actions')
 
@@ -29,18 +28,6 @@ const {
 
 class MetadataPanel extends React.PureComponent {
   fields = [null, null, null]
-
-  state = {
-    newField: null
-  }
-
-  componentDidMount() {
-    on(document, 'ctx:add-extra-field', this.showNewMetadataField)
-  }
-
-  componentWillUnmount() {
-    off(document, 'ctx:add-extra-fields', this.showNewMetadataField)
-  }
 
   get isEmpty() {
     return this.props.items.length === 0
@@ -162,25 +149,9 @@ class MetadataPanel extends React.PureComponent {
     }
   }
 
-  showNewMetadataField = ({ detail }) => {
-    console.log ('showfield newField detail:', detail)
-    let { id, type } = detail.target
-
-    this.setState({
-      newField: {
-        value: this.props.fields[type].map(f => f.property.id),
-        onInsert: (property) => {
-          this.props.onMetadataAdd({ id, property })
-        },
-        onClose: () => {
-          this.hideNewField()
-        }
-      }
-    })
-  }
-
-  hideNewField = () => {
-    this.setState({ newField: null })
+  handleFieldCreate = (property) => {
+    let id = this.props.edit.id[0]
+    this.props.onMetadataAdd({ id, property })
   }
 
   renderItemFields() {
@@ -206,10 +177,8 @@ class MetadataPanel extends React.PureComponent {
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterItemFields}
           onBefore={this.handleBeforeItemFields}
-          newField={this.state.newField}
-
-          options={this.props.fields.available}
-          />
+          onCreate={this.handleFieldCreate}
+          options={this.props.fields.available}/>
         {!this.isBulk &&
           <ItemInfo item={this.props.items[0]}/>}
       </MetadataSection>
@@ -236,7 +205,9 @@ class MetadataPanel extends React.PureComponent {
           onCopy={this.props.onMetadataCopy}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterPhotoFields}
-          onBefore={this.handleBeforePhotoFields}/>
+          onBefore={this.handleBeforePhotoFields}
+          onCreate={this.handleFieldCreate}
+          options={this.props.fields.available}/>
         <PhotoInfo
           photo={this.props.photo}
           onOpenInFolder={this.props.onOpenInFolder}/>
@@ -264,7 +235,9 @@ class MetadataPanel extends React.PureComponent {
           onCopy={this.props.onMetadataCopy}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterSelectionFields}
-          onBefore={this.handleBeforeSelectionFields}/>
+          onBefore={this.handleBeforeSelectionFields}
+          onCreate={this.handleFieldCreate}
+          options={this.props.fields.available}/>
         <SelectionInfo
           selection={this.props.selection}/>
       </MetadataSection>
@@ -273,11 +246,12 @@ class MetadataPanel extends React.PureComponent {
 
 
   render() {
+    console.log('this.props.edit', this.props.edit)
     return (
       <div className="scroll-container">
         {this.renderItemFields()}
-        {this.renderPhotoFields()}
-        {this.renderSelectionFields()}
+        {/*this.renderPhotoFields()*/}
+        {/*this.renderSelectionFields()*/}
       </div>
     )
   }
@@ -331,6 +305,10 @@ module.exports = {
     }),
 
     (dispatch) => ({
+      onMetadataClose(...args) {
+        dispatch(actions.metadata.close(...args))
+      },
+
       onMetadataAdd(...args) {
         dispatch(actions.metadata.add(...args))
       },

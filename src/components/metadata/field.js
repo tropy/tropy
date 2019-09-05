@@ -22,8 +22,8 @@ class NewMetadataField extends React.PureComponent {
           canClearByBackspace={false}
           maxRows={6}
           autofocus
-          onInsert={this.props.newField.onInsert}
-          onClose={this.props.newField.onClose}
+          onInsert={this.props.onCreate}
+          onClose={this.props.onEditCancel}
           options={this.props.options}/>
       </li>
     )
@@ -33,9 +33,8 @@ class NewMetadataField extends React.PureComponent {
   static propTypes = {
     name: string.isRequired,
     options: arrayOf(object).isRequired,
-    onClickOutside: func,
     onCreate: func,
-    onCancel: func
+    onEditCancel: func,
   }
 
   static defaultProps = {

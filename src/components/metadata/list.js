@@ -17,7 +17,7 @@ class MetadataList extends React.PureComponent {
   }
 
   get hasNewMetadataField() {
-    return this.props.onCreate != null
+    return this.props.edit != null && this.props.edit.id != null
   }
 
   indexOf(id) {
@@ -91,13 +91,10 @@ class MetadataList extends React.PureComponent {
 
   render() {
     this.head = null
+    // console.log(' render list props', this.props)
 
     return (
       <ol className="metadata-fields">
-
-        {this.props.newField != null && <NewMetadataField
-          options={this.props.options}
-          newField={this.props.newField}/>}
         {this.props.fields.map(({ property, value, type, ...props }) =>
           <MetadataField {...props}
             key={property.id}
@@ -116,6 +113,10 @@ class MetadataList extends React.PureComponent {
             onNext={this.handleNext}
             onPrev={this.handlePrev}/>
         )}
+        { this.hasNewMetadataField && <NewMetadataField
+          options={this.props.options}
+          onCreate={this.props.onCreate}
+          onEditCancel={this.props.onEditCancel}/> }
       </ol>
     )
   }
@@ -137,7 +138,8 @@ class MetadataList extends React.PureComponent {
     onEditCancel: func,
     onContextMenu: func,
     onCopy: func.isRequired,
-    onChange: func.isRequired
+    onChange: func.isRequired,
+    onCreate: func
   }
 
   static defaultProps = {
