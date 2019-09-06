@@ -10,7 +10,9 @@ const cx = require('classnames')
 const { TYPE, DND } = require('../../constants')
 const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
-const { arrayOf, bool, func, number, oneOfType, shape, string, object } = require('prop-types')
+const {
+  arrayOf, bool, func, number, oneOfType, shape, string, object
+} = require('prop-types')
 const { ResourceSelect } = require('../resource/select')
 
 class NewMetadataField extends React.PureComponent {

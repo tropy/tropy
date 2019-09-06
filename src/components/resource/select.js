@@ -27,7 +27,6 @@ class ResourceSelect extends React.PureComponent {
   render() {
     return (
       <Select {...this.props}
-        autofocus={this.props.autofocus}
         placeholder={this.placeholder}
         ref={this.select}/>
     )

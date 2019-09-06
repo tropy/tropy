@@ -458,8 +458,7 @@ class Tropy extends EventEmitter {
 
     this.on('app:create-field', (win, { target }) =>
       this.dispatch(act.metadata.new({
-        id: target.id,
-        property: target.property
+        id: target.id
       }), win))
 
     this.on('app:delete-selection', (win, { target }) =>

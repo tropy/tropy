@@ -4,7 +4,7 @@ const { array } = require('../common/util')
 const { METADATA, EDIT } = require('../constants')
 
 module.exports = {
-  new(payload, meta) {
+  new(payload, meta = {}) {
     return {
       type: EDIT.START,
       payload: {

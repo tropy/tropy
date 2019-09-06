@@ -52,6 +52,7 @@ class Select extends React.Component {
   componentDidMount() {
     if (this.props.autofocus) {
       this.open()
+      this.focus()
     }
   }
 
@@ -300,7 +301,6 @@ class Select extends React.Component {
       <input
         className={cx('query', { live: this.isOpen && !isInputHidden })}
         disabled={this.isDisabled}
-        autoFocus={this.props.autofocus}
         id={this.props.id}
         onBlur={this.handleBlur}
         onChange={isInputHidden ? null : this.handleQueryChange}

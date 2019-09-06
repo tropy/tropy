@@ -149,11 +149,6 @@ class MetadataPanel extends React.PureComponent {
     }
   }
 
-  handleFieldCreate = (property) => {
-    let id = this.props.edit.id[0]
-    this.props.onMetadataAdd({ id, property })
-  }
-
   renderItemFields() {
     return !this.isEmpty && (
       <MetadataSection
@@ -177,7 +172,7 @@ class MetadataPanel extends React.PureComponent {
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterItemFields}
           onBefore={this.handleBeforeItemFields}
-          onCreate={this.handleFieldCreate}
+          onCreate={this.props.onMetadataAdd}
           options={this.props.fields.available}/>
         {!this.isBulk &&
           <ItemInfo item={this.props.items[0]}/>}
@@ -206,7 +201,7 @@ class MetadataPanel extends React.PureComponent {
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterPhotoFields}
           onBefore={this.handleBeforePhotoFields}
-          onCreate={this.handleFieldCreate}
+          onCreate={this.props.onMetadataAdd}
           options={this.props.fields.available}/>
         <PhotoInfo
           photo={this.props.photo}
@@ -236,7 +231,7 @@ class MetadataPanel extends React.PureComponent {
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterSelectionFields}
           onBefore={this.handleBeforeSelectionFields}
-          onCreate={this.handleFieldCreate}
+          onCreate={this.props.onMetadataAdd}
           options={this.props.fields.available}/>
         <SelectionInfo
           selection={this.props.selection}/>
