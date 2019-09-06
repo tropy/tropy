@@ -15,33 +15,29 @@ const {
 } = require('prop-types')
 const { ResourceSelect } = require('../resource/select')
 
-class NewMetadataField extends React.PureComponent {
+const NewMetadataField = (props) => {
+  return (
+    <li>
+      <ResourceSelect
+        canClearByBackspace={false}
+        maxRows={6}
+        autofocus
+        onInsert={props.onCreate}
+        onClose={props.onEditCancel}
+        options={props.options}/>
+    </li>
+  )
+}
 
-  render() {
-    return (
-      <li>
-        <ResourceSelect
-          canClearByBackspace={false}
-          maxRows={6}
-          autofocus
-          onInsert={this.props.onCreate}
-          onClose={this.props.onEditCancel}
-          options={this.props.options}/>
-      </li>
-    )
-  }
+NewMetadataField.propTypes = {
+  name: string.isRequired,
+  options: arrayOf(object).isRequired,
+  onCreate: func,
+  onEditCancel: func,
+}
 
-
-  static propTypes = {
-    name: string.isRequired,
-    options: arrayOf(object).isRequired,
-    onCreate: func,
-    onEditCancel: func,
-  }
-
-  static defaultProps = {
-    name: ''
-  }
+NewMetadataField.defaultProps = {
+  name: ''
 }
 
 class MetadataField extends React.PureComponent {

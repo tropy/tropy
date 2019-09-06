@@ -33,7 +33,6 @@ class ResourceSelect extends React.PureComponent {
   }
 
   static propTypes = {
-    autofocus: bool,
     className: string.isRequired,
     match: func.isRequired,
     placeholder: string,
