@@ -245,8 +245,8 @@ class MetadataPanel extends React.PureComponent {
     return (
       <div className="scroll-container">
         {this.renderItemFields()}
-        {/*this.renderPhotoFields()*/}
-        {/*this.renderSelectionFields()*/}
+        {this.renderPhotoFields()}
+        {this.renderSelectionFields()}
       </div>
     )
   }

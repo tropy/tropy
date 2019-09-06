@@ -1,6 +1,7 @@
 'use strict'
 
 const React = require('react')
+const xor = require('lodash/xor')
 const { NewMetadataField, MetadataField } = require('./field')
 const { get } = require('../../common/util')
 
@@ -16,8 +17,21 @@ class MetadataList extends React.PureComponent {
     return this.props.fields.length === 0
   }
 
+  get isEditAndFieldsEqual() {
+    let fieldsId = []
+    if (this.props.edit != null && this.props.edit.id) {
+      if (this.props.fields.id.constructor === Array) {
+        fieldsId = [...this.props.fields.id]
+      } else {
+        fieldsId[0] = this.props.fields.id
+      }
+      return xor(this.props.edit.id, fieldsId).length === 0
+    }
+    return false
+  }
+
   get hasNewMetadataField() {
-    return this.props.edit != null && this.props.edit.id != null
+    return this.isEditAndFieldsEqual && this.props.edit.property == null
   }
 
   indexOf(id) {
