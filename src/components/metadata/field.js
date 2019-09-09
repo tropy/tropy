@@ -22,6 +22,7 @@ const NewMetadataField = (props) => {
         canClearByBackspace={false}
         maxRows={6}
         autofocus
+        placeholder="panel.metadata.dropdown.placeholder"
         onInsert={props.onCreate}
         onClose={props.onEditCancel}
         options={props.options}/>
