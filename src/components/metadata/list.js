@@ -71,7 +71,8 @@ class MetadataList extends React.PureComponent {
 
   isEditing(property) {
     let { key } = this.props.fields
-    if (key != null && key === get(this.props.edit, [property])) {
+    if (key != null && key === get(this.props.edit, 'id')
+      && property === get(this.props.edit, 'property')) {
       this.head = property
       return true
     } else {
@@ -80,7 +81,7 @@ class MetadataList extends React.PureComponent {
   }
 
   edit = (property) => {
-    this.props.onEdit({ field: { [property]: this.props.fields.key } })
+    this.props.onEdit({ field: { id: this.props.fields.key, property } })
   }
 
   handleChange = (data, hasChanged) => {
