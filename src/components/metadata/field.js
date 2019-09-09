@@ -19,6 +19,12 @@ const NewMetadataField = (props) => {
   return (
     <li>
       <ResourceSelect
+        hideClearButton
+        isRequired
+        isStatic
+        isOpen
+        isValueHidden
+        className="focus"
         canClearByBackspace={false}
         maxRows={6}
         autofocus
