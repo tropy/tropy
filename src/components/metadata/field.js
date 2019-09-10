@@ -16,17 +16,19 @@ const {
 const { ResourceSelect } = require('../resource/select')
 
 
-const NewMetadataField = ({ options, onCreate, onCancel }) => (
+const NewMetadataField = ({ options, value, onCreate, onCancel }) => (
   <li>
     <ResourceSelect
       autofocus
       canClearByBackspace={false}
       hideClearButton
       isRequired
+      isSelectionHidden
       isValueHidden
       maxRows={6}
       options={options}
       placeholder="panel.metadata.dropdown.placeholder"
+      value={value}
       onBlur={onCancel}
       onInsert={onCreate}/>
   </li>
@@ -34,6 +36,7 @@ const NewMetadataField = ({ options, onCreate, onCancel }) => (
 
 NewMetadataField.propTypes = {
   options: arrayOf(object).isRequired,
+  value: arrayOf(number),
   onCancel: func,
   onCreate: func.isRequired
 }

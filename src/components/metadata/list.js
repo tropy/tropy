@@ -124,6 +124,7 @@ class MetadataList extends React.PureComponent {
         {this.hasNewMetadataField &&
           <NewMetadataField
             options={this.props.options}
+            value={this.props.fields.map(f => f.property.id)}
             onCancel={this.props.onEditCancel}
             onCreate={this.handleCreate}/>}
       </ol>
