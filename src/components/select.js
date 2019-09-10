@@ -51,8 +51,8 @@ class Select extends React.Component {
 
   componentDidMount() {
     if (this.props.autofocus) {
-      this.open()
       this.focus()
+      // this.open()
     }
   }
 
