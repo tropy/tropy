@@ -16,7 +16,7 @@ const {
 const { ResourceSelect } = require('../resource/select')
 
 
-const NewMetadataField = ({ id, options, onCreate, onEditCancel }) => (
+const NewMetadataField = ({ id, options, onCreate, onCancel }) => (
   <li>
     <ResourceSelect
       autofocus
@@ -27,7 +27,7 @@ const NewMetadataField = ({ id, options, onCreate, onEditCancel }) => (
       maxRows={6}
       options={options}
       placeholder="panel.metadata.dropdown.placeholder"
-      onClose={onEditCancel}
+      onBlur={onCancel}
       onInsert={(property) => void onCreate({ id, property })}/>
   </li>
 )
@@ -38,8 +38,8 @@ NewMetadataField.propTypes = {
     arrayOf(number)
   ]),
   options: arrayOf(object).isRequired,
-  onCreate: func.isRequired,
-  onEditCancel: func
+  onCancel: func,
+  onCreate: func.isRequired
 }
 
 class MetadataField extends React.PureComponent {

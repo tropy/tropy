@@ -131,7 +131,7 @@ class MetadataList extends React.PureComponent {
             id={this.props.fields.id}
             options={this.props.options}
             onCreate={this.props.onCreate}
-            onEditCancel={this.props.onEditCancel}/>}
+            onCancel={this.props.onEditCancel}/>}
       </ol>
     )
   }
