@@ -94,8 +94,6 @@ const getMetadataFields = memo(
       }
     }
 
-    let ext = fld.length
-
     if (data != null) {
       for (let id in data) {
         if (id === 'id' || idx[id] != null) continue
@@ -110,9 +108,7 @@ const getMetadataFields = memo(
       fld.id = data.id
     }
 
-    fld.key = Array.isArray(fld.id) ? 'bulk' : fld.id
     fld.idx = idx
-    fld.ext = ext
 
     return fld
   }

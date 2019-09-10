@@ -1,37 +1,25 @@
 'use strict'
 
 const React = require('react')
-const xor = require('lodash/xor')
 const { NewMetadataField, MetadataField } = require('./field')
-const { get } = require('../../common/util')
-
+const { shallow } = require('../../common/util')
 const { arrayOf, bool, func, object, shape, string } =  require('prop-types')
 
 
 class MetadataList extends React.PureComponent {
   get isBulk() {
-    return this.props.fields.key === 'bulk'
+    return Array.isArray(this.props.fields.id) &&
+      this.props.fields.id.length > 1
   }
 
   get isEmpty() {
     return this.props.fields.length === 0
   }
 
-  get isEditAndFieldsEqual() {
-    let fieldsId = []
-    if (this.props.edit != null && this.props.edit.id) {
-      if (this.props.fields.id.constructor === Array) {
-        fieldsId = [...this.props.fields.id]
-      } else {
-        fieldsId[0] = this.props.fields.id
-      }
-      return xor(this.props.edit.id, fieldsId).length === 0
-    }
-    return false
-  }
-
   get hasNewMetadataField() {
-    return this.isEditAndFieldsEqual && this.props.edit.property == null
+    return this.props.edit != null &&
+      !this.props.edit.property &&
+      shallow(this.props.edit.id, this.props.fields.id)
   }
 
   indexOf(id) {
@@ -70,18 +58,22 @@ class MetadataList extends React.PureComponent {
   }
 
   isEditing(property) {
-    let { key } = this.props.fields
-    if (key != null && key === get(this.props.edit, 'id')
-      && property === get(this.props.edit, 'property')) {
-      this.head = property
-      return true
-    } else {
-      return false
+    try {
+      var isEditing = this.props.edit != null &&
+        property === this.props.edit.property &&
+        shallow(this.props.fields.id, this.props.edit.id)
+      return isEditing
+
+    } finally {
+      // Update head for keyboard navigation!
+      if (isEditing) this.head = property
     }
   }
 
   edit = (property) => {
-    this.props.onEdit({ field: { id: this.props.fields.key, property } })
+    this.props.onEdit({
+      field: { id: this.props.fields.id, property }
+    })
   }
 
   handleChange = (data, hasChanged) => {
@@ -90,6 +82,10 @@ class MetadataList extends React.PureComponent {
     } else {
       this.props.onEditCancel()
     }
+  }
+
+  handleCreate = (property) => {
+    this.props.onCreate({ id: this.props.fields.id, property })
   }
 
   handleNext = () => {
@@ -128,10 +124,9 @@ class MetadataList extends React.PureComponent {
         )}
         {this.hasNewMetadataField &&
           <NewMetadataField
-            id={this.props.fields.id}
             options={this.props.options}
-            onCreate={this.props.onCreate}
-            onCancel={this.props.onEditCancel}/>}
+            onCancel={this.props.onEditCancel}
+            onCreate={this.handleCreate}/>}
       </ol>
     )
   }

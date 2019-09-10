@@ -16,7 +16,7 @@ const {
 const { ResourceSelect } = require('../resource/select')
 
 
-const NewMetadataField = ({ id, options, onCreate, onCancel }) => (
+const NewMetadataField = ({ options, onCreate, onCancel }) => (
   <li>
     <ResourceSelect
       autofocus
@@ -28,15 +28,11 @@ const NewMetadataField = ({ id, options, onCreate, onCancel }) => (
       options={options}
       placeholder="panel.metadata.dropdown.placeholder"
       onBlur={onCancel}
-      onInsert={(property) => void onCreate({ id, property })}/>
+      onInsert={onCreate}/>
   </li>
 )
 
 NewMetadataField.propTypes = {
-  id: oneOfType([
-    number,
-    arrayOf(number)
-  ]),
   options: arrayOf(object).isRequired,
   onCancel: func,
   onCreate: func.isRequired
