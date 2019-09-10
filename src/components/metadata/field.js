@@ -19,32 +19,24 @@ const NewMetadataField = (props) => {
   return (
     <li>
       <ResourceSelect
+        autofocus
+        canClearByBackspace={false}
         hideClearButton
         isRequired
-        isStatic
-        isOpen
         isValueHidden
-        className="focus"
-        canClearByBackspace={false}
         maxRows={6}
-        autofocus
+        options={props.options}
         placeholder="panel.metadata.dropdown.placeholder"
-        onInsert={props.onCreate}
         onClose={props.onEditCancel}
-        options={props.options}/>
+        onInsert={props.onCreate}/>
     </li>
   )
 }
 
 NewMetadataField.propTypes = {
-  name: string.isRequired,
   options: arrayOf(object).isRequired,
   onCreate: func,
-  onEditCancel: func,
-}
-
-NewMetadataField.defaultProps = {
-  name: ''
+  onEditCancel: func
 }
 
 class MetadataField extends React.PureComponent {
