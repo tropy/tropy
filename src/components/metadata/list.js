@@ -8,8 +8,7 @@ const { arrayOf, bool, func, object, shape, string } =  require('prop-types')
 
 class MetadataList extends React.PureComponent {
   get isBulk() {
-    return Array.isArray(this.props.fields.id) &&
-      this.props.fields.id.length > 1
+    return this.props.fields.id.length > 1
   }
 
   get isEmpty() {

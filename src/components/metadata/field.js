@@ -11,7 +11,7 @@ const { TYPE, DND } = require('../../constants')
 const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
 const {
-  arrayOf, bool, func, number, oneOfType, shape, string, object
+  arrayOf, bool, func, number, shape, string, oneOfType, object
 } = require('prop-types')
 const { ResourceSelect } = require('../resource/select')
 
@@ -150,11 +150,7 @@ class MetadataField extends React.PureComponent {
   }
 
   static propTypes = {
-    id: oneOfType([
-      number,
-      arrayOf(number)
-    ]),
-
+    id: arrayOf(number),
     isEditing: bool,
     isDisabled: bool,
     isExtra: bool.isRequired,

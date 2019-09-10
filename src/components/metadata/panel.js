@@ -241,7 +241,6 @@ class MetadataPanel extends React.PureComponent {
 
 
   render() {
-    console.log('this.props.edit', this.props.edit)
     return (
       <div className="scroll-container">
         {this.renderItemFields()}
