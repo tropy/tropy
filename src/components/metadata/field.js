@@ -36,7 +36,7 @@ const NewMetadataField = ({ options, value, onCreate, onCancel }) => (
 
 NewMetadataField.propTypes = {
   options: arrayOf(object).isRequired,
-  value: arrayOf(number),
+  value: arrayOf(string),
   onCancel: func,
   onCreate: func.isRequired
 }
