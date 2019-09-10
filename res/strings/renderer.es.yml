@@ -1,0 +1,602 @@
+es:
+  sidebar:
+    lists: Listas
+    tags: Etiquetas
+    imports: Última importación
+    trash: Objetos suprimidos
+  toolbar:
+    import: Importar fotos
+    items: >
+        {count, plural,
+
+        =0 {No hay objetos en esta visualización}
+
+        one {1 Objeto en esta visualización}
+
+        other {# Objetos en esta visualización}}
+    search:
+      placeholder: Búsqueda
+  panel:
+    metadata:
+      tab: Metadatos
+      photo: Foto
+      item: >
+          {count, plural,
+
+          =0 {}
+
+          one {Objeto}
+
+          other {# objetos}}
+      selection: Selección
+      popup:
+        placeholder: Añadir nuevo campo ...
+    tags:
+      tab: Etiquetas
+      add: >
+          {count, plural,
+
+          =0 {Añadir una etiqueta}
+
+          one {Añadir una etiqueta a 1 objeto}
+
+          other {Añadir una etiqueta a # objetos}}
+    photo:
+      title: >
+          {count, plural,
+
+          =0 {No hay fotos}
+
+          one {1 foto}
+
+          other {# fotos}}
+      create: Añadir fotos
+      selection: Selección
+    note:
+      title: >
+          {count, plural,
+
+          =0 {No hay notas}
+
+          one {1 nota}
+
+          other {# notas}}
+      create: Añadir nota
+  print:
+    item: Objeto
+    photo: Foto
+    notes: Notas
+    note: Nota {idx, number}
+    tags: Etiquetas
+  about:
+    version: Versión {version}
+    rrchnm:
+      title: Roy Rosenzweig Center for History and New Media
+      url: https://rrchnm.org
+    cds:
+      title: Corporation for Digital Scholarship
+      url: http://digitalscholar.org
+    text: >
+        Tropy es desarrollado por el {rrchnm}, un equipo que crea recursos para la
+        enseñanza de la historia, exhibiciones digitales y software de código abierto.
+    trademark: Tropy es una marca registrada de la {cds}.
+    release:
+      title: Notas de versión
+      url: https://github.com/tropy/tropy/releases/tag/{version}
+    license:
+      title: Información sobra la licencia
+      url: https://tropy.org/license
+    credits:
+      title: Créditos
+      url: https://tropy.org/credits
+  project:
+    none: Arrastra y suelta un archivo de proyecto aquí o crea un {newProject}
+    empty: Arrastrar y suelta tus fotos en Tropy para empezar.
+    new: Nuevo proyecto
+    recent: Proyectos recientes
+    corrupted: >
+        Tu archivo de proyecto puede estar dañado. Intervención manual puede ser necesaria
+        para repararlo. Consulta la guía del usuario para obtener ayuda.
+  wizard:
+    project:
+      title: Crear un nuevo proyecto
+      submit: Crear proyecto
+      name: Nombre
+      save_as: Cambiar el nombre del archivo o su ubicación
+      change: Cambiar
+  prefs:
+    title: Preferencias
+    app:
+      label: Parámetros
+      style:
+        theme: Tema
+        themes:
+          light: Luminoso
+          dark: Obscuro
+          system: Seguir las preferencias del sistema
+      print:
+        mode: Imprimir
+        modes:
+          item: Un objeto por página
+          photo: Una foto por página
+          selection: Una selección por página
+        metadata: Incluir metadatos
+        notes: Incluir notas
+        overflow: Permitir al contenido de utilizar más de una página
+      locale:
+        locale: Lengua
+        locales:
+          de: Deutsch
+          en: English
+          fr: Français
+          it: Italiano
+          ja: 日本語
+      templates:
+        label: Plantillas por defecto
+        item: Objeto
+        photo: Foto
+        selection: Selección
+      title:
+        label: Utilizar el nombre del archivo como
+        force: Sobreescribir los metadatos de foto incorporados
+      debug: Activar le modo de desarrollo
+      localtime: Suponer que la marca de hora de las imágenes usa la hora local
+      dup:
+        label: Durante la importación
+        option:
+          skip: Omitir las fotos duplicadas
+          import: Aceptar las fotos duplicadas
+          prompt: Preguntarme cada vez
+      export:
+        label: Exportar
+        note:
+          format:
+            html: Notas en HTML
+            markdown: Notas en Markdown
+      ui:
+        label: Interfaz
+        option:
+          invertScroll: Invertir la dirección durante el desplazamiento en la fotos
+          invertZoom: 'Invertir la dirección cuando se usa el zoom en las fotos '
+          overlayToolbars: Esconder y mostrar automáticamente las barras de herramientas
+      zoomMode:
+        label: Por defecto
+        option:
+          fit: Escalar fotos por altura
+          fill: Escalar fotos por anchura
+      layout:
+        label: Modo de visualización de objeto
+        option:
+          stacked: Vertical
+          side-by-side: Lado a lado
+    project:
+      label: Projecto
+    template:
+      label: Plantillas
+      new: Nueva plantilla ...
+      create: Crear
+      select: Plantilla
+      tools:
+        new: Nuevo
+        copy: Duplicar
+        delete: Suprimir
+        import: Importar
+        export: Exportar
+    vocab:
+      label: Esquemas
+      export: Exportar
+      classes: >
+          {count, plural,
+
+          =0 {Ninguna clase}
+
+          one {# Clase}
+
+          other {# Clases}
+
+          }
+      datatypes: >
+          {count, plural,
+
+          =0 {Ningún tipo de dato} one {# Tipo de dato}
+
+          other {# Tipos de datos}
+
+          }
+      properties: >
+          {count, plural,
+
+          =0 {Ninguna propiedad}
+
+          one {# Propiedad}
+
+          other {# Propiedades}
+
+          }
+    plugins:
+      label: Plugins
+      enable: Activar
+      disable: Desactivar
+      install: Instalar plugin
+      uninstall: Desinstalar
+      noInfo: Autor desconocido
+      homepage: Más
+  item:
+    created: Creación
+    modified: Modificado
+    template: Plantilla
+  photo:
+    file: Archivo
+    size: Talla
+    type: Tipo
+    created: Creación
+    modified: Modificado
+  selection:
+    size: Tamaño
+    created: Creación
+    modified: Modificado
+  esper:
+    tool:
+      pan: Herramienta de panorama
+      select: Herramienta de selección
+      rotate: Rotar
+      mirror: Espejo
+      edit: Modificar foto
+    mode:
+      fill: Llenar por altura
+      fit: Llenar por anchura
+      zoom: Zoom
+    panel:
+      negative: Invertir colores
+      revert: Revertir al original
+      brightness:
+        label: Brillo
+        value: "{value, number}"
+      contrast:
+        label: Contraste
+        value: "{value, number}"
+      hue:
+        label: Tinte
+        value: "{value, number}°"
+      saturation:
+        label: Saturación
+        value: "{value, number}"
+      sharpen:
+        label: Nitidez
+        value: "{value, number}"
+  notepad:
+    placeholder: Añade tus notas aqui ...
+  completions:
+    empty: Ninguna opción disponible
+    noMatches: Ningún resultado
+  select:
+    column:
+      placeholder: Búsqueda
+  template:
+    id: URI
+    name: Nombre
+    type: Tipo
+    creator: Creador
+    description: Descripción
+    types:
+      https://tropy.org/v1/tropy#Item: Plantilla de objeto
+      https://tropy.org/v1/tropy#Photo: Plantilla de foto
+      https://tropy.org/v1/tropy#Selection: Plantilla de selección
+    field:
+      property: Propiedad
+      label: Rótulo
+      datatype: Tipo de datos
+      isRequired: Campo obligatorio
+      hint: Consejo
+      value: Valor por defecto
+      isConstant: Sólo lectura
+  vocab:
+    id: URI
+    prefix: Prefijo
+    title: Nombre
+    description: Descripción
+    properties: Propiedades
+    seeAlso: Ver también
+  property:
+    select: Seleccionar una propiedad ...
+  datatype:
+    select: Seleccionar un tipo de dato ...
+  resource:
+    select: Seleccionar un recurso ...
+    id: URI
+    label: Rótulo
+    description: Descripción
+    comment: Comentario
+  dialog:
+    notify:
+      buttons:
+      - OK
+    error:
+      title: Error
+      buttons:
+      - Cerrar
+      - Copiar el error
+      - Mostrar logs
+    prompt:
+      item:
+        destroy:
+          message: >
+              ¿Estás seguro/a de querer suprimir permanentemente estos objetos? Esta
+              acción no puede deshacerse.
+          buttons:
+          - Cancelar
+          - Borrar
+      photo:
+        consolidate:
+          message: >
+              ¿Quieres que Tropy verifique y remplace automáticamente las fotos faltantes
+              en esta ubicación?
+          buttons:
+          - 'No'
+          - Si
+      dup:
+        detail: >
+            Esta foto ya existe en el proyecto. ¿Estás seguro/a de querer importarla
+            de nuevo?
+        checkboxLabel: Recordar mi elección
+        buttons:
+        - Omitir
+        - Importar aún asi
+      plugin:
+        uninstall:
+          type: advertencia
+          detail: >
+              ¿Deseas realmente suprimir este plugin? Continuar lo suprimirá permanentemente,
+              igual que su configuración.
+          buttons:
+          - Cancelar
+          - Borrar
+    filter:
+      csv: CSV
+      templates: Plantillas Tropy
+      images: Imágenes
+      items: Imágenes y objetos Tropy
+      projects: Proyectos Tropy
+      rdf: Esquemas RDF
+      jsonld: JSON-LD
+  action:
+    project:
+      save: Guardar proyecto
+    list:
+      create: Crear lista
+      delete: Suprimir lista
+      item:
+        add: Añadir objetos a lista
+        merge: Fusionar objetos
+        remove: Quitar objeto de la lista
+        restore: Añadir objeto a lista
+      order: Ordenar lista
+      restore: Restaurar lista
+      save: Guardar lista
+    item:
+      create: Crear objetos
+      delete: Suprimir objetos
+      explode: Deconstruir objeto
+      implode: Fusionar objetos
+      merge: Fusionar objetos
+      split: Deconstruir los objetos
+      import: Importar objetos
+      restore: Restaurar objetos
+      save: Guardar objeto
+      tag:
+        create: Tag
+        toggle: Tag
+        clear: Quitar etiquetas
+    metadata:
+      save: Guardar metadatos
+    ontology:
+      import: Importar esquemas
+      vocab:
+        save: Guardar esquema
+      label:
+        save: Guardar rótulo
+      template:
+        import: Importar plantilla
+    photo:
+      create: Importar foto
+      delete: Borrar foto
+      duplicate: Duplicar foto
+      move: Mover foto
+      order: Ordernar fotos
+      restore: Restaurar foto
+      save: Guardar foto
+    note:
+      create: Crear nota
+      delete: Suprimir nota
+      order: Ordenar notas
+      restore: Restaurar nota
+      save: Guardar nota
+    tag:
+      create: Crear etiqueta
+      delete: Borrar etiqueta
+      restore: Crear etiqueta
+      save: Guardar etiqueta
+    selection:
+      create: Crear selección
+      delete: Suprimir selección
+      restore: Crear selección
+      save: Guardar selección
+      order: Ordenar selecciones
+  activity:
+    cache:
+      prune: Optimización de la caché del proyecto ...
+      purge: Purga de caché antigua ...
+    project:
+      save: Guardando ...
+    list:
+      create: Creando lista ...
+      delete: Suprimiendo lista ...
+      item:
+        add: Añadiendo objetos a lista ...
+        merge: Fusionando objetos ...
+        remove: Removiendo objetos de lista ...
+        restore: Restaurando objetos a lista ...
+      load: Cargando listas ...
+      order: Ordenando listas ...
+      restore: Restaurando lista ...
+      save: Guardando lista ...
+    tag:
+      create: Creando etiqueta ...
+      delete: Suprimiendo etiqueta ...
+      load: Cargando etiquetas ...
+      restore: Restaurando etiqueta ...
+      save: Guardando etiqueta ...
+    item:
+      create: Creando objeto ...
+      delete: Suprimiendo objeto ...
+      destroy: Suprimiendo objetos permanentemente ...
+      explode: Deconstruyendo objeto ...
+      export: Exportando objeto ...
+      implode: Restaurando objeto ...
+      import: >
+          {hasProgressBar, select,
+
+          true {Importando objeto {progress, number} de {total, number} …}
+
+          other {Importando objetos …}
+
+          }
+      load: Cargando objetos ...
+      merge: Fusionando objeto ...
+      restore: Restaurando objeto ...
+      save: Guardando objetos ...
+      tag:
+        create: Etiquetando objeto
+        toggle: Etiquetando objeto ...
+        clear: Desetiquetando objeto ...
+    metadata:
+      load: Cargando metadatos ...
+      save: Guardando metadatos ...
+    ontology:
+      load: Cargando ontología ...
+      import: Importando esquema ...
+      vocab:
+        save: Guardando esquema ....
+      label:
+        save: Guardando rótulo
+      template:
+        import: Importando plantillas ...
+    photo:
+      consolidate: >
+          {hasProgressBar, select,
+
+          true {Agrupando foto {progress, number} de {total, number} …}
+
+          other {Agrupando fotos …}
+
+          }
+      create: >
+          {hasProgressBar, select,
+
+          true {Importando foto {progress, number} de {total, number} …}
+
+          other {Importando fotos …}
+
+          }
+      delete: Borrando foto ...
+      duplicate: >
+          {hasProgressBar, select,
+
+          true {Duplicando foto {progress, number} de {total, number} …}
+
+          other {Duplicando fotos …}
+
+          }
+      load: Cargando fotos ...
+      move: Moviendo fotos ...
+      order: Ordenando fotos ...
+      save: Guardando foto ...
+      restore: Restaurando fotos ...
+    note:
+      create: Creando nota ...
+      delete: Suprimiendo nota ...
+      load: Cargando notas ...
+      order: Ordenando notas ...
+      restore: Restaurando notas ...
+    selection:
+      create: Creando selección
+      load: Cargando selecciones ...
+  editor:
+    commands:
+      bold: Negrilla
+      italic: Itálica
+      underline: Subrayado
+      overline: Superlineado
+      strikethrough: Tachado
+      subscript: Subíndice
+      superscript: Superíndice
+      blockquote: Insertar cita
+      ol: Lista numerada
+      ul: Lista con viñetas
+      link:
+        button: Insertar enlace
+        target: Destino del enlace
+        title: Título del enlace
+      left: Alinear a la izquierda
+      center: Centrar
+      right: Alinear a la derecha
+      sinkListItem: Elevar elemento
+      liftListItem: Descender elemento
+  error:
+    cache:
+      prune: Falla al optimizar la caché del proyecto.
+      purge: Falla al remover la caché antigua.
+    project:
+      created: Falla en la creación de proyecto.
+    item:
+      export: Falla en la exportación de objetos.
+      merge: Falla en la fusión de objetos.
+      import: Falla en la importación de objeto.
+      tag:
+        save: Falla en el guardado de la etiqueta.
+        create: Falla en el etiquetado. Las etiquetas deben ser únicas en el objeto.
+      template:
+        change: Falla en la carga de la plantilla del objeto.
+    list:
+      load: Falla en el cargado de listas.
+      create: Falla en la creación de lista. Los nombres de listas deben ser únicos.
+      move: Falla al mover la lista. Los nombres de lista deben ser únicos en cada nivel.
+      save: Falla al guardar la lista.
+      item:
+        add: Falla al añadir objeto(s) a la lista.
+    photo:
+      consolidate: Falla en la agrupación de fotos.
+      create: Falla en la importación de foto.
+      save: Falla al guardar foto.
+      template:
+        change: Falla al cambiar la plantilla de foto.
+    selection:
+      create: Falla en la creación de la selección.
+      template:
+        change: Falla al cambiar la plantilla de selección.
+    ontology:
+      migrate: Falla en la actualización de la base de datos de ontologías.
+      import: Falla en la importación de esquema.
+      vocab:
+        save: Falla al salvar esquema. Los prefijos deben ser únicos.
+      template:
+        import: Falla en la importación de plantilla.
+        field:
+          add: Falla al añadir campo a plantilla.
+          remove: Falla al suprimir campo a plantilla.
+    tag:
+      create: Falla en la creación de etiqueta. Los nombre de etiquetas deben ser únicos.
+  flash:
+    update:
+      ready:
+        message: >
+            Tropy {version} está listo para ser instalado. ¿Quieres instalar y reiniciar
+            la aplicación?
+        confirm: Reiniciar ahora
+  plugin:
+    name: Nombre
+    plugin: Plugin
+    options: Opciones
+    hooks:
+      export: Exportar
+      import: Importar
