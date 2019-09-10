@@ -15,7 +15,8 @@ const {
 } = require('prop-types')
 const { ResourceSelect } = require('../resource/select')
 
-const NewMetadataField = (props) => (
+
+const NewMetadataField = ({ id, options, onCreate, onEditCancel }) => (
   <li>
     <ResourceSelect
       autofocus
@@ -24,16 +25,20 @@ const NewMetadataField = (props) => (
       isRequired
       isValueHidden
       maxRows={6}
-      options={props.options}
+      options={options}
       placeholder="panel.metadata.dropdown.placeholder"
-      onClose={props.onEditCancel}
-      onInsert={props.onCreate}/>
+      onClose={onEditCancel}
+      onInsert={(property) => void onCreate({ id, property })}/>
   </li>
 )
 
 NewMetadataField.propTypes = {
+  id: oneOfType([
+    number,
+    arrayOf(number)
+  ]),
   options: arrayOf(object).isRequired,
-  onCreate: func,
+  onCreate: func.isRequired,
   onEditCancel: func
 }
 

@@ -104,12 +104,6 @@ class MetadataList extends React.PureComponent {
     else this.props.onBefore()
   }
 
-  handleFieldCreate = (property) => {
-    let id = this.props.fields.id
-    this.props.onCreate({ id, property })
-  }
-
-
   render() {
     this.head = null
     return (
@@ -134,8 +128,9 @@ class MetadataList extends React.PureComponent {
         )}
         {this.hasNewMetadataField &&
           <NewMetadataField
+            id={this.props.fields.id}
             options={this.props.options}
-            onCreate={this.handleFieldCreate}
+            onCreate={this.props.onCreate}
             onEditCancel={this.props.onEditCancel}/>}
       </ol>
     )
