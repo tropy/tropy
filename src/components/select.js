@@ -44,6 +44,7 @@ class Value extends React.Component {
 
 class Select extends React.Component {
   state = {
+    hasFocus: !!this.props.autofocus,
     query: '',
     selection: [],
     values: []
