@@ -29,6 +29,7 @@ const NewMetadataField = ({ options, value, onCreate, onCancel }) => (
       options={options}
       placeholder="panel.metadata.dropdown.placeholder"
       value={value}
+      onClose={({ type } = {}) => type === 'escape' && onCancel()}
       onBlur={onCancel}
       onInsert={onCreate}/>
   </li>
