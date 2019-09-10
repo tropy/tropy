@@ -354,6 +354,18 @@ describe('util', () => {
       expect(shallow([1], [1])).to.be.true
       expect(shallow([1, 2], [1, 2])).to.be.true
     })
+
+    it('compares atomic params for identity', () => {
+      expect(shallow(null, {})).to.be.false
+      expect(shallow({}, null)).to.be.false
+      expect(shallow(null)).to.be.false
+      expect(shallow(undefined, null)).to.be.false
+      expect(shallow()).to.be.true
+      expect(shallow(null, null)).to.be.true
+      expect(shallow(3, 3)).to.be.true
+      expect(shallow('1', 1)).to.be.false
+      expect(shallow(1, 2)).to.be.false
+    })
   })
 
   describe('.camelcase', () => {

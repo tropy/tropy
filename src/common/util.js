@@ -461,7 +461,9 @@ const util = {
 
   shallow(a, b, props) {
     if (a === b) return true
-    if (a == null || b == null) return false
+
+    if (typeof a !== 'object' || typeof b !== 'object' || !a || !b)
+      return false
 
     if (Array.isArray(a)) {
       if (!Array.isArray(b) || a.length !== b.length)
