@@ -16,8 +16,9 @@ class MetadataList extends React.PureComponent {
   }
 
   get hasNewMetadataField() {
-    return this.props.edit != null &&
-      !this.props.edit.property &&
+    return this.props.onCreate != null &&
+      this.props.edit != null &&
+      this.props.edit.property == null &&
       shallow(this.props.edit.id, this.props.fields.id)
   }
 
@@ -141,7 +142,7 @@ class MetadataList extends React.PureComponent {
       property: object.isRequired,
       value: object
     })).isRequired,
-    options: arrayOf(object).isRequired,
+    options: arrayOf(object),
     onAfter: func.isRequired,
     onBefore: func.isRequired,
     onEdit: func,
@@ -150,10 +151,6 @@ class MetadataList extends React.PureComponent {
     onCopy: func.isRequired,
     onChange: func.isRequired,
     onCreate: func
-  }
-
-  static defaultProps = {
-    options: []
   }
 }
 
