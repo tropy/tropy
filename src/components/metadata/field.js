@@ -15,23 +15,21 @@ const {
 } = require('prop-types')
 const { ResourceSelect } = require('../resource/select')
 
-const NewMetadataField = (props) => {
-  return (
-    <li>
-      <ResourceSelect
-        autofocus
-        canClearByBackspace={false}
-        hideClearButton
-        isRequired
-        isValueHidden
-        maxRows={6}
-        options={props.options}
-        placeholder="panel.metadata.dropdown.placeholder"
-        onClose={props.onEditCancel}
-        onInsert={props.onCreate}/>
-    </li>
-  )
-}
+const NewMetadataField = (props) => (
+  <li>
+    <ResourceSelect
+      autofocus
+      canClearByBackspace={false}
+      hideClearButton
+      isRequired
+      isValueHidden
+      maxRows={6}
+      options={props.options}
+      placeholder="panel.metadata.dropdown.placeholder"
+      onClose={props.onEditCancel}
+      onInsert={props.onCreate}/>
+  </li>
+)
 
 NewMetadataField.propTypes = {
   options: arrayOf(object).isRequired,
