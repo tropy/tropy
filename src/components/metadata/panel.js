@@ -299,10 +299,6 @@ module.exports = {
     }),
 
     (dispatch) => ({
-      onMetadataClose(...args) {
-        dispatch(actions.metadata.close(...args))
-      },
-
       onMetadataAdd(...args) {
         dispatch(actions.metadata.add(...args))
       },
