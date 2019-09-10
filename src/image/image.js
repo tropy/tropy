@@ -173,6 +173,7 @@ class Image {
             case MIME.PNG:
             case MIME.SVG:
             case MIME.WEBP:
+            case MIME.PDF:
               this.buffer = buffer
               break
             case MIME.TIFF:
@@ -244,6 +245,7 @@ class Image {
     if (!isSelection) {
       switch (this.mimetype) {
         case MIME.TIFF:
+        case MIME.PDF:
           variants.push('full')
           break
       }

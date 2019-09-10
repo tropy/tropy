@@ -16,6 +16,7 @@ const SUPPORTED_IMAGE = {
   [MIME.GIF]: true,
   [MIME.JPEG]: true,
   [MIME.PNG]: true,
+  [MIME.PDF]: true,
   [MIME.SVG]: true,
   [MIME.TIFF]: true,
   [MIME.WEBP]: true
