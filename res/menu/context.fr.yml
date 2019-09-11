@@ -316,7 +316,7 @@ fr:
             type: checkbox
     metadata-list:
       - label: Nouveau champ…
-        command: 'ctx:add-extra-field'
+        command: 'app:create-field'
     metadata-field:
       - label: Supprimer le champ
         command: 'app:delete-field'
@@ -617,7 +617,7 @@ fr:
         accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: Nouveau champ…
-        command: 'ctx:add-extra-field'
+        command: 'app:create-field'
     metadata-field:
       - label: Supprimer le champ
         command: 'app:delete-field'
@@ -953,7 +953,7 @@ fr:
         accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: Nouveau champ…
-        command: 'ctx:add-extra-field'
+        command: 'app:create-field'
     metadata-field:
       - label: Supprimer le champ
         command: 'app:delete-field'

@@ -316,7 +316,7 @@ ja:
             type: checkbox
     metadata-list:
       - label: 新規フィールド
-        command: 'ctx:add-extra-field'
+        command: 'app:create-field'
     metadata-field:
       - label: フィールドを削除
         command: 'app:delete-field'
@@ -617,7 +617,7 @@ ja:
         accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: 新規フィールド
-        command: 'ctx:add-extra-field'
+        command: 'app:create-field'
     metadata-field:
       - label: フィールドを削除
         command: 'app:delete-field'
@@ -953,7 +953,7 @@ ja:
         accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: 新規フィールド
-        command: 'ctx:add-extra-field'
+        command: 'app:create-field'
     metadata-field:
       - label: フィールドを削除
         command: 'app:delete-field'
