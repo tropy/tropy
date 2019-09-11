@@ -52,7 +52,6 @@ class Window extends EventEmitter {
       'minimizable'
     ])
 
-    this.pointer = {}
     this.plugins = new Plugins(opts.plugins)
     this.unloader = 'close'
     this.unloaders = []
@@ -71,7 +70,6 @@ class Window extends EventEmitter {
         this.handleIpcEvents()
         this.handleEditorCommands()
         this.handleModifierKeys()
-        this.handleMouseEnter()
         this.handleMouseButtons()
         this.handleUncaughtExceptions()
 
@@ -187,14 +185,6 @@ class Window extends EventEmitter {
 
         this.reload()
       })
-      .on('ctx', (_, action, detail) => {
-        // NB: delay event for pointer position to be up-to-date!
-        delay(25).then(() => {
-          emit(document, `ctx:${action}`, {
-            detail: { ...detail, ...this.pointer }
-          })
-        })
-      })
       .on('global', (_, action) => {
         emit(document, `global:${action}`)
       })
@@ -296,13 +286,6 @@ class Window extends EventEmitter {
       toggle(document.body, 'meta-key', event.metaKey === true)
       toggle(document.body, 'ctrl-key', event.ctrlKey === true)
     }
-  }
-
-  handleMouseEnter() {
-    on(document, 'mouseenter', event => {
-      this.pointer.x = event.clientX
-      this.pointer.y = event.clientY
-    }, { passive: true, capture: false })
   }
 
   handleMouseButtons() {

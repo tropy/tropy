@@ -461,12 +461,25 @@ const util = {
 
   shallow(a, b, props) {
     if (a === b) return true
-    if (a == null || b == null) return false
 
-    if (util.blank(props)) props = keys(a)
+    if (typeof a !== 'object' || typeof b !== 'object' || !a || !b)
+      return false
 
-    for (let prop of props) {
-      if (a[prop] !== b[prop]) return false
+    if (Array.isArray(a)) {
+      if (!Array.isArray(b) || a.length !== b.length)
+        return false
+
+      for (let i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false
+      }
+
+    } else {
+      if (Array.isArray(b)) return false
+      if (util.blank(props)) props = keys(a)
+
+      for (let prop of props) {
+        if (a[prop] !== b[prop]) return false
+      }
     }
 
     return true

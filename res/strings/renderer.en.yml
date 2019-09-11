@@ -23,7 +23,7 @@ en:
           one {Item}
           other {# Items}}
       selection: Selection
-      popup:
+      dropdown:
         placeholder: Add new field …
     tags:
       tab: Tags

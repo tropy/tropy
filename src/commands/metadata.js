@@ -5,7 +5,7 @@ const { call, put, select } = require('redux-saga/effects')
 const { pick } = require('../common/util')
 const { text } = require('../value')
 const mod = require('../models/metadata')
-const act = require('../actions/metadata')
+const act = require('../actions')
 const { METADATA } = require('../constants')
 const { keys } = Object
 
@@ -32,7 +32,7 @@ class Copy extends Command {
 
     let data = yield this.fetch()
 
-    yield put(act.merge(data))
+    yield put(act.metadata.merge(data))
 
     yield call(db.transaction, async tx => {
       for (let id of payload.id) {
@@ -69,7 +69,7 @@ class Copy extends Command {
       }
     })
 
-    this.undo = act.restore(copy)
+    this.undo = act.metadata.restore(copy)
     this.original = copy
 
     return data
@@ -77,7 +77,7 @@ class Copy extends Command {
 
   *abort() {
     if (this.original) {
-      yield put(act.merge(this.original))
+      yield put(act.metadata.merge(this.original))
     }
   }
 }
@@ -98,7 +98,7 @@ class Restore extends Command {
       }
     })
 
-    yield put(act.merge(payload))
+    yield put(act.metadata.merge(payload))
 
     yield call(db.transaction, async tx => {
       for (let id of ids) {
@@ -110,14 +110,14 @@ class Restore extends Command {
       }
     })
 
-    this.undo = act.restore(this.original)
+    this.undo = act.metadata.restore(this.original)
 
     return ids
   }
 
   *abort() {
     if (this.original) {
-      yield put(act.merge(this.original))
+      yield put(act.metadata.merge(this.original))
     }
   }
 }
@@ -140,7 +140,7 @@ class Save extends Command {
       }
     })
 
-    yield put(act.update({ ids, data, }))
+    yield put(act.metadata.update({ ids, data, }))
 
     yield call(db.transaction, tx =>
       mod.update(tx, {
@@ -149,14 +149,14 @@ class Save extends Command {
         timestamp: meta.now
       }))
 
-    this.undo = act.restore(this.original)
+    this.undo = act.metadata.restore(this.original)
 
     return ids
   }
 
   *abort() {
     if (this.original) {
-      yield put(act.merge(this.original))
+      yield put(act.metadata.merge(this.original))
     }
   }
 }
@@ -170,11 +170,13 @@ class Add extends Command {
 
     if (value == null) value = text('')
 
-    yield put(act.update({
+    yield put(act.metadata.update({
       ids: id, data: { [property]: value }
     }))
 
-    this.undo = act.delete({ id, property })
+    yield put(act.edit.start({ field: { id, property } }))
+
+    this.undo = act.metadata.delete({ id, property })
   }
 }
 
@@ -195,9 +197,9 @@ class Delete extends Command {
     })
 
     yield call(mod.remove, db, { id, property })
-    yield put(act.remove([id, property]))
+    yield put(act.metadata.remove([id, property]))
 
-    this.undo = act.restore(original)
+    this.undo = act.metadata.restore(original)
   }
 }
 

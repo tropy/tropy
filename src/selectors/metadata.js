@@ -2,7 +2,7 @@
 
 const { createSelector: memo } = require('reselect')
 const { pluck } = require('./util')
-const { get, own } = require('../common/util')
+const { array, get, own } = require('../common/util')
 const { equal } = require('../value')
 const { compare } = require('../collate')
 const {
@@ -45,7 +45,7 @@ const getItemMetadata = memo(
         items,
         compose(map(id => metadata[id]), keep(), cat, skipId),
         collect,
-        { id: items.length > 1 ? items : items[0] }),
+        { id: items }),
       map(([key, value]) => {
         if (key !== 'id') {
           value.mixed = value.count !== items.length
@@ -94,8 +94,6 @@ const getMetadataFields = memo(
       }
     }
 
-    let ext = fld.length
-
     if (data != null) {
       for (let id in data) {
         if (id === 'id' || idx[id] != null) continue
@@ -107,12 +105,10 @@ const getMetadataFields = memo(
         })
       }
 
-      fld.id = data.id
+      fld.id = array(data.id)
     }
 
-    fld.key = Array.isArray(fld.id) ? 'bulk' : fld.id
     fld.idx = idx
-    fld.ext = ext
 
     return fld
   }

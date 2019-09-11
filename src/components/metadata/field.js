@@ -11,9 +11,36 @@ const { TYPE, DND } = require('../../constants')
 const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
 const {
-  bool, func, number, oneOfType, shape, string, arrayOf
+  arrayOf, bool, func, number, shape, string, oneOfType, object
 } = require('prop-types')
+const { ResourceSelect } = require('../resource/select')
 
+
+const NewMetadataField = ({ options, value, onCreate, onCancel }) => (
+  <li>
+    <ResourceSelect
+      autofocus
+      canClearByBackspace={false}
+      hideClearButton
+      isRequired
+      isSelectionHidden
+      isValueHidden
+      maxRows={6}
+      options={options}
+      placeholder="panel.metadata.dropdown.placeholder"
+      value={value}
+      onClose={({ type } = {}) => type === 'escape' && onCancel()}
+      onBlur={onCancel}
+      onInsert={onCreate}/>
+  </li>
+)
+
+NewMetadataField.propTypes = {
+  options: arrayOf(object).isRequired,
+  value: arrayOf(string),
+  onCancel: func,
+  onCreate: func.isRequired
+}
 
 class MetadataField extends React.PureComponent {
   get classes() {
@@ -127,11 +154,7 @@ class MetadataField extends React.PureComponent {
   }
 
   static propTypes = {
-    id: oneOfType([
-      number,
-      arrayOf(number)
-    ]),
-
+    id: arrayOf(number),
     isEditing: bool,
     isDisabled: bool,
     isExtra: bool.isRequired,
@@ -253,6 +276,7 @@ const DropTargetCollect = (connect, monitor) => ({
 
 
 module.exports.StaticField = StaticField
+module.exports.NewMetadataField = NewMetadataField
 
 module.exports.MetadataField = DragSource(
   DND.FIELD, DragSourceSpec, DragSourceCollect

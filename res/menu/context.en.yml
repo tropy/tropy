@@ -237,7 +237,7 @@ en:
           type: checkbox
     metadata-list: &metadata-list
       - label: 'New Field …'
-        command: 'ctx:add-extra-field'
+        command: 'app:create-field'
     metadata-field: &metadata-field
       - label: 'Remove Field'
         command: 'app:delete-field'

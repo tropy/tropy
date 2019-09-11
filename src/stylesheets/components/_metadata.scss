@@ -29,9 +29,12 @@ $default-padding-horizontal: 12px !default;
 }
 
 .form-control {
-  &.template-select {
+  &.select {
     width: calc(100% - 2 * #{$default-padding-horizontal});
     margin: auto;
+  }
+
+  &.template-select {
     border-color: $template-select-border;
     margin-bottom: (($metadata-line-height - 10px) / 2);
 
@@ -62,6 +65,11 @@ $default-padding-horizontal: 12px !default;
       background-color: $template-select-nested-focus-bg;
       border-color: $template-select-nested-focus-border;
     }
+  }
+
+  &.resource-select {
+    margin-top: (-$input-border-width);
+    margin-bottom: (-$input-border-width);
   }
 }
 
