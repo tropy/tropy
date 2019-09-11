@@ -15,7 +15,7 @@ const {
   append,
   emit,
   create,
-  isInput,
+  isLiveInput,
   load,
   on,
   off,
@@ -248,17 +248,17 @@ class Window extends EventEmitter {
       switch (event.key) {
         case 'z':
           if (event.shiftKey) {
-            if (isInput(event.target)) this.redo()
+            if (isLiveInput(event.target)) this.redo()
             else this.emit('app.redo')
           } else {
-            if (isInput(event.target)) this.undo()
+            if (isLiveInput(event.target)) this.undo()
             else this.emit('app.undo')
           }
           break
 
         case 'Z':
         case 'y':
-          if (isInput(event.target)) this.redo()
+          if (isLiveInput(event.target)) this.redo()
           else this.emit('app.redo')
           break
 

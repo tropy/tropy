@@ -168,6 +168,10 @@ const dom = {
     return node.tagName === 'INPUT'
   },
 
+  isLiveInput(node) {
+    return dom.isInput(node) && !(node.disabled || node.readOnly)
+  },
+
   isLink(node) {
     return node.tagName === 'A' && !blank(node.href)
   },
