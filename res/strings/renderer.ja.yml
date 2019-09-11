@@ -29,7 +29,7 @@ ja:
 
           other {# アイテム}}
       selection: セレクション
-      popup:
+      dropdown:
         placeholder: フィールド を追加
     tags:
       tab: タグ

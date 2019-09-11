@@ -29,7 +29,7 @@ es:
 
           other {# objetos}}
       selection: Selección
-      popup:
+      dropdown:
         placeholder: Añadir nuevo campo ...
     tags:
       tab: Etiquetas
