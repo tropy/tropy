@@ -166,7 +166,7 @@ class Image {
           chunks.push(chunk)
 
           if (chunks.length === 1) {
-            this.mimetype = magic(chunk)
+            this.mimetype = magic(chunk, this.ext)
           }
         })
 
@@ -191,6 +191,8 @@ class Image {
       case MIME.PNG:
       case MIME.SVG:
       case MIME.WEBP:
+      case MIME.HEIC:
+      case MIME.HEIF:
         this.buffer = buffer
         break
       default:
@@ -254,6 +256,8 @@ class Image {
 
     if (!isSelection) {
       switch (this.mimetype) {
+        case MIME.HEIC:
+        case MIME.HEIF:
         case MIME.TIFF:
         case MIME.PDF:
           variants.push('full')
@@ -283,20 +287,32 @@ Image.SELECTION_SIZE = {
 
 const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
 
-const magic = (buffer) => {
+const magic = (buffer, ext) => {
   if (buffer != null) {
-    if (isJPEG(buffer)) return MIME.JPEG
-    if (isPNG(buffer)) return MIME.PNG
-    if (isTIFF(buffer)) return MIME.TIFF
-    if (isPDF(buffer)) return MIME.PDF
-    if (isGIF(buffer)) return MIME.GIF
-    if (isSVG(buffer)) return MIME.SVG
-    if (isWebP(buffer)) return MIME.WEBP
+    if (isJPEG(buffer))
+      return MIME.JPEG
+    if (isPNG(buffer))
+      return MIME.PNG
+    if (isTIFF(buffer))
+      return MIME.TIFF
+    if (isPDF(buffer))
+      return MIME.PDF
+    if (isGIF(buffer))
+      return MIME.GIF
+    if (isSVG(buffer))
+      return MIME.SVG
+    if (isWebP(buffer))
+      return MIME.WEBP
+    if (isHEIF(buffer))
+      return ext.toLowerCase() === '.heic' ? MIME.HEIC : MIME.HEIF
   }
 }
 
 const isGIF = (buffer) =>
   check(buffer, [0x47, 0x49, 0x46])
+
+const isHEIF = (buffer) =>
+  (/^ftyp((hei|hev)[cms]|heix|mif1)$/).test(buffer.toString('ascii', 4, 12))
 
 const isJPEG = (buffer) =>
   check(buffer, [0xFF, 0xD8, 0xFF])
@@ -312,10 +328,10 @@ const isTIFF = (buffer) =>
 
 const isWebP = (buffer) =>
   check(buffer, [0x52, 0x49, 0x46, 0x46]) &&
-    check(buffer.slice(8), [0x57, 0x45, 0x42, 0x50])
+    check(buffer, [0x57, 0x45, 0x42, 0x50], 8)
 
-const check = (buffer, bytes) =>
-  buffer.slice(0, bytes.length).compare(Buffer.from(bytes)) === 0
+const check = (buffer, bytes, offset = 0) =>
+  buffer.slice(offset, offset + bytes.length).compare(Buffer.from(bytes)) === 0
 
 
 module.exports = {

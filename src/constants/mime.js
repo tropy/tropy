@@ -2,6 +2,10 @@
 
 const MIME = {
   GIF: 'image/gif',
+  HEIC: 'image/heic',
+  HEIC_SEQ: 'image/heic-sequence',
+  HEIF: 'image/heif',
+  HEIF_SEQ: 'image/heif-sequence',
   JPG: 'image/jpeg',
   JPEG: 'image/jpeg',
   PDF: 'application/pdf',
@@ -14,6 +18,10 @@ const MIME = {
 
 const SUPPORTED_IMAGE = {
   [MIME.GIF]: true,
+  [MIME.HEIC]: true,
+  [MIME.HEIC_SEQ]: true,
+  [MIME.HEIF]: true,
+  [MIME.HEIF_SEQ]: true,
   [MIME.JPEG]: true,
   [MIME.PNG]: true,
   [MIME.PDF]: true,

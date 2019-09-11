@@ -225,6 +225,8 @@ class Esper extends React.PureComponent {
   getSource(photo, { cache } = this.props) {
     switch (photo.mimetype) {
       case MIME.PDF:
+      case MIME.HEIC:
+      case MIME.HEIF:
       case MIME.TIFF:
         return Cache.url(cache, photo.id, 'full', photo.mimetype)
       default:
