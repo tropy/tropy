@@ -1,0 +1,1009 @@
+es:
+  linux:
+    history:
+      - id: undo
+        label: Deshacer
+        command: 'app:undo'
+        enabled: false
+        accelerator: CmdOrCtrl+Z
+      - id: redo
+        label: Rehacer
+        command: 'app:redo'
+        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
+    project:
+      - label: Renombrar proyecto
+        command: 'app:rename-project'
+      - label: Mostrar el archivo del proyecto ...
+        command: 'app:show-project-file'
+    lists:
+      - label: Nueva lista
+        command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
+    list:
+      - label: Renombrar lista
+        command: 'app:rename-list'
+      - label: Suprimir lista
+        command: 'app:delete-list'
+    tags:
+      - label: Nueva etiqueta
+        command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Exportar etiquetas ...
+        command: 'app:export-tags'
+      - label: Color de etiqueta por defecto
+        submenu:
+          - label: Ninguno
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Color aleatorio
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: Rojo
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Naranja
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Amarillo
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Verde
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Azul
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Púrpura
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Gris
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Café
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Durazno
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Verde obscuro
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Azul cielo
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavanda
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
+    tag:
+      - label: Color de etiqueta
+        submenu:
+          - label: Ninguno
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
+          - type: separator
+          - label: Rojo
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
+          - label: Naranja
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
+          - label: Amarillo
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
+          - label: Verde
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
+          - label: Azul
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
+          - label: Púrpura
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
+          - label: Gris
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Café
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Durazno
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Verde obscuro
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Azul cielo
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavanda
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
+      - label: Renombrar etiqueta
+        command: 'app:rename-tag'
+      - label: Borrar etiqueta
+        command: 'app:delete-tag'
+    item-tag:
+      - label: Quitar le etiqueta de este objeto
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasSingleItem
+      - label: Quitar la etiqueta de estos objetos
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasMultipleItems
+    note:
+      - label: Suprimir nota
+        command: 'app:delete-note'
+    notepad:
+      - label: Modo de escritura
+        id: writing-mode
+        submenu:
+          - label: Horizontal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Vertical (a la izquierda)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Mostrar los números de línea
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-numbers'
+      - label: Retorno automático de líneas
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-wrap'
+    items:
+      - label: Nuevo objeto
+        command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
+    item:
+      - label: Deconstruir objeto
+        command: 'app:explode-item'
+        condition: hasMultiplePhotos
+      - label: Exportar objeto
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Añadir foto ...
+        command: 'app:create-item-photo'
+      - label: Etiquetas
+        id: tag
+        submenu:
+          - label: Ninguno
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Suprimir objeto
+        command: 'app:delete-item'
+    item-rotate:
+      - label: Rotar a la izquierda
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotar a la derecha
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
+    item-bulk:
+      - label: Fusionar los objetos seleccionados
+        command: 'app:merge-item'
+      - label: Exportar los objetos seleccionados
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Suprimir objetos seleccionados
+        command: 'app:delete-item'
+    item-list:
+      - label: Quitar objeto de la lista
+        command: 'app:list-item-remove'
+    item-bulk-list:
+      - label: Quitar los objetos seleccionados de la lista
+        command: 'app:list-item-remove'
+    photo:
+      - label: Duplicar foto
+        command: 'app:duplicate-photo'
+      - label: Mover foto a un nuevo objeto
+        command: 'app:explode-photo'
+      - label: Mostrar la foto en su fólder ...
+        command: 'app:show-in-folder'
+      - label: Borrar foto
+        command: 'app:delete-photo'
+      - label: Usar foto como imagen de covertura
+        command: 'app:update-cover-image'
+        enabled: false
+        visible: false
+      - label: Reagrupar las fotos
+        command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Rotar a la izquierda
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotar a la derecha
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
+    selection:
+      - label: Suprimir selección
+        command: 'app:delete-selection'
+      - label: Guardar selección como una imagen ...
+        command: 'app:save-selection'
+        enabled: false
+    selection-rotate:
+      - label: Rotar a la izquierda
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotar a la derecha
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
+    item-deleted:
+      - label: Restaurar objeto
+        command: 'app:restore-item'
+      - label: Borrar objeto permanentemente
+        command: 'app:destroy-item'
+    item-bulk-deleted:
+      - label: Restaurar los objetos seleccionados
+        command: 'app:restore-item'
+      - label: Borrar permanentemente los objetos seleccionados
+        command: 'app:destroy-item'
+    item-view:
+      - label: Modo de visualización
+        id: item-view-layout
+        submenu:
+          - label: Vertical
+            id: stacked
+            type: checkbox
+          - label: Lado a lado
+            id: side-by-side
+            type: checkbox
+    metadata-list:
+      - label: Nuevo campo ...
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Suprimir campo
+        command: 'app:delete-field'
+        condition: isExtra
+    trash:
+      - label: Suprimir permanentemente los objetos
+        command: 'app:destroy-item'
+    dev:
+      - label: Recargar
+        command: 'win:reload'
+        accelerator: CmdOrCtrl+R
+      - label: Recargar los estilos
+        command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
+      - type: separator
+      - label: Inspectar
+        command: 'app:inspect'
+        accelerator: CmdOrCtrl+D
+  darwin:
+    history:
+      - id: undo
+        label: Deshacer
+        command: 'app:undo'
+        enabled: false
+        accelerator: CmdOrCtrl+Z
+      - id: redo
+        label: Rehacer
+        command: 'app:redo'
+        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
+    project:
+      - label: Renombrar proyecto
+        command: 'app:rename-project'
+      - label: Mostrar el archivo de proyecto ...
+        command: 'app:show-project-file'
+    lists:
+      - label: Nueva lista
+        command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
+    list:
+      - label: Renombrar lista
+        command: 'app:rename-list'
+      - label: Suprimir lista
+        command: 'app:delete-list'
+    tags:
+      - label: Nueva etiqueta
+        command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Exportar etiquetas ...
+        command: 'app:export-tags'
+      - label: Color de etiqueta por defecto
+        submenu:
+          - label: Ninguno
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Color aleatorio
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: Rojo
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Naranja
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Amarillo
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Verde
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Azul
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Púrpura
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Gris
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Café
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Durazno
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Verde obscuro
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Azul cielo
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavanda
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
+    tag:
+      - label: Color de etiqueta
+        submenu:
+          - label: Ninguno
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
+          - type: separator
+          - label: Rojo
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
+          - label: Naranja
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
+          - label: Amarillo
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
+          - label: Verde
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
+          - label: Azul
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
+          - label: Púrpura
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
+          - label: Gris
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Café
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Durazno
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Verde obscuro
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Azul cielo
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavanda
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
+      - label: Renombrar etiqueta
+        command: 'app:rename-tag'
+      - label: Borrar etiqueta
+        command: 'app:delete-tag'
+    item-tag:
+      - label: Quitar le etiqueta de este objeto
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasSingleItem
+      - label: Quitar la etiqueta de estos objetos
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasMultipleItems
+    note:
+      - label: Suprimir nota
+        command: 'app:delete-note'
+    notepad:
+      - label: Modo de escritura
+        id: writing-mode
+        submenu:
+          - label: Horizontal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Vertical (a la izquierda)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Mostrar los números de línea
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-numbers'
+      - label: Retorno automático de líneas
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-wrap'
+    items:
+      - label: Nuevo objeto
+        command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
+    item:
+      - label: Deconstruir objeto
+        command: 'app:explode-item'
+        condition: hasMultiplePhotos
+      - label: Exportar objeto
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Añadir foto ...
+        command: 'app:create-item-photo'
+      - label: Etiquetas
+        id: tag
+        submenu:
+          - label: Ninguno
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Suprimir objeto
+        command: 'app:delete-item'
+    item-bulk:
+      - label: Fusionar los objetos seleccionados
+        command: 'app:merge-item'
+      - label: Exportar los objetos seleccionados
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Borrar objetos seleccionados
+        command: 'app:delete-item'
+    item-list:
+      - label: Quitar objeto de la lista
+        command: 'app:list-item-remove'
+    item-bulk-list:
+      - label: Quitar los objetos seleccionados de la lista
+        command: 'app:list-item-remove'
+    item-deleted:
+      - label: Restaurar objeto
+        command: 'app:restore-item'
+      - label: Borrar objeto permanentemente
+        command: 'app:destroy-item'
+    item-bulk-deleted:
+      - label: Restaurar los objetos seleccionados
+        command: 'app:restore-item'
+      - label: Borrar permanentemente los objetos seleccionados
+        command: 'app:destroy-item'
+    item-view:
+      - label: Modo de visualización
+        id: item-view-layout
+        submenu:
+          - label: Vertical
+            id: stacked
+            type: checkbox
+          - label: Lado a lado
+            id: side-by-side
+            type: checkbox
+    item-rotate:
+      - label: Rotar a la izquierda
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotar a la derecha
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
+    metadata-list:
+      - label: Nuevo campo ...
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Suprimir campo
+        command: 'app:delete-field'
+        condition: isExtra
+    trash:
+      - label: Borrar permanentemente los objetos
+        command: 'app:destroy-item'
+    photo:
+      - label: Duplicar foto
+        command: 'app:duplicate-photo'
+      - label: Mover foto a un nuevo objeto
+        command: 'app:explode-photo'
+      - label: Mostrar la foto en su fólder ...
+        command: 'app:show-in-folder'
+      - label: Borrar foto
+        command: 'app:delete-photo'
+      - label: Usar foto como imagen de covertura
+        command: 'app:update-cover-image'
+        enabled: false
+        visible: false
+      - label: Reagrupar las fotos
+        command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Rotar a la izquierda
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotar a la derecha
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
+    selection:
+      - label: Suprimir selección
+        command: 'app:delete-selection'
+      - label: Guardar selección como una imagen ...
+        command: 'app:save-selection'
+        enabled: false
+    selection-rotate:
+      - label: Rotar a la izquierda
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotar a la derecha
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
+    dev:
+      - label: Recargar
+        command: 'win:reload'
+        accelerator: CmdOrCtrl+R
+      - label: Recargar los estilos
+        command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
+      - type: separator
+      - label: Inspectar
+        command: 'app:inspect'
+        accelerator: CmdOrCtrl+D
+  win32:
+    history:
+      - id: undo
+        label: Deshacer
+        command: 'app:undo'
+        enabled: false
+        accelerator: CmdOrCtrl+Z
+      - id: redo
+        label: Rehacer
+        command: 'app:redo'
+        enabled: false
+        accelerator: Control+Y
+    project:
+      - label: Renombrar proyecto
+        command: 'app:rename-project'
+      - label: Mostrar el archivo del proyecto
+        command: 'app:show-project-file'
+    lists:
+      - label: Nueva lista
+        command: 'app:create-list'
+        accelerator: CmdOrCtrl+Shift+L
+    list:
+      - label: Renombrar lista
+        command: 'app:rename-list'
+      - label: Suprimir lista
+        command: 'app:delete-list'
+    tags:
+      - label: Nueva etiqueta
+        command: 'app:create-tag'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Exportar etiquetas ...
+        command: 'app:export-tags'
+      - label: Color de etiqueta por defecto
+        submenu:
+          - label: Ninguno
+            color:
+              - null
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Color aleatorio
+            color:
+              - random
+              - tagColor
+              - 'app:save-default-tag-color'
+          - type: separator
+          - label: Rojo
+            color:
+              - red
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Naranja
+            color:
+              - orange
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Amarillo
+            color:
+              - yellow
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Verde
+            color:
+              - green
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Azul
+            color:
+              - blue
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Púrpura
+            color:
+              - purple
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Gris
+            color:
+              - gray
+              - tagColor
+              - 'app:save-default-tag-color'
+          - label: Café
+            color:
+              - brown
+              - color
+              - 'app:save-default-tag-color'
+          - label: Durazno
+            color:
+              - apricot
+              - color
+              - 'app:save-default-tag-color'
+          - label: Verde obscuro
+            color:
+              - dark-green
+              - color
+              - 'app:save-default-tag-color'
+          - label: Azul cielo
+            color:
+              - light-blue
+              - color
+              - 'app:save-default-tag-color'
+          - label: Lavanda
+            color:
+              - lavender
+              - color
+              - 'app:save-default-tag-color'
+    tag:
+      - label: Color de etiqueta
+        submenu:
+          - label: Ninguno
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
+          - type: separator
+          - label: Rojo
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
+          - label: Naranja
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
+          - label: Amarillo
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
+          - label: Verde
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
+          - label: Azul
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
+          - label: Púrpura
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
+          - label: Gris
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: Café
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: Durazno
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: Verde obscuro
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: Azul cielo
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: Lavanda
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
+      - label: Renombrar etiqueta
+        command: 'app:rename-tag'
+      - label: Borrar etiqueta
+        command: 'app:delete-tag'
+    item-tag:
+      - label: Quitar le etiqueta de este objeto
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasSingleItem
+      - label: Quitar la etiqueta de estos objetos
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasMultipleItems
+    note:
+      - label: Suprimir nota
+        command: 'app:delete-note'
+    notepad:
+      - label: Modo de escritura
+        id: writing-mode
+        submenu:
+          - label: Horizontal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Vertical (a la izquierda)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Mostrar los números de línea
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-numbers'
+      - label: Retorno automático de líneas
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-wrap'
+    items:
+      - label: Nuevo objeto
+        command: 'app:create-item'
+        accelerator: CmdOrCtrl+Shift+N
+    item:
+      - label: Deconstruir objeto
+        command: 'app:explode-item'
+        condition: hasMultiplePhotos
+      - label: Exportar objeto
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Añadir foto ...
+        command: 'app:create-item-photo'
+      - label: Etiquetas
+        id: tag
+        submenu:
+          - label: Ninguno
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Suprimir objeto
+        command: 'app:delete-item'
+    item-bulk:
+      - label: Fusionar los objetos seleccionados
+        command: 'app:merge-item'
+      - label: Exportar los objetos seleccionados
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Borrar objetos seleccionados
+        command: 'app:delete-item'
+    item-list:
+      - label: Quitar objeto de la lista
+        command: 'app:list-item-remove'
+    item-bulk-list:
+      - label: Quitar los objetos seleccionados de la lista
+        command: 'app:list-item-remove'
+    item-deleted:
+      - label: Restaurar objeto
+        command: 'app:restore-item'
+      - label: Suprimir objeto permanentemente
+        command: 'app:destroy-item'
+    item-bulk-deleted:
+      - label: Restaurar los objetos seleccionados
+        command: 'app:restore-item'
+      - label: Suprimir permanentemente los objetos seleccionados
+        command: 'app:destroy-item'
+    item-view:
+      - label: Modo de visualización
+        id: item-view-layout
+        submenu:
+          - label: Vertical
+            id: stacked
+            type: checkbox
+          - label: Lado a lado
+            id: side-by-side
+            type: checkbox
+    item-rotate:
+      - label: Rotar a la izquierda
+        command: 'app:rotate-item-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotar a la derecha
+        command: 'app:rotate-item-right'
+        accelerator: 'CmdOrCtrl+]'
+    metadata-list:
+      - label: Nuevo campo ...
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Suprimir campo
+        command: 'app:delete-field'
+        condition: isExtra
+    trash:
+      - label: Suprimir permanentemente los objetos
+        command: 'app:destroy-item'
+    photo:
+      - label: Duplicar foto
+        command: 'app:duplicate-photo'
+      - label: Mover foto a un nuevo objeto
+        command: 'app:explode-photo'
+      - label: Mostrar la foto en su fólder
+        command: 'app:show-in-folder'
+      - label: Suprimir foto
+        command: 'app:delete-photo'
+      - label: Usar foto como imagen de covertura
+        command: 'app:update-cover-image'
+        enabled: false
+        visible: false
+      - label: Reagrupar las fotos
+        command: 'app:consolidate-photo'
+    photo-rotate:
+      - label: Rotar a la izquierda
+        command: 'app:rotate-photo-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotar a la derecha
+        command: 'app:rotate-photo-right'
+        accelerator: 'CmdOrCtrl+]'
+    selection:
+      - label: Suprimir selección
+        command: 'app:delete-selection'
+      - label: Guardar selección como una imagen ...
+        command: 'app:save-selection'
+        enabled: false
+    selection-rotate:
+      - label: Rotar a la izquierda
+        command: 'app:rotate-selection-left'
+        accelerator: 'CmdOrCtrl+['
+      - label: Rotar a la derecha
+        command: 'app:rotate-selection-right'
+        accelerator: 'CmdOrCtrl+]'
+    dev:
+      - label: Recargar
+        command: 'win:reload'
+        accelerator: CmdOrCtrl+R
+      - label: Recargar los estilos
+        command: 'win:refresh'
+        accelerator: CmdOrCtrl+S
+      - type: separator
+      - label: Inspectar
+        command: 'app:inspect'
+        accelerator: CmdOrCtrl+D
