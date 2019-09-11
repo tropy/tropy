@@ -23,6 +23,7 @@ const ProjectToolbar = (props) => (
           value={props.zoom}
           max={props.maxZoom}
           isDisabled={props.isDisabled || props.count === 0}
+          isTracking
           onChange={props.onZoomChange}
           minIcon={<IconList/>}
           maxIcon={<IconGrid/>}

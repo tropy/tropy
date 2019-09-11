@@ -138,6 +138,7 @@ class EsperToolbar extends React.PureComponent {
               precision={this.props.zoomPrecision}
               resolution={this.props.resolution * 100}
               showCurrentValue
+              isTracking
               steps={this.props.zoomSteps}
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}

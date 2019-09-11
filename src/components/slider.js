@@ -222,6 +222,7 @@ class Slider extends React.PureComponent {
         <Draggable
           delay={15}
           isDisabled={isDisabled}
+          isTracking={this.props.isTracking}
           onDrag={this.handleDrag}
           onDragStart={this.handleDragStart}>
           <div ref={this.track} className="slider-track">
@@ -240,6 +241,7 @@ class Slider extends React.PureComponent {
 
   static propTypes = {
     isDisabled: bool,
+    isTracking: bool,
     keymap: instanceOf(KeyMap).isRequired,
     max: number.isRequired,
     maxIcon: element,
@@ -259,6 +261,7 @@ class Slider extends React.PureComponent {
   }
 
   static defaultProps = {
+    isTracking: false,
     min: 0,
     max: 1,
     precision: 1,

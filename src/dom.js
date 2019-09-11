@@ -176,7 +176,7 @@ const dom = {
     return node.tagName === 'A' && !blank(node.href)
   },
 
-  createDragHandler({ handleDrag, handleDragStop }) {
+  createDragHandler({ handleDrag, handleDragStop }, isTracking = false) {
     function onKeyDown(event) {
       switch (event.key) {
         case 'Escape':
@@ -189,8 +189,16 @@ const dom = {
     function onDragStart() {
       dom.on(document, 'mousemove', handleDrag)
       dom.on(document, 'mouseup', onDragStop, { capture: true })
-      dom.on(document, 'mouseleave', onDragStop)
       dom.on(window, 'blur', onDragStop)
+
+      if (isTracking) {
+        dom.on(document.body, 'mouseleave', onDragStop)
+        dom.on(document, 'mousemove', (e) => {
+          if (e.buttons === 0) {
+            onDragStop()
+          }
+        })
+      }
 
       // Register on body because global bindings are bound
       // on document and we need to stop the propagation in

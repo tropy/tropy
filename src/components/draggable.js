@@ -66,7 +66,7 @@ class Draggable extends PureComponent {
   drag = createDragHandler({
     handleDrag: this.handleDrag,
     handleDragStop: this.handleDragStop
-  })
+  }, this.props.isTracking)
 
   clear() {
     if (this.delay) clearTimeout(this.delay)
@@ -88,6 +88,7 @@ class Draggable extends PureComponent {
     className: string,
     delay: number.isRequired,
     isDisabled: bool,
+    isTracking: bool,
     style: object,
     tabIndex: number,
     onClick: func.isRequired,
@@ -98,6 +99,7 @@ class Draggable extends PureComponent {
 
   static defaultProps = {
     delay: 250,
+    isTracking: false,
     onClick: noop,
     onDrag: noop,
     onDragStop: noop
