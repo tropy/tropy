@@ -149,7 +149,7 @@ class Image {
     this.channels < 4 || (await this.do().stats()).isOpaque
   )
 
-  open({ page = 0, density }) {
+  open({ page = 0, density } = {}) {
     return new Promise((resolve, reject) => {
       this.hash = createHash('md5')
       this.mimetype = null
