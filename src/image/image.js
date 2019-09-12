@@ -15,8 +15,8 @@ const { EXIF, MIME } = require('../constants')
 
 
 class Image {
-  static open({ path, page = 0, useLocalTimezone = false }) {
-    return (new Image(path, useLocalTimezone)).open(page)
+  static open({ path, density = 300, page = 0, useLocalTimezone = false }) {
+    return (new Image(path, useLocalTimezone)).open({ page, density })
   }
 
   static async check({
@@ -25,7 +25,7 @@ class Image {
     consolidated,
     created,
     checksum
-  }, { force, useLocalTimezone } = {}) {
+  }, { force, useLocalTimezone, density } = {}) {
     let status = {}
 
     try {
@@ -33,7 +33,11 @@ class Image {
       status.hasChanged = (mtime > (consolidated || created))
 
       if (force || created == null || status.hasChanged) {
-        status.image = await Image.open({ path, page, useLocalTimezone })
+        status.image = await Image.open({
+          path,
+          page,
+          density,
+          useLocalTimezone })
         status.hasChanged = (status.image.checksum !== checksum)
       }
     } catch (e) {
@@ -121,7 +125,10 @@ class Image {
   }
 
   do(page = this.page) {
-    return sharp(this.buffer || this.path, { page })
+    return sharp(this.buffer || this.path, {
+      page,
+      density: this.density
+    })
   }
 
   *each(fn) {
@@ -142,7 +149,7 @@ class Image {
     this.channels < 4 || (await this.do().stats()).isOpaque
   )
 
-  open(page = 0) {
+  open({ page = 0, density }) {
     return new Promise((resolve, reject) => {
       this.hash = createHash('md5')
       this.mimetype = null
@@ -165,21 +172,20 @@ class Image {
 
         .on('end', () => {
           this
-            .parse(Buffer.concat(chunks), page)
+            .parse(Buffer.concat(chunks), { page, density })
             .then(resolve, reject)
         })
     })
   }
 
-  async parse(buffer, page) {
+  async parse(buffer, { page, density }) {
     switch (this.mimetype) {
       case MIME.PDF:
-      case MIME.TIFF: {
-        let { pages } = await sharp(buffer).metadata()
-        this.numPages = pages
-        this.buffer = buffer
-        break
-      }
+        this.density = density
+        // eslint-disable-next-line no-fallthrough
+      case MIME.TIFF:
+        this.numPages = (await sharp(buffer).metadata()).pages
+        // eslint-disable-next-line no-fallthrough
       case MIME.GIF:
       case MIME.JPEG:
       case MIME.PNG:
