@@ -186,16 +186,19 @@ const dom = {
       }
     }
 
+    function onDrag(event) {
+      if (event.buttons === 0) {
+        onDragStop(event)
+      } else {
+        handleDrag(event)
+      }
+    }
+
     function onDragStart() {
+      dom.on(document, 'mousemove', onDrag)
       dom.on(document, 'mouseup', onDragStop, { capture: true })
       dom.on(window, 'blur', onDragStop)
-      dom.on(document, 'mousemove', (e) => {
-        if (e.buttons === 0) {
-          onDragStop()
-        } else {
-          handleDrag(e)
-        }
-      })
+
       if (stopOnMouseLeave) {
         dom.on(document.body, 'mouseleave', onDragStop)
       }
@@ -207,15 +210,15 @@ const dom = {
     }
 
     function onDragStop(event) {
-      dom.off(document, 'mousemove', handleDrag)
+      dom.off(document, 'mousemove', onDrag)
       dom.off(document, 'mouseup', onDragStop, { capture: true })
-      dom.off(document, 'mouseleave', onDragStop)
       dom.off(window, 'blur', onDragStop)
-      dom.off(document.body, 'keydown', onKeyDown)
 
       if (stopOnMouseLeave) {
         dom.off(document.body, 'mouseleave', onDragStop)
       }
+
+      dom.off(document.body, 'keydown', onKeyDown)
 
       handleDragStop(event, event == null || event.type !== 'mouseup')
     }
