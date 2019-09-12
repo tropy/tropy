@@ -222,7 +222,7 @@ class Slider extends React.PureComponent {
         <Draggable
           delay={15}
           isDisabled={isDisabled}
-          isTracking={this.props.isTracking}
+          stopOnMouseLeave={this.props.stopOnMouseLeave}
           onDrag={this.handleDrag}
           onDragStart={this.handleDragStart}>
           <div ref={this.track} className="slider-track">
@@ -241,7 +241,6 @@ class Slider extends React.PureComponent {
 
   static propTypes = {
     isDisabled: bool,
-    isTracking: bool,
     keymap: instanceOf(KeyMap).isRequired,
     max: number.isRequired,
     maxIcon: element,
@@ -253,6 +252,7 @@ class Slider extends React.PureComponent {
     showCurrentValue: bool.isRequired,
     size: oneOf(['sm', 'md', 'lg']).isRequired,
     steps: arrayOf(number).isRequired,
+    stopOnMouseLeave: bool,
     tabIndex: number,
     value: number.isRequired,
     onBlur: func,
@@ -261,7 +261,6 @@ class Slider extends React.PureComponent {
   }
 
   static defaultProps = {
-    isTracking: false,
     min: 0,
     max: 1,
     precision: 1,
@@ -269,6 +268,7 @@ class Slider extends React.PureComponent {
     showCurrentValue: false,
     size: 'md',
     steps: [],
+    stopOnMouseLeave: false,
     tabIndex: null,
 
     keymap: new KeyMap({

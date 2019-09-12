@@ -1,6 +1,7 @@
 'use strict'
 
 const React = require('react')
+const { WindowContext } = require('../main')
 const { FormattedMessage } = require('react-intl')
 const { bool, func, number, string } = require('prop-types')
 const { Titlebar, Toolbar, ToolGroup } = require('../toolbar')
@@ -14,8 +15,7 @@ const {
   IconGrid
 } = require('../icons')
 
-
-const ProjectToolbar = (props) => (
+const ProjectToolbar = (props, context) => (
   <Titlebar>
     <Toolbar.Left>
       <ToolGroup>
@@ -23,7 +23,7 @@ const ProjectToolbar = (props) => (
           value={props.zoom}
           max={props.maxZoom}
           isDisabled={props.isDisabled || props.count === 0}
-          isTracking
+          stopOnMouseLeave
           onChange={props.onZoomChange}
           minIcon={<IconList/>}
           maxIcon={<IconGrid/>}
@@ -52,6 +52,8 @@ const ProjectToolbar = (props) => (
     </Toolbar.Right>
   </Titlebar>
 )
+
+ProjectToolbar.contextType = WindowContext
 
 ProjectToolbar.propTypes = {
   canCreateItems: bool,

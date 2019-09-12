@@ -176,7 +176,7 @@ const dom = {
     return node.tagName === 'A' && !blank(node.href)
   },
 
-  createDragHandler({ handleDrag, handleDragStop }, isTracking = false) {
+  createDragHandler({ handleDrag, handleDragStop, stopOnMouseLeave }) {
     function onKeyDown(event) {
       switch (event.key) {
         case 'Escape':
@@ -187,17 +187,17 @@ const dom = {
     }
 
     function onDragStart() {
-      dom.on(document, 'mousemove', handleDrag)
       dom.on(document, 'mouseup', onDragStop, { capture: true })
       dom.on(window, 'blur', onDragStop)
-
-      if (isTracking) {
+      dom.on(document, 'mousemove', (e) => {
+        if (e.buttons === 0) {
+          onDragStop()
+        } else {
+          handleDrag(e)
+        }
+      })
+      if (stopOnMouseLeave) {
         dom.on(document.body, 'mouseleave', onDragStop)
-        dom.on(document, 'mousemove', (e) => {
-          if (e.buttons === 0) {
-            onDragStop()
-          }
-        })
       }
 
       // Register on body because global bindings are bound
@@ -212,6 +212,10 @@ const dom = {
       dom.off(document, 'mouseleave', onDragStop)
       dom.off(window, 'blur', onDragStop)
       dom.off(document.body, 'keydown', onKeyDown)
+
+      if (stopOnMouseLeave) {
+        dom.off(document.body, 'mouseleave', onDragStop)
+      }
 
       handleDragStop(event, event == null || event.type !== 'mouseup')
     }
