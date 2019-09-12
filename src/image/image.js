@@ -8,7 +8,6 @@ const { exif } = require('./exif')
 const { xmp } = require('./xmp')
 const { isSVG } = require('./svg')
 const sharp = require('sharp')
-const tiff = require('tiff')
 const { assign } = Object
 const { warn } = require('../common/log')
 const { get, pick } = require('../common/util')
@@ -165,45 +164,50 @@ class Image {
         })
 
         .on('end', () => {
-          let buffer = Buffer.concat(chunks)
-
-          switch (this.mimetype) {
-            case MIME.GIF:
-            case MIME.JPEG:
-            case MIME.PNG:
-            case MIME.SVG:
-            case MIME.WEBP:
-            case MIME.PDF:
-              this.buffer = buffer
-              break
-            case MIME.TIFF:
-              this.numPages = tiff.pageCount(buffer)
-              this.buffer = buffer
-              break
-            default:
-              return reject(new Error('unsupported image'))
-          }
-
-          if (page && page < this.numPages) {
-            this.page = page
-          }
-
-          Promise
-            .all([
-              stat(this.path),
-              ...this.each(img => img.metadata())
-            ])
-
-            .then(([file, ...meta]) => assign(this, {
-              exif: meta.map(m => exif(m.exif, { timezone: this.tz })),
-              file,
-              meta,
-              xmp: meta.map(m => xmp(m.xmp))
-            }))
-
+          this
+            .parse(Buffer.concat(chunks), page)
             .then(resolve, reject)
         })
     })
+  }
+
+  async parse(buffer, page) {
+    switch (this.mimetype) {
+      case MIME.PDF:
+      case MIME.TIFF: {
+        let { pages } = await sharp(buffer).metadata()
+        this.numPages = pages
+        this.buffer = buffer
+        break
+      }
+      case MIME.GIF:
+      case MIME.JPEG:
+      case MIME.PNG:
+      case MIME.SVG:
+      case MIME.WEBP:
+        this.buffer = buffer
+        break
+      default:
+        throw new Error('unsupported image')
+    }
+
+    if (page && page < this.numPages) {
+      this.page = page
+    }
+
+    let [file, ...meta] = await Promise.all([
+      stat(this.path),
+      ...this.each(img => img.metadata())
+    ])
+
+    assign(this, {
+      exif: meta.map(m => exif(m.exif, { timezone: this.tz })),
+      file,
+      meta,
+      xmp: meta.map(m => xmp(m.xmp))
+    })
+
+    return this
   }
 
   resize(size, selection) {
