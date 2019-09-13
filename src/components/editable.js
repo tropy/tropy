@@ -139,7 +139,7 @@ class Editable extends React.PureComponent {
     onCancel: func.isRequired,
     onChange: func.isRequired,
     onFocus: func,
-    onKeyDown: func,
+    onKeyDown: func
   }
 
   static defaultProps = {

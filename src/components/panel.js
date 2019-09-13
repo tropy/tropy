@@ -21,7 +21,7 @@ class Panel extends React.PureComponent {
   container = React.createRef()
 
   state = {
-    hasTabFocus: false,
+    hasTabFocus: false
   }
 
   componentDidMount() {
@@ -34,7 +34,7 @@ class Panel extends React.PureComponent {
 
   get classes() {
     return ['panel', this.props.className, {
-      'nested-tab-focus': this.state.hasTabFocus,
+      'nested-tab-focus': this.state.hasTabFocus
     }]
   }
 

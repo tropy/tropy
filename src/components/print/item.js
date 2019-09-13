@@ -15,7 +15,7 @@ Item.propTypes = {
   hasNotes: bool,
   item: shape({
     photos: arrayOf(object).isRequired
-  }).isRequired,
+  }).isRequired
 }
 
 module.exports = {

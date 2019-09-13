@@ -134,7 +134,7 @@ class ProjectContainer extends React.Component {
   projectWillChange = debounce(project => {
     this.setState({
       isProjectClosed: !!project.closed,
-      willProjectClose: project.closing,
+      willProjectClose: project.closing
     })
   }, 750, { leading: false })
 

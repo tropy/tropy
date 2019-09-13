@@ -6,7 +6,7 @@ const { DropTarget, NativeTypes } = require('../dnd')
 const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
-const { pick, } = require('../../common/util')
+const { pick } = require('../../common/util')
 const { array, bool, func, object, number } = require('prop-types')
 const { isImageSupported } = require('../../constants/mime')
 const { ITEM } = require('../../constants/sass')
@@ -65,7 +65,7 @@ class ProjectView extends React.Component {
       zoom,
       onItemCreate,
       onItemSelect,
-      onSearch,
+      onSearch
     } = this.props
 
     const { size, maxZoom, ItemIterator, isEmpty } = this

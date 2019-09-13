@@ -321,7 +321,7 @@ class FormToggle extends React.PureComponent {
   get classes() {
     return [
       `col-${this.props.size}`,
-      `col-offset-${GRID.SIZE - this.props.size}`,
+      `col-offset-${GRID.SIZE - this.props.size}`
     ]
   }
 

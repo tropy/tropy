@@ -548,7 +548,7 @@ const ontology = {
         }
       }
     }
-  },
+  }
 }
 
 const COL = {

@@ -252,7 +252,7 @@ class Merge extends Command {
     return {
       ...item,
       photos: [...item.photos, ...m.photos],
-      tags: [...item.tags, ...m.tags],
+      tags: [...item.tags, ...m.tags]
     }
   }
 }

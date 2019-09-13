@@ -7,7 +7,7 @@ module.exports = {
     return {
       type: EDIT.START,
       payload: {
-        tag: { name: '', ...payload, }
+        tag: { name: '', ...payload }
       },
       meta
     }

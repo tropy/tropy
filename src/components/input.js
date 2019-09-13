@@ -251,7 +251,7 @@ class Input extends React.PureComponent {
     onChange: func.isRequired,
     onCommit: func.isRequired,
     onFocus: func.isRequired,
-    onKeyDown: func,
+    onKeyDown: func
   }
 
   static defaultProps = {

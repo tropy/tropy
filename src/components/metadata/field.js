@@ -255,7 +255,7 @@ const DragSourceSpec = {
 
 const DragSourceCollect = (connect) => ({
   connectDragSource: connect.dragSource(),
-  connectDragPreview: connect.dragPreview(),
+  connectDragPreview: connect.dragPreview()
 })
 
 const DropTargetSpec = {

@@ -95,7 +95,7 @@ class Draggable extends PureComponent {
     onDrag: func.isRequired,
     onDragStart: func.isRequired,
     onDragStop: func.isRequired,
-    stopOnMouseLeave: bool,
+    stopOnMouseLeave: bool
   }
 
   static defaultProps = {
@@ -103,7 +103,7 @@ class Draggable extends PureComponent {
     onClick: noop,
     onDrag: noop,
     onDragStop: noop,
-    stopOnMouseLeave: false,
+    stopOnMouseLeave: false
   }
 }
 

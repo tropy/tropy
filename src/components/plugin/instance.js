@@ -73,7 +73,7 @@ class PluginInstance extends PureComponent {
     specs: arrayOf(shape({
       field: string.isRequired,
       default: oneOfType([string, bool, number])
-    })).isRequired,
+    })).isRequired
   }
 
   static defaultProps = {

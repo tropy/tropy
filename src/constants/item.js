@@ -30,7 +30,7 @@ module.exports = {
     INSERT: 'item.tag.insert',
     REMOVE: 'item.tag.remove',
     CLEAR: 'item.tag.clear',
-    TOGGLE: 'item.tag.toggle',
+    TOGGLE: 'item.tag.toggle'
   },
 
   PHOTO: {

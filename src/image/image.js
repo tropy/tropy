@@ -91,7 +91,7 @@ class Image {
   get data() {
     return {
       ...this.exif[this.page],
-      ...this.xmp[this.page],
+      ...this.xmp[this.page]
     }
   }
 

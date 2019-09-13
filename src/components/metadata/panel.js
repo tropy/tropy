@@ -257,7 +257,7 @@ class MetadataPanel extends React.PureComponent {
       available: arrayOf(object).isRequired,
       item: arrayOf(shapes.field).isRequired,
       photo: arrayOf(shapes.field).isRequired,
-      selection: arrayOf(shapes.field).isRequired,
+      selection: arrayOf(shapes.field).isRequired
     }).isRequired,
     isDisabled: bool,
     items: arrayOf(shapes.subject),
@@ -277,7 +277,7 @@ class MetadataPanel extends React.PureComponent {
     onMetadataDelete: func.isRequired,
     onMetadataSave: func.isRequired,
     onOpenInFolder: func.isRequired,
-    onTemplateChange: func.isRequired,
+    onTemplateChange: func.isRequired
   }
 }
 

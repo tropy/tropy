@@ -85,7 +85,7 @@ class Collapse extends React.Component {
   static propTypes = {
     children: element.isRequired,
     dimension: oneOf(['height', 'width']),
-    value: number,
+    value: number
   }
 
   static defaultProps = {

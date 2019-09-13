@@ -140,7 +140,7 @@ class Save extends Command {
       }
     })
 
-    yield put(act.metadata.update({ ids, data, }))
+    yield put(act.metadata.update({ ids, data }))
 
     yield call(db.transaction, tx =>
       mod.update(tx, {

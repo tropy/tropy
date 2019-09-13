@@ -184,7 +184,7 @@ class PhotoIterable extends React.PureComponent {
 
   static DropTargetCollect = (connect, monitor) => ({
     dt: connect.dropTarget(),
-    isOver: monitor.isOver(),
+    isOver: monitor.isOver()
   })
 
   static wrap() {

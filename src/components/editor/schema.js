@@ -25,7 +25,7 @@ const align = (nodeSpec, tag) => ({
   ...nodeSpec,
   attrs: {
     ...nodeSpec.attrs,
-    align: { default: 'left' },
+    align: { default: 'left' }
   },
   toDOM: (node) => ([
     tag,

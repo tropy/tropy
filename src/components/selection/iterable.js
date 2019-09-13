@@ -114,7 +114,7 @@ class SelectionIterable extends React.PureComponent {
     selection: shape({
       id: number.isRequired,
       angle: number,
-      mirror: bool,
+      mirror: bool
     }).isRequired,
     size: number.isRequired,
     onContextMenu: func.isRequired,
