@@ -6,7 +6,7 @@ const { compose, map, filter, into } = require('transducers.js')
 const { DND } = require('../../constants')
 const { isMeta } = require('../../keymap')
 const { bounds } = require('../../dom')
-const { pure } = require('../util')
+const { noop, pure } = require('../util')
 
 const {
   bool, func, number, object, shape, arrayOf
@@ -27,7 +27,9 @@ class ItemIterable extends React.PureComponent {
       'item': true,
       'drop-target': !this.props.isDisabled,
       'active': this.props.isSelected,
-      'over': this.props.isOver && this.props.canDrop && this.state.offset == null,
+      'over': this.props.isOver &&
+        this.props.canDrop &&
+        this.state.offset == null,
       'dragging': this.props.isDragging,
       'last': this.props.isLast,
       [this.direction]: this.props.isOver && this.state.offset != null
@@ -92,7 +94,8 @@ class ItemIterable extends React.PureComponent {
 
 
   static DragSourceSpec = {
-    beginDrag({ item, getSelection }) {
+    beginDrag({ item, getSelection, onDragStart }) {
+      if (onDragStart) onDragStart()
       return {
         items: into(
           [{ ...item }],
@@ -100,6 +103,10 @@ class ItemIterable extends React.PureComponent {
           getSelection()
         )
       }
+    },
+
+    endDrag({ onDragStop }) {
+      if (onDragStop) onDragStop()
     },
 
     canDrag({ item }) {
@@ -201,11 +208,18 @@ class ItemIterable extends React.PureComponent {
     getSelection: func.isRequired,
 
     onContextMenu: func.isRequired,
+    onDragStart: func.isRequired,
+    onDragStop: func.isRequired,
     onDropItems: func.isRequired,
     onDropPhotos: func.isRequired,
     onItemOpen: func.isRequired,
     onPhotoError: func.isRequired,
     onSelect: func.isRequired
+  }
+
+  static defaultProps = {
+    onDragStart: noop,
+    onDragStop: noop
   }
 }
 

@@ -14,6 +14,10 @@ class ItemGrid extends ItemIterator {
   constructor(props) {
     super(props)
 
+    this.state = {
+      isDragging: false
+    }
+
     refine(this, 'handleKeyDown', ([event]) => {
       if (event.isPropagationStopped()) return
 
@@ -49,10 +53,18 @@ class ItemGrid extends ItemIterator {
       'item-grid': true,
       'drop-target': !this.props.isDisabled,
       'over': this.props.isOver,
-      [this.orientation]: true
+      [this.orientation]: true,
+      'dragging': this.state.isDragging
     }
   }
 
+  handleOnDragStart = () => {
+    this.setState({ isDragging: true })
+  }
+
+  handleOnDragStop = () => {
+    this.setState({ isDragging: false })
+  }
 
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
@@ -76,7 +88,12 @@ class ItemGrid extends ItemIterator {
               className="viewport click-catcher"
               style={{ gridTemplateColumns, transform }}>
               {this.mapIterableRange(({ item, ...props }) =>
-                <ItemTile {...props} key={item.id} item={item}/>
+                <ItemTile
+                  {...props}
+                  key={item.id}
+                  item={item}
+                  onDragStart={this.handleOnDragStart}
+                  onDragStop={this.handleOnDragStop}/>
               )}
             </ul>
           </div>
