@@ -27,7 +27,7 @@ class ItemIterable extends React.PureComponent {
       'item': true,
       'drop-target': !this.props.isDisabled,
       'active': this.props.isSelected,
-      'over': this.props.isOver && this.props.canDrop,
+      'over': this.props.isOver && this.props.canDrop && this.state.offset == null,
       'dragging': this.props.isDragging,
       'last': this.props.isLast,
       [this.direction]: this.props.isOver && this.state.offset != null
