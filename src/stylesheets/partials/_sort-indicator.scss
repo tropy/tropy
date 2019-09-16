@@ -2,8 +2,15 @@
 // Sort indicator
 // --------------------------------------------------
 
+.item,
 .photo,
 .selection {
+  &.before,
+  &.after {
+    position: relative;
+    z-index: 1;
+  }
+
   &::before,
   &::after {
     position: absolute;
@@ -69,6 +76,17 @@
 
     &::after {
       left: 100%;
+    }
+  }
+}
+
+.item {
+  &.last {
+    .item-table.over &,
+    .item-grid.over & {
+      &::after {
+        content: "";
+      }
     }
   }
 }

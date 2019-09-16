@@ -371,7 +371,7 @@ class ItemTable extends ItemIterator {
     return (this.props.isEmpty) ? this.renderNoItems() : (
       <div
         ref={this.setTable}
-        className={cx('item-table', {
+        className={cx('item-table vertical', {
           'dragging-column': this.state.drop != null,
           'max-scroll-left': this.state.hasMaxScrollLeft
         })}

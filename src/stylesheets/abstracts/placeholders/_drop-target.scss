@@ -12,5 +12,6 @@
     left: 0;
     background: $drop-target-color;
     z-index: $zindex-drop-target;
+    outline: none; // Override sort-indicator styles
   }
 }

@@ -7,7 +7,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  contain: strict;
+  contain: size layout style; // Needs overflow for sort-indicator
 
   @each $size in $tile-thumbnail-sizes {
     [data-size="#{$size}"] & {

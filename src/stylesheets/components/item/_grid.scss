@@ -28,12 +28,12 @@
   }
 
   .runway {
-    contain: strict;
+    contain: size layout style; // Needs overflow for sort-indicator
   }
 
   .viewport {
     display: grid;
-    contain: content;
+    contain: size layout style; // Needs overflow for sort-indicator
     will-change: transform;
   }
 

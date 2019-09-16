@@ -252,7 +252,7 @@
     display: grid;
     grid-template-columns: var(--item-template-columns);
     height: $row-height;
-    contain: strict;
+    contain: size layout style; // Needs overflow for sort-indicator
 
     &.active {
       background: $items-active-bg;
