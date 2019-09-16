@@ -5,6 +5,7 @@ const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { compose, map, filter, into } = require('transducers.js')
 const { DND } = require('../../constants')
 const { isMeta } = require('../../keymap')
+const { bounds } = require('../../dom')
 const { pure } = require('../util')
 
 const {
@@ -13,6 +14,10 @@ const {
 
 
 class ItemIterable extends React.PureComponent {
+  state = {
+    offset: null
+  }
+
   componentDidMount() {
     this.props.dp(getEmptyImage())
   }
@@ -24,8 +29,13 @@ class ItemIterable extends React.PureComponent {
       'active': this.props.isSelected,
       'over': this.props.isOver && this.props.canDrop,
       'dragging': this.props.isDragging,
-      'last': this.props.isLast
+      'last': this.props.isLast,
+      [this.direction]: this.props.isOver && this.state.offset != null
     }
+  }
+
+  get direction() {
+    return this.state.offset ? 'after' : 'before'
   }
 
   // Subtle: when an item is not selected, we need to select
@@ -105,6 +115,20 @@ class ItemIterable extends React.PureComponent {
 
 
   static DropTargetSpec = {
+    hover({ isVertical, item }, monitor, component) {
+      const { top, left, width, height } = bounds(component.container)
+      const { x, y } = monitor.getClientOffset()
+      const draggedMonitor = monitor.getItem()
+      const dragged = draggedMonitor.items[0]
+      let offset = null
+
+      if (item.id !== dragged.id) {
+        let calc = isVertical ? ((y - top) / height) : ((x - left) / width)
+        offset = calc < 0.20 ? 0 : calc > 0.80 ? 1 : null
+      }
+      component.setState({ offset })
+    },
+
     drop({ item, onDropPhotos, onDropItems }, monitor) {
       switch (monitor.getItemType()) {
         case DND.PHOTO:
