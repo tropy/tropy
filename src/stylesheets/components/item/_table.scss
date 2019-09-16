@@ -252,7 +252,7 @@
     display: grid;
     grid-template-columns: var(--item-template-columns);
     height: $row-height;
-    contain: size layout style; // Needs overflow for sort-indicator
+    contain: strict;
 
     &.active {
       background: $items-active-bg;
@@ -264,6 +264,11 @@
 
     &.over {
       @extend %drop-target;
+    }
+
+    &.before,
+    &.after {
+      contain: size layout style; // Needs overflow for sort-indicator
     }
 
     .td {
