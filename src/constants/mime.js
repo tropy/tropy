@@ -13,7 +13,7 @@ const MIME = {
   SVG: 'image/svg+xml',
   TIF: 'image/tiff',
   TIFF: 'image/tiff',
-  WEBP: 'image/webp',
+  WEBP: 'image/webp'
 }
 
 const SUPPORTED_IMAGE = {
