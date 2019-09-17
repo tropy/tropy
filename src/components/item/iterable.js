@@ -6,7 +6,8 @@ const { compose, map, filter, into } = require('transducers.js')
 const { DND } = require('../../constants')
 const { isMeta } = require('../../keymap')
 const { bounds } = require('../../dom')
-const { noop, pure } = require('../util')
+const { pure } = require('../util')
+const { noop } = require('../../common/util')
 
 const {
   bool, func, number, object, shape, arrayOf
