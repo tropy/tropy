@@ -28,13 +28,21 @@
   }
 
   .runway {
-    contain: size layout style; // Needs overflow for sort-indicator
+    contain: strict;
+
+    @include state(".item.grid.dragging") {
+      contain: size layout style; // Needs overflow for sort-indicator
+    }
   }
 
   .viewport {
     display: grid;
-    contain: size layout style; // Needs overflow for sort-indicator
+    contain: content;
     will-change: transform;
+
+    @include state(".item.grid.dragging") {
+      contain: size layout style; // Needs overflow for sort-indicator
+    }
   }
 
   &.over {
