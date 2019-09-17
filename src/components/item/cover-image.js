@@ -30,7 +30,7 @@ class CoverImage extends React.PureComponent {
 
   getPhotoProps() {
     return pick(get(this.props.photos, [this.cover]), [
-      'angle', 'consolidated', 'mirror', 'mimetype', 'orientation', 'broken'
+      'angle', 'consolidated', 'mirror', 'mimetype', 'orientation', 'broken', 'width', 'height'
     ])
   }
 

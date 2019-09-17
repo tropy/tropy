@@ -12,6 +12,7 @@ class Thumbnail extends React.Component {
   state = {
     src: null,
     rotation: '0',
+    mode: 'portrait',
     consolidated: null,
     hasFinishedLoading: false,
     isBroken: false
@@ -30,7 +31,12 @@ class Thumbnail extends React.Component {
       (!(hasImageChanged || isBroken) || state.hasFinishedLoading)
 
     return {
-      src, rotation, consolidated, hasFinishedLoading, isBroken
+      mode: rotation.mode(props),
+      src,
+      rotation: rotation.format('x'),
+      consolidated,
+      hasFinishedLoading,
+      isBroken
     }
   }
 
@@ -44,7 +50,6 @@ class Thumbnail extends React.Component {
     return Rotation
       .fromExifOrientation(orientation)
       .add({ angle, mirror })
-      .format('x')
   }
 
   get hasFallbackIcon() {
@@ -70,7 +75,7 @@ class Thumbnail extends React.Component {
   render() {
     return (
       <figure
-        className="thumbnail"
+        className={`thumbnail ${this.state.mode}`}
         onClick={this.props.onClick}
         onContextMenu={this.props.onContextMenu}
         onDoubleClick={this.props.onDoubleClick}
@@ -96,6 +101,8 @@ class Thumbnail extends React.Component {
     mirror: bool,
     orientation: number,
     size: number.isRequired,
+    width: number,
+    height: number,
     onClick: func,
     onContextMenu: func,
     onDoubleClick: func,

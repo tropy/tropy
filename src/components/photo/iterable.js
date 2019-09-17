@@ -113,6 +113,8 @@ class PhotoIterable extends React.PureComponent {
         mimetype: photo.mimetype,
         mirror: photo.mirror,
         orientation: photo.orientation,
+        width: photo.width,
+        height: photo.height,
         adj: getAdjacent(photo).map(p => p && p.id)
       }
     },

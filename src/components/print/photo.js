@@ -27,7 +27,7 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
 
   return (
     <div className={cx('photo', 'container',
-      o(photo.width < photo.height, rotation.isHorizontal),
+      rotation.mode(photo),
       { overflow: canOverflow, metadata: hasMetadata || hasNotes })}>
       <div className="photo-container">
         <img
@@ -82,11 +82,6 @@ const source = (photo, cache) =>
   (photo.protocol !== 'file' || !IMAGE.WEB[photo.mimetype]) ?
     Cache.url(cache, photo.id, 'full', photo.mimetype) :
     `${photo.protocol}://${photo.path}`
-
-const o = (isPortrait, isHorizontal) =>
-  isPortrait ?
-    (isHorizontal ? 'portrait' : 'landscape') :
-    (isHorizontal ? 'landscape' : 'portrait')
 
 module.exports = {
   Photo
