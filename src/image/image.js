@@ -8,7 +8,6 @@ const { exif } = require('./exif')
 const { xmp } = require('./xmp')
 const { isSVG } = require('./svg')
 const sharp = require('sharp')
-const tiff = require('tiff')
 const { assign } = Object
 const { warn } = require('../common/log')
 const { get, pick } = require('../common/util')
@@ -16,8 +15,8 @@ const { EXIF, MIME } = require('../constants')
 
 
 class Image {
-  static open({ path, page = 0, useLocalTimezone = false }) {
-    return (new Image(path, useLocalTimezone)).open(page)
+  static open({ path, density = 300, page = 0, useLocalTimezone = false }) {
+    return (new Image(path, useLocalTimezone)).open({ page, density })
   }
 
   static async check({
@@ -26,7 +25,7 @@ class Image {
     consolidated,
     created,
     checksum
-  }, { force, useLocalTimezone } = {}) {
+  }, { force, useLocalTimezone, density } = {}) {
     let status = {}
 
     try {
@@ -34,7 +33,11 @@ class Image {
       status.hasChanged = (mtime > (consolidated || created))
 
       if (force || created == null || status.hasChanged) {
-        status.image = await Image.open({ path, page, useLocalTimezone })
+        status.image = await Image.open({
+          path,
+          page,
+          density,
+          useLocalTimezone })
         status.hasChanged = (status.image.checksum !== checksum)
       }
     } catch (e) {
@@ -122,7 +125,10 @@ class Image {
   }
 
   do(page = this.page) {
-    return sharp(this.buffer || this.path, { page })
+    return sharp(this.buffer || this.path, {
+      page,
+      density: this.density
+    })
   }
 
   *each(fn) {
@@ -143,7 +149,7 @@ class Image {
     this.channels < 4 || (await this.do().stats()).isOpaque
   )
 
-  open(page = 0) {
+  open({ page = 0, density } = {}) {
     return new Promise((resolve, reject) => {
       this.hash = createHash('md5')
       this.mimetype = null
@@ -165,44 +171,49 @@ class Image {
         })
 
         .on('end', () => {
-          let buffer = Buffer.concat(chunks)
-
-          switch (this.mimetype) {
-            case MIME.GIF:
-            case MIME.JPEG:
-            case MIME.PNG:
-            case MIME.SVG:
-            case MIME.WEBP:
-              this.buffer = buffer
-              break
-            case MIME.TIFF:
-              this.numPages = tiff.pageCount(buffer)
-              this.buffer = buffer
-              break
-            default:
-              return reject(new Error('unsupported image'))
-          }
-
-          if (page && page < this.numPages) {
-            this.page = page
-          }
-
-          Promise
-            .all([
-              stat(this.path),
-              ...this.each(img => img.metadata())
-            ])
-
-            .then(([file, ...meta]) => assign(this, {
-              exif: meta.map(m => exif(m.exif, { timezone: this.tz })),
-              file,
-              meta,
-              xmp: meta.map(m => xmp(m.xmp))
-            }))
-
+          this
+            .parse(Buffer.concat(chunks), { page, density })
             .then(resolve, reject)
         })
     })
+  }
+
+  async parse(buffer, { page, density }) {
+    switch (this.mimetype) {
+      case MIME.PDF:
+        this.density = density
+        // eslint-disable-next-line no-fallthrough
+      case MIME.TIFF:
+        this.numPages = (await sharp(buffer).metadata()).pages
+        // eslint-disable-next-line no-fallthrough
+      case MIME.GIF:
+      case MIME.JPEG:
+      case MIME.PNG:
+      case MIME.SVG:
+      case MIME.WEBP:
+        this.buffer = buffer
+        break
+      default:
+        throw new Error('unsupported image')
+    }
+
+    if (page && page < this.numPages) {
+      this.page = page
+    }
+
+    let [file, ...meta] = await Promise.all([
+      stat(this.path),
+      ...this.each(img => img.metadata())
+    ])
+
+    assign(this, {
+      exif: meta.map(m => exif(m.exif, { timezone: this.tz })),
+      file,
+      meta,
+      xmp: meta.map(m => xmp(m.xmp))
+    })
+
+    return this
   }
 
   resize(size, selection) {
@@ -244,6 +255,7 @@ class Image {
     if (!isSelection) {
       switch (this.mimetype) {
         case MIME.TIFF:
+        case MIME.PDF:
           variants.push('full')
           break
       }

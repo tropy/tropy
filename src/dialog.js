@@ -6,7 +6,15 @@ const { counter, get } = require('./common/util')
 const { crashReport, warn } = require('./common/log')
 
 const IMAGE_EXTENSIONS = [
-  'gif', 'jpg', 'jpeg', 'png', 'svg', 'tif', 'tiff', 'webp'
+  'gif',
+  'jpg',
+  'jpeg',
+  'pdf',
+  'png',
+  'svg',
+  'tif',
+  'tiff',
+  'webp'
 ]
 
 let seq
