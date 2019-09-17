@@ -72,7 +72,7 @@ target.sharp = (force) => {
 
   if (force || !test('-d', buildFragments(mod))) {
     rebuild(mod, {
-      // params: '--build-from-source'
+      params: '--build-from-source'
     })
     say(`${mod} ...done`)
 
