@@ -258,6 +258,7 @@ class ItemIterator extends Iterator {
       cache: this.props.cache,
       photos: this.props.photos,
       tags: this.props.tags,
+      isItemSortable: this.props.isItemSortable,
       isLast: this.isLast(index),
       isSelected: this.isSelected(item),
       isDisabled: this.isDisabled,
@@ -298,6 +299,7 @@ class ItemIterator extends Iterator {
     }).isRequired,
 
     isActive: bool,
+    isItemSortable: bool,
     isOver: bool,
     isDisabled: bool,
 
