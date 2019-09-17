@@ -56,7 +56,7 @@ describe('newProperties', () => {
 
   it('does not overwrite existing values', () => {
     const src = {
-      myLabel: 'already here',
+      myLabel: 'already here'
     }
     expect(newProperties(metadata[1], src, false, props, template)).to.eql({
       myLabel: 'already here',

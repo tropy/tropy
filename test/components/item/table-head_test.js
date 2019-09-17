@@ -14,7 +14,7 @@ describe.skip('ItemTableHead', () => {
   it('renders head columns', () => {
     const columns = [
       { width: '40%', property: { id: 'x', type: 'string' } },
-      { width: '60%', property: { id: 'y', type: 'number' } },
+      { width: '60%', property: { id: 'y', type: 'number' } }
     ]
 
     const sort = {

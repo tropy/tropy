@@ -66,7 +66,7 @@ const props = {
     id: 'http://example.com/photo-property',
     label: 'hello world'
   },
-  'http://example.com/selection-property': { label: 'select prop' },
+  'http://example.com/selection-property': { label: 'select prop' }
 }
 
 const photos = {

@@ -131,7 +131,7 @@ target.all = async (args = []) => {
           'res/icons/mime/*.ico',
           'res/{menu,strings,keymaps}/*',
           'sharp/{build/Release,vendor/lib}/*'
-        ].join(',')}}`,
+        ].join(',')}}`
       }
 
     })
