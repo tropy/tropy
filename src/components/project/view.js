@@ -23,14 +23,6 @@ class ProjectView extends React.Component {
       this.props.items.length === 0
   }
 
-  get isItemSortable() {
-    if (this.props.nav.query === '' &&
-      this.props.nav.list &&
-      this.props.nav.sort[ this.props.nav.list ].column === 'added') {
-      return true
-    }
-    return false
-  }
 
   get maxZoom() {
     return ITEM.ZOOM.length - 1
@@ -77,7 +69,7 @@ class ProjectView extends React.Component {
       onSearch
     } = this.props
 
-    const { size, maxZoom, ItemIterator, isEmpty, isItemSortable } = this
+    const { size, maxZoom, ItemIterator, isEmpty } = this
 
     return (
       <div id="project-view">
@@ -101,7 +93,6 @@ class ProjectView extends React.Component {
             <ItemIterator {...pick(this.props, ItemIterator.getPropKeys())}
               items={items}
               isEmpty={isEmpty}
-              isItemSortable={isItemSortable}
               photos={photos}
               edit={edit.column}
               keymap={keymap.ItemIterator}

@@ -65,6 +65,13 @@ class ItemIterator extends Iterator {
         cat))
   }
 
+  isItemSortable() {
+    if (this.hasPositionColumn() && this.props.sort.column === 'added') {
+      return true
+    }
+    return false
+  }
+
   isSelected({ id }) {
     return this.props.selection.includes(id)
   }
@@ -258,7 +265,7 @@ class ItemIterator extends Iterator {
       cache: this.props.cache,
       photos: this.props.photos,
       tags: this.props.tags,
-      isItemSortable: this.props.isItemSortable,
+      isItemSortable: this.isItemSortable(),
       isLast: this.isLast(index),
       isSelected: this.isSelected(item),
       isDisabled: this.isDisabled,
@@ -299,7 +306,6 @@ class ItemIterator extends Iterator {
     }).isRequired,
 
     isActive: bool,
-    isItemSortable: bool,
     isOver: bool,
     isDisabled: bool,
 
