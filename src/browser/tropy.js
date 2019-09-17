@@ -132,7 +132,7 @@ class Tropy extends EventEmitter {
       case '.jpeg':
       case '.png':
       case '.svg':
-        this.import([file])
+        this.import({ files: [file] })
         break
       case '.ttp':
         this.importTemplates([file])
@@ -217,8 +217,8 @@ class Tropy extends EventEmitter {
     this.emit('app:reload-menu')
   }
 
-  import(files) {
-    return this.dispatch(act.item.import({ files }), this.wm.current())
+  import(...args) {
+    return this.dispatch(act.item.import(...args), this.wm.current())
   }
 
   importTemplates(files) {
@@ -343,8 +343,11 @@ class Tropy extends EventEmitter {
     this.on('app:optimize-project', () =>
       this.dispatch(act.project.optimize(), this.wm.current()))
 
-    this.on('app:import-photos', () =>
+    this.on('app:import-files', () =>
       this.import())
+
+    this.on('app:import-url', () =>
+      this.import({}, { prompt: 'url' }))
 
     this.on('app:rename-project', (win) =>
       this.dispatch(act.edit.start({ project: { name: true } }), win))
