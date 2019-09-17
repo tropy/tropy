@@ -223,9 +223,10 @@ class Esper extends React.PureComponent {
   }
 
   getSource(photo, { cache } = this.props) {
-    return (photo.protocol !== 'file' || !IMAGE.WEB[photo.mimetype]) ?
-      Cache.url(cache, photo.id, 'full', photo.mimetype) :
-      `${photo.protocol}://${photo.path}`
+    if (photo.protocol !== 'file' || !IMAGE.WEB[photo.mimetype])
+      return Cache.url(cache, photo.id, 'full', photo.mimetype)
+    else
+      return `${photo.protocol}://${photo.path}`
   }
 
   getZoomToFill(screen, { width } = this.state, props = this.props) {
