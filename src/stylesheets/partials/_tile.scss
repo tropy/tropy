@@ -45,8 +45,7 @@
     }
   }
 
-  &.before,
-  &.after {
+  .dragging & {
     contain: size layout style; // Needs overflow for sort-indicator
   }
 
