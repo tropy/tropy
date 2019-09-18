@@ -139,11 +139,11 @@
             opacity: $gap-opacity;
           }
         }
-      }
 
-      .thumbnail img {
-        max-width: #{$size}px;
-        max-height: #{$size - 2 * round($size / 32)}px;
+        & + .thumbnail img {
+          max-width: #{$size}px;
+          max-height: #{$size - 2 * round($size / 32)}px;
+        }
       }
     }
   }
