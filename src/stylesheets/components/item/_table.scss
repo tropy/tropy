@@ -215,7 +215,7 @@
     display: flex; // Prevent overflow
     contain: strict;
 
-    &.over {
+    &.over-file {
       @extend %drop-target;
     }
   }
