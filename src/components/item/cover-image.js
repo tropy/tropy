@@ -4,7 +4,6 @@ const React = require('react')
 const { Thumbnail } = require('../photo')
 const { TagColors } = require('../colors')
 const { pick, get } = require('../../common/util')
-const { Rotation } = require('../../common/iiif')
 const { arrayOf, number, object, shape } = require('prop-types')
 
 const StackLines = ({ count }) => (
@@ -28,18 +27,9 @@ class CoverImage extends React.PureComponent {
     return get(this.props.photos, [this.id]) || {}
   }
 
-  get orientation() {
-    let { photo } = this
-
-    return Rotation
-      .fromExifOrientation(photo.orientation)
-      .add(photo)
-      .mode(photo)
-  }
-
   render() {
     return (
-      <div className={`cover-image ${this.orientation}`}>
+      <div className="cover-image">
         <StackLines
           count={this.props.item.photos.length}/>
         <Thumbnail
