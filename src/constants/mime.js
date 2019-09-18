@@ -27,9 +27,24 @@ const SUPPORTED_IMAGE = {
   [MIME.PDF]: true,
   [MIME.SVG]: true,
   [MIME.TIFF]: true,
-  [MIME.WEBP]: true
+  [MIME.WEBP]: true,
+
+  '.gif': true,
+  '.heic': true,
+  '.heif': true,
+  '.jpg': true,
+  '.jpeg': true,
+  '.pdf': true,
+  '.png': true,
+  '.svg': true,
+  '.tif': true,
+  '.tiff': true,
+  '.webp': true
 }
 
-MIME.isImageSupported = (file) => SUPPORTED_IMAGE[file.type]
+MIME.isImageSupported = (file) =>
+  (typeof file === 'string') ?
+    SUPPORTED_IMAGE[file] :
+    SUPPORTED_IMAGE[file.type]
 
 module.exports = MIME

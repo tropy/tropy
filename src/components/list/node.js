@@ -351,7 +351,7 @@ const DropTargetSpec = {
 
     switch (type) {
       case NativeTypes.FILE:
-        return !!item.types.find(t => isImageSupported({ type: t }))
+        return !!item.types.find(isImageSupported)
       case DND.LIST:
         return !(props.isDragging || props.isDraggingParent)
       default:
