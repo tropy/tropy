@@ -82,7 +82,7 @@
 
 .item {
   &.last {
-    .item-table.over &,
+    .table-body.over &,
     .item-grid.over & {
       &::after {
         content: "";
