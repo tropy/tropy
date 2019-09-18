@@ -73,7 +73,8 @@ class ItemTable extends ItemIterator {
   get classes() {
     return ['table-body', {
       'drop-target': !this.props.isDisabled,
-      'over': this.props.isOver
+      'over': this.props.isOver,
+      'dragging': this.state.isDragging
     }]
   }
 
@@ -347,6 +348,8 @@ class ItemTable extends ItemIterator {
                   item={item}
                   position={this.getPosition(index)}
                   template={templates[item.template]}
+                  onDragStart={this.handleDragStart}
+                  onDragStop={this.handleDragStop}
                   onCancel={this.handleEditCancel}
                   onChange={this.handleChange}
                   onEdit={onEdit}/>)}

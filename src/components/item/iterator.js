@@ -15,6 +15,14 @@ const {
 
 
 class ItemIterator extends Iterator {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      isDragging: false
+    }
+  }
+
   componentDidMount() {
     super.componentDidMount()
     on(document, 'global:next-item', this.handleNextItem)
@@ -110,6 +118,14 @@ class ItemIterator extends Iterator {
     if (isDisabled) context.push('deleted')
 
     onContextMenu(event, context.join('-'), target)
+  }
+
+  handleDragStart = () => {
+    this.setState({ isDragging: true })
+  }
+
+  handleDragStop = () => {
+    this.setState({ isDragging: false })
   }
 
   handleItemDelete(items) {

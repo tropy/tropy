@@ -14,10 +14,6 @@ class ItemGrid extends ItemIterator {
   constructor(props) {
     super(props)
 
-    this.state = {
-      isDragging: false
-    }
-
     refine(this, 'handleKeyDown', ([event]) => {
       if (event.isPropagationStopped()) return
 
@@ -56,14 +52,6 @@ class ItemGrid extends ItemIterator {
       [this.orientation]: true,
       'dragging': this.state.isDragging
     }
-  }
-
-  handleDragStart = () => {
-    this.setState({ isDragging: true })
-  }
-
-  handleDragStop = () => {
-    this.setState({ isDragging: false })
   }
 
   render() {
