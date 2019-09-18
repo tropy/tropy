@@ -46,6 +46,14 @@ const SUPPORTED = {
 
 MIME.EXT.forEach(ext => SUPPORTED[ext] = true)
 
+MIME.WEB = {
+  [MIME.JPG]: true,
+  [MIME.PNG]: true,
+  [MIME.WEBP]: true,
+  [MIME.GIF]: true,
+  [MIME.SVG]: true
+}
+
 MIME.isImageSupported = (file) =>
   (typeof file === 'string') ? SUPPORTED[file] : SUPPORTED[file.type]
 

@@ -115,7 +115,7 @@ open.items = (options) => open({
 open.images = (options) => open({
   filters: [{
     name: t('dialog', 'filter', 'images'),
-    extensions: MIME.EXT.map(x => x.slize(1))
+    extensions: MIME.EXT.map(x => x.slice(1))
   }],
   defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],
