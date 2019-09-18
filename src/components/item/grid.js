@@ -58,11 +58,11 @@ class ItemGrid extends ItemIterator {
     }
   }
 
-  handleOnDragStart = () => {
+  handleDragStart = () => {
     this.setState({ isDragging: true })
   }
 
-  handleOnDragStop = () => {
+  handleDragStop = () => {
     this.setState({ isDragging: false })
   }
 
@@ -92,8 +92,8 @@ class ItemGrid extends ItemIterator {
                   {...props}
                   key={item.id}
                   item={item}
-                  onDragStart={this.handleOnDragStart}
-                  onDragStop={this.handleOnDragStop}/>
+                  onDragStart={this.handleDragStart}
+                  onDragStop={this.handleDragStop}/>
               )}
             </ul>
           </div>
