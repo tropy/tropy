@@ -5,6 +5,8 @@ const { DropTarget, NativeTypes } = require('../dnd')
 const { IconMaze, IconWarningSm } = require('../icons')
 const { Editable } = require('../editable')
 const { isImageSupported } = require('../../constants/mime')
+const { extname } = require('path')
+const { blank } = require('../../common/util')
 const cx = require('classnames')
 const { bool, func, string } = require('prop-types')
 
@@ -56,18 +58,33 @@ class ProjectName extends React.PureComponent {
 }
 
 module.exports = {
-  ProjectName: DropTarget(NativeTypes.FILE, {
+  ProjectName: DropTarget([NativeTypes.FILE, NativeTypes.URL], {
     drop({ onDrop }, monitor) {
-      let images = monitor.getItem()
-        .files
-        .filter(isImageSupported)
-        .map(f => f.path)
+      let item = monitor.getItem()
+      let type = monitor.getItemType()
+      let files
 
-      return onDrop({ files: images }), { images }
+      switch (type) {
+        case NativeTypes.FILE:
+          files = item.files.filter(isImageSupported).map(f => f.path)
+          break
+        case NativeTypes.URL:
+          files = item.urls.filter(url => isImageSupported(extname(url)))
+          break
+      }
+
+      if (!blank(files)) {
+        return onDrop({ files }), { files }
+      }
     },
 
     canDrop(_, monitor) {
-      return !!monitor.getItem().types.find(type => isImageSupported({ type }))
+      switch (monitor.getItemType()) {
+        case NativeTypes.FILE:
+          return !!monitor.getItem().types.find(isImageSupported)
+        case NativeTypes.URL:
+          return true
+      }
     }
   }, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),

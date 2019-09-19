@@ -11,7 +11,8 @@ const { isImageSupported } = MIME
 const { bounds } = require('../../dom')
 const lazy = require('./tree')
 const cx = require('classnames')
-const { last, noop, restrict } = require('../../common/util')
+const { blank, last, noop, restrict } = require('../../common/util')
+const { extname } = require('path')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -363,6 +364,7 @@ const DropTargetSpec = {
     try {
       let type = monitor.getItemType()
       let item = monitor.getItem()
+      let files
 
       switch (type) {
         case DND.LIST: {
@@ -377,11 +379,15 @@ const DropTargetSpec = {
           })
           break
         case NativeTypes.FILE:
-          props.onDropFiles({
-            list: list.id,
-            files: item.files.filter(isImageSupported).map(file => file.path)
-          })
+          files = item.files.filter(isImageSupported).map(f => f.path)
           break
+        case NativeTypes.URL:
+          files = item.urls.filter(url => isImageSupported(extname(url)))
+          break
+      }
+
+      if (!blank(files)) {
+        props.onDropFiles({ list: list.id, files })
       }
     } finally {
       node.setState({ detph: null, offset: null })
@@ -401,6 +407,6 @@ module.exports.NewListNode = NewListNode
 module.exports.ListNode =
   DragSource(DND.LIST, DragSourceSpec, DragSourceCollect)(
     DropTarget([
-      DND.LIST, DND.ITEMS, NativeTypes.FILE],
+      DND.LIST, DND.ITEMS, NativeTypes.FILE, NativeTypes.URL],
         DropTargetSpec,
         DropTargetCollect)(ListNode))

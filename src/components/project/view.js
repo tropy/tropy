@@ -167,10 +167,8 @@ const spec = {
     switch (type) {
       case NativeTypes.FILE:
         return !!item.types.find(isImageSupported)
-      case NativeTypes.URL:
-        return true
       default:
-        return false
+        return true
     }
 
   }
