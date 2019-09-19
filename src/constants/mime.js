@@ -16,7 +16,21 @@ const MIME = {
   WEBP: 'image/webp'
 }
 
-const SUPPORTED_IMAGE = {
+MIME.EXT = [
+  '.gif',
+  '.heic',
+  '.heif',
+  '.jpg',
+  '.jpeg',
+  '.pdf',
+  '.png',
+  '.svg',
+  '.tif',
+  '.tiff',
+  '.webp'
+]
+
+const SUPPORTED = {
   [MIME.GIF]: true,
   [MIME.HEIC]: true,
   [MIME.HEIC_SEQ]: true,
@@ -30,6 +44,17 @@ const SUPPORTED_IMAGE = {
   [MIME.WEBP]: true
 }
 
-MIME.isImageSupported = (file) => SUPPORTED_IMAGE[file.type]
+MIME.EXT.forEach(ext => SUPPORTED[ext] = true)
+
+MIME.WEB = {
+  [MIME.JPG]: true,
+  [MIME.PNG]: true,
+  [MIME.WEBP]: true,
+  [MIME.GIF]: true,
+  [MIME.SVG]: true
+}
+
+MIME.isImageSupported = (file) =>
+  (typeof file === 'string') ? SUPPORTED[file] : SUPPORTED[file.type]
 
 module.exports = MIME

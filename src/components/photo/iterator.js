@@ -5,9 +5,10 @@ const { Iterator } = require('../iterator')
 const { DropTarget, NativeTypes } = require('../dnd')
 const { DND, MIME } = require('../../constants')
 const { isImageSupported } = MIME
-const { move } = require('../../common/util')
+const { blank, last, move } = require('../../common/util')
 const { ceil, floor, min } = Math
 const { on, off } = require('../../dom')
+const { extname } = require('path')
 
 const {
   arrayOf, bool, func, number, object, string, shape
@@ -280,7 +281,7 @@ class PhotoIterator extends Iterator {
 
   static asDropTarget() {
     return DropTarget(
-        [DND.PHOTO, NativeTypes.FILE],
+        [DND.PHOTO, NativeTypes.FILE, NativeTypes.URL],
         DropTargetSpec,
         DropTargetCollect
       )(this)
@@ -330,28 +331,33 @@ const DropTargetSpec = {
   drop({ photos, onCreate }, monitor) {
     if (monitor.didDrop()) return
 
-    switch (monitor.getItemType()) {
+    let type = monitor.getItemType()
+    let item = monitor.getItem()
+
+    let files
+
+    switch (type) {
       case DND.PHOTO: {
-        let { id } = monitor.getItem()
-        let to = photos[photos.length - 1].id
+        let to = last(photos).id
 
-        if (id !== to)  {
-          return { id, to, offset: 1 }
+        if (item.id !== to)  {
+          return {
+            id: item.id, to, offset: 1
+          }
         }
         break
       }
-      case NativeTypes.FILE: {
-        let files = monitor.getItem()
-          .files
-          .filter(isImageSupported)
-          .map(file => file.path)
-
-        if (files.length) {
-          onCreate({ files })
-          return { files }
-        }
+      case NativeTypes.FILE:
+        files = item.files.filter(isImageSupported).map(f => f.path)
         break
-      }
+      case NativeTypes.URL:
+        files = item.urls.filter(url => isImageSupported(extname(url)))
+        break
+    }
+
+    if (!blank(files)) {
+      onCreate({ files })
+      return { files }
     }
   },
 
@@ -361,9 +367,11 @@ const DropTargetSpec = {
         return photos.length > 1
       case NativeTypes.FILE:
         return canCreate &&
-          !!monitor.getItem().types.find(type => isImageSupported({ type }))
+          !!monitor.getItem().types.find(isImageSupported)
+      case NativeTypes.URL:
+        return canCreate
       default:
-        return false
+        return true
     }
   }
 }
@@ -375,7 +383,8 @@ const DropTargetCollect = (connect, monitor) => {
   return {
     dt: connect.dropTarget(),
     isOver: isOver && type === DND.PHOTO,
-    isOverFile: isOver && type === NativeTypes.FILE
+    isOverFile: isOver &&
+      (type === NativeTypes.FILE || type === NativeTypes.URL)
   }
 }
 

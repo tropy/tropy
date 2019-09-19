@@ -106,7 +106,10 @@ class Consolidate extends ImportCommand {
 
             let path = yield this.resolve(photo)
             if (path) {
-              image = yield call(Image.open, { path, page: photo.page })
+              image = yield call(Image.open, {
+                path,
+                page: photo.page,
+                protocol: 'file' })
             }
           }
 
@@ -282,10 +285,10 @@ class Duplicate extends ImportCommand {
     let photos = []
 
     for (let i = 0; i < total; ++i) {
-      const { template, path, page } = originals[i]
+      const { template, path, page, protocol } = originals[i]
 
       try {
-        let image = yield call(Image.open, { path, page })
+        let image = yield call(Image.open, { path, page, protocol })
 
         let photo = yield call(db.transaction, tx =>
           mod.photo.create(tx, { base, template }, {

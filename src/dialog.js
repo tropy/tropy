@@ -4,18 +4,7 @@ const assert = require('assert')
 const { ipcRenderer: ipc, shell, clipboard } = require('electron')
 const { counter, get } = require('./common/util')
 const { crashReport, warn } = require('./common/log')
-
-const IMAGE_EXTENSIONS = [
-  'gif',
-  'jpg',
-  'jpeg',
-  'pdf',
-  'png',
-  'svg',
-  'tif',
-  'tiff',
-  'webp'
-]
+const { MIME } = require('./constants')
 
 let seq
 let pending
@@ -116,7 +105,7 @@ function open(options) {
 open.items = (options) => open({
   filters: [{
     name: t('dialog', 'filter', 'items'),
-    extensions: [...IMAGE_EXTENSIONS, 'json', 'jsonld']
+    extensions: [...MIME.EXT.map(x => x.slice(1)), 'json', 'jsonld']
   }],
   defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],
@@ -126,7 +115,7 @@ open.items = (options) => open({
 open.images = (options) => open({
   filters: [{
     name: t('dialog', 'filter', 'images'),
-    extensions: IMAGE_EXTENSIONS
+    extensions: MIME.EXT.map(x => x.slice(1))
   }],
   defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],

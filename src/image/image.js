@@ -1,7 +1,7 @@
 'use strict'
 
 const fs = require('fs')
-const { stat } = fs.promises
+const { readFile, stat } = fs.promises
 const { basename, extname } = require('path')
 const { createHash } = require('crypto')
 const { exif } = require('./exif')
@@ -15,13 +15,19 @@ const { EXIF, MIME } = require('../constants')
 
 
 class Image {
-  static open({ path, density = 300, page = 0, useLocalTimezone = false }) {
-    return (new Image(path, useLocalTimezone)).open({ page, density })
+  static open({
+    path,
+    protocol,
+    density = 300,
+    page = 0,
+    useLocalTimezone = false }) {
+    return (new Image(path, protocol, useLocalTimezone)).open({ page, density })
   }
 
   static async check({
     path,
     page,
+    protocol,
     consolidated,
     created,
     checksum
@@ -29,13 +35,19 @@ class Image {
     let status = {}
 
     try {
-      let { mtime } = await stat(path)
-      status.hasChanged = (mtime > (consolidated || created))
+      if (!force && created != null) {
+        if (protocol === 'file') {
+          let { mtime } = await stat(path)
+          status.hasChanged = (mtime > (consolidated || created))
+        }
+        // TODO check via HTTP HEAD
+      }
 
       if (force || created == null || status.hasChanged) {
         status.image = await Image.open({
           path,
           page,
+          protocol,
           density,
           useLocalTimezone })
         status.hasChanged = (status.image.checksum !== checksum)
@@ -49,7 +61,18 @@ class Image {
     return status
   }
 
-  constructor(path, useLocalTimezone = false) {
+  constructor(path, protocol, useLocalTimezone = false) {
+    if (protocol == null) {
+      let m = path.match(/^(https?):\/\//i)
+      if (m == null) {
+        protocol = 'file'
+      } else {
+        protocol = m[1].toLowerCase()
+        path = path.slice(m[0].length)
+      }
+    }
+
+    this.protocol = protocol
     this.path = path
     this.tz = useLocalTimezone ? (new Date().getTimezoneOffset()) : 0
   }
@@ -60,6 +83,10 @@ class Image {
 
   get filename() {
     return basename(this.path)
+  }
+
+  get url() {
+    return `${this.protocol}://${this.path}`
   }
 
   get title() {
@@ -104,7 +131,7 @@ class Image {
         get(this.exif, [this.page, EXIF.dateTime, 'text'])
 
       // Temporarily return as string until we add value types.
-      return (time || this.file.ctime).toISOString()
+      return (time || this.file.ctime || new Date()).toISOString()
 
     } catch (e) {
       warn({ stack: e.stack }, 'failed to convert image date')
@@ -149,36 +176,35 @@ class Image {
     this.channels < 4 || (await this.do().stats()).isOpaque
   )
 
-  open({ page = 0, density } = {}) {
-    return new Promise((resolve, reject) => {
-      this.hash = createHash('md5')
-      this.mimetype = null
-      this.page = 0
-      this.numPages = 1
+  async open({ page = 0, density } = {}) {
+    this.file = null
+    this.buffer = null
+    this.mimetype = null
+    this.hash = null
+    this.page = 0
+    this.numPages = 1
 
-      let chunks = []
+    let buffer
 
-      fs.createReadStream(this.path)
-        .on('error', reject)
+    if (this.protocol === 'file') {
+      this.file = await stat(this.path)
+      buffer = await readFile(this.path)
+    } else {
+      let response = await fetch(this.url, { redirect: 'follow' })
 
-        .on('data', chunk => {
-          this.hash.update(chunk)
-          chunks.push(chunk)
+      if (!response.ok)
+        throw new Error(`failed to fetch remote image: ${response.status}`)
 
-          if (chunks.length === 1) {
-            this.mimetype = magic(chunk, this.ext)
-          }
-        })
+      buffer = Buffer.from(await response.arrayBuffer())
+      this.file = { size: buffer.length }
+    }
 
-        .on('end', () => {
-          this
-            .parse(Buffer.concat(chunks), { page, density })
-            .then(resolve, reject)
-        })
-    })
+    return this.parse(buffer, { page, density })
   }
 
   async parse(buffer, { page, density }) {
+    this.mimetype = magic(buffer, this.ext)
+
     switch (this.mimetype) {
       case MIME.PDF:
         this.density = density
@@ -193,6 +219,8 @@ class Image {
       case MIME.WEBP:
       case MIME.HEIC:
       case MIME.HEIF:
+        this.hash = createHash('md5')
+        this.hash.update(buffer)
         this.buffer = buffer
         break
       default:
@@ -203,14 +231,12 @@ class Image {
       this.page = page
     }
 
-    let [file, ...meta] = await Promise.all([
-      stat(this.path),
+    let meta = await Promise.all([
       ...this.each(img => img.metadata())
     ])
 
     assign(this, {
       exif: meta.map(m => exif(m.exif, { timezone: this.tz })),
-      file,
       meta,
       xmp: meta.map(m => xmp(m.xmp))
     })
@@ -241,6 +267,7 @@ class Image {
     return pick(this, [
       'page',
       'path',
+      'protocol',
       'checksum',
       'mimetype',
       'width',
@@ -254,15 +281,8 @@ class Image {
     let SIZE = isSelection ? Image.SELECTION_SIZE : Image.PHOTO_SIZE
     let variants = [48, 512]
 
-    if (!isSelection) {
-      switch (this.mimetype) {
-        case MIME.HEIC:
-        case MIME.HEIF:
-        case MIME.TIFF:
-        case MIME.PDF:
-          variants.push('full')
-          break
-      }
+    if (!isSelection || this.isRemote || !MIME.WEB[this.mimetype]) {
+      variants.push('full')
     }
 
     return variants.map(name => ({ name, size: SIZE[name] }))
