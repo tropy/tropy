@@ -358,8 +358,12 @@ class Tropy extends EventEmitter {
     this.on('app:center-window', () =>
       this.wm.center())
 
-    this.on('app:show-in-folder', (_, { target }) =>
-      shell.showItemInFolder(target.path))
+    this.on('app:show-in-folder', (_, { target }) => {
+      if (target.protocol !== 'file')
+        shell.openExternal(`${target.protocol}://${target.path}`)
+      else
+        shell.showItemInFolder(target.path)
+    })
 
     this.on('app:create-item', () =>
       this.dispatch(act.item.create(), this.wm.current()))

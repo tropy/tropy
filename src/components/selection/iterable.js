@@ -5,6 +5,7 @@ const { Thumbnail } = require('../photo/thumbnail')
 const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { bool, func, number, shape, string } = require('prop-types')
 const { pure } = require('../util')
+const { pick } = require('../../common/util')
 const { bounds } = require('../../dom')
 const { DND } = require('../../constants')
 
@@ -59,14 +60,10 @@ class SelectionIterable extends React.PureComponent {
 
   handleContextMenu = (event) => {
     if (!this.props.isDisabled) {
-      const { photo, selection } = this.props
       this.select()
-
       this.props.onContextMenu(event, 'selection', {
-        id: photo.id,
-        item: photo.item,
-        path: photo.path,
-        selection: selection.id
+        ...pick(this.props.photo, ['id', 'item', 'path', 'protocol']),
+        selection: this.props.selection.id
       })
     }
   }
