@@ -343,11 +343,8 @@ class Tropy extends EventEmitter {
     this.on('app:optimize-project', () =>
       this.dispatch(act.project.optimize(), this.wm.current()))
 
-    this.on('app:import-files', () =>
+    this.on('app:import', () =>
       this.import())
-
-    this.on('app:import-url', () =>
-      this.import({}, { prompt: 'url' }))
 
     this.on('app:rename-project', (win) =>
       this.dispatch(act.edit.start({ project: { name: true } }), win))

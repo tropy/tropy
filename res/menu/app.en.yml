@@ -40,14 +40,10 @@ en:
             - label: 'Clear List'
               command: 'app:clear-recent-projects'
         - type: 'separator'
-        - &import-files
-          label: 'Import Files…'
-          command: 'app:import-files'
+        - &import
+          label: 'Import…'
+          command: 'app:import'
           accelerator: 'CmdOrCtrl+Shift+I'
-          condition: 'project'
-        - &import-url
-          label: 'Import URL…'
-          command: 'app:import-url'
           condition: 'project'
         - &consolidate
           label: 'Consolidate Photo Library'
@@ -256,8 +252,7 @@ en:
         - *open-new
         - *recent
         - type: 'separator'
-        - *import-files
-        - *import-url
+        - *import
         - *consolidate
         - type: 'separator'
         - *print
