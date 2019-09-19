@@ -8,6 +8,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: $thumbnail-bg;
   position: relative;
   contain: strict;
 
@@ -35,7 +36,6 @@
     align-items: center;
     justify-content: center;
     color: $thumbnail-color;
-    background: $thumbnail-bg;
 
     svg {
       width: calc(100% * 2 / 3);

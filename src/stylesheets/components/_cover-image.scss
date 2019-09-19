@@ -175,6 +175,8 @@
       }
 
       & + .thumbnail {
+        min-width: $space-sm;
+
         img {
           max-height: $thumbnail-size - $space-min;
         }
