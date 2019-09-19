@@ -142,6 +142,7 @@
 
         & + .thumbnail {
           min-width: #{round($size * 0.375)}px;
+          min-height: #{round($size * 0.375)}px;
 
           img {
             max-width: #{$size}px;
@@ -180,6 +181,7 @@
 
       & + .thumbnail {
         min-width: $space-sm;
+        min-height: $space-sm;
 
         img {
           max-height: $thumbnail-size - $space-min;
