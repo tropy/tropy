@@ -71,9 +71,8 @@ class ItemTable extends ItemIterator {
   }
 
   get classes() {
-    return ['table-body', {
+    return [super.classes, 'table-body', {
       'drop-target': !this.props.isDisabled,
-      'over': this.props.isOver,
       'dragging': this.state.isDragging
     }]
   }
@@ -436,5 +435,5 @@ class ItemTable extends ItemIterator {
 
 
 module.exports = {
-  ItemTable
+  ItemTable: ItemTable.asDropTarget()
 }

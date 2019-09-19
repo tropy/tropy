@@ -45,13 +45,11 @@ class ItemGrid extends ItemIterator {
   }
 
   get classes() {
-    return {
-      'item-grid': true,
+    return [super.classes, 'item-grid', {
       'drop-target': !this.props.isDisabled,
-      'over': this.props.isOver,
-      [this.orientation]: true,
-      'dragging': this.state.isDragging
-    }
+      'dragging': this.state.isDragging,
+      [this.orientation]: true
+    }]
   }
 
   render() {
@@ -97,5 +95,5 @@ class ItemGrid extends ItemIterator {
 
 
 module.exports = {
-  ItemGrid
+  ItemGrid: ItemGrid.asDropTarget()
 }
