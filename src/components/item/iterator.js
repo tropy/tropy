@@ -2,6 +2,9 @@
 
 const React = require('react')
 const { Iterator } = require('../iterator')
+const { DropTarget, NativeTypes } = require('../dnd')
+const { DND } = require('../../constants')
+const { isImageSupported } = require('../../constants/mime')
 const { FormattedMessage } = require('react-intl')
 const { match, isMeta: meta } = require('../../keymap')
 const cx = require('classnames')
@@ -35,6 +38,13 @@ class ItemIterator extends Iterator {
     off(document, 'global:next-item', this.handleNextItem)
     off(document, 'global:prev-item', this.handlePrevItem)
     off(document, 'global:forward', this.handleItemOpen)
+  }
+
+  get classes() {
+    return {
+      'over': this.props.isOver,
+      'over-file': this.props.isOverFile
+    }
   }
 
   get tabIndex() {
@@ -311,6 +321,14 @@ class ItemIterator extends Iterator {
     return !!props.list
   }
 
+  static asDropTarget() {
+    return DropTarget(
+        [DND.ITEMS, NativeTypes.FILE],
+        DropTargetSpec,
+        DropTargetCollect
+      )(this)
+  }
+
   static propTypes = {
     items: arrayOf(shape({
       id: number.isRequired
@@ -336,6 +354,7 @@ class ItemIterator extends Iterator {
     dt: func.isRequired,
     onContextMenu: func.isRequired,
     onItemDelete: func.isRequired,
+    onItemImport: func.isRequired,
     onItemExport: func.isRequired,
     onItemMerge: func.isRequired,
     onItemOpen: func.isRequired,
@@ -348,6 +367,42 @@ class ItemIterator extends Iterator {
   }
 }
 
+const DropTargetSpec = {
+  drop({ list, onItemImport }, monitor) {
+    const files = monitor
+      .getItem()
+      .files
+      .filter(isImageSupported)
+      .map(file => file.path)
+
+    onItemImport({ files, list })
+    return { files }
+  },
+
+  canDrop({ items }, monitor) {
+    switch (monitor.getItemType()) {
+      case DND.ITEMS:
+        return items.length > 1
+      case NativeTypes.FILE: {
+        return !!monitor.getItem().types
+          .find(type => isImageSupported({ type }))
+      }
+      default:
+        return false
+    }
+  }
+}
+
+const DropTargetCollect = (connect, monitor) => {
+  let isOver = monitor.isOver({ shallow: true }) && monitor.canDrop()
+  let type = monitor.getItemType()
+
+  return {
+    dt: connect.dropTarget(),
+    isOverFile: isOver && type === NativeTypes.FILE,
+    isOver: isOver && type === DND.ITEMS,
+  }
+}
 
 module.exports = {
   ItemIterator

@@ -65,6 +65,7 @@ class ProjectView extends React.Component {
       tags,
       zoom,
       onItemCreate,
+      onItemImport,
       onItemSelect,
       onSearch
     } = this.props
@@ -104,6 +105,7 @@ class ProjectView extends React.Component {
               isDisabled={nav.trash}
               isOver={isOver && canDrop}
               onCreate={onItemCreate}
+              onItemImport={onItemImport}
               onSelect={onItemSelect}
               onSort={this.handleSort}/>
             <div className="fake-gap"/>
