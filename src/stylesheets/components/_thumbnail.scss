@@ -11,15 +11,10 @@
   position: relative;
   contain: strict;
 
+  .item-table &,
   .item-grid &,
   .photo-grid & {
     contain: none;
-  }
-
-  .item-table &,
-  .photo-list & {
-    width: $thumbnail-size;
-    height: $thumbnail-size;
   }
 
   img {

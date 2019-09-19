@@ -150,11 +150,16 @@
 }
 
 .item-table {
-  .cover-image {
-    position: absolute;
-    left: $space-xs;
-    top: ($row-height - $thumbnail-size) / 2;
+  .cover-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: $thumbnail-size;
+    height: $thumbnail-size;
+    margin-right: $space-xs;
+  }
 
+  .cover-image {
     .stack-lines {
       .line {
         height: 1px;
@@ -170,7 +175,9 @@
       }
 
       & + .thumbnail {
-        //-webkit-clip-path: inset(4px 0 0 0);
+        img {
+          max-height: $thumbnail-size - $space-min;
+        }
 
         .icon-photo {
           g {
@@ -179,11 +186,10 @@
         }
       }
     }
-  }
 
-  .td:first-child {
-    .cover-image {
-      left: $default-padding-horizontal;
+    .thumbnail img {
+      max-width: $thumbnail-size;
+      max-height: $thumbnail-size;
     }
   }
 

@@ -303,18 +303,8 @@
         transition: none;
       }
 
-      @include variant(".main-column .td-container") {
-        padding-left:
-          $padding-base-horizontal
-          + $thumbnail-size
-          + $padding-base-horizontal;
-      }
-
       @include variant(".main-column:first-child .td-container") {
-        padding-left:
-          $default-padding-horizontal
-          + $thumbnail-size
-          + $padding-base-horizontal;
+        padding-left: $default-padding-horizontal;
       }
     }
   }
