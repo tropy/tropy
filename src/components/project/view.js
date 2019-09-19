@@ -10,7 +10,6 @@ const { blank, pick } = require('../../common/util')
 const { array, bool, func, object, number } = require('prop-types')
 const { isImageSupported } = require('../../constants/mime')
 const { ITEM } = require('../../constants/sass')
-const { extname } = require('path')
 
 
 class ProjectView extends React.Component {
@@ -150,7 +149,7 @@ const spec = {
         files = item.files.filter(isImageSupported).map(f => f.path)
         break
       case NativeTypes.URL:
-        files = item.urls.filter(url => isImageSupported(extname(url)))
+        files = item.urls
         break
     }
 

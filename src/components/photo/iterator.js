@@ -8,7 +8,6 @@ const { isImageSupported } = MIME
 const { blank, last, move } = require('../../common/util')
 const { ceil, floor, min } = Math
 const { on, off } = require('../../dom')
-const { extname } = require('path')
 
 const {
   arrayOf, bool, func, number, object, string, shape
@@ -351,7 +350,7 @@ const DropTargetSpec = {
         files = item.files.filter(isImageSupported).map(f => f.path)
         break
       case NativeTypes.URL:
-        files = item.urls.filter(url => isImageSupported(extname(url)))
+        files = item.urls
         break
     }
 

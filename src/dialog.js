@@ -105,7 +105,7 @@ function open(options) {
 open.items = (options) => open({
   filters: [{
     name: t('dialog', 'filter', 'items'),
-    extensions: [...MIME.EXT.map(x => x.slice(1)), 'json', 'jsonld']
+    extensions: [...MIME.EXT, 'json', 'jsonld']
   }],
   defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],
@@ -115,7 +115,7 @@ open.items = (options) => open({
 open.images = (options) => open({
   filters: [{
     name: t('dialog', 'filter', 'images'),
-    extensions: MIME.EXT.map(x => x.slice(1))
+    extensions: MIME.EXT
   }],
   defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],

@@ -17,17 +17,17 @@ const MIME = {
 }
 
 MIME.EXT = [
-  '.gif',
-  '.heic',
-  '.heif',
-  '.jpg',
-  '.jpeg',
-  '.pdf',
-  '.png',
-  '.svg',
-  '.tif',
-  '.tiff',
-  '.webp'
+  'gif',
+  'heic',
+  'heif',
+  'jpg',
+  'jpeg',
+  'pdf',
+  'png',
+  'svg',
+  'tif',
+  'tiff',
+  'webp'
 ]
 
 const SUPPORTED = {
@@ -43,8 +43,6 @@ const SUPPORTED = {
   [MIME.TIFF]: true,
   [MIME.WEBP]: true
 }
-
-MIME.EXT.forEach(ext => SUPPORTED[ext] = true)
 
 MIME.WEB = {
   [MIME.JPG]: true,

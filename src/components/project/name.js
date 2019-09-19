@@ -5,7 +5,6 @@ const { DropTarget, NativeTypes } = require('../dnd')
 const { IconMaze, IconWarningSm } = require('../icons')
 const { Editable } = require('../editable')
 const { isImageSupported } = require('../../constants/mime')
-const { extname } = require('path')
 const { blank } = require('../../common/util')
 const cx = require('classnames')
 const { bool, func, string } = require('prop-types')
@@ -69,7 +68,7 @@ module.exports = {
           files = item.files.filter(isImageSupported).map(f => f.path)
           break
         case NativeTypes.URL:
-          files = item.urls.filter(url => isImageSupported(extname(url)))
+          files = item.urls
           break
       }
 
