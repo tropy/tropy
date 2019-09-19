@@ -383,7 +383,8 @@ const DropTargetCollect = (connect, monitor) => {
   return {
     dt: connect.dropTarget(),
     isOver: isOver && type === DND.PHOTO,
-    isOverFile: isOver && type === NativeTypes.FILE
+    isOverFile: isOver &&
+      (type === NativeTypes.FILE || type === NativeTypes.URL)
   }
 }
 
