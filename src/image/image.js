@@ -219,6 +219,7 @@ class Image {
       case MIME.WEBP:
       case MIME.HEIC:
       case MIME.HEIF:
+      case MIME.JP2:
         this.hash = createHash('md5')
         this.hash.update(buffer)
         this.buffer = buffer
