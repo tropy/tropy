@@ -127,7 +127,6 @@ class ProjectView extends React.Component {
     offset: number.isRequired,
     photos: object.isRequired,
     tags: object.isRequired,
-    dt: func.isRequired,
     zoom: number.isRequired,
     onItemCreate: func.isRequired,
     onItemImport: func.isRequired,
