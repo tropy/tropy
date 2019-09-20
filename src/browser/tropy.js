@@ -413,6 +413,9 @@ class Tropy extends EventEmitter {
       this.dispatch(act.item.destroy(target.id), win)
     })
 
+    this.on('app:order-item', (win, { target }) =>
+      this.dispatch(act.item.order({ id: target.id }), win))
+
     this.on('app:create-item-photo', (win, { target }) => {
       this.dispatch(act.photo.create({ item: target.id }), win)
     })

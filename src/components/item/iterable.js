@@ -137,16 +137,20 @@ class ItemIterable extends React.PureComponent {
       component.setState({ offset })
     },
 
-    drop({ item, onDropPhotos, onDropItems }, monitor) {
+    drop({ item, onDropPhotos, onDropItems, onItemOrder }, monitor, component) {
       switch (monitor.getItemType()) {
         case DND.PHOTO:
           return onDropPhotos({
             item: item.id, photos: [monitor.getItem()]
           })
         case DND.ITEMS:
-          return onDropItems([
-            item.id, ...monitor.getItem().items.map(({ id }) => id)
-          ])
+          if (component.state.offset !== null) {
+            return onItemOrder([{ item }])
+          } else {
+            return onDropItems([
+              item.id, ...monitor.getItem().items.map(({ id }) => id)
+            ])
+          }
       }
     },
 
@@ -214,6 +218,7 @@ class ItemIterable extends React.PureComponent {
     onDropItems: func.isRequired,
     onDropPhotos: func.isRequired,
     onItemOpen: func.isRequired,
+    onItemOrder: func.isRequired,
     onPhotoError: func.isRequired,
     onSelect: func.isRequired
   }
