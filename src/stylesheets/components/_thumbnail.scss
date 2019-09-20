@@ -10,13 +10,6 @@
   align-items: center;
   background-color: $thumbnail-bg;
   position: relative;
-  contain: strict;
-
-  .item-table &,
-  .item-grid &,
-  .photo-grid & {
-    contain: none;
-  }
 
   img {
     display: block;
