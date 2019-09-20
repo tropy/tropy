@@ -12,6 +12,7 @@ module.exports = {
   LOAD: 'item.load',
   MERGE: 'item.merge',
   OPEN: 'item.open',
+  ORDER: 'item.order',
   REMOVE: 'item.remove',
   RESTORE: 'item.restore',
   SELECT: 'item.select',
