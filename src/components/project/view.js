@@ -2,13 +2,11 @@
 
 const React = require('react')
 const { WindowContext } = require('../main')
-const { DropTarget, NativeTypes } = require('../dnd')
 const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
-const { blank, pick } = require('../../common/util')
+const { pick } = require('../../common/util')
 const { array, bool, func, object, number } = require('prop-types')
-const { isImageSupported } = require('../../constants/image')
 const { ITEM } = require('../../constants/sass')
 
 
@@ -141,50 +139,6 @@ class ProjectView extends React.Component {
   }
 }
 
-const spec = {
-  drop({ nav, onItemImport }, monitor) {
-    let type = monitor.getItemType()
-    let item = monitor.getItem()
-    let files
-
-    switch (type) {
-      case NativeTypes.FILE:
-        files = item.files.filter(isImageSupported).map(f => f.path)
-        break
-      case NativeTypes.URL:
-        files = item.urls
-        break
-    }
-
-    if (!blank(files)) {
-      onItemImport({ files, list: nav.list })
-      return { files }
-    }
-  },
-
-  canDrop(_, monitor) {
-    let type = monitor.getItemType()
-    let item = monitor.getItem()
-
-    switch (type) {
-      case NativeTypes.FILE:
-        return !!item.types.find(isImageSupported)
-      default:
-        return true
-    }
-
-  }
-}
-
-const collect = (connect, monitor) => ({
-  dt: connect.dropTarget(),
-  isOver: monitor.isOver(),
-  canDrop: monitor.canDrop()
-})
-
 module.exports = {
-  ProjectView: DropTarget([
-    NativeTypes.FILE,
-    NativeTypes.URL
-  ], spec, collect)(ProjectView)
+  ProjectView
 }
