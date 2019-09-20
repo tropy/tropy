@@ -15,9 +15,12 @@
 
       height: $tile-size;
 
-      .thumbnail img {
-        max-width: #{$size}px;
-        max-height: #{$size}px;
+      .thumbnail {
+        img,
+        .icon-photo {
+          max-width: #{$size}px;
+          max-height: #{$size}px;
+        }
       }
     }
   }

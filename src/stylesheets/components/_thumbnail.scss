@@ -22,9 +22,8 @@
   }
 
   .icon-photo {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+    width: #{$tile-thumbnail-size-max}px;
+    height: #{$tile-thumbnail-size-max}px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -33,6 +32,12 @@
     svg {
       width: calc(100% * 2 / 3);
       height: calc(100% * 2 / 3);
+    }
+
+    & + img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
     }
   }
 }

@@ -43,7 +43,8 @@
   .thumbnail {
     opacity: $drag-preview-thumbnail-opacity;
 
-    img {
+    img,
+    .icon-photo {
       max-width: $drag-preview-size;
       max-height: $drag-preview-size;
     }

@@ -144,7 +144,8 @@
           min-width: #{round($size * 0.375)}px;
           min-height: #{round($size * 0.375)}px;
 
-          img {
+          img,
+          .icon-photo {
             max-width: #{$size}px;
             max-height: #{$size - 2 * round($size / 32)}px;
           }
@@ -183,21 +184,19 @@
         min-width: $space-sm;
         min-height: $space-sm;
 
-        img {
-          max-height: $thumbnail-size - $space-min;
-        }
-
+        img,
         .icon-photo {
-          g {
-            transform: translateY(2px);
-          }
+          max-height: $thumbnail-size - $space-min;
         }
       }
     }
 
-    .thumbnail img {
-      max-width: $thumbnail-size;
-      max-height: $thumbnail-size;
+    .thumbnail {
+      img,
+      .icon-photo {
+        max-width: $thumbnail-size;
+        max-height: $thumbnail-size;
+      }
     }
   }
 
