@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Editable } = require('../editable')
-const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
+const { DragSource, DropTarget, getEmptyImage, NativeTypes } = require('../dnd')
 const { FormattedMessage } = require('react-intl')
 const { blank, noop, pluck, URI } = require('../../common/util')
 const { IconLock, IconWarningSm } = require('../icons')
@@ -260,12 +260,32 @@ const DragSourceCollect = (connect) => ({
 
 const DropTargetSpec = {
   canDrop({ id, property }, monitor) {
+    let type = monitor.getItemType()
     let item = monitor.getItem()
-    return id === item.id && property.id !== item.property
+
+    switch (type) {
+      case NativeTypes.TEXT:
+        return true
+      case DND.FIELD:
+        return id === item.id && property.id !== item.property
+    }
+    return false
   },
 
-  drop({ property }) {
-    return { property: property.id }
+  drop({ onChange, property, type }, monitor) {
+    let droptype = monitor.getItemType()
+    let item = monitor.getItem()
+
+    switch (droptype) {
+      case NativeTypes.TEXT:
+        onChange({
+          [property.id]: { text: item.text, type }
+        }, true)
+        break
+      case DND.FIELD:
+        return { property: property.id }
+    }
+
   }
 }
 
@@ -281,5 +301,5 @@ module.exports.NewMetadataField = NewMetadataField
 module.exports.MetadataField = DragSource(
   DND.FIELD, DragSourceSpec, DragSourceCollect
 )(DropTarget(
-  DND.FIELD, DropTargetSpec, DropTargetCollect
+  [DND.FIELD, NativeTypes.TEXT], DropTargetSpec, DropTargetCollect
 )(MetadataField))
