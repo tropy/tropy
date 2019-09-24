@@ -265,11 +265,13 @@ const DropTargetSpec = {
 
     switch (type) {
       case NativeTypes.TEXT:
+      case NativeTypes.URL:
         return true
       case DND.FIELD:
         return id === item.id && property.id !== item.property
+      default:
+        return false
     }
-    return false
   },
 
   drop({ onChange, property, type }, monitor) {
@@ -278,8 +280,12 @@ const DropTargetSpec = {
 
     switch (droptype) {
       case NativeTypes.TEXT:
+      case NativeTypes.URL:
         onChange({
-          [property.id]: { text: item.text, type }
+          [property.id]: {
+            text: item.text || item.urls[0],
+            type
+          }
         }, true)
         break
       case DND.FIELD:
@@ -301,5 +307,7 @@ module.exports.NewMetadataField = NewMetadataField
 module.exports.MetadataField = DragSource(
   DND.FIELD, DragSourceSpec, DragSourceCollect
 )(DropTarget(
-  [DND.FIELD, NativeTypes.TEXT], DropTargetSpec, DropTargetCollect
+  [DND.FIELD, NativeTypes.TEXT, NativeTypes.URL],
+  DropTargetSpec,
+  DropTargetCollect
 )(MetadataField))
