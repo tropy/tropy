@@ -71,10 +71,7 @@ class ItemTable extends ItemIterator {
   }
 
   get classes() {
-    return [super.classes, 'table-body', {
-      'drop-target': !this.props.isDisabled,
-      'dragging': this.state.isDragging
-    }]
+    return [super.classes, 'table-body']
   }
 
   getStateFromProps(props = this.props) {

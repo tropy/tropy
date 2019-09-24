@@ -19,12 +19,11 @@ const {
 
 class ItemIterator extends Iterator {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      isDragging: false
-    }
+
+  state = {
+    isDragging: false
   }
+
 
   componentDidMount() {
     super.componentDidMount()
@@ -43,7 +42,9 @@ class ItemIterator extends Iterator {
   get classes() {
     return {
       'over': this.props.isOver,
-      'over-file': this.props.isOverFile
+      'over-file': this.props.isOverFile,
+      'dragging': this.state.isDragging,
+      'drop-target': !this.props.isDisabled
     }
   }
 
@@ -84,10 +85,7 @@ class ItemIterator extends Iterator {
   }
 
   isItemSortable() {
-    if (this.hasPositionColumn() && this.props.sort.column === 'added') {
-      return true
-    }
-    return false
+    return this.hasPositionColumn() && this.props.sort.column === 'added'
   }
 
   isSelected({ id }) {
@@ -390,7 +388,7 @@ const DropTargetSpec = {
           .find(type => isImageSupported({ type }))
       }
       default:
-        return false
+        return true
     }
   }
 }
@@ -402,7 +400,7 @@ const DropTargetCollect = (connect, monitor) => {
   return {
     dt: connect.dropTarget(),
     isOverFile: isOver && type === NativeTypes.FILE,
-    isOver: isOver && type === DND.ITEMS,
+    isOver: isOver && type !== DND.ITEMS
   }
 }
 
