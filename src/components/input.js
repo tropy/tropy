@@ -208,6 +208,8 @@ class Input extends React.PureComponent {
             required={this.props.isRequired}
             tabIndex={this.props.tabIndex}
             type={this.props.type}
+            max={this.props.max}
+            min={this.props.min}
             value={this.state.value}
             onBlur={this.handleBlur}
             onChange={this.handleChange}
@@ -241,6 +243,8 @@ class Input extends React.PureComponent {
     isReadOnly: bool,
     isRequired: bool,
     match: func.isRequired,
+    max: number,
+    min: number,
     placeholder: string,
     resize: bool,
     tabIndex: number,
