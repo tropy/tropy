@@ -3,8 +3,9 @@
 const React = require('react')
 const { TemplateSelect } = require('../template/select')
 const { ResourceSelect } = require('../resource/select')
+const { Input } = require('../input')
 const { ipcRenderer: ipc } = require('electron')
-const { ESPER, ITEM } = require('../../constants')
+const { ESPER, ITEM, IMPORTS } = require('../../constants')
 const { darwin } = require('../../common/os')
 
 const {
@@ -14,7 +15,7 @@ const {
 } = require('../icons')
 
 const {
-  array, arrayOf, bool, func, object, shape, string
+  array, arrayOf, bool, func, object, shape, string, number
 } = require('prop-types')
 
 const {
@@ -41,6 +42,10 @@ class AppPrefs extends React.PureComponent {
 
   handleLocalTimeChange = ({ localtime }) => {
     this.props.onSettingsUpdate({ localtime })
+  }
+
+  handleDPIChange = dpi => {
+    this.props.onSettingsUpdate({ dpi })
   }
 
   handleTemplateChange = (values, hasChanged) => {
@@ -142,6 +147,18 @@ class AppPrefs extends React.PureComponent {
             name="force"
             value={this.props.settings.title.force}
             onChange={this.handleTitleChange}/>
+          <FormElement
+            id="prefs.app.density.label"
+            isCompact>
+            <Input
+              id="dpi"
+              min={this.props.importMin}
+              max={this.props.importMax}
+              value={this.props.settings.dpi}
+              onChange={this.handleDPIChange}
+              className="form-control"
+              type="number" />
+          </FormElement>
           <hr/>
           <FormSelect
             id="prefs.app.style.theme"
@@ -268,6 +285,8 @@ class AppPrefs extends React.PureComponent {
     }).isRequired,
     layouts: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,
+    importMin: number.isRequired,
+    importMax: number.isRequired,
     themes: arrayOf(string).isRequired,
     dupOptions: arrayOf(string).isRequired,
     zoomModes: arrayOf(string).isRequired,
@@ -281,7 +300,9 @@ class AppPrefs extends React.PureComponent {
     locales: ['de', 'en', 'es', 'fr', 'it', 'ja'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL],
-    printModes: ['item', 'photo', 'selection']
+    printModes: ['item', 'photo', 'selection'],
+    importMin: IMPORTS.DPIMIN,
+    importMax: IMPORTS.DPIMAX
   }
 }
 
