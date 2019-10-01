@@ -134,6 +134,8 @@ en:
           skip: Skip duplicate photos
           import: Accept duplicate photos
           prompt: Ask me every time
+      density:
+        label: DPI
       export:
         label: Export
         note:
