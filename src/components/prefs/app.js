@@ -45,7 +45,7 @@ class AppPrefs extends React.PureComponent {
   }
 
   handleDPIChange = dpi => {
-    this.props.onSettingsUpdate({ dpi })
+    this.props.onSettingsUpdate({ dpi: Number(dpi) })
   }
 
   handleTemplateChange = (values, hasChanged) => {
