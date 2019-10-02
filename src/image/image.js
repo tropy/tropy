@@ -10,7 +10,7 @@ const { isSVG } = require('./svg')
 const sharp = require('sharp')
 const { assign } = Object
 const { warn } = require('../common/log')
-const { get, pick } = require('../common/util')
+const { get, pick, restrict } = require('../common/util')
 const { EXIF, MIME, IMAGE } = require('../constants')
 
 
@@ -207,7 +207,7 @@ class Image {
 
     switch (this.mimetype) {
       case MIME.PDF:
-        this.density = density
+        this.density = restrict(density, IMAGE.MIN_DENSITY, IMAGE.MAX_DENSITY)
         // eslint-disable-next-line no-fallthrough
       case MIME.TIFF:
         this.numPages = (await sharp(buffer).metadata()).pages
