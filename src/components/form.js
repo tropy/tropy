@@ -37,32 +37,31 @@ class FormGroup extends React.PureComponent {
 }
 
 
-class Label extends React.PureComponent {
-  get value() {
-    return this.props.value || <FormattedMessage id={this.props.id}/>
-  }
+const Label = React.memo(props => {
+  let intl = useIntl()
 
-  render() {
-    return (
-      <label
-        className={cx('control-label', `col-${this.props.size}`)}
-        title={this.props.title}
-        htmlFor={this.props.id}>
-        {this.value}
-      </label>
-    )
-  }
+  let title = props.title && intl.formatMessage({ id: props.title })
+  let value = props.value || intl.formatMessage({ id: props.id })
 
-  static propTypes = {
-    id: string.isRequired,
-    size: number.isRequired,
-    title: string,
-    value: string
-  }
+  return (
+    <label
+      className={cx('control-label', `col-${props.size}`)}
+      title={title}
+      htmlFor={props.id}>
+      {value}
+    </label>
+  )
+})
 
-  static defaultProps = {
-    size: 4
-  }
+Label.propTypes = {
+  id: string.isRequired,
+  size: number.isRequired,
+  title: string,
+  value: string
+}
+
+Label.defaultProps = {
+  size: 4
 }
 
 class FormElement extends React.PureComponent {
