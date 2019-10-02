@@ -10,6 +10,13 @@
 
 input {
   pointer-events: auto; // Reset
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      display: none;
+    }
+  }
 }
 
 .form-inline {
