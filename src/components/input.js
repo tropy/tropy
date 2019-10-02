@@ -41,7 +41,7 @@ class Input extends React.PureComponent {
   }
 
   get isValid() {
-    return !this.props.isRequired || !blank(this.state.value)
+    return this.input.current.validity.valid
   }
 
   get hasChanged() {
@@ -54,11 +54,17 @@ class Input extends React.PureComponent {
 
   cancel = (isForced) => {
     this.hasBeenCancelled = true
-    this.props.onCancel(this.hasChanged, isForced)
+
+    if (this.isValid) {
+      this.props.onCancel(this.hasChanged, isForced)
+    } else {
+      this.reset()
+      this.props.onCancel(false, isForced)
+    }
   }
 
   commit(isForced) {
-    if (isForced || this.isValid) {
+    if (this.isValid) {
       if (!this.hasBeenCommitted) {
         this.hasBeenCommitted = true
         this.props.onCommit(this.state.value, this.hasChanged, isForced)
