@@ -146,10 +146,12 @@ class AppPrefs extends React.PureComponent {
           <FormField
             id="prefs.app.density.label"
             isCompact
+            isRequired
             max={this.props.importMax}
             min={this.props.importMin}
             name="density"
             onChange={this.props.onSettingsUpdate}
+            tabIndex={0}
             type="number"
             value={this.props.settings.density}/>
           <hr/>
