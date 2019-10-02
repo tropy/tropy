@@ -4,7 +4,7 @@ const React = require('react')
 const { TemplateSelect } = require('../template/select')
 const { ResourceSelect } = require('../resource/select')
 const { ipcRenderer: ipc } = require('electron')
-const { ESPER, ITEM, IMPORTS } = require('../../constants')
+const { ESPER, ITEM, IMAGE } = require('../../constants')
 const { darwin } = require('../../common/os')
 
 const {
@@ -294,8 +294,8 @@ class AppPrefs extends React.PureComponent {
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL],
     printModes: ['item', 'photo', 'selection'],
-    importMin: IMPORTS.DPIMIN,
-    importMax: IMPORTS.DPIMAX
+    importMin: IMAGE.MIN_DENSITY,
+    importMax: IMAGE.MAX_DENSITY
   }
 }
 
