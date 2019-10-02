@@ -3,8 +3,8 @@
 const React = require('react')
 const { Iterator } = require('../iterator')
 const { DropTarget, NativeTypes } = require('../dnd')
-const { DND, MIME } = require('../../constants')
-const { isImageSupported } = MIME
+const { DND, IMAGE } = require('../../constants')
+const { isImageSupported } = IMAGE
 const { blank, last, move } = require('../../common/util')
 const { ceil, floor, min } = Math
 const { on, off } = require('../../dom')

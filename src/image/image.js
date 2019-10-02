@@ -11,7 +11,7 @@ const sharp = require('sharp')
 const { assign } = Object
 const { warn } = require('../common/log')
 const { get, pick } = require('../common/util')
-const { EXIF, MIME } = require('../constants')
+const { EXIF, MIME, IMAGE } = require('../constants')
 
 
 class Image {
@@ -281,7 +281,7 @@ class Image {
     let SIZE = isSelection ? Image.SELECTION_SIZE : Image.PHOTO_SIZE
     let variants = [48, 512]
 
-    if (!isSelection || this.isRemote || !MIME.WEB[this.mimetype]) {
+    if (!isSelection || this.isRemote || !IMAGE.WEB[this.mimetype]) {
       variants.push('full')
     }
 

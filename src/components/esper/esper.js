@@ -20,7 +20,7 @@ const {
   arrayOf, bool, func, number, object, shape, string
 } = require('prop-types')
 
-const { TABS, MIME } = require('../../constants')
+const { TABS, IMAGE } = require('../../constants')
 const { TOOL, MODE } = require('../../constants/esper')
 
 const {
@@ -223,7 +223,7 @@ class Esper extends React.PureComponent {
   }
 
   getSource(photo, { cache } = this.props) {
-    return (photo.protocol !== 'file' || !MIME.WEB[photo.mimetype]) ?
+    return (photo.protocol !== 'file' || !IMAGE.WEB[photo.mimetype]) ?
       Cache.url(cache, photo.id, 'full', photo.mimetype) :
       `${photo.protocol}://${photo.path}`
   }

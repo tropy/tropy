@@ -8,7 +8,7 @@ const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
 const { blank, pick } = require('../../common/util')
 const { array, bool, func, object, number } = require('prop-types')
-const { isImageSupported } = require('../../constants/mime')
+const { isImageSupported } = require('../../constants/image')
 const { ITEM } = require('../../constants/sass')
 
 
