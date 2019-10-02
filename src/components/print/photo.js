@@ -32,9 +32,7 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
       <div className="photo-container">
         <img
           className={`iiif rot-${rotation.format('x')}`}
-          src={(photo.protocol !== 'file' || !IMAGE.WEB[photo.mimetype]) ?
-            Cache.url(cache, photo.id, 'full', photo.mimetype) :
-            `${photo.protocol}://${photo.path}`}/>
+          src={source(photo, cache)}/>
       </div>
       {hasMetadata &&
         <div className={cx('metadata-container')}>
@@ -79,6 +77,11 @@ Photo.propTypes = {
     width: number.isRequired
   })
 }
+
+const source = (photo, cache) =>
+  (photo.protocol !== 'file' || !IMAGE.WEB[photo.mimetype]) ?
+    Cache.url(cache, photo.id, 'full', photo.mimetype) :
+    `${photo.protocol}://${photo.path}`
 
 const o = (isPortrait, isHorizontal) =>
   isPortrait ?
