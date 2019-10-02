@@ -151,6 +151,7 @@ class AppPrefs extends React.PureComponent {
             min={this.props.importMin}
             name="density"
             onChange={this.props.onSettingsUpdate}
+            title="prefs.app.density.title"
             tabIndex={0}
             type="number"
             value={this.props.settings.density}/>

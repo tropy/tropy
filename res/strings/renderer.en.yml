@@ -135,7 +135,8 @@ en:
           import: Accept duplicate photos
           prompt: Ask me every time
       density:
-        label: DPI
+        label: Pixel resolution
+        title: Used for PDF and other scalable formats
       export:
         label: Export
         note:
