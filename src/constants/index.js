@@ -10,6 +10,7 @@ module.exports = {
   ESPER: require('./esper'),
   HISTORY: require('./history'),
   IDLE: require('./idle'),
+  IMAGE: require('./image'),
   IMPORTS: require('./import'),
   ITEM: require('./item'),
   KEYMAP: require('./keymap'),

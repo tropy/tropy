@@ -7,6 +7,7 @@ const { darwin } = require('../common/os')
 const defaults = {
   debug: ARGS.debug,
   dup: 'prompt',
+  density: 300,
   export: {
     note: {
       format: {

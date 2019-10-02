@@ -4,7 +4,7 @@ const React = require('react')
 const { TemplateSelect } = require('../template/select')
 const { ResourceSelect } = require('../resource/select')
 const { ipcRenderer: ipc } = require('electron')
-const { ESPER, ITEM } = require('../../constants')
+const { ESPER, ITEM, IMAGE } = require('../../constants')
 const { darwin } = require('../../common/os')
 
 const {
@@ -14,11 +14,12 @@ const {
 } = require('../icons')
 
 const {
-  array, arrayOf, bool, func, object, shape, string
+  array, arrayOf, bool, func, object, shape, string, number
 } = require('prop-types')
 
 const {
   FormElement,
+  FormField,
   FormSelect,
   FormToggle,
   FormToggleGroup,
@@ -142,6 +143,18 @@ class AppPrefs extends React.PureComponent {
             name="force"
             value={this.props.settings.title.force}
             onChange={this.handleTitleChange}/>
+          <FormField
+            id="prefs.app.density.label"
+            isCompact
+            isRequired
+            max={this.props.importMax}
+            min={this.props.importMin}
+            name="density"
+            onChange={this.props.onSettingsUpdate}
+            title="prefs.app.density.title"
+            tabIndex={0}
+            type="number"
+            value={this.props.settings.density}/>
           <hr/>
           <FormSelect
             id="prefs.app.style.theme"
@@ -268,6 +281,8 @@ class AppPrefs extends React.PureComponent {
     }).isRequired,
     layouts: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,
+    importMin: number.isRequired,
+    importMax: number.isRequired,
     themes: arrayOf(string).isRequired,
     dupOptions: arrayOf(string).isRequired,
     zoomModes: arrayOf(string).isRequired,
@@ -281,7 +296,9 @@ class AppPrefs extends React.PureComponent {
     locales: ['de', 'en', 'es', 'fr', 'it', 'ja'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL],
-    printModes: ['item', 'photo', 'selection']
+    printModes: ['item', 'photo', 'selection'],
+    importMin: IMAGE.MIN_DENSITY,
+    importMax: IMAGE.MAX_DENSITY
   }
 }
 

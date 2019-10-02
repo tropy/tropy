@@ -134,6 +134,9 @@ en:
           skip: Skip duplicate photos
           import: Accept duplicate photos
           prompt: Ask me every time
+      density:
+        label: Pixel resolution
+        title: Used for PDF and other scalable formats
       export:
         label: Export
         note:
