@@ -21,9 +21,13 @@ const {
 
 class ImportCommand extends Command {
   *openImage(path) {
-    let useLocalTimezone = yield select(state => state.settings.localtime)
-    let image = yield call(Image.open, { path, useLocalTimezone })
-    return image
+    let settings = yield select(state => state.settings)
+
+    return yield call(Image.open, {
+      path,
+      density: settings.density,
+      useLocalTimezone: settings.localtime
+    })
   }
 
   *checkPhoto(photo, force) {
