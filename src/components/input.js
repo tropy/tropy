@@ -4,7 +4,7 @@ const React = require('react')
 const { noop } = require('../common/util')
 const { AutoResizer } = require('./auto-resizer')
 const { Completions } = require('./completions')
-const { blank, get } = require('../common/util')
+const { get } = require('../common/util')
 
 const {
   array, bool, func, number, oneOf, oneOfType, string
