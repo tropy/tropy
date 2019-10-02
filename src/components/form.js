@@ -146,10 +146,12 @@ class FormField extends React.PureComponent {
           ref={this.setInput}
           id={this.props.id}
           className="form-control"
+          max={this.props.max}
+          min={this.props.min}
           name={this.props.name}
           placeholder={this.props.placeholder}
           tabIndex={this.props.tabIndex}
-          type="text"
+          type={this.props.type}
           value={this.props.value || ''}
           isDisabled={this.props.isDisabled}
           isReadOnly={this.props.isReadOnly}
@@ -168,10 +170,13 @@ class FormField extends React.PureComponent {
     isReadOnly: bool,
     isRequired: bool,
     label: string,
+    max: number,
+    min: number,
     name: string.isRequired,
     placeholder: string,
     size: number.isRequired,
     tabIndex: number,
+    type: string.isRequired,
     title: string,
     value: string,
     onBlur: func.isRequired,
@@ -182,6 +187,7 @@ class FormField extends React.PureComponent {
   static defaultProps = {
     isReadOnly: false,
     size: 8,
+    type: 'text',
     onBlur: noop,
     onChange: noop,
     onInputChange: noop

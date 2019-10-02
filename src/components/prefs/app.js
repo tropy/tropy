@@ -3,7 +3,6 @@
 const React = require('react')
 const { TemplateSelect } = require('../template/select')
 const { ResourceSelect } = require('../resource/select')
-const { Input } = require('../input')
 const { ipcRenderer: ipc } = require('electron')
 const { ESPER, ITEM, IMPORTS } = require('../../constants')
 const { darwin } = require('../../common/os')
@@ -20,6 +19,7 @@ const {
 
 const {
   FormElement,
+  FormField,
   FormSelect,
   FormToggle,
   FormToggleGroup,
@@ -42,10 +42,6 @@ class AppPrefs extends React.PureComponent {
 
   handleLocalTimeChange = ({ localtime }) => {
     this.props.onSettingsUpdate({ localtime })
-  }
-
-  handleDPIChange = dpi => {
-    this.props.onSettingsUpdate({ dpi: Number(dpi) })
   }
 
   handleTemplateChange = (values, hasChanged) => {
@@ -147,18 +143,15 @@ class AppPrefs extends React.PureComponent {
             name="force"
             value={this.props.settings.title.force}
             onChange={this.handleTitleChange}/>
-          <FormElement
+          <FormField
             id="prefs.app.density.label"
-            isCompact>
-            <Input
-              id="dpi"
-              min={this.props.importMin}
-              max={this.props.importMax}
-              value={this.props.settings.dpi}
-              onChange={this.handleDPIChange}
-              className="form-control"
-              type="number" />
-          </FormElement>
+            isCompact
+            max={this.props.importMax}
+            min={this.props.importMin}
+            name="density"
+            onChange={this.props.onSettingsUpdate}
+            type="number"
+            value={this.props.settings.density}/>
           <hr/>
           <FormSelect
             id="prefs.app.style.theme"
