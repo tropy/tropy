@@ -104,6 +104,8 @@ fieldset {
   display: flex;
   align-items: center;
   padding: (($input-height-base - $line-height-computed) / 2) $padding-base-horizontal;
+  user-select: text;
+  cursor: auto;
 }
 
 .help-text {
