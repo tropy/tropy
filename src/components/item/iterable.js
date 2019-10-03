@@ -127,8 +127,13 @@ class ItemIterable extends React.PureComponent {
       const { top, left, width, height } = bounds(component.container)
       const { x, y } = monitor.getClientOffset()
       const draggedMonitor = monitor.getItem()
-      const dragged = draggedMonitor.items[0]
       let offset = null
+      let dragged
+      if (draggedMonitor.items) {
+        dragged = draggedMonitor.items[0]
+      } else {
+        dragged = draggedMonitor.item
+      }
 
       if (item.id !== dragged.id && isItemSortable) {
         let calc = isVertical ? ((y - top) / height) : ((x - left) / width)
