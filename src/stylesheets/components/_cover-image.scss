@@ -203,18 +203,29 @@
         min-width: $space-sm;
         min-height: $space-sm;
 
-        img,
-        .icon-photo {
+        &,
+        img {
           max-height: $thumbnail-size - $space-min;
         }
       }
     }
 
+
+    .thumbnail,
+    img {
+      --width: var(--x) * #{$thumbnail-size};
+      --height: var(--y) * #{$thumbnail-size};
+      width: calc(var(--width));
+      height: calc(var(--height));
+    }
+
     .thumbnail {
-      img,
-      .icon-photo {
-        max-width: $thumbnail-size;
-        max-height: $thumbnail-size;
+      [class*="90"],
+      [class*="270"] {
+        img {
+          --width: var(--y) * #{$thumbnail-size};
+          --height: var(--x) * #{$thumbnail-size};
+        }
       }
     }
   }
