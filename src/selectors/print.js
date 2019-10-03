@@ -13,13 +13,29 @@ const getPhotoExpanded = (photo, metadata, notes, notepad, ontology) => (
       props: ontology.props,
       template: ontology.template[photo.template]
     }),
-    notes: photo.notes.map(id => ({
-      id,
-      ...serialize(notes[id], { format: { html: true }, localize: false }),
-      ...notepad[id]
-    }))
+    notes: getPhotoNotes(photo, notepad, notes)
   }
 )
+
+const getPhotoNotes = (photo, notepad, notes) => {
+  let photoNotes = photo.notes.map(id => ({
+    id,
+    ...serialize(notes[id], { format: { html: true }, localize: false }),
+    ...notepad[id]
+  }))
+
+  let notesArr = Object.keys(notes).map(key => notes[key])
+  let selectionNotes = photo.selections.map(id => ({
+    id,
+    ...serialize(
+      notesArr.find(({ selection }) => selection === id),
+      { format: { html: true }, localize: false }
+    )
+  }))
+
+  return photoNotes.concat(selectionNotes)
+}
+
 
 const getItemExpanded =
   (item, photos, metadata, notes, notepad, tags, ontology) => (
