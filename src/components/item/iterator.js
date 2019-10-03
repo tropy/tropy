@@ -400,7 +400,7 @@ const DropTargetCollect = (connect, monitor) => {
   return {
     dt: connect.dropTarget(),
     isOverFile: isOver && type === NativeTypes.FILE,
-    isOver: isOver && type !== DND.ITEMS
+    isOver: isOver && type === DND.ITEMS
   }
 }
 
