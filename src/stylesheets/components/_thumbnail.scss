@@ -3,41 +3,23 @@
 // --------------------------------------------------
 
 .thumbnail {
-  box-sizing: content-box;
+  flex: 0 0 auto;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
   background-color: $thumbnail-bg;
-  position: relative;
+}
 
-  img {
-    display: block;
-    text-indent: -99em;
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-    overflow: hidden;
-  }
+.rotation-container {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .icon-photo {
-    width: #{$tile-thumbnail-size-max}px;
-    height: #{$tile-thumbnail-size-max}px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: $thumbnail-color;
-
-    svg {
-      width: calc(100% * 2 / 3);
-      height: calc(100% * 2 / 3);
-    }
-
-    & + img {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-    }
-  }
+img {
+  flex: 0 0 auto;
+  text-indent: -99em;
+  overflow: hidden;
 }

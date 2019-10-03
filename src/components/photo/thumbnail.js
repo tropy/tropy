@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { IconPhoto } = require('../icons')
+//const { IconPhoto } = require('../icons')
 const { Cache } = require('../../common/cache')
 const { bool, func, instanceOf, number, string } = require('prop-types')
 const { ICON } = require('../../constants/sass')
@@ -99,13 +99,14 @@ class Thumbnail extends React.Component {
         onContextMenu={this.props.onContextMenu}
         onDoubleClick={this.props.onDoubleClick}
         onMouseDown={this.props.onMouseDown}>
-        {this.hasFallbackIcon && <IconPhoto/>}
+        {/*this.hasFallbackIcon && <IconPhoto/>*/}
         {this.state.src &&
-          <img
-            className={`iiif rot-${this.state.rotation}`}
-            src={this.src}
-            onLoad={this.handleLoad}
-            onError={this.handleError}/>}
+          <div className={`rotation-container iiif rot-${this.state.rotation}`}>
+            <img
+              src={this.src}
+              onLoad={this.handleLoad}
+              onError={this.handleError}/>
+          </div>}
       </figure>
     )
   }
