@@ -71,7 +71,9 @@ class ItemTable extends ItemIterator {
   }
 
   get classes() {
-    return [super.classes, 'table-body']
+    return [super.classes, 'table-body', {
+      [this.orientation]: true
+    }]
   }
 
   getStateFromProps(props = this.props) {
@@ -370,7 +372,7 @@ class ItemTable extends ItemIterator {
     return (this.props.isEmpty) ? this.renderNoItems() : (
       <div
         ref={this.setTable}
-        className={cx('item-table vertical', {
+        className={cx('item-table', {
           'dragging-column': this.state.drop != null,
           'max-scroll-left': this.state.hasMaxScrollLeft
         })}
