@@ -9,6 +9,7 @@
   align-items: center;
   overflow: hidden;
   background-color: $thumbnail-bg;
+  contain: strict;
 }
 
 .rotation-container {
