@@ -55,9 +55,11 @@
       }
     }
 
-    &:last-child {
-      &::after {
-        top: calc(100% - 1px);
+    &.after {
+      &:last-child {
+        &::after {
+          top: calc(100% - 1px);
+        }
       }
     }
   }
