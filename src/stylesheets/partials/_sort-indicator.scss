@@ -62,6 +62,15 @@
         }
       }
     }
+
+    @include state(".vertical.over") {
+      &:last-child {
+        &::after {
+          content: "";
+          top: calc(100% - 1px);
+        }
+      }
+    }
   }
 
   .horizontal & {
@@ -78,28 +87,6 @@
 
     &::after {
       left: 100%;
-    }
-  }
-}
-
-.item {
-  &.last {
-    .table-body.over &,
-    .item-grid.over & {
-      &::after {
-        content: "";
-      }
-    }
-  }
-}
-
-.photo {
-  &.last {
-    .photo-list.over &,
-    .photo-grid.over & {
-      &::after {
-        content: "";
-      }
     }
   }
 }
