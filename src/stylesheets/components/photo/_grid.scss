@@ -12,10 +12,6 @@
     @extend %drop-target;
   }
 
-  .over & {
-    overflow: hidden;
-  }
-
   .scroll-container {
     padding: $space-min $default-padding-horizontal 0;
   }
