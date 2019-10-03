@@ -14,16 +14,12 @@ const {
 
 
 class PhotoIterable extends React.PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      offset: null
-    }
+  state = {
+    offset: null
   }
 
   componentDidMount() {
-    this.props.dp(getEmptyImage())
+    this.props.connectDragPreview(getEmptyImage())
   }
 
   componentDidUpdate(props) {
@@ -82,11 +78,11 @@ class PhotoIterable extends React.PureComponent {
     this.container = container
   }
 
-
   connect(element) {
-    if (this.props.isSortable) element = this.props.dt(element)
-    if (this.isDraggable) element = this.props.ds(element)
-
+    if (this.props.isSortable)
+      element = this.props.connectDropTarget(element)
+    if (this.isDraggable)
+      element = this.props.connectDragSource(element)
     return element
   }
 
@@ -137,8 +133,8 @@ class PhotoIterable extends React.PureComponent {
   }
 
   static DragSourceCollect = (connect, monitor) => ({
-    ds: connect.dragSource(),
-    dp: connect.dragPreview(),
+    connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
     isDragging: monitor.isDragging()
   })
 
@@ -179,7 +175,7 @@ class PhotoIterable extends React.PureComponent {
   }
 
   static DropTargetCollect = (connect, monitor) => ({
-    dt: connect.dropTarget(),
+    connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver()
   })
 
@@ -211,9 +207,9 @@ class PhotoIterable extends React.PureComponent {
     }).isRequired,
     selection: number,
     size: number.isRequired,
-    ds: func.isRequired,
-    dt: func.isRequired,
-    dp: func.isRequired,
+    connectDragSource: func.isRequired,
+    connectDropTarget: func.isRequired,
+    connectDragPreview: func.isRequired,
     getAdjacent: func.isRequired,
     onContextMenu: func.isRequired,
     onContract: func.isRequired,
