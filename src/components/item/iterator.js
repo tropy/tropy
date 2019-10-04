@@ -20,12 +20,6 @@ const {
 
 class ItemIterator extends Iterator {
 
-
-  state = {
-    isDragging: false
-  }
-
-
   componentDidMount() {
     super.componentDidMount()
     on(document, 'global:next-item', this.handleNextItem)

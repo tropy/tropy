@@ -18,10 +18,6 @@ const byIdx = ([a], [b]) => (a < b) ? -1 : (a > b) ? 1 : 0
 
 class PhotoIterator extends Iterator {
 
-  state = {
-    isDragging: false
-  }
-
   componentDidMount() {
     super.componentDidMount()
     on(document, 'global:next-photo', this.handleNextPhoto)
