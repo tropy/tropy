@@ -67,6 +67,8 @@
   }
 
   .thumbnail {
+    width: $thumbnail-size;
+    height: $thumbnail-size;
     margin-right: $space-xs;
   }
 

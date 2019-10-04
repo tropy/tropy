@@ -274,7 +274,9 @@ class PhotoIterator extends Iterator {
   }
 
   connect(element) {
-    return this.isDisabled ? element : this.props.dt(element)
+    return this.isDisabled ?
+      element :
+      this.props.connectDropTarget(element)
   }
 
 
@@ -307,7 +309,7 @@ class PhotoIterator extends Iterator {
     isOver: bool,
     isOverFile: bool,
 
-    dt: func.isRequired,
+    connectDropTarget: func.isRequired,
 
     onBlur: func.isRequired,
     onContract: func.isRequired,
@@ -380,7 +382,7 @@ const DropTargetCollect = (connect, monitor) => {
   let type = monitor.getItemType()
 
   return {
-    dt: connect.dropTarget(),
+    connectDropTarget: connect.dropTarget(),
     isOver: isOver && type === DND.PHOTO,
     isOverFile: isOver &&
       (type === NativeTypes.FILE || type === NativeTypes.URL)

@@ -44,6 +44,12 @@ class Rotation {
     return `${this.mirror ? symbol : ''}${this.angle}`
   }
 
+  mode({ width, height }, h = this.isHorizontal) {
+    return (width < height) ?
+      (h ? 'portrait' : 'landscape') :
+      (h ? 'landscape' : 'portrait')
+  }
+
   get isHorizontal() {
     return isHorizontal(this.angle)
   }

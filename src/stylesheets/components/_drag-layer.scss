@@ -42,7 +42,11 @@
 
   .thumbnail {
     opacity: $drag-preview-thumbnail-opacity;
-    width: $drag-preview-size;
-    height: $drag-preview-size;
+
+    img,
+    .icon-photo {
+      max-width: $drag-preview-size;
+      max-height: $drag-preview-size;
+    }
   }
 }

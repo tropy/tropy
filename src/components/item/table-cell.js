@@ -92,12 +92,14 @@ class ItemTableCell extends React.PureComponent {
 
   renderCoverImage() {
     return this.props.isMainColumn && (
-      <CoverImage
-        item={this.props.item}
-        cache={this.props.cache}
-        photos={this.props.photos}
-        size={this.props.size}
-        onError={this.props.onPhotoError}/>
+      <div className="cover-image-container">
+        <CoverImage
+          item={this.props.item}
+          cache={this.props.cache}
+          photos={this.props.photos}
+          size={this.props.size}
+          onError={this.props.onPhotoError}/>
+      </div>
     )
   }
 

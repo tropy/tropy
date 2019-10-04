@@ -15,7 +15,26 @@
 
       height: $tile-size;
 
+      .thumbnail,
+      img {
+        --size: #{$size};
+        --width: var(--x) * var(--size) * 1px;
+        --height: var(--y) * var(--size) * 1px;
+        width: calc(var(--width));
+        height: calc(var(--height));
+      }
+
       .thumbnail {
+        [class*="90"],
+        [class*="270"] {
+          img {
+            --width: var(--y) * var(--size) * 1px;
+            --height: var(--x) * var(--size) * 1px;
+          }
+        }
+      }
+
+      .rotation-container {
         width: #{$size}px;
         height: #{$size}px;
       }

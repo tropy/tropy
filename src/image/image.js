@@ -278,31 +278,19 @@ class Image {
   }
 
   variants(isSelection = false) {
-    let SIZE = isSelection ? Image.SELECTION_SIZE : Image.PHOTO_SIZE
     let variants = [48, 512]
 
     if (!isSelection || this.isRemote || !IMAGE.WEB[this.mimetype]) {
       variants.push('full')
     }
 
-    return variants.map(name => ({ name, size: SIZE[name] }))
+    return variants.map(name => ({ name, size: Image.SIZE[name] }))
   }
 }
 
-const transparent = { r: 0, g: 0, b: 0, alpha: 0 }
-
-Image.PHOTO_SIZE = {
-  48: { width: 48, height: 48, fit: 'cover', position: 'center' },
-  512: { width: 512, height: 512, fit: 'cover', position: 'center' }
-}
-
-Image.SELECTION_SIZE = {
-  48: {
-    width: 48, height: 48, fit: 'contain', background: transparent
-  },
-  512: {
-    width: 512, height: 512, fit: 'contain', background: transparent
-  }
+Image.SIZE = {
+  48: { width: 48, height: 48, fit: 'inside' },
+  512: { width: 512, height: 512, fit: 'inside' }
 }
 
 const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
