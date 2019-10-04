@@ -11,6 +11,7 @@ const cx = require('classnames')
 const { blank, get } = require('../../common/util')
 const { on, off } = require('../../dom')
 const { seq, compose, map, cat, keep } = require('transducers.js')
+const { extname } = require('path')
 
 const {
   arrayOf, shape, bool, func, number, object, string
@@ -369,26 +370,38 @@ class ItemIterator extends Iterator {
 
 const DropTargetSpec = {
   drop({ list, onItemImport }, monitor) {
-    const files = monitor
-      .getItem()
-      .files
-      .filter(isImageSupported)
-      .map(file => file.path)
+    let type = monitor.getItemType()
+    let item = monitor.getItem()
+    let files
 
-    onItemImport({ files, list })
-    return { files }
+    switch (type) {
+      case NativeTypes.FILE:
+        files = item.files.filter(isImageSupported).map(f => f.path)
+        break
+      case NativeTypes.URL:
+        files = item.urls.filter(url => isImageSupported(extname(url)))
+        break
+    }
+
+    if (!blank(files)) {
+      onItemImport({ files, list })
+      return { files }
+    }
   },
 
   canDrop({ items }, monitor) {
-    switch (monitor.getItemType()) {
+    let type = monitor.getItemType()
+    let item = monitor.getItem()
+
+    switch (type) {
       case DND.ITEMS:
         return items.length > 1
-      case NativeTypes.FILE: {
-        return !!monitor.getItem().types
-          .find(type => isImageSupported({ type }))
-      }
-      default:
+      case NativeTypes.FILE:
+        return !!item.types.find(isImageSupported)
+      case NativeTypes.URL:
         return true
+      default:
+        return false
     }
   }
 }
