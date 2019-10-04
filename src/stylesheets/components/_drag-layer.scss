@@ -40,13 +40,21 @@
     }
   }
 
-  .thumbnail {
-    opacity: $drag-preview-thumbnail-opacity;
+  .thumbnail,
+  img {
+    --width: var(--x) * #{$drag-preview-size};
+    --height: var(--y) * #{$drag-preview-size};
+    width: calc(var(--width));
+    height: calc(var(--height));
+  }
 
-    img,
-    .icon-photo {
-      max-width: $drag-preview-size;
-      max-height: $drag-preview-size;
+  .thumbnail {
+    [class*="90"],
+    [class*="270"] {
+      img {
+        --width: var(--y) * #{$drag-preview-size};
+        --height: var(--x) * #{$drag-preview-size};
+      }
     }
   }
 }
