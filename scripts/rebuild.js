@@ -71,6 +71,14 @@ target.sharp = (force) => {
   let mod = 'sharp'
 
   if (force || !test('-d', buildFragments(mod))) {
+    say(`${mod} patching...`)
+
+    let target = join(mods, mod)
+    let vendor = join(home, 'vendor', mod)
+
+    cp(join(vendor, 'binding.gyp'), target)
+    rm('-rf', join(target, 'vendor'))
+
     rebuild(mod, {
       params: '--build-from-source'
     })
