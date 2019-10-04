@@ -17,6 +17,11 @@ const byIdx = ([a], [b]) => (a < b) ? -1 : (a > b) ? 1 : 0
 
 
 class PhotoIterator extends Iterator {
+
+  state = {
+    isDragging: false
+  }
+
   componentDidMount() {
     super.componentDidMount()
     on(document, 'global:next-photo', this.handleNextPhoto)
@@ -40,6 +45,7 @@ class PhotoIterator extends Iterator {
 
   get classes() {
     return {
+      'dragging': this.state.isDragging,
       'drop-target': !this.isDisabled,
       'over': this.props.isOver,
       'over-file': this.props.isOverFile,
@@ -208,6 +214,14 @@ class PhotoIterator extends Iterator {
         { photo: id, selections: [selection] }
       )
     }
+  }
+
+  handleDragStart = () => {
+    this.setState({ isDragging: true })
+  }
+
+  handleDragStop = () => {
+    this.setState({ isDragging: false })
   }
 
   handleDropPhoto = ({ id, to, offset }) => {

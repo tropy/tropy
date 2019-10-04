@@ -186,6 +186,8 @@ class PhotoList extends PhotoIterator {
                   selections={this.props.selections}
                   title={DC.title}
                   isEditing={this.isEditing(photo)}
+                  onDragStart={this.handleDragStart}
+                  onDragStop={this.handleDragStop}
                   onChange={onChange}
                   onEdit={this.edit}
                   onEditCancel={this.handleEditCancel}
