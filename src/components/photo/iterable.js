@@ -98,6 +98,8 @@ class PhotoIterable extends React.PureComponent {
         orientation={this.props.photo.orientation}
         cache={this.props.cache}
         size={this.props.size}
+        width={this.props.photo.width}
+        height={this.props.photo.height}
         onError={this.props.onError}/>
     )
   }
