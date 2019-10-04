@@ -3,6 +3,7 @@
 const { createSelector: memo } = require('reselect')
 const { getMetadataFields } = require('./metadata')
 const { serialize } = require('../export/note')
+const { get } = require('../common/util')
 
 const getPhotoExpanded = (
   photo,
@@ -21,8 +22,8 @@ const getPhotoExpanded = (
     }),
     notes: [
       ...photo.notes,
-      ...photo.selections.map(id => selections[id].notes)
-    ].flatMap(id => ({
+      ...photo.selections.flatMap(id => get(selections, [id, 'notes']))
+    ].map(id => ({
       id,
       ...serialize(notes[id], { format: { html: true }, localize: false }),
       ...notepad[id]
