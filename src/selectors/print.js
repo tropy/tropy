@@ -4,7 +4,13 @@ const { createSelector: memo } = require('reselect')
 const { getMetadataFields } = require('./metadata')
 const { serialize } = require('../export/note')
 
-const getPhotoExpanded = (photo, selections, metadata, notes, notepad, ontology) => (
+const getPhotoExpanded = (
+  photo,
+  selections,
+  metadata,
+  notes,
+  notepad,
+  ontology) => (
   (photo == null) ? null : {
     ...photo,
     data: getMetadataFields(null, {
