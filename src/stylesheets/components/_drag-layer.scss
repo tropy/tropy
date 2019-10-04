@@ -49,6 +49,8 @@
   }
 
   .thumbnail {
+    opacity: $drag-preview-thumbnail-opacity;
+
     [class*="90"],
     [class*="270"] {
       img {
