@@ -213,14 +213,9 @@
         }
       }
 
-      & + .thumbnail {
-        min-width: $space-sm;
-        min-height: $space-sm;
-
-        &,
-        img {
-          max-height: $thumbnail-size - $space-min;
-        }
+      & + .thumbnail,
+      & + .thumbnail img {
+        max-height: $thumbnail-size - $space-min;
       }
     }
 
@@ -230,6 +225,8 @@
       --height: var(--y) * #{$thumbnail-size};
       width: calc(var(--width));
       height: calc(var(--height));
+      min-width: $space-sm;
+      min-height: $space-sm;
     }
 
     .thumbnail {
