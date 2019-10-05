@@ -10,17 +10,18 @@
   overflow: hidden;
   background-color: $thumbnail-bg;
   contain: strict;
-}
 
-.rotation-container {
-  flex: 0 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  .rotation-container {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-img {
-  flex: 0 0 auto;
-  text-indent: -99em;
-  overflow: hidden;
+  img {
+    flex: 0 0 auto;
+    text-indent: -99em;
+    overflow: hidden;
+    object-fit: cover;
+  }
 }

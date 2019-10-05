@@ -22,6 +22,8 @@
         --height: var(--y) * var(--size) * 1px;
         width: calc(var(--width));
         height: calc(var(--height));
+        min-width: 24px;
+        min-height: 22px;
       }
 
       .thumbnail {
@@ -29,7 +31,9 @@
         [class*="270"] {
           img {
             --width: var(--y) * var(--size) * 1px;
-            --height: var(--x) * var(--size) * 1px;
+            --height: var(--x) * var(--size) * 1px + 1px;
+            min-width: 22px;
+            min-height: 24px;
           }
         }
       }
@@ -74,16 +78,27 @@
 
   .icon-container {
     position: absolute;
+    top: 5px;
     right: 6px;
     bottom: 5px;
+    left: 6px;
     margin-left: 0;
-  }
 
-  .btn-icon {
-    padding: 0;
+    > .icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
 
-    .icon {
-      color: $tile-selection-icon-color;
+    > .btn-icon {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      padding: 0;
+
+      .icon {
+        color: $tile-selection-icon-color;
+      }
     }
   }
 

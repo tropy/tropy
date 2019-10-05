@@ -78,10 +78,7 @@
   align-items: center;
   margin-left: $space-xs;
 
-  .icon + .icon,
-  .icon + .btn,
-  .btn + .icon,
-  .btn + .btn {
+  > *:not(:first-child) {
     margin-left: $space-min;
   }
 }
