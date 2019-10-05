@@ -66,10 +66,36 @@
     }
   }
 
-  .thumbnail {
+  .thumbnail-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: $thumbnail-size;
     height: $thumbnail-size;
     margin-right: $space-xs;
+  }
+
+  .thumbnail,
+  img {
+    --width: var(--x) * #{$thumbnail-size};
+    --height: var(--y) * #{$thumbnail-size};
+    width: calc(var(--width));
+    height: calc(var(--height));
+  }
+
+  .thumbnail {
+    [class*="90"],
+    [class*="270"] {
+      img {
+        --width: var(--y) * #{$thumbnail-size};
+        --height: var(--x) * #{$thumbnail-size};
+      }
+    }
+  }
+
+  .rotation-container {
+    width: $thumbnail-size;
+    height: $thumbnail-size;
   }
 
   .title {
