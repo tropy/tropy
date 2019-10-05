@@ -76,29 +76,21 @@
     }
   }
 
-  .icon-container {
+  .icon-warningoverlay {
     position: absolute;
+    left: 6px;
     top: 5px;
+    pointer-events: none;
+  }
+
+  .btn-icon {
+    position: absolute;
     right: 6px;
     bottom: 5px;
-    left: 6px;
-    margin-left: 0;
+    padding: 0;
 
-    > .icon {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    > .btn-icon {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      padding: 0;
-
-      .icon {
-        color: $tile-selection-icon-color;
-      }
+    .icon {
+      color: $tile-selection-icon-color;
     }
   }
 
