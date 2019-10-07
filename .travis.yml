@@ -43,6 +43,7 @@ before_install:
   - nvm install
   - node --version && npm --version
 install:
+  - rm -rf $HOME/.npm/_libvips
   - npm install -g node-gyp --no-progress --silent
   - npm install --no-progress --silent
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
