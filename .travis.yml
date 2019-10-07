@@ -49,6 +49,7 @@ install:
       rm -rf $HOME/.npm/_libvips;
       export SHARP_DIST_BASE_URL="https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/";
       node scripts/rebuild sharp -- force;
+      ldd node_modules/sharp/build/Release/sharp.node;
     fi
 script:
   - npm run lint
