@@ -127,6 +127,7 @@
               '../vendor/lib/libgsf-1.so',
               '../vendor/lib/libjpeg.so',
               '../vendor/lib/liblcms2.so',
+              '../vendor/lib/libopenjp2.so',
               '../vendor/lib/libpng.so',
               '../vendor/lib/libtiff.so',
               '../vendor/lib/libwebp.so',
