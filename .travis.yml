@@ -16,7 +16,10 @@ matrix:
     - os: linux
       dist: xenial
       sudo: required
-      env: CC=gcc-7 CXX=g++-7
+      env:
+        - CC=gcc-7
+        - CXX=g++-7
+        - SHARP_DIST_BASE_URL=https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/
       services:
         - xvfb
       addons:
@@ -31,6 +34,7 @@ matrix:
       osx_image: xcode8.3
       compiler: clang
 before_install:
+  - rm-rf $HOME/.npm/_libvips
   - if [[ ! -d $NVM/.git ]]; then
       rm -rf $NVM;
       git clone https://github.com/creationix/nvm.git $NVM;
