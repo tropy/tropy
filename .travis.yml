@@ -19,7 +19,6 @@ matrix:
       env:
         - CC=gcc-7
         - CXX=g++-7
-        - SHARP_DIST_BASE_URL=https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/
       services:
         - xvfb
       addons:
@@ -34,7 +33,6 @@ matrix:
       osx_image: xcode8.3
       compiler: clang
 before_install:
-  - rm -rf $HOME/.npm/_libvips
   - if [[ ! -d $NVM/.git ]]; then
       rm -rf $NVM;
       git clone https://github.com/creationix/nvm.git $NVM;
@@ -47,12 +45,16 @@ before_install:
 install:
   - npm install -g node-gyp --no-progress --silent
   - npm install --no-progress --silent
+  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
+      rm $HOME/.npm/_libvips;
+      export SHARP_DIST_BASE_URL="https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/";
+      node scripts/rebuild sharp -- force;
+    fi
 script:
   - npm run lint
   - npm run compile
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      npm run test:main;
-      npm run test:renderer;
+      npm test;
     else
       npm run coverage;
     fi
