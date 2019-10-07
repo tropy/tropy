@@ -34,7 +34,7 @@ matrix:
       osx_image: xcode8.3
       compiler: clang
 before_install:
-  - rm-rf $HOME/.npm/_libvips
+  - rm -rf $HOME/.npm/_libvips
   - if [[ ! -d $NVM/.git ]]; then
       rm -rf $NVM;
       git clone https://github.com/creationix/nvm.git $NVM;
