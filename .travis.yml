@@ -46,7 +46,7 @@ install:
   - npm install -g node-gyp --no-progress --silent
   - npm install --no-progress --silent
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      rm $HOME/.npm/_libvips;
+      rm -rf $HOME/.npm/_libvips;
       export SHARP_DIST_BASE_URL="https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/";
       node scripts/rebuild sharp -- force;
     fi
