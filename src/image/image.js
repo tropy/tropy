@@ -314,7 +314,7 @@ const magic = (buffer, ext) => {
       return MIME.WEBP
     if (isHEIF(buffer))
       return ext.toLowerCase() === '.heic' ? MIME.HEIC : MIME.HEIF
-    if (isJP2(buffer))
+    if (isJP2(buffer, ext))
       return MIME.JP2
   }
 }
@@ -328,10 +328,12 @@ const isHEIF = (buffer) =>
 const isJPEG = (buffer) =>
   check(buffer, [0xFF, 0xD8, 0xFF])
 
-const isJP2 = (buffer) =>
+// Check for JP2 magic number or match the file extension to detect
+// potential JP2 codestreams.
+const isJP2 = (buffer, ext = '') =>
   check(buffer, [
     0x00, 0x00, 0x00, 0x0C, 0x6A, 0x50, 0x20, 0x20, 0x0D, 0x0A, 0x87, 0x0A
-  ])
+  ]) || (/^\.j(p2|px|2k)$/i).test(ext)
 
 const isPNG = (buffer) =>
   check(buffer, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
