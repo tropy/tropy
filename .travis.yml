@@ -28,6 +28,7 @@ matrix:
           packages:
             - build-essential
             - libxss-dev
+            - liborc
             - g++-7
     - os: osx
       osx_image: xcode8.3
