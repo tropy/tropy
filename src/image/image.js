@@ -303,6 +303,20 @@ class Image {
 
     return variants.map(name => ({ name, size: Image.SIZE[name] }))
   }
+
+  static get input() {
+    return Object
+      .values(sharp.format)
+      .filter(({ input }) => input.file)
+      .map(({ id }) => id)
+  }
+
+  static get output() {
+    return Object
+      .values(sharp.format)
+      .filter(({ output }) => output.file)
+      .map(({ id }) => id)
+  }
 }
 
 Image.SIZE = {
