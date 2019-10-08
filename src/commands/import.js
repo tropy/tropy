@@ -84,7 +84,7 @@ class ImportCommand extends Command {
         let path = cache.path(id, v.name, ext)
 
         if (overwrite || !(yield call(cache.exists, path, false))) {
-          let dup = image.resize(v.size, selection)
+          let dup = yield call(image.resize, v.size, selection)
 
           switch (ext) {
             case '.png':

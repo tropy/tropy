@@ -110,6 +110,14 @@ class Image {
     return get(this.meta, [this.page, 'channels'])
   }
 
+  get space() {
+    return get(this.meta, [this.page, 'space'])
+  }
+
+  get hasAlpha() {
+    return get(this.meta, [this.page, 'hasAlpha'])
+  }
+
   get width() {
     return get(this.meta, [this.page, 'width'], 0)
   }
@@ -173,7 +181,7 @@ class Image {
   }
 
   isOpaque = async () => (
-    this.channels < 4 || (await this.do().stats()).isOpaque
+    !this.hasAlpha || (await this.do().stats()).isOpaque
   )
 
   async open({ page = 0, density } = {}) {
@@ -245,8 +253,16 @@ class Image {
     return this
   }
 
-  resize(size, selection) {
+  resize = async (size, selection) => {
     let image = this.do()
+
+    // Workaround conversion issue of grayscale JP2 which receive
+    // a multiplied alpha channel after conversion to webp/png.
+    // Remove this as soon as we've found a solution or fix upstream!
+    if (this.space === 'b-w' && this.channels > 1 && !this.hasAlpha) {
+      let dup = await image.jpeg({ quality: 100 }).toBuffer()
+      image = sharp(dup)
+    }
 
     if (selection != null) {
       image = image.extract({
