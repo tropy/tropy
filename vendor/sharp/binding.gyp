@@ -124,7 +124,6 @@
               '../vendor/lib/libvips.so',
               '../vendor/lib/libexif.so',
               '../vendor/lib/libgif.so',
-              '../vendor/lib/libgsf-1.so',
               '../vendor/lib/libjpeg.so',
               '../vendor/lib/liblcms2.so',
               '../vendor/lib/libopenjp2.so',
