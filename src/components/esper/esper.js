@@ -438,7 +438,7 @@ class Esper extends React.PureComponent {
     assign(state, this.getZoomBounds(this.view.screen, state))
 
     this.setState(state, () => {
-      this.view.rotate(state, ROTATE_DURATION)
+      this.view.rotate(state, ROTATE_DURATION, by > 0)
       this.view.scale(state, ROTATE_DURATION)
       this.persist()
     })

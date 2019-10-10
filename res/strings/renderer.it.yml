@@ -240,7 +240,8 @@ it:
     tool:
       pan: Strumento per spostarsi
       select: Strumento selezione
-      rotate: Ruota
+      rotate_left: Ruota a sinistra
+      rotate_right: Ruota a destra
       mirror: Rispecchia
       edit: Modifica foto
     mode:

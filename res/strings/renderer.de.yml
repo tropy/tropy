@@ -242,7 +242,8 @@ de:
     tool:
       pan: Verschieben
       select: Ausschnitt-Werkzeug
-      rotate: Drehen
+      rotate_left: Linksdrehen
+      rotate_right: Rechtsdrehen
       mirror: Spiegeln
       edit: Foto bearbeiten
     mode:

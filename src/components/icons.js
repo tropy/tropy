@@ -508,10 +508,18 @@ i('Q', (
   </svg>
 ))
 
-i('Rotate', (
+i('RotateLeft', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
       <path d="M8,1A6.971,6.971,0,0,0,2,4.441V2H1V6H5V5H2.826a5.99,5.99,0,1,1,1.4,7.659l-.5.874A7,7,0,1,0,8,1Z"/>
+    </g>
+  </svg>
+))
+
+i('RotateRight', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M8,1A6.971,6.971,0,0,0,2,4.441V2H1V6H5V5H2.826a5.99,5.99,0,1,1,1.4,7.659l-.5.874A7,7,0,1,0,8,1Z" transform="scale(-1, 1) translate(-16,0)"/>
     </g>
   </svg>
 ))

@@ -20,7 +20,8 @@ const {
 const {
   IconArrow,
   IconSelection,
-  IconRotate,
+  IconRotateLeft,
+  IconRotateRight,
   IconHand,
   IconSliders,
   IconMirror,
@@ -48,8 +49,12 @@ class EsperToolbar extends React.PureComponent {
     this.props.onPanelChange(!this.props.isPanelVisible)
   }
 
-  handleRotate = () => {
+  handleRotateLeft = () => {
     this.props.onRotationChange(-90)
+  }
+
+  handleRotateRight = () => {
+    this.props.onRotationChange(90)
   }
 
   handleZoomChange = throttle((zoom, reason) => {
@@ -98,10 +103,16 @@ class EsperToolbar extends React.PureComponent {
           <ToolGroup>
             <Button
               noFocus
-              icon={<IconRotate/>}
-              title="esper.tool.rotate"
+              icon={<IconRotateLeft/>}
+              title="esper.tool.rotate_left"
               isDisabled={this.props.isDisabled}
-              onClick={this.handleRotate}/>
+              onClick={this.handleRotateLeft}/>
+            <Button
+              noFocus
+              icon={<IconRotateRight/>}
+              title="esper.tool.rotate_right"
+              isDisabled={this.props.isDisabled}
+              onClick={this.handleRotateRight}/>
             <Button
               noFocus
               icon={<IconMirror/>}
