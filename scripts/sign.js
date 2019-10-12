@@ -75,7 +75,11 @@ target.darwin = async (args = []) => {
   ].join(' ')
 
   check(targets.length, 'no targets found')
-  check(identity, 'missing identity')
+
+  if (identity == null) {
+    say('missing identity, skipping darwin code-signing...')
+    return
+  }
 
   let app
   let cnt

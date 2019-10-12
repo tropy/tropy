@@ -11,12 +11,15 @@ env:
   global:
     - NODE_ENV=test
     - NVM=$HOME/.nvm
+    - SHARP_DIST_BASE_URL=https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/
 matrix:
   include:
     - os: linux
       dist: xenial
       sudo: required
-      env: CC=gcc-7 CXX=g++-7
+      env:
+        - CC=gcc-7
+        - CXX=g++-7
       services:
         - xvfb
       addons:
@@ -26,11 +29,16 @@ matrix:
           packages:
             - build-essential
             - libxss-dev
+            - liborc-0.4-0
             - g++-7
     - os: osx
-      osx_image: xcode8.3
+      osx_image: xcode9.3
+      compiler: clang
+    - os: osx
+      osx_image: xcode11.2
       compiler: clang
 before_install:
+  - rm -rf $HOME/.npm/_libvips
   - if [[ ! -d $NVM/.git ]]; then
       rm -rf $NVM;
       git clone https://github.com/creationix/nvm.git $NVM;
@@ -42,18 +50,19 @@ before_install:
   - node --version && npm --version
 install:
   - npm install -g node-gyp --no-progress --silent
+  - npm install sharp sqlite3 --ignore-scripts --no-save --no-package-lock --silent
   - npm install --no-progress --silent
 script:
   - npm run lint
   - npm run compile
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      npm run test:main;
-      npm run test:renderer;
-    else
       npm run coverage;
+    else
+      npm run test:renderer;
+      npm run test:main;
     fi
 after_success:
-  - if [[ $TRAVIS_OS_NAME = "osx" ]]; then
+  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
       npm install -g coveralls --no-progress;
       cat ./coverage/lcov.info | coveralls;
     fi

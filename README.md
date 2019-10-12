@@ -16,15 +16,43 @@ out the [user's manual](https://docs.tropy.org) and join the discussion on the
 If you are interested to work on Tropy or create your own builds, please
 find more details below. Happy hacking!
 
-
 ## Install from Source
 Install the latest version of [Node.js](https://nodejs.org) (at least the
 version that ships with the current [Electron](https://electronjs.org)
 release) with [`node-gyp`](https://www.npmjs.com/package/node-gyp) and all
 its requirements for your platform.
 
-Then clone [this repository](https://github.com/tropy/tropy.git) and run
-`npm install` to install all of Tropy's dependencies.
+On Linux you may need to install some packages in addition to node-gyp's
+requirements. For example:
+
+    # On Arch Linux
+    $ sudo pacman -Sy fftw orc librsvg
+
+    # On Debian
+    $ sudo apt-get install liborc-0.4-0 libfftw3-bin librsvg2-bin
+
+Before installing Tropy's dependencies, set the environment variable
+`SHARP_DIST_BASE_URL` or the `sharp_dist_base_url` npm config option to
+point to the base URL for Tropy's
+[pre-compiled libvips archives](https://github.com/tropy/sharp-libvips/releases/latest):
+
+    $ npm config set sharp_dist_base_url "https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/"
+
+Additionally, if you have libvips installed locally (and don't wish Tropy
+to be linked against it), set the `SHARP_IGNORE_GLOBAL_LIBVIPS` environment
+variable.
+
+Finally, clone [this repository](https://github.com/tropy/tropy.git) and install
+all of Tropy's dependencies:
+
+    # Install native modules first, without building, them. They will
+    # be patched and linked agains Electron by our rebuild script later!
+    $ npm install sharp sqlite3 --ignore-scripts --no-save --no-package-lock
+    $ npm install
+
+To test that everything is set up correctly, run:
+
+    $ npm test
 
 ## Creating Builds
 To create a dev-build for your current platform run `npm run build` at the
