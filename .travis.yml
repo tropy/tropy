@@ -52,6 +52,8 @@ install:
   - npm install -g node-gyp --no-progress --silent
   - npm install sharp sqlite3 --ignore-scripts --no-save --no-package-lock --silent
   - npm install --no-progress --silent
+before_cache:
+  - rm -rf $HOME/.npm/_libvips
 script:
   - npm run lint
   - npm run compile
