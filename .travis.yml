@@ -11,6 +11,7 @@ env:
   global:
     - NODE_ENV=test
     - NVM=$HOME/.nvm
+    - SHARP_DIST_BASE_URL=https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/
 matrix:
   include:
     - os: linux
@@ -31,9 +32,10 @@ matrix:
             - liborc-0.4-0
             - g++-7
     - os: osx
-      osx_image: xcode8.3
+      osx_image: xcode9.3
       compiler: clang
 before_install:
+  - rm -rf $HOME/.npm/_libvips
   - if [[ ! -d $NVM/.git ]]; then
       rm -rf $NVM;
       git clone https://github.com/creationix/nvm.git $NVM;
@@ -44,15 +46,9 @@ before_install:
   - nvm install
   - node --version && npm --version
 install:
-  - rm -rf $HOME/.npm/_libvips
   - npm install -g node-gyp --no-progress --silent
+  - npm install sharp sqlite3 --ignore-scripts --no-progress --silent
   - npm install --no-progress --silent
-  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      rm -rf $HOME/.npm/_libvips;
-      export SHARP_DIST_BASE_URL="https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/";
-      node scripts/rebuild sharp -- force;
-      ldd node_modules/sharp/build/Release/sharp.node;
-    fi
 script:
   - npm run lint
   - npm run compile
