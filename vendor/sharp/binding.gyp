@@ -89,12 +89,13 @@
         ]
       }, {
         # Use pre-built libvips stored locally within node_modules
-        'include_dirs': [
-          'vendor/include',
-          '<!@(PKG_CONFIG_PATH="<(pkg_config_path)" pkg-config --cflags-only-I glib-2.0 | sed s\/-I//g)'
-        ],
         'conditions': [
           ['OS == "win"', {
+            'include_dirs': [
+              'vendor/include',
+              'vendor/include/glib-2.0',
+              'vendor/lib/glib-2.0/include'
+            ],
             'defines': [
               '_ALLOW_KEYWORD_MACROS',
               '_FILE_OFFSET_BITS=64'
@@ -106,6 +107,11 @@
             ]
           }],
           ['OS == "mac"', {
+            'include_dirs': [
+              'vendor/include',
+              'vendor/include/glib-2.0',
+              'vendor/lib/glib-2.0/include'
+            ],
             'libraries': [
               '../vendor/lib/libvips-cpp.42.dylib',
               '../vendor/lib/libvips.42.dylib',
@@ -118,6 +124,10 @@
           ['OS == "linux"', {
             'defines': [
               '_GLIBCXX_USE_CXX11_ABI=0'
+            ],
+            'include_dirs': [
+              'vendor/include',
+              '<!@(PKG_CONFIG_PATH="<(pkg_config_path)" pkg-config --cflags-only-I glib-2.0 | sed s\/-I//g)'
             ],
             'libraries': [
               '../vendor/lib/libvips-cpp.so.42',
@@ -153,7 +163,7 @@
     'xcode_settings': {
       'CLANG_CXX_LANGUAGE_STANDARD': 'c++11',
       'CLANG_CXX_LIBRARY': 'libc++',
-      'MACOSX_DEPLOYMENT_TARGET': '10.7',
+      'MACOSX_DEPLOYMENT_TARGET': '10.10',
       'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
       'GCC_ENABLE_CPP_RTTI': 'YES',
       'OTHER_CPLUSPLUSFLAGS': [
