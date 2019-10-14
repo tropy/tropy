@@ -115,7 +115,7 @@
     "memoize-one": "^5.1.1",
     "mkdirp": "^0.5.1",
     "n3": "^1.2.1",
-    "pino": "^5.13.4",
+    "pino": "^5.13.5",
     "pixi.js": "^4.8.8",
     "prop-types": "^15.7.2",
     "prosemirror-commands": "^1.0.8",
