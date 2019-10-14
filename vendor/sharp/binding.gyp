@@ -109,8 +109,7 @@
           ['OS == "mac"', {
             'include_dirs': [
               'vendor/include',
-              'vendor/include/glib-2.0',
-              'vendor/lib/glib-2.0/include'
+              'vendor/include/glib-2.0'
             ],
             'libraries': [
               '../vendor/lib/libvips-cpp.42.dylib',
