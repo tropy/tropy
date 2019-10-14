@@ -1,6 +1,7 @@
 'use strict'
 
 const React = require('react')
+const { WindowContext } = require('../main')
 const { Titlebar, Toolbar, ToolGroup } = require('../toolbar')
 const { Button } = require('../button')
 const { Slider } = require('../slider')
@@ -138,6 +139,7 @@ class EsperToolbar extends React.PureComponent {
               precision={this.props.zoomPrecision}
               resolution={this.props.resolution * 100}
               showCurrentValue
+              stopOnMouseLeave={this.context.state.frameless}
               steps={this.props.zoomSteps}
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}
@@ -178,6 +180,8 @@ class EsperToolbar extends React.PureComponent {
     onRotationChange: func.isRequired,
     onZoomChange: func.isRequired
   }
+
+  static contextType = WindowContext
 
   static defaultProps = {
     zoomPrecision: ZOOM_SLIDER_PRECISION,

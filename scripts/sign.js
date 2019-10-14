@@ -75,7 +75,11 @@ target.darwin = async (args = []) => {
   ].join(' ')
 
   check(targets.length, 'no targets found')
-  check(identity, 'missing identity')
+
+  if (identity == null) {
+    say('missing identity, skipping darwin code-signing...')
+    return
+  }
 
   let app
   let cnt
@@ -119,7 +123,8 @@ target.darwin = async (args = []) => {
         appBundleId: 'org.tropy.tropy',
         appPath: app,
         appleId,
-        appleIdPassword: '@keychain:TROPY_DEV_PASSWORD'
+        appleIdPassword: '@keychain:TROPY_DEV_PASSWORD',
+        ascProvider: 'CorporationforDigitalScholarship'
       })
     } else {
       say('apple id missing, skipping notarization...')

@@ -11,7 +11,7 @@ const {
   IconCopy,
   IconTrash,
   IconImport,
-  IconExport,
+  IconExport
 } = require('../icons')
 
 

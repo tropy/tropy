@@ -168,11 +168,15 @@ const dom = {
     return node.tagName === 'INPUT'
   },
 
+  isLiveInput(node) {
+    return dom.isInput(node) && !(node.disabled || node.readOnly)
+  },
+
   isLink(node) {
     return node.tagName === 'A' && !blank(node.href)
   },
 
-  createDragHandler({ handleDrag, handleDragStop }) {
+  createDragHandler({ handleDrag, handleDragStop, stopOnMouseLeave }) {
     function onKeyDown(event) {
       switch (event.key) {
         case 'Escape':
@@ -182,11 +186,22 @@ const dom = {
       }
     }
 
+    function onDrag(event) {
+      if (event.buttons === 0) {
+        onDragStop(event)
+      } else {
+        handleDrag(event)
+      }
+    }
+
     function onDragStart() {
-      dom.on(document, 'mousemove', handleDrag)
+      dom.on(document, 'mousemove', onDrag)
       dom.on(document, 'mouseup', onDragStop, { capture: true })
-      dom.on(document, 'mouseleave', onDragStop)
       dom.on(window, 'blur', onDragStop)
+
+      if (stopOnMouseLeave) {
+        dom.on(document.body, 'mouseleave', onDragStop)
+      }
 
       // Register on body because global bindings are bound
       // on document and we need to stop the propagation in
@@ -195,10 +210,14 @@ const dom = {
     }
 
     function onDragStop(event) {
-      dom.off(document, 'mousemove', handleDrag)
+      dom.off(document, 'mousemove', onDrag)
       dom.off(document, 'mouseup', onDragStop, { capture: true })
-      dom.off(document, 'mouseleave', onDragStop)
       dom.off(window, 'blur', onDragStop)
+
+      if (stopOnMouseLeave) {
+        dom.off(document.body, 'mouseleave', onDragStop)
+      }
+
       dom.off(document.body, 'keydown', onKeyDown)
 
       handleDragStop(event, event == null || event.type !== 'mouseup')

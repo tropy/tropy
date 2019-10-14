@@ -29,7 +29,7 @@ it:
 
           other {# elementi}}
       selection: Selezione
-      popup:
+      dropdown:
         placeholder: Aggiungi nuovo campo...
     tags:
       tab: Tag
@@ -128,6 +128,7 @@ it:
         locales:
           de: Deutsch
           en: English
+          es: Español
           fr: Français
           it: Italiano
           ja: 日本語

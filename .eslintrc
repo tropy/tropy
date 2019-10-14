@@ -33,9 +33,10 @@ rules:
   array-bracket-spacing: 2
   block-spacing: 2
   brace-style: [2, '1tbs', { allowSingleLine: true }]
+  comma-dangle: 2
   comma-spacing: 2
   comma-style: 2
-  complexity: [1, 14]
+  complexity: [1, 16]
   dot-location: [2, 'property']
   eqeqeq: [2, 'smart']
   indent: [0, 2, { SwitchCase: 1 }]

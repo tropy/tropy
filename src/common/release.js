@@ -12,7 +12,7 @@ const channel =
 const qualified = {
   product: (channel === 'stable') ?
   productName : `${productName} ${titlecase(channel)}`,
-  name: (channel === 'stable') ? name : `${name}-${channel}`,
+  name: (channel === 'stable') ? name : `${name}-${channel}`
 }
 
 module.exports = {

@@ -7,6 +7,8 @@ const { ItemInfo } = require('../item/info')
 const { PhotoInfo } = require('../photo/info')
 const cx = require('classnames')
 const { Rotation } = require('../../common/iiif')
+const { Cache } = require('../../common/cache')
+const { IMAGE } = require('../../constants')
 
 const {
   arrayOf,
@@ -18,19 +20,19 @@ const {
 } = require('prop-types')
 
 
-const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo }) => {
+const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
   let rotation = Rotation
     .fromExifOrientation(photo.orientation)
     .add(photo)
 
   return (
     <div className={cx('photo', 'container',
-      o(photo.width < photo.height, rotation.isHorizontal),
+      rotation.mode(photo),
       { overflow: canOverflow, metadata: hasMetadata || hasNotes })}>
       <div className="photo-container">
         <img
           className={`iiif rot-${rotation.format('x')}`}
-          src={photo.path}/>
+          src={source(photo, cache)}/>
       </div>
       {hasMetadata &&
         <div className={cx('metadata-container')}>
@@ -64,6 +66,7 @@ Photo.propTypes = {
   hasMetadata: bool,
   hasNotes: bool,
   item: object,
+  cache: string,
   photo: shape({
     angle: number.isRequired,
     data: arrayOf(object).isRequired,
@@ -75,10 +78,10 @@ Photo.propTypes = {
   })
 }
 
-const o = (isPortrait, isHorizontal) =>
-  isPortrait ?
-    (isHorizontal ? 'portrait' : 'landscape') :
-    (isHorizontal ? 'landscape' : 'portrait')
+const source = (photo, cache) =>
+  (photo.protocol !== 'file' || !IMAGE.WEB[photo.mimetype]) ?
+    Cache.url(cache, photo.id, 'full', photo.mimetype) :
+    `${photo.protocol}://${photo.path}`
 
 module.exports = {
   Photo

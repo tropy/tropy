@@ -2,14 +2,13 @@
 
 const React = require('react')
 const { WindowContext } = require('../main')
-const { DropTarget } = require('react-dnd')
-const { NativeTypes } = require('react-dnd-electron-backend')
+const { DropTarget, NativeTypes } = require('../dnd')
 const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
-const { pick, } = require('../../common/util')
+const { blank, pick } = require('../../common/util')
 const { array, bool, func, object, number } = require('prop-types')
-const { isImageSupported } = require('../../constants/mime')
+const { isImageSupported } = require('../../constants/image')
 const { ITEM } = require('../../constants/sass')
 
 
@@ -66,7 +65,7 @@ class ProjectView extends React.Component {
       zoom,
       onItemCreate,
       onItemSelect,
-      onSearch,
+      onSearch
     } = this.props
 
     const { size, maxZoom, ItemIterator, isEmpty } = this
@@ -141,18 +140,36 @@ class ProjectView extends React.Component {
 
 const spec = {
   drop({ nav, onItemImport }, monitor) {
-    const files = monitor
-      .getItem()
-      .files
-      .filter(isImageSupported)
-      .map(file => file.path)
+    let type = monitor.getItemType()
+    let item = monitor.getItem()
+    let files
 
-    onItemImport({ files, list: nav.list })
-    return { files }
+    switch (type) {
+      case NativeTypes.FILE:
+        files = item.files.filter(isImageSupported).map(f => f.path)
+        break
+      case NativeTypes.URL:
+        files = item.urls
+        break
+    }
+
+    if (!blank(files)) {
+      onItemImport({ files, list: nav.list })
+      return { files }
+    }
   },
 
   canDrop(_, monitor) {
-    return !!monitor.getItem().types.find(type => isImageSupported({ type }))
+    let type = monitor.getItemType()
+    let item = monitor.getItem()
+
+    switch (type) {
+      case NativeTypes.FILE:
+        return !!item.types.find(isImageSupported)
+      default:
+        return true
+    }
+
   }
 }
 
@@ -163,5 +180,8 @@ const collect = (connect, monitor) => ({
 })
 
 module.exports = {
-  ProjectView: DropTarget(NativeTypes.FILE, spec, collect)(ProjectView)
+  ProjectView: DropTarget([
+    NativeTypes.FILE,
+    NativeTypes.URL
+  ], spec, collect)(ProjectView)
 }

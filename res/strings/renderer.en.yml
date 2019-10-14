@@ -23,7 +23,7 @@ en:
           one {Item}
           other {# Items}}
       selection: Selection
-      popup:
+      dropdown:
         placeholder: Add new field …
     tags:
       tab: Tags
@@ -114,6 +114,7 @@ en:
         locales:
           de: Deutsch
           en: English
+          es: Español
           fr: Français
           it: Italiano
           ja: 日本語
@@ -133,6 +134,9 @@ en:
           skip: Skip duplicate photos
           import: Accept duplicate photos
           prompt: Ask me every time
+      density:
+        label: Pixel resolution
+        title: Used for PDF and other scalable formats
       export:
         label: Export
         note:

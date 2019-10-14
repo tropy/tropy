@@ -51,20 +51,20 @@ class Create extends Command {
 }
 
 class Import extends ImportCommand {
-  static get ACTION() { return ITEM.IMPORT }
+  static get ACTION() {
+    return ITEM.IMPORT
+  }
 
   *exec() {
     let { db } = this.options
-    let { files, list } = this.action.payload
-
+    let { payload, meta } = this.action
+    let { files, list } = payload
     let items = []
 
-    if (!files) {
-      this.isInteractive = true
-      files = yield call(open.items)
-    }
-
-    if (!files) return []
+    if (!files && meta.prompt)
+      files = yield this.prompt(meta.prompt)
+    if (!files)
+      return []
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
@@ -140,6 +140,20 @@ class Import extends ImportCommand {
     }
 
     return items
+  }
+
+  *prompt(type) {
+    try {
+      this.suspend()
+      switch (type) {
+        case 'url':
+        default:
+          return yield call(open.items)
+      }
+
+    } finally {
+      this.resume()
+    }
   }
 }
 
@@ -252,7 +266,7 @@ class Merge extends Command {
     return {
       ...item,
       photos: [...item.photos, ...m.photos],
-      tags: [...item.tags, ...m.tags],
+      tags: [...item.tags, ...m.tags]
     }
   }
 }
@@ -480,13 +494,14 @@ class Print extends Command {
   static get ACTION() { return ITEM.PRINT }
 
   *exec() {
-    let [prefs, items] = yield select(state => ([
+    let [prefs, project, items] = yield select(state => ([
       state.settings.print,
+      state.project.id,
       getPrintableItems(state)
     ]))
 
     if (items.length) {
-      ipc.send('print', { ...prefs, items })
+      ipc.send('print', { ...prefs, project, items })
     }
   }
 }

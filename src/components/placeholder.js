@@ -11,7 +11,7 @@ const Placeholder = ({ id }) => (
 )
 
 Placeholder.propTypes = {
-  id: string.isRequired,
+  id: string.isRequired
 }
 
 module.exports = {

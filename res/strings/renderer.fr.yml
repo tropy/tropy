@@ -29,7 +29,7 @@ fr:
 
           other {# objets}}
       selection: Sélection
-      popup:
+      dropdown:
         placeholder: 'Ajouter nouveau champ… '
     tags:
       tab: Tags
@@ -129,6 +129,7 @@ fr:
         locales:
           de: Deutsch
           en: English
+          es: Español
           fr: Français
           it: Italiano
           ja: 日本語

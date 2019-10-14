@@ -132,7 +132,9 @@ class PhotoListItem extends PhotoIterable {
           onContextMenu={this.handleContextMenu}
           onMouseDown={this.handleMouseDown}>
           {this.renderTwistyButton()}
-          {this.renderThumbnail()}
+          <div className="thumbnail-container">
+            {this.renderThumbnail()}
+          </div>
           <div className="title">
             <Editable
               value={this.title}

@@ -40,13 +40,11 @@ class PhotoTile extends PhotoIterable {
             onClick: this.handleClick,
             onContextMenu: this.handleContextMenu
           })}
-          <div className="icon-container">
-            {this.props.photo.broken && <IconWarningOverlay/>}
-            {this.props.isExpandable &&
-              <Button
-                icon={<IconSelectionOverlay/>}
-                onClick={this.handleExpansionToggle}/>}
-          </div>
+          {this.props.photo.broken && <IconWarningOverlay/>}
+          {this.props.isExpandable &&
+            <Button
+              icon={<IconSelectionOverlay/>}
+              onClick={this.handleExpansionToggle}/>}
         </div>
         {this.props.isExpanded && <div className="pointer"/>}
       </li>

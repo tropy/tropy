@@ -8,7 +8,9 @@ const { arrayOf, func, number, shape, string } = require('prop-types')
 
 class PhotoDragPreview extends React.PureComponent {
   get classes() {
-    return ['photo', 'drag-preview', 'center', { multiple: this.count > 1 }]
+    return ['photo', 'drag-preview', 'center', {
+      multiple: this.count > 1
+    }]
   }
 
   get item() {
@@ -20,19 +22,19 @@ class PhotoDragPreview extends React.PureComponent {
   }
 
   render() {
-    const { id, angle, broken, mimetype, mirror, orientation } = this.item
-
     return (
       <div className={cx(this.classes)}>
         <Thumbnail
-          id={id}
-          angle={angle}
-          broken={broken}
-          mimetype={mimetype}
-          mirror={mirror}
-          orientation={orientation}
+          id={this.item.id}
+          angle={this.item.angle}
+          broken={this.item.broken}
+          cache={this.props.cache}
+          mimetype={this.item.mimetype}
+          mirror={this.item.mirror}
+          orientation={this.item.orientation}
           size={this.props.size}
-          cache={this.props.cache}/>
+          width={this.item.width}
+          height={this.item.height}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }

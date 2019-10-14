@@ -25,12 +25,12 @@ const skel = (id, selections = [], notes = []) => ({
 
 module.exports = {
   async create(db, { base, template }, { item, image, data, position }) {
-    let { path, width, height, ...meta } = image.toJSON()
+    let { protocol, path, width, height, ...meta } = image.toJSON()
     let { id } = await db.run(
       ...into('subjects').insert({ template: template })
     )
 
-    if (base != null) {
+    if (base != null && protocol === 'file') {
       path = relative(base, path)
     }
 
@@ -42,6 +42,7 @@ module.exports = {
         item_id: item,
         path,
         position,
+        protocol,
         ...meta
       })),
 

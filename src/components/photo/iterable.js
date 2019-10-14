@@ -2,10 +2,10 @@
 
 const React = require('react')
 const { Thumbnail } = require('./thumbnail')
-const { DragSource, DropTarget } = require('react-dnd')
-const { getEmptyImage } = require('react-dnd-electron-backend')
+const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { bounds } = require('../../dom')
 const { pure } = require('../util')
+const { pick } = require('../../common/util')
 const { DND } = require('../../constants')
 
 const {
@@ -14,16 +14,12 @@ const {
 
 
 class PhotoIterable extends React.PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      offset: null
-    }
+  state = {
+    offset: null
   }
 
   componentDidMount() {
-    this.props.dp(getEmptyImage())
+    this.props.connectDragPreview(getEmptyImage())
   }
 
   componentDidUpdate(props) {
@@ -70,16 +66,11 @@ class PhotoIterable extends React.PureComponent {
     this.props.onExpand(this.props.photo)
   }
 
-
   handleContextMenu = (event) => {
-    const { photo, isDisabled, onContextMenu } = this.props
-
-    if (!isDisabled) {
+    if (!this.props.isDisabled) {
       this.select()
-
-      onContextMenu(event, 'photo', {
-        id: photo.id, item: photo.item, path: photo.path
-      })
+      this.props.onContextMenu(event, 'photo',
+        pick(this.props.photo, ['id', 'item', 'path', 'protocol']))
     }
   }
 
@@ -87,11 +78,11 @@ class PhotoIterable extends React.PureComponent {
     this.container = container
   }
 
-
   connect(element) {
-    if (this.props.isSortable) element = this.props.dt(element)
-    if (this.isDraggable) element = this.props.ds(element)
-
+    if (this.props.isSortable)
+      element = this.props.connectDropTarget(element)
+    if (this.isDraggable)
+      element = this.props.connectDragSource(element)
     return element
   }
 
@@ -107,6 +98,8 @@ class PhotoIterable extends React.PureComponent {
         orientation={this.props.photo.orientation}
         cache={this.props.cache}
         size={this.props.size}
+        width={this.props.photo.width}
+        height={this.props.photo.height}
         onError={this.props.onError}/>
     )
   }
@@ -122,6 +115,8 @@ class PhotoIterable extends React.PureComponent {
         mimetype: photo.mimetype,
         mirror: photo.mirror,
         orientation: photo.orientation,
+        width: photo.width,
+        height: photo.height,
         adj: getAdjacent(photo).map(p => p && p.id)
       }
     },
@@ -142,8 +137,8 @@ class PhotoIterable extends React.PureComponent {
   }
 
   static DragSourceCollect = (connect, monitor) => ({
-    ds: connect.dragSource(),
-    dp: connect.dragPreview(),
+    connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
     isDragging: monitor.isDragging()
   })
 
@@ -184,8 +179,8 @@ class PhotoIterable extends React.PureComponent {
   }
 
   static DropTargetCollect = (connect, monitor) => ({
-    dt: connect.dropTarget(),
-    isOver: monitor.isOver(),
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver()
   })
 
   static wrap() {
@@ -216,9 +211,9 @@ class PhotoIterable extends React.PureComponent {
     }).isRequired,
     selection: number,
     size: number.isRequired,
-    ds: func.isRequired,
-    dt: func.isRequired,
-    dp: func.isRequired,
+    connectDragSource: func.isRequired,
+    connectDropTarget: func.isRequired,
+    connectDragPreview: func.isRequired,
     getAdjacent: func.isRequired,
     onContextMenu: func.isRequired,
     onContract: func.isRequired,

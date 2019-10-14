@@ -217,7 +217,7 @@ class Resizable extends React.Component {
     onResize: func.isRequired,
     onDrag: func,
     onDragStart: func,
-    onDragStop: func,
+    onDragStop: func
   }
 
   static defaultProps = {

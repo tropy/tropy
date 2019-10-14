@@ -5,8 +5,7 @@ const { connect } = require('react-redux')
 const { ProjectView } = require('./view')
 const { ItemView } = require('../item')
 const { DragLayer } = require('../drag-layer')
-const { DropTarget } = require('react-dnd')
-const { NativeTypes } = require('react-dnd-electron-backend')
+const { DropTarget, NativeTypes } = require('../dnd')
 const { NoProject } = require('./none')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
@@ -135,7 +134,7 @@ class ProjectContainer extends React.Component {
   projectWillChange = debounce(project => {
     this.setState({
       isProjectClosed: !!project.closed,
-      willProjectClose: project.closing,
+      willProjectClose: project.closing
     })
   }, 750, { leading: false })
 
@@ -363,14 +362,13 @@ const DropTargetSpec = {
     return { files }
   },
 
-  canDrop({ project }, monitor) {
+  canDrop(_, monitor) {
     const { types } = monitor.getItem()
 
     if (types.length < 1) return false
 
     switch (types[0]) {
       case 'application-vnd.tropy.tpy':
-        return project.closed //|| files[0].path !== project.file
       case 'application-vnd.tropy.ttp':
         return true
       default:

@@ -323,7 +323,7 @@ class AppMenu extends Menu {
 }
 
 const separate = transformer(
-  (menu, items) => ([...menu, { type: 'separator' }, ...items]),
+  (menu, items) => ([...menu, { type: 'separator' }, ...items])
 )
 
 class ContextMenu extends Menu {

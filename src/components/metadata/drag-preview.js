@@ -28,7 +28,7 @@ FieldDragPreview.propTypes = {
     id: oneOfType([number, arrayOf(number)]).isRequired,
     isMixed: bool,
     value: string
-  }).isRequired,
+  }).isRequired
 }
 
 module.exports = {

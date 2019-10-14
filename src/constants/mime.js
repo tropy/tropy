@@ -1,9 +1,16 @@
 'use strict'
 
-const MIME = {
+module.exports = {
   GIF: 'image/gif',
+  HEIC: 'image/heic',
+  HEIC_SEQ: 'image/heic-sequence',
+  HEIF: 'image/heif',
+  HEIF_SEQ: 'image/heif-sequence',
   JPG: 'image/jpeg',
   JPEG: 'image/jpeg',
+  JP2: 'image/jp2',
+  J2K: 'image/jpeg2000',
+  JPX: 'image/jpx',
   PDF: 'application/pdf',
   PNG: 'image/png',
   SVG: 'image/svg+xml',
@@ -11,16 +18,3 @@ const MIME = {
   TIFF: 'image/tiff',
   WEBP: 'image/webp'
 }
-
-const SUPPORTED_IMAGE = {
-  [MIME.GIF]: true,
-  [MIME.JPEG]: true,
-  [MIME.PNG]: true,
-  [MIME.SVG]: true,
-  [MIME.TIFF]: true,
-  [MIME.WEBP]: true
-}
-
-MIME.isImageSupported = (file) => SUPPORTED_IMAGE[file.type]
-
-module.exports = MIME

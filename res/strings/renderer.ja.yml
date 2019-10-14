@@ -29,7 +29,7 @@ ja:
 
           other {# アイテム}}
       selection: セレクション
-      popup:
+      dropdown:
         placeholder: フィールド を追加
     tags:
       tab: タグ
@@ -118,6 +118,7 @@ ja:
         locales:
           de: Deutsch
           en: English
+          es: Español
           fr: Français
           it: Italiano
           ja: 日本語

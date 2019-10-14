@@ -26,7 +26,7 @@ TemplateFieldList.propTypes = {
   fields: arrayOf(shape({
     id: number.isRequired
   })).isRequired,
-  template: string.isRequired,
+  template: string.isRequired
 }
 
 module.exports = {

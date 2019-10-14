@@ -45,7 +45,7 @@
     }
   }
 
-  &.single {
+  &:not(.static) {
     background-repeat: no-repeat;
     background-position: right $space-min center;
     background-image:
@@ -88,7 +88,7 @@
     }
   }
 
-  &.multi {
+  &.static {
     .placeholder,
     .query {
       padding: 0 $padding-base-horizontal;

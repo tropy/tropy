@@ -44,9 +44,16 @@ class Value extends React.Component {
 
 class Select extends React.Component {
   state = {
+    hasFocus: !!this.props.autofocus,
     query: '',
     selection: [],
     values: []
+  }
+
+  componentDidMount() {
+    if (this.props.autofocus) {
+      this.focus()
+    }
   }
 
   componentDidUpdate(_, state) {
@@ -85,9 +92,7 @@ class Select extends React.Component {
       'focus': this.state.hasFocus,
       'has-icon': this.props.icon != null,
       'invalid': !this.isDisabled && this.state.isInvalid,
-      'multi': this.state.isMulti,
       'open': this.isOpen,
-      'single': !this.state.isMulti,
       'static': this.props.isStatic,
       'tab-focus': this.state.hasTabFocus,
       'form-control': !this.props.isStatic
@@ -104,13 +109,13 @@ class Select extends React.Component {
       if (value != null) this.props.onRemove(this.props.toId(value))
       else this.props.onClear()
       this.handleChange(null, !this.state.isBlank)
-      this.close()
+      this.close({ type: 'clear' })
     }
   }
 
-  close = () => {
+  close = (event) => {
     this.setState({ isOpen: false, query: '' })
-    this.props.onClose()
+    this.props.onClose(event)
   }
 
   commit() {
@@ -141,7 +146,7 @@ class Select extends React.Component {
   handleBlur = (event) => {
     this.setState({ hasFocus: false, hasTabFocus: false })
     this.props.onBlur(event)
-    this.close()
+    this.close(event)
   }
 
   handleChange = (value, hasChanged) => {
@@ -189,7 +194,7 @@ class Select extends React.Component {
           this.delegate('last')
           break
         case 'Escape':
-          this.close()
+          this.close({ type: 'escape' })
           break
         case 'Backspace':
           if (!this.props.canClearByBackspace ||
@@ -213,7 +218,7 @@ class Select extends React.Component {
   handleMouseDown = (event) => {
     if (event.button === 0 && !this.props.isStatic) {
       if (!this.isOpen) this.open()
-      else if (this.state.query.length === 0) this.close()
+      else if (this.state.query.length === 0) this.close(event)
     }
     if (this.input != null) {
       this.input.focus()
@@ -234,7 +239,7 @@ class Select extends React.Component {
         this.props.onInsert(id)
         this.handleChange(value, true)
       }
-      this.close()
+      this.close({ type: 'select' })
     }
   }
 
@@ -364,6 +369,7 @@ class Select extends React.Component {
   }
 
   static propTypes = {
+    autofocus: bool,
     canClearByBackspace: bool,
     className: string,
     hideClearButton: bool,

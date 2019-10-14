@@ -5,6 +5,7 @@ const { Item } = require('./item')
 const { WindowContext } = require('../main')
 const { noop } = require('../../common/util')
 const { loadImage } = require('../../dom')
+const { join } = require('path')
 
 
 class PrintContainer extends React.Component {
@@ -25,7 +26,8 @@ class PrintContainer extends React.Component {
       canOverflow: opts.overflow,
       hasMetadata: opts.metadata,
       hasNotes: opts.notes,
-      items: opts.items
+      items: opts.items,
+      cache: join(ARGS.cache, opts.project)
     }, this.handleItemsReceived)
   }
 
@@ -49,6 +51,7 @@ class PrintContainer extends React.Component {
         <Item
           key={item.id}
           item={item}
+          cache={this.state.cache}
           canOverflow={this.state.canOverflow}
           hasMetadata={this.state.hasMetadata}
           hasNotes={this.state.hasNotes}/>)

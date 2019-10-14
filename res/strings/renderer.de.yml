@@ -29,7 +29,7 @@ de:
 
           other {# Objekte}}
       selection: Ausschnitt
-      popup:
+      dropdown:
         placeholder: Neues Feld …
     tags:
       tab: Tags
@@ -128,6 +128,7 @@ de:
         locales:
           de: Deutsch
           en: English
+          es: Español
           fr: Français
           it: Italiano
           ja: 日本語

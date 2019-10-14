@@ -132,7 +132,7 @@ class Tropy extends EventEmitter {
       case '.jpeg':
       case '.png':
       case '.svg':
-        this.import([file])
+        this.import({ files: [file] })
         break
       case '.ttp':
         this.importTemplates([file])
@@ -217,8 +217,8 @@ class Tropy extends EventEmitter {
     this.emit('app:reload-menu')
   }
 
-  import(files) {
-    return this.dispatch(act.item.import({ files }), this.wm.current())
+  import(...args) {
+    return this.dispatch(act.item.import(...args), this.wm.current())
   }
 
   importTemplates(files) {
@@ -343,7 +343,7 @@ class Tropy extends EventEmitter {
     this.on('app:optimize-project', () =>
       this.dispatch(act.project.optimize(), this.wm.current()))
 
-    this.on('app:import-photos', () =>
+    this.on('app:import', () =>
       this.import())
 
     this.on('app:rename-project', (win) =>
@@ -358,8 +358,12 @@ class Tropy extends EventEmitter {
     this.on('app:center-window', () =>
       this.wm.center())
 
-    this.on('app:show-in-folder', (_, { target }) =>
-      shell.showItemInFolder(target.path))
+    this.on('app:show-in-folder', (_, { target }) => {
+      if (target.protocol !== 'file')
+        shell.openExternal(`${target.protocol}://${target.path}`)
+      else
+        shell.showItemInFolder(target.path)
+    })
 
     this.on('app:create-item', () =>
       this.dispatch(act.item.create(), this.wm.current()))
@@ -454,6 +458,11 @@ class Tropy extends EventEmitter {
       this.dispatch(act.metadata.delete({
         id: target.id,
         property: target.property
+      }), win))
+
+    this.on('app:create-field', (win, { target }) =>
+      this.dispatch(act.metadata.new({
+        id: target.id
       }), win))
 
     this.on('app:delete-selection', (win, { target }) =>

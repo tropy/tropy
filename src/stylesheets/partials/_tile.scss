@@ -15,7 +15,30 @@
 
       height: $tile-size;
 
+      .thumbnail,
+      img {
+        --size: #{$size};
+        --width: var(--x) * var(--size) * 1px;
+        --height: var(--y) * var(--size) * 1px;
+        width: calc(var(--width));
+        height: calc(var(--height));
+        min-width: 24px;
+        min-height: 22px;
+      }
+
       .thumbnail {
+        [class*="90"],
+        [class*="270"] {
+          img {
+            --width: var(--y) * var(--size) * 1px;
+            --height: var(--x) * var(--size) * 1px + 1px;
+            min-width: 22px;
+            min-height: 24px;
+          }
+        }
+      }
+
+      .rotation-container {
         width: #{$size}px;
         height: #{$size}px;
       }
@@ -53,14 +76,17 @@
     }
   }
 
-  .icon-container {
+  .icon-warningoverlay {
     position: absolute;
-    right: 6px;
-    bottom: 5px;
-    margin-left: 0;
+    left: 6px;
+    top: 5px;
+    pointer-events: none;
   }
 
   .btn-icon {
+    position: absolute;
+    right: 6px;
+    bottom: 5px;
     padding: 0;
 
     .icon {

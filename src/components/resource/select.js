@@ -162,5 +162,5 @@ function m(res, query, prop, at = /^\w/g) {
 module.exports = {
   Id,
   Label,
-  ResourceSelect,
+  ResourceSelect
 }

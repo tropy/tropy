@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Editable } = require('../editable')
-const { DragSource, DropTarget } = require('react-dnd')
+const { DragSource, DropTarget, getEmptyImage, NativeTypes } = require('../dnd')
 const { FormattedMessage } = require('react-intl')
 const { blank, noop, pluck, URI } = require('../../common/util')
 const { IconLock, IconWarningSm } = require('../icons')
@@ -10,11 +10,37 @@ const cx = require('classnames')
 const { TYPE, DND } = require('../../constants')
 const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
-const { getEmptyImage } = require('react-dnd-electron-backend')
 const {
-  bool, func, number, oneOfType, shape, string, arrayOf
+  arrayOf, bool, func, number, shape, string, oneOfType, object
 } = require('prop-types')
+const { ResourceSelect } = require('../resource/select')
 
+
+const NewMetadataField = ({ options, value, onCreate, onCancel }) => (
+  <li>
+    <ResourceSelect
+      autofocus
+      canClearByBackspace={false}
+      hideClearButton
+      isRequired
+      isSelectionHidden
+      isValueHidden
+      maxRows={6}
+      options={options}
+      placeholder="panel.metadata.dropdown.placeholder"
+      value={value}
+      onClose={({ type } = {}) => type === 'escape' && onCancel()}
+      onBlur={onCancel}
+      onInsert={onCreate}/>
+  </li>
+)
+
+NewMetadataField.propTypes = {
+  options: arrayOf(object).isRequired,
+  value: arrayOf(string),
+  onCancel: func,
+  onCreate: func.isRequired
+}
 
 class MetadataField extends React.PureComponent {
   get classes() {
@@ -128,11 +154,7 @@ class MetadataField extends React.PureComponent {
   }
 
   static propTypes = {
-    id: oneOfType([
-      number,
-      arrayOf(number)
-    ]),
-
+    id: arrayOf(number),
     isEditing: bool,
     isDisabled: bool,
     isExtra: bool.isRequired,
@@ -233,17 +255,43 @@ const DragSourceSpec = {
 
 const DragSourceCollect = (connect) => ({
   connectDragSource: connect.dragSource(),
-  connectDragPreview: connect.dragPreview(),
+  connectDragPreview: connect.dragPreview()
 })
 
 const DropTargetSpec = {
   canDrop({ id, property }, monitor) {
+    let type = monitor.getItemType()
     let item = monitor.getItem()
-    return id === item.id && property.id !== item.property
+
+    switch (type) {
+      case NativeTypes.TEXT:
+      case NativeTypes.URL:
+        return true
+      case DND.FIELD:
+        return id === item.id && property.id !== item.property
+      default:
+        return false
+    }
   },
 
-  drop({ property }) {
-    return { property: property.id }
+  drop({ onChange, property, type }, monitor) {
+    let droptype = monitor.getItemType()
+    let item = monitor.getItem()
+
+    switch (droptype) {
+      case NativeTypes.TEXT:
+      case NativeTypes.URL:
+        onChange({
+          [property.id]: {
+            text: item.text || item.urls[0],
+            type
+          }
+        }, true)
+        break
+      case DND.FIELD:
+        return { property: property.id }
+    }
+
   }
 }
 
@@ -254,9 +302,12 @@ const DropTargetCollect = (connect, monitor) => ({
 
 
 module.exports.StaticField = StaticField
+module.exports.NewMetadataField = NewMetadataField
 
 module.exports.MetadataField = DragSource(
   DND.FIELD, DragSourceSpec, DragSourceCollect
 )(DropTarget(
-  DND.FIELD, DropTargetSpec, DropTargetCollect
+  [DND.FIELD, NativeTypes.TEXT, NativeTypes.URL],
+  DropTargetSpec,
+  DropTargetCollect
 )(MetadataField))

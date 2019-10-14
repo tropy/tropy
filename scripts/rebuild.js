@@ -11,7 +11,7 @@ const home = resolve(__dirname, '..')
 const mods = join(home, 'node_modules')
 
 const ELECTRON = v('electron').split('.')
-const HEADERS = 'https://atom.io/download/electron'
+const HEADERS = 'https://electronjs.org/headers'
 
 const CONFIG = [
   `--arch=${process.arch}`,
@@ -71,8 +71,16 @@ target.sharp = (force) => {
   let mod = 'sharp'
 
   if (force || !test('-d', buildFragments(mod))) {
+    say(`${mod} patching...`)
+
+    let target = join(mods, mod)
+    let vendor = join(home, 'vendor', mod)
+
+    cp(join(vendor, 'binding.gyp'), target)
+    rm('-rf', join(target, 'vendor'))
+
     rebuild(mod, {
-      // params: '--build-from-source'
+      params: '--build-from-source'
     })
     say(`${mod} ...done`)
 

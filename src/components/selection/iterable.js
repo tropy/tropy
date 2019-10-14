@@ -2,10 +2,10 @@
 
 const React = require('react')
 const { Thumbnail } = require('../photo/thumbnail')
-const { DragSource, DropTarget } = require('react-dnd')
-const { getEmptyImage } = require('react-dnd-electron-backend')
+const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { bool, func, number, shape, string } = require('prop-types')
 const { pure } = require('../util')
+const { pick } = require('../../common/util')
 const { bounds } = require('../../dom')
 const { DND } = require('../../constants')
 
@@ -60,14 +60,10 @@ class SelectionIterable extends React.PureComponent {
 
   handleContextMenu = (event) => {
     if (!this.props.isDisabled) {
-      const { photo, selection } = this.props
       this.select()
-
       this.props.onContextMenu(event, 'selection', {
-        id: photo.id,
-        item: photo.item,
-        path: photo.path,
-        selection: selection.id
+        ...pick(this.props.photo, ['id', 'item', 'path', 'protocol']),
+        selection: this.props.selection.id
       })
     }
   }
@@ -90,6 +86,8 @@ class SelectionIterable extends React.PureComponent {
         orientation={this.props.photo.orientation}
         cache={this.props.cache}
         size={this.props.size}
+        width={this.props.selection.width}
+        height={this.props.selection.height}
         onError={this.props.onError}/>
     )
   }
@@ -115,7 +113,7 @@ class SelectionIterable extends React.PureComponent {
     selection: shape({
       id: number.isRequired,
       angle: number,
-      mirror: bool,
+      mirror: bool
     }).isRequired,
     size: number.isRequired,
     onContextMenu: func.isRequired,

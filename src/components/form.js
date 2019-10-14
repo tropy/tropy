@@ -37,32 +37,31 @@ class FormGroup extends React.PureComponent {
 }
 
 
-class Label extends React.PureComponent {
-  get value() {
-    return this.props.value || <FormattedMessage id={this.props.id}/>
-  }
+const Label = React.memo(props => {
+  let intl = useIntl()
 
-  render() {
-    return (
-      <label
-        className={cx('control-label', `col-${this.props.size}`)}
-        title={this.props.title}
-        htmlFor={this.props.id}>
-        {this.value}
-      </label>
-    )
-  }
+  let title = props.title && intl.formatMessage({ id: props.title })
+  let value = props.value || intl.formatMessage({ id: props.id })
 
-  static propTypes = {
-    id: string.isRequired,
-    size: number.isRequired,
-    title: string,
-    value: string
-  }
+  return (
+    <label
+      className={cx('control-label', `col-${props.size}`)}
+      title={title}
+      htmlFor={props.id}>
+      {value}
+    </label>
+  )
+})
 
-  static defaultProps = {
-    size: 4
-  }
+Label.propTypes = {
+  id: string.isRequired,
+  size: number.isRequired,
+  title: string,
+  value: string
+}
+
+Label.defaultProps = {
+  size: 4
 }
 
 class FormElement extends React.PureComponent {
@@ -146,10 +145,12 @@ class FormField extends React.PureComponent {
           ref={this.setInput}
           id={this.props.id}
           className="form-control"
+          max={this.props.max}
+          min={this.props.min}
           name={this.props.name}
           placeholder={this.props.placeholder}
           tabIndex={this.props.tabIndex}
-          type="text"
+          type={this.props.type}
           value={this.props.value || ''}
           isDisabled={this.props.isDisabled}
           isReadOnly={this.props.isReadOnly}
@@ -168,10 +169,13 @@ class FormField extends React.PureComponent {
     isReadOnly: bool,
     isRequired: bool,
     label: string,
+    max: number,
+    min: number,
     name: string.isRequired,
     placeholder: string,
     size: number.isRequired,
     tabIndex: number,
+    type: string.isRequired,
     title: string,
     value: string,
     onBlur: func.isRequired,
@@ -182,6 +186,7 @@ class FormField extends React.PureComponent {
   static defaultProps = {
     isReadOnly: false,
     size: 8,
+    type: 'text',
     onBlur: noop,
     onChange: noop,
     onInputChange: noop
@@ -321,7 +326,7 @@ class FormToggle extends React.PureComponent {
   get classes() {
     return [
       `col-${this.props.size}`,
-      `col-offset-${GRID.SIZE - this.props.size}`,
+      `col-offset-${GRID.SIZE - this.props.size}`
     ]
   }
 

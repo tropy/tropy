@@ -5,14 +5,13 @@ const { Button } = require('../button')
 const { Editable } = require('../editable')
 const { Collapse } = require('../fx')
 const { IconFolder, IconGhost, IconTriangle } = require('../icons')
-const { DragSource, DropTarget } = require('react-dnd')
-const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
-const { DND, LIST, SASS, MIME } = require('../../constants')
-const { isImageSupported } = MIME
+const { DragSource, DropTarget, NativeTypes, getEmptyImage } = require('../dnd')
+const { DND, LIST, SASS, IMAGE } = require('../../constants')
+const { isImageSupported } = IMAGE
 const { bounds } = require('../../dom')
 const lazy = require('./tree')
 const cx = require('classnames')
-const { last, noop, restrict } = require('../../common/util')
+const { blank, last, noop, restrict } = require('../../common/util')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -352,7 +351,7 @@ const DropTargetSpec = {
 
     switch (type) {
       case NativeTypes.FILE:
-        return !!item.types.find(t => isImageSupported({ type: t }))
+        return !!item.types.find(isImageSupported)
       case DND.LIST:
         return !(props.isDragging || props.isDraggingParent)
       default:
@@ -364,6 +363,7 @@ const DropTargetSpec = {
     try {
       let type = monitor.getItemType()
       let item = monitor.getItem()
+      let files
 
       switch (type) {
         case DND.LIST: {
@@ -378,11 +378,15 @@ const DropTargetSpec = {
           })
           break
         case NativeTypes.FILE:
-          props.onDropFiles({
-            list: list.id,
-            files: item.files.filter(isImageSupported).map(file => file.path)
-          })
+          files = item.files.filter(isImageSupported).map(f => f.path)
           break
+        case NativeTypes.URL:
+          files = item.urls
+          break
+      }
+
+      if (!blank(files)) {
+        props.onDropFiles({ list: list.id, files })
       }
     } finally {
       node.setState({ detph: null, offset: null })
@@ -402,6 +406,6 @@ module.exports.NewListNode = NewListNode
 module.exports.ListNode =
   DragSource(DND.LIST, DragSourceSpec, DragSourceCollect)(
     DropTarget([
-      DND.LIST, DND.ITEMS, NativeTypes.FILE],
+      DND.LIST, DND.ITEMS, NativeTypes.FILE, NativeTypes.URL],
         DropTargetSpec,
         DropTargetCollect)(ListNode))

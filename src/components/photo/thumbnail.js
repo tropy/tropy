@@ -1,11 +1,12 @@
 'use strict'
 
 const React = require('react')
-const { IconPhoto } = require('../icons')
+//const { IconPhoto } = require('../icons')
 const { Cache } = require('../../common/cache')
 const { bool, func, instanceOf, number, string } = require('prop-types')
 const { ICON } = require('../../constants/sass')
 const { Rotation } = require('../../common/iiif')
+const { round } = require('../../common/math')
 
 
 class Thumbnail extends React.Component {
@@ -29,8 +30,20 @@ class Thumbnail extends React.Component {
     let hasFinishedLoading = (src != null) &&
       (!(hasImageChanged || isBroken) || state.hasFinishedLoading)
 
+    let { width, height } = props
+
+    if (!rotation.isHorizontal) {
+      [width, height] = [height, width]
+    }
+
     return {
-      src, rotation, consolidated, hasFinishedLoading, isBroken
+      src,
+      rotation: rotation.format('x'),
+      consolidated,
+      hasFinishedLoading,
+      isBroken,
+      width,
+      height
     }
   }
 
@@ -44,7 +57,6 @@ class Thumbnail extends React.Component {
     return Rotation
       .fromExifOrientation(orientation)
       .add({ angle, mirror })
-      .format('x')
   }
 
   get hasFallbackIcon() {
@@ -55,6 +67,17 @@ class Thumbnail extends React.Component {
     return (this.state.consolidated == null) ?
       this.state.src :
       `${this.state.src}?c=${this.state.consolidated.getTime()}`
+  }
+
+  get ratio() {
+    let { width, height } = this.state
+
+    if (width > height)
+      return { '--x': 1, '--y': round(height / width, 100) }
+    if (width < height)
+      return { '--x': round(width / height, 100), '--y': 1 }
+    else
+      return { '--x': 1, '--y': 1 }
   }
 
   handleLoad = () => {
@@ -71,17 +94,19 @@ class Thumbnail extends React.Component {
     return (
       <figure
         className="thumbnail"
+        style={this.ratio}
         onClick={this.props.onClick}
         onContextMenu={this.props.onContextMenu}
         onDoubleClick={this.props.onDoubleClick}
         onMouseDown={this.props.onMouseDown}>
-        {this.hasFallbackIcon && <IconPhoto/>}
+        {/*this.hasFallbackIcon && <IconPhoto/>*/}
         {this.state.src &&
-          <img
-            className={`iiif rot-${this.state.rotation}`}
-            src={this.src}
-            onLoad={this.handleLoad}
-            onError={this.handleError}/>}
+          <div className={`rotation-container iiif rot-${this.state.rotation}`}>
+            <img
+              src={this.src}
+              onLoad={this.handleLoad}
+              onError={this.handleError}/>
+          </div>}
       </figure>
     )
   }
@@ -91,11 +116,13 @@ class Thumbnail extends React.Component {
     broken: bool,
     cache: string.isRequired,
     consolidated: instanceOf(Date),
+    height: number,
     id: number,
     mimetype: string,
     mirror: bool,
     orientation: number,
     size: number.isRequired,
+    width: number,
     onClick: func,
     onContextMenu: func,
     onDoubleClick: func,
@@ -106,6 +133,8 @@ class Thumbnail extends React.Component {
   static defaultProps = {
     size: ICON.SIZE
   }
+
+  static keys = Object.keys(this.propTypes)
 }
 
 module.exports = {

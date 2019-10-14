@@ -295,7 +295,7 @@ class Completions extends React.Component {
     query: string.isRequired,
     selection: array.isRequired,
     toId: func.isRequired,
-    toText: func.isRequired,
+    toText: func.isRequired
   }
 
   static defaultProps = {

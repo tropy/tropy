@@ -21,9 +21,13 @@ const {
 
 class ImportCommand extends Command {
   *openImage(path) {
-    let useLocalTimezone = yield select(state => state.settings.localtime)
-    let image = yield call(Image.open, { path, useLocalTimezone })
-    return image
+    let settings = yield select(state => state.settings)
+
+    return yield call(Image.open, {
+      path,
+      density: settings.density,
+      useLocalTimezone: settings.localtime
+    })
   }
 
   *checkPhoto(photo, force) {
@@ -80,7 +84,7 @@ class ImportCommand extends Command {
         let path = cache.path(id, v.name, ext)
 
         if (overwrite || !(yield call(cache.exists, path, false))) {
-          let dup = image.resize(v.size, selection)
+          let dup = yield call(image.resize, v.size, selection)
 
           switch (ext) {
             case '.png':
