@@ -55,6 +55,10 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
                 heading="print.notes"/>}
           </div>
         </div>}
+      {!hasMetadata && hasNotes && !canOverflow &&
+        <NoteList
+          notes={photo.notes}
+          heading="print.notes"/>}
       {hasNotes && canOverflow &&
         <NoteList notes={photo.notes}/>}
     </div>
