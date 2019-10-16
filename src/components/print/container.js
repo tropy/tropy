@@ -3,7 +3,7 @@
 const React = require('react')
 const { Item } = require('./item')
 const { WindowContext } = require('../main')
-const { noop } = require('../../common/util')
+const { delay, noop } = require('../../common/util')
 const { loadImage } = require('../../dom')
 const { join } = require('path')
 const { debug } = require('../../common/log')
@@ -37,6 +37,12 @@ class PrintContainer extends React.Component {
       this.state.items
         .flatMap(item => item.photos)
         .map(photo => loadImage(photo.path).catch(noop)))
+
+    // Hack: All images need to be decoded before we open
+    // the print dialog. Instead of using image.decode() on
+    // every image instance we just estimate a reasonable
+    // delay here and hope for the best!
+    await delay(500)
 
     debug('images loaded for printing')
     requestIdleCallback(() => {

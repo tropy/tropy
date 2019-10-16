@@ -350,7 +350,7 @@ const util = {
   identity(payload) { return payload },
 
   delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    return new Promise(resolve => setTimeout(() => void resolve(), ms))
   },
 
   *counter(k = 0) {
