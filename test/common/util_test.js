@@ -21,7 +21,7 @@ describe('util', () => {
         })
 
         it('resolves', () => (
-          expect(once(ee, 'evt')).eventually.to.eql(42)
+          expect(once(ee, 'evt')).eventually.to.eql([42])
         ))
 
         it('cleans up', () => (
