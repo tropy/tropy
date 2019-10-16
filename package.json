@@ -67,7 +67,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chalk": "^2.4.2",
-    "chokidar": "^3.2.1",
+    "chokidar": "^3.2.2",
     "devtron": "^1.0.0",
     "electron": "^6.0.12",
     "electron-mocha": "^8.1.2",
@@ -103,7 +103,7 @@
     "@inukshuk/exif": "^2.0.0",
     "@pixi/filter-adjustment": "^2.7.0",
     "@tweenjs/tween.js": "^18.3.1",
-    "bluebird": "^3.7.0",
+    "bluebird": "^3.7.1",
     "classnames": "^2.2.6",
     "decompress": "^4.2.0",
     "edtf": "^2.7.0",
@@ -127,7 +127,7 @@
     "prosemirror-schema-basic": "^1.0.1",
     "prosemirror-schema-list": "^1.0.4",
     "prosemirror-state": "^1.2.4",
-    "prosemirror-view": "^1.11.6",
+    "prosemirror-view": "^1.11.7",
     "react": "^16.10.2",
     "react-dnd-cjs": "^9.4.0",
     "react-dnd-html5-backend-cjs": "^9.4.0",
@@ -148,7 +148,7 @@
     "transducers.js": "^0.3.2",
     "uuid": "^3.3.3",
     "winreg": "^1.2.4",
-    "write-file-atomic": "^3.0.0",
+    "write-file-atomic": "^3.0.1",
     "yargs": "^14.2.0"
   }
 }
