@@ -12,7 +12,15 @@ const {
   systemPreferences: prefs
 } = require('electron')
 
-const { fatal, info, warn, logger, crashReport } = require('../common/log')
+const {
+  debug,
+  fatal,
+  info,
+  warn,
+  logger,
+  crashReport
+} = require('../common/log')
+
 const { delay, once } = require('../common/util')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
@@ -727,6 +735,7 @@ class Tropy extends EventEmitter {
           delay(60000)
         ])
 
+        debug('will open print dialog')
         let result = await WindowManager.print(win)
         info(`printing ${result ? 'confirmed' : 'aborted'}`)
 
