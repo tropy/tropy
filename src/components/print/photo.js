@@ -8,7 +8,6 @@ const { PhotoInfo } = require('../photo/info')
 const cx = require('classnames')
 const { Rotation } = require('../../common/iiif')
 const { Cache } = require('../../common/cache')
-const { IMAGE } = require('../../constants')
 
 const {
   arrayOf,
@@ -34,7 +33,7 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
           className={`iiif rot-${rotation.format('x')}`}
           decoding="sync"
           loading="eager"
-          src={source(photo, cache)}/>
+          src={Cache.src(cache, photo)}/>
       </div>
       {hasMetadata &&
         <div className={cx('metadata-container')}>
@@ -79,11 +78,6 @@ Photo.propTypes = {
     width: number.isRequired
   })
 }
-
-const source = (photo, cache) =>
-  (photo.protocol !== 'file' || !IMAGE.WEB[photo.mimetype]) ?
-    Cache.url(cache, photo.id, 'full', photo.mimetype) :
-    `${photo.protocol}://${photo.path}`
 
 module.exports = {
   Photo
