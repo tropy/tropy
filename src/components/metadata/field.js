@@ -78,10 +78,10 @@ class MetadataField extends React.PureComponent {
     }
   }
 
-  handleChange = (text, hasChanged = true) => {
+  handleChange = (text, hasChanged = true, hasBeenForced) => {
     this.props.onChange({
       [this.property]: { text, type: this.props.type }
-    }, hasChanged)
+    }, hasChanged, hasBeenForced)
   }
 
   handleCancel = (hasChanged, hasBeenForced) => {

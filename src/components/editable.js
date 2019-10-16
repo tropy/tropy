@@ -62,10 +62,10 @@ class Editable extends React.PureComponent {
     }
   }
 
-  handleCommit = (value, hasChanged) => {
+  handleCommit = (value, hasChanged, hasBeenForced) => {
     try {
-      if (hasChanged) {
-        this.props.onChange(value)
+      if (hasChanged || hasBeenForced) {
+        this.props.onChange(value, hasChanged, hasBeenForced)
       } else {
         this.props.onCancel(false, hasChanged)
       }
