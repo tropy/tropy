@@ -715,7 +715,7 @@ class Tropy extends EventEmitter {
         var win = await this.wm.open('print', this.hash)
 
         await Promise.race([
-          once(win, 'react:ready'),
+          once(win, 'ready', 'react:ready'),
           delay(2000)
         ])
 
