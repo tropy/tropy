@@ -262,10 +262,15 @@ const dom = {
     })
   },
 
-  loadImage(src) {
+  loadImage(src, decode = false) {
     return new Promise((resolve, reject) => {
       let img = new Image()
-      img.onload = () => resolve(img)
+      img.onload = () => {
+        if (decode)
+          img.decode().then(() => resolve(img), reject)
+        else
+          resolve(img)
+      }
       img.onerror = reject
       img.src = src
     })
