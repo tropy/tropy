@@ -6,6 +6,7 @@ const { WindowContext } = require('../main')
 const { noop } = require('../../common/util')
 const { loadImage } = require('../../dom')
 const { join } = require('path')
+const { debug } = require('../../common/log')
 
 
 class PrintContainer extends React.Component {
@@ -32,17 +33,15 @@ class PrintContainer extends React.Component {
   }
 
   handleItemsReceived = async () => {
-    let p = []
+    await Promise.all(
+      this.state.items
+        .flatMap(item => item.photos)
+        .map(photo => loadImage(photo.path).catch(noop)))
 
-    for (let item of this.state.items) {
-      for (let photo of item.photos) {
-        p.push(loadImage(photo.path).catch(noop))
-      }
-    }
-
-    await Promise.all(p)
-
-    this.context.send('print:ready')
+    debug('images loaded for printing')
+    requestIdleCallback(() => {
+      this.context.send('print:ready')
+    })
   }
 
   render() {
