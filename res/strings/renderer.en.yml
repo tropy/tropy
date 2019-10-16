@@ -159,6 +159,11 @@ en:
         option:
           stacked: Stacked
           side-by-side: Side by side
+      completions:
+        label: Autocomplete
+        option:
+          datatype: By datatype only
+          property-datatype: By datatype and property
     project:
       label: Project
     template:
