@@ -32,6 +32,7 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
       <div className="photo-container">
         <img
           className={`iiif rot-${rotation.format('x')}`}
+          decoding="sync"
           loading="eager"
           src={source(photo, cache)}/>
       </div>
