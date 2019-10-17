@@ -34,31 +34,32 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
           className={`iiif rot-${rotation.format('x')}`}
           src={source(photo, cache)}/>
       </div>
-      {hasMetadata &&
+      {(hasMetadata || hasNotes) &&
         <div className={cx('metadata-container')}>
-          {item &&
-            <div className="col">
-              <MetadataSection
-                title="print.item"
-                fields={item.data}
-                tags={item.tags}/>
-              <ItemInfo item={item}/>
-            </div>}
           <div className="col">
-            <MetadataSection
-              title="print.photo"
-              fields={photo.data}/>
-            <PhotoInfo photo={photo}/>
+            {hasMetadata &&
+              <>
+                <MetadataSection
+                  title="print.item"
+                  fields={item.data}
+                  tags={item.tags}/>
+                <ItemInfo item={item}/>
+              </>}
+          </div>
+          <div className="col">
+            {hasMetadata &&
+              <>
+                <MetadataSection
+                  title="print.photo"
+                  fields={photo.data}/>
+                <PhotoInfo photo={photo}/>
+              </>}
             {hasNotes && !canOverflow &&
               <NoteList
                 notes={photo.notes}
                 heading="print.notes"/>}
           </div>
         </div>}
-      {!hasMetadata && hasNotes && !canOverflow &&
-        <NoteList
-          notes={photo.notes}
-          heading="print.notes"/>}
       {hasNotes && canOverflow &&
         <NoteList notes={photo.notes}/>}
     </div>
