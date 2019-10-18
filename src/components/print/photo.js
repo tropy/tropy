@@ -22,10 +22,6 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
     .fromExifOrientation(photo.orientation)
     .add(photo)
 
-  let notes = hasNotes ?
-    <NoteList notes={photo.notes}/> :
-    null
-
   return (
     <div className={cx('photo', 'container', rotation.mode(photo), {
       overflow: canOverflow,
@@ -38,12 +34,15 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
           loading="eager"
           src={Cache.src(cache, photo)}/>
       </div>
-      {(hasMetadata || (notes && !canOverflow)) &&
+      {(hasMetadata || (hasNotes && !canOverflow)) &&
         <MetadataContainer
           item={hasMetadata ? item : null}
           photo={hasMetadata ? photo : null}
-          notes={canOverflow ? null : notes}/>}
-      {canOverflow && notes}
+          notes={hasNotes && !canOverflow &&
+            <NoteList notes={photo.notes}
+              heading="print.notes"/>}/>}
+      {hasNotes && canOverflow &&
+        <NoteList notes={photo.notes}/>}
     </div>
   )
 }
