@@ -37,6 +37,7 @@ const defaults = {
   overlayToolbars: ARGS.frameless,
   print: {
     mode: 'photo',
+    photos: true,
     metadata: true,
     notes: true,
     overflow: false
