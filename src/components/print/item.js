@@ -11,6 +11,7 @@ const Item = ({ item, ...props }) => (
 
 Item.propTypes = {
   canOverflow: bool,
+  hasPhotos: bool,
   hasMetadata: bool,
   hasNotes: bool,
   cache: string,

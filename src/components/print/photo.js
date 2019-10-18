@@ -17,15 +17,18 @@ const {
 } = require('prop-types')
 
 
-const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
+const Photo = ({
+  canOverflow, item, hasPhotos, hasMetadata, hasNotes, photo, cache
+}) => {
   let rotation = Rotation
     .fromExifOrientation(photo.orientation)
     .add(photo)
 
   return (
     <div className={cx('photo', 'container', rotation.mode(photo), {
-      overflow: canOverflow,
-      metadata: hasMetadata || hasNotes
+      'overflow': canOverflow,
+      'metadata': hasMetadata || hasNotes,
+      'text-only': !hasPhotos
     })}>
       <div className="photo-container">
         <img
@@ -49,6 +52,7 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
 
 Photo.propTypes = {
   canOverflow: bool,
+  hasPhotos: bool,
   hasMetadata: bool,
   hasNotes: bool,
   item: object,
