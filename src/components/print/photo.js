@@ -1,10 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { MetadataSection } = require('./metadata')
+const { MetadataContainer } = require('./metadata')
 const { NoteList } = require('./note')
-const { ItemInfo } = require('../item/info')
-const { PhotoInfo } = require('../photo/info')
 const cx = require('classnames')
 const { Rotation } = require('../../common/iiif')
 const { Cache } = require('../../common/cache')
@@ -24,10 +22,15 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
     .fromExifOrientation(photo.orientation)
     .add(photo)
 
+  let notes = hasNotes ?
+    <NoteList notes={photo.notes}/> :
+    null
+
   return (
-    <div className={cx('photo', 'container',
-      rotation.mode(photo),
-      { overflow: canOverflow, metadata: hasMetadata || hasNotes })}>
+    <div className={cx('photo', 'container', rotation.mode(photo), {
+      overflow: canOverflow,
+      metadata: hasMetadata || hasNotes
+    })}>
       <div className="photo-container">
         <img
           className={`iiif rot-${rotation.format('x')}`}
@@ -35,34 +38,12 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
           loading="eager"
           src={Cache.src(cache, photo)}/>
       </div>
-      {(hasMetadata || hasNotes) &&
-        <div className={cx('metadata-container')}>
-          <div className="col">
-            {hasMetadata &&
-              <>
-                <MetadataSection
-                  title="print.item"
-                  fields={item.data}
-                  tags={item.tags}/>
-                <ItemInfo item={item}/>
-              </>}
-          </div>
-          <div className="col">
-            {hasMetadata &&
-              <>
-                <MetadataSection
-                  title="print.photo"
-                  fields={photo.data}/>
-                <PhotoInfo photo={photo}/>
-              </>}
-            {hasNotes && !canOverflow &&
-              <NoteList
-                notes={photo.notes}
-                heading="print.notes"/>}
-          </div>
-        </div>}
-      {hasNotes && canOverflow &&
-        <NoteList notes={photo.notes}/>}
+      {(hasMetadata || (notes && !canOverflow)) &&
+        <MetadataContainer
+          item={hasMetadata ? item : null}
+          photo={hasMetadata ? photo : null}
+          notes={canOverflow ? null : notes}/>}
+      {canOverflow && notes}
     </div>
   )
 }
