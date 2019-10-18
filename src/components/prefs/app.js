@@ -245,12 +245,26 @@ class AppPrefs extends React.PureComponent {
             onChange={this.handlePrintSettingsChange}/>
           <FormElement isCompact>
             <Toggle
+              id="prefs.app.print.photos"
+              isDisabled={
+                !this.props.settings.print.metadata &&
+                !this.props.settings.print.notes}
+              name="photos"
+              value={this.props.settings.print.photos}
+              onChange={this.handlePrintSettingsChange}/>
+            <Toggle
               id="prefs.app.print.metadata"
+              isDisabled={
+                !this.props.settings.print.photos &&
+                !this.props.settings.print.notes}
               name="metadata"
               value={this.props.settings.print.metadata}
               onChange={this.handlePrintSettingsChange}/>
             <Toggle
               id="prefs.app.print.notes"
+              isDisabled={
+                !this.props.settings.print.photos &&
+                !this.props.settings.print.metadata}
               name="notes"
               value={this.props.settings.print.notes}
               onChange={this.handlePrintSettingsChange}/>
