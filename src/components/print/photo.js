@@ -35,21 +35,26 @@ const Photo = ({ canOverflow, item, hasMetadata, hasNotes, photo, cache }) => {
           loading="eager"
           src={Cache.src(cache, photo)}/>
       </div>
-      {hasMetadata &&
+      {(hasMetadata || hasNotes) &&
         <div className={cx('metadata-container')}>
-          {item &&
-            <div className="col">
-              <MetadataSection
-                title="print.item"
-                fields={item.data}
-                tags={item.tags}/>
-              <ItemInfo item={item}/>
-            </div>}
           <div className="col">
-            <MetadataSection
-              title="print.photo"
-              fields={photo.data}/>
-            <PhotoInfo photo={photo}/>
+            {hasMetadata &&
+              <>
+                <MetadataSection
+                  title="print.item"
+                  fields={item.data}
+                  tags={item.tags}/>
+                <ItemInfo item={item}/>
+              </>}
+          </div>
+          <div className="col">
+            {hasMetadata &&
+              <>
+                <MetadataSection
+                  title="print.photo"
+                  fields={photo.data}/>
+                <PhotoInfo photo={photo}/>
+              </>}
             {hasNotes && !canOverflow &&
               <NoteList
                 notes={photo.notes}
