@@ -94,12 +94,20 @@ class Tropy extends EventEmitter {
     prop(this, 'plugins', {
       value: new Plugins(join(opts.data, 'plugins'))
     })
+
+    prop(this, 'api', {
+      value: this.opts.port && new (require('./api'))(this)
+    })
   }
 
   async start() {
     await this.restore()
     this.listen()
     this.wm.start()
+
+    if (this.opts.port) {
+      this.api.start()
+    }
   }
 
   stop() {
