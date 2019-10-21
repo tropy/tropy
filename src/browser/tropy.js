@@ -32,6 +32,7 @@ const { Strings } = require('../common/res')
 const Storage = require('./storage')
 const Updater = require('./updater')
 const dialog = require('./dialog')
+const API = require('./api')
 const WindowManager = require('./wm')
 const { addIdleObserver } = require('./idle')
 const { migrate } = require('./migrate')
@@ -78,6 +79,7 @@ class Tropy extends EventEmitter {
     this.updater = new Updater({
       enable: process.env.NODE_ENV === 'production' && opts['auto-updates']
     })
+    this.api = new API.Server(this)
 
     prop(this, 'cache', {
       value: new Cache(opts.cache || join(opts.data, 'cache'))
@@ -94,23 +96,17 @@ class Tropy extends EventEmitter {
     prop(this, 'plugins', {
       value: new Plugins(join(opts.data, 'plugins'))
     })
-
-    prop(this, 'api', {
-      value: this.opts.port && new (require('./api'))(this)
-    })
   }
 
   async start() {
     await this.restore()
     this.listen()
     this.wm.start()
-
-    if (this.opts.port) {
-      this.api.start()
-    }
+    this.api.start()
   }
 
   stop() {
+    this.api.stop()
     this.updater.stop()
     this.plugins.stop()
     this.persist()
