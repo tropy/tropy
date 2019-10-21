@@ -1,10 +1,11 @@
 'use strict'
 
+const { info, logger } = require('../common/log')
+
 class Server {
   constructor(app) {
     if (app.opts.port) {
       let api = require('../common/api')
-      let { logger } = require('../common/log')
 
       this.koa = api.create({
         dispatch: this.dispatch,
@@ -21,7 +22,9 @@ class Server {
 
   start() {
     if (this.koa) {
-      this.koa.listen(this.app.opts.port)
+      let { port } = this.app.opts
+      info(`starting api on port ${port}`)
+      this.koa.listen(port)
     }
   }
 
