@@ -24,7 +24,7 @@ Note.propTypes = {
 
 const NoteList = ({ notes, heading }) =>
   notes.length === 0 ? null : (
-    <div className="notes">
+    <div className="note-list">
       {heading &&
         <h5 className="notes-heading">
           <FormattedMessage id={heading}/>

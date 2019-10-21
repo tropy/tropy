@@ -27,16 +27,19 @@ const Photo = ({
   return (
     <div className={cx('photo', 'container', rotation.mode(photo), {
       'overflow': canOverflow,
-      'metadata': hasMetadata || hasNotes,
+      'metadata': hasMetadata,
+      'notes': hasNotes,
       'text-only': !hasPhotos
     })}>
-      <div className="photo-container">
-        <img
-          className={`iiif rot-${rotation.format('x')}`}
-          decoding="sync"
-          loading="eager"
-          src={Cache.src(cache, photo)}/>
-      </div>
+      {hasPhotos &&
+        <div className="photo-container">
+          <img
+            className={`iiif rot-${rotation.format('x')}`}
+            decoding="sync"
+            loading="eager"
+            src={Cache.src(cache, photo)}/>
+        </div>
+      }
       {(hasMetadata || (hasNotes && !canOverflow)) &&
         <MetadataContainer
           item={hasMetadata ? item : null}
