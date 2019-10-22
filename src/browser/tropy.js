@@ -716,6 +716,10 @@ class Tropy extends EventEmitter {
       })
     }
 
+    ipc.on('api', (event, payload, error, meta) => {
+      this.api.onResponse({ error, payload, meta })
+    })
+
     ipc.on('cmd', (event, cmd, ...args) => {
       this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
     })

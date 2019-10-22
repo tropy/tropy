@@ -1,6 +1,7 @@
 'use strict'
 
-const { info, logger } = require('../common/log')
+const { info, warn, logger } = require('../common/log')
+const { counter } = require('../common/util')
 
 class Server {
   constructor(app) {
@@ -15,9 +16,36 @@ class Server {
     }
 
     this.app = app
+    this.seq = counter()
+    this.pending = {}
   }
 
-  dispatch = async () => {
+  dispatch = (action) => {
+    return new Promise((resolve, reject) => {
+      let win = this.app.wm.current()
+      action.meta.id = this.seq.next().value
+
+      if (this.app.dispatch(action, win))
+        this.pending[action.meta.id] = { resolve, reject }
+      else
+        reject()
+    })
+  }
+
+  onResponse({ error, payload, meta }) {
+    try {
+      if (error)
+        this.pending[meta.id].reject(payload)
+      else
+        this.pending[meta.id].resolve({ payload, meta })
+
+    } catch (e) {
+      warn({
+        stack: e.stack
+      }, `failed to resolve API req #${meta.id}: ${e.message}`)
+    } finally {
+      delete this.pending[meta.id]
+    }
   }
 
   start() {

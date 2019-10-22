@@ -15,12 +15,12 @@ const { TAG, HISTORY } = require('../constants')
 
 module.exports = {
 
-  *forward(filter, { type, payload, meta }) {
+  *forward(filter, { type, payload, error, meta }) {
     try {
       const event = meta.ipc === true ? type : meta.ipc
       const data = yield call(filter[event] || identity, payload)
 
-      yield call([ipc, ipc.send], event, data)
+      yield call([ipc, ipc.send], event, data, error, meta)
 
     } catch (e) {
       warn({ stack: e.stack }, 'unexpected error in *ipc:forward')

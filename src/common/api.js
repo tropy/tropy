@@ -3,6 +3,23 @@
 const Koa = require('koa')
 const Router = require('@koa/router')
 
+const act = require('../actions/api')
+
+const project = {
+  async import(ctx) {
+    let { assert, query, dispatch } = ctx
+
+    assert.ok(query.file, 400, 'missing file parameter')
+
+    let res = await dispatch(act.project.import({
+      files: query.file,
+      list: query.list
+    }))
+
+    ctx.body = res.payload
+  }
+}
+
 const create = ({ dispatch, log, version }) => {
   let app = new Koa
   let api = new Router
@@ -19,6 +36,8 @@ const create = ({ dispatch, log, version }) => {
   app.context.log = log
 
   api
+    .get('/project/import', project.import)
+
     .get('/version', (ctx) => {
       ctx.body = { version }
     })
@@ -38,6 +57,8 @@ const logging = async (ctx, next) => {
   ctx.log.debug({
     ms: Date.now() - START,
     status: ctx.status,
+    method: ctx.method,
+    query: ctx.query,
     url: ctx.url
   })
 }
