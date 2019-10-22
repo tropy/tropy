@@ -25,6 +25,7 @@ class PrintContainer extends React.Component {
   onPrint = (opts) => {
     this.setState({
       canOverflow: opts.overflow,
+      hasPhotos: opts.photos,
       hasMetadata: opts.metadata,
       hasNotes: opts.notes,
       items: opts.items,
@@ -58,6 +59,7 @@ class PrintContainer extends React.Component {
           item={item}
           cache={this.state.cache}
           canOverflow={this.state.canOverflow}
+          hasPhotos={this.state.hasPhotos}
           hasMetadata={this.state.hasMetadata}
           hasNotes={this.state.hasNotes}/>)
     )

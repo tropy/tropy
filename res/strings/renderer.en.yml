@@ -106,6 +106,7 @@ en:
           item: One item per page
           photo: One photo per page
           selection: One selection per page
+        photos: Include photos
         metadata: Include metadata
         notes: Include notes
         overflow: Allow content to take up more than one page
