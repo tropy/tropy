@@ -7,11 +7,11 @@ const act = require('../actions/api')
 
 const project = {
   async import(ctx) {
-    let { assert, query, dispatch } = ctx
+    let { assert, query, rsvp } = ctx
 
     assert.ok(query.file, 400, 'missing file parameter')
 
-    let res = await dispatch(act.project.import({
+    let res = await rsvp('project', act.project.import({
       files: query.file,
       list: query.list
     }))
@@ -20,7 +20,7 @@ const project = {
   }
 }
 
-const create = ({ dispatch, log, version }) => {
+const create = ({ dispatch, log, rsvp, version }) => {
   let app = new Koa
   let api = new Router
 
@@ -34,6 +34,7 @@ const create = ({ dispatch, log, version }) => {
 
   app.context.dispatch = dispatch
   app.context.log = log
+  app.context.rsvp = rsvp
 
   api
     .get('/project/import', project.import)

@@ -15,9 +15,9 @@ module.exports = {
       payload,
       error,
       meta: {
-        id: action.meta.id,
-        ipc: action.meta.api ? 'api' : action.meta.ipc,
+        ipc: action.meta.ipc,
         idx: action.meta.idx,
+        rsvp: action.meta.rsvp,
         search: action.meta.search,
         ...meta,
         done: true,

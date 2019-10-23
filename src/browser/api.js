@@ -1,7 +1,6 @@
 'use strict'
 
-const { info, warn, logger } = require('../common/log')
-const { counter } = require('../common/util')
+const { info, logger } = require('../common/log')
 
 class Server {
   constructor(app) {
@@ -11,42 +10,21 @@ class Server {
       this.koa = api.create({
         dispatch: this.dispatch,
         log: logger.child({ name: 'api' }),
+        rsvp: this.rsvp,
         version: app.version
       })
     }
 
     this.app = app
-    this.seq = counter()
-    this.pending = {}
   }
 
-  dispatch = (action) => {
-    return new Promise((resolve, reject) => {
-      let win = this.app.wm.current()
-      action.meta.id = this.seq.next().value
-
-      if (this.app.dispatch(action, win))
-        this.pending[action.meta.id] = { resolve, reject }
-      else
-        reject()
-    })
+  dispatch = (type, action) => {
+    this.app.wm.current(type).webContents.send('dispatch', action)
   }
 
-  onResponse({ error, payload, meta }) {
-    try {
-      if (error)
-        this.pending[meta.id].reject(payload)
-      else
-        this.pending[meta.id].resolve({ payload, meta })
-
-    } catch (e) {
-      warn({
-        stack: e.stack
-      }, `failed to resolve API req #${meta.id}: ${e.message}`)
-    } finally {
-      delete this.pending[meta.id]
-    }
-  }
+  rsvp = (type, action) => (
+    this.app.wm.rsvp(type, action)
+  )
 
   start() {
     if (this.koa) {

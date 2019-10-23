@@ -399,15 +399,15 @@ class Tropy extends EventEmitter {
       this.dispatch(act.item.export(target.id, { plugin }), win))
 
     this.on('app:restore-item', (win, { target }) => {
-      this.dispatch(act.item.restore(target.id))
+      this.dispatch(act.item.restore(target.id), win)
     })
 
     this.on('app:destroy-item', (win, { target }) => {
-      this.dispatch(act.item.destroy(target.id))
+      this.dispatch(act.item.destroy(target.id), win)
     })
 
     this.on('app:create-item-photo', (win, { target }) => {
-      this.dispatch(act.photo.create({ item: target.id }))
+      this.dispatch(act.photo.create({ item: target.id }), win)
     })
 
     this.on('app:toggle-item-tag', (win, { id, tag }) => {
@@ -415,7 +415,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:clear-item-tags', (win, { id }) => {
-      this.dispatch(act.item.tags.clear(id))
+      this.dispatch(act.item.tags.clear(id), win)
     })
 
     this.on('app:list-item-remove', (win, { target }) => {
@@ -715,10 +715,6 @@ class Tropy extends EventEmitter {
         for (let id of ids) prefs.unsubscribeNotification(id)
       })
     }
-
-    ipc.on('api', (event, payload, error, meta) => {
-      this.api.onResponse({ error, payload, meta })
-    })
 
     ipc.on('cmd', (event, cmd, ...args) => {
       this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
