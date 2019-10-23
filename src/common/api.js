@@ -2,7 +2,6 @@
 
 const Koa = require('koa')
 const Router = require('@koa/router')
-
 const act = require('../actions/api')
 
 const project = {
@@ -11,12 +10,37 @@ const project = {
 
     assert.ok(query.file, 400, 'missing file parameter')
 
-    let res = await rsvp('project', act.project.import({
+    let { payload } = await rsvp('project', act.import({
       files: query.file,
       list: query.list
     }))
 
-    ctx.body = res.payload
+    ctx.body = payload
+  },
+
+  items: {
+    async find(ctx) {
+      let { query, rsvp } = ctx
+
+      let { payload } = await rsvp('project', act.item.find({
+        tags: query.tag
+      }))
+
+      ctx.body = payload
+    },
+
+    async show(ctx) {
+      let { params, rsvp } = ctx
+
+      let { payload } = await rsvp('project', act.item.show({
+        id: params.id
+      }))
+
+      if (payload != null)
+        ctx.body = payload
+      else
+        ctx.status = 404
+    }
   }
 }
 
@@ -38,6 +62,9 @@ const create = ({ dispatch, log, rsvp, version }) => {
 
   api
     .get('/project/import', project.import)
+
+    .get('/project/items', project.items.find)
+    .get('/project/items/:id', project.items.show)
 
     .get('/version', (ctx) => {
       ctx.body = { version }

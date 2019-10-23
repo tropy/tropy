@@ -1,23 +1,47 @@
 'use strict'
 
-const { ITEM } = require('../constants')
+const { API, ITEM } = require('../constants')
 const { array } = require('../common/util')
 
 module.exports = {
-  project: {
-    import({ files, ...payload }, meta) {
+  import({ files, ...payload }, meta) {
+    return {
+      type: ITEM.IMPORT,
+      payload: {
+        ...payload,
+        files: array(files)
+      },
+      meta: {
+        cmd: 'project',
+        history: 'add',
+        search: true,
+        prompt: false,
+        ...meta
+      }
+    }
+  },
+
+  item: {
+    find({ tags, ...payload }, meta) {
       return {
-        type: ITEM.IMPORT,
+        type: API.ITEM.FIND,
         payload: {
-          files: array(files),
-          ...payload
+          ...payload,
+          tags: array(tags)
         },
         meta: {
-          api: true,
           cmd: 'project',
-          history: 'add',
-          search: true,
-          prompt: false,
+          ...meta
+        }
+      }
+    },
+
+    show(payload, meta) {
+      return {
+        type: API.ITEM.SHOW,
+        payload,
+        meta: {
+          cmd: 'project',
           ...meta
         }
       }
