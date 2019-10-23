@@ -4,17 +4,6 @@ const { info, logger } = require('../common/log')
 
 class Server {
   constructor(app) {
-    if (app.opts.port) {
-      let api = require('../common/api')
-
-      this.koa = api.create({
-        dispatch: this.dispatch,
-        log: logger.child({ name: 'api' }),
-        rsvp: this.rsvp,
-        version: app.version
-      })
-    }
-
     this.app = app
   }
 
@@ -27,9 +16,19 @@ class Server {
   )
 
   start() {
-    if (this.koa) {
-      let { port } = this.app.opts
-      info(`starting api on port ${port}`)
+    if (this.app.state.api || this.app.opts.port) {
+      let api = require('../common/api')
+
+      this.koa = api.create({
+        dispatch: this.dispatch,
+        log: logger.child({ name: 'api' }),
+        rsvp: this.rsvp,
+        version: this.app.version
+      })
+
+      let port = this.app.opts.port || this.app.state.port
+
+      info(`api.start on port ${port}`)
       this.koa.listen(port)
     }
   }

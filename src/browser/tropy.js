@@ -54,6 +54,7 @@ class Tropy extends EventEmitter {
   static defaults = {
     frameless: darwin,
     debug: false,
+    port: 2019,
     theme: darwin ? 'system' : 'light',
     recent: [],
     updater: true,
