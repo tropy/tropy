@@ -51,7 +51,7 @@ const project = {
     async save(ctx) {
       let { assert, params, request, rsvp } = ctx
 
-      assert.ok(request.body, 400, 'missing request body')
+      assert.ok(request.is('json'), 400, 'missing json data')
 
       let { payload } = await rsvp('project', act.metadata.save({
         id: params.id,
