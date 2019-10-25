@@ -4,6 +4,20 @@ const Koa = require('koa')
 const Router = require('@koa/router')
 const act = require('../actions/api')
 
+const show = (type) =>
+  async (ctx) => {
+    let { params, rsvp } = ctx
+
+    let { payload } = await rsvp('project', act[type].show({
+      id: params.id
+    }))
+
+    if (payload != null)
+      ctx.body = payload
+    else
+      ctx.status = 404
+  }
+
 const project = {
   async import(ctx) {
     let { assert, query, rsvp } = ctx
@@ -29,18 +43,15 @@ const project = {
       ctx.body = payload
     },
 
-    async show(ctx) {
-      let { params, rsvp } = ctx
+    show: show('item')
+  },
 
-      let { payload } = await rsvp('project', act.item.show({
-        id: params.id
-      }))
+  photos: {
+    show: show('photo')
+  },
 
-      if (payload != null)
-        ctx.body = payload
-      else
-        ctx.status = 404
-    }
+  selections: {
+    show: show('selection')
   }
 }
 
@@ -65,6 +76,9 @@ const create = ({ dispatch, log, rsvp, version }) => {
 
     .get('/project/items', project.items.find)
     .get('/project/items/:id', project.items.show)
+
+    .get('/project/photos/:id', project.photos.show)
+    .get('/project/selections/:id', project.photos.show)
 
     .get('/version', (ctx) => {
       ctx.body = { version }

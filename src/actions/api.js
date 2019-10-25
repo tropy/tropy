@@ -46,5 +46,31 @@ module.exports = {
         }
       }
     }
+  },
+
+  photo: {
+    show(payload, meta) {
+      return {
+        type: API.PHOTO.SHOW,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    }
+  },
+
+  selection: {
+    show(payload, meta) {
+      return {
+        type: API.SELECTION.SHOW,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    }
   }
 }

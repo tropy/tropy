@@ -3,12 +3,12 @@
 const { select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { API } = require('../constants')
-const { pick } = require('../common/util')
+const { pluck } = require('../common/util')
 //const act = require('../actions')
 //const mod = require('../models')
 
 
-class Find extends Command {
+class ItemFind extends Command {
   static get ACTION() {
     return API.ITEM.FIND
   }
@@ -17,7 +17,7 @@ class Find extends Command {
   }
 }
 
-class Show extends Command {
+class ItemShow extends Command {
   static get ACTION() {
     return API.ITEM.SHOW
   }
@@ -25,22 +25,50 @@ class Show extends Command {
   *exec() {
     let { id } = this.action.payload
 
-    let [item, data] = yield select(state => ([
-      state.items[id],
-      state.metadata[id]
-    ]))
+    let { items, metadata, photos, notes } = yield select()
 
-    if (item == null)
+    if (!(id in items))
       return  null
 
-    let photos = yield select(state =>
-      pick(state.photos, item.photos))
-
-    return { ...item, data, photos }
+    return {
+      ...items[id],
+      data: metadata[id],
+      photos: pluck(photos, items[id].photos).map(photo => ({
+        ...photo,
+        notes: pluck(notes, photo.notes)
+      }))
+    }
   }
 }
 
+class PhotoShow extends Command {
+  static get ACTION() {
+    return API.PHOTO.SHOW
+  }
+
+  *exec() {
+    let { id } = this.action.payload
+    let photo = yield select(state => state.photos[id])
+    return photo
+  }
+}
+
+class SelectionShow extends Command {
+  static get ACTION() {
+    return API.SELECTION.SHOW
+  }
+
+  *exec() {
+    let { id } = this.action.payload
+    let selection = yield select(state => state.selections[id])
+    return selection
+  }
+}
+
+
 module.exports = {
-  Find,
-  Show
+  ItemFind,
+  ItemShow,
+  PhotoShow,
+  SelectionShow
 }
