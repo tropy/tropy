@@ -18,11 +18,22 @@ const {
 
 
 const Photo = ({
-  canOverflow, item, hasPhotos, hasMetadata, hasNotes, photo, cache
+  canOverflow,
+  item,
+  hasPhotos,
+  hasMetadata,
+  hasNotes,
+  photo,
+  cache
 }) => {
   let rotation = Rotation
     .fromExifOrientation(photo.orientation)
     .add(photo)
+
+  if (hasPhotos && !(hasMetadata || hasNotes)) {
+    let [x, y] = rotation.ratio(photo)
+    var ratio = { '--x': x, '--y': y }
+  }
 
   return (
     <div className={cx('photo', 'container', rotation.mode(photo), {
@@ -37,7 +48,8 @@ const Photo = ({
             className={`iiif rot-${rotation.format('x')}`}
             decoding="sync"
             loading="eager"
-            src={Cache.src(cache, photo)}/>
+            src={Cache.src(cache, photo)}
+            style={ratio}/>
         </div>
       }
       {(hasMetadata || (hasNotes && !canOverflow)) &&
@@ -45,7 +57,8 @@ const Photo = ({
           item={hasMetadata ? item : null}
           photo={hasMetadata ? photo : null}
           notes={hasNotes && !canOverflow &&
-            <NoteList notes={photo.notes}
+            <NoteList
+              notes={photo.notes}
               heading="print.notes"/>}/>}
       {hasNotes && canOverflow &&
         <NoteList notes={photo.notes}/>}
