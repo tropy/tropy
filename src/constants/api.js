@@ -7,6 +7,7 @@ module.exports = {
   },
 
   PHOTO: {
+    FIND: 'api.photo.find',
     SHOW: 'api.photo.show'
   },
 

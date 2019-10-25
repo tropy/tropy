@@ -48,7 +48,31 @@ module.exports = {
     }
   },
 
+  note: {
+    show(payload, meta) {
+      return {
+        type: API.NOTE.SHOW,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    }
+  },
+
   photo: {
+    find(payload, meta) {
+      return {
+        type: API.PHOTO.FIND,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    },
+
     show(payload, meta) {
       return {
         type: API.PHOTO.SHOW,

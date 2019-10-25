@@ -9,7 +9,7 @@ const show = (type) =>
     let { params, rsvp } = ctx
 
     let { payload } = await rsvp('project', act[type].show({
-      id: params.id
+      id: params[type]
     }))
 
     if (payload != null)
@@ -46,7 +46,49 @@ const project = {
     show: show('item')
   },
 
+  notes: {
+    async show(ctx) {
+      let { assert, params, query, rsvp } = ctx
+
+      if (query.format)
+        assert(
+          (/^(json|html|plain|text|md|markdown)$/).test(query.format),
+          400,
+          'format unknown')
+
+      let { payload } = await rsvp('project', act.note.show({
+        id: params.note,
+        format: query.format
+      }))
+
+      if (payload != null) {
+        if (query.format === 'html')
+          ctx.type = 'text/html'
+        if (query.format === 'markdown' || query.format === 'md')
+          ctx.type = 'text/markdown'
+
+        ctx.body = payload
+
+      } else {
+        ctx.status = 404
+      }
+    }
+  },
+
   photos: {
+    async find(ctx) {
+      let { params, rsvp } = ctx
+
+      let { payload } = await rsvp('project', act.photo.find({
+        item: params.item
+      }))
+
+      if (payload != null)
+        ctx.body = payload
+      else
+        ctx.status = 404
+    },
+
     show: show('photo')
   },
 
@@ -75,10 +117,13 @@ const create = ({ dispatch, log, rsvp, version }) => {
     .get('/project/import', project.import)
 
     .get('/project/items', project.items.find)
-    .get('/project/items/:id', project.items.show)
+    .get('/project/items/:item', project.items.show)
+    .get('/project/items/:item/photos', project.photos.find)
 
-    .get('/project/photos/:id', project.photos.show)
-    .get('/project/selections/:id', project.photos.show)
+    .get('/project/notes/:note', project.notes.show)
+    .get('/project/photos/:photo', project.photos.show)
+    .get('/project/selections/:selection', project.photos.show)
+
 
     .get('/version', (ctx) => {
       ctx.body = { version }
