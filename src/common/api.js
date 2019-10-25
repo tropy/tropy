@@ -35,10 +35,14 @@ const project = {
 
   items: {
     async find(ctx) {
-      let { query, rsvp } = ctx
+      let { params, query, rsvp } = ctx
+      let { sort = 'item.created', reverse = false } = query
 
       let { payload } = await rsvp('project', act.item.find({
-        tags: query.tag
+        tags: query.tag,
+        list: params.id,
+        sort: { column: sort, asc: !reverse },
+        query: query.q
       }))
 
       ctx.body = payload
@@ -51,7 +55,7 @@ const project = {
     async save(ctx) {
       let { assert, params, request, rsvp } = ctx
 
-      assert.ok(request.is('json'), 400, 'missing json data')
+      assert(request.is('json'), 400, 'missing json data')
 
       let { payload } = await rsvp('project', act.metadata.save({
         id: params.id,
@@ -137,6 +141,8 @@ const create = ({ dispatch, log, rsvp, version }) => {
     .get('/project/items', project.items.find)
     .get('/project/items/:id', project.items.show)
     .get('/project/items/:id/photos', project.photos.find)
+
+    .get('/project/list/:id/items', project.items.find)
 
     .post('/project/data/:id', project.data.save)
     .get('/project/data/:id', project.data.show)
