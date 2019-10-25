@@ -23,11 +23,11 @@ const project = {
   async import(ctx) {
     let { assert, request, rsvp } = ctx
 
-    assert.ok(request.file, 400, 'missing file parameter')
+    assert.ok(request.body.file, 400, 'missing file parameter')
 
     let { payload } = await rsvp('project', act.import({
-      files: request.file,
-      list: request.list
+      files: request.body.file,
+      list: request.body.list
     }))
 
     ctx.body = payload
