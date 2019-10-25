@@ -114,8 +114,6 @@ img {
   }
 
   .overflow.text-only & {
-    padding-bottom: $print-page-margin - 4.2mm;
-
     @media (orientation: portrait) {
       min-height: 0;
     }
@@ -234,6 +232,10 @@ label {
     font-size: $print-font-size-large;
     line-height: $print-font-size-large * $print-line-height-large;
     letter-spacing: 0;
+  }
+
+  .overflow.metadata & {
+    margin-top: $print-page-margin - 4.2mm;
   }
 
   label {
