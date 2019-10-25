@@ -17,10 +17,14 @@ const format = log =>
 const end = log =>
   log.quit ? '\n\n' : '\n'
 
-const body = log =>
-  log.action ?
-    `${log.action} ${chalk.gray(meta(log))}` :
-    log.msg || log.message
+const body = log => {
+  if (log.action)
+    return `${log.action} ${chalk.gray(meta(log))}`
+  if (log.url)
+    return `${log.url} ${chalk.gray(`${log.status} Δ${ms(log.ms)}`)}`
+  else
+    return log.msg || log.message
+}
 
 const error = ({ stack }) =>
   stack ?
@@ -43,6 +47,7 @@ const symbol = log =>
 
 const SYMBOL = {
   about: 'α',
+  api: 'λ',
   main: 'β',
   prefs: 'σ',
   print: 'π',

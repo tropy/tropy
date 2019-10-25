@@ -101,6 +101,7 @@
   },
   "dependencies": {
     "@inukshuk/exif": "^2.0.0",
+    "@koa/router": "^8.0.2",
     "@pixi/filter-adjustment": "^2.7.0",
     "@tweenjs/tween.js": "^18.3.1",
     "bluebird": "^3.7.1",
@@ -110,6 +111,8 @@
     "generic-pool": "^3.7.1",
     "js-yaml": "^3.13.1",
     "jsonld": "^1.8.0",
+    "koa": "^2.10.0",
+    "koa-bodyparser": "^4.2.1",
     "lodash.debounce": "^4.0.7",
     "lodash.throttle": "^4.1.1",
     "memoize-one": "^5.1.1",
