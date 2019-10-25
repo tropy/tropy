@@ -1,6 +1,6 @@
 'use strict'
 
-const { API, ITEM } = require('../constants')
+const { API, ITEM, METADATA } = require('../constants')
 const { array } = require('../common/util')
 
 module.exports = {
@@ -39,6 +39,33 @@ module.exports = {
     show(payload, meta) {
       return {
         type: API.ITEM.SHOW,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    }
+  },
+
+  metadata: {
+    save({ id, ...payload }, meta) {
+      return {
+        type: METADATA.SAVE,
+        payload: {
+          ids: array(id),
+          ...payload
+        },
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    },
+
+    show(payload, meta) {
+      return {
+        type: API.METADATA.SHOW,
         payload,
         meta: {
           cmd: 'project',

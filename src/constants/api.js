@@ -19,6 +19,10 @@ module.exports = {
     SHOW: 'api.note.show'
   },
 
+  METADATA: {
+    SHOW: 'api.metadata.show'
+  },
+
   TAG: {
     LIST: 'api.tag.list',
     SHOW: 'api.tag.show'

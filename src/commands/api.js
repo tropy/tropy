@@ -30,6 +30,18 @@ class ItemShow extends Command {
   }
 }
 
+class MetadataShow extends Command {
+  static get ACTION() {
+    return API.METADATA.SHOW
+  }
+
+  *exec() {
+    let { id } = this.action.payload
+    let data = yield select(state => state.metadata[id])
+    return data
+  }
+}
+
 class NoteShow extends Command {
   static get ACTION() {
     return API.NOTE.SHOW
@@ -105,6 +117,7 @@ class SelectionShow extends Command {
 module.exports = {
   ItemFind,
   ItemShow,
+  MetadataShow,
   NoteShow,
   PhotoFind,
   PhotoShow,

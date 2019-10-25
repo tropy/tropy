@@ -2,6 +2,7 @@
 
 const Koa = require('koa')
 const Router = require('@koa/router')
+const bodyParser = require('koa-bodyparser')
 const act = require('../actions/api')
 
 const show = (type) =>
@@ -9,7 +10,7 @@ const show = (type) =>
     let { params, rsvp } = ctx
 
     let { payload } = await rsvp('project', act[type].show({
-      id: params[type]
+      id: params.id
     }))
 
     if (payload != null)
@@ -20,13 +21,13 @@ const show = (type) =>
 
 const project = {
   async import(ctx) {
-    let { assert, query, rsvp } = ctx
+    let { assert, request, rsvp } = ctx
 
-    assert.ok(query.file, 400, 'missing file parameter')
+    assert.ok(request.file, 400, 'missing file parameter')
 
     let { payload } = await rsvp('project', act.import({
-      files: query.file,
-      list: query.list
+      files: request.file,
+      list: request.list
     }))
 
     ctx.body = payload
@@ -44,6 +45,23 @@ const project = {
     },
 
     show: show('item')
+  },
+
+  data: {
+    async save(ctx) {
+      let { assert, params, request, rsvp } = ctx
+
+      assert.ok(request.body, 400, 'missing request body')
+
+      let { payload } = await rsvp('project', act.metadata.save({
+        id: params.id,
+        data: request.body
+      }))
+
+      ctx.body = payload
+    },
+
+    show: show('metadata')
   },
 
   notes: {
@@ -80,7 +98,7 @@ const project = {
       let { params, rsvp } = ctx
 
       let { payload } = await rsvp('project', act.photo.find({
-        item: params.item
+        item: params.id
       }))
 
       if (payload != null)
@@ -114,16 +132,20 @@ const create = ({ dispatch, log, rsvp, version }) => {
   app.context.rsvp = rsvp
 
   api
-    .get('/project/import', project.import)
+    .post('/project/import', project.import)
 
     .get('/project/items', project.items.find)
-    .get('/project/items/:item', project.items.show)
-    .get('/project/items/:item/photos', project.photos.find)
+    .get('/project/items/:id', project.items.show)
+    .get('/project/items/:id/photos', project.photos.find)
 
-    .get('/project/notes/:note', project.notes.show)
-    .get('/project/photos/:photo', project.photos.show)
-    .get('/project/selections/:selection', project.photos.show)
+    .post('/project/data/:id', project.data.save)
+    .get('/project/data/:id', project.data.show)
 
+    .get('/project/notes/:id', project.notes.show)
+
+    .get('/project/photos/:id', project.photos.show)
+
+    .get('/project/selections/:id', project.photos.show)
 
     .get('/version', (ctx) => {
       ctx.body = { version }
@@ -131,6 +153,7 @@ const create = ({ dispatch, log, rsvp, version }) => {
 
   app
     .use(logging)
+    .use(bodyParser())
     .use(api.routes())
     .use(api.allowedMethods())
 
