@@ -114,6 +114,20 @@ const project = {
     show: show('photo')
   },
 
+  tags: {
+    async list(ctx) {
+      let { query, rsvp } = ctx
+
+      let { payload } = await rsvp('project', act.tag.list({
+        reverse: query.reverse
+      }))
+
+      ctx.body = payload
+    },
+
+    show: show('tag')
+  },
+
   selections: {
     show: show('selection')
   }
@@ -143,6 +157,9 @@ const create = ({ dispatch, log, rsvp, version }) => {
     .get('/project/items/:id/photos', project.photos.find)
 
     .get('/project/list/:id/items', project.items.find)
+
+    .get('/project/tags', project.tags.list)
+    .get('/project/tags/:id', project.tags.show)
 
     .post('/project/data/:id', project.data.save)
     .get('/project/data/:id', project.data.show)

@@ -8,6 +8,11 @@ const { serialize } = require('../export/note')
 //const act = require('../actions')
 const mod = require('../models')
 
+const {
+  findTag,
+  getAllTags
+} = require('../selectors')
+
 
 class ItemFind extends Command {
   static get ACTION() {
@@ -111,6 +116,31 @@ class PhotoShow extends Command {
   }
 }
 
+class TagShow extends Command {
+  static get ACTION() {
+    return API.TAG.SHOW
+  }
+
+  *exec() {
+    let { payload } = this.action
+    let tag = yield select(state => findTag(state, payload))
+    return tag
+  }
+}
+
+class TagList extends Command {
+  static get ACTION() {
+    return API.TAG.LIST
+  }
+
+  *exec() {
+    let { reverse } = this.action.payload
+    let tags = yield select(getAllTags)
+    return reverse ? tags.reverse() : tags
+  }
+}
+
+
 class SelectionShow extends Command {
   static get ACTION() {
     return API.SELECTION.SHOW
@@ -131,5 +161,7 @@ module.exports = {
   NoteShow,
   PhotoFind,
   PhotoShow,
+  TagList,
+  TagShow,
   SelectionShow
 }

@@ -112,6 +112,30 @@ module.exports = {
     }
   },
 
+  tag: {
+    list(payload, meta) {
+      return {
+        type: API.TAG.LIST,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    },
+
+    show(payload, meta) {
+      return {
+        type: API.TAG.SHOW,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    }
+  },
+
   selection: {
     show(payload, meta) {
       return {
