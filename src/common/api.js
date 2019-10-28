@@ -115,14 +115,42 @@ const project = {
   },
 
   tags: {
-    async list(ctx) {
-      let { query, rsvp } = ctx
+    async add(ctx) {
+      let { assert, params, request, rsvp } = ctx
 
-      let { payload } = await rsvp('project', act.tag.list({
-        reverse: query.reverse
+      assert.ok(request.body.tag, 400, 'missing tag parameter')
+
+      let { payload } = await rsvp('project', act.tag.add({
+        id: params.id,
+        tags: request.body.tag
       }))
 
       ctx.body = payload
+    },
+
+    async remove(ctx) {
+      let { params, request, rsvp } = ctx
+
+      let { payload } = await rsvp('project',
+        request.body.tag ?
+          act.tag.remove({ id: params.id, tags: request.body.tag }) :
+          act.tag.clear({ id: params.id }))
+
+      ctx.body = payload
+    },
+
+    async find(ctx) {
+      let { params, query, rsvp } = ctx
+
+      let { payload } = await rsvp('project', act.tag.find({
+        id: params.id,
+        reverse: query.reverse
+      }))
+
+      if (payload != null)
+        ctx.body = payload
+      else
+        ctx.status = 404
     },
 
     show: show('tag')
@@ -155,10 +183,13 @@ const create = ({ dispatch, log, rsvp, version }) => {
     .get('/project/items', project.items.find)
     .get('/project/items/:id', project.items.show)
     .get('/project/items/:id/photos', project.photos.find)
+    .get('/project/items/:id/tags', project.tags.find)
+    .post('/project/items/:id/tags', project.tags.add)
+    .delete('/project/items/:id/tags', project.tags.remove)
 
     .get('/project/list/:id/items', project.items.find)
 
-    .get('/project/tags', project.tags.list)
+    .get('/project/tags', project.tags.find)
     .get('/project/tags/:id', project.tags.show)
 
     .post('/project/data/:id', project.data.save)

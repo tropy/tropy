@@ -128,18 +128,29 @@ class TagShow extends Command {
   }
 }
 
-class TagList extends Command {
+class TagFind extends Command {
   static get ACTION() {
-    return API.TAG.LIST
+    return API.TAG.FIND
   }
 
   *exec() {
-    let { reverse } = this.action.payload
-    let tags = yield select(getAllTags)
-    return reverse ? tags.reverse() : tags
+    let { id, reverse } = this.action.payload
+
+    let tags = (id == null) ?
+      yield select(getAllTags) :
+      yield select(state =>
+        (id in state.items) ?
+          pluck(state.tags, state.items[id].tags) :
+          null)
+
+    if (tags == null)
+      return null
+    if (reverse)
+      return tags.reverse()
+    else
+      return tags
   }
 }
-
 
 class SelectionShow extends Command {
   static get ACTION() {
@@ -161,7 +172,7 @@ module.exports = {
   NoteShow,
   PhotoFind,
   PhotoShow,
-  TagList,
+  TagFind,
   TagShow,
   SelectionShow
 }

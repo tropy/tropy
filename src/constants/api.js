@@ -24,7 +24,7 @@ module.exports = {
   },
 
   TAG: {
-    LIST: 'api.tag.list',
+    FIND: 'api.tag.find',
     SHOW: 'api.tag.show'
   }
 }

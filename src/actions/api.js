@@ -113,12 +113,58 @@ module.exports = {
   },
 
   tag: {
-    list(payload, meta) {
+    add({ id, tags, ...payload }, meta) {
       return {
-        type: API.TAG.LIST,
+        type: ITEM.TAG.CREATE,
+        payload: {
+          id: array(id),
+          tags: array(tags),
+          ...payload
+        },
+        meta: {
+          cmd: 'project',
+          history: 'add',
+          search: true,
+          ...meta
+        }
+      }
+    },
+
+    clear({ id }, meta) {
+      return {
+        type: ITEM.TAG.CLEAR,
+        payload: id,
+        meta: {
+          cmd: 'project',
+          history: 'add',
+          search: true,
+          ...meta
+        }
+      }
+    },
+
+    find(payload, meta) {
+      return {
+        type: API.TAG.FIND,
         payload,
         meta: {
           cmd: 'project',
+          ...meta
+        }
+      }
+    },
+
+    remove({ tags, ...payload  }, meta) {
+      return {
+        type: ITEM.TAG.DELETE,
+        payload: {
+          tags: array(tags),
+          ...payload
+        },
+        meta: {
+          cmd: 'project',
+          history: 'add',
+          search: true,
           ...meta
         }
       }

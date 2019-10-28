@@ -25,7 +25,6 @@ const findByName = (tags, name) => {
   return null
 }
 
-
 const getItemTags = memo(
   getTags,
   getSelectedItems,
