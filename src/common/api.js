@@ -115,6 +115,30 @@ const project = {
   },
 
   tags: {
+    async create(ctx) {
+      let { assert, request, rsvp } = ctx
+
+      assert.ok(request.body.name, 400, 'missing name parameter')
+
+      let { payload } = await rsvp('project', act.tag.create({
+        name: request.body.name,
+        color: request.body.color,
+        items: request.body.item
+      }))
+
+      ctx.body = payload
+    },
+
+    async delete(ctx) {
+      let { assert, request, rsvp } = ctx
+
+      assert.ok(request.body.tag, 400, 'missing tag parameter')
+
+      let { payload } = await rsvp('project', act.tag.delete(request.body.tag))
+
+      ctx.body = payload
+    },
+
     async add(ctx) {
       let { assert, params, request, rsvp } = ctx
 
@@ -189,6 +213,8 @@ const create = ({ dispatch, log, rsvp, version }) => {
 
     .get('/project/list/:id/items', project.items.find)
 
+    .post('/project/tags', project.tags.create)
+    .delete('/project/tags', project.tags.delete)
     .get('/project/tags', project.tags.find)
     .get('/project/tags/:id', project.tags.show)
 
