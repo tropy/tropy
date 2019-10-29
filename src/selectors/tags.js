@@ -17,13 +17,17 @@ const getAllTags = memo(
 const findTag = ({ tags }, { id }) =>
   tags[id] || findByName(tags, id)
 
-const findByName = (tags, name) => {
+const findByName = (tags, name, idOnly = false) => {
   for (let id in tags) {
     if (equals(tags[id].name, name))
-      return tags[id]
+      return idOnly ? id : tags[id]
   }
   return null
 }
+
+const findTagIds = ({ tags }, tx) =>
+  tx.map(x =>
+    (!(x in tags) && findByName(tags, x, true)) || x)
 
 const getItemTags = memo(
   getTags,
@@ -61,6 +65,7 @@ const getTagCompletions = memo(
 
 module.exports = {
   findTag,
+  findTagIds,
   getAllTags,
   getItemTags,
   getTagCompletions

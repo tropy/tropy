@@ -20,6 +20,7 @@ const { writeFile: write } = require('fs')
 const { win } = require('../window')
 
 const {
+  findTagIds,
   getGroupedItems,
   getItemTemplate,
   getPhotoTemplate,
@@ -510,13 +511,17 @@ class AddTag extends Command {
   static get ACTION() { return ITEM.TAG.CREATE }
 
   *exec() {
-    const { db } = this.options
-    const { payload } = this.action
+    let { db } = this.options
+    let { payload, meta } = this.action
+    let { id, tags } = payload
 
-    const [tag] = payload.tags
-    const id = payload.id
+    if (meta.resolve) {
+      tags = yield select(state => findTagIds(state, tags))
+    }
 
-    const res = yield call(db.transaction, tx =>
+    let [tag] = tags
+
+    let res = yield call(db.transaction, tx =>
       mod.item.tags.add(tx, { id, tag }))
 
     this.undo = act.item.tags.delete({ id: res.id, tags: [tag] })
@@ -529,14 +534,19 @@ class RemoveTag extends Command {
   static get ACTION() { return ITEM.TAG.DELETE }
 
   *exec() {
-    const { db } = this.options
-    const { payload } = this.action
+    let { db } = this.options
+    let { payload, meta } = this.action
+    let { id, tags } = payload
 
-    yield call(mod.item.tags.remove, db, payload)
+    if (meta.resolve) {
+      tags = yield select(state => findTagIds(state, tags))
+    }
 
-    this.undo = act.item.tags.create(payload)
+    yield call(mod.item.tags.remove, db, { id, tags })
 
-    return payload
+    this.undo = act.item.tags.create({ id, tags })
+
+    return { id, tags }
   }
 }
 
