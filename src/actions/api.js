@@ -142,13 +142,12 @@ module.exports = {
       }
     },
 
-    add({ id, tags, ...payload }, meta) {
+    add({ id, tags }, meta) {
       return {
         type: ITEM.TAG.CREATE,
         payload: {
           id: array(id),
-          tags: array(tags),
-          ...payload
+          tags: array(tags)
         },
         meta: {
           cmd: 'project',
@@ -184,12 +183,12 @@ module.exports = {
       }
     },
 
-    remove({ tags, ...payload  }, meta) {
+    remove({ id, tags }, meta) {
       return {
         type: ITEM.TAG.DELETE,
         payload: {
-          tags: array(tags),
-          ...payload
+          id: array(id),
+          tags: array(tags)
         },
         meta: {
           cmd: 'project',

@@ -350,18 +350,10 @@ module.exports = mod.item = {
 
   tags: {
     async add(db, { id, tag }) {
-      const dupes = await db.all(
-        ...select('id').from('taggings').where({ tag_id: tag, id }))
-
-      id = remove(id, ...dupes.map(r => r.id))
-
-      const res = (id.length === 0) ? { changes: 0 } :
-        await db.run(`
-          INSERT INTO taggings (tag_id, id) VALUES ${
-            id.map(i => `(${tag}, ${i})`).join(',')
-          }`)
-
-      return { ...res, id }
+      return db.run(`
+        INSERT INTO taggings (tag_id, id) VALUES ${
+          id.map(i => `(${tag}, ${i})`).join(',')
+        }`)
     },
 
     async set(db, values) {

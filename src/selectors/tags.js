@@ -20,14 +20,14 @@ const findTag = ({ tags }, { id }) =>
 const findByName = (tags, name, idOnly = false) => {
   for (let id in tags) {
     if (equals(tags[id].name, name))
-      return idOnly ? id : tags[id]
+      return idOnly ? Number(id) : tags[id]
   }
   return null
 }
 
 const findTagIds = ({ tags }, tx) =>
   tx.map(x =>
-    (!(x in tags) && findByName(tags, x, true)) || x)
+    (!(x in tags) && findByName(tags, x, true)) || Number(x))
 
 const getItemTags = memo(
   getTags,

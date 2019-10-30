@@ -507,47 +507,72 @@ class Print extends Command {
   }
 }
 
-class AddTag extends Command {
-  static get ACTION() { return ITEM.TAG.CREATE }
-
+class AddTags extends Command {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
-    let { id, tags } = payload
+    let { tags } = payload
 
     if (meta.resolve) {
       tags = yield select(state => findTagIds(state, tags))
     }
 
-    let [tag] = tags
+    let work = yield select(state =>
+      payload.id.map(id => [
+        id,
+        remove(tags, ...state.items[id].tags)
+      ]))
 
-    let res = yield call(db.transaction, tx =>
-      mod.item.tags.add(tx, { id, tag }))
+    yield call(
+      mod.item.tags.set,
+      db,
+      work.flatMap(([id, tx]) =>
+        tx.map(tag => ({ id, tag }))))
 
-    this.undo = act.item.tags.delete({ id: res.id, tags: [tag] })
+    for (let [id, tx] of work) {
+      if (tx.length)
+        yield put(act.item.tags.insert({ id, tags: tx }))
+    }
 
-    return { id: res.id, tags: [tag] }
+    // TODO: Use work. This currently removes all tags!
+    this.undo = act.item.tags.delete({ id: payload.id, tags })
+
+    return work
   }
+
+  static ACTION = ITEM.TAG.CREATE
 }
 
-class RemoveTag extends Command {
-  static get ACTION() { return ITEM.TAG.DELETE }
-
+class RemoveTags extends Command {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
-    let { id, tags } = payload
+    let { tags } = payload
 
     if (meta.resolve) {
       tags = yield select(state => findTagIds(state, tags))
     }
 
-    yield call(mod.item.tags.remove, db, { id, tags })
+    let work = yield select(state =>
+      payload.id.map(id => [
+        id,
+        tags.filter(tag => state.items[id].tags.includes(tag))
+      ]))
 
-    this.undo = act.item.tags.create({ id, tags })
+    yield call(mod.item.tags.remove, db, { id: payload.id, tags })
 
-    return { id, tags }
+    for (let [id, tx] of work) {
+      if (tx.length)
+        yield put(act.item.tags.remove({ id, tags: tx }))
+    }
+
+    // TODO: Use work. This currently adds all tags!
+    this.undo = act.item.tags.create({ id: payload.id, tags })
+
+    return work
   }
+
+  static ACTION = ITEM.TAG.DELETE
 }
 
 
@@ -582,8 +607,8 @@ module.exports = {
   TemplateChange,
   Preview,
   Print,
-  AddTag,
-  RemoveTag,
+  AddTags,
+  RemoveTags,
   ToggleTags,
   ClearTags
 }
