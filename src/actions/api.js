@@ -123,6 +123,7 @@ module.exports = {
         meta: {
           cmd: 'project',
           history: 'add',
+          resolve: true,
           search: true,
           ...meta
         }
