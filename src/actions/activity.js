@@ -5,8 +5,8 @@ const { pick } = require('../common/util')
 
 module.exports = {
   done(action, result, meta) {
-    const error = result instanceof Error
-    const payload = !error ?
+    let error = result instanceof Error
+    let payload = !error ?
       result :
       pick(result, ['code', 'message', 'stack', 'type'])
 
