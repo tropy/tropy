@@ -1,0 +1,2 @@
+ALTER TABLE photos ADD COLUMN density INTEGER;
+
