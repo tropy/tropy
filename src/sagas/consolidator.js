@@ -15,7 +15,7 @@ const consolidator = {
     try {
       yield delay(consolidator.DELAY)
 
-      const photos = yield select(getPhotosWithErrors)
+      let photos = yield select(getPhotosWithErrors)
 
       if (photos.length > 0) {
         yield put(act.photo.consolidate(photos, { force: true }))

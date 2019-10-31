@@ -20,8 +20,6 @@ const { keys, values } = Object
 
 
 class Consolidate extends ImportCommand {
-  static get ACTION() { return PHOTO.CONSOLIDATE }
-
   lookup = async (photo, paths = {}, checkFileSize) => {
     let dir = dirname(photo.path)
     let file = basename(photo.path)
@@ -83,89 +81,110 @@ class Consolidate extends ImportCommand {
   }
 
   *exec() {
-    let { db } = this.options
-    let { payload, meta } = this.action
-    let consolidated = []
+    let { payload } = this.action
+    this.consolidated = []
 
-    let [project, photos, selections, density] = yield select(state => [
-      state.project,
-      blank(payload) ? values(state.photos) : pluck(state.photos, payload),
+    let [base, photos, selections, density] = yield select(state => [
+      state.project.base,
+      state.photos,
       state.selections,
       state.settings.density
     ])
 
+    photos = blank(payload) ?
+      values(photos).filter(photo => !photo.consolidating) :
+      pluck(photos, payload)
+
+    yield put(act.photo.bulk.update([
+      photos.map(photo => photo.id),
+      { consolidating: true }
+    ]))
+
     for (let i = 0, total = photos.length; i < total; ++i) {
-      let photo = photos[i]
+      yield put(act.activity.update(this.action, { total, progress: i + 1 }))
+      yield* this.consolidate(photos[i], { base, density, selections })
+    }
 
-      try {
-        let { image, hasChanged, error } =
-          yield this.checkPhoto(photo, meta.force)
+    return this.consolidated
+  }
 
-        if (meta.force || hasChanged) {
-          if (error != null) {
-            warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
+  *consolidate(photo, { base, density, selections }) {
+    try {
+      let { db } = this.options
+      let { meta } = this.action
 
-            let path = yield this.resolve(photo)
-            if (path) {
-              image = yield call(Image.open, {
-                density,
-                path,
-                page: photo.page,
-                protocol: 'file' })
-            }
+      let { image, hasChanged, error } =
+        yield this.checkPhoto(photo, meta.force)
+
+      if (meta.force || hasChanged) {
+        if (error != null) {
+          warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
+
+          let path = yield this.resolve(photo)
+          if (path) {
+            image = yield call(Image.open, {
+              density,
+              path,
+              page: photo.page,
+              protocol: 'file' })
           }
+        }
 
-          if (image != null) {
-            hasChanged = (image.checksum !== photo.checksum) ||
-              (image.path !== photo.path)
+        if (image != null) {
+          hasChanged = (image.checksum !== photo.checksum) ||
+            (image.path !== photo.path)
 
-            if (meta.force || hasChanged) {
-              yield* this.createThumbnails(photo.id, image, {
-                overwrite: hasChanged
-              })
+          if (meta.force || hasChanged) {
+            yield* this.createThumbnails(photo.id, image, {
+              overwrite: hasChanged
+            })
 
-              for (let id of photo.selections) {
-                if (id in selections) {
-                  yield* this.createThumbnails(id, image, {
-                    overwrite: hasChanged,
-                    selection: selections[id]
-                  })
-                }
+            for (let id of photo.selections) {
+              if (id in selections) {
+                yield* this.createThumbnails(id, image, {
+                  overwrite: hasChanged,
+                  selection: selections[id]
+                })
               }
-
-              let data = { id: photo.id, ...image.toJSON() }
-
-              yield call(mod.photo.save, db, data, project)
-              yield put(act.photo.update({
-                broken: false,
-                consolidated: new Date(),
-                ...data
-              }))
-
-            } else {
-              yield put(act.photo.update({
-                id: photo.id, broken: true, consolidated: new Date()
-              }))
             }
 
-            consolidated.push(photo.id)
+            let data = { id: photo.id, ...image.toJSON() }
+
+            yield call(mod.photo.save, db, data, { base })
+            yield put(act.photo.update({
+              broken: false,
+              consolidated: new Date(),
+              consolidating: false,
+              ...data
+            }))
 
           } else {
             yield put(act.photo.update({
-              id: photo.id, broken: true, consolidated: new Date()
+              id: photo.id,
+              broken: true,
+              consolidated: new Date(),
+              consolidating: false
             }))
           }
+
+          this.consolidated.push(photo.id)
+
+        } else {
+          yield put(act.photo.update({
+            id: photo.id,
+            broken: true,
+            consolidated: new Date(),
+            consolidating: false
+          }))
         }
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
-        fail(e, this.action.type)
       }
-
-      yield put(act.activity.update(this.action, { total, progress: i + 1 }))
+    } catch (e) {
+      warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
+      fail(e, this.action.type)
     }
-
-    return consolidated
   }
+
+  static ACTION = PHOTO.CONSOLIDATE
 }
 
 
