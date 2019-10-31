@@ -123,7 +123,7 @@ class Consolidate extends ImportCommand {
           let path = yield this.resolve(photo)
           if (path) {
             image = yield call(Image.open, {
-              density,
+              density: photo.density || density,
               path,
               page: photo.page,
               protocol: 'file' })
@@ -294,12 +294,12 @@ class Duplicate extends ImportCommand {
 
     assert(!blank(payload.photos), 'missing photos')
 
-    let [base, order, originals, data, density] = yield select(state => [
+    let [base, order, originals, data, settings] = yield select(state => [
       state.project.base,
       state.items[item].photos,
       pluck(state.photos, payload.photos),
       pluck(state.metadata, payload.photos),
-      state.settings.density
+      state.settings
     ])
 
     let idx = [order.indexOf(payload.photos[0]) + 1]
@@ -307,10 +307,15 @@ class Duplicate extends ImportCommand {
     let photos = []
 
     for (let i = 0; i < total; ++i) {
-      const { template, path, page, protocol } = originals[i]
+      let { density, template, path, page, protocol } = originals[i]
 
       try {
-        let image = yield call(Image.open, { density, path, page, protocol })
+        let image = yield call(Image.open, {
+          density: density || settings.density,
+          path,
+          page,
+          protocol
+        })
 
         let photo = yield call(db.transaction, tx =>
           mod.photo.create(tx, { base, template }, {

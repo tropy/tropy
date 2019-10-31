@@ -31,7 +31,7 @@ class Image {
     consolidated,
     created,
     checksum
-  }, { force, useLocalTimezone, density } = {}) {
+  }, { force, useLocalTimezone, density = 300 } = {}) {
     let status = {}
 
     try {
@@ -213,28 +213,18 @@ class Image {
   async parse(buffer, { page, density }) {
     this.mimetype = magic(buffer, this.ext)
 
-    switch (this.mimetype) {
-      case MIME.PDF:
-        this.density = restrict(density, IMAGE.MIN_DENSITY, IMAGE.MAX_DENSITY)
-        // eslint-disable-next-line no-fallthrough
-      case MIME.TIFF:
-        this.numPages = (await sharp(buffer).metadata()).pages
-        // eslint-disable-next-line no-fallthrough
-      case MIME.GIF:
-      case MIME.JPEG:
-      case MIME.PNG:
-      case MIME.SVG:
-      case MIME.WEBP:
-      case MIME.HEIC:
-      case MIME.HEIF:
-      case MIME.JP2:
-        this.hash = createHash('md5')
-        this.hash.update(buffer)
-        this.buffer = buffer
-        break
-      default:
-        throw new Error('unsupported image')
-    }
+    if (!IMAGE.SUPPORTED[this.mimetype])
+      throw new Error(`image type not supported: ${this.mimetype}`)
+
+    if (IMAGE.SCALABLE[this.mimetype])
+      this.density = restrict(density, IMAGE.MIN_DENSITY, IMAGE.MAX_DENSITY)
+
+    if (IMAGE.MULTI[this.mimetype])
+      this.numPages = (await sharp(buffer).metadata()).pages
+
+    this.hash = createHash('md5')
+    this.hash.update(buffer)
+    this.buffer = buffer
 
     if (page && page < this.numPages) {
       this.page = page
@@ -286,6 +276,7 @@ class Image {
       'path',
       'protocol',
       'checksum',
+      'density',
       'mimetype',
       'width',
       'height',

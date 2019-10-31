@@ -52,6 +52,17 @@ module.exports = {
     [MIME.SVG]: true
   },
 
+  SCALABLE: {
+    [MIME.PDF]: true,
+    [MIME.SVG]: true
+  },
+
+  MULTI: {
+    [MIME.GIF]: true,
+    [MIME.PDF]: true,
+    [MIME.TIFF]: true
+  },
+
   SUPPORTED,
   isImageSupported
 }
