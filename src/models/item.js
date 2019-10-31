@@ -2,9 +2,9 @@
 
 const { all } = require('bluebird')
 const { assign } = Object
-const { array, blank, list: lst, remove, uniq } = require('../common/util')
+const { array, blank, list: lst, uniq } = require('../common/util')
 const { NAV: { COLUMN } } = require('../constants')
-const { select } = require('../common/query')
+//const { select } = require('../common/query')
 
 const mod = {
   metadata: require('./metadata'),
