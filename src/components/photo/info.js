@@ -35,6 +35,11 @@ class PhotoInfo extends PureComponent {
         <StaticField
           label="photo.size"
           value={this.size}/>
+        {this.props.photo.density &&
+          <StaticField
+            label="photo.density"
+            hint="Pixels per inch"
+            value={`${this.props.photo.density} ppi`}/>}
         <StaticField
           label="photo.created"
           value={datetime(this.props.photo.created)}/>
