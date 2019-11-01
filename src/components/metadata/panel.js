@@ -98,6 +98,18 @@ class MetadataPanel extends React.PureComponent {
     this.prev(1)
   }
 
+  handleItemTypeChange = (type) => {
+    console.log('handleItemTypeChange', type)
+  }
+
+  handlePhotoTypeChange = (type) => {
+    console.log('handlePhotoTypeChange')
+  }
+
+  handleSelectionTypeChange = (type) => {
+    console.log('handleSelectionTypeChange')
+  }
+
   handleItemTemplateChange = (template, hasChanged) => {
     if (hasChanged || this.isBulk) {
       this.props.onTemplateChange('item', {
@@ -161,6 +173,7 @@ class MetadataPanel extends React.PureComponent {
         title="panel.metadata.item"
         options={this.props.fields.classes}
         onTemplateChange={this.handleItemTemplateChange}
+        onTypeChange={this.handleItemTypeChange}
         onContextMenu={this.handleItemContextMenu}>
         <MetadataList
           ref={this.setItemFields}
@@ -191,6 +204,7 @@ class MetadataPanel extends React.PureComponent {
         title="panel.metadata.photo"
         options={this.props.fields.classes}
         onTemplateChange={this.handlePhotoTemplateChange}
+        onTypeChange={this.handlePhotoTypeChange}
         onContextMenu={this.handlePhotoContextMenu}>
         <MetadataList
           ref={this.setPhotoFields}
@@ -222,6 +236,7 @@ class MetadataPanel extends React.PureComponent {
         title="panel.metadata.selection"
         options={this.props.fields.classes}
         onTemplateChange={this.handleSelectionTemplateChange}
+        onTypeChange={this.handleSelectionTypeChange}
         onContextMenu={this.handleSelectionContextMenu}>
         <MetadataList
           ref={this.setSelectionFields}

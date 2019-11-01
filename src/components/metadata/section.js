@@ -31,6 +31,7 @@ const MetadataSection = (props) => {
         canClearByBackspace={false}
         hideClearButton
         isRequired
+        onChange={props.onTypeChange}
         options={props.options}/>
       {props.children}
     </section>
@@ -44,6 +45,7 @@ MetadataSection.propTypes = {
   count: number,
   onContextMenu: func,
   onTemplateChange: func.isRequired,
+  onTypeChange: func.isRequired,
   template: string,
   templates: array,
   options: array,
@@ -51,7 +53,8 @@ MetadataSection.propTypes = {
 }
 
 MetadataSection.propTypes = {
-  onTemplateChange: noop
+  onTemplateChange: noop,
+  onTypeChange: noop
 }
 
 module.exports = {
