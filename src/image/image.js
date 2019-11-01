@@ -8,7 +8,6 @@ const { exif } = require('./exif')
 const { xmp } = require('./xmp')
 const { isSVG } = require('./svg')
 const sharp = require('sharp')
-const { assign } = Object
 const { warn } = require('../common/log')
 const { get, pick, restrict } = require('../common/util')
 const { EXIF, MIME, IMAGE } = require('../constants')
@@ -19,7 +18,7 @@ class Image {
     path,
     protocol,
     density = 300,
-    page = 0,
+    page,
     useLocalTimezone = false }) {
     return (new Image(path, protocol, useLocalTimezone)).open({ page, density })
   }
@@ -102,7 +101,7 @@ class Image {
 
   get orientation() {
     return Orientation(
-      get(this.exif, [this.page, EXIF.orientation, 'text'], 1)
+      get(this.meta, [this.page, 'exif', EXIF.orientation, 'text'], 1)
     )
   }
 
@@ -128,15 +127,15 @@ class Image {
 
   get data() {
     return {
-      ...this.exif[this.page],
-      ...this.xmp[this.page]
+      ...this.meta[this.page].exif,
+      ...this.meta[this.page].xmp
     }
   }
 
   get date() {
     try {
-      let time = get(this.exif, [this.page, EXIF.dateTimeOriginal, 'text']) ||
-        get(this.exif, [this.page, EXIF.dateTime, 'text'])
+      let time = get(this.meta, [this.page, 'exif', EXIF.dateTimeOriginal, 'text']) ||
+        get(this.meta, [this.page, 'exif', EXIF.dateTime, 'text'])
 
       // Temporarily return as string until we add value types.
       return (time || this.file.ctime || new Date()).toISOString()
@@ -184,11 +183,12 @@ class Image {
     return !this.hasAlpha || (await this.do().stats()).isOpaque
   }
 
-  async open({ page = 0, density } = {}) {
+  async open({ page, density } = {}) {
     this.file = null
     this.buffer = null
     this.mimetype = null
     this.hash = null
+    this.meta = null
     this.page = 0
     this.numPages = 1
 
@@ -226,21 +226,29 @@ class Image {
     this.hash.update(buffer)
     this.buffer = buffer
 
-    if (page && page < this.numPages) {
+    this.meta = new Array(this.numPages)
+
+    if (page != null && page < this.numPages) {
       this.page = page
+      await this.parseMetadata(this.do(), page)
+
+    } else {
+      await Promise.all([
+        ...this.each(this.parseMetadata)
+      ])
     }
 
-    let meta = await Promise.all([
-      ...this.each(img => img.metadata())
-    ])
-
-    assign(this, {
-      exif: meta.map(m => exif(m.exif, { timezone: this.tz })),
-      meta,
-      xmp: meta.map(m => xmp(m.xmp))
-    })
-
     return this
+  }
+
+  parseMetadata = async (img, page) => {
+    let meta = await img.metadata()
+
+    this.meta[page] = {
+      ...meta,
+      exif: exif(meta.exif, { timezone: this.tz }),
+      xmp: xmp(meta.xmp)
+    }
   }
 
   resize = async (size, selection) => {
