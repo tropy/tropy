@@ -77,18 +77,17 @@ class ImportCommand extends Command {
 
   *createThumbnails(id, image, {
     overwrite = true,
-    quality = 100,
     selection
   } = {}) {
     try {
       let { cache } = this.options
       let ext = cache.extname(image.mimetype)
 
-      for (let v of image.variants(selection != null)) {
-        let path = cache.path(id, v.name, ext)
+      for (let { name, size, quality } of image.variants(selection != null)) {
+        let path = cache.path(id, name, ext)
 
         if (overwrite || !(yield call(cache.exists, path, false))) {
-          let dup = yield call(image.resize, v.size, selection)
+          let dup = yield call(image.resize, size, selection)
 
           switch (ext) {
             case '.png':
@@ -107,7 +106,7 @@ class ImportCommand extends Command {
           yield call([dup, dup.toFile], cache.expand(path))
 
         } else {
-          debug(`skipping ${v.name} thumbnail for #${id}: already exists`)
+          debug(`skipping ${name} thumbnail for #${id}: already exists`)
         }
       }
     } catch (e) {

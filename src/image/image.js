@@ -180,9 +180,9 @@ class Image {
     this.page = 0
   }
 
-  isOpaque = async () => (
-    !this.hasAlpha || (await this.do().stats()).isOpaque
-  )
+  isOpaque = async () => {
+    return !this.hasAlpha || (await this.do().stats()).isOpaque
+  }
 
   async open({ page = 0, density } = {}) {
     this.file = null
@@ -288,11 +288,15 @@ class Image {
   variants(isSelection = false) {
     let variants = [48, 512]
 
-    if (!isSelection || this.isRemote || !IMAGE.WEB[this.mimetype]) {
+    if (!isSelection && (this.isRemote || !IMAGE.WEB[this.mimetype])) {
       variants.push('full')
     }
 
-    return variants.map(name => ({ name, size: Image.SIZE[name] }))
+    return variants.map(name => ({
+      name,
+      quality: Image.QUALITY[name],
+      size: Image.SIZE[name]
+    }))
   }
 
   static get input() {
@@ -308,12 +312,21 @@ class Image {
       .filter(({ output }) => output.file)
       .map(({ id }) => id)
   }
+
+  static SIZE = {
+    48: {
+      width: 48, height: 48, fit: 'inside'
+    },
+    512: {
+      width: 512, height: 512, fit: 'inside'
+    }
+  }
+
+  static QUALITY = {
+    48: 85, 512: 90, full: 95
+  }
 }
 
-Image.SIZE = {
-  48: { width: 48, height: 48, fit: 'inside' },
-  512: { width: 512, height: 512, fit: 'inside' }
-}
 
 const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
 
