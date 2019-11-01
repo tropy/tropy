@@ -57,12 +57,6 @@ module.exports = {
     [MIME.SVG]: true
   },
 
-  MULTI: {
-    [MIME.GIF]: true,
-    [MIME.PDF]: true,
-    [MIME.TIFF]: true
-  },
-
   SUPPORTED,
   isImageSupported
 }
