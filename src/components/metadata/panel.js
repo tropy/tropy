@@ -18,6 +18,7 @@ const {
   getAllTemplatesByType,
   getItemFields,
   getPhotoFields,
+  getClassList,
   getPropertyList,
   getSelectedItemTemplate,
   getSelectedItems,
@@ -158,6 +159,7 @@ class MetadataPanel extends React.PureComponent {
         template={this.props.template.id}
         templates={this.props.templates.item}
         title="panel.metadata.item"
+        options={this.props.fields.classes}
         onTemplateChange={this.handleItemTemplateChange}
         onContextMenu={this.handleItemContextMenu}>
         <MetadataList
@@ -187,6 +189,7 @@ class MetadataPanel extends React.PureComponent {
         template={this.props.photo.template}
         templates={this.props.templates.photo}
         title="panel.metadata.photo"
+        options={this.props.fields.classes}
         onTemplateChange={this.handlePhotoTemplateChange}
         onContextMenu={this.handlePhotoContextMenu}>
         <MetadataList
@@ -217,6 +220,7 @@ class MetadataPanel extends React.PureComponent {
         template={this.props.selection.template}
         templates={this.props.templates.selection}
         title="panel.metadata.selection"
+        options={this.props.fields.classes}
         onTemplateChange={this.handleSelectionTemplateChange}
         onContextMenu={this.handleSelectionContextMenu}>
         <MetadataList
@@ -255,6 +259,7 @@ class MetadataPanel extends React.PureComponent {
     edit: object,
     fields: shape({
       available: arrayOf(object).isRequired,
+      classes: arrayOf(object).isRequired,
       item: arrayOf(shapes.field).isRequired,
       photo: arrayOf(shapes.field).isRequired,
       selection: arrayOf(shapes.field).isRequired
@@ -287,6 +292,7 @@ module.exports = {
       edit: state.edit.field,
       fields: {
         available: getPropertyList(state),
+        classes: getClassList(state),
         item: getItemFields(state),
         photo: getPhotoFields(state),
         selection: getSelectionFields(state)
