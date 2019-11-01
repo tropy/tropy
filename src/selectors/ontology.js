@@ -35,6 +35,12 @@ const getDatatypeList = memo(
   getResourceList
 )
 
+const getClassList = memo(
+  ({ ontology }) => ontology.class,
+  ({ ontology }) => ontology.vocab,
+  getResourceList
+)
+
 const getVocabs = memo(
   ({ ontology }) => ontology.vocab,
   ({ ontology }) => ontology.props,
@@ -195,6 +201,7 @@ module.exports = {
   getActiveSelectionTemplate,
   getAllTemplates,
   getAllTemplatesByType,
+  getClassList,
   getDatatypeList,
   getItemTemplate,
   getItemTemplateProperties,
