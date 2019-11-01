@@ -222,8 +222,9 @@ class Image {
     if (IMAGE.SCALABLE[this.mimetype])
       this.density = restrict(density, IMAGE.MIN_DENSITY, IMAGE.MAX_DENSITY)
 
-    if (IMAGE.MULTI[this.mimetype])
+    if (page != null || IMAGE.MULTI[this.mimetype])
       this.numPages = (await sharp(buffer).metadata()).pages
+
 
     this.hash = createHash('md5')
     this.hash.update(buffer)
@@ -231,6 +232,11 @@ class Image {
 
     this.meta = new Array(this.numPages)
     this.stats = new Array(this.numPages)
+
+    if (this.mimetype === MIME.HEIC || this.mimetype === MIME.HEIF) {
+      if (page != null)
+        page = (await sharp(buffer).metadata()).primaryPage
+    }
 
     if (page != null && page < this.numPages) {
       this.page = page
