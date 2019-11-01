@@ -98,16 +98,19 @@ class MetadataPanel extends React.PureComponent {
     this.prev(1)
   }
 
-  handleItemTypeChange = (type) => {
-    console.log('handleItemTypeChange', type)
+  handleItemTypeChange = (type, hasChanged) => {
+    if (hasChanged) {
+      this.props.onTypeChange('item', {
+        id: this.props.items.map(it => it.id),
+        data: { type: type.id }
+      })
+    }
   }
 
-  handlePhotoTypeChange = (type) => {
-    console.log('handlePhotoTypeChange')
+  handlePhotoTypeChange = (type, hasChanged) => {
   }
 
-  handleSelectionTypeChange = (type) => {
-    console.log('handleSelectionTypeChange')
+  handleSelectionTypeChange = (type, hasChanged) => {
   }
 
   handleItemTemplateChange = (template, hasChanged) => {
@@ -297,7 +300,8 @@ class MetadataPanel extends React.PureComponent {
     onMetadataDelete: func.isRequired,
     onMetadataSave: func.isRequired,
     onOpenInFolder: func.isRequired,
-    onTemplateChange: func.isRequired
+    onTemplateChange: func.isRequired,
+    onTypeChange: func.isRequired
   }
 }
 
@@ -334,6 +338,10 @@ module.exports = {
 
       onTemplateChange(type, ...args) {
         dispatch(actions[type].template.change(...args))
+      },
+
+      onTypeChange(type, ...args) {
+        dispatch(actions[type].type.change(...args))
       }
     }), null, { forwardRef: true }
   )(MetadataPanel)

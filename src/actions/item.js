@@ -275,5 +275,8 @@ module.exports = {
         }
       }
     }
+  },
+
+  type: {
   }
 }
