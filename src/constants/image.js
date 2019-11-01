@@ -48,8 +48,8 @@ module.exports = {
     [MIME.JPG]: true,
     [MIME.PNG]: true,
     [MIME.WEBP]: true,
-    [MIME.GIF]: true,
-    [MIME.SVG]: true
+    [MIME.GIF]: true
+    // [MIME.SVG]: true
   },
 
   SCALABLE: {
