@@ -96,7 +96,7 @@ class ImportCommand extends Command {
             case '.webp':
               dup.webp({
                 quality,
-                lossless: image.channels === 1 || !(yield call(image.isOpaque))
+                lossless: image.channels === 1 || !image.isOpaque
               })
               break
             default:

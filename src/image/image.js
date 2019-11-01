@@ -117,6 +117,11 @@ class Image {
     return get(this.meta, [this.page, 'hasAlpha'])
   }
 
+  get isOpaque() {
+    return !this.hasAlpha || get(this.stats, [this.page, 'isOpaque'], true)
+  }
+
+
   get width() {
     return get(this.meta, [this.page, 'width'], 0)
   }
@@ -127,15 +132,16 @@ class Image {
 
   get data() {
     return {
-      ...this.meta[this.page].exif,
-      ...this.meta[this.page].xmp
+      ...get(this.meta, [this.page, 'exif']),
+      ...get(this.meta, [this.page, 'xmp'])
     }
   }
 
   get date() {
     try {
-      let time = get(this.meta, [this.page, 'exif', EXIF.dateTimeOriginal, 'text']) ||
-        get(this.meta, [this.page, 'exif', EXIF.dateTime, 'text'])
+      let xif = get(this.meta, [this.page, 'exif'])
+      let time = get(xif, [EXIF.dateTimeOriginal, 'text']) ||
+        get(xif, [EXIF.dateTime, 'text'])
 
       // Temporarily return as string until we add value types.
       return (time || this.file.ctime || new Date()).toISOString()
@@ -179,16 +185,13 @@ class Image {
     this.page = 0
   }
 
-  isOpaque = async () => {
-    return !this.hasAlpha || (await this.do().stats()).isOpaque
-  }
-
   async open({ page, density } = {}) {
     this.file = null
     this.buffer = null
     this.mimetype = null
     this.hash = null
     this.meta = null
+    this.stats = null
     this.page = 0
     this.numPages = 1
 
@@ -227,27 +230,36 @@ class Image {
     this.buffer = buffer
 
     this.meta = new Array(this.numPages)
+    this.stats = new Array(this.numPages)
 
     if (page != null && page < this.numPages) {
       this.page = page
-      await this.parseMetadata(this.do(), page)
+      await this.analyze(this.do(), page)
 
     } else {
       await Promise.all([
-        ...this.each(this.parseMetadata)
+        ...this.each(this.analyze)
       ])
     }
 
     return this
   }
 
-  parseMetadata = async (img, page) => {
+  analyze = async (img, page) => {
     let meta = await img.metadata()
 
     this.meta[page] = {
       ...meta,
       exif: exif(meta.exif, { timezone: this.tz }),
       xmp: xmp(meta.xmp)
+    }
+
+    if (meta.hasAlpha) {
+      let stats = await img.stats()
+      this.stats[page] = {
+        isOpaque: stats.isOpaque,
+        mean: stats.channels.map(c => c.mean)
+      }
     }
   }
 
