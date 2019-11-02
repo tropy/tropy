@@ -87,7 +87,7 @@ class Thumbnail extends React.Component {
           <div className={`rotation-container iiif rot-${this.state.rotation}`}>
             <img
               decoding="async"
-              loading="eager"
+              loading="lazy"
               src={this.src}
               onLoad={this.handleLoad}
               onError={this.handleError}/>
