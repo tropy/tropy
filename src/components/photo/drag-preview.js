@@ -3,52 +3,34 @@
 const React = require('react')
 const { Thumbnail } = require('./thumbnail')
 const cx = require('classnames')
-const { pick } = require('../../common/util')
-const { arrayOf, func, number, shape, string } = require('prop-types')
+const { arrayOf, number, shape, string } = require('prop-types')
 
+const PhotoDragPreview = ({ cache, size, items  }) => {
+  let count = items.length
 
-class PhotoDragPreview extends React.PureComponent {
-  get classes() {
-    return ['photo', 'drag-preview', 'center', {
-      multiple: this.count > 1
-    }]
-  }
+  return count > 0 && (
+    <div className={cx('photo', 'drag-preview', 'center', {
+      multiple: count > 1
+    })}>
+      <Thumbnail
+        {...items[0]}
+        cache={cache}
+        size={size}/>
+      {count > 1 && <div className="badge">{count}</div>}
+    </div>
+  )
+}
 
-  get item() {
-    return this.props.items[0]
-  }
+PhotoDragPreview.propTypes = {
+  cache: string.isRequired,
+  size: number.isRequired,
+  items: arrayOf(shape({
+    id: number.isRequired
+  })).isRequired
+}
 
-  get count() {
-    return this.props.items.length
-  }
-
-  render() {
-    return (
-      <div className={cx(this.classes)}>
-        <Thumbnail
-          {...pick(this.item, Thumbnail.keys)}
-          cache={this.props.cache}
-          size={this.props.size}/>
-        {this.count > 1 &&
-          <div className="badge">{this.count}</div>
-        }
-      </div>
-    )
-
-  }
-
-  static propTypes = {
-    cache: string.isRequired,
-    size: number.isRequired,
-    items: arrayOf(shape({
-      id: number.isRequired
-    })).isRequired,
-    onPhotoError: func.isRequired
-  }
-
-  static defaultProps = {
-    size: 64
-  }
+PhotoDragPreview.defaultProps = {
+  size: 64
 }
 
 module.exports = {

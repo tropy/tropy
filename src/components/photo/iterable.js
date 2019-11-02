@@ -101,15 +101,9 @@ class PhotoIterable extends React.PureComponent {
   static DragSourceSpec = {
     beginDrag({ photo, getAdjacent }) {
       return {
+        ...pick(photo, Thumbnail.keys),
         id: photo.id,
         item: photo.item,
-        angle: photo.angle,
-        broken: photo.broken,
-        mimetype: photo.mimetype,
-        mirror: photo.mirror,
-        orientation: photo.orientation,
-        width: photo.width,
-        height: photo.height,
         adj: getAdjacent(photo).map(p => p && p.id)
       }
     },

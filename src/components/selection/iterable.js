@@ -134,10 +134,11 @@ class SelectionIterable extends React.PureComponent {
 const DragSourceSpec = {
   beginDrag({ photo, selection, getAdjacent }) {
     return {
+      ...pick(selection, Thumbnail.keys),
       id: selection.id,
       photo: selection.photo,
-      angle: selection.angle,
-      mirror: selection.mirror,
+      color: photo.color,
+      mimetype: photo.mimetype,
       orientation: photo.orientation,
       adj: getAdjacent(selection).map(s => s && s.id)
     }
