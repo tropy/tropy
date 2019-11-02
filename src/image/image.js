@@ -236,7 +236,7 @@ class Image {
     if (meta.pages) {
       this.numPages = meta.pages
 
-      if (page != null)
+      if (page == null)
         page = meta.primaryPage
     }
 
