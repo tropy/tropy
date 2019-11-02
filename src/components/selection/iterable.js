@@ -77,17 +77,14 @@ class SelectionIterable extends React.PureComponent {
 
   renderThumbnail(props) {
     return (
-      <Thumbnail {...props}
-        id={this.props.selection.id}
-        angle={this.props.selection.angle}
-        broken={this.props.photo.broken}
-        mimetype={this.props.photo.mimetype}
-        mirror={this.props.selection.mirror}
-        orientation={this.props.photo.orientation}
+      <Thumbnail
+        {...props}
+        {...pick(this.props.selection, Thumbnail.keys)}
         cache={this.props.cache}
+        color={this.props.photo.color}
+        mimetype={this.props.photo.mimetype}
+        orientation={this.props.photo.orientation}
         size={this.props.size}
-        width={this.props.selection.width}
-        height={this.props.selection.height}
         onError={this.props.onError}/>
     )
   }

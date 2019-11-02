@@ -3,6 +3,7 @@
 const React = require('react')
 const { Thumbnail } = require('./thumbnail')
 const cx = require('classnames')
+const { pick } = require('../../common/util')
 const { arrayOf, func, number, shape, string } = require('prop-types')
 
 
@@ -25,16 +26,9 @@ class PhotoDragPreview extends React.PureComponent {
     return (
       <div className={cx(this.classes)}>
         <Thumbnail
-          id={this.item.id}
-          angle={this.item.angle}
-          broken={this.item.broken}
+          {...pick(this.item, Thumbnail.keys)}
           cache={this.props.cache}
-          mimetype={this.item.mimetype}
-          mirror={this.item.mirror}
-          orientation={this.item.orientation}
-          size={this.props.size}
-          width={this.item.width}
-          height={this.item.height}/>
+          size={this.props.size}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }

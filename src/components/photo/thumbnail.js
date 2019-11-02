@@ -37,7 +37,7 @@ class Thumbnail extends React.Component {
       consolidated,
       hasFinishedLoading,
       isBroken,
-      ratio: { '--x': x, '--y': y }
+      style: { '--x': x, '--y': y, 'backgroundColor': props.color }
     }
   }
 
@@ -77,7 +77,7 @@ class Thumbnail extends React.Component {
     return (
       <figure
         className="thumbnail"
-        style={this.state.ratio}
+        style={this.state.style}
         onClick={this.props.onClick}
         onContextMenu={this.props.onContextMenu}
         onDoubleClick={this.props.onDoubleClick}
@@ -100,6 +100,7 @@ class Thumbnail extends React.Component {
     angle: number,
     broken: bool,
     cache: string.isRequired,
+    color: string,
     consolidated: instanceOf(Date),
     height: number,
     id: number,
