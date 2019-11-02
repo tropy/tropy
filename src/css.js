@@ -19,6 +19,10 @@ const css = {
     return `${isArray(path) ?
       css.imageSet(...path.map(p => join(Resource.base, 'cursors', p))) :
       css.url(join(Resource.base, 'cursors', path))} ${x} ${y}, ${fallback}`
+  },
+
+  rgb(r = 0, g = 0, b = 0, a = 1) {
+    return `rgb(${r},${g},${b},${a})`
   }
 }
 

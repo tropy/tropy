@@ -10,6 +10,7 @@ const { isSVG } = require('./svg')
 const sharp = require('sharp')
 const { warn } = require('../common/log')
 const { get, pick, restrict } = require('../common/util')
+const { rgb } = require('../css')
 const { EXIF, MIME, IMAGE } = require('../constants')
 
 
@@ -111,6 +112,10 @@ class Image {
 
   get space() {
     return get(this.meta, [this.page, 'space'])
+  }
+
+  get color() {
+    return get(this.stats, [this.page, 'mean'])
   }
 
   get hasAlpha() {
@@ -260,12 +265,15 @@ class Image {
       xmp: xmp(meta.xmp)
     }
 
-    if (meta.hasAlpha) {
-      let stats = await img.stats()
-      this.stats[page] = {
-        isOpaque: stats.isOpaque,
-        mean: stats.channels.map(c => c.mean)
-      }
+    let dup = await img
+      .toFormat(meta.hasAlpha ? 'webp' : 'jpeg')
+      .toBuffer()
+
+    let stats = await sharp(dup).stats()
+
+    this.stats[page] = {
+      isOpaque: stats.isOpaque,
+      mean: rgb(...stats.channels.slice(0, 3).map(c => Math.round(c.mean)))
     }
   }
 
@@ -302,6 +310,7 @@ class Image {
       'path',
       'protocol',
       'checksum',
+      'color',
       'density',
       'mimetype',
       'width',
