@@ -35,5 +35,10 @@ module.exports = {
     CHANGE: 'photo.template.change',
 
     DEFAULT: 'https://tropy.org/v1/templates/photo'
+  },
+
+  SUBJECT: {
+    SAVE: 'photo.subject.save',
+    DEFAULT: 'https://tropy.org/v1/tropy#Photo'
   }
 }

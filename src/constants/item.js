@@ -46,5 +46,10 @@ module.exports = {
   TEMPLATE: {
     CHANGE: 'item.template.change',
     DEFAULT: 'https://tropy.org/v1/templates/generic'
+  },
+
+  SUBJECT: {
+    SAVE: 'item.subject.save',
+    DEFAULT: 'https://tropy.org/v1/tropy#Item'
   }
 }

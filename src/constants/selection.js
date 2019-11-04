@@ -20,5 +20,10 @@ module.exports = {
   TEMPLATE: {
     CHANGE: 'selection.template.change',
     DEFAULT: 'https://tropy.org/v1/templates/selection'
+  },
+
+  SUBJECT: {
+    SAVE: 'photo.subject.save',
+    DEFAULT: 'https://tropy.org/v1/tropy#Selection'
   }
 }
