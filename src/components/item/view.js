@@ -205,6 +205,7 @@ class ItemView extends React.PureComponent {
           onNoteCommit={this.handleNoteCommit}
           onPhotoCreate={this.props.onPhotoCreate}
           onPhotoError={this.props.onPhotoError}
+          onPhotoSave={this.props.onPhotoSave}
           onPhotoSelect={this.props.onPhotoSelect}
           onUiUpdate={this.props.onUiUpdate}/>
       </section>
@@ -235,6 +236,7 @@ class ItemView extends React.PureComponent {
     onNoteSave: func.isRequired,
     onNoteSelect: func.isRequired,
     onPhotoError: func.isRequired,
+    onPhotoSave: func.isRequired,
     onPanelResize: func.isRequired,
     onPanelDragStop: func.isRequired,
     onUiUpdate: func.isRequired

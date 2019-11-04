@@ -513,6 +513,10 @@ module.exports = {
         dispatch(actions.photo.rotate(...args))
       },
 
+      onPhotoSave(...args) {
+        dispatch(actions.photo.save(...args))
+      },
+
       onPhotoSelect(...args) {
         dispatch(actions.photo.select(...args))
       },

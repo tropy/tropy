@@ -204,7 +204,12 @@ class MetadataPanel extends React.PureComponent {
           onCreate={this.props.onMetadataAdd}
           options={this.props.fields.available}/>
         <PhotoInfo
+          edit={this.props.edit}
           photo={this.props.photo}
+          isDisabled={this.props.isDisabled}
+          onChange={this.props.onPhotoSave}
+          onEdit={this.props.onEdit}
+          onEditCancel={this.props.onEditCancel}
           onOpenInFolder={this.props.onOpenInFolder}/>
       </MetadataSection>
     )
@@ -277,6 +282,7 @@ class MetadataPanel extends React.PureComponent {
     onMetadataDelete: func.isRequired,
     onMetadataSave: func.isRequired,
     onOpenInFolder: func.isRequired,
+    onPhotoSave: func.isRequired,
     onTemplateChange: func.isRequired
   }
 }
