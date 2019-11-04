@@ -13,29 +13,20 @@ class Thumbnail extends React.Component {
     src: null,
     rotation: '0',
     consolidated: null,
-    hasFinishedLoading: false,
     isBroken: false
   }
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props) {
     let src = Thumbnail.getUrl(props)
     let rotation = Thumbnail.getRotation(props)
     let isBroken = props.broken
     let consolidated = props.consolidated
-
-    let hasImageChanged = src !== state.src ||
-      consolidated > state.consolidated
-
-    let hasFinishedLoading = (src != null) &&
-      (!(hasImageChanged || isBroken) || state.hasFinishedLoading)
-
     let [x, y] = rotation.ratio(props)
 
     return {
       src,
       rotation: rotation.format('x'),
       consolidated,
-      hasFinishedLoading,
       isBroken,
       style: { '--x': x, '--y': y, 'backgroundColor': props.color }
     }
@@ -53,18 +44,10 @@ class Thumbnail extends React.Component {
       .add({ angle, mirror })
   }
 
-  get hasFallbackIcon() {
-    return this.state.isBroken || !this.state.hasFinishedLoading
-  }
-
   get src() {
     return (this.state.consolidated == null) ?
       this.state.src :
       `${this.state.src}?c=${this.state.consolidated.getTime()}`
-  }
-
-  handleLoad = () => {
-    this.setState({ hasFinishedLoading: true })
   }
 
   handleError = () => {
@@ -82,16 +65,14 @@ class Thumbnail extends React.Component {
         onContextMenu={this.props.onContextMenu}
         onDoubleClick={this.props.onDoubleClick}
         onMouseDown={this.props.onMouseDown}>
-        {this.hasFallbackIcon && <IconPhoto/>}
-        {this.state.src &&
+        {!this.state.src ? <IconPhoto/> : (
           <div className={`rotation-container iiif rot-${this.state.rotation}`}>
             <img
               decoding="async"
               loading="lazy"
               src={this.src}
-              onLoad={this.handleLoad}
               onError={this.handleError}/>
-          </div>}
+          </div>)}
       </figure>
     )
   }
