@@ -99,18 +99,30 @@ class MetadataPanel extends React.PureComponent {
   }
 
   handleItemTypeChange = (type, hasChanged) => {
-    if (hasChanged) {
+    if (hasChanged  || this.isBulk) {
       this.props.onTypeChange('item', {
         id: this.props.items.map(it => it.id),
-        data: { type: type.id }
+        type: type.id
       })
     }
   }
 
   handlePhotoTypeChange = (type, hasChanged) => {
+    if (hasChanged) {
+      this.props.onTypeChange('photo', {
+        id: [this.props.photo.id],
+        type: type.id
+      })
+    }
   }
 
   handleSelectionTypeChange = (type, hasChanged) => {
+    if (hasChanged) {
+      this.props.onTemplateChange('selection', {
+        id: [this.props.selection.id],
+        type: type.id
+      })
+    }
   }
 
   handleItemTemplateChange = (template, hasChanged) => {
@@ -341,7 +353,7 @@ module.exports = {
       },
 
       onTypeChange(type, ...args) {
-        dispatch(actions[type].type.change(...args))
+        dispatch(actions[type].subject.save(...args))
       }
     }), null, { forwardRef: true }
   )(MetadataPanel)
