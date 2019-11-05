@@ -119,7 +119,7 @@ class Esper extends React.PureComponent {
 
   shouldViewReset(props, state) {
     return (state.src !== this.state.src) ||
-      (get(props.photo, ['id']) !== get(this.props.photo, ['id']))
+      hasPhotoChanged(props.photo, this.props.photo)
   }
 
   shouldViewSync(props, state) {
@@ -804,6 +804,11 @@ class Esper extends React.PureComponent {
     zoom: 1
   }
 }
+
+const hasPhotoChanged = (c, p) =>
+  c != null && p != null && (c.id !== p.id || (
+    c.consolidated && (!p.consolidated || c.consolidated > p.consolidated)
+  ))
 
 module.exports = {
   Esper

@@ -152,6 +152,8 @@ class Consolidate extends ImportCommand {
             let data = { id: photo.id, ...image.toJSON() }
 
             yield call(mod.photo.save, db, data, { base })
+
+            this.clearTextureCache(photo)
             yield put(act.photo.update({
               broken: false,
               consolidated: new Date(),
@@ -169,7 +171,6 @@ class Consolidate extends ImportCommand {
           }
 
           this.consolidated.push(photo.id)
-          this.clearTextureCache(photo)
 
         } else {
           yield put(act.photo.update({
@@ -192,7 +193,9 @@ class Consolidate extends ImportCommand {
     let { cache } = this.options
     let texture = PIXI.utils.TextureCache[cache.src(photo)]
 
-    if (texture) texture.destroy(true)
+    if (texture) {
+      texture.destroy(true)
+    }
   }
 
   static ACTION = PHOTO.CONSOLIDATE
