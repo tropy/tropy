@@ -3,9 +3,10 @@
 const React = require('react')
 const { Field, StaticField } = require('../metadata/field')
 const { bool, func, object } = require('prop-types')
+const { IMAGE } = require('../../constants')
 const { basename } = require('path')
 const { get } = require('../../common/util')
-const { bytes, datetime, number } = require('../../format')
+const { bytes, datetime, number, ppi } = require('../../format')
 
 
 class PhotoInfo extends React.PureComponent {
@@ -62,14 +63,14 @@ class PhotoInfo extends React.PureComponent {
           value={this.size}/>
         {this.props.photo.density &&
           <Field
-            display={`${this.props.photo.density} ppi`}
+            display={ppi(this.props.photo.density)}
             hint="Pixels per inch"
             isActive={this.isEditing('photo.density')}
             isRequired
             isStatic={this.props.isDisabled || this.props.onChange == null}
             label="photo.density"
-            max={1200}
-            min={72}
+            max={IMAGE.MAX_DENSITY}
+            min={IMAGE.MIN_DENSITY}
             onCancel={this.props.onEditCancel}
             onChange={this.handleDensityChange}
             onClick={this.handleDensityClick}
