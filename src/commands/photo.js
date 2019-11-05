@@ -18,6 +18,7 @@ const { blank, pick, pluck, splice } = require('../common/util')
 const { getPhotoTemplate } = require('../selectors')
 const { keys, values } = Object
 
+let PIXI
 
 class Consolidate extends ImportCommand {
   lookup = async (photo, paths = {}, checkFileSize) => {
@@ -168,6 +169,7 @@ class Consolidate extends ImportCommand {
           }
 
           this.consolidated.push(photo.id)
+          this.clearTextureCache(photo)
 
         } else {
           yield put(act.photo.update({
@@ -182,6 +184,15 @@ class Consolidate extends ImportCommand {
       warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
       fail(e, this.action.type)
     }
+  }
+
+  clearTextureCache(photo) {
+    if (!PIXI) PIXI = require('pixi.js')
+
+    let { cache } = this.options
+    let texture = PIXI.utils.TextureCache[cache.src(photo)]
+
+    if (texture) texture.destroy(true)
   }
 
   static ACTION = PHOTO.CONSOLIDATE
