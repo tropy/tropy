@@ -117,6 +117,9 @@ class Consolidate extends ImportCommand {
       let { image, hasChanged, error } =
         yield this.checkPhoto(photo, meta.force)
 
+      let data
+      let broken
+
       if (meta.force || hasChanged) {
         if (error != null) {
           warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
@@ -149,38 +152,32 @@ class Consolidate extends ImportCommand {
               }
             }
 
-            let data = { id: photo.id, ...image.toJSON() }
+            data = { id: photo.id, ...image.toJSON() }
+            broken = false
 
             yield call(mod.photo.save, db, data, { base })
 
             this.clearTextureCache(photo)
-            yield put(act.photo.update({
-              broken: false,
-              consolidated: new Date(),
-              consolidating: false,
-              ...data
-            }))
 
           } else {
-            yield put(act.photo.update({
-              id: photo.id,
-              broken: true,
-              consolidated: new Date(),
-              consolidating: false
-            }))
+            broken = true
           }
 
           this.consolidated.push(photo.id)
 
         } else {
-          yield put(act.photo.update({
-            id: photo.id,
-            broken: true,
-            consolidated: new Date(),
-            consolidating: false
-          }))
+          broken = true
         }
       }
+
+      yield put(act.photo.update({
+        id: photo.id,
+        broken,
+        consolidated: new Date(),
+        consolidating: false,
+        ...data
+      }))
+
     } catch (e) {
       warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
       fail(e, this.action.type)
@@ -459,6 +456,10 @@ class Save extends Command {
     })
 
     this.undo = act.photo.save({ id, data: original })
+
+    if (data.density) {
+      this.finally = act.photo.consolidate(id, { force: true })
+    }
 
     return { id, ...data }
   }
