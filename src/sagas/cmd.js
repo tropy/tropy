@@ -29,8 +29,15 @@ module.exports = {
       if (!cmd) cmd = { error: e }
 
     } finally {
-      if (!cmd) cmd = { error: new Error('command was cancelled') }
+      if (!cmd) {
+        cmd = { error: new Error('command was cancelled') }
+      }
+
       yield put(activity.done(action, cmd.error || cmd.result, cmd.meta))
+
+      if (cmd.finally) {
+        yield put(cmd.finally)
+      }
 
       trace('*exec terminated')
     }
