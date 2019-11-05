@@ -199,6 +199,7 @@ class MetadataField extends React.PureComponent {
 const Field = ({ isStatic, hint, label, onClick, ...props }) =>
   (props.value == null) ? null : (
     <li className={cx('metadata-field', {
+      static: isStatic,
       clickable: onClick != null
     })}>
       <label>
@@ -209,7 +210,7 @@ const Field = ({ isStatic, hint, label, onClick, ...props }) =>
         onClick={onClick}
         title={hint}>
         {isStatic ?
-          <div className="static">{props.display || props.value}</div> :
+          <div className="truncate">{props.display || props.value}</div> :
           <Editable {...props} />}
       </div>
     </li>
