@@ -30,10 +30,19 @@ const getSelectedItemTemplate = memo(
   }
 )
 
+const getSelectedItemType = memo(
+  getSelectedItems,
+  ([item, ...items]) => (item == null) ? EMPTY : {
+    id: item.type,
+    mixed: items.find(it => it.template !== item.template) != null
+  }
+)
+
 module.exports = {
   getItems,
   getListHold,
   getSelectedItems,
   getSelectedItemTemplate,
+  getSelectedItemType,
   getVisibleItems
 }

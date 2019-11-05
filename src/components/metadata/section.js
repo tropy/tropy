@@ -31,6 +31,7 @@ const MetadataSection = (props) => {
         canClearByBackspace={false}
         hideClearButton
         isRequired
+        value={props.type}
         onChange={props.onTypeChange}
         options={props.options}/>
       {props.children}
@@ -48,6 +49,7 @@ MetadataSection.propTypes = {
   onTypeChange: func.isRequired,
   template: string,
   templates: array,
+  type: string,
   options: array,
   title: string.isRequired
 }

@@ -21,6 +21,7 @@ const {
   getClassList,
   getPropertyList,
   getSelectedItemTemplate,
+  getSelectedItemType,
   getSelectedItems,
   getSelectedPhoto,
   getSelectionFields
@@ -186,6 +187,7 @@ class MetadataPanel extends React.PureComponent {
         template={this.props.template.id}
         templates={this.props.templates.item}
         title="panel.metadata.item"
+        type={this.props.type.id}
         options={this.props.fields.classes}
         onTemplateChange={this.handleItemTemplateChange}
         onTypeChange={this.handleItemTypeChange}
@@ -217,6 +219,7 @@ class MetadataPanel extends React.PureComponent {
         template={this.props.photo.template}
         templates={this.props.templates.photo}
         title="panel.metadata.photo"
+        type={this.props.photo.type}
         options={this.props.fields.classes}
         onTemplateChange={this.handlePhotoTemplateChange}
         onTypeChange={this.handlePhotoTypeChange}
@@ -249,6 +252,7 @@ class MetadataPanel extends React.PureComponent {
         template={this.props.selection.template}
         templates={this.props.templates.selection}
         title="panel.metadata.selection"
+        type={this.props.selection.type}
         options={this.props.fields.classes}
         onTemplateChange={this.handleSelectionTemplateChange}
         onTypeChange={this.handleSelectionTypeChange}
@@ -332,7 +336,8 @@ module.exports = {
       photo: getSelectedPhoto(state),
       selection: getActiveSelection(state),
       template: getSelectedItemTemplate(state),
-      templates: getAllTemplatesByType(state)
+      templates: getAllTemplatesByType(state),
+      type: getSelectedItemType(state)
     }),
 
     (dispatch) => ({
