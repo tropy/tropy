@@ -7,49 +7,11 @@ const {
 
 const { ipcRenderer: ipc } = require('electron')
 const { warn } = require('../common/log')
-const { identity } = require('../common/util')
 const history = require('../selectors/history')
 const { getAllTags } = require('../selectors')
 const { TAG, HISTORY } = require('../constants')
 
-
-module.exports = {
-
-  *forward(filter, { type, payload, meta }) {
-    try {
-      const event = meta.ipc === true ? type : meta.ipc
-      const data = yield call(filter[event] || identity, payload)
-
-      yield call([ipc, ipc.send], event, data)
-
-    } catch (e) {
-      warn({ stack: e.stack }, 'unexpected error in *ipc:forward')
-    }
-  },
-
-  *receive() {
-    const disp = yield call(channel, 'dispatch')
-
-    while (true) {
-      try {
-        const action = yield take(disp)
-        yield put(action)
-
-      } catch (e) {
-        warn({ stack: e.stack }, 'unexpected error in *ipc:receive')
-      }
-    }
-  },
-
-  *ipc() {
-    yield every(({ meta }) => meta && meta.ipc, module.exports.forward, FILTER)
-    yield fork(module.exports.receive)
-  }
-
-}
-
-
-const FILTER = {
+const filters = {
   *[HISTORY.CHANGED]() {
     const summary = yield select(history.summary)
     const messages = yield select(state => state.intl.messages)
@@ -70,6 +32,39 @@ const FILTER = {
   }
 }
 
+function *forward({ type, payload, meta }) {
+  try {
+    let name = meta.ipc === true ? type : meta.ipc
+
+    let data = (name in filters) ?
+      yield call(filters[name], payload) :
+      payload
+
+    yield call([ipc, ipc.send], name, data)
+
+  } catch (e) {
+    warn({ stack: e.stack }, 'unexpected error in *ipc:forward')
+  }
+}
+
+function *rsvp(action) {
+  try {
+    yield call([ipc, ipc.send], 'wm', 'rsvp', action)
+
+  } catch (e) {
+    warn({ stack: e.stack }, 'unexpected error in *ipc:rsvp')
+  }
+}
+
+function *receive() {
+  let dispatches = yield call(channel, 'dispatch')
+
+  while (true) {
+    let action = yield take(dispatches)
+    yield put(action)
+  }
+}
+
 function channel(name) {
   return eventChannel(emitter => {
     const listener = (_, ...actions) => {
@@ -84,4 +79,13 @@ function channel(name) {
 
     return () => ipc.removeListener(name, listener)
   })
+}
+
+module.exports = {
+  *ipc() {
+    yield every(({ error, meta }) => !error && meta && meta.ipc, forward)
+    yield every(({ meta }) => meta && meta.rsvp && meta.done, rsvp)
+
+    yield fork(receive)
+  }
 }

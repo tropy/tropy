@@ -55,7 +55,8 @@ body {
   align-items: center;
   overflow: hidden;
 
-  .metadata & {
+  .metadata &,
+  .notes:not(.overflow) & {
     @media (orientation: portrait) {
       flex: 0 1 100vw;
       min-height: 50vh;
@@ -63,6 +64,17 @@ body {
 
     @media (orientation: landscape) {
       flex: 0 0 100vh;
+      height: 100vh;
+    }
+  }
+
+  .container.notes:not(.metadata).overflow & {
+    @media (orientation: portrait) {
+      flex: 0 0 100vh;
+    }
+
+    @media (orientation: landscape) {
+      flex: 0 0 100vw;
       height: 100vh;
     }
   }
@@ -83,6 +95,12 @@ img {
     flex: 1 1 auto;
     flex-direction: column;
     padding-left: ($print-page-margin / 2);
+
+    .text-only & {
+      flex: 1 1 auto;
+      flex-direction: row;
+      padding-left: 0;
+    }
   }
 
   .overflow & {
@@ -92,6 +110,16 @@ img {
 
     @media (orientation: landscape) {
       flex: 0 0 calc(100vw - 100vh);
+    }
+  }
+
+  .overflow.text-only & {
+    @media (orientation: portrait) {
+      min-height: 0;
+    }
+
+    @media (orientation: landscape) {
+      flex: 1 1 auto;
     }
   }
 }
@@ -106,6 +134,20 @@ img {
 
     &:last-child {
       padding-left: ($print-page-margin / 4);
+    }
+  }
+
+  @media (orientation: landscape) {
+    .text-only & {
+      flex: 0 0 50%;
+
+      &:first-child {
+        padding-right: ($print-page-margin / 4);
+      }
+
+      &:last-child {
+        padding-left: ($print-page-margin / 4);
+      }
     }
   }
 }
@@ -136,12 +178,20 @@ img {
 .metadata-heading {
   @media (orientation: portrait) {
     height: $print-page-margin;
+
+    .text-only & {
+      height: $print-page-margin / 2;
+    }
   }
 
   @media (orientation: landscape) {
     height: $print-page-margin / 2 - $print-font-size / 2;
 
     .col:first-child > :first-child & {
+      height: $print-page-margin / 2;
+    }
+
+    .text-only & {
       height: $print-page-margin / 2;
     }
   }
@@ -171,7 +221,7 @@ label {
   word-break: break-word;
 }
 
-.notes {
+.note-list {
   .container:not(.overflow) & {
     .note-container + .note-container {
       margin-top: ($print-font-size * $print-line-height);
@@ -182,6 +232,10 @@ label {
     font-size: $print-font-size-large;
     line-height: $print-font-size-large * $print-line-height-large;
     letter-spacing: 0;
+  }
+
+  .overflow.metadata & {
+    margin-top: $print-page-margin - 3.7mm;
   }
 
   label {
@@ -209,4 +263,8 @@ label {
 
 .notes-heading {
   height: $print-page-margin / 2 - $print-font-size / 2;
+
+  .container:not(.metadata) & {
+    height: $print-page-margin / 2;
+  }
 }

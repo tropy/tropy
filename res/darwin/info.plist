@@ -2,6 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLIconFile</key>
+			<string>tropy.icns</string>
+			<key>CFBundleURLName</key>
+			<string>org.tropy.tropy-url</string>
+			<key>CFBundleURLSchemes</key>
+      <array>
+        <string>tropy</string>
+      </array>
+    </dict>
+  </array>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>

@@ -5,8 +5,8 @@ const { pick } = require('../common/util')
 
 module.exports = {
   done(action, result, meta) {
-    const error = result instanceof Error
-    const payload = !error ?
+    let error = result instanceof Error
+    let payload = !error ?
       result :
       pick(result, ['code', 'message', 'stack', 'type'])
 
@@ -17,6 +17,7 @@ module.exports = {
       meta: {
         ipc: action.meta.ipc,
         idx: action.meta.idx,
+        rsvp: action.meta.rsvp,
         search: action.meta.search,
         ...meta,
         done: true,

@@ -111,10 +111,6 @@ class Resizable extends React.Component {
     }
   }
 
-  getOuterBounds() {
-    return bounds(this.container.current.parentElement)
-  }
-
   getNewValue(event) {
     let { edge, min, isRelative } = this.props
     let { isInverse, origin, scale, max } = this

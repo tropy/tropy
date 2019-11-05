@@ -42,14 +42,8 @@ module.exports = {
       case ITEM.BULK.UPDATE:
         return bulk.update(state, payload, meta)
 
-      case ITEM.TAG.CREATE:
-        if (!meta.done || error) return state
-        // eslint-disable-line no-fallthrough
       case ITEM.TAG.INSERT:
         return nested.add('tags', state, payload, meta)
-      case ITEM.TAG.DELETE:
-        if (!meta.done || error) return state
-        // eslint-disable-line no-fallthrough
       case ITEM.TAG.REMOVE:
         return nested.remove('tags', state, payload, meta)
 

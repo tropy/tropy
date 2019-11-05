@@ -8,9 +8,9 @@ const { exif } = require('./exif')
 const { xmp } = require('./xmp')
 const { isSVG } = require('./svg')
 const sharp = require('sharp')
-const { assign } = Object
 const { warn } = require('../common/log')
 const { get, pick, restrict } = require('../common/util')
+const { rgb } = require('../css')
 const { EXIF, MIME, IMAGE } = require('../constants')
 
 
@@ -19,7 +19,7 @@ class Image {
     path,
     protocol,
     density = 300,
-    page = 0,
+    page,
     useLocalTimezone = false }) {
     return (new Image(path, protocol, useLocalTimezone)).open({ page, density })
   }
@@ -31,7 +31,7 @@ class Image {
     consolidated,
     created,
     checksum
-  }, { force, useLocalTimezone, density } = {}) {
+  }, { force, useLocalTimezone, density = 300 } = {}) {
     let status = {}
 
     try {
@@ -102,7 +102,7 @@ class Image {
 
   get orientation() {
     return Orientation(
-      get(this.exif, [this.page, EXIF.orientation, 'text'], 1)
+      get(this.meta, [this.page, 'exif', EXIF.orientation, 'text'], 1)
     )
   }
 
@@ -114,8 +114,22 @@ class Image {
     return get(this.meta, [this.page, 'space'])
   }
 
+  get color() {
+    return this.isOpaque ?
+      get(this.stats, [this.page, 'mean']) :
+      null
+  }
+
   get hasAlpha() {
     return get(this.meta, [this.page, 'hasAlpha'])
+  }
+
+  get isOpaque() {
+    return !this.hasAlpha || get(this.stats, [this.page, 'isOpaque'], true)
+  }
+
+  get isRemote() {
+    return this.protocol !== 'file'
   }
 
   get width() {
@@ -128,15 +142,16 @@ class Image {
 
   get data() {
     return {
-      ...this.exif[this.page],
-      ...this.xmp[this.page]
+      ...get(this.meta, [this.page, 'exif']),
+      ...get(this.meta, [this.page, 'xmp'])
     }
   }
 
   get date() {
     try {
-      let time = get(this.exif, [this.page, EXIF.dateTimeOriginal, 'text']) ||
-        get(this.exif, [this.page, EXIF.dateTime, 'text'])
+      let xif = get(this.meta, [this.page, 'exif'])
+      let time = get(xif, [EXIF.dateTimeOriginal, 'text']) ||
+        get(xif, [EXIF.dateTime, 'text'])
 
       // Temporarily return as string until we add value types.
       return (time || this.file.ctime || new Date()).toISOString()
@@ -180,15 +195,13 @@ class Image {
     this.page = 0
   }
 
-  isOpaque = async () => (
-    !this.hasAlpha || (await this.do().stats()).isOpaque
-  )
-
-  async open({ page = 0, density } = {}) {
+  async open({ page, density } = {}) {
     this.file = null
     this.buffer = null
     this.mimetype = null
     this.hash = null
+    this.meta = null
+    this.stats = null
     this.page = 0
     this.numPages = 1
 
@@ -213,44 +226,60 @@ class Image {
   async parse(buffer, { page, density }) {
     this.mimetype = magic(buffer, this.ext)
 
-    switch (this.mimetype) {
-      case MIME.PDF:
-        this.density = restrict(density, IMAGE.MIN_DENSITY, IMAGE.MAX_DENSITY)
-        // eslint-disable-next-line no-fallthrough
-      case MIME.TIFF:
-        this.numPages = (await sharp(buffer).metadata()).pages
-        // eslint-disable-next-line no-fallthrough
-      case MIME.GIF:
-      case MIME.JPEG:
-      case MIME.PNG:
-      case MIME.SVG:
-      case MIME.WEBP:
-      case MIME.HEIC:
-      case MIME.HEIF:
-      case MIME.JP2:
-        this.hash = createHash('md5')
-        this.hash.update(buffer)
-        this.buffer = buffer
-        break
-      default:
-        throw new Error('unsupported image')
+    if (!IMAGE.SUPPORTED[this.mimetype])
+      throw new Error(`image type not supported: ${this.mimetype}`)
+
+    this.hash = createHash('md5')
+    this.hash.update(buffer)
+    this.buffer = buffer
+
+    if (IMAGE.SCALABLE[this.mimetype])
+      this.density = restrict(density, IMAGE.MIN_DENSITY, IMAGE.MAX_DENSITY)
+
+    let meta = await this.do().metadata()
+
+    if (meta.pages) {
+      this.numPages = meta.pages
+
+      if (page == null)
+        page = meta.primaryPage
     }
 
-    if (page && page < this.numPages) {
+    this.meta = new Array(this.numPages)
+    this.stats = new Array(this.numPages)
+
+    if (page != null && page < this.numPages) {
       this.page = page
+      await this.analyze(this.do(), page)
+
+    } else {
+      await Promise.all([
+        ...this.each(this.analyze)
+      ])
     }
-
-    let meta = await Promise.all([
-      ...this.each(img => img.metadata())
-    ])
-
-    assign(this, {
-      exif: meta.map(m => exif(m.exif, { timezone: this.tz })),
-      meta,
-      xmp: meta.map(m => xmp(m.xmp))
-    })
 
     return this
+  }
+
+  analyze = async (img, page) => {
+    let meta = await img.metadata()
+
+    this.meta[page] = {
+      ...meta,
+      exif: exif(meta.exif, { timezone: this.tz }),
+      xmp: xmp(meta.xmp)
+    }
+
+    let dup = await img
+      .toFormat(meta.hasAlpha ? 'webp' : 'jpeg')
+      .toBuffer()
+
+    let stats = await sharp(dup).stats()
+
+    this.stats[page] = {
+      isOpaque: stats.isOpaque,
+      mean: rgb(...stats.channels.slice(0, 3).map(c => Math.round(c.mean)))
+    }
   }
 
   resize = async (size, selection) => {
@@ -286,6 +315,8 @@ class Image {
       'path',
       'protocol',
       'checksum',
+      'color',
+      'density',
       'mimetype',
       'width',
       'height',
@@ -297,11 +328,15 @@ class Image {
   variants(isSelection = false) {
     let variants = [48, 512]
 
-    if (!isSelection || this.isRemote || !IMAGE.WEB[this.mimetype]) {
+    if (!isSelection && (this.isRemote || !IMAGE.WEB[this.mimetype])) {
       variants.push('full')
     }
 
-    return variants.map(name => ({ name, size: Image.SIZE[name] }))
+    return variants.map(name => ({
+      name,
+      quality: Image.QUALITY[name],
+      size: Image.SIZE[name]
+    }))
   }
 
   static get input() {
@@ -317,12 +352,21 @@ class Image {
       .filter(({ output }) => output.file)
       .map(({ id }) => id)
   }
+
+  static SIZE = {
+    48: {
+      width: 48, height: 48, fit: 'inside'
+    },
+    512: {
+      width: 512, height: 512, fit: 'inside'
+    }
+  }
+
+  static QUALITY = {
+    48: 85, 512: 90, full: 95
+  }
 }
 
-Image.SIZE = {
-  48: { width: 48, height: 48, fit: 'inside' },
-  512: { width: 512, height: 512, fit: 'inside' }
-}
 
 const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
 

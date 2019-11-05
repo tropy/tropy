@@ -13,6 +13,8 @@ const { blank, empty, pick } = require('../common/util')
 
 const COLUMNS = [
   'checksum',
+  'color',
+  'density',
   'mimetype',
   'orientation',
   'path',
@@ -87,6 +89,8 @@ module.exports = {
             datetime(created, "localtime") AS created,
             datetime(modified, "localtime") AS modified,
             angle,
+            color,
+            density,
             mirror,
             negative,
             brightness,

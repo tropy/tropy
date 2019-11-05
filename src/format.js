@@ -39,6 +39,10 @@ const format = {
     return `${format.number(value / size[unit])} ${unit}`
   },
 
+  ppi(value) {
+    return blank(value) ? value : `${format.number(value)} ppi`
+  },
+
   auto(value, type) {
     switch (type) {
       case TYPE.DATE:

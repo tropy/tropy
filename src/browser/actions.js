@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+  api: require('../actions/api'),
   cache: require('../actions/cache'),
   context: require('../actions/context'),
   edit: require('../actions/edit'),

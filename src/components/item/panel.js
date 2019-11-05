@@ -167,7 +167,8 @@ class ItemPanelGroup extends React.PureComponent {
                       onEdit={this.props.onEdit}
                       onEditCancel={this.handleEditCancel}
                       onMetadataSave={this.handleMetadataSave}
-                      onOpenInFolder={this.props.onOpenInFolder}/>
+                      onOpenInFolder={this.props.onOpenInFolder}
+                      onPhotoSave={this.props.onPhotoSave}/>
                   )
                 case PANEL.TAGS:
                   return (
@@ -267,6 +268,7 @@ class ItemPanelGroup extends React.PureComponent {
     onPhotoCreate: func.isRequired,
     onPhotoError: func.isRequired,
     onPhotoRotate: func.isRequired,
+    onPhotoSave: func.isRequired,
     onPhotoSelect: func.isRequired,
     onTagCreate: func.isRequired,
     onTagSave: func.isRequired,

@@ -106,6 +106,7 @@ en:
           item: One item per page
           photo: One photo per page
           selection: One selection per page
+        photos: Include photos
         metadata: Include metadata
         notes: Include notes
         overflow: Allow content to take up more than one page
@@ -135,8 +136,8 @@ en:
           import: Accept duplicate photos
           prompt: Ask me every time
       density:
-        label: Pixel resolution
-        title: Used for PDF and other scalable formats
+        label: Default density (ppi)
+        title: Used for PDF, SVG and other scalable formats
       export:
         label: Export
         note:
@@ -159,6 +160,11 @@ en:
         option:
           stacked: Stacked
           side-by-side: Side by side
+      completions:
+        label: Autocomplete
+        option:
+          datatype: By datatype only
+          property-datatype: By datatype and property
     project:
       label: Project
     template:
@@ -207,6 +213,7 @@ en:
   photo:
     file: File
     size: Size
+    density: Density
     type: Type
     created: Date Added
     modified: Modified

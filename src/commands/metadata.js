@@ -6,7 +6,7 @@ const { pick } = require('../common/util')
 const { text } = require('../value')
 const mod = require('../models/metadata')
 const act = require('../actions')
-const { METADATA } = require('../constants')
+const { METADATA, TYPE } = require('../constants')
 const { keys } = Object
 
 
@@ -139,6 +139,11 @@ class Save extends Command {
         this.original[id] = pick(metadata[id], props, {}, true)
       }
     })
+
+    for (let prop in data) {
+      if (typeof data[prop] === 'string')
+        data[prop] = { text: data[prop], type: TYPE.TEXT }
+    }
 
     yield put(act.metadata.update({ ids, data }))
 

@@ -35,7 +35,8 @@ class CoverImage extends React.PureComponent {
         <Thumbnail
           {...pick(this.props, Thumbnail.keys)}
           {...pick(this.photo, Thumbnail.keys)}
-          id={this.id}/>
+          id={this.id}
+          size={this.props.size}/>
         <TagColors
           selection={this.props.item.tags}
           tags={this.props.tags}/>

@@ -78,10 +78,10 @@ class MetadataField extends React.PureComponent {
     }
   }
 
-  handleChange = (text, hasChanged = true) => {
+  handleChange = (text, hasChanged = true, hasBeenForced) => {
     this.props.onChange({
       [this.property]: { text, type: this.props.type }
-    }, hasChanged)
+    }, hasChanged, hasBeenForced)
   }
 
   handleCancel = (hasChanged, hasBeenForced) => {
@@ -196,36 +196,39 @@ class MetadataField extends React.PureComponent {
 }
 
 
-class StaticField extends React.PureComponent {
-  get classes() {
-    return ['metadata-field', 'static', {
-      clickable: this.props.onClick != null
-    }]
-  }
+const Field = ({ isStatic, hint, label, onClick, ...props }) =>
+  (props.value == null) ? null : (
+    <li className={cx('metadata-field', {
+      clickable: onClick != null
+    })}>
+      <label>
+        <FormattedMessage id={label}/>
+      </label>
+      <div
+        className="value"
+        onClick={onClick}
+        title={hint}>
+        {isStatic ?
+          <div className="static">{props.display || props.value}</div> :
+          <Editable {...props} />}
+      </div>
+    </li>
+  )
 
-  render() {
-    return (this.props.value == null) ? null : (
-      <li className={cx(this.classes)}>
-        <label>
-          <FormattedMessage id={this.props.label}/>
-        </label>
-        <div
-          className="value"
-          onClick={this.props.onClick}
-          title={this.props.hint}>
-          <div className="static">{this.props.value}</div>
-        </div>
-      </li>
-    )
-  }
-
-  static propTypes = {
-    hint: string,
-    label: string.isRequired,
-    value: oneOfType([string, number]).isRequired,
-    onClick: func
-  }
+Field.propTypes = {
+  display: string,
+  hint: string,
+  isEditing: bool,
+  isStatic: bool,
+  label: string.isRequired,
+  value: oneOfType([string, number]).isRequired,
+  onChange: func,
+  onClick: func
 }
+
+const StaticField = React.memo((props) =>
+  <Field {...props} isStatic/>
+)
 
 
 const DragSourceSpec = {
@@ -301,6 +304,7 @@ const DropTargetCollect = (connect, monitor) => ({
 })
 
 
+module.exports.Field = Field
 module.exports.StaticField = StaticField
 module.exports.NewMetadataField = NewMetadataField
 

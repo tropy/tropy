@@ -4,8 +4,13 @@ const React = require('react')
 const { TemplateSelect } = require('../template/select')
 const { ResourceSelect } = require('../resource/select')
 const { ipcRenderer: ipc } = require('electron')
-const { ESPER, ITEM, IMAGE } = require('../../constants')
 const { darwin } = require('../../common/os')
+
+const {
+  ESPER,
+  ITEM,
+  IMAGE
+} = require('../../constants')
 
 const {
   IconItemSmall,
@@ -207,6 +212,12 @@ class AppPrefs extends React.PureComponent {
             value={this.props.settings.layout}
             options={this.props.layouts}
             onChange={this.props.onSettingsUpdate}/>
+          <FormToggleGroup
+            id="prefs.app.completions"
+            name="completions"
+            value={this.props.settings.completions}
+            options={this.props.completions}
+            onChange={this.props.onSettingsUpdate}/>
           <hr/>
           <FormElement
             id="prefs.app.export.label"
@@ -234,12 +245,26 @@ class AppPrefs extends React.PureComponent {
             onChange={this.handlePrintSettingsChange}/>
           <FormElement isCompact>
             <Toggle
+              id="prefs.app.print.photos"
+              isDisabled={
+                !this.props.settings.print.metadata &&
+                !this.props.settings.print.notes}
+              name="photos"
+              value={this.props.settings.print.photos}
+              onChange={this.handlePrintSettingsChange}/>
+            <Toggle
               id="prefs.app.print.metadata"
+              isDisabled={
+                !this.props.settings.print.photos &&
+                !this.props.settings.print.notes}
               name="metadata"
               value={this.props.settings.print.metadata}
               onChange={this.handlePrintSettingsChange}/>
             <Toggle
               id="prefs.app.print.notes"
+              isDisabled={
+                !this.props.settings.print.photos &&
+                !this.props.settings.print.metadata}
               name="notes"
               value={this.props.settings.print.notes}
               onChange={this.handlePrintSettingsChange}/>
@@ -279,6 +304,7 @@ class AppPrefs extends React.PureComponent {
       theme: string.isRequired,
       templates: object.isRequired
     }).isRequired,
+    completions: arrayOf(string).isRequired,
     layouts: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,
     importMin: number.isRequired,
@@ -293,6 +319,7 @@ class AppPrefs extends React.PureComponent {
   static defaultProps = {
     themes: ['light', 'dark'],
     layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
+    completions: ['datatype', 'property-datatype'],
     locales: ['de', 'en', 'es', 'fr', 'it', 'ja'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL],

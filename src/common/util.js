@@ -4,28 +4,30 @@ const shortid = require('shortid')
 const { keys } = Object
 
 const util = {
-  once(emitter, event) {
-    return new Promise((resolve, reject) => {
-      const on =
-        (emitter.on || emitter.addEventListener).bind(emitter)
-      const off =
-        (emitter.removeListener || emitter.removeEventListener).bind(emitter)
+  once(emitter, ...events) {
+    return Promise.all(events.map(event =>
+      new Promise((resolve, reject) => {
+        const on =
+          (emitter.on || emitter.addEventListener).bind(emitter)
+        const off =
+          (emitter.removeListener || emitter.removeEventListener).bind(emitter)
 
-      function success(...args) {
-        off(event, success)
-        off('error', failure)
-        resolve(...args)
-      }
+        function success(...args) {
+          off(event, success)
+          off('error', failure)
+          resolve(...args)
+        }
 
-      function failure(reason) {
-        off(event, success)
-        off('error', failure)
-        reject(reason instanceof Error ? reason : new Error(reason))
-      }
+        function failure(reason) {
+          off(event, success)
+          off('error', failure)
+          reject(reason instanceof Error ? reason : new Error(reason))
+        }
 
-      on('error', failure)
-      on(event, success)
-    })
+        on('error', failure)
+        on(event, success)
+      })
+    ))
   },
 
   empty(obj) {
@@ -348,7 +350,7 @@ const util = {
   identity(payload) { return payload },
 
   delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    return new Promise(resolve => setTimeout(() => void resolve(), ms))
   },
 
   *counter(k = 0) {

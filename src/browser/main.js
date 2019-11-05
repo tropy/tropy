@@ -92,6 +92,10 @@ if (!(win32 && require('./squirrel')(opts))) {
       info(`ready after ${tropy.ready - START}ms [req:${T2 - T1}ms]`)
     })
 
+  if (app.isPackaged) {
+    app.setAsDefaultProtocolClient('tropy')
+  }
+
   if (darwin) {
     app.on('open-file', (event, file) => {
       if (tropy.ready) {

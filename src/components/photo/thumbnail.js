@@ -1,12 +1,11 @@
 'use strict'
 
 const React = require('react')
-//const { IconPhoto } = require('../icons')
+const { IconPhoto } = require('../icons')
 const { Cache } = require('../../common/cache')
 const { bool, func, instanceOf, number, string } = require('prop-types')
 const { ICON } = require('../../constants/sass')
 const { Rotation } = require('../../common/iiif')
-const { round } = require('../../common/math')
 
 
 class Thumbnail extends React.Component {
@@ -14,36 +13,22 @@ class Thumbnail extends React.Component {
     src: null,
     rotation: '0',
     consolidated: null,
-    hasFinishedLoading: false,
     isBroken: false
   }
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props) {
     let src = Thumbnail.getUrl(props)
     let rotation = Thumbnail.getRotation(props)
     let isBroken = props.broken
     let consolidated = props.consolidated
-
-    let hasImageChanged = src !== state.src ||
-      consolidated > state.consolidated
-
-    let hasFinishedLoading = (src != null) &&
-      (!(hasImageChanged || isBroken) || state.hasFinishedLoading)
-
-    let { width, height } = props
-
-    if (!rotation.isHorizontal) {
-      [width, height] = [height, width]
-    }
+    let [x, y] = rotation.ratio(props)
 
     return {
       src,
       rotation: rotation.format('x'),
       consolidated,
-      hasFinishedLoading,
       isBroken,
-      width,
-      height
+      style: { '--x': x, '--y': y, 'backgroundColor': props.color }
     }
   }
 
@@ -59,29 +44,10 @@ class Thumbnail extends React.Component {
       .add({ angle, mirror })
   }
 
-  get hasFallbackIcon() {
-    return this.state.isBroken || !this.state.hasFinishedLoading
-  }
-
   get src() {
     return (this.state.consolidated == null) ?
       this.state.src :
       `${this.state.src}?c=${this.state.consolidated.getTime()}`
-  }
-
-  get ratio() {
-    let { width, height } = this.state
-
-    if (width > height)
-      return { '--x': 1, '--y': round(height / width, 100) }
-    if (width < height)
-      return { '--x': round(width / height, 100), '--y': 1 }
-    else
-      return { '--x': 1, '--y': 1 }
-  }
-
-  handleLoad = () => {
-    this.setState({ hasFinishedLoading: true })
   }
 
   handleError = () => {
@@ -94,19 +60,19 @@ class Thumbnail extends React.Component {
     return (
       <figure
         className="thumbnail"
-        style={this.ratio}
+        style={this.state.style}
         onClick={this.props.onClick}
         onContextMenu={this.props.onContextMenu}
         onDoubleClick={this.props.onDoubleClick}
         onMouseDown={this.props.onMouseDown}>
-        {/*this.hasFallbackIcon && <IconPhoto/>*/}
-        {this.state.src &&
+        {!this.state.src ? <IconPhoto/> : (
           <div className={`rotation-container iiif rot-${this.state.rotation}`}>
             <img
+              decoding="async"
+              loading="lazy"
               src={this.src}
-              onLoad={this.handleLoad}
               onError={this.handleError}/>
-          </div>}
+          </div>)}
       </figure>
     )
   }
@@ -115,6 +81,7 @@ class Thumbnail extends React.Component {
     angle: number,
     broken: bool,
     cache: string.isRequired,
+    color: string,
     consolidated: instanceOf(Date),
     height: number,
     id: number,

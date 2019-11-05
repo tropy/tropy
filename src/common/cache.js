@@ -2,6 +2,7 @@
 
 const { mkdir, readdir, stat, writeFile } = require('fs').promises
 const { join, extname, basename } = require('path')
+const { IMAGE } = require('../constants')
 
 class Cache {
   constructor(...args) {
@@ -63,6 +64,10 @@ class Cache {
     return Cache.url(this.root, ...args)
   }
 
+  src(...args) {
+    return Cache.src(this.root, ...args)
+  }
+
   static extname() {
     return '.webp'
   }
@@ -80,6 +85,13 @@ class Cache {
     return `file://${
       join(root, Cache.path(id, variant, Cache.extname(mimetype)))
     }`
+  }
+
+  static src(root, { protocol, path, mimetype, id }) {
+    if (protocol !== 'file' || !IMAGE.WEB[mimetype])
+      return Cache.url(root, id, 'full', mimetype)
+    else
+      return `${protocol}://${path}`
   }
 }
 

@@ -4,7 +4,7 @@ const { createSelector: memo } = require('reselect')
 const { values } = Object
 const { getSelectedItems } = require('./items')
 const { seq, compose, filter, map, cat, keep } = require('transducers.js')
-const { by } = require('../collate')
+const { by, equals } = require('../collate')
 
 const byName = by('name')
 const getTags = ({ tags }) => tags
@@ -13,6 +13,21 @@ const getAllTags = memo(
   getTags,
   (tags) => values(tags).sort(byName)
 )
+
+const findTag = ({ tags }, { id }) =>
+  tags[id] || findByName(tags, id)
+
+const findByName = (tags, name, idOnly = false) => {
+  for (let id in tags) {
+    if (equals(tags[id].name, name))
+      return idOnly ? Number(id) : tags[id]
+  }
+  return null
+}
+
+const findTagIds = ({ tags }, tx) =>
+  tx.map(x =>
+    (!(x in tags) && findByName(tags, x, true)) || Number(x))
 
 const getItemTags = memo(
   getTags,
@@ -49,6 +64,8 @@ const getTagCompletions = memo(
 
 
 module.exports = {
+  findTag,
+  findTagIds,
   getAllTags,
   getItemTags,
   getTagCompletions

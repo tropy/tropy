@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { clipboard } = require('electron')
 const { call, cps, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
@@ -8,7 +9,7 @@ const { pick, sample } = require('../common/util')
 const { join } = require('../common/csv')
 const dialog = require('../dialog')
 const { writeFile: write } = require('fs')
-const { getAllTags } = require('../selectors')
+const { findTag, getAllTags } = require('../selectors')
 const mod = require('../models')
 const act = require('../actions')
 
@@ -23,11 +24,21 @@ class Load extends Command {
 
 
 class Create extends Command {
-  static get ACTION() { return TAG.CREATE }
-
   *exec() {
     let { db } = this.options
-    let { items, ...data } = this.action.payload
+    let { payload, meta } = this.action
+    let { items, ...data } = payload
+    let tag
+
+    assert(data.name != null, 'tag.name missing')
+
+    if (meta.resolve)
+      tag = yield select(state => findTag(state, {
+        id: data.name
+      }))
+
+    if (tag != null)
+      return tag
 
     let hasItems = (items && items.length > 0)
     let color = yield select(state => state.settings.tagColor)
@@ -37,7 +48,7 @@ class Create extends Command {
     if (data.color === 'random')
       data.color = sample(SASS.TAG.COLORS)
 
-    let tag = yield call(db.transaction, async tx => {
+    tag = yield call(db.transaction, async tx => {
       let tg = await mod.tag.create(tx, data)
       if (hasItems) await mod.item.tags.add(tx, { id: items, tag: tg.id })
       return tg
@@ -51,6 +62,8 @@ class Create extends Command {
 
     return tag
   }
+
+  static ACTION = TAG.CREATE
 }
 
 class Save extends Command {

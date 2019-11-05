@@ -88,18 +88,11 @@ class PhotoIterable extends React.PureComponent {
 
   renderThumbnail(props) {
     return (
-      <Thumbnail {...props}
-        id={this.props.photo.id}
-        angle={this.props.photo.angle}
-        broken={this.props.photo.broken}
-        consolidated={this.props.photo.consolidated}
-        mirror={this.props.photo.mirror}
-        mimetype={this.props.photo.mimetype}
-        orientation={this.props.photo.orientation}
+      <Thumbnail
+        {...props}
+        {...pick(this.props.photo, Thumbnail.keys)}
         cache={this.props.cache}
         size={this.props.size}
-        width={this.props.photo.width}
-        height={this.props.photo.height}
         onError={this.props.onError}/>
     )
   }
@@ -108,15 +101,9 @@ class PhotoIterable extends React.PureComponent {
   static DragSourceSpec = {
     beginDrag({ photo, getAdjacent }) {
       return {
+        ...pick(photo, Thumbnail.keys),
         id: photo.id,
         item: photo.item,
-        angle: photo.angle,
-        broken: photo.broken,
-        mimetype: photo.mimetype,
-        mirror: photo.mirror,
-        orientation: photo.orientation,
-        width: photo.width,
-        height: photo.height,
         adj: getAdjacent(photo).map(p => p && p.id)
       }
     },

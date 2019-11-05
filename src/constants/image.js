@@ -25,7 +25,7 @@ const isImageSupported = (file) =>
 
 module.exports = {
   MIN_DENSITY: 72,
-  MAX_DENSITY: 300,
+  MAX_DENSITY: 1200,
 
   EXT: [
     'gif',
@@ -48,7 +48,12 @@ module.exports = {
     [MIME.JPG]: true,
     [MIME.PNG]: true,
     [MIME.WEBP]: true,
-    [MIME.GIF]: true,
+    [MIME.GIF]: true
+    // [MIME.SVG]: true
+  },
+
+  SCALABLE: {
+    [MIME.PDF]: true,
     [MIME.SVG]: true
   },
 

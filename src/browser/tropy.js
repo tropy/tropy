@@ -12,7 +12,15 @@ const {
   systemPreferences: prefs
 } = require('electron')
 
-const { fatal, info, warn, logger, crashReport } = require('../common/log')
+const {
+  debug,
+  fatal,
+  info,
+  warn,
+  logger,
+  crashReport
+} = require('../common/log')
+
 const { delay, once } = require('../common/util')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
@@ -24,6 +32,7 @@ const { Strings } = require('../common/res')
 const Storage = require('./storage')
 const Updater = require('./updater')
 const dialog = require('./dialog')
+const API = require('./api')
 const WindowManager = require('./wm')
 const { addIdleObserver } = require('./idle')
 const { migrate } = require('./migrate')
@@ -45,6 +54,7 @@ class Tropy extends EventEmitter {
   static defaults = {
     frameless: darwin,
     debug: false,
+    port: 2019,
     theme: darwin ? 'system' : 'light',
     recent: [],
     updater: true,
@@ -70,6 +80,7 @@ class Tropy extends EventEmitter {
     this.updater = new Updater({
       enable: process.env.NODE_ENV === 'production' && opts['auto-updates']
     })
+    this.api = new API.Server(this)
 
     prop(this, 'cache', {
       value: new Cache(opts.cache || join(opts.data, 'cache'))
@@ -92,9 +103,11 @@ class Tropy extends EventEmitter {
     await this.restore()
     this.listen()
     this.wm.start()
+    this.api.start()
   }
 
   stop() {
+    this.api.stop()
     this.updater.stop()
     this.plugins.stop()
     this.persist()
@@ -387,15 +400,15 @@ class Tropy extends EventEmitter {
       this.dispatch(act.item.export(target.id, { plugin }), win))
 
     this.on('app:restore-item', (win, { target }) => {
-      this.dispatch(act.item.restore(target.id))
+      this.dispatch(act.item.restore(target.id), win)
     })
 
     this.on('app:destroy-item', (win, { target }) => {
-      this.dispatch(act.item.destroy(target.id))
+      this.dispatch(act.item.destroy(target.id), win)
     })
 
     this.on('app:create-item-photo', (win, { target }) => {
-      this.dispatch(act.photo.create({ item: target.id }))
+      this.dispatch(act.photo.create({ item: target.id }), win)
     })
 
     this.on('app:toggle-item-tag', (win, { id, tag }) => {
@@ -403,7 +416,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:clear-item-tags', (win, { id }) => {
-      this.dispatch(act.item.tags.clear(id))
+      this.dispatch(act.item.tags.clear(id), win)
     })
 
     this.on('app:list-item-remove', (win, { target }) => {
@@ -715,7 +728,7 @@ class Tropy extends EventEmitter {
         var win = await this.wm.open('print', this.hash)
 
         await Promise.race([
-          once(win, 'react:ready'),
+          once(win, 'ready', 'react:ready'),
           delay(2000)
         ])
 
@@ -727,6 +740,7 @@ class Tropy extends EventEmitter {
           delay(60000)
         ])
 
+        debug('will open print dialog')
         let result = await WindowManager.print(win)
         info(`printing ${result ? 'confirmed' : 'aborted'}`)
 

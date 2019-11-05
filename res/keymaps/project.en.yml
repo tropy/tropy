@@ -167,9 +167,15 @@ en:
       italic: CmdOrCtrl+i
       underline: CmdOrCtrl+u
       overline: CmdOrCtrl+o
-      subscript: Shift+CmdOrCtrl+B
-      superscript: Shift+CmdOrCtrl+P
-      strikethrough: Shift+CmdOrCtrl+T
+      subscript:
+        - Shift+CmdOrCtrl+B
+        - Shift+CmdOrCtrl+b
+      superscript:
+        - Shift+CmdOrCtrl+P
+        - Shift+CmdOrCtrl+p
+      strikethrough:
+        - Shift+CmdOrCtrl+T
+        - Shift+CmdOrCtrl+t
       addLink: CmdOrCtrl+l
       joinUp: Shift+Alt+ArrowUp
       joinDown: Shift+Alt+ArrowDown
@@ -181,10 +187,13 @@ en:
         - CmdOrCtrl+Alt+]
       selectAll: CmdOrCtrl+a
       clearSelection: Escape
-      blockquote: CmdOrCtrl+Shift+>
+      blockquote:
+        - CmdOrCtrl+Shift+>
+        - CmdOrCtrl+Shift+.
       undo: CmdOrCtrl+z
       redo:
         - CmdOrCtrl+Shift+Z
+        - CmdOrCtrl+Shift+z
         - CmdOrCtrl+y
     TagList: &TagList
       up: ArrowUp
@@ -221,7 +230,7 @@ en:
         - Backspace
         - Delete
       copy: Cmd+c
-      merge: Cmd+Shift+M
+      merge: Cmd+Shift+m
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
       all: Cmd+a

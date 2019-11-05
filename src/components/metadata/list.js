@@ -76,8 +76,8 @@ class MetadataList extends React.PureComponent {
     })
   }
 
-  handleChange = (data, hasChanged) => {
-    if (hasChanged || this.isBulk) {
+  handleChange = (data, hasChanged, hasBeenForced) => {
+    if (hasChanged || hasBeenForced && this.isBulk) {
       this.props.onChange({ id: this.props.fields.id, data })
     } else {
       this.props.onEditCancel()

@@ -27,7 +27,7 @@ describe('Image', () => {
     })
 
     it('computes exif data', () => {
-      expect(image.exif[0]).to.contain.keys([
+      expect(image.meta[0].exif).to.contain.keys([
         'http://www.w3.org/2003/12/exif/ns#orientation',
         'http://www.w3.org/2003/12/exif/ns#dateTimeOriginal',
         'http://www.w3.org/2003/12/exif/ns#dateTime'

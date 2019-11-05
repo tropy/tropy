@@ -79,11 +79,11 @@ const IGNORE = [
 target.all = async (args = []) => {
   try {
 
-    const platform = args[0] || process.platform
-    const arch = args[1] || process.arch
-    const ignore = [...IGNORE]
+    let platform = args[0] || process.platform
+    let arch = args[1] || process.arch
+    let ignore = [...IGNORE]
 
-    const icon = platform === 'win32' ?
+    let icon = platform === 'win32' ?
       join(res, 'icons', channel, `${name}.ico`) :
       join(res, 'icons', channel, `${name}.icns`)
 
@@ -93,7 +93,7 @@ target.all = async (args = []) => {
       ignore.push(/^\/node_modules.winreg/)
     }
 
-    const extraResource = (platform !== 'darwin') ? [] : [
+    let extraResource = (platform !== 'darwin') ? [] : [
       join(res, 'icons', 'mime', 'tpy.icns'),
       join(res, 'icons', 'mime', 'ttp.icns')
     ]
@@ -117,7 +117,7 @@ target.all = async (args = []) => {
       appCopyright:
         `Copyright (c) 2015-${new Date().getFullYear()} ` +
         `${author.name}. All rights not expressly granted are reserved.`,
-      extendInfo: join(res, 'darwin', 'ext.plist'),
+      extendInfo: join(res, 'darwin', 'info.plist'),
       extraResource,
       darwinDarkModeSupport: true,
       win32metadata: {
