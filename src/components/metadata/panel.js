@@ -102,8 +102,7 @@ class MetadataPanel extends React.PureComponent {
     if (hasChanged  || this.isBulk) {
       this.props.onTypeChange('item', {
         id: this.props.items.map(it => it.id),
-        property: 'rdf:type',
-        value: type.id
+        data: { type: type.id }
       })
     }
   }
@@ -111,19 +110,17 @@ class MetadataPanel extends React.PureComponent {
   handlePhotoTypeChange = (type, hasChanged) => {
     if (hasChanged) {
       this.props.onTypeChange('photo', {
-        id: [this.props.photo.id],
-        property: 'rdf:type',
-        value: type.id
+        id: this.props.photo.id,
+        data: { type: type.id }
       })
     }
   }
 
   handleSelectionTypeChange = (type, hasChanged) => {
     if (hasChanged) {
-      this.props.onTemplateChange('selection', {
-        id: [this.props.selection.id],
-        property: 'rdf:type',
-        value: type.id
+      this.props.onTypeChange('selection', {
+        id: this.props.selection.id,
+        data: { type: type.id }
       })
     }
   }
