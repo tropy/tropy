@@ -101,6 +101,8 @@ class Editable extends React.PureComponent {
         placeholder={this.props.placeholder}
         tabIndex={this.props.tabIndex}
         type={this.props.type}
+        max={this.props.max}
+        min={this.props.min}
         resize={this.props.resize}
         value={this.props.value || ''}
         onBlur={this.handleBlur}
@@ -129,6 +131,8 @@ class Editable extends React.PureComponent {
     isActive: bool,
     isDisabled: bool,
     isRequired: bool,
+    max: oneOfType([string, number]),
+    min: oneOfType([string, number]),
     placeholder: string,
     resize: bool,
     tabIndex: number,
