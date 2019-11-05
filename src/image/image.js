@@ -128,6 +128,9 @@ class Image {
     return !this.hasAlpha || get(this.stats, [this.page, 'isOpaque'], true)
   }
 
+  get isRemote() {
+    return this.protocol !== 'file'
+  }
 
   get width() {
     return get(this.meta, [this.page, 'width'], 0)
