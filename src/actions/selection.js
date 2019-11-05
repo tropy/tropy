@@ -107,18 +107,6 @@ module.exports = {
         }
       }
     }
-  },
-
-  subject: {
-    save({ id, type }) {
-      return {
-        type: SELECTION.SUBJECT.SAVE,
-        payload: {
-          id: array(id),
-          property: 'rdf:type',
-          value: type
-        }
-      }
-    }
   }
+
 }

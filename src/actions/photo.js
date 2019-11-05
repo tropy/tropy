@@ -188,18 +188,7 @@ module.exports = {
         }
       }
     }
-  },
-
-  subject: {
-    save({ id, type }) {
-      return {
-        type: PHOTO.SUBJECT.SAVE,
-        payload: {
-          id: array(id),
-          property: 'rdf:type',
-          value: type
-        }
-      }
-    }
   }
+
+
 }

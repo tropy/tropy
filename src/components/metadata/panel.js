@@ -102,7 +102,8 @@ class MetadataPanel extends React.PureComponent {
     if (hasChanged  || this.isBulk) {
       this.props.onTypeChange('item', {
         id: this.props.items.map(it => it.id),
-        type: type.id
+        property: 'rdf:type',
+        value: type.id
       })
     }
   }
@@ -111,7 +112,8 @@ class MetadataPanel extends React.PureComponent {
     if (hasChanged) {
       this.props.onTypeChange('photo', {
         id: [this.props.photo.id],
-        type: type.id
+        property: 'rdf:type',
+        value: type.id
       })
     }
   }
@@ -120,7 +122,8 @@ class MetadataPanel extends React.PureComponent {
     if (hasChanged) {
       this.props.onTemplateChange('selection', {
         id: [this.props.selection.id],
-        type: type.id
+        property: 'rdf:type',
+        value: type.id
       })
     }
   }
@@ -353,7 +356,7 @@ module.exports = {
       },
 
       onTypeChange(type, ...args) {
-        dispatch(actions[type].subject.save(...args))
+        dispatch(actions[type].save(...args))
       }
     }), null, { forwardRef: true }
   )(MetadataPanel)

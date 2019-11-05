@@ -181,6 +181,14 @@ module.exports = {
     }
   },
 
+  save(payload, meta) {
+    return {
+      type: ITEM.SAVE,
+      payload,
+      meta: { cmd: 'project', history: 'merge', ...meta }
+    }
+  },
+
   bulk: {
     update(payload, meta) {
       return {
@@ -275,18 +283,6 @@ module.exports = {
         }
       }
     }
-  },
-
-  subject: {
-    save({ id, type }) {
-      return {
-        type: ITEM.SUBJECT.SAVE,
-        payload: {
-          id: array(id),
-          property: 'rdf:type',
-          value: type
-        }
-      }
-    }
   }
+
 }
