@@ -124,8 +124,12 @@ $default-padding-horizontal: 12px !default;
       padding-right: ($default-padding-horizontal - $scrollbar-size / 3);
     }
 
-    @include variant(".clickable .value") {
+    @include variant(".clickable.static .value") {
       cursor: pointer;
+    }
+
+    @include variant(".static .value") {
+      cursor: not-allowed;
     }
   }
 
