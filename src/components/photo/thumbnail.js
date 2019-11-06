@@ -5,53 +5,36 @@ const { IconPhoto } = require('../icons')
 const { Cache } = require('../../common/cache')
 const { bool, func, instanceOf, number, string } = require('prop-types')
 const { ICON } = require('../../constants/sass')
-const { Rotation } = require('../../common/iiif')
+const { exifRotation } = require('../../common/iiif')
 
+const variant = (size) =>
+  size > ICON.SIZE ? ICON.MAX : ICON.SIZE
 
 class Thumbnail extends React.Component {
   state = {
-    src: null,
     rotation: '0',
-    consolidated: null,
-    isBroken: false
+    src: null,
+    style: null
   }
 
   static getDerivedStateFromProps(props) {
-    let src = Thumbnail.getUrl(props)
-    let rotation = Thumbnail.getRotation(props)
-    let isBroken = props.broken
-    let consolidated = props.consolidated
-    let [x, y] = rotation.ratio(props)
+    let src = Cache.url(props.cache, variant(props.size), props)
+    let rot = exifRotation(props.orientation).add(props)
+    let [x, y] = rot.ratio(props)
 
     return {
       src,
-      rotation: rotation.format('x'),
-      consolidated,
-      isBroken,
-      style: { '--x': x, '--y': y, 'backgroundColor': props.color }
+      rotation: rot.format('x'),
+      style: {
+        '--x': x,
+        '--y': y,
+        'backgroundColor': props.color
+      }
     }
   }
 
-  static getUrl({ cache, id, mimetype, size }) {
-    return (id == null) ?
-      null :
-      Cache.url(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE, mimetype)
-  }
-
-  static getRotation({ orientation, angle, mirror }) {
-    return Rotation
-      .fromExifOrientation(orientation)
-      .add({ angle, mirror })
-  }
-
-  get src() {
-    return (this.state.consolidated == null) ?
-      this.state.src :
-      `${this.state.src}?c=${this.state.consolidated.getTime()}`
-  }
-
   handleError = () => {
-    if (this.props.onError != null && !this.state.isBroken) {
+    if (this.props.onError != null && !this.props.broken) {
       this.props.onError(this.props.id)
     }
   }
@@ -70,7 +53,7 @@ class Thumbnail extends React.Component {
             <img
               decoding="async"
               loading="lazy"
-              src={this.src}
+              src={this.state.src}
               onError={this.handleError}/>
           </div>)}
       </figure>

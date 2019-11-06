@@ -508,6 +508,16 @@ const util = {
       let ns = uri.split(/(#|\/)/)
       let nm = ns.pop()
       return [ns.join(''), nm]
+    },
+
+    encode(url) {
+      return url.replace(/[#?&]/g, (m) => {
+        switch (m) {
+          case '#': return '%23'
+          case '?': return '%3F'
+          case '&': return '%26'
+        }
+      })
     }
   }
 }

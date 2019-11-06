@@ -191,7 +191,7 @@ class Esper extends React.PureComponent {
 
       assign(state, {
         photo: photo.id,
-        src: this.getSource(photo, props),
+        src: Cache.src(props.cache, photo),
         width: photo.width,
         height: photo.height
       })
@@ -220,10 +220,6 @@ class Esper extends React.PureComponent {
     assign(state, this.getZoomBounds(screen, state, props))
 
     return state
-  }
-
-  getSource(photo, { cache } = this.props) {
-    return Cache.src(cache, photo)
   }
 
   getZoomToFill(screen, { width } = this.state, props = this.props) {

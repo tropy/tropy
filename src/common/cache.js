@@ -2,6 +2,7 @@
 
 const { mkdir, readdir, stat, writeFile } = require('fs').promises
 const { join, extname, basename } = require('path')
+const { URI } = require('./util')
 const { IMAGE } = require('../constants')
 
 class Cache {
@@ -81,17 +82,25 @@ class Cache {
     return [...basename(path, ext).split('_', 2), ext]
   }
 
-  static url(root, id, variant, mimetype) {
-    return `file://${
-      join(root, Cache.path(id, variant, Cache.extname(mimetype)))
-    }`
+  static url(root, variant, { id, mimetype, consolidated }) {
+    if  (id == null)
+      return null
+
+    let path = join(root, Cache.path(id, variant, Cache.extname(mimetype)))
+
+    if (consolidated)
+      return `file://${URI.encode(path)}?c=${consolidated.getTime()}`
+    else
+      return `file://${URI.encode(path)}`
   }
 
-  static src(root, { protocol, path, mimetype, id }) {
+  static src(root, props,  { path, consolidated, protocol, mimetype } = props) {
     if (protocol !== 'file' || !IMAGE.WEB[mimetype])
-      return Cache.url(root, id, 'full', mimetype)
+      return Cache.url(root, 'full', props)
+    if  (consolidated)
+      return `file://${URI.encode(path)}?c=${consolidated.getTime()}`
     else
-      return `${protocol}://${path}`
+      return `file://${URI.encode(path)}`
   }
 }
 
