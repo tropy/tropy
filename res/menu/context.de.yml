@@ -264,7 +264,7 @@ de:
         command: 'app:duplicate-photo'
       - label: Foto in neues Objekt verschieben
         command: 'app:explode-photo'
-      - label: In Finder anzeigen
+      - label: Originalfoto anzeigen …
         command: 'app:show-in-folder'
       - label: Foto löschen
         command: 'app:delete-photo'
@@ -630,7 +630,7 @@ de:
         command: 'app:duplicate-photo'
       - label: Foto in neues Objekt verschieben
         command: 'app:explode-photo'
-      - label: In Finder anzeigen
+      - label: Originalfoto anzeigen …
         command: 'app:show-in-folder'
       - label: Foto löschen
         command: 'app:delete-photo'
@@ -966,7 +966,7 @@ de:
         command: 'app:duplicate-photo'
       - label: Foto in neues Objekt verschieben
         command: 'app:explode-photo'
-      - label: In Finder anzeigen
+      - label: Originalfoto anzeigen …
         command: 'app:show-in-folder'
       - label: Foto löschen
         command: 'app:delete-photo'

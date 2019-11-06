@@ -264,7 +264,7 @@ ja:
         command: 'app:duplicate-photo'
       - label: 写真を新規アイテムへ移動
         command: 'app:explode-photo'
-      - label: フォルダ内の写真を表示
+      - label: Show Original Photo…
         command: 'app:show-in-folder'
       - label: 写真を削除
         command: 'app:delete-photo'
@@ -630,7 +630,7 @@ ja:
         command: 'app:duplicate-photo'
       - label: 写真を新規アイテムへ移動
         command: 'app:explode-photo'
-      - label: フォルダ内の写真を表示
+      - label: Show Original Photo…
         command: 'app:show-in-folder'
       - label: 写真を削除
         command: 'app:delete-photo'
@@ -966,7 +966,7 @@ ja:
         command: 'app:duplicate-photo'
       - label: 写真を新規アイテムへ移動
         command: 'app:explode-photo'
-      - label: フォルダ内の写真を表示
+      - label: Show Original Photo…
         command: 'app:show-in-folder'
       - label: 写真を削除
         command: 'app:delete-photo'

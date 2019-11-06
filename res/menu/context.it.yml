@@ -264,7 +264,7 @@ it:
         command: 'app:duplicate-photo'
       - label: Sposta foto in un nuovo elemento
         command: 'app:explode-photo'
-      - label: Mostra la foto nella sua cartelal
+      - label: Show Original Photo…
         command: 'app:show-in-folder'
       - label: Elimina la foto
         command: 'app:delete-photo'
@@ -630,7 +630,7 @@ it:
         command: 'app:duplicate-photo'
       - label: Sposta foto in un nuovo elemento
         command: 'app:explode-photo'
-      - label: Mostra la foto nella sua cartella...
+      - label: Show Original Photo…
         command: 'app:show-in-folder'
       - label: Elimina la foto
         command: 'app:delete-photo'
@@ -966,7 +966,7 @@ it:
         command: 'app:duplicate-photo'
       - label: Sposta fotografia in un nuovo elemento
         command: 'app:explode-photo'
-      - label: Mostra la foto nella sua cartelal
+      - label: Show Original Photo…
         command: 'app:show-in-folder'
       - label: Elimina la foto
         command: 'app:delete-photo'

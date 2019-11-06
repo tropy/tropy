@@ -36,14 +36,14 @@ ja:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: 写真をインポートする
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
-        - label: Print
+        - label: プリント
           command: 'app:print'
           accelerator: CmdOrCtrl+P
           condition: project
@@ -244,14 +244,14 @@ ja:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: 写真をインポートする
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
-        - label: Print
+        - label: プリント
           command: 'app:print'
           accelerator: CmdOrCtrl+P
           condition: project
@@ -431,14 +431,14 @@ ja:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: 写真をインポートする
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
-        - label: Print
+        - label: プリント
           command: 'app:print'
           accelerator: CmdOrCtrl+P
           condition: project

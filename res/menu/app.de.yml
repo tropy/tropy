@@ -36,7 +36,7 @@ de:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Fotos importieren …
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Fotos konsolidieren
@@ -244,7 +244,7 @@ de:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Fotos importieren …
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Fotos konsolidieren
@@ -431,7 +431,7 @@ de:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Fotos importieren …
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Fotos konsolidieren

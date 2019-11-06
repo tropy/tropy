@@ -6,97 +6,83 @@ es:
     trash: Objetos suprimidos
   toolbar:
     import: Importar fotos
-    items: >
-        {count, plural,
-
-        =0 {No hay objetos en esta visualización}
-
-        one {1 Objeto en esta visualización}
-
-        other {# Objetos en esta visualización}}
+    items: |
+      {count, plural,
+      =0 {No hay objetos en esta visualización}
+      one {1 Objeto en esta visualización}
+      other {# Objetos en esta visualización}}
     search:
       placeholder: Búsqueda
   panel:
     metadata:
       tab: Metadatos
       photo: Foto
-      item: >
-          {count, plural,
-
-          =0 {}
-
-          one {Objeto}
-
-          other {# objetos}}
+      item: |
+        {count, plural,
+        =0 {}
+        one {Objeto}
+        other {# objetos}}
       selection: Selección
       dropdown:
         placeholder: Añadir nuevo campo ...
     tags:
       tab: Etiquetas
-      add: >
-          {count, plural,
-
-          =0 {Añadir una etiqueta}
-
-          one {Añadir una etiqueta a 1 objeto}
-
-          other {Añadir una etiqueta a # objetos}}
+      add: |
+        {count, plural,
+        =0 {Añadir una etiqueta}
+        one {Añadir una etiqueta a 1 objeto}
+        other {Añadir una etiqueta a # objetos}}
     photo:
-      title: >
-          {count, plural,
-
-          =0 {No hay fotos}
-
-          one {1 foto}
-
-          other {# fotos}}
+      title: |
+        {count, plural,
+        =0 {No hay fotos}
+        one {1 foto}
+        other {# fotos}}
       create: Añadir fotos
       selection: Selección
     note:
-      title: >
-          {count, plural,
-
-          =0 {No hay notas}
-
-          one {1 nota}
-
-          other {# notas}}
+      title: |
+        {count, plural,
+        =0 {No hay notas}
+        one {1 nota}
+        other {# notas}}
       create: Añadir nota
   print:
     item: Objeto
     photo: Foto
     notes: Notas
-    note: Nota {idx, number}
+    note: 'Nota {idx, number}'
     tags: Etiquetas
   about:
-    version: Versión {version}
+    version: 'Versión {version}'
     rrchnm:
       title: Roy Rosenzweig Center for History and New Media
-      url: https://rrchnm.org
+      url: 'https://rrchnm.org'
     cds:
       title: Corporation for Digital Scholarship
-      url: http://digitalscholar.org
+      url: 'http://digitalscholar.org'
     text: >
-        Tropy es desarrollado por el {rrchnm}, un equipo que crea recursos para la
-        enseñanza de la historia, exhibiciones digitales y software de código abierto.
-    trademark: Tropy es una marca registrada de la {cds}.
+      Tropy es desarrollado por el {rrchnm}, un equipo que crea recursos para la
+      enseñanza de la historia, exhibiciones digitales y software de código
+      abierto.
+    trademark: 'Tropy es una marca registrada de la {cds}.'
     release:
       title: Notas de versión
-      url: https://github.com/tropy/tropy/releases/tag/{version}
+      url: 'https://github.com/tropy/tropy/releases/tag/{version}'
     license:
       title: Información sobra la licencia
-      url: https://tropy.org/license
+      url: 'https://tropy.org/license'
     credits:
       title: Créditos
-      url: https://tropy.org/credits
+      url: 'https://tropy.org/credits'
   project:
-    none: Arrastra y suelta un archivo de proyecto aquí o crea un {newProject}
+    none: 'Arrastra y suelta un archivo de proyecto aquí o crea un {newProject}'
     empty: Arrastrar y suelta tus fotos en Tropy para empezar.
     new: Nuevo proyecto
     recent: Proyectos recientes
     corrupted: >
-        Tu archivo de proyecto puede estar dañado. Intervención manual puede ser necesaria
-        para repararlo. Consulta la guía del usuario para obtener ayuda.
+      Tu archivo de proyecto puede estar dañado. Intervención manual puede ser
+      necesaria para repararlo. Consulta la guía del usuario para obtener ayuda.
   wizard:
     project:
       title: Crear un nuevo proyecto
@@ -120,6 +106,7 @@ es:
           item: Un objeto por página
           photo: Una foto por página
           selection: Una selección por página
+        photos: Include photos
         metadata: Incluir metadatos
         notes: Incluir notas
         overflow: Permitir al contenido de utilizar más de una página
@@ -148,6 +135,9 @@ es:
           skip: Omitir las fotos duplicadas
           import: Aceptar las fotos duplicadas
           prompt: Preguntarme cada vez
+      density:
+        label: Default density (ppi)
+        title: 'Used for PDF, SVG and other scalable formats'
       export:
         label: Exportar
         note:
@@ -170,6 +160,11 @@ es:
         option:
           stacked: Vertical
           side-by-side: Lado a lado
+      completions:
+        label: Autocomplete
+        option:
+          datatype: By datatype only
+          property-datatype: By datatype and property
     project:
       label: Projecto
     template:
@@ -186,34 +181,23 @@ es:
     vocab:
       label: Esquemas
       export: Exportar
-      classes: >
-          {count, plural,
-
-          =0 {Ninguna clase}
-
-          one {# Clase}
-
-          other {# Clases}
-
-          }
-      datatypes: >
-          {count, plural,
-
-          =0 {Ningún tipo de dato} one {# Tipo de dato}
-
-          other {# Tipos de datos}
-
-          }
-      properties: >
-          {count, plural,
-
-          =0 {Ninguna propiedad}
-
-          one {# Propiedad}
-
-          other {# Propiedades}
-
-          }
+      classes: |
+        {count, plural,
+        =0 {Ninguna clase}
+        one {# Clase}
+        other {# Clases}
+        }
+      datatypes: |
+        {count, plural,
+        =0 {Ningún tipo de dato} one {# Tipo de dato}
+        other {# Tipos de datos}
+        }
+      properties: |
+        {count, plural,
+        =0 {Ninguna propiedad}
+        one {# Propiedad}
+        other {# Propiedades}
+        }
     plugins:
       label: Plugins
       enable: Activar
@@ -229,6 +213,7 @@ es:
   photo:
     file: Archivo
     size: Talla
+    density: Density
     type: Tipo
     created: Creación
     modified: Modificado
@@ -252,19 +237,19 @@ es:
       revert: Revertir al original
       brightness:
         label: Brillo
-        value: "{value, number}"
+        value: '{value, number}'
       contrast:
         label: Contraste
-        value: "{value, number}"
+        value: '{value, number}'
       hue:
         label: Tinte
-        value: "{value, number}°"
+        value: '{value, number}°'
       saturation:
         label: Saturación
-        value: "{value, number}"
+        value: '{value, number}'
       sharpen:
         label: Nitidez
-        value: "{value, number}"
+        value: '{value, number}'
   notepad:
     placeholder: Añade tus notas aqui ...
   completions:
@@ -280,9 +265,9 @@ es:
     creator: Creador
     description: Descripción
     types:
-      https://tropy.org/v1/tropy#Item: Plantilla de objeto
-      https://tropy.org/v1/tropy#Photo: Plantilla de foto
-      https://tropy.org/v1/tropy#Selection: Plantilla de selección
+      'https://tropy.org/v1/tropy#Item': Plantilla de objeto
+      'https://tropy.org/v1/tropy#Photo': Plantilla de foto
+      'https://tropy.org/v1/tropy#Selection': Plantilla de selección
     field:
       property: Propiedad
       label: Rótulo
@@ -311,47 +296,47 @@ es:
   dialog:
     notify:
       buttons:
-      - OK
+        - OK
     error:
       title: Error
       buttons:
-      - Cerrar
-      - Copiar el error
-      - Mostrar logs
+        - Cerrar
+        - Copiar el error
+        - Mostrar logs
     prompt:
       item:
         destroy:
           message: >
-              ¿Estás seguro/a de querer suprimir permanentemente estos objetos? Esta
-              acción no puede deshacerse.
+            ¿Estás seguro/a de querer suprimir permanentemente estos objetos?
+            Esta acción no puede deshacerse.
           buttons:
-          - Cancelar
-          - Borrar
+            - Cancelar
+            - Borrar
       photo:
         consolidate:
           message: >
-              ¿Quieres que Tropy verifique y remplace automáticamente las fotos faltantes
-              en esta ubicación?
+            ¿Quieres que Tropy verifique y remplace automáticamente las fotos
+            faltantes en esta ubicación?
           buttons:
-          - 'No'
-          - Si
+            - 'No'
+            - Si
       dup:
         detail: >
-            Esta foto ya existe en el proyecto. ¿Estás seguro/a de querer importarla
-            de nuevo?
+          Esta foto ya existe en el proyecto. ¿Estás seguro/a de querer
+          importarla de nuevo?
         checkboxLabel: Recordar mi elección
         buttons:
-        - Omitir
-        - Importar aún asi
+          - Omitir
+          - Importar aún asi
       plugin:
         uninstall:
           type: advertencia
           detail: >
-              ¿Deseas realmente suprimir este plugin? Continuar lo suprimirá permanentemente,
-              igual que su configuración.
+            ¿Deseas realmente suprimir este plugin? Continuar lo suprimirá
+            permanentemente, igual que su configuración.
           buttons:
-          - Cancelar
-          - Borrar
+            - Cancelar
+            - Borrar
     filter:
       csv: CSV
       templates: Plantillas Tropy
@@ -454,14 +439,11 @@ es:
       explode: Deconstruyendo objeto ...
       export: Exportando objeto ...
       implode: Restaurando objeto ...
-      import: >
-          {hasProgressBar, select,
-
-          true {Importando objeto {progress, number} de {total, number} …}
-
-          other {Importando objetos …}
-
-          }
+      import: |
+        {hasProgressBar, select,
+        true {Importando objeto {progress, number} de {total, number} …}
+        other {Importando objetos …}
+        }
       load: Cargando objetos ...
       merge: Fusionando objeto ...
       restore: Restaurando objeto ...
@@ -483,31 +465,22 @@ es:
       template:
         import: Importando plantillas ...
     photo:
-      consolidate: >
-          {hasProgressBar, select,
-
-          true {Agrupando foto {progress, number} de {total, number} …}
-
-          other {Agrupando fotos …}
-
-          }
-      create: >
-          {hasProgressBar, select,
-
-          true {Importando foto {progress, number} de {total, number} …}
-
-          other {Importando fotos …}
-
-          }
+      consolidate: |
+        {hasProgressBar, select,
+        true {Agrupando foto {progress, number} de {total, number} …}
+        other {Agrupando fotos …}
+        }
+      create: |
+        {hasProgressBar, select,
+        true {Importando foto {progress, number} de {total, number} …}
+        other {Importando fotos …}
+        }
       delete: Borrando foto ...
-      duplicate: >
-          {hasProgressBar, select,
-
-          true {Duplicando foto {progress, number} de {total, number} …}
-
-          other {Duplicando fotos …}
-
-          }
+      duplicate: |
+        {hasProgressBar, select,
+        true {Duplicando foto {progress, number} de {total, number} …}
+        other {Duplicando fotos …}
+        }
       load: Cargando fotos ...
       move: Moviendo fotos ...
       order: Ordenando fotos ...
@@ -561,7 +534,9 @@ es:
     list:
       load: Falla en el cargado de listas.
       create: Falla en la creación de lista. Los nombres de listas deben ser únicos.
-      move: Falla al mover la lista. Los nombres de lista deben ser únicos en cada nivel.
+      move: >-
+        Falla al mover la lista. Los nombres de lista deben ser únicos en cada
+        nivel.
       save: Falla al guardar la lista.
       item:
         add: Falla al añadir objeto(s) a la lista.
@@ -586,13 +561,15 @@ es:
           add: Falla al añadir campo a plantilla.
           remove: Falla al suprimir campo a plantilla.
     tag:
-      create: Falla en la creación de etiqueta. Los nombre de etiquetas deben ser únicos.
+      create: >-
+        Falla en la creación de etiqueta. Los nombre de etiquetas deben ser
+        únicos.
   flash:
     update:
       ready:
         message: >
-            Tropy {version} está listo para ser instalado. ¿Quieres instalar y reiniciar
-            la aplicación?
+          Tropy {version} está listo para ser instalado. ¿Quieres instalar y
+          reiniciar la aplicación?
         confirm: Reiniciar ahora
   plugin:
     name: Nombre
