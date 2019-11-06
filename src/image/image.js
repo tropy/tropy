@@ -18,7 +18,7 @@ class Image {
   static open({
     path,
     protocol,
-    density = 300,
+    density = 72,
     page,
     useLocalTimezone = false }) {
     return (new Image(path, protocol, useLocalTimezone)).open({ page, density })
@@ -31,7 +31,7 @@ class Image {
     consolidated,
     created,
     checksum
-  }, { force, useLocalTimezone, density = 300 } = {}) {
+  }, { force, useLocalTimezone, density = 72 } = {}) {
     let status = {}
 
     try {

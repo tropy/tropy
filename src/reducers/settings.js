@@ -8,7 +8,7 @@ const defaults = {
   completions: 'datatype',
   debug: ARGS.debug,
   dup: 'prompt',
-  density: 300,
+  density: 72,
   export: {
     note: {
       format: {
