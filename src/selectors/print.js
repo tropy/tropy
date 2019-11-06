@@ -14,6 +14,7 @@ const getPhotoExpanded = (
   ontology) => (
   (photo == null) ? null : {
     ...photo,
+    consolidated: null,
     data: getMetadataFields(null, {
       compact: true,
       data: metadata[photo.id],
