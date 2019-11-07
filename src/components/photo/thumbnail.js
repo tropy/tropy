@@ -43,8 +43,8 @@ class Thumbnail extends React.Component {
     let img = e.target
 
     // Check aspect ratio to detect pre 1.6 thumbnails!
-    let actual = Math.round((img.naturalWidth / img.naturalHeight) * 100)
-    let expected = Math.round((this.props.width / this.props.height) * 100)
+    let actual = Math.round((img.naturalWidth / img.naturalHeight) * 10)
+    let expected = Math.round((this.props.width / this.props.height) * 10)
 
     if (expected !== actual)
       this.props.onError(this.props.id)
