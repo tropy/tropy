@@ -236,6 +236,8 @@ fr:
           - type: separator
       - label: Supprimer l'objet
         command: 'app:delete-item'
+      - label: Regrouper l'objet
+        command: 'app:consolidate-item'
     item-rotate:
       - label: Tourner à gauche
         command: 'app:rotate-item-left'
@@ -253,6 +255,8 @@ fr:
             command: 'app:export-item'
       - label: Supprimer les objets sélectionnés
         command: 'app:delete-item'
+      - label: Regrouper les objets sélectionnés
+        command: 'app:consolidate-item'
     item-list:
       - label: Enlever l'objet de la liste
         command: 'app:list-item-remove'
@@ -572,6 +576,8 @@ fr:
           - type: separator
       - label: Supprimer l'objet
         command: 'app:delete-item'
+      - label: Regrouper l'objet
+        command: 'app:consolidate-item'
     item-bulk:
       - label: Fusionner les objets sélectionnés
         command: 'app:merge-item'
@@ -582,6 +588,8 @@ fr:
             command: 'app:export-item'
       - label: Supprimer les objets sélectionnés
         command: 'app:delete-item'
+      - label: Regrouper les objets sélectionnés
+        command: 'app:consolidate-item'
     item-list:
       - label: Enlever l'objet de la liste
         command: 'app:list-item-remove'
@@ -908,6 +916,8 @@ fr:
           - type: separator
       - label: Supprimer l'objet
         command: 'app:delete-item'
+      - label: Regrouper l'objet
+        command: 'app:consolidate-item'
     item-bulk:
       - label: Fusionner les objets sélectionnés
         command: 'app:merge-item'
@@ -918,6 +928,8 @@ fr:
             command: 'app:export-item'
       - label: Supprimer les objets sélectionnés
         command: 'app:delete-item'
+      - label: Regrouper les objets sélectionnés
+        command: 'app:consolidate-item'
     item-list:
       - label: Enlever l'objet de la liste
         command: 'app:list-item-remove'

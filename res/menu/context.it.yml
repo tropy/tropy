@@ -236,6 +236,8 @@ it:
           - type: separator
       - label: Elimina elemento
         command: 'app:delete-item'
+      - label: Consolida elemento
+        command: 'app:consolidate-item'
     item-rotate:
       - label: Ruota a sinistra
         command: 'app:rotate-item-left'
@@ -253,6 +255,8 @@ it:
             command: 'app:export-item'
       - label: Elimina gli elementi selezionati
         command: 'app:delete-item'
+      - label: Consolida gli elementi selezionati
+        command: 'app:consolidate-item'
     item-list:
       - label: Rimuovi l'elemento dalla lista
         command: 'app:list-item-remove'
@@ -264,7 +268,7 @@ it:
         command: 'app:duplicate-photo'
       - label: Sposta foto in un nuovo elemento
         command: 'app:explode-photo'
-      - label: Show Original Photo…
+      - label: 'Mostra foto originale '
         command: 'app:show-in-folder'
       - label: Elimina la foto
         command: 'app:delete-photo'
@@ -572,6 +576,8 @@ it:
           - type: separator
       - label: Elimina elemento
         command: 'app:delete-item'
+      - label: Consolida elemento
+        command: 'app:consolidate-item'
     item-bulk:
       - label: Unisci gli elementi selezionati
         command: 'app:merge-item'
@@ -582,6 +588,8 @@ it:
             command: 'app:export-item'
       - label: Elimina gli elementi selezionati
         command: 'app:delete-item'
+      - label: Consolida gli elementi selezionati
+        command: 'app:consolidate-item'
     item-list:
       - label: Rimuovi l'elemento dalla lista
         command: 'app:list-item-remove'
@@ -630,7 +638,7 @@ it:
         command: 'app:duplicate-photo'
       - label: Sposta foto in un nuovo elemento
         command: 'app:explode-photo'
-      - label: Show Original Photo…
+      - label: 'Mostra foto originale '
         command: 'app:show-in-folder'
       - label: Elimina la foto
         command: 'app:delete-photo'
@@ -908,6 +916,8 @@ it:
           - type: separator
       - label: Elimina elemento
         command: 'app:delete-item'
+      - label: Consolida elemento
+        command: 'app:consolidate-item'
     item-bulk:
       - label: Unisci gli elementi selezionati
         command: 'app:merge-item'
@@ -918,6 +928,8 @@ it:
             command: 'app:export-item'
       - label: Elimina gli elementi selezionati
         command: 'app:delete-item'
+      - label: Consolida gli elementi selezionati
+        command: 'app:consolidate-item'
     item-list:
       - label: Rimuovi l'elemento dalla lista
         command: 'app:list-item-remove'
@@ -966,7 +978,7 @@ it:
         command: 'app:duplicate-photo'
       - label: Sposta fotografia in un nuovo elemento
         command: 'app:explode-photo'
-      - label: Show Original Photo…
+      - label: 'Mostra foto originale '
         command: 'app:show-in-folder'
       - label: Elimina la foto
         command: 'app:delete-photo'

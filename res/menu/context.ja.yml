@@ -236,6 +236,8 @@ ja:
           - type: separator
       - label: アイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Item
+        command: 'app:consolidate-item'
     item-rotate:
       - label: Rotate Left
         command: 'app:rotate-item-left'
@@ -253,6 +255,8 @@ ja:
             command: 'app:export-item'
       - label: 選択したアイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Selected Items
+        command: 'app:consolidate-item'
     item-list:
       - label: リストからアイテムを削除
         command: 'app:list-item-remove'
@@ -572,6 +576,8 @@ ja:
           - type: separator
       - label: アイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Item
+        command: 'app:consolidate-item'
     item-bulk:
       - label: 選択したアイテムを統合
         command: 'app:merge-item'
@@ -582,6 +588,8 @@ ja:
             command: 'app:export-item'
       - label: 選択したアイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Selected Items
+        command: 'app:consolidate-item'
     item-list:
       - label: リストからアイテムを削除
         command: 'app:list-item-remove'
@@ -908,6 +916,8 @@ ja:
           - type: separator
       - label: アイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Item
+        command: 'app:consolidate-item'
     item-bulk:
       - label: 選択したアイテムを統合
         command: 'app:merge-item'
@@ -918,6 +928,8 @@ ja:
             command: 'app:export-item'
       - label: 選択したアイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Selected Items
+        command: 'app:consolidate-item'
     item-list:
       - label: リストからアイテムを削除
         command: 'app:list-item-remove'
