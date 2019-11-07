@@ -191,7 +191,7 @@ class Esper extends React.PureComponent {
 
       assign(state, {
         photo: photo.id,
-        src: Cache.src(props.cache, photo),
+        src: Cache.url(props.cache, 'full', photo),
         width: photo.width,
         height: photo.height
       })

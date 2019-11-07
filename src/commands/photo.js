@@ -173,7 +173,7 @@ class Consolidate extends ImportCommand {
       yield put(act.photo.update({
         id: photo.id,
         broken,
-        consolidated: new Date(),
+        consolidated: Date.now(),
         consolidating: false,
         ...data
       }))

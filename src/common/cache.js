@@ -65,10 +65,6 @@ class Cache {
     return Cache.url(this.root, ...args)
   }
 
-  src(...args) {
-    return Cache.src(this.root, ...args)
-  }
-
   static extname() {
     return '.webp'
   }
@@ -82,23 +78,20 @@ class Cache {
     return [...basename(path, ext).split('_', 2), ext]
   }
 
-  static url(root, variant, { id, mimetype, consolidated }) {
-    if  (id == null)
+  static url(root, variant, { id, mimetype, path, protocol, consolidated }) {
+    if  (id == null || variant == null)
       return null
 
-    let path = join(root, Cache.path(id, variant, Cache.extname(mimetype)))
+    if (
+        (variant !== 'full') ||   // Thumbnail
+        (protocol !== 'file') ||  // Remote
+        !IMAGE.WEB[mimetype]      // Not supported natively
+    ) {
+      path = join(root, Cache.path(id, variant, Cache.extname(mimetype)))
+    }
 
     if (consolidated)
-      return `file://${URI.encode(path)}?c=${consolidated.getTime()}`
-    else
-      return `file://${URI.encode(path)}`
-  }
-
-  static src(root, props,  { path, consolidated, protocol, mimetype } = props) {
-    if (protocol !== 'file' || !IMAGE.WEB[mimetype])
-      return Cache.url(root, 'full', props)
-    if  (consolidated)
-      return `file://${URI.encode(path)}?c=${consolidated.getTime()}`
+      return `file://${URI.encode(path)}?c=${consolidated}`
     else
       return `file://${URI.encode(path)}`
   }

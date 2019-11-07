@@ -48,7 +48,7 @@ const Photo = ({
             className={`iiif rot-${rotation.format('x')}`}
             decoding="sync"
             loading="eager"
-            src={Cache.src(cache, photo)}
+            src={Cache.url(cache, 'full', photo)}
             style={ratio}/>
         </div>
       }

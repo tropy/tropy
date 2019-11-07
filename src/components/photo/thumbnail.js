@@ -3,7 +3,7 @@
 const React = require('react')
 const { IconPhoto } = require('../icons')
 const { Cache } = require('../../common/cache')
-const { bool, func, instanceOf, number, string } = require('prop-types')
+const { bool, func, number, string } = require('prop-types')
 const { ICON } = require('../../constants/sass')
 const { exifRotation } = require('../../common/iiif')
 
@@ -65,7 +65,7 @@ class Thumbnail extends React.Component {
     broken: bool,
     cache: string.isRequired,
     color: string,
-    consolidated: instanceOf(Date),
+    consolidated: number,
     height: number,
     id: number,
     mimetype: string,
