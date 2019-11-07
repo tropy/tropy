@@ -39,6 +39,17 @@ class Thumbnail extends React.Component {
     }
   }
 
+  handleLoad = (e) => {
+    let img = e.target
+
+    // Check aspect ratio to detect pre 1.6 thumbnails!
+    let actual = Math.round((img.naturalWidth / img.naturalHeight) * 100)
+    let expected = Math.round((this.props.width / this.props.height) * 100)
+
+    if (expected !== actual)
+      this.props.onError(this.props.id)
+  }
+
   render() {
     return (
       <figure
@@ -54,7 +65,8 @@ class Thumbnail extends React.Component {
               decoding="async"
               loading="lazy"
               src={this.state.src}
-              onError={this.handleError}/>
+              onError={this.handleError}
+              onLoad={this.handleLoad}/>
           </div>)}
       </figure>
     )
