@@ -86,7 +86,7 @@ class ImportCommand extends Command {
       for (let { name, size, quality } of image.variants(selection != null)) {
         let path = cache.path(id, name, ext)
 
-        if (overwrite || !(yield call(cache.exists, path, false))) {
+        if (overwrite || !(yield call(cache.exists, path))) {
           let dup = yield call(image.resize, size, selection)
 
           switch (ext) {

@@ -142,27 +142,24 @@ class Consolidate extends ImportCommand {
 
           if (meta.force || hasChanged) {
             yield* this.createThumbnails(photo.id, image, {
-              overwrite: hasChanged
+              overwrite: true // hasChanged
             })
 
             for (let id of photo.selections) {
               if (id in selections) {
                 yield* this.createThumbnails(id, image, {
-                  overwrite: hasChanged,
+                  overwrite: true,  // hasChanged,
                   selection: selections[id]
                 })
               }
             }
 
             data = { id: photo.id, ...image.toJSON() }
-            broken = false
 
             yield call(mod.photo.save, db, data, { base })
-
-          } else {
-            broken = true
           }
 
+          broken = false
           this.consolidated.push(photo.id)
 
         } else {
