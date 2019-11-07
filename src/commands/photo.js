@@ -15,8 +15,12 @@ const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
 const { info, warn } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
-const { getPhotoTemplate } = require('../selectors')
-const { keys, values } = Object
+
+const {
+  getPhotoTemplate,
+  getPhotosForConsolidation
+} = require('../selectors')
+
 
 class Consolidate extends ImportCommand {
   lookup = async (photo, paths = {}, checkFileSize) => {
@@ -80,19 +84,19 @@ class Consolidate extends ImportCommand {
   }
 
   *exec() {
-    let { payload } = this.action
-    this.consolidated = []
+    let { payload, meta } = this.action
 
     let [base, photos, selections, density] = yield select(state => [
       state.project.base,
-      state.photos,
+      getPhotosForConsolidation(state, payload),
       state.selections,
-      state.settings.density
+      meta.density || state.settings.density
     ])
 
-    photos = blank(payload) ?
-      values(photos).filter(photo => !photo.consolidating) :
-      pluck(photos, payload)
+    this.consolidated = []
+
+    if (blank(photos))
+      return this.consolidated
 
     yield put(act.photo.bulk.update([
       photos.map(photo => photo.id),
@@ -429,7 +433,7 @@ class Save extends Command {
     let { id, data } = payload
 
     let [original, project] = yield select(state => [
-      pick(state.photos[id], keys(data)),
+      pick(state.photos[id], Object.keys(data)),
       state.project
     ])
 
