@@ -39,7 +39,7 @@ es:
           command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
-        - label: Agrupar fototeca
+        - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
@@ -434,7 +434,7 @@ es:
           command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
-        - label: Agrupar fototeca
+        - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator

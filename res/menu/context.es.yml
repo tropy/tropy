@@ -14,7 +14,7 @@ es:
     project:
       - label: Renombrar proyecto
         command: 'app:rename-project'
-      - label: Mostrar el archivo del proyecto ...
+      - label: Mostrar el archivo del proyecto …
         command: 'app:show-project-file'
     lists:
       - label: Nueva lista
@@ -29,7 +29,7 @@ es:
       - label: Nueva etiqueta
         command: 'app:create-tag'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Exportar etiquetas ...
+      - label: Exportar etiquetas …
         command: 'app:export-tags'
       - label: Color de etiqueta por defecto
         submenu:
@@ -224,7 +224,7 @@ es:
         submenu:
           - label: JSON-LD
             command: 'app:export-item'
-      - label: Añadir foto ...
+      - label: Añadir foto …
         command: 'app:create-item-photo'
       - label: Etiquetas
         id: tag
@@ -236,7 +236,7 @@ es:
           - type: separator
       - label: Suprimir objeto
         command: 'app:delete-item'
-      - label: Consolidate Item
+      - label: Consolidar objecto
         command: 'app:consolidate-item'
     item-rotate:
       - label: Rotar a la izquierda
@@ -255,7 +255,7 @@ es:
             command: 'app:export-item'
       - label: Suprimir objetos seleccionados
         command: 'app:delete-item'
-      - label: Consolidate Selected Items
+      - label: Consolidar objetos seleccionados
         command: 'app:consolidate-item'
     item-list:
       - label: Quitar objeto de la lista
@@ -268,7 +268,7 @@ es:
         command: 'app:duplicate-photo'
       - label: Mover foto a un nuevo objeto
         command: 'app:explode-photo'
-      - label: Show Original Photo…
+      - label: Mostrar foto original…
         command: 'app:show-in-folder'
       - label: Borrar foto
         command: 'app:delete-photo'
@@ -276,7 +276,7 @@ es:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
-      - label: Reagrupar las fotos
+      - label: Consolidar foto
         command: 'app:consolidate-photo'
     photo-rotate:
       - label: Rotar a la izquierda
@@ -288,7 +288,7 @@ es:
     selection:
       - label: Suprimir selección
         command: 'app:delete-selection'
-      - label: Guardar selección como una imagen ...
+      - label: Guardar selección como una imagen …
         command: 'app:save-selection'
         enabled: false
     selection-rotate:
@@ -319,7 +319,7 @@ es:
             id: side-by-side
             type: checkbox
     metadata-list:
-      - label: Nuevo campo ...
+      - label: Nuevo campo …
         command: 'app:create-field'
     metadata-field:
       - label: Suprimir campo
@@ -354,7 +354,7 @@ es:
     project:
       - label: Renombrar proyecto
         command: 'app:rename-project'
-      - label: Mostrar el archivo de proyecto ...
+      - label: Mostrar el archivo de proyecto …
         command: 'app:show-project-file'
     lists:
       - label: Nueva lista
@@ -369,7 +369,7 @@ es:
       - label: Nueva etiqueta
         command: 'app:create-tag'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Exportar etiquetas ...
+      - label: Exportar etiquetas …
         command: 'app:export-tags'
       - label: Color de etiqueta por defecto
         submenu:
@@ -564,7 +564,7 @@ es:
         submenu:
           - label: JSON-LD
             command: 'app:export-item'
-      - label: Añadir foto ...
+      - label: Añadir foto …
         command: 'app:create-item-photo'
       - label: Etiquetas
         id: tag
@@ -576,7 +576,7 @@ es:
           - type: separator
       - label: Suprimir objeto
         command: 'app:delete-item'
-      - label: Consolidate Item
+      - label: Consolidar objeto
         command: 'app:consolidate-item'
     item-bulk:
       - label: Fusionar los objetos seleccionados
@@ -588,7 +588,7 @@ es:
             command: 'app:export-item'
       - label: Borrar objetos seleccionados
         command: 'app:delete-item'
-      - label: Consolidate Selected Items
+      - label: Consolidar objetos seleccionados
         command: 'app:consolidate-item'
     item-list:
       - label: Quitar objeto de la lista
@@ -624,7 +624,7 @@ es:
         command: 'app:rotate-item-right'
         accelerator: 'CmdOrCtrl+]'
     metadata-list:
-      - label: Nuevo campo ...
+      - label: Nuevo campo …
         command: 'app:create-field'
     metadata-field:
       - label: Suprimir campo
@@ -638,7 +638,7 @@ es:
         command: 'app:duplicate-photo'
       - label: Mover foto a un nuevo objeto
         command: 'app:explode-photo'
-      - label: Show Original Photo…
+      - label: Mostrar foto original…
         command: 'app:show-in-folder'
       - label: Borrar foto
         command: 'app:delete-photo'
@@ -646,7 +646,7 @@ es:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
-      - label: Reagrupar las fotos
+      - label: Consolidar foto
         command: 'app:consolidate-photo'
     photo-rotate:
       - label: Rotar a la izquierda
@@ -658,7 +658,7 @@ es:
     selection:
       - label: Suprimir selección
         command: 'app:delete-selection'
-      - label: Guardar selección como una imagen ...
+      - label: Guardar selección como una imagen …
         command: 'app:save-selection'
         enabled: false
     selection-rotate:
@@ -709,7 +709,7 @@ es:
       - label: Nueva etiqueta
         command: 'app:create-tag'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Exportar etiquetas ...
+      - label: Exportar etiquetas …
         command: 'app:export-tags'
       - label: Color de etiqueta por defecto
         submenu:
@@ -904,7 +904,7 @@ es:
         submenu:
           - label: JSON-LD
             command: 'app:export-item'
-      - label: Añadir foto ...
+      - label: Añadir foto …
         command: 'app:create-item-photo'
       - label: Etiquetas
         id: tag
@@ -916,7 +916,7 @@ es:
           - type: separator
       - label: Suprimir objeto
         command: 'app:delete-item'
-      - label: Consolidate Item
+      - label: Consolidar objeto
         command: 'app:consolidate-item'
     item-bulk:
       - label: Fusionar los objetos seleccionados
@@ -928,7 +928,7 @@ es:
             command: 'app:export-item'
       - label: Borrar objetos seleccionados
         command: 'app:delete-item'
-      - label: Consolidate Selected Items
+      - label: Consolidar objetos seleccionados
         command: 'app:consolidate-item'
     item-list:
       - label: Quitar objeto de la lista
@@ -964,7 +964,7 @@ es:
         command: 'app:rotate-item-right'
         accelerator: 'CmdOrCtrl+]'
     metadata-list:
-      - label: Nuevo campo ...
+      - label: Nuevo campo …
         command: 'app:create-field'
     metadata-field:
       - label: Suprimir campo
@@ -978,7 +978,7 @@ es:
         command: 'app:duplicate-photo'
       - label: Mover foto a un nuevo objeto
         command: 'app:explode-photo'
-      - label: Show Original Photo…
+      - label: Mostrar foto original…
         command: 'app:show-in-folder'
       - label: Suprimir foto
         command: 'app:delete-photo'
@@ -986,7 +986,7 @@ es:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
-      - label: Reagrupar las fotos
+      - label: Consolidar foto
         command: 'app:consolidate-photo'
     photo-rotate:
       - label: Rotar a la izquierda
@@ -998,7 +998,7 @@ es:
     selection:
       - label: Suprimir selección
         command: 'app:delete-selection'
-      - label: Guardar selección como una imagen ...
+      - label: Guardar selección como una imagen …
         command: 'app:save-selection'
         enabled: false
     selection-rotate:

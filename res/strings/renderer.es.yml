@@ -106,7 +106,7 @@ es:
           item: Un objeto por página
           photo: Una foto por página
           selection: Una selección por página
-        photos: Include photos
+        photos: Incluir fotos
         metadata: Incluir metadatos
         notes: Incluir notas
         overflow: Permitir al contenido de utilizar más de una página
@@ -136,8 +136,8 @@ es:
           import: Aceptar las fotos duplicadas
           prompt: Preguntarme cada vez
       density:
-        label: Default density (ppi)
-        title: 'Used for PDF, SVG and other scalable formats'
+        label: Resolución en pixeles por defecto (ppi)
+        title: 'Utilizado para PDF, SVG y otros formatos escalables'
       export:
         label: Exportar
         note:
@@ -161,10 +161,10 @@ es:
           stacked: Vertical
           side-by-side: Lado a lado
       completions:
-        label: Autocomplete
+        label: Autocompletar
         option:
-          datatype: By datatype only
-          property-datatype: By datatype and property
+          datatype: Solamente por tipo de dato
+          property-datatype: Por tipo de dato y propiedad
     project:
       label: Projecto
     template:
@@ -213,7 +213,7 @@ es:
   photo:
     file: Archivo
     size: Talla
-    density: Density
+    density: Resolución
     type: Tipo
     created: Creación
     modified: Modificado
@@ -541,7 +541,7 @@ es:
       item:
         add: Falla al añadir objeto(s) a la lista.
     photo:
-      consolidate: Falla en la agrupación de fotos.
+      consolidate: Falla en la consolidación de fotos.
       create: Falla en la importación de foto.
       save: Falla al guardar foto.
       template:
