@@ -1,23 +1,22 @@
 'use strict'
 
 const React = require('react')
-const { FormattedMessage } = require('react-intl')
 const { TemplateSelect } = require('../template/select')
+const { MetadataHeader } = require('./header')
 const { noop } = require('../../common/util')
-const cx = require('classnames')
 const { array, bool, func, node, number, string } = require('prop-types')
 
 const MetadataSection = (props) => {
   let hasTemplates = !!props.templates
   return (
     <section onContextMenu={props.onContextMenu}>
-      <h5 className={cx('metadata-heading', {
-        separator: !hasTemplates
-      })}>
-        <FormattedMessage
-          id={props.title}
-          values={{ count: props.count }}/>
-      </h5>
+      <MetadataHeader
+        count={{ count: props.count }}
+        onChange={props.onTypeChange}
+        options={props.options}
+        separator={!hasTemplates}
+        title={props.title}
+        value={props.type}/>
       {hasTemplates &&
         <TemplateSelect
           isDisabled={props.isDisabled}
@@ -36,15 +35,19 @@ MetadataSection.propTypes = {
   isDisabled: bool,
   isMixed: bool,
   count: number,
+  options: array,
   onContextMenu: func,
   onTemplateChange: func.isRequired,
+  onTypeChange: func.isRequired,
   template: string,
   templates: array,
-  title: string.isRequired
+  title: string.isRequired,
+  type: string
 }
 
 MetadataSection.propTypes = {
-  onTemplateChange: noop
+  onTemplateChange: noop,
+  onTypeChange: noop
 }
 
 module.exports = {

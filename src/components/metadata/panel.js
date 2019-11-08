@@ -18,8 +18,10 @@ const {
   getAllTemplatesByType,
   getItemFields,
   getPhotoFields,
+  getClassList,
   getPropertyList,
   getSelectedItemTemplate,
+  getSelectedItemType,
   getSelectedItems,
   getSelectedPhoto,
   getSelectionFields
@@ -106,6 +108,26 @@ class MetadataPanel extends React.PureComponent {
     }
   }
 
+
+  handlePhotoTypeChange = (type, hasChanged) => {
+    if (hasChanged) {
+      this.props.onTypeChange('photo', {
+        id: this.props.photo.id,
+        data: { type: type.id }
+      })
+    }
+  }
+
+  handleSelectionTypeChange = (type, hasChanged) => {
+    if (hasChanged) {
+      this.props.onTypeChange('selection', {
+        id: this.props.selection.id,
+        data: { type: type.id }
+      })
+    }
+  }
+
+
   handlePhotoTemplateChange = (template, hasChanged) => {
     if (hasChanged) {
       this.props.onTemplateChange('photo', {
@@ -158,6 +180,8 @@ class MetadataPanel extends React.PureComponent {
         template={this.props.template.id}
         templates={this.props.templates.item}
         title="panel.metadata.item"
+        type={this.props.type.id}
+        options={this.props.fields.classes}
         onTemplateChange={this.handleItemTemplateChange}
         onContextMenu={this.handleItemContextMenu}>
         <MetadataList
@@ -187,7 +211,10 @@ class MetadataPanel extends React.PureComponent {
         template={this.props.photo.template}
         templates={this.props.templates.photo}
         title="panel.metadata.photo"
+        type={this.props.photo.type}
+        options={this.props.fields.classes}
         onTemplateChange={this.handlePhotoTemplateChange}
+        onTypeChange={this.handlePhotoTypeChange}
         onContextMenu={this.handlePhotoContextMenu}>
         <MetadataList
           ref={this.setPhotoFields}
@@ -222,7 +249,10 @@ class MetadataPanel extends React.PureComponent {
         template={this.props.selection.template}
         templates={this.props.templates.selection}
         title="panel.metadata.selection"
+        type={this.props.selection.type}
+        options={this.props.fields.classes}
         onTemplateChange={this.handleSelectionTemplateChange}
+        onTypeChange={this.handleSelectionTypeChange}
         onContextMenu={this.handleSelectionContextMenu}>
         <MetadataList
           ref={this.setSelectionFields}
@@ -260,6 +290,7 @@ class MetadataPanel extends React.PureComponent {
     edit: object,
     fields: shape({
       available: arrayOf(object).isRequired,
+      classes: arrayOf(object).isRequired,
       item: arrayOf(shapes.field).isRequired,
       photo: arrayOf(shapes.field).isRequired,
       selection: arrayOf(shapes.field).isRequired
@@ -274,6 +305,7 @@ class MetadataPanel extends React.PureComponent {
       photo: arrayOf(shapes.template).isRequired,
       selection: arrayOf(shapes.template).isRequired
     }).isRequired,
+    type: shapes.type,
     onContextMenu: func.isRequired,
     onEdit: func,
     onEditCancel: func,
@@ -283,7 +315,8 @@ class MetadataPanel extends React.PureComponent {
     onMetadataSave: func.isRequired,
     onOpenInFolder: func.isRequired,
     onPhotoSave: func.isRequired,
-    onTemplateChange: func.isRequired
+    onTemplateChange: func.isRequired,
+    onTypeChange: func.isRequired
   }
 }
 
@@ -293,6 +326,7 @@ module.exports = {
       edit: state.edit.field,
       fields: {
         available: getPropertyList(state),
+        classes: getClassList(state),
         item: getItemFields(state),
         photo: getPhotoFields(state),
         selection: getSelectionFields(state)
@@ -301,7 +335,8 @@ module.exports = {
       photo: getSelectedPhoto(state),
       selection: getActiveSelection(state),
       template: getSelectedItemTemplate(state),
-      templates: getAllTemplatesByType(state)
+      templates: getAllTemplatesByType(state),
+      type: getSelectedItemType(state)
     }),
 
     (dispatch) => ({
@@ -319,6 +354,10 @@ module.exports = {
 
       onTemplateChange(type, ...args) {
         dispatch(actions[type].template.change(...args))
+      },
+
+      onTypeChange(type, ...args) {
+        dispatch(actions[type].save(...args))
       }
     }), null, { forwardRef: true }
   )(MetadataPanel)
