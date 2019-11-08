@@ -34,23 +34,22 @@ class Thumbnail extends React.Component {
   }
 
   handleError = () => {
-    if (this.props.onError != null && !this.props.broken) {
+    if (this.props.onError && !this.props.broken) {
       this.props.onError(this.props.id)
     }
   }
 
   handleLoad = (e) => {
-    let img = e.target
-
-    if (this.props.broken || !(img instanceof Image))
+    if (!this.props.onError || this.props.broken)
       return
 
-    // Check aspect ratio to detect pre 1.6 thumbnails!
-    let actual = Math.round((img.naturalWidth / img.naturalHeight) * 10)
-    let expected = Math.round((this.props.width / this.props.height) * 10)
+    // HACK: check for pre-1.6 thumbnails!
+    let { naturalWidth, naturalHeight } = e.target
 
-    if (expected !== actual)
+    if (Math.abs(naturalWidth - naturalHeight) < 2 &&
+      Math.abs(this.props.width - this.props.height) > 2) {
       this.props.onError(this.props.id)
+    }
   }
 
   render() {
