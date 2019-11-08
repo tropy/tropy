@@ -46,9 +46,13 @@ class Thumbnail extends React.Component {
     // HACK: check for pre-1.6 thumbnails!
     let { naturalWidth, naturalHeight } = e.target
 
-    if (Math.abs(naturalWidth - naturalHeight) < 2 &&
-      Math.abs(this.props.width - this.props.height) > 2) {
-      this.props.onError(this.props.id)
+    if (naturalWidth === naturalHeight) {
+      let x = Math.floor((this.props.width / naturalWidth) * 100)
+      let y = Math.floor((this.props.height / naturalHeight) * 100)
+
+      if (x !== y) {
+        this.props.onError(this.props.id)
+      }
     }
   }
 
