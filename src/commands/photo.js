@@ -86,12 +86,16 @@ class Consolidate extends ImportCommand {
   *exec() {
     let { payload, meta } = this.action
 
-    let [base, photos, selections, density] = yield select(state => [
-      state.project.base,
+    let [project, photos, selections, settings] = yield select(state => [
+      state.project,
       getPhotosForConsolidation(state, payload),
       state.selections,
-      meta.density || state.settings.density
+      state.settings
     ])
+
+    this.options.base = project.base
+    this.options.density = meta.density || settings.density
+    this.options.overwrite = true
 
     this.consolidated = []
 
@@ -105,25 +109,25 @@ class Consolidate extends ImportCommand {
 
     for (let i = 0, total = photos.length; i < total; ++i) {
       yield put(act.activity.update(this.action, { total, progress: i + 1 }))
-      yield* this.consolidate(photos[i], { base, density, selections })
+      yield this.consolidate(photos[i], selections)
     }
 
     return this.consolidated
   }
 
-  *consolidate(photo, { base, density, selections }) {
+  *consolidate(photo, selections = {}) {
     try {
-      let { db } = this.options
+      let { base, db, density, overwrite } = this.options
       let { meta } = this.action
 
       let { image, hasChanged, error } =
         yield this.checkPhoto(photo, meta.force)
 
-      let data
-      let broken
+      var data
+      var broken = (error != null)
 
       if (meta.force || hasChanged) {
-        if (error != null) {
+        if (broken) {
           warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
 
           let path = yield this.resolve(photo)
@@ -136,19 +140,18 @@ class Consolidate extends ImportCommand {
           }
         }
 
-        if (image != null) {
+        if (image) {
+          broken = false
           hasChanged = (image.checksum !== photo.checksum) ||
             (image.path !== photo.path)
 
           if (meta.force || hasChanged) {
-            yield* this.createThumbnails(photo.id, image, {
-              overwrite: true // hasChanged
-            })
+            yield* this.createThumbnails(photo.id, image, { overwrite })
 
             for (let id of photo.selections) {
               if (id in selections) {
                 yield* this.createThumbnails(id, image, {
-                  overwrite: true,  // hasChanged,
+                  overwrite,
                   selection: selections[id]
                 })
               }
@@ -159,14 +162,17 @@ class Consolidate extends ImportCommand {
             yield call(mod.photo.save, db, data, { base })
           }
 
-          broken = false
           this.consolidated.push(photo.id)
-
-        } else {
-          broken = true
         }
       }
 
+    } catch (e) {
+      broken = true
+
+      warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
+      fail(e, this.action.type)
+
+    } finally {
       yield put(act.photo.update({
         id: photo.id,
         broken,
@@ -174,10 +180,6 @@ class Consolidate extends ImportCommand {
         consolidating: false,
         ...data
       }))
-
-    } catch (e) {
-      warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
-      fail(e, this.action.type)
     }
   }
 
