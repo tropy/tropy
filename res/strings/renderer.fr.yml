@@ -6,98 +6,84 @@ fr:
     trash: Objets supprimés
   toolbar:
     import: Importer des photos
-    items: >
-        {count, plural,
-
-        =0 {Pas d'objet dans cette vue}
-
-        one {1 objet dans cette vue}
-
-        other {# objets dans cette vue}}
+    items: |
+      {count, plural,
+      =0 {Pas d'objet dans cette vue}
+      one {1 objet dans cette vue}
+      other {# objets dans cette vue}}
     search:
       placeholder: Recherche
   panel:
     metadata:
       tab: Métadonnées
       photo: Photo
-      item: >
-          {count, plural,
-
-          =0 {}
-
-          one {Objet}
-
-          other {# objets}}
+      item: |
+        {count, plural,
+        =0 {}
+        one {Objet}
+        other {# objets}}
       selection: Sélection
       dropdown:
         placeholder: 'Ajouter nouveau champ… '
     tags:
       tab: Tags
-      add: >
-          {count, plural,
-
-          =0 {Ajouter un tag}
-
-          one {Ajouter un tag à 1 objet}
-
-          other {Ajouter un tag à # objets}}
+      add: |
+        {count, plural,
+        =0 {Ajouter un tag}
+        one {Ajouter un tag à 1 objet}
+        other {Ajouter un tag à # objets}}
     photo:
-      title: >
-          {count, plural,
-
-          =0 {Pas de photo}
-
-          one {1 photo}
-
-          other {# photos}}
+      title: |
+        {count, plural,
+        =0 {Pas de photo}
+        one {1 photo}
+        other {# photos}}
       create: Ajouter des photos
       selection: Sélection
     note:
-      title: >
-          {count, plural,
-
-          =0 {Pas de note}
-
-          one {1 note}
-
-          other {# notes}}
+      title: |
+        {count, plural,
+        =0 {Pas de note}
+        one {1 note}
+        other {# notes}}
       create: Ajouter une note
   print:
     item: Objet
     photo: Photo
     notes: Les notes
-    note: Note {idx, number}
+    note: 'Note {idx, number}'
     tags: Tags
   about:
-    version: Version {version}
+    version: 'Version {version}'
     rrchnm:
       title: Roy Rosenzweig Center for History and New Media
-      url: https://rrchnm.org
+      url: 'https://rrchnm.org'
     cds:
       title: Corporation for Digital Scholarship
-      url: http://digitalscholar.org
+      url: 'http://digitalscholar.org'
     text: >
-        Tropy est conçu par le {rrchnm}, une équipe qui crée des ressources pour l'enseignement
-        de l'histoire, des expositions numériques, et des logiciels libres et open-source.
-    trademark: Tropy est une marque déposée de la {cds}.
+      Tropy est conçu par le {rrchnm}, une équipe qui crée des ressources pour
+      l'enseignement de l'histoire, des expositions numériques, et des logiciels
+      libres et open-source.
+    trademark: 'Tropy est une marque déposée de la {cds}.'
     release:
       title: Notes de version
-      url: https://github.com/tropy/tropy/releases/tag/{version}
+      url: 'https://github.com/tropy/tropy/releases/tag/{version}'
     license:
       title: Informations sur la licence
-      url: https://tropy.org/license
+      url: 'https://tropy.org/license'
     credits:
       title: Crédits
-      url: https://tropy.org/credits
+      url: 'https://tropy.org/credits'
   project:
-    none: Faire glisser ici un fichier de projet ou créer un {newProject}
-    empty: Pour commencer, faire glisser vos photos dans Tropy
+    none: 'Faire glisser ici un fichier de projet ou créer un {newProject}'
+    empty: 'Pour commencer, faire glisser vos photos dans Tropy'
     new: Nouveau projet
     recent: Projets récents
     corrupted: >
-        Votre fichier de projet peut être endommagé. Quelques interventions manuelles
-        sont peut-être nécessaires pour le réparer. Veuillez consulter le manuel utilisateur
-        pour obtenir de l'aide.
+      Votre fichier de projet peut être endommagé. Quelques interventions
+      manuelles sont peut-être nécessaires pour le réparer. Veuillez consulter
+      le manuel utilisateur pour obtenir de l'aide.
   wizard:
     project:
       title: Créer un nouveau projet
@@ -121,6 +107,7 @@ fr:
           item: Un objet par page
           photo: Une photo par page
           selection: Une sélection par page
+        photos: Include photos
         metadata: Inclure les métadonnées
         notes: Inclure les notes
         overflow: Permettre au contenu d'utiliser plus d'une page
@@ -149,6 +136,9 @@ fr:
           skip: Passer les photos en double
           import: Accepter les photos en double (duplication)
           prompt: Me demander à chaque photo en double
+      density:
+        label: Résolution en pixel (ppi)
+        title: 'Utilisé pour les PDF, SVG et autres formats évolutifs'
       export:
         label: Exporter
         note:
@@ -171,6 +161,11 @@ fr:
         option:
           stacked: Verticale
           side-by-side: Côte à côte
+      completions:
+        label: Auto-complétion
+        option:
+          datatype: Par type de donnée seulement
+          property-datatype: Par type de donnée et par champ
     project:
       label: Projet
     template:
@@ -187,34 +182,23 @@ fr:
     vocab:
       label: Schémas
       export: Exporter
-      classes: >
-          {count, plural,
-
-          =0 {Aucune classe de données}
-
-          one {# classe de données}
-
-          other {# classes de données}
-
-          }
-      datatypes: >
-          {count, plural,
-
-          =0 {Aucun type de données} one {# type de données}
-
-          other {# types de données}
-
-          }
-      properties: >
-          {count, plural,
-
-          =0 {Aucune propriété}
-
-          one {# propriété}
-
-          other {# propriétés}
-
-          }
+      classes: |
+        {count, plural,
+        =0 {Aucune classe de données}
+        one {# classe de données}
+        other {# classes de données}
+        }
+      datatypes: |
+        {count, plural,
+        =0 {Aucun type de données} one {# type de données}
+        other {# types de données}
+        }
+      properties: |
+        {count, plural,
+        =0 {Aucune propriété}
+        one {# propriété}
+        other {# propriétés}
+        }
     plugins:
       label: Plugins
       enable: Activer
@@ -230,6 +214,7 @@ fr:
   photo:
     file: Fichier
     size: Taille
+    density: Résolution
     type: Type
     created: Création
     modified: Modifié
@@ -253,19 +238,19 @@ fr:
       revert: Réinitialiser les ajustements
       brightness:
         label: Luminosité
-        value: "{value, number}"
+        value: '{value, number}'
       contrast:
         label: Contraste
-        value: "{value, number}"
+        value: '{value, number}'
       hue:
         label: Teinte
-        value: "{value, number}°"
+        value: '{value, number}°'
       saturation:
         label: Saturation
-        value: "{value, number}"
+        value: '{value, number}'
       sharpen:
         label: Netteté
-        value: "{value, number}"
+        value: '{value, number}'
   notepad:
     placeholder: Ajoutez vos notes ici…
   completions:
@@ -281,9 +266,9 @@ fr:
     creator: Créateur
     description: Description
     types:
-      https://tropy.org/v1/tropy#Item: Modèle de saisie pour un objet
-      https://tropy.org/v1/tropy#Photo: Modèle de saisie pour une photo
-      https://tropy.org/v1/tropy#Selection: Modèle de saisie pour une sélection
+      'https://tropy.org/v1/tropy#Item': Modèle de saisie pour un objet
+      'https://tropy.org/v1/tropy#Photo': Modèle de saisie pour une photo
+      'https://tropy.org/v1/tropy#Selection': Modèle de saisie pour une sélection
     field:
       property: Propriété
       label: Label
@@ -312,47 +297,47 @@ fr:
   dialog:
     notify:
       buttons:
-      - OK
+        - OK
     error:
       title: Erreur
       buttons:
-      - Fermer
-      - Copier l'erreur
-      - Afficher les logs
+        - Fermer
+        - Copier l'erreur
+        - Afficher les logs
     prompt:
       item:
         destroy:
           message: >
-              Êtes-vous sûr.e de vouloir effacer définitivement ces objets ? Cette
-              action ne peut pas être annulée.
+            Êtes-vous sûr.e de vouloir effacer définitivement ces objets ? Cette
+            action ne peut pas être annulée.
           buttons:
-          - Annuler
-          - Supprimer
+            - Annuler
+            - Supprimer
       photo:
         consolidate:
           message: >
-              Voulez-vous que Tropy vérifie et remplace automatiquement les photos
-              manquantes à cet emplacement ?
+            Voulez-vous que Tropy vérifie et remplace automatiquement les photos
+            manquantes à cet emplacement ?
           buttons:
-          - Non
-          - Oui
+            - Non
+            - Oui
       dup:
         detail: >
-            Cette photo existe déjà dans votre projet. Voulez-vous vraiment l'importer
-            de nouveau?
+          Cette photo existe déjà dans votre projet. Voulez-vous vraiment
+          l'importer de nouveau?
         checkboxLabel: Se souvenir de mon choix
         buttons:
-        - Passer les photos en double
-        - Importer tout de même
+          - Passer les photos en double
+          - Importer tout de même
       plugin:
         uninstall:
           type: warning
           detail: >
-              Souhaitez-vous vraiment supprimer ce plugin ? Le plugin et sa configuration
-              seront supprimés de manière irréversible.
+            Souhaitez-vous vraiment supprimer ce plugin ? Le plugin et sa
+            configuration seront supprimés de manière irréversible.
           buttons:
-          - Annuler
-          - Supprimer
+            - Annuler
+            - Supprimer
     filter:
       csv: CSV
       templates: Modèle de saisie Tropy
@@ -450,19 +435,16 @@ fr:
       save: Sauvegarde des tags…
     item:
       create: Création d'un objet…
-      delete: Suppression d'un objet…
+      delete: Suppression de l'objet...
       destroy: Suppression définitive des objets…
       explode: Dissociation de l'objet en cours…
       export: Exportation de l'objet en cours…
       implode: Restauration de l'objet en cours…
-      import: >
-          {hasProgressBar, select,
-
-          true {{progress, number} objets importés sur {total, number}…}
-
-          other {Importation des objets en cours…}
-
-          }
+      import: |
+        {hasProgressBar, select,
+        true {{progress, number} objets importés sur {total, number}…}
+        other {Importation des objets en cours…}
+        }
       load: Chargement des objets en cours…
       merge: Fusion des objets en cours…
       restore: Restauration de l'objet en cours…
@@ -484,31 +466,22 @@ fr:
       template:
         import: Importation des modèles de saisie…
     photo:
-      consolidate: >
-          {hasProgressBar, select,
-
-          true {Regroupement de {progress, number} photos sur {total, number}…}
-
-          other {Regroupement des photos…}
-
-          }
-      create: >
-          {hasProgressBar, select,
-
-          true {Importation de {progress, number} photos sur {total, number}…}
-
-          other {Importation des photos…}
-
-          }
+      consolidate: |
+        {hasProgressBar, select,
+        true {Regroupement de {progress, number} photos sur {total, number}…}
+        other {Regroupement des photos…}
+        }
+      create: |
+        {hasProgressBar, select,
+        true {Importation de {progress, number} photos sur {total, number}…}
+        other {Importation des photos…}
+        }
       delete: Suppression de la photo…
-      duplicate: >
-          {hasProgressBar, select,
-
-          true {Duplication de {progress, number} photos sur {total, number}…}
-
-          other {Duplication des photos…}
-
-          }
+      duplicate: |
+        {hasProgressBar, select,
+        true {Duplication de {progress, number} photos sur {total, number}…}
+        other {Duplication des photos…}
+        }
       load: Chargement des photos…
       move: Déplacement des photos…
       order: Tri des photos en cours…
@@ -556,13 +529,17 @@ fr:
       import: Échec de l'importation des objets.
       tag:
         save: Échec de la sauvegarde du tag.
-        create: Échec du marquage de l'objet. Chaque tag est unique pour un même objet.
+        create: >-
+          Échec du marquage de l'objet. Chaque tag est unique pour un même
+          objet.
       template:
         change: Échec du le changement de modèle de saisie.
     list:
       load: Échec du chargement des listes.
       create: Création de liste impossible. Le nom des listes doit être unique.
-      move: Impossible de déplacer la liste. Le nom doit être unique au sein du niveau.
+      move: >-
+        Impossible de déplacer la liste. Le nom doit être unique au sein du
+        niveau.
       save: Échec de la sauvegarde de la liste.
       item:
         add: Échec de l'adjonction de l' (des) objet(s) à la liste.
@@ -592,8 +569,8 @@ fr:
     update:
       ready:
         message: >
-            Tropy {version} est prêt à être installé. Voulez-vous l'installer et le
-            relancer?
+          Tropy {version} est prêt à être installé. Voulez-vous l'installer et
+          le relancer?
         confirm: Relancer maintenant
   plugin:
     name: Titre

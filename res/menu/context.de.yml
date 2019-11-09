@@ -236,6 +236,8 @@ de:
           - type: separator
       - label: Objekt löschen
         command: 'app:delete-item'
+      - label: Objekt konsolidieren
+        command: 'app:consolidate-item'
     item-rotate:
       - label: Linksdrehen
         command: 'app:rotate-item-left'
@@ -253,6 +255,8 @@ de:
             command: 'app:export-item'
       - label: Ausgewählte Objekte löschen
         command: 'app:delete-item'
+      - label: Ausgewählte Objekte konsolidieren
+        command: 'app:consolidate-item'
     item-list:
       - label: Objekt aus Liste entfernen
         command: 'app:list-item-remove'
@@ -264,7 +268,7 @@ de:
         command: 'app:duplicate-photo'
       - label: Foto in neues Objekt verschieben
         command: 'app:explode-photo'
-      - label: In Finder anzeigen
+      - label: Originalfoto anzeigen …
         command: 'app:show-in-folder'
       - label: Foto löschen
         command: 'app:delete-photo'
@@ -572,6 +576,8 @@ de:
           - type: separator
       - label: Objekt löschen
         command: 'app:delete-item'
+      - label: Objekt konsolidieren
+        command: 'app:consolidate-item'
     item-bulk:
       - label: Ausgewählte Objekte zusammenfügen
         command: 'app:merge-item'
@@ -582,6 +588,8 @@ de:
             command: 'app:export-item'
       - label: Ausgewählte Objekte löschen
         command: 'app:delete-item'
+      - label: Ausgewählte Objekte konsolidieren
+        command: 'app:consolidate-item'
     item-list:
       - label: Objekt aus Liste entfernen
         command: 'app:list-item-remove'
@@ -630,7 +638,7 @@ de:
         command: 'app:duplicate-photo'
       - label: Foto in neues Objekt verschieben
         command: 'app:explode-photo'
-      - label: In Finder anzeigen
+      - label: Originalfoto anzeigen …
         command: 'app:show-in-folder'
       - label: Foto löschen
         command: 'app:delete-photo'
@@ -908,6 +916,8 @@ de:
           - type: separator
       - label: Objekt löschen
         command: 'app:delete-item'
+      - label: Objekt konsolidieren
+        command: 'app:consolidate-item'
     item-bulk:
       - label: Ausgewählte Objekte zusammenfügen
         command: 'app:merge-item'
@@ -918,6 +928,8 @@ de:
             command: 'app:export-item'
       - label: Ausgewählte Objekte löschen
         command: 'app:delete-item'
+      - label: Ausgewählte Objekte konsolidieren
+        command: 'app:consolidate-item'
     item-list:
       - label: Objekt aus Liste entfernen
         command: 'app:list-item-remove'
@@ -966,7 +978,7 @@ de:
         command: 'app:duplicate-photo'
       - label: Foto in neues Objekt verschieben
         command: 'app:explode-photo'
-      - label: In Finder anzeigen
+      - label: Originalfoto anzeigen …
         command: 'app:show-in-folder'
       - label: Foto löschen
         command: 'app:delete-photo'

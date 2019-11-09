@@ -30,16 +30,6 @@ class ImportCommand extends Command {
     })
   }
 
-  *checkPhoto(photo, force) {
-    let settings = yield select(state => state.settings)
-
-    return yield call(Image.check, photo, {
-      force,
-      density: photo.density || settings.density,
-      useLocalTimezone: settings.localtime
-    })
-  }
-
   *getMetadata(image, templates) {
     let data = {}
     let prefs = yield select(state => state.settings)
@@ -86,7 +76,7 @@ class ImportCommand extends Command {
       for (let { name, size, quality } of image.variants(selection != null)) {
         let path = cache.path(id, name, ext)
 
-        if (overwrite || !(yield call(cache.exists, path, false))) {
+        if (overwrite || !(yield call(cache.exists, path))) {
           let dup = yield call(image.resize, size, selection)
 
           switch (ext) {

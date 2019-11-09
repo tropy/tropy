@@ -24,7 +24,7 @@ const isImageSupported = (file) =>
 
 
 module.exports = {
-  MIN_DENSITY: 72,
+  MIN_DENSITY: 1,
   MAX_DENSITY: 1200,
 
   EXT: [

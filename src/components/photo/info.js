@@ -58,14 +58,12 @@ class PhotoInfo extends React.PureComponent {
           label="photo.file"
           value={this.file}
           onClick={this.handleFileClick}/>
-        <StaticField
-          label="photo.size"
-          value={this.size}/>
         {this.props.photo.density &&
           <Field
             display={ppi(this.props.photo.density)}
             hint="Pixels per inch"
             isActive={this.isEditing('photo.density')}
+            isDisabled={this.props.isDisabled}
             isRequired
             isStatic={this.props.isDisabled || this.props.onChange == null}
             label="photo.density"
@@ -76,6 +74,9 @@ class PhotoInfo extends React.PureComponent {
             onClick={this.handleDensityClick}
             type="number"
             value={this.props.photo.density}/>}
+        <StaticField
+          label="photo.size"
+          value={this.size}/>
         <StaticField
           label="photo.created"
           value={datetime(this.props.photo.created)}/>

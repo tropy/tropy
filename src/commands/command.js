@@ -6,7 +6,7 @@ const { freeze } = Object
 class Command {
   constructor(action, options) {
     this.action = action
-    this.options = options
+    this.options = { ...options }
     this.adjtime = 0
   }
 

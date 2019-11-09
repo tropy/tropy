@@ -112,5 +112,6 @@ class IIIF extends URL {
 
 module.exports = {
   IIIF,
-  Rotation
+  Rotation,
+  exifRotation: Rotation.fromExifOrientation
 }

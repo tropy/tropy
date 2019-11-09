@@ -157,6 +157,8 @@ en:
           - type: separator
       - label: 'Delete Item'
         command: 'app:delete-item'
+      - label: 'Consolidate Item'
+        command: 'app:consolidate-item'
     item-rotate: &item-rotate
       - label: 'Rotate Left'
         command: 'app:rotate-item-left'
@@ -174,6 +176,8 @@ en:
             command: 'app:export-item'
       - label: 'Delete Selected Items'
         command: 'app:delete-item'
+      - label: 'Consolidate Selected Items'
+        command: 'app:consolidate-item'
     item-list: &item-list
       - label: 'Remove Item From List'
         command: 'app:list-item-remove'

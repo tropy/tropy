@@ -384,6 +384,11 @@ class Tropy extends EventEmitter {
     this.on('app:delete-item', (win, { target }) =>
       this.dispatch(act.item.delete(target.id), win))
 
+    this.on('app:consolidate-item', (win, { target }) =>
+      this.dispatch(
+        act.photo.consolidate(target.photos, { force: true }),
+        win))
+
     this.on('app:merge-item', (win, { target }) =>
       this.dispatch(act.item.merge(target.id), win))
 
@@ -459,8 +464,7 @@ class Tropy extends EventEmitter {
         item: target.item, photos: [target.id]
       }), win))
     this.on('app:consolidate-photo-library', () =>
-      this.dispatch(act.photo.consolidate(null, { force: true }),
-        this.wm.current()))
+      this.dispatch(act.photo.consolidate(), this.wm.current()))
 
     this.on('app:consolidate-photo', (win, { target }) =>
       this.dispatch(act.photo.consolidate([target.id], {

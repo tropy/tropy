@@ -15,10 +15,12 @@ const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
 const { info, warn } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
-const { getPhotoTemplate } = require('../selectors')
-const { keys, values } = Object
 
-let PIXI
+const {
+  getPhotoTemplate,
+  getPhotosForConsolidation
+} = require('../selectors')
+
 
 class Consolidate extends ImportCommand {
   lookup = async (photo, paths = {}, checkFileSize) => {
@@ -82,19 +84,24 @@ class Consolidate extends ImportCommand {
   }
 
   *exec() {
-    let { payload } = this.action
-    this.consolidated = []
+    let { payload, meta } = this.action
 
-    let [base, photos, selections, density] = yield select(state => [
-      state.project.base,
-      state.photos,
+    let [project, photos, selections, settings] = yield select(state => [
+      state.project,
+      getPhotosForConsolidation(state, payload),
       state.selections,
-      state.settings.density
+      state.settings
     ])
 
-    photos = blank(payload) ?
-      values(photos).filter(photo => !photo.consolidating) :
-      pluck(photos, payload)
+    this.options.base = project.base
+    this.options.density = meta.density || settings.density
+    this.options.overwrite = true
+    this.useLocalTimezone = settings.timezone
+
+    this.consolidated = []
+
+    if (blank(photos))
+      return this.consolidated
 
     yield put(act.photo.bulk.update([
       photos.map(photo => photo.id),
@@ -103,25 +110,31 @@ class Consolidate extends ImportCommand {
 
     for (let i = 0, total = photos.length; i < total; ++i) {
       yield put(act.activity.update(this.action, { total, progress: i + 1 }))
-      yield* this.consolidate(photos[i], { base, density, selections })
+      yield this.consolidate(photos[i], selections)
     }
 
     return this.consolidated
   }
 
-  *consolidate(photo, { base, density, selections }) {
+  *consolidate(photo, selections = {}) {
     try {
-      let { db } = this.options
+      let { base, db, density, overwrite, useLocalTimezone } = this.options
       let { meta } = this.action
 
-      let { image, hasChanged, error } =
-        yield this.checkPhoto(photo, meta.force)
+      let {
+        image,
+        hasChanged,
+        error
+      } = yield call(Image.check, photo, {
+        density: photo.density || density,
+        useLocalTimezone
+      })
 
-      let data
-      let broken
+      var data
+      var broken = (error != null)
 
       if (meta.force || hasChanged) {
-        if (error != null) {
+        if (broken) {
           warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
 
           let path = yield this.resolve(photo)
@@ -130,68 +143,52 @@ class Consolidate extends ImportCommand {
               density: photo.density || density,
               path,
               page: photo.page,
-              protocol: 'file' })
+              protocol: 'file',
+              useLocalTimezone
+            })
           }
         }
 
-        if (image != null) {
+        if (image) {
+          broken = false
           hasChanged = (image.checksum !== photo.checksum) ||
             (image.path !== photo.path)
 
           if (meta.force || hasChanged) {
-            yield* this.createThumbnails(photo.id, image, {
-              overwrite: hasChanged
-            })
+            yield* this.createThumbnails(photo.id, image, { overwrite })
 
             for (let id of photo.selections) {
               if (id in selections) {
                 yield* this.createThumbnails(id, image, {
-                  overwrite: hasChanged,
+                  overwrite,
                   selection: selections[id]
                 })
               }
             }
 
             data = { id: photo.id, ...image.toJSON() }
-            broken = false
 
             yield call(mod.photo.save, db, data, { base })
-
-            this.clearTextureCache(photo)
-
-          } else {
-            broken = true
           }
 
           this.consolidated.push(photo.id)
-
-        } else {
-          broken = true
         }
       }
 
+    } catch (e) {
+      broken = true
+
+      warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
+      fail(e, this.action.type)
+
+    } finally {
       yield put(act.photo.update({
         id: photo.id,
         broken,
-        consolidated: new Date(),
+        consolidated: Date.now(),
         consolidating: false,
         ...data
       }))
-
-    } catch (e) {
-      warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
-      fail(e, this.action.type)
-    }
-  }
-
-  clearTextureCache(photo) {
-    if (!PIXI) PIXI = require('pixi.js')
-
-    let { cache } = this.options
-    let texture = PIXI.utils.TextureCache[cache.src(photo)]
-
-    if (texture) {
-      texture.destroy(true)
     }
   }
 
@@ -444,7 +441,7 @@ class Save extends Command {
     let { id, data } = payload
 
     let [original, project] = yield select(state => [
-      pick(state.photos[id], keys(data)),
+      pick(state.photos[id], Object.keys(data)),
       state.project
     ])
 

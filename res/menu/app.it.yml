@@ -36,7 +36,7 @@ it:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importa foto...
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Consolida raccolta foto
@@ -244,7 +244,7 @@ it:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importa foto...
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Consolida raccolta foto
@@ -431,7 +431,7 @@ it:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importa foto...
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Consolida raccolta foto

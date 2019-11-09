@@ -18,7 +18,7 @@ class Image {
   static open({
     path,
     protocol,
-    density = 300,
+    density = 72,
     page,
     useLocalTimezone = false }) {
     return (new Image(path, protocol, useLocalTimezone)).open({ page, density })
@@ -28,30 +28,20 @@ class Image {
     path,
     page,
     protocol,
-    consolidated,
-    created,
     checksum
-  }, { force, useLocalTimezone, density = 300 } = {}) {
+  }, { useLocalTimezone, density = 72 } = {}) {
     let status = {}
 
     try {
-      if (!force && created != null) {
-        if (protocol === 'file') {
-          let { mtime } = await stat(path)
-          status.hasChanged = (mtime > (consolidated || created))
-        }
-        // TODO check via HTTP HEAD
-      }
+      status.image = await Image.open({
+        path,
+        page,
+        protocol,
+        density,
+        useLocalTimezone })
 
-      if (force || created == null || status.hasChanged) {
-        status.image = await Image.open({
-          path,
-          page,
-          protocol,
-          density,
-          useLocalTimezone })
-        status.hasChanged = (status.image.checksum !== checksum)
-      }
+      status.hasChanged = (status.image.checksum !== checksum)
+
     } catch (e) {
       status.hasChanged = true
       status.image = null

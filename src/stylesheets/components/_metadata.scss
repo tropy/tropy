@@ -90,17 +90,13 @@ $default-padding-horizontal: 12px !default;
     }
   }
 
-  label,
-  .static {
-    @include css-truncation;
-  }
-
   label {
     flex: 0 0 $metadata-horizontal-offset;
     text-align: right;
     padding-left: $default-padding-horizontal;
     padding-right: ($metadata-gutter / 2);
     color: $label-color;
+    @include css-truncation;
 
     @include variant(".extra label") {
       font-style: italic;
@@ -124,8 +120,12 @@ $default-padding-horizontal: 12px !default;
       padding-right: ($default-padding-horizontal - $scrollbar-size / 3);
     }
 
-    @include variant(".clickable .value") {
+    @include variant(".clickable.static .value") {
       cursor: pointer;
+    }
+
+    @include variant(".static .value") {
+      cursor: not-allowed;
     }
   }
 

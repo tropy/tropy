@@ -2,15 +2,23 @@
 
 const { createSelector: memo } = require('reselect')
 const { getSelectedItems } = require('./items')
+const { blank } = require('../common/util')
 const {
   seq, compose, filter, into, map, cat, keep
 } = require('transducers.js')
 
-const getPhotos = ({ photos }) => photos
 
 const withErrors = ([, photo]) =>
-  (!!photo.broken && !photo.consolidated && !photo.consolidating)
+  !!photo.broken && !photo.consolidated
+
+const notConsolidating = ([, photo]) =>
+  !photo.consolidating
+
 const toId = ([id]) => Number(id)
+const toPhoto = ([, photo]) => photo
+
+
+const getPhotos = ({ photos }) => photos
 
 const getSelectedPhoto = memo(
   getPhotos,
@@ -41,10 +49,29 @@ const getVisiblePhotos = memo(
 const getPhotosWithErrors = memo(
   getPhotos,
   (photos) =>
-    into([], compose(filter(withErrors), map(toId)), photos))
+    into([], compose(
+      filter(withErrors),
+      filter(notConsolidating),
+      map(toId)
+    ), photos))
+
+const getPhotosForConsolidation =
+  ({ photos }, ids) =>
+    blank(ids) ?
+      into([],
+        compose(
+          filter(notConsolidating),
+          map(toPhoto)
+        ), photos) :
+      seq(ids,
+        compose(
+          map(id => photos[id]),
+          filter(photo => !photo.consolidating)))
+
 
 module.exports = {
   getPhotosWithErrors,
+  getPhotosForConsolidation,
   getSelectedPhoto,
   getVisiblePhotos
 }

@@ -252,16 +252,6 @@ const dom = {
     return offset > 0 && offset < node.offsetParent.offsetHeight
   },
 
-  encodeFileURL(url) {
-    return url.replace(/[#?&]/g, (m) => {
-      switch (m) {
-        case '#': return '%23'
-        case '?': return '%3F'
-        case '&': return '%26'
-      }
-    })
-  },
-
   loadImage(src, decode = false) {
     return new Promise((resolve, reject) => {
       let img = new Image()

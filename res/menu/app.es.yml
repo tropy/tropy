@@ -36,10 +36,10 @@ es:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importar fotos ...
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
-        - label: Agrupar fototeca
+        - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
@@ -116,7 +116,7 @@ es:
           accelerator: Ctrl+W
           role: close
           condition: window
-    - label: Desarrollador
+    - label: Desarrollo
       id: dev
       submenu:
         - label: Recargar los estilos
@@ -244,7 +244,7 @@ es:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importar fotos ...
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Consolidar fototeca
@@ -327,7 +327,7 @@ es:
           accelerator: Cmd+W
           role: close
           condition: window
-    - label: Desarrollador
+    - label: Desarrollo
       id: dev
       submenu:
         - label: Recargar los estilos
@@ -431,10 +431,10 @@ es:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importar fotos ...
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
-        - label: Agrupar fototeca
+        - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
@@ -508,7 +508,7 @@ es:
           accelerator: Ctrl+W
           role: close
           condition: window
-    - label: Desarrollador
+    - label: Desarrollo
       id: dev
       submenu:
         - label: Recargar los estilos

@@ -5,25 +5,25 @@ fr:
       plugin: Plugins Tropy
     crashed:
       buttons:
-      - Fermer la fenêtre
-      - Relancer Tropy
-      - Afficher les logs
+        - Fermer la fenêtre
+        - Relancer Tropy
+        - Afficher les logs
       message: Tropy a planté
-      detail: >
-          Merci de reporter cet incident à https://github.com/tropy/tropy
+      detail: |
+        Merci de reporter cet incident à https://github.com/tropy/tropy
     unresponsive:
       buttons:
-      - Fermer
-      - Continuer d'attendre
+        - Fermer
+        - Continuer d'attendre
       message: Tropy ne répond plus
       detail: >
-          Tropy ne répond plus. Voulez-vous forcer sa fermeture ou bien continuer
-          d'attendre?
+        Tropy ne répond plus. Voulez-vous forcer sa fermeture ou bien continuer
+        d'attendre?
     unhandled:
       buttons:
-      - Fermer
-      - Copier l'erreur
-      - Afficher les logs
+        - Fermer
+        - Copier l'erreur
+        - Afficher les logs
       message: Erreur non interceptée
   window:
     prefs:
