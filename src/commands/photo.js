@@ -96,6 +96,7 @@ class Consolidate extends ImportCommand {
     this.options.base = project.base
     this.options.density = meta.density || settings.density
     this.options.overwrite = true
+    this.useLocalTimezone = settings.timezone
 
     this.consolidated = []
 
@@ -117,11 +118,17 @@ class Consolidate extends ImportCommand {
 
   *consolidate(photo, selections = {}) {
     try {
-      let { base, db, density, overwrite } = this.options
+      let { base, db, density, overwrite, useLocalTimezone } = this.options
       let { meta } = this.action
 
-      let { image, hasChanged, error } =
-        yield this.checkPhoto(photo, meta.force)
+      let {
+        image,
+        hasChanged,
+        error
+      } = yield call(Image.check, photo, {
+        density: photo.density || density,
+        useLocalTimezone
+      })
 
       var data
       var broken = (error != null)
@@ -136,7 +143,9 @@ class Consolidate extends ImportCommand {
               density: photo.density || density,
               path,
               page: photo.page,
-              protocol: 'file' })
+              protocol: 'file',
+              useLocalTimezone
+            })
           }
         }
 

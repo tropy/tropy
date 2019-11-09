@@ -30,16 +30,6 @@ class ImportCommand extends Command {
     })
   }
 
-  *checkPhoto(photo, force) {
-    let settings = yield select(state => state.settings)
-
-    return yield call(Image.check, photo, {
-      force,
-      density: photo.density || settings.density,
-      useLocalTimezone: settings.localtime
-    })
-  }
-
   *getMetadata(image, templates) {
     let data = {}
     let prefs = yield select(state => state.settings)
