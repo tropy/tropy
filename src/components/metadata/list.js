@@ -1,18 +1,25 @@
 'use strict'
 
 const React = require('react')
-const { MetadataField } = require('./field')
-const { get } = require('../../common/util')
+const { NewMetadataField, MetadataField } = require('./field')
+const { shallow } = require('../../common/util')
 const { arrayOf, bool, func, object, shape, string } =  require('prop-types')
 
 
 class MetadataList extends React.PureComponent {
   get isBulk() {
-    return this.props.fields.key === 'bulk'
+    return this.props.fields.id.length > 1
   }
 
   get isEmpty() {
     return this.props.fields.length === 0
+  }
+
+  get hasNewMetadataField() {
+    return this.props.onCreate != null &&
+      this.props.edit != null &&
+      this.props.edit.property == null &&
+      shallow(this.props.edit.id, this.props.fields.id)
   }
 
   indexOf(id) {
@@ -51,25 +58,34 @@ class MetadataList extends React.PureComponent {
   }
 
   isEditing(property) {
-    let { key } = this.props.fields
-    if (key != null && key === get(this.props.edit, [property])) {
-      this.head = property
-      return true
-    } else {
-      return false
+    try {
+      var isEditing = this.props.edit != null &&
+        property === this.props.edit.property &&
+        shallow(this.props.fields.id, this.props.edit.id)
+      return isEditing
+
+    } finally {
+      // Update head for keyboard navigation!
+      if (isEditing) this.head = property
     }
   }
 
   edit = (property) => {
-    this.props.onEdit({ field: { [property]: this.props.fields.key } })
+    this.props.onEdit({
+      field: { id: this.props.fields.id, property }
+    })
   }
 
-  handleChange = (data, hasChanged) => {
-    if (hasChanged || this.isBulk) {
+  handleChange = (data, hasChanged, hasBeenForced) => {
+    if (hasChanged || hasBeenForced && this.isBulk) {
       this.props.onChange({ id: this.props.fields.id, data })
     } else {
       this.props.onEditCancel()
     }
+  }
+
+  handleCreate = (property) => {
+    this.props.onCreate({ id: this.props.fields.id, property })
   }
 
   handleNext = () => {
@@ -86,12 +102,12 @@ class MetadataList extends React.PureComponent {
 
   render() {
     this.head = null
-
     return (
       <ol className="metadata-fields">
         {this.props.fields.map(({ property, value, type, ...props }) =>
           <MetadataField {...props}
             key={property.id}
+            id={this.props.fields.id}
             isDisabled={this.props.isDisabled}
             isEditing={this.isEditing(property.id)}
             isMixed={!!value.mixed}
@@ -99,12 +115,19 @@ class MetadataList extends React.PureComponent {
             text={value.text}
             type={value.type || type}
             onContextMenu={this.props.onContextMenu}
+            onCopy={this.props.onCopy}
             onChange={this.handleChange}
             onEdit={this.edit}
             onEditCancel={this.props.onEditCancel}
             onNext={this.handleNext}
             onPrev={this.handlePrev}/>
         )}
+        {this.hasNewMetadataField &&
+          <NewMetadataField
+            options={this.props.options}
+            value={this.props.fields.map(f => f.property.id)}
+            onCancel={this.props.onEditCancel}
+            onCreate={this.handleCreate}/>}
       </ol>
     )
   }
@@ -119,12 +142,15 @@ class MetadataList extends React.PureComponent {
       property: object.isRequired,
       value: object
     })).isRequired,
+    options: arrayOf(object),
     onAfter: func.isRequired,
     onBefore: func.isRequired,
     onEdit: func,
     onEditCancel: func,
     onContextMenu: func,
-    onChange: func.isRequired
+    onCopy: func.isRequired,
+    onChange: func.isRequired,
+    onCreate: func
   }
 }
 

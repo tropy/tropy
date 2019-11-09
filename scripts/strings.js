@@ -7,6 +7,7 @@ const { join } = require('path')
 const { readFileSync: read, writeFileSync: write } = require('fs')
 const { isArray } = Array
 const yaml = require('js-yaml')
+const { merge } = require('../src/common/util')
 
 const HOME = join(__dirname, '..')
 const MENU = join(HOME, 'res', 'menu')
@@ -18,8 +19,8 @@ const load = (file) =>
 const open = (file, locale = 'en') =>
   load(join(MENU, `${file}.${locale}.yml`))
 
-const save = (menu, file, locale, dst = MENU) =>
-  write(join(dst, `${file}.${locale}.yml`), yaml.safeDump(menu, {
+const save = (data, file, locale, dst = MENU) =>
+  write(join(dst, `${file}.${locale}.yml`), yaml.safeDump(data, {
     noRefs: true
   }))
 
@@ -93,7 +94,12 @@ target.import = (args = []) => {
       let type = m[1]
       let locale = m[2]
       say(`importing ${locale} ${type} strings...`)
-      mv(join(home, file), join(STRINGS, `${type}.${locale}.yml`))
+
+      let { en } = load(join(STRINGS, `${type}.en.yml`))
+      let data = load(join(home, file))[locale]
+
+      save({ [locale]: merge(en, data) }, type,  locale, STRINGS)
+      rm(join(home, file))
     }
   }
 }

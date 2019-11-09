@@ -65,7 +65,8 @@ class Draggable extends PureComponent {
 
   drag = createDragHandler({
     handleDrag: this.handleDrag,
-    handleDragStop: this.handleDragStop
+    handleDragStop: this.handleDragStop,
+    stopOnMouseLeave: this.props.stopOnMouseLeave
   })
 
   clear() {
@@ -93,14 +94,16 @@ class Draggable extends PureComponent {
     onClick: func.isRequired,
     onDrag: func.isRequired,
     onDragStart: func.isRequired,
-    onDragStop: func.isRequired
+    onDragStop: func.isRequired,
+    stopOnMouseLeave: bool
   }
 
   static defaultProps = {
     delay: 250,
     onClick: noop,
     onDrag: noop,
-    onDragStop: noop
+    onDragStop: noop,
+    stopOnMouseLeave: false
   }
 }
 

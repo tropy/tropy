@@ -74,7 +74,9 @@ class SelectionListItem extends SelectionIterable {
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
-        {this.renderThumbnail()}
+        <div className="thumbnail-container">
+          {this.renderThumbnail()}
+        </div>
         <div className="title">
           <Editable
             display={title || this.placeholder}

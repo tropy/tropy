@@ -8,7 +8,8 @@ clone_depth: 8
 os: unstable
 environment:
   ELECTRON_NO_ATTACH_CONSOLE: true
-  nodejs_version: 10
+  SHARP_DIST_BASE_URL: https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/
+  nodejs_version: 12
 platform:
   - x64
 cache:
@@ -19,6 +20,7 @@ install:
   - chcp 65001
   - node --version
   - npm --version
+  - npm install sharp sqlite3 --ignore-scripts --no-save --no-package-lock --no-progress --silent
   - npm install --no-optional --no-color --no-progress
 test_script:
   - npm run -s compile

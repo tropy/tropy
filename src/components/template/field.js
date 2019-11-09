@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { DragSource, DropTarget } = require('react-dnd')
+const { DragSource, DropTarget } = require('../dnd')
 const { ResourceSelect } = require('../resource/select')
 const { Button } = require('../button')
 const { FormField, FormGroup, FormToggle, Label } = require('../form')

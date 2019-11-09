@@ -1,0 +1,34 @@
+es:
+  dialog:
+    file:
+      project: Proyectos Tropy
+      plugin: Plugins Tropy
+    crashed:
+      buttons:
+        - Cerrar la ventana
+        - Reiniciar Tropy
+        - Mostrar logs
+      message: Tropy ha fallado
+      detail: >
+        Desafortunadamente, esta ventana de Tropy ha fallado. Puedes ayudarnos
+        reportando este problema en https://github.com/tropy/tropy
+    unresponsive:
+      buttons:
+        - Cerrar la ventana
+        - Esperar
+      message: Tropy no responde
+      detail: |
+        Esta ventana de Tropy no responde. ¿Quieres cerrarla o esperar?
+    unhandled:
+      buttons:
+        - Cerrar
+        - Copiar el error
+        - Mostrar logs
+      message: Error no interceptado
+  window:
+    prefs:
+      title: Preferencias
+    wizard:
+      title: Bienvenida a Tropy
+    about:
+      title: Acerca de Tropy

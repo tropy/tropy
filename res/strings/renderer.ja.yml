@@ -6,90 +6,75 @@ ja:
     trash: 削除済みアイテム
   toolbar:
     import: 写真をインポート
-    items: >
-        {count, plural,
-
-        =0 {このビューにはアイテムがありません}
-
-        one {このビューには1つのアイテムがあります}
-
-        other {# のアイテムがあります}}
+    items: |
+      {count, plural,
+      =0 {このビューにはアイテムがありません}
+      one {このビューには1つのアイテムがあります}
+      other {# のアイテムがあります}}
     search:
       placeholder: 検索
   panel:
     metadata:
       tab: メタデータ
       photo: 写真
-      item: >
-          {count, plural,
-
-          =0 {}
-
-          one {アイテム}
-
-          other {# アイテム}}
+      item: |
+        {count, plural,
+        =0 {}
+        one {アイテム}
+        other {# アイテム}}
       selection: セレクション
-      popup:
+      dropdown:
         placeholder: フィールド を追加
     tags:
       tab: タグ
-      add: >
-          {count, plural,
-
-          =0 {タグを付与する}
-
-          one {1つのアイテムにタグを付与する}
-
-          other {#のアイテムにタグを付与する}}
+      add: |
+        {count, plural,
+        =0 {タグを付与する}
+        one {1つのアイテムにタグを付与する}
+        other {#のアイテムにタグを付与する}}
     photo:
-      title: >
-          {count, plural,
-
-          =0 {写真がありません}
-
-          one {1つの写真}
-
-          other {# の写真}}
+      title: |
+        {count, plural,
+        =0 {写真がありません}
+        one {1つの写真}
+        other {# の写真}}
       create: 写真を追加
       selection: セレクション
     note:
-      title: >
-          {count, plural,
-
-          =0 {ノートがありません}
-
-          one {1つのノート}
-
-          other {# のノート}}
+      title: |
+        {count, plural,
+        =0 {ノートがありません}
+        one {1つのノート}
+        other {# のノート}}
       create: ノートを追加
   print:
     item: アイテム
     photo: 写真
     notes: ノート
-    note: ノート {idx, number}
+    note: 'ノート {idx, number}'
     tags: タグ
   about:
-    version: バージョン {version}
+    version: 'バージョン {version}'
     rrchnm:
       title: ロイ・ローゼンツヴァイク歴史とニューディアセンター
-      url: https://rrchnm.org
+      url: 'https://rrchnm.org'
     cds:
       title: Corporation for Digital Scholarship
-      url: http://digitalscholar.org
-    text: >
-        Tropyは、歴史教育リソースやデジタル展示、オープンソースソフトウェアの開発チームである{rrchnm}によって作成されています。
-    trademark: Tropyは{cds}の商標です。
+      url: 'http://digitalscholar.org'
+    text: |
+      Tropyは、歴史教育リソースやデジタル展示、オープンソースソフトウェアの開発チームである{rrchnm}によって作成されています。
+    trademark: 'Tropyは{cds}の商標です。'
     release:
       title: リリースノート
-      url: https://github.com/tropy/tropy/releases/tag/{version}
+      url: 'https://github.com/tropy/tropy/releases/tag/{version}'
     license:
       title: ライセンス情報
-      url: https://tropy.org/license
+      url: 'https://tropy.org/license'
     credits:
       title: クレジット
-      url: https://tropy.org/credits
+      url: 'https://tropy.org/credits'
   project:
-    none: プロジェクトファイルをここにドロップするか、あるいは{newProject}を作成してください
+    none: 'プロジェクトファイルをここにドロップするか、あるいは{newProject}を作成してください'
     empty: まずは写真をTropyにドロップしてください
     new: 新規プロジェクト
     recent: 最近のプロジェクト
@@ -113,11 +98,22 @@ ja:
           light: ライト
           dark: ダーク
           system: システム環境の設定を引き継ぐ
+      print:
+        mode: プリント
+        modes:
+          item: One item per page
+          photo: One photo per page
+          selection: One selection per page
+        photos: Include photos
+        metadata: Include metadata
+        notes: Include notes
+        overflow: Allow content to take up more than one page
       locale:
         locale: ローカル
         locales:
           de: Deutsch
           en: English
+          es: Español
           fr: Français
           it: Italiano
           ja: 日本語
@@ -137,8 +133,15 @@ ja:
           skip: 重複する写真をスキップ
           import: 写真の重複を認める
           prompt: 毎回確認する
+      density:
+        label: Default density (ppi)
+        title: 'Used for PDF, SVG and other scalable formats'
       export:
         label: エクスポート
+        note:
+          format:
+            html: Notes as HTML
+            markdown: Notes as Markdown
       ui:
         label: インターフェース
         option:
@@ -155,6 +158,11 @@ ja:
         option:
           stacked: 上下に配置
           side-by-side: 左右に配置
+      completions:
+        label: Autocomplete
+        option:
+          datatype: By datatype only
+          property-datatype: By datatype and property
     project:
       label: プロジェクト
     template:
@@ -171,34 +179,23 @@ ja:
     vocab:
       label: 語彙
       export: エクスポート
-      classes: >
-          {count, plural,
-
-          =0 {クラスがありません}
-
-          one {# のクラス}
-
-          other {# のクラス}
-
-          }
-      datatypes: >
-          {count, plural,
-
-          =0 {データタイプがありません} one {# つのデータタイプ}
-
-          other {# のデータタイプ}
-
-          }
-      properties: >
-          {count, plural,
-
-          =0 {プロパティがありません}
-
-          one {# つのプロパティ}
-
-          other {# のプロパティ}
-
-          }
+      classes: |
+        {count, plural,
+        =0 {クラスがありません}
+        one {# のクラス}
+        other {# のクラス}
+        }
+      datatypes: |
+        {count, plural,
+        =0 {データタイプがありません} one {# つのデータタイプ}
+        other {# のデータタイプ}
+        }
+      properties: |
+        {count, plural,
+        =0 {プロパティがありません}
+        one {# つのプロパティ}
+        other {# のプロパティ}
+        }
     plugins:
       label: プラグイン
       enable: 有効にする
@@ -214,6 +211,7 @@ ja:
   photo:
     file: ファイル
     size: サイズ
+    density: Density
     type: タイプ
     created: 登録日
     modified: 更新日
@@ -237,19 +235,19 @@ ja:
       revert: 最初の状態に戻す
       brightness:
         label: 明るさ
-        value: "{value, number}"
+        value: '{value, number}'
       contrast:
         label: コントラスト
-        value: "{value, number}"
+        value: '{value, number}'
       hue:
         label: 色調
-        value: "{value, number}°"
+        value: '{value, number}°'
       saturation:
         label: 彩度
-        value: "{value, number}"
+        value: '{value, number}'
       sharpen:
         label: 鮮鋭化
-        value: "{value, number}"
+        value: '{value, number}'
   notepad:
     placeholder: ノートを入力してください
   completions:
@@ -265,9 +263,9 @@ ja:
     creator: 作成者
     description: 内容記述
     types:
-      https://tropy.org/v1/tropy#Item: アイテムテンプレート
-      https://tropy.org/v1/tropy#Photo: 写真テンプレート
-      https://tropy.org/v1/tropy#Selection: 写真選択テンプレート
+      'https://tropy.org/v1/tropy#Item': アイテムテンプレート
+      'https://tropy.org/v1/tropy#Photo': 写真テンプレート
+      'https://tropy.org/v1/tropy#Selection': 写真選択テンプレート
     field:
       property: プロパティ
       label: ラベル
@@ -296,44 +294,44 @@ ja:
   dialog:
     notify:
       buttons:
-      - OK
+        - OK
     error:
       title: Error
       buttons:
-      - Dismiss
-      - Copy Error
-      - Show Logs
+        - Dismiss
+        - Copy Error
+        - Show Logs
     prompt:
       item:
         destroy:
-          message: >
-              アイテムを完全に削除しますか？削除後は元に戻せません。
+          message: |
+            アイテムを完全に削除しますか？削除後は元に戻せません。
           buttons:
-          - キャンセル
-          - 削除
+            - キャンセル
+            - 削除
       photo:
         consolidate:
           message: >
-            Do you want Tropy to automatically check and resolve further
-            missing photos at this location?
+            Do you want Tropy to automatically check and resolve further missing
+            photos at this location?
           buttons:
-          - いいえ
-          - はい
+            - いいえ
+            - はい
       dup:
-        detail: >
-            この写真はすでにプロジェクトにあります。再度インポートしますか？
+        detail: |
+          この写真はすでにプロジェクトにあります。再度インポートしますか？
         checkboxLabel: この選択を記憶する
         buttons:
-        - 重複する写真をスキップ
-        - 写真の重複を認める
+          - 重複する写真をスキップ
+          - 写真の重複を認める
       plugin:
         uninstall:
           type: warning
-          detail: >
-              このプラグインを本当に削除してよろしいでしょうか？この操作によって、このプラグインとその設定は完全に削除されます。
+          detail: |
+            このプラグインを本当に削除してよろしいでしょうか？この操作によって、このプラグインとその設定は完全に削除されます。
           buttons:
-          - キャンセル
-          - 削除
+            - キャンセル
+            - 削除
     filter:
       csv: CSV
       templates: Tropyテンプレート
@@ -431,19 +429,16 @@ ja:
       save: タグを保存しています
     item:
       create: アイテムを作成しています
-      delete: アイテムを削除しています
+      delete: Deleting item …
       destroy: アイテムを完全に削除しています
       explode: 個々のアイテムに分割しています
       export: アイテムをエクスポートしています
       implode: アイテムを復元しています
-      import: >
-          {hasProgressBar, select,
-
-          true {Importing items {progress, number} of {total, number} …}
-
-          other {Importing items …}
-
-          }
+      import: |
+        {hasProgressBar, select,
+        true {Importing items {progress, number} of {total, number} …}
+        other {Importing items …}
+        }
       load: アイテムをロード中
       merge: アイテムを統合中
       restore: アイテムを復元中
@@ -465,31 +460,22 @@ ja:
       template:
         import: テンプレートをインポート中
     photo:
-      consolidate: >
-          {hasProgressBar, select,
-
-          true {Consolidating photos {progress, number} of {total, number} …}
-
-          other {Consolidating photos …}
-
-          }
-      create: >
-          {hasProgressBar, select,
-
-          true {Importing photos {progress, number} of {total, number} …}
-
-          other {Importing photos …}
-
-          }
+      consolidate: |
+        {hasProgressBar, select,
+        true {Consolidating photos {progress, number} of {total, number} …}
+        other {Consolidating photos …}
+        }
+      create: |
+        {hasProgressBar, select,
+        true {Importing photos {progress, number} of {total, number} …}
+        other {Importing photos …}
+        }
       delete: 写真を削除中
-      duplicate: >
-          {hasProgressBar, select,
-
-          true {Duplicating photos {progress, number} of {total, number} …}
-
-          other {Duplicating photos …}
-
-          }
+      duplicate: |
+        {hasProgressBar, select,
+        true {Duplicating photos {progress, number} of {total, number} …}
+        other {Duplicating photos …}
+        }
       load: 写真をロード中
       move: 写真を移動中
       order: 写真をソート中
@@ -502,6 +488,7 @@ ja:
       order: ノートをソート中
       restore: ノートを復元中
     selection:
+      create: Creating photo selection …
       load: フォト・セレクションをロード中
   editor:
     commands:
@@ -557,6 +544,7 @@ ja:
       template:
         change: 選択テンプレートの変更に失敗しました
     ontology:
+      migrate: Failed to upgrade your ontology database.
       import: 語彙のインポートに失敗しました
       vocab:
         save: 語彙の保存に失敗しました。プレフィックスは一意のものにしてください。
@@ -570,8 +558,8 @@ ja:
   flash:
     update:
       ready:
-        message: >
-            Tropy{version}のインストール準備が完了しました。すぐにインストールし、再起動しますか？
+        message: |
+          Tropy{version}のインストール準備が完了しました。すぐにインストールし、再起動しますか？
         confirm: すぐに再起動する
   plugin:
     name: 名前

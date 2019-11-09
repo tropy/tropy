@@ -4,8 +4,7 @@ const React = require('react')
 const { Provider, connect } = require('react-redux')
 const ReactIntl = require('react-intl')
 const { element, object } = require('prop-types')
-const { DragDropContext } = require('react-dnd')
-const { default: ElectronBackend } = require('react-dnd-electron-backend')
+const { DndProvider, ElectronBackend } = require('./dnd')
 const { Flash } = require('./flash')
 const { noop } = require('../common/util')
 
@@ -28,14 +27,16 @@ class Main extends React.Component {
   render() {
     return (
       <WindowContext.Provider value={this.props.window}>
-        <Provider store={this.props.store}>
-          <IntlProvider>
-            <React.Fragment>
-              {this.props.children}
-              <Flash/>
-            </React.Fragment>
-          </IntlProvider>
-        </Provider>
+        <DndProvider backend={ElectronBackend}>
+          <Provider store={this.props.store}>
+            <IntlProvider>
+              <>
+                {this.props.children}
+                <Flash/>
+              </>
+            </IntlProvider>
+          </Provider>
+        </DndProvider>
       </WindowContext.Provider>
     )
   }
@@ -48,6 +49,6 @@ class Main extends React.Component {
 }
 
 module.exports = {
-  Main: DragDropContext(ElectronBackend)(Main),
+  Main,
   WindowContext
 }

@@ -20,6 +20,7 @@ const { writeFile: write } = require('fs')
 const { win } = require('../window')
 
 const {
+  findTagIds,
   getGroupedItems,
   getItemTemplate,
   getPhotoTemplate,
@@ -51,20 +52,20 @@ class Create extends Command {
 }
 
 class Import extends ImportCommand {
-  static get ACTION() { return ITEM.IMPORT }
+  static get ACTION() {
+    return ITEM.IMPORT
+  }
 
   *exec() {
     let { db } = this.options
-    let { files, list } = this.action.payload
-
+    let { payload, meta } = this.action
+    let { files, list } = payload
     let items = []
 
-    if (!files) {
-      this.isInteractive = true
-      files = yield call(open.items)
-    }
-
-    if (!files) return []
+    if (!files && meta.prompt)
+      files = yield this.prompt(meta.prompt)
+    if (!files)
+      return []
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
@@ -140,6 +141,20 @@ class Import extends ImportCommand {
     }
 
     return items
+  }
+
+  *prompt(type) {
+    try {
+      this.suspend()
+      switch (type) {
+        case 'url':
+        default:
+          return yield call(open.items)
+      }
+
+    } finally {
+      this.resume()
+    }
   }
 }
 
@@ -252,7 +267,7 @@ class Merge extends Command {
     return {
       ...item,
       photos: [...item.photos, ...m.photos],
-      tags: [...item.tags, ...m.tags],
+      tags: [...item.tags, ...m.tags]
     }
   }
 }
@@ -480,49 +495,84 @@ class Print extends Command {
   static get ACTION() { return ITEM.PRINT }
 
   *exec() {
-    let [prefs, items] = yield select(state => ([
+    let [prefs, project, items] = yield select(state => ([
       state.settings.print,
+      state.project.id,
       getPrintableItems(state)
     ]))
 
     if (items.length) {
-      ipc.send('print', { ...prefs, items })
+      ipc.send('print', { ...prefs, project, items })
     }
   }
 }
 
-class AddTag extends Command {
-  static get ACTION() { return ITEM.TAG.CREATE }
-
+class AddTags extends Command {
   *exec() {
-    const { db } = this.options
-    const { payload } = this.action
+    let { db } = this.options
+    let { payload, meta } = this.action
+    let { tags } = payload
 
-    const [tag] = payload.tags
-    const id = payload.id
+    if (meta.resolve) {
+      tags = yield select(state => findTagIds(state, tags))
+    }
 
-    const res = yield call(db.transaction, tx =>
-      mod.item.tags.add(tx, { id, tag }))
+    let work = yield select(state =>
+      payload.id.map(id => [
+        id,
+        remove(tags, ...state.items[id].tags)
+      ]))
 
-    this.undo = act.item.tags.delete({ id: res.id, tags: [tag] })
+    yield call(
+      mod.item.tags.set,
+      db,
+      work.flatMap(([id, tx]) =>
+        tx.map(tag => ({ id, tag }))))
 
-    return { id: res.id, tags: [tag] }
+    for (let [id, tx] of work) {
+      if (tx.length)
+        yield put(act.item.tags.insert({ id, tags: tx }))
+    }
+
+    // TODO: Use work. This currently removes all tags!
+    this.undo = act.item.tags.delete({ id: payload.id, tags })
+
+    return work
   }
+
+  static ACTION = ITEM.TAG.CREATE
 }
 
-class RemoveTag extends Command {
-  static get ACTION() { return ITEM.TAG.DELETE }
-
+class RemoveTags extends Command {
   *exec() {
-    const { db } = this.options
-    const { payload } = this.action
+    let { db } = this.options
+    let { payload, meta } = this.action
+    let { tags } = payload
 
-    yield call(mod.item.tags.remove, db, payload)
+    if (meta.resolve) {
+      tags = yield select(state => findTagIds(state, tags))
+    }
 
-    this.undo = act.item.tags.create(payload)
+    let work = yield select(state =>
+      payload.id.map(id => [
+        id,
+        tags.filter(tag => state.items[id].tags.includes(tag))
+      ]))
 
-    return payload
+    yield call(mod.item.tags.remove, db, { id: payload.id, tags })
+
+    for (let [id, tx] of work) {
+      if (tx.length)
+        yield put(act.item.tags.remove({ id, tags: tx }))
+    }
+
+    // TODO: Use work. This currently adds all tags!
+    this.undo = act.item.tags.create({ id: payload.id, tags })
+
+    return work
   }
+
+  static ACTION = ITEM.TAG.DELETE
 }
 
 
@@ -557,8 +607,8 @@ module.exports = {
   TemplateChange,
   Preview,
   Print,
-  AddTag,
-  RemoveTag,
+  AddTags,
+  RemoveTags,
   ToggleTags,
   ClearTags
 }

@@ -146,7 +146,7 @@ class Menu {
         case 'recent':
           if (item.id === 'recent') {
             if (this.app.state.recent.length) {
-              item.enabled =  true
+              item.enabled = true
 
               item.submenu = [
                 ...this.app.state.recent.map((file, idx) => ({
@@ -323,7 +323,7 @@ class AppMenu extends Menu {
 }
 
 const separate = transformer(
-  (menu, items) => ([...menu, { type: 'separator' }, ...items]),
+  (menu, items) => ([...menu, { type: 'separator' }, ...items])
 )
 
 class ContextMenu extends Menu {

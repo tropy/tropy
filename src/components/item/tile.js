@@ -10,24 +10,22 @@ const cx = require('classnames')
 
 class ItemTile extends ItemIterable {
   render() {
-    const { item, cache, photos, size, tags, onPhotoError } = this.props
-
     return this.connect(
       <li
         ref={this.setContainer}
         className={cx(this.classes, 'tile', 'click-catcher')}>
         <div className="tile-state">
           <CoverImage
-            cache={cache}
-            item={item}
-            photos={photos}
-            tags={tags}
-            size={size}
+            cache={this.props.cache}
+            item={this.props.item}
+            photos={this.props.photos}
+            tags={this.props.tags}
+            size={this.props.size}
             onMouseDown={this.handleMouseDown}
             onClick={this.handleClick}
             onDoubleClick={this.handleOpen}
             onContextMenu={this.handleContextMenu}
-            onError={onPhotoError}/>
+            onError={this.props.onPhotoError}/>
         </div>
       </li>
     )

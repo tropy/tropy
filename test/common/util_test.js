@@ -21,7 +21,7 @@ describe('util', () => {
         })
 
         it('resolves', () => (
-          expect(once(ee, 'evt')).eventually.to.eql(42)
+          expect(once(ee, 'evt')).eventually.to.eql([42])
         ))
 
         it('cleans up', () => (
@@ -334,6 +334,37 @@ describe('util', () => {
       const b = { a: 1, b: [], c: 'foo' }
 
       expect(shallow(a, b)).to.be.false
+    })
+
+    it('returns false if one param is an array', () => {
+      expect(shallow([], {})).to.be.false
+      expect(shallow({}, [])).to.be.false
+    })
+
+    it('returns false for two arrays with different content', () => {
+      expect(shallow([1], [])).to.be.false
+      expect(shallow([], [1])).to.be.false
+      expect(shallow([1], [2])).to.be.false
+      expect(shallow([1], [1, 2])).to.be.false
+      expect(shallow([1, 2], [2, 1])).to.be.false
+    })
+
+    it('returns true for two arrays with identical content', () => {
+      expect(shallow([], [])).to.be.true
+      expect(shallow([1], [1])).to.be.true
+      expect(shallow([1, 2], [1, 2])).to.be.true
+    })
+
+    it('compares atomic params for identity', () => {
+      expect(shallow(null, {})).to.be.false
+      expect(shallow({}, null)).to.be.false
+      expect(shallow(null)).to.be.false
+      expect(shallow(undefined, null)).to.be.false
+      expect(shallow()).to.be.true
+      expect(shallow(null, null)).to.be.true
+      expect(shallow(3, 3)).to.be.true
+      expect(shallow('1', 1)).to.be.false
+      expect(shallow(1, 2)).to.be.false
     })
   })
 

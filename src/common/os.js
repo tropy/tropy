@@ -3,6 +3,7 @@
 const os = require('os')
 const { arch, platform } = process
 const { qualified } = require('./release')
+const { SUPPORTED } = require('../constants/image')
 
 module.exports = {
   get EL_CAPITAN() {
@@ -44,10 +45,12 @@ Version=1.0
 Terminal=false
 Type=Application
 Name=${qualified.product}
-Exec=${exec} %f
+Exec=${exec} %u
 Icon=${qualified.name}
 StartUpNotify=true
-MimeType=application/vnd.tropy.tpy;image/jpeg;
+MimeType=application/vnd.tropy.tpy;x-scheme-handler/tropy;${
+  Object.keys(SUPPORTED).join(';')
+};
 Categories=Graphics;Viewer;Science;`
   }
 }

@@ -2,11 +2,10 @@
 
 const React = require('react')
 const { Iterator } = require('../iterator')
-const { DropTarget } = require('react-dnd')
-const { NativeTypes } = require('react-dnd-electron-backend')
-const { DND, MIME } = require('../../constants')
-const { isImageSupported } = MIME
-const { move } = require('../../common/util')
+const { DropTarget, NativeTypes } = require('../dnd')
+const { DND, IMAGE } = require('../../constants')
+const { isImageSupported } = IMAGE
+const { blank, last, move } = require('../../common/util')
 const { ceil, floor, min } = Math
 const { on, off } = require('../../dom')
 
@@ -275,13 +274,15 @@ class PhotoIterator extends Iterator {
   }
 
   connect(element) {
-    return this.isDisabled ? element : this.props.dt(element)
+    return this.isDisabled ?
+      element :
+      this.props.connectDropTarget(element)
   }
 
 
   static asDropTarget() {
     return DropTarget(
-        [DND.PHOTO, NativeTypes.FILE],
+        [DND.PHOTO, NativeTypes.FILE, NativeTypes.URL],
         DropTargetSpec,
         DropTargetCollect
       )(this)
@@ -308,7 +309,7 @@ class PhotoIterator extends Iterator {
     isOver: bool,
     isOverFile: bool,
 
-    dt: func.isRequired,
+    connectDropTarget: func.isRequired,
 
     onBlur: func.isRequired,
     onContract: func.isRequired,
@@ -331,28 +332,33 @@ const DropTargetSpec = {
   drop({ photos, onCreate }, monitor) {
     if (monitor.didDrop()) return
 
-    switch (monitor.getItemType()) {
+    let type = monitor.getItemType()
+    let item = monitor.getItem()
+
+    let files
+
+    switch (type) {
       case DND.PHOTO: {
-        let { id } = monitor.getItem()
-        let to = photos[photos.length - 1].id
+        let to = last(photos).id
 
-        if (id !== to)  {
-          return { id, to, offset: 1 }
+        if (item.id !== to)  {
+          return {
+            id: item.id, to, offset: 1
+          }
         }
         break
       }
-      case NativeTypes.FILE: {
-        let files = monitor.getItem()
-          .files
-          .filter(isImageSupported)
-          .map(file => file.path)
-
-        if (files.length) {
-          onCreate({ files })
-          return { files }
-        }
+      case NativeTypes.FILE:
+        files = item.files.filter(isImageSupported).map(f => f.path)
         break
-      }
+      case NativeTypes.URL:
+        files = item.urls
+        break
+    }
+
+    if (!blank(files)) {
+      onCreate({ files })
+      return { files }
     }
   },
 
@@ -362,9 +368,11 @@ const DropTargetSpec = {
         return photos.length > 1
       case NativeTypes.FILE:
         return canCreate &&
-          !!monitor.getItem().types.find(type => isImageSupported({ type }))
+          !!monitor.getItem().types.find(isImageSupported)
+      case NativeTypes.URL:
+        return canCreate
       default:
-        return false
+        return true
     }
   }
 }
@@ -374,9 +382,10 @@ const DropTargetCollect = (connect, monitor) => {
   let type = monitor.getItemType()
 
   return {
-    dt: connect.dropTarget(),
+    connectDropTarget: connect.dropTarget(),
     isOver: isOver && type === DND.PHOTO,
-    isOverFile: isOver && type === NativeTypes.FILE
+    isOverFile: isOver &&
+      (type === NativeTypes.FILE || type === NativeTypes.URL)
   }
 }
 

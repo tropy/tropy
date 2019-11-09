@@ -29,7 +29,6 @@ fr:
           command: 'app:open-new-dialog'
         - label: Projets récents
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -37,7 +36,7 @@ fr:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importer des photos …
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Regrouper la photothèque
@@ -132,9 +131,9 @@ fr:
           command: 'app:reset-ontology-db'
         - label: Optimiser le cache du project
           command: 'app:optimize-cache'
-        - label: Optimize Project Database
+        - label: Optimiser la base de données du projet
           command: 'app:optimize-project'
-        - label: Reindex Project Database
+        - label: Réindexer la base de données du projet
           command: 'app:reindex-project'
         - type: separator
         - label: Recombiner le projet
@@ -238,7 +237,6 @@ fr:
           command: 'app:open-new-dialog'
         - label: Projets récents
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -246,7 +244,7 @@ fr:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importer des photos …
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Regrouper la photothèque
@@ -344,9 +342,9 @@ fr:
           command: 'app:reset-ontology-db'
         - label: Optimiser le cache du project
           command: 'app:optimize-cache'
-        - label: Optimize Project Database
+        - label: Optimiser la base de données du projet
           command: 'app:optimize-project'
-        - label: Reindex Project Database
+        - label: Réindexer la base de données du projet
           command: 'app:reindex-project'
         - type: separator
         - label: Recombiner le projet
@@ -426,7 +424,6 @@ fr:
           command: 'app:open-new-dialog'
         - label: Projets récents
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -434,7 +431,7 @@ fr:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importer des photos …
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Regrouper la photothèque
@@ -526,9 +523,9 @@ fr:
           command: 'app:reset-ontology-db'
         - label: Optimiser le cache du project
           command: 'app:optimize-cache'
-        - label: Optimize Project Database
+        - label: Optimiser la base de données du projet
           command: 'app:optimize-project'
-        - label: Reindex Project Database
+        - label: Réindexer la base de données du projet
           command: 'app:reindex-project'
         - type: separator
         - label: Recombiner le projet

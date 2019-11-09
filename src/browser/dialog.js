@@ -3,24 +3,28 @@
 const { dialog } = require('electron')
 
 function show(type, win, opts) {
-  return new Promise((resolve, reject) => {
-    switch (type) {
-      case 'save':
-        dialog.showSaveDialog(win, opts, resolve)
-        break
-      case 'file':
-        dialog.showOpenDialog(win, opts, resolve)
-        break
-      case 'message-box':
-        dialog.showMessageBox(win, { buttons: ['OK'], ...opts },
-          (response, checked) => {
-            resolve({ response, checked })
-          })
-        break
-      default:
-        reject(new Error(`unknown dialog type: ${type}`))
-    }
-  })
+  switch (type) {
+    case 'save':
+      return dialog
+        .showSaveDialog(win, opts)
+        .then(({ filePath }) => filePath)
+
+    case 'file':
+      return dialog
+        .showOpenDialog(win, opts)
+        .then(({ filePaths }) => filePaths)
+
+    case 'message-box':
+      return dialog
+        .showMessageBox(win, { buttons: ['OK'], ...opts })
+        .then(p => ({
+          response: p.response,
+          checked: p.checkboxChecked
+        }))
+
+    default:
+      throw new Error(`unknown dialog type: ${type}`)
+  }
 }
 
 module.exports = {

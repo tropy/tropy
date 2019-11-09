@@ -5,8 +5,10 @@ const { merge } = require('../common/util')
 const { darwin } = require('../common/os')
 
 const defaults = {
+  completions: 'datatype',
   debug: ARGS.debug,
   dup: 'prompt',
+  density: 72,
   export: {
     note: {
       format: {
@@ -35,6 +37,7 @@ const defaults = {
   overlayToolbars: ARGS.frameless,
   print: {
     mode: 'photo',
+    photos: true,
     metadata: true,
     notes: true,
     overflow: false

@@ -5,9 +5,6 @@
 .scroll-container {
   flex: 1 1 0;
   overflow-y: scroll;
+  overscroll-behavior: contain;
   contain: strict;
-
-  .over & {
-    overflow: hidden;
-  }
 }

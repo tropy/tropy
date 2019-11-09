@@ -23,6 +23,7 @@ const IGNORE = [
   /\.(umd|esm|esmodules-browsers)\.js$/,
   /(CHANGELOG|README)/,
   /yarn\.lock/,
+  /tsconfig.tsbuildinfo$/,
   /\.DS_Store/,
   /\.babelrc\.js/,
   /\.editorconfig/,
@@ -52,7 +53,7 @@ const IGNORE = [
   /^\/test/,
   /^\/tmp/,
   /node_modules.\.(bin|cache)/,
-  /node_modules.sqlite3.(build|deps|binding.node)/,
+  /node_modules.sqlite3.(build|deps|lib.binding.node)/,
   /node_modules.sharp.build.[^R]/,
   /node_modules.sharp.build.Release.obj/,
   /node_modules.sharp.vendor.include/,
@@ -71,8 +72,6 @@ const IGNORE = [
   /node_modules.psl.dist/,
   /node_modules.nan.doc/,
   /node_modules.react-dom.(cjs.react-dom-)?(server|unstable|profiling|test|unstable)/,
-  /node_modules.react-dnd.dist/,
-  /node_modules.(react-dnd|dnd-core).lib.esm/,
   /node_modules.bluebird.js.browser/,
   /appveyor\.yml/
 ]
@@ -80,11 +79,11 @@ const IGNORE = [
 target.all = async (args = []) => {
   try {
 
-    const platform = args[0] || process.platform
-    const arch = args[1] || process.arch
-    const ignore = [...IGNORE]
+    let platform = args[0] || process.platform
+    let arch = args[1] || process.arch
+    let ignore = [...IGNORE]
 
-    const icon = platform === 'win32' ?
+    let icon = platform === 'win32' ?
       join(res, 'icons', channel, `${name}.ico`) :
       join(res, 'icons', channel, `${name}.icns`)
 
@@ -94,7 +93,7 @@ target.all = async (args = []) => {
       ignore.push(/^\/node_modules.winreg/)
     }
 
-    const extraResource = (platform !== 'darwin') ? [] : [
+    let extraResource = (platform !== 'darwin') ? [] : [
       join(res, 'icons', 'mime', 'tpy.icns'),
       join(res, 'icons', 'mime', 'ttp.icns')
     ]
@@ -118,7 +117,7 @@ target.all = async (args = []) => {
       appCopyright:
         `Copyright (c) 2015-${new Date().getFullYear()} ` +
         `${author.name}. All rights not expressly granted are reserved.`,
-      extendInfo: join(res, 'ext.plist'),
+      extendInfo: join(res, 'darwin', 'info.plist'),
       extraResource,
       darwinDarkModeSupport: true,
       win32metadata: {
@@ -132,7 +131,7 @@ target.all = async (args = []) => {
           'res/icons/mime/*.ico',
           'res/{menu,strings,keymaps}/*',
           'sharp/{build/Release,vendor/lib}/*'
-        ].join(',')}}`,
+        ].join(',')}}`
       }
 
     })

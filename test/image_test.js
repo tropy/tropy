@@ -27,7 +27,7 @@ describe('Image', () => {
     })
 
     it('computes exif data', () => {
-      expect(image.exif[0]).to.contain.keys([
+      expect(image.meta[0].exif).to.contain.keys([
         'http://www.w3.org/2003/12/exif/ns#orientation',
         'http://www.w3.org/2003/12/exif/ns#dateTimeOriginal',
         'http://www.w3.org/2003/12/exif/ns#dateTime'
@@ -38,6 +38,30 @@ describe('Image', () => {
       expect(image)
         .to.have.property('file')
         .that.contains.keys(['size', 'ctime'])
+    })
+  })
+
+  describe('supported formats', () => {
+    it('covers all important input formats', () => {
+      expect(Image.input).to.include.members([
+        'gif',
+        'heif',
+        'jpeg',
+        'magick',
+        'pdf',
+        'png',
+        'svg',
+        'tiff',
+        'webp'
+      ])
+    })
+
+    it('supports output as jpeg, webp and png', () => {
+      expect(Image.output).to.include.members([
+        'jpeg',
+        'png',
+        'webp'
+      ])
     })
   })
 })

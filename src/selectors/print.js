@@ -3,8 +3,15 @@
 const { createSelector: memo } = require('reselect')
 const { getMetadataFields } = require('./metadata')
 const { serialize } = require('../export/note')
+const { get } = require('../common/util')
 
-const getPhotoExpanded = (photo, metadata, notes, notepad, ontology) => (
+const getPhotoExpanded = (
+  photo,
+  selections,
+  metadata,
+  notes,
+  notepad,
+  ontology) => (
   (photo == null) ? null : {
     ...photo,
     data: getMetadataFields(null, {
@@ -13,7 +20,10 @@ const getPhotoExpanded = (photo, metadata, notes, notepad, ontology) => (
       props: ontology.props,
       template: ontology.template[photo.template]
     }),
-    notes: photo.notes.map(id => ({
+    notes: [
+      ...photo.notes,
+      ...photo.selections.flatMap(id => get(selections, [id, 'notes']))
+    ].map(id => ({
       id,
       ...serialize(notes[id], { format: { html: true }, localize: false }),
       ...notepad[id]
@@ -22,7 +32,7 @@ const getPhotoExpanded = (photo, metadata, notes, notepad, ontology) => (
 )
 
 const getItemExpanded =
-  (item, photos, metadata, notes, notepad, tags, ontology) => (
+  (item, photos, selections, metadata, notes, notepad, tags, ontology) => (
   (item == null) ? null : {
     ...item,
     data: getMetadataFields(null, {
@@ -32,7 +42,13 @@ const getItemExpanded =
       template: ontology.template[item.template]
     }),
     photos: item.photos.map(id =>
-      getPhotoExpanded(photos[id], metadata, notes, notepad, ontology)),
+      getPhotoExpanded(
+        photos[id],
+        selections,
+        metadata,
+        notes,
+        notepad,
+        ontology)),
     tags: item.tags.map(t => tags[t].name)
   }
 )
@@ -41,15 +57,17 @@ const getPrintableItems = memo(
   ({ nav, qr }) => (nav.items.length > 0 ? nav.items : qr.items),
   ({ items }) => items,
   ({ photos }) => photos,
+  ({ selections }) => selections,
   ({ metadata }) => metadata,
   ({ notes }) => notes,
   ({ notepad }) => notepad,
   ({ tags }) => tags,
   ({ ontology }) => ontology,
-  (ids, items, photos, metadata, notes, notepad, tags, ontology) =>
+  (ids, items, photos, selections, metadata, notes, notepad, tags, ontology) =>
   ids.map(id =>
     getItemExpanded(items[id],
       photos,
+      selections,
       metadata,
       notes,
       notepad,

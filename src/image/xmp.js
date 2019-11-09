@@ -1,7 +1,7 @@
 'use strict'
 
 const { $, $$, parse } = require('../dom')
-const { warn } = require('../common/log')
+const { debug, warn } = require('../common/log')
 const { blank } = require('../common/util')
 const { text, date } = require('../value')
 const { XMLNS } = require('../constants')
@@ -18,7 +18,8 @@ module.exports = {
         let data = {}
 
         if (!main) {
-          throw new Error('no XMP meta node found')
+          debug('no XMP meta node found')
+          return
         }
 
         let desc = $('Description', main)

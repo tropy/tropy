@@ -6,97 +6,83 @@ de:
     trash: Gelöscht
   toolbar:
     import: Fotos importieren
-    items: >
-        {count, plural,
-
-        =0 {Keine Objekte in dieser Ansicht}
-
-        one {1 Objekt in dieser Ansicht}
-
-        other {# Objekte in dieser Ansicht}}
+    items: |
+      {count, plural,
+      =0 {Keine Objekte in dieser Ansicht}
+      one {1 Objekt in dieser Ansicht}
+      other {# Objekte in dieser Ansicht}}
     search:
       placeholder: Suche
   panel:
     metadata:
       tab: Metadaten
       photo: Foto
-      item: >
-          {count, plural,
-
-          =0 {}
-
-          one {Objekt}
-
-          other {# Objekte}}
+      item: |
+        {count, plural,
+        =0 {}
+        one {Objekt}
+        other {# Objekte}}
       selection: Ausschnitt
-      popup:
+      dropdown:
         placeholder: Neues Feld …
     tags:
       tab: Tags
-      add: >
-          {count, plural,
-
-          =0 {Tag hinzufügen}
-
-          one {Tag zu Objekt hinzufügen}
-
-          other {Tag zu # Objekten hinzufügen}}
+      add: |
+        {count, plural,
+        =0 {Tag hinzufügen}
+        one {Tag zu Objekt hinzufügen}
+        other {Tag zu # Objekten hinzufügen}}
     photo:
-      title: >
-          {count, plural,
-
-          =0 {Keine Fotos}
-
-          one {1 Foto}
-
-          other {# Fotos}}
+      title: |
+        {count, plural,
+        =0 {Keine Fotos}
+        one {1 Foto}
+        other {# Fotos}}
       create: Fotos hinzufügen
       selection: Ausschnitt
     note:
-      title: >
-          {count, plural,
-
-          =0 {Keine Notizen}
-
-          one {1 Notiz}
-
-          other {# Notizen}}
+      title: |
+        {count, plural,
+        =0 {Keine Notizen}
+        one {1 Notiz}
+        other {# Notizen}}
       create: Notiz hinzufügen
   print:
     item: Objekt
     photo: Foto
     notes: Notizen
-    note: Notiz {idx, number}
+    note: 'Notiz {idx, number}'
     tags: Tags
   about:
-    version: Version {version}
+    version: 'Version {version}'
     rrchnm:
       title: Roy Rosenzweig Center for History and New Media
-      url: https://rrchnm.org
+      url: 'https://rrchnm.org'
     cds:
       title: Corporation for Digital Scholarship
-      url: http://digitalscholar.org
+      url: 'http://digitalscholar.org'
     text: >
-        Tropy wird vom {rrchnm} erstellt, einem Team, das Ressourcen zur Geschichtsvermittlung,
-        digitale Ausstellungen und Open-Source-Software entwickelt.
-    trademark: Der Name Tropy ist eine geschützte Marke der {cds}.
+      Tropy wird vom {rrchnm} erstellt, einem Team, das Ressourcen zur
+      Geschichtsvermittlung, digitale Ausstellungen und Open-Source-Software
+      entwickelt.
+    trademark: 'Der Name Tropy ist eine geschützte Marke der {cds}.'
     release:
       title: Versionshinweise
-      url: https://github.com/tropy/tropy/releases/tag/{version}
+      url: 'https://github.com/tropy/tropy/releases/tag/{version}'
     license:
       title: Lizenzinformationen
-      url: https://tropy.org/license
+      url: 'https://tropy.org/license'
     credits:
       title: Credits
-      url: https://tropy.org/credits
+      url: 'https://tropy.org/credits'
   project:
-    none: Ziehen Sie eine Projektdatei hierher oder erstellen Sie ein {newProject}
+    none: 'Ziehen Sie eine Projektdatei hierher oder erstellen Sie ein {newProject}'
     empty: Fotos ins Tropy Fenster ziehen und los geht’s!
     new: neues Projekt
     recent: Benutzte Projekte
     corrupted: >
-        Die Projektdatenbank ist möglicherweise beschädigt und sollte manuell geprüft
-        werden.
+      Die Projektdatenbank ist möglicherweise beschädigt und sollte manuell
+      geprüft werden.
   wizard:
     project:
       title: Neues Projekt erstellen
@@ -120,6 +106,7 @@ de:
           item: Ein Objekt pro Seite
           photo: Ein Foto pro Seite
           selection: Ein Ausschnitt pro Seite
+        photos: Inklusive Fotos
         metadata: Inklusive Metadaten
         notes: Inklusive Notizen
         overflow: Inhalt gegebenenfalls auf mehrere Seiten aufteilen
@@ -128,6 +115,7 @@ de:
         locales:
           de: Deutsch
           en: English
+          es: Español
           fr: Français
           it: Italiano
           ja: 日本語
@@ -147,6 +135,9 @@ de:
           skip: Zuvor importiere Fotos überspringen
           import: Zuvor importierte Fotos nochmals importieren
           prompt: Jedes Mal nachfragen
+      density:
+        label: Punktdichte (ppi)
+        title: 'Für PDF, SVG und andere skalierbare Formate'
       export:
         label: Exportieren
         note:
@@ -169,6 +160,11 @@ de:
         option:
           stacked: Übereinander
           side-by-side: Nebeneinander
+      completions:
+        label: Autovervollständigung
+        option:
+          datatype: Nach Datentyp
+          property-datatype: Nach Datentyp und Eigenschaft
     project:
       label: Projekt
     template:
@@ -185,36 +181,24 @@ de:
     vocab:
       label: Vokabulare
       export: Exportieren
-      classes: >
-          {count, plural,
-
-          =0 {Keine Klassen}
-
-          one {# Klasse}
-
-          other {# Klassen}
-
-          }
-      datatypes: >
-          {count, plural,
-
-          =0 {Keine Datentypen}
-
-          one {# Datentyp}
-
-          other {# Datentypen}
-
-          }
-      properties: >
-          {count, plural,
-
-          =0 {Keine Eigenschaft}
-
-          one {# Eigenschaft}
-
-          other {# Eigenschaften}
-
-          }
+      classes: |
+        {count, plural,
+        =0 {Keine Klassen}
+        one {# Klasse}
+        other {# Klassen}
+        }
+      datatypes: |
+        {count, plural,
+        =0 {Keine Datentypen}
+        one {# Datentyp}
+        other {# Datentypen}
+        }
+      properties: |
+        {count, plural,
+        =0 {Keine Eigenschaft}
+        one {# Eigenschaft}
+        other {# Eigenschaften}
+        }
     plugins:
       label: Plugins
       enable: Aktivieren
@@ -230,6 +214,7 @@ de:
   photo:
     file: Datei
     size: Größe
+    density: Punktdichte
     type: Typ
     created: Hinzugefügt
     modified: Bearbeitet
@@ -253,19 +238,19 @@ de:
       revert: Originalzustand
       brightness:
         label: Helligkeit
-        value: "{value, number}"
+        value: '{value, number}'
       contrast:
         label: Kontrast
-        value: "{value, number}"
+        value: '{value, number}'
       hue:
         label: Farbton
-        value: "{value, number}°"
+        value: '{value, number}°'
       saturation:
         label: Sättigung
-        value: "{value, number}"
+        value: '{value, number}'
       sharpen:
         label: Schärfe
-        value: "{value, number}"
+        value: '{value, number}'
   notepad:
     placeholder: Notizen hier eintragen …
   completions:
@@ -281,9 +266,9 @@ de:
     creator: Autor
     description: Beschreibung
     types:
-      https://tropy.org/v1/tropy#Item: Objektvorlage
-      https://tropy.org/v1/tropy#Photo: Fotovorlage
-      https://tropy.org/v1/tropy#Selection: Ausschnittvorlage
+      'https://tropy.org/v1/tropy#Item': Objektvorlage
+      'https://tropy.org/v1/tropy#Photo': Fotovorlage
+      'https://tropy.org/v1/tropy#Selection': Ausschnittvorlage
     field:
       property: Eigenschaft
       label: Bezeichnung
@@ -312,46 +297,46 @@ de:
   dialog:
     notify:
       buttons:
-      - OK
+        - OK
     error:
       title: Fehler
       buttons:
-      - Ausblenden
-      - Fehlermeldung kopieren
-      - Logs anzeigen
+        - Ausblenden
+        - Fehlermeldung kopieren
+        - Logs anzeigen
     prompt:
       item:
         destroy:
           message: >
-              Objekte vollständig löschen? Dies kann nicht mehr rückgängig gemacht
-              werden.
+            Objekte vollständig löschen? Dies kann nicht mehr rückgängig gemacht
+            werden.
           buttons:
-          - Abbrechen
-          - Löschen
+            - Abbrechen
+            - Löschen
       photo:
         consolidate:
           message: >
-              Soll Tropy nach weiteren ähnlichen Fotos suchen und diese automatisch
-              konsolidieren?
+            Soll Tropy nach weiteren ähnlichen Fotos suchen und diese
+            automatisch konsolidieren?
           buttons:
-          - Nein
-          - Ja"
+            - Nein
+            - Ja"
       dup:
-        detail: >
-            Dieses Foto ist bereits im Projekt vorhanden. Nochmals importieren?
+        detail: |
+          Dieses Foto ist bereits im Projekt vorhanden. Nochmals importieren?
         checkboxLabel: Auswahl merken
         buttons:
-        - Überspringen
-        - Nochmals importieren
+          - Überspringen
+          - Nochmals importieren
       plugin:
         uninstall:
           type: warning
           detail: >
-              Diesen Plugin samt Konfiguration vollständig entfernen? Dies kann nicht
-              mehr rückgängig gemacht werden.
+            Diesen Plugin samt Konfiguration vollständig entfernen? Dies kann
+            nicht mehr rückgängig gemacht werden.
           buttons:
-          - Abbrechen
-          - Löschen
+            - Abbrechen
+            - Löschen
     filter:
       csv: CSV
       templates: Tropy-Vorlagen
@@ -454,14 +439,11 @@ de:
       explode: Objekt zerteilen …
       export: Objekt exportieren …
       implode: Objekt wiederherstellen
-      import: >
-          {hasProgressBar, select,
-
-          true {Objekt {progress, number} von {total, number} importieren …}
-
-          other {Objekte importieren …}
-
-          }
+      import: |
+        {hasProgressBar, select,
+        true {Objekt {progress, number} von {total, number} importieren …}
+        other {Objekte importieren …}
+        }
       load: Objekte laden …
       merge: Objekte zusammenführen …
       restore: Objekt wiederherstellen …
@@ -483,31 +465,22 @@ de:
       template:
         import: Vorlagen importieren …
     photo:
-      consolidate: >
-          {hasProgressBar, select,
-
-          true {Foto {progress, number} von {total, number} konsolidieren …}
-
-          other {Fotos konsolidieren …}
-
-          }
-      create: >
-          {hasProgressBar, select,
-
-          true {Fotos {progress, number} von {total, number} importieren …}
-
-          other {Fotos importieren …}
-
-          }
+      consolidate: |
+        {hasProgressBar, select,
+        true {Foto {progress, number} von {total, number} konsolidieren …}
+        other {Fotos konsolidieren …}
+        }
+      create: |
+        {hasProgressBar, select,
+        true {Fotos {progress, number} von {total, number} importieren …}
+        other {Fotos importieren …}
+        }
       delete: Foto löschen …
-      duplicate: >
-          {hasProgressBar, select,
-
-          true {Foto {progress, number} von {total, number} duplizieren …}
-
-          other {Fotos duplizieren …}
-
-          }
+      duplicate: |
+        {hasProgressBar, select,
+        true {Foto {progress, number} von {total, number} duplizieren …}
+        other {Fotos duplizieren …}
+        }
       load: Fotos laden …
       move: Fotos verschieben …
       order: Fotos sortieren …
@@ -561,7 +534,9 @@ de:
     list:
       load: Listen konnten nicht geladen werden.
       create: Liste konnte nicht erstellt werden. Listennamen müssen eindeutig sein.
-      move: Liste konnte nicht verschoben werden. Listennamen müssen innerhalb einer Ebene eindeutig sein.
+      move: >-
+        Liste konnte nicht verschoben werden. Listennamen müssen innerhalb einer
+        Ebene eindeutig sein.
       save: Liste konnte nicht gespeichert werden.
       item:
         add: Objekt(e) konnten nicht zur Liste hinzugefügt werden.
@@ -591,7 +566,8 @@ de:
     update:
       ready:
         message: >
-            Tropy {version} kann installiert werden. Jetzt installieren und neustarten?
+          Tropy {version} kann installiert werden. Jetzt installieren und
+          neustarten?
         confirm: Jetzt neu starten
   plugin:
     name: Name

@@ -4,28 +4,30 @@ const shortid = require('shortid')
 const { keys } = Object
 
 const util = {
-  once(emitter, event) {
-    return new Promise((resolve, reject) => {
-      const on =
-        (emitter.on || emitter.addEventListener).bind(emitter)
-      const off =
-        (emitter.removeListener || emitter.removeEventListener).bind(emitter)
+  once(emitter, ...events) {
+    return Promise.all(events.map(event =>
+      new Promise((resolve, reject) => {
+        const on =
+          (emitter.on || emitter.addEventListener).bind(emitter)
+        const off =
+          (emitter.removeListener || emitter.removeEventListener).bind(emitter)
 
-      function success(...args) {
-        off(event, success)
-        off('error', failure)
-        resolve(...args)
-      }
+        function success(...args) {
+          off(event, success)
+          off('error', failure)
+          resolve(...args)
+        }
 
-      function failure(reason) {
-        off(event, success)
-        off('error', failure)
-        reject(reason instanceof Error ? reason : new Error(reason))
-      }
+        function failure(reason) {
+          off(event, success)
+          off('error', failure)
+          reject(reason instanceof Error ? reason : new Error(reason))
+        }
 
-      on('error', failure)
-      on(event, success)
-    })
+        on('error', failure)
+        on(event, success)
+      })
+    ))
   },
 
   empty(obj) {
@@ -348,7 +350,7 @@ const util = {
   identity(payload) { return payload },
 
   delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    return new Promise(resolve => setTimeout(() => void resolve(), ms))
   },
 
   *counter(k = 0) {
@@ -461,12 +463,25 @@ const util = {
 
   shallow(a, b, props) {
     if (a === b) return true
-    if (a == null || b == null) return false
 
-    if (util.blank(props)) props = keys(a)
+    if (typeof a !== 'object' || typeof b !== 'object' || !a || !b)
+      return false
 
-    for (let prop of props) {
-      if (a[prop] !== b[prop]) return false
+    if (Array.isArray(a)) {
+      if (!Array.isArray(b) || a.length !== b.length)
+        return false
+
+      for (let i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false
+      }
+
+    } else {
+      if (Array.isArray(b)) return false
+      if (util.blank(props)) props = keys(a)
+
+      for (let prop of props) {
+        if (a[prop] !== b[prop]) return false
+      }
     }
 
     return true
@@ -493,6 +508,16 @@ const util = {
       let ns = uri.split(/(#|\/)/)
       let nm = ns.pop()
       return [ns.join(''), nm]
+    },
+
+    encode(url) {
+      return url.replace(/[#?&]/g, (m) => {
+        switch (m) {
+          case '#': return '%23'
+          case '?': return '%3F'
+          case '&': return '%26'
+        }
+      })
     }
   }
 }

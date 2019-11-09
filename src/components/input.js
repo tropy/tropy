@@ -4,7 +4,7 @@ const React = require('react')
 const { noop } = require('../common/util')
 const { AutoResizer } = require('./auto-resizer')
 const { Completions } = require('./completions')
-const { blank, get } = require('../common/util')
+const { get } = require('../common/util')
 
 const {
   array, bool, func, number, oneOf, oneOfType, string
@@ -41,7 +41,7 @@ class Input extends React.PureComponent {
   }
 
   get isValid() {
-    return !this.props.isRequired || !blank(this.state.value)
+    return this.input.current.validity.valid
   }
 
   get hasChanged() {
@@ -54,11 +54,17 @@ class Input extends React.PureComponent {
 
   cancel = (isForced) => {
     this.hasBeenCancelled = true
-    this.props.onCancel(this.hasChanged, isForced)
+
+    if (this.isValid) {
+      this.props.onCancel(this.hasChanged, isForced)
+    } else {
+      this.reset()
+      this.props.onCancel(false, isForced)
+    }
   }
 
   commit(isForced) {
-    if (isForced || this.isValid) {
+    if (this.isValid) {
       if (!this.hasBeenCommitted) {
         this.hasBeenCommitted = true
         this.props.onCommit(this.state.value, this.hasChanged, isForced)
@@ -208,6 +214,8 @@ class Input extends React.PureComponent {
             required={this.props.isRequired}
             tabIndex={this.props.tabIndex}
             type={this.props.type}
+            max={this.props.max}
+            min={this.props.min}
             value={this.state.value}
             onBlur={this.handleBlur}
             onChange={this.handleChange}
@@ -241,6 +249,8 @@ class Input extends React.PureComponent {
     isReadOnly: bool,
     isRequired: bool,
     match: func.isRequired,
+    max: number,
+    min: number,
     placeholder: string,
     resize: bool,
     tabIndex: number,
@@ -251,7 +261,7 @@ class Input extends React.PureComponent {
     onChange: func.isRequired,
     onCommit: func.isRequired,
     onFocus: func.isRequired,
-    onKeyDown: func,
+    onKeyDown: func
   }
 
   static defaultProps = {

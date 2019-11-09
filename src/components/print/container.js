@@ -3,8 +3,10 @@
 const React = require('react')
 const { Item } = require('./item')
 const { WindowContext } = require('../main')
-const { noop } = require('../../common/util')
+const { delay, noop } = require('../../common/util')
 const { loadImage } = require('../../dom')
+const { join } = require('path')
+const { debug } = require('../../common/log')
 
 
 class PrintContainer extends React.Component {
@@ -23,24 +25,30 @@ class PrintContainer extends React.Component {
   onPrint = (opts) => {
     this.setState({
       canOverflow: opts.overflow,
+      hasPhotos: opts.photos,
       hasMetadata: opts.metadata,
       hasNotes: opts.notes,
-      items: opts.items
+      items: opts.items,
+      cache: join(ARGS.cache, opts.project)
     }, this.handleItemsReceived)
   }
 
   handleItemsReceived = async () => {
-    let p = []
+    await Promise.all(
+      this.state.items
+        .flatMap(item => item.photos)
+        .map(photo => loadImage(photo.path).catch(noop)))
 
-    for (let item of this.state.items) {
-      for (let photo of item.photos) {
-        p.push(loadImage(photo.path).catch(noop))
-      }
-    }
+    // Hack: All images need to be decoded before we open
+    // the print dialog. Instead of using image.decode() on
+    // every image instance we just estimate a reasonable
+    // delay here and hope for the best!
+    await delay(500)
 
-    await Promise.all(p)
-
-    this.context.send('print:ready')
+    debug('images loaded for printing')
+    requestIdleCallback(() => {
+      this.context.send('print:ready')
+    })
   }
 
   render() {
@@ -49,7 +57,9 @@ class PrintContainer extends React.Component {
         <Item
           key={item.id}
           item={item}
+          cache={this.state.cache}
           canOverflow={this.state.canOverflow}
+          hasPhotos={this.state.hasPhotos}
           hasMetadata={this.state.hasMetadata}
           hasNotes={this.state.hasNotes}/>)
     )

@@ -2,6 +2,7 @@
 
 module.exports = {
   ADD: 'metadata.add',
+  COPY: 'metadata.copy',
   DELETE: 'metadata.delete',
   INSERT: 'metadata.insert',
   LOAD: 'metadata.load',

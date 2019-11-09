@@ -75,7 +75,7 @@ class ItemTableHead extends PureComponent {
     hasPositionColumn: bool,
     sort: shape({
       asc: bool.isRequired,
-      column: string.isRequired,
+      column: string.isRequired
     }).isRequired,
     drop: number,
     minWidth: number.isRequired,

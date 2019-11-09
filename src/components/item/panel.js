@@ -10,7 +10,7 @@ const { MetadataPanel } = require('../metadata')
 const { TagPanel } = require('../tag')
 const { IconMetadata, IconHangtag } = require('../icons')
 const { get, has } = require('../../common/util')
-const { on, off } = require('../../dom')
+const { on, off, isInput } = require('../../dom')
 const { keys } = Object
 const cx = require('classnames')
 
@@ -49,6 +49,9 @@ class ItemPanelGroup extends React.PureComponent {
   }
 
   handleKeyDown = (event) => {
+    if (isInput(event.target))
+      return
+
     switch (this.keymap.match(event)) {
       case 'up':
         if (this.tab.current) {
@@ -164,7 +167,8 @@ class ItemPanelGroup extends React.PureComponent {
                       onEdit={this.props.onEdit}
                       onEditCancel={this.handleEditCancel}
                       onMetadataSave={this.handleMetadataSave}
-                      onOpenInFolder={this.props.onOpenInFolder}/>
+                      onOpenInFolder={this.props.onOpenInFolder}
+                      onPhotoSave={this.props.onPhotoSave}/>
                   )
                 case PANEL.TAGS:
                   return (
@@ -264,6 +268,7 @@ class ItemPanelGroup extends React.PureComponent {
     onPhotoCreate: func.isRequired,
     onPhotoError: func.isRequired,
     onPhotoRotate: func.isRequired,
+    onPhotoSave: func.isRequired,
     onPhotoSelect: func.isRequired,
     onTagCreate: func.isRequired,
     onTagSave: func.isRequired,

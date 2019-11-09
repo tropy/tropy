@@ -8,8 +8,17 @@ const { debug, error, trace, warn } = require('../common/log')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
 const res = require('../common/res')
-const { array, blank, get, once, remove, restrict } = require('../common/util')
 const { BODY, PANEL, ESPER } = require('../constants/sass')
+
+const {
+  array,
+  blank,
+  counter,
+  get,
+  once,
+  remove,
+  restrict
+} = require('../common/util')
 
 const {
   app,
@@ -39,6 +48,8 @@ class WindowManager extends EventEmitter {
     }
 
     this.windows = {}
+    this.pending = {}
+    this.seq = counter()
   }
 
   broadcast(...args) {
@@ -230,8 +241,27 @@ class WindowManager extends EventEmitter {
         else
           win.minimize()
         break
+      case 'rsvp':
+        this.handlePendingResponse(...args)
+        break
       default:
         win.emit(type, ...args)
+    }
+  }
+
+  handlePendingResponse(action) {
+    try {
+      var id = action.meta.rsvp
+
+      if (action.error)
+        this.pending[id].reject(action.payload)
+      else
+        this.pending[id].resolve(action)
+
+    } catch (e) {
+      warn({
+        stack: e.stack
+      }, `failed to resolve pending message ${id}`)
     }
   }
 
@@ -340,6 +370,26 @@ class WindowManager extends EventEmitter {
 
   send(type, ...args) {
     this.each(type, win => win.webContents.send(...args))
+  }
+
+  rsvp(type, action) {
+    let id
+
+    return new Promise((resolve, reject) => {
+      id = this.seq.next().value
+      let win = this.current(type)
+
+      if (win == null)
+        return reject(new Error(`no ${type} window open`))
+
+      action.meta.rsvp = id
+      this.pending[id] = { resolve, reject }
+
+      win.webContents.send('dispatch', action)
+
+      // TODO reject pending after timeout!
+
+    }).finally(() => { delete this.pending[id] })
   }
 
   setTitle(type, title, frameless = false) {

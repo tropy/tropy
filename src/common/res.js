@@ -129,5 +129,5 @@ module.exports = {
   Strings,
   KeyMap,
   icon,
-  view,
+  view
 }

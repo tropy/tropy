@@ -5,25 +5,26 @@ de:
       plugin: Tropy-Plugins
     crashed:
       buttons:
-      - Fenster schließen
-      - Neu starten
-      - Logs anzeigen
+        - Fenster schließen
+        - Neu starten
+        - Logs anzeigen
       message: Tropy ist leider abgestürzt
       detail: >
-          Dieses Tropy Fenster ist leider abgestürzt. Fehler melden auf https://github.com/tropy/tropy
+        Dieses Tropy Fenster ist leider abgestürzt. Fehler melden auf
+        https://github.com/tropy/tropy
     unresponsive:
       buttons:
-      - Fenster schließen
-      - Warten
+        - Fenster schließen
+        - Warten
       message: Tropy reagiert nicht mehr
       detail: >
-          Tropy reagiert nicht mehr. Soll es beendet werden oder möchten Sie noch
-          warten?
+        Tropy reagiert nicht mehr. Soll es beendet werden oder möchten Sie noch
+        warten?
     unhandled:
       buttons:
-      - Ausblenden
-      - Fehlermeldung kopieren
-      - Logs anzeigen
+        - Ausblenden
+        - Fehlermeldung kopieren
+        - Logs anzeigen
       message: Unerwarteter Fehler
   window:
     prefs:

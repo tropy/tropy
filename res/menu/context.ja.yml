@@ -236,6 +236,8 @@ ja:
           - type: separator
       - label: アイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Item
+        command: 'app:consolidate-item'
     item-rotate:
       - label: Rotate Left
         command: 'app:rotate-item-left'
@@ -253,6 +255,8 @@ ja:
             command: 'app:export-item'
       - label: 選択したアイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Selected Items
+        command: 'app:consolidate-item'
     item-list:
       - label: リストからアイテムを削除
         command: 'app:list-item-remove'
@@ -264,7 +268,7 @@ ja:
         command: 'app:duplicate-photo'
       - label: 写真を新規アイテムへ移動
         command: 'app:explode-photo'
-      - label: フォルダ内の写真を表示
+      - label: Show Original Photo…
         command: 'app:show-in-folder'
       - label: 写真を削除
         command: 'app:delete-photo'
@@ -316,7 +320,7 @@ ja:
             type: checkbox
     metadata-list:
       - label: 新規フィールド
-        command: 'ctx:add-extra-field'
+        command: 'app:create-field'
     metadata-field:
       - label: フィールドを削除
         command: 'app:delete-field'
@@ -572,6 +576,8 @@ ja:
           - type: separator
       - label: アイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Item
+        command: 'app:consolidate-item'
     item-bulk:
       - label: 選択したアイテムを統合
         command: 'app:merge-item'
@@ -582,6 +588,8 @@ ja:
             command: 'app:export-item'
       - label: 選択したアイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Selected Items
+        command: 'app:consolidate-item'
     item-list:
       - label: リストからアイテムを削除
         command: 'app:list-item-remove'
@@ -617,7 +625,7 @@ ja:
         accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: 新規フィールド
-        command: 'ctx:add-extra-field'
+        command: 'app:create-field'
     metadata-field:
       - label: フィールドを削除
         command: 'app:delete-field'
@@ -630,7 +638,7 @@ ja:
         command: 'app:duplicate-photo'
       - label: 写真を新規アイテムへ移動
         command: 'app:explode-photo'
-      - label: フォルダ内の写真を表示
+      - label: Show Original Photo…
         command: 'app:show-in-folder'
       - label: 写真を削除
         command: 'app:delete-photo'
@@ -908,6 +916,8 @@ ja:
           - type: separator
       - label: アイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Item
+        command: 'app:consolidate-item'
     item-bulk:
       - label: 選択したアイテムを統合
         command: 'app:merge-item'
@@ -918,6 +928,8 @@ ja:
             command: 'app:export-item'
       - label: 選択したアイテムを削除
         command: 'app:delete-item'
+      - label: Consolidate Selected Items
+        command: 'app:consolidate-item'
     item-list:
       - label: リストからアイテムを削除
         command: 'app:list-item-remove'
@@ -953,7 +965,7 @@ ja:
         accelerator: 'CmdOrCtrl+]'
     metadata-list:
       - label: 新規フィールド
-        command: 'ctx:add-extra-field'
+        command: 'app:create-field'
     metadata-field:
       - label: フィールドを削除
         command: 'app:delete-field'
@@ -966,7 +978,7 @@ ja:
         command: 'app:duplicate-photo'
       - label: 写真を新規アイテムへ移動
         command: 'app:explode-photo'
-      - label: フォルダ内の写真を表示
+      - label: Show Original Photo…
         command: 'app:show-in-folder'
       - label: 写真を削除
         command: 'app:delete-photo'

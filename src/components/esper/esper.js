@@ -20,7 +20,7 @@ const {
   arrayOf, bool, func, number, object, shape, string
 } = require('prop-types')
 
-const { TABS, MIME } = require('../../constants')
+const { TABS } = require('../../constants')
 const { TOOL, MODE } = require('../../constants/esper')
 
 const {
@@ -119,7 +119,7 @@ class Esper extends React.PureComponent {
 
   shouldViewReset(props, state) {
     return (state.src !== this.state.src) ||
-      (get(props.photo, ['id']) !== get(this.props.photo, ['id']))
+      hasPhotoChanged(props.photo, this.props.photo)
   }
 
   shouldViewSync(props, state) {
@@ -191,7 +191,7 @@ class Esper extends React.PureComponent {
 
       assign(state, {
         photo: photo.id,
-        src: this.getSource(photo, props),
+        src: Cache.url(props.cache, 'full', photo),
         width: photo.width,
         height: photo.height
       })
@@ -220,15 +220,6 @@ class Esper extends React.PureComponent {
     assign(state, this.getZoomBounds(screen, state, props))
 
     return state
-  }
-
-  getSource(photo, { cache } = this.props) {
-    switch (photo.mimetype) {
-      case MIME.TIFF:
-        return Cache.url(cache, photo.id, 'full', photo.mimetype)
-      default:
-        return `${photo.protocol}://${photo.path}`
-    }
   }
 
   getZoomToFill(screen, { width } = this.state, props = this.props) {
@@ -809,6 +800,11 @@ class Esper extends React.PureComponent {
     zoom: 1
   }
 }
+
+const hasPhotoChanged = (c, p) =>
+  c != null && p != null && (c.id !== p.id || (
+    c.consolidated && (!p.consolidated || c.consolidated > p.consolidated)
+  ))
 
 module.exports = {
   Esper

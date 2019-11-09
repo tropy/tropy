@@ -15,13 +15,14 @@ const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
 const { info, warn } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
-const { getPhotoTemplate } = require('../selectors')
-const { keys, values } = Object
+
+const {
+  getPhotoTemplate,
+  getPhotosForConsolidation
+} = require('../selectors')
 
 
 class Consolidate extends ImportCommand {
-  static get ACTION() { return PHOTO.CONSOLIDATE }
-
   lookup = async (photo, paths = {}, checkFileSize) => {
     let dir = dirname(photo.path)
     let file = basename(photo.path)
@@ -83,84 +84,115 @@ class Consolidate extends ImportCommand {
   }
 
   *exec() {
-    let { db } = this.options
     let { payload, meta } = this.action
-    let consolidated = []
 
-    let [project, photos, selections] = yield select(state => [
+    let [project, photos, selections, settings] = yield select(state => [
       state.project,
-      blank(payload) ? values(state.photos) : pluck(state.photos, payload),
-      state.selections
+      getPhotosForConsolidation(state, payload),
+      state.selections,
+      state.settings
     ])
 
+    this.options.base = project.base
+    this.options.density = meta.density || settings.density
+    this.options.overwrite = true
+    this.useLocalTimezone = settings.timezone
+
+    this.consolidated = []
+
+    if (blank(photos))
+      return this.consolidated
+
+    yield put(act.photo.bulk.update([
+      photos.map(photo => photo.id),
+      { consolidating: true }
+    ]))
+
     for (let i = 0, total = photos.length; i < total; ++i) {
-      let photo = photos[i]
-
-      try {
-        let { image, hasChanged, error } =
-          yield this.checkPhoto(photo, meta.force)
-
-        if (meta.force || hasChanged) {
-          if (error != null) {
-            warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
-
-            let path = yield this.resolve(photo)
-            if (path) {
-              image = yield call(Image.open, { path, page: photo.page })
-            }
-          }
-
-          if (image != null) {
-            hasChanged = (image.checksum !== photo.checksum) ||
-              (image.path !== photo.path)
-
-            if (meta.force || hasChanged) {
-              yield* this.createThumbnails(photo.id, image, {
-                overwrite: hasChanged
-              })
-
-              for (let id of photo.selections) {
-                if (id in selections) {
-                  yield* this.createThumbnails(id, image, {
-                    overwrite: hasChanged,
-                    selection: selections[id]
-                  })
-                }
-              }
-
-              let data = { id: photo.id, ...image.toJSON() }
-
-              yield call(mod.photo.save, db, data, project)
-              yield put(act.photo.update({
-                broken: false,
-                consolidated: new Date(),
-                ...data
-              }))
-
-            } else {
-              yield put(act.photo.update({
-                id: photo.id, broken: true, consolidated: new Date()
-              }))
-            }
-
-            consolidated.push(photo.id)
-
-          } else {
-            yield put(act.photo.update({
-              id: photo.id, broken: true, consolidated: new Date()
-            }))
-          }
-        }
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
-        fail(e, this.action.type)
-      }
-
       yield put(act.activity.update(this.action, { total, progress: i + 1 }))
+      yield this.consolidate(photos[i], selections)
     }
 
-    return consolidated
+    return this.consolidated
   }
+
+  *consolidate(photo, selections = {}) {
+    try {
+      let { base, db, density, overwrite, useLocalTimezone } = this.options
+      let { meta } = this.action
+
+      let {
+        image,
+        hasChanged,
+        error
+      } = yield call(Image.check, photo, {
+        density: photo.density || density,
+        useLocalTimezone
+      })
+
+      var data
+      var broken = (error != null)
+
+      if (meta.force || hasChanged) {
+        if (broken) {
+          warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
+
+          let path = yield this.resolve(photo)
+          if (path) {
+            image = yield call(Image.open, {
+              density: photo.density || density,
+              path,
+              page: photo.page,
+              protocol: 'file',
+              useLocalTimezone
+            })
+          }
+        }
+
+        if (image) {
+          broken = false
+          hasChanged = (image.checksum !== photo.checksum) ||
+            (image.path !== photo.path)
+
+          if (meta.force || hasChanged) {
+            yield* this.createThumbnails(photo.id, image, { overwrite })
+
+            for (let id of photo.selections) {
+              if (id in selections) {
+                yield* this.createThumbnails(id, image, {
+                  overwrite,
+                  selection: selections[id]
+                })
+              }
+            }
+
+            data = { id: photo.id, ...image.toJSON() }
+
+            yield call(mod.photo.save, db, data, { base })
+          }
+
+          this.consolidated.push(photo.id)
+        }
+      }
+
+    } catch (e) {
+      broken = true
+
+      warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
+      fail(e, this.action.type)
+
+    } finally {
+      yield put(act.photo.update({
+        id: photo.id,
+        broken,
+        consolidated: Date.now(),
+        consolidating: false,
+        ...data
+      }))
+    }
+  }
+
+  static ACTION = PHOTO.CONSOLIDATE
 }
 
 
@@ -270,11 +302,12 @@ class Duplicate extends ImportCommand {
 
     assert(!blank(payload.photos), 'missing photos')
 
-    let [base, order, originals, data] = yield select(state => [
+    let [base, order, originals, data, settings] = yield select(state => [
       state.project.base,
       state.items[item].photos,
       pluck(state.photos, payload.photos),
-      pluck(state.metadata, payload.photos)
+      pluck(state.metadata, payload.photos),
+      state.settings
     ])
 
     let idx = [order.indexOf(payload.photos[0]) + 1]
@@ -282,10 +315,15 @@ class Duplicate extends ImportCommand {
     let photos = []
 
     for (let i = 0; i < total; ++i) {
-      const { template, path, page } = originals[i]
+      let { density, template, path, page, protocol } = originals[i]
 
       try {
-        let image = yield call(Image.open, { path, page })
+        let image = yield call(Image.open, {
+          density: density || settings.density,
+          path,
+          page,
+          protocol
+        })
 
         let photo = yield call(db.transaction, tx =>
           mod.photo.create(tx, { base, template }, {
@@ -403,7 +441,7 @@ class Save extends Command {
     let { id, data } = payload
 
     let [original, project] = yield select(state => [
-      pick(state.photos[id], keys(data)),
+      pick(state.photos[id], Object.keys(data)),
       state.project
     ])
 
@@ -415,6 +453,10 @@ class Save extends Command {
     })
 
     this.undo = act.photo.save({ id, data: original })
+
+    if (data.density) {
+      this.finally = act.photo.consolidate(id, { force: true })
+    }
 
     return { id, ...data }
   }

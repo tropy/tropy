@@ -13,26 +13,50 @@
 }
 
 .drag-preview {
-  opacity: $drag-preview-opacity;
   position: absolute; // Collapse width
 
   &.center {
     transform: translate(-50%, -50%);
   }
 
-  &.list {
-    display: flex;
-    align-items: center;
-    height: $line-height-large;
+  .drag-preview-container {
+    opacity: $drag-preview-opacity;
 
-    .icon {
-      margin-right: $space-xs;
+    @include variant(".drag-preview.list") {
+      display: flex;
+      align-items: center;
+      height: $line-height-large;
+
+      .icon {
+        margin-right: $space-xs;
+      }
     }
+
+    @include variant(".drag-preview.metadata-field") {
+      display: flex;
+      align-items: center;
+      line-height: $metadata-line-height;
+      padding-left: $metadata-gutter / 2;
+    }
+  }
+
+  .thumbnail,
+  img {
+    --width: var(--x) * #{$drag-preview-size};
+    --height: var(--y) * #{$drag-preview-size};
+    width: calc(var(--width));
+    height: calc(var(--height));
   }
 
   .thumbnail {
     opacity: $drag-preview-thumbnail-opacity;
-    width: $drag-preview-size;
-    height: $drag-preview-size;
+
+    [class*="90"],
+    [class*="270"] {
+      img {
+        --width: var(--y) * #{$drag-preview-size};
+        --height: var(--x) * #{$drag-preview-size};
+      }
+    }
   }
 }

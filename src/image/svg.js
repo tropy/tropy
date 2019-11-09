@@ -2,7 +2,7 @@
 
 const { nativeImage } = require('electron')
 const { loadImage } = require('../dom')
-const MIME = require('../constants/mime')
+const { MIME } = require('../constants')
 
 // eslint-disable-next-line max-len
 const SVG = /^\s*(?:<\?xml[^>]*>\s*)?(?:<!doctype svg[^>]*\s*(?:<![^>]*>)*[^>]*>\s*)?<svg[^>]*>/i

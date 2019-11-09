@@ -2,6 +2,7 @@
 
 module.exports = {
   ACTIVITY: require('./activity'),
+  API: require('./api'),
   CACHE: require('./cache'),
   CONTEXT: require('./context'),
   DND: require('./dnd'),
@@ -10,6 +11,7 @@ module.exports = {
   ESPER: require('./esper'),
   HISTORY: require('./history'),
   IDLE: require('./idle'),
+  IMAGE: require('./image'),
   IMPORTS: require('./import'),
   ITEM: require('./item'),
   KEYMAP: require('./keymap'),

@@ -21,17 +21,15 @@ class ItemDragPreview extends React.PureComponent {
   }
 
   render() {
-    const { cache, photos, size, tags, onPhotoError } = this.props
-
     return (
       <div className={cx(...this.classes)}>
         <CoverImage
-          cache={cache}
-          photos={photos}
-          size={size}
+          cache={this.props.cache}
+          photos={this.props.photos}
+          size={this.props.size}
           item={this.item}
-          tags={tags}
-          onError={onPhotoError}/>
+          tags={this.props.tags}
+          onError={this.props.onPhotoError}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }

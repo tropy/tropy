@@ -4,7 +4,12 @@
 
 .cover-image {
   box-sizing: content-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   position: relative;
+  contain: content;
 
   .tag-colors {
     position: absolute;
@@ -43,11 +48,8 @@
 }
 
 .stack-lines {
-  position: absolute;
-  top: 0;
-  left: 0;
+  flex: 0 0 auto;
   width: 100%;
-  z-index: 1;
 
   .line {
     background: $stack-color;
@@ -93,48 +95,92 @@
 
   @each $size in $tile-thumbnail-sizes {
     &[data-size="#{$size}"] {
-      .stack-lines {
-        .line {
+      .cover-image {
+        .thumbnail,
+        .thumbnail img {
+          min-width: #{round($size * 0.375)}px;
+          min-height: #{round($size * 0.375)}px;
+        }
 
-          // Stack line height
-          height: #{round($size / 32)}px;
+        .thumbnail {
+          [class*="90"],
+          [class*="270"] {
+            img {
+              min-height: round($size * 0.375) * 1px + 0.5px;
+            }
+          }
+        }
 
-          // Stack line widths
-          @for $i from 1 through $stack-size-max {
-            &.line-#{$i} {
-              margin-left: #{round($size * $i / 16)}px;
-              margin-right: #{round($size * $i / 16)}px;
+        .stack-lines {
+          .line {
+
+            // Stack line height
+            height: #{round($size / 32)}px;
+
+            // Stack line widths
+            @for $i from 1 through $stack-size-max {
+              &.line-#{$i} {
+                margin-left: #{round($size * $i / 16)}px;
+                margin-right: #{round($size * $i / 16)}px;
+              }
+            }
+
+            // Tinting and gap
+            $tint-opacity: $stack-line-tint-opacity;
+            $gap-opacity: 0;
+            $range: $tile-thumbnail-size-max - $tile-thumbnail-size-min;
+
+            @if ($size - $tile-thumbnail-size-min) < ($range / 2.25) {
+              $tint-opacity:
+                ($stack-line-tint-opacity
+                * (($size - $tile-thumbnail-size-min)
+                * 2.25 / $range));
+
+              $gap-opacity: (1 - ($size - $tile-thumbnail-size-min) * 2.25 / $range);
+            }
+
+            &.line-1 {
+              &::before {
+                opacity: $tint-opacity;
+              }
+            }
+
+            &.line-2 {
+              &::before {
+                opacity: $tint-opacity + $tint-opacity * 0.5;
+              }
+            }
+
+            &::after {
+              opacity: $gap-opacity;
             }
           }
 
-          // Tinting and gap
-          $tint-opacity: $stack-line-tint-opacity;
-          $gap-opacity: 0;
-          $range: $tile-thumbnail-size-max - $tile-thumbnail-size-min;
-
-          @if ($size - $tile-thumbnail-size-min) < ($range / 2.25) {
-            $tint-opacity:
-              ($stack-line-tint-opacity
-              * (($size - $tile-thumbnail-size-min)
-              * 2.25 / $range));
-
-            $gap-opacity: (1 - ($size - $tile-thumbnail-size-min) * 2.25 / $range);
+          & + .thumbnail,
+          & + .thumbnail img {
+            --size: #{$size};
+            --stack-lines-height: 2 * #{round($size / 32)}px;
+            --stack-height: var(--size) * 1px - var(--stack-lines-height);
+            --width: var(--x) * var(--size) * 1px;
+            --height: var(--y) * var(--size) * 1px;
+            --max-width: var(--width) + (var(--stack-height) - var(--height)) * (var(--x) / var(--y));
+            --max-height: var(--stack-height);
+            width: calc(var(--width));
+            height: calc(var(--height));
+            max-width: calc(var(--max-width));
+            max-height: calc(var(--max-height));
           }
 
-          &.line-1 {
-            &::before {
-              opacity: $tint-opacity;
+          & + .thumbnail {
+            [class*="90"],
+            [class*="270"] {
+              img {
+                --width: var(--y) * var(--size) * 1px + 0.5px;
+                --height: var(--x) * var(--size) * 1px;
+                --max-width: var(--stack-height);
+                --max-height: var(--height) + (var(--stack-height) - var(--width)) * (var(--x) / var(--y)) + 0.5px;
+              }
             }
-          }
-
-          &.line-2 {
-            &::before {
-              opacity: $tint-opacity + $tint-opacity * 0.5;
-            }
-          }
-
-          &::after {
-            opacity: $gap-opacity;
           }
         }
       }
@@ -143,11 +189,16 @@
 }
 
 .item-table {
-  .cover-image {
-    position: absolute;
-    left: $space-xs;
-    top: ($row-height - $thumbnail-size) / 2;
+  .cover-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: $thumbnail-size;
+    height: $thumbnail-size;
+    margin-right: $space-xs;
+  }
 
+  .cover-image {
     .stack-lines {
       .line {
         height: 1px;
@@ -162,21 +213,30 @@
         }
       }
 
-      & + .thumbnail {
-        -webkit-clip-path: inset(4px 0 0 0);
-
-        .icon-photo {
-          g {
-            transform: translateY(2px);
-          }
-        }
+      & + .thumbnail,
+      & + .thumbnail img {
+        max-height: $thumbnail-size - $space-min;
       }
     }
-  }
 
-  .td:first-child {
-    .cover-image {
-      left: $default-padding-horizontal;
+    .thumbnail,
+    img {
+      --width: var(--x) * #{$thumbnail-size};
+      --height: var(--y) * #{$thumbnail-size};
+      width: calc(var(--width));
+      height: calc(var(--height));
+      min-width: $space-sm;
+      min-height: $space-sm;
+    }
+
+    .thumbnail {
+      [class*="90"],
+      [class*="270"] {
+        img {
+          --width: var(--y) * #{$thumbnail-size};
+          --height: var(--x) * #{$thumbnail-size};
+        }
+      }
     }
   }
 

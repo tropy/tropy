@@ -177,10 +177,6 @@ module.exports = {
     }),
 
     dispatch => ({
-      onPhotoSave(...args) {
-        dispatch(act.photo.save(...args))
-      },
-
       onSelectionCreate(...args) {
         dispatch(act.selection.create(...args))
       },

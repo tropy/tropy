@@ -4,8 +4,13 @@ const React = require('react')
 const { TemplateSelect } = require('../template/select')
 const { ResourceSelect } = require('../resource/select')
 const { ipcRenderer: ipc } = require('electron')
-const { ESPER, ITEM } = require('../../constants')
 const { darwin } = require('../../common/os')
+
+const {
+  ESPER,
+  ITEM,
+  IMAGE
+} = require('../../constants')
 
 const {
   IconItemSmall,
@@ -14,11 +19,12 @@ const {
 } = require('../icons')
 
 const {
-  array, arrayOf, bool, func, object, shape, string
+  array, arrayOf, bool, func, object, shape, string, number
 } = require('prop-types')
 
 const {
   FormElement,
+  FormField,
   FormSelect,
   FormToggle,
   FormToggleGroup,
@@ -142,6 +148,18 @@ class AppPrefs extends React.PureComponent {
             name="force"
             value={this.props.settings.title.force}
             onChange={this.handleTitleChange}/>
+          <FormField
+            id="prefs.app.density.label"
+            isCompact
+            isRequired
+            max={this.props.importMax}
+            min={this.props.importMin}
+            name="density"
+            onChange={this.props.onSettingsUpdate}
+            title="prefs.app.density.title"
+            tabIndex={0}
+            type="number"
+            value={this.props.settings.density}/>
           <hr/>
           <FormSelect
             id="prefs.app.style.theme"
@@ -194,6 +212,12 @@ class AppPrefs extends React.PureComponent {
             value={this.props.settings.layout}
             options={this.props.layouts}
             onChange={this.props.onSettingsUpdate}/>
+          <FormToggleGroup
+            id="prefs.app.completions"
+            name="completions"
+            value={this.props.settings.completions}
+            options={this.props.completions}
+            onChange={this.props.onSettingsUpdate}/>
           <hr/>
           <FormElement
             id="prefs.app.export.label"
@@ -221,12 +245,26 @@ class AppPrefs extends React.PureComponent {
             onChange={this.handlePrintSettingsChange}/>
           <FormElement isCompact>
             <Toggle
+              id="prefs.app.print.photos"
+              isDisabled={
+                !this.props.settings.print.metadata &&
+                !this.props.settings.print.notes}
+              name="photos"
+              value={this.props.settings.print.photos}
+              onChange={this.handlePrintSettingsChange}/>
+            <Toggle
               id="prefs.app.print.metadata"
+              isDisabled={
+                !this.props.settings.print.photos &&
+                !this.props.settings.print.notes}
               name="metadata"
               value={this.props.settings.print.metadata}
               onChange={this.handlePrintSettingsChange}/>
             <Toggle
               id="prefs.app.print.notes"
+              isDisabled={
+                !this.props.settings.print.photos &&
+                !this.props.settings.print.metadata}
               name="notes"
               value={this.props.settings.print.notes}
               onChange={this.handlePrintSettingsChange}/>
@@ -266,8 +304,11 @@ class AppPrefs extends React.PureComponent {
       theme: string.isRequired,
       templates: object.isRequired
     }).isRequired,
+    completions: arrayOf(string).isRequired,
     layouts: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,
+    importMin: number.isRequired,
+    importMax: number.isRequired,
     themes: arrayOf(string).isRequired,
     dupOptions: arrayOf(string).isRequired,
     zoomModes: arrayOf(string).isRequired,
@@ -278,10 +319,13 @@ class AppPrefs extends React.PureComponent {
   static defaultProps = {
     themes: ['light', 'dark'],
     layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
-    locales: ['de', 'en', 'fr', 'it', 'ja'],
+    completions: ['datatype', 'property-datatype'],
+    locales: ['de', 'en', 'es', 'fr', 'it', 'ja'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL],
-    printModes: ['item', 'photo', 'selection']
+    printModes: ['item', 'photo', 'selection'],
+    importMin: IMAGE.MIN_DENSITY,
+    importMax: IMAGE.MAX_DENSITY
   }
 }
 

@@ -1,13 +1,31 @@
 'use strict'
 
 const { array } = require('../common/util')
-const { METADATA } = require('../constants')
+const { METADATA, EDIT } = require('../constants')
 
 module.exports = {
+  new(payload, meta = {}) {
+    return {
+      type: EDIT.START,
+      payload: {
+        field: payload
+      },
+      meta
+    }
+  },
+
   add(payload, meta) {
     return {
       type: METADATA.ADD,
       payload,
+      meta: { cmd: 'project', history: 'add', ...meta }
+    }
+  },
+
+  copy({ id, ...payload }, meta) {
+    return {
+      type: METADATA.COPY,
+      payload: { id: array(id), ...payload },
       meta: { cmd: 'project', history: 'add', ...meta }
     }
   },

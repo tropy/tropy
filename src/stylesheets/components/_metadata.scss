@@ -29,9 +29,12 @@ $default-padding-horizontal: 12px !default;
 }
 
 .form-control {
-  &.template-select {
+  &.select {
     width: calc(100% - 2 * #{$default-padding-horizontal});
     margin: auto;
+  }
+
+  &.template-select {
     border-color: $template-select-border;
     margin-bottom: (($metadata-line-height - 10px) / 2);
 
@@ -44,13 +47,9 @@ $default-padding-horizontal: 12px !default;
     }
 
     &.mixed {
-      color: $metadata-field-mixed-color;
-      background-image:
-        if(
-          $theme == "light",
-          icon-url("project/icon-chevron7-mixed-light-theme.svg"),
-          icon-url("project/icon-chevron7-mixed-dark-theme.svg")
-        );
+      .value {
+        @extend %mixed-indicator;
+      }
     }
 
     .scrollbar-style-old-school & {
@@ -67,6 +66,11 @@ $default-padding-horizontal: 12px !default;
       border-color: $template-select-nested-focus-border;
     }
   }
+
+  &.resource-select {
+    margin-top: (-$input-border-width);
+    margin-bottom: (-$input-border-width);
+  }
 }
 
 .metadata-fields {
@@ -75,13 +79,15 @@ $default-padding-horizontal: 12px !default;
     line-height: $metadata-line-height;
 
     &.mixed {
-      color: $metadata-field-mixed-color;
-    }
-  }
+      .editable:not(.active) {
+        display: flex;
+        @extend %mixed-indicator;
 
-  label,
-  .static {
-    @include css-truncation;
+        .truncate {
+          flex: 0 1 auto;
+        }
+      }
+    }
   }
 
   label {
@@ -90,6 +96,7 @@ $default-padding-horizontal: 12px !default;
     padding-left: $default-padding-horizontal;
     padding-right: ($metadata-gutter / 2);
     color: $label-color;
+    @include css-truncation;
 
     @include variant(".extra label") {
       font-style: italic;
@@ -103,13 +110,22 @@ $default-padding-horizontal: 12px !default;
     padding-left: $metadata-gutter / 2;
     padding-right: $default-padding-horizontal;
     min-width: 0; // Fix truncation
+    position: relative;
+
+    &.over {
+      @extend %drop-target;
+    }
 
     .scrollbar-style-old-school & {
       padding-right: ($default-padding-horizontal - $scrollbar-size / 3);
     }
 
-    @include variant(".clickable .value") {
+    @include variant(".clickable.static .value") {
       cursor: pointer;
+    }
+
+    @include variant(".static .value") {
+      cursor: not-allowed;
     }
   }
 

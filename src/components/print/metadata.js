@@ -2,6 +2,8 @@
 
 const React = require('react')
 const cx = require('classnames')
+const { ItemInfo } = require('../item/info')
+const { PhotoInfo } = require('../photo/info')
 const { FormattedMessage } = require('react-intl')
 const { auto } = require('../../format')
 const { TYPE } = require('../../constants')
@@ -27,6 +29,37 @@ MetadataField.propTypes = {
   label: node.isRequired,
   text: string,
   type: string.isRequired
+}
+
+const MetadataContainer = ({ item, photo, notes }) => (
+  <div className="metadata-container">
+    <div className="col">
+      {item &&
+        <>
+          <MetadataSection
+            title="print.item"
+            fields={item.data}
+            tags={item.tags}/>
+          <ItemInfo item={item}/>
+        </>}
+    </div>
+    <div className="col">
+      {photo &&
+        <>
+          <MetadataSection
+            title="print.photo"
+            fields={photo.data}/>
+          <PhotoInfo photo={photo}/>
+        </>}
+      {notes}
+    </div>
+  </div>
+)
+
+MetadataContainer.propTypes = {
+  item: object,
+  photo: object,
+  notes: node
 }
 
 const MetadataSection = ({ fields, title, tags }) => (
@@ -58,6 +91,7 @@ MetadataSection.propTypes = {
 }
 
 module.exports = {
+  MetadataContainer,
   MetadataField,
   MetadataSection
 }

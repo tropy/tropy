@@ -34,7 +34,6 @@ en:
         - &recent
           label: 'Recent Projects'
           id: 'recent'
-          role: 'recentDocuments'
           enabled: false
           submenu:
             - type: 'separator'
@@ -42,8 +41,8 @@ en:
               command: 'app:clear-recent-projects'
         - type: 'separator'
         - &import
-          label: 'Import Photos…'
-          command: 'app:import-photos'
+          label: 'Import…'
+          command: 'app:import'
           accelerator: 'CmdOrCtrl+Shift+I'
           condition: 'project'
         - &consolidate

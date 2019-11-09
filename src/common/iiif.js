@@ -1,7 +1,7 @@
 'use strict'
 
 const { URL } = require('url')
-const { rotate, isHorizontal } = require('./math')
+const { rotate, round, isHorizontal } = require('./math')
 
 
 class Rotation {
@@ -42,6 +42,24 @@ class Rotation {
 
   format(symbol = '!') {
     return `${this.mirror ? symbol : ''}${this.angle}`
+  }
+
+  mode({ width, height }, h = this.isHorizontal) {
+    return (width < height) ?
+      (h ? 'portrait' : 'landscape') :
+      (h ? 'landscape' : 'portrait')
+  }
+
+  ratio({ width, height }) {
+    if (!this.isHorizontal)
+      [width, height] = [height, width]
+
+    if (width > height)
+      return [1, round(height / width, 100)]
+    if (width < height)
+      return [round(width / height, 100), 1]
+    else
+      return [1, 1]
   }
 
   get isHorizontal() {
@@ -94,5 +112,6 @@ class IIIF extends URL {
 
 module.exports = {
   IIIF,
-  Rotation
+  Rotation,
+  exifRotation: Rotation.fromExifOrientation
 }

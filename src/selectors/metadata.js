@@ -2,7 +2,7 @@
 
 const { createSelector: memo } = require('reselect')
 const { pluck } = require('./util')
-const { get, own } = require('../common/util')
+const { array, get, own } = require('../common/util')
 const { equal } = require('../value')
 const { compare } = require('../collate')
 const {
@@ -45,7 +45,7 @@ const getItemMetadata = memo(
         items,
         compose(map(id => metadata[id]), keep(), cat, skipId),
         collect,
-        { id: items.length > 1 ? items : items[0] }),
+        { id: items }),
       map(([key, value]) => {
         if (key !== 'id') {
           value.mixed = value.count !== items.length
@@ -94,8 +94,6 @@ const getMetadataFields = memo(
       }
     }
 
-    let ext = fld.length
-
     if (data != null) {
       for (let id in data) {
         if (id === 'id' || idx[id] != null) continue
@@ -107,12 +105,10 @@ const getMetadataFields = memo(
         })
       }
 
-      fld.id = data.id
+      fld.id = array(data.id)
     }
 
-    fld.key = Array.isArray(fld.id) ? 'bulk' : fld.id
     fld.idx = idx
-    fld.ext = ext
 
     return fld
   }
@@ -154,13 +150,11 @@ const getSelectionFields = memo(
     getMetadataFields(null, { template, data, props })
 )
 
-const any = (src) => { for (let key in src) return key }
-
 const getActiveProperty =
-  ({ edit }) => ('field' in edit) ? any(edit.field) : null
+  ({ edit }) => get(edit, ['field', 'property'])
 
 const getActiveId =
-  ({ edit }) => ('field' in edit) ? edit.field[any(edit.field)] : null
+  ({ edit }) => get(edit, ['field', 'id', '0'])
 
 const getActiveDatatype = memo(
   getMetadata, getActiveProperty, getActiveId,
@@ -168,21 +162,25 @@ const getActiveDatatype = memo(
     get(metadata, [id, prop, 'type'], TYPE.TEXT)
 )
 
-const makeCompletionFilter = (prop, datatype, perField = false) =>
-  perField ?
+const makeCompletionFilter = (prop, datatype, byProp) =>
+  byProp ?
     ([id, v]) => id === prop && v && !!(v.text) && v.type === datatype :
     ([id, v]) => id !== 'id' && v && !!(v.text) && v.type === datatype
 
 const getMetadataCompletions = memo(
-  getMetadata, getActiveProperty, getActiveDatatype,
-  (metadata, prop, datatype) => {
+  getMetadata,
+  getActiveProperty,
+  getActiveDatatype,
+  ({ settings }) => settings.completions === 'property-datatype',
+
+  (metadata, prop, datatype, byProp) => {
     if (prop == null) return []
     let comp = new Set()
 
     seq(metadata, compose(
       map(([, data]) => data),
       cat,
-      filter(makeCompletionFilter(prop, datatype)),
+      filter(makeCompletionFilter(prop, datatype, byProp)),
       map(([, value]) => comp.add(value.text))))
 
     return [...comp].sort(compare)

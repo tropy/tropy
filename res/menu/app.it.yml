@@ -29,7 +29,6 @@ it:
           command: 'app:open-new-dialog'
         - label: Progetti recenti
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -37,7 +36,7 @@ it:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importa foto...
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Consolida raccolta foto
@@ -238,7 +237,6 @@ it:
           command: 'app:open-new-dialog'
         - label: Progetti recenti
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -246,7 +244,7 @@ it:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importa foto...
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Consolida raccolta foto
@@ -426,7 +424,6 @@ it:
           command: 'app:open-new-dialog'
         - label: Progetti recenti
           id: recent
-          role: recentDocuments
           enabled: false
           submenu:
             - type: separator
@@ -434,7 +431,7 @@ it:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importa foto...
-          command: 'app:import-photos'
+          command: 'app:import'
           accelerator: CmdOrCtrl+Shift+I
           condition: project
         - label: Consolida raccolta foto

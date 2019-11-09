@@ -2,10 +2,10 @@
 
 const React = require('react')
 const { Thumbnail } = require('../photo/thumbnail')
-const { DragSource, DropTarget } = require('react-dnd')
-const { getEmptyImage } = require('react-dnd-electron-backend')
+const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { bool, func, number, shape, string } = require('prop-types')
 const { pure } = require('../util')
+const { pick } = require('../../common/util')
 const { bounds } = require('../../dom')
 const { DND } = require('../../constants')
 
@@ -60,14 +60,10 @@ class SelectionIterable extends React.PureComponent {
 
   handleContextMenu = (event) => {
     if (!this.props.isDisabled) {
-      const { photo, selection } = this.props
       this.select()
-
       this.props.onContextMenu(event, 'selection', {
-        id: photo.id,
-        item: photo.item,
-        path: photo.path,
-        selection: selection.id
+        ...pick(this.props.photo, ['id', 'item', 'path', 'protocol']),
+        selection: this.props.selection.id
       })
     }
   }
@@ -81,14 +77,13 @@ class SelectionIterable extends React.PureComponent {
 
   renderThumbnail(props) {
     return (
-      <Thumbnail {...props}
-        id={this.props.selection.id}
-        angle={this.props.selection.angle}
-        broken={this.props.photo.broken}
-        mimetype={this.props.photo.mimetype}
-        mirror={this.props.selection.mirror}
-        orientation={this.props.photo.orientation}
+      <Thumbnail
+        {...props}
+        {...pick(this.props.selection, Thumbnail.keys)}
         cache={this.props.cache}
+        color={this.props.photo.color}
+        mimetype={this.props.photo.mimetype}
+        orientation={this.props.photo.orientation}
         size={this.props.size}
         onError={this.props.onError}/>
     )
@@ -115,7 +110,7 @@ class SelectionIterable extends React.PureComponent {
     selection: shape({
       id: number.isRequired,
       angle: number,
-      mirror: bool,
+      mirror: bool
     }).isRequired,
     size: number.isRequired,
     onContextMenu: func.isRequired,
@@ -139,10 +134,11 @@ class SelectionIterable extends React.PureComponent {
 const DragSourceSpec = {
   beginDrag({ photo, selection, getAdjacent }) {
     return {
+      ...pick(selection, Thumbnail.keys),
       id: selection.id,
       photo: selection.photo,
-      angle: selection.angle,
-      mirror: selection.mirror,
+      color: photo.color,
+      mimetype: photo.mimetype,
       orientation: photo.orientation,
       adj: getAdjacent(selection).map(s => s && s.id)
     }

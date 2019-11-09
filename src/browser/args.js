@@ -72,6 +72,13 @@ module.exports =
       default: false
     })
 
+    .option('port', {
+      alias: 'p',
+      type: 'number',
+      describe: 'Set API listening port',
+      default: null
+    })
+
     .help('help')
     .version(version)
 

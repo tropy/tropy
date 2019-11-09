@@ -21,15 +21,13 @@ const {
 
 class ImportCommand extends Command {
   *openImage(path) {
-    let useLocalTimezone = yield select(state => state.settings.localtime)
-    let image = yield call(Image.open, { path, useLocalTimezone })
-    return image
-  }
+    let settings = yield select(state => state.settings)
 
-  *checkPhoto(photo, force) {
-    let useLocalTimezone = yield select(state => state.settings.localtime)
-    return yield call(Image.check, photo, { force, useLocalTimezone })
-
+    return yield call(Image.open, {
+      path,
+      density: settings.density,
+      useLocalTimezone: settings.localtime
+    })
   }
 
   *getMetadata(image, templates) {
@@ -69,18 +67,17 @@ class ImportCommand extends Command {
 
   *createThumbnails(id, image, {
     overwrite = true,
-    quality = 100,
     selection
   } = {}) {
     try {
       let { cache } = this.options
       let ext = cache.extname(image.mimetype)
 
-      for (let v of image.variants(selection != null)) {
-        let path = cache.path(id, v.name, ext)
+      for (let { name, size, quality } of image.variants(selection != null)) {
+        let path = cache.path(id, name, ext)
 
-        if (overwrite || !(yield call(cache.exists, path, false))) {
-          let dup = image.resize(v.size, selection)
+        if (overwrite || !(yield call(cache.exists, path))) {
+          let dup = yield call(image.resize, size, selection)
 
           switch (ext) {
             case '.png':
@@ -89,7 +86,7 @@ class ImportCommand extends Command {
             case '.webp':
               dup.webp({
                 quality,
-                lossless: image.channels === 1 || !(yield call(image.isOpaque))
+                lossless: image.channels === 1 || !image.isOpaque
               })
               break
             default:
@@ -99,7 +96,7 @@ class ImportCommand extends Command {
           yield call([dup, dup.toFile], cache.expand(path))
 
         } else {
-          debug(`skipping ${v.name} thumbnail for #${id}: already exists`)
+          debug(`skipping ${name} thumbnail for #${id}: already exists`)
         }
       }
     } catch (e) {

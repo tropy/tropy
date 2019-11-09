@@ -1,16 +1,15 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const cx = require('classnames')
 const { IconTrash } = require('../icons')
 const { FormattedMessage } = require('react-intl')
-const { DropTarget } = require('react-dnd')
+const { DropTarget } = require('../dnd')
 const { DND } = require('../../constants')
 const { bool, func } = require('prop-types')
 
 
-class TrashListNode extends PureComponent {
+class TrashListNode extends React.PureComponent {
   get classes() {
     return {
       active: this.props.isSelected,

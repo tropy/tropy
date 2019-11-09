@@ -39,7 +39,7 @@ module.exports = {
       expanded: getExpandedPhotos(state),
       keymap: state.keymap,
       selection: state.nav.selection,
-      selections: state.selections,
+      selections: state.selections
     }),
 
     dispatch => ({

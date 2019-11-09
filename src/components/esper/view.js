@@ -7,7 +7,6 @@ const {
   append,
   bounds,
   createDragHandler,
-  encodeFileURL,
   on,
   off
 } = require('../../dom')
@@ -377,7 +376,6 @@ class EsperView extends React.Component {
 
   load(url) {
     return new Promise((resolve, reject) => {
-      url = encodeFileURL(url)
 
       if (TextureCache[url]) {
         return resolve(TextureCache[url])

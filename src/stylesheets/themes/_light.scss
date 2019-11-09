@@ -29,7 +29,7 @@ $shade-1:  if($platform == win32, #f0f0f0, #f6f6f6); // Sidebar bg, panel bg
 $shade-2:  #e6e6e6; // Inactive tab, Esper bg, tile expansion
 $shade-3:  #ddd; // Active state bg/border
 $shade-4:  #ccc; // Slider track
-$shade-5:  #bbb; // Panel heading, mixed color
+$shade-5:  #bbb; // Panel heading
 $shade-6:  #777; // Icon color
 $shade-7:  #555; // Sidebar active icon
 $shade-8:  #444; // Softened text
@@ -127,6 +127,7 @@ $tick-color:                             var(--shade-0);
 // Badge
 $badge-color: var(--shade-0);
 $badge-bg:    var(--red);
+$badge-opacity: 0.8;
 
 // Drop target
 $drop-target-color: var(--brand-primary-30);
@@ -225,14 +226,12 @@ $template-select-border:              var(--shade-3);
 $template-select-nested-focus-border: var(--shade-3-darken-4);
 $template-select-bg:                  var(--shade-1);
 $template-select-nested-focus-bg:     var(--shade-1-darken-4);
-$metadata-field-mixed-color:          var(--shade-5);
 
 // Tag list
 $tag-list-focus-color:              var(--shade-0);
 $tag-list-focus-bg:                 var(--brand-primary);
 $tag-list-active-border:            var(--shade-4-darken-14);
 $tag-list-active-bg:                var(--shade-3);
-$mixed-color:                       var(--shade-5);
 $add-tag-default-bg:                $panel-bg;
 $add-tag-focus-bg:                  var(--shade-0);
 $add-tag-nested-focus-bg:           var(--shade-1-darken-4);
@@ -314,7 +313,7 @@ $esper-btn-default-border:               var(--shade-2-darken-10);
 $esper-btn-default-active-bg:            var(--shade-2-darken-4);
 
 // Drag preview
-$drag-preview-opacity:           0.8;
+$drag-preview-opacity:           0.6;
 $drag-preview-thumbnail-opacity: 0.8;
 
 // Thumbnail

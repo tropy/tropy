@@ -2,7 +2,7 @@
 
 const { save } = require('./value')
 const { keys } = Object
-const { array, blank, get, list, quote } = require('../common/util')
+const { array, blank, list, quote } = require('../common/util')
 const { touch } = require('./subject')
 
 const metadata = {
@@ -51,9 +51,12 @@ const metadata = {
       property: replace ? null : properties })
 
     for (let property of properties) {
-      if (blank(get(data, [property, 'text']))) continue
+      let value = data[property]
 
-      let value = await save(db, data[property])
+      if (value == null || blank(value.text))
+        continue
+
+      value = await save(db, value)
       await metadata.insert(db, { id, property, value })
     }
 

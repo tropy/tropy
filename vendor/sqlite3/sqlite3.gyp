@@ -1,5 +1,8 @@
 {
   'includes': [ 'common-sqlite.gypi' ],
+  'variables': {
+    'sqlite_magic%': '',
+  },
   'target_defaults': {
     'default_configuration': 'Release',
     'cflags': [
@@ -96,6 +99,13 @@
         'SQLITE_ENABLE_FTS5',
         'SQLITE_ENABLE_JSON1',
         'SQLITE_ENABLE_RTREE'
+      ],
+      'conditions': [
+        ["sqlite_magic != ''", {
+          'defines': [
+            'SQLITE_FILE_HEADER="<(sqlite_magic)"'
+          ]
+        }]
       ]
     }
   ]

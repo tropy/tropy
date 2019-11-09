@@ -33,9 +33,10 @@ rules:
   array-bracket-spacing: 2
   block-spacing: 2
   brace-style: [2, '1tbs', { allowSingleLine: true }]
+  comma-dangle: 2
   comma-spacing: 2
   comma-style: 2
-  complexity: [1, 14]
+  complexity: [1, 16]
   dot-location: [2, 'property']
   eqeqeq: [2, 'smart']
   indent: [0, 2, { SwitchCase: 1 }]
@@ -64,6 +65,7 @@ rules:
   quote-props: [2, 'consistent-as-needed']
   quotes: [2, 'single', 'avoid-escape']
   radix: 2
+  require-atomic-updates: 0
   react/display-name: 0
   react/no-deprecated: 1
   react/jsx-boolean-value: 2
@@ -86,5 +88,6 @@ rules:
   space-before-function-paren: [2, { anonymous: 'always', named: 'never' }]
   space-infix-ops: 2
   space-unary-ops: 2
+  space-in-parens: 2
   strict: [2, 'global']
   wrap-regex: 2

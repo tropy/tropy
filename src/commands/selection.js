@@ -24,14 +24,18 @@ class Create extends ImportCommand {
     let { db } = this.options
     let { payload, meta } = this.action
 
-    let [photo, template] = yield select(state => ([
+    let [photo, template, density] = yield select(state => ([
       state.photos[payload.photo],
-      getSelectionTemplate(state)
+      getSelectionTemplate(state),
+      state.settings.density
     ]))
 
-    let image = yield call(Image.open, photo)
-    let idx = (meta.idx != null) ? meta.idx : [photo.selections.length]
+    let image = yield call(Image.open, {
+      ...photo,
+      density: photo.density || density
+    })
 
+    let idx = (meta.idx != null) ? meta.idx : [photo.selections.length]
     let data = getTemplateValues(template)
 
     let selection = yield call(db.transaction, tx =>
