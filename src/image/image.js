@@ -318,7 +318,10 @@ class Image {
   variants(isSelection = false) {
     let variants = [48, 512]
 
-    if (!isSelection && (this.isRemote || !IMAGE.WEB[this.mimetype])) {
+    if (!isSelection && (
+      this.page > 0 ||
+      this.isRemote ||
+      !IMAGE.WEB[this.mimetype])) {
       variants.push('full')
     }
 

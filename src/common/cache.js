@@ -78,11 +78,19 @@ class Cache {
     return [...basename(path, ext).split('_', 2), ext]
   }
 
-  static url(root, variant, { id, mimetype, path, protocol, consolidated }) {
+  static url(root, variant, {
+    id,
+    mimetype,
+    page,
+    path,
+    protocol,
+    consolidated
+  }) {
     if  (id == null || variant == null)
       return null
 
     if (
+        (page > 0) ||
         (variant !== 'full') ||   // Thumbnail
         (protocol !== 'file') ||  // Remote
         !IMAGE.WEB[mimetype]      // Not supported natively
