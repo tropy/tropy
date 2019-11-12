@@ -35,7 +35,10 @@ const About = () => (
       <p>
         <FormattedMessage
           id="about.text"
-          values={{ rrchnm: <Link id="about.rrchnm"/> }}/>
+          values={{
+            c2dh: <Link id="about.c2dh"/>,
+            rrchnm: <Link id="about.rrchnm"/>
+          }}/>
       </p>
       <p>
         <FormattedMessage
