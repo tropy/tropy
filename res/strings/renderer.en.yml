@@ -61,6 +61,9 @@ en:
       cds:
         title: Corporation for Digital Scholarship
         url: http://digitalscholar.org
+      c2dh:
+        title: Luxembourg Centre for Contemporary and Digital History
+        url: https://www.c2dh.uni.lu
       text: >
         Tropy is designed by the {rrchnm}, a team that develops
         historical teaching resources, digital exhibits, and
