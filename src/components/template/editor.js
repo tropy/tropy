@@ -204,19 +204,6 @@ class TemplateEditor extends React.PureComponent {
               isRequired
               onChange={this.handleTemplateUpdate}
               size={9}/>
-            <FormElement
-              id="template.domain"
-              isCompact
-              size={9}>
-              <ResourceSelect
-                name="domain"
-                value={this.state.domain}
-                options={this.props.domains}
-                tabIndex={0}
-                isDisabled={this.state.isProtected || !isPristine}
-                isRequired
-                onChange={this.handleDomainUpdate}/>
-            </FormElement>
             <FormField
               id="template.creator"
               name="creator"
@@ -230,9 +217,22 @@ class TemplateEditor extends React.PureComponent {
               id="template.description"
               name="description"
               value={this.state.description}
+              isCompact
               isDisabled={this.state.isProtected}
               tabIndex={0} onChange={this.handleTemplateUpdate}
               size={9}/>
+            {!isPristine &&
+              <FormElement
+                id="template.domain"
+                size={9}>
+                <ResourceSelect
+                  name="domain"
+                  value={this.state.domain}
+                  options={this.props.domains}
+                  tabIndex={0}
+                  isRequired
+                  onChange={this.handleDomainUpdate}/>
+              </FormElement>}
             {isPristine &&
               <FormElement className="flex-row justify-content-end">
                 <button
