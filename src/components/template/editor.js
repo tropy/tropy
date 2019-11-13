@@ -224,7 +224,7 @@ class TemplateEditor extends React.PureComponent {
                 <ResourceSelect
                   name="domain"
                   value={this.state.domain}
-                  options={this.props.domains}
+                  options={this.props.classes}
                   tabIndex={0}
                   isRequired
                   onChange={this.handleDomainUpdate}/>
@@ -270,7 +270,7 @@ class TemplateEditor extends React.PureComponent {
       name: string
     })).isRequired,
     types: arrayOf(string).isRequired,
-    domains: arrayOf(object).isRequired,
+    classes: arrayOf(object).isRequired,
     onCreate: func.isRequired,
     onDelete: func.isRequired,
     onExport: func.isRequired,
@@ -283,8 +283,7 @@ class TemplateEditor extends React.PureComponent {
   }
 
   static defaultProps = {
-    types: [TROPY.Item, TROPY.Photo, TROPY.Selection],
-    domains: []
+    types: [TROPY.Item, TROPY.Photo, TROPY.Selection]
   }
 }
 
@@ -295,7 +294,7 @@ module.exports = {
       properties: getPropertyList(state),
       templates: getTemplateList(state),
       datatypes: getDatatypeList(state),
-      domains: getClassList(state)
+      classes: getClassList(state)
     }),
 
     dispatch => ({
