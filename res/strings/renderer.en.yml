@@ -267,6 +267,7 @@ en:
     type: Type
     creator: Creator
     description: Description
+    domain: Domain
     types:
       "https://tropy.org/v1/tropy#Item": Item Template
       "https://tropy.org/v1/tropy#Photo": Photo Template
