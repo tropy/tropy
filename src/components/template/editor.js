@@ -85,7 +85,7 @@ class TemplateEditor extends React.PureComponent {
   }
 
   handleDomainUpdate = (rdfType) => {
-    let domain = { domain: rdfType.domain.id }
+    let domain = { domain: [rdfType.domain.id] }
     if (this.isPristine) {
       this.setState(domain)
     } else {
