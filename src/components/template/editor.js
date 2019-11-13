@@ -74,25 +74,21 @@ class TemplateEditor extends React.PureComponent {
   }
 
   handleTemplateUpdate = (template) => {
-    let state = { domain: template.type, ...template }
     if (this.isPristine) {
-      this.setState(state)
+      this.setState(template)
+
     } else {
       this.props.onSave({
-        id: this.state.id, ...state
+        id: this.state.id, ...template
       })
     }
   }
 
   handleDomainUpdate = (rdfType) => {
     let domain = { domain: [rdfType.domain.id] }
-    if (this.isPristine) {
-      this.setState(domain)
-    } else {
-      this.props.onSave({
-        id: this.state.id, ...domain
-      })
-    }
+    this.props.onSave({
+      id: this.state.id, ...domain
+    })
   }
 
   handleFieldSave = (id, data, idx) => {
