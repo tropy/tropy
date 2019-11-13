@@ -57,9 +57,9 @@ class TemplateEditor extends React.PureComponent {
   }
 
   handleTemplateCreate = () => {
-    let { id } = this.state
+    let { id, type } = this.state
     this.props.onCreate({
-      [id]: { id, ...Template.copy(this.state) }
+      [id]: { id, ...Template.copy(this.state), domain: [type] }
     })
   }
 
