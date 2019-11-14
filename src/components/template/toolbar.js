@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { TemplateSelect } = require('./select')
 const { ButtonGroup, Button } = require('../button')
-const { FormGroup, Label } = require('../form')
+const { FormElement } = require('../form')
 const { arrayOf, bool, func, shape, string } = require('prop-types')
 
 const {
@@ -24,11 +24,11 @@ class TemplateToolbar extends PureComponent {
 
   render() {
     return (
-      <FormGroup className="select-template">
-        <Label
-          id="prefs.template.select"
-          size={3}/>
-        <div className="col-9 flex-row center">
+      <FormElement
+        id="prefs.template.select"
+        className="select-template"
+        size={9}>
+        <div className="flex-row">
           <TemplateSelect
             id="prefs.template.select"
             options={this.props.templates}
@@ -58,7 +58,7 @@ class TemplateToolbar extends PureComponent {
               onClick={this.handleExport}/>
           </ButtonGroup>
         </div>
-      </FormGroup>
+      </FormElement>
     )
   }
 
