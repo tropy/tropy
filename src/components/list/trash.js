@@ -32,7 +32,9 @@ class TrashListNode extends React.PureComponent {
         <div className="list-node-container">
           <IconTrash/>
           <div className="name">
-            <FormattedMessage id="sidebar.trash"/>
+            <div className="truncate">
+              <FormattedMessage id="sidebar.trash"/>
+            </div>
           </div>
         </div>
       </li>
