@@ -18,7 +18,7 @@ $font-family-sans-serif: unquote(map-get($sans-serif-fonts, $platform));
 $font-family-base:       $font-family-sans-serif;
 
 $font-size-small: const("FONTSIZE.SMALL") * 1px;
-$font-size-base:  rem(const("FONTSIZE.BASE"));
+$font-size-base:  const("FONTSIZE.BASE") * 1px;
 $font-size-large: const("FONTSIZE.LARGE") * 1px;
 
 // Heads up: Do not trust the computed value in the dev tools,
@@ -27,7 +27,7 @@ $font-size-large: const("FONTSIZE.LARGE") * 1px;
 $line-height-base:     1.539;
 
 $line-height-computed: floor((const("FONTSIZE.BASE") * $line-height-base)) * 1px;
-$line-height-large:    const("LIST.HEIGHT") * 1px;
+$line-height-large:    rem(26);
 
 $link-hover-decoration: underline;
 

@@ -230,7 +230,6 @@ const POPUP = {
 }
 
 const LIST = {
-  HEIGHT: 26,
   INDENT: 12,
   PADDING: 16
 }
