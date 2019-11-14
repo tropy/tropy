@@ -5,7 +5,7 @@ const { connect } = require('react-redux')
 const { TemplateFieldList } = require('./field-list')
 const { TemplateToolbar } = require('./toolbar')
 const { FormattedMessage } = require('react-intl')
-const { FormField, FormGroup, FormSelect } = require('../form')
+const { FormField, FormElement, FormSelect } = require('../form')
 const { Template } = require('../../common/ontology')
 const { arrayOf, func, shape, string } = require('prop-types')
 const actions = require('../../actions')
@@ -209,17 +209,15 @@ class TemplateEditor extends React.PureComponent {
               tabIndex={0} onChange={this.handleTemplateUpdate}
               size={9}/>
             {isPristine &&
-              <FormGroup>
-                <div className="col-12 text-right">
-                  <button
-                    className="btn btn-primary min-width"
-                    disabled={!this.isValid}
-                    tabIndex={0}
-                    onClick={this.handleTemplateCreate}>
-                    <FormattedMessage id="prefs.template.create"/>
-                  </button>
-                </div>
-              </FormGroup>}
+              <FormElement className="flex-row justify-content-end">
+                <button
+                  className="btn btn-primary min-width"
+                  disabled={!this.isValid}
+                  tabIndex={0}
+                  onClick={this.handleTemplateCreate}>
+                  <FormattedMessage id="prefs.template.create"/>
+                </button>
+              </FormElement>}
           </header>
           <TemplateFieldList
             template={this.state.id}
