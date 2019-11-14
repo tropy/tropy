@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { DragSource, DropTarget } = require('../dnd')
 const { ResourceSelect } = require('../resource/select')
 const { Button } = require('../button')
-const { FormField, FormGroup, FormToggle, Label } = require('../form')
+const { FormElement, FormField, FormToggle } = require('../form')
 const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
 const { DND } = require('../../constants')
 const cx = require('classnames')
@@ -89,22 +89,20 @@ class TemplateField extends PureComponent {
         {this.connectDragSource(
           <fieldset>
             {this.isDragAndDropEnabled && <IconGrip/>}
-            <FormGroup isCompact>
-              <Label
-                id="template.field.property"
-                size={3}/>
-              <div className="col-9">
-                <ResourceSelect
-                  options={this.props.properties}
-                  value={this.props.field.property}
-                  maxRows={5}
-                  isRequired={!this.props.isTransient}
-                  isDisabled={this.props.isDisabled}
-                  placeholder="property.select"
-                  tabIndex={0}
-                  onChange={this.handlePropertyChange}/>
-              </div>
-            </FormGroup>
+            <FormElement
+              id="template.field.property"
+              isCompact
+              size={9}>
+              <ResourceSelect
+                options={this.props.properties}
+                value={this.props.field.property}
+                maxRows={5}
+                isRequired={!this.props.isTransient}
+                isDisabled={this.props.isDisabled}
+                placeholder="property.select"
+                tabIndex={0}
+                onChange={this.handlePropertyChange}/>
+            </FormElement>
             <FormField
               id="template.field.label"
               name="label"
@@ -115,22 +113,20 @@ class TemplateField extends PureComponent {
               size={9}
               placeholder=""
               onChange={this.handleChange}/>
-            <FormGroup isCompact>
-              <Label
-                id="template.field.datatype"
-                size={3}/>
-              <div className="col-9">
-                <ResourceSelect
-                  options={this.props.datatypes}
-                  value={this.props.field.datatype}
-                  maxRows={5}
-                  isRequired
-                  isDisabled={!isEditable}
-                  placeholder="datatype.select"
-                  tabIndex={0}
-                  onChange={this.handleDatatypeChange}/>
-              </div>
-            </FormGroup>
+            <FormElement
+              id="template.field.datatype"
+              isCompact
+              size={9}>
+              <ResourceSelect
+                options={this.props.datatypes}
+                value={this.props.field.datatype}
+                maxRows={5}
+                isRequired
+                isDisabled={!isEditable}
+                placeholder="datatype.select"
+                tabIndex={0}
+                onChange={this.handleDatatypeChange}/>
+            </FormElement>
             <FormToggle
               id="template.field.isRequired"
               name="isRequired"
