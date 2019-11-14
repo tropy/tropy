@@ -77,7 +77,9 @@ class FormElement extends React.PureComponent {
     const { hasLabel, offset } = this
 
     return (
-      <FormGroup isCompact={this.props.isCompact}>
+      <FormGroup
+        isCompact={this.props.isCompact}
+        className={cx(this.props.className)}>
         {hasLabel &&
           <Label
             id={this.props.id}
@@ -95,6 +97,7 @@ class FormElement extends React.PureComponent {
 
   static propTypes = {
     children: node,
+    className: string,
     id: string,
     title: string,
     label: string,
