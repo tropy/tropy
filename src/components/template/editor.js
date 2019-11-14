@@ -209,7 +209,7 @@ class TemplateEditor extends React.PureComponent {
               tabIndex={0} onChange={this.handleTemplateUpdate}
               size={9}/>
             {isPristine &&
-              <FormElement className="flex-row justify-content-end">
+              <FormElement className="text-right">
                 <button
                   className="btn btn-primary min-width"
                   disabled={!this.isValid}
