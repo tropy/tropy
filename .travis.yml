@@ -32,10 +32,13 @@ matrix:
             - liborc-0.4-0
             - g++-7
     - os: osx
+      osx_image: xcode11.2
+      compiler: clang
+    - os: osx
       osx_image: xcode9.3
       compiler: clang
     - os: osx
-      osx_image: xcode11.2
+      osx_image: xcode9
       compiler: clang
 before_install:
   - rm -rf $HOME/.npm/_libvips
