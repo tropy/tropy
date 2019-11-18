@@ -126,9 +126,9 @@ class WindowManager extends EventEmitter {
       // TODO check position on display!
       var win = new BrowserWindow(opts)
 
-      win.webContents.once('did-finish-load', () => {
-        win.webContents.setVisualZoomLevelLimits(1, 1)
+      win.webContents.once('did-finish-load', async () => {
         win.webContents.zoomFactor = args.zoom || 1
+        await win.webContents.setVisualZoomLevelLimits(1, 1)
       })
 
       if (opts.isExclusive) {
