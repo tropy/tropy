@@ -745,8 +745,8 @@ class Tropy extends EventEmitter {
         ])
 
         debug('will open print dialog')
-        let result = await WindowManager.print(win)
-        info(`printing ${result ? 'confirmed' : 'aborted'}`)
+        let status = await WindowManager.print(win)
+        info(`print status: ${status}`)
 
       } finally {
         if (win != null) win.destroy()

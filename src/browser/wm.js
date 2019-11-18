@@ -522,8 +522,13 @@ class WindowManager extends EventEmitter {
   }
 
   static print(win, opts = {}) {
-    return new Promise((resolve) => {
-      win.webContents.print(opts, resolve)
+    return new Promise((resolve, reject) => {
+      win.webContents.print(opts, (success, reason) => {
+        if (success)
+          resolve('successful')
+        else
+          reason === 'cancelled' ? resolve(reason) : reject(reason)
+      })
     })
   }
 }
