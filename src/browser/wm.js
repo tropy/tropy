@@ -128,7 +128,7 @@ class WindowManager extends EventEmitter {
 
       win.webContents.once('did-finish-load', () => {
         win.webContents.setVisualZoomLevelLimits(1, 1)
-        win.webContents.setZoomFactor(args.zoom || 1)
+        win.webContents.zoomFactor = args.zoom || 1
       })
 
       if (opts.isExclusive) {
@@ -302,8 +302,8 @@ class WindowManager extends EventEmitter {
         dark: prefs.isDarkMode(),
         environment: process.env.NODE_ENV,
         documents: app.getPath('documents'),
-        maximizable: win.isMaximizable(),
-        minimizable: win.isMinimizable(),
+        maximizable: win.maximizable,
+        minimizable: win.minimizable,
         pictures: app.getPath('pictures'),
         scrollbars: !WindowManager.hasOverlayScrollBars(),
         theme: 'light',
@@ -426,10 +426,10 @@ class WindowManager extends EventEmitter {
     factor = restrict(factor, this.MIN_ZOOM, this.MAX_ZOOM)
 
     for (let win of this.values()) {
-      let old = win.webContents.getZoomFactor()
+      let old = win.webContents.zoomFactor
       if (old === factor) continue
 
-      win.webContents.setZoomFactor(factor)
+      win.webContents.zoomFactor = factor
 
       if (win.isResizable()) {
         let [minWidth, minHeight] = win.getMinimumSize()
