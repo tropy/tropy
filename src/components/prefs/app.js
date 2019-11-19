@@ -4,7 +4,6 @@ const React = require('react')
 const { TemplateSelect } = require('../template/select')
 const { ResourceSelect } = require('../resource/select')
 const { ipcRenderer: ipc } = require('electron')
-const { darwin } = require('../../common/os')
 
 const {
   ESPER,
@@ -317,7 +316,7 @@ class AppPrefs extends React.PureComponent {
   }
 
   static defaultProps = {
-    themes: ['light', 'dark'],
+    themes: ['light', 'dark', 'system'],
     layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
     completions: ['datatype', 'property-datatype'],
     locales: ['de', 'en', 'es', 'fr', 'it', 'ja'],
@@ -328,11 +327,6 @@ class AppPrefs extends React.PureComponent {
     importMax: IMAGE.MAX_DENSITY
   }
 }
-
-if (darwin) {
-  AppPrefs.defaultProps.themes.push('system')
-}
-
 
 module.exports = {
   AppPrefs

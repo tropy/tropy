@@ -69,7 +69,7 @@
     "chalk": "^3.0.0",
     "chokidar": "^3.3.0",
     "devtron": "^1.0.0",
-    "electron": "~6.1.4",
+    "electron": "^7.1.1",
     "electron-mocha": "^8.1.2",
     "electron-notarize": "^0.2.0",
     "electron-packager": "^14.1.0",

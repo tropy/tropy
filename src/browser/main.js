@@ -15,7 +15,7 @@ const { darwin, win32, system }  = require('../common/os')
 const { exe, qualified, version }  = require('../common/release')
 
 // Set app name and paths as soon as possible!
-app.setName(qualified.product)
+app.name = qualified.product
 
 if (!opts.data) {
   opts.data = join(app.getPath('appData'), exe)
