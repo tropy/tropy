@@ -220,6 +220,7 @@ class AppPrefs extends React.PureComponent {
           <FormToggleGroup
             id="prefs.app.layout"
             name="layout"
+            isCompact
             value={this.props.settings.layout}
             options={this.props.layouts}
             onChange={this.props.onSettingsUpdate}/>
