@@ -30,6 +30,10 @@ const COLUMN = {
 
 }
 
+const FONTSIZE = {
+  BASE: 13
+}
+
 const GRID = {
   SIZE: 12,
   PADDING: 12
@@ -235,6 +239,7 @@ module.exports =  {
   COLUMN,
   EDITOR,
   ESPER,
+  FONTSIZE,
   GRID,
   ICON,
   INPUT,
