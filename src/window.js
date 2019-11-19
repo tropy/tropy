@@ -48,6 +48,7 @@ class Window extends EventEmitter {
       'scrollbars',
       'theme',
       'dark',
+      'constrast',
       'maximizable',
       'minimizable'
     ])
@@ -137,10 +138,9 @@ class Window extends EventEmitter {
         this.toggle(state)
         this.emit(state)
       })
-      .on('theme', (_, theme, dark) => {
-        args.update({ theme, dark })
-        this.state.theme = theme
-        this.state.dark = dark
+      .on('theme', (_, theme, { dark, contrast } = {}) => {
+        args.update({ theme, dark, contrast })
+        Object.assign(this.state, { theme, dark, contrast })
         this.style(true)
       })
       .on('recent', (_, recent) => {

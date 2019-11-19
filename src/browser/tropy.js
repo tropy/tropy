@@ -921,7 +921,11 @@ class Tropy extends EventEmitter {
     if (theme !== nativeTheme.themeSource)
       nativeTheme.themeSource = theme
 
-    this.wm.broadcast('theme', theme, nativeTheme.shouldUseDarkColors)
+    this.wm.broadcast('theme', theme, {
+      dark: nativeTheme.shouldUseDarkColors,
+      contrast: nativeTheme.shouldUseHighContrastColors
+    })
+
     this.emit('app:reload-menu')
   }
 

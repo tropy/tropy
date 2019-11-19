@@ -507,7 +507,7 @@ class WindowManager extends EventEmitter {
 
   static getAquaColorVariant() {
     return darwin && AQUA[
-      prefs.getUserDefault('AppleAquaColorVariant', 'integer')
+      prefs.getUserDefault('AppleAquaColorVariant', 'string')
     ]
   }
 
