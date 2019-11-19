@@ -114,9 +114,9 @@ en:
       print:
         mode: Print
         modes:
-          item: One item per page
-          photo: One photo per page
-          selection: One selection per page
+          item: One Item per Page
+          photo: One Photo per Page
+          selection: One Selection per Page
         photos: Include photos
         metadata: Include metadata
         notes: Include notes
