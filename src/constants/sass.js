@@ -31,7 +31,7 @@ const COLUMN = {
 }
 
 const FONTSIZE = {
-  BASE: 13,
+  BASE: 13
 }
 
 const GRID = {
