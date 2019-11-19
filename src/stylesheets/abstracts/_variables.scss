@@ -27,7 +27,7 @@ $font-size-large: const("FONTSIZE.LARGE") * 1px;
 $line-height-base:     1.539;
 
 $line-height-computed: floor((const("FONTSIZE.BASE") * $line-height-base)) * 1px;
-$line-height-large:    rem(26);
+$line-height-large:    const("LIST.HEIGHT") * 1px;
 
 $link-hover-decoration: underline;
 
