@@ -208,6 +208,7 @@ const FormSelect = (props) => {
       <Select
         id={props.id}
         isDisabled={props.isDisabled}
+        isInputHidden={props.isInputHidden}
         isRequired={props.isRequired}
         isSelectionHidden={props.isSelectionHidden}
         name={props.name}
@@ -225,6 +226,7 @@ FormSelect.propTypes = {
   id: string.isRequired,
   isCompact: bool,
   isDisabled: bool,
+  isInputHidden: bool,
   isRequired: bool,
   isSelectionHidden: bool,
   name: string.isRequired,

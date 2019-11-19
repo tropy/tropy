@@ -53,6 +53,7 @@ const T = new WeakMap()
 
 class Tropy extends EventEmitter {
   static defaults = {
+    fontSize: '13px',
     frameless: darwin,
     debug: false,
     port: 2019,
@@ -557,6 +558,11 @@ class Tropy extends EventEmitter {
       this.setTheme(theme)
     })
 
+    this.on('app:change-font-size', (_, fontSize) => {
+      this.state.fontSize = fontSize
+      this.wm.broadcast('fontSize', this.state.fontSize)
+    })
+
     this.on('app:switch-locale', async (_, locale) => {
       info(`switch to "${locale}" locale`)
       this.state.locale = locale
@@ -894,6 +900,7 @@ class Tropy extends EventEmitter {
       dev: this.dev,
       cache: this.cache.root,
       plugins: this.plugins.root,
+      fontSize: this.state.fontSize,
       frameless: this.state.frameless,
       theme: this.state.theme,
       level: logger.level,

@@ -44,6 +44,10 @@ class AppPrefs extends React.PureComponent {
     ipc.send('cmd', 'app:switch-locale', locale)
   }
 
+  handleFontSizeChange = ({ fontSize }) => {
+    ipc.send('cmd', 'app:change-font-size', fontSize)
+  }
+
   handleLocalTimeChange = ({ localtime }) => {
     this.props.onSettingsUpdate({ localtime })
   }
@@ -168,6 +172,14 @@ class AppPrefs extends React.PureComponent {
             value={this.props.settings.theme}
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
+          <FormSelect
+            id="prefs.app.style.font.size"
+            name="fontSize"
+            isRequired
+            isInputHidden
+            value={this.props.settings.fontSize}
+            options={this.props.fontSizes}
+            onChange={this.handleFontSizeChange}/>
           <hr/>
           <FormSelect
             id="prefs.app.locale.locale"
@@ -304,6 +316,7 @@ class AppPrefs extends React.PureComponent {
       templates: object.isRequired
     }).isRequired,
     completions: arrayOf(string).isRequired,
+    fontSizes: arrayOf(string).isRequired,
     layouts: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,
     importMin: number.isRequired,
@@ -316,6 +329,7 @@ class AppPrefs extends React.PureComponent {
   }
 
   static defaultProps = {
+    fontSizes: ['12px', '13px', '14px', '15px', '16px'],
     themes: ['light', 'dark', 'system'],
     layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
     completions: ['datatype', 'property-datatype'],

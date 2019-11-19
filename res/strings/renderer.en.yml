@@ -103,6 +103,14 @@ en:
           light: Light
           dark: Dark
           system: Follow system preference
+        font:
+          size: Font size
+          sizes:
+            12px: Very Small
+            13px: Small (Default)
+            14px: Medium
+            15px: Large
+            16px: Very Large
       print:
         mode: Print
         modes:
