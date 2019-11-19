@@ -8,6 +8,7 @@ const {
   clipboard,
   shell,
   ipcMain: ipc,
+  nativeTheme,
   BrowserWindow,
   systemPreferences: prefs
 } = require('electron')
@@ -290,11 +291,7 @@ class Tropy extends EventEmitter {
       this.updater.start()
     }
 
-    if (darwin) {
-      prefs.setAppLevelAppearance(
-        this.state.theme === 'system' ? null : this.state.theme
-      )
-    }
+    nativeTheme.themeSource = this.state.theme
 
     info('app state restored')
   }
@@ -318,6 +315,9 @@ class Tropy extends EventEmitter {
     state.locale = this.getLocale(state.locale)
     state.uuid = state.uuid || require('uuid/v1')()
     state.version = this.version
+
+    if (!(/^(system|dark|light)$/).test(state.theme))
+      state.theme = 'system'
 
     return state
   }
@@ -704,16 +704,17 @@ class Tropy extends EventEmitter {
       }
     })
 
+    nativeTheme.on('updated', () => {
+      this.setTheme(nativeTheme.themeSource)
+    })
+
     if (darwin) {
       app.on('activate', () => this.open())
 
       let ids = [
         prefs.subscribeNotification(
           'AppleShowScrollBarsSettingChanged',
-          this.wm.handleScrollBarsChange),
-        prefs.subscribeNotification(
-          'AppleInterfaceThemeChangedNotification',
-          () => this.setTheme())
+          this.wm.handleScrollBarsChange)
       ]
 
       app.on('quit', () => {
@@ -917,13 +918,10 @@ class Tropy extends EventEmitter {
     info(`switch to "${theme}" theme`)
     this.state.theme = theme
 
-    if (darwin) {
-      prefs.setAppLevelAppearance(
-        theme === 'system' ? null : theme
-      )
-    }
+    if (theme !== nativeTheme.themeSource)
+      nativeTheme.themeSource = theme
 
-    this.wm.broadcast('theme', theme, prefs.isDarkMode())
+    this.wm.broadcast('theme', theme, nativeTheme.shouldUseDarkColors)
     this.emit('app:reload-menu')
   }
 

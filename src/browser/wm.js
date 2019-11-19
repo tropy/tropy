@@ -24,6 +24,7 @@ const {
   app,
   BrowserWindow,
   ipcMain: ipc,
+  nativeTheme,
   systemPreferences: prefs
 } = require('electron')
 
@@ -95,15 +96,15 @@ class WindowManager extends EventEmitter {
         opts.frame = false
       }
 
-      let isDark = args.theme === 'dark' ||
-        args.theme === 'system' && prefs.isDarkMode()
+      let isDarkMode = nativeTheme.shouldUseDarkColors
 
-      opts.backgroundColor = BODY[process.platform][isDark ? 'dark' : 'light']
+      opts.backgroundColor =
+        BODY[process.platform][isDarkMode ? 'dark' : 'light']
 
       switch (process.platform) {
         case 'linux':
           opts.icon = res.icon.expand(channel, 'tropy', '512x512.png')
-          opts.darkTheme = opts.darkTheme || isDark
+          opts.darkTheme = opts.darkTheme || isDarkMode
           break
         case 'darwin':
           if (!opts.frame && EL_CAPITAN) {
@@ -299,7 +300,8 @@ class WindowManager extends EventEmitter {
     await win.loadFile(res.view.expand(type), {
       hash: encodeURIComponent(JSON.stringify({
         aqua: WindowManager.getAquaColorVariant(),
-        dark: prefs.isDarkMode(),
+        contrast: nativeTheme.shouldUseHighContrastColors,
+        dark: nativeTheme.shouldUseDarkColors,
         environment: process.env.NODE_ENV,
         documents: app.getPath('documents'),
         maximizable: win.maximizable,
