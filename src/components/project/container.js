@@ -460,6 +460,10 @@ module.exports = {
         dispatch(actions.item.open(item))
       },
 
+      onItemOrder(item) {
+        dispatch(actions.item.order(item))
+      },
+
       onItemCreate() {
         dispatch(actions.item.create())
       },

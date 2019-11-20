@@ -29,15 +29,23 @@
 
   .runway {
     contain: strict;
+
+    @include state(".item.grid.dragging") {
+      contain: size layout style; // Needs overflow for sort-indicator
+    }
   }
 
   .viewport {
     display: grid;
     contain: content;
     will-change: transform;
+
+    @include state(".item.grid.dragging") {
+      contain: size layout style; // Needs overflow for sort-indicator
+    }
   }
 
-  &.over {
+  &.over-file {
     @extend %drop-target;
   }
 }

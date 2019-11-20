@@ -233,6 +233,19 @@ class Restore extends Command {
   }
 }
 
+class Order extends Command {
+  static get ACTION() { return ITEM.ORDER }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    let item = yield select(state => ({
+      ...state.items[payload.id]
+    }))
+  }
+}
+
 class TemplateChange extends SaveCommand {
   static get ACTION() { return ITEM.TEMPLATE.CHANGE }
   get type() { return 'item' }
@@ -604,6 +617,7 @@ module.exports = {
   Merge,
   Split,
   Restore,
+  Order,
   TemplateChange,
   Preview,
   Print,

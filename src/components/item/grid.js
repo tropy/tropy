@@ -45,14 +45,10 @@ class ItemGrid extends ItemIterator {
   }
 
   get classes() {
-    return {
-      'item-grid': true,
-      'drop-target': !this.props.isDisabled,
-      'over': this.props.isOver,
+    return [super.classes, 'item-grid', {
       [this.orientation]: true
-    }
+    }]
   }
-
 
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
@@ -76,7 +72,12 @@ class ItemGrid extends ItemIterator {
               className="viewport click-catcher"
               style={{ gridTemplateColumns, transform }}>
               {this.mapIterableRange(({ item, ...props }) =>
-                <ItemTile {...props} key={item.id} item={item}/>
+                <ItemTile
+                  {...props}
+                  key={item.id}
+                  item={item}
+                  onDragStart={this.handleDragStart}
+                  onDragStop={this.handleDragStop}/>
               )}
             </ul>
           </div>
@@ -92,5 +93,5 @@ class ItemGrid extends ItemIterator {
 
 
 module.exports = {
-  ItemGrid
+  ItemGrid: ItemGrid.asDropTarget()
 }

@@ -236,7 +236,11 @@ class PhotoGrid extends PhotoIterator {
               className="viewport"
               style={{ gridTemplateColumns, transform }}>
               {this.mapIterableRange(({ photo, ...props }) => (
-                <PhotoTile {...props} key={photo.id} photo={photo}/>
+                <PhotoTile {...props}
+                  key={photo.id}
+                  onDragStart={this.handleDragStart}
+                  onDragStop={this.handleDragStop}
+                  photo={photo}/>
               ), range)}
             </ul>
           </div>

@@ -2,6 +2,9 @@
 
 const React = require('react')
 const { Iterator } = require('../iterator')
+const { DropTarget, NativeTypes } = require('../dnd')
+const { DND, IMAGE } = require('../../constants')
+const { isImageSupported } = IMAGE
 const { FormattedMessage } = require('react-intl')
 const { match, isMeta: meta } = require('../../keymap')
 const cx = require('classnames')
@@ -15,6 +18,7 @@ const {
 
 
 class ItemIterator extends Iterator {
+
   componentDidMount() {
     super.componentDidMount()
     on(document, 'global:next-item', this.handleNextItem)
@@ -27,6 +31,15 @@ class ItemIterator extends Iterator {
     off(document, 'global:next-item', this.handleNextItem)
     off(document, 'global:prev-item', this.handlePrevItem)
     off(document, 'global:forward', this.handleItemOpen)
+  }
+
+  get classes() {
+    return {
+      'over': this.props.isOver,
+      'over-file': this.props.isOverFile,
+      'dragging': this.state.isDragging,
+      'drop-target': !this.props.isDisabled
+    }
   }
 
   get tabIndex() {
@@ -63,6 +76,10 @@ class ItemIterator extends Iterator {
         map(id => get(items, [this.indexOf(id), 'photos'])),
         keep(),
         cat))
+  }
+
+  isItemSortable() {
+    return this.hasPositionColumn() && this.props.sort.column === 'added'
   }
 
   isSelected({ id }) {
@@ -103,6 +120,14 @@ class ItemIterator extends Iterator {
     if (isDisabled) context.push('deleted')
 
     onContextMenu(event, context.join('-'), target)
+  }
+
+  handleDragStart = () => {
+    this.setState({ isDragging: true })
+  }
+
+  handleDragStop = () => {
+    this.setState({ isDragging: false })
   }
 
   handleItemDelete(items) {
@@ -258,6 +283,7 @@ class ItemIterator extends Iterator {
       cache: this.props.cache,
       photos: this.props.photos,
       tags: this.props.tags,
+      isItemSortable: this.isItemSortable(),
       isLast: this.isLast(index),
       isSelected: this.isSelected(item),
       isDisabled: this.isDisabled,
@@ -267,6 +293,7 @@ class ItemIterator extends Iterator {
       onDropItems: this.props.onItemMerge,
       onDropPhotos: this.props.onPhotoMove,
       onItemOpen: this.props.onItemOpen,
+      onItemOrder: this.props.onItemOrder,
       onPhotoError: this.props.onPhotoError,
       onSelect: this.select
     }
@@ -285,6 +312,14 @@ class ItemIterator extends Iterator {
 
   hasPositionColumn(props = this.props) {
     return !!props.list
+  }
+
+  static asDropTarget() {
+    return DropTarget(
+        [DND.ITEMS, NativeTypes.FILE, NativeTypes.URL],
+        spec,
+        collect
+      )(this)
   }
 
   static propTypes = {
@@ -312,9 +347,11 @@ class ItemIterator extends Iterator {
     dt: func.isRequired,
     onContextMenu: func.isRequired,
     onItemDelete: func.isRequired,
+    onItemImport: func.isRequired,
     onItemExport: func.isRequired,
     onItemMerge: func.isRequired,
     onItemOpen: func.isRequired,
+    onItemOrder: func.isRequired,
     onItemPreview: func.isRequired,
     onPhotoError: func.isRequired,
     onPhotoMove: func.isRequired,
@@ -324,6 +361,50 @@ class ItemIterator extends Iterator {
   }
 }
 
+const spec = {
+  drop({ list, onItemImport }, monitor) {
+    let type = monitor.getItemType()
+    let item = monitor.getItem()
+    let files
+
+    switch (type) {
+      case NativeTypes.FILE:
+        files = item.files.filter(isImageSupported).map(f => f.path)
+        break
+      case NativeTypes.URL:
+        files = item.urls
+        break
+    }
+    if (!blank(files)) {
+      onItemImport({ files, list })
+      return { files }
+    }
+  },
+
+  canDrop(_, monitor) {
+    let type = monitor.getItemType()
+    let item = monitor.getItem()
+
+    switch (type) {
+      case NativeTypes.FILE:
+        return !!item.types.find(isImageSupported)
+      default:
+        return true
+    }
+
+  }
+}
+
+const collect = (connect, monitor) => {
+  let isOver = monitor.isOver({ shallow: true }) && monitor.canDrop()
+  let type = monitor.getItemType()
+
+  return {
+    dt: connect.dropTarget(),
+    isOverFile: isOver && type === NativeTypes.FILE,
+    isOver: isOver && type === DND.ITEMS
+  }
+}
 
 module.exports = {
   ItemIterator

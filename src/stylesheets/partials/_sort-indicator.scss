@@ -2,8 +2,15 @@
 // Sort indicator
 // --------------------------------------------------
 
+.item,
 .photo,
 .selection {
+  &.before,
+  &.after {
+    position: relative;
+    z-index: 1;
+  }
+
   &::before,
   &::after {
     position: absolute;
@@ -48,9 +55,20 @@
       }
     }
 
-    &:last-child {
-      &::after {
-        top: calc(100% - 1px);
+    &.after {
+      &:last-child {
+        &::after {
+          top: calc(100% - 1px);
+        }
+      }
+    }
+
+    @include state(".vertical.over") {
+      &:last-child {
+        &::after {
+          content: "";
+          top: calc(100% - 1px);
+        }
       }
     }
   }
@@ -69,17 +87,6 @@
 
     &::after {
       left: 100%;
-    }
-  }
-}
-
-.photo {
-  &.last {
-    .photo-list.over &,
-    .photo-grid.over & {
-      &::after {
-        content: "";
-      }
     }
   }
 }

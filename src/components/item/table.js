@@ -71,9 +71,8 @@ class ItemTable extends ItemIterator {
   }
 
   get classes() {
-    return ['table-body', {
-      'drop-target': !this.props.isDisabled,
-      'over': this.props.isOver
+    return [super.classes, 'table-body', {
+      [this.orientation]: true
     }]
   }
 
@@ -347,6 +346,8 @@ class ItemTable extends ItemIterator {
                   item={item}
                   position={this.getPosition(index)}
                   template={templates[item.template]}
+                  onDragStart={this.handleDragStart}
+                  onDragStop={this.handleDragStop}
                   onCancel={this.handleEditCancel}
                   onChange={this.handleChange}
                   onEdit={onEdit}/>)}
@@ -433,5 +434,5 @@ class ItemTable extends ItemIterator {
 
 
 module.exports = {
-  ItemTable
+  ItemTable: ItemTable.asDropTarget()
 }

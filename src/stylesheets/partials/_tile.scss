@@ -45,8 +45,8 @@
     }
   }
 
-  &.photo {
-    contain: layout style size;
+  .dragging & {
+    contain: size layout style; // Needs overflow for sort-indicator
   }
 
   .tile-state {

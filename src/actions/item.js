@@ -165,6 +165,14 @@ module.exports = {
     }
   },
 
+  order(payload, meta) {
+    return {
+      type: ITEM.ORDER,
+      payload,
+      meta: { ...meta }
+    }
+  },
+
   preview(payload, meta) {
     return {
       type: ITEM.PREVIEW,

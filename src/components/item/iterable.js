@@ -5,7 +5,9 @@ const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { compose, map, filter, into } = require('transducers.js')
 const { DND } = require('../../constants')
 const { isMeta } = require('../../keymap')
+const { bounds } = require('../../dom')
 const { pure } = require('../util')
+const { noop } = require('../../common/util')
 
 const {
   bool, func, number, object, shape, arrayOf
@@ -13,6 +15,10 @@ const {
 
 
 class ItemIterable extends React.PureComponent {
+  state = {
+    offset: null
+  }
+
   componentDidMount() {
     this.props.dp(getEmptyImage())
   }
@@ -22,10 +28,17 @@ class ItemIterable extends React.PureComponent {
       'item': true,
       'drop-target': !this.props.isDisabled,
       'active': this.props.isSelected,
-      'over': this.props.isOver && this.props.canDrop,
+      'over': this.props.isOver &&
+        this.props.canDrop &&
+        this.state.offset == null,
       'dragging': this.props.isDragging,
-      'last': this.props.isLast
+      'last': this.props.isLast,
+      [this.direction]: this.props.isOver && this.state.offset != null
     }
+  }
+
+  get direction() {
+    return this.state.offset ? 'after' : 'before'
   }
 
   // Subtle: when an item is not selected, we need to select
@@ -82,7 +95,8 @@ class ItemIterable extends React.PureComponent {
 
 
   static DragSourceSpec = {
-    beginDrag({ item, getSelection }) {
+    beginDrag({ item, getSelection, onDragStart }) {
+      if (onDragStart) onDragStart()
       return {
         items: into(
           [{ ...item }],
@@ -90,6 +104,10 @@ class ItemIterable extends React.PureComponent {
           getSelection()
         )
       }
+    },
+
+    endDrag({ onDragStop }) {
+      if (onDragStop) onDragStop()
     },
 
     canDrag({ item }) {
@@ -105,16 +123,39 @@ class ItemIterable extends React.PureComponent {
 
 
   static DropTargetSpec = {
-    drop({ item, onDropPhotos, onDropItems }, monitor) {
+    hover({ isVertical, item, isItemSortable }, monitor, component) {
+      const { top, left, width, height } = bounds(component.container)
+      const { x, y } = monitor.getClientOffset()
+      const draggedMonitor = monitor.getItem()
+      let offset = null
+      let dragged
+      if (draggedMonitor.items) {
+        dragged = draggedMonitor.items[0]
+      } else {
+        dragged = draggedMonitor.item
+      }
+
+      if (item.id !== dragged.id && isItemSortable) {
+        let calc = isVertical ? ((y - top) / height) : ((x - left) / width)
+        offset = calc < 0.20 ? 0 : calc > 0.80 ? 1 : null
+      }
+      component.setState({ offset })
+    },
+
+    drop({ item, onDropPhotos, onDropItems, onItemOrder }, monitor, component) {
       switch (monitor.getItemType()) {
         case DND.PHOTO:
           return onDropPhotos({
             item: item.id, photos: [monitor.getItem()]
           })
         case DND.ITEMS:
-          return onDropItems([
-            item.id, ...monitor.getItem().items.map(({ id }) => id)
-          ])
+          if (component.state.offset !== null) {
+            return onItemOrder([{ item }])
+          } else {
+            return onDropItems([
+              item.id, ...monitor.getItem().items.map(({ id }) => id)
+            ])
+          }
       }
     },
 
@@ -177,11 +218,19 @@ class ItemIterable extends React.PureComponent {
     getSelection: func.isRequired,
 
     onContextMenu: func.isRequired,
+    onDragStart: func.isRequired,
+    onDragStop: func.isRequired,
     onDropItems: func.isRequired,
     onDropPhotos: func.isRequired,
     onItemOpen: func.isRequired,
+    onItemOrder: func.isRequired,
     onPhotoError: func.isRequired,
     onSelect: func.isRequired
+  }
+
+  static defaultProps = {
+    onDragStart: noop,
+    onDragStop: noop
   }
 }
 
