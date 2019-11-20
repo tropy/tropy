@@ -3,8 +3,8 @@
 const React = require('react')
 const { Iterator } = require('../iterator')
 const { DropTarget, NativeTypes } = require('../dnd')
-const { DND } = require('../../constants')
-const { isImageSupported } = require('../../constants/mime')
+const { DND, IMAGE } = require('../../constants')
+const { isImageSupported } = IMAGE
 const { FormattedMessage } = require('react-intl')
 const { match, isMeta: meta } = require('../../keymap')
 const cx = require('classnames')
@@ -362,7 +362,7 @@ class ItemIterator extends Iterator {
 }
 
 const spec = {
-  drop({ nav, onItemImport }, monitor) {
+  drop({ list, onItemImport }, monitor) {
     let type = monitor.getItemType()
     let item = monitor.getItem()
     let files
@@ -375,9 +375,8 @@ const spec = {
         files = item.urls
         break
     }
-
     if (!blank(files)) {
-      onItemImport({ files, list: nav.list })
+      onItemImport({ files, list })
       return { files }
     }
   },
