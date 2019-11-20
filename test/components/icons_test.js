@@ -14,7 +14,7 @@ describe('Icon', () => {
 describe('IconFolder', () => {
   it('renders an .icon.icon-folder', () => {
     const { container } = render(<IconFolder/>)
-    expect(container.firstChild.classList.contains('icon')).to.be.true
-    expect(container.firstChild.classList.contains('icon-folder')).to.be.true
+    expect(container.firstChild).to.have.class('icon')
+    expect(container.firstChild).to.have.class('icon-folder')
   })
 })
