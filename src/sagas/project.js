@@ -40,16 +40,23 @@ function *open(file) {
     var db = new Database(file, 'w')
 
     yield fork(onErrorClose, db)
-    let migrations = yield call(db.migrate, MIGRATIONS)
 
+    let migrations = yield call(db.migrate, MIGRATIONS)
     let project = yield call(mod.project.load, db)
-    let access = yield call(mod.access.open, db)
 
     assert(project != null && project.id != null, 'invalid project')
 
-    if (migrations.length === 0) {
+    if (migrations.length > 0) {
+      db.modified = true
+
+    } else {
       try {
         yield call(db.check)
+
+        db.once('update', () => {
+          db.modified = true
+        })
+
       } catch (_) {
         warn('project file may be corrupted!')
         project.corrupted = true
@@ -75,7 +82,7 @@ function *open(file) {
       }
 
     } finally {
-      yield call(close, db, project, access, cache)
+      yield call(close, db, project, cache)
     }
   } catch (e) {
     warn({ stack: e.stack }, 'unexpected error in *open')
@@ -133,11 +140,7 @@ function *setup(db, project) {
   }
 }
 
-function *close(db, project, access) {
-  if (access != null && access.id > 0) {
-    yield call(mod.access.close, db, access.id)
-  }
-
+function *close(db, project) {
   yield all([
     call(storage.persist, 'nav', project.id),
     call(storage.persist, 'notepad', project.id),
@@ -147,15 +150,19 @@ function *close(db, project, access) {
     call(storage.persist, 'panel', project.id)
   ])
 
-  debug('pruning db...')
-  yield call(mod.item.prune, db)
-  yield call(mod.list.prune, db)
-  yield call(mod.value.prune, db)
-  yield call(mod.photo.prune, db)
-  yield call(mod.selection.prune, db)
-  yield call(mod.note.prune, db)
-  yield call(mod.subject.prune, db)
-  yield call(mod.access.prune, db)
+  if (db.modified) {
+    yield call(mod.access.touch, db)
+
+    debug('pruning db...')
+    yield call(mod.item.prune, db)
+    yield call(mod.list.prune, db)
+    yield call(mod.value.prune, db)
+    yield call(mod.photo.prune, db)
+    yield call(mod.selection.prune, db)
+    yield call(mod.note.prune, db)
+    yield call(mod.subject.prune, db)
+    yield call(mod.access.prune, db)
+  }
 
   debug('*close terminated')
 }

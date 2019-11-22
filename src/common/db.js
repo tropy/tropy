@@ -21,6 +21,8 @@ const M = {
 
 const cache = {}
 
+const IUD = /^\s*(insert|update|delete)/i
+
 
 class Database extends EventEmitter {
   static async create(path, script, ...args) {
@@ -98,9 +100,11 @@ class Database extends EventEmitter {
           .then(resolve, reject)
       })
 
-      // db.on('trace', query => trace(query))
-
       db.on('profile', (query, ms) => {
+        if (IUD.test(query)) {
+          this.emit('update', query)
+        }
+
         let msg = `db query took ${ms}ms`
 
         if (ms > 150) {
