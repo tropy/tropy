@@ -130,6 +130,7 @@ en:
           fr: Français
           it: Italiano
           ja: 日本語
+          pt: Português
       templates:
         label: Default templates
         item: Item
