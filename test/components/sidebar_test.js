@@ -6,7 +6,7 @@ const { render } = require('../support/react')
 describe('Sidebar', () => {
   const { Sidebar } = __require('components/sidebar')
 
-  it('renders .sidebar container', () => {
+  it('renders sidebar element', () => {
     expect(render(<Sidebar/>).element()).to.have.class('sidebar')
   })
 })
@@ -14,7 +14,7 @@ describe('Sidebar', () => {
 describe('SidebarBody', () => {
   const { SidebarBody } = __require('components/sidebar')
 
-  it('renders .sidebar-body container', () => {
+  it('renders sidebar-body element', () => {
     expect(render(<SidebarBody/>).element()).to.have.class('sidebar-body')
   })
 })
