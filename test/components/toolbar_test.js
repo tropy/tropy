@@ -7,6 +7,6 @@ describe('Toolbar', () => {
   const { Toolbar } = __require('components/toolbar')
 
   it('renders toolbar element', () => {
-    expect(render(<Toolbar/>).element()).to.have.class('toobar')
+    expect(render(<Toolbar/>).element()).to.have.class('toolbar')
   })
 })
