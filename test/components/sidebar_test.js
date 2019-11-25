@@ -1,16 +1,20 @@
 'use strict'
 
 const React = require('react')
-const { render } = require('@testing-library/react')
-const { Sidebar, SidebarBody } = __require('components/sidebar')
+const { render } = require('../support/react')
 
 describe('Sidebar', () => {
-  it('has sidebar class', () => {
-    const { container } = render(<Sidebar/>)
-    expect(container.firstChild.classList.contains('sidebar')).to.be.true
+  const { Sidebar } = __require('components/sidebar')
+
+  it('renders .sidebar container', () => {
+    expect(render(<Sidebar/>).element()).to.have.class('sidebar')
   })
-  it('has sidebar-body class', () => {
-    const { container } = render(<SidebarBody/>)
-    expect(container.firstChild.classList.contains('sidebar-body')).to.be.true
+})
+
+describe('SidebarBody', () => {
+  const { SidebarBody } = __require('components/sidebar')
+
+  it('renders .sidebar-body container', () => {
+    expect(render(<SidebarBody/>).element()).to.have.class('sidebar-body')
   })
 })
