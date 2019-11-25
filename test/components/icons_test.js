@@ -6,9 +6,11 @@ const { render } = require('../support/react')
 describe('IconTropy', () => {
   const { IconTropy } = __require('components/icons')
 
-  it('renders an .icon.icon-tropy', () => {
-    expect(render(<IconTropy/>).element())
-      .to.have.class('icon')
-      .and.class('icon-tropy')
+  it('renders the Tropy icon SVG', () => {
+    expect(
+      render(<IconTropy/>).element())
+        .to.have.class('icon')
+        .and.class('icon-tropy')
+        .and.have.descendant('svg')
   })
 })
