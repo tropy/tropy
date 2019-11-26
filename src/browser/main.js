@@ -10,7 +10,7 @@ process.env.NODE_ENV = opts.environment
 const electron = require('electron')
 const { app }  = electron
 const { extname, join, resolve } = require('path')
-const { sync: mkdir } = require('mkdirp')
+const { mkdirSync: mkdir } = require('fs')
 const { darwin, win32, system }  = require('../common/os')
 const { exe, qualified, version }  = require('../common/release')
 
@@ -21,7 +21,7 @@ if (!opts.data) {
   opts.data = join(app.getPath('appData'), exe)
 }
 let userData = join(opts.data, 'electron')
-mkdir(userData)
+mkdir(userData, { recursive: true })
 app.setPath('userData', userData)
 
 if (!opts.cache) {
@@ -30,7 +30,7 @@ if (!opts.cache) {
   if (opts.cache === opts.data)
     opts.cache = join(opts.data, 'cache')
 }
-mkdir(opts.cache)
+mkdir(opts.cache, { recursive: true })
 app.setPath('userCache', opts.cache)
 
 if (!opts.logs) {
@@ -41,7 +41,7 @@ if (!opts.logs) {
     opts.logs = join(opts.data, 'log')
   }
 }
-mkdir(opts.logs)
+mkdir(opts.logs, { recursive: true })
 app.setPath('logs', opts.logs)
 
 if (!app.requestSingleInstanceLock()) {

@@ -6,8 +6,11 @@ const babel = require('@babel/core')
 const sass = require('node-sass')
 const { Glob } = require('glob')
 const { join, relative, dirname } = require('path')
-const { statSync: stat, writeFileSync: write } = require('fs')
-const { sync: mkdir } = require('mkdirp')
+const {
+  mkdirSync: mkdir,
+  statSync: stat,
+  writeFileSync: write
+} = require('fs')
 const { check, error, say } = require('./util')('λ')
 const noop = () => {}
 
@@ -35,7 +38,7 @@ const jsRender = (src, verbose = false, force = false) =>
       if (verbose) say(dst)
       babel.transformFile(src, (err, result) => {
         if (err) return reject(err)
-        mkdir(dirname(dst))
+        mkdir(dirname(dst), { recursive: true })
         write(dst, result.code, 'utf-8')
       })
     } else {
@@ -66,7 +69,7 @@ const cssRender = (file, verbose = false, opts = SassDefaults) =>
     if (verbose) say(outFile)
     sass.render({ ...opts, file, outFile }, (err, result) => {
       if (err) return reject(err)
-      mkdir(dirname(outFile))
+      mkdir(dirname(outFile), { recursive: true })
       write(outFile, result.css, 'utf-8')
       write(`${outFile}.map`, result.map, 'utf-8')
     })
