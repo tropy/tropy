@@ -1,7 +1,5 @@
 'use strict'
 
-__require('common/promisify')
-
 const { mktmp } = require('../support/tmp')
 const { rm } = require('../support/rm')
 const { all, map, using } = require('bluebird')

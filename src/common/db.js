@@ -1,15 +1,13 @@
 'use strict'
 
-require('./promisify')
-
-const sqlite = require('sqlite3')
-const { EventEmitter } = require('events')
-const { Migration } = require('./migration')
-const { normalize } = require('path')
 const Bluebird = require('bluebird')
 const { using } = Bluebird
-const { readFile: read } = require('fs').promises
+const { normalize } = require('path')
 const { createPool } = require('generic-pool')
+const { EventEmitter } = require('events')
+const { readFile: read } = require('fs').promises
+const sqlite = require('./sqlite')
+const { Migration } = require('./migration')
 const { debug, info, trace, warn } = require('./log')
 
 const M = {
@@ -20,7 +18,6 @@ const M = {
 }
 
 const cache = {}
-
 const IUD = /^\s*(insert|update|delete)/i
 
 
@@ -401,4 +398,9 @@ function flatten(params) {
   return (params.length === 1) ? params[0] : params
 }
 
-module.exports = { Database, Connection, Statement, transaction }
+module.exports = {
+  Database,
+  Connection,
+  Statement,
+  transaction
+}
