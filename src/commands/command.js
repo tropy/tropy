@@ -28,9 +28,12 @@ class Command {
   }
 
   *execute() {
+    let wasCancelled = true
+
     try {
       this.init = performance.now()
       this.result = yield this.exec()
+      wasCancelled = false
 
     } catch (error) {
       this.error = error
@@ -38,6 +41,7 @@ class Command {
 
     } finally {
       this.done = performance.now()
+      if (wasCancelled) this.onCancel()
       freeze(this)
     }
 
@@ -45,6 +49,9 @@ class Command {
   }
 
   *abort() {
+  }
+
+  onCancel() {
   }
 
   history() {
