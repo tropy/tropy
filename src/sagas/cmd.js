@@ -10,29 +10,27 @@ const { ACTIVITY } = require('../constants')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
-const cancellationFor = (id) => ({ payload, type }) => (
+const cancellation = (id) => ({ payload, type }) => (
   type === ACTIVITY.CANCEL && payload.id === id
 )
 
 module.exports = {
   *exec(options, action) {
     try {
-      var { cmd, cancellation } = yield race({
-        cmd: call(exec, action, options),
-        cancellation: take(cancellationFor(action.meta.seq))
-      })
+      var [cmd, cancelled] = yield race([
+        call(exec, action, options),
+        take(cancellation(action.meta.seq))
+      ])
 
       if (cmd) {
-        let { type, meta } = action
-
-        if (meta.history && cmd.isomorph) {
-          yield put(history.tick(cmd.history(), meta.history))
+        if (action.meta.history && cmd.isomorph) {
+          yield put(history.tick(cmd.history(), action.meta.history))
         }
 
         if (cmd.error)
-          fail(cmd.error, type)
+          fail(cmd.error, action.type)
         if (!cmd.isInteractive && cmd.duration > TOO_LONG)
-          warn(`SLOW: ${type}`)
+          warn(`SLOW: ${action.type}`)
       }
 
     } catch (e) {
@@ -43,8 +41,8 @@ module.exports = {
       if (!cmd) {
         cmd = {
           error: new Error(`command cancelled ${
-            cancellation ?
-              `by #${cancellation.meta.seq}` :
+            cancelled ?
+              `by #${cancelled.meta.seq}` :
               'implicitly'
           }`)
         }
@@ -52,8 +50,8 @@ module.exports = {
 
       yield put(activity.done(action, cmd.error || cmd.result, cmd.meta))
 
-      if (cmd.finally) {
-        yield put(cmd.finally)
+      if (cmd.after) {
+        yield put(cmd.after)
       }
 
       trace('*exec terminated')

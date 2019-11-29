@@ -455,7 +455,7 @@ class Save extends Command {
     this.undo = act.photo.save({ id, data: original })
 
     if (data.density) {
-      this.finally = act.photo.consolidate(id, { force: true })
+      this.after = act.photo.consolidate(id, { force: true })
     }
 
     return { id, ...data }

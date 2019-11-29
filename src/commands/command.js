@@ -4,62 +4,72 @@ const { pick } = require('../common/util')
 const { freeze } = Object
 
 class Command {
+  #adjtime = 0
+  #suspended
+
   constructor(action, options) {
     this.action = action
     this.options = { ...options }
-    this.adjtime = 0
   }
 
   get duration() {
-    return this.done ? this.done - this.init - this.adjtime : 0
+    return this.done ?
+      (this.done - this.init - this.#adjtime) : 0
   }
 
   get isomorph() {
-    return !this.error && this.undo
+    return this.done && this.error == null && this.undo != null
   }
 
   suspend() {
-    this._adjtime = Date.now()
+    this.#suspended = Date.now()
   }
 
   resume() {
-    this.adj += (Date.now() - this._adjtime)
-    delete this._adjtime
+    this.#adjtime += (Date.now() - this.#suspended)
   }
 
   *execute() {
-    let wasCancelled = true
-
     try {
-      this.init = performance.now()
+      this.init = Date.now()
       this.result = yield this.exec()
-      wasCancelled = false
+      var hasRunToCompletion = true
 
     } catch (error) {
       this.error = error
       yield this.abort()
 
     } finally {
-      this.done = performance.now()
-      if (wasCancelled) this.onCancel()
-      freeze(this)
+      this.cancelled = !!hasRunToCompletion
+      this.done = Date.now()
+      yield this.finally()
     }
 
+    freeze(this)
     return this
   }
 
   *abort() {
   }
 
-  onCancel() {
+  *finally() {
   }
 
   history() {
-    return { undo: this.undo, redo: this.redo || this.action }
+    return {
+      undo: this.undo,
+      redo: this.redo || this.action
+    }
   }
 
   toJSON() {
-    return pick(this, ['init', 'done', 'result', 'error', 'action'])
+    return pick(this, [
+      'action',
+      'done',
+      'error',
+      'init',
+      'result'
+    ])
   }
 }
 
