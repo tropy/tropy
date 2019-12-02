@@ -42,7 +42,7 @@ module.exports = {
       if (!cmd) cmd = { error: e }
 
     } finally {
-      if (cmd.cancelled) {
+      if (cmd.cancelled && !cmd.error) {
         info(`${cmd} was cancelled ${
           cancelled ?
             `by #${cancelled.meta.seq}` :

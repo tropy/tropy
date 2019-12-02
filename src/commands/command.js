@@ -56,17 +56,20 @@ class Command {
 
     } catch (error) {
       this.error = error
+
       yield this.abort()
       yield cancel()
 
     } finally {
       this.cancelled = !hasRunToCompletion
-      this.done = Date.now()
-      yield this.finally()
-    }
 
-    Object.freeze(this)
-    return this
+      yield this.finally()
+
+      this.done = Date.now()
+      Object.freeze(this)
+
+      return this
+    }
   };
 
   *abort() {

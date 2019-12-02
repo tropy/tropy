@@ -74,6 +74,10 @@ class Import extends ImportCommand {
       }
     ])
 
+    // Subtle: push items to results early to support
+    // undo after cancelled (partial) import!
+    this.result = items
+
     let total = files.length
 
     for (let i = 0; i < files.length; ++i) {
@@ -104,10 +108,23 @@ class Import extends ImportCommand {
             }
 
             item.photos.push(photo.id)
-            photos.push(photo)
+
+            photos.push({
+              ...photo,
+              consolidating: true
+            })
+
             image.next()
           }
         })
+
+        items.push(item.id)
+
+        yield all([
+          put(act.item.insert(item)),
+          put(act.metadata.load([item.id, ...item.photos])),
+          put(act.photo.insert(photos))
+        ])
 
         image.rewind()
 
@@ -115,14 +132,16 @@ class Import extends ImportCommand {
           let photo = photos[image.page]
 
           yield* this.createThumbnails(photo.id, image)
-          yield put(act.metadata.load([item.id, photo.id]))
-          yield put(act.photo.insert(photo))
+
+          yield put(act.photo.update({
+            id: photo.id,
+            broken: false,
+            consolidated: Date.now(),
+            consolidating: false
+          }))
 
           image.next()
         }
-
-        yield put(act.item.insert(item))
-        items.push(item.id)
 
       } catch (e) {
         if (e instanceof DuplicateError) {
@@ -135,12 +154,21 @@ class Import extends ImportCommand {
       }
     }
 
-    if (items.length) {
-      this.undo = act.item.delete(items)
-      this.redo = act.item.restore(items)
-    }
-
     return items
+  }
+
+  // Define undo/redo getters to handle cancelled imports!
+
+  get redo() {
+    return (this.result && this.result.length > 0) ?
+      act.item.restore(this.result) :
+      null
+  }
+
+  get undo() {
+    return (this.result && this.result.length > 0) ?
+      act.item.delete(this.result) :
+      null
   }
 
   *prompt(type) {
