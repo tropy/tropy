@@ -18,8 +18,6 @@ const {
 
 
 class Create extends ImportCommand {
-  static get ACTION() { return SELECTION.CREATE }
-
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
@@ -58,9 +56,10 @@ class Create extends ImportCommand {
   }
 }
 
-class Delete extends Command {
-  static get ACTION() { return SELECTION.DELETE }
+Create.register(SELECTION.CREATE)
 
+
+class Delete extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -82,9 +81,10 @@ class Delete extends Command {
   }
 }
 
-class Load extends Command {
-  static get ACTION() { return SELECTION.LOAD }
+Delete.register(SELECTION.DELETE)
 
+
+class Load extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -96,9 +96,10 @@ class Load extends Command {
   }
 }
 
-class Order extends Command {
-  static get ACTION() { return SELECTION.ORDER }
+Load.register(SELECTION.LOAD)
 
+
+class Order extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -113,9 +114,10 @@ class Order extends Command {
   }
 }
 
-class Restore extends Command {
-  static get ACTION() { return SELECTION.RESTORE }
+Order.register(SELECTION.ORDER)
 
+
+class Restore extends Command {
   *exec() {
     const { db } = this.options
     const { payload, meta } = this.action
@@ -140,9 +142,10 @@ class Restore extends Command {
   }
 }
 
-class Save extends Command {
-  static get ACTION() { return SELECTION.SAVE }
+Restore.register(SELECTION.RESTORE)
 
+
+class Save extends Command {
   *exec() {
     const { db } = this.options
     const { payload, meta } = this.action
@@ -160,11 +163,14 @@ class Save extends Command {
   }
 }
 
+Save.register(SELECTION.SAVE)
+
+
 class TemplateChange extends SaveCommand {
-  static get ACTION() { return SELECTION.TEMPLATE.CHANGE }
-  get type() { return 'selection' }
+  type = 'selection'
 }
 
+TemplateChange.register(SELECTION.TEMPLATE.CHANGE)
 
 
 module.exports = {

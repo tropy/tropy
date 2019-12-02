@@ -11,8 +11,6 @@ const { keys } = Object
 
 
 class Load extends Command {
-  static get ACTION() { return METADATA.LOAD }
-
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -21,11 +19,10 @@ class Load extends Command {
   }
 }
 
-class Copy extends Command {
-  static get ACTION() {
-    return METADATA.COPY
-  }
+Load.register(METADATA.LOAD)
 
+
+class Copy extends Command {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
@@ -82,9 +79,10 @@ class Copy extends Command {
   }
 }
 
-class Restore extends Command {
-  static get ACTION() { return METADATA.RESTORE }
+Copy.register(METADATA.COPY)
 
+
+class Restore extends Command {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
@@ -122,9 +120,10 @@ class Restore extends Command {
   }
 }
 
-class Save extends Command {
-  static get ACTION() { return METADATA.SAVE }
+Restore.register(METADATA.RESTORE)
 
+
+class Save extends Command {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
@@ -166,9 +165,10 @@ class Save extends Command {
   }
 }
 
-class Add extends Command {
-  static get ACTION() { return METADATA.ADD }
+Save.register(METADATA.SAVE)
 
+
+class Add extends Command {
   *exec() {
     let { payload } = this.action
     let { id, property, value } = payload
@@ -185,9 +185,10 @@ class Add extends Command {
   }
 }
 
-class Delete extends Command {
-  static get ACTION() { return METADATA.DELETE }
+Add.register(METADATA.ADD)
 
+
+class Delete extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -207,6 +208,8 @@ class Delete extends Command {
     this.undo = act.metadata.restore(original)
   }
 }
+
+Delete.register(METADATA.DELETE)
 
 
 module.exports = {

@@ -1,6 +1,6 @@
 'use strict'
 
-const { debug, warn } = require('../common/log')
+const { info, warn } = require('../common/log')
 const { clipboard, ipcRenderer: ipc } = require('electron')
 const assert = require('assert')
 const { DuplicateError } = require('../common/error')
@@ -30,8 +30,6 @@ const {
 
 
 class Create extends Command {
-  static get ACTION() { return ITEM.CREATE }
-
   *exec() {
     let { db } = this.options
 
@@ -51,11 +49,10 @@ class Create extends Command {
   }
 }
 
-class Import extends ImportCommand {
-  static get ACTION() {
-    return ITEM.IMPORT
-  }
+Create.register(ITEM.CREATE)
 
+
+class Import extends ImportCommand {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
@@ -77,8 +74,10 @@ class Import extends ImportCommand {
       }
     ])
 
-    for (let i = 0, total = files.length; i < total; ++i) {
-      let file, image, item, data
+    let total = files.length
+
+    for (let i = 0; i < files.length; ++i) {
+      let file
       let photos = []
 
       try {
@@ -86,9 +85,10 @@ class Import extends ImportCommand {
 
         file = files[i]
 
-        image = yield* this.openImage(file)
+        let item
+        let image = yield* this.openImage(file)
         yield* this.handleDuplicate(image)
-        data = yield* this.getMetadata(image, ttp)
+        let data = yield* this.getMetadata(image, ttp)
 
         yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, ttp.item.id, data.item)
@@ -126,7 +126,7 @@ class Import extends ImportCommand {
 
       } catch (e) {
         if (e instanceof DuplicateError) {
-          debug(`skipping duplicate "${file}"...`)
+          info(`skipping duplicate "${file}"...`)
           continue
         }
 
@@ -158,9 +158,10 @@ class Import extends ImportCommand {
   }
 }
 
-class Delete extends Command {
-  static get ACTION() { return ITEM.DELETE }
+Import.register(ITEM.IMPORT)
 
+
+class Delete extends Command {
   *exec() {
     const { db } = this.options
     const ids = this.action.payload
@@ -174,9 +175,10 @@ class Delete extends Command {
   }
 }
 
-class Destroy extends Command {
-  static get ACTION() { return ITEM.DESTROY }
+Delete.register(ITEM.DELETE)
 
+
+class Destroy extends Command {
   *exec() {
     const { db } = this.options
     const ids = this.action.payload
@@ -202,9 +204,10 @@ class Destroy extends Command {
   }
 }
 
-class Load extends Command {
-  static get ACTION() { return ITEM.LOAD }
+Destroy.register(ITEM.DESTROY)
 
+
+class Load extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -216,10 +219,10 @@ class Load extends Command {
   }
 }
 
+Load.register(ITEM.LOAD)
+
 
 class Restore extends Command {
-  static get ACTION() { return ITEM.RESTORE }
-
   *exec() {
     const { db } = this.options
     const ids = this.action.payload
@@ -233,14 +236,15 @@ class Restore extends Command {
   }
 }
 
+Restore.register(ITEM.RESTORE)
+
 class TemplateChange extends SaveCommand {
-  static get ACTION() { return ITEM.TEMPLATE.CHANGE }
-  get type() { return 'item' }
+  type = 'item'
 }
+TemplateChange.register(ITEM.TEMPLATE.CHANGE)
+
 
 class Merge extends Command {
-  static get ACTION() { return ITEM.MERGE }
-
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -272,9 +276,10 @@ class Merge extends Command {
   }
 }
 
-class Split extends Command {
-  static get ACTION() { return ITEM.SPLIT }
+Merge.register(ITEM.MERGE)
 
+
+class Split extends Command {
   *exec() {
     let { db } = this.options
     let { item, items, data, lists, tags } = this.action.payload
@@ -308,9 +313,10 @@ class Split extends Command {
   }
 }
 
-class Explode extends Command {
-  static get ACTION() { return ITEM.EXPLODE }
+Split.register(ITEM.SPLIT)
 
+
+class Explode extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -378,9 +384,10 @@ class Explode extends Command {
   }
 }
 
-class Implode extends Command {
-  static get ACTION() { return ITEM.IMPLODE }
+Explode.register(ITEM.EXPLODE)
 
+
+class Implode extends Command {
   *exec() {
     const { db } = this.options
     const { item, items } = this.action.payload
@@ -399,9 +406,10 @@ class Implode extends Command {
   }
 }
 
-class Export extends Command {
-  static get ACTION() { return ITEM.EXPORT }
+Implode.register(ITEM.IMPLODE)
 
+
+class Export extends Command {
   *exec() {
     let { target, plugin } = this.action.meta
     let ids = this.action.payload
@@ -445,9 +453,10 @@ class Export extends Command {
   }
 }
 
-class ToggleTags extends Command {
-  static get ACTION() { return ITEM.TAG.TOGGLE }
+Export.register(ITEM.EXPORT)
 
+
+class ToggleTags extends Command {
   *exec() {
     const { db } = this.options
     const { id, tags } = this.action.payload
@@ -475,9 +484,10 @@ class ToggleTags extends Command {
   }
 }
 
-class Preview extends Command {
-  static get ACTION() { return ITEM.PREVIEW }
+ToggleTags.register(ITEM.TAG.TOGGLE)
 
+
+class Preview extends Command {
   *exec() {
     if (!darwin) return
 
@@ -491,9 +501,10 @@ class Preview extends Command {
   }
 }
 
-class Print extends Command {
-  static get ACTION() { return ITEM.PRINT }
+Preview.register(ITEM.PREVIEW)
 
+
+class Print extends Command {
   *exec() {
     let [prefs, project, items] = yield select(state => ([
       state.settings.print,
@@ -506,6 +517,9 @@ class Print extends Command {
     }
   }
 }
+
+Print.register(ITEM.PRINT)
+
 
 class AddTags extends Command {
   *exec() {
@@ -539,9 +553,10 @@ class AddTags extends Command {
 
     return work
   }
-
-  static ACTION = ITEM.TAG.CREATE
 }
+
+AddTags.register(ITEM.TAG.CREATE)
+
 
 class RemoveTags extends Command {
   *exec() {
@@ -571,14 +586,12 @@ class RemoveTags extends Command {
 
     return work
   }
-
-  static ACTION = ITEM.TAG.DELETE
 }
+
+RemoveTags.register(ITEM.TAG.DELETE)
 
 
 class ClearTags extends Command {
-  static get ACTION() { return ITEM.TAG.CLEAR }
-
   *exec() {
     const { db } = this.options
     const id = this.action.payload
@@ -591,6 +604,9 @@ class ClearTags extends Command {
     this.undo = act.item.tags.toggle({ id, tags })
   }
 }
+
+ClearTags.register(ITEM.TAG.CLEAR)
+
 
 module.exports = {
   Create,

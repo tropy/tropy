@@ -1,7 +1,7 @@
 'use strict'
 
-const { trace, warn } = require('../common/log')
-const { exec } = require('../commands')
+const { info, trace, warn } = require('../common/log')
+const { Command } = require('../commands')
 const { fail } = require('../dialog')
 const { call, put, race, take } = require('redux-saga/effects')
 const activity = require('../actions/activity')
@@ -17,35 +17,31 @@ const cancellation = (id) => ({ payload, type }) => (
 module.exports = {
   *exec(options, action) {
     try {
-      var [cmd, cancelled] = yield race([
-        call(exec, action, options),
-        take(cancellation(action.meta.seq))
+      var cmd = Command.create(action, options)
+
+      var [cancelled] = yield race([
+        take(cancellation(action.meta.seq)),
+        call([cmd, cmd.run])
       ])
 
-      if (cmd) {
-        if (action.meta.history && cmd.isomorph) {
-          yield put(history.tick(cmd.history(), action.meta.history))
-        }
-
-        if (cmd.error)
-          fail(cmd.error, action.type)
-        if (!cmd.isInteractive && cmd.duration > TOO_LONG)
-          warn(`SLOW: ${action.type}`)
-      }
+      if (cmd.isReversible)
+        yield put(history.tick(cmd.history))
+      if (cmd.error)
+        fail(cmd.error, action.type)
+      if (cmd.duration > TOO_LONG)
+        warn(`SLOW: ${cmd}`)
 
     } catch (e) {
       warn({ stack: e.stack }, `${action.type} failed in *exec`)
       if (!cmd) cmd = { error: e }
 
     } finally {
-      if (!cmd) {
-        cmd = {
-          error: new Error(`command cancelled ${
-            cancelled ?
-              `by #${cancelled.meta.seq}` :
-              'implicitly'
-          }`)
-        }
+      if (cmd.cancelled) {
+        info(`${cmd} was cancelled ${
+          cancelled ?
+            `by #${cancelled.meta.seq}` :
+            'implicitly'
+        }`)
       }
 
       yield put(activity.done(action, cmd.error || cmd.result, cmd.meta))

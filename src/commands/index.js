@@ -1,23 +1,18 @@
 'use strict'
 
-const { seq, map } = require('transducers.js')
-const handles = map(([, cmd]) => [cmd.ACTION, cmd])
+require('./cache')
+require('./api')
+require('./item')
+require('./list')
+require('./metadata')
+require('./note')
+require('./ontology')
+require('./photo')
+require('./project')
+require('./selection')
+require('./tag')
+
 
 module.exports = {
-
-  ...seq(require('./cache'), handles),
-  ...seq(require('./api'), handles),
-  ...seq(require('./item'), handles),
-  ...seq(require('./list'), handles),
-  ...seq(require('./metadata'), handles),
-  ...seq(require('./note'), handles),
-  ...seq(require('./ontology'), handles),
-  ...seq(require('./photo'), handles),
-  ...seq(require('./project'), handles),
-  ...seq(require('./selection'), handles),
-  ...seq(require('./tag'), handles),
-
-  exec(action, options) {
-    return new module.exports[action.type](action, options).execute()
-  }
+  ...require('./command')
 }

@@ -191,14 +191,12 @@ class Consolidate extends ImportCommand {
       }))
     }
   }
-
-  static ACTION = PHOTO.CONSOLIDATE
 }
+
+Consolidate.register(PHOTO.CONSOLIDATE)
 
 
 class Create extends ImportCommand {
-  static get ACTION() { return PHOTO.CREATE }
-
   *exec() {
     let { db } = this.options
     let { item, files } = this.action.payload
@@ -269,9 +267,10 @@ class Create extends ImportCommand {
   }
 }
 
-class Delete extends Command {
-  static get ACTION() { return PHOTO.DELETE }
+Create.register(PHOTO.CREATE)
 
+
+class Delete extends Command {
   *exec() {
     const { db } = this.options
     const { item, photos } = this.action.payload
@@ -292,9 +291,10 @@ class Delete extends Command {
   }
 }
 
-class Duplicate extends ImportCommand {
-  static get ACTION() { return PHOTO.DUPLICATE }
+Delete.register(PHOTO.DELETE)
 
+
+class Duplicate extends ImportCommand {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -358,9 +358,10 @@ class Duplicate extends ImportCommand {
   }
 }
 
-class Load extends Command {
-  static get ACTION() { return PHOTO.LOAD }
+Duplicate.register(PHOTO.DUPLICATE)
 
+
+class Load extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -373,9 +374,10 @@ class Load extends Command {
   }
 }
 
-class Move extends Command {
-  static get ACTION() { return PHOTO.MOVE }
+Load.register(PHOTO.LOAD)
 
+
+class Move extends Command {
   *exec() {
     const { db } = this.options
     const { photos, item } = this.action.payload
@@ -416,9 +418,10 @@ class Move extends Command {
   }
 }
 
-class Order extends Command {
-  static get ACTION() { return PHOTO.ORDER }
+Move.register(PHOTO.MOVE)
 
+
+class Order extends Command {
   *exec() {
     const { db } = this.options
     const { item, photos } = this.action.payload
@@ -432,9 +435,10 @@ class Order extends Command {
   }
 }
 
-class Save extends Command {
-  static get ACTION() { return PHOTO.SAVE }
+Order.register(PHOTO.ORDER)
 
+
+class Save extends Command {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
@@ -462,9 +466,10 @@ class Save extends Command {
   }
 }
 
-class Restore extends Command {
-  static get ACTION() { return PHOTO.RESTORE }
+Save.register(PHOTO.SAVE)
 
+
+class Restore extends Command {
   *exec() {
     const { db } = this.options
     const { item, photos } = this.action.payload
@@ -488,9 +493,10 @@ class Restore extends Command {
   }
 }
 
-class Rotate extends Command {
-  static get ACTION() { return PHOTO.ROTATE }
+Restore.register(PHOTO.RESTORE)
 
+
+class Rotate extends Command {
   *exec() {
     let { db } = this.options
     let { id, by, type = 'photo' } = this.action.payload
@@ -504,10 +510,14 @@ class Rotate extends Command {
   }
 }
 
+Rotate.register(PHOTO.ROTATE)
+
+
 class TemplateChange extends SaveCommand {
-  static get ACTION() { return PHOTO.TEMPLATE.CHANGE }
-  get type() { return 'photo' }
+  type = 'photo'
 }
+
+TemplateChange.register(PHOTO.TEMPLATE.CHANGE)
 
 
 module.exports = {

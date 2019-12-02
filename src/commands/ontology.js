@@ -18,8 +18,6 @@ const { writeFile: write } = require('fs')
 
 
 class Import extends Command {
-  static get ACTION() { return ONTOLOGY.IMPORT }
-
   *exec() {
     const { Ontology } = require('../common/ontology')
     const { db } = this.options
@@ -84,9 +82,10 @@ class Import extends Command {
   }
 }
 
-class Load extends Command {
-  static get ACTION() { return ONTOLOGY.LOAD }
+Import.register(ONTOLOGY.IMPORT)
 
+
+class Load extends Command {
   *exec() {
     const { db } = this.options
 
@@ -102,17 +101,19 @@ class Load extends Command {
   }
 }
 
-class VocabLoad extends Command {
-  static get ACTION() { return VOCAB.LOAD }
+Load.register(ONTOLOGY.LOAD)
 
+
+class VocabLoad extends Command {
   *exec() {
     return yield call(mod.ontology.vocab.load, this.options.db)
   }
 }
 
-class VocabExport extends Command {
-  static get ACTION() { return VOCAB.EXPORT }
+VocabLoad.register(VOCAB.LOAD)
 
+
+class VocabExport extends Command {
   *exec() {
     let { toN3 } = require('../export/vocab')
 
@@ -134,9 +135,10 @@ class VocabExport extends Command {
   }
 }
 
-class VocabSave extends Command {
-  static get ACTION() { return VOCAB.SAVE }
+VocabExport.register(VOCAB.EXPORT)
 
+
+class VocabSave extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -153,9 +155,10 @@ class VocabSave extends Command {
   }
 }
 
-class VocabDelete extends Command {
-  static get ACTION() { return VOCAB.DELETE }
+VocabSave.register(VOCAB.SAVE)
 
+
+class VocabDelete extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -170,9 +173,10 @@ class VocabDelete extends Command {
   }
 }
 
-class VocabRestore extends Command {
-  static get ACTION() { return VOCAB.RESTORE }
+VocabDelete.register(VOCAB.DELETE)
 
+
+class VocabRestore extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -186,25 +190,28 @@ class VocabRestore extends Command {
   }
 }
 
-class PropsLoad extends Command {
-  static get ACTION() { return PROPS.LOAD }
+VocabRestore.register(VOCAB.RESTORE)
 
+
+class PropsLoad extends Command {
   *exec() {
     return yield call(mod.ontology.props.load, this.options.db)
   }
 }
 
-class ClassLoad extends Command {
-  static get ACTION() { return CLASS.LOAD }
+PropsLoad.register(PROPS.LOAD)
 
+
+class ClassLoad extends Command {
   *exec() {
     return yield call(mod.ontology.class.load, this.options.db)
   }
 }
 
-class LabelSave extends Command {
-  static get ACTION() { return LABEL.SAVE }
+ClassLoad.register(CLASS.LOAD)
 
+
+class LabelSave extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -223,9 +230,10 @@ class LabelSave extends Command {
   }
 }
 
-class TemplateImport extends Command {
-  static get ACTION() { return TEMPLATE.IMPORT }
+LabelSave.register(LABEL.SAVE)
 
+
+class TemplateImport extends Command {
   *exec() {
     const { Template } = require('../common/ontology')
     const { db } = this.options
@@ -284,9 +292,10 @@ class TemplateImport extends Command {
   }
 }
 
-class TemplateExport extends Command {
-  static get ACTION() { return TEMPLATE.EXPORT }
+TemplateImport.register(TEMPLATE.IMPORT)
 
+
+class TemplateExport extends Command {
   *exec() {
     const { Template } = require('../common/ontology')
     let { id, path } = this.action.payload
@@ -316,9 +325,10 @@ class TemplateExport extends Command {
   }
 }
 
-class TemplateCreate extends Command {
-  static get ACTION() { return TEMPLATE.CREATE }
+TemplateExport.register(TEMPLATE.EXPORT)
 
+
+class TemplateCreate extends Command {
   *exec() {
     const { db } = this.options
     const { payload, meta } = this.action
@@ -344,8 +354,10 @@ class TemplateCreate extends Command {
 
     return temps
   }
-
 }
+
+TemplateCreate.register(TEMPLATE.CREATE)
+
 
 async function createTemplate(db, data, meta) {
   assert(data.id != null, 'missing template id')
@@ -369,8 +381,6 @@ async function createTemplate(db, data, meta) {
 
 
 class TemplateSave extends Command {
-  static get ACTION() { return TEMPLATE.SAVE }
-
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -385,10 +395,10 @@ class TemplateSave extends Command {
   }
 }
 
+TemplateSave.register(TEMPLATE.SAVE)
+
 
 class TemplateDelete extends Command {
-  static get ACTION() { return TEMPLATE.DELETE }
-
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -403,10 +413,10 @@ class TemplateDelete extends Command {
   }
 }
 
+TemplateDelete.register(TEMPLATE.DELETE)
+
 
 class TemplateFieldAdd extends Command {
-  static get ACTION() { return TEMPLATE.FIELD.ADD }
-
   *exec() {
     const { db } = this.options
     const { id, field } = this.action.payload
@@ -425,9 +435,10 @@ class TemplateFieldAdd extends Command {
   }
 }
 
-class TemplateFieldRemove extends Command {
-  static get ACTION() { return TEMPLATE.FIELD.REMOVE }
+TemplateFieldAdd.register(TEMPLATE.FIELD.ADD)
 
+
+class TemplateFieldRemove extends Command {
   *exec() {
     const { db } = this.options
     const { id, field } = this.action.payload
@@ -446,9 +457,10 @@ class TemplateFieldRemove extends Command {
   }
 }
 
-class TemplateFieldSave extends Command {
-  static get ACTION() { return TEMPLATE.FIELD.SAVE }
+TemplateFieldRemove.register(TEMPLATE.FIELD.REMOVE)
 
+
+class TemplateFieldSave extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -473,9 +485,10 @@ class TemplateFieldSave extends Command {
   }
 }
 
-class TemplateFieldOrder extends Command {
-  static get ACTION() { return TEMPLATE.FIELD.ORDER }
+TemplateFieldSave.register(TEMPLATE.FIELD.SAVE)
 
+
+class TemplateFieldOrder extends Command {
   *exec() {
     const { db } = this.options
     const { id, fields } = this.action.payload
@@ -492,6 +505,8 @@ class TemplateFieldOrder extends Command {
     return { id, fields }
   }
 }
+
+TemplateFieldOrder.register(TEMPLATE.FIELD.ORDER)
 
 
 module.exports = {
