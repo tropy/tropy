@@ -1,7 +1,7 @@
 'use strict'
 
 const { info, trace, warn } = require('../common/log')
-const { Command } = require('../commands')
+const { Command } = require('../commands/command')
 const { fail } = require('../dialog')
 const { call, put, race, take } = require('redux-saga/effects')
 const activity = require('../actions/activity')
@@ -15,6 +15,12 @@ const cancellation = (id) => ({ payload, type }) => (
 )
 
 module.exports = {
+  commands(scope) {
+    return ({ error, meta }) => (
+      !error && meta && !meta.done && meta.cmd === scope
+    )
+  },
+
   *exec(options, action) {
     try {
       var cmd = Command.create(action, options)

@@ -1,5 +1,7 @@
 'use strict'
 
+require('../commands')
+
 const assert = require('assert')
 const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
 const { IDLE } = require('../constants/idle')
@@ -11,7 +13,7 @@ const consolidator = require('./consolidator')
 const { history } = require('./history')
 const { search } = require('./search')
 const { ontology } = require('./ontology')
-const { exec } = require('./cmd')
+const { exec, commands } = require('./cmd')
 const { shell } = require('./shell')
 const { fail } = require('../dialog')
 const mod = require('../models')
@@ -27,13 +29,9 @@ const {
 const has = (condition) => (({ error, meta }) =>
   (!error && meta && (!meta.cmd || meta.done) && meta[condition]))
 
-const command = ({ error, meta }) =>
-  (!error && meta && meta.cmd === 'project')
-
 const onErrorClose = onErrorPut(act.project.close)
 
 const FORCE_SHUTDOWN_DELAY = 60000
-
 
 function *open(file) {
   try {
@@ -77,7 +75,7 @@ function *open(file) {
       yield fork(setup, db, project)
 
       while (true) {
-        let action = yield take(command)
+        let action = yield take(commands('project'))
         yield fork(exec, { db, id: project.id, cache }, action)
       }
 
@@ -89,7 +87,7 @@ function *open(file) {
     yield call(fail, e, db.path)
 
     // Mark the task as cancelled. Otherwise the task will appear to be
-    // running event after the finally block completes.
+    // running even after the finally block completes.
     yield cancel()
 
   } finally {
@@ -236,7 +234,6 @@ function *main() {
 }
 
 module.exports = {
-  command,
   main,
   open
 }

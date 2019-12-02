@@ -1,8 +1,8 @@
 'use strict'
 
 const assert = require('assert')
+const { cancel } = require('redux-saga/effects')
 const { pick } = require('../common/util')
-const { freeze } = Object
 
 const Registry = new Map()
 
@@ -57,6 +57,7 @@ class Command {
     } catch (error) {
       this.error = error
       yield this.abort()
+      yield cancel()
 
     } finally {
       this.cancelled = !hasRunToCompletion
@@ -64,7 +65,7 @@ class Command {
       yield this.finally()
     }
 
-    freeze(this)
+    Object.freeze(this)
     return this
   };
 

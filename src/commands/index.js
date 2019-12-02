@@ -12,7 +12,6 @@ require('./project')
 require('./selection')
 require('./tag')
 
-
 module.exports = {
   ...require('./command')
 }
