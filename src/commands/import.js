@@ -1,7 +1,6 @@
 'use strict'
 
 const { basename } = require('path')
-const { debug, warn } = require('../common/log')
 const { DuplicateError } = require('../common/error')
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
