@@ -2,6 +2,7 @@
 
 const { mkdir, readdir, stat, writeFile } = require('fs').promises
 const { join, extname, basename } = require('path')
+const { debug, warn } = require('./log')
 const { URI } = require('./util')
 const { IMAGE } = require('../constants')
 
@@ -46,6 +47,44 @@ class Cache {
     }
 
     return stats
+  }
+
+  consolidate = async (id, image, {
+    overwrite = true,
+    selection
+  } = {}) => {
+    try {
+      let ext = this.extname(image.mimetype)
+
+      for (let { name, size, quality } of image.variants(!!selection)) {
+        let path = this.path(id, name, ext)
+
+        if (overwrite || !(await this.exists(path))) {
+          let dup = await image.resize(size, selection)
+
+          switch (ext) {
+            case '.png':
+              dup.png()
+              break
+            case '.webp':
+              dup.webp({
+                quality,
+                lossless: image.channels === 1 || !image.isOpaque
+              })
+              break
+            default:
+              dup.jpeg({ quality })
+          }
+
+          await dup.toFile(this.expand(path))
+
+        } else {
+          debug(`skipping ${name} image variant for #${id}: already exists`)
+        }
+      }
+    } catch (e) {
+      warn({ stack: e.stack }, 'failed to create image variant')
+    }
   }
 
   expand(...args) {

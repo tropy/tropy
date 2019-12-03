@@ -20,6 +20,23 @@ const {
 
 
 class ImportCommand extends Command {
+  static *consolidate(cache, image, photos, { overwrite = true } = {}) {
+    while (!image.done) {
+      let photo = photos[image.page]
+
+      yield call(cache.consolidate,  photo.id, image, { overwrite })
+
+      yield put(act.photo.update({
+        id: photo.id,
+        broken: false,
+        consolidated: Date.now(),
+        consolidating: false
+      }))
+
+      image.next()
+    }
+  }
+
   *openImage(path) {
     let settings = yield select(state => state.settings)
 

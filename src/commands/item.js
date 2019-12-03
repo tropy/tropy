@@ -4,7 +4,6 @@ const { info, warn } = require('../common/log')
 const { clipboard, ipcRenderer: ipc } = require('electron')
 const assert = require('assert')
 const { DuplicateError } = require('../common/error')
-const { all, call, put, select, cps } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { SaveCommand } = require('./subject')
@@ -18,6 +17,16 @@ const { MODE } = require('../constants/project')
 const { keys } = Object
 const { writeFile: write } = require('fs')
 const { win } = require('../window')
+
+const {
+  all,
+  call,
+  fork,
+  join,
+  put,
+  select,
+  cps
+} = require('redux-saga/effects')
 
 const {
   findTagIds,
@@ -54,10 +63,11 @@ Create.register(ITEM.CREATE)
 
 class Import extends ImportCommand {
   *exec() {
-    let { db } = this.options
+    let { cache, db } = this.options
     let { payload, meta } = this.action
     let { files, list } = payload
     let items = []
+    let backlog = []
 
     if (!files && meta.prompt)
       files = yield this.prompt(meta.prompt)
@@ -128,20 +138,8 @@ class Import extends ImportCommand {
 
         image.rewind()
 
-        while (!image.done) {
-          let photo = photos[image.page]
-
-          yield* this.createThumbnails(photo.id, image)
-
-          yield put(act.photo.update({
-            id: photo.id,
-            broken: false,
-            consolidated: Date.now(),
-            consolidating: false
-          }))
-
-          image.next()
-        }
+        backlog.push(
+          yield fork(ImportCommand.consolidate, cache, image, photos))
 
       } catch (e) {
         if (e instanceof DuplicateError) {
@@ -152,6 +150,10 @@ class Import extends ImportCommand {
         warn({ stack: e.stack }, `failed to import "${file}"`)
         fail(e, this.action.type)
       }
+    }
+
+    if (backlog.length > 0) {
+      yield join(backlog)
     }
 
     return items
