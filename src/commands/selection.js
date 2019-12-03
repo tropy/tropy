@@ -2,7 +2,6 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { ImportCommand } = require('./import')
 const { SaveCommand } = require('./subject')
 const { Image } = require('../image')
 const mod = require('../models')
@@ -17,9 +16,9 @@ const {
 } = require('../selectors')
 
 
-class Create extends ImportCommand {
+class Create extends Command {
   *exec() {
-    let { db } = this.options
+    let { cache, db } = this.options
     let { payload, meta } = this.action
 
     let [photo, template, density] = yield select(state => ([
@@ -33,7 +32,10 @@ class Create extends ImportCommand {
       density: photo.density || density
     })
 
-    let idx = (meta.idx != null) ? meta.idx : [photo.selections.length]
+    let idx = (meta.idx != null) ?
+      meta.idx :
+      [photo.selections.length]
+
     let data = getTemplateValues(template)
 
     let selection = yield call(db.transaction, tx =>
@@ -43,14 +45,27 @@ class Create extends ImportCommand {
         ...payload
       }))
 
-    yield* this.createThumbnails(selection.id, image, { selection })
+    yield call(cache.consolidate, selection.id, image, {
+      selection
+    })
 
-    let common = { selections: [selection.id] }
+    let selections = [selection.id]
+    let position = { idx }
 
-    yield put(act.photo.selections.add({ id: photo.id, ...common }, { idx }))
+    yield put(act.photo.selections.add({
+      id: photo.id,
+      selections
+    }, position))
 
-    this.undo = act.selection.delete({ photo: photo.id, ...common }, { idx })
-    this.redo = act.selection.restore({ photo: photo.id, ...common }, { idx })
+    this.undo = act.selection.delete({
+      photo: photo.id,
+      selections
+    }, position)
+
+    this.redo = act.selection.restore({
+      photo: photo.id,
+      selections
+    }, position)
 
     return selection
   }

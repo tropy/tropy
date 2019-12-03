@@ -8,7 +8,7 @@ const { Command } = require('./command')
 const mod = require('../models')
 const act = require('../actions')
 const { pick } = require('../common/util')
-const { prompt } = require('../dialog')
+const { open, prompt } = require('../dialog')
 const { Image } = require('../image')
 const { DC, TERMS } = require('../constants')
 const { date, text } = require('../value')
@@ -24,16 +24,32 @@ class ImportCommand extends Command {
     while (!image.done) {
       let photo = photos[image.page]
 
-      yield call(cache.consolidate,  photo.id, image, { overwrite })
+      yield call(cache.consolidate, photo, image, {
+        overwrite
+      })
 
       yield put(act.photo.update({
-        id: photo.id,
+        id: photo,
         broken: false,
         consolidated: Date.now(),
         consolidating: false
       }))
 
       image.next()
+    }
+  }
+
+  prompt = async (type) => {
+    try {
+      this.suspend()
+      switch (type) {
+        case 'url':
+        default:
+          return await open.images()
+      }
+
+    } finally {
+      this.resume()
     }
   }
 
@@ -80,45 +96,6 @@ class ImportCommand extends Command {
     }
 
     return data
-  }
-
-  *createThumbnails(id, image, {
-    overwrite = true,
-    selection
-  } = {}) {
-    try {
-      let { cache } = this.options
-      let ext = cache.extname(image.mimetype)
-
-      for (let { name, size, quality } of image.variants(selection != null)) {
-        let path = cache.path(id, name, ext)
-
-        if (overwrite || !(yield call(cache.exists, path))) {
-          let dup = yield call(image.resize, size, selection)
-
-          switch (ext) {
-            case '.png':
-              dup.png()
-              break
-            case '.webp':
-              dup.webp({
-                quality,
-                lossless: image.channels === 1 || !image.isOpaque
-              })
-              break
-            default:
-              dup.jpeg({ quality })
-          }
-
-          yield call([dup, dup.toFile], cache.expand(path))
-
-        } else {
-          debug(`skipping ${name} thumbnail for #${id}: already exists`)
-        }
-      }
-    } catch (e) {
-      warn({ stack: e.stack }, 'failed to create thumbnail')
-    }
   }
 
   *isDuplicate(image) {

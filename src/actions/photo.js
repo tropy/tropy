@@ -26,7 +26,13 @@ module.exports = {
     return {
       type: PHOTO.CREATE,
       payload,
-      meta: { cmd: 'project', history: 'add', ...meta }
+      meta: {
+        cancel: true,
+        cmd: 'project',
+        history: 'add',
+        prompt: true,
+        ...meta
+      }
     }
   },
 

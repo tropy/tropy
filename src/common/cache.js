@@ -4,7 +4,7 @@ const { mkdir, readdir, stat, writeFile } = require('fs').promises
 const { join, extname, basename } = require('path')
 const { debug, warn } = require('./log')
 const { URI } = require('./util')
-const { IMAGE } = require('../constants')
+const { IMAGE, MIME } = require('../constants')
 
 class Cache {
   constructor(...args) {
@@ -54,13 +54,21 @@ class Cache {
     selection
   } = {}) => {
     try {
+      let { page, channels, isOpaque } = image
       let ext = this.extname(image.mimetype)
+      let variants = image.variants(!!selection)
 
-      for (let { name, size, quality } of image.variants(!!selection)) {
+      let jp2hack = image.mimetype === MIME.JP2 &&
+        image.space === 'b-w' && channels > 1 && !image.hasAlpha
+
+      for (let { name, size, quality } of variants) {
         let path = this.path(id, name, ext)
 
         if (overwrite || !(await this.exists(path))) {
-          let dup = await image.resize(size, selection)
+          let dup = await image.resize(size, selection, {
+            page,
+            jp2hack
+          })
 
           switch (ext) {
             case '.png':
@@ -69,7 +77,7 @@ class Cache {
             case '.webp':
               dup.webp({
                 quality,
-                lossless: image.channels === 1 || !image.isOpaque
+                lossless: channels === 1 || !isOpaque
               })
               break
             default:

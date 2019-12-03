@@ -7,7 +7,7 @@ const { DuplicateError } = require('../common/error')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { SaveCommand } = require('./subject')
-const { prompt, open, fail, save } = require('../dialog')
+const { prompt, fail, save } = require('../dialog')
 const act = require('../actions')
 const mod = require('../models')
 const { get, pluck, remove } = require('../common/util')
@@ -70,7 +70,7 @@ class Import extends ImportCommand {
     let backlog = []
 
     if (!files && meta.prompt)
-      files = yield this.prompt(meta.prompt)
+      files = yield call(this.prompt, meta.prompt)
     if (!files)
       return []
 
@@ -84,20 +84,18 @@ class Import extends ImportCommand {
       }
     ])
 
-    // Subtle: push items to results early to support
+    // Subtle: push items to this.result early to support
     // undo after cancelled (partial) import!
     this.result = items
 
-    let total = files.length
-
-    for (let i = 0; i < files.length; ++i) {
+    for (let i = 0, total = files.length; i < files.length; ++i) {
       let file
       let photos = []
 
       try {
-        yield put(act.activity.update(this.action, { total, progress: i + 1 }))
-
         file = files[i]
+
+        yield put(act.activity.update(this.action, { total, progress: i + 1 }))
 
         let item
         let image = yield* this.openImage(file)
@@ -139,7 +137,10 @@ class Import extends ImportCommand {
         image.rewind()
 
         backlog.push(
-          yield fork(ImportCommand.consolidate, cache, image, photos))
+          yield fork(ImportCommand.consolidate,
+            cache,
+            image,
+            item.photos))
 
       } catch (e) {
         if (e instanceof DuplicateError) {
@@ -159,8 +160,6 @@ class Import extends ImportCommand {
     return items
   }
 
-  // Define undo/redo getters to handle cancelled imports!
-
   get redo() {
     return (this.result && this.result.length > 0) ?
       act.item.restore(this.result) :
@@ -171,20 +170,6 @@ class Import extends ImportCommand {
     return (this.result && this.result.length > 0) ?
       act.item.delete(this.result) :
       null
-  }
-
-  *prompt(type) {
-    try {
-      this.suspend()
-      switch (type) {
-        case 'url':
-        default:
-          return yield call(open.items)
-      }
-
-    } finally {
-      this.resume()
-    }
   }
 }
 

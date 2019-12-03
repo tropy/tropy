@@ -3,7 +3,6 @@
 const assert = require('assert')
 const { basename, dirname, join, relative, resolve } = require('path')
 const { stat } = require('fs').promises
-const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { SaveCommand } = require('./subject')
@@ -15,6 +14,15 @@ const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
 const { info, warn } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
+
+const {
+  all,
+  call,
+  fork,
+  join: wait,
+  put,
+  select
+} = require('redux-saga/effects')
 
 const {
   getPhotoTemplate,
@@ -118,15 +126,16 @@ class Consolidate extends ImportCommand {
 
   *consolidate(photo, selections = {}) {
     try {
-      let { base, db, density, overwrite, useLocalTimezone } = this.options
       let { meta } = this.action
+      let { cache, db, overwrite, useLocalTimezone } = this.options
+      let density = photo.density || this.options.density
 
       let {
         image,
         hasChanged,
         error
       } = yield call(Image.check, photo, {
-        density: photo.density || density,
+        density,
         useLocalTimezone
       })
 
@@ -140,7 +149,7 @@ class Consolidate extends ImportCommand {
           let path = yield this.resolve(photo)
           if (path) {
             image = yield call(Image.open, {
-              density: photo.density || density,
+              density,
               path,
               page: photo.page,
               protocol: 'file',
@@ -155,11 +164,13 @@ class Consolidate extends ImportCommand {
             (image.path !== photo.path)
 
           if (meta.force || hasChanged) {
-            yield* this.createThumbnails(photo.id, image, { overwrite })
+            yield call(cache.consolidate, photo.id, image, {
+              overwrite
+            })
 
             for (let id of photo.selections) {
               if (id in selections) {
-                yield* this.createThumbnails(id, image, {
+                yield call(cache.consolidate, id, image, {
                   overwrite,
                   selection: selections[id]
                 })
@@ -168,7 +179,9 @@ class Consolidate extends ImportCommand {
 
             data = { id: photo.id, ...image.toJSON() }
 
-            yield call(mod.photo.save, db, data, { base })
+            yield call(mod.photo.save, db, data, {
+              base: this.options.base
+            })
           }
 
           this.consolidated.push(photo.id)
@@ -198,72 +211,114 @@ Consolidate.register(PHOTO.CONSOLIDATE)
 
 class Create extends ImportCommand {
   *exec() {
-    let { db } = this.options
-    let { item, files } = this.action.payload
+    let { cache, db } = this.options
+    let { payload, meta } = this.action
+    let { item, files } = payload
+
     let photos = []
+    let backlog = []
 
     let idx = this.action.meta.idx ||
       [yield select(({ items }) => items[item].photos.length)]
 
-    if (!files) {
-      this.isInteractive = true
-      files = yield call(open.images)
-    }
+    if (!files && meta.prompt)
+      files = yield call(this.prompt, meta.prompt)
+    if (!files)
+      return []
 
-    if (!files) return []
-
-    let [base, prefs, template] = yield select(state => [
+    let [base, template, prefs] = yield select(state => [
       state.project.base,
-      state.settings,
-      getPhotoTemplate(state)
+      getPhotoTemplate(state),
+      state.settings
     ])
 
+    // Subtle: push photos to this.result early to support
+    // undo after cancelled (partial) import!
+    this.result = photos
+    this.idx = idx
 
     for (let i = 0, total = files.length; i < files.length; ++i) {
-      let file, image, data
+      let file
 
       try {
         file = files[i]
 
-        image = yield* this.openImage(file)
+        let image = yield* this.openImage(file)
         yield* this.handleDuplicate(image)
-        data = this.getImageMetadata('photo', image, template, prefs)
+        let data = this.getImageMetadata('photo', image, template, prefs)
 
         total += (image.numPages - 1)
+        yield put(act.activity.update(this.action, { total, progress: i + 1 }))
 
         while (!image.done) {
           let photo = yield call(db.transaction, tx =>
             mod.photo.create(tx, { base, template: template.id }, {
-              item, image, data, position: idx[0] + i + 1
+              item,
+              image,
+              data,
+              position: idx[0] + i + 1
             }))
 
-          yield put(act.metadata.load([photo.id]))
-
-          yield all([
-            put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
-            put(act.activity.update(this.action, { total, progress: i + 1 }))
-          ])
-
+          photo.consolidating = true
           photos.push(photo.id)
 
-          yield* this.createThumbnails(photo.id, image)
+          yield all([
+            put(act.photo.insert(photo, {
+              idx: [idx[0] + photos.length]
+            })),
+            put(act.metadata.load([photo.id]))
+          ])
 
           image.next()
         }
+
+        image.rewind()
+
+        backlog.push(
+          yield fork(ImportCommand.consolidate,
+            cache,
+            image,
+            photos))
+
       } catch (e) {
-        if (e instanceof DuplicateError) continue
+        if (e instanceof DuplicateError) {
+          info(`skipping duplicate "${file}"...`)
+          continue
+        }
 
         warn({ stack: e.stack }, `failed to import "${file}"`)
         fail(e, this.action.type)
       }
     }
 
-    yield put(act.item.photos.add({ id: item, photos }, { idx }))
+    yield put(act.item.photos.add({
+      id: item,
+      photos
+    }, { idx }))
 
-    this.undo = act.photo.delete({ item, photos })
-    this.redo = act.photo.restore({ item, photos }, { idx })
+    if (backlog.length > 0) {
+      yield wait(backlog)
+    }
 
     return photos
+  }
+
+  get redo() {
+    return !(this.result && this.result.length > 0) ?
+      null :
+      act.photo.restore({
+        item: this.action.payload.item,
+        photos: this.result
+      }, { idx: this.idx })
+  }
+
+  get undo() {
+    return !(this.result && this.result.length > 0) ?
+      null :
+      act.photo.delete({
+        item: this.action.payload.item,
+        photos: this.result
+      })
   }
 }
 
@@ -296,7 +351,7 @@ Delete.register(PHOTO.DELETE)
 
 class Duplicate extends ImportCommand {
   *exec() {
-    let { db } = this.options
+    let { cache, db } = this.options
     let { payload } = this.action
     let { item } = payload
 
@@ -340,7 +395,7 @@ class Duplicate extends ImportCommand {
         ])
 
         photos.push(photo.id)
-        yield* this.createThumbnails(photo.id, image)
+        yield call(cache.consolidate, photo.id, image)
 
       } catch (e) {
         warn({ stack: e.stack }, `failed to duplicate "${path}"`)

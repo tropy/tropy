@@ -102,16 +102,6 @@ function open(options) {
   return show('file', options)
 }
 
-open.items = (options) => open({
-  filters: [{
-    name: t('dialog', 'filter', 'items'),
-    extensions: [...IMAGE.EXT, 'json', 'jsonld']
-  }],
-  defaultPath: ARGS.pictures,
-  properties: ['openFile', 'multiSelections'],
-  ...options
-})
-
 open.images = (options) => open({
   filters: [{
     name: t('dialog', 'filter', 'images'),
