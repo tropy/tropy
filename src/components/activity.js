@@ -10,8 +10,15 @@ const { arrayOf, bool, shape, string, number, func } = require('prop-types')
 const { Button } = require('./button')
 
 
-const Activity = ({ id, type, progress, total, canCancel, onCancel }) => {
-  let hasProgressBar = (progress != null || !isNaN(progress))
+const Activity = ({
+  id,
+  type,
+  progress,
+  total,
+  canCancel,
+  onCancel
+}) => {
+  let hasProgressBar = (progress !== null && !isNaN(progress))
   let hasCancelButton = canCancel && isFunction(onCancel)
 
   return (
