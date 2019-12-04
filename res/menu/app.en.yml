@@ -41,10 +41,19 @@ en:
               command: 'app:clear-recent-projects'
         - type: 'separator'
         - &import
-          label: 'Import…'
-          command: 'app:import'
-          accelerator: 'CmdOrCtrl+Shift+I'
-          condition: 'project'
+          label: 'Import'
+          submenu:
+            - label: 'Photos…'
+              command: 'app:import'
+              accelerator: 'CmdOrCtrl+Shift+I'
+              condition: 'project'
+            - label: 'Folder…'
+              command: 'app:import-directory'
+              condition: 'project'
+            #- label: 'JSON-LD…'
+            #  command: 'app:import-jsonld'
+            #  condition: 'project'
+        - type: 'separator'
         - &consolidate
           label: 'Consolidate Photo Library'
           command: 'app:consolidate-photo-library'

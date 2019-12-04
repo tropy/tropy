@@ -112,6 +112,16 @@ open.images = (options) => open({
   ...options
 })
 
+open.image = (options) => open.images({
+  properties: ['openFile'],
+  ...options
+})
+
+open.dir = (options) => open({
+  properties: ['openDirectory', 'multiSelections'],
+  ...options
+})
+
 open.vocab = (options) => open({
   filters: [{
     name: t('dialog', 'filter', 'rdf'),

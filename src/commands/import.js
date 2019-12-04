@@ -1,15 +1,16 @@
 'use strict'
 
-const { basename } = require('path')
+const { basename, extname } = require('path')
 const { DuplicateError } = require('../common/error')
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const mod = require('../models')
 const act = require('../actions')
+const dir = require('../common/dir')
 const { pick } = require('../common/util')
 const { open, prompt } = require('../dialog')
 const { Image } = require('../image')
-const { DC, TERMS } = require('../constants')
+const { DC, TERMS, IMAGE } = require('../constants')
 const { date, text } = require('../value')
 
 const {
@@ -17,6 +18,8 @@ const {
   getTemplateProperties
 } = require('../selectors')
 
+const isFileSupported = (file) =>
+  IMAGE.EXT.includes(extname(file.name).slice(1).toLowerCase())
 
 class ImportCommand extends Command {
   static *consolidate(cache, image, photos, { overwrite = true } = {}) {
@@ -42,9 +45,13 @@ class ImportCommand extends Command {
     try {
       this.suspend()
       switch (type) {
-        case 'url':
+        case 'dir':
+          return dir.expand(await open.dir(), {
+            filter: isFileSupported,
+            recursive: true
+          })
         default:
-          return await open.images()
+          return open.images()
       }
 
     } finally {

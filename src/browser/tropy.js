@@ -143,17 +143,11 @@ class Tropy extends EventEmitter {
       case '.tpy':
         this.showProjectWindow(file)
         break
-      case '.jpg':
-      case '.jpeg':
-      case '.png':
-      case '.svg':
-        this.import({ files: [file] })
-        break
       case '.ttp':
         this.importTemplates([file])
         break
       default:
-        return false
+        this.import({ files: [file] })
     }
     return true
   }
@@ -359,6 +353,8 @@ class Tropy extends EventEmitter {
 
     this.on('app:import', () =>
       this.import())
+    this.on('app:import-directory', () =>
+      this.import({}, { prompt: 'dir' }))
 
     this.on('app:rename-project', (win) =>
       this.dispatch(act.edit.start({ project: { name: true } }), win))
