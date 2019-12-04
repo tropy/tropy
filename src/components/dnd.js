@@ -18,56 +18,23 @@ const {
 const NativeDragSources =
   require('react-dnd-html5-backend-cjs/lib/NativeDragSources')
 
-
-let currentDataTransfer
-
 refine(NativeDragSources,
   'createNativeDragSource',
-  (_, dragSource) => {
-    if (currentDataTransfer) {
-      dragSource.mutateItemByReadingDataTransfer(currentDataTransfer)
+  ([, dataTransfer], dragSource) => {
+    if (dataTransfer) {
       dragSource.item.types =
-        Array.from(currentDataTransfer.items, (item) => item.type)
+        Array.from(dataTransfer.items, (item) => item.type)
     }
 
     return dragSource
   })
-
-const ElectronBackend = (...args) => {
-  let backend = createHTML5Backend(...args)
-
-  let {
-    handleTopDragEnterCapture,
-    handleTopDragStartCapture
-  } = backend
-
-  backend.handleTopDragEnterCapture = (event) => {
-    try {
-      currentDataTransfer = event.dataTransfer
-      return handleTopDragEnterCapture.call(backend, event)
-    } finally {
-      currentDataTransfer = null
-    }
-  }
-
-  backend.handleTopDragStartCapture = (event) => {
-    try {
-      currentDataTransfer = event.dataTransfer
-      return handleTopDragStartCapture.call(backend, event)
-    } finally {
-      currentDataTransfer = null
-    }
-  }
-
-  return backend
-}
 
 module.exports = {
   DndProvider,
   DragLayer,
   DragSource,
   DropTarget,
-  ElectronBackend,
+  ElectronBackend: createHTML5Backend,
   NativeTypes,
   getEmptyImage
 }
