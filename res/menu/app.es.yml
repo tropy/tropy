@@ -35,10 +35,16 @@ es:
             - label: Vaciar lista
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importar fotos ...
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importar
+          submenu:
+            - label: Photos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Folder…
+              command: 'app:import-directory'
+              condition: project
+        - type: separator
         - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
           condition: project
@@ -243,10 +249,15 @@ es:
             - label: Vaciar lista
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importar fotos ...
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importar
+          submenu:
+            - label: Photos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Folder…
+              command: 'app:import-directory'
+              condition: project
         - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
           condition: project
@@ -430,10 +441,16 @@ es:
             - label: Vaciar lista
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importar fotos ...
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importar
+          submenu:
+            - label: Photos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Folder…
+              command: 'app:import-directory'
+              condition: project
+        - type: separator
         - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
           condition: project

@@ -31,7 +31,7 @@ pt:
         accelerator: CmdOrCtrl+Shift+A
       - label: Exportar Etiquetas...
         command: 'app:export-tags'
-      - label: Cor de Etiqueta Padrão
+      - label: Cor Padrão de Etiqueta
         submenu:
           - label: Nenhuma
             color:
@@ -371,7 +371,7 @@ pt:
         accelerator: CmdOrCtrl+Shift+A
       - label: Exportar Etiquetas...
         command: 'app:export-tags'
-      - label: Cor de Etiqueta Padrão
+      - label: Cor Padrão de Etiqueta
         submenu:
           - label: Nenhuma
             color:
@@ -711,7 +711,7 @@ pt:
         accelerator: CmdOrCtrl+Shift+A
       - label: Exportar Etiquetas...
         command: 'app:export-tags'
-      - label: Cor de Etiqueta Padrão
+      - label: Cor Padrão de Etiqueta
         submenu:
           - label: Nenhuma
             color:

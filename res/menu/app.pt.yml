@@ -35,10 +35,16 @@ pt:
             - label: Limpar Lista
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importar...
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importar
+          submenu:
+            - label: Fotos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Pasta…
+              command: 'app:import-directory'
+              condition: project
+        - type: separator
         - label: Consolidar Fototeca
           command: 'app:consolidate-photo-library'
           condition: project
@@ -243,10 +249,15 @@ pt:
             - label: Limpar Lista
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importar...
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importar
+          submenu:
+            - label: Fotos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Pasta…
+              command: 'app:import-directory'
+              condition: project
         - label: Consolidar Fototeca
           command: 'app:consolidate-photo-library'
           condition: project
@@ -430,10 +441,16 @@ pt:
             - label: Limpar Lista
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importar...
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importar
+          submenu:
+            - label: Fotos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Pasta…
+              command: 'app:import-directory'
+              condition: project
+        - type: separator
         - label: Consolidar Fototeca
           command: 'app:consolidate-photo-library'
           condition: project

@@ -3,7 +3,7 @@ pt:
     lists: Listas
     tags: Etiquetas
     imports: Última Importação
-    trash: Itens Apagados
+    trash: Itens Eliminados
   toolbar:
     import: Importar Fotos
     items: |
@@ -72,14 +72,14 @@ pt:
       title: Notas de Versão
       url: 'https://github.com/tropy/tropy/releases/tag/{version}'
     license:
-      title: Informação sobre Licenciamento
+      title: Licença
       url: 'https://tropy.org/license'
     credits:
       title: Créditos
       url: 'https://tropy.org/credits'
   project:
-    none: 'Arraste e solte aqui um ficheiro de projeto ou crie um {newProject}'
-    empty: Arraste e solte as suas fotos dentro do Tropy para começar
+    none: 'Arraste um ficheiro de projeto para aqui ou crie um {newProject}'
+    empty: Arraste para aqui as suas fotos para começar.
     new: novo projeto
     recent: Projetos Recentes
     corrupted: >
@@ -159,7 +159,7 @@ pt:
       ui:
         label: Interface
         option:
-          invertScroll: Inverter direção quando desloca nas fotos
+          invertScroll: Inverter direção quando move visualização nas fotos
           invertZoom: Inverter direção quando utiliza o zoom nas fotos
           overlayToolbars: Ocultar e mostrar automaticamente as barras de ferramentas
       zoomMode:
@@ -168,10 +168,10 @@ pt:
           fit: Ampliar ajustando à altura
           fill: Ampliar ajustando à largura
       layout:
-        label: Layout de Visualização de Item
+        label: Visualização de Item
         option:
-          stacked: Empilhado
-          side-by-side: Lado a Lado
+          stacked: Layout Vertical
+          side-by-side: Layout Horizontal
       completions:
         label: Autocompletar
         option:

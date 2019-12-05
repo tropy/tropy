@@ -35,10 +35,16 @@ de:
             - label: Einträge löschen
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Fotos importieren …
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importieren
+          submenu:
+            - label: Fotos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Ordner…
+              command: 'app:import-directory'
+              condition: project
+        - type: separator
         - label: Fotos konsolidieren
           command: 'app:consolidate-photo-library'
           condition: project
@@ -243,10 +249,15 @@ de:
             - label: Einträge löschen
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Fotos importieren …
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importieren
+          submenu:
+            - label: Fotos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Ordner…
+              command: 'app:import-directory'
+              condition: project
         - label: Fotos konsolidieren
           command: 'app:consolidate-photo-library'
           condition: project
@@ -430,10 +441,16 @@ de:
             - label: Einträge löschen
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Fotos importieren …
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importieren
+          submenu:
+            - label: Fotos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Ordner…
+              command: 'app:import-directory'
+              condition: project
+        - type: separator
         - label: Fotos konsolidieren
           command: 'app:consolidate-photo-library'
           condition: project
