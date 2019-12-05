@@ -104,15 +104,12 @@ class Database extends EventEmitter {
 
         let msg = `db query took ${ms}ms`
 
-        if (ms > 150) {
-          return warn({ query, ms }, `SLOW: ${msg}`)
-        }
-
-        if (ms > 50) {
-          return info({ msg, query, ms })
-        }
-
-        trace({ msg, query, ms })
+        if (ms < 100)
+          trace({ msg, query, ms })
+        if (ms < 200)
+          info({ msg, query, ms })
+        else
+          warn({ query, ms }, `SLOW: ${msg}`)
       })
     })
   }
