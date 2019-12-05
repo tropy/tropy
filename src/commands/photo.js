@@ -212,23 +212,21 @@ class Create extends ImportCommand {
   *exec() {
     let { cache, db } = this.options
     let { payload, meta } = this.action
-    let { item, files } = payload
+    let id = payload.item
 
     let photos = []
     let backlog = []
 
-    let idx = this.action.meta.idx ||
-      [yield select(({ items }) => items[item].photos.length)]
+    let files = yield call(this.getFilesToImport)
 
-    if (!files && meta.prompt)
-      files = yield call(this.prompt, meta.prompt)
-    if (!files)
+    if (files.length === 0)
       return []
 
-    let [base, template, prefs] = yield select(state => [
+    let [base, template, prefs, idx] = yield select(state => [
       state.project.base,
       getPhotoTemplate(state),
-      state.settings
+      state.settings,
+      meta.idx || state.items[id].photos.length
     ])
 
     // Subtle: push photos to this.result early to support
@@ -252,7 +250,7 @@ class Create extends ImportCommand {
         while (!image.done) {
           let photo = yield call(db.transaction, tx =>
             mod.photo.create(tx, { base, template: template.id }, {
-              item,
+              item: id,
               image,
               data,
               position: idx[0] + i + 1
@@ -290,10 +288,7 @@ class Create extends ImportCommand {
       }
     }
 
-    yield put(act.item.photos.add({
-      id: item,
-      photos
-    }, { idx }))
+    yield put(act.item.photos.add({ id, photos }, { idx }))
 
     if (backlog.length > 0) {
       yield wait(backlog)

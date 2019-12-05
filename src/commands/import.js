@@ -18,9 +18,6 @@ const {
   getTemplateProperties
 } = require('../selectors')
 
-const isFileSupported = (file) =>
-  IMAGE.EXT.includes(extname(file.name).slice(1).toLowerCase())
-
 class ImportCommand extends Command {
   static *consolidate(cache, image, photos, { overwrite = true } = {}) {
     while (!image.done) {
@@ -41,22 +38,35 @@ class ImportCommand extends Command {
     }
   }
 
-  prompt = async (type) => {
+  async promptForFilesToImport(type) {
     try {
       this.suspend()
       switch (type) {
         case 'dir':
-          return dir.expand(await open.dir(), {
-            filter: isFileSupported,
-            recursive: true
-          })
+          return open.dir()
         default:
           return open.images()
       }
-
     } finally {
       this.resume()
     }
+  }
+
+  canImportFile = (file) => (
+    IMAGE.EXT.includes(extname(file.name).slice(1).toLowerCase())
+  )
+
+  getFilesToImport = async () => {
+    let { payload, meta } = this.action
+    let { files = [] } = payload
+
+    if (!files.length && meta.prompt)
+      files = await this.promptForFilesToImport(meta.prompt)
+
+    return dir.expand(files, {
+      filter: this.canImportFile,
+      recursive: true
+    })
   }
 
   *openImage(path) {

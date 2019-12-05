@@ -64,14 +64,13 @@ Create.register(ITEM.CREATE)
 class Import extends ImportCommand {
   *exec() {
     let { cache, db } = this.options
-    let { payload, meta } = this.action
-    let { files, list } = payload
+    let { list } = this.action.payload
     let items = []
     let backlog = []
 
-    if (!files && meta.prompt)
-      files = yield call(this.prompt, meta.prompt)
-    if (!files)
+    let files = yield call(this.getFilesToImport)
+
+    if (files.length === 0)
       return []
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
