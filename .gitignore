@@ -11,4 +11,5 @@ db/*.db
 .vimrc
 scripts/appimagetool
 scripts/stats.js
+scripts/fetch_strings.sh
 _book
