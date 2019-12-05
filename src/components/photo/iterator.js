@@ -2,9 +2,7 @@
 
 const React = require('react')
 const { Iterator } = require('../iterator')
-const { DropTarget, DND } = require('../dnd')
-const { IMAGE } = require('../../constants')
-const { isImageSupported } = IMAGE
+const { DND, DropTarget, hasPhotoFiles } = require('../dnd')
 const { blank, last, move } = require('../../common/util')
 const { ceil, floor, min } = Math
 const { on, off } = require('../../dom')
@@ -330,26 +328,27 @@ class PhotoIterator extends Iterator {
 
 const DropTargetSpec = {
   drop({ photos, onCreate }, monitor) {
-    if (monitor.didDrop()) return
+    if (monitor.didDrop())
+      return
 
-    let type = monitor.getItemType()
     let item = monitor.getItem()
-
     let files
 
-    switch (type) {
+    switch (monitor.getItemType()) {
       case DND.PHOTO: {
         let to = last(photos).id
 
         if (item.id !== to)  {
           return {
-            id: item.id, to, offset: 1
+            id: item.id,
+            to,
+            offset: 1
           }
         }
         break
       }
       case DND.FILE:
-        files = item.files.filter(isImageSupported).map(f => f.path)
+        files = item.files.map(f => f.path)
         break
       case DND.URL:
         files = item.urls
@@ -367,12 +366,11 @@ const DropTargetSpec = {
       case DND.PHOTO:
         return photos.length > 1
       case DND.FILE:
-        return canCreate &&
-          !!monitor.getItem().types.find(isImageSupported)
+        return canCreate && !hasPhotoFiles(monitor)
       case DND.URL:
         return canCreate
       default:
-        return true
+        return false
     }
   }
 }

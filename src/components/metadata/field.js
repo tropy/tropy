@@ -264,10 +264,9 @@ const DragSourceCollect = (connect) => ({
 
 const DropTargetSpec = {
   canDrop({ id, property }, monitor) {
-    let type = monitor.getItemType()
     let item = monitor.getItem()
 
-    switch (type) {
+    switch (monitor.getItemType()) {
       case DND.TEXT:
       case DND.URL:
         return true

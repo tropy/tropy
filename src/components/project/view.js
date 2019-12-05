@@ -2,13 +2,12 @@
 
 const React = require('react')
 const { WindowContext } = require('../main')
-const { DropTarget, DND } = require('../dnd')
+const { DND, DropTarget, hasPhotoFiles } = require('../dnd')
 const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
 const { blank, pick } = require('../../common/util')
 const { array, bool, func, object, number } = require('prop-types')
-const { isImageSupported } = require('../../constants/image')
 const { ITEM } = require('../../constants/sass')
 
 
@@ -126,7 +125,7 @@ class ProjectView extends React.Component {
     offset: number.isRequired,
     photos: object.isRequired,
     tags: object.isRequired,
-    dt: func.isRequired,
+    connectDropTarget: func.isRequired,
     zoom: number.isRequired,
     onItemCreate: func.isRequired,
     onItemImport: func.isRequired,
@@ -140,13 +139,12 @@ class ProjectView extends React.Component {
 
 const spec = {
   drop({ nav, onItemImport }, monitor) {
-    let type = monitor.getItemType()
     let item = monitor.getItem()
     let files
 
-    switch (type) {
+    switch (monitor.getItemType()) {
       case DND.FILE:
-        files = item.files.filter(isImageSupported).map(f => f.path)
+        files = item.files.map(f => f.path)
         break
       case DND.URL:
         files = item.urls
@@ -160,21 +158,17 @@ const spec = {
   },
 
   canDrop(_, monitor) {
-    let type = monitor.getItemType()
-    let item = monitor.getItem()
-
-    switch (type) {
+    switch (monitor.getItemType()) {
       case DND.FILE:
-        return !!item.types.find(isImageSupported)
+        return hasPhotoFiles(monitor)
       default:
         return true
     }
-
   }
 }
 
 const collect = (connect, monitor) => ({
-  dt: connect.dropTarget(),
+  connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver(),
   canDrop: monitor.canDrop()
 })

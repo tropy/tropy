@@ -13,9 +13,6 @@ const {
   getEmptyImage
 } = require('react-dnd-html5-backend-cjs')
 
-const { NativeDragSource } =
-  require('react-dnd-html5-backend-cjs/lib/NativeDragSources/NativeDragSource')
-
 const {
   MIME
 } = require('../constants')
@@ -32,25 +29,15 @@ const DND = {
   }
 }
 
+const isProjectOrTemplateFile = ({ kind, type }) =>
+  kind === 'file' && (MIME.TPY === type || MIME.TTP === type)
 
-const { loadDataTransfer } = NativeDragSource.prototype
+const hasProjectFiles = (monitor) =>
+  !!Array.from(monitor.getItem().items || []).find(isProjectOrTemplateFile)
 
-NativeDragSource.prototype.loadDataTransfer =
-  function (dataTransfer, ...args) {
-    loadDataTransfer.call(this, dataTransfer, ...args)
-
-    this.item.types =
-      Array.from(dataTransfer.items, (item) => item.type)
-  }
-
-const isProjectOrTemplate = (type) =>
-  MIME.TPY === type || MIME.TTP === type
-
-const hasProjectFiles = (monitor) => {
-  let { types } = monitor.getItem()
-  return types != null && types.find(isProjectOrTemplate)
-}
-
+// Subtle: we assume that there are photo files, if we don't see
+// any project files. This is because we cannot reliably see all
+// files (e.g., in a directory) before the drop event.
 const hasPhotoFiles = (monitor) =>
   !hasProjectFiles(monitor)
 

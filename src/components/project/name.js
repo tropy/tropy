@@ -1,10 +1,9 @@
 'use strict'
 
 const React = require('react')
-const { DropTarget, DND } = require('../dnd')
+const { DND, DropTarget, hasPhotoFiles } = require('../dnd')
 const { IconMaze, IconWarningSm } = require('../icons')
 const { Editable } = require('../editable')
-const { isImageSupported } = require('../../constants/image')
 const { blank } = require('../../common/util')
 const cx = require('classnames')
 const { bool, func, string } = require('prop-types')
@@ -60,12 +59,11 @@ module.exports = {
   ProjectName: DropTarget([DND.FILE, DND.URL], {
     drop({ onDrop }, monitor) {
       let item = monitor.getItem()
-      let type = monitor.getItemType()
       let files
 
-      switch (type) {
+      switch (monitor.getItemType()) {
         case DND.FILE:
-          files = item.files.filter(isImageSupported).map(f => f.path)
+          files = item.files.map(f => f.path)
           break
         case DND.URL:
           files = item.urls
@@ -73,14 +71,15 @@ module.exports = {
       }
 
       if (!blank(files)) {
-        return onDrop({ files }), { files }
+        onDrop({ files })
+        return { files }
       }
     },
 
     canDrop(_, monitor) {
       switch (monitor.getItemType()) {
         case DND.FILE:
-          return !!monitor.getItem().types.find(isImageSupported)
+          return hasPhotoFiles(monitor)
         case DND.URL:
           return true
       }
