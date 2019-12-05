@@ -148,7 +148,7 @@
     "sanitize-filename": "^1.6.3",
     "sharp": "^0.23.3",
     "shortid": "^2.2.15",
-    "sqlite3": "^4.1.0",
+    "sqlite3": "^4.1.1",
     "transducers.js": "^0.3.2",
     "uuid": "^3.3.3",
     "winreg": "^1.2.4",
