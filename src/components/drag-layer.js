@@ -1,12 +1,11 @@
 'use strict'
 
 const React = require('react')
-const { DragLayer } = require('./dnd')
+const { DND, DragLayer } = require('./dnd')
 const { ItemDragPreview } = require('./item')
 const { PhotoDragPreview } = require('./photo')
 const { ListDragPreview } = require('./list')
 const { FieldDragPreview } = require('./metadata')
-const { DND } = require('../constants')
 const { on, off } = require('../dom')
 const throttle = require('lodash.throttle')
 const { bool, number, object, shape, string } = require('prop-types')

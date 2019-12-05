@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { WindowContext } = require('../main')
-const { DropTarget, NativeTypes } = require('../dnd')
+const { DropTarget, DND } = require('../dnd')
 const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
@@ -145,10 +145,10 @@ const spec = {
     let files
 
     switch (type) {
-      case NativeTypes.FILE:
+      case DND.FILE:
         files = item.files.filter(isImageSupported).map(f => f.path)
         break
-      case NativeTypes.URL:
+      case DND.URL:
         files = item.urls
         break
     }
@@ -164,7 +164,7 @@ const spec = {
     let item = monitor.getItem()
 
     switch (type) {
-      case NativeTypes.FILE:
+      case DND.FILE:
         return !!item.types.find(isImageSupported)
       default:
         return true
@@ -181,7 +181,7 @@ const collect = (connect, monitor) => ({
 
 module.exports = {
   ProjectView: DropTarget([
-    NativeTypes.FILE,
-    NativeTypes.URL
+    DND.FILE,
+    DND.URL
   ], spec, collect)(ProjectView)
 }

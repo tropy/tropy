@@ -2,11 +2,10 @@
 
 const React = require('react')
 const { Thumbnail } = require('./thumbnail')
-const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
+const { DND, DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { bounds } = require('../../dom')
 const { pure } = require('../util')
 const { pick } = require('../../common/util')
-const { DND } = require('../../constants')
 
 const {
   arrayOf, bool, func, number, string, object, shape

@@ -5,10 +5,10 @@ const { connect } = require('react-redux')
 const { ProjectView } = require('./view')
 const { ItemView } = require('../item')
 const { DragLayer } = require('../drag-layer')
-const { DropTarget, NativeTypes } = require('../dnd')
+const { DropTarget, DND } = require('../dnd')
 const { NoProject } = require('./none')
 const { extname } = require('path')
-const { MODE } = require('../../constants/project')
+const { MIME, PROJECT: { MODE } } = require('../../constants')
 const { emit, on, off, ensure, reflow } = require('../../dom')
 const cx = require('classnames')
 const { values } = Object
@@ -363,13 +363,15 @@ const DropTargetSpec = {
   },
 
   canDrop(_, monitor) {
-    const { types } = monitor.getItem()
+    let { types } = monitor.getItem()
 
-    if (types.length < 1) return false
+    console.log(types)
+    if (types.length !== 1)
+      return false
 
     switch (types[0]) {
-      case 'application-vnd.tropy.tpy':
-      case 'application-vnd.tropy.ttp':
+      case MIME.TPY:
+      case MIME.TTP:
         return true
       default:
         return false
@@ -566,10 +568,9 @@ module.exports = {
       onUiUpdate(...args) {
         dispatch(actions.ui.update(...args))
       }
-
     })
 
-  )(DropTarget(NativeTypes.FILE, DropTargetSpec, (c, m) => ({
+  )(DropTarget(DND.FILE, DropTargetSpec, (c, m) => ({
     dt: c.dropTarget(), isOver: m.isOver(), canDrop: m.canDrop()
   }))(ProjectContainer))
 }

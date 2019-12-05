@@ -5,8 +5,8 @@ const { Button } = require('../button')
 const { Editable } = require('../editable')
 const { Collapse } = require('../fx')
 const { IconFolder, IconGhost, IconTriangle } = require('../icons')
-const { DragSource, DropTarget, NativeTypes, getEmptyImage } = require('../dnd')
-const { DND, LIST, SASS, IMAGE } = require('../../constants')
+const { DragSource, DropTarget, DND, getEmptyImage } = require('../dnd')
+const { LIST, SASS, IMAGE } = require('../../constants')
 const { isImageSupported } = IMAGE
 const { bounds } = require('../../dom')
 const lazy = require('./tree')
@@ -350,7 +350,7 @@ const DropTargetSpec = {
     let item = monitor.getItem()
 
     switch (type) {
-      case NativeTypes.FILE:
+      case DND.FILE:
         return !!item.types.find(isImageSupported)
       case DND.LIST:
         return !(props.isDragging || props.isDraggingParent)
@@ -377,10 +377,10 @@ const DropTargetSpec = {
             items: item.items
           })
           break
-        case NativeTypes.FILE:
+        case DND.FILE:
           files = item.files.filter(isImageSupported).map(f => f.path)
           break
-        case NativeTypes.URL:
+        case DND.URL:
           files = item.urls
           break
       }
@@ -406,6 +406,6 @@ module.exports.NewListNode = NewListNode
 module.exports.ListNode =
   DragSource(DND.LIST, DragSourceSpec, DragSourceCollect)(
     DropTarget([
-      DND.LIST, DND.ITEMS, NativeTypes.FILE, NativeTypes.URL],
+      DND.LIST, DND.ITEMS, DND.FILE, DND.URL],
         DropTargetSpec,
         DropTargetCollect)(ListNode))

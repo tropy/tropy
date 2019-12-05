@@ -2,12 +2,11 @@
 
 const React = require('react')
 const { Thumbnail } = require('../photo/thumbnail')
-const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
+const { DND, DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { bool, func, number, shape, string } = require('prop-types')
 const { pure } = require('../util')
 const { pick } = require('../../common/util')
 const { bounds } = require('../../dom')
-const { DND } = require('../../constants')
 
 
 class SelectionIterable extends React.PureComponent {

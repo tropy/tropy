@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { DropTarget, NativeTypes } = require('../dnd')
+const { DropTarget, DND } = require('../dnd')
 const { IconMaze, IconWarningSm } = require('../icons')
 const { Editable } = require('../editable')
 const { isImageSupported } = require('../../constants/image')
@@ -57,17 +57,17 @@ class ProjectName extends React.PureComponent {
 }
 
 module.exports = {
-  ProjectName: DropTarget([NativeTypes.FILE, NativeTypes.URL], {
+  ProjectName: DropTarget([DND.FILE, DND.URL], {
     drop({ onDrop }, monitor) {
       let item = monitor.getItem()
       let type = monitor.getItemType()
       let files
 
       switch (type) {
-        case NativeTypes.FILE:
+        case DND.FILE:
           files = item.files.filter(isImageSupported).map(f => f.path)
           break
-        case NativeTypes.URL:
+        case DND.URL:
           files = item.urls
           break
       }
@@ -79,9 +79,9 @@ module.exports = {
 
     canDrop(_, monitor) {
       switch (monitor.getItemType()) {
-        case NativeTypes.FILE:
+        case DND.FILE:
           return !!monitor.getItem().types.find(isImageSupported)
-        case NativeTypes.URL:
+        case DND.URL:
           return true
       }
     }

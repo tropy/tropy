@@ -2,8 +2,8 @@
 
 const React = require('react')
 const { Iterator } = require('../iterator')
-const { DropTarget, NativeTypes } = require('../dnd')
-const { DND, IMAGE } = require('../../constants')
+const { DropTarget, DND } = require('../dnd')
+const { IMAGE } = require('../../constants')
 const { isImageSupported } = IMAGE
 const { blank, last, move } = require('../../common/util')
 const { ceil, floor, min } = Math
@@ -282,7 +282,7 @@ class PhotoIterator extends Iterator {
 
   static asDropTarget() {
     return DropTarget(
-        [DND.PHOTO, NativeTypes.FILE, NativeTypes.URL],
+        [DND.PHOTO, DND.FILE, DND.URL],
         DropTargetSpec,
         DropTargetCollect
       )(this)
@@ -348,10 +348,10 @@ const DropTargetSpec = {
         }
         break
       }
-      case NativeTypes.FILE:
+      case DND.FILE:
         files = item.files.filter(isImageSupported).map(f => f.path)
         break
-      case NativeTypes.URL:
+      case DND.URL:
         files = item.urls
         break
     }
@@ -366,10 +366,10 @@ const DropTargetSpec = {
     switch (monitor.getItemType()) {
       case DND.PHOTO:
         return photos.length > 1
-      case NativeTypes.FILE:
+      case DND.FILE:
         return canCreate &&
           !!monitor.getItem().types.find(isImageSupported)
-      case NativeTypes.URL:
+      case DND.URL:
         return canCreate
       default:
         return true
@@ -385,7 +385,7 @@ const DropTargetCollect = (connect, monitor) => {
     connectDropTarget: connect.dropTarget(),
     isOver: isOver && type === DND.PHOTO,
     isOverFile: isOver &&
-      (type === NativeTypes.FILE || type === NativeTypes.URL)
+      (type === DND.FILE || type === DND.URL)
   }
 }
 

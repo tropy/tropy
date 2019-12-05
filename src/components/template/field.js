@@ -2,12 +2,11 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { DragSource, DropTarget } = require('../dnd')
+const { DND, DragSource, DropTarget } = require('../dnd')
 const { ResourceSelect } = require('../resource/select')
 const { Button } = require('../button')
 const { FormElement, FormField, FormToggle } = require('../form')
 const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
-const { DND } = require('../../constants')
 const cx = require('classnames')
 const { array, bool, func, number, object } = require('prop-types')
 const { bounds } = require('../../dom')
