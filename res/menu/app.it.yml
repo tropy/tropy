@@ -35,10 +35,16 @@ it:
             - label: Svuota lista
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importa foto...
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importa
+          submenu:
+            - label: Foto…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Cartella…
+              command: 'app:import-directory'
+              condition: project
+        - type: separator
         - label: Consolida raccolta foto
           command: 'app:consolidate-photo-library'
           condition: project
@@ -243,10 +249,15 @@ it:
             - label: Svuota lista
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importa foto...
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importa
+          submenu:
+            - label: Foto…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Cartella…
+              command: 'app:import-directory'
+              condition: project
         - label: Consolida raccolta foto
           command: 'app:consolidate-photo-library'
           condition: project
@@ -430,10 +441,16 @@ it:
             - label: Svuota lista
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importa foto...
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importa
+          submenu:
+            - label: Foto…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Cartella…
+              command: 'app:import-directory'
+              condition: project
+        - type: separator
         - label: Consolida raccolta foto
           command: 'app:consolidate-photo-library'
           condition: project

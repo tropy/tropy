@@ -349,6 +349,8 @@ const util = {
 
   identity(payload) { return payload },
 
+  tautology() { return true },
+
   delay(ms) {
     return new Promise(resolve => setTimeout(() => void resolve(), ms))
   },

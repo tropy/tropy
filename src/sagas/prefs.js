@@ -1,5 +1,7 @@
 'use strict'
 
+require('../commands/ontology')
+
 const { debug, warn } = require('../common/log')
 const { CLOSE } = require('../constants/prefs')
 const { ontology } = require('./ontology')

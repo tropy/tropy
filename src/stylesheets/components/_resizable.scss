@@ -11,7 +11,7 @@ $resizable-threshold: 8px !default;
   flex-direction: column;
   position: relative;
   z-index: 1;
-  contain: size layout style;
+  contain: layout style; // size breaks the layout of the panel-group after collapsing panels
 
   .resizable-handle {
     &-col,

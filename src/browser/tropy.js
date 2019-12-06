@@ -8,6 +8,7 @@ const {
   clipboard,
   shell,
   ipcMain: ipc,
+  nativeTheme,
   BrowserWindow,
   systemPreferences: prefs
 } = require('electron')
@@ -52,6 +53,7 @@ const T = new WeakMap()
 
 class Tropy extends EventEmitter {
   static defaults = {
+    fontSize: '13px',
     frameless: darwin,
     debug: false,
     port: 2019,
@@ -141,17 +143,11 @@ class Tropy extends EventEmitter {
       case '.tpy':
         this.showProjectWindow(file)
         break
-      case '.jpg':
-      case '.jpeg':
-      case '.png':
-      case '.svg':
-        this.import({ files: [file] })
-        break
       case '.ttp':
         this.importTemplates([file])
         break
       default:
-        return false
+        this.import({ files: [file] })
     }
     return true
   }
@@ -290,11 +286,7 @@ class Tropy extends EventEmitter {
       this.updater.start()
     }
 
-    if (darwin) {
-      prefs.setAppLevelAppearance(
-        this.state.theme === 'system' ? null : this.state.theme
-      )
-    }
+    nativeTheme.themeSource = this.state.theme
 
     info('app state restored')
   }
@@ -318,6 +310,9 @@ class Tropy extends EventEmitter {
     state.locale = this.getLocale(state.locale)
     state.uuid = state.uuid || require('uuid/v1')()
     state.version = this.version
+
+    if (!(/^(system|dark|light)$/).test(state.theme))
+      state.theme = 'system'
 
     return state
   }
@@ -358,6 +353,8 @@ class Tropy extends EventEmitter {
 
     this.on('app:import', () =>
       this.import())
+    this.on('app:import-directory', () =>
+      this.import({}, { prompt: 'dir' }))
 
     this.on('app:rename-project', (win) =>
       this.dispatch(act.edit.start({ project: { name: true } }), win))
@@ -557,6 +554,11 @@ class Tropy extends EventEmitter {
       this.setTheme(theme)
     })
 
+    this.on('app:change-font-size', (_, fontSize) => {
+      this.state.fontSize = fontSize
+      this.wm.broadcast('fontSize', this.state.fontSize)
+    })
+
     this.on('app:switch-locale', async (_, locale) => {
       info(`switch to "${locale}" locale`)
       this.state.locale = locale
@@ -704,16 +706,17 @@ class Tropy extends EventEmitter {
       }
     })
 
+    nativeTheme.on('updated', () => {
+      this.setTheme(nativeTheme.themeSource)
+    })
+
     if (darwin) {
       app.on('activate', () => this.open())
 
       let ids = [
         prefs.subscribeNotification(
           'AppleShowScrollBarsSettingChanged',
-          this.wm.handleScrollBarsChange),
-        prefs.subscribeNotification(
-          'AppleInterfaceThemeChangedNotification',
-          () => this.setTheme())
+          this.wm.handleScrollBarsChange)
       ]
 
       app.on('quit', () => {
@@ -745,8 +748,8 @@ class Tropy extends EventEmitter {
         ])
 
         debug('will open print dialog')
-        let result = await WindowManager.print(win)
-        info(`printing ${result ? 'confirmed' : 'aborted'}`)
+        let status = await WindowManager.print(win)
+        info(`print status: ${status}`)
 
       } finally {
         if (win != null) win.destroy()
@@ -893,6 +896,7 @@ class Tropy extends EventEmitter {
       dev: this.dev,
       cache: this.cache.root,
       plugins: this.plugins.root,
+      fontSize: this.state.fontSize,
       frameless: this.state.frameless,
       theme: this.state.theme,
       level: logger.level,
@@ -917,13 +921,14 @@ class Tropy extends EventEmitter {
     info(`switch to "${theme}" theme`)
     this.state.theme = theme
 
-    if (darwin) {
-      prefs.setAppLevelAppearance(
-        theme === 'system' ? null : theme
-      )
-    }
+    if (theme !== nativeTheme.themeSource)
+      nativeTheme.themeSource = theme
 
-    this.wm.broadcast('theme', theme, prefs.isDarkMode())
+    this.wm.broadcast('theme', theme, {
+      dark: nativeTheme.shouldUseDarkColors,
+      contrast: nativeTheme.shouldUseHighContrastColors
+    })
+
     this.emit('app:reload-menu')
   }
 

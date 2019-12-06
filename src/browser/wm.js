@@ -24,6 +24,7 @@ const {
   app,
   BrowserWindow,
   ipcMain: ipc,
+  nativeTheme,
   systemPreferences: prefs
 } = require('electron')
 
@@ -95,15 +96,15 @@ class WindowManager extends EventEmitter {
         opts.frame = false
       }
 
-      let isDark = args.theme === 'dark' ||
-        args.theme === 'system' && prefs.isDarkMode()
+      let isDarkMode = nativeTheme.shouldUseDarkColors
 
-      opts.backgroundColor = BODY[process.platform][isDark ? 'dark' : 'light']
+      opts.backgroundColor =
+        BODY[process.platform][isDarkMode ? 'dark' : 'light']
 
       switch (process.platform) {
         case 'linux':
           opts.icon = res.icon.expand(channel, 'tropy', '512x512.png')
-          opts.darkTheme = opts.darkTheme || isDark
+          opts.darkTheme = opts.darkTheme || isDarkMode
           break
         case 'darwin':
           if (!opts.frame && EL_CAPITAN) {
@@ -126,9 +127,9 @@ class WindowManager extends EventEmitter {
       // TODO check position on display!
       var win = new BrowserWindow(opts)
 
-      win.webContents.once('did-finish-load', () => {
-        win.webContents.setVisualZoomLevelLimits(1, 1)
-        win.webContents.setZoomFactor(args.zoom || 1)
+      win.webContents.once('did-finish-load', async () => {
+        win.webContents.zoomFactor = args.zoom || 1
+        await win.webContents.setVisualZoomLevelLimits(1, 1)
       })
 
       if (opts.isExclusive) {
@@ -299,11 +300,12 @@ class WindowManager extends EventEmitter {
     await win.loadFile(res.view.expand(type), {
       hash: encodeURIComponent(JSON.stringify({
         aqua: WindowManager.getAquaColorVariant(),
-        dark: prefs.isDarkMode(),
+        contrast: nativeTheme.shouldUseHighContrastColors,
+        dark: nativeTheme.shouldUseDarkColors,
         environment: process.env.NODE_ENV,
         documents: app.getPath('documents'),
-        maximizable: win.isMaximizable(),
-        minimizable: win.isMinimizable(),
+        maximizable: win.maximizable,
+        minimizable: win.minimizable,
         pictures: app.getPath('pictures'),
         scrollbars: !WindowManager.hasOverlayScrollBars(),
         theme: 'light',
@@ -426,10 +428,10 @@ class WindowManager extends EventEmitter {
     factor = restrict(factor, this.MIN_ZOOM, this.MAX_ZOOM)
 
     for (let win of this.values()) {
-      let old = win.webContents.getZoomFactor()
+      let old = win.webContents.zoomFactor
       if (old === factor) continue
 
-      win.webContents.setZoomFactor(factor)
+      win.webContents.zoomFactor = factor
 
       if (win.isResizable()) {
         let [minWidth, minHeight] = win.getMinimumSize()
@@ -505,7 +507,7 @@ class WindowManager extends EventEmitter {
 
   static getAquaColorVariant() {
     return darwin && AQUA[
-      prefs.getUserDefault('AppleAquaColorVariant', 'integer')
+      prefs.getUserDefault('AppleAquaColorVariant', 'string')
     ]
   }
 
@@ -522,8 +524,13 @@ class WindowManager extends EventEmitter {
   }
 
   static print(win, opts = {}) {
-    return new Promise((resolve) => {
-      win.webContents.print(opts, resolve)
+    return new Promise((resolve, reject) => {
+      win.webContents.print(opts, (success, reason) => {
+        if (success)
+          resolve('successful')
+        else
+          reason === 'cancelled' ? resolve(reason) : reject(reason)
+      })
     })
   }
 }

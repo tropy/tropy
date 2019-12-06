@@ -159,6 +159,21 @@ module.exports = {
           payload.photos.includes(state.photo) ?
           { ...state, photo: null, selection: null, note: null } : state
 
+      case PHOTO.SELECTION.REMOVE: {
+        let { id, selections } = payload
+
+        if (id !== state.photo)
+          return state
+        if (!selections.includes(state.selection))
+          return state
+        else
+          return {
+            ...state,
+            selection: null,
+            note: null
+          }
+      }
+
 
       case NAV.SELECT:
         return {

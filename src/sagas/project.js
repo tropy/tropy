@@ -1,5 +1,7 @@
 'use strict'
 
+require('../commands')
+
 const assert = require('assert')
 const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
 const { IDLE } = require('../constants/idle')
@@ -11,7 +13,7 @@ const consolidator = require('./consolidator')
 const { history } = require('./history')
 const { search } = require('./search')
 const { ontology } = require('./ontology')
-const { exec } = require('./cmd')
+const { exec, commands } = require('./cmd')
 const { shell } = require('./shell')
 const { fail } = require('../dialog')
 const mod = require('../models')
@@ -27,29 +29,32 @@ const {
 const has = (condition) => (({ error, meta }) =>
   (!error && meta && (!meta.cmd || meta.done) && meta[condition]))
 
-const command = ({ error, meta }) =>
-  (!error && meta && meta.cmd === 'project')
-
 const onErrorClose = onErrorPut(act.project.close)
 
 const FORCE_SHUTDOWN_DELAY = 60000
-
 
 function *open(file) {
   try {
     var db = new Database(file, 'w')
 
     yield fork(onErrorClose, db)
-    let migrations = yield call(db.migrate, MIGRATIONS)
 
+    let migrations = yield call(db.migrate, MIGRATIONS)
     let project = yield call(mod.project.load, db)
-    let access = yield call(mod.access.open, db)
 
     assert(project != null && project.id != null, 'invalid project')
 
-    if (migrations.length === 0) {
+    if (migrations.length > 0) {
+      db.modified = true
+
+    } else {
       try {
         yield call(db.check)
+
+        db.once('update', () => {
+          db.modified = true
+        })
+
       } catch (_) {
         warn('project file may be corrupted!')
         project.corrupted = true
@@ -70,19 +75,19 @@ function *open(file) {
       yield fork(setup, db, project)
 
       while (true) {
-        let action = yield take(command)
+        let action = yield take(commands('project'))
         yield fork(exec, { db, id: project.id, cache }, action)
       }
 
     } finally {
-      yield call(close, db, project, access, cache)
+      yield call(close, db, project, cache)
     }
   } catch (e) {
     warn({ stack: e.stack }, 'unexpected error in *open')
     yield call(fail, e, db.path)
 
     // Mark the task as cancelled. Otherwise the task will appear to be
-    // running event after the finally block completes.
+    // running even after the finally block completes.
     yield cancel()
 
   } finally {
@@ -133,11 +138,7 @@ function *setup(db, project) {
   }
 }
 
-function *close(db, project, access) {
-  if (access != null && access.id > 0) {
-    yield call(mod.access.close, db, access.id)
-  }
-
+function *close(db, project) {
   yield all([
     call(storage.persist, 'nav', project.id),
     call(storage.persist, 'notepad', project.id),
@@ -147,15 +148,19 @@ function *close(db, project, access) {
     call(storage.persist, 'panel', project.id)
   ])
 
-  debug('pruning db...')
-  yield call(mod.item.prune, db)
-  yield call(mod.list.prune, db)
-  yield call(mod.value.prune, db)
-  yield call(mod.photo.prune, db)
-  yield call(mod.selection.prune, db)
-  yield call(mod.note.prune, db)
-  yield call(mod.subject.prune, db)
-  yield call(mod.access.prune, db)
+  if (db.modified) {
+    yield call(mod.access.touch, db)
+
+    debug('pruning db...')
+    yield call(mod.item.prune, db)
+    yield call(mod.list.prune, db)
+    yield call(mod.value.prune, db)
+    yield call(mod.photo.prune, db)
+    yield call(mod.selection.prune, db)
+    yield call(mod.note.prune, db)
+    yield call(mod.subject.prune, db)
+    yield call(mod.access.prune, db)
+  }
 
   debug('*close terminated')
 }
@@ -229,7 +234,6 @@ function *main() {
 }
 
 module.exports = {
-  command,
   main,
   open
 }

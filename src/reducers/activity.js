@@ -5,13 +5,16 @@ const { ACTIVITY } = require('../constants')
 
 module.exports = {
   activities(state = {}, { type, payload, meta = {} }) {
-    const { cmd, rel, seq, now, done, progress, total } = meta
+    const { cmd, rel, done } = meta
 
     switch (true) {
       case (type === ACTIVITY.UPDATE):
         return {
           ...state,
-          [rel]: { ...state[rel], ...payload }
+          [rel]: {
+            ...state[rel],
+            ...payload
+          }
         }
 
       case (done):
@@ -20,8 +23,11 @@ module.exports = {
       case (cmd != null):
         return {
           ...state,
-          [seq]: {
-            id: seq, type, init: now, progress, total
+          [meta.seq]: {
+            id: meta.seq,
+            type,
+            init: meta.now,
+            cancel: meta.cancel
           }
         }
 

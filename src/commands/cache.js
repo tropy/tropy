@@ -12,8 +12,6 @@ const { debug, info } = require('../common/log')
 const UUID = /^[0-9a-f]{8}(-[0-9a-f]+){4}$/i
 
 class Prune extends Command {
-  static get ACTION() { return CACHE.PRUNE }
-
   static check(file, state) {
     let [id,, ext] = Cache.split(file)
     return ext !== Cache.extname() ||
@@ -48,10 +46,10 @@ class Prune extends Command {
   }
 }
 
+Prune.register(CACHE.PRUNE)
+
 
 class Purge extends Command {
-  static get ACTION() { return CACHE.PURGE }
-
   *exec() {
     let AGE = 3 // months
     let NOW = new Date()
@@ -86,6 +84,8 @@ class Purge extends Command {
     return stale
   }
 }
+
+Purge.register(CACHE.PURGE)
 
 const addMonths = (k = 0, d = new Date()) =>
   new Date(d.getFullYear(), d.getMonth() + k, d.getDate())

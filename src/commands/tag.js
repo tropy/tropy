@@ -15,12 +15,12 @@ const act = require('../actions')
 
 
 class Load extends Command {
-  static get ACTION() { return TAG.LOAD }
-
   *exec() {
     return (yield call(mod.tag.load, this.options.db, this.action.payload))
   }
 }
+
+Load.register(TAG.LOAD)
 
 
 class Create extends Command {
@@ -62,13 +62,12 @@ class Create extends Command {
 
     return tag
   }
-
-  static ACTION = TAG.CREATE
 }
 
-class Save extends Command {
-  static get ACTION() { return TAG.SAVE }
+Create.register(TAG.CREATE)
 
+
+class Save extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -89,10 +88,10 @@ class Save extends Command {
   }
 }
 
+Save.register(TAG.SAVE)
+
 
 class Delete extends Command {
-  static get ACTION() { return TAG.DELETE }
-
   *exec() {
     let { db } = this.options
     let id = this.action.payload
@@ -112,9 +111,10 @@ class Delete extends Command {
   }
 }
 
-class Export extends Command {
-  static get ACTION() { return TAG.EXPORT }
+Delete.register(TAG.DELETE)
 
+
+class Export extends Command {
   *exec() {
     let { target } = this.action.meta
 
@@ -137,6 +137,8 @@ class Export extends Command {
     }
   }
 }
+
+Export.register(TAG.EXPORT)
 
 
 module.exports = {

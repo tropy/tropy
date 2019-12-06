@@ -2,8 +2,9 @@
 
 const { mkdir, readdir, stat, writeFile } = require('fs').promises
 const { join, extname, basename } = require('path')
+const { debug, warn } = require('./log')
 const { URI } = require('./util')
-const { IMAGE } = require('../constants')
+const { IMAGE, MIME } = require('../constants')
 
 class Cache {
   constructor(...args) {
@@ -48,6 +49,52 @@ class Cache {
     return stats
   }
 
+  consolidate = async (id, image, {
+    overwrite = true,
+    selection
+  } = {}) => {
+    try {
+      let { page, channels, isOpaque } = image
+      let ext = this.extname(image.mimetype)
+      let variants = image.variants(!!selection)
+
+      let jp2hack = image.mimetype === MIME.JP2 &&
+        image.space === 'b-w' && channels > 1 && !image.hasAlpha
+
+      for (let { name, size, quality } of variants) {
+        let path = this.path(id, name, ext)
+
+        if (overwrite || !(await this.exists(path))) {
+          let dup = await image.resize(size, selection, {
+            page,
+            jp2hack
+          })
+
+          switch (ext) {
+            case '.png':
+              dup.png()
+              break
+            case '.webp':
+              dup.webp({
+                quality,
+                lossless: channels === 1 || !isOpaque
+              })
+              break
+            default:
+              dup.jpeg({ quality })
+          }
+
+          await dup.toFile(this.expand(path))
+
+        } else {
+          debug(`skipping ${name} image variant for #${id}: already exists`)
+        }
+      }
+    } catch (e) {
+      warn({ stack: e.stack }, 'failed to create image variant')
+    }
+  }
+
   expand(...args) {
     return join(this.root, ...args)
   }
@@ -78,11 +125,19 @@ class Cache {
     return [...basename(path, ext).split('_', 2), ext]
   }
 
-  static url(root, variant, { id, mimetype, path, protocol, consolidated }) {
+  static url(root, variant, {
+    id,
+    mimetype,
+    page,
+    path,
+    protocol,
+    consolidated
+  }) {
     if  (id == null || variant == null)
       return null
 
     if (
+        (page > 0) ||
         (variant !== 'full') ||   // Thumbnail
         (protocol !== 'file') ||  // Remote
         !IMAGE.WEB[mimetype]      // Not supported natively

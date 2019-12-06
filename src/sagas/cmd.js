@@ -1,42 +1,59 @@
 'use strict'
 
-const { trace, warn } = require('../common/log')
-const { exec } = require('../commands')
+const { info, trace, warn } = require('../common/log')
+const { Command } = require('../commands/command')
 const { fail } = require('../dialog')
-const { put } = require('redux-saga/effects')
+const { call, put, race, take } = require('redux-saga/effects')
 const activity = require('../actions/activity')
 const history = require('../actions/history')
+const { ACTIVITY } = require('../constants')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
+const cancellation = (id) => ({ payload, type }) => (
+  type === ACTIVITY.CANCEL && payload.id === id
+)
+
 module.exports = {
+  commands(scope) {
+    return ({ error, meta }) => (
+      !error && meta && !meta.done && meta.cmd === scope
+    )
+  },
+
   *exec(options, action) {
     try {
-      var cmd = yield exec(action, options)
-      let { type, meta } = action
+      var cmd = Command.create(action, options)
 
-      if (meta.history && cmd.isomorph) {
-        yield put(history.tick(cmd.history(), meta.history))
-      }
+      var [cancelled] = yield race([
+        take(cancellation(action.meta.seq)),
+        call([cmd, cmd.run])
+      ])
 
+      if (cmd.isReversible)
+        yield put(history.tick(cmd.history))
       if (cmd.error)
-        fail(cmd.error, type)
-      if (!cmd.isInteractive && cmd.duration > TOO_LONG)
-        warn(`SLOW: ${type}`)
+        fail(cmd.error, action.type)
+      if (cmd.duration > TOO_LONG)
+        warn(`SLOW: ${cmd}`)
 
     } catch (e) {
       warn({ stack: e.stack }, `${action.type} failed in *exec`)
       if (!cmd) cmd = { error: e }
 
     } finally {
-      if (!cmd) {
-        cmd = { error: new Error('command was cancelled') }
+      if (cmd.cancelled && !cmd.error) {
+        info(`${cmd} was cancelled ${
+          cancelled ?
+            `by #${cancelled.meta.seq}` :
+            'implicitly'
+        }`)
       }
 
       yield put(activity.done(action, cmd.error || cmd.result, cmd.meta))
 
-      if (cmd.finally) {
-        yield put(cmd.finally)
+      if (cmd.after) {
+        yield put(cmd.after)
       }
 
       trace('*exec terminated')

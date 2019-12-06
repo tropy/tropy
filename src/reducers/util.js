@@ -16,7 +16,7 @@ const util = {
   },
 
   insert(state, payload) {
-    return { ...state, [payload.id]: payload }
+    return util.update(state, payload, { replace: true })
   },
 
   remove(state, payload) {

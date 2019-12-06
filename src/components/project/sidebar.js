@@ -314,7 +314,9 @@ class ProjectSidebar extends React.PureComponent {
             </section>
 
           </SidebarBody>
-          <ActivityPane activities={this.props.activities}/>
+          <ActivityPane
+            activities={this.props.activities}
+            onCancel={this.props.onActivityCancel}/>
         </Sidebar>
       </Resizable>
     )
@@ -343,6 +345,7 @@ class ProjectSidebar extends React.PureComponent {
     tags: arrayOf(object).isRequired,
     tagSelection: arrayOf(number).isRequired,
     width: number.isRequired,
+    onActivityCancel: func.isRequired,
     onContextMenu: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
@@ -393,6 +396,10 @@ module.exports = {
     }),
 
     (dispatch) => ({
+      onActivityCancel(...args) {
+        dispatch(actions.activity.cancel(...args))
+      },
+
       onListCollapse(...args) {
         dispatch(actions.list.collapse(...args))
       },

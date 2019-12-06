@@ -272,13 +272,16 @@ class Image {
     }
   }
 
-  resize = async (size, selection) => {
-    let image = this.do()
+  resize = async (size, selection, {
+    page = this.page,
+    jp2hack = false
+  } = {}) => {
+    let image = this.do(page)
 
     // Workaround conversion issue of grayscale JP2 which receive
     // a multiplied alpha channel after conversion to webp/png.
     // Remove this as soon as we've found a solution or fix upstream!
-    if (this.space === 'b-w' && this.channels > 1 && !this.hasAlpha) {
+    if (jp2hack) {
       let dup = await image.jpeg({ quality: 100 }).toBuffer()
       image = sharp(dup)
     }
@@ -318,7 +321,10 @@ class Image {
   variants(isSelection = false) {
     let variants = [48, 512]
 
-    if (!isSelection && (this.isRemote || !IMAGE.WEB[this.mimetype])) {
+    if (!isSelection && (
+      this.page > 0 ||
+      this.isRemote ||
+      !IMAGE.WEB[this.mimetype])) {
       variants.push('full')
     }
 

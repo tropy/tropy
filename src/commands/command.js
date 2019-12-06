@@ -1,61 +1,112 @@
 'use strict'
 
+const assert = require('assert')
+const { cancel } = require('redux-saga/effects')
 const { pick } = require('../common/util')
-const { freeze } = Object
+
+const Registry = new Map()
 
 class Command {
-  constructor(action, options) {
+  #adjtime = 0
+  #suspended
+
+  constructor(action, options = {}) {
     this.action = action
-    this.options = { ...options }
-    this.adjtime = 0
+    this.options = options
   }
 
   get duration() {
-    return this.done ? this.done - this.init - this.adjtime : 0
+    return this.done ?
+      (this.done - this.init - this.#adjtime) : 0
   }
 
-  get isomorph() {
-    return !this.error && this.undo
+  get id() {
+    return this.action.meta.seq
+  }
+
+  get isReversible() {
+    return !this.error && !!this.undo && !!this.action.meta.history
+  }
+
+  get history() {
+    return {
+      undo: this.undo,
+      redo: this.redo || this.action,
+      mode: this.action.meta.history
+    }
+  }
+
+  get type() {
+    return this.action.type
   }
 
   suspend() {
-    this._adjtime = Date.now()
+    this.#suspended = Date.now()
   }
 
   resume() {
-    this.adj += (Date.now() - this._adjtime)
-    delete this._adjtime
+    this.#adjtime += (Date.now() - this.#suspended)
   }
 
-  *execute() {
+  run = function* () {
     try {
-      this.init = performance.now()
+      this.init = Date.now()
       this.result = yield this.exec()
+      var hasRunToCompletion = true
 
     } catch (error) {
       this.error = error
+
       yield this.abort()
+      yield cancel()
 
     } finally {
-      this.done = performance.now()
-      freeze(this)
-    }
+      this.cancelled = !hasRunToCompletion
 
-    return this
-  }
+      yield this.finally()
+
+      this.done = Date.now()
+      Object.freeze(this)
+
+      return this
+    }
+  };
 
   *abort() {
   }
 
-  history() {
-    return { undo: this.undo, redo: this.redo || this.action }
+  *finally() {
   }
 
   toJSON() {
-    return pick(this, ['init', 'done', 'result', 'error', 'action'])
+    return pick(this, [
+      'action',
+      'done',
+      'error',
+      'init',
+      'result'
+    ])
+  }
+
+  toString() {
+    return `${this.type}#${this.id}`
+  }
+
+  static create(action, options) {
+    return new (Registry.get(action.type))(action, { ...options })
+  }
+
+  static register(type, Cmd = this) {
+    assert(type, 'missing action type')
+    assert(Cmd.prototype instanceof Command || Cmd === Command)
+
+    assert(!Registry.has(type), `command ${type} already registered!`)
+
+    Registry.set(type, Cmd)
   }
 }
 
 module.exports = {
-  Command
+  Command,
+  Registry
 }

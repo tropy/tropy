@@ -248,7 +248,9 @@ class ItemIterator extends Iterator {
   }
 
   connect(element) {
-    return (this.isDisabled) ? element : this.props.dt(element)
+    return (this.isDisabled) ?
+      element :
+      this.props.connectDropTarget(element)
   }
 
   getIterableProps(item, index) {
@@ -309,7 +311,7 @@ class ItemIterator extends Iterator {
     photos: object.isRequired,
     tags: object.isRequired,
 
-    dt: func.isRequired,
+    connectDropTarget: func.isRequired,
     onContextMenu: func.isRequired,
     onItemDelete: func.isRequired,
     onItemExport: func.isRequired,

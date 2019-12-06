@@ -1,14 +1,13 @@
 'use strict'
 
-const { debug, warn } = require('../common/log')
+const { info, warn } = require('../common/log')
 const { clipboard, ipcRenderer: ipc } = require('electron')
 const assert = require('assert')
 const { DuplicateError } = require('../common/error')
-const { all, call, put, select, cps } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { SaveCommand } = require('./subject')
-const { prompt, open, fail, save } = require('../dialog')
+const { prompt, fail, save } = require('../dialog')
 const act = require('../actions')
 const mod = require('../models')
 const { get, pluck, remove } = require('../common/util')
@@ -18,6 +17,16 @@ const { MODE } = require('../constants/project')
 const { keys } = Object
 const { writeFile: write } = require('fs')
 const { win } = require('../window')
+
+const {
+  all,
+  call,
+  fork,
+  join,
+  put,
+  select,
+  cps
+} = require('redux-saga/effects')
 
 const {
   findTagIds,
@@ -30,8 +39,6 @@ const {
 
 
 class Create extends Command {
-  static get ACTION() { return ITEM.CREATE }
-
   *exec() {
     let { db } = this.options
 
@@ -51,20 +58,19 @@ class Create extends Command {
   }
 }
 
+Create.register(ITEM.CREATE)
+
+
 class Import extends ImportCommand {
-  static get ACTION() {
-    return ITEM.IMPORT
-  }
-
   *exec() {
-    let { db } = this.options
-    let { payload, meta } = this.action
-    let { files, list } = payload
+    let { cache, db } = this.options
+    let { list } = this.action.payload
     let items = []
+    let backlog = []
 
-    if (!files && meta.prompt)
-      files = yield this.prompt(meta.prompt)
-    if (!files)
+    let files = yield call(this.getFilesToImport)
+
+    if (files.length === 0)
       return []
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
@@ -77,18 +83,23 @@ class Import extends ImportCommand {
       }
     ])
 
-    for (let i = 0, total = files.length; i < total; ++i) {
-      let file, image, item, data
+    // Subtle: push items to this.result early to support
+    // undo after cancelled (partial) import!
+    this.result = items
+
+    for (let i = 0, total = files.length; i < files.length; ++i) {
+      let file
       let photos = []
 
       try {
-        yield put(act.activity.update(this.action, { total, progress: i + 1 }))
-
         file = files[i]
 
-        image = yield* this.openImage(file)
+        yield put(act.activity.update(this.action, { total, progress: i + 1 }))
+
+        let item
+        let image = yield* this.openImage(file)
         yield* this.handleDuplicate(image)
-        data = yield* this.getMetadata(image, ttp)
+        let data = yield* this.getMetadata(image, ttp)
 
         yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, ttp.item.id, data.item)
@@ -104,29 +115,35 @@ class Import extends ImportCommand {
             }
 
             item.photos.push(photo.id)
-            photos.push(photo)
+
+            photos.push({
+              ...photo,
+              consolidating: true
+            })
+
             image.next()
           }
         })
 
+        items.push(item.id)
+
+        yield all([
+          put(act.item.insert(item)),
+          put(act.metadata.load([item.id, ...item.photos])),
+          put(act.photo.insert(photos))
+        ])
+
         image.rewind()
 
-        while (!image.done) {
-          let photo = photos[image.page]
-
-          yield* this.createThumbnails(photo.id, image)
-          yield put(act.metadata.load([item.id, photo.id]))
-          yield put(act.photo.insert(photo))
-
-          image.next()
-        }
-
-        yield put(act.item.insert(item))
-        items.push(item.id)
+        backlog.push(
+          yield fork(ImportCommand.consolidate,
+            cache,
+            image,
+            item.photos))
 
       } catch (e) {
         if (e instanceof DuplicateError) {
-          debug(`skipping duplicate "${file}"...`)
+          info(`skipping duplicate "${file}"...`)
           continue
         }
 
@@ -135,32 +152,30 @@ class Import extends ImportCommand {
       }
     }
 
-    if (items.length) {
-      this.undo = act.item.delete(items)
-      this.redo = act.item.restore(items)
+    if (backlog.length > 0) {
+      yield join(backlog)
     }
 
     return items
   }
 
-  *prompt(type) {
-    try {
-      this.suspend()
-      switch (type) {
-        case 'url':
-        default:
-          return yield call(open.items)
-      }
+  get redo() {
+    return (this.result && this.result.length > 0) ?
+      act.item.restore(this.result) :
+      null
+  }
 
-    } finally {
-      this.resume()
-    }
+  get undo() {
+    return (this.result && this.result.length > 0) ?
+      act.item.delete(this.result) :
+      null
   }
 }
 
-class Delete extends Command {
-  static get ACTION() { return ITEM.DELETE }
+Import.register(ITEM.IMPORT)
 
+
+class Delete extends Command {
   *exec() {
     const { db } = this.options
     const ids = this.action.payload
@@ -174,9 +189,10 @@ class Delete extends Command {
   }
 }
 
-class Destroy extends Command {
-  static get ACTION() { return ITEM.DESTROY }
+Delete.register(ITEM.DELETE)
 
+
+class Destroy extends Command {
   *exec() {
     const { db } = this.options
     const ids = this.action.payload
@@ -202,9 +218,10 @@ class Destroy extends Command {
   }
 }
 
-class Load extends Command {
-  static get ACTION() { return ITEM.LOAD }
+Destroy.register(ITEM.DESTROY)
 
+
+class Load extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -216,10 +233,10 @@ class Load extends Command {
   }
 }
 
+Load.register(ITEM.LOAD)
+
 
 class Restore extends Command {
-  static get ACTION() { return ITEM.RESTORE }
-
   *exec() {
     const { db } = this.options
     const ids = this.action.payload
@@ -233,14 +250,15 @@ class Restore extends Command {
   }
 }
 
+Restore.register(ITEM.RESTORE)
+
 class TemplateChange extends SaveCommand {
-  static get ACTION() { return ITEM.TEMPLATE.CHANGE }
-  get type() { return 'item' }
+  type = 'item'
 }
+TemplateChange.register(ITEM.TEMPLATE.CHANGE)
+
 
 class Merge extends Command {
-  static get ACTION() { return ITEM.MERGE }
-
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -272,9 +290,10 @@ class Merge extends Command {
   }
 }
 
-class Split extends Command {
-  static get ACTION() { return ITEM.SPLIT }
+Merge.register(ITEM.MERGE)
 
+
+class Split extends Command {
   *exec() {
     let { db } = this.options
     let { item, items, data, lists, tags } = this.action.payload
@@ -308,9 +327,10 @@ class Split extends Command {
   }
 }
 
-class Explode extends Command {
-  static get ACTION() { return ITEM.EXPLODE }
+Split.register(ITEM.SPLIT)
 
+
+class Explode extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -378,9 +398,10 @@ class Explode extends Command {
   }
 }
 
-class Implode extends Command {
-  static get ACTION() { return ITEM.IMPLODE }
+Explode.register(ITEM.EXPLODE)
 
+
+class Implode extends Command {
   *exec() {
     const { db } = this.options
     const { item, items } = this.action.payload
@@ -399,9 +420,10 @@ class Implode extends Command {
   }
 }
 
-class Export extends Command {
-  static get ACTION() { return ITEM.EXPORT }
+Implode.register(ITEM.IMPLODE)
 
+
+class Export extends Command {
   *exec() {
     let { target, plugin } = this.action.meta
     let ids = this.action.payload
@@ -445,9 +467,10 @@ class Export extends Command {
   }
 }
 
-class ToggleTags extends Command {
-  static get ACTION() { return ITEM.TAG.TOGGLE }
+Export.register(ITEM.EXPORT)
 
+
+class ToggleTags extends Command {
   *exec() {
     const { db } = this.options
     const { id, tags } = this.action.payload
@@ -475,9 +498,10 @@ class ToggleTags extends Command {
   }
 }
 
-class Preview extends Command {
-  static get ACTION() { return ITEM.PREVIEW }
+ToggleTags.register(ITEM.TAG.TOGGLE)
 
+
+class Preview extends Command {
   *exec() {
     if (!darwin) return
 
@@ -491,9 +515,10 @@ class Preview extends Command {
   }
 }
 
-class Print extends Command {
-  static get ACTION() { return ITEM.PRINT }
+Preview.register(ITEM.PREVIEW)
 
+
+class Print extends Command {
   *exec() {
     let [prefs, project, items] = yield select(state => ([
       state.settings.print,
@@ -506,6 +531,9 @@ class Print extends Command {
     }
   }
 }
+
+Print.register(ITEM.PRINT)
+
 
 class AddTags extends Command {
   *exec() {
@@ -539,9 +567,10 @@ class AddTags extends Command {
 
     return work
   }
-
-  static ACTION = ITEM.TAG.CREATE
 }
+
+AddTags.register(ITEM.TAG.CREATE)
+
 
 class RemoveTags extends Command {
   *exec() {
@@ -571,14 +600,12 @@ class RemoveTags extends Command {
 
     return work
   }
-
-  static ACTION = ITEM.TAG.DELETE
 }
+
+RemoveTags.register(ITEM.TAG.DELETE)
 
 
 class ClearTags extends Command {
-  static get ACTION() { return ITEM.TAG.CLEAR }
-
   *exec() {
     const { db } = this.options
     const id = this.action.payload
@@ -591,6 +618,9 @@ class ClearTags extends Command {
     this.undo = act.item.tags.toggle({ id, tags })
   }
 }
+
+ClearTags.register(ITEM.TAG.CLEAR)
+
 
 module.exports = {
   Create,

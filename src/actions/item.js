@@ -23,6 +23,7 @@ module.exports = {
       meta: {
         cmd: 'project',
         history: 'add',
+        cancel: true,
         search: true,
         prompt: true,
         ...meta

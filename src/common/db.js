@@ -1,15 +1,13 @@
 'use strict'
 
-require('./promisify')
-
-const sqlite = require('sqlite3')
-const { EventEmitter } = require('events')
-const { Migration } = require('./migration')
-const { normalize } = require('path')
 const Bluebird = require('bluebird')
 const { using } = Bluebird
-const { readFile: read } = require('fs').promises
+const { normalize } = require('path')
 const { createPool } = require('generic-pool')
+const { EventEmitter } = require('events')
+const { readFile: read } = require('fs').promises
+const sqlite = require('./sqlite')
+const { Migration } = require('./migration')
 const { debug, info, trace, warn } = require('./log')
 
 const M = {
@@ -20,6 +18,7 @@ const M = {
 }
 
 const cache = {}
+const IUD = /^\s*(insert|update|delete)/i
 
 
 class Database extends EventEmitter {
@@ -98,20 +97,19 @@ class Database extends EventEmitter {
           .then(resolve, reject)
       })
 
-      // db.on('trace', query => trace(query))
-
       db.on('profile', (query, ms) => {
+        if (IUD.test(query)) {
+          this.emit('update', query)
+        }
+
         let msg = `db query took ${ms}ms`
 
-        if (ms > 150) {
-          return warn({ query, ms }, `SLOW: ${msg}`)
-        }
-
-        if (ms > 50) {
-          return info({ msg, query, ms })
-        }
-
-        trace({ msg, query, ms })
+        if (ms < 100)
+          trace({ msg, query, ms })
+        if (ms < 200)
+          info({ msg, query, ms })
+        else
+          warn({ query, ms }, `SLOW: ${msg}`)
       })
     })
   }
@@ -397,4 +395,9 @@ function flatten(params) {
   return (params.length === 1) ? params[0] : params
 }
 
-module.exports = { Database, Connection, Statement, transaction }
+module.exports = {
+  Database,
+  Connection,
+  Statement,
+  transaction
+}

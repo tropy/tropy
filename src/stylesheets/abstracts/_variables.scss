@@ -17,9 +17,9 @@ $sans-serif-fonts: (
 $font-family-sans-serif: unquote(map-get($sans-serif-fonts, $platform));
 $font-family-base:       $font-family-sans-serif;
 
-$font-size-small: const("FONTSIZE.SMALL") * 1px;
+$font-size-small: rem(12);
 $font-size-base:  const("FONTSIZE.BASE") * 1px;
-$font-size-large: const("FONTSIZE.LARGE") * 1px;
+$font-size-large: rem(16);
 
 // Heads up: Do not trust the computed value in the dev tools,
 // check the actual height of the rendered element.

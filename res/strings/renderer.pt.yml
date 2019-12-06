@@ -1,0 +1,590 @@
+pt:
+  sidebar:
+    lists: Listas
+    tags: Etiquetas
+    imports: Última Importação
+    trash: Itens Eliminados
+  toolbar:
+    import: Importar Fotos
+    items: |
+      {count, plural,
+      =0 {Nenhuns itens nesta vista}
+      one {1 item nesta vista}
+      other {# itens nesta vista}}
+    search:
+      placeholder: Pesquisar
+  panel:
+    metadata:
+      tab: Metadados
+      photo: Foto
+      item: |
+        {count, plural,
+        =0 {}
+        one {Item}
+        other {# Itens}}
+      selection: Seleção
+      dropdown:
+        placeholder: Adicionar novo campo...
+    tags:
+      tab: Etiquetas
+      add: |
+        {count, plural,
+        =0 {Adicionar Etiqueta}
+        one {Adicionar Etiqueta a 1 Item}
+        other {Adicionar Etiqueta a # Itens}}
+    photo:
+      title: |
+        {count, plural,
+        =0 {Nenhuma Foto}
+        one {1 Foto}
+        other {# Fotos}}
+      create: Adicionar Fotos
+      selection: Seleção
+    note:
+      title: |
+        {count, plural,
+        =0 {Nenhuma Nota}
+        one {1 Nota}
+        other {# Notas}}
+      create: Adicionar Nota
+  print:
+    item: Item
+    photo: Foto
+    notes: Notas
+    note: 'Nota {idx, number}'
+    tags: Etiquetas
+  about:
+    version: 'Versão {version}'
+    rrchnm:
+      title: Roy Rosenzweig Center for History and New Media
+      url: 'https://rrchnm.org'
+    cds:
+      title: Corporation for Digital Scholarship
+      url: 'http://digitalscholar.org'
+    c2dh:
+      title: Luxembourg Centre for Contemporary and Digital History
+      url: 'https://www.c2dh.uni.lu'
+    text: >
+      Tropy é desenvolvido por {rrchnm}, uma equipa que cria recursos para o
+      ensino de história, exposições digitais e software open source.
+    trademark: 'O nome Tropy é uma marca registada de {cds}.'
+    release:
+      title: Notas de Versão
+      url: 'https://github.com/tropy/tropy/releases/tag/{version}'
+    license:
+      title: Licença
+      url: 'https://tropy.org/license'
+    credits:
+      title: Créditos
+      url: 'https://tropy.org/credits'
+  project:
+    none: 'Arraste um ficheiro de projeto para aqui ou crie um {newProject}'
+    empty: Arraste para aqui as suas fotos para começar.
+    new: novo projeto
+    recent: Projetos Recentes
+    corrupted: >
+      O seu ficheiro do projeto pode estar danificado e ser necessário
+      corrigi-lo através de uma intervenção manual. Por favor, consulte o manual
+      do utilizador para obter ajuda adicional.
+  wizard:
+    project:
+      title: Criar novo projeto
+      submit: Criar projeto
+      name: Nome
+      save_as: Alterar nome do ficheiro e localização
+      change: Alterar
+  prefs:
+    title: Preferências do Tropy
+    app:
+      label: Definições
+      style:
+        theme: Tema
+        themes:
+          light: Claro
+          dark: Escuro
+          system: Seguir preferências do sistema
+        font:
+          size: Tamanho da Fonte
+          sizes:
+            12px: Muito Pequena
+            13px: Pequena (Padrão)
+            14px: Médio
+            15px: Grande
+            16px: Muito Grande
+      print:
+        mode: Imprimir
+        modes:
+          item: Um Item por Página
+          photo: Uma Foto por Página
+          selection: Uma Seleção por Página
+        photos: Incluir fotos
+        metadata: Incluir metadados
+        notes: Incluir notas
+        overflow: Permitir que o conteúdo ocupe mais do que uma página
+      locale:
+        locale: Locale
+        locales:
+          de: Deutsch
+          en: English
+          es: Español
+          fr: Français
+          it: Italiano
+          ja: 日本語
+          pt: Português
+      templates:
+        label: Modelos padrão
+        item: Item
+        photo: Foto
+        selection: Seleção
+      title:
+        label: Importar nome do ficheiro como
+        force: Substituir metadados incluídos na foto
+      debug: Ativar Modo Programador
+      localtime: Presumir que os timestamps Exif utilizam fuso horário local
+      dup:
+        label: Durante importação
+        option:
+          skip: Ignorar fotos duplicadas
+          import: Aceitar fotos duplicadas
+          prompt: Perguntar-me sempre
+      density:
+        label: Densidade predefinida (ppi)
+        title: 'Utilizado em PDF, SVG e outros fomatos escaláveis'
+      export:
+        label: Exportar
+        note:
+          format:
+            html: Notas como HTML
+            markdown: Notas como Markdown
+      ui:
+        label: Interface
+        option:
+          invertScroll: Inverter direção quando move visualização nas fotos
+          invertZoom: Inverter direção quando utiliza o zoom nas fotos
+          overlayToolbars: Ocultar e mostrar automaticamente as barras de ferramentas
+      zoomMode:
+        label: Por predefinição
+        option:
+          fit: Ampliar ajustando à altura
+          fill: Ampliar ajustando à largura
+      layout:
+        label: Visualização de Item
+        option:
+          stacked: Layout Vertical
+          side-by-side: Layout Horizontal
+      completions:
+        label: Autocompletar
+        option:
+          datatype: Apenas por tipo de dados
+          property-datatype: Por tipo de dados e propriedade
+    project:
+      label: Projeto
+    template:
+      label: Modelos
+      new: Novo Modelo...
+      create: Criar
+      select: Modelo
+      tools:
+        new: Novo
+        copy: Duplicar
+        delete: Apagar
+        import: Importar
+        export: Exportar
+    vocab:
+      label: Vocabulários
+      export: Exportar
+      classes: |
+        {count, plural,
+        =0 {Nenhuma Classe}
+        one {# Classe}
+        other {# Classes}
+        }
+      datatypes: |
+        {count, plural,
+        =0 {Nenhum Tipo de Dados} one {# Tipo de Dados}
+        other {# Tipos de Dados}
+        }
+      properties: |
+        {count, plural,
+        =0 {Nenhuma Propriedade}
+        one {# Propriedade}
+        other {# Propriedades}
+        }
+    plugins:
+      label: Plugins
+      enable: Ativar
+      disable: Desativar
+      install: Instalar Plugin
+      uninstall: Desinstalar
+      noInfo: Autor desconhecido
+      homepage: Mais
+  item:
+    created: Data da Introdução
+    modified: Modificado
+    template: Modelo
+  photo:
+    file: Ficheiro
+    size: Dimensão
+    density: Densidade
+    type: Tipo
+    created: Data da Introdução
+    modified: Modificado
+  selection:
+    size: Dimensão
+    created: Data da Introdução
+    modified: Modificado
+  esper:
+    tool:
+      pan: Ferramenta de Deslizamento
+      select: Ferramenta de Seleção
+      rotate: Rodar
+      mirror: Espelho
+      edit: Editar Foto
+    mode:
+      fill: Preencher
+      fit: Ajustar
+      zoom: Zoom
+    panel:
+      negative: Inverter cores
+      revert: Reverter para Original
+      brightness:
+        label: Brilho
+        value: '{value, number}'
+      contrast:
+        label: Contraste
+        value: '{value, number}'
+      hue:
+        label: Matiz
+        value: '{value, number}°'
+      saturation:
+        label: Saturação
+        value: '{value, number}'
+      sharpen:
+        label: Nitidez
+        value: '{value, number}'
+  notepad:
+    placeholder: Adicionar suas notas aqui...
+  completions:
+    empty: Sem opções disponíveis
+    noMatches: Sem correspondências
+  select:
+    column:
+      placeholder: Pesquisar
+  template:
+    id: URI
+    name: Nome
+    type: Tipo
+    creator: Criador
+    description: Descrição
+    types:
+      'https://tropy.org/v1/tropy#Item': Modelo de Item
+      'https://tropy.org/v1/tropy#Photo': Modelo de Foto
+      'https://tropy.org/v1/tropy#Selection': Modelo de Seleção
+    field:
+      property: Propriedade
+      label: Rótulo
+      datatype: Tipo de Dados
+      isRequired: É campo obrigatório
+      hint: Dica
+      value: Valor predefinido
+      isConstant: É apenas de leitura
+  vocab:
+    id: URI
+    prefix: Prefixo
+    title: Nome
+    description: Descrição
+    properties: Propriedades
+    seeAlso: Ver Também
+  property:
+    select: Selecionar uma Propriedade...
+  datatype:
+    select: Selecionar um Tipo de Dados...
+  resource:
+    select: Selecionar um Recurso...
+    id: URI
+    label: Rótulo
+    description: Descrição
+    comment: Comentário
+  dialog:
+    notify:
+      buttons:
+        - OK
+    error:
+      title: Erro
+      buttons:
+        - Descartar
+        - Copiar Erro
+        - Mostrar Registos
+    prompt:
+      item:
+        destroy:
+          message: >
+            Tem a certeza que pretende apagar itens permanentemente? Esta ação
+            não poderá ser desfeita.
+          buttons:
+            - Cancelar
+            - Apagar
+      photo:
+        consolidate:
+          message: >
+            Deseja que o Tropy verifique e resolva automaticamente outras fotos
+            ausentes nesta localização?
+          buttons:
+            - Não
+            - Sim
+      dup:
+        detail: >
+          Esta foto já existe no seu projeto. Tem a certeza que pretende
+          importá-la novamente?
+        checkboxLabel: Recordar esta escolha
+        buttons:
+          - Ignorar
+          - Importar de qualquer modo
+      plugin:
+        uninstall:
+          type: aviso
+          detail: >
+            Tem a certeza que pretende apagar o plugin? Esta ação ira remover
+            permanentemente o plugin e a sua configuração.
+          buttons:
+            - Cancelar
+            - Apagar
+    filter:
+      csv: CSV
+      templates: Modelos Tropy
+      images: Imagens
+      items: Imagens e Itens Tropy
+      projects: Projetos Tropy
+      rdf: Vocabulários RDF
+      jsonld: JSON-LD
+  action:
+    project:
+      save: Gravar Projeto
+    list:
+      create: Criar Lista
+      delete: Apagar Lista
+      item:
+        add: Adicionar Itens à Lista
+        merge: Combinar Itens
+        remove: Remover Item da Lista
+        restore: Adicionar Item à Lista
+      order: Ordenar Lista
+      restore: Restaurar Lista
+      save: Gravar Lista
+    item:
+      create: Criar Itens
+      delete: Apagar Itens
+      explode: Explodir Item
+      implode: Combinar Itens
+      merge: Combinar Itens
+      split: Separar Itens
+      import: Importar Itens
+      restore: Restaurar Itens
+      save: Gravar Item
+      tag:
+        create: Etiqueta
+        toggle: Etiqueta
+        clear: Limpar Etiquetas
+    metadata:
+      save: Gravar Metadados
+    ontology:
+      import: Importar Vocabulários
+      vocab:
+        save: Gravar Vocabulário
+      label:
+        save: Gravar Rótulo
+      template:
+        import: Importar Modelo
+    photo:
+      create: Importar Foto
+      delete: Apagar Foto
+      duplicate: Duplicar Foto
+      move: Mover Foto
+      order: Ordenar Fotos
+      restore: Restaurar Foto
+      save: Gravar Foto
+    note:
+      create: Criar Nota
+      delete: Apagar Nota
+      order: Ordenar Notas
+      restore: Restaurar Nota
+      save: Gravar Nota
+    tag:
+      create: Criar Etiqueta
+      delete: Apagar Etiqueta
+      restore: Criar Etiqueta
+      save: Gravar Etiqueta
+    selection:
+      create: Criar Seleção
+      delete: Apagar Seleção
+      restore: Criar Seleção
+      save: Gravar Seleção
+      order: Ordenar Seleções
+  activity:
+    cache:
+      prune: Otimizar cache do projeto...
+      purge: Limpar caches antigas...
+    project:
+      save: Gravar...
+    list:
+      create: Criando lista...
+      delete: Apagando lista...
+      item:
+        add: Adicionando itens a lista...
+        merge: Combinando itens...
+        remove: Removendo itens da lista...
+        restore: Restaurando itens na lista...
+      load: Carregando listas...
+      order: Ordenado lista...
+      restore: Restaurando lista...
+      save: Gravando lista...
+    tag:
+      create: Criando etiqueta...
+      delete: Apagando etiqueta...
+      load: Carregando etiquetas...
+      restore: Restaurando etiqueta...
+      save: Gravando etiqueta...
+    item:
+      create: Criando item...
+      delete: Apagando item...
+      destroy: Apagando itens permanentemente...
+      explode: Explodindo item...
+      export: Exportando item...
+      implode: Restaurando item...
+      import: |
+        {hasProgressBar, select,
+        true {Importando item {progress, number} de {total, number} …}
+        other {Importando itens …}
+        }
+      load: Carregando itens...
+      merge: Combinando item
+      restore: Restaurando item...
+      save: Gravando itens...
+      tag:
+        create: Etiquetando item
+        toggle: Etiquetando item...
+        clear: Limpando etiquetas do item...
+    metadata:
+      load: Carregando metadados...
+      save: Gravando metadados...
+    ontology:
+      load: Carregando ontologia...
+      import: Importando vocabulários...
+      vocab:
+        save: Gravando vocabulário...
+      label:
+        save: Gravando rótulo...
+      template:
+        import: Importando modelos...
+    photo:
+      consolidate: |
+        {hasProgressBar, select,
+        true {Consolidando foto {progress, number} de {total, number} …}
+        other {Consolidando fotos …}
+        }
+      create: |
+        {hasProgressBar, select,
+        true {Importando foto {progress, number} de {total, number} …}
+        other {Importando fotos …}
+        }
+      delete: Apagando foto...
+      duplicate: |
+        {hasProgressBar, select,
+        true {Duplicando foto {progress, number} de {total, number} …}
+        other {Duplicando fotos …}
+        }
+      load: Carregando fotos...
+      move: Movendo fotos...
+      order: Ordenando fotos...
+      save: Gravando foto...
+      restore: Restaurando fotos...
+    note:
+      create: Criando nota...
+      delete: Apagando nota...
+      load: Carregando notas...
+      order: Ordenando notas...
+      restore: Restaurando notas...
+    selection:
+      create: Criando seleção na foto...
+      load: Carregando seleções da foto...
+  editor:
+    commands:
+      bold: Negrito
+      italic: Itálico
+      underline: Sublinhado
+      overline: Sobrelinhado
+      strikethrough: Riscado
+      subscript: Subscrito
+      superscript: Sobrescrito
+      blockquote: Inserir Blockquote
+      ol: Inserir Lista Numerada
+      ul: Inserir Lista com Marcas
+      link:
+        button: Inserir Link
+        target: Destino do Link
+        title: Título do Link
+      left: Alinhar à Esquerda
+      center: Centrar
+      right: Alinhar à Direita
+      sinkListItem: Descer item na lista
+      liftListItem: Subir item na lista
+  error:
+    cache:
+      prune: Falhou a otimização da cache do projeto.
+      purge: Falhou a remoção das caches de projeto antigas.
+    project:
+      created: Falhou a criação de projeto.
+    item:
+      export: Falhou a exportação de itens.
+      merge: Falhou a combinação de itens.
+      import: Falhou a importação de item.
+      tag:
+        save: Falhou a gravação de etiqueta.
+        create: Falhou a etiquetação de item. Etiquetas devem ser únicas por item.
+      template:
+        change: Falhou a alteração do modelo de item.
+    list:
+      load: Falhou o carregamento de listas.
+      create: Falhou a criação de lista. Os nomes das listas devem ser únicos.
+      move: >-
+        Falhou a movimentação da lista. Os nomes das listas devem ser únicos por
+        nível.
+      save: Falhou a gravação da lista.
+      item:
+        add: Falhou a adição de item(s) na lista.
+    photo:
+      consolidate: Falhou a consolidação de fotos.
+      create: Falhou a importação de foto.
+      save: Falhou a gravação de foto.
+      template:
+        change: Falhou a alteração do modelo de foto.
+    selection:
+      create: Falhou a criação de seleção na foto.
+      template:
+        change: Falhou a alteração do modelo de seleção.
+    ontology:
+      migrate: Falhou a atualização da sua base de dados ontológica.
+      import: Falhou a importação de vocabulário.
+      vocab:
+        save: Falhou a gravação do vocabulário. Prefixo deve ser único.
+      template:
+        import: Falhou a importação de modelo.
+        field:
+          add: Falhou a adição do campo ao modelo.
+          remove: Falhou a remoção do campo do modelo.
+    tag:
+      create: Falhou a criação de etiqueta. Nomes das etiquetas devem ser únicos.
+  flash:
+    update:
+      ready:
+        message: >
+          Tropy {version} está pronto para ser instalado. Quer instalar e
+          reiniciar agora?
+        confirm: Reiniciar Agora
+  plugin:
+    name: Nome
+    plugin: Plugin
+    options: Opções
+    hooks:
+      export: Exportar
+      import: Importar

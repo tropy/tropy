@@ -14,7 +14,9 @@ const LastImportListNode = ({ isSelected, onClick }) => (
     <div className="list-node-container">
       <IconClock/>
       <div className="name">
-        <FormattedMessage id="sidebar.imports"/>
+        <div className="truncate">
+          <FormattedMessage id="sidebar.imports"/>
+        </div>
       </div>
     </div>
   </li>

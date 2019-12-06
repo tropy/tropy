@@ -4,14 +4,11 @@ const { join } = require('path')
 const { debug, warn } = require('../common/log')
 const { Database } = require('../common/db')
 const { ONTOLOGY } = require('../constants')
-const { exec } = require('./cmd')
+const { exec, commands } = require('./cmd')
 const { fail } = require('../dialog')
 const mod = require('../models/ontology')
 const { load } = require('../actions/ontology')
 const { call, fork, take } = require('redux-saga/effects')
-
-const command = ({ error, meta }) =>
-  (!error && meta && meta.cmd === 'ontology')
 
 module.exports = {
   *ontology({ file = join(ARGS.data, ONTOLOGY.DB), ...opts } = {}) {
@@ -32,7 +29,7 @@ module.exports = {
       yield call(exec, { db }, load())
 
       while (true) {
-        let action = yield take(command)
+        let action = yield take(commands('ontology'))
         yield fork(exec, { db }, action)
       }
 

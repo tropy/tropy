@@ -1,12 +1,13 @@
 'use strict'
 
-const bb = require('bluebird')
-const { Database, Statement } = require('sqlite3')
+const Bluebird = require('bluebird')
+const sqlite = require('sqlite3')
+const { Database, Statement } = sqlite
 
-bb.promisifyAll([Database, Statement])
+Bluebird.promisifyAll([Database, Statement])
 
 Database.prototype.prepareAsync = function (...args) {
-  return new bb((resolve, reject) => {
+  return new Bluebird((resolve, reject) => {
     let stmt = this.prepare(...args, error => {
       if (error) reject(error)
       else resolve(stmt)
@@ -15,7 +16,7 @@ Database.prototype.prepareAsync = function (...args) {
 }
 
 Database.prototype.runAsync = function (...args) {
-  return new bb((resolve, reject) => {
+  return new Bluebird((resolve, reject) => {
     this.run(...args, function (error) {
       if (error) reject(error)
       else resolve({ id: this.lastID, changes: this.changes })
@@ -26,7 +27,7 @@ Database.prototype.runAsync = function (...args) {
 Statement.prototype.runAsync = Database.prototype.runAsync
 
 Database.prototype.eachAsync = function (...args) {
-  return new bb((resolve, reject) => {
+  return new Bluebird((resolve, reject) => {
 
     if (!args.length || args.length > 3) {
       throw new RangeError(`expected 1-3 arguments, was: ${args.length}`)
@@ -62,4 +63,4 @@ Database.prototype.eachAsync = function (...args) {
 
 Statement.prototype.eachAsync = Database.prototype.eachAsync
 
-module.exports = bb
+module.exports = sqlite

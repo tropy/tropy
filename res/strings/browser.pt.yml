@@ -1,0 +1,35 @@
+pt:
+  dialog:
+    file:
+      project: Projetos Tropy
+      plugin: Plugins Tropy
+    crashed:
+      buttons:
+        - Fechar Janela
+        - Reiniciar Tropy
+        - Mostrar Registos
+      message: Tropy crachou
+      detail: >
+        Infelizmente, esta janela do Tropy crachou. Pode ajudar-nos reportando
+        este problema em https://github.com/tropy/tropy
+    unresponsive:
+      buttons:
+        - Fechar Janela
+        - Aguardar
+      message: Tropy não está a responder
+      detail: >
+        Esta janela do Tropy não está a responder. Prefere fechá-la ou continuar
+        a aguardar?
+    unhandled:
+      buttons:
+        - Descartar
+        - Copiar Erro
+        - Mostrar Registos
+      message: Erro sem tratamento
+  window:
+    prefs:
+      title: Preferências do Tropy
+    wizard:
+      title: Bem-vindo ao Tropy
+    about:
+      title: Sobre o Tropy

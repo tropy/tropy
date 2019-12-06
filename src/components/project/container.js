@@ -5,7 +5,7 @@ const { connect } = require('react-redux')
 const { ProjectView } = require('./view')
 const { ItemView } = require('../item')
 const { DragLayer } = require('../drag-layer')
-const { DropTarget, NativeTypes } = require('../dnd')
+const { DND, DropTarget, hasProjectFiles } = require('../dnd')
 const { NoProject } = require('./none')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
@@ -207,7 +207,7 @@ class ProjectContainer extends React.Component {
   renderNoProject() {
     return (
       <NoProject
-        connect={this.props.dt}
+        connect={this.props.connectDropTarget}
         canDrop={this.props.canDrop}
         isOver={this.props.isOver}
         onProjectCreate={this.props.onProjectCreate}
@@ -223,7 +223,7 @@ class ProjectContainer extends React.Component {
     const {
       columns,
       data,
-      dt,
+      connectDropTarget,
       items,
       nav,
       note,
@@ -238,7 +238,7 @@ class ProjectContainer extends React.Component {
       ...props
     } = this.props
 
-    return dt(
+    return connectDropTarget(
       <div
         className={cx(this.classes)}
         ref={this.container}
@@ -325,7 +325,7 @@ class ProjectContainer extends React.Component {
 
     isOver: bool,
     canDrop: bool,
-    dt: func.isRequired,
+    connectDropTarget: func.isRequired,
 
     onContextMenu: func.isRequired,
     onPhotoError: func.isRequired,
@@ -342,38 +342,34 @@ class ProjectContainer extends React.Component {
 
 const DropTargetSpec = {
   drop({ onProjectOpen, onTemplateImport, project }, monitor) {
-    let files = monitor.getItem().files.map(f => f.path)
+    let tpy = []
+    let ttp = []
 
-    switch (extname(files[0])) {
-      case '.tpy':
-        files = files.slice(0, 1)
-        if (files[0] !== project.file) {
-          onProjectOpen(files[0])
-        }
-        break
-      case '.ttp':
-        files = files.filter(f => f.endsWith('.ttp'))
-        onTemplateImport(files)
-        break
-      default:
-        files = []
+    for (let file of monitor.getItem().files) {
+      switch (extname(file.path)) {
+        case '.tpy':
+          tpy.push(file.path)
+          break
+        case '.ttp':
+          ttp.push(file.path)
+          break
+      }
     }
 
-    return { files }
+    // Subtle: currently handling only the first project file!
+    if (tpy.length > 0 && tpy[0] !== project.file) {
+      onProjectOpen(tpy[0])
+      return { files: tpy }
+    }
+
+    if (ttp.length > 0) {
+      onTemplateImport(ttp)
+      return { files: ttp }
+    }
   },
 
   canDrop(_, monitor) {
-    const { types } = monitor.getItem()
-
-    if (types.length < 1) return false
-
-    switch (types[0]) {
-      case 'application-vnd.tropy.tpy':
-      case 'application-vnd.tropy.ttp':
-        return true
-      default:
-        return false
-    }
+    return hasProjectFiles(monitor)
   }
 }
 
@@ -566,10 +562,11 @@ module.exports = {
       onUiUpdate(...args) {
         dispatch(actions.ui.update(...args))
       }
-
     })
 
-  )(DropTarget(NativeTypes.FILE, DropTargetSpec, (c, m) => ({
-    dt: c.dropTarget(), isOver: m.isOver(), canDrop: m.canDrop()
+  )(DropTarget(DND.FILE, DropTargetSpec, (c, m) => ({
+    connectDropTarget: c.dropTarget(),
+    isOver: m.isOver(),
+    canDrop: m.canDrop()
   }))(ProjectContainer))
 }

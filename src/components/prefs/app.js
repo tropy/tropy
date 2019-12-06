@@ -4,7 +4,6 @@ const React = require('react')
 const { TemplateSelect } = require('../template/select')
 const { ResourceSelect } = require('../resource/select')
 const { ipcRenderer: ipc } = require('electron')
-const { darwin } = require('../../common/os')
 
 const {
   ESPER,
@@ -43,6 +42,10 @@ class AppPrefs extends React.PureComponent {
 
   handleLocaleChange = ({ locale }) => {
     ipc.send('cmd', 'app:switch-locale', locale)
+  }
+
+  handleFontSizeChange = ({ fontSize }) => {
+    ipc.send('cmd', 'app:change-font-size', fontSize)
   }
 
   handleLocalTimeChange = ({ localtime }) => {
@@ -169,6 +172,14 @@ class AppPrefs extends React.PureComponent {
             value={this.props.settings.theme}
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
+          <FormSelect
+            id="prefs.app.style.font.size"
+            name="fontSize"
+            isRequired
+            isInputHidden
+            value={this.props.settings.fontSize}
+            options={this.props.fontSizes}
+            onChange={this.handleFontSizeChange}/>
           <hr/>
           <FormSelect
             id="prefs.app.locale.locale"
@@ -209,6 +220,7 @@ class AppPrefs extends React.PureComponent {
           <FormToggleGroup
             id="prefs.app.layout"
             name="layout"
+            isCompact
             value={this.props.settings.layout}
             options={this.props.layouts}
             onChange={this.props.onSettingsUpdate}/>
@@ -305,6 +317,7 @@ class AppPrefs extends React.PureComponent {
       templates: object.isRequired
     }).isRequired,
     completions: arrayOf(string).isRequired,
+    fontSizes: arrayOf(string).isRequired,
     layouts: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,
     importMin: number.isRequired,
@@ -317,10 +330,11 @@ class AppPrefs extends React.PureComponent {
   }
 
   static defaultProps = {
-    themes: ['light', 'dark'],
+    fontSizes: ['12px', '13px', '14px', '15px', '16px'],
+    themes: ['light', 'dark', 'system'],
     layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
     completions: ['datatype', 'property-datatype'],
-    locales: ['de', 'en', 'es', 'fr', 'it', 'ja'],
+    locales: ['de', 'en', 'es', 'fr', 'it', 'ja', 'pt'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL],
     printModes: ['item', 'photo', 'selection'],
@@ -328,11 +342,6 @@ class AppPrefs extends React.PureComponent {
     importMax: IMAGE.MAX_DENSITY
   }
 }
-
-if (darwin) {
-  AppPrefs.defaultProps.themes.push('system')
-}
-
 
 module.exports = {
   AppPrefs
