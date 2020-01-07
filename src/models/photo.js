@@ -232,7 +232,9 @@ module.exports = {
   async rebase(db, base, oldBase) {
     let delta = []
 
-    await db.each(select('id', 'path').from('photos').query, ({ id, path }) => {
+    await db.each(...select('id', 'path')
+      .from('photos')
+      .where({ protocol: 'file' }), ({ id, path }) => {
       let oldPath = oldBase ? resolve(oldBase, normalize(path)) : path
       let newPath = base ? relative(base, oldPath) : oldPath
       if (newPath !== path) {
