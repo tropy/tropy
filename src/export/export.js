@@ -1,6 +1,6 @@
 'use strict'
 
-const jsonld = require('jsonld').promises
+const jsonld = require('jsonld')
 const { newProperties } = require('./util')
 const { pick, pluck } = require('../common/util')
 const { serialize } = require('./note')
