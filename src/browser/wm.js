@@ -173,11 +173,21 @@ class WindowManager extends EventEmitter {
     }
   }
 
-  close(type) {
+  close(type, destroy = false) {
     return Promise.all(this.map(type, win =>
       new Promise((resolve) => {
-        win.once('closed', resolve)
-        win.close()
+        if (win.isDestroyed())
+          return resolve()
+
+        let wc = win.webContents
+
+        if (wc && !(wc.isDestroyed() || wc.isCrashed())) {
+          win.once('closed', resolve)
+          win[destroy ? 'destroy' : 'close']()
+        } else {
+          win.destroy()
+          resolve()
+        }
       })
     ))
   }
@@ -424,9 +434,9 @@ class WindowManager extends EventEmitter {
     ipc.on('wm', this.handleIpcMessage)
   }
 
-  async stop() {
+  async stop(destroy = false) {
+    await this.close(undefined, destroy)
     ipc.removeListener('wm', this.handleIpcMessage)
-    await this.close()
   }
 
   unref(type, win) {
