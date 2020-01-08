@@ -10,6 +10,12 @@ global.F = {
     }
   },
 
+  db(name) {
+    return {
+      path: join(ROOT, 'db', name)
+    }
+  },
+
   plugins(...args) {
     return {
       path: join(ROOT, 'plugins', ...args)
