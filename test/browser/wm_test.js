@@ -1,8 +1,10 @@
 'use strict'
 
 const { join } = require('path')
+const { copyFile } = require('fs').promises
 const { app, BrowserWindow } = require('electron')
 const res = __require('common/res')
+const { delay } = __require('common/util')
 
 describe('WindowManager', () => {
   const WindowManager = __require('browser/wm')
@@ -19,7 +21,11 @@ describe('WindowManager', () => {
 
     before(() => plugins.init())
     before(() => wm.start())
-    after(() => wm.stop())
+    before(() => copyFile(
+      F.db('ontology.db').path,
+      join(app.getPath('userData'), 'ontology.db')))
+
+    after(() => wm.stop(true))
 
     it('has no windows initially', () => {
       expect([...wm]).to.be.empty
@@ -28,7 +34,7 @@ describe('WindowManager', () => {
     for (let type of ['about', 'prefs', 'print', 'project', 'wizard']) {
       describe(`open('${type}')`, function () {
         // Integration tests with on-the-fly code instrumentation take some time!
-        this.timeout(process.env.CI ? 20000 : 10000)
+        this.timeout(process.env.CI ? 10000 : 5000)
 
         let win
 
@@ -69,6 +75,11 @@ describe('WindowManager', () => {
 
         // Run this test last!
         it('can be closed', async () => {
+          // Give windows which load the ontology db some extra time.
+          if (type === 'project' || type === 'prefs') {
+            await delay(1000)
+          }
+
           await wm.close(type)
           expect(wm.has(type)).to.be.false
           expect(win.isDestroyed()).to.be.true
