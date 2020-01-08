@@ -127,6 +127,15 @@ class WindowManager extends EventEmitter {
       // TODO check position on display!
       var win = new BrowserWindow(opts)
 
+      // Manage a promise for our IPC ready event. Handling this here
+      // immediately after creation makes it easier to avoid potential
+      // race conditions.
+      win.ready = new Promise((resolve) => {
+        win.once('ready', () => {
+          resolve(Date.now())
+        })
+      })
+
       win.webContents.once('did-finish-load', async () => {
         win.webContents.zoomFactor = args.zoom || 1
         await win.webContents.setVisualZoomLevelLimits(1, 1)
