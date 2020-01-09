@@ -1,0 +1,12 @@
+color: true
+recursive: true
+reporter: dot
+require:
+  - "@babel/register"
+  - "test/support/coverage"
+  - "test/support/mode"
+  - "test/support/src"
+  - "test/support/chai"
+  - "test/support/args"
+  - "test/support/fixtures"
+slow: 250
