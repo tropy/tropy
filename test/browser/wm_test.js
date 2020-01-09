@@ -4,7 +4,6 @@ const { join } = require('path')
 const { copyFile } = require('fs').promises
 const { app, BrowserWindow } = require('electron')
 const res = __require('common/res')
-const { delay } = __require('common/util')
 
 describe('WindowManager', () => {
   const WindowManager = __require('browser/wm')
@@ -75,11 +74,6 @@ describe('WindowManager', () => {
 
         // Run this test last!
         it('can be closed', async () => {
-          // Give windows which load the ontology db some extra time.
-          if (type === 'project' || type === 'prefs') {
-            await delay(1000)
-          }
-
           await wm.close(type)
           expect(wm.has(type)).to.be.false
           expect(win.isDestroyed()).to.be.true

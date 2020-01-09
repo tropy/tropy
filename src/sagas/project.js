@@ -181,6 +181,8 @@ function *main() {
       fork(consolidator.run)
     ])
 
+    aux.START = Date.now()
+
     yield all([
       call(storage.restore, 'recent'),
       call(storage.restore, 'settings'),
@@ -221,10 +223,16 @@ function *main() {
       call(storage.persist, 'ui')
     ])
 
-    yield all(aux.map(bg => {
-      if (bg != null && bg.isRunning())
-        return cancel(bg)
-    }))
+    // HACK: Ensure we don't cancel aux tasks too early!
+    if (Date.now() - aux.START < 1000) {
+      yield delay(1000)
+    }
+
+    yield cancel(aux)
+
+    // HACK: We cannot wait for cancelled tasks to complete.
+    // See redux-saga#1242
+    yield delay(200)
 
     if (crash != null)
       process.crash()
