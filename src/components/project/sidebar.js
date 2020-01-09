@@ -369,7 +369,11 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   static defaultProps = {
-    root: LIST.ROOT
+    activities: [],
+    edit: {},
+    keymap: {},
+    root: LIST.ROOT,
+    tags: []
   }
 
   static props = Object.keys(ProjectSidebar.propTypes)
