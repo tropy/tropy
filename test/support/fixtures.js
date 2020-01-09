@@ -30,5 +30,9 @@ global.F = {
 
   get lists() {
     return require(join(ROOT, 'lists'))
+  },
+
+  get projects() {
+    return require(join(ROOT, 'projects'))
   }
 }
