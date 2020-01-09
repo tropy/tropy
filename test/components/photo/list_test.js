@@ -1,8 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { shallow } = require('enzyme')
-const { noop } = __require('common/util')
+const { render, inWindowContext } = require('../../support/react')
 
 const PHOTO = {
   1: { id: 1, selections: [] },
@@ -17,11 +16,14 @@ const PHOTO = {
 describe('PhotoList', () => {
   const { PhotoList } = __require('components/photo/list')
 
-  it.skip('has classes photo and list', () => {
-    expect(shallow(
-      <PhotoList
-        photos={[]}
-        dt={noop}/>)).to.have.className('photo list')
+  it('renders an empty list by default', () => {
+    expect(
+      render(
+        <PhotoList photos={[]}/>,
+        inWindowContext
+      ).element())
+      .to.have.class('photo-list')
+      .and.not.have.descendants('li.photo')
   })
 
   describe('Layout', () => {
