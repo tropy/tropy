@@ -58,15 +58,17 @@ class ImportCommand extends Command {
 
   getFilesToImport = async () => {
     let { payload, meta } = this.action
-    let { files = [] } = payload
+    let { files = [], urls = [] } = payload
 
-    if (!files.length && meta.prompt)
+    if (!files.length && !urls.length && meta.prompt)
       files = await this.promptForFilesToImport(meta.prompt)
 
-    return dir.expand(files, {
+    files = await dir.expand(files, {
       filter: this.canImportFile,
       recursive: true
     })
+
+    return [...files, ...urls]
   }
 
   *openImage(path) {
