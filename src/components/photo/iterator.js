@@ -287,6 +287,7 @@ class PhotoIterator extends Iterator {
   }
 
   static propTypes = {
+    ...Iterator.propTypes,
     photos: arrayOf(
       shape({
         id: number.isRequired
@@ -326,6 +327,7 @@ class PhotoIterator extends Iterator {
   }
 
   static defaultProps = {
+    ...Iterator.defaultProps,
     expanded: [],
     onBlur: noop
   }
