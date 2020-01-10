@@ -106,7 +106,7 @@ class Database extends EventEmitter {
 
         if (ms < 100)
           trace({ msg, query, ms })
-        if (ms < 200)
+        else if (ms < 200)
           info({ msg, query, ms })
         else
           warn({ query, ms }, `SLOW: ${msg}`)
