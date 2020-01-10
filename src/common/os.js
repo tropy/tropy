@@ -47,7 +47,6 @@ Type=Application
 Name=${qualified.product}
 Exec=${exec} %u
 Icon=${qualified.name}
-StartUpNotify=true
 MimeType=application/vnd.tropy.tpy;x-scheme-handler/tropy;${
   Object.keys(SUPPORTED).join(';')
 };
