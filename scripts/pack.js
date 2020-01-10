@@ -68,12 +68,19 @@ target.linux = (args = ['bz2']) => {
 
         rm('-rf', appdir)
         cp('-r', src, appdir)
+        mkdir('-p', `${appdir}/usr/share`)
+        mv(`${appdir}/icons`, `${appdir}/usr/share/icons`)
+        mv(`${appdir}/mime`, `${appdir}/usr/share/mime`)
+
         cd(appdir)
+
         ln('-s', qualified.name, 'AppRun')
-        cp(`./icons/hicolor/256x256/apps/${qualified.name}.png`, '.DirIcon')
-        cp(`./icons/hicolor/scalable/apps/${qualified.name}.svg`, '.')
-        mkdir('-p', 'usr/share')
-        mv('icons', 'usr/share/icons')
+        ln('-s',
+          `usr/share/icons/hicolor/256x256/apps/${qualified.name}.png`,
+          '.DirIcon')
+        ln('-s',
+          `usr/share/icons/hicolor/scalable/apps/${qualified.name}.svg`,
+          `${qualified.name}.svg`)
         cd('-')
 
         const dst = join(dist, `${product}-${version}-x86_64.AppImage`)
