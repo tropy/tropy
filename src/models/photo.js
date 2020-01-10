@@ -232,13 +232,17 @@ module.exports = {
   async rebase(db, base, oldBase) {
     let delta = []
 
-    await db.each(select('id', 'path').from('photos').query, ({ id, path }) => {
-      let oldPath = oldBase ? resolve(oldBase, normalize(path)) : path
-      let newPath = base ? relative(base, oldPath) : oldPath
-      if (newPath !== path) {
-        delta.push({ id, path: newPath })
-      }
-    })
+    await db.each(
+      ...select('id', 'path')
+        .from('photos')
+        .where({ protocol: 'file' }),
+        ({ id, path }) => {
+          let oldPath = oldBase ? resolve(oldBase, normalize(path)) : path
+          let newPath = base ? relative(base, oldPath) : oldPath
+          if (newPath !== path) {
+            delta.push({ id, path: newPath })
+          }
+        })
 
     await bb.map(delta, ({ id, path }) => db.run(
       ...update('photos').set({ path }).where({ id })

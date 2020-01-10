@@ -15,7 +15,7 @@ const {
 const res = resolve(__dirname, '..', 'res')
 const dist = resolve(__dirname, '..', 'dist')
 
-const APPIMAGETOOL = 'https://github.com/probonopd/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage'
+const APPIMAGETOOL = 'https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage'
 
 target.all = (...args) => {
   target[platform](...args)
@@ -70,7 +70,10 @@ target.linux = (args = ['bz2']) => {
         cp('-r', src, appdir)
         cd(appdir)
         ln('-s', qualified.name, 'AppRun')
-        cp(`./icons/hicolor/512x512/apps/${qualified.name}.png`, '.')
+        cp(`./icons/hicolor/256x256/apps/${qualified.name}.png`, '.DirIcon')
+        cp(`./icons/hicolor/scalable/apps/${qualified.name}.svg`, '.')
+        mkdir('-p', 'usr/share')
+        mv('icons', 'usr/share/icons')
         cd('-')
 
         const dst = join(dist, `${product}-${version}-x86_64.AppImage`)

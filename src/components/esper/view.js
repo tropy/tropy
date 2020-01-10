@@ -150,10 +150,17 @@ class EsperView extends React.Component {
     this.image = null
 
     if (props.src != null) {
-      this.image = new Picture(props)
+      let image = this.image = new Picture(props)
 
       try {
-        this.image.bg.texture = await this.load(props.src)
+        let texture = await this.load(props.src)
+
+        // Subtle: if the view was reset while we were loading
+        // the texture, abort!
+        if (this.image !== image) return
+
+        this.image = new Picture(props)
+        this.image.bg.texture =  texture
         this.image.interactive = true
         this.image.on('mousedown', this.handleMouseDown)
 
@@ -163,7 +170,7 @@ class EsperView extends React.Component {
 
       this.adjust(props)
       this.rotate(props)
-      const { mirror, x, y, zoom } = props
+      let { mirror, x, y, zoom } = props
 
       this.setScaleMode(this.image.bg.texture, zoom)
       this.image.scale.x = mirror ? -zoom : zoom

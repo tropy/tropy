@@ -140,20 +140,20 @@ class ProjectView extends React.Component {
 const spec = {
   drop({ nav, onItemImport }, monitor) {
     let item = monitor.getItem()
-    let files
+    let files, urls
 
     switch (monitor.getItemType()) {
       case DND.FILE:
         files = item.files.map(f => f.path)
         break
       case DND.URL:
-        files = item.urls
+        urls = item.urls
         break
     }
 
-    if (!blank(files)) {
-      onItemImport({ files, list: nav.list })
-      return { files }
+    if (!blank(files) || !blank(urls)) {
+      onItemImport({ files, urls, list: nav.list })
+      return { files, urls }
     }
   },
 

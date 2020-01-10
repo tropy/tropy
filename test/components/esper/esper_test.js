@@ -1,13 +1,9 @@
 'use strict'
 
-const React = require('react')
-const { shallow } = require('enzyme')
+// const React = require('react')
 
-describe.skip('Esper', () => {
-  const { Esper } = __require('components/esper/esper')
+describe('Esper', () => {
+  // const { Esper } = __require('components/esper/esper')
 
-  it('has class esper', () => {
-    expect(shallow(<Esper/>)).to.have.className('esper')
-  })
-
+  it('renders an esper view')
 })

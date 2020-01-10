@@ -30,6 +30,9 @@ requirements. For example:
 
     # On Debian
     $ sudo apt-get install liborc-0.4-0 libfftw3-bin librsvg2-bin
+    
+    # On CentOS
+    $ sudo yum install fftw3 orc librsvg2 glib2-devel
 
 Before installing Tropy's dependencies, set the environment variable
 `SHARP_DIST_BASE_URL` or the `sharp_dist_base_url` npm config option to

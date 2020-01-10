@@ -10,6 +10,12 @@ global.F = {
     }
   },
 
+  db(name) {
+    return {
+      path: join(ROOT, 'db', name)
+    }
+  },
+
   plugins(...args) {
     return {
       path: join(ROOT, 'plugins', ...args)
@@ -20,5 +26,13 @@ global.F = {
     return {
       path: join(ROOT, 'views', ...args)
     }
+  },
+
+  get lists() {
+    return require(join(ROOT, 'lists'))
+  },
+
+  get projects() {
+    return require(join(ROOT, 'projects'))
   }
 }

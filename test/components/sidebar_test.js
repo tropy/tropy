@@ -1,13 +1,20 @@
 'use strict'
 
 const React = require('react')
-const { shallow } = require('enzyme')
+const { render } = require('../support/react')
 
-describe.skip('Sidebar', () => {
+describe('Sidebar', () => {
   const { Sidebar } = __require('components/sidebar')
 
-  it('has id sidebar', () => {
-    expect(shallow(<Sidebar/>)).to.have.id('sidebar')
+  it('renders sidebar element', () => {
+    expect(render(<Sidebar/>).element()).to.have.class('sidebar')
   })
+})
 
+describe('SidebarBody', () => {
+  const { SidebarBody } = __require('components/sidebar')
+
+  it('renders sidebar-body element', () => {
+    expect(render(<SidebarBody/>).element()).to.have.class('sidebar-body')
+  })
 })

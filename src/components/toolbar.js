@@ -88,7 +88,7 @@ class Titlebar extends React.PureComponent {
   }
 
   render() {
-    return (!this.props.isOptional || this.context.state.frameless) && (
+    return (this.props.isOptional && !this.context.state.frameless) ? null : (
       <Toolbar
         className="titlebar"
         onDoubleClick={this.handleDoubleClick}>

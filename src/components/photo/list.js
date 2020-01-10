@@ -205,6 +205,11 @@ class PhotoList extends PhotoIterator {
     onEdit: func.isRequired,
     onEditCancel: func.isRequired
   }
+
+  static defaultProps = {
+    ...PhotoIterator.defaultProps,
+    edit: {}
+  }
 }
 
 

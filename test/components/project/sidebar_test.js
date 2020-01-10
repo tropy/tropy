@@ -1,39 +1,22 @@
 'use strict'
 
 const React = require('react')
-const { shallow } = require('enzyme')
+const { render, inWindowContext } = require('../../support/react')
 
 describe('ProjectSidebar', () => {
-  const { ProjectSidebar } = __require('components/project/sidebar')
+  const ProjectSidebar =
+    __require('components/project/sidebar').ProjectSidebar.WrappedComponent
 
-  const project = { name: 'My Research' }
+  it('renders a sidebar with the project name', () => {
+    const { element, getByText } = render(
+      <ProjectSidebar
+        project={F.projects.tropy}
+        lists={F.lists}/>,
+      inWindowContext)
 
-  it.skip('renders a toolbar when prop is set', () => {
-    expect(
-      shallow(
-        <ProjectSidebar
-          project={project}
-          keymap={{}}
-          lists={{}}
-          selectedTags={[]}
-          edit={{}}
-          context={{}}
-          hasToolbar/>
-      )
-    ).to.have.exactly(1).descendants('Toolbar')
-  })
+    expect(element())
+      .to.have.descendants('.sidebar .project-name')
 
-  it.skip('renders the project name', () => {
-    expect(
-      shallow(
-        <ProjectSidebar
-          project={project}
-          keymap={{}}
-          lists={{}}
-          selectedTags={[]}
-          context={{}}
-          edit={{}}/>
-      ).find('DropTarget(ProjectName)')
-    ).to.have.prop('name', project.name)
+    expect(getByText(F.projects.tropy.name)).to.exist
   })
 })
