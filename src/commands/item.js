@@ -63,11 +63,6 @@ Create.register(ITEM.CREATE)
 
 class Import extends ImportCommand {
   *exec() {
-    let { cache, db } = this.options
-    let { list } = this.action.payload
-    let items = []
-    let backlog = []
-
     let files = yield call(this.getFilesToImport)
 
     if (files.length === 0)
@@ -75,88 +70,92 @@ class Import extends ImportCommand {
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
-    let [base, ttp] = yield select(state => [
-      state.project.base,
-      {
+    Object.assign(this.options, yield select(state => ({
+      base: state.project.base,
+      templates: {
         item: getItemTemplate(state),
         photo: getPhotoTemplate(state)
       }
-    ])
+    })))
 
     // Subtle: push items to this.result early to support
     // undo after cancelled (partial) import!
-    this.result = items
+    this.result = []
+    this.backlog = []
 
     for (let i = 0, total = files.length; i < files.length; ++i) {
-      let file
+      yield put(act.activity.update(this.action, { total, progress: i + 1 }))
+      yield* this.importImage(files[i])
+    }
+
+    if (this.backlog.length > 0) {
+      yield join(this.backlog)
+    }
+
+    return this.result
+  }
+
+  *importImage(file) {
+    try {
+      let { base, cache, db, templates } = this.options
+      let { list } = this.action.payload
+
+      let item
       let photos = []
+      let image = yield* this.openImage(file)
 
-      try {
-        file = files[i]
+      yield* this.handleDuplicate(image)
+      let data = yield* this.getMetadata(image, templates)
 
-        yield put(act.activity.update(this.action, { total, progress: i + 1 }))
+      yield call(db.transaction, async tx => {
+        item = await mod.item.create(tx, templates.item.id, data.item)
 
-        let item
-        let image = yield* this.openImage(file)
-        yield* this.handleDuplicate(image)
-        let data = yield* this.getMetadata(image, ttp)
+        while (!image.done) {
+          let photo = await mod.photo.create(tx,
+            { base, template: templates.photo.id },
+            { item: item.id, image, data: data.photo })
 
-        yield call(db.transaction, async tx => {
-          item = await mod.item.create(tx, ttp.item.id, data.item)
-
-          while (!image.done) {
-            let photo = await mod.photo.create(tx,
-              { base, template: ttp.photo.id },
-              { item: item.id, image, data: data.photo })
-
-            if (list) {
-              await mod.list.items.add(tx, list, [item.id])
-              item.lists.push(list)
-            }
-
-            item.photos.push(photo.id)
-
-            photos.push({
-              ...photo,
-              consolidating: true
-            })
-
-            image.next()
+          if (list) {
+            await mod.list.items.add(tx, list, [item.id])
+            item.lists.push(list)
           }
-        })
 
-        items.push(item.id)
+          item.photos.push(photo.id)
 
-        yield all([
-          put(act.item.insert(item)),
-          put(act.metadata.load([item.id, ...item.photos])),
-          put(act.photo.insert(photos))
-        ])
+          photos.push({
+            ...photo,
+            consolidating: true
+          })
 
-        image.rewind()
-
-        backlog.push(
-          yield fork(ImportCommand.consolidate,
-            cache,
-            image,
-            item.photos))
-
-      } catch (e) {
-        if (e instanceof DuplicateError) {
-          info(`skipping duplicate "${file}"...`)
-          continue
+          image.next()
         }
+      })
 
-        warn({ stack: e.stack }, `failed to import "${file}"`)
-        fail(e, this.action.type)
+      this.result.push(item.id)
+
+      yield all([
+        put(act.item.insert(item)),
+        put(act.metadata.load([item.id, ...item.photos])),
+        put(act.photo.insert(photos))
+      ])
+
+      image.rewind()
+
+      this.backlog.push(
+        yield fork(ImportCommand.consolidate,
+          cache,
+          image,
+          item.photos))
+
+    } catch (e) {
+      if (e instanceof DuplicateError) {
+        info(`skipping duplicate "${file}"...`)
+        return
       }
-    }
 
-    if (backlog.length > 0) {
-      yield join(backlog)
+      warn({ stack: e.stack }, `failed to import "${file}"`)
+      fail(e, this.action.type)
     }
-
-    return items
   }
 
   get redo() {
