@@ -7,6 +7,7 @@ const { DuplicateError } = require('../common/error')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { SaveCommand } = require('./subject')
+const { groupedByTemplate } = require('../export')
 const { prompt, fail, save } = require('../dialog')
 const act = require('../actions')
 const mod = require('../models')
@@ -442,9 +443,6 @@ class Export extends Command {
         state.settings.export,
         getGroupedItems(ids)(state)
       ]))
-
-      // NB: load on-demand because jsonld is huge!
-      const { groupedByTemplate } = require('../export')
 
       let results = yield call(groupedByTemplate, items, resources, opts)
       let asString = JSON.stringify(results, null, 2)

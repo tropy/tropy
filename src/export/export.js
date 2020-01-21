@@ -1,8 +1,8 @@
 'use strict'
 
-const jsonld = require('jsonld')
 const { newProperties } = require('./util')
 const { pick, pluck } = require('../common/util')
+const { compact } = require('../common/json')
 const { serialize } = require('./note')
 const { TROPY } = require('../constants')
 
@@ -196,7 +196,7 @@ async function groupedByTemplate(templateItems, resources, opts = {}) {
     const context = makeContext(template, items, resources)
     const document = makeDocument(template, items, resources, opts)
     document['@context'] = context
-    results.push(await jsonld.compact(document, context))
+    results.push(await compact(document, context))
   }
   return results
 }
