@@ -30,7 +30,7 @@ module.exports = {
         cancel: true,
         cmd: 'project',
         history: 'add',
-        prompt: true,
+        prompt: 'images',
         ...meta
       }
     }
