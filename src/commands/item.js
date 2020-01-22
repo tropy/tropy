@@ -43,22 +43,6 @@ class Load extends Command {
 Load.register(ITEM.LOAD)
 
 
-class Restore extends Command {
-  *exec() {
-    const { db } = this.options
-    const ids = this.action.payload
-
-    yield call(mod.item.restore, db, ids)
-    yield put(act.item.bulk.update([ids, { deleted: false }], { search: true }))
-
-    this.undo = act.item.delete(ids)
-
-    return ids
-  }
-}
-
-Restore.register(ITEM.RESTORE)
-
 class TemplateChange extends SaveCommand {
   type = 'item'
 }
@@ -263,14 +247,12 @@ ClearTags.register(ITEM.TAG.CLEAR)
 
 module.exports = {
   ...require('./item/create'),
-  ...require('./item/delete'),
   ...require('./item/explode'),
   ...require('./item/import'),
   ...require('./item/merge'),
 
   Export,
   Load,
-  Restore,
   TemplateChange,
   Preview,
   Print,
