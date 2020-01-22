@@ -6,7 +6,7 @@ const assert = require('assert')
 const { Command } = require('./command')
 const { SaveCommand } = require('./subject')
 const { groupedByTemplate } = require('../export')
-const { prompt, fail, save } = require('../dialog')
+const { fail, save } = require('../dialog')
 const act = require('../actions')
 const mod = require('../models')
 const { darwin } = require('../common/os')
@@ -29,52 +29,6 @@ const {
   getGroupedItems,
   getPrintableItems
 } = require('../selectors')
-
-
-class Delete extends Command {
-  *exec() {
-    const { db } = this.options
-    const ids = this.action.payload
-
-    yield call(mod.item.delete, db, ids)
-    yield put(act.item.bulk.update([ids, { deleted: true }], { search: true }))
-
-    this.undo = act.item.restore(ids)
-
-    return ids
-  }
-}
-
-Delete.register(ITEM.DELETE)
-
-
-class Destroy extends Command {
-  *exec() {
-    const { db } = this.options
-    const ids = this.action.payload
-
-    const { cancel } = yield call(prompt, 'item.destroy')
-    if (cancel) return
-
-    this.init = performance.now()
-
-    try {
-      if (ids.length) {
-        yield call(mod.item.destroy, db, ids)
-        yield put(act.item.remove(ids))
-
-      } else {
-        yield call(mod.item.prune, db, false)
-        // Remove deleted items
-      }
-
-    } finally {
-      yield put(act.history.drop(null, { search: true }))
-    }
-  }
-}
-
-Destroy.register(ITEM.DESTROY)
 
 
 class Load extends Command {
@@ -477,10 +431,9 @@ ClearTags.register(ITEM.TAG.CLEAR)
 
 module.exports = {
   ...require('./create'),
+  ...require('./delete'),
   ...require('./import'),
 
-  Delete,
-  Destroy,
   Explode,
   Export,
   Implode,
