@@ -335,10 +335,10 @@ ClearTags.register(ITEM.TAG.CLEAR)
 
 
 module.exports = {
-  ...require('./create'),
-  ...require('./delete'),
-  ...require('./explode'),
-  ...require('./import'),
+  ...require('./item/create'),
+  ...require('./item/delete'),
+  ...require('./item/explode'),
+  ...require('./item/import'),
 
   Export,
   Load,
