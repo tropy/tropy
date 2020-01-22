@@ -34,32 +34,9 @@ const {
   getGroupedItems,
   getItemTemplate,
   getPhotoTemplate,
-  getPrintableItems,
-  getTemplateValues
+  getPrintableItems
 } = require('../selectors')
 
-
-class Create extends Command {
-  *exec() {
-    let { db } = this.options
-
-    let template = yield select(getItemTemplate)
-    let data = getTemplateValues(template)
-
-    let item = yield call(db.transaction, tx =>
-      mod.item.create(tx, template.id, data))
-
-    yield put(act.item.insert(item))
-    yield put(act.item.select({ items: [item.id] }, { mod: 'replace' }))
-
-    this.undo = act.item.delete([item.id])
-    this.redo = act.item.restore([item.id])
-
-    return item
-  }
-}
-
-Create.register(ITEM.CREATE)
 
 
 class Import extends ImportCommand {
@@ -620,7 +597,8 @@ ClearTags.register(ITEM.TAG.CLEAR)
 
 
 module.exports = {
-  Create,
+  ...require('./create'),
+
   Delete,
   Destroy,
   Explode,
