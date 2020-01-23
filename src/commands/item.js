@@ -1,6 +1,5 @@
 'use strict'
 
-const { ipcRenderer: ipc } = require('electron')
 const { Command } = require('./command')
 const { SaveCommand } = require('./subject')
 const mod = require('../models')
@@ -13,10 +12,6 @@ const {
   call,
   select
 } = require('redux-saga/effects')
-
-const {
-  getPrintableItems
-} = require('../selectors')
 
 
 class Load extends Command {
@@ -59,33 +54,16 @@ class Preview extends Command {
 Preview.register(ITEM.PREVIEW)
 
 
-class Print extends Command {
-  *exec() {
-    let [prefs, project, items] = yield select(state => ([
-      state.settings.print,
-      state.project.id,
-      getPrintableItems(state)
-    ]))
-
-    if (items.length) {
-      ipc.send('print', { ...prefs, project, items })
-    }
-  }
-}
-
-Print.register(ITEM.PRINT)
-
-
 module.exports = {
   ...require('./item/create'),
   ...require('./item/explode'),
   ...require('./item/export'),
   ...require('./item/import'),
   ...require('./item/merge'),
+  ...require('./item/print'),
   ...require('./item/tags'),
 
   Load,
   TemplateChange,
-  Preview,
-  Print
+  Preview
 }
