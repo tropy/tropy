@@ -2,8 +2,9 @@
 
 const React = require('react')
 const { PureComponent } = require('react')
-const { bool, func, shape, string } = require('prop-types')
-const { FormField, FormToggle } = require('../form')
+const { bool, func, shape, string, object } = require('prop-types')
+const { FormElement, FormField, FormToggle } = require('../form')
+const { TemplateSelect } = require('../template/select')
 
 
 class PluginOption extends PureComponent {
@@ -34,6 +35,8 @@ class PluginOption extends PureComponent {
     switch (this.props.spec.type) {
       case 'number':
         return Number(value)
+      case 'template':
+        return value.id
       default:
         return value
     }
@@ -48,6 +51,18 @@ class PluginOption extends PureComponent {
       case 'bool':
       case 'boolean':
         return <FormToggle {...this.attrs}/>
+      case 'template':
+        return (
+          <FormElement id={this.props.spec.label} isCompact>
+            <TemplateSelect {...this.attrs}
+              isRequired
+              minFilterOptions={4}
+              options={[
+                ...this.props.templates.item,
+                ...this.props.templates.photo,
+                ...this.props.templates.selection]}/>
+          </FormElement>
+        )
       default:
         return <FormField {...this.attrs}/>
     }
@@ -55,6 +70,7 @@ class PluginOption extends PureComponent {
 
   static propTypes = {
     onChange: func.isRequired,
+    templates: object.isRequired,
     spec: shape({
       field: string.isRequired,
       hint: string,
