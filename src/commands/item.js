@@ -6,23 +6,20 @@ const { Command } = require('./command')
 const { SaveCommand } = require('./subject')
 const { groupedByTemplate } = require('../export')
 const { fail, save } = require('../dialog')
-const act = require('../actions')
 const mod = require('../models')
 const { darwin } = require('../common/os')
 const { ITEM } = require('../constants')
 const { writeFile: write } = require('fs')
 const { win } = require('../window')
-const { get, remove } = require('../common/util')
+const { get } = require('../common/util')
 
 const {
   call,
-  put,
   select,
   cps
 } = require('redux-saga/effects')
 
 const {
-  findTagIds,
   getGroupedItems,
   getPrintableItems
 } = require('../selectors')
@@ -93,36 +90,6 @@ class Export extends Command {
 Export.register(ITEM.EXPORT)
 
 
-class ToggleTags extends Command {
-  *exec() {
-    const { db } = this.options
-    const { id, tags } = this.action.payload
-
-    const current = yield select(({ items }) => items[id].tags)
-
-    const added = []
-    const removed = []
-
-    for (let tag of tags) {
-      (current.includes(tag) ? removed : added).push(tag)
-    }
-
-    if (added.length) {
-      yield call(mod.item.tags.set, db, added.map(tag => ({ id, tag })))
-      yield put(act.item.tags.insert({ id, tags: added }))
-    }
-
-    if (removed.length) {
-      yield call(mod.item.tags.remove, db, { id, tags: removed })
-      yield put(act.item.tags.remove({ id, tags: removed }))
-    }
-
-    this.undo = this.action
-  }
-}
-
-ToggleTags.register(ITEM.TAG.TOGGLE)
-
 
 class Preview extends Command {
   *exec() {
@@ -158,106 +125,16 @@ class Print extends Command {
 Print.register(ITEM.PRINT)
 
 
-class AddTags extends Command {
-  *exec() {
-    let { db } = this.options
-    let { payload, meta } = this.action
-    let { tags } = payload
-
-    if (meta.resolve) {
-      tags = yield select(state => findTagIds(state, tags))
-    }
-
-    let work = yield select(state =>
-      payload.id.map(id => [
-        id,
-        remove(tags, ...state.items[id].tags)
-      ]))
-
-    yield call(
-      mod.item.tags.set,
-      db,
-      work.flatMap(([id, tx]) =>
-        tx.map(tag => ({ id, tag }))))
-
-    for (let [id, tx] of work) {
-      if (tx.length)
-        yield put(act.item.tags.insert({ id, tags: tx }))
-    }
-
-    // TODO: Use work. This currently removes all tags!
-    this.undo = act.item.tags.delete({ id: payload.id, tags })
-
-    return work
-  }
-}
-
-AddTags.register(ITEM.TAG.CREATE)
-
-
-class RemoveTags extends Command {
-  *exec() {
-    let { db } = this.options
-    let { payload, meta } = this.action
-    let { tags } = payload
-
-    if (meta.resolve) {
-      tags = yield select(state => findTagIds(state, tags))
-    }
-
-    let work = yield select(state =>
-      payload.id.map(id => [
-        id,
-        tags.filter(tag => state.items[id].tags.includes(tag))
-      ]))
-
-    yield call(mod.item.tags.remove, db, { id: payload.id, tags })
-
-    for (let [id, tx] of work) {
-      if (tx.length)
-        yield put(act.item.tags.remove({ id, tags: tx }))
-    }
-
-    // TODO: Use work. This currently adds all tags!
-    this.undo = act.item.tags.create({ id: payload.id, tags })
-
-    return work
-  }
-}
-
-RemoveTags.register(ITEM.TAG.DELETE)
-
-
-class ClearTags extends Command {
-  *exec() {
-    const { db } = this.options
-    const id = this.action.payload
-
-    const tags = yield select(({ items }) => items[id].tags)
-
-    yield call(mod.item.tags.clear, db, id)
-    yield put(act.item.tags.remove({ id, tags }))
-
-    this.undo = act.item.tags.toggle({ id, tags })
-  }
-}
-
-ClearTags.register(ITEM.TAG.CLEAR)
-
-
 module.exports = {
   ...require('./item/create'),
   ...require('./item/explode'),
   ...require('./item/import'),
   ...require('./item/merge'),
+  ...require('./item/tags'),
 
   Export,
   Load,
   TemplateChange,
   Preview,
-  Print,
-  AddTags,
-  RemoveTags,
-  ToggleTags,
-  ClearTags
+  Print
 }
