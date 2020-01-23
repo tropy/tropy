@@ -1,7 +1,7 @@
 'use strict'
 
 const subject = require('../subject')
-const { ITEM } = require('../constants')
+const { ITEM } = require('../../constants')
 
 
 class TemplateChange extends subject.Save {
