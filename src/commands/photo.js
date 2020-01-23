@@ -5,7 +5,7 @@ const { basename, dirname, join, relative, resolve } = require('path')
 const { stat } = require('fs').promises
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
-const { SaveCommand } = require('./subject')
+const subject = require('./subject')
 const { fail, open, prompt } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
@@ -562,7 +562,7 @@ class Rotate extends Command {
 Rotate.register(PHOTO.ROTATE)
 
 
-class TemplateChange extends SaveCommand {
+class TemplateChange extends subject.Save {
   type = 'photo'
 }
 
