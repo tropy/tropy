@@ -5,7 +5,7 @@ const { ipcRenderer: ipc } = require('electron')
 const { WindowContext } = require('../main')
 const { PrefPane } = require('../prefs/pane')
 const { Button } = require('../button')
-const { bool, func, string } = require('prop-types')
+const { bool, func, string, object } = require('prop-types')
 const { AccordionGroup } = require('../accordion')
 const { PluginAccordion } = require('./accordion')
 const { values } = Object
@@ -106,6 +106,7 @@ class PluginsPane extends React.Component {
                      id={spec.name}
                      instances={this.getPluginInstances(spec.name)}
                      spec={spec}
+                     templates={this.props.templates}
                      onChange={this.handleChange}
                      onDisable={this.handleDisable}
                      onEnable={this.handleEnable}
@@ -131,6 +132,7 @@ class PluginsPane extends React.Component {
   static propTypes = {
     isActive: bool,
     name: string.isRequired,
+    templates: object.isRequired,
     onUninstall: func.isRequired,
     onOpenLink: func.isRequired
   }
