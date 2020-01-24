@@ -48,6 +48,10 @@ class PluginOption extends PureComponent {
     this.props.onChange(this.props.spec.field, this.format(value))
   }
 
+  handleTemplateClear = () => {
+    this.props.onChange(this.props.spec.field, '')
+  }
+
   render() {
     switch (this.props.spec.type) {
       case 'bool':
@@ -57,8 +61,8 @@ class PluginOption extends PureComponent {
         return (
           <FormElement id={this.props.spec.label} isCompact>
             <TemplateSelect {...this.attrs}
-              isRequired
               minFilterOptions={4}
+              onRemove={this.handleTemplateClear}
               options={[
                 ...this.props.templates.item,
                 ...this.props.templates.photo,
