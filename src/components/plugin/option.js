@@ -5,6 +5,8 @@ const { PureComponent } = require('react')
 const { bool, func, shape, string, object } = require('prop-types')
 const { FormElement, FormField, FormToggle } = require('../form')
 const { TemplateSelect } = require('../template/select')
+const { get } = require('../../common/util')
+
 
 
 class PluginOption extends PureComponent {
@@ -36,9 +38,7 @@ class PluginOption extends PureComponent {
       case 'number':
         return Number(value)
       case 'template':
-        if (value && value.id)
-          return value.id
-        return ''
+        return get(value, ['id'], '')
       default:
         return value
     }
@@ -46,10 +46,6 @@ class PluginOption extends PureComponent {
 
   handleChange = ({ [this.props.spec.field]: value }) => {
     this.props.onChange(this.props.spec.field, this.format(value))
-  }
-
-  handleTemplateClear = () => {
-    this.props.onChange(this.props.spec.field, '')
   }
 
   render() {
@@ -62,7 +58,6 @@ class PluginOption extends PureComponent {
           <FormElement id={this.props.spec.label} isCompact>
             <TemplateSelect {...this.attrs}
               minFilterOptions={4}
-              onRemove={this.handleTemplateClear}
               options={[
                 ...this.props.templates.item,
                 ...this.props.templates.photo,
