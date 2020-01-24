@@ -36,7 +36,9 @@ class PluginOption extends PureComponent {
       case 'number':
         return Number(value)
       case 'template':
-        return value.id
+        if (value && value.id)
+          return value.id
+        return ''
       default:
         return value
     }
