@@ -5,6 +5,7 @@ const { pick, pluck } = require('../common/util')
 const { compact } = require('../common/json')
 const { serialize } = require('./note')
 const { TROPY } = require('../constants')
+const { version } = require('../common/release')
 
 const IMAGE_PROPS = [
   'angle',
@@ -180,6 +181,7 @@ function renderItem(item, template, resources, opts) {
 function makeDocument(template, items, resources, opts) {
   const result = {
     'template': template.id,
+    'version': version,
     '@graph': []
   }
   for (const item of items) {
