@@ -144,7 +144,7 @@ function renderItem(item, template, resources, opts) {
   const [props, metadata, photos, lists, tags, notes] = resources
 
   // the item starts with a photo property, it may not be overwritten
-  let result = { '@type': TROPY.Item, 'photo': [] }
+  let result = { '@type': TROPY.Item, 'template': item.template, 'photo': [] }
 
   result = addInfo(result, item.lists, 'list', lists)
   result = addInfo(result, item.tags, 'tag', tags)
