@@ -1,9 +1,10 @@
 'use strict'
 
-
-
 const props = {
   item: [
+    'list',
+    'photo',
+    'tag',
     'template'
   ],
 
@@ -25,6 +26,7 @@ const props = {
     'mimetype',
     'orientation',
     'path',
+    'selection',
     'size',
     'template'
   ],
