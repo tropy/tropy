@@ -3,7 +3,7 @@
 const handler = {
   get(obj, prop) {
     return (prop in obj) ?
-      prop[obj] :
+      obj[prop] :
       `${obj.PREFIX}${prop}`
   }
 }
