@@ -2,9 +2,6 @@
 
 const props = {
   item: [
-    'list',
-    'photo',
-    'tag',
     'template'
   ],
 
@@ -23,10 +20,13 @@ const props = {
 
   photo: [
     'checksum',
+    'color',
+    'density',
     'mimetype',
     'orientation',
+    'page',
     'path',
-    'selection',
+    'protocol',
     'size',
     'template'
   ],

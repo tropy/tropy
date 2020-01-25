@@ -251,7 +251,7 @@ class Create extends ImportCommand {
           let photo = yield call(db.transaction, tx =>
             mod.photo.create(tx, { base, template: template.id }, {
               item: id,
-              image,
+              image: image.toJSON(),
               data,
               position: idx[0] + i + 1
             }))
@@ -377,7 +377,7 @@ class Duplicate extends ImportCommand {
         let photo = yield call(db.transaction, tx =>
           mod.photo.create(tx, { base, template }, {
             item,
-            image,
+            image: image.toJSON(),
             data: data[i]
           }))
 
