@@ -49,7 +49,7 @@ const write = async (file, data, {
   return writeFile(file, JSON.stringify(data, null, indent), opts)
 }
 
-const toList = (node) =>
+const flatten = (node) =>
   array(node)
     .flatMap(container => container['@list'] || container)
 
@@ -70,6 +70,6 @@ module.exports = {
   parse,
   write,
 
-  toList,
+  flatten,
   toValue
 }

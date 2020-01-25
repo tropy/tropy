@@ -1,9 +1,9 @@
 'use strict'
 
 const ex = require('./export')
-const { expand, open, toList, toValue } = require('./json')
+const { expand, flatten, open, toValue } = require('./json')
 const { tropy } = require('./ns')
-const { array, map, omit, get } = require('./util')
+const { any, array, map, morph, omit, get } = require('./util')
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
 const normalize = async (json) =>
@@ -22,9 +22,32 @@ const toFirstValue = (_, values) =>
 const getMetadata = (data, skip = ['@id', '@type']) =>
   map(omit(data, skip), toFirstValue)
 
+const isImageProp = (prop) =>
+  (prop !== 'template') && (
+    ex.props.image.includes(prop) ||
+    ex.props.photo.includes(prop)
+  )
+
+const getImageProps = (data) =>
+  morph(data, (img, prop, values) => {
+    if (props.tropy.prefix.test(prop)) {
+      let val = any(values[0], '@value', '@id')
+      if (val === undefined)
+        return
+
+      let key = prop.replace(props.tropy.prefix, '')
+      if (!isImageProp(key))
+        return
+
+      img[key] = val
+    }
+  })
+
+
 const getPhoto = (data) => ({
-  data: getMetadata(data, props.photo),
+  data: getMetadata(data, [...props.photo, ...props.image]),
   id: get(data, ['@id', 0]),
+  image: getImageProps(data),
   template: get(data, [tropy.template, 0, '@id']),
   type: get(data, ['@type', 0])
 })
@@ -35,7 +58,7 @@ function *eachItem(graph) {
       data: getMetadata(data, props.item),
       id: get(data, ['@id', 0]),
       lists: (data[tropy.list] || []).map(toValue),
-      photos: toList(data[tropy.photo]).map(getPhoto),
+      photos: flatten(data[tropy.photo]).map(getPhoto),
       tags: (data[tropy.tag] || []).map(toValue),
       template: get(data, [tropy.template, 0, '@id']),
       type: get(data, ['@type', 0])
@@ -44,18 +67,36 @@ function *eachItem(graph) {
   }
 }
 
+
 const props = {
+  image: [
+    ...ex.props.image.map(prop => tropy[prop])
+  ],
   item: [
     '@id',
     '@type',
+    tropy.list,
+    tropy.photo,
+    tropy.tag,
     ...ex.props.item.map(prop => tropy[prop])
   ],
-
   photo: [
     '@id',
     '@type',
+    tropy.note,
+    tropy.selection,
     ...ex.props.photo.map(prop => tropy[prop])
-  ]
+  ],
+  selection: [
+    '@id',
+    '@type',
+    tropy.note,
+    ...ex.props.selection.map(prop => tropy[prop])
+  ],
+
+  tropy: {
+    prefix: new RegExp(`^${tropy.PREFIX}`)
+  }
 }
 
 
