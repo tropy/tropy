@@ -14,6 +14,7 @@ const mod = require('../../models')
 const { ITEM, PROJECT: { MODE } } = require('../../constants')
 
 const {
+  findTagIds,
   getItemTemplate,
   getPhotoTemplate
 } = require('../../selectors')
@@ -156,18 +157,29 @@ class Import extends ImportCommand {
       let { list } = this.action.payload
       let item
       let photos = []
+      let tags
 
       yield this.progress()
 
+      if (obj.tags.length) {
+        // TODO Find only by name! Drop missing tags!
+        tags = yield select(state => findTagIds(state, obj.tags))
+      }
+
       yield call(db.transaction, async tx => {
         item = await mod.item.create(tx, obj.template, obj.data)
+
+        if (tags) {
+          await mod.item.tags.set(
+            tx,
+            tags.map(tag => ({ id: item.id, tag })))
+          item.tags = [...tags]
+        }
 
         if (list) {
           await mod.list.items.add(tx, list, [item.id])
           item.lists.push(list)
         }
-
-        // tags
 
         for (let i = 0; i < obj.photos.length; ++i) {
           let { template, image, data } = obj.photos[i]

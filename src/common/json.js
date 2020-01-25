@@ -1,8 +1,6 @@
 'use strict'
 
 const { readFile, writeFile } = require('fs').promises
-const { rdfs } = require('./ns')
-const { array } = require('./util')
 
 // NB: load jsonld module on demand, because it's huge.
 const jsonld = {
@@ -49,15 +47,6 @@ const write = async (file, data, {
   return writeFile(file, JSON.stringify(data, null, indent), opts)
 }
 
-const flatten = (node) =>
-  array(node)
-    .flatMap(container => container['@list'] || container)
-
-const toValue = (node) =>
-  node['@id'] ?
-    { type: rdfs.Class, text: node['@id'] } :
-    { type: node['@type'], text: node['@value'] }
-
 
 module.exports = {
   compact(...args) {
@@ -68,8 +57,5 @@ module.exports = {
   },
   open,
   parse,
-  write,
-
-  flatten,
-  toValue
+  write
 }

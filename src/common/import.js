@@ -1,8 +1,8 @@
 'use strict'
 
 const ex = require('./export')
-const { expand, flatten, open, toValue } = require('./json')
-const { tropy } = require('./ns')
+const { expand, open } = require('./json')
+const { rdfs, tropy } = require('./ns')
 const { any, array, map, morph, omit, get } = require('./util')
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
@@ -15,6 +15,15 @@ const normalize = async (json) =>
           ...item
         }))
 
+
+const flatten = (node) =>
+  array(node)
+    .flatMap(container => container['@list'] || container)
+
+const toValue = (node) =>
+  node['@id'] ?
+    { type: rdfs.Class, text: node['@id'] } :
+    { type: node['@type'], text: node['@value'] }
 
 const toFirstValue = (_, values) =>
   toValue(values[0])
@@ -57,9 +66,9 @@ function *eachItem(graph) {
     yield ({
       data: getMetadata(data, props.item),
       id: get(data, ['@id', 0]),
-      lists: (data[tropy.list] || []).map(toValue),
+      // lists: (data[tropy.list] || []).map(literal),
       photos: flatten(data[tropy.photo]).map(getPhoto),
-      tags: (data[tropy.tag] || []).map(toValue),
+      tags: (data[tropy.tag] || []).map(n => n['@value']),
       template: get(data, [tropy.template, 0, '@id']),
       type: get(data, ['@type', 0])
     })
