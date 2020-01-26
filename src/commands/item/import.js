@@ -157,6 +157,8 @@ class Import extends ImportCommand {
       let { list } = this.action.payload
       let item
       let photos = []
+      let selections = []
+      //let notes = []
       let tags
 
       yield this.progress()
@@ -191,22 +193,36 @@ class Import extends ImportCommand {
             position: i + 1
           })
 
+          // TODO photo notes
+
+          for (let j = 0; j < obj.photos[i].selections.length; ++j) {
+            let selection = await mod.selection.create(tx, {
+              photo: photo.id,
+              ...obj.photos[i].selections[j]
+            })
+
+            // TODO selection notes
+
+            photo.selections.push(selection.id)
+            selections.push(selection)
+          }
+
           item.photos.push(photo.id)
           photos.push(photo)
-
-          // photo notes
-          // selections
-          // selection notes
-
         }
       })
 
       this.result.push(item.id)
 
       yield all([
+        put(act.selection.insert(selections)),
+        put(act.photo.insert(photos)),
         put(act.item.insert(item)),
-        put(act.metadata.load([item.id, ...item.photos])),
-        put(act.photo.insert(photos))
+        put(act.metadata.load([
+          item.id,
+          ...photos.map(p => p.id),
+          ...selections.map(s => s.id)
+        ]))
       ])
 
     } catch (e) {

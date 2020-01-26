@@ -3,7 +3,7 @@
 const ex = require('./export')
 const { expand, open } = require('./json')
 const { rdfs, tropy } = require('./ns')
-const { any, array, map, morph, omit, get } = require('./util')
+const { URI, any, array, map, morph, omit, get } = require('./util')
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
 const normalize = async (json) =>
@@ -14,7 +14,6 @@ const normalize = async (json) =>
           [tropy.template]: g[tropy.template],
           ...item
         }))
-
 
 const flatten = (node) =>
   array(node)
@@ -28,43 +27,42 @@ const toValue = (node) =>
 const toFirstValue = (_, values) =>
   toValue(values[0])
 
-const getMetadata = (data, skip = ['@id', '@type']) =>
-  map(omit(data, skip), toFirstValue)
+const getMetadata = (data, type) =>
+  map(omit(data, props[type]), toFirstValue)
 
-const isImageProp = (prop) =>
-  (prop !== 'template') && (
-    ex.props.image.includes(prop) ||
-    ex.props.photo.includes(prop)
-  )
-
-const getImageProps = (data) =>
+const getProps = (data, type) =>
   morph(data, (img, prop, values) => {
-    if (props.tropy.prefix.test(prop)) {
-      let val = any(values[0], '@value', '@id')
-      if (val === undefined)
-        return
+    let value = any(values[0], '@value', '@id')
+    if (value === undefined)
+      return
+    if (props[type].skip.includes(prop))
+      return
+    if (!props[type].includes(prop))
+      return
 
-      let key = prop.replace(props.tropy.prefix, '')
-      if (!isImageProp(key))
-        return
-
-      img[key] = val
-    }
+    img[URI.split(prop)[1]] = value
   })
 
-
 const getPhoto = (data) => ({
-  data: getMetadata(data, [...props.photo, ...props.image]),
+  data: getMetadata(data, 'photo'),
   id: get(data, ['@id', 0]),
-  image: getImageProps(data),
+  image: getProps(data, 'photo'),
+  selections: flatten(data[tropy.selection]).map(getSelection),
   template: get(data, [tropy.template, 0, '@id']),
   type: get(data, ['@type', 0])
+})
+
+const getSelection = (data) => ({
+  data: getMetadata(data, 'selection'),
+  id: get(data, ['@id', 0]),
+  type: get(data, ['@type', 0]),
+  ...getProps(data, 'selection')
 })
 
 function *eachItem(graph) {
   for (let data of graph) {
     yield ({
-      data: getMetadata(data, props.item),
+      data: getMetadata(data, 'item'),
       id: get(data, ['@id', 0]),
       // lists: (data[tropy.list] || []).map(literal),
       photos: flatten(data[tropy.photo]).map(getPhoto),
@@ -76,11 +74,7 @@ function *eachItem(graph) {
   }
 }
 
-
 const props = {
-  image: [
-    ...ex.props.image.map(prop => tropy[prop])
-  ],
   item: [
     '@id',
     '@type',
@@ -94,20 +88,25 @@ const props = {
     '@type',
     tropy.note,
     tropy.selection,
-    ...ex.props.photo.map(prop => tropy[prop])
+    ...ex.props.photo.map(prop => tropy[prop]),
+    ...ex.props.image.map(prop => tropy[prop])
   ],
   selection: [
     '@id',
     '@type',
     tropy.note,
-    ...ex.props.selection.map(prop => tropy[prop])
-  ],
-
-  tropy: {
-    prefix: new RegExp(`^${tropy.PREFIX}`)
-  }
+    ...ex.props.selection.map(prop => tropy[prop]),
+    ...ex.props.image.map(prop => tropy[prop])
+  ]
 }
 
+props.photo.skip = [
+  '@id', '@type', tropy.template, tropy.selection, tropy.note
+]
+
+props.selection.skip = [
+  '@id', '@type', tropy.note
+]
 
 module.exports = {
   eachItem,
