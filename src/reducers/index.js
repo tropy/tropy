@@ -14,7 +14,7 @@ module.exports = {
   ...require('./lists'),
   ...require('./metadata'),
   ...require('./nav'),
-  ...require('./notes'),
+  ...require('./note'),
   ...require('./notepad'),
   ...require('./ontology'),
   ...require('./panel'),
