@@ -47,6 +47,7 @@ const getPhoto = (data) => ({
   data: getMetadata(data, 'photo'),
   id: get(data, ['@id', 0]),
   image: getProps(data, 'photo'),
+  notes: flatten(data[tropy.note]).map(getNote),
   selections: flatten(data[tropy.selection]).map(getSelection),
   template: get(data, [tropy.template, 0, '@id']),
   type: get(data, ['@type', 0])
@@ -55,8 +56,14 @@ const getPhoto = (data) => ({
 const getSelection = (data) => ({
   data: getMetadata(data, 'selection'),
   id: get(data, ['@id', 0]),
+  notes: flatten(data[tropy.note]).map(getNote),
   type: get(data, ['@type', 0]),
   ...getProps(data, 'selection')
+})
+
+const getNote = (data) => ({
+  language: get(data, [tropy.html, 0, '@language']),
+  html: get(data, [tropy.html, 0, '@value'])
 })
 
 function *eachItem(graph) {

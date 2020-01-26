@@ -8,6 +8,7 @@ const { open, eachItem } = require('../../common/import')
 const { info, warn } = require('../../common/log')
 const { Image } = require('../../image')
 const { fail } = require('../../dialog')
+const { fromHTML } = require('../../components/editor/serialize')
 const act = require('../../actions')
 const mod = require('../../models')
 
@@ -158,7 +159,7 @@ class Import extends ImportCommand {
       let item
       let photos = []
       let selections = []
-      //let notes = []
+      let notes = []
       let tags
 
       yield this.progress()
@@ -193,7 +194,18 @@ class Import extends ImportCommand {
             position: i + 1
           })
 
-          // TODO photo notes
+          for (let { html, language } of obj.photos[i].notes) {
+            let { state, text } = fromHTML(html)
+            let note = await mod.note.create(tx, {
+              id: photo.id,
+              state,
+              text,
+              language
+            })
+
+            photo.notes.push(note.id)
+            notes.push(note)
+          }
 
           for (let j = 0; j < obj.photos[i].selections.length; ++j) {
             let selection = await mod.selection.create(tx, {
@@ -201,7 +213,19 @@ class Import extends ImportCommand {
               ...obj.photos[i].selections[j]
             })
 
-            // TODO selection notes
+            // TODO DRY
+            for (let { html, language } of obj.photos[i].selections[j].notes) {
+              let { state, text } = fromHTML(html)
+              let note = await mod.note.create(tx, {
+                id: selection.id,
+                state,
+                text,
+                language
+              })
+
+              selection.notes.push(note.id)
+              notes.push(note)
+            }
 
             photo.selections.push(selection.id)
             selections.push(selection)
@@ -215,6 +239,7 @@ class Import extends ImportCommand {
       this.result.push(item.id)
 
       yield all([
+        put(act.note.insert(notes)),
         put(act.selection.insert(selections)),
         put(act.photo.insert(photos)),
         put(act.item.insert(item)),
