@@ -2,6 +2,7 @@
 
 module.exports = {
   CREATE: 'selection.create',
+  INSERT: 'selection.insert',
   DELETE: 'selection.delete',
   LOAD: 'selection.load',
   ORDER: 'selection.order',
