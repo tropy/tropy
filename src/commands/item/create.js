@@ -3,6 +3,7 @@
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('../command')
 const { ITEM } = require('../../constants')
+const { prompt } = require('../../dialog')
 
 const act = require('../../actions')
 const mod = require('../../models')
