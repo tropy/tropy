@@ -188,7 +188,7 @@ class Import extends ImportCommand {
             item: item.id,
             image,
             data,
-            position: i
+            position: i + 1
           })
 
           item.photos.push(photo.id)
