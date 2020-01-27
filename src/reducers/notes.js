@@ -7,7 +7,7 @@ const init = {}
 
 module.exports = {
   // eslint-disable-next-line complexity
-  note(state = init, { type, payload, error, meta }) {
+  notes(state = init, { type, payload, error, meta }) {
     switch (type) {
       case PROJECT.OPEN:
         return { ...init }
