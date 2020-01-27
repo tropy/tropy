@@ -1,10 +1,11 @@
 'use strict'
 
+const { readFile } = require('fs').promises
 const { extname } = require('path')
 const { all, call, fork, join, put, select } = require('redux-saga/effects')
 const { ImportCommand } = require('../import')
 const { DuplicateError } = require('../../common/error')
-const { open, eachItem } = require('../../common/import')
+const { normalize, eachItem } = require('../../common/import')
 const { info, warn } = require('../../common/log')
 const { Image } = require('../../image')
 const { fail } = require('../../dialog')
@@ -23,31 +24,40 @@ const {
 
 class Import extends ImportCommand {
   *exec() {
-    let files = yield call(this.getFilesToImport)
-
-    if (files.length === 0)
-      return []
-
-    yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
-    yield* this.configure()
+    let { payload } = this.action
 
     // Subtle: push items to this.result early to support
     // undo after cancelled (partial) import!
     this.result = []
     this.backlog = []
 
-    yield this.progress({ total: files.length })
+    if (payload.data) {
+      yield this.progress({ total: 1 })
+      yield* this.importFromJSON(payload.data)
 
-    for (let file of files) {
-      try {
-        if ((/json(ld)?$/i).test(extname(file)))
-          yield* this.importFromJSON(file)
-        else
-          yield* this.importFromImage(file)
+    } else {
+      let files = yield call(this.getFilesToImport)
 
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to import "${file}"`)
-        fail(e, this.action.type)
+      if (files.length === 0)
+        return this.result
+
+      yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
+      yield* this.configure()
+
+      yield this.progress({ total: files.length })
+
+      for (let file of files) {
+        try {
+          if ((/json(ld)?$/i).test(extname(file))) {
+            let text = yield call(readFile, file, 'utf-8')
+            yield* this.importFromJSON(JSON.parse(text))
+          } else
+            yield* this.importFromImage(file)
+
+        } catch (e) {
+          warn({ stack: e.stack }, `failed to import "${file}"`)
+          fail(e, this.action.type)
+        }
       }
     }
 
@@ -141,18 +151,18 @@ class Import extends ImportCommand {
     }
   }
 
-  *importFromJSON(path) {
-    let graph = yield call(open, path)
+  *importFromJSON(data) {
+    let graph = yield call(normalize, data)
 
     if (graph.length > 1)
       yield this.progress({ total: graph.length - 1 })
 
     for (let item of eachItem(graph)) {
-      yield* this.paste(item)
+      yield* this.importJSONItem(item)
     }
   }
 
-  *paste(obj) {
+  *importJSONItem(obj) {
     try {
       let { db, base } = this.options
       let { list } = this.action.payload

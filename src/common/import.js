@@ -1,7 +1,7 @@
 'use strict'
 
 const ex = require('./export')
-const { expand, open } = require('./json')
+const { expand } = require('./json')
 const { rdfs, tropy } = require('./ns')
 const { URI, any, array, map, morph, omit, get } = require('./util')
 
@@ -117,9 +117,5 @@ props.selection.skip = [
 
 module.exports = {
   eachItem,
-  normalize,
-
-  async open(...args) {
-    return normalize(await open(...args))
-  }
+  normalize
 }
