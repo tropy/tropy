@@ -204,18 +204,7 @@ class Import extends ImportCommand {
             position: i + 1
           })
 
-          for (let { html, language } of obj.photos[i].notes) {
-            let { state, text } = fromHTML(html)
-            let note = await mod.note.create(tx, {
-              id: photo.id,
-              state,
-              text,
-              language
-            })
-
-            photo.notes.push(note.id)
-            notes.push(note)
-          }
+          await importNotes(tx, obj.photos[i].notes, photo, notes)
 
           for (let j = 0; j < obj.photos[i].selections.length; ++j) {
             let selection = await mod.selection.create(tx, {
@@ -223,19 +212,11 @@ class Import extends ImportCommand {
               ...obj.photos[i].selections[j]
             })
 
-            // TODO DRY
-            for (let { html, language } of obj.photos[i].selections[j].notes) {
-              let { state, text } = fromHTML(html)
-              let note = await mod.note.create(tx, {
-                id: selection.id,
-                state,
-                text,
-                language
-              })
-
-              selection.notes.push(note.id)
-              notes.push(note)
-            }
+            await importNotes(
+              tx,
+              obj.photos[i].selections[j].notes,
+              selection,
+              notes)
 
             photo.selections.push(selection.id)
             selections.push(selection)
@@ -279,6 +260,23 @@ class Import extends ImportCommand {
 }
 
 Import.register(ITEM.IMPORT)
+
+
+const importNotes = async (db, notes, parent, result = []) => {
+  for (let { html, language } of notes) {
+    let { state, text } = fromHTML(html)
+    let note = await mod.note.create(db, {
+      id: parent.id,
+      state,
+      text,
+      language
+    })
+
+    parent.notes.push(note.id)
+    result.push(note)
+  }
+  return result
+}
 
 
 module.exports = {

@@ -1,6 +1,7 @@
 'use strict'
 
 const { TAG, EDIT } = require('../constants')
+const { array } = require('../common/util')
 
 module.exports = {
   new(payload, meta) {
@@ -76,6 +77,22 @@ module.exports = {
       type: TAG.LOAD,
       payload,
       meta: { cmd: 'project', ipc: TAG.CHANGED, ...meta }
+    }
+  },
+
+  insert(payload, meta = {}) {
+    return {
+      type: TAG.INSERT,
+      payload,
+      meta
+    }
+  },
+
+  remove(payload, meta = {}) {
+    return {
+      type: TAG.REMOVE,
+      payload: array(payload),
+      meta
     }
   },
 
