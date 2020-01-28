@@ -113,10 +113,16 @@ class Slider extends React.PureComponent {
   }, 100)
 
   handleBlur = () => {
+    if (this.props.onBlur) {
+      this.props.onBlur(event)
+    }
     this.setState({ hasFocus: false })
   }
 
-  handleFocus = () => {
+  handleFocus = (event) => {
+    if (this.props.onFocus) {
+      this.props.onFocus(event)
+    }
     this.setState({ hasFocus: true })
   }
 
