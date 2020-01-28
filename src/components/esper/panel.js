@@ -54,8 +54,6 @@ class ColorSlider extends React.PureComponent {
           origin={this.props.origin}
           tabIndex={this.tabIndex}
           value={this.props.value}
-          onBlur={this.props.onBlur}
-          onFocus={this.props.onFocus}
           onChange={this.handleChange}/>
       </li>
     )
@@ -68,9 +66,7 @@ class ColorSlider extends React.PureComponent {
     min: number.isRequired,
     tabIndex: number,
     type: string.isRequired,
-    onBlur: func,
     onChange: func.isRequired,
-    onFocus: func,
     origin: number,
     value: number.isRequired
   }
@@ -92,8 +88,6 @@ const EsperPanel = (props) => (
         tabIndex={TABS.EsperPanel}
         type="brightness"
         value={props.brightness}
-        onBlur={props.onBlur}
-        onFocus={props.onFocus}
         onChange={props.onChange}/>
       <ColorSlider
         icon={<IconContrast/>}
@@ -101,8 +95,6 @@ const EsperPanel = (props) => (
         tabIndex={TABS.EsperPanel}
         type="contrast"
         value={props.contrast}
-        onBlur={props.onBlur}
-        onFocus={props.onFocus}
         onChange={props.onChange}/>
       <ColorSlider
         icon={<IconHue/>}
@@ -112,8 +104,6 @@ const EsperPanel = (props) => (
         max={180}
         type="hue"
         value={props.hue}
-        onBlur={props.onBlur}
-        onFocus={props.onFocus}
         onChange={props.onChange}/>
       <ColorSlider
         icon={<IconDrop/>}
@@ -121,8 +111,6 @@ const EsperPanel = (props) => (
         tabIndex={TABS.EsperPanel}
         type="saturation"
         value={props.saturation}
-        onBlur={props.onBlur}
-        onFocus={props.onFocus}
         onChange={props.onChange}/>
       <ColorSlider
         icon={<IconSharpen/>}
@@ -133,8 +121,6 @@ const EsperPanel = (props) => (
         max={200}
         origin={null}
         value={props.sharpen}
-        onBlur={props.onBlur}
-        onFocus={props.onFocus}
         onChange={props.onChange}/>
       <li className="adjustment">
         <FormToggle
@@ -143,8 +129,6 @@ const EsperPanel = (props) => (
           isDisabled={props.isDisabled || !props.isVisible}
           tabIndex={TABS.EsperPanel}
           value={props.negative}
-          onBlur={props.onBlur}
-          onFocus={props.onFocus}
           onChange={props.onChange}/>
       </li>
     </ul>
@@ -155,8 +139,6 @@ const EsperPanel = (props) => (
         isDisabled={!props.canRevert || props.isDisabled || !props.isVisible}
         tabIndex={TABS.EsperPanel}
         text="esper.panel.revert"
-        onBlur={props.onBlur}
-        onFocus={props.onFocus}
         onClick={props.onRevert}/>
     </div>
   </div>
@@ -172,9 +154,7 @@ EsperPanel.propTypes = {
   sharpen: number.isRequired,
   isDisabled: bool.isRequired,
   isVisible: bool.isRequired,
-  onBlur: func,
   onChange: func.isRequired,
-  onFocus: func,
   onRevert: func.isRequired
 }
 
