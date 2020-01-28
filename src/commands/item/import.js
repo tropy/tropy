@@ -16,7 +16,7 @@ const mod = require('../../models')
 const { ITEM, PROJECT: { MODE } } = require('../../constants')
 
 const {
-  findTagIds,
+  findTag,
   getItemTemplate,
   getPhotoTemplate
 } = require('../../selectors')
@@ -175,8 +175,7 @@ class Import extends ImportCommand {
       yield this.progress()
 
       if (obj.tags.length) {
-        // TODO Find only by name! Drop missing tags!
-        tags = yield select(state => findTagIds(state, obj.tags))
+        tags = yield* this.findOrCreateTags(obj.tags)
       }
 
       yield call(db.transaction, async tx => {
@@ -244,6 +243,28 @@ class Import extends ImportCommand {
     } catch (e) {
       warn({ stack: e.stack }, 'skipping item due to import error')
     }
+  }
+
+  *findOrCreateTags(names) {
+    let tagIds = []
+    let state = yield select()
+    let { db } = this.options
+
+    for (let name of names) {
+      let tag = findTag(state, { name })
+
+      // TODO remove and re-create tags on undo/redo.
+      // Currently the tags remain after an undo.
+
+      if (!tag) {
+        tag = yield call(mod.tag.create, db, { name })
+        yield put(act.tag.insert(tag))
+      }
+
+      tagIds.push(tag.id)
+    }
+
+    return tagIds
   }
 
   get redo() {
