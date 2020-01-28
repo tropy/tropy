@@ -28,6 +28,14 @@ module.exports = {
     }
   },
 
+  insert(payload, meta = {}) {
+    return {
+      type: SELECTION.INSERT,
+      payload,
+      meta
+    }
+  },
+
   load(payload, meta) {
     return {
       type: SELECTION.LOAD,

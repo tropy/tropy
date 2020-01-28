@@ -345,6 +345,16 @@ const util = {
     return into
   },
 
+  morph(src, fn, into = {}) {
+    for (let prop in src) {
+      if (util.own(src, prop)) {
+        into = fn(into, prop, src[prop], src) || into
+      }
+    }
+
+    return into
+  },
+
   noop() {},
 
   identity(payload) { return payload },

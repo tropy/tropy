@@ -1,40 +1,13 @@
 'use strict'
 
-const jsonld = require('jsonld')
 const { newProperties } = require('./util')
 const { pick, pluck } = require('../common/util')
+const { compact } = require('../common/json')
 const { serialize } = require('./note')
 const { TROPY } = require('../constants')
+const { version } = require('../common/release')
+const { props } = require('../common/export')
 
-const IMAGE_PROPS = [
-  'angle',
-  'brightness',
-  'contrast',
-  'height',
-  'hue',
-  'mirror',
-  'negative',
-  'saturation',
-  'sharpen',
-  'width'
-]
-
-const SELECTION_PROPS = [
-  'template',
-  'x',
-  'y',
-  ...IMAGE_PROPS
-]
-
-const PHOTO_PROPS = [
-  'checksum',
-  'mimetype',
-  'orientation',
-  'path',
-  'size',
-  'template',
-  ...IMAGE_PROPS
-]
 
 const makeNote = (note, opts) => ({
   '@type': TROPY.Note,
@@ -42,7 +15,7 @@ const makeNote = (note, opts) => ({
 })
 
 function makeContext(template, items, resources) {
-  const [props, metadata, photos] = resources
+  const [properties, metadata, photos] = resources
   let result = {
     '@version': 1.1,
     '@vocab': TROPY.ns,
@@ -69,14 +42,14 @@ function makeContext(template, items, resources) {
 
   // fill context up with item metadata fields
   const metadataOfItems = pluck(metadata, items.map(i => i.id))
-  result = newProperties(metadataOfItems, result, true, props, template)
+  result = newProperties(metadataOfItems, result, true, properties, template)
 
   // add Photo metadata fields to context from all selected photos
   const photoIDs = items.flatMap(i => i.photos)
   const metadataOfPhotos = pluck(metadata, photoIDs)
   const photoContext = result['photo']['@context']
   const newPhotoProperties = newProperties(
-    metadataOfPhotos, photoContext, true, props, template)
+    metadataOfPhotos, photoContext, true, properties, template)
   result['photo']['@context'] = newPhotoProperties
 
   // add Selection metadata fields to context from all selections metadata
@@ -84,7 +57,7 @@ function makeContext(template, items, resources) {
         .flatMap(p => p.selections)
   const metadataOfSelections = pluck(metadata, selectionIDs)
   const newSelectionProperties = newProperties(
-    metadataOfSelections, {}, true, props, template)
+    metadataOfSelections, {}, true, properties, template)
   result['photo']['@context']['selection']['@context'] =
     newSelectionProperties
 
@@ -107,14 +80,15 @@ function addInfo(target, ids, key, state, fn = x => x.name, ...args) {
 }
 
 function addSelections(template, photo, ids, resources, opts) {
-  const [props, metadata,,,, notes, selections] = resources
+  const [properties, metadata,,,, notes, selections] = resources
 
   if (ids) {
     photo.selection = ids.map(sID => {
       let selection = { '@type': TROPY.Selection }
       const original = selections[sID]
       // add selection properties
-      pick(original, SELECTION_PROPS, selection)
+      pick(original, props.selection, selection)
+      pick(original, props.image, selection)
 
       // add selection notes
       selection = addInfo(
@@ -127,7 +101,7 @@ function addSelections(template, photo, ids, resources, opts) {
 
       // add selection metadata
       selection = newProperties(
-        metadata[sID], selection, false, props, template)
+        metadata[sID], selection, false, properties, template)
       return selection
     })
   }
@@ -140,27 +114,27 @@ function addSelections(template, photo, ids, resources, opts) {
 }
 
 function renderItem(item, template, resources, opts) {
-  const [props, metadata, photos, lists, tags, notes] = resources
+  const [properties, metadata, photos, lists, tags, notes] = resources
 
   // the item starts with a photo property, it may not be overwritten
-  let result = { '@type': TROPY.Item, 'photo': [] }
+  let result = { '@type': TROPY.Item, 'template': item.template, 'photo': [] }
 
   result = addInfo(result, item.lists, 'list', lists)
   result = addInfo(result, item.tags, 'tag', tags)
 
   // add item metadata
-  result = newProperties(metadata[item.id], result, false, props, template)
+  result = newProperties(metadata[item.id], result, false, properties, template)
 
   // add photo metadata
   result.photo = item.photos.map(photoID => {
     const p = photos[photoID]
 
-    let photo = pick(p, PHOTO_PROPS, {
+    let photo = pick(p, [...props.photo, ...props.image], {
       '@type': TROPY.Photo,
       'selection': []
     })
 
-    photo = newProperties(metadata[p.id], photo, false, props, template)
+    photo = newProperties(metadata[p.id], photo, false, properties, template)
 
     photo = addInfo(photo, p.notes, 'note', notes, makeNote, opts.note)
 
@@ -180,6 +154,7 @@ function renderItem(item, template, resources, opts) {
 function makeDocument(template, items, resources, opts) {
   const result = {
     'template': template.id,
+    'version': version,
     '@graph': []
   }
   for (const item of items) {
@@ -196,7 +171,7 @@ async function groupedByTemplate(templateItems, resources, opts = {}) {
     const context = makeContext(template, items, resources)
     const document = makeDocument(template, items, resources, opts)
     document['@context'] = context
-    results.push(await jsonld.compact(document, context))
+    results.push(await compact(document, context))
   }
   return results
 }

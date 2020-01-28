@@ -14,6 +14,8 @@ module.exports = {
         return (error || !meta.done) ? state : replace(state, payload)
       case SELECTION.CREATE:
         return (error || !meta.done) ? state : insert(state, payload)
+      case SELECTION.INSERT:
+        return insert(state, payload, meta)
       case SELECTION.SAVE:
         return (!meta.done || error) ?
           state : {
