@@ -15,6 +15,7 @@ const { values } = Object
 const actions = require('../../actions')
 const debounce = require('lodash.debounce')
 const { match } = require('../../keymap')
+const { warn } = require('../../common/log')
 
 const {
   getCachePrefix,
@@ -52,6 +53,7 @@ class ProjectContainer extends React.Component {
   componentDidMount() {
     on(document, 'keydown', this.handleKeyDown)
     on(document, 'global:back', this.handleBackButton)
+    on(window, 'paste', this.handlePaste)
   }
 
   componentDidUpdate({ project, nav, ui }) {
@@ -77,6 +79,7 @@ class ProjectContainer extends React.Component {
     this.projectWillChange.cancel()
     off(document, 'keydown', this.handleKeyDown)
     off(document, 'global:back', this.handleBackButton)
+    off(window, 'paste', this.handlePaste)
   }
 
   get classes() {
@@ -161,6 +164,24 @@ class ProjectContainer extends React.Component {
     this.props.onUiUpdate({
       panel: { width: Math.round(this.state.offset) }
     })
+  }
+
+  handlePaste = (event) => {
+    try {
+      var text = event.clipboardData.getData('text/plain')
+
+      if (text) {
+        let data = JSON.parse(text)
+        if (data) {
+          this.props.onItemImport({
+            data: JSON.parse(text),
+            list: this.props.nav.list
+          })
+        }
+      }
+    } catch (e) {
+      warn({ stack: e.stack, text }, 'pasted unsupported text')
+    }
   }
 
   handleMetadataSave = (payload, meta = {}) => {
@@ -328,6 +349,7 @@ class ProjectContainer extends React.Component {
     connectDropTarget: func.isRequired,
 
     onContextMenu: func.isRequired,
+    onItemImport: func.isRequired,
     onPhotoError: func.isRequired,
     onProjectCreate: func.isRequired,
     onProjectOpen: func.isRequired,

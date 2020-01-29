@@ -19,6 +19,14 @@ module.exports = {
     }
   },
 
+  insert(payload, meta = {}) {
+    return {
+      type: NOTE.INSERT,
+      payload,
+      meta
+    }
+  },
+
   save(payload, meta) {
     return {
       type: NOTE.SAVE,

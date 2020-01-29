@@ -390,4 +390,23 @@ describe('util', () => {
     expect(groupBy([{ foo: 42 }, { foo: 43 }], 'foo'))
       .to.eql({ 42: [{ foo: 42 }], 43: [{ foo: 43 }] })
   })
+
+  describe('.morph', () => {
+    const { morph } = util
+
+    const upcase = (acc, prop, value) => {
+      acc[prop.toUpperCase()] = value.toUpperCase()
+    }
+
+    it('returns new object', () => {
+      let a = { foo: 'bar' }
+      expect(morph(a, upcase)).not.to.equal(a)
+    })
+
+    it('morphs all entries', () => {
+      expect(morph({}, upcase)).to.eql({})
+      expect(morph({ foo: 'bar' }, upcase)).to.eql({ FOO: 'BAR' })
+      expect(morph({ foo: 'bar' }, upcase)).to.eql({ FOO: 'BAR' })
+    })
+  })
 })

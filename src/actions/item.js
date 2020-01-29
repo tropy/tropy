@@ -25,7 +25,7 @@ module.exports = {
         history: 'add',
         cancel: true,
         search: true,
-        prompt: true,
+        prompt: 'items',
         ...meta
       }
     }

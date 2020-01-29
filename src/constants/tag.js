@@ -2,6 +2,7 @@
 
 module.exports = {
   CREATE: 'tag.create',
+  INSERT: 'tag.insert',
   DELETE: 'tag.delete',
   EXPORT: 'tag.expors',
   SAVE: 'tag.save',

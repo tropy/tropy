@@ -11,7 +11,7 @@
   overflow: hidden;
   contain: strict;
 
-  &:not(:focus):not(.nested-focus) {
+  &:not(:focus-within) {
     .toolbar-left,
     .toolbar-right,
     .esper-panel > * { // todo

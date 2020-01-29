@@ -33,7 +33,7 @@ describe('WindowManager', () => {
     for (let type of ['about', 'prefs', 'print', 'project', 'wizard']) {
       describe(`open('${type}')`, function () {
         // Integration tests with on-the-fly code instrumentation take some time!
-        this.timeout(process.env.CI ? 10000 : 5000)
+        this.timeout(process.env.CI ? 20000 : 10000)
 
         let win
 
