@@ -3,7 +3,7 @@
 const React = require('react')
 const { Iterator } = require('../iterator')
 const { DND, DropTarget, hasPhotoFiles } = require('../dnd')
-const { blank, last, move } = require('../../common/util')
+const { blank, last, move, noop } = require('../../common/util')
 const { ceil, floor, min } = Math
 const { on, off } = require('../../dom')
 
@@ -287,6 +287,7 @@ class PhotoIterator extends Iterator {
   }
 
   static propTypes = {
+    ...Iterator.propTypes,
     photos: arrayOf(
       shape({
         id: number.isRequired
@@ -323,6 +324,12 @@ class PhotoIterator extends Iterator {
     onSelect: func.isRequired,
     onSort: func.isRequired,
     onSelectionSort: func.isRequired
+  }
+
+  static defaultProps = {
+    ...Iterator.defaultProps,
+    expanded: [],
+    onBlur: noop
   }
 }
 

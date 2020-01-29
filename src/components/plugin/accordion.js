@@ -120,6 +120,7 @@ class PluginAccordion extends Accordion {
             key={idx}
             config={config}
             specs={this.props.spec.options}
+            templates={this.props.templates}
             onChange={this.props.onChange}
             onInsert={this.props.onInsert}
             onRemove={this.props.onRemove}/>)}
@@ -131,6 +132,7 @@ class PluginAccordion extends Accordion {
     ...Accordion.propTypes,
     instances: arrayOf(object).isRequired,
     spec: object.isRequired,
+    templates: object.isRequired,
     onChange: func.isRequired,
     onDisable: func.isRequired,
     onEnable: func.isRequired,

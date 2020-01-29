@@ -44,6 +44,8 @@ class ImportCommand extends Command {
       switch (type) {
         case 'dir':
           return open.dir()
+        case 'items':
+          return open.items()
         default:
           return open.images()
       }
@@ -58,15 +60,19 @@ class ImportCommand extends Command {
 
   getFilesToImport = async () => {
     let { payload, meta } = this.action
-    let { files = [] } = payload
+    let { files = [], urls = [] } = payload
 
-    if (!files.length && meta.prompt)
+    if (!files.length && !urls.length && meta.prompt)
       files = await this.promptForFilesToImport(meta.prompt)
 
-    return dir.expand(files, {
+    let json = files.filter(f => (/^\.json(ld)?$/i).test(extname(f)))
+
+    let images = await dir.expand(files, {
       filter: this.canImportFile,
       recursive: true
     })
+
+    return [...json, ...images, ...urls]
   }
 
   *openImage(path) {

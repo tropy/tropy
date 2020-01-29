@@ -20,6 +20,7 @@ class ItemIterator extends Iterator {
     on(document, 'global:next-item', this.handleNextItem)
     on(document, 'global:prev-item', this.handlePrevItem)
     on(document, 'global:forward', this.handleItemOpen)
+    on(window, 'copy', this.handleCopy)
   }
 
   componentWillUnmount() {
@@ -27,6 +28,7 @@ class ItemIterator extends Iterator {
     off(document, 'global:next-item', this.handleNextItem)
     off(document, 'global:prev-item', this.handlePrevItem)
     off(document, 'global:forward', this.handleItemOpen)
+    off(window, 'copy', this.handleCopy)
   }
 
   get tabIndex() {
@@ -108,6 +110,13 @@ class ItemIterator extends Iterator {
   handleItemDelete(items) {
     if (!(this.props.isDisabled || blank(items))) {
       this.props.onItemDelete(items)
+    }
+  }
+
+  handleCopy = () => {
+    let sel = document.getSelection()
+    if (sel == null || !sel.toString()) {
+      this.handleItemCopy(this.props.selection)
     }
   }
 

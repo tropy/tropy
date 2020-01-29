@@ -1,7 +1,8 @@
 'use strict'
 
 const assert = require('assert')
-const { cancel } = require('redux-saga/effects')
+const { cancel, put } = require('redux-saga/effects')
+const { activity } = require('../actions')
 const { pick } = require('../common/util')
 
 const Registry = new Map()
@@ -9,6 +10,9 @@ const Registry = new Map()
 class Command {
   #adjtime = 0
   #suspended
+
+  #total = 0
+  #progress = 0
 
   constructor(action, options = {}) {
     this.action = action
@@ -71,6 +75,18 @@ class Command {
       return this
     }
   };
+
+  progress({ total, progress = 1 } = {}) {
+    if (total !== undefined)
+      this.#total += total
+    else
+      this.#progress += progress
+
+    put(activity.update(this.action, {
+      total: this.#total,
+      progress: this.#progress
+    }))
+  }
 
   *abort() {
   }

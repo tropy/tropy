@@ -1,17 +1,30 @@
 'use strict'
 
-const { DOMSerializer } = require('prosemirror-model')
+const { DOMParser, DOMSerializer } = require('prosemirror-model')
+const { EditorState } = require('prosemirror-state')
 const { defaultMarkdownSerializer } = require('prosemirror-markdown')
 const { schema } = require('./schema')
 const { warn } = require('../../common/log')
 
-const DOM = DOMSerializer.fromSchema(schema)
+const serializer = DOMSerializer.fromSchema(schema)
+const parser = DOMParser.fromSchema(schema)
 
 module.exports = {
+  fromHTML(html) {
+    let dom = (new window.DOMParser).parseFromString(html, 'text/html')
+    let doc = parser.parse(dom)
+    let text = doc.textBetween(0, doc.content.size, ' ', ' ')
+
+    return {
+      state: EditorState.create({ schema, doc }).toJSON(),
+      text
+    }
+  },
+
   toHTML(doc) {
     try {
       let node = schema.nodeFromJSON(doc)
-      let frag = DOM.serializeFragment(node)
+      let frag = serializer.serializeFragment(node)
 
       return Array
         .from(frag.children, el => el.outerHTML)

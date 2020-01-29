@@ -98,38 +98,48 @@ function save(options) {
   return show('save', options)
 }
 
-function open(options) {
-  return show('file', options)
+function open(opts) {
+  return show('file', opts)
 }
 
-open.images = (options) => open({
+open.images = (opts) => open({
   filters: [{
     name: t('dialog', 'filter', 'images'),
     extensions: IMAGE.EXT
   }],
   defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],
-  ...options
+  ...opts
 })
 
-open.image = (options) => open.images({
+open.items = (opts) => open({
+  filters: [{
+    name: t('dialog', 'filter', 'items'),
+    extensions: [...IMAGE.EXT, 'json', 'jsonld']
+  }],
+  defaultPath: ARGS.pictures,
+  properties: ['openFile', 'multiSelections'],
+  ...opts
+})
+
+open.image = (opts) => open.images({
   properties: ['openFile'],
-  ...options
+  ...opts
 })
 
-open.dir = (options) => open({
+open.dir = (opts) => open({
   properties: ['openDirectory', 'multiSelections'],
-  ...options
+  ...opts
 })
 
-open.vocab = (options) => open({
+open.vocab = (opts) => open({
   filters: [{
     name: t('dialog', 'filter', 'rdf'),
     extensions: ['n3', 'ttl']
   }],
   defaultPath: ARGS.documents,
   properties: ['openFile', 'multiSelections'],
-  ...options
+  ...opts
 })
 
 open.templates = (options) => open({

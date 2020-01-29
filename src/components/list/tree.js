@@ -18,7 +18,7 @@ class ListTree extends React.Component {
   }
 
   mapChildren(fn, props = this.props) {
-    return props.parent.children.map((id, idx, all) => {
+    return props.isExpanded && props.parent.children.map((id, idx, all) => {
       if (id in props.lists) {
         let list = props.lists[id]
         let hasNewListNode = this.hasNewListNode(id)
@@ -76,6 +76,9 @@ class ListTree extends React.Component {
 
   static defaultProps = {
     depth: 0,
+    expand: {},
+    hold: {},
+    lists: {},
     minDropDepth: 0
   }
 }

@@ -1,18 +1,18 @@
 'use strict'
 
 const React = require('react')
-const { shallow } = require('enzyme')
+const { render } = require('../support/react')
 
 describe('Steps', () => {
   const { Steps, Step } = __require('components/steps')
 
-  it('has class steps', () => {
-    expect(shallow(<Steps/>).hasClass('steps')).to.eql(true)
+  it('renders steps element', () => {
+    expect(render(<Steps/>).element()).to.have.class('steps')
   })
 
   describe('Step', () => {
-    it('has class step', () => {
-      expect(shallow(<Step/>).hasClass('step')).to.eql(true)
+    it('renders step element', () => {
+      expect(render(<Step/>).element()).to.have.class('step')
     })
   })
 })

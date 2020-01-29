@@ -1,26 +1,45 @@
 'use strict'
 
 const React = require('react')
-const { render } = require('enzyme')
-const dnd = require('../../support/dnd')
+const { render, inWindowContext } = require('../../support/react')
 
-describe.skip('Tree', () => {
-  const ListTree = dnd.wrap(__require('components/list').ListTree)
+describe('ListTree', () => {
+  const { ListTree } = __require('components/list/tree')
 
-  it('renders all lists', () => {
-    expect(
-      render(<ListTree/>)
-    ).not.to.have.descendants('.list')
-
+  it('renders no list nodes by default', () => {
     expect(
       render(
         <ListTree
-          parent={{ children: [2, 1] }}
-          lists={{
-            1: { id: 1, name: 'A' },
-            2: { id: 2, name: 'B' }
-          }}/>
-      )
-    ).to.have.exactly(2).descendants('.list')
+          parent={F.lists.root}
+          lists={F.lists}/>,
+        inWindowContext).element())
+      .not.to.have.descendants('.list-node')
+  })
+
+  it('renders no list for empty parent', () => {
+    expect(
+      render(
+        <ListTree
+          isExpanded
+          parent={F.lists.empty}
+          lists={F.lists}/>,
+        inWindowContext).element())
+      .not.to.have.descendants('.list-node')
+  })
+
+  it('renders list nodes when expanded', () => {
+    const { element, getByText } = render((
+      <ListTree
+        isExpanded
+        parent={F.lists.root}
+        lists={F.lists}/>
+    ), inWindowContext)
+
+    expect(element())
+      .to.have.descendants('.list-node')
+      .with.length(F.lists.root.children.length)
+
+    expect(getByText(F.lists[1].name)).to.exist
+    expect(getByText(F.lists[2].name)).to.exist
   })
 })

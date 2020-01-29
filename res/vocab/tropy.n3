@@ -100,6 +100,11 @@ tropy:template a rdf:Property ;
   rdfs:range tropy:Template ;
 	rdfs:comment "A Tropy template."@en .
 
+tropy:version a rdf:Property ;
+	rdfs:label "Version"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+	rdfs:comment "A Tropy version string."@en .
+
 tropy:photo a rdf:Property ;
 	rdfs:label "Photo"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
