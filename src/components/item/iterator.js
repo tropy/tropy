@@ -173,9 +173,6 @@ class ItemIterator extends Iterator {
       case 'all':
         this.props.onSelect({}, 'all')
         break
-      case 'copy':
-        this.handleItemCopy(this.props.selection)
-        break
       case 'merge':
         this.handleItemMerge(this.props.selection)
         break
