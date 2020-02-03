@@ -39,7 +39,7 @@ Before installing Tropy's dependencies, set the environment variable
 point to the base URL for Tropy's
 [pre-compiled libvips archives](https://github.com/tropy/sharp-libvips/releases/latest):
 
-    $ npm config set sharp_dist_base_url "https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/"
+    $ npm config set sharp_dist_base_url "https://github.com/tropy/sharp-libvips/releases/download/v8.9.0/"
 
 Additionally, if you have libvips installed locally (and don't wish Tropy
 to be linked against it), set the `SHARP_IGNORE_GLOBAL_LIBVIPS` environment

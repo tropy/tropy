@@ -8,7 +8,7 @@ clone_depth: 8
 os: unstable
 environment:
   ELECTRON_NO_ATTACH_CONSOLE: true
-  SHARP_DIST_BASE_URL: https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/
+  SHARP_DIST_BASE_URL: https://github.com/tropy/sharp-libvips/releases/download/v8.9.0/
   nodejs_version: 12
 platform:
   - x64

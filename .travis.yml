@@ -11,7 +11,7 @@ env:
   global:
     - NODE_ENV=test
     - NVM=$HOME/.nvm
-    - SHARP_DIST_BASE_URL=https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/
+    - SHARP_DIST_BASE_URL=https://github.com/tropy/sharp-libvips/releases/download/v8.9.0/
 matrix:
   include:
     - os: linux
