@@ -1,6 +1,8 @@
 color: true
 recursive: true
 reporter: dot
+requireMain:
+  - "test/support/main"
 require:
   - "@babel/register"
   - "test/support/coverage"
