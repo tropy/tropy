@@ -431,7 +431,7 @@ module.exports = {
       },
 
       onOpenInFolder(...args) {
-        dispatch(actions.shell.openInFolder(args))
+        dispatch(actions.shell.open(...args))
       },
 
       onProjectCreate() {

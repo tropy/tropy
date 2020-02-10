@@ -35,6 +35,30 @@ const getGroupedItems = (ids) => memo(
   }
 )
 
+
+const getExportableItems = memo(
+  ({ nav, qr }) => (nav.items.length > 0 ? nav.items : qr.items),
+  ({ items }) => items,
+  ({ photos }) => photos,
+  ({ selections }) => selections,
+  ({ metadata }) => metadata,
+  ({ notes }) => notes,
+  ({ notepad }) => notepad,
+  ({ tags }) => tags,
+  ({ ontology }) => ontology,
+  (ids, items, photos, selections, metadata, notes, notepad, tags, ontology) =>
+  ids.map(id =>
+    getItemExpanded(items[id],
+      photos,
+      selections,
+      metadata,
+      notes,
+      notepad,
+      tags,
+      ontology))
+)
+
 module.exports = {
-  getGroupedItems
+  getGroupedItems,
+  getExportableItems
 }
