@@ -8,14 +8,13 @@ const { ITEM } = require('../../constants')
 const { warn } = require('../../common/log')
 const { fail, save } = require('../../dialog')
 const { win } = require('../../window')
-const { getGroupedItems } = require('../../selectors')
-const { groupedByTemplate } = require('../../export')
+const { getExportItems } = require('../../selectors')
 
 
 class Export extends Command {
   *exec() {
     let { target, plugin } = this.action.meta
-    let ids = this.action.payload
+    let id = this.action.payload
 
     if (plugin) target = ':plugin:'
 
@@ -28,23 +27,17 @@ class Export extends Command {
 
       if (!target) return
 
-      let [opts, [items, ...resources]] = yield select(state => ([
-        state.settings.export,
-        getGroupedItems(ids)(state)
-      ]))
-
-      let results = yield call(groupedByTemplate, items, resources, opts)
-      let asString = JSON.stringify(results, null, 2)
+      let items = yield select(state => getExportItems(state, { id }))
 
       switch (target) {
         case ':clipboard:':
-          yield call(clipboard.writeText, asString)
+          yield call(clipboard.writeText, JSON.stringify(items, null, 2))
           break
         case ':plugin:':
-          yield win.plugins.export(plugin, results)
+          yield win.plugins.export(plugin, items)
           break
         default:
-          yield call(writeFile, target, asString)
+          yield call(writeFile, target, JSON.stringify(items, null, 2))
       }
     } catch (e) {
       warn({ stack: e.stack }, `failed to export items to ${target}`)
