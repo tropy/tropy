@@ -8,6 +8,10 @@ const ctx = {
       '@version': 1.1,
       '@vocab': tropy.BASE,
 
+      'template': {
+        '@type': '@id'
+      },
+
       'photo': {
         '@id': tropy.photo,
         '@container': '@list',

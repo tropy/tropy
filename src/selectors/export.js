@@ -72,7 +72,7 @@ const exportItem = (context, item, state) => {
   }
 
   if (item.tags.length > 0) {
-    output.tag = item.tag.map(id => get(state, ['tags', id, 'name'], id))
+    output.tag = item.tags.map(id => get(state, ['tags', id, 'name'], id))
   }
 
   if (item.photos.length > 0) {
@@ -166,12 +166,16 @@ const addMetadata = (context, into, data, ontology) => {
 }
 
 const toValue = ({ type, text }, context = {}) => {
-  if (type === context['@type'])
-    return text
-  if (type === xsd.string)
-    return text
-  if (type === xsd.integer)
-    return Number(text)
+  if (context['@type']) {
+    if (type === context['@type'])
+      return text
+
+  } else {
+    if (type === xsd.string)
+      return text
+    if (type === xsd.integer)
+      return Number(text)
+  }
 
   return {
     '@type': type,
