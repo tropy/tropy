@@ -131,7 +131,10 @@ class Window extends EventEmitter {
 
   setFontSize(fontSize = this.state.fontSize) {
     this.state.fontSize = fontSize
-    document.documentElement.style.fontSize = fontSize
+
+    if (this.type !== 'print') {
+      document.documentElement.style.fontSize = fontSize
+    }
   }
 
   setScrollBarStyle(scrollbars = this.state.scrollbars) {
