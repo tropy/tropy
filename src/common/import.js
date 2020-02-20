@@ -2,7 +2,7 @@
 
 const ex = require('./export')
 const { expand } = require('./json')
-const { rdfs, tropy } = require('./ns')
+const { rdfs, tropy, xsd } = require('./ns')
 const { URI, any, array, map, morph, omit, get } = require('./util')
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
@@ -19,10 +19,24 @@ const flatten = (node) =>
   array(node)
     .flatMap(container => container['@list'] || container)
 
-const toValue = (node) =>
-  node['@id'] ?
-    { type: rdfs.Class, text: node['@id'] } :
-    { type: node['@type'], text: node['@value'] }
+const coerce = (value) =>
+  (typeof value === 'number') ? xsd.integer : xsd.string
+
+const toValue = (node) => {
+  let text
+  let type
+
+  if (node['@id']) {
+    type = rdfs.Class,
+    text = node['@id']
+
+  } else {
+    text = node['@value']
+    type = node['@type'] || coerce(text)
+  }
+
+  return { text, type }
+}
 
 const toFirstValue = (_, values) =>
   toValue(values[0])
