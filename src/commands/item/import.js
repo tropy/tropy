@@ -2,7 +2,6 @@
 
 const { readFile } = require('fs').promises
 const { dirname, extname, join, isAbsolute } = require('path')
-const { all, call, fork, join: wait, put, select } = require('redux-saga/effects')
 const { ImportCommand } = require('../import')
 const { DuplicateError } = require('../../common/error')
 const { normalize, eachItem } = require('../../common/import')
@@ -14,6 +13,15 @@ const act = require('../../actions')
 const mod = require('../../models')
 
 const { ITEM, PROJECT: { MODE } } = require('../../constants')
+
+const {
+  all,
+  call,
+  fork,
+  join: wait,
+  put,
+  select
+} = require('redux-saga/effects')
 
 const {
   findTag,
