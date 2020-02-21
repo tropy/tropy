@@ -3,6 +3,7 @@
 const React = require('react')
 const { FormattedMessage, useIntl } = require('react-intl')
 const { Input } = require('./input')
+const { SelectFile } = require('./select-file')
 const { Select } = require('./select')
 const cx = require('classnames')
 const {
@@ -111,6 +112,62 @@ class FormElement extends React.PureComponent {
   }
 }
 
+class FormFileSelect extends React.PureComponent {
+
+  handleChange = (value) => {
+    this.props.onChange({
+      [this.props.name]: value
+    })
+  }
+
+  render() {
+    return (
+      <FormElement
+        id={this.props.id}
+        isCompact={this.props.isCompact}
+        label={this.props.label}
+        size={this.props.size}
+        title={this.props.title}>
+        <SelectFile
+          defaultDirectory={this.props.defaultDirectory}
+          id={this.props.id}
+          isDisabled={this.props.isDisabled}
+          isReadOnly={this.props.isReadOnly}
+          isRequired={this.props.isRequired}
+          onBlur={this.handleBlur}
+          onChange={this.handleChange}
+          tabIndex={this.props.tabIndex}
+          type={this.props.type}
+          value={this.props.value || ''}/>
+      </FormElement>
+    )
+  }
+
+  static propTypes = {
+    defaultDirectory: string,
+    id: string.isRequired,
+    isCompact: bool,
+    isDisabled: bool,
+    isReadOnly: bool,
+    isRequired: bool,
+    label: string,
+    name: string.isRequired,
+    onBlur: func.isRequired,
+    onChange: func.isRequired,
+    size: number.isRequired,
+    tabIndex: number,
+    title: string,
+    type: string.isRequired,
+    value: string
+  }
+
+  static defaultProps = {
+    isReadOnly: false,
+    size: 8,
+    onBlur: noop,
+    onChange: noop
+  }
+}
 
 class FormField extends React.PureComponent {
   reset() {
@@ -479,6 +536,7 @@ class FormLink extends React.PureComponent {
 
 module.exports = {
   FormElement,
+  FormFileSelect,
   FormField,
   FormGroup,
   FormLink,
