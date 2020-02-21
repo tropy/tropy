@@ -34,7 +34,7 @@ class Export extends Command {
           yield call(clipboard.writeText, JSON.stringify(items, null, 2))
           break
         case ':plugin:':
-          yield win.plugins.export(plugin, items)
+          yield win.plugins.export(plugin, [items])
           break
         default:
           yield call(writeFile, target, JSON.stringify(items, null, 2))
