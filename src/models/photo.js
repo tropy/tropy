@@ -18,7 +18,7 @@ const skel = (id, selections = [], notes = []) => ({
 
 module.exports = {
   async create(db, { base, template }, { item, image, data, position }) {
-    let { protocol, path, ...meta } = image
+    let { protocol = 'file', path, ...meta } = image
     let { id } = await db.run(
       ...into('subjects').insert({ template })
     )

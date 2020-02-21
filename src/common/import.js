@@ -6,14 +6,29 @@ const { rdfs, tropy, xsd } = require('./ns')
 const { URI, any, array, map, morph, omit, get } = require('./util')
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
-const normalize = async (json) =>
-  array(await expand(json))
-    .flatMap(g =>
+const normalize = async (json) => {
+  if (Array.isArray(json)) {
+    if (!json[0]?.['@context']) {
+      json = {
+        '@context': ex.ctx.item,
+        '@graph': json
+      }
+    }
+  } else {
+    if (!json['@context']) {
+      json['@context'] = ex.ctx.item
+    }
+  }
+
+  return array(await expand(json)).flatMap(g =>
+    (!g['@graph']) ?
+      g :
       g['@graph'].map(item =>
         (tropy.template in item) ? item : {
           [tropy.template]: g[tropy.template],
           ...item
         }))
+}
 
 const flatten = (node) =>
   array(node)
