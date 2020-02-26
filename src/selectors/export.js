@@ -190,6 +190,7 @@ const toContext = (prop, type) =>
     { '@id': prop, '@type': type }
 
 module.exports = {
+  getExportItemIds,
   getExportItems,
   getGroupedItems
 }
