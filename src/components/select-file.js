@@ -2,7 +2,6 @@
 
 const React = require('react')
 const { noop } = require('../common/util')
-const { AutoResizer } = require('./auto-resizer')
 const { Button, ButtonGroup } = require('./button')
 const { open } = require('../dialog')
 
@@ -14,35 +13,16 @@ const {
 class SelectFile extends React.PureComponent {
   selectfile = React.createRef()
 
-  state =  {
-    hasFocus: false,
-    value: this.props.value
-  }
-
-  componentDidMount() {
-    if (this.props.autofocus)
-      this.selectfile.current.focus()
-  }
-
-  focus = () => {
-    if (this.selectfile.current)
-      this.selectfile.current.focus()
-  }
-
   clear() {
     this.handleChange('')
   }
 
   handleBlur = (event) => {
-    let cancel = this.props.onBlur(event)
-    this.setState({ hasFocus: false })
-    if (cancel)
-      this.cancel()
+    this.props.onBlur(event)
   }
 
   handleFocus = (event) => {
     this.props.onFocus(event)
-    this.setState({ hasFocus: true })
   }
 
   handleKeyDown = (event) => {
@@ -60,10 +40,7 @@ class SelectFile extends React.PureComponent {
   }
 
   handleChange = (value) => {
-    if (this.state.value !== value) {
-      this.setState({ value })
-      this.props.onChange(value)
-    }
+    this.props.onChange(value)
   }
 
   handleFileClick = () => {
@@ -85,32 +62,28 @@ class SelectFile extends React.PureComponent {
 
 
   render() {
-    return (<div
-      className="input-group"
-      onKeyDown={this.handleKeyDown}
-      onBlur={this.handleBlur}
-      onFocus={this.handleFocus}>
-      <AutoResizer
-        content={this.state.value}
-        isDisabled={!this.props.resize}>
-        <input type="text" className="form-control"
-          id={this.props.id}
-          value={this.state.value}/>
-        <ButtonGroup>
-          {!this.props.isRequired && (
-          <Button
-            className="btn-default"
-            onClick={this.handleClearButtonClick}
-            text="select.clear" />
-          )}
-          <Button
-            className="btn-default"
-            onClick={this.handleFileClick}
-            text="select.browse" />
-        </ButtonGroup>
-      </AutoResizer>
-    </div>
-    )
+    return (<div className="input-group">
+      <div className="form-control"
+        tabIndex={this.props.tabIndex}
+        onKeyDown={this.handleKeyDown}
+        onClick={this.handleFocus}
+        onDoubleClick={this.handleFileClick}
+        onBlur={this.handleBlur}>
+        <span type="text">{this.props.value}</span>
+      </div>
+      <ButtonGroup>
+        {!this.props.isRequired && (
+        <Button
+          className="btn-default"
+          onClick={this.handleClearButtonClick}
+          text="select.clear" />
+        )}
+        <Button
+          className="btn-default"
+          onClick={this.handleFileClick}
+          text="select.browse" />
+      </ButtonGroup>
+    </div>)
   }
 
   static propTypes = {
