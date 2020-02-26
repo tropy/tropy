@@ -25,6 +25,10 @@ class SelectFile extends React.PureComponent {
     this.props.onFocus(event)
   }
 
+  handleChange = (value) => {
+    this.props.onChange(value)
+  }
+
   handleKeyDown = (event) => {
     event.stopPropagation()
     switch (event.key) {
@@ -37,10 +41,6 @@ class SelectFile extends React.PureComponent {
       default:
         return null
     }
-  }
-
-  handleChange = (value) => {
-    this.props.onChange(value)
   }
 
   handleFileClick = () => {
@@ -87,24 +87,13 @@ class SelectFile extends React.PureComponent {
   }
 
   static propTypes = {
-    autofocus: bool,
-    className: string,
     id: string,
-    isDisabled: bool,
-    isReadOnly: bool,
     isRequired: bool,
-    resize: bool,
     tabIndex: number,
     value: oneOfType([string]).isRequired,
     onBlur: func.isRequired,
-    onCancel: func.isRequired,
     onChange: func.isRequired,
-    onCommit: func.isRequired,
     onFocus: func.isRequired,
-    onClear: func,
-    onClick: func.isRequired,
-    onKeyDown: func,
-
     type: oneOf(['file', 'directory']).isRequired,
     filters: arrayOf(object),
     defaultDirectory: string
@@ -115,12 +104,8 @@ class SelectFile extends React.PureComponent {
     defaultDirectory: '',
     tabIndex: -1,
     onBlur: noop,
-    onCancel: noop,
     onChange: noop,
-    onCommit: noop,
     onFocus: noop,
-    onClear: noop,
-    onClick: noop,
     type: 'file',
     filters: []
   }
