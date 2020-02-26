@@ -4,7 +4,7 @@ const { call, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { API } = require('../constants')
 const { pluck } = require('../common/util')
-const { serialize } = require('../export/note')
+const { serialize } = require('../components/editor/serialize')
 //const act = require('../actions')
 const mod = require('../models')
 

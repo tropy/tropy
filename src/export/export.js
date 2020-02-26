@@ -3,7 +3,7 @@
 const { newProperties } = require('./util')
 const { pick, pluck } = require('../common/util')
 const { compact } = require('../common/json')
-const { serialize } = require('./note')
+const { serialize } = require('../components/editor/serialize')
 const { TROPY } = require('../constants')
 const { version } = require('../common/release')
 const { props } = require('../common/export')

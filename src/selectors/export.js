@@ -5,7 +5,7 @@ const { ctx, props } = require('../common/export')
 const { xsd } = require('../common/ns')
 const { version } = require('../common/release')
 const { URI, get, pick, groupBy } = require('../common/util')
-const { serialize } = require('../export/note')
+const { serialize } = require('../components/editor/serialize')
 const { values, entries } = Object
 
 const reserved = Object.fromEntries(props.all.map(prop => ([prop, true])))
