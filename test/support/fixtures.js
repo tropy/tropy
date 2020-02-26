@@ -28,8 +28,16 @@ global.F = {
     }
   },
 
+  get items() {
+    return require(join(ROOT, 'items'))
+  },
+
   get lists() {
     return require(join(ROOT, 'lists'))
+  },
+
+  get metadata() {
+    return require(join(ROOT, 'metadata'))
   },
 
   get projects() {
