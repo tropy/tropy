@@ -43,7 +43,7 @@ const getGroupedItems = (ids) => memo(
 
 
 const getExportItemIds = ({ nav, qr }, { id } = {}) =>
-  (id != null) ? id : (nav.items.length > 0 ? nav.items : qr.items)
+  (id?.length > 0) ? id : (nav.items.length > 0 ? nav.items : qr.items)
 
 const getExportItems = (state, props = {}) => {
   let context = ctx.item
