@@ -3,11 +3,11 @@
 const React = require('react')
 const { FormattedMessage, useIntl } = require('react-intl')
 const { Input } = require('./input')
-const { SelectFile } = require('./select-file')
+const { FileSelect } = require('./file-select')
 const { Select } = require('./select')
 const cx = require('classnames')
 const {
-  arrayOf, bool, func, node, number, oneOf, string
+  arrayOf, bool, func, node, number, oneOf, string, object
 } = require('prop-types')
 const { noop } = require('../common/util')
 const { GRID } = require('../constants/sass')
@@ -128,23 +128,22 @@ class FormFileSelect extends React.PureComponent {
         label={this.props.label}
         size={this.props.size}
         title={this.props.title}>
-        <SelectFile
+        <FileSelect
           defaultDirectory={this.props.defaultDirectory}
           id={this.props.id}
-          isDisabled={this.props.isDisabled}
-          isReadOnly={this.props.isReadOnly}
           isRequired={this.props.isRequired}
           onBlur={this.handleBlur}
           onChange={this.handleChange}
           tabIndex={this.props.tabIndex}
           type={this.props.type}
-          value={this.props.value || ''}/>
+          value={this.props.value}/>
       </FormElement>
     )
   }
 
   static propTypes = {
     defaultDirectory: string,
+    filters: arrayOf(object),
     id: string.isRequired,
     isCompact: bool,
     isDisabled: bool,

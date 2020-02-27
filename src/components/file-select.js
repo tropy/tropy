@@ -10,11 +10,9 @@ const {
 } = require('prop-types')
 
 
-class SelectFile extends React.PureComponent {
-  selectfile = React.createRef()
-
+class FileSelect extends React.PureComponent {
   clear() {
-    this.handleChange('')
+    this.handleChange(null)
   }
 
   handleBlur = (event) => {
@@ -87,30 +85,31 @@ class SelectFile extends React.PureComponent {
   }
 
   static propTypes = {
+    defaultDirectory: string,
+    filters: arrayOf(object),
     id: string,
     isRequired: bool,
-    tabIndex: number,
-    value: oneOfType([string]).isRequired,
     onBlur: func.isRequired,
     onChange: func.isRequired,
     onFocus: func.isRequired,
+    tabIndex: number,
     type: oneOf(['file', 'directory']).isRequired,
-    filters: arrayOf(object),
-    defaultDirectory: string
+    value: oneOfType([string]).isRequired
 
   }
 
   static defaultProps = {
     defaultDirectory: '',
-    tabIndex: -1,
+    filters: [],
     onBlur: noop,
     onChange: noop,
     onFocus: noop,
+    tabIndex: -1,
     type: 'file',
-    filters: []
+    value: null
   }
 }
 
 module.exports = {
-  SelectFile
+  FileSelect
 }
