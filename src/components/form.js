@@ -129,7 +129,7 @@ class FormFileSelect extends React.PureComponent {
         size={this.props.size}
         title={this.props.title}>
         <FileSelect
-          defaultDirectory={this.props.defaultDirectory}
+          defaultPath={this.props.defaultPath}
           id={this.props.id}
           isRequired={this.props.isRequired}
           onBlur={this.handleBlur}
@@ -142,7 +142,7 @@ class FormFileSelect extends React.PureComponent {
   }
 
   static propTypes = {
-    defaultDirectory: string,
+    defaultPath: string,
     filters: arrayOf(object),
     id: string.isRequired,
     isCompact: bool,
