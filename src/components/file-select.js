@@ -73,13 +73,11 @@ class FileSelect extends React.PureComponent {
         {!this.props.isRequired && (
         <Button
           className="btn-default"
-          tabIndex={0}
           onClick={this.handleClearButtonClick}
           text="select.clear" />
         )}
         <Button
           className="btn-default"
-          tabIndex={0}
           onClick={this.handleFileClick}
           text="select.browse" />
       </div>
