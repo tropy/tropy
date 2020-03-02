@@ -1,0 +1,68 @@
+//
+// Input group
+// --------------------------------------------------
+
+.input-group,
+.input-group-prepend,
+.input-group-append {
+  display: flex;
+}
+
+.input-group-prepend,
+.input-group-append {
+  .btn {
+    &:focus {
+      z-index: 3;
+    }
+
+    & + .btn {
+      margin-left: -$input-border-width;
+    }
+  }
+}
+
+.input-group {
+  > .form-control {
+    &:focus {
+      z-index: 3;
+    }
+
+    &:not(:last-child) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    &:not(:first-child) {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+.input-group-prepend {
+  margin-right: -$input-border-width;
+
+  > .btn {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    &:not(:last-child) {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+.input-group-append {
+  margin-left: -$input-border-width;
+
+  > .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    &:not(:last-child) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}

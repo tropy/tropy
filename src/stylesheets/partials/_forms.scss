@@ -66,10 +66,6 @@ fieldset {
   }
 }
 
-.input-group {
-  display: flex;
-}
-
 .form-control {
   flex: 1 1 auto; // Inside input-group
   display: block; // Without input-group
@@ -84,6 +80,7 @@ fieldset {
   border-radius: $input-border-radius-small;
   box-shadow: none;
   transition: border-color $input-btn-transition, box-shadow $input-btn-transition;
+  position: relative;
 
   @include input-btn-focus;
 
@@ -120,6 +117,17 @@ fieldset {
 
 .form-link {
   word-break: break-word;
+}
+
+.file-select {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+
+  .truncate {
+    flex: 1 1 auto;
+    direction: rtl;
+  }
 }
 
 .checkbox,

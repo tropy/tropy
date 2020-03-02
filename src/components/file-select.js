@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { noop } = require('../common/util')
-const { Button, ButtonGroup } = require('./button')
+const { Button } = require('./button')
 const { open } = require('../dialog')
 
 const {
@@ -61,26 +61,28 @@ class FileSelect extends React.PureComponent {
 
   render() {
     return (<div className="input-group">
-      <div className="form-control"
+      <div className="form-control file-select disabled"
         tabIndex={this.props.tabIndex}
         onKeyDown={this.handleKeyDown}
         onClick={this.handleFocus}
         onDoubleClick={this.handleFileClick}
         onBlur={this.handleBlur}>
-        <span type="text">{this.props.value}</span>
+        <div className="truncate">{this.props.value}</div>
       </div>
-      <ButtonGroup>
+      <div className="input-group-append">
         {!this.props.isRequired && (
         <Button
           className="btn-default"
+          tabIndex={0}
           onClick={this.handleClearButtonClick}
           text="select.clear" />
         )}
         <Button
           className="btn-default"
+          tabIndex={0}
           onClick={this.handleFileClick}
           text="select.browse" />
-      </ButtonGroup>
+      </div>
     </div>)
   }
 
