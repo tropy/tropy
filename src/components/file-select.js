@@ -3,10 +3,8 @@
 const React = require('react')
 const { noop } = require('../common/util')
 const { Button } = require('./button')
-const { open } = require('../dialog')
-
-const {
-  bool, func, number, object, oneOfType, oneOf, string, arrayOf
+const { open, save } = require('../dialog')
+const { bool, func, number, object, oneOf, string, arrayOf
 } = require('prop-types')
 
 
@@ -42,16 +40,30 @@ class FileSelect extends React.PureComponent {
   }
 
   handleFileClick = () => {
-    const { filters, type } = this.props
-    open({
-      defaultPath: this.props.defaultDirectory,
-      filters: filters,
-      properties: type === 'file' ? ['openFile'] : ['openDirectory']
-    }).then((res) => {
-      if (res.length) {
-        this.handleChange(res[0])
-      }
-    })
+    const { defaultPath, filters, type, showHiddenFiles } = this.props
+    const properties = type === 'file' ? ['openFile'] : ['openDirectory']
+    if (showHiddenFiles)
+      properties.push('showHiddenFiles')
+
+    const obj = { defaultPath, properties }
+
+    if (filters)
+      obj.filters = filters
+
+    if (this.props.fileDialogType === 'save') {
+      save(obj).then((res) => {
+        if (res.length) {
+          this.handleChange(res)
+        }
+      })
+    } else {
+      open(obj).then((res) => {
+        if (res.length) {
+          this.handleChange(res[0])
+        }
+      })
+    }
+
   }
 
   handleClearButtonClick = () => {
@@ -85,22 +97,22 @@ class FileSelect extends React.PureComponent {
   }
 
   static propTypes = {
-    defaultDirectory: string,
+    defaultPath: string,
+    fileDialogType: oneOf(['open', 'save']).isRequired,
     filters: arrayOf(object),
     id: string,
     isRequired: bool,
     onBlur: func.isRequired,
     onChange: func.isRequired,
     onFocus: func.isRequired,
+    showHiddenFiles: bool,
     tabIndex: number,
     type: oneOf(['file', 'directory']).isRequired,
-    value: oneOfType([string]).isRequired
-
+    value: string
   }
 
   static defaultProps = {
-    defaultDirectory: '',
-    filters: [],
+    fileDialogType: 'save',
     onBlur: noop,
     onChange: noop,
     onFocus: noop,
