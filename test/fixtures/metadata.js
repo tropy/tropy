@@ -22,7 +22,7 @@ module.exports = {
       type: 'http://www.w3.org/2001/XMLSchema#string',
       text: 'Photo title'
     },
-    'http://example.org/unknown': {
+    'http://example.org/title': {
       type: 'http://www.w3.org/2001/XMLSchema#string',
       text: 'Unknown'
     }

@@ -37,12 +37,14 @@ describe('Export Selectors', () => {
 
     const state = pick(F, [
       'items',
+      'lists',
       'metadata',
       'notes',
       'ontology',
       'photos',
       'selections',
       'tags'])
+
 
     it('includes @context', () => {
       expect(getExportItems(state, { id: [1] }))
@@ -59,6 +61,50 @@ describe('Export Selectors', () => {
     it('includes version', () => {
       expect(getExportItems(state, { id: [1] }))
         .to.have.property('version', version)
+    })
+
+    describe('the exported item', () => {
+      let json
+      let item
+
+      before(() => {
+        json = getExportItems(state, { id: [1] })
+        item = json['@graph'][0]
+      })
+
+      it('includes tag names', () => {
+        expect(item.tag).to.eql(F.items[1].tags.map(id => F.tags[id].name))
+      })
+
+      it('includes list names', () => {
+        expect(item.list).to.eql(F.items[1].lists.map(id => F.lists[id].name))
+      })
+
+      it('includes photos', () => {
+        expect(item.photo).to.have.length(F.items[1].photos.length)
+      })
+
+      it('includes metadata', () => {
+        expect(item.title).to.eql(
+          F.metadata[1]['http://purl.org/dc/elements/1.1/title'].text)
+
+        expect(json['@context']).to.have.property(
+          'title',
+          'http://purl.org/dc/elements/1.1/title')
+
+        let photo = F.items[1].photos[0]
+
+        expect(item.photo[0]).to.have.property(
+          'dcterms:title',
+          F.metadata[photo]['http://purl.org/dc/terms/title'].text)
+
+        expect(json['@context'])
+          .to.have.property('dcterms', 'http://purl.org/dc/terms/')
+
+        expect(item.photo[0]).to.have.property(
+          'http://example.org/title',
+          F.metadata[photo]['http://example.org/title'].text)
+      })
     })
   })
 })
