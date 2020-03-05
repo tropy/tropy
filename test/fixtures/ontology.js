@@ -2,42 +2,80 @@
 
 module.exports = {
   vocab: {
-    id: 'http://example.com/vocab',
-    description: 'Description',
-    prefix: 'vocab',
-    seeAlso: 'http://example.com/seeAlso',
-    title: 'Test Vocabulary',
-    classes: ['http://example.com/class'],
-    properties: ['http://example.com/photo-property'],
-    datatypes: ['http://example.com/type']
-  },
-
-  class: {
-    'http://example.com/class': {
-      comment: 'comment',
-      description: null,
-      id: 'http://example.com/class',
-      label: 'My Class'
-    }
-  },
-
-  props: {
-    'http://example.com/custom-property': {
-      label: 'Non-template Property'
+    'https://tropy.org/v1/tropy#': {
+      id: 'https://tropy.org/v1/tropy#',
+      prefix: 'tropy',
+      classes: [
+        'https://tropy.org/v1/tropy#Item',
+        'https://tropy.org/v1/tropy#Image',
+        'https://tropy.org/v1/tropy#Photo',
+        'https://tropy.org/v1/tropy#Selection',
+        'https://tropy.org/v1/tropy#Note',
+        'https://tropy.org/v1/tropy#Template',
+        'https://tropy.org/v1/tropy#Field',
+        'https://tropy.org/v1/tropy#List',
+        'https://tropy.org/v1/tropy#Tag'
+      ],
+      datatypes: [
+        'https://tropy.org/v1/tropy#date',
+        'https://tropy.org/v1/tropy#name'
+      ],
+      properties: [
+        'https://tropy.org/v1/tropy#box',
+        'https://tropy.org/v1/tropy#folder',
+        'https://tropy.org/v1/tropy#piece'
+      ]
     },
-    'http://example.com/photo-property': {
-      id: 'http://example.com/photo-property',
-      label: 'hello world'
+    'http://purl.org/dc/elements/1.1/': {
+      id: 'http://purl.org/dc/elements/1.1/',
+      prefix: 'dc',
+      classes: [],
+      datatypes: [],
+      properties: [
+        'http://purl.org/dc/elements/1.1/title'
+      ]
     },
-    'http://example.com/selection-property': {
-      label: 'select prop'
-    }
-  },
+    'http://purl.org/dc/terms/': {
+      id: 'http://purl.org/dc/terms/',
+      prefix: 'dcterms',
+      classes: [],
+      datatypes: [],
+      properties: [
+        'http://purl.org/dc/terms/title'
+      ]
+    },
 
-  type: {
-    'http://example.com/type': {
-      id: 'http://example.com/type',
-      comment: 'a custom datatype'
+    'class': {
+      'https://tropy.org/v1/tropy#Item': {
+        comment: 'A Tropy Item',
+        id: 'https://tropy.org/v1/tropy#Item',
+        label: 'Item'
+      }
+    },
+
+    'props': {
+      'http://purl.org/dc/elements/1.1/title': {
+        id: 'http://purl.org/dc/elements/1.1/title',
+        label: 'Title',
+        vocabulary: 'http://purl.org/dc/elements/1.1/'
+      },
+      'http://purl.org/dc/terms/title': {
+        id: 'http://purl.org/dc/terms/title',
+        label: 'Title',
+        vocabulary: 'http://purl.org/dc/terms/'
+      },
+      'https://tropy.org/v1/tropy#box': {
+        id: 'https://tropy.org/v1/tropy#box',
+        label: 'Box',
+        vocabulary: 'https://tropy.org/v1/tropy#'
+      }
+    },
+
+    'type': {
+      'https://tropy.org/v1/tropy#date': {
+        id: 'https://tropy.org/v1/tropy#date',
+        vocabulary: 'https://tropy.org/v1/tropy#'
+      }
     }
   }
 }

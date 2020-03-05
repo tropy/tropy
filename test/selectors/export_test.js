@@ -3,6 +3,7 @@
 describe('Export Selectors', () => {
   const selectors = __require('selectors/export')
   const { version } = __require('common/release')
+  const { pick } = __require('common/util')
 
   describe('getExportItemIds', () => {
     const { getExportItemIds } = selectors
@@ -34,10 +35,14 @@ describe('Export Selectors', () => {
   describe('getExportItems', () => {
     const { getExportItems } = selectors
 
-    const state = {
-      items: F.items,
-      metadata: F.metadata
-    }
+    const state = pick(F, [
+      'items',
+      'metadata',
+      'notes',
+      'ontology',
+      'photos',
+      'selections',
+      'tags'])
 
     it('includes @context', () => {
       expect(getExportItems(state, { id: [1] }))

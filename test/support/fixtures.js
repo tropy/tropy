@@ -44,6 +44,10 @@ global.F = {
     return require(join(ROOT, 'notes'))
   },
 
+  get ontology() {
+    return require(join(ROOT, 'ontology'))
+  },
+
   get photos() {
     return require(join(ROOT, 'photos'))
   },

@@ -93,7 +93,7 @@ const exportNote = (note, opts) => ({
   ...serialize(note, opts)
 })
 
-const addMetadata = (context, into, data, ontology) => {
+const addMetadata = (context, into, data, ontology = {}) => {
   for (let prop in data) {
     if (prop === 'id') continue
     if (prop === 'pending') continue
