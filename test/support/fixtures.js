@@ -42,5 +42,9 @@ global.F = {
 
   get projects() {
     return require(join(ROOT, 'projects'))
+  },
+
+  get tags() {
+    return require(join(ROOT, 'tags'))
   }
 }
