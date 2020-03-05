@@ -1,46 +1,12 @@
 'use strict'
 
-const { createSelector: memo } = require('reselect')
 const { ctx, props } = require('../common/export')
 const { xsd } = require('../common/ns')
 const { version } = require('../common/release')
-const { URI, get, pick, groupBy } = require('../common/util')
+const { URI, get, pick } = require('../common/util')
 const { serialize } = require('../components/editor/serialize')
-const { values, entries } = Object
 
 const reserved = Object.fromEntries(props.all.map(prop => ([prop, true])))
-
-const getGroupedItems = (ids) => memo(
-  ({ items }) => pick(items, ids),
-  ({ ontology }) => ontology.props,
-  ({ ontology }) => ontology.template,
-  ({ metadata }) => metadata,
-  ({ photos }) => photos,
-  ({ lists }) => lists,
-  ({ tags }) => tags,
-  ({ notes }) => notes,
-  ({ selections }) => selections,
-  (items, props, templates,
-   metadata, photos, lists, tags, notes, selections) => {
-    return [
-      entries(groupBy(values(items), 'template')).reduce((res, [t, items]) => {
-        res[t] = {
-          template: templates[t] || { id: t },
-          items
-        }
-        return res
-      }, {}),
-      props,
-      metadata,
-      photos,
-      lists,
-      tags,
-      notes,
-      selections
-    ]
-  }
-)
-
 
 const getExportItemIds = ({ nav, qr }, { id } = {}) =>
   (id?.length > 0) ? id : (nav.items.length > 0 ? nav.items : qr.items)
@@ -191,6 +157,5 @@ const toContext = (prop, type) =>
 
 module.exports = {
   getExportItemIds,
-  getExportItems,
-  getGroupedItems
+  getExportItems
 }
