@@ -2,4 +2,4 @@
 
 const { app } = require('electron')
 
-app.allowRendererProcessReuse = true
+app.allowRendererProcessReuse = false

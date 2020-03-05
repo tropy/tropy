@@ -499,14 +499,6 @@ const util = {
     return true
   },
 
-  groupBy(array, key) {
-    return array.reduce((acc, obj) => {
-      acc[obj[key]] = acc[obj[key]] || []
-      acc[obj[key]].push(obj)
-      return acc
-    }, {})
-  },
-
   URI: {
     namespace(uri) {
       return util.URI.split(uri)[0]

@@ -399,7 +399,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:export-item', (win, { target, plugin }) =>
-      this.dispatch(act.item.export(target.id, { plugin }), win))
+      this.dispatch(act.item.export(target?.id, { plugin }), win))
 
     this.on('app:restore-item', (win, { target }) => {
       this.dispatch(act.item.restore(target.id), win)
