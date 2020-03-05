@@ -2,7 +2,7 @@
 
 const assert = require('assert')
 const { dirname } = require('path')
-const uuid = require('uuid/v4')
+const uuid = require('uuid').v4
 const { all } = require('bluebird')
 const { into, update } = require('../common/query')
 const { info } = require('../common/log')

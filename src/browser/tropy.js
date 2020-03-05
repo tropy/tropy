@@ -308,7 +308,7 @@ class Tropy extends EventEmitter {
       migrate(this, state, state.version)
 
     state.locale = this.getLocale(state.locale)
-    state.uuid = state.uuid || require('uuid/v1')()
+    state.uuid = state.uuid || require('uuid').v1()
     state.version = this.version
 
     if (!(/^(system|dark|light)$/).test(state.theme))
