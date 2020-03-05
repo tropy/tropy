@@ -40,8 +40,20 @@ global.F = {
     return require(join(ROOT, 'metadata'))
   },
 
+  get notes() {
+    return require(join(ROOT, 'notes'))
+  },
+
+  get photos() {
+    return require(join(ROOT, 'photos'))
+  },
+
   get projects() {
     return require(join(ROOT, 'projects'))
+  },
+
+  get selections() {
+    return require(join(ROOT, 'selections'))
   },
 
   get tags() {
