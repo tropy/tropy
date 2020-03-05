@@ -94,7 +94,7 @@ const exportPhoto = (context, photo, state) => {
 
   if (photo.notes.length > 0) {
     output.note = photo.notes.map(id =>
-      exportNote(state.notes[id], state.settings.export.note))
+      exportNote(state.notes[id], state.settings?.export?.note))
   }
 
   if (photo.selections.length > 0) {
@@ -116,7 +116,7 @@ const exportSelection = (context, selection, state) => {
 
   if (selection.notes.length > 0) {
     output.note = selection.notes.map(id =>
-      exportNote(state.notes[id], state.settings.export.note))
+      exportNote(state.notes[id], state.settings?.export?.note))
   }
 
   return output
