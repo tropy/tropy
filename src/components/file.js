@@ -27,7 +27,13 @@ class FileSelect extends React.PureComponent {
   }
 
   handleKeyDown = (event) => {
+    if (this.props.onKeyDown != null) {
+      if (this.props.onKeyDown(event, this))
+        return null
+    }
+
     event.stopPropagation()
+
     switch (event.key) {
       case 'Backspace':
         this.clear()
@@ -38,6 +44,9 @@ class FileSelect extends React.PureComponent {
       default:
         return null
     }
+
+    event.preventDefault()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
   handleFileClick = () => {
@@ -107,6 +116,7 @@ class FileSelect extends React.PureComponent {
     onChange: func.isRequired,
     onCommit: func.isRequired,
     onFocus: func.isRequired,
+    onKeyDown: func,
     showHiddenFiles: bool,
     tabIndex: number,
     type: oneOf(['file', 'directory']).isRequired,
