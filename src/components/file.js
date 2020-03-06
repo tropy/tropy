@@ -94,16 +94,19 @@ class FileSelect extends React.PureComponent {
     return (
       <div className="input-group">
         <div
-          className={cx('form-control', 'file-select', {
+          className={cx('file-select', this.props.className, {
             disabled: this.props.isDisabled
           })}
+          id={this.props.id}
           tabIndex={this.tabIndex}
           title={this.props.value}
           onBlur={this.props.onBlur}
           onClick={this.handleClick}
           onFocus={this.props.onFocus}
           onKeyDown={this.handleKeyDown}>
-          <div className="truncate">{this.props.value}</div>
+          <div className="truncate">
+            {this.props.value || this.props.placeholder}
+          </div>
         </div>
         <div className="input-group-append">
           {!this.props.isRequired && (
@@ -124,9 +127,11 @@ class FileSelect extends React.PureComponent {
   }
 
   static propTypes = {
+    className: string,
     defaultPath: string,
     fileDialogType: oneOf(['open', 'save']).isRequired,
     filters: arrayOf(object),
+    id: string,
     isDisabled: bool,
     isRequired: bool,
     onBlur: func,
@@ -134,6 +139,7 @@ class FileSelect extends React.PureComponent {
     onCommit: func.isRequired,
     onFocus: func,
     onKeyDown: func,
+    placeholder: string,
     showHiddenFiles: bool,
     tabIndex: number,
     type: oneOf(['file', 'directory']).isRequired,
