@@ -9,7 +9,7 @@ const { bool, func, number, object, oneOf, string, arrayOf
 
 
 class FileSelect extends React.PureComponent {
-  clear() {
+  clear = () => {
     this.handleChange(null)
   }
 
@@ -68,11 +68,6 @@ class FileSelect extends React.PureComponent {
 
   }
 
-  handleClearButtonClick = () => {
-    this.clear()
-  }
-
-
   render() {
     return (<div className="input-group">
       <div className="form-control file-select disabled"
@@ -88,7 +83,7 @@ class FileSelect extends React.PureComponent {
         <Button
           isDefault
           noFocus
-          onClick={this.handleClearButtonClick}
+          onClick={this.clear}
           text="select.clear" />
         )}
         <Button
