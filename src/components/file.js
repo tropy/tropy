@@ -33,7 +33,7 @@ class FileSelect extends React.PureComponent {
         break
       case 'Enter':
       case 'Space':
-        this.handleFileClick()
+        this.handleClick()
         break
       default:
         return null
@@ -43,31 +43,29 @@ class FileSelect extends React.PureComponent {
     event.nativeEvent.stopImmediatePropagation()
   }
 
-  handleFileClick = () => {
-    const { defaultPath, filters, type, showHiddenFiles } = this.props
-    const properties = type === 'file' ? ['openFile'] : ['openDirectory']
-    if (showHiddenFiles)
+  handleClick = async () => {
+    let { defaultPath, filters, type } = this.props
+
+    let properties = (type === 'file') ?
+      ['openFile'] :
+      ['openDirectory']
+
+    if (this.props.showHiddenFiles)
       properties.push('showHiddenFiles')
 
-    const obj = { defaultPath, properties }
+    let value = await this.showDialog({
+      defaultPath,
+      filters,
+      properties
+    })
 
-    if (filters)
-      obj.filters = filters
+    this.handleChange(value)
+  }
 
-    if (this.props.fileDialogType === 'save') {
-      save(obj).then((res) => {
-        if (res.length) {
-          this.handleChange(res)
-        }
-      })
-    } else {
-      open(obj).then((res) => {
-        if (res.length) {
-          this.handleChange(res[0])
-        }
-      })
-    }
-
+  showDialog(opts, { type, fileDialogType } = this.props) {
+    return (type === 'file' && fileDialogType === 'save') ?
+      save(opts) :
+      open(opts).then(res => Array.isArray(res) ? res[0] : res)
   }
 
   render() {
@@ -75,7 +73,7 @@ class FileSelect extends React.PureComponent {
       <div className="form-control file-select disabled"
         tabIndex={this.props.tabIndex}
         onKeyDown={this.handleKeyDown}
-        onDoubleClick={this.handleFileClick}
+        onDoubleClick={this.handleClick}
         onFocus={this.props.onFocus}
         onBlur={this.props.onBlur}>
         <div className="truncate">{this.props.value}</div>
@@ -91,7 +89,7 @@ class FileSelect extends React.PureComponent {
         <Button
           isDefault
           noFocus
-          onClick={this.handleFileClick}
+          onClick={this.handleClick}
           text="select.browse" />
       </div>
     </div>)
@@ -115,7 +113,7 @@ class FileSelect extends React.PureComponent {
   }
 
   static defaultProps = {
-    fileDialogType: 'save',
+    fileDialogType: 'open',
     onChange: noop,
     tabIndex: -1,
     type: 'file'
