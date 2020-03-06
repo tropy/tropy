@@ -3,6 +3,7 @@
 const React = require('react')
 const { FormattedMessage, useIntl } = require('react-intl')
 const { Input } = require('./input')
+const { FileSelect } = require('./file')
 const { Select } = require('./select')
 const cx = require('classnames')
 const {
@@ -113,12 +114,22 @@ class FormElement extends React.PureComponent {
 
 
 class FormField extends React.PureComponent {
-  reset() {
-    if (this.input != null) this.input.reset()
+  input = React.createRef()
+
+  get InputComponent() {
+    switch (this.props.type) {
+      case 'file':
+      case 'directory':
+        return FileSelect
+      default:
+        return Input
+    }
   }
 
-  setInput = (input) => {
-    this.input = input
+  reset() {
+    if (this.input.current != null) {
+      this.input.current.reset()
+    }
   }
 
   handleBlur = (event) => {
@@ -138,6 +149,8 @@ class FormField extends React.PureComponent {
   }
 
   render() {
+    let { InputComponent } = this
+
     return (
       <FormElement
         id={this.props.id}
@@ -145,20 +158,11 @@ class FormField extends React.PureComponent {
         label={this.props.label}
         title={this.props.title}
         isCompact={this.props.isCompact}>
-        <Input
-          ref={this.setInput}
-          id={this.props.id}
+        <InputComponent
+          {...this.props}
+          ref={this.input}
           className="form-control"
-          max={this.props.max}
-          min={this.props.min}
-          name={this.props.name}
-          placeholder={this.props.placeholder}
-          tabIndex={this.props.tabIndex}
-          type={this.props.type}
           value={this.props.value || ''}
-          isDisabled={this.props.isDisabled}
-          isReadOnly={this.props.isReadOnly}
-          isRequired={this.props.isRequired}
           onBlur={this.handleBlur}
           onChange={this.handleChange}
           onCommit={this.handleCommit}/>

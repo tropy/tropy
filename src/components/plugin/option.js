@@ -1,15 +1,13 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = require('react')
 const { bool, func, shape, string, object } = require('prop-types')
 const { FormElement, FormField, FormToggle } = require('../form')
 const { TemplateSelect } = require('../template/select')
 const { get } = require('../../common/util')
 
 
-
-class PluginOption extends PureComponent {
+class PluginOption extends React.PureComponent {
   get attrs() {
     return {
       id: this.props.spec.field,
@@ -64,8 +62,19 @@ class PluginOption extends PureComponent {
                 ...this.props.templates.selection]}/>
           </FormElement>
         )
+      case 'save-file':
+        return (
+          <FormField
+            {...this.attrs}
+            createFile
+            type="file"/>
+        )
       default:
-        return <FormField {...this.attrs}/>
+        return (
+          <FormField
+            {...this.attrs}
+            type={this.props.spec.type}/>
+        )
     }
   }
 

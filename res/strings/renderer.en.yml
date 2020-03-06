@@ -270,6 +270,8 @@ en:
   select:
     column:
       placeholder: Search
+    browse: Browse
+    clear: Clear
   template:
     id: URI
     name: Name

@@ -11,6 +11,7 @@
     position: absolute;
     left: ($space-min + 1px);
     top: (($input-height-base - $space-md) / 2);
+    z-index: 1;
   }
 
   .search-input {
