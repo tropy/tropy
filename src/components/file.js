@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { noop } = require('../common/util')
+const { blank, noop } = require('../common/util')
 const { Button } = require('./button')
 const { open, save } = require('../dialog')
 
@@ -88,6 +88,8 @@ class FileSelect extends React.PureComponent {
   }
 
   render() {
+    let isBlank = blank(this.props.value)
+
     return (
       <div className="input-group">
         <div
@@ -101,14 +103,15 @@ class FileSelect extends React.PureComponent {
           onClick={this.handleClick}
           onFocus={this.props.onFocus}
           onKeyDown={this.handleKeyDown}>
-          <div className="truncate">
-            {this.props.value || this.props.placeholder}
+          <div className={cx('truncate', { placeholder: isBlank })}>
+            {isBlank ? this.props.placeholder : this.props.value}
           </div>
         </div>
         <div className="input-group-append">
           {!this.props.isRequired && (
           <Button
             isDefault
+            isDisabled={isBlank}
             noFocus
             onClick={this.clear}
             text="select.clear"/>
