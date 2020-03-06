@@ -23,6 +23,7 @@ class FileSelect extends React.PureComponent {
 
   handleChange = (value) => {
     this.props.onChange(value)
+    this.props.onCommit(value, value !== this.props.value)
   }
 
   handleKeyDown = (event) => {
@@ -104,6 +105,7 @@ class FileSelect extends React.PureComponent {
     isRequired: bool,
     onBlur: func.isRequired,
     onChange: func.isRequired,
+    onCommit: func.isRequired,
     onFocus: func.isRequired,
     showHiddenFiles: bool,
     tabIndex: number,
@@ -117,8 +119,7 @@ class FileSelect extends React.PureComponent {
     onChange: noop,
     onFocus: noop,
     tabIndex: -1,
-    type: 'file',
-    value: null
+    type: 'file'
   }
 }
 
