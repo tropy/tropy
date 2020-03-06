@@ -6,6 +6,7 @@
 .placeholder {
   color: $input-color-placeholder;
   user-select: none;
+  mix-blend-mode: multiply;
 }
 
 input {
@@ -126,7 +127,10 @@ fieldset {
 
   .truncate {
     flex: 1 1 auto;
-    direction: rtl;
+
+    @include state(".file-select.disabled") {
+      opacity: 0.5;
+    }
   }
 }
 

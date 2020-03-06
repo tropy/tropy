@@ -22,7 +22,8 @@
 
     &[readonly],
     &[disabled],
-    &.disabled {
+    &.disabled,
+    &.file-select {
       background-color: var(--level-#{$n}-input-bg-readonly);
     }
   }
