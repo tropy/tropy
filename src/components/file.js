@@ -103,7 +103,6 @@ class FileSelect extends React.PureComponent {
     defaultPath: string,
     fileDialogType: oneOf(['open', 'save']).isRequired,
     filters: arrayOf(object),
-    id: string,
     isRequired: bool,
     onBlur: func,
     onChange: func.isRequired,
