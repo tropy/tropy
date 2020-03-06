@@ -28,9 +28,11 @@ class FileSelect extends React.PureComponent {
 
     switch (event.key) {
       case 'Backspace':
+      case 'Escape':
         this.clear()
         break
       case 'Enter':
+      case 'Space':
         this.handleFileClick()
         break
       default:
