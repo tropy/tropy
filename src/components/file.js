@@ -86,8 +86,9 @@ class FileSelect extends React.PureComponent {
         <div
           className="form-control file-select disabled"
           tabIndex={this.props.tabIndex}
+          title={this.props.value}
           onBlur={this.props.onBlur}
-          onDoubleClick={this.handleClick}
+          onClick={this.handleClick}
           onFocus={this.props.onFocus}
           onKeyDown={this.handleKeyDown}>
           <div className="truncate">{this.props.value}</div>
