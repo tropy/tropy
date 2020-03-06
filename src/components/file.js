@@ -13,14 +13,6 @@ class FileSelect extends React.PureComponent {
     this.handleChange(null)
   }
 
-  handleBlur = (event) => {
-    this.props.onBlur(event)
-  }
-
-  handleFocus = (event) => {
-    this.props.onFocus(event)
-  }
-
   handleChange = (value) => {
     this.props.onChange(value)
     this.props.onCommit(value, value !== this.props.value)
@@ -86,20 +78,22 @@ class FileSelect extends React.PureComponent {
       <div className="form-control file-select disabled"
         tabIndex={this.props.tabIndex}
         onKeyDown={this.handleKeyDown}
-        onClick={this.handleFocus}
         onDoubleClick={this.handleFileClick}
-        onBlur={this.handleBlur}>
+        onFocus={this.props.onFocus}
+        onBlur={this.props.onBlur}>
         <div className="truncate">{this.props.value}</div>
       </div>
       <div className="input-group-append">
         {!this.props.isRequired && (
         <Button
-          className="btn-default"
+          isDefault
+          noFocus
           onClick={this.handleClearButtonClick}
           text="select.clear" />
         )}
         <Button
-          className="btn-default"
+          isDefault
+          noFocus
           onClick={this.handleFileClick}
           text="select.browse" />
       </div>
@@ -112,10 +106,10 @@ class FileSelect extends React.PureComponent {
     filters: arrayOf(object),
     id: string,
     isRequired: bool,
-    onBlur: func.isRequired,
+    onBlur: func,
     onChange: func.isRequired,
     onCommit: func.isRequired,
-    onFocus: func.isRequired,
+    onFocus: func,
     onKeyDown: func,
     showHiddenFiles: bool,
     tabIndex: number,
@@ -125,9 +119,7 @@ class FileSelect extends React.PureComponent {
 
   static defaultProps = {
     fileDialogType: 'save',
-    onBlur: noop,
     onChange: noop,
-    onFocus: noop,
     tabIndex: -1,
     type: 'file'
   }
