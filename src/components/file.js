@@ -111,13 +111,14 @@ class FileSelect extends React.PureComponent {
           {!this.props.isRequired && (
           <Button
             isDefault
-            isDisabled={isBlank}
+            isDisabled={isBlank || this.props.isDisabled}
             noFocus
             onClick={this.clear}
             text="select.clear"/>
           )}
           <Button
             isDefault
+            isDisabled={this.props.isDisabled}
             noFocus
             onClick={this.handleClick}
             text="select.browse"/>
