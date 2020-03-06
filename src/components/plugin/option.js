@@ -18,8 +18,7 @@ class PluginOption extends React.PureComponent {
       onChange: this.handleChange,
       value: this.value,
       isCompact: true,
-      isRequired: this.props.spec.required,
-      createFile: this.props.spec.createFile
+      isRequired: this.props.spec.required
     }
   }
 
@@ -62,6 +61,13 @@ class PluginOption extends React.PureComponent {
                 ...this.props.templates.photo,
                 ...this.props.templates.selection]}/>
           </FormElement>
+        )
+      case 'save-file':
+        return (
+          <FormField
+            {...this.attrs}
+            createFile
+            type="file"/>
         )
       default:
         return (
