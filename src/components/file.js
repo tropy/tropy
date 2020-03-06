@@ -81,8 +81,8 @@ class FileSelect extends React.PureComponent {
       this.handleChange(value)
   }
 
-  showDialog(opts, { type, fileDialogType } = this.props) {
-    return (type === 'file' && fileDialogType === 'save') ?
+  showDialog(opts, { type, createFile } = this.props) {
+    return (type === 'file' && createFile) ?
       save(opts) :
       open(opts).then(res => Array.isArray(res) ? res[0] : res)
   }
@@ -129,8 +129,8 @@ class FileSelect extends React.PureComponent {
 
   static propTypes = {
     className: string,
+    createFile: bool,
     defaultPath: string,
-    fileDialogType: oneOf(['open', 'save']).isRequired,
     filters: arrayOf(object),
     id: string,
     isDisabled: bool,
@@ -148,7 +148,6 @@ class FileSelect extends React.PureComponent {
   }
 
   static defaultProps = {
-    fileDialogType: 'open',
     onChange: noop,
     onCommit: noop,
     tabIndex: -1,
