@@ -4,12 +4,19 @@ const React = require('react')
 const { noop } = require('../common/util')
 const { Button } = require('./button')
 const { open, save } = require('../dialog')
+
 const {
   bool, func, number, object, oneOf, string, arrayOf
 } = require('prop-types')
 
+const cx = require('classnames')
+
 
 class FileSelect extends React.PureComponent {
+  get tabIndex() {
+    return this.props.isDisabled ? null : this.props.tabIndex
+  }
+
   clear = () => {
     this.handleChange(null)
   }
@@ -55,6 +62,9 @@ class FileSelect extends React.PureComponent {
   }
 
   handleClick = async () => {
+    if (this.props.isDisabled)
+      return
+
     let { defaultPath, filters, type } = this.props
 
     let properties = (type === 'file') ?
@@ -84,8 +94,10 @@ class FileSelect extends React.PureComponent {
     return (
       <div className="input-group">
         <div
-          className="form-control file-select disabled"
-          tabIndex={this.props.tabIndex}
+          className={cx('form-control', 'file-select', {
+            disabled: this.props.isDisabled
+          })}
+          tabIndex={this.tabIndex}
           title={this.props.value}
           onBlur={this.props.onBlur}
           onClick={this.handleClick}
@@ -115,6 +127,7 @@ class FileSelect extends React.PureComponent {
     defaultPath: string,
     fileDialogType: oneOf(['open', 'save']).isRequired,
     filters: arrayOf(object),
+    isDisabled: bool,
     isRequired: bool,
     onBlur: func,
     onChange: func.isRequired,
