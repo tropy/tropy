@@ -14,9 +14,17 @@ class FileSelect extends React.PureComponent {
     this.handleChange(null)
   }
 
+  reset = () => {
+    this.handleChange(this.props.value)
+  }
+
   handleChange = (value) => {
-    this.props.onChange(value)
-    this.props.onCommit(value, value !== this.props.value)
+    let hasChanged = value !== this.props.value
+
+    if (hasChanged)
+      this.props.onChange(value)
+
+    this.props.onCommit(value, hasChanged)
   }
 
   handleKeyDown = (event) => {
@@ -28,8 +36,10 @@ class FileSelect extends React.PureComponent {
     event.stopPropagation()
 
     switch (event.key) {
-      case 'Backspace':
       case 'Escape':
+        this.reset()
+        break
+      case 'Backspace':
         this.clear()
         break
       case 'Enter':
@@ -60,7 +70,8 @@ class FileSelect extends React.PureComponent {
       properties
     })
 
-    this.handleChange(value)
+    if (value != null)
+      this.handleChange(value)
   }
 
   showDialog(opts, { type, fileDialogType } = this.props) {
@@ -118,6 +129,7 @@ class FileSelect extends React.PureComponent {
   static defaultProps = {
     fileDialogType: 'open',
     onChange: noop,
+    onCommit: noop,
     tabIndex: -1,
     type: 'file'
   }
