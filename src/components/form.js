@@ -169,12 +169,11 @@ class FormFileSelect extends React.PureComponent {
 }
 
 class FormField extends React.PureComponent {
-  reset() {
-    if (this.input != null) this.input.reset()
-  }
+  input = React.createRef()
 
-  setInput = (input) => {
-    this.input = input
+  reset() {
+    if (this.input.current != null)
+      this.input.current.reset()
   }
 
   handleBlur = (event) => {
@@ -202,7 +201,7 @@ class FormField extends React.PureComponent {
         title={this.props.title}
         isCompact={this.props.isCompact}>
         <Input
-          ref={this.setInput}
+          ref={this.input}
           id={this.props.id}
           className="form-control"
           max={this.props.max}
