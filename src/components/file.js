@@ -4,7 +4,8 @@ const React = require('react')
 const { noop } = require('../common/util')
 const { Button } = require('./button')
 const { open, save } = require('../dialog')
-const { bool, func, number, object, oneOf, string, arrayOf
+const {
+  bool, func, number, object, oneOf, string, arrayOf
 } = require('prop-types')
 
 
@@ -69,30 +70,33 @@ class FileSelect extends React.PureComponent {
   }
 
   render() {
-    return (<div className="input-group">
-      <div className="form-control file-select disabled"
-        tabIndex={this.props.tabIndex}
-        onKeyDown={this.handleKeyDown}
-        onDoubleClick={this.handleClick}
-        onFocus={this.props.onFocus}
-        onBlur={this.props.onBlur}>
-        <div className="truncate">{this.props.value}</div>
+    return (
+      <div className="input-group">
+        <div
+          className="form-control file-select disabled"
+          tabIndex={this.props.tabIndex}
+          onBlur={this.props.onBlur}
+          onDoubleClick={this.handleClick}
+          onFocus={this.props.onFocus}
+          onKeyDown={this.handleKeyDown}>
+          <div className="truncate">{this.props.value}</div>
+        </div>
+        <div className="input-group-append">
+          {!this.props.isRequired && (
+          <Button
+            isDefault
+            noFocus
+            onClick={this.clear}
+            text="select.clear"/>
+          )}
+          <Button
+            isDefault
+            noFocus
+            onClick={this.handleClick}
+            text="select.browse"/>
+        </div>
       </div>
-      <div className="input-group-append">
-        {!this.props.isRequired && (
-        <Button
-          isDefault
-          noFocus
-          onClick={this.clear}
-          text="select.clear" />
-        )}
-        <Button
-          isDefault
-          noFocus
-          onClick={this.handleClick}
-          text="select.browse" />
-      </div>
-    </div>)
+    )
   }
 
   static propTypes = {
