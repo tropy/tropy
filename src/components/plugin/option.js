@@ -18,7 +18,8 @@ class PluginOption extends React.PureComponent {
       onChange: this.handleChange,
       value: this.value,
       isCompact: true,
-      isRequired: this.props.spec.required
+      isRequired: this.props.spec.required,
+      createFile: this.props.spec.createFile
     }
   }
 

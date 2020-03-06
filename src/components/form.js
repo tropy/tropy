@@ -159,19 +159,10 @@ class FormField extends React.PureComponent {
         title={this.props.title}
         isCompact={this.props.isCompact}>
         <InputComponent
+          {...this.props}
           ref={this.input}
-          id={this.props.id}
           className="form-control"
-          max={this.props.max}
-          min={this.props.min}
-          name={this.props.name}
-          placeholder={this.props.placeholder}
-          tabIndex={this.props.tabIndex}
-          type={this.props.type}
           value={this.props.value || ''}
-          isDisabled={this.props.isDisabled}
-          isReadOnly={this.props.isReadOnly}
-          isRequired={this.props.isRequired}
           onBlur={this.handleBlur}
           onChange={this.handleChange}
           onCommit={this.handleCommit}/>
