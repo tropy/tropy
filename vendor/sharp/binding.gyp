@@ -145,7 +145,7 @@
               '../vendor/lib/libheif.so.1',
               '../vendor/lib/libMagickCore-6.Q16.so.6',
               '../vendor/lib/libpoppler-glib.so.8',
-              '../vendor/lib/libpoppler.so.95',
+              '../vendor/lib/libpoppler.so.91',
               # Ensure runtime linking is relative to sharp.node
               '-Wl,--disable-new-dtags -Wl,-rpath=\'$${ORIGIN}/../../vendor/lib\''
             ]
