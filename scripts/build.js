@@ -67,6 +67,7 @@ const IGNORE = [
   /node_modules.(react-)?redux.(dist|es|src)/,
   /node_modules.react-transition-group.(dist|esm)/,
   /node_modules.rdf-canonize.dist/,
+  /node_modules.@formatjs.intl-(displaynames|listformat|unified-numberformat|relativetimeformat)/,
   /node_modules.node-forge/,
   /node_modules.ajv.dist/,
   /node_modules.psl.dist/,
