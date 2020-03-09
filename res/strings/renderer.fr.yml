@@ -271,6 +271,9 @@ fr:
   select:
     column:
       placeholder: Recherche
+    file:
+      browse: Browse
+      clear: Clear
   template:
     id: URI
     name: Nom
