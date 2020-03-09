@@ -80,7 +80,9 @@ class Image {
   }
 
   get title() {
-    return basename(this.path, this.ext)
+    return this.isRemote ?
+      this.path.split('/').pop().replace(/\?.*/, '') :
+      basename(this.path, this.ext)
   }
 
   get checksum() {

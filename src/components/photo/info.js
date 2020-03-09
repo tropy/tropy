@@ -15,8 +15,13 @@ class PhotoInfo extends React.PureComponent {
   }
 
   get size() {
-    const { width, height, size } = this.props.photo
+    let { width, height, size } = this.props.photo
     return `${number(width)}×${number(height)}, ${bytes(size)}`
+  }
+
+  get hint() {
+    let { protocol, path } = this.props.photo
+    return (protocol === 'file') ? path : `${protocol}://${path}`
   }
 
   isEditing(prop) {
@@ -26,7 +31,7 @@ class PhotoInfo extends React.PureComponent {
 
   handleFileClick = () => {
     if (this.props.onOpenInFolder) {
-      this.props.onOpenInFolder(this.props.photo.path)
+      this.props.onOpenInFolder(this.props.photo)
     }
   }
 
@@ -54,7 +59,7 @@ class PhotoInfo extends React.PureComponent {
     return (
       <ol className="photo-info metadata-fields">
         <StaticField
-          hint={this.props.photo.path}
+          hint={this.hint}
           label="photo.file"
           value={this.file}
           onClick={this.handleFileClick}/>

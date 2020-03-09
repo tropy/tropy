@@ -14,6 +14,8 @@ const { mkdirSync: mkdir } = require('fs')
 const { darwin, win32, system }  = require('../common/os')
 const { exe, qualified, version }  = require('../common/release')
 
+app.allowRendererProcessReuse = false
+
 // Set app name and paths as soon as possible!
 app.name = qualified.product
 

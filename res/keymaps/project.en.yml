@@ -91,7 +91,6 @@ en:
         - PageDown
         - Shift+PageDown
         - CmdOrCtrl+PageDown
-      copy: Ctrl+c
       merge: Ctrl+Shift+M
     PhotoIterator: &PhotoIterator
       up: ArrowUp
@@ -229,7 +228,6 @@ en:
       delete:
         - Backspace
         - Delete
-      copy: Cmd+c
       merge: Cmd+Shift+m
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight

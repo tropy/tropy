@@ -44,6 +44,11 @@ es:
             - label: Folder…
               command: 'app:import-directory'
               condition: project
+        - label: Exportar
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
         - type: separator
         - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
@@ -176,15 +181,15 @@ es:
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
-          label: Buscar actualizaciones...
+          label: Buscar actualizaciones …
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: Buscando las últimas actualizaciones...
+          label: Buscando las últimas actualizaciones …
           enabled: false
           visible: false
         - id: updater-install
-          label: Instalando actualización...
+          label: Instalando actualización …
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -262,6 +267,11 @@ es:
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: Exportar
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
         - label: Imprimir
           command: 'app:print'
           accelerator: CmdOrCtrl+P
@@ -393,15 +403,15 @@ es:
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
-          label: Buscar actualizaciones...
+          label: Buscar actualizaciones …
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: Buscando las últimas actualizaciones...
+          label: Buscando las últimas actualizaciones …
           enabled: false
           visible: false
         - id: updater-install
-          label: Instalando actualización...
+          label: Instalando actualización …
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -450,6 +460,11 @@ es:
             - label: Folder…
               command: 'app:import-directory'
               condition: project
+        - label: Exportar
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
         - type: separator
         - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
@@ -579,15 +594,15 @@ es:
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
-          label: Buscar actualizaciones...
+          label: Buscar actualizaciones …
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: Buscando las últimas actualizaciones...
+          label: Buscando las últimas actualizaciones …
           enabled: false
           visible: false
         - id: updater-install
-          label: Instalando actualización...
+          label: Instalando actualización …
           command: 'app:install-updates'
           enabled: false
           visible: false

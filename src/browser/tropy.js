@@ -308,7 +308,7 @@ class Tropy extends EventEmitter {
       migrate(this, state, state.version)
 
     state.locale = this.getLocale(state.locale)
-    state.uuid = state.uuid || require('uuid/v1')()
+    state.uuid = state.uuid || require('uuid').v1()
     state.version = this.version
 
     if (!(/^(system|dark|light)$/).test(state.theme))
@@ -399,7 +399,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:export-item', (win, { target, plugin }) =>
-      this.dispatch(act.item.export(target.id, { plugin }), win))
+      this.dispatch(act.item.export(target?.id, { plugin }), win))
 
     this.on('app:restore-item', (win, { target }) => {
       this.dispatch(act.item.restore(target.id), win)

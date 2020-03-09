@@ -44,6 +44,11 @@ ja:
             - label: Folder…
               command: 'app:import-directory'
               condition: project
+        - label: エクスポート
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
         - type: separator
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
@@ -262,6 +267,11 @@ ja:
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: エクスポート
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
         - label: プリント
           command: 'app:print'
           accelerator: CmdOrCtrl+P
@@ -450,6 +460,11 @@ ja:
             - label: Folder…
               command: 'app:import-directory'
               condition: project
+        - label: エクスポート
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
         - type: separator
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'

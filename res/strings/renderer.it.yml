@@ -273,6 +273,9 @@ it:
   select:
     column:
       placeholder: Cerca
+    file:
+      browse: Browse
+      clear: Clear
   template:
     id: URI
     name: Nome

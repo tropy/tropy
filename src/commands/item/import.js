@@ -1,8 +1,7 @@
 'use strict'
 
 const { readFile } = require('fs').promises
-const { extname } = require('path')
-const { all, call, fork, join, put, select } = require('redux-saga/effects')
+const { dirname, extname, join, isAbsolute } = require('path')
 const { ImportCommand } = require('../import')
 const { DuplicateError } = require('../../common/error')
 const { normalize, eachItem } = require('../../common/import')
@@ -14,6 +13,15 @@ const act = require('../../actions')
 const mod = require('../../models')
 
 const { ITEM, PROJECT: { MODE } } = require('../../constants')
+
+const {
+  all,
+  call,
+  fork,
+  join: wait,
+  put,
+  select
+} = require('redux-saga/effects')
 
 const {
   findTag,
@@ -50,7 +58,8 @@ class Import extends ImportCommand {
         try {
           if ((/json(ld)?$/i).test(extname(file))) {
             let text = yield call(readFile, file, 'utf-8')
-            yield* this.importFromJSON(JSON.parse(text))
+            yield* this.importFromJSON(JSON.parse(text), dirname(file))
+
           } else
             yield* this.importFromImage(file)
 
@@ -62,7 +71,7 @@ class Import extends ImportCommand {
     }
 
     if (this.backlog.length > 0) {
-      yield join(this.backlog)
+      yield wait(this.backlog)
     }
 
     return this.result
@@ -151,18 +160,18 @@ class Import extends ImportCommand {
     }
   }
 
-  *importFromJSON(data) {
+  *importFromJSON(data, rel) {
     let graph = yield call(normalize, data)
 
     if (graph.length > 1)
       yield this.progress({ total: graph.length - 1 })
 
     for (let item of eachItem(graph)) {
-      yield* this.importJSONItem(item)
+      yield* this.importJSONItem(item, rel)
     }
   }
 
-  *importJSONItem(obj) {
+  *importJSONItem(obj, rel) {
     try {
       let { db, base } = this.options
       let { list } = this.action.payload
@@ -195,6 +204,10 @@ class Import extends ImportCommand {
 
         for (let i = 0; i < obj.photos.length; ++i) {
           let { template, image, data } = obj.photos[i]
+
+          if (rel && data.protocol === 'file' && !isAbsolute(data.path)) {
+            data.path = join(rel, data.path)
+          }
 
           let photo = await mod.photo.create(tx, { base, template }, {
             item: item.id,

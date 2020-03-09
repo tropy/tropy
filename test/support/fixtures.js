@@ -28,11 +28,39 @@ global.F = {
     }
   },
 
+  get items() {
+    return require(join(ROOT, 'items'))
+  },
+
   get lists() {
     return require(join(ROOT, 'lists'))
   },
 
+  get metadata() {
+    return require(join(ROOT, 'metadata'))
+  },
+
+  get notes() {
+    return require(join(ROOT, 'notes'))
+  },
+
+  get ontology() {
+    return require(join(ROOT, 'ontology'))
+  },
+
+  get photos() {
+    return require(join(ROOT, 'photos'))
+  },
+
   get projects() {
     return require(join(ROOT, 'projects'))
+  },
+
+  get selections() {
+    return require(join(ROOT, 'selections'))
+  },
+
+  get tags() {
+    return require(join(ROOT, 'tags'))
   }
 }

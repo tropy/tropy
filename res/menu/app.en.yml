@@ -50,9 +50,12 @@ en:
             - label: 'Folder…'
               command: 'app:import-directory'
               condition: 'project'
-            #- label: 'JSON-LD…'
-            #  command: 'app:import-jsonld'
-            #  condition: 'project'
+        - &export
+          label: 'Export'
+          id: 'export'
+          submenu:
+            - label: 'JSON-LD'
+              command: 'app:export-item'
         - type: 'separator'
         - &consolidate
           label: 'Consolidate Photo Library'
@@ -264,6 +267,7 @@ en:
         - *import
         - *consolidate
         - type: 'separator'
+        - *export
         - *print
         - type: 'separator'
         - *close
