@@ -101,7 +101,7 @@ const addMetadata = (context, into, data, ontology = {}) => {
     let [vocab, name] = URI.split(prop)
 
     if ((name in context) || (name in reserved)) {
-      if (prop !== (context[name]['@id'] || context[name])) {
+      if (prop !== (context[name]?.['@id'] || context[name])) {
         let prefix = get(ontology.vocab, [vocab, 'prefix'])
 
         if (prefix) {

@@ -104,6 +104,10 @@ describe('Export Selectors', () => {
         expect(item.photo[0]).to.have.property(
           'http://example.org/title',
           F.metadata[photo]['http://example.org/title'].text)
+
+        expect(item).to.have.property(
+          'http://example.org/contrast',
+          F.metadata[1]['http://example.org/contrast'].text)
       })
     })
   })
