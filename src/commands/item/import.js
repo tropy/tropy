@@ -205,8 +205,8 @@ class Import extends ImportCommand {
         for (let i = 0; i < obj.photos.length; ++i) {
           let { template, image, data } = obj.photos[i]
 
-          if (rel && data.protocol === 'file' && !isAbsolute(data.path)) {
-            data.path = join(rel, data.path)
+          if (rel && image.protocol === 'file' && !isAbsolute(image.path)) {
+            image.path = join(rel, image.path)
           }
 
           let photo = await mod.photo.create(tx, { base, template }, {
