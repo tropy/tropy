@@ -14,6 +14,10 @@ module.exports = {
     'https://tropy.org/v1/tropy#box': {
       type: 'http://www.w3.org/2001/XMLSchema#integer',
       text: 7
+    },
+    'http://example.org/contrast': {
+      type: 'http://www.w3.org/2001/XMLSchema#integer',
+      text: 33
     }
   },
   101: {
