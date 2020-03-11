@@ -28,8 +28,8 @@ const ctx = {
     return {
       note: {
         '@id': tropy.note,
-        '@container': '@list',
-        '@context': ctx.note
+        '@container': '@list'
+        // '@context': ctx.note
       },
       selection: {
         '@id': tropy.selection,
@@ -43,8 +43,8 @@ const ctx = {
     return {
       note: {
         '@id': tropy.note,
-        '@container': '@list',
-        '@context': ctx.note
+        '@container': '@list'
+        // '@context': ctx.note
       }
     }
   }
