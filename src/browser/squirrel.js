@@ -4,8 +4,7 @@ const { basename, dirname, join } = require('path')
 const { app, shell } = require('electron')
 const { sync: rm } = require('rimraf')
 const ChildProcess = require('child_process')
-const { existsSync: exists } = require('fs')
-const { sync: mkdir } = require('mkdirp')
+const { existsSync: exists, mkdirSync: mkdir } = require('fs')
 const { product, qualified } = require('../common/release')
 
 const START_MENU = join(
@@ -34,7 +33,7 @@ const exe = basename(process.execPath)
 function link(path, force = false) {
   if (!exists(path) && !force) return
 
-  mkdir(dirname(path))
+  mkdir(dirname(path), { recursive: true })
   shell.writeShortcutLink(path, exists(path) ? 'update' : 'create', {
     target: update,
     args: `--processStart "${exe}"`,

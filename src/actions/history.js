@@ -33,7 +33,7 @@ module.exports = {
     }
   },
 
-  tick({ undo, redo }, mode = 'add', meta) {
+  tick({ undo, redo, mode = 'add' }, meta) {
     undo.meta = omit(undo.meta, ['history'])
     redo.meta = omit(redo.meta, ['history'])
 

@@ -8,7 +8,11 @@ module.exports = {
     return {
       type: PHOTO.CONSOLIDATE,
       payload: array(payload),
-      meta: { cmd: 'project', ...meta }
+      meta: {
+        cmd: 'project',
+        cancel: true,
+        ...meta
+      }
     }
   },
 
@@ -22,7 +26,13 @@ module.exports = {
     return {
       type: PHOTO.CREATE,
       payload,
-      meta: { cmd: 'project', history: 'add', ...meta }
+      meta: {
+        cancel: true,
+        cmd: 'project',
+        history: 'add',
+        prompt: 'images',
+        ...meta
+      }
     }
   },
 

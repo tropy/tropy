@@ -3,6 +3,7 @@
 const React = require('react')
 const { FormattedMessage, useIntl } = require('react-intl')
 const { Input } = require('./input')
+const { FileSelect } = require('./file')
 const { Select } = require('./select')
 const cx = require('classnames')
 const {
@@ -77,7 +78,8 @@ class FormElement extends React.PureComponent {
     const { hasLabel, offset } = this
 
     return (
-      <FormGroup isCompact={this.props.isCompact}>
+      <FormGroup
+        isCompact={this.props.isCompact}>
         {hasLabel &&
           <Label
             id={this.props.id}
@@ -85,7 +87,9 @@ class FormElement extends React.PureComponent {
             title={this.props.title}
             value={this.props.label}/>}
         <div className={
-          cx(`col-${this.props.size}`, { [`col-offset-${offset}`]: !hasLabel })
+          cx(`col-${this.props.size}`,
+            this.props.className,
+            { [`col-offset-${offset}`]: !hasLabel })
         }>
           {this.props.children}
         </div>
@@ -95,6 +99,7 @@ class FormElement extends React.PureComponent {
 
   static propTypes = {
     children: node,
+    className: string,
     id: string,
     title: string,
     label: string,
@@ -109,12 +114,22 @@ class FormElement extends React.PureComponent {
 
 
 class FormField extends React.PureComponent {
-  reset() {
-    if (this.input != null) this.input.reset()
+  input = React.createRef()
+
+  get InputComponent() {
+    switch (this.props.type) {
+      case 'file':
+      case 'directory':
+        return FileSelect
+      default:
+        return Input
+    }
   }
 
-  setInput = (input) => {
-    this.input = input
+  reset() {
+    if (this.input.current != null) {
+      this.input.current.reset()
+    }
   }
 
   handleBlur = (event) => {
@@ -134,6 +149,8 @@ class FormField extends React.PureComponent {
   }
 
   render() {
+    let { InputComponent } = this
+
     return (
       <FormElement
         id={this.props.id}
@@ -141,20 +158,11 @@ class FormField extends React.PureComponent {
         label={this.props.label}
         title={this.props.title}
         isCompact={this.props.isCompact}>
-        <Input
-          ref={this.setInput}
-          id={this.props.id}
+        <InputComponent
+          {...this.props}
+          ref={this.input}
           className="form-control"
-          max={this.props.max}
-          min={this.props.min}
-          name={this.props.name}
-          placeholder={this.props.placeholder}
-          tabIndex={this.props.tabIndex}
-          type={this.props.type}
           value={this.props.value || ''}
-          isDisabled={this.props.isDisabled}
-          isReadOnly={this.props.isReadOnly}
-          isRequired={this.props.isRequired}
           onBlur={this.handleBlur}
           onChange={this.handleChange}
           onCommit={this.handleCommit}/>
@@ -204,6 +212,7 @@ const FormSelect = (props) => {
       <Select
         id={props.id}
         isDisabled={props.isDisabled}
+        isInputHidden={props.isInputHidden}
         isRequired={props.isRequired}
         isSelectionHidden={props.isSelectionHidden}
         name={props.name}
@@ -221,6 +230,7 @@ FormSelect.propTypes = {
   id: string.isRequired,
   isCompact: bool,
   isDisabled: bool,
+  isInputHidden: bool,
   isRequired: bool,
   isSelectionHidden: bool,
   name: string.isRequired,

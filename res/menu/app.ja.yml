@@ -35,10 +35,21 @@ ja:
             - label: リストを削除
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: 写真をインポートする
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: インポート
+          submenu:
+            - label: Photos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Folder…
+              command: 'app:import-directory'
+              condition: project
+        - label: エクスポート
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
+        - type: separator
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
           condition: project
@@ -243,14 +254,24 @@ ja:
             - label: リストを削除
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: 写真をインポートする
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: インポート
+          submenu:
+            - label: Photos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Folder…
+              command: 'app:import-directory'
+              condition: project
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: エクスポート
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
         - label: プリント
           command: 'app:print'
           accelerator: CmdOrCtrl+P
@@ -430,10 +451,21 @@ ja:
             - label: リストを削除
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: 写真をインポートする
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: インポート
+          submenu:
+            - label: Photos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Folder…
+              command: 'app:import-directory'
+              condition: project
+        - label: エクスポート
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
+        - type: separator
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
           condition: project

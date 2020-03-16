@@ -161,7 +161,7 @@
         <key>public.filename-extension</key>
         <string>tpy</string>
         <key>public.mime-type</key>
-        <string>application-vnd.tropy.tpy</string>
+        <string>application/vnd.tropy.tpy</string>
       </dict>
     </dict>
     <dict>
@@ -182,7 +182,7 @@
         <key>public.filename-extension</key>
         <string>ttp</string>
         <key>public.mime-type</key>
-        <string>application-vnd.tropy.ttp</string>
+        <string>application/vnd.tropy.ttp</string>
       </dict>
     </dict>
 	</array>

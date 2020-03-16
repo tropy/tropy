@@ -35,7 +35,7 @@ const error = ({ stack }) =>
         .join('\n')) : ''
 
 const meta = log =>
-  log.meta.rel ?
+  log.meta.was ?
     `#${log.meta.seq}(${log.meta.rel}) Δ${ms(log.meta.now - log.meta.was)}` :
     `#${log.meta.seq}`
 

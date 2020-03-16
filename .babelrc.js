@@ -6,7 +6,9 @@ const plugins = [
 ]
 
 if (process.env.COVERAGE) {
-  plugins.push('istanbul')
+  plugins.push(['istanbul', {
+    coverageVariable: '__coverage__'
+  }])
 }
 
 module.exports = {

@@ -345,9 +345,21 @@ const util = {
     return into
   },
 
+  morph(src, fn, into = {}) {
+    for (let prop in src) {
+      if (util.own(src, prop)) {
+        into = fn(into, prop, src[prop], src) || into
+      }
+    }
+
+    return into
+  },
+
   noop() {},
 
   identity(payload) { return payload },
+
+  tautology() { return true },
 
   delay(ms) {
     return new Promise(resolve => setTimeout(() => void resolve(), ms))
@@ -485,14 +497,6 @@ const util = {
     }
 
     return true
-  },
-
-  groupBy(array, key) {
-    return array.reduce((acc, obj) => {
-      acc[obj[key]] = acc[obj[key]] || []
-      acc[obj[key]].push(obj)
-      return acc
-    }, {})
   },
 
   URI: {

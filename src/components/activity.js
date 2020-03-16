@@ -1,17 +1,25 @@
 'use strict'
 
+const { isFunction } = require('util')
 const React = require('react')
 const { IconSpin, IconXSmall } = require('./icons')
 const { FormattedMessage } = require('react-intl')
 const cx = require('classnames')
 const { ACTIVITY } = require('../constants/sass')
-const { arrayOf, shape, string, number, func } = require('prop-types')
+const { arrayOf, bool, shape, string, number, func } = require('prop-types')
 const { Button } = require('./button')
 
 
-const Activity = ({ type, progress, total, onCancel }) => {
-  let hasProgressBar = (progress != null || !isNaN(progress))
-  let hasCancelButton = false
+const Activity = ({
+  id,
+  type,
+  progress,
+  total,
+  canCancel,
+  onCancel
+}) => {
+  let hasProgressBar = (progress !== null && !isNaN(progress))
+  let hasCancelButton = canCancel && isFunction(onCancel)
 
   return (
     <div className={cx('activity', { type })}>
@@ -24,7 +32,9 @@ const Activity = ({ type, progress, total, onCancel }) => {
               values={{ progress, total, hasProgressBar }}/>
           </div>
           {hasCancelButton &&
-            <Button icon={<IconXSmall/>} onClick={onCancel}/>}
+            <Button
+              icon={<IconXSmall/>}
+              onClick={() => onCancel(id)}/>}
         </div>
         {hasProgressBar &&
           <div className="flex-row center">
@@ -37,7 +47,9 @@ const Activity = ({ type, progress, total, onCancel }) => {
 }
 
 Activity.propTypes = {
+  canCancel: bool,
   type: string.isRequired,
+  id: number.isRequired,
   progress: number,
   total: number,
   onCancel: func
@@ -89,12 +101,15 @@ class ActivityPane extends React.PureComponent {
       <div
         className={cx('activity-pane', { busy })}
         style={{ height }}>
-        {activities.map(({ id, type, progress, total }) =>
+        {activities.map(({ id, cancel, type, progress, total }) =>
           <Activity
             key={id}
+            id={id}
             type={type}
             progress={progress}
-            total={total}/>)}
+            total={total}
+            canCancel={cancel}
+            onCancel={this.props.onCancel}/>)}
       </div>
     )
   }
@@ -106,13 +121,15 @@ class ActivityPane extends React.PureComponent {
   static propTypes = {
     activities: arrayOf(shape({
       id: number.isRequired,
+      cancel: bool,
       type: string.isRequired,
       init: number.isRequired,
       progress: number,
       total: number
     })).isRequired,
 
-    delay: number.isRequired
+    delay: number.isRequired,
+    onCancel: func.isRequired
   }
 
   static defaultProps = {

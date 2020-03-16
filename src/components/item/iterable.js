@@ -1,9 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { DragSource, DropTarget, getEmptyImage } = require('../dnd')
+const { DND, DragSource, DropTarget, getEmptyImage } = require('../dnd')
 const { compose, map, filter, into } = require('transducers.js')
-const { DND } = require('../../constants')
 const { isMeta } = require('../../keymap')
 const { pure } = require('../util')
 

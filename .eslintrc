@@ -60,6 +60,7 @@ rules:
   no-unneeded-ternary: 2
   no-unreachable: 2
   no-useless-concat: 2
+  no-unsafe-finally: 0
   object-curly-spacing: [2, 'always']
   operator-linebreak: [2, 'after']
   quote-props: [2, 'consistent-as-needed']

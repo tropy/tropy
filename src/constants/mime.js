@@ -1,6 +1,9 @@
 'use strict'
 
 module.exports = {
+  TPY: 'application/vnd.tropy.tpy',
+  TTP: 'application/vnd.tropy.ttp',
+
   GIF: 'image/gif',
   HEIC: 'image/heic',
   HEIC_SEQ: 'image/heic-sequence',

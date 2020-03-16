@@ -105,11 +105,14 @@
     justify-content: center;
     align-items: center;
     border-top: 1px solid $item-table-header-border-color;
-    margin: 0 $space-min;
     position: relative;
 
     &.over {
       @extend %drop-target;
+    }
+
+    .scrollbar-style-old-school & {
+      margin-right: $space-min;
     }
 
     .no-items-illustration {

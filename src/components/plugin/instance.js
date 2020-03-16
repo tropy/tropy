@@ -46,6 +46,7 @@ class PluginInstance extends PureComponent {
             <PluginOption
               key={spec.field}
               spec={spec}
+              templates={this.props.templates}
               value={get(this.props.config.options, spec.field, spec.default)}
               onChange={this.handleOptionsChange}/>)}
         </fieldset>
@@ -67,6 +68,7 @@ class PluginInstance extends PureComponent {
       name: string,
       options: object
     }).isRequired,
+    templates: object.isRequired,
     onRemove: func.isRequired,
     onInsert: func.isRequired,
     onChange: func.isRequired,

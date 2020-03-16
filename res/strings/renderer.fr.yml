@@ -61,6 +61,9 @@ fr:
     cds:
       title: Corporation for Digital Scholarship
       url: 'http://digitalscholar.org'
+    c2dh:
+      title: Luxembourg Centre for Contemporary and Digital History
+      url: 'https://www.c2dh.uni.lu'
     text: >
       Tropy est conçu par le {rrchnm}, une équipe qui crée des ressources pour
       l'enseignement de l'histoire, des expositions numériques, et des logiciels
@@ -101,6 +104,14 @@ fr:
           light: Lumineux
           dark: Sombre
           system: Suit les préférences système
+        font:
+          size: Font size
+          sizes:
+            12px: Very Small
+            13px: Small (Default)
+            14px: Medium
+            15px: Large
+            16px: Very Large
       print:
         mode: Imprimer
         modes:
@@ -120,6 +131,7 @@ fr:
           fr: Français
           it: Italiano
           ja: 日本語
+          pt: Português
       templates:
         label: Modèles de saisie par défaut
         item: Objet
@@ -259,6 +271,9 @@ fr:
   select:
     column:
       placeholder: Recherche
+    file:
+      browse: Browse
+      clear: Clear
   template:
     id: URI
     name: Nom

@@ -1,5 +1,7 @@
 'use strict'
 
+require('../commands/ontology')
+
 const { debug, warn } = require('../common/log')
 const { CLOSE } = require('../constants/prefs')
 const { ontology } = require('./ontology')
@@ -9,7 +11,7 @@ const { shell } = require('./shell')
 const storage = require('./storage')
 
 const {
-  all, call, cancel, cancelled, fork, take
+  all, call, cancel, delay, fork, take
 } = require('redux-saga/effects')
 
 module.exports = {
@@ -23,6 +25,8 @@ module.exports = {
         fork(ipc),
         fork(shell)
       ])
+
+      aux.START = Date.now()
 
       yield all([
         call(storage.restore, 'prefs'),
@@ -41,9 +45,16 @@ module.exports = {
         call(storage.persist, 'settings')
       ])
 
-      if (!(yield cancelled())) {
-        yield all(aux.map(t => cancel(t)))
+      // HACK: Ensure we don't cancel aux tasks too early!
+      if (Date.now() - aux.START < 1000) {
+        yield delay(1000)
       }
+
+      yield cancel(aux)
+
+      // HACK: We cannot wait for cancelled tasks to complete.
+      // See redux-saga#1242
+      yield delay(200)
 
       debug('*prefs.main terminated')
     }

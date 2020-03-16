@@ -10,16 +10,7 @@ const subject = require('./subject')
 const { into, select, update } = require('../common/query')
 const { normalize } = require('../common/os')
 const { blank, empty, pick } = require('../common/util')
-
-const COLUMNS = [
-  'checksum',
-  'color',
-  'density',
-  'mimetype',
-  'orientation',
-  'path',
-  'size'
-]
+const { props } = require('../common/export')
 
 const skel = (id, selections = [], notes = []) => ({
   id, selections, notes
@@ -27,16 +18,19 @@ const skel = (id, selections = [], notes = []) => ({
 
 module.exports = {
   async create(db, { base, template }, { item, image, data, position }) {
-    let { protocol, path, width, height, ...meta } = image.toJSON()
+    let { protocol = 'file', path, ...meta } = image
     let { id } = await db.run(
-      ...into('subjects').insert({ template: template })
+      ...into('subjects').insert({ template })
     )
 
     if (base != null && protocol === 'file') {
       path = relative(base, path)
     }
 
-    await db.run(...into('images').insert({ id, width, height }))
+    await db.run(...into('images').insert({
+      id,
+      ...pick(meta, props.image)
+    }))
 
     await all([
       db.run(...into('photos').insert({
@@ -45,7 +39,7 @@ module.exports = {
         path,
         position,
         protocol,
-        ...meta
+        ...pick(meta, props.photo)
       })),
 
       metadata.update(db, { id, data })
@@ -55,7 +49,7 @@ module.exports = {
   },
 
   async save(db, { id, timestamp, ...data }, { base } = {}) {
-    let photo = pick(data, COLUMNS)
+    let photo = pick(data, props.photo)
     let image = pick(data, ['width', 'height'])
 
     assert(id != null, 'missing photo id')
@@ -232,13 +226,17 @@ module.exports = {
   async rebase(db, base, oldBase) {
     let delta = []
 
-    await db.each(select('id', 'path').from('photos').query, ({ id, path }) => {
-      let oldPath = oldBase ? resolve(oldBase, normalize(path)) : path
-      let newPath = base ? relative(base, oldPath) : oldPath
-      if (newPath !== path) {
-        delta.push({ id, path: newPath })
-      }
-    })
+    await db.each(
+      ...select('id', 'path')
+        .from('photos')
+        .where({ protocol: 'file' }),
+        ({ id, path }) => {
+          let oldPath = oldBase ? resolve(oldBase, normalize(path)) : path
+          let newPath = base ? relative(base, oldPath) : oldPath
+          if (newPath !== path) {
+            delta.push({ id, path: newPath })
+          }
+        })
 
     await bb.map(delta, ({ id, path }) => db.run(
       ...update('photos').set({ path }).where({ id })

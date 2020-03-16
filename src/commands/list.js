@@ -10,18 +10,16 @@ const mod = require('../models/list')
 
 
 class Load extends Command {
-  static get ACTION() { return LIST.LOAD }
-
   *exec() {
     const { db } = this.options
     return (yield call(mod.all, db))
   }
 }
 
+Load.register(LIST.LOAD)
+
 
 class Create extends Command {
-  static get ACTION() { return LIST.CREATE }
-
   *exec() {
     const { payload } = this.action
     const { db } = this.options
@@ -41,9 +39,10 @@ class Create extends Command {
   }
 }
 
-class Save extends Command {
-  static get ACTION() { return LIST.SAVE }
+Create.register(LIST.CREATE)
 
+
+class Save extends Command {
   *exec() {
     const { payload } = this.action
     const { db } = this.options
@@ -63,10 +62,10 @@ class Save extends Command {
   }
 }
 
+Save.register(LIST.SAVE)
+
 
 class Delete extends Command {
-  static get ACTION() { return LIST.DELETE }
-
   *exec() {
     const { payload: id } = this.action
     const { db } = this.options
@@ -91,10 +90,10 @@ class Delete extends Command {
   }
 }
 
+Delete.register(LIST.DELETE)
+
 
 class Restore extends Command {
-  static get ACTION() { return LIST.RESTORE }
-
   *exec() {
     const { db } = this.options
     const { idx } = this.action.meta
@@ -114,9 +113,10 @@ class Restore extends Command {
   }
 }
 
-class Move extends Command {
-  static get ACTION() { return LIST.MOVE }
+Restore.register(LIST.RESTORE)
 
+
+class Move extends Command {
   *exec() {
     let { db } = this.options
     let list = this.action.payload
@@ -158,9 +158,10 @@ class Move extends Command {
   }
 }
 
-class AddItems extends Command {
-  static get ACTION() { return LIST.ITEM.ADD }
+Move.register(LIST.MOVE)
 
+
+class AddItems extends Command {
   *exec() {
     let { db } = this.options
     let { id, items } = this.action.payload
@@ -175,9 +176,10 @@ class AddItems extends Command {
   }
 }
 
-class RemoveItems extends Command {
-  static get ACTION() { return LIST.ITEM.REMOVE }
+AddItems.register(LIST.ITEM.ADD)
 
+
+class RemoveItems extends Command {
   *exec() {
     let { db } = this.options
     let { id, items } = this.action.payload
@@ -190,9 +192,10 @@ class RemoveItems extends Command {
   }
 }
 
-class RestoreItems extends Command {
-  static get ACTION() { return LIST.ITEM.RESTORE }
+RemoveItems.register(LIST.ITEM.REMOVE)
 
+
+class RestoreItems extends Command {
   *exec() {
     let { db } = this.options
     let { id, items } = this.action.payload
@@ -204,6 +207,8 @@ class RestoreItems extends Command {
     return { id, items }
   }
 }
+
+RestoreItems.register(LIST.ITEM.RESTORE)
 
 
 module.exports = {

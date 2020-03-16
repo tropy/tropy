@@ -19,10 +19,6 @@ const SUPPORTED = {
   [MIME.WEBP]: true
 }
 
-const isImageSupported = (file) =>
-  (typeof file === 'string') ? SUPPORTED[file] : SUPPORTED[file.type]
-
-
 module.exports = {
   MIN_DENSITY: 1,
   MAX_DENSITY: 1200,
@@ -57,6 +53,5 @@ module.exports = {
     [MIME.SVG]: true
   },
 
-  SUPPORTED,
-  isImageSupported
+  SUPPORTED
 }

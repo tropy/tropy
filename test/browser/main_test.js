@@ -11,12 +11,13 @@ describe('main process', () => {
   const args = __require('browser/args')
   const argv = process.argv
 
+  const { qualified } = __require('common/release')
+
   before(() => {
     process.argv = ['tropy', 'file.tpy']
     sinon.stub(process, 'on').returns(process)
     sinon.spy(args, 'parse')
     sinon.spy(app, 'whenReady')
-    sinon.stub(app, 'setName')
     sinon.stub(app, 'setPath')
     sinon.stub(app, 'requestSingleInstanceLock').returns(true)
     sinon.stub(app, 'on').returns(app)
@@ -32,7 +33,6 @@ describe('main process', () => {
     args.parse.restore()
     app.on.restore()
     app.requestSingleInstanceLock.restore()
-    app.setName.restore()
     app.setPath.restore()
     app.whenReady.restore()
   })
@@ -45,7 +45,7 @@ describe('main process', () => {
     })
 
     it('sets the app name', () => {
-      expect(app.setName).to.have.been.called
+      expect(app.name).to.equal(qualified.product)
     })
 
     it('sets the data paths', () => {

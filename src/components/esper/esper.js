@@ -137,8 +137,7 @@ class Esper extends React.PureComponent {
     return ['esper', this.state.tool, {
       'overlay-mode': this.props.hasOverlayToolbar,
       'panel-visible': this.props.isPanelVisible,
-      'tab-focus': this.state.hasTabFocus,
-      'nested-focus': this.state.hasNestedFocus
+      'tab-focus': this.state.hasTabFocus
     }]
   }
 
@@ -345,14 +344,6 @@ class Esper extends React.PureComponent {
     this.setState({ isVisible: false })
     this.view.stop()
     this.view.stop.flush()
-  }
-
-  handleNestedBlur = () => {
-    this.setState({ hasNestedFocus: false })
-  }
-
-  handleNestedFocus = () => {
-    this.setState({ hasNestedFocus: true })
   }
 
   handleResize = throttle((rect) => {
@@ -750,8 +741,6 @@ class Esper extends React.PureComponent {
             gamma={this.state.gamma}
             isDisabled={isDisabled}
             isVisible={this.props.isPanelVisible}
-            onBlur={this.handleNestedBlur}
-            onFocus={this.handleNestedFocus}
             onChange={this.handleColorChange}
             onRevert={this.handleRevertToOriginal}/>
         </div>

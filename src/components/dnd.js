@@ -1,7 +1,5 @@
 'use strict'
 
-const { refine } = require('../common/util')
-
 const {
   DndProvider,
   DragLayer,
@@ -15,59 +13,42 @@ const {
   getEmptyImage
 } = require('react-dnd-html5-backend-cjs')
 
-const NativeDragSources =
-  require('react-dnd-html5-backend-cjs/lib/NativeDragSources')
+const {
+  MIME
+} = require('../constants')
 
-
-let currentDataTransfer
-
-refine(NativeDragSources,
-  'createNativeDragSource',
-  (_, dragSource) => {
-    if (currentDataTransfer) {
-      dragSource.mutateItemByReadingDataTransfer(currentDataTransfer)
-      dragSource.item.types =
-        Array.from(currentDataTransfer.items, (item) => item.type)
-    }
-
-    return dragSource
-  })
-
-const ElectronBackend = (...args) => {
-  let backend = createHTML5Backend(...args)
-
-  let {
-    handleTopDragEnterCapture,
-    handleTopDragStartCapture
-  } = backend
-
-  backend.handleTopDragEnterCapture = (event) => {
-    try {
-      currentDataTransfer = event.dataTransfer
-      return handleTopDragEnterCapture.call(backend, event)
-    } finally {
-      currentDataTransfer = null
-    }
+const DND = {
+  ...NativeTypes,
+  FIELD: 'field',
+  ITEMS: 'items',
+  LIST: 'list',
+  PHOTO: 'photo',
+  SELECTION: 'selection',
+  TEMPLATE: {
+    FIELD: 'template.field'
   }
-
-  backend.handleTopDragStartCapture = (event) => {
-    try {
-      currentDataTransfer = event.dataTransfer
-      return handleTopDragStartCapture.call(backend, event)
-    } finally {
-      currentDataTransfer = null
-    }
-  }
-
-  return backend
 }
 
+const isProjectOrTemplateFile = ({ kind, type }) =>
+  kind === 'file' && (MIME.TPY === type || MIME.TTP === type)
+
+const hasProjectFiles = (monitor) =>
+  !!Array.from(monitor.getItem().items || []).find(isProjectOrTemplateFile)
+
+// Subtle: we assume that there are photo files, if we don't see
+// any project files. This is because we cannot reliably see all
+// files (e.g., in a directory) before the drop event.
+const hasPhotoFiles = (monitor) =>
+  !hasProjectFiles(monitor)
+
 module.exports = {
+  DND,
   DndProvider,
   DragLayer,
   DragSource,
   DropTarget,
-  ElectronBackend,
-  NativeTypes,
-  getEmptyImage
+  ElectronBackend: createHTML5Backend,
+  getEmptyImage,
+  hasProjectFiles,
+  hasPhotoFiles
 }

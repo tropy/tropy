@@ -2,8 +2,7 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { ImportCommand } = require('./import')
-const { SaveCommand } = require('./subject')
+const subject = require('./subject')
 const { Image } = require('../image')
 const mod = require('../models')
 const act = require('../actions')
@@ -17,11 +16,9 @@ const {
 } = require('../selectors')
 
 
-class Create extends ImportCommand {
-  static get ACTION() { return SELECTION.CREATE }
-
+class Create extends Command {
   *exec() {
-    let { db } = this.options
+    let { cache, db } = this.options
     let { payload, meta } = this.action
 
     let [photo, template, density] = yield select(state => ([
@@ -35,7 +32,10 @@ class Create extends ImportCommand {
       density: photo.density || density
     })
 
-    let idx = (meta.idx != null) ? meta.idx : [photo.selections.length]
+    let idx = (meta.idx != null) ?
+      meta.idx :
+      [photo.selections.length]
+
     let data = getTemplateValues(template)
 
     let selection = yield call(db.transaction, tx =>
@@ -45,22 +45,36 @@ class Create extends ImportCommand {
         ...payload
       }))
 
-    yield* this.createThumbnails(selection.id, image, { selection })
+    yield call(cache.consolidate, selection.id, image, {
+      selection
+    })
 
-    let common = { selections: [selection.id] }
+    let selections = [selection.id]
+    let position = { idx }
 
-    yield put(act.photo.selections.add({ id: photo.id, ...common }, { idx }))
+    yield put(act.photo.selections.add({
+      id: photo.id,
+      selections
+    }, position))
 
-    this.undo = act.selection.delete({ photo: photo.id, ...common }, { idx })
-    this.redo = act.selection.restore({ photo: photo.id, ...common }, { idx })
+    this.undo = act.selection.delete({
+      photo: photo.id,
+      selections
+    }, position)
+
+    this.redo = act.selection.restore({
+      photo: photo.id,
+      selections
+    }, position)
 
     return selection
   }
 }
 
-class Delete extends Command {
-  static get ACTION() { return SELECTION.DELETE }
+Create.register(SELECTION.CREATE)
 
+
+class Delete extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -82,9 +96,10 @@ class Delete extends Command {
   }
 }
 
-class Load extends Command {
-  static get ACTION() { return SELECTION.LOAD }
+Delete.register(SELECTION.DELETE)
 
+
+class Load extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -96,9 +111,10 @@ class Load extends Command {
   }
 }
 
-class Order extends Command {
-  static get ACTION() { return SELECTION.ORDER }
+Load.register(SELECTION.LOAD)
 
+
+class Order extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -113,9 +129,10 @@ class Order extends Command {
   }
 }
 
-class Restore extends Command {
-  static get ACTION() { return SELECTION.RESTORE }
+Order.register(SELECTION.ORDER)
 
+
+class Restore extends Command {
   *exec() {
     const { db } = this.options
     const { payload, meta } = this.action
@@ -140,9 +157,10 @@ class Restore extends Command {
   }
 }
 
-class Save extends Command {
-  static get ACTION() { return SELECTION.SAVE }
+Restore.register(SELECTION.RESTORE)
 
+
+class Save extends Command {
   *exec() {
     const { db } = this.options
     const { payload, meta } = this.action
@@ -160,11 +178,14 @@ class Save extends Command {
   }
 }
 
-class TemplateChange extends SaveCommand {
-  static get ACTION() { return SELECTION.TEMPLATE.CHANGE }
-  get type() { return 'selection' }
+Save.register(SELECTION.SAVE)
+
+
+class TemplateChange extends subject.Save {
+  type = 'selection'
 }
 
+TemplateChange.register(SELECTION.TEMPLATE.CHANGE)
 
 
 module.exports = {

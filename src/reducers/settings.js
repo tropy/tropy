@@ -19,6 +19,7 @@ const defaults = {
       localize: true
     }
   },
+  fontSize: ARGS.fontSize,
   layout: ITEM.LAYOUT.STACKED,
   locale: ARGS.locale,
   localtime: true,
@@ -53,6 +54,7 @@ module.exports = {
       case SETTINGS.RESTORE:
         return {
           ...merge(defaults, payload),
+          fontSize: ARGS.fontSize,
           theme: ARGS.theme,
           locale: ARGS.locale
         }

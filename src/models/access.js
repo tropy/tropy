@@ -18,6 +18,14 @@ module.exports = {
     )
   },
 
+  async touch(db) {
+    return db.run(`
+      INSERT INTO access (uuid, version, path, closed)
+        VALUES (?, ?, ?, datetime("now"))`,
+      ARGS.uuid, ARGS.version, db.path
+    )
+  },
+
   prune(db) {
     return db.run(`
       DELETE FROM access

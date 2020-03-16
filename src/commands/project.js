@@ -10,10 +10,6 @@ const mod = require('../models')
 
 
 class Optimize extends Command {
-  static get ACTION() {
-    return PROJECT.OPTIMIZE
-  }
-
   *exec() {
     let { db } = this.options
 
@@ -23,9 +19,10 @@ class Optimize extends Command {
   }
 }
 
-class Rebase extends Command {
-  static get ACTION() { return PROJECT.REBASE }
+Optimize.register(PROJECT.OPTIMIZE)
 
+
+class Rebase extends Command {
   *exec() {
     let { db, id } = this.options
     let { project } = yield select()
@@ -43,11 +40,10 @@ class Rebase extends Command {
   }
 }
 
-class Reindex extends Command {
-  static get ACTION() {
-    return PROJECT.REINDEX
-  }
+Rebase.register(PROJECT.REBASE)
 
+
+class Reindex extends Command {
   *exec() {
     let { meta } = this.action
     let { db } = this.options
@@ -59,9 +55,10 @@ class Reindex extends Command {
   }
 }
 
-class Save extends Command {
-  static get ACTION() { return PROJECT.SAVE }
+Reindex.register(PROJECT.REINDEX)
 
+
+class Save extends Command {
   *exec() {
     let { payload } = this.action
     let { db, id } = this.options
@@ -83,6 +80,9 @@ class Save extends Command {
     this.undo = act.project.save(original)
   }
 }
+
+Save.register(PROJECT.SAVE)
+
 
 module.exports = {
   Optimize,

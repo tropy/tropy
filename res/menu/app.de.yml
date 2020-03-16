@@ -35,10 +35,21 @@ de:
             - label: Einträge löschen
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Fotos importieren …
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importieren
+          submenu:
+            - label: Fotos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Ordner…
+              command: 'app:import-directory'
+              condition: project
+        - label: Exportieren
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
+        - type: separator
         - label: Fotos konsolidieren
           command: 'app:consolidate-photo-library'
           condition: project
@@ -243,14 +254,24 @@ de:
             - label: Einträge löschen
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Fotos importieren …
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importieren
+          submenu:
+            - label: Fotos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Ordner…
+              command: 'app:import-directory'
+              condition: project
         - label: Fotos konsolidieren
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
+        - label: Exportieren
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
         - label: Drucken
           command: 'app:print'
           accelerator: CmdOrCtrl+P
@@ -430,10 +451,21 @@ de:
             - label: Einträge löschen
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Fotos importieren …
-          command: 'app:import'
-          accelerator: CmdOrCtrl+Shift+I
-          condition: project
+        - label: Importieren
+          submenu:
+            - label: Fotos…
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: Ordner…
+              command: 'app:import-directory'
+              condition: project
+        - label: Exportieren
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
+        - type: separator
         - label: Fotos konsolidieren
           command: 'app:consolidate-photo-library'
           condition: project

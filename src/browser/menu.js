@@ -211,7 +211,7 @@ class Menu {
               ...plugins.map(({ id, name }) => ({
                 label: name,
                 click: this.responder('app:export-item', win, {
-                  target: event.target,
+                  target: event?.target,
                   plugin: id
                 })
               }))

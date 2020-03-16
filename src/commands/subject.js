@@ -9,13 +9,11 @@ const mod = require('../models')
 const act = require('../actions')
 
 
-class SaveCommand extends Command {
+class Save extends Command {
+  type = 'item'
+
   get isUndo() {
     return Array.isArray(this.action.payload)
-  }
-
-  get type() {
-    return 'item'
   }
 
   *getOriginals(ids, props) {
@@ -116,5 +114,5 @@ class SaveCommand extends Command {
 }
 
 module.exports = {
-  SaveCommand
+  Save
 }

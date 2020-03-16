@@ -44,10 +44,12 @@ class Window extends EventEmitter {
     this.state = pick(opts, [
       'aqua',
       'data',
+      'fontSize',
       'frameless',
       'scrollbars',
       'theme',
       'dark',
+      'constrast',
       'maximizable',
       'minimizable'
     ])
@@ -81,6 +83,7 @@ class Window extends EventEmitter {
           toggle(document.body, aqua, true)
 
         this.setScrollBarStyle()
+        this.setFontSize()
 
         if (frameless) {
           toggle(document.body, 'frameless', true)
@@ -126,6 +129,14 @@ class Window extends EventEmitter {
     ]
   }
 
+  setFontSize(fontSize = this.state.fontSize) {
+    this.state.fontSize = fontSize
+
+    if (this.type !== 'print') {
+      document.documentElement.style.fontSize = fontSize
+    }
+  }
+
   setScrollBarStyle(scrollbars = this.state.scrollbars) {
     this.state.scrollbars = scrollbars
     toggle(document.body, 'scrollbar-style-old-school', scrollbars)
@@ -137,11 +148,15 @@ class Window extends EventEmitter {
         this.toggle(state)
         this.emit(state)
       })
-      .on('theme', (_, theme, dark) => {
-        args.update({ theme, dark })
-        this.state.theme = theme
-        this.state.dark = dark
+      .on('theme', (_, theme, { dark, contrast } = {}) => {
+        args.update({ theme, dark, contrast })
+        Object.assign(this.state, { theme, dark, contrast })
         this.style(true)
+      })
+      .on('fontSize', (_, fontSize) => {
+        args.update({ fontSize })
+        this.setFontSize(fontSize)
+        this.emit('settings.update', { fontSize })
       })
       .on('recent', (_, recent) => {
         args.update({ recent })

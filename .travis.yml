@@ -32,10 +32,10 @@ matrix:
             - liborc-0.4-0
             - g++-7
     - os: osx
-      osx_image: xcode9.3
+      osx_image: xcode11.2
       compiler: clang
     - os: osx
-      osx_image: xcode11.2
+      osx_image: xcode9.3
       compiler: clang
 before_install:
   - rm -rf $HOME/.npm/_libvips
@@ -60,8 +60,7 @@ script:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
       npm run coverage;
     else
-      npm run test:renderer;
-      npm run test:main;
+      npm test;
     fi
 after_success:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then

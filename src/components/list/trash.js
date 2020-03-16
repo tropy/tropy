@@ -4,8 +4,7 @@ const React = require('react')
 const cx = require('classnames')
 const { IconTrash } = require('../icons')
 const { FormattedMessage } = require('react-intl')
-const { DropTarget } = require('../dnd')
-const { DND } = require('../../constants')
+const { DND, DropTarget } = require('../dnd')
 const { bool, func } = require('prop-types')
 
 
@@ -32,7 +31,9 @@ class TrashListNode extends React.PureComponent {
         <div className="list-node-container">
           <IconTrash/>
           <div className="name">
-            <FormattedMessage id="sidebar.trash"/>
+            <div className="truncate">
+              <FormattedMessage id="sidebar.trash"/>
+            </div>
           </div>
         </div>
       </li>

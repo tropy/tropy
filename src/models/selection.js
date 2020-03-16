@@ -1,6 +1,8 @@
 'use strict'
 
-const { empty, list } = require('../common/util')
+const { empty, list, pick } = require('../common/util')
+const { props } = require('../common/export')
+const { into } = require('../common/query')
 const { all } = require('bluebird')
 const { assign } = Object
 
@@ -67,23 +69,23 @@ const mod = {
         photo,
         x,
         y,
-        width,
-        height,
-        angle,
-        mirror,
-        data
+        position,
+        data,
+        ...image
       }) {
-      const { id } = await db.run(`
-        INSERT INTO subjects (template) VALUES (?)`,
-        template)
+      const { id } = await db.run(
+        ...into('subjects').insert({ template }))
 
-      await db.run(`
-        INSERT INTO images (id, width, height, angle, mirror)
-          VALUES (?,?,?,?,?)`, [id, width, height, angle, mirror])
+      await db.run(
+        ...into('images').insert({ id, ...pick(image, props.image) }))
 
-      await db.run(`
-        INSERT INTO selections (id, photo_id, x, y)
-          VALUES (?,?,?,?)`, [id, photo, x, y])
+      await db.run(...into('selections').insert({
+        id,
+        photo_id: photo,
+        position,
+        x,
+        y
+      }))
 
       if (!empty(data)) {
         await mod.metadata.update(db, { id, data })

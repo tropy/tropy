@@ -1,16 +1,16 @@
 'use strict'
 
-const { basename } = require('path')
-const { debug, warn } = require('../common/log')
+const { basename, extname } = require('path')
 const { DuplicateError } = require('../common/error')
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const mod = require('../models')
 const act = require('../actions')
+const dir = require('../common/dir')
 const { pick } = require('../common/util')
-const { prompt } = require('../dialog')
+const { open, prompt } = require('../dialog')
 const { Image } = require('../image')
-const { DC, TERMS } = require('../constants')
+const { DC, TERMS, IMAGE } = require('../constants')
 const { date, text } = require('../value')
 
 const {
@@ -18,8 +18,63 @@ const {
   getTemplateProperties
 } = require('../selectors')
 
-
 class ImportCommand extends Command {
+  static *consolidate(cache, image, photos, { overwrite = true } = {}) {
+    while (!image.done) {
+      let photo = photos[image.page]
+
+      yield call(cache.consolidate, photo, image, {
+        overwrite
+      })
+
+      yield put(act.photo.update({
+        id: photo,
+        broken: false,
+        consolidated: Date.now(),
+        consolidating: false
+      }))
+
+      image.next()
+    }
+  }
+
+  async promptForFilesToImport(type) {
+    try {
+      this.suspend()
+      switch (type) {
+        case 'dir':
+          return open.dir()
+        case 'items':
+          return open.items()
+        default:
+          return open.images()
+      }
+    } finally {
+      this.resume()
+    }
+  }
+
+  canImportFile = (file) => (
+    IMAGE.EXT.includes(extname(file.name).slice(1).toLowerCase())
+  )
+
+  getFilesToImport = async () => {
+    let { payload, meta } = this.action
+    let { files = [], urls = [] } = payload
+
+    if (!files.length && !urls.length && meta.prompt)
+      files = await this.promptForFilesToImport(meta.prompt)
+
+    let json = files.filter(f => (/^\.json(ld)?$/i).test(extname(f)))
+
+    let images = await dir.expand(files, {
+      filter: this.canImportFile,
+      recursive: true
+    })
+
+    return [...json, ...images, ...urls]
+  }
+
   *openImage(path) {
     let settings = yield select(state => state.settings)
 
@@ -63,45 +118,6 @@ class ImportCommand extends Command {
     }
 
     return data
-  }
-
-  *createThumbnails(id, image, {
-    overwrite = true,
-    selection
-  } = {}) {
-    try {
-      let { cache } = this.options
-      let ext = cache.extname(image.mimetype)
-
-      for (let { name, size, quality } of image.variants(selection != null)) {
-        let path = cache.path(id, name, ext)
-
-        if (overwrite || !(yield call(cache.exists, path))) {
-          let dup = yield call(image.resize, size, selection)
-
-          switch (ext) {
-            case '.png':
-              dup.png()
-              break
-            case '.webp':
-              dup.webp({
-                quality,
-                lossless: image.channels === 1 || !image.isOpaque
-              })
-              break
-            default:
-              dup.jpeg({ quality })
-          }
-
-          yield call([dup, dup.toFile], cache.expand(path))
-
-        } else {
-          debug(`skipping ${name} thumbnail for #${id}: already exists`)
-        }
-      }
-    } catch (e) {
-      warn({ stack: e.stack }, 'failed to create thumbnail')
-    }
   }
 
   *isDuplicate(image) {
@@ -148,9 +164,6 @@ class ImportCommand extends Command {
     }
   }
 }
-
-
-
 
 module.exports = {
   ImportCommand

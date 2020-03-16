@@ -15,7 +15,7 @@ const StackLines = ({ count }) => (
   ))
 
 StackLines.propTypes = {
-  isStack: number
+  count: number
 }
 
 class CoverImage extends React.PureComponent {

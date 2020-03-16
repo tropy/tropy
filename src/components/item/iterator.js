@@ -20,6 +20,7 @@ class ItemIterator extends Iterator {
     on(document, 'global:next-item', this.handleNextItem)
     on(document, 'global:prev-item', this.handlePrevItem)
     on(document, 'global:forward', this.handleItemOpen)
+    on(window, 'copy', this.handleCopy)
   }
 
   componentWillUnmount() {
@@ -27,6 +28,7 @@ class ItemIterator extends Iterator {
     off(document, 'global:next-item', this.handleNextItem)
     off(document, 'global:prev-item', this.handlePrevItem)
     off(document, 'global:forward', this.handleItemOpen)
+    off(window, 'copy', this.handleCopy)
   }
 
   get tabIndex() {
@@ -111,6 +113,13 @@ class ItemIterator extends Iterator {
     }
   }
 
+  handleCopy = () => {
+    let sel = document.getSelection()
+    if (sel == null || !sel.toString()) {
+      this.handleItemCopy(this.props.selection)
+    }
+  }
+
   handleItemCopy(items) {
     if (!(this.props.isDisabled || blank(items))) {
       this.props.onItemExport(items, { target: ':clipboard:' })
@@ -163,9 +172,6 @@ class ItemIterator extends Iterator {
         break
       case 'all':
         this.props.onSelect({}, 'all')
-        break
-      case 'copy':
-        this.handleItemCopy(this.props.selection)
         break
       case 'merge':
         this.handleItemMerge(this.props.selection)
@@ -248,7 +254,9 @@ class ItemIterator extends Iterator {
   }
 
   connect(element) {
-    return (this.isDisabled) ? element : this.props.dt(element)
+    return (this.isDisabled) ?
+      element :
+      this.props.connectDropTarget(element)
   }
 
   getIterableProps(item, index) {
@@ -309,7 +317,7 @@ class ItemIterator extends Iterator {
     photos: object.isRequired,
     tags: object.isRequired,
 
-    dt: func.isRequired,
+    connectDropTarget: func.isRequired,
     onContextMenu: func.isRequired,
     onItemDelete: func.isRequired,
     onItemExport: func.isRequired,

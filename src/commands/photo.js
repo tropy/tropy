@@ -3,10 +3,9 @@
 const assert = require('assert')
 const { basename, dirname, join, relative, resolve } = require('path')
 const { stat } = require('fs').promises
-const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
-const { SaveCommand } = require('./subject')
+const subject = require('./subject')
 const { fail, open, prompt } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
@@ -15,6 +14,15 @@ const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
 const { info, warn } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
+
+const {
+  all,
+  call,
+  fork,
+  join: wait,
+  put,
+  select
+} = require('redux-saga/effects')
 
 const {
   getPhotoTemplate,
@@ -56,8 +64,7 @@ class Consolidate extends ImportCommand {
       try {
         this.suspend()
 
-        let paths = yield call(open.images, {
-          properties: ['openFile'],
+        let paths = yield call(open.image, {
           message: photo.path
         })
         path = (paths != null) ? paths[0] : null
@@ -118,15 +125,16 @@ class Consolidate extends ImportCommand {
 
   *consolidate(photo, selections = {}) {
     try {
-      let { base, db, density, overwrite, useLocalTimezone } = this.options
       let { meta } = this.action
+      let { cache, db, overwrite, useLocalTimezone } = this.options
+      let density = photo.density || this.options.density
 
       let {
         image,
         hasChanged,
         error
       } = yield call(Image.check, photo, {
-        density: photo.density || density,
+        density,
         useLocalTimezone
       })
 
@@ -140,7 +148,7 @@ class Consolidate extends ImportCommand {
           let path = yield this.resolve(photo)
           if (path) {
             image = yield call(Image.open, {
-              density: photo.density || density,
+              density,
               path,
               page: photo.page,
               protocol: 'file',
@@ -155,11 +163,13 @@ class Consolidate extends ImportCommand {
             (image.path !== photo.path)
 
           if (meta.force || hasChanged) {
-            yield* this.createThumbnails(photo.id, image, { overwrite })
+            yield call(cache.consolidate, photo.id, image, {
+              overwrite
+            })
 
             for (let id of photo.selections) {
               if (id in selections) {
-                yield* this.createThumbnails(id, image, {
+                yield call(cache.consolidate, id, image, {
                   overwrite,
                   selection: selections[id]
                 })
@@ -168,7 +178,9 @@ class Consolidate extends ImportCommand {
 
             data = { id: photo.id, ...image.toJSON() }
 
-            yield call(mod.photo.save, db, data, { base })
+            yield call(mod.photo.save, db, data, {
+              base: this.options.base
+            })
           }
 
           this.consolidated.push(photo.id)
@@ -191,87 +203,123 @@ class Consolidate extends ImportCommand {
       }))
     }
   }
-
-  static ACTION = PHOTO.CONSOLIDATE
 }
+
+Consolidate.register(PHOTO.CONSOLIDATE)
 
 
 class Create extends ImportCommand {
-  static get ACTION() { return PHOTO.CREATE }
-
   *exec() {
-    let { db } = this.options
-    let { item, files } = this.action.payload
+    let { cache, db } = this.options
+    let { payload, meta } = this.action
+    let id = payload.item
+
     let photos = []
+    let backlog = []
 
-    let idx = this.action.meta.idx ||
-      [yield select(({ items }) => items[item].photos.length)]
+    let files = yield call(this.getFilesToImport)
 
-    if (!files) {
-      this.isInteractive = true
-      files = yield call(open.images)
-    }
+    if (files.length === 0)
+      return []
 
-    if (!files) return []
-
-    let [base, prefs, template] = yield select(state => [
+    let [base, template, prefs, idx] = yield select(state => [
       state.project.base,
+      getPhotoTemplate(state),
       state.settings,
-      getPhotoTemplate(state)
+      meta.idx || state.items[id].photos.length
     ])
 
+    // Subtle: push photos to this.result early to support
+    // undo after cancelled (partial) import!
+    this.result = photos
+    this.idx = idx
 
     for (let i = 0, total = files.length; i < files.length; ++i) {
-      let file, image, data
+      let file
 
       try {
         file = files[i]
 
-        image = yield* this.openImage(file)
+        let image = yield* this.openImage(file)
         yield* this.handleDuplicate(image)
-        data = this.getImageMetadata('photo', image, template, prefs)
+        let data = this.getImageMetadata('photo', image, template, prefs)
 
         total += (image.numPages - 1)
+        yield put(act.activity.update(this.action, { total, progress: i + 1 }))
 
         while (!image.done) {
           let photo = yield call(db.transaction, tx =>
             mod.photo.create(tx, { base, template: template.id }, {
-              item, image, data, position: idx[0] + i + 1
+              item: id,
+              image: image.toJSON(),
+              data,
+              position: idx[0] + i + 1
             }))
 
-          yield put(act.metadata.load([photo.id]))
-
-          yield all([
-            put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
-            put(act.activity.update(this.action, { total, progress: i + 1 }))
-          ])
-
+          photo.consolidating = true
           photos.push(photo.id)
 
-          yield* this.createThumbnails(photo.id, image)
+          yield all([
+            put(act.photo.insert(photo, {
+              idx: [idx[0] + photos.length]
+            })),
+            put(act.metadata.load([photo.id]))
+          ])
 
           image.next()
         }
+
+        image.rewind()
+
+        backlog.push(
+          yield fork(ImportCommand.consolidate,
+            cache,
+            image,
+            photos))
+
       } catch (e) {
-        if (e instanceof DuplicateError) continue
+        if (e instanceof DuplicateError) {
+          info(`skipping duplicate "${file}"...`)
+          continue
+        }
 
         warn({ stack: e.stack }, `failed to import "${file}"`)
         fail(e, this.action.type)
       }
     }
 
-    yield put(act.item.photos.add({ id: item, photos }, { idx }))
+    yield put(act.item.photos.add({ id, photos }, { idx }))
 
-    this.undo = act.photo.delete({ item, photos })
-    this.redo = act.photo.restore({ item, photos }, { idx })
+    if (backlog.length > 0) {
+      yield wait(backlog)
+    }
 
     return photos
   }
+
+  get redo() {
+    return !(this.result && this.result.length > 0) ?
+      null :
+      act.photo.restore({
+        item: this.action.payload.item,
+        photos: this.result
+      }, { idx: this.idx })
+  }
+
+  get undo() {
+    return !(this.result && this.result.length > 0) ?
+      null :
+      act.photo.delete({
+        item: this.action.payload.item,
+        photos: this.result
+      })
+  }
 }
 
-class Delete extends Command {
-  static get ACTION() { return PHOTO.DELETE }
+Create.register(PHOTO.CREATE)
 
+
+class Delete extends Command {
   *exec() {
     const { db } = this.options
     const { item, photos } = this.action.payload
@@ -292,11 +340,12 @@ class Delete extends Command {
   }
 }
 
-class Duplicate extends ImportCommand {
-  static get ACTION() { return PHOTO.DUPLICATE }
+Delete.register(PHOTO.DELETE)
 
+
+class Duplicate extends ImportCommand {
   *exec() {
-    let { db } = this.options
+    let { cache, db } = this.options
     let { payload } = this.action
     let { item } = payload
 
@@ -328,7 +377,7 @@ class Duplicate extends ImportCommand {
         let photo = yield call(db.transaction, tx =>
           mod.photo.create(tx, { base, template }, {
             item,
-            image,
+            image: image.toJSON(),
             data: data[i]
           }))
 
@@ -340,7 +389,7 @@ class Duplicate extends ImportCommand {
         ])
 
         photos.push(photo.id)
-        yield* this.createThumbnails(photo.id, image)
+        yield call(cache.consolidate, photo.id, image)
 
       } catch (e) {
         warn({ stack: e.stack }, `failed to duplicate "${path}"`)
@@ -358,9 +407,10 @@ class Duplicate extends ImportCommand {
   }
 }
 
-class Load extends Command {
-  static get ACTION() { return PHOTO.LOAD }
+Duplicate.register(PHOTO.DUPLICATE)
 
+
+class Load extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -373,9 +423,10 @@ class Load extends Command {
   }
 }
 
-class Move extends Command {
-  static get ACTION() { return PHOTO.MOVE }
+Load.register(PHOTO.LOAD)
 
+
+class Move extends Command {
   *exec() {
     const { db } = this.options
     const { photos, item } = this.action.payload
@@ -416,9 +467,10 @@ class Move extends Command {
   }
 }
 
-class Order extends Command {
-  static get ACTION() { return PHOTO.ORDER }
+Move.register(PHOTO.MOVE)
 
+
+class Order extends Command {
   *exec() {
     const { db } = this.options
     const { item, photos } = this.action.payload
@@ -432,9 +484,10 @@ class Order extends Command {
   }
 }
 
-class Save extends Command {
-  static get ACTION() { return PHOTO.SAVE }
+Order.register(PHOTO.ORDER)
 
+
+class Save extends Command {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
@@ -455,16 +508,17 @@ class Save extends Command {
     this.undo = act.photo.save({ id, data: original })
 
     if (data.density) {
-      this.finally = act.photo.consolidate(id, { force: true })
+      this.after = act.photo.consolidate(id, { force: true })
     }
 
     return { id, ...data }
   }
 }
 
-class Restore extends Command {
-  static get ACTION() { return PHOTO.RESTORE }
+Save.register(PHOTO.SAVE)
 
+
+class Restore extends Command {
   *exec() {
     const { db } = this.options
     const { item, photos } = this.action.payload
@@ -488,9 +542,10 @@ class Restore extends Command {
   }
 }
 
-class Rotate extends Command {
-  static get ACTION() { return PHOTO.ROTATE }
+Restore.register(PHOTO.RESTORE)
 
+
+class Rotate extends Command {
   *exec() {
     let { db } = this.options
     let { id, by, type = 'photo' } = this.action.payload
@@ -504,10 +559,14 @@ class Rotate extends Command {
   }
 }
 
-class TemplateChange extends SaveCommand {
-  static get ACTION() { return PHOTO.TEMPLATE.CHANGE }
-  get type() { return 'photo' }
+Rotate.register(PHOTO.ROTATE)
+
+
+class TemplateChange extends subject.Save {
+  type = 'photo'
 }
+
+TemplateChange.register(PHOTO.TEMPLATE.CHANGE)
 
 
 module.exports = {

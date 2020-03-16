@@ -4,6 +4,19 @@ const { ACTIVITY } = require('../constants')
 const { pick } = require('../common/util')
 
 module.exports = {
+  cancel(id, meta) {
+    return {
+      type: ACTIVITY.CANCEL,
+      payload: {
+        id
+      },
+      meta: {
+        ...meta,
+        rel: id
+      }
+    }
+  },
+
   done(action, result, meta) {
     let error = result instanceof Error
     let payload = !error ?

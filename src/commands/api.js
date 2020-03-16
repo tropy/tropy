@@ -4,7 +4,7 @@ const { call, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { API } = require('../constants')
 const { pluck } = require('../common/util')
-const { serialize } = require('../export/note')
+const { serialize } = require('../components/editor/serialize')
 //const act = require('../actions')
 const mod = require('../models')
 
@@ -15,10 +15,6 @@ const {
 
 
 class ItemFind extends Command {
-  static get ACTION() {
-    return API.ITEM.FIND
-  }
-
   *exec() {
     let { db } = this.options
     let { list, query, sort, tags } = this.action.payload
@@ -33,11 +29,10 @@ class ItemFind extends Command {
   }
 }
 
-class ItemShow extends Command {
-  static get ACTION() {
-    return API.ITEM.SHOW
-  }
+ItemFind.register(API.ITEM.FIND)
 
+
+class ItemShow extends Command {
   *exec() {
     let { id } = this.action.payload
     let item = yield select(state => state.items[id])
@@ -45,11 +40,10 @@ class ItemShow extends Command {
   }
 }
 
-class MetadataShow extends Command {
-  static get ACTION() {
-    return API.METADATA.SHOW
-  }
+ItemShow.register(API.ITEM.SHOW)
 
+
+class MetadataShow extends Command {
   *exec() {
     let { id } = this.action.payload
     let data = yield select(state => state.metadata[id])
@@ -57,11 +51,10 @@ class MetadataShow extends Command {
   }
 }
 
-class NoteShow extends Command {
-  static get ACTION() {
-    return API.NOTE.SHOW
-  }
+MetadataShow.register(API.METADATA.SHOW)
 
+
+class NoteShow extends Command {
   *exec() {
     let { id, format } = this.action.payload
 
@@ -88,11 +81,10 @@ class NoteShow extends Command {
   }
 }
 
-class PhotoFind extends Command {
-  static get ACTION() {
-    return API.PHOTO.FIND
-  }
+NoteShow.register(API.NOTE.SHOW)
 
+
+class PhotoFind extends Command {
   *exec() {
     let { item } = this.action.payload
     let { items, photos } = yield select()
@@ -104,11 +96,10 @@ class PhotoFind extends Command {
   }
 }
 
-class PhotoShow extends Command {
-  static get ACTION() {
-    return API.PHOTO.SHOW
-  }
+PhotoFind.register(API.PHOTO.FIND)
 
+
+class PhotoShow extends Command {
   *exec() {
     let { id } = this.action.payload
     let photo = yield select(state => state.photos[id])
@@ -116,11 +107,10 @@ class PhotoShow extends Command {
   }
 }
 
-class TagShow extends Command {
-  static get ACTION() {
-    return API.TAG.SHOW
-  }
+PhotoShow.register(API.PHOTO.SHOW)
 
+
+class TagShow extends Command {
   *exec() {
     let { payload } = this.action
     let tag = yield select(state => findTag(state, payload))
@@ -128,11 +118,10 @@ class TagShow extends Command {
   }
 }
 
-class TagFind extends Command {
-  static get ACTION() {
-    return API.TAG.FIND
-  }
+TagShow.register(API.TAG.SHOW)
 
+
+class TagFind extends Command {
   *exec() {
     let { id, reverse } = this.action.payload
 
@@ -152,17 +141,18 @@ class TagFind extends Command {
   }
 }
 
-class SelectionShow extends Command {
-  static get ACTION() {
-    return API.SELECTION.SHOW
-  }
+TagFind.register(API.TAG.FIND)
 
+
+class SelectionShow extends Command {
   *exec() {
     let { id } = this.action.payload
     let selection = yield select(state => state.selections[id])
     return selection
   }
 }
+
+SelectionShow.register(API.SELECTION.SHOW)
 
 
 module.exports = {

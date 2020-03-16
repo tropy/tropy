@@ -14,8 +14,10 @@ const getAllTags = memo(
   (tags) => values(tags).sort(byName)
 )
 
-const findTag = ({ tags }, { id }) =>
-  tags[id] || findByName(tags, id)
+const findTag = ({ tags }, { id, name }) =>
+  (name) ?
+    findByName(tags, name) :
+    tags[id] || findByName(tags, id)
 
 const findByName = (tags, name, idOnly = false) => {
   for (let id in tags) {

@@ -268,7 +268,7 @@ es:
         command: 'app:duplicate-photo'
       - label: Mover foto a un nuevo objeto
         command: 'app:explode-photo'
-      - label: Mostrar foto original…
+      - label: Mostrar foto original …
         command: 'app:show-in-folder'
       - label: Borrar foto
         command: 'app:delete-photo'
@@ -638,7 +638,7 @@ es:
         command: 'app:duplicate-photo'
       - label: Mover foto a un nuevo objeto
         command: 'app:explode-photo'
-      - label: Mostrar foto original…
+      - label: Mostrar foto original …
         command: 'app:show-in-folder'
       - label: Borrar foto
         command: 'app:delete-photo'
@@ -978,7 +978,7 @@ es:
         command: 'app:duplicate-photo'
       - label: Mover foto a un nuevo objeto
         command: 'app:explode-photo'
-      - label: Mostrar foto original…
+      - label: Mostrar foto original …
         command: 'app:show-in-folder'
       - label: Suprimir foto
         command: 'app:delete-photo'
