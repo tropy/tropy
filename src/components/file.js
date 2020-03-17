@@ -77,9 +77,8 @@ class FileSelect extends React.PureComponent {
       properties
     })
 
-    if (value != null && value !== '') {
+    if (!blank(value))
       this.handleChange(value)
-    }
   }
 
   showDialog(opts, { type, createFile } = this.props) {
