@@ -77,7 +77,7 @@ class FileSelect extends React.PureComponent {
       properties
     })
 
-    if (value != null)
+    if (!blank(value))
       this.handleChange(value)
   }
 
