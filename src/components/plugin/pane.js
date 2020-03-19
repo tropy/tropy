@@ -106,6 +106,7 @@ class PluginsPane extends React.Component {
                      id={spec.name}
                      instances={this.getPluginInstances(spec.name)}
                      spec={spec}
+                     properties={this.props.properties}
                      templates={this.props.templates}
                      onChange={this.handleChange}
                      onDisable={this.handleDisable}
@@ -132,6 +133,7 @@ class PluginsPane extends React.Component {
   static propTypes = {
     isActive: bool,
     name: string.isRequired,
+    properties: object.isRequired,
     templates: object.isRequired,
     onUninstall: func.isRequired,
     onOpenLink: func.isRequired

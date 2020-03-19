@@ -111,6 +111,7 @@ class PrefsContainer extends React.PureComponent {
 
           <PluginsPane
             name="plugins"
+            properties={this.props.properties}
             templates={this.props.templates}
             onUninstall={this.props.onPluginUninstall}
             onOpenLink={this.props.onOpenLink}
