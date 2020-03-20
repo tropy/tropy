@@ -154,7 +154,6 @@ class Tropy extends EventEmitter {
 
   async showOpenDialog(win = this.wm.current()) {
     let files = await dialog.open(win, {
-      defaultPath: app.getPath('documents'),
       filters: [{
         name: this.dict.dialog.file.project,
         extensions: ['tpy']
@@ -287,6 +286,7 @@ class Tropy extends EventEmitter {
     }
 
     nativeTheme.themeSource = this.state.theme
+    dialog.lastDefaultPath = this.state.lastDefaultPath
 
     info('app state restored')
   }
@@ -321,6 +321,7 @@ class Tropy extends EventEmitter {
     info('saving app state')
 
     if (this.state != null) {
+      this.state.lastDefaultPath = dialog.lastDefaultPath
       this.store.save.sync('state.json', this.state)
     }
 

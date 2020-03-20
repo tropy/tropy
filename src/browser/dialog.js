@@ -1,18 +1,31 @@
 'use strict'
 
+const { dirname } = require('path')
 const { dialog } = require('electron')
+
+let defaultPath
 
 function show(type, win, opts) {
   switch (type) {
     case 'save':
       return dialog
-        .showSaveDialog(win, opts)
-        .then(({ filePath }) => filePath)
+        .showSaveDialog(win, { defaultPath, ...opts })
+        .then(({ filePath }) => {
+          if (filePath) {
+            defaultPath = dirname(filePath)
+          }
+          return filePath
+        })
 
     case 'file':
       return dialog
-        .showOpenDialog(win, opts)
-        .then(({ filePaths }) => filePaths)
+        .showOpenDialog(win, { defaultPath, ...opts })
+        .then(({ filePaths }) => {
+          if (filePaths && filePaths.length) {
+            defaultPath = dirname(filePaths[0])
+          }
+          return filePaths
+        })
 
     case 'message-box':
       return dialog
@@ -28,6 +41,14 @@ function show(type, win, opts) {
 }
 
 module.exports = {
+  get lastDefaultPath() {
+    return defaultPath
+  },
+
+  set lastDefaultPath(lastDefaultPath) {
+    defaultPath = lastDefaultPath
+  },
+
   alert(win, opts) {
     return show('message-box', win, {
       type: 'error',

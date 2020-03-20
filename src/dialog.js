@@ -2,7 +2,7 @@
 
 const assert = require('assert')
 const { ipcRenderer: ipc, shell, clipboard } = require('electron')
-const { counter, get } = require('./common/util')
+const { blank, counter, get } = require('./common/util')
 const { crashReport, warn } = require('./common/log')
 const { IMAGE } = require('./constants')
 
@@ -42,7 +42,7 @@ function onClosed(_, { id, payload, error }) {
 
 function show(type, options = {}) {
   return new Promise((resolve, reject) => {
-    const id = seq.next().value
+    let id = seq.next().value
     ipc.send('wm', 'dialog', { id, type, options })
     pending[id] = { resolve, reject }
   })
@@ -74,28 +74,30 @@ function fail(e, msg) {
   })
 }
 
-function prompt(id, {
+async function prompt(id, {
   defaultId = 0,
   cancelId = 0,
   isChecked = false,
   ...opts
 } = {}) {
-  return show('message-box', {
+  let { response, checked } = await show('message-box', {
     type: 'question',
     ...t('dialog', 'prompt', ...id.split('.')),
     defaultId,
     cancelId,
     checkboxChecked: isChecked,
     ...opts
-  }).then(({ response, checked }) => ({
+  })
+
+  return {
     ok: response !== cancelId,
     cancel: response === cancelId,
     isChecked: checked
-  }))
+  }
 }
 
-function save(options) {
-  return show('save', options)
+function save(opts) {
+  return show('save', opts)
 }
 
 function open(opts) {
@@ -107,7 +109,6 @@ open.images = (opts) => open({
     name: t('dialog', 'filter', 'images'),
     extensions: IMAGE.EXT
   }],
-  defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],
   ...opts
 })
@@ -117,7 +118,6 @@ open.items = (opts) => open({
     name: t('dialog', 'filter', 'items'),
     extensions: [...IMAGE.EXT, 'json', 'jsonld']
   }],
-  defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],
   ...opts
 })
@@ -137,7 +137,6 @@ open.vocab = (opts) => open({
     name: t('dialog', 'filter', 'rdf'),
     extensions: ['n3', 'ttl']
   }],
-  defaultPath: ARGS.documents,
   properties: ['openFile', 'multiSelections'],
   ...opts
 })
@@ -147,7 +146,6 @@ open.templates = (options) => open({
     name: t('dialog', 'filter', 'templates'),
     extensions: ['ttp']
   }],
-  defaultPath: ARGS.documents,
   properties: ['openFile', 'multiSelections'],
   ...options
 })
@@ -158,7 +156,6 @@ save.project = (options) => save({
     name: t('dialog', 'filter', 'projects'),
     extensions: ['tpy']
   }],
-  defaultPath: ARGS.documents,
   properties: ['createDirectory'],
   ...options
 })
