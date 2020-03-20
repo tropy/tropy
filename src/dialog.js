@@ -2,7 +2,7 @@
 
 const assert = require('assert')
 const { ipcRenderer: ipc, shell, clipboard } = require('electron')
-const { blank, counter, get } = require('./common/util')
+const { counter, get } = require('./common/util')
 const { crashReport, warn } = require('./common/log')
 const { IMAGE } = require('./constants')
 
