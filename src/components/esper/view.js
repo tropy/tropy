@@ -311,13 +311,18 @@ class EsperView extends React.Component {
       .start()
   }
 
-  rotate({ angle }, duration = 0) {
+  rotate({ angle }, duration = 0, clockwise = false) {
     if (duration > 0) {
       const cur = this.image.rotation
       const tgt = rad(angle)
 
       // Always rotate counter-clockwise!
-      const tmp = (tgt > cur) ? cur - (2 * PI - tgt) : tgt
+      //const tmp = (tgt > cur) ? cur - (2 * PI - tgt) : tgt
+
+      // Maintain rotation orientation when transitioning between 0 and value
+      const clockwiseTmp = (tgt < cur) ? 2 * PI : tgt
+      const counterTmp = (tgt > cur) ? cur - (2 * PI - tgt) : tgt
+      const tmp = clockwise ? clockwiseTmp : counterTmp
 
       this.animate(this.image, 'rotate', {
         done: () => {

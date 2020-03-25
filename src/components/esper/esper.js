@@ -422,7 +422,7 @@ class Esper extends React.PureComponent {
     assign(state, this.getZoomBounds(this.view.screen, state))
 
     this.setState(state, () => {
-      this.view.rotate(state, ROTATE_DURATION)
+      this.view.rotate(state, ROTATE_DURATION, by > 0)
       this.view.scale(state, ROTATE_DURATION)
       this.persist()
     })
@@ -560,7 +560,6 @@ class Esper extends React.PureComponent {
   handleKeyDown = (event) => {
     if (this.state.quicktool != null) {
       this.handleQuickToolKeyDown(event)
-
     } else {
       switch (match(this.props.keymap, event)) {
         case 'zoomIn':
@@ -575,8 +574,11 @@ class Esper extends React.PureComponent {
         case 'zoomToFill':
           this.handleModeChange(MODE.FILL)
           break
-        case 'rotate':
+        case 'rotateLeft':
           this.handleRotationChange(-90)
+          break
+        case 'rotateRight':
+          this.handleRotationChange(90)
           break
         case 'up':
           this.move({ y: PAN_STEP_SIZE * this.state.zoom })
