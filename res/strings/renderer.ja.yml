@@ -235,7 +235,8 @@ ja:
     tool:
       pan: パンツール
       select: 選択ツール
-      rotate: 回転させる
+      rotate_left: 回転させる
+      rotate_right: 回転させる
       mirror: 反転させる
       edit: 写真を編集する
     mode:

@@ -237,7 +237,8 @@ en:
     tool:
       pan: Pan Tool
       select: Selection Tool
-      rotate: Rotate
+      rotate_left: Rotate Left
+      rotate_right: Rotate Right
       mirror: Mirror
       edit: Edit Photo
     mode:
