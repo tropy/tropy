@@ -238,8 +238,7 @@ fr:
     tool:
       pan: Outil panoramique
       select: Outil de sélection
-      rotate_left: Tourner à gauche
-      rotate_right: Tourner à droite
+      rotate: Rotation
       mirror: Miroir
       edit: Modifier la photo
     mode:

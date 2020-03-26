@@ -237,8 +237,7 @@ es:
     tool:
       pan: Herramienta de panorama
       select: Herramienta de selección
-      rotate_left: Rotar a la izquierda
-      rotate_right: Rotar a la derecha
+      rotate: Rotar
       mirror: Espejo
       edit: Modificar foto
     mode:

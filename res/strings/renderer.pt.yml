@@ -237,8 +237,7 @@ pt:
     tool:
       pan: Ferramenta de Deslizamento
       select: Ferramenta de Seleção
-      rotate_left: Ruota a sinistra
-      rotate_right: Ruota a destra
+      rotate: Rodar
       mirror: Espelho
       edit: Editar Foto
     mode:
