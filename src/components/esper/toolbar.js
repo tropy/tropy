@@ -49,8 +49,7 @@ class EsperToolbar extends React.PureComponent {
   }
 
   handleRotate = (event) => {
-    event.altKey ? this.props.onRotationChange(90) :
-    this.props.onRotationChange(-90)
+    this.props.onRotationChange(event.altKey ? 90 : -90)
   }
 
   handleZoomChange = throttle((zoom, reason) => {
