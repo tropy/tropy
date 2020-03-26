@@ -48,7 +48,8 @@ class EsperToolbar extends React.PureComponent {
     this.props.onPanelChange(!this.props.isPanelVisible)
   }
 
-  handleRotate = () => {
+  handleRotate = (event) => {
+    event.altKey ? this.props.onRotationChange(90) :
     this.props.onRotationChange(-90)
   }
 
