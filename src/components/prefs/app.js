@@ -336,7 +336,7 @@ class AppPrefs extends React.PureComponent {
     completions: ['datatype', 'property-datatype'],
     locales: ['de', 'en', 'es', 'fr', 'it', 'ja', 'pt'],
     dupOptions: ['skip', 'import', 'prompt'],
-    zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL],
+    zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL, ESPER.MODE.ZOOM],
     printModes: ['item', 'photo', 'selection'],
     importMin: IMAGE.MIN_DENSITY,
     importMax: IMAGE.MAX_DENSITY
