@@ -167,6 +167,7 @@ en:
         option:
           fit: Zoom photos to fit
           fill: Zoom photos to fill
+          zoom: Show photos unscaled
       layout:
         label: Item View layout
         option:
