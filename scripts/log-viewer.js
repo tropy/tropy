@@ -82,7 +82,7 @@ const pretty = input => {
     log = input
   }
 
-  return (isPinoLog(log)) ? format(log) : input
+  return format(log)
 }
 
 const seq = (function (prev, pad = 8) {
@@ -99,10 +99,6 @@ const seq = (function (prev, pad = 8) {
 
 const isObject = input =>
   Object.prototype.toString.apply(input) === '[object Object]'
-
-const isPinoLog = log =>
-  log != null && log.v === 1
-
 
 const transport = new Transform({
   objectMode: true,
