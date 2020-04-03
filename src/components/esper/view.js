@@ -224,7 +224,7 @@ class EsperView extends React.Component {
     if (sprite == null || sprite.interactive) return
   }
 
-  setScaleMode(texture, zoom, renderer = this.pixi.renderer) {
+  setScaleMode(texture, zoom) {
     if (texture == null) return
 
     let { baseTexture } = texture
@@ -235,15 +235,6 @@ class EsperView extends React.Component {
 
     if (baseTexture.scaleMode !== scaleMode) {
       baseTexture.scaleMode = scaleMode
-
-      // HACK: Updating scale mode dynamically is broken in Pixi v4.
-      // See Pixi #4096.
-      let glTexture = baseTexture._glTextures[renderer.CONTEXT_UID]
-
-      if (glTexture) {
-        glTexture.bind()
-        glTexture[`enable${crisp ? 'Nearest' : 'Linear'}Scaling`]()
-      }
     }
   }
 
