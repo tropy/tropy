@@ -95,11 +95,6 @@ class Selection extends Graphics {
     return this === this.parent.active
   }
 
-  get state() {
-    if (this.isActive) return 'active'
-    return 'default'
-  }
-
   destroy() {
     this.data = null
     super.destroy({ children: true })
@@ -108,12 +103,12 @@ class Selection extends Graphics {
   update(
     scale = 1,
     { x, y, width, height } = this.data,
-    state = this.state
+    state = this.isActive ? 'active' : 'default'
   ) {
     this.clear()
     if (!width || !height) return
 
-    const colors = COLOR.selection[state]
+    let colors = COLOR.selection[state]
 
     this
       .lineStyle(scale, ...colors.line)
@@ -141,53 +136,41 @@ class SelectionOverlay extends Graphics {
   constructor({ width, height }) {
     super()
 
-    this.beginFill(...COLOR.mask.fill)
+    this.beginFill('0xffffff', 0)
     this.drawRect(0, 0, width, height)
 
     this.cacheAsBitmap = false
     this.visible = false
 
     this.addChild(new Graphics(), new Graphics())
-    this.mask = this.children[0]
-    this.line = this.children[1]
   }
 
   update() {
-    this.line.clear()
-    this.mask.clear()
+    this.children[1].clear()
+    this.children[0].clear()
 
     if (this.active == null || this.parent == null) return
 
-    const scale = 1 / this.parent.scale.y
-    const { x, y, width, height } = this.active
+    let scale = 1 / this.parent.scale.y
+    let { x, y, width, height } = this.active
 
-    this.line
+    this.children[1]
       .lineStyle(scale, ...COLOR.mask.line)
       .beginFill(0, 0)
       .drawRect(x, y, width, height)
 
-    const top = y + scale
-    const right = x + width - 2 * scale
-    const bottom = y + height - 2 * scale
-    const left =  x + scale
-
-    this.mask
-      .beginFill(0xFFFFFF)
-      .moveTo(0, 0)
-      .lineTo(this.width, 0)
-      .lineTo(this.width, this.height)
-      .lineTo(0, this.height)
-      .moveTo(left, top)
-      .lineTo(right, top)
-      .lineTo(right, bottom)
-      .lineTo(left, bottom)
-      .addHole()
+    this.children[0]
+      .beginFill(...COLOR.mask.fill)
+      .drawRect(0, 0, this.width, this.height)
+      .beginHole()
+      .drawRect(x, y, width, height)
+      .endHole()
   }
 
 
   sync({ selection }) {
     this.active = selection
-    this.mask.clear()
+    this.children[0].clear()
     this.visible = (selection != null)
   }
 }
