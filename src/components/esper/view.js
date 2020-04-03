@@ -16,7 +16,7 @@ const { restrict } = require('../../common/util')
 const { darwin } = require('../../common/os')
 const { rad } = require('../../common/math')
 const { info } = require('../../common/log')
-const PIXI = require('pixi.js')
+const PIXI = require('pixi.js-legacy')
 const { TextureCache, skipHello } = PIXI.utils
 const { constrain, Picture } = require('./picture')
 const { Selection  } = require('./selection')
@@ -45,6 +45,7 @@ class EsperView extends React.Component {
 
     this.pixi = new PIXI.Application({
       antialias: false,
+      autoDensity: true,
       forceCanvas: !ARGS.webgl,
       roundPixels: false,
       resolution: this.props.resolution,
@@ -69,7 +70,7 @@ class EsperView extends React.Component {
     on(this.container, 'wheel', this.handleWheel, { passive: true })
 
     info(`esper using ${
-      this.pixi.renderer instanceof PIXI.WebGLRenderer ? 'webgl' : 'canvas'
+      this.pixi.renderer instanceof PIXI.CanvasRenderer ? 'canvas' : 'webgl'
     } renderer`)
   }
 
