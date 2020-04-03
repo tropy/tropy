@@ -57,3 +57,10 @@ win.unloaders.push(() => (
 
 Object.defineProperty(window, 'store', { get: () => store })
 Object.defineProperty(window, 'state', { get: () => store.getState() })
+
+{
+  // Apply PIXI unsafe-eval patch
+  const PIXI = require('@pixi/core')
+  const { install } = require('@pixi/unsafe-eval')
+  install(PIXI)
+}
