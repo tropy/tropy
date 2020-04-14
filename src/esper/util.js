@@ -1,6 +1,7 @@
 'use strict'
 
 const css = require('../css')
+const { restrict } = require('../common/util')
 const { SCALE_MODES } = require('pixi.js')
 
 const {
@@ -9,6 +10,14 @@ const {
     ZOOM_LINEAR_MAX
   }
 } = require('../constants/sass')
+
+
+const constrain = (pos, { left, top, bottom, right }) => {
+  pos.x = Math.floor(restrict(pos.x, left, right))
+  pos.y = Math.floor(restrict(pos.y, top, bottom))
+
+  return pos
+}
 
 const setScaleMode = (texture, zoom) => {
   if (texture == null) return
@@ -36,6 +45,7 @@ const addCursorStyle = (styles, name, cursor = CURSOR[name]) => {
 
 
 module.exports = {
-  setScaleMode,
-  addCursorStyle
+  addCursorStyle,
+  constrain,
+  setScaleMode
 }
