@@ -1,9 +1,8 @@
 'use strict'
 
-const PIXI = require('pixi.js')
-const { Container, Graphics, Rectangle } = PIXI
+const { Container, Graphics, Rectangle } = require('pixi.js')
 const BLANK = Object.freeze({})
-const { COLOR, TOOL } = require('../../constants/esper')
+const { COLOR, TOOL } = require('../constants/esper')
 
 
 class SelectionLayer extends Container {

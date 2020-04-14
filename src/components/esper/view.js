@@ -13,13 +13,11 @@ const {
 const { restrict } = require('../../common/util')
 const { darwin } = require('../../common/os')
 const { rad } = require('../../common/math')
-const { constrain, Picture } = require('./picture')
-const { Selection  } = require('./selection')
 const TWEEN = require('@tweenjs/tween.js')
 const { TOOL } = require('../../constants/esper')
 const debounce = require('lodash.debounce')
 const { PI, floor, round } = Math
-const { Esper, setScaleMode } = require('../../esper')
+const { Esper, Picture, Selection, setScaleMode, constrain } = require('../../esper')
 
 const {
   ESPER: { FADE_DURATION }

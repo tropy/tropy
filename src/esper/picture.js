@@ -4,11 +4,11 @@ const PIXI = require('pixi.js')
 const { Container, Sprite, Rectangle } = PIXI
 const { ColorMatrixFilter } = PIXI.filters
 const { AdjustmentFilter } = require('@pixi/filter-adjustment')
-const { SharpenFilter } = require('../../esper/filter')
+const { SharpenFilter } = require('./filter')
 const { SelectionLayer, SelectionOverlay } = require('./selection')
-const { restrict } = require('../../common/util')
-const { deg, isHorizontal } = require('../../common/math')
-const { floor, max } = Math
+const { constrain } = require('./util')
+const { deg, isHorizontal } = require('../common/math')
+const { max } = Math
 
 const NEGATIVE = [
   -1, 0, 0, 1, 0, 0, -1, 0, 1, 0, 0, 0, -1, 1, 0, 0, 0, 0, 1, 0
@@ -16,11 +16,14 @@ const NEGATIVE = [
 
 
 class Picture extends Container {
+  #WIDTH
+  #HEIGHT
+
   constructor({ width, height }) {
     super()
 
-    this.WIDTH = width
-    this.HEIGHT = height
+    this.#WIDTH = width
+    this.#HEIGHT = height
 
     this.pivot.set(width / 2, height / 2)
 
@@ -55,11 +58,11 @@ class Picture extends Container {
   }
 
   getWidth(scale = this.scale.y) {
-    return this.WIDTH * scale
+    return this.#WIDTH * scale
   }
 
   getHeight(scale = this.scale.y) {
-    return this.HEIGHT * scale
+    return this.#HEIGHT * scale
   }
 
   getBounds(scale = this.scale.y) {
@@ -141,13 +144,7 @@ class Picture extends Container {
   }
 }
 
-function constrain(position, within) {
-  position.x = floor(restrict(position.x, within.left, within.right))
-  position.y = floor(restrict(position.y, within.top, within.bottom))
-  return position
-}
 
 module.exports = {
-  Picture,
-  constrain
+  Picture
 }
