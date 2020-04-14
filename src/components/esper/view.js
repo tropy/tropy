@@ -4,36 +4,27 @@ const React = require('react')
 const { array, func, number, object, string } = require('prop-types')
 
 const {
-  append,
   bounds,
   createDragHandler,
   on,
   off
 } = require('../../dom')
 
-const css = require('../../css')
 const { restrict } = require('../../common/util')
 const { darwin } = require('../../common/os')
 const { rad } = require('../../common/math')
-const { info } = require('../../common/log')
-const PIXI = require('pixi.js-legacy')
-const { TextureCache, skipHello } = PIXI.utils
 const { constrain, Picture } = require('./picture')
 const { Selection  } = require('./selection')
 const TWEEN = require('@tweenjs/tween.js')
 const { TOOL } = require('../../constants/esper')
 const debounce = require('lodash.debounce')
 const { PI, floor, round } = Math
+const { Esper, setScaleMode } = require('../../esper')
 
 const {
-  ESPER: {
-    CURSOR,
-    FADE_DURATION,
-    ZOOM_LINEAR_MAX
-  }
+  ESPER: { FADE_DURATION }
 } = require('../../constants/sass')
 
-PIXI.settings.RETINA_PREFIX = /@2x!/
 
 class EsperView extends React.Component {
   componentDidMount() {
@@ -41,43 +32,25 @@ class EsperView extends React.Component {
 
     this.tweens = new TWEEN.Group()
 
-    skipHello()
-
-    this.pixi = new PIXI.Application({
-      antialias: false,
-      autoDensity: true,
-      forceCanvas: !ARGS.webgl,
-      roundPixels: false,
+    this.esper = new Esper({
       resolution: this.props.resolution,
-      transparent: true,
       width,
       height
     })
 
-    this.pixi.loader.onError.add(this.handleLoadError)
-    this.pixi.loader.onLoad.add(this.handleLoadProgress)
-    this.pixi.ticker.add(this.update)
-    this.pixi.renderer.autoResize = true
+    this.esper.on('load.error', this.handleLoadError)
+    this.esper.on('load', this.handleLoadProgress)
+    this.esper.on('tick', this.update)
 
-    for (let name in TOOL) {
-      addCursorStyle(
-        this.pixi.renderer.plugins.interaction.cursorStyles, TOOL[name]
-      )
-    }
-
-    append(this.pixi.view, this.container)
+    this.esper.mount(this.container)
 
     on(this.container, 'wheel', this.handleWheel, { passive: true })
-
-    info(`esper using ${
-      this.pixi.renderer instanceof PIXI.CanvasRenderer ? 'canvas' : 'webgl'
-    } renderer`)
   }
 
   componentWillUnmount() {
     this.stop.flush()
     this.tweens.removeAll()
-    this.pixi.destroy(true)
+    this.esper.destroy()
     off(this.container, 'wheel', this.handleWheel, { passive: true })
     if (this.drag.current) this.drag.stop()
   }
@@ -87,7 +60,7 @@ class EsperView extends React.Component {
       this.image.overlay.sync(props)
       this.image.selections.sync(props)
       this.image.cursor = props.tool
-      this.pixi.render()
+      this.esper.render()
     }
 
     if (props.resolution !== this.resolution) {
@@ -101,11 +74,11 @@ class EsperView extends React.Component {
 
   start = () => {
     this.stop.cancel()
-    this.pixi.start()
+    this.esper.start()
   }
 
   stop = debounce(() => {
-    this.pixi.stop()
+    this.esper.stop()
   }, 5000)
 
   resume = () => {
@@ -114,15 +87,15 @@ class EsperView extends React.Component {
   }
 
   get resolution() {
-    return this.pixi.renderer.resolution
+    return this.esper.app.renderer.resolution
   }
 
   get screen() {
-    return this.pixi.screen
+    return this.esper.app.screen
   }
 
   get isStarted() {
-    return !!this.pixi.ticker.started
+    return !!this.esper.app.ticker.started
   }
 
   get isDragging() {
@@ -154,7 +127,7 @@ class EsperView extends React.Component {
       let image = this.image = new Picture(props)
 
       try {
-        let texture = await this.load(props.src)
+        let texture = await this.esper.load(props.src)
 
         // Subtle: if the view was reset while we were loading
         // the texture, abort!
@@ -173,7 +146,7 @@ class EsperView extends React.Component {
       this.rotate(props)
       let { mirror, x, y, zoom } = props
 
-      this.setScaleMode(this.image.bg.texture, zoom)
+      setScaleMode(this.image.bg.texture, zoom)
       this.image.scale.x = mirror ? -zoom : zoom
       this.image.scale.y = zoom
 
@@ -181,9 +154,9 @@ class EsperView extends React.Component {
       this.image.constrain(this.screen)
       this.image.cursor = props.tool
 
-      this.pixi.stage.addChildAt(this.image, 0)
+      this.esper.app.stage.addChildAt(this.image, 0)
       this.persist()
-      this.pixi.render()
+      this.esper.render()
     }
   }
 
@@ -193,7 +166,7 @@ class EsperView extends React.Component {
     const { angle, mirror, x, y, zoom } = props
     const { position, scale } = this.image
 
-    this.setScaleMode(this.image.bg.texture, zoom)
+    setScaleMode(this.image.bg.texture, zoom)
     this.adjust(props)
 
     const zx = mirror ? -1 : 1
@@ -219,36 +192,17 @@ class EsperView extends React.Component {
       .start()
   }
 
-
-  makeInteractive(sprite) {
-    if (sprite == null || sprite.interactive) return
-  }
-
-  setScaleMode(texture, zoom) {
-    if (texture == null) return
-
-    let { baseTexture } = texture
-    let crisp = (zoom > ZOOM_LINEAR_MAX) || (zoom === 1)
-    let scaleMode = crisp ?
-      PIXI.SCALE_MODES.NEAREST :
-      PIXI.SCALE_MODES.LINEAR
-
-    if (baseTexture.scaleMode !== scaleMode) {
-      baseTexture.scaleMode = scaleMode
-    }
-  }
-
   resize({ width, height, zoom, mirror }) {
     width = round(width)
     height = round(height)
 
-    this.pixi.renderer.resize(width, height)
-    this.pixi.render()
+    this.esper.app.renderer.resize(width, height)
+    this.esper.render()
 
     if (this.image == null || zoom == null) return
 
     this.image.constrain({ width, height }, zoom)
-    this.setScaleMode(this.image.bg.texture, zoom)
+    setScaleMode(this.image.bg.texture, zoom)
     this.image.scale.set(mirror ? -zoom : zoom, zoom)
     this.persist()
     this.resume()
@@ -285,7 +239,7 @@ class EsperView extends React.Component {
       zoom
     }, this.getInnerBounds(zoom))
 
-    this.setScaleMode(bg.texture, zoom)
+    setScaleMode(bg.texture, zoom)
 
     this
       .animate({
@@ -331,7 +285,7 @@ class EsperView extends React.Component {
 
     } else {
       this.image.rotation = rad(angle)
-      this.pixi.render()
+      this.esper.render()
     }
   }
 
@@ -343,7 +297,7 @@ class EsperView extends React.Component {
       .negative(negative)
       .saturation(saturation)
       .sharpen(sharpen)
-    this.pixi.render()
+    this.esper.render()
   }
 
   fadeOut(thing, duration = FADE_DURATION) {
@@ -379,30 +333,6 @@ class EsperView extends React.Component {
 
     this.resume()
     return tween
-  }
-
-
-  load(url) {
-    return new Promise((resolve, reject) => {
-
-      if (TextureCache[url]) {
-        return resolve(TextureCache[url])
-      }
-
-      this.pixi.loader
-        .reset()
-        .add(url)
-        .load((_, { [url]: res }) => {
-          if (res == null) return reject()
-          if (res.error) return reject(res.error)
-
-          // Loading typically happens on item open while
-          // the view transition is in progress: this
-          // adds a slight delay but improves the overall
-          // smoothness of the transition!
-          requestIdleCallback(() => resolve(res.texture), { timeout: 500 })
-        })
-    })
   }
 
   update = () => {
@@ -442,11 +372,11 @@ class EsperView extends React.Component {
     }
 
     if (resolution !== this.resolution) {
-      this.pixi.renderer.resolution = resolution
-      this.pixi.renderer.plugins.interaction.resolution = resolution
+      this.esper.app.renderer.resolution = resolution
+      this.esper.app.renderer.plugins.interaction.resolution = resolution
 
-      if (this.pixi.renderer.rootRenderTarget) {
-        this.pixi.renderer.rootRenderTarget.resolution = resolution
+      if (this.esper.app.renderer.rootRenderTarget) {
+        this.esper.app.renderer.rootRenderTarget.resolution = resolution
       }
 
       if (image != null) {
@@ -638,18 +568,6 @@ function isPinchToZoom(e) {
 
 function equal(p1, p2) {
   return p1.x === p2.x && p1.y === p2.y
-}
-
-
-function svg(name) {
-  return [`${name}@1x.svg`, `${name}@2x.svg`]
-}
-
-function addCursorStyle(styles, name, cursor = CURSOR[name]) {
-  if (cursor == null) return
-
-  styles[name] = css.cursor(svg(cursor.default), cursor)
-  styles[`${name}-active`] = css.cursor(svg(cursor.active), cursor)
 }
 
 module.exports = {
