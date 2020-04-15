@@ -17,7 +17,7 @@ const TWEEN = require('@tweenjs/tween.js')
 const { TOOL } = require('../../constants/esper')
 const debounce = require('lodash.debounce')
 const { PI, floor, round } = Math
-const { Esper, Picture, Selection, setScaleMode, constrain } = require('../../esper')
+const { Esper, Photo, Selection, setScaleMode, constrain } = require('../../esper')
 
 const {
   ESPER: { FADE_DURATION }
@@ -122,7 +122,7 @@ class EsperView extends React.Component {
     this.image = null
 
     if (props.src != null) {
-      let image = this.image = new Picture(props)
+      let image = this.image = new Photo(props)
 
       try {
         let texture = await this.esper.load(props.src)
@@ -131,7 +131,6 @@ class EsperView extends React.Component {
         // the texture, abort!
         if (this.image !== image) return
 
-        this.image = new Picture(props)
         this.image.bg.texture =  texture
         this.image.interactive = true
         this.image.on('mousedown', this.handleMouseDown)
