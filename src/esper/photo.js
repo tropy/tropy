@@ -15,7 +15,7 @@ const NEGATIVE = [
 ]
 
 
-class Picture extends Container {
+class Photo extends Container {
   #WIDTH
   #HEIGHT
 
@@ -146,5 +146,5 @@ class Picture extends Container {
 
 
 module.exports = {
-  Picture
+  Photo
 }

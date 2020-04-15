@@ -6,7 +6,7 @@ const PIXI = require('pixi.js-legacy')
 const { TextureCache, skipHello } = PIXI.utils
 const { append } = require('../dom')
 const { info } = require('../common/log')
-const { Picture } = require('./picture')
+const { Photo } = require('./photo')
 const util = require('./util')
 const { TOOL } = require('../constants/esper')
 
@@ -107,7 +107,7 @@ class Esper extends EventEmitter {
 
 module.exports = {
   Esper,
-  Picture,
+  Photo,
   ...require('./selection'),
   ...util
 }
