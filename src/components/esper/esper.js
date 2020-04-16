@@ -78,7 +78,7 @@ class Esper extends React.PureComponent {
     this.m.addListener(this.handleResolutionChange)
 
     this.setState(this.getStateFromProps(), () => {
-      this.view.reset(this.state)
+      this.esper.reset(this.state)
     })
   }
 
@@ -101,10 +101,10 @@ class Esper extends React.PureComponent {
       switch (true) {
         case (this.shouldViewReset(props, state)):
           state.quicktool = null
-          this.view.reset(state)
+          this.esper.reset(state)
           break
         case (this.shouldViewSync(props, state)):
-          this.view.sync(state, SYNC_DURATION)
+          this.esper.sync(state, SYNC_DURATION)
           break
       }
 
@@ -183,7 +183,7 @@ class Esper extends React.PureComponent {
   getStateFromProps(props = this.props) {
     const state = this.getEmptyState(props)
     const { photo, selection } = props
-    const { screen } = this.view
+    const { screen } = this.esper.app
 
     if (photo != null && !photo.pending) {
       const image = selection || photo
@@ -237,7 +237,7 @@ class Esper extends React.PureComponent {
   }
 
   getZoomBounds(
-    screen = this.view.screen,
+    screen = this.esper.app.screen,
     state = this.state,
     props = this.props
   ) {
@@ -335,15 +335,19 @@ class Esper extends React.PureComponent {
     this.view = view
   }
 
+  get esper() {
+    return this.view?.esper
+  }
+
   handleSlideIn = () => {
     this.setState({ isVisible: true })
-    this.view.resume()
+    this.esper.resume()
   }
 
   handleSlideOut = () => {
     this.setState({ isVisible: false })
-    this.view.stop()
-    this.view.stop.flush()
+    this.esper.stop()
+    this.esper.stop.flush()
   }
 
   handleResize = throttle((rect) => {
@@ -355,12 +359,12 @@ class Esper extends React.PureComponent {
   }
 
   resize = ({ width, height }) => {
-    width = round(width || this.view.screen.width)
-    height = round(height || this.view.screen.height)
+    width = round(width || this.esper.app.screen.width)
+    height = round(height || this.esper.app.screen.height)
 
     let { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
 
-    this.view.resize({
+    this.esper.resize({
       width, height, zoom, mirror: this.state.mirror
     })
 
@@ -399,13 +403,13 @@ class Esper extends React.PureComponent {
       zoom: this.state.zoom
     }
 
-    assign(state, this.getZoomBounds(this.view.screen, state))
+    assign(state, this.getZoomBounds(this.esper.app.screen, state))
 
     this.setState(state)
 
-    this.view.rotate(state, ROTATE_DURATION)
-    this.view.scale(state, ROTATE_DURATION)
-    this.view.adjust(state)
+    this.esper.rotate(state, ROTATE_DURATION)
+    this.esper.scale(state, ROTATE_DURATION)
+    this.esper.adjust(state)
 
     this.persist()
     this.container.focus()
@@ -419,11 +423,11 @@ class Esper extends React.PureComponent {
       height: this.props.photo.height
     }
 
-    assign(state, this.getZoomBounds(this.view.screen, state))
+    assign(state, this.getZoomBounds(this.esper.app.screen, state))
 
     this.setState(state, () => {
-      this.view.rotate(state, ROTATE_DURATION, by > 0)
-      this.view.scale(state, ROTATE_DURATION)
+      this.esper.rotate(state, ROTATE_DURATION, by > 0)
+      this.esper.scale(state, ROTATE_DURATION)
       this.persist()
     })
   }
@@ -433,7 +437,7 @@ class Esper extends React.PureComponent {
     const mode = MODE.ZOOM
 
     this.setState({ zoom, mode })
-    this.view.scale({
+    this.esper.scale({
       zoom, mirror: this.state.mirror
     }, animate ? ZOOM_DURATION : 0, { x, y })
 
@@ -444,7 +448,7 @@ class Esper extends React.PureComponent {
     if (this.state.mode === 'fit') return
 
     this.setState(position)
-    this.view.move(position, animate ? PAN_DURATION : 0)
+    this.esper.move(position, animate ? PAN_DURATION : 0)
   }
 
   handleMirrorChange = () => {
@@ -456,8 +460,8 @@ class Esper extends React.PureComponent {
 
     this.setState({ angle, mirror })
 
-    this.view.scale({ zoom, mirror })
-    this.view.rotate({ angle })
+    this.esper.scale({ zoom, mirror })
+    this.esper.rotate({ angle })
     this.persist()
   }
 
@@ -474,12 +478,13 @@ class Esper extends React.PureComponent {
     }
 
     this.setState({ zoom, mode })
-    this.view.scale({ zoom, mirror }, ZOOM_DURATION)
+    this.esper.scale({ zoom, mirror }, ZOOM_DURATION)
 
     this.props.onChange({ image: this.wrapImageState({ mode }) })
   }
 
   handleToolChange = (tool) => {
+    this.esper.tool = tool
     this.props.onChange({ esper: { tool } })
   }
 
@@ -489,7 +494,7 @@ class Esper extends React.PureComponent {
 
   handleColorChange = (opts) => {
     this.setState(opts, () => {
-      this.view.adjust(this.state)
+      this.esper.adjust(this.state)
       this.persist()
     })
   }
@@ -506,8 +511,8 @@ class Esper extends React.PureComponent {
       let mw = this.props.invertScroll ? -1 : 1
 
       this.handlePositionChange({
-        x: this.view.image.x + floor(dx * mw),
-        y: this.view.image.y + floor(dy * mw)
+        x: this.esper.photo.x + floor(dx * mw),
+        y: this.esper.photo.y + floor(dy * mw)
       })
     }
   }
@@ -672,7 +677,7 @@ class Esper extends React.PureComponent {
   }
 
   handleMouseMove = () => {
-    this.view.resume()
+    this.esper.resume()
   }
 
   handleTabFocus = () => {
@@ -687,6 +692,8 @@ class Esper extends React.PureComponent {
   render() {
     const { isDisabled, isSelectionActive, tabIndex } = this
     const tool = this.state.quicktool || this.state.tool
+
+    if (this.esper) this.esper.tool = tool
 
     return (
       <section
