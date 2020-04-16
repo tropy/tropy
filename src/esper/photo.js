@@ -142,6 +142,22 @@ class Photo extends Container {
     this.bg.filters[1].intensity = intensity
     return this
   }
+
+  sync(props) {
+    this.selections.sync(props)
+    this.overlay.sync(props)
+    this.cursor = props.tool
+  }
+
+  update(dragState) {
+    if (this.selections.visible) {
+      this.selections.update(dragState)
+    }
+
+    if (this.overlay.visible) {
+      this.overlay.update()
+    }
+  }
 }
 
 

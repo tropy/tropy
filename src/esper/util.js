@@ -2,6 +2,7 @@
 
 const css = require('../css')
 const { restrict } = require('../common/util')
+const { darwin } = require('../common/os')
 const { SCALE_MODES } = require('pixi.js')
 
 const {
@@ -18,6 +19,22 @@ const constrain = (pos, { left, top, bottom, right }) => {
 
   return pos
 }
+
+const coords = (event) => ({
+  x: event.offsetX,
+  y: event.offsetY,
+  dx: event.deltaX,
+  dy: event.deltaY,
+  ctrl: event.ctrlKey || event.metaKey,
+  shift: event.shiftKey,
+  pinch: isPinchToZoom(event)
+})
+
+const isPinchToZoom = ({ type, ctrlKey, metaKey, shiftKey }) =>
+  darwin && type === 'wheel' && ctrlKey && !(metaKey || shiftKey)
+
+const equal = (p1, p2) =>
+  p1.x === p2.x && p1.y === p2.y
 
 const setScaleMode = (texture, zoom) => {
   if (texture == null) return
@@ -47,5 +64,7 @@ const addCursorStyle = (styles, name, cursor = CURSOR[name]) => {
 module.exports = {
   addCursorStyle,
   constrain,
+  coords,
+  equal,
   setScaleMode
 }
