@@ -3,7 +3,7 @@
 const React = require('react')
 const { connect } = require('react-redux')
 const { Resizable } = require('../resizable')
-const { Esper } = require('../esper')
+const { EsperContainer } = require('../esper')
 const { NotePad } = require('../note')
 const act = require('../../actions')
 const cx = require('classnames')
@@ -97,7 +97,7 @@ class ItemContainer extends React.PureComponent {
           isRelative
           value={this.size}
           onChange={this.handleEsperResize}>
-          <Esper {...this.props.view}
+          <EsperContainer {...this.props.view}
             cache={this.props.cache}
             mode={this.props.view.mode || this.props.settings.zoomMode}
             hasOverlayToolbar={this.hasOverlayToolbars}

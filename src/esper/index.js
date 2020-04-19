@@ -14,7 +14,11 @@ const { Selection } = require('./selection')
 const { TOOL } = require('../constants/esper')
 
 const {
-  ESPER: { FADE_DURATION }
+  ESPER: {
+    FADE_DURATION,
+    ZOOM_PINCH_BOOST,
+    ZOOM_WHEEL_FACTOR
+  }
 } = require('../constants/sass')
 
 const {
@@ -36,7 +40,9 @@ class Esper extends EventEmitter {
     return Esper.#INSTANCE
   }
 
+  #rmq = matchMedia('(max-resolution: 1dppx)')
   #lastClickTime = 0
+  #tool = TOOL.ARROW
 
   constructor(opts) {
     super()
@@ -71,6 +77,9 @@ class Esper extends EventEmitter {
     this.app.loader.onLoad.add((...args) =>
       this.emit('loader.load', ...args))
 
+    this.#rmq.addListener(this.handleResolutionChange)
+    this.on('change', this.handleResolutionChange)
+
     on(this.app.view, 'wheel', this.handleWheel, { passive: true })
 
     info(`Esper.instance created using ${
@@ -79,13 +88,15 @@ class Esper extends EventEmitter {
   }
 
   destroy() {
-    this.stop.flush()
     this.tweens.removeAll()
+    this.stop.flush()
 
     if (this.drag.current)
       this.drag.stop()
 
     off(this.app.view, 'wheel', this.handleWheel, { passive: true })
+
+    this.#rmq.removeListener(this.handleResolutionChange)
 
     this.app.destroy(true, true)
     this.removeAllListeners()
@@ -96,6 +107,7 @@ class Esper extends EventEmitter {
 
   mount(element) {
     append(this.app.view, element)
+    return this
   }
 
 
@@ -123,15 +135,15 @@ class Esper extends EventEmitter {
   }
 
   commit = () => {
-    this.emit('change')
-  }
-
-  get position() {
-    return {
+    this.emit('change', {
       x: this.photo?.x || 0,
       y: this.photo?.y || 0,
       zoom: this.photo?.scale.y || 1
-    }
+    })
+  }
+
+  get dpx() {
+    return Math.floor(devicePixelRatio) || 1
   }
 
   get resolution() {
@@ -149,7 +161,33 @@ class Esper extends EventEmitter {
         renderer.rootRenderTarget.resolution = resolution
 
       this.photo?.handleResolutionChange(resolution)
+
+      renderer.resize(renderer.width, renderer.height)
     }
+  }
+
+  get tool() {
+    return this.#tool
+  }
+
+  set tool(tool) {
+    this.#tool = tool
+
+    if (this.photo) {
+      this.photo.cursor = tool
+    }
+  }
+
+  handleResolutionChange() {
+    let resolution = this.dpx
+
+    // On low-res screens, we render at 2x resolution
+    // when zooming out to improve quality. See #218
+    if (resolution < 2 && this.photo && this.photo.scale.y < 1) {
+      resolution = 2
+    }
+
+    this.resolution = resolution
   }
 
   getInnerBounds(...args) {
@@ -193,6 +231,7 @@ class Esper extends EventEmitter {
       })
 
     this.resume()
+
     return tween
   }
 
@@ -274,10 +313,11 @@ class Esper extends EventEmitter {
       photo.position.set(x, y)
       photo.constrain(this.app.screen)
 
-      // photo.cursor = props.tool
-      this.tool = props.tool
+      // photo.sync(props)
+      // this.tool = props.tool
+      photo.cursor = this.tool
 
-      this.app.stage.addChildAt(this.photo, 0)
+      this.app.stage.addChildAt(photo, 0)
 
       this.commit()
       this.render()
@@ -360,7 +400,7 @@ class Esper extends EventEmitter {
         y: position.y,
         zoom: scale.y
       }, 'sync', { complete: this.persist })
-      .to(next, duration * 0.67)
+      .to(next, duration / 2)
       .onUpdate(m => {
         scale.x = m.zoom * zx
         scale.y = m.zoom
@@ -368,6 +408,8 @@ class Esper extends EventEmitter {
         photo.y = m.y
       })
       .start()
+
+    // photo.sync(props)
   }
 
   scale({ mirror, zoom }, duration = 0, { x, y } = {}) {
@@ -430,11 +472,14 @@ class Esper extends EventEmitter {
 
     this.resume()
 
-    if (target instanceof Selection)
-      return this.emit('selection-activate', event)
+    if (target instanceof Selection) {
+      return this.emit('selection-activate', event.target.data)
+    }
 
-    if (this.isDoubleClick())
-      return this.emit('double-click', event, coords(data.originalEvent))
+    if (this.isDoubleClick()) {
+      let { x, y, shift } = coords(data.originalEvent)
+      return this.emit(`zoom-${shift ? 'out' : 'in'}`, { x, y }, true)
+    }
 
     target.cursor = `${this.tool}-active`
 
@@ -477,13 +522,13 @@ class Esper extends EventEmitter {
           this.handlePanStop()
           break
         case TOOL.SELECT:
-          this.handleSelectStop(event)
+          this.handleSelectStop()
           break
         case TOOL.ZOOM_IN:
-          this.emit('zoom-in', event, origin.mov)
+          this.emit('zoom-in', origin.mov, false)
           break
         case TOOL.ZOOM_OUT:
-          this.emit('zoom-out', event, origin.mov)
+          this.emit('zoom-out', origin.mov, false)
           break
       }
 
@@ -514,7 +559,7 @@ class Esper extends EventEmitter {
     selection.height = y - selection.y
   }
 
-  handleSelectStop(event) {
+  handleSelectStop() {
     let { x, y, width, height } = this.drag.current.selection
 
     if (!width || !height) return
@@ -529,7 +574,7 @@ class Esper extends EventEmitter {
       height = -height
     }
 
-    this.emit('selection-create', event, {
+    this.emit('selection-create', {
       x: Math.round(x),
       y: Math.round(y),
       width: Math.round(width),
@@ -538,8 +583,25 @@ class Esper extends EventEmitter {
   }
 
   handleWheel = (event) => {
-    this.emit('wheel', event, coords(event))
-    this.resume()
+    event.stopPropagation()
+
+    let { x, y, dy, dx, ctrl, pinch } = coords(event)
+
+    if (ctrl) {
+      if (pinch) dy = Math.round(dy * ZOOM_PINCH_BOOST)
+
+      this.emit('wheel.zoom', {
+        x,
+        y,
+        by: dy * ZOOM_WHEEL_FACTOR
+      })
+
+    } else {
+      this.emit('wheel.pan', {
+        x: Math.floor(dx),
+        y: Math.floor(dy)
+      })
+    }
   }
 }
 
