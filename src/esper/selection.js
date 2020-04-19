@@ -55,7 +55,7 @@ class SelectionLayer extends Container {
     this.visible = this.isVisible(props)
     this.interactive = this.isInteractive(props)
 
-    const { selections } = props
+    let { selections } = props
 
     for (let i = 0; i < selections.length; ++i) {
       if (i >= this.children.length) {

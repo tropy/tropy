@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = {
-  ...require('./esper'),
-  ...require('./toolbar'),
-  ...require('./view')
+  ...require('./container'),
+  ...require('./panel'),
+  ...require('./toolbar')
 }

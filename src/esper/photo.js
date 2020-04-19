@@ -146,7 +146,7 @@ class Photo extends Container {
   sync(props) {
     this.selections.sync(props)
     this.overlay.sync(props)
-    this.cursor = props.tool
+    // this.cursor = props.tool
   }
 
   update(dragState) {
