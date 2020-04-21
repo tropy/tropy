@@ -16,14 +16,14 @@ const NEGATIVE = [
 
 
 class Photo extends Container {
-  #WIDTH
-  #HEIGHT
+  #width
+  #height
 
   constructor({ width, height }) {
     super()
 
-    this.#WIDTH = width
-    this.#HEIGHT = height
+    this.#width = width
+    this.#height = height
 
     this.pivot.set(width / 2, height / 2)
 
@@ -58,11 +58,11 @@ class Photo extends Container {
   }
 
   getWidth(scale = this.scale.y) {
-    return this.#WIDTH * scale
+    return this.#width * scale
   }
 
   getHeight(scale = this.scale.y) {
-    return this.#HEIGHT * scale
+    return this.#height * scale
   }
 
   getBounds(scale = this.scale.y) {
