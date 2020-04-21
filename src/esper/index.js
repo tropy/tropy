@@ -40,6 +40,10 @@ class Esper extends EventEmitter {
     return Esper.#INSTANCE
   }
 
+  static get devicePixelRatio() {
+    return Math.floor(devicePixelRatio) || 1
+  }
+
   #rmq = matchMedia('(max-resolution: 1dppx)')
   #lastClickTime = 0
   #tool = TOOL.ARROW
@@ -135,15 +139,7 @@ class Esper extends EventEmitter {
   }
 
   commit = () => {
-    this.emit('change', {
-      x: this.photo?.x || 0,
-      y: this.photo?.y || 0,
-      zoom: this.photo?.scale.y || 1
-    })
-  }
-
-  get dpx() {
-    return Math.floor(devicePixelRatio) || 1
+    this.emit('change')
   }
 
   get resolution() {
@@ -178,8 +174,20 @@ class Esper extends EventEmitter {
     }
   }
 
+  get x() {
+    return this.photo?.x ?? 0
+  }
+
+  get y() {
+    return this.photo?.y ?? 0
+  }
+
+  get zoom() {
+    return this.photo?.scale.y ?? 1
+  }
+
   handleResolutionChange() {
-    let resolution = this.dpx
+    let resolution = Esper.devicePixelRatio
 
     // On low-res screens, we render at 2x resolution
     // when zooming out to improve quality. See #218
