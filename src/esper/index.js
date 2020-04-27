@@ -121,7 +121,11 @@ class Esper extends EventEmitter {
     this.photo = null
 
     if (state.src != null) {
+      // Subtle: race conditions because of async loading!
+      // The first sync must not override other syncs, coming
+      // in while the photo is still loading.
       let tmp = this.photo = new Photo(props.photo)
+      this.sync(props, state, 0)
 
       try {
         let texture = await this.load(state.src)
@@ -137,10 +141,6 @@ class Esper extends EventEmitter {
         // TODO
         this.emit('photo.error', props.photo)
       }
-
-      this.sync(props, state, 0)
-
-
 
       this.app.stage.addChildAt(this.photo, 0)
 
@@ -275,15 +275,23 @@ class Esper extends EventEmitter {
 
 
   handleResolutionChange() {
-    let resolution = Esper.devicePixelRatio
+    try {
+      var { original } = this.resolution
+      var resolution = Esper.devicePixelRatio
 
-    // On low-res screens, we render at 2x resolution
-    // when zooming out to improve quality. See #218
-    if (resolution < 2 && this.photo && this.photo.scale.y < 1) {
-      resolution = 2
+      // On low-res screens, we render at 2x resolution
+      // when zooming out to improve quality. See #218
+      if (resolution < 2 && this.photo && this.photo.scale.y < 1) {
+        resolution = 2
+      }
+
+      this.resolution = resolution
+
+    } finally {
+      if (original !== resolution) {
+        this.emit('resolution-change')
+      }
     }
-
-    this.resolution = resolution
   }
 
   getInnerBounds(...args) {
