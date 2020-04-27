@@ -11,11 +11,12 @@ const { rad } = require('../common/math')
 const { restrict } = require('../common/util')
 const { Photo } = require('./photo')
 const { Selection } = require('./selection')
-const { TOOL } = require('../constants/esper')
+const { MODE, TOOL } = require('../constants/esper')
 
 const {
   ESPER: {
     FADE_DURATION,
+    SYNC_DURATION,
     ZOOM_PINCH_BOOST,
     ZOOM_WHEEL_FACTOR
   }
@@ -115,6 +116,96 @@ class Esper extends EventEmitter {
   }
 
 
+  async reset(props, state) {
+    this.fadeOut(this.photo)
+    this.photo = null
+
+    if (state.src != null) {
+      let tmp = this.photo = new Photo(props.photo)
+
+      try {
+        let texture = await this.load(state.src)
+
+        // Subtle: if the view was reset during load, abort!
+        if (this.photo !== tmp) return
+
+        this.photo.bg.texture =  texture
+        this.photo.interactive = true
+        this.photo.on('mousedown', this.handleMouseDown)
+
+      } catch (_) {
+        // TODO
+        this.emit('photo.error', props.photo)
+      }
+
+      this.sync(props, state, 0)
+
+
+
+      this.app.stage.addChildAt(this.photo, 0)
+
+      this.commit()
+      this.render()
+    }
+  }
+
+  sync(props, state, duration = SYNC_DURATION) {
+    let { photo } = this
+    let { angle, mirror, zoom } = state
+    let { x, y } = this.getPositionFromProps(props)
+
+    let zx = mirror ? -1 : 1
+    let next = constrain({ x, y, zoom }, this.getInnerBounds(zoom))
+
+    this.adjust(state)
+    setScaleMode(photo.bg.texture, zoom)
+
+    photo.sync(props)
+
+    if (duration) {
+      // TODO fixate, change pivot and rotate after move and scale!
+      photo.scale.x = photo.scale.y * zx
+      photo.rotation = rad(angle)
+
+      this
+        .animate({
+          x: photo.position.x,
+          y: photo.position.y,
+          zoom: photo.scale.y
+        }, 'sync', { complete: this.commit })
+        .to(next, duration / 2)
+        .onUpdate(m => {
+          photo.scale.x = m.zoom * zx
+          photo.scale.y = m.zoom
+          photo.x = m.x
+          photo.y = m.y
+        })
+        .start()
+
+    } else {
+      this.rotate(state)
+      this.photo.scale.x = next.zoom * zx
+      this.photo.scale.y = next.zoom
+      this.photo.position.set(next.x, next.y)
+    }
+  }
+
+  resize({ width, height, zoom, mirror }) {
+    this.app.renderer.resize(width, height)
+    this.render()
+
+    if (this.photo == null || zoom == null)
+      return
+
+    this.photo.constrain({ width, height }, zoom)
+    setScaleMode(this.photo.bg.texture, zoom)
+    this.photo.scale.set(mirror ? -zoom : zoom, zoom)
+
+    this.commit()
+    this.resume()
+  }
+
+
   render() {
     this.app.render()
   }
@@ -182,9 +273,6 @@ class Esper extends EventEmitter {
     return this.photo?.y ?? 0
   }
 
-  get zoom() {
-    return this.photo?.scale.y ?? 1
-  }
 
   handleResolutionChange() {
     let resolution = Esper.devicePixelRatio
@@ -200,6 +288,16 @@ class Esper extends EventEmitter {
 
   getInnerBounds(...args) {
     return this.photo.getInnerBounds(this.app.screen, ...args)
+  }
+
+  getPositionFromProps({ x, y, mode }) {
+    if (x == null || isNaN(x) || mode !== MODE.ZOOM)
+      x = this.app.screen.width / 2
+
+    if (y == null || isNaN(y) || mode === MODE.FIT)
+      y = this.app.screen.height / 2
+
+    return { x, y }
   }
 
 
@@ -287,70 +385,6 @@ class Esper extends EventEmitter {
       .start()
   }
 
-  async reset(props) {
-    this.fadeOut(this.photo)
-    this.photo = null
-
-    if (props.src != null) {
-      let photo = this.photo = new Photo(props)
-
-      try {
-        let texture = await this.load(props.src)
-
-        // Subtle: if the view was reset while we were loading
-        // the texture, abort!
-        if (this.photo !== photo) return
-
-        photo.bg.texture =  texture
-        photo.interactive = true
-        photo.on('mousedown', this.handleMouseDown)
-
-      } catch (_) {
-        this.emit('photo.error', props.photo)
-      }
-
-      this.adjust(props)
-      this.rotate(props)
-
-      let { mirror, x, y, zoom } = props
-
-      setScaleMode(photo.bg.texture, zoom)
-      photo.scale.x = mirror ? -zoom : zoom
-      photo.scale.y = zoom
-
-      photo.position.set(x, y)
-      photo.constrain(this.app.screen)
-
-      // photo.sync(props)
-      // this.tool = props.tool
-      photo.cursor = this.tool
-
-      this.app.stage.addChildAt(photo, 0)
-
-      this.commit()
-      this.render()
-    }
-  }
-
-
-  resize({ width, height, zoom, mirror }) {
-    width = Math.round(width)
-    height = Math.round(height)
-
-    this.app.renderer.resize(width, height)
-    this.render()
-
-    if (this.photo == null || zoom == null)
-      return
-
-    this.photo.constrain({ width, height }, zoom)
-    setScaleMode(this.photo.bg.texture, zoom)
-    this.photo.scale.set(mirror ? -zoom : zoom, zoom)
-
-    this.commit()
-    this.resume()
-  }
-
   rotate({ angle }, duration = 0, clockwise = false) {
     if (duration > 0) {
       let { photo } = this
@@ -382,42 +416,8 @@ class Esper extends EventEmitter {
     } else {
       this.photo.rotation = rad(angle)
       this.render()
+      this.commit()
     }
-  }
-
-  sync(props, duration = 0) {
-    if (this.photo == null) return
-
-    let { photo } = this
-    let { angle, mirror, x, y, zoom } = props
-    let { position, scale } = photo
-
-    setScaleMode(photo.bg.texture, zoom)
-    this.adjust(props)
-
-    let zx = mirror ? -1 : 1
-    let next = constrain({ x, y, zoom }, this.getInnerBounds(zoom))
-
-    // TODO fixate, change pivot and rotate after move and scale!
-    scale.x = scale.y * zx
-    photo.rotation = rad(angle)
-
-    this
-      .animate({
-        x: position.x,
-        y: position.y,
-        zoom: scale.y
-      }, 'sync', { complete: this.persist })
-      .to(next, duration / 2)
-      .onUpdate(m => {
-        scale.x = m.zoom * zx
-        scale.y = m.zoom
-        photo.x = m.x
-        photo.y = m.y
-      })
-      .start()
-
-    // photo.sync(props)
   }
 
   scale({ mirror, zoom }, duration = 0, { x, y } = {}) {

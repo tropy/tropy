@@ -1,24 +1,22 @@
 'use strict'
 
 const React = require('react')
+const cx = require('classnames')
 const debounce = require('lodash.debounce')
 const throttle = require('lodash.throttle')
-const cx = require('classnames')
 const { Esper } = require('../../esper')
 const { EsperToolbar } = require('./toolbar')
 const { EsperPanel } = require('./panel')
-const { get, restrict, shallow } = require('../../common/util')
+const { restrict, shallow } = require('../../common/util')
 const { Cache } = require('../../common/cache')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { on, off } = require('../../dom')
 const { match } = require('../../keymap')
 const { assign } = Object
-const { floor, min } = Math
 
 const {
-  arrayOf, bool, func, number, object, shape, string
-} = require('prop-types')
+  arrayOf, bool, func, number, object, shape, string } = require('prop-types')
 
 const { TABS } = require('../../constants')
 const { TOOL, MODE } = require('../../constants/esper')
@@ -26,27 +24,20 @@ const { TOOL, MODE } = require('../../constants/esper')
 const {
   ESPER: {
     MAX_ZOOM,
+    MIN_WIDTH,
+    MIN_HEIGHT,
     MIN_ZOOM,
     PAN_DURATION,
     PAN_STEP_SIZE,
     ROTATE_DURATION,
-    SYNC_DURATION,
     ZOOM_DURATION,
     ZOOM_STEP_SIZE,
     ZOOM_PRECISION
   }
 } = require('../../constants/sass')
 
-const IMAGE_PARAMS = [
-  'brightness',
-  'contrast',
-  'hue',
-  'negative',
-  'saturation',
-  'sharpen'
-]
 
-class EsperContainer extends React.PureComponent {
+class EsperContainer extends React.Component {
 
   #IO = new IntersectionObserver(([el]) => {
     requestIdleCallback(
@@ -61,12 +52,67 @@ class EsperContainer extends React.PureComponent {
   container = React.createRef()
   view = React.createRef()
 
-  state = this.getEmptyState(this.props)
+  state = {
+    hasTabFocus: false,
+    isVisible: false,
+    quicktool: null,
+
+    // resize
+    height: MIN_HEIGHT,
+    width: MIN_WIDTH,
+
+    // derive from resize + photo/selection
+    minZoom: EsperContainer.defaultProps.minZoom,
+    zoom: EsperContainer.defaultProps.zoom,
+    zoomToFill: null,
+
+    // derive from photo/selection
+    ...EsperContainer.defaultImageProps
+  }
+
+
+  static getDerivedStateFromProps(props, prevState) {
+    let id
+    let src
+
+    if (props.photo && !props.photo.pending) {
+      id = props.selection?.id ?? props.photo.id
+      src = Cache.url(props.cache, 'full', props.photo)
+    }
+
+    if (id === prevState.id && src === prevState.src)
+      return null
+
+    let state = {
+      ...prevState,
+      quicktool: null,
+      id,
+      src,
+      ...EsperContainer.defaultImageProps
+    }
+
+    let image = props.selection || props.photo
+
+    if (image != null) {
+      for (let prop in EsperContainer.defaultImageProps) {
+        state[prop] = image[prop]
+      }
+
+      orientate(state, props.photo)
+    }
+
+    // TODO
+    Object.assign(state, getZoomBounds(props, state))
+
+    return state
+  }
+
 
   componentDidMount() {
     this.esper = new Esper()
     this.esper
       .on('change', this.handleViewChange)
+    // TODO
     // .on('photo.error', this.handlePhotoError)
     // .on('loader.error', this.handleLoadError)
       .on('selection-activate', this.handleSelectionActivate)
@@ -82,18 +128,19 @@ class EsperContainer extends React.PureComponent {
 
 
     on(this.container.current, 'tab:focus', this.handleTabFocus)
-
-    this.setState(this.getStateFromProps(), () => {
-      this.esper.reset(this.state)
-    })
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.selection !== this.props.selection ||
-      prevProps.selections !== this.props.selections ||
-      prevProps.tool !== this.props.tool) {
+  componentDidUpdate(prevProps, prevState) {
+    let { id, src } = this.state
+
+    if (src !== prevState.src)
+      this.esper.reset(this.props, this.state)
+
+    else if (id !== prevState.id)
+      this.esper.sync(this.props, this.state)
+
+    else if (!shallow(this.props, prevProps, ['selections', 'tool']))
       this.esper.photo?.sync(this.props)
-    }
   }
 
   componentWillUnmount() {
@@ -101,271 +148,32 @@ class EsperContainer extends React.PureComponent {
     this.#RO.disconnect()
 
     this.persist.flush()
-    this.update.flush()
+    this.handleViewChange.flush()
 
     off(this.container.current, 'tab:focus', this.handleTabFocus)
 
     this.esper.destroy()
   }
 
-  UNSAFE_componentWillReceiveProps(props) {
-    if (!shallow(props, this.props)) {
-      const state = this.getStateFromProps(props)
-
-      switch (true) {
-        case (this.shouldViewReset(props, state)):
-          state.quicktool = null
-          this.esper.reset(state)
-          break
-        case (this.shouldViewSync(props, state)):
-          this.esper.sync(state, SYNC_DURATION)
-          break
-      }
-
-      if (this.shouldToolReset(props)) {
-        this.handleToolChange(EsperContainer.defaultProps.tool)
-      }
-
-      this.setState(state)
-    }
-  }
-
-  shouldViewReset(props, state) {
-    return (state.src !== this.state.src) ||
-      hasPhotoChanged(props.photo, this.props.photo)
-  }
-
-  shouldViewSync(props, state) {
-    return (props.selection !== this.props.selection) ||
-      !shallow(state, this.state, ['angle', 'mirror', ...IMAGE_PARAMS])
-  }
-
-  shouldToolReset(props) {
-    if (props.selection == null) return false
-    if (props.tool !== TOOL.SELECT) return false
-    return true
-  }
-
-  get classes() {
-    return {
-      'overlay-mode': this.props.hasOverlayToolbar,
-      'panel-visible': this.props.isPanelVisible,
-      'tab-focus': this.state.hasTabFocus
-    }
-  }
-
-  get isEmpty() {
-    return this.props.photo == null || this.props.photo.pending === true
-  }
-
-  get isDisabled() {
-    return this.props.isDisabled || this.isEmpty || !this.state.isVisible
-  }
-
-  get isSelectionActive() {
-    return this.props.selection != null
-  }
-
-  get tabIndex() {
-    return (this.props.isItemOpen) ? this.props.tabIndex : -1
-  }
-
-  getActiveImageId() {
-    return get(this.props.selection, ['id']) || get(this.props.photo, ['id'])
-  }
-
-  getEmptyState(props = this.props) {
-    return {
-      mode: props.mode,
-      zoom: props.zoom,
-      minZoom: props.minZoom / (this.esper?.dpx || 1),
-      width: 0,
-      height: 0,
-      src: null,
-      x: props.x,
-      y: props.y,
-      hasTransformations: false,
-      ...this.getOriginalPhotoState(props)
-    }
-  }
-
-  getStateFromProps(props = this.props) {
-    const state = this.getEmptyState(props)
-    const { photo, selection } = props
-    const { screen } = this.esper.app
-
-    if (photo != null && !photo.pending) {
-      const image = selection || photo
-
-      assign(state, {
-        photo: photo.id,
-        src: Cache.url(props.cache, 'full', photo),
-        width: photo.width,
-        height: photo.height
-      })
-
-      if (image.angle !== 0) {
-        state.hasTransformations = true
-        state.angle = (state.angle + image.angle) % 360
-      }
-
-      for (let prop of ['mirror', ...IMAGE_PARAMS]) {
-        if (state[prop] !== image[prop]) {
-          state.hasTransformations = true
-          state[prop] = image[prop]
-        }
-      }
-    }
-
-    if (state.x == null || state.mode !== 'zoom') {
-      state.x = screen.width / 2
-    }
-
-    if (state.y == null || state.mode === 'fit') {
-      state.y = screen.height / 2
-    }
-
-    assign(state, this.getZoomBounds(screen, state, props))
-
-    return state
-  }
-
-  getZoomToFill(screen, { width } = this.state, props = this.props) {
-    return round(min(props.maxZoom, screen.width / width), ZOOM_PRECISION)
-  }
-
-  getZoomToFit(
-    screen,
-    { width, height } = this.state,
-    { minZoom } = this.props
-  ) {
-    return round(
-      min(minZoom / this.esper.dpx,
-        min(screen.width / width, screen.height / height)
-    ), ZOOM_PRECISION)
-  }
-
-  getZoomBounds(
-    screen = this.esper.app.screen,
-    state = this.state,
-    props = this.props
-  ) {
-    let { angle, zoom, width, height } = state
-    let minZoom = props.minZoom / this.esper.dpx
-    let zoomToFill = minZoom
-
-    if (width > 0 && height > 0) {
-      if (!isHorizontal(angle)) {
-        [width, height] = [height, width]
-      }
-
-      minZoom = this.getZoomToFit(screen, { width, height }, props)
-      zoomToFill = this.getZoomToFill(screen, { width }, props)
-
-      switch (state.mode) {
-        case 'fill':
-          zoom = zoomToFill
-          break
-        case 'fit':
-          zoom = minZoom
-          break
-      }
-
-      if (minZoom > zoom) zoom = minZoom
-    }
-
-    return { minZoom, zoom, zoomToFill }
-  }
-
-  getImageState() {
-    const { x, y, zoom } = this.state
-    return this.wrapImageState({
-      x: round(x),
-      y: round(y),
-      zoom
-    })
-  }
-
-  wrapImageState(state) {
-    const id = this.getActiveImageId()
-    return (id == null) ? null : { [id]: state }
-  }
-
   getPhotoState() {
-    const id = this.getActiveImageId()
-    const { angle, mirror } = this.getRelativeRotation()
     const {
-      brightness, contrast, hue, negative, saturation, sharpen
+      id, brightness, contrast, hue, negative, saturation, sharpen
     } = this.state
+    const { angle, mirror } = this.rotation
 
     return (id == null) ? null : {
       id,
       data: {
-        angle, brightness, contrast, hue, mirror, negative, saturation, sharpen
+        angle,
+        brightness,
+        contrast,
+        hue,
+        mirror,
+        negative,
+        saturation,
+        sharpen
       }
     }
-  }
-
-  getOrientationState({ angle, mirror }, orientation) {
-    return Rotation
-      .fromExifOrientation(orientation)
-      .add({ angle, mirror })
-      .toJSON()
-  }
-
-  getOriginalPhotoState({ photo } = this.props) {
-    const state = {
-      angle: 0,
-      brightness: 0,
-      contrast: 0,
-      hue: 0,
-      negative: false,
-      mirror: false,
-      saturation: 0,
-      sharpen: 0
-    }
-
-    if (photo != null) {
-      assign(state, this.getOrientationState(state, photo.orientation))
-    }
-
-    return state
-  }
-
-  getRelativeRotation(
-    { angle, mirror } = this.state,
-    orientation = this.props.photo.orientation
-  ) {
-    return new Rotation({ angle, mirror })
-      .subtract(Rotation.fromExifOrientation(orientation))
-  }
-
-  handleSlideIn = () => {
-    this.setState({ isVisible: true })
-    this.esper.resume()
-  }
-
-  handleSlideOut = () => {
-    this.setState({ isVisible: false })
-    this.esper.stop()
-    this.esper.stop.flush()
-  }
-
-  handleResize = throttle((rect) => {
-    this.resize(rect)
-  }, 50)
-
-  resize = ({ width, height }) => {
-    width = round(width || this.esper.app.screen.width)
-    height = round(height || this.esper.app.screen.height)
-
-    let { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
-
-    this.esper.resize({
-      width, height, zoom, mirror: this.state.mirror
-    })
-
-    this.setState({ minZoom, zoom, zoomToFill })
   }
 
   persist = debounce(() => {
@@ -374,79 +182,53 @@ class EsperContainer extends React.PureComponent {
     })
   }, 650)
 
-  update = debounce(() => {
-    this.props.onChange({ image: this.getImageState() })
-  }, 650)
-
-  pan({ x = 0, y = 0 }, animate) {
-    this.handlePositionChange({
-      x: this.state.x + floor(x),
-      y: this.state.y + floor(y)
-    }, animate)
-  }
-
-  zoom(by, animate) {
-    this.handleZoomChange({ zoom: this.state.zoom + by }, animate)
-  }
-
   handleRevertToOriginal = () => {
-    const { photo } = this.props
-    if (photo == null) return
-
-    const state = {
-      ...this.getOriginalPhotoState(),
-      width: photo.width,
-      height: photo.height,
-      zoom: this.state.zoom
+    let state = {
+      ...this.state,
+      ...EsperPanel.defaultProps
     }
 
-    assign(state, this.getZoomBounds(this.esper.app.screen, state))
-
-    this.setState(state)
-
-    this.esper.rotate(state, ROTATE_DURATION)
-    this.esper.scale(state, ROTATE_DURATION)
     this.esper.adjust(state)
-
+    this.setState(state)
+    this.focus()
     this.persist()
-    this.container.current.focus()
   }
 
   handleRotationChange = (by) => {
-    const state = {
+    let state = {
       ...this.state,
-      angle: rotate(this.state.angle, by),
-      width: this.props.photo.width,
-      height: this.props.photo.height
+      angle: rotate(this.state.angle, by)
     }
 
-    assign(state, this.getZoomBounds(this.esper.app.screen, state))
+    assign(state, getZoomBounds(this.props, state))
 
-    this.setState(state, () => {
-      this.esper.rotate(state, ROTATE_DURATION, by > 0)
-      this.esper.scale(state, ROTATE_DURATION)
-      this.persist()
-    })
+    this.esper.rotate(state, ROTATE_DURATION, by > 0)
+    this.esper.scale(state, ROTATE_DURATION)
+
+    this.setState(state)
+    this.persist()
   }
 
   handleZoomChange = ({ x, y, zoom }, animate) => {
-    zoom = restrict(zoom, this.state.minZoom, this.props.maxZoom)
-    const mode = MODE.ZOOM
+    zoom = restrict(
+      round(zoom, ZOOM_PRECISION),
+      this.state.minZoom,
+      this.props.maxZoom)
 
-    this.setState({ zoom, mode })
+    this.setState({ zoom })
+
     this.esper.scale({
-      zoom, mirror: this.state.mirror
+      zoom,
+      mirror: this.state.mirror
     }, animate ? ZOOM_DURATION : 0, { x, y })
 
-    this.props.onChange({ image: this.wrapImageState({ mode }) })
+    this.props.onChange({
+      view: {
+        [this.state.id]: { mode: MODE.ZOOM }
+      }
+    })
   }
 
-  handlePositionChange(position, animate) {
-    if (this.state.mode === 'fit') return
-
-    this.setState(position)
-    this.esper.move(position, animate ? PAN_DURATION : 0)
-  }
 
   handleMirrorChange = () => {
     let { angle, zoom, mirror } = this.state
@@ -459,6 +241,7 @@ class EsperContainer extends React.PureComponent {
 
     this.esper.scale({ zoom, mirror })
     this.esper.rotate({ angle })
+
     this.persist()
   }
 
@@ -474,10 +257,12 @@ class EsperContainer extends React.PureComponent {
         break
     }
 
-    this.setState({ zoom, mode })
+    this.setState({ zoom })
     this.esper.scale({ zoom, mirror }, ZOOM_DURATION)
 
-    this.props.onChange({ image: this.wrapImageState({ mode }) })
+    this.props.onChange({
+      view: { [this.state.id]: { mode } }
+    })
   }
 
   handleToolChange = (tool) => {
@@ -485,14 +270,75 @@ class EsperContainer extends React.PureComponent {
     this.props.onChange({ esper: { tool } })
   }
 
-  handlePanelChange = (panel = !this.props.isPanelVisible) => {
-    this.props.onChange({ esper: { panel } })
-  }
-
   handleColorChange = (opts) => {
     this.setState(opts, () => {
       this.esper.adjust(this.state)
       this.persist()
+    })
+  }
+
+  handleViewChange = debounce(() => {
+    this.props.onChange({
+      view: {
+        [this.state.id]: {
+          x: Math.round(this.esper.x),
+          y: Math.round(this.esper.y),
+          zoom: this.state.zoom
+        }
+      }
+    })
+  }, 650)
+
+
+  // --- WIP ---
+
+
+  get isDisabled() {
+    return this.props.isDisabled ||
+      !this.state.isVisible ||
+      this.props.photo?.pending === true
+  }
+
+  get isSelectionActive() {
+    return this.props.selection != null
+  }
+
+  get rotation() {
+    return new Rotation(this.state)
+      .subtract(
+        Rotation.fromExifOrientation(this.props.photo.orientation)
+      )
+  }
+
+  get tabIndex() {
+    return (this.props.isItemOpen) ? this.props.tabIndex : -1
+  }
+
+  get tool() {
+    let tool = this.state.quicktool || this.props.tool
+
+    if (this.props.selection && tool === TOOL.SELECT)
+      return EsperContainer.defaultProps.tool
+    else
+      return tool
+  }
+
+  focus() {
+    this.container.current.focus()
+  }
+
+  pan({ x = 0, y = 0 }, animate) {
+    if (this.props.mode !== MODE.FIT) {
+      this.esper.move({
+        x: Math.floor(this.esper.x + x),
+        y: Math.floor(this.esper.y + y)
+      }, animate ? PAN_DURATION : 0)
+    }
+  }
+
+  handlePanelChange = (panel = !this.props.isPanelVisible) => {
+    this.props.onChange({
+      esper: { panel }
     })
   }
 
@@ -513,28 +359,32 @@ class EsperContainer extends React.PureComponent {
 
   handleZoomIn = ({ x, y } = {}, animate = false) => {
     this.handleZoomChange({
-      x, y, zoom: this.state.zoom + ZOOM_STEP_SIZE
+      x,
+      y,
+      zoom: this.state.zoom + ZOOM_STEP_SIZE
     }, animate)
   }
 
   handleZoomOut = ({ x, y } = {}, animate = false) => {
     this.handleZoomChange({
-      x, y, zoom: this.state.zoom - ZOOM_STEP_SIZE
+      x,
+      y,
+      zoom: this.state.zoom - ZOOM_STEP_SIZE
     }, animate)
   }
 
   handleSelectionActivate = (selection) => {
-    const { photo } = this.props
     this.props.onSelect({
-      photo: photo.id,
-      item: photo.item,
+      photo: this.props.photo.id,
+      item: this.props.photo.item,
       selection: selection.id,
       note: selection.notes[0]
     })
+    this.handleToolChange(EsperContainer.defaultProps.tool)
   }
 
   handleSelectionCreate = (selection) => {
-    const { angle, mirror } = this.getRelativeRotation()
+    let { angle, mirror } = this.rotation
 
     this.props.onSelectionCreate({
       photo: this.props.photo.id,
@@ -543,12 +393,6 @@ class EsperContainer extends React.PureComponent {
       ...selection
     })
   }
-
-  handleViewChange = (state) => {
-    state.zoom = round(state.zoom, ZOOM_PRECISION)
-    this.setState(state, this.update)
-  }
-
 
   handleKeyDown = (event) => {
     if (this.state.quicktool != null) {
@@ -655,8 +499,9 @@ class EsperContainer extends React.PureComponent {
   }
 
   handleMouseDown = () => {
-    if (document.activeElement !== this.container.current) {
-      this.container.current.focus()
+    if (document.activeElement !== this.container.current &&
+      !this.isDisabled) {
+      this.focus()
     }
   }
 
@@ -672,10 +517,35 @@ class EsperContainer extends React.PureComponent {
     this.setState({ hasTabFocus: false })
   }
 
+  handleSlideIn = () => {
+    this.setState({ isVisible: true })
+
+    this.esper.resume()
+  }
+
+  handleSlideOut = () => {
+    this.setState({ isVisible: false })
+
+    this.esper.stop()
+    this.esper.stop.flush()
+  }
+
+  handleResize = throttle(({ width, height }) => {
+    let state = {
+      ...this.state,
+      width: round(width),
+      height: round(height)
+    }
+
+    assign(state, getZoomBounds(this.props, state))
+
+    this.esper.resize(state)
+    this.setState(state)
+  }, 33)
+
 
   render() {
-    const { isDisabled, isSelectionActive, tabIndex } = this
-    const tool = this.state.quicktool || this.props.tool
+    let { isDisabled, isSelectionActive, tabIndex, tool } = this
 
     if (this.esper) {
       this.esper.tool = tool
@@ -683,9 +553,13 @@ class EsperContainer extends React.PureComponent {
 
     return (
       <section
+        className={cx('esper', tool, {
+          'overlay-mode': this.props.hasOverlayToolbar,
+          'panel-visible': this.props.isPanelVisible,
+          'tab-focus': this.state.hasTabFocus
+        })}
         ref={this.container}
         tabIndex={tabIndex}
-        className={cx('esper', tool, this.classes)}
         onBlur={this.handleBlur}
         onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
@@ -697,9 +571,9 @@ class EsperContainer extends React.PureComponent {
             isDisabled={isDisabled}
             isSelectionActive={isSelectionActive}
             isPanelVisible={this.props.isPanelVisible}
-            mode={this.state.mode}
+            mode={this.props.mode}
             tool={tool}
-            resolution={this.esper?.dpx || 1}
+            resolution={Esper.devicePixelRatio}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}
@@ -714,13 +588,11 @@ class EsperContainer extends React.PureComponent {
           <div className="esper-view" ref={this.view}/>
           <EsperPanel
             brightness={this.state.brightness}
-            canRevert={this.state.hasTransformations}
             contrast={this.state.contrast}
             hue={this.state.hue}
             negative={this.state.negative}
             saturation={this.state.saturation}
             sharpen={this.state.sharpen}
-            gamma={this.state.gamma}
             isDisabled={isDisabled}
             isVisible={this.props.isPanelVisible}
             onChange={this.handleColorChange}
@@ -770,12 +642,61 @@ class EsperContainer extends React.PureComponent {
     tool: TOOL.ARROW,
     zoom: 1
   }
+
+  static defaultImageProps = {
+    angle: 0,
+    mirror: false,
+    ...EsperPanel.defaultProps
+  }
 }
 
-const hasPhotoChanged = (c, p) =>
-  c != null && p != null && (c.id !== p.id || (
-    c.consolidated && (!p.consolidated || c.consolidated > p.consolidated)
-  ))
+
+const getZoomBounds = (props, state) => {
+  // TODO will this be called when devicePixelRatio changes?
+  let minZoom = props.minZoom / Esper.devicePixelRatio
+  let zoom = state.zoom
+  let zoomToFill = minZoom
+
+  if (props.photo) {
+    let { width, height } = props.photo
+
+    if (!isHorizontal(state.angle)) {
+      [width, height] = [height, width]
+    }
+
+    minZoom = getZoomToFit(state, width, height, minZoom)
+    zoomToFill = getZoomToFill(state, width, props.maxZoom)
+
+    switch (props.mode) {
+      case MODE.FILL:
+        zoom = zoomToFill
+        break
+      case MODE.FIT:
+        zoom = minZoom
+        break
+    }
+
+    if (minZoom > zoom) zoom = minZoom
+  }
+
+  return { minZoom, zoom, zoomToFill }
+}
+
+const getZoomToFill = ({ width }, w, maxZoom) =>
+  round(Math.min(maxZoom, width / w), ZOOM_PRECISION)
+
+const getZoomToFit = ({ width, height }, w, h, minZoom) =>
+  round(
+    Math.min(minZoom, Math.min(width / w, height / h)),
+    ZOOM_PRECISION)
+
+const orientate = (state, { orientation }) =>
+  Object.assign(state,
+    Rotation
+      .fromExifOrientation(orientation)
+      .add(state)
+      .toJSON())
+
 
 module.exports = {
   EsperContainer
