@@ -65,7 +65,7 @@ class ItemContainer extends React.PureComponent {
     })
   }
 
-  handleEsperChange = ({ photo, selection, image, esper }) => {
+  handleEsperChange = ({ photo, selection, view, esper }) => {
     if (esper != null) {
       this.props.onUiUpdate({ esper })
     }
@@ -75,8 +75,8 @@ class ItemContainer extends React.PureComponent {
     if (selection != null) {
       this.props.onSelectionSave(selection)
     }
-    if (image != null) {
-      this.props.onEsperChange({ view: image })
+    if (view != null) {
+      this.props.onEsperChange({ view })
     }
   }
 
