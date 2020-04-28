@@ -27,6 +27,7 @@ const {
   constrain,
   coords,
   equal,
+  isDoubleClickSupported,
   setScaleMode
 } = require('./util')
 
@@ -47,7 +48,6 @@ class Esper extends EventEmitter {
 
   #rmq = matchMedia('(max-resolution: 1dppx)')
   #lastClickTime = 0
-  #tool = TOOL.ARROW
 
   constructor(opts) {
     super()
@@ -160,7 +160,7 @@ class Esper extends EventEmitter {
     this.adjust(state)
     setScaleMode(photo.bg.texture, zoom)
 
-    photo.sync(props)
+    photo.sync(props, state)
 
     if (duration) {
       // TODO fixate, change pivot and rotate after move and scale!
@@ -250,18 +250,6 @@ class Esper extends EventEmitter {
       this.photo?.handleResolutionChange(resolution)
 
       renderer.resize(renderer.width, renderer.height)
-    }
-  }
-
-  get tool() {
-    return this.#tool
-  }
-
-  set tool(tool) {
-    this.#tool = tool
-
-    if (this.photo) {
-      this.photo.cursor = tool
     }
   }
 
@@ -467,17 +455,13 @@ class Esper extends EventEmitter {
   }
 
 
-  isDoubleClick(time = Date.now(), threshold = 350) {
+  isDoubleClick(tool, time = Date.now(), threshold = 350) {
     try {
-      return this.isDoubleClickSupported() &&
+      return isDoubleClickSupported(tool) &&
         (time - this.#lastClickTime) <= threshold
     } finally {
       this.#lastClickTime = time
     }
-  }
-
-  isDoubleClickSupported(tool = this.tool) {
-    return tool === TOOL.PAN || tool === TOOL.ARROW
   }
 
   handleMouseDown = (event) => {
@@ -492,18 +476,20 @@ class Esper extends EventEmitter {
       return this.emit('selection-activate', event.target.data)
     }
 
-    if (this.isDoubleClick()) {
+    let tool = this.photo?.tool
+
+    if (this.isDoubleClick(tool)) {
       let { x, y, shift } = coords(data.originalEvent)
       return this.emit(`zoom-${shift ? 'out' : 'in'}`, { x, y }, true)
     }
 
-    target.cursor = `${this.tool}-active`
+    target.cursor = `${tool}-active`
 
     this.drag.start()
     this.drag.current = {
       data,
       target,
-      tool: this.tool,
+      tool,
       origin: {
         pos: { x: target.x, y: target.y },
         mov: data.getLocalPosition(target.parent)
@@ -528,7 +514,7 @@ class Esper extends EventEmitter {
   handleDragStop = (event, wasCancelled) => {
     try {
       let { origin, target, tool } = this.drag.current
-      target.cursor = this.tool
+      target.cursor = this.photo?.tool
 
       if (wasCancelled) return
 

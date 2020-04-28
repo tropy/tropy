@@ -7,7 +7,7 @@ const throttle = require('lodash.throttle')
 const { Esper } = require('../../esper')
 const { EsperToolbar } = require('./toolbar')
 const { EsperPanel } = require('./panel')
-const { pick, restrict, shallow } = require('../../common/util')
+const { pick, restrict } = require('../../common/util')
 const { Cache } = require('../../common/cache')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
@@ -140,8 +140,10 @@ class EsperContainer extends React.Component {
         this.esper.sync(this.props, state)
 
     } else {
-      if (!shallow(this.props, prevProps, ['selections', 'tool'])) {
-        this.esper.photo?.sync(this.props)
+      if (this.props.selections !== prevProps.selections ||
+        this.tool !== getActiveTool(prevProps, prevState)
+      ) {
+        this.esper.photo?.sync(this.props, this.state)
       }
     }
   }
@@ -184,12 +186,7 @@ class EsperContainer extends React.Component {
   }
 
   get tool() {
-    let tool = this.state.quicktool || this.props.tool
-
-    if (this.props.selection && tool === TOOL.SELECT)
-      return EsperContainer.defaultProps.tool
-    else
-      return tool
+    return getActiveTool(this.props, this.state)
   }
 
   get hasFocus() {
@@ -647,6 +644,15 @@ class EsperContainer extends React.Component {
   }
 }
 
+
+const getActiveTool = ({ selection, tool }, { quicktool }) => {
+  tool = quicktool || tool
+
+  if (selection && tool === TOOL.SELECT)
+    return EsperContainer.defaultProps.tool
+  else
+    return tool
+}
 
 const getZoomBounds = (props, state, screen = {}) => {
   let minZoom = props.minZoom / Esper.devicePixelRatio

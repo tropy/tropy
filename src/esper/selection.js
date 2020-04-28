@@ -41,19 +41,21 @@ class SelectionLayer extends Container {
     }
   }
 
-  isVisible({ selection, tool }) {
+  isVisible(selection, tool) {
     return selection == null && (
       tool === TOOL.ARROW || tool === TOOL.SELECT
     )
   }
 
-  isInteractive({ tool }) {
+  isInteractive(tool) {
     return tool === TOOL.ARROW
   }
 
-  sync(props) {
-    this.visible = this.isVisible(props)
-    this.interactive = this.isInteractive(props)
+  sync(props, state) {
+    let tool = state.quicktool || props.tool
+
+    this.visible = this.isVisible(props.selection, tool)
+    this.interactive = this.isInteractive(tool)
 
     let { selections } = props
 
