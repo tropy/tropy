@@ -4,6 +4,7 @@ const css = require('../css')
 const { restrict } = require('../common/util')
 const { darwin } = require('../common/os')
 const { SCALE_MODES } = require('pixi.js')
+const { TOOL } = require('../constants/esper')
 
 const {
   ESPER: {
@@ -29,6 +30,9 @@ const coords = (event) => ({
   shift: event.shiftKey,
   pinch: isPinchToZoom(event)
 })
+
+const isDoubleClickSupported = (tool) =>
+  tool === TOOL.PAN || tool === TOOL.ARROW
 
 const isPinchToZoom = ({ type, ctrlKey, metaKey, shiftKey }) =>
   darwin && type === 'wheel' && ctrlKey && !(metaKey || shiftKey)
@@ -66,5 +70,6 @@ module.exports = {
   constrain,
   coords,
   equal,
+  isDoubleClickSupported,
   setScaleMode
 }

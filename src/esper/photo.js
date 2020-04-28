@@ -9,6 +9,7 @@ const { SelectionLayer, SelectionOverlay } = require('./selection')
 const { constrain } = require('./util')
 const { deg, isHorizontal } = require('../common/math')
 const { max } = Math
+const { TOOL } = require('../constants/esper')
 
 const NEGATIVE = [
   -1, 0, 0, 1, 0, 0, -1, 0, 1, 0, 0, 0, -1, 1, 0, 0, 0, 0, 1, 0
@@ -18,6 +19,7 @@ const NEGATIVE = [
 class Photo extends Container {
   #width
   #height
+  #tool = TOOL.ARROW
 
   constructor({ width, height }) {
     super()
@@ -55,6 +57,15 @@ class Photo extends Container {
 
   get colors() {
     return this.bg.filters[2]
+  }
+
+  get tool() {
+    return this.#tool
+  }
+
+  set tool(tool) {
+    this.#tool = tool
+    this.cursor = tool
   }
 
   getWidth(scale = this.scale.y) {
@@ -143,10 +154,10 @@ class Photo extends Container {
     return this
   }
 
-  sync(props) {
-    this.selections.sync(props)
-    this.overlay.sync(props)
-    this.cursor = props.tool
+  sync(props, state) {
+    this.selections.sync(props, state)
+    this.overlay.sync(props, state)
+    this.tool = state.quicktool || props.tool
   }
 
   update(dragState) {
