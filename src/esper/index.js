@@ -250,6 +250,8 @@ class Esper extends EventEmitter {
       this.photo?.handleResolutionChange(resolution)
 
       renderer.resize(renderer.width, renderer.height)
+
+      this.emit('resolution-change')
     }
   }
 
@@ -263,23 +265,15 @@ class Esper extends EventEmitter {
 
 
   handleResolutionChange() {
-    try {
-      var { original } = this.resolution
-      var resolution = Esper.devicePixelRatio
+    let resolution = Esper.devicePixelRatio
 
-      // On low-res screens, we render at 2x resolution
-      // when zooming out to improve quality. See #218
-      if (resolution < 2 && this.photo && this.photo.scale.y < 1) {
-        resolution = 2
-      }
-
-      this.resolution = resolution
-
-    } finally {
-      if (original !== resolution) {
-        this.emit('resolution-change')
-      }
+    // On low-res screens, we render at 2x resolution
+    // when zooming out to improve quality. See #218
+    if (resolution < 2 && this.photo && this.photo.scale.y < 1) {
+      resolution = 2
     }
+
+    this.resolution = resolution
   }
 
   getInnerBounds(...args) {
