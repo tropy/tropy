@@ -40,7 +40,9 @@ class EsperContainer extends React.Component {
 
   #IO = new IntersectionObserver(([el]) => {
     requestIdleCallback(
-      this[`handleSlide${el.intersectionRatio > 0 ? 'In' : 'Out'}`]
+      el.intersectionRatio > 0 ?
+        this.handleSlideIn :
+        this.handleSlideOut
     )
   }, { threshold: [0] })
 
@@ -105,9 +107,7 @@ class EsperContainer extends React.Component {
     this.esper = new Esper()
     this.esper
       .on('change', this.handleViewChange)
-    // TODO
-    // .on('photo.error', this.handlePhotoError)
-    // .on('loader.error', this.handleLoadError)
+      .on('photo.error', this.handlePhotoError)
       .on('resolution-change', this.handleResolutionChange)
       .on('selection-activate', this.handleSelectionActivate)
       .on('selection-create', this.handleSelectionCreate)
@@ -119,7 +119,6 @@ class EsperContainer extends React.Component {
 
     this.#RO.observe(this.view.current)
     this.#IO.observe(this.view.current)
-
 
     on(this.container.current, 'tab:focus', this.handleTabFocus)
   }
@@ -471,6 +470,11 @@ class EsperContainer extends React.Component {
 
   handleMouseMove = () => {
     this.esper.resume()
+  }
+
+  handlePhotoError = (photo) => {
+    if (!photo.broken)
+      this.props.onPhotoError(photo.id)
   }
 
   handleTabFocus = () => {

@@ -77,8 +77,8 @@ class Esper extends EventEmitter {
 
     this.app.ticker.add(this.update)
 
-    this.app.loader.onError.add((...args) =>
-      this.emit('loader.error', ...args))
+    this.app.loader.onError.add((e, _, res) =>
+      this.emit('loader.error', e, res?.url))
     this.app.loader.onLoad.add((...args) =>
       this.emit('loader.load', ...args))
 
@@ -138,7 +138,6 @@ class Esper extends EventEmitter {
         this.photo.on('mousedown', this.handleMouseDown)
 
       } catch (_) {
-        // TODO
         this.emit('photo.error', props.photo)
       }
 
