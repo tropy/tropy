@@ -56,12 +56,12 @@ class EsperContainer extends React.Component {
     isVisible: false,
     quicktool: null,
 
-    // derive from resize + photo/selection
+    // Derived from props and constrained by Photo/Selection and Resize
     minZoom: EsperContainer.defaultProps.minZoom,
     zoom: EsperContainer.defaultProps.zoom,
     zoomToFill: null,
 
-    // derive from photo/selection
+    // Derived from Photo/Selection
     ...EsperContainer.defaultImageProps
   }
 
@@ -138,6 +138,7 @@ class EsperContainer extends React.Component {
         this.esper.reset(this.props, state)
       else
         this.esper.sync(this.props, state)
+
 
     } else {
       if (this.props.selections !== prevProps.selections ||
