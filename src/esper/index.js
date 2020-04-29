@@ -197,9 +197,12 @@ class Esper extends EventEmitter {
     this.app.renderer.resize(width, height)
     this.render()
 
+    if (!this.photo)
+      return
+
     this.photo?.constrain({ width, height }, zoom)
 
-    if (zoom == null || zoom === this.photo?.scale.y)
+    if (!zoom || zoom === this.photo?.scale.y)
       return
 
     setScaleMode(this.photo.bg.texture, zoom)

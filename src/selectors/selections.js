@@ -2,7 +2,7 @@
 
 const { createSelector: memo } = require('reselect')
 const { seq, compose, cat, map, keep } = require('transducers.js')
-const { getSelectedPhoto, getVisiblePhotos } = require('./photos')
+const { getVisiblePhotos } = require('./photos')
 const { pluck } = require('../common/util')
 
 const NOTHING = []
@@ -20,11 +20,14 @@ const getActiveSelectionData = memo(
   (metadata, id) => (id != null) ? metadata[id] : null
 )
 
+
 const getPhotoSelections = memo(
-  getSelectedPhoto,
+  ({ nav, photos }) => photos[nav.photo]?.selections,
   getSelections,
-  (photo, selections) => (photo != null) ?
-    pluck(selections, photo.selections) : NOTHING
+  (photoSelections, selections) =>
+    (photoSelections != null) ?
+      pluck(selections, photoSelections) :
+      NOTHING
 
 )
 
