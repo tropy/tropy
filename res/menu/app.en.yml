@@ -162,8 +162,6 @@ en:
         - label: 'Toggle &Developer Tools'
           accelerator: 'CmdOrCtrl+D'
           role: 'toggledevtools'
-        - label: 'Toggle Performance Tools'
-          command: 'win:toggle-perf-tools'
         - type: 'separator'
         - label: 'Reset Ontology Database'
           command: 'app:reset-ontology-db'
