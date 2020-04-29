@@ -504,7 +504,7 @@ class EsperContainer extends React.Component {
     })
 
     this.setState(next)
-  }, 33)
+  }, 50)
 
   handleResolutionChange = () => {
     this.setState({
