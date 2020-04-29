@@ -191,13 +191,17 @@ class Esper extends EventEmitter {
   }
 
   resize({ width, height, zoom, mirror }) {
+    width = Math.round(width)
+    height = Math.round(height)
+
     this.app.renderer.resize(width, height)
     this.render()
 
-    if (this.photo == null || zoom == null)
+    this.photo?.constrain({ width, height }, zoom)
+
+    if (zoom == null || zoom === this.photo?.scale.y)
       return
 
-    this.photo.constrain({ width, height }, zoom)
     setScaleMode(this.photo.bg.texture, zoom)
     this.photo.scale.set(mirror ? -zoom : zoom, zoom)
 
