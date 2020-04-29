@@ -191,15 +191,6 @@ class Window extends EventEmitter {
         this.plugins.create()
         this.plugins.emit('change')
       })
-      .on('toggle-perf-tools', () => {
-        const { search, hash } = location
-        const perf = '?react_perf'
-
-        history.pushState('', '',
-          `${(search === perf) ? '' : perf}${hash}`)
-
-        this.reload()
-      })
       .on('global', (_, action) => {
         emit(document, `global:${action}`)
       })
