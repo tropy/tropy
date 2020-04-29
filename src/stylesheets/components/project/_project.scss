@@ -59,6 +59,14 @@
     }
   }
 
+  .item-mode & {
+    display: none;
+  }
+
+  .project-mode-enter & {
+    display: flex;
+  }
+
   .project-mode-enter-active & {
     transform: translate3d(0, 0, 0);
 
