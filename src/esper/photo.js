@@ -19,6 +19,7 @@ const NEGATIVE = [
 class Photo extends Container {
   #width
   #height
+  #pivot
   #tool = TOOL.ARROW
 
   constructor({ width, height }) {
@@ -27,7 +28,12 @@ class Photo extends Container {
     this.#width = width
     this.#height = height
 
-    this.pivot.set(width / 2, height / 2)
+    this.#pivot = {
+      x: width / 2,
+      y: height / 2
+    }
+
+    this.pivot.copyFrom(this.#pivot)
 
     this.bg = new Sprite()
     this.addChild(this.bg)
@@ -76,10 +82,10 @@ class Photo extends Container {
     return this.#height * scale
   }
 
-  getBounds(scale = this.scale.y) {
-    const { x, y } = this
-    const width = this.getWidth(scale)
-    const height = this.getHeight(scale)
+  getBoundsAt(scale = this.scale.y) {
+    let { x, y } = this
+    let width = this.getWidth(scale)
+    let height = this.getHeight(scale)
 
     return this.isHorizontal ?
       new Rectangle(x, y, width, height) :
@@ -87,14 +93,26 @@ class Photo extends Container {
   }
 
   getInnerBounds(screen, scale = this.scale.y) {
-    const { width, height } = this.getBounds(scale)
+    let { width, height } = this.getBoundsAt(scale)
 
-    const dx = max(0, width - screen.width)
-    const dy = max(0, height - screen.height)
+    let dx = max(0, width - screen.width)
+    let dy = max(0, height - screen.height)
 
     return new Rectangle(
       (screen.width - dx) / 2, (screen.height - dy) / 2, dx, dy
     )
+  }
+
+  // Changes pivot without changing position
+  fixate(at) {
+    this.toLocal(at, null, this.pivot, true)
+    this.position.copyFrom(at)
+  }
+
+  // Restores pivot to center without changing position
+  release() {
+    this.toGlobal(this.#pivot, this.position, true)
+    this.pivot.copyFrom(this.#pivot)
   }
 
   handleResolutionChange(dppx = devicePixelRatio) {

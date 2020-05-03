@@ -1,6 +1,15 @@
 'use strict'
 
 const math = {
+  isClockwise(deg1, deg2) {
+    let a = deg1 % 360
+    let b = deg2 % 360
+
+    return (a < b) ?
+      (b - a) <= 180 :
+      (a - b) >= 180
+  },
+
   isHorizontal(deg) {
     return deg < 45 || deg > 315 || (deg > 135 && deg < 225)
   },

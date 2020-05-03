@@ -67,7 +67,6 @@ class EsperContainer extends React.Component {
     ...EsperContainer.defaultImageProps
   }
 
-
   static getDerivedStateFromProps(props, prevState) {
     let id
     let src
@@ -85,7 +84,7 @@ class EsperContainer extends React.Component {
       quicktool: null,
       id,
       src,
-      zoom: props.zoom,
+      zoom: props.zoom ?? state.zoom,
       ...EsperContainer.defaultImageProps
     }
 
@@ -102,20 +101,19 @@ class EsperContainer extends React.Component {
     return state
   }
 
-
   componentDidMount() {
-    this.esper = new Esper()
-    this.esper
-      .on('change', this.handleViewChange)
-      .on('photo.error', this.handlePhotoError)
-      .on('resolution-change', this.handleResolutionChange)
-      .on('selection-activate', this.handleSelectionActivate)
-      .on('selection-create', this.handleSelectionCreate)
-      .on('wheel.zoom', this.handleWheelZoom)
-      .on('wheel.pan', this.handleWheelPan)
-      .on('zoom-in', this.handleZoomIn)
-      .on('zoom-out', this.handleZoomOut)
-      .mount(this.view.current)
+    this.esper =
+      Esper.instance
+        .on('change', this.handleViewChange)
+        .on('photo.error', this.handlePhotoError)
+        .on('resolution-change', this.handleResolutionChange)
+        .on('selection-activate', this.handleSelectionActivate)
+        .on('selection-create', this.handleSelectionCreate)
+        .on('wheel.zoom', this.handleWheelZoom)
+        .on('wheel.pan', this.handleWheelPan)
+        .on('zoom-in', this.handleZoomIn)
+        .on('zoom-out', this.handleZoomOut)
+        .mount(this.view.current)
 
     this.#RO.observe(this.view.current)
     this.#IO.observe(this.view.current)
@@ -233,7 +231,6 @@ class EsperContainer extends React.Component {
     Object.assign(state, getZoomBounds(this.props, state, this.screen))
 
     this.esper.rotate(state, ROTATE_DURATION, by > 0)
-    this.esper.scale(state, ROTATE_DURATION)
 
     this.setState(state)
     this.handleImageChange()
@@ -297,10 +294,8 @@ class EsperContainer extends React.Component {
 
     if (!isHorizontal(angle)) angle = rotate(angle, 180)
 
+    this.esper.rotate({ angle, mirror, zoom })
     this.setState({ angle, mirror })
-
-    this.esper.scale({ zoom, mirror })
-    this.esper.rotate({ angle })
 
     this.handleImageChange()
   }
