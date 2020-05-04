@@ -119,6 +119,8 @@ class EsperContainer extends React.Component {
     this.#IO.observe(this.view.current)
 
     on(this.container.current, 'tab:focus', this.handleTabFocus)
+
+    window.ec = this
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -230,7 +232,11 @@ class EsperContainer extends React.Component {
 
     Object.assign(state, getZoomBounds(this.props, state, this.screen))
 
-    this.esper.rotate(state, ROTATE_DURATION, by > 0)
+    this.esper.rotate(state, {
+      duration: ROTATE_DURATION,
+      clockwise: by > 0,
+      fixate: this.props.mode === MODE.ZOOM
+    })
 
     this.setState(state)
     this.handleImageChange()
@@ -658,9 +664,10 @@ const getZoomBounds = (props, state, screen = {}) => {
   let minZoom = props.minZoom / Esper.devicePixelRatio
   let zoom = state.zoom
   let zoomToFill = minZoom
+  let image = props.selection || props.photo
 
-  if (props.photo) {
-    let { width, height } = props.photo
+  if (image) {
+    let { width, height } = image
 
     if (!isHorizontal(state.angle)) {
       [width, height] = [height, width]

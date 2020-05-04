@@ -150,7 +150,7 @@ class Esper extends EventEmitter {
     }
   }
 
-  sync(props, state, duration = SYNC_DURATION) {
+  async sync(props, state, duration = SYNC_DURATION) {
     let { photo } = this
     let { angle, mirror, zoom } = state
     let { x, y } = this.getPositionFromProps(props)
@@ -166,26 +166,28 @@ class Esper extends EventEmitter {
     if (duration) {
       photo.scale.x = photo.scale.y * zx
 
-      this.rotate({ angle }, duration / 2, null)
-        .then(() => {
-          this
-            .animate({
-              x: photo.position.x,
-              y: photo.position.y,
-              zoom: photo.scale.y
-            }, 'sync', { complete: this.commit })
-            .to(next, duration / 2)
-            .onUpdate(m => {
-              photo.scale.x = m.zoom * zx
-              photo.scale.y = m.zoom
-              photo.x = m.x
-              photo.y = m.y
-            })
-            .start()
+      await this.rotate({ angle }, {
+        duration: duration / 2,
+        fixate: props.mode === MODE.ZOOM
+      })
+
+      this
+        .animate({
+          x: photo.position.x,
+          y: photo.position.y,
+          zoom: photo.scale.y
+        }, 'sync', { complete: this.commit })
+        .to(next, duration / 2)
+        .onUpdate(m => {
+          photo.scale.x = m.zoom * zx
+          photo.scale.y = m.zoom
+          photo.x = m.x
+          photo.y = m.y
         })
+        .start()
 
     } else {
-      this.rotate(state, 0)
+      this.rotate(state)
       this.photo.scale.x = next.zoom * zx
       this.photo.scale.y = next.zoom
       this.photo.position.set(next.x, next.y)
@@ -393,7 +395,7 @@ class Esper extends EventEmitter {
       .start()
   }
 
-  rotate({ angle, mirror, zoom }, duration = 0, clockwise) {
+  rotate({ angle, mirror, zoom }, { duration = 0, clockwise, fixate }) {
     return new Promise((resolve) => {
       let { photo } = this
       let rotation = rad(angle)
@@ -412,9 +414,8 @@ class Esper extends EventEmitter {
           zoom: zoom ?? photo.scale.y
         }
 
-        if (clockwise == null) {
+        if (clockwise == null)
           clockwise = isClockwise(deg(current.rotation), angle)
-        }
 
         // To maintain rotation orientation during the transition,
         // we need to keep temporary values exceeding [0, 2π], because
@@ -429,19 +430,17 @@ class Esper extends EventEmitter {
             next.rotation -= (2 * Math.PI)
         }
 
-        photo.fixate(center(this.app.screen))
+        if (fixate)
+          photo.fixate(center(this.app.screen))
+
+        let complete = () => {
+          photo.rotation = rotation
+          if (fixate) photo.release()
+          this.commit()
+        }
 
         this
-          .animate(current, 'rotate', {
-            complete: () => {
-              photo.rotation = rotation
-              photo.release()
-              this.commit()
-            },
-            done: () => {
-              resolve()
-            }
-          })
+          .animate(current, 'rotate', { complete, done: resolve })
           .to(next, duration)
           .onUpdate(m => {
             photo.rotation = m.rotation
