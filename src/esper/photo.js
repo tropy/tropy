@@ -6,7 +6,7 @@ const { ColorMatrixFilter } = PIXI.filters
 const { AdjustmentFilter } = require('@pixi/filter-adjustment')
 const { SharpenFilter } = require('./filter')
 const { SelectionLayer, SelectionOverlay } = require('./selection')
-const { constrain } = require('./util')
+const { equal, constrain } = require('./util')
 const { deg, isHorizontal } = require('../common/math')
 const { max } = Math
 const { TOOL } = require('../constants/esper')
@@ -111,8 +111,10 @@ class Photo extends Container {
 
   // Restores pivot to center without changing position
   release() {
-    this.toGlobal(this.#pivot, this.position, true)
-    this.pivot.copyFrom(this.#pivot)
+    if (!equal(this.pivot, this.#pivot)) {
+      this.toGlobal(this.#pivot, this.position, true)
+      this.pivot.copyFrom(this.#pivot)
+    }
   }
 
   handleResolutionChange(dppx = devicePixelRatio) {
