@@ -84,6 +84,7 @@ class Photo extends Container {
 
   getBoundsAt(scale = this.scale.y) {
     let { x, y } = this
+
     let width = this.getWidth(scale)
     let height = this.getHeight(scale)
 
