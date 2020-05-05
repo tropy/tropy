@@ -150,7 +150,7 @@ class Esper extends EventEmitter {
     }
   }
 
-  async sync(props, state, duration = SYNC_DURATION) {
+  sync(props, state, duration = SYNC_DURATION) {
     let { photo } = this
     let { angle, mirror, zoom } = state
     let { x, y } = this.getPositionFromProps(props)
@@ -166,25 +166,25 @@ class Esper extends EventEmitter {
     if (duration) {
       photo.scale.x = photo.scale.y * zx
 
-      await this.rotate({ angle }, {
+      this.rotate({ angle }, {
         duration: duration / 2,
         fixate: props.mode === MODE.ZOOM
+      }).then(() => {
+        this
+          .animate({
+            x: photo.position.x,
+            y: photo.position.y,
+            zoom: photo.scale.y
+          }, 'sync', { complete: this.commit })
+          .to(next, duration / 2)
+          .onUpdate(m => {
+            photo.scale.x = m.zoom * zx
+            photo.scale.y = m.zoom
+            photo.x = m.x
+            photo.y = m.y
+          })
+          .start()
       })
-
-      this
-        .animate({
-          x: photo.position.x,
-          y: photo.position.y,
-          zoom: photo.scale.y
-        }, 'sync', { complete: this.commit })
-        .to(next, duration / 2)
-        .onUpdate(m => {
-          photo.scale.x = m.zoom * zx
-          photo.scale.y = m.zoom
-          photo.x = m.x
-          photo.y = m.y
-        })
-        .start()
 
     } else {
       this.rotate(state)
@@ -395,7 +395,11 @@ class Esper extends EventEmitter {
       .start()
   }
 
-  rotate({ angle, mirror, zoom }, { duration = 0, clockwise, fixate }) {
+  rotate({ angle, mirror, zoom }, {
+    duration = 0,
+    clockwise,
+    fixate
+  } = {}) {
     return new Promise((resolve) => {
       let { photo } = this
       let rotation = rad(angle)
