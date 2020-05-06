@@ -395,6 +395,12 @@ class Esper extends EventEmitter {
       .start()
   }
 
+  flip() {
+    this.photo.flip(this.app.screen.width / 2)
+    this.render()
+    this.commit()
+  }
+
   rotate({ angle, mirror, zoom }, {
     duration = 0,
     clockwise,

@@ -61,8 +61,16 @@ class Photo extends Container {
     return this.bg.filters[0]
   }
 
+  get angle() {
+    return deg(this.rotation)
+  }
+
   get colors() {
     return this.bg.filters[2]
+  }
+
+  get mirror() {
+    return this.scale.x < 0
   }
 
   get tool() {
@@ -102,6 +110,14 @@ class Photo extends Container {
     return new Rectangle(
       (screen.width - dx) / 2, (screen.height - dy) / 2, dx, dy
     )
+  }
+
+  flip(x) {
+    if (!isHorizontal(deg(this.rotation)))
+      this.rotation += Math.PI
+
+    this.scale.x = -this.scale.x
+    this.position.x += x - this.position.x
   }
 
   // Changes pivot without changing position
