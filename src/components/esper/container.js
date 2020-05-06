@@ -294,14 +294,15 @@ class EsperContainer extends React.Component {
   }
 
   handleMirrorChange = () => {
-    let { angle, zoom, mirror } = this.state
+    this.esper.flip()
 
-    mirror = !mirror
-
-    if (!isHorizontal(angle)) angle = rotate(angle, 180)
-
-    this.esper.rotate({ angle, mirror, zoom })
-    this.setState({ angle, mirror })
+    // Subtle: when flipping rotated photos, the angle will
+    // change by 180 degrees, so we extract both mirror and
+    // angle after the fact.
+    this.setState({
+      angle: this.esper.photo.angle,
+      mirror: this.esper.photo.mirror
+    })
 
     this.handleImageChange()
   }
@@ -572,6 +573,7 @@ class EsperContainer extends React.Component {
             isSelectionActive={this.isSelectionActive}
             isPanelVisible={this.props.isPanelVisible}
             mode={this.props.mode}
+            mirror={this.state.mirror}
             tool={this.tool}
             resolution={Esper.devicePixelRatio}
             zoom={this.state.zoom}
