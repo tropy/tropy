@@ -6,7 +6,7 @@ const { ColorMatrixFilter } = PIXI.filters
 const { AdjustmentFilter } = require('@pixi/filter-adjustment')
 const { SharpenFilter } = require('./filter')
 const { SelectionLayer, SelectionOverlay } = require('./selection')
-const { equal, center, constrain } = require('./util')
+const { constrain } = require('./util')
 const { deg, isHorizontal } = require('../common/math')
 const { TOOL } = require('../constants/esper')
 
