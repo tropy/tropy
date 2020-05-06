@@ -64,6 +64,14 @@ module.exports = {
     }
   },
 
+  extract(payload, meta) {
+    return {
+      type: PHOTO.EXTRACT,
+      payload,
+      meta: { cmd: 'project', ...meta }
+    }
+  },
+
   update(payload, meta = {}) {
     return {
       type: PHOTO.UPDATE,

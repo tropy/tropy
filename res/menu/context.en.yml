@@ -197,6 +197,8 @@ en:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: 'Save Photo…'
+        command: 'app:extract-photo'
       - label: 'Consolidate Photo'
         command: 'app:consolidate-photo'
     photo-rotate: &photo-rotate
