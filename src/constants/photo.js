@@ -7,6 +7,7 @@ module.exports = {
   DELETE: 'photo.delete',
   DUPLICATE: 'photo.duplicate',
   EXPAND: 'photo.expand',
+  EXTRACT: 'photo.extract',
   INSERT: 'photo.insert',
   LOAD: 'photo.load',
   MOVE: 'photo.move',
