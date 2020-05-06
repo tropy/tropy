@@ -6,9 +6,8 @@ const { ColorMatrixFilter } = PIXI.filters
 const { AdjustmentFilter } = require('@pixi/filter-adjustment')
 const { SharpenFilter } = require('./filter')
 const { SelectionLayer, SelectionOverlay } = require('./selection')
-const { equal, constrain } = require('./util')
+const { equal, center, constrain } = require('./util')
 const { deg, isHorizontal } = require('../common/math')
-const { max } = Math
 const { TOOL } = require('../constants/esper')
 
 const NEGATIVE = [
@@ -28,12 +27,7 @@ class Photo extends Container {
     this.#width = width
     this.#height = height
 
-    this.#pivot = {
-      x: width / 2,
-      y: height / 2
-    }
-
-    this.pivot.copyFrom(this.#pivot)
+    this.pivot.set(width / 2, height / 2)
 
     this.bg = new Sprite()
     this.addChild(this.bg)
@@ -51,10 +45,6 @@ class Photo extends Container {
 
     this.overlay = new SelectionOverlay({ width, height })
     this.addChild(this.overlay)
-  }
-
-  get isHorizontal() {
-    return isHorizontal(deg(this.rotation))
   }
 
   get adjust() {
@@ -82,36 +72,38 @@ class Photo extends Container {
     this.cursor = tool
   }
 
-  getWidth(scale = this.scale.y) {
-    return this.#width * scale
+  getWidth(zoom = this.scale.y) {
+    return this.#width * zoom
   }
 
-  getHeight(scale = this.scale.y) {
-    return this.#height * scale
+  getHeight(zoom = this.scale.y) {
+    return this.#height * zoom
   }
 
-  getBoundsAt(scale = this.scale.y) {
-    let { x, y } = this
+  getBoundsProjection({
+    zoom = this.scale.y,
+    rotation = this.rotation
+  } = {}) {
+    let width = this.getWidth(zoom)
+    let height = this.getHeight(zoom)
 
-    let width = this.getWidth(scale)
-    let height = this.getHeight(scale)
-
-    return this.isHorizontal ?
-      new Rectangle(x, y, width, height) :
-      new Rectangle(x, y, height, width)
+    return isHorizontal(deg(rotation)) ?
+      new Rectangle(0, 0, width, height) :
+      new Rectangle(0, 0, height, width)
   }
 
-  getInnerBounds(screen, scale = this.scale.y) {
-    let { width, height } = this.getBoundsAt(scale)
+  getPanLimits(screen, ...args) {
+    let { width, height } = this.getBoundsProjection(...args)
 
-    let dx = max(0, width - screen.width)
-    let dy = max(0, height - screen.height)
+    let dx = Math.max(0, width - screen.width)
+    let dy = Math.max(0, height - screen.height)
 
     return new Rectangle(
       (screen.width - dx) / 2, (screen.height - dy) / 2, dx, dy
     )
   }
 
+  // Mirror the image across the x-axis without changing position
   flip(x) {
     if (!isHorizontal(deg(this.rotation)))
       this.rotation += Math.PI
@@ -121,17 +113,22 @@ class Photo extends Container {
   }
 
   // Changes pivot without changing position
-  fixate(at) {
+  fixate(at, isReleasePending = true) {
+    if (isReleasePending)
+      this.#pivot = this.pivot.clone()
+
     this.toLocal(at, null, this.pivot, true)
     this.position.copyFrom(at)
   }
 
-  // Restores pivot to center without changing position
+  // Restores previous pivot without changing position
   release() {
-    if (!equal(this.pivot, this.#pivot)) {
-      this.toGlobal(this.#pivot, this.position, true)
-      this.pivot.copyFrom(this.#pivot)
-    }
+    if (this.#pivot == null) return
+
+    this.toGlobal(this.#pivot, this.position, true)
+    this.pivot.copyFrom(this.#pivot)
+
+    this.#pivot = null
   }
 
   handleResolutionChange(dppx = devicePixelRatio) {
@@ -157,8 +154,8 @@ class Photo extends Container {
     return this
   }
 
-  constrain(screen, scale) {
-    constrain(this.position, this.getInnerBounds(screen, scale))
+  constrain(...args) {
+    constrain(this.position, this.getPanLimits(...args))
   }
 
   destroy() {
@@ -192,6 +189,10 @@ class Photo extends Container {
   }
 
   sync(props, state) {
+    let image = props.selection || props.photo
+    this.#width = image.width
+    this.#height = image.height
+
     this.selections.sync(props, state)
     this.overlay.sync(props, state)
     this.tool = state.quicktool || props.tool

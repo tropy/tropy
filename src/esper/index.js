@@ -153,44 +153,59 @@ class Esper extends EventEmitter {
   sync(props, state, duration = SYNC_DURATION) {
     let { photo } = this
     let { angle, mirror, zoom } = state
-    let { x, y } = this.getPositionFromProps(props)
+    let { x, y } = this.getDefaultPosition(props)
+    let origin = center(props.selection || props.photo)
 
+    setScaleMode(photo.bg.texture, zoom)
     photo.sync(props, state)
 
-    let zx = mirror ? -1 : 1
-    let next = constrain({ x, y, zoom }, this.getInnerBounds(zoom))
-
-    this.adjust(state)
-    setScaleMode(photo.bg.texture, zoom)
-
     if (duration) {
-      photo.scale.x = photo.scale.y * zx
+      duration = duration / 2
 
-      this.rotate({ angle }, {
-        duration: duration / 2,
-        fixate: props.mode === MODE.ZOOM
-      }).then(() => {
-        this
-          .animate({
-            x: photo.position.x,
-            y: photo.position.y,
-            zoom: photo.scale.y
-          }, 'sync', { complete: this.commit })
-          .to(next, duration / 2)
-          .onUpdate(m => {
-            photo.scale.x = m.zoom * zx
-            photo.scale.y = m.zoom
-            photo.x = m.x
-            photo.y = m.y
-          })
-          .start()
+      console.log({
+        from: {
+          position: photo.position.clone(),
+          pivot: photo.pivot.clone(),
+          scale: photo.scale.clone(),
+          rotation: photo.rotation
+        },
+        to: {
+          position: { x, y },
+          pivot: origin,
+          scale: zoom,
+          rotation: rad(angle)
+        }
       })
 
+      if (mirror !== photo.mirror) {
+        photo.flip(origin.width)
+        this.render()
+      }
+
+      let fixate = props.mode === MODE.ZOOM
+      let pivot = photo.toGlobal(origin, null, true)
+      let rotation = rad(angle)
+
+      photo.fixate(pivot, false)
+
+      this
+        .move({ x, y, zoom, rotation }, duration)
+        .then(() => {
+          this
+            .rotate({ angle }, { duration, fixate })
+            .then(() => {
+              this.adjust(state)
+              this.commit()
+            })
+        })
+
     } else {
-      this.rotate(state)
-      this.photo.scale.x = next.zoom * zx
-      this.photo.scale.y = next.zoom
-      this.photo.position.set(next.x, next.y)
+      this.adjust(state)
+      this.photo.rotation = rad(angle)
+      this.photo.scale.set(mirror ? -zoom : zoom, zoom)
+      this.photo.pivot.copyFrom(origin)
+      this.photo.position.set(x, y)
+      this.constrain()
     }
   }
 
@@ -287,11 +302,15 @@ class Esper extends EventEmitter {
     this.resolution = resolution
   }
 
-  getInnerBounds(...args) {
-    return this.photo.getInnerBounds(this.app.screen, ...args)
+  constrain(position = this.photo.position, ...args) {
+    return constrain(position, this.getPanLimits(...args))
   }
 
-  getPositionFromProps({ x, y, mode }) {
+  getPanLimits(...args) {
+    return this.photo.getPanLimits(this.app.screen, ...args)
+  }
+
+  getDefaultPosition({ x, y, mode }) {
     switch (mode) {
       case MODE.FIT:
         return center(this.app.screen)
@@ -383,16 +402,54 @@ class Esper extends EventEmitter {
     })
   }
 
-  move({ x, y }, duration = 0) {
-    let { position } = this.photo
-    let next = constrain({ x, y }, this.getInnerBounds())
+  move({ x, y, zoom, rotation }, duration = 0) {
+    return new Promise((done) => {
+      let { photo } = this
 
-    if (equal(position, next)) return
+      let current = {
+        rotation: photo.rotation,
+        x: photo.x,
+        y: photo.y,
+        zoom: photo.scale.y
+      }
 
-    this
-      .animate(position, 'move', { complete: this.commit })
-      .to(next, duration)
-      .start()
+      let next = {
+        x,
+        y,
+        zoom: zoom ?? current.zoom
+      }
+
+      // For target positions at different rotation, compute
+      // the position for the current rotation!
+      if (rotation != null && rotation !== current.rotation) {
+        photo.rotation = rotation
+        let local = photo.toLocal(next)
+        photo.rotation = current.rotation
+        photo.toGlobal(local, next)
+      }
+
+      this.constrain(next, { rotation, zoom })
+
+      if (equal(current, next) && current.zoom === next.zoom)
+        return done()
+
+      let mirror = photo.mirror
+
+      let complete = () => {
+        this.commit()
+      }
+
+      this
+        .animate(current, 'move', { complete, done })
+        .to(next, duration)
+        .onUpdate(m => {
+          photo.x = m.x
+          photo.y = m.y
+          photo.scale.x = mirror ? -m.zoom : m.zoom
+          photo.scale.y = m.zoom
+        })
+        .start()
+    })
   }
 
   flip() {
@@ -485,11 +542,11 @@ class Esper extends EventEmitter {
     let dx = (x - position.x)
     let dy = (y - position.y)
 
-    let next = constrain({
+    let next = this.constrain({
       x: position.x + dx - dx * dz,
       y: position.y + dy - dy * dz,
       zoom
-    }, this.getInnerBounds(zoom))
+    }, { zoom })
 
     setScaleMode(bg.texture, zoom)
 
@@ -550,7 +607,7 @@ class Esper extends EventEmitter {
         mov: data.getLocalPosition(target.parent)
       },
       selection: data.getLocalPosition(target),
-      limit: this.getInnerBounds()
+      limit: this.getPanLimits()
     }
   }
 
