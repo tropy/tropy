@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+  cn: 'cn',
   de: 'de',
   en: 'en',
   es: 'es',

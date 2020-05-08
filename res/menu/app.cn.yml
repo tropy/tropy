@@ -1,0 +1,612 @@
+cn:
+  linux:
+    - label: 文件
+      id: file
+      submenu:
+        - label: 新
+          submenu:
+            - label: 项目
+              command: 'app:create-project'
+              accelerator: CmdOrCtrl+Shift+P
+            - label: 很久
+              command: 'app:create-item'
+              accelerator: CmdOrCtrl+Shift+N
+              condition: project
+            - label: 列表
+              command: 'app:create-list'
+              accelerator: CmdOrCtrl+Shift+L
+              condition: project
+            - label: 标签
+              command: 'app:create-tag'
+              accelerator: CmdOrCtrl+Shift+A
+              condition: project
+        - type: separator
+        - label: 打开...
+          accelerator: CmdOrCtrl+O
+          command: 'app:open-dialog'
+        - label: 在新窗口打开...
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
+        - label: 最近的项目
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: 清除列表
+              command: 'app:clear-recent-projects'
+        - type: separator
+        - label: 导入
+          submenu:
+            - label: 图片...
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: 文件夹...
+              command: 'app:import-directory'
+              condition: project
+        - label: 导出
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
+        - type: separator
+        - label: 检查图片数据库
+          command: 'app:consolidate-photo-library'
+          condition: project
+        - type: separator
+        - label: 打印
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
+        - label: 关闭项目
+          command: 'app:close-project'
+          condition: project
+        - type: separator
+        - label: 关闭窗口
+          accelerator: Ctrl+W
+          role: close
+        - label: 退出 %name
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: 编辑
+      submenu:
+        - id: undo
+          label: 撤销
+          accelerator: CmdOrCtrl+Z
+          command: 'app:undo'
+          enabled: false
+        - id: redo
+          label: 重做
+          accelerator: Shift+CmdOrCtrl+Z
+          command: 'app:redo'
+          enabled: false
+        - type: separator
+        - label: 剪切
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: 复制
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: 粘贴
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: 全选
+          role: selectall
+        - type: separator
+        - label: 首选项…
+          accelerator: Shift+Control+S
+          command: 'app:open-preferences'
+    - label: 视图
+      submenu:
+        - label: 重载
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - type: separator
+        - label: 隐藏菜单栏(重启后显示)
+          command: 'app:toggle-menu-bar'
+        - label: 移动到中间
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: 实际尺寸
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: 放大
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: 缩小
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: 全屏
+          role: togglefullscreen
+          condition: window
+        - type: separator
+        - label: 关闭
+          accelerator: Ctrl+W
+          role: close
+          condition: window
+    - label: 高级
+      id: dev
+      submenu:
+        - label: 刷新皮肤
+          command: 'win:refresh'
+        - label: Toggle &Developer Tools
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - label: Toggle Performance Tools
+          command: 'win:toggle-perf-tools'
+        - type: separator
+        - label: Reset Ontology Database
+          command: 'app:reset-ontology-db'
+        - label: Optimize Project Caches
+          command: 'app:optimize-cache'
+        - label: Optimize Project Database
+          command: 'app:optimize-project'
+        - label: Reindex Project Database
+          command: 'app:reindex-project'
+        - type: separator
+        - label: Rebase Project
+          command: 'app:rebase-project'
+        - type: separator
+        - label: 皮肤
+          id: theme
+          submenu:
+            - label: 明亮
+              id: light
+              type: checkbox
+            - label: 黑暗
+              id: dark
+              type: checkbox
+            - label: 跟随系统设置
+              id: system
+              type: checkbox
+    - label: Help
+      submenu:
+        - label: User Guide
+          command: 'app:open-docs'
+        - label: Support Forums
+          command: 'app:open-forums'
+        - label: Software &License
+          command: 'app:open-license'
+        - type: separator
+        - label: Show Log Files
+          command: 'app:open-logs'
+        - label: Show Plugins Folder
+          command: 'app:open-plugins-folder'
+        - label: Show User-Data Folder
+          command: 'app:open-user-data'
+        - label: Show Cache Folder
+          command: 'app:open-cache-folder'
+        - type: separator
+        - id: updater-check
+          label: Check for Updates…
+          command: 'app:check-for-updates'
+          enabled: false
+        - id: updater-is-checking
+          label: Fetching Latest Updates…
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Install Updates…
+          command: 'app:install-updates'
+          enabled: false
+          visible: false
+        - type: separator
+        - label: About %name
+          command: 'app:about'
+          condition: '!prefs'
+  darwin:
+    - label: '%name'
+      submenu:
+        - label: About %name
+          command: 'app:about'
+          condition: '!prefs'
+        - type: separator
+        - label: Preferences…
+          accelerator: 'Command+,'
+          command: 'app:open-preferences'
+        - type: separator
+        - label: Hide %name
+          accelerator: Command+H
+          role: hide
+        - label: Hide Others
+          accelerator: Command+Shift+H
+          role: hideothers
+        - label: Show All
+          role: unhide
+        - type: separator
+        - label: 退出 %name
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: 文件
+      submenu:
+        - label: 新
+          submenu:
+            - label: 项目
+              command: 'app:create-project'
+              accelerator: CmdOrCtrl+Shift+P
+            - label: 很久
+              command: 'app:create-item'
+              accelerator: CmdOrCtrl+Shift+N
+              condition: project
+            - label: 列表
+              command: 'app:create-list'
+              accelerator: CmdOrCtrl+Shift+L
+              condition: project
+            - label: 标签
+              command: 'app:create-tag'
+              accelerator: CmdOrCtrl+Shift+A
+              condition: project
+        - type: separator
+        - label: 打开...
+          accelerator: CmdOrCtrl+O
+          command: 'app:open-dialog'
+        - label: 在新窗口打开...
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
+        - label: 最近的项目
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: 清除列表
+              command: 'app:clear-recent-projects'
+        - type: separator
+        - label: 导入
+          submenu:
+            - label: 图片...
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: 文件夹...
+              command: 'app:import-directory'
+              condition: project
+        - label: 检查图片数据库
+          command: 'app:consolidate-photo-library'
+          condition: project
+        - type: separator
+        - label: 导出
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
+        - label: 打印
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
+        - label: 关闭项目
+          command: 'app:close-project'
+          condition: project
+    - label: Edit
+      submenu:
+        - id: undo
+          label: 撤销
+          accelerator: CmdOrCtrl+Z
+          command: 'app:undo'
+          enabled: false
+        - id: redo
+          label: 重做
+          accelerator: Shift+CmdOrCtrl+Z
+          command: 'app:redo'
+          enabled: false
+        - type: separator
+        - label: 剪切
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: 复制
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: 粘贴
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: 全选
+          role: selectall
+    - label: View
+      submenu:
+        - label: 重载
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - type: separator
+        - label: 实际尺寸
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: 缩小
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: 放大
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: 全屏
+          role: togglefullscreen
+          condition: window
+    - label: Window
+      role: window
+      submenu:
+        - label: Minimize
+          accelerator: Cmd+M
+          role: minimize
+          condition: window
+        - label: 放大
+          accelerator: Ctrl+Cmd+Z
+          role: zoom
+        - label: 移动到中间
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: 移动到中间
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: Bring All to Front
+          role: front
+        - type: separator
+        - label: 关闭
+          accelerator: Cmd+W
+          role: close
+          condition: window
+    - label: 高级
+      id: dev
+      submenu:
+        - label: 重载皮肤
+          command: 'win:refresh'
+        - label: Toggle &Developer Tools
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - label: Toggle Performance Tools
+          command: 'win:toggle-perf-tools'
+        - type: separator
+        - label: Reset Ontology Database
+          command: 'app:reset-ontology-db'
+        - label: Optimize Project Caches
+          command: 'app:optimize-cache'
+        - label: Optimize Project Database
+          command: 'app:optimize-project'
+        - label: Reindex Project Database
+          command: 'app:reindex-project'
+        - type: separator
+        - label: Rebase Project
+          command: 'app:rebase-project'
+        - type: separator
+        - label: 皮肤
+          id: theme
+          submenu:
+            - label: 明亮
+              id: light
+              type: checkbox
+            - label: 黑暗
+              id: dark
+              type: checkbox
+            - label: 跟随系统设置
+              id: system
+              type: checkbox
+    - label: Help
+      role: help
+      submenu:
+        - label: User Guide
+          command: 'app:open-docs'
+        - label: Support Forums
+          command: 'app:open-forums'
+        - label: Software &License
+          command: 'app:open-license'
+        - type: separator
+        - label: Show Log Files
+          command: 'app:open-logs'
+        - label: Show Plugins Folder
+          command: 'app:open-plugins-folder'
+        - label: Show User-Data Folder
+          command: 'app:open-user-data'
+        - label: Show Cache Folder
+          command: 'app:open-cache-folder'
+        - type: separator
+        - id: updater-check
+          label: Check for Updates…
+          command: 'app:check-for-updates'
+          enabled: false
+        - id: updater-is-checking
+          label: Fetching Latest Updates…
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Install Updates…
+          command: 'app:install-updates'
+          enabled: false
+          visible: false
+  win32:
+    - label: 文件
+      id: file
+      submenu:
+        - label: 新
+          submenu:
+            - label: 项目
+              command: 'app:create-project'
+              accelerator: CmdOrCtrl+Shift+P
+            - label: 很久
+              command: 'app:create-item'
+              accelerator: CmdOrCtrl+Shift+N
+              condition: project
+            - label: 列表
+              command: 'app:create-list'
+              accelerator: CmdOrCtrl+Shift+L
+              condition: project
+            - label: 标签
+              command: 'app:create-tag'
+              accelerator: CmdOrCtrl+Shift+A
+              condition: project
+        - type: separator
+        - label: 打开...
+          accelerator: CmdOrCtrl+O
+          command: 'app:open-dialog'
+        - label: 在新窗口打开...
+          accelerator: Shift+CmdOrCtrl+O
+          command: 'app:open-new-dialog'
+        - label: 最近的项目
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: 清除列表
+              command: 'app:clear-recent-projects'
+        - type: separator
+        - label: 导入
+          submenu:
+            - label: 图片...
+              command: 'app:import'
+              accelerator: CmdOrCtrl+Shift+I
+              condition: project
+            - label: 文件夹...
+              command: 'app:import-directory'
+              condition: project
+        - label: 导出
+          id: export
+          submenu:
+            - label: JSON-LD
+              command: 'app:export-item'
+        - type: separator
+        - label: 检查图片数据库
+          command: 'app:consolidate-photo-library'
+          condition: project
+        - type: separator
+        - label: 打印
+          command: 'app:print'
+          accelerator: CmdOrCtrl+P
+          condition: project
+        - type: separator
+        - label: 关闭项目
+          command: 'app:close-project'
+          condition: project
+        - type: separator
+        - label: 关闭窗口
+          accelerator: Ctrl+W
+          role: close
+        - label: 退出 %name
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: 编辑
+      submenu:
+        - id: undo
+          label: 撤销
+          accelerator: CmdOrCtrl+Z
+          command: 'app:undo'
+          enabled: false
+        - id: redo
+          label: 重做
+          accelerator: Control+Y
+          command: 'app:redo'
+          enabled: false
+        - type: separator
+        - label: 剪切
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: 复制
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: 粘贴
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: 首选项…
+          accelerator: Shift+Control+S
+          command: 'app:open-preferences'
+    - label: 视图
+      submenu:
+        - label: 重载
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - type: separator
+        - label: 隐藏菜单栏(按alt显示)
+          command: 'app:toggle-menu-bar'
+        - label: 移动到中间
+          command: 'app:center-window'
+          condition: window
+        - type: separator
+        - label: 实际尺寸
+          command: 'app:zoom-reset'
+          accelerator: CmdOrCtrl+0
+        - label: 缩小
+          command: 'app:zoom-in'
+          accelerator: CmdOrCtrl+Plus
+        - label: 放大
+          command: 'app:zoom-out'
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: 全屏
+          role: togglefullscreen
+          condition: window
+        - type: separator
+        - label: 关闭
+          accelerator: Ctrl+W
+          role: close
+          condition: window
+    - label: 高级
+      id: dev
+      submenu:
+        - label: 重载皮肤
+          command: 'win:refresh'
+        - label: Toggle &Developer Tools
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - label: Toggle Performance Tools
+          command: 'win:toggle-perf-tools'
+        - type: separator
+        - label: Reset Ontology Database
+          command: 'app:reset-ontology-db'
+        - label: Optimize Project Caches
+          command: 'app:optimize-cache'
+        - label: Optimize Project Database
+          command: 'app:optimize-project'
+        - label: Reindex Project Database
+          command: 'app:reindex-project'
+        - type: separator
+        - label: Rebase Project
+          command: 'app:rebase-project'
+        - type: separator
+        - label: 皮肤
+          id: theme
+          submenu:
+            - label: 明亮
+              id: light
+              type: checkbox
+            - label: 黑暗
+              id: dark
+              type: checkbox
+            - label: 跟随系统设置
+              id: system
+              type: checkbox
+    - label: Help
+      submenu:
+        - label: User Guide
+          command: 'app:open-docs'
+        - label: Support Forums
+          command: 'app:open-forums'
+        - label: Software &License
+          command: 'app:open-license'
+        - type: separator
+        - label: Show Log Files
+          command: 'app:open-logs'
+        - label: Show Plugins Folder
+          command: 'app:open-plugins-folder'
+        - label: Show User-Data Folder
+          command: 'app:open-user-data'
+        - label: Show Cache Folder
+          command: 'app:open-cache-folder'
+        - type: separator
+        - id: updater-check
+          label: Check for Updates…
+          command: 'app:check-for-updates'
+          enabled: false
+        - id: updater-is-checking
+          label: Fetching Latest Updates…
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Install Updates…
+          command: 'app:install-updates'
+          enabled: false
+          visible: false
+        - type: separator
+        - label: About %name
+          command: 'app:about'
+          condition: '!prefs'

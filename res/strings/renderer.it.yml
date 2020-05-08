@@ -125,6 +125,7 @@ it:
       locale:
         locale: Lingua
         locales:
+          cn: 中文
           de: Deutsch
           en: English
           es: Español

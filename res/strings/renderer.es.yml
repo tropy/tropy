@@ -124,6 +124,7 @@ es:
       locale:
         locale: Lengua
         locales:
+          cn: 中文
           de: Deutsch
           en: English
           es: Español
