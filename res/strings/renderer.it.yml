@@ -170,6 +170,7 @@ it:
         option:
           fit: Imposta lo zoom per mostrare la foto per intero
           fill: Imposta lo zoom per riempire lo spazio disponibile
+          zoom: Zoom photos to actual size
       layout:
         label: Layout della visualizzazione dell'elemento
         option:

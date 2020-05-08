@@ -168,6 +168,7 @@ fr:
         option:
           fit: Zoom pleine hauteur
           fill: Zoom pleine largeur
+          zoom: Zoom photos to actual size
       layout:
         label: Mode d'affichage d'objet
         option:

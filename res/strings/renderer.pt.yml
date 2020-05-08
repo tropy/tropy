@@ -167,6 +167,7 @@ pt:
         option:
           fit: Ampliar ajustando à altura
           fill: Ampliar ajustando à largura
+          zoom: Zoom photos to actual size
       layout:
         label: Visualização de Item
         option:

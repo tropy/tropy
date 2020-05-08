@@ -167,6 +167,7 @@ de:
         option:
           fit: Format mit Fotos füllen
           fill: Fotos an das Format anpassen
+          zoom: Zoom photos to actual size
       layout:
         label: Detailansicht-Layout
         option:

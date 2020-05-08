@@ -167,6 +167,7 @@ es:
         option:
           fit: Escalar fotos por altura
           fill: Escalar fotos por anchura
+          zoom: Zoom photos to actual size
       layout:
         label: Modo de visualización de objeto
         option:

@@ -165,6 +165,7 @@ ja:
         option:
           fit: 写真をウインドウサイズで表示
           fill: 写真を全画面表示
+          zoom: Zoom photos to actual size
       layout:
         label: アイテムレイアウト表示
         option:
