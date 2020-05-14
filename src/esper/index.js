@@ -154,58 +154,56 @@ class Esper extends EventEmitter {
     let { photo } = this
     let { angle, mirror, zoom } = state
     let { x, y } = this.getDefaultPosition(props)
-    let origin = center(props.selection || props.photo)
 
     setScaleMode(photo.bg.texture, zoom)
     photo.sync(props, state)
 
-    if (duration) {
-      duration = duration / 2
+    let next = {
+      pivot: center(props.selection || props.photo),
+      rotation: rad(angle),
+      x,
+      y,
+      zoom
+    }
 
-      console.log({
-        from: {
-          position: photo.position.clone(),
-          pivot: photo.pivot.clone(),
-          scale: photo.scale.clone(),
-          rotation: photo.rotation
-        },
-        to: {
-          position: { x, y },
-          pivot: origin,
-          scale: zoom,
-          rotation: rad(angle)
-        }
-      })
+    this.constrain(next, next)
 
+    if (duration && photo.parent) {
       if (mirror !== photo.mirror) {
-        photo.flip(origin.width)
+        photo.flip(next.pivot.x)
         this.render()
       }
 
-      let fixate = props.mode === MODE.ZOOM
-      let pivot = photo.toGlobal(origin, null, true)
-      let rotation = rad(angle)
+      photo.fixate(photo.toGlobal(next.pivot, null, true), false)
 
-      photo.fixate(pivot, false)
+      if (next.rotation !== photo.rotation && props.mode === MODE.ZOOM) {
+        setIntermediatePosition(next, photo, this.app.screen)
+      }
 
-      this
-        .move({ x, y, zoom, rotation }, duration)
-        .then(() => {
-          this
-            .rotate({ angle }, { duration, fixate })
-            .then(() => {
-              this.adjust(state)
-              this.commit()
-            })
-        })
+      let doSync = this.move(next, {
+        duration,
+        skipConstrain: true
+      })
+
+      if (next.rotation !== photo.rotation) {
+        doSync = doSync.then(() =>
+          this.rotate({ angle }, {
+            duration,
+            fixate: props.mode === MODE.ZOOM
+          }))
+      }
+
+      return doSync.then(() => {
+        this.adjust(state)
+        this.commit()
+      })
 
     } else {
-      this.adjust(state)
-      this.photo.rotation = rad(angle)
+      this.photo.rotation = next.rotation
       this.photo.scale.set(mirror ? -zoom : zoom, zoom)
-      this.photo.pivot.copyFrom(origin)
-      this.photo.position.set(x, y)
-      this.constrain()
+      this.photo.pivot.copyFrom(next.pivot)
+      this.photo.position.copyFrom(next)
+      this.adjust(state)
     }
   }
 
@@ -343,8 +341,6 @@ class Esper extends EventEmitter {
   }
 
   animate(thing, scope, { stop, complete, done } = {}) {
-    // TODO skip when esper not visible!
-
     let tween = new TWEEN.Tween(thing, this.tweens)
       .easing(TWEEN.Easing.Cubic.InOut)
       .onStart(() => {
@@ -402,12 +398,14 @@ class Esper extends EventEmitter {
     })
   }
 
-  move({ x, y, zoom, rotation }, duration = 0) {
+  move({ x, y, zoom }, {
+    duration = 0,
+    skipConstrain = false
+  } = {}) {
     return new Promise((done) => {
       let { photo } = this
 
       let current = {
-        rotation: photo.rotation,
         x: photo.x,
         y: photo.y,
         zoom: photo.scale.y
@@ -419,16 +417,8 @@ class Esper extends EventEmitter {
         zoom: zoom ?? current.zoom
       }
 
-      // For target positions at different rotation, compute
-      // the position for the current rotation!
-      if (rotation != null && rotation !== current.rotation) {
-        photo.rotation = rotation
-        let local = photo.toLocal(next)
-        photo.rotation = current.rotation
-        photo.toGlobal(local, next)
-      }
-
-      this.constrain(next, { rotation, zoom })
+      if (!skipConstrain)
+        this.constrain(next, next)
 
       if (equal(current, next) && current.zoom === next.zoom)
         return done()
@@ -719,6 +709,31 @@ class Esper extends EventEmitter {
   }
 }
 
+
+const setIntermediatePosition = (next, photo, screen) => {
+  // Save current position and rotation
+  let rotation = photo.rotation
+  let position = photo.position.clone()
+
+  // Set next rotation, position
+  photo.rotation = next.rotation
+  photo.position.copyFrom(next)
+
+  // Fixate at center of screen, updating transform
+  photo.toLocal(center(screen), null, photo.pivot)
+
+  // Restore rotation and update transform
+  photo.rotation = rotation
+  photo.displayObjectUpdateTransform()
+
+  // Adjust next position
+  next.x = photo.x
+  next.y = photo.y
+
+  // Restore position and pivot
+  photo.position.copyFrom(position)
+  photo.pivot.copyFrom(next.pivot)
+}
 
 module.exports = {
   Esper
