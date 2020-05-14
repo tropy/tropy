@@ -113,19 +113,19 @@ class Photo extends Container {
   }
 
   // Changes pivot without changing position
-  fixate(at, isReleasePending = true) {
+  fixate(at, isReleasePending = true, skipUpdate = true) {
     if (isReleasePending)
       this.#pivot = this.pivot.clone()
 
-    this.toLocal(at, null, this.pivot, true)
+    this.toLocal(at, null, this.pivot, skipUpdate)
     this.position.copyFrom(at)
   }
 
   // Restores previous pivot without changing position
-  release() {
+  release(skipUpdate = true) {
     if (this.#pivot == null) return
 
-    this.toGlobal(this.#pivot, this.position, true)
+    this.toGlobal(this.#pivot, this.position, skipUpdate)
     this.pivot.copyFrom(this.#pivot)
 
     this.#pivot = null
