@@ -78,27 +78,97 @@ class EsperContainer extends React.Component {
 
     if (id === prevState.id && src === prevState.src)
       return null
+    else
+      return {
+        ...prevState,
+        quicktool: null,
+        id,
+        src,
+        zoom: props.zoom || prevState.zoom,
+        ...EsperContainer.getDerivedImageStateFromProps(props)
+      }
+  }
 
-    let state = {
-      ...prevState,
-      quicktool: null,
-      id,
-      src,
-      zoom: props.zoom || state.zoom,
-      ...EsperContainer.defaultImageProps
-    }
-
-    let image = props.selection || props.photo
+  static getDerivedImageStateFromProps({ photo, selection }) {
+    let image = selection || photo
+    let state = { ...EsperContainer.defaultImageProps }
 
     if (image != null) {
       for (let prop in EsperContainer.defaultImageProps) {
         state[prop] = image[prop]
       }
 
-      orientate(state, props.photo)
+      Object.assign(state, addOrientation(state, photo))
     }
 
     return state
+  }
+
+  // Subtle: we missappropriate shouldComponentUpdate to detect
+  // changes to the active image that happen outside of Esper,
+  // for example a rotation via context menu or an undo/redo.
+  //
+  // All the pertinent image props are in the derived state: but
+  // the state acts like a buffer and may deviate when the image
+  // is manipulated in Esper. Because we don't want props that
+  // change because of manipulations in Esper to overwrite the
+  // state (which may be ahead of the props). For this reason,
+  // we need a way to detect changes image props which result from
+  // actions outside of Esper. The suggested way to do this is
+  // to derive all the values a second time so we can compare them
+  // in `getDerivedStateFromProps`.
+  //
+  // We can't do this in componentDidUpdate because the prop
+  // changes alone will not cause the component to update. We do
+  // this here instead, so as not to pollute the state with
+  // duplicates of all image props.
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.src !== nextState.src)
+      return true // view going to reset anyway!
+    if (this.state.id !== nextState.id)
+      return true // view going to sync anyway!
+
+    if (this.didImageChange(nextProps, nextState)) {
+      let state = EsperContainer.getDerivedImageStateFromProps(nextProps)
+
+      this.esper.sync({
+        ...nextProps,
+        x: this.esper.x,
+        y: this.esper.y
+      }, { ...nextState, ...state })
+
+      this.setState(state)
+    }
+
+    return true
+  }
+
+  // Returns true if any of the image props changed and if the
+  // new values are different from next state. The intent is that
+  // this flags only changes which happened outside of Esper.
+  didImageChange(nextProps, nextState) {
+    let image = this.props.selection || this.props.photo
+    let nextImage = nextProps.selection || nextProps.photo
+
+    if (nextImage == null || nextImage === image)
+      return false
+
+    if (nextImage.mirror !== image.mirror ||
+      nextImage.angle !== image.angle) {
+      let { angle, mirror } = addOrientation(nextImage, nextProps.photo)
+      if (mirror !== nextState.mirror || angle !== nextState.angle)
+        return true
+    }
+
+    for (let prop in EsperPanel.defaultProps) {
+      if (nextImage[prop] !== image[prop] &&
+        nextImage[prop] !== nextState[prop]) {
+        return true
+      }
+    }
+
+    return false
   }
 
   componentDidMount() {
@@ -120,6 +190,7 @@ class EsperContainer extends React.Component {
 
     on(this.container.current, 'tab:focus', this.handleTabFocus)
 
+    // TODO just for debugging. Remove!
     window.ec = this
   }
 
@@ -170,13 +241,6 @@ class EsperContainer extends React.Component {
     return this.props.selection != null
   }
 
-  get rotation() {
-    return new Rotation(this.state)
-      .subtract(
-        Rotation.fromExifOrientation(this.props.photo.orientation)
-      )
-  }
-
   get screen() {
     return this.esper?.app.screen
   }
@@ -224,7 +288,7 @@ class EsperContainer extends React.Component {
     this.handleImageChange()
   }
 
-  handleRotationChange = (by) => {
+  handleRotationChange = throttle((by) => {
     let state = {
       ...this.state,
       angle: rotate(this.state.angle, by)
@@ -240,7 +304,7 @@ class EsperContainer extends React.Component {
 
     this.setState(state)
     this.handleImageChange()
-  }
+  }, ROTATE_DURATION * 0.8)
 
   handleWheelPan = ({ x, y }) => {
     this.pan({
@@ -331,11 +395,13 @@ class EsperContainer extends React.Component {
     this.props.onChange({ esper: { tool } })
   }
 
-  handleColorChange = (opts) => {
-    this.setState(opts, () => {
-      this.esper.adjust(this.state)
-      this.handleImageChange()
-    })
+  handleFilterChange = (adjustments) => {
+    let state = { ...this.state, adjustments }
+
+    this.esper.adjust(state)
+
+    this.setState(adjustments)
+    this.handleImageChange()
   }
 
   handleSelectionActivate = (selection) => {
@@ -349,10 +415,11 @@ class EsperContainer extends React.Component {
   }
 
   handleSelectionCreate = (selection) => {
-    let { angle, mirror } = this.rotation
+    let { photo } = this.props
+    let { angle, mirror } = subOrientation(this.state, photo)
 
     this.props.onSelectionCreate({
-      photo: this.props.photo.id,
+      photo: photo.id,
       angle,
       mirror,
       ...selection
@@ -520,22 +587,17 @@ class EsperContainer extends React.Component {
   }
 
   handleImageChange = debounce(() => {
-    if (this.state.id == null) return
-
-    let image = this.isSelectionActive ? 'selection' : 'photo'
-    let { angle, mirror } = this.rotation
-    let adjustments = pick(this.state, Object.keys(EsperPanel.defaultProps))
-
-    this.props.onChange({
-      [image]: {
-        id: this.state.id,
-        data: {
-          angle,
-          mirror,
-          ...adjustments
+    if (this.state.id != null) {
+      this.props.onChange({
+        [this.isSelectionActive ? 'selection' : 'photo']: {
+          id: this.state.id,
+          data: {
+            ...subOrientation(this.state, this.props.photo),
+            ...pick(this.state, Object.keys(EsperPanel.defaultProps))
+          }
         }
-      }
-    })
+      })
+    }
   }, 650)
 
   handleViewChange = debounce(() => {
@@ -597,7 +659,7 @@ class EsperContainer extends React.Component {
             sharpen={this.state.sharpen}
             isDisabled={this.isDisabled}
             isVisible={this.props.isPanelVisible}
-            onChange={this.handleColorChange}
+            onChange={this.handleFilterChange}
             onRevert={this.handleRevertToOriginal}/>
         </div>
       </section>
@@ -702,12 +764,16 @@ const getZoomToFit =
       Math.min(minZoom, Math.min(width / w, height / h)),
       ZOOM_PRECISION)
 
-const orientate = (state, { orientation }) =>
-  Object.assign(state,
-    Rotation
-      .fromExifOrientation(orientation)
-      .add(state)
-      .toJSON())
+const addOrientation = (state, { orientation }) =>
+  Rotation
+    .fromExifOrientation(orientation)
+    .add(state)
+    .toJSON()
+
+const subOrientation = (state, { orientation }) =>
+    new Rotation(state)
+      .subtract(Rotation.fromExifOrientation(orientation))
+      .toJSON()
 
 
 module.exports = {
