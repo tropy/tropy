@@ -126,7 +126,7 @@ class Esper extends EventEmitter {
       // Subtle: race conditions because of async loading!
       // The first sync must not override other syncs, coming
       // in while the photo is still loading.
-      let tmp = this.photo = new Photo(props.photo)
+      let tmp = this.photo = new Photo(props.photo, state)
       this.sync(props, state, 0)
 
       try {
@@ -175,9 +175,15 @@ class Esper extends EventEmitter {
 
       photo.fixate(photo.toGlobal(next.pivot, null, true), false)
 
-      if (next.rotation !== photo.rotation && props.mode === MODE.ZOOM) {
+      let rotate = next.rotation !== photo.rotation
+
+      if (rotate && props.mode === MODE.ZOOM) {
         setIntermediatePosition(next, photo, this.app.screen)
       }
+
+      this.filter(state, {
+        duration: rotate ? duration * 2 : duration
+      })
 
       this.move(next, {
         duration,
@@ -189,9 +195,6 @@ class Esper extends EventEmitter {
               fixate: props.mode === MODE.ZOOM
             })
           }
-
-          // TODO animate
-          this.adjust(state)
         }
       })
 
@@ -200,7 +203,7 @@ class Esper extends EventEmitter {
       this.photo.scale.set(mirror ? -zoom : zoom, zoom)
       this.photo.pivot.copyFrom(next.pivot)
       this.photo.position.copyFrom(next)
-      this.adjust(state)
+      this.filter(state)
     }
   }
 
@@ -321,18 +324,6 @@ class Esper extends EventEmitter {
   }
 
 
-  adjust(opts) {
-    this.photo
-      .brightness(opts.brightness)
-      .contrast(opts.contrast)
-      .hue(opts.hue)
-      .negative(opts.negative)
-      .saturation(opts.saturation)
-      .sharpen(opts.sharpen)
-
-    this.render()
-  }
-
   animate(thing, scope, { stop, complete, done } = {}) {
     let tween = new TWEEN.Tween(thing, this.tweens)
       .easing(TWEEN.Easing.Cubic.InOut)
@@ -367,6 +358,24 @@ class Esper extends EventEmitter {
       .animate(thing, null, { done: () => thing.destroy() })
       .to({ alpha: 0 }, duration)
       .start()
+  }
+
+  filter(next, { duration = 0, ...opts } = {}) {
+    if (duration > 0) {
+      let { photo } = this
+
+      this
+        .animate(photo.current, 'filter', opts)
+        .to(next, duration)
+        .onUpdate((m) => {
+          photo.filter(m)
+        })
+        .start()
+
+    } else {
+      this.photo.filter(next)
+      this.render()
+    }
   }
 
   load(url) {

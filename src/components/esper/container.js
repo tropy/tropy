@@ -284,7 +284,7 @@ class EsperContainer extends React.Component {
       ...EsperPanel.defaultProps
     }
 
-    this.esper.adjust(state)
+    this.esper.filter(state)
     this.setState(state)
     this.focus()
     this.handleImageChange()
@@ -402,7 +402,7 @@ class EsperContainer extends React.Component {
   }
 
   handleFilterChange = (opts) => {
-    this.esper.adjust({ ...this.state, ...opts })
+    this.esper.filter({ ...this.state, ...opts })
     this.setState(opts)
     this.handleImageChange()
   }
