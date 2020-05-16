@@ -266,7 +266,9 @@ class EsperContainer extends React.Component {
       this.esper.move({
         x: Math.floor(this.esper.x + x),
         y: Math.floor(this.esper.y + y)
-      }, animate ? PAN_DURATION : 0)
+      }, {
+        duration: animate ? PAN_DURATION : 0
+      })
     }
   }
 
@@ -348,7 +350,11 @@ class EsperContainer extends React.Component {
     this.esper.scale({
       zoom,
       mirror: this.state.mirror
-    }, animate ? ZOOM_DURATION : 0, { x, y })
+    }, {
+      duration: animate ? ZOOM_DURATION : 0,
+      x,
+      y
+    })
 
     this.props.onChange({
       view: {
@@ -384,7 +390,7 @@ class EsperContainer extends React.Component {
     }
 
     this.setState({ zoom })
-    this.esper.scale({ zoom, mirror }, ZOOM_DURATION)
+    this.esper.scale({ zoom, mirror }, { duration: ZOOM_DURATION })
 
     this.props.onChange({
       view: { [this.state.id]: { mode } }
