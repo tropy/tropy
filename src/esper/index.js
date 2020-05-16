@@ -145,7 +145,7 @@ class Esper extends EventEmitter {
 
       this.app.stage.addChildAt(this.photo, 0)
 
-      this.commit()
+      this.emit('change')
       this.render()
     }
   }
@@ -170,8 +170,7 @@ class Esper extends EventEmitter {
 
     if (duration && photo.parent) {
       if (mirror !== photo.mirror) {
-        photo.flip(next.pivot.x)
-        this.render()
+        photo.flip(next.pivot.x, false)
       }
 
       photo.fixate(photo.toGlobal(next.pivot, null, true), false)
@@ -180,22 +179,18 @@ class Esper extends EventEmitter {
         setIntermediatePosition(next, photo, this.app.screen)
       }
 
-      let doSync = this.move(next, {
+      this.move(next, {
         duration,
-        skipConstrain: true
-      })
-
-      if (next.rotation !== photo.rotation) {
-        doSync = doSync.then(() =>
-          this.rotate({ angle }, {
-            duration,
-            fixate: props.mode === MODE.ZOOM
-          }))
-      }
-
-      return doSync.then(() => {
-        this.adjust(state)
-        this.commit()
+        skipConstrain: true,
+        done: () => {
+          if (next.rotation !== photo.rotation) {
+            this.rotate({ angle }, {
+              duration,
+              fixate: props.mode === MODE.ZOOM
+            })
+          }
+          this.adjust(state)
+        }
       })
 
     } else {
@@ -225,7 +220,7 @@ class Esper extends EventEmitter {
     setScaleMode(this.photo.bg.texture, zoom)
     this.photo.scale.set(mirror ? -zoom : zoom, zoom)
 
-    this.commit()
+    this.emit('change')
     this.resume()
   }
 
@@ -251,10 +246,6 @@ class Esper extends EventEmitter {
   update = () => {
     this.tweens.update(performance.now())
     this.photo?.update(this.drag.current)
-  }
-
-  commit = () => {
-    this.emit('change')
   }
 
   get resolution() {
@@ -359,6 +350,7 @@ class Esper extends EventEmitter {
         if (scope != null) this.tweens[scope] = null
         if (typeof complete === 'function') complete()
         if (typeof done === 'function') done()
+        this.emit('change')
       })
 
     this.resume()
@@ -400,125 +392,115 @@ class Esper extends EventEmitter {
 
   move({ x, y, zoom }, {
     duration = 0,
-    skipConstrain = false
+    skipConstrain = false,
+    ...opts
   } = {}) {
-    return new Promise((done) => {
-      let { photo } = this
+    let { photo } = this
+    let { mirror } = photo
 
-      let current = {
-        x: photo.x,
-        y: photo.y,
-        zoom: photo.scale.y
-      }
+    let current = {
+      x: photo.x,
+      y: photo.y,
+      zoom: photo.scale.y
+    }
 
-      let next = {
-        x,
-        y,
-        zoom: zoom ?? current.zoom
-      }
+    let next = {
+      x,
+      y,
+      zoom: zoom ?? current.zoom
+    }
 
-      if (!skipConstrain)
-        this.constrain(next, next)
+    if (!skipConstrain)
+      this.constrain(next, next)
 
-      if (equal(current, next) && current.zoom === next.zoom)
-        return done()
+    if (equal(current, next) && current.zoom === next.zoom)
+      return opts.done?.()
 
-      let mirror = photo.mirror
-
-      let complete = () => {
-        this.commit()
-      }
-
-      this
-        .animate(current, 'move', { complete, done })
-        .to(next, duration)
-        .onUpdate(m => {
-          photo.x = m.x
-          photo.y = m.y
-          photo.scale.x = mirror ? -m.zoom : m.zoom
-          photo.scale.y = m.zoom
-        })
-        .start()
-    })
+    this
+      .animate(current, 'move', opts)
+      .to(next, duration)
+      .onUpdate(m => {
+        photo.x = m.x
+        photo.y = m.y
+        photo.scale.x = mirror ? -m.zoom : m.zoom
+        photo.scale.y = m.zoom
+      })
+      .start()
   }
 
   flip() {
     this.photo.flip(this.app.screen.width / 2)
     this.render()
-    this.commit()
   }
 
   rotate({ angle, mirror, zoom }, {
     duration = 0,
     clockwise,
-    fixate
+    fixate,
+    ...opts
   } = {}) {
-    return new Promise((resolve) => {
-      let { photo } = this
-      let rotation = rad(angle)
+    let { photo } = this
+    let rotation = rad(angle)
 
-      if (deg(photo.rotation) === (angle % 360))
-        return resolve()
+    if (deg(photo.rotation) === (angle % 360))
+      return opts.done?.()
 
-      if (duration > 0) {
-        let current = {
-          rotation: photo.rotation,
-          zoom: photo.scale.y
-        }
-
-        let next = {
-          rotation,
-          zoom: zoom ?? photo.scale.y
-        }
-
-        if (clockwise == null)
-          clockwise = isClockwise(deg(current.rotation), angle)
-
-        // To maintain rotation orientation during the transition,
-        // we need to keep temporary values exceeding [0, 2π], because
-        // a single animation can go round the circle many times.
-        // For clockwise rotation we always need to count upwards;
-        // downwards for counter-clockwise rotations.
-        if (clockwise) {
-          while (next.rotation < photo.rotation)
-            next.rotation += (2 * Math.PI)
-        } else {
-          while (next.rotation > photo.rotation)
-            next.rotation -= (2 * Math.PI)
-        }
-
-        if (fixate)
-          photo.fixate(center(this.app.screen))
-
-        let complete = () => {
-          photo.rotation = rotation
-          if (fixate) photo.release()
-          this.commit()
-        }
-
-        this
-          .animate(current, 'rotate', { complete, done: resolve })
-          .to(next, duration)
-          .onUpdate(m => {
-            photo.rotation = m.rotation
-            photo.scale.x = mirror ? -m.zoom : m.zoom
-            photo.scale.y = m.zoom
-          })
-          .start()
-
-      } else {
-        photo.rotation = rotation
-        photo.scale.x = mirror ? -zoom : zoom
-        photo.scale.y = zoom
-        this.render()
-        this.commit()
-
-        resolve()
+    if (duration > 0) {
+      let current = {
+        rotation: photo.rotation,
+        zoom: photo.scale.y
       }
-    })
+
+      let next = {
+        rotation,
+        zoom: zoom ?? photo.scale.y
+      }
+
+      if (clockwise == null)
+        clockwise = isClockwise(deg(current.rotation), angle)
+
+      // To maintain rotation orientation during the transition,
+      // we need to keep temporary values exceeding [0, 2π], because
+      // a single animation can go round the circle many times.
+      // For clockwise rotation we always need to count upwards;
+      // downwards for counter-clockwise rotations.
+      if (clockwise) {
+        while (next.rotation < photo.rotation)
+          next.rotation += (2 * Math.PI)
+      } else {
+        while (next.rotation > photo.rotation)
+          next.rotation -= (2 * Math.PI)
+      }
+
+      if (fixate)
+        photo.fixate(center(this.app.screen))
+
+      let complete = () => {
+        photo.rotation = rotation
+        if (fixate) photo.release()
+        opts.complete?.()
+      }
+
+      this
+        .animate(current, 'rotate', { ...opts, complete })
+        .to(next, duration)
+        .onUpdate(m => {
+          photo.rotation = m.rotation
+          photo.scale.x = mirror ? -m.zoom : m.zoom
+          photo.scale.y = m.zoom
+        })
+        .start()
+
+    } else {
+      photo.rotation = rotation
+      photo.scale.x = mirror ? -zoom : zoom
+      photo.scale.y = zoom
+      this.render()
+      opts.done?.()
+    }
   }
 
-  scale({ mirror, zoom }, duration = 0, { x, y } = {}) {
+  scale({ mirror, zoom }, { duration = 0, x, y, ...opts } = {}) {
     let { photo } = this
     let { scale, position, bg } = photo
     let { screen } = this.app
@@ -545,7 +527,7 @@ class Esper extends EventEmitter {
         x: position.x,
         y: position.y,
         zoom: scale.y
-      }, 'zoom', { complete: this.commit })
+      }, 'zoom', opts)
       .to(next, duration)
       .onUpdate(m => {
         scale.x = m.zoom * zx
@@ -653,7 +635,7 @@ class Esper extends EventEmitter {
   }
 
   handlePanStop() {
-    this.commit()
+    this.emit('change')
   }
 
   handleSelectMove() {

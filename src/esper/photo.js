@@ -104,12 +104,15 @@ class Photo extends Container {
   }
 
   // Mirror the image across the x-axis without changing position
-  flip(x) {
+  flip(x, skipUpdate = true) {
     if (!isHorizontal(deg(this.rotation)))
       this.rotation += Math.PI
 
     this.scale.x = -this.scale.x
     this.position.x += x - this.position.x
+
+    if (!skipUpdate && this.parent)
+      this.displayObjectUpdateTransform()
   }
 
   // Changes pivot without changing position. For temporary pivot
