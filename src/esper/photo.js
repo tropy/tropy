@@ -110,7 +110,7 @@ class Photo extends Container {
     let origin = this.toLocal(at, null, null, skipUpdate)
 
     if (!isHorizontal(deg(this.rotation)))
-      this.rotation += Math.PI
+      this.rotation = (this.rotation + Math.PI) % (2 * Math.PI)
 
     this.scale.x = -this.scale.x
     this.position.x += at.x - this.toGlobal(origin, null, false).x
