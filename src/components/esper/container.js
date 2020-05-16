@@ -304,7 +304,7 @@ class EsperContainer extends React.Component {
 
     this.setState(state)
     this.handleImageChange()
-  }, ROTATE_DURATION * 0.8)
+  }, ROTATE_DURATION / 2)
 
   handleWheelPan = ({ x, y }) => {
     this.pan({

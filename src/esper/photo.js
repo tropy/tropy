@@ -112,10 +112,14 @@ class Photo extends Container {
     this.position.x += x - this.position.x
   }
 
-  // Changes pivot without changing position
+  // Changes pivot without changing position. For temporary pivot
+  // changes, release is expected to be called as soon as possible.
+  // If multiple fixate() calls come in, the original pivot is the
+  // one that will be restored on released!
   fixate(at, isReleasePending = true, skipUpdate = true) {
-    if (isReleasePending)
+    if (isReleasePending && this.#pivot == null) {
       this.#pivot = this.pivot.clone()
+    }
 
     this.toLocal(at, null, this.pivot, skipUpdate)
     this.position.copyFrom(at)
