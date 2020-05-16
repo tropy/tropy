@@ -176,7 +176,6 @@ class Esper extends EventEmitter {
       photo.fixate(photo.toGlobal(next.pivot, null, true), false)
 
       let rotate = next.rotation !== photo.rotation
-
       if (rotate && props.mode === MODE.ZOOM) {
         setIntermediatePosition(next, photo, this.app.screen)
       }
@@ -476,10 +475,10 @@ class Esper extends EventEmitter {
       // For clockwise rotation we always need to count upwards;
       // downwards for counter-clockwise rotations.
       if (clockwise) {
-        while (next.rotation < photo.rotation)
+        while (next.rotation < current.rotation)
           next.rotation += (2 * Math.PI)
       } else {
-        while (next.rotation > photo.rotation)
+        while (next.rotation > current.rotation)
           next.rotation -= (2 * Math.PI)
       }
 
