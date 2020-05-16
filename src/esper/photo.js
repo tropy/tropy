@@ -4,7 +4,7 @@ const PIXI = require('pixi.js')
 const { Container, Sprite, Rectangle } = PIXI
 const { ColorMatrixFilter } = PIXI.filters
 const { AdjustmentFilter } = require('@pixi/filter-adjustment')
-const { SharpenFilter } = require('./filter')
+const { SharpenFilter, BalanceFilter } = require('./filter')
 const { SelectionLayer, SelectionOverlay } = require('./selection')
 const { constrain } = require('./util')
 const { deg, isHorizontal } = require('../common/math')
@@ -35,7 +35,8 @@ class Photo extends Container {
     this.bg.filters = [
       new AdjustmentFilter(),
       new SharpenFilter(0, width, height),
-      new ColorMatrixFilter()
+      new ColorMatrixFilter(),
+      new BalanceFilter()
     ]
 
     this.current = {}
@@ -218,6 +219,11 @@ class Photo extends Container {
 
   sharpen(intensity = 0) {
     this.bg.filters[1].intensity = intensity
+    return this
+  }
+
+  balance(arg1 = 0) {
+    this.bg.filters[3].arg1 = arg1
     return this
   }
 
