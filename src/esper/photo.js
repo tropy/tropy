@@ -104,12 +104,14 @@ class Photo extends Container {
   }
 
   // Mirror the image across the x-axis without changing position
-  flip(x, skipUpdate = true) {
+  flip(at, skipUpdate = true) {
+    let origin = this.toLocal(at, null, null, skipUpdate)
+
     if (!isHorizontal(deg(this.rotation)))
       this.rotation += Math.PI
 
     this.scale.x = -this.scale.x
-    this.position.x += x - this.position.x
+    this.position.x += at.x - this.toGlobal(origin, null, false).x
 
     if (!skipUpdate && this.parent)
       this.displayObjectUpdateTransform()

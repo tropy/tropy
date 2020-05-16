@@ -170,7 +170,7 @@ class Esper extends EventEmitter {
 
     if (duration && photo.parent) {
       if (mirror !== photo.mirror) {
-        photo.flip(next.pivot.x, false)
+        this.flip()
       }
 
       photo.fixate(photo.toGlobal(next.pivot, null, true), false)
@@ -189,6 +189,8 @@ class Esper extends EventEmitter {
               fixate: props.mode === MODE.ZOOM
             })
           }
+
+          // TODO animate
           this.adjust(state)
         }
       })
@@ -429,7 +431,7 @@ class Esper extends EventEmitter {
   }
 
   flip() {
-    this.photo.flip(this.app.screen.width / 2)
+    this.photo.flip(center(this.app.screen))
     this.render()
   }
 
