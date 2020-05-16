@@ -401,12 +401,9 @@ class EsperContainer extends React.Component {
     this.props.onChange({ esper: { tool } })
   }
 
-  handleFilterChange = (adjustments) => {
-    let state = { ...this.state, adjustments }
-
-    this.esper.adjust(state)
-
-    this.setState(adjustments)
+  handleFilterChange = (opts) => {
+    this.esper.adjust({ ...this.state, ...opts })
+    this.setState(opts)
     this.handleImageChange()
   }
 
