@@ -38,6 +38,8 @@ class Photo extends Container {
       new ColorMatrixFilter()
     ]
 
+    this.current = {}
+
     this.handleResolutionChange()
 
     this.selections = new SelectionLayer()
@@ -144,6 +146,28 @@ class Photo extends Container {
     for (let filter of this.bg.filters) {
       filter.resolution = dppx
     }
+  }
+
+  filter({
+    brightness = 0,
+    contrast = 0,
+    hue = 0,
+    negative = false,
+    saturation = 0,
+    sharpen = 0
+  } = {}) {
+    this.brightness(brightness)
+    this.current.brightness = brightness
+    this.contrast(contrast)
+    this.current.contrast = contrast
+    this.hue(hue)
+    this.current.hue = hue
+    this.negative(negative)
+    this.current.negative = negative
+    this.saturation(saturation)
+    this.current.saturation = saturation
+    this.sharpen(sharpen)
+    this.current.sharpen = sharpen
   }
 
   brightness(value = 0) {
