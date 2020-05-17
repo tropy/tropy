@@ -463,7 +463,8 @@ class Tropy extends EventEmitter {
       }), win))
     this.on('app:extract-photo', (win, { target }) =>
       this.dispatch(act.photo.extract({
-        id: target.id
+        id: target.id,
+        selection: target.selection
       }), win))
     this.on('app:consolidate-photo-library', () =>
       this.dispatch(act.photo.consolidate(), this.wm.current()))
