@@ -764,17 +764,11 @@ const getZoomToFit =
       Math.min(minZoom, Math.min(width / w, height / h)),
       ZOOM_PRECISION)
 
-const addOrientation = (state, { orientation }) =>
-  Rotation
-    .fromExifOrientation(orientation)
-    .add(state)
-    .toJSON()
+const addOrientation = (...args) =>
+  Rotation.addExifOrientation(...args).toJSON()
 
-const subOrientation = (state, { orientation }) =>
-    new Rotation(state)
-      .subtract(Rotation.fromExifOrientation(orientation))
-      .toJSON()
-
+const subOrientation = (...args) =>
+  Rotation.subExifOrientation(...args).toJSON()
 
 module.exports = {
   EsperContainer

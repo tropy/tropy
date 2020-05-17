@@ -6,7 +6,7 @@ const TWEEN = require('@tweenjs/tween.js')
 const debounce = require('lodash.debounce')
 const { append, createDragHandler, on, off } = require('../dom')
 const { info } = require('../common/log')
-const { isClockwise, deg, rad } = require('../common/math')
+const { isClockwise, isHorizontal, deg, rad } = require('../common/math')
 const { restrict } = require('../common/util')
 const { Photo } = require('./photo')
 const { Selection } = require('./selection')
@@ -120,21 +120,32 @@ class Esper extends EventEmitter {
   extract = async (src, props) => {
     try {
       let photo = new Photo(props)
-      var texture = new PIXI.RenderTexture.create(
-        props.width,
-        props.height
-      )
+      let { width, height } = props
+      let { renderer } = this.app
 
       photo.bg.texture = await this.load(src)
       photo.filter(props)
 
+      if (!isHorizontal(props.angle)) {
+        width = props.height
+        height = props.width
+      }
+
+      var texture = new PIXI.RenderTexture.create(width, height)
+
       photo.rotation = rad(props.angle)
       photo.scale.set(props.mirror ? -1 : 1, 1)
-      photo.position.copyFrom(photo.pivot)
+      photo.position.set(width / 2, height / 2)
 
-      this.app.renderer.render(photo, texture)
+      renderer.render(photo, texture)
 
-      return this.app.renderer.plugins.extract.pixels(texture)
+      return {
+        buffer: Buffer.from(renderer.plugins.extract.pixels(texture)),
+        channels: 4,
+        width,
+        height
+      }
+
 
     } finally {
       texture?.destroy()
