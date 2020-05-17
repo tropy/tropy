@@ -105,6 +105,17 @@ class Rotation {
         return new Rotation()
     }
   }
+
+  static addExifOrientation(state, { orientation }) {
+    return Rotation
+      .fromExifOrientation(orientation)
+      .add(state)
+  }
+
+  static subExifOrientation(state, { orientation }) {
+    return new Rotation(state)
+      .subtract(Rotation.fromExifOrientation(orientation))
+  }
 }
 
 class IIIF extends URL {

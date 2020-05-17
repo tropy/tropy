@@ -4,6 +4,7 @@ const { Command } = require('../command')
 const { call, select } = require('redux-saga/effects')
 const { PHOTO } = require('../../constants')
 const { Cache } = require('../../common/cache')
+const { Rotation } = require('../../common/iiif')
 const { Esper } = require('../../esper')
 const sharp = require('sharp')
 
@@ -16,17 +17,12 @@ class Extract extends Command {
     let photo = yield select(state => state.photos[id])
     let src = Cache.url(cache, 'full', photo)
 
-    // TODO orientation
-
-    let rgba = yield call(Esper.instance.extract, src, photo)
-
-    let image = sharp(Buffer.from(rgba), {
-      raw: {
-        channels: 4,
-        width: photo.width,
-        height: photo.height
-      }
+    let { buffer, ...raw } = yield call(Esper.instance.extract, src, {
+      ...photo,
+      ...Rotation.addExifOrientation(photo, photo).toJSON()
     })
+
+    let image = sharp(buffer, { raw })
 
     yield call([image, image.toFile], '/Users/dupin/Desktop/out.jpg')
   }
