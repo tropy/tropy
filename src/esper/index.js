@@ -117,6 +117,29 @@ class Esper extends EventEmitter {
     return this
   }
 
+  extract = async (src, props) => {
+    try {
+      let photo = new Photo(props)
+      var texture = new PIXI.RenderTexture.create(
+        props.width,
+        props.height
+      )
+
+      photo.bg.texture = await this.load(src)
+      photo.filter(props)
+
+      photo.rotation = rad(props.angle)
+      photo.scale.set(props.mirror ? -1 : 1, 1)
+      photo.position.copyFrom(photo.pivot)
+
+      this.app.renderer.render(photo, texture)
+
+      return this.app.renderer.plugins.extract.pixels(texture)
+
+    } finally {
+      texture?.destroy()
+    }
+  }
 
   async reset(props, state) {
     this.fadeOut(this.photo)
@@ -126,7 +149,7 @@ class Esper extends EventEmitter {
       // Subtle: race conditions because of async loading!
       // The first sync must not override other syncs, coming
       // in while the photo is still loading.
-      let tmp = this.photo = new Photo(props.photo, state)
+      let tmp = this.photo = new Photo(props.photo)
       this.sync(props, state, 0)
 
       try {
@@ -202,7 +225,8 @@ class Esper extends EventEmitter {
       this.photo.scale.set(mirror ? -zoom : zoom, zoom)
       this.photo.pivot.copyFrom(next.pivot)
       this.photo.position.copyFrom(next)
-      this.filter(state)
+      this.photo.filter(state)
+      this.render()
     }
   }
 

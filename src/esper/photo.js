@@ -21,13 +21,13 @@ class Photo extends Container {
   #pivot
   #tool = TOOL.ARROW
 
-  constructor({ width, height }) {
+  constructor({ x = 0, y = 0, width, height }) {
     super()
 
     this.#width = width
     this.#height = height
 
-    this.pivot.set(width / 2, height / 2)
+    this.pivot.set(x + width / 2, y + height / 2)
 
     this.bg = new Sprite()
     this.addChild(this.bg)
@@ -227,7 +227,7 @@ class Photo extends Container {
     return this
   }
 
-  sync(props, state) {
+  sync(props, state = {}) {
     let image = props.selection || props.photo
     this.#width = image.width
     this.#height = image.height
