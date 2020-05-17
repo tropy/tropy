@@ -189,9 +189,6 @@ class EsperContainer extends React.Component {
     this.#IO.observe(this.view.current)
 
     on(this.container.current, 'tab:focus', this.handleTabFocus)
-
-    // TODO just for debugging. Remove!
-    window.ec = this
   }
 
   componentDidUpdate(prevProps, prevState) {
