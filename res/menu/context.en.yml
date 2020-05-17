@@ -197,7 +197,7 @@ en:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
-      - label: 'Save Photo…'
+      - label: 'Export Photo…'
         command: 'app:extract-photo'
       - label: 'Consolidate Photo'
         command: 'app:consolidate-photo'
@@ -211,9 +211,8 @@ en:
     selection: &selection
       - label: 'Delete Selection'
         command: 'app:delete-selection'
-      - label: 'Save Selection as Image …'
-        command: 'app:save-selection'
-        enabled: false
+      - label: 'Export Selection …'
+        command: 'app:extract-photo'
     selection-rotate: &selection-rotate
       - label: 'Rotate Left'
         command: 'app:rotate-selection-left'

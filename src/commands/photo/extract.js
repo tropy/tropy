@@ -12,19 +12,24 @@ const sharp = require('sharp')
 class Extract extends Command {
   *exec() {
     let { cache } = this.options
-    let { id } = this.action.payload
+    let { payload } = this.action
 
-    let photo = yield select(state => state.photos[id])
+    let [photo, selection] = yield select(state => ([
+      state.photos[payload.id],
+      state.selections[payload.selection]
+    ]))
+
+    let image = selection || photo
     let src = Cache.url(cache, 'full', photo)
 
     let { buffer, ...raw } = yield call(Esper.instance.extract, src, {
-      ...photo,
-      ...Rotation.addExifOrientation(photo, photo).toJSON()
+      ...image,
+      ...Rotation.addExifOrientation(image, photo).toJSON()
     })
 
-    let image = sharp(buffer, { raw })
+    let out = sharp(buffer, { raw })
 
-    yield call([image, image.toFile], '/Users/dupin/Desktop/out.jpg')
+    yield call([out, out.toFile], '/Users/dupin/Desktop/out.jpg')
   }
 }
 
