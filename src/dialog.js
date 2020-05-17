@@ -141,60 +141,69 @@ open.vocab = (opts) => open({
   ...opts
 })
 
-open.templates = (options) => open({
+open.templates = (opts) => open({
   filters: [{
     name: t('dialog', 'filter', 'templates'),
     extensions: ['ttp']
   }],
   properties: ['openFile', 'multiSelections'],
-  ...options
+  ...opts
 })
 
 
-save.project = (options) => save({
+save.project = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'projects'),
     extensions: ['tpy']
   }],
   properties: ['createDirectory'],
-  ...options
+  ...opts
 })
 
 
-save.csv = (options) => save({
+save.csv = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'csv'),
     extensions: ['csv']
   }],
   properties: ['createDirectory'],
-  ...options
+  ...opts
 })
 
-save.template = (options) => save({
+save.template = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'templates'),
     extensions: ['ttp']
   }],
   properties: ['createDirectory'],
-  ...options
+  ...opts
 })
 
-save.items = (options) => save({
+save.items = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'jsonld'),
     extensions: ['json', 'jsonld']
   }],
   properties: ['createDirectory'],
-  ...options
+  ...opts
 })
 
-save.vocab = (options) => save({
+save.image = (opts) => save({
+  filters: [{
+    name: t('dialog', 'filter', 'images'),
+    extensions: ['jpg', 'jpeg', 'png', 'webp', 'raw']
+  }],
+  properties: ['createDirectory'],
+  ...opts
+})
+
+save.vocab = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'rdf'),
     extensions: ['n3']
   }],
   properties: ['createDirectory'],
-  ...options
+  ...opts
 })
 
 

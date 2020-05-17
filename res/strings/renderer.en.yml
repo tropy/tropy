@@ -565,10 +565,12 @@ en:
       consolidate: Failed to consolidate photos.
       create: Failed to import photo.
       save: Failed to save photo.
+      extract: Failed to export photo.
       template:
         change: Failed to change photo template.
     selection:
       create: Failed to create photo selection.
+      extract: Failed to export selection.
       template:
         change: Failed to change selection template.
     ontology:
