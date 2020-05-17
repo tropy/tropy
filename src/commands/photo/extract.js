@@ -1,35 +1,34 @@
 'use strict'
 
 const { Command } = require('../command')
-const { call } = require('redux-saga/effects')
+const { call, select } = require('redux-saga/effects')
 const { PHOTO } = require('../../constants')
-const { writeFile } = require('fs').promises
-const { RenderTexture } = require('pixi.js-legacy')
+const { Cache } = require('../../common/cache')
 const { Esper } = require('../../esper')
+const sharp = require('sharp')
+
 
 class Extract extends Command {
   *exec() {
-    // let { id } = this.action.payload
-    let esper = Esper.instance
+    let { cache } = this.options
+    let { id } = this.action.payload
 
-    let texture = RenderTexture.create(
-      esper.photo.bg.width,
-      esper.photo.bg.height
-    )
+    let photo = yield select(state => state.photos[id])
+    let src = Cache.url(cache, 'full', photo)
 
-    esper.renderer.render(esper.photo, texture)
+    // TODO orientation
 
-    let canvas = esper.renderer.plugins.extract.canvas(texture)
-    let blob = yield call(() => new Promise((resolve) => {
-      canvas.toBlob(resolve)
-    }))
+    let rgba = yield call(Esper.instance.extract, src, photo)
 
-    let data = yield call([blob, blob.arrayBuffer])
+    let image = sharp(Buffer.from(rgba), {
+      raw: {
+        channels: 4,
+        width: photo.width,
+        height: photo.height
+      }
+    })
 
-    yield call(writeFile, '/Users/dupin/Desktop/out.png', Buffer.from(data))
-
-    // esper.renderer.plugins.extract.destroy()
-    texture.destroy()
+    yield call([image, image.toFile], '/Users/dupin/Desktop/out.jpg')
   }
 }
 
