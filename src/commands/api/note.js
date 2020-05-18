@@ -1,9 +1,9 @@
 'use strict'
 
 const { select } = require('redux-saga/effects')
-const { Command } = require('./command')
-const { API } = require('../constants')
-const { serialize } = require('../components/editor/serialize')
+const { Command } = require('../command')
+const { API } = require('../../constants')
+const { serialize } = require('../../components/editor/serialize')
 
 
 class NoteShow extends Command {

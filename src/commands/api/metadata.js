@@ -1,8 +1,8 @@
 'use strict'
 
 const { select } = require('redux-saga/effects')
-const { Command } = require('./command')
-const { API } = require('../constants')
+const { Command } = require('../command')
+const { API } = require('../../constants')
 
 class MetadataShow extends Command {
   *exec() {

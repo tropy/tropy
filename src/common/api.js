@@ -19,6 +19,28 @@ const show = (type) =>
       ctx.status = 404
   }
 
+const extract = (type) =>
+  async (ctx) => {
+    let { assert, params, rsvp } = ctx
+
+    assert(
+      (/^(jpg|png|webp|raw)$/).test(params.format),
+      400,
+      'format unknown')
+
+    let { payload } = await rsvp('project', act.photo.extract({
+      [type]: params.id,
+      format: params.format
+    }))
+
+    if (payload != null) {
+      ctx.body = Buffer.from(payload.data)
+      ctx.type = `image/${payload.format}`
+    } else {
+      ctx.status = 404
+    }
+  }
+
 const project = {
   async import(ctx) {
     let { assert, request, rsvp } = ctx
@@ -111,6 +133,7 @@ const project = {
         ctx.status = 404
     },
 
+    extract: extract('photo'),
     show: show('photo')
   },
 
@@ -181,6 +204,7 @@ const project = {
   },
 
   selections: {
+    extract: extract('selection'),
     show: show('selection')
   }
 }
@@ -224,8 +248,11 @@ const create = ({ dispatch, log, rsvp, version }) => {
     .get('/project/notes/:id', project.notes.show)
 
     .get('/project/photos/:id', project.photos.show)
+  //.get('/project/photos/:id/download', project.photos.download)
+    .get('/project/photos/:id/image.:format', project.photos.extract)
 
-    .get('/project/selections/:id', project.photos.show)
+    .get('/project/selections/:id', project.selections.show)
+    .get('/project/selections/:id/image.:format', project.selections.extract)
 
     .get('/version', (ctx) => {
       ctx.body = { version }

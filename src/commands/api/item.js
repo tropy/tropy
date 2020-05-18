@@ -1,10 +1,10 @@
 'use strict'
 
 const { call, select } = require('redux-saga/effects')
-const { Command } = require('./command')
-const { API } = require('../constants')
-const { pluck } = require('../common/util')
-const mod = require('../models')
+const { Command } = require('../command')
+const { API } = require('../../constants')
+const { pluck } = require('../../common/util')
+const mod = require('../../models')
 
 
 class ItemFind extends Command {

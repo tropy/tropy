@@ -1,14 +1,14 @@
 'use strict'
 
 const { select } = require('redux-saga/effects')
-const { Command } = require('./command')
-const { API } = require('../constants')
-const { pluck } = require('../common/util')
+const { Command } = require('../command')
+const { API } = require('../../constants')
+const { pluck } = require('../../common/util')
 
 const {
   findTag,
   getAllTags
-} = require('../selectors')
+} = require('../../selectors')
 
 
 class TagShow extends Command {

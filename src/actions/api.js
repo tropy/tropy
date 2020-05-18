@@ -89,6 +89,17 @@ module.exports = {
   },
 
   photo: {
+    extract(payload, meta) {
+      return {
+        type: API.PHOTO.EXTRACT,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    },
+
     find(payload, meta) {
       return {
         type: API.PHOTO.FIND,
