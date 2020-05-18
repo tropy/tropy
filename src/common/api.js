@@ -4,6 +4,8 @@ const Koa = require('koa')
 const Router = require('@koa/router')
 const bodyParser = require('koa-bodyparser')
 const act = require('../actions/api')
+const fs = require('fs')
+const { basename } = require('path')
 
 const show = (type) =>
   async (ctx) => {
@@ -35,7 +37,7 @@ const extract = (type) =>
 
     if (payload != null) {
       ctx.body = Buffer.from(payload.data)
-      ctx.type = `image/${payload.format}`
+      ctx.type = payload.format
     } else {
       ctx.status = 404
     }
@@ -131,6 +133,44 @@ const project = {
         ctx.body = payload
       else
         ctx.status = 404
+    },
+
+    async raw(ctx) {
+      let { params, rsvp } = ctx
+
+      let { payload } = await rsvp('project', act.photo.show({
+        id: params.id
+      }))
+
+      if (payload == null) {
+        ctx.status = 404
+      } else {
+        let { protocol, path, mimetype } = payload
+
+        switch (protocol) {
+          case 'file': {
+            let stats = await fs.promises.stat(path)
+
+            if (stats && stats.isFile()) {
+              ctx.length = stats.size
+              ctx.lastModified = stats.mtime
+              ctx.type = mimetype
+              ctx.attachment(basename(path))
+              ctx.body = fs.createReadStream(path)
+            } else {
+              ctx.status = 404
+            }
+
+            break
+          }
+          case 'http':
+          case 'https':
+            ctx.redirect(`${protocol}://${path}`)
+            break
+          default:
+            ctx.status = 501
+        }
+      }
     },
 
     extract: extract('photo'),
@@ -248,11 +288,11 @@ const create = ({ dispatch, log, rsvp, version }) => {
     .get('/project/notes/:id', project.notes.show)
 
     .get('/project/photos/:id', project.photos.show)
-  //.get('/project/photos/:id/download', project.photos.download)
-    .get('/project/photos/:id/image.:format', project.photos.extract)
+    .get('/project/photos/:id/raw', project.photos.raw)
+    .get('/project/photos/:id/file.:format', project.photos.extract)
 
     .get('/project/selections/:id', project.selections.show)
-    .get('/project/selections/:id/image.:format', project.selections.extract)
+    .get('/project/selections/:id/file.:format', project.selections.extract)
 
     .get('/version', (ctx) => {
       ctx.body = { version }
