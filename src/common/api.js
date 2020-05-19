@@ -110,7 +110,7 @@ const project = {
       }))
 
       ctx.body = {
-        id: Object.keys(payload)
+        id: Object.values(payload).map(note => note.id)
       }
     },
 
