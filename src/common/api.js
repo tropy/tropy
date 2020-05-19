@@ -93,6 +93,27 @@ const project = {
   },
 
   notes: {
+    async create(ctx) {
+      let { assert, request, rsvp } = ctx
+      let { html, language, photo, selection } = request.body
+
+      assert.ok(html, 400, 'missing html parameter')
+
+      assert.ok(photo || selection, 400,
+        'missing photo or selection parameter')
+
+      let { payload } = await rsvp('project', act.note.create({
+        language,
+        photo: photo ? Number(photo) : null,
+        selection: selection ? Number(selection) : null,
+        html: request.body.html
+      }))
+
+      ctx.body = {
+        id: Object.keys(payload)
+      }
+    },
+
     async show(ctx) {
       let { assert, params, query, rsvp } = ctx
 
@@ -286,6 +307,7 @@ const create = ({ dispatch, log, rsvp, version }) => {
     .get('/project/data/:id', project.data.show)
 
     .get('/project/notes/:id', project.notes.show)
+    .post('/project/notes', project.notes.create)
 
     .get('/project/photos/:id', project.photos.show)
     .get('/project/photos/:id/raw', project.photos.raw)

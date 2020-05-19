@@ -76,6 +76,17 @@ module.exports = {
   },
 
   note: {
+    create(payload, meta) {
+      return {
+        type: API.NOTE.CREATE,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    },
+
     show(payload, meta) {
       return {
         type: API.NOTE.SHOW,

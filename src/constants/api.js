@@ -17,6 +17,7 @@ module.exports = {
   },
 
   NOTE: {
+    CREATE: 'api.note.create',
     SHOW: 'api.note.show'
   },
 
