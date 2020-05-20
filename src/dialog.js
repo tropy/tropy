@@ -68,7 +68,7 @@ function fail(e, msg) {
         clipboard.write({ text: crashReport(e, msg) })
         break
       case 2:
-        shell.openItem(ARGS.log)
+        shell.openPath(ARGS.log)
         break
     }
   })

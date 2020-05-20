@@ -650,7 +650,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-cache-folder', () => {
-      shell.openItem(this.cache.root)
+      shell.openPath(this.cache.root)
     })
 
     this.on('app:install-plugin', (win) => {
@@ -847,7 +847,7 @@ class Tropy extends EventEmitter {
               app.quit()
               break
             case 2:
-              shell.openItem(this.log)
+              shell.openPath(this.log)
               break
           }
         })
@@ -888,7 +888,7 @@ class Tropy extends EventEmitter {
               clipboard.write({ text: crashReport(e) })
               break
             case 2:
-              shell.openItem(this.log)
+              shell.openPath(this.log)
               break
           }
         })
