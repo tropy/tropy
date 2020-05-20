@@ -120,6 +120,7 @@ en:
         photos: Include photos
         metadata: Include metadata
         notes: Include notes
+        onlyNotes: Include only photos with notes
         overflow: Allow content to take up more than one page
       locale:
         locale: Locale

@@ -281,6 +281,12 @@ class AppPrefs extends React.PureComponent {
               value={this.props.settings.print.notes}
               onChange={this.handlePrintSettingsChange}/>
             <Toggle
+              id="prefs.app.print.onlyNotes"
+              isDisabled={!this.props.settings.print.notes}
+              name="onlyNotes"
+              value={this.props.settings.print.onlyNotes}
+              onChange={this.handlePrintSettingsChange}/>
+            <Toggle
               id="prefs.app.print.overflow"
               isDisabled={!(
                 this.props.settings.print.metadata ||
