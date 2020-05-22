@@ -65,6 +65,7 @@ class Esper extends EventEmitter {
       autoDensity: true,
       forceCanvas: !ARGS.webgl,
       powerPreference: 'low-power',
+      resolution: Esper.devicePixelRatio,
       roundPixels: false,
       sharedLoader: true,
       transparent: true,
@@ -241,28 +242,29 @@ class Esper extends EventEmitter {
     }
   }
 
-  resize({ width, height, zoom, mirror }) {
-    width = Math.round(width)
-    height = Math.round(height)
+  resize({ width, height, zoom, mirror } = {}) {
+    width = Math.round(width ?? this.app.screen.width)
+    height = Math.round(height ?? this.app.screen.height)
 
     this.app.renderer.resize(width, height)
     this.render()
 
-    if (!this.photo)
+    if (this.photo == null)
       return
 
-    this.photo?.constrain({ width, height }, zoom)
+    zoom = zoom ?? this.photo.scale.y
+    mirror = mirror ?? this.photo.mirror
 
-    if (!zoom || zoom === this.photo?.scale.y)
-      return
+    this.photo.constrain(this.app.screen, { zoom })
 
-    setScaleMode(this.photo.bg.texture, zoom)
-    this.photo.scale.set(mirror ? -zoom : zoom, zoom)
+    if (zoom !== this.photo.scale.y) {
+      setScaleMode(this.photo.bg.texture, zoom)
+      this.photo.scale.set(mirror ? -zoom : zoom, zoom)
+    }
 
     this.emit('change')
     this.resume()
   }
-
 
   render() {
     this.app.render()
@@ -302,8 +304,7 @@ class Esper extends EventEmitter {
         renderer.rootRenderTarget.resolution = resolution
 
       this.photo?.handleResolutionChange(resolution)
-
-      renderer.resize(renderer.width, renderer.height)
+      this.resize()
 
       this.emit('resolution-change')
     }
@@ -318,7 +319,7 @@ class Esper extends EventEmitter {
   }
 
 
-  handleResolutionChange() {
+  handleResolutionChange = debounce(() => {
     let resolution = Esper.devicePixelRatio
 
     // On low-res screens, we render at 2x resolution
@@ -328,7 +329,7 @@ class Esper extends EventEmitter {
     }
 
     this.resolution = resolution
-  }
+  }, 500)
 
   constrain(position = this.photo.position, ...args) {
     return constrain(position, this.getPanLimits(...args))
