@@ -584,6 +584,7 @@ class EsperContainer extends React.Component {
     this.setState({
       ...getZoomBounds(this.props, this.state, this.screen)
     })
+    this.forceUpdate()
   }
 
   handleImageChange = debounce(() => {
