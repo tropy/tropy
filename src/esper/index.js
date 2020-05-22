@@ -158,7 +158,7 @@ class Esper extends EventEmitter {
     this.photo = null
 
     if (state.src != null) {
-      // Subtle: race conditions because of async loading!
+      // Subtle: avoid race conditions because of async loading!
       // The first sync must not override other syncs, coming
       // in while the photo is still loading.
       let tmp = this.photo = new Photo(props.photo)
@@ -398,6 +398,11 @@ class Esper extends EventEmitter {
   filter(next, { duration = 0, ...opts } = {}) {
     if (duration > 0) {
       let { photo } = this
+
+      photo.filter({
+        ...photo.current,
+        negative: next.negative
+      })
 
       this
         .animate(photo.current, 'filter', opts)
