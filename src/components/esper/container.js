@@ -54,6 +54,7 @@ class EsperContainer extends React.Component {
   view = React.createRef()
 
   state = {
+    dppx: Esper.devicePixelRatio,
     hasTabFocus: false,
     isVisible: false,
     quicktool: null,
@@ -176,6 +177,7 @@ class EsperContainer extends React.Component {
       Esper.instance
         .on('change', this.handleViewChange)
         .on('photo.error', this.handlePhotoError)
+        .on('dppx-change', this.handleDevicePixelRatioChange)
         .on('resolution-change', this.handleResolutionChange)
         .on('selection-activate', this.handleSelectionActivate)
         .on('selection-create', this.handleSelectionCreate)
@@ -580,11 +582,14 @@ class EsperContainer extends React.Component {
     this.setState(next)
   }, 50)
 
+  handleDevicePixelRatioChange = (dppx) => {
+    this.setState({ dppx })
+  }
+
   handleResolutionChange = () => {
     this.setState({
       ...getZoomBounds(this.props, this.state, this.screen)
     })
-    this.forceUpdate()
   }
 
   handleImageChange = debounce(() => {
@@ -638,7 +643,7 @@ class EsperContainer extends React.Component {
             mode={this.props.mode}
             mirror={this.state.mirror}
             tool={this.tool}
-            resolution={Esper.devicePixelRatio}
+            resolution={this.state.dppx}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}

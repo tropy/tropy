@@ -84,7 +84,7 @@ class Esper extends EventEmitter {
     this.app.loader.onLoad.add((...args) =>
       this.emit('loader.load', ...args))
 
-    this.#rmq.addListener(this.handleResolutionChange)
+    this.#rmq.addListener(this.handleDevicePixelRatioChange)
     this.on('change', this.handleResolutionChange)
 
     on(this.app.view, 'wheel', this.handleWheel, { passive: true })
@@ -103,7 +103,7 @@ class Esper extends EventEmitter {
 
     off(this.app.view, 'wheel', this.handleWheel, { passive: true })
 
-    this.#rmq.removeListener(this.handleResolutionChange)
+    this.#rmq.removeListener(this.handleDevicePixelRatioChange)
 
     this.app.destroy(true, true)
     this.removeAllListeners()
@@ -318,6 +318,11 @@ class Esper extends EventEmitter {
     return this.photo?.y ?? 0
   }
 
+
+  handleDevicePixelRatioChange = () => {
+    this.emit('dppx-change', Esper.devicePixelRatio)
+    this.handleResolutionChange()
+  }
 
   handleResolutionChange = debounce(() => {
     let resolution = Esper.devicePixelRatio
