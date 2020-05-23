@@ -50,6 +50,8 @@ class EsperContainer extends React.Component {
     this.handleResize(el.contentRect)
   })
 
+  #lastImageChangeData
+
   container = React.createRef()
   view = React.createRef()
 
@@ -155,10 +157,14 @@ class EsperContainer extends React.Component {
     if (nextImage == null || nextImage === image)
       return false
 
-    if (nextImage.mirror !== image.mirror ||
-      nextImage.angle !== image.angle) {
+    if (nextImage.mirror !== image.mirror || nextImage.angle !== image.angle) {
       let { angle, mirror } = addOrientation(nextImage, nextProps.photo)
-      if (mirror !== nextState.mirror || angle !== nextState.angle)
+
+      if (mirror !== nextState.mirror)
+        return true
+
+      if (angle !== nextState.angle &&
+        nextImage.angle !== this.#lastImageChangeData?.angle)
         return true
     }
 
@@ -593,16 +599,22 @@ class EsperContainer extends React.Component {
   }
 
   handleImageChange = debounce(() => {
-    if (this.state.id != null) {
-      this.props.onChange({
-        [this.isSelectionActive ? 'selection' : 'photo']: {
-          id: this.state.id,
-          data: {
-            ...subOrientation(this.state, this.props.photo),
-            ...pick(this.state, Object.keys(EsperPanel.defaultProps))
-          }
+    try {
+      if (this.state.id != null) {
+        var data = {
+          ...subOrientation(this.state, this.props.photo),
+          ...pick(this.state, Object.keys(EsperPanel.defaultProps))
         }
-      })
+
+        this.props.onChange({
+          [this.isSelectionActive ? 'selection' : 'photo']: {
+            id: this.state.id,
+            data
+          }
+        })
+      }
+    } finally {
+      this.#lastImageChangeData = data
     }
   }, 650)
 
