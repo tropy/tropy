@@ -500,6 +500,9 @@ class Esper extends EventEmitter {
     let { photo } = this
     let rotation = rad(angle)
 
+    mirror = mirror ?? photo.mirror
+    zoom = zoom ?? photo.scale.y
+
     if (deg(photo.rotation) === (angle % 360))
       return opts.done?.()
 
@@ -511,7 +514,7 @@ class Esper extends EventEmitter {
 
       let next = {
         rotation,
-        zoom: zoom ?? photo.scale.y
+        zoom
       }
 
       if (clockwise == null)
