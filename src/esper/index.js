@@ -495,6 +495,8 @@ class Esper extends EventEmitter {
     fixate,
     ...opts
   } = {}) {
+    this.tweens.rotate?.stop()
+
     let { photo } = this
     let rotation = rad(angle)
 
