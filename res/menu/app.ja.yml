@@ -135,8 +135,6 @@ ja:
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: パフォーマンスツールに切り替え
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
@@ -356,8 +354,6 @@ ja:
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: パフォーマンスツールに切り替え
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
@@ -548,8 +544,6 @@ ja:
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: パフォーマンスツールに切り替え
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'

@@ -1,0 +1,33 @@
+cn:
+  dialog:
+    file:
+      project: Tropy项目
+      plugin: Tropy插件
+    crashed:
+      buttons:
+        - 关闭窗口
+        - 重启 Tropy
+        - 查看日志
+      message: 程序崩溃
+      detail: |
+        不幸的是，这个Tropy窗口已崩溃。你可以在 https://github.com/tropy/tropy 反馈这个问题（仅限英文）
+    unresponsive:
+      buttons:
+        - 关闭窗口
+        - 继续等待
+      message: Tropy 没有反应
+      detail: |
+        此Tropy窗口没有响应。您想关闭它还是继续等待？
+    unhandled:
+      buttons:
+        - 重试
+        - 复制日志
+        - 显示日志
+      message: 未知错误
+  window:
+    prefs:
+      title: Tropy 偏好设置
+    wizard:
+      title: 欢迎使用 Tropy
+    about:
+      title: 关于 Tropy

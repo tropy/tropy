@@ -34,8 +34,9 @@ module.exports = {
 
           for (let node of desc.children) {
             let values = Array
-              .from($$('li', node), value)
-              .filter(v => !blank(v))
+                .from(node.childElementCount > 0 ? $$('li', node) : [node])
+                .map(value)
+                .filter(v => !blank(v))
 
             if (blank(values)) continue
 

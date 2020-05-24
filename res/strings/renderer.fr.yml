@@ -121,10 +121,12 @@ fr:
         photos: Include photos
         metadata: Inclure les métadonnées
         notes: Inclure les notes
+        onlyNotes: Include only photos with notes
         overflow: Permettre au contenu d'utiliser plus d'une page
       locale:
         locale: Langue
         locales:
+          cn: 中文
           de: Deutsch
           en: English
           es: Español
@@ -168,6 +170,7 @@ fr:
         option:
           fit: Zoom pleine hauteur
           fill: Zoom pleine largeur
+          zoom: Zoom photos to actual size
       layout:
         label: Mode d'affichage d'objet
         option:
@@ -502,6 +505,7 @@ fr:
       order: Tri des photos en cours…
       save: Sauvegarde de la photo…
       restore: Restauration des photos…
+      extract: Extracting photo …
     note:
       create: Création note…
       delete: Suppression de la note…
@@ -511,6 +515,12 @@ fr:
     selection:
       create: Création sélection …
       load: Chargement de la sélection de photos…
+      extract: Extracting selection …
+    api:
+      photo:
+        extract: Extracting photo …
+      selection:
+        extract: Extracting selection …
   editor:
     commands:
       bold: Gras
@@ -562,10 +572,12 @@ fr:
       consolidate: Échec du regroupement des photos.
       create: Échec de l'importation de la (/des) photo(s).
       save: Échec de la sauvegarde de la (/des) photo(s).
+      extract: Failed to export photo.
       template:
         change: Échec du le changement de modèle de saisie.
     selection:
       create: Echec de la sauvegarde de la sélection
+      extract: Failed to export selection.
       template:
         change: Échec du le changement de modèle de saisie.
     ontology:

@@ -3,7 +3,7 @@
 const React = require('react')
 const { connect } = require('react-redux')
 const { Resizable } = require('../resizable')
-const { Esper } = require('../esper')
+const { EsperContainer } = require('../esper')
 const { NotePad } = require('../note')
 const act = require('../../actions')
 const cx = require('classnames')
@@ -65,7 +65,7 @@ class ItemContainer extends React.PureComponent {
     })
   }
 
-  handleEsperChange = ({ photo, selection, image, esper }) => {
+  handleEsperChange = ({ photo, selection, view, esper }) => {
     if (esper != null) {
       this.props.onUiUpdate({ esper })
     }
@@ -75,8 +75,8 @@ class ItemContainer extends React.PureComponent {
     if (selection != null) {
       this.props.onSelectionSave(selection)
     }
-    if (image != null) {
-      this.props.onEsperChange({ view: image })
+    if (view != null) {
+      this.props.onEsperChange({ view })
     }
   }
 
@@ -97,7 +97,7 @@ class ItemContainer extends React.PureComponent {
           isRelative
           value={this.size}
           onChange={this.handleEsperResize}>
-          <Esper {...this.props.view}
+          <EsperContainer {...this.props.view}
             cache={this.props.cache}
             mode={this.props.view.mode || this.props.settings.zoomMode}
             hasOverlayToolbar={this.hasOverlayToolbars}

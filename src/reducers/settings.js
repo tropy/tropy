@@ -41,6 +41,7 @@ const defaults = {
     photos: true,
     metadata: true,
     notes: true,
+    onlyNotes: false,
     overflow: false
   },
   invertScroll: true,

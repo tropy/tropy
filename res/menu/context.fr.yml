@@ -276,6 +276,8 @@ fr:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Regrouper les photos
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -288,9 +290,8 @@ fr:
     selection:
       - label: Supprimer la sélection
         command: 'app:delete-selection'
-      - label: Sauvegarder la sélection comme une image…
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Tourner à gauche
         command: 'app:rotate-selection-left'
@@ -646,6 +647,8 @@ fr:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Regrouper les photos
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -658,9 +661,8 @@ fr:
     selection:
       - label: Supprimer la sélection
         command: 'app:delete-selection'
-      - label: Sauvegarder la sélection comme une image…
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Tourner à gauche
         command: 'app:rotate-selection-left'
@@ -986,6 +988,8 @@ fr:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Regrouper les photos
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -998,9 +1002,8 @@ fr:
     selection:
       - label: Supprimer la sélection
         command: 'app:delete-selection'
-      - label: Sauvegarder la sélection comme une image…
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Tourner à gauche
         command: 'app:rotate-selection-left'

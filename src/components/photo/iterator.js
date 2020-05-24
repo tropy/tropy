@@ -61,7 +61,7 @@ class PhotoIterator extends Iterator {
     let rows = []
 
     for (let photo of props.expanded) {
-      let exp = ceil(photo.selections.length / cols)
+      let exp = ceil(photo.selections?.length / cols) || 0
       let idx = this.indexOf(photo.id, props)
       if (idx === -1) continue
       rows.push([idx, exp])

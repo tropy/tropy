@@ -42,7 +42,7 @@ function onClosed(_, { id, payload, error }) {
 
 function show(type, options = {}) {
   return new Promise((resolve, reject) => {
-    const id = seq.next().value
+    let id = seq.next().value
     ipc.send('wm', 'dialog', { id, type, options })
     pending[id] = { resolve, reject }
   })
@@ -68,34 +68,36 @@ function fail(e, msg) {
         clipboard.write({ text: crashReport(e, msg) })
         break
       case 2:
-        shell.openItem(ARGS.log)
+        shell.openPath(ARGS.log)
         break
     }
   })
 }
 
-function prompt(id, {
+async function prompt(id, {
   defaultId = 0,
   cancelId = 0,
   isChecked = false,
   ...opts
 } = {}) {
-  return show('message-box', {
+  let { response, checked } = await show('message-box', {
     type: 'question',
     ...t('dialog', 'prompt', ...id.split('.')),
     defaultId,
     cancelId,
     checkboxChecked: isChecked,
     ...opts
-  }).then(({ response, checked }) => ({
+  })
+
+  return {
     ok: response !== cancelId,
     cancel: response === cancelId,
     isChecked: checked
-  }))
+  }
 }
 
-function save(options) {
-  return show('save', options)
+function save(opts) {
+  return show('save', opts)
 }
 
 function open(opts) {
@@ -107,7 +109,6 @@ open.images = (opts) => open({
     name: t('dialog', 'filter', 'images'),
     extensions: IMAGE.EXT
   }],
-  defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],
   ...opts
 })
@@ -117,7 +118,6 @@ open.items = (opts) => open({
     name: t('dialog', 'filter', 'items'),
     extensions: [...IMAGE.EXT, 'json', 'jsonld']
   }],
-  defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],
   ...opts
 })
@@ -137,67 +137,73 @@ open.vocab = (opts) => open({
     name: t('dialog', 'filter', 'rdf'),
     extensions: ['n3', 'ttl']
   }],
-  defaultPath: ARGS.documents,
   properties: ['openFile', 'multiSelections'],
   ...opts
 })
 
-open.templates = (options) => open({
+open.templates = (opts) => open({
   filters: [{
     name: t('dialog', 'filter', 'templates'),
     extensions: ['ttp']
   }],
-  defaultPath: ARGS.documents,
   properties: ['openFile', 'multiSelections'],
-  ...options
+  ...opts
 })
 
 
-save.project = (options) => save({
+save.project = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'projects'),
     extensions: ['tpy']
   }],
-  defaultPath: ARGS.documents,
   properties: ['createDirectory'],
-  ...options
+  ...opts
 })
 
 
-save.csv = (options) => save({
+save.csv = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'csv'),
     extensions: ['csv']
   }],
   properties: ['createDirectory'],
-  ...options
+  ...opts
 })
 
-save.template = (options) => save({
+save.template = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'templates'),
     extensions: ['ttp']
   }],
   properties: ['createDirectory'],
-  ...options
+  ...opts
 })
 
-save.items = (options) => save({
+save.items = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'jsonld'),
     extensions: ['json', 'jsonld']
   }],
   properties: ['createDirectory'],
-  ...options
+  ...opts
 })
 
-save.vocab = (options) => save({
+save.image = (opts) => save({
+  filters: [{
+    name: t('dialog', 'filter', 'images'),
+    extensions: ['jpg', 'jpeg', 'png', 'webp', 'raw']
+  }],
+  properties: ['createDirectory'],
+  ...opts
+})
+
+save.vocab = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'rdf'),
     extensions: ['n3']
   }],
   properties: ['createDirectory'],
-  ...options
+  ...opts
 })
 
 

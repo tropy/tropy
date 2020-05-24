@@ -38,6 +38,12 @@
       }
     }
 
+    .icon-rotate {
+      .alt-key & {
+        transform: scaleX(-1);
+      }
+    }
+
     .slider {
       margin-top: 0;
       height: $toolbar-height;

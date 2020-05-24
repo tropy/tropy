@@ -120,10 +120,12 @@ en:
         photos: Include photos
         metadata: Include metadata
         notes: Include notes
+        onlyNotes: Include only photos with notes
         overflow: Allow content to take up more than one page
       locale:
         locale: Locale
         locales:
+          cn: 中文
           de: Deutsch
           en: English
           es: Español
@@ -167,6 +169,7 @@ en:
         option:
           fit: Zoom photos to fit
           fill: Zoom photos to fill
+          zoom: Zoom photos to actual size
       layout:
         label: Item View layout
         option:
@@ -505,6 +508,7 @@ en:
       order: Sorting photos …
       save: Saving photo …
       restore: Restoring photos …
+      extract: Extracting photo …
     note:
       create: Creating note …
       delete: Deleting note …
@@ -514,6 +518,12 @@ en:
     selection:
       create: Creating photo selection …
       load: Loading photo selections …
+      extract: Extracting selection …
+    api:
+      photo:
+        extract: Extracting photo …
+      selection:
+        extract: Extracting selection …
   editor:
     commands:
       bold: Bold
@@ -561,10 +571,12 @@ en:
       consolidate: Failed to consolidate photos.
       create: Failed to import photo.
       save: Failed to save photo.
+      extract: Failed to export photo.
       template:
         change: Failed to change photo template.
     selection:
       create: Failed to create photo selection.
+      extract: Failed to export selection.
       template:
         change: Failed to change selection template.
     ontology:

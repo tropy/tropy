@@ -118,10 +118,12 @@ ja:
         photos: Include photos
         metadata: Include metadata
         notes: Include notes
+        onlyNotes: Include only photos with notes
         overflow: Allow content to take up more than one page
       locale:
         locale: ローカル
         locales:
+          cn: 中文
           de: Deutsch
           en: English
           es: Español
@@ -165,6 +167,7 @@ ja:
         option:
           fit: 写真をウインドウサイズで表示
           fill: 写真を全画面表示
+          zoom: Zoom photos to actual size
       layout:
         label: アイテムレイアウト表示
         option:
@@ -496,6 +499,7 @@ ja:
       order: 写真をソート中
       save: 写真を保存中
       restore: 写真を復元中
+      extract: Extracting photo …
     note:
       create: ノートを作成中
       delete: ノートを削除中
@@ -505,6 +509,12 @@ ja:
     selection:
       create: Creating photo selection …
       load: フォト・セレクションをロード中
+      extract: Extracting selection …
+    api:
+      photo:
+        extract: Extracting photo …
+      selection:
+        extract: Extracting selection …
   editor:
     commands:
       bold: 太字
@@ -552,10 +562,12 @@ ja:
       consolidate: 写真の統合に失敗しました
       create: 写真のインポートに失敗しました
       save: 写真の保存に失敗しました
+      extract: Failed to export photo.
       template:
         change: 写真テンプレートの変更に失敗しました
     selection:
       create: フォト・セレクションの作成に失敗しました
+      extract: Failed to export selection.
       template:
         change: 選択テンプレートの変更に失敗しました
     ontology:

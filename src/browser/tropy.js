@@ -154,7 +154,6 @@ class Tropy extends EventEmitter {
 
   async showOpenDialog(win = this.wm.current()) {
     let files = await dialog.open(win, {
-      defaultPath: app.getPath('documents'),
       filters: [{
         name: this.dict.dialog.file.project,
         extensions: ['tpy']
@@ -287,6 +286,7 @@ class Tropy extends EventEmitter {
     }
 
     nativeTheme.themeSource = this.state.theme
+    dialog.lastDefaultPath = this.state.lastDefaultPath
 
     info('app state restored')
   }
@@ -321,6 +321,7 @@ class Tropy extends EventEmitter {
     info('saving app state')
 
     if (this.state != null) {
+      this.state.lastDefaultPath = dialog.lastDefaultPath
       this.store.save.sync('state.json', this.state)
     }
 
@@ -459,6 +460,11 @@ class Tropy extends EventEmitter {
     this.on('app:duplicate-photo', (win, { target }) =>
       this.dispatch(act.photo.duplicate({
         item: target.item, photos: [target.id]
+      }), win))
+    this.on('app:extract-photo', (win, { target }) =>
+      this.dispatch(act.photo.extract({
+        id: target.id,
+        selection: target.selection
       }), win))
     this.on('app:consolidate-photo-library', () =>
       this.dispatch(act.photo.consolidate(), this.wm.current()))
@@ -644,7 +650,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-cache-folder', () => {
-      shell.openItem(this.cache.root)
+      shell.openPath(this.cache.root)
     })
 
     this.on('app:install-plugin', (win) => {
@@ -841,7 +847,7 @@ class Tropy extends EventEmitter {
               app.quit()
               break
             case 2:
-              shell.openItem(this.log)
+              shell.openPath(this.log)
               break
           }
         })
@@ -882,7 +888,7 @@ class Tropy extends EventEmitter {
               clipboard.write({ text: crashReport(e) })
               break
             case 2:
-              shell.openItem(this.log)
+              shell.openPath(this.log)
               break
           }
         })

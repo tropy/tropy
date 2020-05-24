@@ -281,6 +281,12 @@ class AppPrefs extends React.PureComponent {
               value={this.props.settings.print.notes}
               onChange={this.handlePrintSettingsChange}/>
             <Toggle
+              id="prefs.app.print.onlyNotes"
+              isDisabled={!this.props.settings.print.notes}
+              name="onlyNotes"
+              value={this.props.settings.print.onlyNotes}
+              onChange={this.handlePrintSettingsChange}/>
+            <Toggle
               id="prefs.app.print.overflow"
               isDisabled={!(
                 this.props.settings.print.metadata ||
@@ -334,9 +340,9 @@ class AppPrefs extends React.PureComponent {
     themes: ['light', 'dark', 'system'],
     layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
     completions: ['datatype', 'property-datatype'],
-    locales: ['de', 'en', 'es', 'fr', 'it', 'ja', 'pt'],
+    locales: ['cn', 'de', 'en', 'es', 'fr', 'it', 'ja', 'pt'],
     dupOptions: ['skip', 'import', 'prompt'],
-    zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL],
+    zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL, ESPER.MODE.ZOOM],
     printModes: ['item', 'photo', 'selection'],
     importMin: IMAGE.MIN_DENSITY,
     importMax: IMAGE.MAX_DENSITY

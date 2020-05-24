@@ -135,8 +135,6 @@ fr:
         - label: Afficher les outils de développement
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Afficher les outils de performance
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Remettre à zéro la base de données des ontologies
           command: 'app:reset-ontology-db'
@@ -356,8 +354,6 @@ fr:
         - label: Afficher les outils de développement
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Afficher les outils de performance
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Remettre à zéro la base de données des ontologies
           command: 'app:reset-ontology-db'
@@ -548,8 +544,6 @@ fr:
         - label: Afficher les outils de développement
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Afficher les outils de performance
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Remettre à zéro la base de données des ontologies
           command: 'app:reset-ontology-db'

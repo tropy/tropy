@@ -48,8 +48,8 @@ class EsperToolbar extends React.PureComponent {
     this.props.onPanelChange(!this.props.isPanelVisible)
   }
 
-  handleRotate = () => {
-    this.props.onRotationChange(-90)
+  handleRotate = (event) => {
+    this.props.onRotationChange(event.altKey ? 90 : -90)
   }
 
   handleZoomChange = throttle((zoom, reason) => {
@@ -106,6 +106,7 @@ class EsperToolbar extends React.PureComponent {
               noFocus
               icon={<IconMirror/>}
               title="esper.tool.mirror"
+              isActive={this.props.mirror}
               isDisabled={this.props.isDisabled}
               onClick={this.props.onMirrorChange}/>
           </ToolGroup>
@@ -162,10 +163,11 @@ class EsperToolbar extends React.PureComponent {
   }
 
   static propTypes = {
-    isDisabled: bool.isRequired,
-    isSelectionActive: bool.isRequired,
-    isPanelVisible: bool.isRequired,
+    isDisabled: bool,
+    isSelectionActive: bool,
+    isPanelVisible: bool,
     mode: string.isRequired,
+    mirror: bool,
     resolution: number.isRequired,
     tool: string.isRequired,
     zoom: number.isRequired,
@@ -184,6 +186,10 @@ class EsperToolbar extends React.PureComponent {
   static contextType = WindowContext
 
   static defaultProps = {
+    mode: MODE.ZOOM,
+    resolution: 1,
+    tool: TOOL.ARROW,
+    zoom: 1,
     zoomPrecision: ZOOM_SLIDER_PRECISION,
     zoomSteps: ZOOM_SLIDER_STEPS
   }

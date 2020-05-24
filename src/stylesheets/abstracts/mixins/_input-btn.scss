@@ -10,6 +10,11 @@
 }
 
 @mixin form-shading-level($n) {
+  ::-webkit-input-placeholder,
+  .placeholder {
+    color: var(--level-#{$n}-placeholder-color);
+  }
+
   fieldset {
     background-color: var(--level-#{$n}-fieldset-bg);
   }

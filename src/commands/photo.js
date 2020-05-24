@@ -580,5 +580,7 @@ module.exports = {
   Restore,
   Rotate,
   Save,
-  TemplateChange
+  TemplateChange,
+
+  ...require('./photo/extract')
 }

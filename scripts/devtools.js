@@ -2,7 +2,7 @@
 
 const { join, resolve } = require('path')
 const  rm = require('rimraf')
-const { app, net, BrowserWindow } = require('electron')
+const { app, net, session } = require('electron')
 const { check, error, say } = require('./util')('δ')
 const { argv } = require('yargs')
 const unzip = require('unzip-crx')
@@ -43,11 +43,11 @@ app.once('ready', async () => {
       case 'remove':
         if (argv._[1]) {
           say(`removing ${argv._[1]}...`)
-          BrowserWindow.removeDevToolsExtension(argv._[1])
+          session.defaultSession.removeExtension(argv._[1])
         } else {
           for (let { name, version } of getExtensions()) {
             say(`removing ${name} ${version}...`)
-            BrowserWindow.removeDevToolsExtension(name)
+            session.defaultSession.removeExtension(name)
           }
         }
         break
@@ -112,12 +112,12 @@ const install = ({ name, path }) => {
   }
 
   say(`installing ${name}...`)
-  BrowserWindow.addDevToolsExtension(path)
+  session.defaultSession.loadExtension(path)
   return true
 }
 
 const isInstalled = name =>
-  (name in BrowserWindow.getDevToolsExtensions())
+  (name in session.defaultSession.getAllExtensions())
 
 const getExtensions = () =>
-  Object.values(BrowserWindow.getDevToolsExtensions())
+  Object.values(session.defaultSession.getAllExtensions())

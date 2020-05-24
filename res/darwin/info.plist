@@ -2,32 +2,34 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLIconFile</key>
-			<string>tropy.icns</string>
-			<key>CFBundleURLName</key>
-			<string>org.tropy.tropy-url</string>
-			<key>CFBundleURLSchemes</key>
+  <key>LSMinimumSystemVersion</key>
+  <string>10.13.0</string>
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>CFBundleURLIconFile</key>
+      <string>tropy.icns</string>
+      <key>CFBundleURLName</key>
+      <string>org.tropy.tropy-url</string>
+      <key>CFBundleURLSchemes</key>
       <array>
         <string>tropy</string>
       </array>
     </dict>
   </array>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Tropy Project</string>
-			<key>CFBundleTypeIconFile</key>
-			<string>tpy.icns</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
+  <key>CFBundleDocumentTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleTypeName</key>
+      <string>Tropy Project</string>
+      <key>CFBundleTypeIconFile</key>
+      <string>tpy.icns</string>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>LSHandlerRank</key>
+      <string>Owner</string>
       <key>LSItemContentTypes</key>
       <array>
         <string>org.tropy.v1.mime-types.tpy</string>
@@ -36,16 +38,16 @@
       <array>
         <string>org.tropy.v1.mime-types.tpy</string>
       </array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Tropy Template</string>
-			<key>CFBundleTypeIconFile</key>
-			<string>ttp.icns</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
+    </dict>
+    <dict>
+      <key>CFBundleTypeName</key>
+      <string>Tropy Template</string>
+      <key>CFBundleTypeIconFile</key>
+      <string>ttp.icns</string>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>LSHandlerRank</key>
+      <string>Owner</string>
       <key>LSItemContentTypes</key>
       <array>
         <string>org.tropy.v1.mime-types.ttp</string>
@@ -54,12 +56,12 @@
       <array>
         <string>org.tropy.v1.mime-types.ttp</string>
       </array>
-		</dict>
+    </dict>
     <dict>
       <key>CFBundleTypeName</key>
       <string>JPEG</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+      <key>CFBundleTypeRole</key>
+      <string>Viewer</string>
       <key>LSItemContentTypes</key>
       <array>
         <string>public.jpeg</string>
@@ -68,8 +70,8 @@
     <dict>
       <key>CFBundleTypeName</key>
       <string>PNG</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+      <key>CFBundleTypeRole</key>
+      <string>Viewer</string>
       <key>LSItemContentTypes</key>
       <array>
         <string>public.png</string>
@@ -78,8 +80,8 @@
     <dict>
       <key>CFBundleTypeName</key>
       <string>TIFF</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+      <key>CFBundleTypeRole</key>
+      <string>Viewer</string>
       <key>CFBundleMIMETypes</key>
       <array>
         <string>image/tiff</string>
@@ -96,8 +98,8 @@
     <dict>
       <key>CFBundleTypeName</key>
       <string>WebP</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+      <key>CFBundleTypeRole</key>
+      <string>Viewer</string>
       <key>CFBundleMIMETypes</key>
       <array>
         <string>image/webp</string>
@@ -111,8 +113,8 @@
     <dict>
       <key>CFBundleTypeName</key>
       <string>SVG</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+      <key>CFBundleTypeRole</key>
+      <string>Viewer</string>
       <key>LSItemContentTypes</key>
       <array>
         <string>public.svg-image</string>
@@ -121,8 +123,8 @@
     <dict>
       <key>CFBundleTypeName</key>
       <string>GIF</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+      <key>CFBundleTypeRole</key>
+      <string>Viewer</string>
       <key>LSItemContentTypes</key>
       <array>
         <string>com.compuserve.gif</string>
@@ -131,8 +133,8 @@
     <dict>
       <key>CFBundleTypeName</key>
       <string>Folder</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+      <key>CFBundleTypeRole</key>
+      <string>Viewer</string>
       <key>LSHandlerRank</key>
       <string>Alternate</string>
       <key>LSItemContentTypes</key>
@@ -140,9 +142,9 @@
         <string>public.folder</string>
       </array>
     </dict>
-	</array>
-	<key>UTExportedTypeDeclarations</key>
-	<array>
+  </array>
+  <key>UTExportedTypeDeclarations</key>
+  <array>
     <dict>
       <key>UTTypeIdentifier</key>
       <string>org.tropy.v1.mime-types.tpy</string>
@@ -185,6 +187,6 @@
         <string>application/vnd.tropy.ttp</string>
       </dict>
     </dict>
-	</array>
+  </array>
 </dict>
 </plist>

@@ -276,6 +276,8 @@ de:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Foto konsolidieren
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -288,9 +290,8 @@ de:
     selection:
       - label: Ausschnitt löschen
         command: 'app:delete-selection'
-      - label: Ausschnitt als Bild speichern …
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Linksdrehen
         command: 'app:rotate-selection-left'
@@ -646,6 +647,8 @@ de:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Foto konsolidieren
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -658,9 +661,8 @@ de:
     selection:
       - label: Ausschnitt löschen
         command: 'app:delete-selection'
-      - label: Ausschnitt als Bild speichern …
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Rechtsdrehen
         command: 'app:rotate-selection-left'
@@ -986,6 +988,8 @@ de:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Foto konsolidieren
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -998,9 +1002,8 @@ de:
     selection:
       - label: Ausschnitt löschen
         command: 'app:delete-selection'
-      - label: Ausschnitt als Bild speichern …
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Rechtsdrehen
         command: 'app:rotate-selection-left'

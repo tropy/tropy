@@ -120,10 +120,12 @@ es:
         photos: Incluir fotos
         metadata: Incluir metadatos
         notes: Incluir notas
+        onlyNotes: Include only photos with notes
         overflow: Permitir al contenido de utilizar más de una página
       locale:
         locale: Lengua
         locales:
+          cn: 中文
           de: Deutsch
           en: English
           es: Español
@@ -167,6 +169,7 @@ es:
         option:
           fit: Escalar fotos por altura
           fill: Escalar fotos por anchura
+          zoom: Zoom photos to actual size
       layout:
         label: Modo de visualización de objeto
         option:
@@ -501,6 +504,7 @@ es:
       order: Ordenando fotos …
       save: Guardando foto …
       restore: Restaurando fotos …
+      extract: Extracting photo …
     note:
       create: Creando nota …
       delete: Suprimiendo nota …
@@ -510,6 +514,12 @@ es:
     selection:
       create: Creando selección
       load: Cargando selecciones …
+      extract: Extracting selection …
+    api:
+      photo:
+        extract: Extracting photo …
+      selection:
+        extract: Extracting selection …
   editor:
     commands:
       bold: Negrilla
@@ -559,10 +569,12 @@ es:
       consolidate: Falla en la consolidación de fotos.
       create: Falla en la importación de foto.
       save: Falla al guardar foto.
+      extract: Failed to export photo.
       template:
         change: Falla al cambiar la plantilla de foto.
     selection:
       create: Falla en la creación de la selección.
+      extract: Failed to export selection.
       template:
         change: Falla al cambiar la plantilla de selección.
     ontology:
