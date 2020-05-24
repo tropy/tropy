@@ -117,6 +117,7 @@ cn:
         photos: 包含图片
         metadata: 包含元数据
         notes: 包含笔记
+        onlyNotes: Include only photos with notes
         overflow: Allow content to take up more than one page
       locale:
         locale: 默认
@@ -496,6 +497,7 @@ cn:
       order: 正在排序图片...
       save: 正在保存图片...
       restore: 正在恢复图片...
+      extract: Extracting photo …
     note:
       create: 新建笔记中...
       delete: 删除笔记中...
@@ -505,6 +507,12 @@ cn:
     selection:
       create: 正在新建图片选择...
       load: 正在加载图片选择...
+      extract: Extracting selection …
+    api:
+      photo:
+        extract: Extracting photo …
+      selection:
+        extract: Extracting selection …
   editor:
     commands:
       bold: 加粗
@@ -552,10 +560,12 @@ cn:
       consolidate: 无法检查图片。
       create: 无法导出图片。
       save: 无法保存图片。
+      extract: Failed to export photo.
       template:
         change: 无法更改照片模板。
     selection:
       create: 无法创建照片选择。
+      extract: Failed to export selection.
       template:
         change: 未能更改选择模板。
     ontology:

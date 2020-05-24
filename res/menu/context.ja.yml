@@ -276,6 +276,8 @@ ja:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: 写真を整理
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -288,9 +290,8 @@ ja:
     selection:
       - label: 選択を削除
         command: 'app:delete-selection'
-      - label: 選択したものをイメージとして保存
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Rotate Left
         command: 'app:rotate-selection-left'
@@ -646,6 +647,8 @@ ja:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: 写真を整理
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -658,9 +661,8 @@ ja:
     selection:
       - label: 選択を削除
         command: 'app:delete-selection'
-      - label: 選択したものをイメージとして保存
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Rotate Left
         command: 'app:rotate-selection-left'
@@ -986,6 +988,8 @@ ja:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: 写真を整理
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -998,9 +1002,8 @@ ja:
     selection:
       - label: 選択を削除
         command: 'app:delete-selection'
-      - label: 選択したものをイメージとして保存
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Rotate Left
         command: 'app:rotate-selection-left'

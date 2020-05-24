@@ -135,8 +135,6 @@ pt:
         - label: Ferramentas de Desenvolvimento
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Ferramentas de Desempenho
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Repor a Base de Dados Ontológica
           command: 'app:reset-ontology-db'
@@ -356,8 +354,6 @@ pt:
         - label: Ferramentas de Desenvolvimento
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Ferramentas de Desempenho
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Repor a Base de Dados Ontológica
           command: 'app:reset-ontology-db'
@@ -548,8 +544,6 @@ pt:
         - label: Ferramentas de Desenvolvimento
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Ferramentas de Desempenho
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Repor a Base de Dados Ontológica
           command: 'app:reset-ontology-db'

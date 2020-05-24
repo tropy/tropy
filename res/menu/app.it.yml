@@ -135,8 +135,6 @@ it:
         - label: Mostra/nascondi strumenti per sviluppatori
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Mostra/nascondi strumenti di performance
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Ripristina il database dell'ontologia
           command: 'app:reset-ontology-db'
@@ -153,7 +151,7 @@ it:
         - label: Tema
           id: theme
           submenu:
-            - label: Luminoso
+            - label: Chiaro
               id: light
               type: checkbox
             - label: Scuro
@@ -356,8 +354,6 @@ it:
         - label: Mostra/nascondi strumenti per sviluppatori
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Mostra/nascondi strumenti di performance
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Ripristina il database dell'ontologia
           command: 'app:reset-ontology-db'
@@ -374,7 +370,7 @@ it:
         - label: Tema
           id: theme
           submenu:
-            - label: Luminoso
+            - label: Chiaro
               id: light
               type: checkbox
             - label: Scuro
@@ -548,8 +544,6 @@ it:
         - label: Mostra/nascondi strumenti per sviluppatori
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Mostra/nascondi strumenti di performance
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Ripristina il database dell'ontologia
           command: 'app:reset-ontology-db'
@@ -566,7 +560,7 @@ it:
         - label: Tema
           id: theme
           submenu:
-            - label: Luminoso
+            - label: Chiaro
               id: light
               type: checkbox
             - label: Scuro

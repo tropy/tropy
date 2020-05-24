@@ -135,8 +135,6 @@ es:
         - label: Alternar las herramienta de desarrollo
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Alternar las herramientas de rendimiento
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Reiniciar la base de datos ontológicos
           command: 'app:reset-ontology-db'
@@ -356,8 +354,6 @@ es:
         - label: Alternar las herramienta de desarrollo
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Alternar las herramientas de rendimiento
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Reiniciar la base de datos ontológicos
           command: 'app:reset-ontology-db'
@@ -548,8 +544,6 @@ es:
         - label: Alternar las herramienta de desarrollo
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Alternar las herramientas de rendimiento
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Reiniciar la base de datos ontológicos
           command: 'app:reset-ontology-db'

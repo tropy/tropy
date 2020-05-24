@@ -121,6 +121,7 @@ it:
         photos: Includi foto
         metadata: Includi i metadata
         notes: Includi le note
+        onlyNotes: Include only photos with notes
         overflow: Permetti ai contenuti di occupare più di una pagina
       locale:
         locale: Lingua
@@ -506,6 +507,7 @@ it:
       order: Ordinamento foto...
       save: Salvataggio foto...
       restore: Ripristino foto...
+      extract: Extracting photo …
     note:
       create: Creazione nota...
       delete: Eliminazione nota...
@@ -515,6 +517,12 @@ it:
     selection:
       create: Creazione selezione di foto...
       load: Caricamento selezioni di foto...
+      extract: Extracting selection …
+    api:
+      photo:
+        extract: Extracting photo …
+      selection:
+        extract: Extracting selection …
   editor:
     commands:
       bold: Grassetto
@@ -566,10 +574,12 @@ it:
       consolidate: Consolidamento delle foto non riuscito.
       create: Importazione della foto non riuscita.
       save: Salvataggio della foto non riuscito.
+      extract: Failed to export photo.
       template:
         change: Cambiamento del modello di foto non riuscito.
     selection:
       create: Creazione della selezione di foto non riuscita.
+      extract: Failed to export selection.
       template:
         change: Cambiamento del modello di selezione non riuscito.
     ontology:

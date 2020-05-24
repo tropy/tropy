@@ -8,7 +8,7 @@ cn:
             - label: 项目
               command: 'app:create-project'
               accelerator: CmdOrCtrl+Shift+P
-            - label: 很久
+            - label: 文件
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
               condition: project
@@ -50,7 +50,7 @@ cn:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
-        - label: 检查图片数据库
+        - label: 刷新缩略图
           command: 'app:consolidate-photo-library'
           condition: project
         - type: separator
@@ -109,13 +109,13 @@ cn:
           command: 'app:center-window'
           condition: window
         - type: separator
-        - label: 实际尺寸
+        - label: 默认界面尺寸
           command: 'app:zoom-reset'
           accelerator: CmdOrCtrl+0
-        - label: 放大
+        - label: 放大界面UI
           command: 'app:zoom-in'
           accelerator: CmdOrCtrl+Plus
-        - label: 缩小
+        - label: 缩小界面UI
           command: 'app:zoom-out'
           accelerator: CmdOrCtrl+-
         - type: separator
@@ -135,8 +135,6 @@ cn:
         - label: Toggle &Developer Tools
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Toggle Performance Tools
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Reset Ontology Database
           command: 'app:reset-ontology-db'
@@ -162,26 +160,26 @@ cn:
             - label: 跟随系统设置
               id: system
               type: checkbox
-    - label: Help
+    - label: 帮助
       submenu:
-        - label: User Guide
+        - label: 使用引导
           command: 'app:open-docs'
         - label: Support Forums
           command: 'app:open-forums'
         - label: Software &License
           command: 'app:open-license'
         - type: separator
-        - label: Show Log Files
+        - label: 软件运行日志
           command: 'app:open-logs'
-        - label: Show Plugins Folder
+        - label: 插件文件夹
           command: 'app:open-plugins-folder'
-        - label: Show User-Data Folder
+        - label: 运行日志
           command: 'app:open-user-data'
         - label: Show Cache Folder
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
-          label: Check for Updates…
+          label: 检查更新
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
@@ -189,18 +187,18 @@ cn:
           enabled: false
           visible: false
         - id: updater-install
-          label: Install Updates…
+          label: 安装更新
           command: 'app:install-updates'
           enabled: false
           visible: false
         - type: separator
-        - label: About %name
+        - label: 关于%name
           command: 'app:about'
           condition: '!prefs'
   darwin:
     - label: '%name'
       submenu:
-        - label: About %name
+        - label: 关于%name
           command: 'app:about'
           condition: '!prefs'
         - type: separator
@@ -227,7 +225,7 @@ cn:
             - label: 项目
               command: 'app:create-project'
               accelerator: CmdOrCtrl+Shift+P
-            - label: 很久
+            - label: 文件
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
               condition: project
@@ -356,8 +354,6 @@ cn:
         - label: Toggle &Developer Tools
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Toggle Performance Tools
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Reset Ontology Database
           command: 'app:reset-ontology-db'
@@ -383,27 +379,27 @@ cn:
             - label: 跟随系统设置
               id: system
               type: checkbox
-    - label: Help
+    - label: 帮助
       role: help
       submenu:
-        - label: User Guide
+        - label: 使用引导
           command: 'app:open-docs'
         - label: Support Forums
           command: 'app:open-forums'
         - label: Software &License
           command: 'app:open-license'
         - type: separator
-        - label: Show Log Files
+        - label: 软件运行日志
           command: 'app:open-logs'
-        - label: Show Plugins Folder
+        - label: 插件文件夹
           command: 'app:open-plugins-folder'
-        - label: Show User-Data Folder
+        - label: 运行日志
           command: 'app:open-user-data'
         - label: Show Cache Folder
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
-          label: Check for Updates…
+          label: 检查更新
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
@@ -411,7 +407,7 @@ cn:
           enabled: false
           visible: false
         - id: updater-install
-          label: Install Updates…
+          label: 安装更新
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -424,7 +420,7 @@ cn:
             - label: 项目
               command: 'app:create-project'
               accelerator: CmdOrCtrl+Shift+P
-            - label: 很久
+            - label: 文件
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
               condition: project
@@ -516,7 +512,7 @@ cn:
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
         - type: separator
-        - label: 隐藏菜单栏(按alt显示)
+        - label: 隐藏菜单栏(重启后显示)
           command: 'app:toggle-menu-bar'
         - label: 移动到中间
           command: 'app:center-window'
@@ -548,8 +544,6 @@ cn:
         - label: Toggle &Developer Tools
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Toggle Performance Tools
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Reset Ontology Database
           command: 'app:reset-ontology-db'
@@ -575,26 +569,26 @@ cn:
             - label: 跟随系统设置
               id: system
               type: checkbox
-    - label: Help
+    - label: 帮助
       submenu:
-        - label: User Guide
+        - label: 使用引导
           command: 'app:open-docs'
         - label: Support Forums
           command: 'app:open-forums'
         - label: Software &License
           command: 'app:open-license'
         - type: separator
-        - label: Show Log Files
+        - label: 软件运行日志
           command: 'app:open-logs'
-        - label: Show Plugins Folder
+        - label: 插件文件夹
           command: 'app:open-plugins-folder'
-        - label: Show User-Data Folder
+        - label: 运行日志
           command: 'app:open-user-data'
         - label: Show Cache Folder
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
-          label: Check for Updates…
+          label: 检查更新
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
@@ -602,11 +596,11 @@ cn:
           enabled: false
           visible: false
         - id: updater-install
-          label: Install Updates…
+          label: 安装更新
           command: 'app:install-updates'
           enabled: false
           visible: false
         - type: separator
-        - label: About %name
+        - label: 关于%name
           command: 'app:about'
           condition: '!prefs'

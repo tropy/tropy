@@ -276,6 +276,8 @@ it:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Consolida foto
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -288,9 +290,8 @@ it:
     selection:
       - label: Elimina selezione
         command: 'app:delete-selection'
-      - label: Salva la selezione come immagine...
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Ruota a sinistra
         command: 'app:rotate-selection-left'
@@ -646,6 +647,8 @@ it:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Consolida foto
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -658,9 +661,8 @@ it:
     selection:
       - label: Elimina selezione
         command: 'app:delete-selection'
-      - label: Salva la selezione come immagine...
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Ruota a sinistra
         command: 'app:rotate-selection-left'
@@ -986,6 +988,8 @@ it:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Consolida foto
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -998,9 +1002,8 @@ it:
     selection:
       - label: Elimina selezione
         command: 'app:delete-selection'
-      - label: Salva la selezione come immagine...
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Ruota a sinistra
         command: 'app:rotate-selection-left'

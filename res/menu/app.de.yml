@@ -135,8 +135,6 @@ de:
         - label: Entwicklerwerkzeuge einblenden
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Performance-Werkzeuge
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Ontologie-Datenbank rücksetzen
           command: 'app:reset-ontology-db'
@@ -356,8 +354,6 @@ de:
         - label: Entwicklerwerkzeuge einblenden
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Performance-Werkzeuge
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Ontologie-Datenbank rücksetzen
           command: 'app:reset-ontology-db'
@@ -548,8 +544,6 @@ de:
         - label: Entwicklerwerkzeuge einblenden
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Performance-Werkzeuge
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Ontologie-Datenbank rücksetzen
           command: 'app:reset-ontology-db'

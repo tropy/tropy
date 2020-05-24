@@ -276,6 +276,8 @@ es:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Consolidar foto
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -288,9 +290,8 @@ es:
     selection:
       - label: Suprimir selección
         command: 'app:delete-selection'
-      - label: Guardar selección como una imagen …
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Rotar a la izquierda
         command: 'app:rotate-selection-left'
@@ -646,6 +647,8 @@ es:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Consolidar foto
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -658,9 +661,8 @@ es:
     selection:
       - label: Suprimir selección
         command: 'app:delete-selection'
-      - label: Guardar selección como una imagen …
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Rotar a la izquierda
         command: 'app:rotate-selection-left'
@@ -986,6 +988,8 @@ es:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: Consolidar foto
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -998,9 +1002,8 @@ es:
     selection:
       - label: Suprimir selección
         command: 'app:delete-selection'
-      - label: Guardar selección como una imagen …
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: Rotar a la izquierda
         command: 'app:rotate-selection-left'

@@ -120,6 +120,7 @@ pt:
         photos: Incluir fotos
         metadata: Incluir metadados
         notes: Incluir notas
+        onlyNotes: Include only photos with notes
         overflow: Permitir que o conteúdo ocupe mais do que uma página
       locale:
         locale: Locale
@@ -503,6 +504,7 @@ pt:
       order: Ordenando fotos...
       save: Gravando foto...
       restore: Restaurando fotos...
+      extract: Extracting photo …
     note:
       create: Criando nota...
       delete: Apagando nota...
@@ -512,6 +514,12 @@ pt:
     selection:
       create: Criando seleção na foto...
       load: Carregando seleções da foto...
+      extract: Extracting selection …
+    api:
+      photo:
+        extract: Extracting photo …
+      selection:
+        extract: Extracting selection …
   editor:
     commands:
       bold: Negrito
@@ -561,10 +569,12 @@ pt:
       consolidate: Falhou a consolidação de fotos.
       create: Falhou a importação de foto.
       save: Falhou a gravação de foto.
+      extract: Failed to export photo.
       template:
         change: Falhou a alteração do modelo de foto.
     selection:
       create: Falhou a criação de seleção na foto.
+      extract: Failed to export selection.
       template:
         change: Falhou a alteração do modelo de seleção.
     ontology:

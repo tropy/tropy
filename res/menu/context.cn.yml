@@ -276,6 +276,8 @@ cn:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: 检查图片
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -288,9 +290,8 @@ cn:
     selection:
       - label: 删除选中项
         command: 'app:delete-selection'
-      - label: 保存选中项为图片
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: 顺时针90度
         command: 'app:rotate-selection-left'
@@ -646,6 +647,8 @@ cn:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: 检查图片
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -658,9 +661,8 @@ cn:
     selection:
       - label: 删除选中项
         command: 'app:delete-selection'
-      - label: 保存选中项为图片
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: 顺时针90度
         command: 'app:rotate-selection-left'
@@ -986,6 +988,8 @@ cn:
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+      - label: Export Photo…
+        command: 'app:extract-photo'
       - label: 检查图片
         command: 'app:consolidate-photo'
     photo-rotate:
@@ -998,9 +1002,8 @@ cn:
     selection:
       - label: 删除选中项
         command: 'app:delete-selection'
-      - label: 保存选中项为图片
-        command: 'app:save-selection'
-        enabled: false
+      - label: Export Selection …
+        command: 'app:extract-photo'
     selection-rotate:
       - label: 顺时针90度
         command: 'app:rotate-selection-left'
