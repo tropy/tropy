@@ -2,8 +2,8 @@ precision mediump float;
 varying vec2 vTextureCoord;
 
 uniform sampler2D uSampler;
-uniform float arg1;
-uniform float arg2;
+uniform float a;
+uniform float b;
 
 vec3 rgb2xyz(vec3 c) {
 	vec3 tmp = vec3(
@@ -76,12 +76,12 @@ vec3 lab2rgb(vec3 c) {
 
 void main(void) {
   vec4 pix = texture2D(uSampler, vTextureCoord);
-  vec3 col = vec3(pix.r, pix.g, pix.b);
+  vec3 rgb = vec3(pix.r, pix.g, pix.b);
 
-  if (arg1 > .0) {
-    col = rgb2lab(col);
-    col = lab2rgb(col);
-  }
+  //if (a != .0 || b != .0) {
+  //  vec3 lab = rgb2lab(rgb);
+  //  rgb = lab2rgb(vec3(lab.x, lab.y + a, lab.z + b));
+  //}
 
-  gl_FragColor = vec4(col, pix.a);
+  gl_FragColor = vec4(rgb, pix.a);
 }
