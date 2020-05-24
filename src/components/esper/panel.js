@@ -117,6 +117,24 @@ export const EsperPanel = (props) => {
         <ColorSlider
           icon={<IconSharpen/>}
           isDisabled={props.isDisabled || !props.isVisible}
+          min={-127}
+          max={127}
+          tabIndex={TABS.EsperPanel}
+          type="aBalance"
+          value={props.aBalance}
+          onChange={props.onChange}/>
+        <ColorSlider
+          icon={<IconSharpen/>}
+          isDisabled={props.isDisabled || !props.isVisible}
+          min={-127}
+          max={127}
+          tabIndex={TABS.EsperPanel}
+          type="bBalance"
+          value={props.bBalance}
+          onChange={props.onChange}/>
+        <ColorSlider
+          icon={<IconSharpen/>}
+          isDisabled={props.isDisabled || !props.isVisible}
           tabIndex={TABS.EsperPanel}
           type="sharpen"
           min={0}
@@ -148,6 +166,8 @@ export const EsperPanel = (props) => {
 }
 
 EsperPanel.propTypes = {
+  aBalance: number.isRequired,
+  bBalance: number.isRequired,
   brightness: number.isRequired,
   contrast: number.isRequired,
   hue: number.isRequired,
@@ -162,6 +182,8 @@ EsperPanel.propTypes = {
 
 // Subtle: these are used to set EsperContainer's state!
 EsperPanel.defaultProps = {
+  aBalance: 0,
+  bBalance: 0,
   brightness: 0,
   contrast: 0,
   hue: 0,

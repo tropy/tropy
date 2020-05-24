@@ -268,6 +268,12 @@ en:
       sharpen:
         label: Sharpen
         value: "{value, number}"
+      aBalance:
+        label: A* Balance
+        value: "{value, number}"
+      bBalance:
+        label: B* Balance
+        value: "{value, number}"
   notepad:
     placeholder: Add your notes here …
   completions:

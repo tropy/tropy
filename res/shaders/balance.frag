@@ -78,10 +78,10 @@ void main(void) {
   vec4 pix = texture2D(uSampler, vTextureCoord);
   vec3 rgb = vec3(pix.r, pix.g, pix.b);
 
-  //if (a != .0 || b != .0) {
-  //  vec3 lab = rgb2lab(rgb);
-  //  rgb = lab2rgb(vec3(lab.x, lab.y + a, lab.z + b));
-  //}
+  if (a != 0. || b != 0.) {
+    vec3 lab = rgb2lab(rgb);
+    rgb = lab2rgb(vec3(lab.x, lab.y + a, lab.z + b));
+  }
 
   gl_FragColor = vec4(rgb, pix.a);
 }
