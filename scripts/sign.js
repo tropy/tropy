@@ -102,6 +102,12 @@ target.darwin = async (args = []) => {
     for (let file of find(`"${join(cnt, 'Resources')}" -name "*.dylib"`)) {
       sign(file)
     }
+    // Sign crashpad handler first!
+    for (let file of find(
+      `"${join(cnt, 'Frameworks')}" -perm +111 -type f -name "*_handler"`)
+    ) {
+      sign(file)
+    }
     for (let file of find(`"${join(cnt, 'Frameworks')}" -perm +111 -type f`)) {
       sign(file)
     }
