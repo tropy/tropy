@@ -191,7 +191,7 @@ save.items = (opts) => save({
 save.image = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'images'),
-    extensions: ['jpg', 'jpeg', 'png', 'webp', 'raw']
+    extensions: ['jpg', 'jpeg', 'png', 'webp']
   }],
   properties: ['createDirectory'],
   ...opts
