@@ -45,14 +45,14 @@ function *open(file) {
     assert(project != null && project.id != null, 'invalid project')
 
     if (migrations.length > 0) {
-      db.modified = true
+      project.accessId = yield call(mod.access, db)
 
     } else {
       try {
         yield call(db.check)
 
-        db.once('update', () => {
-          db.modified = true
+        db.once('update', async () => {
+          project.accessId = await mod.access.open(db)
         })
 
       } catch (_) {
@@ -148,8 +148,8 @@ function *close(db, project) {
     call(storage.persist, 'panel', project.id)
   ])
 
-  if (db.modified) {
-    yield call(mod.access.touch, db)
+  if (project.accessId != null) {
+    yield call(mod.access.close, db, project.accessId)
 
     debug('pruning db...')
     yield call(mod.item.prune, db)
