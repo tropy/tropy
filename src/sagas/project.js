@@ -45,7 +45,7 @@ function *open(file) {
     assert(project != null && project.id != null, 'invalid project')
 
     if (migrations.length > 0) {
-      project.accessId = yield call(mod.access, db)
+      project.accessId = yield call(mod.access.open, db)
 
     } else {
       try {
