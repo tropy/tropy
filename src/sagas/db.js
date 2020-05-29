@@ -8,29 +8,30 @@ const { fail } = require('../dialog')
 
 function ErrorChannel(db) {
   return eventChannel(emitter => {
-    db.on('error', emitter)
+    let onError = (error) => emitter({ error })
+    db.on('error', onError)
 
     return () => {
-      db.removeListener('error', emitter)
+      db.removeListener('error', onError)
     }
   })
 }
 
-function* handleDatabaseErrors(db, actions) {
+function *handleDatabaseErrors(db, actions) {
   try {
     var channel = yield call(ErrorChannel, db)
 
     while (true) {
-      let e = yield take(channel)
+      let { error } = yield take(channel)
 
-      if (e.code in actions) {
-        yield put(actions[e.code](e))
+      if (error.code in actions) {
+        yield put(actions[error.code](error))
 
       } else {
-        warn({ stack: e.stack }, 'unexpected db error')
+        warn({ stack: error.stack }, 'unexpected db error')
 
-        yield call(fail, e, db.path)
-        yield put(actions.default(e))
+        yield call(fail, error, db.path)
+        yield put(actions.default(error))
       }
     }
   } catch (e) {
