@@ -102,6 +102,10 @@ class Database extends EventEmitter {
           .then(resolve, reject)
       })
 
+      db.on('error', (error) => {
+        this.emit('error', error)
+      })
+
       db.on('profile', (query, ms) => {
         if (IUD.test(query)) {
           this.emit('update', query)
@@ -121,6 +125,8 @@ class Database extends EventEmitter {
 
   async destroy(conn) {
     debug({ path: this.path }, 'close db')
+
+    conn.removeAllListeners()
 
     await conn.optimize()
     await conn.close()
@@ -165,6 +171,15 @@ class Database extends EventEmitter {
 
   seq = (fn, opts) =>
     using(this.acquire(opts), fn)
+      .catch(this.handleConnectionError)
+
+  handleConnectionError = (e) => {
+    if (e.code === 'SQLITE_READONLY') {
+      this.mode = 'r'
+      this.emit('error', e)
+    }
+    throw e
+  }
 
   transaction = (fn) =>
     this.seq(conn => using(transaction(conn), fn))
@@ -225,15 +240,6 @@ class Database extends EventEmitter {
     return this.exec(String(await read(file)))
   }
 
-  handleConnectionError(e) {
-    if (e.code === 'SQLITE_READONLY') {
-      this.mode = 'r'
-      this.emit('error', e)
-    }
-
-    throw e
-  }
-
   static defaults = {
     application_id: '0xDAEDA105',
     encoding: 'UTF-8'
@@ -287,20 +293,12 @@ class Connection {
     return this.db.getAsync(sql, flatten(params))
   }
 
-  async run(sql, ...params) {
-    try {
-      return this.db.runAsync(sql, flatten(params))
-    } catch (e) {
-      this.db.handleConnectionError(e)
-    }
+  run(sql, ...params) {
+    return this.db.runAsync(sql, flatten(params))
   }
 
   exec(sql) {
-    try {
-      return this.db.execAsync(sql).return(this)
-    } catch (e) {
-      this.db.handleConnectionError(e)
-    }
+    return this.db.execAsync(sql).return(this)
   }
 
   version(version) {
