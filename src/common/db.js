@@ -52,9 +52,10 @@ class Database extends EventEmitter {
     super()
 
     this.path = path
+    this.mode = mode
 
     this.pool = createPool({
-      create: () => this.create(mode),
+      create: () => this.create(),
       destroy: (conn) => this.destroy(conn)
     }, {
       min: 0,
@@ -81,9 +82,13 @@ class Database extends EventEmitter {
     return this.pool.size - this.pool.available
   }
 
-  create(mode) {
+  get isReadOnly() {
+    return this.mode === 'r'
+  }
+
+  create(mode = this.mode) {
     return new Promise((resolve, reject) => {
-      info(`open db ${this.path}`)
+      info({ mode }, `open db ${this.path}`)
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
         if (error) {
@@ -124,8 +129,8 @@ class Database extends EventEmitter {
   }
 
   acquire(opts = {}) {
-    return this.pool.acquire().disposer(conn =>
-      this.release(conn, opts.destroy))
+    return this.pool.acquire()
+      .disposer(conn => this.release(conn, opts.destroy))
   }
 
   release(conn, destroy = false) {
@@ -220,6 +225,15 @@ class Database extends EventEmitter {
     return this.exec(String(await read(file)))
   }
 
+  handleConnectionError(e) {
+    if (e.code === 'SQLITE_READONLY') {
+      this.mode = 'r'
+      this.emit('error', e)
+    }
+
+    throw e
+  }
+
   static defaults = {
     application_id: '0xDAEDA105',
     encoding: 'UTF-8'
@@ -273,12 +287,20 @@ class Connection {
     return this.db.getAsync(sql, flatten(params))
   }
 
-  run(sql, ...params) {
-    return this.db.runAsync(sql, flatten(params))
+  async run(sql, ...params) {
+    try {
+      return this.db.runAsync(sql, flatten(params))
+    } catch (e) {
+      this.db.handleConnectionError(e)
+    }
   }
 
   exec(sql) {
-    return this.db.execAsync(sql).return(this)
+    try {
+      return this.db.execAsync(sql).return(this)
+    } catch (e) {
+      this.db.handleConnectionError(e)
+    }
   }
 
   version(version) {
