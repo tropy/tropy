@@ -20,7 +20,11 @@ module.exports = {
       case PROJECT.UPDATE:
         return { ...state, ...payload }
       case PROJECT.OPEN:
-        return { ...init, file: payload }
+        return {
+          ...init,
+          file: payload,
+          isReadOnly: meta.isReadOnly
+        }
       case PROJECT.CLOSE:
         return { ...state, closing: true }
       case PROJECT.CLOSED:
