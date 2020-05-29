@@ -47,7 +47,6 @@ class ItemView extends React.PureComponent {
     return { transform: `translate3d(${this.offset}, 0, 0)` }
   }
 
-
   setNotePad = (container) => {
     this.notepad = container != null ? container.notepad : null
   }
@@ -170,7 +169,7 @@ class ItemView extends React.PureComponent {
       photo,
       onPanelDragStop,
       isProjectClosing,
-      isTrashSelected,
+      isReadOnly,
       ...props
     } = this.props
 
@@ -191,14 +190,14 @@ class ItemView extends React.PureComponent {
             note={this.state.note}
             keymap={keymap}
             isItemOpen={isItemOpen}
-            isDisabled={isTrashSelected || isProjectClosing}
+            isDisabled={isReadOnly || isProjectClosing}
             onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
         <ItemContainer
           ref={this.setNotePad}
           note={this.state.note}
           photo={photo}
-          isDisabled={isTrashSelected || isProjectClosing}
+          isDisabled={isReadOnly || isProjectClosing}
           isOpen={isItemOpen}
           onContextMenu={this.props.onContextMenu}
           onNoteChange={this.handleNoteChange}
@@ -228,8 +227,8 @@ class ItemView extends React.PureComponent {
     offset: number.isRequired,
     mode: string.isRequired,
     isModeChanging: bool.isRequired,
-    isTrashSelected: bool.isRequired,
     isProjectClosing: bool,
+    isReadOnly: bool,
 
     onNoteCreate: func.isRequired,
     onNoteDelete: func.isRequired,

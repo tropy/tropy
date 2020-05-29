@@ -224,6 +224,7 @@ class ProjectSidebar extends React.PureComponent {
   handleContextMenu = (event, scope = 'sidebar', target = {}) => {
     this.props.onContextMenu(event, scope, {
       ...target,
+      isReadOnly: this.props.project.isReadOnly,
       tagColor: this.props.tagColor
     })
   }
@@ -250,7 +251,8 @@ class ProjectSidebar extends React.PureComponent {
                 <ol>
                   <ProjectName
                     name={this.props.project.name}
-                    isCorrupted={this.props.project.corrupted}
+                    isCorrupted={this.props.project.isCorrupted}
+                    isReadOnly={this.props.project.isReadOnly}
                     isSelected={!this.hasSelection}
                     isEditing={this.isEditing}
                     onChange={this.handleChange}
@@ -270,6 +272,7 @@ class ProjectSidebar extends React.PureComponent {
                     expand={this.props.expand}
                     hold={this.props.hold}
                     isExpanded
+                    isReadOnly={this.props.project.isReadOnly}
                     selection={this.props.list}
                     onContextMenu={this.handleContextMenu}
                     onDropFiles={this.props.onItemImport}
@@ -300,6 +303,7 @@ class ProjectSidebar extends React.PureComponent {
                 <TagList
                   color={this.props.tagColor}
                   edit={this.props.edit.tag}
+                  isReadOnly={this.props.project.isReadOnly}
                   keymap={this.props.keymap.TagList}
                   selection={this.props.tagSelection}
                   tags={this.props.tags}
@@ -392,7 +396,6 @@ module.exports = {
       lists: state.lists,
       list: state.nav.list,
       listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
-      project: state.project,
       tags: getAllTags(state),
       tagColor: state.settings.tagColor,
       tagSelection: state.nav.tags,
