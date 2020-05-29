@@ -51,7 +51,7 @@ class ProjectView extends React.Component {
   }
 
   render() {
-    const {
+    let {
       isActive,
       canDrop,
       edit,
@@ -67,7 +67,8 @@ class ProjectView extends React.Component {
       onSearch
     } = this.props
 
-    const { size, maxZoom, ItemIterator, isEmpty } = this
+    let { size, maxZoom, ItemIterator, isEmpty } = this
+    let isReadOnly = this.props.project?.isReadOnly || nav.trash
 
     return (
       <div id="project-view">
@@ -78,8 +79,8 @@ class ProjectView extends React.Component {
             <header>
               <ProjectToolbar
                 count={items.length}
-                canCreateItems={!nav.trash}
                 isDisabled={!isActive}
+                isReadOnly={isReadOnly}
                 maxZoom={maxZoom}
                 query={nav.query}
                 zoom={zoom}
@@ -87,10 +88,12 @@ class ProjectView extends React.Component {
                 onSearch={onSearch}
                 onZoomChange={this.handleZoomChange}/>
             </header>
-
             <ItemIterator {...pick(this.props, ItemIterator.getPropKeys())}
               items={items}
+              isDisabled={!isActive}
+              isTrashSelected={nav.trash}
               isEmpty={isEmpty}
+              isReadOnly={isReadOnly}
               photos={photos}
               edit={edit.column}
               keymap={keymap.ItemIterator}
@@ -99,7 +102,6 @@ class ProjectView extends React.Component {
               size={size}
               tags={tags}
               hasScrollbars={this.context.state.scrollbars}
-              isDisabled={nav.trash}
               isOver={isOver && canDrop}
               onCreate={onItemCreate}
               onSelect={onItemSelect}
@@ -124,6 +126,7 @@ class ProjectView extends React.Component {
     nav: object.isRequired,
     offset: number.isRequired,
     photos: object.isRequired,
+    project: object,
     tags: object.isRequired,
     connectDropTarget: func.isRequired,
     zoom: number.isRequired,

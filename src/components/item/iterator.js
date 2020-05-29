@@ -32,7 +32,7 @@ class ItemIterator extends Iterator {
   }
 
   get tabIndex() {
-    return this.props.isActive ? super.tabIndex : null
+    return this.props.isDisabled ? null : super.tabIndex
   }
 
   getIterables(props = this.props) {
@@ -84,7 +84,7 @@ class ItemIterator extends Iterator {
   }
 
   handleContextMenu = (event, item) => {
-    let { list, isDisabled, selection, onContextMenu } = this.props
+    let { list, selection } = this.props
 
     let context = ['item']
     let target = {
@@ -102,13 +102,13 @@ class ItemIterator extends Iterator {
     }
 
     if (list) context.push('list')
-    if (isDisabled) context.push('deleted')
+    if (this.props.isTrashSelected) context.push('deleted')
 
-    onContextMenu(event, context.join('-'), target)
+    this.props.onContextMenu(event, context.join('-'), target)
   }
 
   handleItemDelete(items) {
-    if (!(this.props.isDisabled || blank(items))) {
+    if (!(this.props.isReadOnly || blank(items))) {
       this.props.onItemDelete(items)
     }
   }
@@ -121,13 +121,13 @@ class ItemIterator extends Iterator {
   }
 
   handleItemCopy(items) {
-    if (!(this.props.isDisabled || blank(items))) {
+    if (!(this.props.isReadOnly || blank(items))) {
       this.props.onItemExport(items, { target: ':clipboard:' })
     }
   }
 
   handleItemMerge(items) {
-    if (!(this.props.isDisabled || blank(items))) {
+    if (!(this.props.isReadOnly || blank(items))) {
       this.props.onItemMerge(items)
     }
   }
@@ -167,8 +167,10 @@ class ItemIterator extends Iterator {
         this.clearSelection()
         break
       case 'delete':
-        this.select(this.after() || this.before())
-        this.handleItemDelete(this.props.selection)
+        if (!this.props.isReadOnly) {
+          this.select(this.after() || this.before())
+          this.handleItemDelete(this.props.selection)
+        }
         break
       case 'all':
         this.props.onSelect({}, 'all')
@@ -245,7 +247,7 @@ class ItemIterator extends Iterator {
   }
 
   rotate(by) {
-    if (!this.props.isDisabled && this.props.selection.length > 0) {
+    if (!this.props.isReadOnly && this.props.selection.length > 0) {
       this.props.onPhotoRotate({
         id: this.getSelectedPhotos(),
         by
@@ -254,7 +256,7 @@ class ItemIterator extends Iterator {
   }
 
   connect(element) {
-    return (this.isDisabled) ?
+    return (this.isReadOnly) ?
       element :
       this.props.connectDropTarget(element)
   }
@@ -268,7 +270,7 @@ class ItemIterator extends Iterator {
       tags: this.props.tags,
       isLast: this.isLast(index),
       isSelected: this.isSelected(item),
-      isDisabled: this.isDisabled,
+      isReadOnly: this.props.isReadOnly,
       isVertical: this.isVertical,
       getSelection: this.getSelection,
       onContextMenu: this.handleContextMenu,
@@ -305,9 +307,10 @@ class ItemIterator extends Iterator {
       column: string.isRequired
     }).isRequired,
 
-    isActive: bool,
-    isOver: bool,
     isDisabled: bool,
+    isOver: bool,
+    isReadOnly: bool,
+    isTrashSelected: bool,
 
     cache: string.isRequired,
     selection: arrayOf(number).isRequired,

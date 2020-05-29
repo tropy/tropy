@@ -274,6 +274,7 @@ class ProjectContainer extends React.Component {
           columns={columns}
           offset={this.state.offset}
           photos={photos}
+          project={project}
           templates={templates}
           zoom={ui.zoom}
           onMetadataSave={this.handleMetadataSave}/>
@@ -290,8 +291,8 @@ class ProjectContainer extends React.Component {
           offset={this.state.offset}
           mode={this.state.mode}
           isModeChanging={this.state.isModeChanging}
-          isTrashSelected={!!nav.trash}
           isProjectClosing={project.closing}
+          isReadOnly={project.isReadOnly || nav.trash}
           onPanelResize={this.handlePanelResize}
           onPanelDragStop={this.handlePanelDragStop}
           onMetadataSave={this.handleMetadataSave}/>

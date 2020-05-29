@@ -105,11 +105,19 @@ class ListNode extends React.PureComponent {
   }
 
   get isDragSource() {
-    return !(this.props.isEditing || this.props.isDraggingParent)
+    return !(
+      this.props.isReadOnly ||
+      this.props.isEditing ||
+      this.props.isDraggingParent
+    )
   }
 
   get isDropTarget() {
-    return !(this.props.isDragging || this.props.isDraggingParent)
+    return !(
+      this.props.isReadOnly ||
+      this.props.isDragging ||
+      this.props.isDraggingParent
+    )
   }
 
   getDropDepth(depth = this.state.depth) {
@@ -239,6 +247,7 @@ class ListNode extends React.PureComponent {
         <div className="name">
           <Editable
             isActive={this.props.isEditing}
+            isDisabled={this.props.isReadOnly || this.props.isDragging}
             isRequired
             resize
             value={this.props.list.name}
@@ -279,6 +288,7 @@ class ListNode extends React.PureComponent {
     isHolding: bool,
     isLast: bool,
     isOver: bool,
+    isReadOnly: bool,
     isSelected: bool,
     list: shape({
       id: number.isRequired,
