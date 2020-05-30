@@ -297,9 +297,6 @@ en:
         - label: 'Zoom'
           accelerator: 'Ctrl+Cmd+Z'
           role: 'zoom'
-        - label: 'Move to Center'
-          command: 'app:center-window'
-          condition: 'window'
         - type: 'separator'
         - *center-window
         - type: 'separator'
