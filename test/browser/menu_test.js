@@ -18,12 +18,20 @@ describe('AppMenu', () => {
   })
 
   describe('#load', () => {
-    it('loads and translates menu template', () => (
-      expect(menu.load())
-        .eventually
-        .to.have.property('menu')
-        .and.be.instanceof(Menu)
-    ))
-  })
+    beforeEach(() => {
+      sinon.spy(Menu, 'setApplicationMenu')
+    })
 
+    afterEach(() => {
+      Menu.setApplicationMenu.restore()
+      Menu.setApplicationMenu(null)
+    })
+
+    it('loads, compiles and sets the app menu', async () => {
+      await menu.load()
+
+      expect(menu).to.have.property('template')
+      expect(Menu.setApplicationMenu).to.have.been.called
+    })
+  })
 })
