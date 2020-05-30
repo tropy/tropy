@@ -4,8 +4,9 @@ const res = require('../common/res')
 const { basename } = require('path')
 const { error, warn } = require('../common/log')
 const { blank } = require('../common/util')
-const { transduce, map, transformer } = require('transducers.js')
 const { BrowserWindow, Menu: M } = require('electron')
+
+const SEPARATOR = { type: 'separator' }
 
 const CHECK = {
   hasMultiplePhotos({ target }) {
@@ -322,41 +323,36 @@ class AppMenu extends Menu {
   }
 }
 
-const separate = transformer(
-  (menu, items) => ([...menu, { type: 'separator' }, ...items])
-)
-
 class ContextMenu extends Menu {
-  static scopes = {
-    global: ['history']
-  }
+  static scopes = {}
 
   async load(name = 'context') {
-    this.template = await this.loadTemplate(name)
+    this.templates = await this.loadTemplate(name)
   }
 
-  prepare(template, settings) {
-    if (this.app.dev || this.app.debug) {
-      settings = [...settings, 'dev']
-    }
+  show({ scope, event }, win) {
+    this.menu?.closePopup()
 
-    return transduce(
-      settings, map(key => template[key]), separate, []
-    ).slice(1)
-  }
-
-  show({ scope, event }, window) {
     return new Promise((resolve, reject) =>  {
-      let settings = ContextMenu.scopes[scope]
-
       try {
-        this.menu = this.build(
-          this.prepare(this.template, settings),
-          window,
-          event)
+        let settings = [
+          'history',
+          ...ContextMenu.scopes[scope]
+        ]
+
+        if (this.app.dev || this.app.debug) {
+          settings.push('dev')
+        }
+
+        let template = settings.flatMap(id => ([
+          SEPARATOR,
+          ...this.templates[id]
+        ])).slice(1)
+
+        this.menu = this.build(template, win, event)
 
         this.menu.popup({
-          window,
+          win,
           positioningItem: settings.position,
           callback: () => {
             this.menu.destroy()
@@ -364,10 +360,11 @@ class ContextMenu extends Menu {
             resolve()
           }
         })
-
       } catch (e) {
-        error({ stack: e.stack, scope },
-          `failed to show context-menu: ${e.message}`)
+        error({
+          stack: e.stack,
+          scope
+        }, `failed to show context-menu: ${e.message}`)
         reject(e)
       }
     })
@@ -377,13 +374,13 @@ class ContextMenu extends Menu {
 {
   const { scopes } = ContextMenu
 
-  scopes.sidebar = [...scopes.global, 'project', 'lists', 'tags']
+  scopes.sidebar = ['project', 'lists', 'tags']
   scopes.sidebar.position = 2
 
   scopes.lists = [...scopes.sidebar]
   scopes.lists.position = 5
 
-  scopes.list = [...scopes.global, 'project', 'lists', 'list', 'tags']
+  scopes.list = ['project', 'lists', 'list', 'tags']
   scopes.list.position = 5
 
   scopes.tags = [...scopes.sidebar]
@@ -392,7 +389,7 @@ class ContextMenu extends Menu {
   scopes.tag = [...scopes.sidebar, 'tag']
   scopes.tag.position = 7
 
-  scopes.items = [...scopes.global, 'items']
+  scopes.items = ['items']
   scopes.items.position = 2
 
   scopes.item = [...scopes.items, 'item', 'item-rotate']
@@ -401,18 +398,16 @@ class ContextMenu extends Menu {
   scopes.trash = [...scopes.sidebar, 'trash']
   scopes.trash.position = 10
 
-  scopes.photo = [...scopes.global, 'photo', 'photo-rotate']
+  scopes.photo = ['photo', 'photo-rotate']
   scopes.photo.position = 2
 
-  scopes.selection = [
-    ...scopes.global, 'photo', 'selection', 'selection-rotate'
-  ]
+  scopes.selection = ['photo', 'selection', 'selection-rotate']
   scopes.selection.position = 8
 
-  scopes.note = [...scopes.global, 'note']
+  scopes.note = ['note']
   scopes.note.position = 2
 
-  scopes['metadata-list'] = [...scopes.global, 'metadata-list']
+  scopes['metadata-list'] = ['metadata-list']
   scopes['metadata-list'].position = 2
 
   scopes['metadata-field'] = [...scopes['metadata-list'], 'metadata-field']
@@ -427,16 +422,16 @@ class ContextMenu extends Menu {
   scopes['item-bulk-list'] = [...scopes.items, 'item-bulk-list', 'item-bulk']
   scopes['item-bulk-list'].position = 2
 
-  scopes['item-deleted'] = [...scopes.global, 'item-deleted']
+  scopes['item-deleted'] = ['item-deleted']
   scopes['item-deleted'].position = 2
 
-  scopes['item-bulk-deleted'] = [...scopes.global, 'item-bulk-deleted']
+  scopes['item-bulk-deleted'] = ['item-bulk-deleted']
   scopes['item-bulk-deleted'].position = 2
 
-  scopes['item-tag'] = [...scopes.global, 'item-tag']
+  scopes['item-tag'] = ['item-tag']
   scopes['item-tag'].position = 2
 
-  scopes['item-view'] = [...scopes.global, 'item-view']
+  scopes['item-view'] = ['item-view']
   scopes['item-view'].position = 2
 
   scopes.notepad = [...scopes['item-view'], 'notepad']
