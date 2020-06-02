@@ -19,18 +19,6 @@ const CHECK = {
 
   hasSingleItem(opts) {
     return !CHECK.hasMultipleItems(opts)
-  },
-
-  project({ app }) {
-    return !blank(app.wm.windows.project) && blank(app.wm.windows.prefs)
-  },
-
-  ['!prefs']({ app }) {
-    return blank(app.wm.windows.prefs)
-  },
-
-  window({ win }) {
-    return win != null
   }
 }
 
@@ -125,6 +113,10 @@ class Menu {
       Menu.ItemCompiler.color(item, app, win, event)
     }
 
+    if (item.window) {
+      Menu.ItemCompiler.window(item, app, win, event)
+    }
+
     if (item.condition) {
       item.enabled = check(item, {
         target: event.target,
@@ -147,7 +139,31 @@ class Menu {
     return item
   }
 
+  static eachItem(menu, fn) {
+    if (menu != null) {
+      for (let item of menu.items) {
+        fn(item)
+        Menu.eachItem(item.submenu, fn)
+      }
+    }
+  }
+
   static ItemCompiler = {
+    'window': (item, app) => {
+      switch (item.window) {
+        case null:
+        case undefined:
+          break
+        case '*':
+          item.enabled = !app.wm.empty
+          break
+        default:
+          item.enabled = item.window.startsWith('!') ?
+            blank(app.wm.windows[item.window.slice(1)]) :
+            !blank(app.wm.windows[item.window])
+      }
+    },
+
     'color': (item, app, win, event) => {
       let [col, ctx, cmd] = item.color
 
@@ -364,6 +380,12 @@ class AppMenu extends Menu {
       item.enabled = updater.isSupported
       item.visible = updater.isUpdateReady
     }
+  }
+
+  setWindow() {
+    Menu.eachItem(M.getApplicationMenu(), (item) => {
+      Menu.ItemCompiler.window(item, this.app)
+    })
   }
 }
 

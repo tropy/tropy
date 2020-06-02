@@ -193,8 +193,6 @@ class Tropy extends EventEmitter {
 
       win.show()
     }
-
-    this.emit('app:reload-menu')
   }
 
   hasOpenedProject({ file, name }, win) {
@@ -222,6 +220,7 @@ class Tropy extends EventEmitter {
     }
 
     this.wm.send('project', 'recent', this.state.recent)
+    this.setHistory(null, win)
     this.emit('app:reload-menu')
   }
 
@@ -799,13 +798,11 @@ class Tropy extends EventEmitter {
     })
 
     this.wm.on('show', () => {
-      // TODO
-      this.emit('app:reload-menu')
+      this.menu.setWindow()
     })
 
     this.wm.on('focus-change', () => {
-      // TODO
-      this.emit('app:reload-menu')
+      this.menu.setWindow()
     })
 
     this.wm.on('close', (type, win) => {
@@ -820,8 +817,7 @@ class Tropy extends EventEmitter {
           act.ontology.load(),
           act.storage.reload([['settings']]))
       }
-      // TODO
-      this.emit('app:reload-menu')
+      this.menu.setWindow()
     })
 
     this.wm.on('unresponsive', (_, win) => {
