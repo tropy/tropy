@@ -321,6 +321,18 @@ class AppMenu extends Menu {
       old.destroy()
     }
   }
+
+  setTheme(theme = this.app.state.theme) {
+    let menu = M.getApplicationMenu()
+    let themes = menu?.getMenuItemById('theme')
+
+    if (themes?.submenu) {
+      for (let item of themes.submenu.items) {
+        item.checked = item.id === theme
+        item.enabled = !item.checked
+      }
+    }
+  }
 }
 
 class ContextMenu extends Menu {

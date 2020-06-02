@@ -570,7 +570,6 @@ class Tropy extends EventEmitter {
       this.state.locale = locale
       await this.load()
       this.updateWindowLocale()
-      this.emit('app:reload-menu')
     })
 
     this.on('app:toggle-debug-flag', () => {
@@ -935,7 +934,7 @@ class Tropy extends EventEmitter {
       contrast: nativeTheme.shouldUseHighContrastColors
     })
 
-    this.emit('app:reload-menu')
+    this.menu.setTheme(theme)
   }
 
   dispatch(action, win = BrowserWindow.getFocusedWindow()) {
