@@ -3,7 +3,7 @@
 const { CONTEXT } = require('../constants')
 
 module.exports = {
-  show(event, scope = 'global', target, meta) {
+  show(event, scope = 'default', target, meta) {
     return {
       type: CONTEXT.SHOW,
       payload: {
