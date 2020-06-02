@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { DND, DropTarget, hasPhotoFiles } = require('../dnd')
-const { IconMaze, IconWarningSm } = require('../icons')
+const { IconMaze, IconWarningSm, IconLock } = require('../icons')
 const { Editable } = require('../editable')
 const { blank } = require('../../common/util')
 const cx = require('classnames')
@@ -36,6 +36,7 @@ class ProjectName extends React.PureComponent {
           </div>
           {this.props.isCorrupted &&
             <IconWarningSm title="project.corrupted"/>}
+          {this.props.isReadOnly && <IconLock/>}
         </div>
       </li>
     )
