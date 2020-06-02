@@ -595,7 +595,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:undo', (win) => {
-      if (this.getHistory(win).past) {
+      if (this.getHistory(win)?.past) {
         this.dispatch({
           type: HISTORY.UNDO,
           meta: { ipc: HISTORY.CHANGED }
@@ -604,7 +604,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:redo', (win) => {
-      if (this.getHistory(win).future) {
+      if (this.getHistory(win)?.future) {
         this.dispatch({
           type: HISTORY.REDO,
           meta: { ipc: HISTORY.CHANGED }
@@ -788,12 +788,10 @@ class Tropy extends EventEmitter {
 
     ipc.on(HISTORY.CHANGED, (event, history) => {
       this.setHistory(history, BrowserWindow.fromWebContents(event.sender))
-      this.emit('app:reload-menu')
     })
 
     ipc.on(TAG.CHANGED, (event, tags) => {
       this.setTags(tags, BrowserWindow.fromWebContents(event.sender))
-      this.emit('app:reload-menu')
     })
 
     ipc.on(CONTEXT.SHOW, (event, payload) => {
@@ -950,11 +948,14 @@ class Tropy extends EventEmitter {
   }
 
   getHistory(win = BrowserWindow.getFocusedWindow()) {
-    return H.get(win) || {}
+    return H.get(win)
   }
 
   setHistory(history, win = BrowserWindow.getFocusedWindow()) {
-    return H.set(win, history)
+    H.set(win, history)
+
+    if (win.isFocused())
+      this.menu.setHistory(history)
   }
 
   getTags(win = BrowserWindow.getFocusedWindow()) {
@@ -964,7 +965,6 @@ class Tropy extends EventEmitter {
   setTags(tags, win = BrowserWindow.getFocusedWindow()) {
     return T.set(win, tags)
   }
-
 
   get defaultLocale() {
     return this.getLocale()

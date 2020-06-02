@@ -205,7 +205,7 @@ class Menu {
     },
 
     'undo': (item, app, win) => {
-      if (app.getHistory(win).past > 0) {
+      if (app.getHistory(win)?.past > 0) {
         item.enabled = true
         // item.label = `${item.label} ${this.app.getHistory(win).undo}`
       } else {
@@ -214,7 +214,7 @@ class Menu {
     },
 
     'redo': (item, app, win) => {
-      if (app.getHistory(win).future > 0) {
+      if (app.getHistory(win)?.future > 0) {
         item.enabled = true
         // item.label = `${item.label} ${this.app.getHistory(win).redo}`
       } else {
@@ -332,6 +332,17 @@ class AppMenu extends Menu {
         item.enabled = !item.checked
       }
     }
+  }
+
+  setHistory(history = this.app.getHistory()) {
+    let menu = M.getApplicationMenu()
+    let undo = menu?.getMenuItemById('undo')
+    let redo = menu?.getMenuItemById('redo')
+
+    if (undo)
+      undo.enabled = history?.past > 0
+    if (redo)
+      redo.enabled = history?.future > 0
   }
 }
 
