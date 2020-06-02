@@ -348,13 +348,14 @@ class ContextMenu extends Menu {
     return new Promise((resolve, reject) =>  {
       try {
         let settings = [
-          'history',
           ...ContextMenu.scopes[scope]
         ]
 
-        if (this.app.dev || this.app.debug) {
+        if (scope !== 'default')
+          settings = ContextMenu.scopes.default.concat(settings)
+
+        if (this.app.dev || this.app.debug)
           settings.push('dev')
-        }
 
         let template = settings.flatMap(id => ([
           SEPARATOR,
@@ -386,6 +387,7 @@ class ContextMenu extends Menu {
 {
   const { scopes } = ContextMenu
 
+  scopes.default = ['history']
   scopes.sidebar = ['project', 'lists', 'tags']
   scopes.sidebar.position = 2
 
