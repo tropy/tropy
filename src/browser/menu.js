@@ -344,6 +344,27 @@ class AppMenu extends Menu {
     if (redo)
       redo.enabled = history?.future > 0
   }
+
+  setUpdater(updater = this.app.updater) {
+    let menu = M.getApplicationMenu()
+
+    let item = menu?.getMenuItemById('updater-check')
+    if (item) {
+      item.enabled = updater.isSupported
+      item.visible = updater.canCheck
+    }
+
+    item = menu?.getMenuItemById('updater-is-checking')
+    if (item) {
+      item.visible = updater.isChecking
+    }
+
+    item = menu?.getMenuItemById('updater-install')
+    if (item) {
+      item.enabled = updater.isSupported
+      item.visible = updater.isUpdateReady
+    }
+  }
 }
 
 class ContextMenu extends Menu {

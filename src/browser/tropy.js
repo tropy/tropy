@@ -799,10 +799,12 @@ class Tropy extends EventEmitter {
     })
 
     this.wm.on('show', () => {
+      // TODO
       this.emit('app:reload-menu')
     })
 
     this.wm.on('focus-change', () => {
+      // TODO
       this.emit('app:reload-menu')
     })
 
@@ -818,6 +820,7 @@ class Tropy extends EventEmitter {
           act.ontology.load(),
           act.storage.reload([['settings']]))
       }
+      // TODO
       this.emit('app:reload-menu')
     })
 
@@ -852,12 +855,13 @@ class Tropy extends EventEmitter {
 
     this.updater
       .on('checking-for-updates', () => {
-        this.emit('app:reload-menu')
+        this.menu.setUpdater()
       })
       .on('update-not-available', () => {
-        this.emit('app:reload-menu')
+        this.menu.setUpdater()
       })
       .on('update-ready', (release) => {
+        this.menu.setUpdater()
         this.wm.broadcast('dispatch', act.flash.show(release))
       })
 
