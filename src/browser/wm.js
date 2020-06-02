@@ -200,6 +200,13 @@ class WindowManager extends EventEmitter {
     return this.map(...args), this
   }
 
+  get empty() {
+    for (let type in this.windows) {
+      if (!blank(this.windows[type])) return false
+    }
+    return true
+  }
+
   first(type) {
     return this.values(type).next().value
   }
