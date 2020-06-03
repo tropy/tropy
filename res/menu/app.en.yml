@@ -115,10 +115,10 @@ en:
           role: 'pasteAndMatchStyle'
         - &all
           label: 'Select All'
-          role: 'selectall'
+          role: 'selectAll'
         - type: 'separator'
         - &preferences
-          label: 'Prefere&nces…'
+          label: 'Preferences…'
           accelerator: 'Shift+Control+S'
           command: 'app:open-preferences'
     - &view
