@@ -284,6 +284,7 @@ en:
         - *cut
         - *copy
         - *paste
+        - *pastenmatch
         - *all
     - label: 'View'
       submenu:
@@ -342,6 +343,7 @@ en:
         - *cut
         - *copy
         - *paste
+        - *pastenmatch
         - *preferences
     - *view
     - *dev
