@@ -68,6 +68,15 @@ function withWindow(win, cmd, fn) {
 
 
 class Menu {
+  static eachItem(menu, fn) {
+    if (menu != null) {
+      for (let item of menu.items) {
+        fn(item)
+        Menu.eachItem(item.submenu, fn)
+      }
+    }
+  }
+
   constructor(app) {
     this.app = app
   }
@@ -138,222 +147,41 @@ class Menu {
 
     return item
   }
-
-  static eachItem(menu, fn) {
-    if (menu != null) {
-      for (let item of menu.items) {
-        fn(item)
-        Menu.eachItem(item.submenu, fn)
-      }
-    }
-  }
-
-  static ItemCompiler = {
-    'window': (item, app) => {
-      switch (item.window) {
-        case null:
-        case undefined:
-          break
-        case '*':
-          item.enabled = !app.wm.empty
-          break
-        default:
-          item.enabled = item.window.startsWith('!') ?
-            blank(app.wm.windows[item.window.slice(1)]) :
-            !blank(app.wm.windows[item.window])
-      }
-    },
-
-    'color': (item, app, win, event) => {
-      let [col, ctx, cmd] = item.color
-
-      item.type = 'checkbox'
-      item.checked = event.target?.[ctx] === col
-
-      if (col != null && col !== 'random')
-        item.icon = res.icon.color(col)
-      if (cmd)
-        item.click = createResponder(cmd, app, win, event, col)
-    },
-
-    // Electron does not support removing menu items
-    // dynamically (#527), therefore we currently populate
-    // recent projects only in the translation loop.
-    'recent': (item, app) => {
-      if (app.state.recent.length) {
-        item.enabled = true
-
-        item.submenu = [
-          ...app.state.recent.map((file, idx) => ({
-            label: `${idx + 1}. ${basename(file)}`,
-            click: () => app.open(file)
-          })),
-          ...item.submenu
-        ]
-      }
-    },
-
-    'updater-check': (item, app) => {
-      item.enabled = app.updater.isSupported
-      item.visible = app.updater.canCheck
-    },
-
-    'updater-is-checking': (item, app) => {
-      item.visible = app.updater.isChecking
-    },
-
-    'updater-install': (item, app) => {
-      item.enabled = app.updater.isSupported
-      item.visible = app.updater.isUpdateReady
-    },
-
-    'dev': (item, app) => {
-      item.visible = (app.dev || app.debug)
-    },
-
-    'theme': (item, app, win) => {
-      item.submenu = item.submenu.map(theme => ({
-        ...theme,
-        checked: (theme.id === app.state.theme),
-        enabled: (theme.id !== app.state.theme),
-        click: createResponder('app:switch-theme', app, win, theme.id)
-      }))
-    },
-
-    'undo': (item, app, win) => {
-      if (app.getHistory(win)?.past > 0) {
-        item.enabled = true
-        // item.label = `${item.label} ${this.app.getHistory(win).undo}`
-      } else {
-        item.enabled = false
-      }
-    },
-
-    'redo': (item, app, win) => {
-      if (app.getHistory(win)?.future > 0) {
-        item.enabled = true
-        // item.label = `${item.label} ${this.app.getHistory(win).redo}`
-      } else {
-        item.enabled = false
-      }
-    },
-
-    'export': (item, app, win, event) => {
-      let plugins = app.plugins.available('export')
-
-      if (plugins.length > 0) {
-        item.submenu = [
-          ...item.submenu,
-          { type: 'separator' },
-          ...plugins.map(({ id, name }) => ({
-            label: name,
-            click: createResponder('app:export-item', app, win, {
-              target: event?.target,
-              plugin: id
-            })
-          }))
-        ]
-      }
-    },
-
-    'tag': (item, app, win, event) => {
-      let { target } = event
-      let tags = app.getTags(win)
-
-      if (!tags.length) {
-        item.enabled = false
-
-      } else {
-        item.submenu = [
-          ...item.submenu,
-          ...tags.map(tag => ({
-            type: 'checkbox',
-            label: tag.name,
-            checked: target.tags.includes(tag.id),
-            click: createResponder('app:toggle-item-tag', app, win, {
-              id: target.id,
-              tag: tag.id
-            })
-          }))
-        ]
-
-        if (target.tags.length) {
-          item.submenu[0] = {
-            ...item.submenu[0],
-            checked: false,
-            enabled: true,
-            click: createResponder('app:clear-item-tags', app, win, {
-              id: target.id
-            })
-          }
-        }
-      }
-    },
-
-    'line-wrap': (item, app, win, event) => {
-      item.checked = !!event.target.wrap
-    },
-
-    'line-numbers': (item, app, win, event) => {
-      item.checked = !!event.target.numbers
-    },
-
-    'writing-mode': (item, app, win, event) => {
-      item.submenu = item.submenu.map(li => ({
-        ...li,
-        checked: li.mode === event.target.mode,
-        click: createResponder('app:writing-mode', app, win, {
-          id: event.target.id,
-          mode: li.mode
-        })
-      }))
-    },
-
-    'item-view-layout': (item, app, win, event) => {
-      item.submenu = item.submenu.map(li => ({
-        ...li,
-        checked: li.id === event.target.layout,
-        click: createResponder('app:settings-persist', app, win, {
-          layout: li.id
-        })
-      }))
-    }
-  }
 }
 
 class AppMenu extends Menu {
+  static get instance() {
+    return M.getApplicationMenu()
+  }
+
+  static getItems(...args) {
+    let { instance } = AppMenu
+    return args.map(id => instance?.getMenuItemById(id))
+  }
+
   async load(name = 'app') {
     this.template = await this.loadTemplate(name)
-    this.reload()
+    this.update()
   }
 
   reload() {
-    let old = M.getApplicationMenu()
-    let menu = this.build(this.template)
+    try {
+      var { instance } = AppMenu
+      this.update()
 
-    M.setApplicationMenu(menu)
-
-    if (old != null) {
-      old.destroy()
-    }
-  }
-
-  setTheme(theme = this.app.state.theme) {
-    let menu = M.getApplicationMenu()
-    let themes = menu?.getMenuItemById('theme')
-
-    if (themes?.submenu) {
-      for (let item of themes.submenu.items) {
-        item.checked = item.id === theme
-        item.enabled = !item.checked
+    } finally {
+      if (instance != null) {
+        instance.destroy()
       }
     }
   }
 
-  setHistory(history = this.app.getHistory()) {
-    let menu = M.getApplicationMenu()
-    let undo = menu?.getMenuItemById('undo')
-    let redo = menu?.getMenuItemById('redo')
+  update() {
+    M.setApplicationMenu(this.build(this.template))
+  }
+
+  handleHistoryChange(history = this.app.getHistory()) {
+    let [undo, redo] = AppMenu.getItems('undo', 'redo')
 
     if (undo)
       undo.enabled = history?.past > 0
@@ -361,33 +189,30 @@ class AppMenu extends Menu {
       redo.enabled = history?.future > 0
   }
 
-  setUpdater(updater = this.app.updater) {
-    let menu = M.getApplicationMenu()
+  handleThemeChange(theme = this.app.state.theme) {
+    let [themes] = AppMenu.getItems('themes')
 
-    let item = menu?.getMenuItemById('updater-check')
-    if (item) {
-      item.enabled = updater.isSupported
-      item.visible = updater.canCheck
-    }
-
-    item = menu?.getMenuItemById('updater-is-checking')
-    if (item) {
-      item.visible = updater.isChecking
-    }
-
-    item = menu?.getMenuItemById('updater-install')
-    if (item) {
-      item.enabled = updater.isSupported
-      item.visible = updater.isUpdateReady
-    }
+    Menu.eachItem(themes?.submenu, (item) => {
+      item.checked = item.id === theme
+      item.enabled = !item.checked
+    })
   }
 
-  setWindow() {
-    Menu.eachItem(M.getApplicationMenu(), (item) => {
+  handleUpdaterChange = () => {
+    AppMenu
+      .getItems('updater-check', 'updater-is-checking', 'updater-install')
+      .forEach(item => {
+        Menu.ItemCompiler[item?.id]?.(item, this.app)
+      })
+  }
+
+  handleWindowChange = () => {
+    Menu.eachItem(AppMenu.instance, (item) => {
       Menu.ItemCompiler.window(item, this.app)
     })
   }
 }
+
 
 class ContextMenu extends Menu {
   static scopes = {}
@@ -397,8 +222,6 @@ class ContextMenu extends Menu {
   }
 
   show({ scope, event }, win) {
-    this.menu?.closePopup()
-
     return new Promise((resolve, reject) =>  {
       try {
         let settings = [
@@ -507,6 +330,180 @@ class ContextMenu extends Menu {
 
   scopes.esper = [...scopes['item-view']]
   scopes.esper.position = 2
+}
+
+
+Menu.ItemCompiler = {
+  'window': (item, app) => {
+    switch (item.window) {
+      case null:
+      case undefined:
+        break
+      case '*':
+        item.enabled = !app.wm.empty
+        break
+      default:
+        if (item.window.startsWith('!'))
+          item.enabled = blank(app.wm.windows[item.window.slice(1)])
+        else
+          item.enabled = !blank(app.wm.windows[item.window])
+    }
+  },
+
+  'color': (item, app, win, event) => {
+    let [col, ctx, cmd] = item.color
+
+    item.type = 'checkbox'
+    item.checked = event.target?.[ctx] === col
+
+    if (col != null && col !== 'random')
+      item.icon = res.icon.color(col)
+    if (cmd)
+      item.click = createResponder(cmd, app, win, event, col)
+  },
+
+  // Electron does not support removing menu items
+  // dynamically (#527), therefore we currently populate
+  // recent projects only in the translation loop.
+  'recent': (item, app) => {
+    if (app.state.recent.length) {
+      item.enabled = true
+
+      item.submenu = [
+        ...app.state.recent.map((file, idx) => ({
+          label: `${idx + 1}. ${basename(file)}`,
+          click: () => app.open(file)
+        })),
+        ...item.submenu
+      ]
+    }
+  },
+
+  'updater-check': (item, app) => {
+    item.enabled = app.updater.isSupported
+    item.visible = app.updater.canCheck
+  },
+
+  'updater-is-checking': (item, app) => {
+    item.visible = app.updater.isChecking
+  },
+
+  'updater-install': (item, app) => {
+    item.enabled = app.updater.isSupported
+    item.visible = app.updater.isUpdateReady
+  },
+
+  'dev': (item, app) => {
+    item.visible = (app.dev || app.debug)
+  },
+
+  'theme': (item, app, win) => {
+    item.submenu = item.submenu.map(theme => ({
+      ...theme,
+      checked: (theme.id === app.state.theme),
+      enabled: (theme.id !== app.state.theme),
+      click: createResponder('app:switch-theme', app, win, theme.id)
+    }))
+  },
+
+  'undo': (item, app, win) => {
+    if (app.getHistory(win)?.past > 0) {
+      item.enabled = true
+      // item.label = `${item.label} ${this.app.getHistory(win).undo}`
+    } else {
+      item.enabled = false
+    }
+  },
+
+  'redo': (item, app, win) => {
+    if (app.getHistory(win)?.future > 0) {
+      item.enabled = true
+      // item.label = `${item.label} ${this.app.getHistory(win).redo}`
+    } else {
+      item.enabled = false
+    }
+  },
+
+  'export': (item, app, win, event) => {
+    let plugins = app.plugins.available('export')
+
+    if (plugins.length > 0) {
+      item.submenu = [
+        ...item.submenu,
+        { type: 'separator' },
+        ...plugins.map(({ id, name }) => ({
+          label: name,
+          click: createResponder('app:export-item', app, win, {
+            target: event?.target,
+            plugin: id
+          })
+        }))
+      ]
+    }
+  },
+
+  'tag': (item, app, win, event) => {
+    let { target } = event
+    let tags = app.getTags(win)
+
+    if (!tags.length) {
+      item.enabled = false
+
+    } else {
+      item.submenu = [
+        ...item.submenu,
+        ...tags.map(tag => ({
+          type: 'checkbox',
+          label: tag.name,
+          checked: target.tags.includes(tag.id),
+          click: createResponder('app:toggle-item-tag', app, win, {
+            id: target.id,
+            tag: tag.id
+          })
+        }))
+      ]
+
+      if (target.tags.length) {
+        item.submenu[0] = {
+          ...item.submenu[0],
+          checked: false,
+          enabled: true,
+          click: createResponder('app:clear-item-tags', app, win, {
+            id: target.id
+          })
+        }
+      }
+    }
+  },
+
+  'line-wrap': (item, app, win, event) => {
+    item.checked = !!event.target.wrap
+  },
+
+  'line-numbers': (item, app, win, event) => {
+    item.checked = !!event.target.numbers
+  },
+
+  'writing-mode': (item, app, win, event) => {
+    item.submenu = item.submenu.map(li => ({
+      ...li,
+      checked: li.mode === event.target.mode,
+      click: createResponder('app:writing-mode', app, win, {
+        id: event.target.id,
+        mode: li.mode
+      })
+    }))
+  },
+
+  'item-view-layout': (item, app, win, event) => {
+    item.submenu = item.submenu.map(li => ({
+      ...li,
+      checked: li.id === event.target.layout,
+      click: createResponder('app:settings-persist', app, win, {
+        layout: li.id
+      })
+    }))
+  }
 }
 
 module.exports = {
