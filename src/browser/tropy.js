@@ -797,13 +797,9 @@ class Tropy extends EventEmitter {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
-    this.wm.on('show', () => {
-      this.menu.setWindow()
-    })
+    this.wm.on('show', this.menu.handleWindowChange)
 
-    this.wm.on('focus-change', () => {
-      this.menu.setWindow()
-    })
+    this.wm.on('focus-change', this.menu.handleWindowChange)
 
     this.wm.on('close', (type, win) => {
       if (type === 'project') {
@@ -817,7 +813,7 @@ class Tropy extends EventEmitter {
           act.ontology.load(),
           act.storage.reload([['settings']]))
       }
-      this.menu.setWindow()
+      this.menu.handleWindowChange()
     })
 
     this.wm.on('unresponsive', (_, win) => {
@@ -850,14 +846,10 @@ class Tropy extends EventEmitter {
     })
 
     this.updater
-      .on('checking-for-updates', () => {
-        this.menu.setUpdater()
-      })
-      .on('update-not-available', () => {
-        this.menu.setUpdater()
-      })
+      .on('checking-for-updates', this.menu.handleUpdaterChange)
+      .on('update-not-available', this.menu.handleUpdaterChange)
       .on('update-ready', (release) => {
-        this.menu.setUpdater()
+        this.menu.handleUpdaterChange()
         this.wm.broadcast('dispatch', act.flash.show(release))
       })
 
@@ -932,7 +924,7 @@ class Tropy extends EventEmitter {
       contrast: nativeTheme.shouldUseHighContrastColors
     })
 
-    this.menu.setTheme(theme)
+    this.menu.handleThemeChange()
   }
 
   dispatch(action, win = BrowserWindow.getFocusedWindow()) {
@@ -955,7 +947,7 @@ class Tropy extends EventEmitter {
     H.set(win, history)
 
     if (win.isFocused())
-      this.menu.setHistory(history)
+      this.menu.handleHistoryChange(history)
   }
 
   getTags(win = BrowserWindow.getFocusedWindow()) {
