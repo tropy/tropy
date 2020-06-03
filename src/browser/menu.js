@@ -8,64 +8,6 @@ const { BrowserWindow, Menu: M } = require('electron')
 
 const SEPARATOR = { type: 'separator' }
 
-const CHECK = {
-  hasMultiplePhotos({ target }) {
-    return target && target.photos && target.photos.length > 1
-  },
-
-  hasMultipleItems({ target }) {
-    return target && target.items && target.items.length > 1
-  },
-
-  hasSingleItem(opts) {
-    return !CHECK.hasMultipleItems(opts)
-  }
-}
-
-function check(item, opts = {}) {
-  if (item.condition in CHECK)
-    return CHECK[item.condition](opts)
-  else
-    return opts.target && !!opts.target[item.condition]
-}
-
-
-function createResponder(cmd, app, win, ...params) {
-  let [prefix, action] = cmd.split(':', 2)
-
-  switch (prefix) {
-    case 'app':
-      return (_, w) =>
-        app.emit(cmd, win || w, ...params)
-
-    case 'ctx':
-      return withWindow(win, cmd, w =>
-        w.webContents.send('ctx', action, ...params))
-
-    case 'win':
-      return withWindow(win, cmd, w =>
-        w.webContents.send(action, params))
-
-    case 'dispatch':
-      return withWindow(win, cmd, w =>
-        w.webContents.send('dispatch', {
-          type: action, payload: params
-        }))
-
-    default:
-      warn(`no responder for menu command ${cmd}`)
-  }
-}
-
-function withWindow(win, cmd, fn) {
-  return (_, w) => {
-    if (!(win || w))
-      warn(`${cmd} called without window`)
-    else
-      fn(win || w)
-  }
-}
-
 
 class Menu {
   static eachItem(menu, fn) {
@@ -100,42 +42,24 @@ class Menu {
     )
   }
 
-  interpolate(label) {
-    return label.replace(/%(\w+)/g, (_, prop) =>
-      this.app[prop] || prop
-    )
-  }
-
   compile(item, win = BrowserWindow.getFocusedWindow(), event = {}) {
     item = { ...item }
     let { app } = this
 
-    if (item.command) {
+    if (item.command)
       item.click = createResponder(item.command, app, win, event)
-    }
 
-    if (item.label) {
-      item.label = this.interpolate(item.label)
-    }
+    if (item.label)
+      Menu.ItemCompiler.label(item, app)
 
-    if (item.color) {
+    if (item.color)
       Menu.ItemCompiler.color(item, app, win, event)
-    }
 
-    if (item.window) {
+    if (item.window)
       Menu.ItemCompiler.window(item, app, win, event)
-    }
 
-    if (item.condition) {
-      item.enabled = check(item, {
-        target: event.target,
-        win,
-        app
-      })
-
-      if (item.visible === false)
-        item.visible = item.enabled
-    }
+    if (item.condition)
+      Menu.ItemCompiler.condition(item, app, win, event)
 
     Menu.ItemCompiler[item.id]?.(item, app, win, event)
 
@@ -362,6 +286,11 @@ Menu.ItemCompiler = {
       item.click = createResponder(cmd, app, win, event, col)
   },
 
+  'label': (item, app) => {
+    item.label = item.label.replace(/%(\w+)/g, (_, prop) =>
+      app[prop] || prop)
+  },
+
   // Electron does not support removing menu items
   // dynamically (#527), therefore we currently populate
   // recent projects only in the translation loop.
@@ -503,8 +432,66 @@ Menu.ItemCompiler = {
         layout: li.id
       })
     }))
+  },
+
+  'condition': (item, app, win, event) => {
+    if (item.condition in Menu.ItemConditions)
+      item.enabled = Menu.ItemConditions[item.condition]({ app, event })
+    else
+      item.enabled = !!event?.target?.[item.condition]
   }
 }
+
+Menu.ItemConditions = {
+  hasMultiplePhotos({ event }) {
+    return event?.target?.photos?.length > 1
+  },
+
+  hasMultipleItems({ event }) {
+    return event?.target?.items?.length > 1
+  },
+
+  hasSingleItem(...args) {
+    return !Menu.ItemConditions.hasMultipleItems(...args)
+  }
+}
+
+function createResponder(cmd, app, win, ...params) {
+  let [prefix, action] = cmd.split(':', 2)
+
+  switch (prefix) {
+    case 'app':
+      return (_, w) =>
+        app.emit(cmd, win || w, ...params)
+
+    case 'ctx':
+      return withWindow(win, cmd, w =>
+        w.webContents.send('ctx', action, ...params))
+
+    case 'win':
+      return withWindow(win, cmd, w =>
+        w.webContents.send(action, params))
+
+    case 'dispatch':
+      return withWindow(win, cmd, w =>
+        w.webContents.send('dispatch', {
+          type: action, payload: params
+        }))
+
+    default:
+      warn(`no responder for menu command ${cmd}`)
+  }
+}
+
+function withWindow(win, cmd, fn) {
+  return (_, w) => {
+    if (!(win || w))
+      warn(`${cmd} called without window`)
+    else
+      fn(win || w)
+  }
+}
+
 
 module.exports = {
   AppMenu,
