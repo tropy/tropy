@@ -109,6 +109,10 @@ en:
           label: '&Paste'
           accelerator: 'CmdOrCtrl+V'
           role: 'paste'
+        - &pastenmatch
+          label: 'Paste and Match Style'
+          accelerator: 'Alt+CmdOrCtrl+V'
+          role: 'pasteAndMatchStyle'
         - &all
           label: 'Select All'
           role: 'selectall'
@@ -200,7 +204,7 @@ en:
           label: 'Support Forums'
           command: 'app:open-forums'
         - &license
-          label: 'Software &License'
+          label: 'Software License'
           command: 'app:open-license'
         - type: 'separator'
         - &logs
