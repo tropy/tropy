@@ -55,11 +55,16 @@ class Menu {
     if (item.color)
       Menu.ItemCompiler.color(item, app, win, event)
 
-    if (item.window)
+    if (item.window) {
       Menu.ItemCompiler.window(item, app, win, event)
 
-    if (item.condition)
-      Menu.ItemCompiler.condition(item, app, win, event)
+      if (item.enabled && item.condition)
+        Menu.ItemCompiler.condition(item, app, win, event)
+
+    } else {
+      if (item.condition)
+        Menu.ItemCompiler.condition(item, app, win, event)
+    }
 
     Menu.ItemCompiler[item.id]?.(item, app, win, event)
 
@@ -132,7 +137,13 @@ class AppMenu extends Menu {
 
   handleWindowChange = () => {
     Menu.eachItem(AppMenu.instance, (item) => {
-      Menu.ItemCompiler.window(item, this.app)
+      if (item.window) {
+        Menu.ItemCompiler.window(item, this.app)
+
+        if (item.enabled && item.condition) {
+          Menu.ItemCompiler.condition(item, this.app)
+        }
+      }
     })
   }
 }
@@ -435,10 +446,21 @@ Menu.ItemCompiler = {
   },
 
   'condition': (item, app, win, event) => {
-    if (item.condition in Menu.ItemConditions)
-      item.enabled = Menu.ItemConditions[item.condition]({ app, event })
+    let { condition } = item
+    let negate = false
+
+    if (condition.startsWith('!')) {
+      negate = true
+      condition = condition.slice(1)
+    }
+
+    if (condition in Menu.ItemConditions)
+      item.enabled = Menu.ItemConditions[condition]({ app, event })
     else
-      item.enabled = !!event?.target?.[item.condition]
+      item.enabled = !!event?.target?.[condition]
+
+    if (negate)
+      item.enabled = !item.enabled
   }
 }
 
@@ -453,6 +475,10 @@ Menu.ItemConditions = {
 
   hasSingleItem(...args) {
     return !Menu.ItemConditions.hasMultipleItems(...args)
+  },
+
+  isProjectReadOnly({ app, win }) {
+    return app.getProject(win)?.isReadOnly
   }
 }
 

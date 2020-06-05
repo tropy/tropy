@@ -803,7 +803,6 @@ class Tropy extends EventEmitter {
     })
 
     this.wm.on('show', this.menu.handleWindowChange)
-
     this.wm.on('focus-change', this.menu.handleWindowChange)
 
     this.wm.on('close', (type, win) => {
@@ -970,7 +969,7 @@ class Tropy extends EventEmitter {
         win.setTitle(this.name)
 
     } else {
-      P.set(project, win)
+      P.set(win, project)
 
       if (!this.state.frameless)
         win.setTitle([

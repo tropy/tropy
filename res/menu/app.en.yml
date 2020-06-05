@@ -14,14 +14,17 @@ en:
               command: 'app:create-item'
               accelerator: 'CmdOrCtrl+Shift+N'
               window: 'project'
+              condition: '!isProjectReadOnly'
             - label: 'List'
               command: 'app:create-list'
               accelerator: 'CmdOrCtrl+Shift+L'
               window: 'project'
+              condition: '!isProjectReadOnly'
             - label: 'Tag'
               command: 'app:create-tag'
               accelerator: 'CmdOrCtrl+Shift+A'
               window: 'project'
+              condition: '!isProjectReadOnly'
         - type: 'separator'
         - &open
           label: 'Open…'
@@ -43,6 +46,7 @@ en:
         - &import
           label: 'Import'
           window: 'project'
+          condition: '!isProjectReadOnly'
           submenu:
             - label: 'Photos…'
               command: 'app:import'
@@ -61,6 +65,7 @@ en:
           label: 'Consolidate Photo Library'
           command: 'app:consolidate-photo-library'
           window: 'project'
+          condition: '!isProjectReadOnly'
         - type: 'separator'
         - &print
           label: 'Print'
