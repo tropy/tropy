@@ -36,7 +36,8 @@ class ProjectName extends React.PureComponent {
           </div>
           {this.props.isCorrupted &&
             <IconWarningSm title="project.corrupted"/>}
-          {this.props.isReadOnly && <IconLock/>}
+          {this.props.isReadOnly &&
+            <IconLock title="project.readOnly"/>}
         </div>
       </li>
     )
