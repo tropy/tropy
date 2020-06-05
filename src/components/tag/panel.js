@@ -76,6 +76,7 @@ class TagPanel extends React.PureComponent {
           keymap={this.props.keymap}
           tags={this.props.tags}
           hasFocusIcon
+          isReadOnly={this.props.isDisabled}
           onCommit={this.handleTagAdd}
           onContextMenu={this.handleContextMenu}
           onRemove={this.handleTagRemove}/>
