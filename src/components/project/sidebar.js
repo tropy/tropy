@@ -221,7 +221,7 @@ class ProjectSidebar extends React.PureComponent {
     event.stopPropagation()
   }
 
-  handleContextMenu = (event, scope = 'sidebar', target = {}) => {
+  handleContextMenu = (event, scope = 'sidebar', target) => {
     this.props.onContextMenu(event, scope, {
       ...target,
       isReadOnly: this.props.project.isReadOnly,

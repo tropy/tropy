@@ -66,11 +66,11 @@ class PhotoIterable extends React.PureComponent {
   }
 
   handleContextMenu = (event) => {
-    if (!this.props.isDisabled) {
-      this.select()
-      this.props.onContextMenu(event, 'photo',
-        pick(this.props.photo, ['id', 'item', 'path', 'protocol']))
-    }
+    this.select()
+    this.props.onContextMenu(
+      event,
+      this.props.isDisabled ? 'photo-read-only' : 'photo',
+      pick(this.props.photo, ['id', 'item', 'path', 'protocol']))
   }
 
   setContainer = (container) => {

@@ -200,6 +200,7 @@ class ContextMenu extends Menu {
   const { scopes } = ContextMenu
 
   scopes.default = ['history']
+
   scopes.sidebar = ['project', 'lists', 'tags']
   scopes.sidebar.position = 2
 
@@ -218,41 +219,95 @@ class ContextMenu extends Menu {
   scopes.items = ['items']
   scopes.items.position = 2
 
-  scopes.item = [...scopes.items, 'item', 'item-rotate']
+  scopes.item = [
+    ...scopes.items,
+    'item',
+    'item-read-only',
+    'item-rotate']
   scopes.item.position = 2
 
-  scopes.trash = [...scopes.sidebar, 'trash']
+  scopes['item-read-only'] = [
+    'item-read-only']
+  scopes['item-read-only'].position = 2
+
+  scopes.trash = [
+    ...scopes.sidebar,
+    'trash']
   scopes.trash.position = 10
 
-  scopes.photo = ['photo', 'photo-rotate']
+  scopes.photo = [
+    'photo',
+    'photo-read-only',
+    'photo-rotate']
   scopes.photo.position = 2
 
-  scopes.selection = ['photo', 'selection', 'selection-rotate']
-  scopes.selection.position = 8
+  scopes['photo-read-only'] = [
+    'photo-read-only']
+  scopes['photo-read-only'].position = 2
+
+  scopes.selection = [
+    'photo-read-only',
+    'selection-read-only',
+    'selection',
+    'selection-rotate']
+  scopes.selection.position = 9
+
+  scopes['selection-read-only'] = [
+    'photo-read-only',
+    'selection-read-only']
+  scopes['selection-read-only'].position = 5
 
   scopes.note = ['note']
   scopes.note.position = 2
 
-  scopes['metadata-list'] = ['metadata-list']
+  scopes['metadata-list'] = [
+    'metadata-list']
   scopes['metadata-list'].position = 2
 
-  scopes['metadata-field'] = [...scopes['metadata-list'], 'metadata-field']
+  scopes['metadata-field'] = [
+    ...scopes['metadata-list'],
+    'metadata-field']
   scopes['metadata-field'].position = 2
 
-  scopes['item-bulk'] = [...scopes.items, 'item-bulk', 'item-rotate']
+  scopes['item-bulk'] = [
+    ...scopes.items,
+    'item-bulk-read-only',
+    'item-bulk',
+    'item-rotate']
   scopes['item-bulk'].position = 2
 
-  scopes['item-list'] = [...scopes.items, 'item-list', 'item', 'item-rotate']
+  scopes['item-bulk-read-only'] = [
+    'item-bulk-read-only']
+  scopes['item-bulk-read-only'].position = 2
+
+  scopes['item-list'] = [
+    ...scopes.items,
+    'item-list',
+    'item',
+    'item-rotate']
   scopes['item-list'].position = 2
 
-  scopes['item-bulk-list'] = [...scopes.items, 'item-bulk-list', 'item-bulk']
+  scopes['item-bulk-list'] = [
+    ...scopes.items,
+    'item-bulk-list',
+    'item-bulk']
   scopes['item-bulk-list'].position = 2
 
-  scopes['item-deleted'] = ['item-deleted']
+  scopes['item-deleted'] = [
+    'item-read-only',
+    'item-deleted']
   scopes['item-deleted'].position = 2
 
-  scopes['item-bulk-deleted'] = ['item-bulk-deleted']
+  scopes['item-bulk-deleted'] = [
+    'item-bulk-read-only',
+    'item-bulk-deleted']
   scopes['item-bulk-deleted'].position = 2
+
+  scopes['item-read-only'] = ['item-read-only']
+  scopes['item-read-only'].position = 2
+
+  scopes['item-bulk-read-only'] = ['item-bulk-read-only']
+  scopes['item-bulk-read-only'].position = 2
 
   scopes['item-tag'] = ['item-tag']
   scopes['item-tag'].position = 2
@@ -260,7 +315,9 @@ class ContextMenu extends Menu {
   scopes['item-view'] = ['item-view']
   scopes['item-view'].position = 2
 
-  scopes.notepad = [...scopes['item-view'], 'notepad']
+  scopes.notepad = [
+    ...scopes['item-view'],
+    'notepad']
   scopes.notepad.position = 2
 
   scopes.esper = [...scopes['item-view']]
@@ -465,16 +522,16 @@ Menu.ItemCompiler = {
 }
 
 Menu.ItemConditions = {
-  hasMultiplePhotos({ event }) {
+  isMultiplePhotos({ event }) {
     return event?.target?.photos?.length > 1
   },
 
-  hasMultipleItems({ event }) {
+  isMultipleItems({ event }) {
     return event?.target?.items?.length > 1
   },
 
-  hasSingleItem(...args) {
-    return !Menu.ItemConditions.hasMultipleItems(...args)
+  isSingleItem(...args) {
+    return !Menu.ItemConditions.isMultipleItems(...args)
   },
 
   isProjectReadOnly({ app, win }) {
