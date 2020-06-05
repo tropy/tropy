@@ -121,14 +121,12 @@ class EsperToolbar extends React.PureComponent {
               noFocus
               icon={<IconFill/>}
               title="esper.mode.fill"
-              isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFill}
               onClick={this.setZoomToFill}/>
             <Button
               noFocus
               icon={<IconFit/>}
               title="esper.mode.fit"
-              isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFit}
               onClick={this.setZoomToFit}/>
           </ToolGroup>
@@ -144,7 +142,6 @@ class EsperToolbar extends React.PureComponent {
               steps={this.props.zoomSteps}
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}
-              isDisabled={this.props.isDisabled}
               onChange={this.handleZoomChange}/>
           </ToolGroup>
         </Toolbar.Left>

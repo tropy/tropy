@@ -64,7 +64,7 @@ class ItemTableRow extends ItemIterable {
       isEditing: this.isEditing(column.id),
       isMainColumn,
       isMoving: this.isMoving(idx),
-      isReadOnly: !!column.protected,
+      isReadOnly: this.props.isReadOnly || !!column.protected,
       position: idx,
       type,
       value
