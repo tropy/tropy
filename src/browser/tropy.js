@@ -973,10 +973,11 @@ class Tropy extends EventEmitter {
       P.set(project, win)
 
       if (!this.state.frameless)
-        win.setTitle([
-          project.name,
-          project.isReadOnly ? this.dict.window.project.readOnly : ''
-        ].join(''))
+        win.setTitle(`${project.name}${
+          project.isReadOnly ?
+            ` — ${this.dict.window.project.readOnly}` :
+            ''
+        }`)
     }
   }
 
