@@ -88,7 +88,10 @@ class ItemIterator extends Iterator {
 
     let context = ['item']
     let target = {
-      id: item.id, photos: item.photos, tags: item.tags, list
+      id: item.id,
+      photos: item.photos,
+      tags: item.tags,
+      list
     }
 
     if (selection.length > 1) {
@@ -101,8 +104,12 @@ class ItemIterator extends Iterator {
       }
     }
 
-    if (list) context.push('list')
-    if (this.props.isTrashSelected) context.push('deleted')
+    if (this.props.isReadOnly)
+      context.push('read-only')
+    else if (this.props.isTrashSelected)
+      context.push('deleted')
+    else if (list)
+      context.push('list')
 
     this.props.onContextMenu(event, context.join('-'), target)
   }
