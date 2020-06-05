@@ -101,6 +101,7 @@ class Consolidate extends ImportCommand {
     ])
 
     this.options.base = project.base
+    this.options.isReadOnly = project.isReadOnly
     this.options.density = meta.density || settings.density
     this.options.overwrite = true
     this.useLocalTimezone = settings.timezone
@@ -178,9 +179,11 @@ class Consolidate extends ImportCommand {
 
             data = { id: photo.id, ...image.toJSON() }
 
-            yield call(mod.photo.save, db, data, {
-              base: this.options.base
-            })
+            if (!this.options.isReadOnly) {
+              yield call(mod.photo.save, db, data, {
+                base: this.options.base
+              })
+            }
           }
 
           this.consolidated.push(photo.id)
