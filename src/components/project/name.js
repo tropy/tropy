@@ -27,7 +27,7 @@ class ProjectName extends React.PureComponent {
           <div className="name">
             <Editable
               value={this.props.name}
-              isDisabled={!this.props.isReadOnly}
+              isDisabled={this.props.isReadOnly}
               isRequired
               resize
               isActive={this.props.isEditing}

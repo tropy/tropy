@@ -76,7 +76,10 @@ class Save extends Command {
       }
     })
 
-    yield put(act.project.update(payload))
+    yield put(act.project.update(payload, {
+      ipc: payload.name != null || payload.isReadOnly != null
+    }))
+
     this.undo = act.project.save(original)
   }
 }

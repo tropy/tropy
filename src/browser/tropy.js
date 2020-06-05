@@ -49,6 +49,7 @@ const {
 
 const H = new WeakMap()
 const T = new WeakMap()
+const P = new WeakMap()
 
 
 class Tropy extends EventEmitter {
@@ -195,32 +196,29 @@ class Tropy extends EventEmitter {
     }
   }
 
-  hasOpenedProject({ file, name }, win) {
+  hasOpenedProject(project, win) {
     this.wm.close(['wizard', 'prefs'])
 
     this.state.recent = into(
-      [file],
-      compose(remove(f => f === file), take(9)),
+      [project.file],
+      compose(remove(f => f === project.file), take(9)),
       this.state.recent)
-
-    if (!this.state.frameless) {
-      win.setTitle(name)
-    }
 
     switch (process.platform) {
       case 'darwin':
         if (!this.state.frameless) {
-          win.setRepresentedFilename(file)
+          win.setRepresentedFilename(project.file)
         }
-        app.addRecentDocument(file)
+        app.addRecentDocument(project.file)
         break
       case 'win32':
-        app.addRecentDocument(file)
+        app.addRecentDocument(project.file)
         break
     }
 
     this.wm.send('project', 'recent', this.state.recent)
     this.setHistory(null, win)
+    this.setProject(project, win)
     this.emit('app:reload-menu')
   }
 
@@ -780,9 +778,16 @@ class Tropy extends EventEmitter {
       }
     })
 
-    ipc.on(PROJECT.UPDATE, (event, { name }) => {
-      if (!this.state.frameless)
-        BrowserWindow.fromWebContents(event.sender).setTitle(name)
+    ipc.on(PROJECT.UPDATE, (event, project) => {
+      this.setProject(
+        project,
+        BrowserWindow.fromWebContents(event.sender))
+    })
+
+    ipc.on(PROJECT.CLOSED, (event) => {
+      this.setProject(
+        null,
+        BrowserWindow.fromWebContents(event.sender))
     })
 
     ipc.on(HISTORY.CHANGED, (event, history) => {
@@ -944,10 +949,35 @@ class Tropy extends EventEmitter {
   }
 
   setHistory(history, win = BrowserWindow.getFocusedWindow()) {
-    H.set(win, history)
+    if (history == null)
+      H.delete(win)
+    else
+      H.set(win, history)
 
     if (win.isFocused())
       this.menu.handleHistoryChange(history)
+  }
+
+  getProject(win = this.wm.current()) {
+    return P.get(win)
+  }
+
+  setProject(project, win = this.wm.current()) {
+    if (project == null) {
+      P.delete(win)
+
+      if (!this.state.frameless)
+        win.setTitle(this.name)
+
+    } else {
+      P.set(project, win)
+
+      if (!this.state.frameless)
+        win.setTitle([
+          project.name,
+          project.isReadOnly ? this.dict.window.project.readOnly : ''
+        ].join(''))
+    }
   }
 
   getTags(win = BrowserWindow.getFocusedWindow()) {

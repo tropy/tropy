@@ -31,7 +31,9 @@ const has = (condition) => (({ error, meta }) =>
   (!error && meta && (!meta.cmd || meta.done) && meta[condition]))
 
 const dbErrorActions = {
-  SQLITE_READONLY: () => act.project.update({ isReadOnly: true }),
+  SQLITE_READONLY: () => (
+    act.project.update({ isReadOnly: true }, { ipc: true })
+  ),
   default: act.project.close
 }
 
