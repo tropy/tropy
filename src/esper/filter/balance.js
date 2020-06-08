@@ -17,7 +17,7 @@ export class BalanceFilter extends Filter {
   }
 
   set a(value) {
-    this.uniforms.a = restrict(value, -127, 127)
+    this.uniforms.a = restrict(value, -127, 127) / 100
   }
 
   get b() {
@@ -25,6 +25,11 @@ export class BalanceFilter extends Filter {
   }
 
   set b(value) {
-    this.uniforms.b = restrict(value, -127, 127)
+    this.uniforms.b = restrict(value, -127, 127) / 100
+  }
+
+  set(a, b) {
+    this.a = a
+    this.b = b
   }
 }

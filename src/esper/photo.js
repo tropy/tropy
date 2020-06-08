@@ -177,9 +177,7 @@ export class Photo extends Container {
   }
 
   balance(a = 0, b = 0) {
-    this.filters[3].a = a
-    this.filters[3].b = b
-
+    this.bg.filters[3].set(a, b)
   }
 
   brightness(value = 0) {
@@ -230,11 +228,6 @@ export class Photo extends Container {
 
   sharpen(intensity = 0) {
     this.bg.filters[1].intensity = intensity
-    return this
-  }
-
-  balance(arg1 = 0) {
-    this.bg.filters[3].arg1 = arg1
     return this
   }
 
