@@ -126,8 +126,6 @@ class Database extends EventEmitter {
   async destroy(conn) {
     debug({ path: this.path }, 'close db')
 
-    conn.removeAllListeners()
-
     await conn.optimize()
     await conn.close()
 
@@ -264,8 +262,9 @@ class Connection {
     return this.exec('PRAGMA optimize;')
   }
 
-  close() {
-    return this.db.closeAsync()
+  async close() {
+    await this.db.closeAsync()
+    this.db.removeAllListeners()
   }
 
   parallelize(...args) {
