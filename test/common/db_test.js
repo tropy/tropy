@@ -20,9 +20,10 @@ describe('Database', () => {
       sinon.spy(db.pool, 'release')
     })
 
-    afterEach(() =>
-      db.close()
-        .then(() => rm(dbFile)))
+    afterEach(async () => {
+      await db.close()
+      await rm(dbFile)
+    })
 
     describe('constructor', () => {
       it('creates an empty connection pool', () => {
