@@ -166,9 +166,12 @@
   }
 
   .form-control {
-    background: $add-tag-default-bg;
     cursor: default;
     position: relative;
+
+    &:not([disabled]) {
+      background: $add-tag-default-bg;
+    }
 
     .nested-tab-focus & {
       background: $add-tag-nested-focus-bg;
