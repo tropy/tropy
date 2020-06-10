@@ -119,7 +119,7 @@ class AppMenu extends Menu {
   }
 
   handleThemeChange(theme = this.app.state.theme) {
-    let [themes] = AppMenu.getItems('themes')
+    let [themes] = AppMenu.getItems('theme')
 
     Menu.eachItem(themes?.submenu, (item) => {
       item.checked = item.id === theme
