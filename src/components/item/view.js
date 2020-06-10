@@ -199,6 +199,7 @@ class ItemView extends React.PureComponent {
           photo={photo}
           isDisabled={isReadOnly || isProjectClosing}
           isOpen={isItemOpen}
+          isReadOnly={isReadOnly}
           onContextMenu={this.props.onContextMenu}
           onNoteChange={this.handleNoteChange}
           onNoteCommit={this.handleNoteCommit}

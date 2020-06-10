@@ -122,6 +122,7 @@ class ItemContainer extends React.PureComponent {
           note={this.props.note}
           hasTitlebar={this.hasSideBySideLayout}
           isDisabled={this.props.isDisabled || !this.props.photo}
+          isReadOnly={this.props.isReadOnly}
           isItemOpen={this.props.isOpen}
           keymap={this.props.keymap.NotePad}
           onChange={this.props.onNoteChange}
@@ -141,6 +142,7 @@ class ItemContainer extends React.PureComponent {
     }).isRequired,
     view: object.isRequired,
     isDisabled: bool,
+    isReadOnly: bool,
     isOpen: bool,
     keymap: object.isRequired,
     note: object,

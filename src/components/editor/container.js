@@ -160,6 +160,7 @@ class Editor extends React.Component {
   static propTypes = {
     hasTitlebar: bool,
     isDisabled: bool,
+    isReadOnly: bool,
     keymap: object.isRequired,
     mode: string.isRequired,
     onBlur: func.isRequired,
