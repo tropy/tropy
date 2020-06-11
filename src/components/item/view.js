@@ -190,15 +190,15 @@ class ItemView extends React.PureComponent {
             note={this.state.note}
             keymap={keymap}
             isItemOpen={isItemOpen}
-            isDisabled={isReadOnly || isProjectClosing}
+            isDisabled={isProjectClosing}
+            isReadOnly={isReadOnly}
             onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
         <ItemContainer
           ref={this.setNotePad}
           note={this.state.note}
           photo={photo}
-          isDisabled={isReadOnly || isProjectClosing}
-          isOpen={isItemOpen}
+          isDisabled={!isItemOpen || isProjectClosing}
           isReadOnly={isReadOnly}
           onContextMenu={this.props.onContextMenu}
           onNoteChange={this.handleNoteChange}
@@ -214,8 +214,6 @@ class ItemView extends React.PureComponent {
 
 
   static propTypes = {
-    ...ItemPanelGroup.propTypes,
-
     items: arrayOf(
       shape({
         id: number.isRequired,
@@ -227,25 +225,29 @@ class ItemView extends React.PureComponent {
     keymap: object.isRequired,
     offset: number.isRequired,
     mode: string.isRequired,
+    panel: object,
+    activeSelection: number,
+    note: object,
+    photo: object,
     isModeChanging: bool.isRequired,
     isProjectClosing: bool,
     isReadOnly: bool,
 
+    onContextMenu: func.isRequired,
+    onItemOpen: func.isRequired,
     onNoteCreate: func.isRequired,
     onNoteDelete: func.isRequired,
     onNoteSave: func.isRequired,
     onNoteSelect: func.isRequired,
+    onPhotoCreate: func.isRequired,
     onPhotoError: func.isRequired,
     onPhotoSave: func.isRequired,
+    onPhotoSelect: func.isRequired,
     onPanelResize: func.isRequired,
     onPanelDragStop: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }
-
-delete ItemView.propTypes.isDisabled
-delete ItemView.propTypes.isItemOpen
-
 
 module.exports = {
   ItemView

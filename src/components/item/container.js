@@ -103,8 +103,8 @@ class ItemContainer extends React.PureComponent {
             hasOverlayToolbar={this.hasOverlayToolbars}
             invertScroll={this.props.settings.invertScroll}
             invertZoom={this.props.settings.invertZoom}
-            isDisabled={this.props.isDisabled}
-            isItemOpen={this.props.isOpen}
+            isDisabled={this.props.isDisabled || !this.props.photo}
+            isReadOnly={this.props.isDisabled || this.props.isReadOnly}
             isPanelVisible={this.props.esper.panel}
             keymap={this.props.keymap.Esper}
             photo={this.props.photo}
@@ -122,8 +122,7 @@ class ItemContainer extends React.PureComponent {
           note={this.props.note}
           hasTitlebar={this.hasSideBySideLayout}
           isDisabled={this.props.isDisabled || !this.props.photo}
-          isReadOnly={this.props.isReadOnly}
-          isItemOpen={this.props.isOpen}
+          isReadOnly={this.props.isDisabled || this.props.isReadOnly}
           keymap={this.props.keymap.NotePad}
           onChange={this.props.onNoteChange}
           onCommit={this.props.onNoteCommit}
@@ -143,7 +142,6 @@ class ItemContainer extends React.PureComponent {
     view: object.isRequired,
     isDisabled: bool,
     isReadOnly: bool,
-    isOpen: bool,
     keymap: object.isRequired,
     note: object,
     notepad: object.isRequired,

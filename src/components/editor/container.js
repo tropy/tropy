@@ -118,12 +118,15 @@ class Editor extends React.Component {
   }
 
   render() {
-    let { isDisabled, hasTitlebar, placeholder, tabIndex } = this.props
-    let { hasViewFocus } = this.state
+    let { placeholder } = this.props
     let state = this.getEditorState()
 
-    let showPlaceholder =
-      !(isDisabled || placeholder == null) && this.isBlank(state.doc)
+    let isDisabled = this.props.isDisabled || this.props.isReadOnly
+
+    let showPlaceholder = !(isDisabled || placeholder == null) &&
+      this.isBlank(state.doc)
+
+    let showTitlebar = this.props.hasTitlebar && !isDisabled
 
     return (
       <div
@@ -131,9 +134,9 @@ class Editor extends React.Component {
         className={cx(this.classes)}
         tabIndex={-1}
         onFocus={this.handleFocus}>
-        {(hasTitlebar || !isDisabled) &&
+        {showTitlebar &&
           <EditorToolbar
-            isTitlebar={hasTitlebar}
+            isTitlebar={this.props.hasTitlebar}
             state={state}
             ref={this.toolbar}
             onCommand={this.handleCommand}/>
@@ -144,9 +147,9 @@ class Editor extends React.Component {
           <EditorView
             ref={this.setView}
             state={state}
-            isDisabled={isDisabled}
-            isEditable={hasViewFocus}
-            tabIndex={tabIndex}
+            isDisabled={this.props.isDisabled}
+            isReadOnly={this.props.isReadOnly || !this.state.hasViewFocus}
+            tabIndex={this.props.tabIndex}
             onFocus={this.handleViewFocus}
             onBlur={this.handleViewBlur}
             onChange={this.handleChange}

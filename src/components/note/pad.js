@@ -10,15 +10,11 @@ const cx = require('classnames')
 class NotePad extends React.PureComponent {
   get classes() {
     return ['note-pad', this.props.mode, {
-      'disabled': this.isDisabled,
+      'disabled': this.props.isDisabled,
       'read-only': this.props.isReadOnly,
       'no-wrap': !this.props.wrap,
       'numbers': this.props.numbers
     }]
-  }
-
-  get isDisabled() {
-    return !this.props.isItemOpen || this.props.isDisabled
   }
 
   setEditor = (editor) => {
@@ -67,7 +63,7 @@ class NotePad extends React.PureComponent {
           mode={this.props.mode}
           placeholder="notepad.placeholder"
           hasTitlebar={this.props.hasTitlebar}
-          isDisabled={this.isDisabled}
+          isDisabled={this.props.isDisabled}
           isReadOnly={this.props.isReadOnly}
           tabIndex={this.props.tabIndex}
           onBlur={this.handleEditorBlur}
@@ -80,7 +76,6 @@ class NotePad extends React.PureComponent {
     hasTitlebar: bool,
     isDisabled: bool,
     isReadOnly: bool,
-    isItemOpen: bool,
     keymap: object.isRequired,
     note: shape({
       id: number,
