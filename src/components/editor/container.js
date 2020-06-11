@@ -126,15 +126,13 @@ class Editor extends React.Component {
     let showPlaceholder = !(isDisabled || placeholder == null) &&
       this.isBlank(state.doc)
 
-    let showTitlebar = this.props.hasTitlebar && !isDisabled
-
     return (
       <div
         ref={this.container}
         className={cx(this.classes)}
         tabIndex={-1}
         onFocus={this.handleFocus}>
-        {showTitlebar &&
+        {!isDisabled &&
           <EditorToolbar
             isTitlebar={this.props.hasTitlebar}
             state={state}
