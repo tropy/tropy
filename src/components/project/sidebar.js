@@ -132,14 +132,12 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   edit() {
-    switch (true) {
-      case (!this.hasSelection):
-        this.props.onProjectEdit()
-        break
-      case (this.props.list != null):
-        this.props.onListEdit(this.props.list)
-        break
-    }
+    if (this.props.project.isReadOnly)
+      return
+    if (!this.hasSelection)
+      this.props.onProjectEdit()
+    else if (this.props.list != null)
+      this.props.onListEdit(this.props.list)
   }
 
   handleSelect() {
