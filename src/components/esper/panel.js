@@ -156,8 +156,8 @@ EsperPanel.propTypes = {
   negative: bool.isRequired,
   saturation: number.isRequired,
   sharpen: number.isRequired,
-  isDisabled: bool.isRequired,
-  isVisible: bool.isRequired,
+  isDisabled: bool,
+  isVisible: bool,
   onChange: func.isRequired,
   onRevert: func.isRequired
 }
