@@ -121,10 +121,11 @@ class Editor extends React.Component {
     let { placeholder } = this.props
     let state = this.getEditorState()
 
-    let isDisabled = this.props.isDisabled || this.props.isReadOnly
+    let isReadOnly = this.props.isReadOnly || !this.state.hasViewFocus
 
-    let showPlaceholder = !(isDisabled || placeholder == null) &&
-      this.isBlank(state.doc)
+    let hasPlaceholder = !(
+      this.props.isDisabled || this.props.isReadOnly || placeholder == null
+    )
 
     return (
       <div
@@ -132,21 +133,21 @@ class Editor extends React.Component {
         className={cx(this.classes)}
         tabIndex={-1}
         onFocus={this.handleFocus}>
-        {!isDisabled &&
-          <EditorToolbar
-            isTitlebar={this.props.hasTitlebar}
-            state={state}
-            ref={this.toolbar}
-            onCommand={this.handleCommand}/>
-        }
-
+        <EditorToolbar
+          isDisabled={this.props.isDisabled}
+          isReadOnly={isReadOnly}
+          isTitlebar={this.props.hasTitlebar}
+          state={state}
+          ref={this.toolbar}
+          onCommand={this.handleCommand}/>
         <div className="scroll-container">
-          {showPlaceholder && <Placeholder id={placeholder}/>}
+          {(hasPlaceholder && !this.isBlank(state.doc)) &&
+            <Placeholder id={placeholder}/>}
           <EditorView
             ref={this.setView}
             state={state}
             isDisabled={this.props.isDisabled}
-            isReadOnly={this.props.isReadOnly || !this.state.hasViewFocus}
+            isReadOnly={isReadOnly}
             tabIndex={this.props.tabIndex}
             onFocus={this.handleViewFocus}
             onBlur={this.handleViewBlur}

@@ -11,7 +11,6 @@ class NotePad extends React.PureComponent {
   get classes() {
     return ['note-pad', this.props.mode, {
       'disabled': this.props.isDisabled,
-      'read-only': this.props.isReadOnly,
       'no-wrap': !this.props.wrap,
       'numbers': this.props.numbers
     }]
