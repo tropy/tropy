@@ -10,14 +10,27 @@
   line-height: $editor-line-height;
   word-break: break-word; // For vertical writing mode (break-word or break-all?)
   counter-reset: line-numbers;
-  user-select: text;
 
   .no-wrap & {
     white-space: nowrap;
   }
 
-  &:not(.ProseMirror-focused) {
-    ::selection {
+  .read-only & {
+    user-select: text;
+  }
+
+  .pseudo-selection {
+    @include state(".ProseMirror:not(.ProseMirror-focused)") {
+      background-color: $editor-pseudo-selection-bg;
+
+      @include state(".read-only .ProseMirror") {
+        background-color: transparent;
+      }
+    }
+  }
+
+  ::selection {
+    @include state(".read-only .ProseMirror:not(.ProseMirror-focused)") {
       background-color: $editor-pseudo-selection-bg;
     }
   }
