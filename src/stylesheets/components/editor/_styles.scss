@@ -10,19 +10,20 @@
   line-height: $editor-line-height;
   word-break: break-word; // For vertical writing mode (break-word or break-all?)
   counter-reset: line-numbers;
+  user-select: text;
 
   .no-wrap & {
     white-space: nowrap;
   }
 
-  * {
-    margin: 0;
-  }
-
   &:not(.ProseMirror-focused) {
-    .pseudo-selection {
+    ::selection {
       background-color: $editor-pseudo-selection-bg;
     }
+  }
+
+  * {
+    margin: 0;
   }
 
   p,
