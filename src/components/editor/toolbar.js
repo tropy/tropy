@@ -81,7 +81,7 @@ class EditorToolbar extends React.PureComponent {
       <T>
         <Toolbar.Context
           className="default"
-          isActive={isDisabled || this.state.context === 'default'}>
+          isActive={this.state.context === 'default'}>
           <Toolbar.Left>
             <ToolGroup>
               <EditorButton
@@ -188,7 +188,8 @@ class EditorToolbar extends React.PureComponent {
           </Toolbar.Left>
         </Toolbar.Context>
         <LinkContext
-          isActive={!isDisabled && this.state.context === 'link'}
+          isActive={this.state.context === 'link'}
+          isReadOnly={this.props.isReadOnly}
           onCancel={this.setDefaultContext}
           onCommit={this.handleLinkToggle}/>
       </T>
