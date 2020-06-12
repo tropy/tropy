@@ -25,9 +25,6 @@ class NotePad extends React.PureComponent {
   }
 
   handleChange = (state, hasDocChanged) => {
-    if (this.props.isDisabled || this.props.isReadOnly)
-      return
-
     let note = { ...this.props.note, state }
 
     if (hasDocChanged) {
