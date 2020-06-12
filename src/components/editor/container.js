@@ -135,13 +135,13 @@ class Editor extends React.Component {
         onFocus={this.handleFocus}>
         <EditorToolbar
           isDisabled={this.props.isDisabled}
-          isReadOnly={isReadOnly}
+          isReadOnly={this.props.isReadOnly}
           isTitlebar={this.props.hasTitlebar}
           state={state}
           ref={this.toolbar}
           onCommand={this.handleCommand}/>
         <div className="scroll-container">
-          {(hasPlaceholder && !this.isBlank(state.doc)) &&
+          {(hasPlaceholder && this.isBlank(state.doc)) &&
             <Placeholder id={placeholder}/>}
           <EditorView
             ref={this.setView}
