@@ -83,6 +83,9 @@ cn:
     recent: 最近的项目
     corrupted: |
       您的项目文件可能已损坏，需要手动修复。请查阅用户手册以获得进一步的帮助。
+    readOnly: >
+      Your project file is locked and cannot be modified. To unlock, change the
+      file permissions and open the project again.
   wizard:
     project:
       title: 新建项目

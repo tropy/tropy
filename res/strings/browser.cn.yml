@@ -31,3 +31,5 @@ cn:
       title: 欢迎使用 Tropy
     about:
       title: 关于 Tropy
+    project:
+      readOnly: ' — Locked'
