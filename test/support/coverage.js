@@ -7,7 +7,7 @@ const root = resolve(__dirname, '..', '..')
 const tmpd = resolve(root, '.nyc_output')
 
 function report() {
-  if (__coverage__ != null) {
+  if (typeof __coverage__ !== 'undefined') {
     write(join(tmpd, getCoverageFile()), JSON.stringify(__coverage__))
   }
 }
