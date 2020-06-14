@@ -7,7 +7,7 @@ const { Image } = require('../image')
 const mod = require('../models')
 const act = require('../actions')
 const { SELECTION } = require('../constants')
-const { pick, splice } = require('../common/util')
+const { pick } = require('../common/util')
 const { keys } = Object
 
 const {
@@ -74,31 +74,6 @@ class Create extends Command {
 Create.register(SELECTION.CREATE)
 
 
-class Delete extends Command {
-  *exec() {
-    let { db } = this.options
-    let { payload } = this.action
-    let { photo, selections } = payload
-
-    let ord = yield select(({ photos }) => photos[photo].selections)
-    let idx = selections.map(id => ord.indexOf(id))
-
-    ord = ord.filter(id => !selections.includes(id))
-
-    yield call(db.transaction, async tx => {
-      await mod.selection.delete(tx, ...selections)
-      await mod.selection.order(tx, photo, ord)
-    })
-
-    yield put(act.photo.selections.remove({ id: photo, selections }))
-
-    this.undo = act.selection.restore(payload, { idx })
-  }
-}
-
-Delete.register(SELECTION.DELETE)
-
-
 class Load extends Command {
   *exec() {
     const { db } = this.options
@@ -132,34 +107,6 @@ class Order extends Command {
 Order.register(SELECTION.ORDER)
 
 
-class Restore extends Command {
-  *exec() {
-    const { db } = this.options
-    const { payload, meta } = this.action
-    const { photo, selections } = payload
-
-    // Restore all selections in a batch at the former index
-    // of the first selection to be restored. Need to differentiate
-    // if we support selecting multiple selections!
-    let [idx] = meta.idx
-
-    let ord = yield select(({ photos }) => photos[photo].selections)
-    ord = splice(ord, idx, 0, ...selections)
-
-    yield call(db.transaction, async tx => {
-      await mod.selection.restore(tx, ...selections)
-      await mod.selection.order(tx, photo, ord)
-    })
-
-    yield put(act.photo.selections.add({ id: photo, selections }, { idx }))
-
-    this.undo = act.photo.delete(payload)
-  }
-}
-
-Restore.register(SELECTION.RESTORE)
-
-
 class Save extends Command {
   *exec() {
     const { db } = this.options
@@ -190,10 +137,10 @@ TemplateChange.register(SELECTION.TEMPLATE.CHANGE)
 
 module.exports = {
   Create,
-  Delete,
   Load,
   Order,
-  Restore,
   Save,
-  TemplateChange
+  TemplateChange,
+
+  ...require('./selection/index')
 }

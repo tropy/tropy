@@ -322,30 +322,6 @@ class Create extends ImportCommand {
 Create.register(PHOTO.CREATE)
 
 
-class Delete extends Command {
-  *exec() {
-    const { db } = this.options
-    const { item, photos } = this.action.payload
-
-    let order = yield select(state => state.items[item].photos)
-    let idx = photos.map(id => order.indexOf(id))
-
-    order = order.filter(id => !photos.includes(id))
-
-    yield call([db, db.transaction], async tx => {
-      await mod.photo.delete(tx, photos)
-      await mod.photo.order(tx, item, order)
-    })
-
-    yield put(act.item.photos.remove({ id: item, photos }))
-
-    this.undo = act.photo.restore({ item, photos }, { idx })
-  }
-}
-
-Delete.register(PHOTO.DELETE)
-
-
 class Duplicate extends ImportCommand {
   *exec() {
     let { cache, db } = this.options
@@ -521,33 +497,6 @@ class Save extends Command {
 Save.register(PHOTO.SAVE)
 
 
-class Restore extends Command {
-  *exec() {
-    const { db } = this.options
-    const { item, photos } = this.action.payload
-
-    // Restore all photos in a batch at the former index
-    // of the first photo to be restored. Need to differentiate
-    // if we support selecting multiple photos!
-    let [idx] = this.action.meta.idx
-    let order = yield select(state => state.items[item].photos)
-
-    order = splice(order, idx, 0, ...photos)
-
-    yield call([db, db.transaction], async tx => {
-      await mod.photo.restore(tx, { item, ids: photos })
-      await mod.photo.order(tx, item, order)
-    })
-
-    yield put(act.item.photos.add({ id: item, photos }, { idx }))
-
-    this.undo = act.photo.delete({ item, photos })
-  }
-}
-
-Restore.register(PHOTO.RESTORE)
-
-
 class Rotate extends Command {
   *exec() {
     let { db } = this.options
@@ -575,15 +524,13 @@ TemplateChange.register(PHOTO.TEMPLATE.CHANGE)
 module.exports = {
   Consolidate,
   Create,
-  Delete,
   Duplicate,
   Load,
   Move,
   Order,
-  Restore,
   Rotate,
   Save,
   TemplateChange,
 
-  ...require('./photo/extract')
+  ...require('./photo/index')
 }

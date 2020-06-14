@@ -150,7 +150,6 @@ class PhotoList extends PhotoIterator {
         break
       case 'delete':
         this.handleDelete(this.current())
-        this.select(this.next() || this.prev())
         break
       default:
         return

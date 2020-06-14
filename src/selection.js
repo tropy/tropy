@@ -3,9 +3,9 @@
 const { isArray } = Array
 
 
-const selection = {
+const Selection = {
   select(s, items, mod = 'replace') {
-    return module.exports[mod](s, items)
+    return Selection[mod](s, items)
   },
 
   clear() {
@@ -29,7 +29,7 @@ const selection = {
   },
 
   merge(s, items) {
-    return [...selection.remove(s, items), ...items]
+    return [...Selection.remove(s, items), ...items]
   },
 
   isSelected(s, items) {
@@ -39,4 +39,4 @@ const selection = {
   }
 }
 
-module.exports = selection
+module.exports = Selection
