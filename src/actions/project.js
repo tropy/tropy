@@ -26,7 +26,14 @@ module.exports = {
   },
 
   closed(payload, meta) {
-    return { type: PROJECT.CLOSED, payload, meta }
+    return {
+      type: PROJECT.CLOSED,
+      payload,
+      meta: {
+        ipc: true,
+        ...meta
+      }
+    }
   },
 
   close(payload, meta) {
@@ -89,8 +96,7 @@ module.exports = {
     return {
       type: PROJECT.UPDATE,
       payload,
-      meta: { ipc: !!payload.name, ...meta }
+      meta
     }
   }
-
 }

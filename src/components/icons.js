@@ -83,8 +83,11 @@ i('Lock', (
     <g className="line" fill="currentColor">
       <path d="M9,4V3A3,3,0,0,0,3,3V4H1v8H11V4ZM4,3A2,2,0,0,1,8,3V4H4Zm6,8H2V5h8Z"/>
     </g>
+    <g className="block" fill="currentColor">
+      <path d="M9,4V3A3,3,0,0,0,3,3V4H1v8H11V4ZM4,3A2,2,0,0,1,8,3V4H4Z"/>
+    </g>
   </svg>
-))
+), true)
 
 i('WarningSm', (
   <svg width="12" height="12">

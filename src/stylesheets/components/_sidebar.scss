@@ -136,6 +136,20 @@
       @include variant(".name + .icon") {
         margin-left: $space-xs;
       }
+
+      & + .icon {
+        margin-left: $space-min;
+      }
+
+      &.icon-lock {
+        .line {
+          display: none;
+        }
+
+        .block {
+          display: block;
+        }
+      }
     }
 
     .btn-icon {

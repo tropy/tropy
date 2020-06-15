@@ -60,9 +60,12 @@ describe('format', () => {
       expect(datetime('2019-02-29')).to.equal('Mar 1, 2019')
     })
 
+    it('formats unix timestamps', () => {
+      expect(datetime(24 * 3600 * 1000)).to.match(/^Jan [12], 1970,/)
+    })
+
     it('falls-back to input', () => {
       expect(datetime('-300-')).to.equal('-300-')
-      expect(datetime(100)).to.equal(100)
       expect(datetime('')).to.equal('')
       expect(datetime(null)).to.equal(null)
     })

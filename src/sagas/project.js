@@ -3,6 +3,7 @@
 require('../commands')
 
 const assert = require('assert')
+const fs = require('fs')
 const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
 const { IDLE } = require('../constants/idle')
 const { Database } = require('../common/db')
@@ -19,7 +20,7 @@ const { fail } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
 const storage = require('./storage')
-const { onErrorPut } = require('./db')
+const { handleDatabaseErrors } = require('./db')
 const args = require('../args')
 
 const {
@@ -29,35 +30,47 @@ const {
 const has = (condition) => (({ error, meta }) =>
   (!error && meta && (!meta.cmd || meta.done) && meta[condition]))
 
-const onErrorClose = onErrorPut(act.project.close)
+const dbErrorActions = {
+  SQLITE_READONLY: () => (
+    act.project.update({ isReadOnly: true }, { ipc: true })
+  ),
+  default: act.project.close
+}
 
 const FORCE_SHUTDOWN_DELAY = 60000
 
-function *open(file) {
+const canWrite = (file) =>
+  fs.promises.access(file, fs.constants.W_OK)
+    .then(() => true, () => false)
+
+
+function *open(file, meta) {
   try {
-    var db = new Database(file, 'w')
+    let ro = (meta.isReadOnly || !(yield call(canWrite, file)))
+    var db = new Database(file, ro ? 'r' : 'w')
 
-    yield fork(onErrorClose, db)
+    yield fork(handleDatabaseErrors, db, dbErrorActions)
 
-    let migrations = yield call(db.migrate, MIGRATIONS)
+    if (!db.isReadOnly)
+      var migrations = yield call(db.migrate, MIGRATIONS)
+
     let project = yield call(mod.project.load, db)
-
     assert(project != null && project.id != null, 'invalid project')
 
-    if (migrations.length > 0) {
-      db.modified = true
+    if (migrations?.length > 0) {
+      project.accessId = yield call(mod.access.open, db)
 
     } else {
       try {
         yield call(db.check)
 
-        db.once('update', () => {
-          db.modified = true
+        db.once('update', async () => {
+          project.accessId = await mod.access.open(db)
         })
 
       } catch (_) {
         warn('project file may be corrupted!')
-        project.corrupted = true
+        project.isCorrupted = true
       }
     }
 
@@ -69,7 +82,11 @@ function *open(file) {
     let cache = new Cache(ARGS.cache, project.id)
     yield call(cache.init)
 
-    yield put(act.project.opened({ file: db.path, ...project }))
+    yield put(act.project.opened({
+      isReadOnly: db.isReadOnly,
+      file: db.path,
+      ...project
+    }))
 
     try {
       yield fork(setup, db, project)
@@ -148,8 +165,8 @@ function *close(db, project) {
     call(storage.persist, 'panel', project.id)
   ])
 
-  if (db.modified) {
-    yield call(mod.access.touch, db)
+  if (project.accessId != null) {
+    yield call(mod.access.close, db, project.accessId)
 
     debug('pruning db...')
     yield call(mod.item.prune, db)
@@ -190,7 +207,7 @@ function *main() {
     ])
 
     while (true) {
-      let { type, payload } = yield take([OPEN, CLOSE])
+      let { type, payload, meta } = yield take([OPEN, CLOSE])
 
       debug(`*main "${type}" received`)
 
@@ -208,7 +225,7 @@ function *main() {
         break
 
       if (type === OPEN) {
-        task = yield fork(open, payload)
+        task = yield fork(open, payload, meta)
       }
     }
 

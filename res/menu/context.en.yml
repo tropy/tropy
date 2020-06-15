@@ -16,20 +16,25 @@ en:
     project: &project
       - label: 'Rename Project'
         command: 'app:rename-project'
+        condition: '!isReadOnly'
       - label: 'Show Project File…'
         command: 'app:show-project-file'
     lists: &lists
       - label: 'New List'
         command: 'app:create-list'
+        condition: '!isReadOnly'
         accelerator: 'CmdOrCtrl+Shift+L'
     list: &list
       - label: 'Rename List'
         command: 'app:rename-list'
+        condition: '!isReadOnly'
       - label: 'Delete List'
         command: 'app:delete-list'
+        condition: '!isReadOnly'
     tags: &tags
       - label: 'New Tag'
         command: 'app:create-tag'
+        condition: '!isReadOnly'
         accelerator: 'CmdOrCtrl+Shift+A'
       - label: 'Export Tags …'
         command: 'app:export-tags'
@@ -66,6 +71,7 @@ en:
             color: ['lavender', 'color', 'app:save-default-tag-color']
     tag: &tag
       - label: 'Tag Color'
+        condition: '!isReadOnly'
         submenu:
           - label: 'None'
             color: [null, 'color', 'app:save-tag-color']
@@ -96,17 +102,19 @@ en:
             color: ['lavender', 'color', 'app:save-tag-color']
       - label: 'Rename Tag'
         command: 'app:rename-tag'
+        condition: '!isReadOnly'
       - label: 'Delete Tag'
         command: 'app:delete-tag'
+        condition: '!isReadOnly'
     item-tag: &item-tag
       - label: 'Remove Tag From This Item'
         command: 'app:delete-item-tag'
         visible: false
-        condition: 'hasSingleItem'
+        condition: 'isSingleItem'
       - label: 'Remove Tag From These Items'
         command: 'app:delete-item-tag'
         visible: false
-        condition: 'hasMultipleItems'
+        condition: 'isMultipleItems'
     note: &note
       - label: 'Delete Note'
         command: 'app:delete-note'
@@ -139,12 +147,7 @@ en:
     item: &item
       - label: 'Explode Item'
         command: 'app:explode-item'
-        condition: 'hasMultiplePhotos'
-      - label: 'Export Item'
-        id: 'export'
-        submenu:
-          - label: 'JSON-LD'
-            command: 'app:export-item'
+        condition: 'isMultiplePhotos'
       - label: 'Add Photo …'
         command: 'app:create-item-photo'
       - label: 'Tags'
@@ -157,6 +160,12 @@ en:
           - type: separator
       - label: 'Delete Item'
         command: 'app:delete-item'
+    item-read-only: &item-read-only
+      - label: 'Export Item'
+        id: 'export'
+        submenu:
+          - label: 'JSON-LD'
+            command: 'app:export-item'
       - label: 'Consolidate Item'
         command: 'app:consolidate-item'
     item-rotate: &item-rotate
@@ -169,13 +178,14 @@ en:
     item-bulk: &item-bulk
       - label: 'Merge Selected Items'
         command: 'app:merge-item'
+      - label: 'Delete Selected Items'
+        command: 'app:delete-item'
+    item-bulk-read-only: &item-bulk-read-only
       - label: 'Export Selected Items'
         id: 'export'
         submenu:
           - label: 'JSON-LD'
             command: 'app:export-item'
-      - label: 'Delete Selected Items'
-        command: 'app:delete-item'
       - label: 'Consolidate Selected Items'
         command: 'app:consolidate-item'
     item-list: &item-list
@@ -189,14 +199,15 @@ en:
         command: 'app:duplicate-photo'
       - label: 'Move Photo to New Item'
         command: 'app:explode-photo'
-      - label: 'Show Original Photo…'
-        command: 'app:show-in-folder'
       - label: 'Delete Photo'
         command: 'app:delete-photo'
       - label: 'Use Photo as Cover Image'
         command: 'app:update-cover-image'
         enabled: false
         visible: false
+    photo-read-only: &photo-read-only
+      - label: 'Show Original Photo…'
+        command: 'app:show-in-folder'
       - label: 'Export Photo…'
         command: 'app:extract-photo'
       - label: 'Consolidate Photo'
@@ -211,6 +222,7 @@ en:
     selection: &selection
       - label: 'Delete Selection'
         command: 'app:delete-selection'
+    selection-read-only: &selection-read-only
       - label: 'Export Selection …'
         command: 'app:extract-photo'
     selection-rotate: &selection-rotate
@@ -231,7 +243,7 @@ en:
       - label: 'Permanently Delete Selected Items'
         command: 'app:destroy-item'
     item-view: &item-view
-      - label: View Layout
+      - label: 'View Layout'
         id: 'item-view-layout'
         submenu:
         - label: 'Stacked'
@@ -250,6 +262,7 @@ en:
     trash: &trash
       - label: 'Permanently Delete Items'
         command: 'app:destroy-item'
+        condition: '!isReadOnly'
     dev: &dev
       - label: 'Reload'
         command: 'win:reload'
@@ -276,7 +289,9 @@ en:
     notepad: *notepad
     items: *items
     item: *item
+    item-read-only: *item-read-only
     item-bulk: *item-bulk
+    item-bulk-read-only: *item-bulk-read-only
     item-list: *item-list
     item-bulk-list: *item-bulk-list
     item-deleted: *item-deleted
@@ -287,8 +302,10 @@ en:
     metadata-field: *metadata-field
     trash: *trash
     photo: *photo
+    photo-read-only: *photo-read-only
     photo-rotate: *photo-rotate
     selection: *selection
+    selection-read-only: *selection-read-only
     selection-rotate: *selection-rotate
     dev: *dev
 
@@ -307,7 +324,9 @@ en:
     notepad: *notepad
     items: *items
     item: *item
+    item-read-only: *item-read-only
     item-bulk: *item-bulk
+    item-bulk-read-only: *item-bulk-read-only
     item-list: *item-list
     item-bulk-list: *item-bulk-list
     item-deleted: *item-deleted
@@ -318,7 +337,9 @@ en:
     metadata-field: *metadata-field
     trash: *trash
     photo: *photo
+    photo-read-only: *photo-read-only
     photo-rotate: *photo-rotate
     selection: *selection
+    selection-read-only: *selection-read-only
     selection-rotate: *selection-rotate
     dev: *dev

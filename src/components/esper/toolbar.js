@@ -92,7 +92,9 @@ class EsperToolbar extends React.PureComponent {
               icon={<IconSelection/>}
               title="esper.tool.select"
               isActive={this.isToolActive(TOOL.SELECT)}
-              isDisabled={this.props.isDisabled || this.props.isSelectionActive}
+              isDisabled={
+                this.props.isSelectionActive ||
+                this.props.isReadOnly}
               onClick={this.setSelectTool}/>
           </ToolGroup>
           <ToolGroup>
@@ -100,14 +102,14 @@ class EsperToolbar extends React.PureComponent {
               noFocus
               icon={<IconRotate/>}
               title="esper.tool.rotate"
-              isDisabled={this.props.isDisabled}
+              isDisabled={this.props.isReadOnly}
               onClick={this.handleRotate}/>
             <Button
               noFocus
               icon={<IconMirror/>}
               title="esper.tool.mirror"
               isActive={this.props.mirror}
-              isDisabled={this.props.isDisabled}
+              isDisabled={this.props.isReadOnly}
               onClick={this.props.onMirrorChange}/>
           </ToolGroup>
           <ToolGroup>
@@ -116,24 +118,26 @@ class EsperToolbar extends React.PureComponent {
               icon={<IconHand/>}
               title="esper.tool.pan"
               isActive={this.isToolActive(TOOL.PAN)}
+              isDisabled={this.props.isDisabled}
               onClick={this.setPanTool}/>
             <Button
               noFocus
               icon={<IconFill/>}
               title="esper.mode.fill"
-              isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFill}
+              isDisabled={this.props.isDisabled}
               onClick={this.setZoomToFill}/>
             <Button
               noFocus
               icon={<IconFit/>}
               title="esper.mode.fit"
-              isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFit}
+              isDisabled={this.props.isDisabled}
               onClick={this.setZoomToFit}/>
           </ToolGroup>
           <ToolGroup>
             <Slider
+              isDisabled={this.props.isDisabled}
               value={this.props.zoom}
               min={this.props.minZoom}
               max={this.props.maxZoom}
@@ -144,7 +148,6 @@ class EsperToolbar extends React.PureComponent {
               steps={this.props.zoomSteps}
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}
-              isDisabled={this.props.isDisabled}
               onChange={this.handleZoomChange}/>
           </ToolGroup>
         </Toolbar.Left>
@@ -155,6 +158,7 @@ class EsperToolbar extends React.PureComponent {
               icon={<IconSliders/>}
               title="esper.tool.edit"
               isActive={this.props.isPanelVisible}
+              isDisabled={this.props.isDisabled}
               onClick={this.handlePanelToggle}/>
           </ToolGroup>
         </Toolbar.Right>
@@ -164,6 +168,7 @@ class EsperToolbar extends React.PureComponent {
 
   static propTypes = {
     isDisabled: bool,
+    isReadOnly: bool,
     isSelectionActive: bool,
     isPanelVisible: bool,
     mode: string.isRequired,

@@ -47,7 +47,6 @@ class ItemView extends React.PureComponent {
     return { transform: `translate3d(${this.offset}, 0, 0)` }
   }
 
-
   setNotePad = (container) => {
     this.notepad = container != null ? container.notepad : null
   }
@@ -140,17 +139,19 @@ class ItemView extends React.PureComponent {
   }, NOTE.AUTOSAVE_DELAY)
 
   handleNoteChange = (note, changed, isBlank) => {
-    if (note.id != null) {
-      note.modified = new Date()
-      if (isBlank) this.handleNoteSave.cancel()
-      else this.handleNoteSave(note, { changed })
+    if (!this.props.isReadOnly) {
+      if (note.id != null) {
+        note.modified = new Date()
+        if (isBlank) this.handleNoteSave.cancel()
+        else this.handleNoteSave(note, { changed })
 
-    } else {
-      if (note.created == null && !isBlank) {
-        note.created = Date.now()
-        note.photo = this.props.photo.id
-        note.selection = this.props.activeSelection
-        this.props.onNoteCreate(note)
+      } else {
+        if (note.created == null && !isBlank) {
+          note.created = Date.now()
+          note.photo = this.props.photo.id
+          note.selection = this.props.activeSelection
+          this.props.onNoteCreate(note)
+        }
       }
     }
 
@@ -170,7 +171,7 @@ class ItemView extends React.PureComponent {
       photo,
       onPanelDragStop,
       isProjectClosing,
-      isTrashSelected,
+      isReadOnly,
       ...props
     } = this.props
 
@@ -191,15 +192,16 @@ class ItemView extends React.PureComponent {
             note={this.state.note}
             keymap={keymap}
             isItemOpen={isItemOpen}
-            isDisabled={isTrashSelected || isProjectClosing}
+            isDisabled={isProjectClosing}
+            isReadOnly={isReadOnly}
             onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
         <ItemContainer
           ref={this.setNotePad}
           note={this.state.note}
           photo={photo}
-          isDisabled={isTrashSelected || isProjectClosing}
-          isOpen={isItemOpen}
+          isDisabled={!isItemOpen || isProjectClosing}
+          isReadOnly={isReadOnly}
           onContextMenu={this.props.onContextMenu}
           onNoteChange={this.handleNoteChange}
           onNoteCommit={this.handleNoteCommit}
@@ -214,8 +216,6 @@ class ItemView extends React.PureComponent {
 
 
   static propTypes = {
-    ...ItemPanelGroup.propTypes,
-
     items: arrayOf(
       shape({
         id: number.isRequired,
@@ -227,25 +227,29 @@ class ItemView extends React.PureComponent {
     keymap: object.isRequired,
     offset: number.isRequired,
     mode: string.isRequired,
+    panel: object,
+    activeSelection: number,
+    note: object,
+    photo: object,
     isModeChanging: bool.isRequired,
-    isTrashSelected: bool.isRequired,
     isProjectClosing: bool,
+    isReadOnly: bool,
 
+    onContextMenu: func.isRequired,
+    onItemOpen: func.isRequired,
     onNoteCreate: func.isRequired,
     onNoteDelete: func.isRequired,
     onNoteSave: func.isRequired,
     onNoteSelect: func.isRequired,
+    onPhotoCreate: func.isRequired,
     onPhotoError: func.isRequired,
     onPhotoSave: func.isRequired,
+    onPhotoSelect: func.isRequired,
     onPanelResize: func.isRequired,
     onPanelDragStop: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }
-
-delete ItemView.propTypes.isDisabled
-delete ItemView.propTypes.isItemOpen
-
 
 module.exports = {
   ItemView

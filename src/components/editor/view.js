@@ -37,13 +37,13 @@ class ProseMirror extends Component {
   }
 
   shouldComponentUpdate(props) {
-    const { state, isDisabled, isEditable, tabIndex } = props
+    const { state, isDisabled, isReadOnly, tabIndex } = props
     const wasDisabled = this.props.isDisabled
-    const wasEditable = this.props.isEditable
+    const wasReadOnly = this.props.isReadOnly
 
     if (
       isDisabled !== wasDisabled ||
-      isEditable !== wasEditable ||
+      isReadOnly !== wasReadOnly ||
       tabIndex !== this.props.tabIndex
     ) {
       this.pm.setProps(this.getEditorProps(props))
@@ -63,11 +63,9 @@ class ProseMirror extends Component {
     }
   }
 
-  getEditorProps(props = this.props) {
-    const { isDisabled, isEditable, tabIndex } = props
-
+  getEditorProps({ isDisabled, isReadOnly, tabIndex } = this.props) {
     return {
-      editable: () => !isDisabled && isEditable,
+      editable: () => !isDisabled && !isReadOnly,
       attributes: {
         tabIndex: isDisabled ? -1 : tabIndex
       }
@@ -128,7 +126,7 @@ class ProseMirror extends Component {
 
   static propTypes = {
     isDisabled: bool,
-    isEditable: bool.isRequired,
+    isReadOnly: bool,
     state: instanceOf(EditorState),
     tabIndex: number.isRequired,
     onBlur: func.isRequired,

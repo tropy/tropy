@@ -1,29 +1,25 @@
 'use strict'
 
+const { into, update } = require('../common/query')
+
 module.exports = {
-  async open(db) {
-    const { id } = await db.run(`
-      INSERT INTO access (uuid, version, path) VALUES (?, ?, ?)`,
-      ARGS.uuid, ARGS.version, db.path
-    )
+  async open(db, { uuid, version } = ARGS) {
+    let { id } = await db.run(
+      ...into('access')
+        .insert({
+          path: db.path,
+          uuid,
+          version
+        }))
 
     return id
   },
 
   close(db, id) {
-    return db.run(`
-      UPDATE access
-        SET closed = datetime("now")
-        WHERE rowid = ?`, id
-    )
-  },
-
-  async touch(db) {
-    return db.run(`
-      INSERT INTO access (uuid, version, path, closed)
-        VALUES (?, ?, ?, datetime("now"))`,
-      ARGS.uuid, ARGS.version, db.path
-    )
+    return db.run(
+      ...update('access')
+        .set('closed = datetime("now")')
+        .where({ rowid: id }))
   },
 
   prune(db) {
@@ -31,7 +27,7 @@ module.exports = {
       DELETE FROM access
         WHERE rowid <= (
           SELECT rowid FROM (
-            SELECT rowid FROM access ORDER BY rowid DESC LIMIT 1 OFFSET 9
+            SELECT rowid FROM access ORDER BY rowid DESC LIMIT 1 OFFSET 99
           )
         )`
     )

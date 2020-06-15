@@ -49,6 +49,7 @@ const {
 
 const H = new WeakMap()
 const T = new WeakMap()
+const P = new WeakMap()
 
 
 class Tropy extends EventEmitter {
@@ -193,35 +194,31 @@ class Tropy extends EventEmitter {
 
       win.show()
     }
-
-    this.emit('app:reload-menu')
   }
 
-  hasOpenedProject({ file, name }, win) {
+  hasOpenedProject(project, win) {
     this.wm.close(['wizard', 'prefs'])
 
     this.state.recent = into(
-      [file],
-      compose(remove(f => f === file), take(9)),
+      [project.file],
+      compose(remove(f => f === project.file), take(9)),
       this.state.recent)
-
-    if (!this.state.frameless) {
-      win.setTitle(name)
-    }
 
     switch (process.platform) {
       case 'darwin':
         if (!this.state.frameless) {
-          win.setRepresentedFilename(file)
+          win.setRepresentedFilename(project.file)
         }
-        app.addRecentDocument(file)
+        app.addRecentDocument(project.file)
         break
       case 'win32':
-        app.addRecentDocument(file)
+        app.addRecentDocument(project.file)
         break
     }
 
     this.wm.send('project', 'recent', this.state.recent)
+    this.setHistory(null, win)
+    this.setProject(project, win)
     this.emit('app:reload-menu')
   }
 
@@ -570,7 +567,6 @@ class Tropy extends EventEmitter {
       this.state.locale = locale
       await this.load()
       this.updateWindowLocale()
-      this.emit('app:reload-menu')
     })
 
     this.on('app:toggle-debug-flag', () => {
@@ -596,7 +592,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:undo', (win) => {
-      if (this.getHistory(win).past) {
+      if (this.getHistory(win)?.past) {
         this.dispatch({
           type: HISTORY.UNDO,
           meta: { ipc: HISTORY.CHANGED }
@@ -605,7 +601,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:redo', (win) => {
-      if (this.getHistory(win).future) {
+      if (this.getHistory(win)?.future) {
         this.dispatch({
           type: HISTORY.REDO,
           meta: { ipc: HISTORY.CHANGED }
@@ -782,32 +778,32 @@ class Tropy extends EventEmitter {
       }
     })
 
-    ipc.on(PROJECT.UPDATE, (event, { name }) => {
-      if (!this.state.frameless)
-        BrowserWindow.fromWebContents(event.sender).setTitle(name)
+    ipc.on(PROJECT.UPDATE, (event, project) => {
+      this.setProject(
+        project,
+        BrowserWindow.fromWebContents(event.sender))
+    })
+
+    ipc.on(PROJECT.CLOSED, (event) => {
+      this.setProject(
+        null,
+        BrowserWindow.fromWebContents(event.sender))
     })
 
     ipc.on(HISTORY.CHANGED, (event, history) => {
       this.setHistory(history, BrowserWindow.fromWebContents(event.sender))
-      this.emit('app:reload-menu')
     })
 
     ipc.on(TAG.CHANGED, (event, tags) => {
       this.setTags(tags, BrowserWindow.fromWebContents(event.sender))
-      this.emit('app:reload-menu')
     })
 
     ipc.on(CONTEXT.SHOW, (event, payload) => {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
-    this.wm.on('show', () => {
-      this.emit('app:reload-menu')
-    })
-
-    this.wm.on('focus-change', () => {
-      this.emit('app:reload-menu')
-    })
+    this.wm.on('show', this.menu.handleWindowChange)
+    this.wm.on('focus-change', this.menu.handleWindowChange)
 
     this.wm.on('close', (type, win) => {
       if (type === 'project') {
@@ -821,7 +817,7 @@ class Tropy extends EventEmitter {
           act.ontology.load(),
           act.storage.reload([['settings']]))
       }
-      this.emit('app:reload-menu')
+      this.menu.handleWindowChange()
     })
 
     this.wm.on('unresponsive', (_, win) => {
@@ -854,13 +850,10 @@ class Tropy extends EventEmitter {
     })
 
     this.updater
-      .on('checking-for-updates', () => {
-        this.emit('app:reload-menu')
-      })
-      .on('update-not-available', () => {
-        this.emit('app:reload-menu')
-      })
+      .on('checking-for-updates', this.menu.handleUpdaterChange)
+      .on('update-not-available', this.menu.handleUpdaterChange)
       .on('update-ready', (release) => {
+        this.menu.handleUpdaterChange()
         this.wm.broadcast('dispatch', act.flash.show(release))
       })
 
@@ -935,7 +928,7 @@ class Tropy extends EventEmitter {
       contrast: nativeTheme.shouldUseHighContrastColors
     })
 
-    this.emit('app:reload-menu')
+    this.menu.handleThemeChange()
   }
 
   dispatch(action, win = BrowserWindow.getFocusedWindow()) {
@@ -951,11 +944,39 @@ class Tropy extends EventEmitter {
   }
 
   getHistory(win = BrowserWindow.getFocusedWindow()) {
-    return H.get(win) || {}
+    return H.get(win)
   }
 
   setHistory(history, win = BrowserWindow.getFocusedWindow()) {
-    return H.set(win, history)
+    if (history == null)
+      H.delete(win)
+    else
+      H.set(win, history)
+
+    if (win.isFocused())
+      this.menu.handleHistoryChange(history)
+  }
+
+  getProject(win = this.wm.current()) {
+    return P.get(win)
+  }
+
+  setProject(project, win = this.wm.current()) {
+    if (project == null) {
+      P.delete(win)
+
+      if (!this.state.frameless)
+        win.setTitle(this.name)
+
+    } else {
+      P.set(win, project)
+
+      if (!this.state.frameless)
+        win.setTitle([
+          project.name,
+          project.isReadOnly ? this.dict.window.project.readOnly : ''
+        ].join(''))
+    }
   }
 
   getTags(win = BrowserWindow.getFocusedWindow()) {
@@ -965,7 +986,6 @@ class Tropy extends EventEmitter {
   setTags(tags, win = BrowserWindow.getFocusedWindow()) {
     return T.set(win, tags)
   }
-
 
   get defaultLocale() {
     return this.getLocale()

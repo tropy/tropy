@@ -86,6 +86,9 @@ pt:
       O seu ficheiro do projeto pode estar danificado e ser necessário
       corrigi-lo através de uma intervenção manual. Por favor, consulte o manual
       do utilizador para obter ajuda adicional.
+    readOnly: >
+      Your project file is locked and cannot be modified. To unlock, change the
+      file permissions and open the project again.
   wizard:
     project:
       title: Criar novo projeto

@@ -3,360 +3,181 @@
 const res = require('../common/res')
 const { basename } = require('path')
 const { error, warn } = require('../common/log')
-const { blank, get } = require('../common/util')
-const { transduce, map, transformer } = require('transducers.js')
+const { blank } = require('../common/util')
 const { BrowserWindow, Menu: M } = require('electron')
 
-function withWindow(win, cmd, fn) {
-  return (_, w) => {
-    if (!(win || w)) warn(`${cmd} called without window`)
-    else fn(win || w)
-  }
-}
-
-const CHECK = {
-  hasMultiplePhotos({ target }) {
-    return target && target.photos && target.photos.length > 1
-  },
-
-  hasMultipleItems({ target }) {
-    return target && target.items && target.items.length > 1
-  },
-
-  hasSingleItem(opts) {
-    return !CHECK.hasMultipleItems(opts)
-  },
-
-  project({ app }) {
-    return !blank(app.wm.windows.project) && blank(app.wm.windows.prefs)
-  },
-
-  ['!prefs']({ app }) {
-    return blank(app.wm.windows.prefs)
-  },
-
-  window({ win }) {
-    return win != null
-  }
-}
-
-function check(item, opts = {}) {
-  if (item.condition in CHECK)
-    return CHECK[item.condition](opts)
-  else
-    return opts.target && !!opts.target[item.condition]
-}
+const SEPARATOR = { type: 'separator' }
 
 
 class Menu {
+  static eachItem(menu, fn) {
+    if (menu != null) {
+      for (let item of menu.items) {
+        fn(item)
+        Menu.eachItem(item.submenu, fn)
+      }
+    }
+  }
+
   constructor(app) {
     this.app = app
   }
 
-  async load(name) {
-    const { defaultLocale, state } = this.app
+  async loadTemplate(name) {
+    let { template } = await res.Menu.openWithFallback(
+      this.app.defaultLocale,
+      this.app.state.locale,
+      name)
 
-    this.template = (
-      await res.Menu.openWithFallback(defaultLocale, state.locale, name)
-    ).template
-
-    return this
+    return template
   }
 
-  find(ids, menu = this.menu) {
-    const [id, ...tail] = ids
-    const item = menu.items.find(x => x.id === id)
-
-    if (!tail.length) return item
-    if (!item.submenu) return undefined
-
-    return this.find(tail, item.submenu)
-  }
-
-  responder(cmd, win, ...params) {
-    let [prefix, action] = cmd.split(':', 2)
-
-    switch (prefix) {
-      case 'app':
-        return (_, w) => this.app.emit(cmd, win || w, ...params)
-      case 'ctx':
-        return withWindow(win, cmd, w =>
-          w.webContents.send('ctx', action, ...params))
-      case 'win':
-        return withWindow(win, cmd, w => w.webContents.send(action, params))
-      case 'dispatch':
-        return withWindow(win, cmd, w => w.webContents.send('dispatch', {
-          type: action, payload: params
-        }))
-      default:
-        warn(`no responder for menu command ${cmd}`)
-    }
-  }
-
-  build(...args) {
+  build(template, ...args) {
     return M.buildFromTemplate(
-      this.translate(...args)
+      template
+        .map(item => this.compile(item, ...args))
         // Hiding of root items does not work at the moment.
         // See Electron #2895
         .filter(item => item.visible !== false)
     )
   }
 
-  translate(template, win = BrowserWindow.getFocusedWindow(), event = {}) {
-    // eslint-disable-next-line complexity
-    return template.map(item => {
-      item = { ...item }
+  compile(item, win = BrowserWindow.getFocusedWindow(), event = {}) {
+    item = { ...item }
+    let { app } = this
 
-      if (item.command) {
-        item.click = this.responder(item.command, win, event)
-      }
+    if (item.command)
+      item.click = createResponder(item.command, app, win, event)
 
-      if (item.label) {
-        item.label = item.label
-          .replace(/%(\w+)/g, (_, prop) => this.app[prop])
-      }
+    if (item.label)
+      Menu.ItemCompiler.label(item, app)
 
-      if (item.color) {
-        let [color, context, command] = item.color
+    if (item.color)
+      Menu.ItemCompiler.color(item, app, win, event)
 
-        item.type = 'checkbox'
-        item.checked = get(event.target, context) === color
+    if (item.window) {
+      Menu.ItemCompiler.window(item, app, win, event)
 
-        if (color && color !== 'random')
-          item.icon = res.icon.color(color)
-        if (command)
-          item.click = this.responder(command, win, event, color)
-      }
+      if (item.enabled && item.condition)
+        Menu.ItemCompiler.condition(item, app, win, event)
 
-      if (item.condition) {
-        item.enabled = check(item, {
-          target: event.target,
-          win,
-          app: this.app
-        })
+    } else {
+      if (item.condition)
+        Menu.ItemCompiler.condition(item, app, win, event)
+    }
 
-        if (item.visible === false)
-          item.visible = item.enabled
-      }
+    Menu.ItemCompiler[item.id]?.(item, app, win, event)
 
-      switch (item.id) {
-        // Electron does not support removing menu items
-        // dynamically (#527), therefore we currently populate
-        // recent projects only in the translation loop.
-        case 'recent':
-          if (item.id === 'recent') {
-            if (this.app.state.recent.length) {
-              item.enabled = true
+    if (item.submenu) {
+      item.submenu = item.submenu.map(submenuItem =>
+        this.compile(submenuItem, win, event)
+      )
+    }
 
-              item.submenu = [
-                ...this.app.state.recent.map((file, idx) => ({
-                  label: `${idx + 1}. ${basename(file)}`,
-                  click: () => this.app.open(file)
-                })),
-                ...item.submenu
-              ]
-            }
-          }
-          break
-
-        case 'updater-check':
-          item.enabled = this.app.updater.isSupported
-          item.visible = this.app.updater.canCheck
-          break
-        case 'updater-is-checking':
-          item.visible = this.app.updater.isChecking
-          break
-        case 'updater-install':
-          item.enabled = this.app.updater.isSupported
-          item.visible = this.app.updater.isUpdateReady
-          break
-
-        case 'dev':
-          item.visible = (this.app.dev || this.app.debug)
-          break
-
-        case 'theme':
-          item.submenu = item.submenu.map(theme => ({
-            ...theme,
-            checked: (theme.id === this.app.state.theme),
-            enabled: (theme.id !== this.app.state.theme),
-            click: this.responder('app:switch-theme', win, theme.id)
-          }))
-          break
-
-        case 'undo':
-          if (this.app.getHistory(win).past > 0) {
-            item.enabled = true
-            // item.label = `${item.label} ${this.app.getHistory(win).undo}`
-          } else {
-            item.enabled = false
-          }
-          break
-
-        case 'redo':
-          if (this.app.getHistory(win).future > 0) {
-            item.enabled = true
-            // item.label = `${item.label} ${this.app.getHistory(win).redo}`
-          } else {
-            item.enabled = false
-          }
-          break
-
-        case 'export': {
-          let plugins = this.app.plugins.available('export')
-          if (plugins.length > 0) {
-            item.submenu = [
-              ...item.submenu,
-              { type: 'separator' },
-              ...plugins.map(({ id, name }) => ({
-                label: name,
-                click: this.responder('app:export-item', win, {
-                  target: event?.target,
-                  plugin: id
-                })
-              }))
-            ]
-          }
-          break
-        }
-
-        case 'tag': {
-          let { target } = event
-          let tags = this.app.getTags(win)
-
-          if (!tags.length) {
-            item.enabled = false
-
-          } else {
-            item.submenu = [
-              ...item.submenu,
-              ...tags.map(tag => ({
-                type: 'checkbox',
-                label: tag.name,
-                checked: target.tags.includes(tag.id),
-                click: this.responder('app:toggle-item-tag', win, {
-                  id: target.id,
-                  tag: tag.id
-                })
-              }))
-            ]
-
-            if (target.tags.length) {
-              item.submenu[0] = {
-                ...item.submenu[0],
-                checked: false,
-                enabled: true,
-                click: this.responder('app:clear-item-tags', win, {
-                  id: target.id
-                })
-              }
-            }
-          }
-
-          break
-        }
-        case 'line-wrap':
-          item.checked = !!event.target.wrap
-          break
-
-        case 'line-numbers':
-          item.checked = !!event.target.numbers
-          break
-
-        case 'writing-mode':
-          item.submenu = item.submenu.map(li => ({
-            ...li,
-            checked: li.mode === event.target.mode,
-            click: this.responder('app:writing-mode', win, {
-              id: event.target.id, mode: li.mode
-            })
-          }))
-          break
-
-        case 'item-view-layout':
-          item.submenu = item.submenu.map(li => ({
-            ...li,
-            checked: li.id === event.target.layout,
-            click: this.responder('app:settings-persist', win, {
-              layout: li.id
-            })
-          }))
-          break
-      }
-
-      if (item.submenu) {
-        item.submenu = this.translate(item.submenu, win, event)
-      }
-
-      return item
-    })
+    return item
   }
 }
 
 class AppMenu extends Menu {
+  static get instance() {
+    return M.getApplicationMenu()
+  }
+
+  static getItems(...args) {
+    let { instance } = AppMenu
+    return args.map(id => instance?.getMenuItemById(id))
+  }
+
   async load(name = 'app') {
-    try {
-      return (await super.load(name))
-    } finally {
-      this.reload()
-    }
+    this.template = await this.loadTemplate(name)
+    this.update()
   }
 
   reload() {
-    let old = this.menu
-
-    if (this.template != null) {
-      this.menu = this.build(this.template)
+    try {
+      var { instance } = AppMenu
       this.update()
-    }
 
-    if (old != null) {
-      old.destroy()
+    } finally {
+      if (instance != null) {
+        instance.destroy()
+      }
     }
-
-    return this
   }
 
   update() {
-    return M.setApplicationMenu(this.menu), this
+    M.setApplicationMenu(this.build(this.template))
+  }
+
+  handleHistoryChange(history = this.app.getHistory()) {
+    let [undo, redo] = AppMenu.getItems('undo', 'redo')
+
+    if (undo)
+      undo.enabled = history?.past > 0
+    if (redo)
+      redo.enabled = history?.future > 0
+  }
+
+  handleThemeChange(theme = this.app.state.theme) {
+    let [themes] = AppMenu.getItems('theme')
+
+    Menu.eachItem(themes?.submenu, (item) => {
+      item.checked = item.id === theme
+      item.enabled = !item.checked
+    })
+  }
+
+  handleUpdaterChange = () => {
+    AppMenu
+      .getItems('updater-check', 'updater-is-checking', 'updater-install')
+      .forEach(item => {
+        Menu.ItemCompiler[item?.id]?.(item, this.app)
+      })
+  }
+
+  handleWindowChange = () => {
+    Menu.eachItem(AppMenu.instance, (item) => {
+      if (item.window) {
+        Menu.ItemCompiler.window(item, this.app)
+
+        if (item.enabled && item.condition) {
+          Menu.ItemCompiler.condition(item, this.app)
+        }
+      }
+    })
   }
 }
 
-const separate = transformer(
-  (menu, items) => ([...menu, { type: 'separator' }, ...items])
-)
 
 class ContextMenu extends Menu {
-  static scopes = {
-    global: ['history']
+  static scopes = {}
+
+  async load(name = 'context') {
+    this.templates = await this.loadTemplate(name)
   }
 
-  load(name = 'context') {
-    return super.load(name)
-  }
-
-  prepare(template, settings) {
-    if (this.app.dev || this.app.debug) {
-      settings = [...settings, 'dev']
-    }
-
-    return transduce(
-      settings, map(key => template[key]), separate, []
-    ).slice(1)
-  }
-
-  show({ scope, event }, window) {
+  show({ scope, event }, win) {
     return new Promise((resolve, reject) =>  {
-      let settings = ContextMenu.scopes[scope]
-
       try {
-        this.menu = this.build(
-          this.prepare(this.template, settings),
-          window,
-          event)
+        let settings = [
+          ...ContextMenu.scopes[scope]
+        ]
+
+        if (scope !== 'default')
+          settings = ContextMenu.scopes.default.concat(settings)
+
+        if (this.app.dev || this.app.debug)
+          settings.push('dev')
+
+        let template = settings.flatMap(id => ([
+          SEPARATOR,
+          ...this.templates[id]
+        ])).slice(1)
+
+        this.menu = this.build(template, win, event)
 
         this.menu.popup({
-          window,
+          win,
           positioningItem: settings.position,
           callback: () => {
             this.menu.destroy()
@@ -364,10 +185,11 @@ class ContextMenu extends Menu {
             resolve()
           }
         })
-
       } catch (e) {
-        error({ stack: e.stack, scope },
-          `failed to show context-menu: ${e.message}`)
+        error({
+          stack: e.stack,
+          scope
+        }, `failed to show context-menu: ${e.message}`)
         reject(e)
       }
     })
@@ -377,13 +199,15 @@ class ContextMenu extends Menu {
 {
   const { scopes } = ContextMenu
 
-  scopes.sidebar = [...scopes.global, 'project', 'lists', 'tags']
+  scopes.default = ['history']
+
+  scopes.sidebar = ['project', 'lists', 'tags']
   scopes.sidebar.position = 2
 
   scopes.lists = [...scopes.sidebar]
   scopes.lists.position = 5
 
-  scopes.list = [...scopes.global, 'project', 'lists', 'list', 'tags']
+  scopes.list = ['project', 'lists', 'list', 'tags']
   scopes.list.position = 5
 
   scopes.tags = [...scopes.sidebar]
@@ -392,59 +216,365 @@ class ContextMenu extends Menu {
   scopes.tag = [...scopes.sidebar, 'tag']
   scopes.tag.position = 7
 
-  scopes.items = [...scopes.global, 'items']
+  scopes.items = ['items']
   scopes.items.position = 2
 
-  scopes.item = [...scopes.items, 'item', 'item-rotate']
+  scopes.item = [
+    ...scopes.items,
+    'item',
+    'item-read-only',
+    'item-rotate']
   scopes.item.position = 2
 
-  scopes.trash = [...scopes.sidebar, 'trash']
+  scopes['item-read-only'] = [
+    'item-read-only']
+  scopes['item-read-only'].position = 2
+
+  scopes.trash = [
+    ...scopes.sidebar,
+    'trash']
   scopes.trash.position = 10
 
-  scopes.photo = [...scopes.global, 'photo', 'photo-rotate']
+  scopes.photo = [
+    'photo',
+    'photo-read-only',
+    'photo-rotate']
   scopes.photo.position = 2
 
-  scopes.selection = [
-    ...scopes.global, 'photo', 'selection', 'selection-rotate'
-  ]
-  scopes.selection.position = 8
+  scopes['photo-read-only'] = [
+    'photo-read-only']
+  scopes['photo-read-only'].position = 2
 
-  scopes.note = [...scopes.global, 'note']
+  scopes.selection = [
+    'photo-read-only',
+    'selection-read-only',
+    'selection',
+    'selection-rotate']
+  scopes.selection.position = 9
+
+  scopes['selection-read-only'] = [
+    'photo-read-only',
+    'selection-read-only']
+  scopes['selection-read-only'].position = 5
+
+  scopes.note = ['note']
   scopes.note.position = 2
 
-  scopes['metadata-list'] = [...scopes.global, 'metadata-list']
+  scopes['metadata-list'] = [
+    'metadata-list']
   scopes['metadata-list'].position = 2
 
-  scopes['metadata-field'] = [...scopes['metadata-list'], 'metadata-field']
+  scopes['metadata-field'] = [
+    ...scopes['metadata-list'],
+    'metadata-field']
   scopes['metadata-field'].position = 2
 
-  scopes['item-bulk'] = [...scopes.items, 'item-bulk', 'item-rotate']
+  scopes['item-bulk'] = [
+    ...scopes.items,
+    'item-bulk-read-only',
+    'item-bulk',
+    'item-rotate']
   scopes['item-bulk'].position = 2
 
-  scopes['item-list'] = [...scopes.items, 'item-list', 'item', 'item-rotate']
+  scopes['item-bulk-read-only'] = [
+    'item-bulk-read-only']
+  scopes['item-bulk-read-only'].position = 2
+
+  scopes['item-list'] = [
+    ...scopes.items,
+    'item-list',
+    'item',
+    'item-rotate']
   scopes['item-list'].position = 2
 
-  scopes['item-bulk-list'] = [...scopes.items, 'item-bulk-list', 'item-bulk']
+  scopes['item-bulk-list'] = [
+    ...scopes.items,
+    'item-bulk-list',
+    'item-bulk']
   scopes['item-bulk-list'].position = 2
 
-  scopes['item-deleted'] = [...scopes.global, 'item-deleted']
+  scopes['item-deleted'] = [
+    'item-read-only',
+    'item-deleted']
   scopes['item-deleted'].position = 2
 
-  scopes['item-bulk-deleted'] = [...scopes.global, 'item-bulk-deleted']
+  scopes['item-bulk-deleted'] = [
+    'item-bulk-read-only',
+    'item-bulk-deleted']
   scopes['item-bulk-deleted'].position = 2
 
-  scopes['item-tag'] = [...scopes.global, 'item-tag']
+  scopes['item-read-only'] = ['item-read-only']
+  scopes['item-read-only'].position = 2
+
+  scopes['item-bulk-read-only'] = ['item-bulk-read-only']
+  scopes['item-bulk-read-only'].position = 2
+
+  scopes['item-tag'] = ['item-tag']
   scopes['item-tag'].position = 2
 
-  scopes['item-view'] = [...scopes.global, 'item-view']
+  scopes['item-view'] = ['item-view']
   scopes['item-view'].position = 2
 
-  scopes.notepad = [...scopes['item-view'], 'notepad']
+  scopes.notepad = [
+    ...scopes['item-view'],
+    'notepad']
   scopes.notepad.position = 2
 
   scopes.esper = [...scopes['item-view']]
   scopes.esper.position = 2
 }
+
+
+Menu.ItemCompiler = {
+  'window': (item, app) => {
+    switch (item.window) {
+      case null:
+      case undefined:
+        break
+      case '*':
+        item.enabled = !app.wm.empty
+        break
+      default:
+        if (item.window.startsWith('!'))
+          item.enabled = blank(app.wm.windows[item.window.slice(1)])
+        else
+          item.enabled = !blank(app.wm.windows[item.window])
+    }
+  },
+
+  'color': (item, app, win, event) => {
+    let [col, ctx, cmd] = item.color
+
+    item.type = 'checkbox'
+    item.checked = event.target?.[ctx] === col
+
+    if (col != null && col !== 'random')
+      item.icon = res.icon.color(col)
+    if (cmd)
+      item.click = createResponder(cmd, app, win, event, col)
+  },
+
+  'label': (item, app) => {
+    item.label = item.label.replace(/%(\w+)/g, (_, prop) =>
+      app[prop] || prop)
+  },
+
+  // Electron does not support removing menu items
+  // dynamically (#527), therefore we currently populate
+  // recent projects only in the translation loop.
+  'recent': (item, app) => {
+    if (app.state.recent.length) {
+      item.enabled = true
+
+      item.submenu = [
+        ...app.state.recent.map((file, idx) => ({
+          label: `${idx + 1}. ${basename(file)}`,
+          click: () => app.open(file)
+        })),
+        ...item.submenu
+      ]
+    }
+  },
+
+  'updater-check': (item, app) => {
+    item.enabled = app.updater.isSupported
+    item.visible = app.updater.canCheck
+  },
+
+  'updater-is-checking': (item, app) => {
+    item.visible = app.updater.isChecking
+  },
+
+  'updater-install': (item, app) => {
+    item.enabled = app.updater.isSupported
+    item.visible = app.updater.isUpdateReady
+  },
+
+  'dev': (item, app) => {
+    item.visible = (app.dev || app.debug)
+  },
+
+  'theme': (item, app, win) => {
+    item.submenu = item.submenu.map(theme => ({
+      ...theme,
+      checked: (theme.id === app.state.theme),
+      enabled: (theme.id !== app.state.theme),
+      click: createResponder('app:switch-theme', app, win, theme.id)
+    }))
+  },
+
+  'undo': (item, app, win) => {
+    if (app.getHistory(win)?.past > 0) {
+      item.enabled = true
+      // item.label = `${item.label} ${this.app.getHistory(win).undo}`
+    } else {
+      item.enabled = false
+    }
+  },
+
+  'redo': (item, app, win) => {
+    if (app.getHistory(win)?.future > 0) {
+      item.enabled = true
+      // item.label = `${item.label} ${this.app.getHistory(win).redo}`
+    } else {
+      item.enabled = false
+    }
+  },
+
+  'export': (item, app, win, event) => {
+    let plugins = app.plugins.available('export')
+
+    if (plugins.length > 0) {
+      item.submenu = [
+        ...item.submenu,
+        { type: 'separator' },
+        ...plugins.map(({ id, name }) => ({
+          label: name,
+          click: createResponder('app:export-item', app, win, {
+            target: event?.target,
+            plugin: id
+          })
+        }))
+      ]
+    }
+  },
+
+  'tag': (item, app, win, event) => {
+    let { target } = event
+    let tags = app.getTags(win)
+
+    if (!tags.length) {
+      item.enabled = false
+
+    } else {
+      item.submenu = [
+        ...item.submenu,
+        ...tags.map(tag => ({
+          type: 'checkbox',
+          label: tag.name,
+          checked: target.tags.includes(tag.id),
+          click: createResponder('app:toggle-item-tag', app, win, {
+            id: target.id,
+            tag: tag.id
+          })
+        }))
+      ]
+
+      if (target.tags.length) {
+        item.submenu[0] = {
+          ...item.submenu[0],
+          checked: false,
+          enabled: true,
+          click: createResponder('app:clear-item-tags', app, win, {
+            id: target.id
+          })
+        }
+      }
+    }
+  },
+
+  'line-wrap': (item, app, win, event) => {
+    item.checked = !!event.target.wrap
+  },
+
+  'line-numbers': (item, app, win, event) => {
+    item.checked = !!event.target.numbers
+  },
+
+  'writing-mode': (item, app, win, event) => {
+    item.submenu = item.submenu.map(li => ({
+      ...li,
+      checked: li.mode === event.target.mode,
+      click: createResponder('app:writing-mode', app, win, {
+        id: event.target.id,
+        mode: li.mode
+      })
+    }))
+  },
+
+  'item-view-layout': (item, app, win, event) => {
+    item.submenu = item.submenu.map(li => ({
+      ...li,
+      checked: li.id === event.target.layout,
+      click: createResponder('app:settings-persist', app, win, {
+        layout: li.id
+      })
+    }))
+  },
+
+  'condition': (item, app, win, event) => {
+    let { condition } = item
+    let negate = false
+
+    if (condition.startsWith('!')) {
+      negate = true
+      condition = condition.slice(1)
+    }
+
+    if (condition in Menu.ItemConditions)
+      item.enabled = Menu.ItemConditions[condition]({ app, event })
+    else
+      item.enabled = !!event?.target?.[condition]
+
+    if (negate)
+      item.enabled = !item.enabled
+  }
+}
+
+Menu.ItemConditions = {
+  isMultiplePhotos({ event }) {
+    return event?.target?.photos?.length > 1
+  },
+
+  isMultipleItems({ event }) {
+    return event?.target?.items?.length > 1
+  },
+
+  isSingleItem(...args) {
+    return !Menu.ItemConditions.isMultipleItems(...args)
+  },
+
+  isProjectReadOnly({ app, win }) {
+    return app.getProject(win)?.isReadOnly
+  }
+}
+
+function createResponder(cmd, app, win, ...params) {
+  let [prefix, action] = cmd.split(':', 2)
+
+  switch (prefix) {
+    case 'app':
+      return (_, w) =>
+        app.emit(cmd, win || w, ...params)
+
+    case 'ctx':
+      return withWindow(win, cmd, w =>
+        w.webContents.send('ctx', action, ...params))
+
+    case 'win':
+      return withWindow(win, cmd, w =>
+        w.webContents.send(action, params))
+
+    case 'dispatch':
+      return withWindow(win, cmd, w =>
+        w.webContents.send('dispatch', {
+          type: action, payload: params
+        }))
+
+    default:
+      warn(`no responder for menu command ${cmd}`)
+  }
+}
+
+function withWindow(win, cmd, fn) {
+  return (_, w) => {
+    if (!(win || w))
+      warn(`${cmd} called without window`)
+    else
+      fn(win || w)
+  }
+}
+
 
 module.exports = {
   AppMenu,

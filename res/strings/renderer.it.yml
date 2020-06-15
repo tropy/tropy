@@ -87,6 +87,9 @@ it:
       Il tuo file di progetto potrebbe essere danneggiato e potrebbero servire
       operazioni manuali per aggiustarlo. Consulta il manuale utente per
       ulteriore assistenza.
+    readOnly: >
+      Your project file is locked and cannot be modified. To unlock, change the
+      file permissions and open the project again.
   wizard:
     project:
       title: Crea nuovo progetto

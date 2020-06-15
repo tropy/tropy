@@ -41,6 +41,8 @@ NewTag.defaultProps = {
 
 
 class Tag extends React.PureComponent {
+  container = React.createRef()
+
   get classes() {
     return ['tag', {
       active: this.props.isSelected,
@@ -50,11 +52,9 @@ class Tag extends React.PureComponent {
   }
 
   get isDropTarget() {
-    return !this.props.isSelected && this.props.onDropItems != null
-  }
-
-  setContainer = (container) => {
-    this.container = container
+    return !this.props.isReadOnly &&
+      !this.props.isSelected &&
+      this.props.onDropItems != null
   }
 
   handleChange = (name) => {
@@ -70,7 +70,7 @@ class Tag extends React.PureComponent {
 
     onSelect(tag.id, { mod })
 
-    if (hasFocus(this.container) && onFocusClick) {
+    if (hasFocus(this.container.current) && onFocusClick) {
       onFocusClick(tag)
     }
   }
@@ -94,17 +94,18 @@ class Tag extends React.PureComponent {
       <li
         className={cx(this.classes)}
         tabIndex={-1}
-        ref={this.setContainer}
+        ref={this.container}
         onContextMenu={isEditing ? null : this.handleContextMenu}
         onMouseDown={isEditing ? null : this.handleClick}
         onKeyDown={isEditing ? null : this.handleKeyDown}>
         <IconTag className={ccx(tag.color)}/>
         <div className="name">
           <Editable
-            value={tag.name}
+            isActive={isEditing}
+            isDisabled={this.props.isReadOnly}
             isRequired
             resize
-            isActive={isEditing}
+            value={tag.name}
             onCancel={this.props.onEditCancel}
             onChange={this.handleChange}/>
         </div>
@@ -122,6 +123,7 @@ class Tag extends React.PureComponent {
     hasFocusIcon: bool,
     isEditing: bool,
     isOver: bool,
+    isReadOnly: bool,
     isSelected: bool,
     tag: shape({
       id: number,

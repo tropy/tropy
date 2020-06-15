@@ -11,15 +11,18 @@ cn:
             - label: 文件
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: 列表
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: 标签
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: 打开...
           accelerator: CmdOrCtrl+O
@@ -36,36 +39,39 @@ cn:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: 导入
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: 图片...
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: 文件夹...
               command: 'app:import-directory'
-              condition: project
         - label: 导出
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: 刷新缩略图
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: 打印
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: 关闭项目
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: 关闭窗口
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: 退出 %name
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -91,10 +97,13 @@ cn:
         - label: 粘贴
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: 全选
-          role: selectall
+          role: selectAll
         - type: separator
-        - label: 首选项…
+        - label: Preferences…
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
     - label: 视图
@@ -102,12 +111,14 @@ cn:
         - label: 重载
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: 隐藏菜单栏(重启后显示)
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: 移动到中间
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: 默认界面尺寸
           command: 'app:zoom-reset'
@@ -121,12 +132,12 @@ cn:
         - type: separator
         - label: 全屏
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: 关闭
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: 高级
       id: dev
       submenu:
@@ -166,7 +177,7 @@ cn:
           command: 'app:open-docs'
         - label: Support Forums
           command: 'app:open-forums'
-        - label: Software &License
+        - label: Software License
           command: 'app:open-license'
         - type: separator
         - label: 软件运行日志
@@ -194,13 +205,13 @@ cn:
         - type: separator
         - label: 关于%name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
   darwin:
     - label: '%name'
       submenu:
         - label: 关于%name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
         - type: separator
         - label: Preferences…
           accelerator: 'Command+,'
@@ -228,15 +239,18 @@ cn:
             - label: 文件
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: 列表
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: 标签
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: 打开...
           accelerator: CmdOrCtrl+O
@@ -253,31 +267,33 @@ cn:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: 导入
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: 图片...
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: 文件夹...
               command: 'app:import-directory'
-              condition: project
         - label: 检查图片数据库
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: 导出
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - label: 打印
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: 关闭项目
           command: 'app:close-project'
-          condition: project
+          window: project
     - label: Edit
       submenu:
         - id: undo
@@ -300,13 +316,17 @@ cn:
         - label: 粘贴
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: 全选
-          role: selectall
+          role: selectAll
     - label: View
       submenu:
         - label: 重载
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: 实际尺寸
           command: 'app:zoom-reset'
@@ -320,24 +340,21 @@ cn:
         - type: separator
         - label: 全屏
           role: togglefullscreen
-          condition: window
+          window: '*'
     - label: Window
       role: window
       submenu:
         - label: Minimize
           accelerator: Cmd+M
           role: minimize
-          condition: window
+          window: '*'
         - label: 放大
           accelerator: Ctrl+Cmd+Z
           role: zoom
-        - label: 移动到中间
-          command: 'app:center-window'
-          condition: window
         - type: separator
         - label: 移动到中间
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Bring All to Front
           role: front
@@ -345,7 +362,7 @@ cn:
         - label: 关闭
           accelerator: Cmd+W
           role: close
-          condition: window
+          window: '*'
     - label: 高级
       id: dev
       submenu:
@@ -386,7 +403,7 @@ cn:
           command: 'app:open-docs'
         - label: Support Forums
           command: 'app:open-forums'
-        - label: Software &License
+        - label: Software License
           command: 'app:open-license'
         - type: separator
         - label: 软件运行日志
@@ -423,15 +440,18 @@ cn:
             - label: 文件
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: 列表
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: 标签
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: 打开...
           accelerator: CmdOrCtrl+O
@@ -448,36 +468,39 @@ cn:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: 导入
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: 图片...
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: 文件夹...
               command: 'app:import-directory'
-              condition: project
         - label: 导出
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: 检查图片数据库
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: 打印
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: 关闭项目
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: 关闭窗口
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: 退出 %name
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -503,7 +526,10 @@ cn:
         - label: 粘贴
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: 首选项…
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
+        - label: Preferences…
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
     - label: 视图
@@ -511,12 +537,14 @@ cn:
         - label: 重载
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: 隐藏菜单栏(重启后显示)
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: 移动到中间
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: 实际尺寸
           command: 'app:zoom-reset'
@@ -530,12 +558,12 @@ cn:
         - type: separator
         - label: 全屏
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: 关闭
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: 高级
       id: dev
       submenu:
@@ -575,7 +603,7 @@ cn:
           command: 'app:open-docs'
         - label: Support Forums
           command: 'app:open-forums'
-        - label: Software &License
+        - label: Software License
           command: 'app:open-license'
         - type: separator
         - label: 软件运行日志
@@ -603,4 +631,4 @@ cn:
         - type: separator
         - label: 关于%name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'

@@ -251,7 +251,7 @@ class EsperContainer extends React.Component {
   }
 
   get tabIndex() {
-    return (this.props.isItemOpen) ? this.props.tabIndex : -1
+    return this.isDisabled ? -1 : this.props.tabIndex
   }
 
   get tool() {
@@ -284,6 +284,8 @@ class EsperContainer extends React.Component {
   }
 
   handleRevertToOriginal = () => {
+    if (this.props.isReadOnly) return
+
     let state = {
       ...this.state,
       ...EsperPanel.defaultProps
@@ -296,6 +298,8 @@ class EsperContainer extends React.Component {
   }
 
   handleRotationChange = throttle((by) => {
+    if (this.props.isReadOnly) return
+
     let state = {
       ...this.state,
       angle: rotate(this.state.angle, by)
@@ -369,6 +373,8 @@ class EsperContainer extends React.Component {
   }
 
   handleMirrorChange = () => {
+    if (this.props.isReadOnly) return
+
     this.esper.flip()
 
     // Subtle: when flipping rotated photos, the angle will
@@ -407,6 +413,8 @@ class EsperContainer extends React.Component {
   }
 
   handleFilterChange = (opts) => {
+    if (this.props.isReadOnly) return
+
     this.esper.filter({ ...this.state, ...opts })
     this.setState(opts)
     this.handleImageChange()
@@ -423,6 +431,8 @@ class EsperContainer extends React.Component {
   }
 
   handleSelectionCreate = (selection) => {
+    if (this.props.isReadOnly) return
+
     let { photo } = this.props
     let { angle, mirror } = subOrientation(this.state, photo)
 
@@ -453,9 +463,11 @@ class EsperContainer extends React.Component {
           this.handleModeChange(MODE.FILL)
           break
         case 'rotateLeft':
+          if (this.props.isReadOnly) return
           this.handleRotationChange(-90)
           break
         case 'rotateRight':
+          if (this.props.isReadOnly) return
           this.handleRotationChange(90)
           break
         case 'up':
@@ -534,13 +546,13 @@ class EsperContainer extends React.Component {
   }
 
   handleContextMenu = (event) => {
-    if (!this.isDisabled) {
+    if (!this.props.isReadOnly) {
       this.props.onContextMenu(event, 'esper')
     }
   }
 
   handleMouseDown = () => {
-    if (!this.hasFocus && !this.isDisabled) {
+    if (!this.hasFocus && !this.props.isReadOnly) {
       this.focus()
     }
   }
@@ -632,9 +644,13 @@ class EsperContainer extends React.Component {
 
 
   render() {
+    let { isDisabled } = this
+
     return (
       <section
         className={cx('esper', this.tool, {
+          'disabled': isDisabled,
+          'read-only': this.props.isReadOnly,
           'overlay-mode': this.props.hasOverlayToolbar,
           'panel-visible': this.props.isPanelVisible,
           'tab-focus': this.state.hasTabFocus
@@ -649,7 +665,8 @@ class EsperContainer extends React.Component {
         onKeyUp={this.handleKeyUp}>
         <header className="esper-header">
           <EsperToolbar
-            isDisabled={this.isDisabled}
+            isDisabled={isDisabled}
+            isReadOnly={isDisabled || this.props.isReadOnly}
             isSelectionActive={this.isSelectionActive}
             isPanelVisible={this.props.isPanelVisible}
             mode={this.props.mode}
@@ -675,7 +692,7 @@ class EsperContainer extends React.Component {
             negative={this.state.negative}
             saturation={this.state.saturation}
             sharpen={this.state.sharpen}
-            isDisabled={this.isDisabled}
+            isDisabled={isDisabled || this.props.isReadOnly}
             isVisible={this.props.isPanelVisible}
             onChange={this.handleFilterChange}
             onRevert={this.handleRevertToOriginal}/>
@@ -690,7 +707,7 @@ class EsperContainer extends React.Component {
     invertScroll: bool.isRequired,
     invertZoom: bool.isRequired,
     isDisabled: bool,
-    isItemOpen: bool.isRequired,
+    isReadOnly: bool,
     isPanelVisible: bool.isRequired,
     keymap: object.isRequired,
     maxZoom: number.isRequired,

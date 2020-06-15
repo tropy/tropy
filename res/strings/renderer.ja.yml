@@ -84,6 +84,9 @@ ja:
     corrupted: >
       Your project file may be damaged and manual steps necessary to fix it.
       Please consult the user manual for further assistance.
+    readOnly: >
+      Your project file is locked and cannot be modified. To unlock, change the
+      file permissions and open the project again.
   wizard:
     project:
       title: 新規プロジェクトを作成

@@ -116,10 +116,11 @@ class MetadataField extends React.PureComponent {
   }
 
   connect(element) {
-    if (this.isDraggable)
+    if (!this.props.isDisabled && this.isDraggable)
       element = this.props.connectDragSource(element)
 
-    element = this.props.connectDropTarget(element)
+    if (!this.props.isDisabled && !this.props.isReadOnly)
+      element = this.props.connectDropTarget(element)
 
     return element
   }

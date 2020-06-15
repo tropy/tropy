@@ -118,12 +118,14 @@ class Editor extends React.Component {
   }
 
   render() {
-    let { isDisabled, hasTitlebar, placeholder, tabIndex } = this.props
-    let { hasViewFocus } = this.state
+    let { placeholder } = this.props
     let state = this.getEditorState()
 
-    let showPlaceholder =
-      !(isDisabled || placeholder == null) && this.isBlank(state.doc)
+    let isReadOnly = this.props.isReadOnly || !this.state.hasViewFocus
+
+    let hasPlaceholder = !(
+      this.props.isDisabled || this.props.isReadOnly || placeholder == null
+    )
 
     return (
       <div
@@ -131,22 +133,22 @@ class Editor extends React.Component {
         className={cx(this.classes)}
         tabIndex={-1}
         onFocus={this.handleFocus}>
-        {(hasTitlebar || !isDisabled) &&
-          <EditorToolbar
-            isTitlebar={hasTitlebar}
-            state={state}
-            ref={this.toolbar}
-            onCommand={this.handleCommand}/>
-        }
-
+        <EditorToolbar
+          isDisabled={this.props.isDisabled}
+          isReadOnly={this.props.isReadOnly}
+          isTitlebar={this.props.hasTitlebar}
+          state={state}
+          ref={this.toolbar}
+          onCommand={this.handleCommand}/>
         <div className="scroll-container">
-          {showPlaceholder && <Placeholder id={placeholder}/>}
+          {(hasPlaceholder && this.isBlank(state.doc)) &&
+            <Placeholder id={placeholder}/>}
           <EditorView
             ref={this.setView}
             state={state}
-            isDisabled={isDisabled}
-            isEditable={hasViewFocus}
-            tabIndex={tabIndex}
+            isDisabled={this.props.isDisabled}
+            isReadOnly={isReadOnly}
+            tabIndex={this.props.tabIndex}
             onFocus={this.handleViewFocus}
             onBlur={this.handleViewBlur}
             onChange={this.handleChange}
@@ -160,6 +162,7 @@ class Editor extends React.Component {
   static propTypes = {
     hasTitlebar: bool,
     isDisabled: bool,
+    isReadOnly: bool,
     keymap: object.isRequired,
     mode: string.isRequired,
     onBlur: func.isRequired,

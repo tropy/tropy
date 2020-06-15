@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1910311746;
+PRAGMA user_version=2005271953;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -139,11 +139,6 @@ CREATE TABLE tags (
   CHECK (name != ''),
   UNIQUE (name)
 );
-CREATE TABLE taggings (
-  tag_id     INTEGER  NOT NULL REFERENCES tags ON DELETE CASCADE,
-  id         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  PRIMARY KEY (id, tag_id)
-) WITHOUT ROWID;
 CREATE TABLE trash (
   id          INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   deleted     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -188,6 +183,12 @@ CREATE TABLE selections (
   y         NUMERIC  NOT NULL DEFAULT 0,
   position  INTEGER
 
+) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS "taggings" (
+  tag_id     INTEGER  NOT NULL REFERENCES tags ON DELETE CASCADE,
+  id         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  created    NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id, tag_id)
 ) WITHOUT ROWID;
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags

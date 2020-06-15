@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { DND, DropTarget, hasPhotoFiles } = require('../dnd')
-const { IconMaze, IconWarningSm } = require('../icons')
+const { IconMaze, IconWarningSm, IconLock } = require('../icons')
 const { Editable } = require('../editable')
 const { blank } = require('../../common/util')
 const cx = require('classnames')
@@ -11,8 +11,9 @@ const { bool, func, string } = require('prop-types')
 class ProjectName extends React.PureComponent {
   get classes() {
     return {
-      active: this.props.isSelected,
-      over: this.props.isOver && this.props.canDrop
+      'active': this.props.isSelected,
+      'read-only': this.props.isReadOnly,
+      'over': this.props.isOver && this.props.canDrop
     }
   }
 
@@ -26,6 +27,7 @@ class ProjectName extends React.PureComponent {
           <div className="name">
             <Editable
               value={this.props.name}
+              isDisabled={this.props.isReadOnly}
               isRequired
               resize
               isActive={this.props.isEditing}
@@ -34,6 +36,8 @@ class ProjectName extends React.PureComponent {
           </div>
           {this.props.isCorrupted &&
             <IconWarningSm title="project.corrupted"/>}
+          {this.props.isReadOnly &&
+            <IconLock title="project.readOnly"/>}
         </div>
       </li>
     )
@@ -44,6 +48,7 @@ class ProjectName extends React.PureComponent {
     name: string.isRequired,
     isCorrupted: bool,
     isEditing: bool,
+    isReadOnly: bool,
     isSelected: bool,
     isOver: bool,
     canDrop: bool,

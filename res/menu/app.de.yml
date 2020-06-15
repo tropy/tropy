@@ -11,15 +11,18 @@ de:
             - label: Objekt
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Liste
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Öffnen …
           accelerator: CmdOrCtrl+O
@@ -36,36 +39,39 @@ de:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importieren
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Fotos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Ordner…
               command: 'app:import-directory'
-              condition: project
         - label: Exportieren
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: Fotos konsolidieren
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Drucken
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Projekt schließen
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: Fenster schließen
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: '%name schließen'
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -91,8 +97,11 @@ de:
         - label: Einfügen
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Einfügen und Stil anpassen
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: Alles auswählen
-          role: selectall
+          role: selectAll
         - type: separator
         - label: Voreinstellungen …
           accelerator: Shift+Control+S
@@ -102,12 +111,14 @@ de:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Menüleiste ausblenden
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: Zentrieren
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Echte Größe
           command: 'app:zoom-reset'
@@ -121,12 +132,12 @@ de:
         - type: separator
         - label: Vollbildmodus
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: Schließen
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: Entwickler
       id: dev
       submenu:
@@ -194,13 +205,13 @@ de:
         - type: separator
         - label: Über %name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
   darwin:
     - label: '%name'
       submenu:
         - label: Über %name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
         - type: separator
         - label: Voreinstellungen …
           accelerator: 'Command+,'
@@ -228,15 +239,18 @@ de:
             - label: Objekt
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Liste
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Öffnen …
           accelerator: CmdOrCtrl+O
@@ -253,31 +267,33 @@ de:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importieren
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Fotos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Ordner…
               command: 'app:import-directory'
-              condition: project
         - label: Fotos konsolidieren
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Exportieren
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - label: Drucken
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Projekt schließen
           command: 'app:close-project'
-          condition: project
+          window: project
     - label: Bearbeiten
       submenu:
         - id: undo
@@ -300,13 +316,17 @@ de:
         - label: Einfügen
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Einfügen und Stil anpassen
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: Alles auswählen
-          role: selectall
+          role: selectAll
     - label: Ansicht
       submenu:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Echte Größe
           command: 'app:zoom-reset'
@@ -320,24 +340,21 @@ de:
         - type: separator
         - label: Vollbildmodus
           role: togglefullscreen
-          condition: window
+          window: '*'
     - label: Fenster
       role: window
       submenu:
         - label: Im Dock ablegen
           accelerator: Cmd+M
           role: minimize
-          condition: window
+          window: '*'
         - label: Zoom
           accelerator: Ctrl+Cmd+Z
           role: zoom
-        - label: Zentrieren
-          command: 'app:center-window'
-          condition: window
         - type: separator
         - label: Zentrieren
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Alle nach vorne bringen
           role: front
@@ -345,7 +362,7 @@ de:
         - label: Schließen
           accelerator: Cmd+W
           role: close
-          condition: window
+          window: '*'
     - label: Entwickler
       id: dev
       submenu:
@@ -423,15 +440,18 @@ de:
             - label: Objekt
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Liste
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Öffnen …
           accelerator: CmdOrCtrl+O
@@ -448,36 +468,39 @@ de:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importieren
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Fotos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Ordner…
               command: 'app:import-directory'
-              condition: project
         - label: Exportieren
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: Fotos konsolidieren
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Drucken
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Projekt schließen
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: Fenster schließen
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: '%name schließen'
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -503,6 +526,9 @@ de:
         - label: Einfügen
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Einfügen und Stil anpassen
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: Voreinstellungen …
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
@@ -511,12 +537,14 @@ de:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Menüleiste ausblenden
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: Zentrieren
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Echte Größe
           command: 'app:zoom-reset'
@@ -530,12 +558,12 @@ de:
         - type: separator
         - label: Vollbildmodus
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: Schließen
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: Entwickler
       id: dev
       submenu:
@@ -603,4 +631,4 @@ de:
         - type: separator
         - label: Über %name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'

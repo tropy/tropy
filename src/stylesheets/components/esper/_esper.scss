@@ -22,6 +22,10 @@
   &:not(.overlay-mode) {
     .slider-handle {
       background-color: $esper-slider-handle-bg;
+
+      @include state(".disabled .slider-handle") {
+        background-color: $esper-slider-handle-disabled-bg;
+      }
     }
 
     .slider-value {

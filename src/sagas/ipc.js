@@ -9,7 +9,7 @@ const { ipcRenderer: ipc } = require('electron')
 const { warn } = require('../common/log')
 const history = require('../selectors/history')
 const { getAllTags } = require('../selectors')
-const { TAG, HISTORY } = require('../constants')
+const { PROJECT, TAG, HISTORY } = require('../constants')
 
 const filters = {
   *[HISTORY.CHANGED]() {
@@ -29,6 +29,10 @@ const filters = {
 
   *[TAG.CHANGED]() {
     return yield select(getAllTags)
+  },
+
+  *[PROJECT.UPDATE]() {
+    return yield select(state => state.project)
   }
 }
 
