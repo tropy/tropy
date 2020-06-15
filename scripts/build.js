@@ -41,10 +41,6 @@ const IGNORE = [
   /^\/vendor/,
   /^\/res.ext/,
   /^\/res.mime/,
-  /^\/res.icons.dev/,
-  /^\/res.icons.beta/,
-  /^\/res.icons.stable/,
-  /^\/res.icons.mime/,
   /^\/res.dmg/,
   /^\/res.linux/,
   /^\/res.ext\.plist/,
@@ -125,7 +121,7 @@ target.all = async (args = []) => {
         unpack: `**/{${[
           '*.{node,dll,dylib,so}',
           'lib/stylesheets/**/*',
-          'res/icons/mime/*.ico',
+          'res/icons/**/*',
           'res/{menu,strings,keymaps}/*',
           'sharp/{build/Release,vendor/lib}/*'
         ].join(',')}}`
