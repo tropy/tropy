@@ -59,7 +59,7 @@ const toFirstValue = (_, values) =>
 const getMetadata = (data, type) =>
   map(omit(data, props[type]), toFirstValue)
 
-const getProps = (data, type) =>
+const getProps = (data, type, ...args) =>
   morph(data, (img, prop, values) => {
     let value = any(values[0], '@value', '@id')
     if (value === undefined)
@@ -70,12 +70,15 @@ const getProps = (data, type) =>
       return
 
     img[URI.split(prop)[1]] = value
-  })
+  }, ...args)
 
 const getPhoto = (data) => ({
   data: getMetadata(data, 'photo'),
   id: get(data, ['@id', 0]),
-  image: getProps(data, 'photo'),
+  image: getProps(data, 'photo', {
+    checksum: 'badc0de',
+    mimetype: 'image/x.pending'
+  }),
   notes: flatten(data[tropy.note]).map(getNote),
   selections: flatten(data[tropy.selection]).map(getSelection),
   template: get(data, [tropy.template, 0, '@id']),
