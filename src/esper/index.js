@@ -120,7 +120,11 @@ class Esper extends EventEmitter {
 
   extract = async (src, props) => {
     try {
-      let photo = new Photo(props)
+      let photo = new Photo({
+        ...props,
+        resolution: this.resolution
+      })
+
       let { width, height } = props
       let { renderer } = this.app
 
@@ -161,7 +165,11 @@ class Esper extends EventEmitter {
       // Subtle: avoid race conditions because of async loading!
       // The first sync must not override other syncs, coming
       // in while the photo is still loading.
-      let tmp = this.photo = new Photo(props.photo)
+      let tmp = this.photo = new Photo({
+        ...props.photo,
+        resolution: this.resolution
+      })
+
       this.sync(props, state, 0)
 
       try {
