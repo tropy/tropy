@@ -160,7 +160,10 @@ const spec = {
     }
   },
 
-  canDrop(_, monitor) {
+  canDrop({ nav, project }, monitor) {
+    if (project?.isReadOnly || nav.trash)
+      return false
+
     switch (monitor.getItemType()) {
       case DND.FILE:
         return hasPhotoFiles(monitor)
