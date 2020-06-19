@@ -13,15 +13,18 @@ en:
             - label: 'Item'
               command: 'app:create-item'
               accelerator: 'CmdOrCtrl+Shift+N'
-              condition: 'project'
+              window: 'project'
+              condition: '!isProjectReadOnly'
             - label: 'List'
               command: 'app:create-list'
               accelerator: 'CmdOrCtrl+Shift+L'
-              condition: 'project'
+              window: 'project'
+              condition: '!isProjectReadOnly'
             - label: 'Tag'
               command: 'app:create-tag'
               accelerator: 'CmdOrCtrl+Shift+A'
-              condition: 'project'
+              window: 'project'
+              condition: '!isProjectReadOnly'
         - type: 'separator'
         - &open
           label: 'Open…'
@@ -42,17 +45,18 @@ en:
         - type: 'separator'
         - &import
           label: 'Import'
+          window: 'project'
+          condition: '!isProjectReadOnly'
           submenu:
             - label: 'Photos…'
               command: 'app:import'
               accelerator: 'CmdOrCtrl+Shift+I'
-              condition: 'project'
             - label: 'Folder…'
               command: 'app:import-directory'
-              condition: 'project'
         - &export
           label: 'Export'
           id: 'export'
+          window: 'project'
           submenu:
             - label: 'JSON-LD'
               command: 'app:export-item'
@@ -60,22 +64,24 @@ en:
         - &consolidate
           label: 'Consolidate Photo Library'
           command: 'app:consolidate-photo-library'
-          condition: 'project'
+          window: 'project'
+          condition: '!isProjectReadOnly'
         - type: 'separator'
         - &print
           label: 'Print'
           command: 'app:print'
           accelerator: 'CmdOrCtrl+P'
-          condition: 'project'
+          window: 'project'
         - type: 'separator'
         - &close
           label: 'Close Project'
           command: 'app:close-project'
-          condition: 'project'
+          window: 'project'
         - type: 'separator'
         - label: 'Close Window'
           accelerator: 'Ctrl+W'
           role: 'close'
+          window: '*'
         - &quit
           label: 'Quit %name'
           accelerator: 'CmdOrCtrl+Q'
@@ -108,12 +114,16 @@ en:
           label: '&Paste'
           accelerator: 'CmdOrCtrl+V'
           role: 'paste'
+        - &pastenmatch
+          label: 'Paste and Match Style'
+          accelerator: 'Alt+CmdOrCtrl+V'
+          role: 'pasteAndMatchStyle'
         - &all
           label: 'Select All'
-          role: 'selectall'
+          role: 'selectAll'
         - type: 'separator'
         - &preferences
-          label: 'Prefere&nces…'
+          label: 'Preferences…'
           accelerator: 'Shift+Control+S'
           command: 'app:open-preferences'
     - &view
@@ -123,13 +133,15 @@ en:
           label: '&Reload'
           accelerator: 'CmdOrCtrl+R'
           command: 'win:reload'
+          window: '*'
         - type: 'separator'
         - label: 'Toggle &Menu Bar'
           command: 'app:toggle-menu-bar'
+          window: '*'
         - &center-window
           label: 'Move to Center'
           command: 'app:center-window'
-          condition: 'window'
+          window: '*'
         - type: 'separator'
         - &zoom-reset
           label: 'Actual Size'
@@ -147,12 +159,12 @@ en:
         - &fullscreen
           label: 'Enter &Full Screen'
           role: 'togglefullscreen'
-          condition: 'window'
+          window: '*'
         - type: 'separator'
         - label: 'Close'
           accelerator: 'Ctrl+W'
           role: 'close'
-          condition: 'window'
+          window: '*'
     - &dev
       label: 'Developer'
       id: 'dev'
@@ -162,8 +174,6 @@ en:
         - label: 'Toggle &Developer Tools'
           accelerator: 'CmdOrCtrl+D'
           role: 'toggledevtools'
-        - label: 'Toggle Performance Tools'
-          command: 'win:toggle-perf-tools'
         - type: 'separator'
         - label: 'Reset Ontology Database'
           command: 'app:reset-ontology-db'
@@ -199,7 +209,7 @@ en:
           label: 'Support Forums'
           command: 'app:open-forums'
         - &license
-          label: 'Software &License'
+          label: 'Software License'
           command: 'app:open-license'
         - type: 'separator'
         - &logs
@@ -234,13 +244,13 @@ en:
         - type: 'separator'
         - label: 'About %name'
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
   darwin:
     - label: '%name'
       submenu:
         - label: 'About %name'
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
         - type: 'separator'
         - label: 'Preferences…'
           accelerator: 'Command+,'
@@ -279,6 +289,7 @@ en:
         - *cut
         - *copy
         - *paste
+        - *pastenmatch
         - *all
     - label: 'View'
       submenu:
@@ -295,13 +306,10 @@ en:
         - label: 'Minimize'
           accelerator: 'Cmd+M'
           role: 'minimize'
-          condition: 'window'
+          window: '*'
         - label: 'Zoom'
           accelerator: 'Ctrl+Cmd+Z'
           role: 'zoom'
-        - label: 'Move to Center'
-          command: 'app:center-window'
-          condition: 'window'
         - type: 'separator'
         - *center-window
         - type: 'separator'
@@ -311,7 +319,7 @@ en:
         - label: 'Close'
           accelerator: 'Cmd+W'
           role: 'close'
-          condition: 'window'
+          window: '*'
     - *dev
     - label: 'Help'
       role: 'help'
@@ -340,6 +348,7 @@ en:
         - *cut
         - *copy
         - *paste
+        - *pastenmatch
         - *preferences
     - *view
     - *dev

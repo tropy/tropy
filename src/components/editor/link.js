@@ -42,6 +42,7 @@ class LinkContext extends React.PureComponent {
             ref={this.input}
             className="form-control link-target"
             isDisabled={!this.props.isActive}
+            isReadOnly={this.props.isReadOnly}
             isRequired
             placeholder={this.getLabelFor('target')}
             value=""
@@ -54,7 +55,8 @@ class LinkContext extends React.PureComponent {
   }
 
   static propTypes = {
-    isActive: bool.isRequired,
+    isActive: bool,
+    isReadOnly: bool,
     onBlur: func.isRequired,
     onCancel: func.isRequired,
     onCommit: func.isRequired,

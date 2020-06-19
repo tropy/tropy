@@ -48,8 +48,8 @@ class EsperToolbar extends React.PureComponent {
     this.props.onPanelChange(!this.props.isPanelVisible)
   }
 
-  handleRotate = () => {
-    this.props.onRotationChange(-90)
+  handleRotate = (event) => {
+    this.props.onRotationChange(event.altKey ? 90 : -90)
   }
 
   handleZoomChange = throttle((zoom, reason) => {
@@ -92,7 +92,9 @@ class EsperToolbar extends React.PureComponent {
               icon={<IconSelection/>}
               title="esper.tool.select"
               isActive={this.isToolActive(TOOL.SELECT)}
-              isDisabled={this.props.isDisabled || this.props.isSelectionActive}
+              isDisabled={
+                this.props.isSelectionActive ||
+                this.props.isReadOnly}
               onClick={this.setSelectTool}/>
           </ToolGroup>
           <ToolGroup>
@@ -100,13 +102,14 @@ class EsperToolbar extends React.PureComponent {
               noFocus
               icon={<IconRotate/>}
               title="esper.tool.rotate"
-              isDisabled={this.props.isDisabled}
+              isDisabled={this.props.isReadOnly}
               onClick={this.handleRotate}/>
             <Button
               noFocus
               icon={<IconMirror/>}
               title="esper.tool.mirror"
-              isDisabled={this.props.isDisabled}
+              isActive={this.props.mirror}
+              isDisabled={this.props.isReadOnly}
               onClick={this.props.onMirrorChange}/>
           </ToolGroup>
           <ToolGroup>
@@ -115,24 +118,26 @@ class EsperToolbar extends React.PureComponent {
               icon={<IconHand/>}
               title="esper.tool.pan"
               isActive={this.isToolActive(TOOL.PAN)}
+              isDisabled={this.props.isDisabled}
               onClick={this.setPanTool}/>
             <Button
               noFocus
               icon={<IconFill/>}
               title="esper.mode.fill"
-              isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFill}
+              isDisabled={this.props.isDisabled}
               onClick={this.setZoomToFill}/>
             <Button
               noFocus
               icon={<IconFit/>}
               title="esper.mode.fit"
-              isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFit}
+              isDisabled={this.props.isDisabled}
               onClick={this.setZoomToFit}/>
           </ToolGroup>
           <ToolGroup>
             <Slider
+              isDisabled={this.props.isDisabled}
               value={this.props.zoom}
               min={this.props.minZoom}
               max={this.props.maxZoom}
@@ -143,7 +148,6 @@ class EsperToolbar extends React.PureComponent {
               steps={this.props.zoomSteps}
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}
-              isDisabled={this.props.isDisabled}
               onChange={this.handleZoomChange}/>
           </ToolGroup>
         </Toolbar.Left>
@@ -154,6 +158,7 @@ class EsperToolbar extends React.PureComponent {
               icon={<IconSliders/>}
               title="esper.tool.edit"
               isActive={this.props.isPanelVisible}
+              isDisabled={this.props.isDisabled}
               onClick={this.handlePanelToggle}/>
           </ToolGroup>
         </Toolbar.Right>
@@ -162,10 +167,12 @@ class EsperToolbar extends React.PureComponent {
   }
 
   static propTypes = {
-    isDisabled: bool.isRequired,
-    isSelectionActive: bool.isRequired,
-    isPanelVisible: bool.isRequired,
+    isDisabled: bool,
+    isReadOnly: bool,
+    isSelectionActive: bool,
+    isPanelVisible: bool,
     mode: string.isRequired,
+    mirror: bool,
     resolution: number.isRequired,
     tool: string.isRequired,
     zoom: number.isRequired,
@@ -184,6 +191,10 @@ class EsperToolbar extends React.PureComponent {
   static contextType = WindowContext
 
   static defaultProps = {
+    mode: MODE.ZOOM,
+    resolution: 1,
+    tool: TOOL.ARROW,
+    zoom: 1,
     zoomPrecision: ZOOM_SLIDER_PRECISION,
     zoomSteps: ZOOM_SLIDER_STEPS
   }

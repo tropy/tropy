@@ -11,15 +11,18 @@ ja:
             - label: アイテム
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: リスト
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: タグ
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: 開く
           accelerator: CmdOrCtrl+O
@@ -36,36 +39,39 @@ ja:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: インポート
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Photos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Folder…
               command: 'app:import-directory'
-              condition: project
         - label: エクスポート
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: プリント
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: プロジェクトを閉じる
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: Close Window
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: 終了 %name
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -91,8 +97,11 @@ ja:
         - label: 貼り付け
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: 全選択
-          role: selectall
+          role: selectAll
         - type: separator
         - label: 設定
           accelerator: Shift+Control+S
@@ -102,12 +111,14 @@ ja:
         - label: リロード
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: メニューバーを隠す
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: 画面中央に寄せる
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Actual Size
           command: 'app:zoom-reset'
@@ -121,12 +132,12 @@ ja:
         - type: separator
         - label: 全画面表示にする
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: 閉じる
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: 開発者向け
       id: dev
       submenu:
@@ -135,8 +146,6 @@ ja:
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: パフォーマンスツールに切り替え
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
@@ -196,13 +205,13 @@ ja:
         - type: separator
         - label: Tropyについて
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
   darwin:
     - label: Tropy
       submenu:
         - label: Tropyについて
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
         - type: separator
         - label: 設定
           accelerator: 'Command+,'
@@ -230,15 +239,18 @@ ja:
             - label: アイテム
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: リスト
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: タグ
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: 開く
           accelerator: CmdOrCtrl+O
@@ -255,31 +267,33 @@ ja:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: インポート
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Photos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Folder…
               command: 'app:import-directory'
-              condition: project
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: エクスポート
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - label: プリント
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: プロジェクトを閉じる
           command: 'app:close-project'
-          condition: project
+          window: project
     - label: 編集
       submenu:
         - id: undo
@@ -302,13 +316,17 @@ ja:
         - label: 貼り付ける
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: 全選択
-          role: selectall
+          role: selectAll
     - label: 表示
       submenu:
         - label: リロード
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Actual Size
           command: 'app:zoom-reset'
@@ -322,24 +340,21 @@ ja:
         - type: separator
         - label: 全画面表示にする
           role: togglefullscreen
-          condition: window
+          window: '*'
     - label: ウィンドウ
       role: window
       submenu:
         - label: 最小化
           accelerator: Cmd+M
           role: minimize
-          condition: window
+          window: '*'
         - label: ズーム
           accelerator: Ctrl+Cmd+Z
           role: zoom
-        - label: 画面中央に寄せる
-          command: 'app:center-window'
-          condition: window
         - type: separator
         - label: 画面中央に寄せる
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: 全て全面に表示
           role: front
@@ -347,7 +362,7 @@ ja:
         - label: 閉じる
           accelerator: Cmd+W
           role: close
-          condition: window
+          window: '*'
     - label: 開発者向け
       id: dev
       submenu:
@@ -356,8 +371,6 @@ ja:
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: パフォーマンスツールに切り替え
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
@@ -427,15 +440,18 @@ ja:
             - label: アイテム
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: リスト
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: タグ
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: 開く
           accelerator: CmdOrCtrl+O
@@ -452,36 +468,39 @@ ja:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: インポート
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Photos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Folder…
               command: 'app:import-directory'
-              condition: project
         - label: エクスポート
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: プリント
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: プロジェクトを閉じる
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: Close Window
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: 終了 %name
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -507,6 +526,9 @@ ja:
         - label: 貼り付ける
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: 設定
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
@@ -515,12 +537,14 @@ ja:
         - label: リロード
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: メニューバーを隠す
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: 画面中央に寄せる
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Actual Size
           command: 'app:zoom-reset'
@@ -534,12 +558,12 @@ ja:
         - type: separator
         - label: 全画面表示にする
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: 閉じる
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: 開発者向け
       id: dev
       submenu:
@@ -548,8 +572,6 @@ ja:
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: パフォーマンスツールに切り替え
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
@@ -609,4 +631,4 @@ ja:
         - type: separator
         - label: Tropyについて
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'

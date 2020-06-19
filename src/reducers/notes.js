@@ -1,6 +1,6 @@
 'use strict'
 
-const { NOTE, PROJECT } = require('../constants')
+const { API, NOTE, PROJECT } = require('../constants')
 const { insert } = require('./util')
 
 const init = {}
@@ -12,6 +12,7 @@ module.exports = {
       case PROJECT.OPEN:
         return { ...init }
 
+      case API.NOTE.CREATE:
       case NOTE.CREATE:
       case NOTE.LOAD:
         return (meta.done && !error) ? { ...state, ...payload } : state

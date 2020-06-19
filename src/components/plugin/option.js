@@ -4,6 +4,7 @@ const React = require('react')
 const { bool, func, shape, string, object } = require('prop-types')
 const { FormElement, FormField, FormToggle } = require('../form')
 const { TemplateSelect } = require('../template/select')
+const { ResourceSelect } = require('../resource/select')
 const { get } = require('../../common/util')
 
 
@@ -62,6 +63,13 @@ class PluginOption extends React.PureComponent {
                 ...this.props.templates.selection]}/>
           </FormElement>
         )
+      case 'property':
+        return (
+          <FormElement id={this.props.spec.label} isCompact>
+            <ResourceSelect {...this.attrs}
+              options={this.props.properties}/>
+          </FormElement>
+        )
       case 'save-file':
         return (
           <FormField
@@ -81,6 +89,7 @@ class PluginOption extends React.PureComponent {
   static propTypes = {
     onChange: func.isRequired,
     templates: object.isRequired,
+    properties: object.isRequired,
     spec: shape({
       field: string.isRequired,
       hint: string,

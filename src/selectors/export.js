@@ -3,7 +3,7 @@
 const { ctx, props } = require('../common/export')
 const { xsd } = require('../common/ns')
 const { version } = require('../common/release')
-const { URI, get, pick } = require('../common/util')
+const { blank, URI, get, pick } = require('../common/util')
 const { serialize } = require('../components/editor/serialize')
 
 const reserved = Object.fromEntries(props.all.map(prop => ([prop, true])))
@@ -34,11 +34,15 @@ const exportItem = (context, item, state) => {
   addMetadata(context, output, state.metadata[item.id], state.ontology)
 
   if (item.lists.length > 0) {
-    output.list = item.lists.map(id => get(state, ['lists', id, 'name'], id))
+    output.list = item.lists
+      .map(id => get(state, ['lists', id, 'name']))
+      .filter(x => !blank(x))
   }
 
   if (item.tags.length > 0) {
-    output.tag = item.tags.map(id => get(state, ['tags', id, 'name'], id))
+    output.tag = item.tags
+      .map(id => get(state, ['tags', id, 'name']))
+      .filter(x => !blank(x))
   }
 
   if (item.photos.length > 0) {

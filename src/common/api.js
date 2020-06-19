@@ -4,6 +4,8 @@ const Koa = require('koa')
 const Router = require('@koa/router')
 const bodyParser = require('koa-bodyparser')
 const act = require('../actions/api')
+const fs = require('fs')
+const { basename } = require('path')
 
 const show = (type) =>
   async (ctx) => {
@@ -17,6 +19,28 @@ const show = (type) =>
       ctx.body = payload
     else
       ctx.status = 404
+  }
+
+const extract = (type) =>
+  async (ctx) => {
+    let { assert, params, rsvp } = ctx
+
+    assert(
+      (/^(jpg|png|webp|raw)$/).test(params.format),
+      400,
+      'format unknown')
+
+    let { payload } = await rsvp('project', act.photo.extract({
+      [type]: params.id,
+      format: params.format
+    }))
+
+    if (payload != null) {
+      ctx.body = Buffer.from(payload.data)
+      ctx.type = payload.format
+    } else {
+      ctx.status = 404
+    }
   }
 
 const project = {
@@ -69,6 +93,27 @@ const project = {
   },
 
   notes: {
+    async create(ctx) {
+      let { assert, request, rsvp } = ctx
+      let { html, language, photo, selection } = request.body
+
+      assert.ok(html, 400, 'missing html parameter')
+
+      assert.ok(photo || selection, 400,
+        'missing photo or selection parameter')
+
+      let { payload } = await rsvp('project', act.note.create({
+        language,
+        photo: photo ? Number(photo) : null,
+        selection: selection ? Number(selection) : null,
+        html: request.body.html
+      }))
+
+      ctx.body = {
+        id: Object.values(payload).map(note => note.id)
+      }
+    },
+
     async show(ctx) {
       let { assert, params, query, rsvp } = ctx
 
@@ -111,6 +156,45 @@ const project = {
         ctx.status = 404
     },
 
+    async raw(ctx) {
+      let { params, rsvp } = ctx
+
+      let { payload } = await rsvp('project', act.photo.show({
+        id: params.id
+      }))
+
+      if (payload == null) {
+        ctx.status = 404
+      } else {
+        let { protocol, path, mimetype } = payload
+
+        switch (protocol) {
+          case 'file': {
+            let stats = await fs.promises.stat(path)
+
+            if (stats && stats.isFile()) {
+              ctx.length = stats.size
+              ctx.lastModified = stats.mtime
+              ctx.type = mimetype
+              ctx.attachment(basename(path))
+              ctx.body = fs.createReadStream(path)
+            } else {
+              ctx.status = 404
+            }
+
+            break
+          }
+          case 'http':
+          case 'https':
+            ctx.redirect(`${protocol}://${path}`)
+            break
+          default:
+            ctx.status = 501
+        }
+      }
+    },
+
+    extract: extract('photo'),
     show: show('photo')
   },
 
@@ -181,6 +265,7 @@ const project = {
   },
 
   selections: {
+    extract: extract('selection'),
     show: show('selection')
   }
 }
@@ -222,10 +307,14 @@ const create = ({ dispatch, log, rsvp, version }) => {
     .get('/project/data/:id', project.data.show)
 
     .get('/project/notes/:id', project.notes.show)
+    .post('/project/notes', project.notes.create)
 
     .get('/project/photos/:id', project.photos.show)
+    .get('/project/photos/:id/raw', project.photos.raw)
+    .get('/project/photos/:id/file.:format', project.photos.extract)
 
-    .get('/project/selections/:id', project.photos.show)
+    .get('/project/selections/:id', project.selections.show)
+    .get('/project/selections/:id/file.:format', project.selections.extract)
 
     .get('/version', (ctx) => {
       ctx.body = { version }

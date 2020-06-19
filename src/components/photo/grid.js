@@ -149,7 +149,6 @@ class PhotoGrid extends PhotoIterator {
         break
       case 'delete':
         this.handleDelete(this.current())
-        this.select(this.next() || this.prev())
         break
       case 'rotateLeft':
         this.handleRotate(-90)

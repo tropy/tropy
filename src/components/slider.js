@@ -83,7 +83,10 @@ class Slider extends React.PureComponent {
     value = restrict(value, this.props.min, this.props.max)
     this.setState({ value })
 
-    value  = round(value, this.props.precision)
+    // Subtle: allow unrounded min/max values!
+    if (value !== this.props.min && value !== this.props.max)
+      value = round(value, this.props.precision)
+
     if (value !== this.props.value) {
       this.props.onChange(value, reason)
     }
@@ -166,15 +169,14 @@ class Slider extends React.PureComponent {
   }
 
   renderMinButton() {
-    let { min, minIcon } = this.props
-    let { value } = this.state
+    let { min, minIcon, value } = this.props
 
     if (minIcon) {
       return (
         <Button
           noFocus
           icon={this.props.minIcon}
-          isActive={value === min}
+          isActive={value <= min}
           isDisabled={this.isDisabled}
           onMouseDown={this.handleMinButtonClick}/>
       )
@@ -182,15 +184,14 @@ class Slider extends React.PureComponent {
   }
 
   renderMaxButton() {
-    let { max, maxIcon } = this.props
-    let { value } = this.state
+    let { max, maxIcon, value } = this.props
 
     if (maxIcon) {
       return (
         <Button
           noFocus
           icon={this.props.maxIcon}
-          isActive={value === max}
+          isActive={value >= max}
           isDisabled={this.isDisabled}
           onMouseDown={this.handleMaxButtonClick}/>
       )

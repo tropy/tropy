@@ -523,7 +523,9 @@ const util = {
         }
       })
     }
-  }
+  },
+
+  BLANK: Object.freeze(Object.create(null))
 }
 
 module.exports = util

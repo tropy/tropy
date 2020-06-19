@@ -132,14 +132,12 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   edit() {
-    switch (true) {
-      case (!this.hasSelection):
-        this.props.onProjectEdit()
-        break
-      case (this.props.list != null):
-        this.props.onListEdit(this.props.list)
-        break
-    }
+    if (this.props.project.isReadOnly)
+      return
+    if (!this.hasSelection)
+      this.props.onProjectEdit()
+    else if (this.props.list != null)
+      this.props.onListEdit(this.props.list)
   }
 
   handleSelect() {
@@ -221,9 +219,10 @@ class ProjectSidebar extends React.PureComponent {
     event.stopPropagation()
   }
 
-  handleContextMenu = (event, scope = 'sidebar', target = {}) => {
+  handleContextMenu = (event, scope = 'sidebar', target) => {
     this.props.onContextMenu(event, scope, {
       ...target,
+      isReadOnly: this.props.project.isReadOnly,
       tagColor: this.props.tagColor
     })
   }
@@ -250,7 +249,8 @@ class ProjectSidebar extends React.PureComponent {
                 <ol>
                   <ProjectName
                     name={this.props.project.name}
-                    isCorrupted={this.props.project.corrupted}
+                    isCorrupted={this.props.project.isCorrupted}
+                    isReadOnly={this.props.project.isReadOnly}
                     isSelected={!this.hasSelection}
                     isEditing={this.isEditing}
                     onChange={this.handleChange}
@@ -270,6 +270,7 @@ class ProjectSidebar extends React.PureComponent {
                     expand={this.props.expand}
                     hold={this.props.hold}
                     isExpanded
+                    isReadOnly={this.props.project.isReadOnly}
                     selection={this.props.list}
                     onContextMenu={this.handleContextMenu}
                     onDropFiles={this.props.onItemImport}
@@ -300,6 +301,7 @@ class ProjectSidebar extends React.PureComponent {
                 <TagList
                   color={this.props.tagColor}
                   edit={this.props.edit.tag}
+                  isReadOnly={this.props.project.isReadOnly}
                   keymap={this.props.keymap.TagList}
                   selection={this.props.tagSelection}
                   tags={this.props.tags}
@@ -392,7 +394,6 @@ module.exports = {
       lists: state.lists,
       list: state.nav.list,
       listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
-      project: state.project,
       tags: getAllTags(state),
       tagColor: state.settings.tagColor,
       tagSelection: state.nav.tags,

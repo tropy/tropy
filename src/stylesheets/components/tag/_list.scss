@@ -149,7 +149,8 @@
       line-height: $input-height-base;
       pointer-events: none;
       color: $add-tag-placeholder-color-default;
-      mix-blend-mode: if($theme == "light", multiply, lighten);
+      mix-blend-mode: if($theme == "light", multiply, lighten); // Prevent placeholder text from covering the text cursor.
+      z-index: 1;
 
       transition:
         left $add-tag-transition,
@@ -165,8 +166,12 @@
   }
 
   .form-control {
-    background: $add-tag-default-bg;
     cursor: default;
+    position: relative;
+
+    &:not([disabled]) {
+      background: $add-tag-default-bg;
+    }
 
     .nested-tab-focus & {
       background: $add-tag-nested-focus-bg;
@@ -181,7 +186,7 @@
     }
 
     &:not([value=""]) {
-      position: relative;
+      z-index: 2;
     }
   }
 }

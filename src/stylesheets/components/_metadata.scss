@@ -129,6 +129,12 @@ $default-padding-horizontal: 12px !default;
     }
   }
 
+  .editable {
+    &.disabled {
+      user-select: all;
+    }
+  }
+
   a {
     color: inherit;
     text-decoration: none;

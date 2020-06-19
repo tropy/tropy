@@ -11,15 +11,18 @@ it:
             - label: Elemento
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Lista
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Apri...
           accelerator: CmdOrCtrl+O
@@ -36,36 +39,39 @@ it:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importa
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Foto…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Cartella…
               command: 'app:import-directory'
-              condition: project
         - label: Esporta
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: Consolida raccolta foto
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Stampa
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Chiudi progetto
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: Chiudi finestra
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: Chiudi Tropy
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -91,10 +97,13 @@ it:
         - label: '&Incolla'
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: Seleziona tutto
-          role: selectall
+          role: selectAll
         - type: separator
-        - label: 'Prefere&nze… '
+        - label: Preferenze
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
     - label: '&Vista'
@@ -102,12 +111,14 @@ it:
         - label: '&Ricarica'
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Mostra/nascondi barra dei &menu
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: Sposta in centro
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Dimensione effettiva
           command: 'app:zoom-reset'
@@ -121,12 +132,12 @@ it:
         - type: separator
         - label: Visualizza a &schermo intero
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: Chiudi
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: Sviluppatore
       id: dev
       submenu:
@@ -135,8 +146,6 @@ it:
         - label: Mostra/nascondi strumenti per sviluppatori
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Mostra/nascondi strumenti di performance
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Ripristina il database dell'ontologia
           command: 'app:reset-ontology-db'
@@ -153,7 +162,7 @@ it:
         - label: Tema
           id: theme
           submenu:
-            - label: Luminoso
+            - label: Chiaro
               id: light
               type: checkbox
             - label: Scuro
@@ -168,7 +177,7 @@ it:
           command: 'app:open-docs'
         - label: Forum di assistenza
           command: 'app:open-forums'
-        - label: '&Licenza software'
+        - label: Licenza software
           command: 'app:open-license'
         - type: separator
         - label: Mostra i file di log
@@ -196,13 +205,13 @@ it:
         - type: separator
         - label: Informazioni su Tropy
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
   darwin:
     - label: Tropy
       submenu:
         - label: Informazioni su Tropy
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
         - type: separator
         - label: Preferenze
           accelerator: 'Command+,'
@@ -230,15 +239,18 @@ it:
             - label: Elemento
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Lista
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Apri...
           accelerator: CmdOrCtrl+O
@@ -255,31 +267,33 @@ it:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importa
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Foto…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Cartella…
               command: 'app:import-directory'
-              condition: project
         - label: Consolida raccolta foto
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Esporta
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - label: Stampa
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Chiudi progetto
           command: 'app:close-project'
-          condition: project
+          window: project
     - label: Modifica
       submenu:
         - id: undo
@@ -302,13 +316,17 @@ it:
         - label: '&Incolla'
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: Seleziona tutto
-          role: selectall
+          role: selectAll
     - label: Vista
       submenu:
         - label: '&Ricarica'
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Dimensione effettiva
           command: 'app:zoom-reset'
@@ -322,24 +340,21 @@ it:
         - type: separator
         - label: Visualizza a &schermo intero
           role: togglefullscreen
-          condition: window
+          window: '*'
     - label: Finestra
       role: window
       submenu:
         - label: Minimizza
           accelerator: Cmd+M
           role: minimize
-          condition: window
+          window: '*'
         - label: Ingrandisci
           accelerator: Ctrl+Cmd+Z
           role: zoom
-        - label: Sposta in centro
-          command: 'app:center-window'
-          condition: window
         - type: separator
         - label: Sposta in centro
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Porta tutto davanti
           role: front
@@ -347,7 +362,7 @@ it:
         - label: Chiudi
           accelerator: Cmd+W
           role: close
-          condition: window
+          window: '*'
     - label: Sviluppatore
       id: dev
       submenu:
@@ -356,8 +371,6 @@ it:
         - label: Mostra/nascondi strumenti per sviluppatori
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Mostra/nascondi strumenti di performance
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Ripristina il database dell'ontologia
           command: 'app:reset-ontology-db'
@@ -374,7 +387,7 @@ it:
         - label: Tema
           id: theme
           submenu:
-            - label: Luminoso
+            - label: Chiaro
               id: light
               type: checkbox
             - label: Scuro
@@ -390,7 +403,7 @@ it:
           command: 'app:open-docs'
         - label: Forum di assistenza
           command: 'app:open-forums'
-        - label: '&Licenza software'
+        - label: Licenza software
           command: 'app:open-license'
         - type: separator
         - label: Mostra i file di log
@@ -427,15 +440,18 @@ it:
             - label: Elemento
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Lista
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Apri...
           accelerator: CmdOrCtrl+O
@@ -452,36 +468,39 @@ it:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importa
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Foto…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Cartella…
               command: 'app:import-directory'
-              condition: project
         - label: Esporta
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: Consolida raccolta foto
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Stampa
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Chiudi progetto
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: Chiudi finestra
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: Chiudi Tropy
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -507,7 +526,10 @@ it:
         - label: '&Incolla'
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: 'Prefere&nze… '
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
+        - label: Preferenze
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
     - label: '&Visualizza'
@@ -515,12 +537,14 @@ it:
         - label: '&Ricarica'
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Mostra/nascondi barra dei &menu
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: Sposta in centro
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Dimensione effettiva
           command: 'app:zoom-reset'
@@ -534,12 +558,12 @@ it:
         - type: separator
         - label: Visualizza a &schermo intero
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: Chiudi
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: Sviluppatore
       id: dev
       submenu:
@@ -548,8 +572,6 @@ it:
         - label: Mostra/nascondi strumenti per sviluppatori
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Mostra/nascondi strumenti di performance
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Ripristina il database dell'ontologia
           command: 'app:reset-ontology-db'
@@ -566,7 +588,7 @@ it:
         - label: Tema
           id: theme
           submenu:
-            - label: Luminoso
+            - label: Chiaro
               id: light
               type: checkbox
             - label: Scuro
@@ -581,7 +603,7 @@ it:
           command: 'app:open-docs'
         - label: Forum di assistenza
           command: 'app:open-forums'
-        - label: '&Licenza software'
+        - label: Licenza software
           command: 'app:open-license'
         - type: separator
         - label: Mostra i file di log
@@ -609,4 +631,4 @@ it:
         - type: separator
         - label: Informazioni su Tropy
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'

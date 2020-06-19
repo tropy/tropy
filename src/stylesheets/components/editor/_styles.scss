@@ -15,14 +15,28 @@
     white-space: nowrap;
   }
 
-  * {
-    margin: 0;
+  .read-only & {
+    user-select: text;
   }
 
-  &:not(.ProseMirror-focused) {
-    .pseudo-selection {
+  .pseudo-selection {
+    @include state(".ProseMirror:not(.ProseMirror-focused)") {
+      background-color: $editor-pseudo-selection-bg;
+
+      @include state(".read-only .ProseMirror") {
+        background-color: transparent;
+      }
+    }
+  }
+
+  ::selection {
+    @include state(".read-only .ProseMirror:not(.ProseMirror-focused)") {
       background-color: $editor-pseudo-selection-bg;
     }
+  }
+
+  * {
+    margin: 0;
   }
 
   p,

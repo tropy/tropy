@@ -16,7 +16,6 @@ const {
 } = require('../icons')
 
 class ProjectToolbar extends React.PureComponent {
-
   render() {
     return (
       <Titlebar>
@@ -35,7 +34,7 @@ class ProjectToolbar extends React.PureComponent {
           <ToolGroup>
             <Button
               icon={<IconPlus/>}
-              isDisabled={this.props.isDisabled || !this.props.canCreateItems}
+              isDisabled={this.props.isDisabled || this.props.isReadOnly}
               title="toolbar.import"
               onClick={this.props.onItemCreate}/>
           </ToolGroup>
@@ -60,9 +59,9 @@ class ProjectToolbar extends React.PureComponent {
   static contextType = WindowContext
 
   static propTypes = {
-    canCreateItems: bool,
     count: number.isRequired,
     isDisabled: bool,
+    isReadOnly: bool,
     maxZoom: number.isRequired,
     query: string.isRequired,
     zoom: number.isRequired,

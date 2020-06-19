@@ -33,3 +33,5 @@ pt:
       title: Bem-vindo ao Tropy
     about:
       title: Sobre o Tropy
+    project:
+      readOnly: ' — Locked'

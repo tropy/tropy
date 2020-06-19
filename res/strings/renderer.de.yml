@@ -86,6 +86,9 @@ de:
     corrupted: >
       Die Projektdatenbank ist möglicherweise beschädigt und sollte manuell
       geprüft werden.
+    readOnly: >
+      Your project file is locked and cannot be modified. To unlock, change the
+      file permissions and open the project again.
   wizard:
     project:
       title: Neues Projekt erstellen
@@ -120,10 +123,12 @@ de:
         photos: Inklusive Fotos
         metadata: Inklusive Metadaten
         notes: Inklusive Notizen
+        onlyNotes: Nur Fotos mit Notizen
         overflow: Inhalt gegebenenfalls auf mehrere Seiten aufteilen
       locale:
         locale: Sprache
         locales:
+          cn: 中文
           de: Deutsch
           en: English
           es: Español
@@ -167,6 +172,7 @@ de:
         option:
           fit: Format mit Fotos füllen
           fill: Fotos an das Format anpassen
+          zoom: Fotos in tatsächlicher Größe darstellen
       layout:
         label: Detailansicht-Layout
         option:
@@ -272,8 +278,8 @@ de:
     column:
       placeholder: Suche
     file:
-      browse: Browse
-      clear: Clear
+      browse: Datei auswählen
+      clear: Löschen
   template:
     id: URI
     name: Name
@@ -501,6 +507,7 @@ de:
       order: Fotos sortieren …
       save: Fotos speichern …
       restore: Fotos wiederherstellen …
+      extract: Foto wird exportiert …
     note:
       create: Notiz erstellen …
       delete: Notiz löschen …
@@ -510,6 +517,12 @@ de:
     selection:
       create: Ausschnitt erstellen …
       load: Ausschnitte laden …
+      extract: Ausschnitt wird exportiert …
+    api:
+      photo:
+        extract: Foto wird exportiert …
+      selection:
+        extract: Ausschnitt wird exportiert …
   editor:
     commands:
       bold: Fett
@@ -559,10 +572,12 @@ de:
       consolidate: Fotos konnten nicht konsolidiert werden.
       create: Foto konnte nicht importiert werden.
       save: Foto konnte nicht gespeichert werden.
+      extract: Foto konnte nicht exportiert werden.
       template:
         change: Vorlage konnte nicht gewechselt werden.
     selection:
       create: Ausschnitt konnte nicht gespeichert werden.
+      extract: Ausschnitt konnte nicht exportiert werden.
       template:
         change: Vorlage konnte nicht gewechselt werden.
     ontology:

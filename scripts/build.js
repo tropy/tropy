@@ -41,10 +41,6 @@ const IGNORE = [
   /^\/vendor/,
   /^\/res.ext/,
   /^\/res.mime/,
-  /^\/res.icons.dev/,
-  /^\/res.icons.beta/,
-  /^\/res.icons.stable/,
-  /^\/res.icons.mime/,
   /^\/res.dmg/,
   /^\/res.linux/,
   /^\/res.ext\.plist/,
@@ -60,10 +56,6 @@ const IGNORE = [
   /node_modules.react.umd/,
   /node_modules.react-dom.umd/,
   /node_modules.jsonld.dist/,
-  /node_modules.pixi\.js.dist/,
-  /node_modules.pixi-gl-core.bin/,
-  /node_modules.@pixi[/\\].+[/\\]dist/,
-  /node_modules.resource-loader.dist/,
   /node_modules.(react-)?redux.(dist|es|src)/,
   /node_modules.react-transition-group.(dist|esm)/,
   /node_modules.rdf-canonize.dist/,
@@ -129,7 +121,7 @@ target.all = async (args = []) => {
         unpack: `**/{${[
           '*.{node,dll,dylib,so}',
           'lib/stylesheets/**/*',
-          'res/icons/mime/*.ico',
+          'res/icons/**/*',
           'res/{menu,strings,keymaps}/*',
           'sharp/{build/Release,vendor/lib}/*'
         ].join(',')}}`

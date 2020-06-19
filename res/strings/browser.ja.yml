@@ -31,3 +31,5 @@ ja:
       title: Tropyへようこそ
     about:
       title: Tropyについて
+    project:
+      readOnly: ' — Locked'

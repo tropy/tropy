@@ -2,6 +2,7 @@
 
 const { join } = require('path')
 const { Resource } = require('./common/res')
+const { win32 } = require('./common/os')
 const { isArray } = Array
 
 const css = {
@@ -11,8 +12,8 @@ const css = {
     })`
   },
 
-  url(string) {
-    return `url(${string})`
+  url(path) {
+    return `url(file://${win32 ? path.replace(/\\/g, '/') : path})`
   },
 
   cursor(path, { x = 1, y = 1, fallback = 'default' } = {}) {

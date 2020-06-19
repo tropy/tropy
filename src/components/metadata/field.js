@@ -116,10 +116,11 @@ class MetadataField extends React.PureComponent {
   }
 
   connect(element) {
-    if (this.isDraggable)
+    if (!this.props.isDisabled && this.isDraggable)
       element = this.props.connectDragSource(element)
 
-    element = this.props.connectDropTarget(element)
+    if (!this.props.isDisabled && !this.props.isReadOnly)
+      element = this.props.connectDropTarget(element)
 
     return element
   }
@@ -141,6 +142,7 @@ class MetadataField extends React.PureComponent {
               getCompletions={getMetadataCompletions}
               display={auto(this.props.text, this.props.type)}
               placeholder={this.props.placeholder}
+              isDisabled={this.props.isDisabled || this.props.isReadOnly}
               isActive={this.props.isEditing}
               isRequired={this.props.isRequired}
               onCancel={this.handleCancel}

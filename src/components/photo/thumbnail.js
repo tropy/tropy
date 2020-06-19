@@ -39,23 +39,6 @@ class Thumbnail extends React.Component {
     }
   }
 
-  handleLoad = (e) => {
-    if (!this.props.onError || this.props.broken)
-      return
-
-    // HACK: check for pre-1.6 thumbnails!
-    let { naturalWidth, naturalHeight } = e.target
-
-    if (naturalWidth === naturalHeight) {
-      let x = Math.floor((this.props.width / naturalWidth) * 100)
-      let y = Math.floor((this.props.height / naturalHeight) * 100)
-
-      if (x !== y) {
-        this.props.onError(this.props.id)
-      }
-    }
-  }
-
   render() {
     return (
       <figure
@@ -71,8 +54,7 @@ class Thumbnail extends React.Component {
               decoding="async"
               loading="lazy"
               src={this.state.src}
-              onError={this.handleError}
-              onLoad={this.handleLoad}/>
+              onError={this.handleError}/>
           </div>)}
       </figure>
     )

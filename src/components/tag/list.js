@@ -12,8 +12,10 @@ const {
 
 class TagList extends React.PureComponent {
   get hasNewTag() {
-    return this.props.onCreate != null &&
-      this.props.edit != null && this.props.edit.id == null
+    return !this.props.isReadOnly &&
+      this.props.onCreate != null &&
+      this.props.edit != null &&
+      this.props.edit.id == null
   }
 
   get color() {
@@ -40,6 +42,9 @@ class TagList extends React.PureComponent {
   }
 
   handleKeyDown = (event, tag) => {
+    if (this.props.isReadOnly)
+      return
+
     switch (match(this.props.keymap, event)) {
       case 'remove':
         this.props.onRemove(tag)
@@ -68,6 +73,7 @@ class TagList extends React.PureComponent {
             tag={tag}
             hasFocusIcon={this.props.hasFocusIcon}
             isEditing={this.isEditing(tag)}
+            isReadOnly={this.props.isReadOnly}
             isSelected={this.isSelected(tag)}
             onChange={this.props.onSave}
             onDropItems={this.props.onDropItems}
@@ -91,6 +97,7 @@ class TagList extends React.PureComponent {
     colors: arrayOf(string).isRequired,
     edit: object,
     hasFocusIcon: bool,
+    isReadOnly: bool,
     keymap: object.isRequired,
     selection: arrayOf(number).isRequired,
     tags: arrayOf(shape({

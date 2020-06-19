@@ -1,0 +1,598 @@
+cn:
+  sidebar:
+    lists: 列表
+    tags: 标签
+    imports: 最近导入
+    trash: 删除文件
+  toolbar:
+    import: 导出图片
+    items: |
+      {count, plural,
+      =0 {No items in this view}
+      one {1 item in this view}
+      other {# items in this view}}
+    search:
+      placeholder: 搜索
+  panel:
+    metadata:
+      tab: 元数据
+      photo: 图片
+      item: |
+        {count, plural,
+        =0 {}
+        one {Item}
+        other {# Items}}
+      selection: 选中文件
+      dropdown:
+        placeholder: 新文件夹
+    tags:
+      tab: 标签
+      add: |
+        {count, plural,
+        =0 {Add Tag}
+        one {Add Tag to 1 Item}
+        other {Add Tag to # Items}}
+    photo:
+      title: |
+        {count, plural,
+        =0 {No Photos}
+        one {1 Photo}
+        other {# Photos}}
+      create: 添加图片
+      selection: 选中文件
+    note:
+      title: |
+        {count, plural,
+          =0 {No Notes}
+          one {1 Note}
+          other {# Notes}}
+      create: 添加笔记
+  print:
+    item: 很久
+    photo: 图片
+    notes: 笔记
+    note: '笔记 {idx, number}'
+    tags: 标签
+  about:
+    version: '版本 {version}'
+    rrchnm:
+      title: 罗伊·罗森茨韦格历史和新媒体中心
+      url: 'https://rrchnm.org'
+    cds:
+      title: Corporation for Digital Scholarship
+      url: 'http://digitalscholar.org'
+    c2dh:
+      title: 卢森堡当代和数字历史中心
+      url: 'https://www.c2dh.uni.lu'
+    text: |
+      Tropy是由{rrchnm}设计的，该团队开发历史教学资源、数字展品和开源软件。翻译:李子昂 反馈翻译错误: loveu12@qq.com
+    trademark: 'Tropy名称是{cds}的注册商标。'
+    release:
+      title: 发布笔记
+      url: 'https://github.com/tropy/tropy/releases/tag/{version}'
+    license:
+      title: 许可信息
+      url: 'https://tropy.org/license'
+    credits:
+      title: Credits
+      url: 'https://tropy.org/credits'
+  project:
+    none: '拖放项目到这里或创建一个 {newProject}'
+    empty: 拖动图片到这里
+    new: 新项目
+    recent: 最近的项目
+    corrupted: |
+      您的项目文件可能已损坏，需要手动修复。请查阅用户手册以获得进一步的帮助。
+    readOnly: >
+      Your project file is locked and cannot be modified. To unlock, change the
+      file permissions and open the project again.
+  wizard:
+    project:
+      title: 新建项目
+      submit: 新建项目
+      name: 名称
+      save_as: 手动选择文件位置
+      change: 更改
+  prefs:
+    title: Tropy 偏好设置
+    app:
+      label: 设置
+      style:
+        theme: 皮肤
+        themes:
+          light: 明亮
+          dark: 黑暗
+          system: 跟随系统设置
+        font:
+          size: 字体大小
+          sizes:
+            12px: 极小
+            13px: 小(默认)
+            14px: 中
+            15px: 大
+            16px: 极大
+      print:
+        mode: 打印
+        modes:
+          item: 每页一个文件
+          photo: 每页一张图片
+          selection: 选中的文件打印成一页
+        photos: 包含图片
+        metadata: 包含元数据
+        notes: 包含笔记
+        onlyNotes: Include only photos with notes
+        overflow: Allow content to take up more than one page
+      locale:
+        locale: 默认
+        locales:
+          cn: 中文
+          de: Deutsch
+          en: English
+          es: Español
+          fr: Français
+          it: Italiano
+          ja: 日本語
+          pt: Português
+      templates:
+        label: 默认模板
+        item: 文件
+        photo: 图片
+        selection: 选中文件
+      title:
+        label: 导出文件且命名
+        force: 覆盖嵌入的照片元数据
+      debug: Enable Developer Mode
+      localtime: 设定Exif时间戳使用本地时区
+      dup:
+        label: 导入设置
+        option:
+          skip: 跳过重复图片
+          import: 继续复制重复的图片
+          prompt: 每次都询问我
+      density:
+        label: 显示分辨率 (ppi)
+        title: 用于PDF、SVG和其他可扩展格式
+      export:
+        label: 导出
+        note:
+          format:
+            html: HTML笔记
+            markdown: Markdown笔记
+      ui:
+        label: 界面
+        option:
+          invertScroll: 查看照片时反转滚动方向
+          invertZoom: 查看照片时反转缩放方式
+          overlayToolbars: 自动隐藏工具栏
+      zoomMode:
+        label: 视图缩放
+        option:
+          fit: 原始尺寸但不超过边框
+          fill: 照片缩放至宽度适配
+          zoom: 将照片缩放至实际尺寸
+      layout:
+        label: 项目视图布局
+        option:
+          stacked: 上下
+          side-by-side: 左右
+      completions:
+        label: 自动
+        option:
+          datatype: 仅按数据类型
+          property-datatype: 按数据类型和属性
+    project:
+      label: 项目
+    template:
+      label: 模板
+      new: 新模板 ...
+      create: 创建
+      select: 模板
+      tools:
+        new: 新
+        copy: 副本
+        delete: 删除
+        import: 导入
+        export: 导出
+    vocab:
+      label: 词汇
+      export: 导出
+      classes: |
+        {count, plural,
+        =0 {No Classes}
+        one {# Class}
+        other {# Classes}
+        }
+      datatypes: |
+        {count, plural,
+        =0 {No Datatypes} one {# Datatype}
+        other {# Datatypes}
+        }
+      properties: |
+        {count, plural,
+        =0 {No Properties}
+        one {# Property}
+        other {# Properties}
+        }
+    plugins:
+      label: 插件
+      enable: 启用
+      disable: 禁用
+      install: 安装插件
+      uninstall: 卸载插件
+      noInfo: 未知作者
+      homepage: 更多
+  item:
+    created: 添加日期
+    modified: 已修改
+    template: 模板
+  photo:
+    file: 文件
+    size: 大小
+    density: 密度
+    type: 类型
+    created: 添加日期
+    modified: 已修改
+  selection:
+    size: 大小
+    created: 添加日期
+    modified: 已修改
+  esper:
+    tool:
+      pan: 平移工具
+      select: 已选的插件
+      rotate: 旋转工具
+      mirror: 镜像
+      edit: 编辑图片
+    mode:
+      fill: 填充
+      fit: 适应
+      zoom: 缩放
+    panel:
+      negative: 反色
+      revert: 复原照片
+      brightness:
+        label: 明度
+        value: '{value, number}'
+      contrast:
+        label: 对比度
+        value: '{value, number}'
+      hue:
+        label: 色相
+        value: '{value, number}°'
+      saturation:
+        label: 饱和度
+        value: '{value, number}'
+      sharpen:
+        label: 锐度
+        value: '{value, number}'
+  notepad:
+    placeholder: 在这儿添加笔记
+  completions:
+    empty: 没有可用选项
+    noMatches: 没找到合适选项
+  select:
+    column:
+      placeholder: 搜索
+    file:
+      browse: 浏览器
+      clear: 清除
+  template:
+    id: URI
+    name: 名称
+    type: 类型
+    creator: 作者
+    description: 描述
+    types:
+      'https://tropy.org/v1/tropy#Item': 文件模版
+      'https://tropy.org/v1/tropy#Photo': 图片模板
+      'https://tropy.org/v1/tropy#Selection': 选择的模板
+    field:
+      property: 资产
+      label: 标记
+      datatype: 数据类型
+      isRequired: 必需字段
+      hint: 示意
+      value: 默认值
+      isConstant: 只读
+  vocab:
+    id: URI
+    prefix: 前缀
+    title: 名称
+    description: 描述
+    properties: 资产
+    seeAlso: 另见
+  property:
+    select: 选择一个属性…
+  datatype:
+    select: 选择一个数据类型…
+  resource:
+    select: 选择资源…
+    id: URI
+    label: 标记
+    description: 描述
+    comment: 评论
+  dialog:
+    notify:
+      buttons:
+        - OK
+    error:
+      title: 错误
+      buttons:
+        - 重试
+        - 复制日志
+        - 显示日志
+    prompt:
+      item:
+        destroy:
+          message: |
+            您确定要永久删除项目吗？此操作无法撤消。
+          buttons:
+            - 取消
+            - 删除
+      photo:
+        consolidate:
+          message: |
+            是否希望Tropy自动检查并解决此位置的更多丢失照片？
+          buttons:
+            - 'No'
+            - 'Yes'
+      dup:
+        detail: |
+          此照片已存在于您的项目中。您确定要再次导入吗？
+        checkboxLabel: 记住这个选择
+        buttons:
+          - 跳过
+          - 依然导入
+      plugin:
+        uninstall:
+          type: 警告
+          detail: |
+            您确定要删除该插件吗？这将永久删除插件及其配置。
+          buttons:
+            - 取消
+            - 删除
+    filter:
+      csv: CSV
+      templates: Tropy 模板
+      images: 图像
+      items: 图像和Tropy文件
+      projects: Tropy项目
+      rdf: RDF Vocabularies
+      jsonld: JSON-LD
+  action:
+    project:
+      save: 保存项目
+    list:
+      create: 新建列表
+      delete: 删除列表
+      item:
+        add: 添加文件到列表
+        merge: 合并项目
+        remove: 移出列表
+        restore: 添加文件到列表
+      order: 排序列表
+      restore: 恢复列表
+      save: 保存列表
+    item:
+      create: 新建文件
+      delete: 删除文件
+      explode: 导出文件
+      implode: 合并文件
+      merge: 合并文件
+      split: 拆分文件组
+      import: 导出文件
+      restore: 恢复文件组
+      save: 保存文件
+      tag:
+        create: 标签
+        toggle: 标签
+        clear: 清除标签
+    metadata:
+      save: 保存元数据
+    ontology:
+      import: 导出 Vocabularies
+      vocab:
+        save: 保存 Vocabulary
+      label:
+        save: 保存标记
+      template:
+        import: 导入模板
+    photo:
+      create: 导入图片
+      delete: 删除图片
+      duplicate: 复制图片
+      move: 移动图片
+      order: 排序图片
+      restore: 恢复图片
+      save: 保存图片
+    note:
+      create: 新建笔记
+      delete: 删除笔记
+      order: 排序笔记
+      restore: 恢复笔记
+      save: 保存笔记
+    tag:
+      create: 新建标签
+      delete: 删除标签
+      restore: 新建标签
+      save: 保存标签
+    selection:
+      create: 新建选择
+      delete: 删除选中项
+      restore: 新建选择
+      save: 保存选择
+      order: 排序选择
+  activity:
+    cache:
+      prune: 优化项目缓存…
+      purge: 清除旧缓存…
+    project:
+      save: 正在保存 ...
+    list:
+      create: 正在新建列表 ...
+      delete: 正在删除列表 ...
+      item:
+        add: 正在添加文件到列表 ...
+        merge: 正在合并项目…
+        remove: 正在移出列表 ...
+        restore: 正在恢复文件 ...
+      load: 加载列表中...
+      order: 排序列表中...
+      restore: 正在恢复列表...
+      save: 正在保存列表...
+    tag:
+      create: 正在新建标签...
+      delete: 正在删除标签...
+      load: 正在加载标签...
+      restore: 正在恢复标签...
+      save: 正在保存标签...
+    item:
+      create: 新建标签中...
+      delete: 删除标签中...
+      destroy: 正在删除文件...
+      explode: 正在导出文件...
+      export: 正在导出文件...
+      implode: 正在恢复文件...
+      import: |
+        {hasProgressBar, select,
+        true {Importing item {progress, number} of {total, number} …}
+        other {Importing items …}
+        }
+      load: 加载文件中...
+      merge: 正在合并文件...
+      restore: 正在恢复文件...
+      save: 保存文件中...
+      tag:
+        create: 正在添加标签...
+        toggle: 正在添加标签...
+        clear: 正在清除标签...
+    metadata:
+      load: 正在加载元数据...
+      save: 保存元数据中...
+    ontology:
+      load: 正在加载ontology...
+      import: 正在导入vocabularies ...
+      vocab:
+        save: 正在保存vocabularies ...
+      label:
+        save: 正在保存标记...
+      template:
+        import: 正在导入模板...
+    photo:
+      consolidate: |
+        {hasProgressBar, select,
+        true {Consolidating photo {progress, number} of {total, number} …}
+        other {Consolidating photos …}
+        }
+      create: |
+        {hasProgressBar, select,
+        true {Importing photo {progress, number} of {total, number} …}
+        other {Importing photos …}
+        }
+      delete: 删除图片中...
+      duplicate: |
+        {hasProgressBar, select,
+        true {Duplicating photo {progress, number} of {total, number} …}
+        other {Duplicating photos …}
+        }
+      load: 正在加载图片...
+      move: 正在移动图片...
+      order: 正在排序图片...
+      save: 正在保存图片...
+      restore: 正在恢复图片...
+      extract: Extracting photo …
+    note:
+      create: 新建笔记中...
+      delete: 删除笔记中...
+      load: 加载笔记中...
+      order: 排序笔记中...
+      restore: 恢复笔记中...
+    selection:
+      create: 正在新建图片选择...
+      load: 正在加载图片选择...
+      extract: Extracting selection …
+    api:
+      photo:
+        extract: Extracting photo …
+      selection:
+        extract: Extracting selection …
+  editor:
+    commands:
+      bold: 加粗
+      italic: 斜体
+      underline: 下划线
+      overline: Overline
+      strikethrough: 删除线
+      subscript: 上角标
+      superscript: 下角标
+      blockquote: 插入 Blockquote
+      ol: 插入编号列表
+      ul: 插入项目符号列表
+      link:
+        button: 切换链接
+        target: Link target
+        title: Link title
+      left: 左对齐
+      center: 居中对齐
+      right: 右对齐
+      sinkListItem: Sink list item
+      liftListItem: Lift list item
+  error:
+    cache:
+      prune: 未能优化项目缓存。
+      purge: 未能删除旧的项目缓存。
+    project:
+      created: 项目创建失败。
+    item:
+      export: 无法导出文件。
+      merge: 无法合并项目。
+      import: 无法导入文件。
+      tag:
+        save: 无法保存标签。
+        create: 无法标签文件。每个文件的标签必须是唯一的。
+      template:
+        change: 无法更改项目模板。
+    list:
+      load: 无法加载列表。
+      create: 无法创建列表。列表名称必须是唯一的。
+      move: 无法移动列表。每个级别的列表名称必须是唯一的。
+      save: 无法保存列表。
+      item:
+        add: 无法添加图片到列表。
+    photo:
+      consolidate: 无法检查图片。
+      create: 无法导出图片。
+      save: 无法保存图片。
+      extract: Failed to export photo.
+      template:
+        change: 无法更改照片模板。
+    selection:
+      create: 无法创建照片选择。
+      extract: Failed to export selection.
+      template:
+        change: 未能更改选择模板。
+    ontology:
+      migrate: 无法升级您的notology数据库。
+      import: 无法导入vocabulary。
+      vocab:
+        save: 未能保存vocabulary。前缀必须是唯一的。
+      template:
+        import: 无法导入模板。
+        field:
+          add: 无法将字段添加到模板。
+          remove: 无法从模板中移除字段。
+    tag:
+      create: 无法创建标签。标签名必须是唯一的。
+  flash:
+    update:
+      ready:
+        message: |
+          您已安装Tropy {version}.您是否确定卸载后再次启动安装程序?
+        confirm: 现在重启
+  plugin:
+    name: 名称
+    plugin: 插件
+    options: 设置
+    hooks:
+      export: 导出
+      import: 导入

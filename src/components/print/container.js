@@ -28,6 +28,7 @@ class PrintContainer extends React.Component {
       hasPhotos: opts.photos,
       hasMetadata: opts.metadata,
       hasNotes: opts.notes,
+      hasOnlyNotes: opts.onlyNotes,
       items: opts.items,
       cache: join(ARGS.cache, opts.project)
     }, this.handleItemsReceived)
@@ -61,7 +62,8 @@ class PrintContainer extends React.Component {
           canOverflow={this.state.canOverflow}
           hasPhotos={this.state.hasPhotos}
           hasMetadata={this.state.hasMetadata}
-          hasNotes={this.state.hasNotes}/>)
+          hasNotes={this.state.hasNotes}
+          hasOnlyNotes={this.state.hasOnlyNotes}/>)
     )
   }
 

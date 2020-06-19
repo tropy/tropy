@@ -54,14 +54,16 @@ class ItemPanelGroup extends React.PureComponent {
 
     switch (this.keymap.match(event)) {
       case 'up':
-        if (this.tab.current) {
+        if (this.props.isReadOnly)
+          return
+        if (this.tab.current)
           this.tab.current.prev()
-        }
         break
       case 'down':
-        if (this.tab.current) {
+        if (this.props.isReadOnly)
+          return
+        if (this.tab.current)
           this.tab.current.next()
-        }
         break
       case 'left':
       case 'right':
@@ -128,12 +130,13 @@ class ItemPanelGroup extends React.PureComponent {
   }
 
   render() {
-    let { isDisabled, photo, panel } = this.props
+    let { isDisabled, isReadOnly, photo, panel } = this.props
     let hasMultipleItems = this.props.items.length > 1
     let item = hasMultipleItems ? null : this.props.items[0]
 
-    let isPhotosDisabled = isDisabled || item == null || hasMultipleItems
-    let isNotesDisabled = isPhotosDisabled || photo == null
+    let isPhotosDisabled =
+      isDisabled || isReadOnly || item == null || hasMultipleItems
+    let isNotesDisabled = isPhotosDisabled || isReadOnly || photo == null
 
     return (
       <PanelGroup
@@ -162,7 +165,7 @@ class ItemPanelGroup extends React.PureComponent {
                     <MetadataPanel
                       {...props}
                       ref={this.tab}
-                      isDisabled={isDisabled}
+                      isDisabled={isDisabled || isReadOnly}
                       onContextMenu={this.props.onContextMenu}
                       onEdit={this.props.onEdit}
                       onEditCancel={this.handleEditCancel}
@@ -175,7 +178,7 @@ class ItemPanelGroup extends React.PureComponent {
                     <TagPanel
                       {...props}
                       ref={this.tab}
-                      isDisabled={isDisabled}
+                      isDisabled={isDisabled || isReadOnly}
                       onCancel={this.handleTagAddCancel}
                       onContextMenu={this.props.onContextMenu}
                       onItemTagAdd={this.props.onItemTagAdd}
@@ -238,6 +241,7 @@ class ItemPanelGroup extends React.PureComponent {
 
   static propTypes = {
     isDisabled: bool,
+    isReadOnly: bool,
     isItemOpen: bool.isRequired,
     items: array.isRequired,
     keymap: object.isRequired,

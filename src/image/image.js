@@ -107,9 +107,7 @@ class Image {
   }
 
   get color() {
-    return this.isOpaque ?
-      get(this.stats, [this.page, 'mean']) :
-      null
+    return get(this.stats, [this.page, 'mean'])
   }
 
   get hasAlpha() {

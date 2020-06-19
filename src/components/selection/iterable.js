@@ -58,13 +58,13 @@ class SelectionIterable extends React.PureComponent {
   }
 
   handleContextMenu = (event) => {
-    if (!this.props.isDisabled) {
-      this.select()
-      this.props.onContextMenu(event, 'selection', {
-        ...pick(this.props.photo, ['id', 'item', 'path', 'protocol']),
+    this.select()
+    this.props.onContextMenu(
+      event,
+      this.props.isDisabled ? 'selection-read-only' : 'selection',
+      pick(this.props.photo, ['id', 'item', 'path', 'protocol'], {
         selection: this.props.selection.id
-      })
-    }
+      }))
   }
 
   connect(element) {

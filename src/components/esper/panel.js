@@ -6,6 +6,7 @@ const { Button } = require('../button')
 const { bool, element, func, number, string } = require('prop-types')
 const { FormattedMessage } = require('react-intl')
 const { FormToggle } = require('../form')
+const { shallow } = require('../../common/util')
 const { TABS } = require('../../constants')
 
 const {
@@ -79,83 +80,96 @@ class ColorSlider extends React.PureComponent {
 }
 
 
-const EsperPanel = (props) => (
-  <div className="esper-panel">
-    <ul className="adjustments">
-      <ColorSlider
-        icon={<IconSun/>}
-        isDisabled={props.isDisabled || !props.isVisible}
-        tabIndex={TABS.EsperPanel}
-        type="brightness"
-        value={props.brightness}
-        onChange={props.onChange}/>
-      <ColorSlider
-        icon={<IconContrast/>}
-        isDisabled={props.isDisabled || !props.isVisible}
-        tabIndex={TABS.EsperPanel}
-        type="contrast"
-        value={props.contrast}
-        onChange={props.onChange}/>
-      <ColorSlider
-        icon={<IconHue/>}
-        isDisabled={props.isDisabled || !props.isVisible}
-        tabIndex={TABS.EsperPanel}
-        min={-180}
-        max={180}
-        type="hue"
-        value={props.hue}
-        onChange={props.onChange}/>
-      <ColorSlider
-        icon={<IconDrop/>}
-        isDisabled={props.isDisabled || !props.isVisible}
-        tabIndex={TABS.EsperPanel}
-        type="saturation"
-        value={props.saturation}
-        onChange={props.onChange}/>
-      <ColorSlider
-        icon={<IconSharpen/>}
-        isDisabled={props.isDisabled || !props.isVisible}
-        tabIndex={TABS.EsperPanel}
-        type="sharpen"
-        min={0}
-        max={200}
-        origin={null}
-        value={props.sharpen}
-        onChange={props.onChange}/>
-      <li className="adjustment">
-        <FormToggle
-          id="esper.panel.negative"
-          name="negative"
+const EsperPanel = (props) => {
+  let isDefault = shallow(EsperPanel.defaultProps, props)
+
+  return (
+    <div className="esper-panel">
+      <ul className="adjustments">
+        <ColorSlider
+          icon={<IconSun/>}
           isDisabled={props.isDisabled || !props.isVisible}
           tabIndex={TABS.EsperPanel}
-          value={props.negative}
+          type="brightness"
+          value={props.brightness}
           onChange={props.onChange}/>
-      </li>
-    </ul>
-    <div className="revert-btn-container">
-      <Button
-        isBlock
-        isDefault
-        isDisabled={!props.canRevert || props.isDisabled || !props.isVisible}
-        tabIndex={TABS.EsperPanel}
-        text="esper.panel.revert"
-        onClick={props.onRevert}/>
+        <ColorSlider
+          icon={<IconContrast/>}
+          isDisabled={props.isDisabled || !props.isVisible}
+          tabIndex={TABS.EsperPanel}
+          type="contrast"
+          value={props.contrast}
+          onChange={props.onChange}/>
+        <ColorSlider
+          icon={<IconHue/>}
+          isDisabled={props.isDisabled || !props.isVisible}
+          tabIndex={TABS.EsperPanel}
+          min={-180}
+          max={180}
+          type="hue"
+          value={props.hue}
+          onChange={props.onChange}/>
+        <ColorSlider
+          icon={<IconDrop/>}
+          isDisabled={props.isDisabled || !props.isVisible}
+          tabIndex={TABS.EsperPanel}
+          type="saturation"
+          value={props.saturation}
+          onChange={props.onChange}/>
+        <ColorSlider
+          icon={<IconSharpen/>}
+          isDisabled={props.isDisabled || !props.isVisible}
+          tabIndex={TABS.EsperPanel}
+          type="sharpen"
+          min={0}
+          max={200}
+          origin={null}
+          value={props.sharpen}
+          onChange={props.onChange}/>
+        <li className="adjustment">
+          <FormToggle
+            id="esper.panel.negative"
+            name="negative"
+            isDisabled={props.isDisabled || !props.isVisible}
+            tabIndex={TABS.EsperPanel}
+            value={props.negative}
+            onChange={props.onChange}/>
+        </li>
+      </ul>
+      <div className="revert-btn-container">
+        <Button
+          isBlock
+          isDefault
+          isDisabled={isDefault || props.isDisabled || !props.isVisible}
+          tabIndex={TABS.EsperPanel}
+          text="esper.panel.revert"
+          onClick={props.onRevert}/>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 EsperPanel.propTypes = {
   brightness: number.isRequired,
-  canRevert: bool.isRequired,
   contrast: number.isRequired,
   hue: number.isRequired,
   negative: bool.isRequired,
   saturation: number.isRequired,
   sharpen: number.isRequired,
-  isDisabled: bool.isRequired,
-  isVisible: bool.isRequired,
+  isDisabled: bool,
+  isVisible: bool,
   onChange: func.isRequired,
   onRevert: func.isRequired
+}
+
+// Subtle: these are used to set EsperContainer's state!
+EsperPanel.defaultProps = {
+  brightness: 0,
+  contrast: 0,
+  hue: 0,
+  negative: false,
+  saturation: 0,
+  sharpen: 0
 }
 
 module.exports = {

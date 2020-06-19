@@ -28,11 +28,16 @@ en:
       panel:
         - p
       quicktool: Space
-      rotate:
+      rotateLeft:
         - CmdOrCtrl+[
         - CmdOrCtrl+Shift+[
         - CmdOrCtrl+Alt+[
         - l
+      rotateRight:
+        - CmdOrCtrl+]
+        - CmdOrCtrl+Shift+]
+        - CmdOrCtrl+Alt+]
+        - r
     Sidebar: &Sidebar
       next: ArrowDown
       prev: ArrowUp

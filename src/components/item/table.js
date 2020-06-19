@@ -72,7 +72,7 @@ class ItemTable extends ItemIterator {
 
   get classes() {
     return ['table-body', {
-      'drop-target': !this.props.isDisabled,
+      'drop-target': !this.props.isReadOnly,
       'over': this.props.isOver
     }]
   }
@@ -156,9 +156,11 @@ class ItemTable extends ItemIterator {
   }
 
   edit(item) {
-    this.props.onEdit({
-      column: { [item.id]: this.state.columns[0].id }
-    })
+    if (!this.props.isReadOnly) {
+      this.props.onEdit({
+        column: { [item.id]: this.state.columns[0].id }
+      })
+    }
   }
 
   handleChange = (...args) => {

@@ -11,15 +11,18 @@ es:
             - label: Objeto
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Lista
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Etiqueta
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Abrir…
           accelerator: CmdOrCtrl+O
@@ -36,36 +39,39 @@ es:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importar
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Photos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Folder…
               command: 'app:import-directory'
-              condition: project
         - label: Exportar
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Imprimir
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Cerrar proyecto
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: Cerrar ventana
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: Salir de %name
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -91,8 +97,11 @@ es:
         - label: Pegar
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: Seleccionar todo
-          role: selectall
+          role: selectAll
         - type: separator
         - label: Preferencias…
           accelerator: Shift+Control+S
@@ -102,12 +111,14 @@ es:
         - label: Recargar
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Alternar la barra de menú
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: Centrar
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Tamaño real
           command: 'app:zoom-reset'
@@ -121,12 +132,12 @@ es:
         - type: separator
         - label: Modo de pantalla completa
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: Cerrar
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: Desarrollo
       id: dev
       submenu:
@@ -135,8 +146,6 @@ es:
         - label: Alternar las herramienta de desarrollo
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Alternar las herramientas de rendimiento
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Reiniciar la base de datos ontológicos
           command: 'app:reset-ontology-db'
@@ -196,13 +205,13 @@ es:
         - type: separator
         - label: Acerca de %name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
   darwin:
     - label: '%name'
       submenu:
         - label: Acerca de %name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
         - type: separator
         - label: Preferencias…
           accelerator: 'Command+,'
@@ -230,15 +239,18 @@ es:
             - label: Objeto
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Lista
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Etiqueta
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Abrir…
           accelerator: CmdOrCtrl+O
@@ -255,31 +267,33 @@ es:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importar
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Photos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Folder…
               command: 'app:import-directory'
-              condition: project
         - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Exportar
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - label: Imprimir
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Cerrar proyecto
           command: 'app:close-project'
-          condition: project
+          window: project
     - label: Editar
       submenu:
         - id: undo
@@ -302,13 +316,17 @@ es:
         - label: Pegar
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: Seleccionar todo
-          role: selectall
+          role: selectAll
     - label: Ver
       submenu:
         - label: Recargar
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Tamaño real
           command: 'app:zoom-reset'
@@ -322,24 +340,21 @@ es:
         - type: separator
         - label: Modo de pantalla completa
           role: togglefullscreen
-          condition: window
+          window: '*'
     - label: Ventana
       role: window
       submenu:
         - label: Minimizar
           accelerator: Cmd+M
           role: minimize
-          condition: window
+          window: '*'
         - label: Zoom
           accelerator: Ctrl+Cmd+Z
           role: zoom
-        - label: Centrar
-          command: 'app:center-window'
-          condition: window
         - type: separator
         - label: Centrar
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Poner en primer plano
           role: front
@@ -347,7 +362,7 @@ es:
         - label: Cerrar
           accelerator: Cmd+W
           role: close
-          condition: window
+          window: '*'
     - label: Desarrollo
       id: dev
       submenu:
@@ -356,8 +371,6 @@ es:
         - label: Alternar las herramienta de desarrollo
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Alternar las herramientas de rendimiento
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Reiniciar la base de datos ontológicos
           command: 'app:reset-ontology-db'
@@ -427,15 +440,18 @@ es:
             - label: Objeto
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Lista
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Etiqueta
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Abrir…
           accelerator: CmdOrCtrl+O
@@ -452,36 +468,39 @@ es:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importar
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Photos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Folder…
               command: 'app:import-directory'
-              condition: project
         - label: Exportar
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: Consolidar fototeca
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Imprimir
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Cerrar proyecto
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: Cerrar ventana
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: Salir de %name
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -507,6 +526,9 @@ es:
         - label: Pegar
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: Preferencias…
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
@@ -515,12 +537,14 @@ es:
         - label: Recargar
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Alternar la barra de menú
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: Centrar
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Tamaño real
           command: 'app:zoom-reset'
@@ -534,12 +558,12 @@ es:
         - type: separator
         - label: Modo de pantalla completa
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: Cerrar
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: Desarrollo
       id: dev
       submenu:
@@ -548,8 +572,6 @@ es:
         - label: Alternar las herramienta de desarrollo
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Alternar las herramientas de rendimiento
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Reiniciar la base de datos ontológicos
           command: 'app:reset-ontology-db'
@@ -609,4 +631,4 @@ es:
         - type: separator
         - label: Acerca de %name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'

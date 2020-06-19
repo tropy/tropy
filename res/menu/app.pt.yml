@@ -11,15 +11,18 @@ pt:
             - label: Item
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Lista
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Etiqueta
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Abrir...
           accelerator: CmdOrCtrl+O
@@ -36,36 +39,39 @@ pt:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importar
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Fotos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Pasta…
               command: 'app:import-directory'
-              condition: project
         - label: Exportar
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: Consolidar Fototeca
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Imprimir
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Fechar Projeto
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: Fechar Janela
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: Sair do %name
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -91,8 +97,11 @@ pt:
         - label: Colar
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: Selecionar Tudo
-          role: selectall
+          role: selectAll
         - type: separator
         - label: Preferências
           accelerator: Shift+Control+S
@@ -102,12 +111,14 @@ pt:
         - label: Recarregar
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Esconder Barra de Menu
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: Centrar
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Dimensão Real
           command: 'app:zoom-reset'
@@ -121,12 +132,12 @@ pt:
         - type: separator
         - label: Ecrã Completo
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: Fechar
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: Desenvolvimento
       id: dev
       submenu:
@@ -135,8 +146,6 @@ pt:
         - label: Ferramentas de Desenvolvimento
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Ferramentas de Desempenho
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Repor a Base de Dados Ontológica
           command: 'app:reset-ontology-db'
@@ -196,13 +205,13 @@ pt:
         - type: separator
         - label: Sobre %name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
   darwin:
     - label: '%name'
       submenu:
         - label: Sobre %name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'
         - type: separator
         - label: Preferências
           accelerator: 'Command+,'
@@ -230,15 +239,18 @@ pt:
             - label: Item
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Lista
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Etiqueta
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Abrir...
           accelerator: CmdOrCtrl+O
@@ -255,31 +267,33 @@ pt:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importar
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Fotos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Pasta…
               command: 'app:import-directory'
-              condition: project
         - label: Consolidar Fototeca
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Exportar
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - label: Imprimir
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Fechar Projeto
           command: 'app:close-project'
-          condition: project
+          window: project
     - label: Editar
       submenu:
         - id: undo
@@ -302,13 +316,17 @@ pt:
         - label: Colar
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: Selecionar Tudo
-          role: selectall
+          role: selectAll
     - label: Ver
       submenu:
         - label: Recarregar
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Dimensão Real
           command: 'app:zoom-reset'
@@ -322,24 +340,21 @@ pt:
         - type: separator
         - label: Modo Ecrã Completo
           role: togglefullscreen
-          condition: window
+          window: '*'
     - label: Janela
       role: window
       submenu:
         - label: Minimizar
           accelerator: Cmd+M
           role: minimize
-          condition: window
+          window: '*'
         - label: Zoom
           accelerator: Ctrl+Cmd+Z
           role: zoom
-        - label: Centrar
-          command: 'app:center-window'
-          condition: window
         - type: separator
         - label: Centrar
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Trazer Tudo para a Frente
           role: front
@@ -347,7 +362,7 @@ pt:
         - label: Fechar
           accelerator: Cmd+W
           role: close
-          condition: window
+          window: '*'
     - label: Desenvolvimento
       id: dev
       submenu:
@@ -356,8 +371,6 @@ pt:
         - label: Ferramentas de Desenvolvimento
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Ferramentas de Desempenho
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Repor a Base de Dados Ontológica
           command: 'app:reset-ontology-db'
@@ -427,15 +440,18 @@ pt:
             - label: Item
               command: 'app:create-item'
               accelerator: CmdOrCtrl+Shift+N
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Lista
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
             - label: Etiqueta
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
-              condition: project
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Abrir...
           accelerator: CmdOrCtrl+O
@@ -452,36 +468,39 @@ pt:
               command: 'app:clear-recent-projects'
         - type: separator
         - label: Importar
+          window: project
+          condition: '!isProjectReadOnly'
           submenu:
             - label: Fotos…
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-              condition: project
             - label: Pasta…
               command: 'app:import-directory'
-              condition: project
         - label: Exportar
           id: export
+          window: project
           submenu:
             - label: JSON-LD
               command: 'app:export-item'
         - type: separator
         - label: Consolidar Fototeca
           command: 'app:consolidate-photo-library'
-          condition: project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Imprimir
           command: 'app:print'
           accelerator: CmdOrCtrl+P
-          condition: project
+          window: project
         - type: separator
         - label: Fechar Projeto
           command: 'app:close-project'
-          condition: project
+          window: project
         - type: separator
         - label: Fechar Janela
           accelerator: Ctrl+W
           role: close
+          window: '*'
         - label: Sair do %name
           accelerator: CmdOrCtrl+Q
           role: quit
@@ -507,6 +526,9 @@ pt:
         - label: Colar
           accelerator: CmdOrCtrl+V
           role: paste
+        - label: Paste and Match Style
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
         - label: Preferências
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
@@ -515,12 +537,14 @@ pt:
         - label: Recarregar
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
+          window: '*'
         - type: separator
         - label: Alternar Barra de Menu
           command: 'app:toggle-menu-bar'
+          window: '*'
         - label: Centrar
           command: 'app:center-window'
-          condition: window
+          window: '*'
         - type: separator
         - label: Dimensão Real
           command: 'app:zoom-reset'
@@ -534,12 +558,12 @@ pt:
         - type: separator
         - label: Modo Ecrã Completo
           role: togglefullscreen
-          condition: window
+          window: '*'
         - type: separator
         - label: Fechar
           accelerator: Ctrl+W
           role: close
-          condition: window
+          window: '*'
     - label: Desenvolvimento
       id: dev
       submenu:
@@ -548,8 +572,6 @@ pt:
         - label: Ferramentas de Desenvolvimento
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Ferramentas de Desempenho
-          command: 'win:toggle-perf-tools'
         - type: separator
         - label: Repor a Base de Dados Ontológica
           command: 'app:reset-ontology-db'
@@ -609,4 +631,4 @@ pt:
         - type: separator
         - label: Sobre %name
           command: 'app:about'
-          condition: '!prefs'
+          window: '!prefs'

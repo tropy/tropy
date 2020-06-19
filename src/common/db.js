@@ -52,9 +52,10 @@ class Database extends EventEmitter {
     super()
 
     this.path = path
+    this.mode = mode
 
     this.pool = createPool({
-      create: () => this.create(mode),
+      create: () => this.create(),
       destroy: (conn) => this.destroy(conn)
     }, {
       min: 0,
@@ -81,9 +82,13 @@ class Database extends EventEmitter {
     return this.pool.size - this.pool.available
   }
 
-  create(mode) {
+  get isReadOnly() {
+    return this.mode === 'r'
+  }
+
+  create(mode = this.mode) {
     return new Promise((resolve, reject) => {
-      info(`open db ${this.path}`)
+      info({ mode }, `open db ${this.path}`)
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
         if (error) {
@@ -95,6 +100,10 @@ class Database extends EventEmitter {
           .configure()
           .tap(() => this.emit('create'))
           .then(resolve, reject)
+      })
+
+      db.on('error', (error) => {
+        this.emit('error', error)
       })
 
       db.on('profile', (query, ms) => {
@@ -124,8 +133,8 @@ class Database extends EventEmitter {
   }
 
   acquire(opts = {}) {
-    return this.pool.acquire().disposer(conn =>
-      this.release(conn, opts.destroy))
+    return this.pool.acquire()
+      .disposer(conn => this.release(conn, opts.destroy))
   }
 
   release(conn, destroy = false) {
@@ -160,6 +169,15 @@ class Database extends EventEmitter {
 
   seq = (fn, opts) =>
     using(this.acquire(opts), fn)
+      .catch(this.handleConnectionError)
+
+  handleConnectionError = (e) => {
+    if (e.code === 'SQLITE_READONLY') {
+      this.mode = 'r'
+      this.emit('error', e)
+    }
+    throw e
+  }
 
   transaction = (fn) =>
     this.seq(conn => using(transaction(conn), fn))
@@ -244,8 +262,9 @@ class Connection {
     return this.exec('PRAGMA optimize;')
   }
 
-  close() {
-    return this.db.closeAsync()
+  async close() {
+    await this.db.closeAsync()
+    this.db.removeAllListeners()
   }
 
   parallelize(...args) {
