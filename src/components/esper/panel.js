@@ -117,8 +117,8 @@ export const EsperPanel = (props) => {
         <ColorSlider
           icon={<IconSharpen/>}
           isDisabled={props.isDisabled || !props.isVisible}
-          min={-127}
-          max={127}
+          min={-100}
+          max={100}
           tabIndex={TABS.EsperPanel}
           type="aBalance"
           value={props.aBalance}
@@ -126,8 +126,8 @@ export const EsperPanel = (props) => {
         <ColorSlider
           icon={<IconSharpen/>}
           isDisabled={props.isDisabled || !props.isVisible}
-          min={-127}
-          max={127}
+          min={-100}
+          max={100}
           tabIndex={TABS.EsperPanel}
           type="bBalance"
           value={props.bBalance}
