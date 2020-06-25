@@ -5,6 +5,8 @@ uniform sampler2D uSampler;
 uniform float a;
 uniform float b;
 
+const float PI = 3.1415926535897932384626433832795;
+
 vec3 rgb2xyz(vec3 c) {
 	vec3 tmp = vec3(
 		(c.r > .04045) ? pow((c.r + .055) / 1.055, 2.4) : c.r / 12.92,
@@ -80,7 +82,8 @@ void main(void) {
 
   if (a != 0. || b != 0.) {
     vec3 lab = rgb2lab(rgb);
-    rgb = lab2rgb(vec3(lab.x, lab.y + a, lab.z + b));
+    float boost = sin(lab.x * PI);
+    rgb = lab2rgb(vec3(lab.x, lab.y + a * boost, lab.z + b * boost));
   }
 
   gl_FragColor = vec4(rgb, pix.a);
