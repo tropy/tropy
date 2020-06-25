@@ -33,10 +33,10 @@ export class Photo extends Container {
     this.addChild(this.bg)
 
     this.bg.filters = [
+      new BalanceFilter(),
       new AdjustmentFilter(),
       new SharpenFilter(0, width, height),
-      new ColorMatrixFilter(),
-      new BalanceFilter()
+      new ColorMatrixFilter()
     ]
 
     this.current = {}
@@ -51,7 +51,7 @@ export class Photo extends Container {
   }
 
   get adjust() {
-    return this.bg.filters[0]
+    return this.bg.filters[1]
   }
 
   get angle() {
@@ -59,7 +59,7 @@ export class Photo extends Container {
   }
 
   get colors() {
-    return this.bg.filters[2]
+    return this.bg.filters[3]
   }
 
   get mirror() {
@@ -150,14 +150,14 @@ export class Photo extends Container {
   }
 
   filter({
-    aBalance = 0,
-    bBalance = 0,
     brightness = 0,
     contrast = 0,
     hue = 0,
     negative = false,
     saturation = 0,
-    sharpen = 0
+    sharpen = 0,
+    temperature = 0,
+    tint = 0
   } = {}) {
     this.brightness(brightness)
     this.current.brightness = brightness
@@ -171,13 +171,13 @@ export class Photo extends Container {
     this.current.saturation = saturation
     this.sharpen(sharpen)
     this.current.sharpen = sharpen
-    this.balance(aBalance, bBalance)
-    this.current.aBalance = aBalance
-    this.current.bBalance = bBalance
+    this.balance(tint, temperature)
+    this.current.tint = tint
+    this.current.temperature = temperature
   }
 
   balance(a = 0, b = 0) {
-    this.bg.filters[3].set(a, b)
+    this.bg.filters[0].set(a, b)
   }
 
   brightness(value = 0) {
@@ -227,7 +227,7 @@ export class Photo extends Container {
   }
 
   sharpen(intensity = 0) {
-    this.bg.filters[1].intensity = intensity
+    this.bg.filters[2].intensity = intensity
     return this
   }
 
