@@ -7,7 +7,7 @@ const FRAG = Shader.load('balance.frag')
 
 export class BalanceFilter extends Filter {
   #max = 100
-  #min = 100
+  #min = -100
   #precision = 0.0032
 
   constructor(a = 0, b = 0) {
