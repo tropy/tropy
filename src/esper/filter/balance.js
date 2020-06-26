@@ -8,7 +8,7 @@ const FRAG = Shader.load('balance.frag')
 export class BalanceFilter extends Filter {
   #max = 100
   #min = -100
-  #precision = 0.0032
+  #precision = 0.0016
 
   constructor(a = 0, b = 0) {
     super(undefined, FRAG)
@@ -28,8 +28,13 @@ export class BalanceFilter extends Filter {
     return this.uniforms.b
   }
 
+  get c() {
+    return this.uniforms.c
+  }
+
   set b(value) {
     this.uniforms.b = this.restrict(value)
+    this.uniforms.c = this.uniforms.b * (0.3 / (this.#precision * this.#max))
   }
 
   set(a, b) {
