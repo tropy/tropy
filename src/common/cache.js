@@ -125,30 +125,27 @@ class Cache {
     return [...basename(path, ext).split('_', 2), ext]
   }
 
-  static url(root, variant, {
-    id,
-    mimetype,
-    page,
-    path,
-    protocol,
-    consolidated
-  }) {
+  static url(root, variant, { id, path, ...photo }) {
     if  (id == null || variant == null)
       return null
 
-    if (
-        (page > 0) ||
-        (variant !== 'full') ||   // Thumbnail
-        (protocol !== 'file') ||  // Remote
-        !IMAGE.WEB[mimetype]      // Not supported natively
-    ) {
-      path = join(root, Cache.path(id, variant, Cache.extname(mimetype)))
+    if (Cache.isCacheVariant(variant, photo)) {
+      path = join(root, Cache.path(id, variant, Cache.extname(photo.mimetype)))
     }
 
-    if (consolidated)
-      return `file://${URI.encode(path)}?c=${consolidated}`
+    if (photo.consolidated)
+      return `file://${URI.encode(path)}?c=${photo.consolidated}`
     else
       return `file://${URI.encode(path)}`
+  }
+
+  static isCacheVariant(variant, photo) {
+    return (
+      (photo.page > 0) ||             // Multi-page
+      (variant !== 'full') ||         // Thumbnail
+      (photo.protocol !== 'file') ||  // Remote
+      !IMAGE.WEB[photo.mimetype]      // Not supported natively
+    )
   }
 }
 
