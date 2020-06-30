@@ -166,7 +166,8 @@ class Esper extends EventEmitter {
       // The first sync must not override other syncs, coming
       // in while the photo is still loading.
       let tmp = this.photo = new Photo({
-        ...props.photo,
+        width: state.width,
+        height: state.height,
         resolution: this.resolution
       })
 
@@ -202,7 +203,7 @@ class Esper extends EventEmitter {
     photo.sync(props, state)
 
     let next = {
-      pivot: center(props.selection || props.photo),
+      pivot: center(props.selection || state),
       rotation: rad(angle),
       x,
       y,

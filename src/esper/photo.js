@@ -229,9 +229,10 @@ class Photo extends Container {
   }
 
   sync(props, state = {}) {
-    let image = props.selection || props.photo
-    this.#width = image.width
-    this.#height = image.height
+    let { width, height } = props.selection || state
+
+    this.#width = width
+    this.#height = height
 
     this.selections.sync(props, state)
     this.overlay.sync(props, state)

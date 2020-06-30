@@ -67,6 +67,8 @@ class EsperContainer extends React.Component {
     zoomToFill: EsperContainer.defaultProps.minZoom,
 
     // Derived from photo/selection
+    width: 0,
+    height: 0,
     ...EsperContainer.defaultImageProps
   }
 
@@ -763,7 +765,7 @@ const getZoomBounds = (props, state, screen = {}) => {
   let minZoom = props.minZoom / Esper.devicePixelRatio
   let zoom = state.zoom
   let zoomToFill = minZoom
-  let image = props.selection || props.photo
+  let image = props.selection || state
 
   if (image) {
     let { width, height } = image
@@ -799,11 +801,46 @@ const getZoomToFit =
       Math.min(minZoom, Math.min(width / w, height / h)),
       ZOOM_PRECISION)
 
-const addOrientation = (...args) =>
-  Rotation.addExifOrientation(...args).toJSON()
 
-const subOrientation = (...args) =>
-  Rotation.subExifOrientation(...args).toJSON()
+// Because the image orientation is broken in WebGL we rely on a bug
+// in Chromium 83 which does not yet apply orientation on ImageBitmap.
+// Esper will always load ImageBitmaps and here we assume images are
+// always un-oriented. This hack will not work in Chromium 84 and later
+// but we can remove this hack only once the WebGL issues are resolved!
+const IMAGE_BITMAP_HACK = true
+
+const addOrientation = (state, photo) => {
+  let { width, height } = photo
+  let rot = Rotation.fromExifOrientation(photo.orientation)
+
+  // Chromium 81+ automatically applies image orientation.
+  // Our cached variants are saved without metadata so they will *not*
+  // be oriented automatically and, therefore, we need to handle the
+  // angle and mirror properties differently in each case.
+
+  // When using cache variants, use original aspect ratio and add
+  // orientation to image state.
+  if (IMAGE_BITMAP_HACK || Cache.isCacheVariant('full', photo))
+    return { ...rot.add(state).toJSON(), width, height }
+
+  // Otherwise use image state, but adjust aspect ratio if necessary.
+  let { angle, mirror } = state
+
+  if (!rot.isHorizontal) {
+    width = photo.height
+    height = photo.width
+  }
+
+  return { angle, mirror, width, height }
+}
+
+const subOrientation = (state, photo) => {
+  if (IMAGE_BITMAP_HACK || Cache.isCacheVariant('full', photo))
+    return Rotation.subExifOrientation(state, photo).toJSON()
+  else
+    return pick(state, ['angle', 'mirror'])
+}
+
 
 module.exports = {
   EsperContainer
