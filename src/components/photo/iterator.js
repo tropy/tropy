@@ -373,7 +373,7 @@ const DropTargetSpec = {
       case DND.PHOTO:
         return photos.length > 1
       case DND.FILE:
-        return canCreate && !hasPhotoFiles(monitor)
+        return canCreate && hasPhotoFiles(monitor)
       case DND.URL:
         return canCreate
       default:
