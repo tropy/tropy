@@ -36,9 +36,10 @@ const html = name => (
     // DevTools Extensions currently require 'unsafe-inline'; adding the
     // digest temporarily to see if that is a stable workaround.
     "script-src 'sha256-++gna1tMQ08GGn4M8jnPXPgLA3Il1y2LY+JVA4NpYKk='",
+    "worker-src 'self'",
     "style-src 'self' 'unsafe-inline'",
     'img-src * data:',
-    'connect-src http: https:',
+    "connect-src 'self' http: https:",
     "form-action 'none'"
   ].join('; ')}">
 </head>
