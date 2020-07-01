@@ -121,6 +121,13 @@ const view = {
   }
 }
 
+const worker = {
+  base: join(Resource.base, 'workers'),
+
+  expand(name) {
+    return join(worker.base, `${name}.js`)
+  }
+}
 
 module.exports = {
   Resource,
@@ -129,5 +136,6 @@ module.exports = {
   Strings,
   KeyMap,
   icon,
-  view
+  view,
+  worker
 }
