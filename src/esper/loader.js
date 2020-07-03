@@ -77,13 +77,16 @@ class Loader extends EventEmitter {
       let source = new ImageBitmapResource(bitmap)
 
       texture =  new Texture(new BaseTexture(source))
-
-      texture.cacheId = url
-      BaseTexture.addToCache(texture.baseTexture, url)
-      Texture.addToCache(texture, url)
+      this.addToCache(texture, url)
     }
 
     return texture
+  }
+
+  addToCache(texture, url) {
+    texture.cacheId = url
+    BaseTexture.addToCache(texture.baseTexture, url)
+    Texture.addToCache(texture, url)
   }
 }
 

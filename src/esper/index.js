@@ -94,6 +94,8 @@ class Esper extends EventEmitter {
   }
 
   destroy() {
+    this.clear()
+
     this.tweens.removeAll()
     this.stop.flush()
 
@@ -157,13 +159,23 @@ class Esper extends EventEmitter {
     }
   }
 
-  clear(duration = 0) {
-    this.fadeOut(this.photo, duration)
+  clear(duration = 0, gc = true) {
+    let { photo } = this
+
+    if (duration)
+      this.fadeOut(photo, duration)
+    else
+      photo?.destroy()
+
     this.photo = null
+
+    if (gc) {
+      PIXI.utils.destroyTextureCache()
+    }
   }
 
   async reset(props, state) {
-    this.clear(FADE_DURATION)
+    this.clear(FADE_DURATION, false)
 
     if (state.src != null) {
       // Subtle: avoid race conditions because of async loading!
