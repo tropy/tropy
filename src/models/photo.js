@@ -34,6 +34,8 @@ async function load(db, ids, { base } = {}) {
           hue,
           saturation,
           sharpen,
+          temperature,
+          tint,
           width,
           height,
           path,
@@ -145,6 +147,7 @@ export default {
   },
 
   load,
+
   find(db, { checksum }) {
     return db.get(`
       SELECT p.id, item_id AS item

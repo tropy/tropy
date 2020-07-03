@@ -23,6 +23,8 @@ async function load(db, ids) {
           hue,
           saturation,
           sharpen,
+          temperature,
+          tint,
           template,
           datetime(created, "localtime") AS created,
           datetime(modified, "localtime") AS modified
