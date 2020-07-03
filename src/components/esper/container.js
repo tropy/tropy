@@ -129,6 +129,8 @@ class EsperContainer extends React.Component {
   // duplicates of all image props.
 
   shouldComponentUpdate(nextProps, nextState) {
+    if (!nextState.isVisible)
+      return true
     if (this.state.src !== nextState.src)
       return true // view going to reset anyway!
     if (this.state.id !== nextState.id)
@@ -205,23 +207,32 @@ class EsperContainer extends React.Component {
     let shouldViewReset = this.state.src !== prevState.src
     let shouldViewSync = this.state.id !== prevState.id
 
-    if (shouldViewReset || shouldViewSync) {
-      let next = getZoomBounds(this.props, this.state, this.screen)
-      let state = { ...this.state, ...next }
+    if (this.state.isVisible) {
+      shouldViewReset = shouldViewReset || !prevState.isVisible
 
-      this.setState(next)
+      if (shouldViewReset || shouldViewSync) {
+        let next = getZoomBounds(this.props, this.state, this.screen)
+        let state = { ...this.state, ...next }
 
-      if (shouldViewReset)
-        this.esper.reset(this.props, state)
-      else
-        this.esper.sync(this.props, state)
+        this.setState(next)
 
+        if (shouldViewReset)
+          this.esper.reset(this.props, state)
+        else
+          this.esper.sync(this.props, state)
+
+
+      } else {
+        if (this.props.selections !== prevProps.selections ||
+          this.tool !== getActiveTool(prevProps, prevState)
+        ) {
+          this.esper.photo?.sync(this.props, this.state)
+        }
+      }
 
     } else {
-      if (this.props.selections !== prevProps.selections ||
-        this.tool !== getActiveTool(prevProps, prevState)
-      ) {
-        this.esper.photo?.sync(this.props, this.state)
+      if (shouldViewReset) {
+        this.esper.clear()
       }
     }
   }

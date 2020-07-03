@@ -157,9 +157,13 @@ class Esper extends EventEmitter {
     }
   }
 
-  async reset(props, state) {
-    this.fadeOut(this.photo)
+  clear(duration = 0) {
+    this.fadeOut(this.photo, duration)
     this.photo = null
+  }
+
+  async reset(props, state) {
+    this.clear(FADE_DURATION)
 
     if (state.src != null) {
       // Subtle: avoid race conditions because of async loading!
