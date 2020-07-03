@@ -159,7 +159,7 @@ class Input extends React.PureComponent {
     let opt = null
     let completions = this.completions.current
 
-    if (completions == null)
+    if (!completions?.isVisible)
       return false
 
     switch (event.key) {
