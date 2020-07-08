@@ -174,6 +174,19 @@ class Esper extends EventEmitter {
     }
   }
 
+  clearTextureCache = debounce((current, keep = 0) => {
+    let keys = Object.keys(PIXI.utils.TextureCache)
+
+    if  (keep) {
+      keys = keys.slice(0, -keep)
+    }
+
+    for (let key of keys) {
+      if  (key !== current)
+        PIXI.utils.TextureCache[key].destroy(true)
+    }
+  }, 1000)
+
   async reset(props, state) {
     this.clear(FADE_DURATION, false)
 
@@ -198,6 +211,8 @@ class Esper extends EventEmitter {
         this.photo.bg.texture =  texture
         this.photo.interactive = true
         this.photo.on('mousedown', this.handleMouseDown)
+
+        this.clearTextureCache(state.src, 5)
 
       } catch (e) {
         warn({ stack: e.stack }, `esper: failed loading ${state.src}`)
