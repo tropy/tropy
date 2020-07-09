@@ -287,7 +287,7 @@ cn:
     photo-read-only:
       - label: 显示文件位置
         command: 'app:show-in-folder'
-      - label: Export Photo…
+      - label: 导出图片
         command: 'app:extract-photo'
       - label: 检查图片
         command: 'app:consolidate-photo'
@@ -302,7 +302,7 @@ cn:
       - label: 删除选中项
         command: 'app:delete-selection'
     selection-read-only:
-      - label: Export Selection …
+      - label: 导出选择项
         command: 'app:extract-photo'
     selection-rotate:
       - label: 顺时针90度
@@ -672,7 +672,7 @@ cn:
     photo-read-only:
       - label: 显示文件位置
         command: 'app:show-in-folder'
-      - label: Export Photo…
+      - label: 导出图片
         command: 'app:extract-photo'
       - label: 检查图片
         command: 'app:consolidate-photo'
@@ -687,7 +687,7 @@ cn:
       - label: 删除选中项
         command: 'app:delete-selection'
     selection-read-only:
-      - label: Export Selection …
+      - label: 导出选择项
         command: 'app:extract-photo'
     selection-rotate:
       - label: 顺时针90度
@@ -1026,7 +1026,7 @@ cn:
     photo-read-only:
       - label: 显示文件位置
         command: 'app:show-in-folder'
-      - label: Export Photo…
+      - label: 导出图片
         command: 'app:extract-photo'
       - label: 检查图片
         command: 'app:consolidate-photo'
@@ -1041,7 +1041,7 @@ cn:
       - label: 删除选中项
         command: 'app:delete-selection'
     selection-read-only:
-      - label: Export Selection …
+      - label: 导出选择项
         command: 'app:extract-photo'
     selection-rotate:
       - label: 顺时针90度

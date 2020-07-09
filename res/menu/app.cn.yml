@@ -97,13 +97,13 @@ cn:
         - label: 粘贴
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: 粘贴和匹配样式
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: 全选
           role: selectAll
         - type: separator
-        - label: Preferences…
+        - label: 偏好设置
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
     - label: 视图
@@ -143,17 +143,17 @@ cn:
       submenu:
         - label: 刷新皮肤
           command: 'win:refresh'
-        - label: Toggle &Developer Tools
+        - label: 切换开发人员工具
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Reset Ontology Database
+        - label: 重置数据库
           command: 'app:reset-ontology-db'
-        - label: Optimize Project Caches
+        - label: 优化缓存
           command: 'app:optimize-cache'
-        - label: Optimize Project Database
+        - label: 优化数据库
           command: 'app:optimize-project'
-        - label: Reindex Project Database
+        - label: 重新索引数据库
           command: 'app:reindex-project'
         - type: separator
         - label: Rebase Project
@@ -175,9 +175,9 @@ cn:
       submenu:
         - label: 使用引导
           command: 'app:open-docs'
-        - label: Support Forums
+        - label: 支持论坛
           command: 'app:open-forums'
-        - label: Software License
+        - label: 软件许可证
           command: 'app:open-license'
         - type: separator
         - label: 软件运行日志
@@ -186,7 +186,7 @@ cn:
           command: 'app:open-plugins-folder'
         - label: 运行日志
           command: 'app:open-user-data'
-        - label: Show Cache Folder
+        - label: 打开缓存文件夹
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
@@ -194,7 +194,7 @@ cn:
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: Fetching Latest Updates…
+          label: 获取最新版本
           enabled: false
           visible: false
         - id: updater-install
@@ -213,17 +213,17 @@ cn:
           command: 'app:about'
           window: '!prefs'
         - type: separator
-        - label: Preferences…
+        - label: 偏好设置
           accelerator: 'Command+,'
           command: 'app:open-preferences'
         - type: separator
-        - label: Hide %name
+        - label: 隐藏 %name
           accelerator: Command+H
           role: hide
-        - label: Hide Others
+        - label: 隐藏其他
           accelerator: Command+Shift+H
           role: hideothers
-        - label: Show All
+        - label: 全部显示
           role: unhide
         - type: separator
         - label: 退出 %name
@@ -294,7 +294,7 @@ cn:
         - label: 关闭项目
           command: 'app:close-project'
           window: project
-    - label: Edit
+    - label: 编辑
       submenu:
         - id: undo
           label: 撤销
@@ -316,12 +316,12 @@ cn:
         - label: 粘贴
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: 粘贴和匹配样式
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: 全选
           role: selectAll
-    - label: View
+    - label: 视图
       submenu:
         - label: 重载
           accelerator: CmdOrCtrl+R
@@ -341,10 +341,10 @@ cn:
         - label: 全屏
           role: togglefullscreen
           window: '*'
-    - label: Window
+    - label: 窗口
       role: window
       submenu:
-        - label: Minimize
+        - label: 最小化
           accelerator: Cmd+M
           role: minimize
           window: '*'
@@ -368,17 +368,17 @@ cn:
       submenu:
         - label: 重载皮肤
           command: 'win:refresh'
-        - label: Toggle &Developer Tools
+        - label: 切换开发人员工具
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Reset Ontology Database
+        - label: 重置数据库
           command: 'app:reset-ontology-db'
-        - label: Optimize Project Caches
+        - label: 优化项目缓存
           command: 'app:optimize-cache'
-        - label: Optimize Project Database
+        - label: 优化数据库
           command: 'app:optimize-project'
-        - label: Reindex Project Database
+        - label: 重新索引数据库
           command: 'app:reindex-project'
         - type: separator
         - label: Rebase Project
@@ -401,9 +401,9 @@ cn:
       submenu:
         - label: 使用引导
           command: 'app:open-docs'
-        - label: Support Forums
+        - label: 支持论坛
           command: 'app:open-forums'
-        - label: Software License
+        - label: 软件许可证
           command: 'app:open-license'
         - type: separator
         - label: 软件运行日志
@@ -412,7 +412,7 @@ cn:
           command: 'app:open-plugins-folder'
         - label: 运行日志
           command: 'app:open-user-data'
-        - label: Show Cache Folder
+        - label: 打开缓存文件夹
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
@@ -420,7 +420,7 @@ cn:
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: Fetching Latest Updates…
+          label: 获取最新版本
           enabled: false
           visible: false
         - id: updater-install
@@ -526,10 +526,10 @@ cn:
         - label: 粘贴
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: 粘贴和匹配样式
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
-        - label: Preferences…
+        - label: 偏好设置
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
     - label: 视图
@@ -569,17 +569,17 @@ cn:
       submenu:
         - label: 重载皮肤
           command: 'win:refresh'
-        - label: Toggle &Developer Tools
+        - label: 切换开发人员工具
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Reset Ontology Database
+        - label: 重置数据库
           command: 'app:reset-ontology-db'
-        - label: Optimize Project Caches
+        - label: 优化项目缓存
           command: 'app:optimize-cache'
-        - label: Optimize Project Database
+        - label: 优化数据库
           command: 'app:optimize-project'
-        - label: Reindex Project Database
+        - label: 重新索引数据库
           command: 'app:reindex-project'
         - type: separator
         - label: Rebase Project
@@ -601,9 +601,9 @@ cn:
       submenu:
         - label: 使用引导
           command: 'app:open-docs'
-        - label: Support Forums
+        - label: 支持论坛
           command: 'app:open-forums'
-        - label: Software License
+        - label: 软件许可证
           command: 'app:open-license'
         - type: separator
         - label: 软件运行日志
@@ -612,7 +612,7 @@ cn:
           command: 'app:open-plugins-folder'
         - label: 运行日志
           command: 'app:open-user-data'
-        - label: Show Cache Folder
+        - label: 打开缓存文件夹
           command: 'app:open-cache-folder'
         - type: separator
         - id: updater-check
@@ -620,7 +620,7 @@ cn:
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: Fetching Latest Updates…
+          label: 获取最新版本
           enabled: false
           visible: false
         - id: updater-install

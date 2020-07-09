@@ -5,7 +5,7 @@ cn:
     imports: 最近导入
     trash: 删除文件
   toolbar:
-    import: 导出图片
+    import: 导入图片
     items: |
       {count, plural,
       =0 {No items in this view}
@@ -43,9 +43,9 @@ cn:
     note:
       title: |
         {count, plural,
-          =0 {No Notes}
-          one {1 Note}
-          other {# Notes}}
+        =0 {No Notes}
+        one {1 Note}
+        other {# Notes}}
       create: 添加笔记
   print:
     item: 很久
@@ -83,9 +83,8 @@ cn:
     recent: 最近的项目
     corrupted: |
       您的项目文件可能已损坏，需要手动修复。请查阅用户手册以获得进一步的帮助。
-    readOnly: >
-      Your project file is locked and cannot be modified. To unlock, change the
-      file permissions and open the project again.
+    readOnly: |
+      您的项目文件已锁定，无法修改。要解锁，更改文件权限，然后再次打开项目。
   wizard:
     project:
       title: 新建项目
@@ -120,7 +119,7 @@ cn:
         photos: 包含图片
         metadata: 包含元数据
         notes: 包含笔记
-        onlyNotes: Include only photos with notes
+        onlyNotes: 仅包含带有注释的照片
         overflow: Allow content to take up more than one page
       locale:
         locale: 默认
@@ -139,7 +138,7 @@ cn:
         photo: 图片
         selection: 选中文件
       title:
-        label: 导出文件且命名
+        label: 导入文件且命名
         force: 覆盖嵌入的照片元数据
       debug: Enable Developer Mode
       localtime: 设定Exif时间戳使用本地时区
@@ -380,7 +379,7 @@ cn:
       implode: 合并文件
       merge: 合并文件
       split: 拆分文件组
-      import: 导出文件
+      import: 导入文件
       restore: 恢复文件组
       save: 保存文件
       tag:
@@ -390,7 +389,7 @@ cn:
     metadata:
       save: 保存元数据
     ontology:
-      import: 导出 Vocabularies
+      import: 导入 Vocabularies
       vocab:
         save: 保存 Vocabulary
       label:
@@ -500,7 +499,7 @@ cn:
       order: 正在排序图片...
       save: 正在保存图片...
       restore: 正在恢复图片...
-      extract: Extracting photo …
+      extract: 正在提取照片...
     note:
       create: 新建笔记中...
       delete: 删除笔记中...
@@ -510,12 +509,12 @@ cn:
     selection:
       create: 正在新建图片选择...
       load: 正在加载图片选择...
-      extract: Extracting selection …
+      extract: 正在提取选中项
     api:
       photo:
-        extract: Extracting photo …
+        extract: 正在提取照片...
       selection:
-        extract: Extracting selection …
+        extract: 正在提取选中项
   editor:
     commands:
       bold: 加粗
@@ -530,8 +529,8 @@ cn:
       ul: 插入项目符号列表
       link:
         button: 切换链接
-        target: Link target
-        title: Link title
+        target: 链接目标
+        title: 链接标题
       left: 左对齐
       center: 居中对齐
       right: 右对齐
@@ -561,14 +560,14 @@ cn:
         add: 无法添加图片到列表。
     photo:
       consolidate: 无法检查图片。
-      create: 无法导出图片。
+      create: 无法导入图片。
       save: 无法保存图片。
-      extract: Failed to export photo.
+      extract: 导出图片失败
       template:
         change: 无法更改照片模板。
     selection:
       create: 无法创建照片选择。
-      extract: Failed to export selection.
+      extract: 导出选中项失败
       template:
         change: 未能更改选择模板。
     ontology:
