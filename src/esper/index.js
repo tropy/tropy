@@ -5,11 +5,12 @@ const PIXI = require('pixi.js-legacy')
 const TWEEN = require('@tweenjs/tween.js')
 const debounce = require('lodash.debounce')
 const { append, createDragHandler, on, off } = require('../dom')
-const { info } = require('../common/log')
+const { info, warn } = require('../common/log')
 const { isClockwise, isHorizontal, deg, rad } = require('../common/math')
 const { restrict } = require('../common/util')
 const { Photo } = require('./photo')
 const { Selection } = require('./selection')
+const { Loader } = require('./loader')
 const { MODE, TOOL } = require('../constants/esper')
 
 const {
@@ -33,6 +34,7 @@ const {
 
 
 PIXI.settings.RETINA_PREFIX = /@2x!/
+PIXI.settings.STRICT_TEXTURE_CACHE = true
 
 
 class Esper extends EventEmitter {
@@ -79,10 +81,7 @@ class Esper extends EventEmitter {
 
     this.app.ticker.add(this.update)
 
-    this.app.loader.onError.add((e, _, res) =>
-      this.emit('loader.error', e, res?.url))
-    this.app.loader.onLoad.add((...args) =>
-      this.emit('loader.load', ...args))
+    this.loader = new Loader()
 
     this.#rmq.addListener(this.handleDevicePixelRatioChange)
     this.on('change', this.handleResolutionChange)
@@ -95,6 +94,8 @@ class Esper extends EventEmitter {
   }
 
   destroy() {
+    this.clear()
+
     this.tweens.removeAll()
     this.stop.flush()
 
@@ -105,6 +106,7 @@ class Esper extends EventEmitter {
 
     this.#rmq.removeListener(this.handleDevicePixelRatioChange)
 
+    this.loader.destroy()
     this.app.destroy(true, true)
     this.removeAllListeners()
 
@@ -120,11 +122,15 @@ class Esper extends EventEmitter {
 
   extract = async (src, props) => {
     try {
-      let photo = new Photo(props)
+      let photo = new Photo({
+        ...props,
+        resolution: this.resolution
+      })
+
       let { width, height } = props
       let { renderer } = this.app
 
-      photo.bg.texture = await this.load(src)
+      photo.bg.texture = await this.loader.loadTexture(src)
       photo.filter(props)
 
       if (!isHorizontal(props.angle)) {
@@ -153,19 +159,51 @@ class Esper extends EventEmitter {
     }
   }
 
-  async reset(props, state) {
-    this.fadeOut(this.photo)
+  clear(duration = 0, gc = true) {
+    let { photo } = this
+
+    if (duration)
+      this.fadeOut(photo, duration)
+    else
+      photo?.destroy()
+
     this.photo = null
+
+    if (gc) {
+      PIXI.utils.destroyTextureCache()
+    }
+  }
+
+  clearTextureCache = debounce((current, keep = 0) => {
+    let keys = Object.keys(PIXI.utils.TextureCache)
+
+    if  (keep) {
+      keys = keys.slice(0, -keep)
+    }
+
+    for (let key of keys) {
+      if  (key !== current)
+        PIXI.utils.TextureCache[key].destroy(true)
+    }
+  }, 1000)
+
+  async reset(props, state) {
+    this.clear(FADE_DURATION, false)
 
     if (state.src != null) {
       // Subtle: avoid race conditions because of async loading!
       // The first sync must not override other syncs, coming
       // in while the photo is still loading.
-      let tmp = this.photo = new Photo(props.photo)
+      let tmp = this.photo = new Photo({
+        width: state.width,
+        height: state.height,
+        resolution: this.resolution
+      })
+
       this.sync(props, state, 0)
 
       try {
-        let texture = await this.load(state.src)
+        let texture = await this.loader.loadTexture(state.src)
 
         // Subtle: if the view was reset during load, abort!
         if (this.photo !== tmp) return
@@ -174,7 +212,10 @@ class Esper extends EventEmitter {
         this.photo.interactive = true
         this.photo.on('mousedown', this.handleMouseDown)
 
-      } catch (_) {
+        this.clearTextureCache(state.src, 5)
+
+      } catch (e) {
+        warn({ stack: e.stack }, `esper: failed loading ${state.src}`)
         this.emit('photo.error', props.photo)
       }
 
@@ -194,7 +235,7 @@ class Esper extends EventEmitter {
     photo.sync(props, state)
 
     let next = {
-      pivot: center(props.selection || props.photo),
+      pivot: center(props.selection || state),
       rotation: rad(angle),
       x,
       y,
@@ -421,29 +462,6 @@ class Esper extends EventEmitter {
       this.photo.filter(next)
       this.render()
     }
-  }
-
-  load(url) {
-    return new Promise((resolve, reject) => {
-
-      if (PIXI.utils.TextureCache[url]) {
-        return resolve(PIXI.utils.TextureCache[url])
-      }
-
-      this.app.loader
-        .reset()
-        .add(url)
-        .load((_, { [url]: res }) => {
-          if (res == null) return reject()
-          if (res.error) return reject(res.error)
-
-          // Loading typically happens on item open while
-          // the view transition is in progress: this
-          // adds a slight delay but improves the overall
-          // smoothness of the transition!
-          requestIdleCallback(() => resolve(res.texture), { timeout: 500 })
-        })
-    })
   }
 
   move({ x, y, zoom }, {

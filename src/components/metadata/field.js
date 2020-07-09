@@ -142,6 +142,7 @@ class MetadataField extends React.PureComponent {
               getCompletions={getMetadataCompletions}
               display={auto(this.props.text, this.props.type)}
               placeholder={this.props.placeholder}
+              isDisabled={this.props.isDisabled || this.props.isReadOnly}
               isActive={this.props.isEditing}
               isRequired={this.props.isRequired}
               onCancel={this.handleCancel}

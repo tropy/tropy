@@ -81,7 +81,10 @@ module.exports = {
       }
     },
 
-    canDrop(_, monitor) {
+    canDrop({ isReadOnly }, monitor) {
+      if (isReadOnly)
+        return false
+
       switch (monitor.getItemType()) {
         case DND.FILE:
           return hasPhotoFiles(monitor)

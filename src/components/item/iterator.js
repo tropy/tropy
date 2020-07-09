@@ -128,7 +128,7 @@ class ItemIterator extends Iterator {
   }
 
   handleItemCopy(items) {
-    if (!(this.props.isReadOnly || blank(items))) {
+    if (!blank(items)) {
       this.props.onItemExport(items, { target: ':clipboard:' })
     }
   }

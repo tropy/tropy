@@ -4,6 +4,7 @@ const PIXI = require('pixi.js')
 const { Container, Sprite, Rectangle } = PIXI
 const { ColorMatrixFilter } = PIXI.filters
 const { AdjustmentFilter } = require('@pixi/filter-adjustment')
+const Esper = require('.')
 const { SharpenFilter, BalanceFilter } = require('./filter')
 const { SelectionLayer, SelectionOverlay } = require('./selection')
 const { constrain } = require('./util')
@@ -21,7 +22,7 @@ class Photo extends Container {
   #pivot
   #tool = TOOL.ARROW
 
-  constructor({ x = 0, y = 0, width, height }) {
+  constructor({ x = 0, y = 0, width, height, resolution }) {
     super()
 
     this.#width = width
@@ -41,7 +42,7 @@ class Photo extends Container {
 
     this.current = {}
 
-    this.handleResolutionChange()
+    this.handleResolutionChange(resolution)
 
     this.selections = new SelectionLayer()
     this.addChild(this.selections)
@@ -143,9 +144,9 @@ class Photo extends Container {
     this.#pivot = null
   }
 
-  handleResolutionChange(dppx = devicePixelRatio) {
+  handleResolutionChange(resolution = Esper.devicePixelRatio) {
     for (let filter of this.bg.filters) {
-      filter.resolution = dppx
+      filter.resolution = resolution
     }
   }
 
@@ -228,9 +229,10 @@ class Photo extends Container {
   }
 
   sync(props, state = {}) {
-    let image = props.selection || props.photo
-    this.#width = image.width
-    this.#height = image.height
+    let { width, height } = props.selection || state
+
+    this.#width = width
+    this.#height = height
 
     this.selections.sync(props, state)
     this.overlay.sync(props, state)
