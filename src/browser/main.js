@@ -36,13 +36,11 @@ mkdir(opts.cache, { recursive: true })
 app.setPath('userCache', opts.cache)
 
 if (!opts.logs) {
-  try {
-    app.setAppLogsPath()
-    opts.logs = app.getPath('logs')
-  } catch (_) {
-    opts.logs = join(opts.data, 'log')
-  }
+  opts.logs = (darwin) ?
+    app.getPath('logs') :
+    join(opts.data, 'log')
 }
+
 mkdir(opts.logs, { recursive: true })
 app.setPath('logs', opts.logs)
 
