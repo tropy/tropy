@@ -204,7 +204,7 @@ class Esper extends EventEmitter {
       this.sync(props, state, 0)
 
       try {
-        let texture = await this.loader.loadTexture(state.src)
+        let texture = await this.loadTexture(state.src)
 
         // Subtle: if the view was reset during load, abort!
         if (this.photo !== tmp) return
@@ -225,6 +225,16 @@ class Esper extends EventEmitter {
       this.emit('change')
       this.render()
     }
+  }
+
+  loadTexture(url) {
+    return this.loader
+      .loadTexture(url)
+      .then(texture =>
+        new Promise(resolve => {
+          requestIdleCallback(() => resolve(texture), { timeout: 800 })
+        })
+      )
   }
 
   sync(props, state, duration = SYNC_DURATION) {
