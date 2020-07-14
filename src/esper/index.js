@@ -168,6 +168,7 @@ class Esper extends EventEmitter {
       photo?.destroy()
 
     this.photo = null
+    this.render()
 
     if (gc) {
       PIXI.utils.destroyTextureCache()

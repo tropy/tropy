@@ -587,17 +587,20 @@ class EsperContainer extends React.Component {
     this.setState({ hasTabFocus: false })
   }
 
-  handleSlideIn = () => {
-    this.setState({ isVisible: true })
-
-    this.esper.resume()
-  }
+  handleSlideIn = debounce(() => {
+    if (!this.state.isVisible) {
+      this.setState({ isVisible: true })
+      this.esper.resume()
+    }
+  }, 400)
 
   handleSlideOut = () => {
-    this.setState({ isVisible: false })
-
-    this.esper.stop()
-    this.esper.stop.flush()
+    if (this.state.isVisible) {
+      this.handleSlideIn.cancel()
+      this.setState({ isVisible: false })
+      this.esper.stop()
+      this.esper.stop.flush()
+    }
   }
 
   handleResize = throttle(({ width, height }) => {
