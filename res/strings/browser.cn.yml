@@ -32,4 +32,4 @@ cn:
     about:
       title: 关于 Tropy
     project:
-      readOnly: ' — Locked'
+      readOnly: 已锁定

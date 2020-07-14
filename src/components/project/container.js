@@ -9,7 +9,7 @@ const { DND, DropTarget, hasProjectFiles } = require('../dnd')
 const { NoProject } = require('./none')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
-const { emit, on, off, ensure, reflow } = require('../../dom')
+const { emit, on, off, ensure, isInput, reflow } = require('../../dom')
 const cx = require('classnames')
 const { values } = Object
 const actions = require('../../actions')
@@ -168,6 +168,8 @@ class ProjectContainer extends React.Component {
 
   handlePaste = (event) => {
     try {
+      if (isInput(event.target)) return
+
       var text = event.clipboardData.getData('text/plain')
 
       if (text) {

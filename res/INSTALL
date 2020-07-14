@@ -19,7 +19,9 @@ TROPY_PATH (for example, `/opt/tropy`), and start the `tropy` binary there.
 4. Register Tropy's mimetypes:
    cp -r $TROPY_PATH/mime ~/.local/share/
 5. Copy the file `tropy.desktop` file:
-   cp $TROPY_PATH/tropy.desktop ~/.local/applications/
+   cp $TROPY_PATH/tropy.desktop ~/.local/share/applications/
+6. And update MIME cache database:
+   update-desktop-database ~/.local/share/applications/
 
 Updating
 ========

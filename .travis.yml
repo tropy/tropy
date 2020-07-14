@@ -32,7 +32,10 @@ matrix:
             - liborc-0.4-0
             - g++-7
     - os: osx
-      osx_image: xcode11.2
+      osx_image: xcode12
+      compiler: clang
+    - os: osx
+      osx_image: xcode11
       compiler: clang
     - os: osx
       osx_image: xcode9.3
