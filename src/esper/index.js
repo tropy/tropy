@@ -227,6 +227,8 @@ class Esper extends EventEmitter {
     }
   }
 
+  // Load the texture with an additional idle callback. Use this
+  // when loading textures during important transitions.
   loadTexture(url) {
     return this.loader
       .loadTexture(url)

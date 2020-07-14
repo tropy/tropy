@@ -592,7 +592,7 @@ class EsperContainer extends React.Component {
       this.setState({ isVisible: true })
       this.esper.resume()
     }
-  }, 400)
+  }, 550)
 
   handleSlideOut = () => {
     if (this.state.isVisible) {
