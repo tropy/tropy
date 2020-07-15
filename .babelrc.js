@@ -1,8 +1,7 @@
 'use strict'
 
 const plugins = [
-  '@babel/plugin-syntax-class-properties',
-  '@babel/plugin-syntax-object-rest-spread'
+  '@babel/plugin-syntax-class-properties'
 ]
 
 if (process.env.COVERAGE) {
