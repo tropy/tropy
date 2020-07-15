@@ -41,15 +41,11 @@ target.sqlite3 = async (force) => {
 
     if (!test('-f', tar)) {
       say(`${mod} fetching version ${version}...`)
-      if (process.platform === 'win32') {
-        let res = await fetch(url)
-        if (res.status !== 200)
-          throw new Error(`download failed: ${res.status} ${res.statusText}`)
+      let res = await fetch(url)
+      if (res.status !== 200)
+        throw new Error(`download failed: ${res.status} ${res.statusText}`)
 
-        write(tar, await res.buffer())
-      } else {
-        exec(`curl -L ${url} > ${tar}`)
-      }
+      write(tar, await res.buffer())
     }
 
     say(`${mod} patching...`)
