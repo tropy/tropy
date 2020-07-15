@@ -566,7 +566,7 @@ class WindowManager extends EventEmitter {
 const getTrafficLightPosition = (type) => {
   switch (type) {
     case 'prefs':
-      return { x: 12, y: 22 }
+      return { x: 7, y: 6 }
     default:
       return { x: 12, y: 22 }
   }
