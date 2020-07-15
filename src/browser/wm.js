@@ -112,8 +112,8 @@ class WindowManager extends EventEmitter {
             opts.title = ''
             opts.titleBarStyle = opts.titleBarStyle || 'hidden'
             opts.trafficLightPosition = {
-              x: 13,
-              y: 13
+              x: 12,
+              y: 22
             }
           }
           break
