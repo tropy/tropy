@@ -111,10 +111,7 @@ class WindowManager extends EventEmitter {
             opts.frame = true
             opts.title = ''
             opts.titleBarStyle = opts.titleBarStyle || 'hidden'
-            opts.trafficLightPosition = {
-              x: 12,
-              y: 22
-            }
+            opts.trafficLightPosition = getTrafficLightPosition(type)
           }
           break
       }
@@ -565,6 +562,15 @@ class WindowManager extends EventEmitter {
   }
 }
 
+
+const getTrafficLightPosition = (type) => {
+  switch (type) {
+    case 'prefs':
+      return { x: 12, y: 22 }
+    default:
+      return { x: 12, y: 22 }
+  }
+}
 
 const AQUA = { 1: 'blue', 6: 'graphite' }
 
