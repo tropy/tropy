@@ -23,7 +23,7 @@ const {
 } = require('../common/log')
 
 const { delay, once } = require('../common/util')
-const { existsSync: exists } = require('fs')
+const fs = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 
 const { AppMenu, ContextMenu } = require('./menu')
@@ -130,7 +130,7 @@ class Tropy extends EventEmitter {
 
     } else {
       let recent = this.state.recent[0]
-      if (exists(recent))
+      if (fs.existsSync(recent))
         this.showProjectWindow(recent)
       else
         this.showProjectWindow()
@@ -663,14 +663,13 @@ class Tropy extends EventEmitter {
         })
     })
 
-    this.on('app:reset-ontology-db', () => {
+    this.on('app:reset-ontology-db', async () => {
       if (this.wm.has(['project', 'prefs']))
         dialog.warn(this.wm.first(['prefs', 'project']), {
           message: 'Cannot reset ontology db while in use!'
         })
       else
-        require('rimraf')
-          .sync(join(this.opts.data, 'ontology.db'))
+          await fs.promises.unlink(join(this.opts.data, 'ontology.db'))
     })
 
     this.on('app:open-dialog', () => {

@@ -1,13 +1,13 @@
 'use strict'
 
 const assert = require('assert')
+const { unlink } = require('fs').promises
 const { call, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { CACHE } = require('../constants')
 const { Cache } = require('../common/cache')
-const { rm } = require('../common/rm')
 const { get } = require('../common/util')
-const { debug, info } = require('../common/log')
+const { debug, info, warn } = require('../common/log')
 
 const UUID = /^[0-9a-f]{8}(-[0-9a-f]+){4}$/i
 
@@ -31,11 +31,16 @@ class Prune extends Command {
     let files = yield call(cache.list)
 
     for (let file of files) {
-      if (!Prune.check(file, state)) continue
+      try {
+        if (!Prune.check(file, state)) continue
 
-      debug(`removing ${file}`)
-      yield call(rm, cache.expand(file))
-      stale.push(file)
+        debug(`removing ${file}`)
+        yield call(unlink, cache.expand(file))
+        stale.push(file)
+
+      } catch (e) {
+        warn({ stack: e.stack }, `prune: failed removing ${file}`)
+      }
     }
 
     if (stale.length) {
