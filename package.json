@@ -106,6 +106,7 @@
     "babel-plugin-istanbul": "^6.0.0",
     "bluebird": "^3.7.2",
     "classnames": "^2.2.6",
+    "commander": "^6.0.0",
     "decompress": "^4.2.1",
     "edtf": "^3.0.1",
     "generic-pool": "^3.7.1",
@@ -150,7 +151,6 @@
     "transducers.js": "^0.3.2",
     "uuid": "^8.2.0",
     "winreg": "^1.2.4",
-    "write-file-atomic": "^3.0.3",
-    "yargs": "^15.4.1"
+    "write-file-atomic": "^3.0.3"
   }
 }
