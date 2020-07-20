@@ -70,9 +70,13 @@ $theme: "${theme}";
 
 
 if (require.main === module) {
-  require('yargs')
-    .command('new name', 'create new window template', noop, opts => {
-      for (let name of opts.name.split(',')) {
+  const { program } = require('commander')
+
+  program
+    .command('new <names>')
+    .description('create new window template')
+    .action(names => {
+      for (let name of names.split(',')) {
         create(join(HOME, 'res', 'views', `${name}.html`), html(name))
         create(join(HOME, 'src', 'views', `${name}.js`), script(name))
 
@@ -90,8 +94,11 @@ if (require.main === module) {
         }
       }
     })
-    .command('rm name', 'delete window template', noop, opts => {
-      for (let name of opts.name.split(',')) {
+  program
+    .command('rm <names>')
+    .description('delete window template')
+    .action(names => {
+      for (let name of names.split(',')) {
         rm(join(HOME, 'res', 'views', `${name}.html`))
         rm(join(HOME, 'src', 'views', `${name}.js`))
 
@@ -107,6 +114,6 @@ if (require.main === module) {
         }
       }
     })
-    .help()
-    .argv
+
+  program.parse(process.argv)
 }
