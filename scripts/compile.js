@@ -134,19 +134,25 @@ const swap = (filename, src, dst, ext) =>
     .replace(/(\..+)$/, m => ext || m[1])
 
 if (require.main === module) {
-  require('yargs')
-    .command('*', 'compile js and css', noop, () => {
+  let { program } = require('commander')
+
+  program
+    .command('all', { isDefault: true })
+    .description('compile both js and js')
+    .action(() => {
       css()
       js()
     })
-    .command('js [glob]', 'compile js', noop, opts => {
-      js(opts.glob)
-    })
-    .command('css [glob]', 'compile css', noop, opts => {
-      css(opts.glob)
-    })
-    .help()
-    .argv
+  program
+    .command('js [pattern]')
+    .description('compile js')
+    .action(pattern => js(pattern))
+  program
+    .command('css [pattern]')
+    .description('compile css')
+    .action(pattern => css(pattern))
+
+  program.parse(process.argv)
 }
 
 module.exports = {
