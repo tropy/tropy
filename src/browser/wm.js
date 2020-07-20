@@ -328,7 +328,7 @@ class WindowManager extends EventEmitter {
         aqua: WindowManager.getAquaColorVariant(),
         contrast: nativeTheme.shouldUseHighContrastColors,
         dark: nativeTheme.shouldUseDarkColors,
-        environment: process.env.NODE_ENV,
+        env: process.env.NODE_ENV,
         documents: app.getPath('documents'),
         maximizable: win.maximizable,
         minimizable: win.minimizable,

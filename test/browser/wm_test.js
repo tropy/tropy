@@ -46,6 +46,7 @@ describe('WindowManager', () => {
 
           win = await wm.open(type, {
             plugins: plugins.root,
+            log: join(app.getPath('userData'), `wm-test-${type}.log`),
             data: app.getPath('userData')
           })
         })

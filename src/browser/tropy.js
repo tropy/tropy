@@ -81,7 +81,7 @@ class Tropy extends EventEmitter {
     this.ctx = new ContextMenu(this)
     this.wm = new WindowManager()
     this.updater = new Updater({
-      enable: process.env.NODE_ENV === 'production' && opts['auto-updates']
+      enable: process.env.NODE_ENV === 'production' && opts.autoUpdates
     })
     this.api = new API.Server(this)
 

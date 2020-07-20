@@ -7,7 +7,7 @@ function parse() {
   const hash = window.location.hash.slice(1)
 
   window.ARGS = JSON.parse(decode(hash))
-  process.env.NODE_ENV = ARGS.environment
+  process.env.NODE_ENV = ARGS.env
 
   return window.ARGS
 }

@@ -2,10 +2,10 @@
 
 const START = Date.now()
 
-const args = require('./args')
-const opts = args.parse(process.argv.slice(1))
+const { parse } = require('./args')
+const { args, opts } = parse()
 
-process.env.NODE_ENV = opts.environment
+process.env.NODE_ENV = opts.env
 
 const electron = require('electron')
 const { app }  = electron
@@ -58,7 +58,7 @@ if (!(win32 && require('./squirrel')(opts))) {
     trace: opts.trace
   })
 
-  if (opts['ignore-gpu-blacklist']) {
+  if (opts.webgl) {
     app.commandLine.appendSwitch('ignore-gpu-blacklist')
   }
 
@@ -82,7 +82,7 @@ if (!(win32 && require('./squirrel')(opts))) {
   ])
     .then(() => {
       tropy.ready = Date.now()
-      tropy.open(...opts._.map(f => resolve(f)))
+      tropy.open(...args.map(f => resolve(f)))
 
       electron.powerMonitor.on('shutdown', (event) => {
         event.preventDefault()
@@ -103,7 +103,7 @@ if (!(win32 && require('./squirrel')(opts))) {
           event.preventDefault()
       } else {
         if (extname(file) === '.tpy') {
-          opts._.push(file)
+          args.push(file)
           event.preventDefault()
         }
       }
@@ -121,7 +121,7 @@ if (!(win32 && require('./squirrel')(opts))) {
 
   app.on('second-instance', (_, argv) => {
     if (tropy.ready)
-      tropy.open(...args.parse(argv.slice(1))._)
+      tropy.open(...parse(argv.slice(1)).args)
   })
 
   app.on('web-contents-created', (_, contents) => {

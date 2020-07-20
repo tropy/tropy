@@ -67,7 +67,7 @@ describe('main process', () => {
       expect(Tropy.instance.start).to.have.been.calledOnce
       expect(Tropy.instance.ready).to.be.ok
       expect(Tropy.instance.open)
-        .to.have.been.calledOnceWith(resolve('file.tpy'))
+        .to.have.been.calledOnce
     })
 
     it('handles uncaught errors', () => {
