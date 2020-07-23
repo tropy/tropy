@@ -82,7 +82,7 @@ class Purge extends Command {
       if (date > NOW) continue
 
       info(`removing old project cache ${id}`)
-      yield call(rm, cache.expand(id))
+      yield call(unlink, cache.expand(id))
       stale.push(id)
     }
 
