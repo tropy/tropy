@@ -4,16 +4,14 @@
 
 const { say, warn } = require('./util')('τ')
 const fs = require('fs')
-const rimraf = require('rimraf')
 const { join } = require('path')
 
 const HOME = join(__dirname, '..')
 const PLATFORMS = ['linux', 'darwin', 'win32']
 const THEMES = ['light', 'dark']
-const noop = () => {}
 
 const rm = path => {
-  rimraf.sync(path)
+  fs.unlinkSync(path)
   say(path)
 }
 

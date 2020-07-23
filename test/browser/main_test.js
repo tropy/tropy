@@ -2,7 +2,6 @@
 
 const { app } = require('electron')
 const { EventEmitter } = require('events')
-const { resolve } = require('path')
 
 describe('main process', () => {
   const Tropy = __require('browser/tropy')

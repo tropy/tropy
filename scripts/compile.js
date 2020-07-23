@@ -12,7 +12,6 @@ const {
   writeFileSync: write
 } = require('fs')
 const { check, error, say } = require('./util')('λ')
-const noop = () => {}
 
 const HOME = join(__dirname, '..')
 
