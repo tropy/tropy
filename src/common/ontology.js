@@ -16,6 +16,7 @@ const {
 class Template {
   static defaults = {
     type: TROPY.Item,
+    domain: TROPY.Item,
     name: '',
     creator: '',
     description: '',

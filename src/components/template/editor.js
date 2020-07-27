@@ -6,8 +6,9 @@ const { TemplateFieldList } = require('./field-list')
 const { TemplateToolbar } = require('./toolbar')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormElement, FormSelect } = require('../form')
+const { ResourceSelect } = require('../resource')
 const { Template } = require('../../common/ontology')
-const { arrayOf, func, shape, string } = require('prop-types')
+const { arrayOf, func, shape, string, object } = require('prop-types')
 const actions = require('../../actions')
 const { TROPY, TYPE } = require('../../constants')
 const { insert, move, remove } = require('../../common/util')
@@ -15,7 +16,8 @@ const { insert, move, remove } = require('../../common/util')
 const {
   getDatatypeList,
   getTemplateList,
-  getPropertyList
+  getPropertyList,
+  getClassList
 } = require('../../selectors')
 
 
@@ -56,9 +58,9 @@ class TemplateEditor extends React.PureComponent {
   }
 
   handleTemplateCreate = () => {
-    let { id } = this.state
+    let { id, type } = this.state
     this.props.onCreate({
-      [id]: { id, ...Template.copy(this.state) }
+      [id]: { id, ...Template.copy(this.state), domain: [type] }
     })
   }
 
@@ -81,6 +83,13 @@ class TemplateEditor extends React.PureComponent {
         id: this.state.id, ...template
       })
     }
+  }
+
+  handleDomainUpdate = (rdfType) => {
+    let domain = { domain: [rdfType.domain.id] }
+    this.props.onSave({
+      id: this.state.id, ...domain
+    })
   }
 
   handleFieldSave = (id, data, idx) => {
@@ -205,9 +214,22 @@ class TemplateEditor extends React.PureComponent {
               id="template.description"
               name="description"
               value={this.state.description}
+              isCompact
               isDisabled={this.state.isProtected}
               tabIndex={0} onChange={this.handleTemplateUpdate}
               size={9}/>
+            {!isPristine &&
+              <FormElement
+                id="template.domain"
+                size={9}>
+                <ResourceSelect
+                  name="domain"
+                  value={this.state.domain}
+                  options={this.props.classes}
+                  tabIndex={0}
+                  isRequired
+                  onChange={this.handleDomainUpdate}/>
+              </FormElement>}
             {isPristine &&
               <FormElement className="flex-row justify-content-end">
                 <button
@@ -249,6 +271,7 @@ class TemplateEditor extends React.PureComponent {
       name: string
     })).isRequired,
     types: arrayOf(string).isRequired,
+    classes: arrayOf(object).isRequired,
     onCreate: func.isRequired,
     onDelete: func.isRequired,
     onExport: func.isRequired,
@@ -271,7 +294,8 @@ module.exports = {
     state => ({
       properties: getPropertyList(state),
       templates: getTemplateList(state),
-      datatypes: getDatatypeList(state)
+      datatypes: getDatatypeList(state),
+      classes: getClassList(state)
     }),
 
     dispatch => ({
