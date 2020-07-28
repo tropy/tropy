@@ -5,7 +5,8 @@ const presets = [
 ]
 
 const plugins = [
-  '@babel/plugin-syntax-class-properties'
+  '@babel/plugin-syntax-class-properties',
+  '@babel/plugin-transform-modules-commonjs'
 ]
 
 if (process.env.COVERAGE)

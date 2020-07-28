@@ -59,6 +59,7 @@
   "devDependencies": {
     "@babel/core": "^7.10.5",
     "@babel/plugin-syntax-class-properties": "^7.10.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.4",
     "@babel/preset-react": "^7.10.4",
     "@babel/register": "^7.10.5",
     "@testing-library/react": "^10.4.7",
