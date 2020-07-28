@@ -1,16 +1,14 @@
-'use strict'
+import { EventEmitter } from 'events'
+import { join } from 'path'
+import { URL } from 'url'
+import dialog from './dialog'
+import { debug, error, trace, warn } from '../common/log'
+import { darwin } from '../common/os'
+import { channel, paths } from '../common/release'
+import res from '../common/res'
+import { BODY, PANEL, ESPER } from '../constants/sass'
 
-const { EventEmitter } = require('events')
-const { join } = require('path')
-const { URL } = require('url')
-const dialog = require('./dialog')
-const { debug, error, trace, warn } = require('../common/log')
-const { darwin } = require('../common/os')
-const { channel, paths } = require('../common/release')
-const res = require('../common/res')
-const { BODY, PANEL, ESPER } = require('../constants/sass')
-
-const {
+import {
   array,
   blank,
   counter,
@@ -18,19 +16,18 @@ const {
   once,
   remove,
   restrict
-} = require('../common/util')
+} from '../common/util'
 
-const {
+import {
   app,
   BrowserWindow,
-  ipcMain: ipc,
+  ipcMain as ipc,
   nativeTheme,
-  systemPreferences: prefs
-} = require('electron')
+  systemPreferences as prefs
+} from 'electron'
 
 
-
-class WindowManager extends EventEmitter {
+export class WindowManager extends EventEmitter {
   constructor(defaults = {}) {
     super()
 
@@ -602,6 +599,3 @@ function webContentsForward(win, events) {
     win.on(type, () => { win.webContents.send('win', type) })
   }
 }
-
-
-module.exports = WindowManager

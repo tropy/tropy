@@ -1,21 +1,17 @@
-'use strict'
-
-module.exports = {
-  api: require('../actions/api'),
-  cache: require('../actions/cache'),
-  context: require('../actions/context'),
-  edit: require('../actions/edit'),
-  flash: require('../actions/flash'),
-  item: require('../actions/item'),
-  list: require('../actions/list'),
-  metadata: require('../actions/metadata'),
-  note: require('../actions/note'),
-  notepad: require('../actions/notepad'),
-  ontology: require('../actions/ontology'),
-  photo: require('../actions/photo'),
-  project: require('../actions/project'),
-  selection: require('../actions/selection'),
-  settings: require('../actions/settings'),
-  storage: require('../actions/storage'),
-  tag: require('../actions/tag')
-}
+export * as api from '../actions/api'
+export * as cache from '../actions/cache'
+export * as context from '../actions/context'
+export * as edit from '../actions/edit'
+export * as flash from '../actions/flash'
+export * as item from '../actions/item'
+export * as list from '../actions/list'
+export * as metadata from '../actions/metadata'
+export * as note from '../actions/note'
+export * as notepad from '../actions/notepad'
+export * as ontology from '../actions/ontology'
+export * as photo from '../actions/photo'
+export * as project from '../actions/project'
+export * as selection from '../actions/selection'
+export * as settings from '../actions/settings'
+export * as storage from '../actions/storage'
+export * as tag from '../actions/tag'

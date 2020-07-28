@@ -3,7 +3,7 @@
 const { app } = require('electron')
 
 describe('Tropy', () => {
-  const Tropy = __require('browser/tropy')
+  const { Tropy } = __require('browser/tropy')
 
   beforeEach(() => delete Tropy.instance)
   afterEach(() => delete Tropy.instance)

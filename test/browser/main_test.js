@@ -4,7 +4,7 @@ const { app } = require('electron')
 const { EventEmitter } = require('events')
 
 describe('main process', () => {
-  const Tropy = __require('browser/tropy')
+  const { Tropy } = __require('browser/tropy')
   const tropy = Tropy.instance
 
   const args = __require('browser/args')

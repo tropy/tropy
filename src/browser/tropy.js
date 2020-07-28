@@ -1,58 +1,56 @@
-'use strict'
+import { EventEmitter } from 'events'
+import { extname, join } from 'path'
 
-const { EventEmitter } = require('events')
-const { extname, join } = require('path')
-
-const {
+import {
   app,
   clipboard,
   shell,
-  ipcMain: ipc,
+  ipcMain as ipc,
   nativeTheme,
   BrowserWindow,
-  systemPreferences: prefs
-} = require('electron')
+  systemPreferences as prefs
+} from 'electron'
 
-const {
+import {
   debug,
   fatal,
   info,
   warn,
   logger,
   crashReport
-} = require('../common/log')
+} from '../common/log'
 
-const { delay, once } = require('../common/util')
-const fs = require('fs')
-const { into, compose, remove, take } = require('transducers.js')
+import { delay, once } from '../common/util'
+import fs from 'fs'
+import { into, compose, remove, take } from 'transducers.js'
 
-const { AppMenu, ContextMenu } = require('./menu')
-const { Cache } = require('../common/cache')
-const { Plugins } = require('../common/plugins')
-const { Strings } = require('../common/res')
-const Storage = require('./storage')
-const Updater = require('./updater')
-const dialog = require('./dialog')
-const API = require('./api')
-const WindowManager = require('./wm')
-const { addIdleObserver } = require('./idle')
-const { migrate } = require('./migrate')
+import { AppMenu, ContextMenu } from './menu'
+import { Cache } from '../common/cache'
+import { Plugins } from '../common/plugins'
+import { Strings } from '../common/res'
+import { Storage } from './storage'
+import { Updater } from './updater'
+import dialog from './dialog'
+import * as api from './api'
+import { WindowManager } from './wm'
+import { addIdleObserver } from './idle'
+import { migrate } from './migrate'
 
 const { defineProperty: prop } = Object
-const act = require('./actions')
-const { darwin, linux } = require('../common/os')
-const { channel, product, version } = require('../common/release')
+import act from './actions'
+import { darwin, linux } from '../common/os'
+import { channel, product, version } from '../common/release'
 
-const {
+import {
   FLASH, HISTORY, TAG, PROJECT, CONTEXT, LOCALE
-} = require('../constants')
+} from '../constants'
 
 const H = new WeakMap()
 const T = new WeakMap()
 const P = new WeakMap()
 
 
-class Tropy extends EventEmitter {
+export class Tropy extends EventEmitter {
   static defaults = {
     fontSize: '13px',
     frameless: darwin,
@@ -83,7 +81,7 @@ class Tropy extends EventEmitter {
     this.updater = new Updater({
       enable: process.env.NODE_ENV === 'production' && opts.autoUpdates
     })
-    this.api = new API.Server(this)
+    this.api = new api.Server(this)
 
     prop(this, 'cache', {
       value: new Cache(opts.cache || join(opts.data, 'cache'))
@@ -106,7 +104,7 @@ class Tropy extends EventEmitter {
     await this.restore()
     this.listen()
     this.wm.start()
-    this.api.start()
+    await this.api.start()
   }
 
   stop() {
@@ -1014,5 +1012,3 @@ class Tropy extends EventEmitter {
     return version
   }
 }
-
-module.exports = Tropy

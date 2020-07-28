@@ -1,18 +1,20 @@
-'use strict'
 
+import electron from 'electron'
+import { extname, join, resolve } from 'path'
+import { mkdirSync as mkdir } from 'fs'
+import { darwin, win32, system } from '../common/os'
+import { exe, qualified, version } from '../common/release'
+import { parse } from './args'
+import log from '../common/log'
+import { Tropy } from './tropy'
+
+// TODO This is not very useful with imports!
 const START = Date.now()
 
-const { parse } = require('./args')
+const { app }  = electron
 const { args, opts } = parse()
 
 process.env.NODE_ENV = opts.env
-
-const electron = require('electron')
-const { app }  = electron
-const { extname, join, resolve } = require('path')
-const { mkdirSync: mkdir } = require('fs')
-const { darwin, win32, system }  = require('../common/os')
-const { exe, qualified, version }  = require('../common/release')
 
 app.allowRendererProcessReuse = false
 
@@ -49,8 +51,15 @@ if (!app.requestSingleInstanceLock()) {
   app.exit(0)
 }
 
-if (!(win32 && require('./squirrel')(opts))) {
-  const { info, warn } = require('../common/log')({
+if (app.isPackaged) {
+  app.setAsDefaultProtocolClient('tropy')
+}
+
+export default (async function main() {
+  if (win32 && (await import('./squirrel'))(opts))
+    return
+
+  const { info, warn } = log({
     dest: join(opts.logs, 'tropy.log'),
     name: 'main',
     rotate: true,
@@ -71,30 +80,11 @@ if (!(win32 && require('./squirrel')(opts))) {
     version
   }, `main.init ${version} ${system}`)
 
-  const T1 = Date.now()
-  const Tropy = require('./tropy')
   const tropy = new Tropy(opts)
-  const T2 = Date.now()
-
-  Promise.all([
+  const startups = [
     app.whenReady(),
     tropy.start()
-  ])
-    .then(() => {
-      tropy.ready = Date.now()
-      tropy.open(...args.map(f => resolve(f)))
-
-      electron.powerMonitor.on('shutdown', (event) => {
-        event.preventDefault()
-        app.quit()
-      })
-
-      info(`ready after ${tropy.ready - START}ms [req:${T2 - T1}ms]`)
-    })
-
-  if (app.isPackaged) {
-    app.setAsDefaultProtocolClient('tropy')
-  }
+  ]
 
   if (darwin) {
     app.on('open-file', (event, file) => {
@@ -138,7 +128,7 @@ if (!(win32 && require('./squirrel')(opts))) {
 
   const handleError = (error, isFatal = false) => {
     if (isFatal || !tropy.ready) {
-      require('electron')
+      electron
         .dialog
         .showErrorBox('Unhandled Error', error.stack)
       app.exit(42)
@@ -153,4 +143,16 @@ if (!(win32 && require('./squirrel')(opts))) {
 
   process.on('uncaughtException', handleError)
   process.on('unhandledRejection', (reason) => handleError(reason))
-}
+
+  await Promise.all(startups)
+
+  tropy.ready = Date.now()
+  tropy.open(...args.map(f => resolve(f)))
+
+  electron.powerMonitor.on('shutdown', (event) => {
+    event.preventDefault()
+    app.quit()
+  })
+
+  info(`ready after ${tropy.ready - START}ms`)
+}())

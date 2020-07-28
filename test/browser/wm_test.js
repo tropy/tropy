@@ -6,7 +6,7 @@ const { app, BrowserWindow } = require('electron')
 const res = __require('common/res')
 
 describe('WindowManager', () => {
-  const WindowManager = __require('browser/wm')
+  const { WindowManager } = __require('browser/wm')
   const { Plugins } = __require('common/plugins')
 
   describe('instance', () => {
