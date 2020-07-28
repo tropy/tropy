@@ -1,15 +1,12 @@
-'use strict'
-
-const res = require('../common/res')
-const { basename } = require('path')
-const { error, warn } = require('../common/log')
-const { blank } = require('../common/util')
-const { BrowserWindow, Menu: M } = require('electron')
+import res from '../common/res'
+import { basename } from 'path'
+import { error, warn } from '../common/log'
+import { blank } from '../common/util'
+import { BrowserWindow, Menu as M } from 'electron'
 
 const SEPARATOR = { type: 'separator' }
 
-
-class Menu {
+export class Menu {
   static eachItem(menu, fn) {
     if (menu != null) {
       for (let item of menu.items) {
@@ -78,7 +75,7 @@ class Menu {
   }
 }
 
-class AppMenu extends Menu {
+export class AppMenu extends Menu {
   static get instance() {
     return M.getApplicationMenu()
   }
@@ -149,7 +146,7 @@ class AppMenu extends Menu {
 }
 
 
-class ContextMenu extends Menu {
+export class ContextMenu extends Menu {
   static scopes = {}
 
   async load(name = 'context') {
@@ -577,10 +574,4 @@ function withWindow(win, cmd, fn) {
     else
       fn(win || w)
   }
-}
-
-
-module.exports = {
-  AppMenu,
-  ContextMenu
 }

@@ -1,10 +1,8 @@
-'use strict'
-
-const { basename, dirname, join } = require('path')
-const { app, shell } = require('electron')
-const ChildProcess = require('child_process')
-const { existsSync: exists, mkdirSync: mkdir, rmdirSync } = require('fs')
-const { product, qualified } = require('../common/release')
+import { basename, dirname, join } from 'path'
+import { app, shell } from 'electron'
+import ChildProcess from 'child_process'
+import { existsSync, mkdirSync, rmdirSync } from 'fs'
+import { product, qualified } from '../common/release'
 
 function rm(path) {
   rmdirSync(path, { recursive: true, maxRetries: 3 })
@@ -34,10 +32,10 @@ const update = join(root, 'Update.exe')
 const exe = basename(process.execPath)
 
 function link(path, force = false) {
-  if (!exists(path) && !force) return
+  if (!existsSync(path) && !force) return
 
-  mkdir(dirname(path), { recursive: true })
-  shell.writeShortcutLink(path, exists(path) ? 'update' : 'create', {
+  mkdirSync(dirname(path), { recursive: true })
+  shell.writeShortcutLink(path, existsSync(path) ? 'update' : 'create', {
     target: update,
     args: `--processStart "${exe}"`,
     icon: process.execPath,
@@ -99,7 +97,7 @@ function quit() {
   app.quit()
 }
 
-function handleSquirrelEvent({ data, cache, logs } = {}) {
+export default function handleSquirrelEvent({ data, cache, logs } = {}) {
   if (process.platform !== 'win32') return false
   if (process.env.NODE_ENV === 'development') return false
   if (process.argv.length === 1) return false
@@ -137,5 +135,3 @@ function handleSquirrelEvent({ data, cache, logs } = {}) {
 
   return false
 }
-
-module.exports = handleSquirrelEvent

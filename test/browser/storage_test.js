@@ -4,7 +4,7 @@ const { unlink: rm } = require('fs')
 const { app } = require('electron')
 
 describe('Storage', () => {
-  const Storage = __require('browser/storage')
+  const { Storage } = __require('browser/storage')
 
   describe('given a storage folder', () => {
     const folder = new Storage(app.getPath('userData'))

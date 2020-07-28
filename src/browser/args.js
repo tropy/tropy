@@ -1,10 +1,8 @@
-'use strict'
+import { resolve } from 'path'
+import { exe, version } from '../common/release'
+import { Command } from 'commander'
 
-const { resolve } = require('path')
-const { exe, version } = require('../common/release')
-const { Command } = require('commander')
-
-const program = new Command()
+export const program = new Command()
 
 const type = {
   path(value) { return resolve(value) },
@@ -40,17 +38,13 @@ program
   .option('-p, --port <number>', 'set API listening port', type.int)
 
 
-module.exports = {
-  program,
+export function parse(argv = process.argv.slice(1)) {
+  program.parse(argv, { from: 'user' })
 
-  parse(argv = process.argv.slice(1)) {
-    program.parse(argv, { from: 'user' })
-
-    return {
-      opts: program.opts(),
-      args: program.args
-        // TODO remove with allowUnknownOption!
-        .filter(arg => arg.startsWith('-'))
-    }
+  return {
+    opts: program.opts(),
+    args: program.args
+      // TODO remove with allowUnknownOption!
+      .filter(arg => arg.startsWith('-'))
   }
 }

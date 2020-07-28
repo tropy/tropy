@@ -1,10 +1,8 @@
-'use strict'
+import { join } from 'path'
+import fs from 'fs'
+import write from 'write-file-atomic'
 
-const { join } = require('path')
-const { readFile: read } = require('fs').promises
-const write = require('write-file-atomic')
-
-class Storage {
+export class Storage {
   constructor(path) {
     this.path = path
     this.save.sync = (name, object) =>
@@ -15,7 +13,7 @@ class Storage {
     try {
       return {
         ...defaults,
-        ...JSON.parse(await read(this.expand(name)))
+        ...JSON.parse(await fs.promises.readFile(this.expand(name)))
       }
     } catch (error) {
       if (defaults != null && error.code === 'ENOENT')
@@ -32,5 +30,3 @@ class Storage {
     return join(this.path, name)
   }
 }
-
-module.exports = Storage

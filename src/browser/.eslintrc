@@ -1,3 +1,5 @@
 # vi: set ft=yaml :
 env:
   browser: false
+parserOptions:
+  sourceType: module
