@@ -1,5 +1,5 @@
 'use strict'
 
-require('@babel/register')
 require('./coverage')
+require('./babel')
 require('../../src/bootstrap')

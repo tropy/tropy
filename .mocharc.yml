@@ -4,7 +4,7 @@ reporter: dot
 require-main:
   - "test/support/main"
 require:
-  - "@babel/register"
+  - "test/support/babel"
   - "test/support/coverage"
   - "test/support/mode"
   - "test/support/src"
