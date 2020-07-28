@@ -6,6 +6,7 @@ const presets = [
 
 const plugins = [
   '@babel/plugin-syntax-class-properties',
+  '@babel/plugin-proposal-export-namespace-from',
   '@babel/plugin-transform-modules-commonjs'
 ]
 

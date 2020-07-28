@@ -58,6 +58,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
+    "@babel/plugin-proposal-export-namespace-from": "^7.10.4",
     "@babel/plugin-syntax-class-properties": "^7.10.4",
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",
     "@babel/preset-react": "^7.10.4",
