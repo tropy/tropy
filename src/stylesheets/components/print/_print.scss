@@ -59,6 +59,7 @@ body {
   .notes:not(.overflow) & {
     @media (orientation: portrait) {
       flex: 0 0 100vw;
+      height: 100vw; // Prevent cropped photos in overflow mode
     }
 
     @media (orientation: landscape) {
@@ -70,6 +71,7 @@ body {
   .container.notes:not(.metadata).overflow & {
     @media (orientation: portrait) {
       flex: 0 0 100vh;
+      height: 100vh; // Prevent cropped photos in overflow mode
     }
 
     @media (orientation: landscape) {
