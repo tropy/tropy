@@ -1,5 +1,7 @@
+import fs from 'fs'
 import { EventEmitter } from 'events'
 import { extname, join } from 'path'
+import { into, compose, remove, take } from 'transducers.js'
 
 import {
   app,
@@ -20,26 +22,23 @@ import {
   crashReport
 } from '../common/log'
 
-import { delay, once } from '../common/util'
-import fs from 'fs'
-import { into, compose, remove, take } from 'transducers.js'
 
-import { AppMenu, ContextMenu } from './menu'
+import { darwin, linux } from '../common/os'
+import { delay, once } from '../common/util'
+import { channel, product, version } from '../common/release'
 import { Cache } from '../common/cache'
 import { Plugins } from '../common/plugins'
 import { Strings } from '../common/res'
+
+import { AppMenu, ContextMenu } from './menu'
 import { Storage } from './storage'
 import { Updater } from './updater'
 import dialog from './dialog'
-import * as api from './api'
+import { Server as ApiServer } from './api'
 import { WindowManager } from './wm'
 import { addIdleObserver } from './idle'
 import { migrate } from './migrate'
-
-const { defineProperty: prop } = Object
 import act from './actions'
-import { darwin, linux } from '../common/os'
-import { channel, product, version } from '../common/release'
 
 import {
   FLASH, HISTORY, TAG, PROJECT, CONTEXT, LOCALE
@@ -75,29 +74,19 @@ export class Tropy extends EventEmitter {
     Tropy.instance = this
 
     this.opts = opts
-    this.menu = new AppMenu(this)
+
+    this.api = new ApiServer(this)
+    this.cache = new Cache(opts.cache || join(opts.data, 'cache'))
     this.ctx = new ContextMenu(this)
-    this.wm = new WindowManager()
+    this.menu = new AppMenu(this)
+    this.plugins = new Plugins(join(opts.data, 'plugins'))
+    this.projects = new Map()
+    this.store = new Storage(opts.data)
     this.updater = new Updater({
       enable: process.env.NODE_ENV === 'production' && opts.autoUpdates
     })
-    this.api = new api.Server(this)
 
-    prop(this, 'cache', {
-      value: new Cache(opts.cache || join(opts.data, 'cache'))
-    })
-
-    prop(this, 'store', {
-      value: new Storage(opts.data)
-    })
-
-    prop(this, 'projects', {
-      value: new Map()
-    })
-
-    prop(this, 'plugins', {
-      value: new Plugins(join(opts.data, 'plugins'))
-    })
+    this.wm = new WindowManager()
   }
 
   async start() {
