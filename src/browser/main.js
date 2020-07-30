@@ -1,5 +1,5 @@
 
-import electron from 'electron'
+import electron, { app } from 'electron'
 import { extname, join, resolve } from 'path'
 import { mkdirSync as mkdir } from 'fs'
 import { darwin, win32, system } from '../common/os'
@@ -8,10 +8,7 @@ import { parse } from './args'
 import log from '../common/log'
 import { Tropy } from './tropy'
 
-// TODO This is not very useful with imports!
 const START = Date.now()
-
-const { app }  = electron
 const { args, opts } = parse()
 
 process.env.NODE_ENV = opts.env
