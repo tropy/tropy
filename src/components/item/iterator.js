@@ -104,10 +104,10 @@ class ItemIterator extends Iterator {
       }
     }
 
-    if (this.props.isReadOnly)
-      context.push('read-only')
-    else if (this.props.isTrashSelected)
+    if (this.props.isTrashSelected)
       context.push('deleted')
+    else if (this.props.isReadOnly)
+      context.push('read-only')
     else if (list)
       context.push('list')
 
