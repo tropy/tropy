@@ -520,6 +520,8 @@ Menu.ItemCompiler = {
 
     if (negate)
       item.enabled = !item.enabled
+
+    item.visible = item.enabled
   }
 }
 
