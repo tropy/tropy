@@ -421,10 +421,8 @@ class WindowManager extends EventEmitter {
     }).finally(() => { delete this.pending[id] })
   }
 
-  setTitle(type, title, frameless = false) {
-    if (!frameless) {
-      this.each(type, win => win.setTitle(title))
-    }
+  setTitle(type, title) {
+    this.each(type, win => win.setTitle(title))
   }
 
   async show(type, args, opts) {
