@@ -3,7 +3,7 @@
 const { ipcRenderer: ipc } = require('electron')
 const { basename, join } = require('path')
 const { existsSync: exists } = require('fs')
-const { EL_CAPITAN, darwin } = require('./common/os')
+const { darwin } = require('./common/os')
 const { Plugins } = require('./common/plugins')
 const { delay, pick } = require('./common/util')
 const { paths } = require('./common/release')
@@ -89,10 +89,7 @@ class Window extends EventEmitter {
         if (frameless) {
           toggle(document.body, 'frameless', true)
 
-          if (EL_CAPITAN)
-            toggle(document.body, 'el-capitan', true)
-          else
-            this.createWindowControls()
+          if (!darwin) this.createWindowControls()
         }
 
         resolve()
