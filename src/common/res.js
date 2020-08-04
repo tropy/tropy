@@ -1,16 +1,17 @@
 'use strict'
 
+const yaml = require('js-yaml')
 const { basename, join } = require('path')
 const fs = require('fs')
 const { readFile: read } = fs.promises
+const { paths } = require('./release')
 const { get, flatten } = require('./util')
-const yaml = require('js-yaml')
 const { debug } = require('./log')
 
 
 class Resource {
   static get base() {
-    return join(__dirname, '..', '..', 'res')
+    return paths.res
   }
 
   static get ext() {

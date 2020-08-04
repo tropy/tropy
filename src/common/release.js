@@ -29,8 +29,12 @@ const lib = (function find(path, pattern) {
 module.exports = {
   version,
   author,
-  lib,
   name,
+  paths: {
+    db: resolve(lib, '..', 'db'),
+    lib,
+    res: resolve(lib, '..', 'res')
+  },
   product: productName,
   channel,
   qualified,
