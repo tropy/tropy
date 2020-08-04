@@ -1,18 +1,18 @@
 'use strict'
 
 const assert = require('assert')
-const { dirname } = require('path')
+const { dirname, join } = require('path')
 const uuid = require('uuid').v4
 const { all } = require('bluebird')
 const { into, update } = require('../common/query')
 const { info } = require('../common/log')
 const os = require('../common/os')
-const { PROJECT } = require('../constants')
+const { paths } = require('../common/release')
 
 module.exports = {
   async create(db, { name, base, id = uuid() }) {
     info(`creating project "${name}" ${id}`)
-    await db.read(PROJECT.SCHEMA)
+    await db.read(join(paths.db, 'schema', 'project.sql'))
     await db.run(...into('project').insert({
       project_id: id,
       name,

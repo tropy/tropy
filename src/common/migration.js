@@ -3,6 +3,7 @@
 const { readdir: ls, readFile: read } = require('fs').promises
 const { basename, extname, join } = require('path')
 const { info } = require('./log')
+const { paths } = require('./release')
 
 
 class Migration {
@@ -12,15 +13,17 @@ class Migration {
     this.number = Number(basename(path).split('.', 2)[0])
   }
 
-  static async all(dir) {
+  static async all(name) {
+    let dir = join(paths.db, 'migrate', name)
+
     return (await ls(dir))
       .filter(migration => (/^\d+[\w.-]*\.(js|sql)$/).test(migration))
       .sort()
       .map(migration => new Migration(join(dir, migration)))
   }
 
-  static async since(number = 0, dir) {
-    return (await this.all(dir)).filter(m => m.fresh(number))
+  static async since(number = 0, name) {
+    return (await this.all(name)).filter(m => m.fresh(number))
   }
 
   up(db) {

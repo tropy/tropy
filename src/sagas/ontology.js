@@ -3,7 +3,6 @@
 const { join } = require('path')
 const { debug, warn } = require('../common/log')
 const { Database } = require('../common/db')
-const { ONTOLOGY } = require('../constants')
 const { exec, commands } = require('./cmd')
 const { fail } = require('../dialog')
 const mod = require('../models/ontology')
@@ -11,7 +10,7 @@ const { load } = require('../actions/ontology')
 const { call, fork, take } = require('redux-saga/effects')
 
 module.exports = {
-  *ontology({ file = join(ARGS.data, ONTOLOGY.DB), ...opts } = {}) {
+  *ontology({ file = join(ARGS.data, 'ontology.db'), ...opts } = {}) {
     try {
       var db = new Database(file, 'w+', opts)
 
@@ -19,7 +18,7 @@ module.exports = {
         yield call(mod.create, db)
       } else {
         try {
-          yield call(db.migrate, ONTOLOGY.MIGRATIONS)
+          yield call(db.migrate, 'ontology')
         } catch (e) {
           warn({ stack: e.stack }, 'failed to migrate ontology database')
           yield call(fail, e, 'ontology.migrate')

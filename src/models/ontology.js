@@ -1,14 +1,15 @@
 'use strict'
 
 const assert = require('assert')
-const { SCHEMA } = require('../constants/ontology')
+const { join } = require('path')
 const { TEXT } = require('../constants/type')
 const { all } = require('bluebird')
+const { paths } = require('../common/release')
 const { blank, list, quote } = require('../common/util')
 
 const ontology = {
   create(db) {
-    return db.read(SCHEMA)
+    return db.read(join(paths.db, 'schema', 'ontology.sql'))
   },
 
   clear(db) {

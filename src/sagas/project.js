@@ -4,7 +4,7 @@ require('../commands')
 
 const assert = require('assert')
 const fs = require('fs')
-const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
+const { OPEN, CLOSE, CLOSED } = require('../constants/project')
 const { IDLE } = require('../constants/idle')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
@@ -52,7 +52,7 @@ function *open(file, meta) {
     yield fork(handleDatabaseErrors, db, dbErrorActions)
 
     if (!db.isReadOnly)
-      var migrations = yield call(db.migrate, MIGRATIONS)
+      var migrations = yield call(db.migrate, 'project')
 
     let project = yield call(mod.project.load, db)
     assert(project != null && project.id != null, 'invalid project')

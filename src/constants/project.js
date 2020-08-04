@@ -1,7 +1,5 @@
 'use strict'
 
-const { join } = require('path')
-
 module.exports = {
   CLOSE: 'project.close',
   CLOSED: 'project.closed',
@@ -18,8 +16,5 @@ module.exports = {
   MODE: {
     PROJECT: 'project',
     ITEM: 'item'
-  },
-
-  MIGRATIONS: join(__dirname, '..', '..', 'db', 'migrate', 'project'),
-  SCHEMA: join(__dirname, '..', '..', 'db', 'schema', 'project.sql')
+  }
 }
