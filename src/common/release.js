@@ -1,6 +1,6 @@
 'use strict'
 
-const { version, author, name, productName } = require('../../package')
+const { version, author, name, productName } = require('../../package.json')
 const { titlecase } = require('./util')
 const { platform } = process
 
