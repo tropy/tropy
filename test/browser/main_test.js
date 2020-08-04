@@ -9,6 +9,7 @@ describe('main process', () => {
 
   const args = __require('browser/args')
   const argv = process.argv
+  const env = process.env.NODE_ENV
 
   const { qualified } = __require('common/release')
 
@@ -28,6 +29,7 @@ describe('main process', () => {
   after(() => {
     Tropy.instance = tropy
     process.argv = argv
+    process.env.NODE_ENV = env
     process.on.restore()
     args.parse.restore()
     app.on.restore()
