@@ -5,7 +5,7 @@ const { join } = require('path')
 const { URL } = require('url')
 const dialog = require('./dialog')
 const { debug, error, trace, warn } = require('../common/log')
-const { darwin, EL_CAPITAN } = require('../common/os')
+const { darwin } = require('../common/os')
 const { channel, paths } = require('../common/release')
 const res = require('../common/res')
 const { BODY, PANEL, ESPER } = require('../constants/sass')
@@ -107,7 +107,7 @@ class WindowManager extends EventEmitter {
           opts.darkTheme = opts.darkTheme || isDarkMode
           break
         case 'darwin':
-          if (!opts.frame && EL_CAPITAN) {
+          if (!opts.frame) {
             opts.frame = true
             opts.title = ''
             opts.titleBarStyle = opts.titleBarStyle || 'hidden'
@@ -422,7 +422,7 @@ class WindowManager extends EventEmitter {
   }
 
   setTitle(type, title, frameless = false) {
-    if (!frameless || !(darwin && EL_CAPITAN)) {
+    if (!frameless) {
       this.each(type, win => win.setTitle(title))
     }
   }

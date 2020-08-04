@@ -6,10 +6,6 @@ const { qualified } = require('./release')
 const { SUPPORTED } = require('../constants/image')
 
 module.exports = {
-  get EL_CAPITAN() {
-    return platform === 'darwin' && os.release() > '15'
-  },
-
   get home() {
     return os.homedir()
   },
