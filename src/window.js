@@ -6,6 +6,7 @@ const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
 const { Plugins } = require('./common/plugins')
 const { delay, pick } = require('./common/util')
+const { paths } = require('./common/release')
 const { EventEmitter } = require('events')
 const args = require('./args')
 const debounce = require('lodash.debounce')
@@ -28,7 +29,7 @@ const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
   e => e.ctrlKey && !e.altKey && !e.metaKey
 
-const STYLES = join(__dirname, '..', 'lib', 'stylesheets', process.platform)
+const STYLES = join(paths.lib, 'stylesheets', process.platform)
 
 class Window extends EventEmitter {
   constructor(opts) {

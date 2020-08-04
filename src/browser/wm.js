@@ -6,7 +6,7 @@ const { URL } = require('url')
 const dialog = require('./dialog')
 const { debug, error, trace, warn } = require('../common/log')
 const { darwin, EL_CAPITAN } = require('../common/os')
-const { channel } = require('../common/release')
+const { channel, paths } = require('../common/release')
 const res = require('../common/res')
 const { BODY, PANEL, ESPER } = require('../constants/sass')
 
@@ -43,7 +43,7 @@ class WindowManager extends EventEmitter {
         defaultEncoding: 'UTF-8',
         enableRemoteModule: true,
         nodeIntegration: true,
-        preload: join(__dirname, '..', 'bootstrap.js'),
+        preload: join(paths.lib, 'bootstrap.js'),
         ...defaults.webPreferences
       }
     }
