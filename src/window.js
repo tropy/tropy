@@ -29,7 +29,7 @@ const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
   e => e.ctrlKey && !e.altKey && !e.metaKey
 
-const STYLES = join(paths.lib, 'stylesheets', process.platform)
+const STYLES = join(paths.css, process.platform)
 
 class Window extends EventEmitter {
   constructor(opts) {

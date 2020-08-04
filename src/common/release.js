@@ -31,6 +31,7 @@ module.exports = {
   author,
   name,
   paths: {
+    css: resolve(lib, '..', 'lib', 'stylesheets'),
     db: resolve(lib, '..', 'db'),
     lib,
     res: resolve(lib, '..', 'res')
