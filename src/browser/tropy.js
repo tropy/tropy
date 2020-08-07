@@ -38,7 +38,7 @@ import { Server as ApiServer } from './api'
 import { WindowManager } from './wm'
 import { addIdleObserver } from './idle'
 import { migrate } from './migrate'
-import act from './actions'
+import * as act from './actions'
 
 import {
   FLASH, HISTORY, TAG, PROJECT, CONTEXT, LOCALE
