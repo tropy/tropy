@@ -2,10 +2,13 @@
 
 const { basename, dirname, join } = require('path')
 const { app, shell } = require('electron')
-const { sync: rm } = require('rimraf')
 const ChildProcess = require('child_process')
-const { existsSync: exists, mkdirSync: mkdir } = require('fs')
+const { existsSync: exists, mkdirSync: mkdir, rmdirSync } = require('fs')
 const { product, qualified } = require('../common/release')
+
+function rm(path) {
+  rmdirSync(path, { recursive: true, maxRetries: 3 })
+}
 
 const START_MENU = join(
   app.getPath('appData'),
