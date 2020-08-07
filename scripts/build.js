@@ -31,6 +31,7 @@ const IGNORE = [
   /\.gitignore/,
   /\.nvmrc/,
   /\.nyc_output/,
+  /\.rollup\.config\.js/,
   /\.sass-lint\.yml/,
   /\.travis\.yml/,
   /\.vimrc/,
