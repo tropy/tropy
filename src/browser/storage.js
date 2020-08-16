@@ -2,7 +2,7 @@
 
 const { join } = require('path')
 const { readFile: read } = require('fs').promises
-const { write } = require('../common/atomic')
+const write = require('write-file-atomic')
 
 class Storage {
   constructor(path) {
