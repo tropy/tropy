@@ -15,6 +15,18 @@ const { check, error, say } = require('./util')('λ')
 
 const HOME = join(__dirname, '..')
 
+const BABEL_CONFIG = {
+  presets: [
+    '@babel/preset-react'
+  ],
+  plugins: [
+    '@babel/plugin-syntax-class-properties',
+    '@babel/plugin-proposal-export-namespace-from',
+    'babel-plugin-dynamic-import-node',
+    '@babel/plugin-transform-modules-commonjs'
+  ]
+}
+
 const js = (pattern = 'src/**/*.{js,jsx}') =>
   new Promise((resolve, reject) => {
     say('compile javascripts...')
@@ -35,7 +47,7 @@ const jsRender = (src, verbose = false, force = false) =>
     let dst = swap(src, 'src', 'lib', '.js')
     if (force || !fresh(src, dst)) {
       if (verbose) say(dst)
-      babel.transformFile(src, (err, result) => {
+      babel.transformFile(src, BABEL_CONFIG, (err, result) => {
         if (err) return reject(err)
         mkdir(dirname(dst), { recursive: true })
         write(dst, result.code, 'utf-8')
