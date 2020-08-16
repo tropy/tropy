@@ -6,10 +6,11 @@ const { check, error, say } = require('./util')('pack')
 const { join, resolve } = require('path')
 const { arch, platform } = process
 const { getSignToolParams } = require('./sign')
-// const { repository } = require('../package')
+// const { repository } = require('../package.json')
+const { RRCHNM } = require('./build')
 
 const {
-  author, channel, qualified, name, product, version
+  channel, qualified, name, product, version
 } = require('../lib/common/release')
 
 const res = resolve(__dirname, '..', 'res')
@@ -145,7 +146,7 @@ target.win32 = async (args = []) => {
   await createWindowsInstaller({
     appDirectory: sources[0],
     outputDirectory: dist,
-    authors: author.name,
+    authors: RRCHNM,
     signWithParams: params,
     title: qualified.product,
     name: qualified.name,

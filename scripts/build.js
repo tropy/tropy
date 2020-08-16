@@ -6,11 +6,10 @@ const { say, error } = require('./util')('build')
 const electron = require('electron/package')
 const packager = require('electron-packager')
 const { basename, extname, join, resolve, relative } = require('path')
-const {
-  author, channel, name, version, qualified
-} = require('../lib/common/release')
+const { channel, name, version, qualified } = require('../lib/common/release')
 
 const { SUPPORTED } = require('../lib/constants/image')
+const RRCHNM = 'Roy Rosenzweig Center for History and New Media, George Mason University'
 
 const dir = resolve(__dirname, '..')
 const res = join(dir, 'res')
@@ -110,12 +109,12 @@ target.all = async (args = []) => {
       appCategoryType: 'public.app-category.productivity',
       appCopyright:
         `Copyright (c) 2015-${new Date().getFullYear()} ` +
-        `${author.name}. All rights not expressly granted are reserved.`,
+        `${RRCHNM}. All rights not expressly granted are reserved.`,
       extendInfo: join(res, 'darwin', 'info.plist'),
       extraResource,
       darwinDarkModeSupport: true,
       win32metadata: {
-        CompanyName: author.name,
+        CompanyName: RRCHNM,
         ProductName: qualified.product
       },
       asar: {

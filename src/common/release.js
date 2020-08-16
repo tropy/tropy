@@ -1,7 +1,7 @@
 'use strict'
 
 const { basename, resolve } = require('path')
-const { version, author, name, productName } = require('../../package.json')
+const { version, name, productName } = require('../../package.json')
 const { titlecase } = require('./util')
 
 const { platform } = process
@@ -28,7 +28,6 @@ const lib = (function find(path, pattern) {
 
 module.exports = {
   version,
-  author,
   name,
   paths: {
     css: resolve(lib, '..', 'lib', 'stylesheets'),
