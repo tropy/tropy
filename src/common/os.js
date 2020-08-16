@@ -2,8 +2,6 @@
 
 const os = require('os')
 const { arch, platform } = process
-const { qualified } = require('./release')
-const { SUPPORTED } = require('../constants/image')
 
 module.exports = {
   get home() {
@@ -32,20 +30,5 @@ module.exports = {
 
   meta: platform === 'darwin' ?
     (event) => event.metaKey :
-    (event) => event.ctrlKey,
-
-  desktop(exec = qualified.name) {
-    return `#!/usr/bin/env xdg-open
-[Desktop Entry]
-Version=1.0
-Terminal=false
-Type=Application
-Name=${qualified.product}
-Exec=${exec} %u
-Icon=${qualified.name}
-MimeType=application/vnd.tropy.tpy;x-scheme-handler/tropy;${
-  Object.keys(SUPPORTED).join(';')
-};
-Categories=Graphics;Viewer;Science;`
-  }
+    (event) => event.ctrlKey
 }

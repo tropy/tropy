@@ -6,10 +6,11 @@ const { say, error } = require('./util')('build')
 const electron = require('electron/package')
 const packager = require('electron-packager')
 const { basename, extname, join, resolve, relative } = require('path')
-const { desktop } = require('../lib/common/os')
 const {
   author, channel, name, version, qualified
 } = require('../lib/common/release')
+
+const { SUPPORTED } = require('../lib/constants/image')
 
 const dir = resolve(__dirname, '..')
 const res = join(dir, 'res')
@@ -220,4 +221,19 @@ function copyIcons(dst) {
       cp(join(mime, type, icon), join(target, file))
     }
   }
+}
+
+function desktop() {
+  return `#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Type=Application
+Name=${qualified.product}
+Exec=${qualified.name} %u
+Icon=${qualified.name}
+MimeType=application/vnd.tropy.tpy;x-scheme-handler/tropy;${
+  Object.keys(SUPPORTED).join(';')
+};
+Categories=Graphics;Viewer;Science;`
 }
