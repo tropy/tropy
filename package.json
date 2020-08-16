@@ -14,14 +14,6 @@
     "url": "https://github.com/tropy/tropy/issues"
   },
   "keywords": [],
-  "author": {
-    "name": "Center for History and New Media, George Mason University",
-    "url": "https://chnm.gmu.edu"
-  },
-  "contributors": [
-    "Sylvester Keil <sylvester@keil.or.at>",
-    "Johannes Krtek <johannes.krtek@flachware.com>"
-  ],
   "engines": {
     "node": ">=10",
     "npm": ">=6"
