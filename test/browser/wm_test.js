@@ -40,7 +40,7 @@ describe('WindowManager', () => {
         before(async () => {
           if (process.env.COVERAGE) {
             sinon
-              .stub(res.view, 'expand')
+              .stub(res.View, 'expand')
               .callsFake(name => F.views(`${name}.html`).path)
           }
 
@@ -53,7 +53,7 @@ describe('WindowManager', () => {
 
         after(() => {
           if (process.env.COVERAGE) {
-            res.view.expand.restore()
+            res.View.expand.restore()
           }
 
           win = null

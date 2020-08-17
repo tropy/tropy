@@ -1,10 +1,11 @@
-'use strict'
+import fs from 'fs'
+const { mkdir, readdir, stat, writeFile } = fs.promises
 
-const { mkdir, readdir, stat, writeFile } = require('fs').promises
-const { join, extname, basename } = require('path')
-const { debug, warn } = require('./log')
-const { URI } = require('./util')
-const { IMAGE, MIME } = require('../constants')
+import { join, extname, basename } from 'path'
+import { debug, warn } from './log'
+import { URI } from './util'
+import { IMAGE, MIME } from '../constants'
+
 
 class Cache {
   constructor(...args) {
@@ -149,6 +150,6 @@ class Cache {
   }
 }
 
-module.exports = {
+export {
   Cache
 }

@@ -1,7 +1,5 @@
-'use strict'
-
-const { URL } = require('url')
-const { rotate, round, isHorizontal } = require('./math')
+import { URL } from 'url'
+import { rotate, round, isHorizontal } from './math'
 
 
 class Rotation {
@@ -121,8 +119,7 @@ class Rotation {
 class IIIF extends URL {
 }
 
-module.exports = {
+export {
   IIIF,
-  Rotation,
-  exifRotation: Rotation.fromExifOrientation
+  Rotation
 }

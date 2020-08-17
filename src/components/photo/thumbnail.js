@@ -5,7 +5,7 @@ const { IconPhoto } = require('../icons')
 const { Cache } = require('../../common/cache')
 const { bool, func, number, string } = require('prop-types')
 const { ICON } = require('../../constants/sass')
-const { exifRotation } = require('../../common/iiif')
+const { Rotation } = require('../../common/iiif')
 
 const variant = (size) =>
   size > ICON.SIZE ? ICON.MAX : ICON.SIZE
@@ -19,7 +19,7 @@ class Thumbnail extends React.Component {
 
   static getDerivedStateFromProps(props) {
     let src = Cache.url(props.cache, variant(props.size), props)
-    let rot = exifRotation(props.orientation).add(props)
+    let rot = Rotation.fromExifOrientation(props.orientation).add(props)
     let [x, y] = rot.ratio(props)
 
     return {

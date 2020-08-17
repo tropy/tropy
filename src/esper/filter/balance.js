@@ -1,9 +1,9 @@
 'use strict'
 
 const PIXI = require('pixi.js')
-const res = require('../../common/res')
+const { Shader } = require('../../common/res')
 const { restrict } = require('../../common/util')
-const frag = res.shader.load('balance.frag')
+const frag = Shader.load('balance.frag')
 
 
 class BalanceFilter extends PIXI.Filter {

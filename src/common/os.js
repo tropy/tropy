@@ -1,41 +1,25 @@
-'use strict'
+import fs from 'fs'
+import os from 'os'
+import { join } from 'path'
 
-const os = require('os')
-const fs = require('fs')
-const { join } = require('path')
 const { mkdtemp } = fs.promises
 const { arch, platform } = process
 
-module.exports = {
-  get home() {
-    return os.homedir()
-  },
+export const home = os.homedir()
 
-  get darwin() {
-    return platform === 'darwin'
-  },
+export const darwin = platform === 'darwin'
+export const linux = platform === 'linux'
+export const win32 = platform === 'win32'
 
-  get linux() {
-    return platform === 'linux'
-  },
+export const system = `${os.type()} ${os.release()} (${arch})`
 
-  get win32() {
-    return platform === 'win32'
-  },
+export const mkdtmp = (name = 'tropy') =>
+  mkdtemp(join(os.tmpdir(), name))
 
-  get system() {
-    return `${os.type()} ${os.release()} (${arch})`
-  },
+export const normalize = win32 ?
+  (path) => path :
+  (path) => path.replace(/\\/g, '/')
 
-  mkdtmp(name = 'tropy') {
-    return mkdtemp(join(os.tmpdir(), name))
-  },
-
-  normalize: platform === 'win32' ?
-    (path) => path :
-    (path) => path.replace(/\\/g, '/'),
-
-  meta: platform === 'darwin' ?
-    (event) => event.metaKey :
-    (event) => event.ctrlKey
-}
+export const meta = darwin ?
+  (event) => event.metaKey :
+  (event) => event.ctrlKey
