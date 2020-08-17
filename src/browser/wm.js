@@ -5,7 +5,7 @@ import dialog from './dialog'
 import { debug, error, trace, warn } from '../common/log'
 import { darwin } from '../common/os'
 import { channel, paths } from '../common/release'
-import res from '../common/res'
+import { Icon, View } from '../common/res'
 import { BODY, PANEL, ESPER } from '../constants/sass'
 
 import {
@@ -100,7 +100,7 @@ export class WindowManager extends EventEmitter {
 
       switch (process.platform) {
         case 'linux':
-          opts.icon = res.icon.expand(channel, 'tropy', '512x512.png')
+          opts.icon = Icon.expand(channel, 'tropy', '512x512.png')
           opts.darkTheme = opts.darkTheme || isDarkMode
           break
         case 'darwin':
@@ -321,7 +321,7 @@ export class WindowManager extends EventEmitter {
   async open(type, args, opts = {}) {
     let win = this.create(type, args, opts)
 
-    await win.loadFile(res.view.expand(type), {
+    await win.loadFile(View.expand(type), {
       hash: encodeURIComponent(JSON.stringify({
         aqua: WindowManager.getAquaColorVariant(),
         contrast: nativeTheme.shouldUseHighContrastColors,

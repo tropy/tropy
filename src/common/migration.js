@@ -1,12 +1,11 @@
-'use strict'
+import fs from 'fs'
+import { basename, extname, join } from 'path'
+import { info } from './log'
+import { paths } from './release'
 
-const { readdir: ls, readFile: read } = require('fs').promises
-const { basename, extname, join } = require('path')
-const { info } = require('./log')
-const { paths } = require('./release')
+const { readdir: ls, readFile: read } = fs.promises
 
-
-class Migration {
+export class Migration {
   constructor(path) {
     this.path = path
     this.type = extname(this.path).slice(1)
@@ -45,5 +44,3 @@ class Migration {
     return !number || this.number > number
   }
 }
-
-module.exports =  { Migration }

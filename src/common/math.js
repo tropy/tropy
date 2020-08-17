@@ -1,49 +1,43 @@
-'use strict'
+export function isClockwise(deg1, deg2) {
+  let a = deg1 % 360
+  let b = deg2 % 360
 
-const math = {
-  isClockwise(deg1, deg2) {
-    let a = deg1 % 360
-    let b = deg2 % 360
+  return (a < b) ?
+    (b - a) <= 180 :
+    (a - b) >= 180
+}
 
-    return (a < b) ?
-      (b - a) <= 180 :
-      (a - b) >= 180
-  },
+export function isHorizontal(deg) {
+  return deg < 45 || deg > 315 || (deg > 135 && deg < 225)
+}
 
-  isHorizontal(deg) {
-    return deg < 45 || deg > 315 || (deg > 135 && deg < 225)
-  },
+export function deg(rad) {
+  return (360 + (rad / Math.PI) * 180) % 360
+}
 
-  deg(rad) {
-    return (360 + (rad / Math.PI) * 180) % 360
-  },
+export function rad(deg) {
+  return (deg / 180) * Math.PI
+}
 
-  rad(deg) {
-    return (deg / 180) * Math.PI
-  },
+export function round(value, precision = 1) {
+  return Math.round(value * precision) / precision
+}
 
-  round(value, precision = 1) {
-    return Math.round(value * precision) / precision
-  },
+export function rounded(src) {
+  let res = {}
+  for (let key in src) res[key] = ~~src[key]
+  return res
+}
 
-  rounded(src) {
-    let res = {}
-    for (let key in src) res[key] = ~~src[key]
-    return res
-  },
-
-  translate(a, { top = 0, bottom = 0, left = 0, right = 0 }) {
-    return {
-      top: a.top + top,
-      bottom: a.bottom + bottom,
-      left: a.left + left,
-      right: a.right + right
-    }
-  },
-
-  rotate(deg, by) {
-    return (360 + ((deg + by) % 360)) % 360
+export function translate(a, { top = 0, bottom = 0, left = 0, right = 0 }) {
+  return {
+    top: a.top + top,
+    bottom: a.bottom + bottom,
+    left: a.left + left,
+    right: a.right + right
   }
 }
 
-module.exports = math
+export function rotate(deg, by) {
+  return (360 + ((deg + by) % 360)) % 360
+}

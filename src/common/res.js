@@ -1,15 +1,12 @@
-'use strict'
-
-const yaml = require('js-yaml')
-const { basename, join } = require('path')
-const fs = require('fs')
-const { readFile: read } = fs.promises
-const { paths } = require('./release')
-const { get, flatten } = require('./util')
-const { debug } = require('./log')
+import fs from 'fs'
+import { basename, join } from 'path'
+import yaml from 'js-yaml'
+import { debug } from './log'
+import { paths } from './release'
+import { get, flatten } from './util'
 
 
-class Resource {
+export class Resource {
   static get base() {
     return paths.res
   }
@@ -26,7 +23,9 @@ class Resource {
     const res = this.expand(name, locale)
     debug(`opening resource ${basename(res)}`)
 
-    return new this(this.parse(await read(res)), locale, ...args)
+    return new this(
+      this.parse(
+        await fs.promises.readFile(res)), locale, ...args)
   }
 
   static async openWithFallback(fallback, locale, ...args) {
@@ -44,7 +43,7 @@ class Resource {
 }
 
 
-class Menu extends Resource {
+export class Menu extends Resource {
   static get base() {
     return join(super.base, 'menu')
   }
@@ -57,7 +56,7 @@ class Menu extends Resource {
 }
 
 
-class Strings extends Resource {
+export class Strings extends Resource {
   static get base() {
     return join(super.base, 'strings')
   }
@@ -78,7 +77,7 @@ class Strings extends Resource {
 }
 
 
-class KeyMap extends Resource {
+export class KeyMap extends Resource {
   static get base() {
     return join(super.base, 'keymaps')
   }
@@ -90,53 +89,51 @@ class KeyMap extends Resource {
   }
 }
 
-const icon = {
+
+export const Icon = {
   base: join(Resource.base, 'icons'),
 
   color(name, ext = '.png', variant = '') {
-    return join(
-      Resource.base,
-      'icons',
-      'colors',
-      `${name}${variant}${ext}`)
+    return join(Icon.base, 'colors', `${name}${variant}${ext}`)
   },
 
   expand(...args) {
-    return join(icon.base, ...args)
+    return join(Icon.base, ...args)
   }
 }
 
-const shader = {
+
+export const Cursor = {
+  base: join(Resource.base, 'cursors'),
+
+  expand(name) {
+    return join(Cursor.base, name)
+  }
+}
+
+
+export const Shader = {
   base: join(Resource.base, 'shaders'),
 
   load(name) {
-    return fs.readFileSync(join(shader.base, name), 'utf-8')
+    return fs.readFileSync(join(Shader.base, name), 'utf-8')
   }
 }
 
-const view = {
+
+export const View = {
   base: join(Resource.base, 'views'),
 
   expand(name) {
-    return join(view.base, `${name}.html`)
+    return join(View.base, `${name}.html`)
   }
 }
 
-const worker = {
+
+export const Worker = {
   base: join(Resource.base, 'workers'),
 
   expand(name) {
-    return join(worker.base, `${name}.js`)
+    return join(Worker.base, `${name}.js`)
   }
-}
-
-module.exports = {
-  Resource,
-  Menu,
-  shader,
-  Strings,
-  KeyMap,
-  icon,
-  view,
-  worker
 }

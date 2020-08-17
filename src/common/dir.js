@@ -1,13 +1,13 @@
-'use strict'
+import fs from 'fs'
+import { basename, dirname, join } from 'path'
+import { tautology } from './util'
 
-const { basename, dirname, join } = require('path')
-const { stat, readdir } = require('fs').promises
-const { tautology } = require('./util')
+const { stat, readdir } = fs.promises
 
-const ls = async (path, {
+export async function ls (path, {
   filter = tautology,
   recursive = false
-} = {})  => {
+} = {}) {
   let files = []
   let entries = await readdir(path, { withFileTypes: true })
 
@@ -29,10 +29,10 @@ const ls = async (path, {
   return files
 }
 
-const expand = async (paths, {
+export async function expand(paths, {
   filter = tautology,
   recursive = false
-} = {}) => {
+} = {}) {
   let files = []
 
   for (let path of paths) {
@@ -53,9 +53,4 @@ const expand = async (paths, {
   }
 
   return files
-}
-
-module.exports = {
-  expand,
-  ls
 }

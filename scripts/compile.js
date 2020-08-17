@@ -27,6 +27,10 @@ const BABEL_CONFIG = {
   ]
 }
 
+require('@babel/register')(BABEL_CONFIG)
+const SASS = require('../src/constants/sass')
+const { get } = require('../src/common/util')
+
 const js = (pattern = 'src/**/*.{js,jsx}') =>
   new Promise((resolve, reject) => {
     say('compile javascripts...')
@@ -94,8 +98,6 @@ const SassDefaults = {
 
   functions: {
     'const($name, $unit:"")'(name, unit) {
-      const SASS = require('../src/constants/sass')
-      const { get } = require('../src/common/util')
       return toSass(get(SASS, name.getValue()), unit.getValue())
     }
   },

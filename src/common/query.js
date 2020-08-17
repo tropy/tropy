@@ -1,10 +1,9 @@
-'use strict'
+import { copy, pluck } from './util'
 
 const { assign, entries } = Object
 const { isArray } = Array
-const { copy, pluck } = require('./util')
 
-class Query {
+export class Query {
   dup() {
     return copy(this, new this.constructor())
   }
@@ -29,7 +28,7 @@ class Query {
   }
 }
 
-class Insert extends Query {
+export class Insert extends Query {
   constructor(table) {
     super()
     this.table = table
@@ -63,7 +62,7 @@ class Insert extends Query {
   }
 }
 
-class Union extends Query {
+export class Union extends Query {
   constructor(...args) {
     super()
     this.params = {}
@@ -167,7 +166,7 @@ class ConditionalQuery extends Query {
   }
 }
 
-class Select extends ConditionalQuery {
+export class Select extends ConditionalQuery {
   constructor(...args) {
     super()
     this.select(...args)
@@ -307,7 +306,7 @@ class Select extends ConditionalQuery {
 }
 
 
-class Update extends ConditionalQuery {
+export class Update extends ConditionalQuery {
   constructor(src) {
     super()
     this.src = src
@@ -341,15 +340,18 @@ class Update extends ConditionalQuery {
   }
 }
 
-module.exports = {
-  Insert,
-  Query,
-  Select,
-  Union,
-  Update,
+export function into(...args) {
+  return new Insert(...args)
+}
 
-  into(...args) { return new Insert(...args) },
-  select(...args) { return new Select(...args) },
-  union(...args) { return new Union(...args) },
-  update(...args) { return new Update(...args) }
+export function select(...args) {
+  return new Select(...args)
+}
+
+export function union(...args) {
+  return new Union(...args)
+}
+
+export function update(...args) {
+  return new Update(...args)
 }

@@ -1,4 +1,4 @@
-import res from '../common/res'
+import { Icon, Menu as MR } from '../common/res'
 import { basename } from 'path'
 import { error, warn } from '../common/log'
 import { blank } from '../common/util'
@@ -21,7 +21,7 @@ export class Menu {
   }
 
   async loadTemplate(name) {
-    let { template } = await res.Menu.openWithFallback(
+    let { template } = await MR.openWithFallback(
       this.app.defaultLocale,
       this.app.state.locale,
       name)
@@ -348,7 +348,7 @@ Menu.ItemCompiler = {
     item.checked = event.target?.[ctx] === col
 
     if (col != null && col !== 'random')
-      item.icon = res.icon.color(col)
+      item.icon = Icon.color(col)
     if (cmd)
       item.click = createResponder(cmd, app, win, event, col)
   },

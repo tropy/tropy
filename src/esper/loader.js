@@ -20,7 +20,7 @@ class Loader extends EventEmitter {
 
   constructor() {
     super()
-    this.#worker = new Worker(res.worker.expand('loader'))
+    this.#worker = new Worker(res.Worker.expand('loader'))
     this.#worker.onmessage = this.handleWorkerMessage
   }
 

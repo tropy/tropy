@@ -1,14 +1,14 @@
-'use strict'
+import { EventEmitter } from 'events'
+import fs from 'fs'
+import { normalize } from 'path'
+import Bluebird from 'bluebird'
+import { createPool } from 'generic-pool'
+import sqlite from './sqlite'
+import { Migration } from './migration'
+import { debug, info, trace, warn } from './log'
 
-const Bluebird = require('bluebird')
+const { readFile: read } = fs.promises
 const { using } = Bluebird
-const { normalize } = require('path')
-const { createPool } = require('generic-pool')
-const { EventEmitter } = require('events')
-const { readFile: read } = require('fs').promises
-const sqlite = require('./sqlite')
-const { Migration } = require('./migration')
-const { debug, info, trace, warn } = require('./log')
 
 const M = {
   'r': sqlite.OPEN_READONLY,
@@ -21,7 +21,7 @@ const cache = {}
 const IUD = /^\s*(insert|update|delete)/i
 
 
-class Database extends EventEmitter {
+export class Database extends EventEmitter {
   static async create(path, script, ...args) {
     try {
       var db = new Database(path, 'w+', { max: 1 })
@@ -245,7 +245,7 @@ class Database extends EventEmitter {
 }
 
 
-class Connection {
+export class Connection {
   constructor(db) {
     this.db = db
   }
@@ -357,7 +357,7 @@ class Connection {
 }
 
 
-class Statement {
+export class Statement {
   static disposable(conn, sql, ...params) {
     return conn.db.prepareAsync(sql, flatten(params))
       .then(stmt => new Statement(stmt))
@@ -404,7 +404,7 @@ function nofk(conn) {
     .disposer(() => conn.configure({ foreign_keys: 'on' }))
 }
 
-function transaction(conn, mode = 'IMMEDIATE') {
+export function transaction(conn, mode = 'IMMEDIATE') {
   return conn
     .begin(mode)
     .disposer((tx, p) => p.isFulfilled() ? tx.commit() : tx.rollback())
@@ -412,11 +412,4 @@ function transaction(conn, mode = 'IMMEDIATE') {
 
 function flatten(params) {
   return (params.length === 1) ? params[0] : params
-}
-
-module.exports = {
-  Database,
-  Connection,
-  Statement,
-  transaction
 }
