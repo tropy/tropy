@@ -57,10 +57,6 @@ module.exports = {
     orientation: 'http://www.w3.org/2003/12/exif/ns#orientation'
   },
 
-  SKOS: {
-    definition: 'http://www.w3.org/2004/02/skos/core#definition'
-  },
-
   VANN: {
     ns: 'http://purl.org/vocab/vann/',
     preferredNamespacePrefix: 'http://purl.org/vocab/vann/preferredNamespacePrefix',

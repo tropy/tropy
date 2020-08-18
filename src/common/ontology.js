@@ -1,21 +1,16 @@
-'use strict'
+import fs from 'fs'
+import { join, basename, extname } from 'path'
+import { any, empty, get, identify, pick, URI } from './util'
+import { Resource } from './res'
+import N3 from 'n3'
+import { ONTOLOGY, TYPE } from '../constants'
+import { dc, dcterms, owl, rdf, rdfs, skos, tropy, vann } from './ns'
 
-const fs = require('fs')
 const { readFile: read, writeFile: write } = fs.promises
-const { join, basename, extname } = require('path')
-const { any, empty, get, identify, pick, URI } = require('./util')
-const { Resource } = require('./res')
-const N3 = require('n3')
-const { TEMPLATE } = require('../constants/ontology')
 
-const {
-  RDF, RDFS, DC, TERMS, SKOS, OWL, VANN, TROPY, TYPE
-} = require('../constants')
-
-
-class Template {
+export class Template {
   static defaults = {
-    type: TROPY.Item,
+    type: tropy.Item,
     name: '',
     creator: '',
     description: '',
@@ -55,9 +50,9 @@ class Template {
 
   static parse(data) {
     return {
-      '@context': TEMPLATE.CONTEXT,
+      '@context': ONTOLOGY.TEMPLATE.CONTEXT,
       '@id': data.id,
-      '@type': TROPY.Template,
+      '@type': tropy.Template,
       'type': data.type,
       'name': data.name,
       'version': data.version,
@@ -104,7 +99,7 @@ class Field {
 Template.Field = Field
 
 
-class Ontology extends Resource {
+export class Ontology extends Resource {
   static get base() {
     return join(super.base, 'vocab')
   }
@@ -138,22 +133,22 @@ class Ontology extends Resource {
   }
 
   static CLASSES = [
-    RDFS.Class,
-    OWL.Class
+    rdfs.Class,
+    owl.Class
   ]
 
   static DATATYPES = [
-    RDFS.Datatype
+    rdfs.Datatype
   ]
 
   static PROPERTIES = [
-    RDF.Property,
-    OWL.ObjectProperty,
-    OWL.DatatypeProperty,
-    OWL.SymmetricProperty,
-    OWL.FunctionalProperty,
-    OWL.TransitiveProperty,
-    OWL.InverseFunctionalProperty
+    rdf.Property,
+    owl.ObjectProperty,
+    owl.DatatypeProperty,
+    owl.SymmetricProperty,
+    owl.FunctionalProperty,
+    owl.TransitiveProperty,
+    owl.InverseFunctionalProperty
   ]
 
 
@@ -181,8 +176,8 @@ class Ontology extends Resource {
       if (vocab == null) return []
       if (json[ns] == null) json[ns] = vocab
 
-      if (data[RDFS.label]) {
-        for (let lbl of data[RDFS.label]) {
+      if (data[rdfs.label]) {
+        for (let lbl of data[rdfs.label]) {
           if (lbl['@value'] == null) continue
           vocab.labels.push({
             id, label: lbl['@value'], language: lbl['@language']
@@ -197,8 +192,8 @@ class Ontology extends Resource {
       let [vocab, data] = collect(id)
       if (vocab == null) continue
 
-      let domain = get(data, [RDFS.domain, 0, '@id'])
-      let range = get(data, [RDFS.range, 0, '@id'])
+      let domain = get(data, [rdfs.domain, 0, '@id'])
+      let range = get(data, [rdfs.range, 0, '@id'])
 
       vocab.properties.push({
         id, data, vocabulary: vocab.id, domain, range, ...info(data, locale)
@@ -231,12 +226,12 @@ class Ontology extends Resource {
       data = this.getData(id.slice(0, id.length - 1))
     }
 
-    title = getValue(any(data, DC.title, TERMS.title), locale) || title
-    prefix = get(data, [VANN.preferredNamespacePrefix, 0, '@value'], prefix)
+    title = getValue(any(data, dc.title, dcterms.title), locale) || title
+    prefix = get(data, [vann.preferredNamespacePrefix, 0, '@value'], prefix)
 
-    let seeAlso = get(data, [RDFS.seeAlso, 0, '@id'])
+    let seeAlso = get(data, [rdfs.seeAlso, 0, '@id'])
     let description = getValue(
-      any(data, DC.description, TERMS.description, RDFS.comment), locale
+      any(data, dc.description, dcterms.description, rdfs.comment), locale
     )
 
     return {
@@ -260,7 +255,7 @@ class Ontology extends Resource {
         types.includes(object.id)) {
         ids.push(subject.id)
       }
-    }, null, RDF.type)
+    }, null, rdf.type)
 
     return ids
   }
@@ -274,11 +269,11 @@ class Ontology extends Resource {
 }
 
 
-function info(data, locale = 'en') {
+export function info(data, locale = 'en') {
   return {
-    comment: getValue(any(data, RDFS.comment), locale),
+    comment: getValue(any(data, rdfs.comment), locale),
     description: getValue(
-      any(data, SKOS.defintion, DC.description, TERMS.description), locale
+      any(data, skos.defintion, dc.description, dcterms.description), locale
     )
   }
 }
@@ -295,7 +290,7 @@ function getValue(data, locale = 'en') {
   return data[0]['@value']
 }
 
-function literal(data) {
+export function literal(data) {
   return N3.Util.isLiteral(data) ? {
     '@value': data.value,
     '@type': data.datatype,
@@ -306,18 +301,10 @@ function literal(data) {
   }
 }
 
-function isDefinedBy(id, data) {
-  let ns = get(data, [RDFS.isDefinedBy, 0, '@id'])
+export function isDefinedBy(id, data) {
+  let ns = get(data, [rdfs.isDefinedBy, 0, '@id'])
   if (ns == null) return URI.namespace(id)
   ns = ns.id || ns
   if (!(/[#/]$/).test(ns)) ns += '#'
   return ns
-}
-
-module.exports = {
-  info,
-  isDefinedBy,
-  literal,
-  Ontology,
-  Template
 }
