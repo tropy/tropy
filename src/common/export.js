@@ -1,8 +1,6 @@
-'use strict'
+import { tropy } from './ns'
 
-const { tropy } = require('./ns')
-
-const ctx = {
+export const ctx = {
   get item() {
     return {
       '@version': 1.1,
@@ -50,7 +48,7 @@ const ctx = {
   }
 }
 
-const props = {
+export const props = {
   item: [
     'template'
   ],
@@ -99,9 +97,4 @@ const props = {
       ...props.note
     ]
   }
-}
-
-module.exports = {
-  ctx,
-  props
 }
