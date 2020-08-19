@@ -1,11 +1,9 @@
-'use strict'
-
-const Koa = require('koa')
-const Router = require('@koa/router')
-const bodyParser = require('koa-bodyparser')
-const act = require('../actions/api')
-const fs = require('fs')
-const { basename } = require('path')
+import fs from 'fs'
+import { basename } from 'path'
+import Koa from 'koa'
+import Router from '@koa/router'
+import bodyParser from 'koa-bodyparser'
+import act from '../actions/api'
 
 const show = (type) =>
   async (ctx) => {
@@ -270,7 +268,7 @@ const project = {
   }
 }
 
-const create = ({ dispatch, log, rsvp, version }) => {
+export function create({ dispatch, log, rsvp, version }) {
   let app = new Koa
   let api = new Router
 
@@ -340,8 +338,4 @@ const logging = async (ctx, next) => {
     query: ctx.query,
     url: ctx.url
   })
-}
-
-module.exports = {
-  create
 }

@@ -1,0 +1,3 @@
+# vi: set ft=yaml :
+parserOptions:
+  sourceType: module
