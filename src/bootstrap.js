@@ -5,15 +5,17 @@ try {
 
   const opts = require('./args').parse()
   const { basename } = require('path')
-  const { fatal, info } = require('./common/log')({
-    dest: opts.log,
-    level: opts.level,
-    name: basename(location.pathname, '.html')
-  })
+  const { createLogger, fatal, info } = require('./common/log')
 
   const { ipcRenderer: ipc } = require('electron')
   const { ready } = require('./dom')
   const { Window } = require('./window')
+
+  createLogger({
+    dest: opts.log,
+    level: opts.level,
+    name: basename(location.pathname, '.html')
+  })
 
   const win = new Window(opts)
 

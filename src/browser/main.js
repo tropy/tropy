@@ -5,7 +5,7 @@ import { mkdirSync as mkdir } from 'fs'
 import { darwin, win32, system } from '../common/os'
 import { exe, qualified, version } from '../common/release'
 import { parse } from './args'
-import log from '../common/log'
+import { createLogger, info, warn } from '../common/log'
 import { Tropy } from './tropy'
 
 const START = Date.now()
@@ -52,11 +52,11 @@ if (app.isPackaged) {
   app.setAsDefaultProtocolClient('tropy')
 }
 
-export default (async function main() {
+(async function main() {
   if (win32 && (await import('./squirrel'))(opts))
     return
 
-  const { info, warn } = log({
+  createLogger({
     dest: join(opts.logs, 'tropy.log'),
     name: 'main',
     rotate: true,

@@ -14,12 +14,12 @@ import {
 } from 'electron'
 
 import {
+  crashReport,
   debug,
   fatal,
   info,
-  warn,
   logger,
-  crashReport
+  warn
 } from '../common/log'
 
 
