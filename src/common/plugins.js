@@ -16,12 +16,12 @@ const { EventEmitter } = require('events')
 const { basename, join } = require('path')
 const { info, warn } = require('./log')
 const { blank, get, omit, uniq } = require('./util')
+const { unzip } = require('./zip')
 const debounce = require('lodash.debounce')
 
 const load = async file => JSON.parse(await read(file))
 const save = (file, data) => write(file, JSON.stringify(data, null, 2))
 
-const decompress = (...args) => require('decompress')(...args)
 const proxyRequire = (mod) => require(mod)
 
 const subdirs = async root => (
@@ -115,7 +115,7 @@ class Plugins extends EventEmitter {
       const plugin = Plugins.basename(input)
       const dest = join(this.root, plugin)
       await this.uninstall(plugin, { prune: false })
-      await decompress(input, dest, { strip: 1 })
+      await unzip(input, dest)
       const spec = (await this.scan([plugin]))[plugin] || {}
       await this.reload()
       this.emit('change')
@@ -249,11 +249,11 @@ class Plugins extends EventEmitter {
     return this
   }
 
-  static ext = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip']
+  static ext = ['zip']
 
   static basename(input) {
     return basename(input)
-      .replace(/\.(tar\.(bz2|gz)|tgz|zip)$/, '')
+      .replace(/\.(zip)$/, '')
       .replace(/-\d+(\.\d+)*$/, '')
   }
 }
