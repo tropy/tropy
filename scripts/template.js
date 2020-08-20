@@ -37,7 +37,7 @@ const html = name => (
     "worker-src 'self'",
     "style-src 'self' 'unsafe-inline'",
     'img-src * data:',
-    "connect-src 'self' http: https:",
+    "connect-src 'self' http: https: file:",
     "form-action 'none'"
   ].join('; ')}">
 </head>
