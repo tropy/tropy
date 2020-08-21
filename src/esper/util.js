@@ -1,27 +1,19 @@
-'use strict'
+import * as css from '../css'
+import { SCALE_MODES } from 'pixi.js'
+import { restrict } from '../common/util'
+import { darwin } from '../common/os'
+import { ESPER, SASS } from '../constants'
 
-const css = require('../css')
-const { restrict } = require('../common/util')
-const { darwin } = require('../common/os')
-const { SCALE_MODES } = require('pixi.js')
-const { TOOL } = require('../constants/esper')
+const { CURSOR, ZOOM_LINEAR_MAX } = SASS.ESPER
 
-const {
-  ESPER: {
-    CURSOR,
-    ZOOM_LINEAR_MAX
-  }
-} = require('../constants/sass')
-
-
-const constrain = (pos, { left, top, bottom, right }) => {
+export function constrain(pos, { left, top, bottom, right }) {
   pos.x = Math.floor(restrict(pos.x, left, right))
   pos.y = Math.floor(restrict(pos.y, top, bottom))
 
   return pos
 }
 
-const coords = (event) => ({
+export const coords = (event) => ({
   x: event.offsetX,
   y: event.offsetY,
   dx: event.deltaX,
@@ -31,8 +23,8 @@ const coords = (event) => ({
   pinch: isPinchToZoom(event)
 })
 
-const isDoubleClickSupported = (tool) =>
-  tool === TOOL.PAN || tool === TOOL.ARROW
+export const isDoubleClickSupported = (tool) =>
+  tool === ESPER.TOOL.PAN || tool === ESPER.TOOL.ARROW
 
 const isPinchToZoom = ({ type, ctrlKey, metaKey, shiftKey }) =>
   darwin && type === 'wheel' && ctrlKey && !(metaKey || shiftKey)
@@ -40,12 +32,12 @@ const isPinchToZoom = ({ type, ctrlKey, metaKey, shiftKey }) =>
 const equal = (p1, p2) =>
   p1.x === p2.x && p1.y === p2.y
 
-const center = ({ x = 0, y = 0, width, height }) => ({
+export const center = ({ x = 0, y = 0, width, height }) => ({
   x: Math.round(x + width / 2),
   y: Math.round(y + height / 2)
 })
 
-const setScaleMode = (texture, zoom) => {
+export function setScaleMode(texture, zoom) {
   if (texture == null) return
 
   let { baseTexture } = texture
@@ -62,20 +54,9 @@ const setScaleMode = (texture, zoom) => {
 const svg = (name) =>
   [`${name}@1x.svg`, `${name}@2x.svg`]
 
-const addCursorStyle = (styles, name, cursor = CURSOR[name]) => {
+export function addCursorStyle(styles, name, cursor = CURSOR[name]) {
   if (cursor == null) return
 
   styles[name] = css.cursor(svg(cursor.default), cursor)
   styles[`${name}-active`] = css.cursor(svg(cursor.active), cursor)
-}
-
-
-module.exports = {
-  addCursorStyle,
-  center,
-  constrain,
-  coords,
-  equal,
-  isDoubleClickSupported,
-  setScaleMode
 }
