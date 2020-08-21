@@ -19,8 +19,7 @@ export default {
     babel({ babelHelpers: 'bundled' }),
     commonjs({
       ignore: [
-        'pino-pretty',
-        'decompress'
+        'pino-pretty'
       ]
     })
   ],

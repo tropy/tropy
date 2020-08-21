@@ -40,7 +40,10 @@ export class Plugins extends EventEmitter {
 
   getContext(plugin) {
     return {
-      logger: logger.child({ plugin })
+      logger: logger.child({ plugin }),
+      require(mod) {
+        warn(`plugin ${plugin} tried requiring ${mod} via context!`)
+      }
     }
   }
 
@@ -106,16 +109,18 @@ export class Plugins extends EventEmitter {
 
   async install(input) {
     try {
-      const plugin = Plugins.basename(input)
-      const dest = join(this.root, plugin)
+      var plugin = Plugins.basename(input)
+      let dest = join(this.root, plugin)
       await this.uninstall(plugin, { prune: false })
       await unzip(input, dest, { strip: true })
-      const spec = (await this.scan([plugin]))[plugin] || {}
+      var spec = (await this.scan([plugin]))[plugin] || {}
       await this.reload()
       this.emit('change')
       info(`installed plugin ${spec.name || plugin} ${spec.version}`)
-    } catch (error) {
-      warn(`failed to install plugin: ${error.message}`)
+    } catch (e) {
+      warn({
+        stack: e.stack
+      }, `failed to install plugin ${spec?.name || plugin}`)
     }
     return this
   }
