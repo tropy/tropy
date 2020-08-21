@@ -1,14 +1,13 @@
-'use strict'
+import { Filter } from 'pixi.js'
+import { restrict } from '../../common/util'
+import { Shader } from '../../common/res'
 
-const PIXI = require('pixi.js')
-const { restrict } = require('../../common/util')
-const { Shader } = require('../../common/res')
-const frag = Shader.load('sharpen.frag')
+const FRAG = Shader.load('sharpen.frag')
 
 
-class SharpenFilter extends PIXI.Filter {
+export class SharpenFilter extends Filter {
   constructor(intensity = 0, width = 200, height = 200) {
-    super(undefined, frag)
+    super(undefined, FRAG)
     this.uniforms.size = new Float32Array(2)
     this.intensity = intensity
     this.width = width
@@ -38,8 +37,4 @@ class SharpenFilter extends PIXI.Filter {
   set height(value) {
     this.uniforms.size[1] = 1 / value
   }
-}
-
-module.exports = {
-  SharpenFilter
 }
