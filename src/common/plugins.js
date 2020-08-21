@@ -1,6 +1,11 @@
-'use strict'
-
-const fs = require('fs')
+import { EventEmitter } from 'events'
+import fs from 'fs'
+import { basename, join } from 'path'
+import { shell } from 'electron'
+import debounce from 'lodash.debounce'
+import { logger, info, warn } from './log'
+import { blank, get, omit, uniq } from './util'
+import { unzip } from './zip'
 
 const {
   mkdir,
@@ -10,19 +15,8 @@ const {
   stat
 } = fs.promises
 
-
-const { shell } = require('electron')
-const { EventEmitter } = require('events')
-const { basename, join } = require('path')
-const { info, warn } = require('./log')
-const { blank, get, omit, uniq } = require('./util')
-const { unzip } = require('./zip')
-const debounce = require('lodash.debounce')
-
 const load = async file => JSON.parse(await read(file))
 const save = (file, data) => write(file, JSON.stringify(data, null, 2))
-
-const proxyRequire = (mod) => require(mod)
 
 const subdirs = async root => (
   (await readdir(root, { withFileTypes: true }))
@@ -33,7 +27,7 @@ const subdirs = async root => (
     }, []))
 
 
-class Plugins extends EventEmitter {
+export class Plugins extends EventEmitter {
   constructor(root) {
     super()
     this.root = root
@@ -46,8 +40,7 @@ class Plugins extends EventEmitter {
 
   getContext(plugin) {
     return {
-      logger: require('./log').logger.child({ plugin }),
-      require: proxyRequire
+      logger: logger.child({ plugin })
     }
   }
 
@@ -60,6 +53,7 @@ class Plugins extends EventEmitter {
     }, [])
   }
 
+  // TODO ESM
   clearModuleCache(root = this.root) {
     for (let mod in require.cache) {
       if (mod.startsWith(root)) delete require.cache[mod]
@@ -154,6 +148,7 @@ class Plugins extends EventEmitter {
     return this
   }
 
+  // TODO ESM
   require(name, fallback = 'node_modules') {
     let pkg
     try {
@@ -276,8 +271,4 @@ const homepage = pkg => {
       .replace(/^github:/, 'https://github.com/')
       .replace(/^gitlab:/, 'https://gitlab.com/')
       .replace(/^bitbucket:/, 'https://bitbucket.org/')
-}
-
-module.exports = {
-  Plugins
 }
