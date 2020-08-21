@@ -1,17 +1,13 @@
-'use strict'
+import React from 'react'
+import { render } from 'react-dom'
+import { create } from '../stores/wizard'
+import { Main } from '../components/main'
+import { WizardContainer } from '../components/wizard'
+import { win } from '../window'
+import { intl, history, settings } from '../actions'
+import * as dialog from '../dialog'
 
-const React = require('react')
-const { render } = require('react-dom')
-const { create } = require('../stores/wizard')
-const { Main } = require('../components/main')
-const { WizardContainer } = require('../components/wizard')
-const { win } = require('../window')
-const dialog = require('../dialog')
-const intl = require('../actions/intl')
-const history = require('../actions/history')
-const settings = require('../actions/settings')
-
-const store = create()
+export const store = create()
 const { locale } = ARGS
 
 store
@@ -37,5 +33,7 @@ win.on('settings.update', (data) => {
   store.dispatch(settings.update(data))
 })
 
-Object.defineProperty(window, 'store', { get: () => store })
-Object.defineProperty(window, 'state', { get: () => store.getState() })
+if (ARGS.dev || ARGS.debug) {
+  Object.defineProperty(window, 'store', { get: () => store })
+  Object.defineProperty(window, 'state', { get: () => store.getState() })
+}

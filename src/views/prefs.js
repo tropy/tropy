@@ -1,23 +1,21 @@
-'use strict'
+import React from 'react'
+import { render } from 'react-dom'
+import { create } from '../stores/prefs'
+import { Main } from '../components/main'
+import { PrefsContainer } from '../components/prefs'
+import { main } from '../sagas/prefs'
+import { win } from '../window'
+import { intl, prefs, history, keymap, settings } from '../actions'
+import * as dialog from '../dialog'
 
-const React = require('react')
-const { render } = require('react-dom')
-const { create } = require('../stores/prefs')
-const { Main } = require('../components/main')
-const { PrefsContainer } = require('../components/prefs')
-const { main } = require('../sagas/prefs')
-const { win } = require('../window')
-const act = require('../actions')
-const dialog = require('../dialog')
-
-const store = create()
-const tasks = store.saga.run(main)
+export const store = create()
+export const tasks = store.saga.run(main)
 
 const { locale } = ARGS
 
 Promise.all([
-  store.dispatch(act.intl.load({ locale })),
-  store.dispatch(act.keymap.load({ name: 'project', locale }))
+  store.dispatch(intl.load({ locale })),
+  store.dispatch(keymap.load({ name: 'project', locale }))
 ])
   .then(() => {
     render(
@@ -30,21 +28,21 @@ Promise.all([
 dialog.start(store)
 
 win.on('app.undo', () => {
-  store.dispatch(act.history.undo())
+  store.dispatch(history.undo())
 })
 win.on('app.redo', () => {
-  store.dispatch(act.history.redo())
+  store.dispatch(history.redo())
 })
 win.on('settings.update', (settings) => {
-  store.dispatch(act.settings.update(settings))
+  store.dispatch(settings.update(settings))
   if (settings.locale) {
-    store.dispatch(act.intl.load({ locale: settings.locale }))
+    store.dispatch(intl.load({ locale: settings.locale }))
   }
 })
 
 win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (
-  store.dispatch(act.prefs.close()), tasks.toPromise()
+  store.dispatch(prefs.close()), tasks.toPromise()
 ))
 
 if (ARGS.dev || ARGS.debug) {
