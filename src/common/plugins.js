@@ -115,7 +115,7 @@ class Plugins extends EventEmitter {
       const plugin = Plugins.basename(input)
       const dest = join(this.root, plugin)
       await this.uninstall(plugin, { prune: false })
-      await unzip(input, dest)
+      await unzip(input, dest, { strip: true })
       const spec = (await this.scan([plugin]))[plugin] || {}
       await this.reload()
       this.emit('change')
