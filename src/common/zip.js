@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { join } from 'path'
 import { promisify } from 'util'
 import crossZip from 'cross-zip'
 import { mkdtmp } from './os'
@@ -23,7 +24,7 @@ export async function unzip(src, dst, { strip } = {}) {
     if (tail.length > 0 || !head?.isDirectory())
       await rename(tmp, dst)
     else
-      await rename(tail, dst)
+      await rename(join(tmp, head.name), dst)
 
   } finally {
     if (tmp)
