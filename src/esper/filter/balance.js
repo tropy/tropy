@@ -1,14 +1,13 @@
-'use strict'
+import { Filter } from 'pixi.js'
+import { Shader } from '../../common/res'
+import { restrict } from '../../common/util'
 
-const PIXI = require('pixi.js')
-const { Shader } = require('../../common/res')
-const { restrict } = require('../../common/util')
-const frag = Shader.load('balance.frag')
+const FRAG = Shader.load('balance.frag')
 
 
-class BalanceFilter extends PIXI.Filter {
+export class BalanceFilter extends Filter {
   constructor(a = 0, b = 0) {
-    super(undefined, frag)
+    super(undefined, FRAG)
     this.a = a
     this.b = b
   }
@@ -28,8 +27,4 @@ class BalanceFilter extends PIXI.Filter {
   set b(value) {
     this.uniforms.b = restrict(value, -127, 127)
   }
-}
-
-module.exports = {
-  BalanceFilter
 }
