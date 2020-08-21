@@ -1,6 +1,9 @@
 'use strict'
 
 const os = require('os')
+const fs = require('fs')
+const { join } = require('path')
+const { mkdtemp } = fs.promises
 const { arch, platform } = process
 
 module.exports = {
@@ -22,6 +25,10 @@ module.exports = {
 
   get system() {
     return `${os.type()} ${os.release()} (${arch})`
+  },
+
+  mkdtmp(name = 'tropy') {
+    return mkdtemp(join(os.tmpdir(), name))
   },
 
   normalize: platform === 'win32' ?
