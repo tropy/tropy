@@ -1,19 +1,17 @@
-'use strict'
-
-const fs = require('fs')
-const { promisify } = require('util')
-const crossZip = require('cross-zip')
-const { mkdtmp } = require('./os')
+import fs from 'fs'
+import { promisify } from 'util'
+import crossZip from 'cross-zip'
+import { mkdtmp } from './os'
 
 const { readdir, rename, rmdir } = fs.promises
-
 const unzipAsync = promisify(crossZip.unzip)
-const zip = promisify(crossZip.zip)
+
+export const zip = promisify(crossZip.zip)
 
 //unzip.sync = crossZip.unzipSync
 //zip.sync = crossZip.zipSync
 
-async function unzip(src, dst, { strip } = {}) {
+export async function unzip(src, dst, { strip } = {}) {
   if (!strip)
     return unzipAsync(src, dst)
 
@@ -31,9 +29,4 @@ async function unzip(src, dst, { strip } = {}) {
     if (tmp)
       await rmdir(tmp, { recursive: true })
   }
-}
-
-module.exports = {
-  unzip,
-  zip
 }
