@@ -1,19 +1,14 @@
-'use strict'
+import { INTL } from '../constants'
 
-const { UPDATE } = require('../constants/intl')
+export function intl(state = {
+  locale: ARGS.locale,
+  defaultLocale: 'en'
+}, action) {
+  switch (action.type) {
+    case INTL.UPDATE:
+      return { ...state, ...action.payload }
 
-module.exports = {
-  intl(state = {
-    locale: ARGS.locale,
-    defaultLocale: 'en'
-  }, action) {
-    switch (action.type) {
-
-      case UPDATE:
-        return { ...state, ...action.payload }
-
-      default:
-        return state
-    }
+    default:
+      return state
   }
 }

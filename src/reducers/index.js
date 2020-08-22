@@ -1,32 +1,28 @@
-'use strict'
-
-module.exports = {
-  ...require('./activity'),
-  ...require('./context'),
-  ...require('./edit'),
-  ...require('./esper'),
-  ...require('./flash'),
-  ...require('./history'),
-  ...require('./import'),
-  ...require('./intl'),
-  ...require('./items'),
-  ...require('./keymap'),
-  ...require('./lists'),
-  ...require('./metadata'),
-  ...require('./nav'),
-  ...require('./notes'),
-  ...require('./notepad'),
-  ...require('./ontology'),
-  ...require('./panel'),
-  ...require('./photos'),
-  ...require('./prefs'),
-  ...require('./project'),
-  ...require('./qr'),
-  ...require('./recent'),
-  ...require('./selections'),
-  ...require('./settings'),
-  ...require('./sidebar'),
-  ...require('./tags'),
-  ...require('./ui'),
-  ...require('./wizard')
-}
+export * from './activity'
+export * from './context'
+export * from './edit'
+export * from './esper'
+export * from './flash'
+export * from './history'
+export * from './import'
+export * from './intl'
+export * from './items'
+export * from './keymap'
+export * from './lists'
+export * from './metadata'
+export * from './nav'
+export * from './notepad'
+export * from './notes'
+export * from './ontology'
+export * from './panel'
+export * from './photos'
+export * from './prefs'
+export * from './project'
+export * from './qr'
+export * from './recent'
+export * from './selections'
+export * from './settings'
+export * from './sidebar'
+export * from './tags'
+export * from './ui'
+export * from './wizard'

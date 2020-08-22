@@ -1,10 +1,8 @@
-'use strict'
-
-const { PANEL, ITEM, PHOTO, NOTE } = require('../constants')
-const { merge, omit } = require('../common/util')
+import { PANEL, ITEM, PHOTO, NOTE } from '../constants'
+import { merge, omit } from '../common/util'
 
 const INIT = {
-  expand: {  }
+  expand: {}
 }
 
 const contract = (state, photos) => ({
@@ -18,27 +16,25 @@ const expand = (state, photo) => ({
 })
 
 
-module.exports = {
-  panel(state = INIT, { type, payload }) {
-    switch (type) {
-      case PANEL.RESTORE:
-        return merge(INIT, payload)
-      case PANEL.UPDATE:
-        return merge(state, payload)
-      case PHOTO.CONTRACT:
-        return contract(state, payload)
-      case PHOTO.EXPAND:
-        return expand(state, payload)
-      case PHOTO.SELECT:
-        return (payload.selection == null) ?
-          state :
-          expand(state, payload.photo)
-      case ITEM.OPEN:
-        return expand(state, payload.photos[0])
-      case NOTE.SELECT:
-        return expand(state, payload.photo)
-      default:
-        return state
-    }
+export function panel(state = INIT, { type, payload }) {
+  switch (type) {
+    case PANEL.RESTORE:
+      return merge(INIT, payload)
+    case PANEL.UPDATE:
+      return merge(state, payload)
+    case PHOTO.CONTRACT:
+      return contract(state, payload)
+    case PHOTO.EXPAND:
+      return expand(state, payload)
+    case PHOTO.SELECT:
+      return (payload.selection == null) ?
+        state :
+        expand(state, payload.photo)
+    case ITEM.OPEN:
+      return expand(state, payload.photos[0])
+    case NOTE.SELECT:
+      return expand(state, payload.photo)
+    default:
+      return state
   }
 }

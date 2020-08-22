@@ -1,46 +1,57 @@
-'use strict'
+import {
+  METADATA,
+  ITEM,
+  PHOTO,
+  PROJECT,
+  SELECTION
+} from '../constants'
 
-const { METADATA, ITEM, PHOTO, PROJECT, SELECTION } = require('../constants')
-const { bulk, load, merge, remove, replace, insert, update } = require('./util')
+import {
+  bulk,
+  load,
+  merge,
+  remove,
+  replace,
+  insert,
+  update
+} from './util'
 
 
-module.exports = {
-  // eslint-disable-next-line complexity
-  metadata(state = {}, { type, payload, meta, error }) {
-    switch (type) {
-      case PROJECT.OPENED:
-        return {}
-      case METADATA.LOAD:
-        return load(state, payload, meta, error)
-      case METADATA.MERGE:
-        return merge(state, payload, meta, error)
-      case METADATA.REPLACE:
-        return replace(state, payload)
-      case METADATA.INSERT:
-        return insert(state, payload)
-      case METADATA.REMOVE:
-        return bulk.remove(state, payload)
+// eslint-disable-next-line complexity
+export function metadata(state = {}, { type, payload, meta, error }) {
+  switch (type) {
+    case PROJECT.OPENED:
+      return {}
+    case METADATA.LOAD:
+      return load(state, payload, meta, error)
+    case METADATA.MERGE:
+      return merge(state, payload, meta, error)
+    case METADATA.REPLACE:
+      return replace(state, payload)
+    case METADATA.INSERT:
+      return insert(state, payload)
+    case METADATA.REMOVE:
+      return bulk.remove(state, payload)
 
-      case METADATA.UPDATE: {
-        let { ids, data } = payload
+    case METADATA.UPDATE: {
+      let { ids, data } = payload
 
-        return (ids.length === 1) ?
-          update(state, { ...data, id: ids[0] }, meta) :
-          bulk.update(state, [ids, data], meta)
+      return (ids.length === 1) ?
+        update(state, { ...data, id: ids[0] }, meta) :
+        bulk.update(state, [ids, data], meta)
+    }
+
+    case SELECTION.CREATE:
+      return (error || !meta.done) ? state : {
+        ...state,
+        [payload.id]: { id: payload.id }
       }
 
-      case SELECTION.CREATE:
-        return (error || !meta.done) ? state : {
-          ...state,
-          [payload.id]: { id: payload.id }
-        }
+    case ITEM.REMOVE:
+    case PHOTO.REMOVE:
+      return remove(state, payload)
 
-      case ITEM.REMOVE:
-      case PHOTO.REMOVE:
-        return remove(state, payload)
-
-      default:
-        return state
-    }
+    default:
+      return state
   }
 }
