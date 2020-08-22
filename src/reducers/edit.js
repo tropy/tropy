@@ -1,16 +1,12 @@
-'use strict'
+import { EDIT } from '../constants'
 
-const { EDIT } = require('../constants')
-
-module.exports = {
-  edit(state = {}, { type, payload }) {
-    switch (type) {
-      case EDIT.START:
-        return { ...payload }
-      case EDIT.CANCEL:
-        return {}
-      default:
-        return state
-    }
+export function edit(state = {}, { type, payload }) {
+  switch (type) {
+    case EDIT.START:
+      return { ...payload }
+    case EDIT.CANCEL:
+      return {}
+    default:
+      return state
   }
 }

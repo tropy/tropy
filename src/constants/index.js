@@ -12,6 +12,7 @@ module.exports = {
   IDLE: require('./idle'),
   IMAGE: require('./image'),
   IMPORTS: require('./import'),
+  INTL: require('./intl'),
   ITEM: require('./item'),
   KEYMAP: require('./keymap'),
   LIST: require('./list'),

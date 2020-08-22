@@ -1,19 +1,15 @@
-'use strict'
-
-const { WIZARD } = require('../constants')
+import { WIZARD } from '../constants'
 
 const init = {
   project: { name: '', file: '' },
   userData: ARGS.documents
 }
 
-module.exports = {
-  wizard(state = init, { type, payload }) {
-    switch (type) {
-      case WIZARD.PROJECT.UPDATE:
-        return { ...state, project: { ...state.project, ...payload } }
-      default:
-        return state
-    }
+export function wizard(state = init, { type, payload }) {
+  switch (type) {
+    case WIZARD.PROJECT.UPDATE:
+      return { ...state, project: { ...state.project, ...payload } }
+    default:
+      return state
   }
 }

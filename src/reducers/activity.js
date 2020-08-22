@@ -1,38 +1,34 @@
-'use strict'
+import { omit } from '../common/util'
+import { ACTIVITY } from '../constants'
 
-const { omit } = require('../common/util')
-const { ACTIVITY } = require('../constants')
+export function activities(state = {}, { type, payload, meta = {} }) {
+  const { cmd, rel, done } = meta
 
-module.exports = {
-  activities(state = {}, { type, payload, meta = {} }) {
-    const { cmd, rel, done } = meta
-
-    switch (true) {
-      case (type === ACTIVITY.UPDATE):
-        return {
-          ...state,
-          [rel]: {
-            ...state[rel],
-            ...payload
-          }
+  switch (true) {
+    case (type === ACTIVITY.UPDATE):
+      return {
+        ...state,
+        [rel]: {
+          ...state[rel],
+          ...payload
         }
+      }
 
-      case (done):
-        return omit(state, [rel])
+    case (done):
+      return omit(state, [rel])
 
-      case (cmd != null):
-        return {
-          ...state,
-          [meta.seq]: {
-            id: meta.seq,
-            type,
-            init: meta.now,
-            cancel: meta.cancel
-          }
+    case (cmd != null):
+      return {
+        ...state,
+        [meta.seq]: {
+          id: meta.seq,
+          type,
+          init: meta.now,
+          cancel: meta.cancel
         }
+      }
 
-      default:
-        return state
-    }
+    default:
+      return state
   }
 }
