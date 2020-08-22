@@ -1,15 +1,16 @@
-'use strict'
+import {
+  createStore,
+  applyMiddleware,
+  combineReducers,
+  compose
+} from 'redux'
 
-const {
-  createStore, applyMiddleware, combineReducers, compose
-} = require('redux')
+import thunk from 'redux-thunk'
+import createSagaMiddleware from 'redux-saga'
+import { error } from '../common/log'
+import { seq, debounce, throttle, log } from '../middleware'
 
-const { default: thunk } = require('redux-thunk')
-const { default: createSagaMiddleware } = require('redux-saga')
-const { error } = require('../common/log')
-const { seq, debounce, throttle, log } = require('../middleware')
-
-const {
+import {
   context,
   edit,
   flash,
@@ -20,48 +21,46 @@ const {
   prefs,
   project,
   settings
-} = require('../reducers')
+} from '../reducers'
 
 
 const devtools = (ARGS.dev || ARGS.debug) &&
   window.__REDUX_DEVTOOLS_EXTENSION__
 
-module.exports = {
-  create(init = {}) {
-    let saga = createSagaMiddleware({
-      onError(e) {
-        error({ stack: e.stack }, 'unhandled error in saga middleware')
-      }
-    })
-
-    let reducer = combineReducers({
-      context,
-      edit,
-      flash,
-      history,
-      intl,
-      keymap,
-      ontology,
-      prefs,
-      project,
-      settings
-    })
-
-    let middleware = applyMiddleware(
-      debounce,
-      throttle,
-      thunk,
-      seq,
-      log,
-      saga
-    )
-
-    if (typeof devtools === 'function') {
-      middleware = compose(middleware, devtools())
+export function create(init = {}) {
+  let saga = createSagaMiddleware({
+    onError(e) {
+      error({ stack: e.stack }, 'unhandled error in saga middleware')
     }
+  })
 
-    return {
-      ...createStore(reducer, init, middleware), saga
-    }
+  let reducer = combineReducers({
+    context,
+    edit,
+    flash,
+    history,
+    intl,
+    keymap,
+    ontology,
+    prefs,
+    project,
+    settings
+  })
+
+  let middleware = applyMiddleware(
+    debounce,
+    throttle,
+    thunk,
+    seq,
+    log,
+    saga
+  )
+
+  if (typeof devtools === 'function') {
+    middleware = compose(middleware, devtools())
+  }
+
+  return {
+    ...createStore(reducer, init, middleware), saga
   }
 }

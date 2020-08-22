@@ -1,7 +1,4 @@
-'use strict'
-
-const { darwin } = require('./common/os')
-const { isArray } = Array
+import { darwin } from './common/os'
 
 const ALT = /^a(lt)?$/i
 const CTRL = /^c(trl|ontrol)?$/i
@@ -9,7 +6,7 @@ const META = /^cmd|meta|m$/i
 const SHIFT = /^s(hift)$/i
 const MOD = /^mod|cmdorctrl$/i
 
-class KeyMap {
+export class KeyMap {
   constructor(specs = {}) {
     this.specs = {}
     for (let name in specs) {
@@ -30,7 +27,7 @@ class KeyMap {
   }
 }
 
-function compile(data) {
+export function compile(data) {
   let map = {}
   for (let component in data) {
     map[component] = new KeyMap(data[component])
@@ -39,8 +36,8 @@ function compile(data) {
 }
 
 
-function parse(input) {
-  return isArray(input) ?  input.map(p) : [p(input)]
+export function parse(input) {
+  return Array.isArray(input) ?  input.map(p) : [p(input)]
 }
 
 function p(string) {
@@ -71,7 +68,7 @@ function p(string) {
   return { key, alt, ctrl, meta, shift }
 }
 
-function match(map, event) {
+export function match(map, event) {
   for (let [name, spec] of map) {
     if (spec.key !== event.key) continue
     if (spec.alt !== event.altKey) continue
@@ -85,14 +82,6 @@ function match(map, event) {
   return null
 }
 
-function isMeta(event) {
+export function isMeta(event) {
   return (!darwin && event.ctrlKey) || (darwin && event.metaKey)
-}
-
-module.exports = {
-  KeyMap,
-  compile,
-  isMeta,
-  parse,
-  match
 }
