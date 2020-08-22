@@ -1,8 +1,6 @@
-'use strict'
+import { info } from './common/log'
 
-const { info } = require('./common/log')
-
-class Storage {
+export class Storage {
   static load(name, ...args) {
     return new Storage(...args).load(name)
   }
@@ -32,8 +30,4 @@ class Storage {
   expand(name) {
     return [name, this.namespace].join('@')
   }
-}
-
-module.exports = {
-  Storage
 }

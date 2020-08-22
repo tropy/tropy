@@ -1,32 +1,28 @@
-'use strict'
-
-const {
+import {
   applyMiddleware,
   createStore,
   combineReducers,
   compose
-} = require('redux')
+} from 'redux'
 
-const { default: thunk } = require('redux-thunk')
-const { intl } = require('../reducers/intl')
+import thunk from 'redux-thunk'
+import { intl } from '../reducers'
 
 const devtools = (ARGS.dev || ARGS.debug) &&
   window.__REDUX_DEVTOOLS_EXTENSION__
 
-module.exports = {
-  create(init = {}) {
-    let reducer = combineReducers({
-      intl
-    })
+export function create(init = {}) {
+  let reducer = combineReducers({
+    intl
+  })
 
-    let middleware = applyMiddleware(
-      thunk
-    )
+  let middleware = applyMiddleware(
+    thunk
+  )
 
-    if (typeof devtools === 'function') {
-      middleware = compose(middleware, devtools())
-    }
-
-    return createStore(reducer, init, middleware)
+  if (typeof devtools === 'function') {
+    middleware = compose(middleware, devtools())
   }
+
+  return createStore(reducer, init, middleware)
 }

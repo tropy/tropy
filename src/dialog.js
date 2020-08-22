@@ -1,10 +1,8 @@
-'use strict'
-
-const assert = require('assert')
-const { ipcRenderer: ipc, shell, clipboard } = require('electron')
-const { counter, get } = require('./common/util')
-const { crashReport, warn } = require('./common/log')
-const { IMAGE } = require('./constants')
+import assert from 'assert'
+import { ipcRenderer as ipc, shell, clipboard } from 'electron'
+import { counter, get } from './common/util'
+import { crashReport, warn } from './common/log'
+import { IMAGE } from './constants'
 
 let seq
 let pending
@@ -207,7 +205,7 @@ save.vocab = (opts) => save({
 })
 
 
-module.exports = {
+export {
   fail,
   notify,
   open,

@@ -1,57 +1,53 @@
-'use strict'
+import { TYPE } from './constants'
+import edtf from 'edtf'
+import { blank } from './common/util'
 
-const { TYPE } = require('./constants')
-const edtf = require('edtf')
-const { blank } = require('./common/util')
+export function datetime(value, options = DTF) {
+  try {
+    if (blank(value)) return value
+    const date = (value instanceof Date) ? value : edtf(value)
 
-const format = {
-  datetime(value, options = DTF) {
-    try {
-      if (blank(value)) return value
-      const date = (value instanceof Date) ? value : edtf(value)
+    if (date.getUTCFullYear() < 1300) {
+      options = { ...options, era: 'short' }
+    }
 
-      if (date.getUTCFullYear() < 1300) {
-        options = { ...options, era: 'short' }
-      }
+    return edtf.format(date, ARGS.locale, options)
 
-      return edtf.format(date, ARGS.locale, options)
+  } catch (error) {
+    return value
+  }
+}
 
-    } catch (error) {
+export function number(value) {
+  return fmtNumber(value)
+}
+
+export function bytes(value) {
+  if (typeof value === 'string') value = parseInt(value, 10)
+  if (!Number.isFinite(value)) return null
+
+  let mag = Math.abs(value)
+  let unit = (mag >= size.TB) ?
+      'TB' : (mag >= size.GB) ?
+      'GB' : (mag >= size.MB) ?
+      'MB' : (mag >= size.kB) ?
+      'kB' : 'bytes'
+
+  return `${number(value / size[unit])} ${unit}`
+}
+
+export function ppi(value) {
+  return blank(value) ? value : `${number(value)} ppi`
+}
+
+export function auto(value, type) {
+  switch (type) {
+    case TYPE.DATE:
+      return datetime(value)
+    case TYPE.NUMBER:
+      return number(value)
+    default:
       return value
-    }
-  },
-
-  number(value) {
-    return fmtNumber(value)
-  },
-
-  bytes(value) {
-    if (typeof value === 'string') value = parseInt(value, 10)
-    if (!Number.isFinite(value)) return null
-
-    let mag = Math.abs(value)
-    let unit = (mag >= size.TB) ?
-        'TB' : (mag >= size.GB) ?
-        'GB' : (mag >= size.MB) ?
-        'MB' : (mag >= size.kB) ?
-        'kB' : 'bytes'
-
-    return `${format.number(value / size[unit])} ${unit}`
-  },
-
-  ppi(value) {
-    return blank(value) ? value : `${format.number(value)} ppi`
-  },
-
-  auto(value, type) {
-    switch (type) {
-      case TYPE.DATE:
-        return format.datetime(value)
-      case TYPE.NUMBER:
-        return format.number(value)
-      default:
-        return value
-    }
   }
 }
 
@@ -80,5 +76,3 @@ const size = {
   GB: 1 << 30,
   TB: (1 << 30) * 1024
 }
-
-module.exports = format
