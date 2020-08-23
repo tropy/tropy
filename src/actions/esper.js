@@ -1,8 +1,6 @@
-'use strict'
+import { ESPER } from '../constants'
 
-const { ESPER } = require('../constants')
-
-module.exports = {
+export default {
   restore(payload = {}, meta = {}) {
     return {
       type: ESPER.RESTORE,

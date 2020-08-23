@@ -1,10 +1,9 @@
-'use strict'
+import { ONTOLOGY } from '../constants'
+import { array } from '../common/util'
 
-const { ONTOLOGY } = require('../constants')
 const { PROPS, CLASS, VOCAB, TEMPLATE, LABEL, TYPE } = ONTOLOGY
-const { array } = require('../common/util')
 
-module.exports = {
+export default {
   import(payload = {}, meta) {
     return {
       type: ONTOLOGY.IMPORT,

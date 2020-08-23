@@ -1,8 +1,6 @@
-'use strict'
+import { CONTEXT } from '../constants'
 
-const { CONTEXT } = require('../constants')
-
-module.exports = {
+export default {
   show(event, scope = 'default', target, meta) {
     return {
       type: CONTEXT.SHOW,

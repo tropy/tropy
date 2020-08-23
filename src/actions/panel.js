@@ -1,8 +1,6 @@
-'use strict'
+import { PANEL } from '../constants'
 
-const { PANEL } = require('../constants')
-
-module.exports = {
+export default {
   restore(payload = {}, meta = {}) {
     return {
       type: PANEL.RESTORE,

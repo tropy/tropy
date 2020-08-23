@@ -1,8 +1,6 @@
-'use strict'
+import { NOTEPAD } from '../constants'
 
-const { NOTEPAD } = require('../constants')
-
-module.exports = {
+export default {
   restore(payload = {}, meta = {}) {
     return {
       type: NOTEPAD.RESTORE,

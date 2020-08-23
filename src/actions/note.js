@@ -1,8 +1,6 @@
-'use strict'
-
-const { NOTE } = require('../constants')
-const { warn } = require('../common/log')
-const { get } = require('../common/util')
+import { NOTE } from '../constants'
+import { warn } from '../common/log'
+import { get } from '../common/util'
 
 function json(note) {
   return (note.state != null && typeof note.state.toJSON === 'function') ?
@@ -10,7 +8,7 @@ function json(note) {
     note
 }
 
-module.exports = {
+export default {
   create(payload, meta) {
     return {
       type: NOTE.CREATE,

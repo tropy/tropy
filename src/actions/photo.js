@@ -1,9 +1,7 @@
-'use strict'
+import { PHOTO } from '../constants'
+import { array } from '../common/util'
 
-const { PHOTO } = require('../constants')
-const { array } = require('../common/util')
-
-module.exports = {
+export default {
   consolidate(payload, meta) {
     return {
       type: PHOTO.CONSOLIDATE,

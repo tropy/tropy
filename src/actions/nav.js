@@ -1,8 +1,6 @@
-'use strict'
+import { NAV } from '../constants'
 
-const { NAV } = require('../constants')
-
-module.exports = {
+export default {
   restore(payload, meta) {
     return {
       type: NAV.RESTORE,

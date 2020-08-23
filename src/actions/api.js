@@ -1,9 +1,7 @@
-'use strict'
+import { API, ITEM, METADATA, TAG } from '../constants'
+import { array } from '../common/util'
 
-const { API, ITEM, METADATA, TAG } = require('../constants')
-const { array } = require('../common/util')
-
-module.exports = {
+export default {
   import({ files, ...payload }, meta) {
     return {
       type: ITEM.IMPORT,

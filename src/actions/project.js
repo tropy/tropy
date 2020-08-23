@@ -1,9 +1,7 @@
-'use strict'
-
-const { PROJECT } =  require('../constants')
+import { PROJECT } from '../constants'
 
 
-module.exports = {
+export default {
   create(payload, meta) {
     return {
       type: PROJECT.CREATE,

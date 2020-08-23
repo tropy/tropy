@@ -1,8 +1,6 @@
-'use strict'
+import { CLASSES } from '../constants'
 
-const { CLASSES } = require('../constants')
-
-module.exports = {
+export default {
   restore(payload, meta) {
     return {
       type: CLASSES.RESTORE,
@@ -19,4 +17,3 @@ module.exports = {
     }
   }
 }
-

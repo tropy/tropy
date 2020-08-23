@@ -1,8 +1,6 @@
-'use strict'
+import { QR } from '../constants'
 
-const { QR } = require('../constants')
-
-module.exports = {
+export default {
   update(payload = {}, meta) {
     return {
       type: QR.UPDATE,

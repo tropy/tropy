@@ -1,8 +1,6 @@
-'use strict'
+import { CACHE } from '../constants'
 
-const { CACHE } = require('../constants')
-
-module.exports = {
+export default {
   prune(payload, meta = {}) {
     return {
       type: CACHE.PRUNE,

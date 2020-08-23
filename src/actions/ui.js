@@ -1,8 +1,6 @@
-'use strict'
+import { UI } from '../constants'
 
-const { UI } = require('../constants')
-
-module.exports = {
+export default {
   restore(payload, meta) {
     // Remove pre 1.3 state
     if (payload != null) {
