@@ -1,8 +1,6 @@
-'use strict'
+import { PROPERTIES } from '../constants'
 
-const { PROPERTIES } = require('../constants')
-
-module.exports = {
+export default {
   restore(payload, meta) {
     return {
       type: PROPERTIES.RESTORE,

@@ -1,13 +1,19 @@
-'use strict'
+import { IDLE } from '../constants'
 
-const { IDLE, ACTIVE } = require('../constants/idle')
-
-module.exports = {
+export default {
   active(payload, meta = {}) {
-    return { type: ACTIVE, payload, meta }
+    return {
+      type: IDLE.ACTIVE,
+      payload,
+      meta
+    }
   },
 
   idle(payload, meta = {}) {
-    return { type: IDLE, payload, meta }
+    return {
+      type: IDLE.IDLE,
+      payload,
+      meta
+    }
   }
 }

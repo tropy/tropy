@@ -1,9 +1,7 @@
-'use strict'
+import { METADATA, EDIT } from '../constants'
+import { array } from '../common/util'
 
-const { array } = require('../common/util')
-const { METADATA, EDIT } = require('../constants')
-
-module.exports = {
+export default {
   new(payload, meta = {}) {
     return {
       type: EDIT.START,

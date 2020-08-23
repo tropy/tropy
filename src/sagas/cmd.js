@@ -4,8 +4,7 @@ const { info, trace, warn } = require('../common/log')
 const { Command } = require('../commands/command')
 const { fail } = require('../dialog')
 const { call, put, race, take } = require('redux-saga/effects')
-const activity = require('../actions/activity')
-const history = require('../actions/history')
+const { activity, history } = require('../actions')
 const { ACTIVITY } = require('../constants')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500

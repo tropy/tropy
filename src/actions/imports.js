@@ -1,8 +1,6 @@
-'use strict'
+import { IMPORTS } from '../constants'
 
-const { IMPORTS } = require('../constants')
-
-module.exports = {
+export default {
   restore(payload, meta) {
     return {
       type: IMPORTS.RESTORE,

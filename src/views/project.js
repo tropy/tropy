@@ -43,10 +43,10 @@ win.on('app.undo', () => {
 win.on('app.redo', () => {
   store.dispatch(history.redo())
 })
-win.on('settings.update', (settings) => {
-  store.dispatch(settings.update(settings))
-  if (settings.locale) {
-    store.dispatch(intl.load({ locale: settings.locale }))
+win.on('settings.update', (opts) => {
+  store.dispatch(settings.update(opts))
+  if (opts.locale) {
+    store.dispatch(intl.load({ locale: opts.locale }))
   }
 })
 win.on('idle', ({ type, time }) => {

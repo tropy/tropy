@@ -1,9 +1,7 @@
-'use strict'
+import { ITEM } from '../constants'
+import { array, get } from '../common/util'
 
-const { ITEM } = require('../constants')
-const { array, get } = require('../common/util')
-
-module.exports = {
+export default {
   create(payload, meta) {
     return {
       type: ITEM.CREATE,

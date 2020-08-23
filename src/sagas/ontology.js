@@ -6,7 +6,7 @@ const { Database } = require('../common/db')
 const { exec, commands } = require('./cmd')
 const { fail } = require('../dialog')
 const mod = require('../models/ontology')
-const { load } = require('../actions/ontology')
+const act = require('../actions/ontology')
 const { call, fork, take } = require('redux-saga/effects')
 
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
         }
       }
 
-      yield call(exec, { db }, load())
+      yield call(exec, { db }, act.load())
 
       while (true) {
         let action = yield take(commands('ontology'))

@@ -1,22 +1,20 @@
-'use strict'
-
-const { Database } = require('../common/db')
-const { ipcRenderer: ipc } = require('electron')
-const { fail, save } = require('../dialog')
-const { PROJECT, WIZARD } = require('../constants')
-const { create } = require('../models/project')
-const { unlink } = require('fs').promises
-const { info, warn } = require('../common/log')
+import { ipcRenderer as ipc } from 'electron'
+import fs from 'fs'
+import { Database } from '../common/db'
+import { fail, save } from '../dialog'
+import { PROJECT, WIZARD } from '../constants'
+import { create } from '../models/project'
+import { info, warn } from '../common/log'
 
 async function rm(file) {
   try {
-    await unlink(file)
+    await fs.promises.unlink(file)
   } catch (e) {
     if (e.code !== 'ENOENT') throw e
   }
 }
 
-module.exports = {
+export default {
   complete(payload, meta = {}) {
     return async () => {
       try {
