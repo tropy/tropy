@@ -1,22 +1,18 @@
-'use strict'
-
-const assert = require('assert')
-const { relative, resolve } = require('path')
-const { all } = require('bluebird')
-const metadata = require('./metadata')
-const bb = require('bluebird')
-const { assign } = Object
-const subject = require('./subject')
-const { into, select, update } = require('../common/query')
-const { normalize } = require('../common/os')
-const { blank, empty, pick } = require('../common/util')
-const { props } = require('../common/export')
+import assert from 'assert'
+import { relative, resolve } from 'path'
+import metadata from './metadata'
+import { map } from 'bluebird'
+import subject from './subject'
+import { into, select, update } from '../common/query'
+import { normalize } from '../common/os'
+import { blank, empty, pick } from '../common/util'
+import { props } from '../common/export'
 
 const skel = (id, selections = [], notes = []) => ({
   id, selections, notes
 })
 
-module.exports = {
+export default {
   async create(db, { base, template }, { item, image, data, position }) {
     let { protocol = 'file', path, ...meta } = image
     let { id } = await db.run(
@@ -32,7 +28,7 @@ module.exports = {
       ...pick(meta, props.image)
     }))
 
-    await all([
+    await Promise.all([
       db.run(...into('photos').insert({
         id,
         item_id: item,
@@ -74,7 +70,7 @@ module.exports = {
     const photos = {}
     if (ids != null) ids = ids.join(',')
 
-    await all([
+    await Promise.all([
       db.each(`
         SELECT
             id,
@@ -115,8 +111,8 @@ module.exports = {
             (base) ? resolve(base, normalize(path)) : path
           ).normalize()
 
-          if (id in photos) assign(photos[id], data)
-          else photos[id] = assign(skel(id), data)
+          if (id in photos) Object.assign(photos[id], data)
+          else photos[id] = Object.assign(skel(id), data)
         }
       ),
 
@@ -192,7 +188,7 @@ module.exports = {
   },
 
   async split(db, item, items, concurrency = 4) {
-    return bb.map(items, ({ id, photos }) =>
+    return map(items, ({ id, photos }) =>
       db.run(`
         UPDATE photos
           SET item_id = ?, position = CASE id
@@ -238,7 +234,7 @@ module.exports = {
           }
         })
 
-    await bb.map(delta, ({ id, path }) => db.run(
+    await map(delta, ({ id, path }) => db.run(
       ...update('photos').set({ path }).where({ id })
     ))
   }

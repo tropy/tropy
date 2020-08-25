@@ -1,11 +1,9 @@
-'use strict'
-
-const assert = require('assert')
-const { join } = require('path')
-const { TEXT } = require('../constants/type')
-const { all } = require('bluebird')
-const { paths } = require('../common/release')
-const { blank, list, quote } = require('../common/util')
+import assert from 'assert'
+import { join } from 'path'
+import { TYPE } from '../constants'
+import { all } from 'bluebird'
+import { paths } from '../common/release'
+import { blank, list, quote } from '../common/util'
 
 const ontology = {
   create(db) {
@@ -482,7 +480,7 @@ const ontology = {
               $id: f.id,
               $template: id,
               $property: f.property,
-              $datatype: f.datatype || TEXT,
+              $datatype: f.datatype || TYPE.TEXT,
               $isRequired: !!f.isRequired,
               $hint: f.hint,
               $value: f.value,
@@ -561,4 +559,4 @@ const COL = {
   }
 }
 
-module.exports = ontology
+export default ontology

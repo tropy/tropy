@@ -1,102 +1,91 @@
-'use strict'
+import assert from 'assert'
+import { json, stringify } from '../common/util'
+import { into, update } from '../common/query'
 
-const assert = require('assert')
-const { json, stringify } = require('../common/util')
+async function load(db, ids) {
+  let notes = {}
 
-const mod = {
-  note: {
-    async create(db, { state, text, id: parent }) {
-      const { id } = await db.run(`
-        INSERT INTO notes (id, state, text) VALUES (?,?,?)`,
-        parent, stringify(state), text
-      )
+  let conditions = ['deleted IS NULL']
+  if (ids != null) conditions.push(`note_id IN (${ids.join(',')})`)
 
-      return (await mod.note.load(db, [id]))[id]
-    },
+  await db.each(`
+    SELECT
+        note_id AS note,
+        photos.id AS photo,
+        selections.id AS selection,
+        state,
+        text,
+        language,
+        datetime(modified, "localtime") AS modified
+      FROM notes
+        LEFT OUTER JOIN photos USING (id)
+        LEFT OUTER JOIN selections USING (id)
+      WHERE ${conditions.join(' AND ')}
+      ORDER BY created ASC`,
 
-    async load(db, ids) {
-      const notes = {}
-
-      const conditions = ['deleted IS NULL']
-      if (ids != null) conditions.push(`note_id IN (${ids.join(',')})`)
-
-      await db.each(`
-        SELECT
-            note_id AS note,
-            photos.id AS photo,
-            selections.id AS selection,
-            state,
-            text,
-            language,
-            datetime(modified, "localtime") AS modified
-          FROM notes
-            LEFT OUTER JOIN photos USING (id)
-            LEFT OUTER JOIN selections USING (id)
-          WHERE ${conditions.join(' AND ')}
-          ORDER BY created ASC`,
-
-        ({ note: id, modified, state, ...data }) => {
-          notes[id] = {
-            ...data,
-            id,
-            modified: new Date(modified),
-            state: json(state),
-            deleted: false
-          }
-        }
-      )
-
-      return notes
-    },
-
-    save(db, { id, state, text }, timestamp = Date.now()) {
-      assert(id != null, 'missing id')
-      assert(state != null, 'missing state')
-
-      const assigs = [
-        'state = $state',
-        'modified = datetime($modified)'
-      ]
-
-      if (text != null) {
-        assert(text !== '', 'empty text')
-        assigs.push('text = $text')
+    ({ note: id, modified, state, ...data }) => {
+      notes[id] = {
+        ...data,
+        id,
+        modified: new Date(modified),
+        state: json(state),
+        deleted: false
       }
-
-      return db.run(`
-        UPDATE notes
-          SET ${assigs.join(', ')}
-          WHERE note_id = $id`, {
-            $id: id,
-            $state: stringify(state),
-            $text: text,
-            $modified: new Date(timestamp).toISOString()
-          }
-      )
-    },
-
-    delete(db, ids) {
-      return db.run(`
-        UPDATE notes
-          SET deleted = datetime("now")
-          WHERE note_id IN (${ids.join(',')})`
-      )
-    },
-
-    restore(db, ids) {
-      return db.run(`
-        UPDATE notes
-          SET deleted = NULL
-          WHERE note_id IN (${ids.join(',')})`
-      )
-    },
-
-    prune(db) {
-      return db.run(`
-        DELETE FROM notes WHERE deleted IS NOT NULL`
-      )
     }
-  }
+  )
+
+  return notes
 }
 
-module.exports = mod.note
+export default {
+  load,
+
+  async create(db, { state, text, id: parent }) {
+    let { id } = await db.run(...into('notes').insert({
+      id: parent,
+      state: stringify(state),
+      text
+    }))
+
+    return (await load(db, [id]))[id]
+  },
+
+  save(db, { id, state, text }, timestamp = Date.now()) {
+    assert(id != null, 'missing id')
+    assert(state != null, 'missing state')
+
+    let query = update('notes')
+      .set({
+        state: stringify(state),
+        modified: new Date(timestamp).toISOString()
+      })
+      .where({ note_id: id })
+
+    if (text != null) {
+      assert(text !== '', 'empty text')
+      query.set({ text })
+    }
+
+    return db.run(...query)
+  },
+
+  delete(db, note_id) {
+    return db.run(
+      ...update('notes')
+        .set('deleted = datetime("now")')
+        .where({ note_id }))
+  },
+
+  restore(db, note_id) {
+    return db.run(
+      ...update('notes')
+        .set({ deleted: null })
+        .where({ note_id }))
+  },
+
+  prune(db) {
+    return db.run(`
+      DELETE FROM notes WHERE deleted IS NOT NULL`
+    )
+  }
+}

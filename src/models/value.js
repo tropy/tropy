@@ -1,20 +1,21 @@
-'use strict'
 
-module.exports = {
-  async save(db, { text, type }) {
-    let v = await db.get(`
-      SELECT value_id AS id
-        FROM metadata_values
-        WHERE datatype = ? AND text = ?`, type, text)
+export async function save(db, { text, type }) {
+  let v = await db.get(`
+    SELECT value_id AS id
+      FROM metadata_values
+      WHERE datatype = ? AND text = ?`, type, text)
 
-    if (!v) {
-      v = await db.run(`
-        INSERT INTO metadata_values (datatype, text)
-          VALUES (?, ?)`, type, text)
-    }
+  if (!v) {
+    v = await db.run(`
+      INSERT INTO metadata_values (datatype, text)
+        VALUES (?, ?)`, type, text)
+  }
 
-    return v.id
-  },
+  return v.id
+}
+
+export default {
+  save,
 
   async prune(db) {
     return await db.run(`

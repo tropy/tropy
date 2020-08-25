@@ -1,7 +1,5 @@
-'use strict'
-
-const { list, pick } = require('../common/util')
-const { into, select, update } = require('../common/query')
+import { list, pick } from '../common/util'
+import { into, select, update } from '../common/query'
 
 const COLUMNS = [
   'name',
@@ -9,7 +7,6 @@ const COLUMNS = [
   'created',
   'modified'
 ]
-
 
 async function load(db, ids) {
   let tags = {}
@@ -23,7 +20,7 @@ async function load(db, ids) {
 }
 
 
-module.exports = {
+export default {
   load,
 
   async create(db, data) {
