@@ -3,7 +3,7 @@ import fs from 'fs'
 import { Database } from '../common/db'
 import { fail, save } from '../dialog'
 import { PROJECT, WIZARD } from '../constants'
-import { create } from '../models/project'
+import mod from '../models/project'
 import { info, warn } from '../common/log'
 
 async function rm(file) {
@@ -11,6 +11,24 @@ async function rm(file) {
     await fs.promises.unlink(file)
   } catch (e) {
     if (e.code !== 'ENOENT') throw e
+  }
+}
+
+const project = {
+  update(payload) {
+    return {
+      type: WIZARD.PROJECT.UPDATE,
+      payload
+    }
+  },
+
+  save(payload) {
+    return async (dispatch) => {
+      let file = await save.project({ defaultPath: payload })
+      if (file) {
+        dispatch(project.update({ file }))
+      }
+    }
   }
 }
 
@@ -23,7 +41,7 @@ export default {
 
         if (meta.truncate) await rm(file)
 
-        file = await Database.create(file, create, { name, base })
+        file = await Database.create(file, mod.create, { name, base })
         ipc.send(PROJECT.CREATED, { file })
 
       } catch (e) {
@@ -34,21 +52,5 @@ export default {
     }
   },
 
-  project: {
-    update(payload) {
-      return {
-        type: WIZARD.PROJECT.UPDATE,
-        payload
-      }
-    },
-
-    save(payload) {
-      return async (dispatch) => {
-        let file = await save.project({ defaultPath: payload })
-        if (file) {
-          dispatch(module.exports.project.update({ file }))
-        }
-      }
-    }
-  }
+  project
 }
