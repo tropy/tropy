@@ -1,10 +1,6 @@
-'use strict'
-
-const { all } = require('bluebird')
-const { assign } = Object
-const { array, blank, list: lst, uniq } = require('../common/util')
-const { NAV: { COLUMN } } = require('../constants')
-//const { select } = require('../common/query')
+import { all } from 'bluebird'
+import { array, blank, list as lst, uniq } from '../common/util'
+import { NAV } from '../constants'
 
 const mod = {
   metadata: require('./metadata'),
@@ -38,10 +34,10 @@ const SORT = `
     WHERE property = $sort)`
 
 const ORDER = {
-  [COLUMN.CREATED.id]: 'subjects.created',
-  [COLUMN.MODIFIED.id]: 'subjects.modified',
-  [COLUMN.TEMPLATE.id]: 'subjects.template',
-  [COLUMN.POSITION.id]: 'list_items.added'
+  [NAV.COLUMN.CREATED.id]: 'subjects.created',
+  [NAV.COLUMN.MODIFIED.id]: 'subjects.modified',
+  [NAV.COLUMN.TEMPLATE.id]: 'subjects.template',
+  [NAV.COLUMN.POSITION.id]: 'list_items.added'
 }
 
 const prefix = (query) =>
@@ -85,7 +81,7 @@ async function search(db, query, params) {
 }
 
 
-module.exports = mod.item = {
+mod.item = {
   all(db, { trash, ...options }) {
     let { dir, order, params } = prep(options)
     return search(db, `
@@ -184,8 +180,8 @@ module.exports = mod.item = {
           data.modified = new Date(modified)
           data.deleted = !!deleted
 
-          if (id in items) assign(items[id], data)
-          else items[id] = assign(skel(id), data)
+          if (id in items) Object.assign(items[id], data)
+          else items[id] = Object.assign(skel(id), data)
         }
       ),
 
@@ -409,3 +405,5 @@ module.exports = mod.item = {
     }
   }
 }
+
+export default mod.item

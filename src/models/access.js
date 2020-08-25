@@ -1,8 +1,6 @@
-'use strict'
+import { into, update } from '../common/query'
 
-const { into, update } = require('../common/query')
-
-module.exports = {
+export default {
   async open(db, { uuid, version } = ARGS) {
     let { id } = await db.run(
       ...into('access')

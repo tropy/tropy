@@ -1,15 +1,12 @@
-'use strict'
+import assert from 'assert'
+import { dirname, join } from 'path'
+import { v4 as uuid } from 'uuid'
+import { into, update } from '../common/query'
+import { info } from '../common/log'
+import { home } from '../common/os'
+import { paths } from '../common/release'
 
-const assert = require('assert')
-const { dirname, join } = require('path')
-const uuid = require('uuid').v4
-const { all } = require('bluebird')
-const { into, update } = require('../common/query')
-const { info } = require('../common/log')
-const os = require('../common/os')
-const { paths } = require('../common/release')
-
-module.exports = {
+export default {
   async create(db, { name, base, id = uuid() }) {
     info(`creating project "${name}" ${id}`)
     await db.read(join(paths.db, 'schema', 'project.sql'))
@@ -21,7 +18,7 @@ module.exports = {
   },
 
   async load(db) {
-    const [project, items] = await all([
+    const [project, items] = await Promise.all([
       db.get(`
         SELECT project_id AS id, name, base FROM project LIMIT 1`),
       db.get(`
@@ -37,7 +34,7 @@ module.exports = {
         project.base = dirname(db.path)
         break
       case 'home':
-        project.base = os.home
+        project.base = home
         break
       case 'documents':
       case 'pictures':

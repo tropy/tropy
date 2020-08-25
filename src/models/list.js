@@ -1,12 +1,17 @@
-'use strict'
+import { all } from 'bluebird'
+import { LIST } from '../constants'
+import { into, select, update } from '../common/query'
+import { pick, remove, toId } from '../common/util'
 
-const { all } = require('bluebird')
-const { ROOT } = require('../constants/list')
-const { into, select, update } = require('../common/query')
-const { pick, remove, toId } = require('../common/util')
-const mod = {}
+async function itemsRestore(db, id, items) {
+  return db.run(
+    ...update('list_items')
+      .set({ deleted: null })
+      .where({ list_id: id, id: items.map(Number) }))
+}
 
-module.exports = mod.list = {
+
+export default {
   async all(db) {
     let lists = {}
 
@@ -55,7 +60,8 @@ module.exports = mod.list = {
   prune(db) {
     return db.seq(conn => all([
       conn.run(
-        'DELETE FROM lists WHERE list_id != ? AND parent_list_id IS NULL', ROOT
+        'DELETE FROM lists WHERE list_id != ? AND parent_list_id IS NULL',
+        LIST.ROOT
       ),
       conn.run('DELETE FROM list_items WHERE deleted NOT NULL')
     ]))
@@ -90,7 +96,7 @@ module.exports = mod.list = {
 
       let restores = dupes.filter(r => r.deleted).map(toId)
       if (restores.length > 0) {
-        await mod.list.items.restore(db, id, restores)
+        await itemsRestore(db, id, restores)
       }
 
       items = remove(items, ...dupes.map(toId))
@@ -115,11 +121,6 @@ module.exports = mod.list = {
           .where({ list_id: id, id: items.map(Number) }))
     },
 
-    restore(db, id, items) {
-      return db.run(
-        ...update('list_items')
-          .set({ deleted: null })
-          .where({ list_id: id, id: items.map(Number) }))
-    }
+    restore: itemsRestore
   }
 }

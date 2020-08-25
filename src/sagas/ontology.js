@@ -5,8 +5,8 @@ const { debug, warn } = require('../common/log')
 const { Database } = require('../common/db')
 const { exec, commands } = require('./cmd')
 const { fail } = require('../dialog')
-const mod = require('../models/ontology')
-const act = require('../actions/ontology')
+const mod = require('../models/ontology').default
+const act = require('../actions/ontology').default
 const { call, fork, take } = require('redux-saga/effects')
 
 module.exports = {
