@@ -4,7 +4,7 @@ import { tautology } from './util'
 
 const { stat, readdir } = fs.promises
 
-export async function ls (path, {
+export async function ls(path, {
   filter = tautology,
   recursive = false
 } = {}) {
