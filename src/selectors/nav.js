@@ -1,22 +1,19 @@
-'use strict'
+import { createSelector as memo } from 'reselect'
+import { NAV, TYPE } from '../constants'
+import { dc, expand } from '../ontology'
 
-const { createSelector: memo } = require('reselect')
-const { DC, NAV: { COLUMN }, TYPE } = require('../constants')
-const { values } = Object
-
-const {
-  expand,
+import {
   getItemTemplateProperties,
   getPropertyList
-} = require('./ontology')
+} from './ontology'
 
-const DEFAULT_SORT = { column: DC.title, asc: true }
+const DEFAULT_SORT = { column: dc.title, asc: true }
 const DEFAULT_LIST_SORT =  { column: 'added', asc: true }
 
 const SPECIAL_COLUMNS = [
-  COLUMN.CREATED,
-  COLUMN.MODIFIED,
-  COLUMN.TEMPLATE
+  NAV.COLUMN.CREATED,
+  NAV.COLUMN.MODIFIED,
+  NAV.COLUMN.TEMPLATE
 ]
 
 const merge = (col, { label, name, prefix }) => ({
@@ -31,7 +28,7 @@ const getSpecialColumns = memo(
 )
 
 
-const getColumns = memo(
+export const getColumns = memo(
   ({ nav }) => nav.columns,
   ({ ontology }) => ontology.props,
   ({ ontology }) => ontology.vocab,
@@ -47,7 +44,7 @@ const getAllFreeColumns = memo(
   getPropertyList,
   getSpecialColumns,
   (cols, props, spc) => [
-    ...values(spc).filter(({ id }) => !cols.find(col => col.id === id)),
+    ...Object.values(spc).filter(({ id }) => !cols.find(col => col.id === id)),
     ...props.filter(prop => !cols.find(col => col.id === prop.id))
   ]
 )
@@ -57,12 +54,12 @@ const getCommonFreeColumns = memo(
   getItemTemplateProperties,
   getSpecialColumns,
   (cols, props, spc) => [
-    ...values(spc).filter(({ id }) => !cols.find(col => col.id === id)),
+    ...Object.values(spc).filter(({ id }) => !cols.find(col => col.id === id)),
     ...props.filter(prop => !cols.find(col => col.id === prop.id))
   ]
 )
 
-const getAllColumns = memo(
+export const getAllColumns = memo(
   getColumns,
   getAllFreeColumns,
   getCommonFreeColumns,
@@ -73,16 +70,10 @@ const getAllColumns = memo(
   })
 )
 
-const getSortColumn = memo(
+export const getSortColumn = memo(
   ({ nav }) => nav.sort,
   ({ nav }) => nav.list || 0,
   (sort, list) => ((list in sort) ?
     sort[list] :
     (list > 0) ? DEFAULT_LIST_SORT : DEFAULT_SORT)
 )
-
-module.exports = {
-  getAllColumns,
-  getColumns,
-  getSortColumn
-}
