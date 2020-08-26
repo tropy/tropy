@@ -2,7 +2,6 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const subject = require('./subject')
 const { Image } = require('../image')
 const mod = require('../models')
 const act = require('../actions')
@@ -128,19 +127,11 @@ class Save extends Command {
 Save.register(SELECTION.SAVE)
 
 
-class TemplateChange extends subject.Save {
-  type = 'selection'
-}
-
-TemplateChange.register(SELECTION.TEMPLATE.CHANGE)
-
-
 module.exports = {
   Create,
   Load,
   Order,
   Save,
-  TemplateChange,
 
   ...require('./selection/index')
 }

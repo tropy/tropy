@@ -2,8 +2,8 @@ import { call, put, select } from 'redux-saga/effects'
 import { Command } from '../command'
 import { API } from '../../constants'
 import { fromHTML, serialize } from '../../editor/serialize'
-import act from '../../actions'
-import mod from '../../models'
+import * as act from '../../actions'
+import * as mod from '../../models'
 
 
 class NoteCreate extends Command {

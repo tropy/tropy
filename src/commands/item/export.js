@@ -1,17 +1,17 @@
-'use strict'
+import fs from 'fs'
+import { clipboard } from 'electron'
+import { call, select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { ITEM } from '../../constants'
+import { warn } from '../../common/log'
+import { fail, save } from '../../dialog'
+import { win } from '../../window'
+import { getExportItems } from '../../selectors'
 
-const { writeFile } = require('fs').promises
-const { clipboard } = require('electron')
-const { call, select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { ITEM } = require('../../constants')
-const { warn } = require('../../common/log')
-const { fail, save } = require('../../dialog')
-const { win } = require('../../window')
-const { getExportItems } = require('../../selectors')
+const write = fs.promises.writeFile
 
 
-class Export extends Command {
+export class Export extends Command {
   *exec() {
     let { target, plugin } = this.action.meta
     let id = this.action.payload
@@ -37,7 +37,7 @@ class Export extends Command {
           yield win.plugins.export(plugin, items)
           break
         default:
-          yield call(writeFile, target, JSON.stringify(items, null, 2))
+          yield call(write, target, JSON.stringify(items, null, 2))
       }
     } catch (e) {
       warn({ stack: e.stack }, `failed to export items to ${target}`)
@@ -47,7 +47,3 @@ class Export extends Command {
 }
 
 Export.register(ITEM.EXPORT)
-
-module.exports = {
-  Export
-}

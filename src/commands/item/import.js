@@ -1,36 +1,35 @@
-'use strict'
+import fs from 'fs'
+import { dirname, extname, join, isAbsolute } from 'path'
+import { ImportCommand } from '../import'
+import { DuplicateError } from '../../common/error'
+import { normalize, eachItem } from '../../common/import'
+import { info, warn } from '../../common/log'
+import { Image } from '../../image'
+import { fail } from '../../dialog'
+import { fromHTML } from '../../editor/serialize'
+import * as act from '../../actions'
+import * as mod from '../../models'
+import { ITEM, PROJECT } from '../../constants'
 
-const { readFile } = require('fs').promises
-const { dirname, extname, join, isAbsolute } = require('path')
-const { ImportCommand } = require('../import')
-const { DuplicateError } = require('../../common/error')
-const { normalize, eachItem } = require('../../common/import')
-const { info, warn } = require('../../common/log')
-const { Image } = require('../../image')
-const { fail } = require('../../dialog')
-const { fromHTML } = require('../../editor/serialize')
-const act = require('../../actions')
-const mod = require('../../models')
-
-const { ITEM, PROJECT: { MODE } } = require('../../constants')
-
-const {
+import {
   all,
   call,
   fork,
-  join: wait,
+  join as wait,
   put,
   select
-} = require('redux-saga/effects')
+} from 'redux-saga/effects'
 
-const {
+import {
   findTag,
   getItemTemplate,
   getPhotoTemplate
-} = require('../../selectors')
+} from '../../selectors'
 
+const { MODE } = PROJECT
+const { readFile } = fs.promises
 
-class Import extends ImportCommand {
+export class Import extends ImportCommand {
   *exec() {
     let { payload } = this.action
 
@@ -310,9 +309,4 @@ const importNotes = async (db, notes, parent, result = []) => {
     result.push(note)
   }
   return result
-}
-
-
-module.exports = {
-  Import
 }

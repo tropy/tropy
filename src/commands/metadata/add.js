@@ -3,7 +3,7 @@ import { Command } from '../command'
 import { pick } from '../../common/util'
 import { text } from '../../value'
 import mod from '../../models/metadata'
-import act from '../../actions'
+import * as act from '../../actions'
 import { METADATA } from '../../constants'
 
 

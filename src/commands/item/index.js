@@ -1,14 +1,9 @@
-'use strict'
-
-module.exports = {
-  ...require('./create'),
-  ...require('./explode'),
-  ...require('./export'),
-  ...require('./import'),
-  ...require('./load'),
-  ...require('./merge'),
-  ...require('./preview'),
-  ...require('./print'),
-  ...require('./save'),
-  ...require('./tags')
-}
+export * from './create'
+export * from './explode'
+export * from './export'
+export * from './import'
+export * from './load'
+export * from './merge'
+export * from './preview'
+export * from './print'
+export * from './tags'

@@ -1,14 +1,12 @@
-'use strict'
-
-const { Command } = require('../command')
-const { call, put, select } = require('redux-saga/effects')
-const { PHOTO } = require('../../constants')
-const { get, last, splice } = require('../../common/util')
-const act = require('../../actions')
-const mod = require('../../models')
+import { Command } from '../command'
+import { call, put, select } from 'redux-saga/effects'
+import { PHOTO } from '../../constants'
+import { get, last, splice } from '../../common/util'
+import * as act from '../../actions'
+import * as mod from '../../models'
 
 
-class Delete extends Command {
+export class Delete extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -58,7 +56,7 @@ class Delete extends Command {
 Delete.register(PHOTO.DELETE)
 
 
-class Restore extends Command {
+export class Restore extends Command {
   *exec() {
     let { db } = this.options
     let { item, photos } = this.action.payload
@@ -83,9 +81,3 @@ class Restore extends Command {
 }
 
 Restore.register(PHOTO.RESTORE)
-
-
-module.exports = {
-  Delete,
-  Restore
-}
