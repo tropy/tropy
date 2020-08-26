@@ -1,17 +1,11 @@
-'use strict'
-
-const { select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { API } = require('../../constants')
-const { pluck } = require('../../common/util')
-
-const {
-  findTag,
-  getAllTags
-} = require('../../selectors')
+import { select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { API } from '../../constants'
+import { pluck } from '../../common/util'
+import { findTag, getAllTags } from '../../selectors'
 
 
-class TagShow extends Command {
+export class TagShow extends Command {
   *exec() {
     let { payload } = this.action
     let tag = yield select(state => findTag(state, payload))
@@ -22,7 +16,7 @@ class TagShow extends Command {
 TagShow.register(API.TAG.SHOW)
 
 
-class TagFind extends Command {
+export class TagFind extends Command {
   *exec() {
     let { id, reverse } = this.action.payload
 
@@ -43,9 +37,3 @@ class TagFind extends Command {
 }
 
 TagFind.register(API.TAG.FIND)
-
-
-module.exports = {
-  TagFind,
-  TagShow
-}

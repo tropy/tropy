@@ -1,11 +1,9 @@
-'use strict'
-
-const { call, put, select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { API } = require('../../constants')
-const { fromHTML, serialize } = require('../../components/editor/serialize')
-const act = require('../../actions')
-const mod = require('../../models')
+import { call, put, select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { API } from '../../constants'
+import { fromHTML, serialize } from '../../editor/serialize'
+import act from '../../actions'
+import mod from '../../models'
 
 
 class NoteCreate extends Command {
