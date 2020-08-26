@@ -1,6 +1,14 @@
 import { PHOTO } from '../constants'
 import { array } from '../common/util'
 
+function update(payload, meta = {}) {
+  return {
+    type: PHOTO.UPDATE,
+    payload,
+    meta
+  }
+}
+
 export default {
   consolidate(payload, meta) {
     return {
@@ -51,7 +59,7 @@ export default {
   },
 
   error(payload, meta = {}) {
-    return module.exports.update(
+    return update(
       { id: payload, broken: true },
       { consolidate: true, ...meta })
   },
@@ -70,13 +78,7 @@ export default {
     }
   },
 
-  update(payload, meta = {}) {
-    return {
-      type: PHOTO.UPDATE,
-      payload,
-      meta
-    }
-  },
+  update,
 
   restore(payload, meta) {
     return {
