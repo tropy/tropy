@@ -1,15 +1,14 @@
-'use strict'
+import assert from 'assert'
+import { call, put, select } from 'redux-saga/effects'
+import { empty, get, pick } from '../common/util'
+import { Command } from './command'
+import { getTemplateDefaultValues } from '../selectors'
+import * as mod from '../models'
+import * as act from '../actions'
+import { ITEM, PHOTO, SELECTION } from '../constants'
 
-const assert = require('assert')
-const { empty, get, pick } = require('../common/util')
-const { Command } = require('./command')
-const { call, put, select } = require('redux-saga/effects')
-const { getTemplateDefaultValues } = require('../selectors')
-const mod = require('../models')
-const act = require('../actions')
 
-
-class Save extends Command {
+export class Save extends Command {
   type = 'item'
 
   get isUndo() {
@@ -113,6 +112,23 @@ class Save extends Command {
   }
 }
 
-module.exports = {
-  Save
+export class PhotoTemplateChange extends Save {
+  type = 'photo'
 }
+
+PhotoTemplateChange.register(PHOTO.TEMPLATE.CHANGE)
+
+
+export class ItemTemplateChange extends Save {
+  type = 'item'
+}
+
+ItemTemplateChange.register(ITEM.TEMPLATE.CHANGE)
+
+
+export class SelectionTemplateChange extends Save {
+  type = 'selection'
+}
+
+SelectionTemplateChange.register(SELECTION.TEMPLATE.CHANGE)
+

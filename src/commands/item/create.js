@@ -1,20 +1,17 @@
-'use strict'
+import { call, put, select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { ITEM } from '../../constants'
+import { prompt } from '../../dialog'
+import * as act from '../../actions'
+import * as mod from '../../models'
 
-const { call, put, select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { ITEM } = require('../../constants')
-const { prompt } = require('../../dialog')
-
-const act = require('../../actions')
-const mod = require('../../models')
-
-const {
+import {
   getItemTemplate,
   getTemplateValues
-} = require('../../selectors')
+} from '../../selectors'
 
 
-class Create extends Command {
+export class Create extends Command {
   *exec() {
     let { db } = this.options
 
@@ -37,7 +34,7 @@ class Create extends Command {
 Create.register(ITEM.CREATE)
 
 
-class Delete extends Command {
+export class Delete extends Command {
   *exec() {
     let { db } = this.options
     let items = this.action.payload
@@ -57,7 +54,7 @@ class Delete extends Command {
 Delete.register(ITEM.DELETE)
 
 
-class Destroy extends Command {
+export class Destroy extends Command {
   *exec() {
     let { db } = this.options
     let items = this.action.payload
@@ -88,7 +85,7 @@ class Destroy extends Command {
 Destroy.register(ITEM.DESTROY)
 
 
-class Restore extends Command {
+export class Restore extends Command {
   *exec() {
     let { db } = this.options
     let items = this.action.payload
@@ -105,11 +102,3 @@ class Restore extends Command {
 }
 
 Restore.register(ITEM.RESTORE)
-
-
-module.exports = {
-  Create,
-  Delete,
-  Destroy,
-  Restore
-}

@@ -1,14 +1,12 @@
-'use strict'
-
-const { select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { ITEM } = require('../../constants')
-const { win } = require('../../window')
-const { darwin } = require('../../common/os')
-const { get } = require('../../common/util')
+import { select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { ITEM } from '../../constants'
+import { win } from '../../window'
+import { darwin } from '../../common/os'
+import { get } from '../../common/util'
 
 
-class Preview extends Command {
+export class Preview extends Command {
   *exec() {
     if (!darwin) return
 
@@ -23,7 +21,3 @@ class Preview extends Command {
 }
 
 Preview.register(ITEM.PREVIEW)
-
-module.exports = {
-  Preview
-}

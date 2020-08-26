@@ -1,14 +1,12 @@
-'use strict'
-
-const { all, call, put, select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { ITEM } = require('../../constants')
-const { pluck } = require('../../common/util')
-const act = require('../../actions')
-const mod = require('../../models')
+import { all, call, put, select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { ITEM } from '../../constants'
+import { pluck } from '../../common/util'
+import * as act from '../../actions'
+import * as mod from '../../models'
 
 
-class Merge extends Command {
+export class Merge extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -44,7 +42,7 @@ class Merge extends Command {
 Merge.register(ITEM.MERGE)
 
 
-class Split extends Command {
+export class Split extends Command {
   *exec() {
     let { db } = this.options
     let { item, items, data, lists, tags } = this.action.payload
@@ -79,9 +77,3 @@ class Split extends Command {
 }
 
 Split.register(ITEM.SPLIT)
-
-
-module.exports = {
-  Merge,
-  Split
-}

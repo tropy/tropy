@@ -1,15 +1,13 @@
-'use strict'
-
-const assert = require('assert')
-const { call, put, select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { ITEM } = require('../../constants')
-const { remove } = require('../../common/util')
-const act = require('../../actions')
-const mod = require('../../models')
+import assert from 'assert'
+import { call, put, select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { ITEM } from '../../constants'
+import { remove } from '../../common/util'
+import * as act from '../../actions'
+import * as mod from '../../models'
 
 
-class Explode extends Command {
+export class Explode extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -85,7 +83,7 @@ class Explode extends Command {
 Explode.register(ITEM.EXPLODE)
 
 
-class Implode extends Command {
+export class Implode extends Command {
   *exec() {
     let { db } = this.options
     let { item, items } = this.action.payload
@@ -107,9 +105,3 @@ class Implode extends Command {
 }
 
 Implode.register(ITEM.IMPLODE)
-
-
-module.exports = {
-  Explode,
-  Implode
-}
