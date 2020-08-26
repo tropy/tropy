@@ -37,7 +37,7 @@ export function times(n, fn) {
 
 
 function toArray(obj) {
-    return obj == null ? [] : Array.isArray(obj) ? [...obj] : [obj]
+  return obj == null ? [] : Array.isArray(obj) ? [...obj] : [obj]
 }
 
 export { toArray as array }
