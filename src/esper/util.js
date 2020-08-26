@@ -29,7 +29,7 @@ export const isDoubleClickSupported = (tool) =>
 const isPinchToZoom = ({ type, ctrlKey, metaKey, shiftKey }) =>
   darwin && type === 'wheel' && ctrlKey && !(metaKey || shiftKey)
 
-const equal = (p1, p2) =>
+export const equal = (p1, p2) =>
   p1.x === p2.x && p1.y === p2.y
 
 export const center = ({ x = 0, y = 0, width, height }) => ({
