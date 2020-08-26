@@ -6,14 +6,14 @@ const { EditorToolbar } = require('./toolbar')
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('./view')
 const { Placeholder } = require('../placeholder')
-const { schema } = require('./schema')
-const commands = require('./commands')(schema)
-const plugins = require('./plugins')(schema)
+const { createCommands, createPlugins, schema } = require('../../editor')
 const { match } = require('../../keymap')
 const cx = require('classnames')
 const { get, noop, restrict } = require('../../common/util')
 const { SASS: { EDITOR } } = require('../../constants')
 
+const commands = createCommands(schema)
+const plugins = createPlugins(schema)
 
 class Editor extends React.Component {
   toolbar = React.createRef()

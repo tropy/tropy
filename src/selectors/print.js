@@ -2,7 +2,7 @@
 
 const { createSelector: memo } = require('reselect')
 const { getMetadataFields } = require('./metadata')
-const { serialize } = require('../components/editor/serialize')
+const { serialize } = require('../editor/serialize')
 const { get } = require('../common/util')
 
 const getPhotoExpanded = (

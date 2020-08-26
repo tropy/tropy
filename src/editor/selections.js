@@ -1,5 +1,3 @@
-'use strict'
-
 const hasMark = (pos, index, markType) =>
       markType.isInSet(pos.parent.child(index).marks)
 
@@ -29,15 +27,11 @@ const calculate = (pos, markType) => {
   return { from: startPos, to: endPos }
 }
 
-const markExtend = (selection, markType) => {
+export function markExtend(selection, markType) {
   if (!selection) return
 
   return {
     from: calculate(selection.$from, markType).from,
     to: calculate(selection.$to, markType).to
   }
-}
-
-module.exports = {
-  markExtend
 }

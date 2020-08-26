@@ -1,7 +1,5 @@
-'use strict'
-
-const { splitListItem } = require('prosemirror-schema-list')
-const { splitBlockKeepMarks }  = require('prosemirror-commands')
+import { splitListItem } from 'prosemirror-schema-list'
+import { splitBlockKeepMarks }  from 'prosemirror-commands'
 
 const align = (direction) =>
   (state, dispatch) => {
@@ -54,14 +52,13 @@ const splitListItemKeepAlignment = (listItemType) => {
 const splitBlockKeepAlignment = (state, dispatch) =>
   splitBlockKeepMarks(state, dispatch && keepAlignment(state, dispatch, 1))
 
-module.exports = {
-  alignment(schema) {
-    return {
-      left: align('left'),
-      center: align('center'),
-      right: align('right'),
-      splitBlock: splitBlockKeepAlignment,
-      splitListItem: splitListItemKeepAlignment(schema.nodes.list_item)
-    }
+
+export function alignment(schema) {
+  return {
+    left: align('left'),
+    center: align('center'),
+    right: align('right'),
+    splitBlock: splitBlockKeepAlignment,
+    splitListItem: splitListItemKeepAlignment(schema.nodes.list_item)
   }
 }
