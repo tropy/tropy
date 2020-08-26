@@ -1,19 +1,17 @@
-'use strict'
-
-const { DOMParser, DOMSerializer } = require('prosemirror-model')
-const { EditorState } = require('prosemirror-state')
-const { defaultMarkdownSerializer } = require('prosemirror-markdown')
-const { schema } = require('./schema')
-const { warn } = require('../../common/log')
+import { DOMParser, DOMSerializer } from 'prosemirror-model'
+import { EditorState } from 'prosemirror-state'
+import { defaultMarkdownSerializer } from 'prosemirror-markdown'
+import { schema } from './schema'
+import { warn } from '../common/log'
 
 const serializer = DOMSerializer.fromSchema(schema)
 const parser = DOMParser.fromSchema(schema)
 
-const serialize = (note, {
+export function serialize(note, {
   format = { text: true, html: true },
   localize = true
-} = {}) => (
-  (note == null) ? null :
+} = {}) {
+  return (note == null) ? null :
     Object
       .entries(format)
       .reduce((acc, [fmt, include]) => {
@@ -38,7 +36,7 @@ const serialize = (note, {
         }
         return acc
       }, {})
-)
+}
 
 
 const toValue = (value, localize, language) => (
@@ -47,7 +45,7 @@ const toValue = (value, localize, language) => (
     value
 )
 
-const fromHTML = (html) => {
+export function fromHTML(html) {
   let dom = (new window.DOMParser).parseFromString(html, 'text/html')
   let doc = parser.parse(dom)
   let text = doc.textBetween(0, doc.content.size, ' ', ' ')
@@ -58,8 +56,7 @@ const fromHTML = (html) => {
   }
 }
 
-
-const toHTML = (doc) => {
+export function toHTML(doc) {
   try {
     let node = schema.nodeFromJSON(doc)
     let frag = serializer.serializeFragment(node)
@@ -74,7 +71,7 @@ const toHTML = (doc) => {
   }
 }
 
-const toMarkdown = (doc) => {
+export function toMarkdown(doc) {
   try {
     let node = schema.nodeFromJSON(doc)
     return defaultMarkdownSerializer.serialize(node)
@@ -83,11 +80,4 @@ const toMarkdown = (doc) => {
     warn({ stack: e.stack }, 'failed to convert doc to markdown')
     return ''
   }
-}
-
-module.exports = {
-  fromHTML,
-  serialize,
-  toHTML,
-  toMarkdown
 }

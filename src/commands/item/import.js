@@ -8,7 +8,7 @@ const { normalize, eachItem } = require('../../common/import')
 const { info, warn } = require('../../common/log')
 const { Image } = require('../../image')
 const { fail } = require('../../dialog')
-const { fromHTML } = require('../../components/editor/serialize')
+const { fromHTML } = require('../../editor/serialize')
 const act = require('../../actions')
 const mod = require('../../models')
 

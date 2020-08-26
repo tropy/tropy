@@ -1,12 +1,10 @@
-'use strict'
-
-const cmd  = require('prosemirror-commands')
-const { undo, redo } = require('prosemirror-history')
-const { list } = require('./list')
-const { undoInputRule } = require('prosemirror-inputrules')
-const { TextSelection } = require('prosemirror-state')
-const { markExtend } = require('./selections')
-const { alignment } = require('./alignment')
+import * as cmd from 'prosemirror-commands'
+import { undo, redo } from 'prosemirror-history'
+import { list } from './list'
+import { undoInputRule } from 'prosemirror-inputrules'
+import { TextSelection } from 'prosemirror-state'
+import { markExtend } from './selections'
+import { alignment } from './alignment'
 
 
 const expandAndRemoveMark = (markType) =>
@@ -25,7 +23,7 @@ const expandAndRemoveMark = (markType) =>
     return true
   }
 
-module.exports = (schema) => {
+export function createCommands(schema) {
   const align = alignment(schema)
   const marks = {}
 

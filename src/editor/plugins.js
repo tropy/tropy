@@ -1,17 +1,15 @@
-'use strict'
+import { history } from 'prosemirror-history'
+import { gapCursor } from 'prosemirror-gapcursor'
+import { Decoration, DecorationSet } from 'prosemirror-view'
+import { Plugin } from 'prosemirror-state'
 
-const { history } = require('prosemirror-history')
-const { gapCursor } = require('prosemirror-gapcursor')
-const { Decoration, DecorationSet } = require('prosemirror-view')
-const { Plugin } = require('prosemirror-state')
-
-const {
+import {
   InputRule,
   inputRules,
   smartQuotes,
   ellipsis,
   wrappingInputRule
-} = require('prosemirror-inputrules')
+} from 'prosemirror-inputrules'
 
 const enDash = new InputRule(/--$/, '–')
 const enDashAuto = new InputRule(/ - $/, ' – ')
@@ -49,7 +47,7 @@ const pseudoSelection = ({ className = 'pseudo-selection' } = {}) =>
     }
   })
 
-module.exports = (schema) => {
+export function createPlugins(schema) {
   const rules = [
     enDash, enDashAuto, emDash, ellipsis, ...smartQuotes
   ]

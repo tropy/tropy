@@ -1,9 +1,6 @@
-'use strict'
-
-const { Schema } = require('prosemirror-model')
-
-const basic = require('prosemirror-schema-basic')
-const list = require('prosemirror-schema-list')
+import { Schema } from 'prosemirror-model'
+import * as basic from 'prosemirror-schema-basic'
+import * as list from 'prosemirror-schema-list'
 
 const {
   doc,
@@ -36,7 +33,7 @@ const align = (nodeSpec, tag) => ({
   ])
 })
 
-const nodes = {
+export const nodes = {
   doc,
   paragraph: align(paragraph, 'p'),
   blockquote,
@@ -80,7 +77,7 @@ const textDecoMark = (deco) => ({
   toDOM: (node) => (['span', node.attrs])
 })
 
-const marks = {
+export const marks = {
   link,
   italic: em,
   bold: strong,
@@ -114,10 +111,4 @@ const marks = {
   }
 }
 
-const schema = new Schema({ nodes, marks })
-
-module.exports = {
-  nodes,
-  marks,
-  schema
-}
+export const schema = new Schema({ nodes, marks })

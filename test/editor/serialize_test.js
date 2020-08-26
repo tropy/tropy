@@ -1,7 +1,7 @@
 'use strict'
 
 describe('editor serialize utils', () => {
-  const Editor = __require('components/editor/serialize')
+  const Editor = __require('editor/serialize')
 
   describe('fromHTML', () => {
     it('creates a document from an HTML string', () => {
