@@ -1,7 +1,7 @@
 import { SETTINGS, ITEM, PHOTO, SELECTION, ESPER } from '../constants'
 import { darwin } from '../common/os'
-import { dc } from '../common/ns'
 import { merge } from '../common/util'
+import { dc } from '../ontology'
 
 const defaults = {
   completions: 'datatype',

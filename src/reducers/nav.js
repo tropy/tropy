@@ -1,6 +1,6 @@
 import { isSelected, select } from '../selection'
 import { merge, insert, splice } from '../common/util'
-import { dc } from '../common/ns'
+import { dc } from '../ontology'
 
 import {
   EDIT,

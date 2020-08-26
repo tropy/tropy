@@ -1,4 +1,4 @@
-import { tropy } from './ns'
+import { tropy } from '../ontology'
 
 export const ctx = {
   get item() {

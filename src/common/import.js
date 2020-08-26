@@ -1,6 +1,6 @@
 import * as ex from './export'
 import { expand } from './json'
-import { rdfs, tropy, xsd } from './ns'
+import { rdfs, tropy, xsd } from '../ontology'
 import { URI, any, array, map, morph, omit, get } from './util'
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
