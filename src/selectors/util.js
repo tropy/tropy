@@ -1,10 +1,8 @@
-'use strict'
+import { blank } from '../common/util'
 
-const { blank } = require('../common/util')
-
-const pluck = (data, ids) => {
-  const idx = {}
-  const res = []
+export function pluck(data, ids) {
+  let idx = {}
+  let res = []
 
   if (!blank(ids)) {
     for (const id of ids) {
@@ -17,8 +15,4 @@ const pluck = (data, ids) => {
 
   res.idx = idx
   return res
-}
-
-module.exports = {
-  pluck
 }

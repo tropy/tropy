@@ -1,20 +1,18 @@
-'use strict'
+import { createSelector as memo } from 'reselect'
+import { pluck } from './util'
+import { BLANK } from '../common/util'
 
-const { createSelector: memo } = require('reselect')
-const { pluck } = require('./util')
-const EMPTY = {}
+export const getItems = ({ items }) => items
 
-const getItems = ({ items }) => items
-
-const getSelectedItems = memo(
+export const getSelectedItems = memo(
   ({ items }) => items, ({ nav }) => (nav.items), pluck
 )
 
-const getVisibleItems = memo(
+export const getVisibleItems = memo(
   ({ items }) => items, ({ qr }) => (qr.items), pluck
 )
 
-const getListHold = memo(
+export const getListHold = memo(
   getSelectedItems,
   (items) => items.reduce((hold, item) => {
     for (let list of item.lists) hold[list] = true
@@ -22,18 +20,10 @@ const getListHold = memo(
   }, {})
 )
 
-const getSelectedItemTemplate = memo(
+export const getSelectedItemTemplate = memo(
   getSelectedItems,
-  ([item, ...items]) => (item == null) ? EMPTY : {
+  ([item, ...items]) => (item == null) ? BLANK : {
     id: item.template,
     mixed: items.find(it => it.template !== item.template) != null
   }
 )
-
-module.exports = {
-  getItems,
-  getListHold,
-  getSelectedItems,
-  getSelectedItemTemplate,
-  getVisibleItems
-}
