@@ -2,7 +2,7 @@
 
 const { EditorState } = require('prosemirror-state')
 const { doc, p } = require('prosemirror-test-builder')
-const { schema } = __require('components/editor/schema')
+const { schema } = __require('editor/schema')
 
 
 const url = 'http://www.example.com'
