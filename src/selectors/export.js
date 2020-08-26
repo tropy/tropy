@@ -1,7 +1,7 @@
 'use strict'
 
 const { ctx, props } = require('../common/export')
-const { xsd } = require('../common/ns')
+const { xsd } = require('../ontology')
 const { version } = require('../common/release')
 const { blank, URI, get, pick } = require('../common/util')
 const { serialize } = require('../editor/serialize')
