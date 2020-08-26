@@ -9,7 +9,7 @@ import { pick } from '../common/util'
 import { open, prompt } from '../dialog'
 import { Image } from '../image'
 import { IMAGE } from '../constants'
-import { dc, dcterms } from '../common/ns'
+import { dc, dcterms } from '../ontology/ns'
 import { date, text } from '../value'
 import { getTemplateValues, getTemplateProperties } from '../selectors'
 

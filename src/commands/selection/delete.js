@@ -1,14 +1,12 @@
-'use strict'
-
-const { call, put, select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { SELECTION } = require('../../constants')
-const { get, last, splice } = require('../../common/util')
-const mod = require('../../models')
-const act = require('../../actions')
+import { call, put, select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { SELECTION } from '../../constants'
+import { get, last, splice } from '../../common/util'
+import mod from '../../models/selection'
+import * as act from '../../actions'
 
 
-class Delete extends Command {
+export class Delete extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -22,8 +20,8 @@ class Delete extends Command {
     let order = photo.selections.filter(id => !payload.selections.includes(id))
 
     yield call(db.transaction, async tx => {
-      await mod.selection.delete(tx, ...payload.selections)
-      await mod.selection.order(tx, photo.id, order)
+      await mod.delete(tx, ...payload.selections)
+      await mod.order(tx, photo.id, order)
     })
 
     if (nav.selection != null) {
@@ -62,7 +60,7 @@ class Delete extends Command {
 Delete.register(SELECTION.DELETE)
 
 
-class Restore extends Command {
+export class Restore extends Command {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
@@ -77,8 +75,8 @@ class Restore extends Command {
     ord = splice(ord, idx, 0, ...selections)
 
     yield call(db.transaction, async tx => {
-      await mod.selection.restore(tx, ...selections)
-      await mod.selection.order(tx, photo, ord)
+      await mod.restore(tx, ...selections)
+      await mod.order(tx, photo, ord)
     })
 
     yield put(act.photo.selections.add({ id: photo, selections }, { idx }))
@@ -88,9 +86,3 @@ class Restore extends Command {
 }
 
 Restore.register(SELECTION.RESTORE)
-
-
-module.exports = {
-  Delete,
-  Restore
-}
