@@ -3,7 +3,7 @@
 const N3 = require('n3')
 
 describe('Export Vocabularies', () => {
-  const { toN3 } = __require('export/vocab')
+  const { toN3 } = __require('ontology/vocabulary')
   const { vocab, ontology } = require('../fixtures/export')
 
   describe('toN3()', () => {
