@@ -1,3 +1,5 @@
+import ARGS from './args'
+
 function sort(locale = ARGS.locale) {
   if (!(locale in sort)) {
     sort[locale] = new Intl.Collator(locale, {

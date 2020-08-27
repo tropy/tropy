@@ -1,9 +1,10 @@
 import React from 'react'
 import { render } from 'react-dom'
+import ARGS from '../args'
 import { create } from '../stores/wizard'
 import { Main } from '../components/main'
 import { WizardContainer } from '../components/wizard'
-import { win } from '../window'
+import win from '../window'
 import { intl, history, settings } from '../actions'
 import * as dialog from '../dialog'
 

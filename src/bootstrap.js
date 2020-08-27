@@ -1,27 +1,26 @@
-'use strict'
+import { basename } from 'path'
+import ARGS, { parse } from './args'
+import { createLogger, fatal, info } from './common/log'
+import { ipcRenderer as ipc } from 'electron'
+import { ready } from './dom'
+import win, { Window } from './window'
 
 try {
   const START = Date.now()
 
-  const opts = require('./args').parse()
-  const { basename } = require('path')
-  const { createLogger, fatal, info } = require('./common/log')
-
-  const { ipcRenderer: ipc } = require('electron')
-  const { ready } = require('./dom')
-  const { Window } = require('./window')
+  parse()
 
   createLogger({
-    dest: opts.log,
-    level: opts.level,
+    dest: ARGS.log,
+    level: ARGS.level,
     name: basename(location.pathname, '.html')
   })
 
-  const win = new Window(opts)
+  new Window(ARGS)
 
   info({
     dpx: window.devicePixelRatio,
-    opts
+    opts: ARGS
   }, `${win.type}.init`)
 
   ready
@@ -31,6 +30,7 @@ try {
         ipc.send('wm', 'init')
         win.toggle('init')
         const INIT = Date.now()
+        // TODO ESM
         require(`./views/${win.type}`)
         const LOAD = Date.now()
 
@@ -50,7 +50,7 @@ try {
     .catch((e) => {
       fatal({ stack: e.stack }, `${win.type}.init failed`)
 
-      if (opts.dev)
+      if (ARGS.dev)
         ipc.send('wm', 'show')
       else
         process.crash()
@@ -61,7 +61,7 @@ try {
     throw new Error('use of eval() is prohibited')
   }
 
-  if (!opts.dev) {
+  if (!ARGS.dev) {
     global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
   }
 

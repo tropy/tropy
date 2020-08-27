@@ -1,23 +1,19 @@
-'use strict'
-
 const decode = decodeURIComponent
 const encode = encodeURIComponent
 
-function parse() {
-  const hash = window.location.hash.slice(1)
+let ARGS = {}
+export default ARGS
 
-  window.ARGS = JSON.parse(decode(hash))
+export function parse() {
+  let hash = window.location.hash.slice(1)
+
+  Object.assign(ARGS, JSON.parse(decode(hash)))
   process.env.NODE_ENV = ARGS.env
 
-  return window.ARGS
+  return ARGS
 }
 
-function update(hash) {
-  Object.assign(window.ARGS, hash)
+export function update(hash) {
+  Object.assign(ARGS, hash)
   window.location.hash = encode(JSON.stringify(ARGS))
-}
-
-module.exports = {
-  parse,
-  update
 }

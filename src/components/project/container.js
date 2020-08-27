@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { connect } = require('react-redux')
+const ARGS = require('../../args').default
 const { ProjectView } = require('./view')
 const { ItemView } = require('../item')
 const { DragLayer } = require('../drag-layer')

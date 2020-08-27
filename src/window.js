@@ -1,17 +1,15 @@
-'use strict'
+import { ipcRenderer as ipc } from 'electron'
+import { basename, join } from 'path'
+import { existsSync as exists } from 'fs'
+import { darwin } from './common/os'
+import { Plugins } from './common/plugins'
+import { delay, pick } from './common/util'
+import { paths } from './common/release'
+import { EventEmitter } from 'events'
+import ARGS, { update } from './args'
+import debounce from 'lodash.debounce'
 
-const { ipcRenderer: ipc } = require('electron')
-const { basename, join } = require('path')
-const { existsSync: exists } = require('fs')
-const { darwin } = require('./common/os')
-const { Plugins } = require('./common/plugins')
-const { delay, pick } = require('./common/util')
-const { paths } = require('./common/release')
-const { EventEmitter } = require('events')
-const args = require('./args')
-const debounce = require('lodash.debounce')
-
-const {
+import {
   $$,
   append,
   emit,
@@ -23,7 +21,7 @@ const {
   toggle,
   stylesheet,
   remove
-} = require('./dom')
+} from './dom'
 
 const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
@@ -31,14 +29,17 @@ const isCommand = darwin ?
 
 const STYLES = join(paths.css, process.platform)
 
-class Window extends EventEmitter {
+let instance
+export { instance as default }
+
+export class Window extends EventEmitter {
   constructor(opts) {
-    if (Window.instance) {
+    if (instance) {
       throw Error('Singleton Window constructor called multiple times')
     }
 
     super()
-    Window.instance = this
+    instance = this
 
     this.type = basename(location.pathname, '.html')
 
@@ -147,24 +148,24 @@ class Window extends EventEmitter {
         this.emit(state)
       })
       .on('theme', (_, theme, { dark, contrast } = {}) => {
-        args.update({ theme, dark, contrast })
+        update({ theme, dark, contrast })
         Object.assign(this.state, { theme, dark, contrast })
         this.style(true)
       })
       .on('fontSize', (_, fontSize) => {
-        args.update({ fontSize })
+        update({ fontSize })
         this.setFontSize(fontSize)
         this.emit('settings.update', { fontSize })
       })
       .on('recent', (_, recent) => {
-        args.update({ recent })
+        update({ recent })
       })
       .on('locale', (_, locale) => {
-        args.update({ locale })
+        update({ locale })
         this.emit('settings.update', { locale })
       })
       .on('debug', (_, debug) => {
-        args.update({ debug })
+        update({ debug })
         this.emit('settings.update', { debug })
       })
       .on('scrollbars', (_, scrollbars) => {
@@ -434,10 +435,4 @@ class Window extends EventEmitter {
   send(type, ...params) {
     ipc.send('wm', type, ...params)
   }
-}
-
-module.exports = {
-  Window,
-
-  get win() { return Window.instance || new Window(ARGS) }
 }

@@ -1,3 +1,4 @@
+import ARGS from '../args'
 import { WIZARD } from '../constants'
 
 const init = {

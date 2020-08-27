@@ -1,3 +1,4 @@
+import ARGS from '../args'
 import { INTL } from '../constants'
 
 export function intl(state = {

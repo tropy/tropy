@@ -1,3 +1,4 @@
+import ARGS from '../args'
 import { FLASH } from '../constants'
 
 const init = (ARGS.update && ARGS.update.id) ?

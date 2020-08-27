@@ -3,6 +3,7 @@ import {
 } from 'redux'
 
 import thunk from 'redux-thunk'
+import ARGS from '../args'
 import { flash, intl, wizard } from '../reducers'
 import { debounce } from '../middleware'
 

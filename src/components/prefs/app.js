@@ -1,6 +1,7 @@
 'use strict'
 
 const React = require('react')
+const ARGS = require('../../args').default
 const { TemplateSelect } = require('../template/select')
 const { ResourceSelect } = require('../resource/select')
 const { ipcRenderer: ipc } = require('electron')

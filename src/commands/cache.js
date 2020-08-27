@@ -1,6 +1,7 @@
 import assert from 'assert'
 import fs from 'fs'
 import { call, select } from 'redux-saga/effects'
+import ARGS from '../args'
 import { Command } from './command'
 import { CACHE } from '../constants'
 import { Cache } from '../common/cache'

@@ -1,6 +1,7 @@
 'use strict'
 
 const React = require('react')
+const ARGS = require('../../args').default
 const { Item } = require('./item')
 const { WindowContext } = require('../main')
 const { delay, noop } = require('../../common/util')

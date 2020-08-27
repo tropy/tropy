@@ -1,3 +1,4 @@
+import ARGS from '../args'
 import { into, update } from '../common/query'
 
 export default {

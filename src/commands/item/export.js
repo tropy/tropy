@@ -5,7 +5,7 @@ import { Command } from '../command'
 import { ITEM } from '../../constants'
 import { warn } from '../../common/log'
 import { fail, save } from '../../dialog'
-import { win } from '../../window'
+import win from '../../window'
 import { getExportItems } from '../../selectors'
 
 const write = fs.promises.writeFile

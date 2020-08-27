@@ -1,4 +1,5 @@
 import { Writer, DataFactory } from 'n3'
+import args from '../args'
 import { blank } from '../common/util'
 import { dc, rdf, rdfs, owl, vann } from './ns'
 
@@ -30,17 +31,17 @@ function addEach(out, ids, type, state) {
     if (res.comment) {
       out.addQuad(id,
         namedNode(rdfs.comment),
-        literal(res.comment, ARGS.locale))
+        literal(res.comment, args.locale))
     }
     if (res.label) {
       out.addQuad(id,
         namedNode(rdfs.label),
-        literal(res.label, ARGS.locale))
+        literal(res.label, args.locale))
     }
     if (res.description) {
       out.addQuad(id,
         namedNode(dc.description),
-        literal(res.description, ARGS.locale))
+        literal(res.description, args.locale))
     }
   }
 }
@@ -72,11 +73,11 @@ export function toN3(vocab, ontology, prefixes = {}) {
 
     out.addQuad(id,
       namedNode(dc.title),
-      literal(vocab.title, ARGS.locale))
+      literal(vocab.title, args.locale))
 
     out.addQuad(id,
       namedNode(dc.description),
-      literal(vocab.description, ARGS.locale))
+      literal(vocab.description, args.locale))
 
     addEach(out, vocab.classes, namedNode(rdfs.Class), ontology.class)
     addEach(out, vocab.datatypes, namedNode(rdfs.Datatype), ontology.type)
