@@ -31,10 +31,11 @@ const inWindowContext = {
     const { DndProvider } = require('react-dnd-cjs')
     const { default: TestBackend } = require('react-dnd-test-backend-cjs')
     const { WindowContext } = __require('components/main')
-    const { win } = __require('window')
+    const ARGS = __require('args').default
+    const win = __require('window')
 
     return (
-      <WindowContext.Provider value={win}>
+      <WindowContext.Provider value={win.default || new win.Window(ARGS)}>
         <IntlProvider locale="en">
           <DndProvider backend={TestBackend}>
             {children}
