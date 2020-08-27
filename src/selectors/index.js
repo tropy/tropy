@@ -1,6 +1,7 @@
 export * from './activity'
 export * from './esper'
 export * from './export'
+export * from './history'
 export * from './items'
 export * from './lists'
 export * from './metadata'
