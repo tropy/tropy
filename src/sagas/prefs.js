@@ -1,62 +1,55 @@
-'use strict'
+import { all, call, cancel, delay, fork, take } from 'redux-saga/effects'
+import { debug, warn } from '../common/log'
+import { PREFS } from '../constants'
+import { ontology } from './ontology'
+import { history } from './history'
+import { ipc } from './ipc'
+import { shell } from './shell'
+import { persist, restore } from './storage'
 
-require('../commands/ontology')
+import '../commands/ontology'
 
-const { debug, warn } = require('../common/log')
-const { CLOSE } = require('../constants/prefs')
-const { ontology } = require('./ontology')
-const { history } = require('./history')
-const { ipc } = require('./ipc')
-const { shell } = require('./shell')
-const storage = require('./storage')
+export function *main() {
+  let aux
 
-const {
-  all, call, cancel, delay, fork, take
-} = require('redux-saga/effects')
+  try {
+    aux = yield all([
+      fork(ontology, { max: 2 }),
+      fork(history),
+      fork(ipc),
+      fork(shell)
+    ])
 
-module.exports = {
-  *main() {
-    let aux
+    aux.START = Date.now()
 
-    try {
-      aux = yield all([
-        fork(ontology, { max: 2 }),
-        fork(history),
-        fork(ipc),
-        fork(shell)
-      ])
+    yield all([
+      call(restore, 'prefs'),
+      call(restore, 'settings')
+    ])
 
-      aux.START = Date.now()
+    debug('*prefs.main ready')
+    yield take(PREFS.CLOSE)
 
-      yield all([
-        call(storage.restore, 'prefs'),
-        call(storage.restore, 'settings')
-      ])
+  } catch (e) {
+    warn({ stack: e.stack }, 'unexpected error in *prefs.main')
 
-      debug('*prefs.main ready')
-      yield take(CLOSE)
+  } finally {
+    yield all([
+      call(persist, 'prefs'),
+      call(persist, 'settings')
+    ])
 
-    } catch (e) {
-      warn({ stack: e.stack }, 'unexpected error in *prefs.main')
-
-    } finally {
-      yield all([
-        call(storage.persist, 'prefs'),
-        call(storage.persist, 'settings')
-      ])
-
-      // HACK: Ensure we don't cancel aux tasks too early!
-      if (Date.now() - aux.START < 1000) {
-        yield delay(1000)
-      }
-
-      yield cancel(aux)
-
-      // HACK: We cannot wait for cancelled tasks to complete.
-      // See redux-saga#1242
-      yield delay(200)
-
-      debug('*prefs.main terminated')
+    // HACK: Ensure we don't cancel aux tasks too early!
+    if (Date.now() - aux.START < 1000) {
+      yield delay(1000)
     }
+
+    yield cancel(aux)
+
+    // HACK: We cannot wait for cancelled tasks to complete.
+    // See redux-saga#1242
+    yield delay(200)
+
+    debug('*prefs.main terminated')
   }
 }
