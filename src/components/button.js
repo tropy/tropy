@@ -1,17 +1,14 @@
-'use strict'
-
-const React = require('react')
-const { createElement: create } = React
-const { injectIntl } = require('react-intl')
-const cx = require('classnames')
-const { on, off } = require('../dom')
-const { noop } = require('../common/util')
-const {
+import React from 'react'
+import { injectIntl } from 'react-intl'
+import cx from 'classnames'
+import { on, off } from '../dom'
+import { noop } from '../common/util'
+import {
   bool, element, func, node, number, object, oneOf, string
-} = require('prop-types')
+} from 'prop-types'
 
 
-const ButtonGroup = ({ children }) => (
+export const ButtonGroup = ({ children }) => (
   <div className="btn-group">{children}</div>
 )
 
@@ -119,7 +116,11 @@ class Button extends React.PureComponent {
   }
 
   render() {
-    return create(this.node, this.attributes, this.props.icon, this.text)
+    return React.createElement(
+      this.node,
+      this.attributes,
+      this.props.icon,
+      this.text)
   }
 
   static propTypes = {
@@ -151,8 +152,5 @@ class Button extends React.PureComponent {
   }
 }
 
-
-module.exports = {
-  ButtonGroup,
-  Button: injectIntl(Button)
-}
+const IntlButton = injectIntl(Button)
+export { IntlButton as Button }

@@ -37,7 +37,7 @@ export function append(s, items) {
 }
 
 export function merge(s, items) {
-  return [...Selection.remove(s, items), ...items]
+  return [...remove(s, items), ...items]
 }
 
 export function isSelected(s, items) {

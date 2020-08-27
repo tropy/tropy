@@ -1,18 +1,16 @@
-'use strict'
+import React from 'react'
+import { blank, noop } from '../common/util'
+import { Button } from './button'
+import { open, save } from '../dialog'
+import cx from 'classnames'
 
-const React = require('react')
-const { blank, noop } = require('../common/util')
-const { Button } = require('./button')
-const { open, save } = require('../dialog')
-
-const {
+import {
   bool, func, number, object, oneOf, string, arrayOf
-} = require('prop-types')
-
-const cx = require('classnames')
+} from 'prop-types'
 
 
-class FileSelect extends React.PureComponent {
+
+export class FileSelect extends React.PureComponent {
   get tabIndex() {
     return this.props.isDisabled ? null : this.props.tabIndex
   }
@@ -153,8 +151,4 @@ class FileSelect extends React.PureComponent {
     tabIndex: -1,
     type: 'file'
   }
-}
-
-module.exports = {
-  FileSelect
 }

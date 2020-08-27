@@ -1,14 +1,12 @@
-'use strict'
+import React from 'react'
+import { element, number, oneOf } from 'prop-types'
+import { on, bounds } from '../dom'
 
-const React = require('react')
-const { element, number, oneOf } = require('prop-types')
-const { on, bounds } = require('../dom')
-
-const {
+import {
   CSSTransition,
   Transition,
   TransitionGroup
-} = require('react-transition-group')
+} from 'react-transition-group'
 
 const onTransitionEnd = (node, done) => {
   on(node, 'transitionend', event => {
@@ -93,7 +91,7 @@ class Collapse extends React.Component {
   }
 }
 
-module.exports = {
+export {
   CSSTransition,
   Transition,
   TransitionGroup,

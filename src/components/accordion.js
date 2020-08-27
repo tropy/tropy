@@ -1,14 +1,12 @@
-'use strict'
+import React from 'react'
+import { only } from './util'
+import cx from 'classnames'
+import { on, off, visible } from '../dom'
+import { bool, func, node, number, oneOfType, string } from 'prop-types'
 
-const React = require('react')
 const { Component, Children, cloneElement: clone } = React
-const { only } = require('./util')
-const cx = require('classnames')
-const { on, off, visible } = require('../dom')
-const { bool, func, node, number, oneOfType, string } = require('prop-types')
 
-
-class Accordion extends Component {
+export class Accordion extends Component {
   componentDidUpdate({ isActive: wasActive, isOpen: wasOpen }) {
     const { isActive, isOpen } = this.props
     if (isActive && (!wasActive || isOpen && !wasOpen)) {
@@ -90,7 +88,7 @@ class Accordion extends Component {
 }
 
 
-class AccordionGroup extends Component {
+export class AccordionGroup extends Component {
   state = {
     active: null,
     hasTabFocus: false,
@@ -245,9 +243,4 @@ class AccordionGroup extends Component {
     className: string,
     tabIndex: number
   }
-}
-
-module.exports = {
-  Accordion,
-  AccordionGroup
 }
