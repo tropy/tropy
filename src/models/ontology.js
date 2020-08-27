@@ -1,5 +1,6 @@
 import assert from 'assert'
 import { join } from 'path'
+import ARGS from '../args'
 import { TYPE } from '../constants'
 import { all } from 'bluebird'
 import { paths } from '../common/release'

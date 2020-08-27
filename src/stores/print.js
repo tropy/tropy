@@ -6,6 +6,7 @@ import {
 } from 'redux'
 
 import thunk from 'redux-thunk'
+import ARGS from '../args'
 import { intl } from '../reducers'
 
 const devtools = (ARGS.dev || ARGS.debug) &&

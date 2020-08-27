@@ -1,10 +1,11 @@
 import React from 'react'
 import { render } from 'react-dom'
+import ARGS from '../args'
 import { create } from '../stores/prefs'
 import { Main } from '../components/main'
 import { PrefsContainer } from '../components/prefs'
 import { main } from '../sagas/prefs'
-import { win } from '../window'
+import win from '../window'
 import { intl, prefs, history, keymap, settings } from '../actions'
 import * as dialog from '../dialog'
 

@@ -16,7 +16,7 @@ import * as mod from '../models'
 import * as act from '../actions'
 import { persist, restore, storage } from './storage'
 import { handleDatabaseErrors } from './db'
-import args from '../args'
+import ARGS, { update } from '../args'
 
 import {
   all,
@@ -81,7 +81,7 @@ export function *open(file, meta) {
 
     // Update window's global ARGS to allow reloading the project!
     if (db.path !== ARGS.file) {
-      args.update({ file: db.path })
+      update({ file: db.path })
     }
 
     let cache = new Cache(ARGS.cache, project.id)

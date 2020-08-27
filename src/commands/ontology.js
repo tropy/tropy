@@ -1,5 +1,6 @@
 import assert from 'assert'
 import { writeFile as write } from 'fs'
+import ARGS from '../args'
 import { Command } from './command'
 import { ONTOLOGY } from '../constants'
 import { warn } from '../common/log'

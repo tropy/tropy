@@ -1,5 +1,6 @@
 import assert from 'assert'
 import { ipcRenderer as ipc, shell, clipboard } from 'electron'
+import ARGS from './args'
 import { counter, get } from './common/util'
 import { crashReport, warn } from './common/log'
 import { IMAGE } from './constants'

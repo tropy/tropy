@@ -1,5 +1,6 @@
 import { call, fork, take } from 'redux-saga/effects'
 import { join } from 'path'
+import ARGS from '../args'
 import { debug, warn } from '../common/log'
 import { Database } from '../common/db'
 import { exec, commands } from './cmd'

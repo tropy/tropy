@@ -1,6 +1,7 @@
 import assert from 'assert'
 import { dirname, join } from 'path'
 import { v4 as uuid } from 'uuid'
+import ARGS from '../args'
 import { into, update } from '../common/query'
 import { info } from '../common/log'
 import { home } from '../common/os'

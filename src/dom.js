@@ -176,7 +176,11 @@ export function isLink(node) {
   return node.tagName === 'A' && !blank(node.href)
 }
 
-export function createDragHandler({ handleDrag, handleDragStop, stopOnMouseLeave }) {
+export function createDragHandler({
+  handleDrag,
+  handleDragStop,
+  stopOnMouseLeave
+}) {
   function onKeyDown(event) {
     switch (event.key) {
       case 'Escape':
