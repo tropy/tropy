@@ -1,16 +1,14 @@
-'use strict'
-
-const { isFunction } = require('util')
-const React = require('react')
-const { IconSpin, IconXSmall } = require('./icons')
-const { FormattedMessage } = require('react-intl')
-const cx = require('classnames')
-const { ACTIVITY } = require('../constants/sass')
-const { arrayOf, bool, shape, string, number, func } = require('prop-types')
-const { Button } = require('./button')
+import React from 'react'
+import { isFunction } from 'util'
+import { IconSpin, IconXSmall } from './icons'
+import { FormattedMessage } from 'react-intl'
+import cx from 'classnames'
+import { SASS } from '../constants'
+import { arrayOf, bool, shape, string, number, func } from 'prop-types'
+import { Button } from './button'
 
 
-const Activity = ({
+export const Activity = ({
   id,
   type,
   progress,
@@ -56,7 +54,7 @@ Activity.propTypes = {
 }
 
 
-class ActivityPane extends React.PureComponent {
+export class ActivityPane extends React.PureComponent {
   componentDidMount() {
     this.resume()
   }
@@ -115,7 +113,7 @@ class ActivityPane extends React.PureComponent {
   }
 
   static getHeight(count) {
-    return count ? count * ACTIVITY.HEIGHT : 0
+    return count ? count * SASS.ACTIVITY.HEIGHT : 0
   }
 
   static propTypes = {
@@ -135,10 +133,4 @@ class ActivityPane extends React.PureComponent {
   static defaultProps = {
     delay: 400
   }
-}
-
-
-module.exports = {
-  Activity,
-  ActivityPane
 }

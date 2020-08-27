@@ -1,14 +1,12 @@
-'use strict'
-
-const React = require('react')
-const { DND, DragLayer } = require('./dnd')
-const { ItemDragPreview } = require('./item')
-const { PhotoDragPreview } = require('./photo')
-const { ListDragPreview } = require('./list')
-const { FieldDragPreview } = require('./metadata')
-const { on, off } = require('../dom')
-const throttle = require('lodash.throttle')
-const { bool, number, object, shape, string } = require('prop-types')
+import React from 'react'
+import { DND, DragLayer } from './dnd'
+import { ItemDragPreview } from './item'
+import { PhotoDragPreview } from './photo'
+import { ListDragPreview } from './list'
+import { FieldDragPreview } from './metadata'
+import { on, off } from '../dom'
+import throttle from 'lodash.throttle'
+import { bool, number, object, shape, string } from 'prop-types'
 
 const coords = shape({
   x: number.isRequired,
@@ -109,13 +107,13 @@ class CustomDragLayer extends React.Component {
   }
 }
 
-module.exports = {
-  DragLayer: DragLayer((monitor) => ({
-    item: monitor.getItem(),
-    type: monitor.getItemType(),
-    initialClientOffset: monitor.getInitialClientOffset(),
-    initialSourceClientOffset: monitor.getInitialSourceClientOffset(),
-    position: monitor.getClientOffset(),
-    isDragging: monitor.isDragging()
-  }))(CustomDragLayer)
-}
+const CDL = DragLayer((monitor) => ({
+  item: monitor.getItem(),
+  type: monitor.getItemType(),
+  initialClientOffset: monitor.getInitialClientOffset(),
+  initialSourceClientOffset: monitor.getInitialSourceClientOffset(),
+  position: monitor.getClientOffset(),
+  isDragging: monitor.isDragging()
+}))(CustomDragLayer)
+
+export { CDL as DragLayer }

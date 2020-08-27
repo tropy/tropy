@@ -1,20 +1,19 @@
-'use strict'
+import React from 'react'
+import { FormattedMessage, useIntl } from 'react-intl'
+import { Input } from './input'
+import { FileSelect } from './file'
+import { Select } from './select'
+import cx from 'classnames'
+import { noop } from '../common/util'
+import { SASS } from '../constants'
+import { on, off } from '../dom'
 
-const React = require('react')
-const { FormattedMessage, useIntl } = require('react-intl')
-const { Input } = require('./input')
-const { FileSelect } = require('./file')
-const { Select } = require('./select')
-const cx = require('classnames')
-const {
+import {
   arrayOf, bool, func, node, number, oneOf, string
-} = require('prop-types')
-const { noop } = require('../common/util')
-const { GRID } = require('../constants/sass')
-const { on, off } = require('../dom')
+} from 'prop-types'
 
 
-class FormGroup extends React.PureComponent {
+export class FormGroup extends React.PureComponent {
   get classes() {
     return {
       'form-group': true,
@@ -38,7 +37,7 @@ class FormGroup extends React.PureComponent {
 }
 
 
-const Label = React.memo(props => {
+export const Label = React.memo(props => {
   let intl = useIntl()
 
   let title = props.title && intl.formatMessage({ id: props.title })
@@ -65,13 +64,13 @@ Label.defaultProps = {
   size: 4
 }
 
-class FormElement extends React.PureComponent {
+export class FormElement extends React.PureComponent {
   get hasLabel() {
     return this.props.label || this.props.id != null
   }
 
   get offset() {
-    return GRID.SIZE - this.props.size
+    return SASS.GRID.SIZE - this.props.size
   }
 
   render() {
@@ -113,7 +112,7 @@ class FormElement extends React.PureComponent {
 }
 
 
-class FormField extends React.PureComponent {
+export class FormField extends React.PureComponent {
   input = React.createRef()
 
   get InputComponent() {
@@ -201,7 +200,7 @@ class FormField extends React.PureComponent {
   }
 }
 
-const FormSelect = (props) => {
+export const FormSelect = (props) => {
   const intl = useIntl()
 
   return (
@@ -246,7 +245,7 @@ FormSelect.defaultProps = {
   size: 8
 }
 
-class Toggle extends React.PureComponent {
+export class Toggle extends React.PureComponent {
   state = {
     isTabFocus: false
   }
@@ -332,11 +331,11 @@ class Toggle extends React.PureComponent {
 }
 
 
-class FormToggle extends React.PureComponent {
+export class FormToggle extends React.PureComponent {
   get classes() {
     return [
       `col-${this.props.size}`,
-      `col-offset-${GRID.SIZE - this.props.size}`
+      `col-offset-${SASS.GRID.SIZE - this.props.size}`
     ]
   }
 
@@ -363,7 +362,7 @@ class FormToggle extends React.PureComponent {
   }
 }
 
-class FormToggleGroup extends React.PureComponent {
+export class FormToggleGroup extends React.PureComponent {
   handleChange = (option) => {
     for (let value in option) {
       if (option[value]) {
@@ -408,7 +407,7 @@ class FormToggleGroup extends React.PureComponent {
   }
 }
 
-class FormText extends React.PureComponent {
+export class FormText extends React.PureComponent {
   get isVisible() {
     return this.props.value || !this.props.isOptional
   }
@@ -439,7 +438,7 @@ class FormText extends React.PureComponent {
   }
 }
 
-class FormLink extends React.PureComponent {
+export class FormLink extends React.PureComponent {
   get isVisible() {
     return this.props.value || !this.props.isOptional
   }
@@ -478,18 +477,4 @@ class FormLink extends React.PureComponent {
   static defaultProps = {
     size: 8
   }
-}
-
-
-module.exports = {
-  FormElement,
-  FormField,
-  FormGroup,
-  FormLink,
-  FormSelect,
-  FormText,
-  FormToggle,
-  FormToggleGroup,
-  Label,
-  Toggle
 }

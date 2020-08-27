@@ -1,13 +1,11 @@
-'use strict'
-
-const React = require('react')
-const { bool, func, number, oneOfType, string } = require('prop-types')
-const { Input } = require('./input')
-const { noop } = require('../common/util')
-const cx = require('classnames')
+import React from 'react'
+import { bool, func, number, oneOfType, string } from 'prop-types'
+import { Input } from './input'
+import { noop } from '../common/util'
+import cx from 'classnames'
 
 
-class Editable extends React.PureComponent {
+export class Editable extends React.PureComponent {
   componentWillUnmount() {
     this.prevFocus = null
   }
@@ -152,8 +150,4 @@ class Editable extends React.PureComponent {
     getCompletions: noop,
     onCancel: noop
   }
-}
-
-module.exports = {
-  Editable
 }

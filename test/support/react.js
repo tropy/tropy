@@ -1,14 +1,18 @@
-'use strict'
-
 if (process.type !== 'renderer')
   throw new Error('not in renderer')
 
-const React = require('react')
+import React from 'react'
+import chai from 'chai'
+import dom from 'chai-dom'
+import { render as testRender, queries } from '@testing-library/react'
+import { IntlProvider } from 'react-intl'
+import { DndProvider } from 'react-dnd-cjs'
+import TestBackend from 'react-dnd-test-backend-cjs'
+import { WindowContext } from '../../src/components/main'
+import ARGS from '../../src/args'
+import win, { Window } from '../../src/window'
 
-const chai = require('chai')
-chai.use(require('chai-dom'))
-
-const testing = require('@testing-library/react')
+chai.use(dom)
 
 const helpers = {
   $(node, ...args) {
@@ -24,18 +28,11 @@ const helpers = {
   }
 }
 
-const inWindowContext = {
+export const inWindowContext = {
   // eslint-disable-next-line react/prop-types
   wrapper({ children }) {
-    const { IntlProvider } = require('react-intl')
-    const { DndProvider } = require('react-dnd-cjs')
-    const { default: TestBackend } = require('react-dnd-test-backend-cjs')
-    const { WindowContext } = __require('components/main')
-    const ARGS = __require('args').default
-    const win = __require('window')
-
     return (
-      <WindowContext.Provider value={win.default || new win.Window(ARGS)}>
+      <WindowContext.Provider value={win || new Window(ARGS)}>
         <IntlProvider locale="en">
           <DndProvider backend={TestBackend}>
             {children}
@@ -46,21 +43,16 @@ const inWindowContext = {
   }
 }
 
-const render = (ui, opts) => {
+export const render = (ui, opts) => {
   const container = document.createElement('main')
   document.body.appendChild(container)
 
-  return testing.render(ui, {
+  return testRender(ui, {
     container,
     queries: {
-      ...testing.queries,
+      ...queries,
       ...helpers
     },
     ...opts
   })
-}
-
-module.exports = {
-  render,
-  inWindowContext
 }
