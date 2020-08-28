@@ -1,18 +1,17 @@
-'use strict'
+import React from 'react'
+import { func, shape, string } from 'prop-types'
+import { connect } from 'react-redux'
+import { Steps } from '../steps'
+import { Titlebar } from '../toolbar'
+import { ProjectStep } from './project'
+import { join } from 'path'
+import actions from '../../actions'
+import sanitize from 'sanitize-filename'
+import { blank } from '../../common/util'
+import { existsSync as exists } from 'fs'
 
-const React = require('react')
-const { func, shape, string } = require('prop-types')
-const { connect } = require('react-redux')
-const { Steps } = require('../steps')
-const { Titlebar } = require('../toolbar')
-const { ProjectStep } = require('./project')
-const { join } = require('path')
-const actions = require('../../actions')
-const sanitize = require('sanitize-filename')
-const { blank } = require('../../common/util')
-const { existsSync: exists } = require('fs')
 
-class WizardContainer extends React.PureComponent {
+class Wizard extends React.PureComponent {
   get hasDefaultFilename() {
     return this.props.project.file === this.getDefaultFilename()
   }
@@ -80,25 +79,27 @@ class WizardContainer extends React.PureComponent {
 }
 
 
-module.exports = {
-  WizardContainer: connect(
-    ({ wizard }) => ({
-      project: wizard.project,
-      userData: wizard.userData
-    }),
+const WizardContainer = connect(
+  ({ wizard }) => ({
+    project: wizard.project,
+    userData: wizard.userData
+  }),
 
-    (dispatch) => ({
-      onProjectUpdate(...args) {
-        dispatch(actions.wizard.project.update(...args))
-      },
+  (dispatch) => ({
+    onProjectUpdate(...args) {
+      dispatch(actions.wizard.project.update(...args))
+    },
 
-      onProjectSaveAs(...args) {
-        dispatch(actions.wizard.project.save(...args))
-      },
+    onProjectSaveAs(...args) {
+      dispatch(actions.wizard.project.save(...args))
+    },
 
-      onComplete(...args) {
-        dispatch(actions.wizard.complete(...args))
-      }
-    })
-  )(WizardContainer)
+    onComplete(...args) {
+      dispatch(actions.wizard.complete(...args))
+    }
+  })
+)(Wizard)
+
+export {
+  WizardContainer
 }

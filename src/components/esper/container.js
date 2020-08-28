@@ -1,27 +1,29 @@
-'use strict'
+import React from 'react'
+import cx from 'classnames'
+import debounce from 'lodash.debounce'
+import throttle from 'lodash.throttle'
+import Esper from '../../esper'
+import { EsperToolbar } from './toolbar'
+import { EsperPanel } from './panel'
+import { pick, restrict } from '../../common/util'
+import { Cache } from '../../common/cache'
+import { isHorizontal, rotate, round } from '../../common/math'
+import { Rotation } from '../../common/iiif'
+import { on, off } from '../../dom'
+import { match } from '../../keymap'
 
-const React = require('react')
-const cx = require('classnames')
-const debounce = require('lodash.debounce')
-const throttle = require('lodash.throttle')
-const { default: Esper } = require('../../esper')
-const { EsperToolbar } = require('./toolbar')
-const { EsperPanel } = require('./panel')
-const { pick, restrict } = require('../../common/util')
-const { Cache } = require('../../common/cache')
-const { isHorizontal, rotate, round } = require('../../common/math')
-const { Rotation } = require('../../common/iiif')
-const { on, off } = require('../../dom')
-const { match } = require('../../keymap')
+import {
+  arrayOf, bool, func, number, object, shape, string
+} from 'prop-types'
 
-const {
-  arrayOf, bool, func, number, object, shape, string } = require('prop-types')
-
-const { TABS } = require('../../constants')
-const { TOOL, MODE } = require('../../constants/esper')
+import { ESPER, SASS, TABS } from '../../constants'
 
 const {
-  ESPER: {
+  TOOL,
+  MODE
+} = ESPER
+
+const {
     MAX_ZOOM,
     MIN_WIDTH,
     MIN_HEIGHT,
@@ -32,11 +34,10 @@ const {
     ZOOM_DURATION,
     ZOOM_STEP_SIZE,
     ZOOM_PRECISION
-  }
-} = require('../../constants/sass')
+} = SASS.ESPER
 
 
-class EsperContainer extends React.Component {
+export class EsperContainer extends React.Component {
 
   #IO = new IntersectionObserver(([el]) => {
     requestIdleCallback(
@@ -853,9 +854,4 @@ const subOrientation = (state, photo) => {
     return Rotation.subExifOrientation(state, photo).toJSON()
   else
     return pick(state, ['angle', 'mirror'])
-}
-
-
-module.exports = {
-  EsperContainer
 }
