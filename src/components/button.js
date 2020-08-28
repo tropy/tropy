@@ -17,16 +17,18 @@ ButtonGroup.propTypes = {
 }
 
 class Button extends React.PureComponent {
+  container = React.createRef()
+
   state = {
     hasTabFocus: false
   }
 
   componentDidMount() {
-    on(this.container, 'tab:focus', this.handleTabFocus)
+    on(this.container.current, 'tab:focus', this.handleTabFocus)
   }
 
   componentWillUnmount() {
-    off(this.container, 'tab:focus', this.handleTabFocus)
+    off(this.container.current, 'tab:focus', this.handleTabFocus)
   }
 
   get classes() {
@@ -46,7 +48,7 @@ class Button extends React.PureComponent {
   }
 
   get text() {
-    const { intl, text } = this.props
+    let { intl, text } = this.props
 
     return text ?
       intl.formatMessage({ id: text }) :
@@ -54,7 +56,7 @@ class Button extends React.PureComponent {
   }
 
   get title() {
-    const { intl, title } = this.props
+    let { intl, title } = this.props
 
     return title ?
       intl.formatMessage({ id: title }) :
@@ -62,12 +64,12 @@ class Button extends React.PureComponent {
   }
 
   get attributes() {
-    const attr = {
+    let attr = {
       className: cx(...this.classes),
       disabled: !this.props.noFocus && this.props.isDisabled,
       onBlur: this.handleBlur,
       onFocus: this.props.onFocus,
-      ref: this.setContainer,
+      ref: this.container,
       title: this.title
     }
 
@@ -84,10 +86,6 @@ class Button extends React.PureComponent {
     }
 
     return attr
-  }
-
-  setContainer = (container) => {
-    this.container = container
   }
 
   handleTabFocus = () => {
@@ -152,5 +150,8 @@ class Button extends React.PureComponent {
   }
 }
 
-const IntlButton = injectIntl(Button)
-export { IntlButton as Button }
+const ButtonContainer = injectIntl(Button)
+
+export {
+  ButtonContainer as Button
+}

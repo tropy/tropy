@@ -1,16 +1,14 @@
-'use strict'
-
-const React = require('react')
-const { Completions } = require('./completions')
-const { IconXSmall, IconXMedium } = require('./icons')
-const { Button } = require('./button')
-const { blank, last, noop } = require('../common/util')
-const { on, off } = require('../dom')
-const cx = require('classnames')
-const memoize = require('memoize-one')
-const {
+import React from 'react'
+import { Completions } from './completions'
+import { IconXSmall, IconXMedium } from './icons'
+import { Button } from './button'
+import { blank, last, noop } from '../common/util'
+import { on, off } from '../dom'
+import cx from 'classnames'
+import memoize from 'memoize-one'
+import {
   array, arrayOf, bool, func, object, oneOfType, node, number, string
-} = require('prop-types')
+} from 'prop-types'
 
 
 class Value extends React.Component {
@@ -42,7 +40,7 @@ class Value extends React.Component {
   }
 }
 
-class Select extends React.Component {
+export class Select extends React.Component {
   state = {
     hasFocus: !!this.props.autofocus,
     query: '',
@@ -455,8 +453,3 @@ const getDerivedState = memoize((value, options, isRequired, toId) => {
     values
   }
 })
-
-
-module.exports = {
-  Select
-}

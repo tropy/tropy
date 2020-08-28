@@ -1,6 +1,3 @@
-if (process.type !== 'renderer')
-  throw new Error('not in renderer')
-
 import React from 'react'
 import chai from 'chai'
 import dom from 'chai-dom'

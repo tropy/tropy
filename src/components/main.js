@@ -1,25 +1,20 @@
-'use strict'
+import React from 'react'
+import { Provider, connect } from 'react-redux'
+import { IntlProvider as ReactIntlProvider } from 'react-intl'
+import { element, object } from 'prop-types'
+import { DndProvider, ElectronBackend } from './dnd'
+import { Flash } from './flash'
+import { noop } from '../common/util'
 
-const React = require('react')
-const { Provider, connect } = require('react-redux')
-const ReactIntl = require('react-intl')
-const { element, object } = require('prop-types')
-const { DndProvider, ElectronBackend } = require('./dnd')
-const { Flash } = require('./flash')
-const { noop } = require('../common/util')
-
-const WindowContext = React.createContext({
+export const WindowContext = React.createContext({
   maximize: noop
 })
 
-const IntlProvider = connect(state => {
-  return {
-    ...state.intl, key: state.intl.locale
-  }
-})(ReactIntl.IntlProvider)
+const IntlProvider = connect(
+  ({ intl }) => ({ ...intl, key: intl.locale })
+)(ReactIntlProvider)
 
-// eslint-disable-next-line react/prefer-stateless-function
-class Main extends React.Component {
+export class Main extends React.Component {
   componentDidMount() {
     this.props.window.send('react:ready')
   }
@@ -46,9 +41,4 @@ class Main extends React.Component {
     store: object.isRequired,
     window: object.isRequired
   }
-}
-
-module.exports = {
-  Main,
-  WindowContext
 }

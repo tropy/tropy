@@ -1,17 +1,14 @@
-'use strict'
+import React from 'react'
+import { noop } from '../common/util'
+import { AutoResizer } from './auto-resizer'
+import { Completions } from './completions'
 
-const React = require('react')
-const { noop } = require('../common/util')
-const { AutoResizer } = require('./auto-resizer')
-const { Completions } = require('./completions')
-const { get } = require('../common/util')
-
-const {
+import {
   array, bool, func, number, oneOf, oneOfType, string
-} = require('prop-types')
+} from 'prop-types'
 
 
-class Input extends React.PureComponent {
+export class Input extends React.PureComponent {
   completions = React.createRef()
   input = React.createRef()
 
@@ -192,7 +189,7 @@ class Input extends React.PureComponent {
     }
 
     this.setState({
-      value: get(opt, ['value'], this.state.query)
+      value: opt?.value?.[this.state.query]
     })
 
     return true
@@ -275,8 +272,4 @@ class Input extends React.PureComponent {
     onCommit: noop,
     onFocus: noop
   }
-}
-
-module.exports = {
-  Input
 }

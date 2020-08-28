@@ -1,14 +1,12 @@
-'use strict'
+import React from 'react'
+import { createPortal } from 'react-dom'
+import { bool, func, node, number, oneOf, shape, string } from 'prop-types'
+import { $, append, classes, element, has, on, off, remove } from '../dom'
+import { noop } from '../common/util'
+import cx from 'classnames'
+import throttle from 'lodash.throttle'
 
-const React = require('react')
-const { createPortal } = require('react-dom')
-const { bool, func, node, number, oneOf, shape, string } = require('prop-types')
-const { $, append, classes, element, has, on, off, remove } = require('../dom')
-const { noop } = require('../common/util')
-const cx = require('classnames')
-const throttle = require('lodash.throttle')
-
-class Popup extends React.Component {
+export class Popup extends React.Component {
   constructor(props) {
     super(props)
     this.root = $('#popup-root')
@@ -130,8 +128,4 @@ class Popup extends React.Component {
     onClickOutside: noop,
     onResize: noop
   }
-}
-
-module.exports = {
-  Popup
 }
