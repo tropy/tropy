@@ -1,24 +1,22 @@
-'use strict'
+import React from 'react'
+import { Slider } from '../slider'
+import { Button } from '../button'
+import { bool, element, func, number, string } from 'prop-types'
+import { FormattedMessage } from 'react-intl'
+import { FormToggle } from '../form'
+import { shallow } from '../../common/util'
+import { TABS } from '../../constants'
 
-const React = require('react')
-const { Slider } = require('../slider')
-const { Button } = require('../button')
-const { bool, element, func, number, string } = require('prop-types')
-const { FormattedMessage } = require('react-intl')
-const { FormToggle } = require('../form')
-const { shallow } = require('../../common/util')
-const { TABS } = require('../../constants')
-
-const {
+import {
   IconSun,
   IconContrast,
   IconHue,
   IconDrop,
   IconSharpen
-} = require('../icons')
+} from '../icons'
 
 
-class ColorSlider extends React.PureComponent {
+export class ColorSlider extends React.PureComponent {
   handleChange = (value) => {
     this.props.onChange({ [this.props.type]: value })
   }
@@ -80,7 +78,7 @@ class ColorSlider extends React.PureComponent {
 }
 
 
-const EsperPanel = (props) => {
+export const EsperPanel = (props) => {
   let isDefault = shallow(EsperPanel.defaultProps, props)
 
   return (
@@ -170,9 +168,4 @@ EsperPanel.defaultProps = {
   negative: false,
   saturation: 0,
   sharpen: 0
-}
-
-module.exports = {
-  EsperPanel,
-  ColorSlider
 }

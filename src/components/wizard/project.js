@@ -1,12 +1,10 @@
-'use strict'
-
-const React = require('react')
-const { bool, func, object, string } = require('prop-types')
-const { FormattedMessage, injectIntl } = require('react-intl')
-const { Step } = require('../steps')
-const { Button } = require('../button')
-const { FormElement, FormGroup } = require('../form')
-const cx = require('classnames')
+import React from 'react'
+import { bool, func, object, string } from 'prop-types'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { Step } from '../steps'
+import { Button } from '../button'
+import { FormElement, FormGroup } from '../form'
+import cx from 'classnames'
 
 
 const ProjectName = injectIntl(class extends React.Component {
@@ -91,7 +89,7 @@ ProjectFile.propTypes = {
   value: string.isRequired
 }
 
-const ProjectStep = (props) => (
+export const ProjectStep = (props) => (
   <Step>
     <div className="tropy-icon"/>
     <h1><FormattedMessage id="wizard.project.title"/></h1>
@@ -122,8 +120,4 @@ ProjectStep.propTypes = {
   onNameChange: func.isRequired,
   onFileSelect: func.isRequired,
   onComplete: func.isRequired
-}
-
-module.exports = {
-  ProjectStep
 }
