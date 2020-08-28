@@ -107,7 +107,7 @@ class CustomDragLayer extends React.Component {
   }
 }
 
-const CDL = DragLayer((monitor) => ({
+const DragLayerContainer = DragLayer((monitor) => ({
   item: monitor.getItem(),
   type: monitor.getItemType(),
   initialClientOffset: monitor.getInitialClientOffset(),
@@ -116,4 +116,6 @@ const CDL = DragLayer((monitor) => ({
   isDragging: monitor.isDragging()
 }))(CustomDragLayer)
 
-export { CDL as DragLayer }
+export {
+  DragLayerContainer as DragLayer
+}

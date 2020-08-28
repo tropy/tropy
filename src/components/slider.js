@@ -1,21 +1,19 @@
-'use strict'
+import React from 'react'
+import { Button } from './button'
+import { Draggable } from './draggable'
+import { bounds, borders } from '../dom'
+import { restrict } from '../common/util'
+import { round } from '../common/math'
+import cx from 'classnames'
+import throttle from 'lodash.throttle'
+import { KeyMap } from '../keymap'
 
-const React = require('react')
-const { Button } = require('./button')
-const { Draggable } = require('./draggable')
-const { bounds, borders } = require('../dom')
-const { restrict } = require('../common/util')
-const { round } = require('../common/math')
-const cx = require('classnames')
-const throttle = require('lodash.throttle')
-const { KeyMap } = require('../keymap')
-
-const {
+import {
   arrayOf, bool, element, func, instanceOf, number, oneOf
-} = require('prop-types')
+} from 'prop-types'
 
 
-class Slider extends React.PureComponent {
+export class Slider extends React.PureComponent {
   track = React.createRef()
 
   state = {
@@ -289,7 +287,3 @@ class Slider extends React.PureComponent {
 }
 
 const pct = (value) => `${100 * value}%`
-
-module.exports = {
-  Slider
-}

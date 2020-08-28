@@ -1,13 +1,10 @@
-'use strict'
-
-const React = require('react')
-const { func, node, bool, number, oneOf, string } = require('prop-types')
-const { Draggable } = require('./draggable')
-const cx = require('classnames')
-const { bounds } = require('../dom')
-const { capitalize, noop, restrict } = require('../common/util')
-const { round } = require('../common/math')
-const { keys } = Object
+import React from 'react'
+import { func, node, bool, number, oneOf, string } from 'prop-types'
+import { Draggable } from './draggable'
+import cx from 'classnames'
+import { bounds } from '../dom'
+import { capitalize, noop, restrict } from '../common/util'
+import { round } from '../common/math'
 
 const DIR = {
   top: 'row', right: 'col', bottom: 'row', left: 'col'
@@ -26,7 +23,7 @@ const AXS = {
 }
 
 
-class Resizable extends React.Component {
+export class Resizable extends React.Component {
   container = React.createRef()
 
   state = {
@@ -199,7 +196,7 @@ class Resizable extends React.Component {
   static propTypes = {
     children: node,
     className: string,
-    edge: oneOf(keys(DIM)).isRequired,
+    edge: oneOf(Object.keys(DIM)).isRequired,
     id: number,
     isBuffered: bool,
     isDisabled: bool,
@@ -222,8 +219,4 @@ class Resizable extends React.Component {
     onChange: noop,
     onResize: noop
   }
-}
-
-module.exports = {
-  Resizable
 }
