@@ -1,8 +1,4 @@
-'use strict'
-
-module.exports = {
-  ...require('./container'),
-  ...require('./name'),
-  ...require('./sidebar'),
-  ...require('./toolbar')
-}
+export * from './container'
+export * from './name'
+export * from './sidebar'
+export * from './toolbar'

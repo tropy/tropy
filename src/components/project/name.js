@@ -1,12 +1,11 @@
-'use strict'
+import React from 'react'
+import { DND, DropTarget, hasPhotoFiles } from '../dnd'
+import { IconMaze, IconWarningSm, IconLock } from '../icons'
+import { Editable } from '../editable'
+import { blank } from '../../common/util'
+import cx from 'classnames'
+import { bool, func, string } from 'prop-types'
 
-const React = require('react')
-const { DND, DropTarget, hasPhotoFiles } = require('../dnd')
-const { IconMaze, IconWarningSm, IconLock } = require('../icons')
-const { Editable } = require('../editable')
-const { blank } = require('../../common/util')
-const cx = require('classnames')
-const { bool, func, string } = require('prop-types')
 
 class ProjectName extends React.PureComponent {
   get classes() {
@@ -60,8 +59,8 @@ class ProjectName extends React.PureComponent {
   }
 }
 
-module.exports = {
-  ProjectName: DropTarget([DND.FILE, DND.URL], {
+const ProjectNameContainer =
+  DropTarget([DND.FILE, DND.URL], {
     drop({ onDrop }, monitor) {
       let item = monitor.getItem()
       let files
@@ -96,6 +95,8 @@ module.exports = {
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
     canDrop: monitor.canDrop()
-  })
-  )(ProjectName)
+  }))(ProjectName)
+
+export {
+  ProjectNameContainer as ProjectName
 }

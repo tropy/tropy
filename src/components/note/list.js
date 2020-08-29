@@ -1,15 +1,12 @@
-'use strict'
-
-const React = require('react')
-const { Iterator } = require('../iterator')
-const { NoteListItem } = require('./list-item')
-const { TABS, SASS: { NOTE } } = require('../../constants')
-const { match } = require('../../keymap')
-const { get } = require('../../common/util')
-const { arrayOf, bool, func, number, object, shape } = require('prop-types')
+import React from 'react'
+import { Iterator } from '../iterator'
+import { NoteListItem } from './list-item'
+import { TABS, SASS } from '../../constants'
+import { match } from '../../keymap'
+import { arrayOf, bool, func, number, object, shape } from 'prop-types'
 
 
-class NoteList extends Iterator {
+export class NoteList extends Iterator {
   get tabIndex() {
     return this.size === 0 ? null : TABS.NoteList
   }
@@ -19,7 +16,7 @@ class NoteList extends Iterator {
   }
 
   getRowHeight() {
-    return NOTE.ROW_HEIGHT
+    return SASS.NOTE.ROW_HEIGHT
   }
 
   getIterables(props = this.props) {
@@ -27,7 +24,7 @@ class NoteList extends Iterator {
   }
 
   head() {
-    return get(this.props.selection, ['id'])
+    return this.props.selection?.id
   }
 
   isSelected({ id }) {
@@ -137,8 +134,4 @@ class NoteList extends Iterator {
     onContextMenu: func.isRequired,
     onOpen: func.isRequired
   }
-}
-
-module.exports = {
-  NoteList
 }

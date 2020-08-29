@@ -1,21 +1,20 @@
-'use strict'
+import React from 'react'
+import { func, bool, object, number, string } from 'prop-types'
+import { EditorToolbar } from './toolbar'
+import { EditorState } from 'prosemirror-state'
+import { EditorView } from './view'
+import { Placeholder } from '../placeholder'
+import { createCommands, createPlugins, schema } from '../../editor'
+import { match } from '../../keymap'
+import cx from 'classnames'
+import { noop, restrict } from '../../common/util'
+import { SASS } from '../../constants'
 
-const React = require('react')
-const { func, bool, object, number, string } = require('prop-types')
-const { EditorToolbar } = require('./toolbar')
-const { EditorState } = require('prosemirror-state')
-const { EditorView } = require('./view')
-const { Placeholder } = require('../placeholder')
-const { createCommands, createPlugins, schema } = require('../../editor')
-const { match } = require('../../keymap')
-const cx = require('classnames')
-const { get, noop, restrict } = require('../../common/util')
-const { SASS: { EDITOR } } = require('../../constants')
-
+const { EDITOR } = SASS
 const commands = createCommands(schema)
 const plugins = createPlugins(schema)
 
-class Editor extends React.Component {
+export class Editor extends React.Component {
   toolbar = React.createRef()
   container = React.createRef()
 
@@ -24,7 +23,7 @@ class Editor extends React.Component {
   }
 
   setView = (view) => {
-    this.view = get(view, ['pm'])
+    this.view = view?.pm
   }
 
   get classes() {
@@ -176,8 +175,4 @@ class Editor extends React.Component {
     mode: 'horizontal',
     tabIndex: -1
   }
-}
-
-module.exports = {
-  Editor
 }

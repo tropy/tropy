@@ -1,15 +1,13 @@
-'use strict'
-
-const React = require('react')
-const { Thumbnail } = require('../photo/thumbnail')
-const { DND, DragSource, DropTarget, getEmptyImage } = require('../dnd')
-const { bool, func, number, shape, string } = require('prop-types')
-const { pure } = require('../util')
-const { pick } = require('../../common/util')
-const { bounds } = require('../../dom')
+import React from 'react'
+import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd'
+import { Thumbnail } from '../photo'
+import { bool, func, number, shape, string } from 'prop-types'
+import { bounds } from '../../dom'
+import { pick } from '../../common/util'
+import { pure } from '../util'
 
 
-class SelectionIterable extends React.PureComponent {
+export class SelectionIterable extends React.PureComponent {
   state = {
     offset: null
   }
@@ -206,8 +204,3 @@ const DropTargetCollect = (connect, monitor) => ({
   dropTarget: connect.dropTarget(),
   isOver: monitor.isOver()
 })
-
-
-module.exports = {
-  SelectionIterable
-}

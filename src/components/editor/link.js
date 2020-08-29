@@ -1,11 +1,9 @@
-'use strict'
-
-const React = require('react')
-const { bool, func, object } = require('prop-types')
-const { injectIntl } = require('react-intl')
-const { Toolbar } = require('../toolbar')
-const { Input } = require('../input')
-const { ensure } = require('../../dom')
+import React from 'react'
+import { bool, func, object } from 'prop-types'
+import { injectIntl } from 'react-intl'
+import { Toolbar } from '../toolbar'
+import { Input } from '../input'
+import { ensure } from '../../dom'
 
 class LinkContext extends React.PureComponent {
   input = React.createRef()
@@ -69,6 +67,8 @@ class LinkContext extends React.PureComponent {
 }
 
 
-module.exports = {
-  LinkContext: injectIntl(LinkContext)
+const LinkContextContainer = injectIntl(LinkContext)
+
+export {
+  LinkContextContainer as LinkContext
 }

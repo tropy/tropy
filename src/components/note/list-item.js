@@ -1,17 +1,15 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const PropTypes = require('prop-types')
-const cx = require('classnames')
-const { bool, func, number, shape, string } = PropTypes
-const { createClickHandler } = require('../util')
+import React from 'react'
+import cx from 'classnames'
+import { bool, func, number, shape, string } from 'prop-types'
+import { createClickHandler } from '../util'
 
 
-class NoteListItem extends PureComponent {
+export class NoteListItem extends React.PureComponent {
+  container = React.createRef()
+
   componentDidUpdate(props) {
     if (this.props.isSelected && !props.isSelected) {
-      this.container.scrollIntoViewIfNeeded(false)
+      this.container.current.scrollIntoViewIfNeeded(false)
     }
   }
 
@@ -40,14 +38,10 @@ class NoteListItem extends PureComponent {
     }
   })
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
   render() {
     return (
       <li
-        ref={this.setContainer}
+        ref={this.container}
         className={cx('note', { active: this.props.isSelected })}
         onMouseDown={this.handleClick}
         onContextMenu={this.handleContextMenu}>
@@ -71,8 +65,4 @@ class NoteListItem extends PureComponent {
     onOpen: func.isRequired,
     onSelect: func.isRequired
   }
-}
-
-module.exports = {
-  NoteListItem
 }

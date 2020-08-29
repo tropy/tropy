@@ -1,7 +1,3 @@
-'use strict'
-
-module.exports = {
-  ...require('./container'),
-  ...require('./item'),
-  ...require('./photo')
-}
+export * from './container'
+export * from './item'
+export * from './photo'

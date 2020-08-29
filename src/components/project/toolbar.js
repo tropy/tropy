@@ -1,21 +1,15 @@
-'use strict'
+import React from 'react'
+import { WindowContext } from '../main'
+import { FormattedMessage } from 'react-intl'
+import { bool, func, number, string } from 'prop-types'
+import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
+import { Slider } from '../slider'
+import { SearchField } from '../search'
+import { Button } from '../button'
+import { IconPlus, IconList, IconGrid } from '../icons'
 
-const React = require('react')
-const { WindowContext } = require('../main')
-const { FormattedMessage } = require('react-intl')
-const { bool, func, number, string } = require('prop-types')
-const { Titlebar, Toolbar, ToolGroup } = require('../toolbar')
-const { Slider } = require('../slider')
-const { SearchField } = require('../search')
-const { Button } = require('../button')
 
-const {
-  IconPlus,
-  IconList,
-  IconGrid
-} = require('../icons')
-
-class ProjectToolbar extends React.PureComponent {
+export class ProjectToolbar extends React.PureComponent {
   render() {
     return (
       <Titlebar>
@@ -69,8 +63,4 @@ class ProjectToolbar extends React.PureComponent {
     onSearch: func.isRequired,
     onZoomChange: func.isRequired
   }
-}
-
-module.exports = {
-  ProjectToolbar
 }

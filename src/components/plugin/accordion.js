@@ -1,12 +1,9 @@
-'use strict'
-
-const React = require('react')
-const { arrayOf, func, object } = require('prop-types')
-const { Accordion } = require('../accordion')
-const { Button, ButtonGroup } = require('../button')
-const { PluginInstance } = require('./instance')
-const { FormattedMessage } = require('react-intl')
-const { entries } = Object
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { arrayOf, func, object } from 'prop-types'
+import { Accordion } from '../accordion'
+import { Button, ButtonGroup } from '../button'
+import { PluginInstance } from './instance'
 
 
 const NoInfo = () => (
@@ -15,7 +12,7 @@ const NoInfo = () => (
   </div>
 )
 
-class PluginAccordion extends Accordion {
+export class PluginAccordion extends Accordion {
   handleHomepageClick = (event) => {
     event.stopPropagation()
     this.props.onOpenLink(this.props.spec.homepage)
@@ -65,7 +62,7 @@ class PluginAccordion extends Accordion {
   get hooks() {
     return (
       <ul className="hooks">
-        {entries(this.props.spec.hooks).map(hk => (
+        {Object.entries(this.props.spec.hooks).map(hk => (
           <li key={hk[0]} className={!hk[1] ? 'disabled' : null}>
             <FormattedMessage id={`plugin.hooks.${hk[0]}`}/>
           </li>
@@ -142,8 +139,4 @@ class PluginAccordion extends Accordion {
     onRemove: func.isRequired,
     onUninstall: func.isRequired
   }
-}
-
-module.exports = {
-  PluginAccordion
 }

@@ -1,17 +1,14 @@
-'use strict'
-
-const { shell } = require('electron')
-const React = require('react')
-const { Component } = React
-const { func, bool, instanceOf, number } = require('prop-types')
-const { EditorView } = require('prosemirror-view')
-const { EditorState } = require('prosemirror-state')
-const { isMeta } = require('../../keymap')
-const { isLink } = require('../../dom')
-const throttle = require('lodash.throttle')
+import { shell } from 'electron'
+import React from 'react'
+import { func, bool, instanceOf, number } from 'prop-types'
+import { EditorView } from 'prosemirror-view'
+import { EditorState } from 'prosemirror-state'
+import { isMeta } from '../../keymap'
+import { isLink } from '../../dom'
+import throttle from 'lodash.throttle'
 
 
-class ProseMirror extends Component {
+class ProseMirror extends React.Component {
   componentDidMount() {
     this.pm = new EditorView(this.container, {
       state: this.props.state,
@@ -137,6 +134,6 @@ class ProseMirror extends Component {
   }
 }
 
-module.exports = {
-  EditorView: ProseMirror
+export {
+  ProseMirror as EditorView
 }

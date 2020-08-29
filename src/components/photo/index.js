@@ -1,13 +1,9 @@
-'use strict'
-
-module.exports = {
-  ...require('./drag-preview'),
-  ...require('./grid'),
-  ...require('./info'),
-  ...require('./list'),
-  ...require('./list-item'),
-  ...require('./panel'),
-  ...require('./thumbnail'),
-  ...require('./tile'),
-  ...require('./toolbar')
-}
+export * from './drag-preview'
+export * from './grid'
+export * from './info'
+export * from './list'
+export * from './list-item'
+export * from './panel'
+export * from './thumbnail'
+export * from './tile'
+export * from './toolbar'

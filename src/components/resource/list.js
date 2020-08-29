@@ -1,12 +1,9 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { ResourceListItem } = require('./list-item')
-const { array, func } = require('prop-types')
+import React from 'react'
+import { ResourceListItem } from './list-item'
+import { array, func } from 'prop-types'
 
 
-class ResourceList extends PureComponent {
+export class ResourceList extends React.PureComponent {
   render() {
     return (
       <ul className="resource-list">
@@ -25,8 +22,4 @@ class ResourceList extends PureComponent {
     onOpenLink: func.isRequired,
     onSave: func.isRequired
   }
-}
-
-module.exports = {
-  ResourceList
 }

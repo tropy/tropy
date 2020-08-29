@@ -1,8 +1,4 @@
-'use strict'
-
-module.exports = {
-  ...require('./drag-preview'),
-  ...require('./last-import'),
-  ...require('./trash'),
-  ...require('./tree')
-}
+export * from './drag-preview'
+export * from './last-import'
+export * from './trash'
+export * from './tree'

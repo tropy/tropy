@@ -1,11 +1,10 @@
-'use strict'
-
-const React = require('react')
-const { SelectionIterator } = require('./iterator')
-const { SelectionListItem } = require('./list-item')
-const cx = require('classnames')
-const { func, number, object } = require('prop-types')
-const { DC, SASS: { ROW } } = require('../../constants')
+import React from 'react'
+import { SelectionIterator } from './iterator'
+import { SelectionListItem } from './list-item'
+import cx from 'classnames'
+import { func, number, object } from 'prop-types'
+import { SASS } from '../../constants'
+import { dc } from '../../ontology'
 
 
 class SelectionList extends SelectionIterator {
@@ -18,7 +17,7 @@ class SelectionList extends SelectionIterator {
   }
 
   getRowHeight() {
-    return ROW.HEIGHT
+    return SASS.ROW.HEIGHT
   }
 
   isEditing(selection) {
@@ -34,7 +33,7 @@ class SelectionList extends SelectionIterator {
             data={this.props.data}
             isEditing={this.isEditing(selection.id)}
             selection={selection}
-            title={DC.title}
+            title={dc.title}
             onChange={this.props.onChange}
             onContextMenu={this.props.onContextMenu}
             onEdit={this.props.onEdit}
@@ -53,6 +52,8 @@ class SelectionList extends SelectionIterator {
   }
 }
 
-module.exports = {
-  SelectionList: SelectionList.asDropTarget()
+const SelectionListContainer = SelectionList.asDropTarget()
+
+export {
+  SelectionListContainer as SelectionList
 }

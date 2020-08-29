@@ -1,13 +1,11 @@
-'use strict'
-
-const React = require('react')
-const cx = require('classnames')
-const { IconClock } = require('../icons')
-const { FormattedMessage } = require('react-intl')
-const { bool, func } = require('prop-types')
+import React from 'react'
+import cx from 'classnames'
+import { IconClock } from '../icons'
+import { FormattedMessage } from 'react-intl'
+import { bool, func } from 'prop-types'
 
 
-const LastImportListNode = ({ isSelected, onClick }) => (
+export const LastImportListNode = ({ isSelected, onClick }) => (
   <li
     className={cx({ active: isSelected })}
     onClick={isSelected ? null : onClick}>
@@ -25,8 +23,4 @@ const LastImportListNode = ({ isSelected, onClick }) => (
 LastImportListNode.propTypes = {
   isSelected: bool,
   onClick: func.isRequired
-}
-
-module.exports = {
-  LastImportListNode
 }

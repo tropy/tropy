@@ -1,11 +1,9 @@
-'use strict'
-
-const React = require('react')
-const { IconFolder } = require('../icons')
-const { number, shape, string } = require('prop-types')
+import React from 'react'
+import { IconFolder } from '../icons'
+import { number, shape, string } from 'prop-types'
 
 
-class ListDragPreview extends React.PureComponent {
+export class ListDragPreview extends React.PureComponent {
   get style() {
     return {
       paddingLeft: this.props.list.padding
@@ -31,8 +29,4 @@ class ListDragPreview extends React.PureComponent {
       padding: number.isRequired
     }).isRequired
   }
-}
-
-module.exports = {
-  ListDragPreview
 }

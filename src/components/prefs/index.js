@@ -1,6 +1,2 @@
-'use strict'
-
-module.exports = {
-  ...require('./container'),
-  ...require('./pane')
-}
+export * from './container'
+export * from './pane'
