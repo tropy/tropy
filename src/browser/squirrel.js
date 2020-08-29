@@ -54,8 +54,8 @@ function registry(reg, cmd, ...args) {
 }
 
 
-function setMimeType(...types) {
-  const Registry = require('winreg')
+async function setMimeType(...types) {
+  const Registry = await import('winreg')
   const { DEFAULT_VALUE, HKCU, REG_SZ } = Registry
 
   return Promise.all(types.map(async type => {
@@ -69,12 +69,11 @@ function setMimeType(...types) {
     reg = new Registry({ hive: HKCU, key })
 
     await registry(reg, 'set', DEFAULT_VALUE, REG_SZ, icon)
-
   }))
 }
 
-function clearMimeType(...types) {
-  const Registry = require('winreg')
+async function clearMimeType(...types) {
+  const Registry = await import('winreg')
   const { HKCU } = Registry
 
   return Promise.all(types.map(async type => {
