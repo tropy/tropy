@@ -1,15 +1,13 @@
-'use strict'
-
-const React = require('react')
-const { Editable } = require('../editable')
-const { IconTag, IconPlusCircles } = require('../icons')
-const { isMeta } = require('../../keymap')
-const { noop, toId } = require('../../common/util')
-const { hasFocus } = require('../../dom')
-const cx = require('classnames')
-const { DND, DropTarget } = require('../dnd')
-const { pure } = require('../util')
-const { shape, number, string, bool, func } = require('prop-types')
+import React from 'react'
+import { Editable } from '../editable'
+import { IconTag, IconPlusCircles } from '../icons'
+import { isMeta } from '../../keymap'
+import { noop, toId } from '../../common/util'
+import { hasFocus } from '../../dom'
+import cx from 'classnames'
+import { DND, DropTarget } from '../dnd'
+import { pure } from '../util'
+import { shape, number, string, bool, func } from 'prop-types'
 
 const ccx = (color) => color && `color-${color}`
 
@@ -158,9 +156,11 @@ const DropTargetCollect = (connect, monitor) => ({
 })
 
 
-module.exports = {
+const TagContainer = pure(
+  DropTarget(DND.ITEMS, DropTargetSpec, DropTargetCollect)(Tag)
+)
+
+export {
   NewTag,
-  Tag: pure(
-    DropTarget(DND.ITEMS, DropTargetSpec, DropTargetCollect)(Tag)
-  )
+  TagContainer as Tag
 }

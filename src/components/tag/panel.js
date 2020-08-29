@@ -1,20 +1,16 @@
-'use strict'
+import React from 'react'
+import { connect } from 'react-redux'
+import { TagList } from './list'
+import { TagAdder } from './adder'
+import { toId } from '../../common/util'
+import { arrayOf, bool, func, number, object, shape, string } from 'prop-types'
 
-const React = require('react')
-const { connect } = require('react-redux')
-const { TagList } = require('./list')
-const { TagAdder } = require('./adder')
-const { toId } = require('../../common/util')
-const {
-  arrayOf, bool, func, number, object, shape, string
-} = require('prop-types')
-
-const {
+import {
   getAllTags,
   getItemTags,
   getSelectedItems,
   getTagCompletions
-} = require('../../selectors')
+} from '../../selectors'
 
 
 class TagPanel extends React.PureComponent {
@@ -116,15 +112,17 @@ class TagPanel extends React.PureComponent {
   }
 }
 
-module.exports = {
-  TagPanel: connect(
-    (state) => ({
-      allTags: getAllTags(state),
-      completions: getTagCompletions(state),
-      edit: state.edit.tabTag,
-      items: getSelectedItems(state),
-      keymap: state.keymap.TagList,
-      tags: getItemTags(state)
-    }), null, null, { forwardRef: true }
-  )(TagPanel)
+const TagPanelContainer = connect(
+  (state) => ({
+    allTags: getAllTags(state),
+    completions: getTagCompletions(state),
+    edit: state.edit.tabTag,
+    items: getSelectedItems(state),
+    keymap: state.keymap.TagList,
+    tags: getItemTags(state)
+  }), null, null, { forwardRef: true }
+)(TagPanel)
+
+export {
+  TagPanelContainer as TagPanel
 }

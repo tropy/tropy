@@ -1,7 +1,3 @@
-'use strict'
-
-module.exports = {
-  ...require('./list'),
-  ...require('./panel'),
-  ...require('./tag')
-}
+export * from './list'
+export * from './panel'
+export * from './tag'

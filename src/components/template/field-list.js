@@ -1,10 +1,8 @@
-'use strict'
+import React from 'react'
+import { TemplateField } from './field'
+import { arrayOf, number, shape, string } from 'prop-types'
 
-const React = require('react')
-const { TemplateField } = require('./field')
-const { arrayOf, number, shape, string } = require('prop-types')
-
-const TemplateFieldList = ({ fields, template, ...props }) => {
+export const TemplateFieldList = ({ fields, template, ...props }) => {
   if (template == null) return
   let isSingle = fields.length === 1
 
@@ -27,8 +25,4 @@ TemplateFieldList.propTypes = {
     id: number.isRequired
   })).isRequired,
   template: string.isRequired
-}
-
-module.exports = {
-  TemplateFieldList
 }

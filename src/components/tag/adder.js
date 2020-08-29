@@ -1,12 +1,10 @@
-'use strict'
+import React from 'react'
+import { injectIntl } from 'react-intl'
+import { Input } from '../input'
+import { blank, noop } from '../../common/util'
+import { match } from '../../collate'
 
-const React = require('react')
-const { injectIntl } = require('react-intl')
-const { Input } = require('../input')
-const { blank, noop } = require('../../common/util')
-const collate = require('../../collate')
-
-const {
+import {
   arrayOf,
   bool,
   func,
@@ -14,7 +12,7 @@ const {
   object,
   shape,
   string
-} = require('prop-types')
+} from 'prop-types'
 
 
 class TagAdder extends React.PureComponent {
@@ -63,7 +61,9 @@ class TagAdder extends React.PureComponent {
 
   render() {
     return (
-      <div className="add-tag-container" style={this.placeholder}>
+      <div
+        className="add-tag-container"
+        style={this.placeholder}>
         <Input
           ref={this.input}
           className="form-control"
@@ -99,13 +99,15 @@ class TagAdder extends React.PureComponent {
 
   static defaultProps = {
     match: (value, query) => (
-      collate.match(value.name || String(value), query, /\b\w/g)
+      match(value.name || String(value), query, /\b\w/g)
     ),
     onCancel: noop,
     onFocus: noop
   }
 }
 
-module.exports = {
-  TagAdder: injectIntl(TagAdder, { forwardRef: true })
+const TagAdderContainer = injectIntl(TagAdder, { forwardRef: true })
+
+export {
+  TagAdderContainer as TagAdder
 }

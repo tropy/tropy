@@ -1,24 +1,21 @@
-'use strict'
+import React from 'react'
+import { Select } from '../select'
+import { FormattedMessage } from 'react-intl'
+import { match } from '../../collate'
+import { bool, array, func, node, number, string } from 'prop-types'
+import cx from 'classnames'
 
-const React = require('react')
-const { Select } = require('../select')
-const { FormattedMessage } = require('react-intl')
-const collate = require('../../collate')
-const { bool, array, func, node, number, string } = require('prop-types')
-const cx = require('classnames')
 
-class TemplateSelect extends React.PureComponent {
+export class TemplateSelect extends React.PureComponent {
+  select = React.createRef()
+
   get placeholder() {
     return this.props.placeholder != null &&
       <FormattedMessage id={this.props.placeholder}/>
   }
 
   focus = () => {
-    if (this.select != null) this.select.focus()
-  }
-
-  setSelect = (select) => {
-    this.select = select
+    this.select.current?.focus()
   }
 
   render() {
@@ -28,7 +25,7 @@ class TemplateSelect extends React.PureComponent {
       <Select {...props}
         className={cx('template-select', { mixed: isMixed })}
         placeholder={this.placeholder}
-        ref={this.setContainer}/>
+        ref={this.select}/>
     )
   }
 
@@ -43,13 +40,9 @@ class TemplateSelect extends React.PureComponent {
 
   static defaultProps = {
     ...Select.defaultProps,
-    match(tpl, query) {
-      return collate.match(tpl.name, query, /\b\w/g)
-    },
+    match: (tpl, query) => (
+      match(tpl.name, query, /\b\w/g)
+    ),
     tabIndex: -1
   }
-}
-
-module.exports = {
-  TemplateSelect
 }
