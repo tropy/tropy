@@ -1,6 +1,2 @@
-'use strict'
-
-module.exports = {
-  ...require('./list'),
-  ...require('./select')
-}
+export * from './list'
+export * from './select'

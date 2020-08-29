@@ -1,16 +1,12 @@
-'use strict'
-
-const React = require('react')
-const { NewTag, Tag } = require('./tag')
-const { get, noop, pick, sample } = require('../../common/util')
-const { SASS } = require('../../constants')
-const { match } = require('../../keymap')
-const {
-  arrayOf, bool, number, string, shape, object, func
-} = require('prop-types')
+import React from 'react'
+import { NewTag, Tag } from './tag'
+import { get, noop, pick, sample } from '../../common/util'
+import { SASS } from '../../constants'
+import { match } from '../../keymap'
+import { arrayOf, bool, number, string, shape, object, func } from 'prop-types'
 
 
-class TagList extends React.PureComponent {
+export class TagList extends React.PureComponent {
   get hasNewTag() {
     return !this.props.isReadOnly &&
       this.props.onCreate != null &&
@@ -120,8 +116,4 @@ class TagList extends React.PureComponent {
     onCommit: noop,
     onSelect: noop
   }
-}
-
-module.exports = {
-  TagList
 }

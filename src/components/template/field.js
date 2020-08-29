@@ -1,19 +1,15 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { DND, DragSource, DropTarget } = require('../dnd')
-const { ResourceSelect } = require('../resource/select')
-const { Button } = require('../button')
-const { FormElement, FormField, FormToggle } = require('../form')
-const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
-const cx = require('classnames')
-const { array, bool, func, number, object } = require('prop-types')
-const { bounds } = require('../../dom')
-const { round } = Math
+import React from 'react'
+import { DND, DragSource, DropTarget } from '../dnd'
+import { ResourceSelect } from '../resource'
+import { Button } from '../button'
+import { FormElement, FormField, FormToggle } from '../form'
+import { IconGrip, IconPlusCircle, IconMinusCircle } from '../icons'
+import cx from 'classnames'
+import { array, bool, func, number, object } from 'prop-types'
+import { bounds } from '../../dom'
 
 
-class TemplateField extends PureComponent {
+class TemplateField extends React.PureComponent {
   get classes() {
     return ['template-field', {
       dragging: this.props.isDragging
@@ -221,7 +217,7 @@ const DropTargetSpec = {
     if (item === field) return
 
     const { top, height } = bounds(container)
-    const offset = round((monitor.getClientOffset().y - top) / height)
+    const offset = Math.round((monitor.getClientOffset().y - top) / height)
 
     onSortPreview(item, field, offset)
   },
@@ -237,12 +233,14 @@ const DropTargetCollect = (connect, monitor) => ({
 })
 
 
-module.exports = {
-  TemplateField:
+const TemplateFieldContainer =
     DragSource(
       DND.TEMPLATE.FIELD, DragSourceSpec, DragSourceCollect)(
         DropTarget(
           DND.TEMPLATE.FIELD,
           DropTargetSpec,
           DropTargetCollect)(TemplateField))
+
+export {
+  TemplateFieldContainer as TemplateField
 }

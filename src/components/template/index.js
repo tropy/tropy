@@ -1,6 +1,2 @@
-'use strict'
-
-module.exports = {
-  ...require('./editor'),
-  ...require('./select')
-}
+export * from './editor'
+export * from './select'
