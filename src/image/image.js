@@ -1,20 +1,19 @@
-'use strict'
+import fs from 'fs'
+import { basename, extname } from 'path'
+import { createHash } from 'crypto'
+import { exif } from './exif'
+import { xmp } from './xmp'
+import { isSVG } from './svg'
+import sharp from 'sharp'
+import { warn } from '../common/log'
+import { pick, restrict } from '../common/util'
+import { rgb } from '../css'
+import { MIME, IMAGE } from '../constants'
+import { exif as exifns } from '../ontology'
 
-const fs = require('fs')
 const { readFile, stat } = fs.promises
-const { basename, extname } = require('path')
-const { createHash } = require('crypto')
-const { exif } = require('./exif')
-const { xmp } = require('./xmp')
-const { isSVG } = require('./svg')
-const sharp = require('sharp')
-const { warn } = require('../common/log')
-const { get, pick, restrict } = require('../common/util')
-const { rgb } = require('../css')
-const { EXIF, MIME, IMAGE } = require('../constants')
 
-
-class Image {
+export class Image {
   static open({
     path,
     protocol,
@@ -94,28 +93,28 @@ class Image {
 
   get orientation() {
     return Orientation(
-      get(this.meta, [this.page, 'exif', EXIF.orientation, 'text'], 1)
+      this.meta?.[this.page]?.exif?.[exifns.orientation]?.text || 1
     )
   }
 
   get channels() {
-    return get(this.meta, [this.page, 'channels'])
+    return this.meta?.[this.page]?.channels
   }
 
   get space() {
-    return get(this.meta, [this.page, 'space'])
+    return this.meta?.[this.page]?.space
   }
 
   get color() {
-    return get(this.stats, [this.page, 'mean'])
+    return this.stats?.[this.page]?.mean
   }
 
   get hasAlpha() {
-    return get(this.meta, [this.page, 'hasAlpha'])
+    return this.meta?.[this.page]?.hasAlpha
   }
 
   get isOpaque() {
-    return !this.hasAlpha || get(this.stats, [this.page, 'isOpaque'], true)
+    return !this.hasAlpha || (this.stats?.[this.page]?.isOpaque ?? true)
   }
 
   get isRemote() {
@@ -123,25 +122,25 @@ class Image {
   }
 
   get width() {
-    return get(this.meta, [this.page, 'width'], 0)
+    return this.meta?.[this.page]?.width ?? 0
   }
 
   get height() {
-    return get(this.meta, [this.page, 'height'], 0)
+    return this.meta?.[this.page]?.height ?? 0
   }
 
   get data() {
     return {
-      ...get(this.meta, [this.page, 'exif']),
-      ...get(this.meta, [this.page, 'xmp'])
+      ...this.meta?.[this.page]?.exif,
+      ...this.meta?.[this.page]?.xmp
     }
   }
 
   get date() {
     try {
-      let xif = get(this.meta, [this.page, 'exif'])
-      let time = get(xif, [EXIF.dateTimeOriginal, 'text']) ||
-        get(xif, [EXIF.dateTime, 'text'])
+      let xif = this.meta?.[this.page]?.exif
+      let time = xif?.[exifns.dateTimeOriginal]?.text ||
+        xif?.[exifns.dateTime]?.text
 
       // Temporarily return as string until we add value types.
       return (time || this.file.ctime || new Date()).toISOString()
@@ -153,7 +152,7 @@ class Image {
   }
 
   get size() {
-    return get(this.file, ['size'])
+    return this.file?.size
   }
 
   get done() {
@@ -421,7 +420,3 @@ const isWebP = (buffer) =>
 const check = (buffer, bytes, offset = 0) =>
   buffer.slice(offset, offset + bytes.length).compare(Buffer.from(bytes)) === 0
 
-
-module.exports = {
-  Image
-}

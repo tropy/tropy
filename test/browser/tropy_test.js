@@ -1,10 +1,7 @@
-'use strict'
-
-const { app } = require('electron')
+import { app } from 'electron'
+import { Tropy } from '../../src/browser/tropy'
 
 describe('Tropy', () => {
-  const { Tropy } = __require('browser/tropy')
-
   beforeEach(() => delete Tropy.instance)
   afterEach(() => delete Tropy.instance)
 

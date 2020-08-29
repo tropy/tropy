@@ -1,14 +1,12 @@
-'use strict'
-
-const React = require('react')
-const { ItemIterator } = require('./iterator')
-const { ItemTile } = require('./tile')
-const { refine } = require('../../common/util')
-const cx = require('classnames')
-const { match, isMeta } = require('../../keymap')
+import React from 'react'
+import { ItemIterator } from './iterator'
+import { ItemTile } from './tile'
+import { refine } from '../../common/util'
+import cx from 'classnames'
+import { match, isMeta } from '../../keymap'
 
 
-class ItemGrid extends ItemIterator {
+export class ItemGrid extends ItemIterator {
   get isGrid() { return true }
 
   constructor(props) {
@@ -88,9 +86,4 @@ class ItemGrid extends ItemIterator {
   static propTypes = {
     ...ItemIterator.propTypes
   }
-}
-
-
-module.exports = {
-  ItemGrid
 }

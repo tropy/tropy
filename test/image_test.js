@@ -1,9 +1,6 @@
-'use strict'
-
+import { Image } from '../src/image'
 
 describe('Image', () => {
-  const { Image } = __require('image')
-
   describe('given an image', () => {
     let image = new Image(F.images('PA140105.JPG').path)
 

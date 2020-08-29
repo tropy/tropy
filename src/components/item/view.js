@@ -1,16 +1,16 @@
-'use strict'
+import React from 'react'
+import { ItemPanelGroup } from './panel'
+import { ItemContainer } from './container'
+import { Resizable } from '../resizable'
+import { NOTE, PROJECT, SASS } from '../../constants'
+import { pick } from '../../common/util'
+import debounce from 'lodash.debounce'
 
-const React = require('react')
-const { ItemPanelGroup } = require('./panel')
-const { ItemContainer } = require('./container')
-const { Resizable } = require('../resizable')
-const { NOTE, PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
-const { pick } = require('../../common/util')
-const debounce = require('lodash.debounce')
+const { MODE } = PROJECT
 
-const {
+import {
   arrayOf, bool, func, object, number, shape, string
-} = require('prop-types')
+} from 'prop-types'
 
 
 function getNoteTemplate() {
@@ -18,7 +18,7 @@ function getNoteTemplate() {
 }
 
 
-class ItemView extends React.PureComponent {
+export class ItemView extends React.PureComponent {
   constructor(props) {
     super(props)
 
@@ -182,8 +182,8 @@ class ItemView extends React.PureComponent {
         <Resizable
           edge={isItemOpen ? 'right' : 'left'}
           value={offset}
-          min={PANEL.MIN_WIDTH}
-          max={PANEL.MAX_WIDTH}
+          min={SASS.PANEL.MIN_WIDTH}
+          max={SASS.PANEL.MAX_WIDTH}
           onResize={this.handlePanelResize}
           onDragStop={onPanelDragStop}>
           <ItemPanelGroup {...pick(props, ItemPanelGroup.props)}
@@ -249,8 +249,4 @@ class ItemView extends React.PureComponent {
     onPanelDragStop: func.isRequired,
     onUiUpdate: func.isRequired
   }
-}
-
-module.exports = {
-  ItemView
 }

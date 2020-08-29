@@ -1,5 +1,3 @@
-'use strict'
-
-module.exports = {
+export default {
   RESTORE: 'recent.restore'
 }

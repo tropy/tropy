@@ -1,15 +1,12 @@
-'use strict'
-
-const React = require('react')
-const { Field, StaticField } = require('../metadata/field')
-const { bool, func, object } = require('prop-types')
-const { IMAGE } = require('../../constants')
-const { basename } = require('path')
-const { get } = require('../../common/util')
-const { bytes, datetime, number, ppi } = require('../../format')
+import React from 'react'
+import { Field, StaticField } from '../metadata'
+import { bool, func, object } from 'prop-types'
+import { IMAGE } from '../../constants'
+import { basename } from 'path'
+import { bytes, datetime, number, ppi } from '../../format'
 
 
-class PhotoInfo extends React.PureComponent {
+export class PhotoInfo extends React.PureComponent {
   get file() {
     return basename(this.props.photo.path)
   }
@@ -25,7 +22,7 @@ class PhotoInfo extends React.PureComponent {
   }
 
   isEditing(prop) {
-    return get(this.props.edit, ['property']) === prop &&
+    return this.props.edit?.property === prop &&
       this.props.edit.id === this.props.photo.id
   }
 
@@ -101,8 +98,4 @@ class PhotoInfo extends React.PureComponent {
     onChange: func,
     onOpenInFolder: func
   }
-}
-
-module.exports = {
-  PhotoInfo
 }

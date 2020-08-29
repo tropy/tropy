@@ -1,17 +1,15 @@
-'use strict'
-
-const React = require('react')
-const { Editable } = require('../editable')
-const { createClickHandler } = require('../util')
-const { PhotoIterable } = require('./iterable')
-const { SelectionList } = require('../selection/list')
-const { get, pluck } = require('../../common/util')
-const { TEXT } = require('../../constants/type')
-const cx = require('classnames')
-const { testFocusChange } = require('../../dom')
-const { bool, func, object, string } = require('prop-types')
-const { IconSelection, IconChevron9, IconWarning } = require('../icons')
-const { Button } = require('../button')
+import React from 'react'
+import { Editable } from '../editable'
+import { createClickHandler } from '../util'
+import { PhotoIterable } from './iterable'
+import { SelectionList } from '../selection'
+import { pluck } from '../../common/util'
+import { TYPE } from '../../constants'
+import cx from 'classnames'
+import { testFocusChange } from '../../dom'
+import { bool, func, object, string } from 'prop-types'
+import { IconSelection, IconChevron9, IconWarning } from '../icons'
+import { Button } from '../button'
 
 
 class PhotoListItem extends PhotoIterable {
@@ -28,8 +26,8 @@ class PhotoListItem extends PhotoIterable {
   }
 
   get title() {
-    const { data, photo, title } = this.props
-    return get(data, [photo.id, title, 'text'])
+    let { data, photo, title } = this.props
+    return data?.[photo.id]?.[title]?.text
   }
 
   handleMouseDown = () => {
@@ -44,7 +42,7 @@ class PhotoListItem extends PhotoIterable {
 
   handleClick = createClickHandler({
     onClick: () => {
-      const { isActive } = this
+      let { isActive } = this
       this.select()
       return !isActive || this.hasFocusChanged()
     },
@@ -67,7 +65,7 @@ class PhotoListItem extends PhotoIterable {
     onChange({
       id: photo.id,
       data: {
-        [title]: { text, type: TEXT }
+        [title]: { text, type: TYPE.TEXT }
       }
     })
   }
@@ -170,6 +168,8 @@ class PhotoListItem extends PhotoIterable {
 }
 
 
-module.exports = {
-  PhotoListItem: PhotoListItem.wrap()
+const PhotoListItemContainer = PhotoListItem.wrap()
+
+export {
+  PhotoListItemContainer as PhotoListItem
 }

@@ -1,44 +1,39 @@
-'use strict'
-
-module.exports = {
-  ACTIVITY: require('./activity'),
-  API: require('./api'),
-  CACHE: require('./cache'),
-  CONTEXT: require('./context'),
-  EDIT: require('./edit'),
-  FLASH: require('./flash'),
-  ESPER: require('./esper'),
-  HISTORY: require('./history'),
-  IDLE: require('./idle'),
-  IMAGE: require('./image'),
-  IMPORTS: require('./import'),
-  INTL: require('./intl'),
-  ITEM: require('./item'),
-  KEYMAP: require('./keymap'),
-  LIST: require('./list'),
-  LOCALE: require('./locale'),
-  METADATA: require('./metadata'),
-  MIME: require('./mime'),
-  NAV: require('./nav'),
-  NOTE: require('./note'),
-  NOTEPAD: require('./notepad'),
-  ONTOLOGY: require('./ontology'),
-  PANEL: require('./panel'),
-  PHOTO: require('./photo'),
-  PREFS: require('./prefs'),
-  PROJECT: require('./project'),
-  QR: require('./qr'),
-  RECENT: require('./recent'),
-  SASS: require('./sass'),
-  SELECTION: require('./selection'),
-  SETTINGS: require('./settings'),
-  SHELL: require('./shell'),
-  SIDEBAR: require('./sidebar'),
-  STORAGE: require('./storage'),
-  TABS: require('./tabs'),
-  TAG: require('./tag'),
-  TYPE: require('./type'),
-  UI: require('./ui'),
-  WIZARD: require('./wizard'),
-  ...require('./rdf')
-}
+export { default as TYPE } from './type'
+export { default as ACTIVITY } from './activity'
+export { default as API } from './api'
+export { default as CACHE } from './cache'
+export { default as CONTEXT } from './context'
+export { default as EDIT } from './edit'
+export { default as FLASH } from './flash'
+export { default as ESPER } from './esper'
+export { default as HISTORY } from './history'
+export { default as IDLE } from './idle'
+export { default as IMAGE } from './image'
+export { default as IMPORTS } from './import'
+export { default as INTL } from './intl'
+export { default as ITEM } from './item'
+export { default as KEYMAP } from './keymap'
+export { default as LIST } from './list'
+export { default as LOCALE } from './locale'
+export { default as METADATA } from './metadata'
+export { default as MIME } from './mime'
+export { default as NAV } from './nav'
+export { default as NOTE } from './note'
+export { default as NOTEPAD } from './notepad'
+export { default as ONTOLOGY } from './ontology'
+export { default as PANEL } from './panel'
+export { default as PHOTO } from './photo'
+export { default as PREFS } from './prefs'
+export { default as PROJECT } from './project'
+export { default as QR } from './qr'
+export { default as RECENT } from './recent'
+export { default as SASS } from './sass'
+export { default as SELECTION } from './selection'
+export { default as SETTINGS } from './settings'
+export { default as SHELL } from './shell'
+export { default as SIDEBAR } from './sidebar'
+export { default as STORAGE } from './storage'
+export { default as TABS } from './tabs'
+export { default as TAG } from './tag'
+export { default as UI } from './ui'
+export { default as WIZARD } from './wizard'

@@ -1,17 +1,11 @@
-'use strict'
-
-const React = require('react')
-const { connect } = require('react-redux')
-const { PhotoGrid } = require('./grid')
-const { PhotoList } = require('./list')
-const { PHOTO } = require('../../constants/sass')
-const actions = require('../../actions')
-const { number } = require('prop-types')
-
-const {
-  getCachePrefix,
-  getExpandedPhotos
-} = require('../../selectors')
+import React from 'react'
+import { connect } from 'react-redux'
+import { PhotoGrid } from './grid'
+import { PhotoList } from './list'
+import { SASS } from '../../constants'
+import * as act from '../../actions'
+import { number } from 'prop-types'
+import { getCachePrefix, getExpandedPhotos } from '../../selectors'
 
 
 class PhotoPanel extends React.PureComponent {
@@ -20,7 +14,7 @@ class PhotoPanel extends React.PureComponent {
     let PhotoIterator = (zoom > 0) ? PhotoGrid : PhotoList
 
     return (
-      <PhotoIterator {...props} size={PHOTO.ZOOM[zoom]}/>
+      <PhotoIterator {...props} size={SASS.PHOTO.ZOOM[zoom]}/>
     )
   }
 
@@ -29,8 +23,7 @@ class PhotoPanel extends React.PureComponent {
   }
 }
 
-module.exports = {
-  PhotoPanel: connect(
+const PhotoPanelContainer = connect(
     state => ({
       cache: getCachePrefix(state),
       current: state.nav.photo,
@@ -44,28 +37,31 @@ module.exports = {
 
     dispatch => ({
       onContract(...args) {
-        dispatch(actions.photo.contract(...args))
+        dispatch(act.photo.contract(...args))
       },
 
       onDelete(payload) {
         if (payload.selections == null) {
-          dispatch(actions.photo.delete(payload))
+          dispatch(act.photo.delete(payload))
         } else {
-          dispatch(actions.selection.delete(payload))
+          dispatch(act.selection.delete(payload))
         }
       },
 
       onExpand(...args) {
-        dispatch(actions.photo.expand(...args))
+        dispatch(act.photo.expand(...args))
       },
 
       onSelectionSort(...args) {
-        dispatch(actions.selection.order(...args))
+        dispatch(act.selection.order(...args))
       },
 
       onSort(...args) {
-        dispatch(actions.photo.order(...args))
+        dispatch(act.photo.order(...args))
       }
     })
   )(PhotoPanel)
+
+export {
+  PhotoPanelContainer as PhotoPanel
 }

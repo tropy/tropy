@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   SearchField: 1,
   ProjectSidebar: 2,
   ItemTable: 10,

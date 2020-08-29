@@ -8,6 +8,8 @@ import { pure } from '../util'
 
 
 export class SelectionIterable extends React.PureComponent {
+  container = React.createRef()
+
   state = {
     offset: null
   }
@@ -18,7 +20,7 @@ export class SelectionIterable extends React.PureComponent {
 
   componentDidUpdate({ isActive }) {
     if (this.props.isActive && !isActive) {
-      this.container.scrollIntoViewIfNeeded()
+      this.container.current.scrollIntoViewIfNeeded()
     }
   }
 
@@ -42,10 +44,6 @@ export class SelectionIterable extends React.PureComponent {
     return !this.props.isDisabled
   }
 
-
-  setContainer = (container) => {
-    this.container = container
-  }
 
   select = () => {
     this.props.onSelect(this.props.selection)
@@ -168,7 +166,7 @@ const DropTargetSpec = {
   hover({ selection, isVertical }, monitor, component) {
     const { id, adj } = monitor.getItem()
     // TODO call bounds only on enter!
-    const { top, left, width, height } = bounds(component.container)
+    const { top, left, width, height } = bounds(component.container.current)
     const { x, y } = monitor.getClientOffset()
 
     let offset = null

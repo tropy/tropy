@@ -1,8 +1,6 @@
-'use strict'
+import * as dom from '../src/dom'
 
 describe('dom', () => {
-  const dom = __require('dom')
-
   describe('.css', () => {
     it('creates a style node', () => {
       expect(dom.css()).to.be.instanceof(HTMLStyleElement)

@@ -6,7 +6,7 @@ import { debug, error, trace, warn } from '../common/log'
 import { darwin } from '../common/os'
 import { channel, paths } from '../common/release'
 import { Icon, View } from '../common/res'
-import { BODY, PANEL, ESPER } from '../constants/sass'
+import { SASS } from '../constants'
 
 import {
   array,
@@ -26,6 +26,7 @@ import {
   systemPreferences as prefs
 } from 'electron'
 
+const { BODY, PANEL, ESPER } = SASS
 
 export class WindowManager extends EventEmitter {
   constructor(defaults = {}) {

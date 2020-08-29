@@ -1,6 +1,4 @@
-'use strict'
-
-const MIME = require('./mime')
+import MIME from './mime'
 
 const SUPPORTED = {
   [MIME.GIF]: true,
@@ -19,7 +17,7 @@ const SUPPORTED = {
   [MIME.WEBP]: true
 }
 
-module.exports = {
+export default {
   MIN_DENSITY: 1,
   MAX_DENSITY: 1200,
 

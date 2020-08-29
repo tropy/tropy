@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   TPY: 'application/vnd.tropy.tpy',
   TTP: 'application/vnd.tropy.ttp',
 

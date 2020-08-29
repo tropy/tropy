@@ -1,12 +1,10 @@
-'use strict'
-
-const React = require('react')
-const { NewMetadataField, MetadataField } = require('./field')
-const { shallow } = require('../../common/util')
-const { arrayOf, bool, func, object, shape, string } =  require('prop-types')
+import React from 'react'
+import { NewMetadataField, MetadataField } from './field'
+import { shallow } from '../../common/util'
+import { arrayOf, bool, func, object, shape, string } from 'prop-types'
 
 
-class MetadataList extends React.PureComponent {
+export class MetadataList extends React.PureComponent {
   get isBulk() {
     return this.props.fields.id.length > 1
   }
@@ -152,9 +150,4 @@ class MetadataList extends React.PureComponent {
     onChange: func.isRequired,
     onCreate: func
   }
-}
-
-
-module.exports = {
-  MetadataList
 }

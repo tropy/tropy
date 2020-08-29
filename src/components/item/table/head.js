@@ -1,14 +1,11 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { ItemTableHeadCell } = require('./table-head-cell')
-const { titlecase } = require('../../common/util')
-const { NAV } = require('../../constants')
-const { arrayOf, bool, func, number, shape, string } = require('prop-types')
+import React from 'react'
+import { TableHeadCell } from './head-cell'
+import { titlecase } from '../../../common/util'
+import { NAV } from '../../../constants'
+import { arrayOf, bool, func, number, shape, string } from 'prop-types'
 
 
-class ItemTableHead extends PureComponent {
+export class TableHead extends React.PureComponent {
   get isAscending() {
     return this.props.sort.asc
   }
@@ -34,14 +31,14 @@ class ItemTableHead extends PureComponent {
         className="table-head"
         onContextMenu={this.props.onContextMenu}>
         {this.props.hasPositionColumn &&
-          <ItemTableHeadCell
+          <TableHeadCell
             {...NAV.COLUMN.POSITION}
             isActive={this.isActive(NAV.COLUMN.POSITION)}
             isAscending={this.isAscending}
             isFixedColumn
             onClick={this.props.onSort}/>}
         {this.props.columns.map((col, idx) =>
-          <ItemTableHeadCell
+          <TableHeadCell
             key={col.id}
             id={col.id}
             position={idx}
@@ -93,8 +90,4 @@ class ItemTableHead extends PureComponent {
     minWidth: 40,
     minWidthMain: 100
   }
-}
-
-module.exports = {
-  ItemTableHead
 }

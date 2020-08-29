@@ -1,28 +1,28 @@
-'use strict'
+import React from 'react'
+import { connect } from 'react-redux'
+import { Resizable } from '../resizable'
+import { EsperContainer } from '../esper'
+import { NotePad } from '../note'
+import * as act from '../../actions'
+import cx from 'classnames'
+import { SASS, ITEM } from '../../constants'
 
-const React = require('react')
-const { connect } = require('react-redux')
-const { Resizable } = require('../resizable')
-const { EsperContainer } = require('../esper')
-const { NotePad } = require('../note')
-const act = require('../../actions')
-const cx = require('classnames')
-const { SASS: { ESPER }, ITEM: { LAYOUT } } = require('../../constants')
-
-const {
+import {
   arrayOf, bool, func, number, object, shape, string
-} = require('prop-types')
+} from 'prop-types'
 
-const {
+import {
   getCachePrefix,
   getEsperViewState,
   getNotePadState,
   getActiveSelection,
   getPhotoSelections
-} = require('../../selectors')
+} from '../../selectors'
 
+const { LAYOUT } = ITEM
+const { ESPER } = SASS
 
-class ItemContainer extends React.PureComponent {
+class Item extends React.PureComponent {
   get dimension() {
     return (this.props.settings.layout === LAYOUT.SIDE_BY_SIDE) ?
       'width' : 'height'
@@ -163,8 +163,7 @@ class ItemContainer extends React.PureComponent {
   }
 }
 
-module.exports = {
-  ItemContainer: connect(
+export const ItemContainer = connect(
     state => ({
       cache: getCachePrefix(state),
       esper: state.ui.esper,
@@ -189,5 +188,4 @@ module.exports = {
         dispatch(act.esper.update(...args))
       }
     }), null, { forwardRef: true }
-  )(ItemContainer)
-}
+  )(Item)

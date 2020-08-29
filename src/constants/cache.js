@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   PRUNE: 'cache.prune',
   PURGE: 'cache.purge'
 }

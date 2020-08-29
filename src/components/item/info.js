@@ -1,31 +1,20 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { StaticField } = require('../metadata/field')
-const { object } = require('prop-types')
-const { datetime } = require('../../format')
+import React from 'react'
+import { StaticField } from '../metadata'
+import { object } from 'prop-types'
+import { datetime } from '../../format'
 
 
-class ItemInfo extends PureComponent {
-  render() {
-    return (
-      <ol className="item-info metadata-fields">
-        <StaticField
-          label="item.created"
-          value={datetime(this.props.item.created)}/>
-        <StaticField
-          label="item.modified"
-          value={datetime(this.props.item.modified)}/>
-      </ol>
-    )
-  }
+export const ItemInfo = ({ item }) => (
+  <ol className="item-info metadata-fields">
+    <StaticField
+      label="item.created"
+      value={datetime(item.created)}/>
+    <StaticField
+      label="item.modified"
+      value={datetime(item.modified)}/>
+  </ol>
+)
 
-  static propTypes = {
-    item: object.isRequired
-  }
-}
-
-module.exports = {
-  ItemInfo
+ItemInfo.propTypes = {
+  item: object.isRequired
 }

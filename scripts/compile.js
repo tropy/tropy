@@ -28,7 +28,7 @@ const BABEL_CONFIG = {
 }
 
 require('@babel/register')(BABEL_CONFIG)
-const SASS = require('../src/constants/sass')
+const { default: SASS } = require('../src/constants/sass')
 const { get } = require('../src/common/util')
 
 const js = (pattern = 'src/**/*.{js,jsx}') =>

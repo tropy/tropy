@@ -1,8 +1,6 @@
-'use strict'
+import * as args from '../../src/browser/args'
 
 describe('args', () => {
-  const args = __require('browser/args')
-
   describe('--env', () => {
     it('falls back to node env', () => {
       expect(args.parse([]).opts)
