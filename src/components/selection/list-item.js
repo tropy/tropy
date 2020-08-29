@@ -1,15 +1,11 @@
-'use strict'
-
-
-const React = require('react')
-const { SelectionIterable } = require('./iterable')
-const { Editable } = require('../editable')
-const { injectIntl } = require('react-intl')
-const { createClickHandler } = require('../util')
-const { testFocusChange } = require('../../dom')
-const cx = require('classnames')
-const { get } = require('../../common/util')
-const { bool, func, object, string } = require('prop-types')
+import React from 'react'
+import { SelectionIterable } from './iterable'
+import { Editable } from '../editable'
+import { injectIntl } from 'react-intl'
+import { createClickHandler } from '../util'
+import { testFocusChange } from '../../dom'
+import cx from 'classnames'
+import { bool, func, object, string } from 'prop-types'
 
 
 class SelectionListItem extends SelectionIterable {
@@ -25,7 +21,7 @@ class SelectionListItem extends SelectionIterable {
 
   get title() {
     const { data, selection, title } = this.props
-    return get(data, [selection.id, title, 'text'])
+    return data?.[selection.id]?.[title]?.text
   }
 
   handleMouseDown = () => {
@@ -103,6 +99,9 @@ class SelectionListItem extends SelectionIterable {
   }
 }
 
-module.exports = {
-  SelectionListItem: injectIntl(SelectionListItem.withDragAndDrop())
+const SelectionListItemContainer =
+  injectIntl(SelectionListItem.withDragAndDrop())
+
+export {
+  SelectionListItemContainer as SelectionListItem
 }

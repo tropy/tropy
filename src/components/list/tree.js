@@ -1,20 +1,17 @@
-'use strict'
-
-const React = require('react')
-const lazy = require('./node')
-const { Fade } = require('../fx')
-const { get } = require('../../common/util')
-const { arrayOf, bool, func, number, object, shape } = require('prop-types')
+import React from 'react'
+import { ListNode, NewListNode } from './node'
+import { Fade } from '../fx'
+import { arrayOf, bool, func, number, object, shape } from 'prop-types'
 
 
-class ListTree extends React.Component {
+export class ListTree extends React.Component {
   hasNewListNode(parent = this.props.parent.id) {
     let { edit } = this.props
     return edit && edit.id == null && edit.parent === parent
   }
 
   isEditing(id) {
-    return get(this.props.edit, ['id']) === id
+    return this.props.edit?.id === id
   }
 
   mapChildren(fn, props = this.props) {
@@ -45,10 +42,10 @@ class ListTree extends React.Component {
     return (
       <ol className="list-tree" ref={this.setContainer}>
         {this.mapChildren((key, props) =>
-          <lazy.ListNode key={key} {...props}/>)}
+          <ListNode key={key} {...props}/>)}
         <Fade in={this.hasNewListNode()} exit={false}>
-          <lazy.NewListNode
-            parent={get(this.props.edit, ['parent'])}
+          <NewListNode
+            parent={this.props.edit?.parent}
             onCancel={this.props.onEditCancel}
             onSave={this.props.onSave}/>
         </Fade>
@@ -82,5 +79,3 @@ class ListTree extends React.Component {
     minDropDepth: 0
   }
 }
-
-module.exports.ListTree = ListTree

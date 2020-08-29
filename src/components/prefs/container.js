@@ -1,24 +1,22 @@
-'use strict'
+import React from 'react'
+import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
+import { array, func, object, string } from 'prop-types'
+import { Titlebar } from '../toolbar'
+import { TemplateEditor } from '../template'
+import { VocabPane } from '../vocab'
+import { PrefPane, PrefPaneToggle } from './pane'
+import { AppPrefs } from './app'
+import { PluginsPane } from '../plugin'
+import * as act from '../../actions'
 
-const React = require('react')
-const { connect } = require('react-redux')
-const { FormattedMessage } = require('react-intl')
-const { array, func, object, string } = require('prop-types')
-const { Titlebar } = require('../toolbar')
-const { TemplateEditor } = require('../template')
-const { VocabPane } = require('../vocab')
-const { PrefPane, PrefPaneToggle } = require('./pane')
-const { AppPrefs } = require('./app')
-const { PluginsPane } = require('../plugin')
-const actions = require('../../actions')
-
-const {
+import {
   getAllTemplatesByType,
   getPropertyList,
   getVocabs
-} = require('../../selectors')
+} from '../../selectors'
 
-class PrefsContainer extends React.PureComponent {
+class Prefs extends React.PureComponent {
   isActive(pane) {
     return this.props.pane === pane
   }
@@ -142,64 +140,62 @@ class PrefsContainer extends React.PureComponent {
   }
 }
 
-module.exports = {
-  PrefsContainer: connect(
-    state => ({
-      edit: state.edit,
-      templates: getAllTemplatesByType(state),
-      keymap: state.keymap,
-      pane: state.prefs.pane,
-      project: state.project,
-      properties: getPropertyList(state),
-      settings: state.settings,
-      vocab: getVocabs(state)
-    }),
+export const PrefsContainer = connect(
+  state => ({
+    edit: state.edit,
+    templates: getAllTemplatesByType(state),
+    keymap: state.keymap,
+    pane: state.prefs.pane,
+    project: state.project,
+    properties: getPropertyList(state),
+    settings: state.settings,
+    vocab: getVocabs(state)
+  }),
 
-    dispatch => ({
-      onClassSave(...args) {
-        dispatch(actions.ontology.class.save(...args))
-      },
+  dispatch => ({
+    onClassSave(...args) {
+      dispatch(act.ontology.class.save(...args))
+    },
 
-      onContextMenu(event) {
-        event.stopPropagation()
-        dispatch(actions.context.show(event))
-      },
+    onContextMenu(event) {
+      event.stopPropagation()
+      dispatch(act.context.show(event))
+    },
 
-      onOpenLink(...args) {
-        dispatch(actions.shell.openLink(args))
-      },
+    onOpenLink(...args) {
+      dispatch(act.shell.openLink(args))
+    },
 
-      onPrefsUpdate(...args) {
-        dispatch(actions.prefs.update(...args))
-      },
+    onPrefsUpdate(...args) {
+      dispatch(act.prefs.update(...args))
+    },
 
-      onPropsSave(...args) {
-        dispatch(actions.ontology.props.save(...args))
-      },
+    onPropsSave(...args) {
+      dispatch(act.ontology.props.save(...args))
+    },
 
-      onSettingsUpdate(...args) {
-        dispatch(actions.settings.update(...args))
-      },
+    onSettingsUpdate(...args) {
+      dispatch(act.settings.update(...args))
+    },
 
-      onVocabDelete(...args) {
-        dispatch(actions.ontology.vocab.delete(...args))
-      },
+    onVocabDelete(...args) {
+      dispatch(act.ontology.vocab.delete(...args))
+    },
 
-      onVocabExport(...args) {
-        dispatch(actions.ontology.vocab.export(...args))
-      },
+    onVocabExport(...args) {
+      dispatch(act.ontology.vocab.export(...args))
+    },
 
-      onVocabSave(...args) {
-        dispatch(actions.ontology.vocab.save(...args))
-      },
+    onVocabSave(...args) {
+      dispatch(act.ontology.vocab.save(...args))
+    },
 
-      onOntologyImport() {
-        dispatch(actions.ontology.import())
-      },
+    onOntologyImport() {
+      dispatch(act.ontology.import())
+    },
 
-      onPluginUninstall(...args) {
-        dispatch(actions.plugin.uninstall(...args))
-      }
-    })
-  )(PrefsContainer)
-}
+    onPluginUninstall(...args) {
+      dispatch(act.plugin.uninstall(...args))
+    }
+  })
+)(Prefs)

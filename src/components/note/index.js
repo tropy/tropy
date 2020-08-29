@@ -1,8 +1,4 @@
-'use strict'
-
-module.exports = {
-  ...require('./list'),
-  ...require('./list-item'),
-  ...require('./pad'),
-  ...require('./toolbar')
-}
+export * from './list'
+export * from './list-item'
+export * from './pad'
+export * from './toolbar'

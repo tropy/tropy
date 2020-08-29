@@ -1,19 +1,17 @@
-'use strict'
-
-const React = require('react')
-const { WindowContext } = require('../main')
-const { DND, DropTarget, hasPhotoFiles } = require('../dnd')
-const { ItemGrid, ItemTable } = require('../item')
-const { ProjectSidebar } = require('./sidebar')
-const { ProjectToolbar } = require('./toolbar')
-const { blank, pick } = require('../../common/util')
-const { array, bool, func, object, number } = require('prop-types')
-const { ITEM } = require('../../constants/sass')
+import React from 'react'
+import { WindowContext } from '../main'
+import { DND, DropTarget, hasPhotoFiles } from '../dnd'
+import { ItemGrid, ItemTable } from '../item'
+import { ProjectSidebar } from './sidebar'
+import { ProjectToolbar } from './toolbar'
+import { blank, pick } from '../../common/util'
+import { array, bool, func, object, number } from 'prop-types'
+import { SASS } from '../../constants'
 
 
 class ProjectView extends React.Component {
   get size() {
-    return ITEM.ZOOM[this.props.zoom]
+    return SASS.ITEM.ZOOM[this.props.zoom]
   }
 
   get isEmpty() {
@@ -23,7 +21,7 @@ class ProjectView extends React.Component {
   }
 
   get maxZoom() {
-    return ITEM.ZOOM.length - 1
+    return SASS.ITEM.ZOOM.length - 1
   }
 
   get ItemIterator() {
@@ -179,9 +177,9 @@ const collect = (connect, monitor) => ({
   canDrop: monitor.canDrop()
 })
 
-module.exports = {
-  ProjectView: DropTarget([
-    DND.FILE,
-    DND.URL
-  ], spec, collect)(ProjectView)
+const ProjectViewContainer =
+  DropTarget([DND.FILE, DND.URL], spec, collect)(ProjectView)
+
+export {
+  ProjectViewContainer as ProjectView
 }

@@ -1,28 +1,26 @@
-'use strict'
+import React from 'react'
+import { Button } from '../button'
+import { Editable } from '../editable'
+import { Collapse } from '../fx'
+import { IconFolder, IconGhost, IconTriangle } from '../icons'
+import { bounds } from '../../dom'
+import { ListTree } from './tree'
+import cx from 'classnames'
+import { blank, last, noop, restrict } from '../../common/util'
 
-const React = require('react')
-const { Button } = require('../button')
-const { Editable } = require('../editable')
-const { Collapse } = require('../fx')
-const { IconFolder, IconGhost, IconTriangle } = require('../icons')
-const { bounds } = require('../../dom')
-const lazy = require('./tree')
-const cx = require('classnames')
-const { blank, last, noop, restrict } = require('../../common/util')
-
-const {
+import {
   DND,
   DragSource,
   DropTarget,
   getEmptyImage,
   hasPhotoFiles
-} = require('../dnd')
+} from '../dnd'
 
-const {
+import {
   arrayOf, bool, func, number, object, shape, string
-} = require('prop-types')
+} from 'prop-types'
 
-const { LIST, SASS } = require('../../constants')
+import { LIST, SASS } from '../../constants'
 const { INDENT, PADDING } = SASS.LIST
 
 
@@ -263,7 +261,7 @@ class ListNode extends React.PureComponent {
       <li className={cx(...this.classes)}>
         {this.renderNodeContainer()}
         <Collapse in={this.props.isExpanded}>
-          <lazy.ListTree {...this.props}
+          <ListTree {...this.props}
             depth={1 + this.props.depth}
             minDropDepth={this.props.isLast ?
                 this.props.minDropDepth : this.props.depth}
@@ -414,11 +412,15 @@ const DropTargetCollect = (connect, monitor) => ({
 })
 
 
-module.exports.NewListNode = NewListNode
-
-module.exports.ListNode =
+const ListNodeContainer =
   DragSource(DND.LIST, DragSourceSpec, DragSourceCollect)(
     DropTarget([
       DND.LIST, DND.ITEMS, DND.FILE, DND.URL],
         DropTargetSpec,
         DropTargetCollect)(ListNode))
+
+export {
+  ListNodeContainer as ListNode,
+  NewListNode
+}
+

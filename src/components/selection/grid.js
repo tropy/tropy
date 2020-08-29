@@ -1,12 +1,10 @@
-'use strict'
-
-const React = require('react')
-const { SelectionIterator } = require('./iterator')
-const { SelectionTile } = require('./tile')
-const cx = require('classnames')
-const { func, number, object } = require('prop-types')
-const { match } = require('../../keymap')
-const { on, off } = require('../../dom')
+import React from 'react'
+import { SelectionIterator } from './iterator'
+import { SelectionTile } from './tile'
+import cx from 'classnames'
+import { func, number, object } from 'prop-types'
+import { match } from '../../keymap'
+import { on, off } from '../../dom'
 
 
 class SelectionGrid extends SelectionIterator {
@@ -127,6 +125,8 @@ class SelectionGrid extends SelectionIterator {
   }
 }
 
-module.exports = {
-  SelectionGrid: SelectionGrid.asDropTarget()
+const SelectionGridContainer = SelectionGrid.asDropTarget()
+
+export {
+  SelectionGridContainer as SelectionGrid
 }

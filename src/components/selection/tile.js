@@ -1,9 +1,7 @@
-'use strict'
-
-const React = require('react')
-const { SelectionIterable } = require('./iterable')
-const cx = require('classnames')
-const { createClickHandler } = require('../util')
+import React from 'react'
+import { SelectionIterable } from './iterable'
+import cx from 'classnames'
+import { createClickHandler } from '../util'
 
 
 class SelectionTile extends SelectionIterable {
@@ -40,6 +38,8 @@ class SelectionTile extends SelectionIterable {
   }
 }
 
-module.exports = {
-  SelectionTile: SelectionTile.withDragAndDrop()
+const SelectionTileContainer = SelectionTile.withDragAndDrop()
+
+export {
+  SelectionTileContainer as SelectionTile
 }
