@@ -2,10 +2,14 @@ import { all } from 'bluebird'
 import { array, blank, list as lst, uniq } from '../common/util'
 import { NAV } from '../constants'
 
+import modMetadata from './metadata'
+import modPhoto from './photo'
+import modSubject from './subject'
+
 const mod = {
-  metadata: require('./metadata'),
-  photo: require('./photo'),
-  subject: require('./subject')
+  metadata: modMetadata,
+  photo: modPhoto,
+  subject: modSubject
 }
 
 const skel = (id, lists = [], photos = [], tags = []) => ({

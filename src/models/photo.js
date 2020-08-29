@@ -12,6 +12,84 @@ const skel = (id, selections = [], notes = []) => ({
   id, selections, notes
 })
 
+async function load(db, ids, { base } = {}) {
+  const photos = {}
+  if (ids != null) ids = ids.join(',')
+
+  await Promise.all([
+    db.each(`
+      SELECT
+          id,
+          item_id AS item,
+          template,
+          datetime(created, "localtime") AS created,
+          datetime(modified, "localtime") AS modified,
+          angle,
+          color,
+          density,
+          mirror,
+          negative,
+          brightness,
+          contrast,
+          hue,
+          saturation,
+          sharpen,
+          width,
+          height,
+          path,
+          page,
+          size,
+          protocol,
+          mimetype,
+          checksum,
+          orientation
+        FROM subjects
+          JOIN images USING (id)
+          JOIN photos USING (id)${
+        ids != null ? ` WHERE id IN (${ids})` : ''
+      }`,
+      ({ id, created, modified, mirror, negative, path, ...data }) => {
+        data.created = new Date(created)
+        data.modified = new Date(modified)
+        data.mirror = !!mirror
+        data.negative = !!negative
+        data.path = (
+          (base) ? resolve(base, normalize(path)) : path
+        ).normalize()
+
+        if (id in photos) Object.assign(photos[id], data)
+        else photos[id] = Object.assign(skel(id), data)
+      }
+    ),
+
+    db.each(`
+      SELECT id AS selection, photo_id AS id
+        FROM selections
+          LEFT OUTER JOIN trash USING (id)
+        WHERE ${ids != null ? `photo_id IN (${ids}) AND` : ''}
+          deleted IS NULL
+        ORDER BY photo_id, position`,
+      ({ selection, id }) => {
+        if (id in photos) photos[id].selections.push(selection)
+        else photos[id] = skel(id, [selection])
+      }
+    ),
+
+    db.each(`
+      SELECT id, note_id AS note
+        FROM notes JOIN photos using (id)
+        WHERE ${ids != null ? `id IN (${ids}) AND` : ''} deleted IS NULL
+        ORDER BY id, created`,
+      ({ id, note }) => {
+        if (id in photos) photos[id].notes.push(note)
+        else photos[id] = skel(id, [], [note])
+      }
+    )
+  ])
+
+  return photos
+}
+
 export default {
   async create(db, { base, template }, { item, image, data, position }) {
     let { protocol = 'file', path, ...meta } = image
@@ -41,7 +119,7 @@ export default {
       metadata.update(db, { id, data })
     ])
 
-    return (await module.exports.load(db, [id], { base }))[id]
+    return (await load(db, [id], { base }))[id]
   },
 
   async save(db, { id, timestamp, ...data }, { base } = {}) {
@@ -66,84 +144,7 @@ export default {
     }
   },
 
-  async load(db, ids, { base } = {}) {
-    const photos = {}
-    if (ids != null) ids = ids.join(',')
-
-    await Promise.all([
-      db.each(`
-        SELECT
-            id,
-            item_id AS item,
-            template,
-            datetime(created, "localtime") AS created,
-            datetime(modified, "localtime") AS modified,
-            angle,
-            color,
-            density,
-            mirror,
-            negative,
-            brightness,
-            contrast,
-            hue,
-            saturation,
-            sharpen,
-            width,
-            height,
-            path,
-            page,
-            size,
-            protocol,
-            mimetype,
-            checksum,
-            orientation
-          FROM subjects
-            JOIN images USING (id)
-            JOIN photos USING (id)${
-          ids != null ? ` WHERE id IN (${ids})` : ''
-        }`,
-        ({ id, created, modified, mirror, negative, path, ...data }) => {
-          data.created = new Date(created)
-          data.modified = new Date(modified)
-          data.mirror = !!mirror
-          data.negative = !!negative
-          data.path = (
-            (base) ? resolve(base, normalize(path)) : path
-          ).normalize()
-
-          if (id in photos) Object.assign(photos[id], data)
-          else photos[id] = Object.assign(skel(id), data)
-        }
-      ),
-
-      db.each(`
-        SELECT id AS selection, photo_id AS id
-          FROM selections
-            LEFT OUTER JOIN trash USING (id)
-          WHERE ${ids != null ? `photo_id IN (${ids}) AND` : ''}
-            deleted IS NULL
-          ORDER BY photo_id, position`,
-        ({ selection, id }) => {
-          if (id in photos) photos[id].selections.push(selection)
-          else photos[id] = skel(id, [selection])
-        }
-      ),
-
-      db.each(`
-        SELECT id, note_id AS note
-          FROM notes JOIN photos using (id)
-          WHERE ${ids != null ? `id IN (${ids}) AND` : ''} deleted IS NULL
-          ORDER BY id, created`,
-        ({ id, note }) => {
-          if (id in photos) photos[id].notes.push(note)
-          else photos[id] = skel(id, [], [note])
-        }
-      )
-    ])
-
-    return photos
-  },
-
+  load,
   find(db, { checksum }) {
     return db.get(`
       SELECT p.id, item_id AS item

@@ -6,7 +6,7 @@ import * as act from '../../actions'
 import * as mod from '../../models'
 
 
-class NoteCreate extends Command {
+export class NoteCreate extends Command {
   *exec() {
     let { db } = this.options
     let { html, language, photo, selection } = this.action.payload
@@ -32,7 +32,7 @@ class NoteCreate extends Command {
 NoteCreate.register(API.NOTE.CREATE)
 
 
-class NoteShow extends Command {
+export class NoteShow extends Command {
   *exec() {
     let { id, format } = this.action.payload
 
@@ -60,7 +60,3 @@ class NoteShow extends Command {
 }
 
 NoteShow.register(API.NOTE.SHOW)
-
-module.exports = {
-  NoteShow
-}

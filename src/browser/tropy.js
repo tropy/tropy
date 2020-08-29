@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { EventEmitter } from 'events'
 import { extname, join } from 'path'
+import { v1 as uuid } from 'uuid'
 import { into, compose, remove, take } from 'transducers.js'
 
 import {
@@ -292,7 +293,7 @@ export class Tropy extends EventEmitter {
       migrate(this, state, state.version)
 
     state.locale = this.getLocale(state.locale)
-    state.uuid = state.uuid || require('uuid').v1()
+    state.uuid = state.uuid || uuid()
     state.version = this.version
 
     if (!(/^(system|dark|light)$/).test(state.theme))
