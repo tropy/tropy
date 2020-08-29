@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   ADD: 'metadata.add',
   COPY: 'metadata.copy',
   DELETE: 'metadata.delete',

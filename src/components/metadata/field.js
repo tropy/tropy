@@ -1,20 +1,18 @@
-'use strict'
+import React from 'react'
+import { Editable } from '../editable'
+import { DragSource, DropTarget, getEmptyImage, DND } from '../dnd'
+import { FormattedMessage } from 'react-intl'
+import { blank, noop, pluck, URI } from '../../common/util'
+import { IconLock, IconWarningSm } from '../icons'
+import cx from 'classnames'
+import { TYPE } from '../../constants'
+import { getMetadataCompletions } from '../../selectors'
+import { auto } from '../../format'
+import { ResourceSelect } from '../resource/select'
 
-const React = require('react')
-const { Editable } = require('../editable')
-const { DragSource, DropTarget, getEmptyImage, DND } = require('../dnd')
-const { FormattedMessage } = require('react-intl')
-const { blank, noop, pluck, URI } = require('../../common/util')
-const { IconLock, IconWarningSm } = require('../icons')
-const cx = require('classnames')
-const { TYPE } = require('../../constants')
-const { getMetadataCompletions } = require('../../selectors')
-const { auto } = require('../../format')
-const {
+import {
   arrayOf, bool, func, number, shape, string, oneOfType, object
-} = require('prop-types')
-const { ResourceSelect } = require('../resource/select')
-
+} from 'prop-types'
 
 const NewMetadataField = ({ options, value, onCreate, onCancel }) => (
   <li>
@@ -306,14 +304,18 @@ const DropTargetCollect = (connect, monitor) => ({
 })
 
 
-module.exports.Field = Field
-module.exports.StaticField = StaticField
-module.exports.NewMetadataField = NewMetadataField
+const MetadataFieldContainer = DragSource(
+    DND.FIELD, DragSourceSpec, DragSourceCollect
+  )(DropTarget(
+    [DND.FIELD, DND.TEXT, DND.URL],
+    DropTargetSpec,
+    DropTargetCollect
+  )(MetadataField))
 
-module.exports.MetadataField = DragSource(
-  DND.FIELD, DragSourceSpec, DragSourceCollect
-)(DropTarget(
-  [DND.FIELD, DND.TEXT, DND.URL],
-  DropTargetSpec,
-  DropTargetCollect
-)(MetadataField))
+export {
+  Field,
+  MetadataFieldContainer as MetadataField,
+  NewMetadataField,
+  StaticField
+}
+

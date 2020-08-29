@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   CREATE: 'item.create',
   DELETE: 'item.delete',
   DESTROY: 'item.destroy',

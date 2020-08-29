@@ -1,19 +1,17 @@
-'use strict'
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { Slider } from '../slider'
+import { Button } from '../button'
+import { Toolbar, ToolGroup } from '../toolbar'
+import { number, bool, func } from 'prop-types'
+import { SASS } from '../../constants'
 
-const React = require('react')
-const { FormattedMessage } = require('react-intl')
-const { Slider } = require('../slider')
-const { Button } = require('../button')
-const { Toolbar, ToolGroup } = require('../toolbar')
-const { number, bool, func } = require('prop-types')
-const { PHOTO } = require('../../constants/sass')
-
-const {
+import {
   IconPhoto, IconPlus, IconListSmall, IconGridSmall
-} = require('../icons')
+} from '../icons'
 
 
-const PhotoToolbar = (props) => (
+export const PhotoToolbar = (props) => (
   <Toolbar>
     <Toolbar.Left>
       <IconPhoto/>
@@ -61,10 +59,6 @@ PhotoToolbar.propTypes = {
 }
 
 PhotoToolbar.defaultProps = {
-  maxZoom: PHOTO.ZOOM.length - 1,
+  maxZoom: SASS.PHOTO.ZOOM.length - 1,
   photos: 0
-}
-
-module.exports = {
-  PhotoToolbar
 }

@@ -1,17 +1,15 @@
-'use strict'
+import React from 'react'
 
-const React = require('react')
-
-const {
+import {
   arrayOf,
   bool,
   number,
   oneOfType,
   shape,
   string
-} = require('prop-types')
+} from 'prop-types'
 
-const FieldDragPreview = ({ field }) => (
+export const FieldDragPreview = ({ field }) => (
   <div className="metadata-field drag-preview">
     <div className="drag-preview-container">
       {field.value}
@@ -29,8 +27,4 @@ FieldDragPreview.propTypes = {
     isMixed: bool,
     value: string
   }).isRequired
-}
-
-module.exports = {
-  FieldDragPreview
 }

@@ -1,9 +1,7 @@
-'use strict'
+import TYPE from './type'
+import { tropy } from '../ontology'
 
-const TYPE = require('./type')
-const { TROPY } = require('./rdf')
-
-module.exports = {
+export default {
   PERSIST: 'nav.persist',
   RESTORE: 'nav.restore',
   SEARCH: 'nav.search',
@@ -30,7 +28,7 @@ module.exports = {
     TEMPLATE: {
       id: 'item.template',
       protected: true,
-      type: TROPY.Template
+      type: tropy.Template
     },
     POSITION: {
       id: 'added',

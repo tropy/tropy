@@ -1,14 +1,11 @@
-'use strict'
-
-const { join } = require('path')
-const { copyFile } = require('fs').promises
-const { app, BrowserWindow } = require('electron')
-const res = __require('common/res')
+import fs from 'fs'
+import { join } from 'path'
+import { app, BrowserWindow } from 'electron'
+import { WindowManager } from '../../src/browser/wm'
+import { View } from '../../src/common/res'
+import { Plugins } from '../../src/common/plugins'
 
 describe('WindowManager', () => {
-  const { WindowManager } = __require('browser/wm')
-  const { Plugins } = __require('common/plugins')
-
   describe('instance', () => {
     let wm = new WindowManager({
       webPreferences: {
@@ -20,7 +17,7 @@ describe('WindowManager', () => {
 
     before(() => plugins.init())
     before(() => wm.start())
-    before(() => copyFile(
+    before(() => fs.promises.copyFile(
       F.db('ontology.db').path,
       join(app.getPath('userData'), 'ontology.db')))
 
@@ -40,7 +37,7 @@ describe('WindowManager', () => {
         before(async () => {
           if (process.env.COVERAGE) {
             sinon
-              .stub(res.View, 'expand')
+              .stub(View, 'expand')
               .callsFake(name => F.views(`${name}.html`).path)
           }
 
@@ -53,7 +50,7 @@ describe('WindowManager', () => {
 
         after(() => {
           if (process.env.COVERAGE) {
-            res.View.expand.restore()
+            View.expand.restore()
           }
 
           win = null

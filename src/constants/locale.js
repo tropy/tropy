@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   cn: 'cn',
   de: 'de',
   en: 'en',

@@ -1,20 +1,17 @@
-'use strict'
+import React from 'react'
+import { Iterator } from '../iterator'
+import { DND, DropTarget, hasPhotoFiles } from '../dnd'
+import { blank, last, move, noop } from '../../common/util'
+import { on, off } from '../../dom'
 
-const React = require('react')
-const { Iterator } = require('../iterator')
-const { DND, DropTarget, hasPhotoFiles } = require('../dnd')
-const { blank, last, move, noop } = require('../../common/util')
-const { ceil, floor, min } = Math
-const { on, off } = require('../../dom')
-
-const {
+import {
   arrayOf, bool, func, number, object, string, shape
-} = require('prop-types')
+} from 'prop-types'
 
 const byIdx = ([a], [b]) => (a < b) ? -1 : (a > b) ? 1 : 0
 
 
-class PhotoIterator extends Iterator {
+export class PhotoIterator extends Iterator {
   componentDidMount() {
     super.componentDidMount()
     on(document, 'global:next-photo', this.handleNextPhoto)
@@ -61,7 +58,7 @@ class PhotoIterator extends Iterator {
     let rows = []
 
     for (let photo of props.expanded) {
-      let exp = ceil(photo.selections?.length / cols) || 0
+      let exp = Math.ceil(photo.selections?.length / cols) || 0
       let idx = this.indexOf(photo.id, props)
       if (idx === -1) continue
       rows.push([idx, exp])
@@ -99,7 +96,7 @@ class PhotoIterator extends Iterator {
 
   getOffset(state = this.state) {
     let offset = super.getOffset(state)
-    let row = floor(offset / state.rowHeight)
+    let row = Math.floor(offset / state.rowHeight)
     let [, adj] = this.getExpansionRowsBefore(row)
     return (row - adj) * state.rowHeight
   }
@@ -107,13 +104,13 @@ class PhotoIterator extends Iterator {
   getIterableRange() {
     const { cols, offset, overscan, rowHeight } = this.state
 
-    const row = floor(offset / rowHeight)
+    const row = Math.floor(offset / rowHeight)
     const exp = this.getExpansionRowsBefore(row)
     const from = cols * (row - exp[0])
     const size = cols * overscan
 
     return {
-      from, size, to: min(from + size, this.size), exp
+      from, size, to: Math.min(from + size, this.size), exp
     }
   }
 
@@ -392,9 +389,4 @@ const DropTargetCollect = (connect, monitor) => {
     isOverFile: isOver &&
       (type === DND.FILE || type === DND.URL)
   }
-}
-
-
-module.exports = {
-  PhotoIterator
 }

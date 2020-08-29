@@ -1,14 +1,14 @@
 'use strict'
 
 const React = require('react')
-const { render } = require('../../support/react')
+const { render } = require('../../../support/react')
 
-describe('ItemTableHead', () => {
-  const { ItemTableHead } = __require('components/item/table-head')
+describe('TableHead', () => {
+  const { TableHead } = __require('components/item/table/head')
 
   it('has class table-head', () => {
     expect(
-      render(<ItemTableHead columns={[]}/>).element()
+      render(<TableHead columns={[]}/>).element()
     ).to.have.class('table-head')
   })
 
@@ -23,7 +23,7 @@ describe('ItemTableHead', () => {
 
     expect(
       render(
-        <ItemTableHead
+        <TableHead
           columns={columns}
           colwidth={colwidth}
           sort={sort}/>

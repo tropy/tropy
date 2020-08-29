@@ -22,7 +22,7 @@ class SelectionTile extends SelectionIterable {
     return this.connect(
       <li
         className={cx(this.classes)}
-        ref={this.setContainer}
+        ref={this.container}
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
         <div className="tile-state">

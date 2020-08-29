@@ -6,7 +6,7 @@ import { Plugins } from './common/plugins'
 import { delay, pick } from './common/util'
 import { paths } from './common/release'
 import { EventEmitter } from 'events'
-import ARGS, { update } from './args'
+import { update } from './args'
 import debounce from 'lodash.debounce'
 
 import {

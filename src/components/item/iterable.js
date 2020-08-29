@@ -1,17 +1,12 @@
-'use strict'
-
-const React = require('react')
-const { DND, DragSource, DropTarget, getEmptyImage } = require('../dnd')
-const { compose, map, filter, into } = require('transducers.js')
-const { isMeta } = require('../../keymap')
-const { pure } = require('../util')
-
-const {
-  bool, func, number, object, shape, arrayOf
-} = require('prop-types')
+import React from 'react'
+import { compose, map, filter, into } from 'transducers.js'
+import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd'
+import { isMeta } from '../../keymap'
+import { pure } from '../util'
+import { bool, func, number, object, shape, arrayOf } from 'prop-types'
 
 
-class ItemIterable extends React.PureComponent {
+export class ItemIterable extends React.PureComponent {
   componentDidMount() {
     this.props.dp(getEmptyImage())
   }
@@ -182,8 +177,4 @@ class ItemIterable extends React.PureComponent {
     onPhotoError: func.isRequired,
     onSelect: func.isRequired
   }
-}
-
-module.exports = {
-  ItemIterable
 }

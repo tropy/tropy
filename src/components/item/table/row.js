@@ -1,14 +1,13 @@
-'use strict'
+import React from 'react'
+import { ItemIterable } from '../iterable'
+import { TableCell } from './cell'
+import { get, pick } from '../../../common/util'
+import { NAV, TYPE } from '../../../constants'
+import cx from 'classnames'
+import { arrayOf, bool, number, object } from 'prop-types'
 
-const React = require('react')
-const { ItemIterable } = require('./iterable')
-const { ItemTableCell } = require('./table-cell')
-const { get, pick } = require('../../common/util')
-const { NAV, TYPE } = require('../../constants')
-const cx = require('classnames')
-const { arrayOf, bool, number, object } = require('prop-types')
 
-class ItemTableRow extends ItemIterable {
+class TableRow extends ItemIterable {
   isDragging(idx) {
     return idx === this.props.drag
   }
@@ -115,13 +114,13 @@ class ItemTableRow extends ItemIterable {
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>
         {this.props.hasPositionColumn &&
-          <ItemTableCell {...props}
+          <TableCell {...props}
             isReadOnly
             id={NAV.COLUMN.POSITION.id}
             type={NAV.COLUMN.POSITION.type}
             value={this.props.position}/>}
         {this.props.columns.map((column, idx) =>
-          <ItemTableCell
+          <TableCell
             key={column.id}
             {...props}
             {...this.getColumnProps(column, idx)}
@@ -169,6 +168,8 @@ const CellProps = [
 ]
 
 
-module.exports = {
-  ItemTableRow: ItemTableRow.wrap()
+const TableRowContainer = TableRow.wrap()
+
+export {
+  TableRowContainer as TableRow
 }

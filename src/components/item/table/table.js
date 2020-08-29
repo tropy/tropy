@@ -1,31 +1,29 @@
-'use strict'
+import React from 'react'
+import { arrayOf, bool, func, number, object, shape } from 'prop-types'
+import { ItemIterator } from '../iterator'
+import { TableRow } from './row'
+import { TableHead } from './head'
+import { ColumnContextMenu } from '../column'
+import cx from 'classnames'
+import { noop } from '../../../common/util'
+import { bounds, ensure, on, off, maxScrollLeft } from '../../../dom'
+import { match } from '../../../keymap'
+import throttle from 'lodash.throttle'
+import { refine, restrict, shallow, splice, warp } from '../../../common/util'
 
-const React = require('react')
-const { arrayOf, bool, func, number, object, shape } = require('prop-types')
-const { ItemIterator } = require('./iterator')
-const { ItemTableRow } = require('./table-row')
-const { ItemTableHead } = require('./table-head')
-const { ColumnContextMenu } = require('./column')
-const cx = require('classnames')
-const { noop } = require('../../common/util')
-const { bounds, ensure, on, off, maxScrollLeft } = require('../../dom')
-const { match } = require('../../keymap')
-const { assign } = Object
-const throttle = require('lodash.throttle')
-const { refine, restrict, shallow, splice, warp } = require('../../common/util')
-
-const {
+import {
   NAV,
-  SASS: { COLUMN, ROW, SCROLLBAR }
-} = require('../../constants')
+  SASS
+} from '../../../constants'
 
+const { COLUMN, ROW, SCROLLBAR } = SASS
 const any = (src) => { for (let key in src) return key }
 
-class ItemTable extends ItemIterator {
+export class ItemTable extends ItemIterator {
   constructor(props) {
     super(props)
 
-    assign(this.state, this.getColumnState(props))
+    Object.assign(this.state, this.getColumnState(props))
 
     refine(this, 'handleKeyDown', ([event]) => {
       if (event.isPropagationStopped()) return
@@ -338,7 +336,7 @@ class ItemTable extends ItemIterator {
           <div className="runway click-catcher" style={{ height }}>
             <div className="viewport" style={{ transform }}>
               {this.mapIterableRange(({ item, index, ...props }) =>
-                <ItemTableRow {...props}
+                <TableRow {...props}
                   key={item.id}
                   columns={columns}
                   data={data[item.id]}
@@ -381,7 +379,7 @@ class ItemTable extends ItemIterator {
           '--item-min-width': this.state.minWidth + 'px',
           '--item-template-columns': this.getTemplateColumns()
         }}>
-        <ItemTableHead
+        <TableHead
           columns={this.state.columns}
           colwidth={this.state.colwidth}
           drag={this.state.drag}
@@ -431,9 +429,4 @@ class ItemTable extends ItemIterator {
     minColWidth: 40,
     minMainColWidth: 100
   }
-}
-
-
-module.exports = {
-  ItemTable
 }

@@ -1,10 +1,8 @@
-'use strict'
-
-const React = require('react')
-const { Thumbnail } = require('../photo')
-const { TagColors } = require('../colors')
-const { pick, get } = require('../../common/util')
-const { arrayOf, number, object, shape } = require('prop-types')
+import React from 'react'
+import { Thumbnail } from '../photo'
+import { TagColors } from '../colors'
+import { pick } from '../../common/util'
+import { arrayOf, number, object, shape } from 'prop-types'
 
 const StackLines = ({ count }) => (
   (count > 1) && (
@@ -18,13 +16,13 @@ StackLines.propTypes = {
   count: number
 }
 
-class CoverImage extends React.PureComponent {
+export class CoverImage extends React.PureComponent {
   get id() {
     return this.props.item.cover || this.props.item.photos[0]
   }
 
   get photo() {
-    return get(this.props.photos, [this.id]) || {}
+    return this.props.photos?.[this.id] || {}
   }
 
   render() {
@@ -54,8 +52,4 @@ class CoverImage extends React.PureComponent {
       cover: number
     }).isRequired
   }
-}
-
-module.exports = {
-  CoverImage
 }

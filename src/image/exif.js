@@ -1,9 +1,7 @@
-'use strict'
-
-const { debug, warn } = require('../common/log')
-const exif = require('@inukshuk/exif')
-const { blank } = require('../common/util')
-const { text, date } = require('../value')
+import { debug, warn } from '../common/log'
+import parse from '@inukshuk/exif'
+import { blank } from '../common/util'
+import { text, date } from '../value'
 
 const DEFAULTS = {
   strict: false,
@@ -19,22 +17,20 @@ function toValue(value) {
   return text(String(value))
 }
 
-module.exports = {
-  exif(buffer, opts = {}) {
-    if (!blank(buffer)) {
-      try {
-        let ifd = exif(buffer, { ...DEFAULTS, ...opts })
-        if (ifd.errors) {
-          debug({
-            stack: ifd.errors.map(e => [e.offset, e.message])
-          }, 'EXIF extraction errors')
-        }
-
-        return ifd.flatten(true, toValue)
-
-      } catch (e) {
-        warn({ stack: e.stack }, 'EXIF extraction failed')
+export function exif(buffer, opts = {}) {
+  if (!blank(buffer)) {
+    try {
+      let ifd = parse(buffer, { ...DEFAULTS, ...opts })
+      if (ifd.errors) {
+        debug({
+          stack: ifd.errors.map(e => [e.offset, e.message])
+        }, 'EXIF extraction errors')
       }
+
+      return ifd.flatten(true, toValue)
+
+    } catch (e) {
+      warn({ stack: e.stack }, 'EXIF extraction failed')
     }
   }
 }

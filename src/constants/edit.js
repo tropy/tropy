@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   START: 'edit.start',
   CANCEL: 'edit.cancel'
 }

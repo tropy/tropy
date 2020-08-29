@@ -1,11 +1,9 @@
-'use strict'
+import React from 'react'
+import { CoverImage } from './cover-image'
+import cx from 'classnames'
+import { arrayOf, string, func, shape, number, object } from 'prop-types'
 
-const React = require('react')
-const { CoverImage } = require('./cover-image')
-const cx = require('classnames')
-const { arrayOf, string, func, shape, number, object } =  require('prop-types')
-
-class ItemDragPreview extends React.PureComponent {
+export class ItemDragPreview extends React.PureComponent {
   get classes() {
     return ['item', 'drag-preview', 'center', {
       multiple: this.count > 1
@@ -51,8 +49,4 @@ class ItemDragPreview extends React.PureComponent {
   static defaultProps = {
     size: 64
   }
-}
-
-module.exports = {
-  ItemDragPreview
 }

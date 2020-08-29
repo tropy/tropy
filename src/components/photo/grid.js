@@ -1,14 +1,11 @@
-'use strict'
-
-const React = require('react')
-const { PhotoIterator } = require('./iterator')
-const { PhotoTile } = require('./tile')
-const { SelectionGrid } = require('../selection/grid')
-const { pluck } = require('../../common/util')
-const cx = require('classnames')
-const { match } = require('../../keymap')
-const { floor, ceil } = Math
-const { GRID } = require('../../constants/sass')
+import React from 'react'
+import { PhotoIterator } from './iterator'
+import { PhotoTile } from './tile'
+import { SelectionGrid } from '../selection/grid'
+import { pluck } from '../../common/util'
+import cx from 'classnames'
+import { match } from '../../keymap'
+import { SASS } from '../../constants'
 
 
 class PhotoGrid extends PhotoIterator {
@@ -31,11 +28,11 @@ class PhotoGrid extends PhotoIterator {
 
     if (photo == null) return 0
 
-    const exp = ceil(photo.selections.length / cols)
+    const exp = Math.ceil(photo.selections.length / cols)
     const idx = this.indexOf(photo.id, props)
     if (idx === -1) return 0
 
-    for (let j = 1, k = 1 + floor(idx / cols); j <= exp; ++j, ++k) {
+    for (let j = 1, k = 1 + Math.floor(idx / cols); j <= exp; ++j, ++k) {
       this.expRows.push([k, j, j])
     }
 
@@ -208,7 +205,7 @@ class PhotoGrid extends PhotoIterator {
   render() {
     const { expanded, onBlur } = this.props
     const range = this.getIterableRange()
-    const padding = GRID.PADDING * 4
+    const padding = SASS.GRID.PADDING * 4
     const [exp, adj] = range.exp
 
     let { cols, offset, height } = this.state
@@ -250,6 +247,8 @@ class PhotoGrid extends PhotoIterator {
   }
 }
 
-module.exports = {
-  PhotoGrid: PhotoGrid.asDropTarget()
+const PhotoGridContainer = PhotoGrid.asDropTarget()
+
+export {
+  PhotoGridContainer as PhotoGrid
 }

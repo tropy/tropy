@@ -1,21 +1,20 @@
-'use strict'
+import React from 'react'
+import { CoverImage } from '../cover-image'
+import { Editable } from '../../editable'
+import { TagColors } from '../../colors'
+import { createClickHandler } from '../../util'
+import { testFocusChange } from '../../../dom'
+import { isMeta } from '../../../keymap'
+import { auto } from '../../../format'
+import { noop } from '../../../common/util'
+import cx from 'classnames'
 
-const React = require('react')
-const { CoverImage } = require('./cover-image')
-const { Editable } = require('../editable')
-const { TagColors } = require('../colors')
-const { createClickHandler } = require('../util')
-const { testFocusChange } = require('../../dom')
-const { isMeta } = require('../../keymap')
-const { auto } = require('../../format')
-const { noop } = require('../../common/util')
-const cx = require('classnames')
-const {
+import {
   arrayOf, bool, func, instanceOf, number, object, oneOfType, shape, string
-} = require('prop-types')
+} from 'prop-types'
 
 
-class ItemTableCell extends React.PureComponent {
+export class TableCell extends React.PureComponent {
   get classes() {
     return ['metadata', this.props.type, {
       'dragging': this.props.isDragging,
@@ -174,8 +173,4 @@ class ItemTableCell extends React.PureComponent {
     getNextColumn: noop,
     getPrevColumn: noop
   }
-}
-
-module.exports = {
-  ItemTableCell
 }

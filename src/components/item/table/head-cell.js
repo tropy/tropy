@@ -1,18 +1,15 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { Draggable } = require('../draggable')
-const { Resizable } = require('../resizable')
-const cx = require('classnames')
-const { IconChevron7 } = require('../icons')
-const { TYPE } = require('../../constants')
-const { bool, func, number, string } = require('prop-types')
-const { blank, noop } = require('../../common/util')
+import React from 'react'
+import { Draggable } from '../../draggable'
+import { Resizable } from '../../resizable'
+import cx from 'classnames'
+import { IconChevron7 } from '../../icons'
+import { TYPE } from '../../../constants'
+import { bool, func, number, string } from 'prop-types'
+import { blank, noop } from '../../../common/util'
 
 const MIN_WIDTH = 40
 
-class ItemTableHeadCell extends PureComponent {
+export class TableHeadCell extends React.PureComponent {
   get classes() {
     return ['metadata-head', this.props.type, {
       blank: blank(this.props.label),
@@ -120,8 +117,4 @@ class ItemTableHeadCell extends PureComponent {
     onOrderStart: noop,
     type: TYPE.TEXT
   }
-}
-
-module.exports = {
-  ItemTableHeadCell
 }

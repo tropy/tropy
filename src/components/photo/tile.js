@@ -1,11 +1,9 @@
-'use strict'
-
-const React = require('react')
-const { PhotoIterable } = require('./iterable')
-const { createClickHandler } = require('../util')
-const cx = require('classnames')
-const { IconSelectionOverlay, IconWarningOverlay } = require('../icons')
-const { Button } = require('../button')
+import React from 'react'
+import { PhotoIterable } from './iterable'
+import { createClickHandler } from '../util'
+import cx from 'classnames'
+import { IconSelectionOverlay, IconWarningOverlay } from '../icons'
+import { Button } from '../button'
 
 
 class PhotoTile extends PhotoIterable {
@@ -58,6 +56,8 @@ class PhotoTile extends PhotoIterable {
 }
 
 
-module.exports = {
-  PhotoTile: PhotoTile.wrap()
+const PhotoTileContainer = PhotoTile.wrap()
+
+export {
+  PhotoTileContainer as PhotoTile
 }

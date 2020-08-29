@@ -1,9 +1,7 @@
-'use strict'
+import { tropy, xsd } from '../ontology/ns'
 
-const { TROPY, XSD } = require('./rdf')
-
-module.exports = {
-  DATE: TROPY.date,
-  NUMBER: XSD.integer,
-  TEXT: XSD.string
+export default {
+  DATE: tropy.date,
+  NUMBER: xsd.integer,
+  TEXT: xsd.string
 }
