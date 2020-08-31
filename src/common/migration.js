@@ -31,7 +31,7 @@ export class Migration {
     return db
       .migration(async (tx) => {
         if (this.type === 'js') {
-          await require(this.path).up(tx)
+          await (await import(this.path)).up(tx)
         } else {
           await tx.exec(String(await read(this.path)))
         }

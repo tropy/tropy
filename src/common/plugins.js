@@ -42,7 +42,8 @@ export class Plugins extends EventEmitter {
     return {
       logger: logger.child({ plugin }),
       require(mod) {
-        warn(`plugin ${plugin} tried requiring ${mod} via context!`)
+        warn(`plugin ${plugin} required ${mod} via context!`)
+        return require(mod)
       }
     }
   }
@@ -56,25 +57,41 @@ export class Plugins extends EventEmitter {
     }, [])
   }
 
-  // TODO ESM
+  // Subtle: CommonJS is still used natively. We need to address
+  // this if we switch to ESM!
   clearModuleCache(root = this.root) {
     for (let mod in require.cache) {
       if (mod.startsWith(root)) delete require.cache[mod]
     }
   }
 
-  create(config = this.config) {
-    this.instances = config.reduce((acc, { plugin, options, name }, id) => {
+  async create(config = this.config) {
+    this.instances = {}
+    let loadcount = 0
+
+    for (let i = 0; i < config.length; ++i) {
+      let { plugin, options, name } = config[i]
+
       try {
-        acc[id] = new (this.require(plugin))(
-          options || {},
-          this.getContext(plugin))
+        let Plugin = await this.import(plugin)
+
+        if (typeof Plugin !== 'function')
+          Plugin = Plugin.default
+
+        this.instances[i] = new Plugin(
+          options ?? {},
+          this.getContext(plugin)
+        )
+
+        loadcount++
+
       } catch (e) {
         warn({ stack: e.stack }, `failed to create plugin ${plugin} "${name}"`)
       }
-      return acc
-    }, {})
-    info(`plugins loaded: ${Object.keys(this.instances).length}`)
+    }
+
+    info(`plugins loaded: ${loadcount}`)
+    this.emit('change')
     return this
   }
 
@@ -99,11 +116,7 @@ export class Plugins extends EventEmitter {
   }, 100)
 
   async init(autosave = true) {
-    try {
-      await mkdir(this.root)
-    } catch (error) {
-      if (error.code !== 'EEXIST') throw error
-    }
+    await mkdir(this.root, { recursive: true })
     return this.reload(autosave)
   }
 
@@ -141,9 +154,9 @@ export class Plugins extends EventEmitter {
     try {
       this.reset()
       this.config = await load(this.configFile)
-    } catch (error) {
-      if (error.code !== 'ENOENT') {
-        warn(`failed to load plugin config: ${error.message}`)
+    } catch (e) {
+      if (e.code !== 'ENOENT') {
+        warn({ stack: e.stack }, 'failed to load plugin config')
       } else {
         if (autosave) await this.save()
       }
@@ -153,18 +166,23 @@ export class Plugins extends EventEmitter {
     return this
   }
 
-  // TODO ESM
-  require(name, fallback = 'node_modules') {
-    let pkg
+  async import(name) {
     try {
-      pkg = require(join(this.root, name))
-      pkg.source = 'local'
-    } catch (error) {
-      if (!fallback || error.code !== 'MODULE_NOT_FOUND') throw error
-      pkg = this.require(join(fallback, name), false)
-      pkg.source = 'npm'
+      let mod = join(this.root, name)
+      return {
+        ...await import(mod),
+        source: 'local'
+      }
+    } catch (e) {
+      if (e.code !== 'MODULE_NOT_FOUND')
+        throw e
+
+      let mod = join(this.root, 'node_modules', name)
+      return {
+        ...await import(mod),
+        source: 'npm'
+      }
     }
-    return pkg
   }
 
   reset() {
@@ -179,10 +197,15 @@ export class Plugins extends EventEmitter {
   }
 
   async scan(plugins) {
-    return (plugins || await this.list()).reduce((acc, name) => {
+    if (!plugins) plugins = await this.list()
+
+    let spec = {}
+
+    for (let name of plugins) {
       try {
-        let pkg = this.require(join(name, 'package.json'))
-        acc[name] = {
+        let pkg = await this.import(join(name, 'package.json'))
+
+        spec[name] = {
           name,
           description: pkg.description,
           version: pkg.version,
@@ -193,11 +216,12 @@ export class Plugins extends EventEmitter {
           repository: pkg.repository,
           homepage: homepage(pkg)
         }
-      } catch (error) {
-        warn(`failed to scan '${name}' plugin: ${error.message}`)
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to scan '${name}' plugin`)
       }
-      return acc
-    }, {})
+    }
+
+    return spec
   }
 
   stop() {
