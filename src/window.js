@@ -64,7 +64,7 @@ export class Window extends EventEmitter {
 
   init() {
     return Promise.all([
-      this.plugins.reload().then(p => p.create().emit('change')),
+      this.plugins.reload().then(p => p.create()),
 
       new Promise((resolve) => {
         this.unloaders.push(this.plugins.flush)
@@ -187,8 +187,7 @@ export class Window extends EventEmitter {
       .on('plugins-reload', async () => {
         this.plugins.clearModuleCache()
         await this.plugins.reload()
-        this.plugins.create()
-        this.plugins.emit('change')
+        await this.plugins.create()
       })
       .on('global', (_, action) => {
         emit(document, `global:${action}`)

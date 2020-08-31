@@ -1,9 +1,6 @@
-'use strict'
-
-const { Migration } = __require('common/migration')
+import { Migration } from '../../src/common/migration'
 
 describe('Migration', () => {
-
   describe('constructor', () => {
     it('extracts version number from path', () => {
       expect(new Migration('/tmp/1234.example.js'))
@@ -35,5 +32,4 @@ describe('Migration', () => {
       expect(new Migration('2.js').fresh(1)).to.be.true
     })
   })
-
 })

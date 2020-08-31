@@ -6,7 +6,10 @@ import { ready } from './dom'
 import win, { Window } from './window'
 
 try {
-  const START = Date.now()
+  var START = Date.now()
+  var READY
+  var INIT
+  var LOAD
 
   parse()
 
@@ -24,29 +27,30 @@ try {
   }, `${win.type}.init`)
 
   ready
-    .then(() => Date.now())
-    .then((READY) =>
-      win.init().then(() => {
-        ipc.send('wm', 'init')
-        win.toggle('init')
-        const INIT = Date.now()
-        // TODO ESM
-        require(`./views/${win.type}`)
-        const LOAD = Date.now()
+    .then(() => READY = Date.now())
+    .then(() => win.init())
+    .then(() => {
+      ipc.send('wm', 'init')
+      win.toggle('init')
+      INIT = Date.now()
+      return import(`./views/${win.type}`)
+    })
+    .then(() => {
+      LOAD = Date.now()
 
-        requestIdleCallback(() => {
-          ipc.send('wm', 'ready')
-          win.toggle('ready')
-          win.ready = Date.now()
+      requestIdleCallback(() => {
+        ipc.send('wm', 'ready')
+        win.toggle('ready')
+        win.ready = Date.now()
 
-          info('%s ready %dms [dom:%dms win:%dms req:%dms]',
-            win.type,
-            win.ready - START,
-            READY - START,
-            INIT - READY,
-            LOAD - INIT)
-        }, { timeout: 1000 })
-      }))
+        info('%s ready %dms [dom:%dms win:%dms req:%dms]',
+          win.type,
+          win.ready - START,
+          READY - START,
+          INIT - READY,
+          LOAD - INIT)
+      }, { timeout: 1000 })
+    })
     .catch((e) => {
       fatal({ stack: e.stack }, `${win.type}.init failed`)
 
