@@ -3,12 +3,13 @@ import {
   DragLayer,
   DragSource,
   DropTarget
-} from 'react-dnd-cjs'
+} from 'react-dnd'
 
-import createHTML5Backend, {
+import {
+  HTML5Backend,
   NativeTypes,
   getEmptyImage
-} from 'react-dnd-html5-backend-cjs'
+} from 'react-dnd-html5-backend'
 
 import {
   MIME
@@ -44,7 +45,7 @@ export {
   DragLayer,
   DragSource,
   DropTarget,
-  createHTML5Backend as ElectronBackend,
+  HTML5Backend as ElectronBackend,
   getEmptyImage,
   hasProjectFiles,
   hasPhotoFiles
