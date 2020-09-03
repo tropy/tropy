@@ -8,7 +8,7 @@ export function parse() {
   let hash = window.location.hash.slice(1)
 
   Object.assign(ARGS, JSON.parse(decode(hash)))
-  process.env.NODE_ENV = ARGS.env
+  // process.env.NODE_ENV = ARGS.env
 
   return ARGS
 }
