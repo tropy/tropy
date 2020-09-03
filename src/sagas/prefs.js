@@ -7,7 +7,8 @@ import { ipc } from './ipc'
 import { shell } from './shell'
 import { persist, restore } from './storage'
 
-import '../commands/ontology'
+// eslint-disable-next-line no-unused-vars
+import * as CMD from '../commands/ontology'
 
 export function *main() {
   let aux

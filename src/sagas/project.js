@@ -30,7 +30,11 @@ import {
   race
 } from 'redux-saga/effects'
 
-import('../commands')
+// TODO find better way to ensure command import
+// side-effects make it into the bundle!
+//
+// eslint-disable-next-line no-unused-vars
+import * as CMD from '../commands'
 
 const has = (condition) => (({ error, meta }) =>
   (!error && meta && (!meta.cmd || meta.done) && meta[condition]))
