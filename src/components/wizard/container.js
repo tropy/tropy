@@ -5,7 +5,7 @@ import { Steps } from '../steps'
 import { Titlebar } from '../toolbar'
 import { ProjectStep } from './project'
 import { join } from 'path'
-import actions from '../../actions'
+import act from '../../actions/wizard'
 import sanitize from 'sanitize-filename'
 import { blank } from '../../common/util'
 import { existsSync as exists } from 'fs'
@@ -87,15 +87,15 @@ const WizardContainer = connect(
 
   (dispatch) => ({
     onProjectUpdate(...args) {
-      dispatch(actions.wizard.project.update(...args))
+      dispatch(act.project.update(...args))
     },
 
     onProjectSaveAs(...args) {
-      dispatch(actions.wizard.project.save(...args))
+      dispatch(act.project.save(...args))
     },
 
     onComplete(...args) {
-      dispatch(actions.wizard.complete(...args))
+      dispatch(act.wizard.complete(...args))
     }
   })
 )(Wizard)
