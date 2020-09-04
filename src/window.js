@@ -8,6 +8,8 @@ import { paths } from './common/release'
 import { EventEmitter } from 'events'
 import { update } from './args'
 import debounce from 'lodash.debounce'
+import * as dialog from './dialog'
+import * as json from './common/json'
 
 import {
   $$,
@@ -56,7 +58,7 @@ export class Window extends EventEmitter {
       'minimizable'
     ])
 
-    this.plugins = new Plugins(opts.plugins)
+    this.plugins = new Plugins(opts.plugins, { dialog, json })
     this.unloader = 'close'
     this.unloaders = []
     this.hasFinishedUnloading = false
