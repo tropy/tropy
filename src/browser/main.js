@@ -13,7 +13,7 @@ const { args, opts } = parse()
 
 process.env.NODE_ENV = opts.env
 
-// app.allowRendererProcessReuse = false
+app.allowRendererProcessReuse = false
 
 // Set app name and paths as soon as possible!
 app.name = qualified.product
