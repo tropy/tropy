@@ -28,8 +28,9 @@ const subdirs = async root => (
 
 
 export class Plugins extends EventEmitter {
-  constructor(root) {
+  constructor(root, context = {}) {
     super()
+    this.context = context
     this.root = root
     this.reset()
   }
@@ -42,9 +43,10 @@ export class Plugins extends EventEmitter {
     return {
       logger: logger.child({ plugin }),
       require(mod) {
-        warn(`plugin ${plugin} required ${mod} via context!`)
+        warn(`plugin ${plugin} requires ${mod} via context: update required!`)
         return require(mod)
-      }
+      },
+      ...this.context
     }
   }
 
