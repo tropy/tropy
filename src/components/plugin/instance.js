@@ -46,7 +46,7 @@ export class PluginInstance extends React.PureComponent {
               spec={spec}
               templates={this.props.templates}
               properties={this.props.properties}
-              value={this.props.config.options?.[spec.field]?.[spec.default]}
+              value={this.props.config.options?.[spec.field] ?? spec.default}
               onChange={this.handleOptionsChange}/>)}
         </fieldset>
         <ButtonGroup>
