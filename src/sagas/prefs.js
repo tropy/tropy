@@ -8,13 +8,11 @@ import { shell } from './shell'
 import { persist, restore } from './storage'
 
 export function *main() {
-  let aux
+  // Delayed import with command registation side-effect!
+  yield import('../commands/ontology')
 
   try {
-    // Delayed import with command registation side-effect!
-    yield import('../commands/ontology')
-
-    aux = yield all([
+    var aux = yield all([
       fork(ontology, { max: 2 }),
       fork(history),
       fork(ipc),

@@ -52,11 +52,7 @@ const START =
 
     } catch (e) {
       fatal({ stack: e.stack }, `${win.type}.init failed`)
-
-      if (ARGS.dev)
-        ipc.send('wm', 'show')
-      else
-        process.crash()
+      ipc.send('error', e)
     }
 
     // eslint-disable-next-line

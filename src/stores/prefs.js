@@ -1,14 +1,9 @@
-import {
-  createStore,
-  applyMiddleware,
-  combineReducers,
-  compose
-} from 'redux'
-
+import { ipcRenderer as ipc } from 'electron'
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import thunk from 'redux-thunk'
 import createSagaMiddleware from 'redux-saga'
 import ARGS from '../args'
-import { error } from '../common/log'
+import { fatal } from '../common/log'
 import { seq, debounce, throttle, log } from '../middleware'
 
 import {
@@ -31,7 +26,8 @@ const devtools = (ARGS.dev || ARGS.debug) &&
 export function create(init = {}) {
   let saga = createSagaMiddleware({
     onError(e) {
-      error({ stack: e.stack }, 'unhandled error in saga middleware')
+      fatal({ stack: e.stack }, 'unhandled error in saga middleware')
+      ipc.send('error', e)
     }
   })
 

@@ -856,7 +856,9 @@ export class Tropy extends EventEmitter {
   handleUncaughtException(e, win = BrowserWindow.getFocusedWindow()) {
     fatal(e)
 
-    if (!this.dev) {
+    if (this.dev) {
+      win?.show()
+    } else {
       dialog
         .alert(win, {
           ...this.dict.dialog.unhandled,
