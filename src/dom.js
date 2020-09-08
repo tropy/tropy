@@ -14,6 +14,12 @@ export const ready = (document.readyState !== 'loading') ?
   Promise.resolve() :
   when(document, 'DOMContentLoaded').then(() => {})
 
+export function idle(timeout = 1000) {
+  return new Promise(resolve => {
+    requestIdleCallback(resolve, { timeout })
+  })
+}
+
 export const element = document.createElement.bind(document)
 
 export function create(tag, attributes = {}) {

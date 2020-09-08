@@ -8,7 +8,7 @@ import { parse } from './args'
 import { createLogger, info, warn } from '../common/log'
 import { Tropy } from './tropy'
 
-const START = Date.now()
+const START = getCreationTime() || Date.now()
 const { args, opts } = parse()
 
 process.env.NODE_ENV = opts.env
@@ -153,3 +153,9 @@ if (app.isPackaged) {
 
   info(`ready after ${tropy.ready - START}ms`)
 }())
+
+function getCreationTime() {
+  for (let m of app.getAppMetrics()) {
+    if (m.type === 'Browser') return m.creationTime
+  }
+}
