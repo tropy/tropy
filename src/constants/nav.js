@@ -1,5 +1,5 @@
 import TYPE from './type'
-import { tropy } from '../ontology'
+import { tropy } from '../ontology/ns'
 
 export default {
   PERSIST: 'nav.persist',
