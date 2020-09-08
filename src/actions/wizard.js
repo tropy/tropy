@@ -1,6 +1,5 @@
 import { ipcRenderer as ipc } from 'electron'
 import fs from 'fs'
-import { Database } from '../common/db'
 import { fail, save } from '../dialog'
 import { PROJECT, WIZARD } from '../constants'
 import mod from '../models/project'
@@ -32,10 +31,11 @@ const project = {
   }
 }
 
-export default {
+const wizard = {
   complete(payload, meta = {}) {
     return async () => {
       try {
+        let { Database } = await import('../common/db')
         let { file, name, base } = payload
         info(`creating new project ${name} in ${file}`)
 
@@ -50,7 +50,10 @@ export default {
         if (meta.truncate) await rm(payload.file)
       }
     }
-  },
+  }
+}
 
-  project
+export default {
+  project,
+  wizard
 }
