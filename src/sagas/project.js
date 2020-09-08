@@ -187,14 +187,14 @@ function *close(db, project) {
 
 
 export function *main() {
+  // Delayed import with command registation side-effect!
+  yield import('../commands')
+
   let task
   let aux
   let crash
 
   try {
-    // Delayed import with command registation side-effect!
-    yield import('../commands')
-
     aux = yield all([
       fork(ontology, { max: 1 }),
       fork(ipc),
