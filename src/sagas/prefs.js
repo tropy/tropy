@@ -7,13 +7,13 @@ import { ipc } from './ipc'
 import { shell } from './shell'
 import { persist, restore } from './storage'
 
-// eslint-disable-next-line no-unused-vars
-import * as CMD from '../commands/ontology'
-
 export function *main() {
   let aux
 
   try {
+    // Delayed import with command registation side-effect!
+    yield import('../commands/ontology')
+
     aux = yield all([
       fork(ontology, { max: 2 }),
       fork(history),
