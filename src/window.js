@@ -34,6 +34,10 @@ const STYLES = join(paths.css, process.platform)
 let instance
 export { instance as default }
 
+export function createWindowInstance(...args) {
+  return new Window(...args)
+}
+
 export class Window extends EventEmitter {
   constructor(opts) {
     if (instance) {
