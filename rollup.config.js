@@ -6,6 +6,8 @@ import natives from 'rollup-plugin-natives'
 import replace from '@rollup/plugin-replace'
 import resolve from '@rollup/plugin-node-resolve'
 
+const NODE_ENV = process.env.NODE_ENV || 'production'
+
 export default [
   {
     input: [
@@ -58,7 +60,7 @@ export default [
       }),
       resolve(),
       replace({
-        'process.env.NODE_ENV': '"production"',
+        'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
         'readable-stream': 'stream'
       }),
       json(),
