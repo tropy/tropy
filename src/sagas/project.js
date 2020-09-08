@@ -1,7 +1,6 @@
 import assert from 'assert'
 import fs from 'fs'
 import { PROJECT, IDLE } from '../constants'
-import { Database } from '../common/db'
 import { Cache } from '../common/cache'
 import { warn, debug } from '../common/log'
 import { ipc } from './ipc'
@@ -30,12 +29,6 @@ import {
   race
 } from 'redux-saga/effects'
 
-// TODO find better way to ensure command import
-// side-effects make it into the bundle!
-//
-// eslint-disable-next-line no-unused-vars
-import * as CMD from '../commands'
-
 const has = (condition) => (({ error, meta }) =>
   (!error && meta && (!meta.cmd || meta.done) && meta[condition]))
 
@@ -55,6 +48,7 @@ const canWrite = (file) =>
 
 export function *open(file, meta) {
   try {
+    let { Database } = yield import('../common/db')
     let ro = (meta.isReadOnly || !(yield call(canWrite, file)))
     var db = new Database(file, ro ? 'r' : 'w')
 
@@ -198,6 +192,9 @@ export function *main() {
   let crash
 
   try {
+    // Delayed import with command registation side-effect!
+    yield import('../commands')
+
     aux = yield all([
       fork(ontology, { max: 1 }),
       fork(ipc),
