@@ -1,3 +1,5 @@
+import { join } from 'path'
+import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import builtins from 'builtin-modules'
 import commonjs from '@rollup/plugin-commonjs'
@@ -21,11 +23,19 @@ export default [
     },
     preserveEntrySignatures: 'strict',
     plugins: [
+      alias({
+        entries: {
+          depd: join(
+            __dirname, 'node_modules/cookies/node_modules/depd/index.js'
+          )
+        }
+      }),
       resolve(),
       babel({ babelHelpers: 'bundled' }),
       json(),
       commonjs({
         ignore: [
+          'glob',
           'pino-pretty'
         ]
       })
@@ -58,6 +68,13 @@ export default [
         copyTo: 'lib/node/lib',
         destDir: './node/lib'
       }),
+      alias({
+        entries: {
+          'node-pre-gyp': join(
+            __dirname, 'node_modules/node-pre-gyp/lib/pre-binding'
+          )
+        }
+      }),
       resolve(),
       replace({
         'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
@@ -67,6 +84,7 @@ export default [
       babel({ babelHelpers: 'bundled' }),
       commonjs({
         ignore: [
+          'glob',
           'pino-pretty',
           'request',
           'rdf-canonize-native'
