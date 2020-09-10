@@ -3,6 +3,7 @@ import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import builtins from 'builtin-modules'
 import commonjs from '@rollup/plugin-commonjs'
+import ignore from 'rollup-plugin-ignore'
 import json from '@rollup/plugin-json'
 import natives from 'rollup-plugin-natives'
 import replace from '@rollup/plugin-replace'
@@ -68,10 +69,16 @@ export default [
         copyTo: 'lib/node/lib',
         destDir: './node/lib'
       }),
+      ignore([
+        'node-pre-gyp',
+        'pino-pretty',
+        'rdf-canonize-native',
+        'request'
+      ], { commonjsBugFix: true }),
       alias({
         entries: {
-          'node-pre-gyp': join(
-            __dirname, 'node_modules/node-pre-gyp/lib/pre-binding'
+          semver: join(
+            __dirname, 'node_modules/semver/semver.js'
           )
         }
       }),
@@ -82,14 +89,7 @@ export default [
       }),
       json(),
       babel({ babelHelpers: 'bundled' }),
-      commonjs({
-        ignore: [
-          'glob',
-          'pino-pretty',
-          'request',
-          'rdf-canonize-native'
-        ]
-      })
+      commonjs()
     ],
     external: [
       'electron',
