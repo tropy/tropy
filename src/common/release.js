@@ -25,7 +25,7 @@ const lib = (function find(path, pattern) {
 })(__dirname, /^src|lib$/)
 
 const paths = {
-  css: resolve(lib, '..', 'lib', 'stylesheets'),
+  css: resolve(lib, '..', 'lib', 'css'),
   db: resolve(lib, '..', 'db'),
   lib,
   res: resolve(lib, '..', 'res')

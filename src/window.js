@@ -29,8 +29,6 @@ const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
   e => e.ctrlKey && !e.altKey && !e.metaKey
 
-const STYLES = join(paths.css, process.platform)
-
 let instance
 export { instance as default }
 
@@ -127,8 +125,8 @@ export class Window extends EventEmitter {
   get stylesheets() {
     let { theme } = this
     return [
-      join(STYLES, `window-${theme}.css`),
-      join(STYLES, `${this.type}-${theme}.css`),
+      join(paths.css, `window-${theme}.css`),
+      join(paths.css, `${this.type}-${theme}.css`),
       join(this.state.data, 'style.css'),
       join(this.state.data, `style-${theme}.css`)
     ]
