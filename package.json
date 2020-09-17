@@ -14,7 +14,7 @@
     "url": "https://github.com/tropy/tropy/issues"
   },
   "engines": {
-    "node": ">=10",
+    "node": ">=12",
     "npm": ">=6"
   },
   "main": "lib/browser/main.js",
