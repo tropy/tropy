@@ -9,13 +9,16 @@ import natives from 'rollup-plugin-natives'
 import replace from '@rollup/plugin-replace'
 import resolve from '@rollup/plugin-node-resolve'
 
+import scss from './scripts/rollup-plugin-scss'
+import emit from './scripts/rollup-plugin-emit'
+
 const NODE_ENV = process.env.NODE_ENV || 'production'
+const platform = process.env.TROPY_PLATFORM || process.platform
 
 export default [
   {
     input: [
-      'src/browser/main.js',
-      'src/common/api.js'
+      'src/browser/main.js'
     ],
     output: {
       dir: 'lib/browser',
@@ -24,6 +27,9 @@ export default [
     },
     preserveEntrySignatures: 'strict',
     plugins: [
+      ignore([
+        'pino-pretty'
+      ], { commonjsBugFix: true }),
       alias({
         entries: {
           depd: join(
@@ -34,12 +40,7 @@ export default [
       resolve(),
       babel({ babelHelpers: 'bundled' }),
       json(),
-      commonjs({
-        ignore: [
-          'glob',
-          'pino-pretty'
-        ]
-      })
+      commonjs()
     ],
     external: [
       'electron',
@@ -48,23 +49,32 @@ export default [
   },
 
   {
-    input: {
-      'bootstrap': 'src/bootstrap.js',
-      'image': 'src/image/index.js',
-      'db': 'src/common/db.js',
-      'views/about': 'src/views/about.js',
-      'views/prefs': 'src/views/prefs.js',
-      'views/project': 'src/views/project.js',
-      'views/print': 'src/views/print.js',
-      'views/wizard': 'src/views/wizard.js'
-    },
+    input: [
+      'src/bootstrap.js'
+    ],
     output: {
       dir: 'lib',
       format: 'cjs',
-      sourcemap: true
+      sourcemap: true,
+      manualChunks: {
+        db: ['src/common/db.js'],
+        image: ['src/image/index.js']
+      }
     },
     preserveEntrySignatures: 'strict',
     plugins: [
+      emit({
+        entries: {
+          'views/about': 'src/views/about',
+          'views/prefs': 'src/views/prefs',
+          'views/print': 'src/views/print',
+          'views/project': 'src/views/project',
+          'views/wizard': 'src/views/wizard'
+        },
+        implicitlyLoadedAfterOneOf: [
+          'src/bootstrap.js'
+        ]
+      }),
       natives({
         copyTo: 'lib/node/lib',
         destDir: './node/lib'
@@ -95,5 +105,27 @@ export default [
       'electron',
       ...builtins
     ]
+  },
+
+  {
+    output: {
+      dir: 'lib/css'
+    },
+    plugins: [
+      scss({
+        entries: [
+          `src/stylesheets/${platform}`
+        ],
+        platform,
+        themes: [
+          'light',
+          'dark'
+        ]
+      })
+    ],
+    onwarn(warning, warn) {
+      if (warning.code !== 'EMPTY_BUNDLE')
+        warn(warning)
+    }
   }
 ]

@@ -20,7 +20,7 @@
   "main": "lib/browser/main.js",
   "scripts": {
     "clean": "rimraf coverage doc lib .nyc_output npm-debug.log",
-    "compile": "node scripts/compile",
+    "compile": "rollup -c",
     "db": "node scripts/db",
     "prebuild": "npm run clean && npm run compile",
     "build": "node scripts/build",
@@ -30,11 +30,10 @@
     "purge": "npm run clean && rimraf dist",
     "devtools": "electron scripts/devtools --data tmp",
     "lint": "npm run -s lint:js && npm run -s lint:css",
-    "lint:js": "eslint --color src test scripts",
+    "lint:js": "eslint --color src test scripts res/workers",
     "lint:css": "stylelint src/stylesheets/**/*.scss",
     "log:view": "cat tmp/log/tropy.log | node scripts/log-viewer",
     "log:tail": "tail -q -F tmp/log/tropy.log 2> /dev/null | node scripts/log-viewer",
-    "prestart": "npm run -s compile -- css",
     "start": "electron --app . --env development --data tmp --cache tmp/cache --logs tmp/log",
     "rebuild": "node scripts/rebuild",
     "postinstall": "npm run -s rebuild",
@@ -43,9 +42,7 @@
     "postcoverage": "nyc report -r text-summary -r html -r lcov",
     "test": "npm run -s test:main && npm run -s test:renderer",
     "test:main": "electron-mocha \"test/{browser,common}/**/*_test.js\"",
-    "test:renderer": "electron-mocha --renderer \"test/{,!(browser)/**}/*_test.js\"",
-    "prewatch": "node scripts/compile",
-    "watch": "node scripts/watch"
+    "test:renderer": "electron-mocha --renderer \"test/{,!(browser)/**}/*_test.js\""
   },
   "devDependencies": {
     "@babel/core": "^7.11.4",
@@ -90,7 +87,7 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.23.0",
     "rollup-plugin-ignore": "^1.0.9",
-    "rollup-plugin-natives": "github:inukshuk/rollup-plugin-natives#feature/sourcemap",
+    "rollup-plugin-natives": "^0.6.0",
     "shelljs": "^0.8.4",
     "sinon": "^9.0.3",
     "sinon-chai": "^3.5.0",
