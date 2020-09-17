@@ -43,7 +43,9 @@ export const functions = {
 export default function ({
   entries,
   extension = '.scss',
-  outputStyle = 'compressed'
+  outputStyle = 'compressed',
+  platform,
+  themes = ['light', 'dark']
 
 } = {}) {
   return {
@@ -69,44 +71,51 @@ export default function ({
       if (extname(id) !== extension)
         return null
 
-      let outFile = `${basename(id, extension)}.css`
+      for (let theme of themes) {
+        let outFile = `${basename(id, extension)}-${theme}.css`
 
-      let includePaths = [
-        dirname(id),
-        resolve('node_modules')
-      ]
+        let includePaths = [
+          dirname(id),
+          resolve('node_modules')
+        ]
 
-      let sourceMapRoot = resolve()
+        let sourceMapRoot = resolve()
 
-      let { css, map, stats } = await render({
-        data: code,
-        functions,
-        includePaths,
-        outFile,
-        outputStyle,
-        sourceMap: true,
-        sourceMapContents: true,
-        sourceMapRoot
-      })
+        let data = code
+          .replace('"linux"', `"${platform}"`)
+          .replace('"../themes/light"', `"../themes/${theme}"`)
+          .replace('"../themes/colors-light"', `"../themes/colors-${theme}"`)
 
-      if (this.meta.watchMode && stats.includedFiles) {
-        for (let file of stats.includedFiles) {
-          this.addWatchFile(file)
+        let { css, map, stats } = await render({
+          data,
+          functions,
+          includePaths,
+          outFile,
+          outputStyle,
+          sourceMap: true,
+          sourceMapContents: true,
+          sourceMapRoot
+        })
+
+        if (this.meta.watchMode && stats.includedFiles) {
+          for (let file of stats.includedFiles) {
+            this.addWatchFile(file)
+          }
         }
-      }
 
-      this.emitFile({
-        type: 'asset',
-        fileName: outFile,
-        source: css.toString()
-      })
-
-      if (map) {
         this.emitFile({
           type: 'asset',
-          fileName: `${outFile}.map`,
-          source: map.toString()
+          fileName: outFile,
+          source: css.toString()
         })
+
+        if (map) {
+          this.emitFile({
+            type: 'asset',
+            fileName: `${outFile}.map`,
+            source: map.toString()
+          })
+        }
       }
 
       return ''

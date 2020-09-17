@@ -1,33 +1,30 @@
 /* stylelint-disable max-empty-lines */
 
-//
-// Light window
-// --------------------------------------------------
-
-$platform: "win32";
+$platform: "linux";
 $theme: "light";
 
-
-// Colors
+//
+// Print window
 // --------------------------------------------------
-
-@import
-  "../themes/light",
-  "../themes/colors-light";
 
 
 // Abstracts
 // --------------------------------------------------
 
 @import
-  "../abstracts/variables",
-  "../abstracts/mixins",
   "../abstracts/functions",
-  "../abstracts/placeholders";
+  "../abstracts/variables",
+  "../abstracts/mixins";
 
+// Components
+// --------------------------------------------------
+
+@import
+  "../components/print/print",
+  "../components/print/note-styles";
 
 // Partials
 // --------------------------------------------------
 
 @import
-  "../partials/cover";
+  "../partials/orientation";

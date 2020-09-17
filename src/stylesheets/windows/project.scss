@@ -1,5 +1,11 @@
 /* stylelint-disable max-empty-lines */
 
+$platform: "linux";
+$theme: "light";
+
+@import
+  "../themes/light";
+
 //
 // Project window
 // --------------------------------------------------
