@@ -114,13 +114,9 @@ export default [
     plugins: [
       scss({
         entries: [
-          `src/stylesheets/${platform}`
+          'src/stylesheets/windows'
         ],
-        platform,
-        themes: [
-          'light',
-          'dark'
-        ]
+        platform
       })
     ],
     onwarn(warning, warn) {

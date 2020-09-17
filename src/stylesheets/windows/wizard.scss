@@ -1,7 +1,13 @@
 /* stylelint-disable max-empty-lines */
 
+$platform: "linux";
+$theme: "light";
+
+@import
+  "../themes/light";
+
 //
-// About window
+// Wizard window
 // --------------------------------------------------
 
 
@@ -24,11 +30,18 @@
   "../base/type";
 
 
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/forms";
+
+
 // Components
 // --------------------------------------------------
 
 @import
   "../components/toolbar",
-  "../components/flash",
   "../components/button",
-  "../components/about";
+  "../components/flash",
+  "../components/wizard";

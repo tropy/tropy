@@ -125,7 +125,7 @@ export class Window extends EventEmitter {
   get stylesheets() {
     let { theme } = this
     return [
-      join(paths.css, `window-${theme}.css`),
+      join(paths.css, `base-${theme}.css`),
       join(paths.css, `${this.type}-${theme}.css`),
       join(this.state.data, 'style.css'),
       join(this.state.data, `style-${theme}.css`)
