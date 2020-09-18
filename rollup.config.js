@@ -1,4 +1,4 @@
-import { join } from 'path'
+import { join, relative } from 'path'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import builtins from 'builtin-modules'
@@ -14,6 +14,21 @@ import emit from './scripts/rollup-plugin-emit'
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
 const platform = process.env.TROPY_PLATFORM || process.platform
+
+const IGNORE_WARNINGS = {
+  CIRCULAR_DEPENDENCY: (warning) => [
+    'src/esper/index.js',
+    'src/components/list/tree.js',
+    'node_modules/n3/src/N3DataFactory.js'
+  ].includes(warning.importer),
+
+  EVAL: (warning) => [
+    'node_modules/bluebird/js/release/util.js'
+  ].includes(relative(process.cwd(), warning.id)),
+
+  THIS_IS_UNDEFINED: (warning) =>
+    (/this && this\.__/).test(warning.frame)
+}
 
 export default [
   {
@@ -104,7 +119,17 @@ export default [
     external: [
       'electron',
       ...builtins
-    ]
+    ],
+    onwarn(warning, warn) {
+      let ok = IGNORE_WARNINGS[warning.code]
+
+      if (ok === true || typeof ok === 'function' && ok(warning))
+        return
+      else {
+        console.dir(warning)
+        warn(warning)
+      }
+    }
   },
 
   {

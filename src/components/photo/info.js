@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field, StaticField } from '../metadata'
+import { Field, StaticField } from '../metadata/field'
 import { bool, func, object } from 'prop-types'
 import { IMAGE } from '../../constants'
 import { basename } from 'path'

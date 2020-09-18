@@ -1,6 +1,6 @@
 import React from 'react'
 import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd'
-import { Thumbnail } from '../photo'
+import { Thumbnail } from '../photo/thumbnail'
 import { bool, func, number, shape, string } from 'prop-types'
 import { bounds } from '../../dom'
 import { pick } from '../../common/util'

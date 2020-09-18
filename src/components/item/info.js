@@ -1,5 +1,5 @@
 import React from 'react'
-import { StaticField } from '../metadata'
+import { StaticField } from '../metadata/field'
 import { object } from 'prop-types'
 import { datetime } from '../../format'
 
