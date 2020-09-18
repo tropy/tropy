@@ -6,24 +6,34 @@ const { say, error } = require('./util')('build')
 const electron = require('electron/package')
 const packager = require('electron-packager')
 const { basename, extname, join, resolve, relative } = require('path')
-const { channel, name, version, qualified } = require('../lib/common/release')
-
-const { SUPPORTED } = require('../lib/constants/image')
 const RRCHNM = 'Roy Rosenzweig Center for History and New Media, George Mason University'
+
+const BABEL_CONFIG = {
+  presets: [
+    '@babel/preset-react'
+  ],
+  plugins: [
+    '@babel/plugin-syntax-class-properties',
+    '@babel/plugin-proposal-export-namespace-from',
+    'babel-plugin-dynamic-import-node',
+    '@babel/plugin-transform-modules-commonjs'
+  ]
+}
+
+require('@babel/register')(BABEL_CONFIG)
+const { channel, name, version, qualified } = require('../src/common/release')
+const { SUPPORTED } = require('../src/constants/image').default
 
 const dir = resolve(__dirname, '..')
 const res = join(dir, 'res')
 const icons = resolve(res, 'icons', channel, 'tropy')
 const mime = resolve(res, 'icons', 'mime')
 
-const SHARP = join('node_modules', 'sharp', 'vendor', 'lib')
+const SHARP = join('lib', 'vendor', 'lib')
 
 const IGNORE = [
   /\.(js|css)\.map$/,
-  /\.(umd|esm|esmodules-browsers)\.js$/,
   /(CHANGELOG|README)/,
-  /yarn\.lock/,
-  /tsconfig.tsbuildinfo$/,
   /\.DS_Store/,
   /\.babelrc\.js/,
   /\.editorconfig/,
@@ -49,25 +59,8 @@ const IGNORE = [
   /^\/src/,
   /^\/test/,
   /^\/tmp/,
-  /node_modules.\.(bin|cache)/,
-  /node_modules.sqlite3.(build|deps|lib.binding.node)/,
-  /node_modules.sharp.build.[^R]/,
-  /node_modules.sharp.build.Release.obj/,
-  /node_modules.sharp.vendor.include/,
-  /node_modules.react.umd/,
-  /node_modules.react-dom.umd/,
-  /node_modules.jsonld.dist/,
-  /node_modules.(react-)?redux.(dist|es|src)/,
-  /node_modules.react-transition-group.(dist|esm)/,
-  /node_modules.rdf-canonize.dist/,
-  /node_modules.@formatjs.intl-(displaynames|listformat|unified-numberformat|relativetimeformat)/,
-  /node_modules.node-forge/,
-  /node_modules.ajv.dist/,
-  /node_modules.psl.dist/,
-  /node_modules.nan.doc/,
-  /node_modules.react-dom.(cjs.react-dom-)?(server|unstable|profiling|test|unstable)/,
-  /node_modules.bluebird.js.browser/,
-  /appveyor\.yml/
+  /appveyor\.yml/,
+  /node_modules/
 ]
 
 target.all = async (args = []) => {
@@ -83,10 +76,6 @@ target.all = async (args = []) => {
 
     say(`packaging for ${platform} ${arch}...`)
 
-    if (platform !== 'win32') {
-      ignore.push(/^\/node_modules.winreg/)
-    }
-
     let extraResource = (platform !== 'darwin') ? [] : [
       join(res, 'icons', 'mime', 'tpy.icns'),
       join(res, 'icons', 'mime', 'ttp.icns')
@@ -99,7 +88,7 @@ target.all = async (args = []) => {
       dir,
       out: join(dir, 'dist'),
       name: qualified.product,
-      prune: true,
+      prune: false,
       overwrite: true,
       quiet: true,
       ignore,
@@ -120,11 +109,8 @@ target.all = async (args = []) => {
       },
       asar: {
         unpack: `**/{${[
-          '*.{node,dll,dylib,so}',
-          'lib/stylesheets/**/*',
-          'res/icons/**/*',
-          'res/{menu,strings,keymaps}/*',
-          'sharp/{build/Release,vendor/lib}/*'
+          'lib/{node,vendor}/**/*',
+          'res/{icons,views}/**/*'
         ].join(',')}}`
       }
 
