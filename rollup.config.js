@@ -125,8 +125,12 @@ export default [
         'readable-stream': 'stream'
       }),
       json(),
-      babel({ babelHelpers: 'bundled' }),
-      commonjs()
+      babel({
+        babelHelpers: 'bundled'
+      }),
+      commonjs({
+        requireReturnsDefault: true
+      })
     ],
     external: [
       'electron',
