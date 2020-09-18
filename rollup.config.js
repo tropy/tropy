@@ -3,11 +3,14 @@ import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import builtins from 'builtin-modules'
 import commonjs from '@rollup/plugin-commonjs'
+import copy from 'rollup-plugin-copy'
 import ignore from 'rollup-plugin-ignore'
 import json from '@rollup/plugin-json'
 import natives from 'rollup-plugin-natives'
 import replace from '@rollup/plugin-replace'
 import resolve from '@rollup/plugin-node-resolve'
+
+// import visualize from 'rollup-plugin-visualizer'
 
 import scss from './scripts/rollup-plugin-scss'
 import emit from './scripts/rollup-plugin-emit'
@@ -93,6 +96,15 @@ export default [
       natives({
         copyTo: 'lib/node/lib',
         destDir: './node/lib'
+      }),
+      copy({
+        targets: [
+          {
+            src: 'node_modules/sharp/vendor/lib',
+            dest: 'lib/vendor'
+          }
+        ],
+        copyOnce: true
       }),
       ignore([
         'node-pre-gyp',
