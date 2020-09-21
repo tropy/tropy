@@ -9,9 +9,22 @@ const { getSignToolParams } = require('./sign')
 // const { repository } = require('../package.json')
 const { RRCHNM } = require('./build')
 
+const BABEL_CONFIG = {
+  presets: [
+    '@babel/preset-react'
+  ],
+  plugins: [
+    '@babel/plugin-syntax-class-properties',
+    '@babel/plugin-proposal-export-namespace-from',
+    'babel-plugin-dynamic-import-node',
+    '@babel/plugin-transform-modules-commonjs'
+  ]
+}
+
+require('@babel/register')(BABEL_CONFIG)
 const {
   channel, qualified, name, product, version
-} = require('../lib/common/release')
+} = require('../src/common/release')
 
 const res = resolve(__dirname, '..', 'res')
 const dist = resolve(__dirname, '..', 'dist')
