@@ -2,7 +2,7 @@ import React from 'react'
 import { MetadataContainer } from './metadata'
 import { NoteList } from './note'
 import cx from 'classnames'
-import { Rotation } from '../../common/iiif'
+import { Rotation, addOrientation } from '../../common/iiif'
 import { Cache } from '../../common/cache'
 
 import {
@@ -24,9 +24,8 @@ export const Photo = ({
   photo,
   cache
 }) => {
-  let rotation = Rotation
-    .fromExifOrientation(photo.orientation)
-    .add(photo)
+  Object.assign(photo, addOrientation(photo, photo, false))
+  let rotation = new Rotation(photo)
 
   if (hasPhotos && !(hasMetadata || hasNotes)) {
     let [x, y] = rotation.ratio(photo)

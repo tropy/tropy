@@ -1,8 +1,9 @@
 import { URL } from 'url'
 import { rotate, round, isHorizontal } from './math'
+import { Cache } from './cache'
+import { pick } from './util'
 
-
-class Rotation {
+export class Rotation {
   constructor(input = {}) {
     if (typeof input === 'string') {
       this.parse(input)
@@ -116,10 +117,43 @@ class Rotation {
   }
 }
 
-class IIIF extends URL {
+export class IIIF extends URL {
 }
 
-export {
-  IIIF,
-  Rotation
+// Because the image orientation is broken in WebGL we rely on a bug
+// in Chromium 83 which does not yet apply orientation on ImageBitmap.
+// Esper will always load ImageBitmaps and here we assume images are
+// always un-oriented. This hack will not work in Chromium 84 and later
+// but we can remove this hack only once the WebGL issues are resolved!
+
+export const addOrientation = (state, photo, IMAGE_BITMAP_HACK = true) => {
+  let { width, height } = photo
+  let rot = Rotation.fromExifOrientation(photo.orientation)
+
+  // Chromium 81+ automatically applies image orientation.
+  // Our cached variants are saved without metadata so they will *not*
+  // be oriented automatically and, therefore, we need to handle the
+  // angle and mirror properties differently in each case.
+
+  // When using cache variants, use original aspect ratio and add
+  // orientation to image state.
+  if (IMAGE_BITMAP_HACK || Cache.isCacheVariant('full', photo))
+    return { ...rot.add(state).toJSON(), width, height }
+
+  // Otherwise use image state, but adjust aspect ratio if necessary.
+  let { angle, mirror } = state
+
+  if (!rot.isHorizontal) {
+    width = photo.height
+    height = photo.width
+  }
+
+  return { angle, mirror, width, height }
+}
+
+export const subOrientation = (state, photo) => {
+  if (IMAGE_BITMAP_HACK || Cache.isCacheVariant('full', photo))
+    return Rotation.subExifOrientation(state, photo).toJSON()
+  else
+    return pick(state, ['angle', 'mirror'])
 }
