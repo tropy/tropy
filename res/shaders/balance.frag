@@ -87,9 +87,9 @@ void main(void) {
 
     rgb = lab2rgb(
       vec3(
-        lab.x + c * gamma,
-        lab.y + a * gamma,
-        lab.z + b * gamma
+        lab.x + c * .9 * gamma,
+        lab.y + (a + .016) * gamma,
+        lab.z + (b - .016) * gamma
       )
     );
   }
