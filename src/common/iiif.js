@@ -151,7 +151,7 @@ export const addOrientation = (state, photo, IMAGE_BITMAP_HACK = true) => {
   return { angle, mirror, width, height }
 }
 
-export const subOrientation = (state, photo) => {
+export const subOrientation = (state, photo, IMAGE_BITMAP_HACK = true) => {
   if (IMAGE_BITMAP_HACK || Cache.isCacheVariant('full', photo))
     return Rotation.subExifOrientation(state, photo).toJSON()
   else
