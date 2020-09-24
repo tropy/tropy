@@ -84,7 +84,7 @@ class PhotoGrid extends PhotoIterator {
   }
 
   contract = (photo) => {
-    if (this.isExpandable(photo)) {
+    if (this.isExpandable(photo) && this.isExpanded(photo)) {
       this.handleNestedBlur()
       this.props.onContract(this.props.expanded.map(p => p.id))
 
@@ -95,7 +95,10 @@ class PhotoGrid extends PhotoIterator {
           note: photo.notes[0]
         })
       }
+      return true
     }
+
+    return false
   }
 
   // eslint-disable-next-line complexity
@@ -139,10 +142,10 @@ class PhotoGrid extends PhotoIterator {
         break
       case 'expand':
       case 'enter':
-        this.expand(this.current())
+        if (!this.expand(this.current())) return
         break
       case 'contract':
-        this.contract(this.current())
+        if (!this.contract(this.current())) return
         break
       case 'delete':
         this.handleDelete(this.current())

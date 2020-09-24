@@ -160,7 +160,7 @@ export class PhotoIterator extends Iterator {
   }
 
   contract = (photo) => {
-    if (this.isExpandable(photo)) {
+    if (this.isExpandable(photo) && this.isExpanded(photo)) {
       this.props.onContract([photo.id])
 
       if (this.isSelected(photo)) {
@@ -170,13 +170,19 @@ export class PhotoIterator extends Iterator {
           note: photo.notes[0]
         })
       }
+      return true
     }
+
+    return false
   }
 
   expand = (photo) => {
-    if (this.isExpandable(photo)) {
+    if (this.isExpandable(photo) && !this.isExpanded(photo)) {
       this.props.onExpand(photo.id)
+      return true
     }
+
+    return false
   }
 
   handleFocus = () => {

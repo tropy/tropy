@@ -124,11 +124,11 @@ class PhotoList extends PhotoIterator {
         break
       case 'left':
       case 'contract':
-        this.contract(this.current())
+        if (!this.contract(this.current())) return
         break
       case 'right':
       case 'expand':
-        this.expand(this.current())
+        if (!this.expand(this.current())) return
         break
       case 'edit':
       case 'enter':
