@@ -22,7 +22,8 @@ const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
     'src/esper/index.js',
     'src/components/list/tree.js',
-    'node_modules/n3/src/N3DataFactory.js'
+    'node_modules/n3/src/N3DataFactory.js',
+    'node_modules/semver/classes/comparator.js'
   ].includes(warning.importer),
 
   EVAL: (warning) => [
@@ -107,6 +108,7 @@ export default [
         copyOnce: true
       }),
       ignore([
+        'core-js/fn/object/entries',
         'node-pre-gyp',
         'pino-pretty',
         'rdf-canonize-native',
@@ -115,7 +117,7 @@ export default [
       alias({
         entries: {
           semver: join(
-            __dirname, 'node_modules/semver/semver.js'
+            __dirname, 'node_modules/semver/index.js'
           )
         }
       }),
@@ -141,10 +143,8 @@ export default [
 
       if (ok === true || typeof ok === 'function' && ok(warning))
         return
-      else {
-        console.dir(warning)
+      else
         warn(warning)
-      }
     }
   },
 
