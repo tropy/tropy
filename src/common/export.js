@@ -12,9 +12,11 @@ export const ctx = {
 
       'photo': {
         '@id': tropy.photo,
-        '@container': '@list',
-        '@context': ctx.photo
-      }
+        '@container': '@list'
+      },
+
+      ...ctx.photo
+      //...ctx.selection
     }
   },
 
@@ -27,12 +29,10 @@ export const ctx = {
       note: {
         '@id': tropy.note,
         '@container': '@list'
-        // '@context': ctx.note
       },
       selection: {
         '@id': tropy.selection,
-        '@container': '@list',
-        '@context': ctx.selection
+        '@container': '@list'
       }
     }
   },
@@ -42,7 +42,6 @@ export const ctx = {
       note: {
         '@id': tropy.note,
         '@container': '@list'
-        // '@context': ctx.note
       }
     }
   }

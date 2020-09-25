@@ -1,3 +1,4 @@
+import { gt } from 'semver'
 import * as ex from './export'
 import { expand } from './json'
 import { rdfs, tropy, xsd } from '../ontology'
@@ -15,6 +16,14 @@ export async function normalize(json) {
   } else {
     if (!json['@context']) {
       json['@context'] = ex.ctx.item
+    }
+  }
+
+  // Hoist nested contexts used until 1.8.0
+  if (json.version && !gt(json.version, '1.8.0')) {
+    json['@context'] = {
+      ...json['@context'],
+      ...ex.ctx.item
     }
   }
 
