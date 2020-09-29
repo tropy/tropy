@@ -1,10 +1,8 @@
-'use strict'
+import { select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { API } from '../../constants'
 
-const { select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { API } = require('../../constants')
-
-class MetadataShow extends Command {
+export class MetadataShow extends Command {
   *exec() {
     let { id } = this.action.payload
     let data = yield select(state => state.metadata[id])
@@ -13,7 +11,3 @@ class MetadataShow extends Command {
 }
 
 MetadataShow.register(API.METADATA.SHOW)
-
-module.exports = {
-  MetadataShow
-}

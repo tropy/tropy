@@ -1,15 +1,12 @@
-'use strict'
-
-const res = require('../common/res')
-const { basename } = require('path')
-const { error, warn } = require('../common/log')
-const { blank } = require('../common/util')
-const { BrowserWindow, Menu: M } = require('electron')
+import { Icon, Menu as MR } from '../common/res'
+import { basename } from 'path'
+import { error, warn } from '../common/log'
+import { blank } from '../common/util'
+import { BrowserWindow, Menu as M } from 'electron'
 
 const SEPARATOR = { type: 'separator' }
 
-
-class Menu {
+export class Menu {
   static eachItem(menu, fn) {
     if (menu != null) {
       for (let item of menu.items) {
@@ -24,7 +21,7 @@ class Menu {
   }
 
   async loadTemplate(name) {
-    let { template } = await res.Menu.openWithFallback(
+    let { template } = await MR.openWithFallback(
       this.app.defaultLocale,
       this.app.state.locale,
       name)
@@ -78,7 +75,7 @@ class Menu {
   }
 }
 
-class AppMenu extends Menu {
+export class AppMenu extends Menu {
   static get instance() {
     return M.getApplicationMenu()
   }
@@ -149,7 +146,7 @@ class AppMenu extends Menu {
 }
 
 
-class ContextMenu extends Menu {
+export class ContextMenu extends Menu {
   static scopes = {}
 
   async load(name = 'context') {
@@ -290,7 +287,9 @@ class ContextMenu extends Menu {
   scopes['item-bulk-list'] = [
     ...scopes.items,
     'item-bulk-list',
-    'item-bulk']
+    'item-bulk-read-only',
+    'item-bulk',
+    'item-rotate']
   scopes['item-bulk-list'].position = 2
 
   scopes['item-deleted'] = [
@@ -349,7 +348,7 @@ Menu.ItemCompiler = {
     item.checked = event.target?.[ctx] === col
 
     if (col != null && col !== 'random')
-      item.icon = res.icon.color(col)
+      item.icon = Icon.color(col)
     if (cmd)
       item.click = createResponder(cmd, app, win, event, col)
   },
@@ -518,6 +517,8 @@ Menu.ItemCompiler = {
 
     if (negate)
       item.enabled = !item.enabled
+
+    item.visible = item.enabled
   }
 }
 
@@ -573,10 +574,4 @@ function withWindow(win, cmd, fn) {
     else
       fn(win || w)
   }
-}
-
-
-module.exports = {
-  AppMenu,
-  ContextMenu
 }

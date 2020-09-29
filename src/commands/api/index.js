@@ -1,10 +1,6 @@
-'use strict'
-
-module.exports = {
-  ...require('./item'),
-  ...require('./metadata'),
-  ...require('./note'),
-  ...require('./photo'),
-  ...require('./selection'),
-  ...require('./tag')
-}
+export * from './item'
+export * from './metadata'
+export * from './note'
+export * from './photo'
+export * from './selection'
+export * from './tag'

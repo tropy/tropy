@@ -1,4 +1,0 @@
-# vi: set ft=yaml :
-
-globals:
-  ARGS: true

@@ -1,12 +1,9 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { FormField, FormLink, FormText } = require('../form')
-const { func, object } = require('prop-types')
+import React from 'react'
+import { FormField, FormLink, FormText } from '../form'
+import { func, object } from 'prop-types'
 
 
-class ResourceListItem extends PureComponent {
+export class ResourceListItem extends React.PureComponent {
   handleChange = (data) => {
     this.props.onSave({ id: this.props.resource.id, ...data })
   }
@@ -54,8 +51,4 @@ class ResourceListItem extends PureComponent {
     onOpenLink: func.isRequired,
     onSave: func.isRequired
   }
-}
-
-module.exports = {
-  ResourceListItem
 }

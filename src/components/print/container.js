@@ -1,15 +1,14 @@
-'use strict'
+import { join } from 'path'
+import React from 'react'
+import ARGS from '../../args'
+import { Item } from './item'
+import { WindowContext } from '../main'
+import { delay, noop } from '../../common/util'
+import { loadImage } from '../../dom'
+import { debug } from '../../common/log'
 
-const React = require('react')
-const { Item } = require('./item')
-const { WindowContext } = require('../main')
-const { delay, noop } = require('../../common/util')
-const { loadImage } = require('../../dom')
-const { join } = require('path')
-const { debug } = require('../../common/log')
 
-
-class PrintContainer extends React.Component {
+export class PrintContainer extends React.Component {
   state = {
     items: []
   }
@@ -68,9 +67,4 @@ class PrintContainer extends React.Component {
   }
 
   static contextType = WindowContext
-}
-
-
-module.exports = {
-  PrintContainer
 }

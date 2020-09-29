@@ -1,13 +1,11 @@
-'use strict'
-
-const React = require('react')
-const { Iterator } = require('../iterator')
-const { DND, DropTarget } = require('../dnd')
-const { arrayOf, bool, func, number, shape, string } = require('prop-types')
-const { move } = require('../../common/util')
+import React from 'react'
+import { Iterator } from '../iterator'
+import { DND, DropTarget } from '../dnd'
+import { arrayOf, bool, func, number, shape, string } from 'prop-types'
+import { move } from '../../common/util'
 
 
-class SelectionIterator extends Iterator {
+export class SelectionIterator extends Iterator {
   get classes() {
     return {
       'drop-target': this.isSortable,
@@ -141,8 +139,3 @@ const DropTargetCollect = (connect, monitor) => ({
   dropTarget: connect.dropTarget(),
   isOver: monitor.isOver({ shallow: true })
 })
-
-
-module.exports = {
-  SelectionIterator
-}

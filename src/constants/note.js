@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   AUTOSAVE_DELAY: 5000,
   CREATE: 'note.create',
   INSERT: 'note.insert',

@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   ROOT: 0,
 
   COLLAPSE: 'list.collapse',

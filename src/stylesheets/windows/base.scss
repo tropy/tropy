@@ -1,0 +1,29 @@
+/* stylelint-disable max-empty-lines */
+
+$platform: "linux";
+$theme: "light";
+
+@import
+  "../themes/light",
+  "../themes/colors-light";
+
+//
+// Window Base
+// --------------------------------------------------
+
+
+// Abstracts
+// --------------------------------------------------
+
+@import
+  "../abstracts/variables",
+  "../abstracts/mixins",
+  "../abstracts/functions",
+  "../abstracts/placeholders";
+
+
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/cover";

@@ -1,7 +1,5 @@
-'use strict'
-
-const { get } = require('../common/util')
-const { createSelector: memo } = require('reselect')
+import { createSelector as memo } from 'reselect'
+import { get } from '../common/util'
 
 function *flatten(children, lists, expand) {
   for (let id of children) {
@@ -12,7 +10,7 @@ function *flatten(children, lists, expand) {
   }
 }
 
-const getListSubTree = memo(
+export const getListSubTree = memo(
   ({ lists }, { root }) => get(lists, [root, 'children'], []),
   ({ lists }) => lists,
   ({ sidebar }) => sidebar.expand,
@@ -20,7 +18,3 @@ const getListSubTree = memo(
     ...flatten(children, lists, expand)
   ]
 )
-
-module.exports = {
-  getListSubTree
-}

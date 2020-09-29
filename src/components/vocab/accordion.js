@@ -1,16 +1,14 @@
-'use strict'
-
-const React = require('react')
-const { FormattedMessage } = require('react-intl')
-const { Accordion } = require('../accordion')
-const { FormField, FormLink, FormText } = require('../form')
-const { ResourceList } = require('../resource')
-const { Button, ButtonGroup } = require('../button')
-const { IconBook16, IconBookLock, IconTrash, IconExport } = require('../icons')
-const { arrayOf, func, object, shape, string } = require('prop-types')
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { Accordion } from '../accordion'
+import { FormField, FormLink, FormText } from '../form'
+import { ResourceList } from '../resource'
+import { Button, ButtonGroup } from '../button'
+import { IconBook16, IconBookLock, IconTrash, IconExport } from '../icons'
+import { arrayOf, func, object, shape, string } from 'prop-types'
 
 
-class VocabAccordion extends Accordion {
+export class VocabAccordion extends Accordion {
   get isProtected() {
     return this.props.vocab.isProtected
   }
@@ -136,8 +134,4 @@ class VocabAccordion extends Accordion {
     onPropsSave: func.isRequired,
     onSave: func.isRequired
   }
-}
-
-module.exports = {
-  VocabAccordion
 }

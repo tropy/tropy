@@ -1,8 +1,6 @@
-'use strict'
+import { RECENT } from '../constants'
 
-const { RECENT } = require('../constants')
-
-module.exports = {
+export default {
   restore(payload, meta = {}) {
     return {
       type: RECENT.RESTORE,

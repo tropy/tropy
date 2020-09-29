@@ -1,27 +1,29 @@
-'use strict'
+import React from 'react'
+import cx from 'classnames'
+import debounce from 'lodash.debounce'
+import throttle from 'lodash.throttle'
+import Esper from '../../esper'
+import { EsperToolbar } from './toolbar'
+import { EsperPanel } from './panel'
+import { pick, restrict } from '../../common/util'
+import { Cache } from '../../common/cache'
+import { isHorizontal, rotate, round } from '../../common/math'
+import { addOrientation, subOrientation } from '../../common/iiif'
+import { on, off } from '../../dom'
+import { match } from '../../keymap'
 
-const React = require('react')
-const cx = require('classnames')
-const debounce = require('lodash.debounce')
-const throttle = require('lodash.throttle')
-const { Esper } = require('../../esper')
-const { EsperToolbar } = require('./toolbar')
-const { EsperPanel } = require('./panel')
-const { pick, restrict } = require('../../common/util')
-const { Cache } = require('../../common/cache')
-const { isHorizontal, rotate, round } = require('../../common/math')
-const { Rotation } = require('../../common/iiif')
-const { on, off } = require('../../dom')
-const { match } = require('../../keymap')
+import {
+  arrayOf, bool, func, number, object, shape, string
+} from 'prop-types'
 
-const {
-  arrayOf, bool, func, number, object, shape, string } = require('prop-types')
-
-const { TABS } = require('../../constants')
-const { TOOL, MODE } = require('../../constants/esper')
+import { ESPER, SASS, TABS } from '../../constants'
 
 const {
-  ESPER: {
+  TOOL,
+  MODE
+} = ESPER
+
+const {
     MAX_ZOOM,
     MIN_WIDTH,
     MIN_HEIGHT,
@@ -32,11 +34,10 @@ const {
     ZOOM_DURATION,
     ZOOM_STEP_SIZE,
     ZOOM_PRECISION
-  }
-} = require('../../constants/sass')
+} = SASS.ESPER
 
 
-class EsperContainer extends React.Component {
+export class EsperContainer extends React.Component {
 
   #IO = new IntersectionObserver(([el]) => {
     requestIdleCallback(
@@ -587,17 +588,20 @@ class EsperContainer extends React.Component {
     this.setState({ hasTabFocus: false })
   }
 
-  handleSlideIn = () => {
-    this.setState({ isVisible: true })
-
-    this.esper.resume()
-  }
+  handleSlideIn = debounce(() => {
+    if (!this.state.isVisible) {
+      this.setState({ isVisible: true })
+      this.esper.resume()
+    }
+  }, 550)
 
   handleSlideOut = () => {
-    this.setState({ isVisible: false })
-
-    this.esper.stop()
-    this.esper.stop.flush()
+    if (this.state.isVisible) {
+      this.handleSlideIn.cancel()
+      this.setState({ isVisible: false })
+      this.esper.stop()
+      this.esper.stop.flush()
+    }
   }
 
   handleResize = throttle(({ width, height }) => {
@@ -813,46 +817,3 @@ const getZoomToFit =
       ZOOM_PRECISION)
 
 
-// Because the image orientation is broken in WebGL we rely on a bug
-// in Chromium 83 which does not yet apply orientation on ImageBitmap.
-// Esper will always load ImageBitmaps and here we assume images are
-// always un-oriented. This hack will not work in Chromium 84 and later
-// but we can remove this hack only once the WebGL issues are resolved!
-const IMAGE_BITMAP_HACK = true
-
-const addOrientation = (state, photo) => {
-  let { width, height } = photo
-  let rot = Rotation.fromExifOrientation(photo.orientation)
-
-  // Chromium 81+ automatically applies image orientation.
-  // Our cached variants are saved without metadata so they will *not*
-  // be oriented automatically and, therefore, we need to handle the
-  // angle and mirror properties differently in each case.
-
-  // When using cache variants, use original aspect ratio and add
-  // orientation to image state.
-  if (IMAGE_BITMAP_HACK || Cache.isCacheVariant('full', photo))
-    return { ...rot.add(state).toJSON(), width, height }
-
-  // Otherwise use image state, but adjust aspect ratio if necessary.
-  let { angle, mirror } = state
-
-  if (!rot.isHorizontal) {
-    width = photo.height
-    height = photo.width
-  }
-
-  return { angle, mirror, width, height }
-}
-
-const subOrientation = (state, photo) => {
-  if (IMAGE_BITMAP_HACK || Cache.isCacheVariant('full', photo))
-    return Rotation.subExifOrientation(state, photo).toJSON()
-  else
-    return pick(state, ['angle', 'mirror'])
-}
-
-
-module.exports = {
-  EsperContainer
-}

@@ -13,6 +13,10 @@
   float: left; // Collapse for metadata drag-preview
   line-height: $line-height-base; // Reset
 
+  @if $platform == darwin {
+    -webkit-font-smoothing: auto;
+  }
+
   .drag-preview & {
     position: absolute;
     top: 100%;
@@ -23,5 +27,29 @@
   .drag-preview.metadata-field & {
     transform: translate(var(--offset-x), var(--offset-y));
     position: absolute;
+
+    @if $platform == darwin {
+      left: 0;
+      top: 11px;
+
+      .on-drop-copy & {
+        left: 21px;
+      }
+    }
+
+    @if $platform == linux {
+      transform: none;
+      position: static;
+      margin-left: $space-min;
+    }
+
+    @if $platform == win32 {
+      left: 18px;
+      top: 11px;
+
+      .on-drop-copy & {
+        left: 24px;
+      }
+    }
   }
 }

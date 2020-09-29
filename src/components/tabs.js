@@ -1,12 +1,10 @@
-'use strict'
-
-const React = require('react')
-const { FormattedMessage } = require('react-intl')
-const { arrayOf, bool, node, func, shape, string } = require('prop-types')
-const cx = require('classnames')
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { arrayOf, bool, node, func, shape, string } from 'prop-types'
+import cx from 'classnames'
 
 
-class Tab extends React.PureComponent {
+export class Tab extends React.PureComponent {
   get classes() {
     return ['tab', {
       active: this.props.isActive,
@@ -40,7 +38,7 @@ class Tab extends React.PureComponent {
 }
 
 
-class TabNav extends React.PureComponent {
+export class TabNav extends React.PureComponent {
   activate = (name) => {
     if (name !== this.props.active) {
       this.props.onChange(name)
@@ -74,7 +72,7 @@ class TabNav extends React.PureComponent {
   }
 }
 
-const TabPane = ({ active, children, className, ...props }) => (
+export const TabPane = ({ active, children, className, ...props }) => (
   <div className={cx('tab-pane', active, className)}>
     {children(active, props)}
   </div>
@@ -85,10 +83,4 @@ TabPane.propTypes = {
   active: string,
   children: func.isRequired,
   className: string
-}
-
-module.exports = {
-  Tab,
-  TabNav,
-  TabPane
 }

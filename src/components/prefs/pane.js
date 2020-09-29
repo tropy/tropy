@@ -1,19 +1,14 @@
-'use strict'
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import * as icons from '../icons'
+import cx from 'classnames'
+import { bool, node, func, object, string } from 'prop-types'
 
-const React = require('react')
-const { PureComponent, createElement: create } = React
-const { FormattedMessage } = require('react-intl')
-const icons = require('../icons')
-const cx = require('classnames')
-const { bool, node, func, object, string } = require('prop-types')
-
-class PrefPaneToggle extends PureComponent {
+export class PrefPaneToggle extends React.PureComponent {
   get classes() {
-    return {
-      'pane-toggle btn': true,
-      'active': this.props.isActive,
-      [this.props.name]: true
-    }
+    return ['pane-toggle', 'btn', this.props.name, {
+      active: this.props.isActive
+    }]
   }
 
   get label() {
@@ -31,7 +26,7 @@ class PrefPaneToggle extends PureComponent {
         disabled={this.props.isDisabled}
         tabIndex={-1}
         onClick={this.handleClick}>
-        {create(icons[this.props.icon])}
+        {React.createElement(icons[this.props.icon])}
         <FormattedMessage id={this.label}/>
       </button>
     )
@@ -51,7 +46,7 @@ class PrefPaneToggle extends PureComponent {
   }
 }
 
-class PrefPane extends PureComponent {
+export class PrefPane extends React.PureComponent {
   get classes() {
     return {
       pane: true,
@@ -74,9 +69,4 @@ class PrefPane extends PureComponent {
     isActive: bool,
     name: string.isRequired
   }
-}
-
-module.exports = {
-  PrefPane,
-  PrefPaneToggle
 }

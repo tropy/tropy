@@ -1,13 +1,11 @@
-'use strict'
+import assert from 'assert'
+import { cancel, put } from 'redux-saga/effects'
+import { activity } from '../actions'
+import { pick } from '../common/util'
 
-const assert = require('assert')
-const { cancel, put } = require('redux-saga/effects')
-const { activity } = require('../actions')
-const { pick } = require('../common/util')
+export const Registry = new Map()
 
-const Registry = new Map()
-
-class Command {
+export class Command {
   #adjtime = 0
   #suspended
 
@@ -120,9 +118,4 @@ class Command {
 
     Registry.set(type, Cmd)
   }
-}
-
-module.exports = {
-  Command,
-  Registry
 }

@@ -1,14 +1,12 @@
-'use strict'
-
-const { EventEmitter } = require('events')
-const { autoUpdater } = require('electron')
-const { feed } = require('../common/release')
-const { linux, win32 } = require('../common/os')
-const { error, info } = require('../common/log')
+import { EventEmitter } from 'events'
+import { autoUpdater } from 'electron'
+import { feed } from '../common/release'
+import { linux, win32 } from '../common/os'
+import { error, info } from '../common/log'
 
 const MIN = 1000 * 60
 
-class Updater extends EventEmitter {
+export class Updater extends EventEmitter {
   constructor({ enable = true,  interval = 90 * MIN } = {}) {
     super()
 
@@ -119,5 +117,3 @@ class Updater extends EventEmitter {
     this.emit('update-ready', release)
   }
 }
-
-module.exports = Updater

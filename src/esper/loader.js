@@ -1,26 +1,23 @@
-'use strict'
+import { EventEmitter } from 'events'
+import { Worker as WorkerResource } from '../common/res'
+import { warn } from '../common/log'
+import { Texture, BaseTexture, resources, utils } from 'pixi.js'
 
-const EventEmitter = require('events')
-const res = require('../common/res')
-const { warn } = require('../common/log')
-const PIXI = require('pixi.js')
-
-const { Texture, BaseTexture } = PIXI
-const { ImageBitmapResource } = PIXI.resources
-const { TextureCache } = PIXI.utils
+const { ImageBitmapResource } = resources
+const { TextureCache } = utils
 
 ImageBitmapResource.prototype.dispose = function () {
   this.source?.close()
   this.source = null
 }
 
-class Loader extends EventEmitter {
+export class Loader extends EventEmitter {
   #pending = new Map()
   #worker
 
   constructor() {
     super()
-    this.#worker = new Worker(res.worker.expand('loader'))
+    this.#worker = new Worker(WorkerResource.expand('loader'))
     this.#worker.onmessage = this.handleWorkerMessage
   }
 
@@ -88,8 +85,4 @@ class Loader extends EventEmitter {
     BaseTexture.addToCache(texture.baseTexture, url)
     Texture.addToCache(texture, url)
   }
-}
-
-module.exports = {
-  Loader
 }

@@ -1,15 +1,13 @@
-'use strict'
-
-const { nativeImage } = require('electron')
-const { loadImage } = require('../dom')
-const { MIME } = require('../constants')
+import { nativeImage } from 'electron'
+import { loadImage } from '../dom'
+import { MIME } from '../constants'
 
 // eslint-disable-next-line max-len
 const SVG = /^\s*(?:<\?xml[^>]*>\s*)?(?:<!doctype svg[^>]*\s*(?:<![^>]*>)*[^>]*>\s*)?<svg[^>]*>/i
 const COMMENTS = /<!--([\s\S]*?)-->/g
 
 
-function createFromSVG(data) {
+export function createFromSVG(data) {
   return new Promise((resolve, reject) => {
     let svg = new Blob([data.toString('utf-8')], { type: MIME.SVG })
     let url = URL.createObjectURL(svg)
@@ -42,7 +40,7 @@ function createFromSVG(data) {
   })
 }
 
-function isSVG(buffer) {
+export function isSVG(buffer) {
   return !isBinary(buffer) && SVG.test(buffer.toString().replace(COMMENTS, ''))
 }
 
@@ -52,9 +50,4 @@ function isBinary(buffer) {
   }
 
   return false
-}
-
-module.exports = {
-  createFromSVG,
-  isSVG
 }

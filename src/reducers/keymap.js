@@ -1,17 +1,10 @@
-'use strict'
+import { KEYMAP } from '../constants'
 
-const { KEYMAP } = require('../constants')
-
-module.exports = {
-  keymap(state = {}, { type, payload }) {
-    switch (type) {
-
-      case KEYMAP.UPDATE:
-        return { ...state, ...payload }
-
-      default:
-        return state
-    }
+export function keymap(state = {}, { type, payload }) {
+  switch (type) {
+    case KEYMAP.UPDATE:
+      return { ...state, ...payload }
+    default:
+      return state
   }
 }
-

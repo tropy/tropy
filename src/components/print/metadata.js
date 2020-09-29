@@ -1,23 +1,14 @@
-'use strict'
-
-const React = require('react')
-const cx = require('classnames')
-const { ItemInfo } = require('../item/info')
-const { PhotoInfo } = require('../photo/info')
-const { FormattedMessage } = require('react-intl')
-const { auto } = require('../../format')
-const { TYPE } = require('../../constants')
-
-const {
-  arrayOf,
-  bool,
-  object,
-  node,
-  string
-} = require('prop-types')
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import cx from 'classnames'
+import { ItemInfo } from '../item/info'
+import { PhotoInfo } from '../photo/info'
+import { auto } from '../../format'
+import { TYPE } from '../../constants'
+import { arrayOf, bool, object, node, string } from 'prop-types'
 
 
-const MetadataField = ({ isExtra, label, text, type }) => (
+export const MetadataField = ({ isExtra, label, text, type }) => (
   <li className={cx('metadata-field', { extra: isExtra })}>
     <label>{label}</label>
     <div className="value">{auto(text, type)}</div>
@@ -31,7 +22,7 @@ MetadataField.propTypes = {
   type: string.isRequired
 }
 
-const MetadataContainer = ({ item, photo, notes }) => (
+export const MetadataContainer = ({ item, photo, notes }) => (
   <div className="metadata-container">
     <div className="col">
       {item &&
@@ -62,7 +53,7 @@ MetadataContainer.propTypes = {
   notes: node
 }
 
-const MetadataSection = ({ fields, title, tags }) => (
+export const MetadataSection = ({ fields, title, tags }) => (
   <section>
     <h5 className="metadata-heading">
       <FormattedMessage id={title}/>
@@ -88,10 +79,4 @@ MetadataSection.propTypes = {
   fields: arrayOf(object),
   tags: arrayOf(string),
   title: string.isRequired
-}
-
-module.exports = {
-  MetadataContainer,
-  MetadataField,
-  MetadataSection
 }

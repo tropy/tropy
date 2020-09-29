@@ -1,19 +1,15 @@
-'use strict'
+import { counter } from '../common/util'
 
-const { counter } = require('../common/util')
+export function seq() {
+  let q = counter()
 
-module.exports = {
-  seq() {
-    const seq = counter()
-
-    return next => action => {
-      action.meta = {
-        ...action.meta,
-        seq: seq.next().value,
-        now: Date.now()
-      }
-
-      return next(action)
+  return next => action => {
+    action.meta = {
+      ...action.meta,
+      seq: q.next().value,
+      now: Date.now()
     }
+
+    return next(action)
   }
 }

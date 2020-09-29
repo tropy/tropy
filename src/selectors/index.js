@@ -1,20 +1,17 @@
-'use strict'
-
-module.exports = {
-  ...require('./activity'),
-  ...require('./esper'),
-  ...require('./export'),
-  ...require('./items'),
-  ...require('./metadata'),
-  ...require('./nav'),
-  ...require('./notes'),
-  ...require('./notepad'),
-  ...require('./lists'),
-  ...require('./ontology'),
-  ...require('./panel'),
-  ...require('./photos'),
-  ...require('./print'),
-  ...require('./project'),
-  ...require('./selections'),
-  ...require('./tags')
-}
+export * from './activity'
+export * from './esper'
+export * from './export'
+export * from './history'
+export * from './items'
+export * from './lists'
+export * from './metadata'
+export * from './nav'
+export * from './notepad'
+export * from './notes'
+export * from './ontology'
+export * from './panel'
+export * from './photos'
+export * from './print'
+export * from './project'
+export * from './selections'
+export * from './tags'

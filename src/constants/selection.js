@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   CREATE: 'selection.create',
   INSERT: 'selection.insert',
   DELETE: 'selection.delete',

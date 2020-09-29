@@ -4,16 +4,14 @@
 
 const { say, warn } = require('./util')('τ')
 const fs = require('fs')
-const rimraf = require('rimraf')
 const { join } = require('path')
 
 const HOME = join(__dirname, '..')
 const PLATFORMS = ['linux', 'darwin', 'win32']
 const THEMES = ['light', 'dark']
-const noop = () => {}
 
 const rm = path => {
-  rimraf.sync(path)
+  fs.unlinkSync(path)
   say(path)
 }
 
@@ -35,11 +33,11 @@ const html = name => (
     "default-src 'none'",
     // DevTools Extensions currently require 'unsafe-inline'; adding the
     // digest temporarily to see if that is a stable workaround.
-    "script-src 'sha256-++gna1tMQ08GGn4M8jnPXPgLA3Il1y2LY+JVA4NpYKk='",
+    // "script-src 'sha256-++gna1tMQ08GGn4M8jnPXPgLA3Il1y2LY+JVA4NpYKk='",
     "worker-src 'self'",
     "style-src 'self' 'unsafe-inline'",
     'img-src * data:',
-    "connect-src 'self' http: https:",
+    "connect-src 'self' http: https: file:",
     "form-action 'none'"
   ].join('; ')}">
 </head>
@@ -70,9 +68,13 @@ $theme: "${theme}";
 
 
 if (require.main === module) {
-  require('yargs')
-    .command('new name', 'create new window template', noop, opts => {
-      for (let name of opts.name.split(',')) {
+  const { program } = require('commander')
+
+  program
+    .command('new <names>')
+    .description('create new window template')
+    .action(names => {
+      for (let name of names.split(',')) {
         create(join(HOME, 'res', 'views', `${name}.html`), html(name))
         create(join(HOME, 'src', 'views', `${name}.js`), script(name))
 
@@ -90,8 +92,11 @@ if (require.main === module) {
         }
       }
     })
-    .command('rm name', 'delete window template', noop, opts => {
-      for (let name of opts.name.split(',')) {
+  program
+    .command('rm <names>')
+    .description('delete window template')
+    .action(names => {
+      for (let name of names.split(',')) {
         rm(join(HOME, 'res', 'views', `${name}.html`))
         rm(join(HOME, 'src', 'views', `${name}.js`))
 
@@ -107,6 +112,6 @@ if (require.main === module) {
         }
       }
     })
-    .help()
-    .argv
+
+  program.parse(process.argv)
 }

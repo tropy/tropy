@@ -12,9 +12,24 @@ const {
   writeFileSync: write
 } = require('fs')
 const { check, error, say } = require('./util')('λ')
-const noop = () => {}
 
 const HOME = join(__dirname, '..')
+
+const BABEL_CONFIG = {
+  presets: [
+    '@babel/preset-react'
+  ],
+  plugins: [
+    '@babel/plugin-syntax-class-properties',
+    '@babel/plugin-proposal-export-namespace-from',
+    'babel-plugin-dynamic-import-node',
+    '@babel/plugin-transform-modules-commonjs'
+  ]
+}
+
+require('@babel/register')(BABEL_CONFIG)
+const { default: SASS } = require('../src/constants/sass')
+const { get } = require('../src/common/util')
 
 const js = (pattern = 'src/**/*.{js,jsx}') =>
   new Promise((resolve, reject) => {
@@ -36,7 +51,7 @@ const jsRender = (src, verbose = false, force = false) =>
     let dst = swap(src, 'src', 'lib', '.js')
     if (force || !fresh(src, dst)) {
       if (verbose) say(dst)
-      babel.transformFile(src, (err, result) => {
+      babel.transformFile(src, BABEL_CONFIG, (err, result) => {
         if (err) return reject(err)
         mkdir(dirname(dst), { recursive: true })
         write(dst, result.code, 'utf-8')
@@ -83,8 +98,6 @@ const SassDefaults = {
 
   functions: {
     'const($name, $unit:"")'(name, unit) {
-      const SASS = require('../src/constants/sass')
-      const { get } = require('../src/common/util')
       return toSass(get(SASS, name.getValue()), unit.getValue())
     }
   },
@@ -134,19 +147,25 @@ const swap = (filename, src, dst, ext) =>
     .replace(/(\..+)$/, m => ext || m[1])
 
 if (require.main === module) {
-  require('yargs')
-    .command('*', 'compile js and css', noop, () => {
+  let { program } = require('commander')
+
+  program
+    .command('all', { isDefault: true })
+    .description('compile both js and js')
+    .action(() => {
       css()
       js()
     })
-    .command('js [glob]', 'compile js', noop, opts => {
-      js(opts.glob)
-    })
-    .command('css [glob]', 'compile css', noop, opts => {
-      css(opts.glob)
-    })
-    .help()
-    .argv
+  program
+    .command('js [pattern]')
+    .description('compile js')
+    .action(pattern => js(pattern))
+  program
+    .command('css [pattern]')
+    .description('compile css')
+    .action(pattern => css(pattern))
+
+  program.parse(process.argv)
 }
 
 module.exports = {

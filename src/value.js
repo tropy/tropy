@@ -1,24 +1,20 @@
-'use strict'
+import { TYPE } from './constants'
 
-const { TYPE } = require('./constants')
+export function date(input) {
+  return { text: input, type: TYPE.DATE }
+}
 
-module.exports = {
-  date(value) {
-    return { text: value, type: TYPE.DATE }
-  },
+export function text(input) {
+  return { text: input, type: TYPE.TEXT }
+}
 
-  text(value) {
-    return { text: value, type: TYPE.TEXT }
-  },
+export function value(input, type) {
+  return { text: input, type: type || TYPE.TEXT }
+}
 
-  value(value, type) {
-    return { text: value, type: type || TYPE.TEXT }
-  },
+export function equal(a, b) {
+  if (a === b) return true
+  if (a == null || b == null) return false
 
-  equal(a, b) {
-    if (a === b) return true
-    if (a == null || b == null) return false
-
-    return a.type === b.type && a.text === b.text
-  }
+  return a.type === b.type && a.text === b.text
 }

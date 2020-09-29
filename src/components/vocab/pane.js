@@ -1,16 +1,13 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { PrefPane } = require('../prefs/pane')
-const { AccordionGroup } = require('../accordion')
-const { VocabAccordion } = require('./accordion')
-const { array, bool, func, string } = require('prop-types')
-const { Button } = require('../button')
-const { IconPlus } = require('../icons')
+import React from 'react'
+import { PrefPane } from '../prefs/pane'
+import { AccordionGroup } from '../accordion'
+import { VocabAccordion } from './accordion'
+import { array, bool, func, string } from 'prop-types'
+import { Button } from '../button'
+import { IconPlus } from '../icons'
 
 
-class VocabPane extends PureComponent {
+export class VocabPane extends React.PureComponent {
   render() {
     return (
       <PrefPane
@@ -58,8 +55,4 @@ class VocabPane extends PureComponent {
   static defaultProps = {
     name: 'vocab'
   }
-}
-
-module.exports = {
-  VocabPane
 }

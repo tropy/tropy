@@ -1,5 +1,1 @@
-'use strict'
-
-module.exports = {
-  ...require('./field')
-}
+export * from './field'

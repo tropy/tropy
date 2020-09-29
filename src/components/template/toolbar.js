@@ -1,21 +1,12 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { TemplateSelect } = require('./select')
-const { ButtonGroup, Button } = require('../button')
-const { FormElement } = require('../form')
-const { arrayOf, bool, func, shape, string } = require('prop-types')
-
-const {
-  IconCopy,
-  IconTrash,
-  IconImport,
-  IconExport
-} = require('../icons')
+import React from 'react'
+import { TemplateSelect } from './select'
+import { ButtonGroup, Button } from '../button'
+import { FormElement } from '../form'
+import { arrayOf, bool, func, shape, string } from 'prop-types'
+import { IconCopy, IconTrash, IconImport, IconExport } from '../icons'
 
 
-class TemplateToolbar extends PureComponent {
+export class TemplateToolbar extends React.PureComponent {
   handleExport = () => {
     this.props.onExport({
       id: this.props.selected
@@ -76,8 +67,4 @@ class TemplateToolbar extends PureComponent {
     onExport: func.isRequired,
     onImport: func.isRequired
   }
-}
-
-module.exports = {
-  TemplateToolbar
 }

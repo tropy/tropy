@@ -1,22 +1,96 @@
-'use strict'
-
-const assert = require('assert')
-const { relative, resolve } = require('path')
-const { all } = require('bluebird')
-const metadata = require('./metadata')
-const bb = require('bluebird')
-const { assign } = Object
-const subject = require('./subject')
-const { into, select, update } = require('../common/query')
-const { normalize } = require('../common/os')
-const { blank, empty, pick } = require('../common/util')
-const { props } = require('../common/export')
+import assert from 'assert'
+import { relative, resolve } from 'path'
+import metadata from './metadata'
+import { map } from 'bluebird'
+import subject from './subject'
+import { into, select, update } from '../common/query'
+import { normalize } from '../common/os'
+import { blank, empty, pick } from '../common/util'
+import { props } from '../common/export'
 
 const skel = (id, selections = [], notes = []) => ({
   id, selections, notes
 })
 
-module.exports = {
+async function load(db, ids, { base } = {}) {
+  const photos = {}
+  if (ids != null) ids = ids.join(',')
+
+  await Promise.all([
+    db.each(`
+      SELECT
+          id,
+          item_id AS item,
+          template,
+          datetime(created, "localtime") AS created,
+          datetime(modified, "localtime") AS modified,
+          angle,
+          color,
+          density,
+          mirror,
+          negative,
+          brightness,
+          contrast,
+          hue,
+          saturation,
+          sharpen,
+          width,
+          height,
+          path,
+          page,
+          size,
+          protocol,
+          mimetype,
+          checksum,
+          orientation
+        FROM subjects
+          JOIN images USING (id)
+          JOIN photos USING (id)${
+        ids != null ? ` WHERE id IN (${ids})` : ''
+      }`,
+      ({ id, created, modified, mirror, negative, path, ...data }) => {
+        data.created = new Date(created)
+        data.modified = new Date(modified)
+        data.mirror = !!mirror
+        data.negative = !!negative
+        data.path = (
+          (base) ? resolve(base, normalize(path)) : path
+        ).normalize()
+
+        if (id in photos) Object.assign(photos[id], data)
+        else photos[id] = Object.assign(skel(id), data)
+      }
+    ),
+
+    db.each(`
+      SELECT id AS selection, photo_id AS id
+        FROM selections
+          LEFT OUTER JOIN trash USING (id)
+        WHERE ${ids != null ? `photo_id IN (${ids}) AND` : ''}
+          deleted IS NULL
+        ORDER BY photo_id, position`,
+      ({ selection, id }) => {
+        if (id in photos) photos[id].selections.push(selection)
+        else photos[id] = skel(id, [selection])
+      }
+    ),
+
+    db.each(`
+      SELECT id, note_id AS note
+        FROM notes JOIN photos using (id)
+        WHERE ${ids != null ? `id IN (${ids}) AND` : ''} deleted IS NULL
+        ORDER BY id, created`,
+      ({ id, note }) => {
+        if (id in photos) photos[id].notes.push(note)
+        else photos[id] = skel(id, [], [note])
+      }
+    )
+  ])
+
+  return photos
+}
+
+export default {
   async create(db, { base, template }, { item, image, data, position }) {
     let { protocol = 'file', path, ...meta } = image
     let { id } = await db.run(
@@ -32,7 +106,7 @@ module.exports = {
       ...pick(meta, props.image)
     }))
 
-    await all([
+    await Promise.all([
       db.run(...into('photos').insert({
         id,
         item_id: item,
@@ -45,7 +119,7 @@ module.exports = {
       metadata.update(db, { id, data })
     ])
 
-    return (await module.exports.load(db, [id], { base }))[id]
+    return (await load(db, [id], { base }))[id]
   },
 
   async save(db, { id, timestamp, ...data }, { base } = {}) {
@@ -70,84 +144,7 @@ module.exports = {
     }
   },
 
-  async load(db, ids, { base } = {}) {
-    const photos = {}
-    if (ids != null) ids = ids.join(',')
-
-    await all([
-      db.each(`
-        SELECT
-            id,
-            item_id AS item,
-            template,
-            datetime(created, "localtime") AS created,
-            datetime(modified, "localtime") AS modified,
-            angle,
-            color,
-            density,
-            mirror,
-            negative,
-            brightness,
-            contrast,
-            hue,
-            saturation,
-            sharpen,
-            width,
-            height,
-            path,
-            page,
-            size,
-            protocol,
-            mimetype,
-            checksum,
-            orientation
-          FROM subjects
-            JOIN images USING (id)
-            JOIN photos USING (id)${
-          ids != null ? ` WHERE id IN (${ids})` : ''
-        }`,
-        ({ id, created, modified, mirror, negative, path, ...data }) => {
-          data.created = new Date(created)
-          data.modified = new Date(modified)
-          data.mirror = !!mirror
-          data.negative = !!negative
-          data.path = (
-            (base) ? resolve(base, normalize(path)) : path
-          ).normalize()
-
-          if (id in photos) assign(photos[id], data)
-          else photos[id] = assign(skel(id), data)
-        }
-      ),
-
-      db.each(`
-        SELECT id AS selection, photo_id AS id
-          FROM selections
-            LEFT OUTER JOIN trash USING (id)
-          WHERE ${ids != null ? `photo_id IN (${ids}) AND` : ''}
-            deleted IS NULL
-          ORDER BY photo_id, position`,
-        ({ selection, id }) => {
-          if (id in photos) photos[id].selections.push(selection)
-          else photos[id] = skel(id, [selection])
-        }
-      ),
-
-      db.each(`
-        SELECT id, note_id AS note
-          FROM notes JOIN photos using (id)
-          WHERE ${ids != null ? `id IN (${ids}) AND` : ''} deleted IS NULL
-          ORDER BY id, created`,
-        ({ id, note }) => {
-          if (id in photos) photos[id].notes.push(note)
-          else photos[id] = skel(id, [], [note])
-        }
-      )
-    ])
-
-    return photos
-  },
-
+  load,
   find(db, { checksum }) {
     return db.get(`
       SELECT p.id, item_id AS item
@@ -192,7 +189,7 @@ module.exports = {
   },
 
   async split(db, item, items, concurrency = 4) {
-    return bb.map(items, ({ id, photos }) =>
+    return map(items, ({ id, photos }) =>
       db.run(`
         UPDATE photos
           SET item_id = ?, position = CASE id
@@ -238,7 +235,7 @@ module.exports = {
           }
         })
 
-    await bb.map(delta, ({ id, path }) => db.run(
+    await map(delta, ({ id, path }) => db.run(
       ...update('photos').set({ path }).where({ id })
     ))
   }

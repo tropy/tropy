@@ -1,11 +1,8 @@
-'use strict'
+import React from 'react'
+import { arrayOf, bool, number, object, string } from 'prop-types'
+import { IconCircle, IconCrescentCircle } from './icons'
 
-const React = require('react')
-const { arrayOf, bool, number, object, string } = require('prop-types')
-const { get } = require('../common/util')
-const { IconCircle, IconCrescentCircle } = require('./icons')
-
-const Circle = ({ color, isCrescent }) =>
+export const Circle = ({ color, isCrescent }) =>
   isCrescent ?
     <IconCrescentCircle className={`color-${color}`}/> :
     <IconCircle className={`color-${color}`}/>
@@ -15,7 +12,7 @@ Circle.propTypes = {
   isCrescent: bool
 }
 
-const TagColors = (props) => {
+export const TagColors = (props) => {
   let colors = getColors(props)
 
   return (colors.length === 0) ? null : (
@@ -31,12 +28,13 @@ TagColors.propTypes = {
   tags: object
 }
 
+
 function getColors(props) {
   let skip = {}
   let colors = []
 
   for (let id of props.selection) {
-    let color = get(props.tags, [id, 'color'])
+    let color = props.tags?.[id]?.color
     if (color && !(color in skip)) {
       colors.push(color)
       skip[color] = true
@@ -44,9 +42,4 @@ function getColors(props) {
   }
 
   return colors
-}
-
-module.exports = {
-  TagColors,
-  Circle
 }

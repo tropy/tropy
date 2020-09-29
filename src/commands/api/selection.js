@@ -1,10 +1,8 @@
-'use strict'
+import { select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { API } from '../../constants'
 
-const { select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { API } = require('../../constants')
-
-class SelectionShow extends Command {
+export class SelectionShow extends Command {
   *exec() {
     let { id } = this.action.payload
     let selection = yield select(state => state.selections[id])
@@ -13,8 +11,3 @@ class SelectionShow extends Command {
 }
 
 SelectionShow.register(API.SELECTION.SHOW)
-
-
-module.exports = {
-  SelectionShow
-}

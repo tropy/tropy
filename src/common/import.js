@@ -1,12 +1,11 @@
-'use strict'
-
-const ex = require('./export')
-const { expand } = require('./json')
-const { rdfs, tropy, xsd } = require('./ns')
-const { URI, any, array, map, morph, omit, get } = require('./util')
+import { gt } from 'semver'
+import * as ex from './export'
+import { expand } from './json'
+import { rdfs, tropy, xsd } from '../ontology'
+import { URI, any, array, map, morph, omit, get } from './util'
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
-const normalize = async (json) => {
+export async function normalize(json) {
   if (Array.isArray(json)) {
     if (!json[0]?.['@context']) {
       json = {
@@ -17,6 +16,14 @@ const normalize = async (json) => {
   } else {
     if (!json['@context']) {
       json['@context'] = ex.ctx.item
+    }
+  }
+
+  // Hoist nested contexts used until 1.8.0
+  if (json.version && !gt(json.version, '1.8.0')) {
+    json['@context'] = {
+      ...json['@context'],
+      ...ex.ctx.item
     }
   }
 
@@ -98,7 +105,7 @@ const getNote = (data) => ({
   html: get(data, [tropy.html, 0, '@value'])
 })
 
-function *eachItem(graph) {
+export function *eachItem(graph) {
   for (let data of graph) {
     yield ({
       data: getMetadata(data, 'item'),
@@ -146,8 +153,3 @@ props.photo.skip = [
 props.selection.skip = [
   '@id', '@type', tropy.note
 ]
-
-module.exports = {
-  eachItem,
-  normalize
-}

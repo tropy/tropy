@@ -1,15 +1,12 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { createDragHandler } = require('../dom')
-const { noop, pick } = require('../common/util')
-const { func, bool, string, number, object, node } = require('prop-types')
-const cx = require('classnames')
+import React from 'react'
+import { createDragHandler } from '../dom'
+import { noop, pick } from '../common/util'
+import { func, bool, string, number, object, node } from 'prop-types'
+import cx from 'classnames'
 
 const DRAG = { START: 1, ACTIVE: 2, NONE: 3 }
 
-class Draggable extends PureComponent {
+export class Draggable extends React.PureComponent {
   componentWillUnmount() {
     this.drag.stop()
   }
@@ -105,8 +102,4 @@ class Draggable extends PureComponent {
     onDragStop: noop,
     stopOnMouseLeave: false
   }
-}
-
-module.exports = {
-  Draggable
 }

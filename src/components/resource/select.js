@@ -1,18 +1,16 @@
-'use strict'
+import React from 'react'
+import { Select } from '../select'
+import { Highlight } from '../completions'
+import { FormattedMessage } from 'react-intl'
+import * as collate from '../../collate'
+import { titlecase } from '../../common/util'
 
-const React = require('react')
-const { Select } = require('../select')
-const { Highlight } = require('../completions')
-const { FormattedMessage } = require('react-intl')
-const collate = require('../../collate')
-const { titlecase } = require('../../common/util')
-
-const {
+import {
   bool, func, number, object, oneOfType, shape, string
-} = require('prop-types')
+} from 'prop-types'
 
 
-class ResourceSelect extends React.PureComponent {
+export class ResourceSelect extends React.PureComponent {
   select = React.createRef()
 
   get placeholder() {
@@ -57,7 +55,7 @@ class ResourceSelect extends React.PureComponent {
 }
 
 
-const Label = ({ resource, matchData }) => (
+export const Label = ({ resource, matchData }) => (
   <span className="truncate">
     {resource.label ?
       <Highlight
@@ -80,7 +78,7 @@ Label.propTypes = {
 }
 
 
-const Id = ({ resource, matchData }) => (
+export const Id = ({ resource, matchData }) => (
   <span className="mute truncate">
     {(!resource.prefix || !resource.name) ?
       (resource.id || String(resource)) : (
@@ -157,10 +155,4 @@ function matchByNameAndLabel(res, query) {
 function m(res, query, prop, at = /^\w/g) {
   let matchData = collate.match(String(res[prop]), query, at)
   return (matchData == null) ? null : { [prop]: matchData }
-}
-
-module.exports = {
-  Id,
-  Label,
-  ResourceSelect
 }

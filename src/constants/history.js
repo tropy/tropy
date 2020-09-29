@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   UNDO: 'history.undo',
   REDO: 'history.redo',
   TICK: 'history.tick',

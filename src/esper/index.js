@@ -1,28 +1,18 @@
-'use strict'
+import { EventEmitter } from 'events'
+import * as PIXI from 'pixi.js-legacy'
+import TWEEN from '@tweenjs/tween.js'
+import debounce from 'lodash.debounce'
+import ARGS from '../args'
+import { append, createDragHandler, on, off } from '../dom'
+import { info, warn } from '../common/log'
+import { isClockwise, isHorizontal, deg, rad } from '../common/math'
+import { restrict } from '../common/util'
+import { Photo } from './photo'
+import { Selection } from './selection'
+import { Loader } from './loader'
+import { ESPER, SASS } from '../constants'
 
-const EventEmitter = require('events')
-const PIXI = require('pixi.js-legacy')
-const TWEEN = require('@tweenjs/tween.js')
-const debounce = require('lodash.debounce')
-const { append, createDragHandler, on, off } = require('../dom')
-const { info, warn } = require('../common/log')
-const { isClockwise, isHorizontal, deg, rad } = require('../common/math')
-const { restrict } = require('../common/util')
-const { Photo } = require('./photo')
-const { Selection } = require('./selection')
-const { Loader } = require('./loader')
-const { MODE, TOOL } = require('../constants/esper')
-
-const {
-  ESPER: {
-    FADE_DURATION,
-    SYNC_DURATION,
-    ZOOM_PINCH_BOOST,
-    ZOOM_WHEEL_FACTOR
-  }
-} = require('../constants/sass')
-
-const {
+import {
   addCursorStyle,
   center,
   constrain,
@@ -30,14 +20,21 @@ const {
   equal,
   isDoubleClickSupported,
   setScaleMode
-} = require('./util')
+} from './util'
+
+const {
+    FADE_DURATION,
+    SYNC_DURATION,
+    ZOOM_PINCH_BOOST,
+    ZOOM_WHEEL_FACTOR
+} = SASS.ESPER
 
 
 PIXI.settings.RETINA_PREFIX = /@2x!/
 PIXI.settings.STRICT_TEXTURE_CACHE = true
 
 
-class Esper extends EventEmitter {
+export default class Esper extends EventEmitter {
   static #INSTANCE = null
 
   static get instance() {
@@ -74,10 +71,10 @@ class Esper extends EventEmitter {
       ...opts
     })
 
-    for (let name in TOOL)
+    for (let name in ESPER.TOOL)
       addCursorStyle(
         this.app.renderer.plugins.interaction.cursorStyles,
-        TOOL[name])
+        ESPER.TOOL[name])
 
     this.app.ticker.add(this.update)
 
@@ -168,6 +165,7 @@ class Esper extends EventEmitter {
       photo?.destroy()
 
     this.photo = null
+    this.render()
 
     if (gc) {
       PIXI.utils.destroyTextureCache()
@@ -203,7 +201,7 @@ class Esper extends EventEmitter {
       this.sync(props, state, 0)
 
       try {
-        let texture = await this.loader.loadTexture(state.src)
+        let texture = await this.loadTexture(state.src)
 
         // Subtle: if the view was reset during load, abort!
         if (this.photo !== tmp) return
@@ -224,6 +222,18 @@ class Esper extends EventEmitter {
       this.emit('change')
       this.render()
     }
+  }
+
+  // Load the texture with an additional idle callback. Use this
+  // when loading textures during important transitions.
+  loadTexture(url) {
+    return this.loader
+      .loadTexture(url)
+      .then(texture =>
+        new Promise(resolve => {
+          requestIdleCallback(() => resolve(texture), { timeout: 800 })
+        })
+      )
   }
 
   sync(props, state, duration = SYNC_DURATION) {
@@ -252,7 +262,7 @@ class Esper extends EventEmitter {
       photo.fixate(photo.toGlobal(next.pivot, null, true), false)
 
       let rotate = next.rotation !== photo.rotation
-      if (rotate && props.mode === MODE.ZOOM) {
+      if (rotate && props.mode === ESPER.MODE.ZOOM) {
         setIntermediatePosition(next, photo, this.app.screen)
       }
 
@@ -267,7 +277,7 @@ class Esper extends EventEmitter {
           if (next.rotation !== photo.rotation) {
             this.rotate({ angle }, {
               duration,
-              fixate: props.mode === MODE.ZOOM
+              fixate: props.mode === ESPER.MODE.ZOOM
             })
           }
         }
@@ -387,10 +397,10 @@ class Esper extends EventEmitter {
 
   getDefaultPosition({ x, y, mode }) {
     switch (mode) {
-      case MODE.FIT:
+      case ESPER.MODE.FIT:
         return center(this.app.screen)
 
-      case MODE.FILL:
+      case ESPER.MODE.FILL:
         return {
           x: this.app.screen.width / 2,
           y: y ?? this.app.screen.height / 2
@@ -664,11 +674,11 @@ class Esper extends EventEmitter {
 
   handleDrag = () => {
     switch (this.drag.current?.tool) {
-      case TOOL.ARROW:
-      case TOOL.PAN:
+      case ESPER.TOOL.ARROW:
+      case ESPER.TOOL.PAN:
         this.handlePanMove()
         break
-      case TOOL.SELECT:
+      case ESPER.TOOL.SELECT:
         this.handleSelectMove()
         break
     }
@@ -682,17 +692,17 @@ class Esper extends EventEmitter {
       if (wasCancelled) return
 
       switch (tool) {
-        case TOOL.ARROW:
-        case TOOL.PAN:
+        case ESPER.TOOL.ARROW:
+        case ESPER.TOOL.PAN:
           this.handlePanStop()
           break
-        case TOOL.SELECT:
+        case ESPER.TOOL.SELECT:
           this.handleSelectStop()
           break
-        case TOOL.ZOOM_IN:
+        case ESPER.TOOL.ZOOM_IN:
           this.emit('zoom-in', origin.mov, false)
           break
-        case TOOL.ZOOM_OUT:
+        case ESPER.TOOL.ZOOM_OUT:
           this.emit('zoom-out', origin.mov, false)
           break
       }
@@ -794,8 +804,4 @@ const setIntermediatePosition = (next, photo, screen) => {
   // Restore position and pivot
   photo.position.copyFrom(position)
   photo.pivot.copyFrom(next.pivot)
-}
-
-module.exports = {
-  Esper
 }

@@ -6,11 +6,25 @@ const { check, error, say } = require('./util')('pack')
 const { join, resolve } = require('path')
 const { arch, platform } = process
 const { getSignToolParams } = require('./sign')
-// const { repository } = require('../package')
+// const { repository } = require('../package.json')
+const { RRCHNM } = require('./build')
 
+const BABEL_CONFIG = {
+  presets: [
+    '@babel/preset-react'
+  ],
+  plugins: [
+    '@babel/plugin-syntax-class-properties',
+    '@babel/plugin-proposal-export-namespace-from',
+    'babel-plugin-dynamic-import-node',
+    '@babel/plugin-transform-modules-commonjs'
+  ]
+}
+
+require('@babel/register')(BABEL_CONFIG)
 const {
-  author, channel, qualified, name, product, version
-} = require('../lib/common/release')
+  channel, qualified, name, product, version
+} = require('../src/common/release')
 
 const res = resolve(__dirname, '..', 'res')
 const dist = resolve(__dirname, '..', 'dist')
@@ -145,7 +159,7 @@ target.win32 = async (args = []) => {
   await createWindowsInstaller({
     appDirectory: sources[0],
     outputDirectory: dist,
-    authors: author.name,
+    authors: RRCHNM,
     signWithParams: params,
     title: qualified.product,
     name: qualified.name,

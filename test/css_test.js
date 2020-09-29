@@ -1,9 +1,9 @@
-'use strict'
+import * as css from '../src/css'
 
 describe('css', () => {
-  const { cursor } = __require('css')
-
   describe('cursor', () => {
+    const { cursor } = css
+
     it('returns a css url() for a single path', () => {
       expect(cursor('x.png'))
         .to.match(/url\(.+cursors.x\.png\) 1 1, default/)

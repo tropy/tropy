@@ -1,15 +1,13 @@
-'use strict'
-
-const { call, put, select } = require('redux-saga/effects')
-const { dirname } = require('path')
-const { Command } = require('./command')
-const { PROJECT } = require('../constants')
-const { pick } = require('../common/util')
-const act = require('../actions')
-const mod = require('../models')
+import { call, put, select } from 'redux-saga/effects'
+import { dirname } from 'path'
+import { Command } from './command'
+import { PROJECT } from '../constants'
+import { pick } from '../common/util'
+import * as act from '../actions'
+import * as mod from '../models'
 
 
-class Optimize extends Command {
+export class Optimize extends Command {
   *exec() {
     let { db } = this.options
 
@@ -22,7 +20,7 @@ class Optimize extends Command {
 Optimize.register(PROJECT.OPTIMIZE)
 
 
-class Rebase extends Command {
+export class Rebase extends Command {
   *exec() {
     let { db, id } = this.options
     let { project } = yield select()
@@ -43,7 +41,7 @@ class Rebase extends Command {
 Rebase.register(PROJECT.REBASE)
 
 
-class Reindex extends Command {
+export class Reindex extends Command {
   *exec() {
     let { meta } = this.action
     let { db } = this.options
@@ -58,7 +56,7 @@ class Reindex extends Command {
 Reindex.register(PROJECT.REINDEX)
 
 
-class Save extends Command {
+export class Save extends Command {
   *exec() {
     let { payload } = this.action
     let { db, id } = this.options
@@ -85,11 +83,3 @@ class Save extends Command {
 }
 
 Save.register(PROJECT.SAVE)
-
-
-module.exports = {
-  Optimize,
-  Rebase,
-  Reindex,
-  Save
-}

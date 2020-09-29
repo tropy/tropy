@@ -1,17 +1,13 @@
-'use strict'
-
-module.exports = {
-  access: require('./access'),
-  image: require('./image'),
-  item: require('./item'),
-  list: require('./list'),
-  note: require('./note'),
-  metadata: require('./metadata'),
-  ontology: require('./ontology'),
-  photo: require('./photo'),
-  project: require('./project'),
-  selection: require('./selection'),
-  subject: require('./subject'),
-  tag: require('./tag'),
-  value: require('./value')
-}
+export { default as access } from './access'
+export { default as image } from './image'
+export { default as item } from './item'
+export { default as list } from './list'
+export { default as metadata } from './metadata'
+export { default as note } from './note'
+export { default as ontology } from './ontology'
+export { default as photo } from './photo'
+export { default as project } from './project'
+export { default as selection } from './selection'
+export { default as subject } from './subject'
+export { default as tag } from './tag'
+export { default as value } from './value'

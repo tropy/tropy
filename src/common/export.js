@@ -1,8 +1,6 @@
-'use strict'
+import { tropy } from '../ontology'
 
-const { tropy } = require('./ns')
-
-const ctx = {
+export const ctx = {
   get item() {
     return {
       '@version': 1.1,
@@ -14,9 +12,11 @@ const ctx = {
 
       'photo': {
         '@id': tropy.photo,
-        '@container': '@list',
-        '@context': ctx.photo
-      }
+        '@container': '@list'
+      },
+
+      ...ctx.photo
+      //...ctx.selection
     }
   },
 
@@ -29,12 +29,10 @@ const ctx = {
       note: {
         '@id': tropy.note,
         '@container': '@list'
-        // '@context': ctx.note
       },
       selection: {
         '@id': tropy.selection,
-        '@container': '@list',
-        '@context': ctx.selection
+        '@container': '@list'
       }
     }
   },
@@ -44,13 +42,12 @@ const ctx = {
       note: {
         '@id': tropy.note,
         '@container': '@list'
-        // '@context': ctx.note
       }
     }
   }
 }
 
-const props = {
+export const props = {
   item: [
     'template'
   ],
@@ -99,9 +96,4 @@ const props = {
       ...props.note
     ]
   }
-}
-
-module.exports = {
-  ctx,
-  props
 }

@@ -1,11 +1,8 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { node, number } = require('prop-types')
+import React from 'react'
+import { node, number } from 'prop-types'
 
 
-class Step extends PureComponent {
+export class Step extends React.PureComponent {
   render() {
     return (
       <div className="step">
@@ -19,7 +16,7 @@ class Step extends PureComponent {
   }
 }
 
-class Steps extends PureComponent {
+export class Steps extends React.PureComponent {
   render() {
     return (
       <div className="steps">
@@ -36,10 +33,4 @@ class Steps extends PureComponent {
   static defaultProps = {
     current: 1
   }
-}
-
-
-module.exports = {
-  Step,
-  Steps
 }

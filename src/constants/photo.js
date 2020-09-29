@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   CONSOLIDATE: 'photo.consolidate',
   CONTRACT: 'photo.contract',
   CREATE: 'photo.create',

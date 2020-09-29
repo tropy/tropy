@@ -1,9 +1,7 @@
-'use strict'
+import React from 'react'
+import { node } from 'prop-types'
 
-const React = require('react')
-const { node } = require('prop-types')
-
-const Sidebar = ({ children }) => (
+export const Sidebar = ({ children }) => (
   <header className="sidebar">{children}</header>
 )
 
@@ -11,7 +9,7 @@ Sidebar.propTypes = {
   children: node
 }
 
-const SidebarBody = ({ children, ...props }) => (
+export const SidebarBody = ({ children, ...props }) => (
   <div className="sidebar-body" {...props}>
     {children}
   </div>
@@ -19,9 +17,4 @@ const SidebarBody = ({ children, ...props }) => (
 
 SidebarBody.propTypes = {
   children: node
-}
-
-module.exports = {
-  Sidebar,
-  SidebarBody
 }

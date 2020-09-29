@@ -1,9 +1,6 @@
-'use strict'
-
-const { createSelector: memo } = require('reselect')
-const { getMetadataFields } = require('./metadata')
-const { serialize } = require('../components/editor/serialize')
-const { get } = require('../common/util')
+import { createSelector as memo } from 'reselect'
+import { getMetadataFields } from './metadata'
+import { serialize } from '../editor'
 
 const getPhotoExpanded = (
   photo,
@@ -22,7 +19,7 @@ const getPhotoExpanded = (
     }),
     notes: [
       ...photo.notes,
-      ...photo.selections.flatMap(id => get(selections, [id, 'notes']))
+      ...photo.selections.flatMap(id => selections?.[id]?.notes)
     ].map(id => ({
       id,
       ...serialize(notes[id], { format: { html: true }, localize: false }),
@@ -53,7 +50,7 @@ const getItemExpanded =
   }
 )
 
-const getPrintableItems = memo(
+export const getPrintableItems = memo(
   ({ nav, qr }) => (nav.items.length > 0 ? nav.items : qr.items),
   ({ items }) => items,
   ({ photos }) => photos,
@@ -74,7 +71,3 @@ const getPrintableItems = memo(
       tags,
       ontology))
 )
-
-module.exports = {
-  getPrintableItems
-}

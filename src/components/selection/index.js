@@ -1,7 +1,3 @@
-'use strict'
-
-module.exports = {
-  ...require('./drag-preview'),
-  ...require('./list'),
-  ...require('./grid')
-}
+export * from './grid'
+export * from './info'
+export * from './list'

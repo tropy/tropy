@@ -1,22 +1,20 @@
-'use strict'
+import React from 'react'
+import { connect } from 'react-redux'
+import { TemplateFieldList } from './field-list'
+import { TemplateToolbar } from './toolbar'
+import { FormattedMessage } from 'react-intl'
+import { FormField, FormElement, FormSelect } from '../form'
+import { tropy, Template } from '../../ontology'
+import { arrayOf, func, shape, string } from 'prop-types'
+import { ontology } from '../../actions'
+import { TYPE } from '../../constants'
+import { insert, move, remove } from '../../common/util'
 
-const React = require('react')
-const { connect } = require('react-redux')
-const { TemplateFieldList } = require('./field-list')
-const { TemplateToolbar } = require('./toolbar')
-const { FormattedMessage } = require('react-intl')
-const { FormField, FormElement, FormSelect } = require('../form')
-const { Template } = require('../../common/ontology')
-const { arrayOf, func, shape, string } = require('prop-types')
-const actions = require('../../actions')
-const { TROPY, TYPE } = require('../../constants')
-const { insert, move, remove } = require('../../common/util')
-
-const {
+import {
   getDatatypeList,
   getTemplateList,
   getPropertyList
-} = require('../../selectors')
+} from '../../selectors'
 
 
 class TemplateEditor extends React.PureComponent {
@@ -261,55 +259,57 @@ class TemplateEditor extends React.PureComponent {
   }
 
   static defaultProps = {
-    types: [TROPY.Item, TROPY.Photo, TROPY.Selection]
+    types: [tropy.Item, tropy.Photo, tropy.Selection]
   }
 }
 
 
-module.exports = {
-  TemplateEditor: connect(
-    state => ({
-      properties: getPropertyList(state),
-      templates: getTemplateList(state),
-      datatypes: getDatatypeList(state)
-    }),
+const TemplateEditorContainer = connect(
+  state => ({
+    properties: getPropertyList(state),
+    templates: getTemplateList(state),
+    datatypes: getDatatypeList(state)
+  }),
 
-    dispatch => ({
-      onCreate(...args) {
-        dispatch(actions.ontology.template.create(...args))
-      },
+  dispatch => ({
+    onCreate(...args) {
+      dispatch(ontology.template.create(...args))
+    },
 
-      onDelete(...args) {
-        dispatch(actions.ontology.template.delete(...args))
-      },
+    onDelete(...args) {
+      dispatch(ontology.template.delete(...args))
+    },
 
-      onExport(...args) {
-        dispatch(actions.ontology.template.export(...args))
-      },
+    onExport(...args) {
+      dispatch(ontology.template.export(...args))
+    },
 
-      onFieldAdd(...args) {
-        dispatch(actions.ontology.template.field.add(...args))
-      },
+    onFieldAdd(...args) {
+      dispatch(ontology.template.field.add(...args))
+    },
 
-      onFieldOrder(...args) {
-        dispatch(actions.ontology.template.field.order(...args))
-      },
+    onFieldOrder(...args) {
+      dispatch(ontology.template.field.order(...args))
+    },
 
-      onFieldRemove(...args) {
-        dispatch(actions.ontology.template.field.remove(...args))
-      },
+    onFieldRemove(...args) {
+      dispatch(ontology.template.field.remove(...args))
+    },
 
-      onFieldSave(...args) {
-        dispatch(actions.ontology.template.field.save(...args))
-      },
+    onFieldSave(...args) {
+      dispatch(ontology.template.field.save(...args))
+    },
 
-      onImport() {
-        dispatch(actions.ontology.template.import())
-      },
+    onImport() {
+      dispatch(ontology.template.import())
+    },
 
-      onSave(...args) {
-        dispatch(actions.ontology.template.save(...args))
-      }
-    })
-  )(TemplateEditor)
+    onSave(...args) {
+      dispatch(ontology.template.save(...args))
+    }
+  })
+)(TemplateEditor)
+
+export {
+  TemplateEditorContainer as TemplateEditor
 }

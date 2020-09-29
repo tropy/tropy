@@ -1,12 +1,10 @@
-'use strict'
-
-const { createSelector: memo } = require('reselect')
-const { getVisiblePhotos } = require('./photos')
-const { seq, compose, map, keep } = require('transducers.js')
+import { createSelector as memo } from 'reselect'
+import { seq, compose, map, keep } from 'transducers.js'
+import { getVisiblePhotos } from './photos'
 
 const rev = (a, b) => a < b ? 1 : b < a ? -1 : 0
 
-const getExpandedPhotos = memo(
+export const getExpandedPhotos = memo(
   ({ panel }) => panel.expand,
   ({ ui }) => ui.panel.zoom > 0,
   getVisiblePhotos,
@@ -23,6 +21,3 @@ const getExpandedPhotos = memo(
     return expanded
   }
 )
-module.exports = {
-  getExpandedPhotos
-}

@@ -1,9 +1,7 @@
-'use strict'
+import * as format from '../src/format'
+import { TYPE } from '../src/constants'
 
 describe('format', () => {
-  const format = __require('format')
-  const { TYPE } = __require('constants')
-
   describe('number()', () => {
     const { number } = format
 

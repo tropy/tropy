@@ -1,8 +1,6 @@
-'use strict'
+import { info, logger } from '../common/log'
 
-const { info, logger } = require('../common/log')
-
-class Server {
+export class Server {
   constructor(app) {
     this.app = app
   }
@@ -15,9 +13,9 @@ class Server {
     this.app.wm.rsvp(type, action)
   )
 
-  start() {
+  async start() {
     if (this.app.state.api || this.app.opts.port) {
-      let api = require('../common/api')
+      let api = await import('../common/api')
 
       this.koa = api.create({
         dispatch: this.dispatch,
@@ -35,8 +33,4 @@ class Server {
 
   stop() {
   }
-}
-
-module.exports = {
-  Server
 }

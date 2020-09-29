@@ -2,8 +2,8 @@
 
 const { TextSelection } = require('prosemirror-state')
 const { state, url, www, offset } = require('../fixtures/editor')
-const { schema } = __require('components/editor/schema')
-const { markExtend } = __require('components/editor/selections')
+const { schema } = __require('editor/schema')
+const { markExtend } = __require('editor/selections')
 
 function selectedText(s) {
   return s.doc.cut(

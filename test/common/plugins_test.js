@@ -1,8 +1,6 @@
-'use strict'
+import { Plugins } from '../../src/common/plugins'
 
 describe('Plugins', () => {
-  const { Plugins } = __require('common/plugins')
-
   let plugins
 
   beforeEach(async () => {
@@ -35,12 +33,14 @@ describe('Plugins', () => {
     })
   })
 
-  it('create()', () => {
-    expect(plugins.create().instances).to.have.keys('0', '1')
+  it('create()', async () => {
+    let { instances } = await plugins.create()
+    expect(instances).to.have.keys('0', '1')
   })
 
   it('exec()', async () => {
-    (await plugins.reload()).create()
+    await plugins.reload()
+    await plugins.create()
     const a = await plugins.exec({ id: 0, action: 'sum' }, 40, 2)
     const b = await plugins.exec({ id: 1, action: 'sum' }, 40, 2)
 

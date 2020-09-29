@@ -1,27 +1,31 @@
-'use strict'
-
-const { readFile, writeFile } = require('fs').promises
+import fs from 'fs'
+const { readFile, writeFile } = fs.promises
 
 // NB: load jsonld module on demand, because it's huge.
-const jsonld = {
-  compact(...args) {
-    jsonld.compact = require('jsonld').compact
-    return jsonld.compact(...args)
-  },
+let jsonld
 
-  expand(...args) {
-    jsonld.expand = require('jsonld').expand
-    return jsonld.expand(...args)
-  }
+async function proxyCompact(...args) {
+  if (!jsonld) jsonld = await import('jsonld')
+  return jsonld.compact(...args)
 }
 
-const open = async (path, ...args) => {
+async function proxyExpand(...args) {
+  if (!jsonld) jsonld = await import('jsonld')
+  return jsonld.expand(...args)
+}
+
+export {
+  proxyCompact as compact,
+  proxyExpand as expand
+}
+
+export async function open(path, ...args) {
   // TODO handle remote URLs
   let string = await readFile(path, 'utf-8')
   return parse(string, ...args)
 }
 
-const parse = async (string, { context, expand } = {}) => {
+export async function parse(string, { context, expand } = {}) {
   let data = JSON.parse(string)
 
   if (context)
@@ -32,12 +36,12 @@ const parse = async (string, { context, expand } = {}) => {
     return data
 }
 
-const write = async (file, data, {
+export async function write(file, data, {
   context,
   expand,
   indent,
   ...opts
-} = {}) => {
+} = {}) {
 
   if (context)
     data = await jsonld.compact(data, context)
@@ -45,17 +49,4 @@ const write = async (file, data, {
     data = await jsonld.expand(data)
 
   return writeFile(file, JSON.stringify(data, null, indent), opts)
-}
-
-
-module.exports = {
-  compact(...args) {
-    return jsonld.compact(...args)
-  },
-  expand(...args) {
-    return jsonld.expand(...args)
-  },
-  open,
-  parse,
-  write
 }

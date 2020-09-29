@@ -1,17 +1,13 @@
-'use strict'
+import './api'
+import './cache'
+import './item'
+import './list'
+import './metadata'
+import './note'
+import './ontology'
+import './photo'
+import './project'
+import './selection'
+import './tag'
 
-require('./cache')
-require('./api')
-require('./item')
-require('./list')
-require('./metadata')
-require('./note')
-require('./ontology')
-require('./photo')
-require('./project')
-require('./selection')
-require('./tag')
-
-module.exports = {
-  ...require('./command')
-}
+export * from './command'

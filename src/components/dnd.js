@@ -1,21 +1,19 @@
-'use strict'
-
-const {
+import {
   DndProvider,
   DragLayer,
   DragSource,
   DropTarget
-} = require('react-dnd-cjs')
+} from 'react-dnd'
 
-const {
-  default: createHTML5Backend,
+import {
+  HTML5Backend,
   NativeTypes,
   getEmptyImage
-} = require('react-dnd-html5-backend-cjs')
+} from 'react-dnd-html5-backend'
 
-const {
+import {
   MIME
-} = require('../constants')
+} from '../constants'
 
 const DND = {
   ...NativeTypes,
@@ -41,13 +39,13 @@ const hasProjectFiles = (monitor) =>
 const hasPhotoFiles = (monitor) =>
   !hasProjectFiles(monitor)
 
-module.exports = {
+export {
   DND,
   DndProvider,
   DragLayer,
   DragSource,
   DropTarget,
-  ElectronBackend: createHTML5Backend,
+  HTML5Backend as ElectronBackend,
   getEmptyImage,
   hasProjectFiles,
   hasPhotoFiles

@@ -1,9 +1,7 @@
-'use strict'
+import { TAG, EDIT } from '../constants'
+import { array } from '../common/util'
 
-const { TAG, EDIT } = require('../constants')
-const { array } = require('../common/util')
-
-module.exports = {
+export default {
   new(payload, meta) {
     return {
       type: EDIT.START,

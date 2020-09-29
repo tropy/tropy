@@ -1,15 +1,13 @@
-'use strict'
-
-const assert = require('assert')
-const electron = require('electron')
-const { warn } = require('../common/log')
+import assert from 'assert'
+import electron from 'electron'
+import { warn } from '../common/log'
 
 const byTime = (a, b) =>
 	(a.time < b.time) ? -1 : (a.time > b.time) ? 1 :
 		(a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0
 
 
-class IOQ {
+export class IOQ {
   constructor({ precision } = {}) {
     this.precision = precision || IOQ.PRECISION
     this.observers = []
@@ -102,20 +100,12 @@ IOQ.PRECISION = 5
 IOQ.global = new IOQ()
 
 
-module.exports = {
-  get idleTime() {
-    return IOQ.global.getIdleTime() * 1000
-  },
+export function addIdleObserver(...args) {
+  IOQ.global.add(...args)
+  IOQ.global.resume()
+}
 
-  addIdleObserver(...args) {
-    IOQ.global.add(...args)
-    IOQ.global.resume()
-  },
-
-  removeIdleObserver(...args) {
-    IOQ.global.remove(...args)
-    if (IOQ.global.isEmpty) IOQ.global.pause()
-  },
-
-  IOQ
+export function removeIdleObserver(...args) {
+  IOQ.global.remove(...args)
+  if (IOQ.global.isEmpty) IOQ.global.pause()
 }

@@ -1,6 +1,4 @@
-'use strict'
-
-const debounce = require('lodash.debounce')
+import debounce from 'lodash.debounce'
 
 const middleware = () => next => {
   const dnxt = debounce(next, 25)
@@ -14,6 +12,6 @@ const middleware = () => next => {
   }
 }
 
-module.exports = {
-  debounce: middleware
+export {
+  middleware as debounce
 }

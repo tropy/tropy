@@ -1,13 +1,11 @@
-'use strict'
-
-const React = require('react')
-const { object, func } = require('prop-types')
-const { PhotoListItem } = require('./list-item')
-const { PhotoIterator } = require('./iterator')
-const { DC, SASS: { ROW } } = require('../../constants')
-const cx = require('classnames')
-const { match } = require('../../keymap')
-const { get } = require('../../common/util')
+import React from 'react'
+import { object, func } from 'prop-types'
+import { PhotoListItem } from './list-item'
+import { PhotoIterator } from './iterator'
+import { SASS } from '../../constants'
+import { dc } from '../../ontology'
+import cx from 'classnames'
+import { match } from '../../keymap'
 
 
 class PhotoList extends PhotoIterator {
@@ -20,7 +18,7 @@ class PhotoList extends PhotoIterator {
   }
 
   getRowHeight() {
-    return ROW.HEIGHT
+    return SASS.ROW.HEIGHT
   }
 
   isEditing(photo) {
@@ -53,8 +51,8 @@ class PhotoList extends PhotoIterator {
 
     selection = photo.selections[idx + offset]
 
-    const notes = (selection != null) ?
-      get(this.props.selections, [selection, 'notes'], []) :
+    let notes = (selection != null) ?
+      (this.props.selections?.[selection]?.notes || []) :
       photo.notes
 
     return {
@@ -126,11 +124,11 @@ class PhotoList extends PhotoIterator {
         break
       case 'left':
       case 'contract':
-        this.contract(this.current())
+        if (!this.contract(this.current())) return
         break
       case 'right':
       case 'expand':
-        this.expand(this.current())
+        if (!this.expand(this.current())) return
         break
       case 'edit':
       case 'enter':
@@ -183,7 +181,7 @@ class PhotoList extends PhotoIterator {
                   data={data}
                   edit={edit}
                   selections={this.props.selections}
-                  title={DC.title}
+                  title={dc.title}
                   isEditing={this.isEditing(photo)}
                   onChange={onChange}
                   onEdit={this.edit}
@@ -212,6 +210,8 @@ class PhotoList extends PhotoIterator {
 }
 
 
-module.exports = {
-  PhotoList: PhotoList.asDropTarget()
+const PhotoListContainer = PhotoList.asDropTarget()
+
+export {
+  PhotoListContainer as PhotoList
 }

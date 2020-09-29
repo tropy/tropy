@@ -11,23 +11,19 @@ extends:
 parser: babel-eslint
 
 parserOptions:
-  ecmaVersion: 2018
-  sourceType: script
+  ecmaVersion: 2020
+  sourceType: module
   ecmaFeatures:
-    modules: false
     jsx: true
 
 env:
-  es6: true
+  es2020: true
   node: true
   browser: true
 
 settings:
   react:
-    version: 16.2.0
-
-globals:
-  ResizeObserver: true
+    version: detect
 
 rules:
   array-bracket-spacing: 2
@@ -90,5 +86,4 @@ rules:
   space-infix-ops: 2
   space-unary-ops: 2
   space-in-parens: 2
-  strict: [2, 'global']
   wrap-regex: 2

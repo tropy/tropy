@@ -1,18 +1,12 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { Iterator } = require('./iterator')
-const { OPTION } = require('../constants/sass')
-const { min } = Math
-const { blank } = require('../common/util')
-const cx = require('classnames')
-const {
-  arrayOf, bool, func, node, number, shape, string
-} = require('prop-types')
+import React from 'react'
+import { Iterator } from './iterator'
+import { SASS } from '../constants'
+import { blank } from '../common/util'
+import cx from 'classnames'
+import { arrayOf, bool, func, node, number, shape, string } from 'prop-types'
 
 
-class Option extends PureComponent {
+export class Option extends React.PureComponent {
   get classes() {
     return ['option', {
       active: this.props.isActive,
@@ -56,7 +50,7 @@ class Option extends PureComponent {
 }
 
 
-class OptionList extends Iterator {
+export class OptionList extends Iterator {
   getIterables(props = this.props) {
     return props.values
   }
@@ -136,16 +130,16 @@ class OptionList extends Iterator {
 
   static defaultProps = {
     ...Iterator.defaultProps,
-    rowHeight: OPTION.HEIGHT,
+    rowHeight: SASS.OPTION.HEIGHT,
     selection: []
   }
 
-  static getHeight(rows, { maxRows = rows, rowHeight = OPTION.HEIGHT } = {}) {
-    return (rows) ? min(rows, maxRows) * rowHeight + OPTION.LIST_MARGIN : 0
+  static getHeight(rows, {
+    maxRows = rows,
+    rowHeight = SASS.OPTION.HEIGHT
+  } = {}) {
+    return (rows) ?
+      Math.min(rows, maxRows) * rowHeight + SASS.OPTION.LIST_MARGIN :
+      0
   }
-}
-
-module.exports = {
-  Option,
-  OptionList
 }

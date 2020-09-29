@@ -1,8 +1,6 @@
-'use strict'
+import { STORAGE } from '../constants'
 
-const { STORAGE } = require('../constants')
-
-module.exports = {
+export default {
   reload(payload, meta = {}) {
     return { type: STORAGE.RELOAD, payload, meta }
   }

@@ -1,19 +1,16 @@
-'use strict'
-
-const React = require('react')
-const { ipcRenderer: ipc } = require('electron')
-const { WindowContext } = require('../main')
-const { PrefPane } = require('../prefs/pane')
-const { Button } = require('../button')
-const { bool, func, string, object } = require('prop-types')
-const { AccordionGroup } = require('../accordion')
-const { PluginAccordion } = require('./accordion')
-const { values } = Object
-const debounce = require('lodash.debounce')
-const { insert, omit, splice } = require('../../common/util')
+import { ipcRenderer as ipc } from 'electron'
+import React from 'react'
+import { WindowContext } from '../main'
+import { PrefPane } from '../prefs/pane'
+import { Button } from '../button'
+import { bool, func, string, object } from 'prop-types'
+import { AccordionGroup } from '../accordion'
+import { PluginAccordion } from './accordion'
+import debounce from 'lodash.debounce'
+import { insert, omit, splice } from '../../common/util'
 
 
-class PluginsPane extends React.Component {
+export class PluginsPane extends React.Component {
   state = { config: [] }
 
   componentDidMount() {
@@ -99,7 +96,7 @@ class PluginsPane extends React.Component {
             autoclose
             className="form-horizontal"
             tabIndex={0}>
-            {values(this.context.plugins.spec).map(
+            {Object.values(this.context.plugins.spec).map(
                (spec) => {
                  return (
                    <PluginAccordion
@@ -140,8 +137,4 @@ class PluginsPane extends React.Component {
   }
 
   static contextType = WindowContext
-}
-
-module.exports = {
-  PluginsPane
 }

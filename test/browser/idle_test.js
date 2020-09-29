@@ -1,7 +1,6 @@
-'use strict'
+import * as idleService from '../../src/browser/idle'
 
 describe('idle', () => {
-  const idleService = __require('browser/idle')
   const ioq = idleService.IOQ.global
 
   describe('Adding and removing observers', () => {

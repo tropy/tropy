@@ -1,12 +1,10 @@
-'use strict'
-
-const { eventChannel } = require('redux-saga')
-const { call, put, take } = require('redux-saga/effects')
-const { debug, warn } = require('../common/log')
-const { fail } = require('../dialog')
+import { eventChannel } from 'redux-saga'
+import { call, put, take } from 'redux-saga/effects'
+import { debug, warn } from '../common/log'
+import { fail } from '../dialog'
 
 
-function ErrorChannel(db) {
+export function ErrorChannel(db) {
   return eventChannel(emitter => {
     let onError = (error) => emitter({ error })
     db.on('error', onError)
@@ -17,7 +15,7 @@ function ErrorChannel(db) {
   })
 }
 
-function *handleDatabaseErrors(db, actions) {
+export function *handleDatabaseErrors(db, actions) {
   try {
     var channel = yield call(ErrorChannel, db)
 
@@ -41,9 +39,4 @@ function *handleDatabaseErrors(db, actions) {
     channel.close()
     debug('*handleDatabaseErrors terminated')
   }
-}
-
-module.exports = {
-  ErrorChannel,
-  handleDatabaseErrors
 }

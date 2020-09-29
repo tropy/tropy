@@ -1,7 +1,4 @@
-'use strict'
-
-const { times } = require('../common/util')
-const { round } = Math
+import { times } from '../common/util'
 
 const ACTIVITY = {
   HEIGHT: 43
@@ -112,7 +109,7 @@ PANEL.CLOSED_HEIGHT =
   PANEL.HEADER_HEIGHT + PANEL.HEADER_MARGIN
 
 PANEL.MIN_WIDTH =
-  round(PHOTO.TILE.MAX * PHOTO.TILE.FACTOR + 2 * PANEL.PADDING)
+  Math.round(PHOTO.TILE.MAX * PHOTO.TILE.FACTOR + 2 * PANEL.PADDING)
 
 PANEL.MAX_WIDTH =
   PANEL.MIN_WIDTH * 2
@@ -233,7 +230,7 @@ const LIST = {
   PADDING: 16
 }
 
-module.exports =  {
+export default  {
   ACTIVITY,
   BODY,
   COLUMN,

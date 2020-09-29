@@ -1,26 +1,28 @@
-'use strict'
+import fs from 'fs'
+import { basename, extname, join } from 'path'
+import { info } from './log'
+import { paths } from './release'
 
-const { readdir: ls, readFile: read } = require('fs').promises
-const { basename, extname, join } = require('path')
-const { info } = require('./log')
+const { readdir: ls, readFile: read } = fs.promises
 
-
-class Migration {
+export class Migration {
   constructor(path) {
     this.path = path
     this.type = extname(this.path).slice(1)
     this.number = Number(basename(path).split('.', 2)[0])
   }
 
-  static async all(dir) {
+  static async all(name) {
+    let dir = join(paths.db, 'migrate', name)
+
     return (await ls(dir))
       .filter(migration => (/^\d+[\w.-]*\.(js|sql)$/).test(migration))
       .sort()
       .map(migration => new Migration(join(dir, migration)))
   }
 
-  static async since(number = 0, dir) {
-    return (await this.all(dir)).filter(m => m.fresh(number))
+  static async since(number = 0, name) {
+    return (await this.all(name)).filter(m => m.fresh(number))
   }
 
   up(db) {
@@ -29,7 +31,7 @@ class Migration {
     return db
       .migration(async (tx) => {
         if (this.type === 'js') {
-          await require(this.path).up(tx)
+          await (await import(this.path)).up(tx)
         } else {
           await tx.exec(String(await read(this.path)))
         }
@@ -42,5 +44,3 @@ class Migration {
     return !number || this.number > number
   }
 }
-
-module.exports =  { Migration }

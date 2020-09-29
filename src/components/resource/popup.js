@@ -1,17 +1,14 @@
-'use strict'
+import React from 'react'
+import { ResourceSelect } from './select'
+import { Popup } from '../popup'
+import { SASS } from '../../constants'
+import { viewport } from '../../dom'
+import { arrayOf, func, number, object, oneOfType, string } from 'prop-types'
 
-const React = require('react')
-const { ResourceSelect } = require('./select')
-const { Popup } = require('../popup')
-const { OPTION, PANEL } = require('../../constants/sass')
-const { min } = Math
-const { viewport } = require('../../dom')
-const {
-  arrayOf, func, number, object, oneOfType, string
-} = require('prop-types')
+const { OPTION, PANEL } = SASS
 
 
-class PopupSelect extends React.Component {
+export class PopupSelect extends React.Component {
   constructor(props) {
     super(props)
     this.state = PopupSelect.getInitialStateFromProps(props)
@@ -29,7 +26,8 @@ class PopupSelect extends React.Component {
   }
 
   static getHeight(rows, { maxRows }) {
-    return OPTION.HEIGHT * ((min(rows || 1, maxRows)) + 1) + OPTION.LIST_MARGIN
+    return OPTION.HEIGHT * ((Math.min(rows || 1, maxRows)) + 1) +
+      OPTION.LIST_MARGIN
   }
 
   handleResize = ({ rows }) => {
@@ -76,8 +74,4 @@ class PopupSelect extends React.Component {
     maxRows: 10,
     width: PANEL.MIN_WIDTH
   }
-}
-
-module.exports = {
-  PopupSelect
 }

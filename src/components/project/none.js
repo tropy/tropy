@@ -1,15 +1,14 @@
-'use strict'
+import { basename } from 'path'
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { Sidebar, SidebarBody } from '../sidebar'
+import { Titlebar } from '../toolbar'
+import { IconMaze } from '../icons'
+import { arrayOf, bool, func, string } from 'prop-types'
+import cx from 'classnames'
 
-const React = require('react')
-const { FormattedMessage } = require('react-intl')
-const { Sidebar, SidebarBody } = require('../sidebar')
-const { Titlebar } = require('../toolbar')
-const { IconMaze } = require('../icons')
-const { arrayOf, bool, func, string } = require('prop-types')
-const { basename } = require('path')
-const cx = require('classnames')
 
-const NoProject = ({ connect, ...props }) => connect(
+export const NoProject = ({ connect, ...props }) => connect(
   <div className={cx('no-project', {
     over: props.isOver && props.canDrop
   })}>
@@ -58,8 +57,4 @@ NoProject.propTypes = {
   onProjectCreate: func.isRequired,
   onProjectOpen: func.isRequired,
   recent: arrayOf(string).isRequired
-}
-
-module.exports = {
-  NoProject
 }

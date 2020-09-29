@@ -1,8 +1,6 @@
-'use strict'
+import { EDIT } from '../constants'
 
-const { EDIT } = require('../constants')
-
-module.exports = {
+export default {
   cancel(payload, meta) {
     return {
       type: EDIT.CANCEL,

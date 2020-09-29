@@ -1,13 +1,13 @@
-'use strict'
-
-const React = require('react')
-const { bool, func, number, object, shape, string } = require('prop-types')
-const { Editor } = require('../editor')
-const { TABS } = require('../../constants')
-const cx = require('classnames')
+import React from 'react'
+import { bool, func, number, object, shape, string } from 'prop-types'
+import { Editor } from '../editor'
+import { TABS } from '../../constants'
+import cx from 'classnames'
 
 
-class NotePad extends React.PureComponent {
+export class NotePad extends React.PureComponent {
+  editor = React.createRef()
+
   get classes() {
     return ['note-pad', this.props.mode, {
       'disabled': this.props.isDisabled,
@@ -17,12 +17,8 @@ class NotePad extends React.PureComponent {
     }]
   }
 
-  setEditor = (editor) => {
-    this.editor = editor
-  }
-
   focus = () => {
-    this.editor.view.focus()
+    this.editor.current.view.focus()
   }
 
   handleChange = (state, hasDocChanged) => {
@@ -57,7 +53,7 @@ class NotePad extends React.PureComponent {
         className={cx(this.classes)}
         onContextMenu={this.handleContextMenu}>
         <Editor
-          ref={this.setEditor}
+          ref={this.editor}
           state={this.props.note.state}
           keymap={this.props.keymap}
           mode={this.props.mode}
@@ -97,8 +93,4 @@ class NotePad extends React.PureComponent {
     tabIndex: TABS.NotePad,
     wrap: true
   }
-}
-
-module.exports = {
-  NotePad
 }

@@ -1,10 +1,9 @@
-'use strict'
+import React from 'react'
+import { Photo } from './photo'
+import { arrayOf, bool, object, shape, string } from 'prop-types'
 
-const React = require('react')
-const { Photo } = require('./photo')
-const { arrayOf, bool, object, shape, string } = require('prop-types')
 
-const Item = ({ item, hasOnlyNotes, ...props }) => (
+export const Item = ({ item, hasOnlyNotes, ...props }) => (
   item.photos.map(photo =>
     (hasOnlyNotes && !photo.notes?.length) ?
       null :
@@ -21,8 +20,4 @@ Item.propTypes = {
   item: shape({
     photos: arrayOf(object).isRequired
   }).isRequired
-}
-
-module.exports = {
-  Item
 }

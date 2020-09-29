@@ -1,10 +1,9 @@
-'use strict'
+import { combineReducers } from 'redux'
+import { ONTOLOGY } from '../constants'
+import { load, merge, nested, replace, remove, update } from './util'
+import { has } from '../common/util'
 
-const { combineReducers } = require('redux')
-const { ONTOLOGY } = require('../constants')
 const { PROPS, CLASS, VOCAB, LABEL, TEMPLATE, TYPE } = ONTOLOGY
-const { load, merge, nested, replace, remove, update } = require('./util')
-const { has } = require('../common/util')
 
 function props(state = {}, { type, payload, error, meta }) {
   switch (type) {
@@ -153,12 +152,10 @@ function template(state = {}, { type, payload, error, meta }) {
   }
 }
 
-module.exports = {
-  ontology: combineReducers({
-    props,
-    class: klass,
-    template,
-    type: datatype,
-    vocab
-  })
-}
+export const ontology = combineReducers({
+  props,
+  class: klass,
+  template,
+  type: datatype,
+  vocab
+})

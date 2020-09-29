@@ -1,21 +1,17 @@
-'use strict'
-
-module.exports = {
-  api: require('../actions/api'),
-  cache: require('../actions/cache'),
-  context: require('../actions/context'),
-  edit: require('../actions/edit'),
-  flash: require('../actions/flash'),
-  item: require('../actions/item'),
-  list: require('../actions/list'),
-  metadata: require('../actions/metadata'),
-  note: require('../actions/note'),
-  notepad: require('../actions/notepad'),
-  ontology: require('../actions/ontology'),
-  photo: require('../actions/photo'),
-  project: require('../actions/project'),
-  selection: require('../actions/selection'),
-  settings: require('../actions/settings'),
-  storage: require('../actions/storage'),
-  tag: require('../actions/tag')
-}
+export { default as api } from '../actions/api'
+export { default as cache } from '../actions/cache'
+export { default as context } from '../actions/context'
+export { default as edit } from '../actions/edit'
+export { default as flash } from '../actions/flash'
+export { default as item } from '../actions/item'
+export { default as list } from '../actions/list'
+export { default as metadata } from '../actions/metadata'
+export { default as note } from '../actions/note'
+export { default as notepad } from '../actions/notepad'
+export { default as ontology } from '../actions/ontology'
+export { default as photo } from '../actions/photo'
+export { default as project } from '../actions/project'
+export { default as selection } from '../actions/selection'
+export { default as settings } from '../actions/settings'
+export { default as storage } from '../actions/storage'
+export { default as tag } from '../actions/tag'

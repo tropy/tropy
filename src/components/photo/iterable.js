@@ -1,18 +1,16 @@
-'use strict'
+import React from 'react'
+import { Thumbnail } from './thumbnail'
+import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd'
+import { bounds } from '../../dom'
+import { pure } from '../util'
+import { pick } from '../../common/util'
 
-const React = require('react')
-const { Thumbnail } = require('./thumbnail')
-const { DND, DragSource, DropTarget, getEmptyImage } = require('../dnd')
-const { bounds } = require('../../dom')
-const { pure } = require('../util')
-const { pick } = require('../../common/util')
-
-const {
+import {
   arrayOf, bool, func, number, string, object, shape
-} = require('prop-types')
+} from 'prop-types'
 
 
-class PhotoIterable extends React.PureComponent {
+export class PhotoIterable extends React.PureComponent {
   state = {
     offset: null
   }
@@ -213,8 +211,4 @@ class PhotoIterable extends React.PureComponent {
   static defaultProps = {
     size: 48
   }
-}
-
-module.exports = {
-  PhotoIterable
 }

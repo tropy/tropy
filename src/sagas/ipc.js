@@ -1,20 +1,22 @@
-'use strict'
+import { eventChannel } from 'redux-saga'
+import { ipcRenderer } from 'electron'
+import { warn } from '../common/log'
+import { getHistory, getAllTags } from '../selectors'
+import { PROJECT, TAG, HISTORY } from '../constants'
 
-const { eventChannel } = require('redux-saga')
-const {
-  call, fork, put, take, select, takeEvery: every
-} = require('redux-saga/effects')
-
-const { ipcRenderer: ipc } = require('electron')
-const { warn } = require('../common/log')
-const history = require('../selectors/history')
-const { getAllTags } = require('../selectors')
-const { PROJECT, TAG, HISTORY } = require('../constants')
+import {
+  call,
+  fork,
+  put,
+  take,
+  select,
+  takeEvery as every
+} from 'redux-saga/effects'
 
 const filters = {
   *[HISTORY.CHANGED]() {
-    const summary = yield select(history.summary)
-    const messages = yield select(state => state.intl.messages)
+    let summary = yield select(getHistory)
+    let messages = yield select(state => state.intl.messages)
 
     if (summary.undo != null) {
       summary.undo = messages[`action.${summary.undo}`] || summary.undo
@@ -44,7 +46,7 @@ function *forward({ type, payload, meta }) {
       yield call(filters[name], payload) :
       payload
 
-    yield call([ipc, ipc.send], name, data)
+    yield call([ipcRenderer, ipcRenderer.send], name, data)
 
   } catch (e) {
     warn({ stack: e.stack }, 'unexpected error in *ipc:forward')
@@ -53,7 +55,7 @@ function *forward({ type, payload, meta }) {
 
 function *rsvp(action) {
   try {
-    yield call([ipc, ipc.send], 'wm', 'rsvp', action)
+    yield call([ipcRenderer, ipcRenderer.send], 'wm', 'rsvp', action)
 
   } catch (e) {
     warn({ stack: e.stack }, 'unexpected error in *ipc:rsvp')
@@ -79,17 +81,15 @@ function channel(name) {
       }
     }
 
-    ipc.on(name, listener)
+    ipcRenderer.on(name, listener)
 
-    return () => ipc.removeListener(name, listener)
+    return () => ipcRenderer.removeListener(name, listener)
   })
 }
 
-module.exports = {
-  *ipc() {
-    yield every(({ error, meta }) => !error && meta && meta.ipc, forward)
-    yield every(({ meta }) => meta && meta.rsvp && meta.done, rsvp)
+export function *ipc() {
+  yield every(({ error, meta }) => !error && meta && meta.ipc, forward)
+  yield every(({ meta }) => meta && meta.rsvp && meta.done, rsvp)
 
-    yield fork(receive)
-  }
+  yield fork(receive)
 }

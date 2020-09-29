@@ -1,15 +1,13 @@
-'use strict'
-
-const { call, put, select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { ITEM } = require('../../constants')
-const { remove } = require('../../common/util')
-const act = require('../../actions')
-const mod = require('../../models')
-const { findTagIds } = require('../../selectors')
+import { call, put, select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { ITEM } from '../../constants'
+import { remove } from '../../common/util'
+import * as act from '../../actions'
+import * as mod from '../../models'
+import { findTagIds } from '../../selectors'
 
 
-class AddTags extends Command {
+export class AddTags extends Command {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
@@ -46,7 +44,7 @@ class AddTags extends Command {
 AddTags.register(ITEM.TAG.CREATE)
 
 
-class RemoveTags extends Command {
+export class RemoveTags extends Command {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
@@ -79,7 +77,7 @@ class RemoveTags extends Command {
 RemoveTags.register(ITEM.TAG.DELETE)
 
 
-class ClearTags extends Command {
+export class ClearTags extends Command {
   *exec() {
     let { db } = this.options
     let id = this.action.payload
@@ -96,7 +94,7 @@ class ClearTags extends Command {
 ClearTags.register(ITEM.TAG.CLEAR)
 
 
-class ToggleTags extends Command {
+export class ToggleTags extends Command {
   *exec() {
     let { db } = this.options
     let { id, tags } = this.action.payload
@@ -125,11 +123,3 @@ class ToggleTags extends Command {
 }
 
 ToggleTags.register(ITEM.TAG.TOGGLE)
-
-
-module.exports = {
-  AddTags,
-  RemoveTags,
-  ToggleTags,
-  ClearTags
-}

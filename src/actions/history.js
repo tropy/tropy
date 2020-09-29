@@ -1,20 +1,18 @@
-'use strict'
+import { HISTORY } from '../constants'
+import { omit } from '../common/util'
 
-const {
-  UNDO, REDO, TICK, DROP, CHANGED
-} = require('../constants/history')
-
-const { omit } = require('../common/util')
-
-module.exports = {
+export default {
   undo(payload, meta) {
     return (dispatch, getState) => {
-      const { history } = getState()
+      let { history } = getState()
       if (history.past.length > 0) {
         dispatch({
-          type: UNDO,
+          type: HISTORY.UNDO,
           payload,
-          meta: { ipc: CHANGED, ...meta }
+          meta: {
+            ipc: HISTORY.CHANGED,
+            ...meta
+          }
         })
       }
     }
@@ -22,12 +20,15 @@ module.exports = {
 
   redo(payload, meta) {
     return (dispatch, getState) => {
-      const { history } = getState()
+      let { history } = getState()
       if (history.future.length > 0) {
         dispatch({
-          type: REDO,
+          type: HISTORY.REDO,
           payload,
-          meta: { ipc: CHANGED, ...meta }
+          meta: {
+            ipc: HISTORY.CHANGED,
+            ...meta
+          }
         })
       }
     }
@@ -38,15 +39,24 @@ module.exports = {
     redo.meta = omit(redo.meta, ['history'])
 
     return {
-      type: TICK,
+      type: HISTORY.TICK,
       payload: { undo, redo },
       meta: {
-        ipc: CHANGED, mode, ...meta
+        ipc: HISTORY.CHANGED,
+        mode,
+        ...meta
       }
     }
   },
 
   drop(payload, meta) {
-    return { type: DROP, payload, meta: { ipc: CHANGED, ...meta } }
+    return {
+      type: HISTORY.DROP,
+      payload,
+      meta: {
+        ipc: HISTORY.CHANGED,
+        ...meta
+      }
+    }
   }
 }

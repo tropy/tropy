@@ -1,72 +1,71 @@
-'use strict'
+import { basename } from 'path'
+import ARGS, { parse as parseArgs } from './args'
+import { createLogger, fatal, info } from './common/log'
+import { ipcRenderer as ipc } from 'electron'
+import { idle, ready } from './dom'
+import win, { createWindowInstance } from './window'
 
-try {
-  const START = Date.now()
+const START =
+  window.performance?.timing?.navigationStart || Date.now()
 
-  require('module').globalPaths.push(__dirname)
+;(async function bootstrap() {
+  try {
+    parseArgs()
 
-  const opts = require('./args').parse()
-  const { basename } = require('path')
-  const { fatal, info } = require('./common/log')({
-    dest: opts.log,
-    level: opts.level,
-    name: basename(location.pathname, '.html')
-  })
-
-  const { ipcRenderer: ipc } = require('electron')
-  const { ready } = require('./dom')
-  const { Window } = require('./window')
-
-  const win = new Window(opts)
-
-  info({
-    dpx: window.devicePixelRatio,
-    opts
-  }, `${win.type}.init`)
-
-  ready
-    .then(() => Date.now())
-    .then((READY) =>
-      win.init().then(() => {
-        ipc.send('wm', 'init')
-        win.toggle('init')
-        const INIT = Date.now()
-        require(`./views/${win.type}`)
-        const LOAD = Date.now()
-
-        requestIdleCallback(() => {
-          ipc.send('wm', 'ready')
-          win.toggle('ready')
-          win.ready = Date.now()
-
-          info('%s ready %dms [dom:%dms win:%dms req:%dms]',
-            win.type,
-            win.ready - START,
-            READY - START,
-            INIT - READY,
-            LOAD - INIT)
-        }, { timeout: 1000 })
-      }))
-    .catch((e) => {
-      fatal({ stack: e.stack }, `${win.type}.init failed`)
-
-      if (opts.dev)
-        ipc.send('wm', 'show')
-      else
-        process.crash()
+    createLogger({
+      dest: ARGS.log,
+      level: ARGS.level,
+      name: basename(location.pathname, '.html')
     })
 
-  // eslint-disable-next-line
-  global.eval = () => {
-    throw new Error('use of eval() is prohibited')
-  }
+    createWindowInstance(ARGS)
 
-  if (!opts.dev) {
-    global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
-  }
+    info({
+      dpx: window.devicePixelRatio,
+      opts: ARGS
+    }, `${win.type}.init`)
 
-} catch (e) {
-  process.stderr.write(
-    `Uncaught error in bootstrap: ${e.message}\n${e.stack}\n`)
-  process.crash()
-}
+    try {
+      await ready
+
+      const READY = Date.now()
+
+      await win.init()
+      ipc.send('wm', 'init')
+      win.toggle('init')
+
+      const INIT = Date.now()
+      await import(`./views/${win.type}`)
+      const LOAD = Date.now()
+
+      await idle()
+      ipc.send('wm', 'ready')
+      win.toggle('ready')
+      win.ready = Date.now()
+
+      info('%s ready %dms [dom:%dms win:%dms req:%dms]',
+        win.type,
+        win.ready - START,
+        READY - START,
+        INIT - READY,
+        LOAD - INIT)
+
+    } catch (e) {
+      fatal({ stack: e.stack }, `${win.type}.init failed`)
+      ipc.send('error', e)
+    }
+
+    // eslint-disable-next-line
+    global.eval = () => {
+      throw new Error('use of eval() is prohibited')
+    }
+
+    if (!ARGS.dev) {
+      global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
+    }
+
+  } catch (e) {
+    process.stderr.write(`Uncaught error in bootstrap\n${e.stack}\n`)
+    process.crash()
+  }
+}())

@@ -1,14 +1,17 @@
-'use strict'
-
-const React = require('react')
-const { FormattedMessage } = require('react-intl')
-const { Toolbar, ToolGroup } = require('../toolbar')
-const { IconNote, IconPlus } = require('../icons')
-const { Button } = require('../button')
-const { bool, func, number } = require('prop-types')
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { Toolbar, ToolGroup } from '../toolbar'
+import { IconNote, IconPlus } from '../icons'
+import { Button } from '../button'
+import { bool, func, number } from 'prop-types'
 
 
-const NoteToolbar = ({ hasCreateButton, isDisabled, notes, onCreate }) => (
+export const NoteToolbar = ({
+  hasCreateButton,
+  isDisabled,
+  notes,
+  onCreate
+}) => (
   <Toolbar>
     <Toolbar.Left>
       <IconNote/>
@@ -36,9 +39,4 @@ NoteToolbar.propTypes = {
   isDisabled: bool,
   notes: number.isRequired,
   onCreate: func.isRequired
-}
-
-
-module.exports = {
-  NoteToolbar
 }

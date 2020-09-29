@@ -1,12 +1,10 @@
-'use strict'
-
-const { call } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { ITEM } = require('../../constants')
-const mod = require('../../models')
+import { call } from 'redux-saga/effects'
+import { Command } from '../command'
+import { ITEM } from '../../constants'
+import * as mod from '../../models'
 
 
-class Load extends Command {
+export class Load extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
@@ -19,7 +17,3 @@ class Load extends Command {
 }
 
 Load.register(ITEM.LOAD)
-
-module.exports = {
-  Load
-}

@@ -1,13 +1,11 @@
-'use strict'
-
-const { KeyMap } = require('../common/res')
-const { KEYMAP } = require('../constants')
-const { compile } = require('../keymap')
+import { KeyMap } from '../common/res'
+import { KEYMAP } from '../constants'
+import { compile } from '../keymap'
 
 function load({ name, locale }) {
   return async function (dispatch) {
-    const res = await KeyMap.openWithFallback('en', locale, name)
-    const map = compile(res.map)
+    let res = await KeyMap.openWithFallback('en', locale, name)
+    let map = compile(res.map)
 
     dispatch(update(map))
 
@@ -23,7 +21,7 @@ function update(payload, meta) {
   }
 }
 
-module.exports = {
+export default {
   load,
   update
 }

@@ -1,23 +1,21 @@
-'use strict'
+import React from 'react'
+import { MetadataContainer } from './metadata'
+import { NoteList } from './note'
+import cx from 'classnames'
+import { Rotation, addOrientation } from '../../common/iiif'
+import { Cache } from '../../common/cache'
 
-const React = require('react')
-const { MetadataContainer } = require('./metadata')
-const { NoteList } = require('./note')
-const cx = require('classnames')
-const { Rotation } = require('../../common/iiif')
-const { Cache } = require('../../common/cache')
-
-const {
+import {
   arrayOf,
   bool,
   number,
   object,
   shape,
   string
-} = require('prop-types')
+} from 'prop-types'
 
 
-const Photo = ({
+export const Photo = ({
   canOverflow,
   item,
   hasPhotos,
@@ -26,9 +24,8 @@ const Photo = ({
   photo,
   cache
 }) => {
-  let rotation = Rotation
-    .fromExifOrientation(photo.orientation)
-    .add(photo)
+  Object.assign(photo, addOrientation(photo, photo, false))
+  let rotation = new Rotation(photo)
 
   if (hasPhotos && !(hasMetadata || hasNotes)) {
     let [x, y] = rotation.ratio(photo)
@@ -82,8 +79,4 @@ Photo.propTypes = {
     path: string.isRequired,
     width: number.isRequired
   })
-}
-
-module.exports = {
-  Photo
 }

@@ -1,8 +1,6 @@
-'use strict'
+import { FLASH } from '../constants'
 
-const { FLASH } = require('../constants')
-
-module.exports = {
+export default {
   show(payload, meta = {}) {
     return {
       type: FLASH.SHOW,

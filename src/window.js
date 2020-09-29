@@ -1,16 +1,17 @@
-'use strict'
+import { ipcRenderer as ipc } from 'electron'
+import { basename, join } from 'path'
+import { existsSync as exists } from 'fs'
+import { darwin } from './common/os'
+import { Plugins } from './common/plugins'
+import { delay, pick } from './common/util'
+import { paths } from './common/release'
+import { EventEmitter } from 'events'
+import { update } from './args'
+import debounce from 'lodash.debounce'
+import * as dialog from './dialog'
+import * as json from './common/json'
 
-const { ipcRenderer: ipc } = require('electron')
-const { basename, join } = require('path')
-const { existsSync: exists } = require('fs')
-const { EL_CAPITAN, darwin } = require('./common/os')
-const { Plugins } = require('./common/plugins')
-const { delay, pick } = require('./common/util')
-const { EventEmitter } = require('events')
-const args = require('./args')
-const debounce = require('lodash.debounce')
-
-const {
+import {
   $$,
   append,
   emit,
@@ -22,22 +23,27 @@ const {
   toggle,
   stylesheet,
   remove
-} = require('./dom')
+} from './dom'
 
 const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
   e => e.ctrlKey && !e.altKey && !e.metaKey
 
-const STYLES = join(__dirname, '..', 'lib', 'stylesheets', process.platform)
+let instance
+export { instance as default }
 
-class Window extends EventEmitter {
+export function createWindowInstance(...args) {
+  return new Window(...args)
+}
+
+export class Window extends EventEmitter {
   constructor(opts) {
-    if (Window.instance) {
+    if (instance) {
       throw Error('Singleton Window constructor called multiple times')
     }
 
     super()
-    Window.instance = this
+    instance = this
 
     this.type = basename(location.pathname, '.html')
 
@@ -54,7 +60,7 @@ class Window extends EventEmitter {
       'minimizable'
     ])
 
-    this.plugins = new Plugins(opts.plugins)
+    this.plugins = new Plugins(opts.plugins, { dialog, json })
     this.unloader = 'close'
     this.unloaders = []
     this.hasFinishedUnloading = false
@@ -62,7 +68,7 @@ class Window extends EventEmitter {
 
   init() {
     return Promise.all([
-      this.plugins.reload().then(p => p.create().emit('change')),
+      this.plugins.reload().then(p => p.create()),
 
       new Promise((resolve) => {
         this.unloaders.push(this.plugins.flush)
@@ -88,10 +94,7 @@ class Window extends EventEmitter {
         if (frameless) {
           toggle(document.body, 'frameless', true)
 
-          if (EL_CAPITAN)
-            toggle(document.body, 'el-capitan', true)
-          else
-            this.createWindowControls()
+          if (!darwin) this.createWindowControls()
         }
 
         resolve()
@@ -122,8 +125,8 @@ class Window extends EventEmitter {
   get stylesheets() {
     let { theme } = this
     return [
-      join(STYLES, `window-${theme}.css`),
-      join(STYLES, `${this.type}-${theme}.css`),
+      join(paths.css, `base-${theme}.css`),
+      join(paths.css, `${this.type}-${theme}.css`),
       join(this.state.data, 'style.css'),
       join(this.state.data, `style-${theme}.css`)
     ]
@@ -149,24 +152,24 @@ class Window extends EventEmitter {
         this.emit(state)
       })
       .on('theme', (_, theme, { dark, contrast } = {}) => {
-        args.update({ theme, dark, contrast })
+        update({ theme, dark, contrast })
         Object.assign(this.state, { theme, dark, contrast })
         this.style(true)
       })
       .on('fontSize', (_, fontSize) => {
-        args.update({ fontSize })
+        update({ fontSize })
         this.setFontSize(fontSize)
         this.emit('settings.update', { fontSize })
       })
       .on('recent', (_, recent) => {
-        args.update({ recent })
+        update({ recent })
       })
       .on('locale', (_, locale) => {
-        args.update({ locale })
+        update({ locale })
         this.emit('settings.update', { locale })
       })
       .on('debug', (_, debug) => {
-        args.update({ debug })
+        update({ debug })
         this.emit('settings.update', { debug })
       })
       .on('scrollbars', (_, scrollbars) => {
@@ -188,8 +191,7 @@ class Window extends EventEmitter {
       .on('plugins-reload', async () => {
         this.plugins.clearModuleCache()
         await this.plugins.reload()
-        this.plugins.create()
-        this.plugins.emit('change')
+        await this.plugins.create()
       })
       .on('global', (_, action) => {
         emit(document, `global:${action}`)
@@ -436,10 +438,4 @@ class Window extends EventEmitter {
   send(type, ...params) {
     ipc.send('wm', type, ...params)
   }
-}
-
-module.exports = {
-  Window,
-
-  get win() { return Window.instance || new Window(ARGS) }
 }

@@ -1,24 +1,20 @@
-'use strict'
+import { basename, extname } from 'path'
+import { call, put, select } from 'redux-saga/effects'
+import { DuplicateError } from '../common/error'
+import { Command } from './command'
+import * as mod from '../models'
+import * as act from '../actions'
+import * as dir from '../common/dir'
+import { pick } from '../common/util'
+import { open, prompt } from '../dialog'
+import { Image } from '../image'
+import { IMAGE } from '../constants'
+import { dc, dcterms } from '../ontology/ns'
+import { date, text } from '../value'
+import { getTemplateValues, getTemplateProperties } from '../selectors'
 
-const { basename, extname } = require('path')
-const { DuplicateError } = require('../common/error')
-const { call, put, select } = require('redux-saga/effects')
-const { Command } = require('./command')
-const mod = require('../models')
-const act = require('../actions')
-const dir = require('../common/dir')
-const { pick } = require('../common/util')
-const { open, prompt } = require('../dialog')
-const { Image } = require('../image')
-const { DC, TERMS, IMAGE } = require('../constants')
-const { date, text } = require('../value')
 
-const {
-  getTemplateValues,
-  getTemplateProperties
-} = require('../selectors')
-
-class ImportCommand extends Command {
+export class ImportCommand extends Command {
   static *consolidate(cache, image, photos, { overwrite = true } = {}) {
     while (!image.done) {
       let photo = photos[image.page]
@@ -112,8 +108,8 @@ class ImportCommand extends Command {
     }
 
     if (type === 'photo') {
-      if (!(DC.date in data || TERMS.date in data)) {
-        data[DC.date] = date(image.date)
+      if (!(dc.date in data || dcterms.date in data)) {
+        data[dc.date] = date(image.date)
       }
     }
 
@@ -163,8 +159,4 @@ class ImportCommand extends Command {
       }
     }
   }
-}
-
-module.exports = {
-  ImportCommand
 }
