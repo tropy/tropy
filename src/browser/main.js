@@ -53,7 +53,7 @@ if (app.isPackaged) {
 }
 
 (async function main() {
-  if (win32 && (await import('./squirrel'))(opts))
+  if (win32 && (await import('./squirrel')).default(opts))
     return
 
   createLogger({
