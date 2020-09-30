@@ -223,3 +223,7 @@ MimeType=application/vnd.tropy.tpy;x-scheme-handler/tropy;${
 };
 Categories=Graphics;Viewer;Science;`
 }
+
+module.exports = {
+  RRCHNM
+}

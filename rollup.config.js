@@ -1,4 +1,4 @@
-import { join, relative } from 'path'
+import { join, normalize, relative } from 'path'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import builtins from 'builtin-modules'
@@ -20,14 +20,14 @@ const platform = process.env.TROPY_PLATFORM || process.platform
 
 const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
-    'src/esper/index.js',
-    'src/components/list/tree.js',
-    'node_modules/n3/src/N3DataFactory.js',
-    'node_modules/semver/classes/comparator.js'
+    normalize('src/esper/index.js'),
+    normalize('src/components/list/tree.js'),
+    normalize('node_modules/n3/src/N3DataFactory.js'),
+    normalize('node_modules/semver/classes/comparator.js')
   ].includes(warning.importer),
 
   EVAL: (warning) => [
-    'node_modules/bluebird/js/release/util.js'
+    normalize('node_modules/bluebird/js/release/util.js')
   ].includes(relative(process.cwd(), warning.id)),
 
   THIS_IS_UNDEFINED: (warning) =>
@@ -100,7 +100,10 @@ export default [
       }),
       copy({
         targets: [
-          {
+          (platform === 'win32') ? {
+            src: 'node_modules/sharp/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
+            dest: 'lib/node/lib'
+          } : {
             src: 'node_modules/sharp/vendor/lib',
             dest: 'lib/vendor'
           }
