@@ -100,7 +100,10 @@ export default [
       }),
       copy({
         targets: [
-          {
+          (platform === 'win32') ? {
+            src: 'node_modules/sharp/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
+            dest: 'lib/node/lib'
+          } : {
             src: 'node_modules/sharp/vendor/lib',
             dest: 'lib/vendor'
           }
