@@ -25,7 +25,7 @@
         .item-mode &,
         .item-mode-enter-active & {
           $margin-left:
-             $window-controls-width
+            $window-controls-width
             + $window-controls-offset-x
             - $window-controls-margin;
           margin-left: $margin-left;
