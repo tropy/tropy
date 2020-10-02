@@ -24,17 +24,16 @@
       .toolbar-left {
         .item-mode &,
         .item-mode-enter-active & {
-          margin-left:
-            $window-controls-width
+          $margin-left:
+             $window-controls-width
             + $window-controls-offset-x
             - $window-controls-margin;
+          margin-left: $margin-left;
 
-          [style*="zoom:0.75"] & {
-            margin-left:
-              ($window-controls-width
-              + $window-controls-offset-x
-              - $window-controls-margin)
-              * 1.33;
+          @each $level in 0.75, 1.25, 1.5, 1.75, 2 {
+            [style*="zoom:#{inspect($level)}"] & {
+              margin-left: $margin-left * 1 / $level;
+            }
           }
         }
 
