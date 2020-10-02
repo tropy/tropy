@@ -57,7 +57,8 @@ export class Window extends EventEmitter {
       'dark',
       'constrast',
       'maximizable',
-      'minimizable'
+      'minimizable',
+      'zoom'
     ])
 
     this.plugins = new Plugins(opts.plugins, { dialog, json })
@@ -89,6 +90,7 @@ export class Window extends EventEmitter {
           toggle(document.body, aqua, true)
 
         this.setScrollBarStyle()
+        this.setZoomLevel()
         this.setFontSize()
 
         if (frameless) {
@@ -145,6 +147,11 @@ export class Window extends EventEmitter {
     toggle(document.body, 'scrollbar-style-old-school', scrollbars)
   }
 
+  setZoomLevel(zoom = this.state.zoom) {
+    this.state.zoom = zoom
+    document.body.style.setProperty('--zoom', zoom)
+  }
+
   handleIpcEvents() {
     ipc
       .on('win', (_, state) => {
@@ -195,6 +202,9 @@ export class Window extends EventEmitter {
       })
       .on('global', (_, action) => {
         emit(document, `global:${action}`)
+      })
+      .on('zoom', (_, zoom) => {
+        this.setZoomLevel(zoom)
       })
   }
 
