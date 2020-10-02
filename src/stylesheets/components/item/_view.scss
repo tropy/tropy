@@ -28,6 +28,14 @@
             $window-controls-width
             + $window-controls-offset-x
             - $window-controls-margin;
+
+          [style*="zoom:0.75"] & {
+            margin-left:
+              ($window-controls-width
+              + $window-controls-offset-x
+              - $window-controls-margin)
+              * 1.33;
+          }
         }
 
         .project-mode-enter-active &,
