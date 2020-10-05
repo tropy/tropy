@@ -34,7 +34,5 @@ win.on('settings.update', (data) => {
   store.dispatch(settings.update(data))
 })
 
-if (ARGS.dev || ARGS.debug) {
-  Object.defineProperty(window, 'store', { get: () => store })
-  Object.defineProperty(window, 'state', { get: () => store.getState() })
-}
+Object.defineProperty(window, 'store', { get: () => store })
+Object.defineProperty(window, 'state', { get: () => store.getState() })

@@ -59,7 +59,5 @@ win.unloaders.push(() => (
   store.dispatch(project.close()), tasks.toPromise()
 ))
 
-if (ARGS.dev || ARGS.debug) {
-  Object.defineProperty(window, 'store', { get: () => store })
-  Object.defineProperty(window, 'state', { get: () => store.getState() })
-}
+Object.defineProperty(window, 'store', { get: () => store })
+Object.defineProperty(window, 'state', { get: () => store.getState() })
