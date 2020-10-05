@@ -469,6 +469,8 @@ export class WindowManager extends EventEmitter {
           Math.round((width / old) * factor),
           Math.round((height / old) * factor))
       }
+
+      win.webContents.send('zoom', factor)
     }
 
     return factor

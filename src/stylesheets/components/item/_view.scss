@@ -24,10 +24,17 @@
       .toolbar-left {
         .item-mode &,
         .item-mode-enter-active & {
-          margin-left:
+          $margin-left:
             $window-controls-width
             + $window-controls-offset-x
             - $window-controls-margin;
+          margin-left: $margin-left;
+
+          @each $level in 0.75, 1.25, 1.5, 1.75, 2 {
+            [style*="zoom:#{inspect($level)}"] & {
+              margin-left: $margin-left * 1 / $level;
+            }
+          }
         }
 
         .project-mode-enter-active &,
