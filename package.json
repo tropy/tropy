@@ -73,7 +73,7 @@
     "electron-packager": "^15.1.0",
     "electron-winstaller": "^4.0.1",
     "eslint": "^7.10.0",
-    "eslint-plugin-react": "^7.21.2",
+    "eslint-plugin-react": "^7.21.3",
     "glob": "^7.1.6",
     "legal-eagle": "^0.16.0",
     "ms": "^2.1.2",
@@ -151,7 +151,7 @@
     "shortid": "^2.2.15",
     "sqlite3": "^5.0.0",
     "transducers.js": "^0.3.2",
-    "uuid": "^8.3.0",
+    "uuid": "^8.3.1",
     "winreg": "^1.2.4",
     "write-file-atomic": "^3.0.3"
   }
