@@ -1,6 +1,7 @@
 import { call, put, select } from 'redux-saga/effects'
 import { Command } from '../command'
 import { SELECTION } from '../../constants'
+import { Image } from '../../image'
 import mod from '../../models/selection'
 import * as act from '../../actions'
 import { getSelectionTemplate, getTemplateValues } from '../../selectors'
