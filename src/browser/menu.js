@@ -44,7 +44,7 @@ export class Menu {
     let { app } = this
 
     if (item.command)
-      item.click = createResponder(item.command, app, win, event)
+      item.click = createResponder(item.command, app, event)
 
     if (item.label)
       Menu.ItemCompiler.label(item, app)
@@ -142,6 +142,8 @@ export class AppMenu extends Menu {
         }
       }
     })
+
+    this.handleHistoryChange()
   }
 }
 
@@ -350,7 +352,7 @@ Menu.ItemCompiler = {
     if (col != null && col !== 'random')
       item.icon = Icon.color(col)
     if (cmd)
-      item.click = createResponder(cmd, app, win, event, col)
+      item.click = createResponder(cmd, app, event, col)
   },
 
   'label': (item, app) => {
@@ -393,12 +395,12 @@ Menu.ItemCompiler = {
     item.visible = (app.dev || app.debug)
   },
 
-  'theme': (item, app, win) => {
+  'theme': (item, app) => {
     item.submenu = item.submenu.map(theme => ({
       ...theme,
       checked: (theme.id === app.state.theme),
       enabled: (theme.id !== app.state.theme),
-      click: createResponder('app:switch-theme', app, win, theme.id)
+      click: createResponder('app:switch-theme', app, theme.id)
     }))
   },
 
@@ -429,7 +431,7 @@ Menu.ItemCompiler = {
         { type: 'separator' },
         ...plugins.map(({ id, name }) => ({
           label: name,
-          click: createResponder('app:export-item', app, win, {
+          click: createResponder('app:export-item', app, {
             target: event?.target,
             plugin: id
           })
@@ -452,7 +454,7 @@ Menu.ItemCompiler = {
           type: 'checkbox',
           label: tag.name,
           checked: target.tags.includes(tag.id),
-          click: createResponder('app:toggle-item-tag', app, win, {
+          click: createResponder('app:toggle-item-tag', app, {
             id: target.id,
             tag: tag.id
           })
@@ -464,7 +466,7 @@ Menu.ItemCompiler = {
           ...item.submenu[0],
           checked: false,
           enabled: true,
-          click: createResponder('app:clear-item-tags', app, win, {
+          click: createResponder('app:clear-item-tags', app, {
             id: target.id
           })
         }
@@ -484,7 +486,7 @@ Menu.ItemCompiler = {
     item.submenu = item.submenu.map(li => ({
       ...li,
       checked: li.mode === event.target.mode,
-      click: createResponder('app:writing-mode', app, win, {
+      click: createResponder('app:writing-mode', app, {
         id: event.target.id,
         mode: li.mode
       })
@@ -495,7 +497,7 @@ Menu.ItemCompiler = {
     item.submenu = item.submenu.map(li => ({
       ...li,
       checked: li.id === event.target.layout,
-      click: createResponder('app:settings-persist', app, win, {
+      click: createResponder('app:settings-persist', app, {
         layout: li.id
       })
     }))
@@ -540,38 +542,17 @@ Menu.ItemConditions = {
   }
 }
 
-function createResponder(cmd, app, win, ...params) {
+function createResponder(cmd, app, ...params) {
   let [prefix, action] = cmd.split(':', 2)
 
   switch (prefix) {
     case 'app':
-      return (_, w) =>
-        app.emit(cmd, win || w, ...params)
-
-    case 'ctx':
-      return withWindow(win, cmd, w =>
-        w.webContents.send('ctx', action, ...params))
-
+      return (_, win) =>
+        app.emit(cmd, win, ...params)
     case 'win':
-      return withWindow(win, cmd, w =>
-        w.webContents.send(action, params))
-
-    case 'dispatch':
-      return withWindow(win, cmd, w =>
-        w.webContents.send('dispatch', {
-          type: action, payload: params
-        }))
-
+      return (_, win) =>
+        win?.webContents.send(action, params)
     default:
       warn(`no responder for menu command ${cmd}`)
-  }
-}
-
-function withWindow(win, cmd, fn) {
-  return (_, w) => {
-    if (!(win || w))
-      warn(`${cmd} called without window`)
-    else
-      fn(win || w)
   }
 }
