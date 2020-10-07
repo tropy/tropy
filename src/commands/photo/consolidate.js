@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { basename, dirname, join, relative, resolve } from 'path'
+import { parse, resolve, win32 } from 'path'
 import { call, put, select } from 'redux-saga/effects'
 import { ImportCommand } from '../import'
 import { fail, open, prompt } from '../../dialog'
@@ -12,17 +12,17 @@ import { blank } from '../../common/util'
 import { getPhotosForConsolidation } from '../../selectors'
 
 
+
 export class Consolidate extends ImportCommand {
   lookup = async (photo, paths = {}, checkFileSize) => {
-    let dir = dirname(photo.path)
-    let file = basename(photo.path)
+    let { dir, base } = win32.parse(photo.path)
 
     for (let [from, to] of Object.entries(paths)) {
-      let rel = relative(from, dir)
+      let rel = win32.relative(from, dir)
 
       for (let x of to) {
         try {
-          let candidate = join(resolve(x, rel), file)
+          let candidate = resolve(x, rel, base)
           let { size } = await fs.promises.stat(candidate)
           let isMatch = !checkFileSize || (size === photo.size)
 
@@ -46,20 +46,19 @@ export class Consolidate extends ImportCommand {
       try {
         this.suspend()
 
-        let paths = yield call(open.image, {
+        path = (yield call(open.image, {
           message: photo.path
-        })
-        path = (paths != null) ? paths[0] : null
+        }))?.[0]
 
         if (path) {
-          let from = dirname(photo.path)
-          let to = dirname(path)
+          let from = win32.parse(photo.path)
+          let to = parse(path)
 
-          if (from !== to && basename(photo.path) === basename(path)) {
+          if (from.dir !== to.dir && from.base === to.base) {
             let res = yield call(prompt, 'photo.consolidate')
             if (res.ok) {
               yield put(act.photo.consolidate(null, {
-                paths: { [from]: [to] }
+                paths: { [from.dir]: [to.dir] }
               }))
             }
           }
