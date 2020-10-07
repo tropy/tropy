@@ -90,7 +90,7 @@
     "rollup-plugin-ignore": "^1.0.9",
     "rollup-plugin-natives": "^0.6.0",
     "shelljs": "^0.8.4",
-    "sinon": "^9.1.0",
+    "sinon": "^9.2.0",
     "sinon-chai": "^3.5.0",
     "split2": "^3.2.2",
     "sqleton": "^1.5.1",
