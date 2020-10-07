@@ -2,6 +2,7 @@ import fs from 'fs'
 const { mkdir, readdir, stat, writeFile } = fs.promises
 
 import { join, extname, basename } from 'path'
+import { pathToFileURL } from 'url'
 import { debug, warn } from './log'
 import { URI } from './util'
 import { IMAGE, MIME } from '../constants'
@@ -134,10 +135,13 @@ class Cache {
       path = join(root, Cache.path(id, variant, Cache.extname(photo.mimetype)))
     }
 
-    if (photo.consolidated)
-      return `file://${URI.encode(path)}?c=${photo.consolidated}`
-    else
-      return `file://${URI.encode(path)}`
+    let url = pathToFileURL(path)
+
+    if (photo.consolidated) {
+      url.search = `c=${photo.consolidated}`
+    }
+
+    return url.toString()
   }
 
   static isCacheVariant(variant, photo) {
