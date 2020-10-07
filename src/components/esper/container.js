@@ -703,6 +703,8 @@ export class EsperContainer extends React.Component {
         <div className="esper-view-container">
           <div className="esper-view" ref={this.view}/>
           <EsperPanel
+            tint={this.state.tint}
+            temperature={this.state.temperature}
             brightness={this.state.brightness}
             contrast={this.state.contrast}
             hue={this.state.hue}

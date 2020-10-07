@@ -117,6 +117,24 @@ export const EsperPanel = (props) => {
         <ColorSlider
           icon={<IconSharpen/>}
           isDisabled={props.isDisabled || !props.isVisible}
+          min={-100}
+          max={100}
+          tabIndex={TABS.EsperPanel}
+          type="tint"
+          value={props.tint}
+          onChange={props.onChange}/>
+        <ColorSlider
+          icon={<IconSharpen/>}
+          isDisabled={props.isDisabled || !props.isVisible}
+          min={-100}
+          max={100}
+          tabIndex={TABS.EsperPanel}
+          type="temperature"
+          value={props.temperature}
+          onChange={props.onChange}/>
+        <ColorSlider
+          icon={<IconSharpen/>}
+          isDisabled={props.isDisabled || !props.isVisible}
           tabIndex={TABS.EsperPanel}
           type="sharpen"
           min={0}
@@ -154,6 +172,8 @@ EsperPanel.propTypes = {
   negative: bool.isRequired,
   saturation: number.isRequired,
   sharpen: number.isRequired,
+  temperature: number.isRequired,
+  tint: number.isRequired,
   isDisabled: bool,
   isVisible: bool,
   onChange: func.isRequired,
@@ -167,5 +187,7 @@ EsperPanel.defaultProps = {
   hue: 0,
   negative: false,
   saturation: 0,
-  sharpen: 0
+  sharpen: 0,
+  temperature: 0,
+  tint: 0
 }

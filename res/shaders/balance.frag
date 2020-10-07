@@ -4,6 +4,9 @@ varying vec2 vTextureCoord;
 uniform sampler2D uSampler;
 uniform float a;
 uniform float b;
+uniform float c;
+
+const float PI = 3.1415926535897932384626433832795;
 
 vec3 rgb2xyz(vec3 c) {
 	vec3 tmp = vec3(
@@ -78,10 +81,18 @@ void main(void) {
   vec4 pix = texture2D(uSampler, vTextureCoord);
   vec3 rgb = vec3(pix.r, pix.g, pix.b);
 
-  //if (a != .0 || b != .0) {
-  //  vec3 lab = rgb2lab(rgb);
-  //  rgb = lab2rgb(vec3(lab.x, lab.y + a, lab.z + b));
-  //}
+  if (a != 0. || b != 0.) {
+    vec3 lab = rgb2lab(rgb);
+    float gamma = sin(lab.x * PI);
+
+    rgb = lab2rgb(
+      vec3(
+        lab.x + c * .9 * gamma,
+        lab.y + (a + .016) * gamma,
+        lab.z + (b - .016) * gamma
+      )
+    );
+  }
 
   gl_FragColor = vec4(rgb, pix.a);
 }
