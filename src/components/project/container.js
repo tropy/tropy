@@ -219,6 +219,9 @@ class Project extends React.Component {
       case 'prevTab':
         emit(document, 'global:prev-tab')
         break
+      case 'find':
+        emit(document, 'global:find')
+        break
       default:
         return
     }
