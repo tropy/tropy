@@ -49,21 +49,17 @@ export class ItemPanelGroup extends React.PureComponent {
 
     switch (this.keymap.match(event)) {
       case 'up':
-        if (this.props.isReadOnly)
-          return
-        if (this.tab.current)
-          this.tab.current.prev()
+        if (this.props.isReadOnly) return
+        this.tab.current?.prev()
         break
       case 'down':
-        if (this.props.isReadOnly)
-          return
-        if (this.tab.current)
-          this.tab.current.next()
+        if (this.props.isReadOnly) return
+        this.tab.current?.next()
         break
       case 'left':
       case 'right':
         this.toggleTabs()
-        this.panel.current.focus()
+        this.panel.current?.focus()
         break
       default:
         return

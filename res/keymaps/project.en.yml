@@ -139,6 +139,7 @@ en:
       up: ArrowUp
       down:
         - ArrowDown
+        - Enter
       left:
         - ArrowLeft
         - Shift+Ctrl+Tab
