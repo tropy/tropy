@@ -122,6 +122,10 @@ export class Iterator extends React.PureComponent {
     if (this.ro != null) this.observe(container)
   }
 
+  focus = () => {
+    this.container?.focus()
+  }
+
   update(props = this.props, ...args) {
     this.setState(this.getStateFromProps(props), ...args)
   }
