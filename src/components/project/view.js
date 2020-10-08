@@ -10,6 +10,14 @@ import { SASS } from '../../constants'
 
 
 class ProjectView extends React.Component {
+  iterator = React.createRef()
+
+  componentDidUpdate({ isDisabled: wasDisabled }) {
+    if (wasDisabled && !this.props.isDisabled) {
+      this.iterator.current?.focus()
+    }
+  }
+
   get size() {
     return SASS.ITEM.ZOOM[this.props.zoom]
   }
@@ -50,7 +58,7 @@ class ProjectView extends React.Component {
 
   render() {
     let {
-      isActive,
+      isDisabled,
       canDrop,
       edit,
       isOver,
@@ -71,13 +79,13 @@ class ProjectView extends React.Component {
     return (
       <div id="project-view">
         <ProjectSidebar {...pick(this.props, ProjectSidebar.props)}
-          isDisabled={!isActive}/>
+          isDisabled={isDisabled}/>
         <div className="main">
           <section className="items" style={this.style}>
             <header>
               <ProjectToolbar
                 count={items.length}
-                isDisabled={!isActive}
+                isDisabled={isDisabled}
                 isReadOnly={isReadOnly}
                 maxZoom={maxZoom}
                 query={nav.query}
@@ -87,8 +95,9 @@ class ProjectView extends React.Component {
                 onZoomChange={this.handleZoomChange}/>
             </header>
             <ItemIterator {...pick(this.props, ItemIterator.getPropKeys())}
+              ref={this.iterator}
               items={items}
-              isDisabled={!isActive}
+              isDisabled={isDisabled}
               isTrashSelected={nav.trash}
               isEmpty={isEmpty}
               isReadOnly={isReadOnly}
@@ -116,7 +125,7 @@ class ProjectView extends React.Component {
   static propTypes = {
     canDrop: bool,
     edit: object.isRequired,
-    isActive: bool,
+    isDisabled: bool,
     isEmpty: bool.isRequired,
     isOver: bool,
     items: array.isRequired,

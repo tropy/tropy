@@ -274,7 +274,7 @@ class Project extends React.Component {
           nav={nav}
           items={items}
           data={data}
-          isActive={this.state.mode === MODE.PROJECT && !project.closing}
+          isDisabled={this.state.mode !== MODE.PROJECT || project.closing}
           isEmpty={this.isEmpty}
           columns={columns}
           offset={this.state.offset}
