@@ -60,14 +60,13 @@ es:
       url: 'https://rrchnm.org'
     cds:
       title: Corporation for Digital Scholarship
-      url: 'http://digitalscholar.org'
+      url: 'https://digitalscholar.org'
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
       url: 'https://www.c2dh.uni.lu'
     text: >
-      Tropy es desarrollado por el {rrchnm}, un equipo que crea recursos para la
-      enseñanza de la historia, exhibiciones digitales y software de código
-      abierto.
+      Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
+      historical teaching resources, digital exhibits, and open-source software.
     trademark: 'Tropy es una marca registrada de la {cds}.'
     release:
       title: Notas de versión
