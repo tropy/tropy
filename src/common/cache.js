@@ -4,7 +4,6 @@ const { mkdir, readdir, stat, writeFile } = fs.promises
 import { join, extname, basename } from 'path'
 import { pathToFileURL } from 'url'
 import { debug, warn } from './log'
-import { URI } from './util'
 import { IMAGE, MIME } from '../constants'
 
 
