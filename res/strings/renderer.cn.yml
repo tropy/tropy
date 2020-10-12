@@ -60,12 +60,13 @@ cn:
       url: 'https://rrchnm.org'
     cds:
       title: Corporation for Digital Scholarship
-      url: 'http://digitalscholar.org'
+      url: 'https://digitalscholar.org'
     c2dh:
       title: 卢森堡当代和数字历史中心
       url: 'https://www.c2dh.uni.lu'
-    text: |
-      Tropy是由{rrchnm}设计的，该团队开发历史教学资源、数字展品和开源软件。翻译:李子昂 反馈翻译错误: loveu12@qq.com
+    text: >
+      Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
+      historical teaching resources, digital exhibits, and open-source software.
     trademark: 'Tropy名称是{cds}的注册商标。'
     release:
       title: 发布笔记

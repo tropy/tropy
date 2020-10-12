@@ -188,12 +188,83 @@ ja:
     item-tag:
       - label: このアイテムからタグを削除
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isSingleItem
       - label: このアイテムからタグを削除
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isMultipleItems
+      - label: タグの色
+        condition: '!isReadOnly'
+        submenu:
+          - label: 指定なし
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
+          - type: separator
+          - label: 赤
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
+          - label: オレンジ
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
+          - label: 黄色
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
+          - label: 緑
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
+          - label: 青
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
+          - label: 紫
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
+          - label: 灰色
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: 茶色
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: アプリコット
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: 濃緑
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: 水色
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: ラベンダー
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
     note:
       - label: ノートを削除
         command: 'app:delete-note'
@@ -542,12 +613,83 @@ ja:
     item-tag:
       - label: このアイテムからタグを削除
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isSingleItem
       - label: このアイテムからタグを削除
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isMultipleItems
+      - label: タグの色
+        condition: '!isReadOnly'
+        submenu:
+          - label: 指定なし
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
+          - type: separator
+          - label: 赤
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
+          - label: オレンジ
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
+          - label: 黄色
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
+          - label: 緑
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
+          - label: 青
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
+          - label: 紫
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
+          - label: 灰色
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: 茶色
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: アプリコット
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: 濃緑
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: 水色
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: ラベンダー
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
     note:
       - label: ノートを削除
         command: 'app:delete-note'
@@ -896,12 +1038,83 @@ ja:
     item-tag:
       - label: このアイテムからタグを削除
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isSingleItem
       - label: このアイテムからタグを削除
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isMultipleItems
+      - label: タグの色
+        condition: '!isReadOnly'
+        submenu:
+          - label: 指定なし
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
+          - type: separator
+          - label: 赤
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
+          - label: オレンジ
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
+          - label: 黄色
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
+          - label: 緑
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
+          - label: 青
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
+          - label: 紫
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
+          - label: 灰色
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: 茶色
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: アプリコット
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: 濃緑
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: 水色
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: ラベンダー
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
     note:
       - label: ノートを削除
         command: 'app:delete-note'

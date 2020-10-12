@@ -60,13 +60,13 @@ de:
       url: 'https://rrchnm.org'
     cds:
       title: Corporation for Digital Scholarship
-      url: 'http://digitalscholar.org'
+      url: 'https://digitalscholar.org'
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
       url: 'https://www.c2dh.uni.lu'
     text: >
-      Tropy wird vom {rrchnm} erstellt, einem Team, das Ressourcen zur
-      Geschichtsvermittlung, digitale Ausstellungen und Open-Source-Software
+      Tropy wird vom {rrchnm} und dem {c2dh} betreut, einem Team, das Ressourcen
+      zur Geschichtsvermittlung, digitale Ausstellungen und Open-Source-Software
       entwickelt.
     trademark: 'Der Name Tropy ist eine geschützte Marke der {cds}.'
     release:
@@ -86,9 +86,8 @@ de:
     corrupted: >
       Die Projektdatenbank ist möglicherweise beschädigt und sollte manuell
       geprüft werden.
-    readOnly: >
-      Your project file is locked and cannot be modified. To unlock, change the
-      file permissions and open the project again.
+    readOnly: |
+      Die Projektdatei ist schreibgeschützt und daher nicht modifizierbar.
   wizard:
     project:
       title: Neues Projekt erstellen
