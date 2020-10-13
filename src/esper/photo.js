@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { AdjustmentFilter } from '@pixi/filter-adjustment'
 import Esper from './index'
-import { SharpenFilter, BalanceFilter } from './filter'
+import { SharpenFilter } from './filter'
 import { SelectionLayer, SelectionOverlay } from './selection'
 import { constrain } from './util'
 import { deg, isHorizontal } from '../common/math'
@@ -35,8 +35,7 @@ export class Photo extends Container {
     this.bg.filters = [
       new AdjustmentFilter(),
       new SharpenFilter(0, width, height),
-      new ColorMatrixFilter(),
-      new BalanceFilter()
+      new ColorMatrixFilter()
     ]
 
     this.current = {}
@@ -219,11 +218,6 @@ export class Photo extends Container {
 
   sharpen(intensity = 0) {
     this.bg.filters[1].intensity = intensity
-    return this
-  }
-
-  balance(arg1 = 0) {
-    this.bg.filters[3].arg1 = arg1
     return this
   }
 
