@@ -38,6 +38,8 @@ export class WindowManager extends EventEmitter {
       useContentSize: false,
       show: false,
       webPreferences: {
+        contextIsolation: true,
+        worldSafeExecuteJavaScript: true,
         defaultEncoding: 'UTF-8',
         enableRemoteModule: true,
         nodeIntegration: true,
