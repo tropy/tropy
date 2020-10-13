@@ -197,6 +197,9 @@ class Project extends React.Component {
   }
 
   handleKeyDown = (event) => {
+    if (isInput(event.target))
+      return
+
     switch (match(this.props.keymap.global, event)) {
       case 'back':
         emit(document, 'global:back')
