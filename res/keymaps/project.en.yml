@@ -9,7 +9,9 @@ en:
       prevPhoto: Alt+ArrowLeft
       nextTab: Ctrl+Tab
       prevTab: Shift+Ctrl+Tab
-      find: CmdOrCtrl+f
+      find:
+        - CmdOrCtrl+f
+        - /
     Esper: &Esper
       zoomIn:
         - CmdOrCtrl-+
