@@ -45,6 +45,3 @@ win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (
   store.dispatch(prefs.close()), tasks.toPromise()
 ))
-
-Object.defineProperty(window, 'store', { get: () => store })
-Object.defineProperty(window, 'state', { get: () => store.getState() })

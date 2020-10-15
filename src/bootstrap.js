@@ -1,7 +1,7 @@
 import { basename } from 'path'
 import ARGS, { parse as parseArgs } from './args'
 import { createLogger, fatal, info } from './common/log'
-import { ipcRenderer as ipc } from 'electron'
+import { contextBridge, ipcRenderer as ipc } from 'electron'
 import { idle, ready } from './dom'
 import win, { createWindowInstance } from './window'
 
@@ -35,7 +35,7 @@ const START =
       win.toggle('init')
 
       const INIT = Date.now()
-      await import(`./views/${win.type}`)
+      const { store } = await import(`./views/${win.type}`)
       const LOAD = Date.now()
 
       await idle()
@@ -50,6 +50,11 @@ const START =
         INIT - READY,
         LOAD - INIT)
 
+      contextBridge.exposeInMainWorld('tropy', {
+        state: () => store?.getState(),
+        win: () => win
+      })
+
     } catch (e) {
       fatal({ stack: e.stack }, `${win.type}.init failed`)
       ipc.send('error', e)
@@ -58,10 +63,6 @@ const START =
     // eslint-disable-next-line
     global.eval = () => {
       throw new Error('use of eval() is prohibited')
-    }
-
-    if (!ARGS.dev) {
-      global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
     }
 
   } catch (e) {
