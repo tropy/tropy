@@ -7,12 +7,13 @@ import { ItemInfo } from '../item/info'
 import { SelectionInfo } from '../selection/info'
 import * as act from '../../actions'
 import { shapes } from '../util'
-import { arrayOf, bool, func, object, shape } from 'prop-types'
+import { arrayOf, bool, func, object, shape, string } from 'prop-types'
 
 import {
   getActiveSelection,
   getAllTemplatesByType,
   getItemFields,
+  getMetadataCompletions,
   getPhotoFields,
   getPropertyList,
   getSelectedItemTemplate,
@@ -158,6 +159,7 @@ class MetadataPanel extends React.PureComponent {
         onContextMenu={this.handleItemContextMenu}>
         <MetadataList
           ref={this.setItemFields}
+          completions={this.props.completions}
           edit={this.props.edit}
           fields={this.props.fields.item}
           isDisabled={this.props.isDisabled}
@@ -187,6 +189,7 @@ class MetadataPanel extends React.PureComponent {
         onContextMenu={this.handlePhotoContextMenu}>
         <MetadataList
           ref={this.setPhotoFields}
+          completions={this.props.completions}
           edit={this.props.edit}
           fields={this.props.fields.photo}
           isDisabled={this.props.isDisabled}
@@ -222,6 +225,7 @@ class MetadataPanel extends React.PureComponent {
         onContextMenu={this.handleSelectionContextMenu}>
         <MetadataList
           ref={this.setSelectionFields}
+          completions={this.props.completions}
           edit={this.props.edit}
           fields={this.props.fields.selection}
           isDisabled={this.props.isDisabled}
@@ -253,6 +257,7 @@ class MetadataPanel extends React.PureComponent {
 
 
   static propTypes = {
+    completions: arrayOf(string).isRequired,
     edit: object,
     fields: shape({
       available: arrayOf(object).isRequired,
@@ -285,6 +290,7 @@ class MetadataPanel extends React.PureComponent {
 
 const MetadataPanelContainer = connect(
     (state) => ({
+      completions: getMetadataCompletions(state),
       edit: state.edit.field,
       fields: {
         available: getPropertyList(state),

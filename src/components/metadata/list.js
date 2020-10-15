@@ -112,6 +112,7 @@ export class MetadataList extends React.PureComponent {
             property={property}
             text={value.text}
             type={value.type || type}
+            completions={this.props.completions}
             onContextMenu={this.props.onContextMenu}
             onCopy={this.props.onCopy}
             onChange={this.handleChange}
@@ -131,6 +132,7 @@ export class MetadataList extends React.PureComponent {
   }
 
   static propTypes = {
+    completions: arrayOf(string).isRequired,
     isDisabled: bool,
     edit: object,
     fields: arrayOf(shape({
@@ -149,5 +151,9 @@ export class MetadataList extends React.PureComponent {
     onCopy: func.isRequired,
     onChange: func.isRequired,
     onCreate: func
+  }
+
+  static defaultProps = {
+    completions: []
   }
 }
