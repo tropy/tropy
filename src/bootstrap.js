@@ -56,7 +56,7 @@ const START =
       })
 
     } catch (e) {
-      fatal({ stack: e.stack }, `${win.type}.init failed`)
+      fatal(`${win.type}.init crashed: ${e.message}`)
       ipc.send('error', e)
     }
 
