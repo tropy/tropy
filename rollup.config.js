@@ -68,11 +68,13 @@ export default [
   },
 
   {
-    input: [
-      'src/bootstrap.js'
-    ],
+    input: {
+      bootstrap: 'src/bootstrap.js',
+      esper: 'src/esper/index.js'
+    },
     output: {
       dir: 'lib',
+      exports: 'auto',
       format: 'cjs',
       sourcemap: true,
       manualChunks: {
