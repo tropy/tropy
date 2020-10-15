@@ -1,6 +1,6 @@
 import { createSelector as memo } from 'reselect'
 import { pluck } from './util'
-import { array, get, own } from '../common/util'
+import { array, own } from '../common/util'
 import { equal } from '../value'
 import { compare } from '../collate'
 import { TYPE } from '../constants'
@@ -22,6 +22,7 @@ import {
   getActiveSelectionTemplate
 } from './ontology'
 
+const EMPTY = []
 
 const collect = transformer((data, [key, value]) => {
   if (value != null) {
@@ -156,15 +157,15 @@ export const getSelectionFields = memo(
 )
 
 const getActiveProperty =
-  ({ edit }) => get(edit, ['field', 'property'])
+  ({ edit }) => edit?.field?.property
 
 const getActiveId =
-  ({ edit }) => get(edit, ['field', 'id', '0'])
+  ({ edit }) => edit?.field?.id?.[0]
 
 const getActiveDatatype = memo(
   getMetadata, getActiveProperty, getActiveId,
   (metadata, prop, id) =>
-    get(metadata, [id, prop, 'type'], TYPE.TEXT)
+    metadata?.[id]?.[prop]?.type || TYPE.TEXT
 )
 
 const makeCompletionFilter = (prop, datatype, byProp) =>
@@ -179,7 +180,7 @@ export const getMetadataCompletions = memo(
   ({ settings }) => settings.completions === 'property-datatype',
 
   (metadata, prop, datatype, byProp) => {
-    if (prop == null) return []
+    if (prop == null) return EMPTY
     let comp = new Set()
 
     seq(metadata, compose(

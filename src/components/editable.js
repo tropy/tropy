@@ -1,5 +1,5 @@
 import React from 'react'
-import { bool, func, number, oneOfType, string } from 'prop-types'
+import { array, bool, func, number, oneOfType, string } from 'prop-types'
 import { Input } from './input'
 import { noop } from '../common/util'
 import cx from 'classnames'
@@ -94,7 +94,7 @@ export class Editable extends React.PureComponent {
         autofocus={this.props.autofocus}
         autoselect={this.props.autoselect}
         className="editable-control"
-        completions={this.props.getCompletions(window.state)}
+        completions={this.props.completions}
         isRequired={this.props.isRequired}
         placeholder={this.props.placeholder}
         tabIndex={this.props.tabIndex}
@@ -124,7 +124,7 @@ export class Editable extends React.PureComponent {
   static propTypes = {
     autofocus: bool,
     autoselect: bool,
-    getCompletions: func.isRequired,
+    completions: array,
     display: string,
     isActive: bool,
     isDisabled: bool,
@@ -147,7 +147,6 @@ export class Editable extends React.PureComponent {
   static defaultProps = {
     autofocus: true,
     autoselect: true,
-    getCompletions: noop,
     onCancel: noop
   }
 }

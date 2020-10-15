@@ -6,7 +6,6 @@ import { blank, noop, pluck, URI } from '../../common/util'
 import { IconLock, IconWarningSm } from '../icons'
 import cx from 'classnames'
 import { TYPE } from '../../constants'
-import { getMetadataCompletions } from '../../selectors'
 import { auto } from '../../format'
 import { ResourceSelect } from '../resource/select'
 
@@ -137,7 +136,7 @@ class MetadataField extends React.PureComponent {
             onClick={this.handleClick}>
             <Editable
               value={this.props.text}
-              getCompletions={getMetadataCompletions}
+              completions={this.props.completions}
               display={auto(this.props.text, this.props.type)}
               placeholder={this.props.placeholder}
               isDisabled={this.props.isDisabled || this.props.isReadOnly}
@@ -179,6 +178,7 @@ class MetadataField extends React.PureComponent {
     connectDragSource: func.isRequired,
     connectDragPreview: func.isRequired,
     connectDropTarget: func.isRequired,
+    completions: arrayOf(String),
 
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
