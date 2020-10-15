@@ -372,9 +372,11 @@ export class WindowManager extends EventEmitter {
           win.webContents.send('reload')
         })
         .on('will-navigate', handleWillNavigate)
-        .on('crashed', () => {
-          warn(`${type}[${win.id}] contents crashed`)
-          this.emit('crashed', type, win)
+        .on('render-process-gone', (_, { reason }) => {
+          if (reason !== 'clean-exit') {
+            warn(`${type}[${win.id}] render-process crashed: ${reason}`)
+            this.emit('crashed', type, win)
+          }
         })
 
       win
