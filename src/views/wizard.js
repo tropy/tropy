@@ -33,6 +33,3 @@ win.on('app.redo', () => {
 win.on('settings.update', (data) => {
   store.dispatch(settings.update(data))
 })
-
-Object.defineProperty(window, 'store', { get: () => store })
-Object.defineProperty(window, 'state', { get: () => store.getState() })

@@ -19,6 +19,3 @@ store
       </Main>,
       document.getElementById('main'))
   })
-
-Object.defineProperty(window, 'store', { get: () => store })
-Object.defineProperty(window, 'state', { get: () => store.getState() })
