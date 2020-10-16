@@ -283,6 +283,7 @@ export class ContextMenu extends Menu {
     ...scopes.items,
     'item-list',
     'item',
+    'item-read-only',
     'item-rotate']
   scopes['item-list'].position = 2
 
