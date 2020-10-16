@@ -2,9 +2,8 @@ import fs from 'fs'
 import { join } from 'path'
 import { promisify } from 'util'
 import crossZip from 'cross-zip'
-import { mkdtmp } from './os'
 
-const { readdir, rename, rmdir } = fs.promises
+const { mkdtemp, readdir, rename, rmdir } = fs.promises
 const unzipAsync = promisify(crossZip.unzip)
 
 export const zip = promisify(crossZip.zip)
@@ -17,7 +16,7 @@ export async function unzip(src, dst, { strip } = {}) {
     return unzipAsync(src, dst)
 
   try {
-    var tmp = await mkdtmp('tropy-unzip')
+    var tmp = await mkdtemp(`${dst}-`)
     await unzipAsync(src, tmp)
     let [head, ...tail] = await readdir(tmp, { withFileTypes: true })
 
