@@ -54,7 +54,8 @@ async function load(db, ids, { base } = {}) {
         data.mirror = !!mirror
         data.negative = !!negative
         data.path = (
-          (base) ? resolve(base, normalize(path)) : path
+          (base && data.protocol === 'file') ?
+            resolve(base, normalize(path)) : path
         ).normalize()
 
         if (id in photos) Object.assign(photos[id], data)
@@ -97,7 +98,7 @@ export default {
       ...into('subjects').insert({ template })
     )
 
-    if (base != null && protocol === 'file') {
+    if (base && protocol === 'file') {
       path = relative(base, path)
     }
 
@@ -129,7 +130,7 @@ export default {
     assert(id != null, 'missing photo id')
     if (empty(photo)) return
 
-    if (base != null && photo.path != null) {
+    if (base && photo.path && photo.protocol === 'file') {
       photo.path = relative(base, photo.path)
     }
 
