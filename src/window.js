@@ -61,7 +61,12 @@ export class Window extends EventEmitter {
       'zoom'
     ])
 
-    this.plugins = new Plugins(opts.plugins, { dialog, json })
+    this.plugins = new Plugins(opts.plugins, {
+      dialog,
+      json,
+      window: this
+    })
+
     this.unloader = 'close'
     this.unloaders = []
     this.hasFinishedUnloading = false

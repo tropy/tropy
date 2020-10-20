@@ -36,6 +36,8 @@ const START =
 
       const INIT = Date.now()
       const { store } = await import(`./views/${win.type}`)
+      win.store = store
+
       const LOAD = Date.now()
 
       await idle()
@@ -51,8 +53,7 @@ const START =
         LOAD - INIT)
 
       contextBridge.exposeInMainWorld('tropy', {
-        state: () => store?.getState(),
-        win: () => win
+        state: () => store?.getState()
       })
 
     } catch (e) {
