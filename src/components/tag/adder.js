@@ -8,8 +8,10 @@ import {
   arrayOf,
   bool,
   func,
+  instanceOf,
   number,
   object,
+  oneOfType,
   shape,
   string
 } from 'prop-types'
@@ -44,17 +46,19 @@ class TagAdder extends React.PureComponent {
     return true // Always cancel on blur!
   }
 
-  handleChange = (name) => {
-    if (blank(name))
+  handleChange = (value) => {
+    if (blank(value))
       return this.props.onCancel()
 
-    let query = name.trim().toLowerCase()
-    let tag = this.props.tags.find(t => query === t.name.toLowerCase())
+    for (let name of value.split(this.props.separator)) {
+      let query = name.trim().toLowerCase()
+      let tag = this.props.tags.find(t => query === t.name.toLowerCase())
 
-    if (tag)
-      this.props.onAdd(tag)
-    else
-      this.props.onCreate({ name })
+      if (tag)
+        this.props.onAdd(tag)
+      else
+        this.props.onCreate({ name })
+    }
 
     this.input.current.reset()
   }
@@ -90,6 +94,7 @@ class TagAdder extends React.PureComponent {
       id: number.isRequired,
       name: string.isRequired
     })),
+    separator: oneOfType([string, instanceOf(RegExp)]),
     onAdd: func.isRequired,
     onBlur: func.isRequired,
     onCancel: func.isRequired,
@@ -101,6 +106,7 @@ class TagAdder extends React.PureComponent {
     match: (value, query) => (
       match(value.name || String(value), query, /\b\w/g)
     ),
+    separator: /\s*[;,]\s*/,
     onCancel: noop,
     onFocus: noop
   }
