@@ -189,7 +189,7 @@ export class Input extends React.PureComponent {
     }
 
     this.setState({
-      value: opt?.value?.[this.state.query]
+      value: opt?.value ?? this.state.query
     })
 
     return true
