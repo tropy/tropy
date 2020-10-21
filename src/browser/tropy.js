@@ -801,7 +801,7 @@ export class Tropy extends EventEmitter {
     this.wm.on('closed', (type) => {
       if (type === 'prefs') {
         this.wm.send('project', 'dispatch',
-          act.ontology.load(),
+          act.ontology.load(null, { replace: true }),
           act.storage.reload([['settings']]))
       }
       this.menu.handleWindowChange()

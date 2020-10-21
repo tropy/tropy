@@ -12,7 +12,7 @@ import * as act from '../actions'
 import * as mod from '../models'
 import sanitize from 'sanitize-filename'
 import { join } from 'path'
-import { fail, open, save } from '../dialog'
+import { fail, open, prompt, save } from '../dialog'
 
 
 const { VOCAB, PROPS, CLASS, LABEL, TEMPLATE } = ONTOLOGY
@@ -232,8 +232,8 @@ LabelSave.register(LABEL.SAVE)
 
 export class TemplateImport extends Command {
   *exec() {
-    const { db } = this.options
-    const { payload, meta } = this.action
+    let { db } = this.options
+    let { payload, meta } = this.action
     let { files, isProtected } = payload
 
     if (!files) {
@@ -243,6 +243,8 @@ export class TemplateImport extends Command {
 
     if (!files) return
 
+    let templates = yield select(state => state.ontology.template)
+
     let ids = []
     let temps = {}
 
@@ -250,7 +252,7 @@ export class TemplateImport extends Command {
       let file = files[i]
 
       try {
-        const {
+        let {
           '@id': id,
           type,
           name,
@@ -259,6 +261,11 @@ export class TemplateImport extends Command {
           description,
           field: fields
         } = yield call(Template.open, file)
+
+        if (id in templates) {
+          let response = yield call(prompt, 'template.import', { detail: id })
+          if (response.isCancel) continue
+        }
 
         ids.push(yield call(createTemplate, db, {
           id,
@@ -269,7 +276,7 @@ export class TemplateImport extends Command {
           description,
           fields,
           isProtected
-        }, meta))
+        }, { ...meta, replace: true }))
 
       } catch (e) {
         warn({ stack: e.stack }, `failed to import "${file}"`)
@@ -282,6 +289,10 @@ export class TemplateImport extends Command {
 
       this.undo = act.ontology.template.delete(ids)
       this.redo = act.ontology.template.create(temps)
+
+      if (meta.prompt) {
+        yield call(prompt, 'template.imported', { detail: ids.join('\n') })
+      }
     }
 
     return temps

@@ -558,7 +558,7 @@ export const ProjectContainer = connect(
     },
 
     onTemplateImport(files) {
-      dispatch(act.ontology.template.import({ files }))
+      dispatch(act.ontology.template.import({ files }, { prompt: true }))
     },
 
     onNoteCreate(...args) {
