@@ -8,6 +8,7 @@ import './ontology'
 import './photo'
 import './project'
 import './selection'
+import './subject'
 import './tag'
 
 export * from './command'
