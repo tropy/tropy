@@ -301,7 +301,7 @@ const TemplateEditorContainer = connect(
     },
 
     onImport() {
-      dispatch(ontology.template.import())
+      dispatch(ontology.template.import({}, { prompt: true }))
     },
 
     onSave(...args) {
