@@ -50,14 +50,21 @@ class TagAdder extends React.PureComponent {
     if (blank(value))
       return this.props.onCancel()
 
-    for (let name of value.split(this.props.separator)) {
-      let query = name.trim().toLowerCase()
-      let tag = this.props.tags.find(t => query === t.name.toLowerCase())
+    let query = value.trim().toLowerCase()
+    let tag = this.props.tags.find(t => query === t.name.toLowerCase())
 
-      if (tag)
-        this.props.onAdd(tag)
-      else
-        this.props.onCreate({ name })
+    if (tag) {
+      this.props.onAdd(tag)
+    } else {
+      for (let name of value.split(this.props.separator)) {
+        query = name.trim().toLowerCase()
+        tag = this.props.tags.find(t => query === t.name.toLowerCase())
+
+        if (tag)
+          this.props.onAdd(tag)
+        else
+          this.props.onCreate({ name })
+      }
     }
 
     this.input.current.reset()
