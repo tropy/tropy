@@ -358,6 +358,18 @@ pt:
           buttons:
             - Cancelar
             - Apagar
+      template:
+        import:
+          message: >
+            A template with this id already exists in your ontology database. Do
+            you want to overwrite the existing template?
+          buttons:
+            - Cancel
+            - Overwrite
+        imported:
+          message: Template successfully imported.
+          buttons:
+            - OK
     filter:
       csv: CSV
       templates: Modelos Tropy
