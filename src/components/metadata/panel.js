@@ -1,29 +1,26 @@
-'use strict'
+import React from 'react'
+import { connect } from 'react-redux'
+import { MetadataList } from './list'
+import { MetadataSection } from './section'
+import { PhotoInfo } from '../photo/info'
+import { ItemInfo } from '../item/info'
+import { SelectionInfo } from '../selection/info'
+import * as act from '../../actions'
+import { shapes } from '../util'
+import { arrayOf, bool, func, object, shape, string } from 'prop-types'
 
-const React = require('react')
-const { connect } = require('react-redux')
-const { MetadataList } = require('./list')
-const { MetadataSection } = require('./section')
-const { PhotoInfo } = require('../photo/info')
-const { ItemInfo } = require('../item/info')
-const { SelectionInfo } = require('../selection/info')
-const { get } = require('../../common/util')
-const actions = require('../../actions')
-
-const { shapes } = require('../util')
-const { arrayOf, bool, func, object, shape } = require('prop-types')
-
-const {
+import {
   getActiveSelection,
   getAllTemplatesByType,
   getItemFields,
+  getMetadataCompletions,
   getPhotoFields,
   getPropertyList,
   getSelectedItemTemplate,
   getSelectedItems,
   getSelectedPhoto,
   getSelectionFields
-} = require('../../selectors')
+} from '../../selectors'
 
 
 class MetadataPanel extends React.PureComponent {
@@ -140,7 +137,7 @@ class MetadataPanel extends React.PureComponent {
     if (!this.props.isDisabled) {
       let id = (data.type === 'item') ?
         this.props.items.map(it => it.id) :
-        [get(this.props, [data.type, 'id'])]
+        [this.props?.[data.type]?.id]
 
       let context = data.property ?
         'metadata-field' : 'metadata-list'
@@ -162,6 +159,7 @@ class MetadataPanel extends React.PureComponent {
         onContextMenu={this.handleItemContextMenu}>
         <MetadataList
           ref={this.setItemFields}
+          completions={this.props.completions}
           edit={this.props.edit}
           fields={this.props.fields.item}
           isDisabled={this.props.isDisabled}
@@ -191,6 +189,7 @@ class MetadataPanel extends React.PureComponent {
         onContextMenu={this.handlePhotoContextMenu}>
         <MetadataList
           ref={this.setPhotoFields}
+          completions={this.props.completions}
           edit={this.props.edit}
           fields={this.props.fields.photo}
           isDisabled={this.props.isDisabled}
@@ -226,6 +225,7 @@ class MetadataPanel extends React.PureComponent {
         onContextMenu={this.handleSelectionContextMenu}>
         <MetadataList
           ref={this.setSelectionFields}
+          completions={this.props.completions}
           edit={this.props.edit}
           fields={this.props.fields.selection}
           isDisabled={this.props.isDisabled}
@@ -257,6 +257,7 @@ class MetadataPanel extends React.PureComponent {
 
 
   static propTypes = {
+    completions: arrayOf(string).isRequired,
     edit: object,
     fields: shape({
       available: arrayOf(object).isRequired,
@@ -287,9 +288,9 @@ class MetadataPanel extends React.PureComponent {
   }
 }
 
-module.exports = {
-  MetadataPanel: connect(
+const MetadataPanelContainer = connect(
     (state) => ({
+      completions: getMetadataCompletions(state),
       edit: state.edit.field,
       fields: {
         available: getPropertyList(state),
@@ -306,20 +307,23 @@ module.exports = {
 
     (dispatch) => ({
       onMetadataAdd(...args) {
-        dispatch(actions.metadata.add(...args))
+        dispatch(act.metadata.add(...args))
       },
 
       onMetadataCopy(...args) {
-        dispatch(actions.metadata.copy(...args))
+        dispatch(act.metadata.copy(...args))
       },
 
       onMetadataDelete(...args) {
-        dispatch(actions.metadata.delete(...args))
+        dispatch(act.metadata.delete(...args))
       },
 
       onTemplateChange(type, ...args) {
-        dispatch(actions[type].template.change(...args))
+        dispatch(act[type].template.change(...args))
       }
     }), null, { forwardRef: true }
   )(MetadataPanel)
+
+export {
+  MetadataPanelContainer as MetadataPanel
 }

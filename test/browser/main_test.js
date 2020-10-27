@@ -1,17 +1,15 @@
-'use strict'
-
-const { app } = require('electron')
-const { EventEmitter } = require('events')
-const { resolve } = require('path')
+import { app } from 'electron'
+import { EventEmitter } from 'events'
+import { Tropy } from '../../src/browser/tropy'
+import * as args from '../../src/browser/args'
+import { qualified } from '../../src/common/release'
 
 describe('main process', () => {
-  const Tropy = __require('browser/tropy')
   const tropy = Tropy.instance
 
-  const args = __require('browser/args')
   const argv = process.argv
+  const env = process.env.NODE_ENV
 
-  const { qualified } = __require('common/release')
 
   before(() => {
     process.argv = ['tropy', 'file.tpy']
@@ -29,6 +27,7 @@ describe('main process', () => {
   after(() => {
     Tropy.instance = tropy
     process.argv = argv
+    process.env.NODE_ENV = env
     process.on.restore()
     args.parse.restore()
     app.on.restore()
@@ -67,7 +66,7 @@ describe('main process', () => {
       expect(Tropy.instance.start).to.have.been.calledOnce
       expect(Tropy.instance.ready).to.be.ok
       expect(Tropy.instance.open)
-        .to.have.been.calledOnceWith(resolve('file.tpy'))
+        .to.have.been.calledOnce
     })
 
     it('handles uncaught errors', () => {

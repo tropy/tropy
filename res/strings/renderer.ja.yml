@@ -60,12 +60,13 @@ ja:
       url: 'https://rrchnm.org'
     cds:
       title: Corporation for Digital Scholarship
-      url: 'http://digitalscholar.org'
+      url: 'https://digitalscholar.org'
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
       url: 'https://www.c2dh.uni.lu'
-    text: |
-      Tropyは、歴史教育リソースやデジタル展示、オープンソースソフトウェアの開発チームである{rrchnm}によって作成されています。
+    text: >
+      Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
+      historical teaching resources, digital exhibits, and open-source software.
     trademark: 'Tropyは{cds}の商標です。'
     release:
       title: リリースノート

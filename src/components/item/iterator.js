@@ -1,20 +1,18 @@
-'use strict'
+import React from 'react'
+import { Iterator } from '../iterator'
+import { FormattedMessage } from 'react-intl'
+import { match, isMeta as meta } from '../../keymap'
+import cx from 'classnames'
+import { blank, get } from '../../common/util'
+import { on, off } from '../../dom'
+import { seq, compose, map, cat, keep } from 'transducers.js'
 
-const React = require('react')
-const { Iterator } = require('../iterator')
-const { FormattedMessage } = require('react-intl')
-const { match, isMeta: meta } = require('../../keymap')
-const cx = require('classnames')
-const { blank, get } = require('../../common/util')
-const { on, off } = require('../../dom')
-const { seq, compose, map, cat, keep } = require('transducers.js')
-
-const {
+import {
   arrayOf, shape, bool, func, number, object, string
-} = require('prop-types')
+} from 'prop-types'
 
 
-class ItemIterator extends Iterator {
+export class ItemIterator extends Iterator {
   componentDidMount() {
     super.componentDidMount()
     on(document, 'global:next-item', this.handleNextItem)
@@ -104,10 +102,10 @@ class ItemIterator extends Iterator {
       }
     }
 
-    if (this.props.isReadOnly)
-      context.push('read-only')
-    else if (this.props.isTrashSelected)
+    if (this.props.isTrashSelected)
       context.push('deleted')
+    else if (this.props.isReadOnly)
+      context.push('read-only')
     else if (list)
       context.push('list')
 
@@ -340,9 +338,4 @@ class ItemIterator extends Iterator {
     onSelect: func.isRequired,
     onSort: func.isRequired
   }
-}
-
-
-module.exports = {
-  ItemIterator
 }

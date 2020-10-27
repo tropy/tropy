@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   RESTORE: 'esper.restore',
   UPDATE: 'esper.update',
 

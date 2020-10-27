@@ -1,26 +1,25 @@
-'use strict'
+import * as PIXI from 'pixi.js'
+import { AdjustmentFilter } from '@pixi/filter-adjustment'
+import Esper from './index'
+import { SharpenFilter } from './filter'
+import { SelectionLayer, SelectionOverlay } from './selection'
+import { constrain } from './util'
+import { deg, isHorizontal } from '../common/math'
+import { ESPER } from '../constants'
 
-const PIXI = require('pixi.js')
 const { Container, Sprite, Rectangle } = PIXI
 const { ColorMatrixFilter } = PIXI.filters
-const { AdjustmentFilter } = require('@pixi/filter-adjustment')
-const Esper = require('.')
-const { SharpenFilter, BalanceFilter } = require('./filter')
-const { SelectionLayer, SelectionOverlay } = require('./selection')
-const { constrain } = require('./util')
-const { deg, isHorizontal } = require('../common/math')
-const { TOOL } = require('../constants/esper')
 
 const NEGATIVE = [
   -1, 0, 0, 1, 0, 0, -1, 0, 1, 0, 0, 0, -1, 1, 0, 0, 0, 0, 1, 0
 ]
 
 
-class Photo extends Container {
+export class Photo extends Container {
   #width
   #height
   #pivot
-  #tool = TOOL.ARROW
+  #tool = ESPER.TOOL.ARROW
 
   constructor({ x = 0, y = 0, width, height, resolution }) {
     super()
@@ -36,8 +35,7 @@ class Photo extends Container {
     this.bg.filters = [
       new AdjustmentFilter(),
       new SharpenFilter(0, width, height),
-      new ColorMatrixFilter(),
-      new BalanceFilter()
+      new ColorMatrixFilter()
     ]
 
     this.current = {}
@@ -223,11 +221,6 @@ class Photo extends Container {
     return this
   }
 
-  balance(arg1 = 0) {
-    this.bg.filters[3].arg1 = arg1
-    return this
-  }
-
   sync(props, state = {}) {
     let { width, height } = props.selection || state
 
@@ -248,9 +241,4 @@ class Photo extends Container {
       this.overlay.update()
     }
   }
-}
-
-
-module.exports = {
-  Photo
 }

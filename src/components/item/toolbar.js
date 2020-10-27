@@ -1,15 +1,14 @@
-'use strict'
+import React from 'react'
+import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
+import { IconChevron16 } from '../icons'
+import { Button } from '../button'
+import { Fade } from '../fx'
+import { PROJECT } from '../../constants'
+import { bool, func } from 'prop-types'
 
-const React = require('react')
-const { Titlebar, Toolbar, ToolGroup } = require('../toolbar')
-const { IconChevron16 } = require('../icons')
-const { Button } = require('../button')
-const { Fade } = require('../fx')
-const { MODE } = require('../../constants/project')
-const { bool, func } = require('prop-types')
+const { MODE } = PROJECT
 
-
-class ItemToolbar extends React.PureComponent {
+export class ItemToolbar extends React.PureComponent {
   setProjectMode = () => {
     this.props.onModeChange(MODE.PROJECT)
   }
@@ -34,8 +33,4 @@ class ItemToolbar extends React.PureComponent {
     isItemOpen: bool.isRequired,
     onModeChange: func.isRequired
   }
-}
-
-module.exports = {
-  ItemToolbar
 }

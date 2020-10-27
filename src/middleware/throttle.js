@@ -1,6 +1,4 @@
-'use strict'
-
-const throttle = require('lodash.throttle')
+import throttle from 'lodash.throttle'
 
 const middleware = () => next => {
   const tnxt = throttle(next, 125)
@@ -14,6 +12,6 @@ const middleware = () => next => {
   }
 }
 
-module.exports = {
-  throttle: middleware
+export {
+  middleware as throttle
 }

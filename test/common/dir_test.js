@@ -2,8 +2,7 @@
 
 const { join } = require('path')
 const { mkdtmp } = require('../support/tmp')
-const { rm } = require('../support/rm')
-const { writeFile, mkdir } = require('fs').promises
+const { writeFile, mkdir, rmdir } = require('fs').promises
 
 describe('directory utils', () => {
   const utils = __require('common/dir')
@@ -14,7 +13,7 @@ describe('directory utils', () => {
   })
 
   afterEach(async () => {
-    await rm(root)
+    await rmdir(root, { recursive: true })
   })
 
 

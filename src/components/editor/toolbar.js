@@ -1,16 +1,14 @@
-'use strict'
-
-const React = require('react')
-const { Titlebar, Toolbar, ToolGroup } = require('../toolbar')
-const { Button } = require('../button')
-const { EditorState } = require('prosemirror-state')
-const { LinkContext } = require('./link')
-const memoize = require('memoize-one')
-const { bool, func, instanceOf, string } = require('prop-types')
-const icons = require('../icons')
+import React from 'react'
+import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
+import { Button } from '../button'
+import { EditorState } from 'prosemirror-state'
+import { LinkContext } from './link'
+import memoize from 'memoize-one'
+import { bool, func, instanceOf, string } from 'prop-types'
+import * as icons from '../icons'
 
 
-class EditorToolbar extends React.PureComponent {
+export class EditorToolbar extends React.PureComponent {
   state = {
     context: 'default'
   }
@@ -208,7 +206,10 @@ class EditorToolbar extends React.PureComponent {
 
 const EditorButton = ({ icon, ...props }) => {
   let Icon = icons[icon]
-  return <Button {...props} noFocus icon={<Icon/>}/>
+
+  return (
+    <Button {...props} noFocus icon={<Icon/>}/>
+  )
 }
 
 EditorButton.propTypes = {
@@ -221,8 +222,4 @@ function isMarkActive(type, state) {
   return (empty) ?
     !!type.isInSet(state.storedMarks || $from.marks()) :
     state.doc.rangeHasMark(from, to, type)
-}
-
-module.exports = {
-  EditorToolbar
 }

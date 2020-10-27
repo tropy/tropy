@@ -1,27 +1,25 @@
-'use strict'
-
-const { createSelector: memo } = require('reselect')
-const { seq, compose, cat, map, keep } = require('transducers.js')
-const { getVisiblePhotos } = require('./photos')
-const { pluck } = require('../common/util')
+import { createSelector as memo } from 'reselect'
+import { seq, compose, cat, map, keep } from 'transducers.js'
+import { getVisiblePhotos } from './photos'
+import { pluck } from '../common/util'
 
 const NOTHING = []
 const getSelections = ({ selections }) => selections
 
-const getActiveSelection = memo(
+export const getActiveSelection = memo(
   getSelections,
   ({ nav }) => nav.selection,
   (selections, id) => (id != null) ? selections[id] : null
 )
 
-const getActiveSelectionData = memo(
+export const getActiveSelectionData = memo(
   ({ metadata }) => metadata,
   ({ nav }) => nav.selection,
   (metadata, id) => (id != null) ? metadata[id] : null
 )
 
 
-const getPhotoSelections = memo(
+export const getPhotoSelections = memo(
   ({ nav, photos }) => photos[nav.photo]?.selections,
   getSelections,
   (photoSelections, selections) =>
@@ -31,7 +29,7 @@ const getPhotoSelections = memo(
 
 )
 
-const getVisibleSelections = memo(
+export const getVisibleSelections = memo(
   getSelections,
   getVisiblePhotos,
 
@@ -44,10 +42,3 @@ const getVisibleSelections = memo(
       keep()
     ))
 )
-
-module.exports = {
-  getActiveSelection,
-  getActiveSelectionData,
-  getPhotoSelections,
-  getVisibleSelections
-}

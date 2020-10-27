@@ -1,11 +1,53 @@
-'use strict'
+import { array, blank, list, quote } from '../common/util'
+import { touch } from './subject'
+import { save } from './value'
 
-const { save } = require('./value')
-const { keys } = Object
-const { array, blank, list, quote } = require('../common/util')
-const { touch } = require('./subject')
+async function insert(db, { id, property, value, language = 'NULL' }) {
+  return db.run(`
+    INSERT INTO metadata (id, property, value_id, language)
+      VALUES ${
+        array(id).map(x =>
+          `(${[x, quote(property), value, language].join(',')})`
+        ).join(', ')
+      }`)
+}
 
-const metadata = {
+async function update(db, { id, data, timestamp }, replace = false) {
+  let properties = Object.keys(data)
+      .filter(p => (p !== 'id' && p !== 'pending'))
+
+  await remove(db, {
+    id,
+    property: replace ? null : properties })
+
+  for (let property of properties) {
+    let value = data[property]
+
+    if (value == null || blank(value.text))
+      continue
+
+    value = await save(db, value)
+    await insert(db, { id, property, value })
+  }
+
+  if (timestamp != null) {
+    await touch(db, { id, timestamp })
+  }
+}
+
+async function remove(db, { id, property }) {
+  return db.run(`
+    DELETE FROM metadata WHERE id IN (${list(array(id))})${
+      (property == null) ?
+        '' : ` AND property IN (${list(array(property), quote)})`
+    }`)
+}
+
+export default {
+  insert,
+  remove,
+  update,
+
   async load(db, ids) {
     let data = {}
 
@@ -25,48 +67,8 @@ const metadata = {
     return data
   },
 
-  async remove(db, { id, property }) {
-    return db.run(`
-      DELETE FROM metadata WHERE id IN (${list(array(id))})${
-        (property == null) ?
-          '' : ` AND property IN (${list(array(property), quote)})`
-      }`)
-  },
-
-  async insert(db, { id, property, value, language = 'NULL' }) {
-    return db.run(`
-      INSERT INTO metadata (id, property, value_id, language)
-        VALUES ${
-          array(id).map(x =>
-            `(${[x, quote(property), value, language].join(',')})`
-          ).join(', ')
-        }`)
-  },
-
-  async update(db, { id, data, timestamp }, replace = false) {
-    let properties = keys(data).filter(p => (p !== 'id' && p !== 'pending'))
-
-    await metadata.remove(db, {
-      id,
-      property: replace ? null : properties })
-
-    for (let property of properties) {
-      let value = data[property]
-
-      if (value == null || blank(value.text))
-        continue
-
-      value = await save(db, value)
-      await metadata.insert(db, { id, property, value })
-    }
-
-    if (timestamp != null) {
-      await touch(db, { id, timestamp })
-    }
-  },
-
   async replace(db, data) {
-    return metadata.update(db, data, true)
+    return update(db, data, true)
   },
 
   async copy(db, { source, target }) {
@@ -77,5 +79,3 @@ const metadata = {
           WHERE id = ?`, source)
   }
 }
-
-module.exports = metadata

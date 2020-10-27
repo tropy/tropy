@@ -1,31 +1,33 @@
-'use strict'
+import assert from 'assert'
+import fs from 'fs'
+import { PROJECT, IDLE } from '../constants'
+import { Cache } from '../common/cache'
+import { warn, debug } from '../common/log'
+import { ipc } from './ipc'
+import { consolidator } from './consolidator'
+import { history } from './history'
+import { search } from './search'
+import { ontology } from './ontology'
+import { exec, commands } from './cmd'
+import { shell } from './shell'
+import { fail } from '../dialog'
+import * as mod from '../models'
+import * as act from '../actions'
+import { persist, restore, storage } from './storage'
+import { handleDatabaseErrors } from './db'
+import ARGS, { update } from '../args'
 
-require('../commands')
-
-const assert = require('assert')
-const fs = require('fs')
-const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
-const { IDLE } = require('../constants/idle')
-const { Database } = require('../common/db')
-const { Cache } = require('../common/cache')
-const { warn, debug } = require('../common/log')
-const { ipc } = require('./ipc')
-const consolidator = require('./consolidator')
-const { history } = require('./history')
-const { search } = require('./search')
-const { ontology } = require('./ontology')
-const { exec, commands } = require('./cmd')
-const { shell } = require('./shell')
-const { fail } = require('../dialog')
-const mod = require('../models')
-const act = require('../actions')
-const storage = require('./storage')
-const { handleDatabaseErrors } = require('./db')
-const args = require('../args')
-
-const {
-  all, fork, cancel, call, delay, put, take, takeEvery: every, race
-} = require('redux-saga/effects')
+import {
+  all,
+  fork,
+  cancel,
+  call,
+  delay,
+  put,
+  take,
+  takeEvery as every,
+  race
+} from 'redux-saga/effects'
 
 const has = (condition) => (({ error, meta }) =>
   (!error && meta && (!meta.cmd || meta.done) && meta[condition]))
@@ -44,15 +46,16 @@ const canWrite = (file) =>
     .then(() => true, () => false)
 
 
-function *open(file, meta) {
+export function *open(file, meta) {
   try {
+    let { Database } = yield import('../common/db')
     let ro = (meta.isReadOnly || !(yield call(canWrite, file)))
     var db = new Database(file, ro ? 'r' : 'w')
 
     yield fork(handleDatabaseErrors, db, dbErrorActions)
 
     if (!db.isReadOnly)
-      var migrations = yield call(db.migrate, MIGRATIONS)
+      var migrations = yield call(db.migrate, 'project')
 
     let project = yield call(mod.project.load, db)
     assert(project != null && project.id != null, 'invalid project')
@@ -76,7 +79,7 @@ function *open(file, meta) {
 
     // Update window's global ARGS to allow reloading the project!
     if (db.path !== ARGS.file) {
-      args.update({ file: db.path })
+      update({ file: db.path })
     }
 
     let cache = new Cache(ARGS.cache, project.id)
@@ -121,12 +124,12 @@ function *setup(db, project) {
     yield every(has('search'), search, db)
 
     yield all([
-      call(storage.restore, 'nav', project.id),
-      call(storage.restore, 'notepad', project.id),
-      call(storage.restore, 'esper', project.id),
-      call(storage.restore, 'imports', project.id),
-      call(storage.restore, 'sidebar', project.id),
-      call(storage.restore, 'panel', project.id)
+      call(restore, 'nav', project.id),
+      call(restore, 'notepad', project.id),
+      call(restore, 'esper', project.id),
+      call(restore, 'imports', project.id),
+      call(restore, 'sidebar', project.id),
+      call(restore, 'panel', project.id)
     ])
 
     yield all([
@@ -142,7 +145,7 @@ function *setup(db, project) {
 
     yield call(search, db)
 
-    yield take(IDLE)
+    yield take(IDLE.IDLE)
     yield put(act.cache.prune())
     yield put(act.cache.purge())
 
@@ -157,12 +160,12 @@ function *setup(db, project) {
 
 function *close(db, project) {
   yield all([
-    call(storage.persist, 'nav', project.id),
-    call(storage.persist, 'notepad', project.id),
-    call(storage.persist, 'esper', project.id),
-    call(storage.persist, 'imports', project.id),
-    call(storage.persist, 'sidebar', project.id),
-    call(storage.persist, 'panel', project.id)
+    call(persist, 'nav', project.id),
+    call(persist, 'notepad', project.id),
+    call(persist, 'esper', project.id),
+    call(persist, 'imports', project.id),
+    call(persist, 'sidebar', project.id),
+    call(persist, 'panel', project.id)
   ])
 
   if (project.accessId != null) {
@@ -183,7 +186,10 @@ function *close(db, project) {
 }
 
 
-function *main() {
+export function *main() {
+  // Delayed import with command registation side-effect!
+  yield import('../commands')
+
   let task
   let aux
   let crash
@@ -194,37 +200,37 @@ function *main() {
       fork(ipc),
       fork(history),
       fork(shell),
-      fork(storage.start),
-      fork(consolidator.run)
+      fork(storage),
+      fork(consolidator)
     ])
 
     aux.START = Date.now()
 
     yield all([
-      call(storage.restore, 'recent'),
-      call(storage.restore, 'settings'),
-      call(storage.restore, 'ui')
+      call(restore, 'recent'),
+      call(restore, 'settings'),
+      call(restore, 'ui')
     ])
 
     while (true) {
-      let { type, payload, meta } = yield take([OPEN, CLOSE])
+      let { type, payload, meta } = yield take([PROJECT.OPEN, PROJECT.CLOSE])
 
       debug(`*main "${type}" received`)
 
       if (task != null && task.isRunning()) {
         yield cancel(task)
         yield race({
-          closed: take(CLOSED),
+          closed: take(PROJECT.CLOSED),
           timeout: delay(FORCE_SHUTDOWN_DELAY)
         })
 
         task = null
       }
 
-      if (type === CLOSE && payload !== 'user')
+      if (type === PROJECT.CLOSE && payload !== 'user')
         break
 
-      if (type === OPEN) {
+      if (type === PROJECT.OPEN) {
         task = yield fork(open, payload, meta)
       }
     }
@@ -235,9 +241,9 @@ function *main() {
 
   } finally {
     yield all([
-      call(storage.persist, 'recent'),
-      call(storage.persist, 'settings'),
-      call(storage.persist, 'ui')
+      call(persist, 'recent'),
+      call(persist, 'settings'),
+      call(persist, 'ui')
     ])
 
     // HACK: Ensure we don't cancel aux tasks too early!
@@ -256,9 +262,4 @@ function *main() {
 
     debug('*main terminated')
   }
-}
-
-module.exports = {
-  main,
-  open
 }

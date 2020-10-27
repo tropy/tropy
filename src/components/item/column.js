@@ -1,12 +1,10 @@
-'use strict'
+import React from 'react'
+import { Id, Label } from '../resource/select'
+import { PopupSelect } from '../resource/popup'
+import { IconTick } from '../icons'
+import { bool, object, oneOfType } from 'prop-types'
 
-const React = require('react')
-const { Id, Label } = require('../resource/select')
-const { PopupSelect } = require('../resource/popup')
-const { IconTick } = require('../icons')
-const { bool, object, oneOfType } = require('prop-types')
-
-const ColumnContextMenu = (props) => (
+export const ColumnContextMenu = (props) => (
   <PopupSelect {...props}
     placeholder="select.column.placeholder"
     toText={toColumn}
@@ -28,8 +26,4 @@ Column.propTypes = {
   column: object.isRequired,
   isSelected: bool,
   matchData: oneOfType([bool, object])
-}
-
-module.exports = {
-  ColumnContextMenu
 }

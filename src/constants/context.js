@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   CLEAR: 'context.clear',
   SHOW: 'context.show'
 }

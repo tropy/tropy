@@ -1,21 +1,10 @@
-'use strict'
-
-const { createSelector: memo } = require('reselect')
-const { entries, values } = Object
-const { by } = require('../collate')
-const { cat, compose, filter, into, map } = require('transducers.js')
-const { blank, get, homogenize } = require('../common/util')
-const { TROPY, ITEM, PHOTO, SELECTION } = require('../constants')
-const { value }  = require('../value')
-
-const strip = (id, vocab) =>
-  blank(vocab) ? id.split(/(#|\/)/).pop() : id.slice(vocab.length)
-
-const expand = (res, vocab) => ({
-  ...res,
-  name: strip(res.id, res.vocabulary),
-  prefix: get(vocab, [res.vocabulary, 'prefix'])
-})
+import { createSelector as memo } from 'reselect'
+import { by } from '../collate'
+import { cat, compose, filter, into, map } from 'transducers.js'
+import { blank, get, homogenize } from '../common/util'
+import { expand, tropy } from '../ontology'
+import { ITEM, PHOTO, SELECTION } from '../constants'
+import { value }  from '../value'
 
 const getResourceList =
   (res, vocab) =>
@@ -23,19 +12,19 @@ const getResourceList =
       .sort(by('prefix', 'label', 'name'))
 
 
-const getPropertyList = memo(
+export const getPropertyList = memo(
   ({ ontology }) => ontology.props,
   ({ ontology }) => ontology.vocab,
   getResourceList
 )
 
-const getDatatypeList = memo(
+export const getDatatypeList = memo(
   ({ ontology }) => ontology.type,
   ({ ontology }) => ontology.vocab,
   getResourceList
 )
 
-const getVocabs = memo(
+export const getVocabs = memo(
   ({ ontology }) => ontology.vocab,
   ({ ontology }) => ontology.props,
   ({ ontology }) => ontology.class,
@@ -52,12 +41,12 @@ const getVocabs = memo(
   )
 )
 
-const getAllTemplates = memo(
+export const getAllTemplates = memo(
   ({ ontology }) => ontology.template,
   ({ ontology }) => ontology.props,
 
   (templates, props) =>
-    entries(templates)
+    Object.entries(templates)
       .reduce((tpl, [k, v]) => {
         tpl[k] = {
           ...v,
@@ -83,11 +72,11 @@ const getTemplatesByType = (type) => memo(
   ).sort(by('name', 'id'))
 )
 
-const getItemTemplates = getTemplatesByType(TROPY.Item)
-const getPhotoTemplates = getTemplatesByType(TROPY.Photo)
-const getSelectionTemplates = getTemplatesByType(TROPY.Selection)
+export const getItemTemplates = getTemplatesByType(tropy.Item)
+export const getPhotoTemplates = getTemplatesByType(tropy.Photo)
+export const getSelectionTemplates = getTemplatesByType(tropy.Selection)
 
-const getAllTemplatesByType = memo(
+export const getAllTemplatesByType = memo(
   getItemTemplates,
   getPhotoTemplates,
   getSelectionTemplates,
@@ -96,7 +85,7 @@ const getAllTemplatesByType = memo(
   })
 )
 
-const getItemTemplateProperties = memo(
+export const getItemTemplateProperties = memo(
   getItemTemplates,
   ({ ontology }) => ontology.props,
   ({ ontology }) => ontology.vocab,
@@ -113,15 +102,15 @@ const getItemTemplateProperties = memo(
     )).sort(by('prefix', 'label', 'name'))
 )
 
-const getTemplateList = memo(
+export const getTemplateList = memo(
   ({ ontology }) => ontology.template,
-  (templates) => values(templates).sort(by('name', 'id'))
+  (templates) => Object.values(templates).sort(by('name', 'id'))
 )
 
-const getTemplateFields = ({ ontology }, props) =>
+export const getTemplateFields = ({ ontology }, props) =>
   get(ontology.template, [props.id, 'fields'], [])
 
-const getTemplateField = memo(
+export const getTemplateField = memo(
   getTemplateFields,
   (_, props) => props.field,
   (fields, id) => {
@@ -130,25 +119,25 @@ const getTemplateField = memo(
   }
 )
 
-const getItemTemplate = memo(
+export const getItemTemplate = memo(
   ({ ontology }) => ontology.template,
   ({ settings }) => settings.templates.item,
   (template, id) => template[id] || template[ITEM.TEMPLATE.DEFAULT]
 )
 
-const getPhotoTemplate = memo(
+export const getPhotoTemplate = memo(
   ({ ontology }) => ontology.template,
   ({ settings }) => settings.templates.photo,
   (template, id) => template[id] || template[PHOTO.TEMPLATE.DEFAULT]
 )
 
-const getSelectionTemplate = memo(
+export const getSelectionTemplate = memo(
   ({ ontology }) => ontology.template,
   ({ settings }) => settings.templates.selection,
   (template, id) => template[id] || template[SELECTION.TEMPLATE.DEFAULT]
 )
 
-const getTemplateValues = (template) =>
+export const getTemplateValues = (template) =>
   template.fields.reduce((acc, field) => {
     if (!blank(field.value)) {
       acc[field.property] = value(field.value, field.datatype)
@@ -156,15 +145,15 @@ const getTemplateValues = (template) =>
     return acc
   }, {})
 
-const getTemplateProperties = (template) =>
+export const getTemplateProperties = (template) =>
   template.fields.map(field => field.property)
 
-const getTemplateDefaultValues = memo(
+export const getTemplateDefaultValues = memo(
   ({ ontology }, { template }) => ontology.template[template],
   (template) => getTemplateValues(template)
 )
 
-const getActiveItemTemplate = memo(
+export const getActiveItemTemplate = memo(
   ({ ontology }) => ontology.template,
   ({ nav }) => nav.items[0],
   ({ items }) => items,
@@ -172,7 +161,7 @@ const getActiveItemTemplate = memo(
     (id != null && id in items) ? template[items[id].template] : null
 )
 
-const getActivePhotoTemplate = memo(
+export const getActivePhotoTemplate = memo(
   ({ ontology }) => ontology.template,
   ({ nav }) => nav.photo,
   ({ photos }) => photos,
@@ -180,35 +169,10 @@ const getActivePhotoTemplate = memo(
     (id != null && id in photos) ? template[photos[id].template] : null
 )
 
-const getActiveSelectionTemplate = memo(
+export const getActiveSelectionTemplate = memo(
   ({ ontology }) => ontology.template,
   ({ nav }) => nav.selection,
   ({ selections }) => selections,
   (template, id, selections) =>
     (id != null && id in selections) ? template[selections[id].template] : null
 )
-
-module.exports = {
-  expand,
-  getActiveItemTemplate,
-  getActivePhotoTemplate,
-  getActiveSelectionTemplate,
-  getAllTemplates,
-  getAllTemplatesByType,
-  getDatatypeList,
-  getItemTemplate,
-  getItemTemplateProperties,
-  getItemTemplates,
-  getPhotoTemplate,
-  getPhotoTemplates,
-  getPropertyList,
-  getSelectionTemplate,
-  getSelectionTemplates,
-  getTemplateDefaultValues,
-  getTemplateField,
-  getTemplateFields,
-  getTemplateList,
-  getTemplateProperties,
-  getTemplateValues,
-  getVocabs
-}

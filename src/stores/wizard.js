@@ -1,36 +1,33 @@
-'use strict'
-
-const {
+import {
   createStore, applyMiddleware, combineReducers, compose
-} = require('redux')
+} from 'redux'
 
-const { default: thunk } = require('redux-thunk')
-const { flash, intl, wizard } = require('../reducers')
-const { debounce } = require('../middleware/debounce')
+import thunk from 'redux-thunk'
+import ARGS from '../args'
+import { flash, intl, wizard } from '../reducers'
+import { debounce } from '../middleware'
 
 const devtools = (ARGS.dev || ARGS.debug) &&
   window.__REDUX_DEVTOOLS_EXTENSION__
 
-module.exports = {
-  create(init = {}) {
+export function create(init = {}) {
 
-    const reducer = combineReducers({
-      flash,
-      wizard,
-      intl
-    })
+  const reducer = combineReducers({
+    flash,
+    wizard,
+    intl
+  })
 
-    let middleware = applyMiddleware(
-      debounce,
-      thunk
-    )
+  let middleware = applyMiddleware(
+    debounce,
+    thunk
+  )
 
-    if (typeof devtools === 'function') {
-      middleware = compose(middleware, devtools())
-    }
-
-    const store = createStore(reducer, init, middleware)
-
-    return store
+  if (typeof devtools === 'function') {
+    middleware = compose(middleware, devtools())
   }
+
+  const store = createStore(reducer, init, middleware)
+
+  return store
 }

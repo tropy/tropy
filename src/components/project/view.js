@@ -1,19 +1,25 @@
-'use strict'
-
-const React = require('react')
-const { WindowContext } = require('../main')
-const { DND, DropTarget, hasPhotoFiles } = require('../dnd')
-const { ItemGrid, ItemTable } = require('../item')
-const { ProjectSidebar } = require('./sidebar')
-const { ProjectToolbar } = require('./toolbar')
-const { blank, pick } = require('../../common/util')
-const { array, bool, func, object, number } = require('prop-types')
-const { ITEM } = require('../../constants/sass')
+import React from 'react'
+import { WindowContext } from '../main'
+import { DND, DropTarget, hasPhotoFiles } from '../dnd'
+import { ItemGrid, ItemTable } from '../item'
+import { ProjectSidebar } from './sidebar'
+import { ProjectToolbar } from './toolbar'
+import { blank, pick } from '../../common/util'
+import { array, bool, func, object, number } from 'prop-types'
+import { SASS } from '../../constants'
 
 
 class ProjectView extends React.Component {
+  iterator = React.createRef()
+
+  componentDidUpdate({ isDisabled: wasDisabled }) {
+    if (wasDisabled && !this.props.isDisabled) {
+      this.iterator.current?.focus()
+    }
+  }
+
   get size() {
-    return ITEM.ZOOM[this.props.zoom]
+    return SASS.ITEM.ZOOM[this.props.zoom]
   }
 
   get isEmpty() {
@@ -23,7 +29,7 @@ class ProjectView extends React.Component {
   }
 
   get maxZoom() {
-    return ITEM.ZOOM.length - 1
+    return SASS.ITEM.ZOOM.length - 1
   }
 
   get ItemIterator() {
@@ -52,7 +58,7 @@ class ProjectView extends React.Component {
 
   render() {
     let {
-      isActive,
+      isDisabled,
       canDrop,
       edit,
       isOver,
@@ -73,13 +79,13 @@ class ProjectView extends React.Component {
     return (
       <div id="project-view">
         <ProjectSidebar {...pick(this.props, ProjectSidebar.props)}
-          isDisabled={!isActive}/>
+          isDisabled={isDisabled}/>
         <div className="main">
           <section className="items" style={this.style}>
             <header>
               <ProjectToolbar
                 count={items.length}
-                isDisabled={!isActive}
+                isDisabled={isDisabled}
                 isReadOnly={isReadOnly}
                 maxZoom={maxZoom}
                 query={nav.query}
@@ -89,8 +95,9 @@ class ProjectView extends React.Component {
                 onZoomChange={this.handleZoomChange}/>
             </header>
             <ItemIterator {...pick(this.props, ItemIterator.getPropKeys())}
+              ref={this.iterator}
               items={items}
-              isDisabled={!isActive}
+              isDisabled={isDisabled}
               isTrashSelected={nav.trash}
               isEmpty={isEmpty}
               isReadOnly={isReadOnly}
@@ -118,7 +125,7 @@ class ProjectView extends React.Component {
   static propTypes = {
     canDrop: bool,
     edit: object.isRequired,
-    isActive: bool,
+    isDisabled: bool,
     isEmpty: bool.isRequired,
     isOver: bool,
     items: array.isRequired,
@@ -179,9 +186,9 @@ const collect = (connect, monitor) => ({
   canDrop: monitor.canDrop()
 })
 
-module.exports = {
-  ProjectView: DropTarget([
-    DND.FILE,
-    DND.URL
-  ], spec, collect)(ProjectView)
+const ProjectViewContainer =
+  DropTarget([DND.FILE, DND.URL], spec, collect)(ProjectView)
+
+export {
+  ProjectViewContainer as ProjectView
 }

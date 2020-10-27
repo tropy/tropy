@@ -1,4 +1,4 @@
-'use strict'
+import ARGS from './args'
 
 function sort(locale = ARGS.locale) {
   if (!(locale in sort)) {
@@ -22,7 +22,7 @@ function search(locale = ARGS.locale) {
   return search[locale]
 }
 
-function match(string, term, at = /^\p{Alpha}/gmu) {
+export function match(string, term, at = /^\p{Alpha}/gmu) {
   let cmp = search().compare
   let m
 
@@ -35,28 +35,24 @@ function match(string, term, at = /^\p{Alpha}/gmu) {
   return null
 }
 
-module.exports = {
-  compare(a, b) {
-    return sort().compare(a, b)
-  },
+export function compare(a, b) {
+  return sort().compare(a, b)
+}
 
-  by(...keys) {
-    return (a, b, cmp = sort().compare) => {
-      for (let key of keys) {
-        let res = cmp(a[key], b[key])
-        if (0 !== res) return res
-      }
-      return 0
+export function by(...keys) {
+  return (a, b, cmp = sort().compare) => {
+    for (let key of keys) {
+      let res = cmp(a[key], b[key])
+      if (0 !== res) return res
     }
-  },
-
-  equals(a, b) {
-    return 0 === search().compare(a, b)
-  },
-
-  match,
-
-  startsWith(...args) {
-    return match(...args) != null
+    return 0
   }
+}
+
+export function equals(a, b) {
+  return 0 === search().compare(a, b)
+}
+
+export function startsWith(...args) {
+  return match(...args) != null
 }

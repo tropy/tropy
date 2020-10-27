@@ -1,20 +1,17 @@
-'use strict'
-
-const { select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { ITEM } = require('../../constants')
-const { win } = require('../../window')
-const { darwin } = require('../../common/os')
-const { get } = require('../../common/util')
+import { select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { ITEM } from '../../constants'
+import win from '../../window'
+import { darwin } from '../../common/os'
 
 
-class Preview extends Command {
+export class Preview extends Command {
   *exec() {
     if (!darwin) return
 
     let { photos } = this.action.payload
     let paths = yield select(state =>
-      photos.map(id => get(state.photos, [id, 'path'])))
+      photos.map(id => state.photos?.[id]?.path))
 
     if (paths.length > 0) {
       win.preview(paths[0])
@@ -23,7 +20,3 @@ class Preview extends Command {
 }
 
 Preview.register(ITEM.PREVIEW)
-
-module.exports = {
-  Preview
-}

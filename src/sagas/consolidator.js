@@ -1,42 +1,36 @@
-'use strict'
-
-const { cancel, delay, fork, put, select, take } = require('redux-saga/effects')
-const { getPhotosWithErrors } = require('../selectors')
-const act = require('../actions')
-const { warn } = require('../common/log')
+import { cancel, delay, fork, put, select, take } from 'redux-saga/effects'
+import { getPhotosWithErrors } from '../selectors'
+import * as act from '../actions'
+import { warn } from '../common/log'
 
 const needsConsolidation = ({ meta }) =>
   !!meta.consolidate
 
-const consolidator = {
-  DELAY: 1000,
+const DELAY = 1000
 
-  *consolidate() {
-    try {
-      yield delay(consolidator.DELAY)
+export function *consolidate() {
+  try {
+    yield delay(DELAY)
 
-      let photos = yield select(getPhotosWithErrors)
+    let photos = yield select(getPhotosWithErrors)
 
-      if (photos.length > 0) {
-        yield put(act.photo.consolidate(photos, { force: true }))
-      }
-
-    } catch (e) {
-      warn({ stack: e.stack }, 'unexpected error in *consolidate')
+    if (photos.length > 0) {
+      yield put(act.photo.consolidate(photos, { force: true }))
     }
-  },
 
-  *run() {
-    let task
-
-    while (true) {
-      yield take(needsConsolidation)
-      if (task) {
-        yield cancel(task)
-      }
-      task = yield fork(consolidator.consolidate)
-    }
+  } catch (e) {
+    warn({ stack: e.stack }, 'unexpected error in *consolidate')
   }
 }
 
-module.exports = consolidator
+export function *consolidator() {
+  let task
+
+  while (true) {
+    yield take(needsConsolidation)
+    if (task) {
+      yield cancel(task)
+    }
+    task = yield fork(consolidate)
+  }
+}

@@ -1,14 +1,6 @@
-'use strict'
-
-const { join } = require('path')
-
-module.exports = {
+export default {
   IMPORT: 'ontology.import',
   LOAD: 'ontology.load',
-
-  DB: 'ontology.db',
-  SCHEMA: join(__dirname, '..', '..', 'db', 'schema', 'ontology.sql'),
-  MIGRATIONS: join(__dirname, '..', '..', 'db', 'migrate', 'ontology'),
 
   PROPS: {
     LOAD: 'ontology.props.load'

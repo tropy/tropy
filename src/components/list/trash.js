@@ -1,11 +1,9 @@
-'use strict'
-
-const React = require('react')
-const cx = require('classnames')
-const { IconTrash } = require('../icons')
-const { FormattedMessage } = require('react-intl')
-const { DND, DropTarget } = require('../dnd')
-const { bool, func } = require('prop-types')
+import React from 'react'
+import cx from 'classnames'
+import { IconTrash } from '../icons'
+import { FormattedMessage } from 'react-intl'
+import { DND, DropTarget } from '../dnd'
+import { bool, func } from 'prop-types'
 
 
 class TrashListNode extends React.PureComponent {
@@ -62,6 +60,9 @@ const collect = (connect, monitor) => ({
 })
 
 
-module.exports = {
-  TrashListNode: DropTarget(DND.ITEMS, spec, collect)(TrashListNode)
+const TrashListNodeContainer =
+  DropTarget(DND.ITEMS, spec, collect)(TrashListNode)
+
+export {
+  TrashListNodeContainer as TrashListNode
 }

@@ -1,8 +1,6 @@
-'use strict'
+import { SIDEBAR } from '../constants'
 
-const { SIDEBAR } = require('../constants')
-
-module.exports = {
+export default {
   restore(payload = {}, meta = {}) {
     return {
       type: SIDEBAR.RESTORE,

@@ -1,6 +1,2 @@
-'use strict'
-
-module.exports = {
-  ...require('./balance'),
-  ...require('./sharpen')
-}
+export * from './balance'
+export * from './sharpen'

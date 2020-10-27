@@ -1,30 +1,29 @@
-'use strict'
+import assert from 'assert'
+import { writeFile as write } from 'fs'
+import ARGS from '../args'
+import { Command } from './command'
+import { ONTOLOGY } from '../constants'
+import { warn } from '../common/log'
+import { Ontology, Template, Vocabulary } from '../ontology'
+import { get, pick, pluck } from '../common/util'
+import { all, call, select, cps } from 'redux-saga/effects'
+import { getTemplateField, getTemplateFields } from '../selectors'
+import * as act from '../actions'
+import * as mod from '../models'
+import sanitize from 'sanitize-filename'
+import { join } from 'path'
+import { fail, open, prompt, save } from '../dialog'
 
-const assert = require('assert')
-const { Command } = require('./command')
-const { ONTOLOGY } = require('../constants')
+
 const { VOCAB, PROPS, CLASS, LABEL, TEMPLATE } = ONTOLOGY
-const { warn } = require('../common/log')
-const { get, pick, pluck } = require('../common/util')
-const { all, call, select, cps } = require('redux-saga/effects')
-const { getTemplateField, getTemplateFields } = require('../selectors')
-const act = require('../actions')
-const mod = require('../models')
-const sanitize = require('sanitize-filename')
-const { join } = require('path')
-const { keys } = Object
-const dialog = require('../dialog')
-const { writeFile: write } = require('fs')
 
-
-class Import extends Command {
+export class Import extends Command {
   *exec() {
-    const { Ontology } = require('../common/ontology')
-    const { db } = this.options
+    let { db } = this.options
     let { files, isProtected } = this.action.payload
 
     if (!files) {
-      files = yield call(dialog.open.vocab)
+      files = yield call(open.vocab)
       this.init = performance.now()
     }
 
@@ -54,7 +53,7 @@ class Import extends Command {
 
             } catch (e) {
               warn({ stack: e.stack }, `failed to import "${id}"`)
-              dialog.fail(e, this.action.type)
+              fail(e, this.action.type)
             }
           }
         })
@@ -62,7 +61,7 @@ class Import extends Command {
 
       } catch (e) {
         warn({ stack: e.stack }, `failed to import "${file}"`)
-        dialog.fail(e, this.action.type)
+        fail(e, this.action.type)
       }
     }
 
@@ -85,7 +84,7 @@ class Import extends Command {
 Import.register(ONTOLOGY.IMPORT)
 
 
-class Load extends Command {
+export class Load extends Command {
   *exec() {
     const { db } = this.options
 
@@ -104,7 +103,7 @@ class Load extends Command {
 Load.register(ONTOLOGY.LOAD)
 
 
-class VocabLoad extends Command {
+export class VocabLoad extends Command {
   *exec() {
     return yield call(mod.ontology.vocab.load, this.options.db)
   }
@@ -113,10 +112,8 @@ class VocabLoad extends Command {
 VocabLoad.register(VOCAB.LOAD)
 
 
-class VocabExport extends Command {
+export class VocabExport extends Command {
   *exec() {
-    let { toN3 } = require('../export/vocab')
-
     let { payload } = this.action
     let [vocab, ontology] = yield select(state => [
       pluck(state.ontology.vocab, payload),
@@ -125,10 +122,10 @@ class VocabExport extends Command {
 
     this.isInteractive = true
 
-    let path = yield call(dialog.save.vocab)
+    let path = yield call(save.vocab)
     if (!path) return
 
-    let data = yield call(toN3, vocab[0], ontology)
+    let data = yield call(Vocabulary.toN3, vocab[0], ontology)
     yield cps(write, path, data)
 
     return payload
@@ -138,7 +135,7 @@ class VocabExport extends Command {
 VocabExport.register(VOCAB.EXPORT)
 
 
-class VocabSave extends Command {
+export class VocabSave extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -146,7 +143,7 @@ class VocabSave extends Command {
     assert(payload.id != null)
 
     const original = yield select(state =>
-      pick(state.ontology.vocab[payload.id], keys(payload)))
+      pick(state.ontology.vocab[payload.id], Object.keys(payload)))
 
     yield call(mod.ontology.vocab.update, db, payload)
     this.undo = act.ontology.vocab.save(original)
@@ -158,7 +155,7 @@ class VocabSave extends Command {
 VocabSave.register(VOCAB.SAVE)
 
 
-class VocabDelete extends Command {
+export class VocabDelete extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -176,12 +173,12 @@ class VocabDelete extends Command {
 VocabDelete.register(VOCAB.DELETE)
 
 
-class VocabRestore extends Command {
+export class VocabRestore extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
 
-    const vocabs = keys(payload)
+    const vocabs = Object.keys(payload)
 
     yield call(mod.ontology.vocab.restore, db, ...vocabs)
     this.undo = act.ontology.vocab.delete(vocabs)
@@ -193,7 +190,7 @@ class VocabRestore extends Command {
 VocabRestore.register(VOCAB.RESTORE)
 
 
-class PropsLoad extends Command {
+export class PropsLoad extends Command {
   *exec() {
     return yield call(mod.ontology.props.load, this.options.db)
   }
@@ -202,7 +199,7 @@ class PropsLoad extends Command {
 PropsLoad.register(PROPS.LOAD)
 
 
-class ClassLoad extends Command {
+export class ClassLoad extends Command {
   *exec() {
     return yield call(mod.ontology.class.load, this.options.db)
   }
@@ -211,7 +208,7 @@ class ClassLoad extends Command {
 ClassLoad.register(CLASS.LOAD)
 
 
-class LabelSave extends Command {
+export class LabelSave extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -233,19 +230,20 @@ class LabelSave extends Command {
 LabelSave.register(LABEL.SAVE)
 
 
-class TemplateImport extends Command {
+export class TemplateImport extends Command {
   *exec() {
-    const { Template } = require('../common/ontology')
-    const { db } = this.options
-    const { payload, meta } = this.action
+    let { db } = this.options
+    let { payload, meta } = this.action
     let { files, isProtected } = payload
 
     if (!files) {
-      files = yield call(dialog.open.templates)
+      files = yield call(open.templates)
       this.init = performance.now()
     }
 
     if (!files) return
+
+    let templates = yield select(state => state.ontology.template)
 
     let ids = []
     let temps = {}
@@ -254,7 +252,7 @@ class TemplateImport extends Command {
       let file = files[i]
 
       try {
-        const {
+        let {
           '@id': id,
           type,
           name,
@@ -263,6 +261,11 @@ class TemplateImport extends Command {
           description,
           field: fields
         } = yield call(Template.open, file)
+
+        if (id in templates) {
+          let response = yield call(prompt, 'template.import', { detail: id })
+          if (response.isCancel) continue
+        }
 
         ids.push(yield call(createTemplate, db, {
           id,
@@ -273,11 +276,11 @@ class TemplateImport extends Command {
           description,
           fields,
           isProtected
-        }, meta))
+        }, { ...meta, replace: true }))
 
       } catch (e) {
         warn({ stack: e.stack }, `failed to import "${file}"`)
-        dialog.fail(e, this.action.type)
+        fail(e, this.action.type)
       }
     }
 
@@ -286,6 +289,10 @@ class TemplateImport extends Command {
 
       this.undo = act.ontology.template.delete(ids)
       this.redo = act.ontology.template.create(temps)
+
+      if (meta.prompt) {
+        yield call(prompt, 'template.imported', { detail: ids.join('\n') })
+      }
     }
 
     return temps
@@ -295,9 +302,8 @@ class TemplateImport extends Command {
 TemplateImport.register(TEMPLATE.IMPORT)
 
 
-class TemplateExport extends Command {
+export class TemplateExport extends Command {
   *exec() {
-    const { Template } = require('../common/ontology')
     let { id, path } = this.action.payload
 
     try {
@@ -306,7 +312,7 @@ class TemplateExport extends Command {
 
       if (!path) {
         this.isInteractive = true
-        path = yield call(dialog.save.template, {
+        path = yield call(save.template, {
           defaultPath: join(
             ARGS.documents,
             data.name ? sanitize(`${data.name}.ttp`) : ''
@@ -320,7 +326,7 @@ class TemplateExport extends Command {
 
     } catch (e) {
       warn({ stack: e.stack }, `failed to export template ${id} to ${path}`)
-      dialog.fail(e, this.action.type)
+      fail(e, this.action.type)
     }
   }
 }
@@ -328,7 +334,7 @@ class TemplateExport extends Command {
 TemplateExport.register(TEMPLATE.EXPORT)
 
 
-class TemplateCreate extends Command {
+export class TemplateCreate extends Command {
   *exec() {
     const { db } = this.options
     const { payload, meta } = this.action
@@ -343,7 +349,7 @@ class TemplateCreate extends Command {
 
       } catch (e) {
         warn({ stack: e.stack }, `failed to create template "${id}"`)
-        dialog.fail(e, this.action.type)
+        fail(e, this.action.type)
       }
     }
 
@@ -380,13 +386,13 @@ async function createTemplate(db, data, meta) {
 }
 
 
-class TemplateSave extends Command {
+export class TemplateSave extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
 
     const original = yield select(state =>
-      pick(state.ontology.template[payload.id], keys(payload)))
+      pick(state.ontology.template[payload.id], Object.keys(payload)))
 
     yield call(mod.ontology.template.save, db, payload)
     this.undo = act.ontology.template.save(original)
@@ -398,7 +404,7 @@ class TemplateSave extends Command {
 TemplateSave.register(TEMPLATE.SAVE)
 
 
-class TemplateDelete extends Command {
+export class TemplateDelete extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -416,7 +422,7 @@ class TemplateDelete extends Command {
 TemplateDelete.register(TEMPLATE.DELETE)
 
 
-class TemplateFieldAdd extends Command {
+export class TemplateFieldAdd extends Command {
   *exec() {
     const { db } = this.options
     const { id, field } = this.action.payload
@@ -438,7 +444,7 @@ class TemplateFieldAdd extends Command {
 TemplateFieldAdd.register(TEMPLATE.FIELD.ADD)
 
 
-class TemplateFieldRemove extends Command {
+export class TemplateFieldRemove extends Command {
   *exec() {
     const { db } = this.options
     const { id, field } = this.action.payload
@@ -460,7 +466,7 @@ class TemplateFieldRemove extends Command {
 TemplateFieldRemove.register(TEMPLATE.FIELD.REMOVE)
 
 
-class TemplateFieldSave extends Command {
+export class TemplateFieldSave extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
@@ -478,7 +484,7 @@ class TemplateFieldSave extends Command {
     }
 
     this.undo = act.ontology.template.field.save({
-      id, field: pick(original.field, keys(field))
+      id, field: pick(original.field, Object.keys(field))
     })
 
     return payload
@@ -488,7 +494,7 @@ class TemplateFieldSave extends Command {
 TemplateFieldSave.register(TEMPLATE.FIELD.SAVE)
 
 
-class TemplateFieldOrder extends Command {
+export class TemplateFieldOrder extends Command {
   *exec() {
     const { db } = this.options
     const { id, fields } = this.action.payload
@@ -507,26 +513,3 @@ class TemplateFieldOrder extends Command {
 }
 
 TemplateFieldOrder.register(TEMPLATE.FIELD.ORDER)
-
-
-module.exports = {
-  ClassLoad,
-  Import,
-  LabelSave,
-  Load,
-  PropsLoad,
-  TemplateCreate,
-  TemplateExport,
-  TemplateFieldAdd,
-  TemplateFieldOrder,
-  TemplateFieldRemove,
-  TemplateFieldSave,
-  TemplateImport,
-  TemplateDelete,
-  TemplateSave,
-  VocabDelete,
-  VocabExport,
-  VocabLoad,
-  VocabRestore,
-  VocabSave
-}

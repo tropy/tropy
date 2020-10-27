@@ -1,23 +1,21 @@
-'use strict'
+import { extname } from 'path'
+import debounce from 'lodash.debounce'
+import React from 'react'
+import { connect } from 'react-redux'
+import ARGS from '../../args'
+import { ProjectView } from './view'
+import { ItemView } from '../item'
+import { DragLayer } from '../drag-layer'
+import { DND, DropTarget, hasProjectFiles } from '../dnd'
+import { NoProject } from './none'
+import { PROJECT } from '../../constants'
+import { emit, on, off, ensure, isInput, reflow } from '../../dom'
+import cx from 'classnames'
+import * as act from '../../actions'
+import { match } from '../../keymap'
+import { warn } from '../../common/log'
 
-const React = require('react')
-const { connect } = require('react-redux')
-const { ProjectView } = require('./view')
-const { ItemView } = require('../item')
-const { DragLayer } = require('../drag-layer')
-const { DND, DropTarget, hasProjectFiles } = require('../dnd')
-const { NoProject } = require('./none')
-const { extname } = require('path')
-const { MODE } = require('../../constants/project')
-const { emit, on, off, ensure, isInput, reflow } = require('../../dom')
-const cx = require('classnames')
-const { values } = Object
-const actions = require('../../actions')
-const debounce = require('lodash.debounce')
-const { match } = require('../../keymap')
-const { warn } = require('../../common/log')
-
-const {
+import {
   getCachePrefix,
   getAllColumns,
   getSelectedItems,
@@ -27,14 +25,16 @@ const {
   getVisibleItems,
   getVisibleNotes,
   getVisiblePhotos
-} = require('../../selectors')
+} from '../../selectors'
 
-const {
+import {
   arrayOf, oneOf, shape, bool, object, func, string, number
-} = require('prop-types')
+} from 'prop-types'
+
+const { MODE } = PROJECT
 
 
-class ProjectContainer extends React.Component {
+class Project extends React.Component {
   container = React.createRef()
 
   constructor(props) {
@@ -197,6 +197,9 @@ class ProjectContainer extends React.Component {
   }
 
   handleKeyDown = (event) => {
+    if (isInput(event.target))
+      return
+
     switch (match(this.props.keymap.global, event)) {
       case 'back':
         emit(document, 'global:back')
@@ -218,6 +221,9 @@ class ProjectContainer extends React.Component {
         break
       case 'prevTab':
         emit(document, 'global:prev-tab')
+        break
+      case 'find':
+        emit(document, 'global:find')
         break
       default:
         return
@@ -271,7 +277,7 @@ class ProjectContainer extends React.Component {
           nav={nav}
           items={items}
           data={data}
-          isActive={this.state.mode === MODE.PROJECT && !project.closing}
+          isDisabled={this.state.mode !== MODE.PROJECT || project.closing}
           isEmpty={this.isEmpty}
           columns={columns}
           offset={this.state.offset}
@@ -336,7 +342,7 @@ class ProjectContainer extends React.Component {
     ),
 
     nav: shape({
-      mode: oneOf(values(MODE)).isRequired
+      mode: oneOf(Object.values(MODE)).isRequired
     }).isRequired,
 
     ui: object.isRequired,
@@ -399,199 +405,197 @@ const DropTargetSpec = {
 }
 
 
-module.exports = {
-  ProjectContainer: connect(
-    state => ({
-      cache: getCachePrefix(state),
-      columns: getAllColumns(state),
-      data: state.metadata,
-      edit: state.edit,
-      index: state.qr.index,
-      items: getVisibleItems(state),
-      keymap: state.keymap,
-      nav: state.nav,
-      note: getSelectedNote(state),
-      notes: getVisibleNotes(state),
-      photo: getSelectedPhoto(state),
-      photos: state.photos,
-      visiblePhotos: getVisiblePhotos(state),
-      project: state.project,
-      selection: getSelectedItems(state),
-      sort: getSortColumn(state),
-      templates: state.ontology.template,
-      tags: state.tags,
-      ui: state.ui
-    }),
+export const ProjectContainer = connect(
+  state => ({
+    cache: getCachePrefix(state),
+    columns: getAllColumns(state),
+    data: state.metadata,
+    edit: state.edit,
+    index: state.qr.index,
+    items: getVisibleItems(state),
+    keymap: state.keymap,
+    nav: state.nav,
+    note: getSelectedNote(state),
+    notes: getVisibleNotes(state),
+    photo: getSelectedPhoto(state),
+    photos: state.photos,
+    visiblePhotos: getVisiblePhotos(state),
+    project: state.project,
+    selection: getSelectedItems(state),
+    sort: getSortColumn(state),
+    templates: state.ontology.template,
+    tags: state.tags,
+    ui: state.ui
+  }),
 
-    dispatch => ({
-      onContextMenu(event, ...args) {
-        event.stopPropagation()
-        dispatch(actions.context.show(event, ...args))
-      },
+  dispatch => ({
+    onContextMenu(event, ...args) {
+      event.stopPropagation()
+      dispatch(act.context.show(event, ...args))
+    },
 
-      onModeChange(mode) {
-        dispatch(actions.nav.update({ mode }))
-      },
+    onModeChange(mode) {
+      dispatch(act.nav.update({ mode }))
+    },
 
-      onOpenInFolder(...args) {
-        dispatch(actions.shell.open(...args))
-      },
+    onOpenInFolder(...args) {
+      dispatch(act.shell.open(...args))
+    },
 
-      onProjectCreate() {
-        dispatch(actions.project.create())
-      },
+    onProjectCreate() {
+      dispatch(act.project.create())
+    },
 
-      onProjectOpen(path) {
-        dispatch(actions.project.open(path))
-      },
+    onProjectOpen(path) {
+      dispatch(act.project.open(path))
+    },
 
-      onColumnInsert(...args) {
-        dispatch(actions.nav.column.insert(...args))
-      },
+    onColumnInsert(...args) {
+      dispatch(act.nav.column.insert(...args))
+    },
 
-      onColumnRemove(...args) {
-        dispatch(actions.nav.column.remove(...args))
-      },
+    onColumnRemove(...args) {
+      dispatch(act.nav.column.remove(...args))
+    },
 
-      onColumnOrder(...args) {
-        dispatch(actions.nav.column.order(...args))
-      },
+    onColumnOrder(...args) {
+      dispatch(act.nav.column.order(...args))
+    },
 
-      onColumnResize(...args) {
-        dispatch(actions.nav.column.resize(...args))
-      },
+    onColumnResize(...args) {
+      dispatch(act.nav.column.resize(...args))
+    },
 
-      onSelect(...args) {
-        dispatch(actions.nav.select(...args))
-      },
+    onSelect(...args) {
+      dispatch(act.nav.select(...args))
+    },
 
-      onSearch(query) {
-        dispatch(actions.nav.search({ query }))
-      },
+    onSearch(query) {
+      dispatch(act.nav.search({ query }))
+    },
 
-      onSort(...args) {
-        dispatch(actions.nav.sort(...args))
-      },
+    onSort(...args) {
+      dispatch(act.nav.sort(...args))
+    },
 
-      onItemSelect(payload, mod, meta) {
-        dispatch(actions.item.select(payload, { mod, ...meta }))
-      },
+    onItemSelect(payload, mod, meta) {
+      dispatch(act.item.select(payload, { mod, ...meta }))
+    },
 
-      onItemOpen(item) {
-        dispatch(actions.item.open(item))
-      },
+    onItemOpen(item) {
+      dispatch(act.item.open(item))
+    },
 
-      onItemCreate() {
-        dispatch(actions.item.create())
-      },
+    onItemCreate() {
+      dispatch(act.item.create())
+    },
 
-      onItemImport(...args) {
-        dispatch(actions.item.import(...args))
-      },
+    onItemImport(...args) {
+      dispatch(act.item.import(...args))
+    },
 
-      onItemExport(items, meta) {
-        dispatch(actions.item.export(items, meta))
-      },
+    onItemExport(items, meta) {
+      dispatch(act.item.export(items, meta))
+    },
 
-      onItemDelete(items) {
-        dispatch(actions.item.delete(items))
-      },
+    onItemDelete(items) {
+      dispatch(act.item.delete(items))
+    },
 
-      onItemMerge(...args) {
-        dispatch(actions.item.merge(...args))
-      },
+    onItemMerge(...args) {
+      dispatch(act.item.merge(...args))
+    },
 
-      onItemPreview(...args) {
-        dispatch(actions.item.preview(...args))
-      },
+    onItemPreview(...args) {
+      dispatch(act.item.preview(...args))
+    },
 
-      onItemTagAdd(...args) {
-        dispatch(actions.item.tags.create(...args))
-      },
+    onItemTagAdd(...args) {
+      dispatch(act.item.tags.create(...args))
+    },
 
-      onItemTagRemove(...args) {
-        dispatch(actions.item.tags.delete(...args))
-      },
+    onItemTagRemove(...args) {
+      dispatch(act.item.tags.delete(...args))
+    },
 
-      onMetadataSave(...args) {
-        dispatch(actions.metadata.save(...args))
-        dispatch(actions.edit.cancel())
-      },
+    onMetadataSave(...args) {
+      dispatch(act.metadata.save(...args))
+      dispatch(act.edit.cancel())
+    },
 
-      onPhotoCreate(...args) {
-        dispatch(actions.photo.create(...args))
-      },
+    onPhotoCreate(...args) {
+      dispatch(act.photo.create(...args))
+    },
 
-      onPhotoMove(...args) {
-        dispatch(actions.photo.move(...args))
-      },
+    onPhotoMove(...args) {
+      dispatch(act.photo.move(...args))
+    },
 
-      onPhotoError(...args) {
-        dispatch(actions.photo.error(...args))
-      },
+    onPhotoError(...args) {
+      dispatch(act.photo.error(...args))
+    },
 
-      onPhotoRotate(...args) {
-        dispatch(actions.photo.rotate(...args))
-      },
+    onPhotoRotate(...args) {
+      dispatch(act.photo.rotate(...args))
+    },
 
-      onPhotoSave(...args) {
-        dispatch(actions.photo.save(...args))
-      },
+    onPhotoSave(...args) {
+      dispatch(act.photo.save(...args))
+    },
 
-      onPhotoSelect(...args) {
-        dispatch(actions.photo.select(...args))
-      },
+    onPhotoSelect(...args) {
+      dispatch(act.photo.select(...args))
+    },
 
-      onTagCreate(data) {
-        dispatch(actions.tag.create(data))
-        dispatch(actions.edit.cancel())
-      },
+    onTagCreate(data) {
+      dispatch(act.tag.create(data))
+      dispatch(act.edit.cancel())
+    },
 
-      onTagSave(data, id) {
-        dispatch(actions.tag.save({ ...data, id }))
-        dispatch(actions.edit.cancel())
-      },
+    onTagSave(data, id) {
+      dispatch(act.tag.save({ ...data, id }))
+      dispatch(act.edit.cancel())
+    },
 
-      onTemplateImport(files) {
-        dispatch(actions.ontology.template.import({ files }))
-      },
+    onTemplateImport(files) {
+      dispatch(act.ontology.template.import({ files }, { prompt: true }))
+    },
 
-      onNoteCreate(...args) {
-        dispatch(actions.note.create(...args))
-      },
+    onNoteCreate(...args) {
+      dispatch(act.note.create(...args))
+    },
 
-      onNoteSave(...args) {
-        dispatch(actions.note.save(...args))
-      },
+    onNoteSave(...args) {
+      dispatch(act.note.save(...args))
+    },
 
-      onNoteDelete(...args) {
-        dispatch(actions.note.delete(...args))
-      },
+    onNoteDelete(...args) {
+      dispatch(act.note.delete(...args))
+    },
 
-      onNoteRestore(...args) {
-        dispatch(actions.note.delete(...args))
-      },
+    onNoteRestore(...args) {
+      dispatch(act.note.delete(...args))
+    },
 
-      onNoteSelect(...args) {
-        dispatch(actions.note.select(...args))
-      },
+    onNoteSelect(...args) {
+      dispatch(act.note.select(...args))
+    },
 
-      onEdit(...args) {
-        dispatch(actions.edit.start(...args))
-      },
+    onEdit(...args) {
+      dispatch(act.edit.start(...args))
+    },
 
-      onEditCancel() {
-        dispatch(actions.edit.cancel())
-      },
+    onEditCancel() {
+      dispatch(act.edit.cancel())
+    },
 
-      onUiUpdate(...args) {
-        dispatch(actions.ui.update(...args))
-      }
-    })
+    onUiUpdate(...args) {
+      dispatch(act.ui.update(...args))
+    }
+  })
 
-  )(DropTarget(DND.FILE, DropTargetSpec, (c, m) => ({
-    connectDropTarget: c.dropTarget(),
-    isOver: m.isOver(),
-    canDrop: m.canDrop()
-  }))(ProjectContainer))
-}
+)(DropTarget(DND.FILE, DropTargetSpec, (c, m) => ({
+  connectDropTarget: c.dropTarget(),
+  isOver: m.isOver(),
+  canDrop: m.canDrop()
+}))(Project))

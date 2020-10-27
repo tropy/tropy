@@ -1,11 +1,13 @@
-'use strict'
+import { basename, dirname, join } from 'path'
+import { app, shell } from 'electron'
+import ChildProcess from 'child_process'
+import { existsSync, mkdirSync, rmdirSync } from 'fs'
+import { product, qualified } from '../common/release'
+import Registry from 'winreg'
 
-const { basename, dirname, join } = require('path')
-const { app, shell } = require('electron')
-const { sync: rm } = require('rimraf')
-const ChildProcess = require('child_process')
-const { existsSync: exists, mkdirSync: mkdir } = require('fs')
-const { product, qualified } = require('../common/release')
+function rm(path) {
+  rmdirSync(path, { recursive: true, maxRetries: 3 })
+}
 
 const START_MENU = join(
   app.getPath('appData'),
@@ -31,10 +33,10 @@ const update = join(root, 'Update.exe')
 const exe = basename(process.execPath)
 
 function link(path, force = false) {
-  if (!exists(path) && !force) return
+  if (!existsSync(path) && !force) return
 
-  mkdir(dirname(path), { recursive: true })
-  shell.writeShortcutLink(path, exists(path) ? 'update' : 'create', {
+  mkdirSync(dirname(path), { recursive: true })
+  shell.writeShortcutLink(path, existsSync(path) ? 'update' : 'create', {
     target: update,
     args: `--processStart "${exe}"`,
     icon: process.execPath,
@@ -53,8 +55,7 @@ function registry(reg, cmd, ...args) {
 }
 
 
-function setMimeType(...types) {
-  const Registry = require('winreg')
+async function setMimeType(...types) {
   const { DEFAULT_VALUE, HKCU, REG_SZ } = Registry
 
   return Promise.all(types.map(async type => {
@@ -68,12 +69,10 @@ function setMimeType(...types) {
     reg = new Registry({ hive: HKCU, key })
 
     await registry(reg, 'set', DEFAULT_VALUE, REG_SZ, icon)
-
   }))
 }
 
-function clearMimeType(...types) {
-  const Registry = require('winreg')
+async function clearMimeType(...types) {
   const { HKCU } = Registry
 
   return Promise.all(types.map(async type => {
@@ -96,7 +95,7 @@ function quit() {
   app.quit()
 }
 
-function handleSquirrelEvent({ data, cache, logs } = {}) {
+export default function handleSquirrelEvent({ data, cache, logs } = {}) {
   if (process.platform !== 'win32') return false
   if (process.env.NODE_ENV === 'development') return false
   if (process.argv.length === 1) return false
@@ -134,5 +133,3 @@ function handleSquirrelEvent({ data, cache, logs } = {}) {
 
   return false
 }
-
-module.exports = handleSquirrelEvent

@@ -58,8 +58,8 @@ body {
   .metadata &,
   .notes:not(.overflow) & {
     @media (orientation: portrait) {
-      flex: 0 1 100vw;
-      min-height: 50vh;
+      flex: 0 0 100vw;
+      height: 100vw; // Prevent cropped photos in overflow mode
     }
 
     @media (orientation: landscape) {
@@ -71,6 +71,7 @@ body {
   .container.notes:not(.metadata).overflow & {
     @media (orientation: portrait) {
       flex: 0 0 100vh;
+      height: 100vh; // Prevent cropped photos in overflow mode
     }
 
     @media (orientation: landscape) {
@@ -85,6 +86,20 @@ img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+
+  // Prevent rotated photos from being cropped in photo-only layout
+  &[class*="90"],
+  &[class*="270"] {
+    .portrait:not(.metadata):not(.notes) & {
+      max-width: 100vh;
+      max-height: 100vw;
+    }
+
+    .landscape:not(.metadata):not(.notes) & {
+      max-width: 100vh;
+      max-height: 100vw;
+    }
+  }
 }
 
 .metadata-container {
@@ -104,6 +119,8 @@ img {
   }
 
   .overflow & {
+    padding-bottom: $print-page-margin - 3.7mm;
+
     @media (orientation: portrait) {
       min-height: calc(100vh - 100vw);
     }
@@ -232,10 +249,6 @@ label {
     font-size: $print-font-size-large;
     line-height: $print-font-size-large * $print-line-height-large;
     letter-spacing: 0;
-  }
-
-  .overflow.metadata & {
-    margin-top: $print-page-margin - 3.7mm;
   }
 
   label {

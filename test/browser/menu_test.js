@@ -1,9 +1,7 @@
-'use strict'
+import { Menu } from 'electron'
+import { AppMenu } from '../../src/browser/menu'
 
 describe('AppMenu', () => {
-  const { Menu } = require('electron')
-  const { AppMenu } = __require('browser/menu')
-
   let menu
 
   before(() => {

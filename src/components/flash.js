@@ -1,16 +1,13 @@
-'use strict'
-
-const React = require('react')
-const { PureComponent } = React
-const { connect } = require('react-redux')
-const { FormattedMessage } = require('react-intl')
-const { array, func, object, string } = require('prop-types')
-const act = require('../actions')
-const { IconXLarge } = require('./icons')
-const { Button } = require('./button')
+import React from 'react'
+import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
+import { array, func, object, string } from 'prop-types'
+import * as act from '../actions'
+import { IconXLarge } from './icons'
+import { Button } from './button'
 
 
-class FlashMessage extends PureComponent {
+class FlashMessage extends React.PureComponent {
   handleConfirm = () => {
     this.props.onHide({ id: this.props.id, confirm: true })
   }
@@ -59,15 +56,17 @@ Flash.propTypes = {
   onHide: func.isRequired
 }
 
-module.exports = {
-  Flash: connect(
-    state => ({
-      messages: state.flash
-    }),
-    dispatch => ({
-      onHide(...args) {
-        dispatch(act.flash.hide(...args))
-      }
-    })
-  )(Flash)
+const FlashContainer = connect(
+  state => ({
+    messages: state.flash
+  }),
+  dispatch => ({
+    onHide(...args) {
+      dispatch(act.flash.hide(...args))
+    }
+  })
+)(Flash)
+
+export {
+  FlashContainer as Flash
 }

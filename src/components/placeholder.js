@@ -1,10 +1,8 @@
-'use strict'
+import React from 'react'
+import { useIntl } from 'react-intl'
+import { string } from 'prop-types'
 
-const React = require('react')
-const { useIntl } = require('react-intl')
-const { string } = require('prop-types')
-
-const Placeholder = ({ id }) => (
+export const Placeholder = ({ id }) => (
   <div className="placeholder">
     {useIntl().formatMessage({ id })}
   </div>
@@ -12,8 +10,4 @@ const Placeholder = ({ id }) => (
 
 Placeholder.propTypes = {
   id: string.isRequired
-}
-
-module.exports = {
-  Placeholder
 }

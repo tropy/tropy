@@ -1,11 +1,9 @@
-'use strict'
-
-const { Container, Graphics, Rectangle } = require('pixi.js')
-const BLANK = Object.freeze({})
-const { COLOR, TOOL } = require('../constants/esper')
+import { Container, Graphics, Rectangle } from 'pixi.js'
+import { BLANK } from '../common/util'
+import { ESPER } from '../constants'
 
 
-class SelectionLayer extends Container {
+export class SelectionLayer extends Container {
   constructor() {
     super()
     this.on('mousemove', this.handleMouseMove)
@@ -43,12 +41,12 @@ class SelectionLayer extends Container {
 
   isVisible(selection, tool) {
     return selection == null && (
-      tool === TOOL.ARROW || tool === TOOL.SELECT
+      tool === ESPER.TOOL.ARROW || tool === ESPER.TOOL.SELECT
     )
   }
 
   isInteractive(tool) {
-    return tool === TOOL.ARROW
+    return tool === ESPER.TOOL.ARROW
   }
 
   sync(props, state) {
@@ -82,7 +80,7 @@ class SelectionLayer extends Container {
 }
 
 
-class Selection extends Graphics {
+export class Selection extends Graphics {
   constructor() {
     super()
     this.data = BLANK
@@ -109,7 +107,7 @@ class Selection extends Graphics {
     this.clear()
     if (!width || !height) return
 
-    let colors = COLOR.selection[state]
+    let colors = ESPER.COLOR.selection[state]
 
     this
       .lineStyle(scale, ...colors.line)
@@ -133,7 +131,7 @@ class Selection extends Graphics {
 }
 
 
-class SelectionOverlay extends Graphics {
+export class SelectionOverlay extends Graphics {
   constructor({ width, height }) {
     super()
 
@@ -156,12 +154,12 @@ class SelectionOverlay extends Graphics {
     let { x, y, width, height } = this.active
 
     this.children[1]
-      .lineStyle(scale, ...COLOR.mask.line)
+      .lineStyle(scale, ...ESPER.COLOR.mask.line)
       .beginFill(0, 0)
       .drawRect(x, y, width, height)
 
     this.children[0]
-      .beginFill(...COLOR.mask.fill)
+      .beginFill(...ESPER.COLOR.mask.fill)
       .drawRect(0, 0, this.width, this.height)
       .beginHole()
       .drawRect(x, y, width, height)
@@ -174,11 +172,4 @@ class SelectionOverlay extends Graphics {
     this.children[0].clear()
     this.visible = (selection != null)
   }
-}
-
-
-module.exports = {
-  Selection,
-  SelectionLayer,
-  SelectionOverlay
 }

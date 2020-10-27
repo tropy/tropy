@@ -1,28 +1,27 @@
-'use strict'
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { Popup } from './popup'
+import { OptionList } from './option'
+import { last } from '../common/util'
+import { translate } from '../common/math'
+import { bounds, viewport } from '../dom'
+import * as collate from '../collate'
+import cx from 'classnames'
+import memoize from 'memoize-one'
+import { SASS } from '../constants'
 
-const React = require('react')
-const { FormattedMessage } = require('react-intl')
-const { Popup } = require('./popup')
-const { OptionList } = require('./option')
-const { last } = require('../common/util')
-const { translate } = require('../common/math')
-const { bounds, viewport } = require('../dom')
-const collate = require('../collate')
-const cx = require('classnames')
-const memoize = require('memoize-one')
-
-const {
+import {
   array, arrayOf, bool, func, instanceOf, number, oneOfType, string
-} = require('prop-types')
+} from 'prop-types'
 
 const {
   INPUT: { BORDER_WIDTH, FOCUS_SHADOW_WIDTH },
   POPUP: { PADDING }
-} = require('../constants/sass')
+} = SASS
 
 const MARGIN = BORDER_WIDTH + FOCUS_SHADOW_WIDTH
 
-const Highlight = ({ text, matchData }) => (
+export const Highlight = ({ text, matchData }) => (
   (!Array.isArray(matchData)) ? text : (
     <>
       {text.slice(0, matchData[0])}
@@ -41,7 +40,7 @@ Highlight.propTypes = {
 }
 
 
-class Completions extends React.Component {
+export class Completions extends React.Component {
   state = {
     options: [],
     active: null
@@ -312,9 +311,4 @@ class Completions extends React.Component {
     toText: (value, { matchData } = {}) =>
       <Highlight text={value.name || String(value)} matchData={matchData}/>
   }
-}
-
-module.exports = {
-  Completions,
-  Highlight
 }

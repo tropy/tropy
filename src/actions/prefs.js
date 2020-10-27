@@ -1,8 +1,6 @@
-'use strict'
+import { PREFS } from '../constants'
 
-const { PREFS } = require('../constants')
-
-module.exports = {
+export default {
   close(payload, meta = {}) {
     return { type: PREFS.CLOSE, payload, meta }
   },

@@ -1,24 +1,10 @@
-'use strict'
+import assert from 'assert'
+import subject from './subject'
+import { props } from '../common/export'
+import { select, update } from '../common/query'
+import { empty, pick } from '../common/util'
 
-const assert = require('assert')
-const subject = require('./subject')
-const { select, update } = require('../common/query')
-const { empty, pick } = require('../common/util')
-
-const COLUMNS = [
-  'width',
-  'height',
-  'angle',
-  'mirror',
-  'negative',
-  'brightness',
-  'contrast',
-  'hue',
-  'saturation',
-  'sharpen'
-]
-
-module.exports = {
+export default {
   async rotate(db, { id, by }) {
     by = Number(by)
 
@@ -40,7 +26,7 @@ module.exports = {
   },
 
   async save(db, { id, timestamp, ...data }) {
-    let image = pick(data, COLUMNS)
+    let image = pick(data, props.image)
     if (empty(image)) return
 
     assert(id != null, 'missing image id')

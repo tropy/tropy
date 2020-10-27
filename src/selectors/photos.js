@@ -1,11 +1,7 @@
-'use strict'
-
-const { createSelector: memo } = require('reselect')
-const { getSelectedItems } = require('./items')
-const { blank } = require('../common/util')
-const {
-  seq, compose, filter, into, map, cat, keep
-} = require('transducers.js')
+import { createSelector as memo } from 'reselect'
+import { seq, compose, filter, into, map, cat, keep } from 'transducers.js'
+import { getSelectedItems } from './items'
+import { blank } from '../common/util'
 
 
 const withErrors = ([, photo]) =>
@@ -20,13 +16,13 @@ const toPhoto = ([, photo]) => photo
 
 const getPhotos = ({ photos }) => photos
 
-const getSelectedPhoto = memo(
+export const getSelectedPhoto = memo(
   getPhotos,
   ({ nav }) => nav.photo,
   (photos, id) => (id != null) ? photos[id] : null
 )
 
-const getVisiblePhotos = memo(
+export const getVisiblePhotos = memo(
   getPhotos,
   getSelectedItems,
 
@@ -46,7 +42,7 @@ const getVisiblePhotos = memo(
   }
 )
 
-const getPhotosWithErrors = memo(
+export const getPhotosWithErrors = memo(
   getPhotos,
   (photos) =>
     into([], compose(
@@ -55,7 +51,7 @@ const getPhotosWithErrors = memo(
       map(toId)
     ), photos))
 
-const getPhotosForConsolidation =
+export const getPhotosForConsolidation =
   ({ photos }, ids) =>
     blank(ids) ?
       into([],
@@ -67,11 +63,3 @@ const getPhotosForConsolidation =
         compose(
           map(id => photos[id]),
           filter(photo => !photo.consolidating)))
-
-
-module.exports = {
-  getPhotosWithErrors,
-  getPhotosForConsolidation,
-  getSelectedPhoto,
-  getVisiblePhotos
-}

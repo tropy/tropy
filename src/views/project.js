@@ -1,27 +1,31 @@
-'use strict'
+import React from 'react'
+import { render } from 'react-dom'
+import * as PIXI from '@pixi/core'
+import { install } from '@pixi/unsafe-eval'
+import ARGS from '../args'
+import { Main } from '../components/main'
+import { ProjectContainer } from '../components/project/container'
+import { create } from '../stores/project'
+import { main } from '../sagas/project'
+import win from '../window'
+import { idle, intl, project, history, keymap, settings } from '../actions'
+import * as dialog from '../dialog'
 
-const React = require('react')
-const { render } = require('react-dom')
-const { Main } = require('../components/main')
-const { ProjectContainer } = require('../components/project/container')
-const { create } = require('../stores/project')
-const { main } = require('../sagas/project')
-const { win } = require('../window')
-const act = require('../actions')
-const dialog = require('../dialog')
+// Apply PIXI unsafe-eval patch
+install(PIXI)
 
-const store = create()
-const tasks = store.saga.run(main)
+export const store = create()
+export const tasks = store.saga.run(main)
 
 const { locale, file } = ARGS
 
 Promise.all([
-  store.dispatch(act.intl.load({ locale })),
-  store.dispatch(act.keymap.load({ name: 'project', locale }))
+  store.dispatch(intl.load({ locale })),
+  store.dispatch(keymap.load({ name: 'project', locale }))
 ])
   .then(() => {
     if (file != null) {
-      store.dispatch(act.project.open(file))
+      store.dispatch(project.open(file))
     }
 
     render(
@@ -35,32 +39,22 @@ Promise.all([
 dialog.start(store)
 
 win.on('app.undo', () => {
-  store.dispatch(act.history.undo())
+  store.dispatch(history.undo())
 })
 win.on('app.redo', () => {
-  store.dispatch(act.history.redo())
+  store.dispatch(history.redo())
 })
-win.on('settings.update', (settings) => {
-  store.dispatch(act.settings.update(settings))
-  if (settings.locale) {
-    store.dispatch(act.intl.load({ locale: settings.locale }))
+win.on('settings.update', (opts) => {
+  store.dispatch(settings.update(opts))
+  if (opts.locale) {
+    store.dispatch(intl.load({ locale: opts.locale }))
   }
 })
 win.on('idle', ({ type, time }) => {
-  store.dispatch(act.idle[type](time))
+  store.dispatch(idle[type](time))
 })
 
 win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (
-  store.dispatch(act.project.close()), tasks.toPromise()
+  store.dispatch(project.close()), tasks.toPromise()
 ))
-
-Object.defineProperty(window, 'store', { get: () => store })
-Object.defineProperty(window, 'state', { get: () => store.getState() })
-
-{
-  // Apply PIXI unsafe-eval patch
-  const PIXI = require('@pixi/core')
-  const { install } = require('@pixi/unsafe-eval')
-  install(PIXI)
-}

@@ -1,31 +1,29 @@
-'use strict'
+import React from 'react'
+import { connect } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
+import { Titlebar } from '../toolbar'
+import { ActivityPane } from '../activity'
+import { Resizable } from '../resizable'
+import { LastImportListNode, ListTree, TrashListNode } from '../list'
+import { TagList } from '../tag'
+import { Sidebar, SidebarBody } from '../sidebar'
+import { ProjectName } from './name'
+import { TABS, LIST, SASS } from '../../constants'
+import { has, last } from '../../common/util'
+import { match } from '../../keymap'
+import { testFocusChange } from '../../dom'
+import * as act from '../../actions'
 
-const React = require('react')
-const { connect } = require('react-redux')
-const { FormattedMessage } = require('react-intl')
-const { Titlebar } = require('../toolbar')
-const { ActivityPane } = require('../activity')
-const { Resizable } = require('../resizable')
-const { LastImportListNode, ListTree, TrashListNode } = require('../list')
-const { TagList } = require('../tag')
-const { Sidebar, SidebarBody } = require('../sidebar')
-const { ProjectName } = require('./name')
-const { TABS, LIST, SASS: { SIDEBAR } } = require('../../constants')
-const { has, last } = require('../../common/util')
-const { match } = require('../../keymap')
-const { testFocusChange } = require('../../dom')
-const actions = require('../../actions')
-
-const {
+import {
   bool, shape, string, object, arrayOf, func, number
-} = require('prop-types')
+} from 'prop-types'
 
-const {
+import {
   getActivities,
   getAllTags,
   getListHold,
   getListSubTree
-} = require('../../selectors')
+} from '../../selectors'
 
 
 class ProjectSidebar extends React.PureComponent {
@@ -234,8 +232,8 @@ class ProjectSidebar extends React.PureComponent {
       <Resizable
         edge="right"
         isBuffered
-        min={SIDEBAR.MIN_WIDTH}
-        max={SIDEBAR.MAX_WIDTH}
+        min={SASS.SIDEBAR.MIN_WIDTH}
+        max={SASS.SIDEBAR.MAX_WIDTH}
         value={this.props.width}
         onChange={this.props.onResize}>
         <Sidebar>
@@ -382,8 +380,7 @@ class ProjectSidebar extends React.PureComponent {
 }
 
 
-module.exports = {
-  ProjectSidebar: connect(
+const ProjectSidebarContainer = connect(
     (state, { root }) => ({
       activities: getActivities(state),
       expand: state.sidebar.expand,
@@ -402,58 +399,61 @@ module.exports = {
 
     (dispatch) => ({
       onActivityCancel(...args) {
-        dispatch(actions.activity.cancel(...args))
+        dispatch(act.activity.cancel(...args))
       },
 
       onListCollapse(...args) {
-        dispatch(actions.list.collapse(...args))
+        dispatch(act.list.collapse(...args))
       },
 
       onListExpand(...args) {
-        dispatch(actions.list.expand(...args))
+        dispatch(act.list.expand(...args))
       },
 
       onListItemsAdd({ list, items }) {
-        dispatch(actions.list.items.add({
+        dispatch(act.list.items.add({
           id: list, items: items.map(item => item.id)
         }))
       },
 
       onListEdit(id) {
-        dispatch(actions.edit.start({ list: { id } }))
+        dispatch(act.edit.start({ list: { id } }))
       },
 
       onListSave(...args) {
-        dispatch(actions.list.save(...args))
-        dispatch(actions.edit.cancel())
+        dispatch(act.list.save(...args))
+        dispatch(act.edit.cancel())
       },
 
       onListMove(...args) {
-        dispatch(actions.list.move(...args))
+        dispatch(act.list.move(...args))
       },
 
       onProjectEdit() {
-        dispatch(actions.edit.start({ project: { name: true } }))
+        dispatch(act.edit.start({ project: { name: true } }))
       },
 
       onProjectSave(...args) {
-        dispatch(actions.project.save(...args))
-        dispatch(actions.edit.cancel())
+        dispatch(act.project.save(...args))
+        dispatch(act.edit.cancel())
       },
 
       onResize(width) {
-        dispatch(actions.ui.update({
+        dispatch(act.ui.update({
           sidebar: { width: Math.round(width) }
         }))
       },
 
       onTagDelete(tag) {
-        dispatch(actions.tag.delete(tag.id))
+        dispatch(act.tag.delete(tag.id))
       },
 
       onTagSelect(...args) {
-        dispatch(actions.tag.select(...args))
+        dispatch(act.tag.select(...args))
       }
     })
   )(ProjectSidebar)
+
+export {
+  ProjectSidebarContainer as ProjectSidebar
 }

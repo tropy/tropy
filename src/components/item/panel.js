@@ -1,28 +1,23 @@
-'use strict'
+import React from 'react'
+import { ItemToolbar } from './toolbar'
+import { TabNav, TabPane } from '../tabs'
+import { NoteList, NoteToolbar } from '../note'
+import { PanelGroup, Panel } from '../panel'
+import { PhotoPanel, PhotoToolbar } from '../photo'
+import { MetadataPanel } from '../metadata'
+import { TagPanel } from '../tag'
+import { IconMetadata, IconHangtag } from '../icons'
+import { has } from '../../common/util'
+import { on, off, isInput } from '../../dom'
+import cx from 'classnames'
+import { TABS, UI } from '../../constants'
 
-const React = require('react')
-const { ItemToolbar } = require('./toolbar')
-const { TabNav, TabPane } = require('../tabs')
-const { NoteList, NoteToolbar } = require('../note')
-const { PanelGroup, Panel } = require('../panel')
-const { PhotoPanel, PhotoToolbar } = require('../photo')
-const { MetadataPanel } = require('../metadata')
-const { TagPanel } = require('../tag')
-const { IconMetadata, IconHangtag } = require('../icons')
-const { get, has } = require('../../common/util')
-const { on, off, isInput } = require('../../dom')
-const { keys } = Object
-const cx = require('classnames')
-
-const { PANEL } = require('../../constants/ui')
-const { TABS } = require('../../constants')
-
-const {
+import {
   array, bool, func, number, object, shape, string
-} = require('prop-types')
+} from 'prop-types'
 
 
-class ItemPanelGroup extends React.PureComponent {
+export class ItemPanelGroup extends React.PureComponent {
   panel = React.createRef()
   tab = React.createRef()
 
@@ -54,21 +49,17 @@ class ItemPanelGroup extends React.PureComponent {
 
     switch (this.keymap.match(event)) {
       case 'up':
-        if (this.props.isReadOnly)
-          return
-        if (this.tab.current)
-          this.tab.current.prev()
+        if (this.props.isReadOnly) return
+        this.tab.current?.prev()
         break
       case 'down':
-        if (this.props.isReadOnly)
-          return
-        if (this.tab.current)
-          this.tab.current.next()
+        if (this.props.isReadOnly) return
+        this.tab.current?.next()
         break
       case 'left':
       case 'right':
         this.toggleTabs()
-        this.panel.current.focus()
+        this.panel.current?.focus()
         break
       default:
         return
@@ -106,7 +97,7 @@ class ItemPanelGroup extends React.PureComponent {
 
   handlePhotoCreate = (dropped) => {
     this.props.onPhotoCreate({
-      item: get(this.props.items, [0, 'id']),
+      item: this.props.items?.[0]?.id,
       files: dropped && dropped.files
     })
   }
@@ -125,7 +116,9 @@ class ItemPanelGroup extends React.PureComponent {
 
   toggleTabs = () => {
     this.handleTabChange(
-      this.props.panel.tab === PANEL.METADATA ? PANEL.TAGS : PANEL.METADATA
+      this.props.panel.tab === UI.PANEL.METADATA ?
+        UI.PANEL.TAGS :
+        UI.PANEL.METADATA
     )
   }
 
@@ -160,7 +153,7 @@ class ItemPanelGroup extends React.PureComponent {
               if (this.props.items.length === 0) return null
 
               switch (tab) {
-                case PANEL.METADATA:
+                case UI.PANEL.METADATA:
                   return (
                     <MetadataPanel
                       {...props}
@@ -173,7 +166,7 @@ class ItemPanelGroup extends React.PureComponent {
                       onOpenInFolder={this.props.onOpenInFolder}
                       onPhotoSave={this.props.onPhotoSave}/>
                   )
-                case PANEL.TAGS:
+                case UI.PANEL.TAGS:
                   return (
                     <TagPanel
                       {...props}
@@ -282,21 +275,17 @@ class ItemPanelGroup extends React.PureComponent {
   static defaultProps = {
     tabs: [
       {
-        name: PANEL.METADATA,
+        name: UI.PANEL.METADATA,
         label: 'panel.metadata.tab',
         icon: <IconMetadata/>
       },
       {
-        name: PANEL.TAGS,
+        name: UI.PANEL.TAGS,
         label: 'panel.tags.tab',
         icon: <IconHangtag/>
       }
     ]
   }
 
-  static props = keys(ItemPanelGroup.propTypes)
-}
-
-module.exports = {
-  ItemPanelGroup
+  static props = Object.keys(ItemPanelGroup.propTypes)
 }

@@ -1,8 +1,4 @@
-'use strict'
-
-const { createSelector: memo } = require('reselect')
-const { get } = require('../common/util')
-
+import { createSelector as memo } from 'reselect'
 
 const past = ({ history }) =>
   history.past
@@ -10,23 +6,17 @@ const past = ({ history }) =>
 const future = ({ history }) =>
   history.future
 
-const undo = ({ history }) =>
-  get(history.future, [0, 'undo'])
+export const getUndo = ({ history }) =>
+  history.future?.[0]?.undo
 
-const redo = ({ history }) =>
-  get(history.past, [0, 'redo'])
+export const getRedo = ({ history }) =>
+  history.past?.[0]?.redo
 
-const summary = memo([past, future],
+export const getHistory = memo([past, future],
   (past, future) => ({
     past: past.length,
-    undo: get(past, [0, 'redo', 'type']),
+    undo: past?.[0]?.redo?.type,
     future: future.length,
-    redo: get(future, [0, 'redo', 'type'])
+    redo: future?.[0]?.redo?.type
   })
 )
-
-module.exports = {
-  undo,
-  redo,
-  summary
-}

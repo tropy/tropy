@@ -1,5 +1,1 @@
-'use strict'
-
-module.exports = {
-  ...require('./image')
-}
+export * from './image'

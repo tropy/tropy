@@ -1,7 +1,3 @@
-'use strict'
-
-module.exports = {
-  ...require('./container'),
-  ...require('./panel'),
-  ...require('./toolbar')
-}
+export * from './container'
+export * from './panel'
+export * from './toolbar'

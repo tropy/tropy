@@ -1,7 +1,5 @@
-'use strict'
-
-const { ESPER, UI, SASS } = require('../constants')
-const { merge } = require('../common/util')
+import { ESPER, UI, SASS } from '../constants'
+import { merge } from '../common/util'
 
 const INIT = {
   esper: {
@@ -26,15 +24,13 @@ const INIT = {
   zoom: 0
 }
 
-module.exports = {
-  ui(state = INIT, { type, payload }) {
-    switch (type) {
-      case UI.RESTORE:
-        return merge(INIT, payload)
-      case UI.UPDATE:
-        return merge(state, payload)
-      default:
-        return state
-    }
+export function ui(state = INIT, { type, payload }) {
+  switch (type) {
+    case UI.RESTORE:
+      return merge(INIT, payload)
+    case UI.UPDATE:
+      return merge(state, payload)
+    default:
+      return state
   }
 }

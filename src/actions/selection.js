@@ -1,9 +1,7 @@
-'use strict'
+import { SELECTION } from '../constants'
+import { array } from '../common/util'
 
-const { SELECTION } = require('../constants')
-const { array } = require('../common/util')
-
-module.exports = {
+export default {
   create(payload, meta) {
     return {
       type: SELECTION.CREATE,

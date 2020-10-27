@@ -1,23 +1,12 @@
-'use strict'
+import React from 'react'
+import { WindowContext } from '../main'
+import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
+import { Button } from '../button'
+import { Slider } from '../slider'
+import { arrayOf, bool, func, number, string } from 'prop-types'
+import throttle from 'lodash.throttle'
 
-const React = require('react')
-const { WindowContext } = require('../main')
-const { Titlebar, Toolbar, ToolGroup } = require('../toolbar')
-const { Button } = require('../button')
-const { Slider } = require('../slider')
-const { arrayOf, bool, func, number, string } = require('prop-types')
-const throttle = require('lodash.throttle')
-
-const { TOOL, MODE } = require('../../constants/esper')
-
-const {
-  ESPER: {
-    ZOOM_SLIDER_PRECISION,
-    ZOOM_SLIDER_STEPS
-  }
-} = require('../../constants/sass')
-
-const {
+import {
   IconArrow,
   IconSelection,
   IconRotate,
@@ -28,10 +17,22 @@ const {
   IconPlusCircle,
   IconFit,
   IconFill
-} = require('../icons')
+} from '../icons'
+
+import { ESPER, SASS } from '../../constants'
+
+const {
+  TOOL,
+  MODE
+} = ESPER
+
+const {
+  ZOOM_SLIDER_PRECISION,
+  ZOOM_SLIDER_STEPS
+} = SASS.ESPER
 
 
-class EsperToolbar extends React.PureComponent {
+export class EsperToolbar extends React.PureComponent {
   get isZoomToFill() {
     return this.props.mode === MODE.FILL
   }
@@ -198,8 +199,4 @@ class EsperToolbar extends React.PureComponent {
     zoomPrecision: ZOOM_SLIDER_PRECISION,
     zoomSteps: ZOOM_SLIDER_STEPS
   }
-}
-
-module.exports = {
-  EsperToolbar
 }

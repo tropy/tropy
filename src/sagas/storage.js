@@ -1,35 +1,28 @@
-'use strict'
+import { put, select, takeEvery as every, fork } from 'redux-saga/effects'
+import { Storage } from '../storage'
+import * as act from '../actions'
+import { STORAGE } from '../constants'
 
-const { put, select, takeEvery: every, fork } = require('redux-saga/effects')
-const { get } = require('../common/util')
-const { Storage } = require('../storage')
-const actions = require('../actions')
-const { STORAGE } = require('../constants')
+const PERSIST = action => action?.meta?.persist
 
-const PERSIST = action => get(action, ['meta', 'persist'])
-
-const storage = {
-  *restore(name, ...args) {
-    let data = Storage.load(name, ...args)
-    yield put(actions[name].restore(data))
-  },
-
-  *persist(name, ...args) {
-    let data = yield select(state => state[name])
-    Storage.save(name, data, ...args)
-  },
-
-  *start() {
-    yield every(STORAGE.RELOAD, function* (action) {
-      for (let args of action.payload) {
-        yield fork(storage.restore, ...args)
-      }
-    })
-
-    yield every(PERSIST, function* (action) {
-      yield fork(storage.persist, action.meta.persist)
-    })
-  }
+export function *restore(name, ...args) {
+  let data = Storage.load(name, ...args)
+  yield put(act[name].restore(data))
 }
 
-module.exports = storage
+export function *persist(name, ...args) {
+  let data = yield select(state => state[name])
+  Storage.save(name, data, ...args)
+}
+
+export function *storage() {
+  yield every(STORAGE.RELOAD, function* (action) {
+    for (let args of action.payload) {
+      yield fork(restore, ...args)
+    }
+  })
+
+  yield every(PERSIST, function* (action) {
+    yield fork(persist, action.meta.persist)
+  })
+}

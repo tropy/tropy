@@ -1,8 +1,4 @@
-'use strict'
-
-module.exports = {
-  ...require('./seq'),
-  ...require('./debounce'),
-  ...require('./throttle'),
-  ...require('./log')
-}
+export * from './seq'
+export * from './debounce'
+export * from './throttle'
+export * from './log'

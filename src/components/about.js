@@ -1,11 +1,9 @@
-'use strict'
-
-const React = require('react')
-const { FormattedMessage, useIntl } = require('react-intl')
-const { string } = require('prop-types')
-const { shell } = require('electron')
-const { product, version } = require('../common/release')
-const { Titlebar } = require('./toolbar')
+import React from 'react'
+import { FormattedMessage, useIntl } from 'react-intl'
+import { string } from 'prop-types'
+import { shell } from 'electron'
+import { product, version } from '../common/release'
+import { Titlebar } from './toolbar'
 
 const Link = ({ id, ...opts }) => {
   let intl = useIntl()
@@ -22,8 +20,7 @@ Link.propTypes = {
   id: string.isRequired
 }
 
-
-const About = () => (
+export const About = () => (
   <div className="about-view">
     <Titlebar isOptional/>
     <figure className="app-icon"/>
@@ -53,7 +50,3 @@ const About = () => (
     </div>
   </div>
 )
-
-module.exports = {
-  About
-}

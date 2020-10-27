@@ -1,12 +1,10 @@
-'use strict'
-
-const React = require('react')
-const { NewMetadataField, MetadataField } = require('./field')
-const { shallow } = require('../../common/util')
-const { arrayOf, bool, func, object, shape, string } =  require('prop-types')
+import React from 'react'
+import { NewMetadataField, MetadataField } from './field'
+import { shallow } from '../../common/util'
+import { arrayOf, bool, func, object, shape, string } from 'prop-types'
 
 
-class MetadataList extends React.PureComponent {
+export class MetadataList extends React.PureComponent {
   get isBulk() {
     return this.props.fields.id.length > 1
   }
@@ -114,6 +112,7 @@ class MetadataList extends React.PureComponent {
             property={property}
             text={value.text}
             type={value.type || type}
+            completions={this.props.completions}
             onContextMenu={this.props.onContextMenu}
             onCopy={this.props.onCopy}
             onChange={this.handleChange}
@@ -133,6 +132,7 @@ class MetadataList extends React.PureComponent {
   }
 
   static propTypes = {
+    completions: arrayOf(string).isRequired,
     isDisabled: bool,
     edit: object,
     fields: arrayOf(shape({
@@ -152,9 +152,8 @@ class MetadataList extends React.PureComponent {
     onChange: func.isRequired,
     onCreate: func
   }
-}
 
-
-module.exports = {
-  MetadataList
+  static defaultProps = {
+    completions: []
+  }
 }

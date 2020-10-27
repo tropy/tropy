@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   HIDE: 'flash.hide',
   SHOW: 'flash.show'
 }

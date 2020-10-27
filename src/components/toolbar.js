@@ -1,12 +1,10 @@
-'use strict'
+import React from 'react'
+import { WindowContext } from './main'
+import { bool, func, node, string } from 'prop-types'
+import cx from 'classnames'
+import { has } from '../dom'
 
-const React = require('react')
-const { WindowContext } = require('./main')
-const { bool, func, node, string } = require('prop-types')
-const cx = require('classnames')
-const { has } = require('../dom')
-
-const Toolbar = React.forwardRef((props, ref) =>
+export const Toolbar = React.forwardRef((props, ref) =>
   <div
     ref={ref}
     className={cx('toolbar', 'tb-target', props.className)}
@@ -72,7 +70,7 @@ Toolbar.Right.propTypes = {
 }
 
 
-const ToolGroup = ({ children }) =>
+export const ToolGroup = ({ children }) =>
   <div className="tool-group">{children}</div>
 
 ToolGroup.propTypes = {
@@ -80,7 +78,7 @@ ToolGroup.propTypes = {
 }
 
 
-class Titlebar extends React.PureComponent {
+export class Titlebar extends React.PureComponent {
 
   handleDoubleClick = (event) => {
     if (this.context.state.frameless && has(event.target, 'tb-target'))
@@ -103,10 +101,4 @@ class Titlebar extends React.PureComponent {
     children: node,
     isOptional: bool
   }
-}
-
-module.exports = {
-  Toolbar,
-  ToolGroup,
-  Titlebar
 }

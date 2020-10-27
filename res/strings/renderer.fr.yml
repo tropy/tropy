@@ -60,14 +60,13 @@ fr:
       url: 'https://rrchnm.org'
     cds:
       title: Corporation for Digital Scholarship
-      url: 'http://digitalscholar.org'
+      url: 'https://digitalscholar.org'
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
       url: 'https://www.c2dh.uni.lu'
     text: >
-      Tropy est conçu par le {rrchnm}, une équipe qui crée des ressources pour
-      l'enseignement de l'histoire, des expositions numériques, et des logiciels
-      libres et open-source.
+      Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
+      historical teaching resources, digital exhibits, and open-source software.
     trademark: 'Tropy est une marque déposée de la {cds}.'
     release:
       title: Notes de version
@@ -108,23 +107,23 @@ fr:
           dark: Sombre
           system: Suit les préférences système
         font:
-          size: Font size
+          size: Taille de police
           sizes:
-            12px: Very Small
-            13px: Small (Default)
-            14px: Medium
-            15px: Large
-            16px: Very Large
+            12px: Très petite
+            13px: Petite (par défaut)
+            14px: Moyenne
+            15px: Grande
+            16px: Très grande
       print:
         mode: Imprimer
         modes:
           item: Un objet par page
           photo: Une photo par page
           selection: Une sélection par page
-        photos: Include photos
+        photos: Inclure les photos
         metadata: Inclure les métadonnées
         notes: Inclure les notes
-        onlyNotes: Include only photos with notes
+        onlyNotes: Inclure uniquement les photos et les notes
         overflow: Permettre au contenu d'utiliser plus d'une page
       locale:
         locale: Langue
@@ -432,8 +431,8 @@ fr:
       order: Trier les sélections
   activity:
     cache:
-      prune: Optimisation du cache du projet ...
-      purge: Purge de l'historique du cache ...
+      prune: Optimisation du cache du projet …
+      purge: Purge de l'historique du cache …
     project:
       save: Sauvegarde en cours…
     list:
@@ -456,7 +455,7 @@ fr:
       save: Sauvegarde des tags…
     item:
       create: Création d'un objet…
-      delete: Suppression de l'objet...
+      delete: Suppression de l'objet …
       destroy: Suppression définitive des objets…
       explode: Dissociation de l'objet en cours…
       export: Exportation de l'objet en cours…

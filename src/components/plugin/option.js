@@ -1,14 +1,11 @@
-'use strict'
-
-const React = require('react')
-const { bool, func, shape, string, object } = require('prop-types')
-const { FormElement, FormField, FormToggle } = require('../form')
-const { TemplateSelect } = require('../template/select')
-const { ResourceSelect } = require('../resource/select')
-const { get } = require('../../common/util')
+import React from 'react'
+import { bool, func, shape, string, object } from 'prop-types'
+import { FormElement, FormField, FormToggle } from '../form'
+import { TemplateSelect } from '../template'
+import { ResourceSelect } from '../resource'
 
 
-class PluginOption extends React.PureComponent {
+export class PluginOption extends React.PureComponent {
   get attrs() {
     return {
       id: this.props.spec.field,
@@ -37,7 +34,7 @@ class PluginOption extends React.PureComponent {
       case 'number':
         return Number(value)
       case 'template':
-        return get(value, ['id'], '')
+        return value?.id || ''
       default:
         return value
     }
@@ -98,8 +95,4 @@ class PluginOption extends React.PureComponent {
     }).isRequired,
     value: string
   }
-}
-
-module.exports = {
-  PluginOption
 }

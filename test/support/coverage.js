@@ -1,5 +1,3 @@
-'use strict'
-
 const { basename, resolve, join } = require('path')
 const { writeFileSync: write } = require('fs')
 

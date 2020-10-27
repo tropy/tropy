@@ -1,20 +1,17 @@
-'use strict'
-
-const { createSelector: memo } = require('reselect')
-const { values } = Object
-const { getSelectedItems } = require('./items')
-const { seq, compose, filter, map, cat, keep } = require('transducers.js')
-const { by, equals } = require('../collate')
+import { createSelector as memo } from 'reselect'
+import { getSelectedItems } from './items'
+import { seq, compose, filter, map, cat, keep } from 'transducers.js'
+import { by, equals } from '../collate'
 
 const byName = by('name')
 const getTags = ({ tags }) => tags
 
-const getAllTags = memo(
+export const getAllTags = memo(
   getTags,
-  (tags) => values(tags).sort(byName)
+  (tags) => Object.values(tags).sort(byName)
 )
 
-const findTag = ({ tags }, { id, name }) =>
+export const findTag = ({ tags }, { id, name }) =>
   (name) ?
     findByName(tags, name) :
     tags[id] || findByName(tags, id)
@@ -27,11 +24,11 @@ const findByName = (tags, name, idOnly = false) => {
   return null
 }
 
-const findTagIds = ({ tags }, tx) =>
+export const findTagIds = ({ tags }, tx) =>
   tx.map(x =>
     (!(x in tags) && findByName(tags, x, true)) || Number(x))
 
-const getItemTags = memo(
+export const getItemTags = memo(
   getTags,
   getSelectedItems,
 
@@ -54,7 +51,7 @@ const getItemTags = memo(
   }
 )
 
-const getTagCompletions = memo(
+export const getTagCompletions = memo(
   getAllTags,
   getItemTags,
 
@@ -63,12 +60,3 @@ const getTagCompletions = memo(
       filter(tag => !itemTags.find(t => !t.mixed && t.id === tag.id)),
       map(tag => tag.name)))
 )
-
-
-module.exports = {
-  findTag,
-  findTagIds,
-  getAllTags,
-  getItemTags,
-  getTagCompletions
-}

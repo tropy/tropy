@@ -1,8 +1,8 @@
-'use strict'
-
-const { SETTINGS, ITEM, PHOTO, SELECTION, ESPER, DC } = require('../constants')
-const { merge } = require('../common/util')
-const { darwin } = require('../common/os')
+import ARGS from '../args'
+import { SETTINGS, ITEM, PHOTO, SELECTION, ESPER } from '../constants'
+import { darwin } from '../common/os'
+import { merge } from '../common/util'
+import { dc } from '../ontology'
 
 const defaults = {
   completions: 'datatype',
@@ -31,8 +31,8 @@ const defaults = {
   },
   theme: ARGS.theme,
   title: {
-    item: DC.title,
-    photo: DC.title,
+    item: dc.title,
+    photo: dc.title,
     force: false
   },
   overlayToolbars: ARGS.frameless,
@@ -49,20 +49,18 @@ const defaults = {
   zoomMode: ESPER.MODE.FIT
 }
 
-module.exports = {
-  settings(state = defaults, { type, payload }) {
-    switch (type) {
-      case SETTINGS.RESTORE:
-        return {
-          ...merge(defaults, payload),
-          fontSize: ARGS.fontSize,
-          theme: ARGS.theme,
-          locale: ARGS.locale
-        }
-      case SETTINGS.UPDATE:
-        return merge(state, payload)
-      default:
-        return state
-    }
+export function settings(state = defaults, { type, payload }) {
+  switch (type) {
+    case SETTINGS.RESTORE:
+      return {
+        ...merge(defaults, payload),
+        fontSize: ARGS.fontSize,
+        theme: ARGS.theme,
+        locale: ARGS.locale
+      }
+    case SETTINGS.UPDATE:
+      return merge(state, payload)
+    default:
+      return state
   }
 }

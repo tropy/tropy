@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export default {
   CREATE: 'tag.create',
   INSERT: 'tag.insert',
   DELETE: 'tag.delete',

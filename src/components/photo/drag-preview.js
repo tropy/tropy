@@ -1,11 +1,9 @@
-'use strict'
+import React from 'react'
+import { Thumbnail } from './thumbnail'
+import cx from 'classnames'
+import { arrayOf, number, shape, string } from 'prop-types'
 
-const React = require('react')
-const { Thumbnail } = require('./thumbnail')
-const cx = require('classnames')
-const { arrayOf, number, shape, string } = require('prop-types')
-
-const PhotoDragPreview = ({ cache, size, items  }) => {
+export const PhotoDragPreview = ({ cache, size, items  }) => {
   let count = items.length
 
   return count > 0 && (
@@ -31,8 +29,4 @@ PhotoDragPreview.propTypes = {
 
 PhotoDragPreview.defaultProps = {
   size: 64
-}
-
-module.exports = {
-  PhotoDragPreview
 }

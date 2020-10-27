@@ -188,12 +188,83 @@ cn:
     item-tag:
       - label: 从选中项目除以此标签
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isSingleItem
       - label: 从选中项目除以此标签
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isMultipleItems
+      - label: 标签颜色
+        condition: '!isReadOnly'
+        submenu:
+          - label: 无
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
+          - type: separator
+          - label: 红色
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
+          - label: 橘黄
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
+          - label: 明黄
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
+          - label: 绿色
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
+          - label: 蓝色
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
+          - label: 紫色
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
+          - label: 灰色
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: 棕色
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: 杏色
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: 墨绿
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: 亮蓝
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: 淡紫
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
     note:
       - label: 删除笔记
         command: 'app:delete-note'
@@ -542,12 +613,83 @@ cn:
     item-tag:
       - label: 从选中项目除以此标签
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isSingleItem
       - label: 从选中项目除以此标签
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isMultipleItems
+      - label: 标签颜色
+        condition: '!isReadOnly'
+        submenu:
+          - label: 无
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
+          - type: separator
+          - label: 红色
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
+          - label: 橘黄
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
+          - label: 明黄
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
+          - label: 绿色
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
+          - label: 蓝色
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
+          - label: 紫色
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
+          - label: 灰色
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: 棕色
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: 杏色
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: 墨绿
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: 亮蓝
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: 淡紫
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
     note:
       - label: 删除笔记
         command: 'app:delete-note'
@@ -896,12 +1038,83 @@ cn:
     item-tag:
       - label: 从选中项目除以此标签
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isSingleItem
       - label: 从选中项目除以此标签
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: isMultipleItems
+      - label: 标签颜色
+        condition: '!isReadOnly'
+        submenu:
+          - label: 无
+            color:
+              - null
+              - color
+              - 'app:save-tag-color'
+          - type: separator
+          - label: 红色
+            color:
+              - red
+              - color
+              - 'app:save-tag-color'
+          - label: 橘黄
+            color:
+              - orange
+              - color
+              - 'app:save-tag-color'
+          - label: 明黄
+            color:
+              - yellow
+              - color
+              - 'app:save-tag-color'
+          - label: 绿色
+            color:
+              - green
+              - color
+              - 'app:save-tag-color'
+          - label: 蓝色
+            color:
+              - blue
+              - color
+              - 'app:save-tag-color'
+          - label: 紫色
+            color:
+              - purple
+              - color
+              - 'app:save-tag-color'
+          - label: 灰色
+            color:
+              - gray
+              - color
+              - 'app:save-tag-color'
+          - label: 棕色
+            color:
+              - brown
+              - color
+              - 'app:save-tag-color'
+          - label: 杏色
+            color:
+              - apricot
+              - color
+              - 'app:save-tag-color'
+          - label: 墨绿
+            color:
+              - dark-green
+              - color
+              - 'app:save-tag-color'
+          - label: 亮蓝
+            color:
+              - light-blue
+              - color
+              - 'app:save-tag-color'
+          - label: 淡紫
+            color:
+              - lavender
+              - color
+              - 'app:save-tag-color'
     note:
       - label: 删除笔记
         command: 'app:delete-note'

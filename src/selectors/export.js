@@ -1,17 +1,15 @@
-'use strict'
+import { ctx, props } from '../common/export'
+import { xsd } from '../ontology'
+import { version } from '../common/release'
+import { blank, URI, get, pick } from '../common/util'
+import { serialize } from '../editor/serialize'
 
-const { ctx, props } = require('../common/export')
-const { xsd } = require('../common/ns')
-const { version } = require('../common/release')
-const { blank, URI, get, pick } = require('../common/util')
-const { serialize } = require('../components/editor/serialize')
+const RESERVED = Object.fromEntries(props.all.map(prop => ([prop, true])))
 
-const reserved = Object.fromEntries(props.all.map(prop => ([prop, true])))
-
-const getExportItemIds = ({ nav, qr }, { id } = {}) =>
+export const getExportItemIds = ({ nav, qr }, { id } = {}) =>
   (id?.length > 0) ? id : (nav.items.length > 0 ? nav.items : qr.items)
 
-const getExportItems = (state, props = {}) => {
+export const getExportItems = (state, props = {}) => {
   let context = ctx.item
   let ids = getExportItemIds(state, props)
 
@@ -104,7 +102,7 @@ const addMetadata = (context, into, data, ontology = {}) => {
 
     let [vocab, name] = URI.split(prop)
 
-    if ((name in context) || (name in reserved)) {
+    if ((name in context) || (name in RESERVED)) {
       if (prop !== (context[name]?.['@id'] || context[name])) {
         let prefix = get(ontology.vocab, [vocab, 'prefix'])
 
@@ -158,8 +156,3 @@ const toContext = (prop, type) =>
   (type === xsd.string || type === xsd.integer) ?
     prop :
     { '@id': prop, '@type': type }
-
-module.exports = {
-  getExportItemIds,
-  getExportItems
-}

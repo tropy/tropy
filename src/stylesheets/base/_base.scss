@@ -28,4 +28,8 @@ body {
   overflow: hidden;
   cursor: default;
   user-select: none;
+
+  @if $platform == darwin {
+    -webkit-font-smoothing: antialiased; // Lighter font rendering
+  }
 }

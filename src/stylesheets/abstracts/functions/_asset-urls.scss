@@ -3,7 +3,7 @@
 // --------------------------------------------------
 
 @function asset-url($type, $path) {
-  @return url(unquote("../../../res/#{$type}/#{$path}"));
+  @return url(unquote("../../res/#{$type}/#{$path}"));
 }
 
 @function icon-url($path) {

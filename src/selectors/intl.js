@@ -1,11 +1,5 @@
-'use strict'
+export const locale = ({ intl }) =>
+  intl.locale
 
-module.exports = {
-  locale({ intl }) {
-    return intl.locale
-  },
-
-  message({ intl }, { id }) {
-    return intl.messages[id]
-  }
-}
+export const message = ({ intl }, { id }) =>
+  intl.messages[id]

@@ -1,18 +1,17 @@
-'use strict'
 
-const START = Date.now()
+import electron, { app } from 'electron'
+import { extname, join, resolve } from 'path'
+import { mkdirSync as mkdir } from 'fs'
+import { darwin, win32, system } from '../common/os'
+import { exe, qualified, version } from '../common/release'
+import { parse } from './args'
+import { createLogger, info, warn } from '../common/log'
+import { Tropy } from './tropy'
 
-const args = require('./args')
-const opts = args.parse(process.argv.slice(1))
+const START = getCreationTime() || Date.now()
+const { args, opts } = parse()
 
-process.env.NODE_ENV = opts.environment
-
-const electron = require('electron')
-const { app }  = electron
-const { extname, join, resolve } = require('path')
-const { mkdirSync: mkdir } = require('fs')
-const { darwin, win32, system }  = require('../common/os')
-const { exe, qualified, version }  = require('../common/release')
+process.env.NODE_ENV = opts.env
 
 app.allowRendererProcessReuse = false
 
@@ -49,8 +48,15 @@ if (!app.requestSingleInstanceLock()) {
   app.exit(0)
 }
 
-if (!(win32 && require('./squirrel')(opts))) {
-  const { info, warn } = require('../common/log')({
+if (app.isPackaged) {
+  app.setAsDefaultProtocolClient('tropy')
+}
+
+(async function main() {
+  if (win32 && (await import('./squirrel')).default(opts))
+    return
+
+  createLogger({
     dest: join(opts.logs, 'tropy.log'),
     name: 'main',
     rotate: true,
@@ -58,7 +64,7 @@ if (!(win32 && require('./squirrel')(opts))) {
     trace: opts.trace
   })
 
-  if (opts['ignore-gpu-blacklist']) {
+  if (opts.webgl) {
     app.commandLine.appendSwitch('ignore-gpu-blacklist')
   }
 
@@ -71,30 +77,11 @@ if (!(win32 && require('./squirrel')(opts))) {
     version
   }, `main.init ${version} ${system}`)
 
-  const T1 = Date.now()
-  const Tropy = require('./tropy')
   const tropy = new Tropy(opts)
-  const T2 = Date.now()
-
-  Promise.all([
+  const startups = [
     app.whenReady(),
     tropy.start()
-  ])
-    .then(() => {
-      tropy.ready = Date.now()
-      tropy.open(...opts._.map(f => resolve(f)))
-
-      electron.powerMonitor.on('shutdown', (event) => {
-        event.preventDefault()
-        app.quit()
-      })
-
-      info(`ready after ${tropy.ready - START}ms [req:${T2 - T1}ms]`)
-    })
-
-  if (app.isPackaged) {
-    app.setAsDefaultProtocolClient('tropy')
-  }
+  ]
 
   if (darwin) {
     app.on('open-file', (event, file) => {
@@ -103,7 +90,7 @@ if (!(win32 && require('./squirrel')(opts))) {
           event.preventDefault()
       } else {
         if (extname(file) === '.tpy') {
-          opts._.push(file)
+          args.push(file)
           event.preventDefault()
         }
       }
@@ -121,7 +108,7 @@ if (!(win32 && require('./squirrel')(opts))) {
 
   app.on('second-instance', (_, argv) => {
     if (tropy.ready)
-      tropy.open(...args.parse(argv.slice(1))._)
+      tropy.open(...parse(argv.slice(1)).args)
   })
 
   app.on('web-contents-created', (_, contents) => {
@@ -138,7 +125,7 @@ if (!(win32 && require('./squirrel')(opts))) {
 
   const handleError = (error, isFatal = false) => {
     if (isFatal || !tropy.ready) {
-      require('electron')
+      electron
         .dialog
         .showErrorBox('Unhandled Error', error.stack)
       app.exit(42)
@@ -153,4 +140,22 @@ if (!(win32 && require('./squirrel')(opts))) {
 
   process.on('uncaughtException', handleError)
   process.on('unhandledRejection', (reason) => handleError(reason))
+
+  await Promise.all(startups)
+
+  tropy.ready = Date.now()
+  tropy.open(...args.map(f => resolve(f)))
+
+  electron.powerMonitor.on('shutdown', (event) => {
+    event.preventDefault()
+    app.quit()
+  })
+
+  info(`ready after ${tropy.ready - START}ms`)
+}())
+
+function getCreationTime() {
+  for (let m of app.getAppMetrics()) {
+    if (m.type === 'Browser') return m.creationTime
+  }
 }

@@ -1,8 +1,6 @@
-'use strict'
+import { prompt } from '../dialog'
 
-const { prompt } = require('../dialog')
-
-module.exports = {
+export default {
   uninstall({ plugins, name }, meta = {}) {
     return async () => {
       if (meta.prompt !== false) {

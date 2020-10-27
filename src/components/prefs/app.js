@@ -1,37 +1,36 @@
-'use strict'
+import React from 'react'
+import ARGS from '../../args'
+import { TemplateSelect } from '../template/select'
+import { ResourceSelect } from '../resource/select'
+import { ipcRenderer as ipc } from 'electron'
 
-const React = require('react')
-const { TemplateSelect } = require('../template/select')
-const { ResourceSelect } = require('../resource/select')
-const { ipcRenderer: ipc } = require('electron')
-
-const {
+import {
   ESPER,
   ITEM,
   IMAGE
-} = require('../../constants')
+} from '../../constants'
 
-const {
+import {
   IconItemSmall,
   IconPhoto,
   IconSelection
-} = require('../icons')
+} from '../icons'
 
-const {
+import {
   array, arrayOf, bool, func, object, shape, string, number
-} = require('prop-types')
+} from 'prop-types'
 
-const {
+import {
   FormElement,
   FormField,
   FormSelect,
   FormToggle,
   FormToggleGroup,
   Toggle
-} = require('../form')
+} from '../form'
 
 
-class AppPrefs extends React.PureComponent {
+export class AppPrefs extends React.PureComponent {
   handleDebugChange() {
     ipc.send('cmd', 'app:toggle-debug-flag')
   }
@@ -347,8 +346,4 @@ class AppPrefs extends React.PureComponent {
     importMin: IMAGE.MIN_DENSITY,
     importMax: IMAGE.MAX_DENSITY
   }
-}
-
-module.exports = {
-  AppPrefs
 }

@@ -1,8 +1,6 @@
-'use strict'
+import { SETTINGS } from '../constants'
 
-const { SETTINGS } = require('../constants')
-
-module.exports = {
+export default {
   close(payload, meta = {}) {
     return { type: SETTINGS.CLOSE, payload, meta }
   },

@@ -1,7 +1,7 @@
-'use strict'
+import Bluebird from 'bluebird'
+import sqlite from 'sqlite3'
+export default sqlite
 
-const Bluebird = require('bluebird')
-const sqlite = require('sqlite3')
 const { Database, Statement } = sqlite
 
 Bluebird.promisifyAll([Database, Statement])
@@ -62,5 +62,3 @@ Database.prototype.eachAsync = function (...args) {
 }
 
 Statement.prototype.eachAsync = Database.prototype.eachAsync
-
-module.exports = sqlite

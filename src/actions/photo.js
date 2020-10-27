@@ -1,9 +1,15 @@
-'use strict'
+import { PHOTO } from '../constants'
+import { array } from '../common/util'
 
-const { PHOTO } = require('../constants')
-const { array } = require('../common/util')
+function update(payload, meta = {}) {
+  return {
+    type: PHOTO.UPDATE,
+    payload,
+    meta
+  }
+}
 
-module.exports = {
+export default {
   consolidate(payload, meta) {
     return {
       type: PHOTO.CONSOLIDATE,
@@ -53,7 +59,7 @@ module.exports = {
   },
 
   error(payload, meta = {}) {
-    return module.exports.update(
+    return update(
       { id: payload, broken: true },
       { consolidate: true, ...meta })
   },
@@ -72,13 +78,7 @@ module.exports = {
     }
   },
 
-  update(payload, meta = {}) {
-    return {
-      type: PHOTO.UPDATE,
-      payload,
-      meta
-    }
-  },
+  update,
 
   restore(payload, meta) {
     return {

@@ -1,35 +1,29 @@
-'use strict'
+import { put, select, takeEvery as every } from 'redux-saga/effects'
+import { warn } from '../common/log'
+import { getUndo, getRedo } from '../selectors'
+import { HISTORY } from '../constants'
 
-const { put, select, takeEvery: every } = require('redux-saga/effects')
-const { warn } = require('../common/log')
-const { undo, redo } = require('../selectors/history')
-const { UNDO, REDO } = require('../constants/history')
+function *undo() {
+  try {
+    let action = yield select(getUndo)
+    if (action != null) yield put(action)
 
-const history = {
-  *undo() {
-    try {
-      let action = yield select(undo)
-      if (action != null) yield put(action)
-
-    } catch (e) {
-      warn({ stack: e.stack }, 'unexpected error in *history:undo')
-    }
-  },
-
-  *redo() {
-    try {
-      let action = yield select(redo)
-      if (action != null) yield put(action)
-
-    } catch (e) {
-      warn({ stack: e.stack }, 'unexpected error in *history:redo')
-    }
-  },
-
-  *history() {
-    yield every(UNDO, history.undo)
-    yield every(REDO, history.redo)
+  } catch (e) {
+    warn({ stack: e.stack }, 'unexpected error in *history:undo')
   }
 }
 
-module.exports = history
+function *redo() {
+  try {
+    let action = yield select(getRedo)
+    if (action != null) yield put(action)
+
+  } catch (e) {
+    warn({ stack: e.stack }, 'unexpected error in *history:redo')
+  }
+}
+
+export function *history() {
+  yield every(HISTORY.UNDO, undo)
+  yield every(HISTORY.REDO, redo)
+}

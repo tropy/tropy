@@ -7,7 +7,6 @@ const { join } = require('path')
 const { readFileSync: read, writeFileSync: write } = require('fs')
 const { isArray } = Array
 const yaml = require('js-yaml')
-const { merge } = require('../src/common/util')
 
 const HOME = join(__dirname, '..')
 const MENU = join(HOME, 'res', 'menu')
@@ -61,6 +60,33 @@ const translate = (menu, labels) => {
   for (const path in labels) {
     set(menu, path, labels[path])
   }
+}
+
+const merge = (a, b, into = {}) => {
+  if (a !== into) Object.assign(into, a)
+
+  for (let prop in b) {
+    let value = b[prop]
+    let type = typeof value
+
+    switch (true) {
+      case type === 'boolean':
+      case type === 'number':
+      case type === 'string':
+      case type === 'undefined':
+      case value == null:
+        into[prop] = value
+        break
+      case Array.isArray(value):
+        into[prop] = [...value]
+        break
+      default:
+        into[prop] = merge(into[prop], value)
+        break
+    }
+  }
+
+  return into
 }
 
 

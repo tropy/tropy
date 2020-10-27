@@ -1,11 +1,8 @@
-'use strict'
-
-const React = require('react')
-const PropTypes = require('prop-types')
-const { number } = PropTypes
-const { ItemIterable } = require('./iterable')
-const { CoverImage } = require('./cover-image')
-const cx = require('classnames')
+import React from 'react'
+import { number } from 'prop-types'
+import { ItemIterable } from './iterable'
+import { CoverImage } from './cover-image'
+import cx from 'classnames'
 
 
 class ItemTile extends ItemIterable {
@@ -42,6 +39,8 @@ class ItemTile extends ItemIterable {
   }
 }
 
-module.exports = {
-  ItemTile: ItemTile.wrap()
+const ItemTileContainer = ItemTile.wrap()
+
+export {
+  ItemTileContainer as ItemTile
 }

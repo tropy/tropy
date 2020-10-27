@@ -42,10 +42,10 @@ fr:
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Photos…
+            - label: Photos …
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-            - label: Folder…
+            - label: Dossier …
               command: 'app:import-directory'
         - label: Exporter
           id: export
@@ -97,13 +97,13 @@ fr:
         - label: Coller
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Coller sans la mise en forme
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: Tout sélectionner
           role: selectAll
         - type: separator
-        - label: Préférences ...
+        - label: Préférences …
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
     - label: Affichage
@@ -213,7 +213,7 @@ fr:
           command: 'app:about'
           window: '!prefs'
         - type: separator
-        - label: Préférences ...
+        - label: Préférences …
           accelerator: 'Command+,'
           command: 'app:open-preferences'
         - type: separator
@@ -270,10 +270,10 @@ fr:
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Photos…
+            - label: Photos …
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-            - label: Folder…
+            - label: Dossier …
               command: 'app:import-directory'
         - label: Regrouper la photothèque
           command: 'app:consolidate-photo-library'
@@ -316,7 +316,7 @@ fr:
         - label: Coller
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Coller sans la mise en forme
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: Tout sélectionner
@@ -471,10 +471,10 @@ fr:
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Photos…
+            - label: Photos …
               command: 'app:import'
               accelerator: CmdOrCtrl+Shift+I
-            - label: Folder…
+            - label: Dossier …
               command: 'app:import-directory'
         - label: Exporter
           id: export
@@ -526,10 +526,10 @@ fr:
         - label: Coller
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Coller sans la mise en forme
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
-        - label: Préférences ...
+        - label: Préférences …
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
     - label: Affichage

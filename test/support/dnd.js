@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { wrapInTestContext } = require('react-dnd-test-utils-cjs')
+const { wrapInTestContext } = require('react-dnd-test-utils')
 
 const wrap = (DecoratedComponent) =>
   wrapInTestContext((props) =>

@@ -1,88 +1,50 @@
-'use strict'
+import { resolve } from 'path'
+import { exe, version } from '../common/release'
+import { Command } from 'commander'
 
-const { resolve } = require('path')
-const { exe, version } = require('../common/release')
-const yargs = require('yargs')()
+export const program = new Command()
 
-module.exports =
-  yargs
-    .parserConfiguration({
-      'camel-case-expansion': false,
-      'short-option-groups': false
-    })
+const type = {
+  path(value) { return resolve(value) },
+  float(value) { return parseFloat(value) },
+  int(value) { return parseInt(value, 10) }
+}
 
-    .usage(`Usage: ${exe} [options] [project]`)
-    .wrap(process.stdout.columns ? Math.min(process.stdout.columns, 80) : 80)
-    .env('TROPY')
+program
+  .name(exe)
+  .arguments('[project]')
+  .version(version)
 
-    .demand(0, 1)
+  // TODO remove when squirrel is not used anymore!
+  .allowUnknownOption()
 
-    .option('data', {
-      type: 'string',
-      coerce: resolve,
-      describe: 'Set data directory'
-    })
-    .option('cache', {
-      type: 'string',
-      coerce: resolve,
-      describe: 'Set cache directory'
-    })
-    .option('logs', {
-      type: 'string',
-      coerce: resolve,
-      describe: 'Set log directory'
-    })
+  .option('--data <path>', 'set data directory', type.path)
+  .option('--cache <path>', 'set cache directory', type.path)
+  .option('--logs <path>', 'set log directory', type.path)
 
-    .option('environment', {
-      alias: 'env',
-      type: 'string',
-      describe: 'Set environment',
-      choices: ['development', 'test', 'production']
-    })
-    .default('environment',
-      () => (process.env.NODE_ENV || 'production'),
-      '"production"')
+  // TODO will be obsolete with bundling!
+  .option('--env <name>', 'set environment',
+    process.env.NODE_ENV || 'production')
+  .option('--app <path>', 'reserved for internal development')
 
-    .option('scale', {
-      type: 'number',
-      describe: 'Set the device scale factor'
-    })
+  .option('--scale <factor>', 'set the device scale factor', type.float)
 
-    .option('auto-updates', {
-      type: 'boolean',
-      describe: 'Automatically check for updates',
-      default: true
-    })
+  .option('--no-auto-updates', 'automatically check for updates')
+  .option('--webgl', 'prefer WebGL even on GPUs with known issues', false)
 
-    .option('ignore-gpu-blacklist', {
-      type: 'boolean',
-      describe: 'Do not blacklist certain GPUs known to cause issues',
-      default: false
-    })
+  .option('--debug', 'set debug flag', !!process.env.TROPY_DEBUG)
+  .option('--trace', 'set trace flag', !!process.env.TROPY_TRACE)
 
-    .option('debug', {
-      type: 'boolean',
-      describe: 'Set debug flag',
-      default: false
-    })
+  .option('-p, --port <number>', 'set API listening port', type.int)
 
-    .option('trace', {
-      type: 'boolean',
-      describe: 'Set trace flag',
-      default: false
-    })
 
-    .option('port', {
-      alias: 'p',
-      type: 'number',
-      describe: 'Set API listening port',
-      default: null
-    })
+export function parse(argv = process.argv.slice(1)) {
+  program.parse(argv, { from: 'user' })
 
-    .help('help')
-    .version(version)
-
-    .epilogue([
-      'Environment Variables:',
-      '  NODE_ENV  Set default environment'
-    ].join('\n'))
+  return {
+    opts: program.opts(),
+    args: program.args
+      // TODO remove with allowUnknownOption!
+      .filter(arg => arg.startsWith('-'))
+  }
+}

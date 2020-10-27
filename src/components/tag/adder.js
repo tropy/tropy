@@ -1,20 +1,20 @@
-'use strict'
+import React from 'react'
+import { injectIntl } from 'react-intl'
+import { Input } from '../input'
+import { blank, noop } from '../../common/util'
+import { match } from '../../collate'
 
-const React = require('react')
-const { injectIntl } = require('react-intl')
-const { Input } = require('../input')
-const { blank, noop } = require('../../common/util')
-const collate = require('../../collate')
-
-const {
+import {
   arrayOf,
   bool,
   func,
+  instanceOf,
   number,
   object,
+  oneOfType,
   shape,
   string
-} = require('prop-types')
+} from 'prop-types'
 
 
 class TagAdder extends React.PureComponent {
@@ -46,24 +46,35 @@ class TagAdder extends React.PureComponent {
     return true // Always cancel on blur!
   }
 
-  handleChange = (name) => {
-    if (blank(name))
+  handleChange = (value) => {
+    if (blank(value))
       return this.props.onCancel()
 
-    let query = name.trim().toLowerCase()
+    let query = value.trim().toLowerCase()
     let tag = this.props.tags.find(t => query === t.name.toLowerCase())
 
-    if (tag)
+    if (tag) {
       this.props.onAdd(tag)
-    else
-      this.props.onCreate({ name })
+    } else {
+      for (let name of value.split(this.props.separator)) {
+        query = name.trim().toLowerCase()
+        tag = this.props.tags.find(t => query === t.name.toLowerCase())
+
+        if (tag)
+          this.props.onAdd(tag)
+        else
+          this.props.onCreate({ name })
+      }
+    }
 
     this.input.current.reset()
   }
 
   render() {
     return (
-      <div className="add-tag-container" style={this.placeholder}>
+      <div
+        className="add-tag-container"
+        style={this.placeholder}>
         <Input
           ref={this.input}
           className="form-control"
@@ -90,6 +101,7 @@ class TagAdder extends React.PureComponent {
       id: number.isRequired,
       name: string.isRequired
     })),
+    separator: oneOfType([string, instanceOf(RegExp)]),
     onAdd: func.isRequired,
     onBlur: func.isRequired,
     onCancel: func.isRequired,
@@ -99,13 +111,16 @@ class TagAdder extends React.PureComponent {
 
   static defaultProps = {
     match: (value, query) => (
-      collate.match(value.name || String(value), query, /\b\w/g)
+      match(value.name || String(value), query, /\b\w/g)
     ),
+    separator: /\s*[;,]\s*/,
     onCancel: noop,
     onFocus: noop
   }
 }
 
-module.exports = {
-  TagAdder: injectIntl(TagAdder, { forwardRef: true })
+const TagAdderContainer = injectIntl(TagAdder, { forwardRef: true })
+
+export {
+  TagAdderContainer as TagAdder
 }

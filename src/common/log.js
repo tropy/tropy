@@ -1,28 +1,26 @@
-'use strict'
+import pino from 'pino'
+import { system } from './os'
+import { version } from './release'
+import { copyFileSync, truncateSync } from 'fs'
 
-const pino = require('pino')
-const { system } = require('./os')
-const { version } = require('./release')
-
-let instance
+export let logger
 
 function logRotate(file, suffix = '.1') {
   try {
-    const fs = require('fs')
-    fs.copyFileSync(file, file + suffix)
-    fs.truncateSync(file)
+    copyFileSync(file, file + suffix)
+    truncateSync(file)
   } catch (e) {
     if (e.code !== 'ENOENT') throw e
   }
 }
 
-function log({
+export function createLogger({
   dest = 2,
   level,
   name = 'log',
   rotate = false,
-  debug = process.env.TROPY_DEBUG,
-  trace = process.env.TROPY_TRACE
+  debug = process.env.TROPY_DEBUG, // eslint-disable-line no-shadow
+  trace = process.env.TROPY_TRACE  // eslint-disable-line no-shadow
 } = {}) {
 
   if (!level && trace) level = 'trace'
@@ -45,7 +43,7 @@ function log({
     logRotate(dest)
   }
 
-  instance = pino({
+  logger = pino({
     level,
     base: {
       type: process.type,
@@ -53,55 +51,43 @@ function log({
     }
   }, pino.destination(dest))
 
-  return log
+  return logger
 }
 
-Object.defineProperties(log, {
-  instance: {
-    get() {
-      if (instance == null) log()
-      return instance
-    }
-  },
+export function fatal(...args) {
+  logger.fatal(...args)
+}
 
-  logger: {
-    get() {
-      return this.instance
-    }
+export function error(...args) {
+  logger.error(...args)
+}
+
+export function warn(...args) {
+  logger.warn(...args)
+}
+
+export function info(...args) {
+  logger.info(...args)
+}
+
+export function debug(...args) {
+  logger.debug(...args)
+}
+
+export function trace(...args) {
+  logger.trace(...args)
+}
+
+export function crashReport(e, msg) {
+  try {
+    return JSON.stringify({
+      msg: msg || `unhandled error: ${e.message}`,
+      stack: e.stack,
+      system,
+      time: Date.now(),
+      version
+    })
+  } catch (_) {
+    return JSON.stringify({ stack: (e || _).stack })
   }
-})
-
-module.exports = Object.assign(log, {
-  fatal(...args) {
-    log.instance.fatal(...args)
-  },
-  error(...args) {
-    log.instance.error(...args)
-  },
-  warn(...args) {
-    log.instance.warn(...args)
-  },
-  info(...args) {
-    log.instance.info(...args)
-  },
-  debug(...args) {
-    log.instance.debug(...args)
-  },
-  trace(...args) {
-    log.instance.trace(...args)
-  },
-
-  crashReport(e, msg) {
-    try {
-      return JSON.stringify({
-        msg: msg || `unhandled error: ${e.message}`,
-        stack: e.stack,
-        system,
-        time: Date.now(),
-        version
-      })
-    } catch (_) {
-      return JSON.stringify({ stack: (e || _).stack })
-    }
-  }
-})
+}

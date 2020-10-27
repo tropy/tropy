@@ -1,33 +1,29 @@
-'use strict'
+import { logger } from '../common/log'
 
-const { logger } = require('../common/log')
+export function log() {
+  return next => action => {
+    const { type, payload, meta, error } = action
 
-module.exports = {
-  log() {
-    return next => action => {
-      const { type, payload, meta, error } = action
-
-      switch (true) {
-        case !!error:
-          logger.warn({
+    switch (true) {
+      case !!error:
+        logger.warn({
+          action: type,
+          meta,
+          msg: `${type} failed: ${payload.message}`,
+          stack: payload.stack
+        })
+        break
+      default:
+        if (meta.log !== false) {
+          logger[meta.log || 'debug']({
             action: type,
             meta,
-            msg: `${type} failed: ${payload.message}`,
-            stack: payload.stack
+            payload: logger.level === 'trace' ?
+              payload : undefined
           })
-          break
-        default:
-          if (meta.log !== false) {
-            logger[meta.log || 'debug']({
-              action: type,
-              meta,
-              payload: logger.level === 'trace' ?
-                payload : undefined
-            })
-          }
-      }
-
-      return next(action)
+        }
     }
+
+    return next(action)
   }
 }

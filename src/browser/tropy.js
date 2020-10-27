@@ -1,58 +1,56 @@
-'use strict'
+import fs from 'fs'
+import { EventEmitter } from 'events'
+import { extname, join } from 'path'
+import { v1 as uuid } from 'uuid'
+import { into, compose, remove, take } from 'transducers.js'
 
-const { EventEmitter } = require('events')
-const { extname, join } = require('path')
-
-const {
+import {
   app,
   clipboard,
   shell,
-  ipcMain: ipc,
+  ipcMain as ipc,
   nativeTheme,
   BrowserWindow,
-  systemPreferences: prefs
-} = require('electron')
+  systemPreferences as prefs
+} from 'electron'
 
-const {
+import {
+  crashReport,
   debug,
   fatal,
   info,
-  warn,
   logger,
-  crashReport
-} = require('../common/log')
+  warn
+} from '../common/log'
 
-const { delay, once } = require('../common/util')
-const { existsSync: exists } = require('fs')
-const { into, compose, remove, take } = require('transducers.js')
 
-const { AppMenu, ContextMenu } = require('./menu')
-const { Cache } = require('../common/cache')
-const { Plugins } = require('../common/plugins')
-const { Strings } = require('../common/res')
-const Storage = require('./storage')
-const Updater = require('./updater')
-const dialog = require('./dialog')
-const API = require('./api')
-const WindowManager = require('./wm')
-const { addIdleObserver } = require('./idle')
-const { migrate } = require('./migrate')
+import { darwin, linux } from '../common/os'
+import { delay, once } from '../common/util'
+import { channel, product, version } from '../common/release'
+import { Cache } from '../common/cache'
+import { Plugins } from '../common/plugins'
+import { Strings } from '../common/res'
 
-const { defineProperty: prop } = Object
-const act = require('./actions')
-const { darwin, linux } = require('../common/os')
-const { channel, product, version } = require('../common/release')
+import { AppMenu, ContextMenu } from './menu'
+import { Storage } from './storage'
+import { Updater } from './updater'
+import dialog from './dialog'
+import { Server as ApiServer } from './api'
+import { WindowManager } from './wm'
+import { addIdleObserver } from './idle'
+import { migrate } from './migrate'
+import * as act from './actions'
 
-const {
+import {
   FLASH, HISTORY, TAG, PROJECT, CONTEXT, LOCALE
-} = require('../constants')
+} from '../constants'
 
 const H = new WeakMap()
 const T = new WeakMap()
 const P = new WeakMap()
 
 
-class Tropy extends EventEmitter {
+export class Tropy extends EventEmitter {
   static defaults = {
     fontSize: '13px',
     frameless: darwin,
@@ -77,36 +75,26 @@ class Tropy extends EventEmitter {
     Tropy.instance = this
 
     this.opts = opts
-    this.menu = new AppMenu(this)
+
+    this.api = new ApiServer(this)
+    this.cache = new Cache(opts.cache || join(opts.data, 'cache'))
     this.ctx = new ContextMenu(this)
-    this.wm = new WindowManager()
+    this.menu = new AppMenu(this)
+    this.plugins = new Plugins(join(opts.data, 'plugins'))
+    this.projects = new Map()
+    this.store = new Storage(opts.data)
     this.updater = new Updater({
-      enable: process.env.NODE_ENV === 'production' && opts['auto-updates']
-    })
-    this.api = new API.Server(this)
-
-    prop(this, 'cache', {
-      value: new Cache(opts.cache || join(opts.data, 'cache'))
+      enable: process.env.NODE_ENV === 'production' && opts.autoUpdates
     })
 
-    prop(this, 'store', {
-      value: new Storage(opts.data)
-    })
-
-    prop(this, 'projects', {
-      value: new Map()
-    })
-
-    prop(this, 'plugins', {
-      value: new Plugins(join(opts.data, 'plugins'))
-    })
+    this.wm = new WindowManager()
   }
 
   async start() {
     await this.restore()
     this.listen()
     this.wm.start()
-    this.api.start()
+    await this.api.start()
   }
 
   stop() {
@@ -130,7 +118,7 @@ class Tropy extends EventEmitter {
 
     } else {
       let recent = this.state.recent[0]
-      if (exists(recent))
+      if (fs.existsSync(recent))
         this.showProjectWindow(recent)
       else
         this.showProjectWindow()
@@ -305,7 +293,7 @@ class Tropy extends EventEmitter {
       migrate(this, state, state.version)
 
     state.locale = this.getLocale(state.locale)
-    state.uuid = state.uuid || require('uuid').v1()
+    state.uuid = state.uuid || uuid()
     state.version = this.version
 
     if (!(/^(system|dark|light)$/).test(state.theme))
@@ -663,14 +651,13 @@ class Tropy extends EventEmitter {
         })
     })
 
-    this.on('app:reset-ontology-db', () => {
+    this.on('app:reset-ontology-db', async () => {
       if (this.wm.has(['project', 'prefs']))
         dialog.warn(this.wm.first(['prefs', 'project']), {
           message: 'Cannot reset ontology db while in use!'
         })
       else
-        require('rimraf')
-          .sync(join(this.opts.data, 'ontology.db'))
+          await fs.promises.unlink(join(this.opts.data, 'ontology.db'))
     })
 
     this.on('app:open-dialog', () => {
@@ -814,7 +801,7 @@ class Tropy extends EventEmitter {
     this.wm.on('closed', (type) => {
       if (type === 'prefs') {
         this.wm.send('project', 'dispatch',
-          act.ontology.load(),
+          act.ontology.load(null, { replace: true }),
           act.storage.reload([['settings']]))
       }
       this.menu.handleWindowChange()
@@ -869,7 +856,9 @@ class Tropy extends EventEmitter {
   handleUncaughtException(e, win = BrowserWindow.getFocusedWindow()) {
     fatal(e)
 
-    if (!this.dev) {
+    if (this.dev) {
+      win?.show()
+    } else {
       dialog
         .alert(win, {
           ...this.dict.dialog.unhandled,
@@ -1015,5 +1004,3 @@ class Tropy extends EventEmitter {
     return version
   }
 }
-
-module.exports = Tropy

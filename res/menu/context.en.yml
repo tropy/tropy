@@ -70,7 +70,8 @@ en:
           - label: 'Lavender'
             color: ['lavender', 'color', 'app:save-default-tag-color']
     tag: &tag
-      - label: 'Tag Color'
+      - &tag-color
+        label: 'Tag Color'
         condition: '!isReadOnly'
         submenu:
           - label: 'None'
@@ -109,12 +110,15 @@ en:
     item-tag: &item-tag
       - label: 'Remove Tag From This Item'
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: 'isSingleItem'
       - label: 'Remove Tag From These Items'
         command: 'app:delete-item-tag'
+        enabled: false
         visible: false
         condition: 'isMultipleItems'
+      - *tag-color
     note: &note
       - label: 'Delete Note'
         command: 'app:delete-note'

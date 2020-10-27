@@ -1,18 +1,16 @@
-'use strict'
+import React from 'react'
+import { PluginOption } from './option'
+import { FormField } from '../form'
+import { set } from '../../common/util'
+import { IconPlusCircle, IconMinusCircle } from '../icons'
+import { Button, ButtonGroup } from '../button'
 
-const React = require('react')
-const { PureComponent } = require('react')
-const { PluginOption } = require('./option')
-const { FormField } = require('../form')
-const { get, set } = require('../../common/util')
-const { IconPlusCircle, IconMinusCircle } = require('../icons')
-const { Button, ButtonGroup } = require('../button')
-const {
+import {
   arrayOf, bool, func, number, object, oneOfType, shape, string
-} = require('prop-types')
+} from 'prop-types'
 
 
-class PluginInstance extends PureComponent {
+export class PluginInstance extends React.PureComponent {
   handleInsert = () => {
     this.props.onInsert(this.props.config.plugin, this.props.config)
   }
@@ -48,7 +46,7 @@ class PluginInstance extends PureComponent {
               spec={spec}
               templates={this.props.templates}
               properties={this.props.properties}
-              value={get(this.props.config.options, spec.field, spec.default)}
+              value={this.props.config.options?.[spec.field] ?? spec.default}
               onChange={this.handleOptionsChange}/>)}
         </fieldset>
         <ButtonGroup>
@@ -83,8 +81,4 @@ class PluginInstance extends PureComponent {
   static defaultProps = {
     specs: []
   }
-}
-
-module.exports = {
-  PluginInstance
 }

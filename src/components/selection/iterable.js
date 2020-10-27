@@ -1,15 +1,15 @@
-'use strict'
-
-const React = require('react')
-const { Thumbnail } = require('../photo/thumbnail')
-const { DND, DragSource, DropTarget, getEmptyImage } = require('../dnd')
-const { bool, func, number, shape, string } = require('prop-types')
-const { pure } = require('../util')
-const { pick } = require('../../common/util')
-const { bounds } = require('../../dom')
+import React from 'react'
+import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd'
+import { Thumbnail } from '../photo/thumbnail'
+import { bool, func, number, shape, string } from 'prop-types'
+import { bounds } from '../../dom'
+import { pick } from '../../common/util'
+import { pure } from '../util'
 
 
-class SelectionIterable extends React.PureComponent {
+export class SelectionIterable extends React.PureComponent {
+  container = React.createRef()
+
   state = {
     offset: null
   }
@@ -20,7 +20,7 @@ class SelectionIterable extends React.PureComponent {
 
   componentDidUpdate({ isActive }) {
     if (this.props.isActive && !isActive) {
-      this.container.scrollIntoViewIfNeeded()
+      this.container.current.scrollIntoViewIfNeeded()
     }
   }
 
@@ -44,10 +44,6 @@ class SelectionIterable extends React.PureComponent {
     return !this.props.isDisabled
   }
 
-
-  setContainer = (container) => {
-    this.container = container
-  }
 
   select = () => {
     this.props.onSelect(this.props.selection)
@@ -170,7 +166,7 @@ const DropTargetSpec = {
   hover({ selection, isVertical }, monitor, component) {
     const { id, adj } = monitor.getItem()
     // TODO call bounds only on enter!
-    const { top, left, width, height } = bounds(component.container)
+    const { top, left, width, height } = bounds(component.container.current)
     const { x, y } = monitor.getClientOffset()
 
     let offset = null
@@ -206,8 +202,3 @@ const DropTargetCollect = (connect, monitor) => ({
   dropTarget: connect.dropTarget(),
   isOver: monitor.isOver()
 })
-
-
-module.exports = {
-  SelectionIterable
-}

@@ -1,14 +1,11 @@
-'use strict'
-
-const { join } = require('path')
-const { copyFile } = require('fs').promises
-const { app, BrowserWindow } = require('electron')
-const res = __require('common/res')
+import fs from 'fs'
+import { join } from 'path'
+import { app, BrowserWindow } from 'electron'
+import { WindowManager } from '../../src/browser/wm'
+import { View } from '../../src/common/res'
+import { Plugins } from '../../src/common/plugins'
 
 describe('WindowManager', () => {
-  const WindowManager = __require('browser/wm')
-  const { Plugins } = __require('common/plugins')
-
   describe('instance', () => {
     let wm = new WindowManager({
       webPreferences: {
@@ -20,7 +17,7 @@ describe('WindowManager', () => {
 
     before(() => plugins.init())
     before(() => wm.start())
-    before(() => copyFile(
+    before(() => fs.promises.copyFile(
       F.db('ontology.db').path,
       join(app.getPath('userData'), 'ontology.db')))
 
@@ -33,26 +30,27 @@ describe('WindowManager', () => {
     for (let type of ['about', 'prefs', 'print', 'project', 'wizard']) {
       describe(`open('${type}')`, function () {
         // Integration tests with on-the-fly code instrumentation take some time!
-        this.timeout(process.env.CI ? 20000 : 10000)
+        this.timeout(process.env.CI ? 40000 : 20000)
 
         let win
 
         before(async () => {
           if (process.env.COVERAGE) {
             sinon
-              .stub(res.view, 'expand')
+              .stub(View, 'expand')
               .callsFake(name => F.views(`${name}.html`).path)
           }
 
           win = await wm.open(type, {
             plugins: plugins.root,
+            log: join(app.getPath('userData'), `wm-test-${type}.log`),
             data: app.getPath('userData')
           })
         })
 
         after(() => {
           if (process.env.COVERAGE) {
-            res.view.expand.restore()
+            View.expand.restore()
           }
 
           win = null

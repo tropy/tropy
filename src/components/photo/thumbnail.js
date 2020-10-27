@@ -1,16 +1,14 @@
-'use strict'
-
-const React = require('react')
-const { IconPhoto } = require('../icons')
-const { Cache } = require('../../common/cache')
-const { bool, func, number, string } = require('prop-types')
-const { ICON } = require('../../constants/sass')
-const { exifRotation } = require('../../common/iiif')
+import React from 'react'
+import { IconPhoto } from '../icons'
+import { Cache } from '../../common/cache'
+import { bool, func, number, string } from 'prop-types'
+import { SASS } from '../../constants'
+import { Rotation } from '../../common/iiif'
 
 const variant = (size) =>
-  size > ICON.SIZE ? ICON.MAX : ICON.SIZE
+  size > SASS.ICON.SIZE ? SASS.ICON.MAX : SASS.ICON.SIZE
 
-class Thumbnail extends React.Component {
+export class Thumbnail extends React.Component {
   state = {
     rotation: '0',
     src: null,
@@ -19,7 +17,7 @@ class Thumbnail extends React.Component {
 
   static getDerivedStateFromProps(props) {
     let src = Cache.url(props.cache, variant(props.size), props)
-    let rot = exifRotation(props.orientation).add(props)
+    let rot = Rotation.fromExifOrientation(props.orientation).add(props)
     let [x, y] = rot.ratio(props)
 
     return {
@@ -81,12 +79,8 @@ class Thumbnail extends React.Component {
   }
 
   static defaultProps = {
-    size: ICON.SIZE
+    size: SASS.ICON.SIZE
   }
 
   static keys = Object.keys(this.propTypes)
-}
-
-module.exports = {
-  Thumbnail
 }

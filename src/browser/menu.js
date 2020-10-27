@@ -1,15 +1,12 @@
-'use strict'
-
-const res = require('../common/res')
-const { basename } = require('path')
-const { error, warn } = require('../common/log')
-const { blank } = require('../common/util')
-const { BrowserWindow, Menu: M } = require('electron')
+import { Icon, Menu as MR } from '../common/res'
+import { basename } from 'path'
+import { error, warn } from '../common/log'
+import { blank } from '../common/util'
+import { BrowserWindow, Menu as M } from 'electron'
 
 const SEPARATOR = { type: 'separator' }
 
-
-class Menu {
+export class Menu {
   static eachItem(menu, fn) {
     if (menu != null) {
       for (let item of menu.items) {
@@ -24,7 +21,7 @@ class Menu {
   }
 
   async loadTemplate(name) {
-    let { template } = await res.Menu.openWithFallback(
+    let { template } = await MR.openWithFallback(
       this.app.defaultLocale,
       this.app.state.locale,
       name)
@@ -47,7 +44,7 @@ class Menu {
     let { app } = this
 
     if (item.command)
-      item.click = createResponder(item.command, app, win, event)
+      item.click = createResponder(item.command, app, event)
 
     if (item.label)
       Menu.ItemCompiler.label(item, app)
@@ -78,7 +75,7 @@ class Menu {
   }
 }
 
-class AppMenu extends Menu {
+export class AppMenu extends Menu {
   static get instance() {
     return M.getApplicationMenu()
   }
@@ -145,11 +142,13 @@ class AppMenu extends Menu {
         }
       }
     })
+
+    this.handleHistoryChange()
   }
 }
 
 
-class ContextMenu extends Menu {
+export class ContextMenu extends Menu {
   static scopes = {}
 
   async load(name = 'context') {
@@ -284,6 +283,7 @@ class ContextMenu extends Menu {
     ...scopes.items,
     'item-list',
     'item',
+    'item-read-only',
     'item-rotate']
   scopes['item-list'].position = 2
 
@@ -351,9 +351,9 @@ Menu.ItemCompiler = {
     item.checked = event.target?.[ctx] === col
 
     if (col != null && col !== 'random')
-      item.icon = res.icon.color(col)
+      item.icon = Icon.color(col)
     if (cmd)
-      item.click = createResponder(cmd, app, win, event, col)
+      item.click = createResponder(cmd, app, event, col)
   },
 
   'label': (item, app) => {
@@ -396,12 +396,12 @@ Menu.ItemCompiler = {
     item.visible = (app.dev || app.debug)
   },
 
-  'theme': (item, app, win) => {
+  'theme': (item, app) => {
     item.submenu = item.submenu.map(theme => ({
       ...theme,
       checked: (theme.id === app.state.theme),
       enabled: (theme.id !== app.state.theme),
-      click: createResponder('app:switch-theme', app, win, theme.id)
+      click: createResponder('app:switch-theme', app, theme.id)
     }))
   },
 
@@ -432,7 +432,7 @@ Menu.ItemCompiler = {
         { type: 'separator' },
         ...plugins.map(({ id, name }) => ({
           label: name,
-          click: createResponder('app:export-item', app, win, {
+          click: createResponder('app:export-item', app, {
             target: event?.target,
             plugin: id
           })
@@ -455,7 +455,7 @@ Menu.ItemCompiler = {
           type: 'checkbox',
           label: tag.name,
           checked: target.tags.includes(tag.id),
-          click: createResponder('app:toggle-item-tag', app, win, {
+          click: createResponder('app:toggle-item-tag', app, {
             id: target.id,
             tag: tag.id
           })
@@ -467,7 +467,7 @@ Menu.ItemCompiler = {
           ...item.submenu[0],
           checked: false,
           enabled: true,
-          click: createResponder('app:clear-item-tags', app, win, {
+          click: createResponder('app:clear-item-tags', app, {
             id: target.id
           })
         }
@@ -487,7 +487,7 @@ Menu.ItemCompiler = {
     item.submenu = item.submenu.map(li => ({
       ...li,
       checked: li.mode === event.target.mode,
-      click: createResponder('app:writing-mode', app, win, {
+      click: createResponder('app:writing-mode', app, {
         id: event.target.id,
         mode: li.mode
       })
@@ -498,7 +498,7 @@ Menu.ItemCompiler = {
     item.submenu = item.submenu.map(li => ({
       ...li,
       checked: li.id === event.target.layout,
-      click: createResponder('app:settings-persist', app, win, {
+      click: createResponder('app:settings-persist', app, {
         layout: li.id
       })
     }))
@@ -520,6 +520,8 @@ Menu.ItemCompiler = {
 
     if (negate)
       item.enabled = !item.enabled
+
+    item.visible = item.enabled
   }
 }
 
@@ -541,44 +543,17 @@ Menu.ItemConditions = {
   }
 }
 
-function createResponder(cmd, app, win, ...params) {
+function createResponder(cmd, app, ...params) {
   let [prefix, action] = cmd.split(':', 2)
 
   switch (prefix) {
     case 'app':
-      return (_, w) =>
-        app.emit(cmd, win || w, ...params)
-
-    case 'ctx':
-      return withWindow(win, cmd, w =>
-        w.webContents.send('ctx', action, ...params))
-
+      return (_, win) =>
+        app.emit(cmd, win, ...params)
     case 'win':
-      return withWindow(win, cmd, w =>
-        w.webContents.send(action, params))
-
-    case 'dispatch':
-      return withWindow(win, cmd, w =>
-        w.webContents.send('dispatch', {
-          type: action, payload: params
-        }))
-
+      return (_, win) =>
+        win?.webContents.send(action, params)
     default:
       warn(`no responder for menu command ${cmd}`)
   }
-}
-
-function withWindow(win, cmd, fn) {
-  return (_, w) => {
-    if (!(win || w))
-      warn(`${cmd} called without window`)
-    else
-      fn(win || w)
-  }
-}
-
-
-module.exports = {
-  AppMenu,
-  ContextMenu
 }

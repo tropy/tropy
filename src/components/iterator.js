@@ -1,18 +1,16 @@
-'use strict'
+import React from 'react'
+import { TABS, SASS } from '../constants'
+import { adjacent, restrict } from '../common/util'
+import { has, on, off } from '../dom'
+import { isMeta } from '../keymap'
+import { bool, number, oneOf } from 'prop-types'
+import throttle from 'lodash.throttle'
 
-const React = require('react')
-const { PureComponent } = React
-const { TABS, SASS: { TILE } } = require('../constants')
-const { adjacent, restrict } = require('../common/util')
-const { has, on, off } = require('../dom')
-const { isMeta } = require('../keymap')
-const { ceil, floor, max, min, round } = Math
-const { bool, number, oneOf } = require('prop-types')
-const throttle = require('lodash.throttle')
 const EMPTY = []
+const { ceil, floor, max, min, round } = Math
 
 
-class Iterator extends PureComponent {
+export class Iterator extends React.PureComponent {
   constructor(props) {
     super(props)
     this.viewport = { width: 0, height: 0 }
@@ -122,6 +120,10 @@ class Iterator extends PureComponent {
     if (this.container != null) this.unobserve(this.container)
     this.container = container
     if (this.ro != null) this.observe(container)
+  }
+
+  focus = () => {
+    this.container?.focus()
   }
 
   update(props = this.props, ...args) {
@@ -244,7 +246,7 @@ class Iterator extends PureComponent {
   }
 
   getTileSize(size = this.props.size) {
-    return round(size * TILE.FACTOR)
+    return round(size * SASS.TILE.FACTOR)
   }
 
   getIterablesPerPage() {
@@ -496,8 +498,4 @@ class Iterator extends PureComponent {
     overscan: 2,
     restrict: 'bounds'
   }
-}
-
-module.exports = {
-  Iterator
 }

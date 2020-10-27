@@ -1,13 +1,7 @@
-'use strict'
+import { createSelector as memo } from 'reselect'
 
-const { createSelector: memo } = require('reselect')
-
-const getNotePadState = memo(
+export const getNotePadState = memo(
   ({ notepad }) => notepad,
   ({ nav }) => nav.note,
   (notepad, id) => notepad[id] || {}
 )
-
-module.exports = {
-  getNotePadState
-}

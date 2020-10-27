@@ -1,7 +1,7 @@
-'use strict'
+import { basename, resolve } from 'path'
+import { version, name, productName } from '../../package.json'
+import { titlecase } from './util'
 
-const { version, author, name, productName } = require('../../package')
-const { titlecase } = require('./util')
 const { platform } = process
 
 const channel =
@@ -10,20 +10,42 @@ const channel =
       'stable'
 
 const qualified = {
+  name: (channel === 'stable') ? name : `${name}-${channel}`,
   product: (channel === 'stable') ?
-  productName : `${productName} ${titlecase(channel)}`,
-  name: (channel === 'stable') ? name : `${name}-${channel}`
+    productName : `${productName} ${titlecase(channel)}`
 }
 
-module.exports = {
-  version,
-  author,
-  name,
-  product: productName,
-  channel,
-  qualified,
-  exe: (platform === 'linux') ? qualified.name : qualified.product,
-  feed: (platform === 'win32') ?
+const lib = (function find(path, pattern) {
+  let dir = basename(path)
+
+  if (!dir.length || dir === path || pattern.test(dir))
+    return path
+  else
+    return find(resolve(path, '..'), pattern)
+})(__dirname, /^src|lib$/)
+
+const paths = {
+  css: resolve(lib, '..', 'lib', 'css'),
+  db: resolve(lib, '..', 'db'),
+  lib,
+  res: resolve(lib, '..', 'res')
+}
+
+const exe = (platform === 'linux') ?
+  qualified.name :
+  qualified.product
+
+const feed = (platform === 'win32') ?
     `https://tropy.org/update/${channel}/${platform}` :
     `https://tropy.org/update/${channel}/${platform}/${version}`
+
+export {
+  channel,
+  exe,
+  feed,
+  name,
+  paths,
+  productName as product,
+  qualified,
+  version
 }

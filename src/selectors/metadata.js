@@ -1,22 +1,28 @@
-'use strict'
+import { createSelector as memo } from 'reselect'
+import { pluck } from './util'
+import { array, own } from '../common/util'
+import { equal } from '../value'
+import { compare } from '../collate'
+import { TYPE } from '../constants'
 
-const { createSelector: memo } = require('reselect')
-const { pluck } = require('./util')
-const { array, get, own } = require('../common/util')
-const { equal } = require('../value')
-const { compare } = require('../collate')
-const {
-  cat, compose, filter, keep, map, seq, transduce, transformer
-} = require('transducers.js')
+import {
+  cat,
+  compose,
+  filter,
+  keep,
+  map,
+  seq,
+  transduce,
+  transformer
+} from 'transducers.js'
 
-const { TYPE } = require('../constants')
-
-const {
+import {
   getActiveItemTemplate,
   getActivePhotoTemplate,
   getActiveSelectionTemplate
-} = require('./ontology')
+} from './ontology'
 
+const EMPTY = []
 
 const collect = transformer((data, [key, value]) => {
   if (value != null) {
@@ -35,7 +41,7 @@ const skipId = filter(kv => kv[0] !== 'id')
 
 const getMetadata = ({ metadata }) => metadata
 
-const getItemMetadata = memo(
+export const getItemMetadata = memo(
   getMetadata,
   ({ nav }) => (nav.items),
 
@@ -55,7 +61,7 @@ const getItemMetadata = memo(
       }))
 )
 
-const getVisibleMetadata = memo(
+export const getVisibleMetadata = memo(
   ({ items }) => items, ({ qr }) => (qr.items), pluck
 )
 
@@ -64,7 +70,7 @@ const getProperty = (id, props, compact) =>
     { id } : (!compact) ?
       props[id] : { id, label: props[id].label }
 
-const getMetadataFields = memo(
+export const getMetadataFields = memo(
   (_, { data }) => data,
   (_, { template }) => template,
   (_, { props }) => props,
@@ -114,7 +120,7 @@ const getMetadataFields = memo(
   }
 )
 
-const getItemFields = memo(
+export const getItemFields = memo(
   getActiveItemTemplate,
   getItemMetadata,
   ({ ontology }) => ontology.props,
@@ -134,7 +140,7 @@ const getSelectionMetadata = memo(
   (metadata, id) => metadata[id] || { id }
 )
 
-const getPhotoFields = memo(
+export const getPhotoFields = memo(
   getActivePhotoTemplate,
   getPhotoMetadata,
   ({ ontology }) => ontology.props,
@@ -142,7 +148,7 @@ const getPhotoFields = memo(
     getMetadataFields(null, { template, data, props })
 )
 
-const getSelectionFields = memo(
+export const getSelectionFields = memo(
   getActiveSelectionTemplate,
   getSelectionMetadata,
   ({ ontology }) => ontology.props,
@@ -151,15 +157,15 @@ const getSelectionFields = memo(
 )
 
 const getActiveProperty =
-  ({ edit }) => get(edit, ['field', 'property'])
+  ({ edit }) => edit?.field?.property
 
 const getActiveId =
-  ({ edit }) => get(edit, ['field', 'id', '0'])
+  ({ edit }) => edit?.field?.id?.[0]
 
 const getActiveDatatype = memo(
   getMetadata, getActiveProperty, getActiveId,
   (metadata, prop, id) =>
-    get(metadata, [id, prop, 'type'], TYPE.TEXT)
+    metadata?.[id]?.[prop]?.type || TYPE.TEXT
 )
 
 const makeCompletionFilter = (prop, datatype, byProp) =>
@@ -167,14 +173,14 @@ const makeCompletionFilter = (prop, datatype, byProp) =>
     ([id, v]) => id === prop && v && !!(v.text) && v.type === datatype :
     ([id, v]) => id !== 'id' && v && !!(v.text) && v.type === datatype
 
-const getMetadataCompletions = memo(
+export const getMetadataCompletions = memo(
   getMetadata,
   getActiveProperty,
   getActiveDatatype,
   ({ settings }) => settings.completions === 'property-datatype',
 
   (metadata, prop, datatype, byProp) => {
-    if (prop == null) return []
+    if (prop == null) return EMPTY
     let comp = new Set()
 
     seq(metadata, compose(
@@ -186,13 +192,3 @@ const getMetadataCompletions = memo(
     return [...comp].sort(compare)
   }
 )
-
-module.exports = {
-  getItemMetadata,
-  getItemFields,
-  getPhotoFields,
-  getSelectionFields,
-  getMetadataFields,
-  getMetadataCompletions,
-  getVisibleMetadata
-}

@@ -1,10 +1,4 @@
-'use strict'
+import { BLANK, get } from '../common/util'
 
-const { BLANK, get } = require('../common/util')
-
-const getEsperViewState = ({ esper, nav }) =>
+export const getEsperViewState = ({ esper, nav }) =>
   get(esper.view, [nav.selection ?? nav.photo], BLANK)
-
-module.exports = {
-  getEsperViewState
-}

@@ -1,12 +1,10 @@
-'use strict'
-
-const { Strings } = require('../common/res')
-const { UPDATE } = require('../constants/intl')
+import { INTL } from '../constants'
+import { Strings } from '../common/res'
 
 function load({ locale }) {
   return async function (dispatch) {
-    const strings = await Strings.openWithFallback('en', locale)
-    const messages = {
+    let strings = await Strings.openWithFallback('en', locale)
+    let messages = {
       ...strings.flatten(),
       dialog: strings.dict.dialog
     }
@@ -19,13 +17,13 @@ function load({ locale }) {
 
 function update(payload, meta) {
   return {
-    type: UPDATE,
+    type: INTL.UPDATE,
     payload,
     meta
   }
 }
 
-module.exports = {
+export default {
   load,
   update
 }

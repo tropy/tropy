@@ -1,9 +1,7 @@
-'use strict'
+import { ACTIVITY } from '../constants'
+import { pick } from '../common/util'
 
-const { ACTIVITY } = require('../constants')
-const { pick } = require('../common/util')
-
-module.exports = {
+export default {
   cancel(id, meta) {
     return {
       type: ACTIVITY.CANCEL,

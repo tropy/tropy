@@ -1,16 +1,14 @@
-'use strict'
-
-const { call, select } = require('redux-saga/effects')
-const { Command } = require('../command')
-const { API } = require('../../constants')
-const { Cache } = require('../../common/cache')
-const { Rotation } = require('../../common/iiif')
-const { pluck } = require('../../common/util')
-const { Esper } = require('../../esper')
-const sharp = require('sharp')
+import { call, select } from 'redux-saga/effects'
+import { Command } from '../command'
+import { API } from '../../constants'
+import { Cache } from '../../common/cache'
+import { Rotation } from '../../common/iiif'
+import { pluck } from '../../common/util'
+import Esper from '../../esper'
+import sharp from 'sharp'
 
 
-class PhotoExtract extends Command {
+export class PhotoExtract extends Command {
   *exec() {
     let { cache } = this.options
     let { payload } = this.action
@@ -52,7 +50,7 @@ class PhotoExtract extends Command {
 PhotoExtract.register(API.PHOTO.EXTRACT)
 
 
-class PhotoFind extends Command {
+export class PhotoFind extends Command {
   *exec() {
     let { item } = this.action.payload
     let { items, photos } = yield select()
@@ -67,7 +65,7 @@ class PhotoFind extends Command {
 PhotoFind.register(API.PHOTO.FIND)
 
 
-class PhotoShow extends Command {
+export class PhotoShow extends Command {
   *exec() {
     let { id } = this.action.payload
     let photo = yield select(state => state.photos[id])
@@ -76,10 +74,3 @@ class PhotoShow extends Command {
 }
 
 PhotoShow.register(API.PHOTO.SHOW)
-
-
-module.exports = {
-  PhotoExtract,
-  PhotoFind,
-  PhotoShow
-}

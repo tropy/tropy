@@ -1,13 +1,11 @@
-'use strict'
-
-const React = require('react')
-const { bool, func, number, oneOfType, string } = require('prop-types')
-const { Input } = require('./input')
-const { noop } = require('../common/util')
-const cx = require('classnames')
+import React from 'react'
+import { array, bool, func, number, oneOfType, string } from 'prop-types'
+import { Input } from './input'
+import { noop } from '../common/util'
+import cx from 'classnames'
 
 
-class Editable extends React.PureComponent {
+export class Editable extends React.PureComponent {
   componentWillUnmount() {
     this.prevFocus = null
   }
@@ -96,7 +94,7 @@ class Editable extends React.PureComponent {
         autofocus={this.props.autofocus}
         autoselect={this.props.autoselect}
         className="editable-control"
-        completions={this.props.getCompletions(window.state)}
+        completions={this.props.completions}
         isRequired={this.props.isRequired}
         placeholder={this.props.placeholder}
         tabIndex={this.props.tabIndex}
@@ -126,7 +124,7 @@ class Editable extends React.PureComponent {
   static propTypes = {
     autofocus: bool,
     autoselect: bool,
-    getCompletions: func.isRequired,
+    completions: array,
     display: string,
     isActive: bool,
     isDisabled: bool,
@@ -149,11 +147,6 @@ class Editable extends React.PureComponent {
   static defaultProps = {
     autofocus: true,
     autoselect: true,
-    getCompletions: noop,
     onCancel: noop
   }
-}
-
-module.exports = {
-  Editable
 }

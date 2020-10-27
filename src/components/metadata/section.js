@@ -1,13 +1,11 @@
-'use strict'
+import React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { TemplateSelect } from '../template/select'
+import { noop } from '../../common/util'
+import cx from 'classnames'
+import { array, bool, func, node, number, string } from 'prop-types'
 
-const React = require('react')
-const { FormattedMessage } = require('react-intl')
-const { TemplateSelect } = require('../template/select')
-const { noop } = require('../../common/util')
-const cx = require('classnames')
-const { array, bool, func, node, number, string } = require('prop-types')
-
-const MetadataSection = (props) => {
+export const MetadataSection = (props) => {
   let hasTemplates = !!props.templates
   return (
     <section onContextMenu={props.onContextMenu}>
@@ -43,10 +41,6 @@ MetadataSection.propTypes = {
   title: string.isRequired
 }
 
-MetadataSection.propTypes = {
+MetadataSection.defaultProps = {
   onTemplateChange: noop
-}
-
-module.exports = {
-  MetadataSection
 }

@@ -1,6 +1,11 @@
-'use strict'
-
-const fs = require('fs')
+import { EventEmitter } from 'events'
+import fs from 'fs'
+import { basename, join } from 'path'
+import { shell } from 'electron'
+import debounce from 'lodash.debounce'
+import { logger, info, warn } from './log'
+import { blank, get, omit, uniq } from './util'
+import { unzip } from './zip'
 
 const {
   mkdir,
@@ -10,19 +15,8 @@ const {
   stat
 } = fs.promises
 
-
-const { shell } = require('electron')
-const { EventEmitter } = require('events')
-const { basename, join } = require('path')
-const { info, warn } = require('./log')
-const { blank, get, omit, uniq } = require('./util')
-const debounce = require('lodash.debounce')
-
 const load = async file => JSON.parse(await read(file))
 const save = (file, data) => write(file, JSON.stringify(data, null, 2))
-
-const decompress = (...args) => require('decompress')(...args)
-const proxyRequire = (mod) => require(mod)
 
 const subdirs = async root => (
   (await readdir(root, { withFileTypes: true }))
@@ -33,9 +27,10 @@ const subdirs = async root => (
     }, []))
 
 
-class Plugins extends EventEmitter {
-  constructor(root) {
+export class Plugins extends EventEmitter {
+  constructor(root, context = {}) {
     super()
+    this.context = context
     this.root = root
     this.reset()
   }
@@ -46,8 +41,12 @@ class Plugins extends EventEmitter {
 
   getContext(plugin) {
     return {
-      logger: require('./log').logger.child({ plugin }),
-      require: proxyRequire
+      logger: logger.child({ plugin }),
+      require(mod) {
+        warn(`plugin ${plugin} requires ${mod} via context: update required!`)
+        return require(mod)
+      },
+      ...this.context
     }
   }
 
@@ -60,24 +59,41 @@ class Plugins extends EventEmitter {
     }, [])
   }
 
+  // Subtle: CommonJS is still used natively. We need to address
+  // this if we switch to ESM!
   clearModuleCache(root = this.root) {
     for (let mod in require.cache) {
       if (mod.startsWith(root)) delete require.cache[mod]
     }
   }
 
-  create(config = this.config) {
-    this.instances = config.reduce((acc, { plugin, options, name }, id) => {
+  async create(config = this.config) {
+    this.instances = {}
+    let loadcount = 0
+
+    for (let i = 0; i < config.length; ++i) {
+      let { plugin, options, name } = config[i]
+
       try {
-        acc[id] = new (this.require(plugin))(
-          options || {},
-          this.getContext(plugin))
+        let Plugin = await this.import(plugin)
+
+        if (typeof Plugin !== 'function')
+          Plugin = Plugin.default
+
+        this.instances[i] = new Plugin(
+          options ?? {},
+          this.getContext(plugin)
+        )
+
+        loadcount++
+
       } catch (e) {
         warn({ stack: e.stack }, `failed to create plugin ${plugin} "${name}"`)
       }
-      return acc
-    }, {})
-    info(`plugins loaded: ${Object.keys(this.instances).length}`)
+    }
+
+    info(`plugins loaded: ${loadcount}`)
+    this.emit('change')
     return this
   }
 
@@ -102,26 +118,24 @@ class Plugins extends EventEmitter {
   }, 100)
 
   async init(autosave = true) {
-    try {
-      await mkdir(this.root)
-    } catch (error) {
-      if (error.code !== 'EEXIST') throw error
-    }
+    await mkdir(this.root, { recursive: true })
     return this.reload(autosave)
   }
 
   async install(input) {
     try {
-      const plugin = Plugins.basename(input)
-      const dest = join(this.root, plugin)
+      var plugin = Plugins.basename(input)
+      let dest = join(this.root, plugin)
       await this.uninstall(plugin, { prune: false })
-      await decompress(input, dest, { strip: 1 })
-      const spec = (await this.scan([plugin]))[plugin] || {}
+      await unzip(input, dest, { strip: true })
+      var spec = (await this.scan([plugin]))[plugin] || {}
       await this.reload()
       this.emit('change')
       info(`installed plugin ${spec.name || plugin} ${spec.version}`)
-    } catch (error) {
-      warn(`failed to install plugin: ${error.message}`)
+    } catch (e) {
+      warn({
+        stack: e.stack
+      }, `failed to install plugin ${spec?.name || plugin}`)
     }
     return this
   }
@@ -142,9 +156,9 @@ class Plugins extends EventEmitter {
     try {
       this.reset()
       this.config = await load(this.configFile)
-    } catch (error) {
-      if (error.code !== 'ENOENT') {
-        warn(`failed to load plugin config: ${error.message}`)
+    } catch (e) {
+      if (e.code !== 'ENOENT') {
+        warn({ stack: e.stack }, 'failed to load plugin config')
       } else {
         if (autosave) await this.save()
       }
@@ -154,17 +168,23 @@ class Plugins extends EventEmitter {
     return this
   }
 
-  require(name, fallback = 'node_modules') {
-    let pkg
+  async import(name) {
     try {
-      pkg = require(join(this.root, name))
-      pkg.source = 'local'
-    } catch (error) {
-      if (!fallback || error.code !== 'MODULE_NOT_FOUND') throw error
-      pkg = this.require(join(fallback, name), false)
-      pkg.source = 'npm'
+      let mod = join(this.root, name)
+      return {
+        ...await import(mod),
+        source: 'local'
+      }
+    } catch (e) {
+      if (e.code !== 'MODULE_NOT_FOUND')
+        throw e
+
+      let mod = join(this.root, 'node_modules', name)
+      return {
+        ...await import(mod),
+        source: 'npm'
+      }
     }
-    return pkg
   }
 
   reset() {
@@ -179,10 +199,15 @@ class Plugins extends EventEmitter {
   }
 
   async scan(plugins) {
-    return (plugins || await this.list()).reduce((acc, name) => {
+    if (!plugins) plugins = await this.list()
+
+    let spec = {}
+
+    for (let name of plugins) {
       try {
-        let pkg = this.require(join(name, 'package.json'))
-        acc[name] = {
+        let pkg = await this.import(join(name, 'package.json'))
+
+        spec[name] = {
           name,
           description: pkg.description,
           version: pkg.version,
@@ -193,11 +218,12 @@ class Plugins extends EventEmitter {
           repository: pkg.repository,
           homepage: homepage(pkg)
         }
-      } catch (error) {
-        warn(`failed to scan '${name}' plugin: ${error.message}`)
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to scan '${name}' plugin`)
       }
-      return acc
-    }, {})
+    }
+
+    return spec
   }
 
   stop() {
@@ -249,11 +275,11 @@ class Plugins extends EventEmitter {
     return this
   }
 
-  static ext = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip']
+  static ext = ['zip']
 
   static basename(input) {
     return basename(input)
-      .replace(/\.(tar\.(bz2|gz)|tgz|zip)$/, '')
+      .replace(/\.(zip)$/, '')
       .replace(/-\d+(\.\d+)*$/, '')
   }
 }
@@ -276,8 +302,4 @@ const homepage = pkg => {
       .replace(/^github:/, 'https://github.com/')
       .replace(/^gitlab:/, 'https://gitlab.com/')
       .replace(/^bitbucket:/, 'https://bitbucket.org/')
-}
-
-module.exports = {
-  Plugins
 }

@@ -1,16 +1,14 @@
-'use strict'
+import { EventEmitter } from 'events'
+import { join } from 'path'
+import { URL } from 'url'
+import dialog from './dialog'
+import { debug, error, trace, warn } from '../common/log'
+import { darwin } from '../common/os'
+import { channel, paths } from '../common/release'
+import { Icon, View } from '../common/res'
+import { SASS } from '../constants'
 
-const { EventEmitter } = require('events')
-const { join } = require('path')
-const { URL } = require('url')
-const dialog = require('./dialog')
-const { debug, error, trace, warn } = require('../common/log')
-const { darwin, EL_CAPITAN } = require('../common/os')
-const { channel } = require('../common/release')
-const res = require('../common/res')
-const { BODY, PANEL, ESPER } = require('../constants/sass')
-
-const {
+import {
   array,
   blank,
   counter,
@@ -18,19 +16,19 @@ const {
   once,
   remove,
   restrict
-} = require('../common/util')
+} from '../common/util'
 
-const {
+import {
   app,
   BrowserWindow,
-  ipcMain: ipc,
+  ipcMain as ipc,
   nativeTheme,
-  systemPreferences: prefs
-} = require('electron')
+  systemPreferences as prefs
+} from 'electron'
 
+const { BODY, PANEL, ESPER } = SASS
 
-
-class WindowManager extends EventEmitter {
+export class WindowManager extends EventEmitter {
   constructor(defaults = {}) {
     super()
 
@@ -40,10 +38,12 @@ class WindowManager extends EventEmitter {
       useContentSize: false,
       show: false,
       webPreferences: {
+        contextIsolation: true,
+        worldSafeExecuteJavaScript: true,
         defaultEncoding: 'UTF-8',
         enableRemoteModule: true,
         nodeIntegration: true,
-        preload: join(__dirname, '..', 'bootstrap.js'),
+        preload: join(paths.lib, 'bootstrap.js'),
         ...defaults.webPreferences
       }
     }
@@ -103,14 +103,15 @@ class WindowManager extends EventEmitter {
 
       switch (process.platform) {
         case 'linux':
-          opts.icon = res.icon.expand(channel, 'tropy', '512x512.png')
+          opts.icon = Icon.expand(channel, 'tropy', '512x512.png')
           opts.darkTheme = opts.darkTheme || isDarkMode
           break
         case 'darwin':
-          if (!opts.frame && EL_CAPITAN) {
+          if (!opts.frame) {
             opts.frame = true
             opts.title = ''
-            opts.titleBarStyle = opts.titleBarStyle || 'hiddenInset'
+            opts.titleBarStyle = opts.titleBarStyle || 'hidden'
+            opts.trafficLightPosition = getTrafficLightPosition(type)
           }
           break
       }
@@ -323,12 +324,12 @@ class WindowManager extends EventEmitter {
   async open(type, args, opts = {}) {
     let win = this.create(type, args, opts)
 
-    await win.loadFile(res.view.expand(type), {
+    await win.loadFile(View.expand(type), {
       hash: encodeURIComponent(JSON.stringify({
         aqua: WindowManager.getAquaColorVariant(),
         contrast: nativeTheme.shouldUseHighContrastColors,
         dark: nativeTheme.shouldUseDarkColors,
-        environment: process.env.NODE_ENV,
+        env: process.env.NODE_ENV,
         documents: app.getPath('documents'),
         maximizable: win.maximizable,
         minimizable: win.minimizable,
@@ -371,9 +372,11 @@ class WindowManager extends EventEmitter {
           win.webContents.send('reload')
         })
         .on('will-navigate', handleWillNavigate)
-        .on('crashed', () => {
-          warn(`${type}[${win.id}] contents crashed`)
-          this.emit('crashed', type, win)
+        .on('render-process-gone', (_, { reason }) => {
+          if (reason !== 'clean-exit') {
+            warn(`${type}[${win.id}] render-process crashed: ${reason}`)
+            this.emit('crashed', type, win)
+          }
         })
 
       win
@@ -420,10 +423,8 @@ class WindowManager extends EventEmitter {
     }).finally(() => { delete this.pending[id] })
   }
 
-  setTitle(type, title, frameless = false) {
-    if (!frameless || !(darwin && EL_CAPITAN)) {
-      this.each(type, win => win.setTitle(title))
-    }
+  setTitle(type, title) {
+    this.each(type, win => win.setTitle(title))
   }
 
   async show(type, args, opts) {
@@ -472,6 +473,8 @@ class WindowManager extends EventEmitter {
           Math.round((width / old) * factor),
           Math.round((height / old) * factor))
       }
+
+      win.webContents.send('zoom', factor)
     }
 
     return factor
@@ -491,7 +494,7 @@ class WindowManager extends EventEmitter {
   static defaults = {
     about: {
       width: 600,
-      height: 300,
+      height: 318,
       autoHideMenuBar: true,
       fullscreenable: false,
       maximizable: false,
@@ -562,6 +565,15 @@ class WindowManager extends EventEmitter {
 }
 
 
+const getTrafficLightPosition = (type) => {
+  switch (type) {
+    case 'prefs':
+      return { x: 7, y: 6 }
+    default:
+      return { x: 12, y: 22 }
+  }
+}
+
 const AQUA = { 1: 'blue', 6: 'graphite' }
 
 const APP_CMD = {
@@ -594,6 +606,3 @@ function webContentsForward(win, events) {
     win.on(type, () => { win.webContents.send('win', type) })
   }
 }
-
-
-module.exports = WindowManager

@@ -1,23 +1,20 @@
-'use strict'
+import React from 'react'
+import { only } from './util'
+import { Resizable } from './resizable'
+import cx from 'classnames'
+import { bounds, off, on } from '../dom'
+import { restrict } from '../common/util'
+import { SASS } from '../constants'
+import { remap } from '../common/util'
+import { round } from '../common/math'
+import throttle from 'lodash.throttle'
+import memoize from 'memoize-one'
+import { arrayOf, bool, func, node, number, string, shape } from 'prop-types'
 
-const React = require('react')
-const { only } = require('./util')
-const { Resizable } = require('./resizable')
-const cx = require('classnames')
-const { bounds, off, on } = require('../dom')
-const { restrict } = require('../common/util')
-const { PANEL } = require('../constants/sass')
-const { remap } = require('../common/util')
-const { round } = require('../common/math')
-const throttle = require('lodash.throttle')
-const memoize = require('memoize-one')
-
-const {
-  arrayOf, bool, func, node, number, string, shape
-} = require('prop-types')
+const { MIN_HEIGHT, CLOSED_HEIGHT } = SASS.PANEL
 
 
-class Panel extends React.PureComponent {
+export class Panel extends React.PureComponent {
   container = React.createRef()
 
   state = {
@@ -106,7 +103,7 @@ class Panel extends React.PureComponent {
   }
 }
 
-const PanelBody = (props) => (
+export const PanelBody = (props) => (
   <div className={cx('panel-body', props.className)}>
     {props.children}
   </div>
@@ -118,7 +115,7 @@ PanelBody.propTypes = {
 }
 
 
-const PanelHeader = (props) => (
+export const PanelHeader = (props) => (
   <header
     className="panel-header"
     onDoubleClick={props.onDoubleClick}>
@@ -132,7 +129,7 @@ PanelHeader.propTypes = {
 }
 
 
-class PanelGroup extends React.Component {
+export class PanelGroup extends React.Component {
   container = React.createRef()
 
   state = { slots: [], height: 0 }
@@ -210,12 +207,12 @@ class PanelGroup extends React.Component {
     if (slots.length > 1) {
       let slot = slots[1]
 
-      if (!slot.isClosed && slot.height >= PANEL.MIN_HEIGHT) {
+      if (!slot.isClosed && slot.height >= MIN_HEIGHT) {
         let offset = top + slots[0].height
 
         this.limits.memo = (active.props.id === 0) ?
-          offset + slot.height - PANEL.MIN_HEIGHT :
-          offset + PANEL.MIN_HEIGHT
+          offset + slot.height - MIN_HEIGHT :
+          offset + MIN_HEIGHT
       }
     }
   }
@@ -254,11 +251,11 @@ class PanelGroup extends React.Component {
   }
 
   shrink(slot, by) {
-    if (slot.isClosed || by <= 0 || slot.height <= PANEL.MIN_HEIGHT) {
+    if (slot.isClosed || by <= 0 || slot.height <= MIN_HEIGHT) {
       return slot
     }
 
-    let height = restrict(slot.height - by, PANEL.MIN_HEIGHT)
+    let height = restrict(slot.height - by, MIN_HEIGHT)
 
     return { ...slot, height }
   }
@@ -300,7 +297,7 @@ class PanelGroup extends React.Component {
 
     pivot.height = restrict(pivot.height, null, max)
 
-    const shrink = this.getShrinkMapper(pivot.height - PANEL.CLOSED_HEIGHT)
+    const shrink = this.getShrinkMapper(pivot.height - CLOSED_HEIGHT)
 
     if (at === 0) {
       return [pivot, ...slots.slice(1).map(shrink)]
@@ -317,7 +314,7 @@ class PanelGroup extends React.Component {
     const { slots } = this.state
 
     const pivot = { ...slots[at], isClosed: true }
-    const grow = this.getGrowMapper(pivot.height - PANEL.CLOSED_HEIGHT)
+    const grow = this.getGrowMapper(pivot.height - CLOSED_HEIGHT)
 
     if (at === 0) {
       return [pivot, ...slots.slice(1).map(grow)]
@@ -332,13 +329,13 @@ class PanelGroup extends React.Component {
 
   commit(slots = this.state.slots) {
     const cc = slots.filter(slot => slot.isClosed).length
-    const scale = this.state.height - cc * PANEL.CLOSED_HEIGHT
+    const scale = this.state.height - cc * CLOSED_HEIGHT
 
     this.props.onResize(
       slots.map(({ height, isClosed }) => ({
         isClosed,
         height: round(
-          height * 100 / (isClosed ? scale + PANEL.CLOSED_HEIGHT : scale), 100
+          height * 100 / (isClosed ? scale + CLOSED_HEIGHT : scale), 100
         )
       }))
     )
@@ -350,7 +347,7 @@ class PanelGroup extends React.Component {
     let { min, height, isClosed, isDisabled } = this.state.slots[id]
 
     if (isClosed) {
-      min = height = PANEL.CLOSED_HEIGHT
+      min = height = CLOSED_HEIGHT
     }
 
     return (
@@ -413,11 +410,11 @@ const getLayout = memoize((panels, height) => {
       let min
 
       if (slot.isClosed) {
-        min = PANEL.CLOSED_HEIGHT
+        min = CLOSED_HEIGHT
         numClosed++
 
       } else {
-        min = PANEL.MIN_HEIGHT
+        min = MIN_HEIGHT
       }
 
       offset = offset + min
@@ -431,7 +428,7 @@ const getLayout = memoize((panels, height) => {
       })
     }
 
-    let scale = height - numClosed * PANEL.CLOSED_HEIGHT
+    let scale = height - numClosed * CLOSED_HEIGHT
     let surplus = height
 
     for (let i = slots.length - 1, offset = 0; i >= 0; --i) {
@@ -465,12 +462,4 @@ function fixLayout(slots, surplus) {
       break
     }
   }
-}
-
-
-module.exports = {
-  Panel,
-  PanelBody,
-  PanelGroup,
-  PanelHeader
 }
