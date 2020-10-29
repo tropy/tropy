@@ -10,6 +10,8 @@ export function select(s, items, mod = 'replace') {
       return append(s, items)
     case 'merge':
       return merge(s, items)
+    case 'clear':
+      return clear(s, items)
     default:
       throw new Error(`unknown selection mode: "${mod}"`)
 
