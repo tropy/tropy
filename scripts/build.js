@@ -10,7 +10,7 @@ const RRCHNM = 'Roy Rosenzweig Center for History and New Media, George Mason Un
 
 const BABEL_CONFIG = {
   presets: [
-    '@babel/preset-react'
+    ['@babel/preset-react', { runtime: 'automatic' }]
   ],
   plugins: [
     '@babel/plugin-syntax-class-properties',
