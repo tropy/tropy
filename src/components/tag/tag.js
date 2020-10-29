@@ -60,6 +60,8 @@ class Tag extends React.PureComponent {
   }
 
   handleClick = (event) => {
+    if (event.button > 0) return
+
     let { tag, isSelected, onSelect, onFocusClick } = this.props
 
     let mod = isSelected ?
