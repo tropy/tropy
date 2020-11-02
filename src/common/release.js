@@ -1,19 +1,13 @@
 import { basename, resolve } from 'path'
 import { version, name, productName } from '../../package.json'
-import { titlecase } from './util'
+import { parse } from 'semver'
 
 const { platform } = process
+const v = parse(version)
 
-const channel =
-  version.includes('beta') ? 'beta' :
-    version.includes('dev') ? 'dev' :
-      'stable'
-
-const qualified = {
-  name: (channel === 'stable') ? name : `${name}-${channel}`,
-  product: (channel === 'stable') ?
-    productName : `${productName} ${titlecase(channel)}`
-}
+export const channel = (v?.prerelease.length > 0) ?
+  (v.prerelease[0] === 'beta' ? 'beta' : 'alpha') :
+  'latest'
 
 const lib = (function find(path, pattern) {
   let dir = basename(path)
@@ -24,28 +18,21 @@ const lib = (function find(path, pattern) {
     return find(resolve(path, '..'), pattern)
 })(__dirname, /^src|lib$/)
 
-const paths = {
+export const paths = {
   css: resolve(lib, '..', 'lib', 'css'),
   db: resolve(lib, '..', 'db'),
   lib,
   res: resolve(lib, '..', 'res')
 }
 
-const exe = (platform === 'linux') ?
-  qualified.name :
-  qualified.product
+export const exe = (platform === 'linux') ? name : productName
 
-const feed = (platform === 'win32') ?
-    `https://tropy.org/update/${channel}/${platform}` :
-    `https://tropy.org/update/${channel}/${platform}/${version}`
+export const feed = (platform === 'win32') ?
+  `https://tropy.org/update/${channel}/${platform}` :
+  `https://tropy.org/update/${channel}/${platform}/${version}`
 
 export {
-  channel,
-  exe,
-  feed,
   name,
-  paths,
   productName as product,
-  qualified,
   version
 }
