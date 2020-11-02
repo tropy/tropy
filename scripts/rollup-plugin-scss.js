@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { basename, dirname, extname, resolve } from 'path'
 import { promisify } from 'util'
-import sass from 'node-sass'
+import sass from 'sass'
 import SASS from '../src/constants/sass'
 import { get } from '../src/common/util'
 
