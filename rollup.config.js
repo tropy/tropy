@@ -34,6 +34,15 @@ const IGNORE_WARNINGS = {
     (/this && this\.__/).test(warning.frame)
 }
 
+function onwarn(warning, warn) {
+  let ok = IGNORE_WARNINGS[warning.code]
+
+  if (ok === true || typeof ok === 'function' && ok(warning))
+    return
+  else
+    warn(warning)
+}
+
 export default [
   {
     input: [
@@ -64,7 +73,8 @@ export default [
     external: [
       'electron',
       ...builtins
-    ]
+    ],
+    onwarn
   },
 
   {
@@ -141,14 +151,7 @@ export default [
       'electron',
       ...builtins
     ],
-    onwarn(warning, warn) {
-      let ok = IGNORE_WARNINGS[warning.code]
-
-      if (ok === true || typeof ok === 'function' && ok(warning))
-        return
-      else
-        warn(warning)
-    }
+    onwarn
   },
 
   {
