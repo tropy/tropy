@@ -55,11 +55,11 @@ function notify(opts) {
   })
 }
 
-function fail(e, msg) {
+function fail(e, msg = '') {
   return notify({
     type: 'error',
     ...t('dialog', 'error'),
-    message: t(`error.${msg}`) || e.message,
+    message: t('error', ...msg.split('.')) || e.message,
     detail: e.stack
   }).then(({ response }) => {
     switch (response) {
