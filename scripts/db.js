@@ -2,7 +2,21 @@
 
 require('shelljs/make')
 
-const pkg = require('../package')
+const BABEL_CONFIG = {
+  presets: [
+    '@babel/preset-react'
+  ],
+  plugins: [
+    '@babel/plugin-syntax-class-properties',
+    '@babel/plugin-proposal-export-namespace-from',
+    'babel-plugin-dynamic-import-node',
+    '@babel/plugin-transform-modules-commonjs'
+  ]
+}
+
+require('@babel/register')(BABEL_CONFIG)
+
+const pkg = require('../package.json')
 const { check, say } = require('./util')('db')
 const { join, dirname, relative } = require('path')
 const { compact, strftime } = require('../src/common/util')
@@ -11,7 +25,7 @@ const cwd = process.cwd()
 const SCHEMA = join(home, 'db', 'schema')
 const MIGRATE = join(home, 'db', 'migrate')
 
-require('../src/common/log')({ level: 'warn' })
+require('../src/common/log').createLogger({ level: 'warn' })
 
 global.ARGS = global.ARGS || {
   environment: 'production',
@@ -56,7 +70,7 @@ target.migrate = async (args = []) => {
   const db = new Database(tmp)
 
   try {
-    await db.migrate(join(MIGRATE, domain))
+    await db.migrate(domain)
     const version = await db.version()
 
     ;(`--
