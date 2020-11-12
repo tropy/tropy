@@ -8,7 +8,7 @@ const { readdir: ls, readFile: read } = fs.promises
 export class Migration {
   constructor(path) {
     this.path = path
-    this.type = extname(this.path).slice(1)
+    this.type = extname(path).slice(1)
     this.number = Number(basename(path).split('.', 2)[0])
   }
 
@@ -30,13 +30,15 @@ export class Migration {
 
     return db
       .migration(async (tx) => {
-        if (this.type === 'js') {
-          await (await import(this.path)).up(tx)
+        let { path, type, number } = this
+
+        if (type === 'js') {
+          await (await import(path)).up(tx)
         } else {
-          await tx.exec(String(await read(this.path)))
+          await tx.exec(String(await read(path)))
         }
 
-        await tx.version(this.number)
+        await tx.version(number)
       })
   }
 
