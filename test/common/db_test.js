@@ -68,7 +68,7 @@ describe('Database', () => {
     describe('#prepare()', () => {
       it('returns disposable statement and connection', () => (
         expect(
-          db.prepare('SELECT * FROM sqlite_master', (stmt, conn) => {
+          db.prepare('SELECT * FROM sqlite_schema', (stmt, conn) => {
             expect(stmt).to.be.instanceof(Statement)
             expect(conn).to.be.instanceof(Connection)
           })
@@ -80,7 +80,7 @@ describe('Database', () => {
 
         return expect(
           db
-            .prepare('SELECT * FROM sqlite_master', () => {})
+            .prepare('SELECT * FROM sqlite_schema', () => {})
             .tap(() => {
               expect(Statement.prototype.finalize).to.have.been.called
             })
@@ -103,18 +103,18 @@ describe('Database', () => {
 
     describe('#exec()', () => {
       it('executes arbitrary sql', () =>
-        expect(db.exec('SELECT * FROM sqlite_master;'))
+        expect(db.exec('SELECT * FROM sqlite_schema;'))
           .to.eventually.be.fulfilled)
 
       it('rejects on error', () =>
-        expect(db.exec('SELECT foobar FROM sqlite_master;'))
+        expect(db.exec('SELECT foobar FROM sqlite_schema;'))
           .to.eventually.be.rejected)
 
       it('acquires connection for every call', () => {
         expect(db.busy).to.eql(0)
-        db.exec('SELECT * FROM sqlite_master;')
+        db.exec('SELECT * FROM sqlite_schema;')
         expect(db.busy).to.eql(1)
-        db.exec('SELECT * FROM sqlite_master;')
+        db.exec('SELECT * FROM sqlite_schema;')
         expect(db.busy).to.eql(db.pool.max > 1 ? 2 : 1)
       })
 
@@ -131,7 +131,7 @@ describe('Database', () => {
       it('ignores comments', () => (
         expect(db.exec(
           `-- A comment
-          SELECT * FROM sqlite_master; -- Another comment`
+          SELECT * FROM sqlite_schema; -- Another comment`
         )).to.eventually.be.fulfilled
       ))
     })
@@ -144,7 +144,7 @@ describe('Database', () => {
           expect(db.busy).to.eql(1)
           await conn.run('CREATE TABLE a (x)')
           await conn.run('CREATE TABLE b (x)')
-          await conn.each('SELECT * FROM sqlite_master', spy)
+          await conn.each('SELECT * FROM sqlite_schema', spy)
           expect(spy).to.have.been.calledTwice
           expect(db.busy).to.eql(1)
         }))
@@ -241,7 +241,7 @@ describe('Database', () => {
             await db.seq(async conn => {
               await conn.configure({ writable_schema: 'on' })
               await conn.run(
-                `UPDATE sqlite_master
+                `UPDATE sqlite_schema
                   SET sql = 'CREATE TABLE t1 (id INTEGER PRIMARY KEY, name NOT NULL)'
                   WHERE type = 'table' AND name = 't1'`)
             }, { destroy: true })
