@@ -239,7 +239,6 @@ export class Database extends EventEmitter {
   }
 
   static defaults = {
-    application_id: '0xDAEDA105',
     encoding: 'UTF-8'
   }
 }

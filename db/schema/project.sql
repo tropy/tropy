@@ -11,8 +11,11 @@
 --   node scripts/db migrate
 --
 
+PRAGMA encoding = 'UTF-8';
+PRAGMA application_id = -621960955;
+
 -- Save the current migration number
-PRAGMA user_version=2005271953;
+PRAGMA user_version = 2011121230;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -147,7 +150,7 @@ CREATE TABLE trash (
   CHECK (reason IN ('user', 'auto', 'merge'))
 ) WITHOUT ROWID;
 PRAGMA writable_schema=ON;
-INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_notes','fts_notes',0,'CREATE VIRTUAL TABLE fts_notes USING fts5(
+INSERT INTO sqlite_schema(type,name,tbl_name,rootpage,sql)VALUES('table','fts_notes','fts_notes',0,'CREATE VIRTUAL TABLE fts_notes USING fts5(
   id UNINDEXED,
   text,
   language UNINDEXED,
@@ -162,7 +165,7 @@ CREATE TABLE IF NOT EXISTS 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid,
 CREATE TABLE IF NOT EXISTS 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE IF NOT EXISTS 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
 INSERT INTO fts_notes_config VALUES('version',4);
-INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata','fts_metadata',0,'CREATE VIRTUAL TABLE fts_metadata USING fts5(
+INSERT INTO sqlite_schema(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata','fts_metadata',0,'CREATE VIRTUAL TABLE fts_metadata USING fts5(
   datatype UNINDEXED,
   text,
   content = ''metadata_values'',

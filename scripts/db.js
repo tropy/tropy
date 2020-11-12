@@ -25,6 +25,8 @@ const cwd = process.cwd()
 const SCHEMA = join(home, 'db', 'schema')
 const MIGRATE = join(home, 'db', 'migrate')
 
+const APPLICATION_ID = Buffer.from([0xDA, 0xED, 0xA1, 0x05]).readInt32BE()
+
 require('../src/common/log').createLogger({ level: 'warn' })
 
 global.ARGS = global.ARGS || {
@@ -86,8 +88,11 @@ target.migrate = async (args = []) => {
 --   node scripts/db migrate
 --
 
+PRAGMA encoding = 'UTF-8';
+PRAGMA application_id = ${APPLICATION_ID};
+
 -- Save the current migration number
-PRAGMA user_version=${version};
+PRAGMA user_version = ${version};
 
 -- Load sqlite3 .dump
 `
@@ -149,7 +154,7 @@ target.migration = (args = []) => {
   const path = join(MIGRATE, domain, file)
 
   if (type === 'js') {
-    (`'use strict'
+    (`
 module.exports = {
   async up(tx) {
   }
