@@ -15,8 +15,8 @@ describe('main process', () => {
     process.argv = ['tropy', 'file.tpy']
     sinon.stub(process, 'on').returns(process)
     sinon.spy(args, 'parse')
-    sinon.spy(app, 'whenReady')
     sinon.stub(app, 'setPath')
+    sinon.stub(app, 'setAsDefaultProtocolClient')
     sinon.stub(app, 'requestSingleInstanceLock').returns(true)
     sinon.stub(app, 'on').returns(app)
     Tropy.instance = sinon.createStubInstance(EventEmitter)
@@ -32,8 +32,8 @@ describe('main process', () => {
     args.parse.restore()
     app.on.restore()
     app.requestSingleInstanceLock.restore()
+    app.setAsDefaultProtocolClient.restore()
     app.setPath.restore()
-    app.whenReady.restore()
   })
 
   describe('when required', () => {
@@ -59,7 +59,7 @@ describe('main process', () => {
     })
 
     it('waits for app "ready"', () => {
-      expect(app.whenReady).to.have.been.called
+      expect(app.on).to.have.been.calledWith('ready')
     })
 
     it('starts Tropy instance', () => {
