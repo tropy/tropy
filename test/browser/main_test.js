@@ -18,7 +18,10 @@ describe('main process', () => {
     sinon.stub(app, 'setPath')
     sinon.stub(app, 'setAsDefaultProtocolClient')
     sinon.stub(app, 'requestSingleInstanceLock').returns(true)
-    sinon.stub(app, 'on').returns(app)
+    sinon.stub(app, 'on').callsFake((type, cb) => {
+      if (type === 'ready') cb()
+      return app
+    })
     Tropy.instance = sinon.createStubInstance(EventEmitter)
     Tropy.instance.start = sinon.stub().returns(Promise.resolve())
     Tropy.instance.open = sinon.stub()
