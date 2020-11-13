@@ -1,9 +1,8 @@
 import { basename, dirname, join } from 'path'
 import { app, shell } from 'electron'
-import ChildProcess from 'child_process'
+// import ChildProcess from 'child_process'
 import { existsSync, mkdirSync, rmdirSync } from 'fs'
 import { product, qualified } from '../common/release'
-import Registry from 'winreg'
 
 function rm(path) {
   rmdirSync(path, { recursive: true, maxRetries: 3 })
@@ -56,6 +55,7 @@ function registry(reg, cmd, ...args) {
 
 
 async function setMimeType(...types) {
+  const Registry = await import('winreg')
   const { DEFAULT_VALUE, HKCU, REG_SZ } = Registry
 
   return Promise.all(types.map(async type => {
@@ -73,6 +73,7 @@ async function setMimeType(...types) {
 }
 
 async function clearMimeType(...types) {
+  const Registry = await import('winreg')
   const { HKCU } = Registry
 
   return Promise.all(types.map(async type => {
@@ -82,54 +83,53 @@ async function clearMimeType(...types) {
   }))
 }
 
-// eslint-disable-next-line no-unused-vars
-function spawn(cmd, ...args) {
+//async function spawn(cmd, ...args) {
+//  try {
+//    return ChildProcess.spawn(cmd, args, { detached: true })
+//  } catch (error) {
+//    app.quit(1)
+//  }
+//}
+
+export function handleSquirrelEvent(type, opts) {
+  switch (type) {
+    case '--squirrel-install':
+      return handleInstall()
+
+    case '--squirrel-updated':
+      return handleUpdated()
+
+    case '--squirrel-uninstall':
+      return handleUninstall(opts)
+
+    case '--squirrel-obsolete':
+      return Promise.resolve()
+
+    default:
+      return null
+  }
+}
+
+async function handleInstall() {
+  link(DESKTOP, true)
+  link(START_MENU, true)
+  await setMimeType('tpy', 'ttp')
+}
+
+async function handleUpdated() {
+  link(DESKTOP)
+  link(START_MENU)
+}
+
+async function handleUninstall(opts = {}) {
   try {
-    return ChildProcess.spawn(cmd, args, { detached: true })
-  } catch (error) {
-    app.quit(1)
+    rm(DESKTOP)
+    rm(START_MENU)
+    if (opts.logs) rm(opts.logs)
+    if (opts.cache) rm(opts.cache)
+    if (opts.data) rm(opts.data)
+
+  } finally {
+    await clearMimeType('tpy', 'ttp')
   }
-}
-
-function quit() {
-  app.quit()
-}
-
-export default function handleSquirrelEvent({ data, cache, logs } = {}) {
-  if (process.platform !== 'win32') return false
-  if (process.env.NODE_ENV === 'development') return false
-  if (process.argv.length === 1) return false
-
-  for (let arg of process.argv) {
-    switch (arg) {
-      case '--squirrel-install':
-        link(DESKTOP, true)
-        link(START_MENU, true)
-        setMimeType('tpy', 'ttp').then(quit, quit)
-
-        return true
-      case '--squirrel-updated':
-        link(DESKTOP)
-        link(START_MENU)
-        app.quit()
-        return true
-      case '--squirrel-uninstall':
-        try {
-          rm(DESKTOP)
-          rm(START_MENU)
-          if (logs) rm(logs)
-          if (cache) rm(cache)
-          if (data) rm(data)
-
-        } finally {
-          clearMimeType('tpy', 'ttp').then(quit, quit)
-        }
-        return true
-      case '--squirrel-obsolete':
-        app.quit()
-        return true
-    }
-  }
-
-  return false
 }

@@ -1,5 +1,4 @@
-
-import electron, { app } from 'electron'
+import { app, dialog, powerMonitor } from 'electron'
 import { extname, join, resolve } from 'path'
 import { mkdirSync as mkdir } from 'fs'
 import { darwin, win32, system } from '../common/os'
@@ -7,11 +6,15 @@ import { exe, qualified, version } from '../common/release'
 import { parse } from './args'
 import { createLogger, info, warn } from '../common/log'
 import { Tropy } from './tropy'
+import { handleSquirrelEvent } from './squirrel'
 
 const START = getCreationTime() || Date.now()
 const { args, opts } = parse()
 
 process.env.NODE_ENV = opts.env
+
+process.on('uncaughtException', handleError)
+process.on('unhandledRejection', (reason) => handleError(reason))
 
 app.allowRendererProcessReuse = false
 
@@ -21,9 +24,7 @@ app.name = qualified.product
 if (!opts.data) {
   opts.data = join(app.getPath('appData'), exe)
 }
-let userData = join(opts.data, 'electron')
-mkdir(userData, { recursive: true })
-app.setPath('userData', userData)
+setPath('userData', join(opts.data, 'electron'))
 
 if (!opts.cache) {
   opts.cache = join(app.getPath('cache'), exe)
@@ -31,38 +32,36 @@ if (!opts.cache) {
   if (opts.cache === opts.data)
     opts.cache = join(opts.data, 'cache')
 }
-mkdir(opts.cache, { recursive: true })
-app.setPath('userCache', opts.cache)
+setPath('userCache', opts.cache)
 
 if (!opts.logs) {
-  opts.logs = (darwin) ?
-    app.getPath('logs') :
-    join(opts.data, 'log')
+  opts.logs = (darwin) ? app.getPath('logs') : join(opts.data, 'log')
+}
+setPath('logs', opts.logs)
+
+
+let handlingSquirrelEvent = false
+if (win32 && process.argv.length > 1) {
+  let type = process.argv[1]
+  let promise = handleSquirrelEvent(type, opts)
+
+  if (promise) {
+    handlingSquirrelEvent = true
+    promise.finally(() => app.quit())
+  }
 }
 
-mkdir(opts.logs, { recursive: true })
-app.setPath('logs', opts.logs)
-
-if (!app.requestSingleInstanceLock()) {
-  process.stderr.write('other instance detected, exiting...\n')
-  app.exit(0)
+let isDuplicateInstance = false
+if (!handlingSquirrelEvent) {
+  if (!app.requestSingleInstanceLock()) {
+    isDuplicateInstance = true
+    app.quit()
+  }
 }
 
-if (app.isPackaged) {
+
+if (!handlingSquirrelEvent && !isDuplicateInstance) {
   app.setAsDefaultProtocolClient('tropy')
-}
-
-(async function main() {
-  if (win32 && (await import('./squirrel')).default(opts))
-    return
-
-  createLogger({
-    dest: join(opts.logs, 'tropy.log'),
-    name: 'main',
-    rotate: true,
-    debug: opts.debug,
-    trace: opts.trace
-  })
 
   if (opts.webgl) {
     app.commandLine.appendSwitch('ignore-gpu-blacklist')
@@ -72,21 +71,52 @@ if (app.isPackaged) {
     app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
   }
 
-  info({
-    opts,
-    version
-  }, `main.init ${version} ${system}`)
+  app.on('ready', async () => {
+    createLogger({
+      dest: join(opts.logs, 'tropy.log'),
+      name: 'main',
+      rotate: true,
+      debug: opts.debug,
+      trace: opts.trace
+    })
 
-  const tropy = new Tropy(opts)
-  const startups = [
-    app.whenReady(),
-    tropy.start()
-  ]
+    info({ opts, version }, `main.init ${version} ${system}`)
+
+    let tropy = new Tropy(opts)
+
+    await tropy.start()
+    tropy.ready = Date.now()
+
+    app.on('second-instance', (_, argv) => {
+      tropy.open(...parse(argv.slice(1)).args)
+    })
+
+    app.on('quit', (_, code) => {
+      tropy.stop()
+      info({ quit: true, code }, `quit with exit code ${code}`)
+    })
+
+    tropy.open(...args.map(f => resolve(f)))
+
+    powerMonitor.on('shutdown', (event) => {
+      event.preventDefault()
+      app.quit()
+    })
+
+    info(`ready after ${tropy.ready - START}ms`)
+  })
+
+  app.on('web-contents-created', (_, contents) => {
+    contents.on('new-window', (event, url) => {
+      warn(`prevented loading ${url}`)
+      event.preventDefault()
+    })
+  })
 
   if (darwin) {
     app.on('open-file', (event, file) => {
-      if (tropy.ready) {
-        if (tropy.open(file))
+      if (Tropy.instance?.ready) {
+        if (Tropy.instance.open(file))
           event.preventDefault()
       } else {
         if (extname(file) === '.tpy') {
@@ -105,54 +135,24 @@ if (app.isPackaged) {
       if (quit) app.quit()
     })
   }
+}
 
-  app.on('second-instance', (_, argv) => {
-    if (tropy.ready)
-      tropy.open(...parse(argv.slice(1)).args)
-  })
+function setPath(name, path) {
+  mkdir(path, { recursive: true })
+  app.setPath(name, path)
+}
 
-  app.on('web-contents-created', (_, contents) => {
-    contents.on('new-window', (event, url) => {
-      warn(`prevented loading ${url}`)
-      event.preventDefault()
-    })
-  })
-
-  app.on('quit', (_, code) => {
-    if (tropy.ready) tropy.stop()
-    info({ quit: true, code }, `quit with exit code ${code}`)
-  })
-
-  const handleError = (error, isFatal = false) => {
-    if (isFatal || !tropy.ready) {
-      electron
-        .dialog
-        .showErrorBox('Unhandled Error', error.stack)
-      app.exit(42)
-    }
-
-    try {
-      tropy.handleUncaughtException(error)
-    } catch (_) {
-      handleError(_, true)
-    }
+function handleError(error, isFatal = false) {
+  if (isFatal || !Tropy.instance?.ready) {
+    dialog.showErrorBox('Unhandled Error', error.stack)
   }
 
-  process.on('uncaughtException', handleError)
-  process.on('unhandledRejection', (reason) => handleError(reason))
-
-  await Promise.all(startups)
-
-  tropy.ready = Date.now()
-  tropy.open(...args.map(f => resolve(f)))
-
-  electron.powerMonitor.on('shutdown', (event) => {
-    event.preventDefault()
-    app.quit()
-  })
-
-  info(`ready after ${tropy.ready - START}ms`)
-}())
+  try {
+    Tropy.instance.handleUncaughtException(error)
+  } catch (e) {
+    handleError(e, true)
+  }
+}
 
 function getCreationTime() {
   for (let m of app.getAppMetrics()) {
