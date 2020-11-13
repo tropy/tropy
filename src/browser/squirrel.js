@@ -1,48 +1,16 @@
-import { basename, dirname, join } from 'path'
-import { app, shell } from 'electron'
-// import ChildProcess from 'child_process'
-import { existsSync, mkdirSync, rmdirSync } from 'fs'
-import { product, qualified } from '../common/release'
+import { basename, join, resolve } from 'path'
+import ChildProcess from 'child_process'
+import fs from 'fs'
+import { homedir } from 'os'
+import { qualified } from '../common/release'
 
-function rm(path) {
-  rmdirSync(path, { recursive: true, maxRetries: 3 })
-}
+const appFolder = resolve(process.execPath, '..')
+const rootAppDir = resolve(appFolder, '..')
+const updateDotExe = join(rootAppDir, 'Update.exe')
+const exeName = basename(process.execPath)
 
-const START_MENU = join(
-  app.getPath('appData'),
-  '..',
-  'Roaming',
-  'Microsoft',
-  'Windows',
-  'Start Menu',
-  'Programs',
-  product,
-  `${qualified.product}.lnk`
-)
 
-const DESKTOP = join(
-  app.getPath('home'),
-  'Desktop',
-  `${qualified.product}.lnk`
-)
-
-const root = join(process.execPath, '..', '..')
 const mime = join(process.execPath, '..', 'res', 'icons', 'mime')
-const update = join(root, 'Update.exe')
-const exe = basename(process.execPath)
-
-function link(path, force = false) {
-  if (!existsSync(path) && !force) return
-
-  mkdirSync(dirname(path), { recursive: true })
-  shell.writeShortcutLink(path, existsSync(path) ? 'update' : 'create', {
-    target: update,
-    args: `--processStart "${exe}"`,
-    icon: process.execPath,
-    iconIndex: 0,
-    appUserModelId: 'org.tropy.app'
-  })
-}
 
 function registry(reg, cmd, ...args) {
   return Promise((resolve, reject) => {
@@ -52,7 +20,6 @@ function registry(reg, cmd, ...args) {
     })
   })
 }
-
 
 async function setMimeType(...types) {
   const Registry = await import('winreg')
@@ -83,13 +50,6 @@ async function clearMimeType(...types) {
   }))
 }
 
-//async function spawn(cmd, ...args) {
-//  try {
-//    return ChildProcess.spawn(cmd, args, { detached: true })
-//  } catch (error) {
-//    app.quit(1)
-//  }
-//}
 
 export function handleSquirrelEvent(type, opts) {
   switch (type) {
@@ -111,25 +71,83 @@ export function handleSquirrelEvent(type, opts) {
 }
 
 async function handleInstall() {
-  link(DESKTOP, true)
-  link(START_MENU, true)
+  await createShortcut(['StartMenu', 'Desktop'])
   await setMimeType('tpy', 'ttp')
 }
 
 async function handleUpdated() {
-  link(DESKTOP)
-  link(START_MENU)
+  await updateShortcut()
 }
 
 async function handleUninstall(opts = {}) {
-  try {
-    rm(DESKTOP)
-    rm(START_MENU)
-    if (opts.logs) rm(opts.logs)
-    if (opts.cache) rm(opts.cache)
-    if (opts.data) rm(opts.data)
+  await removeShortcut()
+  await clearMimeType('tpy', 'ttp')
+  await rmdir(opts.logs)
+  await rmdir(opts.cache)
+  await rmdir(opts.data)
+}
 
-  } finally {
-    await clearMimeType('tpy', 'ttp')
+function createShortcut(locations) {
+  return spawn(updateDotExe, [
+    '--createShortcut',
+    exeName,
+    '-l',
+    locations.join(',')
+  ])
+}
+
+function updateShortcut() {
+  let locations = ['StartMenu', 'Desktop']
+  let home = homedir()
+
+  if (home) {
+    let desktopShortcut = join(home, 'Desktop', `${qualified.product}.lnk`)
+
+    if (!fs.existsSync(desktopShortcut))
+      locations = ['StartMenu']
+  }
+
+  return createShortcut(locations)
+}
+
+function removeShortcut() {
+  return spawn(updateDotExe, ['--removeShortcut', exeName])
+}
+
+async function rmdir(path) {
+  if (path) {
+    return fs.promises.rmdir(path, { recursive: true, maxRetries: 3 })
   }
 }
+
+async function spawn(cmd, args) {
+  try {
+    let child = ChildProcess.spawn(cmd, args)
+
+    return new Promise((resolve, reject) => {
+      let stdout = ''
+
+      child.stdout?.on('data', data => {
+        stdout += data
+      })
+
+      child.on('close', code => {
+        if (code === 0)
+          resolve(stdout)
+        else
+          reject(new Error(`Command ${cmd} ${args} failed: ${stdout}`))
+      })
+
+      child.on('error', error => {
+        reject(error)
+      })
+
+      // See http://stackoverflow.com/questions/9155289/calling-powershell-from-nodejs
+      child.stdin?.end()
+    })
+
+  } catch (e) {
+    return Promise.reject(e)
+  }
+}
+
