@@ -8,7 +8,7 @@
       .color {
         color: $icon-tag-color;
 
-        .nested-tab-focus & {
+        :focus-visible & {
           color: $icon-tag-nested-focus-color;
         }
       }
@@ -16,7 +16,7 @@
       .border {
         color: $icon-tag-border;
 
-        .nested-tab-focus & {
+        :focus-visible & {
           color: $icon-tag-nested-focus-border;
         }
       }
@@ -187,7 +187,7 @@
       background: $add-tag-default-bg;
     }
 
-    .nested-tab-focus & {
+    :focus-visible & {
       background: $add-tag-nested-focus-bg;
       border-color: $add-tag-nested-focus-border-color;
     }

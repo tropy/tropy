@@ -76,7 +76,7 @@
         transition: transform $esper-toolbar-transition-in-hover;
       }
 
-      @include state(".esper.tab-focus", ".esper.panel-visible") {
+      @include state(".esper:focus-visible", ".esper.panel-visible") {
         transform: translate3d(0, 0, 0);
         transition: transform $esper-toolbar-transition-in-focus;
       }

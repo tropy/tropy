@@ -36,7 +36,7 @@
   border: 1px solid $btn-default-border;
   padding: $padding-base-vertical $padding-base-horizontal;
 
-  @include input-btn-focus(".tab-focus");
+  @include input-btn-focus(":focus-visible");
 
   &:active {
     background: $btn-default-active-bg;
@@ -46,7 +46,7 @@
     background: $btn-default-overlay-bg;
     border-color: transparent;
 
-    @include input-btn-focus(".tab-focus", $input-btn-overlay-focus-color);
+    @include input-btn-focus(":focus-visible", $input-btn-overlay-focus-color);
 
     &:active {
       background: $btn-default-overlay-active-bg;
@@ -63,7 +63,7 @@
   color: $btn-primary-color;
   background: $btn-primary-bg;
 
-  @include input-btn-focus(".tab-focus");
+  @include input-btn-focus(":focus-visible");
 
   &:active {
     background: $btn-primary-active-bg;

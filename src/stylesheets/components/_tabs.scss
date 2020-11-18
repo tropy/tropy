@@ -49,6 +49,12 @@
       margin-right: 0;
     }
 
+    &:not(.active) {
+      :focus-visible & {
+        background: $tab-nested-focus-bg;
+      }
+    }
+
     &:not(:first-child) {
       margin-left: 0;
     }

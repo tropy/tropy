@@ -22,13 +22,18 @@ $default-padding-horizontal: 12px !default;
     margin-bottom: (($metadata-line-height - 10px) / 2); // 10px: Caps height
     border-bottom: 1px solid $panel-separator-color;
 
-    .nested-tab-focus & {
+    :focus-visible & {
       border-bottom-color: $panel-nested-focus-separator-color;
     }
   }
 
+<<<<<<< HEAD
   .metadata section:first-child & {
     margin-top: 9px; // Visual spacing of following headings
+=======
+  :focus-visible & {
+    color: $panel-nested-focus-heading-color;
+>>>>>>> 03414b1b (#568 Update tab-focus styles to focus-visible.)
   }
 }
 
@@ -65,7 +70,7 @@ $default-padding-horizontal: 12px !default;
       margin-left: $default-padding-horizontal;
     }
 
-    .nested-tab-focus & {
+    :focus-visible & {
       background-color: $template-select-nested-focus-bg;
       border-color: $template-select-nested-focus-border;
     }

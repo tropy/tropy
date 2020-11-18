@@ -129,7 +129,7 @@
     }
 
     &.active {
-      @include state(".plugins .accordion.tab-focus") {
+      @include state(".plugins .accordion:focus-visible") {
         @include form-shading-level(3);
 
         &.disabled {

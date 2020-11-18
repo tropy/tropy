@@ -12,7 +12,7 @@
     background-color: $vocab-panel-bg;
 
     &.active {
-      @include state(".vocab .tab-focus") {
+      @include state(".vocab :focus-visible") {
         @include form-shading-level(3);
       }
     }
@@ -48,7 +48,7 @@
     fieldset {
       @include form-shading-level(3);
 
-      @include state(".vocab .tab-focus .panel.active") {
+      @include state(".vocab .focus-visible .panel.active") {
         @include form-shading-level(4);
       }
     }
