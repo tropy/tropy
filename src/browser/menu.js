@@ -91,15 +91,7 @@ export class AppMenu extends Menu {
   }
 
   reload() {
-    try {
-      var { instance } = AppMenu
-      this.update()
-
-    } finally {
-      if (instance != null) {
-        instance.destroy()
-      }
-    }
+    this.update()
   }
 
   update() {
@@ -179,7 +171,6 @@ export class ContextMenu extends Menu {
           win,
           positioningItem: settings.position,
           callback: () => {
-            this.menu.destroy()
             this.menu = null
             resolve()
           }
