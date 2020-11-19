@@ -3,52 +3,12 @@ import ChildProcess from 'child_process'
 import fs from 'fs'
 import { homedir } from 'os'
 import { qualified } from '../common/release'
+import { ShellOption } from './win-shell'
 
 const appFolder = resolve(process.execPath, '..')
 const rootAppDir = resolve(appFolder, '..')
 const updateDotExe = join(rootAppDir, 'Update.exe')
 const exeName = basename(process.execPath)
-
-
-const mime = join(process.execPath, '..', 'res', 'icons', 'mime')
-
-function registry(reg, cmd, ...args) {
-  return Promise((resolve, reject) => {
-    reg[cmd](...args, (err, ...res) => {
-      if (err != null) reject(err)
-      else resolve(...res)
-    })
-  })
-}
-
-async function setMimeType(...types) {
-  const Registry = await import('winreg')
-  const { DEFAULT_VALUE, HKCU, REG_SZ } = Registry
-
-  return Promise.all(types.map(async type => {
-    let icon = join(mime, `${type}.ico`)
-    let key = `\\Software\\Classes\\.${type}`
-    let reg = new Registry({ hive: HKCU, key })
-
-    await registry(reg, 'set', DEFAULT_VALUE, REG_SZ, qualified.product)
-
-    key = `${key}\\DefaultIcon`
-    reg = new Registry({ hive: HKCU, key })
-
-    await registry(reg, 'set', DEFAULT_VALUE, REG_SZ, icon)
-  }))
-}
-
-async function clearMimeType(...types) {
-  const Registry = await import('winreg')
-  const { HKCU } = Registry
-
-  return Promise.all(types.map(async type => {
-    const key = `\\Software\\Classes\\.${type}`
-    const reg = new Registry({ hive: HKCU, key })
-    await registry(reg, 'clear')
-  }))
-}
 
 
 export function handleSquirrelEvent(type, opts) {
@@ -72,16 +32,17 @@ export function handleSquirrelEvent(type, opts) {
 
 async function handleInstall() {
   await createShortcut(['StartMenu', 'Desktop'])
-  await setMimeType('tpy', 'ttp')
+  await registerApplication()
 }
 
 async function handleUpdated() {
   await updateShortcut()
+  await registerApplication()
 }
 
 async function handleUninstall(opts = {}) {
   await removeShortcut()
-  await clearMimeType('tpy', 'ttp')
+  await clearAppRegistration()
   await rmdir(opts.logs)
   await rmdir(opts.cache)
   await rmdir(opts.data)
@@ -113,6 +74,46 @@ function updateShortcut() {
 function removeShortcut() {
   return spawn(updateDotExe, ['--removeShortcut', exeName])
 }
+
+async function registerApplication() {
+  let exe = process.execPath
+  let res = join(appFolder, 'resources')
+
+  await ShellOption
+    .forAppPath(exe)
+    .register()
+
+  await ShellOption
+    .forApplication(exe, join(res, 'tropy.ico'), ['.tpy'])
+    .register()
+
+  await ShellOption
+    .forProgId('Tropy.Project', exe, join(res, 'tpy.ico'))
+    .register()
+
+  await ShellOption
+    .forProgId('Tropy.Template', exe, join(res, 'ttp.ico'))
+    .register()
+
+  await ShellOption
+    .forFileExtension('.tpy', 'Tropy.Project', 'application/vnd.tropy.tpy')
+    .register()
+
+  await ShellOption
+    .forFileExtension('.ttp', 'Tropy.Template', 'application/vnd.tropy.ttp')
+    .register()
+}
+
+async function clearAppRegistration() {
+  let exe = process.execPath
+
+  await ShellOption.forAppPath(exe).clear()
+  await ShellOption.forApplication(exe).clear()
+  await ShellOption.forProgId('Tropy.Project').clear()
+  await ShellOption.forProgId('Tropy.Template').clear()
+}
+
+
 
 async function rmdir(path) {
   if (path) {
@@ -150,4 +151,3 @@ async function spawn(cmd, args) {
     return Promise.reject(e)
   }
 }
-
