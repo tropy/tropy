@@ -76,10 +76,19 @@ target.all = async (args = []) => {
 
     say(`packaging for ${platform} ${arch}...`)
 
-    let extraResource = (platform !== 'darwin') ? [] : [
-      join(res, 'icons', 'mime', 'tpy.icns'),
-      join(res, 'icons', 'mime', 'ttp.icns')
-    ]
+    let extraResource = []
+
+    switch (platform) {
+      case 'darwin':
+        extraResource.push(join(res, 'icons', 'mime', 'tpy.icns'))
+        extraResource.push(join(res, 'icons', 'mime', 'ttp.icns'))
+        break
+      case 'win32':
+        extraResource.push(icon)
+        extraResource.push(join(res, 'icons', 'mime', 'tpy.ico'))
+        extraResource.push(join(res, 'icons', 'mime', 'ttp.ico'))
+        break
+    }
 
     let dst = await packager({
       platform,
@@ -92,6 +101,7 @@ target.all = async (args = []) => {
       overwrite: true,
       quiet: true,
       ignore,
+      junk: true,
       electronVersion: electron.version,
       appVersion: version,
       appBundleId: 'org.tropy.tropy',
