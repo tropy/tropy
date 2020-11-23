@@ -25,6 +25,9 @@ export function handleSquirrelEvent(type, opts) {
     case '--squirrel-obsolete':
       return Promise.resolve()
 
+    case '--squirrel-firstrun':
+      return null
+
     default:
       return null
   }
