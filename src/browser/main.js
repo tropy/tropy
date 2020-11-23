@@ -13,13 +13,16 @@ const { args, opts } = parse()
 
 process.env.NODE_ENV = opts.env
 
-process.on('uncaughtException', handleError)
-process.on('unhandledRejection', (reason) => handleError(reason))
+process.on('uncaughtException', error => { handleError(error) })
+process.on('unhandledRejection', reason => { handleError(reason) })
 
 app.allowRendererProcessReuse = false
 
 // Set app name and paths as soon as possible!
 app.name = qualified.product
+
+// TODO win32
+// app.setAppUserModelId()
 
 if (!opts.data) {
   opts.data = join(app.getPath('appData'), exe)
@@ -39,7 +42,6 @@ if (!opts.logs) {
 }
 setPath('logs', opts.logs)
 
-
 let handlingSquirrelEvent = false
 if (win32 && process.argv.length > 1) {
   let type = process.argv[1]
@@ -47,7 +49,9 @@ if (win32 && process.argv.length > 1) {
 
   if (promise) {
     handlingSquirrelEvent = true
-    promise.finally(() => app.quit())
+    promise
+      .catch((e) => handleError(e))
+      .then(() => app.quit())
   }
 }
 
@@ -80,15 +84,18 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
       trace: opts.trace
     })
 
-    info({ opts, version }, `main.init ${version} ${system}`)
+    info({ args, opts, version }, `main.init ${version} ${system}`)
 
     let tropy = new Tropy(opts)
 
     await tropy.start()
     tropy.ready = Date.now()
 
-    app.on('second-instance', (_, argv) => {
-      tropy.open(...parse(argv.slice(1)).args)
+    app.on('second-instance', (_, argv, pwd) => {
+      info({ argv, pwd }, 'second-instance')
+      tropy.open(
+        ...parse(argv.slice(1)).args.map(f => resolve(pwd, f))
+      )
     })
 
     app.on('quit', (_, code) => {
@@ -144,7 +151,7 @@ function setPath(name, path) {
 
 function handleError(error, isFatal = false) {
   if (isFatal || !Tropy.instance?.ready) {
-    dialog.showErrorBox('Unhandled Error', error.stack)
+    return dialog.showErrorBox('Unhandled Error', error?.stack)
   }
 
   try {

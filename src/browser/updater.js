@@ -84,9 +84,7 @@ export class Updater extends EventEmitter {
     this.isUpdateAvailable = false
     this.isUpdateReady = false
 
-    error({
-      stack: e.stack
-    }, `failed to fetch update: ${e.message}`)
+    error({ stack: e.stack }, 'failed to fetch update')
   }
 
   onCheckingForUpdate = () =>{
