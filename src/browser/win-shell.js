@@ -33,13 +33,13 @@ export class ShellOption {
 
   static forAppPath(exe) {
     return new ShellOption(
-      `Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\${basename(exe)}`,
+      `\\Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\${basename(exe)}`,
       [{ value: exe }]
     )
   }
 
   static forApplication(exe, icon, types = []) {
-    let key = `Software\\Classes\\Applications\\${basename(exe)}`
+    let key = `\\Software\\Classes\\Applications\\${basename(exe)}`
     let parts = [
       { key: 'shell\\open\\command', value: `"${exe}" "%1"` }
     ]
@@ -66,7 +66,7 @@ export class ShellOption {
   // See https://docs.microsoft.com/en-us/windows/win32/shell/fa-file-types
 
   static forProgId(id, exe, icon) {
-    let key = `Software\\Classes\\${id}`
+    let key = `\\Software\\Classes\\${id}`
     let parts = [
       { key: 'shell\\open\\command', value: `"${exe}" "%1"` }
     ]
@@ -82,7 +82,7 @@ export class ShellOption {
   }
 
   static forFileExtension(ext, progId, mimetype) {
-    let key = `Software\\Classes\\${ext}`
+    let key = `\\Software\\Classes\\${ext}`
     let parts = [
       { value: progId }
     ]
@@ -100,13 +100,15 @@ export class ShellOption {
 
 
 function exec(reg, cmd, ...args) {
-  return Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (!(reg instanceof Registry))
       reg = new Registry(reg)
 
-    reg[cmd](...args, (err, ...res) => {
-      if (err != null)
-        reject(err)
+    reg[cmd](...args, (e, ...res) => {
+      if (e != null)
+        reject(new Error(
+          `Windows Registry error: ${cmd} "${args}": ${e.message}`
+        ))
       else
         resolve(...res)
     })
