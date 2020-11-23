@@ -1,7 +1,7 @@
 import React from 'react'
 import { PluginOption } from './option'
 import { FormField } from '../form'
-import { set } from '../../common/util'
+import { get, set } from '../../common/util'
 import { IconPlusCircle, IconMinusCircle } from '../icons'
 import { Button, ButtonGroup } from '../button'
 
@@ -46,7 +46,7 @@ export class PluginInstance extends React.PureComponent {
               spec={spec}
               templates={this.props.templates}
               properties={this.props.properties}
-              value={this.props.config.options?.[spec.field] ?? spec.default}
+              value={get(this.props.config.options, spec.field, spec.default)}
               onChange={this.handleOptionsChange}/>)}
         </fieldset>
         <ButtonGroup>
