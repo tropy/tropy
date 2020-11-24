@@ -103,6 +103,12 @@ class Project extends React.Component {
       this.props.project.items === 0
   }
 
+  get isProjectDisabled() {
+    return this.state.mode !== MODE.PROJECT ||
+      this.state.isProjectClosed ||
+      this.state.willProjectClose
+  }
+
   modeWillChange() {
     if (this.state.willModeChange) return
 
@@ -277,7 +283,7 @@ class Project extends React.Component {
           nav={nav}
           items={items}
           data={data}
-          isDisabled={this.state.mode !== MODE.PROJECT || project.closing}
+          isDisabled={this.isProjectDisabled}
           isEmpty={this.isEmpty}
           columns={columns}
           offset={this.state.offset}
