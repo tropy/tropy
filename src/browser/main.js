@@ -2,7 +2,7 @@ import { app, dialog, powerMonitor } from 'electron'
 import { extname, join, resolve } from 'path'
 import { mkdirSync as mkdir } from 'fs'
 import { darwin, win32, system } from '../common/os'
-import { exe, product, version } from '../common/release'
+import { exe, qualified, version } from '../common/release'
 import { parse } from './args'
 import { createLogger, info, warn } from '../common/log'
 import { Tropy } from './tropy'
@@ -19,7 +19,8 @@ process.on('unhandledRejection', reason => { handleError(reason) })
 app.allowRendererProcessReuse = false
 
 // Set app name and paths as soon as possible!
-app.name = product
+// TODO single-release use unqualified!
+app.name = qualified.product
 
 // TODO win32
 // app.setAppUserModelId()
