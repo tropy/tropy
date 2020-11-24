@@ -127,18 +127,21 @@ export class Tropy extends EventEmitter {
     return false
   }
 
-  openFile(file) {
-    switch (extname(file)) {
-      case '.tpy':
-        this.showProjectWindow(file)
-        break
+  async openFile(file) {
+    let ext = extname(file)
+
+    if (ext === '.tpy')
+      return this.showProjectWindow(file)
+
+    await this.showProjectWindow()
+
+    switch (ext) {
       case '.ttp':
         this.importTemplates([file])
         break
       default:
         this.import({ files: [file] })
     }
-    return true
   }
 
   async showOpenDialog(win = this.wm.current()) {
