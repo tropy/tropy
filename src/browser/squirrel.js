@@ -2,7 +2,7 @@ import { basename, join, resolve } from 'path'
 import ChildProcess from 'child_process'
 import fs from 'fs'
 import { homedir } from 'os'
-import { product } from '../common/release'
+import { qualified } from '../common/release'
 import { ShellOption } from './win-shell'
 
 const appFolder = resolve(process.execPath, '..')
@@ -65,7 +65,8 @@ function updateShortcut() {
   let home = homedir()
 
   if (home) {
-    let desktopShortcut = join(home, 'Desktop', `${product}.lnk`)
+    // TODO single-release use unqualified!
+    let desktopShortcut = join(home, 'Desktop', `${qualified.product}.lnk`)
 
     if (!fs.existsSync(desktopShortcut))
       locations = ['StartMenu']
