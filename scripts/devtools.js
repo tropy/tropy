@@ -57,7 +57,7 @@ app.once('ready', async () => {
         break
       case 'i':
       case 'install':
-        install({ name: 'devtron', path: require('devtron').path })
+        // install({ name: 'devtron', path: require('devtron').path })
         install(await download(REACT_DEVTOOLS))
         install(await download(REDUX_DEVTOOLS))
         break
