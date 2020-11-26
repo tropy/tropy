@@ -26,6 +26,7 @@ program
   .name('tropy-build')
   .option('--platform <name>', 'set target platform', process.platform)
   .option('--arch <name>', 'set target arch', process.arch)
+  .option('--no-asar', 'skip asar creation')
 
 if (process.platform === 'darwin') {
   program
@@ -51,6 +52,10 @@ async function build(args) {
 
     if (process.platform === 'darwin') {
       mergeMacSigningOptions(opts, args)
+    }
+
+    if (!args.asar) {
+      opts.asar = false
     }
 
     let [dest] = await packager(opts)
