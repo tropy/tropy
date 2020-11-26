@@ -25,7 +25,7 @@
     "db": "node scripts/db",
     "prebuild": "npm run clean && npm run rollup",
     "build": "node scripts/build",
-    "pack": "node scripts/pack",
+    "pack": "node scripts/pack --silent",
     "devtools": "electron scripts/devtools --data tmp",
     "lint": "npm run -s lint:js && npm run -s lint:css",
     "lint:js": "eslint --color src test scripts res/workers",
