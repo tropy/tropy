@@ -5,6 +5,7 @@ require('./babel')
 
 const { copyFile, mkdir, readdir, writeFile } = require('fs').promises
 const { say, error } = require('./util')('Σ')
+const { program } = require('commander')
 const packager = require('electron-packager')
 const minimatch = require('minimatch')
 const { basename, extname, join, resolve, relative } = require('path')
@@ -21,32 +22,25 @@ const {
 const ROOT = resolve(__dirname, '..')
 const ICONS = join(ROOT, 'res', 'icons')
 
-if (require.main === module) {
-  const { program } = require('commander')
+program
+  .name('tropy-build')
+  .option('--platform <name>', 'set target platform', process.platform)
+  .option('--arch <name>', 'set target arch', process.arch)
 
+if (process.platform === 'darwin') {
   program
-    .name('tropy-build')
-    .option('--platform <name>', 'set target platform', process.platform)
-    .option('--arch <name>', 'set target arch', process.arch)
-
-  if (process.platform === 'darwin') {
-    program
-      .option(
-        '-c, --cert <identity>',
-        'select sigining certificate',
-        process.env.SIGN_CERT)
-      .option(
-        '-u, --user <apple-id>',
-        'select Apple Id for notarization',
-        process.env.SIGN_USER)
-      .option(
-        '-p, --password <apple-id-password>',
-        'set the Apple Id password',
-        '@keychain:TROPY_DEV_PASSWORD')
-  }
-
-  program.parse(process.argv)
-  build(program.opts())
+    .option(
+      '-c, --cert <identity>',
+      'select sigining certificate',
+      process.env.SIGN_CERT)
+    .option(
+      '-u, --user <apple-id>',
+      'select Apple Id for notarization',
+      process.env.SIGN_USER)
+    .option(
+      '-p, --password <apple-id-password>',
+      'set the Apple Id password',
+      '@keychain:TROPY_DEV_PASSWORD')
 }
 
 
@@ -249,6 +243,11 @@ Exec=${exe} %u
 Icon=${icon}
 MimeType=${mimetypes.join(';')}
 Categories=Graphics;Viewer;Science`
+}
+
+if (require.main === module) {
+  program.parse(process.argv)
+  build(program.opts())
 }
 
 module.exports = {

@@ -1,16 +1,70 @@
+#!/usr/bin/env node
 'use strict'
 
-require('shelljs/make')
-
-const { say } = require('./util')('make')
+const { say } = require('./util')('μ')
 const { join } = require('path')
-const { readFileSync: read, writeFileSync: write } = require('fs')
-const { isArray } = Array
 const yaml = require('js-yaml')
+const { program } = require('commander')
+
+const {
+  readdirSync: ls,
+  readFileSync: read,
+  writeFileSync: write,
+  unlinkSync: rm
+} = require('fs')
 
 const HOME = join(__dirname, '..')
 const MENU = join(HOME, 'res', 'menu')
 const STRINGS = join(HOME, 'res', 'strings')
+
+
+program
+  .command('export [dir]')
+  .description('export the menu strings')
+  .action(dir => {
+    let home = dir || HOME
+    save({ en: extract(open('app').en) }, 'app-menu', 'en', home)
+    save({ en: extract(open('context').en) }, 'context-menu', 'en', home)
+  })
+
+program
+  .command('import [dir]')
+  .description('import all matching YML files')
+  .action(dir => {
+    let home = dir || HOME
+
+    for (let file of ls(home)) {
+      let m = file.match(
+        /^for_(use|translation)_tropy_(\w+)-menu_(\w{2}).yml$/)
+
+      if (m != null) {
+        let name = m[2]
+        let locale = m[3]
+
+        say(`importing ${locale} labels into ${name} menu...`)
+        let labels = load(join(home, file))[locale]
+        let menu = yaml.safeLoad(yaml.safeDump(open(name).en, { noRefs: true }))
+        translate(menu, labels)
+        save({ [locale]: menu }, name, locale)
+        rm(join(home, file))
+
+      } else {
+        m = file.match(/^for_use_tropy_(renderer|browser)_(\w{2}).yml$/)
+        if (m == null) continue
+
+        let type = m[1]
+        let locale = m[2]
+        say(`importing ${locale} ${type} strings...`)
+
+        let { en } = load(join(STRINGS, `${type}.en.yml`))
+        let data = load(join(home, file))[locale]
+
+        save({ [locale]: merge(en, data) }, type,  locale, STRINGS)
+        rm(join(home, file))
+      }
+    }
+  })
+
 
 const load = (file) =>
   yaml.safeLoad(read(file))
@@ -38,7 +92,7 @@ const flatten = (menu, prefix = '', into = {}) =>
 
 const extract = (menu, prefix = null, into = {}) => {
   for (const prop in menu) {
-    if (isArray(menu[prop])) {
+    if (Array.isArray(menu[prop])) {
       flatten(menu[prop], prefix ? `${prefix}.${prop}` : prop, into)
     } else {
       extract(menu[prop], prefix ? `${prefix}.${prop}` : prop, into)
@@ -89,43 +143,6 @@ const merge = (a, b, into = {}) => {
   return into
 }
 
-
-target.export = () => {
-  save({ en: extract(open('app').en) }, 'app-menu', 'en', HOME)
-  save({ en: extract(open('context').en) }, 'context-menu', 'en', HOME)
-}
-
-target.import = (args = []) => {
-  let home = args[0] || HOME
-
-  for (const file of ls(home)) {
-    let m = file.match(
-      /^for_(use|translation)_tropy_(\w+)-menu_(\w{2}).yml$/)
-
-    if (m != null) {
-      let name = m[2]
-      let locale = m[3]
-
-      say(`importing ${locale} labels into ${name} menu...`)
-      let labels = load(join(home, file))[locale]
-      let menu = yaml.safeLoad(yaml.safeDump(open(name).en, { noRefs: true }))
-      translate(menu, labels)
-      save({ [locale]: menu }, name, locale)
-      rm(join(home, file))
-
-    } else {
-      m = file.match(/^for_use_tropy_(renderer|browser)_(\w{2}).yml$/)
-      if (m == null) continue
-
-      let type = m[1]
-      let locale = m[2]
-      say(`importing ${locale} ${type} strings...`)
-
-      let { en } = load(join(STRINGS, `${type}.en.yml`))
-      let data = load(join(home, file))[locale]
-
-      save({ [locale]: merge(en, data) }, type,  locale, STRINGS)
-      rm(join(home, file))
-    }
-  }
+if (require.main === module) {
+  program.parse(process.argv)
 }
