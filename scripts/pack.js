@@ -37,7 +37,7 @@ program
   .option('--arch <name>', 'set target arch', process.arch)
   .option('--app <dir>', 'set the app directory')
   .option('--out <dir>', 'set the output directory', join(ROOT, 'dist'))
-  .option('-v, --verbose', 'verbose output')
+  .option('-s, --silent', 'silence packer output', false)
   .option(
     '-c, --cert <id>',
     'set sigining certificate',
@@ -67,9 +67,10 @@ program
         })[opts.platform]
       }
 
-      say(`packing for ${opts.platform} ${opts.arch} ...`)
+      say(`packing for ${opts.platform} ${opts.arch}`)
 
       for (let type of args) {
+        check(type in module.exports, `unknown package type: ${type}`)
         let output = await module.exports[type](opts)
         say(`saved "${relative(ROOT, output)}"`)
       }
@@ -83,15 +84,16 @@ program
 module.exports = {
 
   bz2({ app, arch, out }) {
+    let output = join(out, `${name}-${version}-${arch}.tar.bz2`)
     check(which('tar'), 'missing dependency: tar')
 
-    let output = join(out, `${name}-${version}-${arch}.tar.bz2`)
+    rm('-f', output)
     exec(`tar cjf ${output} -C "${app}" .`)
 
     return output
   },
 
-  AppImage({ app, arch, out }) {
+  AppImage({ app, arch, out, silent }) {
     check(arch === 'x64', 'must build for x64')
 
     let output = join(out, `${product}-${version}-x86_64.AppImage`)
@@ -101,11 +103,13 @@ module.exports = {
 
     if (!test('-f', appimagetool)) {
       check(which('curl'), 'missing dependency: curl')
-      exec(`curl -L -o ${appimagetool} ${AIK}/appimagetool-x86_64.AppImage`)
+      exec(`curl -L -o ${appimagetool} ${AIK}/appimagetool-x86_64.AppImage`, {
+        silent
+      })
       chmod('a+x', appimagetool)
     }
 
-    rm('-rf', output)
+    rm('-f', output)
     rm('-rf', AppDir)
 
     cp('-r', app, AppDir)
@@ -122,8 +126,7 @@ module.exports = {
     ln('-s', svg, `${qualified.name}.svg`)
     cd('-')
 
-    // TODO verbose
-    exec(`${appimagetool} -n -v ${AppDir} ${output}`)
+    exec(`${appimagetool} -n -v ${AppDir} ${output}`, { silent })
     chmod('a+x', output)
 
     rm('-rf', AppDir)
@@ -131,7 +134,7 @@ module.exports = {
     return output
   },
 
-  ['7z']({ app, out, platform }) {
+  ['7z']({ app, out, platform, silent }) {
     let output = join(out, `${name}-${version}-${platform}.zip`)
     let input = (platform === 'darwin') ?
       `"${qualified.product}.app"` :
@@ -139,17 +142,17 @@ module.exports = {
 
     check(which('7z'), 'missing dependency: 7z')
 
-    rm(output)
+    rm('-f', output)
 
     cd(app)
     // TODO verbose
-    exec(`7z a ${output} ${input}`)
+    exec(`7z a ${output} ${input}`, { silent })
     cd('-')
 
     return output
   },
 
-  dmg({ out }) {
+  dmg({ out, silent }) {
     let output = join(out, `${name}-${version}.dmg`)
     let config = join(ROOT, 'res', 'dmg', channel, 'appdmg.json')
 
@@ -159,8 +162,7 @@ module.exports = {
     check(which('appdmg'), 'missing dependency: appdmg')
     check(test('-f', config), `missing config: ${config}`)
 
-    // TODO verbose
-    exec(`appdmg ${config} ${output}`)
+    exec(`appdmg ${config} ${output}`, { silent })
 
     return output
   },
