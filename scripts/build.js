@@ -174,12 +174,15 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
 
 function mergeMacSigningOptions(opts, args) {
   if (args.cert) {
+    let entitlements = join(ROOT, 'res', 'darwin', 'entitlements.plist')
+
     opts.osxSign = {
-      identity: args.cert,
-      hardenedRuntime: true,
-      type: channel === 'alpha' ? 'development' : 'distribution',
-      platform: args.platform,
-      entitlements: join(ROOT, 'res', 'darwin', 'entitlements.plist')
+      'identity': args.cert,
+      'type': channel === 'alpha' ? 'development' : 'distribution',
+      'platform': args.platform,
+      'hardened-runtime': true,
+      'entitlements': entitlements,
+      'entitlements-inherit': entitlements
     }
 
     if (args.user) {
@@ -189,13 +192,13 @@ function mergeMacSigningOptions(opts, args) {
         ascProvider: 'CorporationforDigitalScholarship'
       }
 
-      say('will attempt code-signing and app notarization')
+      say('will attempt code-signing and app-notarization')
 
     } else {
       say('will attempt code-signing')
     }
   } else {
-    say('skip code-signing')
+    say('skipped code-signing')
   }
 }
 
