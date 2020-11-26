@@ -358,7 +358,7 @@ fr:
     photo-read-only:
       - label: Montrer la photo originale dans son répertoire …
         command: 'app:show-in-folder'
-      - label: Exporter la photo …
+      - label: Exporter la photo…
         command: 'app:extract-photo'
       - label: Regrouper les photos
         command: 'app:consolidate-photo'
@@ -783,7 +783,7 @@ fr:
             id: side-by-side
             type: checkbox
     item-rotate:
-      - label: Tourne à gouche
+      - label: Tourner à gauche
         command: 'app:rotate-item-left'
         accelerator: 'CmdOrCtrl+['
       - label: Tourner à droite
@@ -814,12 +814,12 @@ fr:
     photo-read-only:
       - label: Montrer la photo originale dans son répertoire …
         command: 'app:show-in-folder'
-      - label: Exporter la photo …
+      - label: Exporter la photo…
         command: 'app:extract-photo'
       - label: Regrouper les photos
         command: 'app:consolidate-photo'
     photo-rotate:
-      - label: Tourne à gouche
+      - label: Tourner à gauche
         command: 'app:rotate-photo-left'
         accelerator: 'CmdOrCtrl+['
       - label: Tourner à droite
@@ -1239,7 +1239,7 @@ fr:
     photo-read-only:
       - label: Montrer la photo originale dans son répertoire …
         command: 'app:show-in-folder'
-      - label: Exporter la photo …
+      - label: Exporter la photo…
         command: 'app:extract-photo'
       - label: Regrouper les photos
         command: 'app:consolidate-photo'

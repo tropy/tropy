@@ -65,8 +65,9 @@ fr:
       title: Luxembourg Centre for Contemporary and Digital History
       url: 'https://www.c2dh.uni.lu'
     text: >
-      Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
-      historical teaching resources, digital exhibits, and open-source software.
+      Tropy est conçu par le {rrchnm} et le {c2dh}, une équipe qui crée des
+      ressources pour l'enseignement de l'histoire, des expositions numériques,
+      et des logiciels libres et open-source.
     trademark: 'Tropy est une marque déposée de la {cds}.'
     release:
       title: Notes de version
@@ -87,8 +88,8 @@ fr:
       manuelles sont peut-être nécessaires pour le réparer. Veuillez consulter
       le manuel utilisateur pour obtenir de l'aide.
     readOnly: >
-      Your project file is locked and cannot be modified. To unlock, change the
-      file permissions and open the project again.
+      Votre fichier projet est verrouillé et ne peut pas être modifié. Pour le
+      déverrouiller, changez les droits du fichier et ouvrez-le à nouveau.
   wizard:
     project:
       title: Créer un nouveau projet
@@ -361,13 +362,13 @@ fr:
       template:
         import:
           message: >
-            A template with this id already exists in your ontology database. Do
-            you want to overwrite the existing template?
+            Un modèle portant cet ID existe déjà dans votre base d'ontologie.
+            Voulez-vous écraser le modèle existant ?
           buttons:
             - Cancel
             - Overwrite
         imported:
-          message: Template successfully imported.
+          message: Modèle importé avec succès.
           buttons:
             - OK
     filter:
@@ -519,7 +520,7 @@ fr:
       order: Tri des photos en cours…
       save: Sauvegarde de la photo…
       restore: Restauration des photos…
-      extract: Extracting photo …
+      extract: Extraction de la photo...
     note:
       create: Création note…
       delete: Suppression de la note…
@@ -529,12 +530,12 @@ fr:
     selection:
       create: Création sélection …
       load: Chargement de la sélection de photos…
-      extract: Extracting selection …
+      extract: Extraction de la sélection...
     api:
       photo:
-        extract: Extracting photo …
+        extract: Extraction de la photo...
       selection:
-        extract: Extracting selection …
+        extract: Extraction de la sélection...
   editor:
     commands:
       bold: Gras
@@ -586,12 +587,12 @@ fr:
       consolidate: Échec du regroupement des photos.
       create: Échec de l'importation de la (/des) photo(s).
       save: Échec de la sauvegarde de la (/des) photo(s).
-      extract: Failed to export photo.
+      extract: Échec de l'exportation de la photo.
       template:
         change: Échec du le changement de modèle de saisie.
     selection:
       create: Echec de la sauvegarde de la sélection
-      extract: Failed to export selection.
+      extract: Échec de l'exportation de la sélection.
       template:
         change: Échec du le changement de modèle de saisie.
     ontology:
