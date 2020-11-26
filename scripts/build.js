@@ -1,236 +1,258 @@
+#!/usr/bin/env node
 'use strict'
 
-require('shelljs/make')
+require('./babel')
 
-const { say, error } = require('./util')('build')
-const electron = require('electron/package')
+const { copyFile, mkdir, readdir, writeFile } = require('fs').promises
+const { say, error } = require('./util')('Σ')
 const packager = require('electron-packager')
+const minimatch = require('minimatch')
 const { basename, extname, join, resolve, relative } = require('path')
-const RRCHNM = 'Roy Rosenzweig Center for History and New Media, George Mason University'
 
-const BABEL_CONFIG = {
-  presets: [
-    ['@babel/preset-react', { runtime: 'automatic' }]
-  ],
-  plugins: [
-    '@babel/plugin-syntax-class-properties',
-    '@babel/plugin-proposal-export-namespace-from',
-    'babel-plugin-dynamic-import-node',
-    '@babel/plugin-transform-modules-commonjs'
-  ]
+const {
+  author,
+  channel,
+  exe,
+  name,
+  version,
+  qualified
+} = require('../src/common/release')
+
+const ROOT = resolve(__dirname, '..')
+const ICONS = join(ROOT, 'res', 'icons')
+
+if (require.main === module) {
+  const { program } = require('commander')
+
+  program
+    .name('tropy-build')
+    .option('--platform <name>', 'set target platform', process.platform)
+    .option('--arch <name>', 'set target arch', process.arch)
+
+  if (process.platform === 'darwin') {
+    program
+      .option(
+        '-c, --cert <identity>',
+        'select sigining certificate',
+        process.env.SIGN_CERT)
+      .option(
+        '-u, --user <apple-id>',
+        'select Apple Id for notarization',
+        process.env.SIGN_USER)
+      .option(
+        '-p, --password <apple-id-password>',
+        'set the Apple Id password',
+        '@keychain:TROPY_DEV_PASSWORD')
+  }
+
+  program.parse(process.argv)
+  build(program.opts())
 }
 
-require('@babel/register')(BABEL_CONFIG)
-const { channel, name, version, qualified } = require('../src/common/release')
-const { SUPPORTED } = require('../src/constants/image').default
 
-const dir = resolve(__dirname, '..')
-const res = join(dir, 'res')
-const icons = resolve(res, 'icons', channel, 'tropy')
-const mime = resolve(res, 'icons', 'mime')
-
-const SHARP = join('lib', 'vendor', 'lib')
-
-const IGNORE = [
-  /\.(js|css)\.map$/,
-  /(CHANGELOG|README)/,
-  /\.DS_Store/,
-  /\.babelrc\.js/,
-  /\.editorconfig/,
-  /\.eslintrc/,
-  /\.gitignore/,
-  /\.nvmrc/,
-  /\.nyc_output/,
-  /\.rollup\.config\.js/,
-  /\.sass-lint\.yml/,
-  /\.travis\.yml/,
-  /\.vimrc/,
-  /^\/coverage/,
-  /^\/db.test/,
-  /^\/dist/,
-  /^\/doc/,
-  /^\/vendor/,
-  /^\/res.ext/,
-  /^\/res.mime/,
-  /^\/res.dmg/,
-  /^\/res.linux/,
-  /^\/res.ext\.plist/,
-  /^\/scripts/,
-  /^\/src/,
-  /^\/test/,
-  /^\/tmp/,
-  /appveyor\.yml/,
-  /node_modules/
-]
-
-target.all = async (args = []) => {
+async function build(args) {
   try {
+    let opts = configure(args)
+    say(`building for ${opts.platform} ${opts.arch}`)
 
-    let platform = args[0] || process.platform
-    let arch = args[1] || process.arch
-    let ignore = [...IGNORE]
-
-    let icon = platform === 'win32' ?
-      join(res, 'icons', channel, `${name}.ico`) :
-      join(res, 'icons', channel, `${name}.icns`)
-
-    say(`packaging for ${platform} ${arch}...`)
-
-    let extraResource = []
-
-    switch (platform) {
-      case 'darwin':
-        extraResource.push(join(res, 'icons', 'mime', 'tpy.icns'))
-        extraResource.push(join(res, 'icons', 'mime', 'ttp.icns'))
-        break
-      case 'win32':
-        extraResource.push(icon)
-        extraResource.push(join(res, 'icons', 'mime', 'tpy.ico'))
-        extraResource.push(join(res, 'icons', 'mime', 'ttp.ico'))
-        break
+    if (process.platform === 'darwin') {
+      mergeMacSigningOptions(opts, args)
     }
 
-    let dst = await packager({
-      platform,
-      arch,
-      icon,
-      dir,
-      out: join(dir, 'dist'),
-      name: qualified.product,
-      prune: false,
-      overwrite: true,
-      quiet: true,
-      ignore,
-      junk: true,
-      electronVersion: electron.version,
-      appVersion: version,
-      appBundleId: 'org.tropy.tropy',
-      helperBundleId: 'org.tropy.tropy-helper',
-      appCategoryType: 'public.app-category.productivity',
-      appCopyright:
-        `Copyright (c) 2015-${new Date().getFullYear()} ` +
-        `${RRCHNM}. All rights not expressly granted are reserved.`,
-      extendInfo: join(res, 'darwin', 'info.plist'),
-      extraResource,
-      darwinDarkModeSupport: true,
-      win32metadata: {
-        CompanyName: RRCHNM,
-        ProductName: qualified.product
-      },
-      asar: {
-        unpack: `**/{${[
-          'lib/{node,vendor}/**/*',
-          'res/{icons,views}/**/*'
-        ].join(',')}}`
-      }
+    let [dest] = await packager(opts)
 
-    })
+    say('copy LICENSE file')
+    await copyFile(join(dest, 'LICENSE'), join(dest, 'LICENSE.electron'))
+    await copyFile(join(ROOT, 'LICENSE'), join(dest, 'LICENSE'))
 
-    dst = String(dst)
 
-    switch (platform) {
+    switch (opts.platform) {
       case 'linux': {
-        let unpacked = join(dst, 'resources', 'app.asar.unpacked')
+        let resources = join(dest, 'resources')
 
-        if (test('-d', unpacked)) {
-          say('fix unpacked symlinks...')
-          cp('-r', join(dir, SHARP, '*'), join(unpacked, SHARP))
-        }
+        say('create .desktop file')
+        await writeFile(
+          join(dest, `${qualified.name}.desktop`),
+          desktop())
 
-        say(`rename executable to ${qualified.name}...`)
-        rename(dst, qualified.product, qualified.name)
+        say('make shared icons')
+        copyIcons(join(resources, 'icons'))
 
-        say('create .desktop file...')
-        desktop().to(join(dst, `${qualified.name}.desktop`))
+        say('copy mime db')
+        await mkdir(join(resources, 'mime', 'packages'), { recursive: true })
+        await copyFile(
+          join(ROOT, 'res', 'mime', 'tropy.xml'),
+          join(resources, 'mime', 'packages', 'tropy.xml'))
 
-        say('copy icons...')
-        copyIcons(dst)
-
-        say('copy mime types...')
-        mkdir('-p', join(dst, 'mime', 'packages'))
-        cp(join(res, 'mime', '*.xml'), join(dst, 'mime', 'packages'))
-
-        say('copy installation instructions...')
-        cp(join(res, 'INSTALL'), dst)
+        say('copy INSTALL file')
+        await copyFile(
+          join(ROOT, 'res', 'INSTALL'),
+          join(dest, 'INSTALL'))
 
         break
-      }
-      case 'darwin': {
-        let unpacked = join(dst,
-            `${qualified.product}.app`,
-            'Contents',
-            'Resources',
-            'app.asar.unpacked')
-
-        if (test('-d', unpacked)) {
-          say('fix unpacked symlinks...')
-          cp('-r', join(dir, SHARP, '*'), join(unpacked, SHARP))
-        }
-        break
-      }
-      case 'win32': {
-        say(`renaming executable to ${qualified.name}.exe...`)
-        rename(dst, `${qualified.product}.exe`, `${qualified.name}.exe`)
       }
     }
 
-    say(`saved app to ${relative(dir, dst)}`)
+    say(`saved as "./${relative(ROOT, dest)}"`)
 
-  } catch (err) {
-    error(err)
+  } catch (e) {
+    error(e)
+    console.error(e.stack)
   }
 }
 
-function rename(ctx, from, to) {
-  mv(join(ctx, from), join(ctx, to))
+
+function configure({ arch, platform, out = join(ROOT, 'dist') }) {
+  // NB: the patterns must include (sub-)directories!
+  const INCLUDE = [
+    '/db{,/{migrate,schema}{,/**/*}}',
+    '/lib{,/**/*[!.map]}',
+    '/res{,/{menu,shaders,cursors,images,keymaps,strings,views,workers}{,/**/*}}',
+    '/res/icons{,/{about,colors,cover,project,wizard,window}{,/**/*}}',
+    '/package.json'
+  ]
+
+  const ignore = (path) => !(
+    path === '' || INCLUDE.some(pattern => minimatch(path, pattern))
+  )
+
+  let icon = null
+  let extraResource = []
+
+  switch (platform) {
+    case 'linux':
+      INCLUDE.push(`/res/icons/${channel}{,/tropy{,/**/*}}`)
+      break
+    case 'darwin':
+      icon = join(ROOT, 'res', 'icons', channel, `${name}.icns`)
+      extraResource.push(join(ICONS, 'mime', 'tpy.icns'))
+      extraResource.push(join(ICONS, 'mime', 'ttp.icns'))
+      break
+    case 'win32':
+      icon = join(ICONS, channel, `${name}.ico`)
+      extraResource.push(icon)
+      extraResource.push(join(ICONS, 'mime', 'tpy.ico'))
+      extraResource.push(join(ICONS, 'mime', 'ttp.ico'))
+      break
+  }
+
+  return {
+    platform,
+    arch,
+    icon,
+    dir: ROOT,
+    out,
+    name: qualified.product,
+    executableName: qualified.name,
+    derefSymlinks: true,
+    prune: false,
+    overwrite: true,
+    quiet: true,
+    ignore,
+    junk: true,
+    appVersion: version,
+    appBundleId: 'org.tropy.tropy',
+    helperBundleId: 'org.tropy.tropy-helper',
+    appCategoryType: 'public.app-category.productivity',
+    appCopyright:
+      `Copyright (c) 2015-${new Date().getFullYear()} ` +
+      `${author}. All rights not expressly granted are reserved.`,
+    extendInfo: join(ROOT, 'res', 'darwin', 'info.plist'),
+    extraResource,
+    darwinDarkModeSupport: true,
+    win32metadata: {
+      CompanyName: author,
+      ProductName: qualified.product
+    },
+    asar: {
+      unpack: `**/{${[
+        'lib/{node,vendor}/**/*',
+        'res/{icons,views}/**/*'
+      ].join(',')}}`
+    }
+  }
 }
 
-function copyIcons(dst) {
-  const theme = resolve(dst, 'icons', 'hicolor')
+function mergeMacSigningOptions(opts, args) {
+  if (args.cert) {
+    opts.osxSign = {
+      identity: args.cert,
+      hardenedRuntime: true,
+      type: channel === 'alpha' ? 'development' : 'distribution',
+      platform: args.platform,
+      entitlements: join(ROOT, 'res', 'darwin', 'entitlements.plist')
+    }
 
-  for (let icon of ls(icons)) {
+    if (args.user) {
+      opts.osxNotarize = {
+        appleId: args.user,
+        appleIdPassword: args.password,
+        ascProvider: 'CorporationforDigitalScholarship'
+      }
+
+      say('will attempt code-signing and app notarization')
+
+    } else {
+      say('will attempt code-signing')
+    }
+  } else {
+    say('skip code-signing')
+  }
+}
+
+async function copyIcons(dst, theme = 'hicolor') {
+  let icons = await readdir(join(ICONS, channel, 'tropy'))
+  for (let icon of icons) {
     let ext = extname(icon)
     let variant = basename(icon, ext)
-    let target = join(theme, variant, 'apps')
+    let target = join(dst, theme, variant, 'apps')
 
     let file = (variant === 'symbolic') ?
       `${qualified.name}-symbolic${ext}` : `${qualified.name}${ext}`
 
-    mkdir('-p', target)
-    cp(join(icons, icon), join(target, file))
+    await mkdir(target, { recursive: true })
+    await copyFile(join(ICONS, channel, 'tropy', icon), join(target, file))
   }
 
-  for (let type of ['tpy']) {
-    for (let icon of ls(join(mime, type))) {
+  for (let type of ['tpy', 'ttp']) {
+    icons = await readdir(join(ICONS, 'mime', type))
+    for (let icon of icons) {
       let ext = extname(icon)
       let variant = basename(icon, ext)
 
       if ((/@/).test(variant)) continue
 
-      let target = join(theme, variant, 'mimetypes')
-      let file = `application-vnd.tropy.${type}{ext}`
+      let target = join(dst, theme, variant, 'mimetypes')
+      let file = `application-vnd.tropy.${type}${ext}`
 
-      mkdir('-p', target)
-      cp(join(mime, type, icon), join(target, file))
+      await mkdir(target, { recursive: true })
+      await copyFile(join(ICONS, 'mime', type, icon), join(target, file))
     }
   }
 }
 
-function desktop() {
+function desktop({
+  icon = exe,
+  mimetypes = [
+    'application/vnd.tropy.tpy',
+    'application/vnd.tropy.ttp',
+    'x-scheme-handler/tropy'
+  ]
+} = {}) {
   return `#!/usr/bin/env xdg-open
 [Desktop Entry]
 Version=1.0
 Terminal=false
 Type=Application
 Name=${qualified.product}
-Exec=${qualified.name} %u
-Icon=${qualified.name}
-MimeType=application/vnd.tropy.tpy;x-scheme-handler/tropy;${
-  Object.keys(SUPPORTED).join(';')
-};
-Categories=Graphics;Viewer;Science;`
+Exec=${exe} %u
+Icon=${icon}
+MimeType=${mimetypes.join(';')}
+Categories=Graphics;Viewer;Science`
 }
 
 module.exports = {
-  RRCHNM
+  build,
+  configure,
+  desktop
 }

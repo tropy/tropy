@@ -1,5 +1,5 @@
 import { basename, resolve } from 'path'
-import { version, name, productName } from '../../package.json'
+import { author, version, name, productName } from '../../package.json'
 import { parse } from 'semver'
 import { titlecase } from './util'
 
@@ -39,6 +39,7 @@ export const feed = (platform === 'win32') ?
   `https://tropy.org/update/${isLatest ? 'stable' : channel}/${platform}/${version}`
 
 export {
+  author,
   name,
   productName as product,
   version

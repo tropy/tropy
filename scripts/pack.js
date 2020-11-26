@@ -7,23 +7,10 @@ const { join, resolve } = require('path')
 const { arch, platform } = process
 const { getSignToolParams } = require('./sign')
 // const { repository } = require('../package.json')
-const { RRCHNM } = require('./build')
 
-const BABEL_CONFIG = {
-  presets: [
-    '@babel/preset-react'
-  ],
-  plugins: [
-    '@babel/plugin-syntax-class-properties',
-    '@babel/plugin-proposal-export-namespace-from',
-    'babel-plugin-dynamic-import-node',
-    '@babel/plugin-transform-modules-commonjs'
-  ]
-}
-
-require('@babel/register')(BABEL_CONFIG)
+require('./babel/register')
 const {
-  channel, qualified, name, product, version
+  author, channel, qualified, name, product, version
 } = require('../src/common/release')
 
 const res = resolve(__dirname, '..', 'res')
@@ -83,14 +70,14 @@ target.linux = (args = ['bz2']) => {
         rm('-rf', appdir)
         cp('-r', src, appdir)
         mkdir('-p', `${appdir}/usr/share`)
-        mv(`${appdir}/icons`, `${appdir}/usr/share/icons`)
-        mv(`${appdir}/mime`, `${appdir}/usr/share/mime`)
+        mv(`${appdir}/resources/icons`, `${appdir}/usr/share/icons`)
+        mv(`${appdir}/resources/mime`, `${appdir}/usr/share/mime`)
 
         cd(appdir)
 
         ln('-s', qualified.name, 'AppRun')
         ln('-s',
-          `usr/share/icons/hicolor/256x256/apps/${qualified.name}.png`,
+          `usr/share/icons/hicolor/512x512/apps/${qualified.name}.png`,
           '.DirIcon')
         ln('-s',
           `usr/share/icons/hicolor/scalable/apps/${qualified.name}.svg`,
@@ -159,7 +146,7 @@ target.win32 = async (args = []) => {
   await createWindowsInstaller({
     appDirectory: sources[0],
     outputDirectory: dist,
-    authors: RRCHNM,
+    authors: author,
     signWithParams: params,
     title: qualified.product,
     name: qualified.name,

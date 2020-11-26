@@ -7,19 +7,7 @@ const { join, resolve, relative } = require('path')
 const { arch, platform } = process
 const dir = resolve(__dirname, '..')
 
-const BABEL_CONFIG = {
-  presets: [
-    '@babel/preset-react'
-  ],
-  plugins: [
-    '@babel/plugin-syntax-class-properties',
-    '@babel/plugin-proposal-export-namespace-from',
-    'babel-plugin-dynamic-import-node',
-    '@babel/plugin-transform-modules-commonjs'
-  ]
-}
-
-require('@babel/register')(BABEL_CONFIG)
+require('./babel')
 const { qualified } = require('../src/common/release')
 
 const KITS = 'C:\\Program Files (x86)\\Windows Kits\\'
