@@ -1,3 +1,7 @@
+'use strict'
+
+const { join } = require('path')
+
 const BABEL_CONFIG = {
   presets: [
     ['@babel/preset-react', { runtime: 'automatic' }]
@@ -11,3 +15,12 @@ const BABEL_CONFIG = {
 }
 
 require('@babel/register')(BABEL_CONFIG)
+
+const ROOT = join(__dirname, '..')
+const ICONS = join(ROOT, 'res', 'icons')
+
+module.exports = {
+  ROOT,
+  ICONS,
+  ...require('../src/common/release')
+}

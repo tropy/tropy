@@ -1,26 +1,24 @@
 #!/usr/bin/env node
 'use strict'
 
-require('./babel')
-
-const { copyFile, mkdir, readdir, writeFile } = require('fs').promises
 const { say, error } = require('./util')('Σ')
+const { copyFile, mkdir, readdir, writeFile } = require('fs').promises
 const { program } = require('commander')
 const packager = require('electron-packager')
 const minimatch = require('minimatch')
-const { basename, extname, join, resolve, relative } = require('path')
+const { basename, extname, join, relative } = require('path')
 
 const {
+  ROOT,
+  ICONS,
   author,
   channel,
   exe,
   name,
   version,
   qualified
-} = require('../src/common/release')
+} = require('./metadata')
 
-const ROOT = resolve(__dirname, '..')
-const ICONS = join(ROOT, 'res', 'icons')
 
 program
   .name('tropy-build')
@@ -30,75 +28,74 @@ program
 
 if (process.platform === 'darwin') {
   program
-    .option(
-      '-c, --cert <identity>',
-      'select sigining certificate',
+    .option('-c, --cert <id>',
+      'set sigining certificate',
       process.env.SIGN_CERT)
     .option(
       '-u, --user <apple-id>',
-      'select Apple Id for notarization',
+      'set Apple Id for notarization',
       process.env.SIGN_USER)
     .option(
-      '-p, --password <apple-id-password>',
+      '-p, --password <password>',
       'set the Apple Id password',
       '@keychain:TROPY_DEV_PASSWORD')
 }
 
+program
+  .action(async () => {
+    try {
+      let args = program.opts()
+      let opts = configure(args)
+      say(`building for ${opts.platform} ${opts.arch}`)
 
-async function build(args) {
-  try {
-    let opts = configure(args)
-    say(`building for ${opts.platform} ${opts.arch}`)
-
-    if (process.platform === 'darwin') {
-      mergeMacSigningOptions(opts, args)
-    }
-
-    if (!args.asar) {
-      opts.asar = false
-    }
-
-    let [dest] = await packager(opts)
-
-    say('copy LICENSE file')
-    await copyFile(join(dest, 'LICENSE'), join(dest, 'LICENSE.electron'))
-    await copyFile(join(ROOT, 'LICENSE'), join(dest, 'LICENSE'))
-
-
-    switch (opts.platform) {
-      case 'linux': {
-        let resources = join(dest, 'resources')
-
-        say('create .desktop file')
-        await writeFile(
-          join(dest, `${qualified.name}.desktop`),
-          desktop())
-
-        say('make shared icons')
-        copyIcons(join(resources, 'icons'))
-
-        say('copy mime db')
-        await mkdir(join(resources, 'mime', 'packages'), { recursive: true })
-        await copyFile(
-          join(ROOT, 'res', 'mime', 'tropy.xml'),
-          join(resources, 'mime', 'packages', 'tropy.xml'))
-
-        say('copy INSTALL file')
-        await copyFile(
-          join(ROOT, 'res', 'INSTALL'),
-          join(dest, 'INSTALL'))
-
-        break
+      if (process.platform === 'darwin') {
+        mergeMacSigningOptions(opts, args)
       }
+
+      if (!args.asar) {
+        opts.asar = false
+      }
+
+      let [dest] = await packager(opts)
+
+      say('copy LICENSE')
+      await copyFile(join(dest, 'LICENSE'), join(dest, 'LICENSE.electron'))
+      await copyFile(join(ROOT, 'LICENSE'), join(dest, 'LICENSE'))
+
+      switch (opts.platform) {
+        case 'linux': {
+          let resources = join(dest, 'resources')
+
+          say('create .desktop file')
+          await writeFile(
+            join(dest, `${qualified.name}.desktop`),
+            desktop())
+
+          say('make shared icons')
+          copyIcons(join(resources, 'icons'))
+
+          say('copy mime-db')
+          await mkdir(join(resources, 'mime', 'packages'), { recursive: true })
+          await copyFile(
+            join(ROOT, 'res', 'mime', 'tropy.xml'),
+            join(resources, 'mime', 'packages', 'tropy.xml'))
+
+          say('copy INSTALL instructions')
+          await copyFile(
+            join(ROOT, 'res', 'INSTALL'),
+            join(dest, 'INSTALL'))
+
+          break
+        }
+      }
+
+      say(`saved as "./${relative(ROOT, dest)}"`)
+
+    } catch (e) {
+      error(e)
+      console.error(e.stack)
     }
-
-    say(`saved as "./${relative(ROOT, dest)}"`)
-
-  } catch (e) {
-    error(e)
-    console.error(e.stack)
-  }
-}
+  })
 
 
 function configure({ arch, platform, out = join(ROOT, 'dist') }) {
@@ -249,17 +246,15 @@ Type=Application
 Name=${qualified.product}
 Exec=${exe} %u
 Icon=${icon}
-MimeType=${mimetypes.join(';')}
-Categories=Graphics;Viewer;Science`
+MimeType=${mimetypes.join(';')};
+Categories=Graphics;Viewer;Science;`
 }
 
 if (require.main === module) {
-  program.parse(process.argv)
-  build(program.opts())
+  program.parseAsync(process.argv)
 }
 
 module.exports = {
-  build,
   configure,
   desktop
 }

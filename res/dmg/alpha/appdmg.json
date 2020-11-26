@@ -1,5 +1,5 @@
 {
-  "title": "Tropy Dev",
+  "title": "Tropy Alpha",
   "background": "background.png",
   "icon-size": 92,
   "contents": [
@@ -7,7 +7,7 @@
       "x": 216,
       "y": 206,
       "type": "file",
-      "path": "../../../dist/Tropy Dev-darwin-x64/Tropy Dev.app"
+      "path": "../../../dist/Tropy Alpha-darwin-x64/Tropy Alpha.app"
     },
     {
       "x": 504,

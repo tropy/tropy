@@ -1,161 +1,196 @@
+#!/usr/bin/env node
 'use strict'
 
-require('shelljs/make')
+const { check, error, say } = require('./util')('λ')
+const { join, relative } = require('path')
+const { program } = require('commander')
 
-const { check, error, say } = require('./util')('pack')
-const { join, resolve } = require('path')
-const { arch, platform } = process
-const { getSignToolParams } = require('./sign')
-// const { repository } = require('../package.json')
-
-require('./babel/register')
 const {
-  author, channel, qualified, name, product, version
-} = require('../src/common/release')
+  exec,
+  cd,
+  chmod,
+  cp,
+  ln,
+  mkdir,
+  mv,
+  rm,
+  test,
+  which
+} = require('shelljs')
 
-const res = resolve(__dirname, '..', 'res')
-const dist = resolve(__dirname, '..', 'dist')
+const {
+  ROOT,
+  ICONS,
+  author,
+  channel,
+  qualified,
+  name,
+  product,
+  version
+} = require('./metadata')
 
-const APPIMAGETOOL = 'https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage'
 
-target.all = (...args) => {
-  target[platform](...args)
-}
+program
+  .name('tropy-pack')
+  .arguments('[targets...]')
+  .option('--platform <name>', 'set target platform', process.platform)
+  .option('--arch <name>', 'set target arch', process.arch)
+  .option('--app <dir>', 'set the app directory')
+  .option('--out <dir>', 'set the output directory', join(ROOT, 'dist'))
+  .option('-v, --verbose', 'verbose output')
+  .option(
+    '-c, --cert <id>',
+    'set sigining certificate',
+    process.env.SIGN_CERT)
+  .option(
+    '-p, --password <password>',
+    'set signing password',
+    process.env.SIGN_PASS)
 
+  .action(async (args) => {
+    try {
+      let opts = program.opts()
 
-target.linux = (args = ['bz2']) => {
-  check(platform === 'linux', 'must be run on Linux')
-
-  const src = join(dist, `${qualified.product}-linux-x64`)
-  check(test('-d', src), 'no sources found')
-
-  for (let arg of args) {
-    switch (arg) {
-      case 'flatpak': {
-        const installer = require('electron-installer-flatpak')
-        const options = {
-          src,
-          dest: dist,
-          productName: qualified.product,
-          name: qualified.name,
-          bin: qualified.name,
-          icon: join(res, 'icons', channel, 'tropy', '512x512.png'),
-          mimeType: ['application/vnd.tropy.tpy', 'image/jpeg'],
-          categories: ['Graphics', 'Viewer', 'Science']
-        }
-
-        installer(options, err => {
-          if (err) return error(err)
-          say(`created flatpak at ${options.dest}`)
-
-        })
-
-        break
-      }
-      case 'bz2': {
-        exec(
-          `tar cjf ${join(dist, `${name}-${version}-${arch}.tar.bz2`)} -C "${src}" .`
-        )
-        break
-      }
-      case 'AppImage': {
-        const appdir = join(dist, `${product}-${version}.AppDir`)
-        const appimagetool = join(__dirname, 'appimagetool')
-
-        if (!test('-f', appimagetool)) {
-          exec(`curl -L -o ${appimagetool} ${APPIMAGETOOL}`)
-          chmod('a+x', appimagetool)
-        }
-
-        rm('-rf', appdir)
-        cp('-r', src, appdir)
-        mkdir('-p', `${appdir}/usr/share`)
-        mv(`${appdir}/resources/icons`, `${appdir}/usr/share/icons`)
-        mv(`${appdir}/resources/mime`, `${appdir}/usr/share/mime`)
-
-        cd(appdir)
-
-        ln('-s', qualified.name, 'AppRun')
-        ln('-s',
-          `usr/share/icons/hicolor/512x512/apps/${qualified.name}.png`,
-          '.DirIcon')
-        ln('-s',
-          `usr/share/icons/hicolor/scalable/apps/${qualified.name}.svg`,
-          `${qualified.name}.svg`)
-        cd('-')
-
-        const dst = join(dist, `${product}-${version}-x86_64.AppImage`)
-        exec(`${appimagetool} -n -v ${appdir} ${dst}`)
-        break
+      if (!opts.app) {
+        opts.app = join(
+          opts.out,
+          `${qualified.product}-${opts.platform}-${opts.arch}`)
       }
 
-      default:
-        error(`unknown linux target: ${arg}`)
+      check(test('-d', opts.app), `missing app: ${opts.app}`)
+
+      if (!args.length) {
+        args = ({
+          darwin: ['dmg', '7z'],
+          linux: ['bz2', 'AppImage'],
+          win32: ['squirrel']
+        })[opts.platform]
+      }
+
+      say(`packing for ${opts.platform} ${opts.arch} ...`)
+
+      for (let type of args) {
+        let output = await module.exports[type](opts)
+        say(`saved "${relative(ROOT, output)}"`)
+      }
+    } catch (e) {
+      error(e)
+      console.error(e.stack)
     }
-  }
-
-}
+  })
 
 
-target.darwin = () => {
-  check(platform === 'darwin', 'must be run on macOS')
-  check(which('appdmg'), 'missing dependency: appdmg')
-  check(which('7z'), 'missing dependency: 7z')
+module.exports = {
 
-  const sources = ls('-d', join(dist, '*-darwin-*'))
-  check(sources.length, 'no sources found')
+  bz2({ app, arch, out }) {
+    check(which('tar'), 'missing dependency: tar')
 
-  for (let src of sources) {
-    let app = join(src, `${qualified.product}.app`)
-    let dmg = join(dist, `${name}-${version}.dmg`)
+    let output = join(out, `${name}-${version}-${arch}.tar.bz2`)
+    exec(`tar cjf ${output} -C "${app}" .`)
 
-    let config = join(res, 'dmg', channel, 'appdmg.json')
+    return output
+  },
 
-    check(test('-d', app), `missing app: ${app}`)
+  AppImage({ app, arch, out }) {
+    check(arch === 'x64', 'must build for x64')
+
+    let output = join(out, `${product}-${version}-x86_64.AppImage`)
+    let AIK = 'https://github.com/AppImage/AppImageKit/releases/download/continuous'
+    let AppDir = join(out, `${product}-${version}.AppDir`)
+    let appimagetool = join(__dirname, 'appimagetool')
+
+    if (!test('-f', appimagetool)) {
+      check(which('curl'), 'missing dependency: curl')
+      exec(`curl -L -o ${appimagetool} ${AIK}/appimagetool-x86_64.AppImage`)
+      chmod('a+x', appimagetool)
+    }
+
+    rm('-rf', output)
+    rm('-rf', AppDir)
+
+    cp('-r', app, AppDir)
+    mkdir('-p', `${AppDir}/usr/share`)
+    mv(`${AppDir}/resources/icons`, `${AppDir}/usr/share/icons`)
+    mv(`${AppDir}/resources/mime`, `${AppDir}/usr/share/mime`)
+
+    let png = `usr/share/icons/hicolor/512x512/apps/${qualified.name}.png`
+    let svg = `usr/share/icons/hicolor/scalable/apps/${qualified.name}.svg`
+
+    cd(AppDir)
+    ln('-s', qualified.name, 'AppRun')
+    ln('-s', png, '.DirIcon')
+    ln('-s', svg, `${qualified.name}.svg`)
+    cd('-')
+
+    // TODO verbose
+    exec(`${appimagetool} -n -v ${AppDir} ${output}`)
+    chmod('a+x', output)
+
+    rm('-rf', AppDir)
+
+    return output
+  },
+
+  ['7z']({ app, out, platform }) {
+    let output = join(out, `${name}-${version}-${platform}.zip`)
+    let input = (platform === 'darwin') ?
+      `"${qualified.product}.app"` :
+      '.'
+
+    check(which('7z'), 'missing dependency: 7z')
+
+    rm(output)
+
+    cd(app)
+    // TODO verbose
+    exec(`7z a ${output} ${input}`)
+    cd('-')
+
+    return output
+  },
+
+  dmg({ out }) {
+    let output = join(out, `${name}-${version}.dmg`)
+    let config = join(ROOT, 'res', 'dmg', channel, 'appdmg.json')
+
+     // TODO use appdmg as module
+
+    check(process.platform === 'darwin', 'must be run on macOS')
+    check(which('appdmg'), 'missing dependency: appdmg')
     check(test('-f', config), `missing config: ${config}`)
 
-    exec(`appdmg ${config} ${dmg}`)
+    // TODO verbose
+    exec(`appdmg ${config} ${output}`)
 
-    let zip = `${name}-${version}-darwin.zip`
+    return output
+  },
 
-    cd(src)
-    exec(`7z a ../${zip} "${qualified.product}.app"`)
-    cd('-')
+  async squirrel({ app, out, arch, cert, password }) {
+    let { createWindowsInstaller } = require('electron-winstaller')
+
+    check(process.platform === 'win32', 'must be run on Windows')
+    check(cert, 'missing certificate')
+    check(password, 'missing password')
+    check(test('-f', cert), `certificate not found: ${cert}`)
+
+    await createWindowsInstaller({
+      appDirectory: app,
+      outputDirectory: out,
+      authors: author,
+      signWithParams: `/fd SHA256 /f ${cert} /p "${password}"`,
+      title: qualified.product,
+      name: qualified.name,
+      exe: `${qualified.name}.exe`,
+      setupExe: `setup-${name}-${version}-${arch}.exe`,
+      setupIcon: join(ICONS, channel, `${name}.ico`),
+      iconUrl: join(ICONS, channel, `${name}.ico`),
+      // remoteReleases: repository.url,
+      noDelta: true,
+      noMsi: true
+    })
   }
 }
 
-
-target.win32 = async (args = []) => {
-  check(platform === 'win32', 'must be run on Windows')
-
-  const { createWindowsInstaller } = require('electron-winstaller')
-
-  const sources = ls('-d', join(dist, '*-win32-*'))
-  check(sources.length === 1, 'multiple sources found')
-
-  let [cert, pass] = args
-  cert = cert || env.SIGN_WIN32_CERT
-  pass = pass || env.SIGN_WIN32_PASS
-
-  check(cert, 'missing certificate')
-  check(pass, 'missing password')
-  check(test('-f', cert), `certificate not found: ${cert}`)
-
-  const params = getSignToolParams(cert, pass)
-
-  await createWindowsInstaller({
-    appDirectory: sources[0],
-    outputDirectory: dist,
-    authors: author,
-    signWithParams: params,
-    title: qualified.product,
-    name: qualified.name,
-    exe: `${qualified.name}.exe`,
-    setupExe: `setup-${name}-${version}-${arch}.exe`,
-    setupIcon: join(res, 'icons', channel, `${name}.ico`),
-    iconUrl: join(res, 'icons', channel, `${name}.ico`),
-    // remoteReleases: repository.url,
-    noDelta: true,
-    noMsi: true
-  })
+if (require.main === module) {
+  program.parseAsync(process.argv)
 }
