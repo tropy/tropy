@@ -86,7 +86,7 @@
     "rollup-plugin-ignore": "^1.0.9",
     "rollup-plugin-natives": "^0.6.0",
     "sass": "^1.29.0",
-    "shelljs": "^0.8.4",
+    "shx": "^0.3.3",
     "sinon": "^9.2.1",
     "sinon-chai": "^3.5.0",
     "split2": "^3.2.2",
