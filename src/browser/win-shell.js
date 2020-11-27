@@ -1,4 +1,4 @@
-import { basename } from 'path'
+import { dirname, basename } from 'path'
 import Registry from 'winreg'
 
 const { HKCU, DEFAULT_VALUE, REG_NONE, REG_SZ } = Registry
@@ -34,7 +34,7 @@ export class ShellOption {
   static forAppPath(exe) {
     return new ShellOption(
       `\\Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\${basename(exe)}`,
-      [{ value: exe }]
+      [{ name: 'Path', value: `${dirname(exe)}` }, { value: exe }]
     )
   }
 
@@ -93,6 +93,13 @@ export class ShellOption {
         value: mimetype
       })
     }
+
+    // HACK inexpicably, the key's default value was not set
+    // in the registry reliably if set right after creating
+    // the key. reg.exe reports no issues and this works fine
+    // for other keys. Here we just set the default value twice
+    // for good measure!
+    parts.push({ value: progId })
 
     return new ShellOption(key, parts)
   }
