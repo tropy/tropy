@@ -169,6 +169,7 @@ module.exports = {
 
   async squirrel({ app, out, arch, cert, password }) {
     let { createWindowsInstaller } = require('electron-winstaller')
+    let output = `setup-${name}-${version}-${arch}.exe`
 
     check(process.platform === 'win32', 'must be run on Windows')
     check(cert, 'missing certificate')
@@ -183,13 +184,15 @@ module.exports = {
       title: qualified.product,
       name: qualified.name,
       exe: `${qualified.name}.exe`,
-      setupExe: `setup-${name}-${version}-${arch}.exe`,
+      setupExe: output,
       setupIcon: join(ICONS, channel, `${name}.ico`),
       iconUrl: join(ICONS, channel, `${name}.ico`),
       // remoteReleases: repository.url,
       noDelta: true,
       noMsi: true
     })
+
+    return output
   }
 }
 
