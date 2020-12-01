@@ -1,7 +1,7 @@
 'use strict'
 
 const { mktmp } = require('../support/tmp')
-const { rm } = require('../support/rm')
+const { unlink } = require('fs').promises
 const { all, map, using } = require('bluebird')
 const { times } = __require('common/util')
 const { Database, Connection, Statement } = __require('common/db')
@@ -22,7 +22,7 @@ describe('Database', () => {
 
     afterEach(async () => {
       await db.close()
-      await rm(dbFile)
+      await unlink(dbFile).catch((e) => { if (e.code !== 'ENOENT') throw e })
     })
 
     describe('constructor', () => {

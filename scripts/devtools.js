@@ -1,7 +1,7 @@
 'use strict'
 
 const { join, resolve } = require('path')
-const  rm = require('rimraf')
+const { unlink } = require('fs').promises
 const { app, net, session } = require('electron')
 const { check, error, say } = require('./util')('δ')
 const { argv } = require('yargs')
@@ -83,7 +83,7 @@ const download = async (id) => {
     say(`fetching ${id}.crx...`)
     await save(url, crx)
     await unzip(crx, path)
-    rm.sync(crx)
+    await unlink(crx)
   }
 
   let { name, version } = JSON.parse(

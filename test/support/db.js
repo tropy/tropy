@@ -1,8 +1,8 @@
 'use strict'
 
 const { mktmp } = require('./tmp')
-const { rm } = require('./rm')
 const { Database } = __require('common/db')
+const fs = require('fs')
 
 module.exports = {
   mkdbtmp(callback, filename = 'db_test.sqlite', ...args) {
@@ -19,7 +19,7 @@ module.exports = {
 
     afterEach(async () => {
       await db.close()
-      await rm(file)
+      await fs.promises.unlink(file)
     })
   }
 }

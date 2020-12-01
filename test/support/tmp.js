@@ -2,12 +2,11 @@
 
 const { tmpdir } = require('os')
 const { join } = require('path')
-const { mkdtempSync: mkdir } = require('fs')
-const { rm } = require('./rm')
+const fs = require('fs')
 
 function mkdtmp() {
-  let dir = mkdir(join(tmpdir(), 'tropy-test-'))
-  after(() => rm(dir))
+  let dir = fs.mkdtempSync(join(tmpdir(), 'tropy-test-'))
+  after(() => fs.promises.rmdir(dir, { recursive: true }))
   return dir
 }
 
