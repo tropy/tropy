@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { basename, extname } from 'path'
 import { createHash } from 'crypto'
+import { URL } from 'url'
 import { exif } from './exif'
 import { xmp } from './xmp'
 import { isSVG } from './svg'
@@ -67,11 +68,9 @@ export class Image {
   }
 
   get ext() {
-    return extname(this.path)
-  }
-
-  get filename() {
-    return basename(this.path)
+    return this.isRemote ?
+      extname((new URL(this.url)).pathname) :
+      extname(this.path)
   }
 
   get url() {
@@ -80,7 +79,7 @@ export class Image {
 
   get title() {
     return this.isRemote ?
-      this.path.split('/').pop().replace(/\?.*/, '') :
+      basename(decodeURIComponent((new URL(this.url)).pathname), this.ext) :
       basename(this.path, this.ext)
   }
 
