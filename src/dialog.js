@@ -205,6 +205,15 @@ save.vocab = (opts) => save({
   ...opts
 })
 
+save.notes = (opts) => save({
+  filters: [{
+    name: t('dialog', 'filter', 'notes'),
+    extensions: ['json', 'jsonld', 'md', 'markdown', 'html', 'txt']
+  }],
+  properties: ['createDirectory'],
+  ...opts
+})
+
 
 export {
   fail,

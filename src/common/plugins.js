@@ -101,7 +101,7 @@ export class Plugins extends EventEmitter {
     return this.instances[id][action](...args)
   }
 
-  export(id, ...args) {
+  export = (id, ...args) => {
     return this.exec({ id, action: 'export' }, ...args)
   }
 

@@ -17,6 +17,17 @@ export default {
     }
   },
 
+  export(payload, meta = {}) {
+    return {
+      type: NOTE.EXPORT,
+      payload,
+      meta: {
+        cmd: 'project',
+        ...meta
+      }
+    }
+  },
+
   insert(payload, meta = {}) {
     return {
       type: NOTE.INSERT,

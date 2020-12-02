@@ -515,6 +515,22 @@ export class Tropy extends EventEmitter {
     this.on('app:delete-note', (win, { target }) =>
       this.dispatch(act.note.delete(target), win))
 
+    this.on('app:copy-note', (win, { target }) =>
+      this.dispatch(
+        act.note.export(target.notes, { target: ':clipboard:' }),
+        win))
+
+    this.on('app:export-note', (win, { target }) =>
+      this.dispatch(act.note.export(target.notes), win))
+
+    this.on('app:export-notes', (win) =>
+      this.dispatch(act.note.export(), win))
+
+    this.on('app:copy-notes', (win) =>
+      this.dispatch(
+        act.note.export(undefined, { target: ':clipboard:' }),
+        win))
+
     this.on('app:toggle-line-wrap', (win, { target }) =>
       this.dispatch(act.notepad.update({
         [target.id]: { wrap: !target.wrap }

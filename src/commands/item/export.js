@@ -31,10 +31,10 @@ export class Export extends Command {
 
       switch (target) {
         case ':clipboard:':
-          yield call(clipboard.writeText, JSON.stringify(items, null, 2))
+          clipboard.writeText, JSON.stringify(items, null, 2)
           break
         case ':plugin:':
-          yield win.plugins.export(plugin, items)
+          yield call(win.plugins.export, plugin, items)
           break
         default:
           yield call(write, target, JSON.stringify(items, null, 2))
