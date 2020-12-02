@@ -12,6 +12,8 @@ en:
       find:
         - CmdOrCtrl+f
         - /
+      editMetadata: CmdOrCtrl+e
+      addTag: CmdOrCtrl+t
     Esper: &Esper
       zoomIn:
         - CmdOrCtrl-+
