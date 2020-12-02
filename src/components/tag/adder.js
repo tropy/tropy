@@ -46,28 +46,34 @@ class TagAdder extends React.PureComponent {
     return true // Always cancel on blur!
   }
 
-  handleChange = (value) => {
+  handleChange = (value, { isCompletion, event } = {}) => {
     if (blank(value))
       return this.props.onCancel()
 
-    let query = value.trim().toLowerCase()
-    let tag = this.props.tags.find(t => query === t.name.toLowerCase())
+    try {
+      let query = value.trim().toLowerCase()
+      let tag = this.props.tags.find(t => query === t.name.toLowerCase())
 
-    if (tag) {
-      this.props.onAdd(tag)
-    } else {
-      for (let name of value.split(this.props.separator)) {
-        query = name.trim().toLowerCase()
-        tag = this.props.tags.find(t => query === t.name.toLowerCase())
+      if (tag)
+        return this.props.onAdd(tag)
 
-        if (tag)
-          this.props.onAdd(tag)
-        else
-          this.props.onCreate({ name })
+      if (!isCompletion && (event?.shiftKey || event?.altKey)) {
+        for (let name of value.split(this.props.separator)) {
+          query = name.trim().toLowerCase()
+          tag = this.props.tags.find(t => query === t.name.toLowerCase())
+
+          if (tag)
+            this.props.onAdd(tag)
+          else
+            this.props.onCreate({ name })
+        }
+      } else {
+        this.props.onCreate({ name: value })
       }
-    }
 
-    this.input.current.reset()
+    } finally {
+      this.input.current.reset()
+    }
   }
 
   render() {
