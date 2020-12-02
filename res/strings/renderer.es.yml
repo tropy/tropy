@@ -374,6 +374,7 @@ es:
       templates: Plantillas Tropy
       images: Imágenes
       items: Imágenes y objetos Tropy
+      notes: Notes
       projects: Proyectos Tropy
       rdf: Esquemas RDF
       jsonld: JSON-LD

@@ -377,6 +377,7 @@ it:
       templates: Modelli di Tropy
       images: Immagini
       items: Immagini ed elementi di Tropy
+      notes: Notes
       projects: Progetti Tropy
       rdf: Vocabolari RDF
       jsonld: JSON'LD

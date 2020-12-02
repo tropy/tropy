@@ -266,6 +266,10 @@ de:
               - color
               - 'app:save-tag-color'
     note:
+      - label: Export Note …
+        command: 'app:export-note'
+      - label: Copy Note
+        command: 'app:copy-note'
       - label: Notiz löschen
         command: 'app:delete-note'
     notepad:
@@ -316,6 +320,10 @@ de:
         submenu:
           - label: JSON-LD
             command: 'app:export-item'
+      - label: Export Item Notes …
+        command: 'app:export-notes'
+      - label: Copy Item Notes
+        command: 'app:copy-notes'
       - label: Objekt konsolidieren
         command: 'app:consolidate-item'
     item-rotate:
@@ -336,6 +344,10 @@ de:
         submenu:
           - label: JSON-LD
             command: 'app:export-item'
+      - label: Export Selected Item Notes …
+        command: 'app:export-notes'
+      - label: Copy Selected Item Notes
+        command: 'app:copy-notes'
       - label: Ausgewählte Objekte konsolidieren
         command: 'app:consolidate-item'
     item-list:
@@ -691,6 +703,10 @@ de:
               - color
               - 'app:save-tag-color'
     note:
+      - label: Export Note …
+        command: 'app:export-note'
+      - label: Copy Note
+        command: 'app:copy-note'
       - label: Notiz löschen
         command: 'app:delete-note'
     notepad:
@@ -741,6 +757,10 @@ de:
         submenu:
           - label: JSON-LD
             command: 'app:export-item'
+      - label: Export Item Notes …
+        command: 'app:export-notes'
+      - label: Copy Item Notes
+        command: 'app:copy-notes'
       - label: Objekt konsolidieren
         command: 'app:consolidate-item'
     item-bulk:
@@ -754,6 +774,10 @@ de:
         submenu:
           - label: JSON-LD
             command: 'app:export-item'
+      - label: Export Selected Item Notes …
+        command: 'app:export-notes'
+      - label: Copy Selected Item Notes
+        command: 'app:copy-notes'
       - label: Ausgewählte Objekte konsolidieren
         command: 'app:consolidate-item'
     item-list:
@@ -1116,6 +1140,10 @@ de:
               - color
               - 'app:save-tag-color'
     note:
+      - label: Export Note …
+        command: 'app:export-note'
+      - label: Copy Note
+        command: 'app:copy-note'
       - label: Notiz löschen
         command: 'app:delete-note'
     notepad:
@@ -1166,6 +1194,10 @@ de:
         submenu:
           - label: JSON-LD
             command: 'app:export-item'
+      - label: Export Item Notes …
+        command: 'app:export-notes'
+      - label: Copy Item Notes
+        command: 'app:copy-notes'
       - label: Objekt konsolidieren
         command: 'app:consolidate-item'
     item-bulk:
@@ -1179,6 +1211,10 @@ de:
         submenu:
           - label: JSON-LD
             command: 'app:export-item'
+      - label: Export Selected Item Notes …
+        command: 'app:export-notes'
+      - label: Copy Selected Item Notes
+        command: 'app:copy-notes'
       - label: Ausgewählte Objekte konsolidieren
         command: 'app:consolidate-item'
     item-list:

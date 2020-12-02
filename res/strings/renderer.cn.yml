@@ -368,6 +368,7 @@ cn:
       templates: Tropy 模板
       images: 图像
       items: 图像和Tropy文件
+      notes: Notes
       projects: Tropy项目
       rdf: RDF Vocabularies
       jsonld: JSON-LD

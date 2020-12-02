@@ -376,6 +376,7 @@ fr:
       templates: Modèle de saisie Tropy
       images: Images
       items: Images et objets Tropy
+      notes: Notes
       projects: Projets Tropy
       rdf: Schémas RDF
       jsonld: JSON-LD
