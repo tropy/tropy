@@ -29,7 +29,7 @@ export class FileSelect extends React.PureComponent {
     if (hasChanged)
       this.props.onChange(value)
 
-    this.props.onCommit(value, hasChanged)
+    this.props.onCommit(value, { hasChanged })
   }
 
   handleKeyDown = (event) => {
