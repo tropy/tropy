@@ -35,9 +35,15 @@ export class Export extends Command {
       switch (target) {
         case ':clipboard:':
           if (format === 'html')
-            clipboard.write({ html: data, text: data })
+            clipboard.write({
+              html: data,
+              text: mapNotes(notes, 'text', format, settings.export.note)
+            })
           else
-            clipboard.writeText(data)
+            clipboard.write({
+              html: mapNotes(notes, 'html', format, settings.export.note),
+              text: data
+            })
           break
         default:
           yield call(fs.promises.writeFile, target, data)
