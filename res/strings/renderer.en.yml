@@ -161,6 +161,12 @@ en:
           format:
             html: Notes as HTML
             markdown: Notes as Markdown
+          copy:
+            label: Copy notes as
+            option:
+              text: Plain text
+              markdown: Markdown
+              html: HTML source code
       ui:
         label: Interface
         option:

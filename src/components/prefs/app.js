@@ -82,6 +82,10 @@ export class AppPrefs extends React.PureComponent {
     this.props.onSettingsUpdate({ export: { note: { format } } })
   }
 
+  handleNoteCopyFormatChange = ({ copy }) => {
+    this.props.onSettingsUpdate({ export: { note: { copy } } })
+  }
+
   render() {
     return (
       <div className="scroll-container">
@@ -244,6 +248,13 @@ export class AppPrefs extends React.PureComponent {
               value={this.props.settings.export.note.format.markdown}
               onChange={this.handleNoteFormatChange}/>
           </FormElement>
+          <FormToggleGroup
+            id="prefs.app.export.note.copy"
+            name="copy"
+            isCompact
+            value={this.props.settings.export.note.copy}
+            options={this.props.noteFormats}
+            onChange={this.handleNoteCopyFormatChange}/>
           <hr/>
           <FormSelect
             id="prefs.app.print.mode"
@@ -325,6 +336,7 @@ export class AppPrefs extends React.PureComponent {
     fontSizes: arrayOf(string).isRequired,
     layouts: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,
+    noteFormats: arrayOf(string).isRequired,
     importMin: number.isRequired,
     importMax: number.isRequired,
     themes: arrayOf(string).isRequired,
@@ -340,6 +352,7 @@ export class AppPrefs extends React.PureComponent {
     layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
     completions: ['datatype', 'property-datatype'],
     locales: ['cn', 'de', 'en', 'es', 'fr', 'it', 'ja', 'pt'],
+    noteFormats: ['text', 'markdown', 'html'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL, ESPER.MODE.ZOOM],
     printModes: ['item', 'photo', 'selection'],

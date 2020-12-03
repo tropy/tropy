@@ -16,6 +16,7 @@ const defaults = {
         html: true,
         markdown: false
       },
+      copyFormat: 'text',
       localize: true
     }
   },

@@ -28,17 +28,14 @@ export class Export extends Command {
       ]))
 
       if (!format)
-        format = formatFor(target)
+        format = formatFor(target, settings.export.note)
 
       let data = mapNotes(notes, format, settings.export.note)
 
       switch (target) {
         case ':clipboard:':
           if (format === 'html')
-            clipboard.write({
-              html: data,
-              text: mapNotes(notes, 'text', format, settings.export.note)
-            })
+            clipboard.write({ html: data, text: data })
           else
             clipboard.write({
               html: mapNotes(notes, 'html', format, settings.export.note),
@@ -80,7 +77,10 @@ function mapNotes(notes, format, opts) {
   }
 }
 
-function formatFor(target) {
+function formatFor(target, opts) {
+  if (target === ':clipboard:')
+    return opts.copy
+
   switch (extname(target)) {
     case '.json':
     case '.jsonld':
