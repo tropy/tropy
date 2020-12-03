@@ -41,7 +41,7 @@ export class WindowManager extends EventEmitter {
         contextIsolation: true,
         worldSafeExecuteJavaScript: true,
         defaultEncoding: 'UTF-8',
-        enableRemoteModule: true,
+        enableRemoteModule: false,
         nodeIntegration: true,
         preload: join(paths.lib, 'bootstrap.js'),
         ...defaults.webPreferences
