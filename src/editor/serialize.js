@@ -7,6 +7,26 @@ import { warn } from '../common/log'
 const serializer = DOMSerializer.fromSchema(schema)
 const parser = DOMParser.fromSchema(schema)
 
+Object.assign(defaultMarkdownSerializer.marks, {
+  bold: defaultMarkdownSerializer.marks.strong,
+  italic: defaultMarkdownSerializer.marks.em,
+  underline: {
+    open: '__', close: '__', mixable: true, expelEnclosingWhitespace: true
+  },
+  overline: {
+    open: '^^', close: '^^', mixable: true, expelEnclosingWhitespace: true
+  },
+  strikethrough: {
+    open: '~~', close: '~~', mixable: true, expelEnclosingWhitespace: true
+  },
+  superscript: {
+    open: '^', close: '^', mixable: true, expelEnclosingWhitespace: true
+  },
+  subscript: {
+    open: '~', close: '~', mixable: true, expelEnclosingWhitespace: true
+  }
+})
+
 export function serialize(note, {
   format = { text: true, html: true },
   localize = true
