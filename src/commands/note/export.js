@@ -35,7 +35,7 @@ export class Export extends Command {
       switch (target) {
         case ':clipboard:':
           if (format === 'html')
-            clipboard.writeHTML(data)
+            clipboard.write({ html: data, text: data })
           else
             clipboard.writeText(data)
           break
