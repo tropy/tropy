@@ -1,7 +1,7 @@
 Installation Instructions
 *************************
 
-Tropy is Copyright (c) 2015, 2016, 2017, 2018, 2019
+Tropy is Copyright (c) 2015, 2016, 2017, 2018, 2019, 2020
 Roy Rosenzweig Center for History and New Media, George Mason University
 
 Basic Installation
@@ -27,6 +27,21 @@ Updating
 ========
   When updating to newer version of Tropy, simply replace your
 the entire installation directory with the new one.
+
+Dark Theme
+==========
+  When using the dark theme you may want to force to use your
+GTK theme's dark variant. Generally, you will have to restart
+Tropy for the window frame to update accordingly; if the menu
+bar does not use the dark theme by default, try starting
+Tropy with `env GTK_THEME=Adwaita:dark tropy` using your
+preferred theme.
+
+Custom Themes
+=============
+  You can adjust Tropy's themes by placing `style-light.css`
+and `style-dark.css` files in your user-data folder (or just
+`style.css` for adjusting all themes).
 
 Sandbox
 =======
