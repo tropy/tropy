@@ -53,6 +53,9 @@ export class Import extends ImportCommand {
 
       yield this.progress({ total: files.length })
 
+      let maxFail = 15
+      let failures = 0
+
       for (let file of files) {
         try {
           if ((/json(ld)?$/i).test(extname(file))) {
@@ -64,7 +67,10 @@ export class Import extends ImportCommand {
 
         } catch (e) {
           warn({ stack: e.stack }, `failed to import "${file}"`)
-          fail(e, this.action.type)
+
+          if (++failures < maxFail) {
+            fail(e, this.action.type)
+          }
         }
       }
     }
@@ -95,9 +101,9 @@ export class Import extends ImportCommand {
 
       let { base, density, db, templates, useLocalTimezone } = this.options
       let { list } = this.action.payload
-
       let item
       let photos = []
+
       let image = yield call(Image.open, {
         path,
         density,
