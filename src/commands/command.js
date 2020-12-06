@@ -74,16 +74,18 @@ export class Command {
     }
   };
 
-  progress({ total, progress = 1 } = {}) {
+  *progress({ total, progress = 1 } = {}) {
     if (total !== undefined)
       this.#total += total
     else
       this.#progress += progress
 
-    put(activity.update(this.action, {
+    yield put(activity.update(this.action, {
       total: this.#total,
       progress: this.#progress
     }))
+
+    return this.#progress
   }
 
   *abort() {
