@@ -6,6 +6,7 @@ import { PHOTO } from '../../constants'
 import { DuplicateError } from '../../common/error'
 import { info, warn } from '../../common/log'
 import { getPhotoTemplate } from '../../selectors'
+import { Image } from '../../image'
 
 import {
   all,
@@ -18,92 +19,120 @@ import {
 
 
 export class Create extends ImportCommand {
-  *exec() {
-    let { cache, db } = this.options
-    let { payload, meta } = this.action
-    let id = payload.item
+  configure(state) {
+    return Object.assign(this.options, {
+      base: state.project.base,
+      template: getPhotoTemplate(state),
+      prefs: state.settings,
+      idx: this.action.meta?.idx ||
+        [state.items[this.action.payload.item].photos.length]
+    })
+  }
 
-    let photos = []
-    let backlog = []
+  *exec() {
+    // Subtle: push photos to this.result early to support
+    // undo after cancelled (partial) import!
+    this.result = []
+    this.backlog = []
 
     let files = yield call(this.getFilesToImport)
 
     if (files.length === 0)
-      return []
+      return this.result
 
-    let [base, template, prefs, idx] = yield select(state => [
-      state.project.base,
-      getPhotoTemplate(state),
-      state.settings,
-      meta.idx || state.items[id].photos.length
-    ])
+    yield this.progress({ total: files.length })
 
-    // Subtle: push photos to this.result early to support
-    // undo after cancelled (partial) import!
-    this.result = photos
-    this.idx = idx
+    this.configure(yield select())
 
-    for (let i = 0, total = files.length; i < files.length; ++i) {
-      let file
+    let maxFail = 15
+    let failures = 0
 
+    for (let file of files) {
       try {
-        file = files[i]
-
-        let image = yield* this.openImage(file)
-        yield* this.handleDuplicate(image)
-        let data = this.getImageMetadata('photo', image, template, prefs)
-
-        total += (image.numPages - 1)
-        yield put(act.activity.update(this.action, { total, progress: i + 1 }))
-
-        while (!image.done) {
-          let photo = yield call(db.transaction, tx =>
-            mod.photo.create(tx, { base, template: template.id }, {
-              item: id,
-              image: image.toJSON(),
-              data,
-              position: idx[0] + i + 1
-            }))
-
-          photo.consolidating = true
-          photos.push(photo.id)
-
-          yield all([
-            put(act.photo.insert(photo, {
-              idx: [idx[0] + photos.length]
-            })),
-            put(act.metadata.load([photo.id]))
-          ])
-
-          image.next()
-        }
-
-        image.rewind()
-
-        backlog.push(
-          yield fork(ImportCommand.consolidate,
-            cache,
-            image,
-            photos))
+        yield* this.importFromFile(file)
 
       } catch (e) {
-        if (e instanceof DuplicateError) {
-          info(`skipping duplicate "${file}"...`)
-          continue
-        }
-
         warn({ stack: e.stack }, `failed to import "${file}"`)
-        fail(e, this.action.type)
+
+        if (++failures < maxFail) {
+          fail(e, this.action.type)
+        }
       }
     }
 
-    yield put(act.item.photos.add({ id, photos }, { idx }))
-
-    if (backlog.length > 0) {
-      yield wait(backlog)
+    if (this.backlog.length > 0) {
+      yield wait(this.backlog)
     }
 
-    return photos
+    return this.result
+  }
+
+  *importFromFile(path) {
+    try {
+      let progress = yield this.progress()
+
+      let { base, cache, db, idx, prefs, template } = this.options
+      let { item } = this.action.payload
+
+      let image = yield call(Image.open, {
+        path,
+        density: prefs.density,
+        useLocalTimezone: prefs.localtime
+      })
+
+      yield* this.handleDuplicate(image)
+
+      let data = this.getImageMetadata('photo', image, template, prefs)
+      let ids = []
+      let photos = []
+      let position = idx[0] + progress
+
+      yield call(db.transaction, async tx => {
+        let count = 0
+
+        while (!image.done) {
+          let photo = await mod.photo.create(tx,
+            { base, template: template.id },
+            {
+              item,
+              image: image.toJSON(),
+              data,
+              position: position + count++
+            })
+
+          ids.push(photo.id)
+
+          photos.push({
+            ...photo,
+            consolidating: true
+          })
+
+          image.next()
+        }
+      })
+
+      yield all([
+        put(act.metadata.load(ids)),
+        put(act.photo.insert(photos)),
+        put(act.item.photos.add({ id: item, photos: ids }, { idx: [position] }))
+      ])
+
+      image.rewind()
+
+      this.backlog.push(
+        yield fork(ImportCommand.consolidate,
+          cache,
+          image,
+          ids))
+
+      this.result.push(...ids)
+
+    } catch (e) {
+      if (e instanceof DuplicateError)
+        info(`skipping duplicate "${path}"...`)
+      else
+        throw e
+    }
   }
 
   get redo() {
@@ -112,7 +141,7 @@ export class Create extends ImportCommand {
       act.photo.restore({
         item: this.action.payload.item,
         photos: this.result
-      }, { idx: this.idx })
+      }, { idx: this.options.idx })
   }
 
   get undo() {
