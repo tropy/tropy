@@ -161,6 +161,12 @@ pt:
           format:
             html: Notas como HTML
             markdown: Notas como Markdown
+          copy:
+            label: Copy notes as
+            option:
+              text: Plain text
+              markdown: Markdown
+              html: HTML source code
       ui:
         label: Interface
         option:
@@ -375,7 +381,7 @@ pt:
       templates: Modelos Tropy
       images: Imagens
       items: Imagens e Itens Tropy
-      notes: Notes
+      notes: Notas
       projects: Projetos Tropy
       rdf: Vocabulários RDF
       jsonld: JSON-LD

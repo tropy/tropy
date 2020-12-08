@@ -158,6 +158,12 @@ cn:
           format:
             html: HTML笔记
             markdown: Markdown笔记
+          copy:
+            label: Copy notes as
+            option:
+              text: Plain text
+              markdown: Markdown
+              html: HTML source code
       ui:
         label: 界面
         option:
@@ -368,7 +374,7 @@ cn:
       templates: Tropy 模板
       images: 图像
       items: 图像和Tropy文件
-      notes: Notes
+      notes: 笔记
       projects: Tropy项目
       rdf: RDF Vocabularies
       jsonld: JSON-LD
