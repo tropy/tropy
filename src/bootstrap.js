@@ -6,7 +6,7 @@ import { idle, ready } from './dom'
 import win, { createWindowInstance } from './window'
 
 const START =
-  window.performance?.timing?.navigationStart || Date.now()
+  performance?.timing?.navigationStart || Date.now()
 
 ;(async function bootstrap() {
   try {
@@ -21,7 +21,7 @@ const START =
     createWindowInstance(ARGS)
 
     info({
-      dpx: window.devicePixelRatio,
+      dpx: devicePixelRatio,
       opts: ARGS
     }, `${win.type}.init`)
 
@@ -61,8 +61,8 @@ const START =
       ipc.send('error', e)
     }
 
-    if (!global.__REACT_DEVTOOLS_GLOBAL_HOOK__)
-      global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = { isDisabled: true }
+    if (!window.__REACT_DEVTOOLS_GLOBAL_HOOK__)
+      window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = { isDisabled: true }
 
     // eslint-disable-next-line
     global.eval = () => {
