@@ -146,7 +146,7 @@ export default [
         babelHelpers: 'bundled'
       }),
       commonjs({
-        requireReturnsDefault: true
+        requireReturnsDefault: 'preferred'
       })
     ],
     external: [
