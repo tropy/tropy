@@ -21,18 +21,25 @@ const body = log => {
   if (log.action)
     return `${log.action} ${chalk.gray(meta(log))}`
   if (log.url)
-    return `${log.url} ${chalk.gray(`${log.status} Δ${ms(log.ms)}`)}`
+    return shorten(log.url, 65) + (
+      (log.status && log.ms) ?
+        ' ' + chalk.gray(`${log.status} Δ${ms(log.ms)}`) : ''
+    )
   else
-    return log.msg || log.message
+    return log.msg || log.message || '??'
 }
 
-const error = ({ stack }) =>
+const shorten = (s, maxLength) =>
+  s.length > maxLength ?
+    `${s.slice(0, maxLength - 2)} …` : s
+
+const error = ({ stack, code }) =>
   stack ?
     '\n' + chalk.gray(
       stack
         .split('\n')
         .map(line => line.replace(CWD, ''))
-        .join('\n')) : ''
+        .join('\n')) : (code ? code : '')
 
 const meta = log =>
   log.meta.was ?
@@ -103,9 +110,12 @@ const isObject = input =>
 const transport = new Transform({
   objectMode: true,
   transform(chunk, enc, cb) {
-    let line = pretty(chunk.toString())
-    if (line === undefined) return cb()
-    cb(null, line)
+    try {
+      cb(null, pretty(chunk.toString()))
+    } catch (e) {
+      console.error(e)
+      cb(e)
+    }
   }
 })
 
