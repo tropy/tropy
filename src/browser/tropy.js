@@ -875,25 +875,21 @@ export class Tropy extends EventEmitter {
   handleUncaughtException(e, win = BrowserWindow.getFocusedWindow()) {
     fatal(e)
 
-    if (this.dev) {
-      win?.show()
-    } else {
-      dialog
-        .alert(win, {
-          ...this.dict.dialog.unhandled,
-          detail: e.stack
-        })
-        .then(({ response }) => {
-          switch (response) {
-            case 1:
-              clipboard.write({ text: crashReport(e) })
-              break
-            case 2:
-              shell.openPath(this.log)
-              break
-          }
-        })
-    }
+    dialog
+      .alert(win, {
+        ...this.dict.dialog.unhandled,
+        detail: e.stack
+      })
+      .then(({ response }) => {
+        switch (response) {
+          case 1:
+            clipboard.write({ text: crashReport(e) })
+            break
+          case 2:
+            shell.openPath(this.log)
+            break
+        }
+      })
   }
 
   get hash() {
