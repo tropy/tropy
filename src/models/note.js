@@ -1,6 +1,7 @@
 import assert from 'assert'
 import { json, stringify } from '../common/util'
 import { into, update } from '../common/query'
+import { warn } from '../common/log'
 
 async function load(db, ids) {
   let notes = {}
@@ -24,12 +25,16 @@ async function load(db, ids) {
       ORDER BY created ASC`,
 
     ({ note: id, modified, state, ...data }) => {
-      notes[id] = {
-        ...data,
-        id,
-        modified: new Date(modified),
-        state: json(state),
-        deleted: false
+      try {
+        notes[id] = {
+          ...data,
+          id,
+          modified: new Date(modified),
+          state: json(state),
+          deleted: false
+        }
+      } catch (e) {
+        warn({ stack: e.stack }, `failed parsing note ${id}`)
       }
     }
   )
