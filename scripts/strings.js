@@ -43,7 +43,7 @@ program
 
         say(`importing ${locale} labels into ${name} menu...`)
         let labels = load(join(home, file))[locale]
-        let menu = yaml.safeLoad(yaml.safeDump(open(name).en, { noRefs: true }))
+        let menu = yaml.load(yaml.dump(open(name).en, { noRefs: true }))
         translate(menu, labels)
         save({ [locale]: menu }, name, locale)
         rm(join(home, file))
@@ -67,13 +67,13 @@ program
 
 
 const load = (file) =>
-  yaml.safeLoad(read(file))
+  yaml.load(read(file))
 
 const open = (file, locale = 'en') =>
   load(join(MENU, `${file}.${locale}.yml`))
 
 const save = (data, file, locale, dst = MENU) =>
-  write(join(dst, `${file}.${locale}.yml`), yaml.safeDump(data, {
+  write(join(dst, `${file}.${locale}.yml`), yaml.dump(data, {
     noRefs: true
   }))
 

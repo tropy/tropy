@@ -16,7 +16,7 @@ export class Resource {
   }
 
   static parse(data) {
-    return yaml.safeLoad(data)
+    return yaml.load(data)
   }
 
   static async open(locale, name, ...args) {
