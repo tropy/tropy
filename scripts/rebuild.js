@@ -1,113 +1,194 @@
 'use strict'
 
-require('shelljs/make')
-
-const { say } = require('./util')('rebuild')
-const { join, resolve } = require('path')
+const { say } = require('./util')('Δ')
+const { join } = require('path')
 const fetch = require('node-fetch')
-const { writeFileSync: write } = require('fs')
+const fs = require('fs')
+const { program } = require('commander')
+const { cat, cp, exec, sed, test } = require('shelljs')
 
-const home = resolve(__dirname, '..')
-const mods = join(home, 'node_modules')
-
-const ELECTRON = v('electron').split('.')
-const HEADERS = 'https://electronjs.org/headers'
-
-const CONFIG = [
-  `--arch=${process.arch}`,
-  '--runtime=electron',
-  `--target=${ELECTRON.join('.')}`
-]
-
-target.all = async (args) => {
-  await target.sqlite3(args)
-  await target.sharp(args)
-}
-
-target.headers = () => {
-  exec(`npx node-gyp install --dist-url=${HEADERS} ${CONFIG.join(' ')}`)
-}
-
-target.sqlite3 = async (force) => {
-  let mod = 'sqlite3'
-
-  if (force || !test('-d', preGypBinding(mod))) {
-    say(`${mod} ${force ? '(forced)' : ''}...`)
-
-    let deps = join(mods, mod, 'deps')
-    let url = cat(join(home, 'vendor', mod, 'version.txt')).trim()
-    let tar = join(deps, url.split('/').pop())
-    let version = (/-(\d+)\.tar\.gz/).exec(url)[1]
-
-    if (!test('-f', tar)) {
-      say(`${mod} fetching version ${version}...`)
-      let res = await fetch(url)
-      if (res.status !== 200)
-        throw new Error(`download failed: ${res.status} ${res.statusText}`)
-
-      write(tar, await res.buffer())
-    }
-
-    say(`${mod} patching...`)
-    sed('-i',
-      /'sqlite_version%':'\d+',/,
-      `'sqlite_version%':'${version}',`,
-      join(deps, 'common-sqlite.gypi'))
-
-    cp(join(home, 'vendor', mod, 'sqlite3.gyp'), deps)
-
-    rebuild(mod, {
-      params: '--build-from-source'
-    })
-
-    say(`${mod} ...done`)
-
-  } else {
-    say(`${mod} skipped`)
-  }
-}
-
-target.sharp = (force) => {
-  let mod = 'sharp'
-
-  if (force || !test('-d', buildFragments(mod))) {
-    say(`${mod} patching...`)
-
-    let target = join(mods, mod)
-    let vendor = join(home, 'vendor', mod)
-
-    cp(join(vendor, 'binding.gyp'), target)
-    rm('-rf', join(target, 'vendor'))
-
-    rebuild(mod, {
-      params: '--build-from-source'
-    })
-    say(`${mod} ...done`)
-
-  } else {
-    say(`${mod} skipped`)
-  }
-}
-
-function buildFragments(mod) {
-  return join(mods, mod, 'build', 'Release', 'obj.target')
-}
-
-function preGypBinding(mod, platform = process.platform, arch = process.arch) {
-  return join(mods, mod, 'lib', 'binding', [
-    'electron',
-    `v${ELECTRON.slice(0, 2).join('.')}`,
-    platform,
-    arch
-  ].join('-'))
-}
-
-function rebuild(mod, opts = {}) {
-  say(mod)
-  target.headers()
-  exec(`npm rebuild ${mod} ${opts.params} ${CONFIG.join(' ')}`)
-}
+const { ROOT } = require('./metadata')
 
 function v(module) {
-  return require(`${module}/package`).version
+  return require(`${module}/package.json`).version
+}
+
+function downloadHeaders({
+  arch = process.arch,
+  target = v('electron'),
+  url = 'https://electronjs.org/headers',
+  silent
+}) {
+  exec(`npx node-gyp install ${[
+    `--dist-url=${url}`,
+    `--arch=${arch}`,
+    `--target=${target}`
+  ].join(' ')}`, { silent })
+}
+
+
+class Rebuilder {
+  constructor({
+    name,
+    arch = process.arch,
+    target = v('electron'),
+    silent,
+    builders = [...Rebuilder.Builders[name]],
+    patches = [...Rebuilder.Patches[name]]
+  }) {
+    this.name = name
+    this.platform = process.platform,
+    this.arch = arch
+    this.target = target
+    this.silent = silent
+    this.builders = builders
+    this.patches = patches
+  }
+
+  modulePath(...args) {
+    return join(ROOT, 'node_modules', this.name, ...args)
+  }
+
+  vendorPath(...args) {
+    return join(ROOT, 'vendor', this.name, ...args)
+  }
+
+  async stale() {
+    return true
+  }
+
+  async patch() {
+    for (let patch of this.patches)
+      await patch(this)
+  }
+
+  async rebuild() {
+    for (let build of this.builders)
+      await build(this)
+  }
+
+  async npmRebuild() {
+    return new Promise((resolve, reject) => {
+      exec(`npm rebuild ${this.name} ${[
+        // node-gyp
+        `--arch=${this.arch}`,
+        `--target=${this.target}`,
+
+        // node-pre-gyp
+        '--runtime=electron',
+        `--build-from-source=${this.name}`,
+        `--target_platform=${this.platform}`,
+        `--target_arch=${this.arch}`
+
+      ].join(' ')}`, { silent: this.silent }, (code, stdout, stderr) => {
+        if (code !== 0)
+          reject(new Error(`${this.name} rebuild exited with error code`))
+        else
+          resolve({ code, stdout, stderr })
+      })
+    })
+  }
+
+
+  static Patches = {
+    sqlite3: [
+      async (task) => {
+        let url = cat(task.vendorPath('version.txt')).trim()
+        let tar = task.modulePath('deps', url.split('/').pop())
+        let version = (/-(\d+)\.tar\.gz/).exec(url)[1]
+
+        if (!test('-f', tar)) {
+          say(`fetching SQLite version ${version} ...`)
+          let res = await fetch(url)
+          if (res.status !== 200)
+            throw new Error(`download failed: ${res.status} ${res.statusText}`)
+
+          await fs.promises.writeFile(tar, await res.buffer())
+        }
+
+        sed('-i',
+          /'sqlite_version%':'\d+',/,
+          `'sqlite_version%':'${version}',`,
+          task.modulePath('deps', 'common-sqlite.gypi'))
+      },
+
+      async (task) => {
+        if (task.platform === 'darwin') {
+          sed('-i',
+            /"MACOSX_DEPLOYMENT_TARGET":\s*"[\d.]+",/,
+            `"MACOSX_DEPLOYMENT_TARGET": "${
+              task.arch === 'arm64' ? '11.0' : '10.13'
+            }",`,
+            task.modulePath('binding.gyp'))
+        }
+      },
+
+      (task) => {
+        cp(task.vendorPath('sqlite3.gyp'), task.modulePath('deps'))
+      }
+    ],
+
+    sharp: [
+      (task) => {
+        cp(task.vendorPath('binding.gyp'), task.modulePath('binding.gyp'))
+      },
+      async (task) => {
+        await fs.promises.rmdir(task.modulePath('vendor'), { recursive: true })
+      }
+    ]
+  }
+
+  static Builders = {
+    sqlite3: [
+    ],
+
+    sharp: [
+    ]
+  }
+}
+
+program
+  .name('tropy-rebuild')
+  .arguments('[modules...]', ['sqlite3', 'sharp'])
+  .option('--arch <name>', 'set target arch', process.arch)
+  .option('-f, --force', 'force rebuild', false)
+  .option('-s, --silent', 'silence rebuilder output', false)
+  .option('-H, --skip-headers', 'skip headers download', false)
+  .option('-p, --parallel', 'rebuild in parallel', process.platform !== 'win32')
+  .action(async (args) => {
+    let opts = program.opts()
+    let tasks = args.map(name => new Rebuilder({ name, ...opts }))
+
+    if (!opts['skip-headers']) {
+      say('fetching Electron headers ...')
+      downloadHeaders(opts)
+    }
+
+    if (opts.parallel) {
+      await Promise.all(tasks.map(rebuild))
+
+    } else {
+      for (let task of tasks)
+        await rebuild(task)
+    }
+  })
+
+
+async function rebuild(task) {
+  if (task.force || task.stale) {
+    if (task.patches.length) {
+      say(`[${task.name}] applying ${task.patches.length} patch(es) ...`)
+      await task.patch()
+    }
+
+    say(`[${task.name}] rebuilding ...`)
+    await task.npmRebuild()
+
+  } else {
+    say(`[${this.name}] rebuild skipped`)
+  }
+}
+
+if (require.main === module) {
+  program.parseAsync(process.argv)
 }
