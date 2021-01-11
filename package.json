@@ -43,6 +43,9 @@
     "test:main": "electron-mocha \"test/{browser,common}/**/*_test.js\"",
     "test:renderer": "electron-mocha --renderer \"test/{,!(browser)/**}/*_test.js\""
   },
+  "config": {
+    "libvips": "8.10.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/plugin-proposal-export-namespace-from": "^7.12.1",
@@ -145,9 +148,9 @@
     "rollup-plugin-copy": "^3.3.0",
     "sanitize-filename": "^1.6.3",
     "semver": "^7.3.4",
-    "sharp": "^0.26.3",
+    "sharp": "^0.27.0",
     "shortid": "^2.2.16",
-    "sqlite3": "^5.0.0",
+    "sqlite3": "^5.0.1",
     "transducers.js": "^0.3.2",
     "uuid": "^8.3.2",
     "winreg": "^1.2.4",
