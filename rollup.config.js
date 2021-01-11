@@ -1,7 +1,6 @@
 import { join, normalize, relative } from 'path'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
-import builtins from 'builtin-modules'
 import commonjs from '@rollup/plugin-commonjs'
 import copy from 'rollup-plugin-copy'
 import ignore from 'rollup-plugin-ignore'
@@ -65,14 +64,15 @@ export default [
           )
         }
       }),
-      resolve(),
+      resolve({
+        preferBuiltins: true
+      }),
       babel({ babelHelpers: 'bundled' }),
       json(),
       commonjs()
     ],
     external: [
-      'electron',
-      ...builtins
+      'electron'
     ],
     onwarn
   },
@@ -134,7 +134,9 @@ export default [
           )
         }
       }),
-      resolve(),
+      resolve({
+        preferBuiltins: true
+      }),
       replace({
         'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
         'readable-stream': 'stream'
@@ -148,8 +150,7 @@ export default [
       })
     ],
     external: [
-      'electron',
-      ...builtins
+      'electron'
     ],
     onwarn
   },
