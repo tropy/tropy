@@ -25,7 +25,7 @@ target.all = async (args) => {
 }
 
 target.headers = () => {
-  exec(`node-gyp install --dist-url=${HEADERS} ${CONFIG.join(' ')}`)
+  exec(`npx node-gyp install --dist-url=${HEADERS} ${CONFIG.join(' ')}`)
 }
 
 target.sqlite3 = async (force) => {

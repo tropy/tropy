@@ -18,8 +18,8 @@ find more details below. Happy hacking!
 ## Install from Source
 Install the latest version of [Node.js](https://nodejs.org) (at least the
 version that ships with the current [Electron](https://electronjs.org)
-release) with [`node-gyp`](https://www.npmjs.com/package/node-gyp) and all
-its requirements for your platform.
+release) and all requirements needed to use
+[`node-gyp`](https://www.npmjs.com/package/node-gyp) on your platform.
 
 On Linux you may need to install some packages in addition to node-gyp's
 requirements. For example:
