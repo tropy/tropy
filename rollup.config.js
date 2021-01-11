@@ -17,6 +17,8 @@ import emit from './scripts/rollup-plugin-emit'
 const NODE_ENV = process.env.NODE_ENV || 'production'
 const platform = process.env.TROPY_PLATFORM || process.platform
 
+const LIBVIPS = '8.10.5'
+
 const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
     normalize('src/esper/index.js'),
@@ -114,8 +116,8 @@ export default [
             src: 'node_modules/sharp/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
             dest: 'lib/node/lib'
           } : {
-            src: 'node_modules/sharp/vendor/lib',
-            dest: 'lib/vendor'
+            src: `node_modules/sharp/vendor/${LIBVIPS}/lib`,
+            dest: `lib/vendor/${LIBVIPS}`
           }
         ],
         copyOnce: true
