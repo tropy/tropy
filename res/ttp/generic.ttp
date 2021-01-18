@@ -31,7 +31,7 @@
       "property": "http://purl.org/dc/elements/1.1/date",
       "label": null,
       "datatype": "https://tropy.org/v1/tropy#date",
-      "hint": "ISO format",
+      "hint": "ISO format (YYYY-MM-DD)",
       "isRequired": false,
       "isConstant": false,
       "value": null
