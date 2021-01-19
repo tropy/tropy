@@ -11,8 +11,10 @@
 --   node scripts/db migrate
 --
 
+PRAGMA encoding = 'UTF-8';
+
 -- Save the current migration number
-PRAGMA user_version=1912052116;
+PRAGMA user_version = 2101190917;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -2306,7 +2308,7 @@ CREATE TABLE fields (
 );
 INSERT INTO fields VALUES(1,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/title','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,0);
 INSERT INTO fields VALUES(2,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/creator','http://www.w3.org/2001/XMLSchema#string',0,0,'Author or creator',NULL,1);
-INSERT INTO fields VALUES(3,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/date','https://tropy.org/v1/tropy#date',0,0,'ISO format',NULL,2);
+INSERT INTO fields VALUES(3,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/date','https://tropy.org/v1/tropy#date',0,0,'ISO format (YYYY-MM-DD)',NULL,2);
 INSERT INTO fields VALUES(4,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/type','http://www.w3.org/2001/XMLSchema#string',0,0,'Type of document or object',NULL,3);
 INSERT INTO fields VALUES(5,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/source','http://www.w3.org/2001/XMLSchema#string',0,0,'Name of the holding archive',NULL,4);
 INSERT INTO fields VALUES(6,'https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#collection','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,5);
@@ -2317,7 +2319,7 @@ INSERT INTO fields VALUES(10,'https://tropy.org/v1/templates/generic','http://pu
 INSERT INTO fields VALUES(11,'https://tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/title','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,0);
 INSERT INTO fields VALUES(12,'https://tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/creator','http://www.w3.org/2001/XMLSchema#string',0,0,'Author or creator',NULL,1);
 INSERT INTO fields VALUES(13,'https://tropy.org/v1/templates/correspondence','http://purl.org/dc/terms/audience','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,2);
-INSERT INTO fields VALUES(14,'https://tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/date','https://tropy.org/v1/tropy#date',0,0,'ISO format',NULL,3);
+INSERT INTO fields VALUES(14,'https://tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/date','https://tropy.org/v1/tropy#date',0,0,'ISO format (YYYY-MM-DD)',NULL,3);
 INSERT INTO fields VALUES(15,'https://tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/coverage','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,4);
 INSERT INTO fields VALUES(16,'https://tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/type','http://www.w3.org/2001/XMLSchema#string',0,0,'Type of document','Correspondence',5);
 INSERT INTO fields VALUES(17,'https://tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/source','http://www.w3.org/2001/XMLSchema#string',0,0,'Name of the holding archive',NULL,6);
