@@ -21,31 +21,8 @@ version that ships with the current [Electron](https://electronjs.org)
 release) and all requirements needed to use
 [`node-gyp`](https://www.npmjs.com/package/node-gyp) on your platform.
 
-On Linux you may need to install some packages in addition to node-gyp's
-requirements. For example:
-
-    # On Arch Linux
-    $ sudo pacman -Sy fftw orc librsvg
-
-    # On Debian
-    $ sudo apt-get install liborc-0.4-0 libfftw3-bin librsvg2-bin
-
-    # On CentOS
-    $ sudo yum install fftw3 orc librsvg2 glib2-devel
-
-Before installing Tropy's dependencies, set the environment variable
-`SHARP_DIST_BASE_URL` or the `sharp_dist_base_url` npm config option to
-point to the base URL for Tropy's
-[pre-compiled libvips archives](https://github.com/tropy/sharp-libvips/releases/latest):
-
-    $ npm config set sharp_dist_base_url "https://github.com/tropy/sharp-libvips/releases/download/v8.8.1-tropy/"
-
-Additionally, if you have libvips installed locally (and don't wish Tropy
-to be linked against it), set the `SHARP_IGNORE_GLOBAL_LIBVIPS` environment
-variable.
-
-Finally, clone [this repository](https://github.com/tropy/tropy.git) and install
-all of Tropy's dependencies:
+Finally, clone [this repository](https://github.com/tropy/tropy.git) and
+install all of Tropy's dependencies:
 
     # Install native modules first, without building, them. They will
     # be patched and linked against Electron by our rebuild script later!

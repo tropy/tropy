@@ -8,6 +8,7 @@ import json from '@rollup/plugin-json'
 import natives from 'rollup-plugin-natives'
 import replace from '@rollup/plugin-replace'
 import resolve from '@rollup/plugin-node-resolve'
+import sharp from 'sharp/package.json'
 
 // import visualize from 'rollup-plugin-visualizer'
 
@@ -17,7 +18,6 @@ import emit from './scripts/rollup-plugin-emit'
 const NODE_ENV = process.env.NODE_ENV || 'production'
 const platform = process.env.TROPY_PLATFORM || process.platform
 
-const LIBVIPS = '8.10.5'
 
 const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
@@ -116,8 +116,8 @@ export default [
             src: 'node_modules/sharp/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
             dest: 'lib/node/lib'
           } : {
-            src: `node_modules/sharp/vendor/${LIBVIPS}/lib`,
-            dest: `lib/vendor/${LIBVIPS}`
+            src: `node_modules/sharp/vendor/${sharp.config.libvips}/lib`,
+            dest: `lib/vendor/${sharp.config.libvips}`
           }
         ],
         copyOnce: true
