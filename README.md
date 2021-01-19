@@ -28,6 +28,7 @@ install all of Tropy's dependencies:
     # be patched and linked against Electron by our rebuild script later!
     $ npm install sharp sqlite3 --ignore-scripts --no-save --no-package-lock
     $ npm install
+    $ npm run rebuild -- --force
 
 To test that everything is set up correctly, run:
 
