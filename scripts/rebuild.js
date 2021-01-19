@@ -33,7 +33,6 @@ class Rebuilder {
     arch = process.arch,
     target = v('electron'),
     silent,
-    builders = [...Rebuilder.Builders[name]],
     patches = [...Rebuilder.Patches[name]]
   }) {
     this.name = name
@@ -41,7 +40,6 @@ class Rebuilder {
     this.arch = arch
     this.target = target
     this.silent = silent
-    this.builders = builders
     this.patches = patches
   }
 
@@ -53,8 +51,19 @@ class Rebuilder {
     return join(ROOT, 'vendor', this.name, ...args)
   }
 
-  async stale() {
-    return true
+  get stale() {
+    switch (this.name) {
+      case 'sharp':
+        return !fs.existsSync(this.modulePath('build', 'Release', 'sharp.node'))
+      case 'sqlite3':
+        return !fs.existsSync(this.modulePath(
+          'lib',
+          'binding',
+          `napi-v6-${this.platform}-${this.arch}`,
+          'node_sqlite3.node'))
+      default:
+        return true
+    }
   }
 
   async patch() {
@@ -63,11 +72,6 @@ class Rebuilder {
   }
 
   async rebuild() {
-    for (let build of this.builders)
-      await build(this)
-  }
-
-  async npmRebuild() {
     return new Promise((resolve, reject) => {
       exec(`npm rebuild ${this.name} ${[
         // node-gyp
@@ -130,26 +134,25 @@ class Rebuilder {
 
     sharp: [
       (task) => {
-        cp(task.vendorPath('binding.gyp'), task.modulePath('binding.gyp'))
+        if (task.platform === 'darwin') {
+          sed('-i',
+            /'MACOSX_DEPLOYMENT_TARGET':\s*'[\d.]+',/,
+            `'MACOSX_DEPLOYMENT_TARGET': '${
+              task.arch === 'arm64' ? '11.0' : '10.13'
+            }',`,
+            task.modulePath('binding.gyp'))
+        }
       },
       async (task) => {
         await fs.promises.rmdir(task.modulePath('vendor'), { recursive: true })
       }
     ]
   }
-
-  static Builders = {
-    sqlite3: [
-    ],
-
-    sharp: [
-    ]
-  }
 }
 
 program
   .name('tropy-rebuild')
-  .arguments('[modules...]', ['sqlite3', 'sharp'])
+  .arguments('[modules...]')
   .option('--arch <name>', 'set target arch', process.arch)
   .option('-f, --force', 'force rebuild', false)
   .option('-s, --silent', 'silence rebuilder output', false)
@@ -157,35 +160,37 @@ program
   .option('-p, --parallel', 'rebuild in parallel', process.platform !== 'win32')
   .action(async (args) => {
     let opts = program.opts()
+    if (!args.length) args = ['sqlite3', 'sharp']
     let tasks = args.map(name => new Rebuilder({ name, ...opts }))
 
-    if (!opts['skip-headers']) {
+    if (!opts.skipHeaders) {
       say('fetching Electron headers ...')
       downloadHeaders(opts)
     }
 
     if (opts.parallel) {
-      await Promise.all(tasks.map(rebuild))
+      await Promise.all(tasks.map(task =>
+        rebuild(task, opts.force)))
 
     } else {
       for (let task of tasks)
-        await rebuild(task)
+        await rebuild(task, opts.force)
     }
   })
 
 
-async function rebuild(task) {
-  if (task.force || task.stale) {
+async function rebuild(task, force) {
+  if (force || task.stale) {
     if (task.patches.length) {
-      say(`[${task.name}] applying ${task.patches.length} patch(es) ...`)
+      say(`${task.name} applying ${task.patches.length} patch(es) ...`)
       await task.patch()
     }
 
-    say(`[${task.name}] rebuilding ...`)
-    await task.npmRebuild()
+    say(`${task.name} rebuilding ...`)
+    await task.rebuild()
 
   } else {
-    say(`[${this.name}] rebuild skipped`)
+    say(`${task.name} rebuild skipped`)
   }
 }
 

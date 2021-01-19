@@ -35,16 +35,13 @@
     "log:tail:win": "tail -q -F tmp/log/tropy.log 2> NUL | node scripts/log-viewer",
     "start": "electron --app . --env development --data tmp --cache tmp/cache --logs tmp/log",
     "rebuild": "node scripts/rebuild",
-    "postinstall": "npm run -s rebuild",
+    "postinstall": "node scripts/rebuild -s",
     "precoverage": "shx rm -rf coverage .nyc_output && mkdir .nyc_output",
     "coverage": "env COVERAGE=true npm run -s test",
     "postcoverage": "nyc report -r text-summary -r html -r lcov",
     "test": "npm run -s test:main && npm run -s test:renderer",
     "test:main": "electron-mocha \"test/{browser,common}/**/*_test.js\"",
     "test:renderer": "electron-mocha --renderer \"test/{,!(browser)/**}/*_test.js\""
-  },
-  "config": {
-    "libvips": "8.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
