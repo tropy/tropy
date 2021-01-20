@@ -16,7 +16,7 @@ process.env.NODE_ENV = opts.env
 process.on('uncaughtException', error => { handleError(error) })
 process.on('unhandledRejection', reason => { handleError(reason) })
 
-app.allowRendererProcessReuse = false
+// app.allowRendererProcessReuse = false
 
 // Set app name and paths as soon as possible!
 // TODO single-release use unqualified!
