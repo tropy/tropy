@@ -105,7 +105,7 @@ export class Image {
   }
 
   get color() {
-    return this.stats?.[this.page]?.mean
+    return this.stats?.[this.page]?.color
   }
 
   get hasAlpha() {
@@ -263,10 +263,13 @@ export class Image {
       .toBuffer()
 
     let stats = await sharp(dup).stats()
+    let { dominant, channels } = stats
 
     this.stats[page] = {
       isOpaque: stats.isOpaque,
-      mean: rgb(...stats.channels.slice(0, 3).map(c => Math.round(c.mean)))
+      color: (dominant != null) ?
+        rgb(dominant.r, dominant.g, dominant.b) :
+        rgb(...channels.slice(0, 3).map(c => Math.round(c.mean)))
     }
   }
 
