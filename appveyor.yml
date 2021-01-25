@@ -8,7 +8,7 @@ clone_depth: 8
 os: unstable
 environment:
   ELECTRON_NO_ATTACH_CONSOLE: true
-  nodejs_version: 12
+  nodejs_version: 14
 platform:
   - x64
 cache:
