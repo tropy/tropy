@@ -21,7 +21,7 @@ install:
   - npm --version
   - npm install sharp sqlite3 --ignore-scripts --no-save --no-package-lock --no-progress --silent
   - npm install --no-optional --no-color --no-progress
-  - npm run rebuild -- --force
+  - node scripts/rebuild --force
 test_script:
   - npm run -s compile
   - npm run -s test:main -- -C -t 8000 -s 2000
