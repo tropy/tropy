@@ -11,7 +11,7 @@
     position: absolute;
     left: ($space-min + 1px);
     top: (($input-height-base - $space-md) / 2);
-    z-index: 1;
+    z-index: 4; // Focused form-control in input group has 3
   }
 
   .search-input {
