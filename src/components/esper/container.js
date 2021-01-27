@@ -130,8 +130,6 @@ export class EsperContainer extends React.Component {
   // duplicates of all image props.
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (!nextState.isVisible)
-      return true
     if (this.state.src !== nextState.src)
       return true // view going to reset anyway!
     if (this.state.id !== nextState.id)
@@ -139,14 +137,16 @@ export class EsperContainer extends React.Component {
 
     if (this.didImageChange(nextProps, nextState)) {
       let state = EsperContainer.getDerivedImageStateFromProps(nextProps)
+      let duration = !this.state.isVisible ? 0 : undefined //-> default
 
       this.esper.sync({
         ...nextProps,
         x: this.esper.x,
         y: this.esper.y
-      }, { ...nextState, ...state })
+      }, { ...nextState, ...state }, duration)
 
       this.setState(state)
+      this.#lastImageChangeData = null
     }
 
     return true
