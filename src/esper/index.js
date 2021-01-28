@@ -55,7 +55,10 @@ export default class Esper extends EventEmitter {
   constructor(opts) {
     super()
 
-    this.tweens = new TWEEN.Group()
+    this.tweens = [
+      new TWEEN.Group(),
+      new TWEEN.Group()
+    ]
 
     PIXI.utils.skipHello()
 
@@ -91,7 +94,9 @@ export default class Esper extends EventEmitter {
   }
 
   halt() {
-    this.tweens.removeAll()
+    for (let tweens of this.tweens)
+      tweens.removeAll()
+
     this.clear()
     this.stop.flush()
 
@@ -189,6 +194,7 @@ export default class Esper extends EventEmitter {
   }, 1000)
 
   async reset(props, state) {
+    this.tweens[0].removeAll()
     this.clear(FADE_DURATION, false)
 
     if (state.src != null) {
@@ -343,8 +349,13 @@ export default class Esper extends EventEmitter {
 
   update = () => {
     try {
-      this.tweens.update(performance.now())
+      let now = performance.now()
+
+      for (let tween of this.tweens)
+        tween.update(now)
+
       this.photo?.update(this.drag.current)
+
     } catch (e) {
       this.halt()
       error({ stack: e.stack }, 'esper: update cycle failed, halting!')
@@ -426,23 +437,23 @@ export default class Esper extends EventEmitter {
   }
 
 
-  animate(thing, scope, { stop, complete, done } = {}) {
-    let tween = new TWEEN.Tween(thing, this.tweens)
+  animate(thing, scope, { stop, complete, done, gid = 0 } = {}) {
+    let group = this.tweens[gid]
+    let tween = new TWEEN.Tween(thing, group)
       .easing(TWEEN.Easing.Cubic.InOut)
       .onStart(() => {
         if (scope != null) {
-          let current = this.tweens[scope]
-          if (current) current.stop()
-          this.tweens[scope] = tween
+          group[scope]?.stop()
+          group[scope] = tween
         }
       })
       .onStop(() => {
-        if (scope != null) this.tweens[scope] = null
+        if (scope != null) group[scope] = null
         if (typeof stop === 'function') stop()
         if (typeof done === 'function') done()
       })
       .onComplete(() => {
-        if (scope != null) this.tweens[scope] = null
+        if (scope != null) group[scope] = null
         if (typeof complete === 'function') complete()
         if (typeof done === 'function') done()
         this.emit('change')
@@ -457,7 +468,7 @@ export default class Esper extends EventEmitter {
     if (thing == null) return
     thing.interactive = false
     this
-      .animate(thing, null, { done: () => thing.destroy() })
+      .animate(thing, null, { gid: 1, done: () => thing.destroy() })
       .to({ alpha: 0 }, duration)
       .start()
   }
@@ -534,7 +545,7 @@ export default class Esper extends EventEmitter {
     fixate,
     ...opts
   } = {}) {
-    this.tweens.rotate?.stop()
+    this.tweens[0].rotate?.stop()
 
     let { photo } = this
     let rotation = rad(angle)
