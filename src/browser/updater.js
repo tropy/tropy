@@ -10,7 +10,7 @@ export class Updater extends EventEmitter {
   constructor({ enable = true,  interval = 90 * MIN } = {}) {
     super()
 
-    this.isSupported = !linux && enable
+    this.isSupported = !linux && enable && process.arch === 'x64'
 
     this.timeout = interval
     this.release = {}
