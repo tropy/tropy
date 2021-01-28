@@ -4,7 +4,7 @@ import TWEEN from '@tweenjs/tween.js'
 import debounce from 'lodash.debounce'
 import ARGS from '../args'
 import { append, createDragHandler, on, off } from '../dom'
-import { info, warn } from '../common/log'
+import { error, info, warn } from '../common/log'
 import { isClockwise, isHorizontal, deg, rad } from '../common/math'
 import { restrict } from '../common/util'
 import { Photo } from './photo'
@@ -90,14 +90,17 @@ export default class Esper extends EventEmitter {
     } renderer`)
   }
 
-  destroy() {
-    this.clear()
-
+  halt() {
     this.tweens.removeAll()
+    this.clear()
     this.stop.flush()
 
     if (this.drag.current)
       this.drag.stop()
+  }
+
+  destroy() {
+    this.halt()
 
     off(this.app.view, 'wheel', this.handleWheel, { passive: true })
 
@@ -238,6 +241,9 @@ export default class Esper extends EventEmitter {
 
   sync(props, state, duration = SYNC_DURATION) {
     let { photo } = this
+
+    if (photo == null) return
+
     let { angle, mirror, zoom } = state
     let { x, y } = this.getDefaultPosition(props)
 
@@ -336,8 +342,13 @@ export default class Esper extends EventEmitter {
   }, 5000)
 
   update = () => {
-    this.tweens.update(performance.now())
-    this.photo?.update(this.drag.current)
+    try {
+      this.tweens.update(performance.now())
+      this.photo?.update(this.drag.current)
+    } catch (e) {
+      this.halt()
+      error({ stack: e.stack }, 'esper: update cycle failed, halting!')
+    }
   }
 
   get resolution() {
