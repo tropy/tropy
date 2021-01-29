@@ -383,8 +383,10 @@ const magic = (buffer, ext) => {
       return MIME.SVG
     if (isWebP(buffer))
       return MIME.WEBP
-    if (isHEIF(buffer))
-      return ext.toLowerCase() === '.heic' ? MIME.HEIC : MIME.HEIF
+    if (isAVIF(buffer) || ext.toLowerCase() === '.avif')
+      return MIME.AVIF
+    if (isHEIC(buffer))
+      return MIME.HEIC
     if (isJP2(buffer, ext))
       return MIME.JP2
   }
@@ -393,8 +395,11 @@ const magic = (buffer, ext) => {
 const isGIF = (buffer) =>
   check(buffer, [0x47, 0x49, 0x46])
 
-const isHEIF = (buffer) =>
+const isHEIC = (buffer) =>
   (/^ftyp((hei|hev)[cms]|heix|mif1)$/).test(buffer.toString('ascii', 4, 12))
+
+const isAVIF = (buffer) =>
+  (/^ftyp(avif)$/).test(buffer.toString('ascii', 4, 12))
 
 const isJPEG = (buffer) =>
   check(buffer, [0xFF, 0xD8, 0xFF])

@@ -1,6 +1,8 @@
 import MIME from './mime'
 
 const SUPPORTED = {
+  [MIME.AVIF]: true,
+  [MIME.AVIF_SEQ]: true,
   [MIME.GIF]: true,
   [MIME.HEIC]: true,
   [MIME.HEIC_SEQ]: true,
@@ -22,6 +24,7 @@ export default {
   MAX_DENSITY: 1200,
 
   EXT: [
+    'avif',
     'gif',
     'heic',
     'heif',
@@ -39,6 +42,7 @@ export default {
   ],
 
   WEB: {
+    [MIME.AVIF]: true,
     [MIME.JPG]: true,
     [MIME.PNG]: true,
     [MIME.WEBP]: true,

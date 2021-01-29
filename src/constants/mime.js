@@ -2,6 +2,8 @@ export default {
   TPY: 'application/vnd.tropy.tpy',
   TTP: 'application/vnd.tropy.ttp',
 
+  AVIF: 'image/avif',
+  AVIF_SEQ: 'image/avif-sequence',
   GIF: 'image/gif',
   HEIC: 'image/heic',
   HEIC_SEQ: 'image/heic-sequence',
