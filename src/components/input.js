@@ -49,25 +49,25 @@ export class Input extends React.PureComponent {
     return this.state.hasFocus && this.props.completions.length > 0
   }
 
-  cancel = (isForced) => {
+  cancel = (hasBeenForced) => {
     this.hasBeenCancelled = true
 
     if (this.isValid) {
-      this.props.onCancel(this.hasChanged, isForced)
+      this.props.onCancel(this.hasChanged, hasBeenForced)
     } else {
       this.reset()
-      this.props.onCancel(false, isForced)
+      this.props.onCancel(false, hasBeenForced)
     }
   }
 
-  commit({ isCompletion, isForced } = {}, event) {
+  commit({ isCompletion, hasBeenForced } = {}, event) {
     if (this.isValid) {
       if (!this.hasBeenCommitted) {
         this.hasBeenCommitted = true
         this.props.onCommit(this.state.value, {
           hasChanged: this.hasChanged,
           isCompletion,
-          isForced,
+          hasBeenForced,
           event
         })
       }
@@ -125,7 +125,7 @@ export class Input extends React.PureComponent {
 
   handleCompletion = (value) => {
     this.setState({ value }, () =>
-      this.commit({ isForced: true, isCompletion: true }))
+      this.commit({ hasBeenForced: true, isCompletion: true }))
     this.props.onChange(value)
   }
 
@@ -146,7 +146,7 @@ export class Input extends React.PureComponent {
           this.cancel(true)
           break
         case 'Enter':
-          this.commit({ isForced: true }, event)
+          this.commit({ hasBeenForced: true }, event)
           break
         default:
           return null
