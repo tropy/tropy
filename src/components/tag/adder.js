@@ -115,7 +115,7 @@ class TagAdder extends React.PureComponent {
 
   static defaultProps = {
     match: (value, query) => (
-      match(value.name || String(value), query, /\b\w/g)
+      match(value.name || String(value), query, /(?<=[\s,.;:-]|^)\p{Alpha}/gmu)
     ),
     separator: /\s*[;,]\s*/,
     onCancel: noop,
