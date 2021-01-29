@@ -165,12 +165,10 @@ export default class Esper extends EventEmitter {
   }
 
   clear(duration = 0, gc = true) {
-    let { photo } = this
-
     if (duration)
-      this.fadeOut(photo, duration)
+      this.fadeOut(this.photo, duration)
     else
-      photo?.destroy()
+      this.photo?.destroy()
 
     this.photo = null
     this.render()
@@ -194,7 +192,6 @@ export default class Esper extends EventEmitter {
   }, 1000)
 
   async reset(props, state) {
-    this.tweens[0].removeAll()
     this.clear(FADE_DURATION, false)
 
     if (state.src != null) {
@@ -246,8 +243,9 @@ export default class Esper extends EventEmitter {
   }
 
   sync(props, state, duration = SYNC_DURATION) {
-    let { photo } = this
+    this.tweens[0].removeAll()
 
+    let { photo } = this
     if (photo == null) return
 
     let { angle, mirror, zoom } = state
@@ -285,7 +283,7 @@ export default class Esper extends EventEmitter {
       this.move(next, {
         duration,
         skipConstrain: true,
-        done: () => {
+        complete: () => {
           if (next.rotation !== photo.rotation) {
             this.rotate({ angle }, {
               duration,
