@@ -2,6 +2,12 @@
   "title": "Tropy Beta",
   "background": "background.png",
   "icon-size": 92,
+  "window": {
+    "size": {
+      "width": 720,
+      "height": 438
+    }
+  },
   "contents": [
     {
       "x": 216,
