@@ -6,66 +6,66 @@ de:
         - label: Neu
           submenu:
             - label: Projekt
-              command: 'app:create-project'
+              command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: Objekt
-              command: 'app:create-item'
+              command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
               condition: '!isProjectReadOnly'
             - label: Liste
-              command: 'app:create-list'
+              command: app:create-list
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
             - label: Tag
-              command: 'app:create-tag'
+              command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
         - label: Öffnen …
           accelerator: CmdOrCtrl+O
-          command: 'app:open-dialog'
+          command: app:open-dialog
         - label: In neuem Fenster öffnen …
           accelerator: Shift+CmdOrCtrl+O
-          command: 'app:open-new-dialog'
+          command: app:open-new-dialog
         - label: Benutzte Projekte
           id: recent
           enabled: false
           submenu:
             - type: separator
             - label: Einträge löschen
-              command: 'app:clear-recent-projects'
+              command: app:clear-recent-projects
         - type: separator
         - label: Importieren
           window: project
           condition: '!isProjectReadOnly'
           submenu:
             - label: Fotos…
-              command: 'app:import'
+              command: app:import
               accelerator: CmdOrCtrl+Shift+I
             - label: Ordner…
-              command: 'app:import-directory'
+              command: app:import-directory
         - label: Exportieren
           id: export
           window: project
           submenu:
             - label: JSON-LD
-              command: 'app:export-item'
+              command: app:export-item
         - type: separator
         - label: Fotos konsolidieren
-          command: 'app:consolidate-photo-library'
+          command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
         - label: Drucken
-          command: 'app:print'
+          command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
         - label: Projekt schließen
-          command: 'app:close-project'
+          command: app:close-project
           window: project
         - type: separator
         - label: Fenster schließen
@@ -80,12 +80,12 @@ de:
         - id: undo
           label: Widerrufen
           accelerator: CmdOrCtrl+Z
-          command: 'app:undo'
+          command: app:undo
           enabled: false
         - id: redo
           label: Wiederholen
           accelerator: Shift+CmdOrCtrl+Z
-          command: 'app:redo'
+          command: app:redo
           enabled: false
         - type: separator
         - label: Ausschneiden
@@ -105,29 +105,29 @@ de:
         - type: separator
         - label: Voreinstellungen …
           accelerator: Shift+Control+S
-          command: 'app:open-preferences'
+          command: app:open-preferences
     - label: Ansicht
       submenu:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
-          command: 'win:reload'
+          command: win:reload
           window: '*'
         - type: separator
         - label: Menüleiste ausblenden
-          command: 'app:toggle-menu-bar'
+          command: app:toggle-menu-bar
           window: '*'
         - label: Zentrieren
-          command: 'app:center-window'
+          command: app:center-window
           window: '*'
         - type: separator
         - label: Echte Größe
-          command: 'app:zoom-reset'
+          command: app:zoom-reset
           accelerator: CmdOrCtrl+0
         - label: Vergrößern
-          command: 'app:zoom-in'
+          command: app:zoom-in
           accelerator: CmdOrCtrl+Plus
         - label: Verkleinern
-          command: 'app:zoom-out'
+          command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
         - label: Vollbildmodus
@@ -142,22 +142,22 @@ de:
       id: dev
       submenu:
         - label: Stile neu laden
-          command: 'win:refresh'
+          command: win:refresh
         - label: Entwicklerwerkzeuge einblenden
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
         - label: Ontologie-Datenbank rücksetzen
-          command: 'app:reset-ontology-db'
+          command: app:reset-ontology-db
         - label: Projekt-Cache optimieren
-          command: 'app:optimize-cache'
+          command: app:optimize-cache
         - label: Projekt-Datenbank optimieren
-          command: 'app:optimize-project'
+          command: app:optimize-project
         - label: Projekt-Datenbank indexieren
-          command: 'app:reindex-project'
+          command: app:reindex-project
         - type: separator
         - label: Projekt portieren
-          command: 'app:rebase-project'
+          command: app:rebase-project
         - type: separator
         - label: Erscheinungsbild
           id: theme
@@ -174,24 +174,24 @@ de:
     - label: Hilfe
       submenu:
         - label: Benutzerhandbuch
-          command: 'app:open-docs'
+          command: app:open-docs
         - label: Support-Forum
-          command: 'app:open-forums'
+          command: app:open-forums
         - label: Softwarelizenz
-          command: 'app:open-license'
+          command: app:open-license
         - type: separator
         - label: Logs anzeigen
-          command: 'app:open-logs'
+          command: app:open-logs
         - label: Plugins-Ordner anzeigen
-          command: 'app:open-plugins-folder'
+          command: app:open-plugins-folder
         - label: User-Data Ordner anzeigen
-          command: 'app:open-user-data'
+          command: app:open-user-data
         - label: Cache Ordner anzeigen
-          command: 'app:open-cache-folder'
+          command: app:open-cache-folder
         - type: separator
         - id: updater-check
           label: Nach Updates suchen …
-          command: 'app:check-for-updates'
+          command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
           label: Updates werden heruntergeladen …
@@ -199,23 +199,23 @@ de:
           visible: false
         - id: updater-install
           label: Updates installieren …
-          command: 'app:install-updates'
+          command: app:install-updates
           enabled: false
           visible: false
         - type: separator
         - label: Über %name
-          command: 'app:about'
+          command: app:about
           window: '!prefs'
   darwin:
     - label: '%name'
       submenu:
         - label: Über %name
-          command: 'app:about'
+          command: app:about
           window: '!prefs'
         - type: separator
         - label: Voreinstellungen …
-          accelerator: 'Command+,'
-          command: 'app:open-preferences'
+          accelerator: Command+,
+          command: app:open-preferences
         - type: separator
         - label: '%name verstecken'
           accelerator: Command+H
@@ -234,49 +234,49 @@ de:
         - label: Neu
           submenu:
             - label: Projekt
-              command: 'app:create-project'
+              command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: Objekt
-              command: 'app:create-item'
+              command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
               condition: '!isProjectReadOnly'
             - label: Liste
-              command: 'app:create-list'
+              command: app:create-list
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
             - label: Tag
-              command: 'app:create-tag'
+              command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
         - label: Öffnen …
           accelerator: CmdOrCtrl+O
-          command: 'app:open-dialog'
+          command: app:open-dialog
         - label: In neuem Fenster öffnen …
           accelerator: Shift+CmdOrCtrl+O
-          command: 'app:open-new-dialog'
+          command: app:open-new-dialog
         - label: Benutzte Projekte
           id: recent
           enabled: false
           submenu:
             - type: separator
             - label: Einträge löschen
-              command: 'app:clear-recent-projects'
+              command: app:clear-recent-projects
         - type: separator
         - label: Importieren
           window: project
           condition: '!isProjectReadOnly'
           submenu:
             - label: Fotos…
-              command: 'app:import'
+              command: app:import
               accelerator: CmdOrCtrl+Shift+I
             - label: Ordner…
-              command: 'app:import-directory'
+              command: app:import-directory
         - label: Fotos konsolidieren
-          command: 'app:consolidate-photo-library'
+          command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
@@ -285,26 +285,26 @@ de:
           window: project
           submenu:
             - label: JSON-LD
-              command: 'app:export-item'
+              command: app:export-item
         - label: Drucken
-          command: 'app:print'
+          command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
         - label: Projekt schließen
-          command: 'app:close-project'
+          command: app:close-project
           window: project
     - label: Bearbeiten
       submenu:
         - id: undo
           label: Widerrufen
           accelerator: CmdOrCtrl+Z
-          command: 'app:undo'
+          command: app:undo
           enabled: false
         - id: redo
           label: Wiederholen
           accelerator: Shift+CmdOrCtrl+Z
-          command: 'app:redo'
+          command: app:redo
           enabled: false
         - type: separator
         - label: Ausschneiden
@@ -325,17 +325,17 @@ de:
       submenu:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
-          command: 'win:reload'
+          command: win:reload
           window: '*'
         - type: separator
         - label: Echte Größe
-          command: 'app:zoom-reset'
+          command: app:zoom-reset
           accelerator: CmdOrCtrl+0
         - label: Vergrößern
-          command: 'app:zoom-in'
+          command: app:zoom-in
           accelerator: CmdOrCtrl+Plus
         - label: Verkleinern
-          command: 'app:zoom-out'
+          command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
         - label: Vollbildmodus
@@ -353,7 +353,7 @@ de:
           role: zoom
         - type: separator
         - label: Zentrieren
-          command: 'app:center-window'
+          command: app:center-window
           window: '*'
         - type: separator
         - label: Alle nach vorne bringen
@@ -367,22 +367,22 @@ de:
       id: dev
       submenu:
         - label: Stile neu laden
-          command: 'win:refresh'
+          command: win:refresh
         - label: Entwicklerwerkzeuge einblenden
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
         - label: Ontologie-Datenbank rücksetzen
-          command: 'app:reset-ontology-db'
+          command: app:reset-ontology-db
         - label: Projekt-Cache optimieren
-          command: 'app:optimize-cache'
+          command: app:optimize-cache
         - label: Projekt-Datenbank optimieren
-          command: 'app:optimize-project'
+          command: app:optimize-project
         - label: Projekt-Datenbank indexieren
-          command: 'app:reindex-project'
+          command: app:reindex-project
         - type: separator
         - label: Projekt portieren
-          command: 'app:rebase-project'
+          command: app:rebase-project
         - type: separator
         - label: Erscheinungsbild
           id: theme
@@ -400,24 +400,24 @@ de:
       role: help
       submenu:
         - label: Benutzerhandbuch
-          command: 'app:open-docs'
+          command: app:open-docs
         - label: Support-Forum
-          command: 'app:open-forums'
+          command: app:open-forums
         - label: Softwarelizenz
-          command: 'app:open-license'
+          command: app:open-license
         - type: separator
         - label: Logs anzeigen
-          command: 'app:open-logs'
+          command: app:open-logs
         - label: Plugins-Ordner anzeigen
-          command: 'app:open-plugins-folder'
+          command: app:open-plugins-folder
         - label: User-Data Ordner anzeigen
-          command: 'app:open-user-data'
+          command: app:open-user-data
         - label: Cache Ordner anzeigen
-          command: 'app:open-cache-folder'
+          command: app:open-cache-folder
         - type: separator
         - id: updater-check
           label: Nach Updates suchen …
-          command: 'app:check-for-updates'
+          command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
           label: Updates werden heruntergeladen …
@@ -425,7 +425,7 @@ de:
           visible: false
         - id: updater-install
           label: Updates installieren …
-          command: 'app:install-updates'
+          command: app:install-updates
           enabled: false
           visible: false
   win32:
@@ -435,66 +435,66 @@ de:
         - label: Neu
           submenu:
             - label: Projekt
-              command: 'app:create-project'
+              command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: Objekt
-              command: 'app:create-item'
+              command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
               condition: '!isProjectReadOnly'
             - label: Liste
-              command: 'app:create-list'
+              command: app:create-list
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
             - label: Tag
-              command: 'app:create-tag'
+              command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
         - label: Öffnen …
           accelerator: CmdOrCtrl+O
-          command: 'app:open-dialog'
+          command: app:open-dialog
         - label: In neuem Fenster öffnen …
           accelerator: Shift+CmdOrCtrl+O
-          command: 'app:open-new-dialog'
+          command: app:open-new-dialog
         - label: Benutzte Projekte
           id: recent
           enabled: false
           submenu:
             - type: separator
             - label: Einträge löschen
-              command: 'app:clear-recent-projects'
+              command: app:clear-recent-projects
         - type: separator
         - label: Importieren
           window: project
           condition: '!isProjectReadOnly'
           submenu:
             - label: Fotos…
-              command: 'app:import'
+              command: app:import
               accelerator: CmdOrCtrl+Shift+I
             - label: Ordner…
-              command: 'app:import-directory'
+              command: app:import-directory
         - label: Exportieren
           id: export
           window: project
           submenu:
             - label: JSON-LD
-              command: 'app:export-item'
+              command: app:export-item
         - type: separator
         - label: Fotos konsolidieren
-          command: 'app:consolidate-photo-library'
+          command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
         - label: Drucken
-          command: 'app:print'
+          command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
         - label: Projekt schließen
-          command: 'app:close-project'
+          command: app:close-project
           window: project
         - type: separator
         - label: Fenster schließen
@@ -509,12 +509,12 @@ de:
         - id: undo
           label: Widerrufen
           accelerator: CmdOrCtrl+Z
-          command: 'app:undo'
+          command: app:undo
           enabled: false
         - id: redo
           label: Wiederholen
           accelerator: Control+Y
-          command: 'app:redo'
+          command: app:redo
           enabled: false
         - type: separator
         - label: Ausschneiden
@@ -531,29 +531,29 @@ de:
           role: pasteAndMatchStyle
         - label: Voreinstellungen …
           accelerator: Shift+Control+S
-          command: 'app:open-preferences'
+          command: app:open-preferences
     - label: Ansicht
       submenu:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
-          command: 'win:reload'
+          command: win:reload
           window: '*'
         - type: separator
         - label: Menüleiste ausblenden
-          command: 'app:toggle-menu-bar'
+          command: app:toggle-menu-bar
           window: '*'
         - label: Zentrieren
-          command: 'app:center-window'
+          command: app:center-window
           window: '*'
         - type: separator
         - label: Echte Größe
-          command: 'app:zoom-reset'
+          command: app:zoom-reset
           accelerator: CmdOrCtrl+0
         - label: Vergrößern
-          command: 'app:zoom-in'
+          command: app:zoom-in
           accelerator: CmdOrCtrl+Plus
         - label: Verkleinern
-          command: 'app:zoom-out'
+          command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
         - label: Vollbildmodus
@@ -568,22 +568,22 @@ de:
       id: dev
       submenu:
         - label: Stile neu laden
-          command: 'win:refresh'
+          command: win:refresh
         - label: Entwicklerwerkzeuge einblenden
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
         - label: Ontologie-Datenbank rücksetzen
-          command: 'app:reset-ontology-db'
+          command: app:reset-ontology-db
         - label: Projekt-Cache optimieren
-          command: 'app:optimize-cache'
+          command: app:optimize-cache
         - label: Projekt-Datenbank optimieren
-          command: 'app:optimize-project'
+          command: app:optimize-project
         - label: Projekt-Datenbank indexieren
-          command: 'app:reindex-project'
+          command: app:reindex-project
         - type: separator
         - label: Projekt portieren
-          command: 'app:rebase-project'
+          command: app:rebase-project
         - type: separator
         - label: Erscheinungsbild
           id: theme
@@ -600,24 +600,24 @@ de:
     - label: Hilfe
       submenu:
         - label: Benutzerhandbuch
-          command: 'app:open-docs'
+          command: app:open-docs
         - label: Support-Forum
-          command: 'app:open-forums'
+          command: app:open-forums
         - label: Softwarelizenz
-          command: 'app:open-license'
+          command: app:open-license
         - type: separator
         - label: Logs anzeigen
-          command: 'app:open-logs'
+          command: app:open-logs
         - label: Plugins-Ordner anzeigen
-          command: 'app:open-plugins-folder'
+          command: app:open-plugins-folder
         - label: User-Data Ordner anzeigen
-          command: 'app:open-user-data'
+          command: app:open-user-data
         - label: Cache Ordner anzeigen
-          command: 'app:open-cache-folder'
+          command: app:open-cache-folder
         - type: separator
         - id: updater-check
           label: Nach Updates suchen …
-          command: 'app:check-for-updates'
+          command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
           label: Updates werden heruntergeladen …
@@ -625,10 +625,10 @@ de:
           visible: false
         - id: updater-install
           label: Updates installieren …
-          command: 'app:install-updates'
+          command: app:install-updates
           enabled: false
           visible: false
         - type: separator
         - label: Über %name
-          command: 'app:about'
+          command: app:about
           window: '!prefs'

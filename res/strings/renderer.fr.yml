@@ -51,36 +51,36 @@ fr:
     item: Objet
     photo: Photo
     notes: Les notes
-    note: 'Note {idx, number}'
+    note: Note {idx, number}
     tags: Tags
   about:
-    version: 'Version {version}'
+    version: Version {version}
     rrchnm:
       title: Roy Rosenzweig Center for History and New Media
-      url: 'https://rrchnm.org'
+      url: https://rrchnm.org
     cds:
       title: Corporation for Digital Scholarship
-      url: 'https://digitalscholar.org'
+      url: https://digitalscholar.org
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
-      url: 'https://www.c2dh.uni.lu'
+      url: https://www.c2dh.uni.lu
     text: >
       Tropy est conçu par le {rrchnm} et le {c2dh}, une équipe qui crée des
       ressources pour l'enseignement de l'histoire, des expositions numériques,
       et des logiciels libres et open-source.
-    trademark: 'Tropy est une marque déposée de la {cds}.'
+    trademark: Tropy est une marque déposée de la {cds}.
     release:
       title: Notes de version
-      url: 'https://github.com/tropy/tropy/releases/tag/{version}'
+      url: https://github.com/tropy/tropy/releases/tag/{version}
     license:
       title: Informations sur la licence
-      url: 'https://tropy.org/license'
+      url: https://tropy.org/license
     credits:
       title: Crédits
-      url: 'https://tropy.org/credits'
+      url: https://tropy.org/credits
   project:
-    none: 'Faire glisser ici un fichier de projet ou créer un {newProject}'
-    empty: 'Pour commencer, faire glisser vos photos dans Tropy'
+    none: Faire glisser ici un fichier de projet ou créer un {newProject}
+    empty: Pour commencer, faire glisser vos photos dans Tropy
     new: Nouveau projet
     recent: Projets récents
     corrupted: >
@@ -155,7 +155,7 @@ fr:
           prompt: Me demander à chaque photo en double
       density:
         label: Résolution en pixel (ppi)
-        title: 'Utilisé pour les PDF, SVG et autres formats évolutifs'
+        title: Utilisé pour les PDF, SVG et autres formats évolutifs
       export:
         label: Exporter
         note:
@@ -293,9 +293,9 @@ fr:
     creator: Créateur
     description: Description
     types:
-      'https://tropy.org/v1/tropy#Item': Modèle de saisie pour un objet
-      'https://tropy.org/v1/tropy#Photo': Modèle de saisie pour une photo
-      'https://tropy.org/v1/tropy#Selection': Modèle de saisie pour une sélection
+      https://tropy.org/v1/tropy#Item: Modèle de saisie pour un objet
+      https://tropy.org/v1/tropy#Photo: Modèle de saisie pour une photo
+      https://tropy.org/v1/tropy#Selection: Modèle de saisie pour une sélection
     field:
       property: Propriété
       label: Label

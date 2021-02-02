@@ -1,6 +1,6 @@
 cn:
   sidebar:
-    lists: 列表
+    lists: 文件夹
     tags: 标签
     imports: 最近导入
     trash: 删除文件
@@ -51,34 +51,33 @@ cn:
     item: 很久
     photo: 图片
     notes: 笔记
-    note: '笔记 {idx, number}'
+    note: 笔记 {idx, number}
     tags: 标签
   about:
-    version: '版本 {version}'
+    version: 版本 {version}
     rrchnm:
       title: 罗伊·罗森茨韦格历史和新媒体中心
-      url: 'https://rrchnm.org'
+      url: https://rrchnm.org
     cds:
       title: Corporation for Digital Scholarship
-      url: 'https://digitalscholar.org'
+      url: https://digitalscholar.org
     c2dh:
       title: 卢森堡当代和数字历史中心
-      url: 'https://www.c2dh.uni.lu'
-    text: >
-      Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
-      historical teaching resources, digital exhibits, and open-source software.
-    trademark: 'Tropy名称是{cds}的注册商标。'
+      url: https://www.c2dh.uni.lu
+    text: |
+      trovy是由{rrchnm}和{c2dh}设计的，这是一个开发历史教学资源、数字展览和开源软件的团队。
+    trademark: Tropy名称是{cds}的注册商标。
     release:
       title: 发布笔记
-      url: 'https://github.com/tropy/tropy/releases/tag/{version}'
+      url: https://github.com/tropy/tropy/releases/tag/{version}
     license:
       title: 许可信息
-      url: 'https://tropy.org/license'
+      url: https://tropy.org/license
     credits:
       title: Credits
-      url: 'https://tropy.org/credits'
+      url: https://tropy.org/credits
   project:
-    none: '拖放项目到这里或创建一个 {newProject}'
+    none: 拖放项目到这里或创建一个 {newProject}
     empty: 拖动图片到这里
     new: 新项目
     recent: 最近的项目
@@ -159,11 +158,11 @@ cn:
             html: HTML笔记
             markdown: Markdown笔记
           copy:
-            label: Copy notes as
+            label: 复制笔记
             option:
-              text: Plain text
+              text: 纯文本
               markdown: Markdown
-              html: HTML source code
+              html: HTML 源代码
       ui:
         label: 界面
         option:
@@ -289,9 +288,9 @@ cn:
     creator: 作者
     description: 描述
     types:
-      'https://tropy.org/v1/tropy#Item': 文件模版
-      'https://tropy.org/v1/tropy#Photo': 图片模板
-      'https://tropy.org/v1/tropy#Selection': 选择的模板
+      https://tropy.org/v1/tropy#Item: 文件模版
+      https://tropy.org/v1/tropy#Photo: 图片模板
+      https://tropy.org/v1/tropy#Selection: 选择的模板
     field:
       property: 资产
       label: 标记
@@ -359,14 +358,13 @@ cn:
             - 删除
       template:
         import:
-          message: >
-            A template with this id already exists in your ontology database. Do
-            you want to overwrite the existing template?
+          message: |
+            本体数据库中已经存在具有此id的模板。是否要覆盖现有模板?
           buttons:
-            - Cancel
-            - Overwrite
+            - 取消
+            - 覆盖
         imported:
-          message: Template successfully imported.
+          message: 成功导入的模板。
           buttons:
             - OK
     filter:
@@ -382,16 +380,16 @@ cn:
     project:
       save: 保存项目
     list:
-      create: 新建列表
-      delete: 删除列表
+      create: 新建文件夹
+      delete: 删除文件夹
       item:
-        add: 添加文件到列表
+        add: 添加文件到文件夹
         merge: 合并项目
-        remove: 移出列表
-        restore: 添加文件到列表
-      order: 排序列表
-      restore: 恢复列表
-      save: 保存列表
+        remove: 移出文件夹
+        restore: 添加文件到文件夹
+      order: 排序文件夹
+      restore: 恢复文件夹
+      save: 保存文件夹
     item:
       create: 新建文件
       delete: 删除文件
@@ -448,17 +446,17 @@ cn:
     project:
       save: 正在保存 ...
     list:
-      create: 正在新建列表 ...
-      delete: 正在删除列表 ...
+      create: 正在新建文件夹 ...
+      delete: 正在删除文件夹 ...
       item:
-        add: 正在添加文件到列表 ...
+        add: 正在添加文件到文件夹 ...
         merge: 正在合并项目…
-        remove: 正在移出列表 ...
+        remove: 正在移出文件夹 ...
         restore: 正在恢复文件 ...
       load: 加载列表中...
       order: 排序列表中...
-      restore: 正在恢复列表...
-      save: 正在保存列表...
+      restore: 正在恢复文件夹...
+      save: 正在保存文件夹..
     tag:
       create: 正在新建标签...
       delete: 正在删除标签...
@@ -545,8 +543,8 @@ cn:
       subscript: 上角标
       superscript: 下角标
       blockquote: 插入 Blockquote
-      ol: 插入编号列表
-      ul: 插入项目符号列表
+      ol: 插入编号
+      ul: 插入项目符号
       link:
         button: 切换链接
         target: 链接目标
@@ -554,8 +552,8 @@ cn:
       left: 左对齐
       center: 居中对齐
       right: 右对齐
-      sinkListItem: Sink list item
-      liftListItem: Lift list item
+      sinkListItem: 缩进
+      liftListItem: 撤销缩进
   error:
     cache:
       prune: 未能优化项目缓存。
@@ -572,12 +570,12 @@ cn:
       template:
         change: 无法更改项目模板。
     list:
-      load: 无法加载列表。
-      create: 无法创建列表。列表名称必须是唯一的。
-      move: 无法移动列表。每个级别的列表名称必须是唯一的。
-      save: 无法保存列表。
+      load: 无法加载文件夹。
+      create: 无法创建文件夹。文件夹名称必须是唯一的。
+      move: 无法移动文件夹。每个级别的文件夹名称必须是唯一的。
+      save: 无法保存文件夹。
       item:
-        add: 无法添加图片到列表。
+        add: 无法添加图片到文件夹(S)。
     photo:
       consolidate: 无法检查图片。
       create: 无法导入图片。

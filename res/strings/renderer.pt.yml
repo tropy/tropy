@@ -51,34 +51,34 @@ pt:
     item: Item
     photo: Foto
     notes: Notas
-    note: 'Nota {idx, number}'
+    note: Nota {idx, number}
     tags: Etiquetas
   about:
-    version: 'Versão {version}'
+    version: Versão {version}
     rrchnm:
       title: Roy Rosenzweig Center for History and New Media
-      url: 'https://rrchnm.org'
+      url: https://rrchnm.org
     cds:
       title: Corporation for Digital Scholarship
-      url: 'https://digitalscholar.org'
+      url: https://digitalscholar.org
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
-      url: 'https://www.c2dh.uni.lu'
+      url: https://www.c2dh.uni.lu
     text: >
       Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
       historical teaching resources, digital exhibits, and open-source software.
-    trademark: 'O nome Tropy é uma marca registada de {cds}.'
+    trademark: O nome Tropy é uma marca registada de {cds}.
     release:
       title: Notas de Versão
-      url: 'https://github.com/tropy/tropy/releases/tag/{version}'
+      url: https://github.com/tropy/tropy/releases/tag/{version}
     license:
       title: Licença
-      url: 'https://tropy.org/license'
+      url: https://tropy.org/license
     credits:
       title: Créditos
-      url: 'https://tropy.org/credits'
+      url: https://tropy.org/credits
   project:
-    none: 'Arraste um ficheiro de projeto para aqui ou crie um {newProject}'
+    none: Arraste um ficheiro de projeto para aqui ou crie um {newProject}
     empty: Arraste para aqui as suas fotos para começar.
     new: novo projeto
     recent: Projetos Recentes
@@ -154,7 +154,7 @@ pt:
           prompt: Perguntar-me sempre
       density:
         label: Densidade predefinida (ppi)
-        title: 'Utilizado em PDF, SVG e outros fomatos escaláveis'
+        title: Utilizado em PDF, SVG e outros fomatos escaláveis
       export:
         label: Exportar
         note:
@@ -292,9 +292,9 @@ pt:
     creator: Criador
     description: Descrição
     types:
-      'https://tropy.org/v1/tropy#Item': Modelo de Item
-      'https://tropy.org/v1/tropy#Photo': Modelo de Foto
-      'https://tropy.org/v1/tropy#Selection': Modelo de Seleção
+      https://tropy.org/v1/tropy#Item: Modelo de Item
+      https://tropy.org/v1/tropy#Photo: Modelo de Foto
+      https://tropy.org/v1/tropy#Selection: Modelo de Seleção
     field:
       property: Propriedade
       label: Rótulo

@@ -3,112 +3,112 @@ ja:
     history:
       - id: undo
         label: 元に戻す
-        command: 'app:undo'
+        command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
         label: やり直す
-        command: 'app:redo'
+        command: app:redo
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: プロジェクト名を変更
-        command: 'app:rename-project'
+        command: app:rename-project
         condition: '!isReadOnly'
       - label: プロジェクトファイルを開く
-        command: 'app:show-project-file'
+        command: app:show-project-file
     lists:
       - label: 新規リスト
-        command: 'app:create-list'
+        command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
       - label: リスト名を変更
-        command: 'app:rename-list'
+        command: app:rename-list
         condition: '!isReadOnly'
       - label: リストを削除
-        command: 'app:delete-list'
+        command: app:delete-list
         condition: '!isReadOnly'
     tags:
       - label: 新規タグ
-        command: 'app:create-tag'
+        command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Export Tags …
-        command: 'app:export-tags'
+        command: app:export-tags
       - label: Default Tag Color
         submenu:
           - label: 指定なし
             color:
               - null
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Random Color
             color:
               - random
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - type: separator
           - label: 赤
             color:
               - red
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: オレンジ
             color:
               - orange
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 黄色
             color:
               - yellow
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 緑
             color:
               - green
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 青
             color:
               - blue
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 紫
             color:
               - purple
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 灰色
             color:
               - gray
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 茶色
             color:
               - brown
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: アプリコット
             color:
               - apricot
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 濃緑
             color:
               - dark-green
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 水色
             color:
               - light-blue
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: ラベンダー
             color:
               - lavender
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
     tag:
       - label: タグの色
         condition: '!isReadOnly'
@@ -117,82 +117,82 @@ ja:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 赤
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: オレンジ
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 黄色
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 緑
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 青
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 茶色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: アプリコット
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 濃緑
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 水色
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: ラベンダー
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
       - label: タグを再設定
-        command: 'app:rename-tag'
+        command: app:rename-tag
         condition: '!isReadOnly'
       - label: タグを削除
-        command: 'app:delete-tag'
+        command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
       - label: このアイテムからタグを削除
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
       - label: このアイテムからタグを削除
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
@@ -203,75 +203,75 @@ ja:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 赤
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: オレンジ
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 黄色
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 緑
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 青
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 茶色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: アプリコット
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 濃緑
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 水色
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: ラベンダー
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
     note:
       - label: Export Note …
-        command: 'app:export-note'
+        command: app:export-note
       - label: Copy Note
-        command: 'app:copy-note'
+        command: app:copy-note
       - label: ノートを削除
-        command: 'app:delete-note'
+        command: app:delete-note
     notepad:
       - label: ライティングモード
         id: writing-mode
@@ -288,22 +288,22 @@ ja:
         id: line-numbers
         type: checkbox
         checked: true
-        command: 'app:toggle-line-numbers'
+        command: app:toggle-line-numbers
       - label: 行をまとめる
         id: line-wrap
         type: checkbox
         checked: true
-        command: 'app:toggle-line-wrap'
+        command: app:toggle-line-wrap
     items:
       - label: 新規アイテム
-        command: 'app:create-item'
+        command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
       - label: 個別のアイテムに分割する
-        command: 'app:explode-item'
+        command: app:explode-item
         condition: isMultiplePhotos
       - label: 写真を追加
-        command: 'app:create-item-photo'
+        command: app:create-item-photo
       - label: タグ
         id: tag
         submenu:
@@ -313,97 +313,97 @@ ja:
             enabled: false
           - type: separator
       - label: アイテムを削除
-        command: 'app:delete-item'
+        command: app:delete-item
     item-read-only:
       - label: アイテムをエクスポート
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Consolidate Item
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-rotate:
       - label: Rotate Left
-        command: 'app:rotate-item-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
       - label: Rotate Right
-        command: 'app:rotate-item-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
     item-bulk:
       - label: 選択したアイテムを統合
-        command: 'app:merge-item'
+        command: app:merge-item
       - label: 選択したアイテムを削除
-        command: 'app:delete-item'
+        command: app:delete-item
     item-bulk-read-only:
       - label: 選択したアイテムをエクスポート
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Selected Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Selected Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Consolidate Selected Items
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-list:
       - label: リストからアイテムを削除
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     item-bulk-list:
       - label: リストから選択したアイテムを削除
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     photo:
       - label: 写真を複製する
-        command: 'app:duplicate-photo'
+        command: app:duplicate-photo
       - label: 写真を新規アイテムへ移動
-        command: 'app:explode-photo'
+        command: app:explode-photo
       - label: 写真を削除
-        command: 'app:delete-photo'
+        command: app:delete-photo
       - label: 表紙画像として写真を利用
-        command: 'app:update-cover-image'
+        command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
       - label: Show Original Photo…
-        command: 'app:show-in-folder'
+        command: app:show-in-folder
       - label: Export Photo…
-        command: 'app:extract-photo'
+        command: app:extract-photo
       - label: 写真を整理
-        command: 'app:consolidate-photo'
+        command: app:consolidate-photo
     photo-rotate:
       - label: Rotate Left
-        command: 'app:rotate-photo-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
       - label: Rotate Right
-        command: 'app:rotate-photo-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
     selection:
       - label: 選択を削除
-        command: 'app:delete-selection'
+        command: app:delete-selection
     selection-read-only:
       - label: Export Selection …
-        command: 'app:extract-photo'
+        command: app:extract-photo
     selection-rotate:
       - label: Rotate Left
-        command: 'app:rotate-selection-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
       - label: Rotate Right
-        command: 'app:rotate-selection-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
     item-deleted:
       - label: アイテムを復元する
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: アイテムを完全に削除する
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-bulk-deleted:
       - label: 選択したアイテムを復元
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: 選択したアイテムを完全に削除する
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-view:
       - label: レイアウト表示
         id: item-view-layout
@@ -416,136 +416,136 @@ ja:
             type: checkbox
     metadata-list:
       - label: 新規フィールド
-        command: 'app:create-field'
+        command: app:create-field
     metadata-field:
       - label: フィールドを削除
-        command: 'app:delete-field'
+        command: app:delete-field
         condition: isExtra
     trash:
       - label: アイテムを完全に削除する
-        command: 'app:destroy-item'
+        command: app:destroy-item
         condition: '!isReadOnly'
     dev:
       - label: リロード
-        command: 'win:reload'
+        command: win:reload
         accelerator: CmdOrCtrl+R
       - label: スタイルをリロード
-        command: 'win:refresh'
+        command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
       - label: 調査
-        command: 'app:inspect'
+        command: app:inspect
         accelerator: CmdOrCtrl+D
   darwin:
     history:
       - id: undo
         label: 元に戻す
-        command: 'app:undo'
+        command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
         label: やり直す
-        command: 'app:redo'
+        command: app:redo
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: プロジェクト名を変更
-        command: 'app:rename-project'
+        command: app:rename-project
         condition: '!isReadOnly'
       - label: プロジェクトファイルを開く
-        command: 'app:show-project-file'
+        command: app:show-project-file
     lists:
       - label: 新規リスト
-        command: 'app:create-list'
+        command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
       - label: リスト名を変更
-        command: 'app:rename-list'
+        command: app:rename-list
         condition: '!isReadOnly'
       - label: リストを削除
-        command: 'app:delete-list'
+        command: app:delete-list
         condition: '!isReadOnly'
     tags:
       - label: 新規タグ
-        command: 'app:create-tag'
+        command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Export Tags …
-        command: 'app:export-tags'
+        command: app:export-tags
       - label: Default Tag Color
         submenu:
           - label: 指定なし
             color:
               - null
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Random Color
             color:
               - random
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - type: separator
           - label: レッド
             color:
               - red
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: オレンジ
             color:
               - orange
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 黄色
             color:
               - yellow
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 緑
             color:
               - green
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 青
             color:
               - blue
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 紫
             color:
               - purple
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 灰色
             color:
               - gray
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 茶色
             color:
               - brown
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: アプリコット
             color:
               - apricot
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 濃緑
             color:
               - dark-green
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 水色
             color:
               - light-blue
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: ラベンダー
             color:
               - lavender
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
     tag:
       - label: タグカラー
         condition: '!isReadOnly'
@@ -554,82 +554,82 @@ ja:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 赤
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: オレンジ
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 黄色
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 緑
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 青
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 茶色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: アプリコット
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 濃緑
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 水色
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: ラベンダー
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
       - label: タグを再設定
-        command: 'app:rename-tag'
+        command: app:rename-tag
         condition: '!isReadOnly'
       - label: タグを削除
-        command: 'app:delete-tag'
+        command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
       - label: このアイテムからタグを削除
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
       - label: このアイテムからタグを削除
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
@@ -640,75 +640,75 @@ ja:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 赤
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: オレンジ
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 黄色
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 緑
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 青
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 茶色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: アプリコット
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 濃緑
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 水色
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: ラベンダー
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
     note:
       - label: Export Note …
-        command: 'app:export-note'
+        command: app:export-note
       - label: Copy Note
-        command: 'app:copy-note'
+        command: app:copy-note
       - label: ノートを削除
-        command: 'app:delete-note'
+        command: app:delete-note
     notepad:
       - label: ライティングモード
         id: writing-mode
@@ -725,22 +725,22 @@ ja:
         id: line-numbers
         type: checkbox
         checked: true
-        command: 'app:toggle-line-numbers'
+        command: app:toggle-line-numbers
       - label: 行をまとめる
         id: line-wrap
         type: checkbox
         checked: true
-        command: 'app:toggle-line-wrap'
+        command: app:toggle-line-wrap
     items:
       - label: 新規アイテム
-        command: 'app:create-item'
+        command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
       - label: 個別のアイテムに分割する
-        command: 'app:explode-item'
+        command: app:explode-item
         condition: isMultiplePhotos
       - label: 写真を追加
-        command: 'app:create-item-photo'
+        command: app:create-item-photo
       - label: タグ
         id: tag
         submenu:
@@ -750,52 +750,52 @@ ja:
             enabled: false
           - type: separator
       - label: アイテムを削除
-        command: 'app:delete-item'
+        command: app:delete-item
     item-read-only:
       - label: アイテムをエクスポート
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Consolidate Item
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-bulk:
       - label: 選択したアイテムを統合
-        command: 'app:merge-item'
+        command: app:merge-item
       - label: 選択したアイテムを削除
-        command: 'app:delete-item'
+        command: app:delete-item
     item-bulk-read-only:
       - label: 選択したアイテムをエクスポート
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Selected Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Selected Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Consolidate Selected Items
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-list:
       - label: リストからアイテムを削除
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     item-bulk-list:
       - label: リストから選択したアイテムを削除
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     item-deleted:
       - label: アイテムを復元する
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: アイテムを完全に削除する
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-bulk-deleted:
       - label: 選択したアイテムを復元
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: 選択したアイテムを完全に削除する
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-view:
       - label: レイアウト表示
         id: item-view-layout
@@ -808,181 +808,181 @@ ja:
             type: checkbox
     item-rotate:
       - label: Rotate Left
-        command: 'app:rotate-item-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
       - label: Rotate Right
-        command: 'app:rotate-item-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
     metadata-list:
       - label: 新規フィールド
-        command: 'app:create-field'
+        command: app:create-field
     metadata-field:
       - label: フィールドを削除
-        command: 'app:delete-field'
+        command: app:delete-field
         condition: isExtra
     trash:
       - label: アイテムを完全に削除する
-        command: 'app:destroy-item'
+        command: app:destroy-item
         condition: '!isReadOnly'
     photo:
       - label: 写真を複製する
-        command: 'app:duplicate-photo'
+        command: app:duplicate-photo
       - label: 写真を新規アイテムへ移動
-        command: 'app:explode-photo'
+        command: app:explode-photo
       - label: 写真を削除
-        command: 'app:delete-photo'
+        command: app:delete-photo
       - label: 表紙画像として写真を利用
-        command: 'app:update-cover-image'
+        command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
       - label: Show Original Photo…
-        command: 'app:show-in-folder'
+        command: app:show-in-folder
       - label: Export Photo…
-        command: 'app:extract-photo'
+        command: app:extract-photo
       - label: 写真を整理
-        command: 'app:consolidate-photo'
+        command: app:consolidate-photo
     photo-rotate:
       - label: Rotate Left
-        command: 'app:rotate-photo-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
       - label: Rotate Right
-        command: 'app:rotate-photo-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
     selection:
       - label: 選択を削除
-        command: 'app:delete-selection'
+        command: app:delete-selection
     selection-read-only:
       - label: Export Selection …
-        command: 'app:extract-photo'
+        command: app:extract-photo
     selection-rotate:
       - label: Rotate Left
-        command: 'app:rotate-selection-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
       - label: Rotate Right
-        command: 'app:rotate-selection-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
     dev:
       - label: リロード
-        command: 'win:reload'
+        command: win:reload
         accelerator: CmdOrCtrl+R
       - label: スタイルをリロード
-        command: 'win:refresh'
+        command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
       - label: 調査
-        command: 'app:inspect'
+        command: app:inspect
         accelerator: CmdOrCtrl+D
   win32:
     history:
       - id: undo
         label: 元に戻す
-        command: 'app:undo'
+        command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
         label: やり直す
-        command: 'app:redo'
+        command: app:redo
         enabled: false
         accelerator: Control+Y
     project:
       - label: プロジェクト名を変更
-        command: 'app:rename-project'
+        command: app:rename-project
         condition: '!isReadOnly'
       - label: プロジェクトファイルを開く
-        command: 'app:show-project-file'
+        command: app:show-project-file
     lists:
       - label: 新規リスト
-        command: 'app:create-list'
+        command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
       - label: リスト名を変更
-        command: 'app:rename-list'
+        command: app:rename-list
         condition: '!isReadOnly'
       - label: リストを削除
-        command: 'app:delete-list'
+        command: app:delete-list
         condition: '!isReadOnly'
     tags:
       - label: 新規タグ
-        command: 'app:create-tag'
+        command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Export Tags …
-        command: 'app:export-tags'
+        command: app:export-tags
       - label: Default Tag Color
         submenu:
           - label: 指定なし
             color:
               - null
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Random Color
             color:
               - random
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - type: separator
           - label: 赤
             color:
               - red
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: オレンジ
             color:
               - orange
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 黄色
             color:
               - yellow
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 緑
             color:
               - green
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 青
             color:
               - blue
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 紫
             color:
               - purple
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 灰色
             color:
               - gray
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 茶色
             color:
               - brown
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: アプリコット
             color:
               - apricot
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 濃緑
             color:
               - dark-green
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 水色
             color:
               - light-blue
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: ラベンダー
             color:
               - lavender
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
     tag:
       - label: タグカラー
         condition: '!isReadOnly'
@@ -991,82 +991,82 @@ ja:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 赤
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: オレンジ
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 黄色
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 緑
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 青
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 茶色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: アプリコット
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 濃緑
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 水色
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: ラベンダー
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
       - label: タグを再設定
-        command: 'app:rename-tag'
+        command: app:rename-tag
         condition: '!isReadOnly'
       - label: タグを削除
-        command: 'app:delete-tag'
+        command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
       - label: このアイテムからタグを削除
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
       - label: このアイテムからタグを削除
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
@@ -1077,75 +1077,75 @@ ja:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 赤
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: オレンジ
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 黄色
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 緑
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 青
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 茶色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: アプリコット
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 濃緑
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 水色
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: ラベンダー
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
     note:
       - label: Export Note …
-        command: 'app:export-note'
+        command: app:export-note
       - label: Copy Note
-        command: 'app:copy-note'
+        command: app:copy-note
       - label: ノートを削除
-        command: 'app:delete-note'
+        command: app:delete-note
     notepad:
       - label: ライティングモード
         id: writing-mode
@@ -1162,22 +1162,22 @@ ja:
         id: line-numbers
         type: checkbox
         checked: true
-        command: 'app:toggle-line-numbers'
+        command: app:toggle-line-numbers
       - label: 行を包む
         id: line-wrap
         type: checkbox
         checked: true
-        command: 'app:toggle-line-wrap'
+        command: app:toggle-line-wrap
     items:
       - label: 新規アイテム
-        command: 'app:create-item'
+        command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
       - label: 個別のアイテムに分割する
-        command: 'app:explode-item'
+        command: app:explode-item
         condition: isMultiplePhotos
       - label: 写真を追加
-        command: 'app:create-item-photo'
+        command: app:create-item-photo
       - label: タグ
         id: tag
         submenu:
@@ -1187,52 +1187,52 @@ ja:
             enabled: false
           - type: separator
       - label: アイテムを削除
-        command: 'app:delete-item'
+        command: app:delete-item
     item-read-only:
       - label: アイテムをエクスポート
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Consolidate Item
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-bulk:
       - label: 選択したアイテムを統合
-        command: 'app:merge-item'
+        command: app:merge-item
       - label: 選択したアイテムを削除
-        command: 'app:delete-item'
+        command: app:delete-item
     item-bulk-read-only:
       - label: 選択したアイテムをエクスポート
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Selected Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Selected Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Consolidate Selected Items
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-list:
       - label: リストからアイテムを削除
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     item-bulk-list:
       - label: リストから選択したアイテムを削除
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     item-deleted:
       - label: アイテムを復元する
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: アイテムを完全に削除する
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-bulk-deleted:
       - label: 選択したアイテムを復元
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: 選択したアイテムを完全に削除する
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-view:
       - label: レイアウト表示
         id: item-view-layout
@@ -1245,68 +1245,68 @@ ja:
             type: checkbox
     item-rotate:
       - label: Rotate Left
-        command: 'app:rotate-item-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
       - label: Rotate Right
-        command: 'app:rotate-item-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
     metadata-list:
       - label: 新規フィールド
-        command: 'app:create-field'
+        command: app:create-field
     metadata-field:
       - label: フィールドを削除
-        command: 'app:delete-field'
+        command: app:delete-field
         condition: isExtra
     trash:
       - label: アイテムを完全に削除する
-        command: 'app:destroy-item'
+        command: app:destroy-item
         condition: '!isReadOnly'
     photo:
       - label: 写真を複製する
-        command: 'app:duplicate-photo'
+        command: app:duplicate-photo
       - label: 写真を新規アイテムへ移動
-        command: 'app:explode-photo'
+        command: app:explode-photo
       - label: 写真を削除
-        command: 'app:delete-photo'
+        command: app:delete-photo
       - label: 表紙画像として写真を利用
-        command: 'app:update-cover-image'
+        command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
       - label: Show Original Photo…
-        command: 'app:show-in-folder'
+        command: app:show-in-folder
       - label: Export Photo…
-        command: 'app:extract-photo'
+        command: app:extract-photo
       - label: 写真を整理
-        command: 'app:consolidate-photo'
+        command: app:consolidate-photo
     photo-rotate:
       - label: Rotate Left
-        command: 'app:rotate-photo-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
       - label: Rotate Right
-        command: 'app:rotate-photo-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
     selection:
       - label: 選択を削除
-        command: 'app:delete-selection'
+        command: app:delete-selection
     selection-read-only:
       - label: Export Selection …
-        command: 'app:extract-photo'
+        command: app:extract-photo
     selection-rotate:
       - label: Rotate Left
-        command: 'app:rotate-selection-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
       - label: Rotate Right
-        command: 'app:rotate-selection-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
     dev:
       - label: リロード
-        command: 'win:reload'
+        command: win:reload
         accelerator: CmdOrCtrl+R
       - label: スタイルをリロード
-        command: 'win:refresh'
+        command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
       - label: 調査
-        command: 'app:inspect'
+        command: app:inspect
         accelerator: CmdOrCtrl+D

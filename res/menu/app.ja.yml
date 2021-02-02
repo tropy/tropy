@@ -6,66 +6,66 @@ ja:
         - label: 新規作成
           submenu:
             - label: プロジェクト
-              command: 'app:create-project'
+              command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: アイテム
-              command: 'app:create-item'
+              command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
               condition: '!isProjectReadOnly'
             - label: リスト
-              command: 'app:create-list'
+              command: app:create-list
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
             - label: タグ
-              command: 'app:create-tag'
+              command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
         - label: 開く
           accelerator: CmdOrCtrl+O
-          command: 'app:open-dialog'
+          command: app:open-dialog
         - label: Open In New Window…
           accelerator: Shift+CmdOrCtrl+O
-          command: 'app:open-new-dialog'
+          command: app:open-new-dialog
         - label: 最近のプロジェクト
           id: recent
           enabled: false
           submenu:
             - type: separator
             - label: リストを削除
-              command: 'app:clear-recent-projects'
+              command: app:clear-recent-projects
         - type: separator
         - label: インポート
           window: project
           condition: '!isProjectReadOnly'
           submenu:
             - label: Photos…
-              command: 'app:import'
+              command: app:import
               accelerator: CmdOrCtrl+Shift+I
             - label: Folder…
-              command: 'app:import-directory'
+              command: app:import-directory
         - label: エクスポート
           id: export
           window: project
           submenu:
             - label: JSON-LD
-              command: 'app:export-item'
+              command: app:export-item
         - type: separator
         - label: 写真ライブラリを統合
-          command: 'app:consolidate-photo-library'
+          command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
         - label: プリント
-          command: 'app:print'
+          command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
         - label: プロジェクトを閉じる
-          command: 'app:close-project'
+          command: app:close-project
           window: project
         - type: separator
         - label: Close Window
@@ -80,12 +80,12 @@ ja:
         - id: undo
           label: 元に戻す
           accelerator: CmdOrCtrl+Z
-          command: 'app:undo'
+          command: app:undo
           enabled: false
         - id: redo
           label: やり直す
           accelerator: Shift+CmdOrCtrl+Z
-          command: 'app:redo'
+          command: app:redo
           enabled: false
         - type: separator
         - label: 切り取り
@@ -105,29 +105,29 @@ ja:
         - type: separator
         - label: 設定
           accelerator: Shift+Control+S
-          command: 'app:open-preferences'
+          command: app:open-preferences
     - label: 表示
       submenu:
         - label: リロード
           accelerator: CmdOrCtrl+R
-          command: 'win:reload'
+          command: win:reload
           window: '*'
         - type: separator
         - label: メニューバーを隠す
-          command: 'app:toggle-menu-bar'
+          command: app:toggle-menu-bar
           window: '*'
         - label: 画面中央に寄せる
-          command: 'app:center-window'
+          command: app:center-window
           window: '*'
         - type: separator
         - label: Actual Size
-          command: 'app:zoom-reset'
+          command: app:zoom-reset
           accelerator: CmdOrCtrl+0
         - label: ズームイン
-          command: 'app:zoom-in'
+          command: app:zoom-in
           accelerator: CmdOrCtrl+Plus
         - label: ズームアウト
-          command: 'app:zoom-out'
+          command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
         - label: 全画面表示にする
@@ -142,22 +142,22 @@ ja:
       id: dev
       submenu:
         - label: スタイルをリロード
-          command: 'win:refresh'
+          command: win:refresh
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
         - label: オントロジーデータベースをリセット
-          command: 'app:reset-ontology-db'
+          command: app:reset-ontology-db
         - label: プロジェクトのキャッシュを最適化
-          command: 'app:optimize-cache'
+          command: app:optimize-cache
         - label: Optimize Project Database
-          command: 'app:optimize-project'
+          command: app:optimize-project
         - label: Reindex Project Database
-          command: 'app:reindex-project'
+          command: app:reindex-project
         - type: separator
         - label: プロジェクトをリベースする
-          command: 'app:rebase-project'
+          command: app:rebase-project
         - type: separator
         - label: テーマ
           id: theme
@@ -174,24 +174,24 @@ ja:
     - label: ヘルプ
       submenu:
         - label: ユーザーガイド
-          command: 'app:open-docs'
+          command: app:open-docs
         - label: サポートフォーラム
-          command: 'app:open-forums'
+          command: app:open-forums
         - label: ソフトウェアライセンス
-          command: 'app:open-license'
+          command: app:open-license
         - type: separator
         - label: ログファイルを開く
-          command: 'app:open-logs'
+          command: app:open-logs
         - label: プラグインフォルダを開く
-          command: 'app:open-plugins-folder'
+          command: app:open-plugins-folder
         - label: ユーザーデータフォルダーを開く
-          command: 'app:open-user-data'
+          command: app:open-user-data
         - label: Show Cache Folder
-          command: 'app:open-cache-folder'
+          command: app:open-cache-folder
         - type: separator
         - id: updater-check
           label: アップデートの確認
-          command: 'app:check-for-updates'
+          command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
           label: 最新アップデートを取得しています
@@ -199,23 +199,23 @@ ja:
           visible: false
         - id: updater-install
           label: アップデートをインストールする
-          command: 'app:install-updates'
+          command: app:install-updates
           enabled: false
           visible: false
         - type: separator
         - label: Tropyについて
-          command: 'app:about'
+          command: app:about
           window: '!prefs'
   darwin:
     - label: Tropy
       submenu:
         - label: Tropyについて
-          command: 'app:about'
+          command: app:about
           window: '!prefs'
         - type: separator
         - label: 設定
-          accelerator: 'Command+,'
-          command: 'app:open-preferences'
+          accelerator: Command+,
+          command: app:open-preferences
         - type: separator
         - label: Tropyを隠す
           accelerator: Command+H
@@ -234,49 +234,49 @@ ja:
         - label: 新規作成
           submenu:
             - label: プロジェクト
-              command: 'app:create-project'
+              command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: アイテム
-              command: 'app:create-item'
+              command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
               condition: '!isProjectReadOnly'
             - label: リスト
-              command: 'app:create-list'
+              command: app:create-list
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
             - label: タグ
-              command: 'app:create-tag'
+              command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
         - label: 開く
           accelerator: CmdOrCtrl+O
-          command: 'app:open-dialog'
+          command: app:open-dialog
         - label: Open In New Window…
           accelerator: Shift+CmdOrCtrl+O
-          command: 'app:open-new-dialog'
+          command: app:open-new-dialog
         - label: 最近のプロジェクト
           id: recent
           enabled: false
           submenu:
             - type: separator
             - label: リストを削除
-              command: 'app:clear-recent-projects'
+              command: app:clear-recent-projects
         - type: separator
         - label: インポート
           window: project
           condition: '!isProjectReadOnly'
           submenu:
             - label: Photos…
-              command: 'app:import'
+              command: app:import
               accelerator: CmdOrCtrl+Shift+I
             - label: Folder…
-              command: 'app:import-directory'
+              command: app:import-directory
         - label: 写真ライブラリを統合
-          command: 'app:consolidate-photo-library'
+          command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
@@ -285,26 +285,26 @@ ja:
           window: project
           submenu:
             - label: JSON-LD
-              command: 'app:export-item'
+              command: app:export-item
         - label: プリント
-          command: 'app:print'
+          command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
         - label: プロジェクトを閉じる
-          command: 'app:close-project'
+          command: app:close-project
           window: project
     - label: 編集
       submenu:
         - id: undo
           label: 元に戻す
           accelerator: CmdOrCtrl+Z
-          command: 'app:undo'
+          command: app:undo
           enabled: false
         - id: redo
           label: やり直す
           accelerator: Shift+CmdOrCtrl+Z
-          command: 'app:redo'
+          command: app:redo
           enabled: false
         - type: separator
         - label: 切り取る
@@ -325,17 +325,17 @@ ja:
       submenu:
         - label: リロード
           accelerator: CmdOrCtrl+R
-          command: 'win:reload'
+          command: win:reload
           window: '*'
         - type: separator
         - label: Actual Size
-          command: 'app:zoom-reset'
+          command: app:zoom-reset
           accelerator: CmdOrCtrl+0
         - label: ズームイン
-          command: 'app:zoom-in'
+          command: app:zoom-in
           accelerator: CmdOrCtrl+Plus
         - label: ズームアウト
-          command: 'app:zoom-out'
+          command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
         - label: 全画面表示にする
@@ -353,7 +353,7 @@ ja:
           role: zoom
         - type: separator
         - label: 画面中央に寄せる
-          command: 'app:center-window'
+          command: app:center-window
           window: '*'
         - type: separator
         - label: 全て全面に表示
@@ -367,22 +367,22 @@ ja:
       id: dev
       submenu:
         - label: スタイルをリロード
-          command: 'win:refresh'
+          command: win:refresh
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
         - label: オントロジーデータベースをリセット
-          command: 'app:reset-ontology-db'
+          command: app:reset-ontology-db
         - label: プロジェクトのキャッシュを最適化
-          command: 'app:optimize-cache'
+          command: app:optimize-cache
         - label: Optimize Project Database
-          command: 'app:optimize-project'
+          command: app:optimize-project
         - label: Reindex Project Database
-          command: 'app:reindex-project'
+          command: app:reindex-project
         - type: separator
         - label: プロジェクトをリベースする
-          command: 'app:rebase-project'
+          command: app:rebase-project
         - type: separator
         - label: テーマ
           id: theme
@@ -400,24 +400,24 @@ ja:
       role: help
       submenu:
         - label: ユーザーガイド
-          command: 'app:open-docs'
+          command: app:open-docs
         - label: サポートフォーラム
-          command: 'app:open-forums'
+          command: app:open-forums
         - label: ソフトウェアライセンス
-          command: 'app:open-license'
+          command: app:open-license
         - type: separator
         - label: ログファイルを開く
-          command: 'app:open-logs'
+          command: app:open-logs
         - label: プラグインフォルダを開く
-          command: 'app:open-plugins-folder'
+          command: app:open-plugins-folder
         - label: ユーザーデータフォルダーを開く
-          command: 'app:open-user-data'
+          command: app:open-user-data
         - label: Show Cache Folder
-          command: 'app:open-cache-folder'
+          command: app:open-cache-folder
         - type: separator
         - id: updater-check
           label: アップデートの確認
-          command: 'app:check-for-updates'
+          command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
           label: 最新アップデートを取得しています
@@ -425,7 +425,7 @@ ja:
           visible: false
         - id: updater-install
           label: アップデートをインストールする
-          command: 'app:install-updates'
+          command: app:install-updates
           enabled: false
           visible: false
   win32:
@@ -435,66 +435,66 @@ ja:
         - label: 新規作成
           submenu:
             - label: プロジェクト
-              command: 'app:create-project'
+              command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: アイテム
-              command: 'app:create-item'
+              command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
               condition: '!isProjectReadOnly'
             - label: リスト
-              command: 'app:create-list'
+              command: app:create-list
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
             - label: タグ
-              command: 'app:create-tag'
+              command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
         - label: 開く
           accelerator: CmdOrCtrl+O
-          command: 'app:open-dialog'
+          command: app:open-dialog
         - label: Open In New Window…
           accelerator: Shift+CmdOrCtrl+O
-          command: 'app:open-new-dialog'
+          command: app:open-new-dialog
         - label: 最近のプロジェクト
           id: recent
           enabled: false
           submenu:
             - type: separator
             - label: リストを削除
-              command: 'app:clear-recent-projects'
+              command: app:clear-recent-projects
         - type: separator
         - label: インポート
           window: project
           condition: '!isProjectReadOnly'
           submenu:
             - label: Photos…
-              command: 'app:import'
+              command: app:import
               accelerator: CmdOrCtrl+Shift+I
             - label: Folder…
-              command: 'app:import-directory'
+              command: app:import-directory
         - label: エクスポート
           id: export
           window: project
           submenu:
             - label: JSON-LD
-              command: 'app:export-item'
+              command: app:export-item
         - type: separator
         - label: 写真ライブラリを統合
-          command: 'app:consolidate-photo-library'
+          command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
         - label: プリント
-          command: 'app:print'
+          command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
         - label: プロジェクトを閉じる
-          command: 'app:close-project'
+          command: app:close-project
           window: project
         - type: separator
         - label: Close Window
@@ -509,12 +509,12 @@ ja:
         - id: undo
           label: 元に戻す
           accelerator: CmdOrCtrl+Z
-          command: 'app:undo'
+          command: app:undo
           enabled: false
         - id: redo
           label: やり直す
           accelerator: Control+Y
-          command: 'app:redo'
+          command: app:redo
           enabled: false
         - type: separator
         - label: 切り取る
@@ -531,29 +531,29 @@ ja:
           role: pasteAndMatchStyle
         - label: 設定
           accelerator: Shift+Control+S
-          command: 'app:open-preferences'
+          command: app:open-preferences
     - label: 表示
       submenu:
         - label: リロード
           accelerator: CmdOrCtrl+R
-          command: 'win:reload'
+          command: win:reload
           window: '*'
         - type: separator
         - label: メニューバーを隠す
-          command: 'app:toggle-menu-bar'
+          command: app:toggle-menu-bar
           window: '*'
         - label: 画面中央に寄せる
-          command: 'app:center-window'
+          command: app:center-window
           window: '*'
         - type: separator
         - label: Actual Size
-          command: 'app:zoom-reset'
+          command: app:zoom-reset
           accelerator: CmdOrCtrl+0
         - label: ズームイン
-          command: 'app:zoom-in'
+          command: app:zoom-in
           accelerator: CmdOrCtrl+Plus
         - label: ズームアウト
-          command: 'app:zoom-out'
+          command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
         - label: 全画面表示にする
@@ -568,22 +568,22 @@ ja:
       id: dev
       submenu:
         - label: スタイルをリロード
-          command: 'win:refresh'
+          command: win:refresh
         - label: 開発者向けツールに切り替え
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
         - label: オントロジーデータベースをリセット
-          command: 'app:reset-ontology-db'
+          command: app:reset-ontology-db
         - label: プロジェクトのキャッシュを最適化
-          command: 'app:optimize-cache'
+          command: app:optimize-cache
         - label: Optimize Project Database
-          command: 'app:optimize-project'
+          command: app:optimize-project
         - label: Reindex Project Database
-          command: 'app:reindex-project'
+          command: app:reindex-project
         - type: separator
         - label: プロジェクトをリベースする
-          command: 'app:rebase-project'
+          command: app:rebase-project
         - type: separator
         - label: テーマ
           id: theme
@@ -600,24 +600,24 @@ ja:
     - label: ヘルプ
       submenu:
         - label: ユーザーガイド
-          command: 'app:open-docs'
+          command: app:open-docs
         - label: サポートフォーラム
-          command: 'app:open-forums'
+          command: app:open-forums
         - label: ソフトウェアライセンス
-          command: 'app:open-license'
+          command: app:open-license
         - type: separator
         - label: ログファイルを開く
-          command: 'app:open-logs'
+          command: app:open-logs
         - label: プラグインフォルダを開く
-          command: 'app:open-plugins-folder'
+          command: app:open-plugins-folder
         - label: ユーザーデータフォルダーを開く
-          command: 'app:open-user-data'
+          command: app:open-user-data
         - label: Show Cache Folder
-          command: 'app:open-cache-folder'
+          command: app:open-cache-folder
         - type: separator
         - id: updater-check
           label: アップデートの確認
-          command: 'app:check-for-updates'
+          command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
           label: 最新アップデートを取得しています
@@ -625,10 +625,10 @@ ja:
           visible: false
         - id: updater-install
           label: アップデートをインストールする
-          command: 'app:install-updates'
+          command: app:install-updates
           enabled: false
           visible: false
         - type: separator
         - label: Tropyについて
-          command: 'app:about'
+          command: app:about
           window: '!prefs'

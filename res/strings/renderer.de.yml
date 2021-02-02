@@ -51,35 +51,35 @@ de:
     item: Objekt
     photo: Foto
     notes: Notizen
-    note: 'Notiz {idx, number}'
+    note: Notiz {idx, number}
     tags: Tags
   about:
-    version: 'Version {version}'
+    version: Version {version}
     rrchnm:
       title: Roy Rosenzweig Center for History and New Media
-      url: 'https://rrchnm.org'
+      url: https://rrchnm.org
     cds:
       title: Corporation for Digital Scholarship
-      url: 'https://digitalscholar.org'
+      url: https://digitalscholar.org
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
-      url: 'https://www.c2dh.uni.lu'
+      url: https://www.c2dh.uni.lu
     text: >
       Tropy wird vom {rrchnm} und dem {c2dh} betreut, einem Team, das Ressourcen
       zur Geschichtsvermittlung, digitale Ausstellungen und Open-Source-Software
       entwickelt.
-    trademark: 'Der Name Tropy ist eine geschützte Marke der {cds}.'
+    trademark: Der Name Tropy ist eine geschützte Marke der {cds}.
     release:
       title: Versionshinweise
-      url: 'https://github.com/tropy/tropy/releases/tag/{version}'
+      url: https://github.com/tropy/tropy/releases/tag/{version}
     license:
       title: Lizenzinformationen
-      url: 'https://tropy.org/license'
+      url: https://tropy.org/license
     credits:
       title: Credits
-      url: 'https://tropy.org/credits'
+      url: https://tropy.org/credits
   project:
-    none: 'Ziehen Sie eine Projektdatei hierher oder erstellen Sie ein {newProject}'
+    none: Ziehen Sie eine Projektdatei hierher oder erstellen Sie ein {newProject}
     empty: Fotos ins Tropy Fenster ziehen und los geht’s!
     new: neues Projekt
     recent: Benutzte Projekte
@@ -153,7 +153,7 @@ de:
           prompt: Jedes Mal nachfragen
       density:
         label: Punktdichte (ppi)
-        title: 'Für PDF, SVG und andere skalierbare Formate'
+        title: Für PDF, SVG und andere skalierbare Formate
       export:
         label: Exportieren
         note:
@@ -292,9 +292,9 @@ de:
     creator: Autor
     description: Beschreibung
     types:
-      'https://tropy.org/v1/tropy#Item': Objektvorlage
-      'https://tropy.org/v1/tropy#Photo': Fotovorlage
-      'https://tropy.org/v1/tropy#Selection': Ausschnittvorlage
+      https://tropy.org/v1/tropy#Item: Objektvorlage
+      https://tropy.org/v1/tropy#Photo: Fotovorlage
+      https://tropy.org/v1/tropy#Selection: Ausschnittvorlage
     field:
       property: Eigenschaft
       label: Bezeichnung

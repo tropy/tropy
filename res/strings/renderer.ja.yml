@@ -51,34 +51,34 @@ ja:
     item: アイテム
     photo: 写真
     notes: ノート
-    note: 'ノート {idx, number}'
+    note: ノート {idx, number}
     tags: タグ
   about:
-    version: 'バージョン {version}'
+    version: バージョン {version}
     rrchnm:
       title: ロイ・ローゼンツヴァイク歴史とニューディアセンター
-      url: 'https://rrchnm.org'
+      url: https://rrchnm.org
     cds:
       title: Corporation for Digital Scholarship
-      url: 'https://digitalscholar.org'
+      url: https://digitalscholar.org
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
-      url: 'https://www.c2dh.uni.lu'
+      url: https://www.c2dh.uni.lu
     text: >
       Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
       historical teaching resources, digital exhibits, and open-source software.
-    trademark: 'Tropyは{cds}の商標です。'
+    trademark: Tropyは{cds}の商標です。
     release:
       title: リリースノート
-      url: 'https://github.com/tropy/tropy/releases/tag/{version}'
+      url: https://github.com/tropy/tropy/releases/tag/{version}
     license:
       title: ライセンス情報
-      url: 'https://tropy.org/license'
+      url: https://tropy.org/license
     credits:
       title: クレジット
-      url: 'https://tropy.org/credits'
+      url: https://tropy.org/credits
   project:
-    none: 'プロジェクトファイルをここにドロップするか、あるいは{newProject}を作成してください'
+    none: プロジェクトファイルをここにドロップするか、あるいは{newProject}を作成してください
     empty: まずは写真をTropyにドロップしてください
     new: 新規プロジェクト
     recent: 最近のプロジェクト
@@ -153,7 +153,7 @@ ja:
           prompt: 毎回確認する
       density:
         label: Default density (ppi)
-        title: 'Used for PDF, SVG and other scalable formats'
+        title: Used for PDF, SVG and other scalable formats
       export:
         label: エクスポート
         note:
@@ -291,9 +291,9 @@ ja:
     creator: 作成者
     description: 内容記述
     types:
-      'https://tropy.org/v1/tropy#Item': アイテムテンプレート
-      'https://tropy.org/v1/tropy#Photo': 写真テンプレート
-      'https://tropy.org/v1/tropy#Selection': 写真選択テンプレート
+      https://tropy.org/v1/tropy#Item: アイテムテンプレート
+      https://tropy.org/v1/tropy#Photo: 写真テンプレート
+      https://tropy.org/v1/tropy#Selection: 写真選択テンプレート
     field:
       property: プロパティ
       label: ラベル

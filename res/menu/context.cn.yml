@@ -3,112 +3,112 @@ cn:
     history:
       - id: undo
         label: 撤销
-        command: 'app:undo'
+        command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
         label: 重做
-        command: 'app:redo'
+        command: app:redo
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: 重命名项目
-        command: 'app:rename-project'
+        command: app:rename-project
         condition: '!isReadOnly'
       - label: 显示项目所在位置
-        command: 'app:show-project-file'
+        command: app:show-project-file
     lists:
-      - label: 新列表
-        command: 'app:create-list'
+      - label: 新文件夹
+        command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
-      - label: 重命名列表
-        command: 'app:rename-list'
+      - label: 重命名文件夹
+        command: app:rename-list
         condition: '!isReadOnly'
-      - label: 删除列表
-        command: 'app:delete-list'
+      - label: 删除文件夹
+        command: app:delete-list
         condition: '!isReadOnly'
     tags:
       - label: 新标签
-        command: 'app:create-tag'
+        command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: 导出标签 ...
-        command: 'app:export-tags'
+        command: app:export-tags
       - label: 默认标签颜色
         submenu:
           - label: 无
             color:
               - null
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 随机颜色
             color:
               - random
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - type: separator
           - label: 红色
             color:
               - red
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 橘黄
             color:
               - orange
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 明黄
             color:
               - yellow
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 绿色
             color:
               - green
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 蓝色
             color:
               - blue
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 紫色
             color:
               - purple
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 灰色
             color:
               - gray
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 棕色
             color:
               - brown
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 杏色
             color:
               - apricot
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 墨绿
             color:
               - dark-green
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 亮蓝
             color:
               - light-blue
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 淡紫
             color:
               - lavender
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
     tag:
       - label: 标签颜色
         condition: '!isReadOnly'
@@ -117,82 +117,82 @@ cn:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 红色
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 橘黄
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 明黄
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 绿色
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 蓝色
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫色
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 棕色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 杏色
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 墨绿
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 亮蓝
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 淡紫
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
       - label: 重命名标签
-        command: 'app:rename-tag'
+        command: app:rename-tag
         condition: '!isReadOnly'
       - label: 删除标签
-        command: 'app:delete-tag'
+        command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
       - label: 从选中项目除以此标签
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
       - label: 从选中项目除以此标签
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
@@ -203,75 +203,75 @@ cn:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 红色
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 橘黄
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 明黄
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 绿色
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 蓝色
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫色
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 棕色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 杏色
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 墨绿
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 亮蓝
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 淡紫
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
     note:
-      - label: Export Note …
-        command: 'app:export-note'
-      - label: Copy Note
-        command: 'app:copy-note'
+      - label: 导出笔记
+        command: app:export-note
+      - label: 复制笔记
+        command: app:copy-note
       - label: 删除笔记
-        command: 'app:delete-note'
+        command: app:delete-note
     notepad:
       - label: 写入模式
         id: writing-mode
@@ -288,22 +288,22 @@ cn:
         id: line-numbers
         type: checkbox
         checked: true
-        command: 'app:toggle-line-numbers'
+        command: app:toggle-line-numbers
       - label: 封边
         id: line-wrap
         type: checkbox
         checked: true
-        command: 'app:toggle-line-wrap'
+        command: app:toggle-line-wrap
     items:
       - label: 新文件
-        command: 'app:create-item'
+        command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
       - label: 导出文件
-        command: 'app:explode-item'
+        command: app:explode-item
         condition: isMultiplePhotos
       - label: 添加图片 ...
-        command: 'app:create-item-photo'
+        command: app:create-item-photo
       - label: 标签
         id: tag
         submenu:
@@ -313,97 +313,97 @@ cn:
             enabled: false
           - type: separator
       - label: 删除文件
-        command: 'app:delete-item'
+        command: app:delete-item
     item-read-only:
       - label: 导出文件
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
-      - label: Export Item Notes …
-        command: 'app:export-notes'
-      - label: Copy Item Notes
-        command: 'app:copy-notes'
+            command: app:export-item
+      - label: 导出笔记
+        command: app:export-notes
+      - label: 复制笔记
+        command: app:copy-notes
       - label: 刷新缩略图
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-rotate:
       - label: 顺时针90度
-        command: 'app:rotate-item-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
       - label: 逆时针90度
-        command: 'app:rotate-item-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
     item-bulk:
       - label: 合并选中项
-        command: 'app:merge-item'
+        command: app:merge-item
       - label: 删除选中文件
-        command: 'app:delete-item'
+        command: app:delete-item
     item-bulk-read-only:
       - label: 导出选中项
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
-      - label: Export Selected Item Notes …
-        command: 'app:export-notes'
-      - label: Copy Selected Item Notes
-        command: 'app:copy-notes'
+            command: app:export-item
+      - label: 导出选中项的笔记
+        command: app:export-notes
+      - label: 复制选中项的笔记
+        command: app:copy-notes
       - label: 检查选中的文件
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-list:
-      - label: 移出列表
-        command: 'app:list-item-remove'
+      - label: 移出文件夹
+        command: app:list-item-remove
     item-bulk-list:
-      - label: 移出列表
-        command: 'app:list-item-remove'
+      - label: 移出文件夹
+        command: app:list-item-remove
     photo:
       - label: 复制图片
-        command: 'app:duplicate-photo'
+        command: app:duplicate-photo
       - label: 移出组
-        command: 'app:explode-photo'
+        command: app:explode-photo
       - label: 删除图片
-        command: 'app:delete-photo'
+        command: app:delete-photo
       - label: 设为封面
-        command: 'app:update-cover-image'
+        command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
       - label: 显示文件位置
-        command: 'app:show-in-folder'
+        command: app:show-in-folder
       - label: 导出图片
-        command: 'app:extract-photo'
+        command: app:extract-photo
       - label: 检查图片
-        command: 'app:consolidate-photo'
+        command: app:consolidate-photo
     photo-rotate:
       - label: 顺时针90度
-        command: 'app:rotate-photo-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
       - label: 逆时针90度
-        command: 'app:rotate-photo-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
     selection:
       - label: 删除选中项
-        command: 'app:delete-selection'
+        command: app:delete-selection
     selection-read-only:
       - label: 导出选择项
-        command: 'app:extract-photo'
+        command: app:extract-photo
     selection-rotate:
       - label: 顺时针90度
-        command: 'app:rotate-selection-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
       - label: 逆时针90度
-        command: 'app:rotate-selection-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
     item-deleted:
       - label: 恢复文件
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: 彻底删除
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-bulk-deleted:
       - label: 恢复选中文件
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: 彻底删除
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-view:
       - label: 视图布局
         id: item-view-layout
@@ -416,136 +416,136 @@ cn:
             type: checkbox
     metadata-list:
       - label: 新文件夹 ...
-        command: 'app:create-field'
+        command: app:create-field
     metadata-field:
       - label: 移出文件夹 ...
-        command: 'app:delete-field'
+        command: app:delete-field
         condition: isExtra
     trash:
       - label: 彻底删除
-        command: 'app:destroy-item'
+        command: app:destroy-item
         condition: '!isReadOnly'
     dev:
       - label: 重新加载
-        command: 'win:reload'
+        command: win:reload
         accelerator: CmdOrCtrl+R
       - label: 刷新样式
-        command: 'win:refresh'
+        command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
       - label: 检查代码
-        command: 'app:inspect'
+        command: app:inspect
         accelerator: CmdOrCtrl+D
   darwin:
     history:
       - id: undo
         label: 撤销
-        command: 'app:undo'
+        command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
         label: 重做
-        command: 'app:redo'
+        command: app:redo
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: 重命名项目
-        command: 'app:rename-project'
+        command: app:rename-project
         condition: '!isReadOnly'
       - label: 显示项目所在位置
-        command: 'app:show-project-file'
+        command: app:show-project-file
     lists:
-      - label: 新列表
-        command: 'app:create-list'
+      - label: 新文件夹
+        command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
-      - label: 重命名列表
-        command: 'app:rename-list'
+      - label: 重命名文件夹
+        command: app:rename-list
         condition: '!isReadOnly'
-      - label: 删除列表
-        command: 'app:delete-list'
+      - label: 删除文件夹
+        command: app:delete-list
         condition: '!isReadOnly'
     tags:
       - label: 新标签
-        command: 'app:create-tag'
+        command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: 导出标签 ...
-        command: 'app:export-tags'
+        command: app:export-tags
       - label: 默认标签颜色
         submenu:
           - label: 无
             color:
               - null
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 随机颜色
             color:
               - random
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - type: separator
           - label: 红色
             color:
               - red
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 橘黄
             color:
               - orange
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 明黄
             color:
               - yellow
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 绿色
             color:
               - green
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 蓝色
             color:
               - blue
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 紫色
             color:
               - purple
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 灰色
             color:
               - gray
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 棕色
             color:
               - brown
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 杏色
             color:
               - apricot
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 墨绿
             color:
               - dark-green
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 亮蓝
             color:
               - light-blue
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 淡紫
             color:
               - lavender
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
     tag:
       - label: 标签颜色
         condition: '!isReadOnly'
@@ -554,82 +554,82 @@ cn:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 红色
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 橘黄
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 明黄
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 绿色
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 蓝色
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫色
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 棕色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 杏色
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 墨绿
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 亮蓝
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 淡紫
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
       - label: 重命名标签
-        command: 'app:rename-tag'
+        command: app:rename-tag
         condition: '!isReadOnly'
       - label: 删除标签
-        command: 'app:delete-tag'
+        command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
       - label: 从选中项目除以此标签
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
       - label: 从选中项目除以此标签
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
@@ -640,75 +640,75 @@ cn:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 红色
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 橘黄
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 明黄
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 绿色
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 蓝色
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫色
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 棕色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 杏色
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 墨绿
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 亮蓝
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 淡紫
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
     note:
-      - label: Export Note …
-        command: 'app:export-note'
-      - label: Copy Note
-        command: 'app:copy-note'
+      - label: 导出笔记
+        command: app:export-note
+      - label: 复制笔记
+        command: app:copy-note
       - label: 删除笔记
-        command: 'app:delete-note'
+        command: app:delete-note
     notepad:
       - label: 写入模式
         id: writing-mode
@@ -725,22 +725,22 @@ cn:
         id: line-numbers
         type: checkbox
         checked: true
-        command: 'app:toggle-line-numbers'
+        command: app:toggle-line-numbers
       - label: 封边
         id: line-wrap
         type: checkbox
         checked: true
-        command: 'app:toggle-line-wrap'
+        command: app:toggle-line-wrap
     items:
       - label: 新文件
-        command: 'app:create-item'
+        command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
       - label: 导出文件
-        command: 'app:explode-item'
+        command: app:explode-item
         condition: isMultiplePhotos
       - label: 添加图片 ...
-        command: 'app:create-item-photo'
+        command: app:create-item-photo
       - label: 标签
         id: tag
         submenu:
@@ -750,52 +750,52 @@ cn:
             enabled: false
           - type: separator
       - label: 删除文件
-        command: 'app:delete-item'
+        command: app:delete-item
     item-read-only:
       - label: 导出文件
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
-      - label: Export Item Notes …
-        command: 'app:export-notes'
-      - label: Copy Item Notes
-        command: 'app:copy-notes'
+            command: app:export-item
+      - label: 导出笔记
+        command: app:export-notes
+      - label: 复制笔记
+        command: app:copy-notes
       - label: 刷新缩略图
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-bulk:
       - label: 合并选中项
-        command: 'app:merge-item'
+        command: app:merge-item
       - label: 删除选中文件
-        command: 'app:delete-item'
+        command: app:delete-item
     item-bulk-read-only:
       - label: 导出选中项
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
-      - label: Export Selected Item Notes …
-        command: 'app:export-notes'
-      - label: Copy Selected Item Notes
-        command: 'app:copy-notes'
+            command: app:export-item
+      - label: 导出选中项的笔记
+        command: app:export-notes
+      - label: 复制选中项的笔记
+        command: app:copy-notes
       - label: 检查选中的文件
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-list:
-      - label: 移出列表
-        command: 'app:list-item-remove'
+      - label: 移出文件夹
+        command: app:list-item-remove
     item-bulk-list:
-      - label: 移出列表
-        command: 'app:list-item-remove'
+      - label: 移出文件夹
+        command: app:list-item-remove
     item-deleted:
       - label: 恢复文件
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: 彻底删除
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-bulk-deleted:
       - label: 恢复选中文件
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: 彻底删除
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-view:
       - label: 视图布局
         id: item-view-layout
@@ -808,181 +808,181 @@ cn:
             type: checkbox
     item-rotate:
       - label: 顺时针90度
-        command: 'app:rotate-item-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
       - label: 逆时针90度
-        command: 'app:rotate-item-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
     metadata-list:
       - label: 新文件夹 ...
-        command: 'app:create-field'
+        command: app:create-field
     metadata-field:
       - label: 移出文件夹 ...
-        command: 'app:delete-field'
+        command: app:delete-field
         condition: isExtra
     trash:
       - label: 彻底删除
-        command: 'app:destroy-item'
+        command: app:destroy-item
         condition: '!isReadOnly'
     photo:
       - label: 复制图片
-        command: 'app:duplicate-photo'
+        command: app:duplicate-photo
       - label: 移出组
-        command: 'app:explode-photo'
+        command: app:explode-photo
       - label: 删除图片
-        command: 'app:delete-photo'
+        command: app:delete-photo
       - label: 设为封面
-        command: 'app:update-cover-image'
+        command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
       - label: 显示文件位置
-        command: 'app:show-in-folder'
+        command: app:show-in-folder
       - label: 导出图片
-        command: 'app:extract-photo'
+        command: app:extract-photo
       - label: 检查图片
-        command: 'app:consolidate-photo'
+        command: app:consolidate-photo
     photo-rotate:
       - label: 顺时针90度
-        command: 'app:rotate-photo-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
       - label: 逆时针90度
-        command: 'app:rotate-photo-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
     selection:
       - label: 删除选中项
-        command: 'app:delete-selection'
+        command: app:delete-selection
     selection-read-only:
       - label: 导出选择项
-        command: 'app:extract-photo'
+        command: app:extract-photo
     selection-rotate:
       - label: 顺时针90度
-        command: 'app:rotate-selection-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
       - label: 逆时针90度
-        command: 'app:rotate-selection-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
     dev:
       - label: 重新加载
-        command: 'win:reload'
+        command: win:reload
         accelerator: CmdOrCtrl+R
       - label: 刷新样式
-        command: 'win:refresh'
+        command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
       - label: 检查代码
-        command: 'app:inspect'
+        command: app:inspect
         accelerator: CmdOrCtrl+D
   win32:
     history:
       - id: undo
         label: 撤销
-        command: 'app:undo'
+        command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
         label: 重做
-        command: 'app:redo'
+        command: app:redo
         enabled: false
         accelerator: Control+Y
     project:
       - label: 重命名项目
-        command: 'app:rename-project'
+        command: app:rename-project
         condition: '!isReadOnly'
       - label: 显示项目所在位置
-        command: 'app:show-project-file'
+        command: app:show-project-file
     lists:
-      - label: 新列表
-        command: 'app:create-list'
+      - label: 新文件夹
+        command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
-      - label: 重命名列表
-        command: 'app:rename-list'
+      - label: 重命名文件夹
+        command: app:rename-list
         condition: '!isReadOnly'
-      - label: 删除列表
-        command: 'app:delete-list'
+      - label: 删除文件夹
+        command: app:delete-list
         condition: '!isReadOnly'
     tags:
       - label: 新标签
-        command: 'app:create-tag'
+        command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: 导出标签 ...
-        command: 'app:export-tags'
+        command: app:export-tags
       - label: 默认标签颜色
         submenu:
           - label: 无
             color:
               - null
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 随机颜色
             color:
               - random
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - type: separator
           - label: 红色
             color:
               - red
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 橘黄
             color:
               - orange
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 明黄
             color:
               - yellow
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 绿色
             color:
               - green
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 蓝色
             color:
               - blue
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 紫色
             color:
               - purple
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 灰色
             color:
               - gray
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 棕色
             color:
               - brown
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 杏色
             color:
               - apricot
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 墨绿
             color:
               - dark-green
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 亮蓝
             color:
               - light-blue
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: 淡紫
             color:
               - lavender
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
     tag:
       - label: 标签颜色
         condition: '!isReadOnly'
@@ -991,82 +991,82 @@ cn:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 红色
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 橘黄
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 明黄
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 绿色
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 蓝色
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫色
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 棕色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 杏色
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 墨绿
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 亮蓝
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 淡紫
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
       - label: 重命名标签
-        command: 'app:rename-tag'
+        command: app:rename-tag
         condition: '!isReadOnly'
       - label: 删除标签
-        command: 'app:delete-tag'
+        command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
       - label: 从选中项目除以此标签
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
       - label: 从选中项目除以此标签
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
@@ -1077,75 +1077,75 @@ cn:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: 红色
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 橘黄
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 明黄
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 绿色
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 蓝色
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 紫色
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 灰色
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 棕色
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 杏色
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 墨绿
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 亮蓝
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: 淡紫
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
     note:
-      - label: Export Note …
-        command: 'app:export-note'
-      - label: Copy Note
-        command: 'app:copy-note'
+      - label: 导出笔记
+        command: app:export-note
+      - label: 复制笔记
+        command: app:copy-note
       - label: 删除笔记
-        command: 'app:delete-note'
+        command: app:delete-note
     notepad:
       - label: 写入模式
         id: writing-mode
@@ -1162,22 +1162,22 @@ cn:
         id: line-numbers
         type: checkbox
         checked: true
-        command: 'app:toggle-line-numbers'
+        command: app:toggle-line-numbers
       - label: 封边
         id: line-wrap
         type: checkbox
         checked: true
-        command: 'app:toggle-line-wrap'
+        command: app:toggle-line-wrap
     items:
       - label: 新文件
-        command: 'app:create-item'
+        command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
       - label: 导出文件
-        command: 'app:explode-item'
+        command: app:explode-item
         condition: isMultiplePhotos
       - label: 添加图片 ...
-        command: 'app:create-item-photo'
+        command: app:create-item-photo
       - label: 标签
         id: tag
         submenu:
@@ -1187,52 +1187,52 @@ cn:
             enabled: false
           - type: separator
       - label: 删除文件
-        command: 'app:delete-item'
+        command: app:delete-item
     item-read-only:
       - label: 导出文件
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
-      - label: Export Item Notes …
-        command: 'app:export-notes'
-      - label: Copy Item Notes
-        command: 'app:copy-notes'
+            command: app:export-item
+      - label: 导出笔记
+        command: app:export-notes
+      - label: 复制笔记
+        command: app:copy-notes
       - label: 刷新缩略图
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-bulk:
       - label: 合并选中项
-        command: 'app:merge-item'
+        command: app:merge-item
       - label: 删除选中文件
-        command: 'app:delete-item'
+        command: app:delete-item
     item-bulk-read-only:
       - label: 导出选中项
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
-      - label: Export Selected Item Notes …
-        command: 'app:export-notes'
-      - label: Copy Selected Item Notes
-        command: 'app:copy-notes'
+            command: app:export-item
+      - label: 导出选中项的笔记
+        command: app:export-notes
+      - label: 复制选中项的笔记
+        command: app:copy-notes
       - label: 检查选中的文件
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-list:
-      - label: 移出列表
-        command: 'app:list-item-remove'
+      - label: 移出文件夹
+        command: app:list-item-remove
     item-bulk-list:
-      - label: 移出列表
-        command: 'app:list-item-remove'
+      - label: 移出文件夹
+        command: app:list-item-remove
     item-deleted:
       - label: 恢复文件
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: 彻底删除
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-bulk-deleted:
       - label: 恢复选中文件
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: 彻底删除
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-view:
       - label: 视图布局
         id: item-view-layout
@@ -1245,68 +1245,68 @@ cn:
             type: checkbox
     item-rotate:
       - label: 顺时针90度
-        command: 'app:rotate-item-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
       - label: 逆时针90度
-        command: 'app:rotate-item-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
     metadata-list:
       - label: 新文件夹 ...
-        command: 'app:create-field'
+        command: app:create-field
     metadata-field:
       - label: 移出文件夹 ...
-        command: 'app:delete-field'
+        command: app:delete-field
         condition: isExtra
     trash:
       - label: 彻底删除
-        command: 'app:destroy-item'
+        command: app:destroy-item
         condition: '!isReadOnly'
     photo:
       - label: 复制图片
-        command: 'app:duplicate-photo'
+        command: app:duplicate-photo
       - label: 移出组
-        command: 'app:explode-photo'
+        command: app:explode-photo
       - label: 删除图片
-        command: 'app:delete-photo'
+        command: app:delete-photo
       - label: 设为封面
-        command: 'app:update-cover-image'
+        command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
       - label: 显示文件位置
-        command: 'app:show-in-folder'
+        command: app:show-in-folder
       - label: 导出图片
-        command: 'app:extract-photo'
+        command: app:extract-photo
       - label: 检查图片
-        command: 'app:consolidate-photo'
+        command: app:consolidate-photo
     photo-rotate:
       - label: 顺时针90度
-        command: 'app:rotate-photo-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
       - label: 逆时针90度
-        command: 'app:rotate-photo-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
     selection:
       - label: 删除选中项
-        command: 'app:delete-selection'
+        command: app:delete-selection
     selection-read-only:
       - label: 导出选择项
-        command: 'app:extract-photo'
+        command: app:extract-photo
     selection-rotate:
       - label: 顺时针90度
-        command: 'app:rotate-selection-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
       - label: 逆时针90度
-        command: 'app:rotate-selection-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
     dev:
       - label: 重新加载
-        command: 'win:reload'
+        command: win:reload
         accelerator: CmdOrCtrl+R
       - label: 刷新样式
-        command: 'win:refresh'
+        command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
       - label: 检查代码
-        command: 'app:inspect'
+        command: app:inspect
         accelerator: CmdOrCtrl+D

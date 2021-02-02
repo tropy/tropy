@@ -3,112 +3,112 @@ de:
     history:
       - id: undo
         label: Widerrufen
-        command: 'app:undo'
+        command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
         label: Wiederholen
-        command: 'app:redo'
+        command: app:redo
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: Projekt umbennen
-        command: 'app:rename-project'
+        command: app:rename-project
         condition: '!isReadOnly'
       - label: Projektdatei anzeigen …
-        command: 'app:show-project-file'
+        command: app:show-project-file
     lists:
       - label: Neue Liste
-        command: 'app:create-list'
+        command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
       - label: Liste umbenennen
-        command: 'app:rename-list'
+        command: app:rename-list
         condition: '!isReadOnly'
       - label: Liste löschen
-        command: 'app:delete-list'
+        command: app:delete-list
         condition: '!isReadOnly'
     tags:
       - label: Neues Tag
-        command: 'app:create-tag'
+        command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Tags exportieren …
-        command: 'app:export-tags'
+        command: app:export-tags
       - label: Standard Tag-Farbe
         submenu:
           - label: Keine
             color:
               - null
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Zufallsfarbe
             color:
               - random
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - type: separator
           - label: Rot
             color:
               - red
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Orange
             color:
               - orange
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Gelb
             color:
               - yellow
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Grün
             color:
               - green
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Blau
             color:
               - blue
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Violett
             color:
               - purple
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Grau
             color:
               - gray
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Braun
             color:
               - brown
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Marille
             color:
               - apricot
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Dunkelgrün
             color:
               - dark-green
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Hellblau
             color:
               - light-blue
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Lavendel
             color:
               - lavender
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
     tag:
       - label: Tag-Farbe
         condition: '!isReadOnly'
@@ -117,82 +117,82 @@ de:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: Rot
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Orange
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Gelb
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grün
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Blau
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Violett
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grau
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Braun
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Marille
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Dunkelgrün
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Hellblau
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Lavendel
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
       - label: Tag umbenennen
-        command: 'app:rename-tag'
+        command: app:rename-tag
         condition: '!isReadOnly'
       - label: Tag löschen
-        command: 'app:delete-tag'
+        command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
       - label: Tag von diesem Objekt entfernen
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
       - label: Tag von diesen Objekten entfernen
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
@@ -203,75 +203,75 @@ de:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: Rot
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Orange
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Gelb
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grün
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Blau
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Violett
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grau
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Braun
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Marille
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Dunkelgrün
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Hellblau
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Lavendel
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
     note:
       - label: Export Note …
-        command: 'app:export-note'
+        command: app:export-note
       - label: Copy Note
-        command: 'app:copy-note'
+        command: app:copy-note
       - label: Notiz löschen
-        command: 'app:delete-note'
+        command: app:delete-note
     notepad:
       - label: Eingabemodus
         id: writing-mode
@@ -288,22 +288,22 @@ de:
         id: line-numbers
         type: checkbox
         checked: true
-        command: 'app:toggle-line-numbers'
+        command: app:toggle-line-numbers
       - label: Zeilenumbruch
         id: line-wrap
         type: checkbox
         checked: true
-        command: 'app:toggle-line-wrap'
+        command: app:toggle-line-wrap
     items:
       - label: Neues Objekt
-        command: 'app:create-item'
+        command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
       - label: Objekt zerteilen
-        command: 'app:explode-item'
+        command: app:explode-item
         condition: isMultiplePhotos
       - label: Foto hinzufügen …
-        command: 'app:create-item-photo'
+        command: app:create-item-photo
       - label: Tags
         id: tag
         submenu:
@@ -313,97 +313,97 @@ de:
             enabled: false
           - type: separator
       - label: Objekt löschen
-        command: 'app:delete-item'
+        command: app:delete-item
     item-read-only:
       - label: Objekt exportieren
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Objekt konsolidieren
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-rotate:
       - label: Linksdrehen
-        command: 'app:rotate-item-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
       - label: Rechtsdrehen
-        command: 'app:rotate-item-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
     item-bulk:
       - label: Ausgewählte Objekte zusammenfügen
-        command: 'app:merge-item'
+        command: app:merge-item
       - label: Ausgewählte Objekte löschen
-        command: 'app:delete-item'
+        command: app:delete-item
     item-bulk-read-only:
       - label: Ausgewählte Objekte exportieren
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Selected Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Selected Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Ausgewählte Objekte konsolidieren
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-list:
       - label: Objekt aus Liste entfernen
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     item-bulk-list:
       - label: Ausgewählte Objekte aus Liste entfernen
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     photo:
       - label: Foto duplizieren
-        command: 'app:duplicate-photo'
+        command: app:duplicate-photo
       - label: Foto in neues Objekt verschieben
-        command: 'app:explode-photo'
+        command: app:explode-photo
       - label: Foto löschen
-        command: 'app:delete-photo'
+        command: app:delete-photo
       - label: Foto als Titelbild verwenden
-        command: 'app:update-cover-image'
+        command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
       - label: Originalfoto anzeigen …
-        command: 'app:show-in-folder'
+        command: app:show-in-folder
       - label: Foto exportieren …
-        command: 'app:extract-photo'
+        command: app:extract-photo
       - label: Foto konsolidieren
-        command: 'app:consolidate-photo'
+        command: app:consolidate-photo
     photo-rotate:
       - label: Linksdrehen
-        command: 'app:rotate-photo-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
       - label: Rechtsdrehen
-        command: 'app:rotate-photo-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
     selection:
       - label: Ausschnitt löschen
-        command: 'app:delete-selection'
+        command: app:delete-selection
     selection-read-only:
       - label: Ausschnitt exportieren …
-        command: 'app:extract-photo'
+        command: app:extract-photo
     selection-rotate:
       - label: Linksdrehen
-        command: 'app:rotate-selection-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
       - label: Rechtsdrehen
-        command: 'app:rotate-selection-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
     item-deleted:
       - label: Objekt wiederherstellen
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: Objekt vollständig löschen
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-bulk-deleted:
       - label: Ausgewählte Objekte wiederherstellen
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: Ausgewählte Objekte vollständig löschen
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-view:
       - label: Layout
         id: item-view-layout
@@ -416,136 +416,136 @@ de:
             type: checkbox
     metadata-list:
       - label: Neues Feld …
-        command: 'app:create-field'
+        command: app:create-field
     metadata-field:
       - label: Feld entfernen
-        command: 'app:delete-field'
+        command: app:delete-field
         condition: isExtra
     trash:
       - label: Objekte vollständig löschen
-        command: 'app:destroy-item'
+        command: app:destroy-item
         condition: '!isReadOnly'
     dev:
       - label: Neu laden
-        command: 'win:reload'
+        command: win:reload
         accelerator: CmdOrCtrl+R
       - label: Stile neu laden
-        command: 'win:refresh'
+        command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
       - label: Untersuchen
-        command: 'app:inspect'
+        command: app:inspect
         accelerator: CmdOrCtrl+D
   darwin:
     history:
       - id: undo
         label: Widerrufen
-        command: 'app:undo'
+        command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
         label: Wiederholen
-        command: 'app:redo'
+        command: app:redo
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
       - label: Projekt umbennen
-        command: 'app:rename-project'
+        command: app:rename-project
         condition: '!isReadOnly'
       - label: Projektdatei anzeigen …
-        command: 'app:show-project-file'
+        command: app:show-project-file
     lists:
       - label: Neue Liste
-        command: 'app:create-list'
+        command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
       - label: Liste umbenennen
-        command: 'app:rename-list'
+        command: app:rename-list
         condition: '!isReadOnly'
       - label: Liste löschen
-        command: 'app:delete-list'
+        command: app:delete-list
         condition: '!isReadOnly'
     tags:
       - label: Neues Tag
-        command: 'app:create-tag'
+        command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Tags exportieren …
-        command: 'app:export-tags'
+        command: app:export-tags
       - label: Standard Tag-Farbe
         submenu:
           - label: Keine
             color:
               - null
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Zufallsfarbe
             color:
               - random
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - type: separator
           - label: Rot
             color:
               - red
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Orange
             color:
               - orange
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Gelb
             color:
               - yellow
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Grün
             color:
               - green
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Blau
             color:
               - blue
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Violett
             color:
               - purple
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Grau
             color:
               - gray
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Braun
             color:
               - brown
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Marille
             color:
               - apricot
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Dunkelgrün
             color:
               - dark-green
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Hellblau
             color:
               - light-blue
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Lavendel
             color:
               - lavender
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
     tag:
       - label: Tag-Farbe
         condition: '!isReadOnly'
@@ -554,82 +554,82 @@ de:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: Rot
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Orange
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Gelb
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grün
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Blau
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Violett
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grau
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Braun
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Marille
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Dunkelgrün
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Hellblau
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Lavendel
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
       - label: Tag umbenennen
-        command: 'app:rename-tag'
+        command: app:rename-tag
         condition: '!isReadOnly'
       - label: Tag löschen
-        command: 'app:delete-tag'
+        command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
       - label: Tag von diesem Objekt entfernen
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
       - label: Tag von diesen Objekten entfernen
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
@@ -640,75 +640,75 @@ de:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: Rot
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Orange
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Gelb
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grün
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Blau
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Violett
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grau
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Braun
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Marille
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Dunkelgrün
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Hellblau
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Lavendel
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
     note:
       - label: Export Note …
-        command: 'app:export-note'
+        command: app:export-note
       - label: Copy Note
-        command: 'app:copy-note'
+        command: app:copy-note
       - label: Notiz löschen
-        command: 'app:delete-note'
+        command: app:delete-note
     notepad:
       - label: Eingabemodus
         id: writing-mode
@@ -725,22 +725,22 @@ de:
         id: line-numbers
         type: checkbox
         checked: true
-        command: 'app:toggle-line-numbers'
+        command: app:toggle-line-numbers
       - label: Zeilenumbruch
         id: line-wrap
         type: checkbox
         checked: true
-        command: 'app:toggle-line-wrap'
+        command: app:toggle-line-wrap
     items:
       - label: Neues Objekt
-        command: 'app:create-item'
+        command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
       - label: Objekt zerteilen
-        command: 'app:explode-item'
+        command: app:explode-item
         condition: isMultiplePhotos
       - label: Foto hinzufügen …
-        command: 'app:create-item-photo'
+        command: app:create-item-photo
       - label: Tags
         id: tag
         submenu:
@@ -750,52 +750,52 @@ de:
             enabled: false
           - type: separator
       - label: Objekt löschen
-        command: 'app:delete-item'
+        command: app:delete-item
     item-read-only:
       - label: Objekt exportieren
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Objekt konsolidieren
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-bulk:
       - label: Ausgewählte Objekte zusammenfügen
-        command: 'app:merge-item'
+        command: app:merge-item
       - label: Ausgewählte Objekte löschen
-        command: 'app:delete-item'
+        command: app:delete-item
     item-bulk-read-only:
       - label: Ausgewählte Objekte exportieren
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Selected Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Selected Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Ausgewählte Objekte konsolidieren
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-list:
       - label: Objekt aus Liste entfernen
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     item-bulk-list:
       - label: Ausgewählte Objekte aus Liste entfernen
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     item-deleted:
       - label: Objet wiederherstellen
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: Objekt permanent löschen
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-bulk-deleted:
       - label: Ausgewählte Objekte wiederherstellen
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: Ausgewählte Objekte permanent löschen
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-view:
       - label: Layout
         id: item-view-layout
@@ -808,181 +808,181 @@ de:
             type: checkbox
     item-rotate:
       - label: Rechtsdrehen
-        command: 'app:rotate-item-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
       - label: Rechtsdrehen
-        command: 'app:rotate-item-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
     metadata-list:
       - label: Neues Feld …
-        command: 'app:create-field'
+        command: app:create-field
     metadata-field:
       - label: Feld entfernen
-        command: 'app:delete-field'
+        command: app:delete-field
         condition: isExtra
     trash:
       - label: Objekte vollständig löschen
-        command: 'app:destroy-item'
+        command: app:destroy-item
         condition: '!isReadOnly'
     photo:
       - label: Foto duplizieren
-        command: 'app:duplicate-photo'
+        command: app:duplicate-photo
       - label: Foto in neues Objekt verschieben
-        command: 'app:explode-photo'
+        command: app:explode-photo
       - label: Foto löschen
-        command: 'app:delete-photo'
+        command: app:delete-photo
       - label: Foto als Titelbild verwenden
-        command: 'app:update-cover-image'
+        command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
       - label: Originalfoto anzeigen …
-        command: 'app:show-in-folder'
+        command: app:show-in-folder
       - label: Foto exportieren …
-        command: 'app:extract-photo'
+        command: app:extract-photo
       - label: Foto konsolidieren
-        command: 'app:consolidate-photo'
+        command: app:consolidate-photo
     photo-rotate:
       - label: Rechtsdrehen
-        command: 'app:rotate-photo-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
       - label: Rechtsdrehen
-        command: 'app:rotate-photo-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
     selection:
       - label: Ausschnitt löschen
-        command: 'app:delete-selection'
+        command: app:delete-selection
     selection-read-only:
       - label: Ausschnitt exportieren …
-        command: 'app:extract-photo'
+        command: app:extract-photo
     selection-rotate:
       - label: Rechtsdrehen
-        command: 'app:rotate-selection-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
       - label: Rechtsdrehen
-        command: 'app:rotate-selection-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
     dev:
       - label: Neu laden
-        command: 'win:reload'
+        command: win:reload
         accelerator: CmdOrCtrl+R
       - label: Stile neu laden
-        command: 'win:refresh'
+        command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
       - label: Inspizieren
-        command: 'app:inspect'
+        command: app:inspect
         accelerator: CmdOrCtrl+D
   win32:
     history:
       - id: undo
         label: Widerrufen
-        command: 'app:undo'
+        command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
         label: Wiederholen
-        command: 'app:redo'
+        command: app:redo
         enabled: false
         accelerator: Control+Y
     project:
       - label: Projekt umbennen
-        command: 'app:rename-project'
+        command: app:rename-project
         condition: '!isReadOnly'
       - label: Projektdatei anzeigen …
-        command: 'app:show-project-file'
+        command: app:show-project-file
     lists:
       - label: Neue Liste
-        command: 'app:create-list'
+        command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
       - label: Liste umbenennen
-        command: 'app:rename-list'
+        command: app:rename-list
         condition: '!isReadOnly'
       - label: Liste löschen
-        command: 'app:delete-list'
+        command: app:delete-list
         condition: '!isReadOnly'
     tags:
       - label: Neuer Tag
-        command: 'app:create-tag'
+        command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Tags exportieren …
-        command: 'app:export-tags'
+        command: app:export-tags
       - label: Standard Tag-Farbe
         submenu:
           - label: Keine
             color:
               - null
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Zufallsfarbe
             color:
               - random
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - type: separator
           - label: Rot
             color:
               - red
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Orange
             color:
               - orange
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Gelb
             color:
               - yellow
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Grün
             color:
               - green
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Blau
             color:
               - blue
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Violett
             color:
               - purple
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Grau
             color:
               - gray
               - tagColor
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Braun
             color:
               - brown
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Marille
             color:
               - apricot
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Dunkelgrün
             color:
               - dark-green
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Hellblau
             color:
               - light-blue
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
           - label: Lavendel
             color:
               - lavender
               - color
-              - 'app:save-default-tag-color'
+              - app:save-default-tag-color
     tag:
       - label: Tagfarbe
         condition: '!isReadOnly'
@@ -991,82 +991,82 @@ de:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: Rot
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Orange
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Gelb
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grün
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Blau
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Violett
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grau
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Braun
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Marille
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Dunkelgrün
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Hellblau
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Lavendel
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
       - label: Tag umbenennen
-        command: 'app:rename-tag'
+        command: app:rename-tag
         condition: '!isReadOnly'
       - label: Tag löschen
-        command: 'app:delete-tag'
+        command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
       - label: Tag von diesem Objekt entfernen
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
       - label: Tag von diesen Objekten entfernen
-        command: 'app:delete-item-tag'
+        command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
@@ -1077,75 +1077,75 @@ de:
             color:
               - null
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - type: separator
           - label: Rot
             color:
               - red
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Orange
             color:
               - orange
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Gelb
             color:
               - yellow
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grün
             color:
               - green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Blau
             color:
               - blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Violett
             color:
               - purple
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Grau
             color:
               - gray
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Braun
             color:
               - brown
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Marille
             color:
               - apricot
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Dunkelgrün
             color:
               - dark-green
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Hellblau
             color:
               - light-blue
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
           - label: Lavendel
             color:
               - lavender
               - color
-              - 'app:save-tag-color'
+              - app:save-tag-color
     note:
       - label: Export Note …
-        command: 'app:export-note'
+        command: app:export-note
       - label: Copy Note
-        command: 'app:copy-note'
+        command: app:copy-note
       - label: Notiz löschen
-        command: 'app:delete-note'
+        command: app:delete-note
     notepad:
       - label: Eingabemodus
         id: writing-mode
@@ -1162,22 +1162,22 @@ de:
         id: line-numbers
         type: checkbox
         checked: true
-        command: 'app:toggle-line-numbers'
+        command: app:toggle-line-numbers
       - label: Zeilenumbruch
         id: line-wrap
         type: checkbox
         checked: true
-        command: 'app:toggle-line-wrap'
+        command: app:toggle-line-wrap
     items:
       - label: Neues Objekt
-        command: 'app:create-item'
+        command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
       - label: Objektfotos aufsplitten
-        command: 'app:explode-item'
+        command: app:explode-item
         condition: isMultiplePhotos
       - label: Foto hinzufügen …
-        command: 'app:create-item-photo'
+        command: app:create-item-photo
       - label: Tags
         id: tag
         submenu:
@@ -1187,52 +1187,52 @@ de:
             enabled: false
           - type: separator
       - label: Objekt löschen
-        command: 'app:delete-item'
+        command: app:delete-item
     item-read-only:
       - label: Objekt exportieren
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Objekt konsolidieren
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-bulk:
       - label: Ausgewählte Objekte zusammenfügen
-        command: 'app:merge-item'
+        command: app:merge-item
       - label: Ausgewählte Objekte löschen
-        command: 'app:delete-item'
+        command: app:delete-item
     item-bulk-read-only:
       - label: Ausgewählte Objekte exportieren
         id: export
         submenu:
           - label: JSON-LD
-            command: 'app:export-item'
+            command: app:export-item
       - label: Export Selected Item Notes …
-        command: 'app:export-notes'
+        command: app:export-notes
       - label: Copy Selected Item Notes
-        command: 'app:copy-notes'
+        command: app:copy-notes
       - label: Ausgewählte Objekte konsolidieren
-        command: 'app:consolidate-item'
+        command: app:consolidate-item
     item-list:
       - label: Objekt aus Liste entfernen
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     item-bulk-list:
       - label: Ausgewählte Objekte aus Liste entfernen
-        command: 'app:list-item-remove'
+        command: app:list-item-remove
     item-deleted:
       - label: Objet wiederherstellen
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: Objekt permanent löschen
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-bulk-deleted:
       - label: Ausgewählte Objekte wiederherstellen
-        command: 'app:restore-item'
+        command: app:restore-item
       - label: Ausgewählte Objekte permanent löschen
-        command: 'app:destroy-item'
+        command: app:destroy-item
     item-view:
       - label: Layout
         id: item-view-layout
@@ -1245,68 +1245,68 @@ de:
             type: checkbox
     item-rotate:
       - label: Rechtsdrehen
-        command: 'app:rotate-item-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
       - label: Rechtsdrehen
-        command: 'app:rotate-item-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
     metadata-list:
       - label: Neues Feld …
-        command: 'app:create-field'
+        command: app:create-field
     metadata-field:
       - label: Feld entfernen
-        command: 'app:delete-field'
+        command: app:delete-field
         condition: isExtra
     trash:
       - label: Objekte vollständig löschen
-        command: 'app:destroy-item'
+        command: app:destroy-item
         condition: '!isReadOnly'
     photo:
       - label: Foto duplizieren
-        command: 'app:duplicate-photo'
+        command: app:duplicate-photo
       - label: Foto in neues Objekt verschieben
-        command: 'app:explode-photo'
+        command: app:explode-photo
       - label: Foto löschen
-        command: 'app:delete-photo'
+        command: app:delete-photo
       - label: Foto als Titelbild verwenden
-        command: 'app:update-cover-image'
+        command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
       - label: Originalfoto anzeigen …
-        command: 'app:show-in-folder'
+        command: app:show-in-folder
       - label: Foto exportieren …
-        command: 'app:extract-photo'
+        command: app:extract-photo
       - label: Foto konsolidieren
-        command: 'app:consolidate-photo'
+        command: app:consolidate-photo
     photo-rotate:
       - label: Rechtsdrehen
-        command: 'app:rotate-photo-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
       - label: Rechtsdrehen
-        command: 'app:rotate-photo-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
     selection:
       - label: Ausschnitt löschen
-        command: 'app:delete-selection'
+        command: app:delete-selection
     selection-read-only:
       - label: Ausschnitt exportieren …
-        command: 'app:extract-photo'
+        command: app:extract-photo
     selection-rotate:
       - label: Rechtsdrehen
-        command: 'app:rotate-selection-left'
-        accelerator: 'CmdOrCtrl+['
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
       - label: Rechtsdrehen
-        command: 'app:rotate-selection-right'
-        accelerator: 'CmdOrCtrl+]'
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
     dev:
       - label: Neu laden
-        command: 'win:reload'
+        command: win:reload
         accelerator: CmdOrCtrl+R
       - label: Stile neu laden
-        command: 'win:refresh'
+        command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
       - label: Inspizieren
-        command: 'app:inspect'
+        command: app:inspect
         accelerator: CmdOrCtrl+D

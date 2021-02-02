@@ -6,66 +6,66 @@ cn:
         - label: 新
           submenu:
             - label: 项目
-              command: 'app:create-project'
+              command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: 文件
-              command: 'app:create-item'
+              command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
               condition: '!isProjectReadOnly'
-            - label: 列表
-              command: 'app:create-list'
+            - label: 文件夹
+              command: app:create-list
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
             - label: 标签
-              command: 'app:create-tag'
+              command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
         - label: 打开...
           accelerator: CmdOrCtrl+O
-          command: 'app:open-dialog'
+          command: app:open-dialog
         - label: 在新窗口打开...
           accelerator: Shift+CmdOrCtrl+O
-          command: 'app:open-new-dialog'
+          command: app:open-new-dialog
         - label: 最近的项目
           id: recent
           enabled: false
           submenu:
             - type: separator
-            - label: 清除列表
-              command: 'app:clear-recent-projects'
+            - label: 清除文件夹
+              command: app:clear-recent-projects
         - type: separator
         - label: 导入
           window: project
           condition: '!isProjectReadOnly'
           submenu:
             - label: 图片...
-              command: 'app:import'
+              command: app:import
               accelerator: CmdOrCtrl+Shift+I
             - label: 文件夹...
-              command: 'app:import-directory'
+              command: app:import-directory
         - label: 导出
           id: export
           window: project
           submenu:
             - label: JSON-LD
-              command: 'app:export-item'
+              command: app:export-item
         - type: separator
         - label: 刷新缩略图
-          command: 'app:consolidate-photo-library'
+          command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
         - label: 打印
-          command: 'app:print'
+          command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
         - label: 关闭项目
-          command: 'app:close-project'
+          command: app:close-project
           window: project
         - type: separator
         - label: 关闭窗口
@@ -80,12 +80,12 @@ cn:
         - id: undo
           label: 撤销
           accelerator: CmdOrCtrl+Z
-          command: 'app:undo'
+          command: app:undo
           enabled: false
         - id: redo
           label: 重做
           accelerator: Shift+CmdOrCtrl+Z
-          command: 'app:redo'
+          command: app:redo
           enabled: false
         - type: separator
         - label: 剪切
@@ -105,29 +105,29 @@ cn:
         - type: separator
         - label: 偏好设置
           accelerator: Shift+Control+S
-          command: 'app:open-preferences'
+          command: app:open-preferences
     - label: 视图
       submenu:
         - label: 重载
           accelerator: CmdOrCtrl+R
-          command: 'win:reload'
+          command: win:reload
           window: '*'
         - type: separator
         - label: 隐藏菜单栏(重启后显示)
-          command: 'app:toggle-menu-bar'
+          command: app:toggle-menu-bar
           window: '*'
         - label: 移动到中间
-          command: 'app:center-window'
+          command: app:center-window
           window: '*'
         - type: separator
         - label: 默认界面尺寸
-          command: 'app:zoom-reset'
+          command: app:zoom-reset
           accelerator: CmdOrCtrl+0
         - label: 放大界面UI
-          command: 'app:zoom-in'
+          command: app:zoom-in
           accelerator: CmdOrCtrl+Plus
         - label: 缩小界面UI
-          command: 'app:zoom-out'
+          command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
         - label: 全屏
@@ -142,22 +142,22 @@ cn:
       id: dev
       submenu:
         - label: 刷新皮肤
-          command: 'win:refresh'
+          command: win:refresh
         - label: 切换开发人员工具
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
         - label: 重置数据库
-          command: 'app:reset-ontology-db'
+          command: app:reset-ontology-db
         - label: 优化缓存
-          command: 'app:optimize-cache'
+          command: app:optimize-cache
         - label: 优化数据库
-          command: 'app:optimize-project'
+          command: app:optimize-project
         - label: 重新索引数据库
-          command: 'app:reindex-project'
+          command: app:reindex-project
         - type: separator
         - label: Rebase Project
-          command: 'app:rebase-project'
+          command: app:rebase-project
         - type: separator
         - label: 皮肤
           id: theme
@@ -174,24 +174,24 @@ cn:
     - label: 帮助
       submenu:
         - label: 使用引导
-          command: 'app:open-docs'
+          command: app:open-docs
         - label: 支持论坛
-          command: 'app:open-forums'
+          command: app:open-forums
         - label: 软件许可证
-          command: 'app:open-license'
+          command: app:open-license
         - type: separator
         - label: 软件运行日志
-          command: 'app:open-logs'
+          command: app:open-logs
         - label: 插件文件夹
-          command: 'app:open-plugins-folder'
+          command: app:open-plugins-folder
         - label: 运行日志
-          command: 'app:open-user-data'
+          command: app:open-user-data
         - label: 打开缓存文件夹
-          command: 'app:open-cache-folder'
+          command: app:open-cache-folder
         - type: separator
         - id: updater-check
           label: 检查更新
-          command: 'app:check-for-updates'
+          command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
           label: 获取最新版本
@@ -199,23 +199,23 @@ cn:
           visible: false
         - id: updater-install
           label: 安装更新
-          command: 'app:install-updates'
+          command: app:install-updates
           enabled: false
           visible: false
         - type: separator
         - label: 关于%name
-          command: 'app:about'
+          command: app:about
           window: '!prefs'
   darwin:
     - label: '%name'
       submenu:
         - label: 关于%name
-          command: 'app:about'
+          command: app:about
           window: '!prefs'
         - type: separator
         - label: 偏好设置
-          accelerator: 'Command+,'
-          command: 'app:open-preferences'
+          accelerator: Command+,
+          command: app:open-preferences
         - type: separator
         - label: 隐藏 %name
           accelerator: Command+H
@@ -234,49 +234,49 @@ cn:
         - label: 新
           submenu:
             - label: 项目
-              command: 'app:create-project'
+              command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: 文件
-              command: 'app:create-item'
+              command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
               condition: '!isProjectReadOnly'
-            - label: 列表
-              command: 'app:create-list'
+            - label: 文件夹
+              command: app:create-list
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
             - label: 标签
-              command: 'app:create-tag'
+              command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
         - label: 打开...
           accelerator: CmdOrCtrl+O
-          command: 'app:open-dialog'
+          command: app:open-dialog
         - label: 在新窗口打开...
           accelerator: Shift+CmdOrCtrl+O
-          command: 'app:open-new-dialog'
+          command: app:open-new-dialog
         - label: 最近的项目
           id: recent
           enabled: false
           submenu:
             - type: separator
-            - label: 清除列表
-              command: 'app:clear-recent-projects'
+            - label: 清除文件夹
+              command: app:clear-recent-projects
         - type: separator
         - label: 导入
           window: project
           condition: '!isProjectReadOnly'
           submenu:
             - label: 图片...
-              command: 'app:import'
+              command: app:import
               accelerator: CmdOrCtrl+Shift+I
             - label: 文件夹...
-              command: 'app:import-directory'
+              command: app:import-directory
         - label: 检查图片数据库
-          command: 'app:consolidate-photo-library'
+          command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
@@ -285,26 +285,26 @@ cn:
           window: project
           submenu:
             - label: JSON-LD
-              command: 'app:export-item'
+              command: app:export-item
         - label: 打印
-          command: 'app:print'
+          command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
         - label: 关闭项目
-          command: 'app:close-project'
+          command: app:close-project
           window: project
     - label: 编辑
       submenu:
         - id: undo
           label: 撤销
           accelerator: CmdOrCtrl+Z
-          command: 'app:undo'
+          command: app:undo
           enabled: false
         - id: redo
           label: 重做
           accelerator: Shift+CmdOrCtrl+Z
-          command: 'app:redo'
+          command: app:redo
           enabled: false
         - type: separator
         - label: 剪切
@@ -325,17 +325,17 @@ cn:
       submenu:
         - label: 重载
           accelerator: CmdOrCtrl+R
-          command: 'win:reload'
+          command: win:reload
           window: '*'
         - type: separator
         - label: 实际尺寸
-          command: 'app:zoom-reset'
+          command: app:zoom-reset
           accelerator: CmdOrCtrl+0
-        - label: 缩小
-          command: 'app:zoom-in'
-          accelerator: CmdOrCtrl+Plus
         - label: 放大
-          command: 'app:zoom-out'
+          command: app:zoom-in
+          accelerator: CmdOrCtrl+Plus
+        - label: 缩小
+          command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
         - label: 全屏
@@ -348,15 +348,15 @@ cn:
           accelerator: Cmd+M
           role: minimize
           window: '*'
-        - label: 放大
+        - label: 缩放
           accelerator: Ctrl+Cmd+Z
           role: zoom
         - type: separator
         - label: 移动到中间
-          command: 'app:center-window'
+          command: app:center-window
           window: '*'
         - type: separator
-        - label: Bring All to Front
+        - label: 将窗口前置
           role: front
         - type: separator
         - label: 关闭
@@ -367,22 +367,22 @@ cn:
       id: dev
       submenu:
         - label: 重载皮肤
-          command: 'win:refresh'
+          command: win:refresh
         - label: 切换开发人员工具
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
         - label: 重置数据库
-          command: 'app:reset-ontology-db'
+          command: app:reset-ontology-db
         - label: 优化项目缓存
-          command: 'app:optimize-cache'
+          command: app:optimize-cache
         - label: 优化数据库
-          command: 'app:optimize-project'
+          command: app:optimize-project
         - label: 重新索引数据库
-          command: 'app:reindex-project'
+          command: app:reindex-project
         - type: separator
         - label: Rebase Project
-          command: 'app:rebase-project'
+          command: app:rebase-project
         - type: separator
         - label: 皮肤
           id: theme
@@ -400,24 +400,24 @@ cn:
       role: help
       submenu:
         - label: 使用引导
-          command: 'app:open-docs'
+          command: app:open-docs
         - label: 支持论坛
-          command: 'app:open-forums'
+          command: app:open-forums
         - label: 软件许可证
-          command: 'app:open-license'
+          command: app:open-license
         - type: separator
         - label: 软件运行日志
-          command: 'app:open-logs'
+          command: app:open-logs
         - label: 插件文件夹
-          command: 'app:open-plugins-folder'
+          command: app:open-plugins-folder
         - label: 运行日志
-          command: 'app:open-user-data'
+          command: app:open-user-data
         - label: 打开缓存文件夹
-          command: 'app:open-cache-folder'
+          command: app:open-cache-folder
         - type: separator
         - id: updater-check
           label: 检查更新
-          command: 'app:check-for-updates'
+          command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
           label: 获取最新版本
@@ -425,7 +425,7 @@ cn:
           visible: false
         - id: updater-install
           label: 安装更新
-          command: 'app:install-updates'
+          command: app:install-updates
           enabled: false
           visible: false
   win32:
@@ -435,66 +435,66 @@ cn:
         - label: 新
           submenu:
             - label: 项目
-              command: 'app:create-project'
+              command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: 文件
-              command: 'app:create-item'
+              command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
               condition: '!isProjectReadOnly'
-            - label: 列表
-              command: 'app:create-list'
+            - label: 文件夹
+              command: app:create-list
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
             - label: 标签
-              command: 'app:create-tag'
+              command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
         - label: 打开...
           accelerator: CmdOrCtrl+O
-          command: 'app:open-dialog'
+          command: app:open-dialog
         - label: 在新窗口打开...
           accelerator: Shift+CmdOrCtrl+O
-          command: 'app:open-new-dialog'
+          command: app:open-new-dialog
         - label: 最近的项目
           id: recent
           enabled: false
           submenu:
             - type: separator
-            - label: 清除列表
-              command: 'app:clear-recent-projects'
+            - label: 清除文件夹
+              command: app:clear-recent-projects
         - type: separator
         - label: 导入
           window: project
           condition: '!isProjectReadOnly'
           submenu:
             - label: 图片...
-              command: 'app:import'
+              command: app:import
               accelerator: CmdOrCtrl+Shift+I
             - label: 文件夹...
-              command: 'app:import-directory'
+              command: app:import-directory
         - label: 导出
           id: export
           window: project
           submenu:
             - label: JSON-LD
-              command: 'app:export-item'
+              command: app:export-item
         - type: separator
         - label: 检查图片数据库
-          command: 'app:consolidate-photo-library'
+          command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
         - label: 打印
-          command: 'app:print'
+          command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
         - label: 关闭项目
-          command: 'app:close-project'
+          command: app:close-project
           window: project
         - type: separator
         - label: 关闭窗口
@@ -509,12 +509,12 @@ cn:
         - id: undo
           label: 撤销
           accelerator: CmdOrCtrl+Z
-          command: 'app:undo'
+          command: app:undo
           enabled: false
         - id: redo
           label: 重做
           accelerator: Control+Y
-          command: 'app:redo'
+          command: app:redo
           enabled: false
         - type: separator
         - label: 剪切
@@ -531,29 +531,29 @@ cn:
           role: pasteAndMatchStyle
         - label: 偏好设置
           accelerator: Shift+Control+S
-          command: 'app:open-preferences'
+          command: app:open-preferences
     - label: 视图
       submenu:
         - label: 重载
           accelerator: CmdOrCtrl+R
-          command: 'win:reload'
+          command: win:reload
           window: '*'
         - type: separator
         - label: 隐藏菜单栏(重启后显示)
-          command: 'app:toggle-menu-bar'
+          command: app:toggle-menu-bar
           window: '*'
         - label: 移动到中间
-          command: 'app:center-window'
+          command: app:center-window
           window: '*'
         - type: separator
         - label: 实际尺寸
-          command: 'app:zoom-reset'
+          command: app:zoom-reset
           accelerator: CmdOrCtrl+0
-        - label: 缩小
-          command: 'app:zoom-in'
-          accelerator: CmdOrCtrl+Plus
         - label: 放大
-          command: 'app:zoom-out'
+          command: app:zoom-in
+          accelerator: CmdOrCtrl+Plus
+        - label: 缩小
+          command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
         - label: 全屏
@@ -568,22 +568,22 @@ cn:
       id: dev
       submenu:
         - label: 重载皮肤
-          command: 'win:refresh'
+          command: win:refresh
         - label: 切换开发人员工具
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
         - label: 重置数据库
-          command: 'app:reset-ontology-db'
+          command: app:reset-ontology-db
         - label: 优化项目缓存
-          command: 'app:optimize-cache'
+          command: app:optimize-cache
         - label: 优化数据库
-          command: 'app:optimize-project'
+          command: app:optimize-project
         - label: 重新索引数据库
-          command: 'app:reindex-project'
+          command: app:reindex-project
         - type: separator
         - label: Rebase Project
-          command: 'app:rebase-project'
+          command: app:rebase-project
         - type: separator
         - label: 皮肤
           id: theme
@@ -600,24 +600,24 @@ cn:
     - label: 帮助
       submenu:
         - label: 使用引导
-          command: 'app:open-docs'
+          command: app:open-docs
         - label: 支持论坛
-          command: 'app:open-forums'
+          command: app:open-forums
         - label: 软件许可证
-          command: 'app:open-license'
+          command: app:open-license
         - type: separator
         - label: 软件运行日志
-          command: 'app:open-logs'
+          command: app:open-logs
         - label: 插件文件夹
-          command: 'app:open-plugins-folder'
+          command: app:open-plugins-folder
         - label: 运行日志
-          command: 'app:open-user-data'
+          command: app:open-user-data
         - label: 打开缓存文件夹
-          command: 'app:open-cache-folder'
+          command: app:open-cache-folder
         - type: separator
         - id: updater-check
           label: 检查更新
-          command: 'app:check-for-updates'
+          command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
           label: 获取最新版本
@@ -625,10 +625,10 @@ cn:
           visible: false
         - id: updater-install
           label: 安装更新
-          command: 'app:install-updates'
+          command: app:install-updates
           enabled: false
           visible: false
         - type: separator
         - label: 关于%name
-          command: 'app:about'
+          command: app:about
           window: '!prefs'
