@@ -51,3 +51,18 @@ Sandbox
   As a fallback, you can `sudo chown root chrome-sandbox` and
 `chmod 4755 chrome-sandbox` to use the SETUID sandbox instead, or start
 Tropy with the `--no-sandbox` flag.
+
+System Libraries
+================
+  The Tropy tarball is bundled with Electron and includes pre-
+compiled modules in `resources/app.asar.unpacked/lib/node` and
+`resources/app.asar.unpacked/lib/vendor`. If you already have
+a system-wide installation of Electron, you can use that instead,
+provided it has the same major version as the one bundled here.
+
+Similarly, you can use your distribution's libvips version instead
+of the bundled image libraries. To do this, simply remove the
+`resources/app.asar.unpacked/lib/vendor` folder. Please note, that
+the major/minor version should match the one included here. Moreover,
+the image formats supported by a custom-packaged Tropy may vary,
+depending on which libraries are available in your distribution.
