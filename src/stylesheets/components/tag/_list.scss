@@ -85,12 +85,6 @@
             flex: 0 1 auto;
           }
         }
-
-        &:focus {
-          .icon-pluscircles {
-            display: block;
-          }
-        }
       }
 
       &:focus {
@@ -114,20 +108,21 @@
         }
       }
 
-      .icon-pluscircles {
-        display: none;
+      .icon-tag {
+        margin-right: $space-xs;
       }
-    }
 
-    .icon-tag {
-      margin-right: $space-xs;
-    }
+      .name {
+        margin-right: auto;
+      }
 
-    .name {
-      margin-right: auto;
-
-      & + .btn-icon {
+      .icon-pluscircles {
         margin-left: $space-min - $shim;
+        display: none;
+
+        @include state("li.mixed:focus") {
+          display: block;
+        }
       }
     }
   }
