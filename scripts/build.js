@@ -114,10 +114,12 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
 
   let icon = null
   let extraResource = []
+  let executableName
 
   switch (platform) {
     case 'linux':
       INCLUDE.push(`/res/icons/${channel}{,/tropy{,/**/*}}`)
+      executableName = qualified.name
       break
     case 'darwin':
       icon = join(ROOT, 'res', 'icons', channel, `${name}.icns`)
@@ -129,6 +131,7 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
       extraResource.push(icon)
       extraResource.push(join(ICONS, 'mime', 'tpy.ico'))
       extraResource.push(join(ICONS, 'mime', 'ttp.ico'))
+      executableName = qualified.name
       break
   }
 
@@ -139,7 +142,7 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
     dir: ROOT,
     out,
     name: qualified.product,
-    executableName: qualified.name,
+    executableName,
     derefSymlinks: true,
     prune: false,
     overwrite: true,
