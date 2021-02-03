@@ -109,7 +109,7 @@ class Tag extends React.PureComponent {
             onCancel={this.props.onEditCancel}
             onChange={this.handleChange}/>
         </div>
-        {hasFocusIcon && !isEditing &&
+        {hasFocusIcon && !isEditing && this.props.tag.mixed &&
           <IconPlusCircles/>}
       </li>
     )

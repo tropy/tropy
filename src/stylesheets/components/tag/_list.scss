@@ -121,7 +121,7 @@
         margin-left: $space-min - $shim;
         display: none;
 
-        @include state("li.mixed:focus") {
+        @include state("li:focus") {
           display: block;
         }
       }
