@@ -87,22 +87,36 @@ export class Consolidate extends ImportCommand {
     this.options.overwrite = true
     this.useLocalTimezone = settings.timezone
 
-    this.consolidated = []
+    this.result = []
 
     if (blank(photos))
-      return this.consolidated
+      return this.result
+
+    yield this.progress({ total: photos.length })
 
     yield put(act.photo.bulk.update([
       photos.map(photo => photo.id),
       { consolidating: true }
     ]))
 
-    for (let i = 0, total = photos.length; i < total; ++i) {
-      yield put(act.activity.update(this.action, { total, progress: i + 1 }))
-      yield this.consolidate(photos[i], selections)
+    let maxFail = 15
+    let failures = 0
+
+    for (let photo of photos) {
+      try {
+        yield this.progress()
+        yield this.consolidate(photo, selections)
+
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
+
+        if (++failures < maxFail) {
+          fail(e, this.action.type)
+        }
+      }
     }
 
-    return this.consolidated
+    return this.result
   }
 
   *consolidate(photo, selections = {}) {
@@ -167,15 +181,13 @@ export class Consolidate extends ImportCommand {
             }
           }
 
-          this.consolidated.push(photo.id)
+          this.result.push(photo.id)
         }
       }
 
     } catch (e) {
       broken = true
-
-      warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
-      fail(e, this.action.type)
+      throw e
 
     } finally {
       yield put(act.photo.update({
