@@ -32,7 +32,9 @@ export class Consolidate extends ImportCommand {
             info({ path: candidate }, 'skipped consolidation candidate')
           }
         } catch (e) {
-          if (e.code !== 'ENOENT') throw e
+          if (e.code === 'ENOENT') return
+          if (e.code === 'ENAMETOOLONG') return
+          throw e
         }
       }
     }
@@ -108,7 +110,7 @@ export class Consolidate extends ImportCommand {
         yield this.consolidate(photo, selections)
 
       } catch (e) {
-        warn({ stack: e.stack }, `failed to consolidate photo ${photo.id}`)
+        warn({ stack: e.stack }, `failed to consolidate photo ${photo.path}`)
 
         if (++failures < maxFail) {
           fail(e, this.action.type)
