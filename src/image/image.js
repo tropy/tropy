@@ -5,7 +5,7 @@ import { URL } from 'url'
 import { exif } from './exif'
 import { xmp } from './xmp'
 import { isSVG } from './svg'
-import sharp from 'sharp'
+import { sharp, init } from './sharp'
 import { warn } from '../common/log'
 import { pick, restrict } from '../common/util'
 import { rgb } from '../css'
@@ -13,6 +13,7 @@ import { MIME, IMAGE } from '../constants'
 import { exif as exifns } from '../ontology'
 
 const { readFile, stat } = fs.promises
+
 
 export class Image {
   static open({
@@ -212,6 +213,8 @@ export class Image {
   }
 
   async parse(buffer, { page, density }) {
+    await init()
+
     this.mimetype = magic(buffer, this.ext)
 
     if (!IMAGE.SUPPORTED[this.mimetype])
@@ -334,20 +337,6 @@ export class Image {
       quality: Image.QUALITY[name],
       size: Image.SIZE[name]
     }))
-  }
-
-  static get input() {
-    return Object
-      .values(sharp.format)
-      .filter(({ input }) => input.file)
-      .map(({ id }) => id)
-  }
-
-  static get output() {
-    return Object
-      .values(sharp.format)
-      .filter(({ output }) => output.file)
-      .map(({ id }) => id)
   }
 
   static SIZE = {

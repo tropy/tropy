@@ -7,7 +7,7 @@ import { warn, info } from '../../common/log'
 import { blank } from '../../common/util'
 import Esper from '../../esper'
 import { fail, save } from '../../dialog'
-import sharp from 'sharp'
+import { toFile } from '../../image'
 
 
 export class Extract extends Command {
@@ -33,9 +33,7 @@ export class Extract extends Command {
         ...Rotation.addExifOrientation(image, photo).toJSON()
       })
 
-      let out = sharp(buffer, { raw })
-
-      yield call([out, out.toFile], file)
+      yield call(toFile, file, buffer, { raw })
       info(`saved image #${image.id} as ${file}`)
 
       return {

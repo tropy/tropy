@@ -5,7 +5,7 @@ import { Cache } from '../../common/cache'
 import { Rotation } from '../../common/iiif'
 import { pluck } from '../../common/util'
 import Esper from '../../esper'
-import sharp from 'sharp'
+import { toBuffer } from '../../image'
 
 
 export class PhotoExtract extends Command {
@@ -36,9 +36,7 @@ export class PhotoExtract extends Command {
     })
 
     let format = payload.format || 'png'
-    let out = sharp(buffer, { raw }).toFormat(format)
-
-    let data = yield call([out, out.toBuffer])
+    let data = yield call(toBuffer, format, buffer, { raw })
 
     return {
       data,

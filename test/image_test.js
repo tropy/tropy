@@ -37,28 +37,4 @@ describe('Image', () => {
         .that.contains.keys(['size', 'ctime'])
     })
   })
-
-  describe('supported formats', () => {
-    it('covers all important input formats', () => {
-      expect(Image.input).to.include.members([
-        'gif',
-        'heif',
-        'jpeg',
-        'magick',
-        'pdf',
-        'png',
-        'svg',
-        'tiff',
-        'webp'
-      ])
-    })
-
-    it('supports output as jpeg, webp and png', () => {
-      expect(Image.output).to.include.members([
-        'jpeg',
-        'png',
-        'webp'
-      ])
-    })
-  })
 })
