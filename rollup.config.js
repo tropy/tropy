@@ -67,6 +67,7 @@ export default [
         }
       }),
       resolve({
+        exportConditions: ['node'],
         preferBuiltins: true
       }),
       babel({ babelHelpers: 'bundled' }),
@@ -137,6 +138,7 @@ export default [
         }
       }),
       resolve({
+        exportConditions: ['node'],
         preferBuiltins: true
       }),
       replace({
