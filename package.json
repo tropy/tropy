@@ -147,7 +147,7 @@
     "semver": "^7.3.4",
     "sharp": "^0.27.1",
     "shortid": "^2.2.16",
-    "sqlite3": "^5.0.1",
+    "sqlite3": "inukshuk/node-sqlite3#feature/update-node-gyp",
     "transducers.js": "^0.3.2",
     "uuid": "^8.3.2",
     "winreg": "^1.2.4",
