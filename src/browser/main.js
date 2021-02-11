@@ -16,14 +16,9 @@ process.env.NODE_ENV = opts.env
 process.on('uncaughtException', error => { handleError(error) })
 process.on('unhandledRejection', reason => { handleError(reason) })
 
-// app.allowRendererProcessReuse = false
-
 // Set app name and paths as soon as possible!
 // TODO single-release use unqualified!
 app.name = qualified.product
-
-// TODO win32
-// app.setAppUserModelId()
 
 if (!opts.data) {
   opts.data = join(app.getPath('appData'), exe)
