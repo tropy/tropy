@@ -2,6 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+  <key>NSDesktopFolderUsageDescription</key>
+  <string>Tropy requests access to project and image files in the Desktop folder</string>
+  <key>NSDocumentsFolderUsageDescription</key>
+  <string>Tropy requests access to project and image files in the Documents folder</string>
+  <key>NSDownloadsFolderUsageDescription</key>
+  <string>Tropy requests access to project and image files in the Downloads folder</string>
+  <key>NSNetworkVolumesUsageDescription</key>
+  <string>Tropy requests access to project and image files on a network volume</string>
+  <key>NSRemovableVolumesUsageDescription</key>
+  <string>Tropy requests access to project and image files on a removable volume</string>
   <key>LSMinimumSystemVersion</key>
   <string>10.13.0</string>
   <key>CFBundleURLTypes</key>
