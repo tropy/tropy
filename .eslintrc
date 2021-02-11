@@ -8,13 +8,15 @@ extends:
   - 'eslint:recommended'
   - 'plugin:react/recommended'
 
-parser: babel-eslint
+parser: '@babel/eslint-parser'
 
 parserOptions:
   ecmaVersion: 2020
   sourceType: module
   ecmaFeatures:
     jsx: true
+  babelOptions:
+    configFile: './src/.babelrc.json'
 
 env:
   es2020: true
