@@ -5,6 +5,9 @@ const { check, error, say } = require('./util')('λ')
 const { join, relative } = require('path')
 const { program } = require('commander')
 
+const ARCH = process.env.npm_config_target_arch || process.arch
+const PLATFORM = process.env.npm_config_target_platform || process.platform
+
 const {
   exec,
   cd,
@@ -33,8 +36,8 @@ const {
 program
   .name('tropy-pack')
   .arguments('[targets...]')
-  .option('--platform <name>', 'set target platform', process.platform)
-  .option('--arch <name>', 'set target arch', process.arch)
+  .option('--platform <name>', 'set target platform', PLATFORM)
+  .option('--arch <name>', 'set target arch', ARCH)
   .option('--app <dir>', 'set the app directory')
   .option('--out <dir>', 'set the output directory', join(ROOT, 'dist'))
   .option('-s, --silent', 'silence packer output', false)
@@ -134,8 +137,13 @@ module.exports = {
     return output
   },
 
-  ['7z']({ app, out, platform, silent }) {
-    let output = join(out, `${name}-${version}-${platform}.zip`)
+  ['7z']({ app, arch, out, platform, silent }) {
+    let output = join(out, `${name}-${version}-${
+      (platform === 'darwin' && arch === 'x64') ?
+        platform :
+        [platform, arch].join('-')
+    }.zip`)
+
     let input = (platform === 'darwin') ?
       `"${qualified.product}.app"` :
       '.'
@@ -152,8 +160,10 @@ module.exports = {
     return output
   },
 
-  dmg({ out, silent }) {
-    let output = join(out, `${name}-${version}.dmg`)
+  dmg({ arch, out, silent }) {
+    let output = join(
+      out,
+      `${name}-${version}${arch === 'x64' ? '' : `-${arch}`}.dmg`)
     let config = join(ROOT, 'res', 'dmg', channel, 'appdmg.json')
 
      // TODO use appdmg as module
@@ -178,7 +188,7 @@ module.exports = {
 
     await createWindowsInstaller({
       appDirectory: app,
-      outputDirectory: out,
+      outputDirectory: join(out, arch),
       authors: author,
       signWithParams: `/fd SHA256 /f ${cert} /p "${password}"`,
       title: qualified.product,
@@ -192,7 +202,7 @@ module.exports = {
       noMsi: true
     })
 
-    return output
+    return join(arch, output)
   }
 }
 
