@@ -8,13 +8,14 @@ const { program } = require('commander')
 const { cat, cp, env, exec, sed, test } = require('shelljs')
 
 const { ROOT } = require('./metadata')
+const ARCH = process.env.npm_config_target_arch || process.arch
 
 function v(module) {
   return require(`${module}/package.json`).version
 }
 
 function downloadHeaders({
-  arch = process.arch,
+  arch = ARCH,
   target = v('electron'),
   url = 'https://electronjs.org/headers',
   silent
@@ -30,7 +31,7 @@ function downloadHeaders({
 class Rebuilder {
   constructor({
     name,
-    arch = process.arch,
+    arch = ARCH,
     target = v('electron'),
     silent,
     patches = [...Rebuilder.Patches[name]]
@@ -153,7 +154,7 @@ class Rebuilder {
 program
   .name('tropy-rebuild')
   .arguments('[modules...]')
-  .option('--arch <name>', 'set target arch', process.arch)
+  .option('--arch <name>', 'set target arch', ARCH)
   .option('-f, --force', 'force rebuild', false)
   .option('-s, --silent', 'silence rebuilder output', false)
   .option('-H, --skip-headers', 'skip headers download', false)

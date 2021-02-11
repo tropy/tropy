@@ -109,7 +109,8 @@ export default [
       }),
       natives({
         copyTo: 'lib/node/lib',
-        destDir: './node/lib'
+        destDir: './node/lib',
+        target_arch: process.env.config_target_arch
       }),
       copy({
         targets: [
