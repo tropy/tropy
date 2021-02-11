@@ -200,7 +200,7 @@ async function rebuild(task, force) {
 }
 
 function setMacSDKRoot() {
-  env.SDKROOT = exec('xcrun -sdk macosx --show-sdk-path', { silent: true })
+  env.SDKROOT = exec('xcrun -sdk macosx --show-sdk-path', { silent: true }).trim()
 }
 
 if (require.main === module) {
