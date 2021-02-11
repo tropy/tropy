@@ -5,7 +5,7 @@ const { join } = require('path')
 const fetch = require('node-fetch')
 const fs = require('fs')
 const { program } = require('commander')
-const { cat, cp, exec, sed, test } = require('shelljs')
+const { cat, cp, env, exec, sed, test } = require('shelljs')
 
 const { ROOT } = require('./metadata')
 
@@ -163,6 +163,10 @@ program
     if (!args.length) args = ['sqlite3', 'sharp']
     let tasks = args.map(name => new Rebuilder({ name, ...opts }))
 
+    // Ensure we're using the latest SDK when cross-compiling!
+    if (process.platform === 'darwin' && opts.arch === 'arm64')
+      setMacSDKRoot()
+
     if (!opts.skipHeaders) {
       say('fetching Electron headers ...')
       downloadHeaders(opts)
@@ -192,6 +196,10 @@ async function rebuild(task, force) {
   } else {
     say(`${task.name} rebuild skipped`)
   }
+}
+
+function setMacSDKRoot() {
+  env.SDKROOT = exec('xcrun -sdk macosx --show-sdk-path', { silent: true })
 }
 
 if (require.main === module) {
