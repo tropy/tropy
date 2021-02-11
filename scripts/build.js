@@ -19,11 +19,20 @@ const {
   qualified
 } = require('./metadata')
 
+const ARCH =
+  process.env.npm_config_target_arch ||
+  process.env.npm_config_arch ||
+  process.arch
+const PLATFORM =
+  process.env.npm_config_target_platform ||
+  process.env.npm_config_platform ||
+  process.platform
+
 
 program
   .name('tropy-build')
-  .option('--platform <name>', 'set target platform', process.platform)
-  .option('--arch <name>', 'set target arch', process.arch)
+  .option('--platform <name>', 'set target platform', PLATFORM)
+  .option('--arch <name>', 'set target arch', ARCH)
   .option('--no-asar', 'skip asar creation')
 
 if (process.platform === 'darwin') {

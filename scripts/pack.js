@@ -5,8 +5,14 @@ const { check, error, say } = require('./util')('λ')
 const { join, relative } = require('path')
 const { program } = require('commander')
 
-const ARCH = process.env.npm_config_target_arch || process.arch
-const PLATFORM = process.env.npm_config_target_platform || process.platform
+const ARCH =
+  process.env.npm_config_target_arch ||
+  process.env.npm_config_arch ||
+  process.arch
+const PLATFORM =
+  process.env.npm_config_target_platform ||
+  process.env.npm_config_platform ||
+  process.platform
 
 const {
   exec,

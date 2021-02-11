@@ -16,7 +16,15 @@ import scss from './scripts/rollup-plugin-scss'
 import emit from './scripts/rollup-plugin-emit'
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
-const platform = process.env.TROPY_PLATFORM || process.platform
+
+const platform =
+  process.env.npm_config_target_platform ||
+  process.env.npm_config_platform ||
+  process.platform
+const arch =
+  process.env.npm_config_target_arch ||
+  process.env.npm_config_arch ||
+  process.arch
 
 
 const IGNORE_WARNINGS = {
@@ -110,7 +118,7 @@ export default [
       natives({
         copyTo: 'lib/node/lib',
         destDir: './node/lib',
-        target_arch: process.env.config_target_arch
+        target_arch: arch
       }),
       copy({
         targets: [
