@@ -85,7 +85,7 @@
     "react-test-renderer": "^17.0.1",
     "rollup": "^2.38.5",
     "rollup-plugin-ignore": "^1.0.9",
-    "rollup-plugin-natives": "inukshuk/rollup-plugin-natives#feature/cross-compile",
+    "rollup-plugin-natives": "^0.7.2",
     "sass": "^1.32.6",
     "shx": "^0.3.3",
     "sinon": "^9.2.4",
