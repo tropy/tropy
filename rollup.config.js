@@ -126,7 +126,7 @@ export default [
       }),
       ignore([
         'core-js/fn/object/entries',
-        'node-pre-gyp',
+        '@mapbox/node-pre-gyp',
         'pino-pretty',
         'rdf-canonize-native',
         'request'
