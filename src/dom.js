@@ -171,7 +171,7 @@ export function reflow(node) {
 }
 
 export function isInput(node) {
-  return node.tagName === 'INPUT'
+  return node.tagName === 'INPUT' || node.contentEditable === 'true'
 }
 
 export function isLiveInput(node) {

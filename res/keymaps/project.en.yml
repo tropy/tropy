@@ -12,6 +12,7 @@ en:
       find:
         - CmdOrCtrl+f
         - /
+        - Shift+/
       editMetadata: CmdOrCtrl+e
       addTag: CmdOrCtrl+t
     Esper: &Esper
