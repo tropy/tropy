@@ -166,21 +166,68 @@ module.exports = {
     return output
   },
 
-  dmg({ arch, out, silent }) {
+  dmg({ app, arch, out, silent }) {
+    check(process.platform === 'darwin', 'must be run on macOS')
+    let appdmg = require('appdmg')
+
     let output = join(
       out,
       `${name}-${version}${arch === 'x64' ? '' : `-${arch}`}.dmg`)
-    let config = join(ROOT, 'res', 'dmg', channel, 'appdmg.json')
 
-     // TODO use appdmg as module
+    return new Promise((resolve, reject) => {
+      // appdmg uses the pre-Big-Sur toolbar height when computing the
+      // size based on the background image, so we set this ourselves.
+      let window = {
+        size: {
+          width: 720,
+          height: 438
+        }
+      }
 
-    check(process.platform === 'darwin', 'must be run on macOS')
-    check(which('appdmg'), 'missing dependency: appdmg')
-    check(test('-f', config), `missing config: ${config}`)
+      let contents = [
+        {
+          x: 216,
+          y: 206,
+          type: 'file',
+          path: join(app, `${qualified.product}.app`)
+        },
+        {
+          x: 504,
+          y: 206,
+          type: 'link',
+          path: '/Applications' }
+      ]
 
-    exec(`appdmg ${config} ${output}`, { silent })
+      let failures = []
 
-    return output
+      appdmg({
+        'target': output,
+        'title': qualified.product,
+        'background': join(ROOT, 'res', 'dmg', 'background.png'),
+        'icon-size': 92,
+        window,
+        contents
+      })
+        .on('progress', (info) => {
+          switch (info.type) {
+            case 'step-begin':
+              if (!silent)
+                say(`dmg: ${info.title}`)
+              break
+            case 'step-end':
+              if (info.status === 'fail')
+                failures.push(info.title)
+              break
+          }
+        })
+        .on('finish', () => {
+          if (failures)
+            reject(new Error(`dmg failures: ${failures.join(', ')}`))
+          else
+            resolve(output)
+        })
+       .on('error', reject)
+    })
   },
 
   async squirrel({ app, out, arch, cert, password }) {
