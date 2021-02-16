@@ -201,12 +201,15 @@ module.exports = {
       let failures = []
 
       appdmg({
-        'target': output,
-        'title': qualified.product,
-        'background': join(ROOT, 'res', 'dmg', 'background.png'),
-        'icon-size': 92,
-        window,
-        contents
+        target: output,
+        basepath: ROOT,
+        specification: {
+          'title': qualified.product,
+          'background': join('res', 'dmg', 'background.png'),
+          'icon-size': 92,
+          window,
+          contents
+        }
       })
         .on('progress', (info) => {
           switch (info.type) {
@@ -221,7 +224,7 @@ module.exports = {
           }
         })
         .on('finish', () => {
-          if (failures)
+          if (failures.length)
             reject(new Error(`dmg failures: ${failures.join(', ')}`))
           else
             resolve(output)
