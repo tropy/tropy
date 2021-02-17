@@ -14,12 +14,15 @@ import {
 
 
 export class Slider extends React.PureComponent {
+
   track = React.createRef()
 
   state = {
     hasFocus: false,
     value: 0
   }
+
+  #dragState = null
 
   static getDerivedStateFromProps(props, state) {
     let value = round(props.value, props.precision)
@@ -91,19 +94,43 @@ export class Slider extends React.PureComponent {
   }
 
   handleDragStart = (event) => {
-    this.handleDrag(event, 'drag-start')
-  }
-
-  handleDrag = ({ pageX }, reason = 'drag') => {
-    let { min } = this.props
     let box = bounds(this.track.current)
     let border = borders(this.track.current)
 
-    let left = box.left + border.left
-    let width = box.width - border.left - border.right
+    this.#dragState = {
+      left: box.left + border.left,
+      offset: null,
+      width: box.width - border.left - border.right
+    }
 
-    this.set(min + restrict((pageX - left) / width, 0, 1) * this.delta, reason)
+    this.handleDrag(event)
   }
+
+  handleDrag = (event) => {
+    let { pageX, shiftKey } = event
+    let { left, width, offset } = this.#dragState
+    let { delta } = this
+    let { min } = this.props
+
+    if (shiftKey) {
+      if (offset == null) {
+        this.#dragState.offset = offset = restrict(pageX - left, 0, width)
+      }
+
+      // TODO
+      let X = 8
+
+      width = width * X
+      left = left - offset * (X - 1)
+
+    } else {
+      if (offset != null)
+        this.#dragState.offset = null
+    }
+
+    this.set(min + restrict((pageX - left) / width, 0, 1) * delta, 'drag')
+  }
+
 
   handleMinButtonClick = throttle(() => {
     this.set(this.getPrevStep(), 'button')
