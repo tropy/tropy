@@ -110,18 +110,15 @@ export class Slider extends React.PureComponent {
     let { pageX, shiftKey } = event
     let { left, width, offset } = this.#dragState
     let { delta } = this
-    let { min } = this.props
+    let { min, zoom } = this.props
 
     if (shiftKey) {
       if (offset == null) {
         this.#dragState.offset = offset = restrict(pageX - left, 0, width)
       }
 
-      // TODO
-      let X = 8
-
-      width = width * X
-      left = left - offset * (X - 1)
+      width = width * zoom
+      left = left - offset * (zoom - 1)
 
     } else {
       if (offset != null)
@@ -287,6 +284,7 @@ export class Slider extends React.PureComponent {
     stopOnMouseLeave: bool,
     tabIndex: number,
     value: number.isRequired,
+    zoom: number.isRequired,
     onBlur: func,
     onChange: func.isRequired,
     onFocus: func
@@ -302,6 +300,7 @@ export class Slider extends React.PureComponent {
     steps: [],
     stopOnMouseLeave: false,
     tabIndex: null,
+    zoom: 8,
 
     keymap: new KeyMap({
       up: 'ArrowUp',
