@@ -26,7 +26,8 @@ const {
     FADE_DURATION,
     SYNC_DURATION,
     ZOOM_PINCH_BOOST,
-    ZOOM_WHEEL_FACTOR
+    ZOOM_WHEEL_FACTOR,
+    ZOOM_WHEEL_PRECISION_FACTOR
 } = SASS.ESPER
 
 
@@ -781,6 +782,7 @@ export default class Esper extends EventEmitter {
     event.stopPropagation()
 
     let { x, y, dy, dx, ctrl, pinch } = coords(event)
+    let zy = event.shiftKey ? ZOOM_WHEEL_PRECISION_FACTOR : ZOOM_WHEEL_FACTOR
 
     if (ctrl) {
       if (pinch) dy = Math.round(dy * ZOOM_PINCH_BOOST)
@@ -788,7 +790,7 @@ export default class Esper extends EventEmitter {
       this.emit('wheel.zoom', {
         x,
         y,
-        by: dy * ZOOM_WHEEL_FACTOR
+        by: dy * zy
       })
 
     } else {
