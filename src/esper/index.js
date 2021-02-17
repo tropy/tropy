@@ -785,6 +785,7 @@ export default class Esper extends EventEmitter {
     let zy = event.shiftKey ? ZOOM_WHEEL_PRECISION_FACTOR : ZOOM_WHEEL_FACTOR
 
     if (ctrl) {
+      if (event.shiftKey && dy === 0) dy = dx
       if (pinch) dy = Math.round(dy * ZOOM_PINCH_BOOST)
 
       this.emit('wheel.zoom', {
