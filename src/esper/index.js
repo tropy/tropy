@@ -27,7 +27,7 @@ const {
     SYNC_DURATION,
     ZOOM_PINCH_BOOST,
     ZOOM_WHEEL_FACTOR,
-    ZOOM_WHEEL_PRECISION_FACTOR
+    ZOOM_MODIFIER
 } = SASS.ESPER
 
 
@@ -624,20 +624,22 @@ export default class Esper extends EventEmitter {
     let dx = (x - position.x)
     let dy = (y - position.y)
 
+    setScaleMode(bg.texture, zoom)
+
+    let current = {
+      x: position.x,
+      y: position.y,
+      zoom: scale.y
+    }
+
     let next = this.constrain({
       x: position.x + dx - dx * dz,
       y: position.y + dy - dy * dz,
       zoom
     }, { zoom })
 
-    setScaleMode(bg.texture, zoom)
-
     this
-      .animate({
-        x: position.x,
-        y: position.y,
-        zoom: scale.y
-      }, 'zoom', opts)
+      .animate(current, 'zoom', opts)
       .to(next, duration)
       .onUpdate(m => {
         scale.x = m.zoom * zx
@@ -782,16 +784,22 @@ export default class Esper extends EventEmitter {
     event.stopPropagation()
 
     let { x, y, dy, dx, ctrl, pinch } = coords(event)
-    let zy = event.shiftKey ? ZOOM_WHEEL_PRECISION_FACTOR : ZOOM_WHEEL_FACTOR
+
+    let modifier = (event.shiftKey) ?
+      ZOOM_WHEEL_FACTOR / ZOOM_MODIFIER :
+      ZOOM_WHEEL_FACTOR
 
     if (ctrl) {
+      // Chromium maps vertical to horizontal scrolling for
+      // some devices with Cmd/Ctrl + Shift!
       if (event.shiftKey && dy === 0) dy = dx
+
       if (pinch) dy = Math.round(dy * ZOOM_PINCH_BOOST)
 
       this.emit('wheel.zoom', {
         x,
         y,
-        by: dy * zy
+        by: dy * modifier
       })
 
     } else {
