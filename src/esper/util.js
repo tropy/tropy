@@ -7,8 +7,8 @@ import { ESPER, SASS } from '../constants'
 const { CURSOR, ZOOM_LINEAR_MAX } = SASS.ESPER
 
 export function constrain(pos, { left, top, bottom, right }) {
-  pos.x = Math.floor(restrict(pos.x, left, right))
-  pos.y = Math.floor(restrict(pos.y, top, bottom))
+  pos.x = (restrict(pos.x, left, right))
+  pos.y = (restrict(pos.y, top, bottom))
 
   return pos
 }
