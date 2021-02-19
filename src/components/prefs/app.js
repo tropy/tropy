@@ -2,6 +2,7 @@ import React from 'react'
 import ARGS from '../../args'
 import { TemplateSelect } from '../template/select'
 import { ResourceSelect } from '../resource/select'
+import { ScrollContainer } from '../scroll'
 import { ipcRenderer as ipc } from 'electron'
 
 import {
@@ -21,6 +22,7 @@ import {
 } from 'prop-types'
 
 import {
+  Form,
   FormElement,
   FormField,
   FormSelect,
@@ -88,8 +90,8 @@ export class AppPrefs extends React.PureComponent {
 
   render() {
     return (
-      <div className="scroll-container">
-        <div className="form-horizontal">
+      <ScrollContainer>
+        <Form>
           <FormElement id="prefs.app.templates.label">
             <TemplateSelect
               icon={<IconItemSmall/>}
@@ -313,8 +315,8 @@ export class AppPrefs extends React.PureComponent {
             isDisabled={ARGS.dev}
             value={this.props.settings.debug || ARGS.dev}
             onChange={this.handleDebugChange}/>
-        </div>
-      </div>
+        </Form>
+      </ScrollContainer>
     )
   }
 

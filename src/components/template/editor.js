@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { TemplateFieldList } from './field-list'
 import { TemplateToolbar } from './toolbar'
 import { FormattedMessage } from 'react-intl'
-import { FormField, FormElement, FormSelect } from '../form'
+import { Form, FormField, FormElement, FormSelect } from '../form'
+import { ScrollContainer }  from '../scroll'
 import { tropy, Template } from '../../ontology'
 import { arrayOf, func, shape, string } from 'prop-types'
 import { ontology } from '../../actions'
@@ -145,8 +146,8 @@ class TemplateEditor extends React.PureComponent {
   render() {
     let { isPristine } = this
     return (
-      <div className="scroll-container">
-        <div className="template-editor form-horizontal">
+      <ScrollContainer>
+        <Form className="template-editor">
           <header className="template-header">
             <TemplateToolbar
               selected={isPristine ? null : this.state.id}
@@ -230,8 +231,8 @@ class TemplateEditor extends React.PureComponent {
             onSortPreview={this.handleSortPreview}
             onSortReset={this.handleSortReset}
             onSortStart={this.handleSortStart}/>
-        </div>
-      </div>
+        </Form>
+      </ScrollContainer>
     )
   }
 
