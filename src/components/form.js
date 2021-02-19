@@ -12,6 +12,19 @@ import {
 } from 'prop-types'
 
 
+export function Form(props) {
+  return (
+    <form className={cx('form-horizontal', props.className)}>
+      {props.children}
+    </form>
+  )
+}
+
+Form.propTypes = {
+  children: node,
+  className: string
+}
+
 export class FormGroup extends React.PureComponent {
   get classes() {
     return {
