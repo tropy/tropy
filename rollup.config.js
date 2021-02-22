@@ -151,8 +151,11 @@ export default [
         preferBuiltins: true
       }),
       replace({
-        'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
-        'readable-stream': 'stream'
+        preventAssignment: true,
+        values: {
+          'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+          'readable-stream': 'stream'
+        }
       }),
       json(),
       babel({
