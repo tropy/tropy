@@ -60,7 +60,7 @@ class Cache {
       let variants = image.variants(!!selection)
 
       let jp2hack = image.mimetype === MIME.JP2 &&
-        image.space === 'b-w' && channels > 1 && !image.hasAlpha
+        image.space === 'b-w' && channels === 3 && image.hasAlpha
 
       for (let { name, size, quality } of variants) {
         let path = this.path(id, name, ext)
