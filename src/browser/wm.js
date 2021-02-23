@@ -109,6 +109,9 @@ export class WindowManager extends EventEmitter {
           opts.darkTheme = opts.darkTheme || isDarkMode
           break
         case 'darwin':
+          opts.vibrancy = 'sidebar'
+          opts.backgroundColor = opts.backgroundColor.replace('#', '#aa')
+
           if (!opts.frame) {
             opts.frame = true
             opts.title = ''
