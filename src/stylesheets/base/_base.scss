@@ -32,4 +32,8 @@ body {
   @if $platform == darwin {
     -webkit-font-smoothing: antialiased; // Lighter font rendering
   }
+
+  &.vibrancy {
+    background: transparent;
+  }
 }

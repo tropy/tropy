@@ -110,7 +110,7 @@ export class WindowManager extends EventEmitter {
           break
         case 'darwin':
           opts.vibrancy = 'sidebar'
-          opts.backgroundColor = opts.backgroundColor.replace('#', '#aa')
+          opts.backgroundColor = opts.backgroundColor.replace('#', '#00')
 
           if (!opts.frame) {
             opts.frame = true
