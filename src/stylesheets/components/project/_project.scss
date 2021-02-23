@@ -17,6 +17,10 @@
     display: flex;
     flex: 1 1 0;
     min-width: 0; // Prevent horizontal scrollbar in project-view
+
+    .vibrancy & {
+      background-color: $body-bg;
+    }
   }
 }
 

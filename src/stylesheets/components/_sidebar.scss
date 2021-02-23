@@ -16,6 +16,16 @@
     }
   }
 
+  .vibrancy & {
+    background: transparent;
+  }
+
+  .toolbar {
+    .is-full-screen & {
+      display: none;
+    }
+  }
+
   .toolbar {
     .frameless & {
       -webkit-app-region: drag;
