@@ -55,7 +55,7 @@ export class Window extends EventEmitter {
       'scrollbars',
       'theme',
       'dark',
-      'constrast',
+      'contrast',
       'maximizable',
       'minimizable',
       'zoom'
