@@ -146,7 +146,7 @@
       pointer-events: none;
       color: $add-tag-placeholder-color-default;
       mix-blend-mode: if($theme == "light", multiply, lighten); // Prevent placeholder text from covering the text cursor.
-      z-index: 1;
+      z-index: 4;
 
       transition:
         left $add-tag-transition,
@@ -182,7 +182,7 @@
     }
 
     &:not([value=""]) {
-      z-index: 2;
+      z-index: 5;
     }
   }
 }
