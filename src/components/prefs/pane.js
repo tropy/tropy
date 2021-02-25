@@ -46,27 +46,15 @@ export class PrefPaneToggle extends React.PureComponent {
   }
 }
 
-export class PrefPane extends React.PureComponent {
-  get classes() {
-    return {
-      pane: true,
-      active: this.props.isActive,
-      [this.props.name]: true
-    }
-  }
+export const PrefPane = (props) => (
+  <div className={cx('pane', props.name, { active: props.isActive })}>
+    {props.isActive && props.children}
+  </div>
+)
 
-  render() {
-    return (
-      <div className={cx(this.classes)}>
-        {this.props.isActive && this.props.children}
-      </div>
-    )
-  }
-
-  static propTypes = {
-    children: node,
-    classes: object,
-    isActive: bool,
-    name: string.isRequired
-  }
+PrefPane.propTypes = {
+  children: node,
+  classes: object,
+  isActive: bool,
+  name: string.isRequired
 }

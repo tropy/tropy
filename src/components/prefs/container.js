@@ -7,6 +7,7 @@ import { TemplateEditor } from '../template'
 import { VocabPane } from '../vocab'
 import { PrefPane, PrefPaneToggle } from './pane'
 import { AppPrefs } from './app'
+import { ProjectPrefs } from './project'
 import { PluginsPane } from '../plugin'
 import * as act from '../../actions'
 
@@ -43,14 +44,14 @@ class Prefs extends React.PureComponent {
                   isActive={this.isActive('app')}
                   onClick={this.toggle}/>
               </li>
-              {/*<li>
+              <li>
                 <PrefPaneToggle
                   name="project"
                   icon="IconMaze32"
                   isActive={this.isActive('project')}
-                  isDisabled
+                  isDisabled={!this.props.project}
                   onClick={this.toggle}/>
-              </li>*/}
+              </li>
               <li>
                 <PrefPaneToggle
                   name="template"
@@ -88,7 +89,11 @@ class Prefs extends React.PureComponent {
 
           <PrefPane
             name="project"
-            isActive={this.isActive('project')}/>
+            isActive={this.isActive('project')}>
+            <ProjectPrefs
+              project={this.props.project}
+              onSave={false}/>
+          </PrefPane>
 
           <PrefPane
             name="template"
@@ -123,6 +128,7 @@ class Prefs extends React.PureComponent {
     edit: object.isRequired,
     templates: object.isRequired,
     pane: string.isRequired,
+    project: object,
     properties: array.isRequired,
     settings: object.isRequired,
     vocab: array.isRequired,
