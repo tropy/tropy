@@ -1,6 +1,8 @@
 import fs from 'fs'
 import { parse, resolve, win32 } from 'path'
+import { cpus } from 'os'
 import { call, put, select } from 'redux-saga/effects'
+import { parallel } from '../../sagas/util'
 import { ImportCommand } from '../import'
 import { fail, open, prompt } from '../../dialog'
 import * as mod from '../../models'
@@ -12,37 +14,36 @@ import { blank } from '../../common/util'
 import { getPhotosForConsolidation } from '../../selectors'
 
 
+async function lookup(photo, paths = {}, checkFileSize) {
+  let { dir, base } = win32.parse(photo.path)
 
-export class Consolidate extends ImportCommand {
-  lookup = async (photo, paths = {}, checkFileSize) => {
-    let { dir, base } = win32.parse(photo.path)
+  for (let [from, to] of Object.entries(paths)) {
+    let rel = win32.relative(from, dir)
 
-    for (let [from, to] of Object.entries(paths)) {
-      let rel = win32.relative(from, dir)
+    for (let x of to) {
+      try {
+        let candidate = resolve(x, rel, base)
+        let { size } = await fs.promises.stat(candidate)
+        let isMatch = !checkFileSize || (size === photo.size)
 
-      for (let x of to) {
-        try {
-          let candidate = resolve(x, rel, base)
-          let { size } = await fs.promises.stat(candidate)
-          let isMatch = !checkFileSize || (size === photo.size)
-
-          if (isMatch) {
-            return candidate
-          } else {
-            info({ path: candidate }, 'skipped consolidation candidate')
-          }
-        } catch (e) {
-          if (e.code === 'ENOENT') return
-          if (e.code === 'ENAMETOOLONG') return
-          throw e
+        if (isMatch) {
+          return candidate
+        } else {
+          info({ path: candidate }, 'skipped consolidation candidate')
         }
+      } catch (e) {
+        if (e.code === 'ENOENT') return
+        if (e.code === 'ENAMETOOLONG') return
+        throw e
       }
     }
   }
+}
 
+export class Consolidate extends ImportCommand {
   *resolve(photo) {
     let { meta } = this.action
-    let path = yield call(this.lookup, photo, meta.paths, true)
+    let path = yield call(lookup, photo, meta.paths, true)
 
     if (!path && meta.prompt) {
       try {
@@ -101,22 +102,27 @@ export class Consolidate extends ImportCommand {
       { consolidating: true }
     ]))
 
-    let maxFail = 15
+    let maxFail = 3
     let failures = 0
 
-    for (let photo of photos) {
+    let concurrency = meta.prompt ? 1 : meta.concurrency ||
+      Math.max(1, cpus().length)
+
+    let self = this
+
+    yield parallel(photos, function* (photo) {
       try {
-        yield this.progress()
-        yield this.consolidate(photo, selections)
+        yield self.progress()
+        yield self.consolidate(photo, selections)
 
       } catch (e) {
         warn({ stack: e.stack }, `failed to consolidate photo ${photo.path}`)
 
         if (++failures < maxFail) {
-          fail(e, this.action.type)
+          fail(e, self.action.type)
         }
       }
-    }
+    }, { concurrency })
 
     return this.result
   }
