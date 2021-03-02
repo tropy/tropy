@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events'
 import { join } from 'path'
 import { URL } from 'url'
+import { read } from './mac-defaults'
 import dialog from './dialog'
 import { debug, error, trace, warn } from '../common/log'
 import { darwin } from '../common/os'
@@ -77,7 +78,7 @@ export class WindowManager extends EventEmitter {
   }
 
   // eslint-disable-next-line complexity
-  create(type, args = {}, opts) {
+  async create(type, args = {}, opts) {
     let NOW = Date.now()
 
     try {
@@ -98,19 +99,19 @@ export class WindowManager extends EventEmitter {
         opts.frame = false
       }
 
-      let isDarkMode = nativeTheme.shouldUseDarkColors
-
       opts.backgroundColor =
-        BODY[process.platform][isDarkMode ? 'dark' : 'light']
+        BODY[process.platform][args.dark ? 'dark' : 'light']
 
       switch (process.platform) {
         case 'linux':
           opts.icon = Icon.expand(channel, 'tropy', '512x512.png')
-          opts.darkTheme = opts.darkTheme || isDarkMode
+          opts.darkTheme = opts.darkTheme || args.dark
+          opts.vibrancy = false
           break
         case 'darwin':
-          opts.vibrancy = 'sidebar'
-          opts.backgroundColor = opts.backgroundColor.replace('#', '#00')
+          if (!args.vibrancy) {
+            opts.vibrancy = false
+          }
 
           if (!opts.frame) {
             opts.frame = true
@@ -118,6 +119,9 @@ export class WindowManager extends EventEmitter {
             opts.titleBarStyle = opts.titleBarStyle || 'hidden'
             opts.trafficLightPosition = getTrafficLightPosition(type)
           }
+          break
+        case 'win32':
+          opts.vibrancy = false
           break
       }
 
@@ -327,21 +331,26 @@ export class WindowManager extends EventEmitter {
   }
 
   async open(type, args, opts = {}) {
-    let win = this.create(type, args, opts)
+    let props = {
+      env: process.env.NODE_ENV,
+      documents: app.getPath('documents'),
+      pictures: app.getPath('pictures'),
+      theme: 'light',
+      aqua: WindowManager.getAquaColorVariant(),
+      contrast: nativeTheme.shouldUseHighContrastColors,
+      dark: nativeTheme.shouldUseDarkColors,
+      scrollbars: !WindowManager.hasOverlayScrollBars(),
+      vibrancy: !(await WindowManager.shouldReduceTransparency()),
+      ...args
+    }
+
+    let win = await this.create(type, props, opts)
 
     await win.loadFile(View.expand(type), {
       hash: encodeURIComponent(JSON.stringify({
-        aqua: WindowManager.getAquaColorVariant(),
-        contrast: nativeTheme.shouldUseHighContrastColors,
-        dark: nativeTheme.shouldUseDarkColors,
-        env: process.env.NODE_ENV,
-        documents: app.getPath('documents'),
+        ...props,
         maximizable: win.maximizable,
-        minimizable: win.minimizable,
-        pictures: app.getPath('pictures'),
-        scrollbars: !WindowManager.hasOverlayScrollBars(),
-        theme: 'light',
-        ...args
+        minimizable: win.minimizable
       }))
     })
 
@@ -523,7 +532,8 @@ export class WindowManager extends EventEmitter {
       width: 1280,
       height: 720,
       minWidth: PANEL.MIN_WIDTH + ESPER.MIN_WIDTH * 2,
-      minHeight: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN
+      minHeight: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN,
+      vibrancy: 'sidebar'
     },
     wizard: {
       width: 456,
@@ -566,6 +576,11 @@ export class WindowManager extends EventEmitter {
           reason === 'cancelled' ? resolve(reason) : reject(reason)
       })
     })
+  }
+
+  static async shouldReduceTransparency() {
+    return darwin &&
+      await read('com.apple.universalaccess', 'reduceTransparency')
   }
 }
 
@@ -611,3 +626,4 @@ function webContentsForward(win, events) {
     win.on(type, () => { win.webContents.send('win', type) })
   }
 }
+

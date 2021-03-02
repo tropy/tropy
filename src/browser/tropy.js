@@ -562,8 +562,8 @@ export class Tropy extends EventEmitter {
       this.emit('app:reload-menu')
     })
 
-    this.on('app:switch-theme', (_, theme) => {
-      this.setTheme(theme)
+    this.on('app:switch-theme', async (_, theme) => {
+      await this.setTheme(theme)
     })
 
     this.on('app:change-font-size', (_, fontSize) => {
@@ -716,8 +716,8 @@ export class Tropy extends EventEmitter {
       }
     })
 
-    nativeTheme.on('updated', () => {
-      this.setTheme(nativeTheme.themeSource)
+    nativeTheme.on('updated', async () => {
+      await this.setTheme(nativeTheme.themeSource)
     })
 
     if (darwin) {
@@ -922,7 +922,7 @@ export class Tropy extends EventEmitter {
     this.wm.broadcast('locale', this.state.locale)
   }
 
-  setTheme(theme = this.state.theme) {
+  async setTheme(theme = this.state.theme) {
     info(`switch to "${theme}" theme`)
     this.state.theme = theme
 
@@ -931,7 +931,8 @@ export class Tropy extends EventEmitter {
 
     this.wm.broadcast('theme', theme, {
       dark: nativeTheme.shouldUseDarkColors,
-      contrast: nativeTheme.shouldUseHighContrastColors
+      contrast: nativeTheme.shouldUseHighContrastColors,
+      vibrancy: !(await WindowManager.shouldReduceTransparency())
     })
 
     this.menu.handleThemeChange()

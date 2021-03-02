@@ -56,6 +56,7 @@ export class Window extends EventEmitter {
       'theme',
       'dark',
       'contrast',
+      'vibrancy',
       'maximizable',
       'minimizable',
       'zoom'
@@ -163,9 +164,9 @@ export class Window extends EventEmitter {
         this.toggle(state)
         this.emit(state)
       })
-      .on('theme', (_, theme, { dark, contrast } = {}) => {
-        update({ theme, dark, contrast })
-        Object.assign(this.state, { theme, dark, contrast })
+      .on('theme', (_, theme, { dark, contrast, vibrancy } = {}) => {
+        update({ theme, dark, contrast, vibrancy })
+        Object.assign(this.state, { theme, dark, contrast, vibrancy })
         this.style(true)
       })
       .on('fontSize', (_, fontSize) => {
@@ -393,6 +394,8 @@ export class Window extends EventEmitter {
         append(css, document.head)
       }
     }
+
+    toggle(document.body, 'vibrancy', this.state.vibrancy)
 
     this.emit('settings.update', { theme: this.state.theme })
 
