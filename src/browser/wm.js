@@ -582,8 +582,12 @@ export class WindowManager extends EventEmitter {
   }
 
   static async shouldReduceTransparency() {
-    return darwin &&
-      await read('com.apple.universalaccess', 'reduceTransparency')
+    try {
+      return darwin &&
+        await read('com.apple.universalaccess', 'reduceTransparency')
+    } catch (e) {
+      warn({ stack: e.stack }, 'failed to check macOS defaults')
+    }
   }
 }
 
