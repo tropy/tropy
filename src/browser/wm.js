@@ -109,16 +109,19 @@ export class WindowManager extends EventEmitter {
           opts.vibrancy = false
           break
         case 'darwin':
-          if (!args.vibrancy) {
-            opts.vibrancy = false
-          }
-
           if (!opts.frame) {
             opts.frame = true
             opts.title = ''
             opts.titleBarStyle = opts.titleBarStyle || 'hidden'
             opts.trafficLightPosition = getTrafficLightPosition(type)
           }
+
+          if (opts.vibrancy && args.vibrancy) {
+            opts.backgroundColor = '#00000000'
+          } else {
+            opts.vibrancy = false
+          }
+
           break
         case 'win32':
           opts.vibrancy = false
