@@ -94,7 +94,7 @@ export class ShellOption {
       })
     }
 
-    // HACK inexpicably, the key's default value was not set
+    // HACK inexplicably, the key's default value was not set
     // in the registry reliably if set right after creating
     // the key. reg.exe reports no issues and this works fine
     // for other keys. Here we just set the default value twice
