@@ -159,6 +159,7 @@ export default [
       }),
       json(),
       babel({
+        exclude: 'node_modules/**',
         babelHelpers: 'bundled'
       }),
       commonjs({
