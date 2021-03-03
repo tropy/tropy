@@ -1,10 +1,8 @@
 import { EventEmitter } from 'events'
 import { Worker as WorkerResource } from '../common/res'
 import { warn } from '../common/log'
-import { Texture, BaseTexture, resources, utils } from 'pixi.js'
+import { Texture, BaseTexture, ImageBitmapResource, utils } from 'pixi.js'
 
-const { ImageBitmapResource } = resources
-const { TextureCache } = utils
 
 ImageBitmapResource.prototype.dispose = function () {
   this.source?.close()
@@ -67,7 +65,7 @@ export class Loader extends EventEmitter {
   }
 
   async loadTexture(url) {
-    let texture = TextureCache[url]
+    let texture = utils.TextureCache[url]
 
     if (!texture) {
       let bitmap = await this.load(url)
