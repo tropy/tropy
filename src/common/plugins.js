@@ -249,9 +249,8 @@ export class Plugins extends EventEmitter {
       if (!((await stat(dir)).isDirectory())) {
         throw new Error('not a plugin directory')
       }
-      if (!shell.moveItemToTrash(dir)) {
-        throw new Error('failed to move directory to trash')
-      }
+      await shell.trashItem(dir)
+
       this.clearModuleCache(dir)
       if (prune) {
         this.config = this.config.filter(c => c.plugin !== plugin)
@@ -259,9 +258,9 @@ export class Plugins extends EventEmitter {
         this.save()
         this.emit('change')
       }
-    } catch (error) {
-      if (error.code !== 'ENOENT') {
-        warn(`failed to uninstall plugin "${plugin}": ${error.message}`)
+    } catch (e) {
+      if (e.code !== 'ENOENT') {
+        warn({ stack: e.stack }, 'failed to uninstall plugin "${plugin}"')
       }
     }
     return this
