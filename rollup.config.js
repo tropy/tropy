@@ -133,22 +133,21 @@ export default [
         copyOnce: true
       }),
       ignore([
-        'core-js/fn/object/entries',
         '@mapbox/node-pre-gyp',
         'pino-pretty',
         'rdf-canonize-native',
-        'request'
+        'request',
+        'vm'
       ], { commonjsBugFix: true }),
       alias({
         entries: {
+          jsonld: join(
+            __dirname, 'node_modules/jsonld/lib/jsonld.js'
+          ),
           semver: join(
             __dirname, 'node_modules/semver/index.js'
           )
         }
-      }),
-      resolve({
-        exportConditions: ['node'],
-        preferBuiltins: true
       }),
       replace({
         preventAssignment: true,
@@ -156,6 +155,10 @@ export default [
           'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
           'readable-stream': 'stream'
         }
+      }),
+      resolve({
+        exportConditions: ['node'],
+        preferBuiltins: true
       }),
       json(),
       babel({
