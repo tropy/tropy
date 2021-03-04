@@ -3,7 +3,7 @@ import { basename, join } from 'path'
 import yaml from 'js-yaml'
 import { debug } from './log'
 import { paths } from './release'
-import { get, flatten } from './util'
+import { flatten } from './util'
 
 
 export class Resource {
@@ -50,7 +50,7 @@ export class Menu extends Resource {
 
   constructor(data, locale = 'en') {
     super()
-    this.template = get(data, [locale, process.platform], {})
+    this.template = data?.[locale]?.[process.platform] || {}
     this.locale = locale
   }
 }
@@ -65,9 +65,9 @@ export class Strings extends Resource {
     return super.open(locale, process.type, ...args)
   }
 
-  constructor(dict, locale = 'en') {
+  constructor(data, locale = 'en') {
     super()
-    this.dict = get(dict, [locale], {})
+    this.dict = data?.[locale] || {}
     this.locale = locale
   }
 
@@ -82,9 +82,13 @@ export class KeyMap extends Resource {
     return join(super.base, 'keymaps')
   }
 
+  static open(locale, ...args) {
+    return super.open(locale, process.type, ...args)
+  }
+
   constructor(data, locale = 'en') {
     super()
-    this.map = get(data, [locale, process.platform], {})
+    this.map = data?.[locale]?.[process.platform] || {}
     this.locale = locale
   }
 }
