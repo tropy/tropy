@@ -2,7 +2,6 @@ import assert from 'assert'
 import { join } from 'path'
 import ARGS from '../args'
 import { TYPE } from '../constants'
-import { all } from 'bluebird'
 import { paths } from '../common/release'
 import { blank, list, quote } from '../common/util'
 
@@ -47,7 +46,7 @@ const ontology = {
         }
       })
 
-      await all([
+      await Promise.all([
         db.each(`
           SELECT vocabulary_id AS id, property_id AS prop
             FROM properties JOIN vocabularies USING (vocabulary_id)
@@ -188,7 +187,7 @@ const ontology = {
           parent,
           description,
           comment) VALUES (?, ?, ?, ?, ?, ?, ?)`, stmt =>
-            all(properties.map(p => stmt.run([
+            Promise.all(properties.map(p => stmt.run([
               p.id,
               p.vocabulary,
               p.domain,
@@ -238,7 +237,7 @@ const ontology = {
           parent,
           description,
           comment) VALUES (?, ?, ?, ?, ?)`, stmt =>
-            all(classes.map(c => stmt.run([
+            Promise.all(classes.map(c => stmt.run([
               c.id,
               c.vocabulary,
               c.parent,
@@ -285,7 +284,7 @@ const ontology = {
           vocabulary_id,
           description,
           comment) VALUES (?, ?, ?, ?)`, stmt =>
-            all(types.map(dt => stmt.run([
+            Promise.all(types.map(dt => stmt.run([
               dt.id,
               dt.vocabulary,
               dt.description,
@@ -301,7 +300,7 @@ const ontology = {
       return db.prepare(`
         REPLACE INTO labels (id, language, label)
           VALUES (?, ?, ?)`, stmt =>
-            all(labels.map(lbl => stmt.run([
+            Promise.all(labels.map(lbl => stmt.run([
               lbl.id,
               lbl.language || ARGS.locale,
               lbl.label
@@ -344,7 +343,7 @@ const ontology = {
         }
       })
 
-      await all([
+      await Promise.all([
         db.each(`
           SELECT class_id AS klass, template_id AS tpl
             FROM domains
@@ -477,7 +476,7 @@ const ontology = {
               $isConstant,
               $position
             )`, stmt =>
-            all(fields.map((f, idx) => stmt.run({
+            Promise.all(fields.map((f, idx) => stmt.run({
               $id: f.id,
               $template: id,
               $property: f.property,
@@ -493,7 +492,7 @@ const ontology = {
           db.prepare(`
             INSERT INTO field_labels (field_id, language, label)
               VALUES (?,?,?)`, addLabel =>
-                all(res.map((f, idx) => blank(fields[idx].label) ?
+                Promise.all(res.map((f, idx) => blank(fields[idx].label) ?
                   null :
                   addLabel.run([f.id, ARGS.locale, fields[idx].label])))
           ).then(() => res)

@@ -1,4 +1,3 @@
-import { all } from 'bluebird'
 import { array, blank, list as lst, uniq } from '../common/util'
 import { NAV } from '../constants'
 
@@ -166,7 +165,7 @@ mod.item = {
     const items = {}
     if (ids != null) ids = ids.join(',')
 
-    await all([
+    await Promise.all([
       db.each(`
         SELECT
             id,
@@ -248,7 +247,7 @@ mod.item = {
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 
-    await all([
+    await Promise.all([
       mod.metadata.copy(db, { source, target: id }),
       mod.item.tags.copy(db, { source, target: id }),
       mod.item.lists.copy(db, { source, target: id })
@@ -287,7 +286,7 @@ mod.item = {
       }
     }
 
-    await all([
+    await Promise.all([
       mod.photo.merge(db, item.id, photos, item.photos.length),
       mod.item.tags.set(db, tags.map(tag => ({ id: item.id, tag }))),
       mod.item.lists.merge(db, item.id, ids, lists),
@@ -301,7 +300,7 @@ mod.item = {
   },
 
   split(db, id, items, data, lists, tags) {
-    return all([
+    return Promise.all([
       mod.photo.split(db, id, items),
       mod.item.tags.remove(db, { id, tags }),
       mod.item.lists.remove(db, id, lists),
@@ -311,7 +310,7 @@ mod.item = {
   },
 
   implode(db, { id, photos, items }) {
-    return all([
+    return Promise.all([
       mod.photo.move(db, { ids: photos, item: id }),
       mod.photo.order(db, id, photos),
       mod.item.delete(db, items, 'auto')

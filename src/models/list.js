@@ -1,4 +1,3 @@
-import { all } from 'bluebird'
 import { LIST } from '../constants'
 import { into, select, update } from '../common/query'
 import { pick, remove, toId } from '../common/util'
@@ -58,7 +57,7 @@ export default {
   },
 
   prune(db) {
-    return db.seq(conn => all([
+    return db.seq(conn => Promise.all([
       conn.run(
         'DELETE FROM lists WHERE list_id != ? AND parent_list_id IS NULL',
         LIST.ROOT
