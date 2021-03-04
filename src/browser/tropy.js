@@ -251,7 +251,14 @@ export class Tropy extends EventEmitter {
   }
 
   showPreferencesWindow() {
-    this.wm.show('prefs', this.hash, {
+    let project = this.getProject()
+
+    let args = {
+      file: project?.file,
+      ...this.hash
+    }
+
+    this.wm.show('prefs', args, {
       alwaysOnTop: darwin,
       isExclusive: !darwin,
       title: this.dict.window.prefs.title,

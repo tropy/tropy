@@ -6,19 +6,22 @@ import { Main } from '../components/main'
 import { PrefsContainer } from '../components/prefs'
 import { main } from '../sagas/prefs'
 import win from '../window'
-import { intl, prefs, history, keymap, settings } from '../actions'
+import { intl, prefs, project, history, settings } from '../actions'
 import * as dialog from '../dialog'
 
 export const store = create()
 export const tasks = store.saga.run(main)
 
-const { locale } = ARGS
+const { locale, file } = ARGS
 
 Promise.all([
-  store.dispatch(intl.load({ locale })),
-  store.dispatch(keymap.load({ locale }))
+  store.dispatch(intl.load({ locale }))
 ])
   .then(() => {
+    if (file != null) {
+      store.dispatch(project.open(file))
+    }
+
     render(
       <Main store={store} window={win}>
         <PrefsContainer/>
