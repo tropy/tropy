@@ -16,7 +16,7 @@ const { locale } = ARGS
 
 Promise.all([
   store.dispatch(intl.load({ locale })),
-  store.dispatch(keymap.load({ name: 'project', locale }))
+  store.dispatch(keymap.load({ locale }))
 ])
   .then(() => {
     render(

@@ -21,7 +21,7 @@ const { locale, file } = ARGS
 
 Promise.all([
   store.dispatch(intl.load({ locale })),
-  store.dispatch(keymap.load({ name: 'project', locale }))
+  store.dispatch(keymap.load({ locale }))
 ])
   .then(() => {
     if (file != null) {
