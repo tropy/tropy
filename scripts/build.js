@@ -175,7 +175,7 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
     asar: {
       unpack: `**/{${[
         'lib/{node,vendor}/**/*',
-        'res/{icons,views}/**/*'
+        'res/{icons,keymaps,views}/**/*'
       ].join(',')}}`
     }
   }
