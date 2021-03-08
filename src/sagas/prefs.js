@@ -1,7 +1,8 @@
-import { all, call, cancel, delay, fork, take } from 'redux-saga/effects'
+import { all, call, cancel, delay, fork, take, takeLatest } from 'redux-saga/effects'
 import { debug, warn } from '../common/log'
-import { PREFS } from '../constants'
+import { PREFS, PROJECT } from '../constants'
 import { ontology } from './ontology'
+import { open } from './project'
 import { history } from './history'
 import { ipc } from './ipc'
 import { shell } from './shell'
@@ -10,6 +11,7 @@ import { persist, restore } from './storage'
 export function *main() {
   // Delayed import with command registation side-effect!
   yield import('../commands/ontology')
+  yield import('../commands/project')
 
   try {
     var aux = yield all([
@@ -26,8 +28,16 @@ export function *main() {
       call(restore, 'settings')
     ])
 
+    let project = yield takeLatest(PROJECT.OPEN, open, {
+      max: 1,
+      noSetup: true,
+      skipMigration: true,
+      skipIntegrityCheck: true
+    })
+
     debug('*prefs.main ready')
     yield take(PREFS.CLOSE)
+    yield cancel(project)
 
   } catch (e) {
     warn({ stack: e.stack }, 'unexpected error in *prefs.main')

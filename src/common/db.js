@@ -17,6 +17,10 @@ const M = {
   'wx+': sqlite.OPEN_CREATE
 }
 
+const canWrite = (file) =>
+  fs.promises.access(file, fs.constants.W_OK)
+    .then(() => true, () => false)
+
 const cache = {}
 const IUD = /^\s*(insert|update|delete)/i
 
@@ -30,6 +34,11 @@ const IUD = /^\s*(insert|update|delete)/i
 }
 
 export class Database extends EventEmitter {
+  static async open(path, { isReadOnly } = {}, opts)  {
+    let ro = (isReadOnly || !(await canWrite(path)))
+    return new Database(path, ro ? 'r' : 'w', opts)
+  }
+
   static async create(path, script, ...args) {
     try {
       var db = new Database(path, 'w+', { max: 1 })

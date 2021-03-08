@@ -49,7 +49,7 @@ class Prefs extends React.PureComponent {
                   name="project"
                   icon="IconMaze32"
                   isActive={this.isActive('project')}
-                  isDisabled={!this.props.project}
+                  isDisabled={!this.props.project.id}
                   onClick={this.toggle}/>
               </li>
               <li>

@@ -13,7 +13,6 @@ import {
   array,
   blank,
   counter,
-  get,
   once,
   remove,
   restrict
@@ -206,7 +205,7 @@ export class WindowManager extends EventEmitter {
   }
 
   current(type = 'project') {
-    return get(this.windows, [type, 0])
+    return this.windows[type]?.[0]
   }
 
   each(...args) {
@@ -226,6 +225,10 @@ export class WindowManager extends EventEmitter {
 
   has(type) {
     return array(type).some(t => !blank(this.windows[t]))
+  }
+
+  is(win, type) {
+    return this.windows[type]?.includes(win)
   }
 
   handleFocus = (type, win) => {

@@ -779,10 +779,12 @@ export class Tropy extends EventEmitter {
         BrowserWindow.fromWebContents(event.sender))
     })
 
-    ipc.on(PROJECT.OPENED, (event, project) =>
-      this.hasOpenedProject(
-        project,
-        BrowserWindow.fromWebContents(event.sender)))
+    ipc.on(PROJECT.OPENED, (event, project) => {
+      let win = BrowserWindow.fromWebContents(event.sender)
+      if (this.wm.is(win, 'project')) {
+        this.hasOpenedProject(project, win)
+      }
+    })
 
     ipc.on(PROJECT.CREATE, () => this.showWizardWindow())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.showProjectWindow(file))
