@@ -15,7 +15,7 @@ export function ErrorChannel(db) {
   })
 }
 
-export function *handleDatabaseErrors(db, actions) {
+export function *handleDatabaseErrors(db, actions = {}) {
   try {
     var channel = yield call(ErrorChannel, db)
 
@@ -32,7 +32,9 @@ export function *handleDatabaseErrors(db, actions) {
         // sure the default action is dispatched without delay!
         fail(error, `db.${error.code}`, db.path).catch()
 
-        yield put(actions.default(error))
+        if (actions.default) {
+          yield put(actions.default(error))
+        }
       }
     }
   } catch (e) {
