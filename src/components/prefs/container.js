@@ -86,13 +86,12 @@ class Prefs extends React.PureComponent {
               settings={this.props.settings}
               onSettingsUpdate={this.props.onSettingsUpdate}/>
           </PrefPane>
-
           <PrefPane
             name="project"
             isActive={this.isActive('project')}>
             <ProjectPrefs
               project={this.props.project}
-              onSave={false}/>
+              onChange={() => {}}/>
           </PrefPane>
 
           <PrefPane

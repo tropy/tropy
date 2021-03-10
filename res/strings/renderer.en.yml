@@ -191,6 +191,12 @@ en:
           property-datatype: By datatype and property
     project:
       label: Project
+      base:
+        label: Store photos
+        option:
+          none: Using absolute paths
+          project: Relative to the project file
+          home: Relative to your home directory
     template:
       label: Templates
       new: New Template …
