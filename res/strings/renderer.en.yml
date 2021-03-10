@@ -197,6 +197,12 @@ en:
           none: Using absolute paths
           project: Relative to the project file
           home: Relative to your home directory
+      store: Import photos to
+      name: Name
+      id: ID
+      file: File
+      keepOriginals: Keep original files
+      watch: Automatically import from
     template:
       label: Templates
       new: New Template …
