@@ -1,11 +1,11 @@
 'use strict'
 
 const { join, resolve } = require('path')
-const { unlink } = require('fs').promises
+const { unlink, readdir } = require('fs').promises
 const { app, net, session } = require('electron')
 const { check, error, say } = require('./util')('δ')
 const { argv } = require('yargs')
-const unzip = require('unzip-crx')
+const unzip = require('unzip-crx-3')
 
 const {
   existsSync: exists,
@@ -32,43 +32,32 @@ if (argv.data) {
 app.once('ready', async () => {
   try {
     switch (argv._[0]) {
-      case undefined:
-      case 'ls':
-      case 'list':
-        for (let { name, version } of getExtensions()) {
-          say(`${name} ${version}`)
-        }
-        break
-      case 'rm':
-      case 'remove':
-        if (argv._[1]) {
-          say(`removing ${argv._[1]}...`)
-          session.defaultSession.removeExtension(argv._[1])
-        } else {
-          for (let { name, version } of getExtensions()) {
-            say(`removing ${name} ${version}...`)
-            session.defaultSession.removeExtension(name)
-          }
-        }
-        break
       case 'download':
         await download(REACT_DEVTOOLS)
         await download(REDUX_DEVTOOLS)
         break
+      case undefined:
       case 'i':
       case 'install':
         // install({ name: 'devtron', path: require('devtron').path })
-        install(await download(REACT_DEVTOOLS))
-        install(await download(REDUX_DEVTOOLS))
+        await install(await download(REACT_DEVTOOLS))
+        await install(await download(REDUX_DEVTOOLS))
+
+        session
+          .defaultSession
+          .getAllExtensions()
+          .forEach(e => say(`${e.name} ${e.version}`))
+
         break
       default:
         throw new Error(`unknown command: "${argv[0]}"`)
     }
   } catch (e) {
     error(e.message)
+    console.log(e.stack)
   }
 
-  app.quit()
+  app.exit(0)
 })
 
 const download = async (id) => {
@@ -81,6 +70,7 @@ const download = async (id) => {
     if (!exists(root)) mkdir(root)
 
     say(`fetching ${id}.crx...`)
+    say(url)
     await save(url, crx)
     await unzip(crx, path)
     await unlink(crx)
@@ -93,7 +83,7 @@ const download = async (id) => {
 }
 
 const CRX = (id) =>
-  `https://clients2.google.com/service/update2/crx?response=redirect&prodversion=${process.versions.chrome}&x=id%3D${id}%26uc`
+  `https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=${process.versions.chrome}&x=id%3D${id}%26uc`
 
 const save = (url, to) =>
   new Promise((resolve, reject) => {
@@ -106,18 +96,6 @@ const save = (url, to) =>
   })
 
 const install = ({ name, path }) => {
-  if (isInstalled(name)) {
-    say(`skipping ${name}...`)
-    return false
-  }
-
   say(`installing ${name}...`)
-  session.defaultSession.loadExtension(path)
-  return true
+  return session.defaultSession.loadExtension(path, { allowFileAccess: true })
 }
-
-const isInstalled = name =>
-  (name in session.defaultSession.getAllExtensions())
-
-const getExtensions = () =>
-  Object.values(session.defaultSession.getAllExtensions())

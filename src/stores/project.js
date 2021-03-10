@@ -2,7 +2,6 @@ import { ipcRenderer as ipc } from 'electron'
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import thunk from 'redux-thunk'
 import createSagaMiddleware from 'redux-saga'
-import ARGS from '../args'
 import { fatal } from '../common/log'
 import { seq, debounce, throttle, log } from '../middleware'
 
@@ -34,9 +33,6 @@ import {
   tags,
   ui
 } from '../reducers'
-
-const devtools = (ARGS.dev || ARGS.debug) &&
-  window.__REDUX_DEVTOOLS_EXTENSION__
 
 export function create(init = {}) {
 
@@ -85,11 +81,10 @@ export function create(init = {}) {
     saga
   )
 
-  if (typeof devtools === 'function') {
-    middleware = compose(middleware, devtools())
-  }
+  let composeWithDevTools =
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
   return {
-    ...createStore(reducer, init, middleware), saga
+    ...createStore(reducer, init, composeWithDevTools(middleware)), saga
   }
 }
