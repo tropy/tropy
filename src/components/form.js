@@ -366,11 +366,11 @@ export class FormToggleGroup extends React.PureComponent {
         {this.props.options.map(value =>
           <Toggle
             id={`${this.props.id}.option.${value}`}
-            key={value}
-            name={value}
+            key={`${value}`}
+            name={`${value}`}
             tabIndex={this.props.tabIndex}
             type="radio"
-            value={(this.props.value || this.props.default) === value}
+            value={this.props.value === value}
             onChange={this.handleChange}/>)}
       </FormElement>
     )
@@ -380,7 +380,6 @@ export class FormToggleGroup extends React.PureComponent {
     id: string.isRequired,
     isCompact: bool,
     isDisabled: bool,
-    default: string,
     name: string.isRequired,
     options: arrayOf(string).isRequired,
     size: number.isRequired,

@@ -194,7 +194,7 @@ en:
       base:
         label: Store photos
         option:
-          none: Using absolute paths
+          null: Using absolute paths
           project: Relative to the project file
           home: Relative to your home directory
       store: Import photos to

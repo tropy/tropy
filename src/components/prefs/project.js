@@ -81,6 +81,6 @@ export class ProjectPrefs extends React.PureComponent {
   }
 
   static defaultProps = {
-    baseOptions: ['none', 'project', 'home']
+    baseOptions: [null, 'project', 'home']
   }
 }
