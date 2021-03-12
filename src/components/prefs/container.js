@@ -91,7 +91,7 @@ class Prefs extends React.PureComponent {
             isActive={this.isActive('project')}>
             <ProjectPrefs
               project={this.props.project}
-              onChange={() => {}}/>
+              onChange={this.props.onProjectSave}/>
           </PrefPane>
 
           <PrefPane
@@ -135,6 +135,7 @@ class Prefs extends React.PureComponent {
     onContextMenu: func.isRequired,
     onOpenLink: func.isRequired,
     onPrefsUpdate: func.isRequired,
+    onProjectSave: func.isRequired,
     onPropsSave: func.isRequired,
     onSettingsUpdate: func.isRequired,
     onVocabDelete: func.isRequired,
@@ -177,6 +178,10 @@ export const PrefsContainer = connect(
 
     onPropsSave(...args) {
       dispatch(act.ontology.props.save(...args))
+    },
+
+    onProjectSave(...args) {
+      dispatch(act.project.save(...args))
     },
 
     onSettingsUpdate(...args) {

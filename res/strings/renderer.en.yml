@@ -192,17 +192,17 @@ en:
     project:
       label: Project
       base:
-        label: Store photos
+        label: Link photos
         option:
           null: Using absolute paths
           project: Relative to the project file
           home: Relative to your home directory
       store: Import photos to
+      keepOriginals: Keep original files
       name: Name
       id: ID
       file: File
-      keepOriginals: Keep original files
-      watch: Automatically import from
+      watch: Watch folder
     template:
       label: Templates
       new: New Template …
