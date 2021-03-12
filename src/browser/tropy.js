@@ -340,9 +340,6 @@ export class Tropy extends EventEmitter {
       this.dispatch(act.cache.purge(), this.wm.current())
     })
 
-    this.on('app:rebase-project', () =>
-      this.dispatch(act.project.rebase(), this.wm.current()))
-
     this.on('app:reindex-project', () =>
       this.dispatch(act.project.reindex(), this.wm.current()))
 

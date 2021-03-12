@@ -54,18 +54,6 @@ export default {
     }
   },
 
-  rebase(payload = {}, meta = {}) {
-    return {
-      type: PROJECT.REBASE,
-      payload,
-      meta: {
-        cmd: 'project',
-        history: 'add',
-        ...meta
-      }
-    }
-  },
-
   reindex(payload = {}, meta = {}) {
     return {
       type: PROJECT.REINDEX,
