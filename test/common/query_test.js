@@ -81,6 +81,18 @@ describe('Query Builder', () => {
       expect(q.query).to.eql('SELECT * FROM a JOIN b ON (x = $x)')
       expect(q.params).to.have.property('$x', 23)
     })
+
+    it('count', () => {
+      expect(
+        select({ total: 'COUNT (id)' })
+          .from('items')
+          .outer.join('trash', { using: 'id' })
+          .where({ deleted: null })
+          .query
+      ).to.eql(
+        'SELECT COUNT (id) AS total FROM items LEFT OUTER JOIN trash USING (id) WHERE deleted IS NULL'
+      )
+    })
   })
 
   describe('Update', () => {

@@ -258,6 +258,11 @@ export class Select extends ConditionalQuery {
     return this
   }
 
+  limit(limit) {
+    this.lmt = Number(limit)
+    return this
+  }
+
   get query() {
     return pluck(this, [
       'WITH',
@@ -266,7 +271,8 @@ export class Select extends ConditionalQuery {
       'WHERE',
       'GROUP_BY',
       'HAVING',
-      'ORDER'
+      'ORDER',
+      'LIMIT'
     ]).join(' ')
   }
 
@@ -302,6 +308,11 @@ export class Select extends ConditionalQuery {
   get ORDER() {
     return (this.ord.length === 0) ?
       undefined : `ORDER BY ${this.ord.join(', ')}`
+  }
+
+  get LIMIT() {
+    return (!this.lmt) ?
+      undefined : `LIMIT ${this.lmt}`
   }
 }
 
