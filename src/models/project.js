@@ -7,7 +7,23 @@ import { info } from '../common/log'
 import { home } from '../common/os'
 import { paths } from '../common/release'
 
+function resolveBasePath(db, base) {
+  switch (base) {
+    case 'project':
+      return dirname(db.path)
+    case 'home':
+      return home
+    case 'documents':
+    case 'pictures':
+      return ARGS[base]
+    default:
+      return base
+  }
+}
+
 export default {
+  resolveBasePath,
+
   async create(db, { name, base, id = uuid() }) {
     info(`creating project "${name}" ${id}`)
     await db.read(join(paths.db, 'schema', 'project.sql'))
@@ -26,24 +42,12 @@ export default {
 
     assert(project != null, 'no project found')
 
-    switch (project.base) {
-      case 'project':
-        project.base = dirname(db.path)
-        break
-      case 'home':
-        project.base = home
-        break
-      case 'documents':
-      case 'pictures':
-        project.base = ARGS[project.base]
-        break
-    }
-
     let items = await db.get(
       ...select({ total: 'COUNT (id)' })
         .from('items').outer.join('trash', { using: 'id' })
         .where({ deleted: null }))
 
+    project.basePath = resolveBasePath(db, project.base)
     project.items = items.total
 
     return project

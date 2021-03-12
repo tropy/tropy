@@ -26,14 +26,15 @@ export class Rebase extends Command {
     let { project } = yield select()
 
     // Temporary: only toggle between absolute and project-relative!
-    let base = (project.base) ? null : dirname(project.file)
+    let base = (project.base) ? null : 'project'
+    let basePath = (project.base) ? null : dirname(project.file)
 
     yield call(db.transaction, async tx => {
-      await mod.project.save(tx, { id, base: (base) ? 'project' : null })
-      await mod.photo.rebase(tx, base, project.base)
+      await mod.project.save(tx, { id, base })
+      await mod.photo.rebase(tx, basePath, project.basePath)
     })
 
-    yield put(act.project.update({ base }))
+    yield put(act.project.update({ base, basePath }))
     this.undo = act.project.rebase()
   }
 }
@@ -61,20 +62,25 @@ export class Save extends Command {
     let { payload } = this.action
     let { db, id } = this.options
 
-    let original = yield select(state =>
-      pick(state.project, Object.keys(payload)))
+    let { project } = yield select()
+    let original = pick(project, Object.keys(payload))
 
-    let doRebase = ('base' in payload && payload.base !== original.base)
+    let isRebaseRequired =
+      ('base' in payload) && payload.base !== original.base
+
+    let basePath = isRebaseRequired ?
+      mod.project.resolveBasePath(db, payload.base) :
+      project.basePath
 
     yield call(db.transaction, async tx => {
       await mod.project.save(tx, { id, ...payload })
 
-      if (doRebase) {
-        await mod.photo.rebase(tx, payload.base, this.original.base)
+      if (isRebaseRequired) {
+        await mod.photo.rebase(tx, basePath, project.basePath)
       }
     })
 
-    yield put(act.project.update(payload, {
+    yield put(act.project.update({ ...payload, basePath }, {
       ipc: payload.name != null || payload.isReadOnly != null
     }))
 
