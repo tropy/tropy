@@ -20,28 +20,6 @@ export class Optimize extends Command {
 Optimize.register(PROJECT.OPTIMIZE)
 
 
-export class Rebase extends Command {
-  *exec() {
-    let { db, id } = this.options
-    let { project } = yield select()
-
-    // Temporary: only toggle between absolute and project-relative!
-    let base = (project.base) ? null : 'project'
-    let basePath = (project.base) ? null : dirname(project.file)
-
-    yield call(db.transaction, async tx => {
-      await mod.project.save(tx, { id, base })
-      await mod.photo.rebase(tx, basePath, project.basePath)
-    })
-
-    yield put(act.project.update({ base, basePath }))
-    this.undo = act.project.rebase()
-  }
-}
-
-Rebase.register(PROJECT.REBASE)
-
-
 export class Reindex extends Command {
   *exec() {
     let { meta } = this.action

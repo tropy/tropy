@@ -6,7 +6,6 @@ export default {
   OPEN: 'project.open',
   OPENED: 'project.opened',
   OPTIMIZE: 'project.optimize',
-  REBASE: 'project.rebase',
   REINDEX: 'project.reindex',
   SAVE: 'project.save',
   UPDATE: 'project.update',

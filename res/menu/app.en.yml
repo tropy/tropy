@@ -184,9 +184,6 @@ en:
         - label: 'Reindex Project Database'
           command: 'app:reindex-project'
         - type: 'separator'
-        - label: 'Rebase Project'
-          command: 'app:rebase-project'
-        - type: 'separator'
         - label: 'Theme'
           id: 'theme'
           submenu:
