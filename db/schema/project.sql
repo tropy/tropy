@@ -15,7 +15,7 @@ PRAGMA encoding = 'UTF-8';
 PRAGMA application_id = -621960955;
 
 -- Save the current migration number
-PRAGMA user_version = 2011121230;
+PRAGMA user_version = 2103121202;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -23,7 +23,7 @@ BEGIN TRANSACTION;
 CREATE TABLE project (
   project_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
-  created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP, base TEXT,
+  created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP, base TEXT, store TEXT, keep_originals BOOLEAN DEFAULT 1,
 
   CHECK (project_id != ''),
   CHECK (name != '')
