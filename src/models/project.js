@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { dirname, join } from 'path'
+import { dirname, join, normalize, relative, resolve } from 'path'
 import { v4 as uuid } from 'uuid'
 import ARGS from '../args'
 import { into, select, update } from '../common/query'
@@ -7,7 +7,7 @@ import { info } from '../common/log'
 import { home } from '../common/os'
 import { paths } from '../common/release'
 
-function resolveBasePath(db, base) {
+function getBasePath(db, base) {
   switch (base) {
     case 'project':
       return dirname(db.path)
@@ -21,8 +21,9 @@ function resolveBasePath(db, base) {
   }
 }
 
+
 export default {
-  resolveBasePath,
+  getBasePath,
 
   async create(db, { name, base, id = uuid() }) {
     info(`creating project "${name}" ${id}`)
@@ -36,7 +37,7 @@ export default {
 
   async load(db) {
     let project = await db.get(
-      ...select({ id: 'project_id' }, 'name', 'base')
+      ...select({ id: 'project_id' }, 'name', 'base', 'store')
         .from('project')
         .limit(1))
 
@@ -44,11 +45,16 @@ export default {
 
     let items = await db.get(
       ...select({ total: 'COUNT (id)' })
-        .from('items').outer.join('trash', { using: 'id' })
+        .from('items')
+        .outer.join('trash', { using: 'id' })
         .where({ deleted: null }))
 
-    project.basePath = resolveBasePath(db, project.base)
+    project.basePath = getBasePath(db, project.base)
     project.items = items.total
+
+    if (project.basePath && project.store) {
+      project.store = resolve(project.basePath, normalize(project.store))
+    }
 
     return project
   },
@@ -74,7 +80,13 @@ export default {
       "INSERT INTO fts_metadata(fts_metadata) VALUES ('rebuild')")
   },
 
-  save(db, { id, ...props }) {
+  save(db, { id, keepOriginals, store, ...props }, basePath) {
+    if (keepOriginals != null)
+      props['keep_originals'] = keepOriginals
+
+    if (basePath && store)
+      props.store = relative(basePath, store)
+
     return db.run(
       ...update('project').set(props).where({ project_id: id })
     )
