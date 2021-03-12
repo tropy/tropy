@@ -84,7 +84,7 @@ export class Import extends ImportCommand {
 
   *configure() {
     Object.assign(this.options, yield select(state => ({
-      base: state.project.base,
+      base: state.project.basePath,
       density: this.action.meta.density || state.settings.density,
       templates: {
         item: getItemTemplate(state),

@@ -796,9 +796,10 @@ export class Tropy extends EventEmitter {
     })
 
     ipc.on(PROJECT.UPDATE, (event, project) => {
-      this.setProject(
-        project,
-        BrowserWindow.fromWebContents(event.sender))
+      let win = BrowserWindow.fromWebContents(event.sender)
+      if (this.wm.is(win, 'project')) {
+        this.setProject(project, win)
+      }
     })
 
     ipc.on(PROJECT.CLOSED, (event) => {

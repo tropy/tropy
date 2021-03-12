@@ -84,7 +84,7 @@ export class Consolidate extends ImportCommand {
       state.settings
     ])
 
-    this.options.base = project.base
+    this.options.base = project.basePath
     this.options.isReadOnly = project.isReadOnly
     this.options.density = meta.density || settings.density
     this.options.overwrite = true

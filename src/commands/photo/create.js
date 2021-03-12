@@ -21,7 +21,7 @@ import {
 export class Create extends ImportCommand {
   configure(state) {
     return Object.assign(this.options, {
-      base: state.project.base,
+      base: state.project.basePath,
       template: getPhotoTemplate(state),
       prefs: state.settings,
       idx: this.action.meta?.idx ||

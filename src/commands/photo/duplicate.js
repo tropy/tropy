@@ -19,7 +19,7 @@ export class Duplicate extends ImportCommand {
     assert(!blank(payload.photos), 'missing photos')
 
     let [base, order, originals, data, settings] = yield select(state => [
-      state.project.base,
+      state.project.basePath,
       state.items[item].photos,
       pluck(state.photos, payload.photos),
       pluck(state.metadata, payload.photos),
