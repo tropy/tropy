@@ -1,5 +1,4 @@
 import { call, put, select } from 'redux-saga/effects'
-import { dirname } from 'path'
 import { Command } from './command'
 import { PROJECT } from '../constants'
 import { pick } from '../common/util'
@@ -47,11 +46,11 @@ export class Save extends Command {
       ('base' in payload) && payload.base !== original.base
 
     let basePath = isRebaseRequired ?
-      mod.project.resolveBasePath(db, payload.base) :
+      mod.project.getBasePath(db, payload.base) :
       project.basePath
 
     yield call(db.transaction, async tx => {
-      await mod.project.save(tx, { id, ...payload })
+      await mod.project.save(tx, { id, ...payload }, basePath)
 
       if (isRebaseRequired) {
         await mod.photo.rebase(tx, basePath, project.basePath)
