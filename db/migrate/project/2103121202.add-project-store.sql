@@ -1,2 +1,1 @@
 ALTER TABLE project ADD COLUMN store TEXT;
-ALTER TABLE project ADD COLUMN keep_originals BOOLEAN DEFAULT 1;
