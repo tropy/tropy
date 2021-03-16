@@ -33,6 +33,23 @@ export class Reindex extends Command {
 
 Reindex.register(PROJECT.REINDEX)
 
+export class Reload extends Command {
+  *exec() {
+    let { db } = this.options
+
+    let project = yield call(mod.project.load, db)
+
+    yield put(act.project.update({
+      isReadOnly: db.isReadOnly,
+      file: db.path,
+      ...project
+    }))
+
+    return project
+  }
+}
+
+Reload.register(PROJECT.RELOAD)
 
 export class Save extends Command {
   *exec() {

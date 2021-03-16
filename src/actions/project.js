@@ -66,6 +66,17 @@ export default {
     }
   },
 
+  reload(payload = {}, meta = {}) {
+    return {
+      type: PROJECT.RELOAD,
+      payload,
+      meta: {
+        cmd: 'project',
+        ...meta
+      }
+    }
+  },
+
   save(payload, meta = {}) {
     return {
       type: PROJECT.SAVE,
