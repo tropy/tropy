@@ -80,10 +80,7 @@ export default {
       "INSERT INTO fts_metadata(fts_metadata) VALUES ('rebuild')")
   },
 
-  save(db, { id, keepOriginals, ...props }, basePath) {
-    if (keepOriginals != null)
-      props['keep_originals'] = keepOriginals
-
+  save(db, { id, ...props }, basePath) {
     if (basePath && props.store)
       props.store = relative(basePath, props.store)
 
