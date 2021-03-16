@@ -352,7 +352,9 @@ export class FormToggleGroup extends React.PureComponent {
   handleChange = (option) => {
     for (let value in option) {
       if (option[value]) {
-        this.props.onChange({ [this.props.name]: value })
+        this.props.onChange({
+          [this.props.name]: value === 'null' ? null : value
+        })
       }
     }
   }

@@ -82,7 +82,10 @@ export default {
     return {
       type: PROJECT.UPDATE,
       payload,
-      meta
+      meta: {
+        ipc: payload.name != null || payload.isReadOnly != null,
+        ...meta
+      }
     }
   }
 }
