@@ -23,7 +23,7 @@ BEGIN TRANSACTION;
 CREATE TABLE project (
   project_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
-  created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP, base TEXT, store TEXT, keep_originals BOOLEAN DEFAULT 1,
+  created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP, base TEXT, store TEXT,
 
   CHECK (project_id != ''),
   CHECK (name != '')
