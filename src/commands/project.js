@@ -41,13 +41,18 @@ export class Save extends Command {
 
     let { project } = yield select()
     let original = pick(project, Object.keys(payload))
+    let { basePath, store } = project
 
     let isRebaseRequired =
       ('base' in payload) && payload.base !== original.base
 
-    let basePath = isRebaseRequired ?
-      mod.project.getBasePath(db, payload.base) :
-      project.basePath
+    if (isRebaseRequired) {
+      basePath = mod.project.getBasePath(db, payload.base)
+      payload = { store, ...payload }
+    }
+
+    this.original = { ...original, basePath: project.basePath }
+    yield put(act.project.update({ ...payload, basePath }))
 
     yield call(db.transaction, async tx => {
       await mod.project.save(tx, { id, ...payload }, basePath)
@@ -57,11 +62,13 @@ export class Save extends Command {
       }
     })
 
-    yield put(act.project.update({ ...payload, basePath }, {
-      ipc: payload.name != null || payload.isReadOnly != null
-    }))
-
     this.undo = act.project.save(original)
+  }
+
+  *abort() {
+    if (this.original) {
+      yield put(act.project.update(this.original))
+    }
   }
 }
 
