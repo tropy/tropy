@@ -198,7 +198,6 @@ en:
           project: Relative to the project file
           home: Relative to your home directory
       store: Import photos to
-      keepOriginals: Keep original files
       name: Name
       id: ID
       file: File

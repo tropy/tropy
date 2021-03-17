@@ -1,6 +1,6 @@
 import React from 'react'
 import { ScrollContainer } from '../scroll'
-import { Form, FormField, FormToggle, FormToggleGroup } from '../form'
+import { Form, FormField, FormToggleGroup } from '../form'
 import { arrayOf, func, object, string } from 'prop-types'
 
 export class ProjectPrefs extends React.PureComponent {
@@ -42,7 +42,6 @@ export class ProjectPrefs extends React.PureComponent {
             options={this.props.baseOptions}
             tabIndex={0}
             onChange={this.props.onChange}/>
-          <hr/>
           <FormField
             id="prefs.project.store"
             name="store"
@@ -51,14 +50,6 @@ export class ProjectPrefs extends React.PureComponent {
             tabIndex={0}
             type="directory"
             value={this.props.project.store}
-            onChange={this.props.onChange}/>
-          <FormToggle
-            id="prefs.project.keepOriginals"
-            name="keepOriginals"
-            isDisabled={!this.props.project.store}
-            isReadOnly={this.props.project.isReadOnly}
-            tabIndex={0}
-            value={this.props.project.keepOriginals}
             onChange={this.props.onChange}/>
           <hr/>
           <FormField
