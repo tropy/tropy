@@ -43,8 +43,10 @@ const ORDER = {
   [NAV.COLUMN.POSITION.id]: 'list_items.added'
 }
 
+const FTS_PATTERN = /[*+'"{(})^-]| (AND|OR|NOT) /
+
 const prefix = (query) =>
-  (!(/[*+'"]/).test(query)) ? query + '*' : query
+  (!FTS_PATTERN.test(query)) ? query + '*' : query
 
 function prep({ query, sort, tags }, params = {}) {
   if (!(sort.column in ORDER)) {
