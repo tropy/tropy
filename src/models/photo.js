@@ -37,6 +37,7 @@ async function load(db, ids, { base } = {}) {
           width,
           height,
           path,
+          filename,
           page,
           size,
           protocol,

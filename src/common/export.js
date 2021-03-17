@@ -69,6 +69,7 @@ export const props = {
     'checksum',
     'color',
     'density',
+    'filename',
     'mimetype',
     'orientation',
     'page',
