@@ -15,7 +15,7 @@ PRAGMA encoding = 'UTF-8';
 PRAGMA application_id = -621960955;
 
 -- Save the current migration number
-PRAGMA user_version = 2103121202;
+PRAGMA user_version = 2103171215;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -64,7 +64,7 @@ CREATE TABLE photos (
   mimetype     TEXT     NOT NULL,
   checksum     TEXT     NOT NULL,
   orientation  INTEGER  NOT NULL DEFAULT 1,
-  metadata     TEXT     NOT NULL DEFAULT '{}', size INTEGER NOT NULL DEFAULT 0, page NOT NULL DEFAULT 0, color TEXT, density INTEGER,
+  metadata     TEXT     NOT NULL DEFAULT '{}', size INTEGER NOT NULL DEFAULT 0, page NOT NULL DEFAULT 0, color TEXT, density INTEGER, filename TEXT,
 
   CHECK (orientation > 0 AND orientation < 9)
 ) WITHOUT ROWID;
