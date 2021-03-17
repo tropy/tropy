@@ -8,7 +8,7 @@ import { bytes, datetime, number, ppi } from '../../format'
 
 export class PhotoInfo extends React.PureComponent {
   get file() {
-    return basename(this.props.photo.path)
+    return this.props.photo.filename || basename(this.props.photo.path)
   }
 
   get size() {
