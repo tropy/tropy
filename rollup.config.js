@@ -137,13 +137,11 @@ export default [
         'pino-pretty',
         'rdf-canonize-native',
         'request',
-        'vm'
+        'vm',
+        'web-streams-polyfill/ponyfill/es2018'
       ], { commonjsBugFix: true }),
       alias({
         entries: {
-          jsonld: join(
-            __dirname, 'node_modules/jsonld/lib/jsonld.js'
-          ),
           semver: join(
             __dirname, 'node_modules/semver/index.js'
           )
