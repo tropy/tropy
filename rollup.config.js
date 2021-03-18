@@ -81,6 +81,7 @@ export default [
       babel({ babelHelpers: 'bundled' }),
       json(),
       commonjs()
+      // visualize({ filename: 'main.html' })
     ],
     external: [
       'electron'
@@ -166,6 +167,7 @@ export default [
       commonjs({
         requireReturnsDefault: 'preferred'
       })
+      // visualize({ filename: 'renderer.html' })
     ],
     external: [
       'electron'

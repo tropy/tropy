@@ -86,6 +86,7 @@
     "rollup": "^2.41.5",
     "rollup-plugin-ignore": "^1.0.9",
     "rollup-plugin-natives": "^0.7.2",
+    "rollup-plugin-visualizer": "^4.2.1",
     "sass": "^1.32.6",
     "shx": "^0.3.3",
     "sinon": "^9.2.4",
