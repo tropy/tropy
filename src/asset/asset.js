@@ -15,30 +15,21 @@ export class Asset {
     return (new this(props)).check(props, ...args)
   }
 
+  #path = null
 
   constructor({ path, protocol }) {
-    if (protocol == null) {
-      let m = path.match(/^([a-z]+):\/\//i)
-
-      if (m == null) {
-        protocol = 'file'
-      } else {
-        protocol = m[1].toLowerCase()
-
-        path = (protocol === 'file') ?
-          fileURLToPath(path) :
-          path.slice(m[0].length)
-      }
-    }
-
+    this.protocol = protocol // Set protocol first to avoid auto-dection!
     this.path = path
-    this.protocol = protocol
   }
 
   get base() {
     return this.isRemote ?
       basename(decodeURIComponent((new URL(this.url)).pathname)) :
       basename(this.path)
+  }
+
+  get date() {
+    return this.fs?.ctime || this.fs?.mtime || new Date()
   }
 
   get ext() {
@@ -53,8 +44,34 @@ export class Asset {
     return this.fs?.mtime
   }
 
+  get name() {
+    return basename(this.base, this.ext)
+  }
+
   get isRemote() {
     return this.protocol !== 'file'
+  }
+
+  set path(path) {
+    if (this.protocol == null) {
+      let m = path.match(/^([a-z]+):\/\//i)
+
+      if (m == null) {
+        this.protocol = 'file'
+      } else {
+        this.protocol = m[1].toLowerCase()
+
+        path = (this.protocol === 'file') ?
+          fileURLToPath(path) :
+          path.slice(m[0].length)
+      }
+    }
+
+    this.#path = path
+  }
+
+  get path() {
+    return this.#path
   }
 
   get size() {
@@ -100,7 +117,9 @@ export class Asset {
         this.buffer = Buffer.from(await res.arrayBuffer())
         this.fs = {
           size: this.buffer.length,
-          mtime: Date.parse(res.headers.get('Last-Modified'))
+          mtime: new Date(
+            Date.parse(res.headers.get('Last-Modified')) || Date.now()
+          )
         }
 
       } else {
