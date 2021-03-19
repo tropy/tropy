@@ -1,5 +1,5 @@
 import { createHash } from 'crypto'
-import { readFile, stat } from 'fs/promises'
+import { readFile, stat, writeFile } from 'fs/promises'
 import { basename, extname } from 'path'
 import { URL, fileURLToPath, pathToFileURL } from 'url'
 import { magic } from './magic'
@@ -7,7 +7,16 @@ import { pick } from '../common/util'
 
 
 export class Asset {
-  constructor(path, protocol) {
+  static async open(props, ...args) {
+    return (new this(props)).open(...args)
+  }
+
+  static async check(props, ...args) {
+    return (new this(props)).check(props, ...args)
+  }
+
+
+  constructor({ path, protocol }) {
     if (protocol == null) {
       let m = path.match(/^([a-z]+):\/\//i)
 
@@ -40,6 +49,10 @@ export class Asset {
     return this.base
   }
 
+  get mtime() {
+    return this.fs?.mtime
+  }
+
   get isRemote() {
     return this.protocol !== 'file'
   }
@@ -52,6 +65,28 @@ export class Asset {
     return this.isRemote ?
       `${this.protocol}://${this.path}` :
       pathToFileURL(this.path)
+  }
+
+  async check({ fastCheck = false, checksum, mtime }, ...args) {
+    try {
+      this.hasChanged = false
+      this.error = null
+
+      // fastCheck may return early without opening the asset!
+      if (fastCheck && mtime && !this.isRemote) {
+        if (mtime === (await stat(this.path)).mtime)
+          return this
+      }
+
+      await this.open(...args)
+      this.hasChanged = checksum !== this.checksum
+
+    } catch (e) {
+      this.hasChanged = true
+      this.error = e
+    }
+
+    return this
   }
 
   async open() {
@@ -79,6 +114,8 @@ export class Asset {
 
       this.mimetype = magic(this.buffer, this.ext)
 
+      return this
+
     } catch (e) {
       this.buffer = null
       this.checksum = null
@@ -87,6 +124,10 @@ export class Asset {
 
       throw e
     }
+  }
+
+  async save(path) {
+    await writeFile(path, this.buffer)
   }
 
   toJSON() {
