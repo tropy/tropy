@@ -1,5 +1,5 @@
 import { createHash } from 'crypto'
-import { readFile, stat, writeFile } from 'fs/promises'
+import { readFile, stat } from 'fs/promises'
 import { basename, extname } from 'path'
 import { URL, fileURLToPath, pathToFileURL } from 'url'
 import { magic } from './magic'
@@ -143,10 +143,6 @@ export class Asset {
 
       throw e
     }
-  }
-
-  async save(path) {
-    await writeFile(path, this.buffer)
   }
 
   toJSON() {

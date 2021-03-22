@@ -71,7 +71,7 @@ export class Create extends ImportCommand {
     try {
       let progress = yield this.progress()
 
-      let { base, cache, db, idx, prefs, template } = this.options
+      let { base, cache, db, idx, prefs, store, template } = this.options
       let { item } = this.action.payload
 
       let image = yield call(Image.open, {
@@ -86,6 +86,8 @@ export class Create extends ImportCommand {
       let ids = []
       let photos = []
       let position = idx[0] + progress
+
+      yield call(store.add, image)
 
       yield call(db.transaction, async tx => {
         let count = 0
