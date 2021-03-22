@@ -1,6 +1,7 @@
 import assert from 'assert'
 import { PROJECT, IDLE } from '../constants'
 import { Cache } from '../common/cache'
+import { Store } from '../common/asset'
 import { warn, debug } from '../common/log'
 import { ipc } from './ipc'
 import { consolidator } from './consolidator'
@@ -50,7 +51,10 @@ export function *open(opts = {}, { payload, meta }) {
     let project = yield call(load, db, opts)
 
     let cache = new Cache(ARGS.cache, project.id)
+    let store = new Store()
+
     yield call(cache.init)
+    yield call(store.init, project.store)
 
     // Update window's global ARGS to allow reloading the project!
     if (db.path !== ARGS.file) {
@@ -69,7 +73,7 @@ export function *open(opts = {}, { payload, meta }) {
 
       while (true) {
         let action = yield take(commands('project'))
-        yield fork(exec, { db, id: project.id, cache }, action)
+        yield fork(exec, { db, id: project.id, cache, store }, action)
       }
 
     } finally {
