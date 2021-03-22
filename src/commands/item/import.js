@@ -99,7 +99,10 @@ export class Import extends ImportCommand {
     try {
       yield this.progress()
 
-      let { base, density, db, templates, useLocalTimezone } = this.options
+      let {
+        base, store, density, db, templates, useLocalTimezone
+      } = this.options
+
       let { list } = this.action.payload
       let item
       let photos = []
@@ -112,6 +115,7 @@ export class Import extends ImportCommand {
 
       yield* this.handleDuplicate(image)
       let data = yield* this.getMetadata(image, templates)
+      yield call(store.add, image)
 
       yield call(db.transaction, async tx => {
         item = await mod.item.create(tx, templates.item.id, data.item)
