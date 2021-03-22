@@ -51,10 +51,10 @@ export function *open(opts = {}, { payload, meta }) {
     let project = yield call(load, db, opts)
 
     let cache = new Cache(ARGS.cache, project.id)
-    let store = new Store()
+    let store = new Store(project.store)
 
     yield call(cache.init)
-    yield call(store.init, project.store)
+    yield call(store.init)
 
     // Update window's global ARGS to allow reloading the project!
     if (db.path !== ARGS.file) {
