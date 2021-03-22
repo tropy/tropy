@@ -17,11 +17,7 @@ class Cache {
   }
 
   init = async () => {
-    try {
-      await mkdir(this.root, { recursive: true })
-    } catch (error) {
-      if (error.code !== 'EEXIST') throw error
-    }
+    await mkdir(this.root, { recursive: true })
 
     return this
   }
