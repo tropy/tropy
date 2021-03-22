@@ -2,12 +2,14 @@ import { mkdir } from 'fs/promises'
 
 
 export class Store {
-  init = async (root) => {
-    this.root = null
+  constructor(root) {
+    this.root = root
+  }
 
-    if (root) {
-      await mkdir(root, { recursive: true })
-      this.root = root
-    }
+  init = async (root = this.root) => {
+    this.root = root
+
+    if (this.root)
+      await mkdir(this.root, { recursive: true })
   }
 }

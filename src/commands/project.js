@@ -35,9 +35,12 @@ Reindex.register(PROJECT.REINDEX)
 
 export class Reload extends Command {
   *exec() {
-    let { db } = this.options
+    let { db, store } = this.options
 
     let project = yield call(mod.project.load, db)
+
+    if (project.store !== store.root)
+      yield call(store.init, project.store)
 
     yield put(act.project.update({
       isReadOnly: db.isReadOnly,
