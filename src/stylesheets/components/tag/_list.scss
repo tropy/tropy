@@ -31,11 +31,11 @@
       padding: 0 $default-padding-horizontal 0 $list-tree-padding-left;
 
       &.active {
-        background: $tag-list-active-bg;
+        @extend %list-active;
 
         .icon-tag:not([class*="color"]) {
           .color {
-            color: $tag-list-active-bg;
+            color: $list-active-bg;
           }
 
           .border {
@@ -44,18 +44,17 @@
         }
 
         &:focus {
-          background: $tag-list-focus-bg;
-          color: $tag-list-focus-color;
+          @extend %list-focus;
 
           .icon-tag {
             &:not([class*="color"]) {
               .color {
-                color: $tag-list-focus-bg;
+                color: $list-focus-bg;
               }
             }
 
             .border {
-              color: $tag-list-focus-color;
+              color: $list-focus-color;
             }
           }
         }
@@ -88,22 +87,17 @@
       }
 
       &:focus {
-        background: $tag-list-focus-bg;
-
-        &,
-        .icon {
-          color: $tag-list-focus-color;
-        }
+        @extend %list-focus;
 
         .icon.icon-tag { // Needs specifity to override nested focus
           &:not([class*="color"]) {
             .color {
-              color: $tag-list-focus-bg;
+              color: $list-focus-bg;
             }
           }
 
           .border {
-            color: $tag-list-focus-color;
+            color: $list-focus-color;
           }
         }
       }
