@@ -107,7 +107,7 @@ export class Import extends ImportCommand {
       let item
       let photos = []
 
-      let image = yield call(Image.open, {
+      let image = yield call([Image, Image.open], {
         path,
         density,
         useLocalTimezone
@@ -244,6 +244,8 @@ export class Import extends ImportCommand {
           }
 
           item.photos.push(photo.id)
+
+          photo.broken = true // mark for consolidation!
           photos.push(photo)
         }
       })

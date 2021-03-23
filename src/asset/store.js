@@ -23,7 +23,7 @@ export class Store {
         await asset.open()
 
       asset.protocol = 'file'
-      asset.path = join(this.root, `${asset.checksum}.${asset.ext}`)
+      asset.path = this.getPathFor(asset)
 
       await writeFile(asset.path, asset.buffer, { flag: 'wx' })
 
@@ -35,5 +35,9 @@ export class Store {
 
       throw e
     }
+  }
+
+  getPathFor(asset) {
+    return join(this.root, `${asset.checksum}${asset.ext.toLowerCase()}`)
   }
 }

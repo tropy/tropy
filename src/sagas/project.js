@@ -1,7 +1,7 @@
 import assert from 'assert'
 import { PROJECT, IDLE } from '../constants'
 import { Cache } from '../common/cache'
-import { Store } from '../common/asset'
+import { Store } from '../asset'
 import { warn, debug } from '../common/log'
 import { ipc } from './ipc'
 import { consolidator } from './consolidator'
