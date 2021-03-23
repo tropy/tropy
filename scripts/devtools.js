@@ -1,7 +1,7 @@
 'use strict'
 
 const { join, resolve } = require('path')
-const { unlink, readdir } = require('fs').promises
+const { unlink } = require('fs/promises')
 const { app, net, session } = require('electron')
 const { check, error, say } = require('./util')('δ')
 const { argv } = require('yargs')
