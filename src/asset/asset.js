@@ -8,7 +8,7 @@ import { pick } from '../common/util'
 
 export class Asset {
   static async open(props, ...args) {
-    return (new this(props)).open(...args)
+    return (new this(props)).open(props, ...args)
   }
 
   static async check(props, ...args) {
@@ -18,8 +18,12 @@ export class Asset {
   #path = null
 
   constructor({ path, protocol }) {
-    this.protocol = protocol // Set protocol first to avoid auto-dection!
+    // Set protocol first to avoid auto-dection!
+    this.protocol = protocol
     this.path = path
+
+    // Subtle: original filename; doesn't automatically update if path changes!
+    this.filename = this.base
   }
 
   get base() {
@@ -34,10 +38,6 @@ export class Asset {
 
   get ext() {
     return extname(this.base)
-  }
-
-  get filename() {
-    return this.base
   }
 
   get mtime() {

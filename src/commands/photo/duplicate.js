@@ -34,7 +34,7 @@ export class Duplicate extends ImportCommand {
       let { density, template, path, page, protocol } = originals[i]
 
       try {
-        let image = yield call(Image.open, {
+        let image = yield call([Image, Image.open], {
           density: density || settings.density,
           path,
           page,

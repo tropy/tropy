@@ -103,7 +103,7 @@ export class ImportCommand extends Command {
 
     if (title != null) {
       if (prefs.title.force || !(title in data)) {
-        data[title] = text(image.title)
+        data[title] = text(image.name)
       }
     }
 

@@ -18,7 +18,7 @@ export class Create extends Command {
       state.settings.density
     ]))
 
-    let image = yield call(Image.open, {
+    let image = yield call([Image, Image.open], {
       ...photo,
       density: photo.density || density
     })

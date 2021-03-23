@@ -133,40 +133,40 @@ export class Consolidate extends ImportCommand {
       let { cache, db, overwrite, useLocalTimezone, store } = this.options
       let density = photo.density || this.options.density
 
-      let {
-        image,
-        hasChanged,
-        error
-      } = yield call(Image.check, photo, {
+      let image = yield call([Image, Image.check], {
+        ...photo,
         density,
         useLocalTimezone
       })
 
       var data
-      var broken = (error != null)
+      var broken = (image.error != null)
 
-      if (meta.force || hasChanged) {
+      if (meta.force || image.hasChanged) {
         if (broken) {
-          warn({ stack: error.stack }, `failed to open photo ${photo.path}`)
+          warn({
+            stack: image.error.stack
+          }, `failed to open photo ${photo.path}`)
 
           let path = yield this.resolve(photo)
           if (path) {
-            image = yield call(Image.open, {
+            image.protocol = 'file'
+            image.path = path
+
+            yield call([image, image.open], {
               density,
-              path,
               page: photo.page,
-              protocol: 'file',
               useLocalTimezone
             })
           }
         }
 
-        if (image) {
+        if (image.buffer) {
           broken = false
 
           yield call(store.add, image)
 
-          hasChanged = (image.checksum !== photo.checksum) ||
+          let hasChanged = (image.checksum !== photo.checksum) ||
             (image.path !== photo.path)
 
           if (meta.force || hasChanged) {

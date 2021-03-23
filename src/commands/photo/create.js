@@ -74,7 +74,7 @@ export class Create extends ImportCommand {
       let { base, cache, db, idx, prefs, store, template } = this.options
       let { item } = this.action.payload
 
-      let image = yield call(Image.open, {
+      let image = yield call([Image, Image.open], {
         path,
         density: prefs.density,
         useLocalTimezone: prefs.localtime
