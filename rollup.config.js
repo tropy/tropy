@@ -94,7 +94,8 @@ export default [
       // visualize({ filename: 'main.html' })
     ],
     external: [
-      'electron'
+      'electron',
+      'fs/promises'
     ],
     onwarn
   },
@@ -194,7 +195,8 @@ export default [
       // visualize({ filename: 'renderer.html' })
     ],
     external: [
-      'electron'
+      'electron',
+      'fs/promises'
     ],
     onwarn
   },
