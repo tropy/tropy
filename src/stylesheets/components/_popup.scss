@@ -138,3 +138,7 @@ $popup-focus-animations: (
     }
   }
 }
+
+.popup-open {
+  pointer-events: none;
+}
