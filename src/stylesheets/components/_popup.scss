@@ -98,6 +98,7 @@ $popup-focus-animations: (
       border: ($input-border-width + $popup-focus-shadow-width) solid $editable-border-color;
       box-shadow: none;
       background-clip: padding-box;
+      padding: 0;
 
       &::before,
       &::after {
