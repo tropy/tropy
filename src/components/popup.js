@@ -1,7 +1,7 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
 import { bool, func, node, number, oneOf, shape, string } from 'prop-types'
-import { $, append, classes, element, has, on, off, remove } from '../dom'
+import { $, append, element, has, on, off, toggle, remove } from '../dom'
 import { noop } from '../common/util'
 import cx from 'classnames'
 import throttle from 'lodash.throttle'
@@ -11,7 +11,7 @@ export class Popup extends React.Component {
     super(props)
     this.root = $('#popup-root')
     this.dom = element('div')
-    classes(this.dom, 'popup-container')
+    toggle(this.dom, 'popup-container', true)
   }
 
   componentDidMount() {
@@ -20,8 +20,8 @@ export class Popup extends React.Component {
     on(window, 'resize', this.handleResize)
     this.clip()
     append(this.dom, this.root)
+    toggle(document.body, 'popup-open', true)
     if (this.props.autofocus) this.focus()
-    document.body.style.pointerEvents = 'none'
   }
 
   componentWillUnmount() {
@@ -30,7 +30,7 @@ export class Popup extends React.Component {
     off(this.dom, 'contextmenu', this.handleContextMenu)
     off(window, 'resize', this.handleResize)
     this.clip(null)
-    document.body.style.pointerEvents = null
+    toggle(document.body, 'popup-open', false)
   }
 
   get classes() {
