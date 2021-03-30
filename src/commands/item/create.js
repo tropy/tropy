@@ -6,6 +6,7 @@ import * as act from '../../actions'
 import * as mod from '../../models'
 
 import {
+  getItemPhotos,
   getItemTemplate,
   getTemplateValues
 } from '../../selectors'
@@ -63,17 +64,18 @@ export class Destroy extends Command {
     let response = yield call(prompt, 'item.destroy')
     this.resume()
 
-    if (response.cancel) return
+    if (response.cancel)
+      return
 
     try {
       if (items.length) {
         yield call(mod.item.destroy, db, items)
-        yield put(act.item.remove(items))
-
       } else {
-        yield call(mod.item.prune, db, false)
+        items = yield call(mod.item.prune, db, false)
+      }
 
-        // TODO remove deleted items from state!
+      if (items.length) {
+        yield put(act.item.remove(items))
       }
 
     } finally {
