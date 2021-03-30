@@ -6,7 +6,6 @@ import * as act from '../../actions'
 import * as mod from '../../models'
 
 import {
-  getItemPhotos,
   getItemTemplate,
   getTemplateValues
 } from '../../selectors'
