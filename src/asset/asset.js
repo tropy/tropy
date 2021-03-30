@@ -17,13 +17,16 @@ export class Asset {
 
   #path = null
 
-  constructor({ path, protocol }) {
+  constructor({ path, protocol, checksum, mimetype }) {
     // Set protocol first to avoid auto-dection!
     this.protocol = protocol
     this.path = path
 
     // Subtle: original filename; doesn't automatically update if path changes!
     this.filename = this.base
+
+    this.checksum = checksum
+    this.mimetype = mimetype
   }
 
   get base() {

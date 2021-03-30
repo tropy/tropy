@@ -78,7 +78,7 @@ export function *open(opts = {}, { payload, meta }) {
 
     } finally {
       if (!opts.noSetup)
-        yield call(teardown, db, project, cache)
+        yield call(teardown, { db, project, cache, store })
     }
   } catch (e) {
     warn({ stack: e.stack }, 'unexpected error in *project.open')
@@ -164,7 +164,7 @@ function *setup(db, project) {
   }
 }
 
-function *teardown(db, project) {
+function *teardown({ db, project, store }) {
   yield all([
     call(persist, 'nav', project.id),
     call(persist, 'notepad', project.id),
@@ -185,6 +185,7 @@ function *teardown(db, project) {
     yield call(mod.selection.prune, db)
     yield call(mod.note.prune, db)
     yield call(mod.subject.prune, db)
+    yield call(store.prune, db)
     yield call(mod.access.prune, db)
   }
 

@@ -1,9 +1,33 @@
-import { mkdir, writeFile } from 'fs/promises'
-import { join } from 'path'
+import assert from 'assert'
+import { mkdir, rm, writeFile } from 'fs/promises'
+import { isAbsolute, dirname, normalize, join } from 'path'
+import { Asset } from './asset'
+import { debug, warn } from '../common/log'
+import mod from '../models/store'
 
 export class Store {
+  #root
+
   constructor(root) {
     this.root = root
+  }
+
+  set root(root) {
+    this.#root = null
+
+    if (root) {
+      root = normalize(root)
+
+      assert(isAbsolute(root), 'store folder path must be absolute')
+      assert(dirname(root) !== root, 'store folder must not be fs root')
+
+      this.#root = root
+    }
+
+  }
+
+  get root() {
+    return this.#root
   }
 
   init = async (root = this.root) => {
@@ -19,7 +43,10 @@ export class Store {
 
       var { path, protocol } = asset
 
-      if (!asset.checksum)
+      if (!(asset instanceof Asset))
+        asset = new Asset(asset)
+
+      if (!asset.buffer)
         await asset.open()
 
       asset.protocol = 'file'
@@ -35,6 +62,34 @@ export class Store {
 
       throw e
     }
+  }
+
+  remove = async (asset) => {
+    try {
+      if (!this.root) return
+
+      if (!(asset instanceof Asset))
+        asset = new Asset(asset)
+
+      let path = this.getPathFor(asset)
+      if (path !== asset.path) return
+
+      debug(`remove "${path}" from store...`)
+      await rm(path, { force: true, maxRetries: 3 })
+
+    } catch (e) {
+      warn({ stack: e.stack }, `failed removing ${asset.path} from store`)
+    }
+  }
+
+  prune = async (db) => {
+    if (this.root) {
+      for (let asset of (await mod.orphaned(db))) {
+        await this.remove({ protocol: 'file', ...asset })
+      }
+    }
+
+    await mod.purge(db)
   }
 
   getPathFor(asset) {
