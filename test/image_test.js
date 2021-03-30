@@ -2,7 +2,7 @@ import { Image } from '../src/image'
 
 describe('Image', () => {
   describe('given an image', () => {
-    let image = new Image(F.images('PA140105.JPG').path)
+    let image = new Image({ path: F.images('PA140105.JPG').path })
 
     before(() => image.open())
 
@@ -15,7 +15,7 @@ describe('Image', () => {
     })
 
     it('computes its title', () => {
-      expect(image.title).to.eql('PA140105')
+      expect(image.name).to.eql('PA140105')
     })
 
     it('computes its size', () => {
@@ -33,7 +33,7 @@ describe('Image', () => {
 
     it('computes file stats', () => {
       expect(image)
-        .to.have.property('file')
+        .to.have.property('fs')
         .that.contains.keys(['size', 'ctime'])
     })
   })
