@@ -15,7 +15,7 @@ PRAGMA encoding = 'UTF-8';
 PRAGMA application_id = -621960955;
 
 -- Save the current migration number
-PRAGMA user_version = 2103171215;
+PRAGMA user_version = 2103301553;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -193,6 +193,11 @@ CREATE TABLE IF NOT EXISTS "taggings" (
   created    NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id, tag_id)
 ) WITHOUT ROWID;
+CREATE TABLE deleted_photos (
+  path TEXT NOT NULL,
+  checksum TEXT NOT NULL,
+  deleted NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN
@@ -302,6 +307,13 @@ CREATE TRIGGER update_lists_cycle_check
       WHEN 1 THEN
         RAISE(ABORT, 'Lists may not contain cycles')
       END;
+  END;
+CREATE TRIGGER delete_photos_store
+  AFTER DELETE ON photos
+  FOR EACH ROW WHEN OLD.protocol = 'file' AND OLD.path NOT NULL
+  BEGIN
+    INSERT INTO deleted_photos (path, checksum)
+      VALUES (OLD.path, OLD.checksum);
   END;
 PRAGMA writable_schema=OFF;
 COMMIT;
