@@ -1,7 +1,7 @@
 import { createSelector as memo } from 'reselect'
 import { seq, compose, filter, into, map, cat, keep } from 'transducers.js'
 import { getSelectedItems } from './items'
-import { blank } from '../common/util'
+import { blank, pluck } from '../common/util'
 
 
 const withErrors = ([, photo]) =>
@@ -22,24 +22,32 @@ export const getSelectedPhoto = memo(
   (photos, id) => (id != null) ? photos[id] : null
 )
 
+const expandItemPhotos = (items, photos) => {
+  let k = 0
+  let idx = {}
+  let lst = seq(items, compose(
+    map(item => item.photos),
+    cat,
+    map(id => photos[id]),
+    keep(),
+    map(photo => (idx[photo.id] = k++, photo))
+  ))
+
+  lst.idx = idx
+  return lst
+}
+
+export const getItemPhotos = (state, props) =>
+  expandItemPhotos(
+    pluck(state.items, props.items),
+    state.photos)
+
 export const getVisiblePhotos = memo(
   getPhotos,
   getSelectedItems,
 
-  (photos, items) => {
-    let k = 0
-    let idx = {}
-    let lst = seq(items, compose(
-      map(item => item.photos),
-      cat,
-      map(id => photos[id]),
-      keep(),
-      map(photo => (idx[photo.id] = k++, photo))
-    ))
-
-    lst.idx = idx
-    return lst
-  }
+  (photos, items) =>
+    expandItemPhotos(items, photos)
 )
 
 export const getPhotosWithErrors = memo(
