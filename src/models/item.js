@@ -1,4 +1,5 @@
 import { array, blank, list as lst, uniq } from '../common/util'
+import { select } from '../common/query'
 import { NAV } from '../constants'
 
 import modMetadata from './metadata'
@@ -336,17 +337,19 @@ mod.item = {
     return db.run(
       `DELETE FROM subjects WHERE id IN (${ids.join(',')})`
     )
+
   },
 
-  prune(db, since = '-1 month') {
-    const condition = since ?
-      ` WHERE deleted < datetime("now", "${since}")` : ''
+  async prune(db, since = '-1 month') {
+    let morituri = select('id').from('trash').join('items', { using: 'id' })
 
-    return db.run(`
-      DELETE FROM subjects
-        WHERE id IN (
-          SELECT id FROM trash JOIN items USING (id)${condition})`
-    )
+    if (since)
+      morituri.where(`deleted < datetime("now", "${since}")`)
+
+    let items = await db.all(...morituri)
+    await mod.item.destroy(db, items)
+
+    return items
   },
 
   tags: {
