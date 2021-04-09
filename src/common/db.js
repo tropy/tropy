@@ -162,7 +162,7 @@ export class Database extends EventEmitter {
 
   empty = async () => {
     const { count } = await this.get(`
-      SELECT count(*) AS count FROM sqlite_master`)
+      SELECT count(*) AS count FROM sqlite_schema`)
 
     return count === 0
   }
