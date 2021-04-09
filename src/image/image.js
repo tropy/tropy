@@ -147,11 +147,7 @@ export class Image extends Asset {
       xmp: xmp(meta.xmp)
     }
 
-    let dup = await img
-      .toFormat(meta.hasAlpha ? 'webp' : 'jpeg')
-      .toBuffer()
-
-    let stats = await sharp(dup).stats()
+    let stats = await img.stats()
     let { dominant, channels } = stats
 
     this.stats[page] = {
