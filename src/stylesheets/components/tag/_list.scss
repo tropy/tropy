@@ -33,29 +33,43 @@
       &.active {
         @extend %list-active;
 
-        .icon-tag:not([class*="color"]) {
-          .color {
-            color: $list-active-bg;
-          }
+        &:focus {
+          @extend %list-focus;
+        }
+      }
 
-          .border {
-            color: $tag-list-active-border;
+      .icon-tag {
+        .is-blurred & {
+          &:not([class*="color"]) {
+            .color {
+              @if $platform == darwin {
+                color: $sidebar-blurred-bg;
+              }
+            }
           }
         }
 
-        &:focus {
-          @extend %list-focus;
-
-          .icon-tag {
-            &:not([class*="color"]) {
-              .color {
-                color: $list-focus-bg;
-              }
+        @include state(".tag.active") {
+          &:not([class*="color"]) {
+            .color {
+              color: $list-active-bg;
             }
 
             .border {
-              color: $list-focus-color;
+              color: $tag-list-active-border;
             }
+          }
+        }
+
+        @include state(".tag.active:focus") {
+          &:not([class*="color"]) {
+            .color {
+              color: $list-focus-bg;
+            }
+          }
+
+          .border {
+            color: $list-focus-color;
           }
         }
       }

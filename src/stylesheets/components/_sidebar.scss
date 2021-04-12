@@ -10,6 +10,12 @@
   display: flex;
   flex-direction: column;
 
+  .is-blurred & {
+    @if $platform == darwin {
+      background-color: $sidebar-blurred-bg;
+    }
+  }
+
   .toolbar {
     .is-full-screen & {
       display: none;
@@ -35,6 +41,12 @@
   h3 {
     color: $sidebar-headings-color;
     padding: 0 $default-padding-horizontal 0 $list-tree-padding-left;
+
+    .is-blurred & {
+      @if $platform == darwin {
+        color: $sidebar-blurred-headings-color;
+      }
+    }
   }
 
   nav {
@@ -53,11 +65,15 @@
         padding-right: $default-padding-horizontal;
         position: relative;
 
-        @include state("li.active", "li.over") {
-          @extend %list-active;
-        }
-
         @include state("li.active") {
+          @extend %list-active;
+
+          @if $platform == darwin {
+            .is-blurred & {
+              background-color: $sidebar-list-blurred-bg;
+            }
+          }
+
           @include state(".sidebar :focus") {
             @extend %list-focus;
           }
@@ -129,6 +145,12 @@
     .icon {
       flex: 0 0 auto;
 
+      .is-blurred & {
+        @if $platform == darwin {
+          opacity: $sidebar-blurred-icon-opacity-darwin;
+        }
+      }
+
       &:first-child {
         margin-right: $space-xs;
       }
@@ -161,6 +183,12 @@
       flex: 1 100000000 auto;
       display: flex;
       min-width: 0; // Fix truncation
+
+      .is-blurred & {
+        @if $platform == darwin {
+          opacity: $sidebar-blurred-name-opacity-darwin;
+        }
+      }
     }
   }
 

@@ -46,6 +46,7 @@
   #{--shade-5}:            $shade-5;
   #{--shade-5-50}:         rgba($shade-5, 0.5);
   #{--shade-5-lighten-5}:  lighten($shade-5, 5%);
+  #{--shade-5-darken-4}:   darken($shade-5, 4%);
   #{--shade-6}:            $shade-6;
   #{--shade-6-lighten-2}:  lighten($shade-6, 2%);
   #{--shade-6-lighten-4}:  lighten($shade-6, 4%);
