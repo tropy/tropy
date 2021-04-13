@@ -241,7 +241,7 @@ export function *main() {
         break
 
       if (action.type === PROJECT.OPEN) {
-        task = yield fork(open, {}, action.payload, action.meta)
+        task = yield fork(open, {}, action)
       }
     }
 
