@@ -106,6 +106,8 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
       app.quit()
     })
 
+    process.on('SIGINT', () => app.quit())
+
     info(`ready after ${tropy.ready - START}ms`)
   })
 
