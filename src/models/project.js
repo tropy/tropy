@@ -2,7 +2,7 @@ import assert from 'assert'
 import { dirname, join } from 'path'
 import { v4 as uuid } from 'uuid'
 import ARGS from '../args'
-import { into, update } from '../common/query'
+import { into, select, update } from '../common/query'
 import { info } from '../common/log'
 import { home } from '../common/os'
 import { paths } from '../common/release'
@@ -19,14 +19,10 @@ export default {
   },
 
   async load(db) {
-    const [project, items] = await Promise.all([
-      db.get(`
-        SELECT project_id AS id, name, base FROM project LIMIT 1`),
-      db.get(`
-        SELECT COUNT (id) AS total
-          FROM items LEFT OUTER JOIN trash USING (id)
-          WHERE deleted IS NULL`)
-    ])
+    let project = await db.get(
+      ...select({ id: 'project_id' }, 'name', 'base')
+        .from('project')
+        .limit(1))
 
     assert(project != null, 'no project found')
 
@@ -42,6 +38,11 @@ export default {
         project.base = ARGS[project.base]
         break
     }
+
+    let items = await db.get(
+      ...select({ total: 'COUNT (id)' })
+        .from('items').outer.join('trash', { using: 'id' })
+        .where({ deleted: null }))
 
     project.items = items.total
 
