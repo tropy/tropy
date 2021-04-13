@@ -613,6 +613,8 @@ en:
           remove: Failed to remove field from template.
     tag:
       create: Failed to create tag. Tag names must be unique.
+    db:
+      SQLITE_CANTOPEN: Cannot find or open database file.
   flash:
     update:
       ready:

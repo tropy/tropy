@@ -55,16 +55,18 @@ function notify(opts) {
   })
 }
 
-function fail(e, msg = '') {
+function fail(e, code = e.code, detail) {
+  let message = t(`error.${code}`) || e.message
+
   return notify({
     type: 'error',
     ...t('dialog', 'error'),
-    message: t('error', ...msg.split('.')) || e.message,
-    detail: e.stack
+    message,
+    detail: detail || e.stack
   }).then(({ response }) => {
     switch (response) {
       case 1:
-        clipboard.write({ text: crashReport(e, msg) })
+        clipboard.write({ text: crashReport(e, message) })
         break
       case 2:
         shell.openPath(ARGS.log)
