@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import fs from 'fs'
 import { normalize } from 'path'
 import Bluebird from 'bluebird'
-import { createPool } from 'generic-pool'
+import { createPool, Pool } from 'generic-pool'
 import sqlite from './sqlite'
 import { Migration } from './migration'
 import { debug, info, trace, warn } from './log'
@@ -20,6 +20,14 @@ const M = {
 const cache = {}
 const IUD = /^\s*(insert|update|delete)/i
 
+{
+  // PATCH generic-pool to ensure that no more connections are created
+  // while draining the pool!
+  let dispense = Pool.prototype._dispense
+  Pool.prototype._dispense = function () {
+    if (!this._draining) dispense.call(this)
+  }
+}
 
 export class Database extends EventEmitter {
   static async create(path, script, ...args) {
@@ -60,11 +68,19 @@ export class Database extends EventEmitter {
     }, {
       min: 0,
       max: 3,
-      idleTimeoutMillis: 1000 * 60 * 5,
+      idleTimeoutMillis: 1000 * 60 * 3,
       acquireTimeoutMillis: 1000 * 10,
       Promise: Bluebird,
       ...opts
     })
+
+    this.pool
+      .on('factoryCreateError', (e) => {
+        this.emit('error', e)
+      })
+      .on('factoryDestroyError', (e) => {
+        this.emit('error', e)
+      })
   }
 
   migrate = async (...args) => {
@@ -92,7 +108,6 @@ export class Database extends EventEmitter {
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
         if (error) {
-          this.emit('error', error)
           return reject(error)
         }
 
@@ -124,7 +139,7 @@ export class Database extends EventEmitter {
   }
 
   async destroy(conn) {
-    debug({ path: this.path }, 'close db')
+    debug({ path: this.path }, 'close db connection')
 
     await conn.optimize()
     await conn.close()
@@ -155,9 +170,12 @@ export class Database extends EventEmitter {
   }
 
   close = async () => {
-    await this.pool.drain()
-    await this.pool.clear()
-    this.emit('close')
+    try {
+      await this.pool.drain()
+      await this.pool.clear()
+    } finally {
+      this.emit('close')
+    }
   }
 
   empty = async () => {
