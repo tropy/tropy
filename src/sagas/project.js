@@ -213,9 +213,9 @@ export function *main() {
     ])
 
     while (true) {
-      let { type, payload, meta } = yield take([PROJECT.OPEN, PROJECT.CLOSE])
+      let action = yield take([PROJECT.OPEN, PROJECT.CLOSE])
 
-      debug(`*main "${type}" received`)
+      debug(`*main "${action.type}" received`)
 
       if (task != null && task.isRunning()) {
         yield cancel(task)
@@ -227,11 +227,14 @@ export function *main() {
         task = null
       }
 
-      if (type === PROJECT.CLOSE && payload !== 'user')
+      // Break main loop if project was closed without reason.
+      // This typically means that the window is being closed.
+      if (action.type === PROJECT.CLOSE &&
+        !(action.error || action.payload === 'user'))
         break
 
-      if (type === PROJECT.OPEN) {
-        task = yield fork(open, payload, meta)
+      if (action.type === PROJECT.OPEN) {
+        task = yield fork(open, action.payload, action.meta)
       }
     }
 

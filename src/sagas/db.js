@@ -26,9 +26,12 @@ export function *handleDatabaseErrors(db, actions) {
         yield put(actions[error.code](error))
 
       } else {
-        warn({ stack: error.stack }, 'unexpected db error')
+        warn({ stack: error.stack }, 'db error')
 
-        yield call(fail, error, db.path)
+        // Report the error but don't wait for the response to make
+        // sure the default action is dispatched without delay!
+        fail(error, `db.${error.code}`, db.path).catch()
+
         yield put(actions.default(error))
       }
     }
