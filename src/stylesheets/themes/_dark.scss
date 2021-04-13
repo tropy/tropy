@@ -189,16 +189,19 @@ $project-heading-color: var(--shade-8);
 $item-count-color:      var(--shade-6);
 
 // Sidebar
-$sidebar-bg:                          var(--shade-4);
-$sidebar-blurred-bg:                  var(--shade-2);
-$sidebar-list-blurred-bg:             var(--shade-5-darken-4);
-$sidebar-text-color:                  var(--shade-8);
-$sidebar-headings-color:              var(--shade-7);
-$sidebar-blurred-headings-color:      var(--shade-7-darken-5);
-$sidebar-blurred-icon-opacity-darwin: 0.33;
-$sidebar-blurred-name-opacity-darwin: 0.55;
-$sidebar-blurred-tag-opacity-darwin:  0.34;
-$activity-border-color:               var(--shade-1);
+$sidebar-bg:                              var(--shade-4);
+$sidebar-blurred-bg:                      var(--shade-2);
+$sidebar-list-blurred-bg:                 var(--shade-5-darken-4);
+$sidebar-text-color:                      var(--shade-8);
+$sidebar-headings-color:                  var(--shade-7);
+$sidebar-blurred-headings-color:          var(--shade-7-darken-5);
+$sidebar-blurred-icon-opacity-darwin:     0.33;
+$sidebar-blurred-name-opacity-darwin:     0.55;
+$sidebar-blurred-tag-opacity-darwin:      0.34;
+$activity-border-color:                   var(--shade-1);
+$activity-blurred-border-color-darwin:    var(--shade-1-darken-4);
+$activity-blurred-progress-bar-bg-darwin: var(--shade-2-darken-4);
+$activity-blurred-progress-val-bg-darwin: var(--shade-6-darken-4);
 
 // Items
 $item-table-header-color:        var(--shade-8);

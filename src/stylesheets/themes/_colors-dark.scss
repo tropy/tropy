@@ -33,8 +33,10 @@
   #{--shade-1-lighten-2}:  lighten($shade-1, 2%);
   #{--shade-1-lighten-4}:  lighten($shade-1, 4%);
   #{--shade-1-lighten-6}:  lighten($shade-1, 6%);
+  #{--shade-1-darken-4}:   darken($shade-1, 4%);
   #{--shade-1-darken-10}:  darken($shade-1, 10%);
   #{--shade-2}:            $shade-2;
+  #{--shade-2-darken-4}:   darken($shade-2, 4%);
   #{--shade-3}:            $shade-3;
   #{--shade-3-50}:         rgba($shade-3, 0.5);
   #{--shade-3-60}:         rgba($shade-3, 0.6);
@@ -52,6 +54,7 @@
   #{--shade-6-lighten-4}:  lighten($shade-6, 4%);
   #{--shade-6-lighten-5}:  lighten($shade-6, 5%);
   #{--shade-6-lighten-6}:  lighten($shade-6, 6%);
+  #{--shade-6-darken-4}:   darken($shade-6, 4%);
   #{--shade-7}:            $shade-7;
   #{--shade-7-darken-5}:   darken($shade-7, 5%);
   #{--shade-7-50}:         rgba($shade-7, 0.5);

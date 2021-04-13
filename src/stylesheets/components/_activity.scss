@@ -34,6 +34,12 @@
   animation: activity-in 0.125s ease both;
   height: $activity-height;
 
+  .is-blurred & {
+    @if $platform == darwin {
+      border-top-color: $activity-blurred-border-color-darwin;
+    }
+  }
+
   .activity-container {
     flex: 1 1 0;
     min-width: 0;
@@ -54,11 +60,26 @@
   .activity-text {
     @include css-truncation;
     margin-right: auto;
+
+    .is-blurred & {
+      @if $platform == darwin {
+        opacity: $sidebar-blurred-name-opacity-darwin;
+      }
+    }
   }
 
-  .progress-bar {
-    flex: 1 1 auto;
-    margin-right: $space-min;
+  progress {
+    .is-blurred & {
+      @if $platform == darwin {
+        &::-webkit-progress-bar {
+          background-color: $activity-blurred-progress-bar-bg-darwin;
+        }
+
+        &::-webkit-progress-value {
+          background-color: $activity-blurred-progress-val-bg-darwin;
+        }
+      }
+    }
   }
 
   .btn {
