@@ -3,16 +3,6 @@
 // --------------------------------------------------
 
 .editor {
-  &.is-blurred {
-    .toolbar-context {
-      opacity: 0.6;
-
-      &.link {
-        opacity: initial;
-      }
-    }
-  }
-
   .toolbar {
     padding-top: 0;
     border-bottom: 1px solid $editor-toolbar-border;
@@ -63,6 +53,22 @@
 
       & + .btn-icon {
         margin-left: $space-min / 2;
+      }
+    }
+  }
+
+  .toolbar-context {
+    @include state(".editor.is-blurred") {
+      opacity: 0.6;
+
+      &.link {
+        opacity: initial;
+      }
+    }
+
+    @include state(".is-blurred .editor") {
+      @if $platform == darwin {
+        opacity: $editor-toolbar-blurred-opacity-darwin;
       }
     }
   }

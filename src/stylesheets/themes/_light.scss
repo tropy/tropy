@@ -177,6 +177,9 @@ $icon-active-color: var(--shade-9);
 
 $icon-spin-color: var(--brand-primary);
 
+// Toolbar
+$toolbar-blurred-opacity-darwin: 0.5;
+
 // Project
 $project-darken-color:  var(--shade-10-10);
 $project-heading-color: var(--shade-8);
@@ -303,6 +306,7 @@ $esper-slider-value-color:               var(--shade-6);
 $esper-overlay-bg:                       var(--shade-0-80);
 $esper-toolbar-overlay-btn-active-color: var(--shade-0);
 $esper-toolbar-overlay-btn-active-bg:    var(--shade-10-60);
+$esper-toolbar-blurred-opacity-darwin:   0.3;
 $esper-overlay-icon-color:               var(--shade-7);
 $esper-checkbox-bg:                      $input-bg;
 $esper-input-border:                     var(--shade-2-darken-10);
@@ -331,12 +335,13 @@ $progress-cancel-color: var(--shade-1);
 $progress-cancel-bg:    var(--shade-6);
 
 // Editor
-$editor-toolbar-border:      var(--shade-2);
-$editor-btn-hover-bg:        var(--shade-1);
-$editor-btn-active-color:    var(--shade-7);
-$editor-btn-active-bg:       var(--shade-2);
-$editor-placeholder-color:   var(--shade-5);
-$editor-pseudo-selection-bg: var(--shade-3);
+$editor-toolbar-border:                 var(--shade-2);
+$editor-toolbar-blurred-opacity-darwin: 0.3;
+$editor-btn-hover-bg:                   var(--shade-1);
+$editor-btn-active-color:               var(--shade-7);
+$editor-btn-active-bg:                  var(--shade-2);
+$editor-placeholder-color:              var(--shade-5);
+$editor-pseudo-selection-bg:            var(--shade-3);
 
 $blockquote-border-color: var(--shade-2);
 $selected-node-color:     var(--brand-primary-tint-40);

@@ -19,6 +19,15 @@
     }
   }
 
+  .is-blurred & {
+    .toolbar-left,
+    .toolbar-right {
+      @if $platform == darwin {
+        opacity: $esper-toolbar-blurred-opacity-darwin !important;
+      }
+    }
+  }
+
   &:not(.overlay-mode) {
     .slider-handle {
       background-color: $esper-slider-handle-bg;
