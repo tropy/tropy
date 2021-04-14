@@ -346,7 +346,7 @@ mod.item = {
     if (since)
       morituri.where(`deleted < datetime("now", "${since}")`)
 
-    let items = await db.all(...morituri)
+    let items = (await db.all(...morituri)).map(({ id }) => id)
     await mod.item.destroy(db, items)
 
     return items
