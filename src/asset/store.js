@@ -74,11 +74,11 @@ export class Store {
       let path = this.getPathFor(asset)
       if (path !== asset.path) return
 
-      debug(`remove "${path}" from store...`)
+      debug(`removing "${path}" from store...`)
       await rm(path, { force: true, maxRetries: 3 })
 
     } catch (e) {
-      warn({ stack: e.stack }, `failed removing ${asset.path} from store`)
+      warn({ stack: e.stack }, `failed removing ${asset.path}`)
     }
   }
 
@@ -89,6 +89,9 @@ export class Store {
       }
     }
 
+    // NB this removes all deleted photos. In case some files
+    // failed to be removed above, they will stay permanently
+    // in the store folder.
     await mod.purge(db)
   }
 

@@ -55,15 +55,21 @@ Delete.register(ITEM.DELETE)
 
 
 export class Destroy extends Command {
+  async confirm() {
+    try {
+      this.suspend()
+      return !(await prompt('item.destroy')).cancel
+
+    } finally {
+      this.resume()
+    }
+  }
+
   *exec() {
     let { db } = this.options
     let items = this.action.payload
 
-    this.suspend()
-    let response = yield call(prompt, 'item.destroy')
-    this.resume()
-
-    if (response.cancel)
+    if (!(yield call([this, this.confirm])))
       return
 
     try {
