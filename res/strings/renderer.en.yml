@@ -197,7 +197,7 @@ en:
           null: Using absolute paths
           project: Relative to the project file
           home: Relative to your home directory
-      store: Import photos to
+      store: Managed folder
       name: Name
       id: ID
       file: File
