@@ -4,7 +4,7 @@ import { Input } from './input'
 import { FileSelect } from './file'
 import { Select } from './select'
 import cx from 'classnames'
-import { noop } from '../common/util'
+import { noop, set } from '../common/util'
 import { SASS } from '../constants'
 
 import {
@@ -148,14 +148,12 @@ export class FormField extends React.PureComponent {
   }
 
   handleChange = (value) => {
-    this.props.onInputChange({ [this.props.name]: value })
+    this.props.onInputChange(set({}, this.props.name, value))
   }
 
   handleCommit = (value, { hasChanged }) => {
     if (hasChanged) {
-      this.props.onChange({
-        [this.props.name]: value
-      })
+      this.props.onChange(set({}, this.props.name, value))
     }
   }
 
