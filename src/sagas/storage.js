@@ -2,16 +2,17 @@ import { put, select, takeEvery as every, fork } from 'redux-saga/effects'
 import { Storage } from '../storage'
 import * as act from '../actions'
 import { STORAGE } from '../constants'
+import { get } from '../common/util'
 
 const PERSIST = action => action?.meta?.persist
 
 export function *restore(name, ...args) {
   let data = Storage.load(name, ...args)
-  yield put(act[name].restore(data))
+  yield put(get(act, name).restore(data))
 }
 
 export function *persist(name, ...args) {
-  let data = yield select(state => state[name])
+  let data = yield select(state => get(state, name))
   Storage.save(name, data, ...args)
 }
 
