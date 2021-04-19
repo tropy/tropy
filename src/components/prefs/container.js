@@ -88,7 +88,7 @@ class Prefs extends React.PureComponent {
           </PrefPane>
           <PrefPane
             name="project"
-            isActive={this.isActive('project')}>
+            isActive={this.props.project.id && this.isActive('project')}>
             <ProjectPrefs
               project={this.props.project}
               onChange={this.props.onProjectSave}/>

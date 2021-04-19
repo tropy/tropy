@@ -56,7 +56,7 @@ Reload.register(PROJECT.RELOAD)
 
 export class Save extends Command {
   *exec() {
-    let { payload } = this.action
+    let { local, ...payload } = this.action.payload
     let { db, id } = this.options
 
     let { project } = yield select()
@@ -70,6 +70,10 @@ export class Save extends Command {
       basePath = mod.project.getBasePath(db, payload.base)
       payload = { store, ...payload }
     }
+
+    // Save and update local settings in their entirety!
+    if (local)
+      payload.local = { ...project.local, ...local }
 
     this.original = { ...original, basePath: project.basePath }
     yield put(act.project.update({ ...payload, basePath }))
