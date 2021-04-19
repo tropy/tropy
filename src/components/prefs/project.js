@@ -54,11 +54,11 @@ export class ProjectPrefs extends React.PureComponent {
           <hr/>
           <FormField
             id="prefs.project.watch"
-            name="watch"
+            name="local.watch"
             isCompact
             tabIndex={0}
             type="directory"
-            value={this.props.project.watch}
+            value={this.props.project.local.watch}
             onChange={this.props.onChange}/>
         </Form>
       </ScrollContainer>

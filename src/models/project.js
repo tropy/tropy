@@ -6,6 +6,8 @@ import { into, select, update } from '../common/query'
 import { info } from '../common/log'
 import { home } from '../common/os'
 import { paths } from '../common/release'
+import { empty } from '../common/util'
+import { Storage } from '../storage'
 
 function getBasePath(db, base) {
   switch (base) {
@@ -56,6 +58,8 @@ export default {
       project.store = resolve(project.basePath, normalize(project.store))
     }
 
+    project.local = Storage.load('project', project.id) || {}
+
     return project
   },
 
@@ -80,12 +84,16 @@ export default {
       "INSERT INTO fts_metadata(fts_metadata) VALUES ('rebuild')")
   },
 
-  save(db, { id, ...props }, basePath) {
+  save(db, { id, local, ...props }, basePath) {
     if (basePath && props.store)
       props.store = relative(basePath, props.store)
 
-    return db.run(
-      ...update('project').set(props).where({ project_id: id })
-    )
+    if (local)
+      Storage.save('project', local, id)
+
+    if (!empty(props))
+      return db.run(
+        ...update('project').set(props).where({ project_id: id })
+      )
   }
 }
