@@ -1,4 +1,5 @@
 import React from 'react'
+import { Toolbar } from '../toolbar'
 import { ItemToolbar } from './toolbar'
 import { TabNav, TabPane } from '../tabs'
 import { NoteList, NoteToolbar } from '../note'
@@ -143,11 +144,15 @@ export class ItemPanelGroup extends React.PureComponent {
           ref={this.panel}
           tabIndex={TABS.ItemPanel}
           onKeyDown={this.handleKeyDown}>
-          <TabNav
-            active={panel.tab}
-            justified
-            tabs={this.props.tabs}
-            onChange={this.handleTabChange}/>
+          <Toolbar>
+            <Toolbar.Left>
+              <TabNav
+                active={panel.tab}
+                justified
+                tabs={this.props.tabs}
+                onChange={this.handleTabChange}/>
+            </Toolbar.Left>
+          </Toolbar>
           <TabPane active={panel.tab}>
             {(tab, props) => {
               if (this.props.items.length === 0) return null

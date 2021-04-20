@@ -23,6 +23,10 @@
   .panel-header & {
     flex: 1 1 auto;
     height: $panel-header-height;
+  }
+
+  .photo-panel &,
+  .note-panel & {
     padding-right: $default-padding-horizontal - ($space-min + $shim); // Align icons with icon buttons
   }
 
