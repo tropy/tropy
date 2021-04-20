@@ -7,8 +7,7 @@
   justify-content: space-between;
   height: $toolbar-height;
   flex: 0 0 auto;
-  padding: $space-min $default-padding-horizontal 0;
-  margin-bottom: $space-min;
+  padding: 0 $default-padding-horizontal;
   overflow: hidden;
 
   &.titlebar {
@@ -21,15 +20,9 @@
     }
   }
 
-  .panel-group-header & {
-    padding-top: 0;
-  }
-
   .panel-header & {
     flex: 1 1 auto;
     height: $panel-header-height;
-    margin: 0;
-    padding-top: 0;
     padding-right: $default-padding-horizontal - ($space-min + $shim); // Align icons with icon buttons
   }
 
