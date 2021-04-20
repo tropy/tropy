@@ -31,6 +31,7 @@ export class Panel extends React.PureComponent {
 
   get classes() {
     return ['panel', this.props.className, {
+      'closed': this.props.isClosed,
       'nested-tab-focus': this.state.hasTabFocus
     }]
   }
