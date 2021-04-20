@@ -4,7 +4,7 @@
 
 .item-panel {
   box-shadow:
-    // We need to stitch two shadows for the minimized panel state
+    // We need to stitch two shadows for the closed panel state
     0 (-$toolbar-height) 0 $panel-bg,
     0 (-$panel-header-height) 0 $panel-bg;
 

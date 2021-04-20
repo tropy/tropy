@@ -28,6 +28,11 @@
       .nested-tab-focus & {
         border-color: $tab-nested-focus-border-color;
       }
+
+      .closed & {
+        border-bottom: 0;
+        padding-bottom: $input-border-width;
+      }
     }
 
     &:active {
@@ -45,12 +50,20 @@
       border-right: none;
       border-top-left-radius: $border-radius-base;
       border-bottom-left-radius: $border-radius-base;
+
+      .closed & {
+        border-bottom-left-radius: 0;
+      }
     }
 
     &:last-child {
       border-left: none;
       border-top-right-radius: $border-radius-base;
       border-bottom-right-radius: $border-radius-base;
+
+      .closed & {
+        border-bottom-right-radius: 0;
+      }
     }
   }
 
