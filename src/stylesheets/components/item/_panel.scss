@@ -1,0 +1,16 @@
+//
+// Item panel
+// --------------------------------------------------
+
+.item-panel {
+  box-shadow:
+    // We need to stitch two shadows for the minimized panel state
+    0 (-$toolbar-height) 0 $panel-bg,
+    0 (-$panel-header-height) 0 $panel-bg;
+
+  &.nested-tab-focus {
+  box-shadow:
+    0 (-$toolbar-height) 0 $panel-focus-bg,
+    0 (-$panel-header-height) 0 $panel-focus-bg;
+  }
+}

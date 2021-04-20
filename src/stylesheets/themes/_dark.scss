@@ -216,9 +216,6 @@ $items-focus-bg:                 var(--brand-primary);
 $items-active-color:             var(--shade-9);
 $items-active-bg:                var(--shade-5);
 
-// Panel group
-$panels-bg: var(--shade-4);
-
 // Panel
 $panel-bg:                           var(--shade-4);
 $panel-focus-bg:                     var(--shade-4-lighten-2);
@@ -229,11 +226,15 @@ $panel-heading-color:                var(--shade-6);
 $panel-nested-focus-heading-color:   var(--shade-6-lighten-2);
 
 // Tabs
-$tab-bg:              var(--shade-2);
-$tab-nested-focus-bg: var(--shade-2);
-$tab-active-color:    inherit;
-$tab-active-bg:       transparent;
-$tab-inactive-color:  var(--shade-7);
+$tab-color:               inherit;
+$tab-bg:                  var(--shade-2);
+$tab-selected-bg:         transparent;
+$tab-active-bg:           var(--shade-1);
+$tab-nested-focus-bg:     var(--shade-2);
+$tab-border-color:        $tab-bg;
+$tab-active-border-color: $tab-active-bg;
+$tab-nested-focus-border-color: $tab-nested-focus-bg;
+$tab-inactive-color:      var(--shade-8-darken-6);
 
 // Metadata
 $label-color:                         var(--shade-7);

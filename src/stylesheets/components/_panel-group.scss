@@ -9,8 +9,22 @@
   min-height: 0;
 
   .panel-group-header {
+    position: relative;
+    z-index: 2;
+
     .toolbar {
-      background: $panels-bg;
+      margin-bottom: -2px;
+
+      .item-mode &,
+      .item-mode-enter & {
+        transition: margin-bottom 0.2s linear;
+        margin-bottom: 0;
+      }
+
+      .project-mode-enter & {
+        transition: margin-bottom 0.2s linear;
+        margin-bottom: -2px;
+      }
 
       .frameless & {
         -webkit-app-region: drag;
