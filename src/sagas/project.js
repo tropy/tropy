@@ -14,6 +14,7 @@ import { fail } from '../dialog'
 import * as mod from '../models'
 import * as act from '../actions'
 import { persist, restore, storage } from './storage'
+import { watch } from './watch'
 import { handleDatabaseErrors } from './db'
 import ARGS, { update } from '../args'
 
@@ -208,7 +209,8 @@ export function *main() {
       fork(history),
       fork(shell),
       fork(storage),
-      fork(consolidator)
+      fork(consolidator),
+      fork(watch),
     ])
 
     aux.START = Date.now()
