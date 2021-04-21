@@ -8,30 +8,6 @@
   flex-direction: column;
   min-height: 0;
 
-  .panel-group-header {
-    position: relative;
-    z-index: 2;
-
-    .toolbar {
-      margin-bottom: -2px;
-
-      .item-mode &,
-      .item-mode-enter & {
-        transition: margin-bottom 0.2s linear;
-        margin-bottom: 0;
-      }
-
-      .project-mode-enter & {
-        transition: margin-bottom 0.2s linear;
-        margin-bottom: -2px;
-      }
-
-      .frameless & {
-        -webkit-app-region: drag;
-      }
-    }
-  }
-
   .panel-group-body {
     flex: 1 1 0;
     height: calc(100% - #{$toolbar-height + $space-min});
@@ -39,10 +15,12 @@
 
   .panel {
     margin-bottom: $space-min;
-  }
 
-  > .panel:last-child,
-  .resizable:last-child .panel {
-    margin-bottom: 0;
+    @include variant(
+      ".panel-group > .panel:last-child",
+      ".resizable:last-child .panel"
+    ) {
+      margin-bottom: 0;
+    }
   }
 }

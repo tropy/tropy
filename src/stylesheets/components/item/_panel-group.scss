@@ -1,0 +1,54 @@
+//
+// Item panel group
+// --------------------------------------------------
+
+.item-panel-group {
+  .panel-group-header {
+    position: relative;
+    z-index: 2;
+
+    .toolbar {
+      margin-bottom: -2px;
+
+      .item-mode &,
+      .item-mode-enter & {
+        transition: margin-bottom 0.2s linear;
+        margin-bottom: 0;
+      }
+
+      .project-mode-enter & {
+        transition: margin-bottom 0.2s linear;
+        margin-bottom: -2px;
+      }
+
+      .frameless & {
+        -webkit-app-region: drag;
+      }
+    }
+  }
+
+  .tab {
+    @include state(".item-panel-group .panel.closed") {
+      border-radius: 0;
+
+      &.active {
+        border-top: 0;
+        border-bottom: 0;
+        padding-top: 0;
+        padding-bottom: $input-border-width;
+      }
+
+      @include variant(".panel-group-body > :first-child .panel") {
+        border-top: $input-border-width solid $tab-border-color;
+
+        &:first-child {
+          border-top-left-radius: $border-radius-base;
+        }
+
+        &:last-child {
+          border-top-right-radius: $border-radius-base;
+        }
+      }
+    }
+  }
+}

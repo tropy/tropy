@@ -5,7 +5,11 @@
 .tabs {
   display: flex;
 
-  li {
+  &.justified {
+    width: 100%;
+  }
+
+  .tab {
     flex: 0 0 auto;
     display: flex;
     justify-content: center;
@@ -16,10 +20,6 @@
     padding: 0 $tabs-padding-horizontal;
     border: $input-border-width solid transparent;
 
-    .icon {
-      margin-right: $space-xs;
-    }
-
     &.active {
       color: $tab-color;
       background-color: $tab-selected-bg;
@@ -27,11 +27,6 @@
 
       .nested-tab-focus & {
         border-color: $tab-nested-focus-border-color;
-      }
-
-      .closed & {
-        border-bottom: 0;
-        padding-bottom: $input-border-width;
       }
     }
 
@@ -47,31 +42,33 @@
     }
 
     &:first-child {
-      border-right: none;
       border-top-left-radius: $border-radius-base;
       border-bottom-left-radius: $border-radius-base;
 
-      .closed & {
-        border-bottom-left-radius: 0;
+      &.active,
+      &:active {
+        border-right: 0;
+        padding-right: $tabs-padding-horizontal + $input-border-width;
       }
     }
 
     &:last-child {
-      border-left: none;
       border-top-right-radius: $border-radius-base;
       border-bottom-right-radius: $border-radius-base;
 
-      .closed & {
-        border-bottom-right-radius: 0;
+      &.active,
+      &:active {
+        border-left: 0;
+        padding-left: $tabs-padding-horizontal + $input-border-width;
       }
     }
-  }
 
-  &.justified {
-    width: 100%;
-
-    li {
+    @include variant(".tabs.justified") {
       flex: 1 1 0;
+    }
+
+    .icon {
+      margin-right: $space-xs;
     }
   }
 }
