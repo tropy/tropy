@@ -16,6 +16,7 @@ import sharp from 'sharp/package.json'
 
 import scss from './scripts/rollup-plugin-scss'
 import emit from './scripts/rollup-plugin-emit'
+import fsEvents from './scripts/rollup-plugin-fsevents'
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
 
@@ -175,6 +176,7 @@ export default [
         preferBuiltins: true
       }),
       json(),
+      fsEvents(),
       babel({
         exclude: 'node_modules/**',
         babelHelpers: 'bundled'
@@ -196,7 +198,8 @@ export default [
     ],
     external: [
       'electron',
-      'fs/promises'
+      'fs/promises',
+      'fsevents'
     ],
     onwarn
   },
