@@ -1,25 +1,24 @@
 Installation Instructions
 *************************
 
-Tropy is Copyright (c) 2015, 2016, 2017, 2018, 2019, 2020
+Tropy is Copyright (c) 2015-2021
 Roy Rosenzweig Center for History and New Media, George Mason University
 
 Basic Installation
 ==================
   Briefly, this distribution package requires no installation step. You
-can move this directory to any suitable location, which we will refer to as
-TROPY_PATH (for example, `/opt/tropy`), and start the `tropy` binary there.
+can move this directory to any suitable location, for example, `/opt/tropy`,
+and start the `tropy` binary there. In the following instructions, change
+`/opt/tropy` to your preferred location.
 
-  For better desktop integration, please follow these instructions:
-
-1. Move this directory to TROPY_PATH
-2. Add TROPY_PATH to your PATH environment variable
+1. Move this directory to /opt/tropy
+2. Add /opt/tropy to your PATH environment variable
 3. Copy the Tropy icons:
-   cp -r $TROPY_PATH/icons ~/.local/share/
+   cp -r /opt/tropy/resources/icons ~/.local/share/
 4. Register Tropy's mimetypes:
-   cp -r $TROPY_PATH/mime ~/.local/share/
+   cp -r /opt/tropy/resources/mime ~/.local/share/
 5. Copy the file `tropy.desktop` file:
-   cp $TROPY_PATH/tropy.desktop ~/.local/share/applications/
+   cp /opt/tropy/tropy.desktop ~/.local/share/applications/
 6. And update MIME cache database:
    update-desktop-database ~/.local/share/applications/
 
