@@ -55,6 +55,15 @@ function onwarn(warning, warn) {
     warn(warning)
 }
 
+const external = [
+  'electron',
+  'fs/promises'
+]
+
+if (process.platform !== 'darwin')
+  external.push('fsevents')
+
+
 export default [
   {
     input: [
@@ -94,10 +103,7 @@ export default [
       cleanup()
       // visualize({ filename: 'main.html' })
     ],
-    external: [
-      'electron',
-      'fs/promises'
-    ],
+    external,
     onwarn
   },
 
@@ -196,11 +202,7 @@ export default [
       cleanup()
       // visualize({ filename: 'renderer.html' })
     ],
-    external: [
-      'electron',
-      'fs/promises',
-      'fsevents'
-    ],
+    external,
     onwarn
   },
 

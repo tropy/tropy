@@ -96,6 +96,8 @@ class Rebuilder {
 
 
   static Patches = {
+    fsevents: [],
+
     sqlite3: [
       async (task) => {
         let url = cat(task.vendorPath('version.txt')).trim()
@@ -161,7 +163,12 @@ program
   .option('-p, --parallel', 'rebuild in parallel', process.platform !== 'win32')
   .action(async (args) => {
     let opts = program.opts()
-    if (!args.length) args = ['sqlite3', 'sharp']
+
+    if (!args.length)
+      args = ['sqlite3', 'sharp', 'fsevents']
+    if (process.platform !== 'darwin')
+      args = args.filter(m => m !== 'fsevents')
+
     let tasks = args.map(name => new Rebuilder({ name, ...opts }))
 
     // Ensure we're using the latest SDK when cross-compiling!
