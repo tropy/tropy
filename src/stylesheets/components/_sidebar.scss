@@ -17,10 +17,6 @@
   }
 
   .toolbar {
-    .is-full-screen & {
-      display: none;
-    }
-
     .frameless & {
       -webkit-app-region: drag;
     }
@@ -32,7 +28,7 @@
     overscroll-behavior: contain;
     padding-top: $space-xs;
 
-    .frameless:not(.is-full-screen) & {
+    .frameless & {
       padding-top: 0;
     }
   }
