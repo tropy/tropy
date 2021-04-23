@@ -15,13 +15,13 @@
     justify-content: center;
     align-items: center;
     height: $tabs-height;
-    color: $tab-inactive-color;
+    color: $tab-color;
     background: $tab-bg;
     padding: 0 $tabs-padding-horizontal;
     border: $input-border-width solid transparent;
 
     &.active {
-      color: $tab-color;
+      color: $tab-selected-color;
       background-color: $tab-selected-bg;
       border-color: $tab-border-color;
 

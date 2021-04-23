@@ -226,15 +226,15 @@ $panel-heading-color:                var(--shade-6);
 $panel-nested-focus-heading-color:   var(--shade-6-lighten-2);
 
 // Tabs
-$tab-color:               inherit;
-$tab-bg:                  var(--shade-2);
-$tab-selected-bg:         transparent;
-$tab-active-bg:           var(--shade-1);
-$tab-nested-focus-bg:     var(--shade-2);
-$tab-border-color:        $tab-bg;
-$tab-active-border-color: $tab-active-bg;
+$tab-color:                     var(--shade-8-darken-6-5); // #888
+$tab-bg:                        var(--shade-2);
+$tab-border-color:              $tab-bg;
+$tab-selected-color:            inherit;
+$tab-selected-bg:               transparent;
+$tab-active-bg:                 var(--shade-1);
+$tab-active-border-color:       $tab-active-bg;
+$tab-nested-focus-bg:           var(--shade-2);
 $tab-nested-focus-border-color: $tab-nested-focus-bg;
-$tab-inactive-color:      var(--shade-8-darken-6);
 
 // Metadata
 $label-color:                         var(--shade-7);
