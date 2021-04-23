@@ -34,19 +34,21 @@ function *closeProject(watcher) {
   // TODO update and save watcher timestamp
 }
 
+const freshProject = ({ type, meta, error }) =>
+  type === PROJECT.OPENED || (
+    type === PROJECT.RELOAD && !error && meta.done
+  )
 
 export function *watch() {
   try {
     var watcher = new Watcher()
     var channel = yield call(addedFilesChannel, watcher)
 
-    yield takeEvery(PROJECT.OPENED, updateProjectWatchFolder, watcher)
-    // project.loaded
+    yield takeEvery(freshProject, updateProjectWatchFolder, watcher)
     yield takeEvery(PROJECT.CLOSE, closeProject, watcher)
 
     while (true) {
       let path = yield take(channel)
-      // TODO buffer files for import
       yield put(act.item.import({ files: [path] }, { prompt: false }))
     }
 

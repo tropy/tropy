@@ -15,6 +15,8 @@ export function project(state = init, { type, payload, meta, error }) {
   switch (type) {
     case PROJECT.OPENED:
       return { ...payload }
+    case PROJECT.RELOAD:
+      return (!error && meta.done) ? { ...payload } : state
     case PROJECT.UPDATE:
       return { ...state, ...payload }
     case PROJECT.OPEN:
