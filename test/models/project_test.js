@@ -24,10 +24,13 @@ describe('models', () => {
     })
 
     describe('load', () => {
-      it('returns the project object', () =>
-        expect(mod.project.load(db))
-          .to.eventually.include({ name: 'Ariadne', items: 0 })
-          .and.have.a.property('id').that.does.match(/^[\da-f-]+$/))
+      it('returns the project object', async () => {
+        let project = await mod.project.load(db)
+
+        expect(project)
+          .to.include({ name: 'Ariadne', items: 0 })
+          .and.have.a.property('id').that.does.match(/^[\da-f-]+$/)
+      })
     })
   })
 })
