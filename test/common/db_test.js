@@ -110,12 +110,13 @@ describe('Database', () => {
         expect(db.exec('SELECT foobar FROM sqlite_schema;'))
           .to.eventually.be.rejected)
 
-      it('acquires connection for every call', () => {
+      it('acquires connection for every call', async () => {
         expect(db.busy).to.eql(0)
-        db.exec('SELECT * FROM sqlite_schema;')
+        let c1 = db.exec('SELECT * FROM sqlite_schema;')
         expect(db.busy).to.eql(1)
-        db.exec('SELECT * FROM sqlite_schema;')
+        let c2 = db.exec('SELECT * FROM sqlite_schema;')
         expect(db.busy).to.eql(db.pool.max > 1 ? 2 : 1)
+        await Promise.all([c1, c2])
       })
 
       it('re-uses connections if possible', () => (
