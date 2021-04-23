@@ -42,13 +42,11 @@ export class Reload extends Command {
     if (project.store !== store.root)
       yield call(store.init, project.store)
 
-    yield put(act.project.update({
+    return {
       isReadOnly: db.isReadOnly,
       file: db.path,
       ...project
-    }))
-
-    return project
+    }
   }
 }
 
