@@ -223,15 +223,16 @@ $panel-heading-color:                var(--shade-5);
 $panel-nested-focus-heading-color:   var(--shade-5-darken-4);
 
 // Tabs
-$tab-color:                     var(--shade-6-darken-6-5); // #666
-$tab-bg:                        var(--shade-2);
-$tab-border-color:              $tab-bg;
-$tab-selected-color:            var(--shade-9);
-$tab-selected-bg:               var(--transparent);
-$tab-active-bg:                 var(--shade-3);
-$tab-active-border-color:       $tab-active-bg;
-$tab-nested-focus-bg:           var(--shade-3);
-$tab-nested-focus-border-color: $tab-nested-focus-bg;
+$tab-color:                              var(--shade-7);
+$tab-bg:                                 var(--shade-2);
+$tab-selected-color:                     var(--shade-9);
+$tab-selected-bg:                        var(--shade-1);
+$tab-selected-border-color:              var(--shade-3);
+$tab-active-bg:                          var(--shade-3);
+$tab-active-border-color:                $tab-active-bg;
+$tab-nested-focus-bg:                    var(--shade-3);
+$tab-nested-focus-selected-bg:           var(--shade-1-darken-4);
+$tab-nested-focus-selected-border-color: var(--shade-3-darken-4);
 
 // Metadata
 $label-color:                         var(--shade-6);

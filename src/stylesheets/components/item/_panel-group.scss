@@ -27,26 +27,39 @@
     }
   }
 
-  .tab {
+  .tabs {
     @include state(".item-panel-group .panel.closed") {
       border-radius: 0;
 
-      &.active {
-        border-top: 0;
-        border-bottom: 0;
-        padding-top: 0;
-        padding-bottom: $input-border-width;
+      .tab {
+        border-radius: 0;
+
+        &.active {
+          border-top: 0;
+          border-bottom: 0;
+          padding-top: $input-border-width;
+          padding-bottom: $input-border-width;
+        }
       }
 
       @include variant(".panel-group-body > :first-child .panel") {
-        border-top: $input-border-width solid $tab-border-color;
+        border-top-left-radius: $border-radius-base;
+        border-top-right-radius: $border-radius-base;
 
-        &:first-child {
-          border-top-left-radius: $border-radius-base;
-        }
+        .tab {
+          &.active {
+            border-top: $input-border-width solid $tab-selected-border-color;
+            padding-top: 0;
+          }
 
-        &:last-child {
-          border-top-right-radius: $border-radius-base;
+          &:first-child {
+            border-top-left-radius: $border-radius-base;
+            padding-top: 0;
+          }
+
+          &:last-child {
+            border-top-right-radius: $border-radius-base;
+          }
         }
       }
     }

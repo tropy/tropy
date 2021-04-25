@@ -4,6 +4,13 @@
 
 .tabs {
   display: flex;
+  background-color: $tab-bg;
+  border-radius: $border-radius-base;
+  overflow: hidden;
+
+  .nested-tab-focus & {
+    background-color: $tab-nested-focus-bg;
+  }
 
   &.justified {
     width: 100%;
@@ -16,17 +23,18 @@
     align-items: center;
     height: $tabs-height;
     color: $tab-color;
-    background: $tab-bg;
     padding: 0 $tabs-padding-horizontal;
     border: $input-border-width solid transparent;
+    border-radius: $border-radius-base;
 
     &.active {
       color: $tab-selected-color;
       background-color: $tab-selected-bg;
-      border-color: $tab-border-color;
+      border-color: $tab-selected-border-color;
 
       .nested-tab-focus & {
-        border-color: $tab-nested-focus-border-color;
+        background-color: $tab-nested-focus-selected-bg;
+        border-color: $tab-nested-focus-selected-border-color;
       }
     }
 
@@ -35,36 +43,12 @@
       border-color: $tab-active-border-color;
     }
 
-    &:not(.active) {
-      .nested-tab-focus & {
-        background: $tab-nested-focus-bg;
-      }
-    }
-
-    &:first-child {
-      border-top-left-radius: $border-radius-base;
-      border-bottom-left-radius: $border-radius-base;
-
-      &.active,
-      &:active {
-        border-right: 0;
-        padding-right: $tabs-padding-horizontal + $input-border-width;
-      }
-    }
-
-    &:last-child {
-      border-top-right-radius: $border-radius-base;
-      border-bottom-right-radius: $border-radius-base;
-
-      &.active,
-      &:active {
-        border-left: 0;
-        padding-left: $tabs-padding-horizontal + $input-border-width;
-      }
-    }
-
     @include variant(".tabs.justified") {
       flex: 1 1 0;
+    }
+
+    & + .tab {
+      margin-left: -$input-border-width;
     }
 
     .icon {

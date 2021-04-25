@@ -8,7 +8,7 @@ $default-padding-horizontal: 12px !default;
   font-size: $font-size-small;
   color: $panel-heading-color;
   line-height: $metadata-line-height;
-  margin: ($font-size-base / 2) $default-padding-horizontal 0;
+  margin: ($font-size-small / 2) $default-padding-horizontal 0;
 
   .scrollbar-style-old-school & {
     margin-right: ($default-padding-horizontal - $scrollbar-size / 3);

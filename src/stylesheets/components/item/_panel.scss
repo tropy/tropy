@@ -13,4 +13,8 @@
     0 (-$toolbar-height) 0 $panel-focus-bg,
     0 (-$panel-header-height) 0 $panel-focus-bg;
   }
+
+  .toolbar {
+    padding: 0 $space-xl;
+  }
 }

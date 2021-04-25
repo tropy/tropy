@@ -19,6 +19,15 @@
     transition: transform $mode-transition;
   }
 
+  .panel-group-header {
+    .toolbar {
+      .project-mode-enter-active &,
+      .is-full-screen & {
+        padding-left: $default-padding-horizontal - ($space-min + $shim);
+      }
+    }
+  }
+
   @if $platform == darwin {
     .panel-group-header {
       .toolbar-left {
