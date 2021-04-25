@@ -14,6 +14,10 @@ $default-padding-horizontal: 12px !default;
     margin-right: ($default-padding-horizontal - $scrollbar-size / 3);
   }
 
+  .nested-tab-focus & {
+    color: $panel-nested-focus-heading-color;
+  }
+
   &.separator {
     margin-bottom: (($metadata-line-height - 10px) / 2); // 10px: Caps height
     border-bottom: 1px solid $panel-separator-color;
@@ -23,8 +27,8 @@ $default-padding-horizontal: 12px !default;
     }
   }
 
-  .nested-tab-focus & {
-    color: $panel-nested-focus-heading-color;
+  .metadata section:first-child & {
+    margin-top: 9px; // Visual spacing of following headings
   }
 }
 
