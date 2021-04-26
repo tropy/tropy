@@ -15,6 +15,10 @@
   }
 
   .toolbar {
-    padding: 0 $space-xl;
+    transition: padding 0.1s ease;
+
+    @include state(".item-panel.closed") {
+      padding: 0;
+    }
   }
 }

@@ -8,19 +8,6 @@
     z-index: 2;
 
     .toolbar {
-      margin-bottom: -2px;
-
-      .item-mode &,
-      .item-mode-enter & {
-        transition: margin-bottom 0.2s linear;
-        margin-bottom: 0;
-      }
-
-      .project-mode-enter & {
-        transition: margin-bottom 0.2s linear;
-        margin-bottom: -2px;
-      }
-
       .frameless & {
         -webkit-app-region: drag;
       }
@@ -28,38 +15,30 @@
   }
 
   .tabs {
+    transition: border-radius 0.1s ease;
+
+    .tab {
+      transition: border-color 0.1s ease, border-radius 0.1s ease;
+    }
+  }
+
+  .tabs {
+    transition: border-radius 0.1s ease;
+
     @include state(".item-panel-group .panel.closed") {
       border-radius: 0;
+    }
 
-      .tab {
+    .tab {
+      transition: border-color 0.1s ease, border-radius 0.1s ease;
+
+      @include state(".item-panel-group .panel.closed") {
         border-radius: 0;
+        box-shadow: none;
+        margin: 0;
 
         &.active {
-          border-top: 0;
-          border-bottom: 0;
-          padding-top: $input-border-width;
-          padding-bottom: $input-border-width;
-        }
-      }
-
-      @include variant(".panel-group-body > :first-child .panel") {
-        border-top-left-radius: $border-radius-base;
-        border-top-right-radius: $border-radius-base;
-
-        .tab {
-          &.active {
-            border-top: $input-border-width solid $tab-selected-border-color;
-            padding-top: 0;
-          }
-
-          &:first-child {
-            border-top-left-radius: $border-radius-base;
-            padding-top: 0;
-          }
-
-          &:last-child {
-            border-top-right-radius: $border-radius-base;
-          }
+          border-color: transparent;
         }
       }
     }
