@@ -55,13 +55,13 @@ export class Panel extends React.PureComponent {
   }
 
   renderHeader(header) {
-    return (
-      <PanelHeader onDoubleClick={this.handleToggle}>
-        {React.cloneElement(header, {
-          isClosed: this.props.isClosed,
-          isDisabled: this.props.isClosed || header.props.isDisabled
-        })}
-      </PanelHeader>
+    return React.createElement(PanelHeader, {
+      [this.props.isClosed ? 'onClick' : 'onDoubleClick']: this.handleToggle
+    },
+      React.cloneElement(header, {
+        isClosed: this.props.isClosed,
+        isDisabled: this.props.isClosed || header.props.isDisabled
+      })
     )
   }
 
@@ -119,6 +119,7 @@ PanelBody.propTypes = {
 export const PanelHeader = (props) => (
   <header
     className="panel-header"
+    onClick={props.onClick}
     onDoubleClick={props.onDoubleClick}>
     {props.children}
   </header>
@@ -126,6 +127,7 @@ export const PanelHeader = (props) => (
 
 PanelHeader.propTypes = {
   children: node,
+  onClick: func,
   onDoubleClick: func
 }
 
