@@ -40,6 +40,7 @@
     }
 
     &:active {
+      color: $tab-selected-color;
       background-color: $tab-active-bg;
       box-shadow: 0 0 0 $input-border-width $tab-active-border-color;
     }
