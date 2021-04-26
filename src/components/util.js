@@ -58,18 +58,21 @@ export function createClickHandler({
       if (onDoubleClick) onDoubleClick(event)
 
     } else {
-      tid = setTimeout(() => {
-        tid = undefined
-
-        if (onSingleClick && !cancelled) {
-          onSingleClick(event)
-        }
-      }, delay)
-
       if (onClick) cancelled = onClick(event)
 
-      if (!cancelled && onSingleClick) {
-        event.persist()
+      if (!cancelled) {
+        tid = setTimeout(() => {
+          tid = undefined
+
+          if (onSingleClick && !cancelled) {
+            onSingleClick(event)
+          }
+        }, delay)
+
+
+        if (onSingleClick) {
+          event.persist()
+        }
       }
     }
   }

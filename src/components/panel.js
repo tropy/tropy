@@ -1,6 +1,7 @@
 import React from 'react'
 import { only } from './util'
 import { Resizable } from './resizable'
+import { createClickHandler } from './util'
 import cx from 'classnames'
 import { bounds, off, on } from '../dom'
 import { restrict } from '../common/util'
@@ -54,14 +55,29 @@ export class Panel extends React.PureComponent {
     }
   }
 
-  renderHeader(header) {
-    return React.createElement(PanelHeader, {
-      [this.props.isClosed ? 'onClick' : 'onDoubleClick']: this.handleToggle
+  handleClick = createClickHandler({
+    onClick: () => {
+      if (this.props.isClosed) {
+        this.props.onToggle(this, false)
+        return true // cancels double click!
+      }
     },
-      React.cloneElement(header, {
-        isClosed: this.props.isClosed,
-        isDisabled: this.props.isClosed || header.props.isDisabled
-      })
+    onDoubleClick: () => {
+      if (!this.props.isClosed) {
+        this.props.onToggle(this, true)
+      }
+    }
+  })
+
+  renderHeader(header) {
+    return (
+      <PanelHeader
+        onClick={this.props.canToggle ? this.handleClick : undefined}>
+        {React.cloneElement(header, {
+          isClosed: this.props.isClosed,
+          isDisabled: this.props.isClosed || header.props.isDisabled
+        })}
+      </PanelHeader>
     )
   }
 
