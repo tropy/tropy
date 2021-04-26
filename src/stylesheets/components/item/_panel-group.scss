@@ -17,14 +17,6 @@
   .tabs {
     transition: border-radius 0.1s ease;
 
-    .tab {
-      transition: border-color 0.1s ease, border-radius 0.1s ease;
-    }
-  }
-
-  .tabs {
-    transition: border-radius 0.1s ease;
-
     @include state(".item-panel-group .panel.closed") {
       border-radius: 0;
     }
