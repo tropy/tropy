@@ -31,6 +31,7 @@
       color: $tab-selected-color;
       background-color: $tab-selected-bg;
       box-shadow: 0 0 0 $input-border-width $tab-selected-border-color;
+      position: relative;
 
       .nested-tab-focus & {
         background-color: $tab-nested-focus-selected-bg;
@@ -40,11 +41,7 @@
 
     &:active {
       background-color: $tab-active-bg;
-      border-color: $tab-active-border-color;
-    }
-
-    @include variant(".tabs.justified") {
-      flex: 1 1 0;
+      box-shadow: 0 0 0 $input-border-width $tab-active-border-color;
     }
 
     &:not(:last-child) {
@@ -53,6 +50,10 @@
 
     &:not(:first-child) {
       margin-left: 0;
+    }
+
+    @include variant(".tabs.justified") {
+      flex: 1 1 0;
     }
 
     .icon {

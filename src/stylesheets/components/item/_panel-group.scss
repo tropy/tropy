@@ -26,11 +26,10 @@
 
       @include state(".item-panel-group .panel.closed") {
         border-radius: 0;
-        box-shadow: none;
         margin: 0;
 
         &.active {
-          border-color: transparent;
+          box-shadow: none;
         }
       }
     }
