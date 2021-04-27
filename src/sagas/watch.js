@@ -26,7 +26,9 @@ function *updateProjectWatchFolder(watcher) {
     debug('clearing project watch folder')
 
   // TODO add filter for supported files
-  yield call([watcher, watcher.watch], project.local.watch)
+  yield call([watcher, watcher.watch], project.local.watch, {
+    usePolling: project.local.usePolling
+  })
 }
 
 function *closeProject(watcher) {

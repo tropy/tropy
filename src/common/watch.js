@@ -2,6 +2,7 @@ import { EventEmitter } from 'events'
 import { warn } from './log'
 
 let chokidar
+
 let fsEvents
 let fsEventsImportError
 
