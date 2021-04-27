@@ -84,7 +84,7 @@ export class Import extends ImportCommand {
 
   *configure() {
     Object.assign(this.options, yield select(state => ({
-      base: state.project.basePath,
+      basePath: state.project.basePath,
       density: this.action.meta.density || state.settings.density,
       templates: {
         item: getItemTemplate(state),
@@ -100,7 +100,7 @@ export class Import extends ImportCommand {
       yield this.progress()
 
       let {
-        base, store, density, db, templates, useLocalTimezone
+        basePath, store, density, db, templates, useLocalTimezone
       } = this.options
 
       let { list } = this.action.payload
@@ -122,7 +122,7 @@ export class Import extends ImportCommand {
 
         while (!image.done) {
           let photo = await mod.photo.create(tx,
-            { base, template: templates.photo.id },
+            { basePath, template: templates.photo.id },
             {
               item: item.id,
               image: image.toJSON(),
@@ -182,7 +182,7 @@ export class Import extends ImportCommand {
 
   *importJSONItem(obj, rel) {
     try {
-      let { db, base } = this.options
+      let { db, basePath } = this.options
       let { list } = this.action.payload
       let item
       let photos = []
@@ -218,7 +218,7 @@ export class Import extends ImportCommand {
             image.path = join(rel, image.path)
           }
 
-          let photo = await mod.photo.create(tx, { base, template }, {
+          let photo = await mod.photo.create(tx, { basePath, template }, {
             item: item.id,
             image,
             data,

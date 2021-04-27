@@ -84,7 +84,7 @@ export class Consolidate extends ImportCommand {
       state.settings
     ])
 
-    this.options.base = project.basePath
+    this.options.basePath = project.basePath
     this.options.isReadOnly = project.isReadOnly
     this.options.density = meta.density || settings.density
     this.options.overwrite = true
@@ -187,7 +187,7 @@ export class Consolidate extends ImportCommand {
 
             if (!this.options.isReadOnly) {
               yield call(mod.photo.save, db, data, {
-                base: this.options.base
+                basePath: this.options.basePath
               })
             }
           }
