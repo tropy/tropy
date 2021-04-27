@@ -12,7 +12,7 @@ const skel = (id, selections = [], notes = []) => ({
   id, selections, notes
 })
 
-async function load(db, ids, { base } = {}) {
+async function load(db, ids, { basePath } = {}) {
   const photos = {}
   if (ids != null) ids = ids.join(',')
 
@@ -55,8 +55,8 @@ async function load(db, ids, { base } = {}) {
         data.mirror = !!mirror
         data.negative = !!negative
         data.path = (
-          (base && data.protocol === 'file') ?
-            resolve(base, normalize(path)) : path
+          (basePath && data.protocol === 'file') ?
+            resolve(basePath, normalize(path)) : path
         ).normalize()
 
         if (id in photos) Object.assign(photos[id], data)
@@ -93,14 +93,14 @@ async function load(db, ids, { base } = {}) {
 }
 
 export default {
-  async create(db, { base, template }, { item, image, data, position }) {
+  async create(db, { basePath, template }, { item, image, data, position }) {
     let { protocol = 'file', path, ...meta } = image
     let { id } = await db.run(
       ...into('subjects').insert({ template })
     )
 
-    if (base && protocol === 'file') {
-      path = relative(base, path)
+    if (basePath && protocol === 'file') {
+      path = relative(basePath, path)
     }
 
     await db.run(...into('images').insert({
@@ -121,18 +121,18 @@ export default {
       metadata.update(db, { id, data })
     ])
 
-    return (await load(db, [id], { base }))[id]
+    return (await load(db, [id], { basePath }))[id]
   },
 
-  async save(db, { id, timestamp, ...data }, { base } = {}) {
+  async save(db, { id, timestamp, ...data }, { basePath } = {}) {
     let photo = pick(data, props.photo)
     let image = pick(data, ['width', 'height'])
 
     assert(id != null, 'missing photo id')
     if (empty(photo)) return
 
-    if (base && photo.path && photo.protocol === 'file') {
-      photo.path = relative(base, photo.path)
+    if (basePath && photo.path && photo.protocol === 'file') {
+      photo.path = relative(basePath, photo.path)
     }
 
     await db.run(...update('photos').set(photo).where({ id }))

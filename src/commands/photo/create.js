@@ -21,7 +21,7 @@ import {
 export class Create extends ImportCommand {
   configure(state) {
     return Object.assign(this.options, {
-      base: state.project.basePath,
+      basePath: state.project.basePath,
       template: getPhotoTemplate(state),
       prefs: state.settings,
       idx: this.action.meta?.idx ||
@@ -71,7 +71,7 @@ export class Create extends ImportCommand {
     try {
       let progress = yield this.progress()
 
-      let { base, cache, db, idx, prefs, store, template } = this.options
+      let { basePath, cache, db, idx, prefs, store, template } = this.options
       let { item } = this.action.payload
 
       let image = yield call([Image, Image.open], {
@@ -94,7 +94,7 @@ export class Create extends ImportCommand {
 
         while (!image.done) {
           let photo = await mod.photo.create(tx,
-            { base, template: template.id },
+            { basePath, template: template.id },
             {
               item,
               image: image.toJSON(),

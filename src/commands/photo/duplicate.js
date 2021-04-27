@@ -18,7 +18,7 @@ export class Duplicate extends ImportCommand {
 
     assert(!blank(payload.photos), 'missing photos')
 
-    let [base, order, originals, data, settings] = yield select(state => [
+    let [basePath, order, originals, data, settings] = yield select(state => [
       state.project.basePath,
       state.items[item].photos,
       pluck(state.photos, payload.photos),
@@ -42,7 +42,7 @@ export class Duplicate extends ImportCommand {
         })
 
         let photo = yield call(db.transaction, tx =>
-          mod.photo.create(tx, { base, template }, {
+          mod.photo.create(tx, { basePath, template }, {
             item,
             image: image.toJSON(),
             data: data[i]
