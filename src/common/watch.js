@@ -31,9 +31,10 @@ export function getFsEvents() {
 
 export class Watcher extends EventEmitter {
   #watcher = null
+  #path = null
 
-  get isWatching() {
-    return this.#watcher != null
+  isWatching(path) {
+    return this.#watcher != null && (!path || path === this.#path)
   }
 
   async watch(path, { since, ...opts } = {}) {
@@ -46,6 +47,7 @@ export class Watcher extends EventEmitter {
       ...opts,
       ignoreInitial: (since == null)
     })
+    this.#path = path
 
     if (since)
       this.#watcher.on('add', (file, stats) => {
@@ -63,5 +65,6 @@ export class Watcher extends EventEmitter {
     await this.#watcher?.close()
     this.#watcher?.removeAllListeners()
     this.#watcher = null
+    this.#path = null
   }
 }

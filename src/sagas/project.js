@@ -212,7 +212,7 @@ export function *main() {
       fork(shell),
       fork(storage),
       fork(consolidator),
-      fork(watch),
+      fork(watch)
     ])
 
     aux.START = Date.now()

@@ -1,9 +1,10 @@
+import { join } from 'path'
 import { eventChannel } from 'redux-saga'
 import { call, put, select, take, takeEvery } from 'redux-saga/effects'
 import * as act from '../actions'
 import { Watcher } from '../common/watch'
 import { debug, warn } from '../common/log'
-import { PROJECT } from '../constants'
+import { IMAGE, PROJECT } from '../constants'
 
 function addedFilesChannel(watcher) {
   return eventChannel(emitter => {
@@ -20,16 +21,23 @@ function addedFilesChannel(watcher) {
 function *updateProjectWatchFolder(watcher) {
   let { project } = yield select()
 
-  if (project.watch.folder)
-    debug(`updating project watch folder: ${project.watch.folder}`)
-  else
-    debug('clearing project watch folder')
+  if (project.watch.folder) {
+    debug(`update project watch folder: ${project.watch.folder}`)
 
-  // TODO add filter for supported files
-  yield call([watcher, watcher.watch], project.watch.folder, {
-    since: project.watch.since,
-    usePolling: project.watch.usePolling
-  })
+    let path = join(project.watch.folder, `*.{${IMAGE.EXT.join(',')}}`)
+    let { usePolling, since } = project.watch
+
+    if (watcher.isWatching(path))
+      yield call([watcher, watcher.watch], path, { usePolling })
+    else
+      yield call([watcher, watcher.watch], path, { usePolling, since })
+
+  } else {
+    if (watcher.isWatching()) {
+      debug('stop project watcher')
+      yield call([watcher, watcher.stop])
+    }
+  }
 }
 
 function *closeProject(watcher) {
