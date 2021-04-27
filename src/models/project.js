@@ -58,7 +58,7 @@ export default {
       project.store = resolve(project.basePath, normalize(project.store))
     }
 
-    project.local = Storage.load('project', project.id) || {}
+    project.watch = Storage.load('project.watch', project.id) || {}
 
     return project
   },
@@ -84,16 +84,26 @@ export default {
       "INSERT INTO fts_metadata(fts_metadata) VALUES ('rebuild')")
   },
 
-  save(db, { id, local, ...props }, basePath) {
+  save(db, { id, watch, ...props }, basePath) {
     if (basePath && props.store)
       props.store = relative(basePath, props.store)
 
-    if (local)
-      Storage.save('project', local, id)
+    if (watch)
+      Storage.save('project.watch', watch, id)
 
     if (!empty(props))
       return db.run(
         ...update('project').set(props).where({ project_id: id })
       )
+  },
+
+  close(db, { id }) {
+    let watch = Storage.load('project.watch', id) || {}
+
+    if (watch.folder) {
+      watch.since = Date.now()
+      Storage.save('project.watch', watch, id)
+    }
   }
+
 }
