@@ -80,6 +80,8 @@ export function *open(opts = {}, { payload, meta }) {
     } finally {
       if (!opts.noSetup)
         yield call(teardown, { db, project, cache, store })
+
+      yield call(mod.project.close, db, project)
     }
   } catch (e) {
     warn({ stack: e.stack }, 'unexpected error in *project.open')

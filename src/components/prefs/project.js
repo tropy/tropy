@@ -54,17 +54,17 @@ export class ProjectPrefs extends React.PureComponent {
           <hr/>
           <FormField
             id="prefs.project.watch.folder"
-            name="local.watch"
+            name="watch.folder"
             isCompact
             tabIndex={0}
             type="directory"
-            value={this.props.project.local.watch}
+            value={this.props.project.watch.folder}
             onChange={this.props.onChange}/>
           <FormToggle
             id="prefs.project.watch.usePolling"
-            isDisabled={!this.props.project.local.watch}
-            name="local.usePolling"
-            value={this.props.project.local.usePolling}
+            isDisabled={!this.props.project.watch.folder}
+            name="watch.usePolling"
+            value={this.props.project.watch.usePolling}
             onChange={this.props.onChange}/>
         </Form>
       </ScrollContainer>

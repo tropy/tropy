@@ -20,20 +20,20 @@ function addedFilesChannel(watcher) {
 function *updateProjectWatchFolder(watcher) {
   let { project } = yield select()
 
-  if (project.local.watch)
-    debug(`updating project watch folder: ${project.local.watch}`)
+  if (project.watch.folder)
+    debug(`updating project watch folder: ${project.watch.folder}`)
   else
     debug('clearing project watch folder')
 
   // TODO add filter for supported files
-  yield call([watcher, watcher.watch], project.local.watch, {
-    usePolling: project.local.usePolling
+  yield call([watcher, watcher.watch], project.watch.folder, {
+    since: project.watch.since,
+    usePolling: project.watch.usePolling
   })
 }
 
 function *closeProject(watcher) {
   yield call([watcher, watcher.stop])
-  // TODO update and save watcher timestamp
 }
 
 const freshProject = ({ type, meta, error }) =>

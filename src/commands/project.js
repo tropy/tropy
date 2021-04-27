@@ -54,7 +54,7 @@ Reload.register(PROJECT.RELOAD)
 
 export class Save extends Command {
   *exec() {
-    let { local, ...payload } = this.action.payload
+    let { watch, ...payload } = this.action.payload
     let { db, id } = this.options
 
     let { project } = yield select()
@@ -69,9 +69,12 @@ export class Save extends Command {
       payload = { store, ...payload }
     }
 
-    // Save and update local settings in their entirety!
-    if (local)
-      payload.local = { ...project.local, ...local }
+    // Save and update/reset watch settings in their entirety!
+    if (watch) {
+      payload.watch = (watch.folder) ?
+        watch :
+        { ...project.watch, ...watch }
+    }
 
     this.original = { ...original, basePath: project.basePath }
     yield put(act.project.update({ ...payload, basePath }))

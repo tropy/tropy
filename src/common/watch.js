@@ -32,6 +32,10 @@ export function getFsEvents() {
 export class Watcher extends EventEmitter {
   #watcher = null
 
+  get isWatching() {
+    return this.#watcher != null
+  }
+
   async watch(path, { since, ...opts } = {}) {
     await init()
     await this.stop()
