@@ -95,7 +95,7 @@
     "sqleton": "^1.5.2",
     "stylelint": "^13.9.0",
     "stylelint-config-recommended-scss": "^4.2.0",
-    "stylelint-config-standard": "^21.0.0",
+    "stylelint-config-standard": "^22.0.0",
     "stylelint-scss": "^3.19.0",
     "unzip-crx-3": "^0.2.0"
   },
