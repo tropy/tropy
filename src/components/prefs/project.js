@@ -1,6 +1,6 @@
 import React from 'react'
 import { ScrollContainer } from '../scroll'
-import { Form, FormField, FormToggleGroup } from '../form'
+import { Form, FormField, FormToggle, FormToggleGroup } from '../form'
 import { arrayOf, func, object, string } from 'prop-types'
 
 export class ProjectPrefs extends React.PureComponent {
@@ -53,12 +53,18 @@ export class ProjectPrefs extends React.PureComponent {
             onChange={this.props.onChange}/>
           <hr/>
           <FormField
-            id="prefs.project.watch"
+            id="prefs.project.watch.folder"
             name="local.watch"
             isCompact
             tabIndex={0}
             type="directory"
             value={this.props.project.local.watch}
+            onChange={this.props.onChange}/>
+          <FormToggle
+            id="prefs.project.watch.usePolling"
+            isDisabled={!this.props.project.local.watch}
+            name="local.usePolling"
+            value={this.props.project.local.usePolling}
             onChange={this.props.onChange}/>
         </Form>
       </ScrollContainer>

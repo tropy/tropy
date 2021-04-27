@@ -201,7 +201,9 @@ en:
       name: Name
       id: ID
       file: File
-      watch: Watch folder
+      watch:
+        folder: Watch folder
+        usePolling: Using file stat polling
     template:
       label: Templates
       new: New Template …
