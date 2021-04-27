@@ -101,6 +101,7 @@ export class Panel extends React.PureComponent {
         ref={this.container}
         tabIndex={this.props.tabIndex}
         onBlur={this.handleBlur}
+        onClick={this.handleBlur}
         onKeyDown={this.props.onKeyDown}>
         {this.renderHeader(header)}
         {this.renderBody(body)}
