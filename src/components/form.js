@@ -265,9 +265,7 @@ export class Toggle extends React.PureComponent {
   }
 
   handleChange = () => {
-    this.props.onChange({
-      [this.props.name]: !this.props.value
-    }, true)
+    this.props.onChange(set({}, this.props.name, !this.props.value), true)
   }
 
   render() {
@@ -350,9 +348,9 @@ export class FormToggleGroup extends React.PureComponent {
   handleChange = (option) => {
     for (let value in option) {
       if (option[value]) {
-        this.props.onChange({
-          [this.props.name]: value === 'null' ? null : value
-        })
+        this.props.onChange(
+          set({}, this.props.name, value === 'null' ? null : value)
+        )
       }
     }
   }
