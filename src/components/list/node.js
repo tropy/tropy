@@ -6,13 +6,14 @@ import { IconFolder, IconGhost, IconTriangle } from '../icons'
 import { bounds } from '../../dom'
 import { ListTree } from './tree'
 import cx from 'classnames'
-import { blank, last, noop, restrict } from '../../common/util'
+import { last, noop, restrict } from '../../common/util'
 
 import {
   DND,
   DragSource,
   DropTarget,
   getEmptyImage,
+  getDroppedFiles,
   hasPhotoFiles
 } from '../dnd'
 
@@ -374,7 +375,6 @@ const DropTargetSpec = {
     try {
       let type = monitor.getItemType()
       let item = monitor.getItem()
-      let files
 
       switch (type) {
         case DND.LIST: {
@@ -389,16 +389,15 @@ const DropTargetSpec = {
           })
           break
         case DND.FILE:
-          files = item.files.map(f => f.path)
-          break
-        case DND.URL:
-          files = item.urls
-          break
+        case DND.URL: {
+          let files = getDroppedFiles(monitor)
+          if (files) {
+            props.onDropFiles({ list: list.id, ...files })
+          }
+          return files
+        }
       }
 
-      if (!blank(files)) {
-        props.onDropFiles({ list: list.id, files })
-      }
     } finally {
       node.setState({ detph: null, offset: null })
     }

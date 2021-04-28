@@ -96,10 +96,10 @@ export class ItemPanelGroup extends React.PureComponent {
     }
   }
 
-  handlePhotoCreate = (dropped) => {
+  handlePhotoCreate = (data) => {
     this.props.onPhotoCreate({
       item: this.props.items?.[0]?.id,
-      files: dropped && dropped.files
+      ...data
     })
   }
 

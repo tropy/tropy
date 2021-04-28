@@ -1,8 +1,7 @@
 import React from 'react'
-import { DND, DropTarget, hasPhotoFiles } from '../dnd'
+import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd'
 import { IconMaze, IconWarningSm, IconLock } from '../icons'
 import { Editable } from '../editable'
-import { blank } from '../../common/util'
 import cx from 'classnames'
 import { bool, func, string } from 'prop-types'
 
@@ -62,21 +61,11 @@ class ProjectName extends React.PureComponent {
 const ProjectNameContainer =
   DropTarget([DND.FILE, DND.URL], {
     drop({ onDrop }, monitor) {
-      let item = monitor.getItem()
-      let files
+      let photos = getDroppedFiles(monitor)
 
-      switch (monitor.getItemType()) {
-        case DND.FILE:
-          files = item.files.map(f => f.path)
-          break
-        case DND.URL:
-          files = item.urls
-          break
-      }
-
-      if (!blank(files)) {
-        onDrop({ files })
-        return { files }
+      if (photos) {
+        onDrop(photos)
+        return photos
       }
     },
 

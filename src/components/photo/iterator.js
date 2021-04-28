@@ -1,7 +1,7 @@
 import React from 'react'
 import { Iterator } from '../iterator'
-import { DND, DropTarget, hasPhotoFiles } from '../dnd'
-import { blank, last, move, noop } from '../../common/util'
+import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd'
+import { last, move, noop } from '../../common/util'
 import { on, off } from '../../dom'
 
 import {
@@ -341,11 +341,9 @@ const DropTargetSpec = {
     if (monitor.didDrop())
       return
 
-    let item = monitor.getItem()
-    let files
-
     switch (monitor.getItemType()) {
       case DND.PHOTO: {
+        let item = monitor.getItem()
         let to = last(photos).id
 
         if (item.id !== to)  {
@@ -358,16 +356,14 @@ const DropTargetSpec = {
         break
       }
       case DND.FILE:
-        files = item.files.map(f => f.path)
+      case DND.URL: {
+        let files = getDroppedFiles(monitor)
+        if (files) {
+          onCreate(files)
+          return files
+        }
         break
-      case DND.URL:
-        files = item.urls
-        break
-    }
-
-    if (!blank(files)) {
-      onCreate({ files })
-      return { files }
+      }
     }
   },
 

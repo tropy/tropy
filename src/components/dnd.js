@@ -19,6 +19,10 @@ import {
   MIME
 } from '../constants'
 
+import {
+  blank
+} from '../common/util'
+
 const DND = {
   ...NativeTypes,
   FIELD: 'field',
@@ -47,6 +51,15 @@ const hasPhotoFiles = (monitor) =>
 // which are matched as HTML because it's defined first.
 delete nativeTypesConfig[NativeTypes.HTML]
 
+const getDroppedFiles = (monitor) => {
+  let item = monitor.getItem()
+  let files = item.files?.map(f => f.path)
+  let urls = item.urls
+
+  if (!blank(files) || !blank(urls))
+    return { files, urls }
+}
+
 export {
   DND,
   DndProvider,
@@ -54,6 +67,7 @@ export {
   DragSource,
   DropTarget,
   HTML5Backend as ElectronBackend,
+  getDroppedFiles,
   getEmptyImage,
   hasProjectFiles,
   hasPhotoFiles

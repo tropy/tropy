@@ -1,10 +1,10 @@
 import React from 'react'
 import { WindowContext } from '../main'
-import { DND, DropTarget, hasPhotoFiles } from '../dnd'
+import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd'
 import { ItemGrid, ItemTable } from '../item'
 import { ProjectSidebar } from './sidebar'
 import { ProjectToolbar } from './toolbar'
-import { blank, pick } from '../../common/util'
+import { pick } from '../../common/util'
 import { array, bool, func, object, number } from 'prop-types'
 import { SASS } from '../../constants'
 
@@ -149,21 +149,11 @@ class ProjectView extends React.Component {
 
 const spec = {
   drop({ nav, onItemImport }, monitor) {
-    let item = monitor.getItem()
-    let files, urls
+    let photos = getDroppedFiles(monitor)
 
-    switch (monitor.getItemType()) {
-      case DND.FILE:
-        files = item.files.map(f => f.path)
-        break
-      case DND.URL:
-        urls = item.urls
-        break
-    }
-
-    if (!blank(files) || !blank(urls)) {
-      onItemImport({ files, urls, list: nav.list })
-      return { files, urls }
+    if (photos) {
+      onItemImport({ ...photos, list: nav.list })
+      return photos
     }
   },
 
