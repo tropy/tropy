@@ -190,12 +190,8 @@
       }
 
       .icon {
-        display: none;
+        color: inherit;
         margin: 0 -4px 0 -5px;
-
-        @include state(".metadata-head.ascending", ".metadata-head.descending") {
-          display: block;
-        }
 
         @include state(".metadata-head.descending") {
           transform: scaleY(-1);
