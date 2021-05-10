@@ -1,6 +1,6 @@
 import React from 'react'
 import { Completions } from './completions'
-import { IconXSmall, IconXMedium } from './icons'
+import { IconXSmall } from './icons'
 import { Button } from './button'
 import { blank, last, noop } from '../common/util'
 import { on, off } from '../dom'
@@ -315,7 +315,7 @@ export class Select extends React.Component {
     return !this.props.hideClearButton && this.state.canClearValue && (
       <Button
         className="global-clear"
-        icon={<IconXMedium/>}
+        icon={<IconXSmall/>}
         onMouseDown={this.clear}/>
     )
   }
