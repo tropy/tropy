@@ -15,6 +15,16 @@
     .frameless & {
       -webkit-app-region: drag;
     }
+
+    .is-blurred & {
+      @if $platform == darwin {
+        background-color: $prefs-header-blurred-bg-darwin;
+
+        > * {
+          opacity: $toolbar-blurred-opacity-darwin;
+        }
+      }
+    }
   }
 
   .toolbar {
