@@ -38,6 +38,7 @@
   #{--shade-2}:            $shade-2;
   #{--shade-2-darken-4}:   darken($shade-2, 4%);
   #{--shade-3}:            $shade-3;
+  #{--shade-3-lighten-2}:  lighten($shade-3, 2%);
   #{--shade-3-50}:         rgba($shade-3, 0.5);
   #{--shade-3-60}:         rgba($shade-3, 0.6);
   #{--shade-4}:            $shade-4;

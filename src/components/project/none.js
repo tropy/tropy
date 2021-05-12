@@ -27,7 +27,9 @@ export const NoProject = ({ connect, ...props }) => connect(
                 onClick={() => props.onProjectOpen(path)}
                 title={path}>
                 <IconMaze/>
-                <div className="truncate">{basename(path)}</div>
+                <div className="name">
+                  <div className="truncate">{basename(path)}</div>
+                </div>
               </li>)}
           </ol>
         </nav>

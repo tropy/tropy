@@ -14,6 +14,12 @@
     background-color: $panel-focus-bg;
   }
 
+  .is-blurred .item-mode & {
+    @if $platform == darwin {
+      background-color: $panel-blurred-bg-darwin;
+    }
+  }
+
   .panel-header {
     flex: 0 0 $panel-header-height;
     display: flex;

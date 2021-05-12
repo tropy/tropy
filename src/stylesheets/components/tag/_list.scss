@@ -182,6 +182,13 @@
       border-color: $add-tag-nested-focus-border-color;
     }
 
+    .is-blurred .item-mode & {
+      @if $platform == darwin {
+        background: $add-tag-blurred-bg-darwin;
+        border-color: $add-tag-blurred-border-color-darwin;
+      }
+    }
+
     &:focus {
       cursor: auto;
       background: $add-tag-focus-bg;

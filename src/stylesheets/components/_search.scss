@@ -17,6 +17,16 @@
   .search-input {
     padding-left: ($space-xs + $space-md);
     padding-right: 1px + $clear-button-size + $space-min;
+
+    &[disabled] {
+      background-color: $search-disabled-bg;
+    }
+
+    .is-blurred & {
+      @if $platform == darwin {
+        background-color: $search-blurred-bg-darwin;
+      }
+    }
   }
 
   .btn-icon {

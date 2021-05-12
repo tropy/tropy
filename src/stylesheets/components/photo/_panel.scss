@@ -1,0 +1,19 @@
+//
+// Photo panel
+// --------------------------------------------------
+
+.photo-panel {
+  .slider {
+    .slider-handle {
+      @include state(".photo-panel.nested-tab-focus") {
+        background-color: $photo-panel-slider-handle-nested-focus-bg;
+      }
+
+      .is-blurred .item-mode & {
+        @if $platform == darwin and $theme == light {
+          background-color: $photo-panel-slider-handle-blurred-bg-darwin;
+        }
+      }
+    }
+  }
+}

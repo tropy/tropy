@@ -9,9 +9,17 @@
     0 (-$panel-header-height) 0 $panel-bg;
 
   &.nested-tab-focus {
-  box-shadow:
-    0 (-$toolbar-height) 0 $panel-focus-bg,
-    0 (-$panel-header-height) 0 $panel-focus-bg;
+    box-shadow:
+      0 (-$toolbar-height) 0 $panel-focus-bg,
+      0 (-$panel-header-height) 0 $panel-focus-bg;
+  }
+
+  .is-blurred .item-mode & {
+    @if $platform == darwin {
+      box-shadow:
+        0 (-$toolbar-height) 0 $panel-blurred-bg-darwin,
+        0 (-$panel-header-height) 0 $panel-blurred-bg-darwin;
+    }
   }
 
   .toolbar {
@@ -19,6 +27,25 @@
 
     @include state(".item-panel.closed") {
       padding: 0;
+    }
+  }
+
+  .tabs {
+    .is-blurred .item-mode & {
+      @if $platform == darwin {
+        background-color: $item-panel-tab-blurred-bg-darwin;
+      }
+    }
+
+    .tab {
+      &.active {
+        .is-blurred .item-mode & {
+          @if $platform == darwin {
+            background-color: $item-panel-tab-blurred-selected-bg-darwin;
+            box-shadow: 0 0 0 $input-border-width $item-panel-tab-blurred-selected-border-darwin;
+          }
+        }
+      }
     }
   }
 }

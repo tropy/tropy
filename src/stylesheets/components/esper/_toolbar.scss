@@ -14,11 +14,26 @@
 
     .frameless & {
       background: transparent;
+
+      @include state(".frameless.is-blurred") {
+        @if $platform == darwin {
+          background: $esper-toolbar-blurred-bg-darwin;
+        }
+      }
     }
 
     .btn-icon {
       & + .btn-icon {
         margin-left: $space-min / 2;
+      }
+    }
+
+    .toolbar-left,
+    .toolbar-right {
+      .is-blurred & {
+        @if $platform == darwin {
+          opacity: $esper-toolbar-blurred-opacity-darwin !important;
+        }
       }
     }
 

@@ -15,6 +15,10 @@
       > * {
         @if $platform == darwin {
           opacity: $toolbar-blurred-opacity-darwin;
+
+          @if $theme == light {
+            mix-blend-mode: multiply;
+          }
         }
       }
     }

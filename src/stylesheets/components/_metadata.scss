@@ -69,6 +69,13 @@ $default-padding-horizontal: 12px !default;
       background-color: $template-select-nested-focus-bg;
       border-color: $template-select-nested-focus-border;
     }
+
+    .is-blurred .item-mode & {
+      @if $platform == darwin {
+        background-color: $template-select-blurred-bg-darwin;
+        border-color: $template-select-blurred-border-darwin;
+      }
+    }
   }
 
   &.resource-select {

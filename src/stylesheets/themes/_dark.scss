@@ -181,7 +181,8 @@ $icon-active-color: var(--shade-9);
 $icon-spin-color:   var(--brand-primary);
 
 // Toolbar
-$toolbar-blurred-opacity-darwin: 0.5;
+$toolbar-blurred-opacity-darwin:       0.5;
+$toolbar-blurred-bg-darwin:            var(--shade-2);
 
 // Project
 $project-darken-color:  var(--shade-0-20);
@@ -219,11 +220,17 @@ $items-active-bg:                var(--shade-5);
 // Panel
 $panel-bg:                           var(--shade-4);
 $panel-focus-bg:                     var(--shade-4-lighten-2);
+$panel-blurred-bg-darwin:            var(--shade-2);
 $panel-header-color:                 var(--shade-8);
 $panel-separator-color:              var(--shade-1);
 $panel-nested-focus-separator-color: var(shade-1-lighten-2);
 $panel-heading-color:                var(--shade-6);
 $panel-nested-focus-heading-color:   var(--shade-6-lighten-2);
+
+// Item panel
+$item-panel-tab-blurred-bg-darwin:              var(--shade-2-darken-4);
+$item-panel-tab-blurred-selected-bg-darwin:     $panel-blurred-bg-darwin;
+$item-panel-tab-blurred-selected-border-darwin: var(--shade-1-darken-4);
 
 // Tabs
 $tab-color:                              var(--shade-7-lighten-2);
@@ -234,27 +241,35 @@ $tab-selected-border-color:              var(--shade-1);
 $tab-active-bg:                          var(--shade-1);
 $tab-active-border-color:                $tab-active-bg;
 $tab-nested-focus-bg:                    var(--shade-2);
-$tab-nested-focus-selected-bg:           var(--shade-4-lighten-2);;
-$tab-nested-focus-selected-border-color: var(shade-1-lighten-2);;
+$tab-nested-focus-selected-bg:           var(--shade-4-lighten-2);
+$tab-nested-focus-selected-border-color: var(--shade-1-lighten-2);
 
 // Metadata
-$label-color:                         var(--shade-7);
-$template-select-border:              var(--shade-1);
-$template-select-nested-focus-border: var(--shade-1-lighten-2);
-$template-select-bg:                  var(--shade-4);
-$template-select-nested-focus-bg:     var(--shade-4-lighten-2);
+$label-color:                           var(--shade-7);
+$template-select-border:                var(--shade-1);
+$template-select-nested-focus-border:   var(--shade-1-lighten-2);
+$template-select-blurred-border-darwin: var(--shade-1-darken-4);
+$template-select-bg:                    var(--shade-4);
+$template-select-nested-focus-bg:       var(--shade-4-lighten-2);
+$template-select-blurred-bg-darwin:     $panel-blurred-bg-darwin;
 
 // Tag list
-$tag-list-active-border:            var(--shade-6-lighten-5);
-$add-tag-default-bg:                $panel-bg;
-$add-tag-focus-bg:                  var(--shade-3);
-$add-tag-nested-focus-bg:           var(--shade-4-lighten-2);
-$add-tag-placeholder-color-default: $text-color;
-$add-tag-nested-focus-border-color: var(--shade-1-lighten-2);
-$icon-tag-color:                    var(--shade-4);
-$icon-tag-nested-focus-color:       var(--shade-4-lighten-2);
-$icon-tag-border:                   var(--shade-6);
-$icon-tag-nested-focus-border:      var(--shade-6-lighten-2);
+$tag-list-active-border:              var(--shade-6-lighten-5);
+$add-tag-default-bg:                  $panel-bg;
+$add-tag-focus-bg:                    var(--shade-3);
+$add-tag-nested-focus-bg:             var(--shade-4-lighten-2);
+$add-tag-blurred-bg-darwin:           $panel-blurred-bg-darwin;
+$add-tag-placeholder-color-default:   $text-color;
+$add-tag-nested-focus-border-color:   var(--shade-1-lighten-2);
+$add-tag-blurred-border-color-darwin: var(--shade-1-darken-4);
+$icon-tag-color:                      var(--shade-4);
+$icon-tag-nested-focus-color:         var(--shade-4-lighten-2);
+$icon-tag-border:                     var(--shade-6);
+$icon-tag-nested-focus-border:        var(--shade-6-lighten-2);
+
+// Photo panel
+$photo-panel-slider-handle-nested-focus-bg:   null;
+$photo-panel-slider-handle-blurred-bg-darwin: null;
 
 // Note list
 $note-list-focus-color:  var(--brand-primary-light);
@@ -314,6 +329,7 @@ $esper-slider-value-color:               var(--shade-7);
 $esper-overlay-bg:                       var(--shade-0-80);
 $esper-toolbar-overlay-btn-active-color: var(--shade-10-darken-4);
 $esper-toolbar-overlay-btn-active-bg:    var(--shade-10-20);
+$esper-toolbar-blurred-bg-darwin:        var(--shade-2);
 $esper-toolbar-blurred-opacity-darwin:   0.3;
 $esper-overlay-icon-color:               var(--shade-10-darken-14);
 $esper-checkbox-bg:                      var(--shade-5);
@@ -354,7 +370,7 @@ $editor-pseudo-selection-bg:            var(--brand-primary-light-10);
 $blockquote-border-color: var(--shade-8);
 $selected-node-color:     var(--brand-primary);
 $editor-hr-border-color:  var(--shade-1);
-$line-number-color:       var(--shade-6);;
+$line-number-color:       var(--shade-6);
 
 // Preferences
 $prefs-bg:            var(--shade-4);
@@ -386,8 +402,10 @@ $flash-color:            var(--brand-primary-lighten-14);
 $flash-close-icon-color: var(--brand-primary-lighten-14);
 $flash-shadow-color:     var(--brand-primary-30);
 
-// Flash
-$clear-search-color: var(--shade-4);
+// Search
+$clear-search-color:       var(--shade-4);
+$search-disabled-bg:       var(--shade-3-lighten-2);
+$search-blurred-bg-darwin: $toolbar-blurred-bg-darwin;
 
 // Popup
 $popup-bg: var(--shade-3);
