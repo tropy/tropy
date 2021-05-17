@@ -33,6 +33,12 @@
       &.active {
         @extend %list-active;
 
+        .is-blurred & {
+          @if $platform == darwin {
+            background-color: $sidebar-list-blurred-bg-darwin;
+          }
+        }
+
         &:focus {
           @extend %list-focus;
         }
