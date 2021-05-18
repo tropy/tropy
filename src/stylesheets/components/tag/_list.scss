@@ -37,6 +37,10 @@
           @if $platform == darwin {
             background-color: $sidebar-list-blurred-bg-darwin;
           }
+
+          @if $platform == linux {
+            background-color: $sidebar-list-blurred-bg-linux;
+          }
         }
 
         &:focus {

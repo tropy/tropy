@@ -189,17 +189,24 @@ $item-count-color:      var(--shade-5);
 // Sidebar
 $sidebar-bg:                              var(--shade-1);
 $sidebar-blurred-bg:                      var(--shade-1-darken-4);
-$sidebar-list-blurred-bg:                 var(--shade-3-darken-4);
+$sidebar-list-blurred-bg-darwin:          var(--shade-3-darken-4);
+$sidebar-list-blurred-bg-linux:           var(--shade-3-60);
 $sidebar-text-color:                      var(--shade-8);
 $sidebar-headings-color:                  var(--shade-6);
-$sidebar-blurred-headings-color:          var(--shade-6-darken-4);
+$sidebar-blurred-headings-color-darwin:   var(--shade-6-darken-4);
+$sidebar-blurred-headings-color-linux:    var(--shade-6-40);
 $sidebar-blurred-icon-opacity-darwin:     0.33;
+$sidebar-blurred-icon-opacity-linux:      0.4;
 $sidebar-blurred-name-opacity-darwin:     0.76;
+$sidebar-blurred-name-opacity-linux:      0.4;
 $sidebar-blurred-tag-opacity-darwin:      0.31;
 $activity-border-color:                   var(--shade-3);
 $activity-blurred-border-color-darwin:    var(--shade-3-darken-4);
+$activity-blurred-border-color-linux:     var(--shade-3-60);
 $activity-blurred-progress-bar-bg-darwin: var(--shade-3-darken-4);
+$activity-blurred-progress-bar-bg-linux:  var(--shade-3-60);
 $activity-blurred-progress-val-bg-darwin: var(--shade-5-darken-4);
+$activity-blurred-progress-val-bg-linux:  var(--shade-4); // ~ 40% opacity
 
 // Items
 $item-table-header-color:        var(--shade-8);

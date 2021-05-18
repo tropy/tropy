@@ -40,7 +40,11 @@
 
     .is-blurred & {
       @if $platform == darwin {
-        color: $sidebar-blurred-headings-color;
+        color: $sidebar-blurred-headings-color-darwin;
+      }
+
+      @if $platform == linux {
+        color: $sidebar-blurred-headings-color-linux;
       }
     }
   }
@@ -64,9 +68,13 @@
         @include state("li.active") {
           @extend %list-active;
 
-          @if $platform == darwin {
-            .is-blurred & {
-              background-color: $sidebar-list-blurred-bg;
+          .is-blurred & {
+            @if $platform == darwin {
+              background-color: $sidebar-list-blurred-bg-darwin;
+            }
+
+            @if $platform == linux {
+              background-color: $sidebar-list-blurred-bg-linux;
             }
           }
 
@@ -145,6 +153,10 @@
         @if $platform == darwin {
           opacity: $sidebar-blurred-icon-opacity-darwin;
         }
+
+        @if $platform == linux {
+          opacity: $sidebar-blurred-icon-opacity-linux;
+        }
       }
 
       &:first-child {
@@ -183,6 +195,10 @@
       .is-blurred & {
         @if $platform == darwin {
           opacity: $sidebar-blurred-name-opacity-darwin;
+        }
+
+        @if $platform == linux {
+          opacity: $sidebar-blurred-name-opacity-linux;
         }
       }
     }

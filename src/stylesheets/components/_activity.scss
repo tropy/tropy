@@ -38,6 +38,10 @@
     @if $platform == darwin {
       border-top-color: $activity-blurred-border-color-darwin;
     }
+
+    @if $platform == linux {
+      border-top-color: $activity-blurred-border-color-linux;
+    }
   }
 
   .activity-container {
@@ -65,6 +69,10 @@
       @if $platform == darwin {
         opacity: $sidebar-blurred-name-opacity-darwin;
       }
+
+      @if $platform == linux {
+        opacity: $sidebar-blurred-name-opacity-linux;
+      }
     }
   }
 
@@ -77,6 +85,16 @@
 
         &::-webkit-progress-value {
           background-color: $activity-blurred-progress-val-bg-darwin;
+        }
+      }
+
+      @if $platform == linux {
+        &::-webkit-progress-bar {
+          background-color: $activity-blurred-progress-bar-bg-linux;
+        }
+
+        &::-webkit-progress-value {
+          background-color: $activity-blurred-progress-val-bg-linux;
         }
       }
     }
