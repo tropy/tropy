@@ -70,7 +70,7 @@ export default [
       alias({
         entries: {
           depd: join(
-            __dirname, 'node_modules/cookies/node_modules/depd/index.js'
+            __dirname, 'node_modules/cookies/node_modules/depd'
           )
         }
       }),
@@ -144,7 +144,7 @@ export default [
       alias({
         entries: {
           semver: join(
-            __dirname, 'node_modules/semver/index.js'
+            __dirname, 'node_modules/semver'
           )
         }
       }),
