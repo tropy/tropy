@@ -1,6 +1,7 @@
 import { join, normalize, relative } from 'path'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
+import cleanup from 'rollup-plugin-cleanup'
 import commonjs from '@rollup/plugin-commonjs'
 import copy from 'rollup-plugin-copy'
 import ignore from 'rollup-plugin-ignore'
@@ -80,7 +81,8 @@ export default [
       }),
       babel({ babelHelpers: 'bundled' }),
       json(),
-      commonjs()
+      commonjs(),
+      cleanup()
       // visualize({ filename: 'main.html' })
     ],
     external: [
@@ -166,7 +168,8 @@ export default [
       }),
       commonjs({
         requireReturnsDefault: 'preferred'
-      })
+      }),
+      cleanup()
       // visualize({ filename: 'renderer.html' })
     ],
     external: [
