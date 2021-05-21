@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Electron",
+    "license": "MIT License",
+    "url": "https://raw.githubusercontent.com/electron/electron/master/LICENSE"
+  },
+  {
+    "name": "Chromium",
+    "license": "Chromium License",
+    "url": "https://source.chromium.org/chromium/chromium/src/+/master:LICENSE"
+  },
+  {
+    "name": "Node.js",
+    "license": "Node.js License",
+    "url": "https://raw.githubusercontent.com/nodejs/node/master/LICENSE"
+  },
+  {
+    "name": "SQLite",
+    "license": "Public Domain",
+    "url": "https://sqlite.org/copyright.html"
+  }
+]

@@ -70,9 +70,7 @@ export default [
       ], { commonjsBugFix: true }),
       alias({
         entries: {
-          depd: join(
-            __dirname, 'node_modules/cookies/node_modules/depd'
-          )
+          depd: join(process.cwd(), 'node_modules/cookies/node_modules/depd')
         }
       }),
       resolve({
@@ -145,9 +143,7 @@ export default [
       ], { commonjsBugFix: true }),
       alias({
         entries: {
-          semver: join(
-            __dirname, 'node_modules/semver'
-          )
+          semver: join(process.cwd(), 'node_modules/semver')
         }
       }),
       replace({
