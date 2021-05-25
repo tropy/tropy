@@ -142,7 +142,8 @@ export default [
           },
           {
             src: `node_modules/sharp/vendor/${sharp.config.libvips}/THIRD-PARTY-NOTICES.json`,
-            dest: 'lib/licenses.libvips.json'
+            dest: 'lib',
+            rename: 'licenses.libvips.json'
           }
 
         ],
