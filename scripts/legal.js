@@ -1,99 +1,116 @@
 'use strict'
 
-const { bail, say } = require('./util')('§')
+const { bail, say, warn } = require('./util')('§')
 const { join, relative, resolve } = require('path')
 const { readFile, writeFile } = require('fs/promises')
 const { program } = require('commander')
+const fetch = require('node-fetch')
 
 /* eslint-disable max-len */
 
 program
   .name('tropy-legal')
-  .option('-m, --modules <files...>', 'module dependencies (JSON)')
-  .option('-l, --libraries <files...>', 'library dependencies (JSON)')
+  .option('-d, --dependencies <files...>', 'dependencies (JSON)')
   .option('-o, --out <directory>', 'output directory')
+  .option('-n, --name <basename>', 'output file name', 'third-party-notices')
   .option('-f, --format <format>', 'output format', 'html')
   .action(async () => {
     let opts = program.opts()
+    let deps = await loadDependencies(opts)
 
-    if (opts.dependencies) {
-      opts.dependencies = opts.dependencies.map(dep => resolve(dep))
-    } else {
-      opts.dependencies = [
-        join(__dirname, 'licenses.browser.json'),
-        join(__dirname, 'licenses.renderer.json')
-      ]
-    }
+    let out = join(opts.out || process.cwd(), `${opts.name}.${opts.format}`)
+    await writeFile(out, compileThirdPartyNotices(deps, opts))
 
-    if (opts.libraries) {
-      opts.libraries = opts.libraries.map(lib => resolve(lib))
-    } else {
-      opts.libraries = [
-        join(__dirname, 'libraries.json'),
-        join(__dirname, '../../sharp-libvips/THIRD-PARTY-NOTICES.json')
-      ]
-    }
-
-    let deps = await loadDependencies(opts.dependencies)
-    let libs = await loadDependencies(opts.libraries)
-
-    let modules
-    let libraries
-
-    switch (opts.format) {
-      case 'json':
-        modules = JSON.stringify(deps, 0, 2)
-        libraries = JSON.stringify(libs, 0, 2)
-        break
-      case 'html':
-        modules = deps.map(modTemplate).join('\n')
-        libraries = libs.map(libTemplate).join('\n')
-        break
-      default:
-        bail(`unknown format: "${opts.format}"`)
-    }
-
-    let target = join(opts.out || process.cwd(), `modules.${opts.format}`)
-    await writeFile(target, modules)
-
-    say(`${deps.length} modules saved to ${relative(process.cwd(), target)}`)
-
-    target = join(opts.out || process.cwd(), `libraries.${opts.format}`)
-    await writeFile(target, libraries)
-
-    say(`${libs.length} libraries saved to ${relative(process.cwd(), target)}`)
+    say(`${deps.length} dependencies saved to ${relative(process.cwd(), out)}`)
   })
 
-const loadDependencies = async (files) => {
-  let modules = []
+
+const compileThirdPartyNotices = (deps, { format }) => {
+  switch (format) {
+    case 'json':
+      return JSON.stringify(deps, 0, 2)
+    case 'html':
+      return deps.map(htmlTemplate).join('\n')
+    case 'txt':
+      return deps.map(textTemplate).join('\n')
+    default:
+      bail(`unknown format: "${format}"`)
+  }
+}
+
+const loadDependencies = async ({ dependencies }) => {
+  if (dependencies) {
+    dependencies = dependencies.map(dep => resolve(dep))
+  } else {
+    dependencies = [
+      join(__dirname, 'licenses.json'),
+      resolve('lib/licenses.browser.json'),
+      resolve('lib/licenses.renderer.json'),
+      resolve('lib/licenses.libvips.json')
+    ]
+  }
+
+  let mods = []
   let dict = {}
 
   let skip = (name) =>
     name == null || name === 'tropy' || dict[name]
 
-  for (let file of files) {
-    for (let module of JSON.parse(await readFile(file))) {
-      if (!skip(module.name)) {
-        modules.push(module)
-        dict[module.name] = module
+  for (let file of dependencies) {
+    try {
+      for (let mod of JSON.parse(await readFile(file))) {
+        if (!skip(mod.name)) {
+          await loadLicenseText(mod)
+          mods.push(mod)
+          dict[mod.name] = true
+        }
       }
+    } catch (e) {
+      warn(`failed loading dependencies from "${file}"`)
+      //console.error(e.stack)
     }
   }
 
-  modules.sort((a, b) =>
+  mods.sort((a, b) =>
     (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
   )
 
-  return modules
+  return mods
 }
 
-const libTemplate = (library) =>
-  `<a href="${library.url}">${library.name}</a>`
+const loadLicenseText = async (mod) => {
+  if (!mod.licenseText) {
+    let text = []
 
-const modTemplate = (module) => html`
-<div class="dependency"><a href="#" class="module">${module.name}</a><div class="license">
+    for (let url of [mod.licenseURL].flat()) {
+      if (url) text.push(await fetch(url).then(res => res.text()))
+    }
+
+    mod.licenseText = text.join(
+      '\n\n        + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +\n\n'
+    )
+  }
+
+  return mod
+}
+
+const textTemplate = (mod) => `
+${mod.name}
+------------------------------------------------------------------------------
+${[
+  mod.licenseText || `License: ${mod.license || 'Unknown'}`,
+  mod.licenseNote
+].filter(x => x).join('\n\n')}
+------------------------------------------------------------------------------
+`
+
+const htmlTemplate = (mod) => html`
+<div class="dependency"><a href="#" class="module">${mod.name}</a><div class="license">
   <pre>
-${module.licenseText || `License: ${module.license || 'Unknown'}`}
+${[
+  mod.licenseText || `License: ${mod.license || 'Unknown'}`,
+  mod.licenseNote
+].filter(x => x).join('\n\n')}
   </pre></div>
 </div>`
 

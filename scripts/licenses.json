@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Electron",
+    "license": "MIT",
+    "licenseURL": "https://raw.githubusercontent.com/electron/electron/master/LICENSE"
+  },
+  {
+    "name": "Chromium",
+    "license": "BSD-3-Clause",
+    "licenseNote": "For additional Chromium credits see the LICENSE.chromium.html file included with Tropy.",
+    "licenseURL": "https://chromium.googlesource.com/chromium/src/+/refs/heads/main/LICENSE?format=TEXT"
+  },
+  {
+    "name": "Node.js",
+    "license": "Node.js License",
+    "licenseURL": "https://raw.githubusercontent.com/nodejs/node/master/LICENSE"
+  },
+  {
+    "name": "SQLite",
+    "license": "Public Domain",
+    "licenseURL": "https://raw.githubusercontent.com/sqlite/sqlite/master/LICENSE.md"
+  }
+]

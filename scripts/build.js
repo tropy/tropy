@@ -67,8 +67,11 @@ program
 
       let [dest] = await packager(opts)
 
-      say('copy LICENSE')
-      await copyFile(join(dest, 'LICENSE'), join(dest, 'LICENSE.electron'))
+      say('compile LICENSE and third-party notices')
+      // todo
+      await copyFile(
+        join(dest, 'LICENSES.chromium.html'),
+        join(dest, 'LICENSE.chromium.html'))
       await copyFile(join(ROOT, 'LICENSE'), join(dest, 'LICENSE'))
 
       switch (opts.platform) {

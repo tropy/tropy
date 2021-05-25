@@ -6,6 +6,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import copy from 'rollup-plugin-copy'
 import ignore from 'rollup-plugin-ignore'
 import json from '@rollup/plugin-json'
+import license from 'rollup-plugin-license'
 import natives from 'rollup-plugin-natives'
 import replace from '@rollup/plugin-replace'
 import resolve from '@rollup/plugin-node-resolve'
@@ -80,6 +81,15 @@ export default [
       babel({ babelHelpers: 'bundled' }),
       json(),
       commonjs(),
+      license({
+        thirdParty: {
+          includePrivate: true,
+          output: {
+            file: 'lib/licenses.browser.json',
+            template: JSON.stringify
+          }
+        }
+      }),
       cleanup()
       // visualize({ filename: 'main.html' })
     ],
@@ -129,7 +139,12 @@ export default [
           } : {
             src: `node_modules/sharp/vendor/${sharp.config.libvips}/lib`,
             dest: `lib/vendor/${sharp.config.libvips}`
+          },
+          {
+            src: `node_modules/sharp/vendor/${sharp.config.libvips}/THIRD-PARTY-NOTICES.json`,
+            dest: 'lib/licenses.libvips.json'
           }
+
         ],
         copyOnce: true
       }),
@@ -164,6 +179,15 @@ export default [
       }),
       commonjs({
         requireReturnsDefault: 'preferred'
+      }),
+      license({
+        thirdParty: {
+          includePrivate: true,
+          output: {
+            file: 'lib/licenses.renderer.json',
+            template: JSON.stringify
+          }
+        }
       }),
       cleanup()
       // visualize({ filename: 'renderer.html' })
