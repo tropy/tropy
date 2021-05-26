@@ -102,7 +102,7 @@ const loadLicenseText = async (mod) => {
     }
 
     mod.licenseText = text.join(
-      '\n\n        + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +\n\n'
+      '\n\n              + + + + + + + + + + + + + + + + + + + + + + + + +\n\n'
     )
   }
 
