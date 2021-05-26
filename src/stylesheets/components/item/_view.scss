@@ -32,7 +32,7 @@
 
           @each $level in 0.75, 1.25, 1.5, 1.75, 2 {
             [style*="zoom:#{inspect($level)}"] & {
-              margin-left: $margin-left * 1 / $level;
+              margin-left: $margin-left * div(1, $level);
             }
           }
         }

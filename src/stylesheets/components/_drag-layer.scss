@@ -36,7 +36,7 @@
       display: flex;
       align-items: center;
       line-height: $metadata-line-height;
-      padding-left: $metadata-gutter / 2;
+      padding-left: div($metadata-gutter, 2);
     }
   }
 

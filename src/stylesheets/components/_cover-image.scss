@@ -115,13 +115,13 @@
           .line {
 
             // Stack line height
-            height: #{round($size / 32)}px;
+            height: #{round(div($size, 32))}px;
 
             // Stack line widths
             @for $i from 1 through $stack-size-max {
               &.line-#{$i} {
-                margin-left: #{round($size * $i / 16)}px;
-                margin-right: #{round($size * $i / 16)}px;
+                margin-left: #{round($size * div($i, 16))}px;
+                margin-right: #{round($size * div($i, 16))}px;
               }
             }
 
@@ -130,13 +130,13 @@
             $gap-opacity: 0;
             $range: $tile-thumbnail-size-max - $tile-thumbnail-size-min;
 
-            @if ($size - $tile-thumbnail-size-min) < ($range / 2.25) {
+            @if ($size - $tile-thumbnail-size-min) < (div($range, 2.25)) {
               $tint-opacity:
                 ($stack-line-tint-opacity
                 * (($size - $tile-thumbnail-size-min)
-                * 2.25 / $range));
+                * div(2.25, $range)));
 
-              $gap-opacity: (1 - ($size - $tile-thumbnail-size-min) * 2.25 / $range);
+              $gap-opacity: (1 - ($size - $tile-thumbnail-size-min) * div(2.25, $range));
             }
 
             &.line-1 {
@@ -159,7 +159,7 @@
           & + .thumbnail,
           & + .thumbnail img {
             --size: #{$size};
-            --stack-lines-height: 2 * #{round($size / 32)}px;
+            --stack-lines-height: 2 * #{round(div($size, 32))}px;
             --stack-height: var(--size) * 1px - var(--stack-lines-height);
             --width: var(--x) * var(--size) * 1px;
             --height: var(--y) * var(--size) * 1px;

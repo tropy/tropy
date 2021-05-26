@@ -52,7 +52,7 @@
       }
 
       & + .btn-icon {
-        margin-left: $space-min / 2;
+        margin-left: div($space-min, 2);
       }
     }
   }

@@ -9,11 +9,11 @@
   &.numbers {
     padding-left:
       ($space-xxl + $space-md)
-      * strip-unit($print-font-size) * 96 / 72
-      / strip-unit($editor-font-size);
+      * strip-unit($print-font-size) * div(96, 72)
+      * div(1, strip-unit($editor-font-size));
 
     .overflow & {
-      padding-left: ($space-xxl + $space-md) * 16 / 18 !important;
+      padding-left: ($space-xxl + $space-md) * div(16, 18) !important;
     }
   }
 
@@ -39,11 +39,11 @@
         left: 0;
         width:
           $space-xxl
-          * strip-unit($print-font-size) * 96 / 72
-          / strip-unit($editor-font-size);
+          * strip-unit($print-font-size) * div(96, 72)
+          * div(1, strip-unit($editor-font-size));
 
         .overflow & {
-          width: $space-xxl * 16 / strip-unit($editor-font-size);
+          width: $space-xxl * div(16, strip-unit($editor-font-size));
         }
       }
     }
@@ -129,11 +129,11 @@
   hr {
     border: 0;
     border-top: 1pt solid #000;
-    margin: ($print-font-size * $print-line-height / 2 - 1pt / 2) 0;
+    margin: ($print-font-size * div($print-line-height, 2) - div(1pt, 2)) 0;
     transform: scaleY(0.5); // Hairline hack
 
     .overflow & {
-      margin: ($print-font-size-large * $print-line-height-large / 2 - 1pt / 2) 0;
+      margin: ($print-font-size-large * div($print-line-height-large, 2) - div(1pt, 2)) 0;
     }
   }
 

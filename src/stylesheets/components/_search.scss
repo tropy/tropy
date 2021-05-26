@@ -10,7 +10,7 @@
   .icon-search {
     position: absolute;
     left: ($space-min + 1px);
-    top: (($input-height-base - $space-md) / 2);
+    top: div(($input-height-base - $space-md), 2);
     z-index: 4; // Focused form-control in input group has 3
   }
 
@@ -32,7 +32,7 @@
   .btn-icon {
     position: absolute;
     right: $space-min + 1px;
-    top: (($input-height-base - $clear-button-size) / 2);
+    top: div(($input-height-base - $clear-button-size), 2);
     width: $clear-button-size;
     height: $clear-button-size;
     background: $icon-color;

@@ -1,15 +1,26 @@
 /* stylelint-disable max-empty-lines, no-invalid-position-at-import-rule */
 
+
+// Window Base
+// --------------------------------------------------
+
 $platform: "linux";
 $theme: "light";
+
+
+// Sass modules
+// --------------------------------------------------
+
+@use
+  "sass:math" as *;
+
+
+// Theme
+// --------------------------------------------------
 
 @import
   "../themes/light",
   "../themes/colors-light";
-
-//
-// Window Base
-// --------------------------------------------------
 
 
 // Abstracts
