@@ -38,7 +38,7 @@ const compileThirdPartyNotices = (deps, { format }) => {
   }
 }
 
-const loadDependencies = async ({ dependencies }) => {
+const loadDependencies = async ({ dependencies } = {}) => {
   if (dependencies) {
     dependencies = dependencies.map(dep => resolve(dep))
   } else {
@@ -67,23 +67,38 @@ const loadDependencies = async ({ dependencies }) => {
       }
     } catch (e) {
       warn(`failed loading dependencies from "${file}"`)
-      //console.error(e.stack)
+      console.error(e.stack)
     }
   }
 
-  mods.sort((a, b) =>
-    (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0
-  )
+  mods.sort(byName)
 
   return mods
 }
+
+const byName = (a, b) => {
+  let n1 = normalizeName(a.name)
+  let n2 = normalizeName(b.name)
+  return (n1 < n2) ? -1 : (n1 > n2) ? 1 : 0
+}
+
+const normalizeName = (name) =>
+  name.replace('@', '').toLowerCase()
+
+const base64 = /^[-a-zA-Z0-9+/]*={0,3}$/
 
 const loadLicenseText = async (mod) => {
   if (!mod.licenseText) {
     let text = []
 
     for (let url of [mod.licenseURL].flat()) {
-      if (url) text.push(await fetch(url).then(res => res.text()))
+      if (!url) continue
+
+      let result = await fetch(url).then(res => res.text())
+      if (base64.test(result))
+        result = Buffer.from(result, 'base64').toString()
+
+      text.push(result)
     }
 
     mod.licenseText = text.join(
