@@ -2,7 +2,8 @@
 'use strict'
 
 const { say, error } = require('./util')('Σ')
-const { copyFile, mkdir, readdir, writeFile } = require('fs').promises
+const legal = require('./legal')
+const { copyFile, mkdir, readdir, rename, writeFile } = require('fs').promises
 const { program } = require('commander')
 const packager = require('electron-packager')
 const minimatch = require('minimatch')
@@ -67,12 +68,16 @@ program
 
       let [dest] = await packager(opts)
 
-      say('compile LICENSE and third-party notices')
-      // todo
-      await copyFile(
+      say('compiling LICENSE and third-party notices')
+      await copyFile(join(ROOT, 'LICENSE'), join(dest, 'LICENSE'))
+
+      await rename(
         join(dest, 'LICENSES.chromium.html'),
         join(dest, 'LICENSE.chromium.html'))
-      await copyFile(join(ROOT, 'LICENSE'), join(dest, 'LICENSE'))
+
+      let deps = await legal.loadDependencies()
+      let licenses = legal.compileThirdPartyNotices(deps, { format: 'txt' })
+      await writeFile(join(dest, 'LICENSE.third-party.txt'), licenses)
 
       switch (opts.platform) {
         case 'linux': {
@@ -114,14 +119,22 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
   // NB: the patterns must include (sub-)directories!
   const INCLUDE = [
     '/db{,/{migrate,schema}{,/**/*}}',
-    '/lib{,/**/*[!.map]}',
+    '/lib{,/**/*}',
     '/res{,/{menu,shaders,cursors,images,keymaps,strings,views,workers}{,/**/*}}',
     '/res/icons{,/{about,colors,cover,project,wizard,window}{,/**/*}}',
     '/package.json'
   ]
 
+  const EXCLUDE = [
+    '/lib/licenses.*.json',
+    '/lib/**/*.map'
+  ]
+
   const ignore = (path) => !(
-    path === '' || INCLUDE.some(pattern => minimatch(path, pattern))
+    path === '' || (
+      INCLUDE.some(pattern => minimatch(path, pattern)) &&
+      !EXCLUDE.some(pattern => minimatch(path, pattern))
+    )
   )
 
   let icon = null

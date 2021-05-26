@@ -153,4 +153,9 @@ const htmlEscape = (str) =>
 
 if (require.main === module) {
   program.parseAsync(process.argv)
+} else {
+  module.exports = {
+    compileThirdPartyNotices,
+    loadDependencies
+  }
 }
