@@ -60,7 +60,7 @@ $default-padding-horizontal: 12px !default;
       width:
         calc(
           100% - 2 * #{$default-padding-horizontal}
-          + #{div($scrollbar-size, 3)}
+          + #{$scrollbar-size} / 3
         );
       margin-left: $default-padding-horizontal;
     }
