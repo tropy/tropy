@@ -60,7 +60,7 @@
         background-color: $hook-bg;
         padding: 1px 5px;
         border-radius: $border-radius-small;
-        margin-left: div($space-min, 2);
+        margin-left: $space-min / 2;
       }
     }
 

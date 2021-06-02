@@ -28,11 +28,11 @@ $resizable-threshold: 8px !default;
     }
 
     &-left {
-      left: div(-$resizable-threshold, 2);
+      left: -($resizable-threshold / 2);
     }
 
     &-right {
-      right: div(-$resizable-threshold, 2);
+      right: -($resizable-threshold / 2);
     }
 
     &-row {
@@ -43,11 +43,11 @@ $resizable-threshold: 8px !default;
     }
 
     &-top {
-      top: div(-$resizable-threshold, 2);
+      top: -($resizable-threshold / 2);
     }
 
     &-bottom {
-      bottom: div(-$resizable-threshold, 2);
+      bottom: -($resizable-threshold / 2);
     }
   }
 

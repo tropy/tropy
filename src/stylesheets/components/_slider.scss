@@ -37,11 +37,11 @@
     flex: 1 1 0;
     height: $slider-track-height;
     background-color: $slider-track-bg;
-    border-radius: div($slider-track-height, 2);
+    border-radius: $slider-track-height / 2;
     margin: 0 ($space-min - $shim);
     position: relative;
-    border-left: div($slider-handle-size, 2) solid transparent;
-    border-right: div($slider-handle-size, 2) solid transparent;
+    border-left: ($slider-handle-size / 2) solid transparent;
+    border-right: ($slider-handle-size / 2) solid transparent;
 
     &:only-child {
       margin: 0;
@@ -61,10 +61,10 @@
     box-sizing: content-box;
     background-color: $slider-range-bg;
     height: $slider-track-height;
-    border-radius: div($slider-track-height, 2);
-    border-left: div($slider-handle-size, 2) solid transparent;
-    border-right: div($slider-handle-size, 2) solid transparent;
-    margin-left: div(-$slider-handle-size, 2);
+    border-radius: $slider-track-height / 2;
+    border-left: ($slider-handle-size / 2) solid transparent;
+    border-right: ($slider-handle-size / 2) solid transparent;
+    margin-left: -($slider-handle-size / 2);
     position: absolute;
 
     @include variant(".slider.origin") {
@@ -104,8 +104,8 @@
     border: 1px solid $slider-handle-border;
     border-radius: 50%;
     position: absolute;
-    top: -(div($slider-handle-size, 2) + 1px - div($slider-track-height, 2));
-    margin-left: -(div($slider-handle-size, 2) + 1px);
+    top: -($slider-handle-size / 2 + 1px - $slider-track-height / 2);
+    margin-left: -($slider-handle-size / 2 + 1px);
 
     @include state(".slider:focus") {
       background-color: $slider-focus-bg;
@@ -134,7 +134,7 @@
     margin-left: -16px; // antialiasing (translateX + transition).
     font-size: 10px;
     text-align: center;
-    line-height: div($toolbar-height, 2) - div($slider-handle-size, 2);
+    line-height: $toolbar-height / 2 - $slider-handle-size / 2;
     color: $slider-value-color;
     opacity: 0;
     transition: opacity $slider-value-transition;
@@ -157,21 +157,21 @@
     width: $slider-width-sm + 2px; // Work around containment
 
     .slider-track {
-      border-left-width: div($slider-handle-size-sm, 2);
-      border-right-width: div($slider-handle-size-sm, 2);
+      border-left-width: ($slider-handle-size-sm / 2);
+      border-right-width: ($slider-handle-size-sm / 2);
     }
 
     .slider-range {
-      border-left-width: div($slider-handle-size-sm, 2);
-      border-right-width: div($slider-handle-size-sm, 2);
-      margin-left: div(-$slider-handle-size-sm, 2);
+      border-left-width: ($slider-handle-size-sm / 2);
+      border-right-width: ($slider-handle-size-sm / 2);
+      margin-left: -($slider-handle-size-sm / 2);
     }
 
     .slider-handle {
       width: $slider-handle-size-sm;
       height: $slider-handle-size-sm;
-      top: -(div($slider-handle-size-sm, 2) + 1px - div($slider-track-height, 2));
-      margin-left: -(div($slider-handle-size-sm, 2) + 1px);
+      top: -($slider-handle-size-sm / 2 + 1px - $slider-track-height / 2);
+      margin-left: -($slider-handle-size-sm / 2 + 1px);
     }
 
     .slider-value {

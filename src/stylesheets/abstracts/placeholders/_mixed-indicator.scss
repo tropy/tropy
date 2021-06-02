@@ -7,6 +7,6 @@
     box-sizing: border-box;
     content: "+";
     flex: 0 0 auto;
-    margin-left: div($space-min, 2);
+    margin-left: $space-min / 2;
   }
 }

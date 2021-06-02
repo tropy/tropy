@@ -3,5 +3,5 @@
 // --------------------------------------------------
 
 @function rem($length) {
-  @return div($length, const("FONTSIZE.BASE")) * 1rem;
+  @return $length / const("FONTSIZE.BASE") * 1rem;
 }

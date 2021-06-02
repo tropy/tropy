@@ -190,12 +190,12 @@
 
     .horizontal & {
       border-top: $editor-hr-border solid $editor-hr-border-color;
-      margin: (div($editor-line-height-computed, 2) - div($editor-hr-border, 2)) 0;
+      margin: ($editor-line-height-computed / 2 - $editor-hr-border / 2) 0;
     }
 
     .vertical-rl & {
       border-right: $editor-hr-border solid $editor-hr-border-color;
-      margin: 0 (div($editor-line-height-computed, 2) - div($editor-hr-border, 2));
+      margin: 0 ($editor-line-height-computed / 2 - $editor-hr-border / 2);
     }
   }
 

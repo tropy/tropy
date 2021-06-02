@@ -45,8 +45,8 @@ fieldset {
   .form-horizontal & {
     display: flex;
     margin: {
-      left: div(-$grid-gutter-width, 2);
-      right: div(-$grid-gutter-width, 2);
+      left: (-$grid-gutter-width / 2);
+      right: (-$grid-gutter-width / 2);
     }
   }
 
@@ -101,7 +101,7 @@ fieldset {
 .form-text {
   display: flex;
   align-items: center;
-  padding: div(($input-height-base - $line-height-computed), 2) $padding-base-horizontal;
+  padding: (($input-height-base - $line-height-computed) / 2) $padding-base-horizontal;
   user-select: text;
   cursor: auto;
 }
@@ -140,11 +140,11 @@ fieldset {
   padding-right: $padding-base-horizontal;
 
   &:first-child {
-    padding-top: div(($input-height-base - $line-height-computed), 2);
+    padding-top: ($input-height-base - $line-height-computed) / 2;
   }
 
   &:last-child {
-    padding-bottom: div(($input-height-base - $line-height-computed), 2);
+    padding-bottom: ($input-height-base - $line-height-computed) / 2;
   }
 
   [type] {

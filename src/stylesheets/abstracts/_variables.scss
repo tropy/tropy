@@ -280,7 +280,7 @@ $scrollbar-size: $space-sm;
 // --------------------------------------------------
 
 $progress-bar-height: $space-min;
-$progress-value-border-radius: div($progress-bar-height, 2);
+$progress-value-border-radius: $progress-bar-height / 2;
 
 
 // Editor
@@ -296,7 +296,7 @@ $editor-outline-width:        2px;
 $blockquote-border:           3px;
 $blockquote-padding:          1em;
 $editor-hr-border:            2px;
-$sup-and-sub-font-size:       1em * div(2, 3);
+$sup-and-sub-font-size:       1em * 2 / 3;
 $link-target-width:           400px;
 $editor-padding:              48px;
 

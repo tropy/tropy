@@ -24,7 +24,7 @@
 
     .btn-icon {
       & + .btn-icon {
-        margin-left: div($space-min, 2);
+        margin-left: $space-min / 2;
       }
     }
 

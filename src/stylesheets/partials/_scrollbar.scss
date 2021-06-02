@@ -21,7 +21,7 @@
         min-height: $space-lg + 2 * $space-min;
 
         &:active {
-          border-width: div($space-min, 2);
+          border-width: $space-min / 2;
         }
 
         @include variant(".scrollbar-style-old-school .overlay-mode") {

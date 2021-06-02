@@ -1,24 +1,14 @@
 /* stylelint-disable max-empty-lines, no-invalid-position-at-import-rule */
 
-
-// Project window
-// --------------------------------------------------
-
 $platform: "linux";
 $theme: "light";
 
-
-// Sass modules
-// --------------------------------------------------
-
-@use "sass:math" as *;
-
-
-// Theme
-// --------------------------------------------------
-
 @import
   "../themes/light";
+
+//
+// Project window
+// --------------------------------------------------
 
 
 // Abstracts

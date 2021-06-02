@@ -100,7 +100,7 @@
     width: auto;
     margin: 0;
     max-width: none;
-    padding: 0 (div((100% - $editor-size), 2));
+    padding: 0 ((100% - $editor-size) / 2);
   }
 
   .vertical-rl & {
@@ -118,7 +118,7 @@
     height: auto;
     margin: 0;
     max-height: none;
-    padding: (div((100% - $editor-size), 2)) 0;
+    padding: ((100% - $editor-size) / 2) 0;
   }
 }
 

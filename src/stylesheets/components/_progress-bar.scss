@@ -9,13 +9,13 @@ progress {
 
   &::-webkit-progress-bar {
     background: $progress-bar-bg;
-    border-radius: div($progress-bar-height, 2);
+    border-radius: ($progress-bar-height / 2);
   }
 
   &::-webkit-progress-value {
     background: $progress-bar-color;
-    border-top-left-radius: div($progress-bar-height, 2);
-    border-bottom-left-radius: div($progress-bar-height, 2);
+    border-top-left-radius: ($progress-bar-height / 2);
+    border-bottom-left-radius: ($progress-bar-height / 2);
     border-top-right-radius: $progress-value-border-radius;
     border-bottom-right-radius: $progress-value-border-radius;
   }
