@@ -14,13 +14,15 @@ $blue: #395bac;
 $blue-light: #cedef7;
 $blue-dark: #171b2e;
 $blue-overlay: #5c93e5;
+$blue-vibrancy: rgba(#4176f2, 0.7); // 2% brighter than blue-dark on original bg
 $red: #e62e2e;
 $green: #2e8c44; // 64% of the light theme green + 7% saturation
 
-$brand-primary: $blue;
-$brand-primary-dark: $blue-dark;
-$brand-primary-light: $blue-light;
-$brand-primary-overlay: $blue-overlay;
+$brand-primary:          $blue;
+$brand-primary-overlay:  $blue-overlay;
+$brand-primary-vibrancy: $blue-vibrancy;
+$brand-primary-dark:     $blue-dark;
+$brand-primary-light:    $blue-light;
 
 
 // Grays
@@ -192,20 +194,31 @@ $item-count-color:      var(--shade-6);
 // Sidebar
 $sidebar-bg:                              var(--shade-4);
 $sidebar-blurred-bg:                      var(--shade-2);
-$sidebar-list-blurred-bg-darwin:          var(--shade-5-darken-4);
-$sidebar-list-blurred-bg-linux:           var(--shade-5-60);
+$sidebar-vibrancy-color:                  var(--shade-10-50); // ~ default color on solid bg
+$sidebar-vibrancy-list-active-color:      var(--shade-10-64);
+$sidebar-vibrancy-list-active-bg:         var(--shade-10-7);
+$sidebar-vibrancy-list-focus-bg:          $brand-primary-vibrancy;
+$sidebar-blurred-list-active-bg-darwin:   var(--shade-5-darken-4);
+$sidebar-blurred-list-active-bg-linux:    var(--shade-5-60);
 $sidebar-text-color:                      var(--shade-8);
 $sidebar-headings-color:                  var(--shade-7);
+$sidebar-vibrancy-headings-color:         var(--shade-10-33);
 $sidebar-blurred-headings-color-darwin:   var(--shade-7-darken-5);
 $sidebar-blurred-headings-color-linux:    var(--shade-7-40);
+$sidebar-vibrancy-icon-color:             var(--shade-10-33);
+$sidebar-vibrancy-icon-selected-color:    var(--shade-10-46);
 $sidebar-blurred-icon-opacity-darwin:     0.33;
 $sidebar-blurred-icon-opacity-linux:      0.4;
 $sidebar-blurred-name-opacity-darwin:     0.55;
 $sidebar-blurred-name-opacity-linux:      0.4;
 $sidebar-blurred-tag-opacity-darwin:      0.34;
 $activity-border-color:                   var(--shade-1);
+$activity-vibrancy-border-color:          var(--shade-0-33);
 $activity-blurred-border-color-darwin:    var(--shade-1-darken-4);
 $activity-blurred-border-color-linux:     var(--shade-1-60);
+$activity-vibrancy-progress-bar-bg:       var(--shade-0-20);
+$activity-vibrancy-progress-val-bg:       $brand-primary-vibrancy;
+$activity-vibrancy-progress-cancel-bg:    var(--shade-10-18);
 $activity-blurred-progress-bar-bg-darwin: var(--shade-2-darken-4);
 $activity-blurred-progress-bar-bg-linux:  var(--shade-2-60);
 $activity-blurred-progress-val-bg-darwin: var(--shade-6-darken-4);
@@ -273,6 +286,7 @@ $icon-tag-color:                      var(--shade-4);
 $icon-tag-nested-focus-color:         var(--shade-4-lighten-2);
 $icon-tag-border:                     var(--shade-6);
 $icon-tag-nested-focus-border:        var(--shade-6-lighten-2);
+$icon-tag-vibrancy-border:            var(--shade-10-20);
 
 // Photo panel
 $photo-panel-slider-handle-nested-focus-bg:   null;
@@ -360,10 +374,10 @@ $thumbnail-color: var(--shade-7-50);
 $thumbnail-bg:    var(--shade-5-lighten-5);
 
 // Progress bar
-$progress-bar-bg:       var(--shade-2);
-$progress-bar-color:    var(--brand-primary);
-$progress-cancel-color: var(--shade-4);
-$progress-cancel-bg:    var(--shade-7);
+$progress-bar-bg:             var(--shade-2);
+$progress-bar-color:          var(--brand-primary);
+$progress-cancel-color:       var(--shade-4);
+$progress-cancel-bg:          var(--shade-7);
 
 // Editor
 $editor-toolbar-border:                 var(--shade-1);
@@ -426,4 +440,5 @@ $option-no-matches-color: var(--shade-6);
 $option-separator-color:  var(--shade-1);
 
 // Recent projects
-$project-name-hover-bg: var(--shade-4-lighten-2);
+$project-name-hover-bg:          var(--shade-4-lighten-2);
+$project-name-vibrancy-hover-bg: var(--shade-10-4);

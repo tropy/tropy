@@ -30,20 +30,32 @@
     padding: 0 $default-padding-horizontal 0 $space-md;
 
     &:hover {
-      background: $project-name-hover-bg;
+      background-color: $project-name-hover-bg;
+
+      .vibrancy & {
+        background-color: $project-name-vibrancy-hover-bg;
+      }
     }
 
     .icon {
       margin-right: $space-xs;
+
+      .vibrancy & {
+        color: $sidebar-vibrancy-icon-color;
+      }
     }
   }
 
   .no-project-container {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .vibrancy & {
+      background-color: $body-bg;
+    }
   }
 
   .no-project-illustration {

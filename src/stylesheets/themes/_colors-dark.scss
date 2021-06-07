@@ -15,6 +15,7 @@
   #{--brand-primary-light-76}:   rgba($blue-light, 0.76);
   #{--brand-primary-lighten-14}: saturate(lighten($brand-primary, 14%), 14%);
   #{--brand-primary-overlay}:    $brand-primary-overlay;
+  #{--brand-primary-vibrancy}:   $brand-primary-vibrancy;
   #{--red}:                      $red;
   #{--red-64}:                   rgba($red, 0.64);
   #{--green}:                    $green;
@@ -28,6 +29,7 @@
   #{--transparent}:        $transparent;
   #{--shade-0}:            $shade-0;
   #{--shade-0-20}:         rgba($shade-0, 0.2);
+  #{--shade-0-33}:         rgba($shade-0, 0.33);
   #{--shade-0-80}:         rgba($shade-0, 0.8);
   #{--shade-1}:            $shade-1;
   #{--shade-1-lighten-2}:  lighten($shade-1, 2%);
@@ -69,11 +71,17 @@
   #{--shade-9}:            $shade-9;
   #{--shade-10}:           $shade-10;
   #{--shade-10-2}:         rgba($shade-10, 0.02);
+  #{--shade-10-4}:         rgba($shade-10, 0.04);
   #{--shade-10-5}:         rgba($shade-10, 0.05);
+  #{--shade-10-7}:         rgba($shade-10, 0.07);
   #{--shade-10-10}:        rgba($shade-10, 0.1);
+  #{--shade-10-18}:        rgba($shade-10, 0.18);
   #{--shade-10-20}:        rgba($shade-10, 0.2);
   #{--shade-10-16}:        rgba($shade-10, 0.16);
+  #{--shade-10-33}:        rgba($shade-10, 0.33);
+  #{--shade-10-46}:        rgba($shade-10, 0.46);
   #{--shade-10-50}:        rgba($shade-10, 0.5);
+  #{--shade-10-64}:        rgba($shade-10, 0.64);
   #{--shade-10-darken-4}:  darken($shade-10, 4%);
   #{--shade-10-darken-14}: darken($shade-10, 14%);
   #{--shade-10-darken-19}: darken($shade-10, 24%); // Darken shade-10-darken-14 by 10%

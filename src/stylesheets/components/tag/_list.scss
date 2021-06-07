@@ -33,22 +33,50 @@
       &.active {
         @extend %list-active;
 
+        .vibrancy & {
+          background-color: $sidebar-vibrancy-list-active-bg;
+        }
+
         .is-blurred & {
           @if $platform == darwin {
-            background-color: $sidebar-list-blurred-bg-darwin;
+            background-color: $sidebar-blurred-list-active-bg-darwin;
           }
 
           @if $platform == linux {
-            background-color: $sidebar-list-blurred-bg-linux;
+            background-color: $sidebar-blurred-list-bg-linux;
           }
         }
 
         &:focus {
           @extend %list-focus;
+
+          .vibrancy & {
+            background-color: $sidebar-vibrancy-list-focus-bg;
+          }
         }
       }
 
       .icon-tag {
+        .vibrancy:not(.is-blurred) & {
+          &:not([class*="color"]) {
+            svg {
+              clip-path: path("M0,0V16H16V0ZM8,13a5,5,0,1,1,5-5A5,5,0,0,1,8,13Z");
+
+              .color {
+                display: none;
+              }
+
+              .border {
+                color: $icon-tag-vibrancy-border;
+
+                @include state(".tag.active:focus .icon-tag") {
+                  color: $list-focus-color;
+                }
+              }
+            }
+          }
+        }
+
         .is-blurred & {
           &:not([class*="color"]) {
             .color {
