@@ -572,7 +572,7 @@ const getTrafficLightPosition = (type) => {
     case 'prefs':
       return { x: 7, y: 6 }
     default:
-      return { x: 12, y: 22 }
+      return { x: 12, y: 11 }
   }
 }
 
