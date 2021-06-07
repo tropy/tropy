@@ -10,23 +10,22 @@
   display: flex;
   flex-direction: column;
 
+  .vibrancy:not(.is-blurred) & {
+    background: transparent;
+    color: $sidebar-vibrancy-color;
+  }
+
   .is-blurred & {
     @if $platform == darwin {
       background-color: $sidebar-blurred-bg;
     }
   }
 
-  .vibrancy & {
-    background: transparent;
-  }
-
   .toolbar {
     .is-full-screen & {
       display: none;
     }
-  }
 
-  .toolbar {
     .frameless & {
       -webkit-app-region: drag;
     }
@@ -48,6 +47,10 @@
     color: $sidebar-headings-color;
     padding: 0 $default-padding-horizontal 0 $list-tree-padding-left;
 
+    .vibrancy & {
+      color: $sidebar-vibrancy-headings-color;
+    }
+
     .is-blurred & {
       @if $platform == darwin {
         color: $sidebar-blurred-headings-color-darwin;
@@ -55,6 +58,68 @@
 
       @if $platform == linux {
         color: $sidebar-blurred-headings-color-linux;
+      }
+    }
+  }
+
+  .icon-truncate {
+    display: flex;
+    align-items: center;
+    height: $line-height-large; // Prevent clipped holding indicator
+    overflow: hidden;
+
+    &.folder {
+      flex: 0 10000 auto;
+    }
+  }
+
+  .btn-icon {
+    padding: 0;
+    margin-left: -$space-md;
+
+    &:active {
+      .icon {
+        color: $icon-color; // Prevent :active state color
+      }
+    }
+  }
+
+  .icon {
+    &:first-child {
+      margin-right: $space-xs;
+    }
+
+    @include variant(".name + .icon") {
+      margin-left: $space-xs;
+    }
+
+    & + .icon {
+      margin-left: $space-min;
+    }
+
+    &.icon-lock {
+      .line {
+        display: none;
+      }
+
+      .block {
+        display: block;
+      }
+    }
+  }
+
+  .name {
+    flex: 1 100000000 auto;
+    display: flex;
+    min-width: 0; // Fix truncation
+
+    .is-blurred & {
+      @if $platform == darwin {
+        opacity: $sidebar-blurred-name-opacity-darwin;
+      }
+
+      @if $platform == linux {
+        opacity: $sidebar-blurred-name-opacity-linux;
       }
     }
   }
@@ -78,23 +143,59 @@
         @include state("li.active") {
           @extend %list-active;
 
+          .vibrancy:not(.is-blurred) & {
+            color: $sidebar-vibrancy-list-active-color;
+            background-color: $sidebar-vibrancy-list-active-bg;
+          }
+
           .is-blurred & {
             @if $platform == darwin {
-              background-color: $sidebar-list-blurred-bg-darwin;
+              background-color: $sidebar-blurred-list-active-bg-darwin;
             }
 
             @if $platform == linux {
-              background-color: $sidebar-list-blurred-bg-linux;
+              background-color: $sidebar-blurred-list-bg-active-linux;
             }
           }
 
           @include state(".sidebar :focus") {
             @extend %list-focus;
+
+            .vibrancy & {
+              color: $list-focus-color;
+              background-color: $sidebar-vibrancy-list-focus-bg;
+            }
           }
         }
 
         &.over:not(.before):not(.after) {
           @extend %drop-target;
+        }
+
+        .icon {
+          flex: 0 0 auto;
+
+          .vibrancy:not(.is-blurred) & {
+            color: $sidebar-vibrancy-icon-color;
+
+            @include state("li.active") {
+              color: $sidebar-vibrancy-icon-selected-color;
+
+              @include state(".sidebar :focus") {
+                color: $list-focus-color;
+              }
+            }
+          }
+
+          .is-blurred & {
+            @if $platform == darwin {
+              opacity: $sidebar-blurred-icon-opacity-darwin;
+            }
+
+            @if $platform == linux {
+              opacity: $sidebar-blurred-icon-opacity-linux;
+            }
+          }
         }
 
         .icon-triangle {
@@ -110,6 +211,10 @@
           @include state("li.holding:not(.active)") {
             position: relative;
 
+            svg {
+              clip-path: polygon(0 0, 16px 0, 16px 10px, 12px 10px, 12px 16px, 0 16px);
+            }
+
             &::after {
               content: "";
               box-sizing: border-box;
@@ -118,8 +223,11 @@
               bottom: -1px;
               width: 7px;
               height: 7px;
-              background-color: $sidebar-bg;
               border: 1px solid $icon-color;
+
+              .vibrancy:not(.is-blurred) & {
+                border-color: $sidebar-vibrancy-icon-color;
+              }
             }
 
             .alt-key & {
@@ -132,83 +240,17 @@
               }
 
               &::after {
-                width: 8px;
-                height: 8px;
-                right: -4px;
-                bottom: -2px;
+                width: 6px;
+                height: 6px;
                 background-color: $icon-color;
-                border-color: $sidebar-bg;
+                border: 0;
+
+                @include state(".alt-key.vibrancy") {
+                  background-color: $sidebar-vibrancy-icon-color;
+                }
               }
             }
           }
-        }
-      }
-    }
-
-    .icon-truncate {
-      display: flex;
-      align-items: center;
-      height: $line-height-large; // Prevent clipped holding indicator
-      overflow: hidden;
-
-      &.folder {
-        flex: 0 10000 auto;
-      }
-    }
-
-    .icon {
-      flex: 0 0 auto;
-
-      .is-blurred & {
-        @if $platform == darwin {
-          opacity: $sidebar-blurred-icon-opacity-darwin;
-        }
-
-        @if $platform == linux {
-          opacity: $sidebar-blurred-icon-opacity-linux;
-        }
-      }
-
-      &:first-child {
-        margin-right: $space-xs;
-      }
-
-      @include variant(".name + .icon") {
-        margin-left: $space-xs;
-      }
-
-      & + .icon {
-        margin-left: $space-min;
-      }
-
-      &.icon-lock {
-        .line {
-          display: none;
-        }
-
-        .block {
-          display: block;
-        }
-      }
-    }
-
-    .btn-icon {
-      padding: 0;
-      margin-left: -$space-md;
-    }
-
-    .name {
-      flex: 1 100000000 auto;
-      display: flex;
-      min-width: 0; // Fix truncation
-
-      .is-blurred & {
-        @if $platform == darwin {
-          opacity: $sidebar-blurred-name-opacity-darwin;
-        }
-
-        @if $platform == linux {
-          opacity: $sidebar-blurred-name-opacity-linux;
         }
       }
     }
