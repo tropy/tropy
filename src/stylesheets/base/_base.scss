@@ -32,4 +32,16 @@ body {
   @if $platform == darwin {
     -webkit-font-smoothing: antialiased; // Lighter font rendering
   }
+
+  &::after {
+    box-sizing: border-box;
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 13px;
+    width: 52px;
+    height: 12px;
+    border: 1px solid blue;
+    z-index: 9999;
+  }
 }
