@@ -19,18 +19,18 @@ function getNoteTemplate() {
 
 
 export class ItemView extends React.PureComponent {
-  constructor(props) {
-    super(props)
+  itemContainer = React.createRef()
 
-    this.state = {
-      note: props.note || getNoteTemplate()
-    }
+  state = {
+    note: this.props.note || getNoteTemplate()
   }
 
   UNSAFE_componentWillReceiveProps(props) {
     if (props.note !== this.props.note) {
-      if (props.note == null) this.handleNoteReset()
-      else this.handleNoteUpdate(props.note)
+      if (props.note == null)
+        this.handleNoteReset()
+      else
+        this.handleNoteUpdate(props.note)
     }
   }
 
@@ -47,8 +47,8 @@ export class ItemView extends React.PureComponent {
     return { transform: `translate3d(${this.offset}, 0, 0)` }
   }
 
-  setNotePad = (container) => {
-    this.notepad = container != null ? container.notepad : null
+  focusNotePad = () => {
+    this.itemContainer.current?.notepad.current?.focus()
   }
 
   handlePanelResize = ({ value }) => {
@@ -60,7 +60,7 @@ export class ItemView extends React.PureComponent {
     let delay = 50
 
     if (!this.isItemOpen) {
-      delay = 1000
+      delay += 800
       this.props.onItemOpen({
         id: this.props.items[0].id,
         photos: [this.props.photo.id],
@@ -80,9 +80,7 @@ export class ItemView extends React.PureComponent {
       }
     }
 
-    if (this.notepad != null) {
-      setTimeout(this.notepad.focus, delay)
-    }
+    setTimeout(this.focusNotePad, delay)
   }
 
   handleNoteReset() {
@@ -197,7 +195,7 @@ export class ItemView extends React.PureComponent {
             onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
         <ItemContainer
-          ref={this.setNotePad}
+          ref={this.itemContainer}
           note={this.state.note}
           photo={photo}
           isDisabled={!isItemOpen || isProjectClosing}

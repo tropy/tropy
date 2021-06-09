@@ -18,7 +18,7 @@ export class NotePad extends React.PureComponent {
   }
 
   focus = () => {
-    this.editor.current.view.focus()
+    this.editor.current?.focus()
   }
 
   handleChange = (state, hasDocChanged) => {

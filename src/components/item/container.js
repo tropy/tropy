@@ -23,6 +23,8 @@ const { LAYOUT } = ITEM
 const { ESPER } = SASS
 
 class Item extends React.PureComponent {
+  notepad = React.createRef()
+
   get dimension() {
     return (this.props.settings.layout === LAYOUT.SIDE_BY_SIDE) ?
       'width' : 'height'
@@ -52,10 +54,6 @@ class Item extends React.PureComponent {
     return layout === LAYOUT.SIDE_BY_SIDE ?
       { edge: 'right', margin: ESPER.MIN_WIDTH, min: ESPER.MIN_WIDTH } :
       { edge: 'bottom', margin: ESPER.MIN_HEIGHT, min: ESPER.MIN_HEIGHT }
-  }
-
-  setNotePad = (notepad) => {
-    this.notepad = notepad
   }
 
   handleContextMenu = (event, scope = 'item-view', opts = {}) => {
@@ -118,7 +116,7 @@ class Item extends React.PureComponent {
             onSelectionCreate={this.props.onSelectionCreate}/>
         </Resizable>
         <NotePad {...this.props.notepad}
-          ref={this.setNotePad}
+          ref={this.notepad}
           note={this.props.note}
           hasTitlebar={this.hasSideBySideLayout}
           isDisabled={this.props.isDisabled || !this.props.photo}

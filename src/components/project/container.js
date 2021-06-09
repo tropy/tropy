@@ -37,17 +37,13 @@ const { MODE } = PROJECT
 class Project extends React.Component {
   container = React.createRef()
 
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      isProjectClosed: false,
-      willProjectClose: false,
-      mode: props.nav.mode,
-      offset: props.ui.panel.width,
-      willModeChange: false,
-      isModeChanging: false
-    }
+  state = {
+    isProjectClosed: false,
+    willProjectClose: false,
+    mode: this.props.nav.mode,
+    offset: this.props.ui.panel.width,
+    willModeChange: false,
+    isModeChanging: false
   }
 
   componentDidMount() {
