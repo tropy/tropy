@@ -45,34 +45,34 @@ export function createClickHandler({
   onSingleClick,
   onDoubleClick
 }, delay = 350) {
-  let tid
+  let timeout
+  let cancelled
 
   return function handleClick(event) {
-    let cancelled = false
-
     // Handle only clicks with the left/primary button!
     if (event.button) return
 
-    if (tid) {
-      tid = clearTimeout(tid), undefined
-      if (onDoubleClick) onDoubleClick(event)
+    if (timeout) {
+      if (onDoubleClick && !cancelled)
+        onDoubleClick(event)
+
+      timeout = clearTimeout(timeout)
+      cancelled = false
 
     } else {
       if (onClick) cancelled = onClick(event)
 
-      if (!cancelled) {
-        tid = setTimeout(() => {
-          tid = undefined
+      timeout = setTimeout(() => {
+        if (onSingleClick && !cancelled)
+          onSingleClick(event)
 
-          if (onSingleClick && !cancelled) {
-            onSingleClick(event)
-          }
-        }, delay)
+        timeout = null
+        cancelled = false
 
+      }, delay)
 
-        if (onSingleClick) {
-          event.persist()
-        }
+      if (onSingleClick && !cancelled) {
+        event.persist()
       }
     }
   }
