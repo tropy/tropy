@@ -3,7 +3,10 @@
 
 const { say, error } = require('./util')('Σ')
 const legal = require('./legal')
-const { copyFile, mkdir, readdir, rename, writeFile } = require('fs').promises
+const {
+  copyFile, mkdir, readdir, readFile, rename, writeFile
+} = require('fs').promises
+const { mv } = require('shelljs')
 const { program } = require('commander')
 const packager = require('electron-packager')
 const minimatch = require('minimatch')
@@ -69,39 +72,35 @@ program
       let [dest] = await packager(opts)
 
       say('compiling LICENSE and third-party notices')
-      await copyFile(join(ROOT, 'LICENSE'), join(dest, 'LICENSE'))
-
-      await rename(
-        join(dest, 'LICENSES.chromium.html'),
-        join(dest, 'LICENSE.chromium.html'))
-
-      let deps = await legal.loadDependencies()
-      let licenses = legal.compileThirdPartyNotices(deps, { format: 'txt' })
-      await writeFile(join(dest, 'LICENSE.third-party.txt'), licenses)
+      await addLicense(dest)
 
       switch (opts.platform) {
         case 'linux': {
           let resources = join(dest, 'resources')
 
           say('create .desktop file')
-          await writeFile(
-            join(dest, `${qualified.name}.desktop`),
-            desktop())
+          await writeFile(`${dest}/${qualified.name}.desktop`, desktop())
 
           say('make shared icons')
-          copyIcons(join(resources, 'icons'))
+          copyIcons(`${resources}/icons`)
 
           say('copy mime-db')
-          await mkdir(join(resources, 'mime', 'packages'), { recursive: true })
+          await mkdir(`${resources}/mime/packages`, { recursive: true })
           await copyFile(
-            join(ROOT, 'res', 'mime', 'tropy.xml'),
-            join(resources, 'mime', 'packages', 'tropy.xml'))
+            `${ROOT}/res/mime/tropy.xml`,
+            `${resources}/mime/packages/tropy.xml`)
 
           say('copy INSTALL instructions')
-          await copyFile(
-            join(ROOT, 'res', 'INSTALL'),
-            join(dest, 'INSTALL'))
+          await copyFile(`${ROOT}/res/INSTALL`, `${dest}/INSTALL`)
 
+          break
+        }
+        case 'darwin': {
+          let resources = join(
+            dest,
+            `${qualified.product}.app/Contents/Resources`)
+
+          await mv(`${dest}/LICENSE*`, resources)
           break
         }
       }
@@ -174,6 +173,9 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
     quiet: true,
     ignore,
     junk: true,
+    afterCopy: [
+      addExtraMetadata
+    ],
     appVersion: version,
     appBundleId: 'org.tropy.tropy',
     helperBundleId: 'org.tropy.tropy-helper',
@@ -191,11 +193,34 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
     asar: {
       unpack: `**/{${[
         'lib/{node,vendor}/**/*',
-        'res/{icons,keymaps,views}/**/*'
+        'res/{icons,keymaps,views}/**/*',
+        'package.json'
       ].join(',')}}`
     }
   }
 }
+
+
+async function addExtraMetadata(buildPath, v, platform, arch, done) {
+  say('tagging package.json for release')
+  let pkg = JSON.parse(await readFile(join(buildPath, 'package.json')))
+
+  delete pkg.scripts
+  delete pkg.dependencies
+  delete pkg.devDependencies
+  delete pkg.optionalDependencies
+
+  pkg.build = {
+    electron: v,
+    platform,
+    arch
+  }
+
+  await writeFile(join(buildPath, 'package.json'), JSON.stringify(pkg, null, 2))
+
+  done()
+}
+
 
 function mergeMacSigningOptions(opts, args) {
   if (args.cert) {
@@ -225,6 +250,18 @@ function mergeMacSigningOptions(opts, args) {
   } else {
     say('skipped code-signing')
   }
+}
+
+async function addLicense(dest) {
+  await copyFile(join(ROOT, 'LICENSE'), join(dest, 'LICENSE'))
+
+  await rename(
+    join(dest, 'LICENSES.chromium.html'),
+    join(dest, 'LICENSE.chromium.html'))
+
+  let deps = await legal.loadDependencies()
+  let licenses = legal.compileThirdPartyNotices(deps, { format: 'txt' })
+  await writeFile(join(dest, 'LICENSE.third-party.txt'), licenses)
 }
 
 async function copyIcons(dst, theme = 'hicolor') {
