@@ -27,7 +27,7 @@ $default-padding-horizontal: 12px !default;
     margin-top: 9px; // Visual spacing of following headings
   }
 
-  :focus-visible & {
+  .nested-tab-focus & {
     color: $panel-nested-focus-heading-color;
   }
 }
