@@ -9,7 +9,6 @@ import { pick, restrict } from '../../common/util'
 import { Cache } from '../../common/cache'
 import { isHorizontal, rotate, round } from '../../common/math'
 import { addOrientation, subOrientation } from '../../common/iiif'
-import { on, off } from '../../dom'
 import { match } from '../../keymap'
 
 import {
@@ -58,7 +57,6 @@ export class EsperContainer extends React.Component {
 
   state = {
     dppx: Esper.devicePixelRatio,
-    hasTabFocus: false,
     isVisible: false,
     quicktool: null,
 
@@ -200,8 +198,6 @@ export class EsperContainer extends React.Component {
 
     this.#RO.observe(this.view.current)
     this.#IO.observe(this.view.current)
-
-    on(this.container.current, 'tab:focus', this.handleTabFocus)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -244,8 +240,6 @@ export class EsperContainer extends React.Component {
 
     this.handleImageChange.flush()
     this.handleViewChange.flush()
-
-    off(this.container.current, 'tab:focus', this.handleTabFocus)
 
     this.esper.destroy()
   }
@@ -580,14 +574,6 @@ export class EsperContainer extends React.Component {
       this.props.onPhotoError(photo.id)
   }
 
-  handleTabFocus = () => {
-    this.setState({ hasTabFocus: true })
-  }
-
-  handleBlur = () => {
-    this.setState({ hasTabFocus: false })
-  }
-
   handleSlideIn = debounce(() => {
     if (!this.state.isVisible) {
       this.setState({ isVisible: true })
@@ -669,12 +655,10 @@ export class EsperContainer extends React.Component {
           'disabled': isDisabled,
           'read-only': this.props.isReadOnly,
           'overlay-mode': this.props.hasOverlayToolbar,
-          'panel-visible': this.props.isPanelVisible,
-          'tab-focus': this.state.hasTabFocus
+          'panel-visible': this.props.isPanelVisible
         })}
         ref={this.container}
         tabIndex={this.tabIndex}
-        onBlur={this.handleBlur}
         onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
         onMouseMove={this.handleMouseMove}

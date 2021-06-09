@@ -3,7 +3,6 @@ import { Completions } from './completions'
 import { IconXSmall } from './icons'
 import { Button } from './button'
 import { blank, last, noop } from '../common/util'
-import { on, off } from '../dom'
 import cx from 'classnames'
 import memoize from 'memoize-one'
 import {
@@ -41,6 +40,8 @@ class Value extends React.Component {
 }
 
 export class Select extends React.Component {
+  input = React.createRef()
+
   state = {
     hasFocus: !!this.props.autofocus,
     query: '',
@@ -57,12 +58,6 @@ export class Select extends React.Component {
   componentDidUpdate(_, state) {
     if (this.state.isInvalid  !== state.Invalid) {
       this.props.onValidate(!this.state.isInvalid)
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.input != null) {
-      off(this.input, 'tab:focus', this.handleTabFocus)
     }
   }
 
@@ -92,7 +87,6 @@ export class Select extends React.Component {
       'invalid': !this.isDisabled && this.state.isInvalid,
       'open': this.isOpen,
       'static': this.props.isStatic,
-      'tab-focus': this.state.hasTabFocus,
       'form-control': !this.props.isStatic
     }]
   }
@@ -130,7 +124,7 @@ export class Select extends React.Component {
   }
 
   focus = () => {
-    this.input && this.input.focus()
+    this.input.current?.focus()
   }
 
   open() {
@@ -142,7 +136,7 @@ export class Select extends React.Component {
   }
 
   handleBlur = (event) => {
-    this.setState({ hasFocus: false, hasTabFocus: false })
+    this.setState({ hasFocus: false })
     this.props.onBlur(event)
     this.close(event)
   }
@@ -218,9 +212,7 @@ export class Select extends React.Component {
       if (!this.isOpen) this.open()
       else if (this.state.query.length === 0) this.close(event)
     }
-    if (this.input != null) {
-      this.input.focus()
-    }
+    this.focus()
   }
 
   handleQueryChange = (event) => {
@@ -241,26 +233,12 @@ export class Select extends React.Component {
     }
   }
 
-  handleTabFocus = () => {
-    this.setState({ hasTabFocus: true })
-  }
-
   setContainer = (container) => {
     this.container = container
   }
 
   setCompletions = (completions) => {
     this.completions = completions
-  }
-
-  setInput = (input) => {
-    if (input != null) {
-      on(input, 'tab:focus', this.handleTabFocus)
-    }
-    if (this.input != null) {
-      off(this.input, 'tab:focus', this.handleTabFocus)
-    }
-    this.input = input
   }
 
   renderContent() {
@@ -302,7 +280,7 @@ export class Select extends React.Component {
         onChange={isInputHidden ? null : this.handleQueryChange}
         onFocus={this.handleFocus}
         onKeyDown={this.handleKeyDown}
-        ref={this.setInput}
+        ref={this.input}
         readOnly={isInputHidden}
         style={{ opacity: isInputHidden ? 0 : 1 }}
         tabIndex={this.props.tabIndex}

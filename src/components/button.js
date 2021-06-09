@@ -1,7 +1,6 @@
 import React from 'react'
 import { injectIntl } from 'react-intl'
 import cx from 'classnames'
-import { on, off } from '../dom'
 import { noop } from '../common/util'
 import {
   bool, element, func, node, number, object, oneOf, string
@@ -19,18 +18,6 @@ ButtonGroup.propTypes = {
 class Button extends React.PureComponent {
   container = React.createRef()
 
-  state = {
-    hasTabFocus: false
-  }
-
-  componentDidMount() {
-    on(this.container.current, 'tab:focus', this.handleTabFocus)
-  }
-
-  componentWillUnmount() {
-    off(this.container.current, 'tab:focus', this.handleTabFocus)
-  }
-
   get classes() {
     return ['btn', this.props.className, `btn-${this.props.size}`, {
       'active': this.props.isActive,
@@ -38,8 +25,7 @@ class Button extends React.PureComponent {
       'btn-default': this.props.isDefault,
       'btn-icon': this.props.icon != null,
       'btn-primary': this.props.isPrimary,
-      'disabled': this.props.isDisabled,
-      'tab-focus': this.state.hasTabFocus
+      'disabled': this.props.isDisabled
     }]
   }
 
@@ -67,7 +53,7 @@ class Button extends React.PureComponent {
     let attr = {
       className: cx(...this.classes),
       disabled: !this.props.noFocus && this.props.isDisabled,
-      onBlur: this.handleBlur,
+      onBlur: this.props.onBlur,
       onFocus: this.props.onFocus,
       ref: this.container,
       title: this.title
@@ -86,15 +72,6 @@ class Button extends React.PureComponent {
     }
 
     return attr
-  }
-
-  handleTabFocus = () => {
-    this.setState({ hasTabFocus: true })
-  }
-
-  handleBlur = (event) => {
-    this.setState({ hasTabFocus: false })
-    this.props.onBlur(event)
   }
 
   handleClick = (event) => {

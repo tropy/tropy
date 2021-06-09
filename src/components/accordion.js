@@ -1,7 +1,7 @@
 import React from 'react'
 import { only } from './util'
 import cx from 'classnames'
-import { on, off, visible } from '../dom'
+import { visible } from '../dom'
 import { bool, func, node, number, oneOfType, string } from 'prop-types'
 
 const { Component, Children, cloneElement: clone } = React
@@ -91,22 +91,11 @@ export class Accordion extends Component {
 export class AccordionGroup extends Component {
   state = {
     active: null,
-    hasTabFocus: false,
     open: []
   }
 
-  componentDidMount() {
-    on(this.container, 'tab:focus', this.handleTabFocus)
-  }
-
-  componentWillUnmount() {
-    off(this.container, 'tab:focus', this.handleTabFocus)
-  }
-
   get classes() {
-    return ['panel-group', 'accordion', this.props.className, {
-      'tab-focus': this.state.hasTabFocus
-    }]
+    return ['panel-group', 'accordion']
   }
 
   isActive(id = this.state.active) {
@@ -165,16 +154,8 @@ export class AccordionGroup extends Component {
     else this.open(id)
   }
 
-  handleBlur = () => {
-    this.setState({ hasTabFocus: false })
-  }
-
   handleFocus = () => {
     this.next(0)
-  }
-
-  handleTabFocus = () => {
-    this.setState({ hasTabFocus: true })
   }
 
   handleKeyDown = (event) => {
@@ -202,8 +183,6 @@ export class AccordionGroup extends Component {
         return
     }
 
-    this.handleTabFocus()
-
     event.preventDefault()
     event.stopPropagation()
     event.nativeEvent.stopImmediatePropagation()
@@ -222,7 +201,6 @@ export class AccordionGroup extends Component {
     return (
       <div
         className={cx(this.classes)}
-        onBlur={this.handleBlur}
         onFocus={this.handleFocus}
         onKeyDown={this.handleKeyDown}
         tabIndex={this.props.tabIndex}

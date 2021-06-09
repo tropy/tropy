@@ -163,6 +163,11 @@ fieldset {
       border-color: $checkbox-checked-border;
     }
 
+    &:focus-visible {
+      border-color: $input-btn-focus-color;
+      box-shadow: 0 0 0 2px $input-btn-focus-color;
+    }
+
     &[disabled] {
       background: $input-bg-readonly;
       border-color: $input-border;
@@ -180,6 +185,11 @@ fieldset {
       &:active {
         background: $checkbox-checked-active-bg;
         border-color: $checkbox-checked-active-border;
+      }
+
+      &:focus-visible {
+        border-color: $input-btn-focus-color;
+        box-shadow: 0 0 0 2px $input-btn-focus-color;
       }
 
       &[disabled] {
@@ -201,6 +211,11 @@ fieldset {
         background: $checkbox-overlay-checked-bg;
       }
 
+      &:focus-visible {
+        border-color: $input-overlay-focus-color;
+        box-shadow: 0 0 0 2px $input-overlay-focus-color;
+      }
+
       &[disabled] {
         background: $input-overlay-bg-readonly;
         border-color: $checkbox-overlay-disabled-border;
@@ -214,6 +229,11 @@ fieldset {
           border-color: transparent;
         }
 
+        &:focus-visible {
+          border-color: $input-overlay-focus-color;
+          box-shadow: 0 0 0 2px $input-overlay-focus-color;
+        }
+
         &[disabled] {
           background: $input-overlay-bg-readonly;
           border-color: $checkbox-overlay-disabled-border;
@@ -222,30 +242,6 @@ fieldset {
           &::after {
             background: $checkbox-overlay-checked-bg;
           }
-        }
-      }
-    }
-  }
-}
-
-@each $input in checkbox, radio {
-  .#{$input}.tab {
-    [type="#{$input}"] {
-      border-color: $input-btn-focus-color !important;
-      box-shadow: 0 0 0 2px $input-btn-focus-color !important;
-
-      .overlay-mode & {
-        border-color: $input-overlay-focus-color !important;
-        box-shadow: 0 0 0 2px $input-overlay-focus-color !important;
-      }
-
-      &:checked {
-        border-color: $input-btn-focus-color !important;
-        box-shadow: 0 0 0 2px $input-btn-focus-color !important;
-
-        .overlay-mode & {
-          border-color: $input-overlay-focus-color !important;
-          box-shadow: 0 0 0 2px $input-overlay-focus-color !important;
         }
       }
     }
