@@ -6,7 +6,6 @@ import { Select } from './select'
 import cx from 'classnames'
 import { noop } from '../common/util'
 import { SASS } from '../constants'
-import { on, off } from '../dom'
 
 import {
   arrayOf, bool, func, node, number, oneOf, string
