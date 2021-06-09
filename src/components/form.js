@@ -246,41 +246,12 @@ FormSelect.defaultProps = {
 }
 
 export class Toggle extends React.PureComponent {
-  state = {
-    isTabFocus: false
-  }
-
-  componentDidMount() {
-    on(this.input, 'tab:focus', this.handleTabFocus)
-  }
-
-  componentWillUnmount() {
-    off(this.input, 'tab:focus', this.handleTabFocus)
-  }
-
-  get classes() {
-    return [
-      this.props.className,
-      this.props.type,
-      { tab: this.state.isTabFocus }
-    ]
-  }
-
   get label() {
     return this.props.label || <FormattedMessage id={this.props.id}/>
   }
 
   setInput = (input) => {
     this.input = input
-  }
-
-  handleTabFocus = () => {
-    this.setState({ isTabFocus: true })
-  }
-
-  handleBlur = (event) => {
-    this.setState({ isTabFocus: false })
-    if (this.props.onBlur) this.props.onBlur(event)
   }
 
   handleChange = () => {
@@ -291,7 +262,10 @@ export class Toggle extends React.PureComponent {
 
   render() {
     return (
-      <div className={cx(...this.classes)}>
+      <div className={cx(
+        this.props.className,
+        this.props.type
+      )}>
         <input
           id={this.props.id}
           ref={this.setInput}
@@ -301,7 +275,7 @@ export class Toggle extends React.PureComponent {
           checked={!!this.props.value}
           disabled={this.props.isDisabled}
           tabIndex={this.props.tabIndex}
-          onBlur={this.handleBlur}
+          onBlur={this.props.onBlur}
           onFocus={this.props.onFocus}
           onChange={this.handleChange}/>
         <label htmlFor={this.props.id}>
