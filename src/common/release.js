@@ -3,7 +3,7 @@ import { author, version, name, productName } from '../../package.json'
 import { parse } from 'semver'
 import { titlecase } from './util'
 
-const { platform } = process
+const { arch, platform } = process
 const v = parse(version)
 const isLatest = !(v?.prerelease.length > 0)
 
@@ -35,8 +35,8 @@ export const paths = {
 export const exe = qualified[(platform === 'linux') ? 'name' : 'product']
 
 export const feed = (platform === 'win32') ?
-  `https://tropy.org/update/${isLatest ? 'stable' : channel}/${platform}` :
-  `https://tropy.org/update/${isLatest ? 'stable' : channel}/${platform}/${version}`
+  `https://tropy.org/update/${channel}/${platform}/${arch}` :
+  `https://tropy.org/update/${channel}/${platform}/${arch}/${version}`
 
 export {
   author,
