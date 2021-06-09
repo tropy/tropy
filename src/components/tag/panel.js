@@ -34,6 +34,12 @@ class TagPanel extends React.PureComponent {
     this.next()
   }
 
+  handleTabFocus = () => {
+    if (this.props.onTabFocus) {
+      this.props.onTabFocus()
+    }
+  }
+
   handleTagRemove = (tag) => {
     let id = this.getTaggedIds(tag)
     if (id.length > 0) {
@@ -97,6 +103,7 @@ class TagPanel extends React.PureComponent {
     })).isRequired,
 
     onBlur: func,
+    onTabFocus: func,
     onCancel: func,
     onContextMenu: func.isRequired,
     onItemTagAdd: func.isRequired,

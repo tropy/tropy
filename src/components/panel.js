@@ -3,7 +3,7 @@ import { only } from './util'
 import { Resizable } from './resizable'
 import { createClickHandler } from './util'
 import cx from 'classnames'
-import { bounds } from '../dom'
+import { bounds, off, on } from '../dom'
 import { restrict } from '../common/util'
 import { SASS } from '../constants'
 import { remap } from '../common/util'
@@ -18,14 +18,35 @@ const { MIN_HEIGHT, CLOSED_HEIGHT } = SASS.PANEL
 export class Panel extends React.PureComponent {
   container = React.createRef()
 
+  state = {
+    hasTabFocus: false
+  }
+
+  componentDidMount() {
+    on(this.container.current, 'tab:focus', this.handleTabFocus)
+  }
+
+  componentWillUnmount() {
+    off(this.container.current, 'tab:focus', this.handleTabFocus)
+  }
+
   get classes() {
     return ['panel', this.props.className, {
-      closed: this.props.isClosed
+      'closed': this.props.isClosed,
+      'nested-tab-focus': this.state.hasTabFocus
     }]
   }
 
   focus() {
     this.container.current.focus()
+  }
+
+  handleBlur = () => {
+    this.setState({ hasTabFocus: false })
+  }
+
+  handleTabFocus = () => {
+    this.setState({ hasTabFocus: true })
   }
 
   handleToggle = () => {
@@ -63,7 +84,10 @@ export class Panel extends React.PureComponent {
   renderBody(body, classes) {
     return !this.props.isClosed && (
       <PanelBody className={cx(classes)}>
-        {body}
+        {React.cloneElement(body, {
+          onBlur: this.handleBlur,
+          onTabFocus: this.handleTabFocus
+        })}
       </PanelBody>
     )
   }
@@ -76,6 +100,8 @@ export class Panel extends React.PureComponent {
         className={cx(this.classes)}
         ref={this.container}
         tabIndex={this.props.tabIndex}
+        onBlur={this.handleBlur}
+        onClick={this.handleBlur}
         onKeyDown={this.props.onKeyDown}>
         {this.renderHeader(header)}
         {this.renderBody(body)}

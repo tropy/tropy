@@ -8,7 +8,7 @@
     0 (-$toolbar-height) 0 $panel-bg,
     0 (-$panel-header-height) 0 $panel-bg;
 
-  &:focus-visible {
+  &.nested-tab-focus {
     box-shadow:
       0 (-$toolbar-height) 0 $panel-focus-bg,
       0 (-$panel-header-height) 0 $panel-focus-bg;
