@@ -45,13 +45,6 @@ export class NoteList extends Iterator {
     }, { throttle })
   }
 
-  handleFocus = () => {
-    // No auto-select, because that could change the active photo!
-    if (this.props.onTabFocus) {
-      this.props.onTabFocus()
-    }
-  }
-
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case 'up':
@@ -129,7 +122,6 @@ export class NoteList extends Iterator {
     }),
     isDisabled: bool,
     onBlur: func,
-    onTabFocus: func,
     onSelect: func.isRequired,
     onContextMenu: func.isRequired,
     onOpen: func.isRequired
