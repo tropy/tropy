@@ -10,7 +10,7 @@
   position: relative;
   contain: content;
 
-  &:focus-visible {
+  &.nested-tab-focus {
     background-color: $panel-focus-bg;
   }
 

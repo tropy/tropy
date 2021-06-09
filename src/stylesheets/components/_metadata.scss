@@ -18,7 +18,7 @@ $default-padding-horizontal: 12px !default;
     margin-bottom: (($metadata-line-height - 10px) / 2); // 10px: Caps height
     border-bottom: 1px solid $panel-separator-color;
 
-    :focus-visible & {
+    .nested-tab-focus & {
       border-bottom-color: $panel-nested-focus-separator-color;
     }
   }
@@ -65,7 +65,7 @@ $default-padding-horizontal: 12px !default;
       margin-left: $default-padding-horizontal;
     }
 
-    :focus-visible & {
+    .nested-tab-focus & {
       background-color: $template-select-nested-focus-bg;
       border-color: $template-select-nested-focus-border;
     }
