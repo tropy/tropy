@@ -12,6 +12,10 @@
       image-url("wizard/key-visual-light.svg") no-repeat center bottom / auto 131px
     );
 
+  .vibrancy & {
+    background-color: $body-bg;
+  }
+
   .toolbar {
     .frameless & {
       -webkit-app-region: drag;
