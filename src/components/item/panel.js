@@ -229,6 +229,7 @@ export class ItemPanelGroup extends React.PureComponent {
             keymap={this.props.keymap.NoteList}
             notes={this.props.notes}
             selection={this.props.note}
+            onDelete={this.props.onNoteDelete}
             onContextMenu={this.props.onContextMenu}
             onOpen={this.handleNoteOpen}
             onSelect={this.props.onNoteSelect}/>
@@ -265,6 +266,7 @@ export class ItemPanelGroup extends React.PureComponent {
     onMetadataSave: func.isRequired,
     onModeChange: func.isRequired,
     onNoteCreate: func.isRequired,
+    onNoteDelete: func.isRequired,
     onNoteSelect: func.isRequired,
     onOpenInFolder: func.isRequired,
     onPhotoCreate: func.isRequired,

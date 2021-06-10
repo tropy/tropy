@@ -163,6 +163,9 @@ en:
       end: *end
       pageUp: *pageUp
       pageDown: *pageDown
+      delete:
+        - Backspace
+        - Delete
     NotePad: &NotePad
       break: Enter
       br:

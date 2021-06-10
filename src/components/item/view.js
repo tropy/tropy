@@ -197,7 +197,8 @@ export class ItemView extends React.PureComponent {
             isItemOpen={isItemOpen}
             isDisabled={isProjectClosing}
             isReadOnly={isReadOnly}
-            onNoteCreate={this.handleNoteCreate}/>
+            onNoteCreate={this.handleNoteCreate}
+            onNoteDelete={this.props.onNoteDelete}/>
         </Resizable>
         <ItemContainer
           ref={this.itemContainer}

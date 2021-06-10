@@ -45,6 +45,14 @@ export class NoteList extends Iterator {
     }, { throttle })
   }
 
+  handleDelete(note) {
+    this.props.onDelete({
+      photo: note.photo,
+      selection: note.selection,
+      notes: [note.id]
+    })
+  }
+
   handleFocus = () => {
     // No auto-select, because that could change the active photo!
     if (this.props.onTabFocus) {
@@ -74,6 +82,9 @@ export class NoteList extends Iterator {
         break
       case 'open':
         this.props.onOpen(this.current())
+        break
+      case 'delete':
+        this.handleDelete(this.current())
         break
       default:
         return
@@ -130,6 +141,7 @@ export class NoteList extends Iterator {
     isDisabled: bool,
     onBlur: func,
     onTabFocus: func,
+    onDelete: func.isRequired,
     onSelect: func.isRequired,
     onContextMenu: func.isRequired,
     onOpen: func.isRequired
