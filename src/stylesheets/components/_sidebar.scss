@@ -125,8 +125,7 @@
       position: relative;
 
       &.over {
-        @extend %drop-target;
-        background: transparent; // Remove background from %list-active
+        @extend %drop-target; // project-name & tag
       }
 
       > .list-node-container {
