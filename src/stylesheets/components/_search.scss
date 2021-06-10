@@ -17,6 +17,7 @@
   .search-input {
     padding-left: ($space-xs + $space-md);
     padding-right: 1px + $clear-button-size + $space-min;
+    border-color: $search-border-color;
 
     &[disabled] {
       background-color: $search-disabled-bg;
