@@ -27,7 +27,7 @@ $brand-primary-light:    $blue-light;
 $transparent: transparent;
 
 $shade-0:  #fff; // Body
-$shade-1:  if($platform == win32, #f0f0f0, #f6f6f6); // Sidebar bg, panel bg
+$shade-1:  #f6f6f6; // Sidebar bg, panel bg
 $shade-2:  #e6e6e6; // Inactive tab, Esper bg, tile expansion
 $shade-3:  #ddd; // Active state bg/border
 $shade-4:  #ccc; // Slider track

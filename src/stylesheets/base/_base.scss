@@ -19,6 +19,7 @@ main {
 html {
   // Fix #item-view positioning bug on window resize.
   // Remove this fix when it is not needed anymore.
+  // Keep for positioning on Windows (border on html).
   position: relative;
 }
 
