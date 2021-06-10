@@ -43,8 +43,8 @@ export class NotePad extends React.PureComponent {
   }
 
   handleEditorBlur = () => {
-    const { note } = this.props
-    this.props.onCommit(note, note.text.length === 0)
+    let { note } = this.props
+    this.props.onCommit(note, note?.text.length === 0)
   }
 
   render() {
@@ -54,7 +54,7 @@ export class NotePad extends React.PureComponent {
         onContextMenu={this.handleContextMenu}>
         <Editor
           ref={this.editor}
-          state={this.props.note.state}
+          state={this.props.note?.state}
           keymap={this.props.keymap}
           mode={this.props.mode}
           placeholder="notepad.placeholder"
@@ -76,8 +76,8 @@ export class NotePad extends React.PureComponent {
     note: shape({
       id: number,
       state: object,
-      text: string.isRequried
-    }).isRequired,
+      text: string
+    }),
     mode: string.isRequired,
     numbers: bool.isRequired,
     wrap: bool.isRequired,

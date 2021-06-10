@@ -13,24 +13,68 @@ import {
 } from 'prop-types'
 
 
-function getNoteTemplate() {
-  return { text: '' }
-}
-
 
 export class ItemView extends React.PureComponent {
   itemContainer = React.createRef()
 
   state = {
-    note: this.props.note || getNoteTemplate()
+    note: null
   }
 
-  UNSAFE_componentWillReceiveProps(props) {
-    if (props.note !== this.props.note) {
-      if (props.note == null)
-        this.handleNoteReset()
-      else
-        this.handleNoteUpdate(props.note)
+  static getDerivedStateFromProps(props, state) {
+    if (props.note) {
+      if (state.note == null)
+        return { ...state, note: props.note }
+
+      if (state.note.id) {
+
+        // If we previously had different note, or if the new note has
+        // been modified more recently than our local copy, we use the
+        // props version.
+        if (state.note.id !== props.note.id)
+          return { ...state, note: props.note }
+
+        if (state.note.modified < props.note.modified)
+          return { ...state, note: props.note }
+
+        // Otherwise, when updating the current note we keep the local
+        // editor state in favor of the serialized state coming back
+        // from the store; otherwise we lose unserializable
+        // state such as the editor's undo/redo history.
+
+      } else {
+
+        // When our local note exists but has no id, the props version
+        // may be the initially saved version of the note currently
+        // in the editor. We assume this is so, if the `created`
+        // timestamps match and merge the new note with our current
+        // editor state.
+        if (state.note.created === props.note.created)
+          return {
+            ...state,
+            note: {
+              ...props.note,
+              state: state.note.state,
+              text: state.note.text
+            }
+          }
+
+        // Otherwise we discard the temporary note in favor of the new one.
+        return { ...state, note: props.note }
+      }
+
+    } else {
+
+      if (state.note?.id)
+        return { ...state, note: null }
+    }
+
+    return null
+  }
+
+  componentDidUpdate(prevProps, { note }) {
+    if (note?.id != null && note.id !== this.state.note?.id) {
+      this.handleNoteRemoval(note)
     }
   }
 
@@ -74,53 +118,13 @@ export class ItemView extends React.PureComponent {
         note: null,
         selection: this.props.activeSelection
       })
-    } else {
-      if (this.state.note.text) {
-        this.setState({ note: getNoteTemplate() })
-      }
     }
 
     setTimeout(this.focusNotePad, delay)
   }
 
-  handleNoteReset() {
-    this.handleNoteDelete()
-    this.setState({ note: getNoteTemplate() })
-  }
-
-  handleNoteUpdate(note) {
-    const { id, modified, created } = this.state.note
-
-    if (id == null) {
-      // When updating a note which was saved for the first
-      // time, we just merge the id.
-      if (created != null && created === note.created) {
-        note = { ...this.state.note, id: note.id }
-      }
-
-    } else {
-
-      // When updating the current note we keep the current
-      // editor state in favor of the serialized state coming
-      // back from the store; otherwise we lose unserializable
-      // state such as the editor's undo/redo history.
-      if (id === note.id) {
-        if (modified >= note.modified) {
-          note = { ...note, state: this.state.note.state }
-        }
-
-      // When the loading a new note, check if the old note
-      // should be deleted.
-      } else {
-        this.handleNoteDelete()
-      }
-    }
-
-    this.setState({ note })
-  }
-
-  handleNoteDelete(note = this.state.note) {
-    if (note.id != null && note.text.length === 0) {
+  handleNoteRemoval(note) {
+    if (note.id != null && !note.text) {
       this.handleNoteSave.cancel()
       this.props.onNoteDelete({
         photo: note.photo,
@@ -136,20 +140,22 @@ export class ItemView extends React.PureComponent {
     this.props.onNoteSave(note, meta)
   }, NOTE.AUTOSAVE_DELAY)
 
-  handleNoteChange = (note, changed, isBlank) => {
-    if (!this.props.isReadOnly) {
-      if (note.id != null) {
-        note.modified = new Date()
-        if (isBlank) this.handleNoteSave.cancel()
-        else this.handleNoteSave(note, { changed })
+  handleNoteChange = (note, hasChanged, isBlank) => {
+    if (this.props.isReadOnly) return
 
-      } else {
-        if (note.created == null && !isBlank) {
-          note.created = Date.now()
-          note.photo = this.props.photo.id
-          note.selection = this.props.activeSelection
-          this.props.onNoteCreate(note)
-        }
+    if (note.id != null) {
+      note.modified = new Date()
+      if (isBlank)
+        this.handleNoteSave.cancel()
+      else
+        this.handleNoteSave(note, { changed: hasChanged })
+
+    } else {
+      if (note.created == null && !isBlank) {
+        note.created = Date.now()
+        note.photo = this.props.photo.id
+        note.selection = this.props.activeSelection
+        this.props.onNoteCreate(note)
       }
     }
 
@@ -157,9 +163,8 @@ export class ItemView extends React.PureComponent {
   }
 
   handleNoteCommit = () => {
-    this.handleNoteDelete()
+    this.handleNoteSave.flush()
   }
-
 
   render() {
     const {
