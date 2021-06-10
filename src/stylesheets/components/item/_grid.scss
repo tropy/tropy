@@ -34,7 +34,6 @@
   .viewport {
     display: grid;
     contain: content;
-    will-change: transform;
   }
 
   &.over {
