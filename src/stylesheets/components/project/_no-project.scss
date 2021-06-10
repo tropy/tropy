@@ -3,6 +3,7 @@
 // --------------------------------------------------
 
 .no-project {
+  @extend .project;
   display: flex;
 
   .toolbar {
