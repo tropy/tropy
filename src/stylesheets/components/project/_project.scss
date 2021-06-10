@@ -8,14 +8,17 @@ html {
   }
 }
 
-.project {
+.project,
+.no-project {
   height: 100%;
   overflow: hidden;
 
   &.over {
     @extend %drop-target;
   }
+}
 
+.project {
   .main {
     display: flex;
     flex: 1 1 0;
