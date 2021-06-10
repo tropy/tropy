@@ -43,7 +43,7 @@
           }
 
           @if $platform == linux {
-            background-color: $sidebar-blurred-list-bg-linux;
+            background-color: $sidebar-blurred-list-active-bg-linux;
           }
         }
 
