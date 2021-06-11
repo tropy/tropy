@@ -73,6 +73,16 @@ $panel-separator-color: #ddd !default;
     // CSS multiline truncate
     .css-multiline-truncate {
       @include css-multiline-truncate($note-lines);
+
+      // Prevent visual glitch when empty note gets deleted
+      // by clicking on another note in the list
+      &:empty {
+        visibility: hidden;
+      }
+
+      @include state(".note:not(.active)") {
+        transition: visibility 0s linear 1s;
+      }
     }
   }
 }
