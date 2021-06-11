@@ -72,12 +72,17 @@ export class Restore extends Command {
     let type = (selection != null) ? 'selection' : 'photo'
     let id = (selection != null) ? selection : photo
 
-    yield call(mod.note.restore, db, notes)
-    yield put(act[type].notes.add({ id, notes }))
+    let restored = yield call(db.transaction, tx =>
+      mod.note.restore(tx, notes))
+
+    yield put(act[type].notes.add({
+      id,
+      notes
+    }))
 
     this.undo = act.note.delete(payload)
 
-    return payload
+    return restored
   }
 }
 

@@ -11,6 +11,7 @@ export function notes(state = init, { type, payload, error, meta }) {
     case API.NOTE.CREATE:
     case NOTE.CREATE:
     case NOTE.LOAD:
+    case NOTE.RESTORE:
       return (meta.done && !error) ? { ...state, ...payload } : state
 
     case NOTE.INSERT:

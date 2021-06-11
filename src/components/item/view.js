@@ -144,11 +144,10 @@ export class ItemView extends React.PureComponent {
     if (this.props.isReadOnly) return
 
     if (note.id != null) {
-      note.modified = new Date()
-      if (isBlank)
-        this.handleNoteSave.cancel()
-      else
-        this.handleNoteSave(note, { changed: hasChanged })
+      this.handleNoteSave(note, {
+        blank: isBlank,
+        changed: hasChanged
+      })
 
     } else {
       if (note.created == null && !isBlank) {

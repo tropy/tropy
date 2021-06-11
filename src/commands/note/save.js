@@ -9,24 +9,35 @@ class Save extends Command {
   *exec() {
     let { db } = this.options
     let { payload, meta } = this.action
-    let { id, state, text, modified } = payload
-
-    let original = yield select(({ notes }) => notes[id])
+    let { id, state, text } = payload
+    let modified = new Date
     let data = { id, state, text, modified }
 
-    yield call(mod.save, db, {
-      id, state, text: meta.changed ? text : undefined
-    },  modified)
+    this.original = yield select(({ notes }) => notes[id])
 
     yield put(act.update(data))
 
-    this.undo = act.save({
-      id,
-      text: original.text,
-      state: original.state
-    })
+    if (!meta.blank) {
+      yield call(mod.save, db, {
+        id,
+        state,
+        text: meta.changed ? text : undefined
+      },  modified)
+
+      this.undo = act.save({
+        id,
+        text: this.original.text,
+        state: this.original.state
+      })
+    }
 
     return data
+  }
+
+  *abort() {
+    if (this.original) {
+      yield put(act.update(this.original))
+    }
   }
 }
 

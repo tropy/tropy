@@ -74,18 +74,20 @@ export default {
     return db.run(...query)
   },
 
-  delete(db, note_id) {
+  delete(db, id) {
     return db.run(
       ...update('notes')
         .set('deleted = datetime("now")')
-        .where({ note_id }))
+        .where({ note_id: id }))
   },
 
-  restore(db, note_id) {
-    return db.run(
+  async restore(db, id) {
+    await db.run(
       ...update('notes')
         .set({ deleted: null })
-        .where({ note_id }))
+        .where({ note_id: id }))
+
+    return load(db, id)
   },
 
   prune(db) {
