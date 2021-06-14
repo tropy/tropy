@@ -35,21 +35,11 @@ export class ProjectPrefs extends React.PureComponent {
           <FormToggleGroup
             id="prefs.project.base"
             name="base"
-            isCompact
             isReadOnly={this.props.project.isReadOnly}
             default="none"
             value={this.props.project.base}
             options={this.props.baseOptions}
             tabIndex={0}
-            onChange={this.props.onChange}/>
-          <FormField
-            id="prefs.project.store"
-            name="store"
-            isCompact
-            isReadOnly={this.props.project.isReadOnly}
-            tabIndex={0}
-            type="directory"
-            value={this.props.project.store}
             onChange={this.props.onChange}/>
           <hr/>
           <FormField
@@ -65,6 +55,15 @@ export class ProjectPrefs extends React.PureComponent {
             isDisabled={!this.props.project.watch.folder}
             name="watch.usePolling"
             value={this.props.project.watch.usePolling}
+            onChange={this.props.onChange}/>
+          <hr/>
+          <FormField
+            id="prefs.project.store"
+            name="store"
+            isReadOnly={this.props.project.isReadOnly}
+            tabIndex={0}
+            type="directory"
+            value={this.props.project.store}
             onChange={this.props.onChange}/>
         </Form>
       </ScrollContainer>
