@@ -89,6 +89,7 @@ export class Plugins extends EventEmitter {
 
       } catch (e) {
         warn({ stack: e.stack }, `failed to create plugin ${plugin} "${name}"`)
+        console.log(e.stack)
       }
     }
 
@@ -171,19 +172,14 @@ export class Plugins extends EventEmitter {
   async import(name) {
     try {
       let mod = join(this.root, name)
-      return {
-        ...await import(mod),
-        source: 'local'
-      }
+      return require(mod)
+
     } catch (e) {
       if (e.code !== 'MODULE_NOT_FOUND')
         throw e
 
       let mod = join(this.root, 'node_modules', name)
-      return {
-        ...await import(mod),
-        source: 'npm'
-      }
+      return require(mod)
     }
   }
 
