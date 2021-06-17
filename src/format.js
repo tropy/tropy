@@ -1,6 +1,6 @@
 import ARGS from './args'
 import { TYPE } from './constants'
-import edtf from 'edtf'
+import edtf, { format as edtfFormat } from 'edtf'
 import { blank } from './common/util'
 
 export function datetime(value, options = DTF) {
@@ -12,7 +12,7 @@ export function datetime(value, options = DTF) {
       options = { ...options, era: 'short' }
     }
 
-    return edtf.format(date, ARGS.locale, options)
+    return edtfFormat(date, ARGS.locale, options)
 
   } catch (error) {
     return value
