@@ -103,6 +103,7 @@
     border: $pointer-height solid transparent;
     border-bottom: $pointer-height solid $tile-expansion-bg;
 
+    .photo-panel.nested-tab-focus:not(.has-active) &,
     .photo-grid.nested-tab-focus:not(.has-nested-active) & {
       border-bottom-color: $tile-expansion-focus-bg;
     }
@@ -117,12 +118,13 @@
 
 .tile-expansion {
   grid-column-start: 1;
-  background: $tile-expansion-bg;
+  background-color: $tile-expansion-bg;
   margin: $space-sm (-$default-padding-horizontal); // Todo
   padding: $space-sm 0; // Todo
 
+  .photo-panel.nested-tab-focus:not(.has-active) &,
   .photo-grid.nested-tab-focus:not(.has-nested-active) & {
-    background: $tile-expansion-focus-bg;
+    background-color: $tile-expansion-focus-bg;
   }
 
   .is-blurred .item-mode & {
