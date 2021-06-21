@@ -145,6 +145,7 @@ $tile-focus-color:          var(--brand-primary);
 $tile-active-color:         var(--shade-5);
 $tile-expansion-bg:         var(--shade-2);
 $tile-expansion-focus-bg:   var(--shade-1);
+$tile-expansion-blurred-bg: var(--shade-2-darken-4);
 $tile-selection-icon-color: var(--shade-10-darken-14);
 
 // Stack
@@ -243,7 +244,8 @@ $panel-focus-bg:                     var(--shade-4-lighten-2);
 $panel-blurred-bg-darwin:            var(--shade-2);
 $panel-header-color:                 var(--shade-8);
 $panel-separator-color:              var(--shade-1);
-$panel-nested-focus-separator-color: var(shade-1-lighten-2);
+$panel-nested-focus-separator-color: var(--shade-1-lighten-2);
+$panel-blurred-separator-color:      var(--shade-1-darken-4);
 $panel-heading-color:                var(--shade-6);
 $panel-nested-focus-heading-color:   var(--shade-6-lighten-2);
 
@@ -297,6 +299,7 @@ $note-list-focus-color:  var(--brand-primary-light);
 $note-list-focus-bg:     var(--brand-primary);
 $note-list-active-color: var(--shade-9);
 $note-list-active-bg:    var(--shade-5);
+$note-list-blurred-bg:   var(--shade-5-darken-4);
 
 // Editable
 $editable-color:        $text-color;

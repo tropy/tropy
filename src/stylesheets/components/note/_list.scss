@@ -35,6 +35,14 @@ $panel-separator-color: #ddd !default;
       left: $default-padding-horizontal;
       height: 1px;
       background: $panel-separator-color;
+
+      @include state(".note-list .scroll-container:focus") {
+        background-color: $panel-nested-focus-separator-color;
+      }
+
+      .is-blurred .item-mode & {
+        background-color: $panel-blurred-separator-color;
+      }
     }
 
     &:first-child {
@@ -52,6 +60,10 @@ $panel-separator-color: #ddd !default;
         background: $note-list-focus-bg;
       }
 
+      .is-blurred .item-mode & {
+        background-color: $note-list-blurred-bg;
+      }
+
       &::before {
         content: none;
       }
@@ -62,6 +74,10 @@ $panel-separator-color: #ddd !default;
 
         @include state(".note-list .scroll-container:focus") {
           border-top-color: $note-list-focus-bg;
+        }
+
+        .is-blurred .item-mode & {
+          border-top-color: $note-list-blurred-bg;
         }
 
         &::before {

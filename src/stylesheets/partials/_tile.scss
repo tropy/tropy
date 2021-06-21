@@ -103,12 +103,14 @@
     border: $pointer-height solid transparent;
     border-bottom: $pointer-height solid $tile-expansion-bg;
 
-    .photo-grid.nested-tab-focus & {
+    .photo-grid.nested-tab-focus:not(.has-nested-active) & {
       border-bottom-color: $tile-expansion-focus-bg;
     }
 
-    .photo-grid.has-nested-active & {
-      border-bottom-color: $tile-expansion-bg;
+    .is-blurred .item-mode & {
+      @if $platform == darwin {
+        border-bottom-color: $tile-expansion-blurred-bg;
+      }
     }
   }
 }
@@ -119,11 +121,13 @@
   margin: $space-sm (-$default-padding-horizontal); // Todo
   padding: $space-sm 0; // Todo
 
-  .photo-grid.nested-tab-focus & {
+  .photo-grid.nested-tab-focus:not(.has-nested-active) & {
     background: $tile-expansion-focus-bg;
   }
 
-  .photo-grid.nested-tab-focus.has-nested-active & {
-    background: $tile-expansion-bg;
+  .is-blurred .item-mode & {
+    @if $platform == darwin {
+      background-color: $tile-expansion-blurred-bg;
+    }
   }
 }
