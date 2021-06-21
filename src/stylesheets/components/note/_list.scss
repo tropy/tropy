@@ -36,7 +36,9 @@ $panel-separator-color: #ddd !default;
       height: 1px;
       background: $panel-separator-color;
 
-      @include state(".note-list .scroll-container:focus") {
+      @include state(
+        ".note-panel:not(.has-active) .note-list .scroll-container:focus"
+      ) {
         background-color: $panel-nested-focus-separator-color;
       }
 
