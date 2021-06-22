@@ -32,7 +32,7 @@ export class NotePad extends React.PureComponent {
   }
 
   handleContextMenu = (event) => {
-    if (!this.props.isDisabled && this.props.note.id != null) {
+    if (!this.props.isDisabled && this.props.note?.id != null) {
       this.props.onContextMenu(event, 'notepad', {
         id: this.props.note.id,
         mode: this.props.mode,
