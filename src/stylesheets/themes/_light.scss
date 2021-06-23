@@ -107,15 +107,15 @@ $disabled-opacity: 0.5;
 // Forms
 $input-color:                            var(--shade-9);
 $input-bg:                               var(--shade-0); // Transparent causes border/box-shadow issue
-$input-overlay-bg:                       var(--shade-10-20);
+$input-overlay-bg:                       var(--shade-10-14);
 $input-bg-readonly:                      var(--shade-1-darken-4);
-$input-overlay-bg-readonly:              var(--shade-10-10);
+$input-overlay-bg-readonly:              var(--shade-10-7);
 $input-border:                           var(--shade-3);
 $input-overlay-focus-color:              var(--brand-primary);
 $input-color-placeholder:                var(--shade-5);
 $fieldset-bg:                            var(--shade-1-darken-4);
 $checkbox-bg:                            var(--shade-0);
-$checkbox-overlay-disabled-border:       var(--shade-10-10);
+$checkbox-overlay-disabled-border:       var(--shade-10-7);
 $checkbox-checked-bg:                    var(--shade-6-lighten-13);
 $checkbox-overlay-checked-bg:            var(--shade-10-60);
 $checkbox-checked-border:                var(--shade-6-lighten-13);
@@ -310,10 +310,10 @@ $wizard-link-color:    $link-color;
 // Button
 $btn-default-color:             var(--shade-9);
 $btn-default-bg:                var(--shade-0);
-$btn-default-overlay-bg:        var(--shade-10-20);
+$btn-default-overlay-bg:        var(--shade-10-10);
 $btn-default-border:            var(--shade-3);
 $btn-default-active-bg:         var(--shade-1);
-$btn-default-overlay-active-bg: var(--shade-10-24);
+$btn-default-overlay-active-bg: var(--shade-10-14);
 $btn-primary-color:             var(--shade-0);
 $btn-primary-bg:                var(--brand-primary);
 $btn-primary-active-bg:         var(--brand-primary-darken-4);
@@ -322,7 +322,7 @@ $btn-icon-bg:                   var(--transparent);
 // Slider
 $slider-track-bg:                       var(--shade-4);
 $slider-overlay-track-disabled-opacity: 0.2;
-$slider-overlay-track-bg:               var(--shade-10-20);
+$slider-overlay-track-bg:               var(--shade-10-14);
 $slider-range-bg:                       var(--shade-6);
 $slider-range-disabled-opacity:         $disabled-opacity;
 $slider-overlay-range-bg:               var(--shade-7);
