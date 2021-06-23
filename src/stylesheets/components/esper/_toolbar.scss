@@ -65,10 +65,14 @@
     }
 
     @include variant(".esper.overlay-mode") {
-      background: $esper-overlay-bg;
-      backdrop-filter: blur($esper-blur-radius);
       transform: translate3d(0, -100%, 0);
       transition: transform $esper-toolbar-transition-out;
+      background-color: $esper-bg;
+
+      .project:not([class*="enter"]) & {
+        background: $esper-overlay-bg;
+        backdrop-filter: blur($esper-blur-radius);
+      }
 
       @include state(".esper:hover") {
         transform: translate3d(0, 0, 0);

@@ -31,8 +31,11 @@
 
   .overlay-mode & {
     position: absolute;
-    background: $esper-overlay-bg;
-    backdrop-filter: blur($esper-blur-radius);
+
+    .project:not([class*="enter"]) & {
+      background: $esper-overlay-bg;
+      backdrop-filter: blur($esper-blur-radius);
+    }
 
     .stacked & {
       top: $toolbar-height;
