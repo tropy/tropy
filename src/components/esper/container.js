@@ -190,6 +190,7 @@ export class EsperContainer extends React.Component {
         .on('resolution-change', this.handleResolutionChange)
         .on('selection-activate', this.handleSelectionActivate)
         .on('selection-create', this.handleSelectionCreate)
+        .on('texture-ready', this.handleTextureReady)
         .on('wheel.zoom', this.handleWheelZoom)
         .on('wheel.pan', this.handleWheelPan)
         .on('zoom-in', this.handleZoomIn)
@@ -211,7 +212,7 @@ export class EsperContainer extends React.Component {
         let next = getZoomBounds(this.props, this.state, this.screen)
         let state = { ...this.state, ...next }
 
-        this.setState(next)
+        this.setState({ isTextureReady: false, ...next })
 
         if (shouldViewReset)
           this.esper.reset(this.props, state)
@@ -230,6 +231,7 @@ export class EsperContainer extends React.Component {
     } else {
       if (shouldViewReset) {
         this.esper.clear()
+        this.setState({ isTextureReady: false })
       }
     }
   }
@@ -452,6 +454,10 @@ export class EsperContainer extends React.Component {
     })
   }
 
+  handleTextureReady = () => {
+    this.setState({ isTextureReady: true })
+  }
+
   handleKeyDown = (event) => {
     if (this.state.quicktool != null) {
       this.handleQuickToolKeyDown(event)
@@ -654,6 +660,7 @@ export class EsperContainer extends React.Component {
         className={cx('esper', this.tool, {
           'disabled': isDisabled,
           'read-only': this.props.isReadOnly,
+          'texture-ready': this.state.isTextureReady,
           'overlay-mode': this.props.hasOverlayToolbar,
           'panel-visible': this.props.isPanelVisible
         })}

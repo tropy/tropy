@@ -216,6 +216,7 @@ export default class Esper extends EventEmitter {
         this.photo.bg.texture =  texture
         this.photo.interactive = true
         this.photo.on('mousedown', this.handleMouseDown)
+        this.emit('texture-ready')
 
         this.clearTextureCache(state.src, 5)
 
