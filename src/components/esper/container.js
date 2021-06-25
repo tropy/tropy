@@ -57,6 +57,7 @@ export class EsperContainer extends React.Component {
 
   state = {
     dppx: Esper.devicePixelRatio,
+    isTextureReady: false,
     isVisible: false,
     quicktool: null,
 
@@ -212,12 +213,14 @@ export class EsperContainer extends React.Component {
         let next = getZoomBounds(this.props, this.state, this.screen)
         let state = { ...this.state, ...next }
 
-        this.setState({ isTextureReady: false, ...next })
-
-        if (shouldViewReset)
+        if (shouldViewReset) {
+          next.isTextureReady = false
           this.esper.reset(this.props, state)
-        else
+        } else {
           this.esper.sync(this.props, state)
+        }
+
+        this.setState(next)
 
 
       } else {
