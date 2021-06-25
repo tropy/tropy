@@ -172,6 +172,8 @@ export default class Esper extends EventEmitter {
       this.photo?.destroy()
 
     this.photo = null
+    this.emit('texture-change', false)
+
     this.render()
 
     if (gc) {
@@ -213,10 +215,11 @@ export default class Esper extends EventEmitter {
         // Subtle: if the view was reset during load, abort!
         if (this.photo !== tmp) return
 
-        this.photo.bg.texture =  texture
+        this.photo.bg.texture = texture
+        this.emit('texture-change', true)
+
         this.photo.interactive = true
         this.photo.on('mousedown', this.handleMouseDown)
-        this.emit('texture-ready')
 
         this.clearTextureCache(state.src, 5)
 

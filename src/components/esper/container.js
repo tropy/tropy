@@ -191,7 +191,7 @@ export class EsperContainer extends React.Component {
         .on('resolution-change', this.handleResolutionChange)
         .on('selection-activate', this.handleSelectionActivate)
         .on('selection-create', this.handleSelectionCreate)
-        .on('texture-ready', this.handleTextureReady)
+        .on('texture-change', this.handleTextureChange)
         .on('wheel.zoom', this.handleWheelZoom)
         .on('wheel.pan', this.handleWheelPan)
         .on('zoom-in', this.handleZoomIn)
@@ -205,37 +205,36 @@ export class EsperContainer extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     let shouldViewReset = this.state.src !== prevState.src
     let shouldViewSync = this.state.id !== prevState.id
+    let hasBecomeVisible = this.state.isVisible && !prevState.isVisible
 
-    if (this.state.isVisible) {
-      shouldViewReset = shouldViewReset || !prevState.isVisible
+    if (shouldViewReset || shouldViewSync || hasBecomeVisible) {
+      let next = getZoomBounds(this.props, this.state, this.screen)
+      let state = { ...this.state, ...next }
 
-      if (shouldViewReset || shouldViewSync) {
-        let next = getZoomBounds(this.props, this.state, this.screen)
-        let state = { ...this.state, ...next }
+      if (this.state.isVisible) {
+        shouldViewReset = shouldViewReset || !this.esper.photo
 
-        if (shouldViewReset) {
-          next.isTextureReady = false
-          this.esper.reset(this.props, state)
+        if (shouldViewReset || shouldViewSync) {
+          if (shouldViewReset)
+            this.esper.reset(this.props, state)
+          else
+            this.esper.sync(this.props, state)
+
         } else {
-          this.esper.sync(this.props, state)
+          if (this.props.selections !== prevProps.selections ||
+            this.tool !== getActiveTool(prevProps, prevState)
+          ) {
+            this.esper.photo?.sync(this.props, this.state)
+          }
         }
-
-        this.setState(next)
-
 
       } else {
-        if (this.props.selections !== prevProps.selections ||
-          this.tool !== getActiveTool(prevProps, prevState)
-        ) {
-          this.esper.photo?.sync(this.props, this.state)
+        if (shouldViewReset || shouldViewSync) {
+          this.esper.clear()
         }
       }
 
-    } else {
-      if (shouldViewReset) {
-        this.esper.clear()
-        this.setState({ isTextureReady: false })
-      }
+      this.setState(next)
     }
   }
 
@@ -457,8 +456,8 @@ export class EsperContainer extends React.Component {
     })
   }
 
-  handleTextureReady = () => {
-    this.setState({ isTextureReady: true })
+  handleTextureChange = (isTextureReady) => {
+    this.setState({ isTextureReady })
   }
 
   handleKeyDown = (event) => {
