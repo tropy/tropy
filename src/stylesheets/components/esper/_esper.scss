@@ -60,6 +60,18 @@
 
     canvas {
       position: absolute;
+      transition: opacity 0.8s ease;
+      opacity: 0;
+
+      .project-mode-enter & {
+        transition: none;
+        opacity: 0;
+      }
+
+      .item-mode-enter &,
+      .item-mode & {
+        opacity: 1;
+      }
     }
   }
 
