@@ -1,7 +1,5 @@
 import React from 'react'
 import { render } from 'react-dom'
-import * as PIXI from '@pixi/core'
-import { install } from '@pixi/unsafe-eval'
 import ARGS from '../args'
 import { Main } from '../components/main'
 import { ProjectContainer } from '../components/project/container'
@@ -10,9 +8,6 @@ import { main } from '../sagas/project'
 import win from '../window'
 import { idle, intl, project, history, keymap, settings } from '../actions'
 import * as dialog from '../dialog'
-
-// Apply PIXI unsafe-eval patch
-install(PIXI)
 
 export const store = create()
 export const tasks = store.saga.run(main)

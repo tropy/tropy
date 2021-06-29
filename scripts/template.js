@@ -31,9 +31,7 @@ const html = name => (
 <head>
   <meta http-equiv="Content-Security-Policy" content="${[
     "default-src 'none'",
-    // DevTools Extensions currently require 'unsafe-inline'; adding the
-    // digest temporarily to see if that is a stable workaround.
-    // "script-src 'sha256-++gna1tMQ08GGn4M8jnPXPgLA3Il1y2LY+JVA4NpYKk='",
+    // "script-src 'unsafe-eval'",
     "worker-src 'self'",
     "style-src 'self' 'unsafe-inline'",
     'img-src * data:',

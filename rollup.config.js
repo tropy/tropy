@@ -114,16 +114,13 @@ export default [
     output: {
       dir: 'lib',
       format: 'cjs',
-      sourcemap: true,
-      manualChunks: {
-        db: ['src/common/db.js'],
-        image: ['src/image/index.js']
-      }
+      sourcemap: true
     },
     preserveEntrySignatures: 'strict',
     plugins: [
       emit({
         entries: {
+          'esper': 'src/esper/index',
           'views/about': 'src/views/about',
           'views/prefs': 'src/views/prefs',
           'views/print': 'src/views/print',
