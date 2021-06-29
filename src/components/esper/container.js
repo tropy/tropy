@@ -587,7 +587,7 @@ export class EsperContainer extends React.Component {
       this.setState({ isVisible: true })
       this.esper.resume()
     }
-  }, 550, { leading: false })
+  }, 550, { leading: true })
 
   handleSlideOut = () => {
     if (this.state.isVisible) {
