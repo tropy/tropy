@@ -65,7 +65,7 @@ const START =
       window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = { isDisabled: true }
 
     // eslint-disable-next-line
-    global.eval = () => {
+    window.eval = () => {
       throw new Error('use of eval() is prohibited')
     }
 

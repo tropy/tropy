@@ -1,6 +1,7 @@
 import { ipcRenderer as ipc } from 'electron'
 import { basename, join } from 'path'
 import { existsSync as exists } from 'fs'
+import { warn } from './common/log'
 import { darwin } from './common/os'
 import { Plugins } from './common/plugins'
 import { delay, pick } from './common/util'
@@ -342,6 +343,10 @@ export class Window extends EventEmitter {
     on(window, 'unhandledrejection', (event) => {
       event.preventDefault()
       if (event.reason) handleError(event.reason)
+    })
+
+    on(window, 'securitypolicyviolation', (e) => {
+      warn(`CSP violation for ${e.violatedDirective}: ${e.blockedURI}`)
     })
   }
 
