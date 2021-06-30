@@ -231,7 +231,7 @@ export default class Esper extends EventEmitter {
       this.app.stage.addChildAt(this.photo, 0)
 
       this.emit('change')
-      this.render()
+      requestIdleCallback(this.render)
     }
   }
 
@@ -332,7 +332,7 @@ export default class Esper extends EventEmitter {
     this.resume()
   }
 
-  render() {
+  render = () => {
     this.app.render()
   }
 
