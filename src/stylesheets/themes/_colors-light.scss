@@ -5,6 +5,7 @@
 
 :root {
   #{--brand-primary}:          $brand-primary;
+  #{--brand-primary-overlay}:  $brand-primary-overlay;
   #{--brand-primary-vibrancy}: $brand-primary-vibrancy;
   #{--brand-primary-light}:    $brand-primary-light;
   #{--brand-primary-30}:       rgba($brand-primary, 0.3);
@@ -66,8 +67,10 @@
   #{--shade-10-14}:         rgba($shade-10, 0.14);
   #{--shade-10-20}:         rgba($shade-10, 0.2);
   #{--shade-10-25}:         rgba($shade-10, 0.25);
+  #{--shade-10-28}:         rgba($shade-10, 0.28);
   #{--shade-10-40}:         rgba($shade-10, 0.4);
   #{--shade-10-46}:         rgba($shade-10, 0.46);
+  #{--shade-10-50}:         rgba($shade-10, 0.50);
   #{--shade-10-59}:         rgba($shade-10, 0.59);
   #{--shade-10-60}:         rgba($shade-10, 0.6);
   #{--shade-10-65}:         rgba($shade-10, 0.65);

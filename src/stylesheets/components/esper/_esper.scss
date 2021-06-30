@@ -31,16 +31,17 @@
     .slider-value {
       color: $esper-slider-value-color;
     }
-  }
 
-  .slider:focus {
-    .slider-handle {
-      background-color: $slider-focus-bg;
-      border-color: transparent;
-    }
+    // State mixin does not work here
+    .slider:focus {
+      .slider-handle {
+        background-color: $slider-focus-bg;
+        border-color: transparent;
+      }
 
-    .slider-range {
-      background-color: $slider-focus-bg;
+      .slider-range {
+        background-color: $slider-focus-bg;
+      }
     }
   }
 
@@ -99,16 +100,6 @@
       left: 0;
       top: 0;
       width: 100%;
-    }
-
-    .slider:focus {
-      .slider-handle {
-        background-color: $slider-overlay-focus-bg;
-      }
-
-      .slider-range {
-        background-color: $slider-overlay-focus-bg;
-      }
     }
   }
 

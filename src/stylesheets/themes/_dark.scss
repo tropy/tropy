@@ -324,8 +324,12 @@ $btn-icon-bg:                   var(--transparent);
 
 // Slider
 $slider-track-bg:                       var(--shade-5);
-$slider-overlay-track-disabled-opacity: 0.2;
 $slider-overlay-track-bg:               var(--shade-10-20);
+$slider-overlay-track-focus-bg:         var(--shade-10-20); // todo
+$slider-overlay-track-disabled-bg:      var(--shade-10-20); // todo
+$slider-overlay-track-opacity:          1; // todo
+$slider-overlay-track-focus-opacity:    1; // todo
+$slider-overlay-track-disabled-opacity: 0.2; // todo
 $slider-range-bg:                       var(--shade-6);
 $slider-range-disabled-opacity:         0;
 $slider-overlay-range-bg:               var(--shade-10-darken-14);
@@ -338,7 +342,6 @@ $slider-value-color:                    var(--shade-8);
 $slider-overlay-value-color:            var(--shade-10-darken-14);
 $slider-focus-bg:                       var(--brand-primary);
 $slider-overlay-focus-bg:               var(--brand-primary-overlay);
-$slider-overlay-disabled-bg:            var(--shade-10);
 
 // Esper
 $esper-bg:                               var(--shade-1);

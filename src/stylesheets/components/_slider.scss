@@ -48,11 +48,17 @@
     }
 
     .overlay-mode & {
+      opacity: $slider-overlay-track-opacity;
       background-color: $slider-overlay-track-bg;
+
+      @include state(".slider:focus") {
+        opacity: $slider-overlay-track-focus-opacity;
+        background-color: $slider-overlay-track-focus-bg;
+      }
 
       @include state(".slider.disabled") {
         opacity: $slider-overlay-track-disabled-opacity;
-        background-color: $slider-overlay-disabled-bg;
+        background-color: $slider-overlay-track-disabled-bg;
       }
     }
   }
@@ -88,10 +94,6 @@
       @include state(".slider:focus") {
         background-color: $slider-overlay-focus-bg;
       }
-
-      @include state(".slider.disabled") {
-        background-color: $slider-overlay-disabled-bg;
-      }
     }
   }
 
@@ -120,8 +122,8 @@
       background-color: $slider-overlay-handle-bg;
       border-color: $slider-overlay-handle-border;
 
-      @include state(".slider.disabled") {
-        background-color: $slider-overlay-disabled-bg;
+      @include state(".slider:focus") {
+        background-color: $slider-overlay-focus-bg;
       }
     }
   }
