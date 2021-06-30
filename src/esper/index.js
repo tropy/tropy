@@ -336,7 +336,7 @@ export default class Esper extends EventEmitter {
     this.app.render()
   }
 
-  resume() {
+  resume = () => {
     this.start()
     this.stop()
   }

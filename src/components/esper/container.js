@@ -39,11 +39,10 @@ const {
 export class EsperContainer extends React.Component {
 
   #IO = new IntersectionObserver(([el]) => {
-    requestIdleCallback(
-      el.intersectionRatio > 0 ?
-        this.handleSlideIn :
-        this.handleSlideOut
-    )
+    if (el.intersectionRatio > 0)
+      this.handleSlideIn()
+    else
+      this.handleSlideOut()
   }, { threshold: [0] })
 
   #RO = new ResizeObserver(([el]) => {
@@ -582,16 +581,15 @@ export class EsperContainer extends React.Component {
       this.props.onPhotoError(photo.id)
   }
 
-  handleSlideIn = debounce(() => {
+  handleSlideIn = () => {
     if (!this.state.isVisible) {
       this.setState({ isVisible: true })
-      this.esper.resume()
+      requestIdleCallback(this.esper.resume)
     }
-  }, 550, { leading: true })
+  }
 
   handleSlideOut = () => {
     if (this.state.isVisible) {
-      this.handleSlideIn.cancel()
       this.setState({ isVisible: false })
       this.esper.stop()
       this.esper.stop.flush()
