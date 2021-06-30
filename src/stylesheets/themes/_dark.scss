@@ -13,7 +13,7 @@ $theme: "dark";
 $blue: #395bac;
 $blue-light: #cedef7;
 $blue-dark: #171b2e;
-$blue-overlay: #5c93e5;
+$blue-overlay: #4176f2;
 $blue-vibrancy: rgba(#4176f2, 0.7); // 2% brighter than blue-dark on original bg
 $red: #e62e2e;
 $green: #2e8c44; // 64% of the light theme green + 7% saturation
@@ -105,23 +105,23 @@ $hr-border: var(--shade-1);
 // Forms & buttons
 $input-btn-focus-color: var(--brand-primary);
 $input-btn-invalid-color: var(--red-64);
-$input-btn-overlay-focus-color: var(--brand-primary-overlay);
+$input-btn-overlay-focus-color: var(--brand-primary-vibrancy);
 $disabled-opacity: 0.5;
 
 // Forms
 $input-color:                            var(--shade-9);
 $input-bg:                               var(--shade-3); // Transparent causes border/box-shadow issue
-$input-overlay-bg:                       var(--shade-10-20);
+$input-overlay-bg:                       var(--shade-10-14);
 $input-bg-readonly:                      var(--shade-4-lighten-2);
-$input-overlay-bg-readonly:              var(--shade-10-10);
+$input-overlay-bg-readonly:              var(--shade-10-7);
 $input-border:                           var(--shade-1);
-$input-overlay-focus-color:              var(--brand-primary-overlay);
+$input-overlay-focus-color:              var(--brand-primary-vibrancy);
 $input-color-placeholder:                var(--shade-6);
 $fieldset-bg:                            var(--shade-4-lighten-2);
 $checkbox-bg:                            var(--shade-3);
-$checkbox-overlay-disabled-border:       var(--shade-10-10);
+$checkbox-overlay-disabled-border:       var(--shade-10-7);
 $checkbox-checked-bg:                    var(--shade-8);
-$checkbox-overlay-checked-bg:            var(--shade-10-darken-14);
+$checkbox-overlay-checked-bg:            var(--shade-9);
 $checkbox-checked-border:                var(--shade-8);
 $checkbox-checked-active-bg:             var(--shade-8-darken-5);
 $checkbox-overlay-checked-active-bg:     var(--shade-10-darken-19);
@@ -312,11 +312,12 @@ $wizard-link-color:    $link-color;
 
 // Button
 $btn-default-color:             var(--shade-9);
+$btn-default-overlay-color:     var(--shade-10-69);
 $btn-default-bg:                var(--shade-3);
-$btn-default-overlay-bg:        var(--shade-10-20);
+$btn-default-overlay-bg:        var(--shade-10-10);
 $btn-default-border:            var(--shade-1);
 $btn-default-active-bg:         var(--shade-2);
-$btn-default-overlay-active-bg: var(--shade-10-16);
+$btn-default-overlay-active-bg: var(--shade-10-8);
 $btn-primary-color:             var(--brand-primary-light);
 $btn-primary-bg:                var(--brand-primary);
 $btn-primary-active-bg:         var(--brand-primary-darken-2);
@@ -324,41 +325,41 @@ $btn-icon-bg:                   var(--transparent);
 
 // Slider
 $slider-track-bg:                       var(--shade-5);
-$slider-overlay-track-bg:               var(--shade-10-20);
-$slider-overlay-track-focus-bg:         var(--shade-10-20); // todo
-$slider-overlay-track-disabled-bg:      var(--shade-10-20); // todo
-$slider-overlay-track-opacity:          1; // todo
-$slider-overlay-track-focus-opacity:    1; // todo
-$slider-overlay-track-disabled-opacity: 0.2; // todo
+$slider-overlay-track-bg:               var(--shade-10-22);
+$slider-overlay-track-focus-bg:         var(--shade-10-20);
+$slider-overlay-track-disabled-bg:      var(--shade-10);
+$slider-overlay-track-opacity:          0.64;
+$slider-overlay-track-focus-opacity:    0.7;
+$slider-overlay-track-disabled-opacity: 0.14;
 $slider-range-bg:                       var(--shade-6);
 $slider-range-disabled-opacity:         0;
-$slider-overlay-range-bg:               var(--shade-10-darken-14);
+$slider-overlay-range-bg:               var(--shade-10);
 $slider-handle-bg:                      var(--shade-7);
-$slider-overlay-handle-bg:              var(--shade-10-darken-14);
+$slider-overlay-handle-bg:              var(--shade-10);
 $slider-handle-border:                  var(--transparent);
 $slider-overlay-handle-border:          var(--transparent);
 $slider-handle-disabled-bg:             var(--shade-5);
 $slider-value-color:                    var(--shade-8);
-$slider-overlay-value-color:            var(--shade-10-darken-14);
+$slider-overlay-value-color:            var(--shade-9);
 $slider-focus-bg:                       var(--brand-primary);
 $slider-overlay-focus-bg:               var(--brand-primary-overlay);
 
 // Esper
 $esper-bg:                               var(--shade-1);
-$esper-overlay-color:                    var(--shade-10-darken-14);
+$esper-overlay-color:                    var(--shade-10-69);
 $esper-toolbar-solid-bg:                 var(--transparent);
-$esper-shadow:                           var(--shade-1-darken-10);
+$esper-shadow:                           var(--shade-0-80);
 $esper-btn-icon-active-color:            var(--shade-9);
 $esper-btn-icon-active-bg:               var(--shade-5);
 $esper-slider-handle-bg:                 $slider-handle-bg;
 $esper-slider-handle-disabled-bg:        $slider-handle-disabled-bg;
 $esper-slider-value-color:               var(--shade-7);
 $esper-overlay-bg:                       var(--shade-1-80);
-$esper-toolbar-overlay-btn-active-color: var(--shade-10-darken-4);
-$esper-toolbar-overlay-btn-active-bg:    var(--shade-10-20);
+$esper-toolbar-overlay-btn-active-color: var(--shade-10-64);
+$esper-toolbar-overlay-btn-active-bg:    var(--shade-10-14);
 $esper-toolbar-blurred-bg-darwin:        var(--shade-2);
 $esper-toolbar-blurred-opacity-darwin:   0.3;
-$esper-overlay-icon-color:               var(--shade-10-darken-14);
+$esper-overlay-icon-color:               var(--shade-10-39);
 $esper-checkbox-bg:                      var(--shade-5);
 $esper-input-border:                     var(--transparent);
 $esper-checkbox-checked-bg:              var(--shade-7);

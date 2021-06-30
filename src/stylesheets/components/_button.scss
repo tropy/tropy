@@ -45,6 +45,7 @@
   .overlay-mode & {
     background: $btn-default-overlay-bg;
     border-color: transparent;
+    color: $btn-default-overlay-color;
 
     @include input-btn-focus(":focus-visible", $input-btn-overlay-focus-color);
 
