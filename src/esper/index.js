@@ -6,7 +6,7 @@ import ARGS from '../args'
 import { append, createDragHandler, on, off } from '../dom'
 import { error, info, warn } from '../common/log'
 import { isClockwise, isHorizontal, deg, rad } from '../common/math'
-import { restrict } from '../common/util'
+import { delay, restrict } from '../common/util'
 import { Photo } from './photo'
 import { Selection } from './selection'
 import { Loader } from './loader'
@@ -30,6 +30,7 @@ const {
     ZOOM_MODIFIER
 } = SASS.ESPER
 
+const LARGE_TEXTURE = 3500 * 3500
 
 PIXI.settings.RETINA_PREFIX = /@2x!/
 PIXI.settings.STRICT_TEXTURE_CACHE = true
@@ -194,7 +195,7 @@ export default class Esper extends EventEmitter {
     }
   }, 1000)
 
-  async reset(props, state) {
+  async reset(props, state, duration = 0) {
     this.clear(FADE_DURATION, false)
 
     if (state.src != null) {
@@ -210,7 +211,7 @@ export default class Esper extends EventEmitter {
       this.sync(props, state, 0)
 
       try {
-        let texture = await this.loadTexture(state.src)
+        let texture = await this.loadTexture(state.src, duration)
 
         // Subtle: if the view was reset during load, abort!
         if (this.photo !== tmp) return
@@ -231,20 +232,38 @@ export default class Esper extends EventEmitter {
       this.app.stage.addChildAt(this.photo, 0)
 
       this.emit('change')
-      requestIdleCallback(this.render)
+      this.render()
     }
   }
 
-  // Load the texture with an additional idle callback. Use this
-  // when loading textures during important transitions.
-  loadTexture(url) {
-    return this.loader
-      .loadTexture(url)
-      .then(texture =>
-        new Promise(resolve => {
-          requestIdleCallback(() => resolve(texture), { timeout: 800 })
-        })
-      )
+  async loadTexture(url, duration = 0) {
+    let loadTime = Date.now()
+    let texture = await this.loader.loadTexture(url)
+
+    loadTime = Date.now() - loadTime
+    duration = duration - loadTime
+
+    // Subtle: resets typically happen because Esper has become
+    // visible by sliding in; when a new texture gets rendered
+    // for the first time, it will be uploaded to the GPU. For
+    // large textures this task can affect the view transition
+    // and, therefore, we may want to artificially delay the
+    // texture loading here. Additionally, we don't want to
+    // render the texture immediately if loading took so long
+    // that the rendering would happen while the transition
+    // is already far advanced: in this case it looks better
+    // to wait until the transition is complete.
+    if (duration > 0 && (
+      loadTime > duration ||
+      texture.width * texture.height > LARGE_TEXTURE
+    )) {
+      console.log('delay', duration)
+      await delay(duration)
+    }
+
+    console.log('loadTexture', loadTime)
+
+    return texture
   }
 
   sync(props, state, duration = SYNC_DURATION) {

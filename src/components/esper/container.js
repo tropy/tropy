@@ -215,7 +215,7 @@ export class EsperContainer extends React.Component {
 
         if (shouldViewReset || shouldViewSync) {
           if (shouldViewReset)
-            this.esper.reset(this.props, state)
+            this.esper.reset(this.props, state, hasBecomeVisible ? 850 : 0)
           else
             this.esper.sync(this.props, state)
 
