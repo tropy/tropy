@@ -61,24 +61,6 @@
 
     canvas {
       position: absolute;
-
-      .project-mode & {
-        visibility: hidden;
-      }
-
-      .item-mode & {
-        visibility: visible;
-      }
-
-      @keyframes texture-ready {
-        100% {
-          visibility: visible;
-        }
-      }
-
-      @include state(".esper.texture-ready") {
-        animation: texture-ready 0.8s step-end forwards;
-      }
     }
   }
 
