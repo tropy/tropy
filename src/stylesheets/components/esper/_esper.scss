@@ -65,6 +65,7 @@
   }
 
   .esper-header {
+    flex: 0 0 auto;
     position: relative;
     z-index: $zindex-esper-header;
     height: $toolbar-height;
