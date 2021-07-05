@@ -91,7 +91,6 @@ $wizard-spacing-top: 37px;
 // Default Dimensions
 // --------------------------------------------------
 
-$panels-default-width: 320px;
 $search-width: 200px;
 
 
@@ -196,7 +195,6 @@ $column-transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 // --------------------------------------------------
 
 $panel-header-height: const("PANEL.HEADER_HEIGHT") * 1px;
-$panel-body-min-height: 100px - (const("PANEL.HEADER_HEIGHT") * 1px) - 4px;
 
 
 // Accordion
