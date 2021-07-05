@@ -132,6 +132,16 @@
       clip-path: path("M0,0V12H12V0ZM9.536,8.828l-.708.708L6,6.707,3.172,9.536l-.708-.708L5.293,6,2.464,3.172l.708-.708L6,5.293,8.828,2.464l.708.708L6.707,6Z");
     }
 
+    .is-blurred & {
+      @if $platform == darwin {
+        opacity: $sidebar-blurred-icon-opacity-darwin;
+      }
+
+      @if $platform == linux {
+        opacity: $sidebar-blurred-icon-opacity-linux;
+      }
+    }
+
     .icon {
       position: absolute;
       left: 50%;
