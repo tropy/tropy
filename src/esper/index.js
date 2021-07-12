@@ -257,11 +257,11 @@ export default class Esper extends EventEmitter {
       loadTime > duration ||
       texture.width * texture.height > LARGE_TEXTURE
     )) {
-      console.log('delay', duration)
+      info(`delaying texture load by ${duration}ms`)
       await delay(duration)
     }
 
-    console.log('loadTexture', loadTime)
+    info(`loadTexture took ${loadTime}ms`)
 
     return texture
   }
