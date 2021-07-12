@@ -213,27 +213,25 @@ export class EsperContainer extends React.Component {
       if (this.state.isVisible) {
         shouldViewReset = shouldViewReset || !this.esper.photo
 
-        if (shouldViewReset || shouldViewSync) {
-          if (shouldViewReset)
-            this.esper.reset(this.props, state, hasBecomeVisible ? 850 : 0)
-          else
-            this.esper.sync(this.props, state)
-
-        } else {
-          if (this.props.selections !== prevProps.selections ||
-            this.tool !== getActiveTool(prevProps, prevState)
-          ) {
-            this.esper.photo?.sync(this.props, this.state)
-          }
-        }
+        if (shouldViewReset)
+          this.esper.reset(this.props, state, hasBecomeVisible ? 850 : 0)
+        else
+          this.esper.sync(this.props, state)
 
       } else {
-        if (shouldViewReset || shouldViewSync) {
-          this.esper.clear()
-        }
+        this.esper.clear()
       }
 
       this.setState(next)
+
+    } else {
+      if (this.state.isVisible) {
+        if (this.props.selections !== prevProps.selections ||
+          this.tool !== getActiveTool(prevProps, prevState)
+        ) {
+          this.esper.photo?.sync(this.props, this.state)
+        }
+      }
     }
   }
 
