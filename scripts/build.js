@@ -4,7 +4,7 @@
 const { say, error } = require('./util')('Σ')
 const legal = require('./legal')
 const {
-  copyFile, mkdir, readdir, readFile, rename, writeFile
+  copyFile, mkdir, readdir, readFile, unlink, writeFile
 } = require('fs').promises
 const { mv } = require('shelljs')
 const { program } = require('commander')
@@ -31,6 +31,8 @@ const PLATFORM =
   process.env.npm_config_target_platform ||
   process.env.npm_config_platform ||
   process.platform
+
+const ELECTRON = join(ROOT, 'node_modules', 'electron', 'dist')
 
 
 program
@@ -71,9 +73,6 @@ program
 
       let [dest] = await packager(opts)
 
-      say('compiling LICENSE and third-party notices')
-      await addLicense(dest)
-
       switch (opts.platform) {
         case 'linux': {
           let resources = join(dest, 'resources')
@@ -93,16 +92,13 @@ program
           say('copy INSTALL instructions')
           await copyFile(`${ROOT}/res/INSTALL`, `${dest}/INSTALL`)
 
-          break
-        }
-        case 'darwin': {
-          let resources = join(
-            dest,
-            `${qualified.product}.app/Contents/Resources`)
+          await copyLicense(dest)
 
-          await mv(`${dest}/LICENSE*`, resources)
           break
         }
+        case 'win32':
+          await copyLicense(dest)
+          break
       }
 
       say(`saved as "./${relative(ROOT, dest)}"`)
@@ -121,7 +117,8 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
     '/lib{,/**/*}',
     '/res{,/{menu,shaders,cursors,images,keymaps,strings,views,workers}{,/**/*}}',
     '/res/icons{,/{about,colors,cover,project,wizard,window}{,/**/*}}',
-    '/package.json'
+    '/package.json',
+    '/LICENSE'
   ]
 
   const EXCLUDE = [
@@ -174,7 +171,8 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
     ignore,
     junk: true,
     afterCopy: [
-      addExtraMetadata
+      addExtraMetadata,
+      addLicense
     ],
     appVersion: version,
     appBundleId: 'org.tropy.tropy',
@@ -194,7 +192,8 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
       unpack: `**/{${[
         'lib/{node,vendor}/**/*',
         'res/{icons,keymaps,views}/**/*',
-        'package.json'
+        'package.json',
+        'LICENSE*'
       ].join(',')}}`
     }
   }
@@ -219,6 +218,26 @@ async function addExtraMetadata(buildPath, v, platform, arch, done) {
   await writeFile(join(buildPath, 'package.json'), JSON.stringify(pkg, null, 2))
 
   done()
+}
+
+async function addLicense(buildPath, v, platform, arch, done) {
+  say('compiling LICENSE and third-party notices')
+
+  await copyFile(
+    join(ELECTRON, 'LICENSES.chromium.html'),
+    join(buildPath, 'LICENSE.chromium.html'))
+
+  let deps = await legal.loadDependencies()
+  let licenses = legal.compileThirdPartyNotices(deps, { format: 'txt' })
+  await writeFile(join(buildPath, 'LICENSE.third-party.txt'), licenses)
+
+  done()
+}
+
+async function copyLicense(dest) {
+  say('copy LICENSE')
+  await copyFile(`${ROOT}/LICENSE`, `${dest}/LICENSE`)
+  await unlink(`${dest}/LICENSES.chromium.html`)
 }
 
 
@@ -250,18 +269,6 @@ function mergeMacSigningOptions(opts, args) {
   } else {
     say('skipped code-signing')
   }
-}
-
-async function addLicense(dest) {
-  await copyFile(join(ROOT, 'LICENSE'), join(dest, 'LICENSE'))
-
-  await rename(
-    join(dest, 'LICENSES.chromium.html'),
-    join(dest, 'LICENSE.chromium.html'))
-
-  let deps = await legal.loadDependencies()
-  let licenses = legal.compileThirdPartyNotices(deps, { format: 'txt' })
-  await writeFile(join(dest, 'LICENSE.third-party.txt'), licenses)
 }
 
 async function copyIcons(dst, theme = 'hicolor') {
