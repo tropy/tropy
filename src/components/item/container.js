@@ -111,6 +111,7 @@ class Item extends React.PureComponent {
             tool={this.props.esper.tool}
             onContextMenu={this.handleContextMenu}
             onChange={this.handleEsperChange}
+            onPhotoConsolidate={this.props.onPhotoConsolidate}
             onPhotoError={this.props.onPhotoError}
             onSelect={this.props.onPhotoSelect}
             onSelectionCreate={this.props.onSelectionCreate}/>
@@ -151,6 +152,7 @@ class Item extends React.PureComponent {
     onEsperChange: func.isRequired,
     onNoteChange: func.isRequired,
     onNoteCommit: func.isRequired,
+    onPhotoConsolidate: func.isRequired,
     onPhotoCreate: func.isRequired,
     onPhotoError: func.isRequired,
     onPhotoSave: func.isRequired,

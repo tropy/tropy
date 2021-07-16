@@ -63,6 +63,14 @@ export class PhotoIterable extends React.PureComponent {
     this.props.onExpand(this.props.photo)
   }
 
+  handleConsolidate = (event) => {
+    event?.stopPropagation()
+
+    this.props.onConsolidate([this.props.photo.id], {
+      force: true, prompt: true
+    })
+  }
+
   handleContextMenu = (event) => {
     this.select()
     this.props.onContextMenu(
@@ -199,6 +207,7 @@ export class PhotoIterable extends React.PureComponent {
     connectDropTarget: func.isRequired,
     connectDragPreview: func.isRequired,
     getAdjacent: func.isRequired,
+    onConsolidate: func.isRequired,
     onContextMenu: func.isRequired,
     onContract: func.isRequired,
     onDropPhoto: func.isRequired,

@@ -5,6 +5,7 @@ import throttle from 'lodash.throttle'
 import Esper from '../../esper'
 import { EsperToolbar } from './toolbar'
 import { EsperPanel } from './panel'
+import { EsperPhotoError } from './error'
 import { pick, restrict } from '../../common/util'
 import { Cache } from '../../common/cache'
 import { isHorizontal, rotate, round } from '../../common/math'
@@ -57,6 +58,7 @@ export class EsperContainer extends React.Component {
   state = {
     dppx: Esper.devicePixelRatio,
     isTextureReady: false,
+    isPhotoBroken: false,
     isVisible: false,
     quicktool: null,
 
@@ -248,6 +250,7 @@ export class EsperContainer extends React.Component {
   get isDisabled() {
     return this.props.isDisabled ||
       !this.state.isVisible ||
+      this.state.isPhotoBroken ||
       this.props.photo?.pending === true
   }
 
@@ -454,7 +457,10 @@ export class EsperContainer extends React.Component {
   }
 
   handleTextureChange = (isTextureReady) => {
-    this.setState({ isTextureReady })
+    this.setState({
+      isTextureReady,
+      isPhotoBroken: false
+    })
   }
 
   handleKeyDown = (event) => {
@@ -575,8 +581,18 @@ export class EsperContainer extends React.Component {
   }
 
   handlePhotoError = (photo) => {
+    this.setState({
+      isPhotoBroken: true
+    })
+
     if (!photo.broken)
       this.props.onPhotoError(photo.id)
+  }
+
+  handlePhotoConsolidate = () => {
+    this.props.onPhotoConsolidate([this.props.photo.id], {
+      force: true, prompt: true
+    })
   }
 
   handleSlideIn = () => {
@@ -691,6 +707,10 @@ export class EsperContainer extends React.Component {
         </header>
         <div className="esper-view-container">
           <div className="esper-view" ref={this.view}/>
+          {
+            this.state.isPhotoBroken &&
+              <EsperPhotoError onConsolidate={this.handlePhotoConsolidate}/>
+          }
           <EsperPanel
             brightness={this.state.brightness}
             contrast={this.state.contrast}
@@ -721,6 +741,7 @@ export class EsperContainer extends React.Component {
     mode: string.isRequired,
     onContextMenu: func.isRequired,
     onChange: func.isRequired,
+    onPhotoConsolidate: func.isRequired,
     onPhotoError: func.isRequired,
     onSelect: func.isRequired,
     onSelectionCreate: func.isRequired,

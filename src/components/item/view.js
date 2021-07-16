@@ -208,6 +208,7 @@ export class ItemView extends React.PureComponent {
           onContextMenu={this.props.onContextMenu}
           onNoteChange={this.handleNoteChange}
           onNoteCommit={this.handleNoteCommit}
+          onPhotoConsolidate={this.props.onPhotoConsolidate}
           onPhotoCreate={this.props.onPhotoCreate}
           onPhotoError={this.props.onPhotoError}
           onPhotoSave={this.props.onPhotoSave}
@@ -244,6 +245,7 @@ export class ItemView extends React.PureComponent {
     onNoteDelete: func.isRequired,
     onNoteSave: func.isRequired,
     onNoteSelect: func.isRequired,
+    onPhotoConsolidate: func.isRequired,
     onPhotoCreate: func.isRequired,
     onPhotoError: func.isRequired,
     onPhotoSave: func.isRequired,

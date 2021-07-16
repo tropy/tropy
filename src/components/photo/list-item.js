@@ -143,7 +143,11 @@ class PhotoListItem extends PhotoIterable {
               onChange={this.handleChange}/>
           </div>
           <div className="icon-container">
-            {photo.broken && <IconWarning/>}
+            {photo.broken &&
+              <Button
+                icon={<IconWarning/>}
+                title="photo.consolidate"
+                onClick={this.handleConsolidate}/>}
             {isExpandable && <IconSelection/>}
           </div>
         </div>

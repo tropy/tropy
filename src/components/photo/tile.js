@@ -20,7 +20,9 @@ class PhotoTile extends PhotoIterable {
     }
   })
 
-  handleExpansionToggle= () => {
+  handleExpansionToggle = (event) => {
+    event?.stopPropagation()
+
     if (this.props.isExpanded) {
       this.props.onContract(this.props.photo)
     } else {
@@ -38,7 +40,11 @@ class PhotoTile extends PhotoIterable {
             onClick: this.handleClick,
             onContextMenu: this.handleContextMenu
           })}
-          {this.props.photo.broken && <IconWarningOverlay/>}
+          {this.props.photo.broken &&
+            <Button
+              icon={<IconWarningOverlay/>}
+              title="photo.consolidate"
+              onClick={this.handleConsolidate}/>}
           {this.props.isExpandable &&
             <Button
               icon={<IconSelectionOverlay/>}

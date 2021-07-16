@@ -361,6 +361,7 @@ class Project extends React.Component {
 
     onContextMenu: func.isRequired,
     onItemImport: func.isRequired,
+    onPhotoConsolidate: func.isRequired,
     onPhotoError: func.isRequired,
     onProjectCreate: func.isRequired,
     onProjectOpen: func.isRequired,
@@ -531,6 +532,10 @@ export const ProjectContainer = connect(
 
     onPhotoMove(...args) {
       dispatch(act.photo.move(...args))
+    },
+
+    onPhotoConsolidate(...args) {
+      dispatch(act.photo.consolidate(...args))
     },
 
     onPhotoError(...args) {

@@ -254,6 +254,8 @@ en:
     type: Type
     created: Date Added
     modified: Modified
+    consolidate: Consolidate Photo
+    error: Photo not found
   selection:
     size: Size
     created: Date Added

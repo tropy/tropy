@@ -378,7 +378,10 @@ export class Tropy extends EventEmitter {
 
     this.on('app:consolidate-item', (win, { target }) =>
       this.dispatch(
-        act.photo.consolidate(target.photos, { force: true }),
+        act.photo.consolidate(target.photos, {
+          force: true,
+          prompt: target.photos.length === 1
+        }),
         win))
 
     this.on('app:merge-item', (win, { target }) =>

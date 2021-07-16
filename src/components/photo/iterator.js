@@ -257,6 +257,7 @@ export class PhotoIterator extends Iterator {
       onContextMenu: this.props.onContextMenu,
       onContract: this.contract,
       onDropPhoto: this.handleDropPhoto,
+      onConsolidate: this.props.onConsolidate,
       onError: this.props.onError,
       onExpand: this.expand,
       onItemOpen: this.handleItemOpen,
@@ -314,6 +315,7 @@ export class PhotoIterator extends Iterator {
     connectDropTarget: func.isRequired,
 
     onBlur: func.isRequired,
+    onConsolidate: func.isRequired,
     onContract: func.isRequired,
     onContextMenu: func.isRequired,
     onCreate: func.isRequired,
