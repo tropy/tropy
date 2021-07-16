@@ -87,7 +87,7 @@ export class Asset {
       pathToFileURL(this.path)
   }
 
-  async check({ fastCheck = false, checksum, mtime }, ...args) {
+  async check({ fastCheck = false, checksum, mtime, ...opts }, ...args) {
     try {
       this.hasChanged = false
       this.error = null
@@ -98,7 +98,7 @@ export class Asset {
           return this
       }
 
-      await this.open(...args)
+      await this.open(opts, ...args)
       this.hasChanged = checksum !== this.checksum
 
     } catch (e) {
