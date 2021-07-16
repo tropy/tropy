@@ -22,7 +22,7 @@ function search(locale = ARGS.locale) {
   return search[locale]
 }
 
-export function match(string, term, at = /^\p{Alpha}/gmu) {
+export function match(string, term, at = /^(\p{Alpha}|\d)/gmu) {
   let cmp = search().compare
   let m
 
