@@ -6,7 +6,6 @@ const legal = require('./legal')
 const {
   copyFile, mkdir, readdir, readFile, unlink, writeFile
 } = require('fs').promises
-const { mv } = require('shelljs')
 const { program } = require('commander')
 const packager = require('electron-packager')
 const minimatch = require('minimatch')
