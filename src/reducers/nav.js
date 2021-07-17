@@ -1,5 +1,5 @@
 import { isSelected, select } from '../selection'
-import { merge, insert, splice } from '../common/util'
+import { merge, insert, omit, splice } from '../common/util'
 import { dc } from '../ontology'
 
 import {
@@ -41,7 +41,7 @@ const init = {
 export function nav(state = init, { type, payload, meta, error }) {
   switch (type) {
     case NAV.RESTORE:
-      return merge(init, payload)
+      return merge(init, omit(payload, ['query', 'tags']))
     case NAV.UPDATE:
       return { ...state, ...payload }
 
