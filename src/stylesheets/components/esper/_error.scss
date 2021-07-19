@@ -14,7 +14,7 @@
     display: none;
   }
 
-  .overlay-mode & {
+  .panel-visible.overlay-mode & {
     padding-top: $toolbar-height;
   }
 
