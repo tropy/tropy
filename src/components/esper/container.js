@@ -59,6 +59,7 @@ export class EsperContainer extends React.Component {
     dppx: Esper.devicePixelRatio,
     isTextureMissing: false,
     isTextureReady: false,
+    isCompact: false,
     isVisible: false,
     quicktool: null,
 
@@ -620,6 +621,8 @@ export class EsperContainer extends React.Component {
       mirror: this.state.mirror
     })
 
+    next.isCompact = width < 200 || height < 200
+
     this.setState(next)
   }, 50)
 
@@ -672,6 +675,7 @@ export class EsperContainer extends React.Component {
     return (
       <section
         className={cx('esper', this.tool, {
+          'compact': this.state.isCompact,
           'disabled': isDisabled,
           'read-only': this.props.isReadOnly,
           'texture-missing': this.state.isTextureMissing,
