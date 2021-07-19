@@ -57,8 +57,8 @@ export class EsperContainer extends React.Component {
 
   state = {
     dppx: Esper.devicePixelRatio,
+    isTextureMissing: false,
     isTextureReady: false,
-    isPhotoBroken: false,
     isVisible: false,
     quicktool: null,
 
@@ -250,7 +250,7 @@ export class EsperContainer extends React.Component {
   get isDisabled() {
     return this.props.isDisabled ||
       !this.state.isVisible ||
-      this.state.isPhotoBroken ||
+      this.state.isTextureMissing ||
       this.props.photo?.pending === true
   }
 
@@ -459,7 +459,7 @@ export class EsperContainer extends React.Component {
   handleTextureChange = (isTextureReady) => {
     this.setState({
       isTextureReady,
-      isPhotoBroken: false
+      isTextureMissing: false
     })
   }
 
@@ -582,7 +582,7 @@ export class EsperContainer extends React.Component {
 
   handlePhotoError = (photo) => {
     this.setState({
-      isPhotoBroken: true
+      isTextureMissing: true
     })
 
     if (!photo.broken)
@@ -674,7 +674,7 @@ export class EsperContainer extends React.Component {
         className={cx('esper', this.tool, {
           'disabled': isDisabled,
           'read-only': this.props.isReadOnly,
-          'texture-ready': this.state.isTextureReady,
+          'texture-missing': this.state.isTextureMissing,
           'overlay-mode': this.props.hasOverlayToolbar,
           'panel-visible': this.props.isPanelVisible
         })}
@@ -708,7 +708,7 @@ export class EsperContainer extends React.Component {
         <div className="esper-view-container">
           <div className="esper-view" ref={this.view}/>
           {
-            this.state.isPhotoBroken &&
+            this.state.isTextureMissing &&
               <EsperPhotoError onConsolidate={this.handlePhotoConsolidate}/>
           }
           <EsperPanel
