@@ -107,6 +107,7 @@ class PhotoListItem extends PhotoIterable {
     return this.props.isExpandable && (
       <Button
         icon={<IconChevron9/>}
+        className="disclosure"
         onClick={this.handleTwistyButtonClick}/>
     )
   }

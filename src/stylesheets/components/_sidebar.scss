@@ -72,12 +72,6 @@
   .btn-icon {
     padding: 0;
     margin-left: -$space-md;
-
-    &:active {
-      .icon {
-        color: $icon-color; // Prevent :active state color
-      }
-    }
   }
 
   .icon {

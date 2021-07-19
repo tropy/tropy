@@ -7,7 +7,7 @@
   background: $list-active-bg;
 
   .icon {
-    color: $list-active-icon-color;
+    color: $list-active-icon-color !important;
   }
 }
 
@@ -16,6 +16,6 @@
   background: $list-focus-bg;
 
   .icon {
-    color: $list-focus-color;
+    color: $list-focus-color !important;
   }
 }

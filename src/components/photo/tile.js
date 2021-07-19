@@ -43,6 +43,7 @@ class PhotoTile extends PhotoIterable {
           {this.props.photo.broken &&
             <Button
               icon={<IconWarningOverlay/>}
+              className="warning"
               title="photo.consolidate"
               onClick={this.handleConsolidate}/>}
           {this.props.isExpandable &&

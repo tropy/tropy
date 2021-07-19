@@ -81,4 +81,8 @@
   > *:not(:first-child) {
     margin-left: $space-min;
   }
+
+  .btn-icon {
+    padding: 0;
+  }
 }
