@@ -106,28 +106,19 @@
     }
   }
 
-  .esper-error {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  &:not(.overlay-mode) {
+    .btn-default {
+      background-color: $esper-btn-default-bg;
+      border-color: $esper-btn-default-border;
 
-    .stacked & {
-      @include state(".esper.panel-visible") {
-        right: $esper-panel-width;
+      &:active {
+        background-color: $esper-btn-default-active-bg;
       }
-    }
 
-    .side-by-side & {
-      @include state(".esper.panel-visible") {
-        bottom: $esper-panel-height;
+      &.disabled,
+      &[disabled] {
+        background-color: $esper-btn-default-bg;
       }
-    }
-
-    @include state(".esper.compact") {
-      display: none;
     }
   }
 }

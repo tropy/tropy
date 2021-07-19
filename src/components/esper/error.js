@@ -6,8 +6,9 @@ import { func } from 'prop-types'
 export const EsperPhotoError = (props) => (
   <div className="esper-error">
     <IconWarningLarge/>
-    <FormattedMessage id="photo.error"/>
+    <p><FormattedMessage id="photo.error"/></p>
     <Button
+      isDefault
       text="photo.consolidate"
       onClick={props.onConsolidate}/>
   </div>

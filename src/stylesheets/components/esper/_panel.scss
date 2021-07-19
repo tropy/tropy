@@ -136,19 +136,5 @@
         }
       }
     }
-
-    .btn-default {
-      background-color: $esper-btn-default-bg;
-      border-color: $esper-btn-default-border;
-
-      &:active {
-        background-color: $esper-btn-default-active-bg;
-      }
-
-      &.disabled,
-      &[disabled] {
-        background-color: $esper-btn-default-bg;
-      }
-    }
   }
 }
