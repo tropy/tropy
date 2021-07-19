@@ -14,6 +14,10 @@
     display: none;
   }
 
+  .overlay-mode & {
+    padding-top: $toolbar-height;
+  }
+
   .panel-visible & {
     .stacked & {
       right: $esper-panel-width;

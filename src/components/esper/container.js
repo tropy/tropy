@@ -621,7 +621,7 @@ export class EsperContainer extends React.Component {
       mirror: this.state.mirror
     })
 
-    next.isCompact = width < 200 || height < 200
+    next.isCompact = width < 240 || height < 240
 
     this.setState(next)
   }, 50)
