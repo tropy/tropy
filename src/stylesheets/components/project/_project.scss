@@ -180,7 +180,7 @@ html {
   z-index: $zindex-item;
 
   .max-scroll-left + & {
-    height: $toolbar-height;
+    height: $toolbar-height + $item-table-header-height;
   }
 
   .item-grid + &,
