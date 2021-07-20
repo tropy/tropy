@@ -61,6 +61,8 @@
     font-size: $font-size-base;
     margin-top: 4px;
     margin-bottom: 19px;
+    cursor: text;
+    user-select: text;
   }
 
   .links {
