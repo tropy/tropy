@@ -132,7 +132,7 @@ class Cache {
 
     let url = pathToFileURL(path)
 
-    if (photo.consolidated) {
+    if (!photo.broken && photo.consolidated) {
       url.search = `c=${photo.consolidated}`
     }
 
