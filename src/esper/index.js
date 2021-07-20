@@ -4,7 +4,7 @@ import TWEEN from '@tweenjs/tween.js'
 import debounce from 'lodash.debounce'
 import ARGS from '../args'
 import { append, createDragHandler, on, off } from '../dom'
-import { error, info, warn } from '../common/log'
+import { debug, error, info, warn } from '../common/log'
 import { isClockwise, isHorizontal, deg, rad } from '../common/math'
 import { delay, restrict } from '../common/util'
 import { Photo } from './photo'
@@ -261,11 +261,11 @@ export default class Esper extends EventEmitter {
       loadTime > duration ||
       texture.width * texture.height > LARGE_TEXTURE
     )) {
-      info(`delaying texture load by ${duration}ms`)
+      debug(`delaying texture load by ${duration}ms`)
       await delay(duration)
     }
 
-    info(`loadTexture took ${loadTime}ms`)
+    debug(`loadTexture took ${loadTime}ms`)
 
     return texture
   }
