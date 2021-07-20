@@ -215,14 +215,18 @@ export default class Esper extends EventEmitter {
 
         // Subtle: if the view was reset during load, abort!
         if (this.photo !== tmp) return
-        this.emit('texture-change', true)
 
         this.photo.bg.texture = texture
+        this.emit('texture-change', true)
 
         this.photo.interactive = true
         this.photo.on('mousedown', this.handleMouseDown)
 
         this.clearTextureCache(state.src, 5)
+
+        if (state.width !== texture.width || state.height !== texture.height)
+          this.emit('photo.error', props.photo)
+
 
       } catch (e) {
         warn({ stack: e.stack }, `esper: failed loading ${state.src}`)

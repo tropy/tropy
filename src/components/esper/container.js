@@ -582,10 +582,6 @@ export class EsperContainer extends React.Component {
   }
 
   handlePhotoError = (photo) => {
-    this.setState({
-      isTextureMissing: true
-    })
-
     if (!photo.broken)
       this.props.onPhotoError(photo.id)
   }
