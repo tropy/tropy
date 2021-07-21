@@ -41,7 +41,7 @@ const init = {
 export function nav(state = init, { type, payload, meta, error }) {
   switch (type) {
     case NAV.RESTORE:
-      return merge(init, omit(payload, ['query', 'tags']))
+      return merge(init, omit(payload || {}, ['query', 'tags']))
     case NAV.UPDATE:
       return { ...state, ...payload }
 
