@@ -95,7 +95,7 @@ export class AccordionGroup extends Component {
   }
 
   get classes() {
-    return ['panel-group', 'accordion']
+    return ['panel-group', 'accordion', this.props.className]
   }
 
   isActive(id = this.state.active) {
