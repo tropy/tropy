@@ -1,7 +1,7 @@
 import React from 'react'
 import { ItemIterator } from './iterator'
 import { ItemTile } from './tile'
-import { ScrollContainer } from '../scroll'
+import { Runway, ScrollContainer, Viewport } from '../scroll'
 import { refine } from '../../common/util'
 import cx from 'classnames'
 import { match, isMeta } from '../../keymap'
@@ -58,7 +58,6 @@ export class ItemGrid extends ItemIterator {
 
     const { cols, height } = this.state
     const { transform } = this
-    const gridTemplateColumns = `repeat(${cols}, ${cols}fr)`
 
     return this.connect(
       <div
@@ -70,15 +69,16 @@ export class ItemGrid extends ItemIterator {
           ref={this.setContainer}
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
-          <div className="runway" style={{ height }}>
-            <ul
-              className="viewport click-catcher"
-              style={{ gridTemplateColumns, transform }}>
+          <Runway height={height}>
+            <Viewport
+              className="click-catcher"
+              columns={cols}
+              transform={transform}>
               {this.mapIterableRange(({ item, ...props }) =>
                 <ItemTile {...props} key={item.id} item={item}/>
               )}
-            </ul>
-          </div>
+            </Viewport>
+          </Runway>
         </ScrollContainer>
       </div>
     )
