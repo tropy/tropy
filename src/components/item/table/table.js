@@ -337,7 +337,7 @@ export class ItemTable extends ItemIterator {
             className="click-catcher"
             height={height}
             width={this.state.minWidth}>
-            <Viewport transform={transform}>
+            <Viewport tag="div" transform={transform}>
               {this.mapIterableRange(({ item, index, ...props }) =>
                 <TableRow {...props}
                   key={item.id}
