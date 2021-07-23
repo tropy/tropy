@@ -495,7 +495,7 @@ export class Iterator extends React.PureComponent {
   }
 
   static defaultProps = {
-    overscan: 2,
+    overscan: 1.25,
     restrict: 'bounds'
   }
 }

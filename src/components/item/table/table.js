@@ -1,5 +1,6 @@
 import React from 'react'
 import { arrayOf, bool, func, number, object, shape } from 'prop-types'
+import { Runway, ScrollContainer, Viewport } from '../../scroll'
 import { ItemIterator } from '../iterator'
 import { TableRow } from './row'
 import { TableHead } from './head'
@@ -328,13 +329,15 @@ export class ItemTable extends ItemIterator {
       <div
         className={cx(this.classes)}
         onClick={this.handleClickOutside}>
-        <div
-          className="scroll-container"
+        <ScrollContainer
           ref={this.setContainer}
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
-          <div className="runway click-catcher" style={{ height }}>
-            <div className="viewport" style={{ transform }}>
+          <Runway
+            className="click-catcher"
+            height={height}
+            width={this.state.minWidth}>
+            <Viewport transform={transform}>
               {this.mapIterableRange(({ item, index, ...props }) =>
                 <TableRow {...props}
                   key={item.id}
@@ -350,9 +353,9 @@ export class ItemTable extends ItemIterator {
                   onCancel={this.handleEditCancel}
                   onChange={this.handleChange}
                   onEdit={onEdit}/>)}
-            </div>
-          </div>
-        </div>
+            </Viewport>
+          </Runway>
+        </ScrollContainer>
       </div>
     )
   }
@@ -425,7 +428,7 @@ export class ItemTable extends ItemIterator {
 
   static defaultProps = {
     ...ItemIterator.defaultProps,
-    overscan: 2,
+    overscan: 1.25,
     minColWidth: 40,
     minMainColWidth: 100
   }
