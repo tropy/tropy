@@ -170,23 +170,24 @@ export class Plugins extends EventEmitter {
   }
 
   async import(name) {
+    let res
+
     try {
       let mod = join(this.root, name)
-      return {
-        ...require(mod),
-        source: 'local'
-      }
+
+      res = require(mod)
+      res.source = 'local'
 
     } catch (e) {
       if (e.code !== 'MODULE_NOT_FOUND')
         throw e
 
       let mod = join(this.root, 'node_modules', name)
-      return {
-        ...require(mod),
-        source: 'npm'
-      }
+      res = require(mod)
+      res.source = 'npm'
     }
+
+    return res
   }
 
   reset() {
