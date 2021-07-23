@@ -1,6 +1,7 @@
 import React from 'react'
 import { ItemIterator } from './iterator'
 import { ItemTile } from './tile'
+import { ScrollContainer } from '../scroll'
 import { refine } from '../../common/util'
 import cx from 'classnames'
 import { match, isMeta } from '../../keymap'
@@ -64,8 +65,8 @@ export class ItemGrid extends ItemIterator {
         className={cx(this.classes)}
         data-size={this.props.size}
         onClick={this.handleClickOutside}>
-        <div
-          className="scroll-container click-catcher"
+        <ScrollContainer
+          className="click-catcher"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
@@ -78,7 +79,7 @@ export class ItemGrid extends ItemIterator {
               )}
             </ul>
           </div>
-        </div>
+        </ScrollContainer>
       </div>
     )
   }
