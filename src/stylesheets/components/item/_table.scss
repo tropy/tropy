@@ -36,11 +36,6 @@
     }
   }
 
-  .table-head,
-  .runway {
-    min-width: var(--item-min-width);
-  }
-
   .table-head {
     display: grid;
     grid-template-columns: var(--item-template-columns);
@@ -51,9 +46,11 @@
       bottom: 1px solid $item-table-header-border-color;
     }
     overflow: hidden;
+    min-width: var(--item-min-width);
 
     .scrollbar-style-old-school & {
       width: calc(100% - #{$default-padding-horizontal});
+      min-width: calc(var(--item-min-width) + #{$scrollbar-size});
     }
 
     @include state(".item-table.dragging-column") {
@@ -236,6 +233,7 @@
 
   .runway {
     contain: strict;
+    min-width: var(--item-min-width);
     min-height: 100%; // Needs some flex row parent to work
   }
 
