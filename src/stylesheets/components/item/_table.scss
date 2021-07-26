@@ -47,6 +47,9 @@
     }
     overflow: hidden;
     min-width: var(--item-min-width);
+    transform: translateX(var(--offset-x));
+    position: relative;
+    z-index: 1; // Fix dragging state with translateX
 
     .scrollbar-style-old-school & {
       width: calc(100% - #{$default-padding-horizontal});
