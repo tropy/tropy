@@ -8,7 +8,7 @@
   // Flexbox plus contain: strict (layout) also breaks the header width after column resize/order
   position: relative;
   height: 100%; // Prevent vertical scrollbar due to horizontal scrollbar
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: hidden; // Prevent horizontal scrollbar due to column borders
   overscroll-behavior: contain;
   contain: strict;
