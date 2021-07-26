@@ -113,7 +113,6 @@ class ProjectView extends React.Component {
               onCreate={onItemCreate}
               onSelect={onItemSelect}
               onSort={this.handleSort}/>
-            <div className="fake-gap"/>
           </section>
         </div>
       </div>
