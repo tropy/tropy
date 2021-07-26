@@ -125,14 +125,6 @@ export function bounds(node) {
   return node.getBoundingClientRect()
 }
 
-export function scrollLeftMax(node) {
-  return node.scrollWidth - node.clientWidth
-}
-
-export function maxScrollLeft(node) {
-  return node.scrollLeft >= scrollLeftMax(node)
-}
-
 export function style(node) {
   return getComputedStyle(node)
 }

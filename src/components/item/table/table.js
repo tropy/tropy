@@ -7,9 +7,8 @@ import { TableHead } from './head'
 import { ColumnContextMenu } from '../column'
 import cx from 'classnames'
 import { noop } from '../../../common/util'
-import { bounds, ensure, on, off, maxScrollLeft } from '../../../dom'
+import { bounds, ensure } from '../../../dom'
 import { match } from '../../../keymap'
-import throttle from 'lodash.throttle'
 import { refine, restrict, shallow, splice, warp } from '../../../common/util'
 
 import {
@@ -17,7 +16,7 @@ import {
   SASS
 } from '../../../constants'
 
-const { COLUMN, ROW, SCROLLBAR } = SASS
+const { COLUMN, ROW } = SASS
 const any = (src) => { for (let key in src) return key }
 
 export class ItemTable extends ItemIterator {
@@ -43,15 +42,6 @@ export class ItemTable extends ItemIterator {
     })
   }
 
-  componentWillUnmount() {
-    super.componentWillUnmount()
-    if (this.table) {
-      off(this.table, 'scroll', this.handleHorizontalScroll, {
-        capture: true, passive: true
-      })
-    }
-  }
-
   componentDidUpdate(...args) {
     super.componentDidUpdate(...args)
     if (this.props.edit != null) {
@@ -62,10 +52,7 @@ export class ItemTable extends ItemIterator {
   UNSAFE_componentWillReceiveProps(props, ...args) {
     super.UNSAFE_componentWillReceiveProps(props, ...args)
     if (!shallow(this.props, props, ['columns', 'list'])) {
-      this.setState({
-        ...this.getColumnState(props),
-        hasMaxScrollLeft: this.hasMaxScrollLeft()
-      })
+      this.setState(this.getColumnState(props))
     }
   }
 
@@ -74,13 +61,6 @@ export class ItemTable extends ItemIterator {
       'drop-target': !this.props.isReadOnly,
       'over': this.props.isOver
     }]
-  }
-
-  getStateFromProps(props = this.props) {
-    return {
-      ...super.getStateFromProps(props),
-      hasMaxScrollLeft: this.hasMaxScrollLeft()
-    }
   }
 
   getColumnState(props = this.props) {
@@ -105,8 +85,7 @@ export class ItemTable extends ItemIterator {
   }
 
   getMaxColumnOffset(idx) {
-    let max = this.state.minWidth - this.state.colwidth[idx]
-    return (this.props.hasScrollbars) ? max - SCROLLBAR.WIDTH : max
+    return this.state.minWidth - this.state.colwidth[idx]
   }
 
   getMinColumnOffset() {
@@ -142,12 +121,6 @@ export class ItemTable extends ItemIterator {
     for (let width of this.state.colwidth)
       gtc += width + 'px '
     return gtc + 'auto'
-  }
-
-  hasMaxScrollLeft(props = this.props) {
-    return props.hasScrollbars &&
-      this.table != null &&
-      maxScrollLeft(this.table)
   }
 
   edit(item) {
@@ -245,12 +218,6 @@ export class ItemTable extends ItemIterator {
     }
   }
 
-  handleHorizontalScroll = throttle(() => {
-    this.setState({
-      hasMaxScrollLeft: this.hasMaxScrollLeft()
-    })
-  }, 25)
-
   showColumnContextMenu = (event) => {
     event.stopPropagation()
 
@@ -297,19 +264,7 @@ export class ItemTable extends ItemIterator {
   }
 
   setTable = (table) => {
-    if (this.table) {
-      off(this.table, 'scroll', this.handleHorizontalScroll, {
-        capture: true, passive: true
-      })
-    }
-
     this.table = table
-
-    if (this.table) {
-      on(this.table, 'scroll', this.handleHorizontalScroll, {
-        capture: true, passive: true
-      })
-    }
   }
 
   renderTableBody() {
@@ -368,8 +323,7 @@ export class ItemTable extends ItemIterator {
       <div
         ref={this.setTable}
         className={cx('item-table', {
-          'dragging-column': this.state.drop != null,
-          'max-scroll-left': this.state.hasMaxScrollLeft
+          'dragging-column': this.state.drop != null
         })}
         style={{
           '--item-min-width': this.state.minWidth + 'px',
