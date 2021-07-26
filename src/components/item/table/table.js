@@ -260,9 +260,9 @@ export class ItemTable extends ItemIterator {
   }
 
   handleNativeScroll = (event) => {
-    if (this.table) {
-      this.table.firstElementChild.scrollLeft = event.target.scrollLeft
-    }
+    this.table?.firstElementChild.style.setProperty(
+      'transform',
+      `translateX(-${event.target.scrollLeft}px)`)
   }
 
   setColumnOffset(offset = 0, column = 'drag') {
