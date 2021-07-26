@@ -169,23 +169,3 @@ html {
     }
   }
 }
-
-.fake-gap {
-  position: absolute;
-  width: 4px;
-  top: 0;
-  right: 0;
-  height: 100%;
-  background: $body-bg;
-  z-index: $zindex-item;
-  display: none;
-
-  .max-scroll-left + & {
-    height: $toolbar-height + $item-table-header-height;
-  }
-
-  .item-grid + &,
-  body:not(.scrollbar-style-old-school) & {
-    display: none;
-  }
-}
