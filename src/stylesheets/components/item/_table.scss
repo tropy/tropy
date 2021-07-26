@@ -337,4 +337,19 @@
       }
     }
   }
+
+  &::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: $space-min;
+    height: $line-height-large;
+    background-color: $body-bg;
+    pointer-events: none;
+    z-index: 3;
+
+    .scrollbar-style-old-school & {
+      content: "";
+    }
+  }
 }
