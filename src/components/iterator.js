@@ -397,19 +397,19 @@ export class Iterator extends React.PureComponent {
     this.scroll(offset)
   }
 
-  handleScroll = () => {
+  handleScroll = (event) => {
     if (!this.isScrollUpdateScheduled) {
       this.isScrollUpdateScheduled = true
 
       requestAnimationFrame(() => {
-        this.handleScrollUpdate()
+        this.setState({ offset: this.getOffset() })
         this.isScrollUpdateScheduled = false
       })
     }
+    this.handleNativeScroll(event)
   }
 
-  handleScrollUpdate() {
-    this.setState({ offset: this.getOffset() })
+  handleNativeScroll() {
   }
 
   handleResize = throttle((rect) => {
