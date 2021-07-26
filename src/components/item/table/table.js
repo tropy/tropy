@@ -97,10 +97,6 @@ export class ItemTable extends ItemIterator {
       minWidth += NAV.COLUMN.POSITION.width
     }
 
-    if (this.props.hasScrollbars) {
-      minWidth += SCROLLBAR.WIDTH
-    }
-
     return { columns, colwidth, minWidth }
   }
 
@@ -333,10 +329,7 @@ export class ItemTable extends ItemIterator {
           ref={this.setContainer}
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
-          <Runway
-            className="click-catcher"
-            height={height}
-            width={this.state.minWidth}>
+          <Runway className="click-catcher" height={height}>
             <Viewport tag="div" transform={transform}>
               {this.mapIterableRange(({ item, index, ...props }) =>
                 <TableRow {...props}
