@@ -178,6 +178,7 @@ html {
   height: 100%;
   background: $body-bg;
   z-index: $zindex-item;
+  display: none;
 
   .max-scroll-left + & {
     height: $toolbar-height + $item-table-header-height;
