@@ -402,10 +402,14 @@ export class Iterator extends React.PureComponent {
       this.isScrollUpdateScheduled = true
 
       requestAnimationFrame(() => {
-        this.setState({ offset: this.getOffset() })
+        this.handleScrollUpdate()
         this.isScrollUpdateScheduled = false
       })
     }
+  }
+
+  handleScrollUpdate() {
+    this.setState({ offset: this.getOffset() })
   }
 
   handleResize = throttle((rect) => {

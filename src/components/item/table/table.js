@@ -24,6 +24,7 @@ export class ItemTable extends ItemIterator {
     super(props)
 
     Object.assign(this.state, this.getColumnState(props))
+    this.state.offsetX = 0
 
     refine(this, 'handleKeyDown', ([event]) => {
       if (event.isPropagationStopped()) return
@@ -259,6 +260,13 @@ export class ItemTable extends ItemIterator {
     this.props.onColumnRemove({ id })
   }
 
+  handleScrollUpdate() {
+    this.setState({
+      offset: this.getOffset(),
+      offsetX: this.container?.scrollLeft || 0
+    })
+  }
+
   setColumnOffset(offset = 0, column = 'drag') {
     this.table.style.setProperty(`--${column}-offset`, `${offset}px`)
   }
@@ -327,6 +335,7 @@ export class ItemTable extends ItemIterator {
         })}
         style={{
           '--item-min-width': this.state.minWidth + 'px',
+          '--offset-x': `-${this.state.offsetX}px`,
           '--item-template-columns': this.getTemplateColumns()
         }}>
         <TableHead
