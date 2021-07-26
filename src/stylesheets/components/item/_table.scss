@@ -231,6 +231,7 @@
     z-index: 0; // Fix stacking context (overlay toolbar covered by active item)
     height: 100%; // Prevent vertical scrollbar du to horizontal scrollbar
     overscroll-behavior: auto; // Reset to allow for horizontal scroll gestures on item-table
+    overflow-x: auto;
   }
 
   .runway {
