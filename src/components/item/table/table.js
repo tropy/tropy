@@ -20,6 +20,8 @@ const { COLUMN, ROW } = SASS
 const any = (src) => { for (let key in src) return key }
 
 export class ItemTable extends ItemIterator {
+  headContainer = React.createRef()
+
   constructor(props) {
     super(props)
 
@@ -260,9 +262,7 @@ export class ItemTable extends ItemIterator {
   }
 
   handleNativeScroll = (event) => {
-    this.table?.firstElementChild.style.setProperty(
-      'transform',
-      `translateX(-${event.target.scrollLeft}px)`)
+    this.headContainer.current.scrollLeft = event.target.scrollLeft
   }
 
   setColumnOffset(offset = 0, column = 'drag') {
@@ -335,22 +335,24 @@ export class ItemTable extends ItemIterator {
           '--item-min-width': this.state.minWidth + 'px',
           '--item-template-columns': this.getTemplateColumns()
         }}>
-        <TableHead
-          columns={this.state.columns}
-          colwidth={this.state.colwidth}
-          drag={this.state.drag}
-          drop={this.state.drop}
-          hasPositionColumn={this.hasPositionColumn()}
-          minWidth={this.props.minColWidth}
-          minWidthMain={this.props.minMainColWidth}
-          sort={this.props.sort}
-          onContextMenu={this.showColumnContextMenu}
-          onOrder={this.handleColumnOrder}
-          onOrderReset={this.handleColumnOrderReset}
-          onOrderStart={this.handleColumnOrderStart}
-          onOrderStop={this.handleColumnOrderStop}
-          onResize={this.handleColumnResize}
-          onSort={this.props.onSort}/>
+        <div className="scroll-container-x" ref={this.headContainer}>
+          <TableHead
+            columns={this.state.columns}
+            colwidth={this.state.colwidth}
+            drag={this.state.drag}
+            drop={this.state.drop}
+            hasPositionColumn={this.hasPositionColumn()}
+            minWidth={this.props.minColWidth}
+            minWidthMain={this.props.minMainColWidth}
+            sort={this.props.sort}
+            onContextMenu={this.showColumnContextMenu}
+            onOrder={this.handleColumnOrder}
+            onOrderReset={this.handleColumnOrderReset}
+            onOrderStart={this.handleColumnOrderStart}
+            onOrderStop={this.handleColumnOrderStop}
+            onResize={this.handleColumnResize}
+            onSort={this.props.onSort}/>
+        </div>
         {this.renderTableBody()}
         {this.renderColumnContextMenu()}
       </div>
