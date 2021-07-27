@@ -71,7 +71,8 @@
       padding: 0 $space-min; // Prevent overlap of th-container and resize handle
       position: relative;
       background-color: $item-table-header-bg;
-      contain: layout style; // Not clear why size shifts the content
+      contain: size style; // Layout interferes with resizable-handle-col
+      z-index: auto;
 
       &::before,
       &::after {
