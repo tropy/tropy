@@ -335,7 +335,7 @@ export class ItemTable extends ItemIterator {
           '--item-min-width': this.state.minWidth + 'px',
           '--item-template-columns': this.getTemplateColumns()
         }}>
-        <div className="scroll-container-x" ref={this.headContainer}>
+        <div className="scroll-container" ref={this.headContainer}>
           <TableHead
             columns={this.state.columns}
             colwidth={this.state.colwidth}
