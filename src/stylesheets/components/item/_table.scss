@@ -36,6 +36,14 @@
     }
   }
 
+  > .scroll-container {
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
   .table-head {
     display: grid;
     grid-template-columns: var(--item-template-columns);
@@ -214,24 +222,24 @@
     &.over {
       @extend %drop-target;
     }
-  }
 
-  .scroll-container {
-    background-image:
-      repeating-linear-gradient(
-        to bottom,
-        $items-odd-bg $space-min,
-        $items-odd-bg ($row-height + $space-min),
-        transparent ($row-height + $space-min),
-        transparent (2 * $row-height + $space-min)
-      );
-    background-attachment: local;
-    padding-top: $space-min;
-    position: relative;
-    z-index: 0; // Fix stacking context (overlay toolbar covered by active item)
-    height: 100%; // Prevent vertical scrollbar du to horizontal scrollbar
-    overscroll-behavior: auto; // Reset to allow for horizontal scroll gestures on item-table
-    overflow-x: auto;
+    .scroll-container {
+      background-image:
+        repeating-linear-gradient(
+          to bottom,
+          $items-odd-bg $space-min,
+          $items-odd-bg ($row-height + $space-min),
+          transparent ($row-height + $space-min),
+          transparent (2 * $row-height + $space-min)
+        );
+      background-attachment: local;
+      padding-top: $space-min;
+      position: relative;
+      z-index: 0; // Fix stacking context (overlay toolbar covered by active item)
+      height: 100%; // Prevent vertical scrollbar du to horizontal scrollbar
+      overscroll-behavior: auto; // Reset to allow for horizontal scroll gestures on item-table
+      overflow-x: auto;
+    }
   }
 
   .runway {
