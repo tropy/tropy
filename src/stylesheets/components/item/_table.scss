@@ -37,6 +37,7 @@
   }
 
   > .scroll-container {
+    overflow-y: hidden;
     overflow-x: auto;
 
     &::-webkit-scrollbar {
