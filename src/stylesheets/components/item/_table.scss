@@ -132,31 +132,10 @@
       }
 
       &.dragging {
-        background-image:
-          linear-gradient(
-            to right,
-            $item-table-header-border-color 1px,
-            $item-table-header-bg 1px
-          );
-        box-shadow: 1px 0 $item-table-header-border-color;
-
         &::before,
         &::after {
-          content: "";
-          position: absolute;
-          top: calc(100% + 1px);
-          width: 1px;
-          height: 4000px;
-          background: $item-table-column-border-color;
-        }
-
-        &::before {
-          left: 0;
-        }
-
-        &::after {
-          right: -1px;
-          box-shadow: none;
+          top: 0;
+          bottom: 0;
         }
 
         // Only hide the 2nd column separator in moving state
@@ -245,11 +224,20 @@
     contain: strict;
     min-width: var(--item-min-width);
     min-height: 100%; // Needs some flex row parent to work
+
+    @include state(".item-table.dragging-column") {
+      contain: none; // Needed for dragging lines of first item
+    }
   }
 
   .viewport {
     width: 100%;
     contain: content;
+
+    @include state(".item-table.dragging-column") {
+      min-height: 100%;
+      contain: none; // Needed for dragging lines of first item
+    }
   }
 
   .item {
@@ -270,6 +258,13 @@
       @extend %drop-target;
     }
 
+    &:first-child,
+    &:last-child {
+      @include state(".item-table.dragging-column") {
+        contain: none; // Needed for dragging lines
+      }
+    }
+
     .td {
       display: flex;
       align-items: center;
@@ -285,6 +280,54 @@
         .icon-crescentcircle {
           .border {
             color: $colors-focus-border-table;
+          }
+        }
+      }
+
+      &.dragging {
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          width: 1px;
+          height: $row-height;
+        }
+
+        &::before {
+          left: 0;
+          background-color: $item-table-column-border-color;
+        }
+
+        &::after {
+          right: 0;
+          box-shadow: 1px 0 $item-table-column-border-color;
+        }
+
+        @include variant(".item:first-child") {
+          &::before,
+          &::after {
+            top: -$space-min;
+            height: $row-height + $space-min;
+          }
+        }
+
+        @include variant(".item:last-child") {
+          $shadows: ();
+
+          @for $i from 0 through 133 {
+            $shadow: var(--x) ($row-height * $i) $item-table-column-border-color;
+            $shadows: append($shadows, $shadow, comma);
+          }
+
+          &::before {
+            --x: 0;
+            box-shadow: $shadows;
+          }
+
+          &::after {
+            --x: 1px;
+            box-shadow: $shadows;
           }
         }
       }
