@@ -235,8 +235,7 @@
     contain: content;
 
     @include state(".item-table.dragging-column") {
-      min-height: 100%;
-      contain: none; // Needed for dragging lines of first item
+      contain: none; // Needed for dragging lines
     }
   }
 
