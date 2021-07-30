@@ -135,12 +135,12 @@ export class ItemTable extends ItemIterator {
 
   handleChange = (...args) => {
     this.props.onMetadataSave(...args)
-    this.container.focus()
+    this.container.current.focus()
   }
 
   handleEditCancel = (...args) => {
     this.props.onEditCancel(...args)
-    this.container.focus()
+    this.container.current.focus()
   }
 
   handleColumnOrderStart = (idx, event) => {
@@ -262,7 +262,7 @@ export class ItemTable extends ItemIterator {
   }
 
   handleNativeScroll = (event) => {
-    this.headContainer.current.scrollLeft = event.target.scrollLeft
+    this.headContainer.current.scroll(null, event.target.scrollLeft)
   }
 
   setColumnOffset(offset = 0, column = 'drag') {
@@ -287,9 +287,12 @@ export class ItemTable extends ItemIterator {
         className={cx(this.classes)}
         onClick={this.handleClickOutside}>
         <ScrollContainer
-          ref={this.setContainer}
+          ref={this.container}
           tabIndex={this.tabIndex}
-          onKeyDown={this.handleKeyDown}>
+          onKeyDown={this.handleKeyDown}
+          onResize={this.handleResize}
+          onScroll={this.handleScroll}
+          onTabFocus={this.handleFocus}>
           <Runway className="click-catcher" height={height}>
             <Viewport tag="div" transform={transform}>
               {this.mapIterableRange(({ item, index, ...props }) =>
@@ -335,7 +338,7 @@ export class ItemTable extends ItemIterator {
           '--item-min-width': this.state.minWidth + 'px',
           '--item-template-columns': this.getTemplateColumns()
         }}>
-        <div className="scroll-container" ref={this.headContainer}>
+        <ScrollContainer ref={this.headContainer}>
           <TableHead
             columns={this.state.columns}
             colwidth={this.state.colwidth}
@@ -352,7 +355,7 @@ export class ItemTable extends ItemIterator {
             onOrderStop={this.handleColumnOrderStop}
             onResize={this.handleColumnResize}
             onSort={this.props.onSort}/>
-        </div>
+        </ScrollContainer>
         {this.renderTableBody()}
         {this.renderColumnContextMenu()}
       </div>
