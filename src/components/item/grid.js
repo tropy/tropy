@@ -66,9 +66,12 @@ export class ItemGrid extends ItemIterator {
         onClick={this.handleClickOutside}>
         <ScrollContainer
           className="click-catcher"
-          ref={this.setContainer}
+          ref={this.container}
           tabIndex={this.tabIndex}
-          onKeyDown={this.handleKeyDown}>
+          onKeyDown={this.handleKeyDown}
+          onResize={this.handleResize}
+          onScroll={this.handleScroll}
+          onTabFocus={this.handleFocus}>
           <Runway height={height}>
             <Viewport
               className="click-catcher"

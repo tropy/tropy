@@ -1,16 +1,17 @@
 import React from 'react'
 import { TABS, SASS } from '../constants'
 import { adjacent, restrict } from '../common/util'
-import { has, on, off } from '../dom'
+import { has } from '../dom'
 import { isMeta } from '../keymap'
 import { bool, number, oneOf } from 'prop-types'
-import throttle from 'lodash.throttle'
 
 const EMPTY = []
 const { ceil, floor, max, min, round } = Math
 
 
 export class Iterator extends React.PureComponent {
+  container = React.createRef()
+
   constructor(props) {
     super(props)
     this.viewport = { width: 0, height: 0 }
@@ -18,31 +19,17 @@ export class Iterator extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (this.container != null) {
+    if (this.container.current) {
       this.update(this.props, () => {
-        this.resize(this.bounds)
+        this.handleResize(this.bounds)
         this.scrollIntoView(this.current(), false)
       })
-
-      this.ro = new ResizeObserver(([e]) => {
-        this.handleResize(e.contentRect)
-      })
-
-      this.observe(this.container)
     }
   }
 
   componentDidUpdate(props) {
     if (props.size !== this.props.size) {
       this.scrollIntoView(this.current(), false)
-    }
-  }
-
-  componentWillUnmount() {
-    this.unobserve(this.container)
-    if (this.ro != null) {
-      this.ro.disconnect()
-      this.ro = null
     }
   }
 
@@ -80,50 +67,8 @@ export class Iterator extends React.PureComponent {
     }
   }
 
-  observe(container) {
-    if (container != null) {
-      if (this.handleFocus) {
-        on(container, 'tab:focus', this.handleFocus)
-      }
-
-      if (this.handleScroll) {
-        on(container, 'scroll', this.handleScroll, {
-          capture: true, passive: true
-        })
-      }
-
-      if (this.ro != null) {
-        this.ro.observe(container)
-      }
-    }
-  }
-
-  unobserve(container) {
-    if (container != null) {
-      if (this.handleFocus) {
-        off(container, 'tab:focus', this.handleFocus)
-      }
-
-      if (this.handleScroll) {
-        off(container, 'scroll', this.handleScroll, {
-          capture: true, passive: true
-        })
-      }
-
-      if (this.ro != null) {
-        this.ro.unobserve(container)
-      }
-    }
-  }
-
-  setContainer = (container) => {
-    if (this.container != null) this.unobserve(this.container)
-    this.container = container
-    if (this.ro != null) this.observe(container)
-  }
-
   focus = () => {
-    this.container?.focus()
+    this.container.current.focus()
   }
 
   update(props = this.props, ...args) {
@@ -131,10 +76,7 @@ export class Iterator extends React.PureComponent {
   }
 
   get bounds() {
-    return {
-      width: this.container.clientWidth,
-      height: this.container.clientHeight
-    }
+    return this.container.current.bounds
   }
 
   get width() {
@@ -224,9 +166,9 @@ export class Iterator extends React.PureComponent {
   }
 
   getOffset({ overscan, maxOffset, rowHeight, viewportRows } = this.state) {
-    if (this.container == null) return 0
+    if (!this.container.current) return 0
 
-    const top = this.container.scrollTop
+    const top = this.container.current.scrollTop
     const offset = floor((overscan - viewportRows) / 2) * rowHeight
 
     return restrict(top - (top % rowHeight) - offset, 0, maxOffset)
@@ -352,15 +294,11 @@ export class Iterator extends React.PureComponent {
   }
 
   scroll(offset = 0) {
-    if (this.container != null) {
-      this.container.scrollTop = offset
-    }
+    this.container.current?.scroll(offset)
   }
 
   scrollBy(offset) {
-    if (this.container != null) {
-      this.scroll(this.container.scrollTop + offset)
-    }
+    this.container.current?.scrollBy(offset)
   }
 
   scrollPageUp() {
@@ -376,13 +314,13 @@ export class Iterator extends React.PureComponent {
   }
 
   scrollIntoView(item = this.current(), force = true) {
-    if (item == null || this.container == null) return
+    if (item == null || this.container.current == null) return
     const idx = this.indexOf(item.id)
     if (idx === -1) return
 
     const { cols, rowHeight } = this.state
     const { height } = this
-    const top = this.container.scrollTop
+    const top = this.container.current.scrollTop
 
     let offset = floor(idx / cols) * rowHeight
     const bottom = offset + rowHeight
@@ -412,11 +350,7 @@ export class Iterator extends React.PureComponent {
   handleNativeScroll() {
   }
 
-  handleResize = throttle((rect) => {
-    this.resize(rect)
-  }, 15)
-
-  resize(viewport) {
+  handleResize = (viewport) => {
     this.viewport = viewport
     this.update()
   }

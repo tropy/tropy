@@ -22,7 +22,6 @@ export class ItemIterator extends Iterator {
   }
 
   componentWillUnmount() {
-    super.componentWillUnmount()
     off(document, 'global:next-item', this.handleNextItem)
     off(document, 'global:prev-item', this.handlePrevItem)
     off(document, 'global:forward', this.handleItemOpen)
