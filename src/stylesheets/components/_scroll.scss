@@ -1,5 +1,5 @@
 //
-// Scroll container
+// Scroll component
 // --------------------------------------------------
 
 .scroll-container {
@@ -10,5 +10,18 @@
 
   .popup-open:not(.scrollbar-style-old-school) & {
     overflow-y: hidden;
+  }
+}
+
+.runway {
+  contain: strict;
+  pointer-events: none;
+}
+
+.viewport {
+  contain: content;
+
+  > * {
+    pointer-events: auto;
   }
 }

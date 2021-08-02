@@ -23,20 +23,23 @@
     }
   }
 
+  &.over {
+    @extend %drop-target;
+  }
+
   .scroll-container {
     padding: $space-min $space-min 0;
   }
 
-  .runway {
-    contain: strict;
-  }
-
   .viewport {
     display: grid;
-    contain: content;
   }
 
-  &.over {
-    @extend %drop-target;
+  .item {
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
   }
 }

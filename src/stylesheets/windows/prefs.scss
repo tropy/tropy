@@ -40,7 +40,6 @@ $theme: "light";
   "../partials/flex",
   "../partials/forms",
   "../partials/input-group",
-  "../partials/scroll-container",
   "../partials/badge";
 
 
@@ -48,6 +47,7 @@ $theme: "light";
 // --------------------------------------------------
 
 @import
+  "../components/scroll",
   "../components/icons",
   "../components/button",
   "../components/button-group",
