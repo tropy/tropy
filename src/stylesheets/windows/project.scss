@@ -40,7 +40,6 @@ $theme: "light";
   "../partials/tile",
   "../partials/sort-indicator",
   "../partials/debug",
-  "../partials/scroll-container",
   "../partials/tab-pane",
   "../partials/scrollbar",
   "../partials/flex",
@@ -52,6 +51,7 @@ $theme: "light";
 // --------------------------------------------------
 
 @import
+  "../components/scroll",
   "../components/activity",
   "../components/toolbar",
   "../components/sidebar",

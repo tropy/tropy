@@ -212,18 +212,13 @@
         );
       background-attachment: local;
       padding-top: $space-min;
-      position: relative;
-      z-index: 0; // Fix stacking context (overlay toolbar covered by active item)
-      height: 100%; // Prevent vertical scrollbar du to horizontal scrollbar
       overscroll-behavior: auto; // Reset to allow for horizontal scroll gestures on item-table
       overflow-x: auto;
     }
   }
 
   .runway {
-    contain: strict;
     min-width: var(--item-min-width);
-    min-height: 100%; // Needs some flex row parent to work
 
     @include state(".item-table.dragging-column") {
       contain: none; // Needed for dragging lines of first item
@@ -231,9 +226,6 @@
   }
 
   .viewport {
-    width: 100%;
-    contain: content;
-
     @include state(".item-table.dragging-column") {
       contain: none; // Needed for dragging lines
     }
