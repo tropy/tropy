@@ -45,7 +45,8 @@
     }
   }
 
-  &.photo {
+  &.photo,
+  &.selection {
     contain: layout style size;
   }
 
