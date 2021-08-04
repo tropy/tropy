@@ -12,19 +12,12 @@ const { ceil, floor, max, min, round } = Math
 export class Iterator extends React.PureComponent {
   container = React.createRef()
 
-  constructor(props) {
-    super(props)
-    this.viewport = { width: 0, height: 0 }
-    this.state = this.getStateFromProps()
-  }
+  state = {}
 
   componentDidMount() {
-    if (this.container.current) {
-      this.update(this.props, () => {
-        this.handleResize(this.bounds)
-        this.scrollIntoView(this.current(), false)
-      })
-    }
+  }
+
+  componentWillUnmount() {
   }
 
   componentDidUpdate(props) {
@@ -33,62 +26,16 @@ export class Iterator extends React.PureComponent {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(props) {
-    if (this.props.size !== props.size ||
-      this.getIterables(props).length !== this.size) {
-      this.update(props)
-    }
-  }
-
-  getStateFromProps(props = this.props) {
-    const cols = this.getColumns(props.size)
-    const rowHeight = this.getRowHeight(props.size)
-    const rows = this.getRows({ cols }, props)
-    const viewportRows = this.getViewportRows(props.size)
-    const height = rows * rowHeight
-    const overscan = ceil(viewportRows * props.overscan)
-
-    let maxOffset = height - (overscan * rowHeight)
-    maxOffset = max(maxOffset - (maxOffset % rowHeight), 0)
-
-    const offset = this.getOffset({
-      overscan, maxOffset, rowHeight, viewportRows
-    })
-
-    return {
-      cols,
-      height,
-      maxOffset,
-      offset,
-      overscan,
-      rowHeight,
-      rows,
-      viewportRows
-    }
-  }
-
   focus = () => {
     this.container.current.focus()
-  }
-
-  update(props = this.props, ...args) {
-    this.setState(this.getStateFromProps(props), ...args)
   }
 
   get bounds() {
     return this.container.current.bounds
   }
 
-  get width() {
-    return this.viewport.width
-  }
-
-  get height() {
-    return this.viewport.height
-  }
-
   get isVertical() {
-    return this.state.cols === 1
+    return this.container.current?.layout.columns === 1
   }
 
   get isHorizontal() {
@@ -107,14 +54,6 @@ export class Iterator extends React.PureComponent {
     return this.getIterables().length
   }
 
-  get transform() {
-    return `translate3d(0,${this.state.offset}px,0)`
-  }
-
-  get orientation() {
-    return this.isVertical ? 'vertical' : 'horizontal'
-  }
-
   get tabIndex() {
     return this.isEmpty ? null : TABS[this.constructor.name]
   }
@@ -123,24 +62,8 @@ export class Iterator extends React.PureComponent {
     return index === this.size - 1
   }
 
-  isMapped(index) {
-    if (this.mappedRange == null) return false
-    if (this.mappedRange.from > index) return false
-    if (this.mappedRange.to < index) return false
-    return true
-  }
-
-  isIterableMapped({ id }) {
-    const index = this.indexOf(id)
-    return (index === -1) ? false : this.isMapped(index)
-  }
-
   getAdjacent = (iterable) => {
     return adjacent(this.getIterables(), iterable)
-  }
-
-  getColumns(size = this.props.size) {
-    return floor(this.width / this.getTileSize(size)) || 1
   }
 
   getIterables() {
@@ -165,26 +88,8 @@ export class Iterator extends React.PureComponent {
     return items[idx]
   }
 
-  getOffset({ overscan, maxOffset, rowHeight, viewportRows } = this.state) {
-    if (!this.container.current) return 0
-
-    const top = this.container.current.scrollTop
-    const offset = floor((overscan - viewportRows) / 2) * rowHeight
-
-    return restrict(top - (top % rowHeight) - offset, 0, maxOffset)
-  }
-
-
-  getRows({ cols } = this.state, props = this.props) {
-    return ceil(this.getIterables(props).length / cols)
-  }
-
   getRowHeight(size = this.props.size) {
     return this.getTileSize(size)
-  }
-
-  getViewportRows(size = this.props.size) {
-    return ceil(this.height / this.getRowHeight(size))
   }
 
   getTileSize(size = this.props.size) {
@@ -195,30 +100,11 @@ export class Iterator extends React.PureComponent {
     return this.state.cols * this.state.viewportRows
   }
 
-  getIterableRange() {
-    const { cols, offset, overscan, rowHeight } = this.state
-
-    const from = cols * floor(offset / rowHeight)
-    const size = cols * overscan
-
-    return {
-      from, size, to: min(from + size, this.size)
-    }
-  }
-
   getIterableProps(item) {
     return item
   }
 
-  mapIterableRange(fn, range = this.getIterableRange()) {
-    const items = this.getIterables()
-    const { from, to } = range
-
-    this.mappedRange = range
-
-    return items.slice(from, to).map((item, index) => {
-      return fn(this.getIterableProps(item, from + index))
-    })
+  mapIterableRange() {
   }
 
   indexOf(id, props = this.props) {
@@ -317,49 +203,12 @@ export class Iterator extends React.PureComponent {
     if (item == null || this.container.current == null) return
     const idx = this.indexOf(item.id)
     if (idx === -1) return
-
-    const { cols, rowHeight } = this.state
-    const { height } = this
-    const top = this.container.current.scrollTop
-
-    let offset = floor(idx / cols) * rowHeight
-    const bottom = offset + rowHeight
-    const isBelow = (bottom > top)
-
-    if (!force && isBelow && bottom <= top + height) return
-
-    if (isBelow) {
-      offset += rowHeight - height
-    }
-
-    this.scroll(offset)
+    this.container.current.scrollIntoView(idx, { force })
   }
 
-  handleScroll = (event) => {
-    if (!this.isScrollUpdateScheduled) {
-      this.isScrollUpdateScheduled = true
-
-      requestAnimationFrame(() => {
-        this.setState({ offset: this.getOffset() })
-        this.isScrollUpdateScheduled = false
-      })
-    }
-    this.handleNativeScroll(event)
-  }
-
-  handleNativeScroll() {
-  }
-
-  handleResize = (viewport) => {
-    this.viewport = viewport
-    this.update()
-  }
-
-  handleClickOutside = (event) => {
-    if (has(event.target, 'click-catcher') &&
-      typeof this.clearSelection === 'function') {
+  handleClickOutside = () => {
+    if (typeof this.clearSelection === 'function')
       this.clearSelection()
-    }
   }
 
   handleFocus = () => {

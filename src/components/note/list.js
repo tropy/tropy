@@ -1,5 +1,6 @@
 import React from 'react'
 import { Iterator } from '../iterator'
+import { Scroll } from '../scroll'
 import { NoteListItem } from './list-item'
 import { TABS, SASS } from '../../constants'
 import { match } from '../../keymap'
@@ -9,14 +10,6 @@ import { arrayOf, bool, func, number, object, shape } from 'prop-types'
 export class NoteList extends Iterator {
   get tabIndex() {
     return this.size === 0 ? null : TABS.NoteList
-  }
-
-  getColumns() {
-    return 1
-  }
-
-  getRowHeight() {
-    return SASS.NOTE.ROW_HEIGHT
   }
 
   getIterables(props = this.props) {
@@ -108,24 +101,22 @@ export class NoteList extends Iterator {
   }
 
   render() {
-    const { height } = this.state
-    const { transform } = this
-
     return (
       <div className="note-list">
-        <div
-          className="scroll-container"
-          ref={this.setContainer}
+        <Scroll
+          ref={this.container}
+          items={this.props.notes}
+          itemHeight={SASS.NOTE.ROW_HEIGHT}
           tabIndex={this.tabIndex}
           onBlur={this.props.onBlur}
-          onKeyDown={this.handleKeyDown}>
-          <div className="runway" style={{ height }}>
-            <ul className="viewport" style={{ transform }}>
-              {this.mapIterableRange(props =>
-                <NoteListItem {...props} key={props.note.id}/>)}
-            </ul>
-          </div>
-        </div>
+          onKeyDown={this.handleKeyDown}
+          onTabFocus={this.handleFocus}>
+          {(note) =>
+            <NoteListItem
+              {...this.getIterableProps(note)}
+              key={note.id}/>
+          }
+        </Scroll>
       </div>
     )
   }

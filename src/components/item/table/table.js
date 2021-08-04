@@ -1,6 +1,6 @@
 import React from 'react'
 import { arrayOf, bool, func, number, object, shape } from 'prop-types'
-import { Runway, ScrollContainer, Viewport } from '../../scroll'
+import { Scroll, ScrollContainer } from '../../scroll'
 import { ItemIterator } from '../iterator'
 import { TableRow } from './row'
 import { TableHead } from './head'
@@ -25,7 +25,7 @@ export class ItemTable extends ItemIterator {
   constructor(props) {
     super(props)
 
-    Object.assign(this.state, this.getColumnState(props))
+    this.state = this.getColumnState(props)
 
     refine(this, 'handleKeyDown', ([event]) => {
       if (event.isPropagationStopped()) return
@@ -51,8 +51,8 @@ export class ItemTable extends ItemIterator {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(props, ...args) {
-    super.UNSAFE_componentWillReceiveProps(props, ...args)
+  UNSAFE_componentWillReceiveProps(props) {
+    // super.UNSAFE_componentWillReceiveProps(props, ...args)
     if (!shallow(this.props, props, ['columns', 'list'])) {
       this.setState(this.getColumnState(props))
     }
@@ -277,42 +277,37 @@ export class ItemTable extends ItemIterator {
     const { data, edit, templates } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { columns, height } = this.state
-    const { transform } = this
+    const { columns } = this.state
 
     const hasPositionColumn = this.hasPositionColumn()
 
     return this.connect(
-      <div
-        className={cx(this.classes)}
-        onClick={this.handleClickOutside}>
-        <ScrollContainer
+      <div className={cx(this.classes)}>
+        <Scroll
           ref={this.container}
+          tag="div"
+          items={this.props.items}
+          itemHeight={this.getRowHeight()}
           tabIndex={this.tabIndex}
+          onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
-          onResize={this.handleResize}
-          onScroll={this.handleScroll}
           onTabFocus={this.handleFocus}>
-          <Runway className="click-catcher" height={height}>
-            <Viewport tag="div" transform={transform}>
-              {this.mapIterableRange(({ item, index, ...props }) =>
-                <TableRow {...props}
-                  key={item.id}
-                  columns={columns}
-                  data={data[item.id]}
-                  drag={this.state.drag}
-                  drop={this.state.drop}
-                  edit={edit}
-                  hasPositionColumn={hasPositionColumn}
-                  item={item}
-                  position={this.getPosition(index)}
-                  template={templates[item.template]}
-                  onCancel={this.handleEditCancel}
-                  onChange={this.handleChange}
-                  onEdit={onEdit}/>)}
-            </Viewport>
-          </Runway>
-        </ScrollContainer>
+          {(item, index) =>
+            <TableRow {...this.getIterableProps(item)}
+              key={item.id}
+              columns={columns}
+              data={data[item.id]}
+              drag={this.state.drag}
+              drop={this.state.drop}
+              edit={edit}
+              hasPositionColumn={hasPositionColumn}
+              item={item}
+              position={this.getPosition(index)}
+              template={templates[item.template]}
+              onCancel={this.handleEditCancel}
+              onChange={this.handleChange}
+              onEdit={onEdit}/>}
+        </Scroll>
       </div>
     )
   }

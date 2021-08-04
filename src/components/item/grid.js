@@ -1,7 +1,7 @@
 import React from 'react'
 import { ItemIterator } from './iterator'
 import { ItemTile } from './tile'
-import { Runway, ScrollContainer, Viewport } from '../scroll'
+import { Scroll } from '../scroll'
 import { refine } from '../../common/util'
 import cx from 'classnames'
 import { match, isMeta } from '../../keymap'
@@ -18,7 +18,7 @@ export class ItemGrid extends ItemIterator {
 
       switch (match(this.props.keymap, event)) {
         case (this.isVertical ? 'left' : 'up'):
-          this.select(this.prev(this.state.cols), {
+          this.select(this.prev(this.container.current.layout.columns), {
             isMeta: isMeta(event),
             isRange: event.shiftKey,
             scrollIntoView: true,
@@ -26,7 +26,7 @@ export class ItemGrid extends ItemIterator {
           })
           break
         case (this.isVertical ? 'right' : 'down'):
-          this.select(this.next(this.state.cols), {
+          this.select(this.next(this.container.current.layout.columns), {
             isMeta: isMeta(event),
             isRange: event.shiftKey,
             scrollIntoView: true,
@@ -56,33 +56,26 @@ export class ItemGrid extends ItemIterator {
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
 
-    const { cols, height } = this.state
-    const { transform } = this
-
     return this.connect(
       <div
         className={cx(this.classes)}
-        data-size={this.props.size}
-        onClick={this.handleClickOutside}>
-        <ScrollContainer
-          className="click-catcher"
+        data-size={this.props.size}>
+        <Scroll
           ref={this.container}
+          items={this.props.items}
+          itemHeight={this.getRowHeight()}
+          itemWidth={this.getRowHeight()}
+          layout="grid"
           tabIndex={this.tabIndex}
+          onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
-          onResize={this.handleResize}
-          onScroll={this.handleScroll}
           onTabFocus={this.handleFocus}>
-          <Runway height={height}>
-            <Viewport
-              className="click-catcher"
-              columns={cols}
-              transform={transform}>
-              {this.mapIterableRange(({ item, ...props }) =>
-                <ItemTile {...props} key={item.id} item={item}/>
-              )}
-            </Viewport>
-          </Runway>
-        </ScrollContainer>
+          {(item) =>
+            <ItemTile
+              {...this.getIterableProps(item)}
+              key={item.id}
+              item={item}/>}
+        </Scroll>
       </div>
     )
   }

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Iterator } from './iterator'
+import { Scroll } from './scroll'
 import { SASS } from '../constants'
 import { blank } from '../common/util'
 import cx from 'classnames'
@@ -55,14 +56,6 @@ export class OptionList extends Iterator {
     return props.values
   }
 
-  getColumns() {
-    return 1
-  }
-
-  getRowHeight() {
-    return this.props.rowHeight
-  }
-
   hasMoved({ clientX, clientY }) {
     try {
       return (clientX !== this.lastX || clientY !== this.lastY)
@@ -93,25 +86,21 @@ export class OptionList extends Iterator {
   }
 
   render() {
-    const { height } = this.state
-    const { transform } = this
-
     return (
       <div className="option-list">
-        <div className="scroll-container" ref={this.setContainer}>
-          <div className="runway" style={{ height }}>
-            <ul className="viewport" style={{ transform }}>
-              {this.mapIterableRange(option =>
-                <Option
-                  key={option.id}
-                  isActive={this.isActive(option)}
-                  isSelected={this.isSelected(option)}
-                  onClick={this.props.onSelect}
-                  onHover={this.handleHover}
-                  option={option}/>)}
-            </ul>
-          </div>
-        </div>
+        <Scroll
+          ref={this.container}
+          items={this.props.values}
+          itemHeight={this.props.rowHeight}>
+          {(option) =>
+            <Option
+              key={option.id}
+              isActive={this.isActive(option)}
+              isSelected={this.isSelected(option)}
+              onClick={this.props.onSelect}
+              onHover={this.handleHover}
+              option={option}/>}
+        </Scroll>
       </div>
     )
   }

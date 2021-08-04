@@ -29,7 +29,7 @@ export class PhotoIterator extends Iterator {
     if (this.props.size !== props.size ||
       this.props.photos !== props.photos ||
       this.props.expanded !== props.expanded) {
-      this.update(props)
+      // this.update(props)
     }
   }
 
