@@ -38,7 +38,6 @@ $theme: "light";
   "../partials/input-group",
   "../partials/badge",
   "../partials/tile",
-  "../partials/sort-indicator",
   "../partials/debug",
   "../partials/tab-pane",
   "../partials/scrollbar",
@@ -54,7 +53,6 @@ $theme: "light";
   "../components/scroll",
   "../components/activity",
   "../components/toolbar",
-  "../components/sidebar",
   "../components/panel-group",
   "../components/panel",
   "../components/icons",
@@ -77,6 +75,9 @@ $theme: "light";
   "../components/project/project",
   "../components/project/no-project",
 
+  "../components/sidebar/sidebar",
+  "../components/sidebar/sort-indicator",
+
   "../components/item/view",
   "../components/item/table",
   "../components/item/grid",
@@ -90,6 +91,7 @@ $theme: "light";
   "../components/photo/grid",
   "../components/photo/panel",
 
+  "../components/selection/list",
   "../components/selection/grid",
 
   "../components/note/list",

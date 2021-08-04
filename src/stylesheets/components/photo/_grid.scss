@@ -26,6 +26,7 @@
   }
 
   .photo {
+    @include sort-indicator("grid");
     position: relative;
   }
 }
