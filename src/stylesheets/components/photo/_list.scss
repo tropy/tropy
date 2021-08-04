@@ -18,6 +18,7 @@
   }
 
   .photo {
+    @include sort-indicator("list");
     align-items: center;
     position: relative;
 
@@ -95,27 +96,5 @@
     flex: 1 1 0;
     min-width: 0; // Fix truncation
     display: flex;
-  }
-
-  .selection-list {
-    .selection {
-      display: flex;
-      align-items: center;
-      padding-left:
-        $default-padding-horizontal
-        + $space-md
-        + $space-sm
-        + $space-min;
-      padding-right: $default-padding-horizontal;
-      height: $row-height;
-
-      &.active {
-        @extend %list-active;
-
-        @include state(".photo-list .scroll-container:focus") {
-          @extend %list-focus;
-        }
-      }
-    }
   }
 }

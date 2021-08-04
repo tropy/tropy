@@ -1,0 +1,81 @@
+//
+// Sort indicator
+// --------------------------------------------------
+
+@mixin sort-indicator($type, $parent: "#{nth(str-parse(#{&}, " "), 1)}.over") {
+  &::before,
+  &::after {
+    position: absolute;
+    outline: 1px solid $sort-indicator;
+    z-index: 1;
+  }
+
+  &.before {
+    &::before {
+      content: "";
+    }
+  }
+
+  &.after {
+    &::after {
+      content: "";
+    }
+  }
+
+  &.over {
+    position: relative;
+  }
+
+  @if $type == "list" {
+    &::before,
+    &::after {
+      left: 0;
+      width: 100%;
+    }
+
+    &::before {
+      bottom: 100%;
+    }
+
+    &::after {
+      top: 100%;
+    }
+
+    &:first-child {
+      &::before {
+        bottom: calc(100% - 1px);
+      }
+    }
+
+    &:last-child {
+      &::after {
+        top: calc(100% - 1px);
+      }
+    }
+  }
+
+  @else if $type == "grid" {
+    &::before,
+    &::after {
+      top: 50%;
+      height: 100%;
+      transform: translateY(-50%);
+    }
+
+    &::before {
+      right: 100%;
+    }
+
+    &::after {
+      left: 100%;
+    }
+  }
+
+  &.last {
+    @include state($parent) {
+      &::after {
+        content: "";
+      }
+    }
+  }
+}

@@ -6,4 +6,8 @@
   display: grid;
   padding: 0 $default-padding-horizontal;
   contain: content;
+
+  .selection {
+    @include sort-indicator("grid");
+  }
 }
