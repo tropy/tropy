@@ -70,6 +70,11 @@ export class ScrollContainer extends React.Component {
     )
   }
 
+  handleClick = (event) => {
+    if (event.target === this.container.current)
+      this.props.onClick()
+  }
+
   handleResize = throttle((rect) => {
     this.props.onResize(rect)
   }, 15)
@@ -88,7 +93,7 @@ export class ScrollContainer extends React.Component {
         ref={this.container}
         className={cx('scroll-container', this.props.className)}
         onBlur={this.props.onBlur}
-        onClick={this.props.onClick}
+        onClick={this.props.onClick && this.handleClick}
         onKeyDown={this.props.onKeyDown}
         tabIndex={this.props.tabIndex}>
         {this.props.children}
