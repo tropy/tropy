@@ -9,11 +9,11 @@ import { on, off } from '../../dom'
 
 class SelectionGrid extends SelectionIterator {
   componentDidMount() {
-    on(this.container, 'tab:focus', this.handleTabFocus)
+    on(this.container.current, 'tab:focus', this.handleTabFocus)
   }
 
   componentWillUnmount() {
-    off(this.container, 'tab:focus', this.handleTabFocus)
+    off(this.container.current, 'tab:focus', this.handleTabFocus)
   }
 
   get isGrid() { return true }
@@ -100,7 +100,7 @@ class SelectionGrid extends SelectionIterator {
   render() {
     return this.connect(
       <ul
-        ref={this.setContainer}
+        ref={this.container}
         className={cx(this.classes)}
         style={this.style}
         tabIndex={this.tabIndex}

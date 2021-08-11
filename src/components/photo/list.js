@@ -1,4 +1,5 @@
 import React from 'react'
+import { Scroll } from '../scroll'
 import { object, func } from 'prop-types'
 import { PhotoListItem } from './list-item'
 import { PhotoIterator } from './iterator'
@@ -161,35 +162,32 @@ class PhotoList extends PhotoIterator {
 
   render() {
     const { data, edit, onBlur, onChange } = this.props
-    const { height } = this.state
-    const { transform } = this
 
     return this.connect(
       <div className={cx(this.classes)}>
-        <div
-          className="scroll-container"
-          ref={this.setContainer}
+        <Scroll
+          ref={this.container}
+          items={this.props.photos}
+          itemHeight={SASS.ROW.HEIGHT}
+          expanded={this.props.expanded}
+
           tabIndex={this.tabIndex}
           onBlur={onBlur}
           onKeyDown={this.handleKeyDown}>
-          <div className="runway" style={{ height }}>
-            <ul className="viewport" style={{ transform }}>
-              {this.mapIterableRange(({ photo, ...props }) =>
-                <PhotoListItem {...props}
-                  key={photo.id}
-                  photo={photo}
-                  data={data}
-                  edit={edit}
-                  selections={this.props.selections}
-                  title={dc.title}
-                  isEditing={this.isEditing(photo)}
-                  onChange={onChange}
-                  onEdit={this.edit}
-                  onEditCancel={this.handleEditCancel}
-                  onSelectionSort={this.props.onSelectionSort}/>)}
-            </ul>
-          </div>
-        </div>
+          {(photo) =>
+            <PhotoListItem {...this.getIterableProps(photo)}
+              key={photo.id}
+              photo={photo}
+              data={data}
+              edit={edit}
+              selections={this.props.selections}
+              title={dc.title}
+              isEditing={this.isEditing(photo)}
+              onChange={onChange}
+              onEdit={this.edit}
+              onEditCancel={this.handleEditCancel}
+              onSelectionSort={this.props.onSelectionSort}/>}
+        </Scroll>
       </div>
     )
   }

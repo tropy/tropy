@@ -3,6 +3,7 @@ import { array, func, number, string } from 'prop-types'
 import { Range } from './range'
 import { Runway } from './runway'
 import { ScrollContainer } from './container'
+import { getExpandedRows, getExpandedRowsAbove } from './expansion'
 import { Viewport } from './viewport'
 import { restrict } from '../../common/util'
 import memoize from 'memoize-one'
@@ -10,16 +11,20 @@ import memoize from 'memoize-one'
 
 export class Scroll extends React.Component {
   container = React.createRef()
-  range = React.createRef()
 
   state = {
     width: 0,
     height: 0,
-    offset: 0
+    offset: 0,
+    row: 0,
+    numRowsAbove: 0,
+    numOffsetRows: 0
   }
 
   componentDidMount() {
-    this.handleResize(this.container.current.bounds)
+    this.handleResize(this.container.current.bounds, () => {
+      this.handleScrollUpdate(this.container.current.scrollTop)
+    })
   }
 
   get tabIndex() {
@@ -34,24 +39,49 @@ export class Scroll extends React.Component {
     this.container.current.focus()
   }
 
+  updateComputedLayout() {
+    this.layout = this.getComputedLayout(
+      this.props.items,
+      this.props.itemHeight,
+      this.props.itemWidth,
+      this.state.height,
+      this.state.width,
+      this.props.expanded,
+      this.props.expansionPadding,
+      this.props.overscan)
+  }
+
   getComputedLayout = memoize((
-    size,
-    itemWidth,
+    items,
     itemHeight,
-    width,
+    itemWidth,
     height,
+    width,
+    expanded,
+    expansionPadding,
     overscan
   ) => {
-    let columns = (itemWidth != null) ?  Math.floor(width / itemWidth) : 1
-    let rows = Math.ceil(size / columns)
+    let columns = Math.floor(width / itemWidth) || 1
+
+    let expandedRows = getExpandedRows(
+      columns,
+      items,
+      expanded,
+      itemWidth > 0)
+
+    let rows = Math.ceil(items.length / columns) + expandedRows.length
     let rowsPerPage = Math.ceil(height / itemHeight)
     let runway = rows * itemHeight
+
+    if (expandedRows.length > 0)
+      runway += (expansionPadding * expandedRows.length)
 
     let maxOffset = runway - (overscan * itemHeight)
     maxOffset = Math.max(maxOffset - (maxOffset % itemHeight), 0)
 
     return {
       columns,
+      expandedRows,
       rows,
       rowsPerPage,
       overscan: Math.ceil(rowsPerPage * overscan),
@@ -60,47 +90,47 @@ export class Scroll extends React.Component {
     }
   })
 
-  getOffset() {
-    let { itemHeight } = this.props
-    let { overscan, maxOffset, rowsPerPage } = this.layout
-
-    if (!this.container.current)
-      return 0
-
-    let top = this.container.current.scrollTop
-    let offset = Math.floor((overscan - rowsPerPage) / 2) * itemHeight
-
-    return restrict(top - (top % itemHeight) - offset, 0, maxOffset)
-  }
-
-  getRange(
-    offset = this.state.offset,
-    size = this.props.items.length,
-    columns = this.layout.columns,
-    overscan = this.layout.overscan,
-    itemHeight = this.props.itemHeight
-  ) {
-    let from = columns * Math.floor(offset / itemHeight)
-
-    return {
-      from,
-      to: Math.min(from + (columns * overscan), size)
-    }
-  }
-
-  handleResize = ({ width, height }) => {
-    this.setState({ width, height })
+  handleResize = ({ width, height }, callback) => {
+    this.setState({ width, height }, callback)
   }
 
   handleScroll = () => {
     if (!this.scrollCallbackId) {
       this.scrollCallbackId = requestAnimationFrame(() => {
-        this.setState({
-          offset: this.getOffset()
-        })
+        this.handleScrollUpdate(this.container.current.scrollTop)
         this.scrollCallbackId = null
       })
     }
+  }
+
+  handleScrollUpdate(top) {
+    let { items, itemHeight, expansionPadding } = this.props
+    let {
+      columns, expandedRows, overscan, maxOffset, rowsPerPage
+    } = this.layout
+
+
+    let offset = Math.floor((overscan - rowsPerPage) / 2) * itemHeight
+    offset = restrict(top - (top % itemHeight) - offset, 0, maxOffset)
+
+    let row = Math.floor(offset / itemHeight)
+
+    let { numRowsAbove, numOffsetRows } =
+        getExpandedRowsAbove(expandedRows, row)
+
+    if (expandedRows.length) {
+      offset = (row - numOffsetRows) * itemHeight
+
+      if (numRowsAbove > 0 && numOffsetRows === 0)
+        offset += expansionPadding
+    }
+
+    this.setState({
+      offset,
+      row,
+      numRowsAbove,
+      numOffsetRows
+    })
   }
 
   pageUp() {
@@ -131,10 +161,12 @@ export class Scroll extends React.Component {
     let top = this.container.current.scrollTop
     let offset = Math.floor(idx / columns) * itemHeight
 
+    // TODO adjust expansion rows and padding
+
     let bottom = offset + itemHeight
     let isBelow = bottom > top
 
-    // No scroll if item already in viewport
+    // Don't scroll if item already in viewport!
     if (!force && isBelow && bottom <= top + height)
       return
 
@@ -145,16 +177,14 @@ export class Scroll extends React.Component {
   }
 
   render() {
-    this.layout = this.getComputedLayout(
-      this.props.items.length,
-      this.props.itemWidth,
-      this.props.itemHeight,
-      this.state.width,
-      this.state.height,
-      this.props.overscan)
+    this.updateComputedLayout()
 
-    let { from, to } = this.getRange()
-    let { columns, runway } = this.layout
+    let { items } = this.props
+    let { columns, expandedRows, overscan, runway } = this.layout
+    let { row, numRowsAbove } = this.state
+
+    let from = columns * (row - numRowsAbove)
+    let to = Math.min(from + (columns * overscan), items.length)
 
     return (
       <ScrollContainer
@@ -171,8 +201,9 @@ export class Scroll extends React.Component {
             columns={columns}
             transform={this.transform}>
             <Range
-              ref={this.range}
-              items={this.props.items}
+              columns={columns}
+              isExpanded={expandedRows.length > 0}
+              items={items}
               from={from}
               to={to}
               mapper={this.props.children}/>
@@ -184,6 +215,8 @@ export class Scroll extends React.Component {
 
   static propTypes = {
     children: func.isRequired,
+    expanded: array.isRequired,
+    expansionPadding: number.isRequired,
     items: array.isRequired,
     itemWidth: number,
     itemHeight: number.isRequired,
@@ -196,6 +229,8 @@ export class Scroll extends React.Component {
   }
 
   static defaultProps = {
+    expanded: [],
+    expansionPadding: 0,
     items: [],
     overscan: 1.25
   }

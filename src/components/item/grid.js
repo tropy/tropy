@@ -65,7 +65,6 @@ export class ItemGrid extends ItemIterator {
           items={this.props.items}
           itemHeight={this.getRowHeight()}
           itemWidth={this.getRowHeight()}
-          layout="grid"
           tabIndex={this.tabIndex}
           onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
