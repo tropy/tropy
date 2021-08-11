@@ -37,8 +37,7 @@ export class PhotoIterator extends Iterator {
     return {
       'drop-target': !this.isDisabled,
       'over': this.props.isOver,
-      'over-file': this.props.isOverFile,
-      [this.orientation]: true
+      'over-file': this.props.isOverFile
     }
   }
 

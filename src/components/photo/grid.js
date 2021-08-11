@@ -2,6 +2,7 @@ import React from 'react'
 import { PhotoIterator } from './iterator'
 import { PhotoTile } from './tile'
 import { SelectionGrid } from '../selection/grid'
+import { Scroll } from '../scroll'
 import { pluck } from '../../common/util'
 import cx from 'classnames'
 import { match } from '../../keymap'
@@ -173,73 +174,59 @@ class PhotoGrid extends PhotoIterator {
     this.setState({ hasNestedTabFocus: false })
   }
 
-  renderSelectionGrid(photo) {
+  renderSelectionGrid(photo, columns) {
     const selections = pluck(this.props.selections, photo.selections)
-    const gridColumnEnd = this.state.cols + 1
 
     return (
-      <li
-        key="expansion"
-        className="tile-expansion"
-        style={{ gridColumnEnd }}>
-        <SelectionGrid
-          active={this.props.selection}
-          cache={this.props.cache}
-          cols={this.state.cols}
-          data={this.props.data}
-          isDisabled={this.props.isDisabled}
-          keymap={this.props.keymap.SelectionGrid}
-          onBlur={this.handleNestedBlur}
-          onTabFocus={this.handleNestedTabFocus}
-          onContextMenu={this.props.onContextMenu}
-          onDelete={this.handleDelete}
-          onError={this.props.onError}
-          onItemOpen={this.handleItemOpen}
-          onRotate={this.handleRotate}
-          onSelect={this.select}
-          onSort={this.props.onSelectionSort}
-          photo={photo}
-          selections={selections}
-          size={this.props.size}/>
-      </li>
+      <SelectionGrid
+        active={this.props.selection}
+        cache={this.props.cache}
+        cols={columns}
+        data={this.props.data}
+        isDisabled={this.props.isDisabled}
+        keymap={this.props.keymap.SelectionGrid}
+        onBlur={this.handleNestedBlur}
+        onTabFocus={this.handleNestedTabFocus}
+        onContextMenu={this.props.onContextMenu}
+        onDelete={this.handleDelete}
+        onError={this.props.onError}
+        onItemOpen={this.handleItemOpen}
+        onRotate={this.handleRotate}
+        onSelect={this.select}
+        onSort={this.props.onSelectionSort}
+        photo={photo}
+        selections={selections}
+        size={this.props.size}/>
     )
   }
 
   render() {
-    const { expanded, onBlur } = this.props
-    const range = this.getIterableRange()
-    const padding = SASS.GRID.PADDING * 4
-    const [exp, adj] = range.exp
-
-    let { cols, offset, height } = this.state
-
-    if (expanded.length > 0) {
-      height += padding
-      if (exp > 0 && adj === 0) offset += padding
-    }
-
-    const transform = `translate3d(0,${offset}px,0)`
-    const gridTemplateColumns = `repeat(${cols}, ${cols}fr)`
-
     return this.connect(
-      <div className={cx(this.classes)}
+      <div
+        className={cx(this.classes)}
         data-size={this.props.size}>
-        <div
-          className="scroll-container"
-          ref={this.setContainer}
+        <Scroll
+          ref={this.container}
+          items={this.props.photos}
+          itemHeight={this.getRowHeight()}
+          itemWidth={this.getRowHeight()}
+          expansionPadding={SASS.GRID.PADDING * 4}
           tabIndex={this.tabIndex}
-          onBlur={onBlur}
+          onBlur={this.props.onBlur}
           onKeyDown={this.handleKeyDown}>
-          <div className="runway" style={{ height }}>
-            <ul
-              className="viewport"
-              style={{ gridTemplateColumns, transform }}>
-              {this.mapIterableRange(({ photo, ...props }) => (
-                <PhotoTile {...props} key={photo.id} photo={photo}/>
-              ), range)}
-            </ul>
-          </div>
-        </div>
+          {(photo, index, range) => {
+            let props = this.getIterableProps(photo)
+
+            if (props.isExpanded)
+              range.renderExpansionRow(
+                index,
+                this.renderSelectionGrid(photo, range.props.columns))
+
+            return (
+              <PhotoTile {...props} key={photo.id} photo={photo}/>
+            )
+          }}
+        </Scroll>
       </div>
     )
   }

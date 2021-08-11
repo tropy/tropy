@@ -9,8 +9,7 @@ export class SelectionIterator extends Iterator {
   get classes() {
     return {
       'drop-target': this.isSortable,
-      'over': this.props.isOver,
-      [this.orientation]: true
+      'over': this.props.isOver
     }
   }
 
