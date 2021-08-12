@@ -245,7 +245,6 @@ export class Import extends ImportCommand {
 
           item.photos.push(photo.id)
 
-          photo.broken = true // mark for consolidation!
           photos.push(photo)
         }
       })
