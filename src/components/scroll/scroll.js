@@ -188,8 +188,6 @@ export class Scroll extends React.Component {
     let from = columns * Math.max(0, row - numRowsAbove)
     let to = Math.min(from + (columns * rowsPerPage), this.props.items.length)
 
-    console.log({ from, to, row, numRowsAbove, expandedRows })
-
     return (
       <ScrollContainer
         ref={this.container}
