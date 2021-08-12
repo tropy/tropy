@@ -226,12 +226,12 @@ export default class Esper extends EventEmitter {
         this.clearTextureCache(state.src, 5)
 
         if (state.width !== texture.width || state.height !== texture.height)
-          this.emit('photo.error', props.photo)
+          this.emit('photo.error', props.photo, false)
 
 
       } catch (e) {
         warn({ stack: e.stack }, `esper: failed loading ${state.src}`)
-        this.emit('photo.error', props.photo)
+        this.emit('photo.error', props.photo, true)
       }
 
       this.app.stage.addChildAt(this.photo, 0)
