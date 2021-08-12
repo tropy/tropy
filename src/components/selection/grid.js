@@ -16,8 +16,6 @@ class SelectionGrid extends SelectionIterator {
     off(this.container.current, 'tab:focus', this.handleTabFocus)
   }
 
-  get isGrid() { return true }
-
   get isVertical() {
     return this.props.cols === 1
   }

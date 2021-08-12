@@ -8,7 +8,6 @@ import { match, isMeta } from '../../keymap'
 
 
 export class ItemGrid extends ItemIterator {
-  get isGrid() { return true }
 
   constructor(props) {
     super(props)
@@ -47,8 +46,7 @@ export class ItemGrid extends ItemIterator {
     return {
       'item-grid': true,
       'drop-target': !this.props.isReadOnly,
-      'over': this.props.isOver,
-      [this.orientation]: true
+      'over': this.props.isOver
     }
   }
 
