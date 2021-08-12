@@ -67,6 +67,7 @@ export default class Esper extends EventEmitter {
     this.app = new PIXI.Application({
       antialias: false,
       autoDensity: true,
+      autoStart: false,
       backgroundAlpha: 0,
       forceCanvas: !ARGS.webgl,
       powerPreference: 'low-power',
