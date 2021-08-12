@@ -1,12 +1,10 @@
 import React from 'react'
 import { TABS, SASS } from '../constants'
-import { adjacent, restrict } from '../common/util'
-import { has } from '../dom'
+import { adjacent } from '../common/util'
 import { isMeta } from '../keymap'
 import { bool, number, oneOf } from 'prop-types'
 
 const EMPTY = []
-const { ceil, floor, max, min, round } = Math
 
 
 export class Iterator extends React.PureComponent {
@@ -93,7 +91,7 @@ export class Iterator extends React.PureComponent {
   }
 
   getTileSize(size = this.props.size) {
-    return round(size * SASS.TILE.FACTOR)
+    return Math.round(size * SASS.TILE.FACTOR)
   }
 
   getIterablesPerPage() {
@@ -102,9 +100,6 @@ export class Iterator extends React.PureComponent {
 
   getIterableProps(item) {
     return item
-  }
-
-  mapIterableRange() {
   }
 
   indexOf(id, props = this.props) {
@@ -166,17 +161,6 @@ export class Iterator extends React.PureComponent {
 
   select() {
     throw new Error('not implemented')
-  }
-
-  range({ from = this.head(), to } = {}) {
-    const items = this.getIterables()
-
-    from = (from == null) ? 0 : this.indexOf(from)
-    to = (to == null) ? this.size - 1 : this.indexOf(to)
-
-    return (from > to) ?
-      items.slice(to, from + 1).reverse() :
-      items.slice(from, to + 1)
   }
 
   scroll(offset = 0) {

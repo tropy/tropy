@@ -14,14 +14,6 @@ class PhotoList extends PhotoIterator {
     return ['photo-list', super.classes]
   }
 
-  getColumns() {
-    return 1
-  }
-
-  getRowHeight() {
-    return SASS.ROW.HEIGHT
-  }
-
   isEditing(photo) {
     return this.props.edit.photo === photo.id
   }

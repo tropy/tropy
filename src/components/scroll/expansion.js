@@ -1,19 +1,19 @@
 
 export const getExpandedRowsAbove = (rows, x) => {
   let numRowsAbove = 0
-  let numOffsetRows = 0
+  let expRowPosition = 0
 
   for (let row of rows) {
     if (x < row.position)
       break
 
     if (x === row.position)
-      numOffsetRows = row.numOffsetRows
+      expRowPosition = row.expRowPosition
 
     numRowsAbove = row.numRowsAbove
   }
 
-  return { numRowsAbove, numOffsetRows }
+  return { numRowsAbove, expRowPosition }
 }
 
 export const getExpandedRows = (
@@ -34,14 +34,14 @@ const getExpandedListRows = (items, expanded, subItems) => {
 
   let count = 0
 
-  for (let { position, numRows } of expansions) {
-    position += count
+  for (let { index, numRows } of expansions) {
+    index += count
 
     for (let i = 1; i <= numRows; ++i)
       rows.push({
-        position: ++position,
+        position: ++index,
         numRowsAbove: ++count,
-        numOffsetRows: i
+        expRowPosition: i
       })
   }
 
@@ -58,14 +58,13 @@ const getExpandedGridRows = (columns, items, expanded, subItems) => {
     subItems)
 
   if (expansion) {
-    let { position, numRows } = expansion
-    position = Math.floor(position / columns)
+    let { index, numRows } = expansion
 
     for (let i = 1; i <= numRows; ++i)
       rows.push({
-        position: ++position,
+        position: ++index,
         numRowsAbove: i,
-        numOffsetRows: i
+        expRowPosition: i
       })
   }
 
@@ -78,13 +77,13 @@ const getExpansions = (columns, items, expanded, subItems) => {
 
   for (let item of expanded) {
     let numRows = Math.ceil(item?.[subItems].length / columns) || 0
-    let position = indexOf(items, item.id)
+    let index = Math.floor(indexOf(items, item.id) / columns)
 
-    if (position >= 0)
-      expansions.push({ position, numRows })
+    if (index >= 0)
+      expansions.push({ index, numRows })
   }
 
-  return expansions.sort(byPosition)
+  return expansions.sort(byIndex)
 }
 
 
@@ -94,7 +93,5 @@ const indexOf = (collection, id) =>
     collection.findIndex(it => it.id === id)
 
 
-const byPosition = (a, b) =>
-  (a.position < b.position) ? -1 : (a.position > b.position) ? 1 : 0
-
-
+const byIndex = (a, b) =>
+  (a.index < b.index) ? -1 : (a.index > b.index) ? 1 : 0

@@ -10,17 +10,11 @@ import { SASS } from '../../constants'
 
 
 class PhotoGrid extends PhotoIterator {
-  get isGrid() { return true }
-
   get classes() {
     return [super.classes, 'photo-grid', {
       'nested-tab-focus': this.state.hasNestedTabFocus,
       'has-nested-active': this.props.selection != null
     }]
-  }
-
-  getNextRowOffset(index) {
-    return index + (this.state.cols - (index % this.state.cols))
   }
 
   getExpansionRows({ cols } = this.state, props = this.props) {
@@ -44,44 +38,6 @@ class PhotoGrid extends PhotoIterator {
     return photo.selections != null &&
       photo.selections.length > 0 &&
       this.props.expanded[0] === photo
-  }
-
-  mapIterableRange(fn, range = this.getIterableRange()) {
-    if (this.props.expanded.length === 0) {
-      return super.mapIterableRange(fn, range)
-    }
-
-    this.mappedRange = range
-
-    const { photos } = this.props
-    const { from, to } = range
-
-    let out = []
-    let cur = from
-    let gap = to
-    let exp
-
-    for (; cur < gap && cur < to; ++cur) {
-      let photo = photos[cur]
-
-      if (this.isExpanded(photo)) {
-        exp = photo
-        gap = this.getNextRowOffset(cur)
-      }
-
-      out.push(fn(this.getIterableProps(photo, cur)))
-    }
-
-    if (exp != null) {
-      out.push(this.renderSelectionGrid(exp))
-    }
-
-    for (; cur < to; ++cur) {
-      let photo = photos[cur]
-      out.push(fn(this.getIterableProps(photo, cur)))
-    }
-
-    return out
   }
 
   contract = (photo) => {
@@ -112,13 +68,13 @@ class PhotoGrid extends PhotoIterator {
         this.handleNextPhoto(event)
         break
       case (this.isVertical ? 'left' : 'up'):
-        this.select(this.prev(this.state.cols), {
+        this.select(this.prev(this.container.current.layout.columns), {
           scrollIntoView: true,
           throttle: true
         })
         break
       case (this.isVertical ? 'right' : 'down'):
-        this.select(this.next(this.state.cols), {
+        this.select(this.next(this.container.current.layout.columns), {
           scrollIntoView: true,
           throttle: true
         })
@@ -210,6 +166,7 @@ class PhotoGrid extends PhotoIterator {
           items={this.props.photos}
           itemHeight={this.getRowHeight()}
           itemWidth={this.getRowHeight()}
+          expanded={this.props.expanded}
           expansionPadding={SASS.GRID.PADDING * 4}
           tabIndex={this.tabIndex}
           onBlur={this.props.onBlur}

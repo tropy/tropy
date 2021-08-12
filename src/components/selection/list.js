@@ -3,21 +3,12 @@ import { SelectionIterator } from './iterator'
 import { SelectionListItem } from './list-item'
 import cx from 'classnames'
 import { func, number, object } from 'prop-types'
-import { SASS } from '../../constants'
 import { dc } from '../../ontology'
 
 
 class SelectionList extends SelectionIterator {
   get classes() {
     return ['selection-list', super.classes]
-  }
-
-  getColumns() {
-    return 1
-  }
-
-  getRowHeight() {
-    return SASS.ROW.HEIGHT
   }
 
   isEditing(selection) {

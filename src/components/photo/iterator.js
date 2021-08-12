@@ -8,8 +8,6 @@ import {
   arrayOf, bool, func, number, object, string, shape
 } from 'prop-types'
 
-const byIdx = ([a], [b]) => (a < b) ? -1 : (a > b) ? 1 : 0
-
 
 export class PhotoIterator extends Iterator {
   componentDidMount() {
@@ -23,14 +21,6 @@ export class PhotoIterator extends Iterator {
     this.props.onBlur()
     off(document, 'global:next-photo', this.handleNextPhoto)
     off(document, 'global:prev-photo', this.handlePrevPhoto)
-  }
-
-  UNSAFE_componentWillReceiveProps(props) {
-    if (this.props.size !== props.size ||
-      this.props.photos !== props.photos ||
-      this.props.expanded !== props.expanded) {
-      // this.update(props)
-    }
   }
 
   get classes() {
@@ -48,71 +38,6 @@ export class PhotoIterator extends Iterator {
   getIterables(props = this.props) {
     return props.photos || super.getIterables()
   }
-
-  getRows(state = this.state, props = this.props) {
-    return super.getRows(state, props) + this.getExpansionRows(state, props)
-  }
-
-  getExpansionRows({ cols } = this.state, props = this.props) {
-    let rows = []
-
-    for (let photo of props.expanded) {
-      let exp = Math.ceil(photo.selections?.length / cols) || 0
-      let idx = this.indexOf(photo.id, props)
-      if (idx === -1) continue
-      rows.push([idx, exp])
-    }
-
-    rows = rows.sort(byIdx)
-    let total = 0
-    this.expRows = []
-
-    for (let i = 0; i < rows.length; ++i) {
-      let [idx, exp] = rows[i]
-      idx += total
-      for (let j = 1; j <= exp; ++j) {
-        this.expRows.push([++idx, ++total, j])
-      }
-    }
-
-    return total
-  }
-
-  getExpansionRowsBefore(row) {
-    let exp = [0, 0]
-
-    if (this.expRows != null) {
-      for (let i = 0; i < this.expRows.length; ++i) {
-        let cur = this.expRows[i]
-        if (row < cur[0]) break
-        if (row === cur[0]) exp[1] = cur[2]
-        exp[0] = cur[1]
-      }
-    }
-
-    return exp
-  }
-
-  getOffset(state = this.state) {
-    let offset = super.getOffset(state)
-    let row = Math.floor(offset / state.rowHeight)
-    let [, adj] = this.getExpansionRowsBefore(row)
-    return (row - adj) * state.rowHeight
-  }
-
-  getIterableRange() {
-    const { cols, offset, overscan, rowHeight } = this.state
-
-    const row = Math.floor(offset / rowHeight)
-    const exp = this.getExpansionRowsBefore(row)
-    const from = cols * (row - exp[0])
-    const size = cols * overscan
-
-    return {
-      from, size, to: Math.min(from + size, this.size), exp
-    }
-  }
-
 
   isSelected(photo) {
     return this.props.current === photo.id
