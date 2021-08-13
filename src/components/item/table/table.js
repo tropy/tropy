@@ -274,13 +274,6 @@ export class ItemTable extends ItemIterator {
   }
 
   renderTableBody() {
-    const { data, edit, templates } = this.props
-    const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
-
-    const { columns } = this.state
-
-    const hasPositionColumn = this.hasPositionColumn()
-
     return this.connect(
       <div className={cx(this.classes)}>
         <Scroll
@@ -292,23 +285,28 @@ export class ItemTable extends ItemIterator {
           onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
           onTabFocus={this.handleFocus}>
-          {(item, index) =>
-            <TableRow {...this.getIterableProps(item)}
-              key={item.id}
-              columns={columns}
-              data={data[item.id]}
-              drag={this.state.drag}
-              drop={this.state.drop}
-              edit={edit}
-              hasPositionColumn={hasPositionColumn}
-              item={item}
-              position={this.getPosition(index)}
-              template={templates[item.template]}
-              onCancel={this.handleEditCancel}
-              onChange={this.handleChange}
-              onEdit={onEdit}/>}
+          {this.renderTableRow}
         </Scroll>
       </div>
+    )
+  }
+
+  renderTableRow = (item, index) => {
+    return (
+      <TableRow {...this.getIterableProps(item)}
+        key={item.id}
+        columns={this.state.columns}
+        data={this.props.data[item.id]}
+        drag={this.state.drag}
+        drop={this.state.drop}
+        edit={this.props.edit}
+        hasPositionColumn={this.hasPositionColumn()}
+        item={item}
+        position={this.getPosition(index)}
+        template={this.props.templates[item.template]}
+        onCancel={this.handleEditCancel}
+        onChange={this.handleChange}
+        onEdit={this.props.selection.length === 1 ? this.props.onEdit : noop}/>
     )
   }
 
