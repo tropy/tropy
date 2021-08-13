@@ -124,7 +124,7 @@ class PhotoListItem extends PhotoIterable {
     return this.connect(
       <li
         className={cx(this.classes)}
-        ref={this.setContainer}>
+        ref={this.container}>
         <div
           className="photo-container"
           onClick={this.handleClick}

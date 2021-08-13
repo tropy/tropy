@@ -11,6 +11,8 @@ import {
 
 
 export class PhotoIterable extends React.PureComponent {
+  container = React.createRef()
+
   state = {
     offset: null
   }
@@ -21,7 +23,7 @@ export class PhotoIterable extends React.PureComponent {
 
   componentDidUpdate(props) {
     if (this.props.isSelected && !props.isSelected) {
-      this.container.scrollIntoViewIfNeeded()
+      this.container.current.scrollIntoViewIfNeeded()
     }
   }
 
@@ -79,10 +81,6 @@ export class PhotoIterable extends React.PureComponent {
       pick(this.props.photo, ['id', 'item', 'path', 'protocol']))
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
   connect(element) {
     if (this.props.isSortable)
       element = this.props.connectDropTarget(element)
@@ -138,7 +136,7 @@ export class PhotoIterable extends React.PureComponent {
   static DropTargetSpec = {
     hover({ photo, isVertical }, monitor, component) {
       const { id, adj } = monitor.getItem()
-      const { top, left, width, height } = bounds(component.container)
+      const { top, left, width, height } = bounds(component.container.current)
       const { x, y } = monitor.getClientOffset()
 
       let offset = null
