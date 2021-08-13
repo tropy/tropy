@@ -297,10 +297,6 @@ export class ItemIterator extends Iterator {
     )
   }
 
-  hasPositionColumn(props = this.props) {
-    return !!props.list
-  }
-
   static propTypes = {
     items: arrayOf(shape({
       id: number.isRequired

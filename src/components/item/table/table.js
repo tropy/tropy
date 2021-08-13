@@ -82,10 +82,6 @@ export class ItemTable extends ItemIterator {
     return { columns, colwidth, minWidth }
   }
 
-  getColumns() {
-    return 1
-  }
-
   getMaxColumnOffset(idx) {
     return this.state.minWidth - this.state.colwidth[idx]
   }
@@ -113,10 +109,6 @@ export class ItemTable extends ItemIterator {
       this.props.items.length - index
   }
 
-  getRowHeight() {
-    return ROW.HEIGHT
-  }
-
   getTemplateColumns() {
     let gtc = this.hasPositionColumn() ?
       `${NAV.COLUMN.POSITION.width}px ` : ''
@@ -131,6 +123,10 @@ export class ItemTable extends ItemIterator {
         column: { [item.id]: this.state.columns[0].id }
       })
     }
+  }
+
+  hasPositionColumn(props = this.props) {
+    return !!props.list
   }
 
   handleChange = (...args) => {
@@ -280,7 +276,7 @@ export class ItemTable extends ItemIterator {
           ref={this.container}
           tag="div"
           items={this.props.items}
-          itemHeight={this.getRowHeight()}
+          itemHeight={ROW.HEIGHT}
           tabIndex={this.tabIndex}
           onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
