@@ -60,15 +60,15 @@ export class Scroll extends React.Component {
 
     let rows = Math.ceil(items.length / columns) + expandedRows.length
     let visibleRows = Math.ceil(height / itemHeight)
-    let rowsPerPage =
-      Math.max(Math.ceil(visibleRows * overscan), visibleRows + 2)
+    let overscanRows = Math.max(2, Math.ceil(visibleRows * overscan))
+    let rowsPerPage = visibleRows + overscanRows
 
     let runway = rows * itemHeight
 
     if (expanded.length > 0)
       runway += expansionPadding
 
-    let pageOffset = Math.floor((rowsPerPage - visibleRows) / 2) * itemHeight
+    let pageOffset = Math.floor(overscanRows / 2) * itemHeight
 
     let maxOffset = runway - (rowsPerPage * itemHeight)
     maxOffset = Math.max(maxOffset - (maxOffset % itemHeight), 0)
