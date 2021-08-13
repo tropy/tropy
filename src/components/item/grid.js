@@ -50,6 +50,12 @@ export class ItemGrid extends ItemIterator {
     }
   }
 
+  renderItemTile = (item) => (
+    <ItemTile
+      {...this.getIterableProps(item)}
+      key={item.id}
+      item={item}/>
+  )
 
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
@@ -67,11 +73,7 @@ export class ItemGrid extends ItemIterator {
           onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
           onTabFocus={this.handleFocus}>
-          {(item) =>
-            <ItemTile
-              {...this.getIterableProps(item)}
-              key={item.id}
-              item={item}/>}
+          {this.renderItemTile}
         </Scroll>
       </div>
     )
