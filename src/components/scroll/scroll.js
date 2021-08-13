@@ -25,9 +25,7 @@ export class Scroll extends React.Component {
   }
 
   componentDidMount() {
-    this.handleResize(this.container.current.bounds, () => {
-      this.handleScrollUpdate(this.container.current.scrollTop)
-    })
+    this.handleResize(this.container.current.bounds)
   }
 
   get tabIndex() {
@@ -86,8 +84,10 @@ export class Scroll extends React.Component {
     }
   })
 
-  handleResize = ({ width, height }, callback) => {
-    this.setState({ width, height }, callback)
+  handleResize = ({ width, height }) => {
+    this.setState({ width, height }, () => {
+      this.handleScroll()
+    })
   }
 
   handleScroll = () => {
