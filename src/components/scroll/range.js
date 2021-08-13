@@ -1,7 +1,7 @@
 import React from 'react'
-import { array, bool, func, number } from 'prop-types'
+import { array, func, number } from 'prop-types'
 
-export class Range extends React.PureComponent {
+export class Range extends React.Component {
 
   getNextRowOffset(index) {
     return index + (this.props.columns - (index % this.props.columns))
@@ -43,7 +43,6 @@ export class Range extends React.PureComponent {
 
   static propTypes = {
     columns: number.isRequired,
-    isExpanded: bool,
     items: array.isRequired,
     from: number.isRequired,
     to: number.isRequired,
