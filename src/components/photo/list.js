@@ -91,7 +91,7 @@ class PhotoList extends PhotoIterator {
 
   handleEditCancel = (...args) => {
     this.props.onEditCancel(...args)
-    this.container.focus()
+    this.container.current.focus()
   }
 
   // eslint-disable-next-line complexity

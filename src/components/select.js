@@ -40,6 +40,8 @@ class Value extends React.Component {
 }
 
 export class Select extends React.Component {
+  completions = React.createRef()
+  container = React.createRef()
   input = React.createRef()
 
   state = {
@@ -111,7 +113,8 @@ export class Select extends React.Component {
   }
 
   commit() {
-    if (this.completions != null) return this.completions.select()
+    if (this.completions.current != null)
+      return this.completions.current.select()
     if (this.state.isBlank) return this.open()
     let value = last(this.state.values)
     if (value == null || value.id == null) return this.open()
@@ -119,8 +122,10 @@ export class Select extends React.Component {
   }
 
   delegate(cmd, ...args) {
-    if (this.completions == null) this.open()
-    else this.completions[cmd](...args)
+    if (this.completions.current == null)
+      this.open()
+    else
+      this.completions.current[cmd](...args)
   }
 
   focus = () => {
@@ -233,14 +238,6 @@ export class Select extends React.Component {
     }
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
-  setCompletions = (completions) => {
-    this.completions = completions
-  }
-
   renderContent() {
     if (this.state.query.length > 0) {
       return null
@@ -315,10 +312,10 @@ export class Select extends React.Component {
           onClickOutside={this.close}
           onResize={this.props.onResize}
           onSelect={this.handleSelect}
-          parent={this.container}
+          parent={this.container.current}
           popup={!this.props.isStatic}
           query={this.state.query}
-          ref={this.setCompletions}
+          ref={this.completions}
           selection={this.state.selection}
           toId={this.props.toId}
           toText={this.props.toText}/>
@@ -334,7 +331,7 @@ export class Select extends React.Component {
         className={cx(this.classes)}
         onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
-        ref={this.setContainer}>
+        ref={this.container}>
         {this.props.icon}
         {this.renderContent()}
         {this.renderInput()}

@@ -7,11 +7,13 @@ import { bool, func, node, number, oneOfType, string } from 'prop-types'
 const { Component, Children, cloneElement: clone } = React
 
 export class Accordion extends Component {
+  container = React.createRef()
+
   componentDidUpdate({ isActive: wasActive, isOpen: wasOpen }) {
     const { isActive, isOpen } = this.props
     if (isActive && (!wasActive || isOpen && !wasOpen)) {
-      if (!visible(this.container)) {
-        this.container.scrollIntoView({ block: 'start' })
+      if (!visible(this.container.current)) {
+        this.container.current.scrollIntoView({ block: 'start' })
       }
     }
   }
@@ -39,10 +41,6 @@ export class Accordion extends Component {
     }
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
   renderHeader(header) {
     return (
       <header
@@ -65,7 +63,7 @@ export class Accordion extends Component {
     return (
       <section
         className={cx(this.classes, this.props.className)}
-        ref={this.setContainer}>
+        ref={this.container}>
         {this.renderHeader(header)}
         {this.renderBody(body)}
       </section>
@@ -169,15 +167,16 @@ export class AccordionGroup extends Component {
         this.prev()
         break
       case 'ArrowRight':
-        if (event.target === this.container) this.open()
+        if (event.target === this.container.current) this.open()
         break
       case ' ':
       case 'Enter':
-        if (event.target === this.container) this.toggle()
+        if (event.target === this.container.current) this.toggle()
         break
       case 'ArrowLeft':
       case 'Escape':
-        if (event.target === this.container) this.close(this.state.active)
+        if (event.target === this.container.current)
+          this.close(this.state.active)
         break
       default:
         return
@@ -193,10 +192,6 @@ export class AccordionGroup extends Component {
     else this.close(accordion.props.id)
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
   render() {
     return (
       <div
@@ -204,7 +199,7 @@ export class AccordionGroup extends Component {
         onFocus={this.handleFocus}
         onKeyDown={this.handleKeyDown}
         tabIndex={this.props.tabIndex}
-        ref={this.setContainer}>
+        ref={this.container}>
         {Children.map(this.props.children, (acc) =>
           clone(acc, {
             isActive: this.isActive(acc.props.id),

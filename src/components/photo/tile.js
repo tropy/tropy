@@ -34,7 +34,7 @@ class PhotoTile extends PhotoIterable {
     return this.connect(
       <li
         className={cx(this.classes)}
-        ref={this.setContainer}>
+        ref={this.container}>
         <div className="tile-state">
           {this.renderThumbnail({
             onClick: this.handleClick,
