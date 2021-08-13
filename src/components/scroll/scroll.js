@@ -91,12 +91,15 @@ export class Scroll extends React.Component {
   }
 
   handleScroll = () => {
-    if (!this.scrollCallbackId) {
-      this.scrollCallbackId = requestAnimationFrame(() => {
-        this.handleScrollUpdate(this.container.current.scrollTop)
-        this.scrollCallbackId = null
-      })
+    if (!this.#scrollCallback.current) {
+      this.#scrollCallback.current =
+        requestAnimationFrame(this.#scrollCallback)
     }
+  }
+
+  #scrollCallback = () => {
+    this.#scrollCallback.current = null
+    this.handleScrollUpdate(this.container.current.scrollTop)
   }
 
   handleScrollUpdate(top) {
