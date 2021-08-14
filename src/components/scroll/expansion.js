@@ -1,3 +1,23 @@
+import React from 'react'
+import { func, number, object, string } from 'prop-types'
+
+export const ExpansionRow = ({ item, columns, tag, renderExpansionRow }) =>
+  React.createElement(tag, {
+    key: `expansion-${item.id}`,
+    className: 'tile-expansion',
+    style: { gridColumnEnd: columns + 1 }
+  }, renderExpansionRow(item, columns))
+
+ExpansionRow.propTypes = {
+  renderExpansionRow: func.isRequired,
+  columns: number.isRequired,
+  item: object.isRequired,
+  tag: string.isRequired
+}
+
+ExpansionRow.defaultProps = {
+  tag: 'li'
+}
 
 export const getExpandedRowsAbove = (rows, x) => {
   let numRowsAbove = 0
@@ -19,18 +39,18 @@ export const getExpandedRowsAbove = (rows, x) => {
 export const getExpandedRows = (
   columns,
   items,
-  expanded,
+  expandedItems,
   isGrid,
   subItems = 'selections'
 ) =>
   isGrid ?
-    getExpandedGridRows(columns, items, expanded, subItems) :
-    getExpandedListRows(items, expanded, subItems)
+    getExpandedGridRows(columns, items, expandedItems, subItems) :
+    getExpandedListRows(items, expandedItems, subItems)
 
 
-const getExpandedListRows = (items, expanded, subItems) => {
+const getExpandedListRows = (items, expandedItems, subItems) => {
   let rows = []
-  let expansions = getExpansions(1, items, expanded, subItems)
+  let expansions = getExpansions(1, items, expandedItems, subItems)
 
   let count = 0
 
@@ -49,12 +69,12 @@ const getExpandedListRows = (items, expanded, subItems) => {
 }
 
 
-const getExpandedGridRows = (columns, items, expanded, subItems) => {
+const getExpandedGridRows = (columns, items, expandedItems, subItems) => {
   let rows = []
   let [expansion] = getExpansions(
     columns,
     items,
-    expanded.slice(0, 1),
+    expandedItems.slice(0, 1),
     subItems)
 
   if (expansion) {
@@ -72,10 +92,10 @@ const getExpandedGridRows = (columns, items, expanded, subItems) => {
 }
 
 
-const getExpansions = (columns, items, expanded, subItems) => {
+const getExpansions = (columns, items, expandedItems, subItems) => {
   let expansions = []
 
-  for (let item of expanded) {
+  for (let item of expandedItems) {
     let numRows = Math.ceil(item?.[subItems].length / columns) || 0
     let index = Math.floor(indexOf(items, item.id) / columns)
 

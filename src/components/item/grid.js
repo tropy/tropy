@@ -50,9 +50,9 @@ export class ItemGrid extends ItemIterator {
     }
   }
 
-  renderItemTile = (item) => (
+  renderItemTile = (item, index) => (
     <ItemTile
-      {...this.getIterableProps(item)}
+      {...this.getIterableProps(item, index)}
       key={item.id}
       item={item}/>
   )

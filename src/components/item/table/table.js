@@ -289,7 +289,7 @@ export class ItemTable extends ItemIterator {
 
   renderTableRow = (item, index) => {
     return (
-      <TableRow {...this.getIterableProps(item)}
+      <TableRow {...this.getIterableProps(item, index)}
         key={item.id}
         columns={this.state.columns}
         data={this.props.data[item.id]}
