@@ -4,12 +4,14 @@ import { createClickHandler } from '../util'
 import cx from 'classnames'
 import { IconSelectionOverlay, IconWarningOverlay } from '../icons'
 import { Button } from '../button'
+import { bool, number } from 'prop-types'
 
 
 class PhotoTile extends PhotoIterable {
   get classes() {
     return [...super.classes, 'tile', {
-      active: this.props.isSelected
+      active: this.props.isSelected,
+      last: this.props.isLast
     }]
   }
 
@@ -56,6 +58,11 @@ class PhotoTile extends PhotoIterable {
     )
   }
 
+  static propTypes = {
+    ...PhotoIterable.propTypes,
+    isLast: bool,
+    size: number
+  }
   static defaultProps = {
     ...PhotoIterable.defaultProps,
     size: 512

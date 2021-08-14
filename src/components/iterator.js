@@ -56,10 +56,6 @@ export class Iterator extends React.PureComponent {
     return this.isEmpty ? null : TABS[this.constructor.name]
   }
 
-  isLast(index) {
-    return index === this.size - 1
-  }
-
   getAdjacent = (iterable) => {
     return adjacent(this.getIterables(), iterable)
   }

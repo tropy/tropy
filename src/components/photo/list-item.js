@@ -98,8 +98,7 @@ class PhotoListItem extends PhotoIterable {
         onSelect={this.props.onSelect}
         onSort={this.props.onSelectionSort}
         photo={this.props.photo}
-        selections={this.selections}
-        size={this.props.size}/>
+        selections={this.selections}/>
     )
   }
 

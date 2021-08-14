@@ -32,7 +32,6 @@ export class PhotoIterable extends React.PureComponent {
       'drop-target': this.props.isSortable,
       'over': this.props.isOver,
       'dragging': this.props.isDragging,
-      'last': this.props.isLast,
       'expanded': this.props.isExpanded,
       'expandable': this.props.isExpandable,
       [this.direction]: this.props.isOver && this.state.offset != null
@@ -186,7 +185,6 @@ export class PhotoIterable extends React.PureComponent {
     cache: string.isRequired,
     isDisabled: bool,
     isDragging: bool,
-    isLast: bool,
     isExpandable: bool,
     isExpanded: bool,
     isItemOpen: bool,

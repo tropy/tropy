@@ -1,5 +1,5 @@
 import React from 'react'
-import { number } from 'prop-types'
+import { bool, number } from 'prop-types'
 import { ItemIterable } from './iterable'
 import { CoverImage } from './cover-image'
 import cx from 'classnames'
@@ -10,7 +10,7 @@ class ItemTile extends ItemIterable {
     return this.connect(
       <li
         ref={this.setContainer}
-        className={cx(this.classes, 'tile', 'click-catcher')}>
+        className={cx(this.classes, 'tile', { last: this.props.isLast })}>
         <div className="tile-state">
           <CoverImage
             cache={this.props.cache}
@@ -30,6 +30,7 @@ class ItemTile extends ItemIterable {
 
   static propTypes = {
     ...ItemIterable.propTypes,
+    isLast: bool,
     size: number.isRequired
   }
 

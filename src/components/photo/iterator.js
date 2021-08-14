@@ -164,7 +164,7 @@ export class PhotoIterator extends Iterator {
   }
 
 
-  getIterableProps(photo, index) {
+  getIterableProps(photo) {
     return {
       photo,
       cache: this.props.cache,
@@ -174,7 +174,6 @@ export class PhotoIterator extends Iterator {
       isItemOpen: this.props.isItemOpen,
       isSelected: this.isSelected(photo),
       isSortable: this.isSortable,
-      isLast: this.isLast(index),
       isVertical: this.isVertical,
       getAdjacent: this.getAdjacent,
       onContextMenu: this.props.onContextMenu,
