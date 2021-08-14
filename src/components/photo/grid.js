@@ -130,31 +130,27 @@ class PhotoGrid extends PhotoIterator {
     this.setState({ hasNestedTabFocus: false })
   }
 
-  renderSelectionGrid(photo, columns) {
-    const selections = pluck(this.props.selections, photo.selections)
-
-    return (
-      <SelectionGrid
-        active={this.props.selection}
-        cache={this.props.cache}
-        cols={columns}
-        data={this.props.data}
-        isDisabled={this.props.isDisabled}
-        keymap={this.props.keymap.SelectionGrid}
-        onBlur={this.handleNestedBlur}
-        onTabFocus={this.handleNestedTabFocus}
-        onContextMenu={this.props.onContextMenu}
-        onDelete={this.handleDelete}
-        onError={this.props.onError}
-        onItemOpen={this.handleItemOpen}
-        onRotate={this.handleRotate}
-        onSelect={this.select}
-        onSort={this.props.onSelectionSort}
-        photo={photo}
-        selections={selections}
-        size={this.props.size}/>
+  renderSelectionGrid = (photo, columns) => (
+    <SelectionGrid
+      active={this.props.selection}
+      cache={this.props.cache}
+      cols={columns}
+      data={this.props.data}
+      isDisabled={this.props.isDisabled}
+      keymap={this.props.keymap.SelectionGrid}
+      onBlur={this.handleNestedBlur}
+      onTabFocus={this.handleNestedTabFocus}
+      onContextMenu={this.props.onContextMenu}
+      onDelete={this.handleDelete}
+      onError={this.props.onError}
+      onItemOpen={this.handleItemOpen}
+      onRotate={this.handleRotate}
+      onSelect={this.select}
+      onSort={this.props.onSelectionSort}
+      photo={photo}
+      selections={pluck(this.props.selections, photo.selections)}
+      size={this.props.size}/>
     )
-  }
 
   render() {
     return this.connect(
@@ -166,23 +162,18 @@ class PhotoGrid extends PhotoIterator {
           items={this.props.photos}
           itemHeight={this.getRowHeight()}
           itemWidth={this.getRowHeight()}
-          expanded={this.props.expanded}
+          expandedItems={this.props.expanded}
           expansionPadding={SASS.GRID.PADDING * 4}
+          renderExpansionRow={this.renderSelectionGrid}
           tabIndex={this.tabIndex}
           onBlur={this.props.onBlur}
           onKeyDown={this.handleKeyDown}>
-          {(photo, index, range) => {
-            let props = this.getIterableProps(photo)
-
-            if (props.isExpanded)
-              range.renderExpansionRow(
-                index,
-                this.renderSelectionGrid(photo, range.props.columns))
-
-            return (
-              <PhotoTile {...props} key={photo.id} photo={photo}/>
-            )
-          }}
+          {(photo, index, { isExpanded }) =>
+            <PhotoTile
+              {...this.getIterableProps(photo, index)}
+              isExpanded={isExpanded}
+              key={photo.id}
+              photo={photo}/>}
         </Scroll>
       </div>
     )

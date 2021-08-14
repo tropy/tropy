@@ -161,19 +161,20 @@ class PhotoList extends PhotoIterator {
           ref={this.container}
           items={this.props.photos}
           itemHeight={SASS.ROW.HEIGHT}
-          expanded={this.props.expanded}
+          expandedItems={this.props.expanded}
 
           tabIndex={this.tabIndex}
           onBlur={onBlur}
           onKeyDown={this.handleKeyDown}>
-          {(photo) =>
-            <PhotoListItem {...this.getIterableProps(photo)}
+          {(photo, index, { isExpanded }) =>
+            <PhotoListItem {...this.getIterableProps(photo, index)}
               key={photo.id}
               photo={photo}
               data={data}
               edit={edit}
               selections={this.props.selections}
               title={dc.title}
+              isExpanded={isExpanded}
               isEditing={this.isEditing(photo)}
               onChange={onChange}
               onEdit={this.edit}

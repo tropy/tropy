@@ -46,7 +46,7 @@ export class Scroll extends React.Component {
     itemWidth,
     height,
     width,
-    expanded,
+    expandedItems,
     expansionPadding,
     overscan
   ) => {
@@ -55,7 +55,7 @@ export class Scroll extends React.Component {
     let expandedRows = getExpandedRows(
       columns,
       items,
-      expanded,
+      expandedItems,
       itemWidth > 0)
 
     let rows = Math.ceil(items.length / columns) + expandedRows.length
@@ -65,7 +65,7 @@ export class Scroll extends React.Component {
 
     let runway = rows * itemHeight
 
-    if (expanded.length > 0)
+    if (expandedItems.length > 0)
       runway += expansionPadding
 
     let pageOffset = Math.floor(overscanRows / 2) * itemHeight
@@ -181,11 +181,11 @@ export class Scroll extends React.Component {
       this.props.itemWidth,
       this.state.height,
       this.state.width,
-      this.props.expanded,
+      this.props.expandedItems,
       this.props.expansionPadding,
       this.props.overscan)
 
-    let { columns, expandedRows, rowsPerPage, runway } = this.layout
+    let { columns, rowsPerPage, runway } = this.layout
     let { row, numRowsAbove } = this.state
 
     let from = columns * Math.max(0, row - numRowsAbove)
@@ -207,11 +207,12 @@ export class Scroll extends React.Component {
             transform={this.transform}>
             <Range
               columns={columns}
-              isExpanded={expandedRows.length > 0}
               items={this.props.items}
               from={from}
               to={to}
-              mapper={this.props.children}/>
+              expandedItems={this.props.expandedItems}
+              renderExpansionRow={this.props.renderExpansionRow}
+              renderItem={this.props.children}/>
           </Viewport>
         </Runway>
       </ScrollContainer>
@@ -220,7 +221,7 @@ export class Scroll extends React.Component {
 
   static propTypes = {
     children: func.isRequired,
-    expanded: array.isRequired,
+    expandedItems: array.isRequired,
     expansionPadding: number.isRequired,
     items: array.isRequired,
     itemWidth: number,
@@ -229,12 +230,13 @@ export class Scroll extends React.Component {
     onKeyDown: func,
     onTabFocus: func,
     overscan: number.isRequired,
+    renderExpansionRow: func,
     tabIndex: number,
     tag: string
   }
 
   static defaultProps = {
-    expanded: [],
+    expandedItems: [],
     expansionPadding: 0,
     items: [],
     overscan: 1.25

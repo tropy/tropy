@@ -1,55 +1,54 @@
 import React from 'react'
 import { array, func, number } from 'prop-types'
+import { ExpansionRow } from './expansion'
 
-export class Range extends React.Component {
+const getNextRowOffset = (index, columns) =>
+  index + (columns - (index % columns))
 
-  getNextRowOffset(index) {
-    return index + (this.props.columns - (index % this.props.columns))
-  }
+export const Range = ({ columns, renderExpansionRow, ...props }) => {
+  let output = []
+  let expansion
 
-  renderItem = (item, index) => {
-    return this.props.mapper(item, this.props.from + index, this)
-  }
+  let range = props.items.slice(props.from, props.to)
 
-  renderExpansionRow = (index, output) => {
-    this.expansion = {
-      at: this.getNextRowOffset(index - this.props.from),
-      output: (
-        <li
-          key="expansion"
-          className="tile-expansion"
-          style={{ gridColumnEnd: this.props.columns + 1 }}>
-          {output}
-        </li>
-      )
-    }
-  }
+  for (let i = 0; i < range.length; ++i) {
+    let item = range[i]
+    let isExpanded = props.expandedItems.includes(item)
 
-  render() {
-    try {
-      let range = this.props.items.slice(this.props.from, this.props.to)
-      let output = range.map(this.renderItem)
+    output.push(props.renderItem(item, props.from + i, {
+      isExpanded
+    }))
 
-      if (this.expansion) {
-        output.splice(this.expansion.at, 0, this.expansion.output)
+    if (isExpanded && !expansion && renderExpansionRow) {
+      expansion = {
+        at: getNextRowOffset(i, columns),
+        row: React.createElement(ExpansionRow, {
+          item,
+          columns,
+          renderExpansionRow
+        })
       }
-
-      return output
-
-    } finally {
-      this.expansion = null
     }
   }
 
-  static propTypes = {
-    columns: number.isRequired,
-    items: array.isRequired,
-    from: number.isRequired,
-    to: number.isRequired,
-    mapper: func.isRequired
+  if (expansion) {
+    output.splice(expansion.at, 0, expansion.row)
   }
 
-  static defaultProps = {
-    columns: 1
-  }
+  return output
+}
+
+Range.propTypes = {
+  columns: number.isRequired,
+  expandedItems: array.isRequired,
+  from: number.isRequired,
+  items: array.isRequired,
+  to: number.isRequired,
+  renderExpansionRow: func,
+  renderItem: func.isRequired
+}
+
+Range.defaultProps = {
+  columns: 1,
+  expandedItems: []
 }
