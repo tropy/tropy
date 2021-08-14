@@ -117,6 +117,7 @@ class SelectionGrid extends SelectionIterator {
   static propTypes = {
     ...SelectionIterator.propTypes,
     cols: number.isRequired,
+    size: number.isRequired,
     keymap: object.isRequired,
     onBlur: func.isRequired,
     onTabFocus: func.isRequired

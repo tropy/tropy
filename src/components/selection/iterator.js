@@ -101,7 +101,6 @@ export class SelectionIterator extends Iterator {
       id: number.isRequired
     })).isRequired,
     cache: string.isRequired,
-    size: number.isRequired,
     onContextMenu: func.isRequired,
     onError: func.isRequired,
     onItemOpen: func.isRequired,

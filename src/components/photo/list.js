@@ -167,7 +167,7 @@ class PhotoList extends PhotoIterator {
           onBlur={onBlur}
           onKeyDown={this.handleKeyDown}>
           {(photo, index, { isExpanded }) =>
-            <PhotoListItem {...this.getIterableProps(photo, index)}
+            <PhotoListItem {...this.getIterableProps(photo)}
               key={photo.id}
               photo={photo}
               data={data}

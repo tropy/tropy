@@ -272,7 +272,6 @@ export class ItemIterator extends Iterator {
       cache: this.props.cache,
       photos: this.props.photos,
       tags: this.props.tags,
-      isLast: this.isLast(index),
       isSelected: this.isSelected(item),
       isReadOnly: this.props.isReadOnly,
       isVertical: this.isVertical,

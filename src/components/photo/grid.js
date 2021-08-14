@@ -170,10 +170,11 @@ class PhotoGrid extends PhotoIterator {
           onKeyDown={this.handleKeyDown}>
           {(photo, index, { isExpanded }) =>
             <PhotoTile
-              {...this.getIterableProps(photo, index)}
-              isExpanded={isExpanded}
+              {...this.getIterableProps(photo)}
               key={photo.id}
-              photo={photo}/>}
+              photo={photo}
+              isExpanded={isExpanded}
+              isLast={index >= this.props.photos.length - 1}/>}
         </Scroll>
       </div>
     )

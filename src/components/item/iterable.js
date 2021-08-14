@@ -17,8 +17,7 @@ export class ItemIterable extends React.PureComponent {
       'drop-target': !this.props.isReadOnly,
       'active': this.props.isSelected,
       'over': this.props.isOver && this.props.canDrop,
-      'dragging': this.props.isDragging,
-      'last': this.props.isLast
+      'dragging': this.props.isDragging
     }
   }
 
@@ -149,7 +148,6 @@ export class ItemIterable extends React.PureComponent {
 
   static propTypes = {
     isDragging: bool,
-    isLast: bool,
     isOver: bool,
     isSelected: bool,
     isReadOnly: bool,
