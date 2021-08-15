@@ -104,7 +104,6 @@ class ProjectView extends React.Component {
                 items={items}
                 isDisabled={isDisabled}
                 isTrashSelected={nav.trash}
-                isEmpty={isEmpty}
                 isReadOnly={isReadOnly}
                 photos={photos}
                 edit={edit.column}
