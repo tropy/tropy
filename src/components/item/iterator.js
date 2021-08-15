@@ -1,8 +1,6 @@
 import React from 'react'
 import { Iterator } from '../iterator'
-import { FormattedMessage } from 'react-intl'
 import { match, isMeta as meta } from '../../keymap'
-import cx from 'classnames'
 import { blank, get } from '../../common/util'
 import { on, off } from '../../dom'
 import { seq, compose, map, cat, keep } from 'transducers.js'
@@ -283,17 +281,6 @@ export class ItemIterator extends Iterator {
       onPhotoError: this.props.onPhotoError,
       onSelect: this.select
     }
-  }
-
-  renderNoItems() {
-    return this.connect(
-      <div className={
-        cx('no-items', 'drop-target', { over: this.props.isOver })
-      }>
-        <figure className="no-items-illustration"/>
-        <h1><FormattedMessage id="project.empty"/></h1>
-      </div>
-    )
   }
 
   static propTypes = {
