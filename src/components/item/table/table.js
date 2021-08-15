@@ -317,7 +317,7 @@ export class ItemTable extends ItemIterator {
   }
 
   render() {
-    return (this.props.isEmpty) ? this.renderNoItems() : (
+    return (
       <div
         ref={this.setTable}
         className={cx('item-table', {

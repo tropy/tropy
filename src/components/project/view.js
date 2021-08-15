@@ -1,7 +1,7 @@
 import React from 'react'
 import { WindowContext } from '../window'
 import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd'
-import { ItemGrid, ItemTable } from '../item'
+import { ItemGrid, ItemTable, NoItems } from '../item'
 import { ProjectSidebar } from './sidebar'
 import { ProjectToolbar } from './toolbar'
 import { pick } from '../../common/util'
@@ -94,25 +94,30 @@ class ProjectView extends React.Component {
                 onSearch={onSearch}
                 onZoomChange={this.handleZoomChange}/>
             </header>
-            <ItemIterator {...pick(this.props, ItemIterator.getPropKeys())}
-              ref={this.iterator}
-              items={items}
-              isDisabled={isDisabled}
-              isTrashSelected={nav.trash}
-              isEmpty={isEmpty}
-              isReadOnly={isReadOnly}
-              photos={photos}
-              edit={edit.column}
-              keymap={keymap.ItemIterator}
-              list={nav.list}
-              selection={nav.items}
-              size={size}
-              tags={tags}
-              hasScrollbars={this.context.state.scrollbars}
-              isOver={isOver && canDrop}
-              onCreate={onItemCreate}
-              onSelect={onItemSelect}
-              onSort={this.handleSort}/>
+            {isEmpty ?
+              <NoItems
+                connectDropTarget={this.props.connectDropTarget}
+                isOver={isOver && canDrop}
+                isReadOnly={isReadOnly}/> :
+              <ItemIterator {...pick(this.props, ItemIterator.getPropKeys())}
+                ref={this.iterator}
+                items={items}
+                isDisabled={isDisabled}
+                isTrashSelected={nav.trash}
+                isEmpty={isEmpty}
+                isReadOnly={isReadOnly}
+                photos={photos}
+                edit={edit.column}
+                keymap={keymap.ItemIterator}
+                list={nav.list}
+                selection={nav.items}
+                size={size}
+                tags={tags}
+                hasScrollbars={this.context.state.scrollbars}
+                isOver={isOver && canDrop}
+                onCreate={onItemCreate}
+                onSelect={onItemSelect}
+                onSort={this.handleSort}/>}
           </section>
         </div>
       </div>
