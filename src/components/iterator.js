@@ -15,16 +15,8 @@ export class Iterator extends React.PureComponent {
     }
   }
 
-  focus = () => {
-    this.container.current.focus()
-  }
-
   get isVertical() {
     return this.container.current?.layout.columns === 1
-  }
-
-  get isHorizontal() {
-    return !this.isVertical
   }
 
   get isDisabled() {
