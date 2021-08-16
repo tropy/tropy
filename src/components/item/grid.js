@@ -5,6 +5,7 @@ import { Scroll } from '../scroll'
 import { refine } from '../../common/util'
 import cx from 'classnames'
 import { match, isMeta } from '../../keymap'
+import { SASS } from '../../constants'
 
 
 export class ItemGrid extends ItemIterator {
@@ -59,6 +60,8 @@ export class ItemGrid extends ItemIterator {
   )
 
   render() {
+    let tileSize = Math.round(this.props.size * SASS.TILE.FACTOR)
+
     return this.connect(
       <div
         className={cx(this.classes)}
@@ -66,8 +69,8 @@ export class ItemGrid extends ItemIterator {
         <Scroll
           ref={this.container}
           items={this.props.items}
-          itemHeight={this.getRowHeight()}
-          itemWidth={this.getRowHeight()}
+          itemHeight={tileSize}
+          itemWidth={tileSize}
           tabIndex={this.tabIndex}
           onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}

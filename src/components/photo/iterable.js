@@ -106,7 +106,7 @@ export class PhotoIterable extends React.PureComponent {
         ...pick(photo, Thumbnail.keys),
         id: photo.id,
         item: photo.item,
-        adj: getAdjacent(photo).map(p => p && p.id)
+        adj: getAdjacent(photo)
       }
     },
 

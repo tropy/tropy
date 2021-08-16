@@ -2,7 +2,7 @@ import React from 'react'
 import { Iterator } from '../iterator'
 import { DND, DropTarget } from '../dnd'
 import { arrayOf, bool, func, number, shape, string } from 'prop-types'
-import { move } from '../../common/util'
+import { adjacent, move } from '../../common/util'
 
 
 export class SelectionIterator extends Iterator {
@@ -62,6 +62,10 @@ export class SelectionIterator extends Iterator {
 
   connect(element) {
     return this.isSortable ? this.props.dropTarget(element) : element
+  }
+
+  getAdjacent = (selection) => {
+    return adjacent(this.props.selections, selection).map(s => s.id)
   }
 
   map(fn) {
