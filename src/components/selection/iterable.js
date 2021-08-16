@@ -135,7 +135,7 @@ const DragSourceSpec = {
       color: photo.color,
       mimetype: photo.mimetype,
       orientation: photo.orientation,
-      adj: getAdjacent(selection).map(s => s && s.id)
+      adj: getAdjacent(selection)
     }
   },
 

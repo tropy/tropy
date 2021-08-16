@@ -12,7 +12,6 @@ import {
 
 export class ItemIterator extends Iterator {
   componentDidMount() {
-    super.componentDidMount()
     on(document, 'global:next-item', this.handleNextItem)
     on(document, 'global:prev-item', this.handlePrevItem)
     on(document, 'global:forward', this.handleItemOpen)

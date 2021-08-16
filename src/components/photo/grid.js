@@ -153,6 +153,8 @@ class PhotoGrid extends PhotoIterator {
     )
 
   render() {
+    let tileSize = Math.round(this.props.size * SASS.TILE.FACTOR)
+
     return this.connect(
       <div
         className={cx(this.classes)}
@@ -160,8 +162,8 @@ class PhotoGrid extends PhotoIterator {
         <Scroll
           ref={this.container}
           items={this.props.photos}
-          itemHeight={this.getRowHeight()}
-          itemWidth={this.getRowHeight()}
+          itemHeight={tileSize}
+          itemWidth={tileSize}
           expandedItems={this.props.expanded}
           expansionPadding={SASS.GRID.PADDING * 4}
           renderExpansionRow={this.renderSelectionGrid}

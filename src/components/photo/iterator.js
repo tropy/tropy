@@ -1,7 +1,7 @@
 import React from 'react'
 import { Iterator } from '../iterator'
 import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd'
-import { last, move, noop } from '../../common/util'
+import { adjacent, last, move, noop } from '../../common/util'
 import { on, off } from '../../dom'
 
 import {
@@ -11,13 +11,11 @@ import {
 
 export class PhotoIterator extends Iterator {
   componentDidMount() {
-    super.componentDidMount()
     on(document, 'global:next-photo', this.handleNextPhoto)
     on(document, 'global:prev-photo', this.handlePrevPhoto)
   }
 
   componentWillUnmount() {
-    super.componentWillUnmount()
     this.props.onBlur()
     off(document, 'global:next-photo', this.handleNextPhoto)
     off(document, 'global:prev-photo', this.handlePrevPhoto)
@@ -163,6 +161,9 @@ export class PhotoIterator extends Iterator {
       this.rotate(by, this.props.current)
   }
 
+  getAdjacent = (photo) => {
+    return adjacent(this.props.photos, photo).map(p => p.id)
+  }
 
   getIterableProps(photo) {
     return {

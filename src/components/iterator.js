@@ -1,22 +1,13 @@
 import React from 'react'
-import { TABS, SASS } from '../constants'
-import { adjacent } from '../common/util'
+import { TABS } from '../constants'
 import { isMeta } from '../keymap'
 import { bool, number, oneOf } from 'prop-types'
-
-const EMPTY = []
 
 
 export class Iterator extends React.PureComponent {
   container = React.createRef()
 
   state = {}
-
-  componentDidMount() {
-  }
-
-  componentWillUnmount() {
-  }
 
   componentDidUpdate(props) {
     if (props.size !== this.props.size) {
@@ -28,20 +19,12 @@ export class Iterator extends React.PureComponent {
     this.container.current.focus()
   }
 
-  get bounds() {
-    return this.container.current.bounds
-  }
-
   get isVertical() {
     return this.container.current?.layout.columns === 1
   }
 
   get isHorizontal() {
     return !this.isVertical
-  }
-
-  get isEmpty() {
-    return this.size === 0
   }
 
   get isDisabled() {
@@ -53,15 +36,7 @@ export class Iterator extends React.PureComponent {
   }
 
   get tabIndex() {
-    return this.isEmpty ? null : TABS[this.constructor.name]
-  }
-
-  getAdjacent = (iterable) => {
-    return adjacent(this.getIterables(), iterable)
-  }
-
-  getIterables() {
-    return EMPTY
+    return this.size === 0 ? null : TABS[this.constructor.name]
   }
 
   getIterableAt(idx, items = this.getIterables(), mode = this.props.restrict) {
@@ -82,20 +57,8 @@ export class Iterator extends React.PureComponent {
     return items[idx]
   }
 
-  getRowHeight(size = this.props.size) {
-    return this.getTileSize(size)
-  }
-
-  getTileSize(size = this.props.size) {
-    return Math.round(size * SASS.TILE.FACTOR)
-  }
-
   getIterablesPerPage() {
     return this.state.cols * this.state.viewportRows
-  }
-
-  getIterableProps(item) {
-    return item
   }
 
   indexOf(id, props = this.props) {
@@ -130,10 +93,6 @@ export class Iterator extends React.PureComponent {
     return this.next(0)
   }
 
-  head() {
-    throw new Error('not implemented')
-  }
-
   first() {
     return this.getIterables()[0]
   }
@@ -149,14 +108,6 @@ export class Iterator extends React.PureComponent {
 
   pageUp() {
     return this.prev(this.getIterablesPerPage(), 'bounds')
-  }
-
-  isSelected() {
-    throw new Error('not implemented')
-  }
-
-  select() {
-    throw new Error('not implemented')
   }
 
   scroll(offset = 0) {
