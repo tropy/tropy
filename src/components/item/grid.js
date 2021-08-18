@@ -68,13 +68,15 @@ export class ItemGrid extends ItemIterator {
         data-size={this.props.size}>
         <Scroll
           ref={this.container}
+          autoselect
+          cursor={this.indexOf(this.head()) || 0}
           items={this.props.items}
           itemHeight={tileSize}
           itemWidth={tileSize}
           tabIndex={this.tabIndex}
           onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
-          onTabFocus={this.handleFocus}>
+          onSelect={this.handleSelectItem}>
           {this.renderItemTile}
         </Scroll>
       </div>

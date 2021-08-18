@@ -46,33 +46,8 @@ export class NoteList extends Iterator {
     })
   }
 
-  handleFocus = () => {
-    // No auto-select, because that could change the active photo!
-    if (this.props.onTabFocus) {
-      this.props.onTabFocus()
-    }
-  }
-
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
-      case 'up':
-        this.select(this.prev(), { scrollIntoView: true, throttle: true })
-        break
-      case 'down':
-        this.select(this.next(), { scrollIntoView: true, throttle: true })
-        break
-      case 'home':
-        this.handleHomeKey(event)
-        break
-      case 'end':
-        this.handleEndKey(event)
-        break
-      case 'pageUp':
-        this.handlePageUp(event)
-        break
-      case 'pageDown':
-        this.handlePageDown(event)
-        break
       case 'open':
         this.props.onOpen(this.current())
         break
@@ -110,7 +85,7 @@ export class NoteList extends Iterator {
           tabIndex={this.tabIndex}
           onBlur={this.props.onBlur}
           onKeyDown={this.handleKeyDown}
-          onTabFocus={this.handleFocus}>
+          onTabFocus={this.props.onTabFocus}>
           {(note) =>
             <NoteListItem
               {...this.getIterableProps(note)}

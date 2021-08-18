@@ -61,36 +61,6 @@ class PhotoGrid extends PhotoIterator {
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
-      case (this.isVertical ? 'up' : 'left'):
-        this.handlePrevPhoto()
-        break
-      case (this.isVertical ? 'down' : 'right'):
-        this.handleNextPhoto(event)
-        break
-      case (this.isVertical ? 'left' : 'up'):
-        this.select(this.prev(this.container.current.layout.columns), {
-          scrollIntoView: true,
-          throttle: true
-        })
-        break
-      case (this.isVertical ? 'right' : 'down'):
-        this.select(this.next(this.container.current.layout.columns), {
-          scrollIntoView: true,
-          throttle: true
-        })
-        break
-      case 'home':
-        this.handleHomeKey(event)
-        break
-      case 'end':
-        this.handleEndKey(event)
-        break
-      case 'pageUp':
-        this.handlePageUp(event)
-        break
-      case 'pageDown':
-        this.handlePageDown(event)
-        break
       case 'open':
         this.handleItemOpen(this.current())
         break
@@ -161,6 +131,7 @@ class PhotoGrid extends PhotoIterator {
         data-size={this.props.size}>
         <Scroll
           ref={this.container}
+          cursor={this.indexOf(this.head()) || 0}
           items={this.props.photos}
           itemHeight={tileSize}
           itemWidth={tileSize}
@@ -169,6 +140,7 @@ class PhotoGrid extends PhotoIterator {
           renderExpansionRow={this.renderSelectionGrid}
           tabIndex={this.tabIndex}
           onBlur={this.props.onBlur}
+          onTabFocus={this.props.onTabFocus}
           onKeyDown={this.handleKeyDown}>
           {(photo, index, { isExpanded }) =>
             <PhotoTile

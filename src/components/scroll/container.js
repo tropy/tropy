@@ -94,7 +94,7 @@ export class ScrollContainer extends React.Component {
         className={cx('scroll-container', this.props.className)}
         onBlur={this.props.onBlur}
         onClick={this.props.onClick && this.handleClick}
-        onKeyDown={this.props.onKeyDown}
+        onKeyDown={this.props.tabIndex && this.props.onKeyDown}
         tabIndex={this.props.tabIndex}>
         {this.props.children}
       </div>

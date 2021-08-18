@@ -25,6 +25,10 @@ export class ItemIterator extends Iterator {
     off(window, 'copy', this.handleCopy)
   }
 
+  focus() {
+    this.container.current?.focus()
+  }
+
   get tabIndex() {
     return this.props.isDisabled ? null : super.tabIndex
   }
@@ -140,24 +144,6 @@ export class ItemIterator extends Iterator {
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
-      case (this.isVertical ? 'up' : 'left'):
-        this.handlePrevItem(event)
-        break
-      case (this.isVertical ? 'down' : 'right'):
-        this.handleNextItem(event)
-        break
-      case 'home':
-        this.handleHomeKey(event)
-        break
-      case 'end':
-        this.handleEndKey(event)
-        break
-      case 'pageUp':
-        this.handlePageUp(event)
-        break
-      case 'pageDown':
-        this.handlePageDown(event)
-        break
       case 'open':
         this.handleItemOpen()
         break
@@ -195,29 +181,39 @@ export class ItemIterator extends Iterator {
   }
 
   handleNextItem = (event) => {
-    this.handleSelectItem(this.next(), event)
+    let item = this.next()
+    this.handleSelectItem(item, event)
+    this.scrollIntoView(item, false)
   }
 
   handlePrevItem = (event) => {
-    this.handleSelectItem(this.prev(), event)
+    let item = this.prev()
+    this.handleSelectItem(item, event)
+    this.scrollIntoView(item, false)
   }
 
-  handleSelectItem(item, event) {
+  handleSelectItem = (item, event) => {
     this.select(item, {
-      isMeta: meta(event),
-      isRange: event.shiftKey,
-      scrollIntoView: true,
+      isMeta: event && meta(event),
+      isRange: event?.shiftKey,
       throttle: true
     })
   }
 
-  select = (item, { isMeta, isRange, scrollIntoView, throttle } = {}) => {
+  range({ from = this.head(), to } = {}) {
+    const items = this.getIterables()
+
+    from = (from == null) ? 0 : this.indexOf(from)
+    to = (to == null) ? this.size - 1 : this.indexOf(to)
+
+    return (from > to) ?
+      items.slice(to, from + 1).reverse() :
+      items.slice(from, to + 1)
+  }
+
+  select = (item, { isMeta, isRange, throttle } = {}) => {
     if (item == null || this.size === 0) return
     let mod, items
-
-    if (scrollIntoView) {
-      this.scrollIntoView(item, false)
-    }
 
     switch (true) {
       case isRange:
