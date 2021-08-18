@@ -19,7 +19,3 @@ export const mkdtmp = (name = 'tropy') =>
 export const normalize = win32 ?
   (path) => path :
   (path) => path.replace(/\\/g, '/')
-
-export const meta = darwin ?
-  (event) => event.metaKey :
-  (event) => event.ctrlKey
