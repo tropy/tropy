@@ -107,11 +107,6 @@ export class PhotoIterator extends Iterator {
     return false
   }
 
-  handleFocus = () => {
-    // No auto-select, because that could change the active photo!
-    this.props.onTabFocus()
-  }
-
   handleItemOpen = (photo) => {
     if (this.props.isItemOpen) {
       return this.expand(photo)

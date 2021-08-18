@@ -275,12 +275,14 @@ export class ItemTable extends ItemIterator {
         <Scroll
           ref={this.container}
           tag="div"
+          autoselect
+          cursor={this.indexOf(this.head()) || 0}
           items={this.props.items}
           itemHeight={ROW.HEIGHT}
           tabIndex={this.tabIndex}
           onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
-          onTabFocus={this.handleFocus}>
+          onSelect={this.handleSelectItem}>
           {this.renderTableRow}
         </Scroll>
       </div>

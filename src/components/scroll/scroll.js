@@ -1,5 +1,5 @@
 import React from 'react'
-import { array, func, number, string } from 'prop-types'
+import { array, bool, func, number, oneOf, string } from 'prop-types'
 import { Range } from './range'
 import { Runway } from './runway'
 import { ScrollContainer } from './container'
@@ -28,12 +28,64 @@ export class Scroll extends React.Component {
     this.handleResize(this.container.current.bounds)
   }
 
+  componentDidUpdate({ itemHeight }) {
+    if (itemHeight !== this.props.itemHeight)
+      this.scrollIntoView()
+  }
+
   get tabIndex() {
     return this.props.items.length === 0 ? null : this.props.tabIndex
   }
 
   get transform() {
     return `translate3d(0,${this.state.offset}px,0)`
+  }
+
+  next(offset = 1) {
+    let index = this.props.cursor + offset
+
+    if (index >= 0 && index < this.props.items.length)
+      return index
+
+    switch (this.props.restrict) {
+      case 'wrap':
+        index = index % this.props.items.length
+        return (index < 0) ?
+          index + this.props.items.length : index
+
+      case 'bounds':
+        return (index < 0) ? 0 : this.props.items.length - 1
+
+      default:
+        return null
+    }
+  }
+
+  prev(offset = 1) {
+    return this.next(-offset)
+  }
+
+  first() {
+    return this.props.items.length > 0 ? 0 : null
+  }
+
+  last() {
+    return this.props.items.length > 0 ? this.props.items.length - 1 : null
+  }
+
+  pageUp() {
+    return this.prev(this.layout.visibleItems)
+  }
+
+  pageDown() {
+    return this.next(this.layout.visibleItems)
+  }
+
+  select(index, event) {
+    this.props.onSelect(this.props.items[index], event)
+
+    if (index != null)
+      this.scrollIntoView(index)
   }
 
   focus() {
@@ -60,6 +112,7 @@ export class Scroll extends React.Component {
 
     let rows = Math.ceil(items.length / columns) + expandedRows.length
     let visibleRows = Math.ceil(height / itemHeight)
+    let visibleItems = visibleRows * columns
     let overscanRows = Math.max(2, Math.ceil(visibleRows * overscan))
     let rowsPerPage = visibleRows + overscanRows
 
@@ -80,9 +133,74 @@ export class Scroll extends React.Component {
       rowsPerPage,
       runway,
       pageOffset,
-      maxOffset
+      maxOffset,
+      visibleItems
     }
   })
+
+  handleKeyDown = (event) => {
+    this.props.onKeyDown?.(event)
+
+    if (!event.isDefaultPrevented()) {
+
+      // By default, the home, end, page up, page down and arrow keys
+      // will work as expected for the ScrollContainer. If we have an
+      // `onSelect` callback, however, we override the default behavior
+      // of the arrow keys to select items instead of only scrolling
+      // the container.
+
+      if (this.props.onSelect) {
+        let { columns } = this.layout
+        let { cursor } = this.props
+
+        if (event.ctrlKey || event.metaKey)
+          return
+
+        switch (event.key) {
+          case 'ArrowDown':
+            if (event.altKey)
+              this.select(this.last(), event)
+            else
+              this.select(this.next(columns), event)
+            break
+
+          case 'ArrowUp':
+            if (event.altKey)
+              this.select(this.first(), event)
+            else
+              this.select(this.prev(columns), event)
+            break
+
+          case 'ArrowRight':
+            if (!this.props.itemWidth)
+              return
+
+            if (event.altKey)
+              this.select(this.next(columns - 1 - (cursor % columns)), event)
+            else
+              this.select(this.next(), event)
+            break
+
+          case 'ArrowLeft':
+            if (!this.props.itemWidth)
+              return
+
+            if (event.altKey)
+              this.select(this.prev(cursor % columns), event)
+            else
+              this.select(this.prev(), event)
+            break
+
+          default:
+            return
+        }
+
+        event.preventDefault()
+        event.stopPropagation()
+        event.nativeEvent.stopImmediatePropagation()
+      }
+    }
+  }
 
   handleResize = ({ width, height }) => {
     this.setState({ width, height }, () => {
@@ -131,16 +249,13 @@ export class Scroll extends React.Component {
     })
   }
 
-  pageUp() {
-    this.scrollBy(-this.state.height)
-  }
+  handleTabFocus = (event) => {
+    if (this.props.autoselect)
+      this.select(this.props.cursor)
+    else
+      this.scrollIntoView()
 
-  pageDown() {
-    this.scrollBy(this.state.height)
-  }
-
-  toEnd() {
-    this.scroll(this.layout.runway - this.state.height)
+    this.props.onTabFocus?.(event)
   }
 
   scroll(...args) {
@@ -148,16 +263,28 @@ export class Scroll extends React.Component {
   }
 
   scrollBy(...args) {
-    this.container.current.scroll(...args)
+    this.container.current.scrollBy(...args)
   }
 
-  scrollIntoView(idx, { force } = {}) {
+  scrollPageDown() {
+    this.scrollBy(this.state.height)
+  }
+
+  scrollPageUp() {
+    this.scrollBy(-this.state.height)
+  }
+
+  scrollToEnd() {
+    this.scroll(this.layout.maxOffset)
+  }
+
+  scrollIntoView(index = this.props.cursor, { force } = {}) {
     let { columns } = this.layout
     let { itemHeight } = this.props
     let { height } = this.state
 
     let top = this.container.current.scrollTop
-    let offset = Math.floor(idx / columns) * itemHeight
+    let offset = Math.floor(index / columns) * itemHeight
 
     // TODO adjust expansion rows and padding
 
@@ -195,10 +322,10 @@ export class Scroll extends React.Component {
       <ScrollContainer
         ref={this.container}
         onClick={this.props.onClick}
-        onKeyDown={this.props.onKeyDown}
+        onKeyDown={this.handleKeyDown}
         onResize={this.handleResize}
         onScroll={this.handleScroll}
-        onTabFocus={this.props.onTabFocus}
+        onTabFocus={this.handleTabFocus}
         tabIndex={this.tabIndex}>
         <Runway height={runway}>
           <Viewport
@@ -220,7 +347,9 @@ export class Scroll extends React.Component {
   }
 
   static propTypes = {
+    autoselect: bool,
     children: func.isRequired,
+    cursor: number.isRequired,
     expandedItems: array.isRequired,
     expansionPadding: number.isRequired,
     items: array.isRequired,
@@ -229,16 +358,20 @@ export class Scroll extends React.Component {
     onClick: func,
     onKeyDown: func,
     onTabFocus: func,
+    onSelect: func,
     overscan: number.isRequired,
     renderExpansionRow: func,
+    restrict: oneOf(['bounds', 'wrap', 'none']).isRequired,
     tabIndex: number,
     tag: string
   }
 
   static defaultProps = {
+    cursor: 0,
     expandedItems: [],
     expansionPadding: 0,
     items: [],
-    overscan: 1.25
+    overscan: 1.25,
+    restrict: 'bounds'
   }
 }

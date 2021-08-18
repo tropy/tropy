@@ -77,8 +77,6 @@ export class OptionList extends Iterator {
     return this.props.selection.includes(id)
   }
 
-  handleFocus = false
-
   handleHover = (event, isActive, option) => {
     if (this.hasMoved(event) && !isActive) {
       this.props.onActivate(option)

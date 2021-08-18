@@ -97,24 +97,6 @@ class PhotoList extends PhotoIterator {
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
-      case 'up':
-        this.handlePrevPhoto(event)
-        break
-      case 'down':
-        this.handleNextPhoto(event)
-        break
-      case 'home':
-        this.handleHomeKey(event)
-        break
-      case 'end':
-        this.handleEndKey(event)
-        break
-      case 'pageUp':
-        this.handlePageUp(event)
-        break
-      case 'pageDown':
-        this.handlePageDown(event)
-        break
       case 'left':
       case 'contract':
         if (!this.contract(this.current())) return
@@ -159,12 +141,14 @@ class PhotoList extends PhotoIterator {
       <div className={cx(this.classes)}>
         <Scroll
           ref={this.container}
+          cursor={this.indexOf(this.head()) || 0}
           items={this.props.photos}
           itemHeight={SASS.ROW.HEIGHT}
           expandedItems={this.props.expanded}
 
           tabIndex={this.tabIndex}
           onBlur={onBlur}
+          onTabFocus={this.props.onTabFocus}
           onKeyDown={this.handleKeyDown}>
           {(photo, index, { isExpanded }) =>
             <PhotoListItem {...this.getIterableProps(photo)}
