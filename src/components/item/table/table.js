@@ -275,7 +275,7 @@ export class ItemTable extends ItemIterator {
           ref={this.container}
           tag="div"
           autoselect
-          cursor={this.indexOf(this.head()) || 0}
+          cursor={this.indexOf(this.head())}
           items={this.props.items}
           itemHeight={ROW.HEIGHT}
           tabIndex={this.tabIndex}

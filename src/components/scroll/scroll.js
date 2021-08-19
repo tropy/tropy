@@ -41,9 +41,7 @@ export class Scroll extends React.Component {
     return `translate3d(0,${this.state.offset}px,0)`
   }
 
-  next(offset = 1) {
-    let index = this.props.cursor + offset
-
+  sanitize(index) {
     if (index >= 0 && index < this.props.items.length)
       return index
 
@@ -61,31 +59,50 @@ export class Scroll extends React.Component {
     }
   }
 
-  prev(offset = 1) {
-    return this.next(-offset)
+  next(offset = 1, event) {
+    if (this.props.cursor != null)
+      return this.select(this.sanitize(this.props.cursor + offset), event)
+    else
+      return this.first()
   }
 
-  first() {
-    return this.props.items.length > 0 ? 0 : null
+  prev(offset = 1, event) {
+    if (this.props.cursor != null)
+      return this.next(-offset, event)
+    else
+      return this.last()
   }
 
-  last() {
-    return this.props.items.length > 0 ? this.props.items.length - 1 : null
+  first(event) {
+    return this.select(
+      this.props.items.length > 0 ? 0 : null,
+      event
+    )
   }
 
-  pageUp() {
-    return this.prev(this.layout.visibleItems)
+  last(event) {
+    return this.select(
+      this.props.items.length > 0 ? this.props.items.length - 1 : null,
+      event
+    )
   }
 
-  pageDown() {
-    return this.next(this.layout.visibleItems)
+  pageUp(event) {
+    return this.prev(this.layout.visibleItems, event)
+  }
+
+  pageDown(event) {
+    return this.next(this.layout.visibleItems, event)
   }
 
   select(index, event) {
-    this.props.onSelect(this.props.items[index], event)
-
     if (index != null)
       this.scrollIntoView(index)
+
+    let item = this.props.items[index]
+    this.props.onSelect?.(item, event)
+
+    return item
   }
 
   focus() {
@@ -151,7 +168,7 @@ export class Scroll extends React.Component {
 
       if (this.props.onSelect) {
         let { columns } = this.layout
-        let { cursor } = this.props
+        let cursor = this.props.cursor ?? 0
 
         if (event.ctrlKey || event.metaKey)
           return
@@ -159,16 +176,16 @@ export class Scroll extends React.Component {
         switch (event.key) {
           case 'ArrowDown':
             if (event.altKey)
-              this.select(this.last(), event)
+              this.last(event)
             else
-              this.select(this.next(columns), event)
+              this.next(columns, event)
             break
 
           case 'ArrowUp':
             if (event.altKey)
-              this.select(this.first(), event)
+              this.first(event)
             else
-              this.select(this.prev(columns), event)
+              this.prev(columns, event)
             break
 
           case 'ArrowRight':
@@ -176,9 +193,9 @@ export class Scroll extends React.Component {
               return
 
             if (event.altKey)
-              this.select(this.next(columns - 1 - (cursor % columns)), event)
+              this.next(columns - 1 - (cursor % columns), event)
             else
-              this.select(this.next(), event)
+              this.next(1, event)
             break
 
           case 'ArrowLeft':
@@ -186,9 +203,9 @@ export class Scroll extends React.Component {
               return
 
             if (event.altKey)
-              this.select(this.prev(cursor % columns), event)
+              this.prev(cursor % columns, event)
             else
-              this.select(this.prev(), event)
+              this.prev(1, event)
             break
 
           default:
@@ -251,7 +268,7 @@ export class Scroll extends React.Component {
 
   handleTabFocus = (event) => {
     if (this.props.autoselect)
-      this.select(this.props.cursor)
+      this.select(this.props.cursor ?? 0)
     else
       this.scrollIntoView()
 
@@ -278,7 +295,7 @@ export class Scroll extends React.Component {
     this.scroll(this.layout.maxOffset)
   }
 
-  scrollIntoView(index = this.props.cursor, { force } = {}) {
+  scrollIntoView(index = this.props.cursor ?? 0, { force } = {}) {
     let { columns } = this.layout
     let { itemHeight } = this.props
     let { height } = this.state
@@ -349,7 +366,7 @@ export class Scroll extends React.Component {
   static propTypes = {
     autoselect: bool,
     children: func.isRequired,
-    cursor: number.isRequired,
+    cursor: number,
     expandedItems: array.isRequired,
     expansionPadding: number.isRequired,
     items: array.isRequired,
@@ -367,7 +384,6 @@ export class Scroll extends React.Component {
   }
 
   static defaultProps = {
-    cursor: 0,
     expandedItems: [],
     expansionPadding: 0,
     items: [],
