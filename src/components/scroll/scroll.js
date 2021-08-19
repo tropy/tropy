@@ -41,6 +41,10 @@ export class Scroll extends React.Component {
     return `translate3d(0,${this.state.offset}px,0)`
   }
 
+  get current() {
+    return this.props.items[this.next(0)]
+  }
+
   sanitize(index) {
     if (index >= 0 && index < this.props.items.length)
       return index
@@ -59,40 +63,34 @@ export class Scroll extends React.Component {
     }
   }
 
-  next(offset = 1, event) {
+  next(offset = 1) {
     if (this.props.cursor != null)
-      return this.select(this.sanitize(this.props.cursor + offset), event)
+      return this.sanitize(this.props.cursor + offset)
     else
       return this.first()
   }
 
-  prev(offset = 1, event) {
+  prev(offset = 1) {
     if (this.props.cursor != null)
-      return this.next(-offset, event)
+      return this.next(-offset)
     else
       return this.last()
   }
 
-  first(event) {
-    return this.select(
-      this.props.items.length > 0 ? 0 : null,
-      event
-    )
+  first() {
+    return this.props.items.length > 0 ? 0 : null
   }
 
-  last(event) {
-    return this.select(
-      this.props.items.length > 0 ? this.props.items.length - 1 : null,
-      event
-    )
+  last() {
+    return this.props.items.length > 0 ? this.props.items.length - 1 : null
   }
 
-  pageUp(event) {
-    return this.prev(this.layout.visibleItems, event)
+  pageUp() {
+    return this.prev(this.layout.visibleItems)
   }
 
-  pageDown(event) {
-    return this.next(this.layout.visibleItems, event)
+  pageDown() {
+    return this.next(this.layout.visibleItems)
   }
 
   select(index, event) {
@@ -176,16 +174,16 @@ export class Scroll extends React.Component {
         switch (event.key) {
           case 'ArrowDown':
             if (event.altKey)
-              this.last(event)
+              this.select(this.last(), event)
             else
-              this.next(columns, event)
+              this.select(this.next(columns), event)
             break
 
           case 'ArrowUp':
             if (event.altKey)
-              this.first(event)
+              this.select(this.first(), event)
             else
-              this.prev(columns, event)
+              this.select(this.prev(columns), event)
             break
 
           case 'ArrowRight':
@@ -193,9 +191,9 @@ export class Scroll extends React.Component {
               return
 
             if (event.altKey)
-              this.next(columns - 1 - (cursor % columns), event)
+              this.select(this.next(columns - 1 - (cursor % columns)), event)
             else
-              this.next(1, event)
+              this.select(this.next(), event)
             break
 
           case 'ArrowLeft':
@@ -203,9 +201,9 @@ export class Scroll extends React.Component {
               return
 
             if (event.altKey)
-              this.prev(cursor % columns, event)
+              this.select(this.prev(cursor % columns), event)
             else
-              this.prev(1, event)
+              this.select(this.prev(), event)
             break
 
           default:

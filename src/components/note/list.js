@@ -1,13 +1,15 @@
 import React from 'react'
-import { Iterator } from '../iterator'
 import { Scroll } from '../scroll'
 import { NoteListItem } from './list-item'
 import { TABS, SASS } from '../../constants'
 import { match } from '../../keymap'
+import { indexOf } from '../../common/collection'
 import { arrayOf, bool, func, number, object, shape } from 'prop-types'
 
 
-export class NoteList extends Iterator {
+export class NoteList extends React.Component {
+  scroll = React.createRef()
+
   get tabIndex() {
     return this.size === 0 ? null : TABS.NoteList
   }
@@ -16,26 +18,19 @@ export class NoteList extends Iterator {
     return props.notes
   }
 
-  head() {
-    return this.props.selection?.id
-  }
-
   isSelected({ id }) {
-    return id === this.head()
+    return id === this.props.selection?.id
   }
 
-  select = (note, { scrollIntoView, throttle } = {}) => {
-    if (note == null || this.isSelected(note)) return
-
-    if (scrollIntoView) {
-      this.scrollIntoView(note, false)
-    }
+  handleSelect = (note, event) => {
+    if (note == null || this.isSelected(note))
+      return
 
     this.props.onSelect({
       note: note.id,
       photo: note.photo,
       selection: note.selection
-    }, { throttle })
+    }, { throttle: event?.repeat })
   }
 
   handleDelete(note) {
@@ -49,10 +44,10 @@ export class NoteList extends Iterator {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case 'open':
-        this.props.onOpen(this.current())
+        this.props.onOpen(this.scroll.current.current)
         break
       case 'delete':
-        this.handleDelete(this.current())
+        this.handleDelete(this.scroll.current.current)
         break
       default:
         return
@@ -71,7 +66,7 @@ export class NoteList extends Iterator {
       isSelected,
       onContextMenu: this.props.onContextMenu,
       onOpen: this.props.onOpen,
-      onSelect: this.select
+      onSelect: this.handleSelect
     }
   }
 
@@ -79,12 +74,14 @@ export class NoteList extends Iterator {
     return (
       <div className="note-list">
         <Scroll
-          ref={this.container}
+          ref={this.scroll}
+          cursor={indexOf(this.props.notes, this.props.selection?.id)}
           items={this.props.notes}
           itemHeight={SASS.NOTE.ROW_HEIGHT}
           tabIndex={this.tabIndex}
           onBlur={this.props.onBlur}
           onKeyDown={this.handleKeyDown}
+          onSelect={this.handleSelect}
           onTabFocus={this.props.onTabFocus}>
           {(note) =>
             <NoteListItem
