@@ -78,24 +78,17 @@ export class Iterator extends React.PureComponent {
     this.container.current?.scroll(offset)
   }
 
-  scrollBy(offset) {
-    this.container.current?.scrollBy(offset)
-  }
-
-
   static getPropKeys() {
     return Object.keys(this.propTypes || this.DecoratedComponent.propTypes)
   }
 
   static propTypes = {
     isDisabled: bool,
-    overscan: number.isRequired,
     restrict: oneOf(['bounds', 'wrap', 'none']).isRequired,
     size: number
   }
 
   static defaultProps = {
-    overscan: 1.25,
     restrict: 'bounds'
   }
 }

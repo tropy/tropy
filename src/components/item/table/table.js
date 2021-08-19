@@ -377,7 +377,6 @@ export class ItemTable extends ItemIterator {
 
   static defaultProps = {
     ...ItemIterator.defaultProps,
-    overscan: 1.25,
     minColWidth: 40,
     minMainColWidth: 100
   }
