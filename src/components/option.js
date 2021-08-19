@@ -77,6 +77,30 @@ export class OptionList extends React.Component {
     }
   }
 
+  next(...args) {
+    this.scroll.current.select(this.scroll.current.next(...args))
+  }
+
+  prev(...args) {
+    this.scroll.current.select(this.scroll.current.prev(...args))
+  }
+
+  first() {
+    this.scroll.current.select(this.scroll.current.first())
+  }
+
+  last() {
+    this.scroll.current.select(this.scroll.current.last())
+  }
+
+  pageUp() {
+    this.scroll.current.select(this.scroll.current.pageUp())
+  }
+
+  pageDown() {
+    this.scroll.current.select(this.scroll.current.pageDown())
+  }
+
   render() {
     return (
       <div className="option-list">
