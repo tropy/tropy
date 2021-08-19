@@ -44,8 +44,7 @@ export class ItemTable extends ItemIterator {
     })
   }
 
-  componentDidUpdate(...args) {
-    super.componentDidUpdate(...args)
+  componentDidUpdate() {
     if (this.props.edit != null) {
       this.scrollIntoView({ id: Number(any(this.props.edit)) }, false)
     }
