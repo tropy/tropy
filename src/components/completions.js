@@ -41,6 +41,8 @@ Highlight.propTypes = {
 
 
 export class Completions extends React.Component {
+  optionsList = React.createRef()
+
   state = {
     options: [],
     active: null
@@ -168,28 +170,28 @@ export class Completions extends React.Component {
     if (active != null) this.props.onSelect(this.props.completions[active.idx])
   }
 
-  next(k = 1) {
-    return this.ol?.scroll.current.next(k)
+  next(...args) {
+    return this.optionsList.current?.next(...args)
   }
 
-  prev(k = 1) {
-    return this.ol?.scroll.current.prev(k)
+  prev(...args) {
+    return this.optionsList.current?.prev(...args)
   }
 
   first() {
-    return this.ol?.scroll.current.first()
+    return this.optionsList.current?.first()
   }
 
   last() {
-    return this.ol?.scroll.current.last()
+    return this.optionsList.current?.last()
   }
 
   pageUp() {
-    return this.ol?.scroll.current.pageUp()
+    return this.optionsList.current?.pageUp()
   }
 
   pageDown() {
-    return this.ol?.scroll.current.pageDown()
+    return this.optionsList.current?.pageDown()
   }
 
   handleActivate = (option) => {
@@ -205,10 +207,6 @@ export class Completions extends React.Component {
     this.forceUpdate()
   }
 
-  setOptionList = (ol) => {
-    this.ol = ol
-  }
-
   renderCompletions() {
     if (this.isEmpty) return this.renderNoCompletions()
     if (this.isBlank) return this.renderNoMatches()
@@ -218,7 +216,7 @@ export class Completions extends React.Component {
         active={this.state.active}
         onActivate={this.handleActivate}
         onSelect={this.handleSelect}
-        ref={this.setOptionList}
+        ref={this.optionsList}
         restrict={this.props.isAdvisory ? 'none' : 'wrap'}
         selection={this.props.selection}
         values={this.state.options}/>
