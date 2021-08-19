@@ -55,25 +55,6 @@ export class Iterator extends React.PureComponent {
     return this.next(0)
   }
 
-  first() {
-    return this.getIterables()[0]
-  }
-
-  last() {
-    const items = this.getIterables()
-    return items[items.length - 1]
-  }
-
-  pageDown() {
-    const items = this.getIterables()
-    return items[this.container.current?.pageDown()]
-  }
-
-  pageUp() {
-    const items = this.getIterables()
-    return items[this.container.current?.pageUp()]
-  }
-
   scroll(offset = 0) {
     this.container.current?.scroll(offset)
   }

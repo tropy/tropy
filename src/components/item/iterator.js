@@ -181,15 +181,11 @@ export class ItemIterator extends Iterator {
   }
 
   handleNextItem = (event) => {
-    let item = this.next()
-    this.handleSelectItem(item, event)
-    this.scrollIntoView(item, false)
+    this.container.current?.next(1, event)
   }
 
   handlePrevItem = (event) => {
-    let item = this.prev()
-    this.handleSelectItem(item, event)
-    this.scrollIntoView(item, false)
+    this.container.current?.prev(1, event)
   }
 
   handleSelectItem = (item, event) => {
