@@ -1,4 +1,5 @@
 import React from 'react'
+import { indexOf } from '../../common/collection'
 import { func, number, object, string } from 'prop-types'
 
 export const ExpansionRow = ({ item, columns, tag, renderExpansionRow }) =>
@@ -105,13 +106,6 @@ const getExpansions = (columns, items, expandedItems, subItems) => {
 
   return expansions.sort(byIndex)
 }
-
-
-const indexOf = (collection, id) =>
-  (collection.idx != null) ?
-    collection.idx[id] :
-    collection.findIndex(it => it.id === id)
-
 
 const byIndex = (a, b) =>
   (a.index < b.index) ? -1 : (a.index > b.index) ? 1 : 0

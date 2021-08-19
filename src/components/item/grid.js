@@ -69,7 +69,7 @@ export class ItemGrid extends ItemIterator {
         <Scroll
           ref={this.container}
           autoselect
-          cursor={this.indexOf(this.head()) || 0}
+          cursor={this.indexOf(this.head())}
           items={this.props.items}
           itemHeight={tileSize}
           itemWidth={tileSize}

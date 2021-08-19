@@ -169,38 +169,32 @@ export class Completions extends React.Component {
   }
 
   next(k = 1) {
-    return this.activate(this.ol && this.ol.next(k))
+    return this.ol?.scroll.current.next(k)
   }
 
   prev(k = 1) {
-    return this.activate(this.ol && this.ol.prev(k))
+    return this.ol?.scroll.current.prev(k)
   }
 
   first() {
-    return this.activate(this.ol && this.ol.first())
+    return this.ol?.scroll.current.first()
   }
 
   last() {
-    return this.activate(this.ol && this.ol.last())
+    return this.ol?.scroll.current.last()
   }
 
   pageUp() {
-    return this.activate(this.ol && this.ol.pageUp())
+    return this.ol?.scroll.current.pageUp()
   }
 
   pageDown() {
-    return this.activate(this.ol && this.ol.pageDown())
+    return this.ol?.scroll.current.pageDown()
   }
 
-  activate(option, scrollIntoView = true) {
-    if (option != null) this.handleActivate(option, scrollIntoView)
-    else if (this.props.isAdvisory) this.setState({ active: null })
-    return option
-  }
-
-  handleActivate = ({ id }, scrollIntoView) => {
-    this.setState({ active: id })
-    if (scrollIntoView && this.ol != null) this.ol.scrollIntoView({ id }, false)
+  handleActivate = (option) => {
+    if (option != null || this.props.isAdvisory)
+      this.setState({ active: option?.id })
   }
 
   handleSelect = (option) => {

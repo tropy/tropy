@@ -1,7 +1,7 @@
 import React from 'react'
-import { Iterator } from './iterator'
 import { Scroll } from './scroll'
 import { SASS } from '../constants'
+import { indexOf } from '../common/collection'
 import { blank } from '../common/util'
 import cx from 'classnames'
 import { arrayOf, bool, func, node, number, shape, string } from 'prop-types'
@@ -51,10 +51,8 @@ export class Option extends React.PureComponent {
 }
 
 
-export class OptionList extends Iterator {
-  getIterables(props = this.props) {
-    return props.values
-  }
+export class OptionList extends React.Component {
+  scroll = React.createRef()
 
   hasMoved({ clientX, clientY }) {
     try {
@@ -63,10 +61,6 @@ export class OptionList extends Iterator {
       this.lastX = clientX
       this.lastY = clientY
     }
-  }
-
-  head() {
-    return this.props.active
   }
 
   isActive({ id }) {
@@ -87,7 +81,10 @@ export class OptionList extends Iterator {
     return (
       <div className="option-list">
         <Scroll
-          ref={this.container}
+          ref={this.scroll}
+          cursor={indexOf(this.props.values, this.props.active)}
+          restrict={this.props.restrict}
+          onSelect={this.props.onActivate}
           items={this.props.values}
           itemHeight={this.props.rowHeight}>
           {(option) =>
@@ -108,6 +105,7 @@ export class OptionList extends Iterator {
     onActivate: func.isRequired,
     onSelect: func.isRequired,
     rowHeight: number.isRequired,
+    restrict: string,
     selection: arrayOf(string).isRequired,
     values: arrayOf(shape({
       id: string.isRequired,
@@ -116,7 +114,6 @@ export class OptionList extends Iterator {
   }
 
   static defaultProps = {
-    ...Iterator.defaultProps,
     rowHeight: SASS.OPTION.HEIGHT,
     selection: []
   }
