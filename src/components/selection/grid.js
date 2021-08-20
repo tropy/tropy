@@ -5,23 +5,19 @@ import cx from 'classnames'
 import { func, number, object } from 'prop-types'
 import { match } from '../../keymap'
 import { on, off } from '../../dom'
+import { indexOf, sanitize } from '../../common/collection'
+import { TABS } from '../../constants'
 
 
 class SelectionGrid extends SelectionIterator {
+  container = React.createRef()
+
   componentDidMount() {
     on(this.container.current, 'tab:focus', this.handleTabFocus)
   }
 
   componentWillUnmount() {
     off(this.container.current, 'tab:focus', this.handleTabFocus)
-  }
-
-  get isVertical() {
-    return this.props.cols === 1
-  }
-
-  get classes() {
-    return [super.classes, 'selection-grid']
   }
 
   get style() {
@@ -31,6 +27,26 @@ class SelectionGrid extends SelectionIterator {
       gridTemplateColumns: `repeat(${cols}, ${cols}fr)`
     }
   }
+
+  next(offset = 1) {
+    let { active, selections } = this.props
+
+    if (active != null)
+      return selections[sanitize(
+        selections,
+        indexOf(selections, active) + offset,
+        'wrap')]
+    else
+      return selections[0]
+  }
+
+  prev(offset = 1) {
+    if (this.props.active != null)
+      return this.next(-offset)
+    else
+      return this.props.selections[this.props.selections.length - 1]
+  }
+
 
   delete(selection) {
     if (selection != null) {
@@ -45,32 +61,19 @@ class SelectionGrid extends SelectionIterator {
     this.props.onTabFocus()
   }
 
-  // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
-      case (this.isVertical ? 'up' : 'left'):
+      case 'left':
         this.select(this.prev())
         break
-      case (this.isVertical ? 'down' : 'right'):
+      case 'right':
         this.select(this.next())
         break
-      case (this.isVertical ? 'left' : 'up'):
+      case 'up':
         this.select(this.prev(this.props.cols))
         break
-      case (this.isVertical ? 'right' : 'down'):
+      case 'down':
         this.select(this.next(this.props.cols))
-        break
-      case 'home':
-        this.handleHomeKey(event)
-        break
-      case 'end':
-        this.handleEndKey(event)
-        break
-      case 'pageUp':
-        this.handlePageUp(event)
-        break
-      case 'pageDown':
-        this.handlePageDown(event)
         break
       case 'open':
         this.open(this.current())
@@ -99,9 +102,9 @@ class SelectionGrid extends SelectionIterator {
     return this.connect(
       <ul
         ref={this.container}
-        className={cx(this.classes)}
+        className={cx('selection-grid', { over: this.props.isOver })}
         style={this.style}
-        tabIndex={this.tabIndex}
+        tabIndex={TABS.SelectionGrid}
         onBlur={this.props.onBlur}
         onKeyDown={this.handleKeyDown}>
         {this.map(({ selection, ...props }) =>

@@ -7,17 +7,13 @@ import { dc } from '../../ontology'
 
 
 class SelectionList extends SelectionIterator {
-  get classes() {
-    return ['selection-list', super.classes]
-  }
-
   isEditing(selection) {
     return this.props.edit === selection
   }
 
   render() {
     return this.connect(
-      <ul className={cx(this.classes)}>
+      <ul className={cx('selection-list', { over: this.props.isOver })}>
         {this.map(({ selection, ...props }) =>
           <SelectionListItem {...props}
             key={selection.id}

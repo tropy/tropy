@@ -6,6 +6,7 @@ import { ScrollContainer } from './container'
 import { getExpandedRows, getExpandedRowsAbove } from './expansion'
 import { Viewport } from './viewport'
 import { restrict } from '../../common/util'
+import { sanitize } from '../../common/collection'
 import memoize from 'memoize-one'
 
 
@@ -45,27 +46,14 @@ export class Scroll extends React.Component {
     return this.props.items[this.next(0)]
   }
 
-  sanitize(index) {
-    if (index >= 0 && index < this.props.items.length)
-      return index
-
-    switch (this.props.restrict) {
-      case 'wrap':
-        index = index % this.props.items.length
-        return (index < 0) ?
-          index + this.props.items.length : index
-
-      case 'bounds':
-        return (index < 0) ? 0 : this.props.items.length - 1
-
-      default:
-        return null
-    }
-  }
+  // TODO move nav to Collection
 
   next(offset = 1) {
     if (this.props.cursor != null)
-      return this.sanitize(this.props.cursor + offset)
+      return sanitize(
+        this.props.items,
+        this.props.cursor + offset,
+        this.props.restrict)
     else
       return this.first()
   }
@@ -92,6 +80,7 @@ export class Scroll extends React.Component {
   pageDown() {
     return this.next(this.layout.visibleItems)
   }
+
 
   select(index, event) {
     if (index != null)
