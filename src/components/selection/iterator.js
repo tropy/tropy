@@ -1,32 +1,16 @@
 import React from 'react'
-import { Iterator } from '../iterator'
 import { DND, DropTarget } from '../dnd'
 import { arrayOf, bool, func, number, shape, string } from 'prop-types'
 import { adjacent, move } from '../../common/util'
 
 
-export class SelectionIterator extends Iterator {
-  get classes() {
-    return {
-      'drop-target': this.isSortable,
-      'over': this.props.isOver
-    }
-  }
-
+export class SelectionIterator extends React.Component {
   get isSortable() {
     return !this.props.isDisabled && this.size > 1
   }
 
   isActive(selection) {
     return this.props.active === selection
-  }
-
-  getIterables(props = this.props) {
-    return props.selections || super.getIterables()
-  }
-
-  head() {
-    return this.props.active
   }
 
   handleDropSelection = ({ id, to, offset }) => {
@@ -40,7 +24,7 @@ export class SelectionIterator extends Iterator {
   }
 
   select = (selection) => {
-    if (selection != null && !this.props.isActive) {
+    if (selection != null && !this.isActive(selection)) {
       this.props.onSelect({
         id: this.props.photo.id,
         item: this.props.photo.item,
@@ -69,7 +53,7 @@ export class SelectionIterator extends Iterator {
   }
 
   map(fn) {
-    const { isSortable, isVertical } = this
+    const { isSortable } = this
 
     return this.props.selections.map((selection, index) => {
       return fn({
@@ -81,7 +65,7 @@ export class SelectionIterator extends Iterator {
         isItemOpen: this.props.isItemOpen,
         isLast: index === this.props.selections.length - 1,
         isSortable,
-        isVertical,
+        isVertical: !(this.props.cols > 1),
         photo: this.props.photo,
         onContextMenu: this.props.onContextMenu,
         onDropSelection: this.handleDropSelection,
@@ -98,6 +82,7 @@ export class SelectionIterator extends Iterator {
     isDisabled: bool.isRequired,
     isItemOpen: bool,
     isOver: bool,
+    cols: number,
     photo: shape({
       id: number.isRequired
     }).isRequired,
