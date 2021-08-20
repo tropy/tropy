@@ -47,12 +47,12 @@ export class ItemIterator extends Iterator {
   // is because the worst case for weird/sparse selections is
   // not worth the price!
   after() {
-    const next = this.next()
+    let next = this.props.items[this.container.current.next()]
     return (next == null || this.isSelected(next)) ? null : next
   }
 
   before() {
-    const prev = this.prev()
+    let prev = this.props.items[this.container.current.prev()]
     return (prev == null || this.isSelected(prev)) ? null : prev
   }
 
