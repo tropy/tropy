@@ -38,10 +38,6 @@ export class Scroll extends React.Component {
     return this.props.items.length === 0 ? null : this.props.tabIndex
   }
 
-  get transform() {
-    return `translate3d(0,${this.state.offset}px,0)`
-  }
-
   get current() {
     return this.next(0)
   }
@@ -249,7 +245,7 @@ export class Scroll extends React.Component {
 
   handleTabFocus = (event) => {
     if (this.props.autoselect)
-      this.select(this.props.cursor ?? 0)
+      this.select(this.current)
     else
       this.scrollIntoView()
 
@@ -335,7 +331,7 @@ export class Scroll extends React.Component {
           <Viewport
             tag={this.props.tag}
             columns={columns}
-            transform={this.transform}>
+            offset={this.state.offset}>
             <Range
               columns={columns}
               items={this.props.items}
