@@ -9,16 +9,17 @@ export const getExpandedPhotos = memo(
   ({ ui }) => ui.panel.zoom > 0,
   getVisiblePhotos,
   (expand, isGrid, photos) => {
-    let expanded = seq(photos, compose(
-      map(photo => expand[photo.id] > 0 ? photo : null),
+    let expandedPhotos = seq(photos, compose(
+      map(photo =>
+        (expand[photo.id] > 0 && photo.selections.length > 0) ? photo : null),
       keep()
     ))
 
     if (isGrid)
-      return expanded
+      return expandedPhotos
         .sort((a, b) => rev(expand[a.id], expand[b.id]))
         .slice(0, 1)
     else
-      return expanded
+      return expandedPhotos
   }
 )
