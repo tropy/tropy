@@ -6,7 +6,7 @@ import { ScrollContainer } from './container'
 import { getExpandedRows, getExpandedRowsAbove } from './expansion'
 import { Viewport } from './viewport'
 import { restrict } from '../../common/util'
-import { sanitize } from '../../common/collection'
+import { indexOf, sanitize } from '../../common/collection'
 import memoize from 'memoize-one'
 
 
@@ -43,34 +43,30 @@ export class Scroll extends React.Component {
   }
 
   get current() {
-    return this.props.items[this.next(0)]
+    return this.next(0)
   }
-
-  // TODO move nav to Collection
 
   next(offset = 1) {
     if (this.props.cursor != null)
-      return sanitize(
+      return this.props.items[sanitize(
         this.props.items,
         this.props.cursor + offset,
-        this.props.restrict)
+        this.props.restrict
+      )]
     else
-      return this.first()
+      return (offset < 0) ? this.last() : this.first()
   }
 
   prev(offset = 1) {
-    if (this.props.cursor != null)
-      return this.next(-offset)
-    else
-      return this.last()
+    return this.next(-offset)
   }
 
   first() {
-    return this.props.items.length > 0 ? 0 : null
+    return this.props.items[0]
   }
 
   last() {
-    return this.props.items.length > 0 ? this.props.items.length - 1 : null
+    return this.props.items[this.props.items.length - 1]
   }
 
   pageUp() {
@@ -82,13 +78,11 @@ export class Scroll extends React.Component {
   }
 
 
-  select(index, event) {
-    if (index != null)
-      this.scrollIntoView(index)
+  select(item, event) {
+    if (item != null)
+      this.scrollIntoView(item)
 
-    let item = this.props.items[index]
     this.props.onSelect?.(item, event)
-
     return item
   }
 
@@ -282,7 +276,13 @@ export class Scroll extends React.Component {
     this.scroll(this.layout.maxOffset)
   }
 
-  scrollIntoView(index = this.props.cursor ?? 0, { force } = {}) {
+  scrollIntoView(index = this.props.cursor, { force } = {}) {
+    if (index != null && typeof index === 'object')
+      index = index.idx || indexOf(this.props.items, index.id)
+
+    if (index == null || index < 0)
+      return
+
     let { columns } = this.layout
     let { itemHeight } = this.props
     let { height } = this.state
