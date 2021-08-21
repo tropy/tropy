@@ -3,6 +3,7 @@ import { ItemIterator } from './iterator'
 import { ItemTile } from './tile'
 import { Scroll } from '../scroll'
 import cx from 'classnames'
+import { indexOf } from '../../common/collection'
 import { SASS } from '../../constants'
 
 
@@ -29,7 +30,7 @@ export class ItemGrid extends ItemIterator {
         <Scroll
           ref={this.container}
           autoselect
-          cursor={this.indexOf(this.head())}
+          cursor={indexOf(this.props.items, this.head())}
           items={this.props.items}
           itemHeight={tileSize}
           itemWidth={tileSize}

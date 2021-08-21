@@ -1,15 +1,18 @@
 import React from 'react'
-import { Iterator } from '../iterator'
 import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd'
 import { adjacent, last, move, noop } from '../../common/util'
 import { on, off } from '../../dom'
+import { TABS } from '../../constants'
 
 import {
   arrayOf, bool, func, number, object, string, shape
 } from 'prop-types'
 
 
-export class PhotoIterator extends Iterator {
+export class PhotoIterator extends React.Component {
+  container = React.createRef()
+  state = {}
+
   componentDidMount() {
     on(document, 'global:next-photo', this.handleNextPhoto)
     on(document, 'global:prev-photo', this.handlePrevPhoto)
@@ -23,18 +26,21 @@ export class PhotoIterator extends Iterator {
 
   get classes() {
     return {
-      'drop-target': !this.isDisabled,
       'over': this.props.isOver,
       'over-file': this.props.isOverFile
     }
   }
 
-  get isSortable() {
-    return !this.props.isDisabled && this.size > 1
+  get current() {
+    return this.container.current.current
   }
 
-  getIterables(props = this.props) {
-    return props.photos || super.getIterables()
+  get isSortable() {
+    return !this.props.isDisabled && this.props.photos?.length > 1
+  }
+
+  get tabIndex() {
+    return this.props.photos.length > 0 ? TABS[this.constructor.name] : null
   }
 
   isSelected(photo) {
@@ -59,18 +65,10 @@ export class PhotoIterator extends Iterator {
     return this.props.keymap.PhotoIterator
   }
 
-  head() {
-    return this.props.current
-  }
-
-  select = (photo, { scrollIntoView, throttle } = {}) => {
+  select = (photo, { throttle } = {}) => {
     if (photo == null ||
       this.isSelected(photo) && this.isActive(photo.selection)) {
       return
-    }
-
-    if (scrollIntoView) {
-      this.scrollIntoView(photo, false)
     }
 
     this.props.onSelect({
@@ -137,16 +135,16 @@ export class PhotoIterator extends Iterator {
     onSort({ item, photos: order })
   }
 
-  handleSelectPhoto(photo) {
-    this.select(photo, { scrollIntoView: true, throttle: true })
+  handleSelectPhoto = (photo, event) => {
+    this.select(photo, { throttle: event?.repeat })
   }
 
-  handleNextPhoto = () => {
-    this.handleSelectPhoto(this.next())
+  handleNextPhoto = (event) => {
+    this.handleSelectPhoto(this.container.current?.next(), event)
   }
 
-  handlePrevPhoto = () => {
-    this.handleSelectPhoto(this.prev())
+  handlePrevPhoto = (event) => {
+    this.handleSelectPhoto(this.container.current?.prev(), event)
   }
 
   handleRotate = (by) => {
@@ -179,7 +177,7 @@ export class PhotoIterator extends Iterator {
       onError: this.props.onError,
       onExpand: this.expand,
       onItemOpen: this.handleItemOpen,
-      onSelect: this.select
+      onSelect: this.handleSelectPhoto
     }
   }
 
@@ -194,7 +192,7 @@ export class PhotoIterator extends Iterator {
   }
 
   connect(element) {
-    return this.isDisabled ?
+    return this.props.isDisabled ?
       element :
       this.props.connectDropTarget(element)
   }
@@ -209,7 +207,6 @@ export class PhotoIterator extends Iterator {
   }
 
   static propTypes = {
-    ...Iterator.propTypes,
     photos: arrayOf(
       shape({
         id: number.isRequired
@@ -250,9 +247,12 @@ export class PhotoIterator extends Iterator {
   }
 
   static defaultProps = {
-    ...Iterator.defaultProps,
     expanded: [],
     onBlur: noop
+  }
+
+  static getPropKeys() {
+    return Object.keys(this.propTypes || this.DecoratedComponent.propTypes)
   }
 }
 

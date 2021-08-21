@@ -3,6 +3,7 @@ import { Scroll } from '../scroll'
 import { object, func } from 'prop-types'
 import { PhotoListItem } from './list-item'
 import { PhotoIterator } from './iterator'
+import { indexOf } from '../../common/collection'
 import { SASS } from '../../constants'
 import { dc } from '../../ontology'
 import cx from 'classnames'
@@ -99,21 +100,21 @@ class PhotoList extends PhotoIterator {
     switch (match(this.keymap, event)) {
       case 'left':
       case 'contract':
-        if (!this.contract(this.current())) return
+        if (!this.contract(this.current)) return
         break
       case 'right':
       case 'expand':
-        if (!this.expand(this.current())) return
+        if (!this.expand(this.current)) return
         break
       case 'edit':
       case 'enter':
-        this.edit(this.current())
+        this.edit(this.current)
         break
       case 'open':
-        this.handleItemOpen(this.current())
+        this.handleItemOpen(this.current)
         break
       case 'preview':
-        this.preview(this.current())
+        this.preview(this.current)
         break
       case 'rotateLeft':
         this.handleRotate(-90)
@@ -122,7 +123,7 @@ class PhotoList extends PhotoIterator {
         this.handleRotate(90)
         break
       case 'delete':
-        this.handleDelete(this.current())
+        this.handleDelete(this.current)
         break
       default:
         return
@@ -141,15 +142,15 @@ class PhotoList extends PhotoIterator {
       <div className={cx(this.classes)}>
         <Scroll
           ref={this.container}
-          cursor={this.indexOf(this.head()) || 0}
+          cursor={indexOf(this.props.photos, this.props.current)}
           items={this.props.photos}
           itemHeight={SASS.ROW.HEIGHT}
           expandedItems={this.props.expanded}
-
           tabIndex={this.tabIndex}
           onBlur={onBlur}
-          onTabFocus={this.props.onTabFocus}
-          onKeyDown={this.handleKeyDown}>
+          onKeyDown={this.handleKeyDown}
+          onSelect={this.handleSelectPhoto}
+          onTabFocus={this.props.onTabFocus}>
           {(photo, index, { isExpanded }) =>
             <PhotoListItem {...this.getIterableProps(photo)}
               key={photo.id}

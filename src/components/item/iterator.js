@@ -1,16 +1,21 @@
 import React from 'react'
-import { Iterator } from '../iterator'
 import { match, isMeta as meta } from '../../keymap'
+import { indexOf } from '../../common/collection'
 import { blank, get } from '../../common/util'
 import { on, off } from '../../dom'
 import { seq, compose, map, cat, keep } from 'transducers.js'
+import { TABS } from '../../constants'
+
 
 import {
   arrayOf, shape, bool, func, number, object, string
 } from 'prop-types'
 
 
-export class ItemIterator extends Iterator {
+export class ItemIterator extends React.Component {
+  container = React.createRef()
+  state = {}
+
   componentDidMount() {
     on(document, 'global:next-item', this.handleNextItem)
     on(document, 'global:prev-item', this.handlePrevItem)
@@ -30,16 +35,16 @@ export class ItemIterator extends Iterator {
   }
 
   get tabIndex() {
-    return this.props.isDisabled ? null : super.tabIndex
+    return this.props.isDisabled || !this.props.items.length ?
+      null : TABS[this.constructor.name]
   }
 
-  getIterables(props = this.props) {
-    return props.items || []
+  get current() {
+    return this.container.current.current
   }
 
   head() {
-    const { selection } = this.props
-    return selection.length > 0 ? selection[selection.length - 1] : null
+    return this.props.selection[this.props.selection.length - 1]
   }
 
   // Note: this can be improved, but we currently check only
@@ -60,7 +65,7 @@ export class ItemIterator extends Iterator {
 
   getSelectedPhotos({ items, selection } = this.props) {
     return seq(selection, compose(
-        map(id => get(items, [this.indexOf(id), 'photos'])),
+        map(id => get(items, [indexOf(items, id), 'photos'])),
         keep(),
         cat))
   }
@@ -142,7 +147,7 @@ export class ItemIterator extends Iterator {
   }
 
   handleItemOpen = async () => {
-    this.props.onItemOpen(this.current())
+    this.props.onItemOpen(this.current)
   }
 
   // eslint-disable-next-line complexity
@@ -152,7 +157,7 @@ export class ItemIterator extends Iterator {
         this.handleItemOpen()
         break
       case 'preview':
-        this.preview(this.current())
+        this.preview(this.current)
         break
       case 'clear':
         this.clearSelection()
@@ -175,6 +180,9 @@ export class ItemIterator extends Iterator {
       case 'rotateRight':
         this.rotate(90)
         break
+      case 'edit':
+        this.edit?.(this.current)
+        break
       default:
         return
     }
@@ -185,26 +193,26 @@ export class ItemIterator extends Iterator {
   }
 
   handleNextItem = (event) => {
-    this.container.current?.next(1, event)
+    this.handleSelectItem(this.container.current?.next(), event)
   }
 
   handlePrevItem = (event) => {
-    this.container.current?.prev(1, event)
+    this.handleSelectItem(this.container.current?.prev(), event)
   }
 
   handleSelectItem = (item, event) => {
     this.select(item, {
       isMeta: event && meta(event),
       isRange: event?.shiftKey,
-      throttle: true
+      throttle: event?.repeat
     })
   }
 
   range({ from = this.head(), to } = {}) {
-    const items = this.getIterables()
+    let { items } = this.props
 
-    from = (from == null) ? 0 : this.indexOf(from)
-    to = (to == null) ? this.size - 1 : this.indexOf(to)
+    from = (from == null) ? 0 : indexOf(items, from)
+    to = (to == null) ? items.length - 1 : indexOf(items, to)
 
     return (from > to) ?
       items.slice(to, from + 1).reverse() :
@@ -212,7 +220,7 @@ export class ItemIterator extends Iterator {
   }
 
   select = (item, { isMeta, isRange, throttle } = {}) => {
-    if (item == null || this.size === 0) return
+    if (item == null || !this.props.items.length) return
     let mod, items
 
     switch (true) {
@@ -313,5 +321,9 @@ export class ItemIterator extends Iterator {
     onPhotoRotate: func.isRequired,
     onSelect: func.isRequired,
     onSort: func.isRequired
+  }
+
+  static getPropKeys() {
+    return Object.keys(this.propTypes || this.DecoratedComponent.propTypes)
   }
 }

@@ -11,11 +11,7 @@ export class NoteList extends React.Component {
   scroll = React.createRef()
 
   get tabIndex() {
-    return this.size === 0 ? null : TABS.NoteList
-  }
-
-  getIterables(props = this.props) {
-    return props.notes
+    return this.props.notes.length ? TABS.NoteList : null
   }
 
   isSelected({ id }) {

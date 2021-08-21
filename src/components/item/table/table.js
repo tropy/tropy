@@ -7,9 +7,9 @@ import { TableHead } from './head'
 import { ColumnContextMenu } from '../column'
 import cx from 'classnames'
 import { noop } from '../../../common/util'
+import { indexOf } from '../../../common/collection'
 import { bounds, ensure } from '../../../dom'
-import { match } from '../../../keymap'
-import { refine, restrict, shallow, splice, warp } from '../../../common/util'
+import { restrict, shallow, splice, warp } from '../../../common/util'
 
 import {
   NAV,
@@ -24,29 +24,14 @@ export class ItemTable extends ItemIterator {
 
   constructor(props) {
     super(props)
-
     this.state = this.getColumnState(props)
-
-    refine(this, 'handleKeyDown', ([event]) => {
-      if (event.isPropagationStopped()) return
-
-      switch (match(this.props.keymap, event)) {
-        case 'edit':
-          this.edit(this.current())
-          break
-        default:
-          return
-      }
-
-      event.preventDefault()
-      event.stopPropagation()
-      event.nativeEvent.stopImmediatePropagation()
-    })
   }
 
   componentDidUpdate() {
     if (this.props.edit != null) {
-      this.scrollIntoView({ id: Number(any(this.props.edit)) }, false)
+      this.container.current?.scrollIntoView({
+        id: Number(any(this.props.edit))
+      })
     }
   }
 
@@ -275,7 +260,7 @@ export class ItemTable extends ItemIterator {
           ref={this.container}
           tag="div"
           autoselect
-          cursor={this.indexOf(this.head())}
+          cursor={indexOf(this.props.items, this.head())}
           items={this.props.items}
           itemHeight={ROW.HEIGHT}
           tabIndex={this.tabIndex}
