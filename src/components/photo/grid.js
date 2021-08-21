@@ -3,6 +3,7 @@ import { PhotoIterator } from './iterator'
 import { PhotoTile } from './tile'
 import { SelectionGrid } from '../selection/grid'
 import { Scroll } from '../scroll'
+import { indexOf } from '../../common/collection'
 import { pluck } from '../../common/util'
 import cx from 'classnames'
 import { match } from '../../keymap'
@@ -11,27 +12,10 @@ import { SASS } from '../../constants'
 
 class PhotoGrid extends PhotoIterator {
   get classes() {
-    return [super.classes, 'photo-grid', {
+    return ['photo-grid', super.classes, {
       'nested-tab-focus': this.state.hasNestedTabFocus,
       'has-nested-active': this.props.selection != null
     }]
-  }
-
-  getExpansionRows({ cols } = this.state, props = this.props) {
-    const photo = props.expanded[0]
-    this.expRows = []
-
-    if (photo == null) return 0
-
-    const exp = Math.ceil(photo.selections.length / cols)
-    const idx = this.indexOf(photo.id, props)
-    if (idx === -1) return 0
-
-    for (let j = 1, k = 1 + Math.floor(idx / cols); j <= exp; ++j, ++k) {
-      this.expRows.push([k, j, j])
-    }
-
-    return exp
   }
 
   isExpanded(photo) {
@@ -62,20 +46,20 @@ class PhotoGrid extends PhotoIterator {
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case 'open':
-        this.handleItemOpen(this.current())
+        this.handleItemOpen(this.current)
         break
       case 'preview':
-        this.preview(this.current())
+        this.preview(this.current)
         break
       case 'expand':
       case 'enter':
-        if (!this.expand(this.current())) return
+        if (!this.expand(this.current)) return
         break
       case 'contract':
-        if (!this.contract(this.current())) return
+        if (!this.contract(this.current)) return
         break
       case 'delete':
-        this.handleDelete(this.current())
+        this.handleDelete(this.current)
         break
       case 'rotateLeft':
         this.handleRotate(-90)
@@ -131,7 +115,7 @@ class PhotoGrid extends PhotoIterator {
         data-size={this.props.size}>
         <Scroll
           ref={this.container}
-          cursor={this.indexOf(this.head()) || 0}
+          cursor={indexOf(this.props.photos, this.props.current)}
           items={this.props.photos}
           itemHeight={tileSize}
           itemWidth={tileSize}
@@ -140,8 +124,9 @@ class PhotoGrid extends PhotoIterator {
           renderExpansionRow={this.renderSelectionGrid}
           tabIndex={this.tabIndex}
           onBlur={this.props.onBlur}
-          onTabFocus={this.props.onTabFocus}
-          onKeyDown={this.handleKeyDown}>
+          onKeyDown={this.handleKeyDown}
+          onSelect={this.handleSelectPhoto}
+          onTabFocus={this.props.onTabFocus}>
           {(photo, index, { isExpanded }) =>
             <PhotoTile
               {...this.getIterableProps(photo)}

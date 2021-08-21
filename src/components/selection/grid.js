@@ -28,6 +28,10 @@ class SelectionGrid extends SelectionIterator {
     }
   }
 
+  get current() {
+    return this.next(0)
+  }
+
   next(offset = 1) {
     let { active, selections } = this.props
 
@@ -76,10 +80,10 @@ class SelectionGrid extends SelectionIterator {
         this.select(this.next(this.props.cols))
         break
       case 'open':
-        this.open(this.current())
+        this.open(this.current)
         break
       case 'delete':
-        this.delete(this.current())
+        this.delete(this.current)
         this.select(this.next() || this.prev())
         break
       case 'rotateLeft':
