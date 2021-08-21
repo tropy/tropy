@@ -5,17 +5,28 @@ import { ExpansionRow } from './expansion'
 const getNextRowOffset = (index, columns) =>
   index + (columns - (index % columns))
 
-export const Range = ({ columns, renderExpansionRow, ...props }) => {
+export const Range = ({
+  columns,
+  items,
+  expandedItems,
+  from,
+  to,
+  renderExpansionRow,
+  renderItem
+}) => {
   let output = []
   let expansion
 
-  let range = props.items.slice(props.from, props.to)
+  if (renderExpansionRow)
+    expandedItems = expandedItems.slice(0, 1)
+
+  let range = items.slice(from, to)
 
   for (let i = 0; i < range.length; ++i) {
     let item = range[i]
-    let isExpanded = props.expandedItems.includes(item)
+    let isExpanded = expandedItems.includes(item)
 
-    output.push(props.renderItem(item, props.from + i, {
+    output.push(renderItem(item, from + i, {
       isExpanded
     }))
 
@@ -31,9 +42,8 @@ export const Range = ({ columns, renderExpansionRow, ...props }) => {
     }
   }
 
-  if (expansion) {
+  if (expansion)
     output.splice(expansion.at, 0, expansion.row)
-  }
 
   return output
 }
