@@ -28,10 +28,7 @@ export class Iterator extends React.PureComponent {
   }
 
   scrollIntoView(item = this.current(), force = true) {
-    if (item == null || this.container.current == null) return
-    const idx = this.indexOf(item.id)
-    if (idx === -1) return
-    this.container.current.scrollIntoView(idx, { force })
+    this.container.current.scrollIntoView(item, { force })
   }
 
   // TODO Use Scroll component directly
