@@ -34,12 +34,6 @@ export class Iterator extends React.PureComponent {
     this.container.current.scrollIntoView(idx, { force })
   }
 
-  handleClickOutside = () => {
-    if (typeof this.clearSelection === 'function')
-      this.clearSelection()
-  }
-
-
   // TODO Use Scroll component directly
 
   next(offset = 1) {

@@ -34,7 +34,7 @@ export class ItemIterator extends Iterator {
   }
 
   getIterables(props = this.props) {
-    return props.items || super.getIterables()
+    return props.items || []
   }
 
   head() {
@@ -79,6 +79,10 @@ export class ItemIterator extends Iterator {
 
   clearSelection() {
     this.props.onSelect({ items: [] })
+  }
+
+  handleClickOutside = () => {
+    this.clearSelection()
   }
 
   handleContextMenu = (event, item) => {
