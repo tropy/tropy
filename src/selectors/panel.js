@@ -10,16 +10,19 @@ export const getExpandedPhotos = memo(
   getVisiblePhotos,
   (expand, isGrid, photos) => {
     let expandedPhotos = seq(photos, compose(
-      map(photo =>
-        (expand[photo.id] > 0 && photo.selections.length > 0) ? photo : null),
+      map(({ id, selections }) =>
+        (expand[id] > 0 && selections.length > 0) ? { id, selections } : null),
       keep()
     ))
 
-    if (isGrid)
-      return expandedPhotos
+    if (isGrid) {
+      expandedPhotos = expandedPhotos
         .sort((a, b) => rev(expand[a.id], expand[b.id]))
         .slice(0, 1)
-    else
-      return expandedPhotos
+    }
+
+    return expandedPhotos.reduce((exp, { id, selections }) => (
+      exp[id] = selections, exp
+    ), {})
   }
 )

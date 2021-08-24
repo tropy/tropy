@@ -58,7 +58,7 @@ export class PhotoIterator extends React.Component {
 
   isExpanded(photo) {
     return photo != null &&
-      this.props.expanded.includes(photo)
+      !!this.props.expandedPhotos[photo.id]
   }
 
   get keymap() {
@@ -81,6 +81,7 @@ export class PhotoIterator extends React.Component {
 
   contract = (photo) => {
     if (this.isExpandable(photo) && this.isExpanded(photo)) {
+      this.handleNestedBlur?.()
       this.props.onContract([photo.id])
 
       if (this.isSelected(photo)) {
@@ -215,7 +216,7 @@ export class PhotoIterator extends React.Component {
 
     cache: string.isRequired,
     current: number,
-    expanded: arrayOf(object).isRequired,
+    expandedPhotos: object.isRequired,
     keymap: object.isRequired,
     selection: number,
     selections: object.isRequired,

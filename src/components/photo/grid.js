@@ -17,30 +17,6 @@ class PhotoGrid extends PhotoIterator {
     }]
   }
 
-  isExpanded(photo) {
-    return photo.selections != null &&
-      photo.selections.length > 0 &&
-      this.props.expanded[0] === photo
-  }
-
-  contract = (photo) => {
-    if (this.isExpandable(photo) && this.isExpanded(photo)) {
-      this.handleNestedBlur()
-      this.props.onContract(this.props.expanded.map(p => p.id))
-
-      if (this.isSelected(photo)) {
-        this.props.onSelect({
-          photo: photo.id,
-          item: photo.item,
-          note: photo.notes[0]
-        })
-      }
-      return true
-    }
-
-    return false
-  }
-
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
@@ -118,7 +94,7 @@ class PhotoGrid extends PhotoIterator {
           items={this.props.photos}
           itemHeight={tileSize}
           itemWidth={tileSize}
-          expandedItems={this.props.expanded}
+          expandedItems={this.props.expandedPhotos}
           expansionPadding={SASS.GRID.PADDING * 4}
           renderExpansionRow={this.renderSelectionGrid}
           tabIndex={this.tabIndex}
