@@ -29,7 +29,7 @@ const PhotoPanelContainer = connect(
       current: state.nav.photo,
       edit: state.edit,
       data: state.metadata,
-      expanded: getExpandedPhotos(state),
+      expandedPhotos: getExpandedPhotos(state),
       keymap: state.keymap,
       selection: state.nav.selection,
       selections: state.selections

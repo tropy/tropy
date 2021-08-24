@@ -86,7 +86,7 @@ class PhotoList extends PhotoIterator {
           expansionCursor={this.props.selection}
           items={this.props.photos}
           itemHeight={SASS.ROW.HEIGHT}
-          expandedItems={this.props.expanded}
+          expandedItems={this.props.expandedPhotos}
           expandedItemsName="selections"
           tabIndex={this.tabIndex}
           onBlur={onBlur}
