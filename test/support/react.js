@@ -5,7 +5,6 @@ import { render as testRender, queries } from '@testing-library/react'
 import { IntlProvider } from 'react-intl'
 import { DndProvider } from 'react-dnd'
 import { TestBackend } from 'react-dnd-test-backend'
-import { WindowContext } from '../../src/components/main'
 import ARGS from '../../src/args'
 import win, { Window } from '../../src/window'
 
@@ -24,6 +23,10 @@ const helpers = {
     return node.firstChild
   }
 }
+
+export const WindowContext = React.createContext({
+  maximize: sinon.spy()
+})
 
 export const inWindowContext = {
   // eslint-disable-next-line react/prop-types
