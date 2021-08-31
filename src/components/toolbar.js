@@ -1,5 +1,5 @@
 import React from 'react'
-import { WindowContext } from './main'
+import { WindowContext } from './window'
 import { bool, func, node, string } from 'prop-types'
 import cx from 'classnames'
 import { has } from '../dom'

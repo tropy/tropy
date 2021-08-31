@@ -4,11 +4,7 @@ import { IntlProvider as ReactIntlProvider } from 'react-intl'
 import { element, object } from 'prop-types'
 import { DndProvider, ElectronBackend } from './dnd'
 import { Flash } from './flash'
-import { noop } from '../common/util'
-
-export const WindowContext = React.createContext({
-  maximize: noop
-})
+import { WindowContext } from './window'
 
 const IntlProvider = connect(
   ({ intl }) => ({ ...intl, key: intl.locale })

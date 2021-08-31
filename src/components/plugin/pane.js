@@ -1,6 +1,6 @@
 import { ipcRenderer as ipc } from 'electron'
 import React from 'react'
-import { WindowContext } from '../main'
+import { WindowContext } from '../window'
 import { PrefPane } from '../prefs/pane'
 import { Button } from '../button'
 import { bool, func, string, object } from 'prop-types'

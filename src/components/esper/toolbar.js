@@ -1,5 +1,5 @@
 import React from 'react'
-import { WindowContext } from '../main'
+import { WindowContext } from '../window'
 import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
 import { Button } from '../button'
 import { Slider } from '../slider'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { WindowContext } from '../main'
+import { WindowContext } from '../window'
 import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd'
 import { ItemGrid, ItemTable } from '../item'
 import { ProjectSidebar } from './sidebar'

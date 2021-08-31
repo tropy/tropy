@@ -1,5 +1,5 @@
 import React from 'react'
-import { WindowContext } from '../main'
+import { WindowContext } from '../window'
 import { FormattedMessage } from 'react-intl'
 import { bool, func, number, string } from 'prop-types'
 import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
