@@ -8,6 +8,7 @@ import { DndProvider } from 'react-dnd'
 import { TestBackend } from 'react-dnd-test-backend'
 import ARGS from '../../src/args'
 import win, { createWindowInstance } from '../../src/window'
+import { WindowContext } from '../../src/components/window'
 import { Strings } from '../../src/common/res'
 
 chai.use(dom)
@@ -29,10 +30,6 @@ const helpers = {
 let messages = new Strings(
   Strings.parse(fs.readFileSync(Strings.expand('renderer')))
 ).flatten()
-
-export const WindowContext = React.createContext({
-  maximize: sinon.spy()
-})
 
 export const inWindowContext = {
   // eslint-disable-next-line react/prop-types
