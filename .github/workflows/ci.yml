@@ -26,5 +26,5 @@ jobs:
       - run: npm install --no-progress --silent
       - run: npm run rebuild
       - run: npm run lint
-      - run: npm run compile
+      - run: npm run rollup
       - run: npm run coverage
