@@ -12,10 +12,6 @@ import {
 } from 'react-dnd-html5-backend'
 
 import {
-  nativeTypesConfig
-} from 'react-dnd-html5-backend/dist/esm/NativeDragSources/nativeTypesConfig'
-
-import {
   MIME
 } from '../constants'
 
@@ -47,9 +43,6 @@ const hasProjectFiles = (monitor) =>
 const hasPhotoFiles = (monitor) =>
   !hasProjectFiles(monitor)
 
-// Hack: remove HTML because we want to be able to match URLs
-// which are matched as HTML because it's defined first.
-delete nativeTypesConfig[NativeTypes.HTML]
 
 const getDroppedFiles = (monitor) => {
   let item = monitor.getItem()
