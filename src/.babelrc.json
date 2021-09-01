@@ -3,7 +3,5 @@
     ["@babel/preset-react", { "runtime": "automatic" }]
   ],
   "plugins": [
-    "@babel/plugin-syntax-class-properties",
-    "@babel/plugin-proposal-export-namespace-from"
   ]
 }
