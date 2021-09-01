@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    environment: CI
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node:
+          - 16
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - run: npm install sharp sqlite3 --ignore-scripts --no-save --no-package-lock --silent
+      - run: npm install --no-progress --silent
+      - run: npm run rebuild
+      - run: npm run lint
+      - run: npm run compile
+      - run: npm run coverage
