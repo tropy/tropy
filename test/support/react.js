@@ -1,12 +1,14 @@
 import React from 'react'
 import chai from 'chai'
 import dom from 'chai-dom'
+import fs from 'fs'
 import { render as testRender, queries } from '@testing-library/react'
 import { IntlProvider } from 'react-intl'
 import { DndProvider } from 'react-dnd'
 import { TestBackend } from 'react-dnd-test-backend'
 import ARGS from '../../src/args'
-import win, { Window } from '../../src/window'
+import win, { createWindowInstance } from '../../src/window'
+import { Strings } from '../../src/common/res'
 
 chai.use(dom)
 
@@ -24,6 +26,10 @@ const helpers = {
   }
 }
 
+let messages = new Strings(
+  Strings.parse(fs.readFileSync(Strings.expand('renderer')))
+).flatten()
+
 export const WindowContext = React.createContext({
   maximize: sinon.spy()
 })
@@ -32,8 +38,8 @@ export const inWindowContext = {
   // eslint-disable-next-line react/prop-types
   wrapper({ children }) {
     return (
-      <WindowContext.Provider value={win || new Window(ARGS)}>
-        <IntlProvider locale="en">
+      <WindowContext.Provider value={win || createWindowInstance(ARGS)}>
+        <IntlProvider locale="en" messages={messages}>
           <DndProvider backend={TestBackend}>
             {children}
           </DndProvider>
