@@ -22,9 +22,10 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - run: apt-get install -y xvfb
       - run: npm install sharp sqlite3 --ignore-scripts --no-save --no-package-lock --silent
       - run: npm install --no-progress --silent
       - run: npm run rebuild
       - run: npm run lint
       - run: npm run rollup
-      - run: npm run coverage
+      - run: xvfb-run npm run coverage
