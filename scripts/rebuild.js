@@ -147,7 +147,10 @@ class Rebuilder {
         }
       },
       async (task) => {
-        await fs.promises.rmdir(task.modulePath('vendor'), { recursive: true })
+        await fs.promises.rm(task.modulePath('vendor'), {
+          force: true,
+          recursive: true
+        })
       }
     ]
   }
