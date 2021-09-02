@@ -45,7 +45,7 @@ jobs:
         run: npm test
 
       - name: Run main/renderer tests with coverage report
-        if: matrix.os == ubuntu-latest
+        if: matrix.os == 'ubuntu-latest'
         run: xvfb-run npm run coverage
 
       - name: Send coverage report to Coveralls
