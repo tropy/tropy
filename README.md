@@ -1,7 +1,6 @@
 # Tropy
-[![Build Status](https://travis-ci.org/tropy/tropy.svg?branch=master)](https://travis-ci.org/tropy/tropy)
-[![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/tropy/tropy?branch=master&svg=true)](https://ci.appveyor.com/project/inukshuk/tropy)
-[![Coverage Status](https://coveralls.io/repos/tropy/tropy/badge.svg?branch=master&service=github)](https://coveralls.io/github/tropy/tropy?branch=master)
+![Build Status](https://github.com/tropy/tropy/actions/workflows/ci.yml/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/tropy/tropy/badge.svg?branch=master)](https://coveralls.io/github/tropy/tropy)
 
 Bring order to your research — use the power of Tropy to organize and describe
 your research photos so you can quickly find your sources whenever you need them.
