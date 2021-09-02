@@ -20,6 +20,7 @@ jobs:
         os:
           - ubuntu-latest
           - macos-latest
+          - windows-latest
         arch:
           - x64
         include:
@@ -27,6 +28,8 @@ jobs:
             friendlyName: Linux
           - os: macos-latest
             friendlyName: macOS
+          - os: windows-latest
+            friendlyName: Windows
 
     steps:
       - name: Checkout repository
@@ -46,14 +49,14 @@ jobs:
       - name: Install and build dependencies
         run: npm install --no-progress --silent
 
-      - name: Rebuild native dependencies for Electron
+      - name: Rebuild native dependencies
         run: npm run rebuild -- --force --arch ${{ matrix.arch }}
 
       - name: Lint
         run: npm run lint
 
       - name: Create production bundle
-        run: npm run rollup
+        run: npm run rollup --arch ${{ matrix.arch }}
 
       - name: Run main/renderer tests
         if: matrix.os != 'ubuntu-latest'
