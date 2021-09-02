@@ -112,7 +112,7 @@ module.exports = {
 
     if (!test('-f', appimagetool)) {
       check(which('curl'), 'missing dependency: curl')
-      exec(`curl -L -o ${appimagetool} ${AIK}/appimagetool-x86_64.AppImage`, {
+      exec(`curl -L -o "${appimagetool}" ${AIK}/appimagetool-x86_64.AppImage`, {
         silent
       })
       chmod('a+x', appimagetool)
@@ -135,7 +135,7 @@ module.exports = {
     ln('-s', svg, `${qualified.name}.svg`)
     cd('-')
 
-    exec(`${appimagetool} -n -v ${AppDir} ${output}`, { silent })
+    exec(`"${appimagetool}" -n -v ${AppDir} ${output}`, { silent })
     chmod('a+x', output)
 
     rm('-rf', AppDir)
