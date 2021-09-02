@@ -56,7 +56,9 @@ jobs:
         run: npm run lint
 
       - name: Create production bundle
-        run: npm run rollup --arch ${{ matrix.arch }}
+        run: npm run rollup
+        env:
+          npm_config_arch: ${{ matrix.arch }}
 
       - name: Run main/renderer tests
         if: matrix.os != 'ubuntu-latest'
