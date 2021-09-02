@@ -41,7 +41,7 @@ jobs:
         run: npm run rollup
 
       - name: Run main/renderer tests
-        if: matrix.os != ubuntu-latest
+        if: matrix.os != 'ubuntu-latest'
         run: npm test
 
       - name: Run main/renderer tests with coverage report
@@ -49,7 +49,7 @@ jobs:
         run: xvfb-run npm run coverage
 
       - name: Send coverage report to Coveralls
-        if: matrix.os == ubuntu-latest
+        if: matrix.os == 'ubuntu-latest'
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
