@@ -31,7 +31,7 @@
     "legal": "node scripts/legal",
     "lint": "npm run -s lint:js && npm run -s lint:css",
     "lint:js": "eslint --color src test scripts res/workers",
-    "lint:css": "stylelint src/stylesheets/**/*.scss",
+    "lint:css": "stylelint \"src/stylesheets/**/*.scss\"",
     "log:view": "cat tmp/log/tropy.log | node scripts/log-viewer",
     "log:tail": "tail -q -F tmp/log/tropy.log 2> /dev/null | node scripts/log-viewer",
     "log:tail:win": "tail -q -F tmp/log/tropy.log 2> NUL | node scripts/log-viewer",

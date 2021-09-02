@@ -20,6 +20,20 @@
   }
 
   &:not(.overlay-mode) {
+    .btn-default {
+      background-color: $esper-btn-default-bg;
+      border-color: $esper-btn-default-border;
+
+      &:active {
+        background-color: $esper-btn-default-active-bg;
+      }
+
+      &.disabled,
+      &[disabled] {
+        background-color: $esper-btn-default-bg;
+      }
+    }
+
     .slider-handle {
       background-color: $esper-slider-handle-bg;
 
@@ -102,22 +116,6 @@
           )
           map-get($val, "x") map-get($val, "y"),
           default;
-      }
-    }
-  }
-
-  &:not(.overlay-mode) {
-    .btn-default {
-      background-color: $esper-btn-default-bg;
-      border-color: $esper-btn-default-border;
-
-      &:active {
-        background-color: $esper-btn-default-active-bg;
-      }
-
-      &.disabled,
-      &[disabled] {
-        background-color: $esper-btn-default-bg;
       }
     }
   }
