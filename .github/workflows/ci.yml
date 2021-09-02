@@ -8,24 +8,48 @@ on:
 
 jobs:
   build:
-    environment: CI
-    runs-on: ubuntu-latest
+    name: ${{ matrix.friendlyName }} ${{ matrix.arch }}
+    runs-on: ${ matrix.os }
 
     strategy:
       matrix:
-        node:
-          - 16
+        os:
+          - ubuntu-latest
+        arch:
+          - x64
+        include:
+          - os: ubuntu-latest
+            friendlyName: Linux
 
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 16
+          cache: npm
 
-      - run: sudo apt-get install -y xvfb
-      - run: npm install sharp sqlite3 --ignore-scripts --no-save --no-package-lock --silent
-      - run: npm install --no-progress --silent
-      - run: npm run rebuild
-      - run: npm run lint
-      - run: npm run rollup
-      - run: xvfb-run npm run coverage
+      - name: Install and build dependencies
+        run: npm install --no-progress --silent
+
+      - name: Rebuild native dependencies for Electron
+        run: npm run rebuild
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Create production bundle
+        run: npm run rollup
+
+      - name: Run main/renderer tests
+        if: matrix.os != ubuntu-latest
+        run: npm test
+
+      - name: Run main/renderer tests with coverage report
+        if: matrix.os == ubuntu-latest
+        run: xvfb-run npm run coverage
+
+      - name: Send coverage report to Coveralls
+        if: matrix.os == ubuntu-latest
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
