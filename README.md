@@ -23,9 +23,6 @@ release) and all requirements needed to use
 Finally, clone [this repository](https://github.com/tropy/tropy.git) and
 install all of Tropy's dependencies:
 
-    # Install native modules first, without building, them. They will
-    # be patched and linked against Electron by our rebuild script later!
-    $ npm install sharp sqlite3 --ignore-scripts --no-save --no-package-lock
     $ npm install
     $ npm run rebuild -- --force
 
