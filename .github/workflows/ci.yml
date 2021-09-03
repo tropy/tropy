@@ -44,10 +44,10 @@ jobs:
       - name: Install native dependencies
         run: >
           npm install sharp sqlite3
-          --no-progress --silent --ignore-scripts --no-save --no-package-lock
+          --no-progress --ignore-scripts --no-save --no-package-lock
 
       - name: Install and build dependencies
-        run: npm install --no-progress --silent
+        run: npm install --no-progress --no-package-lock
 
       - name: Rebuild native dependencies
         run: npm run rebuild -- --force --arch ${{ matrix.arch }}
@@ -60,9 +60,13 @@ jobs:
         env:
           npm_config_arch: ${{ matrix.arch }}
 
-      - name: Run main/renderer tests
+      - name: Run main tests
         if: matrix.os != 'ubuntu-latest'
-        run: npm test
+        run: npm run test:main
+
+      - name: Run renderer tests
+        if: matrix.os != 'ubuntu-latest'
+        run: npm run test:renderer
 
       - name: Run main/renderer tests with coverage report
         if: matrix.os == 'ubuntu-latest'
