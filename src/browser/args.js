@@ -1,6 +1,7 @@
 import { resolve } from 'path'
 import { exe, version } from '../common/release'
 import { Command } from 'commander'
+import { URL, pathToFileURL } from 'url'
 
 export const program = new Command()
 
@@ -12,7 +13,7 @@ const type = {
 
 program
   .name(exe)
-  .arguments('[project]')
+  .arguments('[args]')
   .version(version)
 
   // TODO remove when squirrel is not used anymore!
@@ -46,5 +47,20 @@ export function parse(argv = process.argv.slice(1)) {
     args: program.args
       // TODO remove with allowUnknownOption!
       .filter(arg => !arg.startsWith('-'))
+      .map(arg => argToURL(arg))
+
   }
+}
+
+export function argToURL(arg, cwd = process.cwd()) {
+  try {
+    return new URL(arg)
+
+  } catch (e) {
+    if (e.code !== 'ERR_INVALID_URL')
+      throw e
+
+    return pathToFileURL(resolve(cwd, arg))
+  }
+
 }

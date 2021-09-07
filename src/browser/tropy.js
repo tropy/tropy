@@ -1,6 +1,8 @@
+import assert from 'assert'
 import fs from 'fs'
 import { EventEmitter } from 'events'
 import { extname, join } from 'path'
+import { fileURLToPath } from 'url'
 import { v1 as uuid } from 'uuid'
 import { into, compose, remove, take } from 'transducers.js'
 
@@ -106,44 +108,52 @@ export class Tropy extends EventEmitter {
     this.persist()
   }
 
-  open(file) {
-    if (file != null) {
-      return this.openFile(file)
+  async open(...urls) {
+    for (let url of urls) {
+      switch (url.protocol) {
+        case 'file:':
+          await this.showProjectWindow(fileURLToPath(url), null)
+          break
+        case 'tropy:':
+          await this.handleProtocolRequest(url)
+          break
+        default:
+          throw new Error(`protocol not supported: ${url}`)
+      }
     }
 
     let win = this.wm.current()
-    if (win != null) {
-      win.show()
-
-    } else if (this.state.recent.length === 0) {
-      this.showWizardWindow()
-
-    } else {
-      let recent = this.state.recent[0]
-      if (fs.existsSync(recent))
-        this.showProjectWindow(recent)
-      else
-        this.showProjectWindow()
-    }
-
-    return false
+    if (win != null)
+      return win.show()
+    else
+      return this.openMostRecentProject()
   }
 
-  async openFile(file) {
-    let ext = extname(file)
-
-    if (ext === '.tpy')
-      return this.showProjectWindow(file)
-
-    await this.showProjectWindow()
-
-    switch (ext) {
-      case '.ttp':
-        this.importTemplates([file])
-        break
-      default:
-        this.import({ files: [file] })
+  async openFile(...files) {
+    for (let file of files) {
+      switch (extname(file)) {
+        case '.tpy':
+          await this.showProjectWindow(file, null)
+          break
+        case '.ttp':
+          await this.importTemplates([file])
+          break
+        default:
+          if (this.wm.current())
+            this.import({ files: [file] })
+      }
     }
+  }
+
+  async openMostRecentProject() {
+    if (this.state.recent.length === 0)
+      return this.showWizardWindow()
+
+    let recent = this.state.recent[0]
+    if (fs.existsSync(recent))
+      return this.showProjectWindow(recent)
+
+    return this.showProjectWindow()
   }
 
   async showOpenDialog(win = this.wm.current()) {
@@ -161,6 +171,9 @@ export class Tropy extends EventEmitter {
 
   async showProjectWindow(file, win = this.wm.current()) {
     if (win == null) {
+
+      // TODO focus project in existing window if it's already open!
+
       info({ file }, 'open new project window')
 
       let args = {
@@ -172,7 +185,7 @@ export class Tropy extends EventEmitter {
       let bounds = this.wm.has('project') ?
         {} : this.state.win.bounds
 
-      await this.wm.open('project', args, {
+      return this.wm.open('project', args, {
         show: 'init',
         title: '',
         ...bounds
@@ -186,6 +199,7 @@ export class Tropy extends EventEmitter {
       }
 
       win.show()
+      return win
     }
   }
 
@@ -213,13 +227,18 @@ export class Tropy extends EventEmitter {
     this.setHistory(null, win)
     this.setProject(project, win)
     this.emit('app:reload-menu')
+    this.emit('project:opened', project)
   }
 
-  import(...args) {
-    return this.dispatch(act.item.import(...args), this.wm.current())
+  async import(...args) {
+    if (this.getProject())
+      return this.dispatch(act.item.import(...args), this.wm.current())
   }
 
-  importTemplates(files) {
+  async importTemplates(files) {
+    if (!this.wm.current())
+      await this.showPreferencesWindow()
+
     return this.dispatch(
       act.ontology.template.import({ files }),
       this.wm.first(['prefs', 'project']))
@@ -885,6 +904,61 @@ export class Tropy extends EventEmitter {
     return this
   }
 
+  async handleProtocolRequest(url) {
+    info(`opening url ${url}`)
+
+    switch (url.host) {
+      case 'prefs':
+      case 'preferences':
+        await this.showPreferencesWindow()
+        break
+
+      case 'about':
+      case 'version':
+        await this.showAboutWindow()
+        break
+
+      case 'project': {
+        // tropy://project(/:alias)/items/:id(/:photo)(/:selection)
+        let [, alias = 'current', type, id, photo] =
+          url.pathname.split('/')
+
+        assert.equal(alias, 'current',
+          `bad request: project alias '${alias}' unknown`)
+
+        let win = this.wm.current()
+
+        if (!win) {
+          win = await this.openMostRecentProject()
+
+          await Promise.race([
+            once(this, 'project:opened'),
+            delay(1500)
+          ])
+        }
+
+        win.show()
+
+        if (type) {
+          assert.equal(type, 'items',
+            `bad request: action type '${type}' unknown`)
+
+          assert.ok(id, 'bad request: missing id')
+          assert.ok(photo, 'bad request: missing photo')
+
+          this.dispatch(act.item.open({
+            id: parseInt(id, 10),
+            photos: [parseInt(photo, 10)]
+          }), win)
+        }
+        break
+      }
+
+      default:
+        throw new Error(`bad request: host unknown: ${url}`)
+    }
+  }
+
   handleUncaughtException(e, win = BrowserWindow.getFocusedWindow()) {
     fatal(e)
 
@@ -973,6 +1047,18 @@ export class Tropy extends EventEmitter {
 
     if (win.isFocused())
       this.menu.handleHistoryChange(history)
+  }
+
+  findProject(file) {
+    if (file == null)
+      return this.getProject()
+
+    for (let [win, project] of P) {
+      if (file && project.file === file)
+        return { ...project, win }
+    }
+
+    return null
   }
 
   getProject(win = this.wm.current()) {

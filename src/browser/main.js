@@ -1,14 +1,15 @@
 import { app, dialog, powerMonitor } from 'electron'
-import { extname, join, resolve } from 'path'
+import { join, resolve } from 'path'
 import { mkdirSync as mkdir } from 'fs'
+import { pathToFileURL } from 'url'
 import { darwin, win32, system } from '../common/os'
 import { exe, qualified, version } from '../common/release'
-import { parse } from './args'
+import { parse, argToURL } from './args'
 import { createLogger, info, warn } from '../common/log'
 import { Tropy } from './tropy'
 import { handleSquirrelEvent } from './squirrel'
 
-const START = getCreationTime() || Date.now()
+const START = process.getCreationTime() || Date.now()
 const { args, opts } = parse()
 
 process.env.NODE_ENV = opts.env
@@ -17,7 +18,6 @@ process.on('uncaughtException', error => { handleError(error) })
 process.on('unhandledRejection', reason => { handleError(reason) })
 
 // Set app name and paths as soon as possible!
-// TODO single-release use unqualified!
 app.name = qualified.product
 
 if (!opts.data) {
@@ -61,7 +61,13 @@ if (!handlingSquirrelEvent) {
 
 
 if (!handlingSquirrelEvent && !isDuplicateInstance) {
-  app.setAsDefaultProtocolClient('tropy')
+  if (process.defaultApp) {
+    app.setAsDefaultProtocolClient(
+      'tropy', process.execPath, [resolve(process.argv[1])]
+    )
+  } else {
+    app.setAsDefaultProtocolClient('tropy')
+  }
 
   if (opts.webgl) {
     app.commandLine.appendSwitch('ignore-gpu-blacklist')
@@ -87,10 +93,11 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
     await tropy.start()
     tropy.ready = Date.now()
 
-    app.on('second-instance', (_, argv, pwd) => {
-      info({ argv, pwd }, 'second-instance')
-      tropy.open(
-        ...parse(argv.slice(1)).args.map(f => resolve(pwd, f))
+    app.on('second-instance', async (_, argv, cwd) => {
+      info({ argv, cwd }, 'second-instance')
+
+      await tropy.open(
+         ...parse(argv.slice(1)).args.map(arg => argToURL(arg, cwd))
       )
     })
 
@@ -99,7 +106,7 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
       info({ quit: true, code }, `quit with exit code ${code}`)
     })
 
-    tropy.open(...args.map(f => resolve(f)))
+    await tropy.open(...args)
 
     powerMonitor.on('shutdown', (event) => {
       event.preventDefault()
@@ -119,16 +126,22 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
   })
 
   if (darwin) {
-    app.on('open-file', (event, file) => {
-      if (Tropy.instance?.ready) {
-        if (Tropy.instance.open(file))
-          event.preventDefault()
-      } else {
-        if (extname(file) === '.tpy') {
-          args.push(file)
-          event.preventDefault()
-        }
-      }
+    app.on('open-file', (event, path) => {
+      if (Tropy.instance?.ready)
+        Tropy.instance.openFile(path)
+      else
+        args.push(pathToFileURL(path))
+
+      event.preventDefault()
+    })
+
+    app.on('url-open', (event, url) => {
+      if (Tropy.instance?.ready)
+        Tropy.instance.open(url)
+      else
+        args.push(url)
+
+      event.preventDefault()
     })
 
     let quit = false
@@ -159,8 +172,3 @@ function handleError(error, isFatal = false) {
   }
 }
 
-function getCreationTime() {
-  for (let m of app.getAppMetrics()) {
-    if (m.type === 'Browser') return m.creationTime
-  }
-}
