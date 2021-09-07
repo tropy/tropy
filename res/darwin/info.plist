@@ -22,7 +22,7 @@
       <key>CFBundleURLIconFile</key>
       <string>tropy.icns</string>
       <key>CFBundleURLName</key>
-      <string>org.tropy.tropy-url</string>
+      <string>Tropy Protocol</string>
       <key>CFBundleURLSchemes</key>
       <array>
         <string>tropy</string>
