@@ -2,6 +2,7 @@ import React from 'react'
 import { ScrollContainer } from '../scroll'
 import { Form, FormField, FormToggle, FormToggleGroup } from '../form'
 import { arrayOf, func, object, string } from 'prop-types'
+import { channel } from '../../common/release'
 
 export class ProjectPrefs extends React.PureComponent {
   render() {
@@ -57,14 +58,16 @@ export class ProjectPrefs extends React.PureComponent {
             value={this.props.project.watch.usePolling}
             onChange={this.props.onChange}/>
           <hr/>
-          <FormField
-            id="prefs.project.store"
-            name="store"
-            isReadOnly={this.props.project.isReadOnly}
-            tabIndex={0}
-            type="directory"
-            value={this.props.project.store}
-            onChange={this.props.onChange}/>
+          { channel !== 'latest' &&
+            <FormField
+              id="prefs.project.store"
+              name="store"
+              isReadOnly={this.props.project.isReadOnly}
+              tabIndex={0}
+              type="directory"
+              value={this.props.project.store}
+              onChange={this.props.onChange}/>
+          }
         </Form>
       </ScrollContainer>
     )
