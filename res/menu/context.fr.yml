@@ -322,6 +322,8 @@ fr:
             command: app:export-item
       - label: Export Item Notes …
         command: app:export-notes
+      - label: Copy Item Link
+        command: app:copy-item-link
       - label: Copy Item Notes
         command: app:copy-notes
       - label: Regrouper l'objet
@@ -370,6 +372,8 @@ fr:
     photo-read-only:
       - label: Montrer la photo originale dans son répertoire …
         command: app:show-in-folder
+      - label: Copy Photo Link
+        command: app:copy-photo-link
       - label: Exporter la photo…
         command: app:extract-photo
       - label: Regrouper les photos
@@ -759,6 +763,8 @@ fr:
             command: app:export-item
       - label: Export Item Notes …
         command: app:export-notes
+      - label: Copy Item Link
+        command: app:copy-item-link
       - label: Copy Item Notes
         command: app:copy-notes
       - label: Regrouper l'objet
@@ -838,6 +844,8 @@ fr:
     photo-read-only:
       - label: Montrer la photo originale dans son répertoire …
         command: app:show-in-folder
+      - label: Copy Photo Link
+        command: app:copy-photo-link
       - label: Exporter la photo…
         command: app:extract-photo
       - label: Regrouper les photos
@@ -1196,6 +1204,8 @@ fr:
             command: app:export-item
       - label: Export Item Notes …
         command: app:export-notes
+      - label: Copy Item Link
+        command: app:copy-item-link
       - label: Copy Item Notes
         command: app:copy-notes
       - label: Regrouper l'objet
@@ -1275,6 +1285,8 @@ fr:
     photo-read-only:
       - label: Montrer la photo originale dans son répertoire …
         command: app:show-in-folder
+      - label: Copy Photo Link
+        command: app:copy-photo-link
       - label: Exporter la photo…
         command: app:extract-photo
       - label: Regrouper les photos

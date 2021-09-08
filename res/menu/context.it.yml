@@ -322,6 +322,8 @@ it:
             command: app:export-item
       - label: Export Item Notes …
         command: app:export-notes
+      - label: Copy Item Link
+        command: app:copy-item-link
       - label: Copy Item Notes
         command: app:copy-notes
       - label: Consolida elemento
@@ -370,6 +372,8 @@ it:
     photo-read-only:
       - label: Mostra foto originale…
         command: app:show-in-folder
+      - label: Copy Photo Link
+        command: app:copy-photo-link
       - label: Export Photo…
         command: app:extract-photo
       - label: Consolida foto
@@ -759,6 +763,8 @@ it:
             command: app:export-item
       - label: Export Item Notes …
         command: app:export-notes
+      - label: Copy Item Link
+        command: app:copy-item-link
       - label: Copy Item Notes
         command: app:copy-notes
       - label: Consolida elemento
@@ -838,6 +844,8 @@ it:
     photo-read-only:
       - label: Mostra foto originale…
         command: app:show-in-folder
+      - label: Copy Photo Link
+        command: app:copy-photo-link
       - label: Export Photo…
         command: app:extract-photo
       - label: Consolida foto
@@ -1196,6 +1204,8 @@ it:
             command: app:export-item
       - label: Export Item Notes …
         command: app:export-notes
+      - label: Copy Item Link
+        command: app:copy-item-link
       - label: Copy Item Notes
         command: app:copy-notes
       - label: Consolida elemento
@@ -1275,6 +1285,8 @@ it:
     photo-read-only:
       - label: Mostra foto originale…
         command: app:show-in-folder
+      - label: Copy Photo Link
+        command: app:copy-photo-link
       - label: Export Photo…
         command: app:extract-photo
       - label: Consolida foto

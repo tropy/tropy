@@ -190,6 +190,19 @@ ja:
           property-datatype: By datatype and property
     project:
       label: プロジェクト
+      base:
+        label: Link photos
+        option:
+          'null': Using absolute paths
+          project: Relative to the project file
+          home: Relative to your home directory
+      store: Managed folder
+      name: 名前
+      id: ID
+      file: ファイル
+      watch:
+        folder: Watch folder
+        usePolling: Using file stat polling
     template:
       label: テンプレート
       new: 新規テンプレート
@@ -240,6 +253,8 @@ ja:
     type: タイプ
     created: 登録日
     modified: 更新日
+    consolidate: 写真を整理
+    error: Photo not found
   selection:
     size: サイズ
     created: 登録日
@@ -605,6 +620,8 @@ ja:
           remove: テンプレートからフィールドの削除に失敗しました
     tag:
       create: タグの作成に失敗しました。タグ名は一意のものにしてください。
+    db:
+      SQLITE_CANTOPEN: Cannot find or open database file.
   flash:
     update:
       ready:

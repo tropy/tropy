@@ -190,6 +190,19 @@ de:
           property-datatype: Nach Datentyp und Eigenschaft
     project:
       label: Projekt
+      base:
+        label: Link photos
+        option:
+          'null': Using absolute paths
+          project: Relative to the project file
+          home: Relative to your home directory
+      store: Managed folder
+      name: Name
+      id: ID
+      file: Datei
+      watch:
+        folder: Watch folder
+        usePolling: Using file stat polling
     template:
       label: Vorlagen
       new: Neue Vorlage …
@@ -241,6 +254,8 @@ de:
     type: Typ
     created: Hinzugefügt
     modified: Bearbeitet
+    consolidate: Foto konsolidieren
+    error: Photo not found
   selection:
     size: Größe
     created: Hinzugefügt
@@ -610,6 +625,8 @@ de:
           remove: Feld konnte nicht von Vorlage entfernt werden.
     tag:
       create: Tag konnte nicht erstellt werden. Tag-Namen müssen eindeutig sein.
+    db:
+      SQLITE_CANTOPEN: Cannot find or open database file.
   flash:
     update:
       ready:

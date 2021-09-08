@@ -187,6 +187,20 @@ cn:
           property-datatype: 按数据类型和属性
     project:
       label: 项目
+      base:
+        label: 链接照片
+        option:
+          'null': Using absolute paths
+          project: 相对于项目文件
+          home: 相对于主目录
+          <None>: 使用绝对路径
+      store: 托管文件夹
+      name: 名称
+      id: ID
+      file: 文件
+      watch:
+        folder: 监视文件夹
+        usePolling: 使用文件统计
     template:
       label: 模板
       new: 新模板 ...
@@ -237,6 +251,8 @@ cn:
     type: 类型
     created: 添加日期
     modified: 已修改
+    consolidate: 检查图片
+    error: 照片找不到了
   selection:
     size: 大小
     created: 添加日期
@@ -600,6 +616,8 @@ cn:
           remove: 无法从模板中移除字段。
     tag:
       create: 无法创建标签。标签名必须是唯一的。
+    db:
+      SQLITE_CANTOPEN: 数据库丢失了
   flash:
     update:
       ready:

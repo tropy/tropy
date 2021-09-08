@@ -156,9 +156,6 @@ es:
         - label: Reindexar la base de datos del proyecto
           command: app:reindex-project
         - type: separator
-        - label: Recombinar el proyecto
-          command: app:rebase-project
-        - type: separator
         - label: Tema
           id: theme
           submenu:
@@ -381,9 +378,6 @@ es:
         - label: Reindexar la base de datos del proyecto
           command: app:reindex-project
         - type: separator
-        - label: Recombinar el proyecto
-          command: app:rebase-project
-        - type: separator
         - label: Tema
           id: theme
           submenu:
@@ -581,9 +575,6 @@ es:
           command: app:optimize-project
         - label: Reindexar la base de datos del proyecto
           command: app:reindex-project
-        - type: separator
-        - label: Recombinar el proyecto
-          command: app:rebase-project
         - type: separator
         - label: Tema
           id: theme

@@ -322,6 +322,8 @@ cn:
             command: app:export-item
       - label: 导出笔记
         command: app:export-notes
+      - label: Copy Item Link
+        command: app:copy-item-link
       - label: 复制笔记
         command: app:copy-notes
       - label: 刷新缩略图
@@ -370,6 +372,8 @@ cn:
     photo-read-only:
       - label: 显示文件位置
         command: app:show-in-folder
+      - label: Copy Photo Link
+        command: app:copy-photo-link
       - label: 导出图片
         command: app:extract-photo
       - label: 检查图片
@@ -759,6 +763,8 @@ cn:
             command: app:export-item
       - label: 导出笔记
         command: app:export-notes
+      - label: Copy Item Link
+        command: app:copy-item-link
       - label: 复制笔记
         command: app:copy-notes
       - label: 刷新缩略图
@@ -838,6 +844,8 @@ cn:
     photo-read-only:
       - label: 显示文件位置
         command: app:show-in-folder
+      - label: Copy Photo Link
+        command: app:copy-photo-link
       - label: 导出图片
         command: app:extract-photo
       - label: 检查图片
@@ -1196,6 +1204,8 @@ cn:
             command: app:export-item
       - label: 导出笔记
         command: app:export-notes
+      - label: Copy Item Link
+        command: app:copy-item-link
       - label: 复制笔记
         command: app:copy-notes
       - label: 刷新缩略图
@@ -1275,6 +1285,8 @@ cn:
     photo-read-only:
       - label: 显示文件位置
         command: app:show-in-folder
+      - label: Copy Photo Link
+        command: app:copy-photo-link
       - label: 导出图片
         command: app:extract-photo
       - label: 检查图片

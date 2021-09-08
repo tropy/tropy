@@ -190,6 +190,19 @@ es:
           property-datatype: Por tipo de dato y propiedad
     project:
       label: Projecto
+      base:
+        label: Link photos
+        option:
+          'null': Using absolute paths
+          project: Relative to the project file
+          home: Relative to your home directory
+      store: Managed folder
+      name: Nombre
+      id: ID
+      file: Archivo
+      watch:
+        folder: Watch folder
+        usePolling: Using file stat polling
     template:
       label: Plantillas
       new: Nueva plantilla …
@@ -240,6 +253,8 @@ es:
     type: Tipo
     created: Creación
     modified: Modificado
+    consolidate: Consolidar foto
+    error: Photo not found
   selection:
     size: Tamaño
     created: Creación
@@ -612,6 +627,8 @@ es:
       create: >-
         Falla en la creación de etiqueta. Los nombre de etiquetas deben ser
         únicos.
+    db:
+      SQLITE_CANTOPEN: Cannot find or open database file.
   flash:
     update:
       ready:

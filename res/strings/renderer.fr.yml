@@ -192,6 +192,19 @@ fr:
           property-datatype: Par type de donnée et par champ
     project:
       label: Projet
+      base:
+        label: Link photos
+        option:
+          'null': Using absolute paths
+          project: Relative to the project file
+          home: Relative to your home directory
+      store: Managed folder
+      name: Titre
+      id: ID
+      file: Fichier
+      watch:
+        folder: Watch folder
+        usePolling: Using file stat polling
     template:
       label: Modèles de saisie
       new: Nouveau modèle de saisie…
@@ -242,6 +255,8 @@ fr:
     type: Type
     created: Création
     modified: Modifié
+    consolidate: Regrouper les photos
+    error: Photo not found
   selection:
     size: Taille
     created: Création
@@ -614,6 +629,8 @@ fr:
           remove: Échec de la suppression du champ du modèle de saisie.
     tag:
       create: Impossible de créer le tag. Les tags doivent être uniques.
+    db:
+      SQLITE_CANTOPEN: Cannot find or open database file.
   flash:
     update:
       ready:

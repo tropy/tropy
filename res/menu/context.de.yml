@@ -266,9 +266,9 @@ de:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Notiz exportieren …
         command: app:export-note
-      - label: Copy Note
+      - label: Notiz kopieren
         command: app:copy-note
       - label: Notiz löschen
         command: app:delete-note
@@ -320,9 +320,11 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Item Notes …
+      - label: Objektnotizen exportieren …
         command: app:export-notes
-      - label: Copy Item Notes
+      - label: Kopiere Link zu Objekt
+        command: app:copy-item-link
+      - label: Objektnotizen kopieren
         command: app:copy-notes
       - label: Objekt konsolidieren
         command: app:consolidate-item
@@ -344,9 +346,9 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Selected Item Notes …
+      - label: Exportiere Notizen der ausgewählten Objekte …
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: Kopiere Notizen der ausgewählten Objekte
         command: app:copy-notes
       - label: Ausgewählte Objekte konsolidieren
         command: app:consolidate-item
@@ -370,6 +372,8 @@ de:
     photo-read-only:
       - label: Originalfoto anzeigen …
         command: app:show-in-folder
+      - label: Kopiere Link zu Foto
+        command: app:copy-photo-link
       - label: Foto exportieren …
         command: app:extract-photo
       - label: Foto konsolidieren
@@ -703,9 +707,9 @@ de:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Notiz exportieren …
         command: app:export-note
-      - label: Copy Note
+      - label: Notiz kopieren
         command: app:copy-note
       - label: Notiz löschen
         command: app:delete-note
@@ -757,9 +761,11 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Item Notes …
+      - label: Objektnotizen exportieren …
         command: app:export-notes
-      - label: Copy Item Notes
+      - label: Kopiere Link zu Objekt
+        command: app:copy-item-link
+      - label: Objektnotizen kopieren
         command: app:copy-notes
       - label: Objekt konsolidieren
         command: app:consolidate-item
@@ -774,9 +780,9 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Selected Item Notes …
+      - label: Exportiere Notizen der ausgewählten Objekte …
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: Kopiere Notizen der ausgewählten Objekte
         command: app:copy-notes
       - label: Ausgewählte Objekte konsolidieren
         command: app:consolidate-item
@@ -838,6 +844,8 @@ de:
     photo-read-only:
       - label: Originalfoto anzeigen …
         command: app:show-in-folder
+      - label: Kopiere Link zu Foto
+        command: app:copy-photo-link
       - label: Foto exportieren …
         command: app:extract-photo
       - label: Foto konsolidieren
@@ -1140,9 +1148,9 @@ de:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Notiz exportieren …
         command: app:export-note
-      - label: Copy Note
+      - label: Notiz kopieren
         command: app:copy-note
       - label: Notiz löschen
         command: app:delete-note
@@ -1194,9 +1202,11 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Item Notes …
+      - label: Objektnotizen exportieren …
         command: app:export-notes
-      - label: Copy Item Notes
+      - label: Kopiere Link zu Objekt
+        command: app:copy-item-link
+      - label: Objektnotizen kopieren
         command: app:copy-notes
       - label: Objekt konsolidieren
         command: app:consolidate-item
@@ -1211,9 +1221,9 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Selected Item Notes …
+      - label: Exportiere Notizen der ausgewählten Objekte …
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: Kopiere Notizen der ausgewählten Objekte
         command: app:copy-notes
       - label: Ausgewählte Objekte konsolidieren
         command: app:consolidate-item
@@ -1275,6 +1285,8 @@ de:
     photo-read-only:
       - label: Originalfoto anzeigen …
         command: app:show-in-folder
+      - label: Kopiere Link zu Foto
+        command: app:copy-photo-link
       - label: Foto exportieren …
         command: app:extract-photo
       - label: Foto konsolidieren

@@ -193,6 +193,19 @@ it:
           property-datatype: Per tipo di dati e proprietà
     project:
       label: Progetto
+      base:
+        label: Link photos
+        option:
+          'null': Using absolute paths
+          project: Relative to the project file
+          home: Relative to your home directory
+      store: Managed folder
+      name: Nome
+      id: ID
+      file: File
+      watch:
+        folder: Watch folder
+        usePolling: Using file stat polling
     template:
       label: Modelli
       new: Nuovo modello...
@@ -243,6 +256,8 @@ it:
     type: Tipo
     created: Data di aggiunta
     modified: Modificato
+    consolidate: Consolida foto
+    error: Photo not found
   selection:
     size: Dimensione
     created: Data di aggiunta
@@ -617,6 +632,8 @@ it:
           remove: Rimozione di campo dal modello non riuscita.
     tag:
       create: 'Creazione del tag non riuscita. I nomi di tag devono essere unici. '
+    db:
+      SQLITE_CANTOPEN: Cannot find or open database file.
   flash:
     update:
       ready:
