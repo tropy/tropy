@@ -548,6 +548,18 @@ export class Tropy extends EventEmitter {
         act.note.export(target.notes, { target: ':clipboard:' }),
         win))
 
+    this.on('app:copy-item-link', (win, { target }) =>
+      this.copyProtocolURL(this.getProject(win), {
+        item: target.id,
+        photo: target.photos[0]
+      }))
+
+    this.on('app:copy-photo-link', (win, { target }) =>
+      this.copyProtocolURL(this.getProject(win), {
+        item: target.item,
+        photo: target.id
+      }))
+
     this.on('app:export-note', (win, { target }) =>
       this.dispatch(act.note.export(target.notes), win))
 
@@ -902,6 +914,14 @@ export class Tropy extends EventEmitter {
     })
 
     return this
+  }
+
+  copyProtocolURL(project, { item, photo }) {
+    let alias = 'current'
+
+    clipboard.write({
+      text: `tropy://project/${alias}/items/${item}/${photo}`
+    })
   }
 
   async handleProtocolRequest(url) {
