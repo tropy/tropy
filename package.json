@@ -63,7 +63,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-dom": "^1.8.2",
     "chalk": "^4.1.0",
-    "electron": "^13.1.1",
+    "electron": "<14.0",
     "electron-mocha": "^10.0.0",
     "electron-notarize": "^1.0.0",
     "electron-packager": "^15.2.0",
