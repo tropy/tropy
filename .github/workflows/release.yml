@@ -1,0 +1,132 @@
+name: release
+on:
+  push:
+    tags:
+      - v1.*
+      - v2.*
+
+permissions:
+  contents: write
+  metadata: read
+
+jobs:
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          omitBody: true
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
+          prerelease: true
+          token: ${{ github.token }}
+
+  build:
+    name: Build ${{ matrix.platform }}-${{ matrix.arch }}
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+    environment: release
+
+    strategy:
+      os:
+        - ubuntu-18.04
+        - macos-10.15
+        - windows-2016
+      arch:
+        - x64
+      include:
+        - os: ubuntu-18.04
+          platform: linux
+        - os: macos-10.15
+          platform: darwin
+        - os: windows-2016
+          platform: win32
+        - os: macos-11
+          platform: darwin
+          arch: arm64
+        - os: windows-2016
+          platform: win32
+          arch: ia32
+        - os: windows-latest
+          platform: win32
+          arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: npm
+
+      - name: Install and build dependencies
+        run: npm install --no-progress --no-package-lock
+
+      - name: Rebuild native dependencies
+        run: npm run rebuild -- --force --arch ${{ matrix.arch }}
+
+      - name: Setup macOS keychain and signing certificates
+        if: matrix.platform == 'darwin'
+        run: |
+          # Create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASS" "$KEYCHAIN"
+          security set-keychain-settings -lut 3600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASS" "$KEYCHAIN"
+          security default-keychain -s  "$KEYCHAIN"
+
+          # Import signing certificate
+          echo -n "$SIGN_CERT" | base64 --decode --output "${RUNNER_TEMP}/cert.p12"
+          security import "${RUNNER_TEMP}/cert.p12" -P "$SIGN_CERT_PASS" -T /usr/bin/codesign -k "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASS" "$KEYCHAIN"
+          security list-keychain -d user -s "$KEYCHAIN"
+
+          # Import API key for notarization
+          mkdir -p ~/.private_keys
+          echo "$NOTARY_KEY" > "~/.private_keys/AuthKey_${NOTARY_KEY_ID}.p8"
+        env:
+          SIGN_CERT: ${{ secrets.MAC_CERT }}
+          SIGN_CERT_PASS: ${{ secrets.MAC_CERT_PASS }}
+          KEYCHAIN: ${{ secrets.KEYCHAIN }}
+          KEYCHAIN_PASS: ${{ secrets.KEYCHAIN_PASS }}
+          NOTARY_KEY: ${{ secrets.APPLE_API_KEY }}
+          NOTARY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+
+      - name: Setup Windows signing certificate
+        if: matrix.platform == 'win32'
+        run: |
+          echo -n "$SIGN_CERT_BASE64" > "${RUNNER_TEMP}/cert.b64"
+          certutil -decode "${RUNNER_TEMP}/cert.b64" "${RUNNER_TEMP}/cert.p12"
+        env:
+          SIGN_CERT_BASE64: ${{ WIN_CERT }}
+
+      - name: Create production build
+        run: npm run build
+        env:
+          npm_config_arch: ${{ matrix.arch }}
+          SIGN_CERT: ${{ secrets.MAC_CERT_ID }}
+          SIGN_KEYCHAIN: ${{ secrets.KEYCHAIN }}
+          NOTARY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          NOTARY_KEY_ISSUER: ${{ secrets.APPLE_API_KEY_ISSUER }}
+
+      - name: Create release assets
+        run: npm run pack
+        env:
+          npm_config_arch: ${{ matrix.arch }}
+          SIGN_CERT: ${{ runner.temp }}/cert.p12
+          SIGN_PASS: ${{ secrets.WIN_CERT_PASS }}
+
+      - name: Upload release assets
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts:
+            - "dist/*.{bz2,AppImage,dmg,zip}"
+            - "dist/{x64,arm64,ia32}/*.{exe,nupkg}"
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
+          prerelease: true
+          token: ${{ github.token }}
