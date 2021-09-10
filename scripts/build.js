@@ -46,6 +46,11 @@ if (process.platform === 'darwin') {
       'set sigining certificate',
       process.env.SIGN_CERT)
     .option(
+      '-K, --keychain <keychain>',
+      'set the keychain name',
+      process.env.SIGN_KEYCHAIN)
+
+    .option(
       '-u, --user <apple-id>',
       'set Apple Id for notarization',
       process.env.SIGN_USER)
@@ -53,6 +58,15 @@ if (process.platform === 'darwin') {
       '-p, --password <password>',
       'set the Apple Id password',
       '@keychain:TROPY_DEV_PASSWORD')
+
+    .option(
+      '-k, --api-key <key>',
+      'set Apple API key ID for notarization',
+      process.env.NOTARY_KEY_ID)
+    .option(
+      '-I, --api-key-issuer <issuer>',
+      'set Apple API issuer ID for notarization',
+      process.env.NOTARY_KEY_ISSUER)
 }
 
 program
@@ -250,14 +264,24 @@ function mergeMacSigningOptions(opts, args) {
       'platform': args.platform,
       'hardened-runtime': true,
       'entitlements': entitlements,
-      'entitlements-inherit': entitlements
+      'entitlements-inherit': entitlements,
+      'keychain': args.keychain
     }
 
-    if (args.user) {
-      opts.osxNotarize = {
-        appleId: args.user,
-        appleIdPassword: args.password,
-        ascProvider: 'CorporationforDigitalScholarship'
+    if (args.user || args.apiKey) {
+      if (args.user) {
+        opts.osxNotarize = {
+          appleId: args.user,
+          appleIdPassword: args.password,
+          ascProvider: 'CorporationforDigitalScholarship'
+        }
+      }
+
+      if (args.apiKey) {
+        opts.osxNotarize = {
+          appleApiKey: args.apiKey,
+          appleApiIssuer: args.apiKeyIssuer
+        }
       }
 
       say('will attempt code-signing and app-notarization')
