@@ -120,11 +120,40 @@ jobs:
           SIGN_CERT: ${{ runner.temp }}\\cert.p12
           SIGN_PASS: ${{ secrets.WIN_CERT_PASS }}
 
-      - name: Upload release assets
+      - name: Upload Linux release assets
+        if: matrix.platform == 'linux'
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          artifacts: "dist/*.{bz2,AppImage,dmg,zip},dist/{x64,arm64,ia32}/*.{exe,nupkg}"
+          artifacts: >-
+            dist/*.bz2,
+            dist/*.AppImage
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
+          prerelease: true
+          token: ${{ github.token }}
+
+      - name: Upload macOS release assets
+        if: matrix.platform == 'darwin'
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: >-
+            dist/*.dmg,
+            dist/*.zip
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
+          prerelease: true
+          token: ${{ github.token }}
+
+      - name: Upload Windows release assets
+        if: matrix.platform == 'win32'
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: >-
+            dist/${{ matrix.arch }}/*.exe,
+            dist/${{ matrix.arch }}/*.nupkg
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
           prerelease: true
