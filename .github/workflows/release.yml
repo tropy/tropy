@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  metadata: read
 
 jobs:
   create-release:
@@ -104,7 +103,7 @@ jobs:
           echo -n "$SIGN_CERT_BASE64" > "${RUNNER_TEMP}/cert.b64"
           certutil -decode "${RUNNER_TEMP}/cert.b64" "${RUNNER_TEMP}/cert.p12"
         env:
-          SIGN_CERT_BASE64: ${{ WIN_CERT }}
+          SIGN_CERT_BASE64: ${{ secrets.WIN_CERT }}
 
       - name: Create production build
         run: npm run build
