@@ -84,11 +84,10 @@ jobs:
           echo -n "$SIGN_CERT" | base64 --decode --output "${RUNNER_TEMP}/cert.p12"
           security import "${RUNNER_TEMP}/cert.p12" -P "$SIGN_CERT_PASS" -T /usr/bin/codesign -k "$KEYCHAIN"
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASS" "$KEYCHAIN"
-          security list-keychain -d user -s "$KEYCHAIN"
 
           # Import API key for notarization
-          mkdir -p ~/.private_keys
-          echo "$NOTARY_KEY" > "~/.private_keys/AuthKey_${NOTARY_KEY_ID}.p8"
+          mkdir -p "$HOME/.private_keys"
+          echo "$NOTARY_KEY" > "$HOME/.private_keys/AuthKey_${NOTARY_KEY_ID}.p8"
         env:
           SIGN_CERT: ${{ secrets.MAC_CERT }}
           SIGN_CERT_PASS: ${{ secrets.MAC_CERT_PASS }}
@@ -101,7 +100,7 @@ jobs:
         if: matrix.platform == 'win32'
         run: |
           echo -n "$SIGN_CERT_BASE64" > "${RUNNER_TEMP}/cert.b64"
-          certutil -decode "${RUNNER_TEMP}/cert.b64" "${RUNNER_TEMP}/cert.p12"
+          certutil -decode "${RUNNER_TEMP}\\cert.b64" "${RUNNER_TEMP}\\cert.p12"
         env:
           SIGN_CERT_BASE64: ${{ secrets.WIN_CERT }}
 
@@ -118,7 +117,7 @@ jobs:
         run: npm run pack
         env:
           npm_config_arch: ${{ matrix.arch }}
-          SIGN_CERT: ${{ runner.temp }}/cert.p12
+          SIGN_CERT: ${{ runner.temp }}\\cert.p12
           SIGN_PASS: ${{ secrets.WIN_CERT_PASS }}
 
       - name: Upload release assets
