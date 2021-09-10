@@ -100,7 +100,8 @@ jobs:
         if: matrix.platform == 'win32'
         run: |
           echo -n "$SIGN_CERT_BASE64" > "${RUNNER_TEMP}/cert.b64"
-          certutil -decode "${RUNNER_TEMP}\\cert.b64" "${RUNNER_TEMP}\\cert.p12"
+          base64 --decode --ouput "${RUNNER_TEMP}/cert.p12" "${RUNNER_TEMP}/cert.b64"
+        shell: bash
         env:
           SIGN_CERT_BASE64: ${{ secrets.WIN_CERT }}
 
