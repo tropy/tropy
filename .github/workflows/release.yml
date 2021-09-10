@@ -30,28 +30,30 @@ jobs:
     environment: release
 
     strategy:
-      os:
-        - ubuntu-18.04
-        - macos-10.15
-        - windows-2016
-      arch:
-        - x64
-      include:
-        - os: ubuntu-18.04
-          platform: linux
-        - os: macos-10.15
-          platform: darwin
-        - os: windows-2016
-          platform: win32
-        - os: macos-11
-          platform: darwin
-          arch: arm64
-        - os: windows-2016
-          platform: win32
-          arch: ia32
-        - os: windows-latest
-          platform: win32
-          arch: arm64
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-18.04
+          - macos-10.15
+          - windows-2016
+        arch:
+          - x64
+        include:
+          - os: ubuntu-18.04
+            platform: linux
+          - os: macos-10.15
+            platform: darwin
+          - os: windows-2016
+            platform: win32
+          - os: macos-11
+            platform: darwin
+            arch: arm64
+          - os: windows-2016
+            platform: win32
+            arch: ia32
+          - os: windows-latest
+            platform: win32
+            arch: arm64
 
     steps:
       - name: Checkout repository
