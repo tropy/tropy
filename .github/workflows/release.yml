@@ -11,10 +11,11 @@ permissions:
 
 jobs:
   create-release:
-    name: Create GitHub Release
+    name: Create Release
     runs-on: ubuntu-latest
     steps:
-        uses: ncipollo/release-action@v1
+      - name: Create GitHub Release
+      - uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           omitBody: true
