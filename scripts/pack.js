@@ -16,6 +16,7 @@ const PLATFORM =
 
 const {
   exec,
+  cat,
   cd,
   chmod,
   cp,
@@ -244,7 +245,7 @@ module.exports = {
 
     await createWindowsInstaller({
       appDirectory: app,
-      outputDirectory: join(out, arch),
+      outputDirectory: out,
       authors: author,
       signWithParams: `/fd SHA256 /f ${cert} /p "${password}"`,
       title: qualified.product,
@@ -257,6 +258,16 @@ module.exports = {
       noDelta: true,
       noMsi: true
     })
+
+    if (arch !== 'x64') {
+      let v = version.replace(`${channel}.`, channel)
+
+      mv(
+        `${qualified.name}-${v}-full.nupkg`,
+        `${qualified.name}-${v}-${arch}-full.nupkg`)
+    }
+
+    say(`squirrel release metadata:\n${cat(join(out, 'RELEASES'))}`)
 
     return join(arch, output)
   }

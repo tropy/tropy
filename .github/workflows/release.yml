@@ -120,6 +120,9 @@ jobs:
           SIGN_CERT: ${{ runner.temp }}\\cert.p12
           SIGN_PASS: ${{ secrets.WIN_CERT_PASS }}
 
+      - name: Rename 
+        if: matrix.platform == 'win32'
+
       - name: Upload Linux release assets
         if: matrix.platform == 'linux'
         uses: ncipollo/release-action@v1
@@ -152,8 +155,8 @@ jobs:
         with:
           allowUpdates: true
           artifacts: >-
-            dist/${{ matrix.arch }}/*.exe,
-            dist/${{ matrix.arch }}/*.nupkg
+            dist/*.exe,
+            dist/*.nupkg
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
           prerelease: true
