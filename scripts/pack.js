@@ -269,7 +269,7 @@ module.exports = {
 
     say(`squirrel release metadata:\n${cat(join(out, 'RELEASES'))}`)
 
-    return join(arch, output)
+    return output
   }
 }
 
