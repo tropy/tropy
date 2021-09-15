@@ -260,11 +260,10 @@ module.exports = {
     })
 
     if (arch !== 'x64') {
+      let n = join(out, qualified.name)
       let v = version.replace(`${channel}.`, channel)
 
-      mv(
-        `${qualified.name}-${v}-full.nupkg`,
-        `${qualified.name}-${v}-${arch}-full.nupkg`)
+      mv(`${n}-${v}-full.nupkg`, `${n}-${v}-${arch}-full.nupkg`)
     }
 
     say(`squirrel release metadata:\n${cat(join(out, 'RELEASES'))}`)
