@@ -56,13 +56,10 @@ jobs:
         env:
           npm_config_arch: ${{ matrix.arch }}
 
-      - name: Run main tests
+      - name: Run main/tests tests
         if: matrix.os != 'ubuntu-latest'
-        run: npm run test:main
-
-      - name: Run renderer tests
-        if: matrix.os != 'ubuntu-latest'
-        run: npm run test:renderer
+        run: npm test
+        shell: bash
 
       - name: Run main/renderer tests with coverage report
         if: matrix.os == 'ubuntu-latest'
