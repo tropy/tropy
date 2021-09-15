@@ -5,6 +5,7 @@ import * as act from '../actions'
 import { Watcher } from '../common/watch'
 import { debug, warn } from '../common/log'
 import { IMAGE, PROJECT } from '../constants'
+import mod from '../models/project'
 
 function addedFilesChannel(watcher) {
   return eventChannel(emitter => {
@@ -60,6 +61,9 @@ export function *watch() {
     while (true) {
       let path = yield take(channel)
       yield put(act.item.import({ files: [path] }, { prompt: false }))
+
+      let { project } = yield select()
+      mod.touchWatchFolder(project.id)
     }
 
   } catch (e) {

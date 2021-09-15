@@ -24,6 +24,19 @@ function getBasePath(db, base) {
 }
 
 
+function touchWatchFolder(id) {
+  let watch = Storage.load('project.watch', id) || {}
+
+  if (watch.folder) {
+    watch.since = Date.now()
+    Storage.save('project.watch', watch, id)
+  }
+
+  return watch.since
+}
+
+
+
 export default {
   getBasePath,
 
@@ -98,12 +111,8 @@ export default {
   },
 
   close(db, { id }) {
-    let watch = Storage.load('project.watch', id) || {}
+    touchWatchFolder(id)
+  },
 
-    if (watch.folder) {
-      watch.since = Date.now()
-      Storage.save('project.watch', watch, id)
-    }
-  }
-
+  touchWatchFolder
 }
