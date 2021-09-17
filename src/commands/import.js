@@ -124,7 +124,9 @@ export class ImportCommand extends Command {
 
   *getDuplicateHandler() {
     if (this.duplicateHandler == null) {
-      this.duplicateHandler = yield select(({ settings }) => settings.dup)
+      this.duplicateHandler =
+        this.action.meta.duplicate ||
+        (yield select(({ settings }) => settings.dup))
     }
 
     return this.duplicateHandler

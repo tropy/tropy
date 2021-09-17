@@ -5,6 +5,15 @@ import { copyFileSync, truncateSync } from 'fs'
 
 export let logger
 
+const dateTimeFormat = new Intl.DateTimeFormat('en-GB', {
+  dateStyle: 'short',
+  timeStyle: 'short'
+})
+
+export function formatTime(ts) {
+  return dateTimeFormat.format(new Date(ts))
+}
+
 function logRotate(file, suffix = '.1') {
   try {
     copyFileSync(file, file + suffix)

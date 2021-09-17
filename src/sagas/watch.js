@@ -3,7 +3,7 @@ import { eventChannel } from 'redux-saga'
 import { call, put, select, take, takeEvery } from 'redux-saga/effects'
 import * as act from '../actions'
 import { Watcher } from '../common/watch'
-import { debug, warn } from '../common/log'
+import { debug, info, warn } from '../common/log'
 import { IMAGE, PROJECT } from '../constants'
 import mod from '../models/project'
 
@@ -60,7 +60,12 @@ export function *watch() {
 
     while (true) {
       let path = yield take(channel)
-      yield put(act.item.import({ files: [path] }, { prompt: false }))
+      info(`import from watch folder: ${path}`)
+
+      yield put(act.item.import({ files: [path] }, {
+        prompt: false,
+        duplicate: 'skip'
+      }))
 
       let { project } = yield select()
       mod.touchWatchFolder(project.id)
