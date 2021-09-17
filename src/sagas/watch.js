@@ -25,7 +25,9 @@ function *updateProjectWatchFolder(watcher) {
   if (project.watch.folder) {
     debug(`update project watch folder: ${project.watch.folder}`)
 
-    let path = join(project.watch.folder, `*.{${IMAGE.EXT.join(',')}}`)
+    let path = join(project.watch.folder, `*.{${
+      IMAGE.EXT.map(ext => `${ext},${ext.toUpperCase()}`).join(',')
+    }}`)
     let { usePolling, since } = project.watch
 
     if (watcher.isWatching(path))
