@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import { warn } from './log'
+import { debug, info, warn, formatTime } from './log'
 
 let chokidar
 
@@ -43,17 +43,24 @@ export class Watcher extends EventEmitter {
 
     if (!path) return
 
+    debug({ since }, `start watching ${path}`)
+
     this.#watcher = chokidar.watch(path, {
       ...opts,
       ignoreInitial: (since == null)
     })
     this.#path = path
 
-    if (since)
+    if (since != null) {
+      info({
+        path
+      }, `checking watch folder for additions since ${formatTime(since)}`)
+
       this.#watcher.on('add', (file, stats) => {
         if (stats.ctime > since)
           this.emit('add', file, stats)
       })
+    }
 
     this.#watcher.on('ready', () => {
       this.#watcher.removeAllListeners('add')
