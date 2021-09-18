@@ -1,4 +1,7 @@
+import { promisify } from 'util'
 import ChildProcess from 'child_process'
+
+export const execFile = promisify(ChildProcess.execFile)
 
 export async function spawn(cmd, args) {
   try {
