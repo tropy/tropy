@@ -1,5 +1,8 @@
 import { EventEmitter } from 'events'
-import { debug, info, warn, formatTime } from './log'
+import { dirname } from 'path'
+import { info, warn } from './log.js'
+import { darwin } from './os.js'
+import { execFile } from './spawn.js'
 
 let chokidar
 
@@ -43,7 +46,7 @@ export class Watcher extends EventEmitter {
 
     if (!path) return
 
-    debug({ since }, `start watching ${path}`)
+    info({ path, since }, `start watching ${dirname(path)}`)
 
     this.#watcher = chokidar.watch(path, {
       ...opts,
@@ -52,13 +55,15 @@ export class Watcher extends EventEmitter {
     this.#path = path
 
     if (since != null) {
-      info({
-        path
-      }, `checking watch folder for additions since ${formatTime(since)}`)
-
-      this.#watcher.on('add', (file, stats) => {
-        if (stats.ctime > since)
-          this.emit('add', file, stats)
+      this.#watcher.on('add', async (file, stats) => {
+        if (stats.ctime > since) {
+          // macOS apps like Preview always update ctime. We do not
+          // import duplicate files, but also checking kMDItemDateAdded
+          // here, saves as from importing and then skipping over the
+          // same files every time.
+          if (!darwin || (await mdItemDateAdded(file)) > since)
+            this.emit('add', file, stats)
+        }
       })
     }
 
@@ -74,4 +79,21 @@ export class Watcher extends EventEmitter {
     this.#watcher = null
     this.#path = null
   }
+}
+
+async function mdItemDateAdded(file) {
+  try {
+    let { stdout } = await execFile('mdls', [
+      '-name',
+      'kMDItemDateAdded',
+      file
+    ], { encoding: 'utf-8' })
+
+    let value = stdout.replace(/^\w+ = /, '').trim()
+    return Date.parse(value)
+
+  } catch (e) {
+    warn({ stack: e.stack }, `mdls failed for ${file}`)
+  }
+
 }
