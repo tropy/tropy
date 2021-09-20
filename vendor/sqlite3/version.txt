@@ -1,1 +1,1 @@
-https://www.sqlite.org/2021/sqlite-autoconf-3350200.tar.gz
+https://www.sqlite.org/2021/sqlite-autoconf-3360000.tar.gz
