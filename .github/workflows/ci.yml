@@ -67,6 +67,7 @@ jobs:
 
       - name: Send coverage report to Coveralls
         if: matrix.os == 'ubuntu-latest'
+        continue-on-error: true
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ github.token }}
