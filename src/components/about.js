@@ -28,7 +28,7 @@ export const About = () => (
       <h1><span className="product">{product}</span></h1>
       <p className="version">
         <FormattedMessage id="about.version" values={{ version }}/>
-        {process.arch}
+        {' '}({process.arch})
       </p>
       <p>
         <FormattedMessage
