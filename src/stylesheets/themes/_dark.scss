@@ -10,13 +10,13 @@ $theme: "dark";
 // Colors
 // --------------------------------------------------
 
-$blue: #395bac;
-$blue-light: #cedef7;
-$blue-dark: #171b2e;
-$blue-overlay: #4176f2;
+$blue:          #395bac;
+$blue-light:    #cedef7;
+$blue-dark:     #171b2e;
+$blue-overlay:  #4176f2;
 $blue-vibrancy: rgba(#4176f2, 0.7); // 2% brighter than blue-dark on original bg
-$red: #e62e2e;
-$green: #2e8c44; // 64% of the light theme green + 7% saturation
+$red:           #e62e2e;
+$green:         #328e52; // 64% of the light theme green + 7% saturation
 
 $brand-primary:          $blue;
 $brand-primary-overlay:  $blue-overlay;
@@ -451,3 +451,7 @@ $option-separator-color:  var(--shade-1);
 // Recent projects
 $project-name-hover-bg:          var(--shade-4-lighten-2);
 $project-name-vibrancy-hover-bg: var(--shade-10-4);
+
+// Donate button
+$donate-btn-bg:    var(--green);
+$donate-btn-color: var(--green-tint-70);

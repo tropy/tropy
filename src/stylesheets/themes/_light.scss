@@ -15,7 +15,7 @@ $blue-overlay:  #1770e5;
 $blue-vibrancy: rgba($blue-overlay, 0.7);
 $blue-light:    #cedef7;
 $red:           #e62e2e;
-$green:         #3abd57;
+$green:         #39bf68;
 
 $brand-primary:          $blue;
 $brand-primary-overlay:  $blue-overlay;
@@ -449,3 +449,7 @@ $option-separator-color:  var(--shade-2);
 // Recent projects
 $project-name-hover-bg:          var(--shade-1-darken-4);
 $project-name-vibrancy-hover-bg: var(--shade-10-4);
+
+// Donate button
+$donate-btn-bg:    var(--green-80);
+$donate-btn-color: $body-bg;

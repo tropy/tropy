@@ -514,7 +514,7 @@ export class WindowManager extends EventEmitter {
   static defaults = {
     about: {
       width: 600,
-      height: 318,
+      height: 359,
       autoHideMenuBar: true,
       fullscreenable: false,
       maximizable: false,

@@ -65,6 +65,24 @@
     user-select: text;
   }
 
+  .donate {
+    a {
+      display: inline-block;
+      background-color: $donate-btn-bg;
+      color: $donate-btn-color;
+      padding: 0 $space-min;
+      border-radius: $border-radius-small;
+
+      @if $platform == darwin {
+        -webkit-font-smoothing: initial;
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
   .links {
     a + a {
       margin-left: $space-md;

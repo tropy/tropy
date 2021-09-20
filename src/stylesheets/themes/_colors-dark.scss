@@ -19,6 +19,7 @@
   #{--red}:                      $red;
   #{--red-64}:                   rgba($red, 0.64);
   #{--green}:                    $green;
+  #{--green-tint-70}:            mix(#fff, $green, 70%);
 }
 
 

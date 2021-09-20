@@ -43,6 +43,9 @@ export const About = () => (
           id="about.trademark"
           values={{ cds: <Link id="about.cds"/> }}/>
       </p>
+      <p className="donate">
+        <Link id="about.donate"/>
+      </p>
       <p className="links">
         <Link id="about.release" version={version}/>
         <Link id="about.license"/>
