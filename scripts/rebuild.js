@@ -2,7 +2,6 @@
 
 const { say } = require('./util')('Δ')
 const { join } = require('path')
-const fetch = require('node-fetch')
 const fs = require('fs')
 const { program } = require('commander')
 const { cat, cp, env, exec, sed, test } = require('shelljs')
@@ -106,6 +105,7 @@ class Rebuilder {
 
         if (!test('-f', tar)) {
           say(`fetching SQLite version ${version} ...`)
+          let { default: fetch } = await import('node-fetch')
           let res = await fetch(url)
           if (res.status !== 200)
             throw new Error(`download failed: ${res.status} ${res.statusText}`)
