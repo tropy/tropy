@@ -73,6 +73,7 @@ export default [
     output: {
       dir: 'lib/browser',
       format: 'cjs',
+      generatedCode: 'es2015',
       sourcemap: false
     },
     preserveEntrySignatures: 'strict',
@@ -115,6 +116,7 @@ export default [
     output: {
       dir: 'lib',
       format: 'cjs',
+      generatedCode: 'es2015',
       sourcemap: true
     },
     preserveEntrySignatures: 'strict',
