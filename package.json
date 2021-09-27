@@ -150,7 +150,7 @@
     "rollup-plugin-license": "^2.3.0",
     "sanitize-filename": "^1.6.3",
     "semver": "^7.3.4",
-    "sharp": "^0.28.3",
+    "sharp": "^0.29.1",
     "shortid": "^2.2.16",
     "sqlite3": "inukshuk/node-sqlite3#feature/update-node-gyp",
     "transducers.js": "^0.3.2",

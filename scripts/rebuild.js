@@ -54,7 +54,10 @@ class Rebuilder {
   get stale() {
     switch (this.name) {
       case 'sharp':
-        return !fs.existsSync(this.modulePath('build', 'Release', 'sharp.node'))
+        return !fs.existsSync(this.modulePath(
+          'build',
+          'Release',
+          `sharp-${this.platform}-${this.arch}.node`))
       case 'sqlite3':
         return !fs.existsSync(this.modulePath(
           'lib',

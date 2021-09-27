@@ -18,6 +18,7 @@ import scss from './scripts/rollup-plugin-scss'
 import emit from './scripts/rollup-plugin-emit'
 import fsEvents from './scripts/rollup-plugin-fsevents'
 import reactDnd from './scripts/rollup-plugin-react-dnd'
+import sharpRequire from './scripts/rollup-plugin-sharp'
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
 
@@ -29,6 +30,10 @@ const arch =
   process.env.npm_config_target_arch ||
   process.env.npm_config_arch ||
   process.arch
+
+const platformId = (arch === 'arm64') ?
+`${platform}-arm64v8` :
+`${platform}-${arch}`
 
 
 const IGNORE_WARNINGS = {
@@ -134,6 +139,7 @@ export default [
           'src/bootstrap.js'
         ]
       }),
+      sharpRequire({ platformId }),
       natives({
         copyTo: 'lib/node/lib',
         destDir: './node/lib',
@@ -145,11 +151,11 @@ export default [
             src: 'node_modules/sharp/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
             dest: 'lib/node/lib'
           } : {
-            src: `node_modules/sharp/vendor/${sharp.config.libvips}/lib`,
-            dest: `lib/vendor/${sharp.config.libvips}`
+            src: `node_modules/sharp/vendor/${sharp.config.libvips}/${platformId}/lib`,
+            dest: `lib/vendor/${sharp.config.libvips}/${platformId}`
           },
           {
-            src: `node_modules/sharp/vendor/${sharp.config.libvips}/THIRD-PARTY-NOTICES.json`,
+            src: `node_modules/sharp/vendor/${sharp.config.libvips}/${platformId}/THIRD-PARTY-NOTICES.json`,
             dest: 'lib',
             rename: 'licenses.libvips.json'
           }
