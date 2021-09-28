@@ -13,7 +13,7 @@ export default function sharpRequire({ platformId }) {
   return {
     name: 'sharp-require-patch',
     transform(code, id) {
-      if (id.endsWith('sharp/lib/sharp.js')) {
+      if ((/sharp[\\/]lib[\\/]sharp\.js$/).test(id)) {
         transformed = true
         const requireStatementPos = code.indexOf(REQUIRE)
         if (requireStatementPos < 0) {
