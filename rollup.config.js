@@ -195,6 +195,7 @@ export default [
         babelHelpers: 'bundled'
       }),
       commonjs({
+        ignoreTryCatch: false,
         requireReturnsDefault: 'preferred'
       }),
       license({
