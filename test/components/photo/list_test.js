@@ -26,7 +26,7 @@ describe('PhotoList', () => {
       .and.not.have.descendants('li.photo')
   })
 
-  describe('Layout', () => {
+  describe.skip('Layout', () => {
     let list, props
 
     beforeEach(() => {
