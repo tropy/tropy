@@ -42,19 +42,19 @@ export class Scroll extends React.Component {
     return this.next(0)
   }
 
-  next(offset = 1) {
+  next(k = 1) {
     if (this.props.cursor != null)
       return this.props.items[sanitize(
         this.props.items,
-        this.props.cursor + offset,
+        this.props.cursor + k,
         this.props.restrict
       )]
     else
-      return (offset < 0) ? this.last() : this.first()
+      return (k < 0) ? this.last() : this.first()
   }
 
-  prev(offset = 1) {
-    return this.next(-offset)
+  prev(k = 1) {
+    return this.next(-k)
   }
 
   first() {
@@ -226,7 +226,7 @@ export class Scroll extends React.Component {
     let row = Math.floor(offset / itemHeight)
 
     let { numRowsAbove, expRowPosition } =
-        getExpandedRowsAbove(expandedRows, row)
+        getExpandedRowsAbove(expandedRows, { position: row })
 
     if (expandedRows.length) {
       offset = (row - expRowPosition) * itemHeight
@@ -279,14 +279,20 @@ export class Scroll extends React.Component {
     if (index == null || index < 0)
       return
 
-    let { columns } = this.layout
-    let { itemHeight } = this.props
+    let { columns, expandedRows } = this.layout
+    let { itemHeight, itemWidth, expansionPadding } = this.props
     let { height } = this.state
 
     let top = this.container.current.scrollTop
-    let offset = Math.floor(index / columns) * itemHeight
+    let row = Math.floor(index / columns)
 
-    // TODO adjust expansion rows and padding
+    let { numRowsAbove } =
+        getExpandedRowsAbove(expandedRows, { index: row })
+
+    let offset = (row + numRowsAbove) * itemHeight
+
+    if (itemWidth && numRowsAbove > 0)
+      offset += expansionPadding
 
     let bottom = offset + itemHeight
     let isBelow = bottom > top

@@ -20,15 +20,17 @@ ExpansionRow.defaultProps = {
   tag: 'li'
 }
 
-export const getExpandedRowsAbove = (rows, x) => {
+export const getExpandedRowsAbove = (rows, { index, position }) => {
   let numRowsAbove = 0
   let expRowPosition = 0
 
   for (let row of rows) {
-    if (x < row.position)
+    if (index != null && index <= row.index)
+      break
+    if (position != null && position < row.position)
       break
 
-    if (x === row.position)
+    if (position === row.position)
       expRowPosition = row.expRowPosition
 
     numRowsAbove = row.numRowsAbove
@@ -56,11 +58,12 @@ const getExpandedListRows = (items, expandedItems, subItems) => {
   let count = 0
 
   for (let { index, numRows } of expansions) {
-    index += count
+    let position = index + count
 
     for (let i = 1; i <= numRows; ++i)
       rows.push({
-        position: ++index,
+        index,
+        position: position + i,
         numRowsAbove: ++count,
         expRowPosition: i
       })
@@ -83,7 +86,8 @@ const getExpandedGridRows = (columns, items, expandedItems, subItems) => {
 
     for (let i = 1; i <= numRows; ++i)
       rows.push({
-        position: ++index,
+        index,
+        position: index + i,
         numRowsAbove: i,
         expRowPosition: i
       })
