@@ -3,7 +3,6 @@ import { Scroll } from '../scroll'
 import { object, func } from 'prop-types'
 import { PhotoListItem } from './list-item'
 import { PhotoIterator } from './iterator'
-import { indexOf } from '../../common/collection'
 import { SASS } from '../../constants'
 import { dc } from '../../ontology'
 import cx from 'classnames'
@@ -142,7 +141,7 @@ class PhotoList extends PhotoIterator {
       <div className={cx(this.classes)}>
         <Scroll
           ref={this.container}
-          cursor={indexOf(this.props.photos, this.props.current)}
+          cursor={this.props.current}
           items={this.props.photos}
           itemHeight={SASS.ROW.HEIGHT}
           expandedItems={this.props.expanded}

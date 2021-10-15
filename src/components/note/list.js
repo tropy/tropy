@@ -3,7 +3,6 @@ import { Scroll } from '../scroll'
 import { NoteListItem } from './list-item'
 import { TABS, SASS } from '../../constants'
 import { match } from '../../keymap'
-import { indexOf } from '../../common/collection'
 import { arrayOf, bool, func, number, object, shape } from 'prop-types'
 
 
@@ -71,7 +70,7 @@ export class NoteList extends React.Component {
       <div className="note-list">
         <Scroll
           ref={this.scroll}
-          cursor={indexOf(this.props.notes, this.props.selection?.id)}
+          cursor={this.props.selection?.id}
           items={this.props.notes}
           itemHeight={SASS.NOTE.ROW_HEIGHT}
           tabIndex={this.tabIndex}
