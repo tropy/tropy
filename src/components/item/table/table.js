@@ -7,7 +7,6 @@ import { TableHead } from './head'
 import { ColumnContextMenu } from '../column'
 import cx from 'classnames'
 import { noop } from '../../../common/util'
-import { indexOf } from '../../../common/collection'
 import { bounds, ensure } from '../../../dom'
 import { restrict, shallow, splice, warp } from '../../../common/util'
 
