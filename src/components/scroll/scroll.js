@@ -103,12 +103,13 @@ export class Scroll extends React.Component {
     overscan
   ) => {
     let columns = Math.floor(width / itemWidth) || 1
+    let isGrid = itemWidth > 0
 
     let expandedRows = getExpandedRows(
       columns,
       items,
       expandedItems,
-      itemWidth > 0)
+      isGrid)
 
     let rows = Math.ceil(items.length / columns) + expandedRows.length
     let visibleRows = Math.ceil(height / itemHeight)
@@ -129,6 +130,7 @@ export class Scroll extends React.Component {
     return {
       columns,
       expandedRows,
+      isGrid,
       rows,
       rowsPerPage,
       runway,
@@ -172,7 +174,7 @@ export class Scroll extends React.Component {
             break
 
           case 'ArrowRight':
-            if (!this.props.itemWidth)
+            if (!this.layout.isGrid)
               return
 
             if (event.altKey)
@@ -182,7 +184,7 @@ export class Scroll extends React.Component {
             break
 
           case 'ArrowLeft':
-            if (!this.props.itemWidth)
+            if (!this.layout.isGrid)
               return
 
             if (event.altKey)
@@ -285,8 +287,8 @@ export class Scroll extends React.Component {
     if (cursor == null || cursor < 0)
       return
 
-    let { columns, expandedRows } = this.layout
-    let { itemHeight, itemWidth, expansionPadding } = this.props
+    let { columns, expandedRows, isGrid } = this.layout
+    let { itemHeight, expansionPadding } = this.props
     let { height } = this.state
 
     let top = this.container.current.scrollTop
@@ -297,7 +299,7 @@ export class Scroll extends React.Component {
 
     let offset = (row + numRowsAbove) * itemHeight
 
-    if (itemWidth && numRowsAbove > 0)
+    if (isGrid && numRowsAbove > 0)
       offset += expansionPadding
 
     let bottom = offset + itemHeight
