@@ -38,15 +38,21 @@ export class Scroll extends React.Component {
     return this.props.items.length === 0 ? null : this.props.tabIndex
   }
 
+  get cursor() {
+    return indexOf(this.props.items, this.props.cursor)
+  }
+
   get current() {
     return this.next(0)
   }
 
   next(k = 1) {
-    if (this.props.cursor != null)
+    let { cursor } = this
+
+    if (cursor != null)
       return this.props.items[sanitize(
         this.props.items,
-        this.props.cursor + k,
+        cursor + k,
         this.props.restrict
       )]
     else
@@ -145,7 +151,7 @@ export class Scroll extends React.Component {
 
       if (this.props.onSelect) {
         let { columns } = this.layout
-        let cursor = this.props.cursor ?? 0
+        let cursor = this.cursor ?? 0
 
         if (event.ctrlKey || event.metaKey)
           return
@@ -272,11 +278,11 @@ export class Scroll extends React.Component {
     this.scroll(this.layout.maxOffset)
   }
 
-  scrollIntoView(index = this.props.cursor, { force } = {}) {
-    if (index != null && typeof index === 'object')
-      index = index.idx || indexOf(this.props.items, index.id)
+  scrollIntoView(cursor = this.cursor, { force } = {}) {
+    if (cursor != null && typeof cursor === 'object')
+      cursor = cursor.idx || indexOf(this.props.items, cursor.id)
 
-    if (index == null || index < 0)
+    if (cursor == null || cursor < 0)
       return
 
     let { columns, expandedRows } = this.layout
@@ -284,7 +290,7 @@ export class Scroll extends React.Component {
     let { height } = this.state
 
     let top = this.container.current.scrollTop
-    let row = Math.floor(index / columns)
+    let row = Math.floor(cursor / columns)
 
     let { numRowsAbove } =
         getExpandedRowsAbove(expandedRows, { index: row })

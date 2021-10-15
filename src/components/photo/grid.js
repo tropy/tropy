@@ -3,7 +3,6 @@ import { PhotoIterator } from './iterator'
 import { PhotoTile } from './tile'
 import { SelectionGrid } from '../selection/grid'
 import { Scroll } from '../scroll'
-import { indexOf } from '../../common/collection'
 import { pluck } from '../../common/util'
 import cx from 'classnames'
 import { match } from '../../keymap'
@@ -115,7 +114,7 @@ class PhotoGrid extends PhotoIterator {
         data-size={this.props.size}>
         <Scroll
           ref={this.container}
-          cursor={indexOf(this.props.photos, this.props.current)}
+          cursor={this.props.current}
           items={this.props.photos}
           itemHeight={tileSize}
           itemWidth={tileSize}

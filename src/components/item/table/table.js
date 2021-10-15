@@ -260,7 +260,7 @@ export class ItemTable extends ItemIterator {
           ref={this.container}
           tag="div"
           autoselect
-          cursor={indexOf(this.props.items, this.head())}
+          cursor={this.head()}
           items={this.props.items}
           itemHeight={ROW.HEIGHT}
           tabIndex={this.tabIndex}

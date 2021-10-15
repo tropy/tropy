@@ -1,7 +1,6 @@
 import React from 'react'
 import { Scroll } from './scroll'
 import { SASS } from '../constants'
-import { indexOf } from '../common/collection'
 import { blank } from '../common/util'
 import cx from 'classnames'
 import { arrayOf, bool, func, node, number, shape, string } from 'prop-types'
@@ -106,7 +105,7 @@ export class OptionList extends React.Component {
       <div className="option-list">
         <Scroll
           ref={this.scroll}
-          cursor={indexOf(this.props.values, this.props.active)}
+          cursor={this.props.active}
           restrict={this.props.restrict}
           onSelect={this.props.onActivate}
           items={this.props.values}
