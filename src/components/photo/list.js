@@ -142,9 +142,11 @@ class PhotoList extends PhotoIterator {
         <Scroll
           ref={this.container}
           cursor={this.props.current}
+          expansionCursor={this.props.selection}
           items={this.props.photos}
           itemHeight={SASS.ROW.HEIGHT}
           expandedItems={this.props.expanded}
+          expandedItemsName="selections"
           tabIndex={this.tabIndex}
           onBlur={onBlur}
           onKeyDown={this.handleKeyDown}
