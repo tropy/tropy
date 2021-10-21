@@ -37,7 +37,7 @@ class SelectionGrid extends SelectionIterator {
 
     if (active != null)
       return selections[sanitize(
-        selections,
+        selections.length,
         indexOf(selections, active) + offset,
         'wrap')]
     else

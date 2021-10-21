@@ -39,7 +39,20 @@ export class Scroll extends React.Component {
   }
 
   get cursor() {
-    return indexOf(this.props.items, this.props.cursor)
+    let cursor = indexOf(this.props.items, this.props.cursor)
+    let expRowPosition = 0
+
+    if (cursor != null && this.props.expansionCursor != null) {
+      let { expandedItemsName } = this.props
+      let expandedItems = this.props.items[cursor]?.[expandedItemsName]
+
+      let expCursor = expandedItems?.indexOf(this.props.expansionCursor)
+
+      if (expCursor != null && expCursor >= 0)
+        expRowPosition = expCursor + 1
+    }
+
+    return [cursor, expRowPosition]
   }
 
   get current() {
@@ -47,16 +60,38 @@ export class Scroll extends React.Component {
   }
 
   next(k = 1) {
-    let { cursor } = this
+    let [cursor, expRowPosition] = this.cursor
 
-    if (cursor != null)
-      return this.props.items[sanitize(
-        this.props.items,
-        cursor + k,
-        this.props.restrict
-      )]
-    else
+    if (cursor == null)
       return (k < 0) ? this.last() : this.first()
+
+    let { expandedRows, isGrid } = this.layout
+    let { numRowsAbove } =
+      getExpandedRowsAbove(expandedRows, { index: cursor })
+
+    let row = cursor + k
+    let len = this.props.items.length
+
+    if (!isGrid) {
+      row += numRowsAbove + expRowPosition
+      len += expandedRows.length
+    }
+
+    row = sanitize(len, row, this.props.restrict)
+
+    if (isGrid) {
+      return this.props.items[row]
+    }
+
+    let nxt = getExpandedRowsAbove(expandedRows, { position: row })
+    let item = this.props.items[row - nxt.numRowsAbove]
+
+    if (nxt.expRowPosition) {
+      let selection = item.selections[nxt.expRowPosition - 1]
+      return { ...item, selection }
+    }
+
+    return item
   }
 
   prev(k = 1) {
@@ -68,6 +103,7 @@ export class Scroll extends React.Component {
   }
 
   last() {
+    // TODO expansion selection
     return this.props.items[this.props.items.length - 1]
   }
 
@@ -100,7 +136,8 @@ export class Scroll extends React.Component {
     width,
     expandedItems,
     expansionPadding,
-    overscan
+    overscan,
+    expandedItemsName
   ) => {
     let columns = Math.floor(width / itemWidth) || 1
     let isGrid = itemWidth > 0
@@ -109,7 +146,8 @@ export class Scroll extends React.Component {
       columns,
       items,
       expandedItems,
-      isGrid)
+      isGrid,
+      expandedItemsName)
 
     let rows = Math.ceil(items.length / columns) + expandedRows.length
     let visibleRows = Math.ceil(height / itemHeight)
@@ -153,7 +191,7 @@ export class Scroll extends React.Component {
 
       if (this.props.onSelect) {
         let { columns } = this.layout
-        let cursor = this.cursor ?? 0
+        let cursor = this.cursor[0] ?? 0
 
         if (event.ctrlKey || event.metaKey)
           return
@@ -281,6 +319,13 @@ export class Scroll extends React.Component {
   }
 
   scrollIntoView(cursor = this.cursor, { force } = {}) {
+    let expRowPosition = 0
+
+    if (Array.isArray(cursor)) {
+      expRowPosition = cursor[1]
+      cursor = cursor[0]
+    }
+
     if (cursor != null && typeof cursor === 'object')
       cursor = cursor.idx || indexOf(this.props.items, cursor.id)
 
@@ -297,7 +342,7 @@ export class Scroll extends React.Component {
     let { numRowsAbove } =
         getExpandedRowsAbove(expandedRows, { index: row })
 
-    let offset = (row + numRowsAbove) * itemHeight
+    let offset = (row + numRowsAbove + expRowPosition) * itemHeight
 
     if (isGrid && numRowsAbove > 0)
       offset += expansionPadding
@@ -324,7 +369,8 @@ export class Scroll extends React.Component {
       this.state.width,
       this.props.expandedItems,
       this.props.expansionPadding,
-      this.props.overscan)
+      this.props.overscan,
+      this.props.expandedItemsName)
 
     let { columns, rowsPerPage, runway } = this.layout
     let { row, numRowsAbove } = this.state
@@ -365,7 +411,9 @@ export class Scroll extends React.Component {
     children: func.isRequired,
     cursor: number,
     expandedItems: array.isRequired,
+    expandedItemsName: string,
     expansionPadding: number.isRequired,
+    expansionCursor: number,
     items: array.isRequired,
     itemWidth: number,
     itemHeight: number.isRequired,
