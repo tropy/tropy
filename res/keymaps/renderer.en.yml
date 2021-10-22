@@ -80,9 +80,11 @@ en:
       expand:
         - CmdOrCtrl+ArrowDown
         - CmdOrCtrl+ArrowRight
+        - ArrowRight
       contract:
         - CmdOrCtrl+ArrowUp
         - CmdOrCtrl+ArrowLeft
+        - ArrowLeft
         - Escape
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
