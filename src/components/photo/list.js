@@ -18,65 +18,6 @@ class PhotoList extends PhotoIterator {
     return this.props.edit.photo === photo.id
   }
 
-  next(offset = 1) {
-    if (!(offset === 1 || offset === -1)) {
-      return super.next(offset)
-    }
-
-    const photo = super.next(0)
-    if (!this.isExpanded(photo)) {
-      return this.getPhotoBackwards(super.next(offset), offset)
-    }
-
-    let { selection } = this.props
-    const idx = photo.selections.indexOf(selection)
-
-    if (offset > 0) {
-      if (idx + offset >= photo.selections.length) {
-        return super.next(offset)
-      }
-    } else {
-      if (idx === 0) return photo
-      if (idx < 0) {
-        return this.getPhotoBackwards(super.next(offset), offset)
-      }
-    }
-
-    selection = photo.selections[idx + offset]
-
-    let notes = (selection != null) ?
-      (this.props.selections?.[selection]?.notes || []) :
-      photo.notes
-
-    return {
-      ...photo,
-      selection,
-      notes
-    }
-  }
-
-  current() {
-    const photo = super.next(0)
-    if (!this.isExpanded(photo)) return photo
-
-    const { selection } = this.props
-    if (!photo.selections.includes(selection)) return photo
-
-    return {
-      ...photo,
-      selection
-    }
-  }
-
-  getPhotoBackwards(photo, offset) {
-    if (offset >= 0 || !this.isExpanded(photo)) return photo
-
-    return {
-      ...photo,
-      selection: photo.selections[photo.selections.length - 1]
-    }
-  }
-
   edit = (photo) => {
     if (photo != null && !this.props.isDisabled) {
       const { id, selection } = photo
