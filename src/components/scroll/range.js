@@ -1,5 +1,5 @@
 import React from 'react'
-import { array, func, number } from 'prop-types'
+import { array, func, number, object } from 'prop-types'
 import { ExpansionRow } from './expansion'
 
 const getNextRowOffset = (index, columns) =>
@@ -17,19 +17,17 @@ export const Range = ({
   let output = []
   let expansion
 
-  if (renderExpansionRow)
-    expandedItems = expandedItems.slice(0, 1)
-
   let range = items.slice(from, to)
 
   for (let i = 0; i < range.length; ++i) {
     let item = range[i]
-    let isExpanded = expandedItems.includes(item)
+    let isExpanded = !!expandedItems[item.id]
 
     output.push(renderItem(item, from + i, {
       isExpanded
     }))
 
+  // Invariant: in Grid there must be at most one expanded item!
     if (isExpanded && !expansion && renderExpansionRow) {
       expansion = {
         at: getNextRowOffset(i, columns),
@@ -50,7 +48,7 @@ export const Range = ({
 
 Range.propTypes = {
   columns: number.isRequired,
-  expandedItems: array.isRequired,
+  expandedItems: object.isRequired,
   from: number.isRequired,
   items: array.isRequired,
   to: number.isRequired,
@@ -60,5 +58,5 @@ Range.propTypes = {
 
 Range.defaultProps = {
   columns: 1,
-  expandedItems: []
+  expandedItems: {}
 }
