@@ -42,7 +42,7 @@ export class Scroll extends React.Component {
     let cursor = indexOf(this.props.items, this.props.cursor)
     let expRowPosition = 0
 
-    if (cursor != null && this.props.expansionCursor != null) {
+    if (cursor !== -1 && this.props.expansionCursor != null) {
       let { expandedItemsName } = this.props
       let expandedItems = this.props.items[cursor]?.[expandedItemsName]
 
@@ -62,7 +62,7 @@ export class Scroll extends React.Component {
   next(k = 1) {
     let [cursor, expRowPosition] = this.cursor
 
-    if (cursor == null)
+    if (cursor === -1)
       return (k < 0) ? this.last() : this.first()
 
     let { expandedRows, isGrid } = this.layout
@@ -191,10 +191,10 @@ export class Scroll extends React.Component {
 
       if (this.props.onSelect) {
         let { columns } = this.layout
-        let cursor = this.cursor[0] ?? 0
+        let cursor = this.cursor[0]
 
-        if (event.ctrlKey || event.metaKey)
-          return
+        if (cursor === -1)
+          cursor = 0
 
         switch (event.key) {
           case 'ArrowDown':

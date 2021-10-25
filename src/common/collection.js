@@ -1,6 +1,6 @@
 export const indexOf = (col, id) =>
   (col.idx != null) ?
-    col.idx[id] :
+    col.idx[id] ?? -1 :
     col.findIndex(it => it.id === id)
 
 export const sanitize = (len, index, restrict = 'bounds') => {
