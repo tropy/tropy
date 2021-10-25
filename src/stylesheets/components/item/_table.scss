@@ -212,7 +212,6 @@
         );
       background-attachment: local;
       padding-top: $space-min;
-      overscroll-behavior: auto; // Reset to allow for horizontal scroll gestures on item-table
       overflow-x: auto;
     }
   }
