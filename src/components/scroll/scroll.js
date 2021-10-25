@@ -1,5 +1,5 @@
 import React from 'react'
-import { array, bool, func, number, oneOf, string } from 'prop-types'
+import { array, bool, func, number, object, oneOf, string } from 'prop-types'
 import { Range } from './range'
 import { Runway } from './runway'
 import { ScrollContainer } from './container'
@@ -39,20 +39,19 @@ export class Scroll extends React.Component {
   }
 
   get cursor() {
-    let cursor = indexOf(this.props.items, this.props.cursor)
+    let { cursor, items, expansionCursor, expandedItems } = this.props
+
+    let index = indexOf(items, cursor)
     let expRowPosition = 0
 
-    if (cursor !== -1 && this.props.expansionCursor != null) {
-      let { expandedItemsName } = this.props
-      let expandedItems = this.props.items[cursor]?.[expandedItemsName]
+    if (expansionCursor != null) {
+      let expIndex = expandedItems[cursor]?.indexOf(expansionCursor)
 
-      let expCursor = expandedItems?.indexOf(this.props.expansionCursor)
-
-      if (expCursor != null && expCursor >= 0)
-        expRowPosition = expCursor + 1
+      if (expIndex != null && expIndex >= 0)
+        expRowPosition = expIndex + 1
     }
 
-    return [cursor, expRowPosition]
+    return [index, expRowPosition]
   }
 
   get current() {
@@ -87,6 +86,7 @@ export class Scroll extends React.Component {
     let item = this.props.items[row - nxt.numRowsAbove]
 
     if (nxt.expRowPosition) {
+      // TODO selection name
       let selection = item.selections[nxt.expRowPosition - 1]
       return { ...item, selection }
     }
@@ -136,8 +136,7 @@ export class Scroll extends React.Component {
     width,
     expandedItems,
     expansionPadding,
-    overscan,
-    expandedItemsName
+    overscan
   ) => {
     let columns = Math.floor(width / itemWidth) || 1
     let isGrid = itemWidth > 0
@@ -146,8 +145,7 @@ export class Scroll extends React.Component {
       columns,
       items,
       expandedItems,
-      isGrid,
-      expandedItemsName)
+      isGrid)
 
     let rows = Math.ceil(items.length / columns) + expandedRows.length
     let visibleRows = Math.ceil(height / itemHeight)
@@ -369,8 +367,7 @@ export class Scroll extends React.Component {
       this.state.width,
       this.props.expandedItems,
       this.props.expansionPadding,
-      this.props.overscan,
-      this.props.expandedItemsName)
+      this.props.overscan)
 
     let { columns, rowsPerPage, runway } = this.layout
     let { row, numRowsAbove } = this.state
@@ -410,8 +407,7 @@ export class Scroll extends React.Component {
     autoselect: bool,
     children: func.isRequired,
     cursor: number,
-    expandedItems: array.isRequired,
-    expandedItemsName: string,
+    expandedItems: object.isRequired,
     expansionPadding: number.isRequired,
     expansionCursor: number,
     items: array.isRequired,
@@ -429,7 +425,7 @@ export class Scroll extends React.Component {
   }
 
   static defaultProps = {
-    expandedItems: [],
+    expandedItems: {},
     expansionPadding: 0,
     items: [],
     overscan: 1.25,

@@ -43,17 +43,16 @@ export const getExpandedRows = (
   columns,
   items,
   expandedItems,
-  isGrid,
-  subItems = 'selections'
+  isGrid
 ) =>
   isGrid ?
-    getExpandedGridRows(columns, items, expandedItems, subItems) :
-    getExpandedListRows(items, expandedItems, subItems)
+    getExpandedGridRows(columns, items, expandedItems) :
+    getExpandedListRows(items, expandedItems)
 
 
-const getExpandedListRows = (items, expandedItems, subItems) => {
+const getExpandedListRows = (items, expandedItems) => {
   let rows = []
-  let expansions = getExpansions(1, items, expandedItems, subItems)
+  let expansions = getExpansions(1, items, expandedItems)
 
   let count = 0
 
@@ -73,13 +72,9 @@ const getExpandedListRows = (items, expandedItems, subItems) => {
 }
 
 
-const getExpandedGridRows = (columns, items, expandedItems, subItems) => {
+const getExpandedGridRows = (columns, items, expandedItems) => {
   let rows = []
-  let [expansion] = getExpansions(
-    columns,
-    items,
-    expandedItems.slice(0, 1),
-    subItems)
+  let [expansion] = getExpansions(columns, items, expandedItems)
 
   if (expansion) {
     let { index, numRows } = expansion
@@ -97,15 +92,17 @@ const getExpandedGridRows = (columns, items, expandedItems, subItems) => {
 }
 
 
-const getExpansions = (columns, items, expandedItems, subItems) => {
+const getExpansions = (columns, items, expandedItems) => {
   let expansions = []
 
-  for (let item of expandedItems) {
-    let numRows = Math.ceil(item?.[subItems].length / columns) || 0
-    let index = Math.floor(indexOf(items, item.id) / columns)
+  for (let id in expandedItems) {
+    let index = Math.floor(indexOf(items, id) / columns)
 
     if (index >= 0)
-      expansions.push({ index, numRows })
+      expansions.push({
+        index,
+        numRows: Math.ceil(expandedItems[id].length / columns) || 0
+      })
   }
 
   return expansions.sort(byIndex)
