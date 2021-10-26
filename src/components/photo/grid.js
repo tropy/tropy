@@ -17,6 +17,24 @@ class PhotoGrid extends PhotoIterator {
     }]
   }
 
+  contract = (photo) => {
+    if (this.isExpandable(photo) && this.isExpanded(photo)) {
+      this.handleNestedBlur()
+      this.props.onContract(this.props.photos.map(p => p.id))
+
+      if (this.isSelected(photo)) {
+        this.props.onSelect({
+          photo: photo.id,
+          item: photo.item,
+          note: photo.notes[0]
+        })
+      }
+      return true
+    }
+
+    return false
+  }
+
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {

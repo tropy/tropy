@@ -81,7 +81,6 @@ export class PhotoIterator extends React.Component {
 
   contract = (photo) => {
     if (this.isExpandable(photo) && this.isExpanded(photo)) {
-      this.handleNestedBlur?.()
       this.props.onContract([photo.id])
 
       if (this.isSelected(photo)) {
