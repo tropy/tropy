@@ -41,16 +41,23 @@ class SelectionGrid extends SelectionIterator {
         indexOf(selections, active) + offset,
         'bounds')]
     else
-      return selections[0]
+      return this.first()
   }
 
   prev(offset = 1) {
     if (this.props.active != null)
       return this.next(-offset)
     else
-      return this.props.selections[this.props.selections.length - 1]
+      return this.last()
   }
 
+  first() {
+    return this.props.selections[0]
+  }
+
+  last() {
+    return this.props.selections[this.props.selections.length - 1]
+  }
 
   delete(selection) {
     if (selection != null) {
@@ -78,6 +85,12 @@ class SelectionGrid extends SelectionIterator {
         break
       case 'down':
         this.select(this.next(this.props.cols))
+        break
+      case 'first':
+        this.select(this.first())
+        break
+      case 'last':
+        this.select(this.last())
         break
       case 'open':
         this.open(this.current)
