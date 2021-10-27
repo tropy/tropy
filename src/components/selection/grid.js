@@ -39,7 +39,7 @@ class SelectionGrid extends SelectionIterator {
       return selections[sanitize(
         selections.length,
         indexOf(selections, active) + offset,
-        'wrap')]
+        'bounds')]
     else
       return selections[0]
   }
