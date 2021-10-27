@@ -180,64 +180,72 @@ export class Scroll extends React.Component {
     this.props.onKeyDown?.(event)
 
     if (!event.isDefaultPrevented()) {
-
       // By default, the home, end, page up, page down and arrow keys
       // will work as expected for the ScrollContainer. If we have an
       // `onSelect` callback, however, we override the default behavior
       // of the arrow keys to select items instead of only scrolling
       // the container.
-
-      if (this.props.onSelect) {
-        let { columns } = this.layout
-        let cursor = this.cursor[0]
-
-        if (cursor === -1)
-          cursor = 0
-
-        switch (event.key) {
-          case 'ArrowDown':
-            if (event.altKey)
-              this.select(this.last(), event)
-            else
-              this.select(this.next(columns), event)
-            break
-
-          case 'ArrowUp':
-            if (event.altKey)
-              this.select(this.first(), event)
-            else
-              this.select(this.prev(columns), event)
-            break
-
-          case 'ArrowRight':
-            if (!this.layout.isGrid)
-              return
-
-            if (event.altKey)
-              this.select(this.next(columns - 1 - (cursor % columns)), event)
-            else
-              this.select(this.next(), event)
-            break
-
-          case 'ArrowLeft':
-            if (!this.layout.isGrid)
-              return
-
-            if (event.altKey)
-              this.select(this.prev(cursor % columns), event)
-            else
-              this.select(this.prev(), event)
-            break
-
-          default:
-            return
-        }
-
-        event.preventDefault()
-        event.stopPropagation()
-        event.nativeEvent.stopImmediatePropagation()
-      }
+      if (this.props.onSelect)
+        this.handleArrowKeys(event)
     }
+  }
+
+  handleArrowKeys(event) {
+    let { items } = this.props
+    let { columns, isGrid } = this.layout
+    let [cursor] = this.cursor
+
+    if (cursor === -1) ++cursor
+
+    let isFirstRow = cursor < columns
+    let isLastRow = cursor >= (items.length - columns)
+
+    switch (event.key) {
+      case 'ArrowDown':
+        if (event.altKey)
+          this.select(this.last(), event)
+        else {
+          if (!isLastRow || this.props.restrict !== 'bounds')
+            this.select(this.next(columns), event)
+        }
+        break
+
+      case 'ArrowUp':
+        if (event.altKey)
+          this.select(this.first(), event)
+        else {
+          if (!isFirstRow || this.props.restrict !== 'bounds')
+            this.select(this.prev(columns), event)
+        }
+        break
+
+      case 'ArrowRight':
+        if (!isGrid)
+          return
+
+        if (event.altKey)
+          this.select(this.next(columns - 1 - (cursor % columns)), event)
+        else
+          this.select(this.next(), event)
+        break
+
+      case 'ArrowLeft':
+        if (!isGrid)
+          return
+
+        if (event.altKey)
+          this.select(this.prev(cursor % columns), event)
+        else
+          this.select(this.prev(), event)
+        break
+
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
   handleResize = ({ width, height }) => {
