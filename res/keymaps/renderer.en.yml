@@ -93,6 +93,8 @@ en:
       down: ArrowDown
       left: ArrowLeft
       right: ArrowRight
+      first: Alt+ArrowUp
+      last: Alt+ArrowDown
       open: Enter
       delete:
         - Backspace
@@ -212,6 +214,8 @@ en:
       down: ArrowDown
       left: ArrowLeft
       right: ArrowRight
+      first: Alt+ArrowUp
+      last: Alt+ArrowDown
       open:
         - Cmd+ArrowDown
         - Cmd+ArrowRight
