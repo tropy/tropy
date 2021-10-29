@@ -333,7 +333,7 @@ export class Scroll extends React.Component {
     }
 
     if (cursor != null && typeof cursor === 'object')
-      cursor = cursor.idx || indexOf(this.props.items, cursor.id)
+      cursor = indexOf(this.props.items, cursor.id)
 
     if (cursor == null || cursor < 0)
       return
