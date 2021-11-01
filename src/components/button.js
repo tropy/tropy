@@ -52,12 +52,15 @@ class Button extends React.PureComponent {
   get attributes() {
     let attr = {
       className: cx(...this.classes),
-      disabled: !this.props.noFocus && this.props.isDisabled,
       onBlur: this.props.onBlur,
       onFocus: this.props.onFocus,
       ref: this.container,
-      title: this.title,
-      type: this.props.type
+      title: this.title
+    }
+
+    if (!this.props.noFocus) {
+      attr.disabled = this.props.isDisabled
+      attr.type = this.props.type
     }
 
     if (!this.props.isDisabled) {
