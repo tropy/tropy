@@ -29,6 +29,10 @@ export class Scroll extends React.Component {
     this.handleResize(this.container.current.bounds)
   }
 
+  componentWillUnmount() {
+    cancelAnimationFrame(this.#scrollCallback.current)
+  }
+
   componentDidUpdate({ itemHeight }) {
     if (itemHeight !== this.props.itemHeight)
       this.scrollIntoView()
