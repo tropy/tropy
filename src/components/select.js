@@ -170,10 +170,10 @@ export class Select extends React.Component {
     if (this.props.onKeyDown(event) !== true) {
       switch (event.key) {
         case 'ArrowDown':
-          this.delegate('next')
+          this.delegate(event.altKey ? 'last' : 'next')
           break
         case 'ArrowUp':
-          this.delegate('prev')
+          this.delegate(event.altKey ? 'first' : 'prev')
           break
         case 'Enter':
           this.commit()
