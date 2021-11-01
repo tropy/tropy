@@ -56,7 +56,8 @@ class Button extends React.PureComponent {
       onBlur: this.props.onBlur,
       onFocus: this.props.onFocus,
       ref: this.container,
-      title: this.title
+      title: this.title,
+      type: this.props.type
     }
 
     if (!this.props.isDisabled) {
@@ -112,6 +113,7 @@ class Button extends React.PureComponent {
     title: string,
     text: string,
     tabIndex: number,
+    type: string.isRequired,
     onBlur: func.isRequired,
     onFocus: func.isRequired,
     onClick: func,
@@ -123,7 +125,8 @@ class Button extends React.PureComponent {
     onFocus: noop,
     noFocus: false,
     size: 'md',
-    tabIndex: -1
+    tabIndex: -1,
+    type: 'button'
   }
 }
 

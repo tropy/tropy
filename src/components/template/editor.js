@@ -213,6 +213,7 @@ class TemplateEditor extends React.PureComponent {
                   className="btn btn-primary min-width"
                   disabled={!this.isValid}
                   tabIndex={0}
+                  type="button"
                   onClick={this.handleTemplateCreate}>
                   <FormattedMessage id="prefs.template.create"/>
                 </button>
