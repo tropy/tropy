@@ -159,7 +159,7 @@ export class Scroll extends React.Component {
 
     let runway = rows * itemHeight
 
-    if (expandedItems.length > 0)
+    if (expandedRows.length > 0)
       runway += expansionPadding
 
     let pageOffset = Math.floor(overscanRows / 2) * itemHeight
