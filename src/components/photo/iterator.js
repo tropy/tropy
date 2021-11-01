@@ -155,7 +155,7 @@ export class PhotoIterator extends React.Component {
   }
 
   getAdjacent = (photo) => {
-    return adjacent(this.props.photos, photo).map(p => p.id)
+    return adjacent(this.props.photos, photo).map(p => p?.id)
   }
 
   getIterableProps(photo) {
