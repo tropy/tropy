@@ -7,6 +7,8 @@ import { on, off } from '../../dom'
 export class ScrollContainer extends React.Component {
   container = React.createRef()
 
+  #didSync = false
+
   #RO = new ResizeObserver(([e]) => {
     this.handleResize(e.contentRect)
   })
@@ -15,7 +17,7 @@ export class ScrollContainer extends React.Component {
     if (this.props.onResize)
       this.#RO.observe(this.container.current)
 
-    if (this.props.onScroll)
+    if (this.props.onScroll || this.props.sync)
       on(this.container.current, 'scroll', this.handleScroll, {
         capture: true, passive: true
       })
@@ -63,6 +65,17 @@ export class ScrollContainer extends React.Component {
       this.container.current.scrollLeft = x
   }
 
+  sync(y, x) {
+    if (y != null && y !== this.container.current.scrollTop) {
+      this.#didSync = true
+      this.container.current.scrollTop = y
+    }
+    if (x != null && x !== this.container.current.scrollLeft) {
+      this.#didSync = true
+      this.container.current.scrollLeft = x
+    }
+  }
+
   scrollBy(y, x) {
     this.scroll(
       y != null ? this.scrollTop + y : null,
@@ -80,7 +93,13 @@ export class ScrollContainer extends React.Component {
   }, 15)
 
   handleScroll = (event) => {
-    this.props.onScroll(event)
+    this.props.onScroll?.(event)
+
+    if (this.props.sync?.current && !this.#didSync) {
+      this.props.sync.current.sync(null, this.scrollLeft)
+    }
+
+    this.#didSync = false
   }
 
   handleTabFocus = (event) => {
@@ -110,6 +129,7 @@ export class ScrollContainer extends React.Component {
     onResize: func,
     onScroll: func,
     onTabFocus: func,
+    sync: object,
     tabIndex: number
   }
 }

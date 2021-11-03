@@ -257,6 +257,7 @@ export class ItemTable extends ItemIterator {
       <div className={cx(this.classes)}>
         <Scroll
           ref={this.container}
+          sync={this.headContainer}
           tag="div"
           autoselect
           cursor={this.head()}
@@ -312,7 +313,9 @@ export class ItemTable extends ItemIterator {
           '--item-min-width': this.state.minWidth + 'px',
           '--item-template-columns': this.getTemplateColumns()
         }}>
-        <ScrollContainer ref={this.headContainer}>
+        <ScrollContainer
+          ref={this.headContainer}
+          sync={this.container}>
           <TableHead
             columns={this.state.columns}
             colwidth={this.state.colwidth}
