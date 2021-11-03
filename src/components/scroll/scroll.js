@@ -370,6 +370,10 @@ export class Scroll extends React.Component {
     this.scroll(offset)
   }
 
+  sync(...args) {
+    this.container.current.sync(...args)
+  }
+
   render() {
     this.layout = this.getComputedLayout(
       this.props.items,
@@ -390,6 +394,7 @@ export class Scroll extends React.Component {
     return (
       <ScrollContainer
         ref={this.container}
+        sync={this.props.sync}
         onClick={this.props.onClick}
         onKeyDown={this.handleKeyDown}
         onResize={this.handleResize}
@@ -432,6 +437,7 @@ export class Scroll extends React.Component {
     overscan: number.isRequired,
     renderExpansionRow: func,
     restrict: oneOf(['bounds', 'wrap', 'none']).isRequired,
+    sync: object,
     tabIndex: number,
     tag: string
   }
