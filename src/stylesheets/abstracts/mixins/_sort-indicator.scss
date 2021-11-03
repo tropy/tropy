@@ -71,7 +71,7 @@
     }
   }
 
-  &.last {
+  &:last-child {
     @include state($parent) {
       &::after {
         content: "";
