@@ -181,16 +181,16 @@ export class Scroll extends React.Component {
   })
 
   handleKeyDown = (event) => {
-    this.props.onKeyDown?.(event)
+    // By default, the home, end, page up, page down and arrow keys
+    // will work as expected for the ScrollContainer. If we have an
+    // `onSelect` callback, however, we override the default behavior
+    // of the arrow keys to select items instead of only scrolling
+    // the container.
+    if (this.props.onSelect)
+      this.handleArrowKeys(event)
 
     if (!event.isDefaultPrevented()) {
-      // By default, the home, end, page up, page down and arrow keys
-      // will work as expected for the ScrollContainer. If we have an
-      // `onSelect` callback, however, we override the default behavior
-      // of the arrow keys to select items instead of only scrolling
-      // the container.
-      if (this.props.onSelect)
-        this.handleArrowKeys(event)
+      this.props.onKeyDown?.(event)
     }
   }
 
