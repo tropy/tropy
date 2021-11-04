@@ -206,7 +206,11 @@ en:
         - Delete
       enter: Enter
       preview: Space
-      contract: Escape
+      expand:
+        - ArrowRight
+      contract:
+        - ArrowLeft
+        - Escape
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
     SelectionGrid:
