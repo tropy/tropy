@@ -187,6 +187,10 @@
           order: -1;
         }
       }
+
+      .resizable-handle-col {
+        cursor: col-resize;
+      }
     }
   }
 
