@@ -92,7 +92,7 @@ export class Scroll extends React.Component {
     let item = this.props.items[row - nxt.numRowsAbove]
 
     if (nxt.expRowPosition) {
-      // TODO selection name
+      // TODO selection name!
       let selection = item.selections[nxt.expRowPosition - 1]
       return { ...item, selection }
     }
@@ -109,8 +109,18 @@ export class Scroll extends React.Component {
   }
 
   last() {
-    // TODO expansion selection
-    return this.props.items[this.props.items.length - 1]
+    let { items, expandedItems } = this.props
+    let { isGrid } = this.layout
+    let item = items[items.length - 1]
+    let expansion = expandedItems[item.id]
+
+    // TODO selection name!
+    if (!isGrid && expansion) {
+      let selection = expansion[expansion.length - 1]
+      return { ...item, selection }
+    }
+
+    return item
   }
 
   pageUp() {
