@@ -124,13 +124,35 @@ export class Scroll extends React.Component {
   }
 
   pageUp() {
-    return this.prev(this.layout.visibleItems)
+    let { items, itemHeight } = this.props
+    let { columns } = this.layout
+
+    this.scrollPageUp()
+
+    let offset = this.container.current.scrollTop
+    let row = Math.floor(offset / itemHeight)
+
+    // TODO handle list expansions
+    // TODO account for expansion padding
+
+    return items[row * columns]
   }
 
   pageDown() {
-    return this.next(this.layout.visibleItems)
-  }
+    let { items, itemHeight } = this.props
+    let { columns } = this.layout
 
+    this.scrollPageDown()
+
+    let top = this.container.current.scrollTop
+    let offset = top + this.state.height - itemHeight
+    let row = Math.floor(offset / itemHeight)
+
+    // TODO handle list expansions
+    // TODO account for expansion padding
+
+    return items[row * columns]
+  }
 
   select(item, event) {
     if (item != null)
