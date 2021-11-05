@@ -213,15 +213,17 @@ export class Scroll extends React.Component {
 
     if (cursor === -1) ++cursor
 
-    let isFirstRow = cursor < columns
-    let isLastRow = cursor >= (items.length - columns)
+    if (isGrid && this.props.restrict === 'bounds') {
+      var isFirstRow = cursor < columns
+      var isLastRow = cursor >= (items.length - columns)
+    }
 
     switch (event.key) {
       case 'ArrowDown':
         if (event.altKey)
           this.select(this.last(), event)
         else {
-          if (!isLastRow || this.props.restrict !== 'bounds')
+          if (!isLastRow)
             this.select(this.next(columns), event)
         }
         break
@@ -230,7 +232,7 @@ export class Scroll extends React.Component {
         if (event.altKey)
           this.select(this.first(), event)
         else {
-          if (!isFirstRow || this.props.restrict !== 'bounds')
+          if (!isFirstRow)
             this.select(this.prev(columns), event)
         }
         break
