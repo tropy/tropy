@@ -82,9 +82,11 @@ export class Scroll extends React.Component {
 
     row = sanitize(len, row, this.props.restrict)
 
-    if (isGrid) {
+    if (row == null)
+      return null
+
+    if (isGrid)
       return this.props.items[row]
-    }
 
     let nxt = getExpandedRowsAbove(expandedRows, { position: row })
     let item = this.props.items[row - nxt.numRowsAbove]
