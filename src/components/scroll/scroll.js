@@ -228,6 +228,7 @@ export class Scroll extends React.Component {
     }
   }
 
+  // eslint-disable-next-line complexity
   handleArrowKeys(event) {
     let { items } = this.props
     let { columns, isGrid } = this.layout
@@ -237,7 +238,8 @@ export class Scroll extends React.Component {
 
     if (isGrid && this.props.restrict === 'bounds') {
       var isFirstRow = cursor < columns
-      var isLastRow = cursor >= (items.length - columns)
+      var isLastRow =
+        cursor >= (items.length - ((items.length % columns) || columns))
     }
 
     switch (event.key) {
