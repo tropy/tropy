@@ -88,11 +88,11 @@ class ProseMirror extends React.Component {
 
   handleContainerClick = (event) => {
     const meta = isMeta(event)
-    const { target } = event
+    const link = isLink(event.target)
 
-    if (target != null && isLink(target)) {
+    if (link != null) {
       event.preventDefault()
-      if (meta) shell.openExternal(target.href)
+      if (meta) shell.openExternal(link.href)
     }
   }
 

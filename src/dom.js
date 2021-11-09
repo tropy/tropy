@@ -170,8 +170,15 @@ export function isLiveInput(node) {
   return isInput(node) && !(node.disabled || node.readOnly)
 }
 
-export function isLink(node) {
-  return node.tagName === 'A' && !blank(node.href)
+export function isLink(node, recursive = true) {
+  if (node == null)
+    return null
+  if (node.tagName === 'A' && !blank(node.href))
+    return node
+  if (!recursive)
+    return null
+  else
+    return isLink(node.parentNode, true)
 }
 
 export function createDragHandler({
