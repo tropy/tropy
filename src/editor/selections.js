@@ -28,7 +28,11 @@ const calculate = (pos, markType) => {
 }
 
 export function markExtend(selection, markType) {
-  if (!selection) return
+  if (!selection)
+    return null
+
+  if (selection.$cursor)
+    return calculate(selection.$cursor, markType)
 
   return {
     from: calculate(selection.$from, markType).from,
