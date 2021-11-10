@@ -101,6 +101,15 @@ export function createCommands(schema) {
 
     removeLink: expandAndRemoveMark(schema.marks.link),
 
+    updateLink(state, dispatch, attrs) {
+      let { from, to } = markExtend(state.selection, schema.marks.link)
+
+      if (dispatch)
+        dispatch(state.tr.addMark(from, to, schema.marks.link.create(attrs)))
+
+      return true
+    },
+
     clearSelection() {
       const sel = getSelection()
       if (!sel.isCollapsed) sel.collapseToStart()

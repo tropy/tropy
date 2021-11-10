@@ -1,5 +1,5 @@
 import React from 'react'
-import { bool, func, object } from 'prop-types'
+import { bool, func, object, string } from 'prop-types'
 import { injectIntl } from 'react-intl'
 import { Toolbar } from '../toolbar'
 import { Input } from '../input'
@@ -10,7 +10,7 @@ class LinkContext extends React.PureComponent {
   container = React.createRef()
 
   componentDidUpdate({ isActive: wasActive }) {
-    if (!wasActive && this.props.isActive) {
+    if (!this.props.href && !wasActive && this.props.isActive) {
       ensure(
         this.container.current,
         'transitionend',
@@ -43,7 +43,7 @@ class LinkContext extends React.PureComponent {
             isReadOnly={this.props.isReadOnly}
             isRequired
             placeholder={this.getLabelFor('target')}
-            value=""
+            value={this.props.href}
             onBlur={this.props.onBlur}
             onCancel={this.props.onCancel}
             onCommit={this.handleTargetChange}/>
@@ -53,15 +53,17 @@ class LinkContext extends React.PureComponent {
   }
 
   static propTypes = {
+    href: string.isRequired,
+    intl: object.isRequired,
     isActive: bool,
     isReadOnly: bool,
     onBlur: func.isRequired,
     onCancel: func.isRequired,
-    onCommit: func.isRequired,
-    intl: object.isRequired
+    onCommit: func.isRequired
   }
 
   static defaultProps = {
+    href: '',
     onBlur: () => true // cancel on blur!
   }
 }
