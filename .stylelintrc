@@ -10,3 +10,14 @@ rules:
   unit-no-unknown: [true, { ignoreFunctions: ["-webkit-image-set"] }]
   selector-pseudo-element-no-unknown: [true, { ignorePseudoElements: ["-webkit"] }]
   no-descending-specificity: null
+  alpha-value-notation: "number"
+  selector-no-vendor-prefix: null
+  property-no-vendor-prefix: null
+  value-no-vendor-prefix: null
+  max-line-length: null
+  keyframes-name-pattern: null
+  color-function-notation: "legacy"
+  scss/comment-no-empty: null
+  scss/no-global-function-names: null
+  scss/operator-no-newline-before: null
+  scss/at-if-no-null: null

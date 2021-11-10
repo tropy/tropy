@@ -122,7 +122,7 @@
   }
 }
 
-.ProseMirror {
+.ProseMirror { /* stylelint-disable-line selector-class-pattern */
   //padding-top: $toolbar-height + 1px + $prose-mirror-padding-start
 
   .horizontal & {

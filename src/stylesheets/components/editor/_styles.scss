@@ -5,7 +5,7 @@
 @import "prosemirror-view/style/prosemirror";
 @import "prosemirror-gapcursor/style/gapcursor";
 
-.ProseMirror {
+.ProseMirror { /* stylelint-disable-line selector-class-pattern */
   font-size: $editor-font-size;
   line-height: $editor-line-height;
   word-break: break-word; // For vertical writing mode (break-word or break-all?)
