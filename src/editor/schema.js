@@ -78,13 +78,28 @@ const textDecoMark = (deco) => ({
 })
 
 export const marks = {
-  link,
   italic: em,
   bold: strong,
 
   underline: textDecoMark('underline'),
   overline: textDecoMark('overline'),
   strikethrough: textDecoMark('line-through'),
+
+  link: {
+    attrs: {
+      href: {}
+    },
+    inclusive: false,
+    parseDOM: [
+      {
+        tag: 'a[href]',
+        getAttrs: (dom) => ({
+          href: dom.getAttribute('href')
+        })
+      }
+    ],
+    toDOM: (node) => (['a', node.attrs, 0])
+  },
 
   superscript: {
     excludes: 'subscript',
