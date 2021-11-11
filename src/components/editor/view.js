@@ -3,6 +3,7 @@ import React from 'react'
 import { func, bool, instanceOf, number } from 'prop-types'
 import { EditorView } from 'prosemirror-view'
 import { EditorState } from 'prosemirror-state'
+import { nodeViews } from '../../editor'
 import { isMeta } from '../../keymap'
 import { isLink } from '../../dom'
 import throttle from 'lodash.throttle'
@@ -14,6 +15,7 @@ class ProseMirror extends React.Component {
       state: this.props.state,
       ...this.getEditorProps(),
       dispatchTransaction: this.handleChange,
+      nodeViews,
       handleKeyDown: this.handleKeyDown,
       handleClick: this.handleViewClick,
       handleDOMEvents: {

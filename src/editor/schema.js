@@ -111,4 +111,16 @@ export const marks = {
   }
 }
 
+export const nodeViews = {
+  link(mark) {
+    let dom = document.createElement('a')
+
+    dom.href = mark.attrs.href
+    dom.title = mark.attrs.href
+    dom.tabIndex = -1
+
+    return { dom }
+  }
+}
+
 export const schema = new Schema({ nodes, marks })
