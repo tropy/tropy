@@ -66,6 +66,8 @@
   }
 
   .donate {
+    display: none;
+
     a {
       display: inline-block;
       background-color: $donate-btn-bg;
