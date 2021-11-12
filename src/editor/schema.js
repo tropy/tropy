@@ -11,12 +11,6 @@ const {
   horizontal_rule
 } = basic.nodes
 
-const {
-  em,
-  strong,
-  link
-} = basic.marks
-
 
 const align = (nodeSpec, tag) => ({
   ...nodeSpec,
@@ -78,8 +72,8 @@ const textDecoMark = (deco) => ({
 })
 
 export const marks = {
-  italic: em,
-  bold: strong,
+  italic: basic.marks.em,
+  bold: basic.marks.strong,
 
   underline: textDecoMark('underline'),
   overline: textDecoMark('overline'),
@@ -131,8 +125,7 @@ export const nodeViews = {
     let dom = document.createElement('a')
 
     dom.href = mark.attrs.href
-    dom.title = mark.attrs.href
-    dom.tabIndex = -1
+    dom.title = mark.attrs.title || mark.attrs.href
 
     return { dom }
   }
