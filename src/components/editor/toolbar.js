@@ -74,25 +74,16 @@ export class EditorToolbar extends React.PureComponent {
   }
 
   handleLinkCommit = (attrs) => {
-    let { link } = this
-
-    if (link == null) {
-      this.props.onCommand('insertLink', attrs)
-    } else {
-      if (!attrs.href)
-        this.props.onCommand('removeLink')
-      else if (link.href !== attrs.href)
-        this.props.onCommand('updateLink', attrs)
-    }
-
+    this.props.onCommand('insertLink', attrs)
     this.setDefaultContext()
   }
 
   handleLinkButtonClick = () => {
-    if (this.marks.link)
-      this.props.onCommand('removeLink')
-    else
-      this.setLinkContext()
+    this.setLinkContext()
+  }
+
+  handleUnlinkButtonClick = () => {
+    this.props.onCommand('removeLink')
   }
 
   render() {
@@ -101,9 +92,6 @@ export class EditorToolbar extends React.PureComponent {
 
     let { align, marks, link } = this
     let { context } = this.state
-
-    if (link != null)
-      context = 'link'
 
     return (
       <T>
@@ -212,6 +200,11 @@ export class EditorToolbar extends React.PureComponent {
                 title="editor.commands.link.button"
                 icon="IconLink"
                 onMouseDown={this.handleLinkButtonClick}/>
+              <EditorButton
+                isDisabled={!marks.link || isDisabled}
+                title="editor.commands.unlink"
+                icon="IconRemoveLink"
+                onMouseDown={this.handleUnlinkButtonClick}/>
             </ToolGroup>
           </Toolbar.Left>
         </Toolbar.Context>

@@ -77,20 +77,26 @@ export function createCommands(schema) {
     ),
 
     insertLink(state, dispatch, attrs) {
-      const { href } = attrs
-      const { $cursor, ranges } = state.selection
-      const { tr } = state
-      let from, to
+      let { selection, tr } = state
+      let { $cursor } = selection
 
-      // Insert link target as text, if no text is selected
       if ($cursor) {
-        from = $cursor.pos
-        to = from + href.length
-        tr.insertText(href, from)
-      } else {
-        from = ranges[0].$from.pos
-        to = ranges[0].$to.pos
+        if ($cursor.marks().find(m => m.type === schema.marks.link)) {
+          // Expand selection if cursor is on a link
+          selection = markExtend(selection, schema.marks.link)
+
+        } else {
+          // Insert link target as text, if no text is selected
+          selection = {
+            from: $cursor.pos,
+            to: $cursor.pos + attrs.href.length
+          }
+
+          tr.insertText(attrs.href, selection.from)
+        }
       }
+
+      let { from, to } = selection
 
       if (dispatch) {
         dispatch(tr.addMark(from, to, schema.marks.link.create(attrs)))
@@ -100,15 +106,6 @@ export function createCommands(schema) {
     },
 
     removeLink: expandAndRemoveMark(schema.marks.link),
-
-    updateLink(state, dispatch, attrs) {
-      let { from, to } = markExtend(state.selection, schema.marks.link)
-
-      if (dispatch)
-        dispatch(state.tr.addMark(from, to, schema.marks.link.create(attrs)))
-
-      return true
-    },
 
     clearSelection() {
       const sel = getSelection()
