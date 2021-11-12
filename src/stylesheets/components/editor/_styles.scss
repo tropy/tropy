@@ -73,6 +73,7 @@
   a {
     cursor: text;
     text-decoration: none;
+    display: contents; // Prevent links from getting the focus
 
     .darwin.meta-key &,
     .win32.ctrl-key &,
