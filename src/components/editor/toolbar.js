@@ -195,7 +195,6 @@ export class EditorToolbar extends React.PureComponent {
             </ToolGroup>
             <ToolGroup>
               <EditorButton
-                isActive={marks.link}
                 isDisabled={isDisabled}
                 title="editor.commands.link.button"
                 icon="IconLink"
