@@ -3,6 +3,7 @@ import { bool, func, shape, string, object } from 'prop-types'
 import { FormElement, FormField, FormToggle } from '../form'
 import { TemplateSelect } from '../template'
 import { ResourceSelect } from '../resource'
+import { get } from '../../common/util'
 
 
 export class PluginOption extends React.PureComponent {
@@ -40,7 +41,8 @@ export class PluginOption extends React.PureComponent {
     }
   }
 
-  handleChange = ({ [this.props.spec.field]: value }) => {
+  handleChange = (data) => {
+    let value = get(data, this.props.spec.field)
     this.props.onChange(this.props.spec.field, this.format(value))
   }
 
