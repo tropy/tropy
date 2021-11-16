@@ -1,7 +1,7 @@
 const hasMark = (pos, index, markType) =>
       markType.isInSet(pos.parent.child(index).marks)
 
-const calculate = (pos, markType) => {
+const expand = (pos, markType) => {
   let startIndex = pos.index()
   let endIndex = pos.indexAfter()
 
@@ -28,14 +28,20 @@ const calculate = (pos, markType) => {
 }
 
 export function markExtend(selection, markType) {
-  if (!selection)
+  if (!selection || selection.empty && !selection.$cursor)
     return null
 
   if (selection.$cursor)
-    return calculate(selection.$cursor, markType)
+    return expand(selection.$cursor, markType)
 
-  return {
-    from: calculate(selection.$from, markType).from,
-    to: calculate(selection.$to, markType).to
-  }
+  if (selection.empty)
+    return null
+
+  let { from } = (markType.isInSet(selection.$from.marks())) ?
+    expand(selection.$from, markType) : selection
+
+  let { to } = (markType.isInSet(selection.$to.marks())) ?
+    expand(selection.$to, markType) : selection
+
+  return { from, to }
 }
