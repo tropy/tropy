@@ -104,7 +104,7 @@ export function createCommands(schema) {
       if (dispatch) {
         dispatch(
           tr
-            .setSelection(TextSelection.create(state.doc, from, to))
+            .setSelection(TextSelection.create(tr.doc, from, to))
             .addMark(from, to, schema.marks.link.create(attrs))
         )
       }
