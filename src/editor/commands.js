@@ -9,7 +9,7 @@ import { alignment } from './alignment'
 
 const expandAndRemoveMark = (markType) =>
   (state, dispatch) => {
-    const range = markExtend(state.selection, markType)
+    let range = markExtend(state.selection, markType)
     if (!range) return false
 
     if (dispatch) {
@@ -81,7 +81,7 @@ export function createCommands(schema) {
       let { $cursor } = selection
 
       if ($cursor) {
-        if ($cursor.marks().find(m => m.type === schema.marks.link)) {
+        if (schema.marks.link.isInSet($cursor.marks())) {
           // Expand selection if cursor is on a link
           selection = markExtend(selection, schema.marks.link)
 
@@ -94,12 +94,19 @@ export function createCommands(schema) {
 
           tr.insertText(attrs.href, selection.from)
         }
+      } else {
+        // Expand the selection in case it covers
+        selection = markExtend(selection, schema.marks.link)
       }
 
       let { from, to } = selection
 
       if (dispatch) {
-        dispatch(tr.addMark(from, to, schema.marks.link.create(attrs)))
+        dispatch(
+          tr
+            .setSelection(TextSelection.create(state.doc, from, to))
+            .addMark(from, to, schema.marks.link.create(attrs))
+        )
       }
 
       return true
