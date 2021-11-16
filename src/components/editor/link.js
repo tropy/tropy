@@ -10,7 +10,7 @@ class LinkContext extends React.PureComponent {
   container = React.createRef()
 
   componentDidUpdate({ isActive: wasActive }) {
-    if (!this.props.href && !wasActive && this.props.isActive) {
+    if (!wasActive && this.props.isActive) {
       ensure(
         this.container.current,
         'transitionend',
