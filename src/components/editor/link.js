@@ -36,17 +36,18 @@ class LinkContext extends React.PureComponent {
         ref={this.container}
         isActive={this.props.isActive}>
         <Toolbar.Left className="form-inline">
-          <Input
-            ref={this.input}
-            className="form-control link-target"
-            isDisabled={!this.props.isActive}
-            isReadOnly={this.props.isReadOnly}
-            isRequired
-            placeholder={this.getLabelFor('target')}
-            value={this.props.href}
-            onBlur={this.props.onBlur}
-            onCancel={this.props.onCancel}
-            onCommit={this.handleTargetChange}/>
+          {this.props.isActive &&
+            <Input
+              ref={this.input}
+              className="form-control link-target"
+              isReadOnly={this.props.isReadOnly}
+              isRequired
+              placeholder={this.getLabelFor('target')}
+              value={this.props.href}
+              onBlur={this.props.onBlur}
+              onCancel={this.props.onCancel}
+              onCommit={this.handleTargetChange}/>
+          }
         </Toolbar.Left>
       </Toolbar.Context>
     )
