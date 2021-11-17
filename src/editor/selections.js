@@ -8,7 +8,7 @@ const expand = (pos, markType) => {
   if (startIndex === pos.parent.childCount) {
     startIndex--
   }
-  while (startIndex > 0 && hasMark(pos, startIndex, markType)) {
+  while (startIndex > 0 && hasMark(pos, startIndex - 1, markType)) {
     startIndex--
   }
   while (endIndex < pos.parent.childCount && hasMark(pos, endIndex, markType)) {
@@ -20,7 +20,7 @@ const expand = (pos, markType) => {
 
   for (let i = 0; i < endIndex; i++) {
     let size = pos.parent.child(i).nodeSize
-    if (i <= startIndex) startPos += size
+    if (i < startIndex) startPos += size
     endPos += size
   }
 
