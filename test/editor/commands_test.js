@@ -34,8 +34,7 @@ describe('markExtend', () => {
     {
       marks: [{
         attrs: {
-          href: 'http://www.example.com',
-          title: null
+          href: 'http://www.example.com'
         },
         type: 'link'
       }],
@@ -73,20 +72,6 @@ describe('markExtend', () => {
   it('select from last letter inward', () => {
     const selected = select(state, offset + url.length, offset + url.length - 4)
     expect(selectedText(selected)).to.eql('.com')
-
-    expect(selectedText(expand(selected))).to.eql(url)
-  })
-
-  it('select from within mark outside to the left', () => {
-    const selected = select(state, offset + 4, offset - 6)
-    expect(selectedText(selected)).to.eql('link: http')
-
-    expect(selectedText(expand(selected))).to.eql(url)
-  })
-
-  it('select from outside left to within the mark', () => {
-    const selected = select(state, offset - 6, offset + 4)
-    expect(selectedText(selected)).to.eql('link: http')
 
     expect(selectedText(expand(selected))).to.eql(url)
   })
