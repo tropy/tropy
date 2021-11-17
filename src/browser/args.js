@@ -53,6 +53,11 @@ export function parse(argv = process.argv.slice(1)) {
 }
 
 export function argToURL(arg, cwd = process.cwd()) {
+  // Subtle: only try to parse arguments as URLs for supported protocols,
+  // otherwise win32 paths with drive letters may get interpreted as URLs.
+  if (!(/^(tropy|file|https?):/i).test(arg))
+    return pathToFileURL(resolve(cwd, arg))
+
   try {
     return new URL(arg)
 
@@ -62,5 +67,4 @@ export function argToURL(arg, cwd = process.cwd()) {
 
     return pathToFileURL(resolve(cwd, arg))
   }
-
 }
