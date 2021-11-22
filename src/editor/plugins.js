@@ -39,7 +39,7 @@ const pseudoSelection = ({ className = 'pseudo-selection' } = {}) =>
   new Plugin({
     props: {
       decorations: ({ doc, selection }) =>
-        DecorationSet.create(doc, [
+        selection.empty ? null : DecorationSet.create(doc, [
           Decoration.inline(selection.from, selection.to, {
             class: className
           })
