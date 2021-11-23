@@ -141,20 +141,20 @@ export class ItemView extends React.PureComponent {
   }, NOTE.AUTOSAVE_DELAY)
 
   handleNoteChange = (note, hasChanged, isBlank) => {
-    if (this.props.isReadOnly) return
+    if (!this.props.isReadOnly) {
+      if (note.id != null) {
+        this.handleNoteSave(note, {
+          blank: isBlank,
+          changed: hasChanged
+        })
 
-    if (note.id != null) {
-      this.handleNoteSave(note, {
-        blank: isBlank,
-        changed: hasChanged
-      })
-
-    } else {
-      if (note.created == null && !isBlank) {
-        note.created = Date.now()
-        note.photo = this.props.photo.id
-        note.selection = this.props.activeSelection
-        this.props.onNoteCreate(note)
+      } else {
+        if (note.created == null && !isBlank) {
+          note.created = Date.now()
+          note.photo = this.props.photo.id
+          note.selection = this.props.activeSelection
+          this.props.onNoteCreate(note)
+        }
       }
     }
 
