@@ -78,7 +78,7 @@ export class Database extends EventEmitter {
       min: 0,
       max: 3,
       idleTimeoutMillis: 1000 * 60 * 3,
-      acquireTimeoutMillis: 1000 * 10,
+      acquireTimeoutMillis: 1000 * 60,
       Promise: Bluebird,
       ...opts
     })
