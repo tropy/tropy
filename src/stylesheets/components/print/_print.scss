@@ -22,6 +22,10 @@ html {
   font-size: $print-font-size;
   line-height: $print-font-size * $print-line-height; // Needs unit for some reason to be correct
   letter-spacing: 0.015em;
+
+  @if $platform == darwin {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; // San Francisco is not embeddable
+  }
 }
 
 body {
