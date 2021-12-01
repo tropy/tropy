@@ -188,8 +188,8 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
       addLicense
     ],
     appVersion: version,
-    appBundleId: 'org.tropy.tropy',
-    helperBundleId: 'org.tropy.tropy-helper',
+    appBundleId: `org.tropy.${qualified.name}`,
+    helperBundleId: `org.tropy.${qualified.name}-helper`,
     appCategoryType: 'public.app-category.productivity',
     appCopyright:
       `Copyright (c) 2015-${new Date().getFullYear()} ` +
