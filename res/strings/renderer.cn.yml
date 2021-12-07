@@ -67,6 +67,9 @@ cn:
     text: |
       trovy是由{rrchnm}和{c2dh}设计的，这是一个开发历史教学资源、数字展览和开源软件的团队。
     trademark: Tropy名称是{cds}的注册商标。
+    donate:
+      title: Donate to Tropy
+      url: https://tropy.org/donate
     release:
       title: 发布笔记
       url: https://github.com/tropy/tropy/releases/tag/{version}
@@ -562,9 +565,10 @@ cn:
       ol: 插入编号
       ul: 插入项目符号
       link:
-        button: 切换链接
+        button: Link
         target: 链接目标
         title: 链接标题
+      unlink: Remove link
       left: 左对齐
       center: 居中对齐
       right: 右对齐

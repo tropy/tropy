@@ -68,6 +68,9 @@ pt:
       Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
       historical teaching resources, digital exhibits, and open-source software.
     trademark: O nome Tropy é uma marca registada de {cds}.
+    donate:
+      title: Donate to Tropy
+      url: https://tropy.org/donate
     release:
       title: Notas de Versão
       url: https://github.com/tropy/tropy/releases/tag/{version}
@@ -570,9 +573,10 @@ pt:
       ol: Inserir Lista Numerada
       ul: Inserir Lista com Marcas
       link:
-        button: Inserir Link
+        button: Link
         target: Destino do Link
         title: Título do Link
+      unlink: Remove link
       left: Alinhar à Esquerda
       center: Centrar
       right: Alinhar à Direita

@@ -39,6 +39,7 @@ de:
               command: app:clear-recent-projects
         - type: separator
         - label: Importieren
+          id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
@@ -177,6 +178,9 @@ de:
         - label: Softwarelizenz
           command: app:open-license
         - type: separator
+        - label: An Tropy spenden
+          command: app:donate
+        - type: separator
         - label: Logs anzeigen
           command: app:open-logs
         - label: Plugins-Ordner anzeigen
@@ -264,6 +268,7 @@ de:
               command: app:clear-recent-projects
         - type: separator
         - label: Importieren
+          id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
@@ -400,6 +405,9 @@ de:
         - label: Softwarelizenz
           command: app:open-license
         - type: separator
+        - label: An Tropy spenden
+          command: app:donate
+        - type: separator
         - label: Logs anzeigen
           command: app:open-logs
         - label: Plugins-Ordner anzeigen
@@ -462,6 +470,7 @@ de:
               command: app:clear-recent-projects
         - type: separator
         - label: Importieren
+          id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
@@ -596,6 +605,9 @@ de:
           command: app:open-forums
         - label: Softwarelizenz
           command: app:open-license
+        - type: separator
+        - label: An Tropy spenden
+          command: app:donate
         - type: separator
         - label: Logs anzeigen
           command: app:open-logs

@@ -69,6 +69,9 @@ de:
       zur Geschichtsvermittlung, digitale Ausstellungen und Open-Source-Software
       entwickelt.
     trademark: Der Name Tropy ist eine geschützte Marke der {cds}.
+    donate:
+      title: An Tropy spenden
+      url: https://tropy.org/donate
     release:
       title: Versionshinweise
       url: https://github.com/tropy/tropy/releases/tag/{version}
@@ -161,11 +164,11 @@ de:
             html: Notizen als HTML
             markdown: Notizen als Markdown
           copy:
-            label: Copy notes as
+            label: Notizen kopieren als
             option:
-              text: Plain text
+              text: Reiner Text
               markdown: Markdown
-              html: HTML source code
+              html: HTML Quellcode
       ui:
         label: Benutzeroberfläche
         option:
@@ -191,18 +194,19 @@ de:
     project:
       label: Projekt
       base:
-        label: Link photos
+        label: Foto-Verlinkung
         option:
           'null': Using absolute paths
-          project: Relative to the project file
-          home: Relative to your home directory
+          project: Relativ zur Projektdatei
+          home: Relativ zum Homeverzeichnis
+          <None>: Mit absoluten Pfaden
       store: Managed folder
       name: Name
       id: ID
       file: Datei
       watch:
-        folder: Watch folder
-        usePolling: Using file stat polling
+        folder: Überwachter Ordner
+        usePolling: 'Zyklische Dateistatusabfrage '
     template:
       label: Vorlagen
       new: Neue Vorlage …
@@ -255,7 +259,7 @@ de:
     created: Hinzugefügt
     modified: Bearbeitet
     consolidate: Foto konsolidieren
-    error: Photo not found
+    error: Foto nicht auffindbar
   selection:
     size: Größe
     created: Hinzugefügt
@@ -384,8 +388,8 @@ de:
             A template with this id already exists in your ontology database. Do
             you want to overwrite the existing template?
           buttons:
-            - Cancel
-            - Overwrite
+            - Abbrechen
+            - Überschreiben
         imported:
           message: Template successfully imported.
           buttons:
@@ -572,6 +576,7 @@ de:
         button: Link
         target: Ziel des Links
         title: Titel des Links
+      unlink: Remove link
       left: Links
       center: Zentriert
       right: Rechts
@@ -626,7 +631,7 @@ de:
     tag:
       create: Tag konnte nicht erstellt werden. Tag-Namen müssen eindeutig sein.
     db:
-      SQLITE_CANTOPEN: Cannot find or open database file.
+      SQLITE_CANTOPEN: Datenbankdatei konnte nicht gefunden oder geöffnet werden.
   flash:
     update:
       ready:

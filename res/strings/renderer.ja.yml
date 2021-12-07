@@ -68,6 +68,9 @@ ja:
       Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
       historical teaching resources, digital exhibits, and open-source software.
     trademark: Tropyは{cds}の商標です。
+    donate:
+      title: Donate to Tropy
+      url: https://tropy.org/donate
     release:
       title: リリースノート
       url: https://github.com/tropy/tropy/releases/tag/{version}
@@ -566,9 +569,10 @@ ja:
       ol: 段落番号
       ul: 箇条書き
       link:
-        button: リンクを挿入
+        button: Link
         target: リンクターゲット
         title: リンクタイトル
+      unlink: Remove link
       left: 左揃え
       center: 中央揃え
       right: 右揃え

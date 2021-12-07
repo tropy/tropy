@@ -39,6 +39,7 @@ ja:
               command: app:clear-recent-projects
         - type: separator
         - label: インポート
+          id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
@@ -177,6 +178,9 @@ ja:
         - label: ソフトウェアライセンス
           command: app:open-license
         - type: separator
+        - label: Donate to Tropy
+          command: app:donate
+        - type: separator
         - label: ログファイルを開く
           command: app:open-logs
         - label: プラグインフォルダを開く
@@ -264,6 +268,7 @@ ja:
               command: app:clear-recent-projects
         - type: separator
         - label: インポート
+          id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
@@ -400,6 +405,9 @@ ja:
         - label: ソフトウェアライセンス
           command: app:open-license
         - type: separator
+        - label: Donate to Tropy
+          command: app:donate
+        - type: separator
         - label: ログファイルを開く
           command: app:open-logs
         - label: プラグインフォルダを開く
@@ -462,6 +470,7 @@ ja:
               command: app:clear-recent-projects
         - type: separator
         - label: インポート
+          id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
@@ -596,6 +605,9 @@ ja:
           command: app:open-forums
         - label: ソフトウェアライセンス
           command: app:open-license
+        - type: separator
+        - label: Donate to Tropy
+          command: app:donate
         - type: separator
         - label: ログファイルを開く
           command: app:open-logs

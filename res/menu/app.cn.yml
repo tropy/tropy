@@ -39,6 +39,7 @@ cn:
               command: app:clear-recent-projects
         - type: separator
         - label: 导入
+          id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
@@ -177,6 +178,9 @@ cn:
         - label: 软件许可证
           command: app:open-license
         - type: separator
+        - label: Donate to Tropy
+          command: app:donate
+        - type: separator
         - label: 软件运行日志
           command: app:open-logs
         - label: 插件文件夹
@@ -264,6 +268,7 @@ cn:
               command: app:clear-recent-projects
         - type: separator
         - label: 导入
+          id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
@@ -400,6 +405,9 @@ cn:
         - label: 软件许可证
           command: app:open-license
         - type: separator
+        - label: Donate to Tropy
+          command: app:donate
+        - type: separator
         - label: 软件运行日志
           command: app:open-logs
         - label: 插件文件夹
@@ -462,6 +470,7 @@ cn:
               command: app:clear-recent-projects
         - type: separator
         - label: 导入
+          id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
@@ -596,6 +605,9 @@ cn:
           command: app:open-forums
         - label: 软件许可证
           command: app:open-license
+        - type: separator
+        - label: Donate to Tropy
+          command: app:donate
         - type: separator
         - label: 软件运行日志
           command: app:open-logs
