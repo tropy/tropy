@@ -38,6 +38,9 @@ export class Import extends ImportCommand {
     this.result = []
     this.backlog = []
 
+    if (payload.plugin)
+      return this.result
+
     if (payload.data) {
       yield this.progress({ total: 1 })
       yield* this.importFromJSON(payload.data)

@@ -432,6 +432,23 @@ Menu.ItemCompiler = {
     }
   },
 
+  'import': (item, app) => {
+    let plugins = app.plugins.available('import')
+
+    if (plugins.length > 0) {
+      item.submenu = [
+        ...item.submenu,
+        { type: 'separator' },
+        ...plugins.map(({ id, name }) => ({
+          label: name,
+          click: createResponder('app:import', app, {
+            plugin: id
+          })
+        }))
+      ]
+    }
+  },
+
   'tag': (item, app, win, event) => {
     let { target } = event
     let tags = app.getTags(win)

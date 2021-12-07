@@ -45,6 +45,7 @@ en:
         - type: 'separator'
         - &import
           label: 'Import'
+          id: 'import'
           window: 'project'
           condition: '!isProjectReadOnly'
           submenu:
