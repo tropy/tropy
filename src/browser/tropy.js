@@ -369,6 +369,8 @@ export class Tropy extends EventEmitter {
       this.import())
     this.on('app:import-directory', () =>
       this.import({}, { prompt: 'dir' }))
+    this.on('app:import-plugin', (win, { plugin }) =>
+      this.import({}, { plugin }))
 
     this.on('app:rename-project', (win) =>
       this.dispatch(act.edit.start({ project: { name: true } }), win))

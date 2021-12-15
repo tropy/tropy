@@ -10,6 +10,7 @@ import { fromHTML } from '../../editor/serialize'
 import * as act from '../../actions'
 import * as mod from '../../models'
 import { ITEM, PROJECT } from '../../constants'
+import win from '../../window'
 
 import {
   all,
@@ -31,15 +32,17 @@ const { readFile } = fs.promises
 
 export class Import extends ImportCommand {
   *exec() {
-    let { payload } = this.action
+    let { payload, meta } = this.action
 
     // Subtle: push items to this.result early to support
     // undo after cancelled (partial) import!
     this.result = []
     this.backlog = []
 
-    if (payload.plugin)
-      return this.result
+    if (meta.plugin) {
+      yield this.progress({ total: 1 })
+      yield call(win.plugins.import, meta.plugin, payload)
+    }
 
     if (payload.data) {
       yield this.progress({ total: 1 })
