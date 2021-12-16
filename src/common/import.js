@@ -1,7 +1,7 @@
 import { gt } from 'semver'
 import * as ex from './export'
 import { expand } from './json'
-import { rdfs, tropy, xsd } from '../ontology'
+import { rdfs, tropy, xsd, dc, dcterms } from '../ontology'
 import { URI, any, array, map, morph, omit, get } from './util'
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
@@ -41,10 +41,17 @@ const flatten = (node) =>
   array(node)
     .flatMap(container => container['@list'] || container)
 
-const coerce = (value) =>
-  (typeof value === 'number') ? xsd.integer : xsd.string
+const coerce = (value, key) => {
+  switch (key) {
+    case dc.date:
+    case dcterms.date:
+      return tropy.date
+    default:
+      return (typeof value === 'number') ? xsd.integer : xsd.string
+  }
+}
 
-const toValue = (node) => {
+const toValue = (node, key) => {
   let text
   let type
 
@@ -54,14 +61,14 @@ const toValue = (node) => {
 
   } else {
     text = node['@value']
-    type = node['@type'] || coerce(text)
+    type = node['@type'] || coerce(text, key)
   }
 
   return { text, type }
 }
 
-const toFirstValue = (_, values) =>
-  toValue(values[0])
+const toFirstValue = (key, values) =>
+  toValue(values[0], key)
 
 const getMetadata = (data, type) =>
   map(omit(data, props[type]), toFirstValue)
