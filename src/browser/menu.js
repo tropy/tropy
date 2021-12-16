@@ -441,7 +441,7 @@ Menu.ItemCompiler = {
         { type: 'separator' },
         ...plugins.map(({ id, name }) => ({
           label: name,
-          click: createResponder('app:import', app, {
+          click: createResponder('app:import-plugin', app, {
             plugin: id
           })
         }))

@@ -98,16 +98,12 @@ export class Plugins extends EventEmitter {
     return this
   }
 
-  async exec({ id, action }, ...args) {
+  exec = async ({ id, action }, ...args) => {
     return this.instances[id][action](...args)
   }
 
   export = (id, ...args) => {
     return this.exec({ id, action: 'export' }, ...args)
-  }
-
-  import = (id, ...args) => {
-    return this.exec({ id, action: 'import' }, ...args)
   }
 
   flush = async () => {
