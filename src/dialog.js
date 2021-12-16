@@ -115,10 +115,16 @@ open.images = (opts) => open({
 })
 
 open.items = (opts) => open({
-  filters: [{
-    name: t('dialog', 'filter', 'items'),
-    extensions: [...IMAGE.EXT, 'json', 'jsonld']
-  }],
+  filters: [
+    {
+      name: t('dialog', 'filter', 'images'),
+      extensions: IMAGE.EXT
+    },
+    {
+      name: t('dialog', 'filter', 'items'),
+      extensions: ['json', 'jsonld']
+    }
+  ],
   properties: ['openFile', 'multiSelections'],
   ...opts
 })
