@@ -24,7 +24,8 @@ import {
 import {
   findTag,
   getItemTemplate,
-  getPhotoTemplate
+  getPhotoTemplate,
+  getSelectionTemplate
 } from '../../selectors'
 
 const { MODE } = PROJECT
@@ -39,13 +40,19 @@ export class Import extends ImportCommand {
     this.result = []
     this.backlog = []
 
+    yield* this.configure()
+
+    yield this.progress({ total: 1 })
+    yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
+
     if (meta.plugin) {
-      yield this.progress({ total: 1 })
-      yield call(win.plugins.import, meta.plugin, payload)
+      yield call(win.plugins.exec, {
+        id: meta.plugin,
+        action: 'import'
+      }, payload, meta)
     }
 
     if (payload.data) {
-      yield this.progress({ total: 1 })
       yield* this.importFromJSON(payload.data)
 
     } else {
@@ -53,9 +60,6 @@ export class Import extends ImportCommand {
 
       if (files.length === 0)
         return this.result
-
-      yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
-      yield* this.configure()
 
       yield this.progress({ total: files.length })
 
@@ -94,7 +98,8 @@ export class Import extends ImportCommand {
       density: this.action.meta.density || state.settings.density,
       templates: {
         item: getItemTemplate(state),
-        photo: getPhotoTemplate(state)
+        photo: getPhotoTemplate(state),
+        selection: getSelectionTemplate(state)
       },
       useLocalTimezone: state.settings.timezone
     })))
@@ -188,7 +193,7 @@ export class Import extends ImportCommand {
 
   *importJSONItem(obj, rel) {
     try {
-      let { db, basePath } = this.options
+      let { db, basePath, templates } = this.options
       let { list } = this.action.payload
       let item
       let photos = []
@@ -203,7 +208,10 @@ export class Import extends ImportCommand {
       }
 
       yield call(db.transaction, async tx => {
-        item = await mod.item.create(tx, obj.template, obj.data)
+        item = await mod.item.create(
+          tx,
+          obj.template || templates.item.id,
+          obj.data)
 
         if (tags) {
           await mod.item.tags.set(
@@ -220,9 +228,11 @@ export class Import extends ImportCommand {
         for (let i = 0; i < obj.photos.length; ++i) {
           let { template, image, data } = obj.photos[i]
 
-          if (rel && image.protocol === 'file' && !isAbsolute(image.path)) {
+          if (!template)
+            template = templates.photo.id
+
+          if (rel && image.protocol === 'file' && !isAbsolute(image.path))
             image.path = join(rel, image.path)
-          }
 
           let photo = await mod.photo.create(tx, { basePath, template }, {
             item: item.id,
@@ -233,17 +243,14 @@ export class Import extends ImportCommand {
 
           await importNotes(tx, obj.photos[i].notes, photo, notes)
 
-          for (let j = 0; j < obj.photos[i].selections.length; ++j) {
+          for (let s of obj.photos[i].selections) {
             let selection = await mod.selection.create(tx, {
+              ...s,
               photo: photo.id,
-              ...obj.photos[i].selections[j]
+              template: s.template || templates.selection.id
             })
 
-            await importNotes(
-              tx,
-              obj.photos[i].selections[j].notes,
-              selection,
-              notes)
+            await importNotes(tx, s.notes, selection, notes)
 
             photo.selections.push(selection.id)
             selections.push(selection)

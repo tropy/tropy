@@ -97,6 +97,7 @@ const getSelection = (data) => ({
   id: get(data, ['@id', 0]),
   notes: flatten(data[tropy.note]).map(getNote),
   type: get(data, ['@type', 0]),
+  template: get(data, [tropy.template, 0, '@id']),
   ...getProps(data, 'selection')
 })
 
