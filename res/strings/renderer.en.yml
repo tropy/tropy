@@ -240,6 +240,7 @@ en:
         }
     plugins:
       label: Plugins
+      settings: Settings
       enable: Enable
       disable: Disable
       install: Install Plugin

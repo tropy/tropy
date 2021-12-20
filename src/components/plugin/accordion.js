@@ -96,6 +96,10 @@ export class PluginAccordion extends Accordion {
           <ButtonGroup>
             <Button
               isDefault
+              text="prefs.plugins.settings"
+              onClick={this.handleToggle}/>
+            <Button
+              isDefault
               text={`prefs.plugins.${this.hasInstances ? 'disable' : 'enable'}`}
               onClick={this.handleToggleClick}/>
             {this.isLocalPlugin &&
