@@ -18,7 +18,7 @@ export class PluginAccordion extends Accordion {
     this.props.onOpenLink(this.props.spec.homepage)
   }
 
-  handleToggleClick = (event) => {
+  handlePluginToggle = (event) => {
     event.stopPropagation()
     if (this.hasInstances) {
       this.props.onDisable(this.props.spec.name)
@@ -101,7 +101,7 @@ export class PluginAccordion extends Accordion {
             <Button
               isDefault
               text={`prefs.plugins.${this.hasInstances ? 'disable' : 'enable'}`}
-              onClick={this.handleToggleClick}/>
+              onClick={this.handlePluginToggle}/>
             {this.isLocalPlugin &&
               <Button
                 isDefault
