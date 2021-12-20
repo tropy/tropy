@@ -12,6 +12,7 @@ export class PluginOption extends React.PureComponent {
       id: this.props.spec.field,
       label: this.props.spec.label,
       title: this.props.spec.hint,
+      placeholder: this.props.spec.placeholder,
       tabIndex: 0,
       name: this.props.spec.field,
       onChange: this.handleChange,
