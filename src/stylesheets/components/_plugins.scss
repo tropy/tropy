@@ -65,7 +65,11 @@
     }
 
     .panel-body {
-      padding: ($space-lg + 1px) $default-padding-horizontal $space-lg;
+      padding:
+        ($space-lg + 1px)
+        ($default-padding-horizontal - 2px)
+        $space-lg
+        $default-padding-horizontal;
 
       &::before {
         content: "";
@@ -116,7 +120,8 @@
 
       fieldset {
         @include form-shading-level(3);
-        margin-right: 6px;
+        margin-right: $space-sm - 3px;
+        padding: $space-sm;
       }
 
       .btn-icon {
