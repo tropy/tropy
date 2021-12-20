@@ -4,19 +4,30 @@ const { readFile, writeFile } = fs.promises
 // NB: load jsonld module on demand, because it's huge.
 let jsonld
 
+async function importModule() {
+  await import('jsonld').then(m => jsonld = m.default)
+  jsonld.useDocumentLoader('node')
+}
+
 async function proxyCompact(...args) {
-  if (!jsonld) jsonld = await import('jsonld')
+  if (!jsonld) await importModule()
   return jsonld.compact(...args)
 }
 
 async function proxyExpand(...args) {
-  if (!jsonld) jsonld = await import('jsonld')
+  if (!jsonld) await importModule()
   return jsonld.expand(...args)
+}
+
+async function proxyLoadDocument(...args) {
+  if (!jsonld) await importModule()
+  return jsonld.documentLoader(...args)
 }
 
 export {
   proxyCompact as compact,
-  proxyExpand as expand
+  proxyExpand as expand,
+  proxyLoadDocument as documentLoader
 }
 
 export async function open(path, ...args) {
@@ -29,9 +40,9 @@ export async function parse(string, { context, expand } = {}) {
   let data = JSON.parse(string)
 
   if (context)
-    return jsonld.compact(data, context)
+    return proxyCompact(data, context)
   if (expand)
-    return jsonld.expand(data)
+    return proxyExpand(data)
   else
     return data
 }
