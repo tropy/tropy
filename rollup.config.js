@@ -183,6 +183,15 @@ export default [
           'readable-stream': 'stream'
         }
       }),
+      replace({
+        preventAssignment: true,
+        include: [
+          'node_modules/jsonld/lib/documentLoaders/node.js'
+        ],
+        values: {
+          manual: 'follow'
+        }
+      }),
       resolve({
         exportConditions: ['node'],
         preferBuiltins: true
