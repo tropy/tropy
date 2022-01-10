@@ -237,6 +237,7 @@ cn:
         }
     plugins:
       label: 插件
+      settings: 设置
       enable: 启用
       disable: 禁用
       install: 安装插件
@@ -390,7 +391,7 @@ cn:
       csv: CSV
       templates: Tropy 模板
       images: 图像
-      items: 图像和Tropy文件
+      items: Tropy Items
       notes: 笔记
       projects: Tropy项目
       rdf: RDF Vocabularies

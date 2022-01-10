@@ -370,8 +370,10 @@ cn:
         enabled: false
         visible: false
     photo-read-only:
-      - label: 显示文件位置
+      - label: Show Original File…
         command: app:show-in-folder
+      - label: Open in External Viewer…
+        command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
       - label: 导出图片
@@ -842,8 +844,10 @@ cn:
         enabled: false
         visible: false
     photo-read-only:
-      - label: 显示文件位置
+      - label: Show Original File…
         command: app:show-in-folder
+      - label: Open in External Viewer…
+        command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
       - label: 导出图片
@@ -1283,8 +1287,10 @@ cn:
         enabled: false
         visible: false
     photo-read-only:
-      - label: 显示文件位置
+      - label: Show Original File…
         command: app:show-in-folder
+      - label: Open in External Viewer…
+        command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
       - label: 导出图片

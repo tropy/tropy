@@ -114,7 +114,7 @@ cn:
           command: win:reload
           window: '*'
         - type: separator
-        - label: 隐藏菜单栏(重启后显示)
+        - label: 隐藏菜单栏
           command: app:toggle-menu-bar
           window: '*'
         - label: 移动到中间
@@ -185,7 +185,7 @@ cn:
           command: app:open-logs
         - label: 插件文件夹
           command: app:open-plugins-folder
-        - label: 运行日志
+        - label: 个人数据文件夹
           command: app:open-user-data
         - label: 打开缓存文件夹
           command: app:open-cache-folder

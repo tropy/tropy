@@ -241,6 +241,7 @@ de:
         }
     plugins:
       label: Plugins
+      settings: Einstellungen
       enable: Aktivieren
       disable: Deaktivieren
       install: Plugin Installieren
@@ -385,13 +386,13 @@ de:
       template:
         import:
           message: >
-            A template with this id already exists in your ontology database. Do
-            you want to overwrite the existing template?
+            Ein Template mit dieser Id existiert bereits in der Datenbank. Soll
+            das bestehende Template ersetzt werden?
           buttons:
             - Abbrechen
             - Überschreiben
         imported:
-          message: Template successfully imported.
+          message: Template wurde importiert.
           buttons:
             - OK
     filter:
@@ -576,7 +577,7 @@ de:
         button: Link
         target: Ziel des Links
         title: Titel des Links
-      unlink: Remove link
+      unlink: Link entfernen
       left: Links
       center: Zentriert
       right: Rechts

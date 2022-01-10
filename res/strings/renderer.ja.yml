@@ -239,6 +239,7 @@ ja:
         }
     plugins:
       label: プラグイン
+      settings: 設定
       enable: 有効にする
       disable: 無効にする
       install: プラグインをインストール
@@ -394,7 +395,7 @@ ja:
       csv: CSV
       templates: Tropyテンプレート
       images: イメージ
-      items: 画像とTropyアイテム
+      items: Tropy Items
       notes: ノート
       projects: Tropyプロジェクト
       rdf: RDF語彙

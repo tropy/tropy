@@ -241,6 +241,7 @@ fr:
         }
     plugins:
       label: Plugins
+      settings: Paramètres
       enable: Activer
       disable: Désactiver
       install: Installer un plugin
@@ -399,7 +400,7 @@ fr:
       csv: CSV
       templates: Modèle de saisie Tropy
       images: Images
-      items: Images et objets Tropy
+      items: Tropy Items
       notes: Les notes
       projects: Projets Tropy
       rdf: Schémas RDF

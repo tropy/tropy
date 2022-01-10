@@ -239,6 +239,7 @@ es:
         }
     plugins:
       label: Plugins
+      settings: Parámetros
       enable: Activar
       disable: Desactivar
       install: Instalar plugin
@@ -397,7 +398,7 @@ es:
       csv: CSV
       templates: Plantillas Tropy
       images: Imágenes
-      items: Imágenes y objetos Tropy
+      items: Tropy Items
       notes: Notas
       projects: Proyectos Tropy
       rdf: Esquemas RDF

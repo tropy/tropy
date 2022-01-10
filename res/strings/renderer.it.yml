@@ -242,6 +242,7 @@ it:
         }
     plugins:
       label: Estensioni
+      settings: Impostazioni
       enable: Abilita
       disable: Disabilita
       install: Installa estensione
@@ -400,7 +401,7 @@ it:
       csv: CSV
       templates: Modelli di Tropy
       images: Immagini
-      items: Immagini ed elementi di Tropy
+      items: Tropy Items
       notes: Note
       projects: Progetti Tropy
       rdf: Vocabolari RDF
