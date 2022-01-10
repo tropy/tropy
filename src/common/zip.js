@@ -3,7 +3,7 @@ import { join } from 'path'
 import { promisify } from 'util'
 import crossZip from 'cross-zip'
 
-const { mkdtemp, readdir, rename, rmdir } = fs.promises
+const { mkdtemp, readdir, rename, rm } = fs.promises
 const unzipAsync = promisify(crossZip.unzip)
 
 export const zip = promisify(crossZip.zip)
@@ -27,6 +27,6 @@ export async function unzip(src, dst, { strip } = {}) {
 
   } finally {
     if (tmp)
-      await rmdir(tmp, { recursive: true })
+      await rm(tmp, { recursive: true })
   }
 }

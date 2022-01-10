@@ -46,9 +46,9 @@ async function handleUpdated() {
 async function handleUninstall(opts = {}) {
   await removeShortcut()
   await clearAppRegistration()
-  await rmdir(opts.logs)
-  await rmdir(opts.cache)
-  await rmdir(opts.data)
+  await rm(opts.logs)
+  await rm(opts.cache)
+  await rm(opts.data)
 }
 
 function createShortcut(locations) {
@@ -119,8 +119,8 @@ async function clearAppRegistration() {
 
 
 
-async function rmdir(path) {
+async function rm(path) {
   if (path) {
-    return fs.promises.rmdir(path, { recursive: true, maxRetries: 3 })
+    return fs.promises.rm(path, { recursive: true, maxRetries: 3 })
   }
 }

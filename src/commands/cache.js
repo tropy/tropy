@@ -81,7 +81,7 @@ export class Purge extends Command {
       if (date > NOW) continue
 
       info(`removing old project cache ${id}`)
-      yield call(fs.promises.rmdir, cache.expand(id), { recursive: true })
+      yield call(fs.promises.rm, cache.expand(id), { recursive: true })
       stale.push(id)
     }
 
