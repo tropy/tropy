@@ -137,7 +137,7 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
 
     app.on('open-url', (event, url) => {
       if (Tropy.instance?.ready)
-        Tropy.instance.open(url)
+        Tropy.instance.open(new URL(url))
       else
         args.push(url)
 
