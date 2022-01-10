@@ -148,29 +148,22 @@ export class Image extends Asset {
     }
 
     let stats = await img.stats()
-    let { dominant, channels } = stats
+    let { dominant, channels, isOpaque } = stats
+
+    // Set dominant color to white if there are transparencies in use!
+    if (!isOpaque)
+      dominant = { r: 255, g: 255, b: 255 }
 
     this.stats[page] = {
-      isOpaque: stats.isOpaque,
+      isOpaque,
       color: (dominant != null) ?
         rgb(dominant.r, dominant.g, dominant.b) :
         rgb(...channels.slice(0, 3).map(c => Math.round(c.mean)))
     }
   }
 
-  resize = async (size, selection, {
-    page = this.page,
-    jp2hack = false
-  } = {}) => {
+  resize = async (size, selection, { page = this.page } = {}) => {
     let image = this.do(page)
-
-    // Workaround conversion issue of grayscale JP2 which receive
-    // a multiplied alpha channel after conversion to webp/png.
-    // Remove this as soon as we've found a solution or fix upstream!
-    if (jp2hack) {
-      let dup = await image.jpeg({ quality: 100 }).toBuffer()
-      image = sharp(dup)
-    }
 
     if (selection != null) {
       image = image.extract({

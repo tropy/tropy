@@ -55,17 +55,11 @@ class Cache {
       let ext = this.extname(image.mimetype)
       let variants = image.variants(!!selection)
 
-      let jp2hack = image.mimetype === MIME.JP2 &&
-        image.space === 'b-w' && channels === 3 && image.hasAlpha
-
       for (let { name, size, quality } of variants) {
         let path = this.path(id, name, ext)
 
         if (overwrite || !(await this.exists(path))) {
-          let dup = await image.resize(size, selection, {
-            page,
-            jp2hack
-          })
+          let dup = await image.resize(size, selection, { page })
 
           switch (ext) {
             case '.png':
