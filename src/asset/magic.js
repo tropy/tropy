@@ -22,6 +22,10 @@ export function magic(buffer, ext = '') {
       return MIME.HEIC
     if (isJP2(buffer) || (/^\.j(p2|px|2k)$/i).test(ext))
       return MIME.JP2
+    if (isEPS(buffer))
+      return MIME.EPS
+    if (isPS(buffer))
+      return MIME.PS
   }
 }
 
@@ -47,6 +51,12 @@ const isPNG = (buffer) =>
 
 const isPDF = (buffer) =>
   check(buffer, [0x25, 0x50, 0x44, 0x46])
+
+const isPS = (buffer) =>
+  check(buffer, [0x25, 0x21, 0x50, 0x53])
+
+const isEPS = (buffer) =>
+  buffer.toString('ascii', 0, 23) === '%!PS-Adobe-3.0 EPSF-3.0'
 
 const isTIFF = (buffer) =>
   check(buffer, [0x49, 0x49, 42, 0]) || check(buffer, [0x4d, 0x4d, 0, 42])

@@ -3,6 +3,7 @@ import MIME from './mime'
 const SUPPORTED = {
   [MIME.AVIF]: true,
   [MIME.AVIF_SEQ]: true,
+  [MIME.EPS]: true,
   [MIME.GIF]: true,
   [MIME.HEIC]: true,
   [MIME.HEIC_SEQ]: true,
@@ -14,6 +15,7 @@ const SUPPORTED = {
   [MIME.JPX]: true,
   [MIME.PNG]: true,
   [MIME.PDF]: true,
+  [MIME.PS]: true,
   [MIME.SVG]: true,
   [MIME.TIFF]: true,
   [MIME.WEBP]: true
@@ -24,7 +26,9 @@ export default {
   MAX_DENSITY: 1200,
 
   EXT: [
+    'ai',
     'avif',
+    'eps',
     'gif',
     'heic',
     'heif',
@@ -35,6 +39,7 @@ export default {
     'j2k',
     'pdf',
     'png',
+    'ps',
     'svg',
     'tif',
     'tiff',
@@ -51,7 +56,9 @@ export default {
   },
 
   SCALABLE: {
+    [MIME.EPS]: true,
     [MIME.PDF]: true,
+    [MIME.PS]: true,
     [MIME.SVG]: true
   },
 

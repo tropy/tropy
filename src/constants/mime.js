@@ -4,6 +4,7 @@ export default {
 
   AVIF: 'image/avif',
   AVIF_SEQ: 'image/avif-sequence',
+  EPS: 'application/eps',
   GIF: 'image/gif',
   HEIC: 'image/heic',
   HEIC_SEQ: 'image/heic-sequence',
@@ -16,6 +17,7 @@ export default {
   JPX: 'image/jpx',
   PDF: 'application/pdf',
   PNG: 'image/png',
+  PS: 'application/postscript',
   SVG: 'image/svg+xml',
   TIF: 'image/tiff',
   TIFF: 'image/tiff',
