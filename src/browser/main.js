@@ -139,7 +139,7 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
       if (Tropy.instance?.ready)
         Tropy.instance.open(new URL(url))
       else
-        args.push(url)
+        args.push(new URL(url))
 
       event.preventDefault()
     })
