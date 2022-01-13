@@ -180,7 +180,7 @@ export function info(data, locale = 'en') {
   return {
     comment: getValue(any(data, rdfs.comment), locale),
     description: getValue(
-      any(data, skos.defintion, dc.description, dcterms.description), locale
+      any(data, skos.definition, dc.description, dcterms.description), locale
     )
   }
 }

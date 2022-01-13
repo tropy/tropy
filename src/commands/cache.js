@@ -64,7 +64,7 @@ export class Purge extends Command {
 
     let exists = yield call(cache.exists)
 
-    assert(exists, 'cache doese not exist')
+    assert(exists, 'cache does not exist')
     assert(state.recent != null, 'cannot purge caches without state')
 
     info(`purging cache ${cache.root}`)

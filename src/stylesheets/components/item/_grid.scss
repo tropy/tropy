@@ -7,7 +7,7 @@
   border-top: 1px solid $item-table-header-border-color;
   position: relative;
   display: flex; // Prevent overflow
-  flex-direction: column; // Strech scroll-container
+  flex-direction: column; // Stretch scroll-container
 
   .scrollbar-style-old-school & {
     border-top-color: transparent;

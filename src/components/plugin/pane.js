@@ -15,7 +15,7 @@ export class PluginsPane extends React.Component {
 
   componentDidMount() {
     // Subtle: we assume `plugins` is a Singleton, therefore
-    // it's safe to manage the listeneres in mount/unmount!
+    // it's safe to manage the listeners in mount/unmount!
     this.context.plugins.on('change', this.refresh)
     this.refresh()
   }
