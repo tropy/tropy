@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import { autoUpdater } from 'electron'
+import { app, autoUpdater } from 'electron'
 import { feed } from '../common/release'
 import { linux, win32 } from '../common/os'
 import { error, info } from '../common/log'
@@ -22,7 +22,10 @@ export class Updater extends EventEmitter {
     if (!this.isSupported) return
 
     try {
-      autoUpdater.setFeedURL(feed)
+      if (app.runningUnderArm64Translation)
+        autoUpdater.setFeedURL(feed.replace('x64', 'arm64'))
+      else
+        autoUpdater.setFeedURL(feed)
 
       autoUpdater.on('error', this.onError)
       autoUpdater.on('checking-for-update', this.onCheckingForUpdate)
