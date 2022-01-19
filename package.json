@@ -156,6 +156,6 @@
     "transducers.js": "^0.3.2",
     "uuid": "^8.3.2",
     "winreg": "^1.2.4",
-    "write-file-atomic": "^3.0.3"
+    "write-file-atomic": "^4.0.0"
   }
 }
