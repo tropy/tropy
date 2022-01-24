@@ -73,7 +73,7 @@ it:
       url: https://tropy.org/donate
     release:
       title: Note di rilascio
-      url: https://github.com/tropy/tropy/releases/tag/{version}
+      url: https://github.com/tropy/tropy/releases/tag/v{version}
     license:
       title: Informazioni sulla licenza
       url: https://tropy.org/license
@@ -401,7 +401,7 @@ it:
       csv: CSV
       templates: Modelli di Tropy
       images: Immagini
-      items: Tropy Items
+      items: Elementi di Tropy
       notes: Note
       projects: Progetti Tropy
       rdf: Vocabolari RDF

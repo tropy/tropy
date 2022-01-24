@@ -178,7 +178,7 @@ cn:
         - label: 软件许可证
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: 捐赠给Tropy
           command: app:donate
         - type: separator
         - label: 软件运行日志
@@ -405,7 +405,7 @@ cn:
         - label: 软件许可证
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: 捐赠给Tropy
           command: app:donate
         - type: separator
         - label: 软件运行日志
@@ -606,7 +606,7 @@ cn:
         - label: 软件许可证
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: 捐赠给Tropy
           command: app:donate
         - type: separator
         - label: 软件运行日志

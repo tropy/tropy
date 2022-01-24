@@ -73,7 +73,7 @@ es:
       url: https://tropy.org/donate
     release:
       title: Notas de versión
-      url: https://github.com/tropy/tropy/releases/tag/{version}
+      url: https://github.com/tropy/tropy/releases/tag/v{version}
     license:
       title: Información sobra la licencia
       url: https://tropy.org/license

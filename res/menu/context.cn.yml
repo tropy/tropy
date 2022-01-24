@@ -322,7 +322,7 @@ cn:
             command: app:export-item
       - label: 导出笔记
         command: app:export-notes
-      - label: Copy Item Link
+      - label: 复制笔记链接
         command: app:copy-item-link
       - label: 复制笔记
         command: app:copy-notes
@@ -370,11 +370,11 @@ cn:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: 显示原始文件…
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: 在外部查看器中打开…
         command: app:open-path
-      - label: Copy Photo Link
+      - label: 复制图片链接
         command: app:copy-photo-link
       - label: 导出图片
         command: app:extract-photo
@@ -765,7 +765,7 @@ cn:
             command: app:export-item
       - label: 导出笔记
         command: app:export-notes
-      - label: Copy Item Link
+      - label: 复制笔记链接
         command: app:copy-item-link
       - label: 复制笔记
         command: app:copy-notes
@@ -844,11 +844,11 @@ cn:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: 显示原始文件…
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: 在外部查看器中打开…
         command: app:open-path
-      - label: Copy Photo Link
+      - label: 复制图片链接
         command: app:copy-photo-link
       - label: 导出图片
         command: app:extract-photo
@@ -1208,7 +1208,7 @@ cn:
             command: app:export-item
       - label: 导出笔记
         command: app:export-notes
-      - label: Copy Item Link
+      - label: 复制笔记链接
         command: app:copy-item-link
       - label: 复制笔记
         command: app:copy-notes
@@ -1287,11 +1287,11 @@ cn:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: 显示原始文件…
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: 在外部查看器中打开…
         command: app:open-path
-      - label: Copy Photo Link
+      - label: 复制图片链接
         command: app:copy-photo-link
       - label: 导出图片
         command: app:extract-photo

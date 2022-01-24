@@ -73,7 +73,7 @@ ja:
       url: https://tropy.org/donate
     release:
       title: リリースノート
-      url: https://github.com/tropy/tropy/releases/tag/{version}
+      url: https://github.com/tropy/tropy/releases/tag/v{version}
     license:
       title: ライセンス情報
       url: https://tropy.org/license
@@ -395,7 +395,7 @@ ja:
       csv: CSV
       templates: Tropyテンプレート
       images: イメージ
-      items: Tropy Items
+      items: Tropyアイテム
       notes: ノート
       projects: Tropyプロジェクト
       rdf: RDF語彙
