@@ -1,4 +1,4 @@
-import shortid from 'shortid'
+import { nanoid } from 'nanoid'
 
 export function once(emitter, ...events) {
   return Promise.all(events.map(event =>
@@ -472,8 +472,8 @@ export function blank(string) {
   return string == null || string.length === 0
 }
 
-export function identify() {
-  return shortid.generate()
+export function identify(length = 8) {
+  return nanoid(length)
 }
 
 export function shallow(a, b, props) {
