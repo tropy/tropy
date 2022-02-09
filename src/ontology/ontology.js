@@ -41,7 +41,8 @@ export class Ontology extends Resource {
 
   static CLASSES = [
     rdfs.Class,
-    owl.Class
+    owl.Class,
+    skos.Concept
   ]
 
   static DATATYPES = [
