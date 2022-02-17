@@ -22,6 +22,10 @@ import {
   getActiveSelectionTemplate
 } from './ontology'
 
+import {
+  getSelectedPhotoIds
+} from './photos'
+
 const EMPTY = []
 
 const collect = transformer((data, [key, value]) => {
@@ -130,8 +134,8 @@ export const getItemFields = memo(
 
 const getPhotoMetadata = memo(
   getMetadata,
-  ({ nav }) => nav.photo,
-  (metadata, id) => metadata[id] || { id }
+  getSelectedPhotoIds,
+  (metadata, ids) => metadata[ids[0]] || { id: ids[0] }
 )
 
 const getSelectionMetadata = memo(

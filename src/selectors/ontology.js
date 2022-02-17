@@ -5,6 +5,7 @@ import { blank, get, homogenize } from '../common/util'
 import { expand, tropy } from '../ontology'
 import { ITEM, PHOTO, SELECTION } from '../constants'
 import { value }  from '../value'
+import { getSelectedPhoto } from './photos'
 
 const getResourceList =
   (res, vocab) =>
@@ -163,10 +164,8 @@ export const getActiveItemTemplate = memo(
 
 export const getActivePhotoTemplate = memo(
   ({ ontology }) => ontology.template,
-  ({ nav }) => nav.photo,
-  ({ photos }) => photos,
-  (template, id, photos) =>
-    (id != null && id in photos) ? template[photos[id].template] : null
+  getSelectedPhoto,
+  (template, photo) => template[photo?.template]
 )
 
 export const getActiveSelectionTemplate = memo(

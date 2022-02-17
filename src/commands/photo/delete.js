@@ -24,8 +24,9 @@ export class Delete extends Command {
       await mod.photo.order(tx, item.id, order)
     })
 
-    if (nav.photo != null) {
-      let selected = payload.photos.indexOf(nav.photo)
+    if (nav.items.includes(item.id)) {
+      let cursor = nav.photos[item.id]?.at(-1)
+      let selected = payload.photos.indexOf(cursor)
       if (selected !== -1) {
         yield* this.select(item.id, order[idx[selected]] ?? order.at(-1))
       }

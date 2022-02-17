@@ -1,5 +1,5 @@
 import { ITEM } from '../constants'
-import { array, get } from '../common/util'
+import { array } from '../common/util'
 
 export default {
   create(payload, meta) {
@@ -131,19 +131,21 @@ export default {
       let mod = meta.mod || 'replace'
 
       if (mod === 'all') {
-        const { qr } = getState()
         mod = 'replace'
-        items = qr.items
+        items = getState().qr.items
 
       } else if (items.length === 1 && mod === 'replace') {
-        const state = getState()
+        let state = getState()
 
         if (photo === undefined) {
-          photo = get(state.items[items[0]], ['photos', 0])
+          let itemPhotos = state.items[items[0]]?.photos || []
+          let prev = state.nav.photos[items[0]]?.at(-1)
+
+          photo = itemPhotos.includes(prev) ? prev : itemPhotos[0]
         }
 
         if (note === undefined && photo) {
-          note = get(state.photos[photo], ['notes', 0])
+          note = state.photos[photo]?.notes[0]
         }
       }
 

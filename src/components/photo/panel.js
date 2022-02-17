@@ -5,7 +5,12 @@ import { PhotoList } from './list'
 import { SASS } from '../../constants'
 import * as act from '../../actions'
 import { number } from 'prop-types'
-import { getCachePrefix, getExpandedPhotos } from '../../selectors'
+
+import {
+  getCachePrefix,
+  getExpandedPhotos,
+  getSelectedPhotoIds
+} from '../../selectors'
 
 
 class PhotoPanel extends React.PureComponent {
@@ -26,7 +31,7 @@ class PhotoPanel extends React.PureComponent {
 const PhotoPanelContainer = connect(
     state => ({
       cache: getCachePrefix(state),
-      current: state.nav.photo,
+      current: getSelectedPhotoIds(state).at(-1),
       edit: state.edit,
       data: state.metadata,
       expandedPhotos: getExpandedPhotos(state),

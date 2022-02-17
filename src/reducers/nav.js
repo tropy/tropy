@@ -1,5 +1,6 @@
+import assert from 'assert'
 import { isSelected, select } from '../selection'
-import { merge, insert, omit, splice } from '../common/util'
+import { array, merge, insert, omit, splice } from '../common/util'
 import { dc } from '../ontology'
 
 import {
@@ -17,7 +18,6 @@ const { MODE } = PROJECT
 
 const reset = {
   items: [],
-  photo: null,
   selection: null,
   note: null
 }
@@ -26,6 +26,7 @@ const init = {
   ...reset,
   mode: MODE.PROJECT,
   query: '',
+  photos: {},
   tags: [],
   sort: {},
   columns: [
@@ -41,7 +42,7 @@ const init = {
 export function nav(state = init, { type, payload, meta, error }) {
   switch (type) {
     case NAV.RESTORE:
-      return merge(init, omit(payload || {}, ['query', 'tags']))
+      return merge(init, omit(payload || {}, ['query', 'tags', 'photo']))
     case NAV.UPDATE:
       return { ...state, ...payload }
 
@@ -97,23 +98,24 @@ export function nav(state = init, { type, payload, meta, error }) {
     case ITEM.SELECT:
       return {
         ...state,
-        photo: payload.photo,
         selection: payload.selection,
         note: payload.note,
-        items: select(state.items, payload.items, meta.mod)
+        items: select(state.items, payload.items, meta.mod),
+        photos: {
+          ...state.photos,
+          // Restore photo selection
+          [payload.items[0]]: array(payload.photo)
+        }
       }
 
     case ITEM.OPEN: {
-      const { id, photos, selection } = payload
-      const photo = photos ?
-        (photos.includes(state.photo) ? state.photo : photos[0]) : null
+      let { id } = payload
 
       return {
         ...state,
         mode: MODE.ITEM,
-        photo,
-        selection,
-        items: select(state.items, [id], 'replace')
+        items: select(state.items, [id], 'replace'),
+        selection: null
       }
     }
 
@@ -142,34 +144,79 @@ export function nav(state = init, { type, payload, meta, error }) {
         tags: select(state.tags, [payload], meta.mod)
       }
 
-    case PHOTO.SELECT:
-      return payload ? {
-        ...state,
-        photo: payload.photo,
-        selection: payload.selection,
-        note: payload.note,
-        items: [payload.item]
-      } : { ...state, photo: null, selection: null }
+    case PHOTO.SELECT: {
+      // TODO do we need this?
+      if (payload == null)
+        return {
+          ...state,
+          photos: {
+            ...state.photos,
+            [state.items[0]]: []
+          },
+          selection: null
+        }
 
-    case NOTE.SELECT:
-      return payload ? {
-        ...state,
-        items: [payload.item],
-        photo: payload.photo,
-        selection: payload.selection,
-        note: payload.note
-      } : { ...state, note: null }
+      // TODO deal with multiple photos (associate to respective items!)
+      let { item, photo, selection, note } = payload
 
-    case ITEM.PHOTO.REMOVE:
-      return isSelected(state.items, payload.id) &&
-        payload.photos.includes(state.photo) ?
-        { ...state, photo: null, selection: null, note: null } : state
+      assert(state.items.includes(item),
+        "photo's item must be in active selection range!")
+
+      return {
+        ...state,
+        photos: {
+          ...state.photos,
+          [item]: array(photo)
+        },
+        selection,
+        note
+      }
+    }
+
+    case NOTE.SELECT: {
+      // TODO do we need this?
+      if (payload == null)
+        return { ...state, note: null }
+
+      let { item, photo, selection, note } = payload
+
+      assert(state.items.includes(item),
+        "note's item must be in active selection range!")
+
+      let photos = state.photos.includes(photo) ?
+        state.photos :
+        { ...state.photos, [item]: array(photo) }
+
+      return {
+        ...state,
+        photos,
+        selection,
+        note
+      }
+    }
+
+    case ITEM.PHOTO.REMOVE: {
+      let { id, photos } = payload
+
+      if (!isSelected(state.items, id))
+        return state
+      if (!isSelected(state.photos[id], photos))
+        return state
+
+      return {
+        ...state,
+        photos: {
+          ...state.photos,
+          [id]: []
+        },
+        selection: null,
+        note: null
+      }
+    }
 
     case PHOTO.SELECTION.REMOVE: {
-      let { id, selections } = payload
+      let { selections } = payload
 
-      if (id !== state.photo)
-        return state
       if (!selections.includes(state.selection))
         return state
       else

@@ -1,4 +1,12 @@
-import { BLANK, get } from '../common/util'
+import { BLANK } from '../common/util'
+import { createSelector } from 'reselect'
+import { getSelectedPhotoIds } from './photos'
 
-export const getEsperViewState = ({ esper, nav }) =>
-  get(esper.view, [nav.selection ?? nav.photo], BLANK)
+export const getEsperViewState = createSelector(
+  ({ esper }) => esper.view,
+  getSelectedPhotoIds,
+  ({ nav }) => nav.selection,
+  (view, photos, selection) =>
+    view[selection ?? photos.at(-1)] || BLANK
+)
+

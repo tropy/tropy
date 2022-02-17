@@ -1,6 +1,6 @@
 import { createSelector as memo } from 'reselect'
 import { seq, compose, cat, map, keep } from 'transducers.js'
-import { getVisiblePhotos } from './photos'
+import { getSelectedPhoto, getVisiblePhotos } from './photos'
 import { pluck } from '../common/util'
 
 const NOTHING = []
@@ -20,11 +20,11 @@ export const getActiveSelectionData = memo(
 
 
 export const getPhotoSelections = memo(
-  ({ nav, photos }) => photos[nav.photo]?.selections,
+  getSelectedPhoto,
   getSelections,
-  (photoSelections, selections) =>
-    (photoSelections != null) ?
-      pluck(selections, photoSelections) :
+  (photo, selections) =>
+    (photo?.selections) ?
+      pluck(selections, photo.selections) :
       NOTHING
 
 )

@@ -16,10 +16,25 @@ const toPhoto = ([, photo]) => photo
 
 const getPhotos = ({ photos }) => photos
 
+export const getSelectedPhotoIds = memo(
+  ({ nav }) => nav.items,
+  ({ nav }) => nav.photos,
+  (items, photos) =>
+    items
+      .flatMap(id => photos[id])
+      .filter(p => p != null)
+)
+
+export const getSelectedPhotos = memo(
+  getPhotos,
+  getSelectedPhotoIds,
+  (photos, ids) => pluck(photos, ids)
+)
+
 export const getSelectedPhoto = memo(
   getPhotos,
-  ({ nav }) => nav.photo,
-  (photos, id) => (id != null) ? photos[id] : null
+  getSelectedPhotoIds,
+  (photos, ids) => photos[ids.at(-1)]
 )
 
 const expandItemPhotos = (items, photos) => {
