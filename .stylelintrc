@@ -4,12 +4,16 @@ extends:
   - stylelint-config-recommended-scss
 
 rules:
+  # stylelint-config-recommended
+  unit-no-unknown: [true, { ignoreFunctions: ["-webkit-image-set"] }]
+  function-no-unknown: null
+  selector-pseudo-element-no-unknown: [true, { ignorePseudoElements: ["-webkit"] }]
+  no-descending-specificity: null
+
+  # stylelint-config-standard
   at-rule-empty-line-before: [null, { except: first-nested }]
   declaration-empty-line-before: null
   block-closing-brace-newline-after: null
-  unit-no-unknown: [true, { ignoreFunctions: ["-webkit-image-set"] }]
-  selector-pseudo-element-no-unknown: [true, { ignorePseudoElements: ["-webkit"] }]
-  no-descending-specificity: null
   alpha-value-notation: "number"
   selector-no-vendor-prefix: null
   property-no-vendor-prefix: null
@@ -17,7 +21,10 @@ rules:
   max-line-length: null
   keyframes-name-pattern: null
   color-function-notation: "legacy"
+
+  # stylelint-config-recommended-scss
   scss/comment-no-empty: null
   scss/no-global-function-names: null
   scss/operator-no-newline-before: null
   scss/at-if-no-null: null
+
