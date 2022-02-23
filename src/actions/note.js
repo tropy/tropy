@@ -1,6 +1,5 @@
 import { NOTE } from '../constants'
 import { warn } from '../common/log'
-import { get } from '../common/util'
 
 function json(note) {
   return (note.state != null && typeof note.state.toJSON === 'function') ?
