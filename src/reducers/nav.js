@@ -109,13 +109,19 @@ export function nav(state = init, { type, payload, meta, error }) {
       }
 
     case ITEM.OPEN: {
-      let { id } = payload
+      let { id, photo, selection, note } = payload
+
+      let photos = (photo == null) ?
+        state.photos :
+        { ...state.photos, [id]: [photo] }
 
       return {
         ...state,
         mode: MODE.ITEM,
         items: select(state.items, [id], 'replace'),
-        selection: null
+        photos,
+        selection,
+        note
       }
     }
 
@@ -180,8 +186,7 @@ export function nav(state = init, { type, payload, meta, error }) {
 
       let { item, photo, selection, note } = payload
 
-      assert(state.items.includes(item),
-        "note's item must be in active selection range!")
+      // TODO allow multiple items to stay selected?
 
       let photos = state.photos[item]?.includes(photo) ?
         state.photos :
@@ -189,6 +194,7 @@ export function nav(state = init, { type, payload, meta, error }) {
 
       return {
         ...state,
+        items: select(state.items, [item], 'replace'),
         photos,
         selection,
         note

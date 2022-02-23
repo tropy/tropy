@@ -32,7 +32,9 @@ export function panel(state = INIT, { type, payload }) {
         state :
         expand(state, payload.photo)
     case ITEM.OPEN:
-      return expand(state, payload.photos[0])
+      return (payload.photo == null) ?
+        state :
+        expand(state, payload.photo)
     default:
       return state
   }

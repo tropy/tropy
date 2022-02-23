@@ -89,8 +89,8 @@ export class ItemPanelGroup extends React.PureComponent {
     if (note != null && !this.props.isItemOpen) {
       this.props.onItemOpen({
         id: this.props.items[0].id,
-        photos: [this.props.photo.id],
-        notes: [note.id],
+        photo: this.props.photo.id,
+        note: note.id,
         selection: note.selection
       })
     }

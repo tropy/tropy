@@ -62,16 +62,16 @@ export default {
       let { note, photo, item, selection } = payload
 
       if (item == null) {
-        const { photos, selections } = getState()
+        let { photos, selections } = getState()
 
         if (photo == null) {
-          photo = get(selections, [selection, 'photo'])
+          photo = selections[selection]?.photo
         }
 
-        item = get(photos, [photo, 'item'])
+        item = photos[photo]?.item
 
         if (item == null) {
-          return warn(`cannot select note #${note} without item`)
+          return warn(`cannot select note #${note} without item!`)
         }
       }
 

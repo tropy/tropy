@@ -112,7 +112,7 @@ export class PhotoIterator extends React.Component {
 
     this.props.onItemOpen({
       id: photo.item,
-      photos: [photo.id],
+      photo: photo.id,
       selection: photo.selection
     })
   }
