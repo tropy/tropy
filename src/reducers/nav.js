@@ -183,7 +183,7 @@ export function nav(state = init, { type, payload, meta, error }) {
       assert(state.items.includes(item),
         "note's item must be in active selection range!")
 
-      let photos = state.photos.includes(photo) ?
+      let photos = state.photos[item]?.includes(photo) ?
         state.photos :
         { ...state.photos, [item]: array(photo) }
 
