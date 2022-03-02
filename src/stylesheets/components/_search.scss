@@ -36,7 +36,7 @@
     top: (($input-height-base - $clear-button-size) / 2);
     width: $clear-button-size;
     height: $clear-button-size;
-    background: $icon-color;
+    background-color: $icon-color;
     padding: 0;
     border-radius: 50%;
     z-index: 4;
@@ -47,6 +47,10 @@
       top: 50%;
       transform: translate(-50%, -50%);
       color: $clear-search-color;
+    }
+
+    &:hover {
+      background-color: $icon-color;
     }
 
     &:active {

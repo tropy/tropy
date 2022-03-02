@@ -87,13 +87,18 @@
   padding: $btn-icon-padding;
   line-height: 1;
 
-  &:hover:not([disabled], .disabled) {
+  &:hover {
     background-color: $btn-icon-hover-bg;
   }
 
-  &:active:not([disabled], .disabled),
-  &.active:not([disabled], .disabled) {
+  &:active,
+  &.active {
     background-color: $btn-icon-active-bg;
+  }
+
+  &[disabled],
+  &.disabled {
+    background-color: $btn-icon-bg;
   }
 
   .icon,
