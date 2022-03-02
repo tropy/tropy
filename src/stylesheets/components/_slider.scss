@@ -26,6 +26,11 @@
   .btn {
     flex: 0 0 auto;
 
+    &:hover,
+    &.active {
+      background-color: $btn-icon-bg;
+    }
+
     &.active {
       opacity: $btn-disabled-opacity;
       pointer-events: none; // Simpler than icon color reset
