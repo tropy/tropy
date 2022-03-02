@@ -126,10 +126,17 @@
     opacity: 0.5;
     margin-left: $space-min;
 
-    .vibrancy:not(.is-blurred) & {
+    &:hover,
+    &:active {
       opacity: 1;
-      background-color: $activity-vibrancy-progress-cancel-bg;
-      clip-path: path("M0,0V12H12V0ZM9.536,8.828l-.708.708L6,6.707,3.172,9.536l-.708-.708L5.293,6,2.464,3.172l.708-.708L6,5.293,8.828,2.464l.708.708L6.707,6Z");
+    }
+
+    &:hover {
+      background-color: $progress-cancel-bg;
+    }
+
+    &:active {
+      background: $icon-active-color;
     }
 
     .is-blurred & {
@@ -142,6 +149,12 @@
       }
     }
 
+    .vibrancy:not(.is-blurred) & {
+      opacity: 1;
+      background-color: $activity-vibrancy-progress-cancel-bg;
+      clip-path: path("M0,0V12H12V0ZM9.536,8.828l-.708.708L6,6.707,3.172,9.536l-.708-.708L5.293,6,2.464,3.172l.708-.708L6,5.293,8.828,2.464l.708.708L6.707,6Z");
+    }
+
     .icon {
       position: absolute;
       left: 50%;
@@ -149,21 +162,12 @@
       transform: translate(-50%, -50%);
       color: $progress-cancel-color;
 
+      @include state(".btn:active") {
+        color: $progress-cancel-color;
+      }
+
       .vibrancy:not(.is-blurred) & {
         display: none;
-      }
-    }
-
-    &:hover,
-    &:active {
-      opacity: 1;
-    }
-
-    &:active {
-      background: $icon-active-color;
-
-      .icon {
-        color: $progress-cancel-color;
       }
     }
   }
