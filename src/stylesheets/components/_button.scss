@@ -19,6 +19,7 @@
   &[disabled],
   &.disabled {
     opacity: $disabled-opacity;
+    pointer-events: none;
   }
 
   .frameless & {
@@ -96,11 +97,6 @@
     background-color: $btn-icon-active-bg;
   }
 
-  &[disabled],
-  &.disabled {
-    background-color: $btn-icon-bg;
-  }
-
   .icon,
   svg {
     vertical-align: top;
@@ -109,10 +105,6 @@
   .icon {
     @include state(".btn-icon:active", ".btn-icon.active") {
       color: $icon-active-color;
-
-      @include state(".btn-icon[disabled]", ".btn-icon.disabled") {
-        color: $icon-color;
-      }
     }
   }
 }
