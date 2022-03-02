@@ -83,23 +83,29 @@
 }
 
 .btn-icon {
-  background: $btn-icon-bg;
+  background-color: $btn-icon-bg;
   padding: $btn-icon-padding;
   line-height: 1;
+
+  &:hover:not([disabled], .disabled) {
+    background-color: $btn-icon-hover-bg;
+  }
+
+  &:active:not([disabled], .disabled),
+  &.active:not([disabled], .disabled) {
+    background-color: $btn-icon-active-bg;
+  }
 
   .icon,
   svg {
     vertical-align: top;
   }
 
-  &:active {
-    .icon {
+  .icon {
+    @include state(".btn-icon:active", ".btn-icon.active") {
       color: $icon-active-color;
-    }
 
-    &[disabled],
-    &.disabled {
-      .icon {
+      @include state(".btn-icon[disabled]", ".btn-icon.disabled") {
         color: $icon-color;
       }
     }
