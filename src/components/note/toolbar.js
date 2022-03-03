@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Toolbar, ToolGroup } from '../toolbar'
-import { IconNote, IconPlus } from '../icons'
+import { IconNote, IconPlusSmall } from '../icons'
 import { Button } from '../button'
 import { bool, func, number } from 'prop-types'
 
@@ -25,7 +25,7 @@ export const NoteToolbar = ({
       {hasCreateButton &&
         <ToolGroup>
           <Button
-            icon={<IconPlus/>}
+            icon={<IconPlusSmall/>}
             isDisabled={isDisabled}
             title="panel.note.create"
             onClick={onCreate}/>

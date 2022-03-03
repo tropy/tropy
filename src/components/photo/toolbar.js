@@ -7,7 +7,7 @@ import { number, bool, func } from 'prop-types'
 import { SASS } from '../../constants'
 
 import {
-  IconPhoto, IconPlus, IconListSmall, IconGridSmall
+  IconPhoto, IconPlusSmall, IconListSmall, IconGridSmall
 } from '../icons'
 
 
@@ -26,7 +26,8 @@ export const PhotoToolbar = (props) => (
         props.hasCreateButton &&
           <ToolGroup>
             <Button
-              icon={<IconPlus/>}
+              icon={<IconPlusSmall/>}
+              size="sm"
               isDisabled={props.isDisabled}
               title="panel.photo.create"
               onClick={props.onCreate}/>

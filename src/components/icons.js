@@ -90,6 +90,33 @@ export const IconWarningSm = i('WarningSm', (
 ), true)
 
 
+/* 14 x 14 */
+
+export const IconGridSmall = i('GridSmall', (
+  <svg width="14" height="14">
+    <g className="line" fill="currentColor">
+      <path d="M5,2V5H2V2H5M5,1H2A1,1,0,0,0,1,2V5A1,1,0,0,0,2,6H5A1,1,0,0,0,6,5V2A1,1,0,0,0,5,1Zm7,1V5H9V2h3m0-1H9A1,1,0,0,0,8,2V5A1,1,0,0,0,9,6h3a1,1,0,0,0,1-1V2a1,1,0,0,0-1-1Zm0,8v3H9V9h3m0-1H9A1,1,0,0,0,8,9v3a1,1,0,0,0,1,1h3a1,1,0,0,0,1-1V9a1,1,0,0,0-1-1ZM5,9v3H2V9H5M5,8H2A1,1,0,0,0,1,9v3a1,1,0,0,0,1,1H5a1,1,0,0,0,1-1V9A1,1,0,0,0,5,8Z"/>
+    </g>
+  </svg>
+))
+
+export const IconListSmall = i('ListSmall', (
+  <svg width="14" height="14">
+    <g className="line" fill="currentColor">
+      <path d="M13,3H1V2H13Zm0,2H1V6H13Zm0,3H1V9H13Zm0,3H1v1H13Z"/>
+    </g>
+  </svg>
+))
+
+export const IconPlusSmall = i('PlusSmall', (
+  <svg width="14" height="14">
+    <g className="line" fill="currentColor">
+      <polygon points="14 6 8 6 8 0 7 0 7 6 1 6 1 7 7 7 7 13 8 13 8 7 14 7 14 6"/>
+    </g>
+  </svg>
+))
+
+
 /* 16 x 16 */
 
 export const IconAlignCenter = i('AlignCenter', (
@@ -266,17 +293,6 @@ export const IconGrid = i('Grid', (
   </svg>
 ))
 
-export const IconGridSmall = i('GridSmall', (
-  <svg width="16" height="16">
-    <g className="line" fill="currentColor">
-      <path d="M6,3v3H3V3H6 M6,2H3C2.448,2,2,2.448,2,3v3c0,0.552,0.448,1,1,1h3c0.552,0,1-0.448,1-1V3C7,2.448,6.552,2,6,2L6,2z"/>
-      <path d="M13,3v3h-3V3H13 M13,2h-3C9.448,2,9,2.448,9,3v3c0,0.552,0.448,1,1,1h3c0.552,0,1-0.448,1-1V3C14,2.448,13.552,2,13,2L13,2z"/>
-      <path d="M13,10v3h-3v-3H13 M13,9h-3c-0.552,0-1,0.448-1,1v3c0,0.552,0.448,1,1,1h3c0.552,0,1-0.448,1-1v-3C14,9.448,13.552,9,13,9L13,9z"/>
-      <path d="M6,10v3H3v-3H6 M6,9H3c-0.552,0-1,0.448-1,1v3c0,0.552,0.448,1,1,1h3c0.552,0,1-0.448,1-1v-3C7,9.448,6.552,9,6,9L6,9z"/>
-    </g>
-  </svg>
-))
-
 export const IconGrip = i('Grip', (
   <svg width="16" height="18">
     <g className="line" fill="currentColor">
@@ -357,17 +373,6 @@ export const IconList = i('List', (
       <rect x="1" y="6" width="14" height="1"/>
       <rect x="1" y="9" width="14" height="1"/>
       <rect x="1" y="12" width="14" height="1"/>
-    </g>
-  </svg>
-))
-
-export const IconListSmall = i('ListSmall', (
-  <svg width="16" height="16">
-    <g className="line" fill="currentColor">
-      <rect x="2" y="3" width="12" height="1"/>
-      <rect x="2" y="6" width="12" height="1"/>
-      <rect x="2" y="9" width="12" height="1"/>
-      <rect x="2" y="12" width="12" height="1"/>
     </g>
   </svg>
 ))

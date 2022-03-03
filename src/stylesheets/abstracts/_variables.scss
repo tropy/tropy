@@ -131,10 +131,12 @@ $grid-gutter-width: $space-xs;
 
 $input-btn-transition: 0.15s ease;
 
+
 // Buttons
 // --------------------------------------------------
 
-$btn-icon-padding: $space-min + $shim; // 26px size
+$btn-icon-padding:     $space-min + $shim; // 26px size
+$btn-icon-padding-sm:  $space-min;
 $btn-disabled-opacity: 0.5;
 
 
@@ -245,13 +247,13 @@ $resizable-threshold: $space-xs;
 // Slider
 // --------------------------------------------------
 
-$slider-width:            154px;
+$slider-width:            149px; // Minimal width for all steps
 $slider-height:           $line-height-large;
 $slider-track-height:     $space-min;
 $slider-handle-size:      $space-sm;
 $slider-value-transition: 0.3s ease;
 
-$slider-width-sm:       104px;
+$slider-width-sm:       93px; // Minimal width for all steps
 $slider-handle-size-sm: 10px;
 
 

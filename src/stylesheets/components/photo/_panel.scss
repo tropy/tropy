@@ -3,6 +3,10 @@
 // --------------------------------------------------
 
 .photo-panel {
+  .toolbar {
+    padding-right: $default-padding-horizontal - 3px; // Align icons with icon button
+  }
+
   .slider {
     .slider-handle {
       @include state(".photo-panel.nested-tab-focus:not(.has-active)") {

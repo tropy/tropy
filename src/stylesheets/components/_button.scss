@@ -98,4 +98,8 @@
       color: $icon-active-color;
     }
   }
+
+  &.btn-sm {
+    padding: $btn-icon-padding-sm;
+  }
 }
