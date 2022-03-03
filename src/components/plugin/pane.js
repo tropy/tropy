@@ -96,25 +96,22 @@ export class PluginsPane extends React.Component {
             autoclose
             className="form-horizontal"
             tabIndex={0}>
-            {Object.values(this.context.plugins.spec).map(
-               (spec) => {
-                 return (
-                   <PluginAccordion
-                     id={spec.name}
-                     instances={this.getPluginInstances(spec.name)}
-                     spec={spec}
-                     properties={this.props.properties}
-                     templates={this.props.templates}
-                     onChange={this.handleChange}
-                     onDisable={this.handleDisable}
-                     onEnable={this.handleEnable}
-                     onInsert={this.handleInsert}
-                     onRemove={this.handleRemove}
-                     onUninstall={this.handleUninstall}
-                     onOpenLink={this.props.onOpenLink}
-                     key={spec.name}/>)
-               })
-            }
+            {Object.values(this.context.plugins.spec).map(spec => (
+              <PluginAccordion
+                id={spec.name}
+                instances={this.getPluginInstances(spec.name)}
+                spec={spec}
+                properties={this.props.properties}
+                templates={this.props.templates}
+                onChange={this.handleChange}
+                onDisable={this.handleDisable}
+                onEnable={this.handleEnable}
+                onInsert={this.handleInsert}
+                onRemove={this.handleRemove}
+                onUninstall={this.handleUninstall}
+                onOpenLink={this.props.onOpenLink}
+                key={spec.name}/>
+            ))}
           </AccordionGroup>
         </div>
         <footer className="plugins-footer">
