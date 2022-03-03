@@ -29,6 +29,7 @@
   #{--shade-1}:             $shade-1;
   #{--shade-1-darken-4}:    darken($shade-1, 4%); // 8% Fieldset bg
   #{--shade-1-darken-8}:    darken($shade-1, 8%); // 12% Vocab property bg
+  #{--shade-1-darken-9}:    darken($shade-1, 9%);
   #{--shade-1-darken-14}:   darken($shade-1, 14%); // 18% Vocab property input border
   #{--shade-1-darken-12}:   darken($shade-1, 12%);
   #{--shade-1-darken-16}:   darken($shade-1, 16%);
@@ -61,6 +62,7 @@
   #{--shade-9}:             $shade-9;
   #{--shade-10}:            $shade-10;
   #{--shade-10-4}:          rgba($shade-10, 0.04);
+  #{--shade-10-5}:          rgba($shade-10, 0.05);
   #{--shade-10-7}:          rgba($shade-10, 0.07);
   #{--shade-10-8}:          rgba($shade-10, 0.08);
   #{--shade-10-10}:         rgba($shade-10, 0.1);

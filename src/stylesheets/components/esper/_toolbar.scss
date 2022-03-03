@@ -39,11 +39,17 @@
 
     .tool-group {
       > .btn-icon {
-        &.active {
-          background: $esper-btn-icon-active-bg;
+        .frameless & {
+          &:hover {
+            background-color: $esper-btn-icon-hover-bg;
+          }
 
-          .icon {
-            color: $esper-btn-icon-active-color;
+          &.active {
+            background-color: $esper-btn-icon-active-bg;
+
+            .icon {
+              color: $esper-btn-icon-active-color;
+            }
           }
         }
       }
@@ -104,6 +110,10 @@
 
       .tool-group {
         > .btn-icon {
+          &:hover {
+            background-color: $esper-toolbar-overlay-btn-hover-bg;
+          }
+
           &.active {
             background: $esper-toolbar-overlay-btn-active-bg;
 
