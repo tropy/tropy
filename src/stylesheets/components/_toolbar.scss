@@ -86,6 +86,23 @@
     }
   }
 
+  .btn-icon {
+    &:hover {
+      background-color: $btn-icon-hover-bg;
+    }
+
+    &:active,
+    &.active {
+      background-color: $btn-icon-active-bg;
+    }
+
+    .icon {
+      @include state(".btn-icon:active", ".btn-icon.active") {
+        color: $btn-icon-active-color;
+      }
+    }
+  }
+
   nav {
     width: 100%;
   }

@@ -177,7 +177,7 @@ $accordion-active-bg:    var(--shade-1-darken-8);
 // Icons
 $icon-style:        "line";
 $icon-color:        var(--shade-6);
-$icon-active-color: var(--shade-7);
+$icon-active-color: var(--shade-9);
 
 $icon-spin-color: var(--brand-primary);
 
@@ -322,6 +322,7 @@ $btn-primary-active-bg:         var(--brand-primary-darken-4);
 $btn-icon-bg:                   var(--transparent);
 $btn-icon-hover-bg:             var(--shade-10-4);
 $btn-icon-active-bg:            var(--shade-10-10);
+$btn-icon-active-color:         var(--shade-7);
 
 // Slider
 $slider-track-bg:                       var(--shade-4);

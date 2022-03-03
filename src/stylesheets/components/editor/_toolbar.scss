@@ -28,6 +28,29 @@
     }
 
     .btn-icon {
+      &:hover {
+        background: $editor-btn-hover-bg;
+
+        &[disabled],
+        &.disabled {
+          background: $btn-icon-bg;
+        }
+      }
+
+      &:active {
+        .icon {
+          color: $icon-color;
+        }
+      }
+
+      &.active {
+        background: $editor-btn-active-bg;
+
+        .icon {
+          color: $editor-btn-active-color;
+        }
+      }
+
       & + .btn-icon {
         margin-left: $space-min / 2;
       }

@@ -88,15 +88,6 @@
   padding: $btn-icon-padding;
   line-height: 1;
 
-  &:hover {
-    background-color: $btn-icon-hover-bg;
-  }
-
-  &:active,
-  &.active {
-    background-color: $btn-icon-active-bg;
-  }
-
   .icon,
   svg {
     vertical-align: top;
