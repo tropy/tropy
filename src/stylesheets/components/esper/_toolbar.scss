@@ -22,12 +22,6 @@
       }
     }
 
-    .btn-icon {
-      & + .btn-icon {
-        margin-left: $space-min / 2;
-      }
-    }
-
     .toolbar-left,
     .toolbar-right {
       .is-blurred & {

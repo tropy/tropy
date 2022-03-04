@@ -26,12 +26,6 @@
         margin-left: $space-lg;
       }
     }
-
-    .btn-icon {
-      & + .btn-icon {
-        margin-left: $space-min / 2;
-      }
-    }
   }
 
   .toolbar-context {
