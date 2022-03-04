@@ -70,6 +70,38 @@ export const IconCrescentCircle = i('CrescentCircle', (
 
 /* 12 x 12 */
 
+export const IconArrowTurn = i('ArrowTurn', (
+  <svg width="12" height="12">
+    <g className="line" fill="currentColor">
+      <path d="M6.5,10A.5.5,0,0,1,6,9.5V2.707L8.293,5,9,4.293,5.854,1.146a.5.5,0,0,0-.708,0L2,4.293,2.707,5,5,2.707V9.5A1.5,1.5,0,0,0,6.5,11H10V10Z"/>
+    </g>
+  </svg>
+))
+
+export const IconFilterSmall = i('FilterSmall', (
+  <svg width="12" height="12">
+    <g className="line" fill="currentColor">
+      <path d="M11,1v.586L7.293,5.293,7,5.586v4L5.586,11H5V5.586l-.293-.293L1,1.586V1H11m1-1H0V2L4,6v6H6l2-2V6l4-4V0Z"/>
+    </g>
+  </svg>
+))
+
+export const IconGridSmall = i('GridSmall', (
+  <svg width="12" height="12">
+    <g className="line" fill="currentColor">
+      <path d="M4,1V4H1V1H4M4,0H1A1,1,0,0,0,0,1V4A1,1,0,0,0,1,5H4A1,1,0,0,0,5,4V1A1,1,0,0,0,4,0Zm7,1V4H8V1h3m0-1H8A1,1,0,0,0,7,1V4A1,1,0,0,0,8,5h3a1,1,0,0,0,1-1V1a1,1,0,0,0-1-1Zm0,8v3H8V8h3m0-1H8A1,1,0,0,0,7,8v3a1,1,0,0,0,1,1h3a1,1,0,0,0,1-1V8a1,1,0,0,0-1-1ZM4,8v3H1V8H4M4,7H1A1,1,0,0,0,0,8v3a1,1,0,0,0,1,1H4a1,1,0,0,0,1-1V8A1,1,0,0,0,4,7Z"/>
+    </g>
+  </svg>
+))
+
+export const IconListSmall = i('ListSmall', (
+  <svg width="12" height="12">
+    <g className="line" fill="currentColor">
+      <path d="M12,2H0V1H12Zm0,2H0V5H12Zm0,3H0V8H12Zm0,3H0v1H12Z"/>
+    </g>
+  </svg>
+))
+
 export const IconLock = i('Lock', (
   <svg width="12" height="12">
     <g className="line" fill="currentColor">
@@ -81,6 +113,14 @@ export const IconLock = i('Lock', (
   </svg>
 ), true)
 
+export const IconPlusSmall = i('PlusSmall', (
+  <svg width="12" height="12">
+    <g className="line" fill="currentColor">
+      <polygon points="12 5 7 5 7 0 6 0 6 5 1 5 1 6 6 6 6 11 7 11 7 6 12 6 12 5"/>
+    </g>
+  </svg>
+))
+
 export const IconWarningSm = i('WarningSm', (
   <svg width="12" height="12">
     <g className="line" fill="currentColor">
@@ -88,33 +128,6 @@ export const IconWarningSm = i('WarningSm', (
     </g>
   </svg>
 ), true)
-
-
-/* 14 x 14 */
-
-export const IconGridSmall = i('GridSmall', (
-  <svg width="14" height="14">
-    <g className="line" fill="currentColor">
-      <path d="M5,2V5H2V2H5M5,1H2A1,1,0,0,0,1,2V5A1,1,0,0,0,2,6H5A1,1,0,0,0,6,5V2A1,1,0,0,0,5,1Zm7,1V5H9V2h3m0-1H9A1,1,0,0,0,8,2V5A1,1,0,0,0,9,6h3a1,1,0,0,0,1-1V2a1,1,0,0,0-1-1Zm0,8v3H9V9h3m0-1H9A1,1,0,0,0,8,9v3a1,1,0,0,0,1,1h3a1,1,0,0,0,1-1V9a1,1,0,0,0-1-1ZM5,9v3H2V9H5M5,8H2A1,1,0,0,0,1,9v3a1,1,0,0,0,1,1H5a1,1,0,0,0,1-1V9A1,1,0,0,0,5,8Z"/>
-    </g>
-  </svg>
-))
-
-export const IconListSmall = i('ListSmall', (
-  <svg width="14" height="14">
-    <g className="line" fill="currentColor">
-      <path d="M13,3H1V2H13Zm0,2H1V6H13Zm0,3H1V9H13Zm0,3H1v1H13Z"/>
-    </g>
-  </svg>
-))
-
-export const IconPlusSmall = i('PlusSmall', (
-  <svg width="14" height="14">
-    <g className="line" fill="currentColor">
-      <polygon points="14 6 8 6 8 0 7 0 7 6 1 6 1 7 7 7 7 13 8 13 8 7 14 7 14 6"/>
-    </g>
-  </svg>
-))
 
 
 /* 16 x 16 */

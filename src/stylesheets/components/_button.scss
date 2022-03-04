@@ -84,22 +84,13 @@
 }
 
 .btn-icon {
+  display: inline-flex;
   background-color: $btn-icon-bg;
   padding: $btn-icon-padding;
-  line-height: 1;
-
-  .icon,
-  svg {
-    vertical-align: top;
-  }
 
   .icon {
     @include state(".btn-icon:active", ".btn-icon.active") {
       color: $icon-active-color;
     }
-  }
-
-  &.btn-sm {
-    padding: $btn-icon-padding-sm;
   }
 }

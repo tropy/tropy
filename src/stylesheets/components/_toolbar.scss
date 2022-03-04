@@ -29,10 +29,6 @@
     height: $panel-header-height;
   }
 
-  .note-panel & {
-    padding-right: $default-padding-horizontal - $btn-icon-padding-sm; // Align icons with icon buttons
-  }
-
   .toolbar-context {
     position: absolute;
     left: $default-padding-horizontal;
