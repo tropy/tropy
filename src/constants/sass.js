@@ -123,7 +123,7 @@ const SCROLLBAR = {
 const SIDEBAR = {
   MIN_WIDTH: 150,
   MAX_WIDTH: 500,
-  DEFAULT_WIDTH: 250
+  DEFAULT_WIDTH: 240
 }
 
 const TAG = {
