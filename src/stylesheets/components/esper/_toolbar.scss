@@ -104,6 +104,7 @@
             background-color: $esper-toolbar-overlay-btn-hover-bg;
           }
 
+          &:active,
           &.active {
             background: $esper-toolbar-overlay-btn-active-bg;
 
