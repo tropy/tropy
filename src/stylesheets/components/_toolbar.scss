@@ -70,6 +70,7 @@
   }
 
   .tool-group {
+    display: flex;
     white-space: nowrap;
 
     & + .tool-group {
