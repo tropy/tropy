@@ -125,6 +125,24 @@ export class Scroll extends React.Component {
     return item
   }
 
+  range({ from, to } = {}) {
+    // TODO handle expansions!
+    let { items } = this.props
+
+    if (from == null) {
+      let [cursor] = this.cursor
+      from = Math.max(0, cursor)
+    } else {
+      from = indexOf(items, from)
+    }
+
+    to = (to == null) ? items.length - 1 : indexOf(items, to)
+
+    return (from > to) ?
+      items.slice(to, from + 1).reverse() :
+      items.slice(from, to + 1)
+  }
+
   pageUp() {
     let { items, itemHeight } = this.props
     let { columns } = this.layout

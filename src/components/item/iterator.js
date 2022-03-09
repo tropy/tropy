@@ -208,17 +208,6 @@ export class ItemIterator extends React.Component {
     })
   }
 
-  range({ from = this.head(), to } = {}) {
-    let { items } = this.props
-
-    from = (from == null) ? 0 : indexOf(items, from)
-    to = (to == null) ? items.length - 1 : indexOf(items, to)
-
-    return (from > to) ?
-      items.slice(to, from + 1).reverse() :
-      items.slice(from, to + 1)
-  }
-
   select = (item, { isMeta, isRange, throttle } = {}) => {
     if (item == null || !this.props.items.length) return
     let mod, items
@@ -226,7 +215,7 @@ export class ItemIterator extends React.Component {
     switch (true) {
       case isRange:
         mod = 'merge'
-        items = this.range({ to: item.id }).map(it => it.id)
+        items = this.container.current.range({ to: item.id }).map(it => it.id)
         if (this.isRangeSelected(items)) {
           mod = 'subtract'
           if (items[0] !== item.id) items.unshift(items.pop())
