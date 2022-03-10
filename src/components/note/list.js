@@ -17,7 +17,7 @@ export class NoteList extends React.Component {
     return id === this.props.selection?.id
   }
 
-  handleSelect = (note, event) => {
+  handleSelect = ([note], { throttle } = {}) => {
     if (note == null || this.isSelected(note))
       return
 
@@ -25,7 +25,7 @@ export class NoteList extends React.Component {
       note: note.id,
       photo: note.photo,
       selection: note.selection
-    }, { throttle: event?.repeat })
+    }, { throttle })
   }
 
   handleDelete(note) {
@@ -52,25 +52,12 @@ export class NoteList extends React.Component {
     event.stopPropagation()
   }
 
-  getIterableProps(note) {
-    const isSelected = this.isSelected(note)
-
-    return {
-      note: isSelected ? this.props.selection : note,
-      isDisabled: this.props.isDisabled,
-      isSelected,
-      onContextMenu: this.props.onContextMenu,
-      onOpen: this.props.onOpen,
-      onSelect: this.handleSelect
-    }
-  }
-
   render() {
     return (
       <div className="note-list">
         <Scroll
           ref={this.scroll}
-          cursor={this.props.selection?.id}
+          selectedItems={this.props.selection?.id}
           items={this.props.notes}
           itemHeight={SASS.NOTE.ROW_HEIGHT}
           tabIndex={this.tabIndex}
@@ -78,10 +65,15 @@ export class NoteList extends React.Component {
           onKeyDown={this.handleKeyDown}
           onSelect={this.handleSelect}
           onTabFocus={this.props.onTabFocus}>
-          {(note) =>
+          {(note, _, { isSelected, onSelect }) =>
             <NoteListItem
-              {...this.getIterableProps(note)}
-              key={note.id}/>
+              key={note.id}
+              note={isSelected ? this.props.selection : note}
+              isDisabled={this.props.isDisabled}
+              isSelected={isSelected}
+              onContextMenu={this.props.onContextMenu}
+              onOpen={this.props.onOpen}
+              onSelect={onSelect}/>
           }
         </Scroll>
       </div>

@@ -83,5 +83,5 @@ export function match(map, event) {
 }
 
 export function isMeta(event) {
-  return (!darwin && event.ctrlKey) || (darwin && event.metaKey)
+  return (!darwin && event?.ctrlKey) || (darwin && event?.metaKey)
 }

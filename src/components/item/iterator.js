@@ -43,10 +43,6 @@ export class ItemIterator extends React.Component {
     return this.container.current.current
   }
 
-  head() {
-    return this.props.selection[this.props.selection.length - 1]
-  }
-
   // Note: this can be improved, but we currently check only
   // for the first item before and after the current item. This
   // is because the worst case for weird/sparse selections is
@@ -74,16 +70,18 @@ export class ItemIterator extends React.Component {
     return this.props.selection.includes(id)
   }
 
-  isRangeSelected(items) {
-    return items.every(id => this.props.selection.includes(id))
-  }
-
   get hasMultiSelection() {
     return this.props.selection.length > 1
   }
 
   clearSelection() {
     this.props.onSelect({ items: [] })
+  }
+
+  handleSelect = (items, { mod = 'replace', throttle } = {}) => {
+    this.props.onSelect({
+      items: items.map(item => item.id)
+    }, mod, { throttle })
   }
 
   handleClickOutside = () => {
@@ -193,47 +191,11 @@ export class ItemIterator extends React.Component {
   }
 
   handleNextItem = (event) => {
-    this.handleSelectItem(this.container.current?.next(), event)
+    this.container.current.select(this.container.current?.next(), event)
   }
 
   handlePrevItem = (event) => {
-    this.handleSelectItem(this.container.current?.prev(), event)
-  }
-
-  handleSelectItem = (item, event) => {
-    this.select(item, {
-      isMeta: event && meta(event),
-      isRange: event?.shiftKey,
-      throttle: event?.repeat
-    })
-  }
-
-  select = (item, { isMeta, isRange, throttle } = {}) => {
-    if (item == null || !this.props.items.length) return
-    let mod, items
-
-    switch (true) {
-      case isRange:
-        mod = 'merge'
-        items = this.container.current.range({ to: item.id }).map(it => it.id)
-        if (this.isRangeSelected(items)) {
-          mod = 'subtract'
-          if (items[0] !== item.id) items.unshift(items.pop())
-        }
-        break
-
-      case isMeta:
-        mod = this.isSelected(item) ? 'remove' : 'append'
-        items = [item.id]
-        break
-
-      default:
-        if (!this.hasMultiSelection && this.isSelected(item)) return
-        mod = 'replace'
-        items = [item.id]
-    }
-
-    this.props.onSelect({ items }, mod, { throttle })
+    this.container.current.select(this.container.current?.prev(), event)
   }
 
   preview({ id, photos }) {
@@ -255,14 +217,11 @@ export class ItemIterator extends React.Component {
       this.props.connectDropTarget(element)
   }
 
-  getIterableProps(item, index) {
+  getIterableProps() {
     return {
-      item,
-      index,
       cache: this.props.cache,
       photos: this.props.photos,
       tags: this.props.tags,
-      isSelected: this.isSelected(item),
       isReadOnly: this.props.isReadOnly,
       isVertical: this.isVertical,
       getSelection: this.getSelection,
@@ -270,8 +229,7 @@ export class ItemIterator extends React.Component {
       onDropItems: this.props.onItemMerge,
       onDropPhotos: this.props.onPhotoMove,
       onItemOpen: this.props.onItemOpen,
-      onPhotoError: this.props.onPhotoError,
-      onSelect: this.select
+      onPhotoError: this.props.onPhotoError
     }
   }
 

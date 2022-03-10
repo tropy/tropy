@@ -8,11 +8,13 @@ import { SASS } from '../../constants'
 
 export class ItemGrid extends ItemIterator {
 
-  renderItemTile = (item, index) => (
+  renderItemTile = (item, index, props) => (
     <ItemTile
-      {...this.getIterableProps(item, index)}
+      {...this.getIterableProps()}
+      {...props}
       key={item.id}
       item={item}
+      index={index}
       isLast={index >= this.props.items.length - 1}/>
   )
 
@@ -29,14 +31,14 @@ export class ItemGrid extends ItemIterator {
         <Scroll
           ref={this.container}
           autoselect
-          cursor={this.head()}
           items={this.props.items}
+          selectedItems={this.props.selection}
           itemHeight={tileSize}
           itemWidth={tileSize}
           tabIndex={this.tabIndex}
           onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
-          onSelect={this.handleSelectItem}>
+          onSelect={this.handleSelect}>
           {this.renderItemTile}
         </Scroll>
       </div>

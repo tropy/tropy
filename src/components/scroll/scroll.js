@@ -1,5 +1,4 @@
 import React from 'react'
-import { array, bool, func, number, object, oneOf, string } from 'prop-types'
 import { Range } from './range'
 import { Runway } from './runway'
 import { ScrollContainer } from './container'
@@ -7,7 +6,20 @@ import { getExpandedRows, getExpandedRowsAbove } from './expansion'
 import { Viewport } from './viewport'
 import { restrict } from '../../common/util'
 import { indexOf, sanitize } from '../../common/collection'
+import { isMeta } from '../../keymap'
 import memoize from 'memoize-one'
+
+import {
+  array,
+  arrayOf,
+  bool,
+  func,
+  number,
+  object,
+  oneOf,
+  oneOfType,
+  string
+} from 'prop-types'
 
 
 export class Scroll extends React.Component {
@@ -45,7 +57,20 @@ export class Scroll extends React.Component {
   }
 
   get cursor() {
-    let { cursor, items, expansionCursor, expandedItems } = this.props
+    let {
+      cursor,
+      items,
+      expansionCursor,
+      expandedItems,
+      selectedItems
+    } = this.props
+
+    // Use most recently selected item as cursor if not given.
+    if (cursor == null) {
+      cursor = Array.isArray(selectedItems) ?
+        selectedItems.at(-1) :
+        selectedItems
+    }
 
     let index = indexOf(items, cursor)
     let expRowPosition = 0
@@ -174,11 +199,44 @@ export class Scroll extends React.Component {
     return items[row * columns]
   }
 
-  select(item, event) {
-    if (item != null)
-      this.scrollIntoView(item)
+  isSelected = (item) => {
+    let { selectedItems } = this.props
 
-    this.props.onSelect?.(item, event)
+    if (selectedItems == null)
+      return false
+
+    if (Array.isArray(selectedItems))
+      return selectedItems.includes(item.id)
+
+    return selectedItems === item.id
+  }
+
+  select = (item, event) => {
+    if (item == null)
+      return // TODO do we need to handle empty select?
+
+    this.scrollIntoView(item)
+
+    let items, mod
+
+    if (event?.shiftKey) {
+      items = this.range({ to: item.id })
+      mod = items.every(this.isSelected) ? 'subtract' : 'merge'
+
+    } else {
+      items = [item]
+
+      if (isMeta(event))
+        mod = this.isSelected(item) ? 'remove' : 'append'
+      else
+        mod = 'replace'
+    }
+
+    this.props.onSelect?.(items, {
+      mod,
+      throttle: event?.repeat
+    })
+
     return item
   }
 
@@ -484,6 +542,8 @@ export class Scroll extends React.Component {
               from={from}
               to={to}
               expandedItems={this.props.expandedItems}
+              isSelected={this.isSelected}
+              onSelect={this.select}
               renderExpansionRow={this.props.renderExpansionRow}
               renderItem={this.props.children}/>
           </Viewport>
@@ -509,6 +569,7 @@ export class Scroll extends React.Component {
     overscan: number.isRequired,
     renderExpansionRow: func,
     restrict: oneOf(['bounds', 'wrap', 'none']).isRequired,
+    selectedItems: oneOfType([number, arrayOf(number)]).isRequired,
     sync: object,
     tabIndex: number,
     tag: string
@@ -519,6 +580,7 @@ export class Scroll extends React.Component {
     expansionPadding: 0,
     items: [],
     overscan: 1.25,
-    restrict: 'bounds'
+    restrict: 'bounds',
+    selectedItems: []
   }
 }

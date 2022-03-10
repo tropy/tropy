@@ -1,7 +1,6 @@
 import React from 'react'
 import { compose, map, filter, into } from 'transducers.js'
 import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd'
-import { isMeta } from '../../keymap'
 import { pure } from '../util'
 import { bool, func, number, object, shape, arrayOf } from 'prop-types'
 
@@ -47,10 +46,7 @@ export class ItemIterable extends React.PureComponent {
 
   handleSelect = (event) => {
     if (!(event.button > 2)) {
-      this.props.onSelect(this.props.item, {
-        isMeta: isMeta(event),
-        isRange: event.shiftKey
-      })
+      this.props.onSelect(this.props.item, event)
     }
   }
 

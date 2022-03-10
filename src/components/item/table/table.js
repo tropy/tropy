@@ -260,22 +260,24 @@ export class ItemTable extends ItemIterator {
           sync={this.headContainer}
           tag="div"
           autoselect
-          cursor={this.head()}
+          selectedItems={this.props.selection}
           items={this.props.items}
           itemHeight={ROW.HEIGHT}
           tabIndex={this.tabIndex}
           onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
-          onSelect={this.handleSelectItem}>
+          onSelect={this.handleSelect}>
           {this.renderTableRow}
         </Scroll>
       </div>
     )
   }
 
-  renderTableRow = (item, index, { isScrolling }) => {
+  renderTableRow = (item, index, { isScrolling, ...props }) => {
     return (
-      <TableRow {...this.getIterableProps(item, index)}
+      <TableRow
+        {...this.getIterableProps(item, index)}
+        {...props}
         key={item.id}
         columns={this.state.columns}
         data={this.props.data[item.id]}
@@ -285,6 +287,7 @@ export class ItemTable extends ItemIterator {
         hasPositionColumn={this.hasPositionColumn()}
         isReadOnly={this.props.isReadOnly || isScrolling}
         item={item}
+        index={index}
         position={this.getPosition(index)}
         template={this.props.templates[item.template]}
         onCancel={this.handleEditCancel}
