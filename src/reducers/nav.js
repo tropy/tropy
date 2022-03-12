@@ -163,7 +163,7 @@ export function nav(state = init, { type, payload, meta, error }) {
         }
 
       // TODO deal with multiple photos (associate to respective items!)
-      let { item, photo, selection, note } = payload
+      let { item, photos, selection, note } = payload
 
       assert(state.items.includes(item),
         "photo's item must be in active selection range!")
@@ -172,7 +172,7 @@ export function nav(state = init, { type, payload, meta, error }) {
         ...state,
         photos: {
           ...state.photos,
-          [item]: array(photo)
+          [item]: select(state.photos[item] || [], photos, meta.mod)
         },
         selection,
         note
