@@ -42,7 +42,7 @@ export class Import extends ImportCommand {
 
     yield* this.configure()
 
-    yield this.progress({ total: 1 })
+    yield this.progress({ progress: 0 })
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
     if (meta.plugin) {

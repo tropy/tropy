@@ -16,7 +16,7 @@ export const Activity = ({
   canCancel,
   onCancel
 }) => {
-  let hasProgressBar = (progress !== null && !isNaN(progress))
+  let hasProgressBar = (progress > 0)
   let hasCancelButton = canCancel && isFunction(onCancel)
 
   return (
