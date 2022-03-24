@@ -15,8 +15,6 @@ export class Popup extends React.Component {
   }
 
   componentDidMount() {
-    on(this.dom, 'mousedown', this.handleClick)
-    on(this.dom, 'contextmenu', this.handleContextMenu)
     on(window, 'resize', this.handleResize)
     this.clip()
     append(this.dom, this.root)
@@ -26,8 +24,6 @@ export class Popup extends React.Component {
 
   componentWillUnmount() {
     remove(this.dom)
-    off(this.dom, 'mousedown', this.handleClick)
-    off(this.dom, 'contextmenu', this.handleContextMenu)
     off(window, 'resize', this.handleResize)
     this.clip(null)
     toggle(document.body, 'popup-open', false)
@@ -95,7 +91,11 @@ export class Popup extends React.Component {
 
   render() {
     return createPortal((
-      <div className={cx(this.classes)} style={this.props.style}>
+      <div
+        className={cx(this.classes)}
+        style={this.props.style}
+        onContextMenu={this.handleContextMenu}
+        onMouseDown={this.handleClick}>
         {this.props.children}
       </div>
     ), this.dom)
