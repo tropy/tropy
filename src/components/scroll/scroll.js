@@ -221,7 +221,14 @@ export class Scroll extends React.Component {
 
     if (event?.shiftKey) {
       items = this.range({ to: item.id })
-      mod = items.every(this.isSelected) ? 'subtract' : 'merge'
+      if (items.every(this.isSelected)) {
+        mod = 'subtract'
+        if (items[0].id !== item.id)
+          items.unshift(items.pop())
+
+      } else {
+        mod = 'merge'
+      }
 
     } else {
       items = [item]
