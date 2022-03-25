@@ -212,37 +212,39 @@ export class Scroll extends React.Component {
   }
 
   select = (item, event) => {
-    if (item == null)
-      return // TODO do we need to handle empty select?
-
-    this.scrollIntoView(item)
-
-    let items, mod
-
-    if (event?.shiftKey) {
-      items = this.range({ to: item.id })
-      if (items.every(this.isSelected)) {
-        mod = 'subtract'
-        if (items[0].id !== item.id)
-          items.unshift(items.pop())
-
-      } else {
-        mod = 'merge'
-      }
+    if (item == null) {
+      this.props.onSelect?.([])
 
     } else {
-      items = [item]
+      this.scrollIntoView(item)
 
-      if (isMeta(event))
-        mod = this.isSelected(item) ? 'remove' : 'append'
-      else
-        mod = 'replace'
+      let items, mod
+
+      if (event?.shiftKey) {
+        items = this.range({ to: item.id })
+        if (items.every(this.isSelected)) {
+          mod = 'subtract'
+          if (items[0].id !== item.id)
+            items.unshift(items.pop())
+
+        } else {
+          mod = 'merge'
+        }
+
+      } else {
+        items = [item]
+
+        if (isMeta(event))
+          mod = this.isSelected(item) ? 'remove' : 'append'
+        else
+          mod = 'replace'
+      }
+
+      this.props.onSelect?.(items, {
+        mod,
+        throttle: event?.repeat
+      })
     }
-
-    this.props.onSelect?.(items, {
-      mod,
-      throttle: event?.repeat
-    })
 
     return item
   }
@@ -315,8 +317,14 @@ export class Scroll extends React.Component {
 
   // eslint-disable-next-line complexity
   handleArrowKeys(event) {
-    if (event.ctrlKey || event.metaKey)
+    if (event.ctrlKey || event.metaKey) {
+      // Handle select all shortcut
+      if (event.key === 'a' && !event.repeat) {
+        this.props.onSelect(this.range({ from: this.props.items[0]?.id }))
+      }
+
       return
+    }
 
     let { items } = this.props
     let { columns, isGrid } = this.layout
@@ -331,6 +339,10 @@ export class Scroll extends React.Component {
     }
 
     switch (event.key) {
+      case 'Escape':
+        this.props.onSelect([])
+        break
+
       case 'ArrowDown':
         if (event.altKey)
           this.select(this.last(), event)

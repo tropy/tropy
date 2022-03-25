@@ -118,7 +118,7 @@ export function nav(state = init, { type, payload, meta, error }) {
       return {
         ...state,
         mode: MODE.ITEM,
-        items: select(state.items, [id], 'replace'),
+        items: select(state.items, [id]),
         photos,
         selection,
         note

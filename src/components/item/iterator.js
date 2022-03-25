@@ -1,5 +1,5 @@
 import React from 'react'
-import { match, isMeta as meta } from '../../keymap'
+import { match } from '../../keymap'
 import { indexOf } from '../../common/collection'
 import { blank, get } from '../../common/util'
 import { on, off } from '../../dom'
@@ -78,10 +78,10 @@ export class ItemIterator extends React.Component {
     this.props.onSelect({ items: [] })
   }
 
-  handleSelect = (items, { mod = 'replace', throttle } = {}) => {
+  handleSelect = (items, meta) => {
     this.props.onSelect({
       items: items.map(item => item.id)
-    }, mod, { throttle })
+    }, meta)
   }
 
   handleClickOutside = () => {
@@ -157,17 +157,11 @@ export class ItemIterator extends React.Component {
       case 'preview':
         this.preview(this.current)
         break
-      case 'clear':
-        this.clearSelection()
-        break
       case 'delete':
         if (!this.props.isReadOnly) {
           this.select(this.after() || this.before())
           this.handleItemDelete(this.props.selection)
         }
-        break
-      case 'all':
-        this.props.onSelect({}, 'all')
         break
       case 'merge':
         this.handleItemMerge(this.props.selection)

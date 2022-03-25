@@ -481,8 +481,8 @@ export const ProjectContainer = connect(
       dispatch(act.nav.sort(...args))
     },
 
-    onItemSelect(payload, mod, meta) {
-      dispatch(act.item.select(payload, { mod, ...meta }))
+    onItemSelect(...args) {
+      dispatch(act.item.select(...args))
     },
 
     onItemOpen(item) {
