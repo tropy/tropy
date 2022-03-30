@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import ARGS from '../args'
 import { create } from '../stores/about'
 import { Main } from '../components/main'
@@ -13,9 +13,10 @@ const { locale } = ARGS
 store
   .dispatch(intl.load({ locale }))
   .then(() => {
-    render(
-      <Main store={store} window={win}>
-        <About/>
-      </Main>,
-      document.getElementById('main'))
+    createRoot(document.getElementById('main'))
+      .render(
+        <Main store={store} window={win}>
+          <About/>
+        </Main>
+      )
   })

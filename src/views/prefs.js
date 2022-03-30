@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import ARGS from '../args'
 import { create } from '../stores/prefs'
 import { Main } from '../components/main'
@@ -22,11 +22,12 @@ Promise.all([
       store.dispatch(project.open(file))
     }
 
-    render(
-      <Main store={store} window={win}>
-        <PrefsContainer/>
-      </Main>,
-      document.getElementById('main'))
+    createRoot(document.getElementById('main'))
+      .render(
+        <Main store={store} window={win}>
+          <PrefsContainer/>
+        </Main>
+      )
   })
 
 dialog.start(store)
