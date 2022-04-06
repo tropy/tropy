@@ -3,7 +3,6 @@ import { seq, compose, filter, into, map, cat, keep } from 'transducers.js'
 import { getSelectedItems } from './items'
 import { blank, pluck } from '../common/util'
 
-
 const withErrors = ([, photo]) =>
   !!photo.broken && !photo.consolidated
 
@@ -19,10 +18,14 @@ const getPhotos = ({ photos }) => photos
 export const getSelectedPhotoIds = memo(
   ({ nav }) => nav.items,
   ({ nav }) => nav.photos,
-  (items, photos) =>
-    items
-      .flatMap(id => photos[id])
-      .filter(p => p != null)
+  (items, photos) => {
+    if (items.length > 1)
+      return photos['*']
+    if (items.length === 1)
+      return photos[items[0]]
+    else
+      return []
+  }
 )
 
 export const getSelectedPhotos = memo(

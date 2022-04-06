@@ -135,6 +135,7 @@ export default {
         items = getState().qr.items
 
       } else if (items.length === 1 && mod === 'replace') {
+        // Restore previous cursor photo
         let state = getState()
 
         if (photo === undefined) {

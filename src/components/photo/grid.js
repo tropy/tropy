@@ -108,7 +108,7 @@ class PhotoGrid extends PhotoIterator {
         data-size={this.props.size}>
         <Scroll
           ref={this.container}
-          cursor={this.props.current}
+          cursor={this.props.selectedPhotos.at(-1)}
           items={this.props.photos}
           itemHeight={tileSize}
           itemWidth={tileSize}

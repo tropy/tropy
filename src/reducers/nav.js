@@ -26,7 +26,7 @@ const init = {
   ...reset,
   mode: MODE.PROJECT,
   query: '',
-  photos: {},
+  photos: { '*': [] },
   tags: [],
   sort: {},
   columns: [
@@ -95,18 +95,25 @@ export function nav(state = init, { type, payload, meta, error }) {
           ...reset
         }
 
-    case ITEM.SELECT:
+    case ITEM.SELECT: {
+      let items = select(state.items, payload.items, meta.mod)
+      let photos = state.photos
+
+      if (items.length) {
+        photos = {
+          ...photos,
+          [items.length === 1 ? items[0] : '*']: array(payload.photo)
+        }
+      }
+
       return {
         ...state,
         selection: payload.selection,
         note: payload.note,
-        items: select(state.items, payload.items, meta.mod),
-        photos: {
-          ...state.photos,
-          // Restore photo selection
-          [payload.items[0]]: array(payload.photo)
-        }
+        items,
+        photos
       }
+    }
 
     case ITEM.OPEN: {
       let { id, photo, selection, note } = payload
@@ -162,11 +169,12 @@ export function nav(state = init, { type, payload, meta, error }) {
           selection: null
         }
 
-      // TODO deal with multiple photos (associate to respective items!)
-      let { item, photos, selection, note } = payload
+      let { photos, selection, note } = payload
 
-      assert(state.items.includes(item),
+      assert(state.items.length > 0,
         "photo's item must be in active selection range!")
+
+      let item = state.items.length === 1 ? state.items[0] : '*'
 
       return {
         ...state,

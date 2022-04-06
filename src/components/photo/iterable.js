@@ -50,10 +50,8 @@ export class PhotoIterable extends React.PureComponent {
     return !this.props.isDisabled
   }
 
-  select = () => {
-    if (!this.isActive) {
-      this.props.onSelect(this.props.photo)
-    }
+  select = (event) => {
+    this.props.onSelect(this.props.photo, event)
   }
 
   contract() {

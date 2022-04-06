@@ -10,6 +10,7 @@ import { testFocusChange } from '../../dom'
 import { bool, func, object, string } from 'prop-types'
 import { IconSelection, IconChevron9, IconWarning } from '../icons'
 import { Button } from '../button'
+import { isMeta } from '../../keymap'
 
 
 class PhotoListItem extends PhotoIterable {
@@ -32,6 +33,7 @@ class PhotoListItem extends PhotoIterable {
 
   handleMouseDown = () => {
     this.hasFocusChanged = testFocusChange()
+    this.wasSelected = this.props.isSelected && !this.props.isRangeSelected
   }
 
   handleSingleClick = () => {
@@ -41,10 +43,14 @@ class PhotoListItem extends PhotoIterable {
   }
 
   handleClick = createClickHandler({
-    onClick: () => {
+    onClick: (event) => {
       let { isActive } = this
-      this.select()
-      return !isActive || this.hasFocusChanged()
+      this.select(event)
+      return !isActive ||
+        this.hasFocusChanged() ||
+        !this.wasSelected ||
+        event.shiftKey ||
+        isMeta(event)
     },
 
     onSingleClick: this.handleSingleClick,

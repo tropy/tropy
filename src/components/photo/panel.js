@@ -31,7 +31,7 @@ class PhotoPanel extends React.PureComponent {
 const PhotoPanelContainer = connect(
     state => ({
       cache: getCachePrefix(state),
-      current: getSelectedPhotoIds(state).at(-1),
+      selectedPhotos: getSelectedPhotoIds(state),
       edit: state.edit,
       data: state.metadata,
       expandedPhotos: getExpandedPhotos(state),

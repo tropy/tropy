@@ -82,17 +82,17 @@ class PhotoList extends PhotoIterator {
       <div className={cx(this.classes)}>
         <Scroll
           ref={this.container}
-          cursor={this.props.current}
           expansionCursor={this.props.selection}
           items={this.props.photos}
           itemHeight={SASS.ROW.HEIGHT}
           expandedItems={this.props.expandedPhotos}
+          selectedItems={this.props.selectedPhotos}
           tabIndex={this.tabIndex}
           onBlur={onBlur}
           onKeyDown={this.handleKeyDown}
-          onSelect={this.handleSelectPhoto}
+          onSelect={this.handleSelect}
           onTabFocus={this.props.onTabFocus}>
-          {(photo, index, { isExpanded }) =>
+          {(photo, index, { isExpanded, isSelected, onSelect }) =>
             <PhotoListItem {...this.getIterableProps(photo)}
               key={photo.id}
               photo={photo}
@@ -101,10 +101,12 @@ class PhotoList extends PhotoIterator {
               selections={this.props.selections}
               title={dc.title}
               isExpanded={isExpanded}
+              isSelected={isSelected}
               isEditing={this.isEditing(photo)}
               onChange={onChange}
               onEdit={this.edit}
               onEditCancel={this.handleEditCancel}
+              onSelect={onSelect}
               onSelectionSort={this.props.onSelectionSort}/>}
         </Scroll>
       </div>

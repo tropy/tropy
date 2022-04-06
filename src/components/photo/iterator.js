@@ -44,7 +44,7 @@ export class PhotoIterator extends React.Component {
   }
 
   isSelected(photo) {
-    return this.props.current === photo.id
+    return this.props.selectedPhotos.includes(photo.id)
   }
 
   isActive(selection) {
@@ -65,27 +65,13 @@ export class PhotoIterator extends React.Component {
     return this.props.keymap.PhotoIterator
   }
 
-  select = (photo, { throttle } = {}) => {
-    if (photo == null ||
-      this.isSelected(photo) && this.isActive(photo.selection)) {
-      return
-    }
-
-    this.props.onSelect({
-      photo: photo.id,
-      item: photo.item,
-      note: photo.notes[0],
-      selection: photo.selection
-    }, { throttle })
-  }
-
   contract = (photo) => {
     if (this.isExpandable(photo) && this.isExpanded(photo)) {
       this.props.onContract([photo.id])
 
       if (this.isSelected(photo)) {
         this.props.onSelect({
-          photo: photo.id,
+          photos: [photo.id],
           item: photo.item,
           note: photo.notes[0]
         })
@@ -135,23 +121,31 @@ export class PhotoIterator extends React.Component {
     onSort({ item, photos: order })
   }
 
-  handleSelectPhoto = (photo, event) => {
-    this.select(photo, { throttle: event?.repeat })
+  handleSelect = (photos, meta) => {
+    let { item, notes, selection } = photos.at(-1) || {}
+
+    this.props.onSelect({
+      photos: photos.map(photo => photo.id),
+      item,
+      selection,
+      note: notes?.[0]
+    }, meta)
   }
 
+
   handleNextPhoto = (event) => {
-    this.handleSelectPhoto(this.container.current?.next(), event)
+    this.container.current?.select(this.container.current?.next(), event)
   }
 
   handlePrevPhoto = (event) => {
-    this.handleSelectPhoto(this.container.current?.prev(), event)
+    this.container.current?.select(this.container.current?.prev(), event)
   }
 
   handleRotate = (by) => {
     if (this.props.selection != null)
       this.rotate(by, this.props.selection, 'selection')
     else
-      this.rotate(by, this.props.current)
+      this.rotate(by, this.props.selectedPhotos.at(-1))
   }
 
   getAdjacent = (photo) => {
@@ -166,7 +160,7 @@ export class PhotoIterator extends React.Component {
       isDisabled: this.props.isDisabled,
       isExpandable: this.isExpandable(photo),
       isItemOpen: this.props.isItemOpen,
-      isSelected: this.isSelected(photo),
+      isRangeSelected: this.props.selectedPhotos.length > 1,
       isSortable: this.isSortable,
       isVertical: this.isVertical,
       getAdjacent: this.getAdjacent,
@@ -176,8 +170,7 @@ export class PhotoIterator extends React.Component {
       onConsolidate: this.props.onConsolidate,
       onError: this.props.onError,
       onExpand: this.expand,
-      onItemOpen: this.handleItemOpen,
-      onSelect: this.handleSelectPhoto
+      onItemOpen: this.handleItemOpen
     }
   }
 
@@ -214,7 +207,7 @@ export class PhotoIterator extends React.Component {
     ).isRequired,
 
     cache: string.isRequired,
-    current: number,
+    selectedPhotos: arrayOf(number).isRequired,
     expandedPhotos: object.isRequired,
     keymap: object.isRequired,
     selection: number,
