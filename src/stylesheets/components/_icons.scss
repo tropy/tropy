@@ -78,6 +78,10 @@
   align-items: center;
   margin-left: $space-xs;
 
+  &:empty {
+    display: none;
+  }
+
   > *:not(:first-child) {
     margin-left: $space-min;
   }
