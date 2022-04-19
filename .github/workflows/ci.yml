@@ -43,7 +43,7 @@ jobs:
           cache: npm
 
       - name: Install and build dependencies
-        run: npm install --no-progress --no-package-lock --legacy-peer-deps
+        run: npm install --no-progress --no-package-lock
 
       - name: Rebuild native dependencies
         run: npm run rebuild -- --force --arch ${{ matrix.arch }}
