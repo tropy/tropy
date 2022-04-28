@@ -5,7 +5,6 @@ import { blank, get, homogenize } from '../common/util'
 import { expand, tropy } from '../ontology'
 import { ITEM, PHOTO, SELECTION } from '../constants'
 import { value }  from '../value'
-import { getSelectedPhoto } from './photos'
 
 const getResourceList =
   (res, vocab) =>
