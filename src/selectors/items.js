@@ -1,6 +1,5 @@
 import { createSelector as memo } from 'reselect'
-import { pluck } from './util'
-import { BLANK } from '../common/util'
+import { collectTemplates, pluck } from './util'
 
 export const getItems = ({ items }) => items
 
@@ -22,8 +21,5 @@ export const getListHold = memo(
 
 export const getSelectedItemTemplate = memo(
   getSelectedItems,
-  ([item, ...items]) => (item == null) ? BLANK : {
-    id: item.template,
-    mixed: items.find(it => it.template !== item.template) != null
-  }
+  collectTemplates
 )

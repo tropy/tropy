@@ -1,6 +1,7 @@
 import { createSelector as memo } from 'reselect'
 import { seq, compose, filter, into, map, cat, keep } from 'transducers.js'
 import { getSelectedItems } from './items'
+import { collectTemplates } from './util'
 import { blank, pluck } from '../common/util'
 
 const withErrors = ([, photo]) =>
@@ -38,6 +39,17 @@ export const getSelectedPhoto = memo(
   getPhotos,
   getSelectedPhotoIds,
   (photos, ids) => photos[ids.at(-1)]
+)
+
+export const getSelectedPhotoTemplate = memo(
+  getSelectedPhotos,
+  collectTemplates
+)
+
+export const getActivePhotoTemplate = memo(
+  ({ ontology }) => ontology.template,
+  getSelectedPhoto,
+  (template, photo) => template[photo?.template]
 )
 
 const expandItemPhotos = (items, photos) => {

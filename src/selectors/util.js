@@ -1,4 +1,4 @@
-import { blank } from '../common/util'
+import { BLANK, blank } from '../common/util'
 
 export function pluck(data, ids) {
   let idx = {}
@@ -16,3 +16,9 @@ export function pluck(data, ids) {
   res.idx = idx
   return res
 }
+
+export const collectTemplates = ([head, ...tail]) =>
+  (head == null) ? BLANK : {
+    id: head.template,
+    mixed: tail.find(it => it.template !== head.template) != null
+  }

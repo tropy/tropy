@@ -18,7 +18,8 @@ import {
   getPropertyList,
   getSelectedItemTemplate,
   getSelectedItems,
-  getSelectedPhoto,
+  getSelectedPhotoTemplate,
+  getSelectedPhotos,
   getSelectionFields
 } from '../../selectors'
 
@@ -32,10 +33,6 @@ class MetadataPanel extends React.PureComponent {
 
   get isBulk() {
     return this.props.items.length > 1
-  }
-
-  get hasPhotoFields() {
-    return this.props.photo != null && !this.props.photo.pending
   }
 
   get hasSelectionFields() {
@@ -106,7 +103,7 @@ class MetadataPanel extends React.PureComponent {
   handlePhotoTemplateChange = (template, hasChanged) => {
     if (hasChanged) {
       this.props.onTemplateChange('photo', {
-        id: [this.props.photo.id],
+        id: this.props.photos.map(p => p.id),
         template: template.id
       })
     }
@@ -179,10 +176,12 @@ class MetadataPanel extends React.PureComponent {
   }
 
   renderPhotoFields() {
-    return this.hasPhotoFields && (
+    return this.props.photos.length > 0 && (
       <MetadataSection
+        count={this.props.photos.length}
         isDisabled={this.props.isDisabled}
-        template={this.props.photo.template}
+        isMixed={this.props.photoTemplate.mixed}
+        template={this.props.photoTemplate.id}
         templates={this.props.templates.photo}
         title="panel.metadata.photo"
         onTemplateChange={this.handlePhotoTemplateChange}
@@ -204,7 +203,7 @@ class MetadataPanel extends React.PureComponent {
           options={this.props.fields.available}/>
         <PhotoInfo
           edit={this.props.edit}
-          photo={this.props.photo}
+          photo={this.props.photos[0]}
           isDisabled={this.props.isDisabled}
           onChange={this.props.onPhotoSave}
           onEdit={this.props.onEdit}
@@ -267,9 +266,10 @@ class MetadataPanel extends React.PureComponent {
     }).isRequired,
     isDisabled: bool,
     items: arrayOf(shapes.subject),
-    photo: shapes.subject,
+    photos: arrayOf(shapes.subject),
     selection: shapes.subject,
     template: shapes.template,
+    photoTemplate: shape.template,
     templates: shape({
       item: arrayOf(shapes.template).isRequired,
       photo: arrayOf(shapes.template).isRequired,
@@ -299,9 +299,10 @@ const MetadataPanelContainer = connect(
         selection: getSelectionFields(state)
       },
       items: getSelectedItems(state),
-      photo: getSelectedPhoto(state),
+      photos: getSelectedPhotos(state),
       selection: getActiveSelection(state),
       template: getSelectedItemTemplate(state),
+      photoTemplate: getSelectedPhotoTemplate(state),
       templates: getAllTemplatesByType(state)
     }),
 

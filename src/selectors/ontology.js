@@ -162,12 +162,6 @@ export const getActiveItemTemplate = memo(
     (id != null && id in items) ? template[items[id].template] : null
 )
 
-export const getActivePhotoTemplate = memo(
-  ({ ontology }) => ontology.template,
-  getSelectedPhoto,
-  (template, photo) => template[photo?.template]
-)
-
 export const getActiveSelectionTemplate = memo(
   ({ ontology }) => ontology.template,
   ({ nav }) => nav.selection,

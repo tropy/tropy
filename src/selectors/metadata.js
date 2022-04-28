@@ -18,11 +18,11 @@ import {
 
 import {
   getActiveItemTemplate,
-  getActivePhotoTemplate,
   getActiveSelectionTemplate
 } from './ontology'
 
 import {
+  getActivePhotoTemplate,
   getSelectedPhotoIds
 } from './photos'
 
@@ -45,24 +45,25 @@ const skipId = filter(kv => kv[0] !== 'id')
 
 const getMetadata = ({ metadata }) => metadata
 
+const getMetadataValues = (metadata, ids) =>
+  seq(
+    transduce(
+      ids,
+      compose(map(id => metadata[id]), keep(), cat, skipId),
+      collect,
+      { id: ids }),
+    map(([key, value]) => {
+      if (key !== 'id') {
+        value.mixed = value.count !== ids.length
+      }
+
+      return [key, value]
+    }))
+
 export const getItemMetadata = memo(
   getMetadata,
   ({ nav }) => (nav.items),
-
-  (metadata, items) =>
-    seq(
-      transduce(
-        items,
-        compose(map(id => metadata[id]), keep(), cat, skipId),
-        collect,
-        { id: items }),
-      map(([key, value]) => {
-        if (key !== 'id') {
-          value.mixed = value.count !== items.length
-        }
-
-        return [key, value]
-      }))
+  getMetadataValues
 )
 
 export const getVisibleMetadata = memo(
@@ -135,7 +136,7 @@ export const getItemFields = memo(
 const getPhotoMetadata = memo(
   getMetadata,
   getSelectedPhotoIds,
-  (metadata, ids) => metadata[ids[0]] || { id: ids[0] }
+  getMetadataValues
 )
 
 const getSelectionMetadata = memo(

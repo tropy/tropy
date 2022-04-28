@@ -16,7 +16,11 @@ en:
   panel:
     metadata:
       tab: Metadata
-      photo:  Photo
+      photo: >
+        {count, plural,
+          =0 {}
+          one {Photo}
+          other {# Photos}}
       item: >
         {count, plural,
           =0 {}
