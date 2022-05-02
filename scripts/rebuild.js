@@ -89,7 +89,9 @@ class Rebuilder {
 
       ].join(' ')}`, { silent: this.silent }, (code, stdout, stderr) => {
         if (code !== 0)
-          reject(new Error(`${this.name} rebuild exited with error code`))
+          reject(
+            new Error(`${this.name} rebuild exited with error code ${code}`)
+          )
         else
           resolve({ code, stdout, stderr })
       })

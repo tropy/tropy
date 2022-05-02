@@ -1,8 +1,10 @@
 {
   'includes': [ 'common-sqlite.gypi' ],
+
   'variables': {
     'sqlite_magic%': '',
   },
+
   'target_defaults': {
     'default_configuration': 'Release',
     'cflags': [
@@ -61,12 +63,14 @@
           'outputs': [
             '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/sqlite3.c'
           ],
-          'action': [
-            '<!(node -p "process.env.npm_config_python || \\"python\\"")',
-            './extract.py','./sqlite-autoconf-<@(sqlite_version).tar.gz',
-            '<(SHARED_INTERMEDIATE_DIR)']
+          'action': ['node','./extract.js','./sqlite-autoconf-<@(sqlite_version).tar.gz','<(SHARED_INTERMEDIATE_DIR)']
         }
       ]
+      'direct_dependent_settings': {
+        'include_dirs': [
+          '<(SHARED_INTERMEDIATE_DIR)/sqlite-autoconf-<@(sqlite_version)/',
+        ]
+      },
     },
     {
       'target_name': 'sqlite3',
@@ -89,7 +93,9 @@
           'HAVE_USLEEP',
           'SQLITE_ENABLE_FTS5',
           'SQLITE_ENABLE_JSON1',
-          'SQLITE_ENABLE_RTREE'
+          'SQLITE_ENABLE_RTREE',
+          'SQLITE_ENABLE_DBSTAT_VTAB=1',
+          'SQLITE_ENABLE_MATH_FUNCTIONS'
         ]
       },
       'defines': [
@@ -98,7 +104,9 @@
         'HAVE_USLEEP',
         'SQLITE_ENABLE_FTS5',
         'SQLITE_ENABLE_JSON1',
-        'SQLITE_ENABLE_RTREE'
+        'SQLITE_ENABLE_RTREE',
+        'SQLITE_ENABLE_DBSTAT_VTAB=1',
+        'SQLITE_ENABLE_MATH_FUNCTIONS'
       ],
       'conditions': [
         ["sqlite_magic != ''", {
