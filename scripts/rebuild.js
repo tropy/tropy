@@ -136,7 +136,8 @@ class Rebuilder {
       },
 
       (task) => {
-        cp(task.vendorPath('sqlite3.gyp'), task.modulePath('deps'))
+        sed('-i', /'SQLITE_ENABLE_FTS[34]',/, '',
+          task.modulePath('deps', 'sqlite3.gyp'))
       }
     ],
 
