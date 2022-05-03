@@ -8,6 +8,7 @@ import { darwin } from '../common/os'
 import { channel, paths } from '../common/release'
 import { Icon, View } from '../common/res'
 import { SASS } from '../constants'
+import { writeFile } from 'fs/promises'
 
 import {
   array,
@@ -581,6 +582,13 @@ export class WindowManager extends EventEmitter {
           reason === 'cancelled' ? resolve(reason) : reject(reason)
       })
     })
+  }
+
+  static async printToPDF(win, opts = {}) {
+    let data = await win.webContents.printToPDF(opts)
+    let path = join(app.getPath('home'), 'output.pdf')
+    await writeFile(path, data)
+    return path
   }
 
   static async shouldReduceTransparency() {
