@@ -808,9 +808,12 @@ export class Tropy extends EventEmitter {
           delay(60000)
         ])
 
-        debug('will open print dialog')
-        let status = await WindowManager.print(win)
-        info(`print status: ${status}`)
+        // debug('will open print dialog')
+        // let status = await WindowManager.print(win)
+        // info(`print status: ${status}`)
+        info('will print pdf')
+        let pdf = await WindowManager.printToPDF(win)
+        info(`saved pdf ${pdf}`)
 
       } finally {
         if (win != null) win.destroy()
