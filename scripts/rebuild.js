@@ -147,15 +147,6 @@ class Rebuilder {
   }
 
   static Steps = {
-    fsevents: [
-      (task) => {
-        cp(task.vendorPath('binding.gyp'), task.modulePath('binding.gyp'))
-      },
-      async (task) => {
-        await task.nodeGypRebuild()
-      }
-    ],
-
     sqlite3: [
       async (task) => {
         let url = cat(task.vendorPath('version.txt')).trim()
@@ -246,9 +237,7 @@ program
     let opts = program.opts()
 
     if (!args.length)
-      args = ['sqlite3', 'sharp', 'fsevents']
-    if (process.platform !== 'darwin')
-      args = args.filter(m => m !== 'fsevents')
+      args = ['sqlite3', 'sharp']
 
     opts.libc = await family() || 'unknown'
 
