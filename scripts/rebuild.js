@@ -4,7 +4,8 @@ const { say } = require('./util')('Δ')
 const { join } = require('path')
 const fs = require('fs')
 const { program } = require('commander')
-const { cat, cp, env, exec, sed, test } = require('shelljs')
+const { cat, env, exec, sed, test } = require('shelljs')
+const { family } = require('detect-libc')
 
 const { ROOT } = require('./metadata')
 const ARCH = process.env.npm_config_target_arch || process.arch
@@ -28,19 +29,23 @@ function downloadHeaders({
 
 
 class Rebuilder {
+  #package = null
+
   constructor({
     name,
     arch = ARCH,
     target = v('electron'),
+    libc,
     silent,
-    patches = [...Rebuilder.Patches[name]]
+    steps = [...Rebuilder.Steps[name]]
   }) {
     this.name = name
     this.platform = process.platform,
     this.arch = arch
     this.target = target
+    this.libc = libc
     this.silent = silent
-    this.patches = patches
+    this.steps = steps
   }
 
   modulePath(...args) {
@@ -49,6 +54,15 @@ class Rebuilder {
 
   vendorPath(...args) {
     return join(ROOT, 'vendor', this.name, ...args)
+  }
+
+  get package() {
+    if (!this.#package)
+      this.#package = JSON.parse(
+        fs.readFileSync(this.modulePath('package.json'))
+      )
+
+    return this.#package
   }
 
   get stale() {
@@ -62,45 +76,76 @@ class Rebuilder {
         return !fs.existsSync(this.modulePath(
           'lib',
           'binding',
-          `napi-v6-${this.platform}-${this.arch}`,
+          `napi-v6-${this.platform}-${this.libc}-${this.arch}`,
           'node_sqlite3.node'))
       default:
         return true
     }
   }
 
-  async patch() {
-    for (let patch of this.patches)
-      await patch(this)
-  }
-
-  async rebuild() {
+  exec(cmd) {
     return new Promise((resolve, reject) => {
-      exec(`npm rebuild ${this.name} ${[
-        // node-gyp
-        `--arch=${this.arch}`,
-        `--target=${this.target}`,
+      exec(cmd, { silent: this.silent }, (code, stdout, stderr) => {
+        if (code !== 0) {
+          if (this.silent)
+            console.error(stderr)
 
-        // node-pre-gyp
-        '--runtime=electron',
-        `--build-from-source=${this.name}`,
-        `--target_platform=${this.platform}`,
-        `--target_arch=${this.arch}`
+          reject(new Error(`${this.name} failed to run: ${cmd}`))
 
-      ].join(' ')}`, { silent: this.silent }, (code, stdout, stderr) => {
-        if (code !== 0)
-          reject(
-            new Error(`${this.name} rebuild exited with error code ${code}`)
-          )
-        else
+        } else {
           resolve({ code, stdout, stderr })
+        }
       })
     })
   }
 
+  async nodeGypRebuild() {
+    await this.exec(`npx node-gyp rebuild ${[
+      ...this.buildArgs(),
+      ...this.buildArgsFromBinaryField(),
+      `-C ${this.modulePath()}`
+    ].join(' ')}`)
+  }
 
-  static Patches = {
-    fsevents: [],
+  buildArgs() {
+    return [
+      `--arch=${this.arch}`,
+      `--target=${this.target}`,
+      '--runtime=electron',
+      '--build-from-source',
+      this.silent ? '--silent' : '--verbose',
+      `--target_platform=${this.platform}`,
+      `--target_arch=${this.arch}`
+    ]
+  }
+
+  buildArgsFromBinaryField() {
+    let { binary = {} } = this.package
+
+    return Object.entries((binary)).map(([key, value]) => {
+      if (key === 'napi_versions')
+        return
+
+      if (key === 'module_path')
+        value = this.modulePath(value)
+
+      value = value
+        .replace('{version}', this.package.version)
+        .replace('{napi_build_version}', () => binary.napi_versions.at(-1))
+        .replace('{platform}', this.platform)
+        .replace('{arch}', this.arch)
+        .replace('{libc}', this.libc)
+
+      return `--${key}=${value}`
+    })
+  }
+
+  static Steps = {
+    fsevents: [
+      async (task) => {
+        await task.nodeGypRebuild()
+      }
+    ],
 
     sqlite3: [
       async (task) => {
@@ -138,6 +183,10 @@ class Rebuilder {
       (task) => {
         sed('-i', /'SQLITE_ENABLE_FTS[34]',/, '',
           task.modulePath('deps', 'sqlite3.gyp'))
+      },
+
+      async (task) => {
+        await task.nodeGypRebuild()
       }
     ],
 
@@ -157,6 +206,10 @@ class Rebuilder {
           force: true,
           recursive: true
         })
+      },
+      async (task) => {
+        await task.nodeGypRebuild()
+        await task.exec(`node ${task.modulePath('install', 'dll-copy.js')}`)
       }
     ]
   }
@@ -177,6 +230,8 @@ program
       args = ['sqlite3', 'sharp', 'fsevents']
     if (process.platform !== 'darwin')
       args = args.filter(m => m !== 'fsevents')
+
+    opts.libc = await family() || 'unknown'
 
     let tasks = args.map(name => new Rebuilder({ name, ...opts }))
 
@@ -202,14 +257,10 @@ program
 
 async function rebuild(task, force) {
   if (force || task.stale) {
-    if (task.patches.length) {
-      say(`${task.name} applying ${task.patches.length} patch(es) ...`)
-      await task.patch()
+    for (let i = 0; i < task.steps.length; ++i) {
+      say(`${task.name} rebuilding #${i + 1}...`)
+      await task.steps[i](task)
     }
-
-    say(`${task.name} rebuilding ...`)
-    await task.rebuild()
-
   } else {
     say(`${task.name} rebuild skipped`)
   }
