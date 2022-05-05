@@ -68,9 +68,8 @@ fieldset {
 }
 
 .form-control {
-  flex: 1 1 auto; // Inside input-group
-  display: block; // Without input-group
-  width: 100%; // Without input-group
+  display: block;
+  width: 100%;
   height: $input-height-base;
   padding: 0 $padding-base-horizontal;
   font-family: inherit;

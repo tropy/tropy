@@ -23,6 +23,9 @@
 
 .input-group {
   > .form-control {
+    width: initial;
+    flex: 1 1 auto;
+
     &:focus {
       z-index: 3;
     }
