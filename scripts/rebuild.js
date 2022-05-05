@@ -4,7 +4,7 @@ const { say } = require('./util')('Δ')
 const { join } = require('path')
 const fs = require('fs')
 const { program } = require('commander')
-const { cat, env, exec, sed, test } = require('shelljs')
+const { cat, cd, env, exec, sed, test } = require('shelljs')
 const { family } = require('detect-libc')
 
 const { ROOT } = require('./metadata')
@@ -83,27 +83,33 @@ class Rebuilder {
     }
   }
 
-  exec(cmd) {
-    return new Promise((resolve, reject) => {
-      exec(cmd, { silent: this.silent }, (code, stdout, stderr) => {
-        if (code !== 0) {
-          if (this.silent)
-            console.error(stderr)
+  async exec(cmd) {
+    try {
+      var cwd = process.cwd()
+      cd(this.modulePath())
 
-          reject(new Error(`${this.name} failed to run: ${cmd}`))
+      await new Promise((resolve, reject) => {
+        exec(cmd, { silent: this.silent }, (code, stdout, stderr) => {
+          if (code !== 0) {
+            if (this.silent)
+              console.error(stderr)
 
-        } else {
-          resolve({ code, stdout, stderr })
-        }
+            reject(new Error(`${this.name} failed to run: ${cmd}`))
+
+          } else {
+            resolve({ code, stdout, stderr })
+          }
+        })
       })
-    })
+    } finally {
+      cd(cwd)
+    }
   }
 
   async nodeGypRebuild() {
     await this.exec(`npx node-gyp rebuild ${[
       ...this.buildArgs(),
-      ...this.buildArgsFromBinaryField(),
-      `-C ${this.modulePath()}`
+      ...this.buildArgsFromBinaryField()
     ].join(' ')}`)
   }
 
@@ -208,8 +214,17 @@ class Rebuilder {
         })
       },
       async (task) => {
+        try {
+          await task.exec('node install/libvips.js')
+        } catch (e) {
+          // Can fail if using global libvips
+        }
+      },
+      async (task) => {
         await task.nodeGypRebuild()
-        await task.exec(`node ${task.modulePath('install', 'dll-copy.js')}`)
+      },
+      async (task) => {
+        await task.exec('node install/dll-copy.js')
       }
     ]
   }
@@ -223,6 +238,7 @@ program
   .option('-s, --silent', 'silence rebuilder output', false)
   .option('-H, --skip-headers', 'skip headers download', false)
   .option('-p, --parallel', 'rebuild in parallel', process.platform !== 'win32')
+  .option('--global-libvips', 'do not ignore global libvips', false)
   .action(async (args) => {
     let opts = program.opts()
 
@@ -238,6 +254,9 @@ program
     // Ensure we're using the latest SDK when cross-compiling!
     if (process.platform === 'darwin' && opts.arch === 'arm64')
       setMacSDKRoot()
+
+    if (!opts.globalLibvips)
+      env.SHARP_IGNORE_GLOBAL_LIBVIPS = true
 
     if (!opts.skipHeaders) {
       say('fetching Electron headers ...')
