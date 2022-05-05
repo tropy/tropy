@@ -100,7 +100,7 @@
     "unzip-crx-3": "^0.2.0"
   },
   "optionalDependencies": {
-    "appdmg": "^0.1.13",
+    "appdmg": "^0.1.11",
     "fsevents": "~2.3.2"
   },
   "dependencies": {
