@@ -258,8 +258,10 @@ program
     if (process.platform === 'darwin' && opts.arch === 'arm64')
       setMacSDKRoot()
 
-    if (!opts.globalLibvips)
+    if (!opts.globalLibvips) {
       env.SHARP_IGNORE_GLOBAL_LIBVIPS = true
+      env.npm_config_sharp_libvips_binary_host = 'https://github.com/tropy/sharp-libvips/releases/download'
+    }
 
     if (!opts.skipHeaders) {
       say('fetching Electron headers ...')
