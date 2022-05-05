@@ -4,7 +4,7 @@ const { say } = require('./util')('Δ')
 const { join } = require('path')
 const fs = require('fs')
 const { program } = require('commander')
-const { cat, cd, env, exec, sed, test } = require('shelljs')
+const { cat, cd, cp, env, exec, sed, test } = require('shelljs')
 const { family } = require('detect-libc')
 
 const { ROOT } = require('./metadata')
@@ -148,6 +148,9 @@ class Rebuilder {
 
   static Steps = {
     fsevents: [
+      (task) => {
+        cp(task.vendorPath('binding.gyp'), task.modulePath('binding.gyp'))
+      },
       async (task) => {
         await task.nodeGypRebuild()
       }
