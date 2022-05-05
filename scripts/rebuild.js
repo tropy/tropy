@@ -4,7 +4,7 @@ const { say } = require('./util')('Δ')
 const { join } = require('path')
 const fs = require('fs')
 const { program } = require('commander')
-const { cat, cd, cp, env, exec, sed, test } = require('shelljs')
+const { cat, cd, env, exec, sed, test } = require('shelljs')
 const { family } = require('detect-libc')
 
 const { ROOT } = require('./metadata')
