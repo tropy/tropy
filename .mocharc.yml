@@ -1,6 +1,6 @@
 color: true
 recursive: true
-reporter: dot
+reporter: spec
 require-main:
   - "test/support/main"
 require:
