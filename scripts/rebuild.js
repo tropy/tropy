@@ -88,22 +88,27 @@ class Rebuilder {
       var cwd = process.cwd()
       cd(this.modulePath())
 
-      await new Promise((resolve, reject) => {
-        exec(cmd, { silent: this.silent }, (code, stdout, stderr) => {
-          if (code !== 0) {
-            if (this.silent)
-              console.error(stderr)
+      await this.runCommand(cmd)
 
-            reject(new Error(`${this.name} failed to run: ${cmd}`))
-
-          } else {
-            resolve({ code, stdout, stderr })
-          }
-        })
-      })
     } finally {
       cd(cwd)
     }
+  }
+
+  async runCommand(cmd) {
+    await new Promise((resolve, reject) => {
+      exec(cmd, { silent: this.silent }, (code, stdout, stderr) => {
+        if (code !== 0) {
+          if (this.silent)
+            console.error(stderr)
+
+          reject(new Error(`${this.name} failed to run: ${cmd}`))
+
+        } else {
+          resolve({ code, stdout, stderr })
+        }
+      })
+    })
   }
 
   async nodeGypRebuild() {
@@ -111,6 +116,12 @@ class Rebuilder {
       ...this.buildArgs(),
       ...this.buildArgsFromBinaryField()
     ].join(' ')}`)
+  }
+
+  async npmRebuild() {
+    await this.runCommand(
+      `npm rebuild ${this.name} ${this.buildArgs().join(' ')}`
+    )
   }
 
   buildArgs() {
@@ -201,24 +212,16 @@ class Rebuilder {
             task.modulePath('binding.gyp'))
         }
       },
+
       async (task) => {
         await fs.promises.rm(task.modulePath('vendor'), {
           force: true,
           recursive: true
         })
       },
+
       async (task) => {
-        try {
-          await task.exec('node install/libvips.js')
-        } catch (e) {
-          // Can fail if using global libvips
-        }
-      },
-      async (task) => {
-        await task.nodeGypRebuild()
-      },
-      async (task) => {
-        await task.exec('node install/dll-copy.js')
+        await task.npmRebuild()
       }
     ]
   }
