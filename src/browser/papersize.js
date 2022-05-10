@@ -2,7 +2,7 @@ import { exec } from '../common/spawn'
 import { read } from './mac-defaults'
 import { warn } from '../common/log'
 
-const DARWIN_PAPERSIZE = {
+const DARWIN_PAPER = {
   'iso-a3': 'A3',
   'iso-a4': 'A4',
   'iso-a5': 'A5',
@@ -15,12 +15,11 @@ export async function papersize() {
   try {
     switch (process.platform) {
       case 'linux':
-        console.log(process.env.PATH)
         return (await exec('paperconf -N')).stdout.trim()
 
       case 'darwin':
-        return DARWIN_PAPERSIZE[
-          await read('org.cups.PrintingPrefs', 'DefaultPaperID')
+        return DARWIN_PAPER[
+          await read('org.cups.PrintingPrefs', 'DefaultPaperID', 'string')
         ] || 'A4'
 
       case 'win32':
