@@ -89,7 +89,7 @@
     "rollup-plugin-visualizer": "^5.3.0",
     "sass": "<1.33.0",
     "shx": "^0.3.3",
-    "sinon": "^13.0.1",
+    "sinon": "^14.0.0",
     "sinon-chai": "^3.5.0",
     "split2": "^4.0.0",
     "sqleton": "^2.0.0",
