@@ -1,5 +1,5 @@
 import { ipcRenderer as ipc } from 'electron'
-import { select } from 'redux-saga/effects'
+import { call, select } from 'redux-saga/effects'
 import { Command } from '../command'
 import { ITEM } from '../../constants'
 import { getPrintableItems } from '../../selectors'
@@ -16,7 +16,7 @@ export class Print extends Command {
     ]))
 
     if (items.length) {
-      ipc.send('print', {
+      yield call(ipc.invoke, 'print', {
         pdf,
         landscape,
         ...prefs,

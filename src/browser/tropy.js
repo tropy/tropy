@@ -800,7 +800,7 @@ export class Tropy extends EventEmitter {
       this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
     })
 
-    ipc.on('print', async (_, opts) => {
+    ipc.handle('print', async (_, opts) => {
       try {
         if (!opts.items.length) return
 
