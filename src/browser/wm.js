@@ -3,6 +3,7 @@ import { EventEmitter } from 'events'
 import { join } from 'path'
 import { URL } from 'url'
 import { read } from './mac-defaults'
+import { papersize } from './papersize'
 import dialog from './dialog'
 import { debug, error, trace, warn } from '../common/log'
 import { darwin } from '../common/os'
@@ -585,8 +586,11 @@ export class WindowManager extends EventEmitter {
     })
   }
 
-  static async printToPDF(win, path, { pageSize, landscape } = {}) {
+  static async printToPDF(win, path, { pageSize, landscape = false } = {}) {
     assert(path?.length > 0, 'missing PDF output file')
+
+    if (!pageSize)
+      pageSize = await papersize()
 
     let data = await win.webContents.printToPDF({
       pageSize,
