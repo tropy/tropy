@@ -1,3 +1,4 @@
+export { default as activity } from '../actions/activity'
 export { default as api } from '../actions/api'
 export { default as cache } from '../actions/cache'
 export { default as context } from '../actions/context'
