@@ -171,9 +171,15 @@ en:
     item-read-only: &item-read-only
       - label: 'Export Item'
         id: 'export'
-        submenu:
+        submenu: &export-submenu
           - label: 'JSON-LD'
             command: 'app:export-item'
+          - label: 'PDF'
+            submenu:
+              - label: 'Portrait'
+                command: 'app:print-pdf'
+              - label: 'Landscape'
+                command: 'app:print-pdf-landscape'
       - label: 'Export Item Notes …'
         command: 'app:export-notes'
       - label: 'Copy Item Link'
@@ -197,9 +203,7 @@ en:
     item-bulk-read-only: &item-bulk-read-only
       - label: 'Export Selected Items'
         id: 'export'
-        submenu:
-          - label: 'JSON-LD'
-            command: 'app:export-item'
+        submenu: *export-submenu
       - label: 'Export Selected Item Notes …'
         command: 'app:export-notes'
       - label: 'Copy Selected Item Notes'

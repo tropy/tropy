@@ -26,11 +26,19 @@ const Dialog = {
     })
   },
 
+  save(win, opts) {
+    return Dialog.show('save', win, opts)
+  },
+
   show(type, win, opts) {
     switch (type) {
       case 'save':
         return dialog
-          .showSaveDialog(win, { defaultPath, ...opts })
+          .showSaveDialog(win, {
+            defaultPath,
+            properties: ['createDirectory'],
+            ...opts
+          })
           .then(({ filePath }) => {
             if (filePath) {
               defaultPath = dirname(filePath)

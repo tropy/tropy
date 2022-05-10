@@ -7,6 +7,8 @@ import { getPrintableItems } from '../../selectors'
 
 export class Print extends Command {
   *exec() {
+    let { pdf, landscape } = this.action.meta
+
     let [prefs, project, items] = yield select(state => ([
       state.settings.print,
       state.project.id,
@@ -14,7 +16,13 @@ export class Print extends Command {
     ]))
 
     if (items.length) {
-      ipc.send('print', { ...prefs, project, items })
+      ipc.send('print', {
+        pdf,
+        landscape,
+        ...prefs,
+        project,
+        items
+      })
     }
   }
 }

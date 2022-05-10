@@ -744,6 +744,17 @@ export class Tropy extends EventEmitter {
       this.dispatch(act.item.print(), this.wm.current())
     })
 
+    this.on('app:print-pdf', () => {
+      this.dispatch(act.item.print(null, { pdf: true }), this.wm.current())
+    })
+
+    this.on('app:print-pdf-landscape', () => {
+      this.dispatch(act.item.print(null, {
+        pdf: true,
+        landscape: true
+      }), this.wm.current())
+    })
+
     this.on('app:zoom-in', () => {
       this.state.zoom = this.wm.zoom(this.state.zoom + 0.25)
     })
@@ -808,12 +819,31 @@ export class Tropy extends EventEmitter {
           delay(60000)
         ])
 
-        // debug('will open print dialog')
-        // let status = await WindowManager.print(win)
-        // info(`print status: ${status}`)
-        info('will print pdf')
-        let pdf = await WindowManager.printToPDF(win)
-        info(`saved pdf ${pdf}`)
+        if (opts.pdf) {
+          let path = await dialog.save(win, {
+            filters: [{
+              name: this.dict.dialog.file.pdf,
+              extensions: ['pdf']
+            }]
+          })
+
+          if (!path) {
+            info('pdf printing cancelled: no file selected')
+            return
+          }
+
+          info('will print pdf')
+          await WindowManager.printToPDF(win, path, {
+            landscape: opts.landscape
+          })
+
+          info(`saved pdf ${path}`)
+
+        } else {
+          debug('will open print dialog')
+          let status = await WindowManager.print(win)
+          info(`print status: ${status}`)
+        }
 
       } finally {
         if (win != null) win.destroy()

@@ -163,7 +163,6 @@ save.project = (opts) => save({
     name: t('dialog', 'filter', 'projects'),
     extensions: ['tpy']
   }],
-  properties: ['createDirectory'],
   ...opts
 })
 
@@ -173,7 +172,6 @@ save.csv = (opts) => save({
     name: t('dialog', 'filter', 'csv'),
     extensions: ['csv']
   }],
-  properties: ['createDirectory'],
   ...opts
 })
 
@@ -182,7 +180,6 @@ save.template = (opts) => save({
     name: t('dialog', 'filter', 'templates'),
     extensions: ['ttp']
   }],
-  properties: ['createDirectory'],
   ...opts
 })
 
@@ -191,7 +188,6 @@ save.items = (opts) => save({
     name: t('dialog', 'filter', 'jsonld'),
     extensions: ['json', 'jsonld']
   }],
-  properties: ['createDirectory'],
   ...opts
 })
 
@@ -200,7 +196,6 @@ save.image = (opts) => save({
     name: t('dialog', 'filter', 'images'),
     extensions: ['jpg', 'jpeg', 'png', 'webp']
   }],
-  properties: ['createDirectory'],
   ...opts
 })
 
@@ -209,7 +204,6 @@ save.vocab = (opts) => save({
     name: t('dialog', 'filter', 'rdf'),
     extensions: ['n3']
   }],
-  properties: ['createDirectory'],
   ...opts
 })
 
@@ -218,7 +212,6 @@ save.notes = (opts) => save({
     name: t('dialog', 'filter', 'notes'),
     extensions: ['json', 'jsonld', 'md', 'markdown', 'html', 'txt']
   }],
-  properties: ['createDirectory'],
   ...opts
 })
 
