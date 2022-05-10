@@ -61,6 +61,12 @@ en:
           submenu:
             - label: 'JSON-LD'
               command: 'app:export-item'
+            - label: 'PDF'
+              submenu:
+                - label: 'Portrait'
+                  command: 'app:print-pdf'
+                - label: 'Landscape'
+                  command: 'app:print-pdf-landscape'
         - type: 'separator'
         - &consolidate
           label: 'Consolidate Photo Library'

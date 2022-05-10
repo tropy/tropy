@@ -1,3 +1,4 @@
+import assert from 'assert'
 import { EventEmitter } from 'events'
 import { join } from 'path'
 import { URL } from 'url'
@@ -584,10 +585,16 @@ export class WindowManager extends EventEmitter {
     })
   }
 
-  static async printToPDF(win, opts = {}) {
-    let data = await win.webContents.printToPDF(opts)
-    let path = join(app.getPath('home'), 'output.pdf')
+  static async printToPDF(win, path, { pageSize, landscape } = {}) {
+    assert(path?.length > 0, 'missing PDF output file')
+
+    let data = await win.webContents.printToPDF({
+      pageSize,
+      landscape
+    })
+
     await writeFile(path, data)
+
     return path
   }
 
