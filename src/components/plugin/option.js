@@ -17,7 +17,6 @@ export class PluginOption extends React.PureComponent {
       name: this.props.spec.field,
       onChange: this.handleChange,
       value: this.value,
-      isCompact: true,
       isRequired: this.props.spec.required
     }
   }
@@ -51,10 +50,10 @@ export class PluginOption extends React.PureComponent {
     switch (this.props.spec.type) {
       case 'bool':
       case 'boolean':
-        return <FormToggle {...this.attrs}/>
+        return <FormToggle {...this.attrs} isCompact/>
       case 'template':
         return (
-          <FormElement id={this.props.spec.label} isCompact>
+          <FormElement id={this.props.spec.label}>
             <TemplateSelect {...this.attrs}
               minFilterOptions={4}
               options={[
@@ -65,7 +64,7 @@ export class PluginOption extends React.PureComponent {
         )
       case 'property':
         return (
-          <FormElement id={this.props.spec.label} isCompact>
+          <FormElement id={this.props.spec.label}>
             <ResourceSelect {...this.attrs}
               options={this.props.properties}/>
           </FormElement>
