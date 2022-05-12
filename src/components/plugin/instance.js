@@ -38,8 +38,7 @@ export class PluginInstance extends React.PureComponent {
             name="name"
             value={this.props.config.name}
             tabIndex={0}
-            onChange={this.handleNameChange}
-            isCompact/>
+            onChange={this.handleNameChange}/>
           {this.props.specs.map((spec) =>
             <PluginOption
               key={spec.field}
