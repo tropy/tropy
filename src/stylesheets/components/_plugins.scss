@@ -124,6 +124,29 @@
         padding: $space-sm;
       }
 
+      .form-group {
+        margin-top: $space-sm;
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        &.compact {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+      }
+
+      .checkbox {
+        &:first-child {
+          padding-top: 0;
+        }
+
+        &:last-child {
+          padding-bottom: 0;
+        }
+      }
+
       .btn-icon {
         flex: 0 0 auto;
         padding: {
