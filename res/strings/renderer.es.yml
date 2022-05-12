@@ -69,7 +69,7 @@ es:
       historical teaching resources, digital exhibits, and open-source software.
     trademark: Tropy es una marca registrada de la {cds}.
     donate:
-      title: Donate to Tropy
+      title: Donar a Tropy
       url: https://tropy.org/donate
     release:
       title: Notas de versión
@@ -391,14 +391,14 @@ es:
             - Cancel
             - Overwrite
         imported:
-          message: Template successfully imported.
+          message: Plantilla importada exitosamente
           buttons:
             - OK
     filter:
       csv: CSV
       templates: Plantillas Tropy
       images: Imágenes
-      items: Tropy Items
+      items: Objetos de Tropy
       notes: Notas
       projects: Proyectos Tropy
       rdf: Esquemas RDF
@@ -504,6 +504,7 @@ es:
         }
       load: Cargando objetos …
       merge: Fusionando objeto …
+      print: Processing items …
       restore: Restaurando objeto …
       save: Guardando objetos …
       tag:
@@ -573,10 +574,10 @@ es:
       ol: Lista numerada
       ul: Lista con viñetas
       link:
-        button: Link
+        button: Enlace
         target: Destino del enlace
         title: Título del enlace
-      unlink: Remove link
+      unlink: Quitar enlace
       left: Alinear a la izquierda
       center: Centrar
       right: Alinear a la derecha

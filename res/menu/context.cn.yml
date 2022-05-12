@@ -18,7 +18,7 @@ cn:
       - label: 显示项目所在位置
         command: app:show-project-file
     lists:
-      - label: 新文件夹
+      - label: 新建列表
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
@@ -30,11 +30,11 @@ cn:
         command: app:delete-list
         condition: '!isReadOnly'
     tags:
-      - label: 新标签
+      - label: 新建标签
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: 导出标签 ...
+      - label: 导出标签...
         command: app:export-tags
       - label: 默认标签颜色
         submenu:
@@ -280,7 +280,7 @@ cn:
             type: checkbox
             checked: false
             mode: horizontal
-          - label: 垂直(右向左)
+          - label: 垂直(右到左)
             type: checkbox
             checked: false
             mode: vertical-rl
@@ -302,7 +302,7 @@ cn:
       - label: 导出文件
         command: app:explode-item
         condition: isMultiplePhotos
-      - label: 添加图片 ...
+      - label: 添加图片...
         command: app:create-item-photo
       - label: 标签
         id: tag
@@ -320,6 +320,12 @@ cn:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: 导出笔记
         command: app:export-notes
       - label: 复制笔记链接
@@ -329,43 +335,49 @@ cn:
       - label: 刷新缩略图
         command: app:consolidate-item
     item-rotate:
-      - label: 顺时针90度
+      - label: 顺时针 90 度
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: 逆时针90度
+      - label: 逆时针 90 度
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-bulk:
-      - label: 合并选中项
+      - label: 合并所选项目
         command: app:merge-item
-      - label: 删除选中文件
+      - label: 删除所选项目
         command: app:delete-item
     item-bulk-read-only:
-      - label: 导出选中项
+      - label: 导出所选项目
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: 导出选中项的笔记
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: 导出所选项目笔记
         command: app:export-notes
-      - label: 复制选中项的笔记
+      - label: 复制所选项目笔记
         command: app:copy-notes
-      - label: 检查选中的文件
+      - label: 检查所选项目文件
         command: app:consolidate-item
     item-list:
-      - label: 移出文件夹
+      - label: 从列表中删除项目
         command: app:list-item-remove
     item-bulk-list:
-      - label: 移出文件夹
+      - label: 从列表中删除所选项目
         command: app:list-item-remove
     photo:
       - label: 复制图片
         command: app:duplicate-photo
-      - label: 移出组
+      - label: 移动照片到新项目
         command: app:explode-photo
       - label: 删除图片
         command: app:delete-photo
-      - label: 设为封面
+      - label: 使用照片作为封面图片
         command: app:update-cover-image
         enabled: false
         visible: false
@@ -381,34 +393,34 @@ cn:
       - label: 检查图片
         command: app:consolidate-photo
     photo-rotate:
-      - label: 顺时针90度
+      - label: 顺时针 90 度
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: 逆时针90度
+      - label: 逆时针 90 度
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
-      - label: 删除选中项
+      - label: 删除所选
         command: app:delete-selection
     selection-read-only:
-      - label: 导出选择项
+      - label: 导出所选...
         command: app:extract-photo
     selection-rotate:
-      - label: 顺时针90度
+      - label: 顺时针 90 度
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: 逆时针90度
+      - label: 逆时针 90 度
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     item-deleted:
-      - label: 恢复文件
+      - label: 恢复项目
         command: app:restore-item
-      - label: 彻底删除
+      - label: 永久删除项目
         command: app:destroy-item
     item-bulk-deleted:
-      - label: 恢复选中文件
+      - label: 恢复所选文件
         command: app:restore-item
-      - label: 彻底删除
+      - label: 永久删除所选项目
         command: app:destroy-item
     item-view:
       - label: 视图布局
@@ -421,14 +433,14 @@ cn:
             id: side-by-side
             type: checkbox
     metadata-list:
-      - label: 新文件夹 ...
+      - label: 新建字段…
         command: app:create-field
     metadata-field:
-      - label: 移出文件夹 ...
+      - label: 删除字段
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: 彻底删除
+      - label: 永久删除项目
         command: app:destroy-item
         condition: '!isReadOnly'
     dev:
@@ -458,26 +470,26 @@ cn:
       - label: 重命名项目
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: 显示项目所在位置
+      - label: 显示项目文件...
         command: app:show-project-file
     lists:
-      - label: 新文件夹
+      - label: 新建列表
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
-      - label: 重命名文件夹
+      - label: 重命名列表
         command: app:rename-list
         condition: '!isReadOnly'
-      - label: 删除文件夹
+      - label: 删除列表
         command: app:delete-list
         condition: '!isReadOnly'
     tags:
-      - label: 新标签
+      - label: 新建标签
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: 导出标签 ...
+      - label: 导出标签...
         command: app:export-tags
       - label: 默认标签颜色
         submenu:
@@ -709,7 +721,7 @@ cn:
               - color
               - app:save-tag-color
     note:
-      - label: 导出笔记
+      - label: 导出笔记...
         command: app:export-note
       - label: 复制笔记
         command: app:copy-note
@@ -723,7 +735,7 @@ cn:
             type: checkbox
             checked: false
             mode: horizontal
-          - label: 垂直(右向左)
+          - label: 垂直(右到左)
             type: checkbox
             checked: false
             mode: vertical-rl
@@ -738,14 +750,14 @@ cn:
         checked: true
         command: app:toggle-line-wrap
     items:
-      - label: 新文件
+      - label: 新建项目
         command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
       - label: 导出文件
         command: app:explode-item
         condition: isMultiplePhotos
-      - label: 添加图片 ...
+      - label: 添加图片...
         command: app:create-item-photo
       - label: 标签
         id: tag
@@ -755,54 +767,66 @@ cn:
             checked: true
             enabled: false
           - type: separator
-      - label: 删除文件
+      - label: 删除项目
         command: app:delete-item
     item-read-only:
-      - label: 导出文件
+      - label: 导出项目
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: 导出笔记
         command: app:export-notes
       - label: 复制笔记链接
         command: app:copy-item-link
       - label: 复制笔记
         command: app:copy-notes
-      - label: 刷新缩略图
+      - label: 合并项目
         command: app:consolidate-item
     item-bulk:
-      - label: 合并选中项
+      - label: 合并所选项目
         command: app:merge-item
-      - label: 删除选中文件
+      - label: 删除所选项目
         command: app:delete-item
     item-bulk-read-only:
-      - label: 导出选中项
+      - label: 导出所选项目
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: 导出选中项的笔记
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: 导出所选项目笔记...
         command: app:export-notes
-      - label: 复制选中项的笔记
+      - label: 复制所选项目笔记
         command: app:copy-notes
-      - label: 检查选中的文件
+      - label: 检查所选项目文件
         command: app:consolidate-item
     item-list:
-      - label: 移出文件夹
+      - label: 从列表中删除项目
         command: app:list-item-remove
     item-bulk-list:
-      - label: 移出文件夹
+      - label: 从列表中删除所选项目
         command: app:list-item-remove
     item-deleted:
-      - label: 恢复文件
+      - label: 恢复项目
         command: app:restore-item
-      - label: 彻底删除
+      - label: 永久删除项目
         command: app:destroy-item
     item-bulk-deleted:
-      - label: 恢复选中文件
+      - label: 恢复所选文件
         command: app:restore-item
-      - label: 彻底删除
+      - label: 永久删除所选项目
         command: app:destroy-item
     item-view:
       - label: 视图布局
@@ -815,31 +839,31 @@ cn:
             id: side-by-side
             type: checkbox
     item-rotate:
-      - label: 顺时针90度
+      - label: 顺时针 90 度
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: 逆时针90度
+      - label: 逆时针 90 度
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     metadata-list:
-      - label: 新文件夹 ...
+      - label: 新建字段…
         command: app:create-field
     metadata-field:
-      - label: 移出文件夹 ...
+      - label: 删除字段
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: 彻底删除
+      - label: 永久删除项目
         command: app:destroy-item
         condition: '!isReadOnly'
     photo:
       - label: 复制图片
         command: app:duplicate-photo
-      - label: 移出组
+      - label: 移动照片到新项目
         command: app:explode-photo
       - label: 删除图片
         command: app:delete-photo
-      - label: 设为封面
+      - label: 使用照片作为封面图片
         command: app:update-cover-image
         enabled: false
         visible: false
@@ -855,30 +879,30 @@ cn:
       - label: 检查图片
         command: app:consolidate-photo
     photo-rotate:
-      - label: 顺时针90度
+      - label: 顺时针 90 度
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: 逆时针90度
+      - label: 逆时针 90 度
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
-      - label: 删除选中项
+      - label: 删除所选
         command: app:delete-selection
     selection-read-only:
-      - label: 导出选择项
+      - label: 导出所选...
         command: app:extract-photo
     selection-rotate:
-      - label: 顺时针90度
+      - label: 顺时针 90 度
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: 逆时针90度
+      - label: 逆时针 90 度
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     dev:
       - label: 重新加载
         command: win:reload
         accelerator: CmdOrCtrl+R
-      - label: 刷新样式
+      - label: 重新加载样式
         command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
@@ -901,26 +925,26 @@ cn:
       - label: 重命名项目
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: 显示项目所在位置
+      - label: 显示项目文件...
         command: app:show-project-file
     lists:
-      - label: 新文件夹
+      - label: 新建列表
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
-      - label: 重命名文件夹
+      - label: 重命名列表
         command: app:rename-list
         condition: '!isReadOnly'
-      - label: 删除文件夹
+      - label: 删除列表
         command: app:delete-list
         condition: '!isReadOnly'
     tags:
-      - label: 新标签
+      - label: 新建标签
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: 导出标签 ...
+      - label: 导出标签...
         command: app:export-tags
       - label: 默认标签颜色
         submenu:
@@ -1072,12 +1096,12 @@ cn:
         command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
-      - label: 从选中项目除以此标签
+      - label: 从该项目中删除标签
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: 从选中项目除以此标签
+      - label: 从这些项目中删除标签
         command: app:delete-item-tag
         enabled: false
         visible: false
@@ -1166,7 +1190,7 @@ cn:
             type: checkbox
             checked: false
             mode: horizontal
-          - label: 垂直(右向左)
+          - label: 垂直(右到左)
             type: checkbox
             checked: false
             mode: vertical-rl
@@ -1181,14 +1205,14 @@ cn:
         checked: true
         command: app:toggle-line-wrap
     items:
-      - label: 新文件
+      - label: 新建项目
         command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
-      - label: 导出文件
+      - label: 导出项目
         command: app:explode-item
         condition: isMultiplePhotos
-      - label: 添加图片 ...
+      - label: 添加图片...
         command: app:create-item-photo
       - label: 标签
         id: tag
@@ -1198,54 +1222,66 @@ cn:
             checked: true
             enabled: false
           - type: separator
-      - label: 删除文件
+      - label: 删除项目
         command: app:delete-item
     item-read-only:
-      - label: 导出文件
+      - label: 导出项目
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: 导出笔记
         command: app:export-notes
-      - label: 复制笔记链接
+      - label: 复制项目链接
         command: app:copy-item-link
-      - label: 复制笔记
+      - label: 复制项目笔记
         command: app:copy-notes
-      - label: 刷新缩略图
+      - label: 合并项目
         command: app:consolidate-item
     item-bulk:
-      - label: 合并选中项
+      - label: 合并所选项目
         command: app:merge-item
-      - label: 删除选中文件
+      - label: 删除所选项目
         command: app:delete-item
     item-bulk-read-only:
-      - label: 导出选中项
+      - label: 导出所选项目
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: 导出选中项的笔记
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: 导出所选项目笔记...
         command: app:export-notes
-      - label: 复制选中项的笔记
+      - label: 复制所选项目笔记
         command: app:copy-notes
-      - label: 检查选中的文件
+      - label: 检查所选项目文件
         command: app:consolidate-item
     item-list:
-      - label: 移出文件夹
+      - label: 从列表中删除项目
         command: app:list-item-remove
     item-bulk-list:
-      - label: 移出文件夹
+      - label: 从列表中删除所选项目
         command: app:list-item-remove
     item-deleted:
       - label: 恢复文件
         command: app:restore-item
-      - label: 彻底删除
+      - label: 永久删除项目
         command: app:destroy-item
     item-bulk-deleted:
-      - label: 恢复选中文件
+      - label: 恢复所选文件
         command: app:restore-item
-      - label: 彻底删除
+      - label: 永久删除所选项目
         command: app:destroy-item
     item-view:
       - label: 视图布局
@@ -1258,31 +1294,31 @@ cn:
             id: side-by-side
             type: checkbox
     item-rotate:
-      - label: 顺时针90度
+      - label: 顺时针 90 度
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: 逆时针90度
+      - label: 逆时针 90 度
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     metadata-list:
-      - label: 新文件夹 ...
+      - label: 新建字段…
         command: app:create-field
     metadata-field:
-      - label: 移出文件夹 ...
+      - label: 删除字段
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: 彻底删除
+      - label: 永久删除项目
         command: app:destroy-item
         condition: '!isReadOnly'
     photo:
       - label: 复制图片
         command: app:duplicate-photo
-      - label: 移出组
+      - label: 移动照片到新项目
         command: app:explode-photo
       - label: 删除图片
         command: app:delete-photo
-      - label: 设为封面
+      - label: 使用照片作为封面图片
         command: app:update-cover-image
         enabled: false
         visible: false
@@ -1293,35 +1329,35 @@ cn:
         command: app:open-path
       - label: 复制图片链接
         command: app:copy-photo-link
-      - label: 导出图片
+      - label: 导出图片...
         command: app:extract-photo
       - label: 检查图片
         command: app:consolidate-photo
     photo-rotate:
-      - label: 顺时针90度
+      - label: 顺时针 90 度
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: 逆时针90度
+      - label: 逆时针 90 度
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
-      - label: 删除选中项
+      - label: 删除所选
         command: app:delete-selection
     selection-read-only:
-      - label: 导出选择项
+      - label: 导出所选...
         command: app:extract-photo
     selection-rotate:
-      - label: 顺时针90度
+      - label: 顺时针 90 度
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: 逆时针90度
+      - label: 逆时针 90 度
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     dev:
       - label: 重新加载
         command: win:reload
         accelerator: CmdOrCtrl+R
-      - label: 刷新样式
+      - label: 重新加载样式
         command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator

@@ -43,10 +43,10 @@ es:
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Photos…
+            - label: Fotos...
               command: app:import
               accelerator: CmdOrCtrl+Shift+I
-            - label: Folder…
+            - label: Carpeta...
               command: app:import-directory
         - label: Exportar
           id: export
@@ -54,6 +54,12 @@ es:
           submenu:
             - label: JSON-LD
               command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Portrait
+                  command: app:print-pdf
+                - label: Landscape
+                  command: app:print-pdf-landscape
         - type: separator
         - label: Consolidar fototeca
           command: app:consolidate-photo-library
@@ -98,7 +104,7 @@ es:
         - label: Pegar
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Pegar y combinar el estilo
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: Seleccionar todo
@@ -144,7 +150,7 @@ es:
       submenu:
         - label: Recargar los estilos
           command: win:refresh
-        - label: Alternar las herramienta de desarrollo
+        - label: Alternar las herramientas de desarrollo
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
@@ -178,16 +184,16 @@ es:
         - label: Licencia
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: Donar a Tropy
           command: app:donate
         - type: separator
         - label: Mostrar los logs
           command: app:open-logs
-        - label: Mostrar el fólder de plugins
+        - label: Mostrar la carpeta de plugins
           command: app:open-plugins-folder
-        - label: Mostrar el fólder de datos del usuario
+        - label: Mostrar la carpeta de datos del usuario
           command: app:open-user-data
-        - label: Mostrar el fólder de cache
+        - label: Mostrar la carpeta de cache
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
@@ -234,7 +240,7 @@ es:
       submenu:
         - label: Nuevo
           submenu:
-            - label: Projeto
+            - label: Proyecto
               command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: Objeto
@@ -272,10 +278,10 @@ es:
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Photos…
+            - label: Fotos...
               command: app:import
               accelerator: CmdOrCtrl+Shift+I
-            - label: Folder…
+            - label: Carpeta...
               command: app:import-directory
         - label: Consolidar fototeca
           command: app:consolidate-photo-library
@@ -288,6 +294,12 @@ es:
           submenu:
             - label: JSON-LD
               command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Portrait
+                  command: app:print-pdf
+                - label: Landscape
+                  command: app:print-pdf-landscape
         - label: Imprimir
           command: app:print
           accelerator: CmdOrCtrl+P
@@ -318,7 +330,7 @@ es:
         - label: Pegar
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Pegar y combinar el estilo
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: Seleccionar todo
@@ -370,7 +382,7 @@ es:
       submenu:
         - label: Recargar los estilos
           command: win:refresh
-        - label: Alternar las herramienta de desarrollo
+        - label: Alternar las herramientas de desarrollo
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
@@ -405,16 +417,16 @@ es:
         - label: Licencia
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: Donar a Tropy
           command: app:donate
         - type: separator
         - label: Mostrar los logs
           command: app:open-logs
-        - label: Mostrar el fólder de plugins
+        - label: Mostrar la carpeta de plugins
           command: app:open-plugins-folder
-        - label: Mostrar el fólder de datos del usuario
+        - label: Mostrar la carpeta de datos del usuario
           command: app:open-user-data
-        - label: Mostrar el fólder de cache
+        - label: Mostrar la carpeta de cache
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
@@ -436,7 +448,7 @@ es:
       submenu:
         - label: Nuevo
           submenu:
-            - label: Projeto
+            - label: Proyecto
               command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: Objeto
@@ -474,10 +486,10 @@ es:
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Photos…
+            - label: Fotos...
               command: app:import
               accelerator: CmdOrCtrl+Shift+I
-            - label: Folder…
+            - label: Carpeta...
               command: app:import-directory
         - label: Exportar
           id: export
@@ -485,6 +497,12 @@ es:
           submenu:
             - label: JSON-LD
               command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Portrait
+                  command: app:print-pdf
+                - label: Landscape
+                  command: app:print-pdf-landscape
         - type: separator
         - label: Consolidar fototeca
           command: app:consolidate-photo-library
@@ -529,7 +547,7 @@ es:
         - label: Pegar
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Pegar y combinar el estilo
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: Preferencias…
@@ -572,7 +590,7 @@ es:
       submenu:
         - label: Recargar los estilos
           command: win:refresh
-        - label: Alternar las herramienta de desarrollo
+        - label: Alternar las herramientas de desarrollo
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
@@ -606,16 +624,16 @@ es:
         - label: Licencia
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: Donar a Tropy
           command: app:donate
         - type: separator
         - label: Mostrar los logs
           command: app:open-logs
-        - label: Mostrar el fólder de plugins
+        - label: Mostrar la carpeta de plugins
           command: app:open-plugins-folder
-        - label: Mostrar el fólder de datos del usuario
+        - label: Mostrar la carpeta de datos del usuario
           command: app:open-user-data
-        - label: Mostrar el fólder de cache
+        - label: Mostrar la carpeta de cache
           command: app:open-cache-folder
         - type: separator
         - id: updater-check

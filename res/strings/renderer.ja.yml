@@ -501,6 +501,7 @@ ja:
         }
       load: アイテムをロード中
       merge: アイテムを統合中
+      print: Processing items …
       restore: アイテムを復元中
       save: アイテムを保存中
       tag:

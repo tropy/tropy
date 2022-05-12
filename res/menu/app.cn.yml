@@ -1,9 +1,9 @@
 cn:
   linux:
-    - label: 文件
+    - label: 文件(&F)
       id: file
       submenu:
-        - label: 新
+        - label: 新建
           submenu:
             - label: 项目
               command: app:create-project
@@ -35,7 +35,7 @@ cn:
           enabled: false
           submenu:
             - type: separator
-            - label: 清除文件夹
+            - label: 清除列表
               command: app:clear-recent-projects
         - type: separator
         - label: 导入
@@ -54,6 +54,12 @@ cn:
           submenu:
             - label: JSON-LD
               command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Portrait
+                  command: app:print-pdf
+                - label: Landscape
+                  command: app:print-pdf-landscape
         - type: separator
         - label: 刷新缩略图
           command: app:consolidate-photo-library
@@ -76,62 +82,62 @@ cn:
         - label: 退出 %name
           accelerator: CmdOrCtrl+Q
           role: quit
-    - label: 编辑
+    - label: 编辑(&E)
       submenu:
         - id: undo
-          label: 撤销
+          label: 撤销(&U)
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: 重做
+          label: 重做(&R)
           accelerator: Shift+CmdOrCtrl+Z
           command: app:redo
           enabled: false
         - type: separator
-        - label: 剪切
+        - label: 剪切(&T)
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: 复制
+        - label: 复制(&C)
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: 粘贴
+        - label: 粘贴(&P)
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: 粘贴和匹配样式
+        - label: 粘贴并匹配样式
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: 全选
           role: selectAll
         - type: separator
-        - label: 偏好设置
+        - label: 首选项...
           accelerator: Shift+Control+S
           command: app:open-preferences
-    - label: 视图
+    - label: 视图(&V)
       submenu:
-        - label: 重载
+        - label: 重新加载(&R)
           accelerator: CmdOrCtrl+R
           command: win:reload
           window: '*'
         - type: separator
-        - label: 隐藏菜单栏
+        - label: 隐藏菜单栏(&M)
           command: app:toggle-menu-bar
           window: '*'
-        - label: 移动到中间
+        - label: 移动到中心
           command: app:center-window
           window: '*'
         - type: separator
-        - label: 默认界面尺寸
+        - label: 实际尺寸
           command: app:zoom-reset
           accelerator: CmdOrCtrl+0
-        - label: 放大界面UI
+        - label: 放大
           command: app:zoom-in
           accelerator: CmdOrCtrl+Plus
-        - label: 缩小界面UI
+        - label: 缩小
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: 全屏
+        - label: 全屏(&F)
           role: togglefullscreen
           window: '*'
         - type: separator
@@ -139,31 +145,31 @@ cn:
           accelerator: Ctrl+W
           role: close
           window: '*'
-    - label: 高级
+    - label: 开发
       id: dev
       submenu:
-        - label: 刷新皮肤
+        - label: 重新加载样式(&S)
           command: win:refresh
-        - label: 切换开发人员工具
+        - label: 切换开发者工具(&D)
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: 重置数据库
+        - label: 重置本体数据库
           command: app:reset-ontology-db
-        - label: 优化缓存
+        - label: 优化项目缓存
           command: app:optimize-cache
-        - label: 优化数据库
+        - label: 优化项目数据库
           command: app:optimize-project
-        - label: 重新索引数据库
+        - label: 重新索引项目数据库
           command: app:reindex-project
         - type: separator
-        - label: 皮肤
+        - label: 主题
           id: theme
           submenu:
-            - label: 明亮
+            - label: 浅色模式
               id: light
               type: checkbox
-            - label: 黑暗
+            - label: 深色模式
               id: dark
               type: checkbox
             - label: 跟随系统设置
@@ -171,40 +177,40 @@ cn:
               type: checkbox
     - label: 帮助
       submenu:
-        - label: 使用引导
+        - label: 用户指南
           command: app:open-docs
         - label: 支持论坛
           command: app:open-forums
         - label: 软件许可证
           command: app:open-license
         - type: separator
-        - label: 捐赠给Tropy
+        - label: 捐赠给 Tropy
           command: app:donate
         - type: separator
-        - label: 软件运行日志
+        - label: 显示日志文件
           command: app:open-logs
-        - label: 插件文件夹
+        - label: 显示插件文件夹
           command: app:open-plugins-folder
-        - label: 个人数据文件夹
+        - label: 显示个人数据文件夹
           command: app:open-user-data
-        - label: 打开缓存文件夹
+        - label: 显示缓存文件夹
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
-          label: 检查更新
+          label: 检查更新...
           command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
-          label: 获取最新版本
+          label: 获取最新版本...
           enabled: false
           visible: false
         - id: updater-install
-          label: 安装更新
+          label: 安装更新...
           command: app:install-updates
           enabled: false
           visible: false
         - type: separator
-        - label: 关于%name
+        - label: 关于 %name
           command: app:about
           window: '!prefs'
   darwin:
@@ -214,7 +220,7 @@ cn:
           command: app:about
           window: '!prefs'
         - type: separator
-        - label: 偏好设置
+        - label: 首选项...
           accelerator: Command+,
           command: app:open-preferences
         - type: separator
@@ -232,7 +238,7 @@ cn:
           role: quit
     - label: 文件
       submenu:
-        - label: 新
+        - label: 新建
           submenu:
             - label: 项目
               command: app:create-project
@@ -242,7 +248,7 @@ cn:
               accelerator: CmdOrCtrl+Shift+N
               window: project
               condition: '!isProjectReadOnly'
-            - label: 文件夹
+            - label: 列表
               command: app:create-list
               accelerator: CmdOrCtrl+Shift+L
               window: project
@@ -264,7 +270,7 @@ cn:
           enabled: false
           submenu:
             - type: separator
-            - label: 清除文件夹
+            - label: 清除列表
               command: app:clear-recent-projects
         - type: separator
         - label: 导入
@@ -288,6 +294,12 @@ cn:
           submenu:
             - label: JSON-LD
               command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Portrait
+                  command: app:print-pdf
+                - label: Landscape
+                  command: app:print-pdf-landscape
         - label: 打印
           command: app:print
           accelerator: CmdOrCtrl+P
@@ -299,33 +311,33 @@ cn:
     - label: 编辑
       submenu:
         - id: undo
-          label: 撤销
+          label: 撤销(&U)
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: 重做
+          label: 重做(&R)
           accelerator: Shift+CmdOrCtrl+Z
           command: app:redo
           enabled: false
         - type: separator
-        - label: 剪切
+        - label: 剪切(&T)
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: 复制
+        - label: 复制(&C)
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: 粘贴
+        - label: 粘贴(&P)
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: 粘贴和匹配样式
+        - label: 粘贴并匹配样式
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: 全选
           role: selectAll
     - label: 视图
       submenu:
-        - label: 重载
+        - label: 重新加载(&R)
           accelerator: CmdOrCtrl+R
           command: win:reload
           window: '*'
@@ -340,7 +352,7 @@ cn:
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: 全屏
+        - label: 全屏(&F)
           role: togglefullscreen
           window: '*'
     - label: 窗口
@@ -354,11 +366,11 @@ cn:
           accelerator: Ctrl+Cmd+Z
           role: zoom
         - type: separator
-        - label: 移动到中间
+        - label: 移动到中心
           command: app:center-window
           window: '*'
         - type: separator
-        - label: 将窗口前置
+        - label: 置于顶层
           role: front
         - type: separator
         - label: 关闭
@@ -368,28 +380,28 @@ cn:
     - label: 高级
       id: dev
       submenu:
-        - label: 重载皮肤
+        - label: 重新加载样式(&S)
           command: win:refresh
-        - label: 切换开发人员工具
+        - label: 切换开发者工具(&D)
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: 重置数据库
+        - label: 重置本体数据库
           command: app:reset-ontology-db
         - label: 优化项目缓存
           command: app:optimize-cache
-        - label: 优化数据库
+        - label: 优化项目数据库
           command: app:optimize-project
-        - label: 重新索引数据库
+        - label: 重新索引项目数据库
           command: app:reindex-project
         - type: separator
-        - label: 皮肤
+        - label: 主题
           id: theme
           submenu:
-            - label: 明亮
+            - label: 浅色模式
               id: light
               type: checkbox
-            - label: 黑暗
+            - label: 深色模式
               id: dark
               type: checkbox
             - label: 跟随系统设置
@@ -398,43 +410,43 @@ cn:
     - label: 帮助
       role: help
       submenu:
-        - label: 使用引导
+        - label: 用户指南
           command: app:open-docs
         - label: 支持论坛
           command: app:open-forums
         - label: 软件许可证
           command: app:open-license
         - type: separator
-        - label: 捐赠给Tropy
+        - label: 捐赠给 Tropy
           command: app:donate
         - type: separator
-        - label: 软件运行日志
+        - label: 显示日志文件
           command: app:open-logs
-        - label: 插件文件夹
+        - label: 显示插件文件夹
           command: app:open-plugins-folder
-        - label: 运行日志
+        - label: 显示个人数据文件夹
           command: app:open-user-data
-        - label: 打开缓存文件夹
+        - label: 显示缓存文件夹
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
-          label: 检查更新
+          label: 检查更新...
           command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
-          label: 获取最新版本
+          label: 获取最新版本...
           enabled: false
           visible: false
         - id: updater-install
-          label: 安装更新
+          label: 安装更新...
           command: app:install-updates
           enabled: false
           visible: false
   win32:
-    - label: 文件
+    - label: 文件(&F)
       id: file
       submenu:
-        - label: 新
+        - label: 新建
           submenu:
             - label: 项目
               command: app:create-project
@@ -444,7 +456,7 @@ cn:
               accelerator: CmdOrCtrl+Shift+N
               window: project
               condition: '!isProjectReadOnly'
-            - label: 文件夹
+            - label: 列表
               command: app:create-list
               accelerator: CmdOrCtrl+Shift+L
               window: project
@@ -466,7 +478,7 @@ cn:
           enabled: false
           submenu:
             - type: separator
-            - label: 清除文件夹
+            - label: 清除列表
               command: app:clear-recent-projects
         - type: separator
         - label: 导入
@@ -485,6 +497,12 @@ cn:
           submenu:
             - label: JSON-LD
               command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Portrait
+                  command: app:print-pdf
+                - label: Landscape
+                  command: app:print-pdf-landscape
         - type: separator
         - label: 检查图片数据库
           command: app:consolidate-photo-library
@@ -507,45 +525,45 @@ cn:
         - label: 退出 %name
           accelerator: CmdOrCtrl+Q
           role: quit
-    - label: 编辑
+    - label: 编辑(&E)
       submenu:
         - id: undo
-          label: 撤销
+          label: 撤销(&U)
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: 重做
+          label: 重做(&R)
           accelerator: Control+Y
           command: app:redo
           enabled: false
         - type: separator
-        - label: 剪切
+        - label: 剪切(&T)
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: 复制
+        - label: 复制(&C)
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: 粘贴
+        - label: 粘贴(&P)
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: 粘贴和匹配样式
+        - label: 粘贴并匹配样式
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
-        - label: 偏好设置
+        - label: 首选项...
           accelerator: Shift+Control+S
           command: app:open-preferences
-    - label: 视图
+    - label: 视图(&V)
       submenu:
-        - label: 重载
+        - label: 重新加载(&R)
           accelerator: CmdOrCtrl+R
           command: win:reload
           window: '*'
         - type: separator
-        - label: 隐藏菜单栏(重启后显示)
+        - label: 切换菜单栏(&M)
           command: app:toggle-menu-bar
           window: '*'
-        - label: 移动到中间
+        - label: 移动到中心
           command: app:center-window
           window: '*'
         - type: separator
@@ -559,7 +577,7 @@ cn:
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: 全屏
+        - label: 全屏(&F)
           role: togglefullscreen
           window: '*'
         - type: separator
@@ -567,31 +585,31 @@ cn:
           accelerator: Ctrl+W
           role: close
           window: '*'
-    - label: 高级
+    - label: 开发
       id: dev
       submenu:
-        - label: 重载皮肤
+        - label: 重新加载样式(&S)
           command: win:refresh
-        - label: 切换开发人员工具
+        - label: 切换开发者工具(&D)
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: 重置数据库
+        - label: 重置本体数据库
           command: app:reset-ontology-db
         - label: 优化项目缓存
           command: app:optimize-cache
-        - label: 优化数据库
+        - label: 优化项目数据库
           command: app:optimize-project
-        - label: 重新索引数据库
+        - label: 重新索引项目数据库
           command: app:reindex-project
         - type: separator
-        - label: 皮肤
+        - label: 主题
           id: theme
           submenu:
-            - label: 明亮
+            - label: 浅色模式
               id: light
               type: checkbox
-            - label: 黑暗
+            - label: 深色模式
               id: dark
               type: checkbox
             - label: 跟随系统设置
@@ -599,35 +617,35 @@ cn:
               type: checkbox
     - label: 帮助
       submenu:
-        - label: 使用引导
+        - label: 用户指南
           command: app:open-docs
         - label: 支持论坛
           command: app:open-forums
         - label: 软件许可证
           command: app:open-license
         - type: separator
-        - label: 捐赠给Tropy
+        - label: 捐赠给 Tropy
           command: app:donate
         - type: separator
-        - label: 软件运行日志
+        - label: 显示日志文件
           command: app:open-logs
-        - label: 插件文件夹
+        - label: 显示插件文件夹
           command: app:open-plugins-folder
-        - label: 运行日志
+        - label: 显示个人数据文件夹
           command: app:open-user-data
-        - label: 打开缓存文件夹
+        - label: 显示缓存文件夹
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
-          label: 检查更新
+          label: 检查更新...
           command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
-          label: 获取最新版本
+          label: 获取最新版本...
           enabled: false
           visible: false
         - id: updater-install
-          label: 安装更新
+          label: 安装更新...
           command: app:install-updates
           enabled: false
           visible: false

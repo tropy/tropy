@@ -3,6 +3,7 @@ de:
     file:
       project: Tropy-Projekte
       plugin: Tropy-Plugins
+      pdf: PDF files
     crashed:
       buttons:
         - Fenster schließen

@@ -3,6 +3,7 @@ ja:
     file:
       project: Tropyプロジェクト
       plugin: プラグイン
+      pdf: PDF files
     crashed:
       buttons:
         - Close Window

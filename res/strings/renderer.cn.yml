@@ -1,6 +1,6 @@
 cn:
   sidebar:
-    lists: 文件夹
+    lists: 列表
     tags: 标签
     imports: 最近导入
     trash: 删除文件
@@ -8,9 +8,9 @@ cn:
     import: 导入图片
     items: |
       {count, plural,
-      =0 {No items in this view}
-      one {1 item in this view}
-      other {# items in this view}}
+      =0 {此视图中没有项目}
+      one {此视图中有 1 项}
+      other {此视图中有 # 项}}
     search:
       placeholder: 搜索
   panel:
@@ -22,33 +22,33 @@ cn:
         =0 {}
         one {Item}
         other {# Items}}
-      selection: 选中文件
+      selection: 选择
       dropdown:
-        placeholder: 新文件夹
+        placeholder: 添加新字段…
     tags:
       tab: 标签
       add: |
         {count, plural,
-        =0 {Add Tag}
-        one {Add Tag to 1 Item}
-        other {Add Tag to # Items}}
+        =0 {添加标签}
+        one {为 1 项添加标签}
+        other {添加项目到 # 项目}}
     photo:
       title: |
         {count, plural,
-        =0 {No Photos}
-        one {1 Photo}
-        other {# Photos}}
+        =0 {无图片}
+        one {1 张图片}
+        other {# 张图片}}
       create: 添加图片
-      selection: 选中文件
+      selection: 选择
     note:
       title: |
         {count, plural,
-        =0 {No Notes}
-        one {1 Note}
-        other {# Notes}}
+        =0 {无笔记}
+        one {1 个笔记}
+        other {# 个笔记}}
       create: 添加笔记
   print:
-    item: 很久
+    item: 项目
     photo: 图片
     notes: 笔记
     note: 笔记 {idx, number}
@@ -65,24 +65,24 @@ cn:
       title: 卢森堡当代和数字历史中心
       url: https://www.c2dh.uni.lu
     text: |
-      trovy是由{rrchnm}和{c2dh}设计的，这是一个开发历史教学资源、数字展览和开源软件的团队。
-    trademark: Tropy名称是{cds}的注册商标。
+      Trovy 是由 {rrchnm} 和 {c2dh} 设计的，这是一个开发历史教学资源、数字展览和开源软件的团队。简体中文由大眼仔~旭翻译。
+    trademark: Tropy 名称是 {cds} 的注册商标。
     donate:
-      title: 捐赠给Tropy
+      title: 捐赠给 Tropy
       url: https://tropy.org/donate
     release:
       title: 发布笔记
       url: https://github.com/tropy/tropy/releases/tag/v{version}
     license:
-      title: 许可信息
+      title: 许可证信息
       url: https://tropy.org/license
     credits:
-      title: Credits
+      title: 致谢
       url: https://tropy.org/credits
   project:
     none: 拖放项目到这里或创建一个 {newProject}
-    empty: 拖动图片到这里
-    new: 新项目
+    empty: 将您的照片放入 Tropy 以开始使用
+    new: 新建项目
     recent: 最近的项目
     corrupted: |
       您的项目文件可能已损坏，需要手动修复。请查阅用户手册以获得进一步的帮助。
@@ -90,29 +90,29 @@ cn:
       您的项目文件已锁定，无法修改。要解锁，更改文件权限，然后再次打开项目。
   wizard:
     project:
-      title: 新建项目
+      title: 创建一个新项目
       submit: 新建项目
       name: 名称
       save_as: 手动选择文件位置
       change: 更改
   prefs:
-    title: Tropy 偏好设置
+    title: Tropy 首选项
     app:
       label: 设置
       style:
-        theme: 皮肤
+        theme: 主题
         themes:
-          light: 明亮
-          dark: 黑暗
+          light: 浅色模式
+          dark: 深色模式
           system: 跟随系统设置
         font:
           size: 字体大小
           sizes:
-            12px: 极小
+            12px: 非常小
             13px: 小(默认)
             14px: 中
             15px: 大
-            16px: 极大
+            16px: 非常大
       print:
         mode: 打印
         modes:
@@ -123,11 +123,11 @@ cn:
         metadata: 包含元数据
         notes: 包含笔记
         onlyNotes: 仅包含带有注释的照片
-        overflow: Allow content to take up more than one page
+        overflow: 允许内容占用多于一页
       locale:
         locale: 默认
         locales:
-          cn: 中文
+          cn: 简体中文
           de: Deutsch
           en: English
           es: Español
@@ -137,14 +137,14 @@ cn:
           pt: Português
       templates:
         label: 默认模板
-        item: 文件
+        item: 项目
         photo: 图片
-        selection: 选中文件
+        selection: 选择
       title:
-        label: 导入文件且命名
+        label: 导入文件命名为
         force: 覆盖嵌入的照片元数据
-      debug: Enable Developer Mode
-      localtime: 设定Exif时间戳使用本地时区
+      debug: 启用开发者模式
+      localtime: 假设 Exif 时间戳使用本地时区
       dup:
         label: 导入设置
         option:
@@ -153,15 +153,15 @@ cn:
           prompt: 每次都询问我
       density:
         label: 显示分辨率 (ppi)
-        title: 用于PDF、SVG和其他可扩展格式
+        title: 用于 PDF、SVG 和其他可缩放格式
       export:
         label: 导出
         note:
           format:
-            html: HTML笔记
-            markdown: Markdown笔记
+            html: HTML 笔记
+            markdown: Markdown 笔记
           copy:
-            label: 复制笔记
+            label: 复制笔记为
             option:
               text: 纯文本
               markdown: Markdown
@@ -173,7 +173,7 @@ cn:
           invertZoom: 查看照片时反转缩放方式
           overlayToolbars: 自动隐藏工具栏
       zoomMode:
-        label: 视图缩放
+        label: 按默认
         option:
           fit: 原始尺寸但不超过边框
           fill: 照片缩放至宽度适配
@@ -206,11 +206,11 @@ cn:
         usePolling: 使用文件统计
     template:
       label: 模板
-      new: 新模板 ...
+      new: 新建模板...
       create: 创建
       select: 模板
       tools:
-        new: 新
+        new: 新建
         copy: 副本
         delete: 删除
         import: 导入
@@ -256,7 +256,7 @@ cn:
     created: 添加日期
     modified: 已修改
     consolidate: 检查图片
-    error: 照片找不到了
+    error: 照片未找到
   selection:
     size: 大小
     created: 添加日期
@@ -270,7 +270,7 @@ cn:
       edit: 编辑图片
     mode:
       fill: 填充
-      fit: 适应
+      fit: 适合
       zoom: 缩放
     panel:
       negative: 反色
@@ -302,7 +302,7 @@ cn:
       browse: 浏览器
       clear: 清除
   template:
-    id: URI
+    id: URL
     name: 名称
     type: 类型
     creator: 作者
@@ -312,7 +312,7 @@ cn:
       https://tropy.org/v1/tropy#Photo: 图片模板
       https://tropy.org/v1/tropy#Selection: 选择的模板
     field:
-      property: 资产
+      property: 属性
       label: 标记
       datatype: 数据类型
       isRequired: 必需字段
@@ -320,11 +320,11 @@ cn:
       value: 默认值
       isConstant: 只读
   vocab:
-    id: URI
+    id: URL
     prefix: 前缀
     title: 名称
     description: 描述
-    properties: 资产
+    properties: 属性
     seeAlso: 另见
   property:
     select: 选择一个属性…
@@ -332,14 +332,14 @@ cn:
     select: 选择一个数据类型…
   resource:
     select: 选择资源…
-    id: URI
+    id: URL
     label: 标记
     description: 描述
-    comment: 评论
+    comment: 注释
   dialog:
     notify:
       buttons:
-        - OK
+        - 确定
     error:
       title: 错误
       buttons:
@@ -357,10 +357,10 @@ cn:
       photo:
         consolidate:
           message: |
-            是否希望Tropy自动检查并解决此位置的更多丢失照片？
+            是否希望 Tropy 自动检查并解决此位置的更多丢失照片？
           buttons:
-            - 'No'
-            - 'Yes'
+            - 否
+            - 是
       dup:
         detail: |
           此照片已存在于您的项目中。您确定要再次导入吗？
@@ -386,40 +386,40 @@ cn:
         imported:
           message: 成功导入的模板。
           buttons:
-            - OK
+            - 确定
     filter:
       csv: CSV
       templates: Tropy 模板
       images: 图像
       items: Tropy 项目
       notes: 笔记
-      projects: Tropy项目
-      rdf: RDF Vocabularies
+      projects: Tropy 项目
+      rdf: RDF 词汇表
       jsonld: JSON-LD
   action:
     project:
       save: 保存项目
     list:
-      create: 新建文件夹
-      delete: 删除文件夹
+      create: 清除列表
+      delete: 删除列表
       item:
-        add: 添加文件到文件夹
+        add: 添加项目到列表
         merge: 合并项目
-        remove: 移出文件夹
-        restore: 添加文件到文件夹
-      order: 排序文件夹
-      restore: 恢复文件夹
-      save: 保存文件夹
+        remove: 从列表中删除项目
+        restore: 添加项目到列表
+      order: 排序列表
+      restore: 恢复列表
+      save: 保存列表
     item:
-      create: 新建文件
-      delete: 删除文件
-      explode: 导出文件
-      implode: 合并文件
-      merge: 合并文件
-      split: 拆分文件组
-      import: 导入文件
-      restore: 恢复文件组
-      save: 保存文件
+      create: 创建项目
+      delete: 删除项目
+      explode: 导出项目
+      implode: 合并项目
+      merge: 合并项目
+      split: 拆分项目
+      import: 导入项目
+      restore: 恢复项目
+      save: 保存项目
       tag:
         create: 标签
         toggle: 标签
@@ -427,11 +427,11 @@ cn:
     metadata:
       save: 保存元数据
     ontology:
-      import: 导入 Vocabularies
+      import: 导入词汇表
       vocab:
-        save: 保存 Vocabulary
+        save: 保存词汇表
       label:
-        save: 保存标记
+        save: 保存标签
       template:
         import: 导入模板
     photo:
@@ -455,7 +455,7 @@ cn:
       save: 保存标签
     selection:
       create: 新建选择
-      delete: 删除选中项
+      delete: 删除选择
       restore: 新建选择
       save: 保存选择
       order: 排序选择
@@ -464,19 +464,19 @@ cn:
       prune: 优化项目缓存…
       purge: 清除旧缓存…
     project:
-      save: 正在保存 ...
+      save: 正在保存...
     list:
-      create: 正在新建文件夹 ...
-      delete: 正在删除文件夹 ...
+      create: 正在创建列表...
+      delete: 正在删除列表...
       item:
-        add: 正在添加文件到文件夹 ...
+        add: 正在添加项目到列表 ...
         merge: 正在合并项目…
-        remove: 正在移出文件夹 ...
-        restore: 正在恢复文件 ...
-      load: 加载列表中...
+        remove: 正在从列表移出项目...
+        restore: 正在从项目恢复列表 ...
+      load: 正在加载列表...
       order: 排序列表中...
-      restore: 正在恢复文件夹...
-      save: 正在保存文件夹..
+      restore: 正在恢复列表...
+      save: 正在保存列表..
     tag:
       create: 正在新建标签...
       delete: 正在删除标签...
@@ -484,12 +484,12 @@ cn:
       restore: 正在恢复标签...
       save: 正在保存标签...
     item:
-      create: 新建标签中...
-      delete: 删除标签中...
-      destroy: 正在删除文件...
-      explode: 正在导出文件...
-      export: 正在导出文件...
-      implode: 正在恢复文件...
+      create: 正在创建项目...
+      delete: 正在删除项目...
+      destroy: 正在永久删除项目...
+      explode: 正在导出项目...
+      export: 正在导出项目...
+      implode: 正在恢复项目...
       import: |
         {hasProgressBar, select,
         true {Importing item {progress, number} of {total, number} …}
@@ -497,6 +497,7 @@ cn:
         }
       load: 加载文件中...
       merge: 正在合并文件...
+      print: Processing items …
       restore: 正在恢复文件...
       save: 保存文件中...
       tag:
@@ -507,10 +508,10 @@ cn:
       load: 正在加载元数据...
       save: 保存元数据中...
     ontology:
-      load: 正在加载ontology...
-      import: 正在导入vocabularies ...
+      load: 正在加载 ontology...
+      import: 正在导入词汇表...
       vocab:
-        save: 正在保存vocabularies ...
+        save: 正在保存词汇表...
       label:
         save: 正在保存标记...
       template:
@@ -545,20 +546,20 @@ cn:
       order: 排序笔记中...
       restore: 恢复笔记中...
     selection:
-      create: 正在新建图片选择...
+      create: 正在创建图片选择...
       load: 正在加载图片选择...
-      extract: 正在提取选中项
+      extract: 正在提取选择...
     api:
       photo:
         extract: 正在提取照片...
       selection:
-        extract: 正在提取选中项
+        extract: 正在提取选择...
   editor:
     commands:
       bold: 加粗
       italic: 斜体
       underline: 下划线
-      overline: Overline
+      overline: 上划线
       strikethrough: 删除线
       subscript: 上角标
       superscript: 下角标
@@ -610,10 +611,10 @@ cn:
       template:
         change: 未能更改选择模板。
     ontology:
-      migrate: 无法升级您的notology数据库。
-      import: 无法导入vocabulary。
+      migrate: 无法升级您的 notology 数据库。
+      import: 无法导入词汇表。
       vocab:
-        save: 未能保存vocabulary。前缀必须是唯一的。
+        save: 未能保存词汇表。前缀必须是唯一的。
       template:
         import: 无法导入模板。
         field:
@@ -627,7 +628,7 @@ cn:
     update:
       ready:
         message: |
-          您已安装Tropy {version}.您是否确定卸载后再次启动安装程序?
+          您已安装 Tropy {version}。您是否确定卸载后再次启动安装程序?
         confirm: 现在重启
   plugin:
     name: 名称

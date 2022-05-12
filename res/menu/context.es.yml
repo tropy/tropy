@@ -266,9 +266,9 @@ es:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Exportar notas ...
         command: app:export-note
-      - label: Copy Note
+      - label: Copiar nota
         command: app:copy-note
       - label: Suprimir nota
         command: app:delete-note
@@ -320,11 +320,17 @@ es:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Item Notes …
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Exportar notas de un objeto ...
         command: app:export-notes
-      - label: Copy Item Link
+      - label: Copiar enlace al objeto
         command: app:copy-item-link
-      - label: Copy Item Notes
+      - label: Copiar nota de un objeto
         command: app:copy-notes
       - label: Consolidar objeto
         command: app:consolidate-item
@@ -346,9 +352,15 @@ es:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Selected Item Notes …
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Exportar notas del objeto seleccionado ...
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: Copiar notas del objeto seleccionado
         command: app:copy-notes
       - label: Consolidar objetos seleccionados
         command: app:consolidate-item
@@ -370,13 +382,13 @@ es:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: Mostrar el archivo original ...
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: Abrir en visor externo ...
         command: app:open-path
-      - label: Copy Photo Link
+      - label: Copiar enlace a la foto
         command: app:copy-photo-link
-      - label: Export Photo…
+      - label: Exportar foto ...
         command: app:extract-photo
       - label: Consolidar foto
         command: app:consolidate-photo
@@ -391,7 +403,7 @@ es:
       - label: Suprimir selección
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: Exportar selección ...
         command: app:extract-photo
     selection-rotate:
       - label: Rotar a la izquierda
@@ -709,9 +721,9 @@ es:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Exportar nota ...
         command: app:export-note
-      - label: Copy Note
+      - label: Copiar nota
         command: app:copy-note
       - label: Suprimir nota
         command: app:delete-note
@@ -763,11 +775,17 @@ es:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Item Notes …
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Exportar notas de un objeto ...
         command: app:export-notes
-      - label: Copy Item Link
+      - label: Copiar enlace al objeto
         command: app:copy-item-link
-      - label: Copy Item Notes
+      - label: Copiar nota de un objeto
         command: app:copy-notes
       - label: Consolidar objeto
         command: app:consolidate-item
@@ -782,9 +800,15 @@ es:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Selected Item Notes …
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Exportar notas del objeto seleccionado ...
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: Copiar notas del objeto seleccionado
         command: app:copy-notes
       - label: Consolidar objetos seleccionados
         command: app:consolidate-item
@@ -844,13 +868,13 @@ es:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: Mostrar el archivo original ...
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: Abrir en visor externo ...
         command: app:open-path
-      - label: Copy Photo Link
+      - label: Copiar enlace a la foto
         command: app:copy-photo-link
-      - label: Export Photo…
+      - label: Exportar foto ...
         command: app:extract-photo
       - label: Consolidar foto
         command: app:consolidate-photo
@@ -865,7 +889,7 @@ es:
       - label: Suprimir selección
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: Exportar selección ...
         command: app:extract-photo
     selection-rotate:
       - label: Rotar a la izquierda
@@ -1152,9 +1176,9 @@ es:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Exportar notas ...
         command: app:export-note
-      - label: Copy Note
+      - label: Copiar nota
         command: app:copy-note
       - label: Suprimir nota
         command: app:delete-note
@@ -1206,11 +1230,17 @@ es:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Item Notes …
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Exportar notas de un objeto ...
         command: app:export-notes
-      - label: Copy Item Link
+      - label: Copiar enlace al objeto
         command: app:copy-item-link
-      - label: Copy Item Notes
+      - label: Copiar nota de un objeto
         command: app:copy-notes
       - label: Consolidar objeto
         command: app:consolidate-item
@@ -1225,9 +1255,15 @@ es:
         submenu:
           - label: JSON-LD
             command: app:export-item
-      - label: Export Selected Item Notes …
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Exportar notas del objeto seleccionado ...
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: Copiar notas del objeto seleccionado
         command: app:copy-notes
       - label: Consolidar objetos seleccionados
         command: app:consolidate-item
@@ -1287,13 +1323,13 @@ es:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: Mostrar el archivo original ...
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: Abrir en visor externo ...
         command: app:open-path
-      - label: Copy Photo Link
+      - label: Copiar enlace a la foto
         command: app:copy-photo-link
-      - label: Export Photo…
+      - label: Exportar foto ...
         command: app:extract-photo
       - label: Consolidar foto
         command: app:consolidate-photo
@@ -1308,7 +1344,7 @@ es:
       - label: Suprimir selección
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: Exportar selección ...
         command: app:extract-photo
     selection-rotate:
       - label: Rotar a la izquierda

@@ -320,6 +320,12 @@ ja:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Export Item Notes …
         command: app:export-notes
       - label: Copy Item Link
@@ -346,6 +352,12 @@ ja:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Export Selected Item Notes …
         command: app:export-notes
       - label: Copy Selected Item Notes
@@ -763,6 +775,12 @@ ja:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Export Item Notes …
         command: app:export-notes
       - label: Copy Item Link
@@ -782,6 +800,12 @@ ja:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Export Selected Item Notes …
         command: app:export-notes
       - label: Copy Selected Item Notes
@@ -1206,6 +1230,12 @@ ja:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Export Item Notes …
         command: app:export-notes
       - label: Copy Item Link
@@ -1225,6 +1255,12 @@ ja:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Export Selected Item Notes …
         command: app:export-notes
       - label: Copy Selected Item Notes

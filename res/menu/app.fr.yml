@@ -54,6 +54,12 @@ fr:
           submenu:
             - label: JSON-LD
               command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Portrait
+                  command: app:print-pdf
+                - label: Landscape
+                  command: app:print-pdf-landscape
         - type: separator
         - label: Regrouper la photothèque
           command: app:consolidate-photo-library
@@ -288,6 +294,12 @@ fr:
           submenu:
             - label: JSON-LD
               command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Portrait
+                  command: app:print-pdf
+                - label: Landscape
+                  command: app:print-pdf-landscape
         - label: Imprimer
           command: app:print
           accelerator: CmdOrCtrl+P
@@ -485,6 +497,12 @@ fr:
           submenu:
             - label: JSON-LD
               command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Portrait
+                  command: app:print-pdf
+                - label: Landscape
+                  command: app:print-pdf-landscape
         - type: separator
         - label: Regrouper la photothèque
           command: app:consolidate-photo-library

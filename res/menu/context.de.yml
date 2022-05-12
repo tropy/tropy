@@ -320,6 +320,12 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Objektnotizen exportieren …
         command: app:export-notes
       - label: Kopiere Link zu Objekt
@@ -346,6 +352,12 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Exportiere Notizen der ausgewählten Objekte …
         command: app:export-notes
       - label: Kopiere Notizen der ausgewählten Objekte
@@ -763,6 +775,12 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Objektnotizen exportieren …
         command: app:export-notes
       - label: Kopiere Link zu Objekt
@@ -782,6 +800,12 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Exportiere Notizen der ausgewählten Objekte …
         command: app:export-notes
       - label: Kopiere Notizen der ausgewählten Objekte
@@ -1206,6 +1230,12 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Objektnotizen exportieren …
         command: app:export-notes
       - label: Kopiere Link zu Objekt
@@ -1225,6 +1255,12 @@ de:
         submenu:
           - label: JSON-LD
             command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
       - label: Exportiere Notizen der ausgewählten Objekte …
         command: app:export-notes
       - label: Kopiere Notizen der ausgewählten Objekte
