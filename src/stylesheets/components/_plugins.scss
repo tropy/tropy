@@ -66,9 +66,9 @@
 
     .panel-body {
       padding:
-        ($space-lg + 1px)
+        ($space-sm + 1px)
         ($default-padding-horizontal - 2px)
-        $space-lg
+        $space-sm
         $default-padding-horizontal;
 
       &::before {
@@ -121,7 +121,7 @@
       fieldset {
         @include form-shading-level(3);
         margin-right: $space-sm - 3px;
-        padding: $space-sm;
+        padding: 20px;
       }
 
       .form-group {
