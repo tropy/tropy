@@ -51,8 +51,6 @@
       display: inline-flex;
       float: right;
       margin-top: -1px;
-      // Remove when first plugin with a hook other than export is available
-      display: none; /* stylelint-disable-line declaration-block-no-duplicate-properties */
 
       li {
         font-size: 11px;
