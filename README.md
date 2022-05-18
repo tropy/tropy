@@ -1,4 +1,5 @@
-# Tropy
+Tropy
+=====
 [![Build Status](https://github.com/tropy/tropy/actions/workflows/ci.yml/badge.svg)](https://github.com/tropy/tropy/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/tropy/tropy/badge.svg?branch=master)](https://coveralls.io/github/tropy/tropy)
 

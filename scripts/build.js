@@ -128,7 +128,7 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
   const INCLUDE = [
     '/db{,/{migrate,schema}{,/**/*}}',
     '/lib{,/**/*}',
-    '/res{,/{menu,shaders,cursors,images,keymaps,strings,views,workers}{,/**/*}}',
+    '/res{,/{menu,shaders,cursors,images,plugins,keymaps,strings,views,workers}{,/**/*}}',
     '/res/icons{,/{about,colors,cover,project,wizard,window}{,/**/*}}',
     '/package.json',
     '/LICENSE'
@@ -204,7 +204,7 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
     asar: {
       unpack: `**/{${[
         'lib/{node,vendor}/**/*',
-        'res/{icons,keymaps,views}/**/*',
+        'res/{icons,keymaps,plugins,views}/**/*',
         'package.json',
         'LICENSE*'
       ].join(',')}}`
