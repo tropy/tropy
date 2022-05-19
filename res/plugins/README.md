@@ -25,6 +25,7 @@ specifies which Tropy functionality the plugin wants to extend.
 {
   "name": "my-plugin",
   "main": ".src/plugin.js",
+  "icon": "./icon.svg",
   "hooks": {
     "export": true,
     "import": false
@@ -44,7 +45,7 @@ class MyPlugin {
 module.exports = MyPlugin
 ```
 When installed into Tropy, the plugin will be initialized at start-up, with the
-`options` parameter receiving the plugin's [configuration](#configuration), and
+`options` parameter receiving the plugin's [configuration](#options), and
 `context` an object providing access to a range of Tropy's built-in
 functionality, notably the logger or the dialog sub-system.
 
@@ -53,13 +54,12 @@ name as each hook it has registered in its `package.json`. The method's
 signature is specific to the respective hook and can be invoked in different
 ways via Tropy's user interface.
 
-
 Options
 -------
 Your plugin is likely to need some user-defined configuration options. These
 options can be specified in the `package.json` file using the top-level
 "options" array and adjusted by users in the plugins section of Tropy's
-preference window. Here is an example of a plugin parameter in your
+preferences window. Here is an example of a plugin parameter in your
 `package.json`:
 ```json
 "options": [
@@ -78,13 +78,14 @@ Each parameter can be described with the following properties:
   In the previous example, your plugin will receive an `options` parameter with
   `fileName` set to the value selected via the plugin preferences.
 
-* **type** has a default value of 'string' if omitted, corresponding to a
-  regular text box. Other possibilities are `boolean` for a checkbox, `number`
-  for a number input, `template` for a dropdown menu of templates, `property`
-  for a dropdown menu of linked data properties, or `save-file` for a dialog to
-  choose a file location.
+* **type** determines the type of input control Tropy will use for the
+  parameter in the plugins preference pane. Its default value of 'string',
+  if omitted, corresponds to a regular text box. Other possibilities are
+  `boolean` for a checkbox, `number` for a number input, `template` for a
+  dropdown menu of templates, `property` for a dropdown menu of linked data
+  properties, or `save-file` for a dialog to choose a file location.
 
-* **default** sets the parameter's default value.
+* **default** optionally sets the parameter's default value.
 
 * **label** is a mandatory string which appears as the parameter's label in the
   plugin preferences.
@@ -96,19 +97,18 @@ You can also define other attributes here, such as **placeholder** and
 **required**, if appropriate for the type of input you have selected, and these
 are passed through to the corresponding form field.
 
-
 Context
 -------
 The `context` object is supplied to each plugin instance and provides access to
-various of Tropy's sub-systems available at runtime.
-```js
-{
-  logger, // Write to Tropy's logger
-  dialog, // Create dialog windows
-  json, // Utilities for working with JSON-LD
-  window // The project window object, including access to the global store
-}
-```
+various of Tropy's sub-systems available at runtime. These include the `logger`
+and `dialog`, which can be used to write directly to Tropy's logger or to open
+dialog windows (e.g., to select a local file). The context also exposes access
+to [jsonld.js](https://github.com/digitalbazaar/jsonld.js) bundled with Tropy
+via `json.expand()` and `json.compact()`.
+
+For more advanced requirements, the context also exposes access to the project
+`window` object, which include's the store for read-only access to the current
+project and all installed templates and vocabularies.
 
 Hooks
 -----
