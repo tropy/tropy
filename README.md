@@ -9,7 +9,7 @@ so you can quickly find your sources whenever you need them.
 Visit [tropy.org][] to learn more
 or follow [@tropy][] on Twitter for important announcements.
 To get started, download the latest version of Tropy for your platform,
-check out the [user's manual][] and join the discussion on the [forums][].
+check out the [user's manual][docs] and join the discussion on the [forums][].
 
 If you are interested to work on Tropy or create your own builds,
 please find more details below.
@@ -17,7 +17,7 @@ Happy hacking!
 
 [tropy.org]: https://tropy.org
 [@tropy]: https://twitter.com.tropy
-[users'manual]: https://docs.tropy.org
+[docs]: https://docs.tropy.org
 [forums]: https://forums.tropy.org
 
 Install from Source
