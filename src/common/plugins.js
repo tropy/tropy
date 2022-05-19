@@ -230,6 +230,7 @@ export class Plugins extends EventEmitter {
           options: pkg.options,
           label: pkg.label || pkg.productName,
           hooks: pkg.hooks || {},
+          icon: icon(pkg, name, this.root),
           source: pkg.source,
           repository: pkg.repository,
           homepage: homepage(pkg)
@@ -317,4 +318,14 @@ const homepage = pkg => {
       .replace(/^github:/, 'https://github.com/')
       .replace(/^gitlab:/, 'https://gitlab.com/')
       .replace(/^bitbucket:/, 'https://bitbucket.org/')
+}
+
+const icon = (pkg, name, root) => {
+  if (!pkg.icon)
+    return null
+  if (pkg.source === 'npm')
+    return join(root, 'node_modules', name, pkg.icon)
+  else
+    return join(root, name, pkg.icon)
+
 }
