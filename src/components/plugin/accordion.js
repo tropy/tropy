@@ -71,6 +71,12 @@ export class PluginAccordion extends Accordion {
     )
   }
 
+  get icon() {
+    return (this.props.spec.icon) && (
+      <span>{this.props.spec.icon}</span>
+    )
+  }
+
   get info() {
     return (this.props.spec.homepage == null) ? <NoInfo/> : (
       <div className="info">
@@ -89,6 +95,7 @@ export class PluginAccordion extends Accordion {
     return super.renderHeader(
       <div className="panel-header-container">
         {this.hooks}
+        {this.icon}
         {this.heading}
         {this.description}
         <div className="flex-row center">
