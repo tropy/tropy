@@ -3,17 +3,19 @@ import fs from 'fs'
 import { basename, join } from 'path'
 import { shell } from 'electron'
 import debounce from 'lodash.debounce'
-import { logger, info, warn } from './log'
+import { debug, logger, info, warn } from './log'
 import { blank, get, omit, uniq } from './util'
 import { unzip } from './zip'
+import { paths } from './release'
 
-const {
+import {
   mkdir,
-  readFile: read,
-  writeFile: write,
+  readFile as read,
+  writeFile as write,
   readdir,
-  stat
-} = fs.promises
+  stat,
+  symlink
+} from 'fs/promises'
 
 const load = async file => JSON.parse(await read(file))
 const save = (file, data) => write(file, JSON.stringify(data, null, 2))
@@ -120,6 +122,17 @@ export class Plugins extends EventEmitter {
 
   async init(autosave = true) {
     await mkdir(this.root, { recursive: true })
+
+    try {
+      await symlink(
+        join(paths.res, 'plugins', 'README.md'),
+        join(this.root, 'README.md'),
+        'file')
+    } catch (e) {
+      if (e.code !== 'EEXIST')
+        warn({ stack: e.stack }, 'failed to link plugins readme')
+    }
+
     return this.reload(autosave)
   }
 
