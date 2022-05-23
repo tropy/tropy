@@ -107,6 +107,12 @@ export class ImportCommand extends Command {
       }
     }
 
+    if (image.description) {
+      if (!(dc.description in data || dcterms.description in data)) {
+        data[dc.description] = text(image.description)
+      }
+    }
+
     if (type === 'photo') {
       if (!(dc.date in data || dcterms.date in data)) {
         data[dc.date] = date(image.date)

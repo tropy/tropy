@@ -5,8 +5,9 @@ import { sharp, init } from './sharp'
 import { warn } from '../common/log'
 import { pick, restrict } from '../common/util'
 import { rgb } from '../css'
-import { IMAGE } from '../constants'
+import { IMAGE, MIME } from '../constants'
 import { exif as exifns } from '../ontology'
+import { getComments } from './jpg'
 
 const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
 
@@ -124,6 +125,14 @@ export class Image extends Asset {
 
     this.meta = new Array(this.numPages)
     this.stats = new Array(this.numPages)
+
+    if (this.mimetype === MIME.JPG) {
+      try {
+        this.description = [...getComments(this.buffer)].join(' ')
+      } catch (e) {
+        warn({ stack: e.stack }, 'failed to extract jpg comments')
+      }
+    }
 
     let timezone = useLocalTimezone ? (new Date().getTimezoneOffset()) : 0
 
