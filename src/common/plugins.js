@@ -123,14 +123,16 @@ export class Plugins extends EventEmitter {
   async init(autosave = true) {
     await mkdir(this.root, { recursive: true })
 
-    try {
-      await symlink(
-        join(paths.res, 'plugins', 'README.md'),
-        join(this.root, 'README.md'),
-        'file')
-    } catch (e) {
-      if (e.code !== 'EEXIST')
-        warn({ stack: e.stack }, 'failed to link plugins readme')
+    if (process.env.NODE_ENV !== 'test') {
+      try {
+        await symlink(
+          join(paths.res, 'plugins', 'README.md'),
+          join(this.root, 'README.md'),
+          'file')
+      } catch (e) {
+        if (e.code !== 'EEXIST')
+          warn({ stack: e.stack }, 'failed to link plugins readme')
+      }
     }
 
     return this.reload(autosave)
