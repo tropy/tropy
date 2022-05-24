@@ -72,8 +72,11 @@ export class PluginAccordion extends Accordion {
   }
 
   get icon() {
-    return (this.props.spec.icon) && (
-      <span>{this.props.spec.icon}</span>
+    return (
+      <img
+        className="plugin-icon"
+        src={(this.props.spec.icon == null) ? '../../res/icons/prefs/icon.svg' :
+          this.props.spec.icon}/>
     )
   }
 
@@ -94,27 +97,30 @@ export class PluginAccordion extends Accordion {
   renderHeader() {
     return super.renderHeader(
       <div className="panel-header-container">
-        {this.hooks}
         {this.icon}
-        {this.heading}
-        {this.description}
-        <div className="flex-row center">
-          {this.info}
-          <ButtonGroup>
-            <Button
-              isDefault
-              text="prefs.plugins.settings"
-              onClick={this.handleToggle}/>
-            <Button
-              isDefault
-              text={`prefs.plugins.${this.hasInstances ? 'disable' : 'enable'}`}
-              onClick={this.handlePluginToggle}/>
-            {this.isLocalPlugin &&
+        <div className="plugin-container">
+          {this.hooks}
+          {this.heading}
+          {this.description}
+          <div className="flex-row center">
+            {this.info}
+            <ButtonGroup>
               <Button
                 isDefault
-                text="prefs.plugins.uninstall"
-                onClick={this.handleUninstall}/>}
-          </ButtonGroup>
+                text="prefs.plugins.settings"
+                onClick={this.handleToggle}/>
+              <Button
+                isDefault
+                text={`prefs.plugins.${this.hasInstances ? 'disable' :
+                  'enable'}`}
+                onClick={this.handlePluginToggle}/>
+              {this.isLocalPlugin &&
+                <Button
+                  isDefault
+                  text="prefs.plugins.uninstall"
+                  onClick={this.handleUninstall}/>}
+            </ButtonGroup>
+          </div>
         </div>
       </div>
     )

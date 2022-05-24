@@ -16,14 +16,26 @@
     }
 
     .panel-header-container {
+      display: flex;
       padding-top: $space-sm + 2px; // 20px to x-height
       padding-bottom: $space-sm;
+    }
+
+    .plugin-icon {
+      flex: 0 0 auto;
+      width: $space-xl;
+      height: $space-xl;
+      margin-top: 3px;
+      margin-right: $space-sm;
+    }
+
+    .plugin-container {
+      flex: 1 1 0;
     }
 
     .panel-heading {
       font-size: $h1-font-size;
       line-height: $headings-line-height;
-      margin-bottom: 2px;
 
       .version {
         font-size: $font-size-base;
