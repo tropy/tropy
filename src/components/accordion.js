@@ -4,9 +4,8 @@ import cx from 'classnames'
 import { visible } from '../dom'
 import { bool, func, node, number, oneOfType, string } from 'prop-types'
 
-const { Component, Children, cloneElement: clone } = React
 
-export class Accordion extends Component {
+export class Accordion extends React.Component {
   container = React.createRef()
 
   componentDidUpdate({ isActive: wasActive, isOpen: wasOpen }) {
@@ -58,7 +57,7 @@ export class Accordion extends Component {
   }
 
   render() {
-    const [header, ...body] = Children.toArray(this.props.children)
+    const [header, ...body] = React.Children.toArray(this.props.children)
 
     return (
       <section
@@ -86,7 +85,7 @@ export class Accordion extends Component {
 }
 
 
-export class AccordionGroup extends Component {
+export class AccordionGroup extends React.Component {
   state = {
     active: null,
     open: []
@@ -105,7 +104,7 @@ export class AccordionGroup extends Component {
   }
 
   getNext(k = 1) {
-    let accordions = Children.toArray(this.props.children)
+    let accordions = React.Children.toArray(this.props.children)
     let { active } = this.state
 
     if (accordions.length === 0) return null
@@ -200,8 +199,8 @@ export class AccordionGroup extends Component {
         onKeyDown={this.handleKeyDown}
         tabIndex={this.props.tabIndex}
         ref={this.container}>
-        {Children.map(this.props.children, (acc) =>
-          clone(acc, {
+        {React.Children.map(this.props.children, (acc) =>
+          React.cloneElement(acc, {
             isActive: this.isActive(acc.props.id),
             isOpen: this.isOpen(acc.props.id),
             onToggle: this.handleToggle

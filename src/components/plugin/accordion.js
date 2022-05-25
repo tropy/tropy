@@ -160,6 +160,7 @@ export class PluginAccordion extends Accordion {
   }
 
   static defaultProps = {
+    ...Accordion.defaultProps,
     defaultIcon: join(paths.res, 'icons', 'prefs', 'icon.svg')
   }
 }
