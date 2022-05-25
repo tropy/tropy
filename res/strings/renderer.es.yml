@@ -65,8 +65,9 @@ es:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
     text: >
-      Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
-      historical teaching resources, digital exhibits, and open-source software.
+      Tropy es desarrollado por el {rrchnm} y el {c2dh}, un equipo que crea
+      recursos para la enseñanza de la historia, exhibiciones digitales y
+      software de código abierto.
     trademark: Tropy es una marca registrada de la {cds}.
     donate:
       title: Donar a Tropy
@@ -109,23 +110,23 @@ es:
           dark: Obscuro
           system: Seguir las preferencias del sistema
         font:
-          size: Font size
+          size: Tamaño de letra
           sizes:
-            12px: Very Small
-            13px: Small (Default)
-            14px: Medium
-            15px: Large
-            16px: Very Large
+            12px: Muy pequeño
+            13px: Pequeño (por defecto)
+            14px: Mediano
+            15px: Grande
+            16px: Muy grande
       print:
         mode: Imprimir
         modes:
-          item: One Item per Page
-          photo: One Photo per Page
-          selection: One Selection per Page
+          item: Un objeto por página
+          photo: Una foto por página
+          selection: Una selección por página
         photos: Incluir fotos
         metadata: Incluir metadatos
         notes: Incluir notas
-        onlyNotes: Include only photos with notes
+        onlyNotes: Incluir únicamente fotos con notas
         overflow: Permitir al contenido de utilizar más de una página
       locale:
         locale: Lengua
@@ -164,11 +165,11 @@ es:
             html: Notas en HTML
             markdown: Notas en Markdown
           copy:
-            label: Copy notes as
+            label: Copiar notas como
             option:
-              text: Plain text
+              text: Texto sin formato
               markdown: Markdown
-              html: HTML source code
+              html: Código fuente HTML
       ui:
         label: Interfaz
         option:
@@ -180,7 +181,7 @@ es:
         option:
           fit: Escalar fotos por altura
           fill: Escalar fotos por anchura
-          zoom: Zoom photos to actual size
+          zoom: Escalar fotos por su tamaño real
       layout:
         label: Modo de visualización de objeto
         option:
@@ -197,7 +198,7 @@ es:
         label: Link photos
         option:
           'null': Using absolute paths
-          project: Relative to the project file
+          project: Relativo al archivo de proyecto
           home: Relative to your home directory
       store: Managed folder
       name: Nombre
@@ -252,13 +253,13 @@ es:
     template: Plantilla
   photo:
     file: Archivo
-    size: Talla
+    size: Tamaño
     density: Resolución
     type: Tipo
     created: Creación
     modified: Modificado
     consolidate: Consolidar foto
-    error: Photo not found
+    error: Foto no encontrada
   selection:
     size: Tamaño
     created: Creación
@@ -384,12 +385,11 @@ es:
             - Borrar
       template:
         import:
-          message: >
-            A template with this id already exists in your ontology database. Do
-            you want to overwrite the existing template?
+          message: |
+            No se puede encontrar o abrir el archivo de la base de datos.
           buttons:
-            - Cancel
-            - Overwrite
+            - Cancelar
+            - Sobrescribir
         imported:
           message: Plantilla importada exitosamente
           buttons:
@@ -504,7 +504,7 @@ es:
         }
       load: Cargando objetos …
       merge: Fusionando objeto …
-      print: Processing items …
+      print: Procesando objetos ...
       restore: Restaurando objeto …
       save: Guardando objetos …
       tag:
@@ -545,7 +545,7 @@ es:
       order: Ordenando fotos …
       save: Guardando foto …
       restore: Restaurando fotos …
-      extract: Extracting photo …
+      extract: Extrayendo foto ...
     note:
       create: Creando nota …
       delete: Suprimiendo nota …
@@ -555,12 +555,12 @@ es:
     selection:
       create: Creando selección
       load: Cargando selecciones …
-      extract: Extracting selection …
+      extract: Extrayendo selección ...
     api:
       photo:
-        extract: Extracting photo …
+        extract: Extrayendo foto ...
       selection:
-        extract: Extracting selection …
+        extract: Extrayendo selección ...
   editor:
     commands:
       bold: Negrilla
@@ -611,12 +611,12 @@ es:
       consolidate: Falla en la consolidación de fotos.
       create: Falla en la importación de foto.
       save: Falla al guardar foto.
-      extract: Failed to export photo.
+      extract: Falla al exportar la foto.
       template:
         change: Falla al cambiar la plantilla de foto.
     selection:
       create: Falla en la creación de la selección.
-      extract: Failed to export selection.
+      extract: Falla al exportar la selección.
       template:
         change: Falla al cambiar la plantilla de selección.
     ontology:
@@ -634,7 +634,7 @@ es:
         Falla en la creación de etiqueta. Los nombre de etiquetas deben ser
         únicos.
     db:
-      SQLITE_CANTOPEN: Cannot find or open database file.
+      SQLITE_CANTOPEN: No se puede encontrar o abrir el archivo de la base de datos.
   flash:
     update:
       ready:
