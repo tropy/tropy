@@ -43,7 +43,7 @@ jobs:
           cache: npm
 
       - name: Install and build dependencies
-        run: npm ci --no-progress
+        run: npm clean-install --no-progress
 
       - name: Rebuild native dependencies
         run: node scripts/rebuild --force --arch ${{ matrix.arch }}
@@ -56,7 +56,7 @@ jobs:
         env:
           npm_config_arch: ${{ matrix.arch }}
 
-      - name: Run main/tests tests
+      - name: Run main/renderer tests
         if: matrix.os != 'ubuntu-latest'
         run: npm test
         shell: bash
