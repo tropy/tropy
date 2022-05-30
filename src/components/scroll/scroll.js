@@ -8,12 +8,15 @@ import { Viewport } from './viewport'
 import { restrict } from '../../common/util'
 import { indexOf, sanitize } from '../../common/collection'
 import memoize from 'memoize-one'
+import debounce from 'lodash.debounce'
 
 
 export class Scroll extends React.Component {
   container = React.createRef()
 
   state = {
+    isScrolling: false,
+
     // Derived from container size
     width: 0,
     height: 0,
@@ -31,6 +34,7 @@ export class Scroll extends React.Component {
 
   componentWillUnmount() {
     cancelAnimationFrame(this.#scrollCallback.current)
+    this.#resetIsScrolling.cancel()
   }
 
   componentDidUpdate({ itemHeight }) {
@@ -304,12 +308,21 @@ export class Scroll extends React.Component {
       this.#scrollCallback.current =
         requestAnimationFrame(this.#scrollCallback)
     }
+
+    if (!this.state.isScrolling)
+      this.setState({ isScrolling: true })
+
+    this.#resetIsScrolling()
   }
 
   #scrollCallback = () => {
     this.#scrollCallback.current = null
     this.handleScrollUpdate(this.container.current.scrollTop)
   }
+
+  #resetIsScrolling = debounce(() => {
+    this.setState({ isScrolling: false })
+  }, 200)
 
   handleScrollUpdate(top) {
     let { itemHeight, expansionPadding } = this.props
@@ -436,6 +449,7 @@ export class Scroll extends React.Component {
       <ScrollContainer
         ref={this.container}
         sync={this.props.sync}
+        isScrolling={this.state.isScrolling}
         onClick={this.props.onClick}
         onKeyDown={this.handleKeyDown}
         onResize={this.handleResize}

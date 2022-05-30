@@ -1,5 +1,5 @@
 import React from 'react'
-import { element, func, number, object, oneOfType, string } from 'prop-types'
+import { bool, element, func, number, object, oneOfType, string } from 'prop-types'
 import cx from 'classnames'
 import throttle from 'lodash.throttle'
 import { on, off } from '../../dom'
@@ -110,7 +110,9 @@ export class ScrollContainer extends React.Component {
     return (
       <div
         ref={this.container}
-        className={cx('scroll-container', this.props.className)}
+        className={cx('scroll-container', this.props.className, {
+          scrolling: this.props.isScrolling
+        })}
         onBlur={this.props.onBlur}
         onClick={this.props.onClick && this.handleClick}
         onKeyDown={this.props.tabIndex && this.props.onKeyDown}
@@ -123,6 +125,7 @@ export class ScrollContainer extends React.Component {
   static propTypes = {
     children: element,
     className: oneOfType(object, string),
+    isScrolling: bool,
     onBlur: func,
     onClick: func,
     onKeyDown: func,
