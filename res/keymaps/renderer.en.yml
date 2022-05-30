@@ -169,8 +169,15 @@ en:
       remove:
         - Backspace
         - Delete
-      commit: Enter
+      edit:
+        - Enter
+        - F2
       clear: Escape
+    TagPanel: &TagPanel
+      remove:
+        - Backspace
+        - Delete
+      commit: Enter
   darwin:
     global: *global
     Esper: *Esper
@@ -231,5 +238,8 @@ en:
     ItemPanel: *ItemPanel
     NoteList: *NoteList
     NotePad: *NotePad
-    TagList: *TagList
+    TagList:
+      <<: *TagList
+      edit: Enter
+    TagPanel: *TagPanel
   win32: *linux
