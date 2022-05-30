@@ -52,7 +52,9 @@ en:
       clear:
         - Escape
         - Home
-      edit: F2
+      edit:
+        - Enter
+        - F2
     ItemIterator: &ItemIterator
       preview: Space
       open: Enter
@@ -181,14 +183,8 @@ en:
   darwin:
     global: *global
     Esper: *Esper
-    Sidebar: &Sidebar
-      next: ArrowDown
-      prev: ArrowUp
-      expand: ArrowRight
-      collapse: ArrowLeft
-      clear:
-        - Escape
-        - Home
+    Sidebar:
+      <<: *Sidebar
       edit: Enter
     ItemIterator:
       preview: Space
