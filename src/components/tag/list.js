@@ -45,6 +45,9 @@ export class TagList extends React.PureComponent {
       case 'remove':
         this.props.onRemove(tag)
         break
+      case 'edit':
+        this.props.onEdit(tag)
+        break
       case 'commit':
         this.props.onCommit(tag)
         break
@@ -104,6 +107,7 @@ export class TagList extends React.PureComponent {
     onContextMenu: func.isRequired,
     onCreate: func,
     onDropItems: func,
+    onEdit: func,
     onEditCancel: func,
     onRemove: func.isRequired,
     onSave: func,
@@ -114,6 +118,7 @@ export class TagList extends React.PureComponent {
     colors: SASS.TAG.COLORS,
     selection: [],
     onCommit: noop,
+    onEdit: noop,
     onSelect: noop
   }
 }
