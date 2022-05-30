@@ -23,5 +23,9 @@
 
   > * {
     pointer-events: auto;
+
+    .scrolling & {
+      pointer-events: none;
+    }
   }
 }
