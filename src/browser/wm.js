@@ -46,7 +46,6 @@ export class WindowManager extends EventEmitter {
         enableRemoteModule: false,
         nodeIntegration: true,
         preload: join(paths.lib, 'bootstrap.js'),
-        experimentalFeatures: true,
         spellcheck: false,
         v8CacheOptions: 'bypassHeatCheck',
         ...defaults.webPreferences

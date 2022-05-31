@@ -50,7 +50,7 @@ export class PluginOption extends React.PureComponent {
     switch (this.props.spec.type) {
       case 'bool':
       case 'boolean':
-        return <FormToggle {...this.attrs}/>
+        return <FormToggle {...this.attrs} isCompact/>
       case 'template':
         return (
           <FormElement id={this.props.spec.label}>
