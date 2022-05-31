@@ -153,8 +153,8 @@ export class Plugins extends EventEmitter {
         ...(await deps(join(this.root, 'package.json'))),
         ...(await subdirs(this.root))
       ])
-    } catch (error) {
-      warn(`failed to list plugins: ${error.message}`)
+    } catch (e) {
+      warn({ stack: e.stack }, `failed to list plugins: ${e.message}`)
       return []
     }
   }
