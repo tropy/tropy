@@ -129,7 +129,7 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
     '/db{,/{migrate,schema}{,/**/*}}',
     '/lib{,/**/*}',
     '/res{,/{menu,shaders,cursors,images,plugins,keymaps,strings,views,workers}{,/**/*}}',
-    '/res/icons{,/{about,colors,cover,project,wizard,window}{,/**/*}}',
+    '/res/icons{,/{about,colors,cover,prefs,project,wizard,window}{,/**/*}}',
     '/package.json',
     '/LICENSE'
   ]
