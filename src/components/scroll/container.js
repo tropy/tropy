@@ -1,7 +1,8 @@
 import React from 'react'
-import { bool, element, func, number, object, oneOfType, string } from 'prop-types'
+import { element, func, number, object, oneOfType, string } from 'prop-types'
 import cx from 'classnames'
 import throttle from 'lodash.throttle'
+import debounce from 'lodash.debounce'
 import { on, off } from '../../dom'
 
 export class ScrollContainer extends React.Component {
@@ -12,6 +13,10 @@ export class ScrollContainer extends React.Component {
   #RO = new ResizeObserver(([e]) => {
     this.handleResize(e.contentRect)
   })
+
+  state = {
+    isScrolling: false
+  }
 
   componentDidMount() {
     if (this.props.onResize)
@@ -35,6 +40,8 @@ export class ScrollContainer extends React.Component {
     })
 
     off(this.container.current, 'tab:focus', this.handleTabFocus)
+
+    this.handleScrollStop.cancel()
   }
 
   get bounds() {
@@ -44,6 +51,10 @@ export class ScrollContainer extends React.Component {
       width: clientWidth,
       height: clientHeight
     }
+  }
+
+  get isScrolling() {
+    return this.state.isScrolling
   }
 
   get scrollTop() {
@@ -93,6 +104,11 @@ export class ScrollContainer extends React.Component {
   }, 15)
 
   handleScroll = (event) => {
+    if (!this.state.isScrolling) {
+      this.setState({ isScrolling: true })
+      this.props.onScrollStart?.(event)
+    }
+
     this.props.onScroll?.(event)
 
     if (this.props.sync?.current && !this.#didSync) {
@@ -100,7 +116,13 @@ export class ScrollContainer extends React.Component {
     }
 
     this.#didSync = false
+    this.handleScrollStop()
   }
+
+  handleScrollStop = debounce(() => {
+    this.setState({ isScrolling: false })
+    this.props.onScrollStop?.()
+  }, 250)
 
   handleTabFocus = (event) => {
     this.props.onTabFocus(event)
@@ -111,7 +133,7 @@ export class ScrollContainer extends React.Component {
       <div
         ref={this.container}
         className={cx('scroll-container', this.props.className, {
-          scrolling: this.props.isScrolling
+          scrolling: this.state.isScrolling
         })}
         onBlur={this.props.onBlur}
         onClick={this.props.onClick && this.handleClick}
@@ -125,12 +147,13 @@ export class ScrollContainer extends React.Component {
   static propTypes = {
     children: element,
     className: oneOfType(object, string),
-    isScrolling: bool,
     onBlur: func,
     onClick: func,
     onKeyDown: func,
     onResize: func,
     onScroll: func,
+    onScrollStart: func,
+    onScrollStop: func,
     onTabFocus: func,
     sync: object,
     tabIndex: number

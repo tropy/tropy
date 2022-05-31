@@ -273,7 +273,7 @@ export class ItemTable extends ItemIterator {
     )
   }
 
-  renderTableRow = (item, index) => {
+  renderTableRow = (item, index, { isScrolling }) => {
     return (
       <TableRow {...this.getIterableProps(item, index)}
         key={item.id}
@@ -283,6 +283,7 @@ export class ItemTable extends ItemIterator {
         drop={this.state.drop}
         edit={this.props.edit}
         hasPositionColumn={this.hasPositionColumn()}
+        isReadOnly={isScrolling}
         item={item}
         position={this.getPosition(index)}
         template={this.props.templates[item.template]}

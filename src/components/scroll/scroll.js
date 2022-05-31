@@ -8,7 +8,6 @@ import { Viewport } from './viewport'
 import { restrict } from '../../common/util'
 import { indexOf, sanitize } from '../../common/collection'
 import memoize from 'memoize-one'
-import debounce from 'lodash.debounce'
 
 
 export class Scroll extends React.Component {
@@ -34,7 +33,6 @@ export class Scroll extends React.Component {
 
   componentWillUnmount() {
     cancelAnimationFrame(this.#scrollCallback.current)
-    this.#resetIsScrolling.cancel()
   }
 
   componentDidUpdate({ itemHeight }) {
@@ -303,26 +301,25 @@ export class Scroll extends React.Component {
     })
   }
 
+  handleScrollStart = () => {
+    this.setState({ isScrolling: true })
+  }
+
+  handleScrollStop = () => {
+    this.setState({ isScrolling: false })
+  }
+
   handleScroll = () => {
     if (!this.#scrollCallback.current) {
       this.#scrollCallback.current =
         requestAnimationFrame(this.#scrollCallback)
     }
-
-    if (!this.state.isScrolling)
-      this.setState({ isScrolling: true })
-
-    this.#resetIsScrolling()
   }
 
   #scrollCallback = () => {
     this.#scrollCallback.current = null
     this.handleScrollUpdate(this.container.current.scrollTop)
   }
-
-  #resetIsScrolling = debounce(() => {
-    this.setState({ isScrolling: false })
-  }, 200)
 
   handleScrollUpdate(top) {
     let { itemHeight, expansionPadding } = this.props
@@ -449,11 +446,12 @@ export class Scroll extends React.Component {
       <ScrollContainer
         ref={this.container}
         sync={this.props.sync}
-        isScrolling={this.state.isScrolling}
         onClick={this.props.onClick}
         onKeyDown={this.handleKeyDown}
         onResize={this.handleResize}
         onScroll={this.handleScroll}
+        onScrollStart={this.handleScrollStart}
+        onScrollStop={this.handleScrollStop}
         onTabFocus={this.handleTabFocus}
         tabIndex={this.tabIndex}>
         <Runway height={runway}>
@@ -462,6 +460,7 @@ export class Scroll extends React.Component {
             columns={columns}
             offset={this.state.offset}>
             <Range
+              isScrolling={this.state.isScrolling}
               columns={columns}
               items={this.props.items}
               from={from}
