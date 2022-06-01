@@ -193,6 +193,7 @@
       color: $add-tag-placeholder-color-default;
       mix-blend-mode: if($theme == "light", multiply, lighten); // Prevent placeholder text from covering the text cursor.
       z-index: 4;
+      white-space: nowrap;
 
       transition:
         left $add-tag-transition,
