@@ -152,7 +152,7 @@
     "rollup-plugin-license": "^2.3.0",
     "sanitize-filename": "^1.6.3",
     "semver": "^7.3.4",
-    "sharp": "^0.29.1",
+    "sharp": "^0.30.5",
     "sqlite3": "^5.0.6",
     "transducers.js": "^0.3.2",
     "uuid": "^8.3.2",
