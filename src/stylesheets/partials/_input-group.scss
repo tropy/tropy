@@ -10,6 +10,8 @@
 
 .input-group-prepend,
 .input-group-append {
+  white-space: nowrap;
+
   .btn {
     &:focus {
       z-index: 3;
@@ -23,7 +25,6 @@
 
 .input-group {
   > .form-control {
-    width: initial;
     flex: 1 1 auto;
 
     &:focus {
