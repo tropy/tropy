@@ -158,11 +158,13 @@
         }
       }
 
-      .btn-icon {
-        flex: 0 0 auto;
-        padding: {
-          left: 2px;
-          right: 2px;
+      > .btn-group {
+        .btn-icon {
+          flex: 0 0 auto;
+          padding: {
+            left: 2px;
+            right: 2px;
+          }
         }
       }
     }
