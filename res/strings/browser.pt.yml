@@ -3,7 +3,7 @@ pt:
     file:
       project: Projetos Tropy
       plugin: Plugins Tropy
-      pdf: PDF files
+      pdf: Ficheiros PDF
     crashed:
       buttons:
         - Fechar Janela

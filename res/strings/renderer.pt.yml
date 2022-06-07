@@ -69,7 +69,7 @@ pt:
       historical teaching resources, digital exhibits, and open-source software.
     trademark: O nome Tropy é uma marca registada de {cds}.
     donate:
-      title: Donate to Tropy
+      title: Donativos ao Tropy
       url: https://tropy.org/donate
     release:
       title: Notas de Versão
@@ -126,7 +126,7 @@ pt:
         photos: Incluir fotos
         metadata: Incluir metadados
         notes: Incluir notas
-        onlyNotes: Include only photos with notes
+        onlyNotes: Incluir apenas fotos com notas.
         overflow: Permitir que o conteúdo ocupe mais do que uma página
       locale:
         locale: Locale
@@ -167,9 +167,9 @@ pt:
           copy:
             label: Copy notes as
             option:
-              text: Plain text
+              text: Texto simples
               markdown: Markdown
-              html: HTML source code
+              html: Código fonte HTML
       ui:
         label: Interface
         option:
@@ -198,8 +198,9 @@ pt:
         label: Link photos
         option:
           'null': Using absolute paths
-          project: Relative to the project file
-          home: Relative to your home directory
+          project: Relativos ao ficheiro do projeto
+          home: Relativos à pasta pessoal inicial
+          <None>: Usar caminhos absolutos
       store: Managed folder
       name: Nome
       id: ID
@@ -259,7 +260,7 @@ pt:
     created: Data da Introdução
     modified: Modificado
     consolidate: Consolidar Foto
-    error: Photo not found
+    error: Foto não encontrada
   selection:
     size: Dimensão
     created: Data da Introdução
@@ -392,7 +393,7 @@ pt:
             - Cancel
             - Overwrite
         imported:
-          message: Template successfully imported.
+          message: Modelo importado com sucesso.
           buttons:
             - OK
     filter:
@@ -633,7 +634,7 @@ pt:
     tag:
       create: Falhou a criação de etiqueta. Nomes das etiquetas devem ser únicos.
     db:
-      SQLITE_CANTOPEN: Cannot find or open database file.
+      SQLITE_CANTOPEN: Não é possível encontrar ou abrir ficheiro da base de dados.
   flash:
     update:
       ready:

@@ -266,9 +266,9 @@ pt:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Exportar Nota ...
         command: app:export-note
-      - label: Copy Note
+      - label: Copiar Nota
         command: app:copy-note
       - label: Apagar Nota
         command: app:delete-note
@@ -322,9 +322,9 @@ pt:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Retrato
                 command: app:print-pdf
-              - label: Landscape
+              - label: Paisagem
                 command: app:print-pdf-landscape
       - label: Export Item Notes …
         command: app:export-notes
@@ -354,9 +354,9 @@ pt:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Retrato
                 command: app:print-pdf
-              - label: Landscape
+              - label: Paisagem
                 command: app:print-pdf-landscape
       - label: Export Selected Item Notes …
         command: app:export-notes
@@ -382,13 +382,13 @@ pt:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: Mostrar Ficheiro Original...
         command: app:show-in-folder
       - label: Open in External Viewer…
         command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
-      - label: Export Photo…
+      - label: Exportar Foto ...
         command: app:extract-photo
       - label: Consolidar Foto
         command: app:consolidate-photo
@@ -403,7 +403,7 @@ pt:
       - label: Apagar Seleção
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: Exportar Seleção ...
         command: app:extract-photo
     selection-rotate:
       - label: Rodar para a Esquerda
@@ -721,9 +721,9 @@ pt:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Exportar Nota ...
         command: app:export-note
-      - label: Copy Note
+      - label: Copiar Nota
         command: app:copy-note
       - label: Apagar Nota
         command: app:delete-note
@@ -777,9 +777,9 @@ pt:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Retrato
                 command: app:print-pdf
-              - label: Landscape
+              - label: Paisagem
                 command: app:print-pdf-landscape
       - label: Export Item Notes …
         command: app:export-notes
@@ -802,9 +802,9 @@ pt:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Retrato
                 command: app:print-pdf
-              - label: Landscape
+              - label: Paisagem
                 command: app:print-pdf-landscape
       - label: Export Selected Item Notes …
         command: app:export-notes
@@ -868,13 +868,13 @@ pt:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: Mostrar Ficheiro Original...
         command: app:show-in-folder
       - label: Open in External Viewer…
         command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
-      - label: Export Photo…
+      - label: Exportar Foto
         command: app:extract-photo
       - label: Consolidar Foto
         command: app:consolidate-photo
@@ -889,7 +889,7 @@ pt:
       - label: Apagar Seleção
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: Exportar Seleção ...
         command: app:extract-photo
     selection-rotate:
       - label: Rodar para a Esquerda
@@ -1176,9 +1176,9 @@ pt:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Exportar Nota ...
         command: app:export-note
-      - label: Copy Note
+      - label: Copiar Nota
         command: app:copy-note
       - label: Apagar Nota
         command: app:delete-note
@@ -1232,9 +1232,9 @@ pt:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Retrato
                 command: app:print-pdf
-              - label: Landscape
+              - label: Paisagem
                 command: app:print-pdf-landscape
       - label: Export Item Notes …
         command: app:export-notes
@@ -1257,9 +1257,9 @@ pt:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Retrato
                 command: app:print-pdf
-              - label: Landscape
+              - label: Paisagem
                 command: app:print-pdf-landscape
       - label: Export Selected Item Notes …
         command: app:export-notes
@@ -1323,13 +1323,13 @@ pt:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: Mostrar Ficheiro Original...
         command: app:show-in-folder
       - label: Open in External Viewer…
         command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
-      - label: Export Photo…
+      - label: Exportar Foto
         command: app:extract-photo
       - label: Consolidar Foto
         command: app:consolidate-photo
@@ -1344,7 +1344,7 @@ pt:
       - label: Apagar Seleção
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: Exportar Seleção ...
         command: app:extract-photo
     selection-rotate:
       - label: Rodar para a Esquerda

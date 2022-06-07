@@ -56,9 +56,9 @@ pt:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Retrato
                   command: app:print-pdf
-                - label: Landscape
+                - label: Paisagem
                   command: app:print-pdf-landscape
         - type: separator
         - label: Consolidar Fototeca
@@ -184,7 +184,7 @@ pt:
         - label: Licença do Software
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: Donativos ao Tropy
           command: app:donate
         - type: separator
         - label: Mostrar Ficheiros de Registo
@@ -296,9 +296,9 @@ pt:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Retrato
                   command: app:print-pdf
-                - label: Landscape
+                - label: Paisagem
                   command: app:print-pdf-landscape
         - label: Imprimir
           command: app:print
@@ -417,7 +417,7 @@ pt:
         - label: Licença do Software
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: Donativos ao Tropy
           command: app:donate
         - type: separator
         - label: Mostrar Ficheiros de Registo
@@ -499,9 +499,9 @@ pt:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Retrato
                   command: app:print-pdf
-                - label: Landscape
+                - label: Paisagem
                   command: app:print-pdf-landscape
         - type: separator
         - label: Consolidar Fototeca
@@ -624,7 +624,7 @@ pt:
         - label: Licença do Software
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: Donativos ao Tropy
           command: app:donate
         - type: separator
         - label: Mostrar Ficheiros de Registo
