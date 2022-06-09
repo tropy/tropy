@@ -1,12 +1,9 @@
-'use strict'
-
-const React = require('react')
-const { render, inWindowContext } = require('../../support/react')
+import React from 'react'
+import { render, inWindowContext } from '../../support/react'
 
 describe('PluginOption', () => {
   const { PluginOption } = __require('components/plugin/option')
   const labelText = 'this should be in label'
-  // boolean field type doesn't support label
   const fieldTypes = [
     undefined, 'text', 'bool', 'boolean', 'template', 'property', 'save-file'
   ]
