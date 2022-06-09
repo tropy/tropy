@@ -8,7 +8,7 @@ describe('PluginOption', () => {
   const labelText = 'this should be in label'
   // boolean field type doesn't support label
   const fieldTypes = [
-    undefined, 'text', 'template', 'property', 'save-file'
+    undefined, 'text', 'bool', 'boolean', 'template', 'property', 'save-file'
   ]
   for (const fieldType of fieldTypes) {
     it(

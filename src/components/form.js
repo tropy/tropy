@@ -286,7 +286,7 @@ export class Toggle extends React.PureComponent {
           onBlur={this.props.onBlur}
           onFocus={this.props.onFocus}
           onChange={this.handleChange}/>
-        <label htmlFor={this.props.id}>
+        <label htmlFor={this.props.id} title={this.props.title}>
           {this.label}
         </label>
       </div>
