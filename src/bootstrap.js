@@ -52,9 +52,15 @@ const START =
         INIT - READY,
         LOAD - INIT)
 
-      contextBridge.exposeInMainWorld('tropy', {
+      let tropy = {
         state: () => store?.getState()
-      })
+      }
+
+      try {
+        contextBridge.exposeInMainWorld('tropy', tropy)
+      } catch {
+        window.tropy = tropy
+      }
 
     } catch (e) {
       fatal(`${win.type}.init crashed: ${e.message}`)

@@ -22,6 +22,7 @@ program
   .option('--data <path>', 'set data directory', type.path)
   .option('--cache <path>', 'set cache directory', type.path)
   .option('--logs <path>', 'set log directory', type.path)
+  .option('--extensions <path>', 'set chromium extensions directory', type.path)
 
   // TODO will be obsolete with bundling!
   .option('--env <name>', 'set environment',
@@ -30,7 +31,8 @@ program
 
   .option('--scale <factor>', 'set the device scale factor', type.float)
 
-  .option('--no-auto-updates', 'automatically check for updates')
+  .option('--no-auto-updates', 'disable automatic updates')
+  .option('--no-context-isolation', 'disable context isolation')
   .option('--webgl', 'prefer WebGL even on GPUs with known issues', false)
 
   .option('--debug', 'set debug flag', !!process.env.TROPY_DEBUG)

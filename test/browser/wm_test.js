@@ -8,9 +8,7 @@ import { Plugins } from '../../src/common/plugins'
 describe('WindowManager', () => {
   describe('instance', () => {
     let wm = new WindowManager({
-      webPreferences: {
-        preload: join(__dirname, '..', 'support', 'bootstrap.js')
-      }
+      preload: join(__dirname, '..', 'support', 'bootstrap.js')
     })
 
     let plugins = new Plugins(join(app.getPath('userData'), 'plugins'))

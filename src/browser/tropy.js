@@ -90,7 +90,9 @@ export class Tropy extends EventEmitter {
       enable: process.env.NODE_ENV === 'production' && opts.autoUpdates
     })
 
-    this.wm = new WindowManager()
+    this.wm = new WindowManager({
+      contextIsolation: opts.contextIsolation
+    })
   }
 
   async start() {

@@ -48,7 +48,7 @@ export class WindowManager extends EventEmitter {
         preload: join(paths.lib, 'bootstrap.js'),
         spellcheck: false,
         v8CacheOptions: 'bypassHeatCheck',
-        ...defaults.webPreferences
+        ...defaults
       }
     }
 
