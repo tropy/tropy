@@ -53,7 +53,7 @@ export class PluginOption extends React.PureComponent {
         return <FormToggle {...this.attrs} isCompact/>
       case 'template':
         return (
-          <FormElement id={this.props.spec.label}>
+          <FormElement id={this.props.spec.label} title={this.attrs.title}>
             <TemplateSelect {...this.attrs}
               minFilterOptions={4}
               options={[
@@ -64,7 +64,7 @@ export class PluginOption extends React.PureComponent {
         )
       case 'property':
         return (
-          <FormElement id={this.props.spec.label}>
+          <FormElement id={this.props.spec.label} title={this.attrs.title}>
             <ResourceSelect {...this.attrs}
               options={this.props.properties}/>
           </FormElement>
