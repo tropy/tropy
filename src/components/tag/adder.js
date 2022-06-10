@@ -124,7 +124,7 @@ export class TagAdder extends React.PureComponent {
       match(
         value.name || String(value),
         query,
-        /(?<=[\s,.;:-]|^)(\d|\p{Alpha})/gmu)
+        /(?<=[\s\p{Punctuation}]|^)(\d|\p{Alpha})/gmu)
     ),
     separator: /\s*[;,]\s*/,
     onCancel: noop,
