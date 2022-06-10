@@ -185,6 +185,10 @@
 
         @include variant(".metadata-head[class*='integer']") {
           order: -1;
+
+          @include variant(".label:empty + .icon") {
+            order: initial;
+          }
         }
       }
 
