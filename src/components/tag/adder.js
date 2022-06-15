@@ -16,6 +16,12 @@ import {
   string
 } from 'prop-types'
 
+export const matchFn = (value, query) => (
+  match(
+    value.name || String(value),
+    query,
+    /^.|(?<=[\s\p{Punctuation}])(\d|\p{Alpha})/gmu)
+)
 
 const TagAdderContainer = ({ children, count }) => {
   let intl = useIntl()
@@ -120,12 +126,7 @@ export class TagAdder extends React.PureComponent {
   }
 
   static defaultProps = {
-    match: (value, query) => (
-      match(
-        value.name || String(value),
-        query,
-        /(?<=[\s\p{Punctuation}]|^)(\d|\p{Alpha})/gmu)
-    ),
+    match: matchFn,
     separator: /\s*[;,]\s*/,
     onCancel: noop,
     onFocus: noop
