@@ -1,5 +1,5 @@
 import React from 'react'
-import { injectIntl } from 'react-intl'
+import { useIntl } from 'react-intl'
 import { Input } from '../input'
 import { blank, noop } from '../../common/util'
 import { match } from '../../collate'
@@ -9,25 +9,34 @@ import {
   bool,
   func,
   instanceOf,
+  node,
   number,
-  object,
   oneOfType,
   shape,
   string
 } from 'prop-types'
 
 
-class TagAdder extends React.PureComponent {
-  input = React.createRef()
+const TagAdderContainer = ({ children, count }) => {
+  let intl = useIntl()
+  let placeholder = intl.formatMessage({ id: 'panel.tags.add' }, { count })
 
-  get placeholder() {
-    let { count, intl } = this.props
-    return {
-      '--placeholder': `"${
-        intl.formatMessage({ id: 'panel.tags.add' }, { count }).trim()
-      }"`
-    }
-  }
+  return (
+    <div
+      className="add-tag-container"
+      style={{ '--placeholder': `"${placeholder.trim()}"` }}>
+      {children}
+    </div>
+  )
+}
+
+TagAdderContainer.propTypes = {
+  children: node,
+  count: number
+}
+
+export class TagAdder extends React.PureComponent {
+  input = React.createRef()
 
   focus() {
     this.input.current.focus()
@@ -76,9 +85,7 @@ class TagAdder extends React.PureComponent {
 
   render() {
     return (
-      <div
-        className="add-tag-container"
-        style={this.placeholder}>
+      <TagAdderContainer count={this.props.count}>
         <Input
           ref={this.input}
           className="form-control"
@@ -91,14 +98,13 @@ class TagAdder extends React.PureComponent {
           onFocus={this.props.onFocus}
           onCancel={this.handleCancel}
           onCommit={this.handleChange}/>
-      </div>
+      </TagAdderContainer>
     )
   }
 
   static propTypes = {
     count: number.isRequired,
     completions: arrayOf(string).isRequired,
-    intl: object.isRequired,
     isDisabled: bool,
     match: func.isRequired,
     tags: arrayOf(shape({
@@ -124,10 +130,4 @@ class TagAdder extends React.PureComponent {
     onCancel: noop,
     onFocus: noop
   }
-}
-
-const TagAdderContainer = injectIntl(TagAdder, { forwardRef: true })
-
-export {
-  TagAdderContainer as TagAdder
 }
