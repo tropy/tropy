@@ -1,5 +1,6 @@
+import { TagAdder } from '../../../src/components/tag/adder'
+
 describe('Tag autocomplete', () => {
-  const { TagAdder } = __require('components/tag/adder')
   const matchFn = TagAdder.defaultProps.match
   it('Matches from the start of the tag', () => {
     const tag = 'John Doe'
