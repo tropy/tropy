@@ -1,6 +1,6 @@
 describe('Tag autocomplete', () => {
-  const { matchFn } = __require('components/tag/adder')
-
+  const { TagAdder } = __require('components/tag/adder')
+  const matchFn = TagAdder.defaultProps.match
   it('Matches from the start of the tag', () => {
     const tag = 'John Doe'
     expect(matchFn(tag, 'Jo')).to.be.ok
