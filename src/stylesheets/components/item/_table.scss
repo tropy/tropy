@@ -106,7 +106,7 @@
         color: $item-table-header-sort-color;
       }
 
-      &:active:not(.resizing):not(.dragging) {
+      &:active:not(.resizing, .dragging) {
         background-color: $item-table-header-active-bg;
 
         &::before,

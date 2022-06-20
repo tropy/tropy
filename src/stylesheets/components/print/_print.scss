@@ -94,12 +94,12 @@ img {
   // Prevent rotated photos from being cropped in photo-only layout
   &[class*="90"],
   &[class*="270"] {
-    .portrait:not(.metadata):not(.notes) & {
+    .portrait:not(.metadata, .notes) & {
       max-width: 100vh;
       max-height: 100vw;
     }
 
-    .landscape:not(.metadata):not(.notes) & {
+    .landscape:not(.metadata, .notes) & {
       max-width: 100vh;
       max-height: 100vw;
     }

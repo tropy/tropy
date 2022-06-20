@@ -157,7 +157,7 @@
           }
         }
 
-        &.over:not(.before):not(.after) {
+        &.over:not(.before, .after) {
           @extend %drop-target;
         }
 
