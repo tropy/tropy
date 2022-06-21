@@ -1,12 +1,5 @@
-'use strict'
+import { wrapInTestContext } from 'react-dnd-test-utils'
 
-const React = require('react')
-const { wrapInTestContext } = require('react-dnd-test-utils')
-
-const wrap = (DecoratedComponent) =>
+export const wrap = (DecoratedComponent) =>
   wrapInTestContext((props) =>
     <DecoratedComponent {...props}/>)
-
-module.exports = {
-  wrap
-}

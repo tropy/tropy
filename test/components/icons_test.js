@@ -1,11 +1,7 @@
-'use strict'
-
-const React = require('react')
-const { render } = require('../support/react')
+import { render } from '../support/react'
+import { IconTropy } from '../../src/components/icons'
 
 describe('IconTropy', () => {
-  const { IconTropy } = __require('components/icons')
-
   it('renders the Tropy icon SVG', () => {
     expect(
       render(<IconTropy/>).element())

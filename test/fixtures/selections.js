@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export const selections = {
   201: {
     id: 201,
     notes: [],

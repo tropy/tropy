@@ -1,9 +1,7 @@
-'use strict'
-
-const { TextSelection } = require('prosemirror-state')
-const { state, url, www, offset } = require('../fixtures/editor')
-const { schema } = __require('editor/schema')
-const { markExtend } = __require('editor/selections')
+import { TextSelection } from 'prosemirror-state'
+import { state, url, www, offset } from '../fixtures/editor'
+import { schema } from '../../src/editor/schema'
+import { markExtend } from '../../src/editor/selections'
 
 function selectedText(s) {
   return s.doc.cut(

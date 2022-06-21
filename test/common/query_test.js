@@ -1,11 +1,7 @@
-'use strict'
+import { select, update, into } from '../../src/common/query'
 
 describe('Query Builder', () => {
-  const query = __require('common/query')
-
   describe('Select', () => {
-    const { select } = query
-
     it('empty', () =>
       expect(select().SELECT).to.eql('SELECT *'))
 
@@ -96,8 +92,6 @@ describe('Query Builder', () => {
   })
 
   describe('Update', () => {
-    const { update } = query
-
     it('simple', () =>
       expect(
         update('project')
@@ -155,8 +149,6 @@ describe('Query Builder', () => {
   })
 
   describe('Insert', () => {
-    const { into } = query
-
     it('simple', () =>
       expect([
         ...into('photos').insert({ id: 23, mimetype: 'image/jpeg' })

@@ -1,7 +1,5 @@
-'use strict'
-
-const React = require('react')
-const { render, inWindowContext } = require('../../support/react')
+import { render, inWindowContext } from '../../support/react'
+import { PhotoList } from '../../../src/components/photo/list'
 
 const PHOTO = {
   1: { id: 1, selections: [] },
@@ -14,8 +12,6 @@ const PHOTO = {
 }
 
 describe('PhotoList', () => {
-  const { PhotoList } = __require('components/photo/list')
-
   it('renders an empty list by default', () => {
     expect(
       render(

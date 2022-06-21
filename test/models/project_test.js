@@ -1,15 +1,12 @@
-'use strict'
-
-const { mkdbtmp } = require('../support/db')
+import { mkdbtmp } from '../support/db'
+import { project as projectModel } from '../../src/models'
 
 describe('models', () => {
-  const mod = __require('models')
-
   describe('project', () => {
     let db
 
     mkdbtmp(x => db = x,
-      'a.tpy', mod.project.create, { name: 'Ariadne' })
+      'a.tpy', projectModel.create, { name: 'Ariadne' })
 
     describe('create', () => {
       it('creates a fresh project', async () => {
@@ -25,7 +22,7 @@ describe('models', () => {
 
     describe('load', () => {
       it('returns the project object', async () => {
-        let project = await mod.project.load(db)
+        let project = await projectModel.load(db)
 
         expect(project)
           .to.include({ name: 'Ariadne', items: 0 })

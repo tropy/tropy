@@ -1,8 +1,7 @@
-import React from 'react'
 import { render, inWindowContext } from '../../support/react'
+import { PluginOption } from '../../../src/components/plugin/option'
 
 describe('PluginOption', () => {
-  const { PluginOption } = __require('components/plugin/option')
   const labelText = 'this should be in label'
   const fieldTypes = [
     undefined, 'text', 'bool', 'boolean', 'template', 'property', 'save-file'

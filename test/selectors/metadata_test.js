@@ -1,10 +1,7 @@
-'use strict'
-
-const { text } = __require('value')
+import { getItemMetadata } from '../../src/selectors'
+import { text } from '../../src/value'
 
 describe('Metadata Selectors', () => {
-  const selectors = __require('selectors/metadata')
-
   const metadata = {
     1: { id: 1, title: text('foo'), type: text('test') },
     2: { id: 2, title: text('bar'), type: text('test') }
@@ -13,8 +10,6 @@ describe('Metadata Selectors', () => {
   const state = (items = []) => ({ nav: { items }, metadata })
 
   describe('getItemMetadata', () => {
-    const { getItemMetadata } = selectors
-
     it('returns combined metadata in bulk', () => {
       expect(getItemMetadata(state([1, 2])))
         .to.have.nested.property('title.text', 'foo')

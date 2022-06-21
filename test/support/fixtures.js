@@ -1,6 +1,14 @@
-'use strict'
+import { join } from 'path'
+import { lists } from '../fixtures/lists'
+import { project } from '../fixtures/projects'
+import { tags } from '../fixtures/tags'
+import { selections } from '../fixtures/selections'
+import { items } from '../fixtures/items'
+import { metadata } from '../fixtures/metadata'
+import { notes } from '../fixtures/notes'
+import { ontology } from '../fixtures/ontology'
+import { photos } from '../fixtures/photos'
 
-const { join } = require('path')
 const ROOT = join(__dirname, '..', 'fixtures')
 
 global.F = {
@@ -33,38 +41,38 @@ global.F = {
   },
 
   get items() {
-    return require(join(ROOT, 'items'))
+    return items
   },
 
   get lists() {
-    return require(join(ROOT, 'lists'))
+    return lists
   },
 
   get metadata() {
-    return require(join(ROOT, 'metadata'))
+    return metadata
   },
 
   get notes() {
-    return require(join(ROOT, 'notes'))
+    return notes
   },
 
   get ontology() {
-    return require(join(ROOT, 'ontology'))
+    return ontology
   },
 
   get photos() {
-    return require(join(ROOT, 'photos'))
+    return photos
   },
 
   get projects() {
-    return require(join(ROOT, 'projects'))
+    return project
   },
 
   get selections() {
-    return require(join(ROOT, 'selections'))
+    return selections
   },
 
   get tags() {
-    return require(join(ROOT, 'tags'))
+    return tags
   }
 }

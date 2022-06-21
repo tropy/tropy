@@ -1,11 +1,7 @@
-'use strict'
-
-const React = require('react')
-const { render, inWindowContext } = require('../../support/react')
+import { render, inWindowContext } from '../../support/react'
+import { ListTree } from '../../../src/components/list/tree'
 
 describe('ListTree', () => {
-  const { ListTree } = __require('components/list/tree')
-
   it('renders no list nodes by default', () => {
     expect(
       render(

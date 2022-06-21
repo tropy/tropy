@@ -1,8 +1,6 @@
-'use strict'
+import { fromHTML } from '../../src/editor/serialize'
 
 describe('editor serialize utils', () => {
-  const { fromHTML } = __require('editor/serialize')
-
   describe('fromHTML', () => {
     it('creates a document from an HTML string', () => {
       let { state } = fromHTML('<p>Test</p>')

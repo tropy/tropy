@@ -1,11 +1,7 @@
-'use strict'
-
-const React = require('react')
-const { render } = require('../support/react')
+import { render } from '../support/react'
+import { PanelGroup } from '../../src/components/panel'
 
 describe('PanelGroup', () => {
-  const { PanelGroup } = __require('components/panel')
-
   it('renders panel-group structure', () => {
     expect(render(
       <PanelGroup

@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export const notes = {
   301: {
     photo: 101,
     selection: null,

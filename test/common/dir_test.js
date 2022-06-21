@@ -1,11 +1,9 @@
-'use strict'
-
-const { join } = require('path')
-const { mkdtmp } = require('../support/tmp')
-const { writeFile, mkdir, rm } = require('fs').promises
+import { join } from 'path'
+import { mkdtmp } from '../support/tmp'
+import { writeFile, mkdir, rm } from 'fs/promises'
+import { ls } from '../../src/common/dir'
 
 describe('directory utils', () => {
-  const utils = __require('common/dir')
   const root = join(mkdtmp(), 'dir')
 
   beforeEach(async () => {
@@ -18,7 +16,6 @@ describe('directory utils', () => {
 
 
   describe('ls', () => {
-    const { ls } = utils
 
     it('lists files in a directory (recursively)', async () => {
       expect(await ls(root)).to.be.empty

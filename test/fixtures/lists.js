@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export const lists = {
   root: {
     id: 0,
     children: [1, 2]

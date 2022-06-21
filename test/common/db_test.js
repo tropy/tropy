@@ -1,10 +1,8 @@
-'use strict'
-
-const { mktmp } = require('../support/tmp')
-const { unlink } = require('fs').promises
-const { all, map, using } = require('bluebird')
-const { times } = __require('common/util')
-const { Database, Connection, Statement } = __require('common/db')
+import { mktmp } from '../support/tmp'
+import { unlink } from 'fs/promises'
+import { all, map, using } from 'bluebird'
+import { times } from '../../src/common/util'
+import { Database, Connection, Statement } from '../../src/common/db'
 
 function failure() { throw new Error() }
 

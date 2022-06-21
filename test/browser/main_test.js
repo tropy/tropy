@@ -40,7 +40,9 @@ describe('main process', () => {
   })
 
   describe('when required', () => {
-    before(() => __require('browser/main'))
+    before(
+      async () => { await import('../../src/browser/main') }
+    )
 
     it('parses cli arguments', () => {
       expect(args.parse).to.have.been.calledOnce

@@ -1,12 +1,8 @@
-'use strict'
-
-const React = require('react')
-const { render, inWindowContext } = require('../../support/react')
+import { render, inWindowContext } from '../../support/react'
+import { ProjectSidebar as WrappedSidebar } from '../../../src/components/project/sidebar'
 
 describe('ProjectSidebar', () => {
-  const ProjectSidebar =
-    __require('components/project/sidebar').ProjectSidebar.WrappedComponent
-
+  const ProjectSidebar = WrappedSidebar.WrappedComponent
   it('renders a sidebar with the project name', () => {
     const { element, getByText } = render(
       <ProjectSidebar

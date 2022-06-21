@@ -1,10 +1,7 @@
-'use strict'
-
-const { LIST } = __require('constants')
+import { LIST } from '../../src/constants'
+import { items as itemsReducer } from '../../src/reducers/items'
 
 describe('Items Reducer', () => {
-  const reduce = __require('reducers/items')
-
   let state
   let action
 
@@ -23,12 +20,12 @@ describe('Items Reducer', () => {
     })
 
     it('skips unless the action has done', () => {
-      expect(reduce.items(state, action)).to.equal(state)
+      expect(itemsReducer(state, action)).to.equal(state)
     })
 
     it('adds list to all items', () => {
       action.meta.done = true
-      expect(reduce.items(state, action)[1].lists).to.eql([1])
+      expect(itemsReducer(state, action)[1].lists).to.eql([1])
     })
   })
 
@@ -47,14 +44,14 @@ describe('Items Reducer', () => {
     })
 
     it('skips unless the action has done', () => {
-      expect(reduce.items(state, action)).to.equal(state)
+      expect(itemsReducer(state, action)).to.equal(state)
     })
 
     it('removes list from all items', () => {
       action.meta.done = true
 
-      expect(reduce.items(state, action)[1].lists).to.eql([])
-      expect(reduce.items(state, action)[2].lists).to.eql([2])
+      expect(itemsReducer(state, action)[1].lists).to.eql([])
+      expect(itemsReducer(state, action)[2].lists).to.eql([2])
     })
   })
 })
