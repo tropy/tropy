@@ -41,7 +41,7 @@ describe('main process', () => {
 
   describe('when required', () => {
     before(
-      async () => { await import('../../src/browser/main') }
+      () => { import('../../src/browser/main') }
     )
 
     it('parses cli arguments', () => {
