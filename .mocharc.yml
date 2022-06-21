@@ -7,7 +7,6 @@ require:
   - "test/support/mode.js"
   - "test/support/args.js"
   - "test/support/log.js"
-  - "test/support/src.js"
   - "test/support/chai.js"
   - "test/support/fixtures.js"
 slow: 250
