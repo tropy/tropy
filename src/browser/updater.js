@@ -22,7 +22,7 @@ export class Updater extends EventEmitter {
     if (!this.isSupported) return
 
     try {
-      if (app.runningUnderArm64Translation)
+      if (app.runningUnderARM64Translation)
         autoUpdater.setFeedURL(feed.replace('x64', 'arm64'))
       else
         autoUpdater.setFeedURL(feed)
