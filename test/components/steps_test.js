@@ -1,11 +1,7 @@
-'use strict'
-
-const React = require('react')
-const { render } = require('../support/react')
+import { render } from '../support/react'
+import { Step, Steps } from '../../src/components/steps'
 
 describe('Steps', () => {
-  const { Steps, Step } = __require('components/steps')
-
   it('renders steps element', () => {
     expect(render(<Steps/>).element()).to.have.class('steps')
   })

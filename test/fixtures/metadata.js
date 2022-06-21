@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export const metadata = {
   1: {
     'id': 1,
     'http://purl.org/dc/elements/1.1/title': {

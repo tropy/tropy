@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export const ontology = {
   vocab: {
     'https://tropy.org/v1/tropy#': {
       id: 'https://tropy.org/v1/tropy#',

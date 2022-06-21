@@ -1,6 +1,4 @@
-'use strict'
-
-class Plugin {
+export default class Plugin {
   constructor(options, context) {
     this.options = options
     this.context = context
@@ -10,5 +8,3 @@ class Plugin {
     return (this.options.invert) ? -(a + b) : (a + b)
   }
 }
-
-module.exports = Plugin

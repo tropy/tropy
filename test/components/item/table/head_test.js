@@ -1,10 +1,7 @@
-'use strict'
-
-const React = require('react')
-const { render } = require('../../../support/react')
+import { render } from '../../../support/react'
+import { TableHead } from '../../../../src/components/item/table/head'
 
 describe('TableHead', () => {
-  const { TableHead } = __require('components/item/table/head')
 
   it('has class table-head', () => {
     expect(

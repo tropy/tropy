@@ -1,12 +1,12 @@
-'use strict'
+import { string } from './matchers'
+import chai from 'chai'
+import sinon from 'sinon'
+import sinonChai from 'sinon-chai'
+import chaiAsPromised from 'chai-as-promised'
 
-const chai = require('chai')
-const sinon = require('sinon')
-const matchers = require('./matchers')
-
-chai.use(require('sinon-chai'))
-chai.use(require('chai-as-promised'))
-chai.use(matchers.string)
+chai.use(sinonChai)
+chai.use(chaiAsPromised)
+chai.use(string)
 
 global.expect = chai.expect
 global.sinon = sinon

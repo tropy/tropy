@@ -1,5 +1,3 @@
-'use strict'
-
 const template = {
   id: 'https://tropy.org/v1/tropy#test-template',
   fields: [{
@@ -133,7 +131,13 @@ const selections = {
   21: { x: 10, y: 20, width: 30, height: 40, notes: [2] }
 }
 
-module.exports = {
+const ontology = {
+  class: classes,
+  props,
+  type: datatypes
+}
+
+export {
   template,
   items,
   metadata,
@@ -146,9 +150,5 @@ module.exports = {
   tags,
   notes,
   selections,
-  ontology: {
-    class: classes,
-    props,
-    type: datatypes
-  }
+  ontology
 }

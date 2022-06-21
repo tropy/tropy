@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export const items = {
   1: {
     id: 1,
     lists: [1],

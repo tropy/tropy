@@ -1,11 +1,8 @@
-'use strict'
-
-const N3 = require('n3')
+import N3 from 'n3'
+import { toN3 } from '../../src/ontology/vocabulary'
+import { vocab, ontology } from '../fixtures/export'
 
 describe('Export Vocabularies', () => {
-  const { toN3 } = __require('ontology/vocabulary')
-  const { vocab, ontology } = require('../fixtures/export')
-
   describe('toN3()', () => {
     let output
 

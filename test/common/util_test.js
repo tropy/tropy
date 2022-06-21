@@ -1,13 +1,9 @@
-'use strict'
-
+import { adjacent, camelcase, flatten, get, has, merge, mixed, morph, move, omit, once, pick, remove, set, shallow, strftime, swap, uniq } from '../../src/common/util'
+import { EventEmitter } from 'events'
 describe('util', () => {
-  const util = __require('common/util')
 
   describe('.once', () => {
-    const { once } = util
-
     describe('given an event emitter', () => {
-      const { EventEmitter } = require('events')
       const ee = new EventEmitter()
 
       describe('when the event fires', () => {
@@ -57,10 +53,7 @@ describe('util', () => {
       })
     })
   })
-
   describe('.flatten', () => {
-    const { flatten } = util
-
     it('flattens empty objects', () =>
       expect(flatten({})).to.eql({}))
 
@@ -69,8 +62,6 @@ describe('util', () => {
   })
 
   describe('.strftime', () => {
-    const { strftime } = util
-
     it('supports subset of stdlib strftime', () => {
       const date = new Date(2016, 8, 3, 23, 11, 5)
 
@@ -81,8 +72,6 @@ describe('util', () => {
   })
 
   describe('.pick', () => {
-    const { pick } = util
-
     it('picks the given properties', () =>
       expect(pick({ foo: 1, bar: 2 }, ['bar'])).to.eql({ bar: 2 }))
 
@@ -96,8 +85,6 @@ describe('util', () => {
   })
 
   describe('.omit', () => {
-    const { omit } = util
-
     it('picks the given properties', () =>
       expect(omit({ foo: 1, bar: 2 }, ['bar'])).to.eql({ foo: 1 }))
 
@@ -111,8 +98,6 @@ describe('util', () => {
   })
 
   describe('.move', () => {
-    const { move } = util
-
     describe('with offset 0', () => {
       it('moves a in front of b', () => {
         expect(move([1, 2, 3], 3, 2, 0)).to.eql([1, 3, 2])
@@ -149,8 +134,6 @@ describe('util', () => {
   })
 
   describe('.swap', () => {
-    const { swap } = util
-
     it('swapes the items at the given positions', () => {
       expect(swap([1, 2, 3], 0, 0)).to.eql([1, 2, 3])
       expect(swap([1, 2, 3], 1, 1)).to.eql([1, 2, 3])
@@ -166,8 +149,6 @@ describe('util', () => {
   })
 
   describe('.adjacent', () => {
-    const { adjacent } = util
-
     it('returns the two items adjacent to the given item', () => {
       expect(adjacent([])).to.eql([])
       expect(adjacent([], 1)).to.eql([])
@@ -182,8 +163,6 @@ describe('util', () => {
   })
 
   describe('.get', () => {
-    const { get } = util
-
     it('returns the value', () => {
       expect(get({}, '')).to.eql({})
       expect(get(null, '')).to.be.undefined
@@ -199,8 +178,6 @@ describe('util', () => {
   })
 
   describe('.set', () => {
-    const { set } = util
-
     it('on objects', () => {
       expect(set({}, 'foo', 1)).to.eql({ foo: 1 })
     })
@@ -224,8 +201,6 @@ describe('util', () => {
   })
 
   describe('.has', () => {
-    const { has } = util
-
     it('tests for existence', () => {
       expect(has({}, '')).to.be.true
       expect(has(null, '')).to.be.false
@@ -243,8 +218,6 @@ describe('util', () => {
   })
 
   describe('.merge', () => {
-    const { merge } = util
-
     it('returns a new object', () => {
       const a = {}
       const b = {}
@@ -276,8 +249,6 @@ describe('util', () => {
   })
 
   describe('.uniq', () => {
-    const { uniq } = util
-
     it('returns array of unique values', () => {
       expect(uniq([])).to.eql([])
       expect(uniq([1])).to.eql([1])
@@ -286,8 +257,6 @@ describe('util', () => {
   })
 
   describe('.mixed', () => {
-    const { mixed } = util
-
     it('returns true for mixed contents', () => {
       expect(mixed([])).to.be.false
       expect(mixed([1])).to.be.false
@@ -300,8 +269,6 @@ describe('util', () => {
   })
 
   describe('.remove', () => {
-    const { remove } = util
-
     it('returns new array', () => {
       const a = [1, 2, 3]
       expect(remove(a)).not.to.equal(a)
@@ -319,8 +286,6 @@ describe('util', () => {
   })
 
   describe('.shallow', () => {
-    const { shallow } = util
-
     it('returns true if params are shallowly equal', () => {
       const a = { a: 1, b: [], c: 'foo' }
       const b = { a: 1, b: a.b, c: 'foo' }
@@ -369,8 +334,6 @@ describe('util', () => {
   })
 
   describe('.camelcase', () => {
-    const { camelcase } = util
-
     expect(camelcase('')).to.eql('')
     expect(camelcase('foo')).to.eql('foo')
     expect(camelcase('Foo')).to.eql('foo')
@@ -380,8 +343,6 @@ describe('util', () => {
   })
 
   describe('.morph', () => {
-    const { morph } = util
-
     const upcase = (acc, prop, value) => {
       acc[prop.toUpperCase()] = value.toUpperCase()
     }

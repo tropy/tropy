@@ -1,13 +1,9 @@
-'use strict'
+import { version } from '../../src/common/release'
+import { pick } from '../../src/common/util'
+import { getExportItemIds, getExportItems } from '../../src/selectors/export'
 
 describe('Export Selectors', () => {
-  const selectors = __require('selectors/export')
-  const { version } = __require('common/release')
-  const { pick } = __require('common/util')
-
   describe('getExportItemIds', () => {
-    const { getExportItemIds } = selectors
-
     it('selects passed-in ids only', () => {
       expect(getExportItemIds({}, { id: [42] })).to.eql([42])
     })
@@ -33,8 +29,6 @@ describe('Export Selectors', () => {
   })
 
   describe('getExportItems', () => {
-    const { getExportItems } = selectors
-
     const state = pick(F, [
       'items',
       'lists',

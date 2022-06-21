@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export const photos = {
   101: {
     id: 101,
     selections: [

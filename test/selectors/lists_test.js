@@ -1,8 +1,6 @@
-'use strict'
+import { getListSubTree } from '../../src/selectors/lists'
 
 describe('List Selectors', () => {
-  const selectors = __require('selectors/lists')
-
   const lists = {
     0: { id: 0, name: 'ROOT', children: [2, 5] },
     2: { id: 2, name: 'Italia', children: [4, 9] },
@@ -23,8 +21,6 @@ describe('List Selectors', () => {
   }
 
   describe('getListSubTree', () => {
-    const { getListSubTree } = selectors
-
     it('returns expanded subtree', () => {
       expect(getListSubTree({ lists, sidebar: { expand } }, { root: 0 }))
         .to.eql([2, 4, 9, 3, 8, 6, 5])

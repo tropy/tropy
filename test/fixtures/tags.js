@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports = {
+export const tags = {
   1: {
     id: 1,
     name: 'Landscape',

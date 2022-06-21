@@ -1,12 +1,10 @@
-'use strict'
-
-const { EditorState } = require('prosemirror-state')
-const { doc, p } = require('prosemirror-test-builder')
-const { schema } = __require('editor/schema')
-
+import { EditorState } from 'prosemirror-state'
+import { doc, p } from 'prosemirror-test-builder'
+import { schema } from '../../src/editor/schema'
 
 const url = 'http://www.example.com'
 const offset = 39
+const www = { from: offset + 7, to: offset + 10 } // helper for selection the url
 
 let state = EditorState.create({
   doc: doc(
@@ -21,9 +19,9 @@ state = state.apply(
     offset + url.length,
     schema.marks.link.create({ href: url })))
 
-module.exports = {
+export {
   state,
   url,
   offset,
-  www: { from: offset + 7, to: offset + 10 } // helper for selection the url
+  www
 }

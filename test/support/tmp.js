@@ -1,20 +1,14 @@
-'use strict'
+import { mkdtempSync } from 'fs'
+import { rm } from 'fs/promises'
+import { tmpdir } from 'os'
+import { join } from 'path'
 
-const { tmpdir } = require('os')
-const { join } = require('path')
-const fs = require('fs')
-
-function mkdtmp() {
-  let dir = fs.mkdtempSync(join(tmpdir(), 'tropy-test-'))
-  after(() => fs.promises.rm(dir, { recursive: true }))
+export function mkdtmp() {
+  let dir = mkdtempSync(join(tmpdir(), 'tropy-test-'))
+  after(() => rm(dir, { recursive: true }))
   return dir
 }
 
-function mktmp(file) {
+export function mktmp(file) {
   return join(mkdtmp(), file)
-}
-
-module.exports = {
-  mkdtmp,
-  mktmp
 }

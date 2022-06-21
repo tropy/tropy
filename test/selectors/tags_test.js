@@ -1,9 +1,6 @@
-'use strict'
-
+import { getItemTags } from '../../src/selectors'
 
 describe('Tag Selectors', () => {
-  const selectors = __require('selectors/tags')
-
   const tags = {
     1: { id: 1, name: 'Rosso', visible: true },
     2: { id: 2, name: 'Azurro', visible: true }
@@ -17,7 +14,6 @@ describe('Tag Selectors', () => {
 
 
   describe('getItemTags', () => {
-    const { getItemTags } = selectors
     const getState = (ids) => ({ tags, items, nav: { items: ids } })
 
     it('returns combined tags', () => {

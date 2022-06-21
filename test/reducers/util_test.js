@@ -1,10 +1,7 @@
-'use strict'
-
+import { nested } from '../../src/reducers/util'
 describe('Reducer Helpers', () => {
 
   describe('nested', () => {
-    const { nested } = __require('reducers/util')
-
     describe('add', () => {
       const state = {
         1: { id: 1, tags: [] },
