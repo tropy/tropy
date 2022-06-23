@@ -2,11 +2,11 @@ color: true
 recursive: true
 reporter: dot
 require:
-  - "test/support/babel.js"
-  - "test/support/coverage.js"
+  - "test/support/babel.cjs"
+  - "test/support/coverage.cjs"
   - "test/support/mode.js"
-  - "test/support/args.js"
+  - "test/support/args.cjs"
   - "test/support/log.js"
   - "test/support/chai.js"
-  - "test/support/fixtures.js"
+  - "test/support/fixtures.cjs"
 slow: 250

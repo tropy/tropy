@@ -29,7 +29,7 @@ global.F = new Proxy({
   },
 
   get preload() {
-    return join(__dirname, 'bootstrap.js')
+    return join(__dirname, 'bootstrap.cjs')
   }
 }, {
   get(obj, name) {
