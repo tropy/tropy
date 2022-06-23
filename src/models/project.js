@@ -1,13 +1,12 @@
-import assert from 'assert'
-import { dirname, join, normalize, relative, resolve } from 'path'
+import assert from 'node:assert'
+import { dirname, join, normalize, relative, resolve } from 'node:path'
 import { v4 as uuid } from 'uuid'
-import ARGS from '../args'
-import { into, select, update } from '../common/query'
-import { info } from '../common/log'
-import { home } from '../common/os'
-import { paths } from '../common/release'
-import { empty } from '../common/util'
-import { Storage } from '../storage'
+import ARGS from '../args.js'
+import { into, select, update } from '../common/query.js'
+import { info } from '../common/log.js'
+import { home } from '../common/os.js'
+import { empty } from '../common/util.js'
+import { Storage } from '../storage.js'
 
 function getBasePath(db, base) {
   switch (base) {
@@ -42,7 +41,7 @@ export default {
 
   async create(db, { name, base, id = uuid() }) {
     info(`creating project "${name}" ${id}`)
-    await db.read(join(paths.db, 'schema', 'project.sql'))
+    await db.read(join(ARGS.app, 'db', 'schema', 'project.sql'))
     await db.run(...into('project').insert({
       project_id: id,
       name,

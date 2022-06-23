@@ -16,3 +16,5 @@ export function update(hash) {
   window.location.hash = encode(JSON.stringify(ARGS))
   return ARGS
 }
+
+parse()

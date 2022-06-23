@@ -1,12 +1,11 @@
-import { EventEmitter } from 'events'
-import fs from 'fs'
-import { basename, join } from 'path'
-import { shell } from 'electron'
+import { EventEmitter } from 'node:events'
+import fs from 'node:fs'
+import { basename, join } from 'node:path'
+import electron, { shell } from 'electron'
 import debounce from 'lodash.debounce'
-import { logger, info, warn } from './log'
-import { blank, get, omit, uniq } from './util'
-import { unzip } from './zip'
-import { paths } from './release'
+import { logger, info, warn } from './log.js'
+import { blank, get, omit, uniq } from './util.js'
+import { unzip } from './zip.js'
 
 import {
   mkdir,
@@ -15,7 +14,7 @@ import {
   readdir,
   stat,
   symlink
-} from 'fs/promises'
+} from 'node:fs/promises'
 
 const load = async file => JSON.parse(await read(file))
 const save = (file, data) => write(file, JSON.stringify(data, null, 2))
@@ -123,7 +122,7 @@ export class Plugins extends EventEmitter {
   async init(autosave = true) {
     await mkdir(this.root, { recursive: true })
 
-    if (process.env.NODE_ENV !== 'test')
+    if (process.env.NODE_ENV !== 'test' && process.type === 'browser')
       await linkReadme(this.root)
 
     return this.reload(autosave)
@@ -325,7 +324,7 @@ const icon = (pkg, name, root) => {
 
 const linkReadme = (root) =>
   symlink(
-    join(paths.res, 'plugins', 'README.md'),
+    join(electron.app.getAppPath(), 'res', 'plugins', 'README.md'),
     join(root, 'README.md'),
     'file'
   ).catch(e => {

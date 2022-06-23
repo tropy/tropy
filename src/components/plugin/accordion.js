@@ -1,11 +1,10 @@
-import { join } from 'path'
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { arrayOf, func, object, string } from 'prop-types'
-import { Accordion } from '../accordion'
-import { Button, ButtonGroup } from '../button'
-import { PluginInstance } from './instance'
-import { paths } from '../../common/release'
+import { Accordion } from '../accordion.js'
+import { Button, ButtonGroup } from '../button.js'
+import { PluginInstance } from './instance.js'
+import { Icon } from '../../res.js'
 
 
 const NoInfo = () => (
@@ -77,7 +76,7 @@ export class PluginAccordion extends Accordion {
     return (
       <img
         className="plugin-icon"
-        src={this.props.spec.icon || this.props.defaultIcon}/>
+        src={this.props.spec.icon || Icon.expand('prefs/icon.svg')}/>
     )
   }
 
@@ -157,10 +156,5 @@ export class PluginAccordion extends Accordion {
     onInsert: func.isRequired,
     onRemove: func.isRequired,
     onUninstall: func.isRequired
-  }
-
-  static defaultProps = {
-    ...Accordion.defaultProps,
-    defaultIcon: join(paths.res, 'icons', 'prefs', 'icon.svg')
   }
 }

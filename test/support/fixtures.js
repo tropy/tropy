@@ -28,6 +28,10 @@ global.F = {
     }
   },
 
+  get preload() {
+    return join(__dirname, './bootstrap.js')
+  },
+
   get items() {
     return require(join(ROOT, 'items'))
   },

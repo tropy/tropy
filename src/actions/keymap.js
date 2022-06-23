@@ -1,6 +1,6 @@
-import { KeyMap } from '../common/res'
-import { KEYMAP } from '../constants'
-import { compile } from '../keymap'
+import { KeyMap } from '../res.js'
+import { KEYMAP } from '../constants/index.js'
+import { compile } from '../keymap.js'
 
 function load({ locale }) {
   return async function (dispatch) {

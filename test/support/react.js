@@ -1,15 +1,15 @@
+import fs from 'node:fs'
 import React from 'react'
 import chai from 'chai'
 import dom from 'chai-dom'
-import fs from 'fs'
 import { render as testRender, queries } from '@testing-library/react'
 import { IntlProvider } from 'react-intl'
 import { DndProvider } from 'react-dnd'
 import { TestBackend } from 'react-dnd-test-backend'
-import ARGS from '../../src/args'
-import win, { createWindowInstance } from '../../src/window'
-import { WindowContext } from '../../src/components/window'
-import { Strings } from '../../src/common/res'
+import ARGS from '../../src/args.js'
+import win, { createWindowInstance } from '../../src/window.js'
+import { WindowContext } from '../../src/components/window.js'
+import { Strings } from '../../src/res.js'
 
 chai.use(dom)
 

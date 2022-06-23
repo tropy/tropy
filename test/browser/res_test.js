@@ -1,6 +1,4 @@
-'use strict'
-
-const { Resource, Menu, Strings } = __require('common/res')
+import { Resource, Menu, Strings } from '../../src/browser/res.js'
 
 describe('Resource', () => {
   it('is a constructor', () => expect(Resource).to.be.a('function'))

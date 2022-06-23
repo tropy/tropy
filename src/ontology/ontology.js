@@ -1,9 +1,9 @@
-import { createReadStream } from 'fs'
-import { join, basename, extname } from 'path'
+import { createReadStream } from 'node:fs'
+import { join, basename, extname } from 'node:path'
 import * as N3 from 'n3'
-import { any, empty, get, URI } from '../common/util'
-import { Resource } from '../common/res'
-import { dc, dcterms, owl, rdf, rdfs, skos, vann } from './ns'
+import { any, empty, get, URI } from '../common/util.js'
+import { Resource } from '../res.js'
+import { dc, dcterms, owl, rdf, rdfs, skos, vann } from './ns.js'
 
 
 export class Ontology extends Resource {

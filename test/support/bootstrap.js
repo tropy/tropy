@@ -1,3 +1,5 @@
-require('./coverage')
-require('./babel')
-require('../../src/bootstrap')
+'use strict'
+
+require('./coverage.js')
+require('./babel.js')
+require('../../src/bootstrap.js')

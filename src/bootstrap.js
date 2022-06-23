@@ -1,5 +1,5 @@
 import { basename } from 'path'
-import ARGS, { parse as parseArgs } from './args'
+import ARGS from './args'
 import { createLogger, fatal, info } from './common/log'
 import { contextBridge, ipcRenderer as ipc } from 'electron'
 import { idle, ready } from './dom'
@@ -10,8 +10,6 @@ const START =
 
 ;(async function bootstrap() {
   try {
-    parseArgs()
-
     createLogger({
       dest: ARGS.log,
       level: ARGS.level,

@@ -70,7 +70,7 @@ target.migrate = async (args = []) => {
   const db = new Database(tmp)
 
   try {
-    await db.migrate(domain)
+    await db.migrate(join(MIGRATE, domain))
     const version = await db.version()
 
     ;(`--

@@ -1,8 +1,8 @@
-import assert from 'assert'
-import fs from 'fs'
-import { EventEmitter } from 'events'
-import { extname, join } from 'path'
-import { fileURLToPath } from 'url'
+import assert from 'node:assert'
+import fs from 'node:fs'
+import { EventEmitter } from 'node:events'
+import { extname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { v1 as uuid } from 'uuid'
 import { into, compose, remove, take } from 'transducers.js'
 
@@ -24,29 +24,28 @@ import {
   info,
   logger,
   warn
-} from '../common/log'
+} from '../common/log.js'
 
+import { darwin, linux } from '../common/os.js'
+import { delay, once } from '../common/util.js'
+import { channel, product, version } from '../common/release.js'
+import { Cache } from '../common/cache.js'
+import { Plugins } from '../common/plugins.js'
 
-import { darwin, linux } from '../common/os'
-import { delay, once } from '../common/util'
-import { channel, product, version } from '../common/release'
-import { Cache } from '../common/cache'
-import { Plugins } from '../common/plugins'
-import { Strings } from '../common/res'
-
-import { AppMenu, ContextMenu } from './menu'
-import { Storage } from './storage'
-import { Updater } from './updater'
-import dialog from './dialog'
-import { Server as ApiServer } from './api'
-import { WindowManager } from './wm'
-import { addIdleObserver } from './idle'
-import { migrate } from './migrate'
-import * as act from './actions'
+import { Strings } from './res.js'
+import { AppMenu, ContextMenu } from './menu.js'
+import { Storage } from './storage.js'
+import { Updater } from './updater.js'
+import dialog from './dialog.js'
+import { Server as ApiServer } from './api.js'
+import { WindowManager } from './wm.js'
+import { addIdleObserver } from './idle.js'
+import { migrate } from './migrate.js'
+import * as act from './actions.js'
 
 import {
   FLASH, HISTORY, TAG, PROJECT, CONTEXT, LOCALE
-} from '../constants'
+} from '../constants/index.js'
 
 const H = new WeakMap()
 const T = new WeakMap()

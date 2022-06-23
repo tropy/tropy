@@ -1,8 +1,8 @@
-import { Icon, Menu as MR } from '../common/res'
-import { basename } from 'path'
-import { error, warn } from '../common/log'
-import { blank } from '../common/util'
+import { basename } from 'node:path'
 import { BrowserWindow, Menu as M } from 'electron'
+import { Icon, Menu as MR } from './res.js'
+import { error, warn } from '../common/log.js'
+import { blank } from '../common/util.js'
 
 const SEPARATOR = { type: 'separator' }
 

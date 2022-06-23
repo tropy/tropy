@@ -1,5 +1,8 @@
-const { basename, resolve, join } = require('path')
-const { writeFileSync: write } = require('fs')
+'use strict'
+
+const process = require('node:process')
+const { basename, resolve, join } = require('node:path')
+const { writeFileSync: write } = require('node:fs')
 
 const root = resolve(__dirname, '..', '..')
 const tmpd = resolve(root, '.nyc_output')

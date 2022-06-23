@@ -1,16 +1,16 @@
 import { ipcRenderer as ipc } from 'electron'
-import { basename, join } from 'path'
-import { existsSync as exists } from 'fs'
-import { warn } from './common/log'
-import { darwin } from './common/os'
-import { Plugins } from './common/plugins'
-import { delay, pick } from './common/util'
-import { paths } from './common/release'
-import { EventEmitter } from 'events'
-import { update } from './args'
+import { EventEmitter } from 'node:events'
+import { existsSync as exists } from 'node:fs'
+import { basename, join } from 'node:path'
+import { warn } from './common/log.js'
+import { darwin } from './common/os.js'
+import { Plugins } from './common/plugins.js'
+import { delay, pick } from './common/util.js'
+import { update } from './args.js'
+import { StyleSheet } from './res.js'
 import debounce from 'lodash.debounce'
-import * as dialog from './dialog'
-import * as json from './common/json'
+import * as dialog from './dialog.js'
+import * as json from './common/json.js'
 
 import {
   $$,
@@ -24,7 +24,7 @@ import {
   toggle,
   stylesheet,
   remove
-} from './dom'
+} from './dom.js'
 
 const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
@@ -134,8 +134,8 @@ export class Window extends EventEmitter {
   get stylesheets() {
     let { theme } = this
     return [
-      join(paths.css, `base-${theme}.css`),
-      join(paths.css, `${this.type}-${theme}.css`),
+      StyleSheet.expand(`base-${theme}`),
+      StyleSheet.expand(`${this.type}-${theme}`),
       join(this.state.data, 'style.css'),
       join(this.state.data, `style-${theme}.css`)
     ]

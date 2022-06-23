@@ -1,22 +1,23 @@
-import assert from 'assert'
-import { PROJECT, IDLE } from '../constants'
-import { Cache } from '../common/cache'
-import { Store } from '../asset'
-import { warn, debug } from '../common/log'
-import { ipc } from './ipc'
-import { consolidator } from './consolidator'
-import { history } from './history'
-import { search } from './search'
-import { ontology } from './ontology'
-import { exec, commands } from './cmd'
-import { shell } from './shell'
-import { fail } from '../dialog'
-import * as mod from '../models'
-import * as act from '../actions'
-import { persist, restore, storage } from './storage'
-import { watch } from './watch'
-import { handleDatabaseErrors } from './db'
-import ARGS, { update } from '../args'
+import assert from 'node:assert'
+import { join } from 'node:path'
+import { PROJECT, IDLE } from '../constants/index.js'
+import { Cache } from '../common/cache.js'
+import { Store } from '../asset/index.js'
+import { warn, debug } from '../common/log.js'
+import { ipc } from './ipc.js'
+import { consolidator } from './consolidator.js'
+import { history } from './history.js'
+import { search } from './search.js'
+import { ontology } from './ontology.js'
+import { exec, commands } from './cmd.js'
+import { shell } from './shell.js'
+import { fail } from '../dialog.js'
+import * as mod from '../models/index.js'
+import * as act from '../actions/index.js'
+import { persist, restore, storage } from './storage.js'
+import { watch } from './watch.js'
+import { handleDatabaseErrors } from './db.js'
+import ARGS, { update } from '../args.js'
 
 import {
   all,
@@ -101,7 +102,9 @@ export function *open(opts = {}, { payload, meta }) {
 
 export function *load(db, opts) {
   if (!(db.isReadOnly || opts.skipMigration))
-    var migrations = yield call(db.migrate, 'project')
+    var migrations = yield call(
+      db.migrate,
+      join(ARGS.app, 'db', 'migrate', 'project'))
 
   let project = yield call(mod.project.load, db)
   assert(project != null && project.id != null, 'invalid project')
