@@ -137,7 +137,7 @@ const ontology = {
   type: datatypes
 }
 
-export {
+export default {
   template,
   items,
   metadata,

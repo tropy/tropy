@@ -1,4 +1,4 @@
-export const items = {
+export default {
   1: {
     id: 1,
     lists: [1],

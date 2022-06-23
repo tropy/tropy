@@ -1,13 +1,12 @@
 import N3 from 'n3'
-import { toN3 } from '../../src/ontology/vocabulary'
-import { vocab, ontology } from '../fixtures/export'
+import { toN3 } from '../../src/ontology/vocabulary.js'
 
 describe('Export Vocabularies', () => {
   describe('toN3()', () => {
     let output
 
     before(async () => {
-      output = await toN3(vocab, ontology)
+      output = await toN3(F.export.vocab, F.export.ontology)
     })
 
     it('creates a string', () => {
@@ -22,8 +21,10 @@ describe('Export Vocabularies', () => {
       expect(store.getQuads('http://example.com/vocab')).to.have.length(6)
       expect(store.getQuads('http://example.com/class')).to.have.length(3)
       expect(store.getQuads('http://example.com/type')).to.have.length(2)
-      expect(store.getQuads('http://example.com/photo-property'))
-        .to.have.length(2)
+
+      expect(
+        store.getQuads('http://example.com/photo-property')
+      ).to.have.length(2)
     })
   })
 })

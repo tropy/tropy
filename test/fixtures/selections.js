@@ -1,4 +1,4 @@
-export const selections = {
+export default {
   201: {
     id: 201,
     notes: [],

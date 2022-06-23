@@ -1,7 +1,5 @@
 import { TextSelection } from 'prosemirror-state'
-import { state, url, www, offset } from '../fixtures/editor'
-import { schema } from '../../src/editor/schema'
-import { markExtend } from '../../src/editor/selections'
+import { markExtend } from '../../src/editor/selections.js'
 
 function selectedText(s) {
   return s.doc.cut(
@@ -16,13 +14,14 @@ function select(s, from, to) {
 }
 
 function expand(s) {
-  const range = markExtend(s.selection, schema.marks.link)
+  let range = markExtend(s.selection, F.editor.schema.marks.link)
   return select(s, range.from, range.to)
 }
 
 describe('markExtend', () => {
-  const content = state.doc.toJSON().content
-  const p = content[1]
+  let { state, offset, url, www } = F.editor
+  let content = state.doc.toJSON().content
+  let p = content[1]
 
   it('fixture state has a paragraph with a link', () => {
     expect(p.content).to.eql([{
@@ -47,30 +46,30 @@ describe('markExtend', () => {
   })
 
   it('select inner text within mark', () => {
-    const selected = select(state, www.from, www.to)
-    expect(selectedText(selected)).to.eql('www')
+    let selected = select(state, ...www)
 
+    expect(selectedText(selected)).to.eql('www')
     expect(selectedText(expand(selected))).to.eql(url)
   })
 
   it('select inner text within mark (backwards)', () => {
-    const selected = select(state, www.to, www.from)
-    expect(selectedText(selected)).to.eql('www')
+    let selected = select(state, ...www)
 
+    expect(selectedText(selected)).to.eql('www')
     expect(selectedText(expand(selected))).to.eql(url)
   })
 
   it('select from first letter inward', () => {
-    const selected = select(state, offset, offset + 4)
-    expect(selectedText(selected)).to.eql('http')
+    let selected = select(state, offset, offset + 4)
 
+    expect(selectedText(selected)).to.eql('http')
     expect(selectedText(expand(selected))).to.eql(url)
   })
 
   it('select from last letter inward', () => {
-    const selected = select(state, offset + url.length, offset + url.length - 4)
-    expect(selectedText(selected)).to.eql('.com')
+    let selected = select(state, offset + url.length, offset + url.length - 4)
 
+    expect(selectedText(selected)).to.eql('.com')
     expect(selectedText(expand(selected))).to.eql(url)
   })
 })

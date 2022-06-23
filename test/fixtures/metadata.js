@@ -1,4 +1,4 @@
-export const metadata = {
+export default {
   1: {
     'id': 1,
     'http://purl.org/dc/elements/1.1/title': {
