@@ -1,13 +1,11 @@
 import { Filter } from 'pixi.js'
-import { Shader } from '../../common/res'
-import { restrict } from '../../common/util'
-
-const FRAG = Shader.load('balance.frag')
+import { Shader } from '../../res.js'
+import { restrict } from '../../common/util.js'
 
 
 export class BalanceFilter extends Filter {
   constructor(a = 0, b = 0) {
-    super(undefined, FRAG)
+    super(undefined, Shader.load('balance.frag'))
     this.a = a
     this.b = b
   }

@@ -1,7 +1,7 @@
-import { resolve } from 'path'
-import { exe, version } from '../common/release'
+import { resolve } from 'node:path'
+import { URL, pathToFileURL } from 'node:url'
+import { exe, version } from '../common/release.js'
 import { Command } from 'commander'
-import { URL, pathToFileURL } from 'url'
 
 export const program = new Command()
 

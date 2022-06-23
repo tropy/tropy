@@ -1,14 +1,17 @@
-import fs from 'fs'
-import { basename, join } from 'path'
+import fs from 'node:fs'
+import { basename, join } from 'node:path'
+import electron from 'electron'
 import yaml from 'js-yaml'
-import { debug } from './log'
-import { paths } from './release'
-import { flatten } from './util'
+import { debug } from '../common/log.js'
+import { flatten } from '../common/util.js'
 
 
 export class Resource {
+
+  // NB: When the Resource classes are used in Renderer,
+  // Resource.base must be re-set to the app path supplied as window argument!
   static get base() {
-    return paths.res
+    return electron.app.getAppPath()
   }
 
   static get ext() {
@@ -42,23 +45,9 @@ export class Resource {
   }
 }
 
-
-export class Menu extends Resource {
-  static get base() {
-    return join(super.base, 'menu')
-  }
-
-  constructor(data, locale = 'en') {
-    super()
-    this.template = data?.[locale]?.[process.platform] || {}
-    this.locale = locale
-  }
-}
-
-
 export class Strings extends Resource {
   static get base() {
-    return join(super.base, 'strings')
+    return join(super.base, 'res/strings')
   }
 
   static open(locale, ...args) {
@@ -76,29 +65,25 @@ export class Strings extends Resource {
   }
 }
 
-
-export class KeyMap extends Resource {
+export class Menu extends Resource {
   static get base() {
-    return join(super.base, 'keymaps')
-  }
-
-  static open(locale, ...args) {
-    return super.open(locale, process.type, ...args)
+    return join(super.base, 'res/menu')
   }
 
   constructor(data, locale = 'en') {
     super()
-    this.map = data?.[locale]?.[process.platform] || {}
+    this.template = data?.[locale]?.[process.platform] || {}
     this.locale = locale
   }
 }
 
-
 export const Icon = {
-  base: join(Resource.base, 'icons'),
+  get base() {
+    return join(Resource.base, 'res/icons')
+  },
 
   color(name, ext = '.png', variant = '') {
-    return join(Icon.base, 'colors', `${name}${variant}${ext}`)
+    return Icon.expand('colors', `${name}${variant}${ext}`)
   },
 
   expand(...args) {
@@ -106,38 +91,12 @@ export const Icon = {
   }
 }
 
-
-export const Cursor = {
-  base: join(Resource.base, 'cursors'),
-
-  expand(name) {
-    return join(Cursor.base, name)
-  }
-}
-
-
-export const Shader = {
-  base: join(Resource.base, 'shaders'),
-
-  load(name) {
-    return fs.readFileSync(join(Shader.base, name), 'utf-8')
-  }
-}
-
-
 export const View = {
-  base: join(Resource.base, 'views'),
+  get base() {
+    return join(Resource.base, 'res/views')
+  },
 
   expand(name) {
     return join(View.base, `${name}.html`)
-  }
-}
-
-
-export const Worker = {
-  base: join(Resource.base, 'workers'),
-
-  expand(name) {
-    return join(Worker.base, `${name}.js`)
   }
 }

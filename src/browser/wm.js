@@ -1,16 +1,16 @@
-import assert from 'assert'
-import { EventEmitter } from 'events'
-import { join } from 'path'
-import { URL } from 'url'
-import { read } from './mac-defaults'
-import { papersize } from './papersize'
-import dialog from './dialog'
-import { debug, error, trace, warn } from '../common/log'
-import { darwin } from '../common/os'
-import { channel, paths } from '../common/release'
-import { Icon, View } from '../common/res'
-import { SASS } from '../constants'
-import { writeFile } from 'fs/promises'
+import assert from 'node:assert'
+import { EventEmitter } from 'node:events'
+import { writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
+import { URL } from 'node:url'
+import { read } from './mac-defaults.js'
+import { papersize } from './papersize.js'
+import dialog from './dialog.js'
+import { debug, error, trace, warn } from '../common/log.js'
+import { darwin } from '../common/os.js'
+import { channel } from '../common/release.js'
+import { Resource, Icon, View } from './res.js'
+import { SASS } from '../constants/index.js'
 
 import {
   array,
@@ -19,7 +19,7 @@ import {
   once,
   remove,
   restrict
-} from '../common/util'
+} from '../common/util.js'
 
 import {
   app,
@@ -45,7 +45,7 @@ export class WindowManager extends EventEmitter {
         defaultEncoding: 'UTF-8',
         enableRemoteModule: false,
         nodeIntegration: true,
-        preload: join(paths.lib, 'bootstrap.js'),
+        preload: join(Resource.base, 'lib/bootstrap.js'),
         spellcheck: false,
         v8CacheOptions: 'bypassHeatCheck',
         ...defaults
@@ -340,6 +340,7 @@ export class WindowManager extends EventEmitter {
 
   async open(type, args, opts = {}) {
     let props = {
+      app: Resource.base,
       env: process.env.NODE_ENV,
       documents: app.getPath('documents'),
       pictures: app.getPath('pictures'),

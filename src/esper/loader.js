@@ -1,6 +1,6 @@
-import { EventEmitter } from 'events'
-import { Worker as WorkerResource } from '../common/res'
-import { warn } from '../common/log'
+import { EventEmitter } from 'node:events'
+import { Worker as WorkerResource } from '../res.js'
+import { warn } from '../common/log.js'
 import { Texture, BaseTexture, ImageBitmapResource, utils } from 'pixi.js'
 
 

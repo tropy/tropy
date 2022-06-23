@@ -1,16 +1,14 @@
-import fs from 'fs'
-import { join } from 'path'
+import fs from 'node:fs'
+import { join } from 'node:path'
 import { app, BrowserWindow } from 'electron'
-import { WindowManager } from '../../src/browser/wm'
-import { View } from '../../src/common/res'
-import { Plugins } from '../../src/common/plugins'
+import { WindowManager } from '../../src/browser/wm.js'
+import { View } from '../../src/browser/res.js'
+import { Plugins } from '../../src/common/plugins.js'
+
 
 describe('WindowManager', () => {
   describe('instance', () => {
-    let wm = new WindowManager({
-      preload: join(__dirname, '..', 'support', 'bootstrap.js')
-    })
-
+    let wm = new WindowManager({ preload: F.preload })
     let plugins = new Plugins(join(app.getPath('userData'), 'plugins'))
 
     before(() => plugins.init())

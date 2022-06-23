@@ -1,9 +1,7 @@
-import fs from 'fs'
-import { basename, extname, join } from 'path'
-import { info } from './log'
-import { paths } from './release'
+import { readdir as ls, readFile as read } from 'node:fs/promises'
+import { basename, extname, join } from 'node:path'
+import { info } from './log.js'
 
-const { readdir: ls, readFile: read } = fs.promises
 
 export class Migration {
   constructor(path) {
@@ -12,17 +10,15 @@ export class Migration {
     this.number = Number(basename(path).split('.', 2)[0])
   }
 
-  static async all(name) {
-    let dir = join(paths.db, 'migrate', name)
-
+  static async all(dir) {
     return (await ls(dir))
       .filter(migration => (/^\d+[\w.-]*\.(js|sql)$/).test(migration))
       .sort()
       .map(migration => new Migration(join(dir, migration)))
   }
 
-  static async since(number = 0, name) {
-    return (await this.all(name)).filter(m => m.fresh(number))
+  static async since(number = 0, dir) {
+    return (await this.all(dir)).filter(m => m.fresh(number))
   }
 
   up(db) {

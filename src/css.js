@@ -1,5 +1,5 @@
-import { Cursor } from './common/res'
-import { win32 } from './common/os'
+import { Cursor } from './res.js'
+import { win32 } from './common/os.js'
 
 export function imageSet(...paths) {
   return `-webkit-image-set(${

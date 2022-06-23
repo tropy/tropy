@@ -1,5 +1,5 @@
-import { INTL } from '../constants'
-import { Strings } from '../common/res'
+import { INTL } from '../constants/index.js'
+import { Strings } from '../res.js'
 
 function load({ locale }) {
   return async function (dispatch) {

@@ -1,13 +1,12 @@
-import { EventEmitter } from 'events'
-import fs from 'fs'
-import { normalize } from 'path'
+import { EventEmitter } from 'node:events'
+import fs from 'node:fs'
+import { normalize } from 'node:path'
 import Bluebird from 'bluebird'
 import { createPool, Pool } from 'generic-pool'
-import sqlite from './sqlite'
-import { Migration } from './migration'
-import { debug, info, trace, warn } from './log'
+import sqlite from './sqlite.js'
+import { Migration } from './migration.js'
+import { debug, info, trace, warn } from './log.js'
 
-const { readFile: read } = fs.promises
 const { using } = Bluebird
 
 const M = {
@@ -261,8 +260,8 @@ export class Database extends EventEmitter {
   check = (...args) =>
     this.seq(conn => conn.check(...args))
 
-  async read(file) {
-    return this.exec(String(await read(file)))
+  async read(path) {
+    return this.exec(String(await fs.promises.readFile(path)))
   }
 
   static defaults = {

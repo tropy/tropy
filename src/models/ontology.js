@@ -1,13 +1,12 @@
-import assert from 'assert'
-import { join } from 'path'
-import ARGS from '../args'
-import { TYPE } from '../constants'
-import { paths } from '../common/release'
-import { blank, list, quote } from '../common/util'
+import assert from 'node:assert'
+import { join } from 'node:path'
+import ARGS from '../args.js'
+import { TYPE } from '../constants/index.js'
+import { blank, list, quote } from '../common/util.js'
 
 const ontology = {
   create(db) {
-    return db.read(join(paths.db, 'schema', 'ontology.sql'))
+    return db.read(join(ARGS.app, 'db', 'schema', 'ontology.sql'))
   },
 
   clear(db) {
