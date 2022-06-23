@@ -1,4 +1,4 @@
-export const photos = {
+export default {
   101: {
     id: 101,
     selections: [

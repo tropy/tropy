@@ -1,4 +1,4 @@
-export const lists = {
+export default {
   root: {
     id: 0,
     children: [1, 2]

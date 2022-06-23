@@ -1,4 +1,4 @@
-export const tags = {
+export default {
   1: {
     id: 1,
     name: 'Landscape',

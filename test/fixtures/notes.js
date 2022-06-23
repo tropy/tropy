@@ -1,4 +1,4 @@
-export const notes = {
+export default {
   301: {
     photo: 101,
     selection: null,

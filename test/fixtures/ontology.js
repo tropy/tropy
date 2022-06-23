@@ -1,4 +1,4 @@
-export const ontology = {
+export default {
   vocab: {
     'https://tropy.org/v1/tropy#': {
       id: 'https://tropy.org/v1/tropy#',
