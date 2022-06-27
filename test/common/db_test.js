@@ -1,8 +1,8 @@
 import { mktmp } from '../support/tmp'
 import { unlink } from 'fs/promises'
-import { all, map, using } from 'bluebird'
 import { times } from '../../src/common/util'
-import { Database, Connection, Statement } from '../../src/common/db'
+import { using, Database, Connection, Statement } from '../../src/common/db'
+import { map } from 'bluebird'
 
 function failure() { throw new Error() }
 
@@ -64,6 +64,14 @@ describe('Database', () => {
     })
 
     describe('#prepare()', () => {
+      beforeEach(() => {
+        sinon.spy(Statement.prototype, 'finalize')
+      })
+
+      afterEach(() => {
+        Statement.prototype.finalize.restore()
+      })
+
       it('returns disposable statement and connection', () => (
         expect(
           db.prepare('SELECT * FROM sqlite_schema', (stmt, conn) => {
@@ -73,30 +81,21 @@ describe('Database', () => {
         ).eventually.to.be.fulfilled
       ))
 
-      it('finalizes statement when done', () => {
-        sinon.spy(Statement.prototype, 'finalize')
-
-        return expect(
-          db
-            .prepare('SELECT * FROM sqlite_schema', () => {})
-            .tap(() => {
-              expect(Statement.prototype.finalize).to.have.been.called
-            })
-            .finally(() => { Statement.prototype.finalize.restore() })
-
-        ).eventually.to.be.fulfilled
+      it('finalizes statement when done', async () => {
+        await db.prepare('SELECT * FROM sqlite_schema', () => {})
+        expect(Statement.prototype.finalize).to.have.been.called
       })
 
-      it('can be run multiple times', () =>
-        expect((async function () {
-          await db.run('CREATE TABLE s(a)')
+      it('can be run multiple times', async () => {
+        await db.run('CREATE TABLE s(a)')
 
-          await db.prepare('INSERT INTO s VALUES (?)', stmt =>
-            all(times(9, i => stmt.run(i))))
+        await db.prepare('INSERT INTO s VALUES (?)', stmt =>
+          Promise.all(times(9, i => stmt.run(i))))
 
-          return db.get('SELECT COUNT(*) AS count FROM s')
+        let result = await db.get('SELECT COUNT(*) AS count FROM s')
 
-        }())).to.eventually.have.property('count', 9))
+        expect(result).to.have.property('count', 9)
+      })
     })
 
     describe('#exec()', () => {
@@ -254,7 +253,7 @@ describe('Database', () => {
     })
 
     describe('#migration()', () => {
-      beforeEach(() => db.seq(conn => all([
+      beforeEach(() => db.seq(conn => Promise.all([
         conn.run('CREATE TABLE m1 (id INTEGER PRIMARY KEY)'),
         conn.run('CREATE TABLE m2 (m1id REFERENCES m1(id))')
       ])))

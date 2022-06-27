@@ -1,7 +1,7 @@
 import assert from 'assert'
 import { relative, resolve } from 'path'
 import metadata from './metadata'
-import { map } from 'bluebird'
+import Bluebird from 'bluebird'
 import subject from './subject'
 import { into, select, update } from '../common/query'
 import { normalize } from '../common/os'
@@ -191,7 +191,7 @@ export default {
   },
 
   async split(db, item, items, concurrency = 4) {
-    return map(items, ({ id, photos }) =>
+    return Bluebird.map(items, ({ id, photos }) =>
       db.run(`
         UPDATE photos
           SET item_id = ?, position = CASE id
@@ -237,7 +237,7 @@ export default {
           }
         })
 
-    await map(delta, ({ id, path }) => db.run(
+    await Bluebird.map(delta, ({ id, path }) => db.run(
       ...update('photos').set({ path }).where({ id })
     ))
   }

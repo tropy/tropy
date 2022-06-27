@@ -1,25 +1,37 @@
-import Bluebird from 'bluebird'
-import sqlite from 'sqlite3'
-export default sqlite
+import { promisify } from 'node:util'
+import sqlite3 from 'sqlite3'
 
-const { Database, Statement } = sqlite
+export default sqlite3
 
-Bluebird.promisifyAll([Database, Statement])
+const { Database, Statement } = sqlite3
+
+for (let fn of ['close', 'all', 'get', 'exec']) {
+  Database.prototype[`${fn}Async`] = promisify(Database.prototype[fn])
+}
+
+for (let fn of ['bind', 'reset', 'finalize', 'all', 'get']) {
+  Statement.prototype[`${fn}Async`] = promisify(Statement.prototype[fn])
+}
+
 
 Database.prototype.prepareAsync = function (...args) {
-  return new Bluebird((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let stmt = this.prepare(...args, error => {
-      if (error) reject(error)
-      else resolve(stmt)
+      if (error)
+        reject(error)
+      else
+        resolve(stmt)
     })
   })
 }
 
 Database.prototype.runAsync = function (...args) {
-  return new Bluebird((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     this.run(...args, function (error) {
-      if (error) reject(error)
-      else resolve({ id: this.lastID, changes: this.changes })
+      if (error)
+        reject(error)
+      else
+        resolve({ id: this.lastID, changes: this.changes })
     })
   })
 }
@@ -27,7 +39,7 @@ Database.prototype.runAsync = function (...args) {
 Statement.prototype.runAsync = Database.prototype.runAsync
 
 Database.prototype.eachAsync = function (...args) {
-  return new Bluebird((resolve, reject) => {
+  return new Promise((resolve, reject) => {
 
     if (!args.length || args.length > 3) {
       throw new RangeError(`expected 1-3 arguments, was: ${args.length}`)
@@ -55,8 +67,10 @@ Database.prototype.eachAsync = function (...args) {
       },
 
       (error, rows) => {
-        if (error) reject(error)
-        else resolve(rows)
+        if (error)
+          reject(error)
+        else
+          resolve(rows)
       })
   })
 }
