@@ -1,13 +1,36 @@
 import { EventEmitter } from 'node:events'
 import fs from 'node:fs'
 import { normalize } from 'node:path'
-import Bluebird from 'bluebird'
 import { createPool, Pool } from 'generic-pool'
 import sqlite from './sqlite.js'
 import { Migration } from './migration.js'
 import { debug, info, trace, warn } from './log.js'
 
-const { using } = Bluebird
+
+class DisposableResource {
+  constructor(resource, dispose) {
+    this.promise = Promise.resolve(resource)
+    this.dispose = dispose
+  }
+}
+
+function disposable(resource, dispose) {
+  return new DisposableResource(resource, dispose)
+}
+
+
+export async function using({ promise, dispose }, callback) {
+  let resource = await promise
+
+  try {
+    return await callback(resource)
+
+  } finally {
+    await dispose(resource)
+  }
+}
+
+
 
 const M = {
   'r': sqlite.OPEN_READONLY,
@@ -78,7 +101,6 @@ export class Database extends EventEmitter {
       max: 3,
       idleTimeoutMillis: 1000 * 60 * 3,
       acquireTimeoutMillis: 1000 * 60,
-      Promise: Bluebird,
       ...opts
     })
 
@@ -121,8 +143,10 @@ export class Database extends EventEmitter {
 
         new Connection(db)
           .configure()
-          .tap(() => this.emit('create'))
-          .then(resolve, reject)
+          .then(conn => {
+            this.emit('create')
+            resolve(conn)
+          }, reject)
       })
 
       db.on('error', (error) => {
@@ -156,8 +180,10 @@ export class Database extends EventEmitter {
   }
 
   acquire(opts = {}) {
-    return this.pool.acquire()
-      .disposer(conn => this.release(conn, opts.destroy))
+    return disposable(
+      this.pool.acquire(),
+      conn => this.release(conn, opts.destroy)
+    )
   }
 
   release(conn, destroy = false) {
@@ -206,7 +232,7 @@ export class Database extends EventEmitter {
   }
 
   transaction = (fn) =>
-    this.seq(conn => using(transaction(conn), fn))
+    this.seq(conn => transaction(conn, fn))
 
 
   /*
@@ -222,9 +248,13 @@ export class Database extends EventEmitter {
    */
   migration = (fn) =>
     this.seq(conn =>
-      using(nofk(conn), conn =>
-        using(transaction(conn, 'EXCLUSIVE'), tx =>
-          Bluebird.resolve(fn(tx)).then(() => tx.check()))))
+      nofk(conn, conn =>
+        exclusiveTransaction(conn, async tx => {
+          await fn(tx)
+          await tx.check()
+        })
+      )
+    )
 
 
   prepare(...args) {
@@ -250,8 +280,10 @@ export class Database extends EventEmitter {
     return this.seq(conn => conn.run(...args))
   }
 
-  exec = (...args) =>
-    this.seq(conn => conn.exec(...args)).return(this)
+  exec = async (...args) => {
+    await this.seq(conn => conn.exec(...args))
+    return this
+  }
 
   version(...args) {
     return this.seq(conn => conn.version(...args))
@@ -321,8 +353,9 @@ export class Connection {
     return this.db.runAsync(sql, flatten(params))
   }
 
-  exec(sql) {
-    return this.db.execAsync(sql).return(this)
+  async exec(sql) {
+    await this.db.execAsync(sql)
+    return this
   }
 
   version(version) {
@@ -339,8 +372,15 @@ export class Connection {
     return this.exec('COMMIT TRANSACTION')
   }
 
-  rollback() {
-    return this.exec('ROLLBACK TRANSACTION')
+  async rollback(cause) {
+    try {
+      await this.exec('ROLLBACK TRANSACTION')
+      return this
+
+    } catch (e) {
+      e.cause = cause
+      throw e
+    }
   }
 
   async check(table, { maxIntErrors = 10 } = {}) {
@@ -384,25 +424,31 @@ export class Connection {
 
 export class Statement {
   static disposable(conn, sql, ...params) {
-    return conn.db.prepareAsync(sql, flatten(params))
-      .then(stmt => new Statement(stmt))
-      .disposer(stmt => stmt.finalize())
+    return disposable(
+      conn.db.prepareAsync(sql, flatten(params))
+        .then(stmt => new Statement(stmt)),
+
+      stmt => stmt.finalize()
+    )
   }
 
   constructor(stmt) {
     this.stmt = stmt
   }
 
-  bind(...params) {
-    return this.stmt.bindAsync(flatten(params)).return(this)
+  async bind(...params) {
+    await this.stmt.bindAsync(flatten(params))
+    return this
   }
 
-  reset() {
-    return this.stmt.resetAsync().return(this)
+  async reset() {
+    await this.stmt.resetAsync()
+    return this
   }
 
-  finalize() {
-    return this.stmt.finalizeAsync().return(this)
+  async finalize() {
+    await this.stmt.finalizeAsync()
+    return this
   }
 
   run(...params) {
@@ -423,17 +469,37 @@ export class Statement {
 }
 
 
-function nofk(conn) {
-  return conn
-    .configure({ foreign_keys: 'off' })
-    .disposer(() => conn.configure({ foreign_keys: 'on' }))
+async function nofk(conn, callback) {
+  await conn.configure({ foreign_keys: 'off' })
+
+  try {
+    let result = await callback(conn)
+    return result
+
+  } finally {
+    await conn.configure({ foreign_keys: 'on' })
+  }
 }
 
-export function transaction(conn, mode = 'IMMEDIATE') {
-  return conn
-    .begin(mode)
-    .disposer((tx, p) => p.isFulfilled() ? tx.commit() : tx.rollback())
+async function transaction(conn, callback, mode = 'IMMEDIATE') {
+  await conn.begin(mode)
+
+  try {
+    let result = await callback(conn)
+    await conn.commit()
+
+    return result
+
+  } catch (e) {
+    await conn.rollback(e)
+    throw e
+  }
 }
+
+async function exclusiveTransaction(conn, callback) {
+  return transaction(conn, callback, 'EXCLUSIVE')
+}
+
 
 function flatten(params) {
   return (params.length === 1) ? params[0] : params
