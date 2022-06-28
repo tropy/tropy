@@ -358,10 +358,10 @@ export class Connection {
     return this
   }
 
-  version(version) {
+  async version(version) {
     return (version) ?
       this.exec(`PRAGMA user_version = ${version}`) :
-      this.get('PRAGMA user_version').get('user_version')
+      this.get('PRAGMA user_version').then(r => r.user_version)
   }
 
   begin(mode = 'IMMEDIATE') {
