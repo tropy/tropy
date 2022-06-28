@@ -1,7 +1,7 @@
 import { writeFile, mkdir, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { mkdtmp } from '../support/tmp.js'
-import { ls } from '../../src/common/dir.js'
+import { ls } from '../../src/common/fs.js'
 
 describe('fs utils', () => {
   const root = join(mkdtmp(), 'dir')
