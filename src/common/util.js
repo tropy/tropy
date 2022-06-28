@@ -30,9 +30,53 @@ export function empty(obj) {
   return obj == null || Object.keys(obj).length === 0
 }
 
-export function times(n, fn) {
-  for (var i = 0, res = []; i < n; ++i) res.push(fn(i))
+export function times(n, fn = identity) {
+  for (var i = 0, res = []; i < n; ++i)
+    res.push(fn(i))
+
   return res
+}
+
+export function *iteratorWithIndex(input) {
+  let index = 0
+  for (let item of input[Symbol.iterator]())
+    yield [item, index++]
+}
+
+export async function pMap(input, mapper, { concurrency = Infinity } = {}) {
+  let result = []
+
+  if (!input.length)
+    return result
+
+  let it = iteratorWithIndex(input)
+  concurrency = Math.min(Math.max(0, concurrency), input.length)
+
+  let errors = []
+  let workers = []
+
+  times(concurrency, () => {
+    workers.push(pMap.worker(it, mapper, result, errors))
+  })
+
+  await Promise.allSettled(workers)
+
+  if (errors.length >= 1)
+    throw new AggregateError(errors)
+
+  return result
+}
+
+pMap.worker = async function (it, mapper, result, errors) {
+  for (let [item, index] of it) {
+    try {
+      item = await Promise.resolve(item)
+      result[index] = await mapper(item, index)
+
+    } catch (e) {
+      errors.push(e)
+    }
+  }
 }
 
 function toArray(obj) {
@@ -359,8 +403,8 @@ export function tautology() {
   return true
 }
 
-export function delay(ms) {
-  return new Promise(resolve => setTimeout(() => void resolve(), ms))
+export function delay(ms, ...args) {
+  return new Promise(resolve => setTimeout(resolve, ms, ...args))
 }
 
 export function *counter(k = 0) {

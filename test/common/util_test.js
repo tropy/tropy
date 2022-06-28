@@ -366,4 +366,65 @@ describe('util', () => {
       expect(util.morph({ foo: 'bar' }, upcase)).to.eql({ FOO: 'BAR' })
     })
   })
+
+  describe('.pMap', () => {
+    it('accepts an empty list', async () => {
+      let spy = sinon.spy()
+
+      expect(await util.pMap([], spy))
+        .to.be.an('array').that.is.empty
+
+      expect(spy).not.to.have.been.called
+    })
+
+    it('passes items and index to the mapper', async () => {
+      let spy = sinon.spy()
+
+      expect(await util.pMap(['a', 'b'], spy))
+        .to.be.an('array').of.length(2)
+
+      expect(spy).to.have.been.calledTwice
+      expect(spy).to.have.been.calledWith('a', 0)
+      expect(spy).to.have.been.calledWith('b', 1)
+    })
+
+    it('throws aggregate error on mapper rejection', async () => {
+      let stub = sinon.stub()
+
+      stub.resolvesArg(0)
+      stub.onCall(1).rejects()
+
+      await expect(
+        util.pMap([1, 2, 3], stub, { concurrency: 1 })
+      ).to.eventually.be.rejectedWith(AggregateError)
+
+      expect(stub).to.have.callCount(3)
+    })
+
+    it('throws aggregate error on mapper throw', async () => {
+      let stub = sinon.stub()
+
+      stub.onCall(0).throws()
+      stub.resolvesArg(0)
+
+      await expect(
+        util.pMap([1, 2, 3], stub, { concurrency: 1 })
+      ).to.eventually.be.rejectedWith(AggregateError)
+
+      expect(stub).to.have.callCount(3)
+    })
+
+    it('resolves mapped promises', () => (
+      expect(util.pMap([1, 2, 3, 4], sinon.stub().resolvesArg(1)))
+        .to.eventually.eql([0, 1, 2, 3])
+    ))
+
+    it('supports concurrency', () =>
+      expect(
+        Promise.race([
+          util.pMap([1, 2, 3], () => util.delay(25, 'a'), { concurrency: 1 }),
+          util.pMap([1, 2, 3], () => util.delay(25, 'b'), { concurrency: 3 })
+        ])
+      ).to.eventually.eql(['b', 'b', 'b']))
+  })
 })
