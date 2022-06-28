@@ -1,6 +1,5 @@
 import { EventEmitter } from 'node:events'
 import { readFile } from 'node:fs/promises'
-import { normalize } from 'node:path'
 import { createPool, Pool } from 'generic-pool'
 import { canWrite } from './fs.js'
 import sqlite from './sqlite.js'
@@ -40,7 +39,6 @@ const M = {
   'wx+': sqlite.OPEN_CREATE
 }
 
-const cache = {}
 const IUD = /^\s*(insert|update|delete)/i
 
 {
@@ -70,17 +68,6 @@ export class Database extends EventEmitter {
     } finally {
       if (db) await db.close()
     }
-  }
-
-  static cached(path) {
-    path = normalize(path)
-
-    if (!cache[path]) {
-      cache[path] = new Database(path, 'w')
-        .once('close', () => { cache[path] = null })
-    }
-
-    return cache[path]
   }
 
   constructor(path = ':memory:', mode = 'w+', opts = {}) {
