@@ -44,10 +44,6 @@ const IGNORE_WARNINGS = {
     normalize('node_modules/semver/classes/comparator.js')
   ].includes(warning.importer),
 
-  EVAL: (warning) => [
-    normalize('node_modules/bluebird/js/release/util.js')
-  ].includes(relative(process.cwd(), warning.id)),
-
   THIS_IS_UNDEFINED: (warning) =>
     (/this && this\.__/).test(warning.frame)
 }
