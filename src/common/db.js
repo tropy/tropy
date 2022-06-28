@@ -1,7 +1,8 @@
 import { EventEmitter } from 'node:events'
-import fs from 'node:fs'
+import { readFile } from 'node:fs/promises'
 import { normalize } from 'node:path'
 import { createPool, Pool } from 'generic-pool'
+import { canWrite } from './fs.js'
 import sqlite from './sqlite.js'
 import { Migration } from './migration.js'
 import { debug, info, trace, warn } from './log.js'
@@ -38,10 +39,6 @@ const M = {
   'w+': sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE,
   'wx+': sqlite.OPEN_CREATE
 }
-
-const canWrite = (file) =>
-  fs.promises.access(file, fs.constants.W_OK)
-    .then(() => true, () => false)
 
 const cache = {}
 const IUD = /^\s*(insert|update|delete)/i
@@ -293,7 +290,7 @@ export class Database extends EventEmitter {
     this.seq(conn => conn.check(...args))
 
   async read(path) {
-    return this.exec(String(await fs.promises.readFile(path)))
+    return this.exec(String(await readFile(path)))
   }
 
   static defaults = {

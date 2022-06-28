@@ -1,8 +1,13 @@
-import fs from 'fs'
-import { basename, dirname, join } from 'path'
-import { tautology } from './util'
+import fs from 'node:fs'
+import { access, stat, readdir } from 'node:fs/promises'
+import { basename, dirname, join } from 'node:path'
+import { tautology } from './util.js'
 
-const { stat, readdir } = fs.promises
+
+export function canWrite(file) {
+  return access(file, fs.constants.W_OK)
+    .then(() => true, () => false)
+}
 
 export async function ls(path, {
   filter = tautology,
