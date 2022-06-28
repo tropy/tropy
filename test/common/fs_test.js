@@ -1,9 +1,9 @@
-import { join } from 'path'
-import { mkdtmp } from '../support/tmp'
-import { writeFile, mkdir, rm } from 'fs/promises'
-import { ls } from '../../src/common/dir'
+import { writeFile, mkdir, rm } from 'node:fs/promises'
+import { join } from 'node:path'
+import { mkdtmp } from '../support/tmp.js'
+import { ls } from '../../src/common/dir.js'
 
-describe('directory utils', () => {
+describe('fs utils', () => {
   const root = join(mkdtmp(), 'dir')
 
   beforeEach(async () => {
