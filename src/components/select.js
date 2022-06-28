@@ -2,7 +2,7 @@ import React from 'react'
 import { Completions } from './completions'
 import { IconXSmall } from './icons'
 import { Button } from './button'
-import { blank, last, noop } from '../common/util'
+import { blank, noop } from '../common/util'
 import cx from 'classnames'
 import memoize from 'memoize-one'
 import {
@@ -100,8 +100,11 @@ export class Select extends React.Component {
 
   clear = (value) => {
     if (this.state.canClearValue) {
-      if (value != null) this.props.onRemove(this.props.toId(value))
-      else this.props.onClear()
+      if (value != null)
+        this.props.onRemove(this.props.toId(value))
+      else
+        this.props.onClear()
+
       this.handleChange(null, !this.state.isBlank)
       this.close({ type: 'clear' })
     }
@@ -115,9 +118,13 @@ export class Select extends React.Component {
   commit() {
     if (this.completions.current != null)
       return this.completions.current.select()
-    if (this.state.isBlank) return this.open()
-    let value = last(this.state.values)
-    if (value == null || value.id == null) return this.open()
+    if (this.state.isBlank)
+      return this.open()
+
+    let value = this.state.values.at(-1)
+    if (value == null || value.id == null)
+      return this.open()
+
     this.handleChange(value, false)
   }
 
@@ -199,7 +206,7 @@ export class Select extends React.Component {
             !this.state.canClearValue) {
             return false
           }
-          this.clear(last(this.state.values))
+          this.clear(this.state.values.at(-1))
           break
         default:
           return false

@@ -1,7 +1,7 @@
 import { Command } from '../command'
 import { call, put, select } from 'redux-saga/effects'
 import { PHOTO } from '../../constants'
-import { get, last, splice } from '../../common/util'
+import { get, splice } from '../../common/util'
 import * as act from '../../actions'
 import * as mod from '../../models'
 
@@ -27,7 +27,7 @@ export class Delete extends Command {
     if (nav.photo != null) {
       let selected = payload.photos.indexOf(nav.photo)
       if (selected !== -1) {
-        yield* this.select(item.id, order[idx[selected]] ?? last(order))
+        yield* this.select(item.id, order[idx[selected]] ?? order.at(-1))
       }
     }
 

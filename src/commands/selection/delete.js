@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects'
 import { Command } from '../command'
 import { SELECTION } from '../../constants'
-import { get, last, splice } from '../../common/util'
+import { get, splice } from '../../common/util'
 import mod from '../../models/selection'
 import * as act from '../../actions'
 
@@ -30,7 +30,7 @@ export class Delete extends Command {
         yield* this.select(
           photo.item,
           photo.id,
-          order[idx[selected]] ?? last(order))
+          order[idx[selected]] ?? order.at(-1))
       }
     }
 

@@ -9,7 +9,7 @@ import { TagList } from '../tag'
 import { Sidebar, SidebarBody } from '../sidebar'
 import { ProjectName } from './name'
 import { TABS, LIST, SASS } from '../../constants'
-import { has, last } from '../../common/util'
+import { has } from '../../common/util'
 import { match } from '../../keymap'
 import { testFocusChange } from '../../dom'
 import * as act from '../../actions'
@@ -50,7 +50,7 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   getLastList() {
-    return last(this.props.listwalk)
+    return this.props.listwalk.at(-1)
   }
 
   getNextList() {

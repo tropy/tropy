@@ -35,7 +35,6 @@ export function times(n, fn) {
   return res
 }
 
-
 function toArray(obj) {
   return obj == null ? [] : Array.isArray(obj) ? [...obj] : [obj]
 }
@@ -54,10 +53,6 @@ export function splice(array, at, count = 0, ...items) {
 
 export function insert(array, at, ...items) {
   return splice(array, at, 0, ...items)
-}
-
-export function last(array) {
-  return array[array.length - 1]
 }
 
 export function remove(array, ...items) {
