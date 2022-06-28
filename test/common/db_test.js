@@ -1,7 +1,8 @@
-import { mktmp } from '../support/tmp'
-import { unlink } from 'fs/promises'
-import { times } from '../../src/common/util'
-import { using, Database, Connection, Statement } from '../../src/common/db'
+import { unlink } from 'node:fs/promises'
+import { mktmp } from '../support/tmp.js'
+import { times } from '../../src/common/util.js'
+import { Database, Connection, Statement } from '../../src/common/db.js'
+import { using } from '../../src/common/disposable.js'
 import { map } from 'bluebird'
 
 function failure() { throw new Error() }
@@ -30,17 +31,16 @@ describe('Database', () => {
     })
 
     describe('#acquire()', () => {
-      it('returns a disposable connection', () => (
-        using(db.acquire(), c => {
+      it('returns a disposable connection', async () => {
+        await using(db.acquire(), c => {
           expect(db.pool.acquire).to.have.been.called
           expect(db.pool.release).not.to.have.been.called
 
           expect(c).to.be.instanceof(Connection)
         })
-          .then(() => {
-            expect(db.pool.release).to.have.been.called
-          })
-      ))
+
+        expect(db.pool.release).to.have.been.called
+      })
 
       it('draws from the connection pool', () =>
         using(db.acquire(), c1 => {
