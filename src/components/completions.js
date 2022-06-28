@@ -2,7 +2,6 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Popup } from './popup'
 import { OptionList } from './option'
-import { last } from '../common/util'
 import { translate } from '../common/math'
 import { bounds, viewport } from '../dom'
 import * as collate from '../collate'
@@ -64,7 +63,7 @@ export class Completions extends React.Component {
     let active = (state.options === options) ?
       state.active :
       (!query.length && !props.isSelectionHidden) ?
-        last(props.selection) : null
+        props.selection.at(-1) : null
 
     if (!active && !props.isAdvisory && options.length > 0) {
       active = options[0].id

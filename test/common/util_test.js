@@ -1,5 +1,6 @@
-import * as util from '../../src/common/util'
-import { EventEmitter } from 'events'
+import { EventEmitter } from 'node:events'
+import * as util from '../../src/common/util.js'
+
 describe('util', () => {
 
   describe('.once', () => {
@@ -53,6 +54,7 @@ describe('util', () => {
       })
     })
   })
+
   describe('.flatten', () => {
     it('flattens empty objects', () =>
       expect(util.flatten({})).to.eql({}))

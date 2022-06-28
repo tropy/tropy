@@ -1,6 +1,6 @@
 import React from 'react'
 import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd'
-import { adjacent, last, move, noop } from '../../common/util'
+import { adjacent, move, noop } from '../../common/util'
 import { on, off } from '../../dom'
 import { TABS } from '../../constants'
 
@@ -264,7 +264,7 @@ const DropTargetSpec = {
     switch (monitor.getItemType()) {
       case DND.PHOTO: {
         let item = monitor.getItem()
-        let to = last(photos).id
+        let to = photos.at(-1).id
 
         if (item.id !== to)  {
           return {

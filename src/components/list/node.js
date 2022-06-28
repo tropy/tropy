@@ -6,7 +6,7 @@ import { IconFolder, IconGhost, IconTriangle } from '../icons'
 import { bounds } from '../../dom'
 import { ListTree } from './tree'
 import cx from 'classnames'
-import { last, noop, restrict } from '../../common/util'
+import { noop, restrict } from '../../common/util'
 
 import {
   DND,
@@ -130,7 +130,7 @@ class ListNode extends React.PureComponent {
     for (; depth > 0 && list.parent != null; --depth) {
       prev = list.id
       list = lists[list.parent]
-      if (last(list.children) !== prev) break
+      if (list.children.at(-1) !== prev) break
     }
 
     let idx = (prev == null) ?
