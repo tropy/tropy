@@ -5,31 +5,7 @@ import { canWrite } from './fs.js'
 import sqlite from './sqlite.js'
 import { Migration } from './migration.js'
 import { debug, info, trace, warn } from './log.js'
-
-
-class DisposableResource {
-  constructor(resource, dispose) {
-    this.promise = Promise.resolve(resource)
-    this.dispose = dispose
-  }
-}
-
-function disposable(resource, dispose) {
-  return new DisposableResource(resource, dispose)
-}
-
-
-export async function using({ promise, dispose }, callback) {
-  let resource = await promise
-
-  try {
-    return await callback(resource)
-
-  } finally {
-    await dispose(resource)
-  }
-}
-
+import { DisposableResource, using } from './disposable.js'
 
 
 const M = {
@@ -164,7 +140,7 @@ export class Database extends EventEmitter {
   }
 
   acquire(opts = {}) {
-    return disposable(
+    return new DisposableResource(
       this.pool.acquire(),
       conn => this.release(conn, opts.destroy)
     )
@@ -407,7 +383,7 @@ export class Connection {
 
 export class Statement {
   static disposable(conn, sql, ...params) {
-    return disposable(
+    return new DisposableResource(
       conn.db.prepareAsync(sql, flatten(params))
         .then(stmt => new Statement(stmt)),
 
