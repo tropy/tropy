@@ -1,12 +1,11 @@
-import assert from 'assert'
-import { relative, resolve } from 'path'
-import metadata from './metadata'
-import Bluebird from 'bluebird'
-import subject from './subject'
-import { into, select, update } from '../common/query'
-import { normalize } from '../common/os'
-import { blank, empty, pick } from '../common/util'
-import { props } from '../common/export'
+import assert from 'node:assert'
+import { relative, resolve } from 'node:path'
+import metadata from './metadata.js'
+import subject from './subject.js'
+import { into, select, update } from '../common/query.js'
+import { normalize } from '../common/os.js'
+import { blank, empty, pick, pMap } from '../common/util.js'
+import { props } from '../common/export.js'
 
 const skel = (id, selections = [], notes = []) => ({
   id, selections, notes
@@ -191,7 +190,7 @@ export default {
   },
 
   async split(db, item, items, concurrency = 4) {
-    return Bluebird.map(items, ({ id, photos }) =>
+    return pMap(items, ({ id, photos }) =>
       db.run(`
         UPDATE photos
           SET item_id = ?, position = CASE id
@@ -237,7 +236,7 @@ export default {
           }
         })
 
-    await Bluebird.map(delta, ({ id, path }) => db.run(
+    await pMap(delta, ({ id, path }) => db.run(
       ...update('photos').set({ path }).where({ id })
     ))
   }

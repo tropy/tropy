@@ -1,9 +1,8 @@
 import { unlink } from 'node:fs/promises'
 import { mktmp } from '../support/tmp.js'
-import { times } from '../../src/common/util.js'
+import { pMap, times } from '../../src/common/util.js'
 import { Database, Connection, Statement } from '../../src/common/db.js'
 import { using } from '../../src/common/disposable.js'
-import { map } from 'bluebird'
 
 function failure() { throw new Error() }
 
@@ -305,23 +304,21 @@ describe('Database', () => {
         db.run('CREATE TABLE cc (a)'))
 
       describe('on multiple connections', () => {
-        function count() {
-          return db.get('SELECT COUNT(*) AS count FROM cc')
-        }
+        let count = () =>
+          db.get('SELECT COUNT(*) AS count FROM cc')
 
-        function write(value) {
-          return db.transaction(tx =>
-              tx.run('INSERT INTO cc VALUES (?)', value))
-        }
+        let write = (value) =>
+          db.transaction(tx =>
+            tx.run('INSERT INTO cc VALUES (?)', value))
 
         it('supports parallel reading', () =>
           expect(
-            map(times(NUM_READ, count), res => res.count)
+            pMap(times(NUM_READ, count), res => res.count)
           ).to.eventually.eql(times(NUM_READ, () => 0)))
 
         it('supports parallel writing transactions', () =>
           expect(
-            map(times(NUM_WRITE, write), x => x).then(count)
+            pMap(times(NUM_WRITE, write), x => x).then(count)
           ).to.eventually.have.property('count', NUM_WRITE))
 
       })
