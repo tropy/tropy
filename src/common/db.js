@@ -372,14 +372,13 @@ export class Connection {
     return this.exec('COMMIT TRANSACTION')
   }
 
-  async rollback(cause) {
+  async rollback(...errors) {
     try {
       await this.exec('ROLLBACK TRANSACTION')
       return this
 
     } catch (e) {
-      e.cause = cause
-      throw e
+      throw new AggregateError([e, ...errors])
     }
   }
 
