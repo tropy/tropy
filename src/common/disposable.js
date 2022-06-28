@@ -10,7 +10,7 @@ export class DisposableResource {
 }
 
 export async function using({ promise, dispose }, callback) {
-  if (!promise || !Function.isFunction(dispose))
+  if (!promise || typeof dispose !== 'function')
     throw new Error('using() called without a disposable resource')
 
   let resource = await promise
