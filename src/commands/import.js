@@ -4,7 +4,7 @@ import { DuplicateError } from '../common/error'
 import { Command } from './command'
 import * as mod from '../models'
 import * as act from '../actions'
-import * as dir from '../common/dir'
+import { expand } from '../common/fs'
 import { pick } from '../common/util'
 import { open, prompt } from '../dialog'
 import { Image } from '../image'
@@ -63,7 +63,7 @@ export class ImportCommand extends Command {
 
     let json = files.filter(f => (/^\.json(ld)?$/i).test(extname(f)))
 
-    let images = await dir.expand(files, {
+    let images = await expand(files, {
       filter: this.canImportFile,
       recursive: true
     })
