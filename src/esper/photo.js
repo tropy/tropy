@@ -1,11 +1,10 @@
 import * as PIXI from 'pixi.js'
 import { AdjustmentFilter } from '@pixi/filter-adjustment'
-import Esper from './index'
-import { SharpenFilter } from './filter'
-import { SelectionLayer, SelectionOverlay } from './selection'
-import { constrain } from './util'
-import { deg, isHorizontal } from '../common/math'
-import { ESPER } from '../constants'
+import { SharpenFilter } from './filter/index.js'
+import { SelectionLayer, SelectionOverlay } from './selection.js'
+import { constrain, getDevicePixelRatio } from './util.js'
+import { deg, isHorizontal } from '../common/math.js'
+import { ESPER } from '../constants/index.js'
 
 const { Container, Sprite, Rectangle } = PIXI
 const { ColorMatrixFilter } = PIXI.filters
@@ -142,7 +141,7 @@ export class Photo extends Container {
     this.#pivot = null
   }
 
-  handleResolutionChange(resolution = Esper.devicePixelRatio) {
+  handleResolutionChange(resolution = getDevicePixelRatio()) {
     for (let filter of this.bg.filters) {
       filter.resolution = resolution
     }

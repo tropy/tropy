@@ -1,10 +1,14 @@
-import * as css from '../css'
 import { SCALE_MODES } from 'pixi.js'
-import { restrict } from '../common/util'
-import { darwin } from '../common/os'
-import { ESPER, SASS } from '../constants'
+import * as css from '../css.js'
+import { restrict } from '../common/util.js'
+import { darwin } from '../common/os.js'
+import { ESPER, SASS } from '../constants/index.js'
 
 const { CURSOR, ZOOM_LINEAR_MAX } = SASS.ESPER
+
+export function getDevicePixelRatio() {
+  return Math.floor(devicePixelRatio) || 1
+}
 
 export function constrain(pos, { left, top, bottom, right }) {
   pos.x = (restrict(pos.x, left, right))

@@ -1,16 +1,16 @@
-import { EventEmitter } from 'events'
+import { EventEmitter } from 'node:events'
 import * as PIXI from 'pixi.js-legacy'
 import TWEEN from '@tweenjs/tween.js'
 import debounce from 'lodash.debounce'
-import ARGS from '../args'
-import { append, createDragHandler, on, off } from '../dom'
-import { debug, error, info, warn } from '../common/log'
-import { isClockwise, isHorizontal, deg, rad } from '../common/math'
-import { delay, restrict } from '../common/util'
-import { Photo } from './photo'
-import { Selection } from './selection'
-import { Loader } from './loader'
-import { ESPER, SASS } from '../constants'
+import ARGS from '../args.js'
+import { append, createDragHandler, on, off } from '../dom.js'
+import { debug, error, info, warn } from '../common/log.js'
+import { isClockwise, isHorizontal, deg, rad } from '../common/math.js'
+import { delay, restrict } from '../common/util.js'
+import { Photo } from './photo.js'
+import { Selection } from './selection.js'
+import { Loader } from './loader.js'
+import { ESPER, SASS } from '../constants/index.js'
 
 import {
   addCursorStyle,
@@ -18,9 +18,10 @@ import {
   constrain,
   coords,
   equal,
+  getDevicePixelRatio,
   isDoubleClickSupported,
   setScaleMode
-} from './util'
+} from './util.js'
 
 const {
     FADE_DURATION,
@@ -48,7 +49,7 @@ export default class Esper extends EventEmitter {
   }
 
   static get devicePixelRatio() {
-    return Math.floor(devicePixelRatio) || 1
+    return getDevicePixelRatio()
   }
 
   #rmq = matchMedia('(max-resolution: 1dppx)')
