@@ -419,6 +419,11 @@ describe('util', () => {
         .to.eventually.eql([0, 1, 2, 3])
     ))
 
+    it('resolves input promises', () => (
+      expect(util.pMap([Promise.resolve(2)], (x) => x + x))
+        .to.eventually.eql([4])
+    ))
+
     it('supports concurrency', () =>
       expect(
         Promise.race([
