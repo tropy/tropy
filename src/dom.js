@@ -1,4 +1,4 @@
-import { blank, once as when } from './common/util'
+import { blank, once as when } from './common/util.js'
 
 const everything = () => true
 

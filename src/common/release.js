@@ -1,5 +1,5 @@
 import { arch, platform } from 'node:process'
-import { parse } from 'semver'
+import parse from 'semver/functions/parse.js'
 import { author, version, name, productName } from '../../package.json'
 import { titlecase } from './util.js'
 

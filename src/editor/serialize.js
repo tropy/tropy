@@ -1,8 +1,8 @@
 import { DOMParser, DOMSerializer } from 'prosemirror-model'
 import { EditorState } from 'prosemirror-state'
 import { defaultMarkdownSerializer } from 'prosemirror-markdown'
-import { schema } from './schema'
-import { warn } from '../common/log'
+import { schema } from './schema.js'
+import { warn } from '../common/log.js'
 
 const serializer = DOMSerializer.fromSchema(schema)
 const parser = DOMParser.fromSchema(schema)

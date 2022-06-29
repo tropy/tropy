@@ -1,7 +1,7 @@
+import { copyFileSync, truncateSync } from 'node:fs'
 import pino from 'pino'
-import { system } from './os'
-import { version } from './release'
-import { copyFileSync, truncateSync } from 'fs'
+import { system } from './os.js'
+import { version } from './release.js'
 
 export let logger
 

@@ -1,5 +1,4 @@
-import fs from 'fs'
-const { readFile, writeFile } = fs.promises
+import { readFile, writeFile } from 'node:fs/promises'
 
 // NB: load jsonld module on demand, because it's huge.
 let jsonld

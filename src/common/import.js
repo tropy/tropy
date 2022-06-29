@@ -1,8 +1,8 @@
-import { gt } from 'semver'
-import * as ex from './export'
-import { expand } from './json'
-import { rdfs, tropy, xsd, dc, dcterms } from '../ontology'
-import { URI, any, array, map, morph, omit, get } from './util'
+import gt from 'semver/functions/gt.js'
+import * as ex from './export.js'
+import { expand } from './json.js'
+import { rdfs, tropy, xsd, dc, dcterms } from '../ontology/index.js'
+import { URI, any, array, map, morph, omit, get } from './util.js'
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
 export async function normalize(json) {

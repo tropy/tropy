@@ -1,14 +1,14 @@
 import React from 'react'
-import { func, bool, object, number, string } from 'prop-types'
-import { EditorToolbar } from './toolbar'
-import { EditorState } from 'prosemirror-state'
-import { EditorView } from './view'
-import { Placeholder } from '../placeholder'
-import { createCommands, createPlugins, schema } from '../../editor'
-import { match } from '../../keymap'
 import cx from 'classnames'
-import { noop, restrict } from '../../common/util'
-import { SASS } from '../../constants'
+import { func, bool, object, number, string } from 'prop-types'
+import { EditorState } from 'prosemirror-state'
+import { EditorToolbar } from './toolbar.js'
+import { EditorView } from './view.js'
+import { Placeholder } from '../placeholder.js'
+import { createCommands, createPlugins, schema } from '../../editor/index.js'
+import { match } from '../../keymap.js'
+import { noop, restrict } from '../../common/util.js'
+import { SASS } from '../../constants/index.js'
 
 const { EDITOR } = SASS
 const commands = createCommands(schema)

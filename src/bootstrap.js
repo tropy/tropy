@@ -1,9 +1,9 @@
-import { basename } from 'path'
-import ARGS from './args'
-import { createLogger, fatal, info } from './common/log'
+import { basename } from 'node:path'
+import ARGS from './args.js'
+import { createLogger, fatal, info } from './common/log.js'
 import { contextBridge, ipcRenderer as ipc } from 'electron'
-import { idle, ready } from './dom'
-import win, { createWindowInstance } from './window'
+import { idle, ready } from './dom.js'
+import win, { createWindowInstance } from './window.js'
 
 const START =
   performance?.timing?.navigationStart || Date.now()
@@ -33,7 +33,7 @@ const START =
       win.toggle('init')
 
       const INIT = Date.now()
-      const { store } = await import(`./views/${win.type}`)
+      const { store } = await import(`./views/${win.type}.js`)
       win.store = store
 
       const LOAD = Date.now()
