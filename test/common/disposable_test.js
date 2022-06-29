@@ -2,9 +2,9 @@ import { DisposableResource, using } from '../../src/common/disposable.js'
 
 describe('.using', () => {
 
-  it('throws unless called with a disposable resource', async () => {
-    expect(using).to.throw
-    expect(() => using({}, sinon.spy())).to.throw
+  it('rejects unless called with a disposable resource', async () => {
+    await expect(using()).eventually.to.be.rejected
+    await expect(using({}, sinon.spy())).eventually.to.be.rejected
   })
 
   describe('given a disposable resource', () => {
@@ -47,6 +47,15 @@ describe('.using', () => {
 
       expect(disposable.dispose).to.have.been.calledOnce
       expect(disposable.dispose).to.have.been.calledWith(res)
+    })
+
+    it('does not dispose of resource if resource promise rejects', async () => {
+      disposable.promise = Promise.reject(new Error())
+
+      await expect(using(disposable, sinon.spy()))
+        .eventually.to.be.rejected
+
+      expect(disposable.dispose).to.have.callCount(0)
     })
   })
 })

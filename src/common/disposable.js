@@ -9,9 +9,10 @@ export class DisposableResource {
   }
 }
 
-export async function using({ promise, dispose }, callback) {
-  if (!promise || typeof dispose !== 'function')
+export async function using({ promise, dispose } = {}, callback) {
+  if (!promise || typeof dispose !== 'function') {
     throw new Error('using() called without a disposable resource')
+  }
 
   let resource = await promise
 
