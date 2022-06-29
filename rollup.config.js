@@ -1,4 +1,4 @@
-import { join, normalize, relative } from 'path'
+import { join, normalize } from 'node:path'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import cleanup from 'rollup-plugin-cleanup'
@@ -14,11 +14,11 @@ import sharp from 'sharp/package.json'
 
 // import visualize from 'rollup-plugin-visualizer'
 
-import scss from './scripts/rollup-plugin-scss'
-import emit from './scripts/rollup-plugin-emit'
-import fsEvents from './scripts/rollup-plugin-fsevents'
-import reactDnd from './scripts/rollup-plugin-react-dnd'
-import sharpRequire from './scripts/rollup-plugin-sharp'
+import scss from './scripts/rollup-plugin-scss.js'
+import emit from './scripts/rollup-plugin-emit.js'
+import fsEvents from './scripts/rollup-plugin-fsevents.js'
+import reactDnd from './scripts/rollup-plugin-react-dnd.js'
+import sharpRequire from './scripts/rollup-plugin-sharp.js'
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
 
@@ -32,16 +32,14 @@ const arch =
   process.arch
 
 const platformId = (arch === 'arm64') ?
-`${platform}-arm64v8` :
-`${platform}-${arch}`
+  `${platform}-arm64v8` :
+  `${platform}-${arch}`
 
 
 const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
-    normalize('src/esper/index.js'),
     normalize('src/components/list/tree.js'),
-    normalize('node_modules/n3/src/N3DataFactory.js'),
-    normalize('node_modules/semver/classes/comparator.js')
+    normalize('node_modules/n3/src/N3DataFactory.js')
   ].includes(warning.importer),
 
   THIS_IS_UNDEFINED: (warning) =>
@@ -58,8 +56,7 @@ function onwarn(warning, warn) {
 }
 
 const external = [
-  'electron',
-  'fs/promises'
+  'electron'
 ]
 
 if (process.platform !== 'darwin')
@@ -124,12 +121,12 @@ export default [
     plugins: [
       emit({
         entries: {
-          'esper': 'src/esper/index',
-          'views/about': 'src/views/about',
-          'views/prefs': 'src/views/prefs',
-          'views/print': 'src/views/print',
-          'views/project': 'src/views/project',
-          'views/wizard': 'src/views/wizard'
+          'esper': 'src/esper/index.js',
+          'views/about': 'src/views/about.js',
+          'views/prefs': 'src/views/prefs.js',
+          'views/print': 'src/views/print.js',
+          'views/project': 'src/views/project.js',
+          'views/wizard': 'src/views/wizard.js'
         },
         implicitlyLoadedAfterOneOf: [
           'src/bootstrap.js'
@@ -163,7 +160,6 @@ export default [
         '@mapbox/node-pre-gyp',
         'pino-pretty',
         'rdf-canonize-native',
-        'request',
         'vm',
         'web-streams-polyfill/ponyfill/es2018'
       ], { commonjsBugFix: true }),
@@ -200,8 +196,7 @@ export default [
         babelHelpers: 'bundled'
       }),
       commonjs({
-        ignoreTryCatch: false,
-        requireReturnsDefault: 'preferred'
+        requireReturnsDefault: false
       }),
       license({
         thirdParty: {
