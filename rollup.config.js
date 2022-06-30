@@ -81,7 +81,8 @@ export default [
       ], { commonjsBugFix: true }),
       alias({
         entries: {
-          depd: join(process.cwd(), 'node_modules/cookies/node_modules/depd')
+          'depd': join(process.cwd(), 'node_modules/cookies/node_modules/depd'),
+          'readable-stream': 'stream'
         }
       }),
       resolve({
@@ -90,7 +91,9 @@ export default [
       }),
       babel({ babelHelpers: 'bundled' }),
       json(),
-      commonjs(),
+      commonjs({
+        ignoreTryCatch: false
+      }),
       license({
         thirdParty: {
           includePrivate: true,
@@ -160,21 +163,21 @@ export default [
         '@mapbox/node-pre-gyp',
         'pino-pretty',
         'rdf-canonize-native',
-        'vm',
-        'web-streams-polyfill/ponyfill/es2018'
+        'vm'
       ], { commonjsBugFix: true }),
       alias({
         entries: {
-          semver: join(process.cwd(), 'node_modules/semver')
+          'semver': join(process.cwd(), 'node_modules/semver'),
+          'readable-stream': 'node:stream'
         }
       }),
       replace({
         preventAssignment: true,
         values: {
-          'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
-          'readable-stream': 'stream'
+          'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
         }
       }),
+      // PATCH jsonld documentLoader redirect handling
       replace({
         preventAssignment: true,
         include: [
@@ -182,6 +185,16 @@ export default [
         ],
         values: {
           manual: 'follow'
+        }
+      }),
+      // PATCH remove top-level await in ky-universal
+      replace({
+        preventAssignment: true,
+        include: [
+          'node_modules/ky-universal/index.js'
+        ],
+        values: {
+          'await import': 'require'
         }
       }),
       resolve({
@@ -196,7 +209,9 @@ export default [
         babelHelpers: 'bundled'
       }),
       commonjs({
-        requireReturnsDefault: false
+        ignoreTryCatch: false,
+        esmExternals: false,
+        requireReturnsDefault: 'preferred'
       }),
       license({
         thirdParty: {

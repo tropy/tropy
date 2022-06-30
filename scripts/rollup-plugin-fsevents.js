@@ -7,7 +7,7 @@
 import MagicString from 'magic-string'
 
 const FSEVENTS_REQUIRE = "require('fsevents')"
-const REPLACEMENT = "require('../../../src/common/watch').getFsEvents()"
+const REPLACEMENT = "require('../../../src/common/watch.js').getFsEvents()"
 
 export default function fsEvents() {
   let transformed = false
