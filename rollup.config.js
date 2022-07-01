@@ -1,4 +1,5 @@
 import { join, normalize } from 'node:path'
+import process from 'node:process'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import cleanup from 'rollup-plugin-cleanup'
@@ -76,9 +77,6 @@ export default [
     },
     preserveEntrySignatures: 'strict',
     plugins: [
-      ignore([
-        'pino-pretty'
-      ], { commonjsBugFix: true }),
       alias({
         entries: {
           'depd': join(process.cwd(), 'node_modules/cookies/node_modules/depd'),
@@ -92,6 +90,7 @@ export default [
       babel({ babelHelpers: 'bundled' }),
       json(),
       commonjs({
+        ignoreGlobal: true,
         ignoreTryCatch: false
       }),
       license({
@@ -161,9 +160,7 @@ export default [
       }),
       ignore([
         '@mapbox/node-pre-gyp',
-        'pino-pretty',
-        'rdf-canonize-native',
-        'vm'
+        'rdf-canonize-native'
       ], { commonjsBugFix: true }),
       alias({
         entries: {
@@ -209,9 +206,8 @@ export default [
         babelHelpers: 'bundled'
       }),
       commonjs({
-        ignoreTryCatch: false,
-        esmExternals: false,
-        requireReturnsDefault: 'preferred'
+        ignoreGlobal: true,
+        ignoreTryCatch: false
       }),
       license({
         thirdParty: {
