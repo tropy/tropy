@@ -23,10 +23,8 @@ export class PluginAccordion extends Accordion {
     event.stopPropagation()
     if (this.hasInstances) {
       this.props.onDisable(this.props.spec.name)
-      this.close()
     } else {
       this.props.onEnable(this.props.spec.name)
-      this.open()
     }
   }
 
