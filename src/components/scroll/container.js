@@ -23,9 +23,7 @@ export class ScrollContainer extends React.Component {
       this.#RO.observe(this.container.current)
 
     if (this.props.onScroll || this.props.sync)
-      on(this.container.current, 'scroll', this.handleScroll, {
-        capture: true, passive: true
-      })
+      on(this.container.current, 'scroll', this.handleScroll)
 
     if (this.props.onTabFocus)
       on(this.container.current, 'tab:focus', this.handleTabFocus)
@@ -35,9 +33,7 @@ export class ScrollContainer extends React.Component {
     this.#RO.unobserve(this.container.current)
     this.#RO.disconnect()
 
-    off(this.container.current, 'scroll', this.handleScroll, {
-      capture: true, passive: true
-    })
+    off(this.container.current, 'scroll', this.handleScroll)
 
     off(this.container.current, 'tab:focus', this.handleTabFocus)
 
