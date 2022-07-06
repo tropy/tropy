@@ -1,11 +1,13 @@
 import React from 'react'
 import { array, bool, func, number, oneOfType, string } from 'prop-types'
-import { Input } from './input'
-import { noop } from '../common/util'
 import cx from 'classnames'
+import { Input } from './input.js'
+import { noop } from '../common/util.js'
 
 
 export class Editable extends React.PureComponent {
+  input = React.createRef()
+
   componentWillUnmount() {
     this.prevFocus = null
   }
@@ -25,12 +27,8 @@ export class Editable extends React.PureComponent {
     return this.props.isActive && !this.props.isDisabled
   }
 
-  setInput = (input) => {
-    this.input = input
-  }
-
   focus = () => {
-    if (this.input != null) this.input.focus()
+    this.input.current?.focus()
   }
 
   handleBlur = (event) => {
@@ -90,12 +88,13 @@ export class Editable extends React.PureComponent {
   renderInput() {
     return (
       <Input
-        ref={this.setInput}
+        ref={this.input}
         autofocus={this.props.autofocus}
         autoselect={this.props.autoselect}
         className="editable-control"
         completions={this.props.completions}
         isRequired={this.props.isRequired}
+        isReadOnly={this.props.isReadOnly}
         placeholder={this.props.placeholder}
         tabIndex={this.props.tabIndex}
         type={this.props.type}
@@ -128,6 +127,7 @@ export class Editable extends React.PureComponent {
     display: string,
     isActive: bool,
     isDisabled: bool,
+    isReadOnly: bool,
     isRequired: bool,
     max: oneOfType([string, number]),
     min: oneOfType([string, number]),

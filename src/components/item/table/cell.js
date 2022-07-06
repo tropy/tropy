@@ -1,13 +1,13 @@
 import React from 'react'
-import { CoverImage } from '../cover-image'
-import { Editable } from '../../editable'
-import { TagColors } from '../../colors'
-import { createClickHandler } from '../../util'
-import { testFocusChange } from '../../../dom'
-import { isMeta } from '../../../keymap'
-import { auto } from '../../../format'
-import { noop } from '../../../common/util'
 import cx from 'classnames'
+import { CoverImage } from '../cover-image.js'
+import { Editable } from '../../editable.js'
+import { TagColors } from '../../colors.js'
+import { createClickHandler } from '../../util.js'
+import { testFocusChange } from '../../../dom.js'
+import { isMeta } from '../../../keymap.js'
+import { auto } from '../../../format.js'
+import { noop } from '../../../common/util.js'
 
 import {
   arrayOf, bool, func, instanceOf, number, object, oneOfType, shape, string
@@ -111,7 +111,6 @@ export class TableCell extends React.PureComponent {
   }
 
   render() {
-    let isDisabled = this.props.isDisabled || this.props.isReadOnly
     return (
       <div
         className={cx('td', this.classes)}
@@ -122,10 +121,11 @@ export class TableCell extends React.PureComponent {
           <Editable
             display={this.display}
             isActive={this.props.isEditing}
-            isDisabled={isDisabled}
+            isDisabled={this.props.isDisabled}
+            isReadOnly={this.props.isReadOnly}
             resize
             title={this.props.title}
-            value={isDisabled ? null : this.props.value}
+            value={this.props.value}
             onCancel={this.props.onCancel}
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}/>

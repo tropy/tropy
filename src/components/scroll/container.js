@@ -118,7 +118,7 @@ export class ScrollContainer extends React.Component {
   handleScrollStop = debounce(() => {
     this.setState({ isScrolling: false })
     this.props.onScrollStop?.()
-  }, 250)
+  }, 150)
 
   handleTabFocus = (event) => {
     this.props.onTabFocus(event)

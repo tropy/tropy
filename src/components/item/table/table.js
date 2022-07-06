@@ -283,7 +283,7 @@ export class ItemTable extends ItemIterator {
         drop={this.state.drop}
         edit={this.props.edit}
         hasPositionColumn={this.hasPositionColumn()}
-        isReadOnly={isScrolling}
+        isReadOnly={this.props.isReadOnly || isScrolling}
         item={item}
         position={this.getPosition(index)}
         template={this.props.templates[item.template]}
