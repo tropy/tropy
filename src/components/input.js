@@ -77,8 +77,15 @@ export class Input extends React.PureComponent {
   }
 
   focus = () => {
-    if (this.input.current)
-      this.input.current.focus()
+    this.input.current?.focus()
+  }
+
+  select = () => {
+    this.input.current?.setSelectionRange(
+      0,
+      this.input.current.value.length,
+      'backward'
+    )
   }
 
   reset() {
@@ -108,7 +115,7 @@ export class Input extends React.PureComponent {
     this.props.onFocus(event)
 
     if (this.props.autoselect)
-      this.input.current.select()
+      this.select()
 
     this.hasBeenCancelled = false
     this.hasBeenCommitted = false
