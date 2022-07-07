@@ -56,9 +56,9 @@ es:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Vertical
                   command: app:print-pdf
-                - label: Landscape
+                - label: Horizontal
                   command: app:print-pdf-landscape
         - type: separator
         - label: Consolidar fototeca
@@ -296,9 +296,9 @@ es:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Vertical
                   command: app:print-pdf
-                - label: Landscape
+                - label: Horizontal
                   command: app:print-pdf-landscape
         - label: Imprimir
           command: app:print
@@ -499,9 +499,9 @@ es:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Vertical
                   command: app:print-pdf
-                - label: Landscape
+                - label: Horizontal
                   command: app:print-pdf-landscape
         - type: separator
         - label: Consolidar fototeca

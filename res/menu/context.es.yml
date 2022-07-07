@@ -322,9 +322,9 @@ es:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Vertical
                 command: app:print-pdf
-              - label: Landscape
+              - label: Horizontal
                 command: app:print-pdf-landscape
       - label: Exportar notas de un objeto ...
         command: app:export-notes
@@ -354,9 +354,9 @@ es:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Vertical
                 command: app:print-pdf
-              - label: Landscape
+              - label: Horizontal
                 command: app:print-pdf-landscape
       - label: Exportar notas del objeto seleccionado ...
         command: app:export-notes
@@ -777,9 +777,9 @@ es:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Vertical
                 command: app:print-pdf
-              - label: Landscape
+              - label: Horizontal
                 command: app:print-pdf-landscape
       - label: Exportar notas de un objeto ...
         command: app:export-notes
@@ -802,9 +802,9 @@ es:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Vertical
                 command: app:print-pdf
-              - label: Landscape
+              - label: Horizontal
                 command: app:print-pdf-landscape
       - label: Exportar notas del objeto seleccionado ...
         command: app:export-notes
@@ -1232,9 +1232,9 @@ es:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Vertical
                 command: app:print-pdf
-              - label: Landscape
+              - label: Horizontal
                 command: app:print-pdf-landscape
       - label: Exportar notas de un objeto ...
         command: app:export-notes
@@ -1257,9 +1257,9 @@ es:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Vertical
                 command: app:print-pdf
-              - label: Landscape
+              - label: Horizontal
                 command: app:print-pdf-landscape
       - label: Exportar notas del objeto seleccionado ...
         command: app:export-notes

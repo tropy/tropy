@@ -90,8 +90,8 @@ es:
       Tu archivo de proyecto puede estar dañado. Intervención manual puede ser
       necesaria para repararlo. Consulta la guía del usuario para obtener ayuda.
     readOnly: >
-      Your project file is locked and cannot be modified. To unlock, change the
-      file permissions and open the project again.
+      Tu proyecto está bloqueado y no se puede modificar. Para desbloquearlo,
+      cambia los permisos del archivo y abre el proyecto nuevamente.
   wizard:
     project:
       title: Crear un nuevo proyecto
@@ -195,18 +195,19 @@ es:
     project:
       label: Projecto
       base:
-        label: Link photos
+        label: Vincular fotos
         option:
           'null': Using absolute paths
           project: Relativo al archivo de proyecto
-          home: Relative to your home directory
-      store: Managed folder
+          home: Relativo a su carpeta de usuario
+          <None>: Usando rutas absolutas
+      store: Carpeta administrada
       name: Nombre
-      id: ID
+      id: Número de identificación
       file: Archivo
       watch:
-        folder: Watch folder
-        usePolling: Using file stat polling
+        folder: Carpeta monitoreada
+        usePolling: Usando sondeo file stat
     template:
       label: Plantillas
       new: Nueva plantilla …
@@ -302,8 +303,8 @@ es:
     column:
       placeholder: Búsqueda
     file:
-      browse: Browse
-      clear: Clear
+      browse: Navegar
+      clear: Limpiar
   template:
     id: URI
     name: Nombre
