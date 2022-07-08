@@ -1,36 +1,9 @@
-import { EventEmitter } from 'events'
-import { dirname } from 'path'
+import { EventEmitter } from 'node:events'
+import { dirname } from 'node:path'
+import chokidar from 'chokidar'
 import { info, warn } from './log.js'
 import { darwin } from './os.js'
 import { execFile } from './spawn.js'
-
-let chokidar
-
-let fsEvents
-let fsEventsImportError
-
-export async function init() {
-  if (!chokidar) {
-    await import('fsevents')
-      .then(namespace => {
-        fsEvents = namespace.default
-      })
-      .catch(e => {
-        if (process.platform === 'darwin')
-          warn(`failed to load fsEvents: ${e.message}`)
-
-        fsEventsImportError = e
-      })
-
-    chokidar = await import('chokidar')
-  }
-}
-
-// A call to this function will be injected into chokidar by Rollup!
-export function getFsEvents() {
-  if (fsEventsImportError) throw fsEventsImportError
-  return fsEvents
-}
 
 export class Watcher extends EventEmitter {
   #watcher = null
@@ -41,7 +14,6 @@ export class Watcher extends EventEmitter {
   }
 
   async watch(path, { since, ...opts } = {}) {
-    await init()
     await this.stop()
 
     if (!path) return

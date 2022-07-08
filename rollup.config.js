@@ -17,7 +17,6 @@ import sharp from 'sharp/package.json'
 
 import scss from './scripts/rollup-plugin-scss.js'
 import emit from './scripts/rollup-plugin-emit.js'
-import fsEvents from './scripts/rollup-plugin-fsevents.js'
 import reactDnd from './scripts/rollup-plugin-react-dnd.js'
 import sharpRequire from './scripts/rollup-plugin-sharp.js'
 
@@ -187,7 +186,7 @@ export default [
       }),
       // PATCH remove top-level await in ky-universal
       replace({
-        preventAssignment: true,
+        preventAssignment: false,
         include: [
           'node_modules/ky-universal/index.js'
         ],
@@ -200,7 +199,6 @@ export default [
         preferBuiltins: true
       }),
       json(),
-      fsEvents(),
       reactDnd(),
       babel({
         exclude: 'node_modules/**',
