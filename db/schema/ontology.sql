@@ -12,9 +12,10 @@
 --
 
 PRAGMA encoding = 'UTF-8';
+PRAGMA application_id = -621960955;
 
 -- Save the current migration number
-PRAGMA user_version = 2101190917;
+PRAGMA user_version = 220712134;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -2173,7 +2174,7 @@ INSERT INTO labels VALUES('https://tropy.org/v1/tropy#field','ja','フィール�
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#field','pt','Campo');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#folder','de','Ordner');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#folder','en','Folder');
-INSERT INTO labels VALUES('https://tropy.org/v1/tropy#folder','es','Fólder');
+INSERT INTO labels VALUES('https://tropy.org/v1/tropy#folder','es','Carpeta');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#folder','fr','Dossier');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#folder','it','Cartella');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#folder','ja','フォルダ');
