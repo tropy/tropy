@@ -56,12 +56,16 @@ function onwarn(warning, warn) {
     warn(warning)
 }
 
-const external = [
-  'electron'
-]
+let ignoreTryCatch = false
 
-if (process.platform !== 'darwin')
-  external.push('fsevents')
+if (process.platform !== 'darwin') {
+  ignoreTryCatch = (id) => {
+    if (id === 'fsevents')
+      return 'remove'
+
+    return false
+  }
+}
 
 
 export default [
@@ -91,7 +95,7 @@ export default [
       json(),
       commonjs({
         ignoreGlobal: true,
-        ignoreTryCatch: false
+        ignoreTryCatch
       }),
       license({
         thirdParty: {
@@ -105,7 +109,9 @@ export default [
       cleanup()
       // visualize({ filename: 'main.html' })
     ],
-    external,
+    external: [
+      'electron'
+    ],
     onwarn
   },
 
@@ -206,7 +212,7 @@ export default [
       }),
       commonjs({
         ignoreGlobal: true,
-        ignoreTryCatch: false,
+        ignoreTryCatch,
         requireReturnsDefault: 'preferred' // TODO
       }),
       license({
@@ -221,7 +227,9 @@ export default [
       cleanup()
       // visualize({ filename: 'renderer.html' })
     ],
-    external,
+    external: [
+      'electron'
+    ],
     onwarn
   },
 
