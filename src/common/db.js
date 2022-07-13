@@ -318,10 +318,33 @@ export class Connection {
     return this
   }
 
+  // The version number is a 10-digit migration number
+  // corresponding to the migration's time of creation
+  // using the YYMMDDHHMM format.
+  //
+  // Because the `user_version` pragma is a signed integer,
+  // the maximum valid number we can store is 2112312400.
+  // For migrations after 2021 we therefore store only the first 9 digits.
+  // As a consequence, the effective format is YYMMDDHHM0!
+  //
+  // This works because we have no migrations between 2000/2010.
+  // Apologies, if you're reading this in 2099 or later!
+
   async version(version) {
-    return (version) ?
-      this.exec(`PRAGMA user_version = ${version}`) :
-      this.get('PRAGMA user_version').then(r => r.user_version)
+    if (version) {
+      if (version > 2112312400)
+        version = version / 10
+
+      return this.exec(`PRAGMA user_version = ${version}`)
+
+    } else {
+      let { user_version } = await this.get('PRAGMA user_version')
+
+      if (user_version >= 220101000 && user_version < 1001010000)
+        user_version = user_version * 10
+
+      return user_version
+    }
   }
 
   begin(mode = 'IMMEDIATE') {
