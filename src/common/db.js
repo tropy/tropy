@@ -347,7 +347,7 @@ export class Connection {
         return number
 
       } catch (e) {
-        warn({
+        debug({
           stack: e.stack
         }, 'failed to fetch migration number, falling back to user_version')
 
