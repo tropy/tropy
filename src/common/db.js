@@ -1,3 +1,4 @@
+import assert from 'node:assert'
 import { EventEmitter } from 'node:events'
 import { readFile } from 'node:fs/promises'
 import { createPool, Pool } from 'generic-pool'
@@ -320,30 +321,39 @@ export class Connection {
 
   // The version number is a 10-digit migration number
   // corresponding to the migration's time of creation
-  // using the YYMMDDHHMM format.
+  // using the YYMMDDHHMM format. This can be extended
+  // to 12 digits if necessary.
   //
-  // Because the `user_version` pragma is a signed integer,
-  // the maximum valid number we can store is 2112312400.
-  // For migrations after 2021 we therefore store only the first 9 digits.
-  // As a consequence, the effective format is YYMMDDHHM0!
-  //
-  // This works because we have no migrations between 2000/2010.
-  // Apologies, if you're reading this in 2099 or later!
+  // Until Tropy version 1.12 this number was stored
+  // using the user_version PRAGMA, a signed 32-bit integer.
 
   async version(version) {
     if (version) {
-      if (version > 2112312400)
-        version = version / 10
+      assert(typeof version === 'number' && version > 0,
+        `not a valid version number: ${version}`)
 
-      return this.exec(`PRAGMA user_version = ${version}`)
+      if (version > 2131122400)
+        await this.run(`INSERT INTO migrations (number) VALUES (${version})`)
+      else
+        await this.exec(`PRAGMA user_version = ${version}`)
+
+      return this
 
     } else {
-      let { user_version } = await this.get('PRAGMA user_version')
+      try {
+        let { number } = await this.get(
+          'SELECT number FROM migrations ORDER BY number DESC LIMIT 1')
 
-      if (user_version >= 220101000 && user_version < 1001010000)
-        user_version = user_version * 10
+        return number
 
-      return user_version
+      } catch (e) {
+        warn({
+          stack: e.stack
+        }, 'failed to fetch migration number, falling back to user_version')
+
+        let { user_version } = await this.get('PRAGMA user_version')
+        return user_version
+      }
     }
   }
 
