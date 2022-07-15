@@ -49,24 +49,12 @@ DragPreviewPositioner.propTypes = {
 }
 
 
-export function DragPreview({ item, type, ...props }) {
-  switch (type) {
-    case DND.ITEMS:
-      return <ItemDragPreview {...props} item={item}/>
-    case DND.PHOTO:
-      return <PhotoDragPreview {...props} item={item}/>
-    case DND.SELECTION:
-      return <PhotoDragPreview {...props} item={item}/>
-    case DND.LIST:
-      return <ListDragPreview item={item}/>
-    case DND.FIELD:
-      return <FieldDragPreview {...props} item={item}/>
-  }
-}
-
-DragPreview.propTypes = {
-  item: object,
-  type: string
+const dragPreview = {
+  [DND.ITEMS]: ItemDragPreview,
+  [DND.PHOTO]: PhotoDragPreview,
+  [DND.SELECTION]: PhotoDragPreview,
+  [DND.LIST]: ListDragPreview,
+  [DND.FIELD]: FieldDragPreview
 }
 
 
@@ -83,12 +71,9 @@ export function DragLayer(props) {
       type: monitor.getItemType()
     }))
 
-  if (!isDragging)
-    return null
+  let DragPreview = dragPreview[type]
 
-  let dragPreview = DragPreview({ item, type, ...props })
-
-  if (!dragPreview)
+  if (!isDragging || !DragPreview)
     return null
 
   return (
@@ -98,7 +83,7 @@ export function DragLayer(props) {
         isRelative={item.position === 'relative'}
         origin={origin}
         position={position}>
-        {dragPreview}
+        <DragPreview {...props} item={item}/>
       </DragPreviewPositioner>
     </div>
   )
