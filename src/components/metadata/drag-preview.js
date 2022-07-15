@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {
   arrayOf,
   bool,
@@ -9,20 +7,20 @@ import {
   string
 } from 'prop-types'
 
-export const FieldDragPreview = ({ field }) => (
+export const FieldDragPreview = ({ item }) => (
   <div className="metadata-field drag-preview">
     <div className="drag-preview-container">
-      {field.value}
-      {field.isMixed && <span>+</span>}
+      {item.value}
+      {item.isMixed && <span>+</span>}
     </div>
-    {field.id.length &&
-      <div className="badge">{field.id.length}</div>
+    {item.id.length > 1 &&
+      <div className="badge">{item.id.length}</div>
     }
   </div>
 )
 
 FieldDragPreview.propTypes = {
-  field: shape({
+  item: shape({
     id: oneOfType([number, arrayOf(number)]).isRequired,
     isMixed: bool,
     value: string

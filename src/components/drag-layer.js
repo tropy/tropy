@@ -60,7 +60,7 @@ export function DragPreview({ item, type, ...props }) {
     case DND.LIST:
       return <ListDragPreview item={item}/>
     case DND.FIELD:
-      return <FieldDragPreview {...props} field={item}/>
+      return <FieldDragPreview {...props} item={item}/>
   }
 }
 
