@@ -152,7 +152,7 @@ class ProjectView extends React.Component {
 
 const spec = {
   drop({ nav, onItemImport }, monitor) {
-    let photos = getDroppedFiles(monitor)
+    let photos = getDroppedFiles(monitor.getItem())
 
     if (photos) {
       onItemImport({ ...photos, list: nav.list })
@@ -166,7 +166,7 @@ const spec = {
 
     switch (monitor.getItemType()) {
       case DND.FILE:
-        return hasPhotoFiles(monitor)
+        return hasPhotoFiles(monitor.getItem())
       default:
         return true
     }

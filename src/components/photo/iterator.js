@@ -261,9 +261,10 @@ const DropTargetSpec = {
     if (monitor.didDrop())
       return
 
+    let item = monitor.getItem()
+
     switch (monitor.getItemType()) {
       case DND.PHOTO: {
-        let item = monitor.getItem()
         let to = photos.at(-1).id
 
         if (item.id !== to)  {
@@ -277,7 +278,7 @@ const DropTargetSpec = {
       }
       case DND.FILE:
       case DND.URL: {
-        let files = getDroppedFiles(monitor)
+        let files = getDroppedFiles(item)
         if (files) {
           onCreate(files)
           return files
@@ -292,7 +293,7 @@ const DropTargetSpec = {
       case DND.PHOTO:
         return photos.length > 1
       case DND.FILE:
-        return canCreate && hasPhotoFiles(monitor)
+        return canCreate && hasPhotoFiles(monitor.getItem())
       case DND.URL:
         return canCreate
       default:

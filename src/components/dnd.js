@@ -1,6 +1,7 @@
 import {
   DndProvider,
   useDragLayer,
+  useDrop,
   DragSource,
   DropTarget
 } from 'react-dnd'
@@ -34,18 +35,17 @@ const DND = {
 const isProjectOrTemplateFile = ({ kind, type }) =>
   kind === 'file' && (MIME.TPY === type || MIME.TTP === type)
 
-const hasProjectFiles = (monitor) =>
-  !!Array.from(monitor.getItem().items || []).find(isProjectOrTemplateFile)
+const hasProjectFiles = (item) =>
+  !!Array.from(item.items || []).find(isProjectOrTemplateFile)
 
 // Subtle: we assume that there are photo files, if we don't see
 // any project files. This is because we cannot reliably see all
 // files (e.g., in a directory) before the drop event.
-const hasPhotoFiles = (monitor) =>
-  !hasProjectFiles(monitor)
+const hasPhotoFiles = (item) =>
+  !hasProjectFiles(item)
 
 
-const getDroppedFiles = (monitor) => {
-  let item = monitor.getItem()
+const getDroppedFiles = (item) => {
   let files = item.files?.map(f => f.path)
   let urls = item.urls
 
@@ -57,6 +57,7 @@ export {
   DND,
   DndProvider,
   useDragLayer,
+  useDrop,
   DragSource,
   DropTarget,
   HTML5Backend as ElectronBackend,

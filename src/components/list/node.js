@@ -390,7 +390,7 @@ const DropTargetSpec = {
           break
         case DND.FILE:
         case DND.URL: {
-          let files = getDroppedFiles(monitor)
+          let files = getDroppedFiles(item)
           if (files) {
             props.onDropFiles({ list: list.id, ...files })
           }
