@@ -1,3 +1,5 @@
+# vi: set ft=yaml :
+
 rules:
   operator-linebreak: 0
   no-unused-vars: [2, { 'varsIgnorePattern': 'React' }]

@@ -71,6 +71,7 @@
     "electron-winstaller": "^5.0.0",
     "eslint": "^8.6.0",
     "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "glob": "^8.0.1",
     "minimatch": "^5.0.1",
     "ms": "^2.1.3",

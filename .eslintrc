@@ -3,10 +3,11 @@ root: true
 
 plugins:
   - 'react'
-
+  - 'react-hooks'
 extends:
   - 'eslint:recommended'
   - 'plugin:react/recommended'
+  - 'plugin:react-hooks/recommended'
 
 parser: '@babel/eslint-parser'
 
