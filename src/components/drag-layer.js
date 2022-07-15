@@ -54,7 +54,7 @@ export function DragPreview({ item, type, ...props }) {
     case DND.ITEMS:
       return <ItemDragPreview {...props} items={item.items}/>
     case DND.PHOTO:
-      return <PhotoDragPreview {...props} items={[item]}/>
+      return <PhotoDragPreview {...props} item={item}/>
     case DND.SELECTION:
       return <PhotoDragPreview {...props} items={[item]}/>
     case DND.LIST:

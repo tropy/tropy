@@ -1,17 +1,17 @@
-import React from 'react'
-import { Thumbnail } from './thumbnail'
 import cx from 'classnames'
-import { arrayOf, number, shape, string } from 'prop-types'
+import { number, object, string } from 'prop-types'
+import { Thumbnail } from './thumbnail.js'
 
-export const PhotoDragPreview = ({ cache, size, items  }) => {
-  let count = items.length
+export const PhotoDragPreview = ({ cache, item, size  }) => {
+  let count = 1
+  let photo = item
 
-  return count > 0 && (
+  return (
     <div className={cx('photo', 'drag-preview', 'center', {
       multiple: count > 1
     })}>
       <Thumbnail
-        {...items[0]}
+        {...photo}
         cache={cache}
         size={size}/>
       {count > 1 && <div className="badge">{count}</div>}
@@ -22,9 +22,7 @@ export const PhotoDragPreview = ({ cache, size, items  }) => {
 PhotoDragPreview.propTypes = {
   cache: string.isRequired,
   size: number.isRequired,
-  items: arrayOf(shape({
-    id: number.isRequired
-  })).isRequired
+  item: object.isRequired
 }
 
 PhotoDragPreview.defaultProps = {
