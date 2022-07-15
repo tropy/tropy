@@ -1,6 +1,6 @@
 import {
   DndProvider,
-  DragLayer,
+  useDragLayer,
   DragSource,
   DropTarget
 } from 'react-dnd'
@@ -13,11 +13,11 @@ import {
 
 import {
   MIME
-} from '../constants'
+} from '../constants/index.js'
 
 import {
   blank
-} from '../common/util'
+} from '../common/util.js'
 
 const DND = {
   ...NativeTypes,
@@ -56,7 +56,7 @@ const getDroppedFiles = (monitor) => {
 export {
   DND,
   DndProvider,
-  DragLayer,
+  useDragLayer,
   DragSource,
   DropTarget,
   HTML5Backend as ElectronBackend,

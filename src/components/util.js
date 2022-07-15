@@ -89,6 +89,11 @@ export function why(component, props, state) {
 }
 
 export const shapes = {
+  point: shape({
+    x: number.isRequired,
+    y: number.isRequired
+  }),
+
   number(min, max, required = true) {
     return (props, name, component) => {
       let value = props[name]

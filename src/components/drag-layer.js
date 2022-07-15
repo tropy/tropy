@@ -1,121 +1,110 @@
 import React from 'react'
-import { DND, DragLayer } from './dnd'
-import { ItemDragPreview } from './item'
-import { PhotoDragPreview } from './photo'
-import { ListDragPreview } from './list'
-import { FieldDragPreview } from './metadata'
-import { on, off } from '../dom'
-import throttle from 'lodash.throttle'
-import { bool, number, object, shape, string } from 'prop-types'
+import { DND, useDragLayer } from './dnd.js'
+import { useDropEffect } from '../hooks/use-drop-effect.js'
+import { ItemDragPreview } from './item/drag-preview.js'
+import { PhotoDragPreview } from './photo/drag-preview.js'
+import { ListDragPreview } from './list/drag-preview.js'
+import { FieldDragPreview } from './metadata/drag-preview.js'
+import { shapes } from './util.js'
+import { bool, element, object, string } from 'prop-types'
 
-const coords = shape({
-  x: number.isRequired,
-  y: number.isRequired
-})
 
-class CustomDragLayer extends React.Component {
-  state = {
-    dropEffect: 'none'
+export function DragPreviewPositioner({
+  children,
+  cursor,
+  isRelative,
+  origin,
+  position
+}) {
+  let style = {}
+  let { x, y } = position
+
+  let offset = {
+    x: cursor.x - origin.x,
+    y: cursor.y - origin.y
   }
 
-  componentDidMount() {
-    on(window, 'dragover', this.handleDragOver, { passive: true })
+  if (isRelative) {
+    style['--offset-x'] = `${offset.x}px`
+    style['--offset-y'] = `${offset.y}px`
+    x -= offset.x
+    y -= offset.y
   }
 
-  componentWillUnmount() {
-    off(window, 'dragover', this.handleDragOver, { passive: true })
-  }
+  style.transform = `translate(${x}px, ${y}px)`
 
-  get offset() {
-    let origin = this.props.initialSourceClientOffset
-    let cursor = this.props.initialClientOffset
+  return (
+    <div className="drag-preview-positioner" style={style}>
+      {children}
+    </div>
+  )
+}
 
-    return {
-      x: cursor.x - origin.x,
-      y: cursor.y - origin.y
-    }
-  }
+DragPreviewPositioner.propTypes = {
+  children: element.isRequired,
+  cursor: shapes.point.isRequired,
+  isRelative: bool,
+  origin: shapes.point.isRequired,
+  position: shapes.point.isRequired
+}
 
-  get style() {
-    let { position, item } = this.props
 
-    if (position == null || item == null)
-      return null
-
-    let style = {}
-    let { x, y } = position
-
-    if (item.position === 'relative') {
-      let { offset } = this
-      style['--offset-x'] = `${offset.x}px`
-      style['--offset-y'] = `${offset.y}px`
-      x -= offset.x
-      y -= offset.y
-    }
-
-    style.transform = `translate(${x}px, ${y}px)`
-
-    return style
-  }
-
-  handleDragOver = throttle((event) => {
-    let { dropEffect } = event.dataTransfer
-    if (dropEffect !== this.state.dropEffect) {
-      this.setState({ dropEffect })
-    }
-  }, 100)
-
-  renderItemPreview() {
-    let { item, type, ...props } = this.props
-
-    switch (type) {
-      case DND.ITEMS:
-        return <ItemDragPreview {...props} items={item.items}/>
-      case DND.PHOTO:
-        return <PhotoDragPreview {...props} items={[item]}/>
-      case DND.SELECTION:
-        return <PhotoDragPreview {...props} items={[item]}/>
-      case DND.LIST:
-        return <ListDragPreview list={item}/>
-      case DND.FIELD:
-        return <FieldDragPreview {...props} field={item}/>
-    }
-  }
-
-  render() {
-    let { type, isDragging } = this.props
-    let preview = isDragging && type && this.renderItemPreview()
-
-    return (!preview) ? null : (
-      <div className={`drag-layer on-drop-${this.state.dropEffect}`}>
-        <div className="drag-preview-positioner" style={this.style}>
-          {preview}
-        </div>
-      </div>
-    )
-  }
-
-  static propTypes = {
-    cache: string.isRequired,
-    isDragging: bool,
-    item: object,
-    position: coords,
-    initialClientOffset: coords,
-    initialSourceClientOffset: coords,
-    tags: object.isRequired,
-    type: string
+export function DragPreview({ item, type, ...props }) {
+  switch (type) {
+    case DND.ITEMS:
+      return <ItemDragPreview {...props} items={item.items}/>
+    case DND.PHOTO:
+      return <PhotoDragPreview {...props} items={[item]}/>
+    case DND.SELECTION:
+      return <PhotoDragPreview {...props} items={[item]}/>
+    case DND.LIST:
+      return <ListDragPreview list={item}/>
+    case DND.FIELD:
+      return <FieldDragPreview {...props} field={item}/>
   }
 }
 
-const DragLayerContainer = DragLayer((monitor) => ({
-  item: monitor.getItem(),
-  type: monitor.getItemType(),
-  initialClientOffset: monitor.getInitialClientOffset(),
-  initialSourceClientOffset: monitor.getInitialSourceClientOffset(),
-  position: monitor.getClientOffset(),
-  isDragging: monitor.isDragging()
-}))(CustomDragLayer)
+DragPreview.propTypes = {
+  item: object,
+  type: string
+}
 
-export {
-  DragLayerContainer as DragLayer
+
+export function DragLayer(props) {
+  let dropEffect = useDropEffect()
+
+  let { cursor, isDragging, item, origin, position, type } =
+    useDragLayer(monitor => ({
+      cursor: monitor.getInitialClientOffset(),
+      isDragging: monitor.isDragging(),
+      item: monitor.getItem(),
+      origin: monitor.getInitialSourceClientOffset(),
+      position: monitor.getClientOffset(),
+      type: monitor.getItemType()
+    }))
+
+  if (!isDragging)
+    return null
+
+  let dragPreview = DragPreview({ item, type, ...props })
+
+  if (!dragPreview)
+    return null
+
+  return (
+    <div className={`drag-layer on-drop-${dropEffect}`}>
+      <DragPreviewPositioner
+        cursor={cursor}
+        isRelative={item.position === 'relative'}
+        origin={origin}
+        position={position}>
+        {dragPreview}
+      </DragPreviewPositioner>
+    </div>
+  )
+}
+
+DragLayer.propTypes = {
+  cache: string.isRequired,
+  tags: object.isRequired
 }
