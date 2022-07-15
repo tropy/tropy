@@ -1,52 +1,47 @@
-import React from 'react'
-import { CoverImage } from './cover-image'
 import cx from 'classnames'
+import { CoverImage } from './cover-image.js'
 import { arrayOf, string, func, shape, number, object } from 'prop-types'
 
-export class ItemDragPreview extends React.PureComponent {
-  get classes() {
-    return ['item', 'drag-preview', 'center', {
-      multiple: this.count > 1
-    }]
-  }
+export function ItemDragPreview({
+  cache,
+  item,
+  size,
+  photos,
+  tags,
+  onPhotoError
+}) {
+  let items = item.items
+  let count = items.length
 
-  get item() {
-    return this.props.items[0]
-  }
+  return (
+    <div className={cx('item', 'drag-preview', 'center', {
+      multiple: count > 1
+    })}>
+      <CoverImage
+        cache={cache}
+        photos={photos}
+        size={size}
+        item={items[0]}
+        tags={tags}
+        onError={onPhotoError}/>
+      {count > 1 &&
+        <div className="badge">{count}</div>
+      }
+    </div>
+  )
+}
 
-  get count() {
-    return this.props.items.length
-  }
+ItemDragPreview.propTypes = {
+  cache: string.isRequired,
+  size: number.isRequired,
+  tags: object.isRequired,
+  photos: object.isRequired,
+  item: shape({
+    items: arrayOf(object).isRequired
+  }).isRequired,
+  onPhotoError: func.isRequired
+}
 
-  render() {
-    return (
-      <div className={cx(...this.classes)}>
-        <CoverImage
-          cache={this.props.cache}
-          photos={this.props.photos}
-          size={this.props.size}
-          item={this.item}
-          tags={this.props.tags}
-          onError={this.props.onPhotoError}/>
-        {this.count > 1 &&
-          <div className="badge">{this.count}</div>
-        }
-      </div>
-    )
-  }
-
-  static propTypes = {
-    cache: string.isRequired,
-    size: number.isRequired,
-    tags: object.isRequired,
-    photos: object.isRequired,
-    items: arrayOf(shape({
-      id: number.isRequired
-    })).isRequired,
-    onPhotoError: func.isRequired
-  }
-
-  static defaultProps = {
-    size: 64
-  }
+ItemDragPreview.defaultProps = {
+  size: 64
 }

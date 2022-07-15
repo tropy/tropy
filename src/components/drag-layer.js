@@ -52,11 +52,11 @@ DragPreviewPositioner.propTypes = {
 export function DragPreview({ item, type, ...props }) {
   switch (type) {
     case DND.ITEMS:
-      return <ItemDragPreview {...props} items={item.items}/>
+      return <ItemDragPreview {...props} item={item}/>
     case DND.PHOTO:
       return <PhotoDragPreview {...props} item={item}/>
     case DND.SELECTION:
-      return <PhotoDragPreview {...props} items={[item]}/>
+      return <PhotoDragPreview {...props} item={item}/>
     case DND.LIST:
       return <ListDragPreview list={item}/>
     case DND.FIELD:
