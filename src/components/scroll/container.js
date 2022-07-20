@@ -142,7 +142,7 @@ export class ScrollContainer extends React.Component {
 
   static propTypes = {
     children: element,
-    className: oneOfType(object, string),
+    className: oneOfType([object, string]),
     onBlur: func,
     onClick: func,
     onKeyDown: func,
