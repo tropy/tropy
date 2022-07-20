@@ -53,5 +53,31 @@ export default {
       (item) => { items.push(item.id) })
 
     return items
+  },
+
+  async merge(db, ids) {
+    let [keepId, ...mergeIds] = ids
+    let itemsWithOldTags = new Set()
+    // find all item ids which have taggings of tags to be deleted
+    for (const id of mergeIds) {
+      itemsWithOldTags.add(...await this.items(db, id))
+    }
+
+    // delete all tags except the one to be kept
+    // on delete cascade causes taggings to be removed too
+    await this.delete(db, mergeIds)
+
+    // recreate taggings for items which had deleted tags
+    for (const item of itemsWithOldTags) {
+      try {
+        await db.run(
+          ...into('taggings')
+            .insert({ tag_id: keepId, id: item }))
+      } catch (e) {
+        // TODO is there a nicer way to insert if not exists?
+        console.error(e)
+      }
+    }
+    // TODO should we update the modified timestamp on the tag we kept?
   }
 }
