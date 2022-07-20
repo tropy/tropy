@@ -186,6 +186,11 @@ export const ItemContainer = connect(
 
       onEsperChange(...args) {
         dispatch(act.esper.update(...args))
+      },
+
+      onPhotoError(...args) {
+        dispatch(act.photo.error(...args))
       }
+
     }), null, { forwardRef: true }
   )(Item)

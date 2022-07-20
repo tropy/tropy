@@ -1,6 +1,6 @@
 import React from 'react'
 import { DND, DropTarget } from '../dnd'
-import { arrayOf, bool, func, number, shape, string } from 'prop-types'
+import { arrayOf, bool, func, number, shape } from 'prop-types'
 import { adjacent, move } from '../../common/util'
 
 
@@ -17,10 +17,6 @@ export class SelectionIterator extends React.Component {
     const { onSort, photo } = this.props
     const order = move(photo.selections, id, to, offset)
     onSort({ photo: photo.id, selections: order })
-  }
-
-  handleLoadError = () => {
-    this.props.onError(this.props.photo.id)
   }
 
   select = (selection) => {
@@ -58,7 +54,6 @@ export class SelectionIterator extends React.Component {
     return this.props.selections.map((selection, index) => {
       return fn({
         selection,
-        cache: this.props.cache,
         getAdjacent: this.getAdjacent,
         isActive: this.isActive(selection.id),
         isDisabled: this.props.isDisabled,
@@ -69,7 +64,6 @@ export class SelectionIterator extends React.Component {
         photo: this.props.photo,
         onContextMenu: this.props.onContextMenu,
         onDropSelection: this.handleDropSelection,
-        onError: this.handleLoadError,
         onItemOpen: this.open,
         onSelect: this.select
       })
@@ -89,7 +83,6 @@ export class SelectionIterator extends React.Component {
     selections: arrayOf(shape({
       id: number.isRequired
     })).isRequired,
-    cache: string.isRequired,
     onContextMenu: func.isRequired,
     onError: func.isRequired,
     onItemOpen: func.isRequired,

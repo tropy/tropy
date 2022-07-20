@@ -1,8 +1,8 @@
 import cx from 'classnames'
-import { number, object, string } from 'prop-types'
+import { number, object } from 'prop-types'
 import { Thumbnail } from './thumbnail.js'
 
-export const PhotoDragPreview = ({ cache, item, size  }) => {
+export const PhotoDragPreview = ({ item, size  }) => {
   let count = 1
   let photo = item
 
@@ -12,7 +12,6 @@ export const PhotoDragPreview = ({ cache, item, size  }) => {
     })}>
       <Thumbnail
         {...photo}
-        cache={cache}
         size={size}/>
       {count > 1 && <div className="badge">{count}</div>}
     </div>
@@ -20,7 +19,6 @@ export const PhotoDragPreview = ({ cache, item, size  }) => {
 }
 
 PhotoDragPreview.propTypes = {
-  cache: string.isRequired,
   size: number.isRequired,
   item: object.isRequired
 }

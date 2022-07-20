@@ -1,13 +1,10 @@
 import React from 'react'
-import { Thumbnail } from './thumbnail'
-import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd'
-import { bounds } from '../../dom'
-import { pure } from '../util'
-import { pick } from '../../common/util'
-
-import {
-  arrayOf, bool, func, number, string, object, shape
-} from 'prop-types'
+import { arrayOf, bool, func, number, object, shape } from 'prop-types'
+import { Thumbnail } from './thumbnail.js'
+import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd.js'
+import { bounds } from '../../dom.js'
+import { pure } from '../util.js'
+import { pick } from '../../common/util.js'
 
 
 export class PhotoIterable extends React.PureComponent {
@@ -93,9 +90,7 @@ export class PhotoIterable extends React.PureComponent {
       <Thumbnail
         {...props}
         {...pick(this.props.photo, Thumbnail.keys)}
-        cache={this.props.cache}
-        size={this.props.size}
-        onError={this.props.onError}/>
+        size={this.props.size}/>
     )
   }
 
@@ -182,7 +177,6 @@ export class PhotoIterable extends React.PureComponent {
 
 
   static propTypes = {
-    cache: string.isRequired,
     isDisabled: bool,
     isDragging: bool,
     isExpandable: bool,
@@ -207,7 +201,6 @@ export class PhotoIterable extends React.PureComponent {
     onContextMenu: func.isRequired,
     onContract: func.isRequired,
     onDropPhoto: func.isRequired,
-    onError: func.isRequired,
     onExpand: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired

@@ -83,7 +83,6 @@ class PhotoListItem extends PhotoIterable {
 
     return (
       <SelectionList
-        cache={this.props.cache}
         active={this.props.selection}
         data={this.props.data}
         edit={this.props.edit.selection}
@@ -93,7 +92,6 @@ class PhotoListItem extends PhotoIterable {
         onContextMenu={this.props.onContextMenu}
         onEdit={this.props.onEdit}
         onEditCancel={this.props.onEditCancel}
-        onError={this.props.onError}
         onItemOpen={this.props.onItemOpen}
         onSelect={this.props.onSelect}
         onSort={this.props.onSelectionSort}

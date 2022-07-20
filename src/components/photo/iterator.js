@@ -3,10 +3,7 @@ import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd'
 import { adjacent, move, noop } from '../../common/util'
 import { on, off } from '../../dom'
 import { TABS } from '../../constants'
-
-import {
-  arrayOf, bool, func, number, object, string, shape
-} from 'prop-types'
+import { arrayOf, bool, func, number, object, shape } from 'prop-types'
 
 
 export class PhotoIterator extends React.Component {
@@ -161,7 +158,6 @@ export class PhotoIterator extends React.Component {
   getIterableProps(photo) {
     return {
       photo,
-      cache: this.props.cache,
       selection: this.props.selection,
       isDisabled: this.props.isDisabled,
       isExpandable: this.isExpandable(photo),
@@ -174,7 +170,6 @@ export class PhotoIterator extends React.Component {
       onContract: this.contract,
       onDropPhoto: this.handleDropPhoto,
       onConsolidate: this.props.onConsolidate,
-      onError: this.props.onError,
       onExpand: this.expand,
       onItemOpen: this.handleItemOpen,
       onSelect: this.handleSelectPhoto
@@ -213,7 +208,6 @@ export class PhotoIterator extends React.Component {
       })
     ).isRequired,
 
-    cache: string.isRequired,
     current: number,
     expandedPhotos: object.isRequired,
     keymap: object.isRequired,
@@ -236,7 +230,6 @@ export class PhotoIterator extends React.Component {
     onCreate: func.isRequired,
     onDelete: func.isRequired,
     onExpand: func.isRequired,
-    onError: func.isRequired,
     onTabFocus: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,

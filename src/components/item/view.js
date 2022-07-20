@@ -210,7 +210,6 @@ export class ItemView extends React.PureComponent {
           onNoteCommit={this.handleNoteCommit}
           onPhotoConsolidate={this.props.onPhotoConsolidate}
           onPhotoCreate={this.props.onPhotoCreate}
-          onPhotoError={this.props.onPhotoError}
           onPhotoSave={this.props.onPhotoSave}
           onPhotoSelect={this.props.onPhotoSelect}
           onUiUpdate={this.props.onUiUpdate}/>
@@ -247,7 +246,6 @@ export class ItemView extends React.PureComponent {
     onNoteSelect: func.isRequired,
     onPhotoConsolidate: func.isRequired,
     onPhotoCreate: func.isRequired,
-    onPhotoError: func.isRequired,
     onPhotoSave: func.isRequired,
     onPhotoSelect: func.isRequired,
     onPanelResize: func.isRequired,

@@ -270,7 +270,6 @@ export class ItemIterator extends React.Component {
     return {
       item,
       index,
-      cache: this.props.cache,
       photos: this.props.photos,
       tags: this.props.tags,
       isSelected: this.isSelected(item),
@@ -281,7 +280,6 @@ export class ItemIterator extends React.Component {
       onDropItems: this.props.onItemMerge,
       onDropPhotos: this.props.onPhotoMove,
       onItemOpen: this.props.onItemOpen,
-      onPhotoError: this.props.onPhotoError,
       onSelect: this.select
     }
   }
@@ -301,7 +299,6 @@ export class ItemIterator extends React.Component {
     isReadOnly: bool,
     isTrashSelected: bool,
 
-    cache: string.isRequired,
     selection: arrayOf(number).isRequired,
     keymap: object.isRequired,
     list: number,
@@ -316,7 +313,6 @@ export class ItemIterator extends React.Component {
     onItemMerge: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,
-    onPhotoError: func.isRequired,
     onPhotoMove: func.isRequired,
     onPhotoRotate: func.isRequired,
     onSelect: func.isRequired,

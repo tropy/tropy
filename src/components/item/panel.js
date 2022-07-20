@@ -211,7 +211,6 @@ export class ItemPanelGroup extends React.PureComponent {
             onConsolidate={this.props.onPhotoConsolidate}
             onContextMenu={this.props.onContextMenu}
             onCreate={this.handlePhotoCreate}
-            onError={this.props.onPhotoError}
             onItemPreview={this.props.onItemPreview}
             onRotate={this.props.onPhotoRotate}
             onSelect={this.props.onPhotoSelect}/>
@@ -272,7 +271,6 @@ export class ItemPanelGroup extends React.PureComponent {
     onOpenInFolder: func.isRequired,
     onPhotoConsolidate: func.isRequired,
     onPhotoCreate: func.isRequired,
-    onPhotoError: func.isRequired,
     onPhotoRotate: func.isRequired,
     onPhotoSave: func.isRequired,
     onPhotoSelect: func.isRequired,

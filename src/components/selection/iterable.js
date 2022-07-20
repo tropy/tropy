@@ -1,7 +1,7 @@
 import React from 'react'
 import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd'
 import { Thumbnail } from '../photo/thumbnail'
-import { bool, func, number, shape, string } from 'prop-types'
+import { bool, func, number, shape } from 'prop-types'
 import { bounds } from '../../dom'
 import { pick } from '../../common/util'
 import { pure } from '../util'
@@ -75,12 +75,10 @@ export class SelectionIterable extends React.PureComponent {
       <Thumbnail
         {...props}
         {...pick(this.props.selection, Thumbnail.keys)}
-        cache={this.props.cache}
         color={this.props.photo.color}
         mimetype={this.props.photo.mimetype}
         orientation={this.props.photo.orientation}
-        size={this.props.size}
-        onError={this.props.onError}/>
+        size={this.props.size}/>
     )
   }
 
@@ -97,7 +95,6 @@ export class SelectionIterable extends React.PureComponent {
     isOver: bool,
     isSortable: bool.isRequired,
     isVertical: bool.isRequired,
-    cache: string.isRequired,
     photo: shape({
       id: number.isRequired,
       orientation: number.isRequired
@@ -110,7 +107,6 @@ export class SelectionIterable extends React.PureComponent {
     size: number.isRequired,
     onContextMenu: func.isRequired,
     onDropSelection: func.isRequired,
-    onError: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired
   }

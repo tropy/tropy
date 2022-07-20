@@ -94,10 +94,8 @@ export class TableCell extends React.PureComponent {
       <div className="cover-image-container">
         <CoverImage
           item={this.props.item}
-          cache={this.props.cache}
           photos={this.props.photos}
-          size={this.props.size}
-          onError={this.props.onPhotoError}/>
+          size={this.props.size}/>
       </div>
     )
   }
@@ -136,7 +134,6 @@ export class TableCell extends React.PureComponent {
   }
 
   static propTypes = {
-    cache: string,
     display: string,
     id: string.isRequired,
     isDisabled: bool,
@@ -163,8 +160,7 @@ export class TableCell extends React.PureComponent {
     getPrevColumn: func.isRequired,
     onCancel: func.isRequired,
     onChange: func.isRequired,
-    onEdit: func.isRequired,
-    onPhotoError: func
+    onEdit: func.isRequired
   }
 
   static defaultProps = {

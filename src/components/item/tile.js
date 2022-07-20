@@ -13,7 +13,6 @@ class ItemTile extends ItemIterable {
         className={cx(this.classes, 'tile', { last: this.props.isLast })}>
         <div className="tile-state">
           <CoverImage
-            cache={this.props.cache}
             item={this.props.item}
             photos={this.props.photos}
             tags={this.props.tags}
@@ -21,8 +20,7 @@ class ItemTile extends ItemIterable {
             onMouseDown={this.handleMouseDown}
             onClick={this.handleClick}
             onDoubleClick={this.handleOpen}
-            onContextMenu={this.handleContextMenu}
-            onError={this.props.onPhotoError}/>
+            onContextMenu={this.handleContextMenu}/>
         </div>
       </li>
     )

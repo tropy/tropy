@@ -16,7 +16,6 @@ import { match } from '../../keymap'
 import { warn } from '../../common/log'
 
 import {
-  getCachePrefix,
   getAllColumns,
   getSelectedItems,
   getSelectedPhoto,
@@ -307,12 +306,8 @@ class Project extends React.Component {
           onPanelDragStop={this.handlePanelDragStop}
           onMetadataSave={this.handleMetadataSave}/>
 
-        <DragLayer
-          cache={props.cache}
-          photos={photos}
-          tags={props.tags}
-          onPhotoError={props.onPhotoError}/>
-        <div className="cover" />
+        <DragLayer photos={photos} tags={props.tags}/>
+        <div className="cover"/>
       </div>
     )
   }
@@ -350,7 +345,6 @@ class Project extends React.Component {
     ui: object.isRequired,
     data: object.isRequired,
     columns: object.isRequired,
-    cache: string.isRequired,
     sort: object.isRequired,
     tags: object.isRequired,
     templates: object.isRequired,
@@ -362,7 +356,6 @@ class Project extends React.Component {
     onContextMenu: func.isRequired,
     onItemImport: func.isRequired,
     onPhotoConsolidate: func.isRequired,
-    onPhotoError: func.isRequired,
     onProjectCreate: func.isRequired,
     onProjectOpen: func.isRequired,
     onModeChange: func.isRequired,
@@ -410,7 +403,6 @@ const DropTargetSpec = {
 
 export const ProjectContainer = connect(
   state => ({
-    cache: getCachePrefix(state),
     columns: getAllColumns(state),
     data: state.metadata,
     edit: state.edit,
@@ -536,10 +528,6 @@ export const ProjectContainer = connect(
 
     onPhotoConsolidate(...args) {
       dispatch(act.photo.consolidate(...args))
-    },
-
-    onPhotoError(...args) {
-      dispatch(act.photo.error(...args))
     },
 
     onPhotoRotate(...args) {
