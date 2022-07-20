@@ -60,3 +60,25 @@ export const getTagCompletions = memo(
       filter(tag => !itemTags.find(t => !t.mixed && t.id === tag.id)),
       map(tag => tag.name)))
 )
+
+export const getTagColors = memo(
+  getTags,
+  (_, tagIds) => tagIds,
+
+  (tags, tagIds) => {
+    let skip = Object.create({})
+    let colors = []
+
+    if (tagIds) {
+      for (let id of tagIds) {
+        let color = tags[id]?.color
+
+        if (color && !skip[color]) {
+          colors.push(color)
+          skip[color] = true
+        }
+      }
+    }
+
+    return colors
+  })

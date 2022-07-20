@@ -1,8 +1,9 @@
 import React from 'react'
-import { Thumbnail } from '../photo'
-import { TagColors } from '../colors'
-import { pick } from '../../common/util'
-import { arrayOf, number, object, shape } from 'prop-types'
+import { useSelector } from 'react-redux'
+import { arrayOf, func, number } from 'prop-types'
+import { Thumbnail } from '../photo/thumbnail.js'
+import { TagColors } from '../tag/colors.js'
+import { pick } from '../../common/util.js'
 
 const StackLines = ({ count }) => (
   (count > 1) && (
@@ -16,40 +17,32 @@ StackLines.propTypes = {
   count: number
 }
 
-export class CoverImage extends React.PureComponent {
-  get id() {
-    return this.props.item.cover || this.props.item.photos[0]
-  }
 
-  get photo() {
-    return this.props.photos?.[this.id] || {}
-  }
+export const CoverImage = React.memo(({ cover, photos, tags, ...props }) => {
+  let id = cover || photos[0]
+  let photo = useSelector(state => state.photos[id]) || {}
 
-  render() {
-    return (
-      <div className="cover-image">
-        <StackLines
-          count={this.props.item.photos.length}/>
-        <Thumbnail
-          {...pick(this.props, Thumbnail.keys)}
-          {...pick(this.photo, Thumbnail.keys)}
-          id={this.id}
-          size={this.props.size}/>
-        <TagColors
-          selection={this.props.item.tags}
-          tags={this.props.tags}/>
-      </div>
-    )
-  }
+  return (
+    <div className="cover-image">
+      <StackLines count={photos.length}/>
 
-  static propTypes = {
-    ...Thumbnail.propTypes,
-    tags: object,
-    photos: object,
-    item: shape({
-      photos: arrayOf(number).isRequired,
-      tags: arrayOf(number),
-      cover: number
-    }).isRequired
-  }
+      <Thumbnail
+        {...props}
+        {...pick(photo, Thumbnail.keys)}
+        id={id}/>
+
+      <TagColors tags={tags}/>
+    </div>
+  )
+})
+
+CoverImage.propTypes = {
+  onClick: func,
+  onContextMenu: func,
+  onDoubleClick: func,
+  onMouseDown: func,
+  photos: arrayOf(number).isRequired,
+  tags: arrayOf(number),
+  cover: number,
+  size: number
 }

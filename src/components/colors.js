@@ -1,6 +1,5 @@
-import React from 'react'
-import { arrayOf, bool, number, object, string } from 'prop-types'
-import { IconCircle, IconCrescentCircle } from './icons'
+import { arrayOf, bool, string } from 'prop-types'
+import { IconCircle, IconCrescentCircle } from './icons.js'
 
 export const Circle = ({ color, isCrescent }) =>
   isCrescent ?
@@ -12,34 +11,22 @@ Circle.propTypes = {
   isCrescent: bool
 }
 
-export const TagColors = (props) => {
-  let colors = getColors(props)
-
-  return (colors.length === 0) ? null : (
-    <div className="tag-colors">
+export const Colors = ({ className, colors }) => (
+  (!colors.length) ? null : (
+    <div className={className}>
       {colors.map((color, idx) =>
-        <Circle key={color} color={color} isCrescent={idx > 0}/>)}
+        <Circle
+          key={color}
+          color={color}
+          isCrescent={idx > 0}/>)}
     </div>
-  )
+  ))
+
+Colors.propTypes = {
+  className: string,
+  colors: arrayOf(string).isRequired
 }
 
-TagColors.propTypes = {
-  selection: arrayOf(number).isRequired,
-  tags: object
-}
-
-
-function getColors(props) {
-  let skip = {}
-  let colors = []
-
-  for (let id of props.selection) {
-    let color = props.tags?.[id]?.color
-    if (color && !(color in skip)) {
-      colors.push(color)
-      skip[color] = true
-    }
-  }
-
-  return colors
+Colors.defaultProps = {
+  className: 'colors'
 }

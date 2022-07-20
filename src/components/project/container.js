@@ -306,7 +306,7 @@ class Project extends React.Component {
           onPanelDragStop={this.handlePanelDragStop}
           onMetadataSave={this.handleMetadataSave}/>
 
-        <DragLayer photos={photos} tags={props.tags}/>
+        <DragLayer/>
         <div className="cover"/>
       </div>
     )

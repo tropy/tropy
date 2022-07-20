@@ -2,7 +2,7 @@ import React from 'react'
 import cx from 'classnames'
 import { CoverImage } from '../cover-image.js'
 import { Editable } from '../../editable.js'
-import { TagColors } from '../../colors.js'
+import { TagColors } from '../../tag/colors.js'
 import { createClickHandler } from '../../util.js'
 import { testFocusChange } from '../../../dom.js'
 import { isMeta } from '../../../keymap.js'
@@ -93,8 +93,8 @@ export class TableCell extends React.PureComponent {
     return this.props.isMainColumn && (
       <div className="cover-image-container">
         <CoverImage
-          item={this.props.item}
-          photos={this.props.photos}
+          cover={this.props.item.cover}
+          photos={this.props.item.photos}
           size={this.props.size}/>
       </div>
     )
@@ -102,9 +102,7 @@ export class TableCell extends React.PureComponent {
 
   renderTagColors() {
     return this.props.isMainColumn && (
-      <TagColors
-        selection={this.props.item.tags}
-        tags={this.props.tags}/>
+      <TagColors tags={this.props.item.tags}/>
     )
   }
 

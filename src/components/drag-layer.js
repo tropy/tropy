@@ -6,7 +6,7 @@ import { PhotoDragPreview } from './photo/drag-preview.js'
 import { ListDragPreview } from './list/drag-preview.js'
 import { FieldDragPreview } from './metadata/drag-preview.js'
 import { shapes } from './util.js'
-import { bool, element, object } from 'prop-types'
+import { bool, element } from 'prop-types'
 
 
 export function DragPreviewPositioner({
@@ -87,8 +87,4 @@ export function DragLayer(props) {
       </DragPreviewPositioner>
     </div>
   )
-}
-
-DragLayer.propTypes = {
-  tags: object.isRequired
 }

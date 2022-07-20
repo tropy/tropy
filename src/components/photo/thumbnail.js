@@ -17,10 +17,9 @@ export function Thumbnail(props) {
 
   let src = Cache.url(cache, variant(props.size), props)
   let rot = Rotation.fromExifOrientation(props.orientation).add(props)
-
   let [x, y] = rot.ratio(props)
-
   let rotation = rot.format('x')
+
   let style = {
     '--x': x,
     '--y': y,

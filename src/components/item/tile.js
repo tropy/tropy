@@ -13,9 +13,9 @@ class ItemTile extends ItemIterable {
         className={cx(this.classes, 'tile', { last: this.props.isLast })}>
         <div className="tile-state">
           <CoverImage
-            item={this.props.item}
-            photos={this.props.photos}
-            tags={this.props.tags}
+            cover={this.props.item.cover}
+            photos={this.props.item.photos}
+            tags={this.props.item.tags}
             size={this.props.size}
             onMouseDown={this.handleMouseDown}
             onClick={this.handleClick}
