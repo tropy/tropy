@@ -1,8 +1,8 @@
 import React from 'react'
-import { createDragHandler } from '../dom'
-import { noop, pick } from '../common/util'
 import { func, bool, string, number, object, node } from 'prop-types'
 import cx from 'classnames'
+import { createDragHandler } from '../dom.js'
+import { noop } from '../common/util.js'
 
 const DRAG = { START: 1, ACTIVE: 2, NONE: 3 }
 
@@ -67,14 +67,18 @@ export class Draggable extends React.PureComponent {
   })
 
   clear() {
-    if (this.delay) clearTimeout(this.delay)
+    if (this.delay)
+      clearTimeout(this.delay)
+
     this.delay = null
   }
 
   render() {
     return (
-      <div {...pick(this.props, ['tabIndex', 'style'])}
+      <div
         className={cx('draggable', this.props.className)}
+        style={this.props.style}
+        tabIndex={this.props.tabIndex}
         onMouseDown={this.handleMouseDown}>
         {this.props.children}
       </div>
