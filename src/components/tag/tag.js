@@ -1,27 +1,27 @@
-import React from 'react'
-import { Editable } from '../editable'
-import { IconTag, IconPlusCircles } from '../icons'
-import { isMeta } from '../../keymap'
-import { noop, toId } from '../../common/util'
-import { hasFocus } from '../../dom'
+import React, { useCallback, useRef } from 'react'
 import cx from 'classnames'
-import { DND, DropTarget } from '../dnd'
-import { pure } from '../util'
 import { shape, number, string, bool, func } from 'prop-types'
+import { Editable } from '../editable.js'
+import { IconTag, IconPlusCircles } from '../icons.js'
+import { isMeta } from '../../keymap.js'
+import { noop, toId } from '../../common/util.js'
+import { hasFocus } from '../../dom.js'
+import { DND, useDrop } from '../dnd.js'
+
 
 const ccx = (color) => color && `color-${color}`
 
-const NewTag = (props) => (
+export const NewTag = ({ color, name, onCreate, onCancel }) => (
   <li className="tag" tabIndex={-1}>
-    <IconTag className={ccx(props.color)}/>
+    <IconTag className={ccx(color)}/>
     <div className="name">
       <Editable
-        value={props.name}
+        value={name}
         isRequired
         resize
         isActive
-        onCancel={props.onCancel}
-        onChange={(name) => props.onCreate({ name, color: props.color })}/>
+        onCancel={onCancel}
+        onChange={(value) => onCreate({ name: value, color })}/>
     </div>
   </li>
 )
@@ -38,31 +38,39 @@ NewTag.defaultProps = {
 }
 
 
-class Tag extends React.PureComponent {
-  container = React.createRef()
+export const Tag = React.memo(({
+  hasFocusIcon,
+  isEditing,
+  isSelected,
+  isReadOnly,
+  tag,
+  onChange,
+  onContextMenu,
+  onDropItems,
+  onEditCancel,
+  onFocusClick,
+  onKeyDown,
+  onSelect
+}) => {
 
-  get classes() {
-    return ['tag', {
-      active: this.props.isSelected,
-      mixed: !!this.props.tag.mixed,
-      over: this.props.isOver
-    }]
+  let container = useRef()
+
+  let [{ isOver }, drop] = useDrop({
+    accept: [DND.ITEMS],
+    drop: (item) => {
+      onDropItems({ id: item.items.map(toId), tags: [tag.id] })
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver()
+    })
+  })
+
+  let handleChange = (name) => {
+    onChange({ name }, tag.id)
   }
 
-  get isDropTarget() {
-    return !this.props.isReadOnly &&
-      !this.props.isSelected &&
-      this.props.onDropItems != null
-  }
-
-  handleChange = (name) => {
-    this.props.onChange({ name }, this.props.tag.id)
-  }
-
-  handleClick = (event) => {
+  let handleClick = (event) => {
     if (event.button > 0) return
-
-    let { tag, isSelected, onSelect, onFocusClick } = this.props
 
     let mod = isSelected ?
       (isMeta(event) ? 'remove' : 'clear') :
@@ -70,97 +78,78 @@ class Tag extends React.PureComponent {
 
     onSelect(tag.id, { mod })
 
-    if (hasFocus(this.container.current) && onFocusClick) {
+    if (hasFocus(container.current) && onFocusClick) {
       onFocusClick(tag)
     }
   }
 
-  handleContextMenu = (event) => {
-    this.props.onContextMenu(event, this.props.tag)
+  let handleContextMenu = (event) => {
+    onContextMenu(event, tag)
   }
 
-  handleKeyDown = (event) => {
-    this.props.onKeyDown(event, this.props.tag)
+  let handleKeyDown = (event) => {
+    onKeyDown(event, tag)
   }
 
-  connect(element) {
-    return (this.isDropTarget) ? this.props.dt(element) : element
-  }
+  let connect = useCallback(node => {
+    let isDropTarget = !isReadOnly &&
+        !isSelected &&
+        onDropItems != null
 
-  render() {
-    let { tag, isEditing, hasFocusIcon } = this.props
+    if (isDropTarget) drop(node)
 
-    return this.connect(
-      <li
-        className={cx(this.classes)}
-        tabIndex={-1}
-        ref={this.container}
-        onContextMenu={isEditing ? null : this.handleContextMenu}
-        onMouseDown={isEditing ? null : this.handleClick}
-        onKeyDown={isEditing ? null : this.handleKeyDown}>
-        <IconTag className={ccx(tag.color)}/>
-        <div className="name">
-          <Editable
-            isActive={isEditing}
-            isDisabled={this.props.isReadOnly}
-            isRequired
-            resize
-            value={tag.name}
-            onCancel={this.props.onEditCancel}
-            onChange={this.handleChange}/>
-        </div>
-        {hasFocusIcon && !isEditing && this.props.tag.mixed &&
-          <IconPlusCircles/>}
-      </li>
-    )
-  }
+    container.current = node
+  }, [isReadOnly, isSelected, onDropItems, drop])
 
-
-  static propTypes = {
-    dt: func.isRequired,
-    hasFocusIcon: bool,
-    isEditing: bool,
-    isOver: bool,
-    isReadOnly: bool,
-    isSelected: bool,
-    tag: shape({
-      id: number,
-      name: string.isRequired,
-      color: string
-    }).isRequired,
-
-    onChange: func.isRequired,
-    onContextMenu: func,
-    onDropItems: func,
-    onEditCancel: func,
-    onFocusClick: func,
-    onKeyDown: func,
-    onSelect: func
-  }
-
-  static defaultProps = {
-    onChange: noop
-  }
-}
-
-const DropTargetSpec = {
-  drop({ tag, onDropItems }, monitor) {
-    const it = monitor.getItem()
-    onDropItems({ id: it.items.map(toId), tags: [tag.id] })
-  }
-}
-
-const DropTargetCollect = (connect, monitor) => ({
-  dt: connect.dropTarget(),
-  isOver: monitor.isOver()
+  return (
+    <li
+      ref={connect}
+      className={cx('tag', {
+        active: isSelected,
+        mixed: !!tag.mixed,
+        over: isOver
+      })}
+      tabIndex={-1}
+      onContextMenu={isEditing ? null : handleContextMenu}
+      onMouseDown={isEditing ? null : handleClick}
+      onKeyDown={isEditing ? null : handleKeyDown}>
+      <IconTag className={ccx(tag.color)}/>
+      <div className="name">
+        <Editable
+          isActive={isEditing}
+          isDisabled={isReadOnly}
+          isRequired
+          resize
+          value={tag.name}
+          onCancel={onEditCancel}
+          onChange={handleChange}/>
+      </div>
+      {hasFocusIcon && !isEditing && tag.mixed &&
+        <IconPlusCircles/>}
+    </li>
+  )
 })
 
+Tag.propTypes = {
+  hasFocusIcon: bool,
+  isEditing: bool,
+  isReadOnly: bool,
+  isSelected: bool,
+  tag: shape({
+    id: number,
+    name: string.isRequired,
+    color: string
+  }).isRequired,
 
-const TagContainer = pure(
-  DropTarget(DND.ITEMS, DropTargetSpec, DropTargetCollect)(Tag)
-)
+  onChange: func.isRequired,
+  onContextMenu: func,
+  onDropItems: func,
+  onEditCancel: func,
+  onFocusClick: func,
+  onKeyDown: func,
+  onSelect: func
+}
 
-export {
-  NewTag,
-  TagContainer as Tag
+Tag.defaultProps = {
+  onChange: noop
 }
