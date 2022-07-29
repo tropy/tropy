@@ -54,6 +54,11 @@ export class Database extends EventEmitter {
     this.path = path
     this.mode = mode
 
+    if (path === ':memory:') {
+      opts.min = 1,
+      opts.max = 1
+    }
+
     this.pool = createPool({
       create: () => this.create(),
       destroy: (conn) => this.destroy(conn)
