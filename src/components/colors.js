@@ -1,10 +1,12 @@
 import { arrayOf, bool, string } from 'prop-types'
-import { IconCircle, IconCrescentCircle } from './icons.js'
+import { IconCircle, IconCrescentCircle, IconTag } from './icons.js'
+
+const ccx = (color) => color && `color-${color}`
 
 export const Circle = ({ color, isCrescent }) =>
   isCrescent ?
-    <IconCrescentCircle className={`color-${color}`}/> :
-    <IconCircle className={`color-${color}`}/>
+    <IconCrescentCircle className={ccx(color)}/> :
+    <IconCircle className={ccx(color)}/>
 
 Circle.propTypes = {
   color: string.isRequired,
@@ -29,4 +31,12 @@ Colors.propTypes = {
 
 Colors.defaultProps = {
   className: 'colors'
+}
+
+export const TagColor = ({ color }) => (
+  <IconTag className={ccx(color)}/>
+)
+
+TagColor.propTypes = {
+  color: string
 }

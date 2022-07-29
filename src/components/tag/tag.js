@@ -2,18 +2,17 @@ import React, { useCallback, useRef } from 'react'
 import cx from 'classnames'
 import { shape, number, string, bool, func } from 'prop-types'
 import { Editable } from '../editable.js'
-import { IconTag, IconPlusCircles } from '../icons.js'
+import { IconPlusCircles } from '../icons.js'
+import { TagColor } from '../colors.js'
 import { isMeta } from '../../keymap.js'
 import { noop, toId } from '../../common/util.js'
 import { hasFocus } from '../../dom.js'
 import { DND, useDrop } from '../dnd.js'
 
 
-const ccx = (color) => color && `color-${color}`
-
 export const NewTag = ({ color, name, onCreate, onCancel }) => (
   <li className="tag" tabIndex={-1}>
-    <IconTag className={ccx(color)}/>
+    <TagColor color={color}/>
     <div className="name">
       <Editable
         value={name}
@@ -58,16 +57,19 @@ export const Tag = React.memo(({
   let [{ isOver }, drop] = useDrop({
     accept: [DND.ITEMS],
     drop: (item) => {
-      onDropItems({ id: item.items.map(toId), tags: [tag.id] })
+      onDropItems({
+        id: item.items.map(toId),
+        tags: [tag.id]
+      })
     },
     collect: (monitor) => ({
       isOver: monitor.isOver()
     })
   })
 
-  let handleChange = (name) => {
+  let handleChange = useCallback((name) => {
     onChange({ name }, tag.id)
-  }
+  }, [tag, onChange])
 
   let handleClick = (event) => {
     if (event.button > 0) return
@@ -78,8 +80,8 @@ export const Tag = React.memo(({
 
     onSelect(tag.id, { mod })
 
-    if (hasFocus(container.current) && onFocusClick) {
-      onFocusClick(tag)
+    if (hasFocus(container.current)) {
+      onFocusClick?.(tag)
     }
   }
 
@@ -113,7 +115,7 @@ export const Tag = React.memo(({
       onContextMenu={isEditing ? null : handleContextMenu}
       onMouseDown={isEditing ? null : handleClick}
       onKeyDown={isEditing ? null : handleKeyDown}>
-      <IconTag className={ccx(tag.color)}/>
+      <TagColor color={tag.color}/>
       <div className="name">
         <Editable
           isActive={isEditing}

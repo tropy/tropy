@@ -7,9 +7,7 @@ export function TagColors({ tags }) {
   let colors = useSelector(state => getTagColors(state, tags))
 
   return (
-    <Colors
-      className="tag-colors"
-      colors={colors}/>
+    <Colors className="tag-colors" colors={colors}/>
   )
 }
 
