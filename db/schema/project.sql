@@ -14,7 +14,7 @@
 PRAGMA encoding = 'UTF-8';
 PRAGMA application_id = -621960955;
 
--- Save the current migration number
+-- Save the current migration number (legacy)
 PRAGMA user_version = 2112312400;
 
 -- Load sqlite3 .dump
@@ -343,6 +343,6 @@ CREATE TRIGGER delete_photos_store
     INSERT INTO deleted_photos (path, checksum)
       VALUES (OLD.path, OLD.checksum);
   END;
-PRAGMA writable_schema=OFF;
+PRAGMA writable_schema=RESET;
 COMMIT;
 PRAGMA foreign_keys=ON;

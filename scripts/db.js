@@ -89,7 +89,7 @@ target.migrate = async (args = []) => {
 PRAGMA encoding = 'UTF-8';
 PRAGMA application_id = ${APPLICATION_ID};
 
--- Save the current migration number
+-- Save the current migration number (legacy)
 PRAGMA user_version = ${version};
 
 -- Load sqlite3 .dump
@@ -98,6 +98,11 @@ PRAGMA user_version = ${version};
 
     exec(`sqlite3 ${tmp} .dump >> ${schema}`)
     'PRAGMA foreign_keys=ON;'.toEnd(schema)
+
+    sed('-i',
+      'PRAGMA writable_schema=OFF;',
+      'PRAGMA writable_schema=RESET;',
+      schema)
 
     say(`migrated ${domain} to #${version}`)
     say(`schema saved as ${relative(cwd, schema)}`)
