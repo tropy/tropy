@@ -1,6 +1,7 @@
 import { mkdbtmp } from '../support/db.js'
 import * as mod from '../../src/models/index.js'
 import { delay } from '../../src/common/util.js'
+import { dc } from '../../src/ontology/ns.js'
 
 
 describe('tag model', () => {
@@ -146,37 +147,16 @@ describe('tag model', () => {
   })
 
   describe('merge', async () => {
-    let [tag1id, tag2id, tag3id] = [1, 2, 3]
     let tag1, tag2, tag3
     let item1, item2
 
     beforeEach(async function () {
-      tag1 = await mod.tag.create(
-        db.current, { name: 'tag1', color: 'red', id: tag1id }
-      )
-      tag2 = await mod.tag.create(
-        db.current, { name: 'tag2', color: 'blue', id: tag2id }
-      )
-      tag3 = await mod.tag.create(
-        db.current, { name: 'tag3', color: 'green', id: tag3id }
-      )
+      tag1 = await mod.tag.create(db.current, { name: 't1', color: 'red' })
+      tag2 = await mod.tag.create(db.current, { name: 't2', color: 'blue' })
+      tag3 = await mod.tag.create(db.current, { name: 't3', color: 'green' })
 
-      item1 = await mod.item.create(db.current,
-        'https://tropy.org/v1/templates/generic',
-        {
-          'http://purl.org/dc/elements/1.1/title': {
-            text: 'item1',
-            type: 'http://www.w3.org/2001/XMLSchema#string'
-          }
-        })
-      item2 = await mod.item.create(db.current,
-        'https://tropy.org/v1/templates/generic',
-        {
-          'http://purl.org/dc/elements/1.1/title': {
-            text: 'item2',
-            type: 'http://www.w3.org/2001/XMLSchema#string'
-          }
-        })
+      item1 = await mod.item.create(db.current, null, { [dc.title]: 'Item 1' })
+      item2 = await mod.item.create(db.current, null, { [dc.title]: 'Item 2' })
 
       await mod.item.tags.add(db.current, { id: [item1.id], tag: tag1.id })
       await mod.item.tags.add(db.current, { id: [item2.id], tag: tag2.id })
