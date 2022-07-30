@@ -1,10 +1,10 @@
-import { array, blank, list as lst, uniq } from '../common/util'
-import { select } from '../common/query'
-import { NAV } from '../constants'
+import { array, blank, list as lst, uniq } from '../common/util.js'
+import { into, select } from '../common/query.js'
+import { NAV, ITEM } from '../constants/index.js'
 
-import modMetadata from './metadata'
-import modPhoto from './photo'
-import modSubject from './subject'
+import modMetadata from './metadata.js'
+import modPhoto from './photo.js'
+import modSubject from './subject.js'
 
 const mod = {
   metadata: modMetadata,
@@ -231,10 +231,13 @@ mod.item = {
   },
 
   async create(db, template, data) {
-    const { id } = await db.run(`
-      INSERT INTO subjects (template) VALUES (?)`, template)
-    await db.run(`
-      INSERT INTO items (id) VALUES (?)`, id)
+    template ??= ITEM.TEMPLATE.DEFAULT
+
+    let { id } = await db.run(
+      ...into('subjects').insert({ template }))
+
+    await db.run(
+      ...into('items').insert({ id }))
 
     if (data) {
       await mod.metadata.update(db, { id, data })
