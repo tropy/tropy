@@ -1,20 +1,16 @@
 import React from 'react'
+import { CSSTransition } from 'react-transition-group'
 import { element, number, oneOf } from 'prop-types'
-import { on, bounds } from '../dom'
+import { on, bounds } from '../dom.js'
 
-import {
-  CSSTransition,
-  Transition,
-  TransitionGroup
-} from 'react-transition-group'
 
-const onTransitionEnd = (node, done) => {
+export const onTransitionEnd = (node, done) => {
   on(node, 'transitionend', event => {
     if (event.target === node) done()
   })
 }
 
-const Fade = (props) => (
+export const Fade = (props) => (
   <CSSTransition
     addEndListener={onTransitionEnd}
     classNames="fade"
@@ -24,7 +20,7 @@ const Fade = (props) => (
     {...props}/>
 )
 
-class Collapse extends React.Component {
+export class Collapse extends React.Component {
   getValue(node) {
     return this.props.value ?
       this.props.value :
@@ -89,13 +85,4 @@ class Collapse extends React.Component {
   static defaultProps = {
     dimension: 'height'
   }
-}
-
-export {
-  CSSTransition,
-  Transition,
-  TransitionGroup,
-  onTransitionEnd,
-  Collapse,
-  Fade
 }
