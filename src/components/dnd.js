@@ -1,6 +1,7 @@
 import {
   DndProvider,
   useDragLayer,
+  useDrag,
   useDrop,
   DragSource,
   DropTarget
@@ -57,6 +58,7 @@ export {
   DND,
   DndProvider,
   useDragLayer,
+  useDrag,
   useDrop,
   DragSource,
   DropTarget,

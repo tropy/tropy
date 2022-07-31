@@ -1,246 +1,163 @@
-import React from 'react'
-import { DND, DragSource, DropTarget } from '../dnd'
-import { ResourceSelect } from '../resource'
-import { Button } from '../button'
-import { FormElement, FormField, FormToggle } from '../form'
-import { IconGrip, IconPlusCircle, IconMinusCircle } from '../icons'
-import cx from 'classnames'
+import React, { useRef } from 'react'
 import { array, bool, func, number, object } from 'prop-types'
-import { bounds } from '../../dom'
+import cx from 'classnames'
+import { ResourceSelect } from '../resource/select.js'
+import { PlusMinusControls } from '../button.js'
+import { FormElement, FormField, FormToggle } from '../form.js'
+import { IconGrip } from '../icons.js'
+import { bounds } from '../../dom.js'
+import { DND, useDrag, useDrop } from '../dnd.js'
 
 
-class TemplateField extends React.PureComponent {
-  get classes() {
-    return ['template-field', {
-      dragging: this.props.isDragging
-    }]
-  }
+export const TemplateField = ({
+  datatypes,
+  field,
+  isDisabled,
+  isSingle,
+  isTransient,
+  onInsert,
+  onRemove,
+  onSave,
+  onSort,
+  onSortReset,
+  onSortPreview,
+  onSortStart,
+  position,
+  properties
+}) => {
 
-  get isDragAndDropEnabled() {
-    return !this.props.isDisabled && !this.props.isSingle
-  }
+  let container = useRef()
 
-  get isEditable() {
-    return !(this.props.isDisabled || this.props.isTransient)
-  }
+  let isDragAndDropEnabled = !isDisabled && !isSingle
+  let isEditable = !(isDisabled || isTransient)
 
-  setContainer = (container) => {
-    this.container = container
-  }
+  let [{ isDragging }, drag] = useDrag({
+    type: DND.TEMPLATE.FIELD,
 
-  handlePropertyChange = ({ id }) => {
-    this.handleChange({ property: id })
-  }
+    item: () => {
+      onSortStart(field)
+      return field
+    },
 
-  handleDatatypeChange = ({ id }) => {
-    this.handleChange({ datatype: id })
-  }
+    end: (item, monitor) => {
+      if (monitor.didDrop())
+        onSort(item)
+      else
+        onSortReset(item)
+    },
 
-  handleChange = (data) => {
-    this.props.onSave(this.props.field.id, data, this.props.position)
-  }
+    canDrag: () => (isDragAndDropEnabled),
 
-  handleInsert = () => {
-    this.props.onInsert(this.props.field, this.props.position + 1)
-  }
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging()
+    })
+  })
 
-  handleRemove = () => {
-    this.props.onRemove(this.props.field)
-  }
+  let [, drop] = useDrop({
+    accept: [DND.TEMPLATE.FIELD],
 
-  connectDragSource(element) {
-    return this.isDragAndDropEnabled ? this.props.ds(element) : element
-  }
+    drop: (item) => (item),
 
-  connectDropTarget(element) {
-    return this.isDragAndDropEnabled ? this.props.dt(element) : element
-  }
+    hover: (item, monitor) => {
+      if (item === field || !container.current)
+        return
 
-  renderInsertButton() {
-    return !this.props.isDisabled && (
-      <Button
-        icon={<IconPlusCircle/>}
-        isDisabled={this.props.isTransient}
-        onClick={this.handleInsert}/>
-    )
-  }
+      let { top, height } = bounds(container.current)
+      let offset = Math.round((monitor.getClientOffset().y - top) / height)
 
-  renderRemoveButton() {
-    return !this.props.isDisabled && (
-      <Button
-        icon={<IconMinusCircle/>}
-        isDisabled={this.props.isTransient && this.props.isSingle}
-        onClick={this.handleRemove}/>
-    )
-  }
-
-  render() {
-    const { isEditable } = this
-
-    return this.connectDropTarget(
-      <li
-        className={cx(this.classes)}
-        ref={this.setContainer}>
-        {this.connectDragSource(
-          <fieldset>
-            {this.isDragAndDropEnabled && <IconGrip/>}
-            <FormElement
-              id="template.field.property"
-              isCompact
-              size={9}>
-              <ResourceSelect
-                options={this.props.properties}
-                value={this.props.field.property}
-                maxRows={5}
-                isRequired={!this.props.isTransient}
-                isDisabled={this.props.isDisabled}
-                placeholder="property.select"
-                tabIndex={0}
-                onChange={this.handlePropertyChange}/>
-            </FormElement>
-            <FormField
-              id="template.field.label"
-              name="label"
-              value={this.props.field.label}
-              isDisabled={!isEditable}
-              tabIndex={0}
-              isCompact
-              size={9}
-              placeholder=""
-              onChange={this.handleChange}/>
-            <FormElement
-              id="template.field.datatype"
-              isCompact
-              size={9}>
-              <ResourceSelect
-                options={this.props.datatypes}
-                value={this.props.field.datatype}
-                maxRows={5}
-                isRequired
-                isDisabled={!isEditable}
-                placeholder="datatype.select"
-                tabIndex={0}
-                onChange={this.handleDatatypeChange}/>
-            </FormElement>
-            <FormToggle
-              id="template.field.isRequired"
-              name="isRequired"
-              value={this.props.field.isRequired}
-              isDisabled={!isEditable}
-              tabIndex={0}
-              onChange={this.handleChange}
-              isCompact
-              size={9}/>
-            <FormField
-              id="template.field.hint"
-              name="hint"
-              value={this.props.field.hint || ''}
-              isDisabled={!isEditable}
-              onChange={this.handleChange}
-              tabIndex={0}
-              isCompact
-              size={9}/>
-            <FormField
-              id="template.field.value"
-              name="value"
-              value={this.props.field.value || ''}
-              isDisabled={!isEditable}
-              onChange={this.handleChange}
-              tabIndex={0}
-              isCompact
-              size={9}/>
-            <FormToggle
-              id="template.field.isConstant"
-              name="isConstant"
-              value={this.props.field.isConstant}
-              isDisabled={!isEditable}
-              tabIndex={0}
-              onChange={this.handleChange}
-              isCompact
-              size={9}/>
-          </fieldset>
-        )}
-        <div className="btn-group">
-          {this.renderRemoveButton()}
-          {this.renderInsertButton()}
-        </div>
-      </li>
-    )
-  }
-
-  static propTypes = {
-    field: object.isRequired,
-    isDragging: bool,
-    isDisabled: bool,
-    isTransient: bool,
-    isSingle: bool,
-    position: number.isRequired,
-    datatypes: array.isRequired,
-    properties: array.isRequired,
-    ds: func.isRequired,
-    dt: func.isRequired,
-    onInsert: func.isRequired,
-    onRemove: func.isRequired,
-    onSave: func.isRequired,
-    onSort: func.isRequired,
-    onSortPreview: func.isRequired,
-    onSortReset: func.isRequired,
-    onSortStart: func.isRequired
-  }
-}
-
-
-const DragSourceSpec = {
-  beginDrag({ field, onSortStart }) {
-    onSortStart(field)
-    return field
-  },
-
-  endDrag({ field, onSort, onSortReset }, monitor) {
-    if (monitor.didDrop()) {
-      onSort(field)
-    } else {
-      onSortReset(field)
+      onSortPreview(item, field, offset)
     }
+  })
+
+  if (isDragAndDropEnabled)
+    drop(container)
+
+  let handleChange = (data) => {
+    onSave(field.id, data, position)
   }
+
+  let propsFor = (name) => ({
+    id: `${position}.template.field.${name}`,
+    isCompact: true,
+    isDisabled: !isEditable,
+    label: `template.field.${name}`,
+    name,
+    onChange: handleChange,
+    size: 9,
+    tabIndex: 0,
+    value: field[name]
+  })
+
+  return (
+    <li
+      ref={container}
+      className={cx('template-field', {
+        dragging: isDragging
+      })}>
+      <fieldset ref={drag}>
+        {isDragAndDropEnabled && <IconGrip/>}
+        <FormElement
+          id="template.field.property"
+          isCompact
+          size={9}>
+          <ResourceSelect
+            options={properties}
+            value={field.property}
+            maxRows={5}
+            isRequired={!isTransient}
+            isDisabled={isDisabled}
+            placeholder="property.select"
+            tabIndex={0}
+            onChange={({ id }) => handleChange({ property: id })}/>
+        </FormElement>
+
+        <FormField {...propsFor('label')}/>
+
+        <FormElement
+          id="template.field.datatype"
+          isCompact
+          size={9}>
+          <ResourceSelect
+            options={datatypes}
+            value={field.datatype}
+            maxRows={5}
+            isRequired
+            isDisabled={!isEditable}
+            placeholder="datatype.select"
+            tabIndex={0}
+            onChange={({ id }) => handleChange({ datatype: id })}/>
+        </FormElement>
+
+        <FormToggle {...propsFor('isRequired')}/>
+        <FormField {...propsFor('hint')}/>
+        <FormField {...propsFor('value')}/>
+        <FormToggle {...propsFor('isConstant')}/>
+
+      </fieldset>
+      {isDisabled ?
+        <div className="btn-group"/> :
+        <PlusMinusControls
+          canAdd={!isTransient}
+          canRemove={!(isTransient || isSingle)}
+          onAdd={() => onInsert(field, position + 1)}
+          onRemove={() => onRemove(field)}/>}
+    </li>
+  )
 }
 
-const DragSourceCollect = (connect, monitor) => ({
-  ds: connect.dragSource(),
-  isDragging: monitor.isDragging()
-})
-
-
-const DropTargetSpec = {
-  hover({ field, onSortPreview }, monitor, { container }) {
-    const item = monitor.getItem()
-    if (item === field) return
-
-    const { top, height } = bounds(container)
-    const offset = Math.round((monitor.getClientOffset().y - top) / height)
-
-    onSortPreview(item, field, offset)
-  },
-
-  drop({ field }) {
-    return field
-  }
-}
-
-const DropTargetCollect = (connect, monitor) => ({
-  dt: connect.dropTarget(),
-  isOver: monitor.isOver()
-})
-
-
-const TemplateFieldContainer =
-    DragSource(
-      DND.TEMPLATE.FIELD, DragSourceSpec, DragSourceCollect)(
-        DropTarget(
-          DND.TEMPLATE.FIELD,
-          DropTargetSpec,
-          DropTargetCollect)(TemplateField))
-
-export {
-  TemplateFieldContainer as TemplateField
+TemplateField.propTypes = {
+  field: object.isRequired,
+  isDisabled: bool,
+  isTransient: bool,
+  isSingle: bool,
+  position: number.isRequired,
+  datatypes: array.isRequired,
+  properties: array.isRequired,
+  onInsert: func.isRequired,
+  onRemove: func.isRequired,
+  onSave: func.isRequired,
+  onSort: func.isRequired,
+  onSortPreview: func.isRequired,
+  onSortReset: func.isRequired,
+  onSortStart: func.isRequired
 }
