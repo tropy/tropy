@@ -1,7 +1,6 @@
 import React from 'react'
-import { injectIntl } from 'react-intl'
+import { useIntl } from 'react-intl'
 import cx from 'classnames'
-import { noop } from '../common/util'
 import {
   bool, element, func, node, number, object, oneOf, string
 } from 'prop-types'
@@ -15,126 +14,99 @@ ButtonGroup.propTypes = {
   children: node
 }
 
-class Button extends React.PureComponent {
-  container = React.createRef()
+export const Button = React.memo(({
+  className,
+  icon,
+  isActive,
+  isBlock,
+  isDefault,
+  isDisabled,
+  isPrimary,
+  noFocus,
+  onBlur,
+  onClick,
+  onFocus,
+  onMouseDown,
+  size,
+  tabIndex,
+  text,
+  title,
+  type
+}) => {
 
-  get classes() {
-    return ['btn', this.props.className, `btn-${this.props.size}`, {
-      'active': this.props.isActive,
-      'btn-block': this.props.isBlock,
-      'btn-default': this.props.isDefault,
-      'btn-icon': this.props.icon != null,
-      'btn-primary': this.props.isPrimary,
-      'disabled': this.props.isDisabled
-    }]
+  let container = React.useRef()
+  let intl = useIntl()
+
+  let attr = {
+    className: cx('btn', className, `btn-${size}`, {
+      'active': isActive,
+      'btn-block': isBlock,
+      'btn-default': isDefault,
+      'btn-icon': icon != null,
+      'btn-primary': isPrimary,
+      'disabled': isDisabled
+    }),
+
+    onBlur,
+    onFocus,
+    ref: container,
+    title: title && intl.formatMessage({ id: title })
   }
 
-  get node() {
-    return this.props.noFocus ? 'span' : 'button'
+  if (!noFocus) {
+    attr.disabled = isDisabled
+    attr.type = type
   }
 
-  get text() {
-    let { intl, text } = this.props
-
-    return text ?
-      intl.formatMessage({ id: text }) :
-      null
-  }
-
-  get title() {
-    let { intl, title } = this.props
-
-    return title ?
-      intl.formatMessage({ id: title }) :
-      null
-  }
-
-  get attributes() {
-    let attr = {
-      className: cx(...this.classes),
-      onBlur: this.props.onBlur,
-      onFocus: this.props.onFocus,
-      ref: this.container,
-      title: this.title
-    }
-
-    if (!this.props.noFocus) {
-      attr.disabled = this.props.isDisabled
-      attr.type = this.props.type
-    }
-
-    if (!this.props.isDisabled) {
-      if (this.props.noFocus) {
-        attr.onMouseDown = this.handleMouseDown
-        attr.onClick = this.handleClick
-
-      } else {
-        attr.onClick = this.props.onClick
-        attr.onMouseDown = this.props.onMouseDown
-        attr.tabIndex = this.props.tabIndex
+  if (!isDisabled) {
+    if (noFocus) {
+      attr.handleMouseDown = (event) => {
+        event.preventDefault()
+        onMouseDown?.(event)
       }
-    }
+      attr.onClick = (event) => {
+        event.preventDefault()
+        onClick?.(event)
+      }
 
-    return attr
-  }
-
-  handleClick = (event) => {
-    event.preventDefault()
-
-    if (!this.props.isDisabled && this.props.onClick) {
-      this.props.onClick(event)
-    }
-  }
-
-  handleMouseDown = (event) => {
-    event.preventDefault()
-
-    if (!this.props.isDisabled && this.props.onMouseDown) {
-      this.props.onMouseDown(event)
+    } else {
+      attr.onClick = onClick
+      attr.onMouseDown = onMouseDown
+      attr.tabIndex = tabIndex
     }
   }
 
-  render() {
-    return React.createElement(
-      this.node,
-      this.attributes,
-      this.props.icon,
-      this.text)
-  }
+  return React.createElement(
+    noFocus ? 'span' : 'button',
+    attr,
+    icon,
+    text && intl.formatMessage({ id: text }))
+})
 
-  static propTypes = {
-    className: string,
-    icon: element,
-    intl: object.isRequired,
-    isActive: bool,
-    isBlock: bool,
-    isDefault: bool,
-    isDisabled: bool,
-    isPrimary: bool,
-    noFocus: bool,
-    size: oneOf(['sm', 'md', 'lg']),
-    title: string,
-    text: string,
-    tabIndex: number,
-    type: string.isRequired,
-    onBlur: func.isRequired,
-    onFocus: func.isRequired,
-    onClick: func,
-    onMouseDown: func
-  }
-
-  static defaultProps = {
-    onBlur: noop,
-    onFocus: noop,
-    noFocus: false,
-    size: 'md',
-    tabIndex: -1,
-    type: 'button'
-  }
+Button.propTypes = {
+  className: string,
+  icon: element,
+  intl: object.isRequired,
+  isActive: bool,
+  isBlock: bool,
+  isDefault: bool,
+  isDisabled: bool,
+  isPrimary: bool,
+  noFocus: bool,
+  size: oneOf(['sm', 'md', 'lg']),
+  title: string,
+  text: string,
+  tabIndex: number,
+  type: string.isRequired,
+  onBlur: func,
+  onFocus: func,
+  onClick: func,
+  onMouseDown: func
 }
 
-const ButtonContainer = injectIntl(Button)
-
-export {
-  ButtonContainer as Button
+Button.defaultProps = {
+  noFocus: false,
+  size: 'md',
+  tabIndex: -1,
+  type: 'button'
 }
