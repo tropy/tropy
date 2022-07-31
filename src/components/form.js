@@ -53,7 +53,7 @@ export const Label = React.memo(props => {
   let intl = useIntl()
 
   let title = props.title && intl.formatMessage({ id: props.title })
-  let value = props.value || intl.formatMessage({ id: props.id })
+  let value = intl.formatMessage({ id: props.value || props.id })
 
   return (
     <label
@@ -282,7 +282,7 @@ export const Toggle = ({
       type={type}
       value={value}/>
     <label htmlFor={id} title={title}>
-      {label || <FormattedMessage id={id}/>}
+      <FormattedMessage id={label || id}/>
     </label>
   </div>
 )
