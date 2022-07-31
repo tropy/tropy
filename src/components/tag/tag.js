@@ -67,6 +67,9 @@ export const Tag = React.memo(({
     })
   })
 
+  if (!isReadOnly && !isSelected && onDropItems != null)
+    drop(container)
+
   let handleChange = useCallback((name) => {
     onChange({ name }, tag.id)
   }, [tag, onChange])
@@ -93,19 +96,9 @@ export const Tag = React.memo(({
     onKeyDown(event, tag)
   }
 
-  let connect = useCallback(node => {
-    let isDropTarget = !isReadOnly &&
-        !isSelected &&
-        onDropItems != null
-
-    if (isDropTarget) drop(node)
-
-    container.current = node
-  }, [isReadOnly, isSelected, onDropItems, drop])
-
   return (
     <li
-      ref={connect}
+      ref={container}
       className={cx('tag', {
         active: isSelected,
         mixed: !!tag.mixed,
