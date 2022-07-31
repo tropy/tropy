@@ -4,6 +4,7 @@ import cx from 'classnames'
 import {
   bool, element, func, node, number, object, oneOf, string
 } from 'prop-types'
+import { IconPlusCircle, IconMinusCircle } from './icons.js'
 
 
 export const ButtonGroup = ({ children }) => (
@@ -109,4 +110,29 @@ Button.defaultProps = {
   size: 'md',
   tabIndex: -1,
   type: 'button'
+}
+
+export const PlusMinusControls = ({
+  canAdd,
+  canRemove,
+  onAdd,
+  onRemove
+}) => (
+  <ButtonGroup>
+    <Button
+      icon={<IconPlusCircle/>}
+      isDisabled={!(canAdd && onAdd)}
+      onClick={onAdd}/>
+    <Button
+      icon={<IconMinusCircle/>}
+      isDisabled={!(canRemove && onRemove)}
+      onClick={onRemove}/>
+  </ButtonGroup>
+)
+
+PlusMinusControls.propTypes = {
+  canAdd: bool,
+  canRemove: bool,
+  onAdd: func,
+  onRemove: func
 }
