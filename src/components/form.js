@@ -255,61 +255,54 @@ FormSelect.defaultProps = {
   size: 8
 }
 
-export class Toggle extends React.PureComponent {
-  get label() {
-    return this.props.label || <FormattedMessage id={this.props.id}/>
-  }
+export const Toggle = ({
+  className,
+  id,
+  isDisabled,
+  label,
+  name,
+  onBlur,
+  onChange,
+  onFocus,
+  tabIndex,
+  title,
+  type,
+  value
+}) => (
+  <div className={cx(className, type)}>
+    <input
+      checked={!!value}
+      disabled={isDisabled}
+      id={id}
+      name={name}
+      onBlur={onBlur}
+      onChange={() => onChange({ [name]: !value }, true)}
+      onFocus={onFocus}
+      tabIndex={tabIndex}
+      type={type}
+      value={value}/>
+    <label htmlFor={id} title={title}>
+      {label || <FormattedMessage id={id}/>}
+    </label>
+  </div>
+)
 
-  setInput = (input) => {
-    this.input = input
-  }
+Toggle.propTypes = {
+  className: string,
+  id: string.isRequired,
+  isDisabled: bool,
+  name: string.isRequired,
+  tabIndex: number,
+  label: string,
+  type: oneOf(['checkbox', 'radio']).isRequired,
+  value: bool,
+  onBlur: func,
+  onFocus: func,
+  onChange: func.isRequired
+}
 
-  handleChange = () => {
-    this.props.onChange(set({}, this.props.name, !this.props.value), true)
-  }
-
-  render() {
-    return (
-      <div className={cx(
-        this.props.className,
-        this.props.type
-      )}>
-        <input
-          id={this.props.id}
-          ref={this.setInput}
-          name={this.props.name}
-          type={this.props.type}
-          value={this.props.value}
-          checked={!!this.props.value}
-          disabled={this.props.isDisabled}
-          tabIndex={this.props.tabIndex}
-          onBlur={this.props.onBlur}
-          onFocus={this.props.onFocus}
-          onChange={this.handleChange}/>
-        <label htmlFor={this.props.id} title={this.props.title}>
-          {this.label}
-        </label>
-      </div>
-    )
-  }
-
-  static propTypes = {
-    className: string,
-    id: string.isRequired,
-    isDisabled: bool,
-    name: string.isRequired,
-    tabIndex: number,
-    label: string,
-    type: oneOf(['checkbox', 'radio']).isRequired,
-    value: bool,
-    onBlur: func,
-    onFocus: func,
-    onChange: func.isRequired
-  }
-
-  static defaultProps = {
-    type: 'checkbox'
-  }
+Toggle.defaultProps = {
+  type: 'checkbox'
 }
 
 
