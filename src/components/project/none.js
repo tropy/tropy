@@ -28,7 +28,6 @@ export const NoProject = ({ connect, ...props }) => connect(
         <FormElement>
           <input
             className="form-control input-lg"
-            value=""
             type="text"
             autoFocus/>
         </FormElement>
