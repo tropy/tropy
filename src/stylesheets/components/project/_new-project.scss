@@ -22,7 +22,7 @@
         icon-url("project/tropy-icon-dark.svg") no-repeat 0 0,
         icon-url("project/tropy-icon-light.svg") no-repeat 0 0
     );
-    margin: $space-sm auto 0;
+    margin: $space-sm auto (30px - 12px);
   }
 
   h1 {
@@ -31,11 +31,14 @@
     line-height: $headings-line-height;
     text-align: center;
     letter-spacing: -0.01em;
+    margin-bottom: $space-xxl - 13px;
   }
 
   h2 {
     font-size: 18px;
     line-height: $headings-line-height;
+    margin-top: 40px - 7px;
+    margin-bottom: $space-sm - 4px;
   }
 
   form {
@@ -50,5 +53,13 @@
     color: $new-project-form-text-color;
     padding: 0;
     margin: 0;
+    margin-top: $space-md - 6px;
+  }
+
+  .btn-xl {
+    height: 52px;
+    font-size: 21px;
+    font-weight: 600;
+    margin-top: 40px - 5px;
   }
 }
