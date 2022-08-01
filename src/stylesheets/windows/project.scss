@@ -45,7 +45,6 @@ $theme: "light";
   "../partials/orientation",
   "../partials/transitions";
 
-
 // Components
 // --------------------------------------------------
 
@@ -58,6 +57,7 @@ $theme: "light";
   "../components/icons",
   "../components/search",
   "../components/button",
+  "../components/button-group",
   "../components/tabs",
   "../components/metadata",
   "../components/editable",
@@ -73,7 +73,8 @@ $theme: "light";
   "../components/select",
 
   "../components/project/project",
-  "../components/project/no-project",
+  "../components/project/recent-projects",
+  "../components/project/new-project",
 
   "../components/sidebar/sidebar",
   "../components/sidebar/sort-indicator",

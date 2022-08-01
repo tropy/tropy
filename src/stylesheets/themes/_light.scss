@@ -451,8 +451,12 @@ $option-no-matches-color: var(--shade-5);
 $option-separator-color:  var(--shade-2);
 
 // Recent projects
+$recent-projects-bg: var(--shade-1);
 $project-name-hover-bg:          var(--shade-1-darken-4);
 $project-name-vibrancy-hover-bg: var(--shade-10-4);
+
+// New project
+$new-project-form-text-color: $shade-6;
 
 // Donate button
 $donate-btn-bg:    var(--green-80);

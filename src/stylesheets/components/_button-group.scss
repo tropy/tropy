@@ -4,9 +4,10 @@
 
 .btn-group {
   flex: 0 0 auto;
+  display: flex;
 
   .btn {
-    &:not(:first-child) {
+    & ~ .btn {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
       border-left: 0;
