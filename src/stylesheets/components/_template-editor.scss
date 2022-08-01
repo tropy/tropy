@@ -49,12 +49,6 @@
       opacity: 0;
     }
 
-    .checkbox {
-      label {
-        pointer-events: none; // Prevent dragging
-      }
-    }
-
     .btn-group {
       flex: 0 0 auto;
       width: 2 * ($space-md + $space-min);
