@@ -24,44 +24,46 @@ export const NoProject = ({ connect, ...props }) => connect(
       <figure/>
       <h1>Create a new project</h1>
       <form>
-        <h2>Project name</h2>
-        <FormElement isCompact>
+        <h2>Enter a name for the project</h2>
+        <FormElement>
           <input
             className="form-control input-lg"
             value=""
             type="text"
             autoFocus/>
         </FormElement>
-        <h2>Project type</h2>
-        <ButtonGroup>
-          <Toggle
-            id={"test1"}
-            key={"test1"}
-            name={"type"}
-            tabIndex={0}
-            type="radio"
-            isButton
-            size="lg"
-            label="Standard"
-            value={"standard"}/>
-          <Toggle
-            id={"test2"}
-            key={"test2"}
-            name={"type"}
-            tabIndex={0}
-            type="radio"
-            isButton
-            size="lg"
-            label="Advanced"
-            value={"advanced"}/>
-        </ButtonGroup>
-        <p className="form-text">Copies photos to project bundle on import.</p>
+        <h2>Choose the project type</h2>
+        <div className="form-group">
+          <ButtonGroup>
+            <Toggle
+              id={"test1"}
+              key={"test1"}
+              name={"type"}
+              tabIndex={0}
+              type="radio"
+              isButton
+              size="lg"
+              label="Standard"
+              value={"standard"}/>
+            <Toggle
+              id={"test2"}
+              key={"test2"}
+              name={"type"}
+              tabIndex={0}
+              type="radio"
+              isButton
+              size="lg"
+              label="Advanced"
+              value={"advanced"}/>
+          </ButtonGroup>
+          <p className="form-text">Copies photos to project bundle on import.</p>
+        </div>
         <Button
           isBlock
           isDisabled={!props.file}
           isPrimary
           onClick={props.onComplete}
-          size="lg"
+          size="xl"
           text="Create Project"/>
       </form>
     </div>
