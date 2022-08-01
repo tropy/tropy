@@ -234,7 +234,7 @@ program
   .option('-f, --force', 'force rebuild', false)
   .option('-s, --silent', 'silence rebuilder output', false)
   .option('-H, --skip-headers', 'skip headers download', false)
-  .option('-p, --parallel', 'rebuild in parallel', process.platform !== 'win32')
+  .option('-p, --parallel', 'rebuild in parallel', false)
   .option('--global-libvips', 'do not ignore global libvips', false)
   .action(async (args) => {
     let opts = program.opts()
