@@ -1,79 +1,61 @@
 import React from 'react'
-import { FormattedMessage, useIntl } from 'react-intl'
-import { Input } from './input'
-import { FileSelect } from './file'
-import { Select } from './select'
+import { useIntl } from 'react-intl'
 import cx from 'classnames'
-import { noop, set } from '../common/util'
-import { SASS } from '../constants'
+import { Input } from './input.js'
+import { FileSelect } from './file.js'
+import { Select } from './select.js'
+import { SASS } from '../constants/index.js'
 
 import {
   arrayOf, bool, func, node, number, oneOf, string
 } from 'prop-types'
 
 
-export function Form(props) {
-  return (
-    <form className={cx('form-horizontal', props.className)}>
-      {props.children}
-    </form>
-  )
-}
+export const Form = ({ children, className }) => (
+  <form className={cx('form-horizontal', className)}>
+    {children}
+  </form>
+)
 
 Form.propTypes = {
   children: node,
   className: string
 }
 
-export class FormGroup extends React.PureComponent {
-  get classes() {
-    return {
-      'form-group': true,
-      'compact': this.props.isCompact
-    }
-  }
 
-  render() {
-    return (
-      <div className={cx(this.classes, this.props.className)}>
-        {this.props.children}
-      </div>
-    )
-  }
+export const FormGroup = ({ children, className, isCompact }) => (
+  <div className={cx('form-group', className, {
+    compact: isCompact
+  })}>
+    {children}
+  </div>
+)
 
-  static propTypes = {
-    children: node,
-    className: string,
-    isCompact: bool
-  }
+FormGroup.propTypes = {
+  children: node,
+  className: string,
+  isCompact: bool
 }
 
 
-export const Label = React.memo(props => {
+export const Label = React.memo(({ id, size, title, value }) => {
   let intl = useIntl()
-
-  let title = props.title && intl.formatMessage({ id: props.title })
-  let value = intl.formatMessage({ id: props.value || props.id })
 
   return (
     <label
-      className={cx('control-label', `col-${props.size}`)}
-      title={title}
-      htmlFor={props.id}>
-      {value}
+      className={size && cx('control-label', `col-${size}`)}
+      title={title && intl.formatMessage({ id: title })}
+      htmlFor={id}>
+      {intl.formatMessage({ id: value || id })}
     </label>
   )
 })
 
 Label.propTypes = {
   id: string.isRequired,
-  size: number.isRequired,
+  size: number,
   title: string,
   value: string
-}
-
-Label.defaultProps = {
-  size: 4
 }
 
 export class FormElement extends React.PureComponent {
@@ -144,16 +126,16 @@ export class FormField extends React.PureComponent {
   }
 
   handleBlur = (event) => {
-    this.props.onBlur(this.props.id, event)
+    this.props.onBlur?.(this.props.id, event)
   }
 
   handleChange = (value) => {
-    this.props.onInputChange(set({}, this.props.name, value))
+    this.props.onInputChange?.({ [this.props.name]: value })
   }
 
   handleCommit = (value, { hasChanged }) => {
     if (hasChanged) {
-      this.props.onChange(set({}, this.props.name, value))
+      this.props.onChange?.({ [this.props.name]: value })
     }
   }
 
@@ -195,18 +177,15 @@ export class FormField extends React.PureComponent {
     type: string.isRequired,
     title: string,
     value: string,
-    onBlur: func.isRequired,
-    onChange: func.isRequired,
-    onInputChange: func.isRequired
+    onBlur: func,
+    onChange: func,
+    onInputChange: func
   }
 
   static defaultProps = {
     isReadOnly: false,
     size: 8,
-    type: 'text',
-    onBlur: noop,
-    onChange: noop,
-    onInputChange: noop
+    type: 'text'
   }
 }
 
@@ -281,9 +260,7 @@ export const Toggle = ({
       tabIndex={tabIndex}
       type={type}
       value={value}/>
-    <label htmlFor={id} title={title}>
-      <FormattedMessage id={label || id}/>
-    </label>
+    <Label id={id} title={title} value={label}/>
   </div>
 )
 
@@ -341,9 +318,9 @@ export class FormToggleGroup extends React.PureComponent {
   handleChange = (option) => {
     for (let value in option) {
       if (option[value]) {
-        this.props.onChange(
-          set({}, this.props.name, value === 'null' ? null : value)
-        )
+        this.props.onChange({
+          [this.props.name]: value === 'null' ? null : value
+        })
       }
     }
   }
