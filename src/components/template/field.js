@@ -97,10 +97,12 @@ export const TemplateField = ({
       <fieldset ref={drag}>
         {isDragAndDropEnabled && <IconGrip/>}
         <FormElement
-          id="template.field.property"
+          id={`${position}.template.field.property`}
           isCompact
+          label="template.field.property"
           size={9}>
           <ResourceSelect
+            id={`${position}.template.field.property`}
             options={properties}
             value={field.property}
             maxRows={5}
@@ -114,10 +116,12 @@ export const TemplateField = ({
         <FormField {...propsFor('label')}/>
 
         <FormElement
-          id="template.field.datatype"
+          id={`${position}.template.field.datatype`}
           isCompact
+          label="template.field.datatype"
           size={9}>
           <ResourceSelect
+            id={`${position}.template.field.datatype`}
             options={datatypes}
             value={field.datatype}
             maxRows={5}
