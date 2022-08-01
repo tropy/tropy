@@ -22,6 +22,10 @@
         }
       }
     }
+
+    .frameless & {
+      -webkit-app-region: drag;
+    }
   }
 
   .panel-header & {

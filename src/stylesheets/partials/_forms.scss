@@ -138,11 +138,11 @@ fieldset {
   display: flex;
   padding-right: $padding-base-horizontal;
 
-  &:first-child {
+  &:where(:first-child) {
     padding-top: ($input-height-base - $line-height-computed) / 2;
   }
 
-  &:last-child {
+  &:where(:last-child) {
     padding-bottom: ($input-height-base - $line-height-computed) / 2;
   }
 
@@ -294,4 +294,11 @@ fieldset {
       }
     }
   }
+}
+
+:not(.checkbox) > [type="checkbox"],
+:not(.radio) > [type="radio"] {
+  position: absolute;
+  clip: rect(0 0 0 0);
+  pointer-events: none;
 }

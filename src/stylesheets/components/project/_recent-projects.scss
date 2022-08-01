@@ -1,0 +1,16 @@
+//
+// Recent projects
+// --------------------------------------------------
+
+.recent-projects {
+  flex: 1 1 50%;
+  background-color: $recent-projects-bg;
+
+  .toolbar {
+    .is-blurred & {
+      @if $platform == darwin {
+        background-color: $toolbar-blurred-bg-darwin;
+      }
+    }
+  }
+}

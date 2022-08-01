@@ -1,0 +1,54 @@
+//
+// New project
+// --------------------------------------------------
+
+.new-project {
+  flex: 1 1 50%;
+
+  .toolbar {
+    .is-blurred & {
+      @if $platform == darwin {
+        background-color: $toolbar-blurred-bg-darwin;
+      }
+    }
+  }
+
+  figure {
+    width: 112px;
+    height: 96px;
+    background:
+    if(
+      $theme == "dark",
+        icon-url("project/tropy-icon-dark.svg") no-repeat 0 0,
+        icon-url("project/tropy-icon-light.svg") no-repeat 0 0
+    );
+    margin: $space-sm auto 0;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 600;
+    line-height: $headings-line-height;
+    text-align: center;
+    letter-spacing: -0.01em;
+  }
+
+  h2 {
+    font-size: 18px;
+    line-height: $headings-line-height;
+  }
+
+  form {
+    padding: 0 40px;
+  }
+
+  .btn-toggle {
+    flex: 1 1 0;
+  }
+
+  .form-text {
+    color: $new-project-form-text-color;
+    padding: 0;
+    margin: 0;
+  }
+}

@@ -246,9 +246,9 @@ class Project extends React.Component {
     )
   }
   render() {
-    if (!this.props.project.file || this.state.isProjectClosed) {
+    //if (!this.props.project.file || this.state.isProjectClosed) {
       return this.renderNoProject()
-    }
+    //}
 
     const {
       columns,

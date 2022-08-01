@@ -94,3 +94,15 @@
     }
   }
 }
+
+.btn-toggle {
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: normal;
+
+  input:checked + & {
+    background-color: $brand-primary;
+  }
+}
