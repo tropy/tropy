@@ -31,3 +31,9 @@
     justify-content: space-around;
   }
 }
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}

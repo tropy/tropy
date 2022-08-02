@@ -2,12 +2,13 @@
 // Recent projects
 // --------------------------------------------------
 
-.recent-projects {
+.recent-projects-view {
   flex: 1 1 50%;
   display: flex;
   flex-direction: column;
   background-color: $recent-projects-bg;
   color: #444;
+  min-width: 0;
 
   .toolbar {
     .is-blurred & {
@@ -83,6 +84,19 @@
   .name {
     font-size: $font-size-large;
     margin-top: -10px;
+  }
+
+  .truncate {
+    display: inline-block;
+    vertical-align: top;
+    max-width: calc(100% - #{$space-md});
+  }
+
+  .btn-icon {
+    flex: 0 0 auto;
+    padding: 0;
+    margin-left: $space-min;
+    cursor: pointer;
   }
 
   .stats {

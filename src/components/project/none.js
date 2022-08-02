@@ -3,7 +3,7 @@ import React from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Sidebar, SidebarBody } from '../sidebar'
 import { Titlebar } from '../toolbar'
-import { IconMaze } from '../icons'
+import { IconMaze, IconWarningSm } from '../icons'
 import { Toggle } from '../form'
 import { Button, ButtonGroup } from '../button'
 import { arrayOf, bool, func, string } from 'prop-types'
@@ -15,7 +15,7 @@ export const NoProject = ({ connect, ...props }) => connect(
   <div className={cx('no-project', {
     over: props.isOver && props.canDrop
   })}>
-    <div className="recent-projects">
+    <div className="recent-projects-view">
       <Titlebar isOptional/>
       <nav>
         <ol className="recent-projects">
@@ -26,9 +26,16 @@ export const NoProject = ({ connect, ...props }) => connect(
               onClick={() => props.onProjectOpen(path)}
               title={path}>
               <IconMaze/>
-              <div>
+              <div className="flex-col">
                 <div className="name">
                   <div className="truncate">{basename(path)}</div>
+                  {
+                    Math.random() > 0.75 && (
+                      <Button
+                        icon={<IconWarningSm/>}
+                        title="Find Project File"/>
+                    )
+                  }
                 </div>
                 <ul className="stats">
                   <li>1 day ago</li>
