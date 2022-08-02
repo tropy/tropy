@@ -17,11 +17,11 @@
     width: 112px;
     height: 96px;
     background:
-    if(
-      $theme == "dark",
+      if(
+        $theme == "dark",
         icon-url("project/tropy-icon-dark.svg") no-repeat 0 0,
         icon-url("project/tropy-icon-light.svg") no-repeat 0 0
-    );
+      );
     margin: $space-sm auto (30px - 12px);
   }
 
