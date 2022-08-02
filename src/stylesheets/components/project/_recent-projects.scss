@@ -4,13 +4,98 @@
 
 .recent-projects {
   flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
   background-color: $recent-projects-bg;
+  color: #444;
 
   .toolbar {
     .is-blurred & {
       @if $platform == darwin {
         background-color: $toolbar-blurred-bg-darwin;
       }
+    }
+  }
+
+  nav {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .recent-projects {
+    padding: 0 (40px - $space-md);
+    overflow-y: auto;
+  }
+
+  .recent-project {
+    display: flex;
+    align-items: center;
+    gap: $default-padding-horizontal;
+    padding: ($space-md + 1px) $space-md $space-md;
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #ebebeb;
+      padding-bottom: ($space-md + 1px);
+      margin-bottom: -1px;
+      z-index: 1;
+
+      &::before {
+        content: none;
+      }
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: $space-md;
+      left: $space-md;
+      height: 1px;
+      background-color: #ddd;
+
+      @include variant(".recent-project:first-child") {
+        content: none;
+      }
+    }
+
+    .icon-maze {
+      flex: 0 0 auto;
+
+      svg {
+        width: $space-xl;
+        height: $space-xl;
+        color: $maze-color;
+        margin-bottom: -1px;
+        margin-left: -2px;
+
+        @include state(".recent-project:hover") {
+          color: darken(#ccc, 2%);
+        }
+      }
+    }
+  }
+
+  .name {
+    font-size: $font-size-large;
+    margin-top: -10px;
+  }
+
+  .stats {
+    display: flex;
+    gap: $space-xs;
+    white-space: nowrap;
+    font-size: $font-size-small;
+    color: #777;
+    margin-top: 1px;
+    margin-bottom: -10px;
+
+    :first-child {
+      color: #444;
     }
   }
 }
