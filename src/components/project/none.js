@@ -17,7 +17,29 @@ export const NoProject = ({ connect, ...props }) => connect(
   })}>
     <div className="recent-projects">
       <Titlebar isOptional/>
-      List of recent projects
+      <nav>
+        <ol className="recent-projects">
+          {props.recent.map(path =>
+            <li
+              className="recent-project"
+              key={path}
+              onClick={() => props.onProjectOpen(path)}
+              title={path}>
+              <IconMaze/>
+              <div>
+                <div className="name">
+                  <div className="truncate">{basename(path)}</div>
+                </div>
+                <ul className="stats">
+                  <li>1 day ago</li>
+                  <li>{Math.round(1167 * Math.random())} items</li>
+                  <li>{Math.round(4959 * Math.random())} photos</li>
+                  <li>{Math.round(182 * Math.random())} notes</li>
+                </ul>
+              </div>
+            </li>)}
+        </ol>
+      </nav>
     </div>
     <div className="new-project">
       <Titlebar isOptional/>

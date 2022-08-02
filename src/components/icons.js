@@ -391,7 +391,7 @@ export const IconList = i('List', (
 ))
 
 export const IconMaze = i('Maze', (
-  <svg width="16" height="16">
+  <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
       <path d="M16,0v15H9v-1h4v-2h1v2h1v-3h-3v2h-1V8h1v2h3V5h-4V4h4V1h-5v1h4v1H9V0H16z M5,13h5V8H5v1h4v3H6v-1h2v-1H4V7h9v2h1V6h-4V4H8V0H1v15h7v-1H4v-2H3v2H2V1h5v3H6V2H5v3h4v1H4V2H3v9h2V13L5,13z"/>
     </g>
