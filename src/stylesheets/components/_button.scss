@@ -98,11 +98,20 @@
 .btn-toggle {
   border: 1px solid #ddd;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  line-height: normal;
+  transition: none;
 
-  input:checked + & {
+  @include input-btn-focus(":has(:focus-visible)");
+
+  &:has(:checked) {
+    color: #fff;
     background-color: $brand-primary;
+    border-color: transparent;
+  }
+
+  label {
+    flex: 1 1 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
