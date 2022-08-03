@@ -38,12 +38,12 @@ FormGroup.propTypes = {
 }
 
 
-export const Label = React.memo(({ id, size, title, value }) => {
+export const Label = React.memo(({ className, id, size, title, value }) => {
   let intl = useIntl()
 
   return (
     <label
-      className={size && cx('control-label', `col-${size}`)}
+      className={cx(className, size && ['control-label', `col-${size}`])}
       title={title && intl.formatMessage({ id: title })}
       htmlFor={id}>
       {intl.formatMessage({ id: value || id })}
@@ -52,6 +52,7 @@ export const Label = React.memo(({ id, size, title, value }) => {
 })
 
 Label.propTypes = {
+  className: string,
   id: string.isRequired,
   size: number,
   title: string,
