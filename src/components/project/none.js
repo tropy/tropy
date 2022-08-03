@@ -8,6 +8,7 @@ import { Toggle } from '../form'
 import { Button, ButtonGroup } from '../button'
 import { arrayOf, bool, func, string } from 'prop-types'
 import { FormElement } from '../form'
+import { SearchField } from '../search'
 import cx from 'classnames'
 
 
@@ -17,6 +18,7 @@ export const NoProject = ({ connect, ...props }) => connect(
   })}>
     <div className="recent-projects-view">
       <Titlebar isOptional/>
+      <SearchField/>
       <nav>
         <ol className="recent-projects">
           {props.recent.map(path =>
