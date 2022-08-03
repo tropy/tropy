@@ -284,35 +284,23 @@ Toggle.defaultProps = {
 }
 
 
-export class FormToggle extends React.PureComponent {
-  get classes() {
-    return [
-      `col-${this.props.size}`,
-      `col-offset-${SASS.GRID.SIZE - this.props.size}`
-    ]
-  }
+export const FormToggle = ({ isCompact, size, ...props }) => (
+  <FormGroup isCompact={isCompact}>
+    <Toggle {...props} className={
+      cx(`col-${size}`, `col-offset-${SASS.GRID.SIZE - size}`)
+    }/>
+  </FormGroup>
+)
 
-  render() {
-    const { isCompact, ...props } = this.props
+FormToggle.propTypes = {
+  ...Toggle.propTypes,
+  size: number.isRequired,
+  isCompact: bool
+}
 
-    return (
-      <FormGroup isCompact={isCompact}>
-        <Toggle className={cx(...this.classes)} {...props}/>
-      </FormGroup>
-    )
-  }
-
-  static propTypes = {
-    ...Toggle.propTypes,
-    size: number.isRequired,
-    isCompact: bool,
-    label: string
-  }
-
-  static defaultProps = {
-    size: 8,
-    type: 'checkbox'
-  }
+FormToggle.defaultProps = {
+  size: 8,
+  type: 'checkbox'
 }
 
 export class FormToggleGroup extends React.PureComponent {
