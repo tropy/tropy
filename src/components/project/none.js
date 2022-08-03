@@ -63,26 +63,14 @@ export const NoProject = ({ connect, ...props }) => connect(
         <h2>Choose the project type</h2>
         <div className="form-group">
           <ButtonGroup>
-            <Toggle
-              id={"test1"}
-              key={"test1"}
-              name={"type"}
-              tabIndex={0}
-              type="radio"
-              isButton
-              size="lg"
-              label="Standard"
-              value={"standard"}/>
-            <Toggle
-              id={"test2"}
-              key={"test2"}
-              name={"type"}
-              tabIndex={0}
-              type="radio"
-              isButton
-              size="lg"
-              label="Advanced"
-              value={"advanced"}/>
+            <div className="btn btn-lg btn-toggle">
+              <input id="radio-1" name="project-type" type="radio" checked/>
+              <label for="radio-1">Standard</label>
+            </div>
+            <div className="btn btn-lg btn-toggle">
+              <input id="radio-2" name="project-type" type="radio"/>
+              <label for="radio-2">Advanced</label>
+            </div>
           </ButtonGroup>
           <p className="form-text">Copies photos to project bundle on import.</p>
         </div>
