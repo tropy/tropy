@@ -76,6 +76,11 @@
   font-size: $font-size-large;
   height: $input-height-large;
   padding: 0 $padding-large-horizontal;
+  border-radius: $border-radius-base;
+}
+
+.btn-xl {
+  border-radius: $border-radius-large;
 }
 
 .btn-block {
