@@ -18,6 +18,29 @@
     }
   }
 
+  .search {
+    width: auto;
+    margin-top: 15px;
+    margin-bottom: $space-md - 10px;
+
+    .icon-search {
+      left: 40px;
+      color: #bbb;
+    }
+
+    .form-control {
+      border-color: transparent;
+      background-color: transparent;
+      padding-left: 60px;
+      font-size: 18px;
+
+      &:focus {
+        border-color: transparent !important;
+        box-shadow: none !important;
+      }
+    }
+  }
+
   nav {
     flex: 1 1 0;
     min-height: 0;
@@ -26,7 +49,7 @@
   }
 
   .recent-projects {
-    padding: 0 (40px - $space-md);
+    padding: 0 (40px - $space-sm);
     overflow-y: auto;
   }
 
@@ -34,14 +57,14 @@
     display: flex;
     align-items: center;
     gap: $default-padding-horizontal;
-    padding: ($space-md + 1px) $space-md $space-md;
+    padding: ($space-sm + 1px) $space-sm $space-sm;
     border-radius: 5px;
     position: relative;
     cursor: pointer;
 
     &:hover {
       background-color: #ebebeb;
-      padding-bottom: ($space-md + 1px);
+      padding-bottom: ($space-sm + 1px);
       margin-bottom: -1px;
       z-index: 1;
 
@@ -54,8 +77,8 @@
       content: "";
       position: absolute;
       top: 0;
-      right: $space-md;
-      left: $space-md;
+      right: $space-sm;
+      left: $space-sm;
       height: 1px;
       background-color: #ddd;
 
@@ -71,7 +94,7 @@
         width: $space-xl;
         height: $space-xl;
         color: $maze-color;
-        margin-bottom: -1px;
+        margin-bottom: -2px;
         margin-left: -2px;
 
         @include state(".recent-project:hover") {
@@ -105,8 +128,11 @@
     white-space: nowrap;
     font-size: $font-size-small;
     color: #777;
-    margin-top: 1px;
     margin-bottom: -10px;
+
+    @media (min-resolution: 2dppx) {
+      margin-bottom: -10.5px;
+    }
 
     :first-child {
       color: #444;
