@@ -1,10 +1,7 @@
 import { basename } from 'path'
 import React from 'react'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { Sidebar, SidebarBody } from '../sidebar'
 import { Titlebar } from '../toolbar'
 import { IconMaze, IconWarningSm, IconXMedium } from '../icons'
-import { Toggle } from '../form'
 import { Button, ButtonGroup } from '../button'
 import { arrayOf, bool, func, string } from 'prop-types'
 import { FormElement } from '../form'
@@ -68,11 +65,11 @@ export const NoProject = ({ connect, ...props }) => connect(
           <ButtonGroup>
             <div className="btn btn-lg btn-toggle">
               <input id="radio-1" name="project-type" type="radio" checked/>
-              <label for="radio-1">Standard</label>
+              <label htmlFor="radio-1">Standard</label>
             </div>
             <div className="btn btn-lg btn-toggle">
               <input id="radio-2" name="project-type" type="radio"/>
-              <label for="radio-2">Advanced</label>
+              <label htmlFor="radio-2">Advanced</label>
             </div>
           </ButtonGroup>
           <p className="form-text">Copies photos to project bundle on import.</p>
