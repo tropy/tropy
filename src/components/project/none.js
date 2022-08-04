@@ -3,7 +3,7 @@ import React from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Sidebar, SidebarBody } from '../sidebar'
 import { Titlebar } from '../toolbar'
-import { IconMaze, IconWarningSm } from '../icons'
+import { IconMaze, IconWarningSm, IconXMedium } from '../icons'
 import { Toggle } from '../form'
 import { Button, ButtonGroup } from '../button'
 import { arrayOf, bool, func, string } from 'prop-types'
@@ -46,6 +46,7 @@ export const NoProject = ({ connect, ...props }) => connect(
                   <li>{Math.round(182 * Math.random())} notes</li>
                 </ul>
               </div>
+              <Button icon={<IconXMedium/>}/>
             </li>)}
         </ol>
       </nav>

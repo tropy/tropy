@@ -102,40 +102,50 @@
         }
       }
     }
-  }
 
-  .name {
-    font-size: $font-size-large;
-    margin-top: -10px;
-  }
+    .name {
+      font-size: $font-size-large;
+      margin-top: -10px;
 
-  .truncate {
-    display: inline-block;
-    vertical-align: top;
-    max-width: calc(100% - #{$space-md});
-  }
-
-  .btn-icon {
-    flex: 0 0 auto;
-    padding: 0;
-    margin-left: $space-min;
-    cursor: pointer;
-  }
-
-  .stats {
-    display: flex;
-    gap: $space-xs;
-    white-space: nowrap;
-    font-size: $font-size-small;
-    color: #777;
-    margin-bottom: -10px;
-
-    @media (min-resolution: 2dppx) {
-      margin-bottom: -10.5px;
+      .btn-icon {
+        flex: 0 0 auto;
+        padding: 0;
+        margin-left: $space-min;
+        cursor: pointer;
+      }
     }
 
-    :first-child {
-      color: #444;
+    .truncate {
+      display: inline-block;
+      vertical-align: top;
+      max-width: calc(100% - #{$space-md});
+    }
+
+    .stats {
+      display: flex;
+      gap: $space-xs;
+      white-space: nowrap;
+      font-size: $font-size-small;
+      color: #777;
+      margin-bottom: -10px;
+
+      @media (min-resolution: 2dppx) {
+        margin-bottom: -10.5px;
+      }
+
+      :first-child {
+        color: #444;
+      }
+    }
+
+    > .btn-icon {
+      visibility: hidden;
+      margin-right: 3px;
+      cursor: pointer;
+
+      @include state(".recent-project:hover") {
+        visibility: visible;
+      }
     }
   }
 }
