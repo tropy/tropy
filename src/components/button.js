@@ -132,7 +132,7 @@ export const ToggleButton = ({
   value
 }) => (
   <Toggle
-    className={cx('btn', `btn-${size}`)}
+    className={cx('btn', 'btn-toggle', `btn-${size}`)}
     id={text || name}
     isChecked={isChecked}
     isDisabled={isDisabled}

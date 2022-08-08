@@ -253,7 +253,7 @@ export const Toggle = ({
   isChecked ??= value === true
 
   return (
-    <div className={cx(className, type)}>
+    <div className={cx(className || type)}>
       <input
         checked={isChecked}
         disabled={isDisabled}
