@@ -7,7 +7,7 @@ import { Select } from './select.js'
 import { SASS } from '../constants/index.js'
 
 import {
-  arrayOf, bool, func, node, number, oneOf, string
+  arrayOf, bool, func, node, number, oneOf, oneOfType, string
 } from 'prop-types'
 
 
@@ -238,6 +238,7 @@ FormSelect.defaultProps = {
 export const Toggle = ({
   className,
   id,
+  isChecked,
   isDisabled,
   label,
   name,
@@ -248,32 +249,41 @@ export const Toggle = ({
   title,
   type,
   value
-}) => (
-  <div className={cx(className, type)}>
-    <input
-      checked={!!value}
-      disabled={isDisabled}
-      id={id}
-      name={name}
-      onBlur={onBlur}
-      onChange={() => onChange({ [name]: !value }, true)}
-      onFocus={onFocus}
-      tabIndex={tabIndex}
-      type={type}
-      value={value}/>
-    <Label id={id} title={title} value={label}/>
-  </div>
-)
+}) => {
+  isChecked ??= value === true
+
+  return (
+    <div className={cx(className, type)}>
+      <input
+        checked={isChecked}
+        disabled={isDisabled}
+        id={id}
+        name={name}
+        onBlur={onBlur}
+        onChange={() => onChange({
+          [name]: typeof value === 'boolean' ?
+            !value :
+            isChecked ? null : value
+        }, true)}
+        onFocus={onFocus}
+        tabIndex={tabIndex}
+        type={type}
+        value={`${value}`}/>
+      <Label id={id} title={title} value={label}/>
+    </div>
+  )
+}
 
 Toggle.propTypes = {
   className: string,
   id: string.isRequired,
+  isChecked: bool,
   isDisabled: bool,
   name: string.isRequired,
   tabIndex: number,
   label: string,
   type: oneOf(['checkbox', 'radio']).isRequired,
-  value: bool,
+  value: oneOfType([bool, string]),
   onBlur: func,
   onFocus: func,
   onChange: func.isRequired
@@ -303,51 +313,47 @@ FormToggle.defaultProps = {
   type: 'checkbox'
 }
 
-export class FormToggleGroup extends React.PureComponent {
-  handleChange = (option) => {
-    for (let value in option) {
-      if (option[value]) {
-        this.props.onChange({
-          [this.props.name]: value === 'null' ? null : value
-        })
-      }
-    }
-  }
+export const FormToggleGroup = ({
+  id,
+  isCompact,
+  name,
+  onChange,
+  options,
+  size,
+  tabIndex,
+  value
+}) => (
+  <FormElement
+    id={`${id}.label`}
+    size={size}
+    isCompact={isCompact}>
+    {options.map(option =>
+      <Toggle
+        id={`${id}.option.${option}`}
+        isChecked={option === value}
+        key={`${option}`}
+        name={name}
+        onChange={onChange}
+        tabIndex={tabIndex}
+        type="radio"
+        value={option}/>)}
+  </FormElement>
+)
 
-  render() {
-    return (
-      <FormElement
-        id={`${this.props.id}.label`}
-        size={this.props.size}
-        isCompact={this.props.isCompact}>
-        {this.props.options.map(value =>
-          <Toggle
-            id={`${this.props.id}.option.${value}`}
-            key={`${value}`}
-            name={`${value}`}
-            tabIndex={this.props.tabIndex}
-            type="radio"
-            value={this.props.value === value}
-            onChange={this.handleChange}/>)}
-      </FormElement>
-    )
-  }
+FormToggleGroup.propTypes = {
+  id: string.isRequired,
+  isCompact: bool,
+  isDisabled: bool,
+  name: string.isRequired,
+  options: arrayOf(string).isRequired,
+  size: number.isRequired,
+  tabIndex: number,
+  value: string,
+  onChange: func.isRequired
+}
 
-  static propTypes = {
-    id: string.isRequired,
-    isCompact: bool,
-    isDisabled: bool,
-    name: string.isRequired,
-    options: arrayOf(string).isRequired,
-    size: number.isRequired,
-    tabIndex: number,
-    value: string,
-    onChange: func.isRequired
-  }
-
-  static defaultProps = {
-    size: 8
-  }
+FormToggleGroup.defaultProps = {
+  size: 8
 }
 
 export class FormText extends React.PureComponent {
