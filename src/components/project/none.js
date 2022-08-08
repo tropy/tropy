@@ -66,6 +66,7 @@ export const NoProject = ({ connect, ...props }) => connect(
           <ToggleButtonGroup
             id="project.new.type"
             name="type"
+            size="lg"
             options={['standard', 'advanced']}
             onChange={console.log}
             value={'standard'}/>
