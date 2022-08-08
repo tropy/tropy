@@ -122,29 +122,34 @@
     }
 
     .stats {
-      display: flex;
-      gap: $space-xs;
       white-space: nowrap;
       font-size: $font-size-small;
       color: $recent-project-stats-color;
       margin-bottom: -10px;
+      @include css-truncation;
 
       @media (min-resolution: 2dppx) {
         margin-bottom: -10.5px;
       }
 
+      li {
+        display: inline;
+        margin-left: $space-xs;
+      }
+
       :first-child {
         color: $recent-projects-color;
+        margin-left: 0;
       }
     }
 
     > .btn-icon {
-      visibility: hidden;
+      display: none;
       margin-right: 3px;
       cursor: pointer;
 
       @include state(".recent-project:hover") {
-        visibility: visible;
+        display: inline-flex;
       }
     }
   }
