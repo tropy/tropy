@@ -84,7 +84,6 @@ en:
   project:
     none: Drop a project file here or create a {newProject}
     empty: Drop your photos into Tropy to get started
-    new: new project
     recent: Recent Projects
     corrupted: >
       Your project file may be damaged and manual steps necessary to fix it.
@@ -92,6 +91,16 @@ en:
     readOnly: >
       Your project file is locked and cannot be modified.
       To unlock, change the file permissions and open the project again.
+    new:
+      title: Create a new project 
+      name: Enter a name for the project
+      type:
+        label: Choose the project type
+        option:
+          advanced: Advanced
+          standard: Standard
+        hint:
+          standard: Copies photos to project bundle on import.
   wizard:
     project:
       title: Create a new project

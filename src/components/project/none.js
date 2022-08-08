@@ -1,10 +1,11 @@
 import { basename } from 'path'
 import React from 'react'
+import { FormattedMessage } from 'react-intl'
 import { Titlebar } from '../toolbar'
 import { IconMaze, IconWarningSm, IconXMedium } from '../icons'
-import { Button, ButtonGroup } from '../button'
+import { Button, ToggleButtonGroup } from '../button'
 import { arrayOf, bool, func, string } from 'prop-types'
-import { FormElement } from '../form'
+import { FormElement, FormGroup } from '../form'
 import { SearchField } from '../search'
 import cx from 'classnames'
 
@@ -51,29 +52,27 @@ export const NoProject = ({ connect, ...props }) => connect(
     <div className="new-project">
       <Titlebar isOptional/>
       <figure/>
-      <h1>Create a new project</h1>
+      <h1><FormattedMessage id="project.new.title"/></h1>
       <form>
-        <h2>Enter a name for the project</h2>
+        <h2><FormattedMessage id="project.new.name"/></h2>
         <FormElement>
           <input
             className="form-control input-lg"
             type="text"
             autoFocus/>
         </FormElement>
-        <h2>Choose the project type</h2>
-        <div className="form-group">
-          <ButtonGroup>
-            <div className="btn btn-lg btn-toggle">
-              <input id="radio-1" name="project-type" type="radio" checked/>
-              <label htmlFor="radio-1">Standard</label>
-            </div>
-            <div className="btn btn-lg btn-toggle">
-              <input id="radio-2" name="project-type" type="radio"/>
-              <label htmlFor="radio-2">Advanced</label>
-            </div>
-          </ButtonGroup>
-          <p className="form-text">Copies photos to project bundle on import.</p>
-        </div>
+        <h2><FormattedMessage id="project.new.type.label"/></h2>
+        <FormGroup>
+          <ToggleButtonGroup
+            id="project.new.type"
+            name="type"
+            options={['standard', 'advanced']}
+            onChange={console.log}
+            value={'standard'}/>
+          <p className="form-text">
+            <FormattedMessage id="project.new.type.hint.standard"/>
+          </p>
+        </FormGroup>
         <Button
           isBlock
           isDisabled={!props.file}
