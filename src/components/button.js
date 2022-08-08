@@ -1,11 +1,20 @@
 import React from 'react'
 import { useIntl } from 'react-intl'
 import cx from 'classnames'
-import {
-  bool, element, func, node, number, object, oneOf, string
-} from 'prop-types'
+import { Toggle } from './form.js'
 import { IconPlusCircle, IconMinusCircle } from './icons.js'
 
+import {
+  arrayOf,
+  bool,
+  element,
+  func,
+  node,
+  number,
+  object,
+  oneOf,
+  string
+} from 'prop-types'
 
 export const ButtonGroup = ({ children }) => (
   <div className="btn-group">{children}</div>
@@ -110,6 +119,74 @@ Button.defaultProps = {
   size: 'md',
   tabIndex: -1,
   type: 'button'
+}
+
+export const ToggleButton = ({
+  isChecked,
+  isDisabled,
+  name,
+  onChange,
+  size,
+  text,
+  tabIndex,
+  value
+}) => (
+  <Toggle
+    className={cx('btn', `btn-${size}`)}
+    id={text || name}
+    isChecked={isChecked}
+    isDisabled={isDisabled}
+    name={name}
+    onChange={onChange}
+    tabIndex={tabIndex}
+    type="radio"
+    value={value}/>
+)
+
+ToggleButton.propTypes = {
+  isChecked: bool,
+  isDisabled: bool,
+  name: string.isRequired,
+  onChange: func.isRequired,
+  size: oneOf(['sm', 'md', 'lg']),
+  text: string,
+  tabIndex: number,
+  value: string
+}
+
+ToggleButton.defaultProps = {
+  size: 'md',
+  tabIndex: -1
+}
+
+export const ToggleButtonGroup = ({
+  id,
+  name,
+  onChange,
+  options,
+  tabIndex,
+  value
+}) => (
+  <ButtonGroup>
+    {options.map(option =>
+      <ToggleButton
+        isChecked={option === value}
+        key={`${option}`}
+        name={name}
+        onChange={onChange}
+        text={`${id || name}.option.${option}`}
+        tabIndex={tabIndex}
+        value={option}/>)}
+  </ButtonGroup>
+)
+
+ToggleButtonGroup.propTypes = {
+  id: string,
+  name: string.isRequired,
+  onChange: func.isRequired,
+  options: arrayOf(string).isRequired,
+  tabIndex: number,
+  value: string
 }
 
 export const PlusMinusControls = ({
