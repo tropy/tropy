@@ -451,13 +451,16 @@ $option-no-matches-color: var(--shade-5);
 $option-separator-color:  var(--shade-2);
 
 // Recent projects
-$recent-projects-bg:             var(--shade-1);
-$project-name-hover-bg:          var(--shade-1-darken-4);
-$project-name-vibrancy-hover-bg: var(--shade-10-4);
-$maze-color:                     var(--shade-4);
+$recent-projects-bg:         var(--shade-1);
+$recent-projects-color:      var(--shade-8);
+$recent-project-hover-bg:    var(--shade-1-darken-4);
+$recent-project-border:      var(--shade-3);
+$maze-color:                 var(--shade-4);
+$maze-hover-color:           var(--shade-4-darken-2);
+$recent-project-stats-color: var(--shade-6);
 
 // New project
-$new-project-form-text-color: $shade-6;
+$new-project-form-text-color: var(--shade-6);
 
 // Donate button
 $donate-btn-bg:    var(--green-80);

@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   background-color: $recent-projects-bg;
-  color: #444;
+  color: $recent-projects-color;
   min-width: 0;
 
   .toolbar {
@@ -25,7 +25,7 @@
 
     .icon-search {
       left: 40px;
-      color: #bbb;
+      color: $input-color-placeholder;
     }
 
     .form-control {
@@ -63,7 +63,7 @@
     cursor: pointer;
 
     &:hover {
-      background-color: #ebebeb;
+      background-color: $recent-project-hover-bg;
       padding-bottom: ($space-sm + 1px);
       margin-bottom: -1px;
       z-index: 1;
@@ -80,7 +80,7 @@
       right: $space-sm;
       left: $space-sm;
       height: 1px;
-      background-color: #ddd;
+      background-color: $recent-project-border;
 
       @include variant(".recent-project:first-child") {
         content: none;
@@ -98,7 +98,7 @@
         margin-left: -2px;
 
         @include state(".recent-project:hover") {
-          color: darken(#ccc, 2%);
+          color: $maze-hover-color;
         }
       }
     }
@@ -126,7 +126,7 @@
       gap: $space-xs;
       white-space: nowrap;
       font-size: $font-size-small;
-      color: #777;
+      color: $recent-project-stats-color;
       margin-bottom: -10px;
 
       @media (min-resolution: 2dppx) {
@@ -134,7 +134,7 @@
       }
 
       :first-child {
-        color: #444;
+        color: $recent-projects-color;
       }
     }
 

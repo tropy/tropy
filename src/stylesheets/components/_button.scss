@@ -101,15 +101,15 @@
 }
 
 .btn-toggle {
-  border: 1px solid #ddd;
+  border: 1px solid $input-border;
   display: flex;
   transition: none;
 
   @include input-btn-focus(":has(:focus-visible)");
 
   &:has(:checked) {
-    color: #fff;
-    background-color: $brand-primary;
+    color: $btn-primary-color;
+    background-color: $btn-primary-bg;
     border-color: transparent;
   }
 
