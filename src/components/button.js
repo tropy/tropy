@@ -163,6 +163,7 @@ export const ToggleButtonGroup = ({
   id,
   name,
   onChange,
+  size,
   options,
   tabIndex,
   value
@@ -174,6 +175,7 @@ export const ToggleButtonGroup = ({
         key={`${option}`}
         name={name}
         onChange={onChange}
+        size={size}
         text={`${id || name}.option.${option}`}
         tabIndex={tabIndex}
         value={option}/>)}
@@ -184,9 +186,14 @@ ToggleButtonGroup.propTypes = {
   id: string,
   name: string.isRequired,
   onChange: func.isRequired,
+  size: oneOf(['sm', 'md', 'lg']),
   options: arrayOf(string).isRequired,
   tabIndex: number,
   value: string
+}
+
+ToggleButtonGroup.defaultProps = {
+  size: 'md'
 }
 
 export const PlusMinusControls = ({
