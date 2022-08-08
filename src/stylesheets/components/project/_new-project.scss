@@ -5,6 +5,10 @@
 .new-project {
   flex: 1 1 50%;
 
+  @if $theme == "dark" {
+    @include form-shading-level(0);
+  }
+
   .toolbar {
     .is-blurred & {
       @if $platform == darwin {

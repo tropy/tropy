@@ -38,6 +38,7 @@
   #{--shade-1-lighten-2}:  lighten($shade-1, 2%);
   #{--shade-1-lighten-4}:  lighten($shade-1, 4%);
   #{--shade-1-lighten-6}:  lighten($shade-1, 6%);
+  #{--shade-1-darken-2}:   darken($shade-1, 2%);
   #{--shade-1-darken-4}:   darken($shade-1, 4%);
   #{--shade-1-60}:         rgba($shade-1, 60%);
   #{--shade-1-80}:         rgba($shade-1, 80%);
@@ -112,6 +113,13 @@
 
 // Forms
 :root {
+
+  // Level 0
+  #{--level-0-border}: var(--shade-1-darken-2);
+  #{--level-0-bg}:     var(--shade-2);
+  // todo
+
+  // Level 1 (default)
 
   // Level 2
   #{--level-2-border}:                var(--shade-1-lighten-2);

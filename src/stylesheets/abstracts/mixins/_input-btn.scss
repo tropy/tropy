@@ -21,7 +21,8 @@
     background-color: var(--level-#{$n}-fieldset-bg);
   }
 
-  .form-control {
+  .form-control,
+  .btn-toggle:not(:has(:checked)) {
     border-color: var(--level-#{$n}-border);
     background-color: var(--level-#{$n}-bg);
 
