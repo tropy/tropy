@@ -7,13 +7,10 @@ import { Button, ToggleButtonGroup } from '../button'
 import { arrayOf, bool, func, string } from 'prop-types'
 import { FormElement, FormGroup } from '../form'
 import { SearchField } from '../search'
-import cx from 'classnames'
 
 
-export const NoProject = ({ connect, ...props }) => connect(
-  <div className={cx('no-project', {
-    over: props.isOver && props.canDrop
-  })}>
+export const NoProject = (props) => (
+  <div className="no-project">
     <div className="recent-projects-view">
       <Titlebar isOptional/>
       <SearchField/>
@@ -87,9 +84,6 @@ export const NoProject = ({ connect, ...props }) => connect(
 )
 
 NoProject.propTypes = {
-  canDrop: bool,
-  isOver: bool,
-  connect: func.isRequired,
   onProjectCreate: func.isRequired,
   onProjectOpen: func.isRequired,
   recent: arrayOf(string).isRequired
