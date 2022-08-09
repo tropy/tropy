@@ -237,9 +237,6 @@ class Project extends React.Component {
   renderNoProject() {
     return (
       <NoProject
-        connect={this.props.connectDropTarget}
-        canDrop={this.props.canDrop}
-        isOver={this.props.isOver}
         onProjectCreate={this.props.onProjectCreate}
         onProjectOpen={this.props.onProjectOpen}
         recent={ARGS.recent}/>
