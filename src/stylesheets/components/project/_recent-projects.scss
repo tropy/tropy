@@ -48,12 +48,12 @@
     flex-direction: column;
   }
 
-  .recent-projects {
+  .project-files {
     padding: 0 (40px - $space-sm);
     overflow-y: auto;
   }
 
-  .recent-project {
+  .project-file {
     display: flex;
     align-items: center;
     gap: $default-padding-horizontal;
@@ -82,7 +82,7 @@
       height: 1px;
       background-color: $recent-project-border;
 
-      @include variant(".recent-project:first-child") {
+      @include variant(".project-file:first-child") {
         content: none;
       }
     }
@@ -97,7 +97,7 @@
         margin-bottom: -2px;
         margin-left: -2px;
 
-        @include state(".recent-project:hover") {
+        @include state(".project-file:hover") {
           color: $maze-hover-color;
         }
       }
@@ -148,7 +148,7 @@
       margin-right: 3px;
       cursor: pointer;
 
-      @include state(".recent-project:hover") {
+      @include state(".project-file:hover") {
         display: inline-flex;
       }
     }

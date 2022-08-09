@@ -101,6 +101,22 @@ en:
           standard: Standard
         hint:
           standard: Copies photos to project bundle on import.
+    stats:
+      photos: >
+        {photos, plural,
+          =0 {No photos}
+          one {1 photo}
+          other {# photos}}
+      items: >
+        {items, plural,
+          =0 {No items}
+          one {1 item}
+          other {# items}}
+      notes: >
+        {notes, plural,
+          =0 {No notes}
+          one {1 note}
+          other {# notes}}
   wizard:
     project:
       title: Create a new project

@@ -1,12 +1,11 @@
-import { basename } from 'path'
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Titlebar } from '../toolbar'
-import { IconMaze, IconWarningSm, IconXMedium } from '../icons'
-import { Button, ToggleButtonGroup } from '../button'
-import { arrayOf, bool, func, string } from 'prop-types'
-import { FormElement, FormGroup } from '../form'
-import { SearchField } from '../search'
+import { Titlebar } from '../toolbar.js'
+import { Button, ToggleButtonGroup } from '../button.js'
+import { arrayOf, func, string } from 'prop-types'
+import { FormElement, FormGroup } from '../form.js'
+import { SearchField } from '../search/field.js'
+import { ProjectFileList } from './file.js'
 
 
 export const NoProject = (props) => (
@@ -15,35 +14,9 @@ export const NoProject = (props) => (
       <Titlebar isOptional/>
       <SearchField/>
       <nav>
-        <ol className="recent-projects">
-          {props.recent.map(path =>
-            <li
-              className="recent-project"
-              key={path}
-              onClick={() => props.onProjectOpen(path)}
-              title={path}>
-              <IconMaze/>
-              <div className="flex-col">
-                <div className="name">
-                  <div className="truncate">{basename(path)}</div>
-                  {
-                    Math.random() > 0.75 && (
-                      <Button
-                        icon={<IconWarningSm/>}
-                        title="Find Project File"/>
-                    )
-                  }
-                </div>
-                <ul className="stats">
-                  <li>1 day ago</li>
-                  <li>{Math.round(1167 * Math.random())} items</li>
-                  <li>{Math.round(4959 * Math.random())} photos</li>
-                  <li>{Math.round(182 * Math.random())} notes</li>
-                </ul>
-              </div>
-              <Button icon={<IconXMedium/>}/>
-            </li>)}
-        </ol>
+        <ProjectFileList
+          files={props.recent}
+          onClick={props.onProjectOpen}/>
       </nav>
     </div>
     <div className="new-project">
