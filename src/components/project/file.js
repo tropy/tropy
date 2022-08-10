@@ -9,13 +9,15 @@ import { RelativeDate } from '../date.js'
 
 export const ProjectFileList = ({
   files,
-  onClick
+  onRemove,
+  onSelect
 }) => (
   <ol className="project-files">
     {files.map(path =>
       <ProjectFile
         key={path}
-        onClick={onClick}
+        onClick={onSelect}
+        onRemove={onRemove}
         path={path}/>
     )}
   </ol>
@@ -23,16 +25,19 @@ export const ProjectFileList = ({
 
 ProjectFileList.propTypes = {
   files: arrayOf(string).isRequired,
-  onClick: func
+  onRemove: func,
+  onSelect: func
 }
 
 export const ProjectFile = ({
   path,
-  onClick
+  onConsolidate,
+  onClick,
+  onRemove
 }) => (
   <li
     className="project-file"
-    onClick={() => onClick(path)}
+    onClick={() => onClick?.(path)}
     title={path}>
     <IconMaze/>
     <div className="flex-col">
@@ -42,6 +47,7 @@ export const ProjectFile = ({
           Math.random() > 0.75 && (
             <Button
               icon={<IconWarningSm/>}
+              onClick={() => onConsolidate?.(path)}
               title="project.new.find-missing"/>
           )
         }
@@ -52,13 +58,17 @@ export const ProjectFile = ({
         photos={Math.round(4959 * Math.random())}
         notes={Math.round(182 * Math.random())}/>
     </div>
-    <Button icon={<IconXMedium/>}/>
+    <Button
+      icon={<IconXMedium/>}
+      onClick={() => onRemove?.(path)}/>
   </li>
 )
 
 ProjectFile.propTypes = {
   path: string.isRequired,
-  onClick: func
+  onConsolidate: func,
+  onClick: func,
+  onRemove: func
 }
 
 export const ProjectFileStats = ({ lastModified, ...values }) =>

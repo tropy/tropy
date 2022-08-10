@@ -7,7 +7,21 @@ import project from '../../actions/project.js'
 
 export const RecentProjects = () => {
   let dispatch = useDispatch()
+
   let files = ARGS.recent
+  // TODO add useArgs that handles ARGS updates
+
+  let handleConsolidate = (path) => {
+    // TODO
+    // open filepicker in dirname(path)
+    // if file picked: remove old path from recent list and open new path
+  }
+
+  let handleRemove = (path) => {
+    // TODO
+    // send path to main thread for removal
+    // have main thread update ARGS
+  }
 
   return (
     <div className="recent-projects-view">
@@ -16,7 +30,9 @@ export const RecentProjects = () => {
       <nav>
         <ProjectFileList
           files={files}
-          onClick={path => dispatch(project.open(path))}/>
+          onConsolidate={handleConsolidate}
+          onClick={path => dispatch(project.open(path))}
+          onRemove={handleRemove}/>
       </nav>
     </div>
   )
