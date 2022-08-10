@@ -4,21 +4,13 @@ import { Titlebar } from '../toolbar.js'
 import { Button, ToggleButtonGroup } from '../button.js'
 import { arrayOf, func, string } from 'prop-types'
 import { FormElement, FormGroup } from '../form.js'
-import { SearchField } from '../search/field.js'
-import { ProjectFileList } from './file.js'
+import { RecentProjects } from './recent.js'
 
 
 export const NoProject = (props) => (
   <div className="no-project">
-    <div className="recent-projects-view">
-      <Titlebar isOptional/>
-      <SearchField/>
-      <nav>
-        <ProjectFileList
-          files={props.recent}
-          onClick={props.onProjectOpen}/>
-      </nav>
-    </div>
+    <RecentProjects/>
+
     <div className="new-project">
       <Titlebar isOptional/>
       <figure/>
