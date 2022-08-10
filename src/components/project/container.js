@@ -2,7 +2,6 @@ import { extname } from 'path'
 import debounce from 'lodash.debounce'
 import React from 'react'
 import { connect } from 'react-redux'
-import ARGS from '../../args'
 import { ProjectView } from './view'
 import { ItemView } from '../item'
 import { DragLayer } from '../drag-layer'
@@ -234,18 +233,13 @@ class Project extends React.Component {
     event.preventDefault()
   }
 
-  renderNoProject() {
-    return (
-      <NoProject
-        onProjectCreate={this.props.onProjectCreate}
-        onProjectOpen={this.props.onProjectOpen}
-        recent={ARGS.recent}/>
-    )
-  }
   render() {
-    //if (!this.props.project.file || this.state.isProjectClosed) {
-      return this.renderNoProject()
-    //}
+    if (true || !this.props.project.file || this.state.isProjectClosed) {
+      return (
+        <NoProject
+          onProjectCreate={this.props.onProjectCreate}/>
+      )
+    }
 
     const {
       columns,
