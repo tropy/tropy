@@ -5,7 +5,6 @@ export function useDebounce(fn, { wait = 250 } = {}) {
   let ref = useRef()
 
   useEffect(() => {
-    console.log('useDebounce :: debounce')
     ref.current = debounce(fn, wait)
 
     return () => {
@@ -14,7 +13,6 @@ export function useDebounce(fn, { wait = 250 } = {}) {
   }, [fn, wait])
 
   return useMemo(() => {
-    console.log('useDebounce :: inside useMemo')
     let debounced = (...args) => ref.current?.(...args)
 
     debounced.flush = () => ref.current?.flush()
