@@ -1,84 +1,70 @@
-import React from 'react'
-import { injectIntl } from 'react-intl'
-import { bool, func, object, string } from 'prop-types'
-import { IconSearch, IconXSmall } from '../icons'
-import { Button } from '../button'
-import { Input } from '../input'
-import { TABS } from '../../constants'
-import { blank } from '../../common/util'
-import { on, off } from '../../dom'
-import debounce from 'lodash.debounce'
+import React, { useRef } from 'react'
+import { useIntl } from 'react-intl'
+import { bool, func, number, string } from 'prop-types'
+import { useEvent } from '../../hooks/use-event.js'
+import { useDebounce } from '../../hooks/use-debounce.js'
+import { useGlobalEvent } from '../../hooks/use-global-event.js'
+import { IconSearch, IconXSmall } from '../icons.js'
+import { Button } from '../button.js'
+import { Input } from '../input.js'
+import { TABS } from '../../constants/index.js'
+import { blank } from '../../common/util.js'
 
 
-class SearchField extends React.PureComponent {
-  input = React.createRef()
+export const SearchField = React.memo(({
+  isDisabled,
+  onSearch,
+  query,
+  tabIndex
+}) => {
+  let input = useRef()
 
-  componentDidMount() {
-    on(document, 'global:find', this.focus)
-  }
+  useGlobalEvent('find', () => {
+    if (!isDisabled) input.current?.focus()
+  })
 
-  componentWillUnmount() {
-    off(document, 'global:find', this.focus)
-  }
+  // TODO the Input component should probably do the translation
+  let intl = useIntl()
+  let placeholder = intl.formatMessage({ id: 'toolbar.search.placeholder' })
 
-  get placeholder() {
-    return this.props.intl.formatMessage({ id: 'toolbar.search.placeholder' })
-  }
+  let handleChange = useDebounce(onSearch)
 
-  focus = () => {
-    if (!this.props.isDisabled) {
-      this.input.current?.focus()
+  let handleCancel = useEvent(() => {
+    handleChange.cancel()
+
+    if (!blank(query)) {
+      onSearch('')
     }
-  }
+  })
 
-  handleCancel = () => {
-    this.handleChange.cancel()
+  return (
+    <div className="search">
+      <IconSearch/>
+      <Input
+        ref={input}
+        className="search-input form-control"
+        isDisabled={isDisabled}
+        tabIndex={tabIndex}
+        value={query}
+        placeholder={placeholder}
+        onCancel={handleCancel}
+        onChange={handleChange}
+        onCommit={handleChange.flush}/>
+      {!blank(query) &&
+        <Button
+          icon={<IconXSmall/>}
+          onClick={handleCancel}/>}
+    </div>
+  )
+})
 
-    if (!blank(this.props.query)) {
-      this.props.onSearch('')
-    }
-  }
-
-  handleChange = debounce(query => {
-    this.props.onSearch(query)
-  }, 250)
-
-  handleCommit = () => {
-    this.handleChange.flush()
-  }
-
-  render() {
-    return (
-      <div className="search">
-        <IconSearch/>
-        <Input
-          ref={this.input}
-          className="search-input form-control"
-          isDisabled={this.props.isDisabled}
-          tabIndex={TABS.SearchField}
-          value={this.props.query}
-          placeholder={this.placeholder}
-          onCancel={this.handleCancel}
-          onChange={this.handleChange}
-          onCommit={this.handleCommit}/>
-        {!blank(this.props.query) &&
-          <Button
-            icon={<IconXSmall/>}
-            onClick={this.handleCancel}/>}
-      </div>
-    )
-  }
-
-  static propTypes = {
-    intl: object,
-    isDisabled: bool,
-    query: string.isRequired,
-    onSearch: func.isRequired
-  }
+SearchField.propTypes = {
+  isDisabled: bool,
+  onSearch: func.isRequired,
+  query: string.isRequired,
+  tabIndex: number
 }
 
-const SearchFieldContainer = injectIntl(SearchField)
-
-export {
-  SearchFieldContainer as SearchField
+SearchField.defaultProps = {
+  tabIndex: TABS.SearchField
 }
