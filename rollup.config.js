@@ -91,7 +91,10 @@ export default [
         exportConditions: ['node'],
         preferBuiltins: true
       }),
-      babel({ babelHelpers: 'bundled' }),
+      babel({
+        exclude: 'node_modules/**',
+        babelHelpers: 'bundled'
+      }),
       json(),
       commonjs({
         ignoreGlobal: true,
