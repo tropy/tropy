@@ -6,6 +6,7 @@ import { SearchField } from '../search/field.js'
 import { ProjectFileList } from './file.js'
 import project from '../../actions/project.js'
 import { reload } from '../../slices/project-files.js'
+import { identity } from '../../common/util.js'
 
 
 export const RecentProjects = () => {
@@ -20,7 +21,9 @@ export const RecentProjects = () => {
 
 
   let files = useSelector(state =>
-    recent.map(path => state.projectFiles[path] || { path }))
+    recent
+      .map(path => state.projectFiles[path])
+      .filter(identity))
 
   let handleConsolidate = (path) => {
     // TODO
