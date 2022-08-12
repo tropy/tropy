@@ -1,7 +1,3 @@
-import { STORAGE } from '../constants'
+import { createAction } from '@reduxjs/toolkit'
 
-export default {
-  reload(payload, meta = {}) {
-    return { type: STORAGE.RELOAD, payload, meta }
-  }
-}
+export const reload = createAction('storage/reload')

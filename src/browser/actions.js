@@ -1,3 +1,5 @@
+export * as storage from '../actions/storage.js'
+
 export { default as activity } from '../actions/activity'
 export { default as api } from '../actions/api'
 export { default as cache } from '../actions/cache'
@@ -14,5 +16,4 @@ export { default as photo } from '../actions/photo'
 export { default as project } from '../actions/project'
 export { default as selection } from '../actions/selection'
 export { default as settings } from '../actions/settings'
-export { default as storage } from '../actions/storage'
 export { default as tag } from '../actions/tag'
