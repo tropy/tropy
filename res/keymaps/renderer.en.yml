@@ -52,7 +52,9 @@ en:
       clear:
         - Escape
         - Home
-      edit: F2
+      edit:
+        - Enter
+        - F2
     ItemIterator: &ItemIterator
       preview: Space
       open: Enter
@@ -169,19 +171,20 @@ en:
       remove:
         - Backspace
         - Delete
-      commit: Enter
+      edit:
+        - Enter
+        - F2
       clear: Escape
+    TagPanel: &TagPanel
+      remove:
+        - Backspace
+        - Delete
+      commit: Enter
   darwin:
     global: *global
     Esper: *Esper
-    Sidebar: &Sidebar
-      next: ArrowDown
-      prev: ArrowUp
-      expand: ArrowRight
-      collapse: ArrowLeft
-      clear:
-        - Escape
-        - Home
+    Sidebar:
+      <<: *Sidebar
       edit: Enter
     ItemIterator:
       preview: Space
@@ -231,5 +234,8 @@ en:
     ItemPanel: *ItemPanel
     NoteList: *NoteList
     NotePad: *NotePad
-    TagList: *TagList
+    TagList:
+      <<: *TagList
+      edit: Enter
+    TagPanel: *TagPanel
   win32: *linux

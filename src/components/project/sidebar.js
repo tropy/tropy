@@ -189,6 +189,11 @@ class ProjectSidebar extends React.PureComponent {
     }
   }
 
+  handleTagEdit = (tag) => {
+    this.props.onEdit({ tag: { id: tag.id } })
+  }
+
+
   handleKeyDown = (event) => {
     switch (match(this.props.keymap.Sidebar, event)) {
       case 'prev':
@@ -306,6 +311,7 @@ class ProjectSidebar extends React.PureComponent {
                   onContextMenu={this.handleContextMenu}
                   onCreate={this.props.onTagCreate}
                   onDropItems={this.props.onItemTagAdd}
+                  onEdit={this.handleTagEdit}
                   onEditCancel={this.props.onEditCancel}
                   onRemove={this.props.onTagDelete}
                   onSave={this.props.onTagSave}

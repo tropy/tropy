@@ -1,5 +1,6 @@
+import { TYPE } from '../constants/index.js'
 
-export async function save(db, { text, type }) {
+export async function save(db, { text, type = TYPE.TEXT }) {
   let v = await db.get(`
     SELECT value_id AS id
       FROM metadata_values

@@ -1,4 +1,4 @@
-import { tropy, xsd } from '../ontology/ns'
+import { tropy, xsd } from '../ontology/ns.js'
 
 export default {
   DATE: tropy.date,
