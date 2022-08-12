@@ -5,19 +5,21 @@ export function useDebounce(fn, { wait = 250 } = {}) {
   let ref = useRef()
 
   useEffect(() => {
-    ref.current = debounce(fn, wait)
+    if (typeof fn === 'function')
+      ref.current = debounce(fn, wait)
+    else
+      ref.current = null
 
     return () => {
       ref.current?.flush()
     }
   }, [fn, wait])
 
-  return useMemo(() => {
-    let debounced = (...args) => ref.current?.(...args)
-
-    debounced.flush = () => ref.current?.flush()
-    debounced.cancel = () => ref.current?.cancel()
-
-    return debounced
-  }, [])
+  return useMemo(() => Object.assign(
+    (...args) => ref.current?.(...args),
+    {
+      flush: () => ref.current?.flush(),
+      cancel: () => ref.current?.cancel()
+    }
+  ), [])
 }
