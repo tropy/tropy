@@ -221,6 +221,7 @@ export function *main() {
     aux.START = Date.now()
 
     yield all([
+      call(restore, 'projectFiles'),
       call(restore, 'recent'),
       call(restore, 'settings'),
       call(restore, 'ui')
@@ -258,6 +259,7 @@ export function *main() {
 
   } finally {
     yield all([
+      call(persist, 'projectFiles'),
       call(persist, 'recent'),
       call(persist, 'settings'),
       call(persist, 'ui')

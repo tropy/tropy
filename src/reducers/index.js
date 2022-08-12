@@ -1,3 +1,5 @@
+export { default as projectFiles } from '../slices/project-files.js'
+
 export * from './activity'
 export * from './context'
 export * from './edit'
