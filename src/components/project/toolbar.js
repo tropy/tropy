@@ -42,6 +42,7 @@ export class ProjectToolbar extends React.PureComponent {
         </Toolbar.Center>
         <Toolbar.Right>
           <SearchField
+            focus="find"
             query={this.props.query}
             isDisabled={this.props.isDisabled}
             onSearch={this.props.onSearch}/>

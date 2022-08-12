@@ -12,6 +12,7 @@ import { blank } from '../../common/util.js'
 
 
 export const SearchField = React.memo(({
+  focus,
   isDisabled,
   onSearch,
   query,
@@ -19,7 +20,7 @@ export const SearchField = React.memo(({
 }) => {
   let input = useRef()
 
-  useGlobalEvent('find', () => {
+  useGlobalEvent(focus, () => {
     if (!isDisabled) input.current?.focus()
   })
 
@@ -59,6 +60,7 @@ export const SearchField = React.memo(({
 })
 
 SearchField.propTypes = {
+  focus: string,
   isDisabled: bool,
   onSearch: func.isRequired,
   query: string.isRequired,

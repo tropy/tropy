@@ -7,10 +7,12 @@ export function useGlobalEvent(name, callback) {
   let handler = useEvent(callback)
 
   useEffect(() => {
-    on(document, `global:${name}`, handler, { passive: true })
+    if (name) {
+      on(document, `global:${name}`, handler, { passive: true })
 
-    return () => {
-      off(document, `global:${name}`, handler, { passive: true })
+      return () => {
+        off(document, `global:${name}`, handler, { passive: true })
+      }
     }
   }, [name, handler])
 }
