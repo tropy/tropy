@@ -1,15 +1,26 @@
-import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import ARGS from '../../args.js'
 import { Titlebar } from '../toolbar.js'
 import { SearchField } from '../search/field.js'
 import { ProjectFileList } from './file.js'
 import project from '../../actions/project.js'
+import { reload } from '../../slices/project-files.js'
+
 
 export const RecentProjects = () => {
   let dispatch = useDispatch()
 
-  let files = ARGS.recent
-  // TODO add useArgs that handles ARGS updates
+  let recent = ARGS.recent
+  // TODO add useArgs that handles ARGS updates (or get via window context?)
+
+  useEffect(() => {
+    dispatch(reload(recent))
+  }, [recent, dispatch])
+
+
+  let files = useSelector(state =>
+    recent.map(path => state.projectFiles[path] || { path }))
 
   let handleConsolidate = (path) => {
     // TODO
