@@ -96,7 +96,7 @@
     "sqleton": "^2.0.0",
     "stylelint": "^14.0.1",
     "stylelint-config-recommended-scss": "^7.0.0",
-    "stylelint-config-standard": "^26.0.0",
+    "stylelint-config-standard": "^27.0.0",
     "stylelint-scss": "^4.0.0",
     "unzip-crx-3": "^0.2.0"
   },
@@ -109,6 +109,7 @@
     "@inukshuk/exif": "^2.0.0",
     "@koa/router": "^12.0.0",
     "@pixi/filter-adjustment": "^4.0.0",
+    "@reduxjs/toolkit": "^1.8.4",
     "@tweenjs/tween.js": "^18.6.4",
     "chokidar": "^3.5.1",
     "classnames": "^2.2.6",
