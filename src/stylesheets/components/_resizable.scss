@@ -2,9 +2,6 @@
 // Resizable
 // --------------------------------------------------
 
-$zindex-resizable: 1000 !default;
-$resizable-threshold: 8px !default;
-
 .resizable {
   flex: 0 0 auto;
   display: flex;
