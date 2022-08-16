@@ -1,4 +1,4 @@
-import { unlink } from 'node:fs/promises'
+import { rm } from 'node:fs/promises'
 import { mktmp } from './tmp.js'
 import { Database } from '../../src/common/db.js'
 
@@ -33,7 +33,7 @@ export function mkdbtmp(name = ':memory:', init, ...args) {
     db.current = null
 
     if (!isInMemory)
-      await unlink(file)
+      await rm(file)
   })
 
   return db

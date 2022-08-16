@@ -1,11 +1,10 @@
-import { mkdtempSync } from 'fs'
-import { rm } from 'fs/promises'
-import { tmpdir } from 'os'
-import { join } from 'path'
+import fs from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
 export function mkdtmp() {
-  let dir = mkdtempSync(join(tmpdir(), 'tropy-test-'))
-  after(() => rm(dir, { recursive: true }))
+  let dir = fs.mkdtempSync(join(tmpdir(), 'tropy-test-'))
+  after(() => fs.promises.rm(dir, { recursive: true }))
   return dir
 }
 
