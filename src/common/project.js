@@ -1,22 +1,29 @@
-import assert from 'node:assert'
 import { stat } from 'node:fs/promises'
+import { join } from 'node:path'
 import { extname } from 'node:path'
 import { Database } from './db.js'
 
+export function getProjectType(path) {
+  switch (extname(path)) {
+    case '.tpy':
+      return TPY
+    case '.tpm':
+      return TPM
+    default:
+      throw new Error(`unknown project file extension ${path}`)
+  }
+}
 
 export async function pstat(path, modifiedSince) {
+  let type = getProjectType(path)
+  let dbFile = (type === TPM) ? join(path, 'tropy.sqlite') : path
 
-  let ext = extname(path)
-  assert(ext === '.tpy', `unknown file extension "${ext}"`)
-
-  // TODO managed project
-
-  let { mtimeMs } = await stat(path)
+  let { mtimeMs } = await stat(dbFile)
 
   if (modifiedSince > mtimeMs)
     return null
 
-  let db = new Database(path, 'r', { max: 1 })
+  let db = new Database(dbFile, 'r', { max: 1 })
   let stats = await db.get(PROJECT_STATS)
 
   stats.path = path
@@ -24,6 +31,10 @@ export async function pstat(path, modifiedSince) {
 
   return stats
 }
+
+const TPY = 'tpy'
+const TPM = 'tpm'
+
 
 const NUM_ITEMS =
   'SELECT count(id) FROM items LEFT OUTER JOIN trash USING (id)'
