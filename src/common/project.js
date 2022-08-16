@@ -1,16 +1,55 @@
-import { stat } from 'node:fs/promises'
+import assert from 'node:assert'
+import { stat, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { extname } from 'node:path'
+import { v4 as uuid } from 'uuid'
 import { Database } from './db.js'
+import { select, into } from './query.js'
 
-export function getProjectType(path) {
-  switch (extname(path)) {
-    case '.tpy':
-      return TPY
-    case '.tpm':
-      return TPM
-    default:
-      throw new Error(`unknown project file extension ${path}`)
+
+export async function create(path, schema, {
+  autoclose = true,
+  name = 'Tropy',
+  base = null,
+  id = uuid()
+} = {}) {
+  try {
+    let type = getProjectType(path)
+    let dbFile = path
+    let store = null
+
+    if (type === TPM) {
+      dbFile = join(path, 'tropy.sqlite')
+      store = 'assets'
+      base = 'project'
+
+      await mkdir(join(path, store), { recursive: true })
+    }
+
+    assert([null, 'project', 'home'].include(base),
+      `project base not supported: "${base}"`)
+
+    var db = new Database(dbFile, 'wx+', { max: 1 })
+
+    await db.read(schema)
+    await db.run(...into('project').insert({
+      project_id: id,
+      name,
+      base,
+      store
+    }))
+
+    if (autoclose) {
+      await db.close()
+      db = null
+    }
+
+    return db
+
+
+  } catch (e) {
+    await db?.close()
+    throw e
   }
 }
 
@@ -24,7 +63,7 @@ export async function pstat(path, modifiedSince) {
     return null
 
   let db = new Database(dbFile, 'r', { max: 1 })
-  let stats = await db.get(PROJECT_STATS)
+  let stats = await db.get(projectStats.query)
 
   stats.path = path
   stats.lastModified = mtimeMs
@@ -32,24 +71,32 @@ export async function pstat(path, modifiedSince) {
   return stats
 }
 
+export function getProjectType(path) {
+  switch (extname(path)) {
+    case '.tpy':
+      return TPY
+    case '.tpm':
+      return TPM
+    default:
+      throw new Error(`unknown project file extension ${path}`)
+  }
+}
+
 const TPY = 'tpy'
 const TPM = 'tpm'
 
+const projectStats =
+  select({
+    id: 'project_id',
+    name: 'name',
+    items:
+      select('count(id)')
+        .from('items')
+        .outer.join('trash', { using: 'id' }),
+    photos:
+      select('count(id)')
+        .from('photos')
+        .outer.join('trash', { using: 'id' }),
+    notes: select('count(note_id)').from('notes')
 
-const NUM_ITEMS =
-  'SELECT count(id) FROM items LEFT OUTER JOIN trash USING (id)'
-
-const NUM_PHOTOS =
-  'SELECT count(id) FROM photos LEFT OUTER JOIN trash USING (id)'
-
-const NUM_NOTES =
-  'SELECT count(note_id) FROM notes'
-
-const PROJECT_STATS = `
-    SELECT
-      project_id AS id,
-      name,
-      (${NUM_ITEMS}) AS items,
-      (${NUM_PHOTOS}) AS photos,
-      (${NUM_NOTES}) AS notes
-    FROM project LIMIT 1`
+  }).from('project').limit(1)
