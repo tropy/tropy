@@ -285,7 +285,8 @@ export class Select extends ConditionalQuery {
     return (
       `SELECT${this.isDistinct ? ' DISTINCT' : ''} ${
         entries(this.col)
-          .map(([a, n]) => n === a ? n : `${n} AS ${a}`)
+          .map(([a, n]) => (n === a) ?
+            n : `${(n instanceof Query) ? `(${n.query})` : n} AS ${a}`)
           .join(', ') || '*'
       }`
     )
