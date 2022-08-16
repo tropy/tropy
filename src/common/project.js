@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { stat, mkdir } from 'node:fs/promises'
+import { access, stat, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { extname } from 'node:path'
 import { v4 as uuid } from 'uuid'
@@ -23,13 +23,18 @@ export async function create(path, schema, {
       store = 'assets'
       base = 'project'
 
-      await mkdir(join(path, store), { recursive: true })
+      await mkdir(path)
+      await mkdir(join(path, store))
+
+    } else {
+      assert(await access(dbFile).then(() => false, () => true),
+        `project file exists: "${dbFile}"`)
+
+      assert([null, 'project', 'home'].includes(base),
+        `project base not supported: "${base}"`)
     }
 
-    assert([null, 'project', 'home'].include(base),
-      `project base not supported: "${base}"`)
-
-    var db = new Database(dbFile, 'wx+', { max: 1 })
+    var db = new Database(dbFile, 'w+', { max: 1 })
 
     await db.read(schema)
     await db.run(...into('project').insert({
@@ -38,6 +43,8 @@ export async function create(path, schema, {
       base,
       store
     }))
+
+    // TODO enable WAL for TPM
 
     if (autoclose) {
       await db.close()
