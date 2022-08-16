@@ -2,7 +2,7 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Titlebar } from '../toolbar.js'
 import { Button, ToggleButtonGroup } from '../button.js'
-import { arrayOf, func, string } from 'prop-types'
+import { func } from 'prop-types'
 import { FormElement, FormGroup } from '../form.js'
 import { RecentProjects } from './recent.js'
 
@@ -38,9 +38,9 @@ export const NoProject = (props) => (
         </FormGroup>
         <Button
           isBlock
-          isDisabled={!props.file}
+          isDisabled
           isPrimary
-          onClick={props.onComplete}
+          onClick={props.onProjectCreate}
           size="xl"
           text="Create Project"/>
       </form>
@@ -50,6 +50,5 @@ export const NoProject = (props) => (
 
 NoProject.propTypes = {
   onProjectCreate: func.isRequired,
-  onProjectOpen: func.isRequired,
-  recent: arrayOf(string).isRequired
+  onProjectOpen: func.isRequired
 }

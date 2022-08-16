@@ -25,13 +25,13 @@ export const RecentProjects = () => {
       .map(path => state.projectFiles[path])
       .filter(identity))
 
-  let handleConsolidate = (path) => {
+  let handleConsolidate = () => {
     // TODO
     // open filepicker in dirname(path)
     // if file picked: remove old path from recent list and open new path
   }
 
-  let handleRemove = (path) => {
+  let handleRemove = () => {
     // TODO
     // send path to main thread for removal
     // have main thread update ARGS
