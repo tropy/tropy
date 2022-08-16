@@ -16,6 +16,12 @@ global.F = new Proxy({
     }
   },
 
+  schema(name) {
+    return {
+      path: join(ROOT, '../../db/schema', `${name}.sql`)
+    }
+  },
+
   plugins(...args) {
     return {
       path: join(ROOT, 'plugins', ...args)
