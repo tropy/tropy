@@ -25,7 +25,7 @@ describe('common/project', () => {
 
     it('rejects files with unknown extensions', () =>
       expect(pstat('test.txt'))
-        .to.eventually.be.rejectedWith('unknown file extension ".txt"'))
+        .to.eventually.be.rejectedWith('unknown project file extension'))
 
     it('rejects missing files', () =>
       expect(pstat('test.tpy'))
