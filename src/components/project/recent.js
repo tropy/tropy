@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ARGS from '../../args.js'
 import { Titlebar } from '../toolbar.js'
@@ -6,11 +6,13 @@ import { SearchField } from '../search/field.js'
 import { ProjectFileList } from './file.js'
 import project from '../../actions/project.js'
 import { reload } from '../../slices/project-files.js'
-import { identity } from '../../common/util.js'
+import { match } from '../../collate.js'
 
 
 export const RecentProjects = () => {
   let dispatch = useDispatch()
+
+  let [query, setQuery] = useState('')
 
   let recent = ARGS.recent
   // TODO add useArgs that handles ARGS updates (or get via window context?)
@@ -23,7 +25,7 @@ export const RecentProjects = () => {
   let files = useSelector(state =>
     recent
       .map(path => state.projectFiles[path])
-      .filter(identity))
+      .filter(file => file && (!query || match(file.name, query))))
 
   let handleConsolidate = () => {
     // TODO
@@ -40,7 +42,9 @@ export const RecentProjects = () => {
   return (
     <div className="recent-projects-view">
       <Titlebar isOptional/>
-      <SearchField/>
+      <SearchField
+        onSearch={setQuery}
+        query={query}/>
       <nav>
         <ProjectFileList
           files={files}
