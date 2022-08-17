@@ -79,7 +79,7 @@ export async function pstat(path, modifiedSince) {
 }
 
 export function getProjectType(path) {
-  switch (extname(path)) {
+  switch (extname(path).toLowerClass()) {
     case '.tpy':
       return TPY
     case '.tpm':
@@ -89,8 +89,8 @@ export function getProjectType(path) {
   }
 }
 
-const TPY = 'tpy'
-const TPM = 'tpm'
+export const TPY = 'tpy'
+export const TPM = 'tpm'
 
 const projectStats =
   select({
