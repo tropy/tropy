@@ -44,6 +44,7 @@ export const RecentProjects = () => {
       <Titlebar isOptional/>
       <SearchField
         onSearch={setQuery}
+        placeholder="project.recent.search.placeholder"
         query={query}/>
       <nav>
         <ProjectFileList

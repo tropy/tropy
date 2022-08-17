@@ -15,18 +15,16 @@ export const SearchField = React.memo(({
   focus,
   isDisabled,
   onSearch,
+  placeholder,
   query,
   tabIndex
 }) => {
+  let intl = useIntl()
   let input = useRef()
 
   useGlobalEvent(focus, () => {
     if (!isDisabled) input.current?.focus()
   })
-
-  // TODO the Input component should probably do the translation
-  let intl = useIntl()
-  let placeholder = intl.formatMessage({ id: 'toolbar.search.placeholder' })
 
   let handleChange = useDebounce(onSearch)
 
@@ -47,7 +45,8 @@ export const SearchField = React.memo(({
         isDisabled={isDisabled}
         tabIndex={tabIndex}
         value={query}
-        placeholder={placeholder}
+        // TODO the Input component should probably do the translation
+        placeholder={intl.formatMessage({ id: placeholder })}
         onCancel={handleCancel}
         onChange={handleChange}
         onCommit={handleChange.flush}/>
@@ -63,10 +62,12 @@ SearchField.propTypes = {
   focus: string,
   isDisabled: bool,
   onSearch: func.isRequired,
+  placeholder: string.isRequired,
   query: string.isRequired,
   tabIndex: number
 }
 
 SearchField.defaultProps = {
+  placeholder: 'toolbar.search.placeholder',
   tabIndex: TABS.SearchField
 }
