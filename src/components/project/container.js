@@ -6,7 +6,8 @@ import { ProjectView } from './view'
 import { ItemView } from '../item'
 import { DragLayer } from '../drag-layer'
 import { DND, DropTarget, hasProjectFiles } from '../dnd'
-import { NoProject } from './none'
+import { NewProject } from './new.js'
+import { RecentProjects } from './recent.js'
 import { PROJECT } from '../../constants'
 import { emit, on, off, ensure, isInput, reflow } from '../../dom'
 import cx from 'classnames'
@@ -31,6 +32,12 @@ import {
 
 const { MODE } = PROJECT
 
+const NoProject = () => (
+  <div className="no-project">
+    <RecentProjects/>
+    <NewProject/>
+  </div>
+)
 
 class Project extends React.Component {
   container = React.createRef()
@@ -236,10 +243,7 @@ class Project extends React.Component {
   render() {
     // eslint-disable-next-line no-constant-condition
     if (true || !this.props.project.file || this.state.isProjectClosed) {
-      return (
-        <NoProject
-          onProjectCreate={this.props.onProjectCreate}/>
-      )
+      return <NoProject/>
     }
 
     const {
@@ -348,7 +352,6 @@ class Project extends React.Component {
     onContextMenu: func.isRequired,
     onItemImport: func.isRequired,
     onPhotoConsolidate: func.isRequired,
-    onProjectCreate: func.isRequired,
     onProjectOpen: func.isRequired,
     onModeChange: func.isRequired,
     onMetadataSave: func.isRequired,
@@ -427,10 +430,6 @@ export const ProjectContainer = connect(
 
     onOpenInFolder(...args) {
       dispatch(act.shell.open(...args))
-    },
-
-    onProjectCreate() {
-      dispatch(act.project.create())
     },
 
     onProjectOpen(path) {
