@@ -19,7 +19,7 @@ export async function create(path, schema, {
     let store = null
 
     if (type === TPM) {
-      dbFile = join(path, 'tropy.sqlite')
+      dbFile = join(path, 'project.tpy')
       store = 'assets'
       base = 'project'
 
@@ -62,7 +62,7 @@ export async function create(path, schema, {
 
 export async function pstat(path, modifiedSince) {
   let type = getProjectType(path)
-  let dbFile = (type === TPM) ? join(path, 'tropy.sqlite') : path
+  let dbFile = (type === TPM) ? join(path, 'project.typ') : path
 
   let { mtimeMs } = await stat(dbFile)
 
