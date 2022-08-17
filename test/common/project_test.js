@@ -33,7 +33,7 @@ describe('common/project', () => {
         let { db, path } = tpm.current
 
         expect((await stat(path)).isDirectory()).to.be.true
-        expect((await stat(join(path, 'tropy.sqlite'))).isFile()).to.be.true
+        expect((await stat(join(path, 'project.tpy'))).isFile()).to.be.true
         expect((await stat(join(path, 'assets'))).isDirectory()).to.be.true
 
         let project = await db.get('select * from project')
