@@ -97,10 +97,11 @@ en:
       type:
         label: Choose the project type
         option:
-          advanced: Advanced
-          standard: Standard
+          tpy: Advanced
+          tpm: Standard
         hint:
-          standard: Copies photos to project bundle on import.
+          tpy: Links to photos at their original location.
+          tpm: Copies photos to project folder on import.
     stats:
       photos: >
         {photos, plural,
