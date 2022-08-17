@@ -62,7 +62,7 @@ export async function create(path, schema, {
 
 export async function pstat(path, modifiedSince) {
   let type = getProjectType(path)
-  let dbFile = (type === TPM) ? join(path, 'project.typ') : path
+  let dbFile = (type === TPM) ? join(path, 'project.tpy') : path
 
   let { mtimeMs } = await stat(dbFile)
 
