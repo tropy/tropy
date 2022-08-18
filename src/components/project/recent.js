@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { arrayOf, string } from 'prop-types'
+import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar } from '../toolbar.js'
 import { SearchField } from '../search/field.js'
 import { ProjectFileList } from './file.js'
 import project from '../../actions/project.js'
-import { reload } from '../../slices/project-files.js'
+import { clear, reload } from '../../slices/project-files.js'
 import { match } from '../../collate.js'
 
 
@@ -33,11 +34,13 @@ export const RecentProjects = ({
     // if file picked: remove old path from recent list and open new path
   }
 
-  let handleRemove = () => {
-    // TODO
-    // send path to main thread for removal
-    // have main thread update ARGS
-  }
+  let handleProjectRemove = useEvent(path => {
+    dispatch(clear(path))
+  })
+
+  let handleProjectOpen = useEvent(path => {
+    dispatch(project.open(path))
+  })
 
   if (!files.length)
     return null
@@ -53,8 +56,8 @@ export const RecentProjects = ({
         <ProjectFileList
           files={projects}
           onConsolidate={handleConsolidate}
-          onClick={path => dispatch(project.open(path))}
-          onRemove={handleRemove}/>
+          onClick={handleProjectOpen}
+          onRemove={handleProjectRemove}/>
       </nav>
     </div>
   )

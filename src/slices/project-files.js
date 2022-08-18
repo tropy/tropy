@@ -42,6 +42,16 @@ const projectFiles = createSlice({
   initialState: {},
 
   reducers: {
+    clear: {
+      reducer(state, { payload }) {
+        delete state[payload]
+      },
+      prepare: (path) => ({
+        payload: path,
+        meta: { ipc: 'clear-recent-project' }
+      })
+    },
+
     restore(state, { payload }) {
       Object.assign(state, payload)
     }
@@ -58,6 +68,7 @@ const projectFiles = createSlice({
 })
 
 export const {
+  clear,
   restore
 } = projectFiles.actions
 

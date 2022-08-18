@@ -207,10 +207,6 @@ export class Tropy extends EventEmitter {
   hasOpenedProject(project, win) {
     this.wm.close(['wizard', 'prefs'])
 
-    this.state.recent = into(
-      [project.file],
-      compose(remove(f => f === project.file), take(9)),
-      this.state.recent)
 
     switch (process.platform) {
       case 'darwin':
@@ -224,11 +220,28 @@ export class Tropy extends EventEmitter {
         break
     }
 
+    this.state.recent = [
+      project.file,
+      ...this.state.recent.filter(f => f !== project.file)
+    ]
+
     this.wm.send('project', 'recent', this.state.recent)
+
     this.setHistory(null, win)
     this.setProject(project, win)
+
     this.emit('app:reload-menu')
     this.emit('project:opened', project)
+  }
+
+  clearRecentProjects(projects) {
+    if (projects)
+      this.state.recent = this.state.recent.filter(f => !projects.includes(f))
+    else
+      this.state.recent = []
+
+    this.wm.send('project', 'recent', this.state.recent)
+    this.emit('app:reload-menu')
   }
 
   async import(...args) {
@@ -605,9 +618,7 @@ export class Tropy extends EventEmitter {
     })
 
     this.on('app:clear-recent-projects', () => {
-      info('clear recent projects')
-      this.state.recent = []
-      this.emit('app:reload-menu')
+      this.clearRecentProjects()
     })
 
     this.on('app:switch-theme', async (_, theme) => {
@@ -862,6 +873,10 @@ export class Tropy extends EventEmitter {
       if (this.wm.is(win, 'project')) {
         this.hasOpenedProject(project, win)
       }
+    })
+
+    ipc.on('clear-recent-project', (_, path) => {
+      this.clearRecentProjects([path])
     })
 
     ipc.on(PROJECT.CREATE, () => this.showWizardWindow())
