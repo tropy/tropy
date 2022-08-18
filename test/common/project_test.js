@@ -105,6 +105,11 @@ describe('common/project', () => {
       it('returns null if file not modifed since', () =>
         expect(pstat(tpm.current.path, Date.now() + 1))
           .to.eventually.be.null)
+
+      it('returns folder path when given database file', async () => {
+        let stats = await pstat(join(tpm.current.path, 'project.tpy'))
+        expect(stats).to.have.property('path', tpm.current.path)
+      })
     })
 
     it('rejects files with unknown extensions', () =>
