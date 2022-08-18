@@ -1,18 +1,9 @@
-import { useEffect } from 'react'
-import { useEvent } from './use-event.js'
-import { on, off } from '../dom.js'
-
+import { useEventHandler } from './use-event-handler.js'
 
 export function useGlobalEvent(name, callback) {
-  let handler = useEvent(callback)
-
-  useEffect(() => {
-    if (name) {
-      on(document, `global:${name}`, handler, { passive: true })
-
-      return () => {
-        off(document, `global:${name}`, handler, { passive: true })
-      }
-    }
-  }, [name, handler])
+  useEventHandler(
+    document,
+    name != null ? `global:${name}` : null,
+    callback,
+    true)
 }
