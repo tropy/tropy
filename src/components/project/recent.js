@@ -25,7 +25,8 @@ export const RecentProjects = () => {
   let files = useSelector(state =>
     recent
       .map(path => state.projectFiles[path])
-      .filter(file => file && (!query || match(file.name, query))))
+      .filter(file =>
+        file && (!query || match(file.name, query, /\b\p{Alpha}/gu))))
 
   let handleConsolidate = () => {
     // TODO
