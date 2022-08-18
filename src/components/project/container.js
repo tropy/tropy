@@ -3,11 +3,10 @@ import debounce from 'lodash.debounce'
 import React from 'react'
 import { connect } from 'react-redux'
 import { ProjectView } from './view'
+import { NoProject } from './none.js'
 import { ItemView } from '../item'
 import { DragLayer } from '../drag-layer'
 import { DND, DropTarget, hasProjectFiles } from '../dnd'
-import { NewProject } from './new.js'
-import { RecentProjects } from './recent.js'
 import { PROJECT } from '../../constants'
 import { emit, on, off, ensure, isInput, reflow } from '../../dom'
 import cx from 'classnames'
@@ -32,12 +31,6 @@ import {
 
 const { MODE } = PROJECT
 
-const NoProject = () => (
-  <div className="no-project">
-    <RecentProjects/>
-    <NewProject/>
-  </div>
-)
 
 class Project extends React.Component {
   container = React.createRef()

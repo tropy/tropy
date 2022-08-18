@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import ARGS from '../../args.js'
+import { arrayOf, string } from 'prop-types'
 import { Titlebar } from '../toolbar.js'
 import { SearchField } from '../search/field.js'
 import { ProjectFileList } from './file.js'
@@ -9,21 +9,20 @@ import { reload } from '../../slices/project-files.js'
 import { match } from '../../collate.js'
 
 
-export const RecentProjects = () => {
+export const RecentProjects = ({
+  files
+}) => {
   let dispatch = useDispatch()
 
   let [query, setQuery] = useState('')
 
-  let recent = ARGS.recent
-  // TODO add useArgs that handles ARGS updates (or get via window context?)
-
   useEffect(() => {
-    dispatch(reload(recent))
-  }, [recent, dispatch])
+    dispatch(reload(files))
+  }, [files, dispatch])
 
 
-  let files = useSelector(state =>
-    recent
+  let projects = useSelector(state =>
+    files
       .map(path => state.projectFiles[path])
       .filter(file =>
         file && (!query || match(file.name, query, /\b\p{Alpha}/gu))))
@@ -40,6 +39,9 @@ export const RecentProjects = () => {
     // have main thread update ARGS
   }
 
+  if (!files.length)
+    return null
+
   return (
     <div className="recent-projects-view">
       <Titlebar isOptional/>
@@ -49,11 +51,15 @@ export const RecentProjects = () => {
         query={query}/>
       <nav>
         <ProjectFileList
-          files={files}
+          files={projects}
           onConsolidate={handleConsolidate}
           onClick={path => dispatch(project.open(path))}
           onRemove={handleRemove}/>
       </nav>
     </div>
   )
+}
+
+RecentProjects.propTypes = {
+  files: arrayOf(string).isRequired
 }
