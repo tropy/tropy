@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { access, stat, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
-import { extname } from 'node:path'
+import { basename, dirname, extname } from 'node:path'
 import { v4 as uuid } from 'uuid'
 import { Database } from './db.js'
 import { select, into } from './query.js'
@@ -19,8 +19,8 @@ export async function create(path, schema, {
     let store = null
 
     if (type === TPM) {
-      dbFile = join(path, 'project.tpy')
-      store = 'assets'
+      dbFile = join(path, TPM_DB_NAME)
+      store = TPM_STORE_NAME
       base = 'project'
 
       await mkdir(path)
@@ -62,7 +62,19 @@ export async function create(path, schema, {
 
 export async function pstat(path, modifiedSince) {
   let type = getProjectType(path)
-  let dbFile = (type === TPM) ? join(path, 'project.tpy') : path
+  let dbFile
+
+  if (type === TPM) {
+    dbFile = join(path, TPM_DB_NAME)
+
+  } else {
+    dbFile = path
+
+    if (isManaged(dbFile)) {
+      type = TPM
+      path = dirname(dbFile)
+    }
+  }
 
   let { mtimeMs } = await stat(dbFile)
 
@@ -89,8 +101,15 @@ export function getProjectType(path) {
   }
 }
 
+const isManaged = (path) =>
+  basename(path) === TPM_DB_NAME &&
+    extname(dirname(path)).toLowerCase() === '.tpm'
+
 export const TPY = 'tpy'
 export const TPM = 'tpm'
+
+const TPM_DB_NAME = 'project.tpy'
+const TPM_STORE_NAME = 'assets'
 
 const projectStats =
   select({
