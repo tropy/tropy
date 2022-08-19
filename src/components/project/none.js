@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { number } from 'prop-types'
 import { useArgs } from '../../hooks/use-args.js'
 import { useWindowSize } from '../../hooks/use-window-size.js'
@@ -15,7 +14,7 @@ export const NoProject = ({
 
   return (
     <div className="no-project">
-      <RecentProjects files={recent.current}/>
+      <RecentProjects files={recent}/>
       <NewProject/>
     </div>
   )
