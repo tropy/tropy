@@ -1,30 +1,17 @@
 import { useEffect } from 'react'
+import { number } from 'prop-types'
 import { useArgs } from '../../hooks/use-args.js'
-import { useWindow } from '../../hooks/use-window.js'
+import { useWindowSize } from '../../hooks/use-window-size.js'
 import { NewProject } from './new.js'
 import { RecentProjects } from './recent.js'
 
-export const NoProject = () => {
+export const NoProject = ({
+  height,
+  width
+}) => {
   let recent = useArgs('recent')
-  let win = useWindow()
 
-  useEffect(() => {
-    let { width, height } = win
-    win.setResizable(false)
-
-    return () => {
-      win.resize(width, height, true)
-      win.setResizable(true)
-    }
-  }, [win])
-
-  useEffect(() => {
-    if (recent.length)
-      win.resize(880, 580, true)
-    else
-      win.resize(440, 580, true)
-
-  }, [win, recent])
+  useWindowSize(width * recent.length ? 2 : 1, height)
 
   return (
     <div className="no-project">
@@ -32,4 +19,14 @@ export const NoProject = () => {
       <NewProject/>
     </div>
   )
+}
+
+NoProject.propTypes = {
+  height: number.isRequired,
+  width: number.isRequired
+}
+
+NoProject.defaultProps = {
+  height: 580,
+  width: 440
 }
