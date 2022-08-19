@@ -10,9 +10,11 @@ export const NoProject = () => {
 
   useEffect(() => {
     let { width, height } = win
+    win.setResizable(false)
 
     return () => {
       win.resize(width, height, true)
+      win.setResizable(true)
     }
   }, [win])
 
