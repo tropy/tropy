@@ -1,8 +1,9 @@
-import { basename } from 'node:path'
+import { basename, dirname } from 'node:path'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { pstat } from '../common/project.js'
 import { pMap } from '../common/util.js'
 import { warn } from '../common/log.js'
+import { open } from '../dialog.js'
 
 
 export const reload = createAsyncThunk(
@@ -36,6 +37,19 @@ export const reload = createAsyncThunk(
     return result
   })
 
+export const consolidate = createAsyncThunk(
+  'projectFiles/consolidate',
+  async (path, { fulfillWithValue }) => {
+
+    let [newPath] = await open.project({
+      defaultPath: dirname(path)
+    })
+
+    return fulfillWithValue({ path, newPath }, {
+      ipc: 'clear-recent-project'
+    })
+  }
+)
 
 const projectFiles = createSlice({
   name: 'projectFiles',
@@ -47,7 +61,7 @@ const projectFiles = createSlice({
         delete state[payload]
       },
       prepare: (path) => ({
-        payload: path,
+        payload: { path },
         meta: { ipc: 'clear-recent-project' }
       })
     },
@@ -62,6 +76,11 @@ const projectFiles = createSlice({
       .addCase(reload.fulfilled, (state, { payload }) => {
         for (let file of payload) {
           state[file.path] = file
+        }
+      })
+      .addCase(consolidate.fulfilled, (state, { payload }) => {
+        if (payload.newPath) {
+          delete state[payload.path]
         }
       })
   }
