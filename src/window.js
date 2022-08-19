@@ -458,6 +458,10 @@ export class Window extends EventEmitter {
     this.send('resize', width, height, animate)
   }
 
+  setResizable(resizable) {
+    this.send('resizable', resizable)
+  }
+
   get width() {
     return window.outerWidth
   }

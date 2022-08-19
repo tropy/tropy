@@ -288,7 +288,10 @@ export class WindowManager extends EventEmitter {
           win.minimize()
         break
       case 'resize':
-        win.setSize(...args)
+        WindowManager.resize(win, ...args)
+        break
+      case 'resizable':
+        win.setResizable(...args)
         break
       case 'rsvp':
         this.handlePendingResponse(...args)
@@ -561,6 +564,21 @@ export class WindowManager extends EventEmitter {
 
   MIN_ZOOM = 0.75
   MAX_ZOOM = 2
+
+  static resize(win, width, height, animate) {
+    try {
+      var resizable = win.isResizable()
+
+      if (!resizable)
+        win.setResizable(true)
+
+      win.setSize(width, height, animate)
+
+    } finally {
+      if (!resizable)
+        win.setResizable(false)
+    }
+  }
 
   static getAquaColorVariant() {
     return darwin && AQUA[

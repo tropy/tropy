@@ -916,7 +916,7 @@ export class Tropy extends EventEmitter {
     this.wm.on('focus-change', this.menu.handleWindowChange)
 
     this.wm.on('close', (type, win) => {
-      if (type === 'project') {
+      if (type === 'project' && win.isResizable()) {
         this.state.win.bounds = win.getNormalBounds()
       }
     })
