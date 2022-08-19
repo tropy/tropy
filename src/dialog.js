@@ -139,6 +139,19 @@ open.dir = (opts) => open({
   ...opts
 })
 
+open.project = (opts) => {
+  return open({
+    filters: [
+      {
+        name: t('dialog', 'filter', 'projects'),
+        extensions: ['tpy', 'tpm']
+      }
+    ],
+    properties: ['openFile'],
+    ...opts
+  })
+}
+
 open.vocab = (opts) => open({
   filters: [{
     name: t('dialog', 'filter', 'rdf'),

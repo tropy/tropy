@@ -84,6 +84,7 @@ en:
   project:
     empty: Drop your photos into Tropy to get started
     recent:
+      missing: Find missing project file
       search:
         placeholder: Filter projects
     corrupted: >-

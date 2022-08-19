@@ -6,7 +6,7 @@ import { Titlebar } from '../toolbar.js'
 import { SearchField } from '../search/field.js'
 import { ProjectFileList } from './file.js'
 import project from '../../actions/project.js'
-import { clear, reload } from '../../slices/project-files.js'
+import { clear, consolidate, reload } from '../../slices/project-files.js'
 import { match } from '../../collate.js'
 
 
@@ -28,11 +28,13 @@ export const RecentProjects = ({
       .filter(file =>
         file && (!query || match(file.name, query, /\b\p{Alpha}/gu))))
 
-  let handleConsolidate = () => {
-    // TODO
-    // open filepicker in dirname(path)
-    // if file picked: remove old path from recent list and open new path
-  }
+  let handleConsolidate = useEvent(path => {
+    dispatch(consolidate(path))
+      .then(action => {
+        if (action?.payload?.newPath)
+          handleProjectOpen(action.payload.newPath)
+      })
+  })
 
   let handleProjectRemove = useEvent(path => {
     dispatch(clear(path))
@@ -56,8 +58,8 @@ export const RecentProjects = ({
         <ProjectFileList
           files={projects}
           onConsolidate={handleConsolidate}
-          onClick={handleProjectOpen}
-          onRemove={handleProjectRemove}/>
+          onRemove={handleProjectRemove}
+          onSelect={handleProjectOpen}/>
       </nav>
     </div>
   )

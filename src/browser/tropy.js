@@ -875,8 +875,8 @@ export class Tropy extends EventEmitter {
       }
     })
 
-    ipc.on('clear-recent-project', (_, path) => {
-      this.clearRecentProjects([path])
+    ipc.on('clear-recent-project', (_, project) => {
+      this.clearRecentProjects([project.path])
     })
 
     ipc.on(PROJECT.CREATE, () => this.showWizardWindow())
