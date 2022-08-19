@@ -234,8 +234,7 @@ class Project extends React.Component {
   }
 
   render() {
-    // eslint-disable-next-line no-constant-condition
-    if (true || !this.props.project.file || this.state.isProjectClosed) {
+    if (!this.props.project.file || this.state.isProjectClosed) {
       return <NoProject/>
     }
 
