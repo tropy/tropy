@@ -1,6 +1,6 @@
 import React from 'react'
 import { arrayOf,  func, number, object, shape, string } from 'prop-types'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
 import { Button } from '../button.js'
 import { IconMaze, IconWarningSm, IconXMedium } from '../icons.js'
@@ -45,37 +45,36 @@ export const ProjectFile = ({
   path,
   stats
 }) => {
+  let intl = useIntl()
+
   let isMissing = !stats?.lastModified
 
   let handleClick = useEvent(() => {
-    if (!isMissing) onClick?.(path)
+    if (isMissing && onConsolidate)
+      onConsolidate(path)
+    else
+      onClick?.(path)
   })
 
-  let handleConsolidate = useEvent(() => {
-    onConsolidate?.(path)
-  })
-
-  let handleRemove = useEvent(() => {
+  let handleRemove = useEvent((event) => {
+    event.stopPropagation()
     onRemove?.(path)
   })
+
+  let hint = intl.formatMessage({
+    id: `project.file.${isMissing ? 'missing' : 'open'}`
+  }, { path })
 
   return (
     <li
       className="project-file"
       onClick={handleClick}
-      title={path}>
+      title={hint}>
       <IconMaze/>
       <div className="flex-col">
         <div className="name">
           <div className="truncate">{name}</div>
-          {
-            isMissing && (
-              <Button
-                icon={<IconWarningSm/>}
-                onClick={handleConsolidate}
-                title="project.recent.missing"/>
-            )
-          }
+          {isMissing && <IconWarningSm/>}
         </div>
         <ProjectFileStats {...stats}/>
       </div>

@@ -83,8 +83,10 @@ en:
         url: https://tropy.org/credits
   project:
     empty: Drop your photos into Tropy to get started
+    file:
+      open: Open project {path}
+      missing: Find missing project {path}
     recent:
-      missing: Find missing project file
       search:
         placeholder: Filter projects
     corrupted: >-
