@@ -10,7 +10,7 @@ export const NoProject = ({
 }) => {
   let recent = useArgs('recent')
 
-  useWindowSize(width * recent.length ? 2 : 1, height)
+  useWindowSize(width * (recent.length ? 2 : 1), height)
 
   return (
     <div className="no-project">
