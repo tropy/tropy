@@ -454,6 +454,18 @@ export class Window extends EventEmitter {
     this.send('minimize')
   }
 
+  resize(width, height, animate = false) {
+    this.send('resize', width, height, animate)
+  }
+
+  get width() {
+    return window.outerWidth
+  }
+
+  get height() {
+    return window.outerHeight
+  }
+
   preview(file) {
     this.send('preview', file)
   }
