@@ -287,6 +287,9 @@ export class WindowManager extends EventEmitter {
         else
           win.minimize()
         break
+      case 'resize':
+        win.setSize(...args)
+        break
       case 'rsvp':
         this.handlePendingResponse(...args)
         break
