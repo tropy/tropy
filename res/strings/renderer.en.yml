@@ -86,6 +86,7 @@ en:
     file:
       open: Open project {path}
       missing: Find missing project {path}
+      remove: Remove project from list
     recent:
       search:
         placeholder: Filter projects

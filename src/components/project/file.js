@@ -80,7 +80,8 @@ export const ProjectFile = ({
       </div>
       <Button
         icon={<IconXMedium/>}
-        onClick={handleRemove}/>
+        onClick={handleRemove}
+        title="project.file.remove"/>
     </li>
   )
 }
