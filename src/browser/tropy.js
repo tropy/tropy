@@ -4,7 +4,6 @@ import { EventEmitter } from 'node:events'
 import { extname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { v1 as uuid } from 'uuid'
-import { into, compose, remove, take } from 'transducers.js'
 
 import {
   app,
