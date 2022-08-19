@@ -462,12 +462,11 @@ export class Window extends EventEmitter {
     this.send('resizable', resizable)
   }
 
-  get width() {
-    return window.outerWidth
-  }
-
-  get height() {
-    return window.outerHeight
+  getBounds() {
+    return {
+      width: window.outerWidth,
+      height: window.outerHeight
+    }
   }
 
   preview(file) {
