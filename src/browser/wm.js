@@ -31,6 +31,8 @@ import {
 
 const { BODY, PANEL, ESPER } = SASS
 
+const MIN_SIZE = new WeakMap()
+
 export class WindowManager extends EventEmitter {
   constructor(defaults = {}) {
     super()
@@ -291,7 +293,7 @@ export class WindowManager extends EventEmitter {
         WindowManager.resize(win, ...args)
         break
       case 'resizable':
-        win.setResizable(...args)
+        WindowManager.resizable(win, ...args)
         break
       case 'rsvp':
         this.handlePendingResponse(...args)
@@ -569,6 +571,8 @@ export class WindowManager extends EventEmitter {
     try {
       var resizable = win.isResizable()
 
+      // Change resizable state directly,
+      // without restoring minimal bounds!
       if (!resizable)
         win.setResizable(true)
 
@@ -578,6 +582,21 @@ export class WindowManager extends EventEmitter {
       if (!resizable)
         win.setResizable(false)
     }
+  }
+
+  static resizable(win, resizable) {
+    if (resizable) {
+      let bounds = MIN_SIZE.get(win)
+      if (bounds) {
+        win.setMinimumSize(...bounds)
+      }
+
+    } else {
+      MIN_SIZE.set(win, win.getMinimumSize())
+      win.setMinimumSize(16, 16)
+    }
+
+    win.setResizable(true)
   }
 
   static getAquaColorVariant() {
