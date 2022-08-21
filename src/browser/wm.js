@@ -464,16 +464,21 @@ export class WindowManager extends EventEmitter {
     if (fixedSize) {
       if (win.isMaximized())
         win.unmaximize()
+      if (win.isFullScreen())
+        win.setFullScreen(false)
 
       let { width, height } = win.getSize()
       let { width: minWidth, height: minHeight } = win.getMinimumSize()
       let maximizable = win.isMaximizable()
+      let fullscreenable = win.isFullScreenable()
 
       this.props.set(win, {
-        width, height, minWidth, minHeight, maximizable
+        width, height, minWidth, minHeight, maximizable, fullscreenable
       })
 
       win.isResizable(false)
+      win.setMaximizable(false)
+      win.setFullScreenable(false)
 
     } else {
       let type = this.types.get(win)
@@ -483,13 +488,15 @@ export class WindowManager extends EventEmitter {
         height,
         minWidth = 16,
         minHeight = 16,
-        maximizable
+        maximizable,
+        fullscreenable = true
       } = this.props.get(win) || WindowManager.defaults[type]
 
       win.isResizable(true)
       win.setSize(width, height, animate)
       win.setMinimumSize(minWidth, minHeight)
-      win.isMaximizable(maximizable)
+      win.setMaximizable(maximizable)
+      win.setFullscreenable(fullscreenable)
     }
   }
 
