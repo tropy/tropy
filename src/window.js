@@ -458,15 +458,8 @@ export class Window extends EventEmitter {
     this.send('resize', width, height, animate)
   }
 
-  setResizable(resizable) {
-    this.send('resizable', resizable)
-  }
-
-  getBounds() {
-    return {
-      width: window.outerWidth,
-      height: window.outerHeight
-    }
+  setFixedSize(resizable) {
+    this.send('fixed-size', resizable)
   }
 
   preview(file) {

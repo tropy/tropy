@@ -6,13 +6,12 @@ export function useWindowSize(width, height) {
   let win = useWindow()
 
   useEffect(() => {
-    let original = win.getBounds()
-    win.setResizable(false)
+    win.setFixedSize(true)
 
     return () => {
-      win.resize(original.width, original.height, true)
-      win.setResizable(true)
+      win.setFixedSize(false)
     }
+
   }, [win])
 
   useEffect(() => {

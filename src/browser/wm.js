@@ -31,8 +31,6 @@ import {
 
 const { BODY, PANEL, ESPER } = SASS
 
-const MIN_SIZE = new WeakMap()
-
 export class WindowManager extends EventEmitter {
   constructor(defaults = {}) {
     super()
@@ -56,6 +54,8 @@ export class WindowManager extends EventEmitter {
     }
 
     this.windows = {}
+    this.types = new WeakMap()
+    this.props = new WeakMap()
     this.pending = {}
     this.seq = counter()
   }
@@ -248,6 +248,7 @@ export class WindowManager extends EventEmitter {
     }
   }
 
+  // eslint-disable-next-line complexity
   handleIpcMessage = (event, type, ...args) => {
     trace({ args }, `ipc.${type} received`)
     let win = BrowserWindow.fromWebContents(event.sender)
@@ -292,8 +293,8 @@ export class WindowManager extends EventEmitter {
       case 'resize':
         WindowManager.resize(win, ...args)
         break
-      case 'resizable':
-        WindowManager.resizable(win, ...args)
+      case 'fixed-size':
+        this.setFixedSize(win, !!args[0])
         break
       case 'rsvp':
         this.handlePendingResponse(...args)
@@ -424,6 +425,7 @@ export class WindowManager extends EventEmitter {
         })
 
       this.windows[type] = [win, ...array(this.windows[type])]
+      this.types.set(win, type)
 
     } catch (e) {
       this.unref(type, win)
@@ -455,6 +457,42 @@ export class WindowManager extends EventEmitter {
     }).finally(() => { delete this.pending[id] })
   }
 
+  setFixedSize(win, fixedSize = false, animate = true) {
+    if (win.isResizable() === !fixedSize)
+      return null
+
+    if (fixedSize) {
+      if (win.isMaximized())
+        win.unmaximize()
+
+      let { width, height } = win.getSize()
+      let { width: minWidth, height: minHeight } = win.getMinimumSize()
+      let maximizable = win.isMaximizable()
+
+      this.props.set(win, {
+        width, height, minWidth, minHeight, maximizable
+      })
+
+      win.isResizable(false)
+
+    } else {
+      let type = this.types.get(win)
+
+      let {
+        width,
+        height,
+        minWidth = 16,
+        minHeight = 16,
+        maximizable
+      } = this.props.get(win) || WindowManager.defaults[type]
+
+      win.isResizable(true)
+      win.setSize(width, height, animate)
+      win.setMinimumSize(minWidth, minHeight)
+      win.isMaximizable(maximizable)
+    }
+  }
+
   setTitle(type, title) {
     this.each(type, win => win.setTitle(title))
   }
@@ -481,6 +519,8 @@ export class WindowManager extends EventEmitter {
 
   unref(type, win) {
     this.windows[type] = remove(array(this.windows[type]), win)
+    this.types.delete(win)
+    this.props.delete(win)
   }
 
   zoom(factor) {
@@ -571,8 +611,7 @@ export class WindowManager extends EventEmitter {
     try {
       var resizable = win.isResizable()
 
-      // Change resizable state directly,
-      // without restoring minimal bounds!
+      // Change resizable state directly, without restoring minimal bounds!
       if (!resizable)
         win.setResizable(true)
 
@@ -582,21 +621,6 @@ export class WindowManager extends EventEmitter {
       if (!resizable)
         win.setResizable(false)
     }
-  }
-
-  static resizable(win, resizable) {
-    if (resizable) {
-      let bounds = MIN_SIZE.get(win)
-      if (bounds) {
-        win.setMinimumSize(...bounds)
-      }
-
-    } else {
-      MIN_SIZE.set(win, win.getMinimumSize())
-      win.setMinimumSize(16, 16)
-    }
-
-    win.setResizable(true)
   }
 
   static getAquaColorVariant() {
