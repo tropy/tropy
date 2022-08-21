@@ -286,7 +286,7 @@ export class WindowManager extends EventEmitter {
         break
       case 'minimize':
         if (win.isMinimized())
-          win.unminimize()
+          win.restore()
         else
           win.minimize()
         break
