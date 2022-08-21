@@ -242,11 +242,16 @@ export function *main() {
         task = null
       }
 
-      // Break main loop if project was closed without reason.
-      // This typically means that the window is being closed.
-      if (action.type === PROJECT.CLOSE &&
-        !(action.error || action.payload === 'user'))
-        break
+      if (action.type === PROJECT.CLOSE) {
+        // Clear project file if project was closed by user.
+        if (action.payload === 'user')
+          update({ file: null })
+
+        // Break main loop if project was closed without reason.
+        // This typically means that the window is being closed.
+        if (!(action.error || action.payload === 'user'))
+          break
+      }
 
       if (action.type === PROJECT.OPEN) {
         task = yield fork(open, {}, action)
