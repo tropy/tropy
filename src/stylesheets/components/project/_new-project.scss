@@ -26,7 +26,7 @@
         icon-url("project/tropy-icon-dark.svg") no-repeat 0 0,
         icon-url("project/tropy-icon-light.svg") no-repeat 0 0
       );
-    margin: $space-sm auto (30px - 12px);
+    margin: $space-sm auto (28px - 12px); // 60px spacing after btn-xl
   }
 
   h1 {
@@ -62,7 +62,7 @@
   }
 
   .btn-xl {
-    height: 52px;
+    height: 54px;
     font-size: 21px;
     font-weight: 600;
     margin-top: 40px - 5px;
