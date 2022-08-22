@@ -155,6 +155,12 @@
       @include state(".project-file:hover") {
         display: inline-flex;
       }
+
+      .icon {
+        @include state(".btn-icon:hover") {
+          color: $recent-projects-color;
+        }
+      }
     }
   }
 }
