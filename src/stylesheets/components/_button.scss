@@ -101,8 +101,9 @@
 }
 
 .btn-toggle {
-  border: 1px solid $input-border;
   display: flex;
+  border: 1px solid $input-border;
+  background-color: $input-bg;
   transition: none;
 
   @include input-btn-focus(":has(:focus-visible)");
