@@ -49,7 +49,7 @@
   }
 
   .project-files {
-    padding: 0 (40px - $space-sm) 1px;
+    padding: 0 (40px - $space-sm);
     overflow-y: auto;
   }
 
@@ -68,8 +68,9 @@
       margin-bottom: -1px;
       z-index: 1;
 
-      &::before {
-        content: none;
+      &:last-child {
+        margin-bottom: 0;
+        padding-bottom: $space-sm;
       }
     }
 
@@ -82,7 +83,7 @@
       height: 1px;
       background-color: $recent-project-border;
 
-      @include variant(".project-file:first-child") {
+      @include state(".project-file:hover", ".project-file:first-child") {
         content: none;
       }
     }
