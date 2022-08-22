@@ -107,6 +107,10 @@
       font-size: $font-size-large;
       margin-top: -10px;
 
+      @media (min-resolution: 2dppx) {
+        margin-top: -9.5px;
+      }
+
       .btn-icon {
         flex: 0 0 auto;
         padding: 0;
@@ -125,11 +129,12 @@
       white-space: nowrap;
       font-size: $font-size-small;
       color: $recent-project-stats-color;
+      margin-top: 1px;
       margin-bottom: -10px;
       @include css-truncation;
 
       @media (min-resolution: 2dppx) {
-        margin-bottom: -10.5px;
+        margin-top: 0;
       }
 
       li {
