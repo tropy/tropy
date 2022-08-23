@@ -23,8 +23,12 @@
     margin-top: 15px;
     margin-bottom: $space-md - 10px;
 
+    @if $platform == win32 {
+      margin-top: 52px;
+    }
+
     @if $platform == linux {
-      margin-top: 35px;
+      margin-top: 53px;
     }
 
     .icon-search {

@@ -28,8 +28,12 @@
       );
     margin: $space-sm auto (28px - 12px); // 60px spacing after btn-xl
 
+    @if $platform == win32 {
+      margin-top: 49px;
+    }
+
     @if $platform == linux {
-      margin-top: $space-xl;
+      margin-top: 50px;
     }
   }
 
