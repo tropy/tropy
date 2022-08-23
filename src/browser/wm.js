@@ -481,6 +481,7 @@ export class WindowManager extends EventEmitter {
         fullscreenable
       })
 
+      win.setMinimumSize(16, 16)
       win.setResizable(false)
       win.setMaximizable(false)
       win.setFullScreenable(false)
