@@ -38,7 +38,7 @@ export class WindowManager extends EventEmitter {
     this.defaults = {
       disableAutoHideCursor: darwin,
       resizable: true,
-      useContentSize: false,
+      useContentSize: true,
       show: false,
       webPreferences: {
         contextIsolation: true,
@@ -473,7 +473,12 @@ export class WindowManager extends EventEmitter {
       let fullscreenable = win.isFullScreenable()
 
       this.props.set(win, {
-        width, height, minWidth, minHeight, maximizable, fullscreenable
+        width,
+        height,
+        minWidth,
+        minHeight,
+        maximizable,
+        fullscreenable
       })
 
       win.isResizable(false)
@@ -493,7 +498,7 @@ export class WindowManager extends EventEmitter {
       } = this.props.get(win) || WindowManager.defaults[type]
 
       win.isResizable(true)
-      win.setSize(width, height, animate)
+      win.setContentSize(width, height, animate)
       win.setMinimumSize(minWidth, minHeight)
       win.setMaximizable(maximizable)
       win.setFullscreenable(fullscreenable)
@@ -622,7 +627,7 @@ export class WindowManager extends EventEmitter {
       if (!resizable)
         win.setResizable(true)
 
-      win.setSize(width, height, animate)
+      win.setContentSize(width, height, animate)
 
     } finally {
       if (!resizable)
