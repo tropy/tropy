@@ -23,6 +23,10 @@
     margin-top: 15px;
     margin-bottom: $space-md - 10px;
 
+    @if $platform == linux {
+      margin-top: 35px;
+    }
+
     .icon-search {
       left: 40px;
       color: $input-color-placeholder;

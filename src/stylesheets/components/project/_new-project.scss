@@ -27,6 +27,10 @@
         icon-url("project/tropy-icon-light.svg") no-repeat 0 0
       );
     margin: $space-sm auto (28px - 12px); // 60px spacing after btn-xl
+
+    @if $platform == linux {
+      margin-top: $space-xl;
+    }
   }
 
   h1 {
