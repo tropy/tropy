@@ -155,8 +155,7 @@ ToggleButton.propTypes = {
 }
 
 ToggleButton.defaultProps = {
-  size: 'md',
-  tabIndex: -1
+  size: 'md'
 }
 
 export const ToggleButtonGroup = ({
