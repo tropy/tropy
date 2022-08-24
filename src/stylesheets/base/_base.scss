@@ -21,6 +21,13 @@ html {
   // Remove this fix when it is not needed anymore.
   // Keep for positioning on Windows (border on html).
   position: relative;
+
+  @if $platform == win32 {
+    &:has(#project),
+    &:has(.prefs) {
+      border-top: 1px solid #e0e0e0;
+    }
+  }
 }
 
 body {

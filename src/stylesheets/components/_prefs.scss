@@ -2,12 +2,6 @@
 // Preferences
 // --------------------------------------------------
 
-html {
-  @if $platform == win32 {
-    border-top: 1px solid #dadbdc;
-  }
-}
-
 .prefs {
   display: flex;
   flex-direction: column;
