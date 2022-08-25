@@ -144,6 +144,12 @@ export class WindowManager extends EventEmitter {
       // TODO check position on display!
       var win = new BrowserWindow(opts)
 
+      if (opts.fixedSize) {
+        let { width, height } = opts.fixedSize
+        this.setFixedSize(win, true)
+        WindowManager.resize(win, width, height, false)
+      }
+
       // Manage a promise for our IPC ready event. Handling this here
       // immediately after creation makes it easier to avoid potential
       // race conditions.
