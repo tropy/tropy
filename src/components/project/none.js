@@ -3,6 +3,7 @@ import { useArgs } from '../../hooks/use-args.js'
 import { useWindowSize } from '../../hooks/use-window-size.js'
 import { NewProject } from './new.js'
 import { RecentProjects } from './recent.js'
+import { Fade } from '../fx.js'
 
 export const NoProject = ({
   height,
@@ -13,10 +14,12 @@ export const NoProject = ({
   useWindowSize(width * (recent.length ? 2 : 1), height)
 
   return (
-    <div className="no-project">
-      <RecentProjects files={recent}/>
-      <NewProject/>
-    </div>
+    <Fade in>
+      <div className="no-project">
+        <RecentProjects files={recent}/>
+        <NewProject/>
+      </div>
+    </Fade>
   )
 }
 
