@@ -23,7 +23,9 @@ describe('WindowManager', () => {
       expect([...wm]).to.be.empty
     })
 
-    for (let type of ['about', 'prefs', 'print', 'project', 'wizard']) {
+    // TODO open project window with and without project file
+
+    for (let type of ['about', 'prefs', 'print', 'project']) {
       describe(`open('${type}')`, function () {
         // Integration tests with on-the-fly code instrumentation take some time!
         this.timeout(process.env.CI ? 40000 : 20000)

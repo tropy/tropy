@@ -605,15 +605,6 @@ export class WindowManager extends EventEmitter {
       minWidth: PANEL.MIN_WIDTH + ESPER.MIN_WIDTH * 2,
       minHeight: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN,
       vibrancy: 'sidebar'
-    },
-    wizard: {
-      width: 456,
-      height: 580,
-      autoHideMenuBar: true,
-      fullscreenable: false,
-      maximizable: false,
-      minimizable: false,
-      resizable: false
     }
   }
 

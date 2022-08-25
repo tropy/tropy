@@ -136,8 +136,7 @@ export default [
           'views/about': 'src/views/about.js',
           'views/prefs': 'src/views/prefs.js',
           'views/print': 'src/views/print.js',
-          'views/project': 'src/views/project.js',
-          'views/wizard': 'src/views/wizard.js'
+          'views/project': 'src/views/project.js'
         },
         implicitlyLoadedAfterOneOf: [
           'src/bootstrap.js'
