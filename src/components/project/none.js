@@ -14,7 +14,7 @@ export const NoProject = ({
   useWindowSize(width * (recent.length ? 2 : 1), height)
 
   return (
-    <Fade in>
+    <Fade appear in>
       <div className="no-project">
         <RecentProjects files={recent}/>
         <NewProject/>
