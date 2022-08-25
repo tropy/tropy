@@ -183,9 +183,19 @@ export class Tropy extends EventEmitter {
         {} : this.state.win.bounds
 
       // TODO fixed size if no file (and small size if no recent)
+      let fixedSize
+
+      if (!file) {
+        fixedSize = {
+          width: 440 * (this.state.recent.length ? 2 : 1),
+          height: 580
+        }
+      }
+
       return this.wm.open('project', args, {
         show: 'init',
-        title: '',
+        title: 'Tropy',
+        fixedSize,
         ...bounds
       })
 
