@@ -56,10 +56,9 @@ const SYMBOL = {
   about: 'α',
   api: 'λ',
   main: 'β',
-  prefs: 'σ',
+  prefs: 'φ',
   print: 'π',
-  project: 'ρ',
-  wizard: 'φ'
+  project: 'ρ'
 }
 
 const COLOR = [

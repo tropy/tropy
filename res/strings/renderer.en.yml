@@ -123,13 +123,6 @@ en:
           =0 {No notes}
           one {1 note}
           other {# notes}}
-  wizard:
-    project:
-      title: Create a new project
-      submit: Create project
-      name: Name
-      save_as: Change file name and location
-      change: Change
   prefs:
     title: Tropy Preferences
     app:

@@ -146,9 +146,6 @@ export class Tropy extends EventEmitter {
   }
 
   async openMostRecentProject() {
-    if (this.state.recent.length === 0)
-      return this.showWizardWindow()
-
     let recent = this.state.recent[0]
     if (fs.existsSync(recent))
       return this.showProjectWindow(recent)
@@ -185,6 +182,7 @@ export class Tropy extends EventEmitter {
       let bounds = this.wm.has('project') ?
         {} : this.state.win.bounds
 
+      // TODO fixed size if no file (and small size if no recent)
       return this.wm.open('project', args, {
         show: 'init',
         title: '',
@@ -204,8 +202,7 @@ export class Tropy extends EventEmitter {
   }
 
   hasOpenedProject(project, win) {
-    this.wm.close(['wizard', 'prefs'])
-
+    this.wm.close(['prefs'])
 
     switch (process.platform) {
       case 'darwin':
@@ -268,15 +265,6 @@ export class Tropy extends EventEmitter {
   showAboutWindow() {
     this.wm.show('about', this.hash, {
       title: this.dict.window.about.title,
-      parent: this.wm.current(),
-      modal: linux
-    })
-  }
-
-  showWizardWindow() {
-    this.wm.close('prefs')
-    this.wm.show('wizard', this.hash, {
-      title: this.dict.window.wizard.title,
       parent: this.wm.current(),
       modal: linux
     })
@@ -362,7 +350,7 @@ export class Tropy extends EventEmitter {
       this.showAboutWindow())
 
     this.on('app:create-project', () =>
-      this.showWizardWindow())
+      this.showProjectWindow(null, null))
 
     this.on('app:close-project', () =>
       this.dispatch(act.project.close('user'), this.wm.current()))
@@ -878,8 +866,7 @@ export class Tropy extends EventEmitter {
       this.clearRecentProjects([project.path])
     })
 
-    ipc.on(PROJECT.CREATE, () => this.showWizardWindow())
-    ipc.on(PROJECT.CREATED, (_, { file }) => this.showProjectWindow(file))
+    ipc.on(PROJECT.CREATE, () => this.showProjectWindow(null, null))
 
     ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
       if (id === 'update.ready' && confirm) {
@@ -1084,7 +1071,6 @@ export class Tropy extends EventEmitter {
   updateWindowLocale() {
     this.wm.setTitle('about', this.dict.window.about.title)
     this.wm.setTitle('prefs', this.dict.window.prefs.title)
-    this.wm.setTitle('wizard', this.dict.window.wizard.title)
     this.wm.broadcast('locale', this.state.locale)
   }
 
