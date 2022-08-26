@@ -1,10 +1,22 @@
 import { basename, dirname } from 'node:path'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { pstat } from '../common/project.js'
+import { pstat, create as createProject } from '../common/project.js'
 import { pMap } from '../common/util.js'
 import { warn } from '../common/log.js'
-import { open } from '../dialog.js'
+import { open, save } from '../dialog.js'
+import { Schema } from '../res.js'
 
+
+export const create = createAsyncThunk(
+  'projectFiles/create',
+  async ({ name, type }) => {
+    let path = await save[type]?.({
+      defaultPath: `${name}.${type}`
+    })
+    await createProject(path, Schema.expand('project'), { name })
+
+    return path
+  })
 
 export const reload = createAsyncThunk(
   'projectFiles/reload',
