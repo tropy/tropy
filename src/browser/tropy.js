@@ -876,8 +876,6 @@ export class Tropy extends EventEmitter {
       this.clearRecentProjects([project.path])
     })
 
-    ipc.on(PROJECT.CREATE, () => this.showProjectWindow(null, null))
-
     ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
       if (id === 'update.ready' && confirm) {
         this.updater.install()
