@@ -2,14 +2,6 @@ import { PROJECT } from '../constants'
 
 
 export default {
-  create(payload, meta) {
-    return {
-      type: PROJECT.CREATE,
-      payload,
-      meta: { ipc: true, ...meta }
-    }
-  },
-
   opened(payload, meta) {
     return {
       type: PROJECT.OPENED,
