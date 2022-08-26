@@ -59,6 +59,7 @@ export const NewProject = ({
           isPrimary
           onClick={handleProjectCreate}
           size="xl"
+          tabIndex="0"
           text="project.new.create"/>
       </form>
     </div>
