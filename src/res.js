@@ -69,3 +69,13 @@ export const StyleSheet = {
     return join(StyleSheet.base, `${name}.css`)
   }
 }
+
+export const Schema = {
+  get base() {
+    return join(Resource.base, 'db/schema')
+  },
+
+  expand(name) {
+    return join(Schema.base, `${name}.sql`)
+  }
+}
