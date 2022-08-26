@@ -44,7 +44,9 @@ export async function create(path, schema, {
       store
     }))
 
-    // TODO enable WAL for TPM
+    if (type === TPM) {
+      db.exec('PRAGMA journal_mode = WAL;')
+    }
 
     if (autoclose) {
       await db.close()
