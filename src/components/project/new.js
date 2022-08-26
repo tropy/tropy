@@ -23,7 +23,6 @@ export const NewProject = ({
       type: 'project/create/not/implemented/yet',
       payload: { name, type }
     })
-
   })
 
   return (
@@ -60,7 +59,7 @@ export const NewProject = ({
           isPrimary
           onClick={handleProjectCreate}
           size="xl"
-          text="Create Project"/>
+          text="project.new.create"/>
       </form>
     </div>
   )

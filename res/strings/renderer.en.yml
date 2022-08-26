@@ -107,6 +107,7 @@ en:
         hint:
           tpy: Links to photos at their original location.
           tpm: Copies photos to project folder on import.
+      create: Create Project
     stats:
       photos: >-
         {photos, plural,
