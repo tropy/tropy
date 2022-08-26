@@ -171,14 +171,29 @@ open.templates = (opts) => open({
 })
 
 
-save.project = (opts) => save({
+save.tpy = (opts) => save({
   filters: [{
     name: t('dialog', 'filter', 'projects'),
     extensions: ['tpy']
   }],
+  properties: [
+    'createDirectory',
+    'showOverwriteConfirmation'
+  ],
   ...opts
 })
 
+save.tpm = (opts) => save({
+  filters: [{
+    name: t('dialog', 'filter', 'projects'),
+    extensions: ['tpm']
+  }],
+  properties: [
+    'createDirectory',
+    'showOverwriteConfirmation'
+  ],
+  ...opts
+})
 
 save.csv = (opts) => save({
   filters: [{

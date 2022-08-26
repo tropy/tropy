@@ -1,17 +1,18 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import { arrayOf, func, string } from 'prop-types'
 import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar } from '../toolbar.js'
 import { Button, ToggleButtonGroup } from '../button.js'
-import { arrayOf, string } from 'prop-types'
 import { FormElement, FormGroup } from '../form.js'
 import { TPY, TPM } from '../../common/project.js'
-
+import { create } from '../../slices/project-files.js'
 
 
 export const NewProject = ({
-  accept
+  accept,
+  onCreated
 }) => {
   let dispatch = useDispatch()
 
@@ -19,10 +20,19 @@ export const NewProject = ({
   let [type, setType] = useState(accept[0])
 
   let handleProjectCreate = useEvent(() => {
-    dispatch({
-      type: 'project/create/not/implemented/yet',
-      payload: { name, type }
-    })
+    dispatch(create({ name, type }))
+      .then(action => {
+        if (action?.payload?.path)
+          onCreated?.(action.payload.path)
+      })
+  })
+
+  let handleNameChange = useEvent(e => {
+    setName(e.target.value)
+  })
+
+  let handleTypeChange = useEvent(v => {
+    setType(v.type)
   })
 
   return (
@@ -36,7 +46,7 @@ export const NewProject = ({
           <input
             autoFocus
             className="form-control input-lg"
-            onChange={useEvent(e => setName(e.target.value))}
+            onChange={handleNameChange}
             type="text"
             value={name}/>
         </FormElement>
@@ -47,7 +57,7 @@ export const NewProject = ({
             name="type"
             size="lg"
             options={accept}
-            onChange={useEvent(v => setType(v.type))}
+            onChange={handleTypeChange}
             value={type}/>
           <p className="form-text">
             <FormattedMessage id={`project.new.type.hint.${type}`}/>
@@ -67,7 +77,8 @@ export const NewProject = ({
 }
 
 NewProject.propTypes = {
-  accept: arrayOf(string)
+  accept: arrayOf(string),
+  onCreated: func
 }
 
 NewProject.defaultProps = {

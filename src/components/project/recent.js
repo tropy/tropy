@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { arrayOf, string } from 'prop-types'
+import { arrayOf, func, string } from 'prop-types'
 import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar } from '../toolbar.js'
 import { SearchField } from '../search/field.js'
 import { ProjectFileList } from './file.js'
-import project from '../../actions/project.js'
 import { clear, consolidate, reload } from '../../slices/project-files.js'
 import { match } from '../../collate.js'
 
 
 export const RecentProjects = ({
-  files
+  files,
+  onSelect
 }) => {
   let dispatch = useDispatch()
 
@@ -20,7 +20,6 @@ export const RecentProjects = ({
   useEffect(() => {
     dispatch(reload(files))
   }, [files, dispatch])
-
 
   let projects = useSelector(state =>
     files
@@ -32,16 +31,12 @@ export const RecentProjects = ({
     dispatch(consolidate(path))
       .then(action => {
         if (action?.payload?.newPath)
-          handleProjectOpen(action.payload.newPath)
+          onSelect?.(action.payload.newPath)
       })
   })
 
   let handleProjectRemove = useEvent(path => {
     dispatch(clear(path))
-  })
-
-  let handleProjectOpen = useEvent(path => {
-    dispatch(project.open(path))
   })
 
   if (!files.length)
@@ -59,12 +54,13 @@ export const RecentProjects = ({
           files={projects}
           onConsolidate={handleConsolidate}
           onRemove={handleProjectRemove}
-          onSelect={handleProjectOpen}/>
+          onSelect={onSelect}/>
       </nav>
     </div>
   )
 }
 
 RecentProjects.propTypes = {
-  files: arrayOf(string).isRequired
+  files: arrayOf(string).isRequired,
+  onSelect: func
 }
