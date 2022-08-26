@@ -46,7 +46,7 @@ export const consolidate = createAsyncThunk(
     })
 
     return fulfillWithValue({ path, newPath }, {
-      ipc: 'clear-recent-project'
+      ipc: newPath ? 'clear-recent-project' : false
     })
   }
 )
