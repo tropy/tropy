@@ -1,10 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useWindow } from './use-window.js'
 
 // Resizes the window to the given dimensions while the component is mounted.
 export function useWindowSize(width, height) {
   let win = useWindow()
-  let wasResized = useRef(false)
 
   useEffect(() => {
     win.setFixedSize(true)
@@ -17,8 +16,7 @@ export function useWindowSize(width, height) {
 
   useEffect(() => {
     if (width && height) {
-      win.resize(width, height, !wasResized.current)
-      wasResized.current = true
+      win.resize(width, height, true)
     }
   }, [win, width, height])
 }
