@@ -3,7 +3,8 @@
 // --------------------------------------------------
 
 .new-project {
-  flex: 1 1 50%;
+  flex: 0 0 440px;
+  margin-left: auto;
 
   @if $theme == "dark" {
     @include form-shading-level(0);
