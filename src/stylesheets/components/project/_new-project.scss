@@ -4,6 +4,7 @@
 
 .new-project {
   flex: 0 0 440px;
+  background-color: $body-bg;
   margin-left: auto;
 
   @if $theme == "dark" {
