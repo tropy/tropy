@@ -186,9 +186,21 @@ $toolbar-blurred-opacity-darwin: 0.5;
 $toolbar-blurred-bg-darwin:      var(--shade-1-darken-4);
 
 // Project
+$no-project-bg:         var(--shade-1);
 $project-darken-color:  var(--shade-10-10);
 $project-heading-color: var(--shade-8);
 $item-count-color:      var(--shade-5);
+
+// Recent projects
+$recent-projects-color:      var(--shade-8);
+$recent-project-hover-bg:    var(--shade-1-darken-4);
+$recent-project-border:      var(--shade-3);
+$maze-color:                 var(--shade-5);
+$maze-hover-color:           var(--shade-5-darken-2);
+$recent-project-stats-color: var(--shade-6);
+
+// New project
+$new-project-form-text-color: var(--shade-6);
 
 // Sidebar
 $sidebar-bg:                              var(--shade-1);
@@ -445,18 +457,6 @@ $option-active-bg:        var(--shade-1);
 $option-selected-bg:      var(--shade-2);
 $option-no-matches-color: var(--shade-5);
 $option-separator-color:  var(--shade-2);
-
-// Recent projects
-$recent-projects-bg:         var(--shade-1);
-$recent-projects-color:      var(--shade-8);
-$recent-project-hover-bg:    var(--shade-1-darken-4);
-$recent-project-border:      var(--shade-3);
-$maze-color:                 var(--shade-5);
-$maze-hover-color:           var(--shade-5-darken-2);
-$recent-project-stats-color: var(--shade-6);
-
-// New project
-$new-project-form-text-color: var(--shade-6);
 
 // Donate button
 $donate-btn-bg:    var(--green-80);
