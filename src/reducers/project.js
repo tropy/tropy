@@ -26,9 +26,9 @@ export function project(state = init, { type, payload, meta, error }) {
         isReadOnly: meta.isReadOnly
       }
     case PROJECT.CLOSE:
-      return { ...state, closing: true }
+      return { ...state, isClosing: true }
     case PROJECT.CLOSED:
-      return { ...state, closing: false, closed: new Date() }
+      return { ...state, isClosing: false, closed: new Date() }
     case ITEM.INSERT:
       return inc(state)
     case ITEM.RESTORE:

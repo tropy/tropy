@@ -18,6 +18,7 @@ import { persist, restore, storage } from './storage.js'
 import { watch } from './watch.js'
 import { handleDatabaseErrors } from './db.js'
 import ARGS, { update } from '../args.js'
+import { Database } from '../common/db.js'
 
 import {
   all,
@@ -45,7 +46,6 @@ const FORCE_SHUTDOWN_DELAY = 60000
 
 export function *open(opts = {}, { payload, meta }) {
   try {
-    let { Database } = yield import('../common/db')
     var db = yield call(Database.open, payload, meta, { max: opts.max || 3 })
 
     yield fork(handleDatabaseErrors, db, dbErrorActions)
