@@ -1,18 +1,18 @@
-import { extname } from 'path'
-import debounce from 'lodash.debounce'
+import { extname } from 'node:path'
 import React from 'react'
 import { connect } from 'react-redux'
 import { ProjectView } from './view'
 import { NoProject } from './none.js'
 import { ItemView } from '../item'
+import { Fade } from '../fx.js'
 import { DragLayer } from '../drag-layer'
-import { DND, DropTarget, hasProjectFiles } from '../dnd'
+import { DND, DropTarget, hasProjectFiles } from '../dnd.js'
 import { PROJECT } from '../../constants'
-import { emit, on, off, ensure, isInput, reflow } from '../../dom'
+import { emit, on, off, ensure, isInput, reflow } from '../../dom.js'
 import cx from 'classnames'
 import * as act from '../../actions'
-import { match } from '../../keymap'
-import { warn } from '../../common/log'
+import { match } from '../../keymap.js'
+import { warn } from '../../common/log.js'
 
 import {
   getAllColumns,
@@ -36,8 +36,6 @@ class Project extends React.Component {
   container = React.createRef()
 
   state = {
-    isProjectClosed: false,
-    willProjectClose: false,
     mode: this.props.nav.mode,
     offset: this.props.ui.panel.width,
     willModeChange: false,
@@ -50,7 +48,7 @@ class Project extends React.Component {
     on(window, 'paste', this.handlePaste)
   }
 
-  componentDidUpdate({ project, nav, ui }) {
+  componentDidUpdate({ nav, ui }) {
     if (nav.mode !== this.props.nav.mode) {
       this.modeWillChange()
     }
@@ -60,17 +58,9 @@ class Project extends React.Component {
         offset: this.props.ui.panel.width
       })
     }
-
-    if (project !== this.props.project) {
-      this.projectWillChange(this.props.project)
-      if (this.props.project.closed) {
-        this.projectWillChange.flush()
-      }
-    }
   }
 
   componentWillUnmount() {
-    this.projectWillChange.cancel()
     off(document, 'keydown', this.handleKeyDown)
     off(document, 'global:back', this.handleBackButton)
     off(window, 'paste', this.handlePaste)
@@ -81,7 +71,7 @@ class Project extends React.Component {
     const { mode, willModeChange, isModeChanging } = this.state
 
     return ['project', {
-      closing: this.state.willProjectClose,
+      closing: this.props.project.isClosing,
       empty: this.isEmpty,
       over: isOver && canDrop,
       [`${mode}-mode`]: true,
@@ -95,12 +85,6 @@ class Project extends React.Component {
   get isEmpty() {
     return this.props.project.id != null &&
       this.props.project.items === 0
-  }
-
-  get isProjectDisabled() {
-    return this.state.mode !== MODE.PROJECT ||
-      this.state.isProjectClosed ||
-      this.state.willProjectClose
   }
 
   modeWillChange() {
@@ -133,14 +117,6 @@ class Project extends React.Component {
       isModeChanging: false
     })
   }
-
-  projectWillChange = debounce(project => {
-    this.setState({
-      isProjectClosed: !!project.closed,
-      willProjectClose: project.isClosing
-    })
-  }, 750, { leading: false })
-
 
   handleBackButton = () => {
     if (this.state.mode !== MODE.PROJECT) {
@@ -234,11 +210,6 @@ class Project extends React.Component {
   }
 
   render() {
-
-    if (!this.props.project.file || this.state.isProjectClosed) {
-      return <NoProject/>
-    }
-
     const {
       columns,
       data,
@@ -247,6 +218,7 @@ class Project extends React.Component {
       nav,
       note,
       notes,
+      onProjectOpen,
       photo,
       photos,
       project,
@@ -257,47 +229,60 @@ class Project extends React.Component {
       ...props
     } = this.props
 
-    return connectDropTarget(
-      <div
-        className={cx(this.classes)}
-        ref={this.container}
-        onContextMenu={this.handleContextMenu}>
+    let hasProject = project.file && !project.closed
+    let isDisabled = !hasProject || this.state.mode !== MODE.PROJECT
 
-        <ProjectView {...props}
-          nav={nav}
-          items={items}
-          data={data}
-          isDisabled={this.isProjectDisabled}
-          isEmpty={this.isEmpty}
-          columns={columns}
-          offset={this.state.offset}
-          photos={photos}
-          project={project}
-          templates={templates}
-          zoom={ui.zoom}
-          onMetadataSave={this.handleMetadataSave}/>
+    return (
+      <>
+        <Fade
+          in={!hasProject}
+          mountOnEnter={false}
+          unmountOnExit>
+          <NoProject onProjectOpen={onProjectOpen}/>
+        </Fade>
+        {hasProject && connectDropTarget(
+          <div
+            className={cx(this.classes)}
+            ref={this.container}
+            onContextMenu={this.handleContextMenu}>
 
-        <ItemView {...props}
-          items={selection}
-          data={data}
-          activeSelection={nav.selection}
-          note={note}
-          notes={notes}
-          photo={photo}
-          photos={visiblePhotos}
-          panel={ui.panel}
-          offset={this.state.offset}
-          mode={this.state.mode}
-          isModeChanging={this.state.isModeChanging}
-          isProjectClosing={project.isClosing}
-          isReadOnly={project.isReadOnly || nav.trash}
-          onPanelResize={this.handlePanelResize}
-          onPanelDragStop={this.handlePanelDragStop}
-          onMetadataSave={this.handleMetadataSave}/>
+            <ProjectView {...props}
+              nav={nav}
+              items={items}
+              data={data}
+              isDisabled={isDisabled}
+              isEmpty={this.isEmpty}
+              columns={columns}
+              offset={this.state.offset}
+              photos={photos}
+              project={project}
+              templates={templates}
+              zoom={ui.zoom}
+              onMetadataSave={this.handleMetadataSave}/>
 
-        <DragLayer/>
-        <div className="cover"/>
-      </div>
+            <ItemView {...props}
+              items={selection}
+              data={data}
+              activeSelection={nav.selection}
+              note={note}
+              notes={notes}
+              photo={photo}
+              photos={visiblePhotos}
+              panel={ui.panel}
+              offset={this.state.offset}
+              mode={this.state.mode}
+              isModeChanging={this.state.isModeChanging}
+              isProjectClosing={project.isClosing}
+              isReadOnly={project.isReadOnly || nav.trash}
+              onPanelResize={this.handlePanelResize}
+              onPanelDragStop={this.handlePanelDragStop}
+              onMetadataSave={this.handleMetadataSave}/>
+
+            <DragLayer/>
+            <div className="cover"/>
+          </div>
+        )}
+      </>
     )
   }
 
@@ -361,7 +346,7 @@ const DropTargetSpec = {
     let ttp = []
 
     for (let file of monitor.getItem().files) {
-      switch (extname(file.path)) {
+      switch (extname(file.path).toLowerCase()) {
         case '.tpy':
           tpy.push(file.path)
           break
