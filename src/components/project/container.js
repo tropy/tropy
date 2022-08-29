@@ -63,7 +63,7 @@ class Project extends React.Component {
 
     if (project !== this.props.project) {
       this.projectWillChange(this.props.project)
-      if (this.state.isProjectClosed) {
+      if (this.props.project.closed) {
         this.projectWillChange.flush()
       }
     }
@@ -137,7 +137,7 @@ class Project extends React.Component {
   projectWillChange = debounce(project => {
     this.setState({
       isProjectClosed: !!project.closed,
-      willProjectClose: project.closing
+      willProjectClose: project.isClosing
     })
   }, 750, { leading: false })
 
@@ -234,6 +234,7 @@ class Project extends React.Component {
   }
 
   render() {
+
     if (!this.props.project.file || this.state.isProjectClosed) {
       return <NoProject/>
     }
@@ -288,7 +289,7 @@ class Project extends React.Component {
           offset={this.state.offset}
           mode={this.state.mode}
           isModeChanging={this.state.isModeChanging}
-          isProjectClosing={project.closing}
+          isProjectClosing={project.isClosing}
           isReadOnly={project.isReadOnly || nav.trash}
           onPanelResize={this.handlePanelResize}
           onPanelDragStop={this.handlePanelDragStop}
