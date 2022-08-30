@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { bool, func, number, string } from 'prop-types'
 import { Image } from '../image.js'
-import { getCachePrefix } from '../../selectors/project.js'
+import { selectCachePrefix } from '../../selectors/project.js'
 import { Cache } from '../../common/cache.js'
 import { SASS } from '../../constants/index.js'
 import { Rotation } from '../../common/iiif.js'
@@ -13,7 +13,7 @@ const variant = (size) =>
 
 export function Thumbnail(props) {
   let dispatch = useDispatch()
-  let cache = useSelector(getCachePrefix)
+  let cache = useSelector(selectCachePrefix)
 
   let src = Cache.url(cache, variant(props.size), props)
   let rot = Rotation.fromExifOrientation(props.orientation).add(props)

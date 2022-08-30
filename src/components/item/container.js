@@ -12,7 +12,7 @@ import {
 } from 'prop-types'
 
 import {
-  getCachePrefix,
+  selectCachePrefix,
   getEsperViewState,
   getNotePadState,
   getActiveSelection,
@@ -165,7 +165,7 @@ class Item extends React.PureComponent {
 
 export const ItemContainer = connect(
     state => ({
-      cache: getCachePrefix(state),
+      cache: selectCachePrefix(state),
       esper: state.ui.esper,
       view: getEsperViewState(state),
       notepad: getNotePadState(state),
