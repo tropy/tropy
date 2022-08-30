@@ -1,5 +1,5 @@
 import React from 'react'
-import { CSSTransition } from 'react-transition-group'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { element, number, oneOf } from 'prop-types'
 import { on, bounds } from '../dom.js'
 
@@ -7,7 +7,7 @@ import { on, bounds } from '../dom.js'
 export const onTransitionEnd = (node, done) => {
   on(node, 'transitionend', event => {
     if (event.target === node) done()
-  })
+  }, false)
 }
 
 export const Fade = (props) => (
@@ -19,6 +19,10 @@ export const Fade = (props) => (
     unmountOnExit
     {...props}/>
 )
+
+export {
+  SwitchTransition
+}
 
 export class Collapse extends React.Component {
   getValue(node) {

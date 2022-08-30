@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { ProjectView } from './view'
 import { NoProject } from './none.js'
 import { ItemView } from '../item'
-import { Fade } from '../fx.js'
+import { Fade, SwitchTransition } from '../fx.js'
 import { DragLayer } from '../drag-layer'
 import { DND, DropTarget, hasProjectFiles } from '../dnd.js'
 import { PROJECT } from '../../constants'
@@ -31,8 +31,36 @@ import {
 
 const { MODE } = PROJECT
 
+import { useDispatch, useSelector } from 'react-redux'
+import { useEvent } from '../../hooks/use-event.js'
 
-class Project extends React.Component {
+export const ProjectContainer = () => {
+  let dispatch = useDispatch()
+
+  // let [, drop] = useDrop()
+
+  let project = useSelector(state => state.project)
+  let isProjectOpen = (project.file && !project.closed)
+
+  let handleProjectOpen = useEvent(path => {
+    dispatch(act.project.open(path))
+  })
+
+  return (
+    <SwitchTransition>
+      <Fade key={isProjectOpen ? 'project' : 'no-project'}>
+        {isProjectOpen ?
+          <Project
+            project={project}/> :
+          <NoProject
+            onProjectOpen={handleProjectOpen}/>}
+      </Fade>
+    </SwitchTransition>
+  )
+}
+
+
+class ProjectComponent extends React.Component {
   container = React.createRef()
 
   state = {
@@ -218,7 +246,6 @@ class Project extends React.Component {
       nav,
       note,
       notes,
-      onProjectOpen,
       photo,
       photos,
       project,
@@ -229,61 +256,50 @@ class Project extends React.Component {
       ...props
     } = this.props
 
-    let hasProject = project.file && !project.closed
-    let isDisabled = !hasProject || this.state.mode !== MODE.PROJECT
+    let isDisabled = this.state.mode !== MODE.PROJECT
 
-    return (
-      <>
-        <Fade
-          in={!hasProject}
-          mountOnEnter={false}
-          unmountOnExit>
-          <NoProject onProjectOpen={onProjectOpen}/>
-        </Fade>
-        {hasProject && connectDropTarget(
-          <div
-            className={cx(this.classes)}
-            ref={this.container}
-            onContextMenu={this.handleContextMenu}>
+    return (connectDropTarget(
+      <div
+        className={cx(this.classes)}
+        ref={this.container}
+        onContextMenu={this.handleContextMenu}>
 
-            <ProjectView {...props}
-              nav={nav}
-              items={items}
-              data={data}
-              isDisabled={isDisabled}
-              isEmpty={this.isEmpty}
-              columns={columns}
-              offset={this.state.offset}
-              photos={photos}
-              project={project}
-              templates={templates}
-              zoom={ui.zoom}
-              onMetadataSave={this.handleMetadataSave}/>
+        <ProjectView {...props}
+          nav={nav}
+          items={items}
+          data={data}
+          isDisabled={isDisabled}
+          isEmpty={this.isEmpty}
+          columns={columns}
+          offset={this.state.offset}
+          photos={photos}
+          project={project}
+          templates={templates}
+          zoom={ui.zoom}
+          onMetadataSave={this.handleMetadataSave}/>
 
-            <ItemView {...props}
-              items={selection}
-              data={data}
-              activeSelection={nav.selection}
-              note={note}
-              notes={notes}
-              photo={photo}
-              photos={visiblePhotos}
-              panel={ui.panel}
-              offset={this.state.offset}
-              mode={this.state.mode}
-              isModeChanging={this.state.isModeChanging}
-              isProjectClosing={project.isClosing}
-              isReadOnly={project.isReadOnly || nav.trash}
-              onPanelResize={this.handlePanelResize}
-              onPanelDragStop={this.handlePanelDragStop}
-              onMetadataSave={this.handleMetadataSave}/>
+        <ItemView {...props}
+          items={selection}
+          data={data}
+          activeSelection={nav.selection}
+          note={note}
+          notes={notes}
+          photo={photo}
+          photos={visiblePhotos}
+          panel={ui.panel}
+          offset={this.state.offset}
+          mode={this.state.mode}
+          isModeChanging={this.state.isModeChanging}
+          isProjectClosing={project.isClosing}
+          isReadOnly={project.isReadOnly || nav.trash}
+          onPanelResize={this.handlePanelResize}
+          onPanelDragStop={this.handlePanelDragStop}
+          onMetadataSave={this.handleMetadataSave}/>
 
-            <DragLayer/>
-            <div className="cover"/>
-          </div>
-        )}
-      </>
-    )
+        <DragLayer/>
+        <div className="cover"/>
+      </div>
+    ))
   }
 
 
@@ -374,7 +390,7 @@ const DropTargetSpec = {
 }
 
 
-export const ProjectContainer = connect(
+export const Project = connect(
   state => ({
     columns: getAllColumns(state),
     data: state.metadata,
@@ -388,7 +404,6 @@ export const ProjectContainer = connect(
     photo: getSelectedPhoto(state),
     photos: state.photos,
     visiblePhotos: getVisiblePhotos(state),
-    project: state.project,
     selection: getSelectedItems(state),
     sort: getSortColumn(state),
     templates: state.ontology.template,
@@ -562,4 +577,4 @@ export const ProjectContainer = connect(
   connectDropTarget: c.dropTarget(),
   isOver: m.isOver(),
   canDrop: m.canDrop()
-}))(Project))
+}))(ProjectComponent))

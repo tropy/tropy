@@ -1,8 +1,8 @@
-import { join } from 'path'
-import { createSelector as memo } from 'reselect'
-import ARGS from '../args'
+import { join } from 'node:path'
+import { createSelector } from 'reselect'
+import ARGS from '../args.js'
 
-export const getCachePrefix = memo(
-  (state) => state.project,
-  (project) => (ARGS.cache) ? join(ARGS.cache, `${project.id}`) : null
+export const selectCachePrefix = createSelector(
+  (state) => state.project?.id,
+  (id) => (ARGS.cache && id) ? join(ARGS.cache, id) : null
 )
