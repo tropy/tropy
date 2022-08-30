@@ -16,7 +16,7 @@ export function useWindowSize(width, height) {
 
   useEffect(() => {
     if (width && height) {
-      win.resize(width, height, true)
+      win.resize(width, height)
     }
   }, [win, width, height])
 }

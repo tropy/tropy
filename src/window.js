@@ -6,7 +6,7 @@ import { warn } from './common/log.js'
 import { darwin } from './common/os.js'
 import { Plugins } from './common/plugins.js'
 import { delay, pick } from './common/util.js'
-import { update } from './args.js'
+import ARGS, { update } from './args.js'
 import { StyleSheet } from './res.js'
 import debounce from 'lodash.debounce'
 import * as dialog from './dialog.js'
@@ -454,12 +454,16 @@ export class Window extends EventEmitter {
     this.send('minimize')
   }
 
-  resize(width, height, animate = false) {
-    this.send('resize', width, height, animate)
+  resize(width, height) {
+    this.send('resize', width, height)
   }
 
   setFixedSize(resizable) {
     this.send('fixed-size', resizable)
+  }
+
+  get isResizeAnimated() {
+    return darwin && ARGS.motion
   }
 
   preview(file) {

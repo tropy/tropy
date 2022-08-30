@@ -34,7 +34,10 @@ const { MODE } = PROJECT
 import { useDispatch, useSelector } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
 
-export const ProjectContainer = () => {
+export const ProjectContainer = ({
+  isWindowResizeAnimated,
+  timeout
+}) => {
   let dispatch = useDispatch()
 
   // let [, drop] = useDrop()
@@ -48,7 +51,11 @@ export const ProjectContainer = () => {
 
   return (
     <SwitchTransition>
-      <Fade key={isProjectOpen ? 'project' : 'no-project'}>
+      <Fade
+        key={isProjectOpen ? 'project' : 'no-project'}
+        enter={isWindowResizeAnimated}
+        exit={false}
+        timeout={timeout}>
         {isProjectOpen ?
           <Project
             project={project}/> :
@@ -59,6 +66,10 @@ export const ProjectContainer = () => {
   )
 }
 
+ProjectContainer.propTypes = {
+  isWindowResizeAnimated: bool,
+  timeout: 300
+}
 
 class ProjectComponent extends React.Component {
   container = React.createRef()
