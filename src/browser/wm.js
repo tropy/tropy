@@ -366,6 +366,7 @@ export class WindowManager extends EventEmitter {
       dark: nativeTheme.shouldUseDarkColors,
       scrollbars: !WindowManager.hasOverlayScrollBars(),
       vibrancy: !(await WindowManager.shouldReduceTransparency()),
+      motion: !WindowManager.preferReducedMotion(),
       ...args
     }
 
@@ -617,7 +618,7 @@ export class WindowManager extends EventEmitter {
   MIN_ZOOM = 0.75
   MAX_ZOOM = 2
 
-  static resize(win, width, height, animate) {
+  static resize(win, width, height, animate = true) {
     try {
       var resizable = win.isResizable()
 
@@ -686,6 +687,16 @@ export class WindowManager extends EventEmitter {
         await read('com.apple.universalaccess', 'reduceTransparency')
     } catch (e) {
       warn({ stack: e.stack }, 'failed to check macOS defaults')
+    }
+  }
+
+  static preferReducedMotion() {
+    try {
+      return prefs.getAnimationSettings().prefersReducedMotion
+
+    } catch (e) {
+      warn({ stack: e.stack }, 'failed to check reduced motion preference')
+      return false
     }
   }
 }

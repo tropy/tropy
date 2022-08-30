@@ -26,7 +26,8 @@ Promise.all([
     createRoot(document.getElementById('main'))
       .render(
         <Main store={store} window={win}>
-          <ProjectContainer/>
+          <ProjectContainer
+            isWindowResizeAnimated={win.isResizeAnimated}/>
         </Main>
       )
   })
