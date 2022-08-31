@@ -2,16 +2,22 @@ import { useEffect } from 'react'
 import { useEvent } from './use-event.js'
 import { on, off } from '../dom.js'
 
-export function useEventHandler(target, name, callback, passive = true) {
+export function useEventHandler(
+  target,
+  name,
+  callback,
+  passive = true,
+  capture = false) {
+
   let handler = useEvent(callback)
 
   useEffect(() => {
     if (name) {
-      on(target, name, handler, { passive })
+      on(target, name, handler, { capture, passive })
 
       return () => {
-        off(document, name, handler, { passive })
+        off(document, name, handler, { capture, passive })
       }
     }
-  }, [target, name, handler, passive])
+  }, [target, name, handler, passive, capture])
 }
