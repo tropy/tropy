@@ -1,0 +1,29 @@
+//
+// Transitions
+// --------------------------------------------------
+
+@mixin fade(
+  $duration: $fade-duration,
+  $timing-function: $fade-timing-function,
+  $delay: $fade-delay
+) {
+  &.fade {
+    &-enter {
+      opacity: 0;
+
+      &-active {
+        opacity: 1;
+        transition: opacity $duration $timing-function $delay;
+      }
+    }
+
+    &-exit {
+      opacity: 1;
+
+      &-active {
+        opacity: 0;
+        transition: opacity $duration $timing-function $delay;
+      }
+    }
+  }
+}

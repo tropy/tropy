@@ -6,6 +6,7 @@
 .no-project {
   height: 100%;
   overflow: hidden;
+  @include fade($delay: 0.33s);
 
   &.over {
     @extend %drop-target;
