@@ -1,22 +1,6 @@
-.fade {
-  &-enter {
-    opacity: 0;
-
-    &-active {
-      opacity: 1;
-      transition: $fade-transition;
-    }
-  }
-
-  &-exit {
-    opacity: 1;
-
-    &-active {
-      opacity: 0;
-      transition: $fade-transition;
-    }
-  }
-}
+//
+// Transitions
+// --------------------------------------------------
 
 .collapse-enter,
 .collapse-exit {
