@@ -201,16 +201,6 @@ class ProjectComponent extends React.Component {
     }
   }
 
-  handleMetadataSave = (payload, meta = {}) => {
-    const { sort, onMetadataSave } = this.props
-
-    if (sort.column in payload.data) {
-      meta.search = true
-    }
-
-    onMetadataSave(payload, meta)
-  }
-
   handleKeyDown = (event) => {
     if (isInput(event.target))
       return
@@ -286,8 +276,7 @@ class ProjectComponent extends React.Component {
           photos={photos}
           project={project}
           templates={templates}
-          zoom={ui.zoom}
-          onMetadataSave={this.handleMetadataSave}/>
+          zoom={ui.zoom}/>
 
         <ItemView {...props}
           items={selection}
@@ -304,8 +293,7 @@ class ProjectComponent extends React.Component {
           isProjectClosing={project.isClosing}
           isReadOnly={project.isReadOnly || nav.trash}
           onPanelResize={this.handlePanelResize}
-          onPanelDragStop={this.handlePanelDragStop}
-          onMetadataSave={this.handleMetadataSave}/>
+          onPanelDragStop={this.handlePanelDragStop}/>
 
         <DragLayer/>
         <div className="cover"/>
@@ -510,7 +498,6 @@ export const Project = connect(
 
     onMetadataSave(...args) {
       dispatch(act.metadata.save(...args))
-      dispatch(act.edit.cancel())
     },
 
     onPhotoCreate(...args) {

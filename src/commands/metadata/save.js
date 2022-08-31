@@ -3,6 +3,7 @@ import { Command } from '../command'
 import { pick } from '../../common/util'
 import mod from '../../models/metadata'
 import act from '../../actions/metadata'
+import { getSortColumn } from '../../selectors'
 import { METADATA, TYPE } from '../../constants'
 
 
@@ -14,11 +15,16 @@ export class Save extends Command {
 
     this.original = {}
 
-    yield select(({ metadata }) => {
+    yield select(state => {
+      let sort = getSortColumn(state)
+
+      if (sort.column in data)
+        meta.search = true
+
       let props = Object.keys(data)
 
       for (let id of ids) {
-        this.original[id] = pick(metadata[id], props, {}, true)
+        this.original[id] = pick(state.metadata[id], props, {}, true)
       }
     })
 
