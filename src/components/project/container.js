@@ -7,7 +7,7 @@ import { ItemView } from '../item'
 import { Fade, SwitchTransition } from '../fx.js'
 import { DragLayer } from '../drag-layer'
 import { DND, DropTarget, hasProjectFiles } from '../dnd.js'
-import { PROJECT } from '../../constants'
+import { MODE } from '../../constants/project.js'
 import { emit, on, off, ensure, isInput, reflow } from '../../dom.js'
 import cx from 'classnames'
 import * as act from '../../actions'
@@ -28,8 +28,6 @@ import {
 import {
   arrayOf, oneOf, shape, bool, object, func, string, number
 } from 'prop-types'
-
-const { MODE } = PROJECT
 
 import { useDispatch, useSelector } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
@@ -58,7 +56,8 @@ export const ProjectContainer = ({
         timeout={timeout}>
         {isProjectOpen ?
           <Project
-            project={project}/> :
+            project={project}
+            isOver={false}/> :
           <NoProject
             onProjectOpen={handleProjectOpen}/>}
       </Fade>
@@ -171,8 +170,8 @@ class ProjectComponent extends React.Component {
     this.props.onModeChange(mode)
   }
 
-  handlePanelResize = (offset) => {
-    this.setState({ offset })
+  handlePanelResize = ({ value }) => {
+    this.setState({ offset: value })
   }
 
   handlePanelDragStop = () => {
@@ -259,6 +258,10 @@ class ProjectComponent extends React.Component {
 
     let isDisabled = this.state.mode !== MODE.PROJECT
 
+    let isItemOpen = !!(
+      this.state.mode === MODE.ITEM ^ this.state.isModeChanging
+    )
+
     return (connectDropTarget(
       <div
         className={cx(this.classes)}
@@ -288,8 +291,7 @@ class ProjectComponent extends React.Component {
           photos={visiblePhotos}
           panel={ui.panel}
           offset={this.state.offset}
-          mode={this.state.mode}
-          isModeChanging={this.state.isModeChanging}
+          isItemOpen={isItemOpen}
           isProjectClosing={project.isClosing}
           isReadOnly={project.isReadOnly || nav.trash}
           onPanelResize={this.handlePanelResize}
