@@ -2,14 +2,12 @@ import React from 'react'
 import { ItemPanelGroup } from './panel'
 import { ItemContainer } from './container'
 import { Resizable } from '../resizable'
-import { NOTE, PROJECT, SASS } from '../../constants'
+import { NOTE, SASS } from '../../constants'
 import { pick } from '../../common/util'
 import debounce from 'lodash.debounce'
 
-const { MODE } = PROJECT
-
 import {
-  arrayOf, bool, func, object, number, shape, string
+  arrayOf, bool, func, object, number, shape
 } from 'prop-types'
 
 
@@ -78,12 +76,8 @@ export class ItemView extends React.PureComponent {
     }
   }
 
-  get isItemOpen() {
-    return this.props.mode === MODE.ITEM
-  }
-
   get offset() {
-    return (this.isItemOpen ^ this.props.isModeChanging) ?
+    return (this.props.isItemOpen) ?
       0 : `calc(100% - ${this.props.offset}px)`
   }
 
@@ -95,15 +89,10 @@ export class ItemView extends React.PureComponent {
     this.itemContainer.current?.notepad.current?.focus()
   }
 
-  handlePanelResize = ({ value }) => {
-    this.props.onPanelResize(value)
-  }
-
-
   handleNoteCreate = () => {
     let delay = 50
 
-    if (!this.isItemOpen) {
+    if (!this.props.isItemOpen) {
       delay += 800
       this.props.onItemOpen({
         id: this.props.items[0].id,
@@ -172,12 +161,12 @@ export class ItemView extends React.PureComponent {
       panel,
       photo,
       onPanelDragStop,
+      onPanelResize,
+      isItemOpen,
       isProjectClosing,
       isReadOnly,
       ...props
     } = this.props
-
-    const { isItemOpen } = this
 
     return (
       <section className="item-view" style={this.style}>
@@ -186,7 +175,7 @@ export class ItemView extends React.PureComponent {
           value={offset}
           min={SASS.PANEL.MIN_WIDTH}
           max={SASS.PANEL.MAX_WIDTH}
-          onResize={this.handlePanelResize}
+          onResize={onPanelResize}
           onDragStop={onPanelDragStop}>
           <ItemPanelGroup {...pick(props, ItemPanelGroup.props)}
             panel={panel}
@@ -229,12 +218,11 @@ export class ItemView extends React.PureComponent {
 
     keymap: object.isRequired,
     offset: number.isRequired,
-    mode: string.isRequired,
     panel: object,
     activeSelection: number,
     note: object,
     photo: object,
-    isModeChanging: bool.isRequired,
+    isItemOpen: bool.isRequired,
     isProjectClosing: bool,
     isReadOnly: bool,
 
