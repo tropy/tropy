@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 import {
   DndProvider,
   useDragLayer,
@@ -54,12 +56,52 @@ const getDroppedFiles = (item) => {
     return { files, urls }
 }
 
+function useDropPhotoFiles({ onDrop, isReadOnly = false }) {
+  let spec = useMemo(() => ({
+    accept: [DND.FILE, DND.URL],
+
+    drop(item) {
+      let photos = getDroppedFiles(item)
+
+      if (photos) {
+        onDrop(photos)
+        return photos
+      }
+    },
+
+    canDrop(item, monitor) {
+      if (isReadOnly)
+        return false
+
+      switch (monitor.getItemType()) {
+        case DND.FILE:
+          return hasPhotoFiles(item)
+        case DND.URL:
+          // Currently, Tropy only support importing photos via URLs,
+          // so here we don't inspecting it further.
+          return true
+        default:
+          return false
+      }
+    },
+
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    })
+  }), [onDrop, isReadOnly])
+
+  return useDrop(spec)
+}
+
+
 export {
   DND,
   DndProvider,
   useDragLayer,
   useDrag,
   useDrop,
+  useDropPhotoFiles,
   DragSource,
   DropTarget,
   HTML5Backend as ElectronBackend,
