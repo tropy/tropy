@@ -12,15 +12,11 @@ import { emit, on, off, ensure, isInput, reflow } from '../../dom.js'
 import cx from 'classnames'
 import * as act from '../../actions'
 import { match } from '../../keymap.js'
-import { warn } from '../../common/log.js'
 
 import {
-  getAllColumns,
   getSelectedItems,
   getSelectedPhoto,
   getSelectedNote,
-  getSortColumn,
-  getVisibleItems,
   getVisibleNotes,
   getVisiblePhotos
 } from '../../selectors'
@@ -110,7 +106,6 @@ class ProjectComponent extends React.Component {
 
     return ['project', {
       closing: this.props.project.isClosing,
-      empty: this.isEmpty,
       over: isOver && canDrop,
       [`${mode}-mode`]: true,
       [`${mode}-mode-leave`]: willModeChange,
@@ -118,11 +113,6 @@ class ProjectComponent extends React.Component {
       [`${nav.mode}-mode-enter`]: willModeChange,
       [`${nav.mode}-mode-enter-active`]: isModeChanging
     }]
-  }
-
-  get isEmpty() {
-    return this.props.project.id != null &&
-      this.props.project.items === 0
   }
 
   modeWillChange() {
@@ -162,10 +152,6 @@ class ProjectComponent extends React.Component {
     }
   }
 
-  handleContextMenu = (event) => {
-    this.props.onContextMenu(event)
-  }
-
   handleModeChange = (mode) => {
     this.props.onModeChange(mode)
   }
@@ -178,26 +164,6 @@ class ProjectComponent extends React.Component {
     this.props.onUiUpdate({
       panel: { width: Math.round(this.state.offset) }
     })
-  }
-
-  handlePaste = (event) => {
-    try {
-      if (isInput(event.target)) return
-
-      var text = event.clipboardData.getData('text/plain')
-
-      if (text) {
-        let data = JSON.parse(text)
-        if (data) {
-          this.props.onItemImport({
-            data: JSON.parse(text),
-            list: this.props.nav.list
-          })
-        }
-      }
-    } catch (e) {
-      warn({ stack: e.stack, text }, 'pasted unsupported text')
-    }
   }
 
   handleKeyDown = (event) => {
@@ -238,23 +204,7 @@ class ProjectComponent extends React.Component {
   }
 
   render() {
-    const {
-      columns,
-      data,
-      connectDropTarget,
-      items,
-      nav,
-      note,
-      notes,
-      photo,
-      photos,
-      project,
-      visiblePhotos,
-      selection,
-      templates,
-      ui,
-      ...props
-    } = this.props
+    let { project, nav, ui } = this.props
 
     let isDisabled = this.state.mode !== MODE.PROJECT
 
@@ -262,40 +212,50 @@ class ProjectComponent extends React.Component {
       this.state.mode === MODE.ITEM ^ this.state.isModeChanging
     )
 
-    return (connectDropTarget(
+    return (this.props.connectDropTarget(
       <div
         className={cx(this.classes)}
         ref={this.container}
-        onContextMenu={this.handleContextMenu}>
+        onContextMenu={this.props.onContextMenu}>
 
-        <ProjectView {...props}
-          nav={nav}
-          items={items}
-          data={data}
+        <ProjectView
           isDisabled={isDisabled}
-          isEmpty={this.isEmpty}
-          columns={columns}
           offset={this.state.offset}
-          photos={photos}
-          project={project}
-          templates={templates}
-          zoom={ui.zoom}/>
+          onContextMenu={this.props.onContextMenu}
+          project={project}/>
 
-        <ItemView {...props}
-          items={selection}
-          data={data}
+        <ItemView
           activeSelection={nav.selection}
-          note={note}
-          notes={notes}
-          photo={photo}
-          photos={visiblePhotos}
-          panel={ui.panel}
-          offset={this.state.offset}
           isItemOpen={isItemOpen}
           isProjectClosing={project.isClosing}
           isReadOnly={project.isReadOnly || nav.trash}
+          items={this.props.selection}
+          keymap={this.props.keymap}
+          note={this.props.note}
+          notes={this.props.notes}
+          offset={this.state.offset}
+          panel={ui.panel}
+          photo={this.props.photo}
+          photos={this.props.visiblePhotos}
+          onContextMenu={this.props.onContextMenu}
+          onEdit={this.props.onEdit}
+          onEditCancel={this.props.onEditCancel}
+          onItemOpen={this.props.onItemOpen}
+          onMetadataSave={this.props.onMetadataSave}
+          onModeChange={this.props.onModeChange}
+          onNoteCreate={this.props.onNoteCreate}
+          onNoteDelete={this.props.onNoteDelete}
+          onNoteSave={this.props.onNoteSave}
+          onNoteSelect={this.props.onNoteSelect}
+          onOpenInFolder={this.props.onOpenInFolder}
+          onPanelDragStop={this.handlePanelDragStop}
           onPanelResize={this.handlePanelResize}
-          onPanelDragStop={this.handlePanelDragStop}/>
+          onPhotoConsolidate={this.props.onPhotoConsolidate}
+          onPhotoCreate={this.props.onPhotoCreate}
+          onPhotoRotate={this.props.onPhotoRotate}
+          onPhotoSave={this.props.onPhotoSave}
+          onPhotoSelect={this.props.onPhotoSelect}
+          onUiUpdate={this.props.onUiUpdate}/>
 
         <DragLayer/>
         <div className="cover"/>
@@ -310,16 +270,12 @@ class ProjectComponent extends React.Component {
     }).isRequired,
 
     keymap: object.isRequired,
-    items: arrayOf(
-      shape({ id: number.isRequired })
-    ).isRequired,
 
     selection: arrayOf(
       shape({ id: number.isRequired })
     ),
 
     photo: object,
-    photos: object.isRequired,
     visiblePhotos: arrayOf(
       shape({ id: number.isRequired })
     ),
@@ -334,23 +290,28 @@ class ProjectComponent extends React.Component {
     }).isRequired,
 
     ui: object.isRequired,
-    data: object.isRequired,
-    columns: object.isRequired,
-    sort: object.isRequired,
-    tags: object.isRequired,
-    templates: object.isRequired,
 
     isOver: bool,
     canDrop: bool,
     connectDropTarget: func.isRequired,
 
     onContextMenu: func.isRequired,
-    onItemImport: func.isRequired,
-    onPhotoConsolidate: func.isRequired,
-    onProjectOpen: func.isRequired,
-    onModeChange: func.isRequired,
+    onEdit: func.isRequired,
+    onEditCancel: func.isRequired,
+    onItemOpen: func.isRequired,
     onMetadataSave: func.isRequired,
-    onSort: func.isRequired,
+    onModeChange: func.isRequired,
+    onNoteCreate: func.isRequired,
+    onNoteDelete: func.isRequired,
+    onNoteSave: func.isRequired,
+    onNoteSelect: func.isRequired,
+    onOpenInFolder: func.isRequired,
+    onPhotoConsolidate: func.isRequired,
+    onPhotoCreate: func.isRequired,
+    onPhotoRotate: func.isRequired,
+    onPhotoSave: func.isRequired,
+    onPhotoSelect: func.isRequired,
+    onProjectOpen: func.isRequired,
     onTemplateImport: func.isRequired,
     onUiUpdate: func.isRequired
   }
@@ -393,22 +354,15 @@ const DropTargetSpec = {
 
 export const Project = connect(
   state => ({
-    columns: getAllColumns(state),
-    data: state.metadata,
     edit: state.edit,
-    index: state.qr.index,
-    items: getVisibleItems(state),
     keymap: state.keymap,
     nav: state.nav,
     note: getSelectedNote(state),
     notes: getVisibleNotes(state),
     photo: getSelectedPhoto(state),
-    photos: state.photos,
     visiblePhotos: getVisiblePhotos(state),
     selection: getSelectedItems(state),
-    sort: getSortColumn(state),
     templates: state.ontology.template,
-    tags: state.tags,
     ui: state.ui
   }),
 
@@ -416,6 +370,14 @@ export const Project = connect(
     onContextMenu(event, ...args) {
       event.stopPropagation()
       dispatch(act.context.show(event, ...args))
+    },
+
+    onEdit(...args) {
+      dispatch(act.edit.start(...args))
+    },
+
+    onEditCancel() {
+      dispatch(act.edit.cancel())
     },
 
     onModeChange(mode) {
@@ -430,72 +392,12 @@ export const Project = connect(
       dispatch(act.project.open(path))
     },
 
-    onColumnInsert(...args) {
-      dispatch(act.nav.column.insert(...args))
-    },
-
-    onColumnRemove(...args) {
-      dispatch(act.nav.column.remove(...args))
-    },
-
-    onColumnOrder(...args) {
-      dispatch(act.nav.column.order(...args))
-    },
-
-    onColumnResize(...args) {
-      dispatch(act.nav.column.resize(...args))
-    },
-
-    onSelect(...args) {
-      dispatch(act.nav.select(...args))
-    },
-
-    onSearch(query) {
-      dispatch(act.nav.search({ query }))
-    },
-
-    onSort(...args) {
-      dispatch(act.nav.sort(...args))
-    },
-
-    onItemSelect(payload, mod, meta) {
-      dispatch(act.item.select(payload, { mod, ...meta }))
-    },
-
     onItemOpen(item) {
       dispatch(act.item.open(item))
     },
 
-    onItemCreate() {
-      dispatch(act.item.create())
-    },
-
-    onItemImport(...args) {
-      dispatch(act.item.import(...args))
-    },
-
-    onItemExport(items, meta) {
-      dispatch(act.item.export(items, meta))
-    },
-
-    onItemDelete(items) {
-      dispatch(act.item.delete(items))
-    },
-
-    onItemMerge(...args) {
-      dispatch(act.item.merge(...args))
-    },
-
     onItemPreview(...args) {
       dispatch(act.item.preview(...args))
-    },
-
-    onItemTagAdd(...args) {
-      dispatch(act.item.tags.create(...args))
-    },
-
-    onItemTagRemove(...args) {
-      dispatch(act.item.tags.delete(...args))
     },
 
     onMetadataSave(...args) {
@@ -504,10 +406,6 @@ export const Project = connect(
 
     onPhotoCreate(...args) {
       dispatch(act.photo.create(...args))
-    },
-
-    onPhotoMove(...args) {
-      dispatch(act.photo.move(...args))
     },
 
     onPhotoConsolidate(...args) {
@@ -526,16 +424,6 @@ export const Project = connect(
       dispatch(act.photo.select(...args))
     },
 
-    onTagCreate(data) {
-      dispatch(act.tag.create(data))
-      dispatch(act.edit.cancel())
-    },
-
-    onTagSave(data, id) {
-      dispatch(act.tag.save({ ...data, id }))
-      dispatch(act.edit.cancel())
-    },
-
     onTemplateImport(files) {
       dispatch(act.ontology.template.import({ files }, { prompt: true }))
     },
@@ -552,20 +440,8 @@ export const Project = connect(
       dispatch(act.note.delete(...args))
     },
 
-    onNoteRestore(...args) {
-      dispatch(act.note.delete(...args))
-    },
-
     onNoteSelect(...args) {
       dispatch(act.note.select(...args))
-    },
-
-    onEdit(...args) {
-      dispatch(act.edit.start(...args))
-    },
-
-    onEditCancel() {
-      dispatch(act.edit.cancel())
     },
 
     onUiUpdate(...args) {
