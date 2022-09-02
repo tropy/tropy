@@ -178,10 +178,7 @@ export class ItemPanelGroup extends React.PureComponent {
                       ref={this.tab}
                       isDisabled={isDisabled || isReadOnly}
                       onCancel={this.handleTagAddCancel}
-                      onContextMenu={this.props.onContextMenu}
-                      onItemTagAdd={this.props.onItemTagAdd}
-                      onItemTagRemove={this.props.onItemTagRemove}
-                      onTagCreate={this.props.onTagCreate}/>
+                      onContextMenu={this.props.onContextMenu}/>
                   )
               }
             }}
@@ -261,8 +258,6 @@ export class ItemPanelGroup extends React.PureComponent {
     onEditCancel: func,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,
-    onItemTagAdd: func.isRequired,
-    onItemTagRemove: func.isRequired,
     onMetadataSave: func.isRequired,
     onModeChange: func.isRequired,
     onNoteCreate: func.isRequired,
@@ -274,8 +269,6 @@ export class ItemPanelGroup extends React.PureComponent {
     onPhotoRotate: func.isRequired,
     onPhotoSave: func.isRequired,
     onPhotoSelect: func.isRequired,
-    onTagCreate: func.isRequired,
-    onTagSave: func.isRequired,
     onUiUpdate: func.isRequired
   }
 

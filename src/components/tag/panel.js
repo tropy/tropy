@@ -4,6 +4,7 @@ import { TagList } from './list'
 import { TagAdder } from './adder'
 import { toId } from '../../common/util'
 import { arrayOf, bool, func, number, object, shape, string } from 'prop-types'
+import * as act from '../../actions'
 
 import {
   getAllTags,
@@ -120,7 +121,21 @@ const TagPanelContainer = connect(
     items: getSelectedItems(state),
     keymap: state.keymap.TagList,
     tags: getItemTags(state)
-  }), null, null, { forwardRef: true }
+  }),
+
+  (dispatch) => ({
+    onTagCreate(data) {
+      dispatch(act.tag.create(data))
+    },
+
+    onItemTagAdd(...args) {
+      dispatch(act.item.tags.create(...args))
+    },
+
+    onItemTagRemove(...args) {
+      dispatch(act.item.tags.delete(...args))
+    }
+  }), null, { forwardRef: true }
 )(TagPanel)
 
 export {
