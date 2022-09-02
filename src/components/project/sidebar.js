@@ -342,8 +342,8 @@ class ProjectSidebar extends React.PureComponent {
     }).isRequired,
     root: number.isRequired,
     tagColor: string,
-    tags: arrayOf(object).isRequired,
     tagSelection: arrayOf(number).isRequired,
+    tags: arrayOf(object).isRequired,
     width: number.isRequired,
     onActivityCancel: func.isRequired,
     onContextMenu: func.isRequired,
@@ -383,17 +383,19 @@ class ProjectSidebar extends React.PureComponent {
 const ProjectSidebarContainer = connect(
     (state, { root }) => ({
       activities: getActivities(state),
+      edit: state.edit,
       expand: state.sidebar.expand,
       hasLastImport: state.imports.length > 0,
       hold: getListHold(state),
       isLastImportSelected: state.nav.imports,
       isTrashSelected: state.nav.trash,
-      lists: state.lists,
+      keymap: state.keymap,
       list: state.nav.list,
+      lists: state.lists,
       listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
-      tags: getAllTags(state),
       tagColor: state.settings.tagColor,
       tagSelection: state.nav.tags,
+      tags: getAllTags(state),
       width: state.ui.sidebar.width
     }),
 
@@ -402,8 +404,24 @@ const ProjectSidebarContainer = connect(
         dispatch(act.activity.cancel(...args))
       },
 
+      onEdit(...args) {
+        dispatch(act.edit.start(...args))
+      },
+
+      onEditCancel() {
+        dispatch(act.edit.cancel())
+      },
+
+      onItemTagAdd(...args) {
+        dispatch(act.item.tags.create(...args))
+      },
+
       onListCollapse(...args) {
         dispatch(act.list.collapse(...args))
+      },
+
+      onListEdit(id) {
+        dispatch(act.edit.start({ list: { id } }))
       },
 
       onListExpand(...args) {
@@ -416,17 +434,13 @@ const ProjectSidebarContainer = connect(
         }))
       },
 
-      onListEdit(id) {
-        dispatch(act.edit.start({ list: { id } }))
+      onListMove(...args) {
+        dispatch(act.list.move(...args))
       },
 
       onListSave(...args) {
         dispatch(act.list.save(...args))
         dispatch(act.edit.cancel())
-      },
-
-      onListMove(...args) {
-        dispatch(act.list.move(...args))
       },
 
       onProjectEdit() {
@@ -435,7 +449,6 @@ const ProjectSidebarContainer = connect(
 
       onProjectSave(...args) {
         dispatch(act.project.save(...args))
-        dispatch(act.edit.cancel())
       },
 
       onResize(width) {
@@ -444,8 +457,20 @@ const ProjectSidebarContainer = connect(
         }))
       },
 
+      onSelect(...args) {
+        dispatch(act.nav.select(...args))
+      },
+
+      onTagCreate(data) {
+        dispatch(act.tag.create(data))
+      },
+
       onTagDelete(tag) {
         dispatch(act.tag.delete(tag.id))
+      },
+
+      onTagSave(data, id) {
+        dispatch(act.tag.save({ ...data, id }))
       },
 
       onTagSelect(...args) {
