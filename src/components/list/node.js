@@ -363,7 +363,7 @@ const DropTargetSpec = {
   canDrop(props, monitor) {
     switch (monitor.getItemType()) {
       case DND.FILE:
-        return hasPhotoFiles(monitor)
+        return hasPhotoFiles(monitor.getItem())
       case DND.LIST:
         return !(props.isDragging || props.isDraggingParent)
       default:
