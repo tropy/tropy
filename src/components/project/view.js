@@ -1,187 +1,209 @@
-import React from 'react'
-import { WindowContext } from '../window'
-import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd'
-import { ItemGrid, ItemTable, NoItems } from '../item'
-import { ProjectSidebar } from './sidebar'
-import { ProjectToolbar } from './toolbar'
-import { pick } from '../../common/util'
-import { array, bool, func, object, number } from 'prop-types'
-import { SASS } from '../../constants'
+import React, { useEffect, useMemo, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { bool, func, object, number } from 'prop-types'
+import { useDropPhotoFiles } from '../dnd.js'
+import { useActions } from '../../hooks/use-action.js'
+import { useEvent } from '../../hooks/use-event.js'
+import { usePasteEvent } from '../../hooks/use-paste-event.js'
+import { useWindow } from '../../hooks/use-window.js'
+
+import { ItemGrid, ItemTable, NoItems } from '../item/index.js'
+import { ProjectSidebar } from './sidebar.js'
+import { ProjectToolbar } from './toolbar.js'
+import { SASS } from '../../constants/index.js'
+
+import * as act from '../../actions/index.js'
+
+import {
+  getAllColumns,
+  getSortColumn,
+  getVisibleItems
+} from '../../selectors/index.js'
 
 
-class ProjectView extends React.Component {
-  iterator = React.createRef()
+export const ProjectView = ({
+  isDisabled,
+  offset,
+  onContextMenu,
+  project
+}) => {
 
-  componentDidUpdate({ isDisabled: wasDisabled }) {
-    if (wasDisabled && !this.props.isDisabled) {
-      this.iterator.current?.focus()
-    }
-  }
+  let win = useWindow()
+  let dispatch = useDispatch()
 
-  get size() {
-    return SASS.ITEM.ZOOM[this.props.zoom]
-  }
+  let nav = useSelector(state => state.nav)
+  let zoom = useSelector(state => state.ui.zoom)
+  let items = useSelector(getVisibleItems)
+  let sort = useSelector(getSortColumn)
 
-  get isEmpty() {
-    return this.props.isEmpty &&
-      !this.props.nav.trash &&
-      this.props.items.length === 0
-  }
+  let iterator = useRef()
 
-  get maxZoom() {
-    return SASS.ITEM.ZOOM.length - 1
-  }
+  // TODO if isDisabled switches from true to false
+  useEffect(() => {
+    if (!isDisabled) iterator.current?.focus()
+  }, [isDisabled])
 
-  get ItemIterator() {
-    return this.props.zoom ? ItemGrid : ItemTable
-  }
+  let size = SASS.ITEM.ZOOM[zoom]
+  let maxZoom = SASS.ITEM.ZOOM.length - 1
 
-  get style() {
-    return {
-      flexBasis: `calc(100% - ${this.props.offset}px)`
-    }
-  }
+  let ItemIterator = zoom ? ItemGrid : ItemTable
 
-  handleZoomChange = (zoom) => {
-    this.props.onUiUpdate({ zoom })
-  }
+  let isEmpty = (project.id && project.items === 0)
+    && !nav.trash && items.length === 0
 
-  handleItemImport = () => {
-    return this.props.onItemImport({ list: this.props.nav.list })
-  }
+  let isReadOnly = project.isReadOnly || nav.trash
 
-  handleSort = (sort) => {
-    this.props.onSort({
-      ...sort, list: this.props.nav.list || 0
-    })
-  }
+  let style = useMemo(() => ({
+    flexBasis: `calc(100% - ${offset}px)`
+  }), [offset])
 
-  render() {
-    let {
-      isDisabled,
-      canDrop,
-      edit,
-      isOver,
-      items,
-      keymap,
-      nav,
-      photos,
-      tags,
-      zoom,
-      onItemCreate,
-      onItemSelect,
-      onSearch
-    } = this.props
 
-    let { size, maxZoom, ItemIterator, isEmpty } = this
-    let isReadOnly = this.props.project?.isReadOnly || nav.trash
+  let handleZoomChange = useEvent((value) => {
+    dispatch(act.ui.update({ zoom: value }))
+  })
 
-    return (
-      <div id="project-view">
-        <ProjectSidebar {...pick(this.props, ProjectSidebar.props)}
-          isDisabled={isDisabled}/>
-        <div className="main">
-          <section className="items" style={this.style}>
-            <header>
-              <ProjectToolbar
-                count={items.length}
-                isDisabled={isDisabled}
-                isReadOnly={isReadOnly}
-                maxZoom={maxZoom}
-                query={nav.query}
-                zoom={zoom}
-                onItemCreate={this.handleItemImport}
-                onSearch={onSearch}
-                onZoomChange={this.handleZoomChange}/>
-            </header>
-            {isEmpty ?
-              <NoItems
-                connectDropTarget={this.props.connectDropTarget}
-                isOver={isOver && canDrop}
-                isReadOnly={isReadOnly}/> :
-              <ItemIterator {...pick(this.props, ItemIterator.getPropKeys())}
-                ref={this.iterator}
-                items={items}
-                isDisabled={isDisabled}
-                isTrashSelected={nav.trash}
-                isReadOnly={isReadOnly}
-                photos={photos}
-                edit={edit.column}
-                keymap={keymap.ItemIterator}
-                list={nav.list}
-                selection={nav.items}
-                size={size}
-                tags={tags}
-                hasScrollbars={this.context.state.scrollbars}
-                isOver={isOver && canDrop}
-                onCreate={onItemCreate}
-                onSelect={onItemSelect}
-                onSort={this.handleSort}/>}
-          </section>
-        </div>
+  let handleItemImport = useEvent(({ files, urls } = {}) => {
+    dispatch(act.item.import({
+      files,
+      urls,
+      list: nav.list
+    }))
+  })
+
+  let handleSort = useEvent((opts) => {
+    dispatch(act.nav.sort(opts))
+  })
+
+  let handleSearch = useEvent((query) => {
+    dispatch(act.nav.search({ query }))
+  })
+
+  usePasteEvent('application/json', (data) => {
+    handleItemImport({ data })
+  })
+
+  let [{ canDrop }, drop] = useDropPhotoFiles({
+    onDrop: handleItemImport,
+    isReadOnly
+  })
+
+
+  // TODO these don't concern ProjectView and should be moved!
+  // ------------------------------------------------------------
+  let edit = useSelector(state => state.edit.column)
+  let keymap = useSelector(state => state.keymap.ItemIterator)
+  let photos = useSelector(state => state.photos)
+  let data = useSelector(state => state.metadata)
+  let columns = useSelector(getAllColumns)
+  let templates = useSelector(state => state.ontology.template)
+  let tags = useSelector(state => state.tags)
+
+  let [
+    handleEdit,
+    handleEditCancel,
+    handleColumnInsert,
+    handleColumnOrder,
+    handleColumnRemove,
+    handleColumnResize,
+    handleItemExport,
+    handleItemDelete,
+    handleItemMerge,
+    handleItemOpen,
+    handleItemPreview,
+    handleMetadataSave,
+    handlePhotoMove,
+    handlePhotoRotate
+  ] = useActions([
+    'edit.start', 'edit.cancel',
+    'nav.column.insert', 'nav.column.order', 'nav.column.remove', 'nav.column.resize',
+    'item.export', 'item.delete', 'item.merge', 'item.open', 'item.preview',
+    'metadata.save',
+    'photo.move', 'photo.rotate'
+  ])
+
+  let handleItemSelect = useEvent((payload, mod, meta) => {
+    dispatch(act.item.select(payload, { mod, ...meta }))
+  })
+  // ------------------------------------------------------------
+
+
+  return (
+    <div id="project-view">
+      <ProjectSidebar
+        isDisabled={isDisabled}
+        project={project}
+        onContextMenu={onContextMenu}
+        onItemDelete={handleItemDelete}
+        onItemImport={handleItemImport}/>
+
+      <div className="main">
+        <section className="items" style={style}>
+          <header>
+            <ProjectToolbar
+              count={items.length}
+              isDisabled={isDisabled}
+              isReadOnly={isReadOnly}
+              maxZoom={maxZoom}
+              query={nav.query}
+              zoom={zoom}
+              onItemCreate={handleItemImport}
+              onSearch={handleSearch}
+              onZoomChange={handleZoomChange}/>
+          </header>
+          {isEmpty ?
+            <NoItems
+              ref={drop}
+              isOver={canDrop}
+              isReadOnly={isReadOnly}/> :
+
+            <ItemIterator
+              ref={iterator}
+              hasScrollbars={win.state.scrollbars}
+              isDisabled={isDisabled}
+              isReadOnly={isReadOnly}
+              items={items}
+              list={nav.list}
+              onItemDelete={handleItemDelete}
+              onSelect={handleItemSelect}
+              onSort={handleSort}
+              selection={nav.items}
+              size={size}
+
+              columns={columns}
+              connectDropTarget={drop}
+              data={data}
+              edit={edit}
+              isOver={canDrop}
+              isTrashSelected={nav.trash}
+              keymap={keymap}
+              onColumnInsert={handleColumnInsert}
+              onColumnOrder={handleColumnOrder}
+              onColumnRemove={handleColumnRemove}
+              onColumnResize={handleColumnResize}
+              onContextMenu={onContextMenu}
+              onEdit={handleEdit}
+              onEditCancel={handleEditCancel}
+              onItemExport={handleItemExport}
+              onItemMerge={handleItemMerge}
+              onItemOpen={handleItemOpen}
+              onItemPreview={handleItemPreview}
+              onMetadataSave={handleMetadataSave}
+              onPhotoMove={handlePhotoMove}
+              onPhotoRotate={handlePhotoRotate}
+              photos={photos}
+              sort={sort}
+              tags={tags}
+              templates={templates}/>}
+        </section>
       </div>
-    )
-  }
-
-  static contextType = WindowContext
-
-  static propTypes = {
-    canDrop: bool,
-    edit: object.isRequired,
-    isDisabled: bool,
-    isEmpty: bool.isRequired,
-    isOver: bool,
-    items: array.isRequired,
-    keymap: object.isRequired,
-    nav: object.isRequired,
-    offset: number.isRequired,
-    photos: object.isRequired,
-    project: object,
-    tags: object.isRequired,
-    connectDropTarget: func.isRequired,
-    zoom: number.isRequired,
-    onItemCreate: func.isRequired,
-    onItemImport: func.isRequired,
-    onItemSelect: func.isRequired,
-    onItemTagAdd: func.isRequired,
-    onSearch: func.isRequired,
-    onSort: func.isRequired,
-    onUiUpdate: func.isRequired
-  }
+    </div>
+  )
 }
 
-const spec = {
-  drop({ nav, onItemImport }, monitor) {
-    let photos = getDroppedFiles(monitor.getItem())
-
-    if (photos) {
-      onItemImport({ ...photos, list: nav.list })
-      return photos
-    }
-  },
-
-  canDrop({ nav, project }, monitor) {
-    if (project?.isReadOnly || nav.trash)
-      return false
-
-    switch (monitor.getItemType()) {
-      case DND.FILE:
-        return hasPhotoFiles(monitor.getItem())
-      default:
-        return true
-    }
-  }
-}
-
-const collect = (connect, monitor) => ({
-  connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver(),
-  canDrop: monitor.canDrop()
-})
-
-const ProjectViewContainer =
-  DropTarget([DND.FILE, DND.URL], spec, collect)(ProjectView)
-
-export {
-  ProjectViewContainer as ProjectView
+ProjectView.propTypes = {
+  isDisabled: bool,
+  offset: number.isRequired,
+  onContextMenu: func,
+  onItemOpen: func,
+  project: object
 }
