@@ -1,4 +1,4 @@
-import { NAV } from '../constants'
+import { NAV, LIST } from '../constants'
 
 export default {
   restore(payload, meta) {
@@ -32,7 +32,10 @@ export default {
   sort(payload, meta) {
     return {
       type: NAV.SORT,
-      payload,
+      payload: {
+        list: LIST.ROOT,
+        ...payload
+      },
       meta: { search: true, ...meta }
     }
   },
