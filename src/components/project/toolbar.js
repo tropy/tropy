@@ -6,7 +6,7 @@ import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
 import { Slider } from '../slider'
 import { SearchField } from '../search'
 import { Button } from '../button'
-import { IconPlus, IconList, IconGrid } from '../icons'
+import { IconPlus, IconList, IconGrid, IconXSmall } from '../icons'
 
 
 export class ProjectToolbar extends React.PureComponent {
@@ -42,6 +42,7 @@ export class ProjectToolbar extends React.PureComponent {
         </Toolbar.Center>
         <Toolbar.Right>
           <SearchField
+            clearIcon={<IconXSmall/>}
             focus="find"
             query={this.props.query}
             isDisabled={this.props.isDisabled}

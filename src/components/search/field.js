@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { useIntl } from 'react-intl'
-import { bool, func, number, string } from 'prop-types'
+import { bool, func, node, number, string } from 'prop-types'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDebounce } from '../../hooks/use-debounce.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
@@ -12,6 +12,7 @@ import { blank } from '../../common/util.js'
 
 
 export const SearchField = React.memo(({
+  clearIcon,
   focus,
   isDisabled,
   onSearch,
@@ -50,15 +51,16 @@ export const SearchField = React.memo(({
         onCancel={handleCancel}
         onChange={handleChange}
         onCommit={handleChange.flush}/>
-      {!blank(query) &&
+      {!blank(query) && clearIcon &&
         <Button
-          icon={<IconXSmall/>}
+          icon={clearIcon}
           onClick={handleCancel}/>}
     </div>
   )
 })
 
 SearchField.propTypes = {
+  clearIcon: node,
   focus: string,
   isDisabled: bool,
   onSearch: func.isRequired,
