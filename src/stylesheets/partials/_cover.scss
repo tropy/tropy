@@ -18,8 +18,8 @@
     display: none;
   }
 
-  .inactive &,
-  .closing & {
+  .inactive > &,
+  .closing > & {
     display: flex;
     opacity: 0.6;
   }
