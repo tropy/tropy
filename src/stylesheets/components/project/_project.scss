@@ -6,7 +6,6 @@
 .no-project {
   height: 100%;
   overflow: hidden;
-  @include fade($delay: 0.33s);
 
   &.over {
     @extend %drop-target;
@@ -16,9 +15,12 @@
 .no-project {
   display: flex;
   background-color: $no-project-bg;
+  @include fade($delay: 0.33s, $duration: 0.15s);
 }
 
 .project {
+  @include fade($delay: 0.66s, $duration: 0.15s);
+
   .main {
     display: flex;
     flex: 1 1 0;
