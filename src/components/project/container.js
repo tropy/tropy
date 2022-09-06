@@ -37,7 +37,6 @@ export const ProjectContainer = ({
   // let [, drop] = useDrop()
 
   let project = useSelector(state => state.project)
-  let isProjectOpen = (project.file && !project.closed)
 
   let handleProjectOpen = useEvent(path => {
     dispatch(act.project.open(path))
@@ -46,11 +45,11 @@ export const ProjectContainer = ({
   return (
     <SwitchTransition>
       <Fade
-        key={isProjectOpen ? 'project' : 'no-project'}
+        key={project.file ? 'project' : 'no-project'}
         enter={isWindowResizeAnimated}
         exit={false}
         timeout={timeout}>
-        {isProjectOpen ?
+        {project.file ?
           <Project
             project={project}
             isOver={false}/> :
@@ -211,6 +210,9 @@ class ProjectComponent extends React.Component {
     let isItemOpen = !!(
       this.state.mode === MODE.ITEM ^ this.state.isModeChanging
     )
+
+    if (project.closed)
+      return <div className="project closed"/>
 
     return (this.props.connectDropTarget(
       <div
