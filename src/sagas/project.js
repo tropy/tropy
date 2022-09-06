@@ -17,7 +17,7 @@ import * as act from '../actions/index.js'
 import { persist, restore, storage } from './storage.js'
 import { watch } from './watch.js'
 import { handleDatabaseErrors } from './db.js'
-import ARGS, { update } from '../args.js'
+import ARGS from '../args.js'
 import { Database } from '../common/db.js'
 
 import {
