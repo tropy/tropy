@@ -117,7 +117,7 @@ class Cache {
   }
 
   static url(root, variant, { id, path, ...photo }) {
-    if  (id == null || variant == null)
+    if  (root == null || id == null || variant == null)
       return null
 
     if (Cache.isCacheVariant(variant, photo)) {
