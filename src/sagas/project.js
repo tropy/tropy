@@ -58,11 +58,6 @@ export function *open(opts = {}, { payload, meta }) {
     yield call(cache.init)
     yield call(store.init)
 
-    // Update window's global ARGS to allow reloading the project!
-    if (db.path !== ARGS.file) {
-      update({ file: db.path })
-    }
-
     yield put(act.project.opened({
       isReadOnly: db.isReadOnly,
       file: db.path,
@@ -88,13 +83,15 @@ export function *open(opts = {}, { payload, meta }) {
     warn({ stack: e.stack }, 'unexpected error in *project.open')
     yield call(fail, e, db.path)
 
+    var error = e
+
     // Mark the task as cancelled. Otherwise the task will appear to be
     // running even after the finally block completes.
     yield cancel()
 
   } finally {
     yield call(db.close)
-    yield put(act.project.closed())
+    yield put(act.project.closed(error))
 
     debug('*project.open terminated')
   }
@@ -243,10 +240,6 @@ export function *main() {
       }
 
       if (action.type === PROJECT.CLOSE) {
-        // Clear project file if project was closed by user.
-        if (action.payload === 'user')
-          update({ file: null })
-
         // Break main loop if project was closed without reason.
         // This typically means that the window is being closed.
         if (!(action.error || action.payload === 'user'))

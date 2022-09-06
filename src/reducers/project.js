@@ -1,4 +1,5 @@
-import { PROJECT, ITEM } from '../constants'
+import { PROJECT, ITEM } from '../constants/index.js'
+import ARGS, { update } from '../args.js'
 
 const init = { name: '', items: 0 }
 
@@ -13,8 +14,6 @@ function inc(state, by = 1) {
 // eslint-disable-next-line complexity
 export function project(state = init, { type, payload, meta, error }) {
   switch (type) {
-    case PROJECT.OPENED:
-      return { ...payload }
     case PROJECT.RELOAD:
       return (!error && meta.done) ? { ...payload } : state
     case PROJECT.UPDATE:
@@ -25,10 +24,31 @@ export function project(state = init, { type, payload, meta, error }) {
         file: payload,
         isReadOnly: meta.isReadOnly
       }
+    case PROJECT.OPENED:
+      // Update window's global ARGS to allow reloading the project!
+      if (payload.file !== ARGS.file) {
+        update({ file: payload.file })
+      }
+      return { ...payload }
+
     case PROJECT.CLOSE:
-      return { ...state, isClosing: true }
+      // Clear project file if project was closed by user.
+      if (payload === 'user') {
+        update({ file: null })
+      }
+      return {
+        ...state,
+        closedBy: payload,
+        isReadOnly: true,
+        isClosing: true
+      }
     case PROJECT.CLOSED:
-      return { ...state, isClosing: false, closed: new Date() }
+      return (error || state.closedBy === 'user') ? init : {
+        ...state,
+        isClosing: false,
+        closed: new Date()
+      }
+
     case ITEM.INSERT:
       return inc(state)
     case ITEM.RESTORE:
