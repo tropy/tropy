@@ -12,7 +12,7 @@ export const NoProject = React.forwardRef(({
 }, ref) => {
   let recent = useArgs('recent')
 
-  useWindowSize(width * (recent.length ? 2 : 1), height)
+  useWindowSize(width * (recent.length ? 2 : 1), height, 150)
 
   return (
     <div ref={ref} className="no-project">
