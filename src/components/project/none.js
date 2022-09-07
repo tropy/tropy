@@ -1,11 +1,13 @@
 import React from 'react'
-import { func, number } from 'prop-types'
+import { bool, func, number } from 'prop-types'
+import cx from 'classnames'
 import { useArgs } from '../../hooks/use-args.js'
 import { useWindowSize } from '../../hooks/use-window-size.js'
 import { NewProject } from './new.js'
 import { RecentProjects } from './recent.js'
 
 export const NoProject = React.forwardRef(({
+  isOver,
   onProjectOpen,
   height,
   width
@@ -15,7 +17,7 @@ export const NoProject = React.forwardRef(({
   useWindowSize(width * (recent.length ? 2 : 1), height)
 
   return (
-    <div ref={ref} className="no-project">
+    <div ref={ref} className={cx('no-project', { over: isOver })}>
       <RecentProjects
         files={recent}
         onSelect={onProjectOpen}/>
@@ -26,6 +28,7 @@ export const NoProject = React.forwardRef(({
 })
 
 NoProject.propTypes = {
+  isOver: bool,
   onProjectOpen: func,
   height: number.isRequired,
   width: number.isRequired

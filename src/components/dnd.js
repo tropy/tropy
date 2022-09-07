@@ -1,5 +1,3 @@
-import { useMemo } from 'react'
-
 import {
   DndProvider,
   useDragLayer,
@@ -57,7 +55,7 @@ const getDroppedFiles = (item) => {
 }
 
 function useDropPhotoFiles({ onDrop, isReadOnly = false }) {
-  let spec = useMemo(() => ({
+  return useDrop(() => ({
     accept: [DND.FILE, DND.URL],
 
     drop(item) {
@@ -90,8 +88,6 @@ function useDropPhotoFiles({ onDrop, isReadOnly = false }) {
       canDrop: monitor.canDrop()
     })
   }), [onDrop, isReadOnly])
-
-  return useDrop(spec)
 }
 
 

@@ -6,7 +6,7 @@ import { NoProject } from './none.js'
 import { ItemView } from '../item'
 import { Fade, SwitchTransition } from '../fx.js'
 import { DragLayer } from '../drag-layer'
-import { DND, DropTarget, hasProjectFiles } from '../dnd.js'
+import { DND, useDrop, hasProjectFiles } from '../dnd.js'
 import { MODE } from '../../constants/project.js'
 import { emit, on, off, ensure, isInput, reflow } from '../../dom.js'
 import cx from 'classnames'
@@ -34,13 +34,57 @@ export const ProjectContainer = ({
 }) => {
   let dispatch = useDispatch()
 
-  // let [, drop] = useDrop()
-
   let project = useSelector(state => state.project)
 
   let handleProjectOpen = useEvent(path => {
     dispatch(act.project.open(path))
   })
+
+  let handleTemplateImport = useEvent(files => {
+    dispatch(act.ontology.template.import({ files }, { prompt: true }))
+  })
+
+  let [{ isOver }, drop] = useDrop(() => ({
+    accept: [DND.FILE],
+
+    drop(item) {
+      let projects = []
+      let templates = []
+
+      for (let file of item.files) {
+        switch (extname(file.path).toLowerCase()) {
+          case '.tpy':
+            if (file.path !== project.file)
+              projects.push(file.path)
+            break
+          case '.ttp':
+            templates.push(file.path)
+            break
+        }
+      }
+
+      // Subtle: currently handling only the first project file!
+      if (projects.length) {
+        handleProjectOpen(projects[0])
+        return { files: projects }
+      }
+
+      if (templates.length) {
+        handleTemplateImport(templates)
+        return { files: templates }
+      }
+    },
+
+    // FIXME in recent Electron versions we can't see the mime-types anymore on drag
+    // so this is currently broken.
+    canDrop: (item) =>
+      hasProjectFiles(item),
+
+    collect: (monitor) => ({
+      isOver: monitor.isOver() && monitor.canDrop()
+    })
+  }), [project.file, handleProjectOpen, handleTemplateImport])
+
 
   return (
     <SwitchTransition>
@@ -51,9 +95,12 @@ export const ProjectContainer = ({
         timeout={timeout}>
         {project.file ?
           <Project
+            drop={drop}
             project={project}
-            isOver={false}/> :
+            isOver={isOver}/> :
           <NoProject
+            ref={drop}
+            isOver={isOver}
             onProjectOpen={handleProjectOpen}/>}
       </Fade>
     </SwitchTransition>
@@ -100,18 +147,23 @@ class ProjectComponent extends React.Component {
   }
 
   get classes() {
-    const { isOver, canDrop, nav } = this.props
+    const { isOver, nav } = this.props
     const { mode, willModeChange, isModeChanging } = this.state
 
     return ['project', {
       closing: this.props.project.isClosing,
-      over: isOver && canDrop,
+      over: isOver,
       [`${mode}-mode`]: true,
       [`${mode}-mode-leave`]: willModeChange,
       [`${mode}-mode-leave-active`]: isModeChanging,
       [`${nav.mode}-mode-enter`]: willModeChange,
       [`${nav.mode}-mode-enter-active`]: isModeChanging
     }]
+  }
+
+  setContainer = (element) => {
+    this.props.drop(element)
+    this.container.current = element
   }
 
   modeWillChange() {
@@ -214,10 +266,10 @@ class ProjectComponent extends React.Component {
     if (project.closed)
       return <div className="project closed"/>
 
-    return (this.props.connectDropTarget(
+    return (
       <div
         className={cx(this.classes)}
-        ref={this.container}
+        ref={this.setContainer}
         onContextMenu={this.props.onContextMenu}>
 
         <ProjectView
@@ -262,7 +314,7 @@ class ProjectComponent extends React.Component {
         <DragLayer/>
         <div className="cover"/>
       </div>
-    ))
+    )
   }
 
 
@@ -294,8 +346,7 @@ class ProjectComponent extends React.Component {
     ui: object.isRequired,
 
     isOver: bool,
-    canDrop: bool,
-    connectDropTarget: func.isRequired,
+    drop: func.isRequired,
 
     onContextMenu: func.isRequired,
     onEdit: func.isRequired,
@@ -318,41 +369,6 @@ class ProjectComponent extends React.Component {
     onUiUpdate: func.isRequired
   }
 }
-
-
-const DropTargetSpec = {
-  drop({ onProjectOpen, onTemplateImport, project }, monitor) {
-    let tpy = []
-    let ttp = []
-
-    for (let file of monitor.getItem().files) {
-      switch (extname(file.path).toLowerCase()) {
-        case '.tpy':
-          tpy.push(file.path)
-          break
-        case '.ttp':
-          ttp.push(file.path)
-          break
-      }
-    }
-
-    // Subtle: currently handling only the first project file!
-    if (tpy.length > 0 && tpy[0] !== project.file) {
-      onProjectOpen(tpy[0])
-      return { files: tpy }
-    }
-
-    if (ttp.length > 0) {
-      onTemplateImport(ttp)
-      return { files: ttp }
-    }
-  },
-
-  canDrop(_, monitor) {
-    return hasProjectFiles(monitor)
-  }
-}
-
 
 export const Project = connect(
   state => ({
@@ -451,8 +467,4 @@ export const Project = connect(
     }
   })
 
-)(DropTarget(DND.FILE, DropTargetSpec, (c, m) => ({
-  connectDropTarget: c.dropTarget(),
-  isOver: m.isOver(),
-  canDrop: m.canDrop()
-}))(ProjectComponent))
+)(ProjectComponent)
