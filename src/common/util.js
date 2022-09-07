@@ -26,6 +26,10 @@ export function once(emitter, ...events) {
   ))
 }
 
+export function when(emitter, event, timeout) {
+  return Promise.race([once(emitter, event), delay(timeout)])
+}
+
 export function empty(obj) {
   return obj == null || Object.keys(obj).length === 0
 }
