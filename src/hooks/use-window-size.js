@@ -7,18 +7,13 @@ export function useWindowSize(width, height) {
   let delay = win.isResizeAnimated() ? 150 : 0
 
   useEffect(() => {
-    win.setFixedSize(true)
+    win.setFixedSize(true, { width, height })
+  }, [win, width, height])
 
-    return () => {
+  useEffect(() => (
+    () => {
       // Using a timeout because we want this to fire after unmount!
       setTimeout(() => { win?.setFixedSize(false) }, delay)
     }
-
-  }, [win, delay])
-
-  useEffect(() => {
-    if (width && height) {
-      win.resize(width, height)
-    }
-  }, [win, width, height])
+  ), [win, delay])
 }
