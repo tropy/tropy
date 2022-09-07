@@ -16,9 +16,9 @@ import {
   array,
   blank,
   counter,
-  once,
   remove,
-  restrict
+  restrict,
+  when
 } from '../common/util.js'
 
 import {
@@ -145,9 +145,7 @@ export class WindowManager extends EventEmitter {
       var win = new BrowserWindow(opts)
 
       if (opts.fixedSize) {
-        let { width, height } = opts.fixedSize
-        this.setFixedSize(win, true)
-        WindowManager.resize(win, width, height, false)
+        this.setFixedSize(win, true, opts.fixedSize)
       }
 
       // Manage a promise for our IPC ready event. Handling this here
@@ -296,11 +294,8 @@ export class WindowManager extends EventEmitter {
         else
           win.minimize()
         break
-      case 'resize':
-        WindowManager.resize(win, ...args)
-        break
       case 'fixed-size':
-        this.setFixedSize(win, !!args[0])
+        this.setFixedSize(win, ...args)
         break
       case 'rsvp':
         this.handlePendingResponse(...args)
@@ -464,52 +459,81 @@ export class WindowManager extends EventEmitter {
     }).finally(() => { delete this.pending[id] })
   }
 
-  setFixedSize(win, fixedSize = false, animate = true) {
-    if (win.isResizable() === !fixedSize)
-      return null
+  async enterFixedSize(win) {
+    if (!win.isNormal())
+      await WindowManager.setNormal(win)
+
+    let [width, height] = win.getContentSize()
+    let [minWidth, minHeight] = win.getMinimumSize()
+    let maximizable = win.isMaximizable()
+    let fullscreenable = win.isFullScreenable()
+
+    win.setMinimumSize(16, 16)
+    win.setMaximizable(false)
+    win.setFullScreenable(false)
+    win.setResizable(false)
+
+    this.props.set(win, {
+      isFixedSize: true,
+      width,
+      height,
+      minWidth,
+      minHeight,
+      maximizable,
+      fullscreenable
+    })
+  }
+
+  leaveFixedSize(win, animate) {
+    let type = this.types.get(win)
+
+    let {
+      width,
+      height,
+      minWidth = 16,
+      minHeight = 16,
+      maximizable,
+      fullscreenable = true
+    } = this.props.get(win) || WindowManager.defaults[type]
+
+    win.setResizable(true)
+    win.setContentSize(width, height, animate)
+    win.setMinimumSize(minWidth, minHeight)
+    win.setMaximizable(maximizable)
+    win.setFullScreenable(fullscreenable)
+
+    if (win.isMinimized())
+      win.restore()
+
+    this.props.set(win, {
+      isFixedSize: false
+    })
+  }
+
+  async setFixedSize(win, fixedSize = false, {
+    width,
+    height,
+    animate = true
+  } = {}) {
+    let { isFixedSize = false } = this.props.get(win) || {}
 
     if (fixedSize) {
-      if (win.isMaximized())
-        win.unmaximize()
-      if (win.isFullScreen())
-        win.setFullScreen(false)
+      if (!isFixedSize)
+        await this.enterFixedSize(win)
 
-      let [width, height] = win.getContentSize()
-      let [minWidth, minHeight] = win.getMinimumSize()
-      let maximizable = win.isMaximizable()
-      let fullscreenable = win.isFullScreenable()
-
-      this.props.set(win, {
-        width,
-        height,
-        minWidth,
-        minHeight,
-        maximizable,
-        fullscreenable
-      })
-
-      win.setMinimumSize(16, 16)
-      win.setResizable(false)
-      win.setMaximizable(false)
-      win.setFullScreenable(false)
+      if (width || height) {
+        try {
+          let size = win.getContentSize()
+          win.setResizable(true)
+          win.setContentSize(width || size[0], height || size[1], animate)
+        } finally {
+          win.setResizable(false)
+        }
+      }
 
     } else {
-      let type = this.types.get(win)
-
-      let {
-        width,
-        height,
-        minWidth = 16,
-        minHeight = 16,
-        maximizable,
-        fullscreenable = true
-      } = this.props.get(win) || WindowManager.defaults[type]
-
-      win.setResizable(true)
-      win.setContentSize(width, height, animate)
-      win.setMinimumSize(minWidth, minHeight)
-      win.setMaximizable(maximizable)
-      win.setFullScreenable(fullscreenable)
+      if (isFixedSize)
+        this.leaveFixedSize(win, animate)
     }
   }
 
@@ -523,7 +547,7 @@ export class WindowManager extends EventEmitter {
       win.show()
     } else {
       win = await this.open(type, args, { show: 'init', ...opts })
-      await once(win, 'show')
+      await when(win, 'show', 3000)
     }
     return win
   }
@@ -618,22 +642,6 @@ export class WindowManager extends EventEmitter {
   MIN_ZOOM = 0.75
   MAX_ZOOM = 2
 
-  static resize(win, width, height, animate = true) {
-    try {
-      var resizable = win.isResizable()
-
-      // Change resizable state directly, without restoring minimal bounds!
-      if (!resizable)
-        win.setResizable(true)
-
-      win.setContentSize(width, height, animate)
-
-    } finally {
-      if (!resizable)
-        win.setResizable(false)
-    }
-  }
-
   static getAquaColorVariant() {
     return darwin && AQUA[
       prefs.getUserDefault('AppleAquaColorVariant', 'string')
@@ -699,6 +707,29 @@ export class WindowManager extends EventEmitter {
       return false
     }
   }
+
+  static async leaveFullScreen(win) {
+    await setWindowState(win, 'leave-full-screen', 'setFullScreen', false)
+  }
+
+  static async unmaximize(win) {
+    await setWindowState(win, 'unmaximize')
+  }
+
+  static async restore(win) {
+    await setWindowState(win, 'restore')
+  }
+
+  static async setNormal(win) {
+    if (win.isMinimized())
+      await WindowManager.restore(win)
+    // Subtle: macOS reports isMaximized when in full-screen,
+    // so we need to check isFullScreen first!
+    if (win.isFullScreen())
+      await WindowManager.leaveFullScreen(win)
+    if (win.isMaximized())
+      await WindowManager.unmaximize(win)
+  }
 }
 
 
@@ -744,3 +775,8 @@ function webContentsForward(win, events) {
   }
 }
 
+function setWindowState(win, event, setter = event, ...args) {
+  let p = when(win, event, 2000)
+  win[setter](...args)
+  return p
+}

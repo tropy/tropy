@@ -454,12 +454,8 @@ export class Window extends EventEmitter {
     this.send('minimize')
   }
 
-  resize(width, height) {
-    this.send('resize', width, height)
-  }
-
-  setFixedSize(resizable) {
-    this.send('fixed-size', resizable)
+  setFixedSize(resizable, ...args) {
+    this.send('fixed-size', resizable, ...args)
   }
 
   get isResizeAnimated() {

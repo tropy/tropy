@@ -188,7 +188,8 @@ export class Tropy extends EventEmitter {
       if (!file) {
         fixedSize = {
           width: 440 * (this.state.recent.length ? 2 : 1),
-          height: 580
+          height: 580,
+          animate: false
         }
       }
 
