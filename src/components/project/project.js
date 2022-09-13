@@ -11,7 +11,7 @@ import { useGlobalKeys } from '../../hooks/use-global-keys.js'
 import { ProjectView } from './view.js'
 import { ItemView } from '../item/view.js'
 import { DragLayer } from '../drag-layer.js'
-import { MODE } from '../../constants/project.js'
+import { MODE } from '../../constants/nav.js'
 import * as act from '../../actions/index.js'
 
 import {
@@ -42,13 +42,18 @@ export const Project = React.forwardRef(({
   let nav = useSelector(state => state.nav)
   let [mode, container] = useTransitionState(nav.mode, timeout, modeToString)
 
+  let isItemMode = !!(
+    (mode.current === MODE.ITEM) ^ mode.isChanging
+  )
+
+  drop?.(container)
+
   let keymap = useSelector(state => state.keymap.global)
   useGlobalKeys(keymap)
 
   useGlobalEvent('back', () => {
-    if (mode.current !== MODE.PROJECT) {
-      dispatch(act.nav.update({ mode: MODE.PROJECT }))
-    }
+    if (isItemMode)
+      dispatch(act.nav.mode.project())
   })
 
   // TODO use event propagation instead of passing down callback!
@@ -104,21 +109,10 @@ export const Project = React.forwardRef(({
     'photo.create', 'photo.consolidate', 'photo.save', 'photo.select', 'photo.rotate',
     'ui.update'
   ])
-
-  let handleModeChange = useEvent((value) => {
-    dispatch(act.nav.update({ mode: value }))
-  })
-
   // ------------------------------------------------------------
-
-  let isItemMode = !!(
-    (mode.current === MODE.ITEM) ^ mode.isChanging
-  )
 
   if (project.closed)
     return <ProjectClosed/>
-
-  drop?.(container)
 
   return (
     <div
@@ -137,7 +131,7 @@ export const Project = React.forwardRef(({
 
       <ItemView
         activeSelection={nav.selection}
-        isDisabled={!isItemMode}
+        isItemMode={isItemMode}
         isProjectClosing={project.isClosing}
         isReadOnly={project.isReadOnly || nav.trash}
         items={items}
@@ -154,7 +148,6 @@ export const Project = React.forwardRef(({
         onItemOpen={handleItemOpen}
         onItemPreview={handleItemPreview}
         onMetadataSave={handleMetadataSave}
-        onModeChange={handleModeChange}
         onNoteCreate={handleNoteCreate}
         onNoteDelete={handleNoteDelete}
         onNoteSave={handleNoteSave}

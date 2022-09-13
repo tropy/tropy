@@ -1,36 +1,36 @@
 import React from 'react'
-import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
-import { IconChevron16 } from '../icons'
-import { Button } from '../button'
-import { Fade } from '../fx'
-import { PROJECT } from '../../constants'
-import { bool, func } from 'prop-types'
+import { bool } from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { useEvent } from '../../hooks/use-event.js'
+import { Titlebar, Toolbar, ToolGroup } from '../toolbar.js'
+import { IconChevron16 } from '../icons.js'
+import { Button } from '../button.js'
+import { Fade } from '../fx.js'
+import { mode } from '../../actions/nav.js'
 
-const { MODE } = PROJECT
+export const ItemToolbar = ({ isItemMode }) => {
+  let dispatch = useDispatch()
 
-export class ItemToolbar extends React.PureComponent {
-  setProjectMode = () => {
-    this.props.onModeChange(MODE.PROJECT)
-  }
+  let toggleProjectMode = useEvent(() => {
+    dispatch(mode.project())
+  })
 
-  render() {
-    return (
-      <Titlebar>
-        <Toolbar.Left>
-          <ToolGroup>
-            <Fade in={this.props.isItemOpen}>
-              <Button
-                icon={<IconChevron16/>}
-                onClick={this.setProjectMode}/>
-            </Fade>
-          </ToolGroup>
-        </Toolbar.Left>
-      </Titlebar>
-    )
-  }
+  return (
+    <Titlebar>
+      <Toolbar.Left>
+        <ToolGroup>
+          <Fade in={isItemMode}>
+            <Button
+              icon={<IconChevron16/>}
+              noFocus
+              onClick={toggleProjectMode}/>
+          </Fade>
+        </ToolGroup>
+      </Toolbar.Left>
+    </Titlebar>
+  )
+}
 
-  static propTypes = {
-    isItemOpen: bool.isRequired,
-    onModeChange: func.isRequired
-  }
+ItemToolbar.propTypes = {
+  isItemMode: bool
 }

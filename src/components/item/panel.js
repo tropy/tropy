@@ -34,9 +34,7 @@ export class ItemPanelGroup extends React.PureComponent {
 
   get toolbar() {
     return (
-      <ItemToolbar
-        isItemOpen={this.props.isItemOpen}
-        onModeChange={this.props.onModeChange}/>
+      <ItemToolbar isItemMode={this.props.isItemMode}/>
     )
   }
 
@@ -86,7 +84,7 @@ export class ItemPanelGroup extends React.PureComponent {
   }
 
   handleNoteOpen = (note) => {
-    if (note != null && !this.props.isItemOpen) {
+    if (note != null && !this.props.isItemMode) {
       this.props.onItemOpen({
         id: this.props.items[0].id,
         photos: [this.props.photo.id],
@@ -198,7 +196,7 @@ export class ItemPanelGroup extends React.PureComponent {
           <PhotoPanel
             canCreate
             isDisabled={isPhotosDisabled}
-            isItemOpen={this.props.isItemOpen}
+            isItemOpen={this.props.isItemMode}
             photos={this.props.photos}
             zoom={panel.zoom}
             onEdit={this.props.onEdit}
@@ -238,7 +236,7 @@ export class ItemPanelGroup extends React.PureComponent {
   static propTypes = {
     isDisabled: bool,
     isReadOnly: bool,
-    isItemOpen: bool.isRequired,
+    isItemMode: bool.isRequired,
     items: array.isRequired,
     keymap: object.isRequired,
     note: object,
@@ -259,7 +257,6 @@ export class ItemPanelGroup extends React.PureComponent {
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,
     onMetadataSave: func.isRequired,
-    onModeChange: func.isRequired,
     onNoteCreate: func.isRequired,
     onNoteDelete: func.isRequired,
     onNoteSelect: func.isRequired,

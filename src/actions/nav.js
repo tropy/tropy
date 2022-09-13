@@ -1,4 +1,17 @@
-import { NAV, LIST } from '../constants'
+import { createAction } from '@reduxjs/toolkit'
+import { NAV, LIST } from '../constants/index.js'
+
+export const update = createAction(NAV.UPDATE)
+
+export const mode = {
+  item() {
+    return update({ mode: NAV.MODE.ITEM })
+  },
+
+  project() {
+    return update({ mode: NAV.MODE.PROJECT })
+  }
+}
 
 export default {
   restore(payload, meta) {
@@ -9,9 +22,7 @@ export default {
     }
   },
 
-  update(payload, meta) {
-    return { type: NAV.UPDATE, payload, meta }
-  },
+  update,
 
   search(payload, meta) {
     return {
@@ -39,6 +50,8 @@ export default {
       meta: { search: true, ...meta }
     }
   },
+
+  mode,
 
   column: {
     insert(payload, meta = {}) {

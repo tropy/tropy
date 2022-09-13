@@ -1,8 +1,3 @@
-export const MODE = {
-  PROJECT: 'project',
-  ITEM: 'item'
-}
-
 export default {
   CLOSE: 'project.close',
   CLOSED: 'project.closed',
@@ -12,6 +7,5 @@ export default {
   REINDEX: 'project.reindex',
   RELOAD: 'project.reload',
   SAVE: 'project.save',
-  UPDATE: 'project.update',
-  MODE
+  UPDATE: 'project.update'
 }

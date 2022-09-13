@@ -9,11 +9,8 @@ import {
   LIST,
   TAG,
   NOTE,
-  PHOTO,
-  PROJECT
-} from '../constants'
-
-const { MODE } = PROJECT
+  PHOTO
+} from '../constants/index.js'
 
 const reset = {
   items: [],
@@ -24,7 +21,7 @@ const reset = {
 
 const init = {
   ...reset,
-  mode: MODE.PROJECT,
+  mode: NAV.MODE.PROJECT,
   query: '',
   tags: [],
   sort: {},
@@ -110,7 +107,7 @@ export function nav(state = init, { type, payload, meta, error }) {
 
       return {
         ...state,
-        mode: MODE.ITEM,
+        mode: NAV.MODE.ITEM,
         photo,
         selection,
         items: select(state.items, [id], 'replace')
@@ -118,12 +115,12 @@ export function nav(state = init, { type, payload, meta, error }) {
     }
 
     case EDIT.START:
-      if (state.mode === MODE.PROJECT) return state
+      if (state.mode === NAV.MODE.PROJECT) return state
       if (!payload.tag && !payload.list) return state
 
       return {
         ...state,
-        mode: MODE.PROJECT
+        mode: NAV.MODE.PROJECT
       }
 
     case TAG.DELETE:
