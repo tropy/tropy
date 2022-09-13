@@ -2,6 +2,26 @@
 // Transitions
 // --------------------------------------------------
 
+.fade {
+  &-enter {
+    opacity: 0;
+
+    &-active {
+      opacity: 1;
+      transition: opacity $fade-duration $fade-timing-function $fade-delay;
+    }
+  }
+
+  &-exit {
+    opacity: 1;
+
+    &-active {
+      opacity: 0;
+      transition: opacity $fade-duration $fade-timing-function $fade-delay;
+    }
+  }
+}
+
 .collapse-enter,
 .collapse-exit {
   overflow: hidden;
