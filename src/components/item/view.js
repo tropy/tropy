@@ -77,8 +77,8 @@ export class ItemView extends React.PureComponent {
   }
 
   get offset() {
-    return (this.props.isItemOpen) ?
-      0 : `calc(100% - ${this.props.offset}px)`
+    return (this.props.isDisabled) ?
+      `calc(100% - ${this.props.offset}px)` : 0
   }
 
   get style() {
@@ -92,7 +92,7 @@ export class ItemView extends React.PureComponent {
   handleNoteCreate = () => {
     let delay = 50
 
-    if (!this.props.isItemOpen) {
+    if (this.props.isDisabled) {
       delay += 800
       this.props.onItemOpen({
         id: this.props.items[0].id,
@@ -162,7 +162,7 @@ export class ItemView extends React.PureComponent {
       photo,
       onPanelDragStop,
       onPanelResize,
-      isItemOpen,
+      isDisabled,
       isProjectClosing,
       isReadOnly,
       ...props
@@ -171,7 +171,7 @@ export class ItemView extends React.PureComponent {
     return (
       <section className="item-view" style={this.style}>
         <Resizable
-          edge={isItemOpen ? 'right' : 'left'}
+          edge={isDisabled ? 'left' : 'right'}
           value={offset}
           min={SASS.PANEL.MIN_WIDTH}
           max={SASS.PANEL.MAX_WIDTH}
@@ -182,7 +182,7 @@ export class ItemView extends React.PureComponent {
             photo={photo}
             note={this.state.note}
             keymap={keymap}
-            isItemOpen={isItemOpen}
+            isItemOpen={!isDisabled}
             isDisabled={isProjectClosing}
             isReadOnly={isReadOnly}
             onNoteCreate={this.handleNoteCreate}
@@ -192,7 +192,7 @@ export class ItemView extends React.PureComponent {
           ref={this.itemContainer}
           note={this.state.note}
           photo={photo}
-          isDisabled={!isItemOpen || isProjectClosing}
+          isDisabled={isDisabled || isProjectClosing}
           isReadOnly={isReadOnly}
           onContextMenu={this.props.onContextMenu}
           onNoteChange={this.handleNoteChange}
@@ -222,7 +222,7 @@ export class ItemView extends React.PureComponent {
     activeSelection: number,
     note: object,
     photo: object,
-    isItemOpen: bool.isRequired,
+    isDisabled: bool.isRequired,
     isProjectClosing: bool,
     isReadOnly: bool,
 
