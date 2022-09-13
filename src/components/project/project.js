@@ -120,8 +120,6 @@ export const Project = React.forwardRef(({
 
   drop?.(container)
 
-  console.log('project', mode.className)
-
   return (
     <div
       ref={container}
