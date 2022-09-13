@@ -9,7 +9,7 @@ import { fail } from '../../dialog'
 import { fromHTML } from '../../editor/serialize'
 import * as act from '../../actions'
 import * as mod from '../../models'
-import { ITEM, PROJECT } from '../../constants'
+import { ITEM, NAV } from '../../constants'
 import win from '../../window'
 
 import {
@@ -28,7 +28,6 @@ import {
   getSelectionTemplate
 } from '../../selectors'
 
-const { MODE } = PROJECT
 const { readFile } = fs.promises
 
 export class Import extends ImportCommand {
@@ -43,7 +42,7 @@ export class Import extends ImportCommand {
     yield* this.configure()
 
     yield this.progress({ progress: 0 })
-    yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
+    yield put(act.nav.update({ mode: NAV.MODE.PROJECT, query: '' }))
 
     if (meta.plugin) {
       yield call(win.plugins.exec, {

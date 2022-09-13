@@ -1,5 +1,10 @@
-import TYPE from './type'
-import { tropy } from '../ontology/ns'
+import TYPE from './type.js'
+import { tropy } from '../ontology/ns.js'
+
+export const MODE = {
+  PROJECT: 'project',
+  ITEM: 'item'
+}
 
 export default {
   PERSIST: 'nav.persist',
@@ -8,6 +13,7 @@ export default {
   SELECT: 'nav.select',
   SORT: 'nav.sort',
   UPDATE: 'nav.update',
+  MODE,
 
   COLUMN: {
     INSERT: 'nav.column.insert',
