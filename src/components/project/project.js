@@ -111,9 +111,8 @@ export const Project = React.forwardRef(({
 
   // ------------------------------------------------------------
 
-  // TODO rename
-  let isItemOpen = !!(
-    mode.current === MODE.ITEM ^ mode.isChanging
+  let isItemMode = !!(
+    (mode.current === MODE.ITEM) ^ mode.isChanging
   )
 
   if (project.closed)
@@ -133,14 +132,14 @@ export const Project = React.forwardRef(({
       onContextMenu={handleContextMenu}>
 
       <ProjectView
-        isDisabled={mode.current !== MODE.PROJECT}
+        isDisabled={isItemMode}
         offset={offset}
         onContextMenu={handleContextMenu}
         project={project}/>
 
       <ItemView
         activeSelection={nav.selection}
-        isItemOpen={isItemOpen}
+        isDisabled={!isItemMode}
         isProjectClosing={project.isClosing}
         isReadOnly={project.isReadOnly || nav.trash}
         items={items}

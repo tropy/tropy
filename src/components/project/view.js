@@ -38,7 +38,6 @@ export const ProjectView = ({
 
   let iterator = useRef()
 
-  // TODO if isDisabled switches from true to false
   useEffect(() => {
     if (!isDisabled) iterator.current?.focus()
   }, [isDisabled])
