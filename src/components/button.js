@@ -70,7 +70,7 @@ export const Button = React.memo(({
 
   if (!isDisabled) {
     if (noFocus) {
-      attr.handleMouseDown = (event) => {
+      attr.onMouseDown = (event) => {
         event.preventDefault()
         onMouseDown?.(event)
       }
