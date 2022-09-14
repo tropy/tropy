@@ -320,19 +320,19 @@ export class ContextMenu extends Menu {
 
 Menu.ItemCompiler = {
   'window': (item, app) => {
-    switch (item.window) {
-      case null:
-      case undefined:
-        break
-      case '*':
-        item.enabled = !app.wm.empty
-        break
-      default:
-        if (item.window.startsWith('!'))
-          item.enabled = blank(app.wm.windows[item.window.slice(1)])
-        else
-          item.enabled = !blank(app.wm.windows[item.window])
+    if (!item.window)
+      return
+
+    if (item.window === '*') {
+      item.enabled = !app.wm.empty
+    } else {
+      if (item.window.startsWith('!'))
+        item.enabled = blank(app.wm.windows[item.window.slice(1)])
+      else
+        item.enabled = !blank(app.wm.windows[item.window])
     }
+
+    item.visible = item.enabled
   },
 
   'color': (item, app, win, event) => {
@@ -528,8 +528,6 @@ Menu.ItemCompiler = {
 
     if (negate)
       item.enabled = !item.enabled
-
-    item.visible = item.enabled
   }
 }
 
@@ -547,7 +545,12 @@ Menu.ItemConditions = {
   },
 
   isProjectReadOnly({ app, win }) {
-    return app.getProject(win)?.isReadOnly
+    let project = app.getProject(win)
+    return project == null || project.isReadOnly
+  },
+
+  isProjectOpen({ app, win }) {
+    return app.getProject(win) != null
   }
 }
 

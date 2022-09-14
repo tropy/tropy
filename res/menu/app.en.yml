@@ -84,6 +84,7 @@ en:
           label: 'Close Project'
           command: 'app:close-project'
           window: 'project'
+          condition: 'isProjectOpen'
         - type: 'separator'
         - label: 'Close Window'
           accelerator: 'Ctrl+W'
