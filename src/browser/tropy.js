@@ -891,9 +891,11 @@ export class Tropy extends EventEmitter {
     })
 
     ipc.on(PROJECT.CLOSED, (event) => {
-      this.setProject(
-        null,
-        BrowserWindow.fromWebContents(event.sender))
+      let win = BrowserWindow.fromWebContents(event.sender)
+      this.setProject(null, win)
+
+      if (win ===  this.wm.current())
+        this.menu.handleWindowChange(win)
     })
 
     ipc.on(HISTORY.CHANGED, (event, history) => {
