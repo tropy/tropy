@@ -46,7 +46,7 @@ const FORCE_SHUTDOWN_DELAY = 60000
 
 export function *open(opts = {}, { payload, meta }) {
   try {
-    var db = yield call(Database.open, payload, meta, { max: opts.max || 3 })
+    var db = yield call(Database.open, payload, { ...meta, max: opts.max || 3 })
 
     yield fork(handleDatabaseErrors, db, dbErrorActions)
 
