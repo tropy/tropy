@@ -1,9 +1,7 @@
-import fs from 'fs'
-import os from 'os'
-import { join } from 'path'
-
-const { mkdtemp } = fs.promises
-const { arch, platform } = process
+import { mkdtemp } from 'node:fs/promises'
+import os from 'node:os'
+import { join } from 'node:path'
+import { arch, platform } from 'node:process'
 
 export const home = os.homedir()
 
