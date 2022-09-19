@@ -28,7 +28,7 @@ const IUD = /^\s*(insert|update|delete)/i
 }
 
 export class Database extends EventEmitter {
-  static async open(path, { isReadOnly } = {}, opts)  {
+  static async open(path, { isReadOnly, ...opts } = {})  {
     let ro = (isReadOnly || !(await canWrite(path)))
     return new Database(path, ro ? 'r' : 'w', opts)
   }
