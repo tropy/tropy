@@ -43,13 +43,13 @@ export class Database extends EventEmitter {
       return db.path
 
     } finally {
-      if (db) await db.close()
+      await db?.close()
     }
   }
 
   constructor(path = ':memory:', mode = 'w+', opts = {}) {
     debug({ path, mode }, 'init db')
-    super()
+    super({ captureRejections: true })
 
     this.path = path
     this.mode = mode
@@ -164,10 +164,23 @@ export class Database extends EventEmitter {
     this.emit('clear')
   }
 
+  emitAsync(name) {
+    return Promise.all(
+      this.getRawListeners(name).map(fn => fn())
+    )
+  }
+
   close = async () => {
     try {
+      // Subtle: call and wait for `will-close` listeners to complete!
+      await this.emitAsync('will-close')
+
       await this.pool.drain()
       await this.pool.clear()
+
+    } catch (e) {
+      warn({ stack: e.stack }, 'error while closing db pool')
+
     } finally {
       this.emit('close')
     }
