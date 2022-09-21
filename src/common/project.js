@@ -4,9 +4,14 @@ import { join } from 'node:path'
 import { basename, dirname, extname } from 'node:path'
 import { v4 as uuid } from 'uuid'
 import { Database } from './db.js'
-import { select, into } from './query.js'
+import { home } from './os.js'
+import { into, select, update } from './query.js'
+import { version } from './release.js'
 
 
+/*
+ * Creates a new Tropy project.
+ */
 export async function create(path, schema, {
   autoclose = true,
   name = 'Tropy',
@@ -62,34 +67,127 @@ export async function create(path, schema, {
   }
 }
 
-export async function pstat(path, modifiedSince) {
-  let type = getProjectType(path)
-  let dbFile
 
-  if (type === TPM) {
-    dbFile = join(path, TPM_DB_NAME)
+/*
+ * Opens a project file and returns an array with an `info` object
+ * and a live `db` instance.
+ *
+ * Unless for read-only project files, any outstanding migrations
+ * in the `migrate` folder will be applied.
+ *
+ * If there are no migrations,
+ * an integrity check will be performed instead.
+ *
+ * Additionally, the following database event handlers are attached:
+ * - After the first write (or immediately after migrations)
+ *   an access row will be created using the given `user` id.
+ *
+ * - Before closing the database, the access record will be finalized
+ *   and the access table pruned.
+ *
+ */
+export async function open(path, {
+  migrate,
+  pruneAccessTable = false,
+  skipIntegrityCheck = false,
+  user,
+  ...dbOptions
+}) {
+  let type = getProjectType(path)
+  let dbFile = (type === TPM) ? join(path, TPM_DB_NAME) : path
+
+  let db = await Database.open(dbFile, dbOptions)
+
+  if (migrate && !db.isReadOnly) {
+    var migrations = await db.migrate(migrate)
+  }
+
+  let info = await getProjectInfo(db)
+  let accessId
+
+  if (migrations?.length > 0) {
+    accessId = await beginProjectAccess(db, user)
 
   } else {
-    dbFile = path
+    db.once('update', async () => {
+      accessId = await beginProjectAccess(db, user)
+    })
 
-    if (isManaged(dbFile)) {
-      type = TPM
-      path = dirname(dbFile)
+    if (!skipIntegrityCheck) {
+      await db.check().catch(() => {
+        info.isCorrupted = true
+      })
     }
   }
 
-  let { mtimeMs } = await stat(dbFile)
+  db.once('will-close', async () => {
+    if (accessId)
+      await endProjectAccess(db, accessId, pruneAccessTable)
+  })
 
-  if (modifiedSince > mtimeMs)
-    return null
+  return [db, info]
+}
 
-  let db = new Database(dbFile, 'r', { max: 1 })
-  let stats = await db.get(projectStats.query)
+export async function pstat(path, modifiedSince) {
+  try {
+    let type = getProjectType(path)
+    let dbFile
 
-  stats.path = path
-  stats.lastModified = mtimeMs
+    if (type === TPM) {
+      dbFile = join(path, TPM_DB_NAME)
 
-  return stats
+    } else {
+      dbFile = path
+
+      if (isManaged(dbFile)) {
+        type = TPM
+        path = dirname(dbFile)
+      }
+    }
+
+    let { mtimeMs } = await stat(dbFile)
+
+    if (modifiedSince > mtimeMs)
+      return null
+
+    var db = new Database(dbFile, 'r', { max: 1 })
+    let stats = await db.get(projectStats.query)
+
+    stats.path = path
+    stats.lastModified = mtimeMs
+
+    return stats
+
+  } finally {
+    await db?.close()
+  }
+}
+
+
+export async function getProjectInfo(db) {
+  let info = await db.get(projectInfo.query)
+  assert(info?.id != null, 'invalid project info')
+
+  info.isReadOnly = db.isReadOnly
+  info.basePath = resolveBasePath(db, info.base)
+
+  // TODO
+  let isManaged = info.store != null
+  info.path = isManaged ? dirname(db.path) : db.path
+
+  return info
+}
+
+
+export function resolveBasePath(db, base) {
+  switch (base) {
+    case 'project':
+      return dirname(db.path)
+    case 'home':
+      return home
+    default:
+      return base
+  }
 }
 
 export function getProjectType(path) {
@@ -113,10 +211,17 @@ export const TPM = 'tpm'
 const TPM_DB_NAME = 'project.tpy'
 const TPM_STORE_NAME = 'assets'
 
+const projectInfo =
+  select({ id: 'project_id' }, 'name', 'base', 'store', {
+    lastAccess:
+      select('opened')
+        .from('access')
+        .order('opened desc')
+        .limit(1)
+  }).from('project').limit(1)
+
 const projectStats =
-  select({
-    id: 'project_id',
-    name: 'name',
+  select({ id: 'project_id' }, 'name', {
     items:
       select('count(id)')
         .from('items')
@@ -128,3 +233,37 @@ const projectStats =
     notes: select('count(note_id)').from('notes')
 
   }).from('project').limit(1)
+
+
+export async function beginProjectAccess(db, user) {
+  if (user == null)
+    return null
+
+  let { id } = await db.run(
+    ...into('access')
+      .insert({
+        path: db.path,
+        uuid: user,
+        version
+      }))
+
+  return id
+}
+
+export async function endProjectAccess(db, id, prune = false) {
+  await db.run(
+    ...update('access')
+      .set('closed = datetime("now")')
+      .where({ rowid: id }))
+
+  if (prune) {
+    await db.run(`
+      DELETE FROM access
+        WHERE rowid <= (
+          SELECT rowid FROM (
+            SELECT rowid FROM access ORDER BY rowid DESC LIMIT 1 OFFSET 99
+          )
+        )`
+    )
+  }
+}
