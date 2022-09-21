@@ -117,6 +117,7 @@ export class Database extends EventEmitter {
       db.on('profile', (query, ms) => {
         if (IUD.test(query)) {
           this.emit('update', query)
+          this.hasBeenModified = true
         }
 
         let msg = `db query took ${ms}ms`
