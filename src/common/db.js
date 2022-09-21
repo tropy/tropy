@@ -167,7 +167,7 @@ export class Database extends EventEmitter {
 
   emitAsync(name) {
     return Promise.all(
-      this.getRawListeners(name).map(fn => fn())
+      this.rawListeners(name).map(fn => fn())
     )
   }
 
