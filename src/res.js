@@ -79,3 +79,17 @@ export const Schema = {
     return join(Schema.base, `${name}.sql`)
   }
 }
+
+export const Migrations = {
+  get base() {
+    return join(Resource.base, 'db/migrate')
+  },
+
+  get project() {
+    return Migrations.expand('project')
+  },
+
+  expand(name) {
+    return join(Migrations.base, name)
+  }
+}
