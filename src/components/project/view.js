@@ -47,8 +47,7 @@ export const ProjectView = ({
 
   let ItemIterator = zoom ? ItemGrid : ItemTable
 
-  let isEmpty = (project.id && project.items === 0)
-    && !nav.trash && items.length === 0
+  let isBlank = (project.id && !project.lastAccess) && !nav.trash
 
   let isReadOnly = project.isReadOnly || nav.trash
 
@@ -149,7 +148,7 @@ export const ProjectView = ({
               onSearch={handleSearch}
               onZoomChange={handleZoomChange}/>
           </header>
-          {isEmpty ?
+          {isBlank ?
             <NoItems
               ref={drop}
               isOver={canDrop}
