@@ -1,7 +1,8 @@
 import assert from 'node:assert'
 import { access, stat, mkdir } from 'node:fs/promises'
-import { join } from 'node:path'
-import { basename, dirname, extname, normalize, resolve } from 'node:path'
+import {
+  basename, dirname, extname, join, normalize, resolve, relative
+} from 'node:path'
 import { v4 as uuid } from 'uuid'
 import { Database } from './db.js'
 import { home } from './os.js'
