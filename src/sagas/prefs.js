@@ -30,8 +30,7 @@ export function *main() {
 
     let project = yield takeLatest(PROJECT.OPEN, open, {
       max: 1,
-      noSetup: true,
-      skipMigration: true,
+      skipFullSetup: true,
       skipIntegrityCheck: true
     })
 

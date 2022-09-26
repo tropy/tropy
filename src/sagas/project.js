@@ -1,5 +1,3 @@
-import assert from 'node:assert'
-import { join } from 'node:path'
 import { PROJECT, IDLE } from '../constants/index.js'
 import { Cache } from '../common/cache.js'
 import { Store } from '../asset/index.js'
@@ -17,8 +15,10 @@ import * as act from '../actions/index.js'
 import { persist, restore, storage } from './storage.js'
 import { watch } from './watch.js'
 import { handleDatabaseErrors } from './db.js'
-import ARGS from '../args.js'
-import { Database } from '../common/db.js'
+import ARGS, { update } from '../args.js'
+import { open as openProject } from '../common/project.js'
+import { Migrations } from '../res.js'
+import { Storage } from '../storage.js'
 
 import {
   all,
@@ -44,13 +44,17 @@ const dbErrorActions = {
 
 const FORCE_SHUTDOWN_DELAY = 60000
 
-export function *open(opts = {}, { payload, meta }) {
+
+export function *open(opts, action) {
   try {
-    var db = yield call(Database.open, payload, { ...meta, max: opts.max || 3 })
+    var [db, project] = yield call(openProject, action.payload, {
+      user: ARGS.uuid,
+      ...opts
+    })
 
     yield fork(handleDatabaseErrors, db, dbErrorActions)
 
-    let project = yield call(load, db, opts)
+    project.watch = Storage.load('project.watch', project.id) || {}
 
     let cache = new Cache(ARGS.cache, project.id)
     let store = new Store(project.store)
@@ -58,30 +62,30 @@ export function *open(opts = {}, { payload, meta }) {
     yield call(cache.init)
     yield call(store.init)
 
-    yield put(act.project.opened({
-      isReadOnly: db.isReadOnly,
-      file: db.path,
-      ...project
-    }))
+    yield put(act.project.opened(project))
+
+    // Update window's global ARGS to allow reloading the project!
+    if (project.path !== ARGS.file) {
+      update({ file: project.path })
+    }
 
     try {
-      if (!opts.noSetup)
-        yield fork(setup, db, project)
+      if (!opts.skipFullSetup)
+        yield fork(setup, { db, project })
 
+      warn('waiting for project commands')
       while (true) {
-        let action = yield take(commands('project'))
-        yield fork(exec, { db, id: project.id, cache, store }, action)
+        let cmd = yield take(commands('project'))
+        yield fork(exec, { db, id: project.id, cache, store }, cmd)
       }
 
     } finally {
-      if (!opts.noSetup)
+      if (!opts.skipFullSetup)
         yield call(teardown, { db, project, cache, store })
-
-      yield call(mod.project.close, db, project)
     }
   } catch (e) {
     warn({ stack: e.stack }, 'unexpected error in *project.open')
-    yield call(fail, e, db.path)
+    yield call(fail, e, action.payload)
 
     var error = e
 
@@ -90,45 +94,20 @@ export function *open(opts = {}, { payload, meta }) {
     yield cancel()
 
   } finally {
-    yield call(db.close)
-    yield put(act.project.closed(error))
+    yield call(db?.close)
+
+    yield put(act.project.closed({
+      id: project?.id,
+      path: project?.path,
+      error
+    }))
 
     debug('*project.open terminated')
   }
 }
 
-export function *load(db, opts) {
-  if (!(db.isReadOnly || opts.skipMigration))
-    var migrations = yield call(
-      db.migrate,
-      join(ARGS.app, 'db', 'migrate', 'project'))
 
-  let project = yield call(mod.project.load, db)
-  assert(project != null && project.id != null, 'invalid project')
-
-  if (migrations?.length > 0) {
-    project.accessId = yield call(mod.access.open, db)
-
-  } else {
-    try {
-      if (!(db.isReadOnly || opts.skipIntegrityCheck))
-        yield call(db.check)
-
-      db.once('update', async () => {
-        project.accessId = await mod.access.open(db)
-      })
-
-    } catch (_) {
-      warn('project file may be corrupted!')
-      project.isCorrupted = true
-    }
-  }
-
-  return project
-}
-
-
-function *setup(db, project) {
+function *setup({ db, project }) {
   try {
     yield every(has('search'), search, db)
 
@@ -159,11 +138,11 @@ function *setup(db, project) {
     yield put(act.cache.purge())
 
   } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *setup')
-    yield call(fail, e, db.path)
+    warn({ stack: e.stack }, 'unexpected error in *project.setup')
+    yield call(fail, e, project.path)
 
   } finally {
-    debug('*setup terminated')
+    debug('*project.setup terminated')
   }
 }
 
@@ -177,9 +156,7 @@ function *teardown({ db, project, store }) {
     call(persist, 'panel', project.id)
   ])
 
-  if (project.accessId != null) {
-    yield call(mod.access.close, db, project.accessId)
-
+  if (db.hasBeenModified) {
     debug('pruning db...')
     yield call(mod.item.prune, db)
     yield call(mod.list.prune, db)
@@ -189,10 +166,9 @@ function *teardown({ db, project, store }) {
     yield call(mod.note.prune, db)
     yield call(mod.subject.prune, db)
     yield call(store.prune, db)
-    yield call(mod.access.prune, db)
   }
 
-  debug('*teardown terminated')
+  debug('*project.teardown terminated')
 }
 
 
@@ -240,6 +216,11 @@ export function *main() {
       }
 
       if (action.type === PROJECT.CLOSE) {
+        // Clear project file if project was closed by user.
+        if (action.payload === 'user') {
+          update({ file: null })
+        }
+
         // Break main loop if project was closed without reason.
         // This typically means that the window is being closed.
         if (!(action.error || action.payload === 'user'))
@@ -247,7 +228,10 @@ export function *main() {
       }
 
       if (action.type === PROJECT.OPEN) {
-        task = yield fork(open, {}, action)
+        task = yield fork(open, {
+          max: 3,
+          migrate: Migrations.project
+        }, action)
       }
     }
 
