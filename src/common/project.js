@@ -1,12 +1,13 @@
 import assert from 'node:assert'
 import { access, stat, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
-import { basename, dirname, extname } from 'node:path'
+import { basename, dirname, extname, normalize, resolve } from 'node:path'
 import { v4 as uuid } from 'uuid'
 import { Database } from './db.js'
 import { home } from './os.js'
 import { into, select, update } from './query.js'
 import { version } from './release.js'
+import { empty } from './util.js'
 
 
 /*
@@ -102,7 +103,7 @@ export async function open(path, {
     var migrations = await db.migrate(migrate)
   }
 
-  let info = await getProjectInfo(db)
+  let info = await load(db)
   let accessId
 
   if (migrations?.length > 0) {
@@ -128,6 +129,9 @@ export async function open(path, {
   return [db, info]
 }
 
+/*
+ * Returns stats for a Tropy project file.
+ */
 export async function pstat(path, modifiedSince) {
   try {
     let type = getProjectType(path)
@@ -164,18 +168,47 @@ export async function pstat(path, modifiedSince) {
 }
 
 
-export async function getProjectInfo(db) {
+export async function load(db) {
   let info = await db.get(projectInfo.query)
   assert(info?.id != null, 'invalid project info')
 
   info.isReadOnly = db.isReadOnly
   info.basePath = resolveBasePath(db, info.base)
 
-  // TODO
   let isManaged = info.store != null
-  info.path = isManaged ? dirname(db.path) : db.path
+
+  if (isManaged) {
+    info.store = resolve(info.basePath, normalize(info.store))
+    info.path = dirname(db.path)
+
+  } else {
+    info.path = db.path
+  }
 
   return info
+}
+
+export async function save(db, { id, ...props }, basePath) {
+  if (basePath && props.store)
+    props.store = relative(basePath, props.store)
+
+  if (!empty(props))
+    return db.run(
+      ...update('project').set(props).where({ project_id: id })
+    )
+}
+
+export async function optimize(db) {
+  await db.exec("INSERT INTO fts_notes(fts_notes) VALUES ('optimize')")
+  await db.exec("INSERT INTO fts_metadata(fts_metadata) VALUES ('optimize')")
+  await db.exec('VACUUM')
+}
+
+export async function reindex(db) {
+  await db.check()
+  await db.exec('REINDEX')
+  await db.exec("INSERT INTO fts_notes(fts_notes) VALUES ('rebuild')")
+  await db.exec("INSERT INTO fts_metadata(fts_metadata) VALUES ('rebuild')")
 }
 
 
