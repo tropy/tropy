@@ -215,22 +215,24 @@ export class Tropy extends EventEmitter {
   hasOpenedProject(project, win) {
     this.wm.close(['prefs'])
 
-    switch (process.platform) {
-      case 'darwin':
-        if (!this.state.frameless) {
-          win.setRepresentedFilename(project.file)
-        }
-        app.addRecentDocument(project.file)
-        break
-      case 'win32':
-        app.addRecentDocument(project.file)
-        break
-    }
+    if (project.path) {
+      switch (process.platform) {
+        case 'darwin':
+          if (!this.state.frameless) {
+            win.setRepresentedFilename(project.path)
+          }
+          app.addRecentDocument(project.path)
+          break
+        case 'win32':
+          app.addRecentDocument(project.path)
+          break
+      }
 
-    this.state.recent = [
-      project.file,
-      ...this.state.recent.filter(f => f !== project.file)
-    ]
+      this.state.recent = [
+        project.path,
+        ...this.state.recent.filter(f => f !== project.path)
+      ]
+    }
 
     this.wm.send('project', 'recent', this.state.recent)
 
@@ -285,7 +287,7 @@ export class Tropy extends EventEmitter {
     let project = this.getProject()
 
     let args = {
-      file: project?.file,
+      file: project?.path,
       ...this.hash
     }
 
