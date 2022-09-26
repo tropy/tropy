@@ -303,7 +303,7 @@ Toggle.defaultProps = {
 export const FormToggle = ({ isCompact, size, ...props }) => (
   <FormGroup isCompact={isCompact}>
     <Toggle {...props} className={
-      cx(`col-${size}`, `col-offset-${SASS.GRID.SIZE - size}`)
+      cx(props.type, `col-${size}`, `col-offset-${SASS.GRID.SIZE - size}`)
     }/>
   </FormGroup>
 )
