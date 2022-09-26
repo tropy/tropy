@@ -36,7 +36,8 @@ export const ProjectContainer = ({
       for (let file of item.files) {
         switch (extname(file.path).toLowerCase()) {
           case '.tpy':
-            if (file.path !== project.file)
+            // TODO move this to handleProjectOpen
+            if (file.path !== project.path)
               projects.push(file.path)
             break
           case '.ttp':
@@ -65,17 +66,17 @@ export const ProjectContainer = ({
     collect: (monitor) => ({
       isOver: monitor.isOver() && monitor.canDrop()
     })
-  }), [project.file, handleProjectOpen, handleTemplateImport])
+  }), [project.path, handleProjectOpen, handleTemplateImport])
 
 
   return (
     <SwitchTransition>
       <Fade
-        key={project.file ? 'project' : 'no-project'}
+        key={project.path ? 'project' : 'no-project'}
         enter={isWindowResizeAnimated}
         exit={false}
         timeout={timeout}>
-        {project.file ?
+        {project.path ?
           <Project
             ref={drop}
             project={project}

@@ -2,7 +2,6 @@ import React from 'react'
 import { ScrollContainer } from '../scroll'
 import { Form, FormField, FormToggle, FormToggleGroup } from '../form'
 import { arrayOf, func, object, string } from 'prop-types'
-import { channel } from '../../common/release'
 
 export class ProjectPrefs extends React.PureComponent {
   render() {
@@ -26,12 +25,12 @@ export class ProjectPrefs extends React.PureComponent {
             isRequired
             value={this.props.project.id}/>
           <FormField
-            id="prefs.project.file"
-            name="file"
+            id="prefs.project.path"
+            name="path"
             isCompact
             isReadOnly
             isRequired
-            value={this.props.project.file}/>
+            value={this.props.project.path}/>
           <hr/>
           <FormToggleGroup
             id="prefs.project.base"
@@ -55,19 +54,9 @@ export class ProjectPrefs extends React.PureComponent {
             id="prefs.project.watch.usePolling"
             isDisabled={!this.props.project.watch.folder}
             name="watch.usePolling"
-            value={this.props.project.watch.usePolling}
+            value={!!this.props.project.watch.usePolling}
             onChange={this.props.onChange}/>
           <hr/>
-          { channel !== 'latest' &&
-            <FormField
-              id="prefs.project.store"
-              name="store"
-              isReadOnly={this.props.project.isReadOnly}
-              tabIndex={0}
-              type="directory"
-              value={this.props.project.store}
-              onChange={this.props.onChange}/>
-          }
         </Form>
       </ScrollContainer>
     )
