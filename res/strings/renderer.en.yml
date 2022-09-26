@@ -228,7 +228,7 @@ en:
       store: Managed folder
       name: Name
       id: ID
-      file: File
+      path: File
       watch:
         folder: Watch folder
         usePolling: Using file stat polling
