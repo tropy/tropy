@@ -1,11 +1,11 @@
-import { join } from 'path'
+import { join } from 'node:path'
 import { eventChannel } from 'redux-saga'
 import { call, put, select, take, takeEvery } from 'redux-saga/effects'
-import * as act from '../actions'
-import { Watcher } from '../common/watch'
-import { debug, info, warn } from '../common/log'
-import { IMAGE, PROJECT } from '../constants'
-import mod from '../models/project'
+import * as act from '../actions/index.js'
+import { Watcher } from '../common/watch.js'
+import { debug, info, warn } from '../common/log.js'
+import { IMAGE, PROJECT } from '../constants/index.js'
+import { Storage } from '../storage.js'
 
 function addedFilesChannel(watcher) {
   return eventChannel(emitter => {
@@ -19,16 +19,33 @@ function addedFilesChannel(watcher) {
   })
 }
 
+function *touchProjectWatchFolder() {
+  let { project } = yield select()
+  let w = Storage.load('project.watch', project.id) || {}
+
+  if (w.folder) {
+    w.since = Date.now()
+    Storage.save('project.watch', w, project.id)
+  }
+
+  return w.since
+}
+
 function *updateProjectWatchFolder(watcher) {
   let { project } = yield select()
 
-  if (project.watch.folder) {
-    debug(`update project watch folder: ${project.watch.folder}`)
+  let {
+    folder,
+    since,
+    usePolling
+  } = Storage.load('project.watch', project.id) || {}
 
-    let path = join(project.watch.folder, `*.{${
+  if (folder) {
+    debug(`update project watch folder: ${folder}`)
+
+    let path = join(folder, `*.{${
       IMAGE.EXT.map(ext => `${ext},${ext.toUpperCase()}`).join(',')
     }}`)
-    let { usePolling, since } = project.watch
 
     if (watcher.isWatching(path))
       yield call([watcher, watcher.watch], path, { usePolling })
@@ -45,6 +62,7 @@ function *updateProjectWatchFolder(watcher) {
 
 function *closeProject(watcher) {
   yield call([watcher, watcher.stop])
+  yield call(touchProjectWatchFolder)
 }
 
 const freshProject = ({ type, meta, error }) =>
@@ -69,8 +87,7 @@ export function *watch() {
         duplicate: 'skip'
       }))
 
-      let { project } = yield select()
-      mod.touchWatchFolder(project.id)
+      yield call(touchProjectWatchFolder)
     }
 
   } catch (e) {
