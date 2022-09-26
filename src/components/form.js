@@ -1,6 +1,8 @@
 import React from 'react'
 import { useIntl } from 'react-intl'
 import cx from 'classnames'
+import { useEvent } from '../hooks/use-event.js'
+import { set } from '../common/util.js'
 import { Input } from './input.js'
 import { FileSelect } from './file.js'
 import { Select } from './select.js'
@@ -252,6 +254,14 @@ export const Toggle = ({
 }) => {
   isChecked ??= value === true
 
+  let handleChange = useEvent(() => {
+    let inverse =  (typeof value === 'boolean') ?
+      !value :
+      isChecked ? null : value
+
+    onChange(set({}, name, inverse), true)
+  })
+
   return (
     <div className={cx(className || type)}>
       <input
@@ -260,11 +270,7 @@ export const Toggle = ({
         id={id}
         name={name}
         onBlur={onBlur}
-        onChange={() => onChange({
-          [name]: typeof value === 'boolean' ?
-            !value :
-            isChecked ? null : value
-        }, true)}
+        onChange={handleChange}
         onFocus={onFocus}
         tabIndex={tabIndex}
         type={type}
