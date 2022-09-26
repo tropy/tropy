@@ -52,7 +52,6 @@ export default {
       payload,
       meta: {
         cmd: 'project',
-        check: true,
         ...meta
       }
     }
