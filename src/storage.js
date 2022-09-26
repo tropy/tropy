@@ -1,4 +1,4 @@
-import { info } from './common/log'
+import { info } from './common/log.js'
 
 export class Storage {
   static load(name, ...args) {
