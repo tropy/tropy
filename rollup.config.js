@@ -38,6 +38,7 @@ const platformId = (arch === 'arm64') ?
 
 const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
+    normalize('src/components/button.js'),
     normalize('src/components/list/tree.js'),
     normalize('node_modules/n3/src/N3DataFactory.js'),
     normalize('node_modules/undici/lib/fetch/util.js')
