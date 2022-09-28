@@ -176,9 +176,9 @@ export async function load(db) {
   info.isReadOnly = db.isReadOnly
   info.basePath = resolveBasePath(db, info.base)
 
-  let isManaged = info.store != null
+  info.isManaged = info.store != null
 
-  if (isManaged) {
+  if (info.isManaged) {
     info.store = resolve(info.basePath, normalize(info.store))
     info.path = dirname(db.path)
 
