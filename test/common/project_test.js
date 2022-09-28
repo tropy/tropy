@@ -1,8 +1,8 @@
 import { stat, mkdir, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { isAbsolute, join } from 'node:path'
 import { mkprojtmp } from '../support/project.js'
 import { mkdtmp } from '../support/tmp.js'
-import { create, pstat } from '../../src/common/project.js'
+import { create, load, pstat } from '../../src/common/project.js'
 
 describe('common/project', () => {
 
@@ -23,6 +23,8 @@ describe('common/project', () => {
         expect(project).to.have.property('base', null)
         expect(project).to.have.property('store', null)
         expect(project).to.have.property('project_id', 'abc123')
+
+        expect(await db.version()).to.be.a('number').above(1601010000)
       })
     })
 
@@ -46,6 +48,7 @@ describe('common/project', () => {
           .to.have.property('project_id')
           .and.match(/^[0-9a-f-]+$/)
 
+        expect(await db.version()).to.be.a('number').above(2207140000)
       })
     })
 
@@ -65,6 +68,36 @@ describe('common/project', () => {
 
       await expect(create(tpm, F.schema('project').path))
         .to.eventually.be.rejectedWith('EEXIST')
+    })
+  })
+
+  describe('load', () => {
+    describe('*.tpy', () => {
+      let tpy = mkprojtmp('test.tpy', { name: 'Daedalus' })
+
+      it('returns project info', async () => {
+        let { db } = tpy.current
+        let project = await load(db)
+
+        expect(project.name).to.equal('Daedalus')
+        expect(project.base).to.be.null
+        expect(project.store).to.be.null
+        expect(project.isManaged).to.be.false
+      })
+    })
+
+    describe('*.tpy', () => {
+      let tpm = mkprojtmp('test.tpm', { name: 'Ariadne' })
+
+      it('returns project info', async () => {
+        let { db } = tpm.current
+        let project = await load(db)
+
+        expect(project.name).to.equal('Ariadne')
+        expect(project.base).to.equal('project')
+        expect(project.isManaged).to.be.true
+        expect(isAbsolute(project.store)).to.be.true
+      })
     })
   })
 
