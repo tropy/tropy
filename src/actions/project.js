@@ -19,6 +19,7 @@ export default {
     return {
       type: PROJECT.CLOSED,
       payload,
+      error: payload instanceof Error,
       meta: {
         ipc: true,
         ...meta

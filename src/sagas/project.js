@@ -89,19 +89,15 @@ export function *open(opts, action) {
 
     var error = e
 
-    // Mark the task as cancelled. Otherwise the task will appear to be
-    // running even after the finally block completes.
+    // Mark the task as cancelled.
+    // Otherwise the task.isRunning() will return true even after completion!
     yield cancel()
 
   } finally {
-    yield call(db?.close)
+    if (db)
+      yield call(db.close)
 
-    yield put(act.project.closed({
-      id: project?.id,
-      path: project?.path,
-      error
-    }))
-
+    yield put(act.project.closed(error))
     debug('*project.open terminated')
   }
 }
