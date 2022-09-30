@@ -2,6 +2,7 @@ import React from 'react'
 import { arrayOf, func, object, string } from 'prop-types'
 import { ScrollContainer } from '../scroll/container.js'
 import { Form, FormField, FormToggle, FormToggleGroup } from '../form.js'
+import { BASES } from '../../common/project.js'
 
 export const ProjectPrefs = React.memo(({
   baseOptions,
@@ -77,5 +78,5 @@ ProjectPrefs.propTypes = {
 }
 
 ProjectPrefs.defaultProps = {
-  baseOptions: [null, 'project', 'home']
+  baseOptions: BASES
 }

@@ -28,8 +28,8 @@ describe('common/project', () => {
       })
     })
 
-    describe('*.tpm', () => {
-      let tpm = mkprojtmp('test.tpm', { name: 'Ariadne' })
+    describe('managed', () => {
+      let tpm = mkprojtmp('test.tropy', { name: 'Ariadne' })
 
       it('creates managed project folders and database', async () => {
         let { db, path } = tpm.current
@@ -58,7 +58,7 @@ describe('common/project', () => {
 
     it('rejects if file or directory already exists', async () => {
       let tpy = join(tmp, 'file.tpy')
-      let tpm = join(tmp, 'file.tpm')
+      let tpm = join(tmp, 'file.tropy')
 
       await writeFile(tpy, '')
       await mkdir(tpm)
@@ -86,8 +86,8 @@ describe('common/project', () => {
       })
     })
 
-    describe('*.tpy', () => {
-      let tpm = mkprojtmp('test.tpm', { name: 'Ariadne' })
+    describe('managed', () => {
+      let tpm = mkprojtmp('test.tropy', { name: 'Ariadne' })
 
       it('returns project info', async () => {
         let { db } = tpm.current
@@ -122,8 +122,8 @@ describe('common/project', () => {
           .to.eventually.be.null)
     })
 
-    describe('*.tpm', () => {
-      let tpm = mkprojtmp('test.tpm', { name: 'Ariadne' })
+    describe('managed', () => {
+      let tpm = mkprojtmp('test.tropy', { name: 'Ariadne' })
 
       it('returns project stats', async () => {
         let stats = await pstat(tpm.current.path)

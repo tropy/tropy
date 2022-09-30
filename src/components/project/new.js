@@ -6,7 +6,7 @@ import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar } from '../toolbar.js'
 import { Button, ToggleButtonGroup } from '../button.js'
 import { FormElement, FormGroup } from '../form.js'
-import { TPY, TPM } from '../../common/project.js'
+import { TYPES } from '../../common/project.js'
 import { create } from '../../slices/project-files.js'
 
 
@@ -82,5 +82,5 @@ NewProject.propTypes = {
 }
 
 NewProject.defaultProps = {
-  accept: [TPM, TPY]
+  accept: TYPES
 }
