@@ -3,6 +3,7 @@ import { isAbsolute, join } from 'node:path'
 import { mkprojtmp } from '../support/project.js'
 import { mkdtmp } from '../support/tmp.js'
 import { create, load, pstat } from '../../src/common/project.js'
+import { delay } from '../../src/common/util.js'
 
 describe('common/project', () => {
 
@@ -117,9 +118,10 @@ describe('common/project', () => {
         expect(stats).to.have.property('notes', 0)
       })
 
-      it('returns null if file not modifed since', () =>
-        expect(pstat(tpy.current.path, Date.now() + 1))
-          .to.eventually.be.null)
+      it('returns null if file not modifed since', async () => {
+        await delay(100)
+        expect(await pstat(tpy.current.path, Date.now())).to.be.null
+      })
     })
 
     describe('managed', () => {
@@ -135,9 +137,10 @@ describe('common/project', () => {
         expect(stats).to.have.property('notes', 0)
       })
 
-      it('returns null if file not modifed since', () =>
-        expect(pstat(tpm.current.path, Date.now() + 1))
-          .to.eventually.be.null)
+      it('returns null if file not modifed since', async () => {
+        await delay(100)
+        expect(await pstat(tpm.current.path, Date.now())).to.be.null
+      })
 
       it('returns folder path when given database file', async () => {
         let stats = await pstat(join(tpm.current.path, 'project.tpy'))

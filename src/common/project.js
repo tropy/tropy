@@ -150,12 +150,10 @@ export async function pstat(path, modifiedSince) {
       }
     }
 
-    let { mtimeMs, ...x } = await stat(dbFile)
+    let { mtimeMs } = await stat(dbFile)
 
-    if (modifiedSince > mtimeMs) {
-      console.log(modifiedSince, mtimeMs, x)
+    if (modifiedSince > mtimeMs)
       return null
-    }
 
     var db = new Database(dbFile, 'r', { max: 1 })
     let stats = await db.get(projectStats.query)
