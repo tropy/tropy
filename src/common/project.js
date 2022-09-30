@@ -25,10 +25,10 @@ export async function create(path, schema, {
     let dbFile = path
     let store = null
 
-    if (type === TPM) {
-      dbFile = join(path, TPM_DB_NAME)
-      store = TPM_STORE_NAME
-      base = 'project'
+    if (type === MANAGED) {
+      dbFile = join(path, MANAGED_DB_NAME)
+      store = MANAGED_STORE_NAME
+      base = BASE.PROJECT
 
       await mkdir(path)
       await mkdir(join(path, store))
@@ -37,7 +37,7 @@ export async function create(path, schema, {
       assert(await access(dbFile).then(() => false, () => true),
         `project file exists: "${dbFile}"`)
 
-      assert([null, 'project', 'home'].includes(base),
+      assert(BASES.includes(base),
         `project base not supported: "${base}"`)
     }
 
@@ -51,7 +51,7 @@ export async function create(path, schema, {
       store
     }))
 
-    if (type === TPM) {
+    if (type === MANAGED) {
       db.exec('PRAGMA journal_mode = WAL;')
     }
 
@@ -96,7 +96,7 @@ export async function open(path, {
   ...dbOptions
 }) {
   let type = getProjectType(path)
-  let dbFile = (type === TPM) ? join(path, TPM_DB_NAME) : path
+  let dbFile = (type === MANAGED) ? join(path, MANAGED_DB_NAME) : path
 
   let db = await Database.open(dbFile, dbOptions)
 
@@ -138,14 +138,14 @@ export async function pstat(path, modifiedSince) {
     let type = getProjectType(path)
     let dbFile
 
-    if (type === TPM) {
-      dbFile = join(path, TPM_DB_NAME)
+    if (type === MANAGED) {
+      dbFile = join(path, MANAGED_DB_NAME)
 
     } else {
       dbFile = path
 
       if (isManaged(dbFile)) {
-        type = TPM
+        type = MANAGED
         path = dirname(dbFile)
       }
     }
@@ -215,9 +215,9 @@ export async function reindex(db) {
 
 export function resolveBasePath(db, base) {
   switch (base) {
-    case 'project':
+    case BASE.PROJECT:
       return dirname(db.path)
-    case 'home':
+    case BASE.HOME:
       return home
     default:
       return base
@@ -228,22 +228,32 @@ export function getProjectType(path) {
   switch (extname(path).toLowerCase()) {
     case '.tpy':
       return TPY
-    case '.tpm':
-      return TPM
+    case '.tropy':
+    case '.mtpy':
+    case '.mpy':
+    case '':
+      return MANAGED
     default:
       throw new Error(`unknown project file extension ${path}`)
   }
 }
 
-const isManaged = (path) =>
-  basename(path) === TPM_DB_NAME &&
-    extname(dirname(path)).toLowerCase() === '.tpm'
+const isManaged = (dbFile) =>
+  basename(dbFile) === MANAGED_DB_NAME &&
+    getProjectType(dirname(dbFile)) === MANAGED
 
-export const TPY = 'tpy'
-export const TPM = 'tpm'
+const TPY = 'tpy'
+const MANAGED = 'managed'
+const MANAGED_DB_NAME = 'project.tpy'
+const MANAGED_STORE_NAME = 'assets'
 
-const TPM_DB_NAME = 'project.tpy'
-const TPM_STORE_NAME = 'assets'
+const BASE = {
+  PROJECT: 'project',
+  HOME: 'home'
+}
+
+export const TYPES = [MANAGED, TPY]
+export const BASES = [null, BASE.PROJECT, BASE.HOME]
 
 const projectInfo =
   select({ id: 'project_id' }, 'name', 'base', 'store', {
