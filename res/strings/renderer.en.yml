@@ -103,10 +103,10 @@ en:
         label: Choose the project type
         option:
           tpy: Advanced
-          tpm: Standard
+          managed: Standard
         hint:
           tpy: Links to photos at their original location.
-          tpm: Copies photos to project folder on import.
+          managed: Copies photos to project folder on import.
       create: Create Project
     stats:
       photos: >-

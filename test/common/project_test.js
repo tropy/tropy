@@ -3,6 +3,7 @@ import { isAbsolute, join } from 'node:path'
 import { mkprojtmp } from '../support/project.js'
 import { mkdtmp } from '../support/tmp.js'
 import { create, load, pstat } from '../../src/common/project.js'
+import { delay } from '../../src/common/util.js'
 
 describe('common/project', () => {
 
@@ -28,8 +29,8 @@ describe('common/project', () => {
       })
     })
 
-    describe('*.tpm', () => {
-      let tpm = mkprojtmp('test.tpm', { name: 'Ariadne' })
+    describe('managed', () => {
+      let tpm = mkprojtmp('test.tropy', { name: 'Ariadne' })
 
       it('creates managed project folders and database', async () => {
         let { db, path } = tpm.current
@@ -58,7 +59,7 @@ describe('common/project', () => {
 
     it('rejects if file or directory already exists', async () => {
       let tpy = join(tmp, 'file.tpy')
-      let tpm = join(tmp, 'file.tpm')
+      let tpm = join(tmp, 'file.tropy')
 
       await writeFile(tpy, '')
       await mkdir(tpm)
@@ -86,8 +87,8 @@ describe('common/project', () => {
       })
     })
 
-    describe('*.tpy', () => {
-      let tpm = mkprojtmp('test.tpm', { name: 'Ariadne' })
+    describe('managed', () => {
+      let tpm = mkprojtmp('test.tropy', { name: 'Ariadne' })
 
       it('returns project info', async () => {
         let { db } = tpm.current
@@ -117,13 +118,14 @@ describe('common/project', () => {
         expect(stats).to.have.property('notes', 0)
       })
 
-      it('returns null if file not modifed since', () =>
-        expect(pstat(tpy.current.path, Date.now() + 1))
-          .to.eventually.be.null)
+      it('returns null if file not modifed since', async () => {
+        await delay(100)
+        expect(await pstat(tpy.current.path, Date.now())).to.be.null
+      })
     })
 
-    describe('*.tpm', () => {
-      let tpm = mkprojtmp('test.tpm', { name: 'Ariadne' })
+    describe('managed', () => {
+      let tpm = mkprojtmp('test.tropy', { name: 'Ariadne' })
 
       it('returns project stats', async () => {
         let stats = await pstat(tpm.current.path)
@@ -135,9 +137,10 @@ describe('common/project', () => {
         expect(stats).to.have.property('notes', 0)
       })
 
-      it('returns null if file not modifed since', () =>
-        expect(pstat(tpm.current.path, Date.now() + 1))
-          .to.eventually.be.null)
+      it('returns null if file not modifed since', async () => {
+        await delay(100)
+        expect(await pstat(tpm.current.path, Date.now())).to.be.null
+      })
 
       it('returns folder path when given database file', async () => {
         let stats = await pstat(join(tpm.current.path, 'project.tpy'))
