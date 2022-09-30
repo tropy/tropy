@@ -1,4 +1,4 @@
-import { join, normalize } from 'node:path'
+import { join } from 'node:path'
 import process from 'node:process'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
@@ -38,10 +38,10 @@ const platformId = (arch === 'arm64') ?
 
 const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
-    normalize('src/components/button.js'),
-    normalize('src/components/list/tree.js'),
-    normalize('node_modules/n3/src/N3DataFactory.js'),
-    normalize('node_modules/undici/lib/fetch/util.js')
+    'src/components/button.js',
+    'src/components/list/tree.js',
+    'node_modules/n3/src/N3DataFactory.js',
+    'node_modules/undici/lib/fetch/util.js'
   ].includes(warning.importer),
 
   THIS_IS_UNDEFINED: (warning) =>
