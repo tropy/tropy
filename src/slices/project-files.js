@@ -10,12 +10,12 @@ import { Schema } from '../res.js'
 export const create = createAsyncThunk(
   'projectFiles/create',
   async ({ name, type }) => {
-    let path = await save[type]?.({
-      defaultPath: `${name}.${type}`
-    })
-    await createProject(path, Schema.expand('project'), { name })
+    let path = await save.project(type, name)
 
-    return path
+    if (path)
+      await createProject(path, Schema.expand('project'), { name })
+
+    return { path }
   })
 
 export const reload = createAsyncThunk(
