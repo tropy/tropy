@@ -9,14 +9,6 @@
   color: $recent-projects-color;
   min-width: 0;
 
-  .toolbar {
-    .is-blurred & {
-      @if $platform == darwin {
-        background-color: $toolbar-blurred-bg-darwin;
-      }
-    }
-  }
-
   .search {
     width: auto;
     margin-top: 15px;
