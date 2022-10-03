@@ -255,6 +255,15 @@ const BASE = {
 export const TYPES = [MANAGED, TPY]
 export const BASES = [null, BASE.PROJECT, BASE.HOME]
 
+export const pext = (type) => {
+  switch (type) {
+    case TPY: return 'tpy'
+    case MANAGED: return 'tropy'
+    default:
+      throw new Error(`unknown project type ${type}`)
+  }
+}
+
 const projectInfo =
   select({ id: 'project_id' }, 'name', 'base', 'store', {
     lastAccess:

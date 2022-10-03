@@ -1,9 +1,10 @@
 import assert from 'assert'
 import { ipcRenderer as ipc, shell, clipboard } from 'electron'
-import ARGS from './args'
-import { counter, get } from './common/util'
-import { crashReport, warn } from './common/log'
-import { IMAGE } from './constants'
+import ARGS from './args.js'
+import { counter, get } from './common/util.js'
+import { crashReport, warn } from './common/log.js'
+import { pext } from './common/project.js'
+import IMAGE from './constants/image.js'
 
 let seq
 let pending
@@ -171,15 +172,16 @@ open.templates = (opts) => open({
 })
 
 
-save.tpy = (opts) => save({
+save.project = (type, name = 'Project', opts = {}) => save({
   filters: [{
     name: t('dialog', 'filter', 'projects'),
-    extensions: ['tpy']
+    extensions: [pext(type)]
   }],
   properties: [
     'createDirectory',
     'showOverwriteConfirmation'
   ],
+  defaultPath: `${name}.${pext(type)}`,
   ...opts
 })
 
