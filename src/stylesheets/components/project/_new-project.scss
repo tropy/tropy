@@ -11,14 +11,6 @@
     @include form-shading-level(0);
   }
 
-  .toolbar {
-    .is-blurred & {
-      @if $platform == darwin {
-        background-color: $toolbar-blurred-bg-darwin;
-      }
-    }
-  }
-
   figure {
     width: 112px;
     height: 96px;
