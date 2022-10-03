@@ -22,6 +22,12 @@
       margin-top: 53px;
     }
 
+    .is-blurred & {
+      @if $platform == darwin {
+        opacity: $recent-projects-search-blurred-opacity-darwin;
+      }
+    }
+
     .icon-search {
       left: 40px;
       color: $input-color-placeholder;
@@ -85,10 +91,22 @@
       @include state(".project-file:hover", ".project-file:first-child") {
         content: none;
       }
+
+      .is-blurred & {
+        @if $platform == darwin {
+          background-color: $recent-project-blurred-border;
+        }
+      }
     }
 
     .icon-maze {
       flex: 0 0 auto;
+
+      .is-blurred & {
+        @if $platform == darwin {
+          opacity: $maze-blurred-opacity-darwin;
+        }
+      }
 
       svg {
         width: $space-xl;
@@ -109,6 +127,12 @@
 
       @media (min-resolution: 2dppx) {
         margin-top: -9.5px;
+      }
+
+      .is-blurred & {
+        @if $platform == darwin {
+          opacity: $recent-projects-blurred-opacity;
+        }
       }
 
       .icon {
@@ -135,6 +159,12 @@
         margin-top: 0;
       }
 
+      .is-blurred & {
+        @if $platform == darwin {
+          color: $recent-project-stats-blurred-color;
+        }
+      }
+
       li {
         display: inline;
         margin-left: $space-xs;
@@ -143,6 +173,12 @@
       :first-child {
         color: $recent-projects-color;
         margin-left: 0;
+
+        .is-blurred & {
+          @if $platform == darwin {
+            color: unset;
+          }
+        }
       }
     }
 

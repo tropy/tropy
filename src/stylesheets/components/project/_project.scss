@@ -16,6 +16,12 @@
   display: flex;
   background-color: $no-project-bg;
   @include fade($delay: 0.33s, $duration: 0.15s);
+
+  .is-blurred & {
+    @if $platform == darwin {
+      background-color: $no-project-blurred-bg;
+    }
+  }
 }
 
 .project {
