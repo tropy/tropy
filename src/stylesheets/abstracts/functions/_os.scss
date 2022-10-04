@@ -1,0 +1,17 @@
+// stylelint-disable block-closing-brace-empty-line-before
+
+//
+// OS helper
+// --------------------------------------------------
+
+@function os($variable) {
+  @if $platform == darwin {
+    @return nth($variable, 1);
+
+  } @else if $platform == win32 {
+    @return nth($variable, 2);
+
+  } @else {
+    @return nth($variable, 3);
+  }
+}

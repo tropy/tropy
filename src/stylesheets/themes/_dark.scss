@@ -194,18 +194,18 @@ $project-heading-color: var(--shade-8);
 $item-count-color:      var(--shade-6);
 
 // Recent projects
-$recent-projects-color:                         var(--shade-8);
-$recent-projects-blurred-opacity:               0.55;
-$recent-projects-search-blurred-opacity-darwin: 0.6;
-$no-project-blurred-bg:                         var(--shade-2);
-$recent-project-hover-bg:                       var(--shade-4-lighten-2);
-$recent-project-border:                         var(--shade-1);
-$recent-project-blurred-border:                 var(--shade-1-darken-4);
-$maze-color:                                    var(--shade-6);
-$maze-hover-color:                              var(--shade-6-lighten-2);
-$maze-blurred-opacity-darwin:                   0.6;
-$recent-project-stats-color:                    var(--shade-7);
-$recent-project-stats-blurred-color:            var(--shade-7-darken-5);
+$recent-projects-color:                  var(--shade-8);
+$recent-projects-blurred-opacity:        (0.55, null, null);
+$recent-projects-search-blurred-opacity: (0.6, null, null);
+$no-project-blurred-bg:                  var(--shade-2);
+$recent-project-hover-bg:                var(--shade-4-lighten-2);
+$recent-project-border:                  var(--shade-1);
+$recent-project-blurred-border:          (var(--shade-1-darken-4), null, null);
+$maze-color:                             var(--shade-6);
+$maze-hover-color:                       var(--shade-6-lighten-2);
+$maze-blurred-opacity:                   (0.6, null, null);
+$recent-project-stats-color:             var(--shade-7);
+$recent-project-stats-blurred-color:     (var(--shade-7-darken-5), null, null);
 
 // New project
 $new-project-form-text-color: var(--shade-7);

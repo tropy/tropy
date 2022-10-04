@@ -23,9 +23,7 @@
     }
 
     .is-blurred & {
-      @if $platform == darwin {
-        opacity: $recent-projects-search-blurred-opacity-darwin;
-      }
+      opacity: os($recent-projects-search-blurred-opacity);
     }
 
     .icon-search {
@@ -93,9 +91,7 @@
       }
 
       .is-blurred & {
-        @if $platform == darwin {
-          background-color: $recent-project-blurred-border;
-        }
+        background-color: os($recent-project-blurred-border);
       }
     }
 
@@ -103,9 +99,7 @@
       flex: 0 0 auto;
 
       .is-blurred & {
-        @if $platform == darwin {
-          opacity: $maze-blurred-opacity-darwin;
-        }
+        opacity: os($maze-blurred-opacity);
       }
 
       svg {
@@ -130,9 +124,7 @@
       }
 
       .is-blurred & {
-        @if $platform == darwin {
-          opacity: $recent-projects-blurred-opacity;
-        }
+        opacity: os($recent-projects-blurred-opacity);
       }
 
       .icon {
@@ -160,9 +152,7 @@
       }
 
       .is-blurred & {
-        @if $platform == darwin {
-          color: $recent-project-stats-blurred-color;
-        }
+        color: os($recent-project-stats-blurred-color);
       }
 
       li {
