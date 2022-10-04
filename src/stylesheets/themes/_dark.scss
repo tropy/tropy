@@ -194,6 +194,7 @@ $project-heading-color: var(--shade-8);
 $item-count-color:      var(--shade-6);
 
 // Recent projects
+$recent-projects-view-blurred-opacity:   (null, null, 0.4);
 $recent-projects-color:                  var(--shade-8);
 $recent-projects-blurred-opacity:        (0.55, null, null);
 $recent-projects-search-blurred-opacity: (0.6, null, null);

@@ -9,6 +9,12 @@
   color: $recent-projects-color;
   min-width: 0;
 
+  > * {
+    .is-blurred & {
+      opacity: os($recent-projects-view-blurred-opacity);
+    }
+  }
+
   .search {
     width: auto;
     margin-top: 15px;
