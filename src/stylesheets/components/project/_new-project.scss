@@ -11,6 +11,14 @@
     @include form-shading-level(0);
   }
 
+  &:first-child {
+    > * {
+      .is-blurred & {
+        opacity: os($new-project-blurred-opacity);
+      }
+    }
+  }
+
   figure {
     width: 112px;
     height: 96px;
