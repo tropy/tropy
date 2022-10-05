@@ -24,7 +24,7 @@ export const About = () => (
   <div className="about-view">
     <Titlebar isOptional/>
     <figure className="app-icon"/>
-    <div className="flex-row center">
+    <div>
       <h1><span className="product">{product}</span></h1>
       <p className="version">
         <FormattedMessage id="about.version" values={{ version }}/>
