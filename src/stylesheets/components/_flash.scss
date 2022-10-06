@@ -37,7 +37,7 @@
 
   .btn-icon {
     position: absolute;
-    right: $space-sm + 7px;
+    right: $space-lg - 6px;
     top: 50%;
     transform: translateY(-50%);
     mix-blend-mode: if($theme == "light", multiply, inherit);

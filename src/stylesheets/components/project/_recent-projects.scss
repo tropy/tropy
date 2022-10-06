@@ -40,12 +40,28 @@
     .form-control {
       border-color: transparent;
       background-color: transparent;
-      padding-left: 60px;
+      padding-left: 61px;
+      padding-right: 68px;
       font-size: 18px;
 
       &:focus {
         border-color: transparent !important;
         box-shadow: none !important;
+      }
+    }
+
+    .btn-icon {
+      width: $space-md;
+      height: $space-md;
+      background-color: initial;
+      right: 48px; // Align with x-icons in list below
+
+      .icon {
+        color: $icon-color;
+
+        @include state(".btn-icon:hover") {
+          color: $input-color;
+        }
       }
     }
   }
