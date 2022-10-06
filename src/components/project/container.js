@@ -58,10 +58,7 @@ export const ProjectContainer = ({
       }
     },
 
-    // FIXME in recent Electron versions we can't see the mime-types anymore on drag
-    // so this is currently broken.
-    canDrop: (item) =>
-      true || hasProjectFiles(item),
+    canDrop: (item) => hasProjectFiles(item),
 
     collect: (monitor) => ({
       isOver: monitor.isOver() && monitor.canDrop()
