@@ -4,6 +4,7 @@ import { arrayOf, func, string } from 'prop-types'
 import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar } from '../toolbar.js'
 import { SearchField } from '../search/field.js'
+import { IconXLarge } from '../icons.js'
 import { ProjectFileList } from './file.js'
 import { clear, consolidate, reload } from '../../slices/project-files.js'
 import { match } from '../../collate.js'
@@ -48,6 +49,7 @@ export const RecentProjects = ({
       <SearchField
         onSearch={setQuery}
         placeholder="project.recent.search.placeholder"
+        clearIcon={<IconXLarge/>}
         query={query}/>
       <nav>
         <ProjectFileList
