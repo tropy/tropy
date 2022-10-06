@@ -1,4 +1,6 @@
-//
+import MagicString from 'magic-string'
+
+
 // In the source file:
 // 'react-dnd-html5-backend/dist/cjs/NativeDragSources/nativeTypesConfig'
 //
@@ -7,11 +9,15 @@
 // dragged from a browser to be dropped as HTML snippets, when we really
 // want the URL instead. We patch the native type config so that it
 // will not match 'text/html' anymore (which Tropy does not handle).
-
-import MagicString from 'magic-string'
-
 const HTML_TYPES = "matchesTypes: ['Html', 'text/html']"
-const REPLACEMENT = "matchesTypes: ['Html', 'matches-nothing']"
+const HTML_TYPES_REPLACEMENT = "matchesTypes: ['Html', 'matches-nothing']"
+
+// The exposed dataTransfer.items is collected on dragenter but that
+// object is reset by the browser later on successive dragover events.
+// Newer versions of react-dnd update the properties for every event;
+// here we solve it by making a copy using primitives only.
+const EXPOSE_ITEMS = "return dataTransfer.items"
+const EXPOSE_ITEMS_REPLACEMENT = "return Array.from(dataTransfer.items).map(({ kind, type }) => ({ kind, type }))"
 
 export default function reactDnd() {
   let transformed = false
@@ -20,17 +26,28 @@ export default function reactDnd() {
     transform(code, id) {
       if (id.endsWith('nativeTypesConfig.js')) {
         transformed = true
-        const requireStatementPos = code.indexOf(HTML_TYPES)
-        if (requireStatementPos < 0) {
+        let magicString = new MagicString(code)
+        let pos = code.indexOf(HTML_TYPES)
+        if (pos < 0) {
           throw new Error(
             `Could not find expected HTML match types "${HTML_TYPES}"`
           )
         }
-        const magicString = new MagicString(code)
         magicString.overwrite(
-          requireStatementPos,
-          requireStatementPos + HTML_TYPES.length,
-          REPLACEMENT
+          pos,
+          pos + HTML_TYPES.length,
+          HTML_TYPES_REPLACEMENT
+        )
+        pos = code.indexOf(EXPOSE_ITEMS)
+        if (pos < 0) {
+          throw new Error(
+            `Could not find expected exposed dataTransfer.items "${EXPOSE_ITEMS}"`
+          )
+        }
+        magicString.overwrite(
+          pos,
+          pos + EXPOSE_ITEMS.length,
+          EXPOSE_ITEMS_REPLACEMENT
         )
         return {
           code: magicString.toString(),
