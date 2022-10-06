@@ -37,7 +37,7 @@ const isProjectOrTemplateFile = ({ kind, type }) =>
   kind === 'file' && (MIME.TPY === type || MIME.TTP === type)
 
 const hasProjectFiles = (item) =>
-  !!Array.from(item.items || []).find(isProjectOrTemplateFile)
+  !!item.items.find(isProjectOrTemplateFile)
 
 // Subtle: we assume that there are photo files, if we don't see
 // any project files. This is because we cannot reliably see all
