@@ -16,8 +16,8 @@ const HTML_TYPES_REPLACEMENT = "matchesTypes: ['Html', 'matches-nothing']"
 // object is reset by the browser later on successive dragover events.
 // Newer versions of react-dnd update the properties for every event;
 // here we solve it by making a copy using primitives only.
-const EXPOSE_ITEMS = "return dataTransfer.items"
-const EXPOSE_ITEMS_REPLACEMENT = "return Array.from(dataTransfer.items).map(({ kind, type }) => ({ kind, type }))"
+const EXPOSE_ITEMS = 'return dataTransfer.items'
+const EXPOSE_ITEMS_REPLACEMENT = 'return Array.from(dataTransfer.items).map(({ kind, type }) => ({ kind, type }))'
 
 export default function reactDnd() {
   let transformed = false
