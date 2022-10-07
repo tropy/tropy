@@ -1,12 +1,11 @@
-import { extname } from 'node:path'
 import React from 'react'
 import { bool } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
+import { useDropProjectFiles } from '../../hooks/use-drop-project-files.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { Project } from './project.js'
 import { NoProject } from './none.js'
 import { Fade, SwitchTransition } from '../fx.js'
-import { DND, useDrop, hasProjectFiles } from '../dnd.js'
 import * as act from '../../actions/index.js'
 
 
@@ -19,52 +18,24 @@ export const ProjectContainer = ({
   let project = useSelector(state => state.project)
 
   let handleProjectOpen = useEvent(path => {
-    dispatch(act.project.open(path))
+    if (path !== project.path)
+      dispatch(act.project.open(path))
   })
 
-  let handleTemplateImport = useEvent(files => {
-    dispatch(act.ontology.template.import({ files }, { prompt: true }))
-  })
+  let onDrop = useEvent(({ projects, templates }) => {
+    if (templates.length) {
+      dispatch(act.ontology.template.import({
+        files: templates
+      }, { prompt: true }))
+    }
 
-  let [{ isOver }, drop] = useDrop(() => ({
-    accept: [DND.FILE],
-
-    drop(item) {
-      let projects = []
-      let templates = []
-
-      for (let file of item.files) {
-        switch (extname(file.path).toLowerCase()) {
-          case '.tpy':
-            // TODO move this to handleProjectOpen
-            if (file.path !== project.path)
-              projects.push(file.path)
-            break
-          case '.ttp':
-            templates.push(file.path)
-            break
-        }
-      }
-
+    if (projects.length) {
       // Subtle: currently handling only the first project file!
-      if (projects.length) {
-        handleProjectOpen(projects[0])
-        return { files: projects }
-      }
+      handleProjectOpen(projects[0])
+    }
+  })
 
-      if (templates.length) {
-        handleTemplateImport(templates)
-        return { files: templates }
-      }
-    },
-
-    canDrop: (item) => hasProjectFiles(item),
-
-    collect: (monitor) => ({
-      isOver: monitor.isOver() && monitor.canDrop()
-    })
-  }), [project.path, handleProjectOpen, handleTemplateImport])
-
+  let [{ isOver }, drop] = useDropProjectFiles({ onDrop })
 
   return (
     <SwitchTransition>
