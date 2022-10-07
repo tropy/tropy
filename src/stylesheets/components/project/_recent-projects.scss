@@ -74,6 +74,8 @@
     justify-content: center;
     align-items: center;
     font-size: $h1-font-size;
+    line-height: $headings-line-height;
+    text-align: center;
     padding: 0 40px 85px;
 
     .is-blurred & {
