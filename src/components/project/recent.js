@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { arrayOf, func, string } from 'prop-types'
 import { useEvent } from '../../hooks/use-event.js'
@@ -51,13 +52,16 @@ export const RecentProjects = ({
         placeholder="project.recent.search.placeholder"
         clearIcon={<IconXLarge/>}
         query={query}/>
-      <nav>
-        <ProjectFileList
-          files={projects}
-          onConsolidate={handleConsolidate}
-          onRemove={handleProjectRemove}
-          onSelect={onSelect}/>
-      </nav>
+      {!projects.length ?
+        <FormattedMessage id="project.recent.search.blank"/> : (
+          <nav>
+            <ProjectFileList
+              files={projects}
+              onConsolidate={handleConsolidate}
+              onRemove={handleProjectRemove}
+              onSelect={onSelect}/>
+          </nav>
+      )}
     </div>
   )
 }
