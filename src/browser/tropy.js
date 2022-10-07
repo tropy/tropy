@@ -157,7 +157,7 @@ export class Tropy extends EventEmitter {
     let files = await dialog.open(win, {
       filters: [{
         name: this.dict.dialog.file.project,
-        extensions: ['tpy']
+        extensions: ['tpy', 'tropy', 'mtpy']
       }]
     })
 
