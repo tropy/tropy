@@ -1,6 +1,6 @@
 import cx from 'classnames'
 import { bool, func, string } from 'prop-types'
-import { useDropPhotoFiles } from '../dnd.js'
+import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { IconMaze, IconWarningSm, IconLock } from '../icons.js'
 import { Editable } from '../editable.js'
 
