@@ -157,14 +157,18 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
       break
     case 'darwin':
       icon = join(ROOT, 'res', 'icons', channel, `${name}.icns`)
+      extraResource.push(icon)
+      extraResource.push(join(ICONS, 'mime', 'mtpy.icns'))
       extraResource.push(join(ICONS, 'mime', 'tpy.icns'))
       extraResource.push(join(ICONS, 'mime', 'ttp.icns'))
       break
     case 'win32':
       icon = join(ICONS, channel, `${name}.ico`)
       extraResource.push(icon)
+      //extraResource.push(join(ICONS, 'mime', 'mtpy.ico'))
       extraResource.push(join(ICONS, 'mime', 'tpy.ico'))
       extraResource.push(join(ICONS, 'mime', 'ttp.ico'))
+      extraResource.push(join(ICONS, 'mime', 'folder.ico'))
       executableName = qualified.name
       break
   }
@@ -308,7 +312,7 @@ async function copyIcons(dst, theme = 'hicolor') {
     await copyFile(join(ICONS, channel, 'tropy', icon), join(target, file))
   }
 
-  for (let type of ['tpy', 'ttp']) {
+  for (let type of ['mtpy', 'tpy', 'ttp']) {
     icons = await readdir(join(ICONS, 'mime', type))
     for (let icon of icons) {
       let ext = extname(icon)
@@ -328,6 +332,7 @@ async function copyIcons(dst, theme = 'hicolor') {
 function desktop({
   icon = exe,
   mimetypes = [
+    'application/vnd.tropy.mtpy',
     'application/vnd.tropy.tpy',
     'application/vnd.tropy.ttp',
     'x-scheme-handler/tropy'
