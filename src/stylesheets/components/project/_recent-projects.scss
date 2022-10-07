@@ -38,11 +38,13 @@
     }
 
     .form-control {
-      border-color: transparent;
+      border: 0;
       background-color: transparent;
-      padding-left: 61px;
-      padding-right: 68px;
       font-size: 18px;
+      padding-left: 28px;
+      padding-right: 0;
+      margin-left: 34px;
+      margin-right: 69px;
 
       &:focus {
         border-color: transparent !important;
