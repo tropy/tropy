@@ -52,8 +52,10 @@ export const RecentProjects = ({
         placeholder="project.recent.search.placeholder"
         clearIcon={<IconXLarge/>}
         query={query}/>
-      {!projects.length ?
-        <FormattedMessage id="project.recent.search.blank"/> : (
+      {!projects.length ? (
+        <div className="placeholder">
+          <FormattedMessage id="project.recent.search.blank"/>
+        </div> : (
           <nav>
             <ProjectFileList
               files={projects}
