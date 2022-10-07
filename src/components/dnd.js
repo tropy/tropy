@@ -33,8 +33,13 @@ const DND = {
   }
 }
 
+// Subtle: we cannot reliably detect folders while dragging;
+// they are `kind` file and have an empty string as type
+// which also matches other files without extensions.
 const isProjectOrTemplateFile = ({ kind, type }) =>
-  kind === 'file' && (MIME.TPY === type || MIME.TTP === type)
+  kind === 'file' && (
+    MIME.TPY === type || MIME.TROPY || MIME.TTP === type || type === ''
+  )
 
 const hasProjectFiles = (item) =>
   !!item.items.find(isProjectOrTemplateFile)
