@@ -50,6 +50,31 @@
       </array>
     </dict>
     <dict>
+      <key>CFBundleTypeExtensions</key>
+      <array>
+        <string>tropy</string>
+        <string>mtpy</string>
+      </array>
+      <key>CFBundleTypeName</key>
+      <string>Managed Tropy Project</string>
+      <key>CFBundleTypeIconFile</key>
+      <string>mtpy.icns</string>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>LSHandlerRank</key>
+      <string>Owner</string>
+      <key>LSItemContentTypes</key>
+      <array>
+        <string>org.tropy.v1.mime-types.mtpy</string>
+      </array>
+      <key>NSExportableTypes</key>
+      <array>
+        <string>org.tropy.v1.mime-types.mtpy</string>
+      </array>
+      <key>LSTypeIsPackage</key>
+      <true/>
+    </dict>
+    <dict>
       <key>CFBundleTypeName</key>
       <string>Tropy Template</string>
       <key>CFBundleTypeIconFile</key>
@@ -155,6 +180,30 @@
   </array>
   <key>UTExportedTypeDeclarations</key>
   <array>
+    <dict>
+      <key>UTTypeIdentifier</key>
+      <string>org.tropy.v1.mime-types.mtpy</string>
+      <key>UTTypeReferenceURL</key>
+      <string>https://tropy.org/v1/mime-types/mtpy</string>
+      <key>UTTypeDescription</key>
+      <string>Managed Tropy Project</string>
+      <key>UTTypeIconFile</key>
+      <string>mtpy.icns</string>
+      <key>UTTypeConformsTo</key>
+      <array>
+        <string>com.apple.package</string>
+      </array>
+      <key>UTTypeTagSpecification</key>
+      <dict>
+        <key>public.filename-extension</key>
+        <array>
+          <string>tropy</string>
+          <string>mtpy</string>
+        </array>
+        <key>public.mime-type</key>
+        <string>application/vnd.tropy.mtpy</string>
+      </dict>
+    </dict>
     <dict>
       <key>UTTypeIdentifier</key>
       <string>org.tropy.v1.mime-types.tpy</string>
