@@ -55,7 +55,8 @@ export const RecentProjects = ({
       {!projects.length ? (
         <div className="placeholder">
           <FormattedMessage id="project.recent.search.blank"/>
-        </div> : (
+        </div>
+        ) : (
           <nav>
             <ProjectFileList
               files={projects}
