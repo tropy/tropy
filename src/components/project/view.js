@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { bool, func, object, number } from 'prop-types'
-import { useDropPhotoFiles } from '../dnd.js'
+import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useActions } from '../../hooks/use-action.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { usePasteEvent } from '../../hooks/use-paste-event.js'
