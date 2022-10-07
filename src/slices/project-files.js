@@ -1,4 +1,4 @@
-import { basename, dirname } from 'node:path'
+import { basename } from 'node:path'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { pstat, create as createProject } from '../common/project.js'
 import { pMap } from '../common/util.js'
@@ -53,9 +53,7 @@ export const consolidate = createAsyncThunk(
   'projectFiles/consolidate',
   async (path, { fulfillWithValue }) => {
 
-    let [newPath] = await open.project({
-      defaultPath: dirname(path)
-    })
+    let [newPath] = await open.project(path)
 
     return fulfillWithValue({ path, newPath }, {
       ipc: newPath ? 'clear-recent-project' : false
