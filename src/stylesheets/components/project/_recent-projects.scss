@@ -66,6 +66,19 @@
     }
   }
 
+  .placeholder {
+    flex: 1 1 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: $h1-font-size;
+    padding: 0 40px 85px;
+
+    .is-blurred & {
+      opacity: os($recent-projects-search-blurred-opacity);
+    }
+  }
+
   nav {
     flex: 1 1 0;
     min-height: 0;
