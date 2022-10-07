@@ -1,6 +1,6 @@
 export default {
   TPY: 'application/vnd.tropy.tpy',
-  TROPY: 'application/vnd.tropy.tropy',
+  MTPY: 'application/vnd.tropy.mtpy',
   TTP: 'application/vnd.tropy.ttp',
 
   AVIF: 'image/avif',

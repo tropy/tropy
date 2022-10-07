@@ -36,7 +36,7 @@ const DND = {
 // Subtle: we cannot reliably detect folders while dragging;
 // they are `kind` file and have an empty string as type
 // which also matches other files without extensions.
-const projectMimeTypes = [MIME.TPY, MIME.TROPY, MIME.TTP, '']
+const projectMimeTypes = [MIME.TPY, MIME.MTPY, MIME.TTP, '']
 
 const isProjectOrTemplateFile = ({ kind, type }) =>
   kind === 'file' && projectMimeTypes.includes(type)
