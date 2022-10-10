@@ -73,7 +73,6 @@ export function *open(opts, action) {
       if (!opts.skipFullSetup)
         yield fork(setup, { db, project })
 
-      warn('waiting for project commands')
       while (true) {
         let cmd = yield take(commands('project'))
         yield fork(exec, { db, id: project.id, cache, store }, cmd)
