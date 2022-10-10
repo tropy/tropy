@@ -133,6 +133,8 @@ export class Tropy extends EventEmitter {
     for (let file of files) {
       switch (extname(file)) {
         case '.tpy':
+        case '.mtpy':
+        case '.tropy':
           await this.showProjectWindow(file, null)
           break
         case '.ttp':
