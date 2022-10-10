@@ -67,7 +67,9 @@ export class Database extends EventEmitter {
 
     this.pool
       .on('factoryCreateError', (e) => {
-        this.emit('error', e)
+        warn({ stack: e.stack }, 'failed to create db connection')
+        // Reject the pending request instead of waiting for it to time out!
+        this.pool._waitingClientsQueue.dequeue()?.reject(e)
       })
       .on('factoryDestroyError', (e) => {
         this.emit('error', e)
