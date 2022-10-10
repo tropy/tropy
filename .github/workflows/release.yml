@@ -39,13 +39,13 @@ jobs:
         arch:
           - x64
         include:
-          - os: ubuntu-18.04
+          - os: ubuntu-20.04
             platform: linux
-          - os: macos-10.15
+          - os: macos-11
             platform: darwin
           - os: windows-2019
             platform: win32
-          - os: macos-11
+          - os: macos-12
             platform: darwin
             arch: arm64
           - os: windows-2019
