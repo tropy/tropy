@@ -5,7 +5,7 @@ import { isInput } from '../dom.js'
 
 export function usePasteEvent(format, handler) {
   useEventHandler(window, 'paste', (event) => {
-    if (isInput(event))
+    if (isInput(event.target || event.srcElement))
       return
 
     let data = getClipboardData(event, format)
