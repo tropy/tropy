@@ -163,7 +163,7 @@ export function reflow(node) {
 }
 
 export function isInput(node) {
-  return node.contentEditable === 'true' ||
+  return node.isContentEditable ||
     node.tagName === 'INPUT' || node.tagName === 'TEXTAREA' || node.tagName === 'SELECT'
 }
 
