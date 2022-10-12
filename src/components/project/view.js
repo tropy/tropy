@@ -60,10 +60,9 @@ export const ProjectView = ({
     dispatch(act.ui.update({ zoom: value }))
   })
 
-  let handleItemImport = useEvent(({ files, urls } = {}) => {
+  let handleItemImport = useEvent((data = {}) => {
     dispatch(act.item.import({
-      files,
-      urls,
+      ...data,
       list: nav.list
     }))
   })
