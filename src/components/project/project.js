@@ -48,8 +48,8 @@ export const Project = React.forwardRef(({
 
   drop?.(container)
 
-  let keymap = useSelector(state => state.keymap.global)
-  useGlobalKeys(keymap)
+  let keymap = useSelector(state => state.keymap)
+  useGlobalKeys(keymap.global)
 
   useGlobalEvent('back', () => {
     if (isItemMode)
