@@ -133,12 +133,12 @@ export class FormField extends React.PureComponent {
   }
 
   handleChange = (value) => {
-    this.props.onInputChange?.({ [this.props.name]: value })
+    this.props.onInputChange?.(set({}, this.props.name, value))
   }
 
   handleCommit = (value, { hasChanged }) => {
     if (hasChanged) {
-      this.props.onChange?.({ [this.props.name]: value })
+      this.props.onChange?.(set({}, this.props.name, value))
     }
   }
 
