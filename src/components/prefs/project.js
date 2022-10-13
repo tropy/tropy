@@ -65,7 +65,6 @@ export const ProjectPrefs = React.memo(({
           name="watch.usePolling"
           value={!!project.watch.usePolling}
           onChange={onChange}/>
-        <hr/>
       </Form>
     </ScrollContainer>
   )
