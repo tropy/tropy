@@ -64,16 +64,19 @@ export class Save extends Command {
       payload = { store, ...payload }
     }
 
+    this.original = { ...original, basePath: project.basePath }
+    let changes = { ...payload, basePath }
+
     // Save and update/reset watch settings in their entirety!
     if (watch) {
       if (!watch.folder)
         watch = { ...project.watch, ...watch }
 
       Storage.save('project.watch', watch, id)
+      changes.watch = watch
     }
 
-    this.original = { ...original, basePath: project.basePath }
-    yield put(act.project.update({ ...payload, basePath, watch }))
+    yield put(act.project.update(changes))
 
     yield call(db.transaction, async tx => {
       await save(tx, { id, ...payload }, basePath)
