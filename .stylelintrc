@@ -21,6 +21,7 @@ rules:
   max-line-length: null
   keyframes-name-pattern: null
   color-function-notation: "legacy"
+  import-notation: "string"
 
   # stylelint-config-recommended-scss
   scss/comment-no-empty: null
