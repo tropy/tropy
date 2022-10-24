@@ -85,8 +85,8 @@ async function prompt(id, {
   ...opts
 } = {}) {
   let { response, checked } = await show('message-box', {
-    type: 'question',
     ...t('dialog', 'prompt', ...id.split('.')),
+    type: 'question',
     defaultId,
     cancelId,
     checkboxChecked: isChecked,

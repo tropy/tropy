@@ -404,7 +404,6 @@ en:
           - Import Anyway
       plugin:
         uninstall:
-          type: warning
           detail: >-
             Are you sure you want to delete the plugin?
             This will permanently remove the plugin and its configuration.
