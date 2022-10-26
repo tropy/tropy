@@ -44,7 +44,7 @@ export class Photo extends Container {
     this.selections = new SelectionLayer()
     this.addChild(this.selections)
 
-    this.overlay = new SelectionOverlay({ width, height })
+    this.overlay = new SelectionOverlay()
     this.addChild(this.overlay)
   }
 

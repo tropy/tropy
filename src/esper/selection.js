@@ -131,12 +131,9 @@ export class Selection extends Graphics {
 }
 
 
-export class SelectionOverlay extends Graphics {
-  constructor({ width, height }) {
+export class SelectionOverlay extends Container {
+  constructor() {
     super()
-
-    this.beginFill('0xffffff', 0)
-    this.drawRect(0, 0, width, height)
 
     this.cacheAsBitmap = false
     this.visible = false
@@ -160,7 +157,7 @@ export class SelectionOverlay extends Graphics {
 
     this.children[0]
       .beginFill(...ESPER.COLOR.mask.fill)
-      .drawRect(0, 0, this.width, this.height)
+      .drawRect(0, 0, this.parent.width, this.parent.height)
       .beginHole()
       .drawRect(x, y, width, height)
       .endHole()
