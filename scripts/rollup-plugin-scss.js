@@ -45,7 +45,8 @@ export default function ({
   extension = '.scss',
   outputStyle = 'compressed',
   platform,
-  themes = ['light', 'dark']
+  themes = ['light', 'dark'],
+  skipThemes
 
 } = {}) {
   return {
@@ -71,21 +72,30 @@ export default function ({
       if (extname(id) !== extension)
         return null
 
-      for (let theme of themes) {
-        let outFile = `${basename(id, extension)}-${theme}.css`
+      let includePaths = [
+        dirname(id),
+        resolve('node_modules')
+      ]
 
-        let includePaths = [
-          dirname(id),
-          resolve('node_modules')
-        ]
+      let sourceMapRoot = resolve()
+      let outFiles = []
 
-        let sourceMapRoot = resolve()
+      if (skipThemes === true || skipThemes?.(id)) {
+        let data = code.replace('"linux"', `"${platform}"`)
+        outFiles.push([`${basename(id, extension)}.css`, data])
 
-        let data = code
-          .replace('"linux"', `"${platform}"`)
-          .replace('"../themes/light"', `"../themes/${theme}"`)
-          .replace('"../themes/colors-light"', `"../themes/colors-${theme}"`)
+      } else {
+        for (let theme of themes) {
+          let data = code
+            .replace('"linux"', `"${platform}"`)
+            .replace('"../themes/light"', `"../themes/${theme}"`)
+            .replace('"../themes/colors-light"', `"../themes/colors-${theme}"`)
 
+          outFiles.push([`${basename(id, extension)}-${theme}.css`, data])
+        }
+      }
+
+      for (let [outFile, data] of outFiles) {
         let { css, map, stats } = await render({
           data,
           functions,
