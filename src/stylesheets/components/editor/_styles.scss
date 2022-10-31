@@ -19,22 +19,6 @@
     user-select: text;
   }
 
-  .pseudo-selection {
-    @include state(".ProseMirror:not(.ProseMirror-focused)") {
-      background-color: $editor-pseudo-selection-bg;
-
-      @include state(".read-only .ProseMirror") {
-        background-color: transparent;
-      }
-    }
-  }
-
-  ::selection {
-    @include state(".read-only .ProseMirror:not(.ProseMirror-focused)") {
-      background-color: $editor-pseudo-selection-bg;
-    }
-  }
-
   * {
     margin: 0;
   }
