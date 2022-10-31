@@ -46,7 +46,11 @@ export class WindowManager extends EventEmitter {
         enableRemoteModule: false,
         nodeIntegration: true,
         preload: join(Resource.base, 'lib/bootstrap.js'),
+
+        // TODO remove once we're on Electron 21 or later!
+        // The flag enables CSS :has and container queries.
         experimentalFeatures: true,
+
         spellcheck: false,
         v8CacheOptions: 'bypassHeatCheck',
         ...defaults
