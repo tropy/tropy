@@ -1,7 +1,5 @@
 import { history } from 'prosemirror-history'
 import { gapCursor } from 'prosemirror-gapcursor'
-import { Decoration, DecorationSet } from 'prosemirror-view'
-import { Plugin } from 'prosemirror-state'
 
 import {
   InputRule,
@@ -35,18 +33,6 @@ const orderedListRule = (nodeType) =>
 const bulletListRule = (nodeType) =>
   wrappingInputRule(/^\s*([-+*])\s$/, nodeType)
 
-const pseudoSelection = ({ className = 'pseudo-selection' } = {}) =>
-  new Plugin({
-    props: {
-      decorations: ({ doc, selection }) =>
-        selection.empty ? null : DecorationSet.create(doc, [
-          Decoration.inline(selection.from, selection.to, {
-            class: className
-          })
-        ])
-    }
-  })
-
 export function createPlugins(schema) {
   const rules = [
     enDash, enDashAuto, emDash, ellipsis, ...smartQuotes
@@ -73,7 +59,6 @@ export function createPlugins(schema) {
   return [
     gapCursor(),
     history(),
-    inputRules({ rules }),
-    pseudoSelection()
+    inputRules({ rules })
   ]
 }
