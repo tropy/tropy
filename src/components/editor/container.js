@@ -3,7 +3,7 @@ import cx from 'classnames'
 import { func, bool, object, number, string } from 'prop-types'
 import { EditorState } from 'prosemirror-state'
 import { EditorToolbar } from './toolbar.js'
-import { EditorView } from './view.js'
+import { ProseMirror as EditorView } from './prosemirror.js'
 import { Placeholder } from '../placeholder.js'
 import { createCommands, createPlugins, schema } from '../../editor/index.js'
 import { match } from '../../keymap.js'
@@ -23,7 +23,7 @@ export class Editor extends React.Component {
   }
 
   setView = (view) => {
-    this.view = view?.pm
+    this.view = view
   }
 
   get classes() {
@@ -66,6 +66,9 @@ export class Editor extends React.Component {
   }
 
   handleKeyDown = (_, event) => {
+    if (this.props.isDisabled)
+      return false
+
     const action = match(this.props.keymap, event)
 
     switch (action) {
