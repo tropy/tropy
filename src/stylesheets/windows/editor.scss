@@ -1,0 +1,12 @@
+/* stylelint-disable max-empty-lines, no-invalid-position-at-import-rule */
+
+$platform: "linux";
+$theme: "light";
+
+@import
+  "../themes/light";
+
+@import
+  "../abstracts/variables",
+  "../abstracts/mixins",
+  "../components/editor/styles";
