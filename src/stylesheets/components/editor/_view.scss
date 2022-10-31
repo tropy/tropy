@@ -16,6 +16,12 @@
   //  padding-top: $toolbar-height + 1px;
   //}
 
+  iframe.prosemirror {
+    border: none;
+    width: 100%;
+    height: 100%;
+  }
+
   .scroll-container {
     display: flex; // Stretch prose-mirror-container
     overflow: auto;
