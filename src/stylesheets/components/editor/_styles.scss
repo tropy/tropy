@@ -5,11 +5,28 @@
 @import "prosemirror-view/style/prosemirror";
 @import "prosemirror-gapcursor/style/gapcursor";
 
+* {
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+body {
+  margin: 0;
+}
+
 .ProseMirror { /* stylelint-disable-line selector-class-pattern */
+  font-family: $font-family-base;
   font-size: $editor-font-size;
   line-height: $editor-line-height;
   word-break: break-word; // For vertical writing mode (break-word or break-all?)
   counter-reset: line-numbers;
+  width: $editor-size;
+  margin: 0 auto;
+  max-width: $editor-max-size;
+  padding-block: min(10vh, #{$editor-padding});
 
   .no-wrap & {
     white-space: nowrap;
