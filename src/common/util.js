@@ -1,27 +1,30 @@
 import { nanoid } from 'nanoid'
 
+export function on(emitter, ...args) {
+  (emitter.addEventListener || emitter.addListener).apply(emitter, args)
+}
+
+export function off(emitter, ...args) {
+  (emitter.removeEventListener || emitter.removeListener).apply(emitter, args)
+}
+
 export function once(emitter, ...events) {
   return Promise.all(events.map(event =>
     new Promise((resolve, reject) => {
-      const on =
-        (emitter.on || emitter.addEventListener).bind(emitter)
-      const off =
-        (emitter.removeListener || emitter.removeEventListener).bind(emitter)
-
       function success(...args) {
-        off(event, success)
-        off('error', failure)
+        off(emitter, event, success)
+        off(emitter, 'error', failure)
         resolve(...args)
       }
 
       function failure(reason) {
-        off(event, success)
-        off('error', failure)
+        off(emitter, event, success)
+        off(emitter, 'error', failure)
         reject(reason instanceof Error ? reason : new Error(reason))
       }
 
-      on('error', failure)
-      on(event, success)
+      on(emitter, 'error', failure)
+      on(emitter, event, success)
     })
   ))
 }
