@@ -1,16 +1,12 @@
 import React from 'react'
 import cx from 'classnames'
 import { func, bool, object, number, string } from 'prop-types'
-import { EditorState } from 'prosemirror-state'
 import { EditorToolbar } from './toolbar.js'
 import { ProseMirror as EditorView } from './prosemirror.js'
 import { Placeholder } from '../placeholder.js'
-import { createCommands, createPlugins, schema } from '../../editor/index.js'
+import { commands, isBlank, toEditorState } from '../../editor/index.js'
 import { match } from '../../keymap.js'
-import { noop } from '../../common/util.js'
 
-const commands = createCommands(schema)
-const plugins = createPlugins(schema)
 
 export class Editor extends React.Component {
   toolbar = React.createRef()
@@ -27,31 +23,12 @@ export class Editor extends React.Component {
     }]
   }
 
-  getEditorState({ state } = this.props) {
-    if (state == null) {
-      return EditorState.create({ schema, plugins })
-    }
-
-    if (state instanceof EditorState) {
-      return state
-    }
-
-    return EditorState.fromJSON({ schema, plugins }, state)
-  }
-
-  isBlank(doc) {
-    if (doc.childCount !== 1) return false
-    if (!doc.firstChild.isTextblock) return false
-    if (doc.firstChild.content.size !== 0) return false
-    return true
-  }
-
   focus = () => {
     this.view.current?.dom.focus()
   }
 
   exec(action, ...args) {
-    return (commands[action] || noop)(
+    return commands[action]?.(
       this.view.current.state, this.view.current.dispatch, ...args
     )
   }
@@ -82,6 +59,7 @@ export class Editor extends React.Component {
   }
 
   handleFocus = (event) => {
+    // TODO still needed?
     if (event.target === this.container.current) {
       setTimeout(this.focus, 0)
     }
@@ -104,7 +82,7 @@ export class Editor extends React.Component {
 
   render() {
     let { placeholder } = this.props
-    let state = this.getEditorState()
+    let state = toEditorState(this.props.state)
 
     let isReadOnly = this.props.isReadOnly || !this.state.hasViewFocus
 
@@ -126,7 +104,7 @@ export class Editor extends React.Component {
           ref={this.toolbar}
           onCommand={this.handleCommand}/>
         <div className="scroll-container">
-          {(hasPlaceholder && this.isBlank(state.doc)) &&
+          {(hasPlaceholder && isBlank(state.doc)) &&
             <Placeholder id={placeholder}/>}
           <EditorView
             ref={this.view}
