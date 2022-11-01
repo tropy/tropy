@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useEvent } from './use-event.js'
-import { on, off } from '../dom.js'
+import { on, off } from '../common/util.js'
+
 
 export function useEventHandler(
   target,
