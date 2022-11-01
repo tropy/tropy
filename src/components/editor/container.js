@@ -15,13 +15,10 @@ const plugins = createPlugins(schema)
 export class Editor extends React.Component {
   toolbar = React.createRef()
   container = React.createRef()
+  view = React.createRef()
 
   state = {
     hasViewFocus: false
-  }
-
-  setView = (view) => {
-    this.view = view
   }
 
   get classes() {
@@ -50,17 +47,13 @@ export class Editor extends React.Component {
   }
 
   focus = () => {
-    if (this.view != null) this.view.dom.focus()
+    this.view.current?.dom.focus()
   }
 
   exec(action, ...args) {
     return (commands[action] || noop)(
-      this.view.state, this.view.dispatch, ...args
+      this.view.current.state, this.view.current.dispatch, ...args
     )
-  }
-
-  handleChange = (tr) => {
-    this.props.onChange(this.view.state.apply(tr), tr.docChanged)
   }
 
   handleKeyDown = (_, event) => {
@@ -136,16 +129,15 @@ export class Editor extends React.Component {
           {(hasPlaceholder && this.isBlank(state.doc)) &&
             <Placeholder id={placeholder}/>}
           <EditorView
-            ref={this.setView}
+            ref={this.view}
             state={state}
             isDisabled={this.props.isDisabled}
             isReadOnly={isReadOnly}
             tabIndex={this.props.tabIndex}
             onFocus={this.handleViewFocus}
             onBlur={this.handleViewBlur}
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyDown}
-            onResize={this.handleResize}/>
+            onChange={this.props.onChange}
+            onKeyDown={this.handleKeyDown}/>
         </div>
       </div>
     )

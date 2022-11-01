@@ -26,7 +26,9 @@ export const ProseMirror = forwardRef(({
 
   let handleLoad = useEvent(() => {
     setView(new EditorView(frame.current.contentDocument.body, {
-      dispatchTransaction: onChange,
+      dispatchTransaction(tr) {
+        onChange(this.state.apply(tr), tr.docChanged)
+      },
       state,
       nodeViews,
       handleClick,
@@ -74,7 +76,7 @@ ProseMirror.propTypes = {
   // Subtle: event handlers are passed to PM on initialization
   // and they will not be updated. Use stable references!
   onBlur: func,
-  onChange: func.isRequired, // dispatchTransaction
+  onChange: func.isRequired,
   onFocus: func,
   onKeyDown: func.isRequired,
 
