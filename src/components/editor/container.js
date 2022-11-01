@@ -7,10 +7,8 @@ import { ProseMirror as EditorView } from './prosemirror.js'
 import { Placeholder } from '../placeholder.js'
 import { createCommands, createPlugins, schema } from '../../editor/index.js'
 import { match } from '../../keymap.js'
-import { noop, restrict } from '../../common/util.js'
-import { SASS } from '../../constants/index.js'
+import { noop } from '../../common/util.js'
 
-const { EDITOR } = SASS
 const commands = createCommands(schema)
 const plugins = createPlugins(schema)
 
@@ -100,14 +98,6 @@ export class Editor extends React.Component {
     if (this.exec(...args)) {
       if (!this.state.hasViewFocus) this.focus()
     }
-  }
-
-  handleResize = ({ width, height }) => {
-    const dim = (this.props.mode !== 'horizontal') ? width : height
-    this.container.current.style.setProperty(
-      '--editor-padding',
-      `${restrict(Math.round(dim / 10), 0, EDITOR.MAX_PADDING)}px`
-    )
   }
 
   handleViewFocus = () => {
