@@ -169,6 +169,7 @@ export class Window extends EventEmitter {
         update({ theme, dark, contrast, vibrancy })
         Object.assign(this.state, { theme, dark, contrast, vibrancy })
         this.style(true)
+        this.emit('settings.update', { theme, dark, contrast, vibrancy })
       })
       .on('fontSize', (_, fontSize) => {
         update({ fontSize })
