@@ -4,7 +4,7 @@ import { EditorState } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 import { nodeViews } from '../../editor/schema.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { useWindow } from '../../hooks/use-window.js'
+import { useTheme } from '../../hooks/use-theme.js'
 import { stylesheet } from '../../dom.js'
 import { isMeta } from '../../keymap.js'
 import { StyleSheet } from '../../res.js'
@@ -20,7 +20,7 @@ export const ProseMirror = forwardRef(({
 }, ref) => {
   let frame = createRef()
   let [view, setView] = useState()
-  let win = useWindow()
+  let theme = useTheme()
 
   // TODO isReadOnly, isDisabled, tabIndex
 
@@ -48,12 +48,13 @@ export const ProseMirror = forwardRef(({
   useImperativeHandle(ref, () => view, [view])
 
   useEffect(() => {
-    let href = StyleSheet.expand(`editor-${win.theme}`)
-    let head = frame.current.contentDocument.head
+    if (view != null) {
+      let href = StyleSheet.expand(`editor-${theme}`)
+      let html = view.dom.getRootNode()
 
-    head.replaceChildren(stylesheet(href))
-
-  }, [win.theme, frame])
+      html.head.replaceChildren(stylesheet(href))
+    }
+  }, [theme, view])
 
   useEffect(() => {
     view?.updateState(state)
