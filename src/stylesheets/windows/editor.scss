@@ -4,9 +4,20 @@ $platform: "linux";
 $theme: "light";
 
 @import
-  "../themes/light";
+  "../themes/light",
+  "../themes/colors-light";
+
+
+// Abstracts
+// --------------------------------------------------
 
 @import
   "../abstracts/variables",
-  "../abstracts/mixins",
+  "../abstracts/mixins";
+
+
+// Components
+// --------------------------------------------------
+
+@import
   "../components/editor/styles";
