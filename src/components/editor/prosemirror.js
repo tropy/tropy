@@ -4,6 +4,7 @@ import { EditorState } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 import { nodeViews } from '../../editor/schema.js'
 import { useEvent } from '../../hooks/use-event.js'
+import { useEventHandler } from '../../hooks/use-event-handler.js'
 import { useTheme } from '../../hooks/use-theme.js'
 import { stylesheet } from '../../dom.js'
 import { isMeta } from '../../keymap.js'
@@ -69,6 +70,14 @@ export const ProseMirror = forwardRef(({
       html.head.replaceChildren(stylesheet(href))
     }
   }, [theme, view])
+
+
+  useEventHandler(document, 'dragstart', () => {
+    frame.current.inert = true
+  })
+  useEventHandler(document, 'dragend', () => {
+    frame.current.inert = false
+  })
 
 
   return (
