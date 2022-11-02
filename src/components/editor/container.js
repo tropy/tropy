@@ -102,19 +102,17 @@ export class Editor extends React.Component {
           state={state}
           ref={this.toolbar}
           onCommand={this.handleCommand}/>
-        <div className="scroll-container">
-          {(hasPlaceholder && isBlank(state.doc)) &&
-            <Placeholder id={placeholder}/>}
-          <EditorView
-            ref={this.view}
-            state={state}
-            isDisabled={this.props.isDisabled}
-            isReadOnly={isReadOnly}
-            onFocus={this.handleViewFocus}
-            onBlur={this.handleViewBlur}
-            onChange={this.props.onChange}
-            onKeyDown={this.handleKeyDown}/>
-        </div>
+        {(hasPlaceholder && isBlank(state.doc)) &&
+          <Placeholder id={placeholder}/>}
+        <EditorView
+          ref={this.view}
+          state={state}
+          isDisabled={this.props.isDisabled}
+          isReadOnly={isReadOnly}
+          onFocus={this.handleViewFocus}
+          onBlur={this.handleViewBlur}
+          onChange={this.props.onChange}
+          onKeyDown={this.handleKeyDown}/>
       </div>
     )
   }
