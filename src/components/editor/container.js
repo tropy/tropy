@@ -59,9 +59,8 @@ export class Editor extends React.Component {
   }
 
   handleFocus = (event) => {
-    // TODO still needed?
     if (event.target === this.container.current) {
-      setTimeout(this.focus, 0)
+      this.focus()
     }
   }
 
@@ -84,7 +83,7 @@ export class Editor extends React.Component {
     let { placeholder } = this.props
     let state = toEditorState(this.props.state)
 
-    let isReadOnly = this.props.isReadOnly || !this.state.hasViewFocus
+    let isReadOnly = this.props.isReadOnly
 
     let hasPlaceholder = !(
       this.props.isDisabled || this.props.isReadOnly || placeholder == null
@@ -94,7 +93,7 @@ export class Editor extends React.Component {
       <div
         ref={this.container}
         className={cx(this.classes)}
-        tabIndex={-1}
+        tabIndex={this.props.tabIndex}
         onFocus={this.handleFocus}>
         <EditorToolbar
           isDisabled={this.props.isDisabled}
@@ -111,7 +110,6 @@ export class Editor extends React.Component {
             state={state}
             isDisabled={this.props.isDisabled}
             isReadOnly={isReadOnly}
-            tabIndex={this.props.tabIndex}
             onFocus={this.handleViewFocus}
             onBlur={this.handleViewBlur}
             onChange={this.props.onChange}

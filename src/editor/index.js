@@ -23,10 +23,11 @@ export function isBlank(doc) {
 }
 
 export function toEditorState(state) {
-  if (state == null)
-    return EditorState.create({ schema, plugins })
   if (state instanceof EditorState)
     return state
+
+  if (state == null)
+    return EditorState.create({ schema, plugins })
 
   return EditorState.fromJSON({ schema, plugins }, state)
 }
