@@ -3,42 +3,16 @@
 // --------------------------------------------------
 
 .editor {
-  --editor-padding: #{$editor-padding};
-
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
   position: relative;
-  //padding-top: 0;
   padding-top: $toolbar-height + 1px;
 
-  //&:hover {
-  //  padding-top: $toolbar-height + 1px;
-  //}
-
-  iframe.prosemirror {
-    border: none;
+  iframe {
+    border: 0;
     width: 100%;
     height: 100%;
-  }
-
-  .scroll-container {
-    display: flex; // Stretch prose-mirror-container
-    overflow: auto;
-    position: relative;
-
-    .horizontal & {
-      writing-mode: horizontal-tb;
-    }
-
-    .vertical-rl & {
-      writing-mode: vertical-rl;
-      text-orientation: upright;
-    }
-
-    .no-wrap & {
-      display: flex;
-    }
   }
 
   .placeholder {
@@ -82,74 +56,4 @@
       max-height: none;
     }
   }
-}
-
-// TODO: Remove this styles when Chromium issue 1273014 has been fixed,
-// move 'cursor: text' to .editor then.
-.prose-mirror-container {
-  cursor: text;
-  position: relative;
-
-  // ---
-  .horizontal & {
-    width: $editor-size;
-    margin: 0 auto;
-    max-width: $editor-max-size;
-  }
-
-  .horizontal.numbers & {
-    max-width: $editor-max-size + $space-xxl + $space-md;
-  }
-
-  .horizontal.no-wrap & {
-    flex: 1 1 auto;
-    width: auto;
-    margin: 0;
-    max-width: none;
-    padding: 0 ((100% - $editor-size) / 2);
-  }
-
-  .vertical-rl & {
-    height: $editor-size;
-    margin: auto 0;
-    max-height: $editor-max-size;
-  }
-
-  .numbers.vertical-rl & {
-    max-height: $editor-max-size + $space-xxl + $space-md;
-  }
-
-  .vertical-rl.no-wrap & {
-    flex: 1 1 auto;
-    height: auto;
-    margin: 0;
-    max-height: none;
-    padding: ((100% - $editor-size) / 2) 0;
-  }
-}
-
-.ProseMirror { /* stylelint-disable-line selector-class-pattern */
-  //padding-top: $toolbar-height + 1px + $prose-mirror-padding-start
-
-  .horizontal & {
-    padding-top: var(--editor-padding);
-    padding-bottom: var(--editor-padding);
-  }
-
-  .horizontal.numbers & {
-    padding-left: $space-xxl + $space-md;
-  }
-
-  .vertical-rl & {
-    padding-right: var(--editor-padding);
-    padding-left: var(--editor-padding);
-  }
-
-  .vertical-rl.numbers & {
-    padding-top: $space-xxl + $space-md;
-  }
-
-  //.editor:hover & {
-  //  padding-top: $prose-mirror-padding;
-  //}
 }
