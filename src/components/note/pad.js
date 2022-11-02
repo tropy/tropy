@@ -49,9 +49,7 @@ export class NotePad extends React.PureComponent {
 
   render() {
     return (
-      <section
-        className={cx(this.classes)}
-        onContextMenu={this.handleContextMenu}>
+      <section className={cx(this.classes)}>
         <Editor
           ref={this.editor}
           state={this.props.note?.state}
@@ -63,7 +61,8 @@ export class NotePad extends React.PureComponent {
           isReadOnly={this.props.isReadOnly}
           tabIndex={this.props.tabIndex}
           onBlur={this.handleEditorBlur}
-          onChange={this.handleChange}/>
+          onChange={this.handleChange}
+          onContextMenu={this.handleContextMenu}/>
       </section>
     )
   }

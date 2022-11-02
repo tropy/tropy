@@ -33,6 +33,10 @@ export class Editor extends React.Component {
     )
   }
 
+  handleContextMenu = (_, event) => {
+    this.props.onContextMenu?.(event)
+  }
+
   handleKeyDown = (_, event) => {
     if (this.props.isDisabled)
       return false
@@ -83,8 +87,6 @@ export class Editor extends React.Component {
     let { placeholder } = this.props
     let state = toEditorState(this.props.state)
 
-    let isReadOnly = this.props.isReadOnly
-
     let hasPlaceholder = !(
       this.props.isDisabled || this.props.isReadOnly || placeholder == null
     )
@@ -94,6 +96,7 @@ export class Editor extends React.Component {
         ref={this.container}
         className={cx(this.classes)}
         tabIndex={this.props.tabIndex}
+        onContextMenu={this.props.onContextMenu}
         onFocus={this.handleFocus}>
         <EditorToolbar
           isDisabled={this.props.isDisabled}
@@ -108,10 +111,11 @@ export class Editor extends React.Component {
           ref={this.view}
           state={state}
           isDisabled={this.props.isDisabled}
-          isReadOnly={isReadOnly}
+          isReadOnly={this.props.isReadOnly}
           onFocus={this.handleViewFocus}
           onBlur={this.handleViewBlur}
           onChange={this.props.onChange}
+          onContextMenu={this.handleContextMenu}
           onKeyDown={this.handleKeyDown}/>
       </div>
     )
@@ -125,6 +129,7 @@ export class Editor extends React.Component {
     mode: string.isRequired,
     onBlur: func.isRequired,
     onChange: func.isRequired,
+    onContextMenu: func,
     placeholder: string,
     state: object,
     tabIndex: number.isRequired
