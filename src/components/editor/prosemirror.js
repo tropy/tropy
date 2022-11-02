@@ -15,6 +15,7 @@ export const ProseMirror = forwardRef(({
   isReadOnly,
   onBlur,
   onChange,
+  onContextMenu,
   onFocus,
   onKeyDown,
   srcDoc,
@@ -39,6 +40,7 @@ export const ProseMirror = forwardRef(({
       },
       handleDOMEvents: {
         blur: onBlur,
+        contextmenu: onContextMenu,
         focus: onFocus
       },
       handleKeyDown: onKeyDown,
@@ -85,6 +87,7 @@ ProseMirror.propTypes = {
   // and they will not be updated. Use stable references!
   onBlur: func,
   onChange: func.isRequired,
+  onContextMenu: func,
   onFocus: func,
   onKeyDown: func.isRequired,
 
