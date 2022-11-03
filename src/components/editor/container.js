@@ -33,10 +33,6 @@ export class Editor extends React.Component {
     )
   }
 
-  handleContextMenu = (_, event) => {
-    this.props.onContextMenu?.(event)
-  }
-
   handleKeyDown = (_, event) => {
     if (this.props.isDisabled)
       return false
@@ -115,7 +111,7 @@ export class Editor extends React.Component {
           onFocus={this.handleViewFocus}
           onBlur={this.handleViewBlur}
           onChange={this.props.onChange}
-          onContextMenu={this.handleContextMenu}
+          onContextMenu={this.props.onContextMenu}
           onKeyDown={this.handleKeyDown}/>
       </div>
     )
