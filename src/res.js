@@ -65,8 +65,8 @@ export const StyleSheet = {
     return join(Resource.base, 'lib/css')
   },
 
-  expand(name) {
-    return join(StyleSheet.base, `${name}.css`)
+  expand(name, theme) {
+    return join(StyleSheet.base, `${name}${theme ? `-${theme}` : ''}.css`)
   }
 }
 

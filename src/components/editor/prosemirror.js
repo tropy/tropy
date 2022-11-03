@@ -1,14 +1,11 @@
-import { createRef, forwardRef, useEffect, useImperativeHandle, useState } from 'react'
-import { bool, func, instanceOf, string } from 'prop-types'
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import { bool, func, instanceOf } from 'prop-types'
 import { EditorState } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
+import { Frame } from '../frame.js'
 import { nodeViews } from '../../editor/schema.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { useEventHandler } from '../../hooks/use-event-handler.js'
-import { useTheme } from '../../hooks/use-theme.js'
-import { stylesheet } from '../../dom.js'
 import { isMeta } from '../../keymap.js'
-import { StyleSheet } from '../../res.js'
 
 
 export const ProseMirror = forwardRef(({
@@ -19,18 +16,15 @@ export const ProseMirror = forwardRef(({
   onContextMenu,
   onFocus,
   onKeyDown,
-  srcDoc,
   state
 }, ref) => {
-  let frame = createRef()
   let [view, setView] = useState()
-  let theme = useTheme()
 
   let editable = useEvent(() =>
     !(isDisabled || isReadOnly))
 
-  let handleLoad = useEvent(() => {
-    setView(new EditorView(frame.current.contentDocument.body, {
+  let handleLoad = useEvent((doc) => {
+    setView(new EditorView(doc.body, {
       editable,
       dispatchTransaction(tr) {
         onChange(this.state.apply(tr), tr.docChanged)
@@ -41,7 +35,6 @@ export const ProseMirror = forwardRef(({
       },
       handleDOMEvents: {
         blur: onBlur,
-        contextmenu: onContextMenu,
         focus: onFocus
       },
       handleKeyDown: onKeyDown,
@@ -50,9 +43,10 @@ export const ProseMirror = forwardRef(({
     }))
   })
 
-  useEffect(() => (
-    () => view?.destroy()
-  ), [view])
+  let handleUnload = useEvent(() => {
+    view.destroy()
+    setView(null)
+  })
 
   useEffect(() => {
     view?.updateState(state)
@@ -62,30 +56,14 @@ export const ProseMirror = forwardRef(({
 
   // TODO handle container click (links)
 
-  useEffect(() => {
-    if (view != null) {
-      let href = StyleSheet.expand(`editor-${theme}`)
-      let html = view.dom.getRootNode()
-
-      html.head.replaceChildren(stylesheet(href))
-    }
-  }, [theme, view])
-
-
-  useEventHandler(document, 'dragstart', () => {
-    frame.current.inert = true
-  })
-  useEventHandler(document, 'dragend', () => {
-    frame.current.inert = false
-  })
-
 
   return (
-    <iframe
-      ref={frame}
+    <Frame
       className="prosemirror"
-      srcDoc={srcDoc}
-      onLoad={handleLoad}/>
+      onContextMenu={onContextMenu}
+      onLoad={handleLoad}
+      onUnload={handleUnload}
+      styleSheet="editor"/>
   )
 })
 
@@ -100,10 +78,5 @@ ProseMirror.propTypes = {
   onFocus: func,
   onKeyDown: func.isRequired,
 
-  state: instanceOf(EditorState),
-  srcDoc: string.isRequired
-}
-
-ProseMirror.defaultProps = {
-  srcDoc: '<!DOCTYPE html><html><head></head><body></body></html>'
+  state: instanceOf(EditorState)
 }
