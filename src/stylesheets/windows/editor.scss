@@ -12,6 +12,7 @@ $theme: "light";
 // --------------------------------------------------
 
 @import
+  "../abstracts/functions",
   "../abstracts/variables",
   "../abstracts/mixins";
 
