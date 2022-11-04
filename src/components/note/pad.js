@@ -55,6 +55,8 @@ export class NotePad extends React.PureComponent {
           state={this.props.note?.state}
           keymap={this.props.keymap}
           mode={this.props.mode}
+          numbers={this.props.numbers}
+          wrap={this.props.wrap}
           placeholder="notepad.placeholder"
           hasTitlebar={this.props.hasTitlebar}
           isDisabled={this.props.isDisabled}

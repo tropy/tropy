@@ -108,6 +108,9 @@ export class Editor extends React.Component {
           state={state}
           isDisabled={this.props.isDisabled}
           isReadOnly={this.props.isReadOnly}
+          mode={this.props.mode}
+          numbers={this.props.numbers}
+          wrap={this.props.wrap}
           onFocus={this.handleViewFocus}
           onBlur={this.handleViewBlur}
           onChange={this.props.onChange}
@@ -123,16 +126,20 @@ export class Editor extends React.Component {
     isReadOnly: bool,
     keymap: object.isRequired,
     mode: string.isRequired,
+    numbers: bool,
     onBlur: func.isRequired,
     onChange: func.isRequired,
     onContextMenu: func,
     placeholder: string,
     state: object,
-    tabIndex: number.isRequired
+    tabIndex: number.isRequired,
+    wrap: bool
   }
 
   static defaultProps = {
     mode: 'horizontal',
-    tabIndex: -1
+    numbers: false,
+    tabIndex: -1,
+    wrap: true
   }
 }

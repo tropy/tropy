@@ -9,6 +9,7 @@ import { StyleSheet } from '../res.js'
 
 export function Frame({
   className,
+  innerClassName,
   onContextMenu,
   onLoad,
   onUnload,
@@ -57,6 +58,13 @@ export function Frame({
     }
   }, [doc, styleSheet, theme])
 
+  useEffect(() => {
+    if (doc != null) {
+      if (doc.documentElement.className !== innerClassName)
+        doc.documentElement.className = innerClassName
+    }
+  }, [doc, innerClassName])
+
 
   useEventHandler(document, 'dragstart', () => {
     frame.current.inert = true
@@ -77,6 +85,7 @@ export function Frame({
 
 Frame.propTypes = {
   className: string,
+  innerClassName: string,
   onContextMenu: func,
   onLoad: func,
   onUnload: func,
@@ -85,5 +94,6 @@ Frame.propTypes = {
 }
 
 Frame.defaultProps = {
+  innerClassName: '',
   srcDoc: '<!DOCTYPE html><html><head></head><body></body></html>'
 }
