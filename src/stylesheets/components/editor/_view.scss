@@ -8,6 +8,7 @@
   flex-direction: column;
   position: relative;
   padding-top: $toolbar-height + 1px;
+  min-height: 0; // Fix vh unit in ProseMirror
 
   iframe {
     border: 0;

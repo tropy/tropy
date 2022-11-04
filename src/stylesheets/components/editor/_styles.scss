@@ -13,8 +13,24 @@
   }
 }
 
+.horizontal {
+  writing-mode: horizontal-tb;
+}
+
+.vertical-rl {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
 body {
+  display: flex;
   margin: 0;
+  overflow: auto;
+  color: $text-color;
+
+  @if $platform == darwin {
+    -webkit-font-smoothing: antialiased; // Lighter font rendering
+  }
 }
 
 .ProseMirror { /* stylelint-disable-line selector-class-pattern */
@@ -23,13 +39,35 @@ body {
   line-height: $editor-line-height;
   word-break: break-word; // For vertical writing mode (break-word or break-all?)
   counter-reset: line-numbers;
-  width: $editor-size;
-  margin: 0 auto;
-  max-width: $editor-max-size;
-  padding-block: min(10vh, #{$editor-padding});
+  padding-inline: (100% - $editor-size) / 2;
+  white-space: nowrap;
 
-  .no-wrap & {
-    white-space: nowrap;
+  .numbers & {
+    padding-inline-start: calc(((100% - #{$editor-size}) / 2) + #{$space-xxl + $space-md});
+    padding-inline-end: 10%;
+  }
+
+  .wrap & {
+    white-space: initial;
+    inline-size: $editor-size;
+    max-inline-size: $editor-max-size;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+
+  .numbers.wrap & {
+    max-inline-size: $editor-max-size + $space-xxl + $space-md;
+    padding-inline-start: $space-xxl + $space-md;
+  }
+
+  .horizontal & {
+    padding-block: min(10vh, #{$editor-padding});
+    min-height: 100vh;
+  }
+
+  .vertical-rl & {
+    padding-block: min(10vw, #{$editor-padding});
+    min-width: 100vw;
   }
 
   .read-only & {
@@ -47,9 +85,8 @@ body {
 
   p,
   .line-break {
-    .numbers.horizontal &,
-    .numbers.vertical-rl & {
-      &::before {
+    &::before {
+      .numbers & {
         content: counter(line-numbers);
         counter-increment: line-numbers;
         position: absolute;
@@ -57,21 +94,20 @@ body {
         text-align: right;
         color: $line-number-color;
         user-select: none;
+        inline-size: $space-xxl;
       }
-    }
 
-    .numbers.horizontal & {
-      &::before {
-        left: 0;
-        width: $space-xxl;
+      .horizontal & {
+        left: 10vw;
       }
-    }
 
-    .numbers.vertical-rl & {
-      &::before {
-        top: 0;
-        height: $space-xxl;
+      .vertical-rl & {
+        top: 10vh;
         text-orientation: mixed;
+      }
+
+      .wrap & {
+        inset-inline-start: 0;
       }
     }
   }
