@@ -1,10 +1,10 @@
 import { EditorState } from 'prosemirror-state'
 import { createCommands } from './commands.js'
 import { createPlugins } from './plugins.js'
-import { schema } from './schema.js'
+import { nodeViews, schema } from './schema.js'
 
 export * from './serialize.js'
-export { schema }
+export { nodeViews, schema }
 
 export const commands = createCommands(schema)
 export const plugins = createPlugins(schema)

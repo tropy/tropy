@@ -3,8 +3,7 @@ import cx from 'classnames'
 import { func, bool, object, number, string } from 'prop-types'
 import { EditorToolbar } from './toolbar.js'
 import { ProseMirror as EditorView } from './prosemirror.js'
-import { Placeholder } from '../placeholder.js'
-import { commands, isBlank, toEditorState } from '../../editor/index.js'
+import { commands, toEditorState } from '../../editor/index.js'
 import { match } from '../../keymap.js'
 
 
@@ -80,12 +79,7 @@ export class Editor extends React.Component {
   }
 
   render() {
-    let { placeholder } = this.props
     let state = toEditorState(this.props.state)
-
-    let hasPlaceholder = !(
-      this.props.isDisabled || this.props.isReadOnly || placeholder == null
-    )
 
     return (
       <div
@@ -101,8 +95,6 @@ export class Editor extends React.Component {
           state={state}
           ref={this.toolbar}
           onCommand={this.handleCommand}/>
-        {(hasPlaceholder && isBlank(state.doc)) &&
-          <Placeholder id={placeholder}/>}
         <EditorView
           ref={this.view}
           state={state}
@@ -110,6 +102,7 @@ export class Editor extends React.Component {
           isReadOnly={this.props.isReadOnly}
           mode={this.props.mode}
           numbers={this.props.numbers}
+          placeholder={this.props.placeholder}
           wrap={this.props.wrap}
           onFocus={this.handleViewFocus}
           onBlur={this.handleViewBlur}
