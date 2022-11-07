@@ -117,13 +117,13 @@ body {
     text-decoration: none;
     display: contents; // Prevent links from getting the focus
 
-    .darwin.meta-key &,
-    .win32.ctrl-key &,
-    .linux.ctrl-key & {
-      cursor: pointer;
-
-      @include state("a:hover") {
-        text-decoration: underline;
+    @if $platform == darwin {
+      .meta-key & {
+        cursor: pointer;
+      }
+    } @else {
+      .ctrl-key & {
+        cursor: pointer;
       }
     }
   }
