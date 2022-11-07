@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { func, string } from 'prop-types'
 import { useEvent } from '../hooks/use-event.js'
-import { useEventHandler } from '../hooks/use-event-handler.js'
 import { useTheme } from '../hooks/use-theme.js'
 import { on, off, stylesheet } from '../dom.js'
 import { StyleSheet } from '../res.js'
@@ -64,14 +63,6 @@ export function Frame({
         doc.documentElement.className = innerClassName
     }
   }, [doc, innerClassName])
-
-
-  useEventHandler(document, 'dragstart', () => {
-    frame.current.inert = true
-  })
-  useEventHandler(document, 'dragend', () => {
-    frame.current.inert = false
-  })
 
   return (
     <iframe

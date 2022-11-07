@@ -205,6 +205,8 @@ export function createDragHandler({
   }
 
   function onDragStart() {
+    toggle(document.body, 'dragging', true)
+
     on(document, 'mousemove', onDrag)
     on(document, 'mouseup', onDragStop, { capture: true })
     on(window, 'blur', onDragStop)
@@ -231,6 +233,8 @@ export function createDragHandler({
     off(document.body, 'keydown', onKeyDown)
 
     handleDragStop(event, event == null || event.type !== 'mouseup')
+
+    toggle(document.body, 'dragging', false)
   }
 
   return {
