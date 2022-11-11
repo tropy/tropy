@@ -8,7 +8,7 @@ import { Frame } from '../frame.js'
 import { isBlank, nodeViews } from '../../editor/index.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useOpenExternal } from '../../hooks/use-open-external.js'
-import { create, isLink, toggle } from '../../dom.js'
+import { create, isLink } from '../../dom.js'
 import { isMeta } from '../../keymap.js'
 
 
@@ -49,11 +49,6 @@ export const ProseMirror = forwardRef(({
     }
   })
 
-  let handleMouseMove = useEvent((v, event) => {
-    toggle(v.dom.parentElement, 'ctrl-key', event.ctrlKey)
-    toggle(v.dom.parentElement, 'meta-key', event.metaKey)
-  })
-
   let handleLoad = useEvent((doc) => {
     setView(new EditorView(doc.body, {
       editable,
@@ -66,8 +61,7 @@ export const ProseMirror = forwardRef(({
       ),
       handleDOMEvents: {
         blur: onBlur,
-        focus: onFocus,
-        mousemove: handleMouseMove
+        focus: onFocus
       },
       handleKeyDown: onKeyDown,
       nodeViews,
