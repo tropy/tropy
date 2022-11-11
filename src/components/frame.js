@@ -9,6 +9,7 @@ import { StyleSheet } from '../res.js'
 export function Frame({
   className,
   innerClassName,
+  onClick,
   onContextMenu,
   onLoad,
   onUnload,
@@ -18,6 +19,10 @@ export function Frame({
   let frame = useRef()
   let [doc, setDoc] = useState()
   let theme = useTheme()
+
+  let handleClick = useEvent((event) => {
+    onClick?.(event)
+  })
 
   let handleContextMenu = useEvent((event) => {
     onContextMenu?.(event)
@@ -35,13 +40,15 @@ export function Frame({
     if (doc != null) {
       onLoad?.(doc)
       on(doc, 'contextmenu', handleContextMenu)
+      on(doc.body, 'click', handleClick)
 
       return () => {
         off(doc, 'contextmenu', handleContextMenu)
+        off(doc.body, 'click', handleClick)
         onUnload?.()
       }
     }
-  }, [doc, handleContextMenu, onLoad, onUnload])
+  }, [doc, handleClick, handleContextMenu, onLoad, onUnload])
 
 
   useEffect(() => {
@@ -77,6 +84,7 @@ export function Frame({
 Frame.propTypes = {
   className: string,
   innerClassName: string,
+  onClick: func,
   onContextMenu: func,
   onLoad: func,
   onUnload: func,
