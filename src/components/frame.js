@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { func, string } from 'prop-types'
+import throttle from 'lodash.throttle'
 import { useEvent } from '../hooks/use-event.js'
 import { useTheme } from '../hooks/use-theme.js'
-import { on, off, stylesheet } from '../dom.js'
+import { on, off, stylesheet, toggle } from '../dom.js'
 import { StyleSheet } from '../res.js'
 
 
@@ -37,14 +38,22 @@ export function Frame({
   })
 
   useEffect(() => {
+    let checkModKeys = throttle((event) => {
+      toggle(doc.body, 'ctrl-key', event.ctrlKey === true)
+      toggle(doc.body, 'meta-key', event.metaKey === true)
+    }, 250)
+
     if (doc != null) {
       onLoad?.(doc)
       on(doc, 'contextmenu', handleContextMenu)
       on(doc.body, 'click', handleClick)
+      on(doc, 'mousemove', checkModKeys, { passive: true })
 
       return () => {
         off(doc, 'contextmenu', handleContextMenu)
         off(doc.body, 'click', handleClick)
+        off(doc, 'mousemove', checkModKeys, { passive: true })
+
         onUnload?.()
       }
     }
