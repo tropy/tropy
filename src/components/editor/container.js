@@ -80,12 +80,13 @@ export class Editor extends React.Component {
 
   render() {
     let state = toEditorState(this.props.state)
+    let tabIndex = this.props.isDisabled ? -1 : this.props.tabIndex
 
     return (
       <div
         ref={this.container}
         className={cx(this.classes)}
-        tabIndex={this.props.tabIndex}
+        tabIndex={tabIndex}
         onContextMenu={this.props.onContextMenu}
         onFocus={this.handleFocus}>
         <EditorToolbar
