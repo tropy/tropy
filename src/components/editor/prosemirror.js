@@ -35,16 +35,21 @@ export const ProseMirror = forwardRef(({
   let editable = useEvent(() =>
     !(isDisabled || isReadOnly))
 
+  let handleClick = useEvent(() => {
+    if (!view.editable)
+      view.focus()
+  })
+
   let handleLoad = useEvent((doc) => {
     setView(new EditorView(doc.body, {
       editable,
-      dispatchTransaction(tr) {
+      dispatchTransaction: (tr) => {
         onChange(this.state.apply(tr), tr.docChanged)
       },
-      handleClick(v, pos, event) {
-        if (!v.editable) v.dom.focus()
-        return isMeta(event) // disable PM's block select
-      },
+      // Subtle: by returning true prevent the default block selection!
+      handleClick: (v, pos, event) => (
+        isMeta(event)
+      ),
       handleDOMEvents: {
         blur: onBlur,
         focus: onFocus
@@ -79,12 +84,12 @@ export const ProseMirror = forwardRef(({
     ) ? 'none' : 'block'
   }, [state, isDisabled, isReadOnly, p])
 
-  // TODO handle container click (links)
 
   return (
     <Frame
       className="prosemirror"
       innerClassName={cx(mode, { numbers, wrap })}
+      onClick={handleClick}
       onContextMenu={onContextMenu}
       onLoad={handleLoad}
       onUnload={handleUnload}

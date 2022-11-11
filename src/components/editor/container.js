@@ -23,7 +23,7 @@ export class Editor extends React.Component {
   }
 
   focus = () => {
-    this.view.current?.dom.focus()
+    this.view.current?.focus()
   }
 
   exec(action, ...args) {
