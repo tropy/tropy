@@ -7,7 +7,8 @@ import cx from 'classnames'
 import { Frame } from '../frame.js'
 import { isBlank, nodeViews } from '../../editor/index.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { create } from '../../dom.js'
+import { useOpenExternal } from '../../hooks/use-open-external.js'
+import { create, isLink } from '../../dom.js'
 import { isMeta } from '../../keymap.js'
 
 
@@ -27,6 +28,7 @@ export const ProseMirror = forwardRef(({
 }, ref) => {
   let [view, setView] = useState()
   let intl = useIntl()
+  let openExternal = useOpenExternal()
 
   let p = useMemo(() => (
     create('div', { class: 'placeholder' })
@@ -35,15 +37,22 @@ export const ProseMirror = forwardRef(({
   let editable = useEvent(() =>
     !(isDisabled || isReadOnly))
 
-  let handleClick = useEvent(() => {
+  let handleClick = useEvent((event) => {
     if (!view.editable)
       view.focus()
+
+    let link = isLink(event.target)
+
+    if (link && isMeta(event)) {
+      event.preventDefault()
+      openExternal(link.href)
+    }
   })
 
   let handleLoad = useEvent((doc) => {
     setView(new EditorView(doc.body, {
       editable,
-      dispatchTransaction: (tr) => {
+      dispatchTransaction(tr) {
         onChange(this.state.apply(tr), tr.docChanged)
       },
       // Subtle: by returning true prevent the default block selection!
