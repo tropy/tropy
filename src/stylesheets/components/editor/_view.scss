@@ -20,46 +20,4 @@
       pointer-events: none;
     }
   }
-
-  .placeholder {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-    font-size: $editor-font-size;
-    line-height: $editor-line-height;
-    color: $editor-placeholder-color;
-
-    .horizontal & {
-      top: var(--editor-padding);
-      width: $editor-size;
-      max-width: $editor-max-size;
-    }
-
-    .horizontal.numbers & {
-      padding-left: $space-xxl + $space-md;
-      max-width: $editor-max-size + $space-xxl + $space-md;
-    }
-
-    .horizontal.no-wrap & {
-      max-width: none;
-    }
-
-    .vertical-rl & {
-      right: var(--editor-padding);
-      height: $editor-size;
-      max-height: $editor-max-size;
-    }
-
-    .vertical-rl.numbers & {
-      padding-top: $space-xxl + $space-md;
-      max-height: $editor-max-size + $space-xxl + $space-md;
-    }
-
-    .vertical-rl.no-wrap & {
-      max-height: none;
-    }
-  }
 }

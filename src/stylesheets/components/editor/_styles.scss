@@ -27,16 +27,53 @@ body {
   margin: 0;
   overflow: auto;
   color: $text-color;
+  font-family: $font-family-base;
+  font-size: $editor-font-size;
+  line-height: $editor-line-height;
 
   @if $platform == darwin {
     -webkit-font-smoothing: antialiased; // Lighter font rendering
   }
 }
 
+.placeholder {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-inline: (100% - $editor-size) / 2;
+  color: $editor-placeholder-color;
+  pointer-events: none;
+
+  .numbers & {
+    padding-inline-start: calc(((100% - #{$editor-size}) / 2) + #{$space-xxl + $space-md});
+    padding-inline-end: 10%;
+  }
+
+  .wrap & {
+    inline-size: $editor-size;
+    max-inline-size: $editor-max-size;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+
+  .numbers.wrap & {
+    max-inline-size: $editor-max-size + $space-xxl + $space-md;
+    padding-inline-start: $space-xxl + $space-md;
+  }
+
+  .horizontal & {
+    padding-block: min(10vh, #{$editor-padding});
+  }
+
+  .vertical-rl & {
+    padding-block: min(10vw, #{$editor-padding});
+  }
+}
+
 .ProseMirror { /* stylelint-disable-line selector-class-pattern */
-  font-family: $font-family-base;
-  font-size: $editor-font-size;
-  line-height: $editor-line-height;
+  flex: 1 1 auto;
   word-break: break-word; // For vertical writing mode (break-word or break-all?)
   counter-reset: line-numbers;
   padding-inline: (100% - $editor-size) / 2;
@@ -48,6 +85,7 @@ body {
   }
 
   .wrap & {
+    flex: 0 1 auto;
     white-space: initial;
     inline-size: $editor-size;
     max-inline-size: $editor-max-size;
