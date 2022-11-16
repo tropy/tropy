@@ -2,7 +2,7 @@ import React from 'react'
 import cx from 'classnames'
 import { func, bool, object, number, string } from 'prop-types'
 import { EditorToolbar } from './toolbar.js'
-import { ProseMirror as EditorView } from './prosemirror.js'
+import { EditorView } from './view.js'
 import { commands, toEditorState } from '../../editor/index.js'
 import { match } from '../../keymap.js'
 
