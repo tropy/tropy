@@ -1,141 +1,129 @@
-import { shell } from 'electron'
-import React from 'react'
-import { func, bool, instanceOf, number } from 'prop-types'
-import { EditorView } from 'prosemirror-view'
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import { useIntl } from 'react-intl'
+import { bool, func, instanceOf, string } from 'prop-types'
 import { EditorState } from 'prosemirror-state'
-import { nodeViews } from '../../editor'
-import { isMeta } from '../../keymap'
-import { isLink } from '../../dom'
-import throttle from 'lodash.throttle'
+import { EditorView as ProseMirror } from 'prosemirror-view'
+import cx from 'classnames'
+import { Frame } from '../frame.js'
+import { isBlank, nodeViews } from '../../editor/index.js'
+import { useEvent } from '../../hooks/use-event.js'
+import { useOpenExternal } from '../../hooks/use-open-external.js'
+import { create, isLink } from '../../dom.js'
+import { isMeta } from '../../keymap.js'
 
 
-class ProseMirror extends React.Component {
-  componentDidMount() {
-    this.pm = new EditorView(this.container, {
-      state: this.props.state,
-      ...this.getEditorProps(),
-      dispatchTransaction: this.handleChange,
-      nodeViews,
-      handleKeyDown: this.handleKeyDown,
-      handleClick: this.handleViewClick,
-      handleDOMEvents: {
-        focus: this.handleFocus,
-        blur: this.handleBlur
-      }
-    })
+export const EditorView = forwardRef(({
+  isDisabled,
+  isReadOnly,
+  mode,
+  numbers,
+  onBlur,
+  onChange,
+  onContextMenu,
+  onFocus,
+  onKeyDown,
+  placeholder,
+  state,
+  wrap
+}, ref) => {
+  let [view, setView] = useState()
+  let intl = useIntl()
+  let openExternal = useOpenExternal()
 
-    this.ro = new ResizeObserver(([e]) => {
-      this.handleResize(e.contentRect)
-    })
-    this.ro.observe(this.container)
-  }
+  let p = useMemo(() => (
+    create('div', { class: 'placeholder' })
+  ), [])
 
-  componentWillUnmount() {
-    this.ro.disconnect()
-    this.pm.destroy()
-  }
+  let editable = useEvent(() =>
+    !(isDisabled || isReadOnly))
 
-  shouldComponentUpdate(props) {
-    const { state, isDisabled, isReadOnly, tabIndex } = props
-    const wasDisabled = this.props.isDisabled
-    const wasReadOnly = this.props.isReadOnly
+  let handleClick = useEvent((event) => {
+    if (!view.editable)
+      view.focus()
 
-    if (
-      isDisabled !== wasDisabled ||
-      isReadOnly !== wasReadOnly ||
-      tabIndex !== this.props.tabIndex
-    ) {
-      this.pm.setProps(this.getEditorProps(props))
-    }
+    let link = isLink(event.target)
 
-    if (state != null && state !== this.pm.state) {
-      this.pm.updateState(state)
-    }
-
-    return false
-  }
-
-  get bounds() {
-    return {
-      width: this.container.clientWidth,
-      height: this.container.clientHeight
-    }
-  }
-
-  getEditorProps({ isDisabled, isReadOnly, tabIndex } = this.props) {
-    return {
-      editable: () => !isDisabled && !isReadOnly,
-      attributes: {
-        tabIndex: isDisabled ? -1 : tabIndex
-      }
-    }
-  }
-
-  setContainer = (container) => {
-    this.container = container
-  }
-
-  handleChange = (...args) => {
-    this.props.onChange(...args)
-  }
-
-  handleKeyDown = (...args) => {
-    return (this.props.isDisabled) ? false : this.props.onKeyDown(...args)
-  }
-
-  handleViewClick = (view, pos, event) => {
-    if (!view.editable) this.pm.dom.focus()
-    return isMeta(event) // disable PM's block select
-  }
-
-  handleContainerClick = (event) => {
-    const meta = isMeta(event)
-    const link = isLink(event.target)
-
-    if (link != null) {
+    if (link && isMeta(event)) {
       event.preventDefault()
-      if (meta) shell.openExternal(link.href)
+      openExternal(link.href)
     }
-  }
+  })
 
-  handleFocus = (...args) => {
-    this.props.onFocus(...args)
-  }
+  let handleLoad = useEvent((doc) => {
+    setView(new ProseMirror(doc.body, {
+      editable,
+      dispatchTransaction(tr) {
+        onChange(this.state.apply(tr), tr.docChanged)
+      },
+      // Subtle: by returning true prevent the default block selection!
+      handleClick: (v, pos, event) => (
+        isMeta(event)
+      ),
+      handleDOMEvents: {
+        blur: onBlur,
+        focus: onFocus
+      },
+      handleKeyDown: onKeyDown,
+      nodeViews,
+      state
+    }))
 
-  handleBlur = (...args) => {
-    this.props.onBlur(...args)
-  }
+    doc.body.prepend(p)
+  })
 
-  handleResize = throttle((rect) => {
-    this.resize(rect)
-  }, 50)
+  let handleUnload = useEvent(() => {
+    view.destroy()
+    setView(null)
+  })
 
-  resize = ({ width, height }) => {
-    this.props.onResize({ width, height })
-  }
+  useEffect(() => {
+    view?.updateState(state)
+  }, [state, view])
 
-  render() {
-    return (
-      <div
-        ref={this.setContainer}
-        className="prose-mirror-container"
-        onClick={this.handleContainerClick}/>
-    )
-  }
+  useImperativeHandle(ref, () => view, [view])
 
-  static propTypes = {
-    isDisabled: bool,
-    isReadOnly: bool,
-    state: instanceOf(EditorState),
-    tabIndex: number.isRequired,
-    onBlur: func.isRequired,
-    onChange: func.isRequired,
-    onFocus: func.isRequired,
-    onKeyDown: func.isRequired,
-    onResize: func.isRequired
-  }
+  useEffect(() => {
+    p.textContent = intl.formatMessage({ id: placeholder })
+  }, [placeholder, intl, p])
+
+  useEffect(() => {
+    p.style.display = (
+      isDisabled || isReadOnly || !isBlank(state.doc)
+    ) ? 'none' : 'block'
+  }, [state, isDisabled, isReadOnly, p])
+
+
+  return (
+    <Frame
+      className="prosemirror"
+      innerClassName={cx(mode, { numbers, wrap })}
+      onClick={handleClick}
+      onContextMenu={onContextMenu}
+      onLoad={handleLoad}
+      onUnload={handleUnload}
+      styleSheet="editor"/>
+  )
+})
+
+EditorView.propTypes = {
+  isDisabled: bool,
+  isReadOnly: bool,
+  mode: string,
+  numbers: bool,
+  // Subtle: event handlers are passed to PM on initialization
+  // and they will not be updated. Use stable references!
+  onBlur: func,
+  onChange: func.isRequired,
+  onContextMenu: func,
+  onFocus: func,
+  onKeyDown: func.isRequired,
+  placeholder: string,
+  state: instanceOf(EditorState),
+  wrap: bool
 }
 
-export {
-  ProseMirror as EditorView
+EditorView.propTypes = {
+  mode: 'horizontal',
+  numbers: false,
+  wrap: true
 }
