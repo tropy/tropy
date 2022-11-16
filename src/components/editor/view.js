@@ -53,7 +53,12 @@ export const EditorView = forwardRef(({
     setView(new ProseMirror(doc.body, {
       editable,
       dispatchTransaction(tr) {
-        onChange(this.state.apply(tr), tr.docChanged)
+        let next = this.state.apply(tr)
+
+        if (this.composing)
+          this.updateState(next)
+        else
+          onChange(next, tr.docChanged)
       },
       // Subtle: by returning true prevent the default block selection!
       handleClick: (v, pos, event) => (
@@ -61,6 +66,9 @@ export const EditorView = forwardRef(({
       ),
       handleDOMEvents: {
         blur: onBlur,
+        compositionend(v, event) {
+          onChange(v.state, !!event.data)
+        },
         focus: onFocus
       },
       handleKeyDown: onKeyDown,
