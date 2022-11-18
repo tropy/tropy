@@ -1,7 +1,7 @@
 export const indexOf = (col, id) =>
   (col.idx != null) ?
     col.idx[id] ?? -1 :
-    col.findIndex(it => it.id === id)
+    col.findIndex(it => it === id || it.id === id)
 
 export const sanitize = (len, index, restrict = 'bounds') => {
   if (index >= 0 && index < len)
