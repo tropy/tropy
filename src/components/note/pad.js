@@ -1,4 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { bool, func, number, object, shape, string } from 'prop-types'
 import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
@@ -11,14 +12,11 @@ export const NotePad = forwardRef(({
   isDisabled,
   isReadOnly,
   keymap,
-  mode,
   note,
-  numbers,
   onChange,
   onCommit,
   onContextMenu,
-  tabIndex,
-  wrap
+  tabIndex
 }, ref) => {
 
   let editor = useRef()
@@ -28,6 +26,10 @@ export const NotePad = forwardRef(({
       editor.current.focus()
     }
   }), [])
+
+  let { mode, numbers, wrap } = useSelector((state) =>
+    state.notepad[note?.id] || Editor.defaultProps
+  )
 
   let handleChange = useEvent((state, hasDocChanged) => {
     let text = (hasDocChanged) ?
@@ -88,9 +90,6 @@ NotePad.propTypes = {
     state: object,
     text: string
   }),
-  mode: string.isRequired,
-  numbers: bool.isRequired,
-  wrap: bool.isRequired,
   tabIndex: number.isRequired,
   onChange: func.isRequired,
   onCommit: func.isRequired,
@@ -98,8 +97,5 @@ NotePad.propTypes = {
 }
 
 NotePad.defaultProps = {
-  mode: 'horizontal',
-  numbers: false,
-  tabIndex: TABS.NotePad,
-  wrap: true
+  tabIndex: TABS.NotePad
 }
