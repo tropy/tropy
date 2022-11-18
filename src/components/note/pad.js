@@ -1,97 +1,105 @@
-import React from 'react'
+import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { bool, func, number, object, shape, string } from 'prop-types'
-import { Editor } from '../editor'
-import { TABS } from '../../constants'
 import cx from 'classnames'
+import { useEvent } from '../../hooks/use-event.js'
+import { Editor } from '../editor/index.js'
+import TABS from '../../constants/tabs.js'
 
 
-export class NotePad extends React.PureComponent {
-  editor = React.createRef()
+export const NotePad = forwardRef(({
+  hasTitlebar,
+  isDisabled,
+  isReadOnly,
+  keymap,
+  mode,
+  note,
+  numbers,
+  onChange,
+  onCommit,
+  onContextMenu,
+  tabIndex,
+  wrap
+}, ref) => {
 
-  get classes() {
-    return ['note-pad', this.props.mode, {
-      'disabled': this.props.isDisabled,
-      'read-only': this.props.isReadOnly,
-      'no-wrap': !this.props.wrap,
-      'numbers': this.props.numbers
-    }]
-  }
+  let editor = useRef()
 
-  focus = () => {
-    this.editor.current?.focus()
-  }
-
-  handleChange = (state, hasDocChanged) => {
-    let note = { ...this.props.note, state }
-
-    if (hasDocChanged) {
-      note.text = state.doc.textBetween(0, state.doc.content.size, ' ', ' ')
+  useImperativeHandle(ref, () => ({
+    focus() {
+      editor.current.focus()
     }
+  }), [])
 
-    this.props.onChange(note, hasDocChanged, note.text.length === 0)
-  }
+  let handleChange = useEvent((state, hasDocChanged) => {
+    let text = (hasDocChanged) ?
+      state.doc.textBetween(0, state.doc.content.size, ' ', ' ') :
+      note.text
 
-  handleContextMenu = (event) => {
-    if (!this.props.isDisabled && this.props.note?.id != null) {
-      this.props.onContextMenu(event, 'notepad', {
-        id: this.props.note.id,
-        mode: this.props.mode,
-        numbers: this.props.numbers,
-        wrap: this.props.wrap
+    onChange({ ...note, state, text }, hasDocChanged, text.length === 0)
+  })
+
+  let handleContextMenu = useEvent((event) => {
+    if (!isDisabled && note?.id != null) {
+      onContextMenu(event, 'notepad', {
+        id: note.id,
+        mode: mode,
+        numbers: numbers,
+        wrap: wrap
       })
     }
-  }
+  })
 
-  handleEditorBlur = () => {
-    let { note } = this.props
-    this.props.onCommit(note, note?.text.length === 0)
-  }
+  let handleEditorBlur = useEvent(() => {
+    onCommit(note, note?.text.length === 0)
+  })
 
-  render() {
-    return (
-      <section className={cx(this.classes)}>
-        <Editor
-          ref={this.editor}
-          state={this.props.note?.state}
-          keymap={this.props.keymap}
-          mode={this.props.mode}
-          numbers={this.props.numbers}
-          wrap={this.props.wrap}
-          placeholder="notepad.placeholder"
-          hasTitlebar={this.props.hasTitlebar}
-          isDisabled={this.props.isDisabled}
-          isReadOnly={this.props.isReadOnly}
-          tabIndex={this.props.tabIndex}
-          onBlur={this.handleEditorBlur}
-          onChange={this.handleChange}
-          onContextMenu={this.handleContextMenu}/>
-      </section>
-    )
-  }
+  return (
+    <section className={cx('note-pad', mode, {
+      'disabled': isDisabled,
+      'read-only': isReadOnly,
+      'no-wrap': !wrap,
+      'numbers': numbers
+    })}>
+      <Editor
+        ref={editor}
+        state={note?.state}
+        keymap={keymap}
+        mode={mode}
+        numbers={numbers}
+        wrap={wrap}
+        placeholder="notepad.placeholder"
+        hasTitlebar={hasTitlebar}
+        isDisabled={isDisabled}
+        isReadOnly={isReadOnly}
+        tabIndex={tabIndex}
+        onBlur={handleEditorBlur}
+        onChange={handleChange}
+        onContextMenu={handleContextMenu}/>
+    </section>
+  )
+})
 
-  static propTypes = {
-    hasTitlebar: bool,
-    isDisabled: bool,
-    isReadOnly: bool,
-    keymap: object.isRequired,
-    note: shape({
-      id: number,
-      state: object,
-      text: string
-    }),
-    mode: string.isRequired,
-    numbers: bool.isRequired,
-    wrap: bool.isRequired,
-    tabIndex: number.isRequired,
-    onChange: func.isRequired,
-    onCommit: func.isRequired,
-    onContextMenu: func.isRequired
-  }
+NotePad.propTypes = {
+  hasTitlebar: bool,
+  isDisabled: bool,
+  isReadOnly: bool,
+  keymap: object.isRequired,
+  note: shape({
+    id: number,
+    state: object,
+    text: string
+  }),
+  mode: string.isRequired,
+  numbers: bool.isRequired,
+  wrap: bool.isRequired,
+  tabIndex: number.isRequired,
+  onChange: func.isRequired,
+  onCommit: func.isRequired,
+  onContextMenu: func.isRequired
+}
 
-  static defaultProps = {
-    mode: 'horizontal',
-    numbers: false,
-    tabIndex: TABS.NotePad,
-    wrap: true
-  }
+NotePad.defaultProps = {
+  mode: 'horizontal',
+  numbers: false,
+  tabIndex: TABS.NotePad,
+  wrap: true
 }
