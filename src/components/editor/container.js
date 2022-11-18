@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import React, { useImperativeHandle, useMemo, useRef, useState } from 'react'
 import cx from 'classnames'
 import { func, bool, object, number, string } from 'prop-types'
 import { EditorToolbar } from './toolbar.js'
@@ -8,7 +8,7 @@ import { commands, toEditorState } from '../../editor/index.js'
 import { match } from '../../keymap.js'
 
 
-export function Editor({
+export const Editor = React.forwardRef(({
   hasTitlebar,
   isDisabled,
   isReadOnly,
@@ -22,7 +22,7 @@ export function Editor({
   state,
   tabIndex,
   wrap
-}) {
+}, ref) => {
   let container = useRef()
   let toolbar = useRef()
   let view = useRef()
@@ -68,7 +68,7 @@ export function Editor({
 
   let handleContainerFocus = useEvent((event) => {
     if (event.target === container.current) {
-      view.current.focus()
+      view.current.dom.focus()
     }
   })
 
@@ -80,6 +80,12 @@ export function Editor({
     setViewFocus(false)
     onBlur?.(event)
   })
+
+  useImperativeHandle(ref, () => ({
+    focus() {
+      view.current.dom.focus()
+    }
+  }), [])
 
   return (
     <div
@@ -111,7 +117,7 @@ export function Editor({
         onKeyDown={handleKeyDown}/>
     </div>
   )
-}
+})
 
 Editor.propTypes = {
   hasTitlebar: bool,
