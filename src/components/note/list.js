@@ -1,48 +1,57 @@
-import React from 'react'
-import { Scroll } from '../scroll'
-import { NoteListItem } from './list-item'
-import { TABS, SASS } from '../../constants'
-import { match } from '../../keymap'
+import { useRef } from 'react'
+import { Scroll } from '../scroll/index.js'
+import { NoteListItem } from './list-item.js'
+import { TABS, SASS } from '../../constants/index.js'
+import { match } from '../../keymap.js'
 import { arrayOf, bool, func, number, object, shape } from 'prop-types'
+import { useEvent } from '../../hooks/use-event.js'
 
 
-export class NoteList extends React.Component {
-  scroll = React.createRef()
+export const NoteList = ({
+  isReadOnly,
+  keymap,
+  notes,
+  onBlur,
+  onContextMenu,
+  onRemove,
+  onOpen,
+  onSelect,
+  onTabFocus,
+  rowHeight,
+  selection,
+  tabIndex
+}) => {
 
-  get tabIndex() {
-    return this.props.notes.length ? TABS.NoteList : null
-  }
+  let scroll = useRef()
 
-  isSelected({ id }) {
-    return id === this.props.selection?.id
-  }
-
-  handleSelect = (note, event) => {
-    if (note == null || this.isSelected(note))
+  let handleSelect = useEvent((note, event) => {
+    if (note == null || note.id === selection?.id)
       return
 
-    this.props.onSelect({
+    onSelect({
       note: note.id,
       photo: note.photo,
       selection: note.selection
     }, { throttle: event?.repeat })
-  }
+  })
 
-  handleDelete(note) {
-    this.props.onDelete({
-      photo: note.photo,
-      selection: note.selection,
-      notes: [note.id]
-    })
-  }
+  let handleRemove = useEvent((note) => {
+    if (!isReadOnly) {
+      onRemove({
+        photo: note.photo,
+        selection: note.selection,
+        notes: [note.id]
+      })
+    }
+  })
 
-  handleKeyDown = (event) => {
-    switch (match(this.props.keymap, event)) {
+  let handleKeyDown = useEvent((event) => {
+    switch (match(keymap, event)) {
       case 'open':
-        this.props.onOpen(this.scroll.current.current)
+        onOpen(scroll.current.current)
         break
-      case 'delete':
-        this.handleDelete(this.scroll.current.current)
+      case 'remove':
+        handleRemove(scroll.current.current)
         break
       default:
         return
@@ -50,58 +59,54 @@ export class NoteList extends React.Component {
 
     event.preventDefault()
     event.stopPropagation()
-  }
+  })
 
-  getIterableProps(note) {
-    const isSelected = this.isSelected(note)
+  return (
+    <div className="note-list">
+      <Scroll
+        ref={scroll}
+        cursor={selection?.id}
+        items={notes}
+        itemHeight={rowHeight}
+        tabIndex={tabIndex}
+        onBlur={onBlur}
+        onKeyDown={handleKeyDown}
+        onSelect={handleSelect}
+        onTabFocus={onTabFocus}>
+        {(note) => (
+          <NoteListItem
+            key={note.id}
+            isSelected={note.id === selection?.id}
+            note={note.id === selection?.id ? selection : note}
+            onContextMenu={onContextMenu}
+            onOpen={onOpen}
+            onSelect={handleSelect}/>
+        )}
+      </Scroll>
+    </div>
+  )
+}
 
-    return {
-      note: isSelected ? this.props.selection : note,
-      isDisabled: this.props.isDisabled,
-      isSelected,
-      onContextMenu: this.props.onContextMenu,
-      onOpen: this.props.onOpen,
-      onSelect: this.handleSelect
-    }
-  }
+NoteList.propTypes = {
+  isReadOnly: bool,
+  keymap: object.isRequired,
+  notes: arrayOf(shape({
+    id: number.isRequired
+  })).isRequired,
+  onBlur: func,
+  onContextMenu: func.isRequired,
+  onRemove: func.isRequired,
+  onOpen: func.isRequired,
+  onSelect: func.isRequired,
+  onTabFocus: func,
+  rowHeight: number.isRequired,
+  selection: shape({
+    id: number
+  }),
+  tabIndex: number
+}
 
-  render() {
-    return (
-      <div className="note-list">
-        <Scroll
-          ref={this.scroll}
-          cursor={this.props.selection?.id}
-          items={this.props.notes}
-          itemHeight={SASS.NOTE.ROW_HEIGHT}
-          tabIndex={this.tabIndex}
-          onBlur={this.props.onBlur}
-          onKeyDown={this.handleKeyDown}
-          onSelect={this.handleSelect}
-          onTabFocus={this.props.onTabFocus}>
-          {(note) =>
-            <NoteListItem
-              {...this.getIterableProps(note)}
-              key={note.id}/>
-          }
-        </Scroll>
-      </div>
-    )
-  }
-
-  static propTypes = {
-    keymap: object.isRequired,
-    notes: arrayOf(shape({
-      id: number.isRequired
-    })).isRequired,
-    selection: shape({
-      id: number
-    }),
-    isDisabled: bool,
-    onBlur: func,
-    onTabFocus: func,
-    onDelete: func.isRequired,
-    onSelect: func.isRequired,
-    onContextMenu: func.isRequired,
-    onOpen: func.isRequired
-  }
+NoteList.defaultProps = {
+  rowHeight: SASS.NOTE.ROW_HEIGHT,
+  tabIndex: TABS.NoteList
 }

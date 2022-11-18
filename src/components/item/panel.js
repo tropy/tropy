@@ -220,11 +220,11 @@ export class ItemPanelGroup extends React.PureComponent {
             notes={this.props.notes.length}
             onCreate={this.props.onNoteCreate}/>
           <NoteList
-            isDisabled={isNotesDisabled}
+            isReadOnly={isReadOnly}
             keymap={this.props.keymap.NoteList}
             notes={this.props.notes}
             selection={this.props.note}
-            onDelete={this.props.onNoteDelete}
+            onRemove={this.props.onNoteDelete}
             onContextMenu={this.props.onContextMenu}
             onOpen={this.handleNoteOpen}
             onSelect={this.props.onNoteSelect}/>
