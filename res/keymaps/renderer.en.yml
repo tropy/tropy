@@ -117,7 +117,7 @@ en:
         - Enter
         - Cmd+ArrowDown
         - Cmd+ArrowRight
-      delete:
+      remove:
         - Backspace
         - Delete
     NotePad: &NotePad
