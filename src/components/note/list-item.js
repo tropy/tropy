@@ -1,68 +1,65 @@
-import React from 'react'
+import { useEffect, useRef } from 'react'
 import cx from 'classnames'
 import { bool, func, number, shape, string } from 'prop-types'
-import { createClickHandler } from '../util'
+import { useClickHandler } from '../../hooks/use-click-handler.js'
+import { useEvent } from '../../hooks/use-event.js'
 
+export const NoteListItem = ({
+  note,
+  isSelected,
+  onContextMenu,
+  onOpen,
+  onSelect
+}) => {
 
-export class NoteListItem extends React.PureComponent {
-  container = React.createRef()
+  let dom = useRef()
 
-  componentDidUpdate(props) {
-    if (this.props.isSelected && !props.isSelected) {
-      this.container.current.scrollIntoViewIfNeeded(false)
-    }
-  }
+  useEffect(() => {
+    if (isSelected)
+      dom.current.scrollIntoViewIfNeeded(false)
+  }, [isSelected])
 
-  handleContextMenu = (event) => {
-    const { note, isDisabled, isSelected, onContextMenu, onSelect } = this.props
+  let handleContextMenu = useEvent((event) => {
 
-    if (!isDisabled) {
-      if (!isSelected) onSelect(note)
+    if (!isSelected) onSelect(note)
 
-      onContextMenu(event, 'note', {
-        notes: [note.id],
-        item: note.item,
-        photo: note.photo,
-        selection: note.selection
-      })
-    }
-  }
+    onContextMenu?.(event, 'note', {
+      notes: [note.id],
+      item: note.item,
+      photo: note.photo,
+      selection: note.selection
+    })
+  })
 
-  handleClick = createClickHandler({
-    onClick: () => {
-      this.props.onSelect(this.props.note)
+  let handleMouseDown = useClickHandler({
+    onClick() {
+      onSelect(note)
     },
-
-    onDoubleClick: () => {
-      this.props.onOpen(this.props.note)
+    onDoubleClick() {
+      onOpen(note)
     }
   })
 
-  render() {
-    return (
-      <li
-        ref={this.container}
-        className={cx('note', { active: this.props.isSelected })}
-        onMouseDown={this.handleClick}
-        onContextMenu={this.handleContextMenu}>
-        <div className="css-multiline-truncate">
-          {this.props.note.text.slice(0, 280)}
-        </div>
-      </li>
-    )
-  }
+  return (
+    <li
+      ref={dom}
+      className={cx('note', { active: isSelected })}
+      onMouseDown={handleMouseDown}
+      onContextMenu={handleContextMenu}>
+      <div className="css-multiline-truncate">
+        {note.text.slice(0, 280)}
+      </div>
+    </li>
+  )
+}
 
-  static propTypes = {
-    note: shape({
-      id: number.isRequired,
-      text: string.isRequired
-    }).isRequired,
-
-    isDisabled: bool,
-    isSelected: bool,
-
-    onContextMenu: func.isRequired,
-    onOpen: func.isRequired,
-    onSelect: func.isRequired
-  }
+NoteListItem.propTypes = {
+  isSelected: bool,
+  note: shape({
+    id: number.isRequired,
+    text: string.isRequired
+  }).isRequired,
+  onContextMenu: func.isRequired,
+  onOpen: func.isRequired,
+  onSelect: func.isRequired
 }
