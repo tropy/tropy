@@ -20,7 +20,6 @@ export const NoteListItem = ({
   }, [isSelected])
 
   let handleContextMenu = useEvent((event) => {
-
     if (!isSelected) onSelect(note)
 
     onContextMenu?.(event, 'note', {
