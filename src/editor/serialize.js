@@ -101,3 +101,13 @@ export function toMarkdown(doc) {
     return ''
   }
 }
+
+export function toText(doc) {
+  try {
+    return doc.textBetween(0, doc.content.size, ' ', ' ')
+
+  } catch (e) {
+    warn({ stack: e.stack }, 'failed to convert doc to text')
+    return ''
+  }
+}

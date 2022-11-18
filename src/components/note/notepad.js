@@ -4,6 +4,7 @@ import { bool, func, number, object, shape, string } from 'prop-types'
 import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { Editor } from '../editor/index.js'
+import { toText } from '../../editor/serialize.js'
 import TABS from '../../constants/tabs.js'
 
 
@@ -27,13 +28,13 @@ export const NotePad = forwardRef(({
     }
   }), [])
 
-  let { mode, numbers, wrap } = useSelector((state) =>
-    state.notepad[note?.id] || Editor.defaultProps
+  let { mode, numbers, wrap } = useSelector(({ notepad }) =>
+    notepad[note?.id] || Editor.defaultProps
   )
 
   let handleChange = useEvent((state, hasDocChanged) => {
     let text = (hasDocChanged) ?
-      state.doc.textBetween(0, state.doc.content.size, ' ', ' ') :
+      toText(state.doc) :
       note.text
 
     onChange({ ...note, state, text }, hasDocChanged, text.length === 0)
