@@ -1,64 +1,49 @@
 import { useRef } from 'react'
+import { arrayOf, bool, func, number, shape } from 'prop-types'
 import { Scroll } from '../scroll/index.js'
 import { NoteListItem } from './list-item.js'
 import { TABS, SASS } from '../../constants/index.js'
-import { match } from '../../keymap.js'
-import { arrayOf, bool, func, number, object, shape } from 'prop-types'
 import { useEvent } from '../../hooks/use-event.js'
-
+import { useKeyMap } from '../../hooks/use-keymap.js'
 
 export const NoteList = ({
   isReadOnly,
-  keymap,
   notes,
-  onBlur,
   onContextMenu,
   onRemove,
   onOpen,
   onSelect,
-  onTabFocus,
   rowHeight,
   selection,
   tabIndex
 }) => {
-
   let scroll = useRef()
 
   let handleSelect = useEvent((note, event) => {
-    if (note == null || note.id === selection?.id)
-      return
-
-    onSelect({
-      note: note.id,
-      photo: note.photo,
-      selection: note.selection
-    }, { throttle: event?.repeat })
+    if (!(note == null || note.id === selection?.id))
+      onSelect({
+        note: note.id,
+        photo: note.photo,
+        selection: note.selection
+      }, { throttle: event?.repeat })
   })
 
   let handleRemove = useEvent((note) => {
-    if (!isReadOnly) {
+    if (!isReadOnly)
       onRemove({
         photo: note.photo,
         selection: note.selection,
         notes: [note.id]
       })
-    }
   })
 
-  let handleKeyDown = useEvent((event) => {
-    switch (match(keymap, event)) {
-      case 'open':
-        onOpen(scroll.current.current)
-        break
-      case 'remove':
-        handleRemove(scroll.current.current)
-        break
-      default:
-        return
+  let handleKeyDown = useKeyMap('NoteList', {
+    open() {
+      onOpen(scroll.current.current)
+    },
+    remove() {
+      handleRemove(scroll.current.current)
     }
-
-    event.preventDefault()
-    event.stopPropagation()
   })
 
   return (
@@ -69,10 +54,8 @@ export const NoteList = ({
         items={notes}
         itemHeight={rowHeight}
         tabIndex={tabIndex}
-        onBlur={onBlur}
         onKeyDown={handleKeyDown}
-        onSelect={handleSelect}
-        onTabFocus={onTabFocus}>
+        onSelect={handleSelect}>
         {(note) => (
           <NoteListItem
             key={note.id}
@@ -89,16 +72,13 @@ export const NoteList = ({
 
 NoteList.propTypes = {
   isReadOnly: bool,
-  keymap: object.isRequired,
   notes: arrayOf(shape({
     id: number.isRequired
   })).isRequired,
-  onBlur: func,
   onContextMenu: func.isRequired,
   onRemove: func.isRequired,
   onOpen: func.isRequired,
   onSelect: func.isRequired,
-  onTabFocus: func,
   rowHeight: number.isRequired,
   selection: shape({
     id: number
