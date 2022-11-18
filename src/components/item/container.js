@@ -14,7 +14,6 @@ import {
 import {
   selectCachePrefix,
   getEsperViewState,
-  getNotePadState,
   getActiveSelection,
   getPhotoSelections
 } from '../../selectors'
@@ -116,7 +115,7 @@ class Item extends React.PureComponent {
             onSelect={this.props.onPhotoSelect}
             onSelectionCreate={this.props.onSelectionCreate}/>
         </Resizable>
-        <NotePad {...this.props.notepad}
+        <NotePad
           ref={this.notepad}
           note={this.props.note}
           hasTitlebar={this.hasSideBySideLayout}
@@ -143,7 +142,6 @@ class Item extends React.PureComponent {
     isReadOnly: bool,
     keymap: object.isRequired,
     note: object,
-    notepad: object.isRequired,
     photo: object,
     selection: object,
     selections: arrayOf(object).isRequired,
@@ -168,7 +166,6 @@ export const ItemContainer = connect(
       cache: selectCachePrefix(state),
       esper: state.ui.esper,
       view: getEsperViewState(state),
-      notepad: getNotePadState(state),
       keymap: state.keymap,
       selection: getActiveSelection(state),
       selections: getPhotoSelections(state),
