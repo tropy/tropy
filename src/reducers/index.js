@@ -1,3 +1,4 @@
+export { default as notepad } from '../slices/notepad.js'
 export { default as projectFiles } from '../slices/project-files.js'
 
 export * from './activity'
@@ -13,7 +14,6 @@ export * from './keymap'
 export * from './lists'
 export * from './metadata'
 export * from './nav'
-export * from './notepad'
 export * from './notes'
 export * from './ontology'
 export * from './panel'
