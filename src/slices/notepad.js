@@ -1,4 +1,4 @@
-import { createSlice } from '@react-redux/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 const notepad = createSlice({
   name: 'notepad',
