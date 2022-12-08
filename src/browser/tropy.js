@@ -170,8 +170,13 @@ export class Tropy extends EventEmitter {
 
   async showProjectWindow(file, win = this.wm.current()) {
     if (win == null) {
-
-      // TODO focus project in existing window if it's already open!
+      for (const w of this.wm.windows?.project || []) {
+        if (this.getProject(w).path === file) {
+          info({ file }, 'focus existing project window')
+          w.show()
+          return
+        }
+      }
 
       info({ file }, 'open new project window')
 

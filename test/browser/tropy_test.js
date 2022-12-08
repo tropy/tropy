@@ -1,4 +1,4 @@
-import { app } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import { URL } from 'url'
 import { Tropy } from '../../src/browser/tropy'
 
@@ -81,6 +81,48 @@ describe('Tropy', () => {
           expect(tropy.dispatch.args[0][0])
             .to.have.a.nested.property('payload.photos').eql([3])
         })
+    })
+    describe('project windows', () => {
+      beforeEach(() => {
+        sinon.stub(BrowserWindow.prototype, 'show')
+      })
+      afterEach(() => {
+        sinon.restore()
+      })
+      it('no second window if same project opened in new window', async () => {
+        const projectFilePath = 'test.tpy'
+        await tropy.restore()
+        await tropy.openFile(projectFilePath)
+        tropy.setProject({ path: projectFilePath }, tropy.wm.current())
+        expect(tropy.wm.windows['project']).to.have.length(1)
+
+        await tropy.openFile(projectFilePath)
+        expect(tropy.wm.windows['project']).to.have.length(1)
+      })
+      it('new window if different project opened in new window', async () => {
+        const projectFilePath = 'test.tpy'
+        await tropy.restore()
+        await tropy.openFile(projectFilePath)
+        tropy.setProject({ path: projectFilePath }, tropy.wm.current())
+
+        await tropy.openFile('aDifferentProject.tpy')
+        expect(tropy.wm.windows['project']).to.have.length(2)
+      })
+
+      it('refocus window if open project opened in new window', async () => {
+        const projectFilePath = 'test.tpy'
+        const secondProject = 'aDifferentProject.tpy'
+        await tropy.restore()
+        await tropy.openFile(projectFilePath)
+        tropy.setProject({ path: projectFilePath }, tropy.wm.current())
+
+        await tropy.openFile(secondProject)
+        tropy.setProject({ path: secondProject }, tropy.wm.current())
+        expect(tropy.wm.windows['project']).to.have.length(2)
+
+        await tropy.openFile(projectFilePath)
+        expect(tropy.wm.windows['project']).to.have.length(2)
+      })
     })
   })
 })
