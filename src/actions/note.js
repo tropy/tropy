@@ -2,17 +2,11 @@ import { NOTE } from '../constants'
 import { warn } from '../common/log'
 import { get } from '../common/util'
 
-function json(note) {
-  return (note.state != null && typeof note.state.toJSON === 'function') ?
-    { ...note, state: note.state.toJSON() } :
-    note
-}
-
 export default {
   create(payload, meta) {
     return {
       type: NOTE.CREATE,
-      payload: json(payload),
+      payload: payload,
       meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
@@ -39,11 +33,9 @@ export default {
   save(payload, meta) {
     return {
       type: NOTE.SAVE,
-      payload: json(payload),
+      payload: payload,
       meta: {
         cmd: 'project',
-        history: 'merge',
-        changed: true,
         ...meta
       }
     }
@@ -58,6 +50,13 @@ export default {
   },
 
   select(payload, meta) {
+    if (payload == null)
+      return {
+        type: NOTE.SELECT,
+        payload,
+        meta
+      }
+
     return (dispatch, getState) => {
       let { note, photo, item, selection } = payload
 
@@ -87,7 +86,12 @@ export default {
     return {
       type: NOTE.UPDATE,
       payload,
-      meta: { ...meta }
+      meta: {
+        cmd: 'project',
+        history: 'merge',
+        log: false,
+        ...meta
+      }
     }
   },
 

@@ -43,6 +43,7 @@ export default {
       payload: { undo, redo },
       meta: {
         ipc: HISTORY.CHANGED,
+        log: mode === 'merge' ? false : 'debug',
         mode,
         ...meta
       }
