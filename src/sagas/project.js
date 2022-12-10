@@ -12,6 +12,7 @@ import { shell } from './shell.js'
 import { fail } from '../dialog.js'
 import * as mod from '../models/index.js'
 import * as act from '../actions/index.js'
+import { autosave } from './note.js'
 import { persist, restore, storage } from './storage.js'
 import { watch } from './watch.js'
 import { handleDatabaseErrors } from './db.js'
@@ -126,6 +127,7 @@ function *setup({ db, project }) {
       put(act.note.load())
     ])
 
+    yield fork(autosave, db)
     yield call(search, db)
 
     yield take(IDLE.IDLE)
