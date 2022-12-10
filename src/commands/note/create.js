@@ -9,16 +9,15 @@ import { getSelectableNoteId } from '../../selectors'
 export class Create extends Command {
   *exec() {
     let { db } = this.options
-    let { payload } = this.action
-    let { state, text, photo, selection, created } = payload
+    let { state, text } = this.action.payload
+
+    let { photo, selection } = yield select(({ nav }) => nav)
 
     let type = (selection != null) ? 'selection' : 'photo'
     let id = (selection != null) ? selection : photo
 
     let note = yield call(db.transaction, tx =>
       mod.note.create(tx, { id, state, text }))
-
-    note.created = created
 
     yield put(act[type].notes.add({ id, notes: [note.id] }))
     yield put(act.note.select({ note: note.id, photo, selection }))
@@ -41,6 +40,10 @@ export class Delete extends Command {
 
     let type = (selection != null) ? 'selection' : 'photo'
     let id = (selection != null) ? selection : photo
+
+    // TODO
+    // clear the selection in the nav reducer if necessary
+    // to select a different note should happen in the note list component
 
     let [isSelected, nextId] = yield select(state => [
       state.nav.note === notes[0], getSelectableNoteId(state)

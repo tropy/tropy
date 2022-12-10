@@ -1,43 +1,29 @@
-import { call, put, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import mod from '../../models/note'
-import act from '../../actions/note'
-import { NOTE } from '../../constants'
+import { call, select } from 'redux-saga/effects'
+import { Command } from '../command.js'
+import mod from '../../models/note.js'
+import NOTE from '../../constants/note.js'
 
 
 class Save extends Command {
   *exec() {
     let { db } = this.options
-    let { payload, meta } = this.action
-    let { id, state, text } = payload
+    let { id } = this.action.payload
+
+    let note = yield select(({ notes }) => notes[id])
+
+    if (!note.changed || !note.text)
+      return { id }
+
     let modified = new Date
-    let data = { id, state, text, modified }
 
-    this.original = yield select(({ notes }) => notes[id])
+    yield call(mod.save, db, {
+      id,
+      state: note.state,
+      text: note.text,
+      modified
+    })
 
-    yield put(act.update(data))
-
-    if (!meta.blank) {
-      yield call(mod.save, db, {
-        id,
-        state,
-        text: meta.changed ? text : undefined
-      },  modified)
-
-      this.undo = act.save({
-        id,
-        text: this.original.text,
-        state: this.original.state
-      })
-    }
-
-    return data
-  }
-
-  *abort() {
-    if (this.original) {
-      yield put(act.update(this.original))
-    }
+    return { id, modified }
   }
 }
 

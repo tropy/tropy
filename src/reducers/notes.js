@@ -18,13 +18,23 @@ export function notes(state = init, { type, payload, error, meta }) {
       return insert(state, payload, meta)
 
     case NOTE.UPDATE:
-      return {
+      return (meta.done && !error) ? {
         ...state,
         [payload.id]: {
           ...state[payload.id],
-          ...payload
+          ...payload,
+          changed: true
         }
-      }
+      } : state
+
+    case NOTE.SAVE:
+      return (meta.done && !error) ? {
+        ...state,
+        [payload.id]: {
+          ...state[payload.id],
+          changed: false
+        }
+      } : state
 
     default:
       return state
