@@ -1,4 +1,5 @@
 export default {
+  AUTOSAVE_DELAY: 5000,
   CREATE: 'note.create',
   EXPORT: 'note.export',
   INSERT: 'note.insert',

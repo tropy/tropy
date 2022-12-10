@@ -28,7 +28,7 @@ export function panel(state = INIT, { type, payload }) {
       return expand(state, payload)
     case PHOTO.SELECT:
     case NOTE.SELECT:
-      return (payload.selection == null) ?
+      return (payload?.selection == null) ?
         state :
         expand(state, payload.photo)
     case ITEM.OPEN:

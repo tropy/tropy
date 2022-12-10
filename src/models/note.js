@@ -17,19 +17,21 @@ async function load(db, ids) {
         state,
         text,
         language,
-        datetime(modified, "localtime") AS modified
+        datetime(modified, "localtime") AS modified,
+        datetime(created, "localtime") AS created
       FROM notes
         LEFT OUTER JOIN photos USING (id)
         LEFT OUTER JOIN selections USING (id)
       WHERE ${conditions.join(' AND ')}
       ORDER BY created ASC`,
 
-    ({ note: id, modified, state, ...data }) => {
+    ({ note: id, created, modified, state, ...data }) => {
       try {
         notes[id] = {
           ...data,
           id,
           modified: new Date(modified),
+          created: new Date(created),
           state: json(state),
           deleted: false
         }
@@ -55,14 +57,14 @@ export default {
     return (await load(db, [id]))[id]
   },
 
-  save(db, { id, state, text }, timestamp = Date.now()) {
+  async save(db, { id, state, text, modified = new Date }) {
     assert(id != null, 'missing id')
     assert(state != null, 'missing state')
 
     let query = update('notes')
       .set({
         state: stringify(state),
-        modified: new Date(timestamp).toISOString()
+        modified: modified.toISOString()
       })
       .where({ note_id: id })
 
@@ -71,7 +73,7 @@ export default {
       query.set({ text })
     }
 
-    return db.run(...query)
+    await db.run(...query)
   },
 
   delete(db, id) {
