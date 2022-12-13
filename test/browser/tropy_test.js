@@ -83,25 +83,27 @@ describe('Tropy', () => {
         })
     })
     describe('project windows', () => {
-      beforeEach(() => {
+      const projectFilePath = 'test.tpy'
+      beforeEach(async () => {
         sinon.stub(BrowserWindow.prototype, 'show')
+        await tropy.restore()
       })
+
       afterEach(() => {
+        for (const w of tropy.wm.windows?.project  || []) {
+          w.close('project', true)
+        }
         sinon.restore()
       })
+
       it('no second window if same project opened in new window', async () => {
-        const projectFilePath = 'test.tpy'
-        await tropy.restore()
         await tropy.openFile(projectFilePath)
         tropy.setProject({ path: projectFilePath }, tropy.wm.current())
-        expect(tropy.wm.windows['project']).to.have.length(1)
 
         await tropy.openFile(projectFilePath)
         expect(tropy.wm.windows['project']).to.have.length(1)
       })
       it('new window if different project opened in new window', async () => {
-        const projectFilePath = 'test.tpy'
-        await tropy.restore()
         await tropy.openFile(projectFilePath)
         tropy.setProject({ path: projectFilePath }, tropy.wm.current())
 
@@ -110,9 +112,7 @@ describe('Tropy', () => {
       })
 
       it('refocus window if open project opened in new window', async () => {
-        const projectFilePath = 'test.tpy'
         const secondProject = 'aDifferentProject.tpy'
-        await tropy.restore()
         await tropy.openFile(projectFilePath)
         tropy.setProject({ path: projectFilePath }, tropy.wm.current())
 
