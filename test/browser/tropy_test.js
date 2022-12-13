@@ -84,9 +84,9 @@ describe('Tropy', () => {
     })
     describe('project windows', () => {
       const projectFilePath = 'test.tpy'
-      beforeEach(async () => {
+      beforeEach(() => {
         sinon.stub(BrowserWindow.prototype, 'show')
-        await tropy.restore()
+        tropy.state = { recents: [], win: { bounds: {} } }
       })
 
       afterEach(() => {
@@ -94,6 +94,7 @@ describe('Tropy', () => {
           w.close('project', true)
         }
         sinon.restore()
+        delete tropy.state
       })
 
       it('no second window if same project opened in new window', async () => {
