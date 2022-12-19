@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import cx from 'classnames'
 import { func, bool, object, number, string } from 'prop-types'
 import { EditorToolbar } from './toolbar.js'
@@ -18,8 +18,9 @@ export const Editor = React.forwardRef(({
   onBlur,
   onChange,
   onContextMenu,
+  onCreate,
   placeholder,
-  state,
+  state: srcState,
   tabIndex,
   wrap
 }, ref) => {
@@ -29,7 +30,18 @@ export const Editor = React.forwardRef(({
 
   let [hasViewFocus, setViewFocus] = useState(false)
 
-  state = useMemo(() => toEditorState(state), [state])
+  let pendingCreation = useRef()
+
+  useEffect(() => {
+    if (srcState != null) {
+      if (srcState === pendingCreation.current)
+        onChange(view.current.state, true)
+
+      pendingCreation.current = null
+    }
+  }, [srcState, onChange])
+
+  let state = useMemo(() => toEditorState(srcState), [srcState])
 
   let exec = useEvent((action, ...args) =>
     commands[action]?.(
@@ -41,6 +53,20 @@ export const Editor = React.forwardRef(({
 
     if (!view.current.hasFocus())
       view.current.focus()
+  })
+
+  let handleChange = useEvent((next, hasDocChanged) => {
+    if (srcState == null) {
+      view.current.updateState(next)
+
+      if (hasDocChanged && !pendingCreation.current) {
+        pendingCreation.current = next
+        onCreate(next)
+      }
+
+    } else {
+      onChange(next, hasDocChanged)
+    }
   })
 
   let handleKeyDown = useEvent((_, event) => {
@@ -112,7 +138,7 @@ export const Editor = React.forwardRef(({
         wrap={wrap}
         onFocus={handleViewFocus}
         onBlur={handleViewBlur}
-        onChange={onChange}
+        onChange={handleChange}
         onContextMenu={onContextMenu}
         onKeyDown={handleKeyDown}/>
     </div>
@@ -128,6 +154,7 @@ Editor.propTypes = {
   numbers: bool,
   onBlur: func.isRequired,
   onChange: func.isRequired,
+  onCreate: func,
   onContextMenu: func,
   placeholder: string,
   state: object,
