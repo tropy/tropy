@@ -2,9 +2,8 @@ import React from 'react'
 import { ItemPanelGroup } from './panel'
 import { ItemContainer } from './container'
 import { Resizable } from '../resizable'
-import { NOTE, SASS } from '../../constants'
+import { SASS } from '../../constants'
 import { pick } from '../../common/util'
-import debounce from 'lodash.debounce'
 
 import {
   arrayOf, bool, func, object, number, shape
@@ -14,67 +13,6 @@ import {
 
 export class ItemView extends React.PureComponent {
   itemContainer = React.createRef()
-
-  state = {
-    note: null
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    if (props.note) {
-      if (state.note == null)
-        return { ...state, note: props.note }
-
-      if (state.note.id) {
-
-        // If we previously had different note, or if the new note has
-        // been modified more recently than our local copy, we use the
-        // props version.
-        if (state.note.id !== props.note.id)
-          return { ...state, note: props.note }
-
-        if (state.note.modified < props.note.modified)
-          return { ...state, note: props.note }
-
-        // Otherwise, when updating the current note we keep the local
-        // editor state in favor of the serialized state coming back
-        // from the store; otherwise we lose unserializable
-        // state such as the editor's undo/redo history.
-
-      } else {
-
-        // When our local note exists but has no id, the props version
-        // may be the initially saved version of the note currently
-        // in the editor. We assume this is so, if the `created`
-        // timestamps match and merge the new note with our current
-        // editor state.
-        if (state.note.created === props.note.created)
-          return {
-            ...state,
-            note: {
-              ...props.note,
-              state: state.note.state,
-              text: state.note.text
-            }
-          }
-
-        // Otherwise we discard the temporary note in favor of the new one.
-        return { ...state, note: props.note }
-      }
-
-    } else {
-
-      if (state.note?.id)
-        return { ...state, note: null }
-    }
-
-    return null
-  }
-
-  componentDidUpdate(prevProps, { note }) {
-    if (note?.id != null && note.id !== this.state.note?.id) {
-      this.handleNoteRemoval(note)
-    }
-  }
 
   get offset() {
     return (this.props.isItemMode) ?
@@ -102,56 +40,10 @@ export class ItemView extends React.PureComponent {
     }
 
     if (this.props.note) {
-      this.props.onNoteSelect({
-        photo: this.props.photo.id,
-        note: null,
-        selection: this.props.activeSelection
-      })
+      this.props.onNoteSelect()
     }
 
     setTimeout(this.focusNotePad, delay)
-  }
-
-  handleNoteRemoval(note) {
-    if (note.id != null && !note.text) {
-      this.handleNoteSave.cancel()
-      this.props.onNoteDelete({
-        photo: note.photo,
-        selection: note.selection,
-        notes: [note.id]
-      })
-    } else {
-      this.handleNoteSave.flush()
-    }
-  }
-
-  handleNoteSave = debounce((note, meta) => {
-    this.props.onNoteSave(note, meta)
-  }, NOTE.AUTOSAVE_DELAY)
-
-  handleNoteChange = (note, hasChanged, isBlank) => {
-    if (!this.props.isReadOnly) {
-      if (note.id != null) {
-        this.handleNoteSave(note, {
-          blank: isBlank,
-          changed: hasChanged
-        })
-
-      } else {
-        if (note.created == null && !isBlank) {
-          note.created = Date.now()
-          note.photo = this.props.photo.id
-          note.selection = this.props.activeSelection
-          this.props.onNoteCreate(note)
-        }
-      }
-    }
-
-    this.setState({ note })
-  }
-
-  handleNoteCommit = () => {
-    this.handleNoteSave.flush()
   }
 
   render() {
@@ -180,7 +72,7 @@ export class ItemView extends React.PureComponent {
           <ItemPanelGroup {...pick(props, ItemPanelGroup.props)}
             panel={panel}
             photo={photo}
-            note={this.state.note}
+            note={this.props.note}
             keymap={keymap}
             isItemMode={isItemMode}
             isDisabled={isProjectClosing}
@@ -190,13 +82,11 @@ export class ItemView extends React.PureComponent {
         </Resizable>
         <ItemContainer
           ref={this.itemContainer}
-          note={this.state.note}
+          note={this.props.note}
           photo={photo}
           isDisabled={!isItemMode || isProjectClosing}
           isReadOnly={isReadOnly}
           onContextMenu={this.props.onContextMenu}
-          onNoteChange={this.handleNoteChange}
-          onNoteCommit={this.handleNoteCommit}
           onPhotoConsolidate={this.props.onPhotoConsolidate}
           onPhotoCreate={this.props.onPhotoCreate}
           onPhotoSave={this.props.onPhotoSave}
@@ -228,7 +118,6 @@ export class ItemView extends React.PureComponent {
 
     onContextMenu: func.isRequired,
     onItemOpen: func.isRequired,
-    onNoteCreate: func.isRequired,
     onNoteDelete: func.isRequired,
     onNoteSave: func.isRequired,
     onNoteSelect: func.isRequired,
