@@ -29,12 +29,8 @@ export const NoteList = ({
   })
 
   let handleRemove = useEvent((note) => {
-    if (!isReadOnly)
-      onRemove({
-        photo: note.photo,
-        selection: note.selection,
-        notes: [note.id]
-      })
+    if (!(isReadOnly || note == null))
+      onRemove([note.id])
   })
 
   let handleKeyDown = useKeyMap('NoteList', {

@@ -1,11 +1,12 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { bool, func, number, object, shape, string } from 'prop-types'
 import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { Editor } from '../editor/index.js'
 import { toText } from '../../editor/serialize.js'
 import TABS from '../../constants/tabs.js'
+import actions from '../../actions/note.js'
 
 
 export const NotePad = forwardRef(({
@@ -14,13 +15,15 @@ export const NotePad = forwardRef(({
   isReadOnly,
   keymap,
   note,
-  onChange,
-  onCommit,
   onContextMenu,
   tabIndex
 }, ref) => {
 
+  let dispatch = useDispatch()
   let editor = useRef()
+
+  isReadOnly = isReadOnly || isDisabled
+  let isBlank = note?.id && !note.text
 
   useImperativeHandle(ref, () => ({
     focus() {
@@ -32,12 +35,26 @@ export const NotePad = forwardRef(({
     notepad[note?.id] || Editor.defaultProps
   )
 
-  let handleChange = useEvent((state, hasDocChanged) => {
-    let text = (hasDocChanged) ?
-      toText(state.doc) :
-      note.text
+  useEffect(() => {
+    return () => {
+      if (isBlank)
+        dispatch(actions.delete([note.id]))
+    }
+  }, [note?.id, isBlank, dispatch])
 
-    onChange({ ...note, state, text }, hasDocChanged, text.length === 0)
+  let handleCreate = useEvent((state) => {
+    dispatch(actions.create({
+      state,
+      text: toText(state.doc)
+    }))
+  })
+
+  let handleChange = useEvent((state, hasDocChanged) => {
+    dispatch(actions.update({
+      id: note.id,
+      state,
+      text: hasDocChanged ? toText(state.doc) : note.text
+    }))
   })
 
   let handleContextMenu = useEvent((event) => {
@@ -49,10 +66,6 @@ export const NotePad = forwardRef(({
         wrap: wrap
       })
     }
-  })
-
-  let handleEditorBlur = useEvent(() => {
-    onCommit(note, note?.text.length === 0)
   })
 
   return (
@@ -74,9 +87,9 @@ export const NotePad = forwardRef(({
         isDisabled={isDisabled}
         isReadOnly={isReadOnly}
         tabIndex={tabIndex}
-        onBlur={handleEditorBlur}
         onChange={handleChange}
-        onContextMenu={handleContextMenu}/>
+        onContextMenu={handleContextMenu}
+        onCreate={handleCreate}/>
     </section>
   )
 })
@@ -92,8 +105,6 @@ NotePad.propTypes = {
     text: string
   }),
   tabIndex: number.isRequired,
-  onChange: func.isRequired,
-  onCommit: func.isRequired,
   onContextMenu: func.isRequired
 }
 

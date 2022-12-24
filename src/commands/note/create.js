@@ -3,7 +3,7 @@ import { Command } from '../command'
 import * as mod from '../../models'
 import * as act from '../../actions'
 import { NOTE } from '../../constants'
-import { getSelectableNoteId } from '../../selectors'
+import { getNextNoteSelection, getNotesMap } from '../../selectors'
 
 
 export class Create extends Command {
@@ -36,26 +36,26 @@ export class Delete extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
-    let { photo, selection, notes } = payload
 
-    let type = (selection != null) ? 'selection' : 'photo'
-    let id = (selection != null) ? selection : photo
-
-    // TODO
-    // clear the selection in the nav reducer if necessary
-    // to select a different note should happen in the note list component
-
-    let [isSelected, nextId] = yield select(state => [
-      state.nav.note === notes[0], getSelectableNoteId(state)
-    ])
-
-    yield call(db.transaction, tx => mod.note.delete(tx, notes))
+    let [isSelected, map] = yield select(state => ([
+      payload.includes(state.nav.note),
+      getNotesMap(state, { notes: payload })
+    ]))
 
     if (isSelected) {
-      yield put(act.note.select({ photo, selection, note: nextId }))
+      let next = yield select(getNextNoteSelection)
+      yield put(act.note.select(next && {
+        note: next.id,
+        photo: next.photo,
+        selection: next.selection
+      }))
     }
 
-    yield put(act[type].notes.remove({ id, notes }))
+    for (let { id, type, notes } of map.values()) {
+      yield put(act[type].notes.remove({ id, notes }))
+    }
+
+    yield call(db.transaction, tx => mod.note.delete(tx, payload))
 
     this.undo = act.note.restore(payload)
 
@@ -70,20 +70,17 @@ export class Restore extends Command {
   *exec() {
     let { db } = this.options
     let { payload } = this.action
-    let { photo, selection, notes } = payload
-
-    let type = (selection != null) ? 'selection' : 'photo'
-    let id = (selection != null) ? selection : photo
 
     let restored = yield call(db.transaction, tx =>
-      mod.note.restore(tx, notes))
+      mod.note.restore(tx, payload))
 
-    yield put(act[type].notes.add({
-      id,
-      notes
-    }))
+    let map = getNotesMap({ notes: restored }, { notes: payload })
 
-    this.undo = act.note.delete(payload)
+    for (let { id, type, notes } of map.values()) {
+      yield put(act[type].notes.add({ id, notes }))
+    }
+
+    this.undo = act.note.delete(Object.keys(restored))
 
     return restored
   }

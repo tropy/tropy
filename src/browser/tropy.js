@@ -562,11 +562,8 @@ export class Tropy extends EventEmitter {
     this.on('app:delete-tag', (win, { target }) =>
       this.dispatch(act.tag.delete(target.id), win))
 
-    this.on('app:create-note', (win, { target }) =>
-      this.dispatch(act.note.create(target), win))
-
     this.on('app:delete-note', (win, { target }) =>
-      this.dispatch(act.note.delete(target), win))
+      this.dispatch(act.note.delete(target.notes), win))
 
     this.on('app:copy-note', (win, { target }) =>
       this.dispatch(
