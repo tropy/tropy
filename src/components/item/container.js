@@ -122,8 +122,6 @@ class Item extends React.PureComponent {
           isDisabled={this.props.isDisabled || !this.props.photo}
           isReadOnly={this.props.isDisabled || this.props.isReadOnly}
           keymap={this.props.keymap.NotePad}
-          onChange={this.props.onNoteChange}
-          onCommit={this.props.onNoteCommit}
           onContextMenu={this.handleContextMenu}/>
       </div>
     )
@@ -148,8 +146,6 @@ class Item extends React.PureComponent {
     settings: object.isRequired,
     onContextMenu: func.isRequired,
     onEsperChange: func.isRequired,
-    onNoteChange: func.isRequired,
-    onNoteCommit: func.isRequired,
     onPhotoConsolidate: func.isRequired,
     onPhotoCreate: func.isRequired,
     onPhotoError: func.isRequired,

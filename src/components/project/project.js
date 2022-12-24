@@ -89,8 +89,6 @@ export const Project = React.forwardRef(({
     handleItemOpen,
     handleItemPreview,
     handleMetadataSave,
-    handleNoteCreate,
-    handleNoteSave,
     handleNoteDelete,
     handleNoteSelect,
     handleOpenInFolder,
@@ -104,7 +102,7 @@ export const Project = React.forwardRef(({
     'edit.start', 'edit.cancel',
     'item.open', 'item.preview',
     'metadata.save',
-    'note.create', 'note.save', 'note.delete', 'note.select',
+    'note.delete', 'note.select',
     'shell.open',
     'photo.create', 'photo.consolidate', 'photo.save', 'photo.select', 'photo.rotate',
     'ui.update'
@@ -148,9 +146,7 @@ export const Project = React.forwardRef(({
         onItemOpen={handleItemOpen}
         onItemPreview={handleItemPreview}
         onMetadataSave={handleMetadataSave}
-        onNoteCreate={handleNoteCreate}
         onNoteDelete={handleNoteDelete}
-        onNoteSave={handleNoteSave}
         onNoteSelect={handleNoteSelect}
         onOpenInFolder={handleOpenInFolder}
         onPanelDragStop={handlePanelDragStop}
