@@ -104,8 +104,8 @@
     border: $pointer-height solid transparent;
     border-bottom: $pointer-height solid $tile-expansion-bg;
 
-    .photo-panel.nested-tab-focus:not(.has-active) &,
-    .photo-grid.nested-tab-focus:not(.has-nested-active) & {
+    .photo-panel.nested-tab-focus:not(:has(.panel-body .active)) &,
+    .photo-grid.nested-tab-focus:not(:has(.selection-grid .active)) & {
       border-bottom-color: $tile-expansion-focus-bg;
     }
 
@@ -123,8 +123,8 @@
   margin: $space-sm (-$default-padding-horizontal); // Todo
   padding: $space-sm 0; // Todo
 
-  .photo-panel.nested-tab-focus:not(.has-active) &,
-  .photo-grid.nested-tab-focus:not(.has-nested-active) & {
+  .photo-panel.nested-tab-focus:not(:has(.panel-body .active)) &,
+  .photo-grid.nested-tab-focus:not(:has(.selection-grid .active)) & {
     background-color: $tile-expansion-focus-bg;
   }
 

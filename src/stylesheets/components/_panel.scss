@@ -10,7 +10,7 @@
   position: relative;
   contain: content;
 
-  &.nested-tab-focus:not(.has-active) {
+  &.nested-tab-focus:not(:has(.panel-body .active)) {
     background-color: $panel-focus-bg;
   }
 

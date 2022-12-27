@@ -44,7 +44,7 @@
     transition: transform $toolbar-context-transition;
 
     &.default,
-    &.has-active {
+    &:has(.active) {
       transform: translate(0, -100%);
     }
 

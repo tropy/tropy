@@ -9,7 +9,7 @@
 
   .slider {
     .slider-handle {
-      @include state(".photo-panel.nested-tab-focus:not(.has-active)") {
+      @include state(".photo-panel.nested-tab-focus:not(:has(li.active))") {
         background-color: $photo-panel-slider-handle-nested-focus-bg;
       }
 
