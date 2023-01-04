@@ -8,9 +8,7 @@ import { PhotoPanel, PhotoToolbar } from '../photo'
 import { MetadataPanel } from '../metadata'
 import { TagPanel } from '../tag'
 import { IconMetadata, IconHangtag } from '../icons'
-import { has } from '../../common/util'
 import { on, off, isInput } from '../../dom'
-import cx from 'classnames'
 import { TABS, UI } from '../../constants'
 
 import {
@@ -183,9 +181,7 @@ export class ItemPanelGroup extends React.PureComponent {
           </TabPane>
         </Panel>
 
-        <Panel className={cx('photo-panel', {
-          'has-active': has(photo, ['id'])
-        })}>
+        <Panel className="photo-panel">
           <PhotoToolbar
             hasCreateButton
             isDisabled={isPhotosDisabled}
@@ -211,9 +207,7 @@ export class ItemPanelGroup extends React.PureComponent {
             onSelect={this.props.onPhotoSelect}/>
         </Panel>
 
-        <Panel className={cx('note-panel', {
-          'has-active': has(this.props.note, ['id'])
-        })}>
+        <Panel className="note-panel">
           <NoteToolbar
             hasCreateButton
             isDisabled={isNotesDisabled}
