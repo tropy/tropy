@@ -26,8 +26,9 @@ export default {
       payload,
       error,
       meta: {
-        ipc: action.meta.ipc,
         idx: action.meta.idx,
+        ipc: action.meta.ipc,
+        log: action.meta.log,
         rsvp: action.meta.rsvp,
         search: action.meta.search,
         ...meta,
