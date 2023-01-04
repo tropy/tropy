@@ -4,7 +4,7 @@ import { func, bool, object, number, string } from 'prop-types'
 import { EditorToolbar } from './toolbar.js'
 import { EditorView } from './view.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { commands, toEditorState } from '../../editor/index.js'
+import { commands, toEditorState, toText } from '../../editor/index.js'
 import { match } from '../../keymap.js'
 
 
@@ -59,7 +59,7 @@ export const Editor = React.forwardRef(({
     if (srcState == null) {
       view.current.updateState(next)
 
-      if (hasDocChanged && !pendingCreation.current) {
+      if (hasDocChanged && !pendingCreation.current && toText(next.doc)) {
         pendingCreation.current = next
         onCreate(next)
       }
