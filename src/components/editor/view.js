@@ -88,6 +88,11 @@ export const EditorView = forwardRef(({
     view?.updateState(state)
   }, [state, view])
 
+  useEffect(() => {
+    // Subtle: force PM to check the editable status!
+    view?.setProps({})
+  }, [isDisabled, isReadOnly, view])
+
   useImperativeHandle(ref, () => view, [view])
 
   useEffect(() => {
