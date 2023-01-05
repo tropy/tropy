@@ -28,10 +28,11 @@ export function notes(state = init, { type, payload, error, meta }) {
       } : state
 
     case NOTE.SAVE:
-      return (meta.done && !error) ? {
+      return (meta.done && !error && payload.modified) ? {
         ...state,
         [payload.id]: {
           ...state[payload.id],
+          ...payload,
           changed: false
         }
       } : state
