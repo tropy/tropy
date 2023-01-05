@@ -35,13 +35,6 @@ export const NotePad = forwardRef(({
     notepad[note?.id] || Editor.defaultProps
   )
 
-  useEffect(() => {
-    return () => {
-      if (isBlank)
-        dispatch(actions.delete([note.id]))
-    }
-  }, [note?.id, isBlank, dispatch])
-
   let handleCreate = useEvent((state) => {
     dispatch(actions.create({
       state,
@@ -67,6 +60,18 @@ export const NotePad = forwardRef(({
       })
     }
   })
+
+  let handleUnload = useEvent((id, wasBlank) => {
+    if (wasBlank && id !== note?.id)
+      dispatch(actions.delete([id]))
+  })
+
+  useEffect(() => {
+    return () => {
+      handleUnload(note?.id, isBlank)
+    }
+  }, [note?.id, isBlank, handleUnload])
+
 
   return (
     <section className={cx('note-pad', mode, {
