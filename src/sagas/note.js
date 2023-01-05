@@ -13,15 +13,25 @@ function *save(ms, id, pending) {
 function *flush(db, pending) {
   let notes = yield select(state => state.notes)
 
-  for (let [id] of pending) {
-    let { changed, state, text } = notes[id]
+  if (pending.size) {
+    debug(`persiting ${pending.size} unsaved note(s)...`)
 
-    if (!changed)
-      continue
+    for (let [id] of pending) {
+      let { changed, state, text } = notes[id]
 
-    if (text)
-      yield call(models.save, db, { id, state, text })
-    // else // TODO delete?
+      if (!changed)
+        continue
+
+      if (text)
+        yield call(models.save, db, { id, state, text })
+    }
+  }
+
+  for (let note of Object.values(notes)) {
+    if (note.changed && !note.text) {
+      debug('deleting unsaved blank note')
+      yield call(models.delete, db, note.id)
+    }
   }
 }
 
@@ -45,10 +55,7 @@ export function *autosave(db, ms = 5000) {
     warn({ stack: e.stack }, 'unexpected error in *note.autosave')
 
   } finally {
-    if (pending.size) {
-      debug(`persiting ${pending.size} unsaved note(s)...`)
-      yield call(flush, db, pending)
-    }
+    yield call(flush, db, pending)
 
     debug('*note.autosave terminated')
   }
