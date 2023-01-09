@@ -151,15 +151,18 @@ body {
   }
 
   a {
-    cursor: text;
     text-decoration: none;
+    color: $link-color;
+    cursor: text;
     display: contents; // Prevent links from getting the focus
 
     @if $platform == darwin {
       .meta-key & {
         cursor: pointer;
       }
-    } @else {
+    }
+
+    @else {
       .ctrl-key & {
         cursor: pointer;
       }
