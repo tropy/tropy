@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { func, string } from 'prop-types'
-import throttle from 'lodash.throttle'
 import { useEvent } from '../hooks/use-event.js'
 import { useTheme } from '../hooks/use-theme.js'
 import { on, off, stylesheet, toggle } from '../dom.js'
