@@ -1,10 +1,8 @@
 import React from 'react'
 import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
 import { Button } from '../button'
-import { EditorState } from 'prosemirror-state'
 import { LinkContext } from './link'
-import memoize from 'memoize-one'
-import { bool, func, instanceOf, string } from 'prop-types'
+import { bool, func, object, string } from 'prop-types'
 import * as icons from '../icons'
 
 
@@ -12,54 +10,6 @@ export class EditorToolbar extends React.PureComponent {
   state = {
     context: 'default'
   }
-
-  get align() {
-    return this.getActiveAlignment(this.props.state)
-  }
-
-  get marks() {
-    return this.getActiveMarks(this.props.state)
-  }
-
-  get link() {
-    return this.getActiveLink(this.props.state)
-  }
-
-  getActiveMarks = memoize(state => {
-    let marks = {}
-    for (let mark in state.schema.marks) {
-      marks[mark] = isMarkActive(state.schema.marks[mark], state)
-    }
-    return marks
-  })
-
-  getActiveAlignment = memoize(state => {
-    let align = { left: false, right: false, center: false }
-
-    state.doc.nodesBetween(
-      state.selection.from,
-      state.selection.to,
-      (node) => {
-        if (node.type.attrs.align) {
-          align[node.attrs.align] = true
-        }
-      })
-
-    return align
-  })
-
-  getActiveLink = memoize(state => {
-    let cursor = state.selection.$cursor
-
-    if (cursor) {
-      for (let mark of cursor.marks()) {
-        if (mark.type === state.schema.marks.link)
-          return mark.attrs
-      }
-    }
-
-    return null
-  })
 
   setDefaultContext = () => {
     this.setState({ context: 'default' })
@@ -90,7 +40,7 @@ export class EditorToolbar extends React.PureComponent {
     let T = this.props.isTitlebar ? Titlebar : Toolbar
     let isDisabled = this.props.isDisabled || this.props.isReadOnly
 
-    let { align, marks, link } = this
+    let { align, marks, link } = this.props
     let { context } = this.state
 
     return (
@@ -218,11 +168,18 @@ export class EditorToolbar extends React.PureComponent {
   }
 
   static propTypes = {
+    align: object.isRequired,
     isDisabled: bool,
     isReadOnly: bool,
     isTitlebar: bool,
-    state: instanceOf(EditorState),
+    link: object,
+    marks: object.isRequired,
     onCommand: func.isRequired
+  }
+
+  static defaultProps = {
+    align: {},
+    marks: {}
   }
 }
 
@@ -237,12 +194,4 @@ const EditorButton = ({ icon, ...props }) => {
 
 EditorButton.propTypes = {
   icon: string.isRequired
-}
-
-
-function isMarkActive(type, state) {
-  let { from, $from, to, empty } = state.selection
-  return (empty) ?
-    !!type.isInSet(state.storedMarks || $from.marks()) :
-    state.doc.rangeHasMark(from, to, type)
 }
