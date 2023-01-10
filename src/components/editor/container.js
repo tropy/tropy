@@ -1,9 +1,10 @@
-import React, { useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react'
 import cx from 'classnames'
 import { func, bool, object, number, string } from 'prop-types'
 import { EditorToolbar } from './toolbar.js'
 import { EditorView } from './view.js'
 import { useEvent } from '../../hooks/use-event.js'
+import { useDerivedState } from '../../hooks/use-derived-state.js'
 import { commands, toEditorState, toText } from '../../editor/index.js'
 import { match } from '../../keymap.js'
 
@@ -41,7 +42,7 @@ export const Editor = React.forwardRef(({
     }
   }, [srcState, onChange])
 
-  let state = useMemo(() => toEditorState(srcState), [srcState])
+  let [state, setState] = useDerivedState(srcState, toEditorState)
 
   let exec = useEvent((action, ...args) =>
     commands[action]?.(
@@ -57,7 +58,7 @@ export const Editor = React.forwardRef(({
 
   let handleChange = useEvent((next, hasDocChanged) => {
     if (srcState == null) {
-      view.current.updateState(next)
+      setState(next)
 
       if (hasDocChanged && !pendingCreation.current && toText(next.doc)) {
         pendingCreation.current = next
