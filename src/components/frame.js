@@ -38,21 +38,29 @@ export function Frame({
   })
 
   useEffect(() => {
-    let checkModKeys = throttle((event) => {
+    let checkModKeys = (event) => {
       toggle(doc.body, 'ctrl-key', event.ctrlKey === true)
       toggle(doc.body, 'meta-key', event.metaKey === true)
-    }, 250)
+    }
 
     if (doc != null) {
       onLoad?.(doc)
       on(doc, 'contextmenu', handleContextMenu)
       on(doc.body, 'click', handleClick)
-      on(doc, 'mousemove', checkModKeys, { passive: true })
+      on(document, 'keydown', checkModKeys, { passive: true, capture: true })
+      on(document, 'keyup', checkModKeys, { passive: true, capture: true })
+      on(doc, 'keydown', checkModKeys, { passive: true, capture: true })
+      on(doc, 'keyup', checkModKeys, { passive: true, capture: true })
+      on(doc, 'blur', checkModKeys, { passive: true })
 
       return () => {
         off(doc, 'contextmenu', handleContextMenu)
         off(doc.body, 'click', handleClick)
-        off(doc, 'mousemove', checkModKeys, { passive: true })
+        off(document, 'keydown', checkModKeys, { passive: true, capture: true })
+        off(document, 'keyup', checkModKeys, { passive: true, capture: true })
+        off(doc, 'keydown', checkModKeys, { passive: true, capture: true })
+        off(doc, 'keyup', checkModKeys, { passive: true, capture: true })
+        off(doc, 'blur', checkModKeys, { passive: true })
 
         onUnload?.()
       }
