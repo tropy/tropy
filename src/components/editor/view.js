@@ -60,9 +60,8 @@ export const EditorView = forwardRef(({
         else
           onChange(next, tr.docChanged)
       },
-      // Subtle: by returning true prevent the default block selection!
       handleClick: (v, pos, event) => (
-        isMeta(event)
+        isMeta(event) // Returning true prevents PM's block selection!
       ),
       handleDOMEvents: {
         blur: onBlur,
@@ -89,7 +88,7 @@ export const EditorView = forwardRef(({
   }, [state, view])
 
   useEffect(() => {
-    // Subtle: force PM to check the editable status!
+    // Forces PM to re-evaluate the editable status!
     view?.setProps({})
   }, [isDisabled, isReadOnly, view])
 
