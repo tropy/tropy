@@ -11,7 +11,7 @@ const notepad = createSlice({
 
     update(state, { payload }) {
       for (let [id, data] of Object.entries(payload)) {
-        state.id = Object.assign(state[id] || {}, data)
+        state[id] = Object.assign(state[id] || {}, data)
       }
     }
   }
