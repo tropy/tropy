@@ -6,7 +6,7 @@ const notepad = createSlice({
 
   reducers: {
     restore(state, { payload }) {
-      return payload
+      return Object.assign({}, payload)
     },
 
     update(state, { payload }) {
