@@ -22,8 +22,8 @@ export class Create extends Command {
     yield put(act[type].notes.add({ id, notes: [note.id] }))
     yield put(act.note.select({ note: note.id, photo, selection }))
 
-    this.undo = act.note.delete({ photo, selection, notes: [note.id] })
-    this.redo = act.note.restore({ photo, selection, notes: [note.id] })
+    this.undo = act.note.delete([note.id])
+    this.redo = act.note.restore([note.id])
 
     return { [note.id]: note }
   }
@@ -56,7 +56,6 @@ export class Delete extends Command {
     }
 
     yield call(db.transaction, tx => mod.note.delete(tx, payload))
-
     this.undo = act.note.restore(payload)
 
     return payload
