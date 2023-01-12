@@ -83,6 +83,10 @@ class Item extends React.PureComponent {
     })
   }
 
+  focusNotePad = () => {
+    this.notepad.current.focus()
+  }
+
   render() {
     return (
       <div

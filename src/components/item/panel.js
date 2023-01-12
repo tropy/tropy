@@ -164,7 +164,6 @@ export class ItemPanelGroup extends React.PureComponent {
                       onEdit={this.props.onEdit}
                       onEditCancel={this.handleEditCancel}
                       onMetadataSave={this.handleMetadataSave}
-                      onOpenInFolder={this.props.onOpenInFolder}
                       onPhotoSave={this.props.onPhotoSave}/>
                   )
                 case UI.PANEL.TAGS:
@@ -202,7 +201,6 @@ export class ItemPanelGroup extends React.PureComponent {
             onConsolidate={this.props.onPhotoConsolidate}
             onContextMenu={this.props.onContextMenu}
             onCreate={this.handlePhotoCreate}
-            onItemPreview={this.props.onItemPreview}
             onRotate={this.props.onPhotoRotate}
             onSelect={this.props.onPhotoSelect}/>
         </Panel>
@@ -248,12 +246,10 @@ export class ItemPanelGroup extends React.PureComponent {
     onEdit: func.isRequired,
     onEditCancel: func,
     onItemOpen: func.isRequired,
-    onItemPreview: func.isRequired,
     onMetadataSave: func.isRequired,
     onNoteCreate: func.isRequired,
     onNoteDelete: func.isRequired,
     onNoteSelect: func.isRequired,
-    onOpenInFolder: func.isRequired,
     onPhotoConsolidate: func.isRequired,
     onPhotoCreate: func.isRequired,
     onPhotoRotate: func.isRequired,

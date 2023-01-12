@@ -318,6 +318,10 @@ const MetadataPanelContainer = connect(
         dispatch(act.metadata.delete(...args))
       },
 
+      onOpenInFolder(...args) {
+        dispatch(act.shell.open(args))
+      },
+
       onTemplateChange(type, ...args) {
         dispatch(act[type].template.change(...args))
       }
