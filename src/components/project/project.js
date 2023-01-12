@@ -2,7 +2,6 @@ import React from 'react'
 import { bool, number } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
-import { useActions } from '../../hooks/use-action.js'
 import { useDerivedState } from '../../hooks/use-derived-state.js'
 import { useTransitionState } from '../../hooks/use-transition-state.js'
 import { useEvent } from '../../hooks/use-event.js'
@@ -13,14 +12,6 @@ import { ItemView } from '../item/view.js'
 import { DragLayer } from '../drag-layer.js'
 import { MODE } from '../../constants/nav.js'
 import * as act from '../../actions/index.js'
-
-import {
-  getSelectedItems,
-  getSelectedNote,
-  getSelectedPhoto,
-  getVisibleNotes,
-  getVisiblePhotos
-} from '../../selectors/index.js'
 
 
 const modeToString = (mode) =>
@@ -48,8 +39,8 @@ export const Project = React.forwardRef(({
 
   drop?.(container)
 
-  let keymap = useSelector(state => state.keymap)
-  useGlobalKeys(keymap.global)
+  let keymap = useSelector(state => state.keymap.global)
+  useGlobalKeys(keymap)
 
   useGlobalEvent('back', () => {
     if (isItemMode)
@@ -75,40 +66,6 @@ export const Project = React.forwardRef(({
     }))
   })
 
-  // TODO these should be moved!
-  // ------------------------------------------------------------
-  let items = useSelector(getSelectedItems)
-  let photo = useSelector(getSelectedPhoto)
-  let photos = useSelector(getVisiblePhotos)
-  let note = useSelector(getSelectedNote)
-  let notes = useSelector(getVisibleNotes)
-
-  let [
-    handleEdit,
-    handleEditCancel,
-    handleItemOpen,
-    handleItemPreview,
-    handleMetadataSave,
-    handleNoteDelete,
-    handleNoteSelect,
-    handleOpenInFolder,
-    handlePhotoCreate,
-    handlePhotoConsolidate,
-    handlePhotoSave,
-    handlePhotoSelect,
-    handlePhotoRotate,
-    handleUiUpdate
-  ] = useActions([
-    'edit.start', 'edit.cancel',
-    'item.open', 'item.preview',
-    'metadata.save',
-    'note.delete', 'note.select',
-    'shell.open',
-    'photo.create', 'photo.consolidate', 'photo.save', 'photo.select', 'photo.rotate',
-    'ui.update'
-  ])
-  // ------------------------------------------------------------
-
   if (project.closed)
     return <ProjectClosed/>
 
@@ -128,35 +85,14 @@ export const Project = React.forwardRef(({
         project={project}/>
 
       <ItemView
-        activeSelection={nav.selection}
         isItemMode={isItemMode}
         isProjectClosing={project.isClosing}
         isReadOnly={project.isReadOnly || nav.trash}
-        items={items}
-        keymap={keymap}
-        note={note}
-        notes={notes}
         offset={offset}
         panel={panel}
-        photo={photo}
-        photos={photos}
         onContextMenu={handleContextMenu}
-        onEdit={handleEdit}
-        onEditCancel={handleEditCancel}
-        onItemOpen={handleItemOpen}
-        onItemPreview={handleItemPreview}
-        onMetadataSave={handleMetadataSave}
-        onNoteDelete={handleNoteDelete}
-        onNoteSelect={handleNoteSelect}
-        onOpenInFolder={handleOpenInFolder}
         onPanelDragStop={handlePanelDragStop}
-        onPanelResize={handlePanelResize}
-        onPhotoConsolidate={handlePhotoConsolidate}
-        onPhotoCreate={handlePhotoCreate}
-        onPhotoRotate={handlePhotoRotate}
-        onPhotoSave={handlePhotoSave}
-        onPhotoSelect={handlePhotoSelect}
-        onUiUpdate={handleUiUpdate}/>
+        onPanelResize={handlePanelResize}/>
 
       <DragLayer/>
       <div className="cover"/>

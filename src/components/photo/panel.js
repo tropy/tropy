@@ -51,6 +51,14 @@ const PhotoPanelContainer = connect(
         dispatch(act.photo.expand(...args))
       },
 
+      onItemPreview(...args) {
+        dispatch(act.item.preview(...args))
+      },
+
+      onPhotoRotate(...args) {
+        dispatch(act.photo.rotate(...args))
+      },
+
       onSelectionSort(...args) {
         dispatch(act.selection.order(...args))
       },

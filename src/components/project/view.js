@@ -48,7 +48,6 @@ export const ProjectView = ({
   let ItemIterator = zoom ? ItemGrid : ItemTable
 
   let isBlank = (project.id && !project.lastAccess) && !nav.trash
-
   let isReadOnly = project.isReadOnly || nav.trash
 
   let style = useMemo(() => ({
