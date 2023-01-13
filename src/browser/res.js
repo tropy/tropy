@@ -34,14 +34,20 @@ export class Resource {
   static async openWithFallback(fallback, locale, ...args) {
     try {
       return (await this.open(locale, ...args))
+
     } catch (error) {
-      if (error.code !== 'ENOENT' || fallback === locale) throw error
-      return this.open(fallback, ...args)
+      if (error.code !== 'ENOENT' || fallback === locale)
+        throw error
+
+      if (locale.length > 2)
+        return this.openWithFallback(fallback, locale.slice(0, 2), ...args)
+      else
+        return this.open(fallback, ...args)
     }
   }
 
   static expand(name, locale = 'en') {
-    return join(this.base, `${name}.${locale.slice(0, 2)}${this.ext}`)
+    return join(this.base, `${name}.${locale}${this.ext}`)
   }
 }
 
