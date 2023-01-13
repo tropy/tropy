@@ -35,7 +35,7 @@ program
 
     for (let file of ls(home)) {
       let m = file.match(
-        /^for_(use|translation)_tropy_(\w+)-menu_(\w{2}).yml$/)
+        /^for_(use|translation)_tropy_(\w+)-menu_(\w{2}(-\w{2})?).yml$/)
 
       if (m != null) {
         let name = m[2]
@@ -49,18 +49,20 @@ program
         rm(join(home, file))
 
       } else {
-        m = file.match(/^for_use_tropy_(renderer|browser)_(\w{2}).yml$/)
-        if (m == null) continue
+        m = file.match(
+          /^for_use_tropy_(renderer|browser)_(\w{2}(-\w{2})?).yml$/)
 
-        let type = m[1]
-        let locale = m[2]
-        say(`importing ${locale} ${type} strings...`)
+        if (m != null) {
+          let type = m[1]
+          let locale = m[2]
+          say(`importing ${locale} ${type} strings...`)
 
-        let { en } = load(join(STRINGS, `${type}.en.yml`))
-        let data = load(join(home, file))[locale]
+          let { en } = load(join(STRINGS, `${type}.en.yml`))
+          let data = load(join(home, file))[locale]
 
-        save({ [locale]: merge(en, data) }, type,  locale, STRINGS)
-        rm(join(home, file))
+          save({ [locale]: merge(en, data) }, type,  locale, STRINGS)
+          rm(join(home, file))
+        }
       }
     }
   })
