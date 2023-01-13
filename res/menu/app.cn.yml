@@ -1,14 +1,14 @@
 cn:
   linux:
-    - label: 文件(&F)
+    - label: 文件
       id: file
       submenu:
         - label: 新建
           submenu:
-            - label: 项目
+            - label: 库
               command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
-            - label: 文件
+            - label: 图组
               command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
@@ -30,7 +30,7 @@ cn:
         - label: 在新窗口打开...
           accelerator: Shift+CmdOrCtrl+O
           command: app:open-new-dialog
-        - label: 最近的项目
+        - label: 最近打开的库
           id: recent
           enabled: false
           submenu:
@@ -56,9 +56,9 @@ cn:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: 肖像
                   command: app:print-pdf
-                - label: Landscape
+                - label: 风景
                   command: app:print-pdf-landscape
         - type: separator
         - label: 刷新缩略图
@@ -71,9 +71,10 @@ cn:
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
-        - label: 关闭项目
+        - label: 关闭当前库
           command: app:close-project
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: 关闭窗口
           accelerator: Ctrl+W
@@ -82,26 +83,26 @@ cn:
         - label: 退出 %name
           accelerator: CmdOrCtrl+Q
           role: quit
-    - label: 编辑(&E)
+    - label: 编辑
       submenu:
         - id: undo
-          label: 撤销(&U)
+          label: 撤销
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: 重做(&R)
+          label: 重做
           accelerator: Shift+CmdOrCtrl+Z
           command: app:redo
           enabled: false
         - type: separator
-        - label: 剪切(&T)
+        - label: 剪切
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: 复制(&C)
+        - label: 复制
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: 粘贴(&P)
+        - label: 粘贴
           accelerator: CmdOrCtrl+V
           role: paste
         - label: 粘贴并匹配样式
@@ -113,14 +114,14 @@ cn:
         - label: 首选项...
           accelerator: Shift+Control+S
           command: app:open-preferences
-    - label: 视图(&V)
+    - label: 视图
       submenu:
-        - label: 重新加载(&R)
+        - label: 重新加载
           accelerator: CmdOrCtrl+R
           command: win:reload
           window: '*'
         - type: separator
-        - label: 隐藏菜单栏(&M)
+        - label: 隐藏菜单栏
           command: app:toggle-menu-bar
           window: '*'
         - label: 移动到中心
@@ -137,7 +138,7 @@ cn:
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: 全屏(&F)
+        - label: 全屏
           role: togglefullscreen
           window: '*'
         - type: separator
@@ -148,9 +149,9 @@ cn:
     - label: 开发
       id: dev
       submenu:
-        - label: 重新加载样式(&S)
+        - label: 重新加载样式
           command: win:refresh
-        - label: 切换开发者工具(&D)
+        - label: 切换开发者工具
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
@@ -158,7 +159,7 @@ cn:
           command: app:reset-ontology-db
         - label: 优化项目缓存
           command: app:optimize-cache
-        - label: 优化项目数据库
+        - label: 优化数据库
           command: app:optimize-project
         - label: 重新索引项目数据库
           command: app:reindex-project
@@ -240,10 +241,10 @@ cn:
       submenu:
         - label: 新建
           submenu:
-            - label: 项目
+            - label: 库
               command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
-            - label: 文件
+            - label: 图组
               command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
@@ -265,7 +266,7 @@ cn:
         - label: 在新窗口打开...
           accelerator: Shift+CmdOrCtrl+O
           command: app:open-new-dialog
-        - label: 最近的项目
+        - label: 最近打开的库
           id: recent
           enabled: false
           submenu:
@@ -296,38 +297,39 @@ cn:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: 肖像
                   command: app:print-pdf
-                - label: Landscape
+                - label: 风景
                   command: app:print-pdf-landscape
         - label: 打印
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
-        - label: 关闭项目
+        - label: 关闭当前库
           command: app:close-project
           window: project
+          condition: isProjectOpen
     - label: 编辑
       submenu:
         - id: undo
-          label: 撤销(&U)
+          label: 撤销
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: 重做(&R)
+          label: 重做
           accelerator: Shift+CmdOrCtrl+Z
           command: app:redo
           enabled: false
         - type: separator
-        - label: 剪切(&T)
+        - label: 剪切
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: 复制(&C)
+        - label: 复制
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: 粘贴(&P)
+        - label: 粘贴
           accelerator: CmdOrCtrl+V
           role: paste
         - label: 粘贴并匹配样式
@@ -337,7 +339,7 @@ cn:
           role: selectAll
     - label: 视图
       submenu:
-        - label: 重新加载(&R)
+        - label: 重新加载
           accelerator: CmdOrCtrl+R
           command: win:reload
           window: '*'
@@ -352,7 +354,7 @@ cn:
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: 全屏(&F)
+        - label: 全屏
           role: togglefullscreen
           window: '*'
     - label: 窗口
@@ -380,9 +382,9 @@ cn:
     - label: 高级
       id: dev
       submenu:
-        - label: 重新加载样式(&S)
+        - label: 重新加载样式
           command: win:refresh
-        - label: 切换开发者工具(&D)
+        - label: 切换开发者工具
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
@@ -390,7 +392,7 @@ cn:
           command: app:reset-ontology-db
         - label: 优化项目缓存
           command: app:optimize-cache
-        - label: 优化项目数据库
+        - label: 优化数据库
           command: app:optimize-project
         - label: 重新索引项目数据库
           command: app:reindex-project
@@ -443,15 +445,15 @@ cn:
           enabled: false
           visible: false
   win32:
-    - label: 文件(&F)
+    - label: 文件
       id: file
       submenu:
         - label: 新建
           submenu:
-            - label: 项目
+            - label: 库
               command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
-            - label: 文件
+            - label: 图组
               command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
@@ -473,7 +475,7 @@ cn:
         - label: 在新窗口打开...
           accelerator: Shift+CmdOrCtrl+O
           command: app:open-new-dialog
-        - label: 最近的项目
+        - label: 最近打开的库
           id: recent
           enabled: false
           submenu:
@@ -499,9 +501,9 @@ cn:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: 肖像
                   command: app:print-pdf
-                - label: Landscape
+                - label: 风景
                   command: app:print-pdf-landscape
         - type: separator
         - label: 检查图片数据库
@@ -514,9 +516,10 @@ cn:
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
-        - label: 关闭项目
+        - label: 关闭当前库
           command: app:close-project
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: 关闭窗口
           accelerator: Ctrl+W
@@ -525,26 +528,26 @@ cn:
         - label: 退出 %name
           accelerator: CmdOrCtrl+Q
           role: quit
-    - label: 编辑(&E)
+    - label: 编辑
       submenu:
         - id: undo
-          label: 撤销(&U)
+          label: 撤销
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: 重做(&R)
+          label: 重做
           accelerator: Control+Y
           command: app:redo
           enabled: false
         - type: separator
-        - label: 剪切(&T)
+        - label: 剪切
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: 复制(&C)
+        - label: 复制
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: 粘贴(&P)
+        - label: 粘贴
           accelerator: CmdOrCtrl+V
           role: paste
         - label: 粘贴并匹配样式
@@ -553,14 +556,14 @@ cn:
         - label: 首选项...
           accelerator: Shift+Control+S
           command: app:open-preferences
-    - label: 视图(&V)
+    - label: 视图
       submenu:
-        - label: 重新加载(&R)
+        - label: 重新加载
           accelerator: CmdOrCtrl+R
           command: win:reload
           window: '*'
         - type: separator
-        - label: 切换菜单栏(&M)
+        - label: 切换菜单栏
           command: app:toggle-menu-bar
           window: '*'
         - label: 移动到中心
@@ -577,7 +580,7 @@ cn:
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: 全屏(&F)
+        - label: 全屏
           role: togglefullscreen
           window: '*'
         - type: separator
@@ -588,15 +591,15 @@ cn:
     - label: 开发
       id: dev
       submenu:
-        - label: 重新加载样式(&S)
+        - label: 重新加载样式
           command: win:refresh
-        - label: 切换开发者工具(&D)
+        - label: 切换开发者工具
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
         - label: 重置本体数据库
           command: app:reset-ontology-db
-        - label: 优化项目缓存
+        - label: 清除失效图片的缓存
           command: app:optimize-cache
         - label: 优化项目数据库
           command: app:optimize-project

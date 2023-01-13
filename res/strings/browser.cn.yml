@@ -1,9 +1,9 @@
 cn:
   dialog:
     file:
-      project: Tropy 项目
+      project: Tropy 库
       plugin: Tropy 插件
-      pdf: PDF files
+      pdf: PDF 文件
     crashed:
       buttons:
         - 关闭窗口

@@ -74,6 +74,7 @@ fr:
         - label: Fermer le projet
           command: app:close-project
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Fermer la fenêtre
           accelerator: Ctrl+W
@@ -308,6 +309,7 @@ fr:
         - label: Fermer le projet
           command: app:close-project
           window: project
+          condition: isProjectOpen
     - label: Édition
       submenu:
         - id: undo
@@ -517,6 +519,7 @@ fr:
         - label: Fermer le projet
           command: app:close-project
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Fermer la fenêtre
           accelerator: Ctrl+W

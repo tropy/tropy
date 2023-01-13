@@ -3,7 +3,7 @@ it:
     file:
       project: Progetti Tropy
       plugin: Estensioni per Tropy
-      pdf: PDF files
+      pdf: 'File PDF '
     crashed:
       buttons:
         - Chiudi finestra
@@ -35,4 +35,4 @@ it:
     about:
       title: Informazioni su Tropy
     project:
-      readOnly: ' — Locked'
+      readOnly: — Bloccato

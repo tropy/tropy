@@ -266,9 +266,9 @@ it:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Esporta nota...
         command: app:export-note
-      - label: Copy Note
+      - label: Copia nota
         command: app:copy-note
       - label: Elimina la nota
         command: app:delete-note
@@ -322,15 +322,15 @@ it:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Ritratto
                 command: app:print-pdf
-              - label: Landscape
+              - label: panorama
                 command: app:print-pdf-landscape
-      - label: Export Item Notes …
+      - label: Esporta note articolo...
         command: app:export-notes
-      - label: Copy Item Link
+      - label: Copia collegamento elemento
         command: app:copy-item-link
-      - label: Copy Item Notes
+      - label: Copia le note dell'elemento
         command: app:copy-notes
       - label: Consolida elemento
         command: app:consolidate-item
@@ -354,13 +354,13 @@ it:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Ritratto
                 command: app:print-pdf
-              - label: Landscape
+              - label: panorama
                 command: app:print-pdf-landscape
-      - label: Export Selected Item Notes …
+      - label: Esporta note elemento selezionato...
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: Copia le note dell'elemento selezionato
         command: app:copy-notes
       - label: Consolida gli elementi selezionati
         command: app:consolidate-item
@@ -382,13 +382,13 @@ it:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: Mostra file originale...
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: Apri in un visualizzatore esterno...
         command: app:open-path
-      - label: Copy Photo Link
+      - label: Copia collegamento foto
         command: app:copy-photo-link
-      - label: Export Photo…
+      - label: Esporta foto...
         command: app:extract-photo
       - label: Consolida foto
         command: app:consolidate-photo
@@ -403,7 +403,7 @@ it:
       - label: Elimina selezione
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: Esporta selezione...
         command: app:extract-photo
     selection-rotate:
       - label: Ruota a sinistra
@@ -721,9 +721,9 @@ it:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Esporta nota...
         command: app:export-note
-      - label: Copy Note
+      - label: Copia nota
         command: app:copy-note
       - label: Elimina la nota
         command: app:delete-note
@@ -777,15 +777,15 @@ it:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Ritratto
                 command: app:print-pdf
-              - label: Landscape
+              - label: panorama
                 command: app:print-pdf-landscape
-      - label: Export Item Notes …
+      - label: Esporta note articolo...
         command: app:export-notes
-      - label: Copy Item Link
+      - label: Copia collegamento elemento
         command: app:copy-item-link
-      - label: Copy Item Notes
+      - label: Copia le note dell'elemento
         command: app:copy-notes
       - label: Consolida elemento
         command: app:consolidate-item
@@ -802,13 +802,13 @@ it:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Ritratto
                 command: app:print-pdf
-              - label: Landscape
+              - label: panorama
                 command: app:print-pdf-landscape
-      - label: Export Selected Item Notes …
+      - label: Esporta note elemento selezionato...
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: Copia le note dell'elemento selezionato
         command: app:copy-notes
       - label: Consolida gli elementi selezionati
         command: app:consolidate-item
@@ -868,13 +868,13 @@ it:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: Mostra file originale...
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: Apri in un visualizzatore esterno...
         command: app:open-path
-      - label: Copy Photo Link
+      - label: Copia collegamento foto
         command: app:copy-photo-link
-      - label: Export Photo…
+      - label: Esporta foto...
         command: app:extract-photo
       - label: Consolida foto
         command: app:consolidate-photo
@@ -889,7 +889,7 @@ it:
       - label: Elimina selezione
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: Esporta selezione...
         command: app:extract-photo
     selection-rotate:
       - label: Ruota a sinistra
@@ -1176,9 +1176,9 @@ it:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: Esporta nota...
         command: app:export-note
-      - label: Copy Note
+      - label: Copia nota
         command: app:copy-note
       - label: Elimina la nota
         command: app:delete-note
@@ -1232,15 +1232,15 @@ it:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Ritratto
                 command: app:print-pdf
-              - label: Landscape
+              - label: panorama
                 command: app:print-pdf-landscape
-      - label: Export Item Notes …
+      - label: Esporta note articolo...
         command: app:export-notes
-      - label: Copy Item Link
+      - label: Copia collegamento elemento
         command: app:copy-item-link
-      - label: Copy Item Notes
+      - label: Copia le note dell'elemento
         command: app:copy-notes
       - label: Consolida elemento
         command: app:consolidate-item
@@ -1257,13 +1257,13 @@ it:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Ritratto
                 command: app:print-pdf
-              - label: Landscape
+              - label: panorama
                 command: app:print-pdf-landscape
-      - label: Export Selected Item Notes …
+      - label: Esporta note elemento selezionato...
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: Copia le note dell'elemento selezionato
         command: app:copy-notes
       - label: Consolida gli elementi selezionati
         command: app:consolidate-item
@@ -1323,13 +1323,13 @@ it:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: Mostra file originale...
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: Apri in un visualizzatore esterno...
         command: app:open-path
-      - label: Copy Photo Link
+      - label: Copia collegamento foto
         command: app:copy-photo-link
-      - label: Export Photo…
+      - label: Esporta foto...
         command: app:extract-photo
       - label: Consolida foto
         command: app:consolidate-photo
@@ -1344,7 +1344,7 @@ it:
       - label: Elimina selezione
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: Esporta selezione...
         command: app:extract-photo
     selection-rotate:
       - label: Ruota a sinistra

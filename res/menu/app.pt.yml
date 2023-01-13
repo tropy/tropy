@@ -74,6 +74,7 @@ pt:
         - label: Fechar Projeto
           command: app:close-project
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Fechar Janela
           accelerator: Ctrl+W
@@ -308,6 +309,7 @@ pt:
         - label: Fechar Projeto
           command: app:close-project
           window: project
+          condition: isProjectOpen
     - label: Editar
       submenu:
         - id: undo
@@ -517,6 +519,7 @@ pt:
         - label: Fechar Projeto
           command: app:close-project
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Fechar Janela
           accelerator: Ctrl+W

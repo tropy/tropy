@@ -56,9 +56,9 @@ it:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Ritratto
                   command: app:print-pdf
-                - label: Landscape
+                - label: panorama
                   command: app:print-pdf-landscape
         - type: separator
         - label: Consolida raccolta foto
@@ -74,6 +74,7 @@ it:
         - label: Chiudi progetto
           command: app:close-project
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Chiudi finestra
           accelerator: Ctrl+W
@@ -104,7 +105,7 @@ it:
         - label: '&Incolla'
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Incolla e abbina lo stile
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: Seleziona tutto
@@ -184,7 +185,7 @@ it:
         - label: Licenza software
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: Donazione a Tropy
           command: app:donate
         - type: separator
         - label: Mostra i file di log
@@ -296,9 +297,9 @@ it:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Ritratto
                   command: app:print-pdf
-                - label: Landscape
+                - label: panorama
                   command: app:print-pdf-landscape
         - label: Stampa
           command: app:print
@@ -308,6 +309,7 @@ it:
         - label: Chiudi progetto
           command: app:close-project
           window: project
+          condition: isProjectOpen
     - label: Modifica
       submenu:
         - id: undo
@@ -330,7 +332,7 @@ it:
         - label: '&Incolla'
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Incolla e abbina lo stile
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: Seleziona tutto
@@ -417,7 +419,7 @@ it:
         - label: Licenza software
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: Donazione a Tropy
           command: app:donate
         - type: separator
         - label: Mostra i file di log
@@ -499,9 +501,9 @@ it:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Ritratto
                   command: app:print-pdf
-                - label: Landscape
+                - label: panorama
                   command: app:print-pdf-landscape
         - type: separator
         - label: Consolida raccolta foto
@@ -517,6 +519,7 @@ it:
         - label: Chiudi progetto
           command: app:close-project
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Chiudi finestra
           accelerator: Ctrl+W
@@ -547,7 +550,7 @@ it:
         - label: '&Incolla'
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Incolla e abbina lo stile
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: Preferenze
@@ -624,7 +627,7 @@ it:
         - label: Licenza software
           command: app:open-license
         - type: separator
-        - label: Donate to Tropy
+        - label: Donazione a Tropy
           command: app:donate
         - type: separator
         - label: Mostra i file di log

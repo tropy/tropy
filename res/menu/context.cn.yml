@@ -12,10 +12,10 @@ cn:
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
-      - label: 重命名项目
+      - label: 重命名库
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: 显示项目所在位置
+      - label: 显示库所在位置
         command: app:show-project-file
     lists:
       - label: 新建列表
@@ -312,7 +312,7 @@ cn:
             checked: true
             enabled: false
           - type: separator
-      - label: 删除文件
+      - label: 删除图组
         command: app:delete-item
     item-read-only:
       - label: 导出文件
@@ -322,9 +322,9 @@ cn:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 肖像
                 command: app:print-pdf
-              - label: Landscape
+              - label: 风景
                 command: app:print-pdf-landscape
       - label: 导出笔记
         command: app:export-notes
@@ -342,30 +342,30 @@ cn:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-bulk:
-      - label: 合并所选项目
+      - label: 合并所选图组
         command: app:merge-item
-      - label: 删除所选项目
+      - label: 删除所选图组
         command: app:delete-item
     item-bulk-read-only:
-      - label: 导出所选项目
+      - label: 导出所选图组
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 肖像
                 command: app:print-pdf
-              - label: Landscape
+              - label: 风景
                 command: app:print-pdf-landscape
-      - label: 导出所选项目笔记
+      - label: 导出所选图组的笔记
         command: app:export-notes
-      - label: 复制所选项目笔记
+      - label: 复制所选图组的笔记
         command: app:copy-notes
-      - label: 检查所选项目文件
+      - label: 检查所选图组文件
         command: app:consolidate-item
     item-list:
-      - label: 从列表中删除项目
+      - label: 移出列表
         command: app:list-item-remove
     item-bulk-list:
       - label: 从列表中删除所选项目
@@ -373,7 +373,7 @@ cn:
     photo:
       - label: 复制图片
         command: app:duplicate-photo
-      - label: 移动照片到新项目
+      - label: 移动图片到新图组
         command: app:explode-photo
       - label: 删除图片
         command: app:delete-photo
@@ -413,14 +413,14 @@ cn:
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     item-deleted:
-      - label: 恢复项目
+      - label: 恢复图组
         command: app:restore-item
-      - label: 永久删除项目
+      - label: 永久删除图组
         command: app:destroy-item
     item-bulk-deleted:
       - label: 恢复所选文件
         command: app:restore-item
-      - label: 永久删除所选项目
+      - label: 永久删除所选图组
         command: app:destroy-item
     item-view:
       - label: 视图布局
@@ -440,7 +440,7 @@ cn:
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: 永久删除项目
+      - label: 永久删除图组
         command: app:destroy-item
         condition: '!isReadOnly'
     dev:
@@ -467,10 +467,10 @@ cn:
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
-      - label: 重命名项目
+      - label: 重命名库
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: 显示项目文件...
+      - label: 显示库所在位置
         command: app:show-project-file
     lists:
       - label: 新建列表
@@ -641,12 +641,12 @@ cn:
         command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
-      - label: 从选中项目除以此标签
+      - label: 从选中图组除以此标签
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: 从选中项目除以此标签
+      - label: 从选中图组移除此标签
         command: app:delete-item-tag
         enabled: false
         visible: false
@@ -750,11 +750,11 @@ cn:
         checked: true
         command: app:toggle-line-wrap
     items:
-      - label: 新建项目
+      - label: 新建图组
         command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
-      - label: 导出文件
+      - label: 导出图组
         command: app:explode-item
         condition: isMultiplePhotos
       - label: 添加图片...
@@ -767,19 +767,19 @@ cn:
             checked: true
             enabled: false
           - type: separator
-      - label: 删除项目
+      - label: 删除图组
         command: app:delete-item
     item-read-only:
-      - label: 导出项目
+      - label: 导出图组
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 肖像
                 command: app:print-pdf
-              - label: Landscape
+              - label: 风景
                 command: app:print-pdf-landscape
       - label: 导出笔记
         command: app:export-notes
@@ -787,46 +787,46 @@ cn:
         command: app:copy-item-link
       - label: 复制笔记
         command: app:copy-notes
-      - label: 合并项目
+      - label: 合并图组
         command: app:consolidate-item
     item-bulk:
-      - label: 合并所选项目
+      - label: 合并所选图片
         command: app:merge-item
-      - label: 删除所选项目
+      - label: 删除所选图片
         command: app:delete-item
     item-bulk-read-only:
-      - label: 导出所选项目
+      - label: 导出所选图片
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 肖像
                 command: app:print-pdf
-              - label: Landscape
+              - label: 风景
                 command: app:print-pdf-landscape
       - label: 导出所选项目笔记...
         command: app:export-notes
       - label: 复制所选项目笔记
         command: app:copy-notes
-      - label: 检查所选项目文件
+      - label: 检查所选图片
         command: app:consolidate-item
     item-list:
-      - label: 从列表中删除项目
+      - label: 移出列表
         command: app:list-item-remove
     item-bulk-list:
-      - label: 从列表中删除所选项目
+      - label: 移出列表
         command: app:list-item-remove
     item-deleted:
-      - label: 恢复项目
+      - label: 恢复图片
         command: app:restore-item
-      - label: 永久删除项目
+      - label: 永久删除图组
         command: app:destroy-item
     item-bulk-deleted:
       - label: 恢复所选文件
         command: app:restore-item
-      - label: 永久删除所选项目
+      - label: 永久删除所选图组
         command: app:destroy-item
     item-view:
       - label: 视图布局
@@ -853,13 +853,13 @@ cn:
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: 永久删除项目
+      - label: 永久删除图组
         command: app:destroy-item
         condition: '!isReadOnly'
     photo:
       - label: 复制图片
         command: app:duplicate-photo
-      - label: 移动照片到新项目
+      - label: 移动图片到新图组
         command: app:explode-photo
       - label: 删除图片
         command: app:delete-photo
@@ -922,10 +922,10 @@ cn:
         enabled: false
         accelerator: Control+Y
     project:
-      - label: 重命名项目
+      - label: 重命名库
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: 显示项目文件...
+      - label: 显示库所在位置
         command: app:show-project-file
     lists:
       - label: 新建列表
@@ -1101,7 +1101,7 @@ cn:
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: 从这些项目中删除标签
+      - label: 从选中图组移除此标签
         command: app:delete-item-tag
         enabled: false
         visible: false
@@ -1205,11 +1205,11 @@ cn:
         checked: true
         command: app:toggle-line-wrap
     items:
-      - label: 新建项目
+      - label: 新建图组
         command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
-      - label: 导出项目
+      - label: 导出图组
         command: app:explode-item
         condition: isMultiplePhotos
       - label: 添加图片...
@@ -1222,61 +1222,61 @@ cn:
             checked: true
             enabled: false
           - type: separator
-      - label: 删除项目
+      - label: 删除图组
         command: app:delete-item
     item-read-only:
-      - label: 导出项目
+      - label: 导出图片
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 肖像
                 command: app:print-pdf
-              - label: Landscape
+              - label: 风景
                 command: app:print-pdf-landscape
       - label: 导出笔记
         command: app:export-notes
-      - label: 复制项目链接
+      - label: 复制笔记链接
         command: app:copy-item-link
-      - label: 复制项目笔记
+      - label: 复制笔记
         command: app:copy-notes
-      - label: 合并项目
+      - label: 合并图组
         command: app:consolidate-item
     item-bulk:
-      - label: 合并所选项目
+      - label: 合并所选图片
         command: app:merge-item
-      - label: 删除所选项目
+      - label: 删除所选图片
         command: app:delete-item
     item-bulk-read-only:
-      - label: 导出所选项目
+      - label: 导出所选图片
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 肖像
                 command: app:print-pdf
-              - label: Landscape
+              - label: 风景
                 command: app:print-pdf-landscape
-      - label: 导出所选项目笔记...
+      - label: 导出所选图组的笔记
         command: app:export-notes
-      - label: 复制所选项目笔记
+      - label: 复制所选图组的笔记
         command: app:copy-notes
-      - label: 检查所选项目文件
+      - label: 检查所选图片
         command: app:consolidate-item
     item-list:
-      - label: 从列表中删除项目
+      - label: 移出列表
         command: app:list-item-remove
     item-bulk-list:
-      - label: 从列表中删除所选项目
+      - label: 移出列表
         command: app:list-item-remove
     item-deleted:
       - label: 恢复文件
         command: app:restore-item
-      - label: 永久删除项目
+      - label: 永久删除图组
         command: app:destroy-item
     item-bulk-deleted:
       - label: 恢复所选文件
@@ -1308,13 +1308,13 @@ cn:
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: 永久删除项目
+      - label: 永久删除图组
         command: app:destroy-item
         condition: '!isReadOnly'
     photo:
       - label: 复制图片
         command: app:duplicate-photo
-      - label: 移动照片到新项目
+      - label: 移动图片到新图组
         command: app:explode-photo
       - label: 删除图片
         command: app:delete-photo

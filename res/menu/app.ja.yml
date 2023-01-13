@@ -74,6 +74,7 @@ ja:
         - label: プロジェクトを閉じる
           command: app:close-project
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Close Window
           accelerator: Ctrl+W
@@ -308,6 +309,7 @@ ja:
         - label: プロジェクトを閉じる
           command: app:close-project
           window: project
+          condition: isProjectOpen
     - label: 編集
       submenu:
         - id: undo
@@ -517,6 +519,7 @@ ja:
         - label: プロジェクトを閉じる
           command: app:close-project
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Close Window
           accelerator: Ctrl+W
