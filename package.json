@@ -91,7 +91,7 @@
     "rollup-plugin-visualizer": "^5.3.0",
     "sass": "<1.33.0",
     "shx": "^0.3.3",
-    "sinon": "^14.0.0",
+    "sinon": "^15.0.1",
     "sinon-chai": "^3.5.0",
     "split2": "^4.0.0",
     "sqleton": "^2.0.0",
@@ -158,7 +158,7 @@
     "sharp": "^0.29.1",
     "sqlite3": "^5.0.6",
     "transducers.js": "^0.3.2",
-    "uuid": "^8.3.2",
+    "uuid": "^9.0.0",
     "winreg": "^1.2.4",
     "write-file-atomic": "^5.0.0"
   }
