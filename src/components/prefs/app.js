@@ -353,7 +353,7 @@ export class AppPrefs extends React.PureComponent {
     themes: ['light', 'dark', 'system'],
     layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
     completions: ['datatype', 'property-datatype'],
-    locales: ['cn', 'de', 'en', 'es', 'fr', 'it', 'ja', 'pt'],
+    locales: ['cn', 'de', 'en', 'es', 'fr', 'it', 'ja', 'pt', 'pt-BR'],
     noteFormats: ['text', 'markdown', 'html'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL, ESPER.MODE.ZOOM],

@@ -165,6 +165,7 @@ en:
           it: Italiano
           ja: 日本語
           pt: Português
+          pt-BR: Português brasileiro
       templates:
         label: Default templates
         item: Item
