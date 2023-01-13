@@ -6,7 +6,7 @@ cn:
     trash: 删除文件
   toolbar:
     import: 导入图片
-    items: |
+    items: |-
       {count, plural,
       =0 {此视图中没有项目}
       one {此视图中有 1 项}
@@ -17,23 +17,23 @@ cn:
     metadata:
       tab: 元数据
       photo: 图片
-      item: |
+      item: |-
         {count, plural,
-        =0 {}
-        one {Item}
-        other {# Items}}
+          =0 {}
+          one {Item}
+          other {# Items}}
       selection: 选择
       dropdown:
         placeholder: 添加新字段…
     tags:
       tab: 标签
-      add: |
+      add: |-
         {count, plural,
         =0 {添加标签}
         one {为 1 项添加标签}
         other {添加项目到 # 项目}}
     photo:
-      title: |
+      title: |-
         {count, plural,
         =0 {无图片}
         one {1 张图片}
@@ -41,7 +41,7 @@ cn:
       create: 添加图片
       selection: 选择
     note:
-      title: |
+      title: |-
         {count, plural,
         =0 {无笔记}
         one {1 个笔记}
@@ -64,8 +64,7 @@ cn:
     c2dh:
       title: 卢森堡当代和数字历史中心
       url: https://www.c2dh.uni.lu
-    text: |
-      Trovy 是由 {rrchnm} 和 {c2dh} 设计的，这是一个开发历史教学资源、数字展览和开源软件的团队。简体中文由大眼仔~旭翻译。
+    text: 托托是由{rrchnm}和{c2dh}设计的，这是一个开发历史教学资源、数字展览和开源软件的团队。
     trademark: Tropy 名称是 {cds} 的注册商标。
     donate:
       title: 捐赠给 Tropy
@@ -80,21 +79,45 @@ cn:
       title: 致谢
       url: https://tropy.org/credits
   project:
-    none: 拖放项目到这里或创建一个 {newProject}
     empty: 将您的照片放入 Tropy 以开始使用
-    new: 新建项目
-    recent: 最近的项目
-    corrupted: |
-      您的项目文件可能已损坏，需要手动修复。请查阅用户手册以获得进一步的帮助。
-    readOnly: |
-      您的项目文件已锁定，无法修改。要解锁，更改文件权限，然后再次打开项目。
-  wizard:
-    project:
-      title: 创建一个新项目
-      submit: 新建项目
-      name: 名称
-      save_as: 手动选择文件位置
-      change: 更改
+    file:
+      open: 打开库 {path}
+      missing: 查找丢失的项目 {path}
+      remove: 从列表中移除项目
+    recent:
+      search:
+        placeholder: 文件过滤器
+        blank: 没有匹配的库
+    corrupted: 您的库文件可能已损坏，需要手动步骤来修复它。有关进一步的帮助，请参阅用户手册。
+    readOnly: 您的库文件被锁定，无法修改。若要解锁，请更改文件权限并再次打开项目。
+    new:
+      title: 创建一个新库
+      name: 请输入新的名称
+      type:
+        label: 请选择库中图片的存储方式
+        option:
+          tpy: 链接图片
+          managed: 导入图片
+        hint:
+          tpy: 链接到原始位置的照片。
+          managed: 在导入时将照片复制到库文件夹中。
+      create: 新建库
+    stats:
+      photos: |-
+        {photos, plural,
+          =0 {No photos}
+          one {1 photo}
+          other {# photos}}
+      items: |-
+        {items, plural,
+          =0 {No items}
+          one {1 item}
+          other {# items}}
+      notes: |-
+        {notes, plural,
+          =0 {No notes}
+          one {1 note}
+          other {# notes}}
   prefs:
     title: Tropy 首选项
     app:
@@ -189,18 +212,18 @@ cn:
           datatype: 仅按数据类型
           property-datatype: 按数据类型和属性
     project:
-      label: 项目
+      label: 库
       base:
         label: 链接照片
         option:
           'null': Using absolute paths
-          project: 相对于项目文件
+          project: 相对于库的位置
           home: 相对于主目录
           <None>: 使用绝对路径
       store: 托管文件夹
       name: 名称
       id: ID
-      file: 文件
+      path: 文件
       watch:
         folder: 监视文件夹
         usePolling: 使用文件统计
@@ -218,22 +241,22 @@ cn:
     vocab:
       label: 词汇
       export: 导出
-      classes: |
+      classes: |-
         {count, plural,
-        =0 {No Classes}
-        one {# Class}
-        other {# Classes}
+          =0 {No Classes}
+          one {# Class}
+          other {# Classes}
         }
-      datatypes: |
+      datatypes: |-
         {count, plural,
-        =0 {No Datatypes} one {# Datatype}
-        other {# Datatypes}
+          =0 {No Datatypes} one {# Datatype}
+          other {# Datatypes}
         }
-      properties: |
+      properties: |-
         {count, plural,
-        =0 {No Properties}
-        one {# Property}
-        other {# Properties}
+          =0 {No Properties}
+          one {# Property}
+          other {# Properties}
         }
     plugins:
       label: 插件
@@ -308,7 +331,7 @@ cn:
     creator: 作者
     description: 描述
     types:
-      https://tropy.org/v1/tropy#Item: 文件模版
+      https://tropy.org/v1/tropy#Item: 组模版
       https://tropy.org/v1/tropy#Photo: 图片模板
       https://tropy.org/v1/tropy#Selection: 选择的模板
     field:
@@ -316,7 +339,7 @@ cn:
       label: 标记
       datatype: 数据类型
       isRequired: 必需字段
-      hint: 示意
+      hint: 提示
       value: 默认值
       isConstant: 只读
   vocab:
@@ -349,37 +372,31 @@ cn:
     prompt:
       item:
         destroy:
-          message: |
-            您确定要永久删除项目吗？此操作无法撤消。
+          message: 您确定要永久删除项目吗?此操作无法撤消。
           buttons:
             - 取消
             - 删除
       photo:
         consolidate:
-          message: |
-            是否希望 Tropy 自动检查并解决此位置的更多丢失照片？
+          message: 您是否希望“Tropy”在此位置自动检查和解决丢失的照片?
           buttons:
             - 否
             - 是
       dup:
-        detail: |
-          此照片已存在于您的项目中。您确定要再次导入吗？
+        detail: 此照片已存在于您的项目中。您确定要重新导入它吗?
         checkboxLabel: 记住这个选择
         buttons:
           - 跳过
           - 依然导入
       plugin:
         uninstall:
-          type: 警告
-          detail: |
-            您确定要删除该插件吗？这将永久删除插件及其配置。
+          detail: 您确定要删除插件吗?这将永久删除插件及其配置。
           buttons:
             - 取消
             - 删除
       template:
         import:
-          message: |
-            本体数据库中已经存在具有此id的模板。是否要覆盖现有模板?
+          message: 本体数据库中已经存在具有此id的模板。是否要覆盖现有模板?
           buttons:
             - 取消
             - 覆盖
@@ -393,33 +410,33 @@ cn:
       images: 图像
       items: Tropy 项目
       notes: 笔记
-      projects: Tropy 项目
+      projects: Tropy 库
       rdf: RDF 词汇表
       jsonld: JSON-LD
   action:
     project:
-      save: 保存项目
+      save: 保存库
     list:
       create: 清除列表
       delete: 删除列表
       item:
-        add: 添加项目到列表
-        merge: 合并项目
-        remove: 从列表中删除项目
-        restore: 添加项目到列表
+        add: 添加图组到列表
+        merge: 合并图组
+        remove: 移出列表
+        restore: 添加图组到列表
       order: 排序列表
       restore: 恢复列表
       save: 保存列表
     item:
-      create: 创建项目
-      delete: 删除项目
-      explode: 导出项目
-      implode: 合并项目
-      merge: 合并项目
-      split: 拆分项目
-      import: 导入项目
-      restore: 恢复项目
-      save: 保存项目
+      create: 创建图组
+      delete: 删除图组
+      explode: 导出图组
+      implode: 合并图组
+      merge: 合并图组
+      split: 拆分图组
+      import: 导入图组
+      restore: 恢复图组
+      save: 保存图组
       tag:
         create: 标签
         toggle: 标签
@@ -461,7 +478,7 @@ cn:
       order: 排序选择
   activity:
     cache:
-      prune: 优化项目缓存…
+      prune: 正在优化缓存
       purge: 清除旧缓存…
     project:
       save: 正在保存...
@@ -470,9 +487,9 @@ cn:
       delete: 正在删除列表...
       item:
         add: 正在添加项目到列表 ...
-        merge: 正在合并项目…
-        remove: 正在从列表移出项目...
-        restore: 正在从项目恢复列表 ...
+        merge: 正在合并图组…
+        remove: 正在从列表移出...
+        restore: 正在从图组恢复列表 ...
       load: 正在加载列表...
       order: 排序列表中...
       restore: 正在恢复列表...
@@ -484,22 +501,22 @@ cn:
       restore: 正在恢复标签...
       save: 正在保存标签...
     item:
-      create: 正在创建项目...
-      delete: 正在删除项目...
-      destroy: 正在永久删除项目...
-      explode: 正在导出项目...
-      export: 正在导出项目...
-      implode: 正在恢复项目...
-      import: |
+      create: 正在创建图组...
+      delete: 正在删除图组...
+      destroy: 正在永久删除图组...
+      explode: 正在导出图组...
+      export: 正在导出图组...
+      implode: 正在恢复...
+      import: |-
         {hasProgressBar, select,
-        true {Importing item {progress, number} of {total, number} …}
-        other {Importing items …}
+          true {Importing item {progress, number} of {total, number} …}
+          other {Importing items …}
         }
       load: 加载文件中...
-      merge: 正在合并文件...
-      print: Processing items …
+      merge: 正在合并图组...
+      print: 处理中 ...
       restore: 正在恢复文件...
-      save: 保存文件中...
+      save: 保存图组中...
       tag:
         create: 正在添加标签...
         toggle: 正在添加标签...
@@ -517,21 +534,21 @@ cn:
       template:
         import: 正在导入模板...
     photo:
-      consolidate: |
+      consolidate: |-
         {hasProgressBar, select,
-        true {Consolidating photo {progress, number} of {total, number} …}
-        other {Consolidating photos …}
+          true {Consolidating photo {progress, number} of {total, number} …}
+          other {Consolidating photos …}
         }
-      create: |
+      create: |-
         {hasProgressBar, select,
-        true {Importing photo {progress, number} of {total, number} …}
-        other {Importing photos …}
+          true {Importing photo {progress, number} of {total, number} …}
+          other {Importing photos …}
         }
       delete: 删除图片中...
-      duplicate: |
+      duplicate: |-
         {hasProgressBar, select,
-        true {Duplicating photo {progress, number} of {total, number} …}
-        other {Duplicating photos …}
+          true {Duplicating photo {progress, number} of {total, number} …}
+          other {Duplicating photos …}
         }
       load: 正在加载图片...
       move: 正在移动图片...
@@ -578,17 +595,17 @@ cn:
       liftListItem: 撤销缩进
   error:
     cache:
-      prune: 未能优化项目缓存。
-      purge: 未能删除旧的项目缓存。
+      prune: 优化缓存失败。
+      purge: 未能删除旧的缓存。
     project:
-      created: 项目创建失败。
+      created: 库创建失败。
     item:
       export: 无法导出文件。
-      merge: 无法合并项目。
+      merge: 无法合并图组。
       import: 无法导入文件。
       tag:
         save: 无法保存标签。
-        create: 无法标签文件。每个文件的标签必须是唯一的。
+        create: 无法标签图组。每个图组的标签必须是唯一的。
       template:
         change: 无法更改项目模板。
     list:
@@ -627,8 +644,7 @@ cn:
   flash:
     update:
       ready:
-        message: |
-          您已安装 Tropy {version}。您是否确定卸载后再次启动安装程序?
+        message: Tropy {version}已经准备好安装了。您想现在安装并重新启动吗?
         confirm: 现在重启
   plugin:
     name: 名称

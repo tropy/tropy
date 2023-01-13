@@ -6,7 +6,7 @@ fr:
     trash: Objets supprimés
   toolbar:
     import: Importer des photos
-    items: |
+    items: |-
       {count, plural,
       =0 {Pas d'objet dans cette vue}
       one {1 objet dans cette vue}
@@ -17,7 +17,7 @@ fr:
     metadata:
       tab: Métadonnées
       photo: Photo
-      item: |
+      item: |-
         {count, plural,
         =0 {}
         one {Objet}
@@ -27,13 +27,13 @@ fr:
         placeholder: 'Ajouter nouveau champ… '
     tags:
       tab: Tags
-      add: |
+      add: |-
         {count, plural,
         =0 {Ajouter un tag}
         one {Ajouter un tag à 1 objet}
         other {Ajouter un tag à # objets}}
     photo:
-      title: |
+      title: |-
         {count, plural,
         =0 {Pas de photo}
         one {1 photo}
@@ -41,7 +41,7 @@ fr:
       create: Ajouter des photos
       selection: Sélection
     note:
-      title: |
+      title: |-
         {count, plural,
         =0 {Pas de note}
         one {1 note}
@@ -64,7 +64,7 @@ fr:
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
-    text: >
+    text: >-
       Tropy est conçu par le {rrchnm} et le {c2dh}, une équipe qui crée des
       ressources pour l'enseignement de l'histoire, des expositions numériques,
       et des logiciels libres et open-source.
@@ -82,24 +82,50 @@ fr:
       title: Crédits
       url: https://tropy.org/credits
   project:
-    none: Faire glisser ici un fichier de projet ou créer un {newProject}
     empty: Pour commencer, faire glisser vos photos dans Tropy
-    new: Nouveau projet
-    recent: Projets récents
-    corrupted: >
+    file:
+      open: Open project {path}
+      missing: Find missing project {path}
+      remove: Remove project from list
+    recent:
+      search:
+        placeholder: Filter projects
+        blank: No matching projects
+    corrupted: >-
       Votre fichier de projet peut être endommagé. Quelques interventions
       manuelles sont peut-être nécessaires pour le réparer. Veuillez consulter
       le manuel utilisateur pour obtenir de l'aide.
-    readOnly: >
+    readOnly: >-
       Votre fichier projet est verrouillé et ne peut pas être modifié. Pour le
       déverrouiller, changez les droits du fichier et ouvrez-le à nouveau.
-  wizard:
-    project:
+    new:
       title: Créer un nouveau projet
-      submit: Créer un projet
-      name: Titre
-      save_as: Changer le nom du fichier ou sa localisation
-      change: Changer
+      name: Enter a name for the project
+      type:
+        label: Choose the project type
+        option:
+          tpy: Advanced
+          managed: Standard
+        hint:
+          tpy: Links to photos at their original location.
+          managed: Copies photos to project folder on import.
+      create: Create Project
+    stats:
+      photos: |-
+        {photos, plural,
+          =0 {No photos}
+          one {1 photo}
+          other {# photos}}
+      items: |-
+        {items, plural,
+          =0 {No items}
+          one {1 item}
+          other {# items}}
+      notes: |-
+        {notes, plural,
+          =0 {No notes}
+          one {1 note}
+          other {# notes}}
   prefs:
     title: Tropy Préférences
     app:
@@ -204,7 +230,7 @@ fr:
       store: Managed folder
       name: Titre
       id: ID
-      file: Fichier
+      path: Fichier
       watch:
         folder: Watch folder
         usePolling: Using file stat polling
@@ -222,18 +248,19 @@ fr:
     vocab:
       label: Schémas
       export: Exporter
-      classes: |
+      classes: |-
         {count, plural,
         =0 {Aucune classe de données}
         one {# classe de données}
         other {# classes de données}
         }
-      datatypes: |
+      datatypes: |-
         {count, plural,
-        =0 {Aucun type de données} one {# type de données}
+        =0 {Aucun type de données}
+        one {# type de données}
         other {# types de données}
         }
-      properties: |
+      properties: |-
         {count, plural,
         =0 {Aucune propriété}
         one {# propriété}
@@ -353,7 +380,7 @@ fr:
     prompt:
       item:
         destroy:
-          message: >
+          message: >-
             Êtes-vous sûr.e de vouloir effacer définitivement ces objets ? Cette
             action ne peut pas être annulée.
           buttons:
@@ -361,14 +388,14 @@ fr:
             - Supprimer
       photo:
         consolidate:
-          message: >
+          message: >-
             Voulez-vous que Tropy vérifie et remplace automatiquement les photos
             manquantes à cet emplacement ?
           buttons:
             - Non
             - Oui
       dup:
-        detail: >
+        detail: >-
           Cette photo existe déjà dans votre projet. Voulez-vous vraiment
           l'importer de nouveau?
         checkboxLabel: Se souvenir de mon choix
@@ -377,8 +404,7 @@ fr:
           - Importer tout de même
       plugin:
         uninstall:
-          type: warning
-          detail: >
+          detail: >-
             Souhaitez-vous vraiment supprimer ce plugin ? Le plugin et sa
             configuration seront supprimés de manière irréversible.
           buttons:
@@ -386,7 +412,7 @@ fr:
             - Supprimer
       template:
         import:
-          message: >
+          message: >-
             Un modèle portant cet ID existe déjà dans votre base d'ontologie.
             Voulez-vous écraser le modèle existant ?
           buttons:
@@ -400,7 +426,7 @@ fr:
       csv: CSV
       templates: Modèle de saisie Tropy
       images: Images
-      items: Tropy Items
+      items: Objets Tropy
       notes: Les notes
       projects: Projets Tropy
       rdf: Schémas RDF
@@ -499,7 +525,7 @@ fr:
       explode: Dissociation de l'objet en cours…
       export: Exportation de l'objet en cours…
       implode: Restauration de l'objet en cours…
-      import: |
+      import: |-
         {hasProgressBar, select,
         true {{progress, number} objets importés sur {total, number}…}
         other {Importation des objets en cours…}
@@ -526,18 +552,18 @@ fr:
       template:
         import: Importation des modèles de saisie…
     photo:
-      consolidate: |
+      consolidate: |-
         {hasProgressBar, select,
         true {Regroupement de {progress, number} photos sur {total, number}…}
         other {Regroupement des photos…}
         }
-      create: |
+      create: |-
         {hasProgressBar, select,
         true {Importation de {progress, number} photos sur {total, number}…}
         other {Importation des photos…}
         }
       delete: Suppression de la photo…
-      duplicate: |
+      duplicate: |-
         {hasProgressBar, select,
         true {Duplication de {progress, number} photos sur {total, number}…}
         other {Duplication des photos…}
@@ -640,7 +666,7 @@ fr:
   flash:
     update:
       ready:
-        message: >
+        message: >-
           Tropy {version} est prêt à être installé. Voulez-vous l'installer et
           le relancer?
         confirm: Relancer maintenant

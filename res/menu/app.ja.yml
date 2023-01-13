@@ -27,7 +27,7 @@ ja:
         - label: 開く
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Open In New Window…
+        - label: 最近のプロジェクト
           accelerator: Shift+CmdOrCtrl+O
           command: app:open-new-dialog
         - label: 最近のプロジェクト
@@ -263,7 +263,7 @@ ja:
         - label: 開く
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Open In New Window…
+        - label: 最近のプロジェクト
           accelerator: Shift+CmdOrCtrl+O
           command: app:open-new-dialog
         - label: 最近のプロジェクト
@@ -472,7 +472,7 @@ ja:
         - label: 開く
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Open In New Window…
+        - label: 最近のプロジェクト
           accelerator: Shift+CmdOrCtrl+O
           command: app:open-new-dialog
         - label: 最近のプロジェクト

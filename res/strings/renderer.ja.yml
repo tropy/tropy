@@ -6,7 +6,7 @@ ja:
     trash: 削除済みアイテム
   toolbar:
     import: 写真をインポート
-    items: |
+    items: |-
       {count, plural,
       =0 {このビューにはアイテムがありません}
       one {このビューには1つのアイテムがあります}
@@ -17,7 +17,7 @@ ja:
     metadata:
       tab: メタデータ
       photo: 写真
-      item: |
+      item: |-
         {count, plural,
         =0 {}
         one {アイテム}
@@ -27,13 +27,13 @@ ja:
         placeholder: フィールド を追加
     tags:
       tab: タグ
-      add: |
+      add: |-
         {count, plural,
         =0 {タグを付与する}
         one {1つのアイテムにタグを付与する}
         other {#のアイテムにタグを付与する}}
     photo:
-      title: |
+      title: |-
         {count, plural,
         =0 {写真がありません}
         one {1つの写真}
@@ -41,7 +41,7 @@ ja:
       create: 写真を追加
       selection: セレクション
     note:
-      title: |
+      title: |-
         {count, plural,
         =0 {ノートがありません}
         one {1つのノート}
@@ -64,7 +64,7 @@ ja:
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
-    text: >
+    text: >-
       Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
       historical teaching resources, digital exhibits, and open-source software.
     trademark: Tropyは{cds}の商標です。
@@ -81,23 +81,49 @@ ja:
       title: クレジット
       url: https://tropy.org/credits
   project:
-    none: プロジェクトファイルをここにドロップするか、あるいは{newProject}を作成してください
     empty: まずは写真をTropyにドロップしてください
-    new: 新規プロジェクト
-    recent: 最近のプロジェクト
-    corrupted: >
+    file:
+      open: Open project {path}
+      missing: Find missing project {path}
+      remove: Remove project from list
+    recent:
+      search:
+        placeholder: Filter projects
+        blank: No matching projects
+    corrupted: >-
       Your project file may be damaged and manual steps necessary to fix it.
       Please consult the user manual for further assistance.
-    readOnly: >
+    readOnly: >-
       Your project file is locked and cannot be modified. To unlock, change the
       file permissions and open the project again.
-  wizard:
-    project:
+    new:
       title: 新規プロジェクトを作成
-      submit: プロジェクトを作成
-      name: 名前
-      save_as: ファイル名と保存先を変更
-      change: 変更する
+      name: Enter a name for the project
+      type:
+        label: Choose the project type
+        option:
+          tpy: Advanced
+          managed: Standard
+        hint:
+          tpy: Links to photos at their original location.
+          managed: Copies photos to project folder on import.
+      create: Create Project
+    stats:
+      photos: |-
+        {photos, plural,
+          =0 {No photos}
+          one {1 photo}
+          other {# photos}}
+      items: |-
+        {items, plural,
+          =0 {No items}
+          one {1 item}
+          other {# items}}
+      notes: |-
+        {notes, plural,
+          =0 {No notes}
+          one {1 note}
+          other {# notes}}
   prefs:
     title: Tropy設定
     app:
@@ -202,7 +228,7 @@ ja:
       store: Managed folder
       name: 名前
       id: ID
-      file: ファイル
+      path: ファイル
       watch:
         folder: Watch folder
         usePolling: Using file stat polling
@@ -220,18 +246,18 @@ ja:
     vocab:
       label: 語彙
       export: エクスポート
-      classes: |
+      classes: |-
         {count, plural,
         =0 {クラスがありません}
         one {# のクラス}
         other {# のクラス}
         }
-      datatypes: |
+      datatypes: |-
         {count, plural,
         =0 {データタイプがありません} one {# つのデータタイプ}
         other {# のデータタイプ}
         }
-      properties: |
+      properties: |-
         {count, plural,
         =0 {プロパティがありません}
         one {# つのプロパティ}
@@ -351,37 +377,33 @@ ja:
     prompt:
       item:
         destroy:
-          message: |
-            アイテムを完全に削除しますか？削除後は元に戻せません。
+          message: アイテムを完全に削除しますか？削除後は元に戻せません。
           buttons:
             - キャンセル
             - 削除
       photo:
         consolidate:
-          message: >
+          message: >-
             Do you want Tropy to automatically check and resolve further missing
             photos at this location?
           buttons:
             - いいえ
             - はい
       dup:
-        detail: |
-          この写真はすでにプロジェクトにあります。再度インポートしますか？
+        detail: この写真はすでにプロジェクトにあります。再度インポートしますか？
         checkboxLabel: この選択を記憶する
         buttons:
           - 重複する写真をスキップ
           - 写真の重複を認める
       plugin:
         uninstall:
-          type: warning
-          detail: |
-            このプラグインを本当に削除してよろしいでしょうか？この操作によって、このプラグインとその設定は完全に削除されます。
+          detail: このプラグインを本当に削除してよろしいでしょうか？この操作によって、このプラグインとその設定は完全に削除されます。
           buttons:
             - キャンセル
             - 削除
       template:
         import:
-          message: >
+          message: >-
             A template with this id already exists in your ontology database. Do
             you want to overwrite the existing template?
           buttons:
@@ -489,15 +511,15 @@ ja:
       save: タグを保存しています
     item:
       create: アイテムを作成しています
-      delete: Deleting item …
+      delete: アイテムを削除しています
       destroy: アイテムを完全に削除しています
       explode: 個々のアイテムに分割しています
       export: アイテムをエクスポートしています
       implode: アイテムを復元しています
-      import: |
+      import: |-
         {hasProgressBar, select,
-        true {Importing items {progress, number} of {total, number} …}
-        other {Importing items …}
+          true {Importing item {progress, number} of {total, number} …}
+          other {Importing items …}
         }
       load: アイテムをロード中
       merge: アイテムを統合中
@@ -521,21 +543,21 @@ ja:
       template:
         import: テンプレートをインポート中
     photo:
-      consolidate: |
+      consolidate: |-
         {hasProgressBar, select,
-        true {Consolidating photos {progress, number} of {total, number} …}
-        other {Consolidating photos …}
+          true {Consolidating photo {progress, number} of {total, number} …}
+          other {Consolidating photos …}
         }
-      create: |
+      create: |-
         {hasProgressBar, select,
-        true {Importing photos {progress, number} of {total, number} …}
-        other {Importing photos …}
+          true {Importing photo {progress, number} of {total, number} …}
+          other {Importing photos …}
         }
       delete: 写真を削除中
-      duplicate: |
+      duplicate: |-
         {hasProgressBar, select,
-        true {Duplicating photos {progress, number} of {total, number} …}
-        other {Duplicating photos …}
+          true {Duplicating photo {progress, number} of {total, number} …}
+          other {Duplicating photos …}
         }
       load: 写真をロード中
       move: 写真を移動中
@@ -571,7 +593,7 @@ ja:
       ol: 段落番号
       ul: 箇条書き
       link:
-        button: Link
+        button: リンクを挿入
         target: リンクターゲット
         title: リンクタイトル
       unlink: Remove link
@@ -631,8 +653,7 @@ ja:
   flash:
     update:
       ready:
-        message: |
-          Tropy{version}のインストール準備が完了しました。すぐにインストールし、再起動しますか？
+        message: "Tropy\_{version}のインストール準備が完了しました。すぐにインストールし、再起動しますか？"
         confirm: すぐに再起動する
   plugin:
     name: 名前

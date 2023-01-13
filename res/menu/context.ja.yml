@@ -266,7 +266,7 @@ ja:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: ノートを削除
         command: app:export-note
       - label: Copy Note
         command: app:copy-note
@@ -721,7 +721,7 @@ ja:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: ノートを削除
         command: app:export-note
       - label: Copy Note
         command: app:copy-note
@@ -1176,7 +1176,7 @@ ja:
               - color
               - app:save-tag-color
     note:
-      - label: Export Note …
+      - label: ノートを削除
         command: app:export-note
       - label: Copy Note
         command: app:copy-note

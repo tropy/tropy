@@ -6,7 +6,7 @@ de:
     trash: Gelöscht
   toolbar:
     import: Fotos importieren
-    items: |
+    items: |-
       {count, plural,
       =0 {Keine Objekte in dieser Ansicht}
       one {1 Objekt in dieser Ansicht}
@@ -17,7 +17,7 @@ de:
     metadata:
       tab: Metadaten
       photo: Foto
-      item: |
+      item: |-
         {count, plural,
         =0 {}
         one {Objekt}
@@ -27,13 +27,13 @@ de:
         placeholder: Neues Feld …
     tags:
       tab: Tags
-      add: |
+      add: |-
         {count, plural,
         =0 {Tag hinzufügen}
         one {Tag zu Objekt hinzufügen}
         other {Tag zu # Objekten hinzufügen}}
     photo:
-      title: |
+      title: |-
         {count, plural,
         =0 {Keine Fotos}
         one {1 Foto}
@@ -41,7 +41,7 @@ de:
       create: Fotos hinzufügen
       selection: Ausschnitt
     note:
-      title: |
+      title: |-
         {count, plural,
         =0 {Keine Notizen}
         one {1 Notiz}
@@ -64,7 +64,7 @@ de:
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
-    text: >
+    text: >-
       Tropy wird vom {rrchnm} und dem {c2dh} betreut, einem Team, das Ressourcen
       zur Geschichtsvermittlung, digitale Ausstellungen und Open-Source-Software
       entwickelt.
@@ -82,22 +82,47 @@ de:
       title: Credits
       url: https://tropy.org/credits
   project:
-    none: Ziehen Sie eine Projektdatei hierher oder erstellen Sie ein {newProject}
     empty: Fotos ins Tropy Fenster ziehen und los geht’s!
-    new: neues Projekt
-    recent: Benutzte Projekte
-    corrupted: >
+    file:
+      open: Projekt {path} öffnen
+      missing: Finde fehlendes Projekt {path}
+      remove: Projekt aus Liste entfernen
+    recent:
+      search:
+        placeholder: Projekte filtern
+        blank: Keine passenden Projekte
+    corrupted: >-
       Die Projektdatenbank ist möglicherweise beschädigt und sollte manuell
       geprüft werden.
-    readOnly: |
-      Die Projektdatei ist schreibgeschützt und daher nicht modifizierbar.
-  wizard:
-    project:
+    readOnly: Die Projektdatei ist schreibgeschützt und daher nicht modifizierbar.
+    new:
       title: Neues Projekt erstellen
-      submit: Projekt erstellen
-      name: Projektname
-      save_as: Datei und Verzeichnis anpassen
-      change: Anpassen
+      name: Enter a name for the project
+      type:
+        label: Choose the project type
+        option:
+          tpy: Advanced
+          managed: Standard
+        hint:
+          tpy: Links to photos at their original location.
+          managed: Copies photos to project folder on import.
+      create: Create Project
+    stats:
+      photos: |-
+        {photos, plural,
+        =0 {Keine Fotos}
+        one {1 Foto}
+        other {# Fotos}}
+      items: |-
+        {items, plural,
+        =0 {Keine Objekte}
+        one {1 Objekt}
+        other {# Objekte}}
+      notes: |-
+        {notes, plural,
+        =0 {Keine Notizen}
+        one {1 Notiz}
+        other {# Notizen}}
   prefs:
     title: Voreinstellungen
     app:
@@ -203,7 +228,7 @@ de:
       store: Managed folder
       name: Name
       id: ID
-      file: Datei
+      path: Datei
       watch:
         folder: Überwachter Ordner
         usePolling: 'Zyklische Dateistatusabfrage '
@@ -221,19 +246,18 @@ de:
     vocab:
       label: Vokabulare
       export: Exportieren
-      classes: |
+      classes: |-
         {count, plural,
         =0 {Keine Klassen}
         one {# Klasse}
         other {# Klassen}
         }
-      datatypes: |
+      datatypes: |-
         {count, plural,
-        =0 {Keine Datentypen}
-        one {# Datentyp}
+        =0 {Keine Datentypen} one {# Datentyp}
         other {# Datentypen}
         }
-      properties: |
+      properties: |-
         {count, plural,
         =0 {Keine Eigenschaft}
         one {# Eigenschaft}
@@ -353,7 +377,7 @@ de:
     prompt:
       item:
         destroy:
-          message: >
+          message: >-
             Objekte vollständig löschen? Dies kann nicht mehr rückgängig gemacht
             werden.
           buttons:
@@ -361,23 +385,21 @@ de:
             - Löschen
       photo:
         consolidate:
-          message: >
+          message: >-
             Soll Tropy nach weiteren ähnlichen Fotos suchen und diese
             automatisch konsolidieren?
           buttons:
             - Nein
             - Ja"
       dup:
-        detail: |
-          Dieses Foto ist bereits im Projekt vorhanden. Nochmals importieren?
+        detail: Dieses Foto ist bereits im Projekt vorhanden. Nochmals importieren?
         checkboxLabel: Auswahl merken
         buttons:
           - Überspringen
           - Nochmals importieren
       plugin:
         uninstall:
-          type: warning
-          detail: >
+          detail: >-
             Diesen Plugin samt Konfiguration vollständig entfernen? Dies kann
             nicht mehr rückgängig gemacht werden.
           buttons:
@@ -385,7 +407,7 @@ de:
             - Löschen
       template:
         import:
-          message: >
+          message: >-
             Ein Template mit dieser Id existiert bereits in der Datenbank. Soll
             das bestehende Template ersetzt werden?
           buttons:
@@ -498,7 +520,7 @@ de:
       explode: Objekt zerteilen …
       export: Objekt exportieren …
       implode: Objekt wiederherstellen
-      import: |
+      import: |-
         {hasProgressBar, select,
         true {Objekt {progress, number} von {total, number} importieren …}
         other {Objekte importieren …}
@@ -525,18 +547,18 @@ de:
       template:
         import: Vorlagen importieren …
     photo:
-      consolidate: |
+      consolidate: |-
         {hasProgressBar, select,
         true {Foto {progress, number} von {total, number} konsolidieren …}
         other {Fotos konsolidieren …}
         }
-      create: |
+      create: |-
         {hasProgressBar, select,
         true {Fotos {progress, number} von {total, number} importieren …}
         other {Fotos importieren …}
         }
       delete: Foto löschen …
-      duplicate: |
+      duplicate: |-
         {hasProgressBar, select,
         true {Foto {progress, number} von {total, number} duplizieren …}
         other {Fotos duplizieren …}
@@ -637,7 +659,7 @@ de:
   flash:
     update:
       ready:
-        message: >
+        message: >-
           Tropy {version} kann installiert werden. Jetzt installieren und
           neustarten?
         confirm: Jetzt neu starten

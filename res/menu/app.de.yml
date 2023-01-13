@@ -56,9 +56,9 @@ de:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Hochformat
                   command: app:print-pdf
-                - label: Landscape
+                - label: Querformat
                   command: app:print-pdf-landscape
         - type: separator
         - label: Fotos konsolidieren
@@ -297,9 +297,9 @@ de:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Hochformat
                   command: app:print-pdf
-                - label: Landscape
+                - label: Querformat
                   command: app:print-pdf-landscape
         - label: Drucken
           command: app:print
@@ -501,9 +501,9 @@ de:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: Hochformat
                   command: app:print-pdf
-                - label: Landscape
+                - label: Querformat
                   command: app:print-pdf-landscape
         - type: separator
         - label: Fotos konsolidieren

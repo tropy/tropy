@@ -6,7 +6,7 @@ it:
     trash: Elementi eliminati
   toolbar:
     import: Importa foto
-    items: |
+    items: |-
       {count, plural,
       =0 {Nessun elemento in questa visualizzazione}
       one {1 elemento in questa visualizzazione}
@@ -17,7 +17,7 @@ it:
     metadata:
       tab: Metadata
       photo: Foto
-      item: |
+      item: |-
         {count, plural,
         =0 {}
         one {Elemento}
@@ -27,13 +27,13 @@ it:
         placeholder: Aggiungi nuovo campo...
     tags:
       tab: Tag
-      add: |
+      add: |-
         {count, plural,
         =0 {Aggiungi tag}
         one {Aggiungi tag a 1 elemento}
         other {Aggiungi # elementi}}
     photo:
-      title: |
+      title: |-
         {count, plural,
         =0 {Nessuna foto}
         one {1 foto}
@@ -41,7 +41,7 @@ it:
       create: Aggiungi foto
       selection: Selezione
     note:
-      title: |
+      title: |-
         {count, plural,
         =0 {Nessuna nota}
         one {1 nota}
@@ -64,12 +64,12 @@ it:
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
-    text: >
-      Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
-      historical teaching resources, digital exhibits, and open-source software.
+    text: >-
+      Tropy è progettato da {rrchnm} e {c2dh}, un team che sviluppa risorse
+      didattiche storiche, mostre digitali e software open source.
     trademark: Tropy è un marchio registrato da {cds}.
     donate:
-      title: Donate to Tropy
+      title: Donazione a Tropy
       url: https://tropy.org/donate
     release:
       title: Note di rilascio
@@ -81,24 +81,51 @@ it:
       title: Crediti
       url: https://tropy.org/credits
   project:
-    none: Trascina un file di progetto qui o crea un {newProject}
     empty: Trascina le tuo foto in Tropy per iniziare
-    new: nuovo progetto
-    recent: Progetti recenti
-    corrupted: >
-      Il tuo file di progetto potrebbe essere danneggiato e potrebbero servire
-      operazioni manuali per aggiustarlo. Consulta il manuale utente per
-      ulteriore assistenza.
-    readOnly: >
-      Your project file is locked and cannot be modified. To unlock, change the
-      file permissions and open the project again.
-  wizard:
-    project:
+    file:
+      open: Apri progetto {path}
+      missing: Trova il progetto mancante {path}
+      remove: Rimuovi progetto dall'elenco
+    recent:
+      search:
+        placeholder: Filtra progetti
+        blank: Nessun progetto corrispondente
+    corrupted: >-
+      Il file di progetto potrebbe essere danneggiato e sono necessari passaggi
+      manuali per risolvere il problema. Si prega di consultare il manuale
+      utente per ulteriore assistenza.
+    readOnly: >-
+      Il tuo file di progetto è bloccato e non può essere modificato. Per
+      sbloccarlo, modificare i permessi del file e aprire nuovamente il
+      progetto.
+    new:
       title: Crea nuovo progetto
-      submit: Crea progetto
-      name: Nome
-      save_as: Cambia nome e posizione del file
-      change: Cambia
+      name: Inserisci un nome per il progetto
+      type:
+        label: Scegli il tipo di progetto
+        option:
+          tpy: Avanzato
+          managed: Standard
+        hint:
+          tpy: Collegamenti alle foto nella loro posizione originale.
+          managed: Copia le foto nella cartella del progetto durante l'importazione.
+      create: Crea progetto
+    stats:
+      photos: |-
+        {photos, plural,
+        =0 {Nessuna foto}
+        one {1 foto}
+        other {# foto}}
+      items: |-
+        {items, plural,
+        =0 {Nessuno elemento}
+        one {1 elemento}
+        other {# elementi}}
+      notes: |-
+        {notes, plural,
+        =0 {Nessuna nota}
+        one {1 nota}
+        other {# note}}
   prefs:
     title: Preferenze di Tropy
     app:
@@ -126,7 +153,7 @@ it:
         photos: Includi foto
         metadata: Includi i metadata
         notes: Includi le note
-        onlyNotes: Include only photos with notes
+        onlyNotes: Includi solo foto con note
         overflow: Permetti ai contenuti di occupare più di una pagina
       locale:
         locale: Lingua
@@ -167,11 +194,11 @@ it:
             html: Note come HTML
             markdown: Note come Markdown
           copy:
-            label: Copy notes as
+            label: Copia note come
             option:
-              text: Plain text
+              text: Testo normale
               markdown: Markdown
-              html: HTML source code
+              html: Codice sorgente HTML
       ui:
         label: Interfaccia
         option:
@@ -183,7 +210,7 @@ it:
         option:
           fit: Imposta lo zoom per mostrare la foto per intero
           fill: Imposta lo zoom per riempire lo spazio disponibile
-          zoom: Zoom photos to actual size
+          zoom: Ingrandisci le foto alle dimensioni reali
       layout:
         label: Layout della visualizzazione dell'elemento
         option:
@@ -197,18 +224,19 @@ it:
     project:
       label: Progetto
       base:
-        label: Link photos
+        label: Link foto
         option:
           'null': Using absolute paths
-          project: Relative to the project file
-          home: Relative to your home directory
-      store: Managed folder
+          project: Relativo al file di progetto
+          home: Relativo alla tua home directory
+          <None>: Utilizzo di percorsi assoluti
+      store: Cartella gestita
       name: Nome
       id: ID
-      file: File
+      path: File
       watch:
-        folder: Watch folder
-        usePolling: Using file stat polling
+        folder: Guarda cartella
+        usePolling: Utilizzo del polling delle statistiche sui file
     template:
       label: Modelli
       new: Nuovo modello...
@@ -223,23 +251,21 @@ it:
     vocab:
       label: Vocabolari
       export: Esporta
-      classes: |
+      classes: |-
         {count, plural,
         =0 {Nessuna classe}
         one {# classe}
-        other {# classi}
-        }
-      datatypes: |
+        other {# classi}}
+      datatypes: |-
         {count, plural,
-        =0 {Nessun tipo di dati} one {# tipo di dati}
-        other {# tipi di dati}
-        }
-      properties: |
+        =0 {Nessun tipo di dati}
+        one {# tipo di dati}
+        other {# tipi di dati}}
+      properties: |-
         {count, plural,
         =0 {Nessuna proprietà}
         one {# proprietà}
-        other {# proprietà}
-        }
+        other {# proprietà}}
     plugins:
       label: Estensioni
       settings: Impostazioni
@@ -261,7 +287,7 @@ it:
     created: Data di aggiunta
     modified: Modificato
     consolidate: Consolida foto
-    error: Photo not found
+    error: Foto non trovata
   selection:
     size: Dimensione
     created: Data di aggiunta
@@ -304,8 +330,8 @@ it:
     column:
       placeholder: Cerca
     file:
-      browse: Browse
-      clear: Clear
+      browse: Sfoglia
+      clear: Pulisci
   template:
     id: URI
     name: Nome
@@ -354,47 +380,46 @@ it:
     prompt:
       item:
         destroy:
-          message: >
-            Sei sicuro di voler eliminare permanentemente gli elementi? Questa
-            azione non può essere annullata
+          message: >-
+            Sei sicuro di voler eliminare definitivamente gli elementi? Questa
+            azione non può essere annullata.
           buttons:
             - Annulla
             - Elimina
       photo:
         consolidate:
-          message: >
-            Vuoi che Tropy verifichi e risolva automaticamente altre foto
-            mancanti in questa cartella?
+          message: >-
+            Vuoi che Tropy controlli e risolva automaticamente altre foto
+            mancanti in questa posizione?
           buttons:
             - 'No'
             - Sì
       dup:
-        detail: >
-          Questa foto esiste già nel tuo progetto. Sei sicuro di volerla
-          importare nuovamente?
+        detail: >-
+          Questa foto esiste già nel tuo progetto. Sei sicuro di volerlo
+          importare di nuovo?
         checkboxLabel: Ricorda questa scelta
         buttons:
           - Salta
           - Importa comunque
       plugin:
         uninstall:
-          type: attenzione
-          detail: >
-            Sei sicuro di voler eliminare l'estensione? Questo eliminerà
-            permanentemente l'estensione e la sua configurazione.
+          detail: >-
+            Sei sicuro di voler eliminare il plugin? Questo rimuoverà
+            permanentemente il plugin e la sua configurazione.
           buttons:
             - Annulla
             - Elimina
       template:
         import:
-          message: >
-            A template with this id already exists in your ontology database. Do
-            you want to overwrite the existing template?
+          message: >-
+            Un modello con questo id esiste già nel database dell'ontologia.
+            Vuoi sovrascrivere il modello esistente?
           buttons:
             - Cancel
             - Overwrite
         imported:
-          message: Template successfully imported.
+          message: Modello importato con successo.
           buttons:
             - OK
     filter:
@@ -500,11 +525,10 @@ it:
       explode: Divisione elemento...
       export: Esportazione elemento...
       implode: Ripristino elemento...
-      import: |
+      import: |-
         {hasProgressBar, select,
         true {Importazione elemento {progress, number} di {total, number}…}
-        other {Importazione elementi…}
-        }
+        other {Importazione elementi…}}
       load: Caricamento elementi...
       merge: Unione elemento...
       print: Processing items …
@@ -527,18 +551,18 @@ it:
       template:
         import: Importazione modelli...
     photo:
-      consolidate: |
+      consolidate: |-
         {hasProgressBar, select,
         true {Consolidamento foto {progress, number} di {total, number} …}
         other {Consolidamento foto…}
         }
-      create: |
+      create: |-
         {hasProgressBar, select,
         true {Importazione foto {progress, number} di {total, number}…}
         other {Importazione foto…}
         }
       delete: Eliminazione foto...
-      duplicate: |
+      duplicate: |-
         {hasProgressBar, select,
         true {Duplicazione foto {progress, number} di {total, number}…}
         other {Duplicazione foto…}
@@ -548,7 +572,7 @@ it:
       order: Ordinamento foto...
       save: Salvataggio foto...
       restore: Ripristino foto...
-      extract: Extracting photo …
+      extract: Estrazione foto…
     note:
       create: Creazione nota...
       delete: Eliminazione nota...
@@ -558,12 +582,12 @@ it:
     selection:
       create: Creazione selezione di foto...
       load: Caricamento selezioni di foto...
-      extract: Extracting selection …
+      extract: Estrazione selezione…
     api:
       photo:
-        extract: Extracting photo …
+        extract: Estrazione foto…
       selection:
-        extract: Extracting selection …
+        extract: Estrazione selezione…
   editor:
     commands:
       bold: Grassetto
@@ -580,7 +604,7 @@ it:
         button: Link
         target: Destinazione del collegamento
         title: Titolo del collegamento
-      unlink: Remove link
+      unlink: Rimuovi link
       left: Allinea a sinistra
       center: Centrato
       right: Allinea a destra
@@ -616,12 +640,12 @@ it:
       consolidate: Consolidamento delle foto non riuscito.
       create: Importazione della foto non riuscita.
       save: Salvataggio della foto non riuscito.
-      extract: Failed to export photo.
+      extract: Impossibile esportare la foto.
       template:
         change: Cambiamento del modello di foto non riuscito.
     selection:
       create: Creazione della selezione di foto non riuscita.
-      extract: Failed to export selection.
+      extract: Impossibile esportare la selezione.
       template:
         change: Cambiamento del modello di selezione non riuscito.
     ontology:
@@ -639,11 +663,11 @@ it:
     tag:
       create: 'Creazione del tag non riuscita. I nomi di tag devono essere unici. '
     db:
-      SQLITE_CANTOPEN: Cannot find or open database file.
+      SQLITE_CANTOPEN: Impossibile trovare o aprire il file dal database.
   flash:
     update:
       ready:
-        message: >
+        message: >-
           Tropy {version} è pronto per essere installato. Vuoi installarlo e
           riavviare ora?
         confirm: Riavvia ora

@@ -322,9 +322,9 @@ de:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Hochformat
                 command: app:print-pdf
-              - label: Landscape
+              - label: Querformat
                 command: app:print-pdf-landscape
       - label: Objektnotizen exportieren …
         command: app:export-notes
@@ -354,9 +354,9 @@ de:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Hochformat
                 command: app:print-pdf
-              - label: Landscape
+              - label: Querformat
                 command: app:print-pdf-landscape
       - label: Exportiere Notizen der ausgewählten Objekte …
         command: app:export-notes
@@ -777,9 +777,9 @@ de:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Hochformat
                 command: app:print-pdf
-              - label: Landscape
+              - label: Querformat
                 command: app:print-pdf-landscape
       - label: Objektnotizen exportieren …
         command: app:export-notes
@@ -802,9 +802,9 @@ de:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Hochformat
                 command: app:print-pdf
-              - label: Landscape
+              - label: Querformat
                 command: app:print-pdf-landscape
       - label: Exportiere Notizen der ausgewählten Objekte …
         command: app:export-notes
@@ -1232,9 +1232,9 @@ de:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Hochformat
                 command: app:print-pdf
-              - label: Landscape
+              - label: Querformat
                 command: app:print-pdf-landscape
       - label: Objektnotizen exportieren …
         command: app:export-notes
@@ -1257,9 +1257,9 @@ de:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: Hochformat
                 command: app:print-pdf
-              - label: Landscape
+              - label: Querformat
                 command: app:print-pdf-landscape
       - label: Exportiere Notizen der ausgewählten Objekte …
         command: app:export-notes
