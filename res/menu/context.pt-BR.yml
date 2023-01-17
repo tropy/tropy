@@ -275,6 +275,7 @@ pt-BR:
     notepad:
       - label: Modo de Escrita
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Horizontal
             type: checkbox
@@ -289,11 +290,13 @@ pt-BR:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Quebra automática de Linhas
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Novo Item
         command: app:create-item
@@ -730,6 +733,7 @@ pt-BR:
     notepad:
       - label: Modo de Escrita
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Horizontal
             type: checkbox
@@ -744,11 +748,13 @@ pt-BR:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Quebra Automática de Linhas
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Novo Item
         command: app:create-item
@@ -1185,6 +1191,7 @@ pt-BR:
     notepad:
       - label: Modo de Escrita
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Horizontal
             type: checkbox
@@ -1199,11 +1206,13 @@ pt-BR:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Quebra automática de Linhas
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Novo Item
         command: app:create-item

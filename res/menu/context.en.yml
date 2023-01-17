@@ -129,6 +129,7 @@ en:
     notepad: &notepad
       - label: 'Writing Mode'
         id: 'writing-mode'
+        condition: 'hasTargetId'
         submenu:
           - label: 'Horizontal'
             type: checkbox
@@ -143,11 +144,13 @@ en:
         type: checkbox
         checked: true
         command: 'app:toggle-line-numbers'
+        condition: 'hasTargetId'
       - label: 'Wrap Lines'
         id: 'line-wrap'
         type: checkbox
         checked: true
         command: 'app:toggle-line-wrap'
+        condition: 'hasTargetId'
     items: &items
       - label: 'New Item'
         command: 'app:create-item'

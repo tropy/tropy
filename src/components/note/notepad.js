@@ -51,14 +51,12 @@ export const NotePad = forwardRef(({
   })
 
   let handleContextMenu = useEvent((event) => {
-    if (!isDisabled && note?.id != null) {
-      onContextMenu(event, 'notepad', {
-        id: note.id,
-        mode: mode,
-        numbers: numbers,
-        wrap: wrap
-      })
-    }
+    onContextMenu(event, 'notepad', {
+      id: isDisabled ? null : note?.id,
+      mode: mode,
+      numbers: numbers,
+      wrap: wrap
+    })
   })
 
   let handleUnload = useEvent((id, wasBlank) => {

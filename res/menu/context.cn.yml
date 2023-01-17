@@ -275,6 +275,7 @@ cn:
     notepad:
       - label: 写入模式
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: 水平
             type: checkbox
@@ -289,11 +290,13 @@ cn:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: 封边
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: 新文件
         command: app:create-item
@@ -730,6 +733,7 @@ cn:
     notepad:
       - label: 写入模式
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: 水平
             type: checkbox
@@ -744,11 +748,13 @@ cn:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: 封边
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: 新建图组
         command: app:create-item
@@ -1185,6 +1191,7 @@ cn:
     notepad:
       - label: 写入模式
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: 水平
             type: checkbox
@@ -1199,11 +1206,13 @@ cn:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: 封边
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: 新建图组
         command: app:create-item

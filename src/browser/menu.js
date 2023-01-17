@@ -540,6 +540,10 @@ Menu.ItemConditions = {
     return event?.target?.items?.length > 1
   },
 
+  hasTargetId({ event }) {
+    return event?.target?.id != null
+  },
+
   isSingleItem(...args) {
     return !Menu.ItemConditions.isMultipleItems(...args)
   },

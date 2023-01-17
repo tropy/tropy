@@ -275,6 +275,7 @@ it:
     notepad:
       - label: Modalità di scrittura
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Orizzontale
             type: checkbox
@@ -289,11 +290,13 @@ it:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Avvolgi righe
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Nuovo elemento
         command: app:create-item
@@ -730,6 +733,7 @@ it:
     notepad:
       - label: Modalità di scrittura
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Orizzontale
             type: checkbox
@@ -744,11 +748,13 @@ it:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Avvolgi righe
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Nuovo elemento
         command: app:create-item
@@ -1185,6 +1191,7 @@ it:
     notepad:
       - label: Modalità di scrittura
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Orizzontale
             type: checkbox
@@ -1199,11 +1206,13 @@ it:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Avvolgi righe
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Nuovo elemento
         command: app:create-item

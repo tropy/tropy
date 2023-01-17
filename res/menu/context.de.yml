@@ -275,6 +275,7 @@ de:
     notepad:
       - label: Eingabemodus
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Horizontal
             type: checkbox
@@ -289,11 +290,13 @@ de:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Zeilenumbruch
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Neues Objekt
         command: app:create-item
@@ -730,6 +733,7 @@ de:
     notepad:
       - label: Eingabemodus
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Horizontal
             type: checkbox
@@ -744,11 +748,13 @@ de:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Zeilenumbruch
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Neues Objekt
         command: app:create-item
@@ -1185,6 +1191,7 @@ de:
     notepad:
       - label: Eingabemodus
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Horizontal
             type: checkbox
@@ -1199,11 +1206,13 @@ de:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Zeilenumbruch
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Neues Objekt
         command: app:create-item

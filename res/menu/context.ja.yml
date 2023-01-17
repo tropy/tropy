@@ -275,6 +275,7 @@ ja:
     notepad:
       - label: ライティングモード
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: 横書き
             type: checkbox
@@ -289,11 +290,13 @@ ja:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: 行をまとめる
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: 新規アイテム
         command: app:create-item
@@ -730,6 +733,7 @@ ja:
     notepad:
       - label: ライティングモード
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: 横書き
             type: checkbox
@@ -744,11 +748,13 @@ ja:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: 行をまとめる
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: 新規アイテム
         command: app:create-item
@@ -1185,6 +1191,7 @@ ja:
     notepad:
       - label: ライティングモード
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: 横書き
             type: checkbox
@@ -1199,11 +1206,13 @@ ja:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: 行を包む
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: 新規アイテム
         command: app:create-item

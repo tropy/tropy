@@ -275,6 +275,7 @@ es:
     notepad:
       - label: Modo de escritura
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Horizontal
             type: checkbox
@@ -289,11 +290,13 @@ es:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Retorno automático de líneas
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Nuevo objeto
         command: app:create-item
@@ -730,6 +733,7 @@ es:
     notepad:
       - label: Modo de escritura
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Horizontal
             type: checkbox
@@ -744,11 +748,13 @@ es:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Retorno automático de líneas
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Nuevo objeto
         command: app:create-item
@@ -1185,6 +1191,7 @@ es:
     notepad:
       - label: Modo de escritura
         id: writing-mode
+        condition: hasTargetId
         submenu:
           - label: Horizontal
             type: checkbox
@@ -1199,11 +1206,13 @@ es:
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
+        condition: hasTargetId
       - label: Retorno automático de líneas
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
+        condition: hasTargetId
     items:
       - label: Nuevo objeto
         command: app:create-item
