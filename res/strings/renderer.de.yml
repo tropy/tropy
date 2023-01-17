@@ -85,7 +85,7 @@ de:
     empty: Fotos ins Tropy Fenster ziehen und los geht’s!
     file:
       open: Projekt {path} öffnen
-      missing: Finde fehlendes Projekt {path}
+      missing: Fehlendes Projekt {path} finden
       remove: Projekt aus Liste entfernen
     recent:
       search:
@@ -163,6 +163,7 @@ de:
           it: Italiano
           ja: 日本語
           pt: Português
+          pt-BR: Português brasileiro
       templates:
         label: Standardvorlagen
         item: Objekt

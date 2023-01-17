@@ -1,0 +1,38 @@
+pt-BR:
+  dialog:
+    file:
+      project: Projetos Tropy
+      plugin: Plugins do Tropy
+      pdf: Arquivos PDF
+    crashed:
+      buttons:
+        - Fechar Janela
+        - Reiniciar Tropy
+        - Mostrar Registros
+      message: Tropy parou de funcionar
+      detail: >
+        Infelizmente, esta janela do Tropy parou de funcionar. Você pode ajudar
+        reportando este problema em https://github.com/tropy/tropy
+    unresponsive:
+      buttons:
+        - Fechar Janela
+        - Aguardar
+      message: Tropy não está respondendo
+      detail: >
+        Esta janela do Tropy não está respondendo. Prefere fechá-la ou continuar
+        aguardandor?
+    unhandled:
+      buttons:
+        - Descartar
+        - Copiar Erro
+        - Mostrar Registros
+      message: Erro sem tratamento
+  window:
+    prefs:
+      title: Preferências do Tropy
+    wizard:
+      title: Bem-vindo ao Tropy
+    about:
+      title: Sobre o Tropy
+    project:
+      readOnly: — Bloqueado

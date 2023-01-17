@@ -1,14 +1,14 @@
-pt:
+pt-BR:
   sidebar:
     lists: Listas
     tags: Etiquetas
     imports: Última Importação
-    trash: Itens Eliminados
+    trash: Itens Apagados
   toolbar:
     import: Importar Fotos
     items: >-
-      {count, plural, =0 {Nenhuns itens nesta vista} one {1 item nesta vista}
-      other {# itens nesta vista}}
+      {count, plural, =0 {Nenhum item nesta visualização} one {1 item nesta
+      visualização} other {# itens nesta visualização}}
     search:
       placeholder: Pesquisar
   panel:
@@ -49,14 +49,14 @@ pt:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
     text: >-
-      Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
-      historical teaching resources, digital exhibits, and open-source software.
-    trademark: O nome Tropy é uma marca registada de {cds}.
+      Tropy é uma ferramenta do {rrchnm} e do {c2dh}, uma equipe que desenvolve
+      recursos para o ensino de história, exposições digitais e software livres.
+    trademark: O nome Tropy é uma marca registrada da {cds}.
     donate:
-      title: Donativos ao Tropy
+      title: Doações ao Tropy
       url: https://tropy.org/donate
     release:
-      title: Notas de Versão
+      title: Notas da Versão
       url: https://github.com/tropy/tropy/releases/tag/v{version}
     license:
       title: Licença
@@ -65,50 +65,38 @@ pt:
       title: Créditos
       url: https://tropy.org/credits
   project:
-    empty: Arraste para aqui as suas fotos para começar.
+    empty: Arraste suas fotos aqui para começar.
     file:
-      open: Open project {path}
-      missing: Find missing project {path}
-      remove: Remove project from list
+      open: Abrir Projeto {path}
+      missing: Encontrar projeto perdido {path}
+      remove: Remover projeto da lista
     recent:
       search:
-        placeholder: Filter projects
-        blank: No matching projects
+        placeholder: Filtrar projetos
+        blank: Nenhum projeto correspondente
     corrupted: >-
-      O seu ficheiro do projeto pode estar danificado e ser necessário
+      O arquivo do seu projeto pode estar danificado e poder ser necessário
       corrigi-lo através de uma intervenção manual. Por favor, consulte o manual
-      do utilizador para obter ajuda adicional.
+      do usuário para obter maior assistência.
     readOnly: >-
-      Your project file is locked and cannot be modified. To unlock, change the
-      file permissions and open the project again.
+      Seu projeto está bloqueado e não pode ser modificado. Para desbloquear,
+      altere as permissões do arquivo e abra o projeto novamente.
     new:
       title: Criar novo projeto
-      name: Enter a name for the project
+      name: Insira um nome para o projeto
       type:
-        label: Choose the project type
+        label: Escolha o tipo do projeto
         option:
-          tpy: Advanced
-          managed: Standard
+          tpy: Avançado
+          managed: Padrão
         hint:
-          tpy: Links to photos at their original location.
-          managed: Copies photos to project folder on import.
-      create: Create Project
+          tpy: Links para fotos em seu local original.
+          managed: Copia fotos para a pasta do projeto na importação.
+      create: Criar Projeto
     stats:
-      photos: |-
-        {photos, plural,
-          =0 {No photos}
-          one {1 photo}
-          other {# photos}}
-      items: |-
-        {items, plural,
-          =0 {No items}
-          one {1 item}
-          other {# items}}
-      notes: |-
-        {notes, plural,
-          =0 {No notes}
-          one {1 note}
-          other {# notes}}
+      photos: '{photos, plural, =0 {Nenhuma foto} one {1 foto} other {# fotos}}'
+      items: '{items, plural, =0 {Nenhum item} one {1 item} other {# items}}'
+      notes: '{notes, plural, =0 {Nenhuma nota} one {1 nota} other {# notas}}'
   prefs:
     title: Preferências do Tropy
     app:
@@ -139,7 +127,7 @@ pt:
         onlyNotes: Incluir apenas fotos com notas.
         overflow: Permitir que o conteúdo ocupe mais do que uma página
       locale:
-        locale: Locale
+        locale: Idioma
         locales:
           cn: 中文
           de: Deutsch
@@ -156,9 +144,9 @@ pt:
         photo: Foto
         selection: Seleção
       title:
-        label: Importar nome do ficheiro como
+        label: Importar nome do arquivo como
         force: Substituir metadados incluídos na foto
-      debug: Ativar Modo Programador
+      debug: Ativar Modo Desenvolvedor
       localtime: Presumir que os timestamps Exif utilizam fuso horário local
       dup:
         label: Durante importação
@@ -176,7 +164,7 @@ pt:
             html: Notas como HTML
             markdown: Notas como Markdown
           copy:
-            label: Copy notes as
+            label: Copiar notas como
             option:
               text: Texto simples
               markdown: Markdown
@@ -185,16 +173,16 @@ pt:
         label: Interface
         option:
           invertScroll: Inverter direção quando move visualização nas fotos
-          invertZoom: Inverter direção quando utiliza o zoom nas fotos
+          invertZoom: Inverta a direção ao ampliar as fotos
           overlayToolbars: Ocultar e mostrar automaticamente as barras de ferramentas
       zoomMode:
         label: Por predefinição
         option:
           fit: Ampliar ajustando à altura
           fill: Ampliar ajustando à largura
-          zoom: Zoom photos to actual size
+          zoom: Ampliar fotos para o tamanho real
       layout:
-        label: Visualização de Item
+        label: Layout de Visualização de Item
         option:
           stacked: Layout Vertical
           side-by-side: Layout Horizontal
@@ -206,19 +194,19 @@ pt:
     project:
       label: Projeto
       base:
-        label: Link photos
+        label: Linkar Fotos
         option:
           'null': Using absolute paths
-          project: Relativos ao ficheiro do projeto
-          home: Relativos à pasta pessoal inicial
+          project: Relativo ao arquivo do projeto
+          home: Relativo ao seu diretório pessoal
           <None>: Usar caminhos absolutos
-      store: Managed folder
+      store: Pasta Gerenciada
       name: Nome
       id: ID
-      path: Ficheiro
+      path: Arquivo
       watch:
-        folder: Watch folder
-        usePolling: Using file stat polling
+        folder: Pasta Monitorada
+        usePolling: Usando pesquisa de estatísticas de arquivo
     template:
       label: Modelos
       new: Novo Modelo...
@@ -250,27 +238,27 @@ pt:
       noInfo: Autor desconhecido
       homepage: Mais
   item:
-    created: Data da Introdução
+    created: Data de adição
     modified: Modificado
     template: Modelo
   photo:
-    file: Ficheiro
+    file: Arquivo
     size: Dimensão
     density: Densidade
     type: Tipo
-    created: Data da Introdução
+    created: Data de adição
     modified: Modificado
     consolidate: Consolidar Foto
     error: Foto não encontrada
   selection:
     size: Dimensão
-    created: Data da Introdução
+    created: Data de adição
     modified: Modificado
   esper:
     tool:
       pan: Ferramenta de Deslizamento
       select: Ferramenta de Seleção
-      rotate: Rodar
+      rotate: Girar
       mirror: Espelho
       edit: Editar Foto
     mode:
@@ -304,8 +292,8 @@ pt:
     column:
       placeholder: Pesquisar
     file:
-      browse: Browse
-      clear: Clear
+      browse: Buscar
+      clear: Limpar
   template:
     id: URI
     name: Nome
@@ -320,10 +308,10 @@ pt:
       property: Propriedade
       label: Rótulo
       datatype: Tipo de Dados
-      isRequired: É campo obrigatório
+      isRequired: Definido como campo obrigatório
       hint: Dica
       value: Valor predefinido
-      isConstant: É apenas de leitura
+      isConstant: Definido como somente leitura
   vocab:
     id: URI
     prefix: Prefixo
@@ -334,7 +322,7 @@ pt:
   property:
     select: Selecionar uma Propriedade...
   datatype:
-    select: Selecionar um Tipo de Dados...
+    select: Selecionar um Tipo de Dado...
   resource:
     select: Selecionar um Recurso...
     id: URI
@@ -350,7 +338,7 @@ pt:
       buttons:
         - Descartar
         - Copiar Erro
-        - Mostrar Registos
+        - Mostrar Registros
     prompt:
       item:
         destroy:
@@ -372,14 +360,14 @@ pt:
         detail: >-
           Esta foto já existe no seu projeto. Tem a certeza que pretende
           importá-la novamente?
-        checkboxLabel: Recordar esta escolha
+        checkboxLabel: Lembrar desta escolha
         buttons:
           - Ignorar
           - Importar de qualquer modo
       plugin:
         uninstall:
           detail: >-
-            Tem a certeza que pretende apagar o plugin? Esta ação ira remover
+            Tem certeza que pretende apagar o plugin? Esta ação removerá
             permanentemente o plugin e a sua configuração.
           buttons:
             - Cancelar
@@ -387,27 +375,27 @@ pt:
       template:
         import:
           message: >-
-            A template with this id already exists in your ontology database. Do
-            you want to overwrite the existing template?
+            Já existe um modelo com este ID em seu banco de dados de ontologia.
+            Deseja substituir o modelo existente?
           buttons:
-            - Cancel
-            - Overwrite
+            - Cancelar
+            - Substituir
         imported:
           message: Modelo importado com sucesso.
           buttons:
             - OK
     filter:
       csv: CSV
-      templates: Modelos Tropy
+      templates: Modelos do Tropy
       images: Imagens
       items: Itens Tropy
       notes: Notas
-      projects: Projetos Tropy
+      projects: Projetos do Tropy
       rdf: Vocabulários RDF
       jsonld: JSON-LD
   action:
     project:
-      save: Gravar Projeto
+      save: Salvar Projeto
     list:
       create: Criar Lista
       delete: Apagar Lista
@@ -418,29 +406,29 @@ pt:
         restore: Adicionar Item à Lista
       order: Ordenar Lista
       restore: Restaurar Lista
-      save: Gravar Lista
+      save: Salvar Lista
     item:
       create: Criar Itens
       delete: Apagar Itens
-      explode: Explodir Item
+      explode: Expandir Item
       implode: Combinar Itens
       merge: Combinar Itens
       split: Separar Itens
       import: Importar Itens
       restore: Restaurar Itens
-      save: Gravar Item
+      save: Salvar Item
       tag:
         create: Etiqueta
         toggle: Etiqueta
         clear: Limpar Etiquetas
     metadata:
-      save: Gravar Metadados
+      save: Salvar Metadados
     ontology:
       import: Importar Vocabulários
       vocab:
-        save: Gravar Vocabulário
+        save: Salvar Vocabulário
       label:
-        save: Gravar Rótulo
+        save: Salvar Rótulo
       template:
         import: Importar Modelo
     photo:
@@ -450,30 +438,30 @@ pt:
       move: Mover Foto
       order: Ordenar Fotos
       restore: Restaurar Foto
-      save: Gravar Foto
+      save: Salvar Foto
     note:
       create: Criar Nota
       delete: Apagar Nota
       order: Ordenar Notas
       restore: Restaurar Nota
-      save: Gravar Nota
+      save: Salvar Nota
     tag:
       create: Criar Etiqueta
       delete: Apagar Etiqueta
       restore: Criar Etiqueta
-      save: Gravar Etiqueta
+      save: Salvar Etiqueta
     selection:
       create: Criar Seleção
       delete: Apagar Seleção
       restore: Criar Seleção
-      save: Gravar Seleção
+      save: Salvar Seleção
       order: Ordenar Seleções
   activity:
     cache:
       prune: Otimizar cache do projeto...
-      purge: Limpar caches antigas...
+      purge: Limpar caches antigos...
     project:
-      save: Gravar...
+      save: Salvando...
     list:
       create: Criando lista...
       delete: Apagando lista...
@@ -485,18 +473,18 @@ pt:
       load: Carregando listas...
       order: Ordenado lista...
       restore: Restaurando lista...
-      save: Gravando lista...
+      save: Salvando lista...
     tag:
       create: Criando etiqueta...
       delete: Apagando etiqueta...
       load: Carregando etiquetas...
       restore: Restaurando etiqueta...
-      save: Gravando etiqueta...
+      save: Salvando etiqueta...
     item:
       create: Criando item...
       delete: Apagando item...
       destroy: Apagando itens permanentemente...
-      explode: Explodindo item...
+      explode: Expandindo item...
       export: Exportando item...
       implode: Restaurando item...
       import: >-
@@ -504,23 +492,23 @@ pt:
         {total, number} …} other {Importando itens …}}
       load: Carregando itens...
       merge: Combinando item
-      print: Processing items …
+      print: Processando itens ...
       restore: Restaurando item...
-      save: Gravando itens...
+      save: Salvando itens...
       tag:
         create: Etiquetando item
         toggle: Etiquetando item...
         clear: Limpando etiquetas do item...
     metadata:
       load: Carregando metadados...
-      save: Gravando metadados...
+      save: Salvando metadados...
     ontology:
       load: Carregando ontologia...
       import: Importando vocabulários...
       vocab:
-        save: Gravando vocabulário...
+        save: Salvando vocabulário...
       label:
-        save: Gravando rótulo...
+        save: Salvando rótulo...
       template:
         import: Importando modelos...
     photo:
@@ -537,9 +525,9 @@ pt:
       load: Carregando fotos...
       move: Movendo fotos...
       order: Ordenando fotos...
-      save: Gravando foto...
+      save: Salvando foto...
       restore: Restaurando fotos...
-      extract: Extracting photo …
+      extract: Extraindo foto ...
     note:
       create: Criando nota...
       delete: Apagando nota...
@@ -549,12 +537,12 @@ pt:
     selection:
       create: Criando seleção na foto...
       load: Carregando seleções da foto...
-      extract: Extracting selection …
+      extract: Extraindo seleção ...
     api:
       photo:
-        extract: Extracting photo …
+        extract: Extraindo foto ...
       selection:
-        extract: Extracting selection …
+        extract: Extraindo seleção ...
   editor:
     commands:
       bold: Negrito
@@ -564,74 +552,74 @@ pt:
       strikethrough: Riscado
       subscript: Subscrito
       superscript: Sobrescrito
-      blockquote: Inserir Blockquote
+      blockquote: Inserir Bloco de Citação
       ol: Inserir Lista Numerada
       ul: Inserir Lista com Marcas
       link:
         button: Link
-        target: Destino do Link
+        target: Endereço do site de destino
         title: Título do Link
-      unlink: Remove link
+      unlink: Remover Link
       left: Alinhar à Esquerda
-      center: Centrar
+      center: Centralizar
       right: Alinhar à Direita
-      sinkListItem: Descer item na lista
-      liftListItem: Subir item na lista
+      sinkListItem: Deslocar item da lista para baixo
+      liftListItem: Deslocar item da lista para cima
   error:
     cache:
-      prune: Falhou a otimização da cache do projeto.
-      purge: Falhou a remoção das caches de projeto antigas.
+      prune: Falha ao otimizar cache do projeto.
+      purge: Falha ao remover caches de projeto antigos.
     project:
-      created: Falhou a criação de projeto.
+      created: Falha ao criar o projeto.
     item:
-      export: Falhou a exportação de itens.
-      merge: Falhou a combinação de itens.
-      import: Falhou a importação de item.
+      export: Falha ao exportar itens.
+      merge: Falha ao combinar itens.
+      import: Falha ao importar item.
       tag:
-        save: Falhou a gravação de etiqueta.
-        create: Falhou a etiquetação de item. Etiquetas devem ser únicas por item.
+        save: Falha ao salvar etiqueta.
+        create: Falha ao etiquetar item. Etiquetas devem ser únicas por item.
       template:
-        change: Falhou a alteração do modelo de item.
+        change: Falha ao alterar modelo de item.
     list:
-      load: Falhou o carregamento de listas.
-      create: Falhou a criação de lista. Os nomes das listas devem ser únicos.
+      load: Falha ao carregar listas.
+      create: Falha ao criar lista. Os nomes das listas devem ser únicos.
       move: >-
-        Falhou a movimentação da lista. Os nomes das listas devem ser únicos por
+        Falha ao movimentar lista. Os nomes das listas devem ser únicos por
         nível.
-      save: Falhou a gravação da lista.
+      save: Falha ao gravar lista.
       item:
-        add: Falhou a adição de item(s) na lista.
+        add: Falha ao adicionar item(s) à lista
     photo:
-      consolidate: Falhou a consolidação de fotos.
-      create: Falhou a importação de foto.
-      save: Falhou a gravação de foto.
-      extract: Failed to export photo.
+      consolidate: Falha ao consolidar fotos.
+      create: Falha na importação de foto(s)
+      save: Falha ao salvar foto.
+      extract: Falha ao exportar foto.
       template:
-        change: Falhou a alteração do modelo de foto.
+        change: Falha ao alterar modelo de foto.
     selection:
-      create: Falhou a criação de seleção na foto.
-      extract: Failed to export selection.
+      create: Falha ao criar seleção na foto.
+      extract: Falha ao exportar seleção.
       template:
-        change: Falhou a alteração do modelo de seleção.
+        change: Falha ao alterar modelo de seleção.
     ontology:
-      migrate: Falhou a atualização da sua base de dados ontológica.
-      import: Falhou a importação de vocabulário.
+      migrate: Falha ao atualizar sua base de dados ontológica.
+      import: Falha ao importar vocabulário.
       vocab:
-        save: Falhou a gravação do vocabulário. Prefixo deve ser único.
+        save: Falha ao salvar o vocabulário. Prefixo deve ser único.
       template:
-        import: Falhou a importação de modelo.
+        import: Falha ao importar modelo.
         field:
-          add: Falhou a adição do campo ao modelo.
-          remove: Falhou a remoção do campo do modelo.
+          add: Falha ao adicionar campo ao modelo.
+          remove: Falha ao remover campo do template.
     tag:
-      create: Falhou a criação de etiqueta. Nomes das etiquetas devem ser únicos.
+      create: Falha ao criar etiqueta. Nomes das etiquetas devem ser únicos.
     db:
-      SQLITE_CANTOPEN: Não é possível encontrar ou abrir ficheiro da base de dados.
+      SQLITE_CANTOPEN: Não é possível encontrar ou abrir o arquivo da base de dados.
   flash:
     update:
       ready:
         message: >-
-          Tropy {version} está pronto para ser instalado. Quer instalar e
+          Tropy {version} está pronto para ser instalado. Gostaria de instalar e
           reiniciar agora?
         confirm: Reiniciar Agora
   plugin:

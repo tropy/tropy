@@ -166,6 +166,7 @@ it:
           it: Italiano
           ja: 日本語
           pt: Português
+          pt-BR: Português brasileiro
       templates:
         label: Modelli predefiniti
         item: Elemento

@@ -158,6 +158,7 @@ cn:
           it: Italiano
           ja: 日本語
           pt: Português
+          pt-BR: Português brasileiro
       templates:
         label: 默认模板
         item: 项目

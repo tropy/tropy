@@ -159,6 +159,7 @@ es:
           it: Italiano
           ja: 日本語
           pt: Português
+          pt-BR: Português brasileiro
       templates:
         label: Plantillas por defecto
         item: Objeto
