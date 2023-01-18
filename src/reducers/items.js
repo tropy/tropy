@@ -24,8 +24,11 @@ function itemsReducer(state = {}, { type, payload, meta, error }) {
 
     case ITEM.SPLIT:
     case ITEM.MERGE:
-      if (!meta.done || error) return state
-      // eslint-disable-line no-fallthrough
+    case ITEM.IMPLODE:
+      return (!meta.done || error) ?
+        state :
+        insert(state, payload)
+
     case ITEM.INSERT:
       return insert(state, payload)
     case ITEM.REMOVE:
@@ -37,11 +40,6 @@ function itemsReducer(state = {}, { type, payload, meta, error }) {
       return (!meta.done || error) ?
         state :
         replace(state, payload)
-
-    case ITEM.IMPLODE:
-      return (!meta.done || error) ?
-        state :
-        insert(state, payload)
 
     case ITEM.BULK.UPDATE:
       return bulk.update(state, payload, meta)
