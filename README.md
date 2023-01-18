@@ -7,8 +7,7 @@ Bring order to your research —
 use the power of Tropy to organize and describe your research photos
 so you can quickly find your sources whenever you need them.
 
-Visit [tropy.org][] to learn more
-or follow [@tropy][] on Twitter for important announcements.
+Visit [tropy.org][] to learn more.
 To get started, download the latest version of Tropy for your platform,
 check out the [user's manual][docs] and join the discussion on the [forums][].
 
@@ -17,7 +16,6 @@ please find more details below.
 Happy hacking!
 
 [tropy.org]: https://tropy.org
-[@tropy]: https://twitter.com/tropy
 [docs]: https://docs.tropy.org
 [forums]: https://forums.tropy.org
 
