@@ -24,8 +24,8 @@ es:
     tags:
       tab: Etiquetas
       add: >-
-        {count, plural,=0 {Añadir una etiqueta}one {Añadir una etiqueta a 1
-        objeto}other {Añadir una etiqueta a # objetos}}
+        {count, plural,=0 {Añadir etiqueta}one {Añadir etiqueta a 1 objeto}other
+        {Añadir etiqueta a # objetos}}
     photo:
       title: |-
         {count, plural,
@@ -78,13 +78,13 @@ es:
   project:
     empty: Arrastrar y suelta tus fotos en Tropy para empezar.
     file:
-      open: Open project {path}
-      missing: Find missing project {path}
-      remove: Remove project from list
+      open: Abrir proyecto {path}
+      missing: Encontrar proyecto perdido {path}
+      remove: Quitar proyecto de la lista
     recent:
       search:
-        placeholder: Filter projects
-        blank: No matching projects
+        placeholder: Filtrar proyectos
+        blank: Ningún proyecto correspondiente
     corrupted: >-
       Tu archivo de proyecto puede estar dañado. Intervención manual puede ser
       necesaria para repararlo. Consulta la guía del usuario para obtener ayuda.
@@ -93,34 +93,34 @@ es:
       cambia los permisos del archivo y abre el proyecto nuevamente.
     new:
       title: Crear un nuevo proyecto
-      name: Enter a name for the project
+      name: Ingresa un nombre para el proyecto
       type:
-        label: Choose the project type
+        label: Escoger un tipo de proyecto
         option:
-          tpy: Advanced
-          managed: Standard
+          tpy: Avanzado
+          managed: Convencional
         hint:
-          tpy: Links to photos at their original location.
-          managed: Copies photos to project folder on import.
-      create: Create Project
+          tpy: Vincula con fotos en su ubicación original
+          managed: Copia fotos a la carpeta del proyecto al importar.
+      create: Crear proyecto
     stats:
       photos: |-
         {photos, plural,
-          =0 {No photos}
-          one {1 photo}
-          other {# photos}}
+        =0 {Ninguna foto}
+        one {1 foto}
+        other {# fotos}}
       items: |-
         {items, plural,
-          =0 {No items}
-          one {1 item}
-          other {# items}}
+        =0 {Ningún objeto}
+        one {1 objeto}
+        other {# objetos}}
       notes: |-
         {notes, plural,
-          =0 {No notes}
-          one {1 note}
-          other {# notes}}
+        =0 {Ninguna nota}
+        one {1 nota}
+        other {# notas}}
   prefs:
-    title: Preferencias
+    title: Preferencias de Tropy
     app:
       label: Parámetros
       style:
@@ -168,8 +168,8 @@ es:
       title:
         label: Utilizar el nombre del archivo como
         force: Sobreescribir los metadatos de foto incorporados
-      debug: Activar le modo de desarrollo
-      localtime: Suponer que la marca de hora de las imágenes usa la hora local
+      debug: Activar el modo de desarrollo
+      localtime: Suponer que la marca de hora de las fotos usa la hora local
       dup:
         label: Durante la importación
         option:
@@ -194,7 +194,7 @@ es:
       ui:
         label: Interfaz
         option:
-          invertScroll: Invertir la dirección durante el desplazamiento en la fotos
+          invertScroll: Invertir la dirección durante el desplazamiento en las fotos
           invertZoom: 'Invertir la dirección cuando se usa el zoom en las fotos '
           overlayToolbars: Esconder y mostrar automáticamente las barras de herramientas
       zoomMode:
@@ -214,13 +214,13 @@ es:
           datatype: Solamente por tipo de dato
           property-datatype: Por tipo de dato y propiedad
     project:
-      label: Projecto
+      label: Proyecto
       base:
         label: Vincular fotos
         option:
           'null': Using absolute paths
           project: Relativo al archivo de proyecto
-          home: Relativo a su carpeta de usuario
+          home: Relativo a la carpeta de usuario
           <None>: Usando rutas absolutas
       store: Carpeta administrada
       name: Nombre

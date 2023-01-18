@@ -20,7 +20,7 @@ pt-BR:
       message: Tropy não está respondendo
       detail: >
         Esta janela do Tropy não está respondendo. Prefere fechá-la ou continuar
-        aguardandor?
+        aguardando?
     unhandled:
       buttons:
         - Descartar

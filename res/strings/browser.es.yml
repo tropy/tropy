@@ -1,8 +1,8 @@
 es:
   dialog:
     file:
-      project: Proyectos Tropy
-      plugin: Plugins Tropy
+      project: Proyectos de Tropy
+      plugin: Plugins de Tropy
       pdf: Archivos PDF
     crashed:
       buttons:
@@ -30,7 +30,7 @@ es:
     prefs:
       title: Preferencias
     wizard:
-      title: Bienvenida a Tropy
+      title: Bienvenido a Tropy
     about:
       title: Acerca de Tropy
     project:
