@@ -17,7 +17,7 @@ please find more details below.
 Happy hacking!
 
 [tropy.org]: https://tropy.org
-[@tropy]: https://fosstodon.org/@tropy
+[@tropy@fosstodon.org]: https://fosstodon.org/@tropy
 [docs]: https://docs.tropy.org
 [forums]: https://forums.tropy.org
 
