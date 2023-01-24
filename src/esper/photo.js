@@ -17,6 +17,7 @@ const NEGATIVE = [
 export class Photo extends Container {
   #width
   #height
+  #resolution
   #pivot
   #tool = ESPER.TOOL.ARROW
 
@@ -66,6 +67,10 @@ export class Photo extends Container {
 
   get tool() {
     return this.#tool
+  }
+
+  get resolution() {
+    return this.#resolution
   }
 
   set tool(tool) {
@@ -142,6 +147,8 @@ export class Photo extends Container {
   }
 
   handleResolutionChange(resolution = getDevicePixelRatio()) {
+    this.#resolution = resolution
+
     for (let filter of this.bg.filters) {
       filter.resolution = resolution
     }

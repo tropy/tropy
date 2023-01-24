@@ -148,6 +148,7 @@ export class SelectionOverlay extends Container {
     if (this.active == null || this.parent == null) return
 
     let scale = 1 / this.parent.scale.y
+    let { resolution, width: w, height: h } = this.parent
     let { x, y, width, height } = this.active
 
     this.children[1]
@@ -157,7 +158,7 @@ export class SelectionOverlay extends Container {
 
     this.children[0]
       .beginFill(...ESPER.COLOR.mask.fill)
-      .drawRect(0, 0, this.parent.width, this.parent.height)
+      .drawRect(0, 0, w * resolution, h * resolution)
       .beginHole()
       .drawRect(x, y, width, height)
       .endHole()
