@@ -93,7 +93,7 @@ describe('Tropy', () => {
         for (const w of tropy.wm.windows?.project  || []) {
           w.close('project', true)
         }
-        sinon.restore()
+        BrowserWindow.prototype.show.restore()
         delete tropy.state
       })
 
