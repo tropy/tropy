@@ -848,6 +848,10 @@ export class Tropy extends EventEmitter {
             return
           }
 
+          if (extname(path).toLowerCase() !== '.pdf') {
+            path = `${path}.pdf`
+          }
+
           info('will print pdf')
           await WindowManager.printToPDF(win, path, {
             landscape: opts.landscape
