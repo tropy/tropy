@@ -365,6 +365,65 @@ export class Tropy extends EventEmitter {
     return this
   }
 
+  async print(opts, sender) {
+    try {
+      if (!opts.items.length) {
+        info('print aborted: no items submitted')
+        return
+      }
+
+      var win = await this.wm.open('print', this.hash)
+
+      await Promise.race([
+        once(win, 'ready', 'react:ready'),
+        delay(2000)
+      ])
+
+      sender.focus()
+
+      info(`will print ${opts.items.length} item(s)`)
+      win.send('print', opts)
+
+      await Promise.race([
+        once(win, 'print:ready'),
+        delay(60000)
+      ])
+
+      if (opts.pdf) {
+        let path = await dialog.save(sender, {
+          filters: [{
+            name: this.dict.dialog.file.pdf,
+            extensions: ['pdf']
+          }]
+        })
+
+        if (!path) {
+          info('print pdf aborted: no file selected')
+          return
+        }
+
+        if (extname(path).toLowerCase() !== '.pdf') {
+          path = `${path}.pdf`
+        }
+
+        info('will print pdf')
+        await WindowManager.printToPDF(win, path, {
+          landscape: opts.landscape
+        })
+
+        info(`saved pdf ${path}`)
+
+      } else {
+        debug('will open print dialog')
+        let status = await WindowManager.print(win)
+        info(`print status: ${status}`)
+      }
+
+    } finally {
+      if (win != null) win.destroy()
+    }
+  }
+
   listen() {
     this.on('app:about', () =>
       this.showAboutWindow())
@@ -817,63 +876,7 @@ export class Tropy extends EventEmitter {
     })
 
     ipc.handle('print', async (event, opts) => {
-      try {
-        if (!opts.items.length) {
-          info('print aborted: no items submitted')
-          return
-        }
-
-        let projectWindow = BrowserWindow.fromWebContents(event.sender)
-        var win = await this.wm.open('print', this.hash)
-
-        await Promise.race([
-          once(win, 'ready', 'react:ready'),
-          delay(2000)
-        ])
-
-        projectWindow.focus()
-
-        info(`will print ${opts.items.length} item(s)`)
-        win.send('print', opts)
-
-        await Promise.race([
-          once(win, 'print:ready'),
-          delay(60000)
-        ])
-
-        if (opts.pdf) {
-          let path = await dialog.save(projectWindow, {
-            filters: [{
-              name: this.dict.dialog.file.pdf,
-              extensions: ['pdf']
-            }]
-          })
-
-          if (!path) {
-            info('print pdf aborted: no file selected')
-            return
-          }
-
-          if (extname(path).toLowerCase() !== '.pdf') {
-            path = `${path}.pdf`
-          }
-
-          info('will print pdf')
-          await WindowManager.printToPDF(win, path, {
-            landscape: opts.landscape
-          })
-
-          info(`saved pdf ${path}`)
-
-        } else {
-          debug('will open print dialog')
-          let status = await WindowManager.print(win)
-          info(`print status: ${status}`)
-        }
-
-      } finally {
-        if (win != null) win.destroy()
-      }
+      this.print(opts, BrowserWindow.fromWebContents(event.sender))
     })
 
     ipc.on('error', (event, error) => {
