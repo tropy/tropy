@@ -19,6 +19,10 @@ export class Create extends Command {
     let note = yield call(db.transaction, tx =>
       mod.note.create(tx, { id, state, text }))
 
+    // Subtle: for referential-stability in PM
+    // keep the non-serialized state object intact!
+    note.state = state
+
     yield put(act[type].notes.add({ id, notes: [note.id] }))
     yield put(act.note.select({ note: note.id, photo, selection }))
 

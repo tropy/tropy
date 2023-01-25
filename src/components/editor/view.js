@@ -79,7 +79,7 @@ export const EditorView = forwardRef(({
   })
 
   let handleUnload = useEvent(() => {
-    view.destroy()
+    view?.destroy()
     setView(null)
   })
 
