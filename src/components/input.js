@@ -81,11 +81,15 @@ export class Input extends React.PureComponent {
   }
 
   select = () => {
-    this.input.current?.setSelectionRange(
-      0,
-      this.input.current.value.length,
-      'backward'
-    )
+    if (this.props.type === 'text') {
+      this.input.current?.setSelectionRange(
+        0,
+        this.input.current.value.length,
+        'backward'
+      )
+    } else {
+      this.input.current?.select()
+    }
   }
 
   reset() {
