@@ -670,7 +670,7 @@ export class WindowManager extends EventEmitter {
         if (success)
           resolve('successful')
         else
-          reason === 'cancelled' ? resolve(reason) : reject(reason)
+          (/cancell?ed/i).test(reason) ? resolve(reason) : reject(reason)
       })
     })
   }
