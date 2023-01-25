@@ -816,16 +816,22 @@ export class Tropy extends EventEmitter {
       this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
     })
 
-    ipc.handle('print', async (_, opts) => {
+    ipc.handle('print', async (event, opts) => {
       try {
-        if (!opts.items.length) return
+        if (!opts.items.length) {
+          info('print aborted: no items submitted')
+          return
+        }
 
+        let projectWindow = BrowserWindow.fromWebContents(event.sender)
         var win = await this.wm.open('print', this.hash)
 
         await Promise.race([
           once(win, 'ready', 'react:ready'),
           delay(2000)
         ])
+
+        projectWindow.focus()
 
         info(`will print ${opts.items.length} item(s)`)
         win.send('print', opts)
@@ -836,7 +842,7 @@ export class Tropy extends EventEmitter {
         ])
 
         if (opts.pdf) {
-          let path = await dialog.save(win, {
+          let path = await dialog.save(projectWindow, {
             filters: [{
               name: this.dict.dialog.file.pdf,
               extensions: ['pdf']
@@ -844,7 +850,7 @@ export class Tropy extends EventEmitter {
           })
 
           if (!path) {
-            info('pdf printing cancelled: no file selected')
+            info('print pdf aborted: no file selected')
             return
           }
 
