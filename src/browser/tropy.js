@@ -403,7 +403,9 @@ export class Tropy extends EventEmitter {
         }
 
         if (extname(path).toLowerCase() !== '.pdf') {
-          path = `${path}.pdf`
+          let xpath = `${path}.pdf`
+          if (!fs.existsSync(xpath))
+            path = xpath
         }
 
         info('will print pdf')
