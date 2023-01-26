@@ -17,7 +17,7 @@ export function useEventHandler(
       on(target, name, handler, { capture, passive })
 
       return () => {
-        off(document, name, handler, { capture, passive })
+        off(target, name, handler, { capture, passive })
       }
     }
   }, [target, name, handler, passive, capture])
