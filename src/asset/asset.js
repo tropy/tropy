@@ -23,13 +23,13 @@ export class Asset {
     this.path = path
 
     // Subtle: original filename; doesn't automatically update if path changes!
-    this.filename = this.base
+    this.filename = this.basename
 
     this.checksum = checksum
     this.mimetype = mimetype
   }
 
-  get base() {
+  get basename() {
     return this.isRemote ?
       basename(decodeURIComponent((new URL(this.url)).pathname)) :
       basename(this.path)
@@ -40,7 +40,7 @@ export class Asset {
   }
 
   get ext() {
-    return extname(this.base)
+    return extname(this.basename)
   }
 
   get mtime() {
@@ -48,7 +48,7 @@ export class Asset {
   }
 
   get name() {
-    return basename(this.base, this.ext)
+    return basename(this.basename, this.ext)
   }
 
   get isRemote() {
