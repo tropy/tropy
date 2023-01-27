@@ -173,6 +173,7 @@ export default [
       ], { commonjsBugFix: true }),
       alias({
         entries: {
+          'ky-universal': 'ky',
           'semver': join(process.cwd(), 'node_modules/semver'),
           'readable-stream': 'node:stream'
         }
@@ -191,16 +192,6 @@ export default [
         ],
         values: {
           manual: 'follow'
-        }
-      }),
-      // PATCH remove top-level await in ky-universal
-      replace({
-        preventAssignment: false,
-        include: [
-          'node_modules/ky-universal/index.js'
-        ],
-        values: {
-          'await import': 'require'
         }
       }),
       resolve({
