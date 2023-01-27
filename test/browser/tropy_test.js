@@ -1,6 +1,14 @@
-import { app, BrowserWindow } from 'electron'
+import { app } from 'electron'
 import { URL } from 'url'
 import { Tropy } from '../../src/browser/tropy'
+
+const fakeWindow = () => ({
+  show: sinon.spy(),
+  setTitle: sinon.spy(),
+  webContents: {
+    send: sinon.spy()
+  }
+})
 
 describe('Tropy', () => {
   let tropy
@@ -58,9 +66,7 @@ describe('Tropy', () => {
     describe('project', () => {
       beforeEach(() => {
         sinon.stub(tropy.wm, 'current')
-        sinon.stub(tropy, 'openMostRecentProject').callsFake(() => ({
-          show: sinon.spy()
-        }))
+        sinon.stub(tropy, 'openMostRecentProject').callsFake(fakeWindow)
         sinon.stub(tropy, 'dispatch')
       })
 
@@ -82,48 +88,60 @@ describe('Tropy', () => {
             .to.have.a.nested.property('payload.photos').eql([3])
         })
     })
-    describe('project windows', () => {
-      const projectFilePath = 'test.tpy'
-      beforeEach(() => {
-        sinon.stub(BrowserWindow.prototype, 'show')
-        tropy.state = { recents: [], win: { bounds: {} } }
-      })
+  })
 
-      afterEach(() => {
-        for (const w of tropy.wm.windows?.project  || []) {
-          w.close('project', true)
-        }
-        BrowserWindow.prototype.show.restore()
-        delete tropy.state
-      })
+  describe('showProjectWindow', () => {
+    let win
+    let project = { path: 'x.tpy' }
 
-      it('no second window if same project opened in new window', async () => {
-        await tropy.openFile(projectFilePath)
-        tropy.setProject({ path: projectFilePath }, tropy.wm.current())
+    beforeEach(() => {
+      win = fakeWindow()
 
-        await tropy.openFile(projectFilePath)
-        expect(tropy.wm.windows['project']).to.have.length(1)
-      })
-      it('new window if different project opened in new window', async () => {
-        await tropy.openFile(projectFilePath)
-        tropy.setProject({ path: projectFilePath }, tropy.wm.current())
+      tropy.state = { recents: [], win: { bounds: {} } }
+      tropy.setProject(project, win)
 
-        await tropy.openFile('aDifferentProject.tpy')
-        expect(tropy.wm.windows['project']).to.have.length(2)
-      })
+      sinon.stub(tropy.wm, 'map').returns([win])
+      sinon.stub(tropy.wm, 'open')
+    })
 
-      it('refocus window if open project opened in new window', async () => {
-        const secondProject = 'aDifferentProject.tpy'
-        await tropy.openFile(projectFilePath)
-        tropy.setProject({ path: projectFilePath }, tropy.wm.current())
+    afterEach(() => {
+      tropy.setProject(null, win)
 
-        await tropy.openFile(secondProject)
-        tropy.setProject({ path: secondProject }, tropy.wm.current())
-        expect(tropy.wm.windows['project']).to.have.length(2)
+      tropy.wm.map.restore()
+      tropy.wm.open.restore()
+    })
 
-        await tropy.openFile(projectFilePath)
-        expect(tropy.wm.windows['project']).to.have.length(2)
-      })
+    it('focus window if project already open', () => {
+      tropy.showProjectWindow(project.path, null)
+
+      expect(win.show).to.have.been.called
+      expect(tropy.wm.open).not.to.have.been.called
+    })
+
+    it('new window if not already open', () => {
+      tropy.showProjectWindow('other.tpy', null)
+
+      expect(win.show).not.to.have.been.called
+      expect(tropy.wm.open).to.have.been.calledOnce
+
+      let call = tropy.wm.open.getCall(0)
+
+      expect(call.args[0]).to.eql('project')
+      expect(call.args[1]).to.have.property('file', 'other.tpy')
+    })
+
+    it('open in existing window if given', () => {
+      tropy.showProjectWindow('other.tpy', win)
+
+      expect(tropy.wm.open).not.to.have.been.called
+
+      expect(win.show).to.have.been.called
+      expect(win.webContents.send).to.have.been.calledOnce
+
+      let [type, action] = win.webContents.send.getCall(0).args
+
+      expect(type).to.eql('dispatch')
+      expect(action.payload).to.eql('other.tpy')
     })
   })
 })
