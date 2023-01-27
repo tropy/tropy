@@ -173,8 +173,8 @@ mod.item = {
         SELECT
             id,
             template,
-            datetime(created, "localtime") AS created,
-            datetime(modified, "localtime") AS modified,
+            strftime("%Y-%m-%dT%H:%M:%fZ", created, "localtime") AS created,
+            strftime("%Y-%m-%dT%H:%M:%fZ", modified, "localtime") AS modified,
             deleted
           FROM subjects
             JOIN items USING (id)
@@ -231,8 +231,8 @@ mod.item = {
   },
 
   async create(db, template, data) {
-    const { id } = await db.run(`
-      INSERT INTO subjects (template) VALUES (?)`, template)
+    const { id } = await mod.subject.create(db, { template })
+
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 
@@ -244,9 +244,7 @@ mod.item = {
   },
 
   async dup(db, source) {
-    const { id } = await db.run(`
-      INSERT INTO subjects (template)
-        SELECT template FROM subjects WHERE id = ?`, source)
+    const { id } = await mod.subject.dup(db, source)
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 
@@ -334,10 +332,7 @@ mod.item = {
   },
 
   destroy(db, ids) {
-    return db.run(
-      `DELETE FROM subjects WHERE id IN (${ids.join(',')})`
-    )
-
+    return mod.subject.destroy(db, ids)
   },
 
   async prune(db, since = '-1 month') {

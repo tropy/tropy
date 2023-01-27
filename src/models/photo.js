@@ -21,8 +21,8 @@ async function load(db, ids, { basePath } = {}) {
           id,
           item_id AS item,
           template,
-          datetime(created, "localtime") AS created,
-          datetime(modified, "localtime") AS modified,
+          strftime("%Y-%m-%dT%H:%M:%fZ", created, "localtime") AS created,
+          strftime("%Y-%m-%dT%H:%M:%fZ", modified, "localtime") AS modified,
           angle,
           color,
           density,
@@ -94,9 +94,7 @@ async function load(db, ids, { basePath } = {}) {
 export default {
   async create(db, { basePath, template }, { item, image, data, position }) {
     let { protocol = 'file', path, ...meta } = image
-    let { id } = await db.run(
-      ...into('subjects').insert({ template })
-    )
+    let { id } = await subject.create(db, { template })
 
     if (basePath && protocol === 'file') {
       path = relative(basePath, path)

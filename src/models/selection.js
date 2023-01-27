@@ -1,7 +1,8 @@
-import { empty, list, pick } from '../common/util'
-import { props } from '../common/export'
-import { into } from '../common/query'
-import metadata from './metadata'
+import { empty, list, pick } from '../common/util.js'
+import { props } from '../common/export.js'
+import { into } from '../common/query.js'
+import metadata from './metadata.js'
+import subject from './subject.js'
 
 async function load(db, ids) {
   let selections = {}
@@ -70,8 +71,7 @@ export default {
       data,
       ...image
     }) {
-    const { id } = await db.run(
-      ...into('subjects').insert({ template }))
+    const { id } = await subject.create(db, { template })
 
     await db.run(
       ...into('images').insert({ id, ...pick(image, props.image) }))
