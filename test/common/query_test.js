@@ -1,4 +1,4 @@
-import { select, update, into } from '../../src/common/query'
+import { deleteFrom, select, update, into } from '../../src/common/query.js'
 
 describe('Query Builder', () => {
   describe('Select', () => {
@@ -154,6 +154,27 @@ describe('Query Builder', () => {
         ...into('photos').insert({ id: 23, mimetype: 'image/jpeg' })
       ]).to.eql([
         'INSERT INTO photos (id, mimetype) VALUES (?,?)', [23, 'image/jpeg']
+      ]))
+  })
+
+  describe('Delete', () => {
+    it('simple', () =>
+      expect(deleteFrom('subjects').query)
+        .to.eql('DELETE FROM subjects'))
+
+    it('list params', () =>
+      expect([
+        ...deleteFrom('subjects').where({ id: [1, 2, 3] })
+      ]).to.eql([
+        'DELETE FROM subjects WHERE id IN (1, 2, 3)'
+      ]))
+
+    it('sub-query', () =>
+      expect([
+        ...deleteFrom('subjects')
+          .where('id IN (SELECT id FROM trash WHERE reason = "auto")')
+      ]).to.eql([
+        'DELETE FROM subjects WHERE id IN (SELECT id FROM trash WHERE reason = "auto")'
       ]))
   })
 })

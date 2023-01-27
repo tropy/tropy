@@ -352,6 +352,21 @@ export class Update extends ConditionalQuery {
   }
 }
 
+export class Delete extends ConditionalQuery {
+  constructor(src) {
+    super()
+    this.src = src
+  }
+
+  get query() {
+    return pluck(this, ['DELETE', 'WHERE']).join(' ')
+  }
+
+  get DELETE() {
+    return `DELETE FROM ${this.src}`
+  }
+}
+
 export function into(...args) {
   return new Insert(...args)
 }
@@ -366,4 +381,8 @@ export function union(...args) {
 
 export function update(...args) {
   return new Update(...args)
+}
+
+export function deleteFrom(...args) {
+  return new Delete(...args)
 }
