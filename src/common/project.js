@@ -1,5 +1,7 @@
+import { shell } from 'electron'
 import assert from 'node:assert'
-import { access, stat, mkdir } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
+import { stat, mkdir } from 'node:fs/promises'
 import {
   basename, dirname, extname, join, normalize, resolve, relative
 } from 'node:path'
@@ -9,6 +11,7 @@ import { home } from './os.js'
 import { into, select, update } from './query.js'
 import { version } from './release.js'
 import { empty } from './util.js'
+import { info, warn } from './log.js'
 
 
 /*
@@ -18,12 +21,23 @@ export async function create(path, schema, {
   autoclose = true,
   name = 'Tropy',
   base = null,
-  id = uuid()
+  id = uuid(),
+  overwrite = false
 } = {}) {
   try {
     let type = getProjectType(path)
     let dbFile = path
     let store = null
+
+    if (existsSync(path)) {
+      if (!overwrite)
+        throw new Error(`project file exists: "${path}"`)
+
+      warn(`trashing old project previously at "${path}"`)
+      await shell.trashItem(path)
+    }
+
+    info(`creating new project at "${path}"`)
 
     if (type === MANAGED) {
       dbFile = join(path, MANAGED_DB_NAME)
@@ -34,9 +48,6 @@ export async function create(path, schema, {
       await mkdir(join(path, store))
 
     } else {
-      assert(await access(dbFile).then(() => false, () => true),
-        `project file exists: "${dbFile}"`)
-
       assert(BASES.includes(base),
         `project base not supported: "${base}"`)
     }
@@ -61,7 +72,6 @@ export async function create(path, schema, {
     }
 
     return db
-
 
   } catch (e) {
     await db?.close()

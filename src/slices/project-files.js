@@ -13,7 +13,10 @@ export const create = createAsyncThunk(
     let path = await save.project(type, name)
 
     if (path)
-      await createProject(path, Schema.expand('project'), { name })
+      await createProject(path, Schema.expand('project'), {
+        name,
+        overwrite: true
+      })
 
     return { path }
   })

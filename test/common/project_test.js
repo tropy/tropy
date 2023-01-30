@@ -68,7 +68,7 @@ describe('common/project', () => {
         .to.eventually.be.rejectedWith('project file exists')
 
       await expect(create(tpm, F.schema('project').path))
-        .to.eventually.be.rejectedWith('EEXIST')
+        .to.eventually.be.rejectedWith('project file exists')
     })
   })
 
