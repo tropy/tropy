@@ -168,10 +168,17 @@ const getActiveDatatype = memo(
     metadata?.[id]?.[prop]?.type || TYPE.TEXT
 )
 
+const isCompletable = (value, datatype, maxLength = 100) => (
+  value != null &&
+  value.type === datatype &&
+  value.text?.length > 0 &&
+  value.text.length < maxLength
+)
+
 const makeCompletionFilter = (prop, datatype, byProp) =>
   byProp ?
-    ([id, v]) => id === prop && v && !!(v.text) && v.type === datatype :
-    ([id, v]) => id !== 'id' && v && !!(v.text) && v.type === datatype
+    ([id, v]) => id === prop && isCompletable(v, datatype) :
+    ([id, v]) => id !== 'id' && isCompletable(v, datatype)
 
 export const getMetadataCompletions = memo(
   getMetadata,
@@ -181,6 +188,7 @@ export const getMetadataCompletions = memo(
 
   (metadata, prop, datatype, byProp) => {
     if (prop == null) return EMPTY
+
     let comp = new Set()
 
     seq(metadata, compose(
