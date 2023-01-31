@@ -81,8 +81,8 @@ export async function create(path, schema, {
 
 
 /*
- * Opens a project file and returns an array with an `info` object
- * and a live `db` instance.
+ * Opens a project file and returns an array `[db, project]`
+ * with a live `db` instance and the project info object.
  *
  * Unless for read-only project files, any outstanding migrations
  * in the `migrate` folder will be applied.
@@ -114,7 +114,7 @@ export async function open(path, {
     var migrations = await db.migrate(migrate)
   }
 
-  let info = await load(db)
+  let project = await load(db)
   let accessId
 
   if (migrations?.length > 0) {
@@ -127,7 +127,7 @@ export async function open(path, {
 
     if (!skipIntegrityCheck) {
       await db.check().catch(() => {
-        info.isCorrupted = true
+        project.isCorrupted = true
       })
     }
   }
@@ -137,7 +137,7 @@ export async function open(path, {
       await endProjectAccess(db, accessId, pruneAccessTable)
   })
 
-  return [db, info]
+  return [db, project]
 }
 
 /*
@@ -180,23 +180,23 @@ export async function pstat(path, modifiedSince) {
 
 
 export async function load(db) {
-  let info = await db.get(projectInfo.query)
-  assert(info?.id != null, 'invalid project info')
+  let project = await db.get(projectInfo.query)
+  assert(project?.id != null, 'invalid project info')
 
-  info.isReadOnly = db.isReadOnly
-  info.basePath = resolveBasePath(db, info.base)
+  project.isReadOnly = db.isReadOnly
+  project.basePath = resolveBasePath(db, project.base)
 
-  info.isManaged = info.store != null
+  project.isManaged = project.store != null
 
-  if (info.isManaged) {
-    info.store = resolve(info.basePath, normalize(info.store))
-    info.path = dirname(db.path)
+  if (project.isManaged) {
+    project.store = resolve(project.basePath, normalize(project.store))
+    project.path = dirname(db.path)
 
   } else {
-    info.path = db.path
+    project.path = db.path
   }
 
-  return info
+  return project
 }
 
 export async function save(db, { id, ...props }, basePath) {
