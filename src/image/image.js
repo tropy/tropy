@@ -128,7 +128,10 @@ export class Image extends Asset {
 
     if (this.mimetype === MIME.JPG) {
       try {
-        this.description = [...getComments(this.buffer)].join(' ')
+        this.description = [
+          ...getComments(this.buffer, 256)
+        ].join(' ')
+
       } catch (e) {
         warn({ stack: e.stack }, 'failed to extract jpg comments')
       }
