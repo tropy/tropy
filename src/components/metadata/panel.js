@@ -319,7 +319,7 @@ const MetadataPanelContainer = connect(
       },
 
       onOpenInFolder(...args) {
-        dispatch(act.shell.open(args))
+        dispatch(act.shell.open(...args))
       },
 
       onTemplateChange(type, ...args) {
