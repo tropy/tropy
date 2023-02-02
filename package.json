@@ -140,6 +140,7 @@
     "prosemirror-schema-list": "^1.1.4",
     "prosemirror-state": "^1.3.4",
     "prosemirror-view": "^1.29.0",
+    "rdjpgcom": "^1.0.0",
     "react": "^18.0.0",
     "react-dnd": "^14.0.2",
     "react-dnd-html5-backend": "^14.0.0",

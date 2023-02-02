@@ -1,3 +1,4 @@
+import { rdjpgcom } from 'rdjpgcom'
 import { Asset } from '../asset'
 import { exif } from './exif'
 import { xmp } from './xmp'
@@ -7,7 +8,6 @@ import { pick, restrict } from '../common/util'
 import { rgb } from '../css'
 import { IMAGE, MIME } from '../constants'
 import { exif as exifns } from '../ontology'
-import { getComments } from './jpg'
 
 const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
 
@@ -128,9 +128,12 @@ export class Image extends Asset {
 
     if (this.mimetype === MIME.JPG) {
       try {
-        this.description = [
-          ...getComments(this.buffer, 256)
-        ].join(' ')
+        let com = rdjpgcom(this.buffer).join(' ')
+
+        if (com > 256)
+          warn('dropping excessive jpeg comments')
+        else
+          this.description = com
 
       } catch (e) {
         warn({ stack: e.stack }, 'failed to extract jpg comments')
