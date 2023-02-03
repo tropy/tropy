@@ -52,7 +52,10 @@ export async function create(path, schema, {
         `project base not supported: "${base}"`)
     }
 
-    var db = new Database(dbFile, 'w+', { max: 1 })
+    var db = new Database(dbFile, 'w+', {
+      max: 1,
+      journalMode: type === MANAGED ? 'wal' : 'delete'
+    })
 
     await db.read(schema)
     await db.run(...into('project').insert({
@@ -61,10 +64,6 @@ export async function create(path, schema, {
       base,
       store
     }))
-
-    if (type === MANAGED) {
-      db.exec('PRAGMA journal_mode = WAL;')
-    }
 
     if (autoclose) {
       await db.close()
@@ -108,7 +107,10 @@ export async function open(path, {
   let type = getProjectType(path)
   let dbFile = (type === MANAGED) ? join(path, MANAGED_DB_NAME) : path
 
-  let db = await Database.open(dbFile, dbOptions)
+  let db = await Database.open(dbFile, {
+    journalMode: type === MANAGED ? 'wal' : 'delete',
+    ...dbOptions
+  })
 
   if (migrate && !db.isReadOnly) {
     var migrations = await db.migrate(migrate)

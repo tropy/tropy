@@ -47,12 +47,13 @@ export class Database extends EventEmitter {
     }
   }
 
-  constructor(path = ':memory:', mode = 'w+', opts = {}) {
+  constructor(path = ':memory:', mode = 'w+', { journalMode, ...opts } = {}) {
     debug({ path, mode }, 'init db')
     super({ captureRejections: true })
 
     this.path = path
     this.mode = mode
+    this.journalMode = journalMode
 
     this.pool = createPool({
       create: () => this.create(),
@@ -104,8 +105,15 @@ export class Database extends EventEmitter {
           return reject(error)
         }
 
+        let options = { ...Connection.defaults }
+
+        if (this.journalMode === 'wal') {
+          options['journal_mode'] = 'wal'
+          options['synchronous'] = 'normal'
+        }
+
         new Connection(db)
-          .configure()
+          .configure(options)
           .then(conn => {
             this.emit('create')
             resolve(conn)
@@ -424,8 +432,11 @@ export class Connection {
   }
 
   static defaults = {
-    busy_timeout: 5000,
-    foreign_keys: 'on'
+    busy_timeout: '5000',
+    cache_size: '-20000',
+    foreign_keys: 'on',
+    synchronous: 'full',
+    temp_store: 'memory'
   }
 }
 
