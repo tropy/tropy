@@ -74,6 +74,7 @@ export const Project = React.forwardRef(({
       ref={container}
       className={cx('project', mode.className, {
         closing: project.isClosing,
+        opening: project.id == null,
         over: isOver
       })}
       onContextMenu={handleContextMenu}>
