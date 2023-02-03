@@ -395,8 +395,8 @@ es:
       plugin:
         uninstall:
           detail: >-
-            ¿Deseas realmente suprimir este plugin? Continuar lo suprimirá
-            permanentemente, igual que su configuración.
+            ¿Estás seguro/a de querer suprimir este plugin? Continuar lo
+            suprimirá permanentemente, igual que su configuración.
           buttons:
             - Cancelar
             - Borrar
@@ -412,11 +412,11 @@ es:
             - OK
     filter:
       csv: CSV
-      templates: Plantillas Tropy
+      templates: Plantillas de Tropy
       images: Imágenes
       items: Objetos de Tropy
       notes: Notas
-      projects: Proyectos Tropy
+      projects: Proyectos de Tropy
       rdf: Esquemas RDF
       jsonld: JSON-LD
   action:
@@ -444,8 +444,8 @@ es:
       restore: Restaurar objetos
       save: Guardar objeto
       tag:
-        create: Tag
-        toggle: Tag
+        create: Etiqueta
+        toggle: Etiqueta
         clear: Quitar etiquetas
     metadata:
       save: Guardar metadatos
@@ -484,8 +484,8 @@ es:
       order: Ordenar selecciones
   activity:
     cache:
-      prune: Optimización de la caché del proyecto …
-      purge: Purga de caché antigua …
+      prune: Optimizando la cache memoria del proyecto …
+      purge: Purga de cache memoria antigua …
     project:
       save: Guardando …
     list:
@@ -589,11 +589,11 @@ es:
       left: Alinear a la izquierda
       center: Centrar
       right: Alinear a la derecha
-      sinkListItem: Elevar elemento
-      liftListItem: Descender elemento
+      sinkListItem: Descender elemento
+      liftListItem: Elevar elemento
   error:
     cache:
-      prune: Falla al optimizar la caché del proyecto.
+      prune: Falla al optimizar la cache memoria del proyecto.
       purge: Falla al remover la caché antigua.
     project:
       created: Falla en la creación de proyecto.
@@ -618,7 +618,7 @@ es:
     photo:
       consolidate: Falla en la consolidación de fotos.
       create: Falla en la importación de foto.
-      save: Falla al guardar foto.
+      save: Falla al guardar la foto.
       extract: Falla al exportar la foto.
       template:
         change: Falla al cambiar la plantilla de foto.

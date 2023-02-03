@@ -89,7 +89,7 @@ es:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Durazno
+          - label: Albaricoque
             color:
               - apricot
               - color
@@ -99,7 +99,7 @@ es:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Azul cielo
+          - label: Celeste
             color:
               - light-blue
               - color
@@ -159,7 +159,7 @@ es:
               - brown
               - color
               - app:save-tag-color
-          - label: Durazno
+          - label: Albaricoque
             color:
               - apricot
               - color
@@ -169,7 +169,7 @@ es:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul cielo
+          - label: Celeste
             color:
               - light-blue
               - color
@@ -245,7 +245,7 @@ es:
               - brown
               - color
               - app:save-tag-color
-          - label: Durazno
+          - label: Albaricoque
             color:
               - apricot
               - color
@@ -255,7 +255,7 @@ es:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul cielo
+          - label: Celeste
             color:
               - light-blue
               - color
@@ -380,7 +380,7 @@ es:
         command: app:explode-photo
       - label: Suprimir foto
         command: app:delete-photo
-      - label: Usar foto como imagen de covertura
+      - label: Usar foto como imagen de portada
         command: app:update-cover-image
         enabled: false
         visible: false
@@ -547,7 +547,7 @@ es:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Durazno
+          - label: Albaricoque
             color:
               - apricot
               - color
@@ -557,7 +557,7 @@ es:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Azul cielo
+          - label: Celeste
             color:
               - light-blue
               - color
@@ -617,7 +617,7 @@ es:
               - brown
               - color
               - app:save-tag-color
-          - label: Durazno
+          - label: Albaricoque
             color:
               - apricot
               - color
@@ -627,7 +627,7 @@ es:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul cielo
+          - label: Celeste
             color:
               - light-blue
               - color
@@ -703,7 +703,7 @@ es:
               - brown
               - color
               - app:save-tag-color
-          - label: Durazno
+          - label: Albaricoque
             color:
               - apricot
               - color
@@ -713,7 +713,7 @@ es:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul cielo
+          - label: Celeste
             color:
               - light-blue
               - color
@@ -869,7 +869,7 @@ es:
         command: app:explode-photo
       - label: Suprimir foto
         command: app:delete-photo
-      - label: Usar foto como imagen de covertura
+      - label: Usar foto como imagen de portada
         command: app:update-cover-image
         enabled: false
         visible: false
@@ -1005,7 +1005,7 @@ es:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Durazno
+          - label: Albaricoque
             color:
               - apricot
               - color
@@ -1015,7 +1015,7 @@ es:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Azul cielo
+          - label: Celeste
             color:
               - light-blue
               - color
@@ -1075,7 +1075,7 @@ es:
               - brown
               - color
               - app:save-tag-color
-          - label: Durazno
+          - label: Albaricoque
             color:
               - apricot
               - color
@@ -1085,7 +1085,7 @@ es:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul cielo
+          - label: Celeste
             color:
               - light-blue
               - color
@@ -1161,7 +1161,7 @@ es:
               - brown
               - color
               - app:save-tag-color
-          - label: Durazno
+          - label: Albaricoque
             color:
               - apricot
               - color
@@ -1171,7 +1171,7 @@ es:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul cielo
+          - label: Celeste
             color:
               - light-blue
               - color
@@ -1327,7 +1327,7 @@ es:
         command: app:explode-photo
       - label: Suprimir foto
         command: app:delete-photo
-      - label: Usar foto como imagen de covertura
+      - label: Usar foto como imagen de portada
         command: app:update-cover-image
         enabled: false
         visible: false

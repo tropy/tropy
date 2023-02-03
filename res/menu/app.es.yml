@@ -390,7 +390,7 @@ es:
         - type: separator
         - label: Reiniciar la base de datos ontológicos
           command: app:reset-ontology-db
-        - label: Optimizar la caché del proyecto
+        - label: Optimizar la cache memoria del proyecto
           command: app:optimize-cache
         - label: Optimizar la base de datos del proyecto
           command: app:optimize-project
@@ -599,7 +599,7 @@ es:
         - type: separator
         - label: Reiniciar la base de datos ontológicos
           command: app:reset-ontology-db
-        - label: Optimizar la caché del proyecto
+        - label: Optimizar la cache memoria del proyecto
           command: app:optimize-cache
         - label: Optimizar la base de datos del proyecto
           command: app:optimize-project
