@@ -112,6 +112,7 @@ export async function open(path, {
 
   if (migrate && !db.isReadOnly) {
     var migrations = await db.migrate(migrate)
+    await optimize(db)
   }
 
   let project = await load(db)
@@ -212,6 +213,7 @@ export async function save(db, { id, ...props }, basePath) {
 export async function optimize(db) {
   await db.exec("INSERT INTO fts_notes(fts_notes) VALUES ('optimize')")
   await db.exec("INSERT INTO fts_metadata(fts_metadata) VALUES ('optimize')")
+  await db.exec('VACUUM')
 }
 
 export async function reindex(db) {

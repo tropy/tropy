@@ -163,7 +163,6 @@ function *teardown({ db, project, store }) {
     yield call(mod.note.prune, db)
     yield call(mod.subject.prune, db)
     yield call(store.prune, db)
-    yield call(db.exec, 'VACUUM')
   }
 
   debug('*project.teardown terminated')
