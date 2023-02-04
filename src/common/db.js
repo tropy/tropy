@@ -176,16 +176,6 @@ export class Database extends EventEmitter {
       this.pool.release(conn)
   }
 
-  clear = async () => {
-    await this.pool.clear()
-
-    while (this.pool.available > this.pool.size) {
-      this.pool._availableObjects.pop()
-    }
-
-    this.emit('clear')
-  }
-
   emitAsync(name) {
     return Promise.all(
       this.rawListeners(name).map(fn => fn())
