@@ -281,10 +281,6 @@ export class Database extends EventEmitter {
   async read(path) {
     return this.exec(String(await readFile(path)))
   }
-
-  static defaults = {
-    encoding: 'UTF-8'
-  }
 }
 
 
