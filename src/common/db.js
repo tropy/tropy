@@ -143,12 +143,23 @@ export class Database extends EventEmitter {
   }
 
   async destroy(conn) {
-    debug({ path: this.path }, 'close db connection')
+    try {
+      debug({ path: this.path }, 'close db connection')
 
-    await conn.optimize()
-    await conn.close()
+      await conn.optimize().catch((e) => {
+        // When pool is cleared open connections are destroyed in parallel
+        // so the optimization will often cause a busy timeout.
+        debug({ path: this.path }, `optimize connection failed: ${e.message}`)
+      })
 
-    this.emit('destroy')
+      await conn.close()
+      this.emit('destroy')
+
+    } catch (e) {
+      // NB: generic-pool does not wait handle async destroy functions
+      // so errors thrown here will likely end up as unhandled rejections.
+      warn({ path: this.path }, `failed to close db connection: ${e.message}`)
+    }
   }
 
   acquire(opts = {}) {
