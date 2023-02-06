@@ -14,31 +14,80 @@
   z-index: $zindex-cover;
   background-color: $cover-bg;
 
+  @keyframes tropy-icon {
+    100% {
+      fill: $cover-icon-color;
+    }
+  }
+
+  .icon-tropylarge {
+    polygon {
+      animation: tropy-icon 0s linear forwards 0.5s;
+    }
+
+    .inactive &,
+    .closing & {
+      display: none;
+    }
+  }
+}
+
+#cover {
   .ready & {
     display: none;
   }
 
-  .inactive > &,
-  .closing > & {
+  .inactive &,
+  .closing & {
     display: flex;
     opacity: 0.6;
   }
+}
 
-  @keyframes tropy-icon {
-    100% {
-      fill: $tropy-icon-color;
+.project .cover {
+  display: none;
+
+  @include state(".project.opening") {
+    display: flex;
+  }
+
+  @include state(".project.closing") {
+    display: flex;
+    opacity: 0.6;
+
+    .closing &,
+    .inactive & {
+      display: none; // Do not show project cover when window cover is present
     }
   }
 
-  @include variant("#project .cover") {
-    .tropy-icon {
-      polygon {
-        animation: tropy-icon 0s linear forwards 0.5s;
-      }
+  @keyframes spin {
+    100% {
+      transform: rotate(1turn);
+    }
+  }
 
-      @include state("#project.inactive", "#project.closing") {
-        display: none;
-      }
+  .icon-tropylarge {
+    polygon {
+      fill: $cover-icon-color;
+    }
+  }
+
+  &::before {
+    box-sizing: border-box;
+    content: "";
+    position: absolute;
+    top: max(calc(50% + 101px), calc(66.67% - #{$space-lg / 2}));
+    left: calc(50% - #{$space-lg / 2});
+    width: $space-lg;
+    height: $space-lg;
+    border: 2px solid $cover-spin-color;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+
+    @include state(".project.closing") {
+      content: none;
     }
   }
 }

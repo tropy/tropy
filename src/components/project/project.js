@@ -12,7 +12,7 @@ import { ItemView } from '../item/view.js'
 import { DragLayer } from '../drag-layer.js'
 import { MODE } from '../../constants/nav.js'
 import * as act from '../../actions/index.js'
-
+import { IconTropyLarge } from '../icons.js'
 
 const modeToString = (mode) =>
   `${mode}-mode`
@@ -96,7 +96,9 @@ export const Project = React.forwardRef(({
         onPanelResize={handlePanelResize}/>
 
       <DragLayer/>
-      <div className="cover"/>
+      <div className="cover">
+        <IconTropyLarge/>
+      </div>
     </div>
   )
 })

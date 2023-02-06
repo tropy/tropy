@@ -81,8 +81,6 @@ $body-bg:          var(--shade-0);
 $text-color:       var(--shade-9);
 $soft-text-color:  var(--shade-8);
 $muted-text-color: var(--shade-6);
-$tropy-icon-color: var(--shade-3);
-$cover-bg:         var(--shade-1);
 
 
 // Typography
@@ -99,6 +97,11 @@ $hr-border: var(--shade-3);
 
 // Partials
 // --------------------------------------------------
+
+// Cover
+$cover-icon-color: var(--shade-3);
+$cover-spin-color: var(--shade-4);
+$cover-bg:         var(--shade-1);
 
 // Forms & buttons
 $input-btn-focus-color: var(--brand-primary);
