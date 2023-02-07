@@ -1,5 +1,5 @@
 import { basename } from 'node:path'
-import { BrowserWindow, Menu as M } from 'electron'
+import { Menu as M } from 'electron'
 import { Icon, Menu as MR } from './res.js'
 import { error, warn } from '../common/log.js'
 import { blank } from '../common/util.js'
@@ -39,12 +39,12 @@ export class Menu {
     )
   }
 
-  compile(item, win = BrowserWindow.getFocusedWindow(), event = {}) {
+  compile(item, win, event = {}) {
     item = { ...item }
     let { app } = this
 
     if (item.command)
-      item.click = createResponder(item.command, app, event)
+      item.click = createResponder(item.command, app, win, event)
 
     if (item.label)
       Menu.ItemCompiler.label(item, app)
@@ -344,7 +344,7 @@ Menu.ItemCompiler = {
     if (col != null && col !== 'random')
       item.icon = Icon.color(col)
     if (cmd)
-      item.click = createResponder(cmd, app, event, col)
+      item.click = createResponder(cmd, app, win, event, col)
   },
 
   'label': (item, app) => {
@@ -387,12 +387,12 @@ Menu.ItemCompiler = {
     item.visible = (app.dev || app.debug)
   },
 
-  'theme': (item, app) => {
+  'theme': (item, app, win) => {
     item.submenu = item.submenu.map(theme => ({
       ...theme,
       checked: (theme.id === app.state.theme),
       enabled: (theme.id !== app.state.theme),
-      click: createResponder('app:switch-theme', app, theme.id)
+      click: createResponder('app:switch-theme', app, win, theme.id)
     }))
   },
 
@@ -423,7 +423,7 @@ Menu.ItemCompiler = {
         { type: 'separator' },
         ...plugins.map(({ id, name }) => ({
           label: name,
-          click: createResponder('app:export-item', app, {
+          click: createResponder('app:export-item', app, win, {
             target: event?.target,
             plugin: id
           })
@@ -432,7 +432,7 @@ Menu.ItemCompiler = {
     }
   },
 
-  'import': (item, app) => {
+  'import': (item, app, win) => {
     let plugins = app.plugins.available('import')
 
     if (plugins.length > 0) {
@@ -441,7 +441,7 @@ Menu.ItemCompiler = {
         { type: 'separator' },
         ...plugins.map(({ id, name }) => ({
           label: name,
-          click: createResponder('app:import-plugin', app, {
+          click: createResponder('app:import-plugin', app, win, {
             plugin: id
           })
         }))
@@ -463,7 +463,7 @@ Menu.ItemCompiler = {
           type: 'checkbox',
           label: tag.name,
           checked: target.tags.includes(tag.id),
-          click: createResponder('app:toggle-item-tag', app, {
+          click: createResponder('app:toggle-item-tag', app, win, {
             id: target.id,
             tag: tag.id
           })
@@ -475,7 +475,7 @@ Menu.ItemCompiler = {
           ...item.submenu[0],
           checked: false,
           enabled: true,
-          click: createResponder('app:clear-item-tags', app, {
+          click: createResponder('app:clear-item-tags', app, win, {
             id: target.id
           })
         }
@@ -495,7 +495,7 @@ Menu.ItemCompiler = {
     item.submenu = item.submenu.map(li => ({
       ...li,
       checked: li.mode === event.target.mode,
-      click: createResponder('app:writing-mode', app, {
+      click: createResponder('app:writing-mode', app, win, {
         id: event.target.id,
         mode: li.mode
       })
@@ -506,7 +506,7 @@ Menu.ItemCompiler = {
     item.submenu = item.submenu.map(li => ({
       ...li,
       checked: li.id === event.target.layout,
-      click: createResponder('app:settings-persist', app, {
+      click: createResponder('app:settings-persist', app, win, {
         layout: li.id
       })
     }))
@@ -558,16 +558,16 @@ Menu.ItemConditions = {
   }
 }
 
-function createResponder(cmd, app, ...params) {
+function createResponder(cmd, app, win, ...params) {
   let [prefix, action] = cmd.split(':', 2)
 
   switch (prefix) {
     case 'app':
-      return (_, win) =>
-        app.emit(cmd, win, ...params)
+      return (_, w) =>
+        app.emit(cmd, win || w, ...params)
     case 'win':
-      return (_, win) =>
-        win?.webContents.send(action, params)
+      return (_, w) =>
+        (win || w)?.webContents.send(action, params)
     default:
       warn(`no responder for menu command ${cmd}`)
   }
