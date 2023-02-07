@@ -67,16 +67,13 @@ export const Project = React.forwardRef(({
   })
 
   // HACK set opening/closing class on DOM element
-  // because these typically coincide with the component's
-  // fade transition classes which would be overwritten
-  // if set by React.
+  // because these typically coincide
+  // with the component's fade transition classes
+  // which are overwritten by changing the className prop!
   useEffect(() => {
     container.current?.classList.toggle('closing', !!project.isClosing)
-  }, [project.isClosing, container])
-
-  useEffect(() => {
     container.current?.classList.toggle('opening', project.id == null)
-  }, [project.id, container])
+  }, [project.id, project.isClosing, container])
 
   if (project.closed)
     return <ProjectClosed/>
