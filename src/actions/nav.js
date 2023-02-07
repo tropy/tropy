@@ -44,8 +44,8 @@ export default {
     return {
       type: NAV.SORT,
       payload: {
-        list: LIST.ROOT,
-        ...payload
+        ...payload,
+        list: payload.list ?? LIST.ROOT
       },
       meta: { search: true, ...meta }
     }

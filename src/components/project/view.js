@@ -67,7 +67,10 @@ export const ProjectView = ({
   })
 
   let handleSort = useEvent((opts) => {
-    dispatch(act.nav.sort(opts))
+    dispatch(act.nav.sort({
+      ...opts,
+      list: nav.list
+    }))
   })
 
   let handleSearch = useEvent((query) => {
