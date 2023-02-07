@@ -61,7 +61,8 @@ export class Input extends React.PureComponent {
   }
 
   commit({ isCompletion, hasBeenForced } = {}, event) {
-    if (this.isValid) {
+    // TODO allow blank values to be saved for now.
+    if (this.isValid || (hasBeenForced && this.state.value === '')) {
       if (!this.hasBeenCommitted) {
         this.hasBeenCommitted = true
         this.props.onCommit(this.state.value, {
