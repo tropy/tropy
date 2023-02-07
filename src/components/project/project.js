@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { bool, number } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
@@ -66,6 +66,18 @@ export const Project = React.forwardRef(({
     }))
   })
 
+  // HACK set opening/closing class on DOM element
+  // because these typically coincide with the component's
+  // fade transition classes which would be overwritten
+  // if set by React.
+  useEffect(() => {
+    container.current?.classList.toggle('closing', !!project.isClosing)
+  }, [project.isClosing, container])
+
+  useEffect(() => {
+    container.current?.classList.toggle('opening', project.id == null)
+  }, [project.id, container])
+
   if (project.closed)
     return <ProjectClosed/>
 
@@ -73,8 +85,6 @@ export const Project = React.forwardRef(({
     <div
       ref={container}
       className={cx('project', mode.className, {
-        closing: project.isClosing,
-        opening: project.id == null,
         over: isOver
       })}
       onContextMenu={handleContextMenu}>
