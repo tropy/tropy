@@ -1,7 +1,7 @@
 import { shell } from 'electron'
 import assert from 'node:assert'
 import { existsSync } from 'node:fs'
-import { stat, mkdir } from 'node:fs/promises'
+import { chmod, stat, mkdir } from 'node:fs/promises'
 import {
   basename, dirname, extname, join, normalize, resolve, relative
 } from 'node:path'
@@ -210,6 +210,14 @@ export async function save(db, { id, ...props }, basePath) {
     return db.run(
       ...update('project').set(props).where({ project_id: id })
     )
+}
+
+export async function lock(dbFile) {
+  return chmod(dbFile, 0o444)
+}
+
+export async function unlock(dbFile) {
+  return chmod(dbFile, 0o666)
 }
 
 export async function optimize(db) {
