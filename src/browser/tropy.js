@@ -422,7 +422,7 @@ export class Tropy extends EventEmitter {
       }
 
     } finally {
-      if (win != null) win.destroy()
+      win?.destroy()
     }
   }
 

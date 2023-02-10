@@ -1,4 +1,4 @@
-import { DOMParser, DOMSerializer } from 'prosemirror-model'
+import { Node, DOMParser, DOMSerializer } from 'prosemirror-model'
 import { EditorState } from 'prosemirror-state'
 import { defaultMarkdownSerializer } from 'prosemirror-markdown'
 import { schema } from './schema.js'
@@ -78,7 +78,10 @@ export function fromHTML(html) {
 
 export function toHTML(doc) {
   try {
-    let node = schema.nodeFromJSON(doc)
+    let node = (doc instanceof Node) ?
+      doc :
+      schema.nodeFromJSON(doc)
+
     let frag = serializer.serializeFragment(node)
 
     return Array
@@ -93,7 +96,10 @@ export function toHTML(doc) {
 
 export function toMarkdown(doc) {
   try {
-    let node = schema.nodeFromJSON(doc)
+    let node = (doc instanceof Node) ?
+      doc :
+      schema.nodeFromJSON(doc)
+
     return defaultMarkdownSerializer.serialize(node)
 
   } catch (e) {
