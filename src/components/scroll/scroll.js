@@ -36,7 +36,8 @@ export class Scroll extends React.Component {
   }
 
   componentDidUpdate({ cursor, itemHeight }) {
-    if (cursor !== this.props.cursor || itemHeight !== this.props.itemHeight)
+    if (cursor !== this.props.cursor ||
+      itemHeight !== this.props.itemHeight)
       this.scrollIntoView()
   }
 
@@ -157,9 +158,6 @@ export class Scroll extends React.Component {
   }
 
   select(item, event) {
-    if (item != null)
-      this.scrollIntoView(item)
-
     this.props.onSelect?.(item, event)
     return item
   }
