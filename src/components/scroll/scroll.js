@@ -35,8 +35,8 @@ export class Scroll extends React.Component {
     cancelAnimationFrame(this.#scrollCallback.current)
   }
 
-  componentDidUpdate({ itemHeight }) {
-    if (itemHeight !== this.props.itemHeight)
+  componentDidUpdate({ cursor, itemHeight }) {
+    if (cursor !== this.props.cursor || itemHeight !== this.props.itemHeight)
       this.scrollIntoView()
   }
 
