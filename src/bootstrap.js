@@ -1,6 +1,7 @@
 import { basename } from 'node:path'
 import ARGS from './args.js'
 import { createLogger, fatal, info } from './common/log.js'
+import { omit } from './common/util.js'
 import { contextBridge, ipcRenderer as ipc } from 'electron'
 import { idle, ready } from './dom.js'
 import win, { createWindowInstance } from './window.js'
@@ -20,7 +21,7 @@ const START =
 
     info({
       dpx: devicePixelRatio,
-      opts: ARGS
+      opts: omit(ARGS, ['documents', 'pictures', 'recent'])
     }, `${win.type}.init`)
 
     try {
