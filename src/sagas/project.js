@@ -43,7 +43,7 @@ const dbErrorActions = {
   default: act.project.close
 }
 
-const FORCE_SHUTDOWN_DELAY = 60000
+const FORCE_SHUTDOWN_DELAY = 120000
 
 
 export function *open(opts, action) {
