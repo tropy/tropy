@@ -13,12 +13,10 @@ rules:
   # stylelint-config-standard
   at-rule-empty-line-before: [null, { except: first-nested }]
   declaration-empty-line-before: null
-  block-closing-brace-newline-after: null
   alpha-value-notation: "number"
   selector-no-vendor-prefix: null
   property-no-vendor-prefix: null
   value-no-vendor-prefix: null
-  max-line-length: null
   keyframes-name-pattern: null
   color-function-notation: "legacy"
   import-notation: "string"
