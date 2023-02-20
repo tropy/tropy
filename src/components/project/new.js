@@ -19,7 +19,9 @@ export const NewProject = ({
   let [name, setName] = useState('')
   let [type, setType] = useState(accept[0])
 
-  let handleProjectCreate = useEvent(() => {
+  let handleProjectCreate = useEvent((event) => {
+    event.preventDefault()
+
     dispatch(create({ name, type }))
       .then(action => {
         if (action?.payload?.path)
@@ -40,7 +42,7 @@ export const NewProject = ({
       <Titlebar isOptional/>
       <figure/>
       <h1><FormattedMessage id="project.new.title"/></h1>
-      <form>
+      <form onSubmit={handleProjectCreate}>
         <h2><FormattedMessage id="project.new.name"/></h2>
         <FormElement>
           <input
@@ -67,10 +69,10 @@ export const NewProject = ({
           isBlock
           isDisabled={!name}
           isPrimary
-          onClick={handleProjectCreate}
           size="xl"
           tabIndex="0"
-          text="project.new.create"/>
+          text="project.new.create"
+          type="submit"/>
       </form>
     </div>
   )
