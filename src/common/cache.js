@@ -1,13 +1,11 @@
-import fs from 'fs'
-const { mkdir, readdir, stat, writeFile } = fs.promises
-
-import { join, extname, basename } from 'path'
-import { pathToFileURL } from 'url'
-import { debug, warn } from './log'
-import { IMAGE } from '../constants'
+import { mkdir, readdir, stat, writeFile } from 'node:fs/promises'
+import { join, extname, basename } from 'node:path'
+import { pathToFileURL } from 'node:url'
+import { debug, warn } from './log.js'
+import IMAGE from '../constants/image.js'
 
 
-class Cache {
+export class Cache {
   constructor(...args) {
     this.root = join(...args)
   }
@@ -141,8 +139,4 @@ class Cache {
       !IMAGE.WEB[photo.mimetype]      // Not supported natively
     )
   }
-}
-
-export {
-  Cache
 }

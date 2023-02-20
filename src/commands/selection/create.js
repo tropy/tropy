@@ -12,15 +12,13 @@ export class Create extends Command {
     let { cache, db } = this.options
     let { payload, meta } = this.action
 
-    let [photo, template, density] = yield select(state => ([
+    let [photo, template] = yield select(state => ([
       state.photos[payload.photo],
-      getSelectionTemplate(state),
-      state.settings.density
+      getSelectionTemplate(state)
     ]))
 
     let image = yield call([Image, Image.open], {
-      ...photo,
-      density: photo.density || density
+      path: cache.url('full', photo)
     })
 
     let idx = (meta.idx != null) ?

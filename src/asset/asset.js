@@ -1,9 +1,9 @@
-import { createHash } from 'crypto'
-import { readFile, stat } from 'fs/promises'
-import { basename, extname } from 'path'
-import { URL, fileURLToPath, pathToFileURL } from 'url'
-import { magic } from './magic'
-import { pick } from '../common/util'
+import { createHash } from 'node:crypto'
+import { readFile, stat } from 'node:fs/promises'
+import { basename, extname } from 'node:path'
+import { URL, fileURLToPath, pathToFileURL } from 'node:url'
+import { magic } from './magic.js'
+import { pick } from '../common/util.js'
 
 
 export class Asset {
