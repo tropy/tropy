@@ -220,6 +220,19 @@ export async function unlock(dbFile) {
   return chmod(dbFile, 0o666)
 }
 
+export async function listAssets(db, { basePath }) {
+  let assets = await db.all(assetInfo.query)
+
+  for (let asset of assets) {
+    asset.path = (
+      (basePath && asset.protocol === 'file') ?
+        resolve(basePath, normalize(asset.path)) : asset.path
+    ).normalize()
+  }
+
+  return assets
+}
+
 export async function optimize(db) {
   await db.exec("INSERT INTO fts_notes(fts_notes) VALUES ('optimize')")
   await db.exec("INSERT INTO fts_metadata(fts_metadata) VALUES ('optimize')")
@@ -308,6 +321,10 @@ const projectStats =
 
   }).from('project').limit(1)
 
+const assetInfo =
+    select('id', 'protocol', 'path', 'checksum')
+      .from('photos')
+      .order('protocol, path')
 
 export async function beginProjectAccess(db, user) {
   if (user == null)
