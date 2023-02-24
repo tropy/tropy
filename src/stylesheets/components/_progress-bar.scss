@@ -9,11 +9,11 @@ progress {
 
   &::-webkit-progress-bar {
     background: $progress-bar-bg;
-    border-radius: $progress-bar-height / 2;
+    border-radius: calc($progress-bar-height / 2);
   }
 
   &::-webkit-progress-value {
     background: $progress-bar-color;
-    border-radius: $progress-bar-height / 2;
+    border-radius: calc($progress-bar-height / 2);
   }
 }

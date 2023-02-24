@@ -295,7 +295,7 @@ $editor-outline-width:        2px;
 $blockquote-border:           3px;
 $blockquote-padding:          1em;
 $editor-hr-border:            2px;
-$sup-and-sub-font-size:       1em * 2 / 3;
+$sup-and-sub-font-size:       calc(1em * 2 / 3);
 $link-target-width:           400px;
 $editor-padding:              48px;
 

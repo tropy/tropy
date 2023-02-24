@@ -177,7 +177,7 @@
 
 .add-tag-container {
   flex: 0 0 auto;
-  padding: ($space-min + $space-min / 2) $default-padding-horizontal 2px;
+  padding: calc($space-min + $space-min / 2) $default-padding-horizontal 2px;
 
   .input-group {
     position: relative;

@@ -6,14 +6,14 @@
   font-size: $font-size-small;
   color: $panel-heading-color;
   line-height: $metadata-line-height;
-  margin: ($font-size-small / 2) $default-padding-horizontal 0;
+  margin: calc($font-size-small / 2) $default-padding-horizontal 0;
 
   .scrollbar-style-old-school & {
-    margin-right: ($default-padding-horizontal - $scrollbar-size / 3);
+    margin-right: calc($default-padding-horizontal - $scrollbar-size / 3);
   }
 
   &.separator {
-    margin-bottom: (($metadata-line-height - 10px) / 2); // 10px: Caps height
+    margin-bottom: calc(($metadata-line-height - 10px) / 2); // 10px: Caps height
     border-bottom: 1px solid $panel-separator-color;
 
     .nested-tab-focus & {
@@ -38,7 +38,7 @@
 
   &.template-select {
     border-color: $template-select-border;
-    margin-bottom: (($metadata-line-height - 10px) / 2);
+    margin-bottom: calc(($metadata-line-height - 10px) / 2);
 
     &:not(.disabled) {
       background-color: $template-select-bg; // 'Transparent' causes border/box-shadow issue
@@ -103,7 +103,7 @@
     flex: 0 0 $metadata-horizontal-offset;
     text-align: right;
     padding-left: $default-padding-horizontal;
-    padding-right: ($metadata-gutter / 2);
+    padding-right: calc($metadata-gutter / 2);
     color: $label-color;
     @include css-truncation;
 
@@ -116,7 +116,7 @@
     flex: 0 0 calc(100% - #{$metadata-horizontal-offset});
     display: flex;
     align-items: center;
-    padding-left: $metadata-gutter / 2;
+    padding-left: calc($metadata-gutter / 2);
     padding-right: $default-padding-horizontal;
     min-width: 0; // Fix truncation
     position: relative;
@@ -126,7 +126,7 @@
     }
 
     .scrollbar-style-old-school & {
-      padding-right: ($default-padding-horizontal - $scrollbar-size / 3);
+      padding-right: calc($default-padding-horizontal - $scrollbar-size / 3);
     }
 
     @include variant(".clickable.static .value") {

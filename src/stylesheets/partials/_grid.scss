@@ -4,12 +4,12 @@
 
 @for $i from 1 through 12 {
   .col-#{$i} {
-    flex: 0 0 (100% / (12 / $i));
-    padding: 0 ($grid-gutter-width / 2);
+    flex: 0 0 calc(100% / (12 / $i));
+    padding: 0 calc($grid-gutter-width / 2);
     min-width: 0; // Fix truncation
   }
 
   .col-offset-#{$i} {
-    margin-left: 100% / (12 / $i);
+    margin-left: calc(100% / (12 / $i));
   }
 }

@@ -25,11 +25,11 @@
     }
 
     &-left {
-      left: -($resizable-threshold / 2);
+      left: calc($resizable-threshold * -1 / 2);
     }
 
     &-right {
-      right: -($resizable-threshold / 2);
+      right: calc($resizable-threshold * -1 / 2);
     }
 
     &-row {
@@ -40,11 +40,11 @@
     }
 
     &-top {
-      top: -($resizable-threshold / 2);
+      top: calc($resizable-threshold * -1 / 2);
     }
 
     &-bottom {
-      bottom: -($resizable-threshold / 2);
+      bottom: calc($resizable-threshold * -1 / 2);
     }
   }
 

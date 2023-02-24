@@ -103,7 +103,7 @@
     }
 
     & + .btn-icon {
-      margin-left: $space-min / 2;
+      margin-left: calc($space-min / 2);
     }
   }
 

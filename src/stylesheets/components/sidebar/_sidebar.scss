@@ -31,7 +31,7 @@
     flex: 1 1 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding-top: ($toolbar-height - $line-height-large) / 2;
+    padding-top: calc(($toolbar-height - $line-height-large) / 2);
 
     .frameless & {
       padding-top: 0;

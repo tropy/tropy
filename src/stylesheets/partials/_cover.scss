@@ -77,8 +77,8 @@
     box-sizing: border-box;
     content: "";
     position: absolute;
-    top: max(calc(50% + 101px), calc(66.67% - #{$space-lg / 2}));
-    left: calc(50% - #{$space-lg / 2});
+    top: max(calc(50% + 101px), calc(66.67% - $space-lg / 2));
+    left: calc(50% - $space-lg / 2);
     width: $space-lg;
     height: $space-lg;
     border: 2px solid $cover-spin-color;

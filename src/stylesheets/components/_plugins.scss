@@ -70,7 +70,7 @@
         background-color: $hook-bg;
         padding: 1px 5px;
         border-radius: $border-radius-small;
-        margin-left: $space-min / 2;
+        margin-left: calc($space-min / 2);
       }
     }
 
