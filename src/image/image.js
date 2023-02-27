@@ -114,7 +114,7 @@ export class Image extends Asset {
     if (IMAGE.SCALABLE[this.mimetype])
       this.density = restrict(density, IMAGE.MIN_DENSITY, IMAGE.MAX_DENSITY)
 
-    let meta = await this.do().metadata().catch(() => ({}))
+    let meta = await this.do().metadata()
 
     if (meta.pages) {
       this.numPages = meta.pages
@@ -154,7 +154,7 @@ export class Image extends Asset {
   }
 
   analyze = async (img, page, { timezone }) => {
-    let meta = await img.metadata().catch(() => ({}))
+    let meta = await img.metadata()
 
     this.meta[page] = {
       ...meta,
