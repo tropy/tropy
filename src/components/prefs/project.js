@@ -2,13 +2,41 @@ import React from 'react'
 import { arrayOf, func, object, string } from 'prop-types'
 import { ScrollContainer } from '../scroll/container.js'
 import { Form, FormField, FormToggle, FormToggleGroup } from '../form.js'
-import { BASES } from '../../common/project.js'
+import { ProjectTypeField } from './project-type-field.js'
+import { BASES, TYPES } from '../../common/project.js'
+import { convert } from '../../slices/project-files.js'
+import { useDispatch } from 'react-redux'
+import { useEvent } from '../../hooks/use-event.js'
+import { useWindow } from '../../hooks/use-window.js'
+
 
 export const ProjectPrefs = React.memo(({
   baseOptions,
   project,
   onChange
 }) => {
+  let dispatch = useDispatch()
+  let win = useWindow()
+
+  let handleProjectConvert = useEvent(() => {
+    win.toggle('busy', true)
+
+    dispatch(convert({
+      name: project.name,
+      type: TYPES[0]
+    }))
+      .then(action => {
+        if (action?.payload?.path) {
+          console.log('converted', action.payload.path)
+          // prompt?
+          // close prefs/project and open new project
+        }
+      })
+      .finally(() => {
+        win.toggle('busy', false)
+      })
+  })
+
   return (
     <ScrollContainer>
       <Form>
@@ -26,15 +54,17 @@ export const ProjectPrefs = React.memo(({
           name="id"
           isCompact
           isReadOnly
-          isRequired
           value={project.id}/>
         <FormField
           id="prefs.project.path"
           name="path"
           isCompact
           isReadOnly
-          isRequired
           value={project.path}/>
+        <ProjectTypeField
+          isDisabled={project.isManaged}
+          value={TYPES[project.isManaged ? 0 : 1]}
+          onConvert={handleProjectConvert}/>
         <hr/>
 
         {!project.isManaged &&

@@ -1,10 +1,15 @@
 import { basename } from 'node:path'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { pstat, create as createProject } from '../common/project.js'
 import { pMap } from '../common/util.js'
 import { warn } from '../common/log.js'
 import { open, save } from '../dialog.js'
 import { Schema } from '../res.js'
+
+import {
+  pstat,
+  convert as convertProject,
+  create as createProject
+} from '../common/project.js'
 
 
 export const create = createAsyncThunk(
@@ -63,6 +68,19 @@ export const consolidate = createAsyncThunk(
     })
   }
 )
+
+export const convert = createAsyncThunk(
+  'projectFiles/convert',
+  async ({ src, name, type }) => {
+    let path = await save.project(type, name)
+
+    if (path)
+      await convertProject(src, path, {
+        overwrite: true
+      })
+
+    return { path }
+  })
 
 const projectFiles = createSlice({
   name: 'projectFiles',
