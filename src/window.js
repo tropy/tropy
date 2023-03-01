@@ -411,7 +411,7 @@ export class Window extends EventEmitter {
     ])
   }
 
-  toggle(state) {
+  toggle(state, ...args) {
     switch (state) {
       case 'focus':
         toggle(document.body, 'is-blurred', false)
@@ -427,6 +427,9 @@ export class Window extends EventEmitter {
         break
       case 'init':
         toggle(document.body, 'init', true)
+        break
+      case 'busy':
+        toggle(document.body, 'busy', ...args)
         break
       case 'ready':
         toggle(document.body, 'ready', true)
