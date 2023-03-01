@@ -1,8 +1,9 @@
 import { stat, mkdir, writeFile } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import { isAbsolute, join } from 'node:path'
 import { mkprojtmp } from '../support/project.js'
-import { mkdtmp } from '../support/tmp.js'
-import { create, load, pstat } from '../../src/common/project.js'
+import { mkdtmp, mktmp } from '../support/tmp.js'
+import { convert, create, load, open, pstat } from '../../src/common/project.js'
 import { delay } from '../../src/common/util.js'
 
 describe('common/project', () => {
@@ -155,5 +156,59 @@ describe('common/project', () => {
     it('rejects missing files', () =>
       expect(pstat('test.tpy'))
         .to.eventually.be.rejectedWith('ENOENT'))
+  })
+
+  describe('convert', () => {
+    let tpy = mkprojtmp('a.tpy', { name: 'Daedalus' })
+    let tpm = mktmp('b.tropy')
+
+    it('converts *.tpy to *.tropy', async () => {
+
+      // TODO add photos
+
+      await convert(tpy.current.path, tpm)
+      let [db, project] = await open(tpm)
+
+      expect(project.name).to.equal('Daedalus')
+      expect(project.base).to.equal('project')
+      expect(project.isManaged).to.be.true
+      expect(isAbsolute(project.store)).to.be.true
+
+      expect(existsSync(join(tpm, 'project.tpy-wal'))).to.be.ok
+
+      // TODO check store
+      // TODO check photo paths
+
+      await db.close()
+    })
+
+    it('throws when trying to convert to *.tpy', () =>
+      expect(convert('a.tropy', 'b.tpy'))
+        .to.eventually.be.rejectedWith('not implemented'))
+
+    it('throws when trying to convert to same type', () =>
+      expect(convert('a.tpy', 'b.tpy'))
+        .to.eventually.be.rejectedWith('different types'))
+
+    it('throws when given no source', () =>
+      expect(convert())
+        .to.eventually.be.rejectedWith('type string'))
+
+    it('throws when given no target', () =>
+      expect(convert('test.tpy'))
+        .to.eventually.be.rejectedWith('type string'))
+
+    it('throws when given target only', () =>
+      expect(convert(null, 'test.tropy'))
+        .to.eventually.be.rejectedWith('type string'))
+
+    it('throws when given bad source path', () =>
+      expect(convert('a.txt'))
+        .to.eventually.be.rejectedWith('type string'))
+
+    it('throws when given bad target path', () =>
+      expect(convert('a.tpy', 'b.txt'))
+        .to.eventually.be.rejectedWith('file extension'))
+
   })
 })
