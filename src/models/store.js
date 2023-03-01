@@ -1,4 +1,4 @@
-import { select } from '../common/query'
+import { select } from '../common/query.js'
 
 export default {
   orphaned(db) {

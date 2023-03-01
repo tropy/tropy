@@ -1,9 +1,9 @@
-import assert from 'assert'
-import { mkdir, rm, writeFile } from 'fs/promises'
-import { isAbsolute, dirname, normalize, join } from 'path'
-import { Asset } from './asset'
-import { debug, warn } from '../common/log'
-import mod from '../models/store'
+import assert from 'node:assert'
+import { mkdir, rm, writeFile } from 'node:fs/promises'
+import { basename, isAbsolute, dirname, normalize, join } from 'node:path'
+import { Asset } from './asset.js'
+import { debug, warn } from '../common/log.js'
+import mod from '../models/store.js'
 
 export class Store {
   #root
@@ -30,6 +30,10 @@ export class Store {
     return this.#root
   }
 
+  get name() {
+    return (this.root) ? basename(this.root) : null
+  }
+
   init = async (root = this.root) => {
     this.root = root
 
@@ -39,7 +43,8 @@ export class Store {
 
   add = async (asset) => {
     try {
-      if (!this.root) return
+      if (!this.root)
+        return asset
 
       var { path, protocol } = asset
 
@@ -54,8 +59,11 @@ export class Store {
 
       await writeFile(asset.path, asset.buffer, { flag: 'wx' })
 
+      return asset
+
     } catch (e) {
-      if (e.code === 'EEXIST') return
+      if (e.code === 'EEXIST')
+        return asset
 
       asset.protocol = protocol
       asset.path = path

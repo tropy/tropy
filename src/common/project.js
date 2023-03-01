@@ -1,7 +1,7 @@
 import { shell } from 'electron'
 import assert from 'node:assert'
 import { existsSync } from 'node:fs'
-import { chmod, stat, mkdir } from 'node:fs/promises'
+import { chmod, cp, stat, mkdir } from 'node:fs/promises'
 import {
   basename, dirname, extname, join, normalize, resolve, relative
 } from 'node:path'
@@ -10,8 +10,11 @@ import { Database } from './db.js'
 import { home } from './os.js'
 import { into, select, update } from './query.js'
 import { version } from './release.js'
-import { empty } from './util.js'
+import { empty, pMap } from './util.js'
 import { info, warn } from './log.js'
+
+import { Asset } from '../asset/asset.js'
+import { Store } from '../asset/store.js'
 
 
 /*
@@ -29,14 +32,7 @@ export async function create(path, schema, {
     let dbFile = path
     let store = null
 
-    if (existsSync(path)) {
-      if (!overwrite)
-        throw new Error(`project file exists: "${path}"`)
-
-      warn(`trashing old project previously at "${path}"`)
-      await shell.trashItem(path)
-    }
-
+    await checkProjectPath(path, overwrite)
     info(`creating new project at "${path}"`)
 
     if (type === MANAGED) {
@@ -44,8 +40,7 @@ export async function create(path, schema, {
       store = MANAGED_STORE_NAME
       base = BASE.PROJECT
 
-      await mkdir(path)
-      await mkdir(join(path, store))
+      await makeProjectDir(path, store)
 
     } else {
       assert(BASES.includes(base),
@@ -78,6 +73,118 @@ export async function create(path, schema, {
   }
 }
 
+// Ensures that a project path is available
+async function checkProjectPath(path, overwrite = false) {
+  if (existsSync(path)) {
+    if (!overwrite)
+      throw new Error(`project file exists: "${path}"`)
+
+    warn(`trashing old project previously at "${path}"`)
+    await shell.trashItem(path)
+  }
+}
+
+// Creates the folder structure for managed projects.
+async function makeProjectDir(path, store) {
+  await mkdir(path)
+  await mkdir(join(path, store))
+}
+
+
+/*
+ * Converts `.tpy` files to managed `.tropy` projects.
+ *
+ * Returns a list of asset URLs which were not added to the store.
+ *
+ * If the return value is empty,
+ * all assets were successfully added.
+ * Otherwise, the conversion was not complete,
+ * which typically means the project needs consolidation.
+ *
+ * Any errors unrelated to adding files to the store,
+ * such as failure to write to the database file,
+ * will be thrown.
+ */
+export async function convert(src, path, {
+  concurrency = 4,
+  overwrite = false
+} = {}) {
+  try {
+    let type = getProjectType(path)
+
+    assert(type !== getProjectType(src),
+      'different types expected for conversion')
+
+    if (type !== MANAGED)
+      throw new Error(`conversion to "${type}" not implemented`)
+
+    await checkProjectPath(path, overwrite)
+    info(`converting project "${src}" to "${path}"`)
+
+    let dbFile = join(path, MANAGED_DB_NAME)
+    let store = new Store(join(path, MANAGED_STORE_NAME))
+
+    await makeProjectDir(path, store.name)
+    await cp(src, dbFile, { force: false, errorOnExist: true })
+
+    // Open db and enable WAL
+    var db = new Database(dbFile, 'w+', {
+      max: 1,
+      journalMode: 'wal'
+    })
+
+    // Fetch asset list (using current project base)
+    let project = await load(db)
+    let assets = getAssets(db, project)
+    let errors = []
+
+    // Update project base and store
+    await db.run(
+      ...update('project')
+        .set({
+          base: BASE.PROJECT,
+          store: MANAGED_STORE_NAME
+        })
+        .where({ project_id: project.id }))
+
+    info(`processing ${assets.length} asset(s)`)
+    await pMap(assets, async ({ id, ...props }) => {
+      let asset = new Asset(props)
+
+      try {
+        await asset.check()
+
+        if (!asset.hasChanged) {
+          await store.add(asset) // updates asset path and protocol!
+        } else {
+          errors.push(asset.url)
+          warn({
+            stack: asset.error?.stack,
+            url: asset.url
+          }, 'consolidation required')
+        }
+      } catch (e) {
+        errors.push(asset.url)
+        warn({ stack: e.stack, url: asset.url }, 'consolidation required')
+      }
+
+      // Update all local paths regardless of error status,
+      // because the project has a new base!
+      if (asset.protocol === 'file') {
+        await db.run(
+          ...update('photos')
+            .set({ path: relative(path, asset.path) })
+            .where({ id }))
+      }
+    }, { concurrency })
+
+    return errors
+
+  } finally {
+    await db?.close()
+  }
+}
+
 
 /*
  * Opens a project file and returns an array `[db, project]`
@@ -103,7 +210,7 @@ export async function open(path, {
   skipIntegrityCheck = false,
   user,
   ...dbOptions
-}) {
+} = {}) {
   let type = getProjectType(path)
   let dbFile = (type === MANAGED) ? join(path, MANAGED_DB_NAME) : path
 
@@ -220,15 +327,17 @@ export async function unlock(dbFile) {
   return chmod(dbFile, 0o666)
 }
 
-export async function listAssets(db, { basePath }) {
-  let assets = await db.all(assetInfo.query)
+export async function getAssets(db, { basePath }) {
+  let assets = []
 
-  for (let asset of assets) {
+  await db.each(assetInfo.query, asset => {
     asset.path = (
       (basePath && asset.protocol === 'file') ?
         resolve(basePath, normalize(asset.path)) : asset.path
     ).normalize()
-  }
+
+    assets.push(asset)
+  })
 
   return assets
 }
