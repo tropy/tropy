@@ -231,6 +231,11 @@ en:
       name: Name
       id: ID
       path: File
+      type: Project type
+      convert:
+        title: Convert to Standard Project
+        hint: Are you sure?
+        confirm: Convert
       watch:
         folder: Watch folder
         usePolling: Using file stat polling
