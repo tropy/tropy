@@ -1,0 +1,13 @@
+//
+// Project pane
+// --------------------------------------------------
+
+.project.pane {
+  .btn-edit {
+    margin-left: 1px;
+  }
+
+  .btn-convert {
+    width: calc(100% - $space-md - 2 * $btn-icon-padding - 1px);
+  }
+}

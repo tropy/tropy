@@ -4,6 +4,7 @@ import { bool, func, string } from 'prop-types'
 import { FormField, FormElement } from '../form.js'
 import { Button } from '../button.js'
 import { Input } from '../input.js'
+import { IconPencil } from '../icons'
 
 
 export const ProjectTypeField = ({
@@ -31,24 +32,26 @@ export const ProjectTypeField = ({
   return (
     <>
       <FormElement
-        id={"prefs.project.type"}
+        id="prefs.project.type"
         htmlFor="prefs.projefct.type"
         size={8}
         isCompact>
         <div className="flex-row">
           <Input
-            id={"prefs.project.type"}
+            id="prefs.project.type"
             className="form-control"
             value={type}
             isReadOnly/>
           <Button
-            text="Edit"
+            className="btn-edit"
+            icon={<IconPencil/>}
             onClick={() => setEditing(!isEditing)}/>
         </div>
       </FormElement>
       {isEditing &&
         <FormElement>
           <Button
+            className="btn-default btn-block btn-convert"
             text="prefs.project.convert.confirm"
             onClick={onConvert}/>
         </FormElement>
