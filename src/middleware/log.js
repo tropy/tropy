@@ -9,8 +9,8 @@ export function log() {
         logger.warn({
           action: type,
           meta,
-          msg: `${type} failed: ${payload.message}`,
-          stack: payload.stack
+          msg: `${type} failed: ${error.message || payload?.message}`,
+          stack: error.stack || payload?.stack
         })
         break
       default:
