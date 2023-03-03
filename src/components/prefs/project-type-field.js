@@ -29,31 +29,31 @@ export const ProjectTypeField = ({
     )
 
   return (
-      <>
-        <FormElement
-          id={"prefs.project.type"}
-          htmlFor="prefs.projefct.type"
-          size={8}
-          isCompact>
-          <div className="flex-row">
-            <Input
-              id={"prefs.project.type"}
-              className="form-control"
-              value={type}
-              isReadOnly/>
-            <Button
-              text="Edit"
-              onClick={() => setEditing(!isEditing)}/>
-          </div>
+    <>
+      <FormElement
+        id={"prefs.project.type"}
+        htmlFor="prefs.projefct.type"
+        size={8}
+        isCompact>
+        <div className="flex-row">
+          <Input
+            id={"prefs.project.type"}
+            className="form-control"
+            value={type}
+            isReadOnly/>
+          <Button
+            text="Edit"
+            onClick={() => setEditing(!isEditing)}/>
+        </div>
+      </FormElement>
+      {isEditing &&
+        <FormElement>
+          <Button
+            text="prefs.project.convert.confirm"
+            onClick={onConvert}/>
         </FormElement>
-        {isEditing &&
-          <FormElement>
-            <Button
-              text="prefs.project.convert.confirm"
-              onClick={onConvert}/>
-          </FormElement>
-        }
-      </>
+      }
+    </>
   )
 }
 
