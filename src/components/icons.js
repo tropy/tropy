@@ -465,6 +465,14 @@ export const IconO = i('O', (
   </svg>
 ))
 
+export const IconPencil = i('Pencil', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M14.293,4.293,11.707,1.707a1,1,0,0,0-1.414,0L1,11v4H5l9.293-9.293A1,1,0,0,0,14.293,4.293ZM4.586,14H2V11.414L9.332,4.081l2.587,2.586Zm8.04-8.04L10.039,3.374l.96-.96h0L13.586,5ZM4,12.707,3.293,12,9.5,5.793l.707.707Z"/>
+    </g>
+  </svg>
+))
+
 export const IconPhoto = i('Photo', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
