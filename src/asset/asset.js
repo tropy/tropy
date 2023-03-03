@@ -92,7 +92,7 @@ export class Asset {
     checksum = this.checksum,
     mtime,
     ...opts
-  }, ...args) {
+  } = {}, ...args) {
     try {
       this.hasChanged = false
       this.error = null

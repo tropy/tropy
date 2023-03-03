@@ -2,12 +2,10 @@ import { shell } from 'electron'
 import assert from 'node:assert'
 import { existsSync } from 'node:fs'
 import { chmod, cp, stat, mkdir } from 'node:fs/promises'
-import {
-  basename, dirname, extname, join, normalize, resolve, relative
-} from 'node:path'
+import { basename, dirname, extname, join, resolve, relative } from 'node:path'
 import { v4 as uuid } from 'uuid'
 import { Database } from './db.js'
-import { home } from './os.js'
+import { home, normalize } from './os.js'
 import { into, select, update } from './query.js'
 import { version } from './release.js'
 import { empty, pMap } from './util.js'
@@ -123,20 +121,25 @@ export async function convert(src, path, {
 
     let dbFile = join(path, MANAGED_DB_NAME)
     let store = new Store(join(path, MANAGED_STORE_NAME))
+    let errors = []
 
     await makeProjectDir(path, store.name)
+
+    // Fetch asset list (using current project base)
+    var db = new Database(src, 'r', { max: 1 })
+
+    let project = await load(db)
+    let assets = await getAssets(db, project)
+
+    await db.close()
+
+    // Copy and open db and enable WAL
     await cp(src, dbFile, { force: false, errorOnExist: true })
 
-    // Open db and enable WAL
-    var db = new Database(dbFile, 'w+', {
+    db = new Database(dbFile, 'w', {
       max: 1,
       journalMode: 'wal'
     })
-
-    // Fetch asset list (using current project base)
-    let project = await load(db)
-    let assets = getAssets(db, project)
-    let errors = []
 
     // Update project base and store
     await db.run(

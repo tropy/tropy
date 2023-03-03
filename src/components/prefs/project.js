@@ -23,6 +23,7 @@ export const ProjectPrefs = React.memo(({
 
     dispatch(convert({
       name: project.name,
+      src: project.path,
       type: TYPES[0]
     }))
       .then(action => {
