@@ -235,7 +235,7 @@ en:
       type: Project type
       convert:
         confirm: Convert
-        hint: Convert this project into a Standard project
+        hint: Convert this project into a Standard project.
         detail: >-
           {errors, plural,
             =0 {All photos consolidated.}

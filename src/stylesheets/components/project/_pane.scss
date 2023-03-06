@@ -17,8 +17,6 @@
   }
 
   .input-group {
-    margin-bottom: $space-min;
-
     @include state(".editing .input-group") {
       transform: translateY(-30px);
     }
@@ -29,27 +27,11 @@
   }
 
   .btn-convert {
+    margin-top: $space-min;
     flex: 0 0 calc(100% - 27px);
 
     @include state(".editing .btn-convert") {
       transform: translateY(-30px);
-    }
-  }
-
-  .form-description {
-    transition: opacity 0.24s ease;
-
-    @include state(".editing .form-description") {
-      opacity: 0;
-    }
-
-    & + .form-description {
-      opacity: 0;
-      margin-top: -26px;
-
-      @include state(".editing .form-description") {
-        opacity: 1;
-      }
     }
   }
 }
