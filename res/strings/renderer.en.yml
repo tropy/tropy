@@ -109,6 +109,7 @@ en:
           tpy: Links to photos at their original location.
           managed: Copies photos to project folder on import.
       create: Create Project
+      eyeCatcher: New
     stats:
       photos: >-
         {photos, plural,
