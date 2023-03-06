@@ -30,6 +30,18 @@
       display: none;
     }
   }
+
+  &::before {
+    box-sizing: border-box;
+    position: absolute;
+    left: calc(50% - $space-lg / 2);
+    width: $space-lg;
+    height: $space-lg;
+    border: 2px solid $cover-spin-color;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
 }
 
 #cover {
@@ -41,6 +53,19 @@
   .closing & {
     display: flex;
     opacity: 0.6;
+  }
+
+  .busy & {
+    display: flex;
+
+    .icon-tropylarge {
+      display: none;
+    }
+
+    &::before {
+      content: "";
+      top: calc(50% - $space-lg / 2);
+    }
   }
 }
 
@@ -74,17 +99,8 @@
   }
 
   &::before {
-    box-sizing: border-box;
     content: "";
-    position: absolute;
     top: max(calc(50% + 101px), calc(66.67% - $space-lg / 2));
-    left: calc(50% - $space-lg / 2);
-    width: $space-lg;
-    height: $space-lg;
-    border: 2px solid $cover-spin-color;
-    border-right-color: transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
 
     @include state(".project.closing") {
       content: none;
