@@ -51,6 +51,6 @@
   //}
 
   .link-target {
-    width: $link-target-width;
+    flex: 0 0 $link-target-width;
   }
 }
