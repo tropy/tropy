@@ -35,4 +35,21 @@
       transform: translateY(-30px);
     }
   }
+
+  .form-description {
+    transition: opacity 0.24s ease;
+
+    @include state(".editing .form-description") {
+      opacity: 0;
+    }
+
+    & + .form-description {
+      opacity: 0;
+      margin-top: -26px;
+
+      @include state(".editing .form-description") {
+        opacity: 1;
+      }
+    }
+  }
 }
