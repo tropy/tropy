@@ -233,9 +233,8 @@ en:
       path: File
       type: Project type
       convert:
-        title: Convert to Standard Project
-        hint: Are you sure?
         confirm: Convert
+        hint: Convert this project into a Standard project
         detail: >-
           {errors, plural,
             =0 {All photos consolidated.}
