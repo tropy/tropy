@@ -16,12 +16,15 @@ export const RelativeDate = ({ origin, threshold, value }) => {
   }
 
   let unit
+  let updateIntervalInSeconds
 
   if (seconds < 60) {
     unit = 'second'
+    updateIntervalInSeconds = 10
   } else if (seconds < 3600) {
     unit = 'minute'
     delta = Math.round(delta / 60)
+    updateIntervalInSeconds = 60
   } else if (seconds < 86400) {
     unit = 'hour'
     delta = Math.round(delta / 3600)
@@ -38,6 +41,7 @@ export const RelativeDate = ({ origin, threshold, value }) => {
       numeric="auto"
       style="long"
       unit={unit}
+      updateIntervalInSeconds={updateIntervalInSeconds}
       value={delta}/>
   )
 }
