@@ -46,7 +46,8 @@ export const ProjectTypeField = ({
             id="prefs.project.type"
             className="form-control"
             value={type}
-            readOnly/>
+            readOnly
+            tabIndex="-1"/>
         </div>
         <Button
           className="btn-edit"
