@@ -3,9 +3,11 @@ import { arrayOf, func, object, string } from 'prop-types'
 import { ScrollContainer } from '../scroll/container.js'
 import { Form, FormField, FormToggle, FormToggleGroup } from '../form.js'
 import { ProjectTypeField } from './project-type-field.js'
+import { notify } from '../../dialog.js'
 import { BASES, TYPES } from '../../common/project.js'
 import { convert } from '../../slices/project-files.js'
 import { useDispatch } from 'react-redux'
+import { useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
 import { useWindow } from '../../hooks/use-window.js'
 
@@ -16,26 +18,31 @@ export const ProjectPrefs = React.memo(({
   onChange
 }) => {
   let dispatch = useDispatch()
+  let intl = useIntl()
   let win = useWindow()
 
-  let handleProjectConvert = useEvent(() => {
-    win.toggle('busy', true)
+  let handleProjectConvert = useEvent(async () => {
+    try {
+      win.toggle('busy', true)
 
-    dispatch(convert({
-      name: project.name,
-      src: project.path,
-      type: TYPES[0]
-    }))
-      .then(action => {
-        if (action?.payload?.path) {
-          console.log('converted', action.payload.path)
-          // prompt?
-          // close prefs/project and open new project
-        }
-      })
-      .finally(() => {
-        win.toggle('busy', false)
-      })
+      let action = await dispatch(convert({
+        name: project.name,
+        src: project.path,
+        type: TYPES[0]
+      }))
+
+      if (action?.payload?.path) {
+        await notify('project.convert', {
+          detail: intl.formatMessage({ id: 'prefs.project.convert.detail' }, {
+            errors: action.payload.errors.length
+          })
+        })
+
+        // close prefs/project and open new project
+      }
+    } finally {
+      win.toggle('busy', false)
+    }
   })
 
   return (

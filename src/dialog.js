@@ -50,10 +50,10 @@ function show(type, options = {}) {
   })
 }
 
-function notify(opts) {
+function notify(id, opts) {
   return show('message-box', {
-    type: 'none',
-    ...t('dialog', 'notify'),
+    type: 'info',
+    ...t('dialog', 'notify', ...id.split('.')),
     ...opts
   })
 }
