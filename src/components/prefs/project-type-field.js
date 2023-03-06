@@ -33,9 +33,10 @@ export const ProjectTypeField = ({
   return (
     <FormElement
       id="prefs.project.type"
+      className={cx({ editing: isEditing })}
       htmlFor="prefs.projefct.type"
       isCompact>
-      <div className={cx('flex-row', { editing: isEditing })}>
+      <div className="flex-row">
         <Input
           id="prefs.project.type"
           className="form-control"
@@ -52,6 +53,12 @@ export const ProjectTypeField = ({
           onClick={onConvert}
           isDisabled={!isEditing}/>
       </div>
+      <p className="form-description">
+        Links to photos at their original location.
+      </p>
+      <p className="form-description">
+        Convert this project into a Standard project.
+      </p>
     </FormElement>
   )
 }

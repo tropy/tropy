@@ -106,14 +106,11 @@ fieldset {
   cursor: auto;
 }
 
-.help-text {
+.form-description {
   font-size: 11px;
   line-height: 16px;
-
-  .form-text + & {
-    padding: 0 $padding-base-horizontal;
-    margin-top: -2px;
-  }
+  margin: 0;
+  padding: 5px ($padding-base-horizontal + $input-border-width);
 }
 
 .form-link {
