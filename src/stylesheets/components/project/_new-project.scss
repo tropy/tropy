@@ -46,6 +46,7 @@
     line-height: $headings-line-height;
     margin-top: 40px - 7px;
     margin-bottom: $space-sm - 4px;
+    position: relative;
   }
 
   form {
@@ -68,5 +69,36 @@
     font-size: 21px;
     font-weight: 600;
     margin-top: 40px - 5px;
+  }
+
+  .eye-catcher {
+    display: inline-block;
+    min-width: 32px;
+    height: 19px;
+    font-size: 10px;
+    line-height: 19px;
+    text-align: center;
+    font-weight: 900;
+    position: absolute;
+    left: calc(100% + 1px);
+    top: -50%;
+    margin: 0;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 4px;
+
+    @if $theme == "light" {
+      background:
+        image-url("project/new-left-light.svg") no-repeat left top,
+        image-url("project/new-right-light.svg") no-repeat right top,
+        #66ce9d;
+    } @else {
+      opacity: 0.8;
+      color: #2f2f2f;
+      background:
+        image-url("project/new-left-dark.svg") no-repeat left top,
+        image-url("project/new-right-dark.svg") no-repeat right top,
+        #66ce9d;
+    }
   }
 }
