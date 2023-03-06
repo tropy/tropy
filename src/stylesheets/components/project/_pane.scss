@@ -3,11 +3,36 @@
 // --------------------------------------------------
 
 .project.pane {
+  .flex-row {
+    flex-wrap: wrap;
+    height: 30px;
+    padding: 2px;
+    margin: -2px;
+    overflow: hidden;
+  }
+
+  .input-group,
+  .btn-convert {
+    transition: transform 0.24s ease;
+  }
+
+  .input-group {
+    margin-bottom: $space-min;
+
+    @include state(".editing .input-group") {
+      transform: translateY(-30px);
+    }
+  }
+
   .btn-edit {
     margin-left: 1px;
   }
 
   .btn-convert {
-    width: calc(100% - $space-md - 2 * $btn-icon-padding - 1px);
+    flex: 0 0 calc(100% - 27px);
+
+    @include state(".editing .btn-convert") {
+      transform: translateY(-30px);
+    }
   }
 }
