@@ -73,13 +73,14 @@ export const convert = createAsyncThunk(
   'projectFiles/convert',
   async ({ src, name, type }) => {
     let path = await save.project(type, name)
+    let errors
 
     if (path)
-      await convertProject(src, path, {
+      errors = await convertProject(src, path, {
         overwrite: true
       })
 
-    return { path }
+    return { path, errors }
   })
 
 const projectFiles = createSlice({
