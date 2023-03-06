@@ -1,4 +1,5 @@
 import React from 'react'
+import { ipcRenderer as ipc } from 'electron'
 import { arrayOf, func, object, string } from 'prop-types'
 import { ScrollContainer } from '../scroll/container.js'
 import { Form, FormField, FormToggle, FormToggleGroup } from '../form.js'
@@ -38,7 +39,7 @@ export const ProjectPrefs = React.memo(({
           })
         })
 
-        // close prefs/project and open new project
+        ipc.send('switch-project', action.payload.path, project.path)
       }
     } finally {
       win.toggle('busy', false)

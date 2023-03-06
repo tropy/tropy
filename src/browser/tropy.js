@@ -170,12 +170,12 @@ export class Tropy extends EventEmitter {
 
   async showProjectWindow(file, win = this.wm.current()) {
     if (win == null) {
-      for (const w of this.wm.map('project')) {
-        if (this.getProject(w)?.path === file) {
-          info({ file }, 'focus existing project window')
-          w.show()
-          return
-        }
+
+      win = this.getProjectWindow(file)
+      if (win) {
+        info({ file }, 'focus existing project window')
+        win.show()
+        return
       }
 
       info({ file }, 'open new project window')
@@ -877,6 +877,16 @@ export class Tropy extends EventEmitter {
       this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
     })
 
+    ipc.on('switch-project', async (_, path, old) => {
+      await this.wm.close('prefs')
+      this.getProjectWindow(old)?.close()
+      this.showProjectWindow(path, null)
+    })
+
+    ipc.on('close-project', (_, path) => {
+      this.getProjectWindow(path)?.close()
+    })
+
     ipc.handle('print', async (event, opts) => {
       this.print(opts, BrowserWindow.fromWebContents(event.sender))
     })
@@ -1158,6 +1168,14 @@ export class Tropy extends EventEmitter {
     }
 
     return null
+  }
+
+  getProjectWindow(path) {
+    for (let win of this.wm.map('project')) {
+      if (this.getProject(win)?.path === path) {
+        return win
+      }
+    }
   }
 
   getProject(win = this.wm.current()) {
