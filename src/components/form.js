@@ -1,5 +1,5 @@
 import React from 'react'
-import { useIntl } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import cx from 'classnames'
 import { useEvent } from '../hooks/use-event.js'
 import { set } from '../common/util.js'
@@ -61,6 +61,14 @@ Label.propTypes = {
   value: string
 }
 
+export const Description = (props = {}) => {
+  return (
+    <p className="form-description">
+      <FormattedMessage {...props}/>
+    </p>
+  )
+}
+
 export class FormElement extends React.PureComponent {
   get hasLabel() {
     return this.props.label || this.props.id != null
@@ -88,6 +96,8 @@ export class FormElement extends React.PureComponent {
             { [`col-offset-${offset}`]: !hasLabel })
         }>
           {this.props.children}
+          {this.props.description &&
+            <Description id={this.props.description}/>}
         </div>
       </FormGroup>
     )
@@ -96,6 +106,7 @@ export class FormElement extends React.PureComponent {
   static propTypes = {
     children: node,
     className: string,
+    description: string,
     id: string,
     title: string,
     label: string,
@@ -148,6 +159,7 @@ export class FormField extends React.PureComponent {
     return (
       <FormElement
         id={this.props.id}
+        description={this.props.description}
         size={this.props.size}
         label={this.props.label}
         title={this.props.title}
@@ -165,6 +177,7 @@ export class FormField extends React.PureComponent {
   }
 
   static propTypes = {
+    description: string,
     id: string.isRequired,
     isCompact: bool,
     isDisabled: bool,

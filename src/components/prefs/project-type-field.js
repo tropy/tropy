@@ -3,7 +3,6 @@ import { useIntl } from 'react-intl'
 import { bool, func, string } from 'prop-types'
 import { FormField, FormElement } from '../form.js'
 import { Button } from '../button.js'
-import { Input } from '../input.js'
 import { IconPencil } from '../icons'
 import cx from 'classnames'
 
@@ -20,10 +19,15 @@ export const ProjectTypeField = ({
     id: `project.new.type.option.${value}`
   })
 
+  let description = isEditing ?
+    'prefs.project.convert.hint' :
+    `project.new.type.hint.${value}`
+
   if (isDisabled)
     return (
       <FormField
         id="prefs.project.type"
+        description={description}
         name="type"
         isCompact
         isReadOnly
@@ -33,15 +37,17 @@ export const ProjectTypeField = ({
   return (
     <FormElement
       id="prefs.project.type"
+      description={description}
       className={cx({ editing: isEditing })}
-      htmlFor="prefs.projefct.type"
       isCompact>
       <div className="flex-row">
-        <Input
-          id="prefs.project.type"
-          className="form-control"
-          value={type}
-          isReadOnly/>
+        <div className="input-group">
+          <input
+            id="prefs.project.type"
+            className="form-control"
+            value={type}
+            readOnly/>
+        </div>
         <Button
           className="btn-edit"
           icon={<IconPencil/>}
@@ -53,12 +59,6 @@ export const ProjectTypeField = ({
           onClick={onConvert}
           isDisabled={!isEditing}/>
       </div>
-      <p className="form-description">
-        Links to photos at their original location.
-      </p>
-      <p className="form-description">
-        Convert this project into a Standard project.
-      </p>
     </FormElement>
   )
 }
