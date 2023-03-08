@@ -110,6 +110,7 @@ it:
           tpy: Collegamenti alle foto nella loro posizione originale.
           managed: Copia le foto nella cartella del progetto durante l'importazione.
       create: Crea progetto
+      eyeCatcher: Nuovo
     stats:
       photos: |-
         {photos, plural,
@@ -235,6 +236,15 @@ it:
       name: Nome
       id: ID
       path: File
+      type: Project type
+      convert:
+        confirm: Convert
+        hint: Convert this project into a Standard project.
+        detail: |-
+          {errors, plural,
+            =0 {All photos consolidated.}
+            one {1 photo not found; consolidation required.}
+            other {# photos not found; consolidation required.}}
       watch:
         folder: Guarda cartella
         usePolling: Utilizzo del polling delle statistiche sui file
@@ -370,8 +380,15 @@ it:
     comment: Commento
   dialog:
     notify:
-      buttons:
-        - OK
+      project:
+        convert:
+          title: Conversion complete
+          message: >-
+            Your project was successfully converted and saved. Tropy will now
+            close the original project file and open the converted project in a
+            new window.
+          buttons:
+            - OK
     error:
       title: Errore
       buttons:

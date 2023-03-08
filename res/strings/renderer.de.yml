@@ -107,6 +107,7 @@ de:
           tpy: Links to photos at their original location.
           managed: Copies photos to project folder on import.
       create: Create Project
+      eyeCatcher: Neu
     stats:
       photos: |-
         {photos, plural,
@@ -230,6 +231,15 @@ de:
       name: Name
       id: ID
       path: Datei
+      type: Project type
+      convert:
+        confirm: Convert
+        hint: Convert this project into a Standard project.
+        detail: |-
+          {errors, plural,
+            =0 {All photos consolidated.}
+            one {1 photo not found; consolidation required.}
+            other {# photos not found; consolidation required.}}
       watch:
         folder: Überwachter Ordner
         usePolling: 'Zyklische Dateistatusabfrage '
@@ -367,8 +377,15 @@ de:
     comment: Kommentar
   dialog:
     notify:
-      buttons:
-        - OK
+      project:
+        convert:
+          title: Conversion complete
+          message: >-
+            Your project was successfully converted and saved. Tropy will now
+            close the original project file and open the converted project in a
+            new window.
+          buttons:
+            - OK
     error:
       title: Fehler
       buttons:

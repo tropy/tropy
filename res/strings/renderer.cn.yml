@@ -102,6 +102,7 @@ cn:
           tpy: 链接到原始位置的照片。
           managed: 在导入时将照片复制到库文件夹中。
       create: 新建库
+      eyeCatcher: 新建
     stats:
       photos: |-
         {photos, plural,
@@ -225,6 +226,15 @@ cn:
       name: 名称
       id: ID
       path: 文件
+      type: Project type
+      convert:
+        confirm: Convert
+        hint: Convert this project into a Standard project.
+        detail: |-
+          {errors, plural,
+            =0 {All photos consolidated.}
+            one {1 photo not found; consolidation required.}
+            other {# photos not found; consolidation required.}}
       watch:
         folder: 监视文件夹
         usePolling: 使用文件统计
@@ -362,8 +372,15 @@ cn:
     comment: 注释
   dialog:
     notify:
-      buttons:
-        - 确定
+      project:
+        convert:
+          title: Conversion complete
+          message: >-
+            Your project was successfully converted and saved. Tropy will now
+            close the original project file and open the converted project in a
+            new window.
+          buttons:
+            - 确定
     error:
       title: 错误
       buttons:
