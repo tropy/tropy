@@ -55,10 +55,19 @@ const red = (pre, msg, ...args) =>
 const green = (pre, msg, ...args) =>
   console.log(format(msg, 'green', pre), ...args)
 
+let fetch
 
 module.exports = (name) => ({
+  bail,
   check(predicate, ...args) {
     check(predicate, name, ...args)
+  },
+
+  async fetch(...args) {
+    if (!fetch)
+      fetch = (await import('node-fetch')).default
+
+    return fetch(...args)
   },
 
   say(...args) { log(name, ...args) },

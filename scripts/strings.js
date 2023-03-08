@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const { say } = require('./util')('μ')
+const { bail, fetch, say, warn } = require('./util')('μ')
 const { join } = require('path')
 const yaml = require('js-yaml')
 const { program } = require('commander')
@@ -31,6 +31,7 @@ program
   .command('import [dir]')
   .description('import all matching YML files')
   .action(dir => {
+    console.log('ho')
     let home = dir || HOME
 
     for (let file of ls(home)) {
@@ -67,6 +68,69 @@ program
     }
   })
 
+program
+  .command('fetch [dir]')
+  .option('-t, --token <token>',
+    'set the Transifex API token',
+    process.env.TRANSIFEX_API_TOKEN)
+  .option('-l, --lang <codes...>',
+    'set the languages to fetch',
+    ['de', 'fr', 'es', 'pt', 'pt_BR', 'ja', 'it', 'zh_CN'])
+  .option('-r, --res <slugs...>',
+    'set the resources to fetch',
+    ['app-menu', 'context-menu', 'browser', 'renderer'])
+  .action(async (dir, opts) => {
+    let home = dir || HOME
+
+    if (!opts.token) {
+      bail('missing Transifex API token')
+    }
+
+    let { transifexApi: tx } = loadTransifexApi()
+    tx.setup({ auth: opts.token })
+
+    let cds = await tx.Organization.get({ slug: 'cds' })
+    let projects = await cds.fetch('projects')
+    let project = await projects.get({ slug: 'tropy' })
+
+    for (let code of opts.lang) {
+      let language = await tx.Language.get({ code })
+
+      for (let slug of opts.res) {
+        let resource = await tx.Resource.get({ project, slug })
+        let url = await tx.ResourceTranslationsAsyncDownload.download({
+          resource,
+          language
+        })
+
+        let res = await fetch(url)
+
+        if (res.status !== 200) {
+          warn(`failed to fetch ${slug} ${code}: ${res.statusText}`)
+          continue
+        }
+
+        let tag = code
+          .replace('zh_CN', 'cn')
+          .replace('_', '-')
+
+        let data = (await res.text()).replace(code, tag)
+        write(join(home, `for_use_tropy_${slug}_${tag}.yml`), data)
+
+        say(`fetched ${code} ${slug}`)
+      }
+    }
+  })
+
+
+
+const loadTransifexApi = () => {
+  try {
+    return require('@transifex/api')
+  } catch {
+    bail('missing @transifex/api')
+  }
+}
 
 const load = (file) =>
   yaml.load(read(file))
@@ -146,5 +210,5 @@ const merge = (a, b, into = {}) => {
 }
 
 if (require.main === module) {
-  program.parse(process.argv)
+  program.parseAsync(process.argv)
 }
