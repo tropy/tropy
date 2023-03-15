@@ -17,15 +17,15 @@ export class ItemIterator extends React.Component {
   state = {}
 
   componentDidMount() {
-    on(document, 'global:next-item', this.handleNextItem)
-    on(document, 'global:prev-item', this.handlePrevItem)
+    on(document, 'global:nextItem', this.handleNextItem)
+    on(document, 'global:prevItem', this.handlePrevItem)
     on(document, 'global:forward', this.handleItemOpen)
     on(window, 'copy', this.handleCopy)
   }
 
   componentWillUnmount() {
-    off(document, 'global:next-item', this.handleNextItem)
-    off(document, 'global:prev-item', this.handlePrevItem)
+    off(document, 'global:nextItem', this.handleNextItem)
+    off(document, 'global:prevItem', this.handlePrevItem)
     off(document, 'global:forward', this.handleItemOpen)
     off(window, 'copy', this.handleCopy)
   }

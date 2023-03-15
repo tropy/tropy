@@ -21,13 +21,13 @@ export class ItemPanelGroup extends React.PureComponent {
   tab = React.createRef()
 
   componentDidMount() {
-    on(document, 'global:next-tab', this.toggleTabs)
-    on(document, 'global:prev-tab', this.toggleTabs)
+    on(document, 'global:nextTab', this.toggleTabs)
+    on(document, 'global:prevTab', this.toggleTabs)
   }
 
   componentWillUnmount() {
-    off(document, 'global:next-tab', this.toggleTabs)
-    off(document, 'global:prev-tab', this.toggleTabs)
+    off(document, 'global:nextTab', this.toggleTabs)
+    off(document, 'global:prevTab', this.toggleTabs)
   }
 
   get toolbar() {

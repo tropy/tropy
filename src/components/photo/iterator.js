@@ -11,14 +11,14 @@ export class PhotoIterator extends React.Component {
   state = {}
 
   componentDidMount() {
-    on(document, 'global:next-photo', this.handleNextPhoto)
-    on(document, 'global:prev-photo', this.handlePrevPhoto)
+    on(document, 'global:nextPhoto', this.handleNextPhoto)
+    on(document, 'global:prevPhoto', this.handlePrevPhoto)
   }
 
   componentWillUnmount() {
     this.props.onBlur()
-    off(document, 'global:next-photo', this.handleNextPhoto)
-    off(document, 'global:prev-photo', this.handlePrevPhoto)
+    off(document, 'global:nextPhoto', this.handleNextPhoto)
+    off(document, 'global:prevPhoto', this.handlePrevPhoto)
   }
 
   get classes() {
