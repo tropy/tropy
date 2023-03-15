@@ -59,9 +59,17 @@ export default {
   },
 
   error(payload, meta = {}) {
-    return update(
-      { id: payload, broken: true },
-      { consolidate: true, ...meta })
+    return (dispatch, getState) => {
+      let id = payload
+      let { selections } = getState()
+
+      if (id in selections)
+        id = selections[id].photo
+
+      meta.consolidate = true
+
+      return dispatch(update({ id, broken: true }, meta))
+    }
   },
 
   expand(payload, meta = {}) {

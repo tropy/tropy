@@ -75,6 +75,7 @@ export class SelectionIterable extends React.PureComponent {
       <Thumbnail
         {...props}
         {...pick(this.props.selection, Thumbnail.keys)}
+        consolidated={this.props.photo.consolidated}
         color={this.props.photo.color}
         mimetype={this.props.photo.mimetype}
         orientation={this.props.photo.orientation}
