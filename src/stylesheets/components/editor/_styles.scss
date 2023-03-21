@@ -38,10 +38,7 @@ body {
 
 .placeholder {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   padding-inline: calc((100% - $editor-size) / 2);
   color: $editor-placeholder-color;
   pointer-events: none;

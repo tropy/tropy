@@ -84,10 +84,7 @@
     padding: 0;
 
     &.warning {
-      right: initial;
-      bottom: initial;
-      left: 6px;
-      top: 5px;
+      inset: 5px initial initial 6px;
     }
 
     .icon {
