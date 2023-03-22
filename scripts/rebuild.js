@@ -99,8 +99,7 @@ class Rebuilder {
     await new Promise((resolve, reject) => {
       exec(cmd, { silent: this.silent }, (code, stdout, stderr) => {
         if (code !== 0) {
-          if (this.silent)
-            console.error(stderr)
+          console.error(stderr)
 
           reject(new Error(`${this.name} failed to run: ${cmd}`))
 
