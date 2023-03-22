@@ -2,7 +2,7 @@
   {
     "name": "Electron",
     "license": "MIT",
-    "licenseURL": "https://raw.githubusercontent.com/electron/electron/master/LICENSE"
+    "licenseURL": "https://raw.githubusercontent.com/electron/electron/main/LICENSE"
   },
   {
     "name": "Chromium",
@@ -13,7 +13,7 @@
   {
     "name": "Node.js",
     "license": "Node.js License",
-    "licenseURL": "https://raw.githubusercontent.com/nodejs/node/master/LICENSE"
+    "licenseURL": "https://raw.githubusercontent.com/nodejs/node/main/LICENSE"
   },
   {
     "name": "SQLite",
