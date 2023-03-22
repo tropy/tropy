@@ -134,9 +134,9 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
   })
 
   app.on('web-contents-created', (_, contents) => {
-    contents.on('new-window', (event, url) => {
-      warn(`prevented loading ${url}`)
-      event.preventDefault()
+    contents.setWindowOpenHandler((details) => {
+      warn({ details }, `prevented loading ${details.url}`)
+      return { action: 'deny' }
     })
   })
 
