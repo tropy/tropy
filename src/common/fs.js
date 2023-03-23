@@ -1,7 +1,8 @@
 import fs from 'node:fs'
-import { access, stat, readdir } from 'node:fs/promises'
+import { access, cp, stat, symlink, readdir } from 'node:fs/promises'
 import { basename, dirname, join } from 'node:path'
 import { tautology } from './util.js'
+import { win32 } from './os.js'
 
 
 export function canWrite(file) {
@@ -58,4 +59,24 @@ export async function expand(paths, {
   }
 
   return files
+}
+
+export async function link(src, dest, type = 'file') {
+  try {
+    try {
+      await symlink(src, dest, type)
+
+    } catch (e) {
+      if (win32 && e.code === 'EPERM')
+        await cp(src, dest, {
+          force: false,
+          recursive: type === 'dir'
+        })
+      else
+        throw e
+    }
+  } catch (e) {
+    if (e.code !== 'EEXIST')
+      throw e
+  }
 }

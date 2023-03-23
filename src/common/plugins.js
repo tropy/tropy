@@ -3,6 +3,7 @@ import fs from 'node:fs'
 import { basename, join } from 'node:path'
 import electron, { shell } from 'electron'
 import debounce from 'lodash.debounce'
+import { link } from './fs.js'
 import { logger, info, warn } from './log.js'
 import { blank, get, omit, uniq } from './util.js'
 import { unzip } from './zip.js'
@@ -12,8 +13,7 @@ import {
   readFile as read,
   writeFile as write,
   readdir,
-  stat,
-  symlink
+  stat
 } from 'node:fs/promises'
 
 const load = async file => JSON.parse(await read(file))
@@ -323,11 +323,10 @@ const icon = (pkg, name, root) => {
 }
 
 const linkReadme = (root) =>
-  symlink(
+  link(
     join(electron.app.getAppPath(), 'res', 'plugins', 'README.md'),
     join(root, 'README.md'),
     'file'
   ).catch(e => {
-    if (e.code !== 'EEXIST')
-      warn({ stack: e.stack }, 'failed to link plugins readme')
+    warn({ stack: e.stack }, 'failed to link plugins readme')
   })
