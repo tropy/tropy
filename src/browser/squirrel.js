@@ -1,9 +1,9 @@
-import { basename, join, resolve } from 'path'
-import fs from 'fs'
-import { homedir } from 'os'
-import { qualified } from '../common/release'
-import { spawn } from '../common/spawn'
-import { ShellOption } from './win-shell'
+import { basename, join, resolve } from 'node:path'
+import fs from 'node:fs'
+import { homedir } from 'node:os'
+import { qualified } from '../common/release.js'
+import { spawn } from '../common/spawn.js'
+import { ShellOption } from './win-shell.js'
 
 const appFolder = resolve(process.execPath, '..')
 const rootAppDir = resolve(appFolder, '..')

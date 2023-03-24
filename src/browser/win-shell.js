@@ -1,4 +1,4 @@
-import { dirname, basename } from 'path'
+import { dirname, basename } from 'node:path'
 import Registry from 'winreg'
 
 const { HKCU, DEFAULT_VALUE, REG_NONE, REG_SZ } = Registry

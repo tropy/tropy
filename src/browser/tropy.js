@@ -41,6 +41,7 @@ import { WindowManager } from './wm.js'
 import { addIdleObserver } from './idle.js'
 import { migrate } from './migrate.js'
 import * as act from './actions.js'
+import { setProjectFolderIcon } from './project.js'
 
 import {
   FLASH, HISTORY, TAG, PROJECT, CONTEXT, LOCALE
@@ -233,6 +234,10 @@ export class Tropy extends EventEmitter {
         case 'win32':
           app.addRecentDocument(project.path)
           break
+      }
+
+      if (project.isManaged) {
+        setProjectFolderIcon(project.path)
       }
 
       this.state.recent = [
