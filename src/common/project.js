@@ -88,7 +88,7 @@ async function makeProjectDir(path, store, appDir) {
   await mkdir(join(path, store))
 
   await cp(
-    join(appDir, 'res/icons/mime/folder/scalable.svg'),
+    join(appDir, 'res/icons/mime/folder/1024x1024.png'),
     join(path, '.DirIcon'))
   await cp(
     join(appDir, 'res/icons/mime/folder.ico'),
