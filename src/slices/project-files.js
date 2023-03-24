@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { pMap } from '../common/util.js'
 import { warn } from '../common/log.js'
 import { open, save } from '../dialog.js'
-import { Schema } from '../res.js'
+import { Resource, Schema } from '../res.js'
 
 import {
   pstat,
@@ -18,7 +18,7 @@ export const create = createAsyncThunk(
     let path = await save.project(type, name)
 
     if (path)
-      await createProject(path, Schema.expand('project'), {
+      await createProject(path, Schema.expand('project'), Resource.base, {
         name,
         overwrite: true
       })
@@ -76,7 +76,7 @@ export const convert = createAsyncThunk(
     let errors
 
     if (path)
-      errors = await convertProject(src, path, {
+      errors = await convertProject(src, path, Resource.base, {
         overwrite: true
       })
 

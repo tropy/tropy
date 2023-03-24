@@ -55,7 +55,7 @@ describe('common/project', () => {
     })
 
     it('rejects unknown file extensions', () =>
-      expect(create('tropy.db', F.schema('project').path))
+      expect(create('tropy.db', F.schema('project').path, F.appDir))
         .to.eventually.be.rejectedWith('unknown project file extension'))
 
     it('rejects if file or directory already exists', async () => {
@@ -65,10 +65,10 @@ describe('common/project', () => {
       await writeFile(tpy, '')
       await mkdir(tpm)
 
-      await expect(create(tpy, F.schema('project').path))
+      await expect(create(tpy, F.schema('project').path, F.appDir))
         .to.eventually.be.rejectedWith('project file exists')
 
-      await expect(create(tpm, F.schema('project').path))
+      await expect(create(tpm, F.schema('project').path, F.appDir))
         .to.eventually.be.rejectedWith('project file exists')
     })
   })
@@ -166,7 +166,7 @@ describe('common/project', () => {
 
       // TODO add photos
 
-      await convert(tpy.current.path, tpm)
+      await convert(tpy.current.path, tpm, F.appDir)
       let [db, project] = await open(tpm)
 
       expect(project.name).to.equal('Daedalus')
@@ -175,6 +175,9 @@ describe('common/project', () => {
       expect(isAbsolute(project.store)).to.be.true
 
       expect(existsSync(join(tpm, 'project.tpy-wal'))).to.be.ok
+      expect(existsSync(join(tpm, '.DirIcon'))).to.be.ok
+      expect(existsSync(join(tpm, 'folder.ico'))).to.be.ok
+      expect(existsSync(join(tpm, 'desktop.ini'))).to.be.ok
 
       // TODO check store
       // TODO check photo paths

@@ -16,7 +16,7 @@ export function mkprojtmp(file, opts) {
   let path = mktmp(file)
 
   beforeEach(async () => {
-    let db = await create(path, F.schema('project').path, {
+    let db = await create(path, F.schema('project').path, F.appDir, {
       ...opts,
       autoclose: false
     })

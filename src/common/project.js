@@ -18,7 +18,7 @@ import { Store } from '../asset/store.js'
 /*
  * Creates a new Tropy project.
  */
-export async function create(path, schema, {
+export async function create(path, schema, appDir, {
   autoclose = true,
   name = 'Tropy',
   base = null,
@@ -38,7 +38,7 @@ export async function create(path, schema, {
       store = MANAGED_STORE_NAME
       base = BASE.PROJECT
 
-      await makeProjectDir(path, store)
+      await makeProjectDir(path, store, appDir)
 
     } else {
       assert(BASES.includes(base),
@@ -83,9 +83,19 @@ async function checkProjectPath(path, overwrite = false) {
 }
 
 // Creates the folder structure for managed projects.
-async function makeProjectDir(path, store) {
+async function makeProjectDir(path, store, appDir) {
   await mkdir(path)
   await mkdir(join(path, store))
+
+  await cp(
+    join(appDir, 'res/icons/mime/folder/1024x1024.png'),
+    join(path, '.DirIcon'))
+  await cp(
+    join(appDir, 'res/icons/mime/folder.ico'),
+    join(path, 'folder.ico'))
+  await cp(
+    join(appDir, 'res/win32/desktop.ini'),
+    join(path, 'desktop.ini'))
 }
 
 
@@ -103,7 +113,7 @@ async function makeProjectDir(path, store) {
  * such as failure to write to the database file,
  * will be thrown.
  */
-export async function convert(src, path, {
+export async function convert(src, path, appDir, {
   concurrency = 4,
   overwrite = false
 } = {}) {
@@ -123,7 +133,7 @@ export async function convert(src, path, {
     let store = new Store(join(path, MANAGED_STORE_NAME))
     let errors = []
 
-    await makeProjectDir(path, store.name)
+    await makeProjectDir(path, store.name, appDir)
 
     // Fetch asset list (using current project base)
     var db = new Database(src, 'r', { max: 1 })

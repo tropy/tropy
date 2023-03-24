@@ -4,6 +4,10 @@ const { join } = require('node:path')
 const ROOT = join(__dirname, '../fixtures')
 
 global.F = new Proxy({
+  get appDir() {
+    return join(ROOT, '../..')
+  },
+
   images(name) {
     return {
       path: join(ROOT, 'images', name)
