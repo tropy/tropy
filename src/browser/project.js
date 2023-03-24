@@ -13,6 +13,7 @@ export async function setProjectFolderIcon(path) {
       break
     case 'win32':
       await attrib(join(path, 'desktop.ini'), '+S', '+H')
+      await attrib(path, '+S')
       break
   }
 }
