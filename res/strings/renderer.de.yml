@@ -630,6 +630,7 @@ de:
       purge: Fehler beim Entfernen alter Projekt-Caches.
     project:
       created: Projekt konnte nicht erstellt werden.
+      convert: Project conversion failed.
     item:
       export: Objekte konnten nicht exportiert werden.
       merge: Objekte konnten nicht zusammengefügt werden.

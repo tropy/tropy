@@ -635,6 +635,7 @@ fr:
       purge: Échec de la suppression du cache des anciens projets
     project:
       created: Échec de la création du projet.
+      convert: Project conversion failed.
     item:
       export: Échec de l'exportation des objets.
       merge: Échec de la fusion des objets.

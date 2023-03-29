@@ -617,6 +617,7 @@ cn:
       purge: 未能删除旧的缓存。
     project:
       created: 库创建失败。
+      convert: Project conversion failed.
     item:
       export: 无法导出文件。
       merge: 无法合并图组。

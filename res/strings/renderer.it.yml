@@ -634,6 +634,7 @@ it:
       purge: Rimozione della vecchia cache di progetto non riuscita.
     project:
       created: Creazione del progetto non riuscita.
+      convert: Project conversion failed.
     item:
       export: Esportazione degli elementi non riuscita.
       merge: Unione degli elementi non riuscita.

@@ -588,6 +588,7 @@ pt-BR:
       purge: Falha ao remover caches de projeto antigos.
     project:
       created: Falha ao criar o projeto.
+      convert: Project conversion failed.
     item:
       export: Falha ao exportar itens.
       merge: Falha ao combinar itens.

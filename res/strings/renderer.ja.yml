@@ -626,6 +626,7 @@ ja:
       purge: 古いプロジェクトのキャッシュの削除に失敗しました
     project:
       created: プロジェクトの作成に失敗しました
+      convert: Project conversion failed.
     item:
       export: アイテムのエクスポートに失敗しました
       merge: アイテムの統合に失敗しました

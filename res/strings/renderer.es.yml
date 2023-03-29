@@ -614,6 +614,7 @@ es:
       purge: Falla al remover la caché antigua.
     project:
       created: Falla en la creación de proyecto.
+      convert: Project conversion failed.
     item:
       export: Falla en la exportación de objetos.
       merge: Falla en la fusión de objetos.

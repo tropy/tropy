@@ -600,6 +600,7 @@ pt:
       purge: Falhou a remoção das caches de projeto antigas.
     project:
       created: Falhou a criação de projeto.
+      convert: Project conversion failed.
     item:
       export: Falhou a exportação de itens.
       merge: Falhou a combinação de itens.
