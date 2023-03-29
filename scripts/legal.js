@@ -5,9 +5,6 @@ const { join, relative, resolve } = require('path')
 const { readFile, writeFile } = require('fs/promises')
 const { program } = require('commander')
 
-const fetch = (...args) =>
-  import('node-fetch').then(f => f.default(...args))
-
 /* eslint-disable max-len */
 
 program

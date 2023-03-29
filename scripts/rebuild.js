@@ -166,7 +166,6 @@ class Rebuilder {
 
         if (!test('-f', tar)) {
           say(`fetching SQLite version ${version} ...`)
-          let { default: fetch } = await import('node-fetch')
           let res = await fetch(url)
           if (res.status !== 200)
             throw new Error(`download failed: ${res.status} ${res.statusText}`)

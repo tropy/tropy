@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const { bail, fetch, say, warn } = require('./util')('μ')
+const { bail, say, warn } = require('./util')('μ')
 const { join } = require('path')
 const yaml = require('js-yaml')
 const { program } = require('commander')
