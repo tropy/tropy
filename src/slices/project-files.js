@@ -1,8 +1,8 @@
 import { basename } from 'node:path'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { pMap } from '../common/util.js'
-import { warn } from '../common/log.js'
-import { open, save } from '../dialog.js'
+import { error, warn } from '../common/log.js'
+import { fail, open, save } from '../dialog.js'
 import { Resource, Schema } from '../res.js'
 
 import {
@@ -15,15 +15,20 @@ import {
 export const create = createAsyncThunk(
   'projectFiles/create',
   async ({ name, type }) => {
-    let path = await save.project(type, name)
+    try {
+      let path = await save.project(type, name)
 
-    if (path)
-      await createProject(path, Schema.expand('project'), Resource.base, {
-        name,
-        overwrite: true
-      })
+      if (path)
+        await createProject(path, Schema.expand('project'), Resource.base, {
+          name,
+          overwrite: true
+        })
 
-    return { path }
+      return { path }
+    } catch (e) {
+      error({ stack: e.stack }, `failed to create project ${name}`)
+      fail(e, 'project.created')
+    }
   })
 
 export const reload = createAsyncThunk(
@@ -72,15 +77,20 @@ export const consolidate = createAsyncThunk(
 export const convert = createAsyncThunk(
   'projectFiles/convert',
   async ({ src, name, type }) => {
-    let path = await save.project(type, name)
-    let errors
+    try {
+      let path = await save.project(type, name)
+      let errors
 
-    if (path)
-      errors = await convertProject(src, path, Resource.base, {
-        overwrite: true
-      })
+      if (path)
+        errors = await convertProject(src, path, Resource.base, {
+          overwrite: true
+        })
 
-    return { path, errors }
+      return { path, errors }
+    } catch (e) {
+      error({ stack: e.stack }, `failed to convert project ${src}`)
+      fail(e, 'project.convert')
+    }
   })
 
 const projectFiles = createSlice({

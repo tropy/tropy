@@ -637,6 +637,7 @@ en:
       purge: Failed to remove old project caches.
     project:
       created: Project creation failed.
+      convert: Project conversion failed.
     item:
       export: Failed to export items.
       merge: Failed to merge items.
