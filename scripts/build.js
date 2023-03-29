@@ -333,6 +333,7 @@ function desktop({
   icon = exe,
   mimetypes = [
     'application/vnd.tropy.tropy',
+    'application/vnd.tropy.mtpy',
     'application/vnd.tropy.tpy',
     'application/vnd.tropy.ttp',
     'x-scheme-handler/tropy'

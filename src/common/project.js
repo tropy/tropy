@@ -94,7 +94,7 @@ async function makeProjectDir(path, store, appDir) {
     join(appDir, 'res/icons/mime/folder.ico'),
     join(path, 'folder.ico'))
   await cp(
-    join(appDir, 'res/win32/desktop.ini'),
+    join(appDir, 'res/icons/mime/folder.ini'),
     join(path, 'desktop.ini'))
 }
 
