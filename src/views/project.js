@@ -50,7 +50,7 @@ win.on('idle', ({ type, time }) => {
   store.dispatch(idle[type](time))
 })
 
-win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (
-  store.dispatch(project.close()), tasks.toPromise()
+  store.dispatch(project.close()),
+  tasks.toPromise().finally(() => dialog.stop())
 ))

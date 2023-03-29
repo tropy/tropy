@@ -45,7 +45,7 @@ win.on('settings.update', (opts) => {
   }
 })
 
-win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (
-  store.dispatch(prefs.close()), tasks.toPromise()
+  store.dispatch(prefs.close()),
+  tasks.toPromise().finally(() => dialog.stop())
 ))
