@@ -25,9 +25,10 @@ export const create = createAsyncThunk(
         })
 
       return { path }
+
     } catch (e) {
       error({ stack: e.stack }, `failed to create project ${name}`)
-      fail(e, 'project.created')
+      await fail(e, 'project.created')
     }
   })
 
@@ -87,9 +88,10 @@ export const convert = createAsyncThunk(
         })
 
       return { path, errors }
+
     } catch (e) {
       error({ stack: e.stack }, `failed to convert project ${src}`)
-      fail(e, 'project.convert')
+      await fail(e, 'project.convert')
     }
   })
 

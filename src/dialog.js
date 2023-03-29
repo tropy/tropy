@@ -61,7 +61,7 @@ function notify(id, opts) {
 function fail(e, code = e.code, detail) {
   let message = t(`error.${code}`) || e.message
 
-  return notify({
+  return show('message-box', {
     type: 'error',
     ...t('dialog', 'error'),
     message,
