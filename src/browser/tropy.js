@@ -304,7 +304,7 @@ export class Tropy extends EventEmitter {
     }
 
     this.wm.show('prefs', args, {
-      isExclusive: true,
+      isExclusive: !darwin,
       title: this.dict.window.prefs.title,
       parent: this.wm.current()
     })
