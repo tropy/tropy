@@ -129,7 +129,7 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
     '/db{,/{migrate,schema}{,/**/*}}',
     '/lib{,/**/*}',
     '/res{,/{menu,shaders,cursors,images,plugins,keymaps,strings,views,workers}{,/**/*}}',
-    '/res/icons{,/{about,colors,cover,prefs,project,window}{,/**/*}}',
+    '/res/icons{,/{about,colors,cover,mime,prefs,project,window}{,/**/*}}',
     '/package.json',
     '/LICENSE'
   ]
@@ -332,7 +332,7 @@ async function copyIcons(dst, theme = 'hicolor') {
 function desktop({
   icon = exe,
   mimetypes = [
-    'application/vnd.tropy.mtpy',
+    'application/vnd.tropy.tropy',
     'application/vnd.tropy.tpy',
     'application/vnd.tropy.ttp',
     'x-scheme-handler/tropy'
