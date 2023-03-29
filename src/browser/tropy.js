@@ -304,8 +304,7 @@ export class Tropy extends EventEmitter {
     }
 
     this.wm.show('prefs', args, {
-      alwaysOnTop: darwin,
-      isExclusive: !darwin,
+      isExclusive: true,
       title: this.dict.window.prefs.title,
       parent: this.wm.current()
     })
@@ -793,7 +792,7 @@ export class Tropy extends EventEmitter {
 
     this.on('app:install-plugin', (win) => {
       dialog
-        .open(darwin ? null : win, {
+        .open(win, {
           defaultPath: app.getPath('downloads'),
           filters: [{
             name: this.dict.dialog.file.plugin,
