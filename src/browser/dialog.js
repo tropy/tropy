@@ -1,5 +1,5 @@
 import { dirname } from 'node:path'
-import { dialog, BrowserWindow } from 'electron'
+import { dialog } from 'electron'
 
 let defaultPath
 
