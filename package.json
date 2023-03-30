@@ -57,7 +57,7 @@
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-replace": "^5.0.1",
-    "@testing-library/react": "^13.0.0",
+    "@testing-library/react": "^14.0.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.3.0",
