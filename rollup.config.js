@@ -126,6 +126,7 @@ export default [
     output: {
       dir: 'lib',
       format: 'cjs',
+      dynamicImportInCjs: false,
       generatedCode: 'es2015',
       sourcemap: true
     },
