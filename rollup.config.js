@@ -1,4 +1,4 @@
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 import process from 'node:process'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
@@ -10,7 +10,7 @@ import json from '@rollup/plugin-json'
 import license from 'rollup-plugin-license'
 import natives from 'rollup-plugin-natives'
 import replace from '@rollup/plugin-replace'
-import resolve from '@rollup/plugin-node-resolve'
+import nodeResolve from '@rollup/plugin-node-resolve'
 import sharp from 'sharp/package.json'
 
 // import visualize from 'rollup-plugin-visualizer'
@@ -38,11 +38,11 @@ const platformId = (arch === 'arm64') ?
 
 const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
-    'src/components/button.js',
-    'src/components/list/tree.js',
-    'node_modules/n3/src/N3DataFactory.js',
-    'node_modules/undici/lib/fetch/util.js'
-  ].includes(warning.importer),
+    resolve('src/components/button.js'),
+    resolve('src/components/list/tree.js'),
+    resolve('node_modules/n3/src/N3DataFactory.js'),
+    resolve('node_modules/undici/lib/fetch/util.js')
+  ].some(id => warning.ids.includes(id)),
 
   THIS_IS_UNDEFINED: (warning) =>
     (/this && this\.__/).test(warning.frame)
@@ -88,7 +88,7 @@ export default [
           'readable-stream': 'stream'
         }
       }),
-      resolve({
+      nodeResolve({
         exportConditions: ['node'],
         preferBuiltins: true
       }),
@@ -194,7 +194,7 @@ export default [
           manual: 'follow'
         }
       }),
-      resolve({
+      nodeResolve({
         exportConditions: ['node'],
         preferBuiltins: true
       }),
