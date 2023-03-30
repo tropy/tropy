@@ -92,9 +92,13 @@ export default class Esper extends EventEmitter {
 
     on(this.app.view, 'wheel', this.handleWheel, { passive: true })
 
-    info(`Esper.instance created using ${
-      this.app.renderer instanceof PIXI.CanvasRenderer ? 'canvas' : 'webgl'
-    } renderer`)
+    let mode = (this.app.renderer instanceof PIXI.CanvasRenderer) ?
+      'canvas' : 'webgl'
+
+    info({
+      mode,
+      resolution: this.resolution
+    }, `Esper.instance created with ${mode} renderer`)
   }
 
   halt() {
@@ -408,6 +412,7 @@ export default class Esper extends EventEmitter {
       this.resize()
 
       this.emit('resolution-change')
+      debug({ resolution }, `esper: resolution changed to ${resolution}`)
     }
   }
 
@@ -418,7 +423,6 @@ export default class Esper extends EventEmitter {
   get y() {
     return this.photo?.y ?? 0
   }
-
 
   handleDevicePixelRatioChange = () => {
     this.emit('dppx-change', Esper.devicePixelRatio)
