@@ -156,7 +156,7 @@
           image-url("project/no-items-light.svg") no-repeat 0 0
         );
 
-      @media (max-height: 540px) {
+      @media (height <= 540px) {
         display: none;
       }
     }

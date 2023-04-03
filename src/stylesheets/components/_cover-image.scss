@@ -85,7 +85,7 @@
         box-shadow: 0 -1px 0 $stack-line-gap-color;
 
         @if $theme == "light" {
-          @media (min-resolution: 2dppx) {
+          @media (2dppx <= resolution) {
             box-shadow: 0 -0.5px 0 $stack-line-gap-color;
           }
         }

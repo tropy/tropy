@@ -158,7 +158,7 @@
       font-size: $font-size-large;
       margin-top: -10px;
 
-      @media (min-resolution: 2dppx) {
+      @media (2dppx <= resolution) {
         margin-top: -9.5px;
       }
 
@@ -186,7 +186,7 @@
       margin-bottom: -10px;
       @include css-truncation;
 
-      @media (min-resolution: 2dppx) {
+      @media (2dppx <= resolution) {
         margin-top: 0;
       }
 
