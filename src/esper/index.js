@@ -63,8 +63,6 @@ export default class Esper extends EventEmitter {
       new TWEEN.Group()
     ]
 
-    PIXI.utils.skipHello()
-
     this.app = new PIXI.Application({
       antialias: false,
       autoDensity: true,
