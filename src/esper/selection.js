@@ -45,15 +45,15 @@ export class SelectionLayer extends Container {
     )
   }
 
-  isInteractive(tool) {
-    return tool === ESPER.TOOL.ARROW
+  getEventModeFor(tool) {
+    return (tool === ESPER.TOOL.ARROW) ? 'static' : 'none'
   }
 
   sync(props, state) {
     let tool = state.quicktool || props.tool
 
     this.visible = this.isVisible(props.selection, tool)
-    this.interactive = this.isInteractive(tool)
+    this.eventMode = this.getEventModeFor(tool)
 
     let { selections } = props
 
@@ -84,6 +84,7 @@ export class Selection extends Graphics {
   constructor() {
     super()
     this.data = BLANK
+    this.eventMode = 'static'
   }
 
   get isBlank() {
@@ -118,11 +119,9 @@ export class Selection extends Graphics {
   sync(data = BLANK) {
     this.data = data
 
-    if (this.isBlank || !this.parent.interactive) {
-      this.interactive = false
+    if (this.isBlank || this.parent.eventMode !== 'none') {
       this.hitArea = null
     } else {
-      this.interactive = true
       this.hitArea = new Rectangle(
         data.x, data.y, data.width, data.height
       )
