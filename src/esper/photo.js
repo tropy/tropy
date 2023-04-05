@@ -6,8 +6,7 @@ import { constrain, getDevicePixelRatio } from './util.js'
 import { deg, isHorizontal } from '../common/math.js'
 import { ESPER } from '../constants/index.js'
 
-const { Container, Sprite, Rectangle } = PIXI
-const { ColorMatrixFilter } = PIXI.filters
+const { Container, ColorMatrixFilter, Sprite, Rectangle } = PIXI
 
 const NEGATIVE = [
   -1, 0, 0, 1, 0, 0, -1, 0, 1, 0, 0, 0, -1, 1, 0, 0, 0, 0, 1, 0
