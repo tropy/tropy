@@ -2,7 +2,6 @@ import { join, resolve } from 'node:path'
 import process from 'node:process'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
-import cleanup from 'rollup-plugin-cleanup'
 import commonjs from '@rollup/plugin-commonjs'
 import copy from 'rollup-plugin-copy'
 import ignore from 'rollup-plugin-ignore'
@@ -80,6 +79,7 @@ export default [
       generatedCode: 'es2015',
       sourcemap: false
     },
+    treeshake: 'safest',
     preserveEntrySignatures: 'strict',
     plugins: [
       alias({
@@ -109,8 +109,7 @@ export default [
             template: JSON.stringify
           }
         }
-      }),
-      cleanup()
+      })
       // visualize({ filename: 'main.html' })
     ],
     external: [
@@ -130,11 +129,11 @@ export default [
       generatedCode: 'es2015',
       sourcemap: true
     },
+    treeshake: 'safest',
     preserveEntrySignatures: 'strict',
     plugins: [
       emit({
         entries: {
-          'esper': 'src/esper/index.js',
           'views/about': 'src/views/about.js',
           'views/prefs': 'src/views/prefs.js',
           'views/print': 'src/views/print.js',
@@ -164,7 +163,6 @@ export default [
             dest: 'lib',
             rename: 'licenses.libvips.json'
           }
-
         ],
         copyOnce: true
       }),
@@ -175,7 +173,6 @@ export default [
       alias({
         entries: {
           'ky-universal': 'ky',
-          'semver': join(process.cwd(), 'node_modules/semver'),
           'readable-stream': 'node:stream'
         }
       }),
@@ -218,8 +215,7 @@ export default [
             template: JSON.stringify
           }
         }
-      }),
-      cleanup()
+      })
       // visualize({ filename: 'renderer.html' })
     ],
     external: [
