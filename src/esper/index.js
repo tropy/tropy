@@ -78,7 +78,7 @@ export default class Esper extends EventEmitter {
 
     for (let name in ESPER.TOOL)
       addCursorStyle(
-        this.app.renderer.plugins.interaction.cursorStyles,
+        this.app.renderer.events.cursorStyles,
         ESPER.TOOL[name])
 
     this.app.ticker.add(this.update)
@@ -223,8 +223,8 @@ export default class Esper extends EventEmitter {
         this.photo.bg.texture = texture
         this.emit('texture-change', true)
 
-        this.photo.interactive = true
-        this.photo.on('mousedown', this.handleMouseDown)
+        this.photo.eventMode = 'static'
+        this.photo.addEventListener('mousedown', this.handleMouseDown)
 
         this.clearTextureCache(state.src, 5)
 
@@ -401,7 +401,7 @@ export default class Esper extends EventEmitter {
 
     if (resolution !== renderer.resolution) {
       renderer.resolution = resolution
-      renderer.plugins.interaction.resolution = resolution
+      renderer.events.resolution = resolution
 
       if (renderer.rootRenderTarget)
         renderer.rootRenderTarget.resolution = resolution
@@ -496,7 +496,7 @@ export default class Esper extends EventEmitter {
 
   fadeOut(thing, duration = FADE_DURATION) {
     if (thing == null) return
-    thing.interactive = false
+    thing.eventMode = 'none'
     this
       .animate(thing, null, { gid: 1, done: () => thing.destroy() })
       .to({ alpha: 0 }, duration)
