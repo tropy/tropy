@@ -20,6 +20,7 @@ import {
   equal,
   getDevicePixelRatio,
   isDoubleClickSupported,
+  normalizeRectangle,
   setScaleMode
 } from './util.js'
 
@@ -789,26 +790,10 @@ export default class Esper extends EventEmitter {
   }
 
   handleSelectStop() {
-    let { x, y, width, height } = this.drag.current.selection
+    let selection = normalizeRectangle(this.drag.current.selection, true)
+    if (!selection.width || !selection.height) return
 
-    if (!width || !height) return
-
-    if (width < 0) {
-      x = x + width
-      width = -width
-    }
-
-    if (height < 0) {
-      y = y + height
-      height = -height
-    }
-
-    this.emit('selection-create', {
-      x: Math.round(x),
-      y: Math.round(y),
-      width: Math.round(width),
-      height: Math.round(height)
-    })
+    this.emit('selection-create', selection)
   }
 
   handleWheel = (event) => {

@@ -1,6 +1,7 @@
 import { Container, Graphics, Rectangle } from 'pixi.js'
-import { BLANK } from '../common/util'
-import { ESPER } from '../constants'
+import { BLANK } from '../common/util.js'
+import { ESPER } from '../constants/index.js'
+import { normalizeRectangle } from './util.js'
 
 
 export class SelectionLayer extends Container {
@@ -19,6 +20,9 @@ export class SelectionLayer extends Container {
     for (; i < this.children.length - 1; ++i) {
       this.children[i].update(scale)
     }
+
+    if (selection)
+      selection = normalizeRectangle(selection)
 
     this.children[i].update(scale, selection, 'live')
   }
