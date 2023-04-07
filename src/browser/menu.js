@@ -513,7 +513,7 @@ Menu.ItemCompiler = {
   },
 
   'condition': (item, app, win, event) => {
-    let { condition } = item
+    let { condition, visible } = item
     let negate = false
 
     if (condition.startsWith('!')) {
@@ -528,6 +528,9 @@ Menu.ItemCompiler = {
 
     if (negate)
       item.enabled = !item.enabled
+
+    if (!visible && item.enabled)
+      item.visible = true
   }
 }
 
