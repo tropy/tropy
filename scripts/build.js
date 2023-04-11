@@ -8,7 +8,7 @@ const {
 } = require('fs').promises
 const { program } = require('commander')
 const packager = require('electron-packager')
-const minimatch = require('minimatch')
+const { minimatch } = require('minimatch')
 const { basename, extname, join, relative } = require('path')
 
 const {
