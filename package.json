@@ -51,7 +51,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.12.13",
     "@babel/preset-react": "^7.12.13",
     "@babel/register": "^7.12.13",
-    "@rollup/plugin-alias": "^4.0.0",
+    "@rollup/plugin-alias": "^5.0.0",
     "@rollup/plugin-babel": "^6.0.0",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-json": "^6.0.0",
