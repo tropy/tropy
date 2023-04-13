@@ -25,8 +25,8 @@ async function load(db, ids) {
           saturation,
           sharpen,
           template,
-          datetime(created, "localtime") AS created,
-          datetime(modified, "localtime") AS modified
+          strftime("%Y-%m-%dT%H:%M:%f", created, "localtime") AS created,
+          strftime("%Y-%m-%dT%H:%M:%f", modified, "localtime") AS modified
         FROM subjects
           JOIN images USING (id)
           JOIN selections USING (id)${
