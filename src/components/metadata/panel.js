@@ -15,7 +15,6 @@ import {
   getItemFields,
   getMetadataCompletions,
   getPhotoFields,
-  getPropertyList,
   getSelectedItemTemplate,
   getSelectedItems,
   getSelectedPhoto,
@@ -170,8 +169,7 @@ class MetadataPanel extends React.PureComponent {
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterItemFields}
           onBefore={this.handleBeforeItemFields}
-          onCreate={this.props.onMetadataAdd}
-          options={this.props.fields.available}/>
+          onCreate={this.props.onMetadataAdd}/>
         {!this.isBulk &&
           <ItemInfo item={this.props.items[0]}/>}
       </MetadataSection>
@@ -200,8 +198,7 @@ class MetadataPanel extends React.PureComponent {
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterPhotoFields}
           onBefore={this.handleBeforePhotoFields}
-          onCreate={this.props.onMetadataAdd}
-          options={this.props.fields.available}/>
+          onCreate={this.props.onMetadataAdd}/>
         <PhotoInfo
           edit={this.props.edit}
           photo={this.props.photo}
@@ -236,8 +233,7 @@ class MetadataPanel extends React.PureComponent {
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterSelectionFields}
           onBefore={this.handleBeforeSelectionFields}
-          onCreate={this.props.onMetadataAdd}
-          options={this.props.fields.available}/>
+          onCreate={this.props.onMetadataAdd}/>
         <SelectionInfo
           selection={this.props.selection}/>
       </MetadataSection>
@@ -260,7 +256,6 @@ class MetadataPanel extends React.PureComponent {
     completions: arrayOf(string).isRequired,
     edit: object,
     fields: shape({
-      available: arrayOf(object).isRequired,
       item: arrayOf(shapes.field).isRequired,
       photo: arrayOf(shapes.field).isRequired,
       selection: arrayOf(shapes.field).isRequired
@@ -293,7 +288,6 @@ const MetadataPanelContainer = connect(
       completions: getMetadataCompletions(state),
       edit: state.edit.field,
       fields: {
-        available: getPropertyList(state),
         item: getItemFields(state),
         photo: getPhotoFields(state),
         selection: getSelectionFields(state)

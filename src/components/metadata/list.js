@@ -1,7 +1,8 @@
 import React from 'react'
-import { NewMetadataField, MetadataField } from './field'
-import { shallow } from '../../common/util'
 import { arrayOf, bool, func, object, shape, string } from 'prop-types'
+import { MetadataField } from './field.js'
+import { FieldSelect } from './select.js'
+import { shallow } from '../../common/util.js'
 
 
 export class MetadataList extends React.PureComponent {
@@ -122,11 +123,12 @@ export class MetadataList extends React.PureComponent {
             onPrev={this.handlePrev}/>
         )}
         {this.hasNewMetadataField &&
-          <NewMetadataField
-            options={this.props.options}
-            value={this.props.fields.map(f => f.property.id)}
-            onCancel={this.props.onEditCancel}
-            onCreate={this.handleCreate}/>}
+          <li>
+            <FieldSelect
+              value={this.props.fields.map(f => f.property.id)}
+              onCancel={this.props.onEditCancel}
+              onInsert={this.handleCreate}/>
+          </li>}
       </ol>
     )
   }
@@ -142,7 +144,6 @@ export class MetadataList extends React.PureComponent {
       property: object.isRequired,
       value: object
     })).isRequired,
-    options: arrayOf(object),
     onAfter: func.isRequired,
     onBefore: func.isRequired,
     onEdit: func,
