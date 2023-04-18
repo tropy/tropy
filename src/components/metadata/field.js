@@ -7,37 +7,11 @@ import { IconLock, IconWarningSm } from '../icons'
 import cx from 'classnames'
 import { TYPE } from '../../constants'
 import { auto } from '../../format'
-import { ResourceSelect } from '../resource/select'
 
 import {
-  arrayOf, bool, func, number, shape, string, oneOfType, object
+  arrayOf, bool, func, number, shape, string, oneOfType
 } from 'prop-types'
 
-const NewMetadataField = ({ options, value, onCreate, onCancel }) => (
-  <li>
-    <ResourceSelect
-      autofocus
-      canClearByBackspace={false}
-      hideClearButton
-      isRequired
-      isSelectionHidden
-      isValueHidden
-      maxRows={6}
-      options={options}
-      placeholder="panel.metadata.dropdown.placeholder"
-      value={value}
-      onClose={({ type } = {}) => type === 'escape' && onCancel()}
-      onBlur={onCancel}
-      onInsert={onCreate}/>
-  </li>
-)
-
-NewMetadataField.propTypes = {
-  options: arrayOf(object).isRequired,
-  value: arrayOf(string),
-  onCancel: func,
-  onCreate: func.isRequired
-}
 
 class MetadataField extends React.PureComponent {
   get classes() {
@@ -315,7 +289,5 @@ const MetadataFieldContainer = DragSource(
 export {
   Field,
   MetadataFieldContainer as MetadataField,
-  NewMetadataField,
   StaticField
 }
-
