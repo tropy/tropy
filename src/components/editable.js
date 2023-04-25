@@ -24,7 +24,9 @@ export class Editable extends React.PureComponent {
   }
 
   get isActive() {
-    return this.props.isActive && !this.props.isDisabled
+    return this.props.isActive &&
+      !this.props.isDisabled &&
+      this.props.onChange != null
   }
 
   focus = () => {
@@ -138,8 +140,8 @@ export class Editable extends React.PureComponent {
     type: string,
     value: oneOfType([string, number]),
     onBlur: func,
-    onCancel: func.isRequired,
-    onChange: func.isRequired,
+    onCancel: func,
+    onChange: func,
     onFocus: func,
     onKeyDown: func
   }
