@@ -1,12 +1,14 @@
-import ARGS from './args'
-import { TYPE } from './constants'
 import edtf, { format as edtfFormat } from 'edtf'
-import { blank } from './common/util'
+import ARGS from './args.js'
+import { TYPE } from './constants/index.js'
+import { blank } from './common/util.js'
 
 export function datetime(value, options = DTF) {
   try {
-    if (blank(value)) return value
-    const date = (value instanceof Date) ? value : edtf(value)
+    if (blank(value))
+      return value
+
+    let date = (value instanceof Date) ? value : edtf(value)
 
     if (date.getUTCFullYear() < 1300) {
       options = { ...options, era: 'short' }
@@ -24,8 +26,10 @@ export function number(value) {
 }
 
 export function bytes(value) {
-  if (typeof value === 'string') value = parseInt(value, 10)
-  if (!Number.isFinite(value)) return null
+  if (typeof value === 'string')
+    value = parseInt(value, 10)
+  if (!Number.isFinite(value))
+    return null
 
   let mag = Math.abs(value)
   let unit = (mag >= size.TB) ?
@@ -47,6 +51,10 @@ export function auto(value, type) {
       return datetime(value)
     case TYPE.NUMBER:
       return number(value)
+    case TYPE.BYTE:
+      return bytes(value)
+    case 'ppi':
+      return ppi(value)
     default:
       return value
   }
