@@ -1,101 +1,94 @@
-import React from 'react'
-import { Field, StaticField } from '../metadata/field'
-import { bool, func, object } from 'prop-types'
-import { IMAGE } from '../../constants'
-import { basename } from 'path'
-import { bytes, datetime, number, ppi } from '../../format'
+import { basename } from 'node:path'
+import React, { useState } from 'react'
+import { useIntl } from 'react-intl'
+import { useDispatch } from 'react-redux'
+import { bool, number, object } from 'prop-types'
+import { IMAGE } from '../../constants/index.js'
+import { useEvent } from '../../hooks/use-event.js'
+import { MetadataField } from '../metadata/field.js'
+import { bytes, datetime, number as num } from '../../format.js'
+import * as act from '../../actions/index.js'
+import { map } from '../../common/util.js'
 
+export const PhotoInfo = React.memo(({
+  photo,
+  isDisabled,
+  maxDensity,
+  minDensity
+}) => {
+  let dispatch = useDispatch()
+  let intl = useIntl()
+  let [editing, setEditing] = useState(null)
 
-export class PhotoInfo extends React.PureComponent {
-  get file() {
-    return this.props.photo.filename || basename(this.props.photo.path)
-  }
+  let url = (photo.protocol === 'file') ?
+    photo.path : `${photo.protocol}://${photo.path}`
 
-  get size() {
-    let { width, height, size } = this.props.photo
-    return `${number(width)}×${number(height)}, ${bytes(size)}`
-  }
+  let size = [
+    `${num(photo.width)}×${num(photo.height)}`,
+    bytes(photo.size)
+  ].join(', ')
 
-  get hint() {
-    let { protocol, path } = this.props.photo
-    return (protocol === 'file') ? path : `${protocol}://${path}`
-  }
+  let openPhotoInFolder = useEvent(() => {
+    dispatch(act.shell.open(photo))
+  })
 
-  isEditing(prop) {
-    return this.props.edit?.property === prop &&
-      this.props.edit.id === this.props.photo.id
-  }
+  let stopEditing = useEvent(() => setEditing(null))
 
-  handleFileClick = () => {
-    if (this.props.onOpenInFolder) {
-      this.props.onOpenInFolder(this.props.photo)
-    }
-  }
+  let handleChange = useEvent((data) => {
+    if (!isDisabled)
+      dispatch(act.photo.save({
+        id: photo.id,
+        data: map(data, (_, { text }) => text)
+      }))
 
-  handleDensityClick = () => {
-    if (!this.props.isDisabled)
-      this.props.onEdit({
-        field: {
-          id: this.props.photo.id,
-          property: 'photo.density'
-        }
-      })
-  }
+    stopEditing()
+  })
 
-  handleDensityChange = (density) => {
-    if (!this.props.isDisabled)
-      this.props.onChange({
-        id: this.props.photo.id,
-        data: { density }
-      }, { })
+  return (
+    <ol className="photo-info metadata-fields">
+      <MetadataField
+        label={intl.formatMessage({ id: 'photo.file' })}
+        text={photo.filename || basename(photo.path)}
+        title={url}
+        onClick={openPhotoInFolder}/>
 
-    this.props.onEditCancel()
-  }
+      {photo.density &&
+        <MetadataField
+          hint={intl.formatMessage({ id: 'format.ppi' })}
+          isActive={editing === 'density'}
+          isDisabled={isDisabled}
+          isRequired
+          label="photo.density"
+          max={maxDensity}
+          min={minDensity}
+          property="density"
+          text={photo.density}
+          type="ppi"
+          onCancel={stopEditing}
+          onChange={handleChange}
+          onClick={setEditing}/>}
 
-  render() {
-    return (
-      <ol className="photo-info metadata-fields">
-        <StaticField
-          hint={this.hint}
-          label="photo.file"
-          value={this.file}
-          onClick={this.handleFileClick}/>
-        {this.props.photo.density &&
-          <Field
-            display={ppi(this.props.photo.density)}
-            hint="Pixels per inch"
-            isActive={this.isEditing('photo.density')}
-            isDisabled={this.props.isDisabled}
-            isRequired
-            isStatic={this.props.isDisabled || this.props.onChange == null}
-            label="photo.density"
-            max={IMAGE.MAX_DENSITY}
-            min={IMAGE.MIN_DENSITY}
-            onCancel={this.props.onEditCancel}
-            onChange={this.handleDensityChange}
-            onClick={this.handleDensityClick}
-            type="number"
-            value={this.props.photo.density}/>}
-        <StaticField
-          label="photo.size"
-          value={this.size}/>
-        <StaticField
-          label="photo.created"
-          value={datetime(this.props.photo.created)}/>
-        <StaticField
-          label="item.modified"
-          value={datetime(this.props.photo.modified)}/>
-      </ol>
-    )
-  }
+      <MetadataField
+        label={intl.formatMessage({ id: 'photo.size' })}
+        text={size}/>
+      <MetadataField
+        label={intl.formatMessage({ id: 'photo.created' })}
+        text={datetime(photo.created)}/>
+      <MetadataField
+        label={intl.formatMessage({ id: 'photo.modified' })}
+        text={datetime(photo.modified)}/>
+    </ol>
+  )
+})
 
-  static propTypes = {
-    isDisabled: bool,
-    edit: object,
-    photo: object.isRequired,
-    onEdit: func,
-    onEditCancel: func,
-    onChange: func,
-    onOpenInFolder: func
-  }
+PhotoInfo.propTypes = {
+  isDisabled: bool,
+  photo: object.isRequired,
+  maxDensity: number.isRequired,
+  minDensity: number.isRequired
+}
+
+PhotoInfo.defaultProps = {
+  maxDensity: IMAGE.MAX_DENSITY,
+  minDensity: IMAGE.MIN_DENSITY
 }

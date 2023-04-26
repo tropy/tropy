@@ -284,6 +284,8 @@ en:
       uninstall: Uninstall
       noInfo: Unknown author
       homepage: More
+  format:
+    ppi: Pixels per inch (ppi)
   item:
     created: Date Added
     modified: Modified
