@@ -200,13 +200,8 @@ class MetadataPanel extends React.PureComponent {
           onBefore={this.handleBeforePhotoFields}
           onCreate={this.props.onMetadataAdd}/>
         <PhotoInfo
-          edit={this.props.edit}
           photo={this.props.photo}
-          isDisabled={this.props.isDisabled}
-          onChange={this.props.onPhotoSave}
-          onEdit={this.props.onEdit}
-          onEditCancel={this.props.onEditCancel}
-          onOpenInFolder={this.props.onOpenInFolder}/>
+          isDisabled={this.props.isDisabled}/>
       </MetadataSection>
     )
   }
@@ -234,8 +229,7 @@ class MetadataPanel extends React.PureComponent {
           onAfter={this.handleAfterSelectionFields}
           onBefore={this.handleBeforeSelectionFields}
           onCreate={this.props.onMetadataAdd}/>
-        <SelectionInfo
-          selection={this.props.selection}/>
+        <SelectionInfo selection={this.props.selection}/>
       </MetadataSection>
     )
   }
@@ -277,8 +271,6 @@ class MetadataPanel extends React.PureComponent {
     onMetadataCopy: func.isRequired,
     onMetadataDelete: func.isRequired,
     onMetadataSave: func.isRequired,
-    onOpenInFolder: func.isRequired,
-    onPhotoSave: func.isRequired,
     onTemplateChange: func.isRequired
   }
 }
@@ -310,10 +302,6 @@ const MetadataPanelContainer = connect(
 
       onMetadataDelete(...args) {
         dispatch(act.metadata.delete(...args))
-      },
-
-      onOpenInFolder(...args) {
-        dispatch(act.shell.open(...args))
       },
 
       onTemplateChange(type, ...args) {
