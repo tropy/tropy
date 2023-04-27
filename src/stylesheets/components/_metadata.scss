@@ -125,6 +125,10 @@
       @extend %drop-target;
     }
 
+    @include variant(".over .value") {
+      @extend %drop-target;
+    }
+
     .scrollbar-style-old-school & {
       padding-right: calc($default-padding-horizontal - $scrollbar-size / 3);
     }
