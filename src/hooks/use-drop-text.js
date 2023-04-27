@@ -6,7 +6,7 @@ export function useDropText({ onDrop }) {
     accept: [NativeTypes.TEXT, NativeTypes.URL],
 
     drop(item) {
-      onDrop({ text: item.text || item.urls[0] })
+      onDrop(item.text || item.urls[0])
     },
 
     collect: (monitor) => ({
