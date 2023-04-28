@@ -72,11 +72,6 @@ export class ItemPanelGroup extends React.PureComponent {
     this.panel.current.focus()
   }
 
-  handleMetadataSave = (...args) => {
-    this.props.onMetadataSave(...args)
-    this.panel.current.focus()
-  }
-
   handleTagAddCancel = () => {
     this.panel.current.focus()
   }
@@ -163,7 +158,7 @@ export class ItemPanelGroup extends React.PureComponent {
                       onContextMenu={this.props.onContextMenu}
                       onEdit={this.props.onEdit}
                       onEditCancel={this.handleEditCancel}
-                      onMetadataSave={this.handleMetadataSave}
+                      onMetadataSave={this.props.onMetadataSave}
                       onPhotoSave={this.props.onPhotoSave}/>
                   )
                 case UI.PANEL.TAGS:

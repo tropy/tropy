@@ -60,7 +60,7 @@ class PhotoListItem extends PhotoIterable {
 
 
   handleChange = (text) => {
-    const { photo, title, onChange } = this.props
+    const { photo, title, onChange, onEditCancel } = this.props
 
     onChange({
       id: photo.id,
@@ -68,6 +68,8 @@ class PhotoListItem extends PhotoIterable {
         [title]: { text, type: TYPE.TEXT }
       }
     })
+
+    onEditCancel()
   }
 
   handleTwistyButtonClick = (event) => {

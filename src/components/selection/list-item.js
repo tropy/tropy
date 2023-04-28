@@ -50,7 +50,7 @@ class SelectionListItem extends SelectionIterable {
   })
 
   handleChange = (text) => {
-    const { selection, title, onChange } = this.props
+    const { selection, title, onChange, onEditCancel } = this.props
 
     onChange({
       id: selection.id,
@@ -58,6 +58,8 @@ class SelectionListItem extends SelectionIterable {
         [title]: { text, type: 'text' }
       }
     })
+
+    onEditCancel()
   }
 
   render() {

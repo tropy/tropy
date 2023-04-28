@@ -46,6 +46,7 @@ export class TableCell extends React.PureComponent {
       text,
       type: this.props.type
     })
+    this.props.onCancel()
   }
 
   // Subtle: We want to enable click-to-edit for selected cells only;

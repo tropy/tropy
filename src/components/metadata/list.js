@@ -78,9 +78,8 @@ export class MetadataList extends React.PureComponent {
   handleChange = (data, hasChanged, hasBeenForced) => {
     if (hasChanged || hasBeenForced && this.isBulk) {
       this.props.onChange({ id: this.props.fields.id, data })
-    } else {
-      this.props.onEditCancel()
     }
+    this.props.onEditCancel()
   }
 
   handleCreate = (property) => {
@@ -93,8 +92,8 @@ export class MetadataList extends React.PureComponent {
       event.stopPropagation()
       event.nativeEvent.stopImmediatePropagation()
 
-      if (input.hasChanged)
-        input.commit(true)
+      if (input.hasChanged && !this.isBulk)
+        input.commit()
 
       if (event.shiftKey)
         this.handlePrev()
