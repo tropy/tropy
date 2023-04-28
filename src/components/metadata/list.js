@@ -130,11 +130,10 @@ export class MetadataList extends React.PureComponent {
             isDisabled={this.props.isDisabled}
             isEditing={this.isEditing(property.id)}
             isMixed={!!value.mixed}
-            property={property}
+            property={property.id}
             text={value.text}
             type={value.type || type}
             onContextMenu={this.props.onContextMenu}
-            onCopy={this.props.onCopy}
             onChange={this.handleChange}
             onEdit={this.edit}
             onEditCancel={this.props.onEditCancel}
@@ -166,7 +165,6 @@ export class MetadataList extends React.PureComponent {
     onEdit: func,
     onEditCancel: func,
     onContextMenu: func,
-    onCopy: func.isRequired,
     onChange: func.isRequired,
     onCreate: func
   }

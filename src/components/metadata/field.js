@@ -1,293 +1,128 @@
 import React from 'react'
-import { Editable } from '../editable'
-import { DragSource, DropTarget, getEmptyImage, DND } from '../dnd'
-import { FormattedMessage } from 'react-intl'
-import { blank, noop, pluck, URI } from '../../common/util'
-import { IconLock, IconWarningSm } from '../icons'
+import { useDispatch } from 'react-redux'
+import { arrayOf, bool, func, number, string, oneOfType } from 'prop-types'
+import { useDragDropMetadata } from '../../hooks/use-drag-drop-metadata.js'
+import { useEvent } from '../../hooks/use-event.js'
 import cx from 'classnames'
-import { TYPE } from '../../constants'
-import { auto } from '../../format'
-
-import {
-  arrayOf, bool, func, number, shape, string, oneOfType
-} from 'prop-types'
+import { MetadataLabel } from './label.js'
+import { MetadataValue } from './value.js'
+import actions from '../../actions/metadata.js'
 
 
-class MetadataField extends React.PureComponent {
-  get classes() {
-    return ['metadata-field', this.props.type, {
-      extra: this.props.isExtra,
-      mixed: this.props.isMixed
-    }]
-  }
+export const MetadataField = ({
+  id,
+  isExtra,
+  isDisabled,
+  isReadOnly,
+  isMixed,
+  label,
+  onContextMenu,
+  onChange,
+  onClick,
+  onEdit,
+  onEditCancel,
+  property,
+  text,
+  type,
+  ...props
+}) => {
+  let dispatch = useDispatch()
+  let isStatic = onChange == null
 
-  get isInvalid() {
-    return this.props.isRequired && blank(this.props.text)
-  }
+  let onDragEnd = useEvent(({ property: to, dropEffect }) => {
+    // TODO handle copy/move across different items
+    dispatch(actions.copy({
+      id,
+      from: property,
+      to
+    }, { cut: dropEffect === 'move' }))
+  })
 
-  get label() {
-    return this.props.label ||
-      this.props.property.label ||
-      URI.getLabel(this.props.property.id)
-  }
+  let [{ isOver }, dnd] = useDragDropMetadata({
+    id,
+    isDisabled: isDisabled || isStatic,
+    isMixed,
+    isReadOnly,
+    property,
+    text,
+    type,
+    onDragEnd
+  })
 
-  get property() {
-    return this.props.property.id
-  }
-
-  get details() {
-    return pluck(this.props.property, ['id', 'description', 'comment'])
-  }
-
-  get isDraggable() {
-    return !blank(this.props.text)
-  }
-
-  handleClick = () => {
-    if (!this.props.isDisabled && !this.props.isReadOnly) {
-      this.props.onEdit(this.property)
-    }
-  }
-
-  handleChange = (text, hasChanged = true, hasBeenForced) => {
-    this.props.onChange({
-      [this.property]: { text, type: this.props.type }
+  let handleChange = useEvent((value, hasChanged, hasBeenForced) => {
+    onChange({
+      [property]: {
+        text: value,
+        type
+      }
     }, hasChanged, hasBeenForced)
-  }
+  })
 
-  handleCancel = (hasChanged, hasBeenForced) => {
-    if (hasBeenForced) this.props.onEditCancel()
-    else this.handleChange(this.props.text, hasChanged)
-  }
+  let handleCancel = useEvent((hasChanged, hasBeenForced) => {
+    if (hasBeenForced)
+      onEditCancel()
+    else
+      handleChange(text, hasChanged)
+  })
 
-  handleContextMenu = (event) => {
-    if (!this.props.isDisabled && !this.props.isReadOnly) {
-      this.props.onContextMenu(event, {
-        isExtra: this.props.isExtra,
-        property: this.property
-      })
-    }
-  }
+  let handleClick = useEvent(() => {
+    if (!(isDisabled || isReadOnly))
+      onEdit?.(property)
+  })
 
-  handleKeyDown = (event, input) => {
-    if (event.key === 'Tab') {
-      event.preventDefault()
-      event.stopPropagation()
-      event.nativeEvent.stopImmediatePropagation()
+  let handleContextMenu = useEvent((event) => {
+    onContextMenu(event, {
+      isDisabled,
+      isExtra,
+      isReadOnly,
+      property
+    })
+  })
 
-      if (input.hasChanged) input.commit(true)
+  return (
+    <li
+      className={cx('metadata-field', {
+        extra: isExtra,
+        mixed: isMixed,
+        over: isOver,
+        static: isStatic,
+        clickable: onClick != null
+      })}
+      onContextMenu={handleContextMenu}>
 
-      if (event.shiftKey) this.props.onPrev()
-      else this.props.onNext()
-    }
-  }
+      <MetadataLabel id={property}>
+        {label}
+      </MetadataLabel>
 
-  componentDidMount() {
-    this.props.connectDragPreview(getEmptyImage())
-  }
-
-  connect(element) {
-    if (!this.props.isDisabled && this.isDraggable)
-      element = this.props.connectDragSource(element)
-
-    if (!this.props.isDisabled && !this.props.isReadOnly)
-      element = this.props.connectDropTarget(element)
-
-    return element
-  }
-
-  render() {
-    let { classes, details, label, isInvalid } = this
-
-    return (
-      <li
-        className={cx(classes)}
-        onContextMenu={this.handleContextMenu}>
-        <label title={details.join('\n\n')}>{label}</label>
-        {this.connect(
-          <div
-            className={cx('value', { over: this.props.isOver })}
-            onClick={this.handleClick}>
-            <Editable
-              value={this.props.text}
-              completions={this.props.completions}
-              display={auto(this.props.text, this.props.type)}
-              placeholder={this.props.placeholder}
-              isDisabled={this.props.isDisabled || this.props.isReadOnly}
-              isActive={this.props.isEditing}
-              isRequired={this.props.isRequired}
-              onCancel={this.handleCancel}
-              onChange={this.handleChange}
-              onKeyDown={this.handleKeyDown}/>
-            {isInvalid && <IconWarningSm/>}
-            {this.props.isReadOnly && <IconLock/>}
-          </div>)}
-      </li>
-    )
-  }
-
-  static propTypes = {
-    id: arrayOf(number),
-    isEditing: bool,
-    isDisabled: bool,
-    isExtra: bool.isRequired,
-    isMixed: bool,
-    isRequired: bool,
-    isReadOnly: bool,
-    isOver: bool,
-
-    property: shape({
-      id: string.isRequired,
-      label: string,
-      type: string,
-      description: string,
-      comment: string
-    }).isRequired,
-
-    label: string,
-    placeholder: string,
-    text: string,
-    type: string.isRequired,
-
-    connectDragSource: func.isRequired,
-    connectDragPreview: func.isRequired,
-    connectDropTarget: func.isRequired,
-    completions: arrayOf(String),
-
-    onEdit: func.isRequired,
-    onEditCancel: func.isRequired,
-    onChange: func.isRequired,
-    onContextMenu: func.isRequired,
-    onCopy: func.isRequired,
-    onNext: func.isRequired,
-    onPrev: func.isRequired
-  }
-
-  static defaultProps = {
-    type: TYPE.TEXT,
-    onContextMenu: noop
-  }
-}
-
-
-const Field = ({ isStatic, hint, label, onClick, ...props }) =>
-  (props.value == null) ? null : (
-    <li className={cx('metadata-field', {
-      static: isStatic,
-      clickable: onClick != null
-    })}>
-      <label>
-        <FormattedMessage id={label}/>
-      </label>
-      <div
-        className="value"
-        onClick={onClick}
-        title={hint}>
-        {isStatic ?
-          <div className="truncate">{props.display || props.value}</div> :
-          <Editable {...props} />}
-      </div>
+      <MetadataValue
+        {...props}
+        ref={dnd}
+        onClick={onClick || handleClick}
+        property={property}
+        text={text}
+        type={type}
+        isDisabled={isDisabled}
+        isReadOnly={isReadOnly}
+        onCancel={isStatic ? null : handleCancel}
+        onChange={isStatic ? null : handleChange}/>
     </li>
   )
+}
 
-Field.propTypes = {
-  display: string,
-  hint: string,
-  isEditing: bool,
-  isStatic: bool,
-  label: string.isRequired,
-  value: oneOfType([string, number]).isRequired,
+MetadataField.propTypes = {
+  ...MetadataValue.propTypes,
+  id: arrayOf(number),
+  isDisabled: bool,
+  isExtra: bool,
+  isMixed: bool,
+  isReadOnly: bool,
+  label: string,
   onChange: func,
-  onClick: func
-}
-
-const StaticField = React.memo((props) =>
-  <Field {...props} isStatic/>
-)
-
-
-const DragSourceSpec = {
-  beginDrag({ id, isMixed, property, text, type }) {
-    return {
-      id,
-      isMixed,
-      property: property.id,
-      value: auto(text, type),
-      position: 'relative'
-    }
-  },
-
-  endDrag({ onCopy }, monitor) {
-    if (monitor.didDrop()) {
-      let item = monitor.getItem()
-      let drop = monitor.getDropResult()
-
-      onCopy({
-        id: item.id,
-        from: item.property,
-        to: drop.property
-      }, { cut: drop.dropEffect === 'move' })
-    }
-  }
-}
-
-const DragSourceCollect = (connect) => ({
-  connectDragSource: connect.dragSource(),
-  connectDragPreview: connect.dragPreview()
-})
-
-const DropTargetSpec = {
-  canDrop({ id, property }, monitor) {
-    let item = monitor.getItem()
-
-    switch (monitor.getItemType()) {
-      case DND.TEXT:
-      case DND.URL:
-        return true
-      case DND.FIELD:
-        return id === item.id && property.id !== item.property
-      default:
-        return false
-    }
-  },
-
-  drop({ onChange, property, type }, monitor) {
-    let droptype = monitor.getItemType()
-    let item = monitor.getItem()
-
-    switch (droptype) {
-      case DND.TEXT:
-      case DND.URL:
-        onChange({
-          [property.id]: {
-            text: item.text || item.urls[0],
-            type
-          }
-        }, true)
-        break
-      case DND.FIELD:
-        return { property: property.id }
-    }
-
-  }
-}
-
-const DropTargetCollect = (connect, monitor) => ({
-  connectDropTarget: connect.dropTarget(),
-  isOver: monitor.canDrop() && monitor.isOver()
-})
-
-
-const MetadataFieldContainer = DragSource(
-    DND.FIELD, DragSourceSpec, DragSourceCollect
-  )(DropTarget(
-    [DND.FIELD, DND.TEXT, DND.URL],
-    DropTargetSpec,
-    DropTargetCollect
-  )(MetadataField))
-
-export {
-  Field,
-  MetadataFieldContainer as MetadataField,
-  StaticField
+  onClick: func,
+  onCopy: func,
+  onEdit: func,
+  onEditCancel: func,
+  property: string,
+  text: oneOfType([string, number]),
+  type: string
 }

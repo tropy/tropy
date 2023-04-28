@@ -7,13 +7,12 @@ import { ItemInfo } from '../item/info'
 import { SelectionInfo } from '../selection/info'
 import * as act from '../../actions'
 import { shapes } from '../util'
-import { arrayOf, bool, func, object, shape, string } from 'prop-types'
+import { arrayOf, bool, func, object, shape } from 'prop-types'
 
 import {
   getActiveSelection,
   getAllTemplatesByType,
   getItemFields,
-  getMetadataCompletions,
   getPhotoFields,
   getSelectedItemTemplate,
   getSelectedItems,
@@ -158,14 +157,12 @@ class MetadataPanel extends React.PureComponent {
         onContextMenu={this.handleItemContextMenu}>
         <MetadataList
           ref={this.setItemFields}
-          completions={this.props.completions}
           edit={this.props.edit}
           fields={this.props.fields.item}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
           onEditCancel={this.props.onEditCancel}
           onContextMenu={this.handleItemContextMenu}
-          onCopy={this.props.onMetadataCopy}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterItemFields}
           onBefore={this.handleBeforeItemFields}
@@ -187,14 +184,12 @@ class MetadataPanel extends React.PureComponent {
         onContextMenu={this.handlePhotoContextMenu}>
         <MetadataList
           ref={this.setPhotoFields}
-          completions={this.props.completions}
           edit={this.props.edit}
           fields={this.props.fields.photo}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
           onEditCancel={this.props.onEditCancel}
           onContextMenu={this.handlePhotoContextMenu}
-          onCopy={this.props.onMetadataCopy}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterPhotoFields}
           onBefore={this.handleBeforePhotoFields}
@@ -217,14 +212,12 @@ class MetadataPanel extends React.PureComponent {
         onContextMenu={this.handleSelectionContextMenu}>
         <MetadataList
           ref={this.setSelectionFields}
-          completions={this.props.completions}
           edit={this.props.edit}
           fields={this.props.fields.selection}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
           onEditCancel={this.props.onEditCancel}
           onContextMenu={this.handleSelectionContextMenu}
-          onCopy={this.props.onMetadataCopy}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterSelectionFields}
           onBefore={this.handleBeforeSelectionFields}
@@ -247,7 +240,6 @@ class MetadataPanel extends React.PureComponent {
 
 
   static propTypes = {
-    completions: arrayOf(string).isRequired,
     edit: object,
     fields: shape({
       item: arrayOf(shapes.field).isRequired,
@@ -268,8 +260,6 @@ class MetadataPanel extends React.PureComponent {
     onEdit: func,
     onEditCancel: func,
     onMetadataAdd: func.isRequired,
-    onMetadataCopy: func.isRequired,
-    onMetadataDelete: func.isRequired,
     onMetadataSave: func.isRequired,
     onTemplateChange: func.isRequired
   }
@@ -277,7 +267,6 @@ class MetadataPanel extends React.PureComponent {
 
 const MetadataPanelContainer = connect(
     (state) => ({
-      completions: getMetadataCompletions(state),
       edit: state.edit.field,
       fields: {
         item: getItemFields(state),
@@ -294,14 +283,6 @@ const MetadataPanelContainer = connect(
     (dispatch) => ({
       onMetadataAdd(...args) {
         dispatch(act.metadata.add(...args))
-      },
-
-      onMetadataCopy(...args) {
-        dispatch(act.metadata.copy(...args))
-      },
-
-      onMetadataDelete(...args) {
-        dispatch(act.metadata.delete(...args))
       },
 
       onTemplateChange(type, ...args) {
