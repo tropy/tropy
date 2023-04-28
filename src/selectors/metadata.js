@@ -1,6 +1,6 @@
 import { createSelector as memo } from 'reselect'
 import { pluck } from './util'
-import { array, own } from '../common/util'
+import { own } from '../common/util'
 import { equal } from '../value'
 import { compare } from '../collate'
 
@@ -110,7 +110,7 @@ export const getMetadataFields = memo(
         })
       }
 
-      fld.id = array(data.id)
+      fld.id = data.id
     }
 
     fld.idx = idx
