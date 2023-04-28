@@ -3,7 +3,6 @@ import { pluck } from './util'
 import { array, own } from '../common/util'
 import { equal } from '../value'
 import { compare } from '../collate'
-import { TYPE } from '../constants'
 
 import {
   cat,
@@ -156,18 +155,6 @@ export const getSelectionFields = memo(
     getMetadataFields(null, { template, data, props })
 )
 
-const getActiveProperty =
-  ({ edit }) => edit?.field?.property
-
-const getActiveId =
-  ({ edit }) => edit?.field?.id?.[0]
-
-const getActiveDatatype = memo(
-  getMetadata, getActiveProperty, getActiveId,
-  (metadata, prop, id) =>
-    metadata?.[id]?.[prop]?.type || TYPE.TEXT
-)
-
 const isCompletable = (value, datatype, maxLength = 100) => (
   value != null &&
   value.type === datatype &&
@@ -182,12 +169,14 @@ const makeCompletionFilter = (prop, datatype, byProp) =>
 
 export const getMetadataCompletions = memo(
   getMetadata,
-  getActiveProperty,
-  getActiveDatatype,
+  (_, { property }) => property,
+  (_, { type }) => type,
+  (_, { isDisabled }) => isDisabled,
   ({ settings }) => settings.completions === 'property-datatype',
 
-  (metadata, prop, datatype, byProp) => {
-    if (prop == null) return EMPTY
+  (metadata, prop, datatype, isDisabled, byProp) => {
+    if (isDisabled || prop == null)
+      return EMPTY
 
     let comp = new Set()
 
