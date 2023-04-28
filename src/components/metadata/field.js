@@ -9,7 +9,7 @@ import { MetadataValue } from './value.js'
 import actions from '../../actions/metadata.js'
 
 
-export const MetadataField = ({
+export const MetadataField = React.memo(({
   id,
   isExtra,
   isDisabled,
@@ -107,7 +107,7 @@ export const MetadataField = ({
         onChange={isStatic ? null : handleChange}/>
     </li>
   )
-}
+})
 
 MetadataField.propTypes = {
   ...MetadataValue.propTypes,
