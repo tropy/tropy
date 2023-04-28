@@ -1,11 +1,10 @@
-import { EDIT, METADATA, PROJECT, TAG } from '../constants'
+import { EDIT, PROJECT, TAG } from '../constants'
 
 export function edit(state = {}, { type, payload, meta }) {
   switch (type) {
     case EDIT.START:
       return { ...payload }
 
-    case METADATA.SAVE:
     case PROJECT.SAVE:
     case TAG.CREATE:
     case TAG.SAVE:
