@@ -87,16 +87,36 @@ export class MetadataList extends React.PureComponent {
     this.props.onCreate({ id: this.props.fields.id, property })
   }
 
+  handleKeyDown = (event, input) => {
+    if (event.key === 'Tab') {
+      event.preventDefault()
+      event.stopPropagation()
+      event.nativeEvent.stopImmediatePropagation()
+
+      if (input.hasChanged)
+        input.commit(true)
+
+      if (event.shiftKey)
+        this.handlePrev()
+      else
+        this.handleNext()
+    }
+  }
+
   handleNext = () => {
     const next = this.next()
-    if (next != null) this.edit(next.property.id)
-    else this.props.onAfter()
+    if (next != null)
+      this.edit(next.property.id)
+    else
+      this.props.onAfter()
   }
 
   handlePrev = () => {
     const prev = this.prev()
-    if (prev != null) this.edit(prev.property.id)
-    else this.props.onBefore()
+    if (prev != null)
+      this.edit(prev.property.id)
+    else
+      this.props.onBefore()
   }
 
   render() {
@@ -118,8 +138,7 @@ export class MetadataList extends React.PureComponent {
             onChange={this.handleChange}
             onEdit={this.edit}
             onEditCancel={this.props.onEditCancel}
-            onNext={this.handleNext}
-            onPrev={this.handlePrev}/>
+            onKeyDown={this.handleKeyDown}/>
         )}
         {this.hasNewMetadataField &&
           <li>
