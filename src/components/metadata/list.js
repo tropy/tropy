@@ -92,7 +92,7 @@ export class MetadataList extends React.PureComponent {
       event.stopPropagation()
       event.nativeEvent.stopImmediatePropagation()
 
-      if (input.hasChanged && !this.isBulk)
+      if (input.hasChanged)
         input.commit()
 
       if (event.shiftKey)
