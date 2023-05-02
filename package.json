@@ -95,7 +95,7 @@
     "stylelint": "^15.1.0",
     "stylelint-config-recommended-scss": "^11.0.0",
     "stylelint-config-standard": "^33.0.0",
-    "stylelint-scss": "^4.0.0",
+    "stylelint-scss": "^5.0.0",
     "unzip-crx-3": "^0.2.0"
   },
   "optionalDependencies": {
