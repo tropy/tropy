@@ -139,6 +139,7 @@ pt-BR:
           ja: 日本語
           pt: Português
           pt-BR: Português brasileiro
+          uk: Украї́нська мо́ва
       templates:
         label: Modelos padrão
         item: Item
@@ -247,6 +248,8 @@ pt-BR:
       uninstall: Desinstalar
       noInfo: Autor desconhecido
       homepage: Mais
+  format:
+    ppi: Pixels per inch (ppi)
   item:
     created: Data de adição
     modified: Modificado

@@ -165,6 +165,7 @@ de:
           ja: 日本語
           pt: Português
           pt-BR: Português brasileiro
+          uk: Украї́нська мо́ва
       templates:
         label: Standardvorlagen
         item: Objekt
@@ -283,6 +284,8 @@ de:
       uninstall: Deinstallieren
       noInfo: Autor anonym
       homepage: Mehr
+  format:
+    ppi: Pixels per inch (ppi)
   item:
     created: Hinzugefügt
     modified: Bearbeitet

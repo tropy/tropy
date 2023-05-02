@@ -161,6 +161,7 @@ es:
           ja: 日本語
           pt: Português
           pt-BR: Português brasileiro
+          uk: Украї́нська мо́ва
       templates:
         label: Plantillas por defecto
         item: Objeto
@@ -275,6 +276,8 @@ es:
       uninstall: Desinstalar
       noInfo: Autor desconocido
       homepage: Más
+  format:
+    ppi: Pixels per inch (ppi)
   item:
     created: Creación
     modified: Modificado

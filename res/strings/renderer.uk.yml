@@ -1,0 +1,695 @@
+uk:
+  sidebar:
+    lists: Lists
+    tags: Теґи
+    imports: Last Import
+    trash: Deleted Items
+  toolbar:
+    import: Import Photos
+    items: |-
+      {count, plural,
+        =0 {No items in this view}
+        one {1 item in this view}
+        other {# items in this view}}
+    search:
+      placeholder: Search
+  panel:
+    metadata:
+      tab: Метадата
+      photo: Фото
+      item: |-
+        {count, plural,
+          =0 {}
+          one {Item}
+          other {# Items}}
+      selection: Фрагмент
+      dropdown:
+        placeholder: Add new field …
+    tags:
+      tab: Теґи
+      add: |-
+        {count, plural,
+          =0 {Add Tag}
+          one {Add Tag to 1 Item}
+          other {Add Tag to # Items}}
+    photo:
+      title: |-
+        {count, plural,
+          =0 {No Photos}
+          one {1 Photo}
+          other {# Photos}}
+      create: Додати фото
+      selection: Фрагмент
+    note:
+      title: |-
+        {count, plural,
+          =0 {No Notes}
+          one {1 Note}
+          other {# Notes}}
+      create: Add Note
+  print:
+    item: Елемент
+    photo: Фото
+    notes: Notes
+    note: Note {idx, number}
+    tags: Теґи
+  about:
+    version: Версія {version}
+    rrchnm:
+      title: Roy Rosenzweig Center for History and New Media
+      url: https://rrchnm.org
+    cds:
+      title: Corporation for Digital Scholarship
+      url: https://digitalscholar.org
+    c2dh:
+      title: Luxembourg Centre for Contemporary and Digital History
+      url: https://www.c2dh.uni.lu
+    text: >-
+      Tropy is designed by the {rrchnm} and the {c2dh}, a team that develops
+      historical teaching resources, digital exhibits, and open-source software.
+    trademark: Tropy є зареєстрованою торговою маркою {cds}.
+    donate:
+      title: Підтримати Tropy
+      url: https://tropy.org/donate
+    release:
+      title: Release Notes
+      url: https://github.com/tropy/tropy/releases/tag/v{version}
+    license:
+      title: Licensing Information
+      url: https://tropy.org/license
+    credits:
+      title: Credits
+      url: https://tropy.org/credits
+  project:
+    empty: Drop your photos into Tropy to get started
+    file:
+      open: Відкрити проєкт {шлях}
+      missing: Find missing project {path}
+      remove: Remove project from list
+    recent:
+      search:
+        placeholder: Фільтрувати проєкти
+        blank: Немає відповідних проєктів
+    corrupted: >-
+      Ваш файл проекту може бути пошкоджено, і для його виправлення необхідно
+      виконати додаткові дії. Для отримання допомоги зверніться до посібника
+      користувача.
+    readOnly: >-
+      Your project file is locked and cannot be modified. To unlock, change the
+      file permissions and open the project again.
+    new:
+      title: Створити новий проєкт
+      name: Введіть назву проєкту
+      type:
+        label: Обрати тип проєкту
+        option:
+          tpy: Advanced
+          managed: Standard
+        hint:
+          tpy: Links to photos at their original location.
+          managed: Copies photos to project folder on import.
+      create: Створити проєкт
+      eyeCatcher: Новий
+    stats:
+      photos: |-
+        {photos, plural,
+          =0 {No photos}
+          one {1 photo}
+          other {# photos}}
+      items: |-
+        {items, plural,
+          =0 {No items}
+          one {1 item}
+          other {# items}}
+      notes: |-
+        {notes, plural,
+          =0 {No notes}
+          one {1 note}
+          other {# notes}}
+  prefs:
+    title: Налаштування Tropy
+    app:
+      label: Налаштування
+      style:
+        theme: Тема
+        themes:
+          light: Світла
+          dark: Темна
+          system: Follow system preference
+        font:
+          size: Font size
+          sizes:
+            12px: Very Small
+            13px: Small (Default)
+            14px: Medium
+            15px: Large
+            16px: Very Large
+      print:
+        mode: Print
+        modes:
+          item: One Item per Page
+          photo: One Photo per Page
+          selection: One Selection per Page
+        photos: Include photos
+        metadata: Include metadata
+        notes: Include notes
+        onlyNotes: Include only photos with notes
+        overflow: Allow content to take up more than one page
+      locale:
+        locale: Locale
+        locales:
+          cn: 中文
+          de: Deutsch
+          en: English
+          es: Español
+          fr: Français
+          it: Italiano
+          ja: 日本語
+          pt: Português
+          pt-BR: Португальський (бразильський)
+          uk: Украї́нська мо́ва
+      templates:
+        label: Default templates
+        item: Елемент
+        photo: Фото
+        selection: Фрагмент
+      title:
+        label: Import file name as
+        force: Overwrite embedded photo metadata
+      debug: Enable Developer Mode
+      localtime: Assume Exif timestamps use local timezone
+      dup:
+        label: During import
+        option:
+          skip: Skip duplicate photos
+          import: Accept duplicate photos
+          prompt: Ask me every time
+      density:
+        label: Default density (ppi)
+        title: Used for PDF, SVG and other scalable formats
+      export:
+        label: Експорт
+        note:
+          format:
+            html: Notes as HTML
+            markdown: Notes as Markdown
+          copy:
+            label: Copy notes as
+            option:
+              text: Plain text
+              markdown: Markdown
+              html: HTML source code
+      ui:
+        label: Interface
+        option:
+          invertScroll: Invert direction when scrolling in photos
+          invertZoom: Invert direction when zooming in photos
+          overlayToolbars: Automatically hide and show toolbars
+      zoomMode:
+        label: By default
+        option:
+          fit: Zoom photos to fit
+          fill: Zoom photos to fill
+          zoom: Zoom photos to actual size
+      layout:
+        label: Item View layout
+        option:
+          stacked: Stacked
+          side-by-side: Side by side
+      completions:
+        label: Autocomplete
+        option:
+          datatype: By datatype only
+          property-datatype: By datatype and property
+    project:
+      label: Проєкт
+      base:
+        label: Link photos
+        option:
+          'null': Using absolute paths
+          project: Relative to the project file
+          home: Relative to your home directory
+      store: Managed folder
+      name: Заголовок
+      id: ID
+      path: Файл
+      type: Тип проєкту
+      convert:
+        confirm: Convert
+        hint: Перетворити цей проєкт на стандартний проєкт.
+        detail: |-
+          {errors, plural,
+            =0 {All photos consolidated.}
+            one {1 photo not found; consolidation required.}
+            other {# photos not found; consolidation required.}}
+      watch:
+        folder: Watch folder
+        usePolling: Using file stat polling
+    template:
+      label: Шаблони
+      new: New Template …
+      create: Create
+      select: Шаблон
+      tools:
+        new: Новий
+        copy: Duplicate
+        delete: Видалити
+        import: Імпорт
+        export: Експорт
+    vocab:
+      label: Словники
+      export: Експорт
+      classes: |-
+        {count, plural,
+          =0 {No Classes}
+          one {# Class}
+          other {# Classes}
+        }
+      datatypes: |-
+        {count, plural,
+          =0 {No Datatypes} one {# Datatype}
+          other {# Datatypes}
+        }
+      properties: |-
+        {count, plural,
+          =0 {No Properties}
+          one {# Property}
+          other {# Properties}
+        }
+    plugins:
+      label: Plugins
+      settings: Налаштування
+      enable: Enable
+      disable: Disable
+      install: Встановити плагін
+      uninstall: Uninstall
+      noInfo: Невідомий автор
+      homepage: More
+  format:
+    ppi: Pixels per inch (ppi)
+  item:
+    created: Date Added
+    modified: Modified
+    template: Шаблон
+  photo:
+    file: Файл
+    size: Size
+    density: Density
+    type: Тип
+    created: Date Added
+    modified: Modified
+    consolidate: Consolidate Photo
+    error: Photo not found
+  selection:
+    size: Size
+    created: Date Added
+    modified: Modified
+  esper:
+    tool:
+      pan: Перемістити
+      select: Selection Tool
+      rotate: Повернути
+      mirror: Дзеркально
+      edit: Edit Photo
+    mode:
+      fill: По ширині
+      fit: Fit
+      zoom: Zoom
+    panel:
+      negative: Інвертувати кольори
+      revert: Скинути до оригіналу
+      brightness:
+        label: Яскравість
+        value: '{value, number}'
+      contrast:
+        label: Контраст
+        value: '{value, number}'
+      hue:
+        label: Відтінок
+        value: '{value, number}°'
+      saturation:
+        label: Насиченість
+        value: '{value, number}'
+      sharpen:
+        label: Sharpen
+        value: '{value, number}'
+  notepad:
+    placeholder: Add your notes here …
+  completions:
+    empty: No options available
+    noMatches: No matches found
+  select:
+    column:
+      placeholder: Search
+    file:
+      browse: Browse
+      clear: Clear
+  template:
+    id: URI
+    name: Заголовок
+    type: Тип
+    creator: Creator
+    description: Description
+    types:
+      https://tropy.org/v1/tropy#Item: Item Template
+      https://tropy.org/v1/tropy#Photo: Photo Template
+      https://tropy.org/v1/tropy#Selection: Selection Template
+    field:
+      property: Property
+      label: Label
+      datatype: Datatype
+      isRequired: Is mandatory field
+      hint: Підказка
+      value: Значення за замовчуванням
+      isConstant: Is read-only
+  vocab:
+    id: URI
+    prefix: Prefix
+    title: Заголовок
+    description: Description
+    properties: Властивості
+    seeAlso: See Also
+  property:
+    select: Select a Property …
+  datatype:
+    select: Select a Datatype …
+  resource:
+    select: Select a Resource …
+    id: URI
+    label: Label
+    description: Description
+    comment: Comment
+  dialog:
+    notify:
+      project:
+        convert:
+          title: Conversion complete
+          message: >-
+            Your project was successfully converted and saved. Tropy will now
+            close the original project file and open the converted project in a
+            new window.
+          buttons:
+            - OK
+    error:
+      title: Error
+      buttons:
+        - Відхилити
+        - Помилка копіювання
+        - Показати лоґи
+    prompt:
+      item:
+        destroy:
+          message: >-
+            Are your sure you want to permanently delete items? This action
+            cannot be undone.
+          buttons:
+            - Cancel
+            - Delete
+      photo:
+        consolidate:
+          message: >-
+            Do you want Tropy to automatically check and resolve further missing
+            photos at this location?
+          buttons:
+            - 'No'
+            - 'Yes'
+      dup:
+        detail: >-
+          Це фото вже є у вашому проєкті. Ви впевнені, що хочете імпортувати
+          його знову?
+        checkboxLabel: Remember this choice
+        buttons:
+          - Skip
+          - Import Anyway
+      plugin:
+        uninstall:
+          detail: >-
+            Are you sure you want to delete the plugin? This will permanently
+            remove the plugin and its configuration.
+          buttons:
+            - Cancel
+            - Delete
+      template:
+        import:
+          message: >-
+            A template with this id already exists in your ontology database. Do
+            you want to overwrite the existing template?
+          buttons:
+            - Cancel
+            - Overwrite
+        imported:
+          message: Template successfully imported.
+          buttons:
+            - OK
+    filter:
+      csv: CSV
+      templates: Шаблони Tropy
+      images: Images
+      items: Tropy Items
+      notes: Notes
+      projects: Проєкти Tropy
+      rdf: RDF Vocabularies
+      jsonld: JSON-LD
+  action:
+    project:
+      save: Зберегти проєкт
+    list:
+      create: Create List
+      delete: Delete List
+      item:
+        add: Додати елементи до Списку
+        merge: Об'єднати елементи
+        remove: Remove Item From List
+        restore: Додати елемент до списку
+      order: Sort List
+      restore: Відновити Список
+      save: Зберегти Список
+    item:
+      create: Створити елементи
+      delete: Delete Items
+      explode: Explode Item
+      implode: Об'єднати елементи
+      merge: Об'єднати елементи
+      split: Розділити елементи
+      import: Import Items
+      restore: Restore Items
+      save: Save Item
+      tag:
+        create: Теґ
+        toggle: Теґ
+        clear: Clear Tags
+    metadata:
+      save: Save Metadata
+    ontology:
+      import: Import Vocabularies
+      vocab:
+        save: Зберегти Словник
+      label:
+        save: Save Label
+      template:
+        import: Імпортувати шаблон
+    photo:
+      create: Імпортувати фото
+      delete: Видалити фото
+      duplicate: Duplicate Photo
+      move: Moving Photo
+      order: Sort Photos
+      restore: Відновити фото
+      save: Зберегти фото
+    note:
+      create: Створити нотатку
+      delete: Видалити нотатку
+      order: Sort Notes
+      restore: Restore Note
+      save: Save Note
+    tag:
+      create: Створити теґ
+      delete: Видалити тег
+      restore: Створити теґ
+      save: Save Tag
+    selection:
+      create: Створити фрагмент
+      delete: Видалити фрагмент
+      restore: Створити фрагмент
+      save: Зберегти фрагмент
+      order: Сортувати фрагменти
+  activity:
+    cache:
+      prune: Оптимізувати кеш проєкту …
+      purge: Purging old caches …
+    project:
+      save: Saving …
+    list:
+      create: Creating list …
+      delete: Deleting list …
+      item:
+        add: Adding items to list …
+        merge: Об'єднання елементів …
+        remove: Removing items from list …
+        restore: Restoring items to list …
+      load: Loading lists …
+      order: Sorting list …
+      restore: Restoring list …
+      save: Saving list …
+    tag:
+      create: Creating tag …
+      delete: Deleting tag …
+      load: Loading tags …
+      restore: Restoring tag …
+      save: Saving tag …
+    item:
+      create: Creating item …
+      delete: Видалення елементу …
+      destroy: Deleting items permanently …
+      explode: Exploding item …
+      export: Exporting item …
+      implode: Restoring item …
+      import: |-
+        {hasProgressBar, select,
+          true {Importing item {progress, number} of {total, number} …}
+          other {Importing items …}
+        }
+      load: Loading items …
+      merge: Merging item …
+      print: Processing items …
+      restore: Restoring item …
+      save: Saving items …
+      tag:
+        create: Tagging item
+        toggle: Tagging item …
+        clear: Clearing item tags …
+    metadata:
+      load: Loading metadata …
+      save: Saving metadata …
+    ontology:
+      load: Loading ontology …
+      import: Importing vocabularies …
+      vocab:
+        save: Saving vocabulary …
+      label:
+        save: Saving label …
+      template:
+        import: Importing templates …
+    photo:
+      consolidate: |-
+        {hasProgressBar, select,
+          true {Consolidating photo {progress, number} of {total, number} …}
+          other {Consolidating photos …}
+        }
+      create: |-
+        {hasProgressBar, select,
+          true {Importing photo {progress, number} of {total, number} …}
+          other {Importing photos …}
+        }
+      delete: Видалення фото …
+      duplicate: |-
+        {hasProgressBar, select,
+          true {Duplicating photo {progress, number} of {total, number} …}
+          other {Duplicating photos …}
+        }
+      load: Loading photos …
+      move: Moving photos …
+      order: Sorting photos …
+      save: Saving photo …
+      restore: Restoring photos …
+      extract: Extracting photo …
+    note:
+      create: Створення нотатки …
+      delete: Deleting note …
+      load: Loading notes …
+      order: Sorting notes …
+      restore: Restoring notes …
+    selection:
+      create: Creating photo selection …
+      load: Loading photo selections …
+      extract: Extracting selection …
+    api:
+      photo:
+        extract: Extracting photo …
+      selection:
+        extract: Extracting selection …
+  editor:
+    commands:
+      bold: Жирний
+      italic: Курсив
+      underline: Underline
+      overline: Overline
+      strikethrough: Закреслення
+      subscript: Підрядковий
+      superscript: Надрядковий
+      blockquote: Insert Blockquote
+      ol: Insert Numbered List
+      ul: Insert Bulleted List
+      link:
+        button: Link
+        target: Link target
+        title: Link title
+      unlink: Remove link
+      left: Align Left
+      center: По центру
+      right: Align Right
+      sinkListItem: Sink list item
+      liftListItem: Lift list item
+  error:
+    cache:
+      prune: Не вдалося оптимізувати кеш проєкту.
+      purge: Не вдалося видалити старий кеш проєкту.
+    project:
+      created: Не вдалося створити проєкт.
+      convert: Не вдалося перетворити проєкт.
+    item:
+      export: Failed to export items.
+      merge: Не вдалося об'єднати елементи.
+      import: Failed to import item.
+      tag:
+        save: Failed to save tag.
+        create: Failed to tag item. Tags must be unique per item.
+      template:
+        change: Failed to change item template.
+    list:
+      load: Failed to load lists.
+      create: Failed to create list. List names must be unique.
+      move: Failed to move list. List names must be unique per level.
+      save: Failed to save list.
+      item:
+        add: Failed to add item(s) to list.
+    photo:
+      consolidate: Failed to consolidate photos.
+      create: Failed to import photo.
+      save: Failed to save photo.
+      extract: Failed to export photo.
+      template:
+        change: Failed to change photo template.
+    selection:
+      create: Failed to create photo selection.
+      extract: Failed to export selection.
+      template:
+        change: Failed to change selection template.
+    ontology:
+      migrate: Failed to upgrade your ontology database.
+      import: Failed to import vocabulary.
+      vocab:
+        save: Failed to save vocabulary. Prefix must be unique.
+      template:
+        import: Failed to import template.
+        field:
+          add: Failed to add field to template.
+          remove: Failed to remove field from template.
+    tag:
+      create: Failed to create tag. Tag names must be unique.
+    db:
+      SQLITE_CANTOPEN: Cannot find or open database file.
+  flash:
+    update:
+      ready:
+        message: >-
+          Tropy {version} is ready to be installed. Do you want to install and
+          restart now?
+        confirm: Restart Now
+  plugin:
+    name: Заголовок
+    plugin: Плагін
+    options: Options
+    hooks:
+      export: Експорт
+      import: Імпорт

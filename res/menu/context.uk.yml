@@ -1,0 +1,1375 @@
+uk:
+  linux:
+    history:
+      - id: undo
+        label: Undo
+        command: app:undo
+        enabled: false
+        accelerator: CmdOrCtrl+Z
+      - id: redo
+        label: Redo
+        command: app:redo
+        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
+    project:
+      - label: Перейменувати проєкт
+        command: app:rename-project
+        condition: '!isReadOnly'
+      - label: Показати фалу проєкту …
+        command: app:show-project-file
+    lists:
+      - label: New List
+        command: app:create-list
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+L
+    list:
+      - label: Rename List
+        command: app:rename-list
+        condition: '!isReadOnly'
+      - label: Delete List
+        command: app:delete-list
+        condition: '!isReadOnly'
+    tags:
+      - label: Новий теґ
+        command: app:create-tag
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Експорртувати теґи
+        command: app:export-tags
+      - label: Колір теґу за замовчуванням
+        submenu:
+          - label: Жодного
+            color:
+              - null
+              - tagColor
+              - app:save-default-tag-color
+          - label: Випадковий колір
+            color:
+              - random
+              - tagColor
+              - app:save-default-tag-color
+          - type: separator
+          - label: Червоний
+            color:
+              - red
+              - tagColor
+              - app:save-default-tag-color
+          - label: Помаранчевий
+            color:
+              - orange
+              - tagColor
+              - app:save-default-tag-color
+          - label: Жовтий
+            color:
+              - yellow
+              - tagColor
+              - app:save-default-tag-color
+          - label: Зелений
+            color:
+              - green
+              - tagColor
+              - app:save-default-tag-color
+          - label: Синій
+            color:
+              - blue
+              - tagColor
+              - app:save-default-tag-color
+          - label: Пурпуровий
+            color:
+              - purple
+              - tagColor
+              - app:save-default-tag-color
+          - label: Сірий
+            color:
+              - gray
+              - tagColor
+              - app:save-default-tag-color
+          - label: Коричневий
+            color:
+              - brown
+              - color
+              - app:save-default-tag-color
+          - label: Абрикосовий
+            color:
+              - apricot
+              - color
+              - app:save-default-tag-color
+          - label: Темно-зелений
+            color:
+              - dark-green
+              - color
+              - app:save-default-tag-color
+          - label: Голубий
+            color:
+              - light-blue
+              - color
+              - app:save-default-tag-color
+          - label: Фіолетовий
+            color:
+              - lavender
+              - color
+              - app:save-default-tag-color
+    tag:
+      - label: Колір теґу
+        condition: '!isReadOnly'
+        submenu:
+          - label: Жодного
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Червоний
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Помаранчевий
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Жовтий
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Зелений
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Синій
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Пурпуровий
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Сірий
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Коричневий
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Абрикосовий
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Темно-зелений
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Голубий
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Фіолетовий
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+      - label: Перейменувати тег
+        command: app:rename-tag
+        condition: '!isReadOnly'
+      - label: Видалити тег
+        command: app:delete-tag
+        condition: '!isReadOnly'
+    item-tag:
+      - label: Видали теґ з цього елементу
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isSingleItem
+      - label: Видалити теґ з цих елементів
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isMultipleItems
+      - label: Колір теґу
+        condition: '!isReadOnly'
+        submenu:
+          - label: Жодного
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Червоний
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Помаранчевий
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Жовтий
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Зелений
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Синій
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Пурпуровий
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Сірий
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Коричневий
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Абрикосовий
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Темно-зелений
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Голубий
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Фіолетовий
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+    note:
+      - label: Експортувати нотатку …
+        command: app:export-note
+      - label: Копіювати нотатку
+        command: app:copy-note
+      - label: Видалити нотатку
+        command: app:delete-note
+    notepad:
+      - label: Writing Mode
+        id: writing-mode
+        condition: hasTargetId
+        submenu:
+          - label: Horizontal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Vertical (Right to Left)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Show Line Numbers
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: app:toggle-line-numbers
+        condition: hasTargetId
+      - label: Wrap Lines
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: app:toggle-line-wrap
+        condition: hasTargetId
+    items:
+      - label: Новий елемент
+        command: app:create-item
+        accelerator: CmdOrCtrl+Shift+N
+    item:
+      - label: Explode Item
+        command: app:explode-item
+        condition: isMultiplePhotos
+      - label: Add Photo …
+        command: app:create-item-photo
+      - label: Теґи
+        id: tag
+        submenu:
+          - label: Жодного
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Видалити елемент
+        command: app:delete-item
+    item-read-only:
+      - label: Експортувати елемент
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Експортувати нотатки елементу …
+        command: app:export-notes
+      - label: Копіювати лінк елементу
+        command: app:copy-item-link
+      - label: Копіювати нотатки елементу
+        command: app:copy-notes
+      - label: Consolidate Item
+        command: app:consolidate-item
+    item-rotate:
+      - label: Повернути вліво
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
+      - label: Повернути вправо
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
+    item-bulk:
+      - label: Об'єднати вибрані елементи
+        command: app:merge-item
+      - label: Видалити вибрані елементи
+        command: app:delete-item
+    item-bulk-read-only:
+      - label: Експортувати вибрані елементи
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Export Selected Item Notes …
+        command: app:export-notes
+      - label: Copy Selected Item Notes
+        command: app:copy-notes
+      - label: Consolidate Selected Items
+        command: app:consolidate-item
+    item-list:
+      - label: Remove Item From List
+        command: app:list-item-remove
+    item-bulk-list:
+      - label: Remove Selected Items From List
+        command: app:list-item-remove
+    photo:
+      - label: Duplicate Photo
+        command: app:duplicate-photo
+      - label: Move Photo to New Item
+        command: app:explode-photo
+      - label: Видалити фото
+        command: app:delete-photo
+      - label: Use Photo as Cover Image
+        command: app:update-cover-image
+        enabled: false
+        visible: false
+    photo-read-only:
+      - label: Show Original File…
+        command: app:show-in-folder
+      - label: Open in External Viewer…
+        command: app:open-path
+      - label: Copy Photo Link
+        command: app:copy-photo-link
+      - label: Export Photo…
+        command: app:extract-photo
+      - label: Consolidate Photo
+        command: app:consolidate-photo
+    photo-rotate:
+      - label: Повернути вправо
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
+      - label: Повернути вправо
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
+    selection:
+      - label: Видалити фрагмент
+        command: app:delete-selection
+    selection-read-only:
+      - label: Експортувати фрагмент …
+        command: app:extract-photo
+    selection-rotate:
+      - label: Повернути вправо
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
+      - label: Повернути вправо
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
+    item-deleted:
+      - label: Restore Item
+        command: app:restore-item
+      - label: Permanently Delete Item
+        command: app:destroy-item
+    item-bulk-deleted:
+      - label: Restore Selected Items
+        command: app:restore-item
+      - label: Permanently Delete Selected Items
+        command: app:destroy-item
+    item-view:
+      - label: View Layout
+        id: item-view-layout
+        submenu:
+          - label: Stacked
+            id: stacked
+            type: checkbox
+          - label: Side by side
+            id: side-by-side
+            type: checkbox
+    metadata-list:
+      - label: New Field …
+        command: app:create-field
+    metadata-field:
+      - label: Remove Field
+        command: app:delete-field
+        condition: isExtra
+    trash:
+      - label: Permanently Delete Items
+        command: app:destroy-item
+        condition: '!isReadOnly'
+    dev:
+      - label: Reload
+        command: win:reload
+        accelerator: CmdOrCtrl+R
+      - label: Reload Styles
+        command: win:refresh
+        accelerator: CmdOrCtrl+S
+      - type: separator
+      - label: Inspect
+        command: app:inspect
+        accelerator: CmdOrCtrl+D
+  darwin:
+    history:
+      - id: undo
+        label: Undo
+        command: app:undo
+        enabled: false
+        accelerator: CmdOrCtrl+Z
+      - id: redo
+        label: Redo
+        command: app:redo
+        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
+    project:
+      - label: Перейменувати проєкт
+        command: app:rename-project
+        condition: '!isReadOnly'
+      - label: Показати фалу проєкту …
+        command: app:show-project-file
+    lists:
+      - label: New List
+        command: app:create-list
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+L
+    list:
+      - label: Rename List
+        command: app:rename-list
+        condition: '!isReadOnly'
+      - label: Delete List
+        command: app:delete-list
+        condition: '!isReadOnly'
+    tags:
+      - label: Новий теґ
+        command: app:create-tag
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Експорртувати теґи
+        command: app:export-tags
+      - label: Колір теґу за замовчуванням
+        submenu:
+          - label: Жодного
+            color:
+              - null
+              - tagColor
+              - app:save-default-tag-color
+          - label: Випадковий колір
+            color:
+              - random
+              - tagColor
+              - app:save-default-tag-color
+          - type: separator
+          - label: Червоний
+            color:
+              - red
+              - tagColor
+              - app:save-default-tag-color
+          - label: Помаранчевий
+            color:
+              - orange
+              - tagColor
+              - app:save-default-tag-color
+          - label: Жовтий
+            color:
+              - yellow
+              - tagColor
+              - app:save-default-tag-color
+          - label: Зелений
+            color:
+              - green
+              - tagColor
+              - app:save-default-tag-color
+          - label: Синій
+            color:
+              - blue
+              - tagColor
+              - app:save-default-tag-color
+          - label: Пурпуровий
+            color:
+              - purple
+              - tagColor
+              - app:save-default-tag-color
+          - label: Сірий
+            color:
+              - gray
+              - tagColor
+              - app:save-default-tag-color
+          - label: Коричневий
+            color:
+              - brown
+              - color
+              - app:save-default-tag-color
+          - label: Абрикосовий
+            color:
+              - apricot
+              - color
+              - app:save-default-tag-color
+          - label: Темно-зелений
+            color:
+              - dark-green
+              - color
+              - app:save-default-tag-color
+          - label: Голубий
+            color:
+              - light-blue
+              - color
+              - app:save-default-tag-color
+          - label: Фіолетовий
+            color:
+              - lavender
+              - color
+              - app:save-default-tag-color
+    tag:
+      - label: Колір теґу
+        condition: '!isReadOnly'
+        submenu:
+          - label: Жодного
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Червоний
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Помаранчевий
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Жовтий
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Зелений
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Синій
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Пурпуровий
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Сірий
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Коричневий
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Абрикосовий
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Темно-зелений
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Голубий
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Фіолетовий
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+      - label: Перейменувати тег
+        command: app:rename-tag
+        condition: '!isReadOnly'
+      - label: Видалити тег
+        command: app:delete-tag
+        condition: '!isReadOnly'
+    item-tag:
+      - label: Видали теґ з елементу
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isSingleItem
+      - label: Видалити теґ з цих елементів
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isMultipleItems
+      - label: Колір теґу
+        condition: '!isReadOnly'
+        submenu:
+          - label: Жодного
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Червоний
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Помаранчевий
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Жовтий
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Зелений
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Синій
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Пурпуровий
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Сірий
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Коричневий
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Абрикосовий
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Темно-зелений
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Голубий
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Фіолетовий
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+    note:
+      - label: Експортувати нотатку …
+        command: app:export-note
+      - label: Копіювати нотатку
+        command: app:copy-note
+      - label: Видалити нотатку
+        command: app:delete-note
+    notepad:
+      - label: Writing Mode
+        id: writing-mode
+        condition: hasTargetId
+        submenu:
+          - label: Horizontal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Vertical (Right to Left)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Show Line Numbers
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: app:toggle-line-numbers
+        condition: hasTargetId
+      - label: Wrap Lines
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: app:toggle-line-wrap
+        condition: hasTargetId
+    items:
+      - label: Новий елемент
+        command: app:create-item
+        accelerator: CmdOrCtrl+Shift+N
+    item:
+      - label: Explode Item
+        command: app:explode-item
+        condition: isMultiplePhotos
+      - label: Add Photo …
+        command: app:create-item-photo
+      - label: Теґи
+        id: tag
+        submenu:
+          - label: Жодного
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Видалити елемент
+        command: app:delete-item
+    item-read-only:
+      - label: Експортувати елемент
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Експортувати нотатки елементу
+        command: app:export-notes
+      - label: Копіювати лінк елементу
+        command: app:copy-item-link
+      - label: Копіювати нотатки елементу
+        command: app:copy-notes
+      - label: Consolidate Item
+        command: app:consolidate-item
+    item-bulk:
+      - label: Об'єднати обрані елементи
+        command: app:merge-item
+      - label: Видалити обрані елементи
+        command: app:delete-item
+    item-bulk-read-only:
+      - label: Експортувати вибрані елементи
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Export Selected Item Notes …
+        command: app:export-notes
+      - label: Copy Selected Item Notes
+        command: app:copy-notes
+      - label: Consolidate Selected Items
+        command: app:consolidate-item
+    item-list:
+      - label: Remove Item From List
+        command: app:list-item-remove
+    item-bulk-list:
+      - label: Remove Selected Items From List
+        command: app:list-item-remove
+    item-deleted:
+      - label: Restore Item
+        command: app:restore-item
+      - label: Permanently Delete Item
+        command: app:destroy-item
+    item-bulk-deleted:
+      - label: Restore Selected Items
+        command: app:restore-item
+      - label: Permanently Delete Selected Items
+        command: app:destroy-item
+    item-view:
+      - label: View Layout
+        id: item-view-layout
+        submenu:
+          - label: Stacked
+            id: stacked
+            type: checkbox
+          - label: Side by side
+            id: side-by-side
+            type: checkbox
+    item-rotate:
+      - label: Повернути вправо
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
+      - label: Повернути вправо
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
+    metadata-list:
+      - label: New Field …
+        command: app:create-field
+    metadata-field:
+      - label: Remove Field
+        command: app:delete-field
+        condition: isExtra
+    trash:
+      - label: Permanently Delete Items
+        command: app:destroy-item
+        condition: '!isReadOnly'
+    photo:
+      - label: Duplicate Photo
+        command: app:duplicate-photo
+      - label: Move Photo to New Item
+        command: app:explode-photo
+      - label: Видалити фото
+        command: app:delete-photo
+      - label: Use Photo as Cover Image
+        command: app:update-cover-image
+        enabled: false
+        visible: false
+    photo-read-only:
+      - label: Show Original File…
+        command: app:show-in-folder
+      - label: Open in External Viewer…
+        command: app:open-path
+      - label: Copy Photo Link
+        command: app:copy-photo-link
+      - label: Export Photo…
+        command: app:extract-photo
+      - label: Consolidate Photo
+        command: app:consolidate-photo
+    photo-rotate:
+      - label: Повернути вправо
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
+      - label: Повернути вправо
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
+    selection:
+      - label: Видалити фрагмент
+        command: app:delete-selection
+    selection-read-only:
+      - label: Експортувати фрагмент …
+        command: app:extract-photo
+    selection-rotate:
+      - label: Повернути вправо
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
+      - label: Повернути вправо
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
+    dev:
+      - label: Reload
+        command: win:reload
+        accelerator: CmdOrCtrl+R
+      - label: Reload Styles
+        command: win:refresh
+        accelerator: CmdOrCtrl+S
+      - type: separator
+      - label: Inspect
+        command: app:inspect
+        accelerator: CmdOrCtrl+D
+  win32:
+    history:
+      - id: undo
+        label: Undo
+        command: app:undo
+        enabled: false
+        accelerator: CmdOrCtrl+Z
+      - id: redo
+        label: Redo
+        command: app:redo
+        enabled: false
+        accelerator: Control+Y
+    project:
+      - label: Перейменувати проєкт
+        command: app:rename-project
+        condition: '!isReadOnly'
+      - label: Показати фалу проєкту …
+        command: app:show-project-file
+    lists:
+      - label: New List
+        command: app:create-list
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+L
+    list:
+      - label: Rename List
+        command: app:rename-list
+        condition: '!isReadOnly'
+      - label: Delete List
+        command: app:delete-list
+        condition: '!isReadOnly'
+    tags:
+      - label: Новий теґ
+        command: app:create-tag
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Експорртувати теґи
+        command: app:export-tags
+      - label: Колір теґу за замовчуванням
+        submenu:
+          - label: Жодного
+            color:
+              - null
+              - tagColor
+              - app:save-default-tag-color
+          - label: Випадковий колір
+            color:
+              - random
+              - tagColor
+              - app:save-default-tag-color
+          - type: separator
+          - label: Червоний
+            color:
+              - red
+              - tagColor
+              - app:save-default-tag-color
+          - label: Помаранчевий
+            color:
+              - orange
+              - tagColor
+              - app:save-default-tag-color
+          - label: Жовтий
+            color:
+              - yellow
+              - tagColor
+              - app:save-default-tag-color
+          - label: Зелений
+            color:
+              - green
+              - tagColor
+              - app:save-default-tag-color
+          - label: Синій
+            color:
+              - blue
+              - tagColor
+              - app:save-default-tag-color
+          - label: Пурпуровий
+            color:
+              - purple
+              - tagColor
+              - app:save-default-tag-color
+          - label: Сірий
+            color:
+              - gray
+              - tagColor
+              - app:save-default-tag-color
+          - label: Коричневий
+            color:
+              - brown
+              - color
+              - app:save-default-tag-color
+          - label: Абрикосовий
+            color:
+              - apricot
+              - color
+              - app:save-default-tag-color
+          - label: Темно-зелений
+            color:
+              - dark-green
+              - color
+              - app:save-default-tag-color
+          - label: Голубий
+            color:
+              - light-blue
+              - color
+              - app:save-default-tag-color
+          - label: Фіолетовий
+            color:
+              - lavender
+              - color
+              - app:save-default-tag-color
+    tag:
+      - label: Колір теґу
+        condition: '!isReadOnly'
+        submenu:
+          - label: Жодного
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Червоний
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Помаранчевий
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Жовтий
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Зелений
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Синій
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Пурпуровий
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Сірий
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Коричневий
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Абрикосовий
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Темно-зелений
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Голубий
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Фіолетовий
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+      - label: Перейменувати тег
+        command: app:rename-tag
+        condition: '!isReadOnly'
+      - label: Видалити тег
+        command: app:delete-tag
+        condition: '!isReadOnly'
+    item-tag:
+      - label: Видали теґ з елементу
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isSingleItem
+      - label: Видалити теґ з цих елементів
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isMultipleItems
+      - label: Колір теґу
+        condition: '!isReadOnly'
+        submenu:
+          - label: Жодного
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Червоний
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Помаранчевий
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Жовтий
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Зелений
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Синій
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Пурпуровий
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Сірий
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Коричневий
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Абрикосовий
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Темно-зелений
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Голубий
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Фіолетовий
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+    note:
+      - label: Експортувати нотатку …
+        command: app:export-note
+      - label: Копіювати нотатку
+        command: app:copy-note
+      - label: Видалити нотатку
+        command: app:delete-note
+    notepad:
+      - label: Writing Mode
+        id: writing-mode
+        condition: hasTargetId
+        submenu:
+          - label: Horizontal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Vertical (Right to Left)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Show Line Numbers
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: app:toggle-line-numbers
+        condition: hasTargetId
+      - label: Wrap Lines
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: app:toggle-line-wrap
+        condition: hasTargetId
+    items:
+      - label: Новий елемент
+        command: app:create-item
+        accelerator: CmdOrCtrl+Shift+N
+    item:
+      - label: Explode Item
+        command: app:explode-item
+        condition: isMultiplePhotos
+      - label: Add Photo …
+        command: app:create-item-photo
+      - label: Теґи
+        id: tag
+        submenu:
+          - label: Жодного
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Видалити елемент
+        command: app:delete-item
+    item-read-only:
+      - label: Експортувати елемент
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Експортувати нотатки елементу
+        command: app:export-notes
+      - label: Копіювати лінк елементу
+        command: app:copy-item-link
+      - label: Копіювати нотатки елементу
+        command: app:copy-notes
+      - label: Consolidate Item
+        command: app:consolidate-item
+    item-bulk:
+      - label: Об'єднати обрані елементи
+        command: app:merge-item
+      - label: Видалити обрані елементи
+        command: app:delete-item
+    item-bulk-read-only:
+      - label: Експортувати вибрані елементи
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Portrait
+                command: app:print-pdf
+              - label: Landscape
+                command: app:print-pdf-landscape
+      - label: Export Selected Item Notes …
+        command: app:export-notes
+      - label: Copy Selected Item Notes
+        command: app:copy-notes
+      - label: Consolidate Selected Items
+        command: app:consolidate-item
+    item-list:
+      - label: Remove Item From List
+        command: app:list-item-remove
+    item-bulk-list:
+      - label: Remove Selected Items From List
+        command: app:list-item-remove
+    item-deleted:
+      - label: Restore Item
+        command: app:restore-item
+      - label: Permanently Delete Item
+        command: app:destroy-item
+    item-bulk-deleted:
+      - label: Restore Selected Items
+        command: app:restore-item
+      - label: Permanently Delete Selected Items
+        command: app:destroy-item
+    item-view:
+      - label: View Layout
+        id: item-view-layout
+        submenu:
+          - label: Stacked
+            id: stacked
+            type: checkbox
+          - label: Side by side
+            id: side-by-side
+            type: checkbox
+    item-rotate:
+      - label: Повернути вправо
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
+      - label: Повернути вправо
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
+    metadata-list:
+      - label: New Field …
+        command: app:create-field
+    metadata-field:
+      - label: Remove Field
+        command: app:delete-field
+        condition: isExtra
+    trash:
+      - label: Permanently Delete Items
+        command: app:destroy-item
+        condition: '!isReadOnly'
+    photo:
+      - label: Duplicate Photo
+        command: app:duplicate-photo
+      - label: Move Photo to New Item
+        command: app:explode-photo
+      - label: Видалити фото
+        command: app:delete-photo
+      - label: Use Photo as Cover Image
+        command: app:update-cover-image
+        enabled: false
+        visible: false
+    photo-read-only:
+      - label: Show Original File…
+        command: app:show-in-folder
+      - label: Open in External Viewer…
+        command: app:open-path
+      - label: Copy Photo Link
+        command: app:copy-photo-link
+      - label: Export Photo…
+        command: app:extract-photo
+      - label: Consolidate Photo
+        command: app:consolidate-photo
+    photo-rotate:
+      - label: Повернути вправо
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
+      - label: Повернути вправо
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
+    selection:
+      - label: Видалити фрагмент
+        command: app:delete-selection
+    selection-read-only:
+      - label: Експортувати фрагмент …
+        command: app:extract-photo
+    selection-rotate:
+      - label: Повернути вправо
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
+      - label: Повернути вправо
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
+    dev:
+      - label: Reload
+        command: win:reload
+        accelerator: CmdOrCtrl+R
+      - label: Reload Styles
+        command: win:refresh
+        accelerator: CmdOrCtrl+S
+      - type: separator
+      - label: Inspect
+        command: app:inspect
+        accelerator: CmdOrCtrl+D

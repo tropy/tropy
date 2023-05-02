@@ -160,6 +160,7 @@ cn:
           ja: 日本語
           pt: Português
           pt-BR: Português brasileiro
+          uk: Украї́нська мо́ва
       templates:
         label: 默认模板
         item: 项目
@@ -278,6 +279,8 @@ cn:
       uninstall: 卸载插件
       noInfo: 未知作者
       homepage: 更多
+  format:
+    ppi: Pixels per inch (ppi)
   item:
     created: 添加日期
     modified: 已修改

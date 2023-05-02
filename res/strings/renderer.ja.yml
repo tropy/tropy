@@ -166,6 +166,7 @@ ja:
           ja: 日本語
           pt: Português
           pt-BR: Português brasileiro
+          uk: Украї́нська мо́ва
       templates:
         label: デフォルトテンプレート
         item: アイテム
@@ -283,6 +284,8 @@ ja:
       uninstall: アンインストール
       noInfo: 作者不明
       homepage: More
+  format:
+    ppi: Pixels per inch (ppi)
   item:
     created: 登録日
     modified: 更新日

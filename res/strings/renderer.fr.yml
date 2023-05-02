@@ -168,6 +168,7 @@ fr:
           ja: 日本語
           pt: Português
           pt-BR: Português brasileiro
+          uk: Украї́нська мо́ва
       templates:
         label: Modèles de saisie par défaut
         item: Objet
@@ -286,6 +287,8 @@ fr:
       uninstall: Désinstaller
       noInfo: Auteur inconnu
       homepage: Plus
+  format:
+    ppi: Pixels per inch (ppi)
   item:
     created: Création
     modified: Modifié

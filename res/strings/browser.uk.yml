@@ -1,0 +1,37 @@
+uk:
+  dialog:
+    file:
+      project: Проєкти Tropy
+      plugin: Плаґіни Tropy
+      pdf: PDF файли
+    crashed:
+      buttons:
+        - Закрити вікно
+        - Перезапустити Tropy
+        - Показати лоґи
+      message: Tropy зазнало краху
+      detail: >
+        На жаль, у цьому вікні Tropy стався збій. Ви можете допомогти,
+        повідомивши про цю проблему на https://github.com/tropy/tropy
+    unresponsive:
+      buttons:
+        - Закрити вікно
+        - Продовжувати чекати
+      message: Tropy не відповідає
+      detail: |
+        Це вікно Tropy не відповідає. Закрити його чи продовжити чекати?
+    unhandled:
+      buttons:
+        - Відхилити
+        - Помилка копіювання
+        - Показати лоґи
+      message: Невідома помилка
+  window:
+    prefs:
+      title: Налаштування Tropy
+    wizard:
+      title: Ласкаво просимо до Tropy
+    about:
+      title: Про Tropy
+    project:
+      readOnly: ' — Заблоковано'
