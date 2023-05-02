@@ -71,7 +71,7 @@ export const MetadataField = React.memo(({
   })
 
   let handleContextMenu = useEvent((event) => {
-    onContextMenu(event, {
+    onContextMenu?.(event, {
       isDisabled,
       isExtra,
       isReadOnly,
