@@ -97,7 +97,7 @@ de:
     readOnly: Die Projektdatei ist schreibgeschützt und daher nicht modifizierbar.
     new:
       title: Neues Projekt erstellen
-      name: Benenne das Projekt
+      name: Gib einen Projektnamen ein
       type:
         label: Wähle den Projekttyp
         option:
