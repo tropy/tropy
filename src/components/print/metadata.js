@@ -1,11 +1,10 @@
+import { basename } from 'node:path'
 import React from 'react'
-import { FormattedMessage } from 'react-intl'
-import cx from 'classnames'
-import { ItemInfo } from '../item/info'
-import { PhotoInfo } from '../photo/info'
-import { auto } from '../../format'
-import { TYPE } from '../../constants'
 import { arrayOf, bool, object, node, string } from 'prop-types'
+import { useIntl, FormattedMessage } from 'react-intl'
+import cx from 'classnames'
+import { auto, bytes, number } from '../../format.js'
+import { TYPE } from '../../constants/index.js'
 
 
 export const MetadataField = ({ isExtra, label, text, type }) => (
@@ -20,6 +19,61 @@ MetadataField.propTypes = {
   label: node.isRequired,
   text: string,
   type: string.isRequired
+}
+
+MetadataField.defaultProps = {
+  type: TYPE.TEXT
+}
+
+export const ItemInfo = ({ item }) => {
+  let intl = useIntl()
+  return (
+    <ol className="item-info metadata-fields">
+      <MetadataField
+        label={intl.formatMessage({ id: 'item.created' })}
+        text={item.created}
+        type={TYPE.DATE}/>
+      <MetadataField
+        label={intl.formatMessage({ id: 'item.modified' })}
+        text={item.modified}
+        type={TYPE.DATE}/>
+    </ol>
+  )
+}
+
+ItemInfo.propTypes = {
+  item: object.isRequired
+}
+
+export const PhotoInfo = ({ photo }) => {
+  let intl = useIntl()
+  let size = [
+    `${number(photo.width)}×${number(photo.height)}`,
+    bytes(photo.size)
+  ].join(', ')
+
+  return (
+    <ol className="item-info metadata-fields">
+      <MetadataField
+        label={intl.formatMessage({ id: 'photo.file' })}
+        text={photo.filename || basename(photo.path)}/>
+      <MetadataField
+        label={intl.formatMessage({ id: 'photo.size' })}
+        text={size}/>
+      <MetadataField
+        label={intl.formatMessage({ id: 'photo.created' })}
+        text={photo.created}
+        type={TYPE.DATE}/>
+      <MetadataField
+        label={intl.formatMessage({ id: 'photo.modified' })}
+        text={photo.modified}
+        type={TYPE.DATE}/>
+    </ol>
+  )
+}
+
+PhotoInfo.propTypes = {
+  photo: object.isRequired
 }
 
 export const MetadataContainer = ({ item, photo, notes }) => (
