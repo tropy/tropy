@@ -59,16 +59,16 @@ de:
       title: Roy Rosenzweig Center for History and New Media
       url: https://rrchnm.org
     cds:
-      title: Corporation for Digital Scholarship
+      title: Digital Scholar
       url: https://digitalscholar.org
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
     text: >-
-      Tropy wird vom {rrchnm} und dem {c2dh} betreut, einem Team, das Ressourcen
+      Tropy wird vom {c2dh} und dem {rrchnm} betreut, einem Team, das Ressourcen
       zur Geschichtsvermittlung, digitale Ausstellungen und Open-Source-Software
       entwickelt.
-    trademark: Der Name Tropy ist eine geschützte Marke der {cds}.
+    trademark: Der Name Tropy ist eine geschützte Marke von {cds}.
     donate:
       title: An Tropy spenden
       url: https://tropy.org/donate
@@ -97,16 +97,16 @@ de:
     readOnly: Die Projektdatei ist schreibgeschützt und daher nicht modifizierbar.
     new:
       title: Neues Projekt erstellen
-      name: Enter a name for the project
+      name: Benenne das Projekt
       type:
-        label: Choose the project type
+        label: Wähle den Projekttyp
         option:
-          tpy: Advanced
+          tpy: Benutzerdefiniert
           managed: Standard
         hint:
-          tpy: Links to photos at their original location.
-          managed: Copies photos to project folder on import.
-      create: Create Project
+          tpy: Verlinkt Fotos an ihrer aktuellen Speicherstelle
+          managed: Kopiert Fotos beim Importieren in den Projektordner.
+      create: Projekt erstellen
       eyeCatcher: Neu
     stats:
       photos: |-
@@ -232,15 +232,15 @@ de:
       name: Name
       id: ID
       path: Datei
-      type: Project type
+      type: Projekttyp
       convert:
-        confirm: Convert
-        hint: Convert this project into a Standard project.
+        confirm: Konvertieren
+        hint: Dieses Projekt in ein Standard Projekt konvertieren.
         detail: |-
           {errors, plural,
-            =0 {All photos consolidated.}
-            one {1 photo not found; consolidation required.}
-            other {# photos not found; consolidation required.}}
+          =0 {Alle Fotos wurden konsolidiert.}
+          one {1 Foto fehlt; Konsolidierung notwendig.}
+          other {# Fotos fehlen; Konsolidierung notwendig.}}
       watch:
         folder: Überwachter Ordner
         usePolling: 'Zyklische Dateistatusabfrage '
@@ -285,7 +285,7 @@ de:
       noInfo: Autor anonym
       homepage: Mehr
   format:
-    ppi: Pixels per inch (ppi)
+    ppi: Punktdichte (ppi)
   item:
     created: Hinzugefügt
     modified: Bearbeitet
@@ -382,11 +382,11 @@ de:
     notify:
       project:
         convert:
-          title: Conversion complete
+          title: Konvertierung abgeschlossen
           message: >-
-            Your project was successfully converted and saved. Tropy will now
-            close the original project file and open the converted project in a
-            new window.
+            Das Projekt wurde erfolgreich konvertiert und gespeichert. Tropy
+            wird nun die ursprüngliche Projektdatei schließen und das
+            konvertierte Projekt in einem neuen Fenster öffnen.
           buttons:
             - OK
     error:
@@ -633,7 +633,7 @@ de:
       purge: Fehler beim Entfernen alter Projekt-Caches.
     project:
       created: Projekt konnte nicht erstellt werden.
-      convert: Project conversion failed.
+      convert: Projektkonvertierung fehlgeschlagen.
     item:
       export: Objekte konnten nicht exportiert werden.
       merge: Objekte konnten nicht zusammengefügt werden.

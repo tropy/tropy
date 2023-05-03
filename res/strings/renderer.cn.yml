@@ -59,13 +59,15 @@ cn:
       title: 罗伊·罗森茨韦格历史和新媒体中心
       url: https://rrchnm.org
     cds:
-      title: Corporation for Digital Scholarship
+      title: Digital Scholar
       url: https://digitalscholar.org
     c2dh:
       title: 卢森堡当代和数字历史中心
       url: https://www.c2dh.uni.lu
-    text: 托托是由{rrchnm}和{c2dh}设计的，这是一个开发历史教学资源、数字展览和开源软件的团队。
-    trademark: Tropy 名称是 {cds} 的注册商标。
+    text: >-
+      Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
+      historical teaching resources, digital exhibits, and open-source software.
+    trademark: The Tropy name is a registered trademark of {cds}.
     donate:
       title: 捐赠给 Tropy
       url: https://tropy.org/donate

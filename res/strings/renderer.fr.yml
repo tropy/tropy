@@ -59,16 +59,15 @@ fr:
       title: Roy Rosenzweig Center for History and New Media
       url: https://rrchnm.org
     cds:
-      title: Corporation for Digital Scholarship
+      title: Digital Scholar
       url: https://digitalscholar.org
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
     text: >-
-      Tropy est conçu par le {rrchnm} et le {c2dh}, une équipe qui crée des
-      ressources pour l'enseignement de l'histoire, des expositions numériques,
-      et des logiciels libres et open-source.
-    trademark: Tropy est une marque déposée de la {cds}.
+      Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
+      historical teaching resources, digital exhibits, and open-source software.
+    trademark: The Tropy name is a registered trademark of {cds}.
     donate:
       title: Donate to Tropy
       url: https://tropy.org/donate
