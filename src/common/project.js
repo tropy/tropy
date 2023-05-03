@@ -186,7 +186,7 @@ export async function convert(src, path, appDir, {
       if (asset.protocol === 'file') {
         await db.run(
           ...update('photos')
-            .set({ path: relative(path, asset.path) })
+            .set({ path: relative(path, asset.path), protocol: 'file' })
             .where({ id }))
       }
     }, { concurrency })
