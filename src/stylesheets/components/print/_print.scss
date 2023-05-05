@@ -123,8 +123,6 @@ img {
   }
 
   .overflow & {
-    padding-bottom: $print-page-margin - 3.7mm;
-
     @media (orientation: portrait) {
       min-height: calc(100vh - 100vw);
     }
@@ -250,6 +248,7 @@ label {
   }
 
   .overflow & {
+    margin-top: $print-page-margin - 3.7mm;
     font-size: $print-font-size-large;
     line-height: $print-font-size-large * $print-line-height-large;
     letter-spacing: 0;
