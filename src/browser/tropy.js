@@ -896,7 +896,7 @@ export class Tropy extends EventEmitter {
     })
 
     ipc.handle('print', async (event, opts) => {
-      this.print(opts, BrowserWindow.fromWebContents(event.sender))
+      await this.print(opts, BrowserWindow.fromWebContents(event.sender))
     })
 
     ipc.on('error', (event, error) => {
