@@ -9,6 +9,7 @@ export default {
   'ja': 'ja',
   'pt': 'pt',
   'pt-BR': 'pt-BR',
+  'uk': 'uk',
 
   'default': 'en'
 }
