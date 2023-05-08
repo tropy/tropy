@@ -134,9 +134,11 @@ export default class Esper extends EventEmitter {
 
   extract = async (src, props) => {
     try {
+      let { resolution } = this
+
       let photo = new Photo({
         ...props,
-        resolution: this.resolution
+        resolution
       })
 
       let { width, height } = props
@@ -150,16 +152,20 @@ export default class Esper extends EventEmitter {
         height = props.width
       }
 
-      var texture = new PIXI.RenderTexture.create(width, height)
+      var renderTexture = PIXI.RenderTexture.create({
+        width,
+        height,
+        resolution
+      })
 
       photo.rotation = rad(props.angle)
       photo.scale.set(props.mirror ? -1 : 1, 1)
       photo.position.set(width / 2, height / 2)
 
-      renderer.render(photo, texture)
+      renderer.render(photo, { renderTexture })
 
       return {
-        buffer: Buffer.from(renderer.plugins.extract.pixels(texture)),
+        buffer: Buffer.from(renderer.extract.pixels(renderTexture)),
         channels: 4,
         width,
         height
@@ -167,7 +173,7 @@ export default class Esper extends EventEmitter {
 
 
     } finally {
-      texture?.destroy()
+      renderTexture?.destroy()
     }
   }
 
