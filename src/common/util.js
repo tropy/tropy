@@ -50,7 +50,12 @@ export function *iteratorWithIndex(input) {
     yield [item, index++]
 }
 
-export async function pMap(input, mapper, { concurrency = Infinity } = {}) {
+export async function pMap(
+  input,
+  mapper,
+  { concurrency = Infinity } = {},
+  ...args
+) {
   let result = []
 
   if (!input.length)
@@ -63,7 +68,7 @@ export async function pMap(input, mapper, { concurrency = Infinity } = {}) {
   let workers = []
 
   times(concurrency, () => {
-    workers.push(pMap.worker(it, mapper, result, errors))
+    workers.push(pMap.worker(it, mapper, result, errors, ...args))
   })
 
   await Promise.allSettled(workers)
@@ -74,11 +79,11 @@ export async function pMap(input, mapper, { concurrency = Infinity } = {}) {
   return result
 }
 
-pMap.worker = async function (it, mapper, result, errors) {
+pMap.worker = async function (it, mapper, result, errors, ...args) {
   for (let [item, index] of it) {
     try {
       item = await Promise.resolve(item)
-      result[index] = await mapper(item, index)
+      result[index] = await mapper(item, index, ...args)
 
     } catch (e) {
       errors.push(e)

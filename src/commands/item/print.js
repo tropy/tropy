@@ -1,28 +1,88 @@
+import { rm } from 'node:fs/promises'
+import { join } from 'node:path'
 import { ipcRenderer as ipc } from 'electron'
 import { call, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { ITEM } from '../../constants'
-import { getPrintableItems } from '../../selectors'
+import { Command } from '../command.js'
+import { ITEM } from '../../constants/index.js'
+import { getPrintableItems } from '../../selectors/print.js'
+import { Cache } from '../../common/cache.js'
+import { Rotation } from '../../common/iiif.js'
+import { info, warn } from '../../common/log.js'
+import { mkdtmp } from '../../common/os.js'
+import { pMap } from '../../common/util.js'
+import Esper from '../../esper/index.js'
+import { open } from '../../image/sharp.js'
 
+async function prepForPrinting(photo, _, {
+  cache,
+  tmp
+}) {
+  try {
+    let src = Cache.url(cache.root, 'full', photo)
+    let [img] = await loadImage(src, photo)
+
+    // TODO check for duplicates before prep?
+    let path = join(tmp, `${photo.checksum}.jpg`)
+
+    await img.jpeg({
+      quality: 100
+    }).toFile(path)
+
+    photo.print = path
+
+  } catch (e) {
+    warn({ stack: e.stack, photo }, 'failed to prepare photo for printing')
+  }
+}
+
+async function loadImage(src, photo, image = photo) {
+  let { buffer, ...raw } = await Esper.instance.extract(src, {
+    ...image,
+    ...Rotation.addExifOrientation(image, photo).toJSON()
+  })
+
+  let img = await open(buffer, { raw })
+  return [img, raw]
+}
 
 export class Print extends Command {
   *exec() {
-    let { pdf, landscape } = this.action.meta
+    try {
+      let { cache } = this.options
+      let { pdf, landscape } = this.action.meta
+      let concurrency = 4
 
-    let [prefs, project, items] = yield select(state => ([
-      state.settings.print,
-      state.project.id,
-      getPrintableItems(state)
-    ]))
+      let [prefs, project, items] = yield select(state => ([
+        state.settings.print,
+        state.project.id,
+        getPrintableItems(state)
+      ]))
 
-    if (items.length) {
-      yield call(ipc.invoke, 'print', {
-        pdf,
-        landscape,
-        ...prefs,
-        project,
-        items
-      })
+      if (prefs.photos) {
+        var tmp = yield call(mkdtmp, ITEM.PRINT)
+        let photos = items.flatMap(it => it.photos)
+
+        info({ tmp, prefs }, `prepare ${photos.length} photo(s) for printing`)
+        yield call(pMap, photos, prepForPrinting, { concurrency }, {
+          cache,
+          landscape,
+          tmp,
+          prefs
+        })
+      }
+
+      if (items.length) {
+        yield call(ipc.invoke, 'print', {
+          pdf,
+          landscape,
+          ...prefs,
+          project,
+          items
+        })
+      }
+    } finally {
+      if (tmp)
+        rm(tmp, { recursive: true })
     }
   }
 }
