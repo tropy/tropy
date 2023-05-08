@@ -42,10 +42,10 @@ export const Photo = ({
       {hasPhotos &&
         <div className="photo-container">
           <img
-            className={`iiif rot-${rotation.format('x')}`}
+            className={photo.print ? null : `iiif rot-${rotation.format('x')}`}
             decoding="sync"
             loading="eager"
-            src={Cache.url(cache, 'full', photo)}
+            src={photo.print || Cache.url(cache, 'full', photo)}
             style={ratio}/>
         </div>
       }
