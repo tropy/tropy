@@ -277,6 +277,12 @@ export class AppPrefs extends React.PureComponent {
               value={this.props.settings.print.photos}
               onChange={this.handlePrintSettingsChange}/>
             <Toggle
+              id="prefs.app.print.optimize"
+              isDisabled={!this.props.settings.print.photos}
+              name="optimize"
+              value={this.props.settings.print.optimize}
+              onChange={this.handlePrintSettingsChange}/>
+            <Toggle
               id="prefs.app.print.metadata"
               isDisabled={
                 !this.props.settings.print.photos &&

@@ -40,6 +40,7 @@ const defaults = {
   print: {
     mode: 'photo',
     photos: true,
+    optimize: true,
     metadata: true,
     notes: true,
     onlyNotes: false,

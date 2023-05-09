@@ -151,6 +151,7 @@ en:
           photo: One Photo per Page
           selection: One Selection per Page
         photos: Include photos
+        optimize: Optimize photo size and quality
         metadata: Include metadata
         notes: Include notes
         onlyNotes: Include only photos with notes

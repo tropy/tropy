@@ -15,17 +15,26 @@ import { open } from '../../image/sharp.js'
 
 async function prepForPrinting(photo, _, {
   cache,
-  tmp
+  prefs,
+  tmp,
+  maxSize
 }) {
   try {
     let src = Cache.url(cache.root, 'full', photo)
-    let [img] = await loadImage(src, photo)
+    let [img, { width, height }] = await loadImage(src, photo)
 
     // TODO check for duplicates before prep?
     let path = join(tmp, `${photo.checksum}.jpg`)
 
+    if (prefs.optimize && maxSize) {
+      img = (width > height) ?
+        img.resize({ width: maxSize }) :
+        img.resize({ height: maxSize })
+    }
+
     await img.jpeg({
-      quality: 100
+      quality: prefs.optimize ? 80 : 100,
+      chromaSubsampling: '4:4:4'
     }).toFile(path)
 
     photo.print = path
@@ -65,7 +74,7 @@ export class Print extends Command {
         info({ tmp, prefs }, `prepare ${photos.length} photo(s) for printing`)
         yield call(pMap, photos, prepForPrinting, { concurrency }, {
           cache,
-          landscape,
+          maxSize: 2137, // For A4/Letter at 300ppi
           tmp,
           prefs
         })
