@@ -27,9 +27,10 @@ async function prepForPrinting(photo, _, {
     let path = join(tmp, `${photo.checksum}.jpg`)
 
     if (prefs.optimize && maxSize) {
-      img = (width > height) ?
-        img.resize({ width: maxSize }) :
-        img.resize({ height: maxSize })
+      img.resize({
+        [width > height ? 'width' : 'height']: maxSize,
+        withoutEnlargement: true
+      })
     }
 
     await img.jpeg({
