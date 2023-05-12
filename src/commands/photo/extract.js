@@ -2,7 +2,7 @@ import { Command } from '../command'
 import { call, select } from 'redux-saga/effects'
 import { PHOTO } from '../../constants/index.js'
 import { Cache } from '../../common/cache.js'
-import { Rotation } from '../../common/iiif.js'
+import { addOrientation } from '../../common/iiif.js'
 import { warn, info } from '../../common/log.js'
 import { blank } from '../../common/util.js'
 import Esper from '../../esper/index.js'
@@ -30,7 +30,7 @@ export class Extract extends Command {
 
       let { buffer, ...raw } = yield call(Esper.instance.extract, src, {
         ...image,
-        ...Rotation.addExifOrientation(image, photo).toJSON()
+        ...addOrientation(image, photo)
       })
 
       yield call(toFile, file, buffer, { raw })
