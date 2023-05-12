@@ -6,7 +6,7 @@ import { Command } from '../command.js'
 import { ITEM } from '../../constants/index.js'
 import { getPrintableItems } from '../../selectors/print.js'
 import { Cache } from '../../common/cache.js'
-import { Rotation } from '../../common/iiif.js'
+import { addOrientation } from '../../common/iiif.js'
 import { info, warn } from '../../common/log.js'
 import { mkdtmp } from '../../common/os.js'
 import { pMap } from '../../common/util.js'
@@ -48,7 +48,7 @@ async function prepForPrinting(photo, _, {
 async function loadImage(src, photo, image = photo) {
   let { buffer, ...raw } = await Esper.instance.extract(src, {
     ...image,
-    ...Rotation.addExifOrientation(image, photo).toJSON()
+    ...addOrientation(image, photo)
   })
 
   let img = await open(buffer, { raw })
