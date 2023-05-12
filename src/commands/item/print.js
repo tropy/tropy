@@ -29,6 +29,7 @@ async function prepForPrinting(photo, _, {
     if (prefs.optimize && maxSize) {
       img.resize({
         [width > height ? 'width' : 'height']: maxSize,
+        kernel: 'lanczos2',
         withoutEnlargement: true
       })
     }
