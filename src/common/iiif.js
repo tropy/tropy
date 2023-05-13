@@ -120,8 +120,8 @@ export class Rotation {
 export class IIIF extends URL {
 }
 
-export const addOrientation = (state, photo) => {
-  let { width, height } = photo
+export const addOrientation = (image, photo = image) => {
+  let { width, height } = image
   let rot = Rotation.fromExifOrientation(photo.orientation)
 
   // Chromium 81+ automatically applies image orientation.
@@ -132,10 +132,10 @@ export const addOrientation = (state, photo) => {
   // When using cache variants, use original aspect ratio and add
   // orientation to image state.
   if (Cache.isCacheVariant('full', photo))
-    return { ...rot.add(state).toJSON(), width, height }
+    return { ...rot.add(image).toJSON(), width, height }
 
   // Otherwise use image state, but adjust aspect ratio if necessary.
-  let { angle, mirror } = state
+  let { angle, mirror } = image
 
   if (!rot.isHorizontal) {
     width = photo.height
@@ -145,9 +145,9 @@ export const addOrientation = (state, photo) => {
   return { angle, mirror, width, height }
 }
 
-export const subOrientation = (state, photo) => {
+export const subOrientation = (image, photo) => {
   if (Cache.isCacheVariant('full', photo))
-    return Rotation.subExifOrientation(state, photo).toJSON()
+    return Rotation.subExifOrientation(image, photo).toJSON()
   else
-    return pick(state, ['angle', 'mirror'])
+    return pick(image, ['angle', 'mirror'])
 }

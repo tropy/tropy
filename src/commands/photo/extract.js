@@ -42,7 +42,7 @@ export class Extract extends Command {
       }
 
     } catch (e) {
-      warn({ stack: e.stack }, `failed to save image #${image.id} as ${file}`)
+      warn({ stack: e.stack }, `failed to save image #${image?.id} as ${file}`)
       fail(e, this.action.type)
     }
   }

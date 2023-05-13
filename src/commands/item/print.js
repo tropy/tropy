@@ -46,14 +46,16 @@ async function prepForPrinting(photo, _, {
   }
 }
 
-async function loadImage(src, photo, image = photo) {
+async function loadImage(src, image, photo = image) {
   let { buffer, ...raw } = await Esper.instance.extract(src, {
     ...image,
     ...addOrientation(image, photo)
   })
 
-  let img = await open(buffer, { raw })
-  return [img, raw]
+  return [
+    await open(buffer, { raw }),
+    raw
+  ]
 }
 
 export class Print extends Command {
@@ -76,7 +78,7 @@ export class Print extends Command {
         info({ tmp, prefs }, `prepare ${photos.length} photo(s) for printing`)
         yield call(pMap, photos, prepForPrinting, { concurrency }, {
           cache,
-          maxSize: 2137, // For A4/Letter at 300ppi
+          maxSize: 2137, // Good for A4/Letter at 300ppi
           tmp,
           prefs
         })
