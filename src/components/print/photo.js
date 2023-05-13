@@ -24,7 +24,7 @@ export const Photo = ({
   photo,
   cache
 }) => {
-  Object.assign(photo, addOrientation(photo, photo, false))
+  Object.assign(photo, addOrientation(photo))
   let rotation = new Rotation(photo)
 
   if (hasPhotos && !(hasMetadata || hasNotes)) {

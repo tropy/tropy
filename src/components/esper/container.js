@@ -105,7 +105,7 @@ export class EsperContainer extends React.Component {
         state[prop] = image[prop]
       }
 
-      Object.assign(state, addOrientation(state, photo))
+      Object.assign(state, addOrientation(image, photo))
     }
 
     return state
