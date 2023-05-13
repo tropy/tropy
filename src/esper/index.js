@@ -134,9 +134,6 @@ export default class Esper extends EventEmitter {
 
   extract = async (src, props) => {
     try {
-      this.stop()
-      this.stop.flush()
-
       let photo = new Photo({
         ...props,
         resolution: 1
