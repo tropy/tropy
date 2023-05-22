@@ -2,10 +2,10 @@ import { blank } from '../common/util.js'
 import { deleteFrom, into, update } from '../common/query.js'
 
 export function touch(db, { id, timestamp = Date.now() }) {
-  return update(db, { id, timestamp })
+  return subject.update(db, { id, timestamp })
 }
 
-export default {
+const subject = {
   create(db, { template, timestamp = Date.now() }) {
     return db.run(
       ...into('subjects').insert({
@@ -50,3 +50,5 @@ export default {
     )
   }
 }
+
+export default subject
