@@ -1,8 +1,13 @@
+import { platform } from 'node:process'
 export let sharp
 
 export async function init() {
-  if (sharp == null)
+  if (sharp == null) {
     sharp = (await import('sharp')).default
+
+    if (platform === 'linux')
+      sharp.concurrency(1)
+  }
 }
 
 export async function open(...args) {
