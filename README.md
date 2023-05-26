@@ -5,15 +5,15 @@ Tropy
 
 Bring order to your research —
 use the power of Tropy to organize and describe your research photos
-so you can quickly find your sources whenever you need them.
+so you can find your sources whenever you need them.
 
 Visit [tropy.org][] to learn more
 or follow [@tropy@fosstodon.org][] for important announcements.
 To get started, download the latest version of Tropy for your platform,
 check out the [user's manual][docs] and join the discussion on the [forums][].
 
-If you are interested to work on Tropy or create your own builds,
-please find more details below.
+Interested to work on Tropy or create your own builds?
+Please find more details below.
 Happy hacking!
 
 [tropy.org]: https://tropy.org
@@ -25,14 +25,14 @@ Install from Source
 -------------------
 Install the latest version of [Node.js][]
 (at least the version that ships with the current [Electron][] release)
-and all requirements needed to use [node-gyp][] on your platform.
+and all dependencies required to use [node-gyp][] on your platform.
 
-Finally, clone this [repository][] and install all of Tropy's dependencies:
+Clone this [repository][] and install Tropy's dependencies:
 
     $ npm install
     $ npm run rebuild -- --force
 
-To test that everything is set up correctly, run:
+To test that everything works, run:
 
     $ npm test
 
@@ -46,15 +46,15 @@ Creating Builds
 To create a dev-build for your current platform run `npm run build`.
 This will create a dev-build of Tropy in the `dist` folder.
 
-Running in Dev-Mode
--------------------
-Alternatively, you can start Tropy in dev-mode by running `npm start`.
+Tropy Development
+-----------------
+Start Tropy in dev-mode by running `npm start`.
 
 Plugin Development
 ------------------
-Tropy can also be extended via plugins.
+You can extend Tropy's functionality via plugins.
 To find out more, consult the [plugin specification][]
-and clone our [sample plugin][] to get started.
+and clone the [sample plugin][] to get started.
 
 [sample plugin]: https://github.com/tropy/tropy-plugin-example
 [plugin specification]: https://github.com/tropy/tropy/blob/master/res/plugins/README.md
