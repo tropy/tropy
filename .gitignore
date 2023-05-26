@@ -12,3 +12,5 @@ db/*.db
 scripts/appimagetool
 scripts/stats.mjs
 _book
+.github/styles/*
+!.github/styles/Vocab/tropy
