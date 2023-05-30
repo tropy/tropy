@@ -254,7 +254,7 @@ export class AppPrefs extends React.PureComponent {
             id="prefs.app.export.note.copy"
             name="copy"
             isCompact
-            value={this.props.settings.export.note.copy}
+            value={this.props.settings.export.note.copyFormat}
             options={this.props.noteFormats}
             onChange={this.handleNoteCopyFormatChange}/>
           <hr/>
