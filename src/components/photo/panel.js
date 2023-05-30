@@ -55,7 +55,7 @@ const PhotoPanelContainer = connect(
         dispatch(act.item.preview(...args))
       },
 
-      onPhotoRotate(...args) {
+      onRotate(...args) {
         dispatch(act.photo.rotate(...args))
       },
 
