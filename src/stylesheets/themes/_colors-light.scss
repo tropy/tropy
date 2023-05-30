@@ -3,7 +3,7 @@
 // Colors
 // --------------------------------------------------
 
-:root {
+:root, ::selection {
   #{--brand-primary}:          $brand-primary;
   #{--brand-primary-overlay}:  $brand-primary-overlay;
   #{--brand-primary-vibrancy}: $brand-primary-vibrancy;

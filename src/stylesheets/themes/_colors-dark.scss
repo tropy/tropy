@@ -3,7 +3,7 @@
 // Colors
 // --------------------------------------------------
 
-:root {
+:root, ::selection {
   #{--brand-primary}:            $brand-primary;
   #{--brand-primary-30}:         rgba($brand-primary, 0.3);
   #{--brand-primary-35}:         rgba($brand-primary, 0.35);
