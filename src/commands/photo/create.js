@@ -122,10 +122,11 @@ export class Create extends ImportCommand {
       image.rewind()
 
       this.backlog.push(
-        yield fork(ImportCommand.consolidate,
+        yield fork(ImportCommand.consolidate, {
           cache,
           image,
-          ids))
+          photos: ids
+        }))
 
       this.result.push(...ids)
 

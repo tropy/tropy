@@ -166,10 +166,11 @@ export class Import extends ImportCommand {
       image.rewind()
 
       this.backlog.push(
-        yield fork(ImportCommand.consolidate,
-          this.options.cache,
+        yield fork(ImportCommand.consolidate, {
+          cache: this.options.cache,
           image,
-          item.photos))
+          photos: item.photos
+        }))
 
     } catch (e) {
       if (e instanceof DuplicateError)

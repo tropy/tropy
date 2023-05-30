@@ -15,7 +15,20 @@ import { getTemplateValues, getTemplateProperties } from '../selectors'
 
 
 export class ImportCommand extends Command {
-  static *consolidate(cache, image, photos, { overwrite = true } = {}) {
+  static *consolidate(args = {}) {
+    let { cache, image, photos, overwrite = true } = args
+
+    // Subtle: when importing, *consolidation is forked
+    // in order not to block importing the next item.
+    // The backlog of consolidation process is retained
+    // so that the import command can wait for it to finish.
+    // Because of this, the arguments passed to consolidate
+    // can't be garbage collected.
+    // We clear the image reference here so that
+    // the allocated memory can be freed after consolidation,
+    // not at the end of the import command.
+    args.image = null
+
     while (!image.done) {
       let photo = photos[image.page]
 
