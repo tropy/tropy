@@ -23,7 +23,7 @@ export function useDragDropMetadata({
     value: auto(text, type)
   }))
 
-  let canDrag = useEvent(() => !(isDisabled || blank(text)))
+  let canDrag = useEvent(() => !(isDisabled || blank(text) || id == null))
 
   let [, drag, preview] = useDrag({
     type: DND.FIELD,
