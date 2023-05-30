@@ -58,7 +58,7 @@ export const PhotoInfo = React.memo(({
           isActive={editing === 'density'}
           isDisabled={isDisabled}
           isRequired
-          label="photo.density"
+          label={intl.formatMessage({ id: 'photo.density' })}
           max={maxDensity}
           min={minDensity}
           property="density"

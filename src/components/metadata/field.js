@@ -10,6 +10,7 @@ import actions from '../../actions/metadata.js'
 
 
 export const MetadataField = React.memo(({
+  hint,
   id,
   isExtra,
   isDisabled,
@@ -90,7 +91,7 @@ export const MetadataField = React.memo(({
       })}
       onContextMenu={handleContextMenu}>
 
-      <MetadataLabel id={property}>
+      <MetadataLabel id={property} hint={hint}>
         {label}
       </MetadataLabel>
 
@@ -111,6 +112,7 @@ export const MetadataField = React.memo(({
 
 MetadataField.propTypes = {
   ...MetadataValue.propTypes,
+  hint: string,
   id: arrayOf(number),
   isDisabled: bool,
   isExtra: bool,
