@@ -115,7 +115,8 @@ body {
 
   ::selection {
     color: $text-selection-color;
-    background-color: $text-selection-bg;
+    // FIXME css var access broken in latest chromium?
+    // background-color: $text-selection-bg;
   }
 
   p,
