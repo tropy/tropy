@@ -66,7 +66,7 @@ export const PhotoInfo = React.memo(({
           type="ppi"
           onCancel={stopEditing}
           onChange={handleChange}
-          onClick={setEditing}/>}
+          onEdit={setEditing}/>}
 
       <MetadataField
         label={intl.formatMessage({ id: 'photo.size' })}
