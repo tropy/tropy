@@ -12,6 +12,7 @@ import actions from '../../actions/metadata.js'
 export const MetadataField = React.memo(({
   hint,
   id,
+  isEditing,
   isExtra,
   isDisabled,
   isReadOnly,
@@ -41,7 +42,7 @@ export const MetadataField = React.memo(({
 
   let [{ isOver }, dnd] = useDragDropMetadata({
     id,
-    isDisabled: isDisabled || isStatic,
+    isDisabled: isDisabled || isStatic || isEditing,
     isMixed,
     isReadOnly,
     property,
@@ -103,6 +104,7 @@ export const MetadataField = React.memo(({
         text={text}
         type={type}
         isDisabled={isDisabled}
+        isEditing={isEditing}
         isReadOnly={isReadOnly}
         onCancel={isStatic ? null : handleCancel}
         onChange={isStatic ? null : handleChange}/>
