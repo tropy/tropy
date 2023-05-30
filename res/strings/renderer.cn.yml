@@ -146,6 +146,7 @@ cn:
           photo: 每页一张图片
           selection: 选中的文件打印成一页
         photos: 包含图片
+        optimize: Optimize photo size and quality
         metadata: 包含元数据
         notes: 包含笔记
         onlyNotes: 仅包含带有注释的照片

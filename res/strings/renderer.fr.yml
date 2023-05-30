@@ -151,6 +151,7 @@ fr:
           photo: Une photo par page
           selection: Une sélection par page
         photos: Inclure les photos
+        optimize: Optimize photo size and quality
         metadata: Inclure les métadonnées
         notes: Inclure les notes
         onlyNotes: Inclure uniquement les photos et les notes

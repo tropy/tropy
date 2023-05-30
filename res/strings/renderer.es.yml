@@ -144,6 +144,7 @@ es:
           photo: Una foto por página
           selection: Una selección por página
         photos: Incluir fotos
+        optimize: Optimize photo size and quality
         metadata: Incluir metadatos
         notes: Incluir notas
         onlyNotes: Incluir únicamente fotos con notas

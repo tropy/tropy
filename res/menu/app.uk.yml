@@ -66,7 +66,7 @@ uk:
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
-        - label: Print
+        - label: Друк
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
@@ -301,7 +301,7 @@ uk:
                   command: app:print-pdf
                 - label: Landscape
                   command: app:print-pdf-landscape
-        - label: Print
+        - label: Друк
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
@@ -364,7 +364,7 @@ uk:
           accelerator: Cmd+M
           role: minimize
           window: '*'
-        - label: Zoom
+        - label: Масштаб
           accelerator: Ctrl+Cmd+Z
           role: zoom
         - type: separator
@@ -511,7 +511,7 @@ uk:
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
-        - label: Print
+        - label: Друк
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project

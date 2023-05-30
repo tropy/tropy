@@ -149,6 +149,7 @@ de:
           photo: Ein Foto pro Seite
           selection: Ein Ausschnitt pro Seite
         photos: Inklusive Fotos
+        optimize: Optimize photo size and quality
         metadata: Inklusive Metadaten
         notes: Inklusive Notizen
         onlyNotes: Nur Fotos mit Notizen

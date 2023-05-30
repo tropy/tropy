@@ -123,6 +123,7 @@ pt-BR:
           photo: Uma Foto por Página
           selection: Uma Seleção por Página
         photos: Incluir fotos
+        optimize: Optimize photo size and quality
         metadata: Incluir metadados
         notes: Incluir notas
         onlyNotes: Incluir apenas fotos com notas.

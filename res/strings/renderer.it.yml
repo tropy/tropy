@@ -152,6 +152,7 @@ it:
           photo: Una foto per pagina
           selection: Una selezione per pagina
         photos: Includi foto
+        optimize: Optimize photo size and quality
         metadata: Includi i metadata
         notes: Includi le note
         onlyNotes: Includi solo foto con note

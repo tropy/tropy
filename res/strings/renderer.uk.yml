@@ -50,7 +50,7 @@ uk:
   print:
     item: Елемент
     photo: Фото
-    notes: Notes
+    notes: Нотатки
     note: Note {idx, number}
     tags: Теґи
   about:
@@ -103,11 +103,11 @@ uk:
       type:
         label: Обрати тип проєкту
         option:
-          tpy: Advanced
-          managed: Standard
+          tpy: Розширений
+          managed: Стандартний
         hint:
-          tpy: Links to photos at their original location.
-          managed: Copies photos to project folder on import.
+          tpy: Посилання на оригінальні фотографії в місці їх збереження.
+          managed: Фотографії копіюються в папку проекту під час імпорту.
       create: Створити проєкт
       eyeCatcher: Новий
     stats:
@@ -137,20 +137,21 @@ uk:
           dark: Темна
           system: Follow system preference
         font:
-          size: Font size
+          size: Розмір шрифту
           sizes:
-            12px: Very Small
-            13px: Small (Default)
-            14px: Medium
-            15px: Large
-            16px: Very Large
+            12px: Дуже малий
+            13px: Малий (за замовчуванням)
+            14px: Середній
+            15px: Великий
+            16px: Дуже великий
       print:
-        mode: Print
+        mode: Друк
         modes:
           item: One Item per Page
           photo: One Photo per Page
           selection: One Selection per Page
         photos: Include photos
+        optimize: Optimize photo size and quality
         metadata: Include metadata
         notes: Include notes
         onlyNotes: Include only photos with notes
@@ -166,8 +167,8 @@ uk:
           it: Italiano
           ja: 日本語
           pt: Português
-          pt-BR: Португальський (бразильський)
-          uk: Украї́нська мо́ва
+          pt-BR: Português brasileiro
+          uk: Українська
       templates:
         label: Default templates
         item: Елемент
@@ -247,12 +248,12 @@ uk:
         usePolling: Using file stat polling
     template:
       label: Шаблони
-      new: New Template …
-      create: Create
+      new: Новий шаблон …
+      create: Створити
       select: Шаблон
       tools:
         new: Новий
-        copy: Duplicate
+        copy: Дублювати
         delete: Видалити
         import: Імпорт
         export: Експорт
@@ -279,10 +280,10 @@ uk:
     plugins:
       label: Plugins
       settings: Налаштування
-      enable: Enable
-      disable: Disable
+      enable: Увімкнути
+      disable: Вимкнути
       install: Встановити плагін
-      uninstall: Uninstall
+      uninstall: Деінсталювати
       noInfo: Невідомий автор
       homepage: More
   format:
@@ -314,7 +315,7 @@ uk:
     mode:
       fill: По ширині
       fit: Fit
-      zoom: Zoom
+      zoom: Масштаб
     panel:
       negative: Інвертувати кольори
       revert: Скинути до оригіналу
@@ -446,7 +447,7 @@ uk:
       templates: Шаблони Tropy
       images: Images
       items: Tropy Items
-      notes: Notes
+      notes: Нотатки
       projects: Проєкти Tropy
       rdf: RDF Vocabularies
       jsonld: JSON-LD
@@ -667,29 +668,29 @@ uk:
         change: Failed to change selection template.
     ontology:
       migrate: Failed to upgrade your ontology database.
-      import: Failed to import vocabulary.
+      import: Не вдалося імпортувати словниковий запас.
       vocab:
-        save: Failed to save vocabulary. Prefix must be unique.
+        save: Не вдалося зберегти словник. Префікс має бути унікальним.
       template:
-        import: Failed to import template.
+        import: Помилка імпорту шаблону.
         field:
-          add: Failed to add field to template.
-          remove: Failed to remove field from template.
+          add: Не вдалося додати поле до шаблону.
+          remove: Не вдалося видалити поле з шаблону.
     tag:
-      create: Failed to create tag. Tag names must be unique.
+      create: Не вдалося створити тег. Назви тегів мають бути унікальними.
     db:
-      SQLITE_CANTOPEN: Cannot find or open database file.
+      SQLITE_CANTOPEN: Не вдається знайти або відкрити файл бази даних.
   flash:
     update:
       ready:
         message: >-
-          Tropy {version} is ready to be installed. Do you want to install and
-          restart now?
-        confirm: Restart Now
+          Tropy {version} готова до встановлення. Ви хочете встановити та
+          перезапустити зараз?
+        confirm: Перезапустити зараз
   plugin:
     name: Заголовок
     plugin: Плагін
-    options: Options
+    options: Параметри
     hooks:
       export: Експорт
       import: Імпорт
