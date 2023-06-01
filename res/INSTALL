@@ -1,67 +1,86 @@
 Installation Instructions
-*************************
+=========================
+The Tropy Linux tarball is a binary release.
+You can move this directory to any suitable location such as `/opt/tropy`,
+and start the `tropy` binary there.
 
-Tropy is Copyright (c) 2015-2021
-Roy Rosenzweig Center for History and New Media, George Mason University
+In the following instructions, change `/opt/tropy` to your preferred location.
 
-Basic Installation
-==================
-  Briefly, this distribution package requires no installation step. You
-can move this directory to any suitable location, for example, `/opt/tropy`,
-and start the `tropy` binary there. In the following instructions, change
-`/opt/tropy` to your preferred location.
-
-1. Move this directory to /opt/tropy
-2. Add /opt/tropy to your PATH environment variable
+1. Move this directory to `/opt/tropy`.
+2. Add `/opt/tropy` to your `PATH` environment variable.
 3. Copy the Tropy icons:
+
    cp -r /opt/tropy/resources/icons ~/.local/share/
-4. Register Tropy's mimetypes:
+
+4. Register Tropy's MIME types:
+
    cp -r /opt/tropy/resources/mime ~/.local/share/
+
 5. Copy the file `tropy.desktop` file:
+
    cp /opt/tropy/tropy.desktop ~/.local/share/applications/
+
 6. And update MIME cache database:
+
    update-desktop-database ~/.local/share/applications/
+
 
 Updating
 ========
-  When updating to newer version of Tropy, simply replace your
-the entire installation directory with the new one.
+When updating to a newer version of Tropy,
+replace your the entire installation directory with the new one.
+
 
 Dark Theme
 ==========
-  When using the dark theme you may want to force to use your
-GTK theme's dark variant. Generally, you will have to restart
-Tropy for the window frame to update accordingly; if the menu
-bar does not use the dark theme by default, try starting
-Tropy with `env GTK_THEME=Adwaita:dark tropy` using your
-preferred theme.
+When using the dark theme you may want to use your GTK theme's dark variant.
+After changing the theme,
+you will have to restart Tropy for the window frame to update accordingly;
+if the menu or title bar don't use your GTK theme's dark variant,
+try starting Tropy with `env GTK_THEME=Adwaita:dark tropy` or your preferred theme.
+
 
 Custom Themes
 =============
-  You can adjust Tropy's themes by placing `style-light.css`
-and `style-dark.css` files in your user-data folder (or just
-`style.css` for adjusting all themes).
+You can adjust Tropy's user interface
+by placing files called `style-light.css` and `style-dark.css`
+into your user-data folder (or just `style.css` for adjusting all themes).
+
 
 Sandbox
 =======
-  By default, Tropy requires your kernel to be configured with
+Tropy requires your kernel to be configured with the options
 `CONFIG_USER_NS` and `sysctl kernel.unprivileged_userns_clone=1`.
 
-  As a fallback, you can `sudo chown root chrome-sandbox` and
-`chmod 4755 chrome-sandbox` to use the SETUID sandbox instead, or start
-Tropy with the `--no-sandbox` flag.
+As a fallback, you can `sudo chown root chrome-sandbox` and
+`chmod 4755 chrome-sandbox` to use the SETUID sandbox instead,
+or start Tropy with the `--no-sandbox` flag.
+
+
+Wayland
+=======
+By default, Tropy will use the X11 or XWayland windows.
+For native Wayland use the following command line switches:
+
+    tropy --ozone-platform-hint=auto --enable-features=WaylandWindowDecorations
+
+You can add those switches to your `tropy.desktop` launcher as well.
+
 
 System Libraries
 ================
-  The Tropy tarball is bundled with Electron and includes pre-
-compiled modules in `resources/app.asar.unpacked/lib/node` and
-`resources/app.asar.unpacked/lib/vendor`. If you already have
-a system-wide installation of Electron, you can use that instead,
-provided it has the same major version as the one bundled here.
+The Tropy tarball includes the Electron platform
+and pre-compiled modules in `resources/app.asar.unpacked/lib/node`
+and in `resources/app.asar.unpacked/lib/vendor`.
+If you already have a system-wide installation of Electron,
+you can use that instead, provided it has the same major version
+as the one bundled here.
 
-Similarly, you can use your distribution's libvips version instead
-of the bundled image libraries. To do this, simply remove the
-`resources/app.asar.unpacked/lib/vendor` folder. Please note, that
-the major/minor version should match the one included here. Moreover,
-the image formats supported by a custom-packaged Tropy may vary,
+Similarly, you can use your distribution's libvips version
+instead of the bundled image libraries.
+To do this, remove the `resources/app.asar.unpacked/lib/vendor` folder.
+
+Please note, that the major/minor version should match the one included here.
+
+Moreover, the image formats supported by a custom-packaged Tropy may vary,
 depending on which libraries are available in your distribution.
