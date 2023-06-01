@@ -1,14 +1,14 @@
 import { app, dialog, powerMonitor, session } from 'electron'
-import { join, resolve } from 'path'
-import { mkdirSync as mkdir } from 'fs'
-import { readdir } from 'fs/promises'
-import { pathToFileURL } from 'url'
-import { darwin, win32, system } from '../common/os'
-import { exe, qualified, version } from '../common/release'
-import { parse, argToURL } from './args'
-import { createLogger, info, warn } from '../common/log'
-import { Tropy } from './tropy'
-import { handleSquirrelEvent } from './squirrel'
+import { join, resolve } from 'node:path'
+import { mkdirSync as mkdir } from 'node:fs'
+import { readdir } from 'node:fs/promises'
+import { pathToFileURL } from 'node:url'
+import { darwin, linux, win32, system } from '../common/os.js'
+import { exe, qualified, version } from '../common/release.js'
+import { parse, argToURL } from './args.js'
+import { createLogger, info, warn } from '../common/log.js'
+import { Tropy } from './tropy.js'
+import { handleSquirrelEvent } from './squirrel.js'
 
 const START = process.getCreationTime() || Date.now()
 const { args, opts } = parse()
@@ -72,6 +72,11 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
 
   if (opts.webgl) {
     app.commandLine.appendSwitch('ignore-gpu-blacklist')
+
+    if (linux) {
+      app.commandLine.appendSwitch('enable-gpu-rasterization')
+      app.commandLine.appendSwitch('enable-zero-copy')
+    }
   }
 
   if (opts.scale) {
