@@ -107,6 +107,10 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
       )
     })
 
+    app.on('gpu-info-update', () => {
+      info({ status: app.getGPUFeatureStatus() }, 'gpu-info-update')
+    })
+
     app.on('quit', (_, code) => {
       tropy.stop()
       info({ quit: true, code }, `quit with exit code ${code}`)
