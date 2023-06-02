@@ -38,8 +38,8 @@ export function Frame({
 
   useEffect(() => {
     let checkModKeys = (event) => {
-      toggle(doc.body, 'ctrl-key', event.ctrlKey === true)
-      toggle(doc.body, 'meta-key', event.metaKey === true)
+      toggle(doc.documentElement, 'ctrl-key', event.ctrlKey === true)
+      toggle(doc.documentElement, 'meta-key', event.metaKey === true)
     }
 
     if (doc != null) {
@@ -82,14 +82,14 @@ export function Frame({
 
   useEffect(() => {
     if (doc != null) {
-      toggle(doc.body, 'scrollbar-style-old-school', scrollbars)
+      toggle(doc.documentElement, 'scrollbar-style-old-school', scrollbars)
     }
   }, [doc, scrollbars])
 
   useEffect(() => {
     if (doc != null) {
-      if (doc.documentElement.className !== innerClassName)
-        doc.documentElement.className = innerClassName
+      if (doc.body.className !== innerClassName)
+        doc.body.className = innerClassName
     }
   }, [doc, innerClassName])
 
