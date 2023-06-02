@@ -18,7 +18,7 @@ export function Frame({
 }) {
   let frame = useRef()
   let [doc, setDoc] = useState()
-  let theme = useTheme()
+  let { theme, fontSize, scrollbars } = useTheme()
 
   let handleClick = useEvent((event) => {
     onClick?.(event)
@@ -79,6 +79,19 @@ export function Frame({
       doc.head.replaceChildren(...nodes)
     }
   }, [doc, styleSheet, theme])
+
+  useEffect(() => {
+    if (doc != null) {
+      toggle(doc.body, 'scrollbar-style-old-school', scrollbars)
+    }
+  }, [doc, scrollbars])
+
+  useEffect(() => {
+    if (doc != null) {
+      doc.documentElement.style.fontSize = fontSize
+    }
+  }, [doc, fontSize])
+
 
   useEffect(() => {
     if (doc != null) {

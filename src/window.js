@@ -190,6 +190,7 @@ export class Window extends EventEmitter {
       .on('scrollbars', (_, scrollbars) => {
         this.setScrollBarStyle(scrollbars)
         this.style(true)
+        this.emit('settings.update', { scrollbars })
       })
       .on('refresh', () => {
         this.style(true)
@@ -213,6 +214,7 @@ export class Window extends EventEmitter {
       })
       .on('zoom', (_, zoom) => {
         this.setZoomLevel(zoom)
+        this.emit('settings.update', { zoom })
       })
   }
 
