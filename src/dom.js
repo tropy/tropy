@@ -205,7 +205,7 @@ export function createDragHandler({
   }
 
   function onDragStart() {
-    toggle(document.body, 'dragging', true)
+    toggle(document.documentElement, 'dragging', true)
 
     on(document, 'mousemove', onDrag)
     on(document, 'mouseup', onDragStop, { capture: true })
@@ -234,7 +234,7 @@ export function createDragHandler({
 
     handleDragStop(event, event == null || event.type !== 'mouseup')
 
-    toggle(document.body, 'dragging', false)
+    toggle(document.documentElement, 'dragging', false)
   }
 
   return {

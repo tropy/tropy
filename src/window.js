@@ -89,19 +89,19 @@ export class Window extends EventEmitter {
         this.handleMouseButtons()
         this.handleUncaughtExceptions()
 
-        toggle(document.body, process.platform, true)
+        toggle(document.documentElement, process.platform, true)
 
         let { aqua, frameless } = this.state
 
         if (aqua)
-          toggle(document.body, aqua, true)
+          toggle(document.documentElement, aqua, true)
 
         this.setScrollBarStyle()
         this.setZoomLevel()
         this.setFontSize()
 
         if (frameless) {
-          toggle(document.body, 'frameless', true)
+          toggle(document.documentElement, 'frameless', true)
 
           if (!darwin) this.createWindowControls()
         }
@@ -151,12 +151,12 @@ export class Window extends EventEmitter {
 
   setScrollBarStyle(scrollbars = this.state.scrollbars) {
     this.state.scrollbars = scrollbars
-    toggle(document.body, 'scrollbar-style-old-school', scrollbars)
+    toggle(document.documentElement, 'scrollbar-style-old-school', scrollbars)
   }
 
   setZoomLevel(zoom = this.state.zoom) {
     this.state.zoom = zoom
-    document.body.style.setProperty('--zoom', zoom)
+    document.documentElement.style.setProperty('--zoom', zoom)
   }
 
   handleIpcEvents() {
@@ -301,18 +301,18 @@ export class Window extends EventEmitter {
 
   handleModifierKeys() {
     on(document, 'keydown', event => {
-      toggle(document.body, 'alt-key', event.altKey)
-      toggle(document.body, 'meta-key', event.metaKey)
-      toggle(document.body, 'ctrl-key', event.ctrlKey)
+      toggle(document.documentElement, 'alt-key', event.altKey)
+      toggle(document.documentElement, 'meta-key', event.metaKey)
+      toggle(document.documentElement, 'ctrl-key', event.ctrlKey)
     }, { passive: true, capture: true })
 
     on(document, 'keyup', up, { passive: true, capture: true })
     on(window, 'blur', up, { passive: true })
 
     function up(event) {
-      toggle(document.body, 'alt-key', event.altKey === true)
-      toggle(document.body, 'meta-key', event.metaKey === true)
-      toggle(document.body, 'ctrl-key', event.ctrlKey === true)
+      toggle(document.documentElement, 'alt-key', event.altKey === true)
+      toggle(document.documentElement, 'meta-key', event.metaKey === true)
+      toggle(document.documentElement, 'ctrl-key', event.ctrlKey === true)
     }
   }
 
@@ -365,12 +365,12 @@ export class Window extends EventEmitter {
     if (this.state.minimizable)
       on(this.controls.min, 'click', this.minimize)
     else
-      toggle(document.body, 'not-minimizable', true)
+      toggle(document.documentElement, 'not-minimizable', true)
 
     if (this.state.maximizable)
       on(this.controls.max, 'click', this.maximize)
     else
-      toggle(document.body, 'not-maximizable', true)
+      toggle(document.documentElement, 'not-maximizable', true)
 
     let div = create('div', { class: 'window-controls' })
 
@@ -403,7 +403,7 @@ export class Window extends EventEmitter {
       }
     }
 
-    toggle(document.body, 'vibrancy', this.state.vibrancy)
+    toggle(document.documentElement, 'vibrancy', this.state.vibrancy)
 
     this.emit('settings.update', { theme: this.state.theme })
 
@@ -416,38 +416,38 @@ export class Window extends EventEmitter {
   toggle(state, ...args) {
     switch (state) {
       case 'focus':
-        toggle(document.body, 'is-blurred', false)
+        toggle(document.documentElement, 'is-blurred', false)
         break
       case 'blur':
-        toggle(document.body, 'is-blurred', true)
+        toggle(document.documentElement, 'is-blurred', true)
         break
       case 'maximize':
-        toggle(document.body, 'is-maximized', true)
+        toggle(document.documentElement, 'is-maximized', true)
         break
       case 'unmaximize':
-        toggle(document.body, 'is-maximized', false)
+        toggle(document.documentElement, 'is-maximized', false)
         break
       case 'init':
-        toggle(document.body, 'init', true)
+        toggle(document.documentElement, 'init', true)
         break
       case 'busy':
-        toggle(document.body, 'busy', ...args)
+        toggle(document.documentElement, 'busy', ...args)
         break
       case 'ready':
-        toggle(document.body, 'ready', true)
+        toggle(document.documentElement, 'ready', true)
         break
       case 'disable':
       case 'unload':
-        toggle(document.body, 'inactive', true)
+        toggle(document.documentElement, 'inactive', true)
         break
       case 'enable':
-        toggle(document.body, 'inactive', false)
+        toggle(document.documentElement, 'inactive', false)
         break
       case 'enter-full-screen':
-        toggle(document.body, 'is-full-screen', true)
+        toggle(document.documentElement, 'is-full-screen', true)
         break
       case 'leave-full-screen':
-        toggle(document.body, 'is-full-screen', false)
+        toggle(document.documentElement, 'is-full-screen', false)
         break
     }
   }
