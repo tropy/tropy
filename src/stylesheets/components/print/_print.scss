@@ -10,13 +10,6 @@
   box-sizing: border-box;
 }
 
-html,
-body,
-main,
-.container {
-  height: 100%;
-}
-
 html {
   font-family: system-ui;
   font-size: $print-font-size;
@@ -36,6 +29,7 @@ body {
 .container {
   display: flex;
   page-break-after: always;
+  height: 100vh;
   overflow: hidden;
 
   @media (orientation: portrait) {
