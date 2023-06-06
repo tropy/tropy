@@ -2,17 +2,17 @@ uk:
   sidebar:
     lists: Lists
     tags: Теґи
-    imports: Last Import
-    trash: Deleted Items
+    imports: Останній імпорт
+    trash: Видалені елементи
   toolbar:
-    import: Import Photos
+    import: Імпорт фотографій
     items: |-
       {count, plural,
         =0 {No items in this view}
         one {1 item in this view}
         other {# items in this view}}
     search:
-      placeholder: Search
+      placeholder: Пошук
   panel:
     metadata:
       tab: Метадата
@@ -24,7 +24,7 @@ uk:
           other {# Items}}
       selection: Фрагмент
       dropdown:
-        placeholder: Add new field …
+        placeholder: Додати нове поле …
     tags:
       tab: Теґи
       add: |-
@@ -46,7 +46,7 @@ uk:
           =0 {No Notes}
           one {1 Note}
           other {# Notes}}
-      create: Add Note
+      create: Додати нотатку
   print:
     item: Елемент
     photo: Фото
@@ -95,8 +95,8 @@ uk:
       виконати додаткові дії. Для отримання допомоги зверніться до посібника
       користувача.
     readOnly: >-
-      Your project file is locked and cannot be modified. To unlock, change the
-      file permissions and open the project again.
+      Ваш файл проекту заблокований і не може бути змінений. Щоб розблокувати,
+      змініть права доступу до файлу та знову відкрийте проект.
     new:
       title: Створити новий проєкт
       name: Введіть назву проєкту
@@ -135,7 +135,7 @@ uk:
         themes:
           light: Світла
           dark: Темна
-          system: Follow system preference
+          system: Дотримуйтеся системних налаштувань
         font:
           size: Розмір шрифту
           sizes:
@@ -147,8 +147,8 @@ uk:
       print:
         mode: Друк
         modes:
-          item: One Item per Page
-          photo: One Photo per Page
+          item: Один елемент на сторінку
+          photo: Одне фото на сторінку
           selection: One Selection per Page
         photos: Include photos
         optimize: Optimize photo size and quality
@@ -341,7 +341,7 @@ uk:
     noMatches: No matches found
   select:
     column:
-      placeholder: Search
+      placeholder: Пошук
     file:
       browse: Browse
       clear: Clear

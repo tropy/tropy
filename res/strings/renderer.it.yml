@@ -65,9 +65,9 @@ it:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
     text: >-
-      Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
-      historical teaching resources, digital exhibits, and open-source software.
-    trademark: The Tropy name is a registered trademark of {cds}.
+      Tropy è progettato da {c2dh} e {rrchnm}, laboratori che sviluppano risorse
+      didattiche storiche, mostre digitali e software open source.
+    trademark: Il nome Tropy è un marchio registrato di {cds}.
     donate:
       title: Donazione a Tropy
       url: https://tropy.org/donate
@@ -152,7 +152,7 @@ it:
           photo: Una foto per pagina
           selection: Una selezione per pagina
         photos: Includi foto
-        optimize: Optimize photo size and quality
+        optimize: Ottimizza le dimensioni e la qualità delle foto
         metadata: Includi i metadata
         notes: Includi le note
         onlyNotes: Includi solo foto con note
@@ -168,8 +168,8 @@ it:
           it: Italiano
           ja: 日本語
           pt: Português
-          pt-BR: Português brasileiro
-          uk: Украї́нська мо́ва
+          pt-BR: portoghese brasiliano
+          uk: lingua ucraina
       templates:
         label: Modelli predefiniti
         item: Elemento
@@ -238,15 +238,15 @@ it:
       name: Nome
       id: ID
       path: File
-      type: Project type
+      type: Tipo di progetto
       convert:
-        confirm: Convert
-        hint: Convert this project into a Standard project.
+        confirm: Converti
+        hint: Converti questo progetto in un progetto standard.
         detail: |-
           {errors, plural,
-            =0 {All photos consolidated.}
-            one {1 photo not found; consolidation required.}
-            other {# photos not found; consolidation required.}}
+          =0 {Tutte le foto consolidate.}
+          una {1 foto non trovata; consolidamento richiesto.}
+          altro {# foto non trovate; consolidamento richiesto.}}
       watch:
         folder: Guarda cartella
         usePolling: Utilizzo del polling delle statistiche sui file
@@ -289,7 +289,7 @@ it:
       noInfo: Autore sconosciuto
       homepage: Di più
   format:
-    ppi: Pixels per inch (ppi)
+    ppi: Pixel per pollice (ppi)
   item:
     created: Data di aggiunta
     modified: Modificato
@@ -386,11 +386,11 @@ it:
     notify:
       project:
         convert:
-          title: Conversion complete
+          title: Conversione completata
           message: >-
-            Your project was successfully converted and saved. Tropy will now
-            close the original project file and open the converted project in a
-            new window.
+            Il tuo progetto è stato convertito e salvato con successo. Tropy ora
+            chiuderà il file del progetto originale e aprirà il progetto
+            convertito in una nuova finestra.
           buttons:
             - OK
     error:
@@ -438,8 +438,8 @@ it:
             Un modello con questo id esiste già nel database dell'ontologia.
             Vuoi sovrascrivere il modello esistente?
           buttons:
-            - Cancel
-            - Overwrite
+            - Annulla
+            - Sovrascrivi
         imported:
           message: Modello importato con successo.
           buttons:
@@ -553,7 +553,7 @@ it:
         other {Importazione elementi…}}
       load: Caricamento elementi...
       merge: Unione elemento...
-      print: Processing items …
+      print: Elaborazione articoli...
       restore: Ripristino elemento...
       save: Salvataggio elementi...
       tag:
@@ -638,7 +638,7 @@ it:
       purge: Rimozione della vecchia cache di progetto non riuscita.
     project:
       created: Creazione del progetto non riuscita.
-      convert: Project conversion failed.
+      convert: Conversione del progetto non riuscita.
     item:
       export: Esportazione degli elementi non riuscita.
       merge: Unione degli elementi non riuscita.

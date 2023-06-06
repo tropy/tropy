@@ -173,7 +173,7 @@ uk:
             - label: Темна
               id: dark
               type: checkbox
-            - label: Follow system preference
+            - label: Дотримуйтеся системних налаштувань
               id: system
               type: checkbox
     - label: Допомога
@@ -406,7 +406,7 @@ uk:
             - label: Темна
               id: dark
               type: checkbox
-            - label: Follow system preference
+            - label: Дотримуйтеся системних налаштувань
               id: system
               type: checkbox
     - label: Допомога
@@ -615,7 +615,7 @@ uk:
             - label: Темна
               id: dark
               type: checkbox
-            - label: Follow system preference
+            - label: Дотримуйтеся системних налаштувань
               id: system
               type: checkbox
     - label: Допомога
