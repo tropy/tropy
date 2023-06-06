@@ -170,7 +170,7 @@ class Rebuilder {
           if (res.status !== 200)
             throw new Error(`download failed: ${res.status} ${res.statusText}`)
 
-          await fs.promises.writeFile(tar, await res.buffer())
+          await fs.promises.writeFile(tar, Buffer.from(await res.arrayBuffer()))
         }
 
         sed('-i',
