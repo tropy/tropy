@@ -1,21 +1,21 @@
-import React from 'react'
-import ARGS from '../../args'
-import { TemplateSelect } from '../template/select'
-import { ResourceSelect } from '../resource/select'
-import { ScrollContainer } from '../scroll'
+import React, { } from 'react'
 import { ipcRenderer as ipc } from 'electron'
+import ARGS from '../../args.js'
+import { TemplateSelect } from '../template/select.js'
+import { ResourceSelect } from '../resource/select.js'
+import { ScrollContainer } from '../scroll/container.js'
 
 import {
   ESPER,
   ITEM,
   IMAGE
-} from '../../constants'
+} from '../../constants/index.js'
 
 import {
   IconItemSmall,
   IconPhoto,
   IconSelection
-} from '../icons'
+} from '../icons.js'
 
 import {
   array, arrayOf, bool, func, object, shape, string, number
@@ -29,7 +29,7 @@ import {
   FormToggle,
   FormToggleGroup,
   Toggle
-} from '../form'
+} from '../form.js'
 
 
 export class AppPrefs extends React.PureComponent {
