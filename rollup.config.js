@@ -149,6 +149,11 @@ export default [
         destDir: './node/lib',
         target_arch: arch
       }),
+      {
+        buildEnd() {
+          delete process.__signal_exit_emitter__
+        }
+      },
       copy({
         targets: [
           (platform === 'win32') ? {
