@@ -82,7 +82,7 @@
     "react-dnd-test-backend": "^14.0.0",
     "react-dnd-test-utils": "^14.0.0",
     "react-test-renderer": "^18.0.0",
-    "rollup": "^3.20.2",
+    "rollup": "^3.25.1",
     "rollup-plugin-ignore": "^1.0.9",
     "rollup-plugin-natives": "^0.7.2",
     "rollup-plugin-visualizer": "^5.3.0",
