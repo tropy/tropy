@@ -1,6 +1,7 @@
 import React, { } from 'react'
 import { ipcRenderer as ipc } from 'electron'
 import ARGS from '../../args.js'
+import { PrintSettings } from './print.js'
 import { TemplateSelect } from '../template/select.js'
 import { ResourceSelect } from '../resource/select.js'
 import { ScrollContainer } from '../scroll/container.js'
@@ -74,10 +75,6 @@ export class AppPrefs extends React.PureComponent {
         }
       })
     }
-  }
-
-  handlePrintSettingsChange = (print) => {
-    this.props.onSettingsUpdate({ print })
   }
 
   handleNoteFormatChange = (format) => {
@@ -258,62 +255,9 @@ export class AppPrefs extends React.PureComponent {
             options={this.props.noteFormats}
             onChange={this.handleNoteCopyFormatChange}/>
           <hr/>
-          <FormSelect
-            id="prefs.app.print.mode"
-            name="mode"
-            isDisabled
-            isRequired
-            isSelectionHidden
-            value={this.props.settings.print.mode}
-            options={this.props.printModes}
-            onChange={this.handlePrintSettingsChange}/>
-          <FormElement isCompact>
-            <Toggle
-              id="prefs.app.print.photos"
-              isDisabled={
-                !this.props.settings.print.metadata &&
-                !this.props.settings.print.notes}
-              name="photos"
-              value={this.props.settings.print.photos}
-              onChange={this.handlePrintSettingsChange}/>
-            <Toggle
-              id="prefs.app.print.optimize"
-              isDisabled={!this.props.settings.print.photos}
-              name="optimize"
-              value={this.props.settings.print.optimize}
-              onChange={this.handlePrintSettingsChange}/>
-            <Toggle
-              id="prefs.app.print.metadata"
-              isDisabled={
-                !this.props.settings.print.photos &&
-                !this.props.settings.print.notes}
-              name="metadata"
-              value={this.props.settings.print.metadata}
-              onChange={this.handlePrintSettingsChange}/>
-            <Toggle
-              id="prefs.app.print.notes"
-              isDisabled={
-                !this.props.settings.print.photos &&
-                !this.props.settings.print.metadata}
-              name="notes"
-              value={this.props.settings.print.notes}
-              onChange={this.handlePrintSettingsChange}/>
-            <Toggle
-              id="prefs.app.print.onlyNotes"
-              isDisabled={!this.props.settings.print.notes}
-              name="onlyNotes"
-              value={this.props.settings.print.onlyNotes}
-              onChange={this.handlePrintSettingsChange}/>
-            <Toggle
-              id="prefs.app.print.overflow"
-              isDisabled={!(
-                this.props.settings.print.metadata ||
-                this.props.settings.print.notes
-              )}
-              name="overflow"
-              value={this.props.settings.print.overflow}
-              onChange={this.handlePrintSettingsChange}/>
-          </FormElement>
+          <PrintSettings
+            config={this.props.settings.print}
+            onChange={this.props.onSettingsUpdate}/>
           <hr/>
           <FormToggle
             id="prefs.app.debug"
@@ -350,7 +294,6 @@ export class AppPrefs extends React.PureComponent {
     themes: arrayOf(string).isRequired,
     dupOptions: arrayOf(string).isRequired,
     zoomModes: arrayOf(string).isRequired,
-    printModes: arrayOf(string).isRequired,
     onSettingsUpdate: func.isRequired
   }
 
@@ -363,7 +306,6 @@ export class AppPrefs extends React.PureComponent {
     noteFormats: ['text', 'markdown', 'html'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL, ESPER.MODE.ZOOM],
-    printModes: ['item', 'photo', 'selection'],
     importMin: IMAGE.MIN_DENSITY,
     importMax: IMAGE.MAX_DENSITY
   }
