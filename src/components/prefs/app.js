@@ -1,6 +1,7 @@
 import React, { } from 'react'
 import { ipcRenderer as ipc } from 'electron'
 import ARGS from '../../args.js'
+import { ExportSettings } from './export.js'
 import { PrintSettings } from './print.js'
 import { TemplateSelect } from '../template/select.js'
 import { ResourceSelect } from '../resource/select.js'
@@ -75,14 +76,6 @@ export class AppPrefs extends React.PureComponent {
         }
       })
     }
-  }
-
-  handleNoteFormatChange = (format) => {
-    this.props.onSettingsUpdate({ export: { note: { format } } })
-  }
-
-  handleNoteCopyFormatChange = ({ copy }) => {
-    this.props.onSettingsUpdate({ export: { note: { copy } } })
   }
 
   render() {
@@ -233,27 +226,9 @@ export class AppPrefs extends React.PureComponent {
             options={this.props.completions}
             onChange={this.props.onSettingsUpdate}/>
           <hr/>
-          <FormElement
-            id="prefs.app.export.label"
-            isCompact>
-            <Toggle
-              id="prefs.app.export.note.format.html"
-              name="html"
-              value={this.props.settings.export.note.format.html}
-              onChange={this.handleNoteFormatChange}/>
-            <Toggle
-              id="prefs.app.export.note.format.markdown"
-              name="markdown"
-              value={this.props.settings.export.note.format.markdown}
-              onChange={this.handleNoteFormatChange}/>
-          </FormElement>
-          <FormToggleGroup
-            id="prefs.app.export.note.copy"
-            name="copy"
-            isCompact
-            value={this.props.settings.export.note.copyFormat}
-            options={this.props.noteFormats}
-            onChange={this.handleNoteCopyFormatChange}/>
+          <ExportSettings
+            config={this.props.settings.export}
+            onChange={this.props.onSettingsUpdate}/>
           <hr/>
           <PrintSettings
             config={this.props.settings.print}
@@ -288,7 +263,6 @@ export class AppPrefs extends React.PureComponent {
     fontSizes: arrayOf(string).isRequired,
     layouts: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,
-    noteFormats: arrayOf(string).isRequired,
     importMin: number.isRequired,
     importMax: number.isRequired,
     themes: arrayOf(string).isRequired,
@@ -303,7 +277,6 @@ export class AppPrefs extends React.PureComponent {
     layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
     completions: ['datatype', 'property-datatype'],
     locales: ['cn', 'de', 'en', 'es', 'fr', 'it', 'ja', 'pt', 'pt-BR', 'uk'],
-    noteFormats: ['text', 'markdown', 'html'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL, ESPER.MODE.ZOOM],
     importMin: IMAGE.MIN_DENSITY,
