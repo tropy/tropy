@@ -8,8 +8,16 @@
   overscroll-behavior: contain;
   contain: content; // size breaks padding-bottom of app prefs scroll-container
 
-  .popup-open:not(.scrollbar-style-old-school) > :not(#popup-root) & {
+  .popup-open & {
     overflow-y: hidden;
+
+    @include variant(".popup-open.scrollbar-style-old-school") {
+      overflow-y: scroll;
+    }
+
+    @include variant(".popup-open #popup-root") {
+      overflow-y: scroll;
+    }
   }
 }
 
