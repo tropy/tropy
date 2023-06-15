@@ -3,13 +3,12 @@ import { ipcRenderer as ipc } from 'electron'
 import ARGS from '../../args.js'
 import { ExportSettings } from './export.js'
 import { PrintSettings } from './print.js'
+import { InterfaceSettings } from './interface.js'
 import { TemplateSelect } from '../template/select.js'
 import { ResourceSelect } from '../resource/select.js'
 import { ScrollContainer } from '../scroll/container.js'
 
 import {
-  ESPER,
-  ITEM,
   IMAGE
 } from '../../constants/index.js'
 
@@ -29,8 +28,7 @@ import {
   FormField,
   FormSelect,
   FormToggle,
-  FormToggleGroup,
-  Toggle
+  FormToggleGroup
 } from '../form.js'
 
 
@@ -186,44 +184,8 @@ export class AppPrefs extends React.PureComponent {
             tabIndex={0}
             onChange={this.handleLocaleChange}/>
           <hr/>
-          <FormElement
-            id="prefs.app.ui.label"
-            isCompact>
-            <Toggle
-              id="prefs.app.ui.option.invertScroll"
-              name="invertScroll"
-              value={this.props.settings.invertScroll}
-              onChange={this.props.onSettingsUpdate}/>
-            <Toggle
-              id="prefs.app.ui.option.invertZoom"
-              name="invertZoom"
-              value={this.props.settings.invertZoom}
-              onChange={this.props.onSettingsUpdate}/>
-            <Toggle
-              id="prefs.app.ui.option.overlayToolbars"
-              name="overlayToolbars"
-              value={this.props.settings.overlayToolbars}
-              onChange={this.props.onSettingsUpdate}/>
-          </FormElement>
-          <FormToggleGroup
-            id="prefs.app.zoomMode"
-            name="zoomMode"
-            isCompact
-            value={this.props.settings.zoomMode}
-            options={this.props.zoomModes}
-            onChange={this.props.onSettingsUpdate}/>
-          <FormToggleGroup
-            id="prefs.app.layout"
-            name="layout"
-            isCompact
-            value={this.props.settings.layout}
-            options={this.props.layouts}
-            onChange={this.props.onSettingsUpdate}/>
-          <FormToggleGroup
-            id="prefs.app.completions"
-            name="completions"
-            value={this.props.settings.completions}
-            options={this.props.completions}
+          <InterfaceSettings
+            config={this.props.settings}
             onChange={this.props.onSettingsUpdate}/>
           <hr/>
           <ExportSettings
@@ -259,26 +221,20 @@ export class AppPrefs extends React.PureComponent {
       theme: string.isRequired,
       templates: object.isRequired
     }).isRequired,
-    completions: arrayOf(string).isRequired,
     fontSizes: arrayOf(string).isRequired,
-    layouts: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,
     importMin: number.isRequired,
     importMax: number.isRequired,
     themes: arrayOf(string).isRequired,
     dupOptions: arrayOf(string).isRequired,
-    zoomModes: arrayOf(string).isRequired,
     onSettingsUpdate: func.isRequired
   }
 
   static defaultProps = {
     fontSizes: ['12px', '13px', '14px', '15px', '16px'],
     themes: ['light', 'dark', 'system'],
-    layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
-    completions: ['datatype', 'property-datatype'],
     locales: ['cn', 'de', 'en', 'es', 'fr', 'it', 'ja', 'pt', 'pt-BR', 'uk'],
     dupOptions: ['skip', 'import', 'prompt'],
-    zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL, ESPER.MODE.ZOOM],
     importMin: IMAGE.MIN_DENSITY,
     importMax: IMAGE.MAX_DENSITY
   }
