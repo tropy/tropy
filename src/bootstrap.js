@@ -1,5 +1,5 @@
 import { basename } from 'node:path'
-import ARGS from './args.js'
+import ARGS, { clone, parse } from './args.js'
 import { createLogger, fatal, info } from './common/log.js'
 import { omit } from './common/util.js'
 import { contextBridge, ipcRenderer as ipc } from 'electron'
@@ -11,6 +11,8 @@ const START =
 
 ;(async function bootstrap() {
   try {
+    parse()
+
     createLogger({
       dest: ARGS.log,
       level: ARGS.level,
@@ -52,6 +54,7 @@ const START =
         LOAD - INIT)
 
       let tropy = {
+        args: clone,
         state: () => store?.getState()
       }
 
