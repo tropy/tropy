@@ -33,12 +33,12 @@ const isCommand = darwin ?
 let instance
 export { instance as default }
 
-export function createWindowInstance(...args) {
-  return new Window(...args)
+export function createWindowInstance() {
+  return new Window()
 }
 
 export class Window extends EventEmitter {
-  constructor(opts) {
+  constructor() {
     if (instance) {
       throw Error('Singleton Window constructor called multiple times')
     }
@@ -48,7 +48,7 @@ export class Window extends EventEmitter {
 
     this.type = basename(location.pathname, '.html')
 
-    this.state = pick(opts, [
+    this.state = pick(ARGS, [
       'aqua',
       'data',
       'fontSize',
@@ -63,7 +63,7 @@ export class Window extends EventEmitter {
       'zoom'
     ])
 
-    this.plugins = new Plugins(opts.plugins, {
+    this.plugins = new Plugins(ARGS.plugins, {
       dialog,
       json,
       window: this
@@ -74,8 +74,8 @@ export class Window extends EventEmitter {
     this.hasFinishedUnloading = false
   }
 
-  init() {
-    return Promise.all([
+  async init() {
+    await Promise.all([
       this.plugins.reload().then(p => p.create()),
 
       new Promise((resolve) => {
@@ -111,6 +111,19 @@ export class Window extends EventEmitter {
 
       this.style(false)
     ])
+
+    this.send('init')
+    this.toggle('init')
+    this.INIT = Date.now()
+  }
+
+  async load() {
+    let { store } = await import(`./views/${this.type}.js`)
+    this.store = store
+    this.LOAD = Date.now()
+
+    this.send('ready')
+    this.toggle('ready')
   }
 
   close() {

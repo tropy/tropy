@@ -1,7 +1,7 @@
 import { basename } from 'node:path'
-import ARGS, { clone, parse } from './args.js'
+import { clone, parse } from './args.js'
 import { createLogger, fatal, info } from './common/log.js'
-import { omit } from './common/util.js'
+import { pick } from './common/util.js'
 import { contextBridge, ipcRenderer as ipc } from 'electron'
 import { idle, ready } from './dom.js'
 import win, { createWindowInstance } from './window.js'
@@ -9,53 +9,52 @@ import win, { createWindowInstance } from './window.js'
 const START =
   performance?.timing?.navigationStart || Date.now()
 
+const ARGS = parse()
+
 ;(async function bootstrap() {
   try {
-    parse()
-
     createLogger({
       dest: ARGS.log,
       level: ARGS.level,
       name: basename(location.pathname, '.html')
     })
 
-    createWindowInstance(ARGS)
+    createWindowInstance()
 
     info({
       dpx: devicePixelRatio,
-      opts: omit(ARGS, ['documents', 'pictures', 'recent'])
+      args: pick(ARGS, [
+        'contrast',
+        'fontSize',
+        'frameless',
+        'locale',
+        'motion',
+        'theme',
+        'webgl',
+        'zoom'
+      ])
     }, `${win.type}.init`)
 
     try {
       await ready
-
       const READY = Date.now()
 
       await win.init()
-      ipc.send('wm', 'init')
-      win.toggle('init')
-
-      const INIT = Date.now()
-      const { store } = await import(`./views/${win.type}.js`)
-      win.store = store
-
-      const LOAD = Date.now()
+      await win.load()
 
       await idle()
-      ipc.send('wm', 'ready')
-      win.toggle('ready')
-      win.ready = Date.now()
 
-      info('%s ready %dms [dom:%dms win:%dms req:%dms]',
+      info('%s ready %dms [dom:%dms init:%dms load:%dms]',
         win.type,
-        win.ready - START,
+        Date.now() - START,
         READY - START,
-        INIT - READY,
-        LOAD - INIT)
+        win.INIT - READY,
+        win.LOAD - win.INIT)
 
       let tropy = {
         args: clone,
-        state: () => store?.getState()
+        state: () => win.store?.getState(),
+        win: () => win
       }
 
       try {
