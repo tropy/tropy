@@ -15,6 +15,10 @@
     height: $toolbar-height + 1px;
     //display: none;
 
+    .frameless & {
+      height: os($toolbar-frameless-height) + 1px;
+    }
+
     .side-by-side & {
       .frameless & {
         -webkit-app-region: drag;

@@ -44,6 +44,10 @@
     transform: translate(0, 100%); // translate3d clips box-shadow
     transition: transform $toolbar-context-transition;
 
+    .frameless & {
+      height: os($toolbar-frameless-height);
+    }
+
     &.default,
     &:has(.active) {
       transform: translate(0, -100%);
