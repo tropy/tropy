@@ -114,14 +114,11 @@ export class Window extends EventEmitter {
 
     this.send('init')
     this.toggle('init')
-    this.INIT = Date.now()
   }
 
   async load() {
     let { store } = await import(`./views/${this.type}.js`)
     this.store = store
-    this.LOAD = Date.now()
-
     this.send('ready')
     this.toggle('ready')
   }
