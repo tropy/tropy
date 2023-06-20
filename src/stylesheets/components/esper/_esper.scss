@@ -78,6 +78,7 @@
 
     .frameless & {
       -webkit-app-region: drag;
+      height: os($toolbar-frameless-height);
     }
   }
 
