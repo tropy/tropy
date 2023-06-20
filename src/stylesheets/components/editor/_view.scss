@@ -10,6 +10,10 @@
   padding-top: $toolbar-height + 1px;
   min-height: 0; // Fix vh unit in ProseMirror
 
+  .frameless & {
+    padding-top: os($toolbar-frameless-height);
+  }
+
   iframe {
     border: 0;
     width: 100%;
