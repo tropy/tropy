@@ -16,8 +16,9 @@ export default proxy
 
 export function parse() {
   let hash = window.location.hash.slice(1)
-  Object.assign(ARGS, JSON.parse(decodeURIComponent(hash)))
-  return proxy
+  let args = JSON.parse(decodeURIComponent(hash))
+  Object.assign(ARGS, args)
+  return args
 }
 
 export function update(args) {
