@@ -10,12 +10,18 @@
   .icon-search {
     position: absolute;
     left: ($space-min + 1px);
-    top: calc(($input-height-base - $space-md) / 2);
+    top: calc(($search-height - $space-md) / 2);
     z-index: 4; // Focused form-control in input group has 3
     pointer-events: none;
+
+    .frameless & {
+      left: calc((os($search-frameless-height) - $space-md) / 2 + 1px);
+      top: calc((os($search-frameless-height) - $space-md) / 2);
+    }
   }
 
   .search-input {
+    height: $search-height;
     padding-left: ($space-xs + $space-md);
     padding-right: 1px + $clear-button-size + $space-min;
     border-color: $search-border-color;
@@ -28,6 +34,12 @@
       @if $platform == darwin {
         background-color: $search-blurred-bg-darwin;
       }
+    }
+
+    .frameless & {
+      height: os($search-frameless-height);
+      padding-left: calc((os($search-frameless-height) - $space-md) / 2 + $space-md + $space-min);
+      border-radius: os($search-frameless-border-radius);
     }
   }
 

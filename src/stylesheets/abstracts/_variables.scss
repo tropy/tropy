@@ -85,6 +85,7 @@ $drag-preview-size: 64px;
 // --------------------------------------------------
 
 $toolbar-height: 38px;
+$toolbar-frameless-height: ($toolbar-height, $toolbar-height, 46px);
 
 
 // Default Dimensions
@@ -315,6 +316,9 @@ $add-tag-transition:                0.3s ease;
 // Search
 // --------------------------------------------------
 
+$search-height: $input-height-base;
+$search-frameless-height: ($search-height, $search-height, 34px);
+$search-frameless-border-radius: (null, null, $border-radius-base);
 $clear-button-size: 14px;
 
 
