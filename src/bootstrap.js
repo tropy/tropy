@@ -31,27 +31,30 @@ const ARGS = parse()
       const READY = Date.now()
 
       await win.init()
+      const INIT = Date.now()
+
       await win.load()
+      const LOAD = Date.now()
 
       await idle()
 
       info('%s ready %dms [dom:%dms init:%dms load:%dms]',
         win.type,
         Date.now() - START,
-        READY - START,
-        win.INIT - READY,
-        win.LOAD - win.INIT)
+        READY - START, INIT - READY, LOAD - INIT)
 
-      let tropy = {
-        args: clone,
-        state: () => win.store?.getState(),
-        win: () => win
-      }
 
       try {
-        contextBridge.exposeInMainWorld('tropy', tropy)
+        // Expose tropy global / context-bridge for console-use.
+        window.tropy = {
+          args: clone,
+          state: () => win.store?.getState(),
+          win: () => win
+        }
+
+        contextBridge.exposeInMainWorld('tropy', window.tropy)
       } catch {
-        window.tropy = tropy
+        // Ignore. Most likely we're not sandboxed.
       }
 
     } catch (e) {
