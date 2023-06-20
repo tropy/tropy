@@ -23,16 +23,7 @@ const ARGS = parse()
 
     info({
       dpx: devicePixelRatio,
-      args: pick(ARGS, [
-        'contrast',
-        'fontSize',
-        'frameless',
-        'locale',
-        'motion',
-        'theme',
-        'webgl',
-        'zoom'
-      ])
+      args: pick(ARGS, ['frameless', 'locale', 'webgl', 'zoom'])
     }, `${win.type}.init`)
 
     try {
