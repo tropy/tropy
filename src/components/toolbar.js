@@ -81,12 +81,12 @@ ToolGroup.propTypes = {
 export class Titlebar extends React.PureComponent {
 
   handleDoubleClick = (event) => {
-    if (this.context.state.frameless && has(event.target, 'tb-target'))
+    if (this.context.args.frameless && has(event.target, 'tb-target'))
       this.context.send('double-click')
   }
 
   render() {
-    return (this.props.isOptional && !this.context.state.frameless) ? null : (
+    return (this.props.isOptional && !this.context.args.frameless) ? null : (
       <Toolbar
         className="titlebar"
         onDoubleClick={this.handleDoubleClick}>

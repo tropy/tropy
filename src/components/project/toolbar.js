@@ -19,7 +19,7 @@ export class ProjectToolbar extends React.PureComponent {
               value={this.props.zoom}
               max={this.props.maxZoom}
               isDisabled={this.props.isDisabled || this.props.count === 0}
-              stopOnMouseLeave={this.context.state.frameless}
+              stopOnMouseLeave={this.context.args.frameless}
               onChange={this.props.onZoomChange}
               minIcon={<IconList/>}
               maxIcon={<IconGrid/>}

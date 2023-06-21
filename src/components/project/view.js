@@ -5,7 +5,7 @@ import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useActions } from '../../hooks/use-action.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { usePasteEvent } from '../../hooks/use-paste-event.js'
-import { useWindow } from '../../hooks/use-window.js'
+import { useTheme } from '../../hooks/use-theme.js'
 
 import { ItemGrid, ItemTable, NoItems } from '../item/index.js'
 import { ProjectSidebar } from './sidebar.js'
@@ -28,7 +28,7 @@ export const ProjectView = ({
   project
 }) => {
 
-  let win = useWindow()
+  let { scrollbars } = useTheme()
   let dispatch = useDispatch()
 
   let nav = useSelector(state => state.nav)
@@ -157,7 +157,7 @@ export const ProjectView = ({
 
             <ItemIterator
               ref={iterator}
-              hasScrollbars={win.state.scrollbars}
+              hasScrollbars={scrollbars}
               isDisabled={isDisabled}
               isReadOnly={isReadOnly}
               items={items}
