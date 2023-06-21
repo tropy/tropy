@@ -5,7 +5,7 @@ import { basename, join } from 'node:path'
 import { warn } from './common/log.js'
 import { darwin } from './common/os.js'
 import { Plugins } from './common/plugins.js'
-import { delay, pick } from './common/util.js'
+import { delay } from './common/util.js'
 import ARGS, { update } from './args.js'
 import { StyleSheet } from './res.js'
 import debounce from 'lodash.debounce'
@@ -38,40 +38,25 @@ export function createWindowInstance() {
 }
 
 export class Window extends EventEmitter {
+  type = basename(window.location.pathname, '.html')
+
+  plugins = new Plugins(ARGS.plugins, {
+    dialog,
+    json,
+    window: this
+  })
+
+  unloader = 'close'
+  unloaders = []
+  hasFinishedUnloading = false
+
+
   constructor() {
     if (instance) {
-      throw Error('Singleton Window constructor called multiple times')
+      throw Error('window singleton instance already exists')
     }
-
     super()
     instance = this
-
-    this.type = basename(location.pathname, '.html')
-
-    this.state = pick(ARGS, [
-      'aqua',
-      'data',
-      'fontSize',
-      'frameless',
-      'scrollbars',
-      'theme',
-      'dark',
-      'contrast',
-      'vibrancy',
-      'maximizable',
-      'minimizable',
-      'zoom'
-    ])
-
-    this.plugins = new Plugins(ARGS.plugins, {
-      dialog,
-      json,
-      window: this
-    })
-
-    this.unloader = 'close'
-    this.unloaders = []
-    this.hasFinishedUnloading = false
   }
 
   async init() {
@@ -91,7 +76,7 @@ export class Window extends EventEmitter {
 
         toggle(document.documentElement, process.platform, true)
 
-        let { aqua, frameless } = this.state
+        let { aqua, frameless } = ARGS
 
         if (aqua)
           toggle(document.documentElement, aqua, true)
@@ -135,37 +120,37 @@ export class Window extends EventEmitter {
     this.send('redo')
   }
 
+  get args() {
+    return ARGS
+  }
+
   get theme() {
-    return (this.state.theme !== 'system') ?
-      this.state.theme :
-      (this.state.dark ? 'dark' : 'light')
+    return (ARGS.theme !== 'system') ?
+      ARGS.theme :
+      ARGS.dark ? 'dark' : 'light'
   }
 
   get stylesheets() {
-    let { theme } = this
+    let { theme, type } = this
     return [
       StyleSheet.expand(`base-${theme}`),
-      StyleSheet.expand(`${this.type}-${theme}`),
-      join(this.state.data, 'style.css'),
-      join(this.state.data, `style-${theme}.css`)
+      StyleSheet.expand(`${type}-${theme}`),
+      join(ARGS.data, 'style.css'),
+      join(ARGS.data, `style-${theme}.css`)
     ]
   }
 
-  setFontSize(fontSize = this.state.fontSize) {
-    this.state.fontSize = fontSize
-
+  setFontSize(fontSize = ARGS.fontSize) {
     if (this.type !== 'print') {
       document.documentElement.style.fontSize = fontSize
     }
   }
 
-  setScrollBarStyle(scrollbars = this.state.scrollbars) {
-    this.state.scrollbars = scrollbars
+  setScrollBarStyle(scrollbars = ARGS.scrollbars) {
     toggle(document.documentElement, 'scrollbar-style-old-school', scrollbars)
   }
 
-  setZoomLevel(zoom = this.state.zoom) {
-    this.state.zoom = zoom
+  setZoomLevel(zoom = ARGS.zoom) {
     document.documentElement.style.setProperty('--zoom', zoom)
   }
 
@@ -173,11 +158,9 @@ export class Window extends EventEmitter {
     ipc
       .on('win', (_, state) => {
         this.toggle(state)
-        this.emit(state)
       })
-      .on('theme', (_, theme, { dark, contrast, vibrancy } = {}) => {
+      .on('theme', (_, theme, { dark, contrast, vibrancy } = ARGS) => {
         update({ theme, dark, contrast, vibrancy })
-        Object.assign(this.state, { theme, dark, contrast, vibrancy })
         this.style(true)
         this.emit('settings.update', { theme, dark, contrast, vibrancy })
       })
@@ -188,6 +171,7 @@ export class Window extends EventEmitter {
       })
       .on('recent', (_, recent) => {
         update({ recent })
+        this.emit('settings.update', { recent })
       })
       .on('locale', (_, locale) => {
         update({ locale })
@@ -198,9 +182,15 @@ export class Window extends EventEmitter {
         this.emit('settings.update', { debug })
       })
       .on('scrollbars', (_, scrollbars) => {
+        update({ scrollbars })
         this.setScrollBarStyle(scrollbars)
         this.style(true)
         this.emit('settings.update', { scrollbars })
+      })
+      .on('zoom', (_, zoom) => {
+        update({ zoom })
+        this.setZoomLevel(zoom)
+        this.emit('settings.update', { zoom })
       })
       .on('refresh', () => {
         this.style(true)
@@ -221,10 +211,6 @@ export class Window extends EventEmitter {
       })
       .on('global', (_, action) => {
         emit(document, `global:${action}`)
-      })
-      .on('zoom', (_, zoom) => {
-        this.setZoomLevel(zoom)
-        this.emit('settings.update', { zoom })
       })
   }
 
@@ -372,12 +358,12 @@ export class Window extends EventEmitter {
 
     on(this.controls.close, 'click', this.close)
 
-    if (this.state.minimizable)
+    if (ARGS.minimizable)
       on(this.controls.min, 'click', this.minimize)
     else
       toggle(document.documentElement, 'not-minimizable', true)
 
-    if (this.state.maximizable)
+    if (ARGS.maximizable)
       on(this.controls.max, 'click', this.maximize)
     else
       toggle(document.documentElement, 'not-maximizable', true)
@@ -413,9 +399,7 @@ export class Window extends EventEmitter {
       }
     }
 
-    toggle(document.documentElement, 'vibrancy', this.state.vibrancy)
-
-    this.emit('settings.update', { theme: this.state.theme })
+    toggle(document.documentElement, 'vibrancy', ARGS.vibrancy)
 
     await Promise.race([
       Promise.all(loaded),
@@ -460,6 +444,8 @@ export class Window extends EventEmitter {
         toggle(document.documentElement, 'is-full-screen', false)
         break
     }
+
+    this.emit('toggle', state)
   }
 
   maximize() {
