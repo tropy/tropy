@@ -140,6 +140,11 @@ export class Window extends EventEmitter {
     ]
   }
 
+  setArgs(args) {
+    update(args)
+    this.emit('settings.update', args)
+  }
+
   setFontSize(fontSize = ARGS.fontSize) {
     if (this.type !== 'print') {
       document.documentElement.style.fontSize = fontSize
@@ -160,37 +165,30 @@ export class Window extends EventEmitter {
         this.toggle(state)
       })
       .on('theme', (_, theme, { dark, contrast, vibrancy } = ARGS) => {
-        update({ theme, dark, contrast, vibrancy })
+        this.setArgs({ theme, dark, contrast, vibrancy })
         this.style(true)
-        this.emit('settings.update', { theme, dark, contrast, vibrancy })
       })
       .on('fontSize', (_, fontSize) => {
-        update({ fontSize })
+        this.setArgs({ fontSize })
         this.setFontSize(fontSize)
-        this.emit('settings.update', { fontSize })
       })
       .on('recent', (_, recent) => {
-        update({ recent })
-        this.emit('settings.update', { recent })
+        this.setArgs({ recent })
       })
       .on('locale', (_, locale) => {
-        update({ locale })
-        this.emit('settings.update', { locale })
+        this.setArgs({ locale })
       })
       .on('debug', (_, debug) => {
-        update({ debug })
-        this.emit('settings.update', { debug })
+        this.setArgs({ debug })
       })
       .on('scrollbars', (_, scrollbars) => {
-        update({ scrollbars })
+        this.setArgs({ scrollbars })
         this.setScrollBarStyle(scrollbars)
         this.style(true)
-        this.emit('settings.update', { scrollbars })
       })
       .on('zoom', (_, zoom) => {
-        update({ zoom })
+        this.setArgs({ zoom })
         this.setZoomLevel(zoom)
-        this.emit('settings.update', { zoom })
       })
       .on('refresh', () => {
         this.style(true)
@@ -210,6 +208,7 @@ export class Window extends EventEmitter {
         await this.plugins.create()
       })
       .on('global', (_, action) => {
+        // TODO use window instance emitter
         emit(document, `global:${action}`)
       })
   }
