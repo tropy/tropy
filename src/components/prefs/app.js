@@ -4,6 +4,7 @@ import ARGS from '../../args.js'
 import { ExportSettings } from './export.js'
 import { PrintSettings } from './print.js'
 import { InterfaceSettings } from './interface.js'
+import { StyleSettings } from './style.js'
 import { TemplateSelect } from '../template/select.js'
 import { ResourceSelect } from '../resource/select.js'
 import { ScrollContainer } from '../scroll/container.js'
@@ -37,16 +38,8 @@ export class AppPrefs extends React.PureComponent {
     ipc.send('cmd', 'app:toggle-debug-flag')
   }
 
-  handleThemeChange = ({ theme }) => {
-    ipc.send('cmd', 'app:switch-theme', theme)
-  }
-
   handleLocaleChange = ({ locale }) => {
     ipc.send('cmd', 'app:switch-locale', locale)
-  }
-
-  handleFontSizeChange = ({ fontSize }) => {
-    ipc.send('cmd', 'app:change-font-size', fontSize)
   }
 
   handleLocalTimeChange = ({ localtime }) => {
@@ -157,22 +150,7 @@ export class AppPrefs extends React.PureComponent {
             type="number"
             value={this.props.settings.density}/>
           <hr/>
-          <FormSelect
-            id="prefs.app.style.theme"
-            name="theme"
-            isRequired
-            isSelectionHidden
-            value={this.props.settings.theme}
-            options={this.props.themes}
-            onChange={this.handleThemeChange}/>
-          <FormSelect
-            id="prefs.app.style.font.size"
-            name="fontSize"
-            isRequired
-            isInputHidden
-            value={this.props.settings.fontSize}
-            options={this.props.fontSizes}
-            onChange={this.handleFontSizeChange}/>
+          <StyleSettings/>
           <hr/>
           <FormSelect
             id="prefs.app.locale.locale"
@@ -218,21 +196,16 @@ export class AppPrefs extends React.PureComponent {
       debug: bool.isRequired,
       layout: string.isRequired,
       locale: string.isRequired,
-      theme: string.isRequired,
       templates: object.isRequired
     }).isRequired,
-    fontSizes: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,
     importMin: number.isRequired,
     importMax: number.isRequired,
-    themes: arrayOf(string).isRequired,
     dupOptions: arrayOf(string).isRequired,
     onSettingsUpdate: func.isRequired
   }
 
   static defaultProps = {
-    fontSizes: ['12px', '13px', '14px', '15px', '16px'],
-    themes: ['light', 'dark', 'system'],
     locales: ['cn', 'de', 'en', 'es', 'fr', 'it', 'ja', 'pt', 'pt-BR', 'uk'],
     dupOptions: ['skip', 'import', 'prompt'],
     importMin: IMAGE.MIN_DENSITY,

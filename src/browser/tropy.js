@@ -703,6 +703,12 @@ export class Tropy extends EventEmitter {
       this.wm.broadcast('fontSize', this.state.fontSize)
     })
 
+    this.on('app:toggle-frameless-flag', (_, frameless) => {
+      this.state.frameless =
+        (frameless == null) ? !this.state.frameless : frameless
+    })
+
+
     this.on('app:switch-locale', async (_, locale) => {
       info(`switch to "${locale}" locale`)
       this.state.locale = locale
