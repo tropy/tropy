@@ -1,75 +1,53 @@
 //
-// Legacy OS X window controls
+// Fake window controls
 // --------------------------------------------------
 
 .window-controls {
   position: absolute;
-  left: $window-controls-offset-x;
-  top: $window-controls-offset-y;
-  width: $window-controls-width;
   z-index: $zindex-window-controls;
+  display: flex;
 
   button {
-    width: 12px;
-    height: 12px;
     border: 0;
-    background: {
-      repeat: no-repeat;
-      position: 0 0;
-      size: 12px auto;
-      color: transparent;
-    }
-    margin: $window-controls-margin;
-    vertical-align: top;
     padding: 0;
-
-    @include state(".window-controls:hover") {
-      background-position-y: -12px;
-    }
-
-    &:active {
-      background-position-y: -24px;
-    }
-
-    .is-blurred & {
-      background-position-y: -36px;
-    }
   }
 
-  .minimize {
-    .not-minimizable & {
-      background-position-y: -36px;
-    }
-  }
+  @if $platform == linux {
+    right: 6px;
+    top: 6px;
+    column-gap: 3px;
 
-  .maximize {
-    .not-maximizable & {
-      background-position-y: -36px;
-    }
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px;
 
-    @include state(".window-controls:hover") {
-      .is-maximized & {
-        background-position-y: -48px;
+      &::after {
+        content: "";
+        width: 24px;
+        height: 24px;
+        background-color: rgba(0, 0, 0, 0.08);
+        border-radius: 50%;
+        transition: background-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-        &:active {
-          background-position-y: -60px;
+        @include state("button:hover") {
+          background-color: rgba(0, 0, 0, 0.12);
         }
       }
     }
-  }
 
-  @each $aqua in blue, graphite {
-    .#{$aqua} & {
+    .minimize {
+      background: icon-url("window/linux/minimize.svg") no-repeat center center;
+    }
 
-      @each $action in close, minimize, maximize {
-        .#{$action} {
-          background-image:
-            -webkit-image-set(
-              icon-url("window/#{$aqua}/#{$action}@1x.svg") 1x,
-              icon-url("window/#{$aqua}/#{$action}@2x.svg") 2x
-            );
-        }
-      }
+    .maximize {
+      background: icon-url("window/linux/maximize.svg") no-repeat center center;
+    }
+
+    .close {
+      order: 3;
+      background: icon-url("window/linux/close.svg") no-repeat center center;
     }
   }
 }
