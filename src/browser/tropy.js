@@ -694,8 +694,8 @@ export class Tropy extends EventEmitter {
       this.clearRecentProjects()
     })
 
-    this.on('app:switch-theme', async (_, theme) => {
-      await this.setTheme(theme)
+    this.on('app:switch-theme', (_, theme) => {
+      nativeTheme.themeSource = theme
     })
 
     this.on('app:change-font-size', (_, fontSize) => {
