@@ -108,7 +108,7 @@ export class Window extends EventEmitter {
     this.toggle('ready')
   }
 
-  close() {
+  close = () => {
     this.send('close')
   }
 
@@ -447,11 +447,11 @@ export class Window extends EventEmitter {
     this.emit('toggle', state)
   }
 
-  maximize() {
+  maximize = () => {
     this.send('maximize')
   }
 
-  minimize() {
+  minimize = () => {
     this.send('minimize')
   }
 
