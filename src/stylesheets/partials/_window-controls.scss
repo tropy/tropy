@@ -27,31 +27,43 @@
         content: "";
         width: 24px;
         height: 24px;
-        background-color: rgba(0, 0, 0, 0.08);
         border-radius: 50%;
         transition: background-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        background-color: if(
+          $theme == "light",
+          rgba(0, 0, 0, 0.08),
+          rgba(255, 255, 255, 0.1)
+        );
 
         @include state("button:hover") {
-          background-color: rgba(0, 0, 0, 0.12);
+          background-color: if(
+            $theme == "light",
+            rgba(0, 0, 0, 0.12),
+            rgba(255, 255, 255, 0.15)
+          );
         }
 
         @include state("button:active") {
-          background-color: rgba(0, 0, 0, 0.24);
+          background-color: if(
+            $theme == "light",
+            rgba(0, 0, 0, 0.24),
+            rgba(255, 255, 255, 0.3)
+          );
         }
       }
     }
 
     .minimize {
-      background: icon-url("window/linux/minimize.svg") no-repeat center center;
+      background: icon-url("window/linux/#{$theme}/minimize.svg") no-repeat center center;
     }
 
     .maximize {
-      background: icon-url("window/linux/maximize.svg") no-repeat center center;
+      background: icon-url("window/linux/#{$theme}/maximize.svg") no-repeat center center;
     }
 
     .close {
       order: 3;
-      background: icon-url("window/linux/close.svg") no-repeat center center;
+      background: icon-url("window/linux/#{$theme}/close.svg") no-repeat center center;
     }
   }
 }
