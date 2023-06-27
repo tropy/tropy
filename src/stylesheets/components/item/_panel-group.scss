@@ -6,12 +6,6 @@
   .panel-group-header {
     position: relative;
     z-index: 2;
-
-    .toolbar {
-      .frameless & {
-        -webkit-app-region: drag;
-      }
-    }
   }
 
   .tabs {
