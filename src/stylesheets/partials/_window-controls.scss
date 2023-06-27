@@ -34,6 +34,10 @@
         @include state("button:hover") {
           background-color: rgba(0, 0, 0, 0.12);
         }
+
+        @include state("button:active") {
+          background-color: rgba(0, 0, 0, 0.24);
+        }
       }
     }
 
