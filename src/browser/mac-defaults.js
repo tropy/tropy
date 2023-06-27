@@ -1,4 +1,4 @@
-import { execFile } from '../common/spawn'
+import { execFile } from '../common/spawn.js'
 
 export async function defaults(method, domain, key) {
   let { stdout } = await execFile('defaults', [method, domain, key], {
