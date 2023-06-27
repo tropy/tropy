@@ -6,6 +6,7 @@
   position: absolute;
   z-index: $zindex-window-controls;
   display: flex;
+  -webkit-app-region: no-drag;
 
   button {
     border: 0;
