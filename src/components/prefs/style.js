@@ -2,28 +2,25 @@ import { useState } from 'react'
 import { arrayOf, string } from 'prop-types'
 import { darwin } from '../../common/os.js'
 import { FormToggle, FormSelect } from '../form.js'
-import { useIpc } from '../../hooks/use-ipc.js'
+import { useIpcEvent } from '../../hooks/use-ipc.js'
 import { useWindowArgs } from '../../hooks/use-window.js'
-import { useEvent } from '../../hooks/use-event.js'
 
 export function StyleSettings({ themes, fontSizes }) {
-  let ipc = useIpc()
-
   let { frameless, fontSize, theme } = useWindowArgs()
   let [localFrameless, setLocalFrameless] = useState(frameless)
 
-  let handleThemeChange = useEvent(event => {
-    ipc.send('cmd', 'app:switch-theme', event.theme)
-  })
+  let handleThemeChange = useIpcEvent(event => (
+    event.theme
+  ), ['cmd', 'app:switch-theme'])
 
-  let handleFontSizeChange = useEvent(event => {
-    ipc.send('cmd', 'app:change-font-size', event.fontSize)
-  })
+  let handleFontSizeChange = useIpcEvent(event => (
+    event.fontSize
+  ), ['cmd', 'app:change-font-size'])
 
-  let handleFramelessChange = useEvent(() => {
-    ipc.send('cmd', 'app:toggle-frameless-flag', !localFrameless)
+  let handleFramelessChange = useIpcEvent(() => {
     setLocalFrameless(!localFrameless)
-  })
+    return !localFrameless
+  }, ['cmd', 'app:toggle-frameless-flag'])
 
   return (
     <>
