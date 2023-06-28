@@ -11,12 +11,12 @@ import { StyleSheet } from './res.js'
 import debounce from 'lodash.debounce'
 import * as dialog from './dialog.js'
 import * as json from './common/json.js'
+import { WindowControls } from './window-controls.js'
 
 import {
   $$,
   append,
   emit,
-  create,
   isLiveInput,
   load,
   on,
@@ -74,21 +74,25 @@ export class Window extends EventEmitter {
         this.handleMouseButtons()
         this.handleUncaughtExceptions()
 
-        toggle(document.documentElement, process.platform, true)
+        toggle(this.html, process.platform, true)
 
-        let { aqua, frameless } = ARGS
-
-        if (aqua)
-          toggle(document.documentElement, aqua, true)
+        if (ARGS.aqua)
+          toggle(this.html, ARGS.aqua, true)
 
         this.setScrollBarStyle()
         this.setZoomLevel()
         this.setFontSize()
 
-        if (frameless) {
-          toggle(document.documentElement, 'frameless', true)
+        if (ARGS.frameless) {
+          toggle(this.html, 'frameless', true)
 
-          if (!darwin) this.createWindowControls()
+          toggle(this.html, 'not-maximizable', !ARGS.maximizable)
+          toggle(this.html, 'not-minimizable', !ARGS.minimizable)
+
+          if (!darwin) {
+            this.controls = new WindowControls()
+            this.controls.mount(this)
+          }
         }
 
         resolve()
@@ -108,7 +112,7 @@ export class Window extends EventEmitter {
     this.toggle('ready')
   }
 
-  close = () => {
+  close() {
     this.send('close')
   }
 
@@ -122,6 +126,14 @@ export class Window extends EventEmitter {
 
   get args() {
     return ARGS
+  }
+
+  get body() {
+    return document.body
+  }
+
+  get html() {
+    return document.documentElement
   }
 
   get theme() {
@@ -147,16 +159,16 @@ export class Window extends EventEmitter {
 
   setFontSize(fontSize = ARGS.fontSize) {
     if (this.type !== 'print') {
-      document.documentElement.style.fontSize = fontSize
+      this.html.style.fontSize = fontSize
     }
   }
 
   setScrollBarStyle(scrollbars = ARGS.scrollbars) {
-    toggle(document.documentElement, 'scrollbar-style-old-school', scrollbars)
+    toggle(this.html, 'scrollbar-style-old-school', scrollbars)
   }
 
   setZoomLevel(zoom = ARGS.zoom) {
-    document.documentElement.style.setProperty('--zoom', zoom)
+    this.html.style.setProperty('--zoom', zoom)
   }
 
   handleIpcEvents() {
@@ -296,19 +308,19 @@ export class Window extends EventEmitter {
 
   handleModifierKeys() {
     on(document, 'keydown', event => {
-      toggle(document.documentElement, 'alt-key', event.altKey)
-      toggle(document.documentElement, 'meta-key', event.metaKey)
-      toggle(document.documentElement, 'ctrl-key', event.ctrlKey)
+      toggle(this.html, 'alt-key', event.altKey)
+      toggle(this.html, 'meta-key', event.metaKey)
+      toggle(this.html, 'ctrl-key', event.ctrlKey)
     }, { passive: true, capture: true })
+
+    let up = (event) => {
+      toggle(this.html, 'alt-key', event.altKey === true)
+      toggle(this.html, 'meta-key', event.metaKey === true)
+      toggle(this.html, 'ctrl-key', event.ctrlKey === true)
+    }
 
     on(document, 'keyup', up, { passive: true, capture: true })
     on(window, 'blur', up, { passive: true })
-
-    function up(event) {
-      toggle(document.documentElement, 'alt-key', event.altKey === true)
-      toggle(document.documentElement, 'meta-key', event.metaKey === true)
-      toggle(document.documentElement, 'ctrl-key', event.ctrlKey === true)
-    }
   }
 
   handleMouseButtons() {
@@ -348,33 +360,6 @@ export class Window extends EventEmitter {
     })
   }
 
-  createWindowControls() {
-    this.controls = {
-      close: create('button', { tabindex: '-1', class: 'close' }),
-      min: create('button', { tabindex: '-1', class: 'minimize' }),
-      max: create('button', { tabindex: '-1', class: 'maximize' })
-    }
-
-    on(this.controls.close, 'click', this.close)
-
-    if (ARGS.minimizable)
-      on(this.controls.min, 'click', this.minimize)
-    else
-      toggle(document.documentElement, 'not-minimizable', true)
-
-    if (ARGS.maximizable)
-      on(this.controls.max, 'click', this.maximize)
-    else
-      toggle(document.documentElement, 'not-maximizable', true)
-
-    let div = create('div', { class: 'window-controls' })
-
-    append(this.controls.close, div)
-    append(this.controls.min, div)
-    append(this.controls.max, div)
-    append(div, document.body)
-  }
-
   reload() {
     this.unloader = 'reload'
     this.send('reload')
@@ -398,7 +383,7 @@ export class Window extends EventEmitter {
       }
     }
 
-    toggle(document.documentElement, 'vibrancy', ARGS.vibrancy)
+    toggle(this.html, 'vibrancy', ARGS.vibrancy)
 
     await Promise.race([
       Promise.all(loaded),
@@ -409,49 +394,49 @@ export class Window extends EventEmitter {
   toggle(state, ...args) {
     switch (state) {
       case 'focus':
-        toggle(document.documentElement, 'is-blurred', false)
+        toggle(this.html, 'is-blurred', false)
         break
       case 'blur':
-        toggle(document.documentElement, 'is-blurred', true)
+        toggle(this.html, 'is-blurred', true)
         break
       case 'maximize':
-        toggle(document.documentElement, 'is-maximized', true)
+        toggle(this.html, 'is-maximized', true)
         break
       case 'unmaximize':
-        toggle(document.documentElement, 'is-maximized', false)
+        toggle(this.html, 'is-maximized', false)
         break
       case 'init':
-        toggle(document.documentElement, 'init', true)
+        toggle(this.html, 'init', true)
         break
       case 'busy':
-        toggle(document.documentElement, 'busy', ...args)
+        toggle(this.html, 'busy', ...args)
         break
       case 'ready':
-        toggle(document.documentElement, 'ready', true)
+        toggle(this.html, 'ready', true)
         break
       case 'disable':
       case 'unload':
-        toggle(document.documentElement, 'inactive', true)
+        toggle(this.html, 'inactive', true)
         break
       case 'enable':
-        toggle(document.documentElement, 'inactive', false)
+        toggle(this.html, 'inactive', false)
         break
       case 'enter-full-screen':
-        toggle(document.documentElement, 'is-full-screen', true)
+        toggle(this.html, 'is-full-screen', true)
         break
       case 'leave-full-screen':
-        toggle(document.documentElement, 'is-full-screen', false)
+        toggle(this.html, 'is-full-screen', false)
         break
     }
 
     this.emit('toggle', state)
   }
 
-  maximize = () => {
+  maximize() {
     this.send('maximize')
   }
 
-  minimize = () => {
+  minimize() {
     this.send('minimize')
   }
 
