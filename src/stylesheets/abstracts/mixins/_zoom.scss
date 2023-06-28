@@ -1,0 +1,16 @@
+@mixin zoom($property, $value, $selectors...) {
+  @each $selector in $selectors {
+    #{$selector} & {
+      #{$property}: $value;
+    }
+  }
+
+  // Use :is() or :has() in selectors depending on the level
+  @each $level in 0.75, 1.25, 1.5, 1.75, 2 {
+    @each $selector in $selectors {
+      [style*="zoom: #{inspect($level)}"]#{$selector} & {
+        #{$property}: calc($value * 1 / $level);
+      }
+    }
+  }
+}

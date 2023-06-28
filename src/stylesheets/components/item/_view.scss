@@ -29,16 +29,40 @@
             - $window-controls-margin;
           margin-left: $margin-left;
 
-          @each $level in 0.75, 1.25, 1.5, 1.75, 2 {
-            [style*="zoom:#{inspect($level)}"] & {
-              margin-left: calc($margin-left * 1 / $level);
-            }
-          }
+          @include zoom("margin-left", $margin-left, "");
         }
 
         .project-mode-enter-active &,
         .is-full-screen & {
           margin-left: 0;
+        }
+      }
+    }
+  }
+
+  @if $platform == linux {
+    .panel-group-header {
+      .toolbar-left {
+        .item-mode &,
+        .item-mode-enter-active & {
+          @include zoom(
+            "margin-left",
+            (109px - 37px - 37px),
+            ":is(.frameless.window-controls-left)"
+          );
+
+          @include zoom(
+            "margin-left",
+            (109px - 37px),
+            ":is(.frameless.window-controls-left.minimize-button)",
+            ":is(.frameless.window-controls-left.maximize-button)"
+          );
+
+          @include zoom(
+            "margin-left",
+            (109px),
+            ":is(.frameless.window-controls-left.minimize-button.maximize-button)"
+          );
         }
       }
     }

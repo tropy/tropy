@@ -14,9 +14,16 @@
   }
 
   @if $platform == linux {
-    right: 6px;
     top: 6px;
     column-gap: 3px;
+
+    .window-controls-left & {
+      left: 6px;
+    }
+
+    .window-controls-right & {
+      right: 6px;
+    }
 
     button {
       display: flex;
@@ -56,15 +63,28 @@
 
     .minimize {
       background: icon-url("window/linux/#{$theme}/minimize.svg") no-repeat center center;
+      display: none;
+
+      .minimize-button & {
+        display: flex;
+      }
     }
 
     .maximize {
       background: icon-url("window/linux/#{$theme}/maximize.svg") no-repeat center center;
+      display: none;
+
+      .maximize-button & {
+        display: flex;
+      }
     }
 
     .close {
-      order: 3;
       background: icon-url("window/linux/#{$theme}/close.svg") no-repeat center center;
+
+      .window-controls-right & {
+        order: 3;
+      }
     }
   }
 }

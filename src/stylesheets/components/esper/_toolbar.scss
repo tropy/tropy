@@ -31,6 +31,25 @@
       }
     }
 
+    .toolbar-right {
+      @if $platform == linux {
+        .frameless.window-controls-right & {
+          margin-right: 178px - 37px - 37px;
+
+          @include variant(
+            ".frameless.minimize-button",
+            ".frameless.maximize-button"
+          ) {
+            margin-right: 178px - 37px;
+          }
+
+          @include variant(".frameless.minimize-button.maximize-button") {
+            margin-right: 178px;
+          }
+        }
+      }
+    }
+
     .tool-group {
       > .btn-icon {
         .frameless & {
