@@ -108,7 +108,7 @@
     "@koa/router": "^12.0.0",
     "@pixi/filter-adjustment": "^5.1.1",
     "@reduxjs/toolkit": "^1.8.4",
-    "@tweenjs/tween.js": "^21.0.0",
+    "@tweenjs/tween.js": "^19.0.0",
     "chokidar": "^3.5.1",
     "classnames": "^2.2.6",
     "commander": "^11.0.0",
