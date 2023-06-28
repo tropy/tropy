@@ -48,20 +48,20 @@
           @include zoom(
             "margin-left",
             (109px - 37px - 37px),
-            ":is(.frameless.window-controls-left)"
+            ".frameless.window-controls-left"
           );
 
           @include zoom(
             "margin-left",
             (109px - 37px),
-            ":is(.frameless.window-controls-left.minimize-button)",
-            ":is(.frameless.window-controls-left.maximize-button)"
+            ".frameless.window-controls-left.minimize-button",
+            ".frameless.window-controls-left.maximize-button"
           );
 
           @include zoom(
             "margin-left",
             (109px),
-            ":is(.frameless.window-controls-left.minimize-button.maximize-button)"
+            ".frameless.window-controls-left.minimize-button.maximize-button"
           );
         }
       }
