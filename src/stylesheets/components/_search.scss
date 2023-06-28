@@ -15,7 +15,7 @@
     pointer-events: none;
 
     .frameless & {
-      left: calc((os($search-frameless-height) - $space-md) / 2 + 1px);
+      left: calc((os($search-frameless-height) - $space-md) / 2);
       top: calc((os($search-frameless-height) - $space-md) / 2);
     }
   }
@@ -39,6 +39,7 @@
     .frameless & {
       height: os($search-frameless-height);
       padding-left: calc((os($search-frameless-height) - $space-md) / 2 + $space-md + $space-min);
+      padding-right: calc((os($search-frameless-height) - $clear-button-size) / 2 + $clear-button-size);
       border-radius: os($search-frameless-border-radius);
     }
   }
@@ -53,6 +54,11 @@
     padding: 0;
     border-radius: 50%;
     z-index: 4;
+
+    .frameless & {
+      right: calc((os($search-frameless-height) - $clear-button-size) / 2 - 1px);
+      top: calc((os($search-frameless-height) - $clear-button-size) / 2);
+    }
 
     .icon {
       position: absolute;
