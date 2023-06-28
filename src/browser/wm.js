@@ -4,10 +4,11 @@ import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { URL } from 'node:url'
 import { read } from './mac-defaults.js'
+import { get } from './gsettings.js'
 import { papersize } from './papersize.js'
 import dialog from './dialog.js'
 import { debug, error, trace, warn } from '../common/log.js'
-import { darwin } from '../common/os.js'
+import { darwin, linux } from '../common/os.js'
 import { channel } from '../common/release.js'
 import { Resource, Icon, View } from './res.js'
 import { SASS } from '../constants/index.js'
@@ -112,6 +113,7 @@ export class WindowManager extends EventEmitter {
           opts.icon = Icon.expand(channel, 'tropy', '512x512.png')
           opts.darkTheme = opts.darkTheme || args.dark
           opts.vibrancy = false
+          args.controls = await WindowManager.getButtonLayout()
           break
         case 'darwin':
           if (!opts.frame) {
@@ -659,6 +661,16 @@ export class WindowManager extends EventEmitter {
       prefs
         .getUserDefault('AppleActionOnDoubleClick', 'string')
         .toLowerCase()
+  }
+
+  static async getButtonLayout() {
+    try {
+      return !linux ? null :
+        await get('org.gnome.desktop.wm.preferences', 'button-layout')
+    } catch (e) {
+      warn({ stack: e.stack }, 'failed to get GNOME button-layout')
+      return null
+    }
   }
 
   static print(win, opts = {}) {
