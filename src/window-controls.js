@@ -25,6 +25,11 @@ export class WindowControls {
       toggle(win.html, 'window-controls-minimize', true)
     }
 
+    if (!darwin) {
+      append(Button('menu', (event) => { win.menu(event) }), this.root)
+      toggle(win.html, 'window-controls-menu', true)
+    }
+
     toggle(win.html, `window-controls-${this.layout.placement}`, true)
 
     append(this.root, win.body)
