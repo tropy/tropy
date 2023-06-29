@@ -75,7 +75,7 @@ export class Window extends EventEmitter {
         this.handleMouseButtons()
         this.handleUncaughtExceptions()
 
-        toggle(this.html, process.platform, true)
+        toggle(document.documentElement, 'linux', true)
 
         if (ARGS.aqua)
           toggle(this.html, ARGS.aqua, true)

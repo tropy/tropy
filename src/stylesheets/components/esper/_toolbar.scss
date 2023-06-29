@@ -33,20 +33,24 @@
 
     .toolbar-right {
       @if $platform == linux {
+        .frameless.window-controls-left & {
+          margin-right: 52px;
+        }
+
         .frameless.window-controls-right & {
-          margin-right: 178px - 37px - 37px;
+          margin-right: 166px - 37px - 37px;
 
           @include variant(
             ".frameless.window-controls-minimize",
             ".frameless.window-controls-maximize"
           ) {
-            margin-right: 178px - 37px;
+            margin-right: 166px - 37px;
           }
 
           @include variant(
             ".frameless.window-controls-minimize.window-controls-maximize"
           ) {
-            margin-right: 178px;
+            margin-right: 166px;
           }
         }
       }
