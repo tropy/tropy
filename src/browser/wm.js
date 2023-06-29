@@ -256,13 +256,14 @@ export class WindowManager extends EventEmitter {
   }
 
   // eslint-disable-next-line complexity
-  handleIpcMessage = (event, type, ...args) => {
+  handleIpcMessage = async (event, type, ...args) => {
     trace({ args }, `ipc.${type} received`)
     let win = BrowserWindow.fromWebContents(event.sender)
 
-    if (type === 'double-click')
-      type = WindowManager.getActionOnDoubleClick()
+    if (type === 'titlebar-action')
+      type = await WindowManager.getTitlebarActionFor(args.shift())
 
+    console.log(type)
     switch (type) {
       case 'close':
         win.close()
@@ -285,12 +286,14 @@ export class WindowManager extends EventEmitter {
       case 'preview':
         win.previewFile(...args)
         break
+      case 'toggle-maximize':
       case 'maximize':
         if (win.isMaximized())
           win.unmaximize()
         else
           win.maximize()
         break
+      case 'toggle-minimize':
       case 'minimize':
         if (win.isMinimized())
           win.restore()
@@ -305,6 +308,9 @@ export class WindowManager extends EventEmitter {
         break
       case 'show-menu':
         this.emit('show-menu', win, ...args)
+        break
+      case 'raise':
+        win.moveTop()
         break
       default:
         win.emit(type, ...args)
@@ -659,11 +665,30 @@ export class WindowManager extends EventEmitter {
       prefs.getUserDefault('AppleShowScrollBars', 'string') === 'WhenScrolling'
   }
 
-  static getActionOnDoubleClick() {
-    return !darwin ? 'maximize' :
-      prefs
-        .getUserDefault('AppleActionOnDoubleClick', 'string')
-        .toLowerCase()
+  static async getTitlebarActionFor(trigger) {
+    try {
+      if (darwin) {
+        if (trigger === 'double-click')
+          return prefs
+            .getUserDefault('AppleActionOnDoubleClick', 'string')
+            .toLowerCase()
+      }
+
+      if (linux) {
+        return await get(
+          `org.gnome.desktop.wm.preferences.action-${trigger}-titlebar`
+        )
+      }
+    } catch (e) {
+      warn({
+        stack: e.stack
+      }, `failed to resolve titlebar action for ${trigger}`)
+    }
+
+    if (trigger === 'double-click')
+      return 'maximize'
+    else
+      return 'raise'
   }
 
   static async getButtonLayout() {
