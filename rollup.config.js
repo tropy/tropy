@@ -238,7 +238,7 @@ export default [
         entries: [
           'src/stylesheets/windows'
         ],
-        platform
+        platform: 'linux'
       })
     ],
     onwarn(warning, warn) {
