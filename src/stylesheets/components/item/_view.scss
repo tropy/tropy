@@ -27,9 +27,8 @@
             $window-controls-width
             + $window-controls-offset-x
             - $window-controls-margin;
-          margin-left: $margin-left;
 
-          @include zoom("margin-left", $margin-left, "");
+          margin-left: calc($margin-left / var(--zoom));
         }
 
         .project-mode-enter-active &,
@@ -45,24 +44,22 @@
       .toolbar-left {
         .item-mode &,
         .item-mode-enter-active & {
-          @include zoom(
-            "margin-left",
-            (109px - 37px - 37px),
-            ".frameless.window-controls-left"
-          );
+          .frameless.window-controls-left & {
+            margin-left: calc((109px - 37px - 37px) / var(--zoom));
 
-          @include zoom(
-            "margin-left",
-            (109px - 37px),
-            ".frameless.window-controls-left.minimize-button",
-            ".frameless.window-controls-left.maximize-button"
-          );
+            @include variant(
+              ".frameless.window-controls-minimize",
+              ".frameless.window-controls-maximize"
+            ) {
+              margin-left: calc((109px - 37px) / var(--zoom));
+            }
 
-          @include zoom(
-            "margin-left",
-            (109px),
-            ".frameless.window-controls-left.minimize-button.maximize-button"
-          );
+            @include variant(
+              ".frameless.window-controls-minimize.window-controls-maximize"
+            ) {
+              margin-left: calc(109px / var(--zoom));
+            }
+          }
         }
       }
     }
