@@ -303,6 +303,9 @@ export class WindowManager extends EventEmitter {
       case 'rsvp':
         this.handlePendingResponse(...args)
         break
+      case 'show-menu':
+        this.emit('show-menu', win, ...args)
+        break
       default:
         win.emit(type, ...args)
     }
