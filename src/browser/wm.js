@@ -263,7 +263,6 @@ export class WindowManager extends EventEmitter {
     if (type === 'titlebar-action')
       type = await WindowManager.getTitlebarActionFor(args.shift())
 
-    console.log(type)
     switch (type) {
       case 'close':
         win.close()
