@@ -442,8 +442,11 @@ export class Window extends EventEmitter {
   }
 
   menu(event) {
-    let { left: x, bottom: y } = bounds(event.target)
-    this.send('show-menu', { x, y })
+    let { left, bottom } = bounds(event.target)
+    this.send('show-menu', {
+      x: left,
+      y: bottom + 12
+    })
   }
 
   setFixedSize(resizable, ...args) {
