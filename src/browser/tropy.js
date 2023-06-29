@@ -955,6 +955,14 @@ export class Tropy extends EventEmitter {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
+    this.wm.on('show-menu', (win, pos) => {
+      this.menu.popup({
+        window: win,
+        x: pos?.x,
+        y: pos?.y
+      })
+    })
+
     this.wm.on('show', this.menu.handleWindowChange)
     this.wm.on('focus-change', this.menu.handleWindowChange)
 

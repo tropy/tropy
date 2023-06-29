@@ -137,6 +137,10 @@ export class AppMenu extends Menu {
 
     this.handleHistoryChange()
   }
+
+  popup(opts) {
+    AppMenu.instance.popup(opts)
+  }
 }
 
 
