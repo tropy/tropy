@@ -15,12 +15,18 @@ export class WindowControls {
 
     append(Button('close', () => { win.close() }), this.root)
 
-    if (this.layout.minimize)
-      append(Button('minimize', () => { win.minimize() }), this.root)
-    if (this.layout.maximize)
+    if (this.layout.maximize) {
       append(Button('maximize', () => { win.maximize() }), this.root)
+      toggle(win.html, 'window-controls-maximize', true)
+    }
+
+    if (this.layout.minimize) {
+      append(Button('minimize', () => { win.minimize() }), this.root)
+      toggle(win.html, 'window-controls-minimize', true)
+    }
 
     toggle(win.html, `window-controls-${this.layout.placement}`, true)
+
     append(this.root, win.body)
   }
 }
