@@ -37,13 +37,15 @@
           margin-right: 178px - 37px - 37px;
 
           @include variant(
-            ".frameless.minimize-button",
-            ".frameless.maximize-button"
+            ".frameless.window-controls-minimize",
+            ".frameless.window-controls-maximize"
           ) {
             margin-right: 178px - 37px;
           }
 
-          @include variant(".frameless.minimize-button.maximize-button") {
+          @include variant(
+            ".frameless.window-controls-minimize.window-controls-maximize"
+          ) {
             margin-right: 178px;
           }
         }
