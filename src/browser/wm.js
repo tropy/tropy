@@ -101,7 +101,7 @@ export class WindowManager extends EventEmitter {
         }
       }
 
-      if (args.frameless) {
+      if (args.frameless && type !== 'print') {
         opts.frame = false
       }
 
