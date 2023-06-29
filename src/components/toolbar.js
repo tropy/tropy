@@ -1,17 +1,18 @@
-import React from 'react'
-import { WindowContext } from './window'
+import { forwardRef } from 'react'
 import { bool, func, node, string } from 'prop-types'
 import cx from 'classnames'
-import { has } from '../dom'
+import { useWindow } from '../hooks/use-window.js'
+import { useEvent } from '../hooks/use-event.js'
+import { has } from '../dom.js'
 
-export const Toolbar = React.forwardRef((props, ref) =>
+export const Toolbar = forwardRef((props, ref) => (
   <div
     ref={ref}
     className={cx('toolbar', 'tb-target', props.className)}
     onDoubleClick={props.onDoubleClick}>
     {props.children}
   </div>
-)
+))
 
 Toolbar.propTypes = {
   children: node,
@@ -19,7 +20,7 @@ Toolbar.propTypes = {
   onDoubleClick: func
 }
 
-Toolbar.Context = React.forwardRef((props, ref) => (
+Toolbar.Context = forwardRef((props, ref) => (
   <div
     ref={ref}
     className={cx('toolbar-context', 'tb-target', props.className, {
@@ -78,27 +79,36 @@ ToolGroup.propTypes = {
 }
 
 
-export class Titlebar extends React.PureComponent {
+export const Titlebar = ({ children, isOptional }) => {
+  let win = useWindow()
 
-  handleDoubleClick = (event) => {
-    if (this.context.args.frameless && has(event.target, 'tb-target'))
-      this.context.send('double-click')
-  }
+  let handleDoubleClick = useEvent((event) => {
+    if (win.args.frameless && has(event.target, 'tb-target'))
+      win.send('titlebar-action', 'double-click')
+  })
 
-  render() {
-    return (this.props.isOptional && !this.context.args.frameless) ? null : (
-      <Toolbar
-        className="titlebar"
-        onDoubleClick={this.handleDoubleClick}>
-        {this.props.children}
-      </Toolbar>
-    )
-  }
+  let handleMouseDown = useEvent((event) => {
+    if (win.args.frameless && has(event.target, 'tb-target'))
+      if (event.button === 2)
+        win.send('titlebar-action', 'right-click')
+      else if (event.button === 1)
+        win.send('titlebar-action', 'middle-click')
+  })
 
-  static contextType = WindowContext
+  if (isOptional && !win.args.frameless)
+    return null
 
-  static propTypes = {
-    children: node,
-    isOptional: bool
-  }
+  return (
+    <Toolbar
+      className="titlebar"
+      onMouseDown={handleMouseDown}
+      onDoubleClick={handleDoubleClick}>
+      {children}
+    </Toolbar>
+  )
+}
+
+Titlebar.propTypes = {
+  children: node,
+  isOptional: bool
 }
