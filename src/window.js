@@ -16,6 +16,7 @@ import { WindowControls } from './window-controls.js'
 import {
   $$,
   append,
+  bounds,
   emit,
   isLiveInput,
   load,
@@ -438,6 +439,11 @@ export class Window extends EventEmitter {
 
   minimize() {
     this.send('minimize')
+  }
+
+  menu(event) {
+    let { left: x, bottom: y } = bounds(event.target)
+    this.send('show-menu', { x, y })
   }
 
   setFixedSize(resizable, ...args) {
