@@ -26,7 +26,10 @@ export class WindowControls {
     }
 
     if (!darwin) {
-      append(Button('menu', (event) => { win.menu(event) }), this.root)
+      append(
+        Button('menu', (event) => { win.menu(event) }, { tabindex: '0' }),
+        this.root)
+
       toggle(win.html, 'window-controls-menu', true)
     }
 
@@ -36,10 +39,11 @@ export class WindowControls {
   }
 }
 
-function Button(type, action) {
+function Button(type, action, attrs = {}) {
   let button = create('button', {
     tabindex: '-1',
-    class: type
+    class: type,
+    ...attrs
   })
 
   on(button, 'click', action)
