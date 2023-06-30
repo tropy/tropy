@@ -444,8 +444,8 @@ export class Window extends EventEmitter {
   menu(event) {
     let { left, bottom } = bounds(event.target)
     this.send('show-menu', {
-      x: left,
-      y: bottom + 12
+      x: Math.round(left),
+      y: Math.round(bottom) + 12
     })
   }
 
