@@ -299,6 +299,10 @@ export class WindowManager extends EventEmitter {
         else
           win.minimize()
         break
+      case 'toggle-fullscreen':
+      case 'fullscreen':
+        win.setFullScreen(!win.isFullScreen())
+        break
       case 'fixed-size':
         this.setFixedSize(win, ...args)
         break

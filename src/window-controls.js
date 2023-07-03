@@ -13,6 +13,7 @@ export class WindowControls {
   mount(win) {
     this.root = create('div', { class: 'window-controls' })
 
+    append(Button('fullscreen', () => { win.fullscreen() }), this.root)
     append(Button('close', () => { win.close() }), this.root)
 
     if (this.layout.minimize) {
