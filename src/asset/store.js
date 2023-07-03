@@ -54,8 +54,8 @@ export class Store {
       if (!asset.buffer)
         await asset.open()
 
-      asset.protocol = 'file'
       asset.path = this.getPathFor(asset)
+      asset.protocol = 'file'
 
       await writeFile(asset.path, asset.buffer, { flag: 'wx' })
 
