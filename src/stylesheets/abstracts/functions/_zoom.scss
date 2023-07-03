@@ -1,0 +1,7 @@
+//
+// Zoom helper
+// --------------------------------------------------
+
+@function zoom($length) {
+  @return calc($length / var(--zoom));
+}

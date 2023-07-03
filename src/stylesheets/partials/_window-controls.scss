@@ -14,30 +14,31 @@
   }
 
   @if $platform == linux {
-    top: 6px;
-    column-gap: 3px;
+    top: zoom(6px);
+    column-gap: zoom(3px);
 
     .window-controls-left & {
-      left: 6px;
+      left: zoom(6px);
     }
 
     .window-controls-right & {
-      right: 6px;
+      right: zoom(6px);
     }
 
     button {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 5px;
+      padding: zoom(5px);
       background-repeat: no-repeat;
       background-position: center center;
       background-color: transparent;
+      background-size: zoom(16px);
 
       &::after {
         content: "";
-        width: 24px;
-        height: 24px;
+        width: zoom(24px);
+        height: zoom(24px);
         border-radius: 50%;
         transition: background-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         background-color: if(
@@ -65,8 +66,8 @@
     }
 
     .menu {
-      min-width: 34px;
-      min-height: 34px;
+      min-width: zoom(34px);
+      min-height: zoom(34px);
       background-image: icon-url("window/linux/#{$theme}/menu.svg");
       border-radius: 6px;
       transition-property: background-color, outline-color, outline-width, outline-offset;
@@ -77,12 +78,12 @@
 
       .window-controls-left & {
         position: fixed;
-        right: 6px;
+        right: zoom(6px);
       }
 
       .window-controls-right & {
         order: -1;
-        margin-right: 3px;
+        margin-right: zoom(3px);
       }
 
       &:hover {
