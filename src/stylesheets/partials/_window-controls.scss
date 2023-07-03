@@ -123,6 +123,10 @@
     .maximize {
       background-image: icon-url("window/linux/#{$theme}/maximize.svg");
 
+      .is-maximized & {
+        background-image: icon-url("window/linux/#{$theme}/is-maximized.svg");
+      }
+
       .window-controls-left & {
         order: 3;
       }
