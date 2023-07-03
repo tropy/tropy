@@ -1,6 +1,6 @@
-import fs from 'fs'
-import { parse, resolve, win32 } from 'path'
-import { cpus } from 'os'
+import fs from 'node:fs'
+import { basename, parse, resolve, win32 } from 'node:path'
+import { cpus } from 'node:os'
 import { call, put, select } from 'redux-saga/effects'
 import { parallel } from '../../sagas/util'
 import { ImportCommand } from '../import'
@@ -185,7 +185,7 @@ export class Consolidate extends ImportCommand {
 
             data = { id: photo.id, ...image.toJSON() }
 
-            if (photo.path === image.path)
+            if (basename(photo.path) === image.basename)
               delete data.filename
 
             if (!this.options.isReadOnly) {
