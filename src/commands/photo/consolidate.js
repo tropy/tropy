@@ -185,6 +185,9 @@ export class Consolidate extends ImportCommand {
 
             data = { id: photo.id, ...image.toJSON() }
 
+            if (photo.path === image.path)
+              delete data.filename
+
             if (!this.options.isReadOnly) {
               yield call(mod.photo.save, db, data, {
                 basePath: this.options.basePath
