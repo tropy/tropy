@@ -136,6 +136,23 @@
     .close {
       background-image: icon-url("window/linux/#{$theme}/close.svg");
 
+      .is-full-screen & {
+        display: none;
+      }
+
+      .window-controls-right & {
+        order: 3;
+      }
+    }
+
+    .fullscreen {
+      background-image: icon-url("window/linux/#{$theme}/exit-fullscreen.svg");
+      display: none;
+
+      .is-full-screen & {
+        display: flex;
+      }
+
       .window-controls-right & {
         order: 3;
       }
