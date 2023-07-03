@@ -10,7 +10,7 @@
 
   .frameless & {
     box-shadow:
-      0 (-1 * os($toolbar-frameless-height)) 0 $panel-bg,
+      0 zoom(-1 * os($toolbar-frameless-height)) 0 $panel-bg,
       0 (-$panel-header-height) 0 $panel-bg;
   }
 
@@ -21,7 +21,7 @@
 
     .frameless & {
       box-shadow:
-        0 (-1 * os($toolbar-frameless-height)) 0 $panel-focus-bg,
+        0 zoom(-1 * os($toolbar-frameless-height)) 0 $panel-focus-bg,
         0 (-$panel-header-height) 0 $panel-focus-bg;
     }
   }
