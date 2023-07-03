@@ -3,5 +3,5 @@
 // --------------------------------------------------
 
 @function zoom($length) {
-  @return calc($length / var(--zoom));
+  @return calc(($length) / var(--zoom));
 }
