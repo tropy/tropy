@@ -5,7 +5,7 @@ import { arch, platform } from 'node:process'
 
 export const home = os.homedir()
 
-export const darwin = false
+export const darwin = platform === 'darwin'
 export const linux = platform === 'linux'
 export const win32 = platform === 'win32'
 
