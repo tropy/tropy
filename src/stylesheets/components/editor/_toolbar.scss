@@ -16,7 +16,8 @@
     //display: none;
 
     .frameless & {
-      height: os($toolbar-frameless-height) + 1px;
+      --zoom: inherit; // Counterbalance frameless editor toolbar
+      height: zoom(os($toolbar-frameless-height) + 1px);
     }
 
     .side-by-side & {
@@ -27,7 +28,7 @@
 
     .tool-group {
       & + .tool-group {
-        margin-left: $space-lg;
+        margin-left: zoom($space-lg);
       }
     }
   }
@@ -56,5 +57,12 @@
 
   .link-target {
     flex: 0 0 $link-target-width;
+  }
+
+  .btn-icon {
+    svg {
+      width: zoom(16px);
+      height: zoom(16px);
+    }
   }
 }

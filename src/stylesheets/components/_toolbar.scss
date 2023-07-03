@@ -5,10 +5,16 @@
 .toolbar {
   display: flex;
   justify-content: space-between;
-  height: $toolbar-height;
+  height: zoom($toolbar-height);
   flex: 0 0 auto;
   padding: 0 $default-padding-horizontal;
   overflow: hidden;
+
+  // Do not counterbalance toolbars if they are not frameless titlebars
+  :root:not(.frameless) &,
+  &:not(.titlebar) {
+    --zoom: 1;
+  }
 
   &.titlebar {
     .is-blurred & {
@@ -24,8 +30,10 @@
     }
 
     .frameless & {
+      font-size: zoom($font-size-base);
       -webkit-app-region: drag;
-      height: os($toolbar-frameless-height);
+      height: zoom(os($toolbar-frameless-height));
+      padding: 0 zoom($default-padding-horizontal);
     }
   }
 
@@ -45,7 +53,7 @@
     transition: transform $toolbar-context-transition;
 
     .frameless & {
-      height: os($toolbar-frameless-height);
+      height: zoom(os($toolbar-frameless-height));
     }
 
     &.default,
@@ -83,7 +91,7 @@
     white-space: nowrap;
 
     & + .tool-group {
-      margin-left: $space-xs - 2 * $shim;
+      margin-left: zoom($space-xs - 2 * $shim);
 
       .panel & {
         margin-left: $space-min - 2 * $shim;
@@ -101,14 +109,25 @@
       background-color: $btn-icon-active-bg;
     }
 
+    .frameless & {
+      padding: zoom($btn-icon-padding);
+    }
+
     .icon {
       @include state(".btn-icon:active", ".btn-icon.active") {
         color: $btn-icon-active-color;
       }
+
+      svg {
+        @include variant(":where(.frameless) :where(.titlebar).toolbar") {
+          width: zoom($space-md);
+          height: zoom($space-md);
+        }
+      }
     }
 
     & + .btn-icon {
-      margin-left: calc($space-min / 2);
+      margin-left: zoom(calc($space-min / 2));
     }
   }
 
