@@ -441,6 +441,10 @@ export class Window extends EventEmitter {
     this.send('minimize')
   }
 
+  fullscreen() {
+    this.send('fullscreen')
+  }
+
   menu(event) {
     let { left, bottom } = bounds(event.target)
     this.send('show-menu', {
