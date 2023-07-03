@@ -10,9 +10,15 @@ export async function init() {
   }
 }
 
-export async function open(...args) {
+export const defaults = {
+  failOn: 'none'
+  // limitInputPixels: false
+  // unlimited: true
+}
+
+export async function open(input, options = {}) {
   await init()
-  return sharp(...args)
+  return sharp(input, { ...defaults, ...options })
 }
 
 export async function toFile(file, ...args) {
