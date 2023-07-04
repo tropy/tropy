@@ -232,7 +232,11 @@ export function createDragHandler({
 
     off(document.body, 'keydown', onKeyDown)
 
-    handleDragStop(event, event == null || event.type !== 'mouseup')
+    let wasCancelled = !(
+      event?.type === 'mouseup' || event?.type === 'mousemove'
+    )
+
+    handleDragStop(event, wasCancelled)
 
     toggle(document.documentElement, 'dragging', false)
   }
