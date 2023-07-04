@@ -89,7 +89,6 @@ export default function ({
           let data = code
             .replace('"linux"', `"${platform}"`)
             .replace('"../themes/light"', `"../themes/${theme}"`)
-            .replace('"../themes/colors-light"', `"../themes/colors-${theme}"`)
 
           outFiles.push([`${basename(id, extension)}-${theme}.css`, data])
         }

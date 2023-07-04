@@ -1,0 +1,11 @@
+@function tint($color, $tint) {
+  @return color-mix(in sRGB, $color, rgb(255 255 255) $tint);
+}
+
+@function shade($color, $shade) {
+  @return color-mix(in sRGB, $color, rgb(0 0 0) $shade);
+}
+
+@function fade($color, $alpha) {
+  @return color-mix(in sRGB, $color, $alpha, rgba(0 0 0 / 0));
+}

@@ -1,21 +1,20 @@
 /* stylelint-disable max-empty-lines, no-invalid-position-at-import-rule */
 
-$platform: "linux";
-$theme: "light";
-
-@import
-  "../themes/light";
-
 //
 // About window
 // --------------------------------------------------
+
+$platform: "linux";
+$theme: "light";
+
+@import "../abstracts/functions";
+@import "../themes/light";
 
 
 // Abstracts
 // --------------------------------------------------
 
 @import
-  "../abstracts/functions",
   "../abstracts/variables",
   "../abstracts/mixins",
   "../abstracts/placeholders";

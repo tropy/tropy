@@ -12,19 +12,20 @@
 }
 
 @mixin form-shading-level($n) {
+@if $theme == "light" {
   ::-webkit-input-placeholder,
   .placeholder {
-    color: var(--level-#{$n}-placeholder-color);
+    color: map-get($form-level-shades, "level-#{$n}-placeholder-color");
   }
 
   fieldset {
-    background-color: var(--level-#{$n}-fieldset-bg);
+    background-color: map-get($form-level-shades, "level-#{$n}-fieldset-bg");
   }
 
   .form-control,
   .btn-toggle:not(:has(:checked)) {
-    border-color: var(--level-#{$n}-border);
-    background-color: var(--level-#{$n}-bg);
+    border-color: map-get($form-level-shades, "level-#{$n}-border");
+    background-color: map-get($form-level-shades, "level-#{$n}-bg");
 
     @include input-btn-focus;
 
@@ -32,15 +33,15 @@
     &[disabled],
     &.disabled,
     &.file-select {
-      background-color: var(--level-#{$n}-input-bg-readonly);
+      background-color: map-get($form-level-shades, "level-#{$n}-inpug-bg-readonly");
     }
   }
 
   .checkbox,
   .radio {
     [type] {
-      background-color: var(--level-#{$n}-bg);
-      border-color: var(--level-#{$n}-border);
+      background-color: map-get($form-level-shades, "level-#{$n}-bg");
+      border-color: map-get($form-level-shades, "level-#{$n}-border");
 
       &:active {
         background-color: $checkbox-checked-bg;
@@ -48,8 +49,8 @@
       }
 
       &[disabled] {
-        background-color: var(--level-#{$n}-input-bg-readonly);
-        border-color: var(--level-#{$n}-border);
+        background-color: map-get($form-level-shades, "level-#{$n}-input-bg-readonly");
+        border-color: map-get($form-level-shades, "level-#{$n}-border");
       }
 
       &:checked {
@@ -62,8 +63,8 @@
         }
 
         &[disabled] {
-          background-color: var(--level-#{$n}-input-bg-readonly);
-          border-color: var(--level-#{$n}-border);
+          background-color: map-get($form-level-shades, "level-#{$n}-input-bg-readonly");
+          border-color: map-get($form-level-shades, "level-#{$n}-border");
 
           &::before,
           &::after {
@@ -75,11 +76,12 @@
   }
 
   .btn-default {
-    border-color: var(--level-#{$n}-border);
-    background-color: var(--level-#{$n}-bg);
+    border-color: map-get($form-level-shades, "level-#{$n}-border");
+    background-color: map-get($form-level-shades, "level-#{$n}-bg");
 
     &:active {
-      background-color: var(--level-#{$n}-btn-default-active-bg);
+      background-color: map-get($form-level-shades, "level-#{$n}-btn-default-active-bg");
     }
   }
+}
 }

@@ -22,7 +22,10 @@
     );
   line-height: normal;
   padding: $editable-padding-vertical $editable-padding-horizontal;
-  border: $editable-border-width solid $editable-border-color;
+  // Issue #800
+  border-width: $editable-border-width;
+  border-style: solid;
+  border-color: $editable-border-color;
   color: $editable-color;
   background: $editable-bg;
   border-radius: $editable-border-radius;

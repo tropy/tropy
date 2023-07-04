@@ -1,15 +1,14 @@
 /* stylelint-disable max-empty-lines, no-invalid-position-at-import-rule */
 
-$platform: "linux";
-$theme: "light";
-
-@import
-  "../themes/light",
-  "../themes/colors-light";
-
 //
 // Window Base
 // --------------------------------------------------
+
+$platform: "linux";
+$theme: "light";
+
+@import "../abstracts/functions";
+@import "../themes/light";
 
 
 // Abstracts
@@ -18,7 +17,6 @@ $theme: "light";
 @import
   "../abstracts/variables",
   "../abstracts/mixins",
-  "../abstracts/functions",
   "../abstracts/placeholders";
 
 
