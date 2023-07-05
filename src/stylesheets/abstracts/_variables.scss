@@ -318,7 +318,7 @@ $add-tag-transition:                0.3s ease;
 
 $search-height: $input-height-base;
 $search-frameless-height: ($search-height, $search-height, 34px);
-$search-frameless-border-radius: (null, null, $border-radius-base);
+$search-frameless-border-radius: ($border-radius-small, $border-radius-small, $border-radius-base);
 $clear-button-size: 14px;
 
 
