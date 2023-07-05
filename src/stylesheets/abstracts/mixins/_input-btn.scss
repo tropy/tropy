@@ -12,7 +12,6 @@
 }
 
 @mixin form-shading-level($n) {
-@if $theme == "light" {
   ::-webkit-input-placeholder,
   .placeholder {
     color: map-get($form-level-shades, "level-#{$n}-placeholder-color");
@@ -83,5 +82,4 @@
       background-color: map-get($form-level-shades, "level-#{$n}-btn-default-active-bg");
     }
   }
-}
 }

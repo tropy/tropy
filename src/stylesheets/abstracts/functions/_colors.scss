@@ -7,5 +7,5 @@
 }
 
 @function fade($color, $alpha) {
-  @return color-mix(in sRGB, $color, $alpha, rgba(0 0 0 / 0));
+  @return color-mix(in sRGB, $color $alpha, rgba(0 0 0 / 0));
 }
