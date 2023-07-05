@@ -424,7 +424,7 @@ export class WindowManager extends EventEmitter {
         })
         .once('closed', () => {
           this.unref(type, win)
-          this.emit('closed', type, win)
+          this.emit('closed', type)
         })
 
       this.windows[type] = [win, ...array(this.windows[type])]
