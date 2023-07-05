@@ -11,20 +11,14 @@ $theme: "dark";
 // --------------------------------------------------
 
 :root, ::selection {
-  --blue:          #395bac;
-  --blue-light:    #cedef7;
-  --blue-dark:     #171b2e;
-  --blue-overlay:  #4176f2;
-  --blue-vibrancy: rgba(#4176f2, 0.7); // 2% brighter than blue-dark on original bg
-  --red:           #e62e2e;
-  --green:         #328e52; // 64% of the light theme green + 7% saturation
+  --primary:          #395bac;            // Blue
+  --primary-overlay:  #4176f2;            // Blue Overlay
+  --primary-vibrancy: rgba(#4176f2, 0.7); // Blue Vibrancy, 2% brighter than Blue Dark on original bg
+  --primary-dark:     #171b2e;            // Blue Dark
+  --primary-light:    #cedef7;            // Blue Light
+  --red:              #e62e2e;
+  --green:            #328e52;            // 64% of the light theme green + 7% saturation
 }
-
-$brand-primary:          var(--blue);
-$brand-primary-overlay:  var(--blue-overlay);
-$brand-primary-vibrancy: var(--blue-vibrancy);
-$brand-primary-dark:     var(--blue-dark);
-$brand-primary-light:    var(--blue-light);
 
 
 // Grays
@@ -102,11 +96,11 @@ $muted-text-color: var(--shade-7);
 // Typography
 // --------------------------------------------------
 
-$link-color:       tint($brand-primary, 14%);
-$link-hover-color: tint($brand-primary, 14%);
+$link-color:       tint(var(--primary), 14%);
+$link-hover-color: tint(var(--primary), 14%);
 
 $text-selection-color: inherit;
-$text-selection-bg:    alpha($brand-primary, 35%);
+$text-selection-bg:    alpha(var(--primary), 35%);
 
 $hr-border: var(--shade-1);
 
@@ -120,9 +114,9 @@ $cover-spin-color: alpha(var(--shade-0), 40%);
 $cover-bg:         var(--shade-3);
 
 // Forms & buttons
-$input-btn-focus-color: $brand-primary;
+$input-btn-focus-color: var(--primary);
 $input-btn-invalid-color: alpha(var(--red), 64%);
-$input-btn-overlay-focus-color: $brand-primary-vibrancy;
+$input-btn-overlay-focus-color: var(--primary-vibrancy);
 $disabled-opacity: 0.5;
 
 // Forms
@@ -132,7 +126,7 @@ $input-overlay-bg:                       alpha(var(--shade-10), 14%);
 $input-bg-readonly:                      tint(var(--shade-4), 2%);
 $input-overlay-bg-readonly:              alpha(var(--shade-10), 7%);
 $input-border:                           var(--shade-1);
-$input-overlay-focus-color:              $brand-primary-vibrancy;
+$input-overlay-focus-color:              var(--primary-vibrancy);
 $input-color-placeholder:                var(--shade-6);
 $fieldset-bg:                            tint(var(--shade-4), 2%);
 $checkbox-bg:                            var(--shade-3);
@@ -177,13 +171,13 @@ $badge-bg:      var(--red);
 $badge-opacity: 0.64;
 
 // Drop target
-$drop-target-color: alpha($brand-primary, 35%);
+$drop-target-color: alpha(var(--primary), 35%);
 
 // Sort indicator
 $sort-indicator: var(--shade-9);
 
 // Tile
-$tile-focus-color:          $brand-primary;
+$tile-focus-color:          var(--primary);
 $tile-active-color:         var(--shade-5);
 $tile-expansion-bg:         var(--shade-2);
 $tile-expansion-focus-bg:   var(--shade-1);
@@ -193,7 +187,7 @@ $tile-selection-icon-color: shade(var(--shade-10), 14%);
 // Stack
 $stack-color:             var(--shade-7);
 $stack-bg:                $body-bg;
-$stack-focus-color:       $brand-primary-light;
+$stack-focus-color:       var(--primary-light);
 $stack-line-gap-color:    var(--shade-3);
 $stack-line-tint-color:   var(--shade-3);
 $stack-line-tint-opacity: 0.5;
@@ -204,8 +198,8 @@ $scrollbar-color:         var(--shade-6);
 $scrollbar-overlay-color: alpha(var(--shade-10), 20%);
 
 // List states
-$list-focus-color:       $brand-primary-light;
-$list-focus-bg:          $brand-primary;
+$list-focus-color:       var(--primary-light);
+$list-focus-bg:          var(--primary);
 $list-active-color:      var(--shade-9);
 $list-active-bg:         var(--shade-5);
 $list-active-icon-color: var(--shade-8);
@@ -223,7 +217,7 @@ $icon-style:        "line";
 $icon-color:        var(--shade-7);
 $icon-active-color: var(--shade-9);
 
-$icon-spin-color:   $brand-primary;
+$icon-spin-color:   var(--primary);
 
 // Toolbar
 $toolbar-blurred-opacity-darwin:       0.5;
@@ -259,7 +253,7 @@ $sidebar-blurred-bg:                      var(--shade-2);
 $sidebar-vibrancy-color:                  alpha(var(--shade-10), 50%); // ~ default color on solid bg
 $sidebar-vibrancy-list-active-color:      alpha(var(--shade-10), 64%);
 $sidebar-vibrancy-list-active-bg:         alpha(var(--shade-10), 7%);
-$sidebar-vibrancy-list-focus-bg:          $brand-primary-vibrancy;
+$sidebar-vibrancy-list-focus-bg:          var(--primary-vibrancy);
 $sidebar-blurred-list-active-bg-darwin:   shade(var(--shade-5), 4%);
 $sidebar-blurred-list-active-bg-linux:    alpha(var(--shade-5), 60%);
 $sidebar-text-color:                      var(--shade-8);
@@ -279,7 +273,7 @@ $activity-vibrancy-border-color:          alpha(var(--shade-0), 33%);
 $activity-blurred-border-color-darwin:    shade(var(--shade-1), 4%);
 $activity-blurred-border-color-linux:     alpha(var(--shade-1), 60%);
 $activity-vibrancy-progress-bar-bg:       alpha(var(--shade-0), 20%);
-$activity-vibrancy-progress-val-bg:       $brand-primary-vibrancy;
+$activity-vibrancy-progress-val-bg:       var(--primary-vibrancy);
 $activity-vibrancy-progress-cancel-bg:    alpha(var(--shade-10), 18%);
 $activity-blurred-progress-bar-bg-darwin: shade(var(--shade-2), 4%);
 $activity-blurred-progress-bar-bg-linux:  alpha(var(--shade-2), 60%);
@@ -294,8 +288,8 @@ $item-table-header-active-bg:    var(--shade-2);
 $item-table-header-border-color: var(--shade-1);
 $item-table-column-border-color: $item-table-header-border-color;
 $items-odd-bg:                   var(--shade-4);
-$items-focus-color:              $brand-primary-light;
-$items-focus-bg:                 $brand-primary;
+$items-focus-color:              var(--primary-light);
+$items-focus-bg:                 var(--primary);
 $items-active-color:             var(--shade-9);
 $items-active-bg:                var(--shade-5);
 
@@ -356,8 +350,8 @@ $photo-panel-slider-handle-nested-focus-bg:   null;
 $photo-panel-slider-handle-blurred-bg-darwin: null;
 
 // Note list
-$note-list-focus-color:  $brand-primary-light;
-$note-list-focus-bg:     $brand-primary;
+$note-list-focus-color:  var(--primary-light);
+$note-list-focus-bg:     var(--primary);
 $note-list-active-color: var(--shade-9);
 $note-list-active-bg:    var(--shade-5);
 $note-list-blurred-bg:   shade(var(--shade-5), 4%);
@@ -375,9 +369,9 @@ $btn-default-overlay-bg:        alpha(var(--shade-10), 10%);
 $btn-default-border:            var(--shade-1);
 $btn-default-active-bg:         var(--shade-2);
 $btn-default-overlay-active-bg: alpha(var(--shade-10), 8%);
-$btn-primary-color:             $brand-primary-light;
-$btn-primary-bg:                $brand-primary;
-$btn-primary-active-bg:         shade($brand-primary, 2%);
+$btn-primary-color:             var(--primary-light);
+$btn-primary-bg:                var(--primary);
+$btn-primary-active-bg:         shade(var(--primary), 2%);
 $btn-icon-bg:                   transparent;
 $btn-icon-hover-bg:             alpha(var(--shade-0), 15%);
 $btn-icon-active-bg:            alpha(var(--shade-0), 30%);
@@ -401,8 +395,8 @@ $slider-overlay-handle-border:          transparent;
 $slider-handle-disabled-bg:             var(--shade-5);
 $slider-value-color:                    var(--shade-8);
 $slider-overlay-value-color:            var(--shade-9);
-$slider-focus-bg:                       $brand-primary;
-$slider-overlay-focus-bg:               $brand-primary-overlay;
+$slider-focus-bg:                       var(--primary);
+$slider-overlay-focus-bg:               var(--primary-overlay);
 
 // Esper
 $esper-bg:                               var(--shade-1);
@@ -444,7 +438,7 @@ $thumbnail-bg:    tint(var(--shade-5), 5%);
 
 // Progress bar
 $progress-bar-bg:             var(--shade-2);
-$progress-bar-color:          $brand-primary;
+$progress-bar-color:          var(--primary);
 $progress-cancel-color:       var(--shade-4);
 $progress-cancel-bg:          var(--shade-7);
 
@@ -457,7 +451,7 @@ $editor-btn-active-bg:                  var(--shade-1);
 $editor-placeholder-color:              var(--shade-6);
 
 $blockquote-border-color: var(--shade-8);
-$selected-node-color:     $brand-primary;
+$selected-node-color:     var(--primary);
 $editor-hr-border-color:  var(--shade-1);
 $line-number-color:       var(--shade-6);
 
@@ -469,7 +463,7 @@ $prefs-header-blurred-bg-darwin: var(--shade-2);
 // Vocab
 $vocab-panel-bg:    tint(var(--shade-4), 2%);
 $vocab-label-color: var(--shade-7);
-$vocab-link-color:  alpha($brand-primary-light, 76%);
+$vocab-link-color:  alpha(var(--primary-light), 76%);
 
 // Plugins
 $plugin-instance-bg:               tint(var(--shade-4), 4%);
@@ -483,14 +477,14 @@ $plugin-disabled-indicator:        var(--shade-1);
 $plugin-active-disabled-indicator: tint(var(--shade-1), 2%);
 
 // Colors
-$colors-focus-border-table: $brand-primary-light;
+$colors-focus-border-table: var(--primary-light);
 $colors-focus-border-grid:  shade(var(--shade-10), 14%);
 
 // Flash
-$flash-bg:               $brand-primary-dark;
-$flash-color:            tint($brand-primary, 14%);
-$flash-close-icon-color: tint($brand-primary, 14%);
-$flash-shadow-color:     alpha($brand-primary, 30%);
+$flash-bg:               var(--primary-dark);
+$flash-color:            tint(var(--primary), 14%);
+$flash-close-icon-color: tint(var(--primary), 14%);
+$flash-shadow-color:     alpha(var(--primary), 30%);
 
 // Search
 $search-border-color:      null;
