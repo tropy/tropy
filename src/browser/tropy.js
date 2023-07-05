@@ -958,11 +958,17 @@ export class Tropy extends EventEmitter {
       }
     })
 
-    this.wm.on('closed', (type) => {
+    this.wm.on('close', (type, win) => {
       if (type === 'prefs') {
+        let parent = win.getParentWindow()
+        let project = this.getProject(parent)
+
+        if (project)
+          parent.webContents.send('dispatch', act.project.reload())
+
+        // All project windows
         this.wm.send('project', 'dispatch',
           act.ontology.load(null, { replace: true }),
-          act.project.reload(),
           act.storage.reload([['settings']]))
       }
       this.menu.handleWindowChange()
