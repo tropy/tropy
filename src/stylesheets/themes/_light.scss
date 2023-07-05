@@ -63,8 +63,8 @@ $tag-colors: (
   color-lavender:   #a28ae6
 );
 
-@each $key, $val in $tag-colors {
-  :root {
+:root {
+  @each $key, $val in $tag-colors {
     #{--#{$key}}: $val;
   }
 }
