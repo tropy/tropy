@@ -141,7 +141,8 @@
         order: 3;
       }
 
-      .not-maximizable & {
+      .not-maximizable &,
+      :has(.no-project) & {
         display: none;
       }
     }
