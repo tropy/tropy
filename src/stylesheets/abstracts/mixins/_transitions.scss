@@ -2,7 +2,7 @@
 // Transitions
 // --------------------------------------------------
 
-@mixin fade(
+@mixin alpha(
   $duration: $fade-duration,
   $timing-function: $fade-timing-function,
   $delay: $fade-delay

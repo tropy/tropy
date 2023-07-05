@@ -15,7 +15,7 @@
 .no-project {
   display: flex;
   background-color: $no-project-bg;
-  @include fade($delay: 0.33s, $duration: 0.15s);
+  @include alpha($delay: 0.33s, $duration: 0.15s);
 
   .is-blurred & {
     @if $platform == darwin {
@@ -25,7 +25,7 @@
 }
 
 .project {
-  @include fade($delay: 0.66s, $duration: 0.15s);
+  @include alpha($delay: 0.66s, $duration: 0.15s);
 
   .main {
     display: flex;
