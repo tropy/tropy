@@ -125,8 +125,7 @@
     .minimize {
       background-image: icon-url("window/linux/#{$theme}/minimize.svg");
 
-      #prefs &,
-      #about & {
+      .not-minimizable & {
         display: none;
       }
     }
@@ -142,8 +141,7 @@
         order: 3;
       }
 
-      #prefs &,
-      #about & {
+      .not-maximizable & {
         display: none;
       }
     }
