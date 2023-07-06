@@ -406,7 +406,7 @@ export const IconMaze = i('Maze', (
   </svg>
 ))
 
-export const IconMazeLinux = i('MazeLinux', (
+export const IconMazePrefsLinux = i('MazePrefsLinux', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
       <polygon points="9 1 9 7 11 7 11 3 13 3 13 13 9 13 9 15 15 15 15 1 9 1"/>
@@ -775,7 +775,7 @@ export const IconProject = i('Project', (
   </svg>
 ))
 
-export const IconMaze32 = i('Maze32', (
+export const IconMazePrefs = i('MazePrefs', (
   <svg width="32" height="32" viewBox="0 0 32 32">
     <g className="line" fill="currentColor">
       <path d="M27,5V27H17V26h6V23h1v3h2V21H21v3H20V17h1v3h5V12H20V11h6V6H18V8h7V9H17V5ZM9,23H8v3H6V6h8v5H12V8H11v4h6v2H9V8H8V21h3v3h7V17H11v1h6v5H12V21h3V20H9V15H23v3h1V14H18V11H15V5H5V27H15V26H9ZM29,2a1,1,0,0,1,1,1V29a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2H29m0-1H3A2,2,0,0,0,1,3V29a2,2,0,0,0,2,2H29a2,2,0,0,0,2-2V3a2,2,0,0,0-2-2Z"/>
