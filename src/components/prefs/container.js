@@ -18,6 +18,10 @@ import {
 } from '../../selectors'
 
 class Prefs extends React.PureComponent {
+  icon(name) {
+    return process.platform === 'linux' ? `${name}Linux` : name
+  }
+
   isActive(pane) {
     return this.props.pane === pane
   }
@@ -40,14 +44,14 @@ class Prefs extends React.PureComponent {
               <li>
                 <PrefPaneToggle
                   name="app"
-                  icon="IconTropy"
+                  icon={this.icon('IconTropy')}
                   isActive={this.isActive('app')}
                   onClick={this.toggle}/>
               </li>
               <li>
                 <PrefPaneToggle
                   name="project"
-                  icon="IconMaze32"
+                  icon={this.icon('IconMazePrefs')}
                   isActive={this.isActive('project')}
                   isDisabled={!this.props.project.id}
                   onClick={this.toggle}/>
@@ -55,21 +59,21 @@ class Prefs extends React.PureComponent {
               <li>
                 <PrefPaneToggle
                   name="template"
-                  icon="IconTemplate"
+                  icon={this.icon('IconTemplate')}
                   isActive={this.isActive('template')}
                   onClick={this.toggle}/>
               </li>
               <li>
                 <PrefPaneToggle
                   name="vocab"
-                  icon="IconBook"
+                  icon={this.icon('IconBook')}
                   isActive={this.isActive('vocab')}
                   onClick={this.toggle}/>
               </li>
               <li>
                 <PrefPaneToggle
                   name="plugins"
-                  icon="IconPlugin"
+                  icon={this.icon('IconPlugin')}
                   isActive={this.isActive('plugins')}
                   onClick={this.toggle}/>
               </li>
