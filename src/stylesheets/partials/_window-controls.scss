@@ -110,11 +110,7 @@
       &:focus-visible {
         outline-width: 2px;
         outline-offset: -2px;
-        outline-color: if(
-          $theme == "light",
-          rgba(198, 70, 0, 0.5),
-          rgba(255, 190, 111, 0.5)
-        )
+        outline-color: $input-btn-focus-color;
       }
 
       &::after {
