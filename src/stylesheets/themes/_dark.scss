@@ -140,29 +140,29 @@ $checkbox-checked-active-border:         shade(var(--shade-8), 5%);
 $checkbox-overlay-checked-active-border: shade(var(--shade-10), 19%);
 $tick-color:                             var(--shade-4);
 $form-level-shades: (
-  level-0-border: var(--shade-1-darken-2),
+  level-0-border: shade(var(--shade-1), 2%),
   level-0-bg:     var(--shade-2),
 
-  level-2-border:                var(--shade-1-lighten-2),
+  level-2-border:                tint(var(--shade-1), 2%),
   level-2-bg:                    var(--shade-4),
-  level-2-input-bg-readonly:     var(--shade-4-lighten-4),
-  level-2-fieldset-bg:           var(--shade-4-lighten-4),
+  level-2-input-bg-readonly:     tint(var(--shade-4), 4%),
+  level-2-fieldset-bg:           tint(var(--shade-4), 4%),
   level-2-btn-default-active-bg: var(--shade-3),
-  level-2-placeholder-color:     var(--shade-6-lighten-2),
+  level-2-placeholder-color:     tint(var(--shade-6), 2%),
 
-  level-3-border:                var(--shade-1-lighten-4),
-  level-3-bg:                    var(--shade-4-lighten-2),
-  level-3-input-bg-readonly:     var(--shade-4-lighten-6),
-  level-3-fieldset-bg:           var(--shade-4-lighten-6),
+  level-3-border:                tint(var(--shade-1), 4%),
+  level-3-bg:                    tint(var(--shade-4), 2%),
+  level-3-input-bg-readonly:     tint(var(--shade-4), 6%),
+  level-3-fieldset-bg:           tint(var(--shade-4), 6%),
   level-3-btn-default-active-bg: var(--shade-4),
-  level-3-placeholder-color:     var(--shade-6-lighten-4),
+  level-3-placeholder-color:     tint(var(--shade-6), 4%),
 
-  level-4-border:                var(--shade-1-lighten-6),
-  level-4-bg:                    var(--shade-4-lighten-4),
-  level-4-input-bg-readonly:     var(--shade-4-lighten-8),
-  level-4-fieldset-bg:           var(--shade-4-lighten-8),
-  level-4-btn-default-active-bg: var(--shade-4-lighten-2),
-  level-4-placeholder-color:     var(--shade-6-lighten-6)
+  level-4-border:                tint(var(--shade-1), 6%),
+  level-4-bg:                    tint(var(--shade-4), 4%),
+  level-4-input-bg-readonly:     tint(var(--shade-4), 8%),
+  level-4-fieldset-bg:           tint(var(--shade-4), 8%),
+  level-4-btn-default-active-bg: tint(var(--shade-4), 2%),
+  level-4-placeholder-color:     tint(var(--shade-6), 6%)
 );
 
 // Badge
