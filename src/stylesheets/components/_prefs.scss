@@ -106,13 +106,60 @@
         padding: 7px $space-sm 0;
         font-weight: 700;
         border-radius: 0;
+        transition-property: outline-color, outline-width, outline-offset, background-color;
+        transition-duration: 0.2s;
+        transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        outline: 0 solid transparent;
+        outline-offset: 4px;
+        color: if(
+          $theme == "light",
+          rgba(0, 0, 0, 0.8),
+          rgb(255, 255, 255)
+        );
+
+        &:hover {
+          background-color: if(
+            $theme == "light",
+            rgba(0, 0, 0, 0.056),
+            rgba(255, 255, 255, 0.07)
+          );
+        }
 
         &.active {
-          background-color: rgba(0, 0, 0, 0.08);
+          background-color: if(
+            $theme == "light",
+            rgba(0, 0, 0, 0.08),
+            rgba(255, 255, 255, 0.1)
+          );
+
+          &:where(:hover) {
+            background-color: if(
+              $theme == "light",
+              rgba(0, 0, 0, 0.104),
+              rgba(255, 255, 255, 0.13)
+            );
+          }
+        }
+
+        &:active {
+          background-color: if(
+            $theme == "light",
+            rgba(0, 0, 0, 0.152),
+            rgba(255, 255, 255, 0.19)
+          );
+        }
+
+        &:focus-visible {
+          outline: 2px solid $input-btn-focus-color;
+          outline-offset: -2px;
         }
 
         .icon {
-          color: rgba(0, 0, 0, 0.8);
+          color: if(
+            $theme == "light",
+            rgba(0, 0, 0, 0.8),
+            rgb(255, 255, 255)
+          );
         }
       }
     }
