@@ -382,11 +382,15 @@ export class WindowManager extends EventEmitter {
 
     let win = await this.create(type, props, opts)
 
+    // On Linux minimizable/maximizable is always true,
+    // so we use our default config instead.
+    let mmx = linux ? WindowManager.defaults[type] : win
+
     await win.loadFile(View.expand(type), {
       hash: encodeURIComponent(JSON.stringify({
         ...props,
-        maximizable: win.maximizable,
-        minimizable: win.minimizable
+        maximizable: mmx.maximizable !== false,
+        minimizable: mmx.minimizable !== false
       }))
     })
 

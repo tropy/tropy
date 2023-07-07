@@ -35,6 +35,9 @@ export class WindowControls {
     }
 
     toggle(win.html, `window-controls-${this.layout.placement}`, true)
+    toggle(win.html, 'not-maximizable', !ARGS.maximizable)
+    toggle(win.html, 'not-minimizable', !ARGS.minimizable)
+
 
     append(this.root, win.body)
   }

@@ -87,9 +87,6 @@ export class Window extends EventEmitter {
         if (ARGS.frameless) {
           toggle(this.html, 'frameless', true)
 
-          toggle(this.html, 'not-maximizable', !ARGS.maximizable)
-          toggle(this.html, 'not-minimizable', !ARGS.minimizable)
-
           if (!darwin) {
             this.controls = new WindowControls()
             this.controls.mount(this)
