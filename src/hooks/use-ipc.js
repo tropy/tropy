@@ -8,7 +8,7 @@ export function useIpc() {
 
 export function useIpcEvent(fn, params = []) {
   return useEvent((...args) => {
-    ipcRenderer.send(...params, fn(...args))
+    ipcRenderer.send(...params, fn?.(...args))
   })
 }
 
