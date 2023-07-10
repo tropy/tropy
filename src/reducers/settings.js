@@ -6,7 +6,6 @@ import { dc } from '../ontology'
 
 const defaults = {
   completions: 'datatype',
-  debug: ARGS.debug,
   dup: 'prompt',
   density: 72,
   export: {
@@ -20,9 +19,7 @@ const defaults = {
       localize: true
     }
   },
-  fontSize: ARGS.fontSize,
   layout: ITEM.LAYOUT.STACKED,
-  locale: ARGS.locale,
   localtime: true,
   tagColor: null,
   templates: {
