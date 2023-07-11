@@ -85,8 +85,6 @@ class Prefs extends React.PureComponent {
             name="app"
             isActive={this.isActive('app')}>
             <AppPrefs
-              properties={this.props.properties}
-              templates={this.props.templates}
               settings={this.props.settings}
               onSettingsUpdate={this.props.onSettingsUpdate}/>
           </PrefPane>
