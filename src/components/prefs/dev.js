@@ -10,13 +10,11 @@ export function DeveloperSettings() {
   ])
 
   return (
-    <>
-      <FormToggle
-        id="prefs.app.debug"
-        name="debug"
-        isDisabled={dev}
-        value={debug}
-        onChange={handleDebugChange}/>
-    </>
+    <FormToggle
+      id="prefs.app.debug"
+      name="debug"
+      isDisabled={dev}
+      value={debug}
+      onChange={handleDebugChange}/>
   )
 }
