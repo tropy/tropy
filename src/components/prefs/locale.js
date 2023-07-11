@@ -11,17 +11,15 @@ export function LocaleSettings({ options }) {
   ), ['cmd', 'app:switch-locale'])
 
   return (
-    <>
-      <FormSelect
-        id="prefs.app.locale.locale"
-        name="locale"
-        isRequired
-        isSelectionHidden
-        value={locale}
-        options={options}
-        tabIndex={0}
-        onChange={handleLocaleChange}/>
-    </>
+    <FormSelect
+      id="prefs.app.locale.locale"
+      name="locale"
+      isRequired
+      isSelectionHidden
+      value={locale}
+      options={options}
+      tabIndex={0}
+      onChange={handleLocaleChange}/>
   )
 }
 
