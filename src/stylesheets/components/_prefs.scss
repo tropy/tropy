@@ -101,16 +101,16 @@
         align-items: center;
         border: 0;
         background: transparent;
-        font-size: 11px;
-        line-height: 22px;
-        padding: 7px $space-sm 0;
+        font-size: zoom(11px);
+        line-height: zoom(22px);
+        padding: zoom(7px) zoom($space-sm) 0;
         font-weight: 700;
         border-radius: 0;
         transition-property: outline-color, outline-width, outline-offset, background-color;
         transition-duration: 0.2s;
         transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
         outline: 0 solid transparent;
-        outline-offset: 4px;
+        outline-offset: zoom(4px);
         color: if(
           $theme == "light",
           rgba(0, 0, 0, 0.8),
@@ -150,8 +150,8 @@
         }
 
         &:focus-visible {
-          outline: 2px solid $input-btn-focus-color;
-          outline-offset: -2px;
+          outline: zoom(2px) solid $input-btn-focus-color;
+          outline-offset: zoom(-2px);
         }
 
         .icon {
@@ -160,6 +160,11 @@
             rgba(0, 0, 0, 0.8),
             rgb(255, 255, 255)
           );
+
+          svg {
+            width: zoom($space-md);
+            height: zoom($space-md);
+          }
         }
       }
     }
