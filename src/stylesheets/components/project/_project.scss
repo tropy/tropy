@@ -102,10 +102,6 @@
   }
 
   .toolbar {
-    .frameless & {
-      -webkit-app-region: drag;
-    }
-
     .is-blurred & {
       @if $platform == darwin {
         background-color: $toolbar-blurred-bg-darwin;
