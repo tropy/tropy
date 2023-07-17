@@ -69,12 +69,12 @@
       min-width: zoom(34px);
       min-height: zoom(34px);
       background-image: icon-url("window/linux/#{$theme}/menu.svg");
-      border-radius: 6px;
+      border-radius: zoom(6px);
       transition-property: background-color, outline-color, outline-width, outline-offset;
       transition-duration: 0.2s;
       transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
       outline: 0 solid transparent;
-      outline-offset: 4px;
+      outline-offset: zoom(4px);
 
       .window-controls-left & {
         position: fixed;
@@ -108,8 +108,8 @@
       }
 
       &:focus-visible {
-        outline-width: 2px;
-        outline-offset: -2px;
+        outline-width: zoom(2px);
+        outline-offset: zoom(-2px);
         outline-color: $input-btn-focus-color;
       }
 
