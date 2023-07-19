@@ -254,31 +254,24 @@ $sidebar-vibrancy-color:                  alpha(var(--shade-10), 50%); // ~ defa
 $sidebar-vibrancy-list-active-color:      alpha(var(--shade-10), 64%);
 $sidebar-vibrancy-list-active-bg:         alpha(var(--shade-10), 7%);
 $sidebar-vibrancy-list-focus-bg:          var(--primary-vibrancy);
-$sidebar-blurred-list-active-bg-darwin:   shade(var(--shade-5), 4%);
-$sidebar-blurred-list-active-bg-linux:    alpha(var(--shade-5), 60%);
+$sidebar-blurred-list-active-bg:          (shade(var(--shade-5), 4%), null, null);
 $sidebar-text-color:                      var(--shade-8);
 $sidebar-headings-color:                  var(--shade-7);
 $sidebar-vibrancy-headings-color:         alpha(var(--shade-10), 33%);
-$sidebar-blurred-headings-color-darwin:   shade(var(--shade-7), 5%);
-$sidebar-blurred-headings-color-linux:    alpha(var(--shade-7), 40%);
+$sidebar-blurred-headings-color:          (shade(var(--shade-7), 5%), null, null);
 $sidebar-vibrancy-icon-color:             alpha(var(--shade-10), 33%);
 $sidebar-vibrancy-icon-selected-color:    alpha(var(--shade-10), 46%);
-$sidebar-blurred-icon-opacity-darwin:     0.33;
-$sidebar-blurred-icon-opacity-linux:      0.4;
-$sidebar-blurred-name-opacity-darwin:     0.55;
-$sidebar-blurred-name-opacity-linux:      0.4;
+$sidebar-blurred-icon-opacity:            (0.33, null, null);
+$sidebar-blurred-name-opacity:            (0.55, null, null);
 $sidebar-blurred-tag-opacity-darwin:      0.34;
 $activity-border-color:                   var(--shade-1);
 $activity-vibrancy-border-color:          alpha(var(--shade-0), 33%);
-$activity-blurred-border-color-darwin:    shade(var(--shade-1), 4%);
-$activity-blurred-border-color-linux:     alpha(var(--shade-1), 60%);
+$activity-blurred-border-color:           (shade(var(--shade-1), 4%), null, null);
 $activity-vibrancy-progress-bar-bg:       alpha(var(--shade-0), 20%);
 $activity-vibrancy-progress-val-bg:       var(--primary-vibrancy);
 $activity-vibrancy-progress-cancel-bg:    alpha(var(--shade-10), 18%);
-$activity-blurred-progress-bar-bg-darwin: shade(var(--shade-2), 4%);
-$activity-blurred-progress-bar-bg-linux:  alpha(var(--shade-2), 60%);
-$activity-blurred-progress-val-bg-darwin: shade(var(--shade-6), 4%);
-$activity-blurred-progress-val-bg-linux:  var(--shade-5); // ~ 60% opacity
+$activity-blurred-progress-bar-bg:        (shade(var(--shade-2), 4%), null, null);
+$activity-blurred-progress-val-bg:        (shade(var(--shade-6), 4%), null, null);
 
 // Items
 $item-table-header-color:        var(--shade-8);

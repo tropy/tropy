@@ -39,13 +39,7 @@
   }
 
   .is-blurred & {
-    @if $platform == darwin {
-      border-top-color: $activity-blurred-border-color-darwin;
-    }
-
-    @if $platform == linux {
-      border-top-color: $activity-blurred-border-color-linux;
-    }
+    border-top-color: os($activity-blurred-border-color);
   }
 
   .activity-container {
@@ -70,13 +64,7 @@
     margin-right: auto;
 
     .is-blurred & {
-      @if $platform == darwin {
-        opacity: $sidebar-blurred-name-opacity-darwin;
-      }
-
-      @if $platform == linux {
-        opacity: $sidebar-blurred-name-opacity-linux;
-      }
+      opacity: os($sidebar-blurred-name-opacity);
     }
   }
 
@@ -92,24 +80,12 @@
     }
 
     .is-blurred & {
-      @if $platform == darwin {
-        &::-webkit-progress-bar {
-          background-color: $activity-blurred-progress-bar-bg-darwin;
-        }
-
-        &::-webkit-progress-value {
-          background-color: $activity-blurred-progress-val-bg-darwin;
-        }
+      &::-webkit-progress-bar {
+        background-color: os($activity-blurred-progress-bar-bg);
       }
 
-      @if $platform == linux {
-        &::-webkit-progress-bar {
-          background-color: $activity-blurred-progress-bar-bg-linux;
-        }
-
-        &::-webkit-progress-value {
-          background-color: $activity-blurred-progress-val-bg-linux;
-        }
+      &::-webkit-progress-value {
+        background-color: os($activity-blurred-progress-val-bg);
       }
     }
   }
@@ -133,13 +109,7 @@
     }
 
     .is-blurred & {
-      @if $platform == darwin {
-        opacity: $sidebar-blurred-icon-opacity-darwin;
-      }
-
-      @if $platform == linux {
-        opacity: $sidebar-blurred-icon-opacity-linux;
-      }
+      opacity: os($sidebar-blurred-icon-opacity);
     }
 
     .icon {
