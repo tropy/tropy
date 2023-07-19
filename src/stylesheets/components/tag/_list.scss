@@ -38,13 +38,7 @@
         }
 
         .is-blurred & {
-          @if $platform == darwin {
-            background-color: $sidebar-blurred-list-active-bg-darwin;
-          }
-
-          @if $platform == linux {
-            background-color: $sidebar-blurred-list-active-bg-linux;
-          }
+          background-color: os($sidebar-blurred-list-active-bg);
         }
 
         &:focus {
