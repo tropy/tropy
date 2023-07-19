@@ -25,6 +25,11 @@
       right: zoom(6px);
     }
 
+    .is-blurred & {
+      filter: opacity(0.5);
+      transition: filter 0.2s ease-out;
+    }
+
     button {
       display: flex;
       justify-content: center;
