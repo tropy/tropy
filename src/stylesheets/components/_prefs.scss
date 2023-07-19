@@ -73,6 +73,11 @@
         flex: 0 0 auto;
         border-bottom: 1px solid $prefs-header-border;
         -webkit-app-region: drag;
+
+        @include state(".frameless.is-blurred") {
+          filter: opacity(0.5);
+          transition: filter 0.2s ease-out;
+        }
       }
 
       .toolbar {
