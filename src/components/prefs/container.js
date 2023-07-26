@@ -84,9 +84,7 @@ class Prefs extends React.PureComponent {
           <PrefPane
             name="app"
             isActive={this.isActive('app')}>
-            <AppPrefs
-              settings={this.props.settings}
-              onSettingsUpdate={this.props.onSettingsUpdate}/>
+            <AppPrefs/>
           </PrefPane>
           <PrefPane
             name="project"
@@ -131,7 +129,6 @@ class Prefs extends React.PureComponent {
     pane: string.isRequired,
     project: object,
     properties: array.isRequired,
-    settings: object.isRequired,
     vocab: array.isRequired,
     onClassSave: func.isRequired,
     onContextMenu: func.isRequired,
@@ -139,7 +136,6 @@ class Prefs extends React.PureComponent {
     onPrefsUpdate: func.isRequired,
     onProjectSave: func.isRequired,
     onPropsSave: func.isRequired,
-    onSettingsUpdate: func.isRequired,
     onVocabDelete: func.isRequired,
     onVocabExport: func.isRequired,
     onVocabSave: func.isRequired,
@@ -156,7 +152,6 @@ export const PrefsContainer = connect(
     pane: state.prefs.pane,
     project: state.project,
     properties: getPropertyList(state),
-    settings: state.settings,
     vocab: getVocabs(state)
   }),
 
@@ -184,10 +179,6 @@ export const PrefsContainer = connect(
 
     onProjectSave(...args) {
       dispatch(act.project.save(...args))
-    },
-
-    onSettingsUpdate(...args) {
-      dispatch(act.settings.update(...args))
     },
 
     onVocabDelete(...args) {
