@@ -3,7 +3,7 @@ import { EventEmitter } from 'node:events'
 import { existsSync as exists } from 'node:fs'
 import { basename, join } from 'node:path'
 import { warn } from './common/log.js'
-import { darwin } from './common/os.js'
+import { darwin, linux } from './common/os.js'
 import { Plugins } from './common/plugins.js'
 import { delay } from './common/util.js'
 import ARGS, { update } from './args.js'
@@ -450,8 +450,15 @@ export class Window extends EventEmitter {
     })
   }
 
-  setFixedSize(resizable, ...args) {
-    this.send('fixed-size', resizable, ...args)
+  setFixedSize(resizable, isFixed, { width, height, animate } = {}) {
+    if (linux && ARGS.frameless)
+      height += 46
+
+    this.send('fixed-size', resizable, isFixed, {
+      width,
+      height,
+      animate
+    })
   }
 
   get isResizeAnimated() {
