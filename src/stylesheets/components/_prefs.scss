@@ -2,12 +2,44 @@
 // Preferences
 // --------------------------------------------------
 
+@mixin prefs-nav {
+  .prefs-nav {
+    ul {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .pane-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 0;
+    background: transparent;
+    font-size: 11px;
+    line-height: 22px;
+    padding: 7px $space-sm 0;
+    -webkit-font-smoothing: subpixel-antialiased;
+
+    &.active {
+      .line {
+        display: none;
+      }
+
+      .block {
+        display: block;
+      }
+    }
+  }
+}
+
 .prefs {
   display: flex;
   flex-direction: column;
   height: 100%;
   background: $prefs-bg;
 
+  // macOS and Windows
   @if $platform != linux {
     .prefs-header {
       flex: 0 0 auto;
@@ -33,41 +65,24 @@
       padding: 1px 0;
     }
 
-    .prefs-nav {
-      ul {
-        display: flex;
-        justify-content: center;
-      }
-    }
+    @include prefs-nav;
+  }
 
+  // macOS
+  @if $platform == darwin {
     .pane-toggle {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      border: 0;
-      background: transparent;
-      font-size: 11px;
-      line-height: 22px;
-      padding: 7px $space-sm 0;
-      -webkit-font-smoothing: subpixel-antialiased;
-
-      .frameless & {
-        padding-top: 1px;
-      }
-
-      &.active {
-        .line {
-          display: none;
-        }
-
-        .block {
-          display: block;
-        }
-      }
+      padding-top: 1px;
     }
   }
 
+  // Linux
   @if $platform == linux {
+    // Native window
+    html:not(.frameless) & {
+      @include prefs-nav
+    }
+
+    // Frameless window
     .frameless & {
       .prefs-header {
         flex: 0 0 auto;
