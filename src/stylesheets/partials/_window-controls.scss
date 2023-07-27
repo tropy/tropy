@@ -26,7 +26,7 @@
     }
 
     .is-blurred & {
-      filter: opacity(0.5);
+      opacity: 0.5; // 'filter' would break position fixed of the menu button
       transition: filter 0.2s ease-out;
     }
 
