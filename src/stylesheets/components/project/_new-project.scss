@@ -27,7 +27,9 @@
     }
 
     @if $platform == linux {
-      margin-top: 50px;
+      html:not(.frameless) & {
+        margin-top: 49px;
+      }
     }
   }
 
