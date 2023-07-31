@@ -144,7 +144,7 @@ en:
             14px: Medium
             15px: Large
             16px: Very Large
-        frameless: Use custom titlebar (change applies to new windows)
+        frameless: Use custom titlebar (requires restart)
       print:
         mode: Print
         modes:
