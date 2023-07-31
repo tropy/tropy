@@ -25,7 +25,9 @@
     }
 
     @if $platform == linux {
-      margin-top: 53px;
+      html:not(.frameless) & {
+        margin-top: 52px;
+      }
     }
 
     .is-blurred & {
