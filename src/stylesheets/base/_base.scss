@@ -31,8 +31,7 @@ html {
 
   @if $platform == linux {
     &:not(.frameless) {
-      &:has(#project),
-      &:has(.prefs) {
+      &:has(#project) {
         border-top: 1px solid if($theme == light, #e6e6e6, #212121);
       }
     }
