@@ -1,49 +1,46 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import * as icons from '../icons'
 import cx from 'classnames'
 import { bool, node, func, object, string } from 'prop-types'
+import * as icons from '../icons.js'
+import { linux } from '../../common/os.js'
+import { useWindow } from '../../hooks/use-window.js'
 
-export class PrefPaneToggle extends React.PureComponent {
-  get classes() {
-    return ['pane-toggle', 'btn', this.props.name, {
-      active: this.props.isActive
-    }]
-  }
+export const PrefPaneToggle = React.memo(({
+  name,
+  icon,
+  isActive,
+  isDisabled,
+  onClick
+}) => {
+  let win = useWindow()
 
-  get label() {
-    return `prefs.${this.props.name}.label`
-  }
+  let Icon = icons[
+    (linux && win.args.frameless) ? `${icon}Linux` : icon
+  ]
 
-  handleClick = () => {
-    this.props.onClick(this.props.name)
-  }
+  return (
+    <button
+      className={cx('pane-toggle', 'btn', name, { active: isActive })}
+      disabled={isDisabled}
+      tabIndex={-1}
+      onClick={() => onClick({ pane: name })}>
+      <Icon/>
+      <FormattedMessage id={`prefs.${name}.label`}/>
+    </button>
+  )
+})
 
-  render() {
-    return (
-      <button
-        className={cx(this.classes)}
-        disabled={this.props.isDisabled}
-        tabIndex={-1}
-        onClick={this.handleClick}>
-        {React.createElement(icons[this.props.icon])}
-        <FormattedMessage id={this.label}/>
-      </button>
-    )
-  }
+PrefPaneToggle.propTypes = {
+  icon: string.isRequired,
+  isActive: bool,
+  isDisabled: bool,
+  name: string.isRequired,
+  onClick: func.isRequired
+}
 
-  static propTypes = {
-    classes: object,
-    icon: string.isRequired,
-    isActive: bool,
-    isDisabled: bool,
-    name: string.isRequired,
-    onClick: func.isRequired
-  }
-
-  static defaultProps = {
-    icon: 'IconTemplate'
-  }
+PrefPaneToggle.defaultProps = {
+  icon: 'IconTemplate'
 }
 
 export const PrefPane = (props) => (
