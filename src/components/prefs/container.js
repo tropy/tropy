@@ -18,16 +18,9 @@ import {
 } from '../../selectors'
 
 class Prefs extends React.PureComponent {
-  icon(name) {
-    return process.platform === 'linux' ? `${name}Linux` : name
-  }
 
   isActive(pane) {
     return this.props.pane === pane
-  }
-
-  toggle = (pane) => {
-    this.props.onPrefsUpdate({ pane })
   }
 
   render() {
@@ -44,38 +37,38 @@ class Prefs extends React.PureComponent {
               <li>
                 <PrefPaneToggle
                   name="app"
-                  icon={this.icon('IconTropy')}
+                  icon={'IconTropy'}
                   isActive={this.isActive('app')}
-                  onClick={this.toggle}/>
+                  onClick={this.props.onPrefsUpdate}/>
               </li>
               <li>
                 <PrefPaneToggle
                   name="project"
-                  icon={this.icon('IconMazePrefs')}
+                  icon={'IconMazePrefs'}
                   isActive={this.isActive('project')}
                   isDisabled={!this.props.project.id}
-                  onClick={this.toggle}/>
+                  onClick={this.props.onPrefsUpdate}/>
               </li>
               <li>
                 <PrefPaneToggle
                   name="template"
-                  icon={this.icon('IconTemplate')}
+                  icon={'IconTemplate'}
                   isActive={this.isActive('template')}
-                  onClick={this.toggle}/>
+                  onClick={this.props.onPrefsUpdate}/>
               </li>
               <li>
                 <PrefPaneToggle
                   name="vocab"
-                  icon={this.icon('IconBook')}
+                  icon={'IconBook'}
                   isActive={this.isActive('vocab')}
-                  onClick={this.toggle}/>
+                  onClick={this.props.onPrefsUpdate}/>
               </li>
               <li>
                 <PrefPaneToggle
                   name="plugins"
-                  icon={this.icon('IconPlugin')}
+                  icon={'IconPlugin'}
                   isActive={this.isActive('plugins')}
-                  onClick={this.toggle}/>
+                  onClick={this.props.onPrefsUpdate}/>
               </li>
             </ul>
           </nav>
