@@ -31,27 +31,41 @@
       }
     }
 
+    .toolbar-left {
+      @if $platform == linux {
+        .frameless & {
+          flex: 1 1 auto;
+          overflow: hidden;
+        }
+      }
+    }
+
     .toolbar-right {
       @if $platform == linux {
-        .stacked & {
-          .frameless.window-controls-left & {
-            margin-right: zoom(52px);
-          }
+        .frameless & {
+          flex: 1 1 0;
+          overflow: hidden;
 
-          .frameless.window-controls-right & {
-            margin-right: zoom(166px - 37px - 37px);
-
-            @include variant(
-              ".frameless.window-controls-minimize",
-              ".frameless.window-controls-maximize"
-            ) {
-              margin-right: zoom(166px - 37px);
+          @include variant(".stacked .esper") {
+            @include variant(".frameless.window-controls-left") {
+              margin-right: zoom(52px);
             }
 
-            @include variant(
-              ".frameless.window-controls-minimize.window-controls-maximize"
-            ) {
-              margin-right: zoom(166px);
+            @include variant(".frameless.window-controls-right") {
+              margin-right: zoom(166px - 37px - 37px);
+
+              @include variant(
+                ".frameless.window-controls-minimize",
+                ".frameless.window-controls-maximize"
+              ) {
+                margin-right: zoom(166px - 37px);
+              }
+
+              @include variant(
+                ".frameless.window-controls-minimize.window-controls-maximize"
+              ) {
+                margin-right: zoom(166px);
+              }
             }
           }
         }
