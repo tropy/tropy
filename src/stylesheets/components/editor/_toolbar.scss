@@ -33,6 +33,39 @@
     }
   }
 
+  .toolbar-left {
+    @if $platform == linux {
+      .frameless & {
+        @include variant(".side-by-side .editor") {
+          overflow: hidden;
+          padding: 0 zoom(2px); // Do not clip link target
+          margin: 0 zoom(-2px);
+
+          @include variant(".frameless.window-controls-left") {
+            margin-right: zoom(52px);
+          }
+
+          @include variant(".frameless.window-controls-right") {
+            margin-right: zoom(166px - 37px - 37px);
+
+            @include variant(
+              ".frameless.window-controls-minimize",
+              ".frameless.window-controls-maximize"
+            ) {
+              margin-right: zoom(166px - 37px);
+            }
+
+            @include variant(
+              ".frameless.window-controls-minimize.window-controls-maximize"
+            ) {
+              margin-right: zoom(166px);
+            }
+          }
+        }
+      }
+    }
+  }
+
   .toolbar-context {
     @include state(".editor.is-blurred") {
       opacity: 0.6;
