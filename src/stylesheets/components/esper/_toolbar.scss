@@ -33,24 +33,26 @@
 
     .toolbar-right {
       @if $platform == linux {
-        .frameless.window-controls-left & {
-          margin-right: zoom(52px);
-        }
-
-        .frameless.window-controls-right & {
-          margin-right: zoom(166px - 37px - 37px);
-
-          @include variant(
-            ".frameless.window-controls-minimize",
-            ".frameless.window-controls-maximize"
-          ) {
-            margin-right: zoom(166px - 37px);
+        .stacked & {
+          .frameless.window-controls-left & {
+            margin-right: zoom(52px);
           }
 
-          @include variant(
-            ".frameless.window-controls-minimize.window-controls-maximize"
-          ) {
-            margin-right: zoom(166px);
+          .frameless.window-controls-right & {
+            margin-right: zoom(166px - 37px - 37px);
+
+            @include variant(
+              ".frameless.window-controls-minimize",
+              ".frameless.window-controls-maximize"
+            ) {
+              margin-right: zoom(166px - 37px);
+            }
+
+            @include variant(
+              ".frameless.window-controls-minimize.window-controls-maximize"
+            ) {
+              margin-right: zoom(166px);
+            }
           }
         }
       }
