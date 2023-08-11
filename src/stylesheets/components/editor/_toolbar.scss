@@ -16,7 +16,8 @@
     //display: none;
 
     .frameless & {
-      --zoom: inherit; // Counterbalance frameless editor toolbar
+      --zoom: inherit; // Always counterbalance frameless editor toolbar
+      font-size: zoom($font-size-base);
       height: zoom(os($toolbar-frameless-height) + 1px);
     }
 
@@ -89,7 +90,15 @@
   //}
 
   .link-target {
-    flex: 0 0 $link-target-width;
+    flex: 0 1 zoom($link-target-width);
+    height: zoom($input-height-base);
+    padding: 0 zoom($padding-base-horizontal);
+    border-width: zoom(1px);
+    border-radius: zoom($input-border-radius-small);
+
+    &:focus {
+      box-shadow: 0 0 0 zoom(2px) $input-btn-focus-color !important;
+    }
   }
 
   .btn-icon {
