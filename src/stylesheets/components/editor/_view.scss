@@ -11,7 +11,7 @@
   min-height: 0; // Fix vh unit in ProseMirror
 
   .frameless & {
-    padding-top: os($toolbar-frameless-height);
+    padding-top: zoom(os($toolbar-frameless-height));
   }
 
   iframe {
