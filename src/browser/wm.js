@@ -131,12 +131,14 @@ export class WindowManager extends EventEmitter {
 
           break
         case 'win32':
-          opts.vibrancy = false
-          opts.titleBarStyle = 'hidden'
-          opts.titleBarOverlay = {
-            height: 33, // 32px
-            color: '#ffffff00'
+          if (!opts.frame) {
+            opts.titleBarStyle = 'hidden'
+            opts.titleBarOverlay = {
+              height: 33, // 32px
+              color: '#ffffff00'
+            }
           }
+          opts.vibrancy = false
           break
       }
 
