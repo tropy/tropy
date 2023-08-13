@@ -55,10 +55,10 @@ const P = new WeakMap()
 export class Tropy extends EventEmitter {
   static defaults = {
     fontSize: '13px',
-    frameless: darwin,
+    frameless: !linux,
     debug: false,
     port: 2019,
-    theme: darwin ? 'system' : 'light',
+    theme: 'system',
     recent: [],
     updater: true,
     webgl: true,
