@@ -13,17 +13,21 @@ export class WindowControls {
   mount(win) {
     this.root = create('div', { class: 'window-controls' })
 
-    append(Button('fullscreen', () => { win.fullscreen() }), this.root)
-    append(Button('close', () => { win.close() }), this.root)
+    // Add default controls only for Linux.
+    // On macOS and Windows we have the native controls overlay.
+    if (linux) {
+      append(Button('fullscreen', () => { win.fullscreen() }), this.root)
+      append(Button('close', () => { win.close() }), this.root)
 
-    if (this.layout.minimize) {
-      append(Button('minimize', () => { win.minimize() }), this.root)
-      toggle(win.html, 'window-controls-minimize', true)
-    }
+      if (this.layout.minimize) {
+        append(Button('minimize', () => { win.minimize() }), this.root)
+        toggle(win.html, 'window-controls-minimize', true)
+      }
 
-    if (this.layout.maximize) {
-      append(Button('maximize', () => { win.maximize() }), this.root)
-      toggle(win.html, 'window-controls-maximize', true)
+      if (this.layout.maximize) {
+        append(Button('maximize', () => { win.maximize() }), this.root)
+        toggle(win.html, 'window-controls-maximize', true)
+      }
     }
 
     if (!darwin) {
