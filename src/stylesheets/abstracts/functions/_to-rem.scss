@@ -2,6 +2,6 @@
 // Rem helper
 // --------------------------------------------------
 
-@function rem($length) {
+@function to-rem($length) {
   @return calc($length / const("FONTSIZE.BASE") * 1rem);
 }
