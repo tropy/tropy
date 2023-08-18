@@ -1,27 +1,24 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { TemplateSelect } from '../template/select'
-import { noop } from '../../common/util'
 import cx from 'classnames'
-import { array, bool, func, node, number, string } from 'prop-types'
+import { bool, func, node, number, string } from 'prop-types'
 
 export const MetadataSection = (props) => {
-  let hasTemplates = !!props.templates
   return (
     <section onContextMenu={props.onContextMenu}>
       <h5 className={cx('metadata-heading', {
-        separator: !hasTemplates
+        separator: !props.template
       })}>
         <FormattedMessage
           id={props.title}
           values={{ count: props.count }}/>
       </h5>
-      {hasTemplates &&
+      {props.template &&
         <TemplateSelect
           isDisabled={props.isDisabled}
           isMixed={props.isMixed}
           isRequired
-          options={props.templates}
           value={props.template}
           onChange={props.onTemplateChange}/>}
       {props.children}
@@ -35,12 +32,7 @@ MetadataSection.propTypes = {
   isMixed: bool,
   count: number,
   onContextMenu: func,
-  onTemplateChange: func.isRequired,
+  onTemplateChange: func,
   template: string,
-  templates: array,
   title: string.isRequired
-}
-
-MetadataSection.defaultProps = {
-  onTemplateChange: noop
 }

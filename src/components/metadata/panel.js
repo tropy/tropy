@@ -11,7 +11,6 @@ import { arrayOf, bool, func, object, shape } from 'prop-types'
 
 import {
   getActiveSelection,
-  getAllTemplatesByType,
   getItemFields,
   getPhotoFields,
   getSelectedItemTemplate,
@@ -151,7 +150,6 @@ class MetadataPanel extends React.PureComponent {
         isDisabled={this.props.isDisabled}
         isMixed={this.props.template.mixed}
         template={this.props.template.id}
-        templates={this.props.templates.item}
         title="panel.metadata.item"
         onTemplateChange={this.handleItemTemplateChange}
         onContextMenu={this.handleItemContextMenu}>
@@ -178,7 +176,6 @@ class MetadataPanel extends React.PureComponent {
       <MetadataSection
         isDisabled={this.props.isDisabled}
         template={this.props.photo.template}
-        templates={this.props.templates.photo}
         title="panel.metadata.photo"
         onTemplateChange={this.handlePhotoTemplateChange}
         onContextMenu={this.handlePhotoContextMenu}>
@@ -206,7 +203,6 @@ class MetadataPanel extends React.PureComponent {
       <MetadataSection
         isDisabled={this.props.isDisabled}
         template={this.props.selection.template}
-        templates={this.props.templates.selection}
         title="panel.metadata.selection"
         onTemplateChange={this.handleSelectionTemplateChange}
         onContextMenu={this.handleSelectionContextMenu}>
@@ -251,11 +247,6 @@ class MetadataPanel extends React.PureComponent {
     photo: shapes.subject,
     selection: shapes.subject,
     template: shapes.template,
-    templates: shape({
-      item: arrayOf(shapes.template).isRequired,
-      photo: arrayOf(shapes.template).isRequired,
-      selection: arrayOf(shapes.template).isRequired
-    }).isRequired,
     onContextMenu: func.isRequired,
     onEdit: func,
     onEditCancel: func,
@@ -276,8 +267,7 @@ const MetadataPanelContainer = connect(
       items: getSelectedItems(state),
       photo: getSelectedPhoto(state),
       selection: getActiveSelection(state),
-      template: getSelectedItemTemplate(state),
-      templates: getAllTemplatesByType(state)
+      template: getSelectedItemTemplate(state)
     }),
 
     (dispatch) => ({

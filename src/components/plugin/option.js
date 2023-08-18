@@ -1,9 +1,9 @@
 import React from 'react'
 import { bool, func, shape, string, object } from 'prop-types'
-import { FormElement, FormField, FormToggle } from '../form'
+import { FormElement, FormField, FormToggle } from '../form.js'
 import { TemplateSelect } from '../template'
-import { ResourceSelect } from '../resource'
-import { get } from '../../common/util'
+import { PropertySelect } from '../resource/select.js'
+import { get } from '../../common/util.js'
 
 
 export class PluginOption extends React.PureComponent {
@@ -65,8 +65,7 @@ export class PluginOption extends React.PureComponent {
       case 'property':
         return (
           <FormElement id={this.props.spec.label} title={this.attrs.title}>
-            <ResourceSelect {...this.attrs}
-              options={this.props.properties}/>
+            <PropertySelect {...this.attrs}/>
           </FormElement>
         )
       case 'save-file':
