@@ -1,197 +1,100 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
-import { array, func, object, string } from 'prop-types'
-import { Titlebar } from '../toolbar'
-import { TemplateEditor } from '../template'
-import { VocabPane } from '../vocab'
-import { PrefPane, PrefPaneToggle } from './pane'
-import { AppPrefs } from './app'
-import { ProjectPrefs } from './project'
-import { PluginsPane } from '../plugin'
-import * as act from '../../actions'
+import React, { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Prefs, Body, Header } from './index.js'
+import { Nav, NavItem } from './nav.js'
+import { TemplateEditor } from '../template/editor.js'
+import { VocabBrowser } from '../vocab/browser.js'
+import { Pane, Footer } from './pane.js'
+import { AppSettings } from '../settings/app.js'
+import { ProjectSettings } from '../project/settings.js'
+import { PluginConfig } from '../plugin/config.js'
+import { useIpcEvent } from '../../hooks/use-ipc.js'
+import * as act from '../../actions/index.js'
+import { Button } from '../button.js'
+import { IconPlus } from '../icons.js'
 
-import {
-  getAllTemplatesByType,
-  getPropertyList,
-  getVocabs
-} from '../../selectors'
 
-class Prefs extends React.PureComponent {
+export function PrefsContainer() {
+  let dispatch = useDispatch
 
-  isActive(pane) {
-    return this.props.pane === pane
-  }
+  let project = useSelector(state => state.project)
+  let handleProjectChange = useCallback((...args) => {
+    dispatch(act.project.save(...args))
+  }, [dispatch])
 
-  render() {
-    return (
-      <div
-        className="prefs"
-        onContextMenu={this.props.onContextMenu}>
-        <header className="prefs-header">
-          <Titlebar isOptional>
-            <FormattedMessage id="prefs.title"/>
-          </Titlebar>
-          <nav className="prefs-nav">
-            <ul>
-              <li>
-                <PrefPaneToggle
-                  name="app"
-                  icon={'IconTropy'}
-                  isActive={this.isActive('app')}
-                  onClick={this.props.onPrefsUpdate}/>
-              </li>
-              <li>
-                <PrefPaneToggle
-                  name="project"
-                  icon={'IconMazePrefs'}
-                  isActive={this.isActive('project')}
-                  isDisabled={!this.props.project.id}
-                  onClick={this.props.onPrefsUpdate}/>
-              </li>
-              <li>
-                <PrefPaneToggle
-                  name="template"
-                  icon={'IconTemplate'}
-                  isActive={this.isActive('template')}
-                  onClick={this.props.onPrefsUpdate}/>
-              </li>
-              <li>
-                <PrefPaneToggle
-                  name="vocab"
-                  icon={'IconBook'}
-                  isActive={this.isActive('vocab')}
-                  onClick={this.props.onPrefsUpdate}/>
-              </li>
-              <li>
-                <PrefPaneToggle
-                  name="plugins"
-                  icon={'IconPlugin'}
-                  isActive={this.isActive('plugins')}
-                  onClick={this.props.onPrefsUpdate}/>
-              </li>
-            </ul>
-          </nav>
-        </header>
-        <div className="prefs-body">
-          <PrefPane
-            name="app"
-            isActive={this.isActive('app')}>
-            <AppPrefs/>
-          </PrefPane>
-          <PrefPane
+  let handleVocabImport = useCallback(() => {
+    dispatch(act.ontology.import())
+  }, [dispatch])
+
+  let handlePluginInstall = useIpcEvent(null, [
+    'cmd', 'app:install-plugin'
+  ])
+
+
+  let handlePluginUninstall = useCallback((...args) => {
+    dispatch(act.plugin.uninstall(...args))
+  }, [dispatch])
+
+  let handleContextMenu = useCallback((event) => {
+    event.stopPropagation()
+    dispatch(act.context.show(event))
+  }, [dispatch])
+
+  let openLink = useCallback((...args) => {
+    dispatch(act.shell.openLink(...args))
+  }, [dispatch])
+
+  return (
+    <Prefs onContextMenu={handleContextMenu}>
+      <Header>
+        <Nav>
+          <NavItem name="app" icon="IconTropy"/>
+          <NavItem
             name="project"
-            isActive={this.props.project.id && this.isActive('project')}>
-            <ProjectPrefs
-              project={this.props.project}
-              onChange={this.props.onProjectSave}/>
-          </PrefPane>
+            icon="IconMazePrefs"
+            isDisabled={!project?.id}/>
+          <NavItem name="template" icon="IconTemplate"/>
+          <NavItem name="vocab" icon="IconBook"/>
+          <NavItem name="plugins" icon="IconPlugin"/>
+        </Nav>
+      </Header>
+      <Body>
+        <Pane name="app">
+          <AppSettings/>
+        </Pane>
 
-          <PrefPane
-            name="template"
-            isActive={this.isActive('template')}>
-            <TemplateEditor/>
-          </PrefPane>
+        <Pane name="project" isDisabled={!project?.id}>
+          <ProjectSettings
+            project={project}
+            onChange={handleProjectChange}/>
+        </Pane>
 
-          <VocabPane
-            isActive={this.isActive('vocab')}
-            vocab={this.props.vocab}
-            onClassSave={this.props.onClassSave}
-            onDelete={this.props.onVocabDelete}
-            onExport={this.props.onVocabExport}
-            onImport={this.props.onOntologyImport}
-            onOpenLink={this.props.onOpenLink}
-            onPropsSave={this.props.onPropsSave}
-            onSave={this.props.onVocabSave}/>
+        <Pane name="templates">
+          <TemplateEditor/>
+        </Pane>
 
-          <PluginsPane
-            name="plugins"
-            properties={this.props.properties}
-            templates={this.props.templates}
-            onUninstall={this.props.onPluginUninstall}
-            onOpenLink={this.props.onOpenLink}
-            isActive={this.isActive('plugins')}/>
-        </div>
-      </div>
-    )
-  }
+        <Pane name="vocab">
+          <VocabBrowser
+            onOpenLink={openLink}/>
+          <Footer>
+            <Button
+              icon={<IconPlus/>}
+              onClick={handleVocabImport}/>
+          </Footer>
+        </Pane>
 
-  static propTypes = {
-    edit: object.isRequired,
-    templates: object.isRequired,
-    pane: string.isRequired,
-    project: object,
-    properties: array.isRequired,
-    vocab: array.isRequired,
-    onClassSave: func.isRequired,
-    onContextMenu: func.isRequired,
-    onOpenLink: func.isRequired,
-    onPrefsUpdate: func.isRequired,
-    onProjectSave: func.isRequired,
-    onPropsSave: func.isRequired,
-    onVocabDelete: func.isRequired,
-    onVocabExport: func.isRequired,
-    onVocabSave: func.isRequired,
-    onOntologyImport: func.isRequired,
-    onPluginUninstall: func.isRequired
-  }
+        <Pane name="plugins">
+          <PluginConfig
+            onOpenLink={openLink}
+            onUninstall={handlePluginUninstall}/>
+          <Footer>
+            <Button
+              isDefault
+              text="prefs.plugins.install"
+              onClick={handlePluginInstall}/>
+          </Footer>
+        </Pane>
+      </Body>
+    </Prefs>
+  )
 }
-
-export const PrefsContainer = connect(
-  state => ({
-    edit: state.edit,
-    templates: getAllTemplatesByType(state),
-    keymap: state.keymap,
-    pane: state.prefs.pane,
-    project: state.project,
-    properties: getPropertyList(state),
-    vocab: getVocabs(state)
-  }),
-
-  dispatch => ({
-    onClassSave(...args) {
-      dispatch(act.ontology.class.save(...args))
-    },
-
-    onContextMenu(event) {
-      event.stopPropagation()
-      dispatch(act.context.show(event))
-    },
-
-    onOpenLink(...args) {
-      dispatch(act.shell.openLink(args))
-    },
-
-    onPrefsUpdate(...args) {
-      dispatch(act.prefs.update(...args))
-    },
-
-    onPropsSave(...args) {
-      dispatch(act.ontology.props.save(...args))
-    },
-
-    onProjectSave(...args) {
-      dispatch(act.project.save(...args))
-    },
-
-    onVocabDelete(...args) {
-      dispatch(act.ontology.vocab.delete(...args))
-    },
-
-    onVocabExport(...args) {
-      dispatch(act.ontology.vocab.export(...args))
-    },
-
-    onVocabSave(...args) {
-      dispatch(act.ontology.vocab.save(...args))
-    },
-
-    onOntologyImport() {
-      dispatch(act.ontology.import())
-    },
-
-    onPluginUninstall(...args) {
-      dispatch(act.plugin.uninstall(...args))
-    }
-  })
-)(Prefs)
