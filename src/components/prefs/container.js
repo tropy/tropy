@@ -15,7 +15,7 @@ import { IconPlus } from '../icons.js'
 
 
 export function PrefsContainer() {
-  let dispatch = useDispatch
+  let dispatch = useDispatch()
 
   let project = useSelector(state => state.project)
   let handleProjectChange = useCallback((...args) => {
@@ -29,7 +29,6 @@ export function PrefsContainer() {
   let handlePluginInstall = useIpcEvent(null, [
     'cmd', 'app:install-plugin'
   ])
-
 
   let handlePluginUninstall = useCallback((...args) => {
     dispatch(act.plugin.uninstall(...args))
