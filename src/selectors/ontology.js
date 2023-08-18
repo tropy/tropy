@@ -102,6 +102,14 @@ export const getItemTemplateProperties = memo(
     )).sort(by('prefix', 'label', 'name'))
 )
 
+export const selectTemplatesByType = memo(
+  (state) => state.ontology.template,
+  (_, props) => props.type,
+  (templates, type) =>
+    Object.values(templates)
+      .filter((t => type == null || t.type === type))
+      .sort(by('name', 'id')))
+
 export const getTemplateList = memo(
   ({ ontology }) => ontology.template,
   (templates) => Object.values(templates).sort(by('name', 'id'))
