@@ -1,16 +1,13 @@
-import { ipcRenderer as ipc } from 'electron'
 import React from 'react'
 import { WindowContext } from '../window'
-import { PrefPane } from '../prefs/pane'
-import { Button } from '../button'
-import { bool, func, string, object } from 'prop-types'
+import { func } from 'prop-types'
 import { AccordionGroup } from '../accordion'
 import { PluginAccordion } from './accordion'
 import debounce from 'lodash.debounce'
 import { insert, omit, splice } from '../../common/util'
 
 
-export class PluginsPane extends React.Component {
+export class PluginConfig extends React.Component {
   state = { config: [] }
 
   componentDidMount() {
@@ -78,57 +75,35 @@ export class PluginsPane extends React.Component {
     this.setState({ config }, this.persist)
   }
 
-  handleInstall() {
-    ipc.send('cmd', 'app:install-plugin')
-  }
-
   getPluginInstances(name) {
     return this.state.config.filter(c => c.plugin === name && !c.disabled)
   }
 
   render() {
     return (
-      <PrefPane
-        name={this.props.name}
-        isActive={this.props.isActive}>
-        <div className="scroll-container">
-          <AccordionGroup
-            autoclose
-            className="form-horizontal"
-            tabIndex={0}>
-            {Object.values(this.context.plugins.spec).map(spec => (
-              <PluginAccordion
-                id={spec.name}
-                instances={this.getPluginInstances(spec.name)}
-                spec={spec}
-                properties={this.props.properties}
-                templates={this.props.templates}
-                onChange={this.handleChange}
-                onDisable={this.handleDisable}
-                onEnable={this.handleEnable}
-                onInsert={this.handleInsert}
-                onRemove={this.handleRemove}
-                onUninstall={this.handleUninstall}
-                onOpenLink={this.props.onOpenLink}
-                key={spec.name}/>
-            ))}
-          </AccordionGroup>
-        </div>
-        <footer className="plugins-footer">
-          <Button
-            isDefault
-            text="prefs.plugins.install"
-            onClick={this.handleInstall}/>
-        </footer>
-      </PrefPane>
+      <AccordionGroup
+        autoclose
+        className="form-horizontal"
+        tabIndex={0}>
+        {Object.values(this.context.plugins.spec).map(spec => (
+          <PluginAccordion
+            id={spec.name}
+            instances={this.getPluginInstances(spec.name)}
+            spec={spec}
+            onChange={this.handleChange}
+            onDisable={this.handleDisable}
+            onEnable={this.handleEnable}
+            onInsert={this.handleInsert}
+            onRemove={this.handleRemove}
+            onUninstall={this.handleUninstall}
+            onOpenLink={this.props.onOpenLink}
+            key={spec.name}/>
+        ))}
+      </AccordionGroup>
     )
   }
 
   static propTypes = {
-    isActive: bool,
-    name: string.isRequired,
-    properties: object.isRequired,
-    templates: object.isRequired,
     onUninstall: func.isRequired,
     onOpenLink: func.isRequired
   }
