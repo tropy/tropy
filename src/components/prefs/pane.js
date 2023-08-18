@@ -1,13 +1,13 @@
 import React, { Children } from 'react'
 import { useSelector } from 'react-redux'
-import { node, string } from 'prop-types'
+import { bool, node, string } from 'prop-types'
 import cx from 'classnames'
 import { ScrollContainer } from '../scroll/container.js'
 
-export const Pane = ({ children, name }) => {
+export const Pane = ({ isDisabled, children, name }) => {
   let pane = useSelector(state => state.prefs.pane)
 
-  if (pane !== name)
+  if (isDisabled || pane !== name)
     return null
 
   let [content, footer] = Children.toArray(children)
@@ -23,6 +23,7 @@ export const Pane = ({ children, name }) => {
 }
 
 Pane.propTypes = {
+  isDisabled: bool,
   children: node,
   name: string.isRequired
 }
