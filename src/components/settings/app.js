@@ -10,11 +10,10 @@ import { ImportSettings } from './import.js'
 import { LocaleSettings } from './locale.js'
 import { StyleSettings } from './style.js'
 import { TemplateSettings } from './template.js'
-import { ScrollContainer } from '../scroll/container.js'
 import act from '../../actions/settings.js'
 
 
-export function AppPrefs() {
+export function AppSettings() {
   let dispatch = useDispatch()
   let settings = useSelector(state => state.settings)
 
@@ -23,34 +22,32 @@ export function AppPrefs() {
   })
 
   return (
-    <ScrollContainer>
-      <Form>
-        <TemplateSettings
-          config={settings.templates}
-          onChange={handleSettingsUpdate}/>
-        <hr/>
-        <ImportSettings
-          config={settings}
-          onChange={handleSettingsUpdate}/>
-        <hr/>
-        <StyleSettings/>
-        <hr/>
-        <LocaleSettings/>
-        <hr/>
-        <InterfaceSettings
-          config={settings}
-          onChange={handleSettingsUpdate}/>
-        <hr/>
-        <ExportSettings
-          config={settings.export}
-          onChange={handleSettingsUpdate}/>
-        <hr/>
-        <PrintSettings
-          config={settings.print}
-          onChange={handleSettingsUpdate}/>
-        <hr/>
-        <DeveloperSettings/>
-      </Form>
-    </ScrollContainer>
+    <Form>
+      <TemplateSettings
+        config={settings.templates}
+        onChange={handleSettingsUpdate}/>
+      <hr/>
+      <ImportSettings
+        config={settings}
+        onChange={handleSettingsUpdate}/>
+      <hr/>
+      <StyleSettings/>
+      <hr/>
+      <LocaleSettings/>
+      <hr/>
+      <InterfaceSettings
+        config={settings}
+        onChange={handleSettingsUpdate}/>
+      <hr/>
+      <ExportSettings
+        config={settings.export}
+        onChange={handleSettingsUpdate}/>
+      <hr/>
+      <PrintSettings
+        config={settings.print}
+        onChange={handleSettingsUpdate}/>
+      <hr/>
+      <DeveloperSettings/>
+    </Form>
   )
 }

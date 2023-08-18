@@ -1,58 +1,55 @@
-import React from 'react'
-import { PrefPane } from '../prefs/pane'
-import { AccordionGroup } from '../accordion'
-import { VocabAccordion } from './accordion'
-import { array, bool, func, string } from 'prop-types'
-import { Button } from '../button'
-import { IconPlus } from '../icons'
+import React, { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { AccordionGroup } from '../accordion.js'
+import { VocabAccordion } from './accordion.js'
+import { func } from 'prop-types'
+import { getVocabs } from '../../selectors/index.js'
+import * as act from '../../actions/index.js'
 
+export const VocabBrowser = ({ onOpenLink }) => {
+  let dispatch = useDispatch()
 
-export class VocabPane extends React.PureComponent {
-  render() {
-    return (
-      <PrefPane
-        name={this.props.name}
-        isActive={this.props.isActive}>
-        <div className="scroll-container">
-          <AccordionGroup
-            className="form-horizontal"
-            tabIndex={0}>
-            {this.props.vocab.map(vocab =>
-              <VocabAccordion
-                key={vocab.id}
-                id={vocab.id}
-                vocab={vocab}
-                onClassSave={this.props.onClassSave}
-                onDelete={this.props.onDelete}
-                onExport={this.props.onExport}
-                onOpenLink={this.props.onOpenLink}
-                onPropsSave={this.props.onPropsSave}
-                onSave={this.props.onSave}/>)}
-          </AccordionGroup>
-        </div>
-        <footer className="vocab-footer">
-          <Button
-            icon={<IconPlus/>}
-            onClick={this.props.onImport}/>
-        </footer>
-      </PrefPane>
-    )
-  }
+  let vocabs = useSelector(getVocabs)
 
-  static propTypes = {
-    isActive: bool,
-    name: string.isRequired,
-    vocab: array.isRequired,
-    onClassSave: func.isRequired,
-    onDelete: func.isRequired,
-    onExport: func.isRequired,
-    onImport: func.isRequired,
-    onOpenLink: func.isRequired,
-    onPropsSave: func.isRequired,
-    onSave: func.isRequired
-  }
+  let handleSave = useCallback((...args) => {
+    dispatch(act.ontology.vocab.save(...args))
+  }, [dispatch])
 
-  static defaultProps = {
-    name: 'vocab'
-  }
+  let handleClassSave = useCallback((...args) => {
+    dispatch(act.ontology.class.save(...args))
+  }, [dispatch])
+
+  let handlePropsSave = useCallback((...args) => {
+    dispatch(act.ontology.props.save(...args))
+  }, [dispatch])
+
+  let handleExport = useCallback((...args) => {
+    dispatch(act.ontology.vocab.export(...args))
+  }, [dispatch])
+
+  let handleDelete = useCallback((...args) => {
+    dispatch(act.ontology.vocab.delete(...args))
+  }, [dispatch])
+
+  return (
+    <AccordionGroup
+      className="form-horizontal"
+      tabIndex={0}>
+      {vocabs.map(vocab =>
+        <VocabAccordion
+          key={vocab.id}
+          id={vocab.id}
+          vocab={vocab}
+          onClassSave={handleClassSave}
+          onDelete={handleDelete}
+          onExport={handleExport}
+          onOpenLink={onOpenLink}
+          onPropsSave={handlePropsSave}
+          onSave={handleSave}/>)}
+    </AccordionGroup>
+  )
+}
+
+VocabBrowser.propTypes = {
+  onOpenLink: func
 }
