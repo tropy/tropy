@@ -27,13 +27,12 @@ Pane.propTypes = {
   name: string.isRequired
 }
 
-export const Footer = ({ children, name }) => (
-  <footer className={`${name}-footer`}>
+export const Footer = ({ children }) => (
+  <footer>
     {children}
   </footer>
 )
 
 Footer.propTypes = {
-  children: node,
-  name: string.isRequired
+  children: node
 }
