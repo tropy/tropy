@@ -2,7 +2,7 @@ import React from 'react'
 import { TemplateSelect } from './select'
 import { ButtonGroup, Button } from '../button'
 import { FormElement } from '../form'
-import { arrayOf, bool, func, shape, string } from 'prop-types'
+import { bool, func, string } from 'prop-types'
 import { IconCopy, IconTrash, IconImport, IconExport } from '../icons'
 
 
@@ -22,7 +22,6 @@ export class TemplateToolbar extends React.PureComponent {
         <div className="flex-row">
           <TemplateSelect
             id="prefs.template.select"
-            options={this.props.templates}
             value={this.props.selected}
             placeholder="prefs.template.new"
             tabIndex={0}
@@ -54,10 +53,6 @@ export class TemplateToolbar extends React.PureComponent {
   }
 
   static propTypes = {
-    templates: arrayOf(shape({
-      id: string.isRequired,
-      name: string
-    })).isRequired,
     selected: string,
     isPristine: bool,
     isProtected: bool,

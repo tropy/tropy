@@ -43,8 +43,6 @@ export class PluginInstance extends React.PureComponent {
             <PluginOption
               key={spec.field}
               spec={spec}
-              templates={this.props.templates}
-              properties={this.props.properties}
               value={get(this.props.config.options, spec.field, spec.default)}
               onChange={this.handleOptionsChange}/>)}
         </fieldset>
@@ -66,8 +64,6 @@ export class PluginInstance extends React.PureComponent {
       name: string,
       options: object
     }).isRequired,
-    templates: object.isRequired,
-    properties: object.isRequired,
     onRemove: func.isRequired,
     onInsert: func.isRequired,
     onChange: func.isRequired,

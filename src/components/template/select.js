@@ -1,48 +1,43 @@
 import React from 'react'
-import { Select } from '../select'
-import { FormattedMessage } from 'react-intl'
-import { match } from '../../collate'
-import { bool, array, func, node, number, string } from 'prop-types'
+import { useSelector } from 'react-redux'
+import { bool, func, node, number, oneOf, string } from 'prop-types'
 import cx from 'classnames'
+import { ResourceSelect } from '../resource/select.js'
+import { Select } from '../select.js'
+import { match } from '../../collate.js'
+import { tropy } from '../../ontology/ns.js'
+import { selectTemplatesByType } from '../../selectors/ontology.js'
 
 
-export class TemplateSelect extends React.PureComponent {
-  select = React.createRef()
+export const TemplateSelect = React.forwardRef(({
+  isMixed,
+  type,
+  ...props
+}, ref) => {
+  let options = useSelector(state =>
+    selectTemplatesByType(state, { type }))
 
-  get placeholder() {
-    return this.props.placeholder != null &&
-      <FormattedMessage id={this.props.placeholder}/>
-  }
+  return (
+    <ResourceSelect {...props}
+      className={cx('template-select', { mixed: isMixed })}
+      options={options}
+      ref={ref}/>
+  )
+})
 
-  focus = () => {
-    this.select.current?.focus()
-  }
+TemplateSelect.propTypes = {
+  icon: node,
+  isMixed: bool,
+  match: func.isRequired,
+  placeholder: string,
+  tabIndex: number.isRequired,
+  type: oneOf([tropy.Item, tropy.Photo, tropy.Selection])
+}
 
-  render() {
-    let { isMixed, ...props } = this.props
-
-    return (
-      <Select {...props}
-        className={cx('template-select', { mixed: isMixed })}
-        placeholder={this.placeholder}
-        ref={this.select}/>
-    )
-  }
-
-  static propTypes = {
-    icon: node,
-    isMixed: bool,
-    match: func.isRequired,
-    options: array.isRequired,
-    placeholder: string,
-    tabIndex: number.isRequired
-  }
-
-  static defaultProps = {
-    ...Select.defaultProps,
-    match: (tpl, query) => (
-      match(tpl.name, query, /\b\w/g)
-    ),
-    tabIndex: -1
-  }
+TemplateSelect.defaultProps = {
+  ...Select.defaultProps,
+  match: (tpl, query) => (
+    match(tpl.name, query, /\b\w/g)
+  ),
+  tabIndex: -1
 }

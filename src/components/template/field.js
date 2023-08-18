@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { array, bool, func, number, object } from 'prop-types'
 import cx from 'classnames'
-import { ResourceSelect } from '../resource/select.js'
+import { DataTypeSelect, PropertySelect } from '../resource/select.js'
 import { PlusMinusControls } from '../button.js'
 import { FormElement, FormField, FormToggle } from '../form.js'
 import { IconGrip } from '../icons.js'
@@ -10,7 +10,6 @@ import { DND, useDrag, useDrop } from '../dnd.js'
 
 
 export const TemplateField = ({
-  datatypes,
   field,
   isDisabled,
   isSingle,
@@ -22,8 +21,7 @@ export const TemplateField = ({
   onSortReset,
   onSortPreview,
   onSortStart,
-  position,
-  properties
+  position
 }) => {
 
   let container = useRef()
@@ -101,9 +99,8 @@ export const TemplateField = ({
           isCompact
           label="template.field.property"
           size={9}>
-          <ResourceSelect
+          <PropertySelect
             id={`${position}.template.field.property`}
-            options={properties}
             value={field.property}
             maxRows={5}
             isRequired={!isTransient}
@@ -120,9 +117,8 @@ export const TemplateField = ({
           isCompact
           label="template.field.datatype"
           size={9}>
-          <ResourceSelect
+          <DataTypeSelect
             id={`${position}.template.field.datatype`}
-            options={datatypes}
             value={field.datatype}
             maxRows={5}
             isRequired

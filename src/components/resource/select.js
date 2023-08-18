@@ -1,57 +1,62 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Select } from '../select'
 import { Highlight } from '../completions'
-import { FormattedMessage } from 'react-intl'
+import { useIntl } from 'react-intl'
 import * as collate from '../../collate'
 import { titlecase } from '../../common/util'
+import { getDatatypeList, getPropertyList } from '../../selectors/index.js'
 
 import {
   bool, func, number, object, oneOfType, shape, string
 } from 'prop-types'
 
+export const DataTypeSelect = React.forwardRef((props, ref) => {
+  let options = useSelector(getDatatypeList)
+  return (
+    <ResourceSelect ref={ref} {...props} options={options}/>
+  )
+})
 
-export class ResourceSelect extends React.PureComponent {
-  select = React.createRef()
+export const PropertySelect = React.forwardRef((props, ref) => {
+  let options = useSelector(getPropertyList)
+  return (
+    <ResourceSelect ref={ref} {...props} options={options}/>
+  )
+})
 
-  get placeholder() {
-    return this.props.placeholder != null &&
-      <FormattedMessage id={this.props.placeholder}/>
-  }
+export const ResourceSelect = React.forwardRef((props, ref) => {
+  let intl = useIntl()
+  let placeholder = (props.placeholder) ?
+    intl.formatMessage({ id: props.placeholder }) :
+    null
 
-  focus = () => {
-    if (this.select.current) this.select.current.focus()
-  }
+  return (
+    <Select ref={ref} {...props} placeholder={placeholder}/>
+  )
+})
 
-  render() {
-    return (
-      <Select {...this.props}
-        placeholder={this.placeholder}
-        ref={this.select}/>
-    )
-  }
+ResourceSelect.propTypes = {
+  className: string.isRequired,
+  match: func.isRequired,
+  placeholder: string,
+  tabIndex: number.isRequired,
+  toText: func.isRequired
+}
 
-  static propTypes = {
-    className: string.isRequired,
-    match: func.isRequired,
-    placeholder: string,
-    tabIndex: number.isRequired,
-    toText: func.isRequired
-  }
-
-  static defaultProps = {
-    ...Select.defaultProps,
-    className: 'resource-select',
-    match: (res, query) => (
-      match(res, ...query.split(':', 2).reverse())
-    ),
-    tabIndex: -1,
-    toText: (value, { matchData } = {}) => (
-      <>
-        <Label resource={value} matchData={matchData}/>
-        <Id resource={value} matchData={matchData}/>
-      </>
-    )
-  }
+ResourceSelect.defaultProps = {
+  ...Select.defaultProps,
+  className: 'resource-select',
+  match: (res, query) => (
+    match(res, ...query.split(':', 2).reverse())
+  ),
+  tabIndex: -1,
+  toText: (value, { matchData } = {}) => (
+    <>
+      <Label resource={value} matchData={matchData}/>
+      <Id resource={value} matchData={matchData}/>
+    </>
+  )
 }
 
 
