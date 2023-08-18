@@ -116,6 +116,7 @@
   .toolbar-center {
     flex: 0 1 auto;
     min-width: 0; // Fix truncation
+    overflow: hidden; // Prevent item count glitch in blurred narrow window
   }
 
   .item-count {
