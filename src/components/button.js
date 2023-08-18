@@ -2,7 +2,7 @@ import React from 'react'
 import { useIntl } from 'react-intl'
 import cx from 'classnames'
 import { Toggle } from './form.js'
-import { IconPlusCircle, IconMinusCircle } from './icons.js'
+import * as icons from './icons.js'
 
 import {
   arrayOf,
@@ -85,6 +85,9 @@ export const Button = React.memo(({
       attr.tabIndex = tabIndex
     }
   }
+
+  if (typeof icon === 'string')
+    icon = React.createElement(icons[icon])
 
   return React.createElement(
     noFocus ? 'span' : 'button',
@@ -203,11 +206,11 @@ export const PlusMinusControls = ({
 }) => (
   <ButtonGroup>
     <Button
-      icon={<IconPlusCircle/>}
+      icon="IconPlusCircle"
       isDisabled={!(canAdd && onAdd)}
       onClick={onAdd}/>
     <Button
-      icon={<IconMinusCircle/>}
+      icon="IconMinusCircle"
       isDisabled={!(canRemove && onRemove)}
       onClick={onRemove}/>
   </ButtonGroup>
