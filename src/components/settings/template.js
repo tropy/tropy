@@ -1,14 +1,11 @@
-import { useSelector } from 'react-redux'
 import { func, object } from 'prop-types'
 import { FormElement } from '../form.js'
 import { TemplateSelect } from '../template/select.js'
 import { IconItemSmall, IconPhoto, IconSelection } from '../icons.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { getAllTemplatesByType } from '../../selectors/index.js'
+import { tropy } from '../../ontology/ns.js'
 
 export function TemplateSettings({ config, onChange }) {
-  let templates = useSelector(getAllTemplatesByType)
-
   let handleTemplateChange = useEvent((values, hasChanged) => {
     if (hasChanged) {
       let [type, template] = Object.entries(values)[0]
@@ -27,7 +24,7 @@ export function TemplateSettings({ config, onChange }) {
         id="prefs.app.templates.label"
         isRequired
         name="item"
-        options={templates.item}
+        type={tropy.Item}
         value={config.item}
         tabIndex={0}
         onChange={handleTemplateChange}/>
@@ -35,7 +32,7 @@ export function TemplateSettings({ config, onChange }) {
         icon={<IconPhoto/>}
         isRequired
         name="photo"
-        options={templates.photo}
+        type={tropy.Photo}
         value={config.photo}
         tabIndex={0}
         onChange={handleTemplateChange}/>
@@ -43,7 +40,7 @@ export function TemplateSettings({ config, onChange }) {
         icon={<IconSelection/>}
         isRequired
         name="selection"
-        options={templates.selection}
+        type={tropy.Selection}
         value={config.selection}
         tabIndex={0}
         onChange={handleTemplateChange}/>
