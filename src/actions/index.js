@@ -1,4 +1,5 @@
 export * as notepad from '../slices/notepad.js'
+export * as prefs from '../slices/prefs.js'
 export * as projectFiles from '../slices/project-files.js'
 export * as storage from '../slices/storage.js'
 
@@ -23,7 +24,6 @@ export { default as ontology } from './ontology'
 export { default as panel } from './panel'
 export { default as photo } from './photo'
 export { default as plugin } from './plugin'
-export { default as prefs } from './prefs'
 export { default as project } from './project'
 export { default as qr } from './qr'
 export { default as recent } from './recent'

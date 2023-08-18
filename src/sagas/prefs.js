@@ -1,12 +1,13 @@
 import { all, call, cancel, delay, fork, take, takeLatest } from 'redux-saga/effects'
 import { debug, warn } from '../common/log'
-import { PREFS, PROJECT } from '../constants'
+import { PROJECT } from '../constants'
 import { ontology } from './ontology'
 import { open } from './project'
 import { history } from './history'
 import { ipc } from './ipc'
 import { shell } from './shell'
 import { persist, restore } from './storage'
+import { close } from '../slices/prefs.js'
 
 export function *main() {
   // Delayed import with command registation side-effect!
@@ -35,7 +36,7 @@ export function *main() {
     })
 
     debug('*prefs.main ready')
-    yield take(PREFS.CLOSE)
+    yield take(close)
     yield cancel(project)
 
   } catch (e) {
