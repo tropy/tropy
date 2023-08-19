@@ -54,12 +54,7 @@ export class PluginOption extends React.PureComponent {
       case 'template':
         return (
           <FormElement id={this.props.spec.label} title={this.attrs.title}>
-            <TemplateSelect {...this.attrs}
-              minFilterOptions={4}
-              options={[
-                ...this.props.templates.item,
-                ...this.props.templates.photo,
-                ...this.props.templates.selection]}/>
+            <TemplateSelect {...this.attrs} minFilterOptions={4}/>
           </FormElement>
         )
       case 'property':
