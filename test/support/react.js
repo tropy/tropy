@@ -3,6 +3,8 @@ import React from 'react'
 import chai from 'chai'
 import dom from 'chai-dom'
 import { render as testRender, queries } from '@testing-library/react'
+import { configureStore } from '@reduxjs/toolkit'
+import { Provider } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 import { DndProvider } from 'react-dnd'
 import { TestBackend } from 'react-dnd-test-backend'
@@ -10,6 +12,7 @@ import ARGS from '../../src/args.js'
 import win, { createWindowInstance } from '../../src/window.js'
 import { WindowContext } from '../../src/components/window.js'
 import { Strings } from '../../src/res.js'
+import * as reducer from '../../src/reducers/index.js'
 
 chai.use(dom)
 
@@ -31,16 +34,22 @@ let messages = new Strings(
   Strings.parse(fs.readFileSync(Strings.expand('renderer')))
 ).flatten()
 
+let store = configureStore({
+  reducer
+})
+
 export const inWindowContext = {
   // eslint-disable-next-line react/prop-types
   wrapper({ children }) {
     return (
       <WindowContext.Provider value={win || createWindowInstance(ARGS)}>
-        <IntlProvider locale="en" messages={messages}>
-          <DndProvider backend={TestBackend}>
-            {children}
-          </DndProvider>
-        </IntlProvider>
+        <DndProvider backend={TestBackend}>
+          <Provider store={store}>
+            <IntlProvider locale="en" messages={messages}>
+              {children}
+            </IntlProvider>
+          </Provider>
+        </DndProvider>
       </WindowContext.Provider>
     )
   }
