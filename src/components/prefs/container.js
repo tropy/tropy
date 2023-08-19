@@ -66,7 +66,7 @@ export function PrefsContainer() {
             project={project}
             onChange={handleProjectChange}/>
         </Pane>
-        <Pane name="templates">
+        <Pane name="template">
           <TemplateEditor/>
         </Pane>
         <Pane name="vocab">
