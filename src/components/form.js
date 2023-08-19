@@ -268,7 +268,7 @@ export const Toggle = ({
   isChecked ??= value === true
 
   let handleChange = useEvent(() => {
-    let inverse =  (typeof value === 'boolean') ?
+    let inverse =  (typeof value === 'boolean' || value === undefined) ?
       !value :
       isChecked ? null : value
 
