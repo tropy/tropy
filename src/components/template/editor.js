@@ -4,18 +4,11 @@ import { TemplateFieldList } from './field-list'
 import { TemplateToolbar } from './toolbar'
 import { FormattedMessage } from 'react-intl'
 import { Form, FormField, FormElement, FormSelect } from '../form'
-import { ScrollContainer }  from '../scroll'
 import { tropy, Template } from '../../ontology'
-import { arrayOf, func, shape, string } from 'prop-types'
+import { arrayOf, func, object, string } from 'prop-types'
 import { ontology } from '../../actions'
 import { TYPE } from '../../constants'
 import { insert, move, remove } from '../../common/util'
-
-import {
-  getDatatypeList,
-  getTemplateList,
-  getPropertyList
-} from '../../selectors'
 
 
 class TemplateEditor extends React.PureComponent {
@@ -23,10 +16,9 @@ class TemplateEditor extends React.PureComponent {
 
   componentDidUpdate(props) {
     if (props.templates !== this.props.templates) {
-      let template = this.props.templates.find(t => t.id === this.state.id)
-      if (template != null) {
+      let template = this.props.templates[this.state.id]
+      if (template != null)
         this.handleTemplateChange(template)
-      }
     }
   }
 
@@ -146,108 +138,94 @@ class TemplateEditor extends React.PureComponent {
   render() {
     let { isPristine } = this
     return (
-      <ScrollContainer>
-        <Form className="template-editor">
-          <header className="template-header">
-            <TemplateToolbar
-              selected={isPristine ? null : this.state.id}
-              templates={this.props.templates}
-              isProtected={this.state.isProtected}
-              isPristine={this.isPristine}
-              onChange={this.handleTemplateChange}
-              onCopy={this.handleTemplateCopy}
-              onDelete={this.handleTemplateDelete}
-              onExport={this.props.onExport}
-              onImport={this.props.onImport}/>
-            <FormField
-              id="template.name"
-              name="name"
-              value={this.state.name}
-              isCompact
-              isRequired
-              isDisabled={this.state.isProtected}
-              tabIndex={0}
-              onChange={isPristine ? undefined : this.handleTemplateUpdate}
-              onInputChange={isPristine ?
-                this.handleTemplateUpdate : undefined}
-              size={9}/>
-            <FormField
-              id="template.id"
-              name="id"
-              value={this.state.id}
-              isCompact
-              isDisabled={this.state.isProtected || !isPristine}
-              tabIndex={0}
-              onInputChange={this.handleTemplateUpdate}
-              size={9}/>
-            <FormSelect
-              id="template.type"
-              name="type"
-              value={this.state.type}
-              options={this.props.types}
-              tabIndex={0}
-              isCompact
-              isDisabled={this.state.isProtected || !isPristine}
-              isRequired
-              onChange={this.handleTemplateUpdate}
-              size={9}/>
-            <FormField
-              id="template.creator"
-              name="creator"
-              value={this.state.creator}
-              isCompact
-              isDisabled={this.state.isProtected}
-              tabIndex={0}
-              onChange={this.handleTemplateUpdate}
-              size={9}/>
-            <FormField
-              id="template.description"
-              name="description"
-              value={this.state.description}
-              isDisabled={this.state.isProtected}
-              tabIndex={0} onChange={this.handleTemplateUpdate}
-              size={9}/>
-            {isPristine &&
-              <FormElement className="flex-row justify-content-end">
-                <button
-                  className="btn btn-primary min-width"
-                  disabled={!this.isValid}
-                  tabIndex={0}
-                  type="button"
-                  onClick={this.handleTemplateCreate}>
-                  <FormattedMessage id="prefs.template.create"/>
-                </button>
-              </FormElement>}
-          </header>
-          <TemplateFieldList
-            template={this.state.id}
-            fields={this.state.fields}
-            datatypes={this.props.datatypes}
-            properties={this.props.properties}
-            isDisabled={this.state.isProtected || isPristine}
-            onInsert={this.handleFieldInsert}
-            onRemove={this.handleFieldRemove}
-            onSave={this.handleFieldSave}
-            onSort={this.handleSort}
-            onSortPreview={this.handleSortPreview}
-            onSortReset={this.handleSortReset}
-            onSortStart={this.handleSortStart}/>
-        </Form>
-      </ScrollContainer>
+      <Form className="template-editor">
+        <header className="template-header">
+          <TemplateToolbar
+            selected={isPristine ? null : this.state.id}
+            isProtected={this.state.isProtected}
+            isPristine={this.isPristine}
+            onChange={this.handleTemplateChange}
+            onCopy={this.handleTemplateCopy}
+            onDelete={this.handleTemplateDelete}
+            onExport={this.props.onExport}
+            onImport={this.props.onImport}/>
+          <FormField
+            id="template.name"
+            name="name"
+            value={this.state.name}
+            isCompact
+            isRequired
+            isDisabled={this.state.isProtected}
+            tabIndex={0}
+            onChange={isPristine ? undefined : this.handleTemplateUpdate}
+            onInputChange={isPristine ?
+              this.handleTemplateUpdate : undefined}
+            size={9}/>
+          <FormField
+            id="template.id"
+            name="id"
+            value={this.state.id}
+            isCompact
+            isDisabled={this.state.isProtected || !isPristine}
+            tabIndex={0}
+            onInputChange={this.handleTemplateUpdate}
+            size={9}/>
+          <FormSelect
+            id="template.type"
+            name="type"
+            value={this.state.type}
+            options={this.props.types}
+            tabIndex={0}
+            isCompact
+            isDisabled={this.state.isProtected || !isPristine}
+            isRequired
+            onChange={this.handleTemplateUpdate}
+            size={9}/>
+          <FormField
+            id="template.creator"
+            name="creator"
+            value={this.state.creator}
+            isCompact
+            isDisabled={this.state.isProtected}
+            tabIndex={0}
+            onChange={this.handleTemplateUpdate}
+            size={9}/>
+          <FormField
+            id="template.description"
+            name="description"
+            value={this.state.description}
+            isDisabled={this.state.isProtected}
+            tabIndex={0} onChange={this.handleTemplateUpdate}
+            size={9}/>
+          {isPristine &&
+            <FormElement className="flex-row justify-content-end">
+              <button
+                className="btn btn-primary min-width"
+                disabled={!this.isValid}
+                tabIndex={0}
+                type="button"
+                onClick={this.handleTemplateCreate}>
+                <FormattedMessage id="prefs.template.create"/>
+              </button>
+            </FormElement>}
+        </header>
+        <TemplateFieldList
+          template={this.state.id}
+          fields={this.state.fields}
+          isDisabled={this.state.isProtected || isPristine}
+          onInsert={this.handleFieldInsert}
+          onRemove={this.handleFieldRemove}
+          onSave={this.handleFieldSave}
+          onSort={this.handleSort}
+          onSortPreview={this.handleSortPreview}
+          onSortReset={this.handleSortReset}
+          onSortStart={this.handleSortStart}/>
+      </Form>
     )
   }
 
   static propTypes = {
-    datatypes: arrayOf(shape({
-      id: string.isRequired
-    })).isRequired,
-    properties: arrayOf(shape({
-      id: string.isRequired
-    })).isRequired,
-    templates: arrayOf(shape({
-      id: string.isRequired,
-      name: string
-    })).isRequired,
+    templates: object.isRequired,
     types: arrayOf(string).isRequired,
     onCreate: func.isRequired,
     onDelete: func.isRequired,
@@ -267,10 +245,8 @@ class TemplateEditor extends React.PureComponent {
 
 
 const TemplateEditorContainer = connect(
-  state => ({
-    properties: getPropertyList(state),
-    templates: getTemplateList(state),
-    datatypes: getDatatypeList(state)
+  (state) => ({
+    templates: state.ontology.template
   }),
 
   dispatch => ({
