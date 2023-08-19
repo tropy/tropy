@@ -61,17 +61,14 @@ export function PrefsContainer() {
         <Pane name="app">
           <AppSettings/>
         </Pane>
-
         <Pane name="project" isDisabled={!project?.id}>
           <ProjectSettings
             project={project}
             onChange={handleProjectChange}/>
         </Pane>
-
         <Pane name="templates">
           <TemplateEditor/>
         </Pane>
-
         <Pane name="vocab">
           <VocabBrowser
             onOpenLink={openLink}/>
@@ -81,7 +78,6 @@ export function PrefsContainer() {
               onClick={handleVocabImport}/>
           </Footer>
         </Pane>
-
         <Pane name="plugins">
           <PluginConfig
             onOpenLink={openLink}
