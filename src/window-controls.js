@@ -1,4 +1,4 @@
-import { darwin, linux } from './common/os.js'
+import { darwin, linux, win32 } from './common/os.js'
 import { append, create, on, toggle } from './dom.js'
 import ARGS from './args.js'
 
@@ -28,6 +28,11 @@ export class WindowControls {
         append(Button('maximize', () => { win.maximize() }), this.root)
         toggle(win.html, 'window-controls-maximize', true)
       }
+    }
+
+    if (win32) {
+      let appIcon = create('div', { class: 'app-icon' })
+      append(appIcon, this.root)
     }
 
     if (!darwin) {
