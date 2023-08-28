@@ -581,6 +581,11 @@ export class Tropy extends EventEmitter {
         id: target.id,
         selection: target.selection
       }), win))
+    this.on('app:copy-photo', (win, { target }) =>
+      this.dispatch(act.photo.extract({
+        id: target.id,
+        selection: target.selection
+      }, { target: ':clipboard:' }), win))
     this.on('app:consolidate-photo-library', () =>
       this.dispatch(act.photo.consolidate(), this.wm.current()))
 
@@ -1040,6 +1045,9 @@ export class Tropy extends EventEmitter {
     clipboard.write({
       text: `tropy://project/${alias}/items/${item}/${photo}`
     })
+  }
+
+  copyPhoto({ path, protocol }) {
   }
 
   async handleProtocolRequest(url) {

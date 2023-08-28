@@ -1,10 +1,10 @@
+import { clipboard, nativeImage } from 'electron'
 import { Command } from '../command'
 import { call, select } from 'redux-saga/effects'
 import { PHOTO } from '../../constants/index.js'
 import { Cache } from '../../common/cache.js'
 import { addOrientation } from '../../common/iiif.js'
 import { warn, info } from '../../common/log.js'
-import { blank } from '../../common/util.js'
 import Esper from '../../esper/index.js'
 import { fail, save } from '../../dialog.js'
 import { toFile } from '../../image/index.js'
@@ -14,11 +14,13 @@ export class Extract extends Command {
   *exec() {
     try {
       let { cache } = this.options
-      let { payload } = this.action
+      let { meta, payload } = this.action
+      var { target } = meta
 
-      var file = yield call(save.image)
-
-      if (blank(file)) return
+      if (!target)
+        target = yield call(save.image)
+      if (!target)
+        return
 
       let [photo, selection] = yield select(state => ([
         state.photos[payload.id],
@@ -33,16 +35,25 @@ export class Extract extends Command {
         ...addOrientation(image, photo)
       })
 
-      yield call(toFile, file, buffer, { raw })
-      info(`saved image #${image.id} as ${file}`)
+      switch (target) {
+        case ':clipboard:':
+          clipboard.writeImage(nativeImage.createFromBitmap(buffer, raw))
+          break
+        default:
+          yield call(toFile, target, buffer, { raw })
+      }
+
+      info(`extracted image #${image.id} to ${target}`)
 
       return {
-        file,
+        target,
         size: buffer.length
       }
 
     } catch (e) {
-      warn({ stack: e.stack }, `failed to save image #${image?.id} as ${file}`)
+      warn({
+        stack: e.stack
+      }, `failed to extract image #${image?.id} to ${target}`)
       fail(e, this.action.type)
     }
   }
