@@ -1047,9 +1047,6 @@ export class Tropy extends EventEmitter {
     })
   }
 
-  copyPhoto({ path, protocol }) {
-  }
-
   async handleProtocolRequest(url) {
     info(`opening url ${url}`)
 
