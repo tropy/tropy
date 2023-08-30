@@ -221,6 +221,12 @@ export function nav(state = init, { type, payload, meta, error }) {
         })
       }
     }
+    case 'item.quickview':
+      return {
+        ...state,
+        quickview: !state.quickview
+      }
+
 
     default:
       return state

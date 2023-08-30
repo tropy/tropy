@@ -164,11 +164,14 @@ export default {
     }
   },
 
-  preview(payload, meta) {
+  preview(payload = {}, meta = {}) {
     return {
-      type: ITEM.PREVIEW,
+      type: 'item.quickview',
       payload,
-      meta: { cmd: 'project', ...meta }
+      meta
+      // type: ITEM.PREVIEW,
+      // payload,
+      // meta: { cmd: 'project', ...meta }
     }
   },
 

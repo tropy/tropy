@@ -9,6 +9,7 @@ import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useGlobalKeys } from '../../hooks/use-global-keys.js'
 import { ProjectView } from './view.js'
 import { ItemView } from '../item/view.js'
+import { ItemQuickView } from '../item/quickview.js'
 import { DragLayer } from '../drag-layer.js'
 import { MODE } from '../../constants/nav.js'
 import * as act from '../../actions/index.js'
@@ -102,6 +103,7 @@ export const Project = React.forwardRef(({
         onPanelDragStop={handlePanelDragStop}
         onPanelResize={handlePanelResize}/>
 
+      <ItemQuickView/>
       <DragLayer/>
       <div className="cover">
         <IconTropyLarge/>
