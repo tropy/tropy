@@ -37,6 +37,8 @@ const LARGE_TEXTURE = 3500 * 3500
 PIXI.settings.RETINA_PREFIX = /@2x!/
 PIXI.settings.STRICT_TEXTURE_CACHE = true
 
+PIXI.Ticker.shared.autoStart = false
+PIXI.Ticker.shared.stop()
 
 export default class Esper extends EventEmitter {
   static #INSTANCE = null
@@ -74,6 +76,7 @@ export default class Esper extends EventEmitter {
       resolution: Esper.devicePixelRatio,
       roundPixels: false,
       sharedLoader: true,
+      sharedTicker: true,
       ...opts
     })
 
@@ -376,11 +379,15 @@ export default class Esper extends EventEmitter {
 
   start() {
     this.stop.cancel()
+    PIXI.Ticker.system.stop()
     this.app.start()
+    this.app.ticker.start()
   }
 
   stop = debounce(() => {
     this.app.stop()
+    this.app.ticker.stop()
+    PIXI.Ticker.system.stop()
   }, 5000)
 
   update = () => {
