@@ -4,7 +4,7 @@ import { useWindow } from './use-window.js'
 // Resizes the window to the given dimensions while the component is mounted.
 export function useWindowSize(width, height) {
   let win = useWindow()
-  let delay = win.isResizeAnimated ? 150 : 0
+  let timeout = win.isResizeAnimated ? 150 : 0
 
   useEffect(() => {
     win.setFixedSize(true, { width, height })
@@ -12,8 +12,8 @@ export function useWindowSize(width, height) {
 
   useEffect(() => (
     () => {
-      // Using a timeout because we want this to fire after unmount!
-      setTimeout(() => { win?.setFixedSize(false) }, delay)
+      // Delaying because we want this to fire after unmount!
+      win?.setFixedSize(false, { timeout })
     }
-  ), [win, delay])
+  ), [win, timeout])
 }

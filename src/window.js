@@ -450,15 +450,18 @@ export class Window extends EventEmitter {
     })
   }
 
-  setFixedSize(resizable, isFixed, { width, height, animate } = {}) {
+  setFixedSize(isFixed, { width, height, animate, timeout = 0 } = {}) {
     if (linux && ARGS.frameless)
       height += 46
 
-    this.send('fixed-size', resizable, isFixed, {
-      width,
-      height,
-      animate
-    })
+    clearTimeout(this.setFixedSize.pending)
+    this.setFixedSize.pending = setTimeout(() => {
+      this.send('fixed-size', isFixed, {
+        width,
+        height,
+        animate
+      })
+    }, timeout)
   }
 
   get isResizeAnimated() {
