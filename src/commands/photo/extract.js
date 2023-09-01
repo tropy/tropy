@@ -1,6 +1,6 @@
 import { clipboard, nativeImage } from 'electron'
 import { Command } from '../command'
-import { call, select } from 'redux-saga/effects'
+import { call, put, select } from 'redux-saga/effects'
 import { PHOTO } from '../../constants/index.js'
 import { Cache } from '../../common/cache.js'
 import { addOrientation } from '../../common/iiif.js'
@@ -8,6 +8,8 @@ import { warn, info } from '../../common/log.js'
 import Esper from '../../esper/index.js'
 import { fail, save } from '../../dialog.js'
 import { toBuffer, toFile } from '../../image/index.js'
+import * as act from '../../actions/index.js'
+import win from '../../window.js'
 
 
 export class Extract extends Command {
@@ -15,7 +17,10 @@ export class Extract extends Command {
     try {
       let { cache } = this.options
       let { meta, payload } = this.action
-      var { target } = meta
+      var { target, plugin } = meta
+
+      if (plugin)
+        target = ':plugin:'
 
       if (!target)
         target = yield call(save.image)
@@ -39,6 +44,15 @@ export class Extract extends Command {
         case ':clipboard:': {
           let png = yield call(toBuffer, 'png', buffer, { raw })
           clipboard.writeImage(nativeImage.createFromBuffer(png))
+          break
+        case ':plugin:': {
+          let res = yield call(win.plugins.extract, plugin, { buffer, ...raw })
+          if (res.note)
+            yield put(act.note.create({
+              text: res.note,
+              photo: photo.id,
+              selection: selection?.id
+            }))
           break
         }
         default:
