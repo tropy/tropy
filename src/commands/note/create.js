@@ -5,17 +5,24 @@ import * as act from '../../actions/index.js'
 import { NOTE } from '../../constants/index.js'
 import { getNextNoteSelection, getNotesMap } from '../../selectors/index.js'
 import { containsRTL } from '../../common/util.js'
+import { fromHTML } from '../../editor/serialize.js'
 
 
 export class Create extends Command {
   *exec() {
     let { db } = this.options
-    let { state, text } = this.action.payload
+    let { state, text, photo, selection } = this.action.payload
 
-    let { photo, selection } = yield select(({ nav }) => nav)
+    if (photo == null) {
+      ({ photo, selection } = yield select(({ nav }) => nav))
+    }
 
     let type = (selection != null) ? 'selection' : 'photo'
     let id = (selection != null) ? selection : photo
+
+    if (state == null) {
+      ({ state, text } = fromHTML(text))
+    }
 
     let note = yield call(db.transaction, tx =>
       mod.note.create(tx, { id, state, text }))
