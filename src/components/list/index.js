@@ -1,4 +1,4 @@
 export * from './drag-preview'
-export * from './last-import'
+export * from './leaf-node'
 export * from './trash'
 export * from './tree'

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import { Titlebar } from '../toolbar'
 import { ActivityPane } from '../activity'
 import { Resizable } from '../resizable'
-import { LastImportListNode, ListTree, TrashListNode } from '../list'
+import { ListLeafNode, ListTree, TrashListNode } from '../list'
 import { TagList } from '../tag'
 import { Sidebar, SidebarBody } from '../sidebar'
 import { ProjectName } from './name'
@@ -72,7 +72,7 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   isListSelected(list) {
-    return list && list === this.props.list
+    return list > 0 && list === this.props.list
   }
 
   isListEmpty() {
@@ -85,11 +85,13 @@ class ProjectSidebar extends React.PureComponent {
         return
       case this.props.isLastImportSelected:
         return this.handleTrashSelect()
-      case this.isListEmpty():
-      case this.isListSelected(this.getLastList()):
+      case (this.props.list === -1):
         return this.props.hasLastImport ?
           this.handleLastImportSelect() :
           this.handleTrashSelect()
+      case this.isListEmpty():
+      case this.isListSelected(this.getLastList()):
+        return this.handleUnlistedSelect()
       case !this.hasSelection:
         return this.handleListSelect(this.getFirstList())
       default:
@@ -111,7 +113,9 @@ class ProjectSidebar extends React.PureComponent {
       case this.props.isTrashSelected:
         return this.props.hasLastImport ?
           this.handleLastImportSelect() :
-          this.handleListSelect(this.getLastList())
+          this.handleUnlistedSelect()
+      case (this.props.list === -1):
+        return this.handleListSelect(this.getLastList())
       default:
         return this.handleListSelect(this.getPrevList())
     }
@@ -170,6 +174,10 @@ class ProjectSidebar extends React.PureComponent {
     this.props.onSelect({ imports: true }, { throttle: true })
   }
 
+  handleUnlistedSelect = () => {
+    this.props.onSelect({ list: -1 }, { throttle: true })
+  }
+
   handleTrashDropItems = (items) => {
     this.props.onItemDelete(items.map(it => it.id))
   }
@@ -183,7 +191,7 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   handleListSelect = (list) => {
-    if (list && (!this.isListSelected(list) || this.hasActiveTags)) {
+    if (list > 0 && (!this.isListSelected(list) || this.hasActiveTags)) {
       this.props.onSelect({ list }, { throttle: true })
       return true
     }
@@ -280,8 +288,16 @@ class ProjectSidebar extends React.PureComponent {
                     onMove={this.props.onListMove}
                     onSave={this.props.onListSave}/>}
                 <ol>
+                  {root &&
+                    <ListLeafNode
+                      name="sidebar.unlisted"
+                      icon="Clock"
+                      isSelected={this.props.list === -1}
+                      onClick={this.handleUnlistedSelect}/>}
                   {this.props.hasLastImport &&
-                    <LastImportListNode
+                    <ListLeafNode
+                      name="sidebar.imports"
+                      icon="Clock"
                       isSelected={this.props.isLastImportSelected}
                       onClick={this.handleLastImportSelect}/>}
                   <TrashListNode
