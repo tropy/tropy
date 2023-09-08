@@ -4,6 +4,7 @@ en:
     tags: Tags
     imports: Last Import
     trash: Deleted Items
+    unlisted: Unlisted Items
   toolbar:
     import: Import Photos
     items: >-
