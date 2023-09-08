@@ -29,7 +29,10 @@ export function *search(db) {
         break
 
       case (list != null):
-        result = yield call(mod.item.list, db, list, { tags, query, sort })
+        if (list < 0)
+          result = yield call(mod.item.unlisted, db, { tags, query, sort })
+        else
+          result = yield call(mod.item.list, db, list, { tags, query, sort })
         break
 
       default:
@@ -40,7 +43,7 @@ export function *search(db) {
     if (ms > 300) {
       warn({
         ms,
-        list: list != null,
+        list,
         query,
         tags: tags.length > 0,
         trash
@@ -51,7 +54,7 @@ export function *search(db) {
 
   } catch (e) {
     warn({
-      list: list != null,
+      list,
       query,
       tags: tags.length > 0,
       stack: e.stack,

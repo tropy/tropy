@@ -164,6 +164,27 @@ mod.item = {
       params)
   },
 
+  async unlisted(db, options) {
+    let { dir, order, params } = prep(options)
+    return search(db, `
+      ${params.$sort ? SORT : ''}
+      SELECT DISTINCT id
+        FROM items
+          LEFT OUTER JOIN trash USING (id)
+          LEFT OUTER JOIN list_items USING (id)
+          ${params.$sort ?
+            'LEFT OUTER JOIN sort USING (id)' :
+            'JOIN subjects USING (id)'}
+        WHERE
+          (list_items.id IS NULL OR list_items.deleted NOT NULL) AND
+          ${params.$query ? `id IN (${SEARCH}) AND` : ''}
+          trash.deleted IS NULL
+        ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
+        ${params.$tags ? `tag_id IN (${lst(options.tags)}) AND` : ''}
+        ORDER BY ${order} ${dir}, id ${dir}`,
+      params)
+  },
+
   async load(db, ids) {
     const items = {}
     if (ids != null) ids = ids.join(',')
