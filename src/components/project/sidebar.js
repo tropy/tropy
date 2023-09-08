@@ -103,19 +103,17 @@ class ProjectSidebar extends React.PureComponent {
     switch (true) {
       case !this.hasSelection:
         return
-      case this.props.isTrashSelected && this.props.hasLastImport:
-        return this.handleLastImportSelect()
-      case this.isListEmpty():
-      case this.isListSelected(this.getFirstList()):
-        return this.handleSelect()
-      case this.props.isLastImportSelected:
-        return this.handleListSelect(this.getLastList())
       case this.props.isTrashSelected:
         return this.props.hasLastImport ?
           this.handleLastImportSelect() :
           this.handleUnlistedSelect()
+      case this.props.isLastImportSelected:
+        return this.handleUnlistedSelect(this.getLastList())
       case (this.props.list === -1):
         return this.handleListSelect(this.getLastList())
+      case this.isListEmpty():
+      case this.isListSelected(this.getFirstList()):
+        return this.handleSelect()
       default:
         return this.handleListSelect(this.getPrevList())
     }
