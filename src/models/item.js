@@ -175,12 +175,13 @@ mod.item = {
           ${params.$sort ?
             'LEFT OUTER JOIN sort USING (id)' :
             'JOIN subjects USING (id)'}
+          ${params.$tags ? 'JOIN taggings USING (id)' : ''}
         WHERE
           (list_items.id IS NULL OR list_items.deleted NOT NULL) AND
           ${params.$query ? `id IN (${SEARCH}) AND` : ''}
+          ${params.$tags ? `tag_id IN (${lst(options.tags)}) AND` : ''}
           trash.deleted IS NULL
         ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
-        ${params.$tags ? `tag_id IN (${lst(options.tags)}) AND` : ''}
         ORDER BY ${order} ${dir}, id ${dir}`,
       params)
   },
