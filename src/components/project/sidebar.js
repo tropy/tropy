@@ -289,7 +289,7 @@ class ProjectSidebar extends React.PureComponent {
                   {root &&
                     <ListLeafNode
                       name="sidebar.unlisted"
-                      icon="Clock"
+                      icon="UnlistedItems"
                       isSelected={this.props.list === -1}
                       onClick={this.handleUnlistedSelect}/>}
                   {this.props.hasLastImport &&

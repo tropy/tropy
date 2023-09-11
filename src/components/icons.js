@@ -703,6 +703,14 @@ export const IconU = i('U', (
   </svg>
 ))
 
+export const IconUnlistedItems = i('UnlistedItems', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M10,1H2V0h8ZM3,9H1V3H11V5h1V2H0v8H3ZM15,9H5v6H15V9m1-1v8H4V8ZM14,6H6V7h8Z"/>
+    </g>
+  </svg>
+))
+
 export const IconXSmall = i('XSmall', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
