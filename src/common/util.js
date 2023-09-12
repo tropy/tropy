@@ -450,7 +450,7 @@ export function camelcase(str) {
 }
 
 export function lispcase(str) {
-  return str.split(/(\p{Lu}\p{Lu}+)|(\p{Lu}\p{L}+)|[\s-]+/u)
+  return str.split(/(\p{Lu}\p{Lu}+)|(\p{Lu}\p{Ll}+)|[\s-]+/u)
     .filter(s => !!s)
     .map(s => s.toLowerCase())
     .join('-')

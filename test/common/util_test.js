@@ -356,6 +356,7 @@ describe('util', () => {
     expect(util.lispcase('Foo')).to.eql('foo')
     expect(util.lispcase('foo bar')).to.eql('foo-bar')
     expect(util.lispcase('Foo Bar')).to.eql('foo-bar')
+    expect(util.lispcase('FooBar')).to.eql('foo-bar')
     expect(util.lispcase('one two three')).to.eql('one-two-three')
     expect(util.lispcase('oneTwo-three.Four')).to.eql('one-two-three.-four')
     expect(util.lispcase('aJPEGfile')).to.eql('a-jpeg-file')

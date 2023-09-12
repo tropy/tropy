@@ -2,6 +2,7 @@ import React from 'react'
 import { element, string } from 'prop-types'
 import cx from 'classnames'
 import { useIntl } from 'react-intl'
+import { lispcase } from '../common/util.js'
 
 const icons = Object.create({})
 
@@ -22,7 +23,9 @@ export function IconContainer({ children, className, name, title }) {
     title = intl.formatMessage({ id: title })
 
   return (
-    <span className={cx('icon', `icon-${name}`, className)} title={title}>
+    <span
+      className={cx('icon', `icon-${lispcase(name)}`, className)}
+      title={title}>
       {children}
     </span>
   )
@@ -40,7 +43,7 @@ function i(name, svg) {
   let IconComponent = React.memo(({ className, title }) => (
     <IconContainer
       className={className}
-      name={name.toLowerCase()}
+      name={name}
       title={title}>
       {svg}
     </IconContainer>
