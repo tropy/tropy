@@ -449,6 +449,13 @@ export function camelcase(str) {
     })
 }
 
+export function lispcase(str) {
+  return str.split(/(\p{Lu}\p{Lu}+)|(\p{Lu}\p{L}+)|[\s-]+/u)
+    .filter(s => !!s)
+    .map(s => s.toLowerCase())
+    .join('-')
+}
+
 export function quote(string) {
   return `"${string.replace(/\\"/, 'g')}"`
 }
