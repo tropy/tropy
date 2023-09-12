@@ -36,6 +36,9 @@ export const ProjectView = ({
   let items = useSelector(getVisibleItems)
   let sort = useSelector(getSortColumn)
 
+  let list = typeof nav.list === 'number' && nav.list > 0 ?
+    nav.list : null
+
   let iterator = useRef()
 
   useEffect(() => {
@@ -60,17 +63,11 @@ export const ProjectView = ({
   })
 
   let handleItemImport = useEvent((data = {}) => {
-    dispatch(act.item.import({
-      ...data,
-      list: nav.list
-    }))
+    dispatch(act.item.import({ ...data, list }))
   })
 
   let handleSort = useEvent((opts) => {
-    dispatch(act.nav.sort({
-      ...opts,
-      list: nav.list
-    }))
+    dispatch(act.nav.sort({ ...opts, list }))
   })
 
   let handleSearch = useEvent((query) => {
@@ -161,7 +158,7 @@ export const ProjectView = ({
               isDisabled={isDisabled}
               isReadOnly={isReadOnly}
               items={items}
-              list={nav.list}
+              list={list}
               onItemDelete={handleItemDelete}
               onSelect={handleItemSelect}
               onSort={handleSort}
