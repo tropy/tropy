@@ -1,54 +1,62 @@
 import React from 'react'
-import { element, object, string } from 'prop-types'
+import { element, string } from 'prop-types'
 import cx from 'classnames'
-import { injectIntl } from 'react-intl'
+import { useIntl } from 'react-intl'
 
-export const Icon = ({ children, className, name, title }) => (
-  <span className={cx('icon', `icon-${name}`, className)} title={title}>
-    {children}
-  </span>
-)
+const icons = Object.create({})
+
+export function Icon(props) {
+  return React.createElement(icons[props.name], props)
+}
 
 Icon.propTypes = {
+  name: string.isRequired,
+  className: string,
+  title: string
+}
+
+export function IconContainer({ children, className, name, title }) {
+  let intl = useIntl()
+
+  if (title)
+    title = intl.formatMessage({ id: title })
+
+  return (
+    <span className={cx('icon', `icon-${name}`, className)} title={title}>
+      {children}
+    </span>
+  )
+}
+
+IconContainer.propTypes = {
   children: element.isRequired,
   className: string,
   name: string.isRequired,
   title: string
 }
 
-function i(name, svg, intl = false) {
-  const icon = class extends React.PureComponent {
-    get title() {
-      return (this.props.title && this.props.intl) ?
-        this.props.intl.formatMessage({ id: this.props.title }) :
-        this.props.title
-    }
 
-    render() {
-      return (
-        <Icon
-          className={this.props.className}
-          name={name.toLowerCase()}
-          title={this.title}>
-          {svg}
-        </Icon>
-      )
-    }
-  }
+function i(name, svg) {
+  let IconComponent = React.memo(({ className, title }) => (
+    <IconContainer
+      className={className}
+      name={name.toLowerCase()}
+      title={title}>
+      {svg}
+    </IconContainer>
+  ))
 
-  icon.propTypes = {
+  IconComponent.propTypes = {
     className: string,
     title: string
   }
 
-  icon.displayName = `Icon${name}`
+  IconComponent.displayName = `Icon${name}`
 
-  if (intl) {
-    icon.propTypes.intl = object
-  }
-
-  return intl ? injectIntl(icon) : icon
+  icons[name] = IconComponent
+  return IconComponent
 }
+
 
 /* eslint-disable max-len */
 
@@ -111,7 +119,7 @@ export const IconLock = i('Lock', (
       <path d="M9,4V3A3,3,0,0,0,3,3V4H1v8H11V4ZM4,3A2,2,0,0,1,8,3V4H4Z"/>
     </g>
   </svg>
-), true)
+))
 
 export const IconPlusSmall = i('PlusSmall', (
   <svg width="12" height="12">
@@ -127,7 +135,7 @@ export const IconWarningSm = i('WarningSm', (
       <path d="M11.606,10.211,6.894.789C6.4-.2,5.6-.2,5.106.789L.394,10.211A1.139,1.139,0,0,0,1.5,12h9A1.139,1.139,0,0,0,11.606,10.211ZM7,10.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5v-1A.5.5,0,0,1,5.5,9h1a.5.5,0,0,1,.5.5Zm0-3a.5.5,0,0,1-.5.5h-1A.5.5,0,0,1,5,7.5v-4A.5.5,0,0,1,5.5,3h1a.5.5,0,0,1,.5.5Z"/>
     </g>
   </svg>
-), true)
+))
 
 
 /* 16 x 16 */
