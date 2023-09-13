@@ -17,7 +17,7 @@
     }
   }
 
-  .icon-tropylarge {
+  .icon-tropy-large {
     polygon {
       animation: tropy-icon 0s linear forwards 0.5s;
     }
@@ -55,7 +55,7 @@
   .busy & {
     display: flex;
 
-    .icon-tropylarge {
+    .icon-tropy-large {
       display: none;
     }
 
@@ -89,7 +89,7 @@
     }
   }
 
-  .icon-tropylarge {
+  .icon-tropy-large {
     polygon {
       fill: $cover-icon-color;
     }
