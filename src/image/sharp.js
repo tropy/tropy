@@ -1,8 +1,16 @@
+import { info } from '../common/log.js'
+
 export let sharp
 
 export async function init() {
   if (sharp == null) {
     sharp = (await import('sharp')).default
+
+    info({
+      cache: sharp.cache(),
+      concurrency: sharp.concurrency(),
+      simd: sharp.simd()
+    }, 'sharp initialized')
   }
 }
 
