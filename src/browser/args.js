@@ -35,7 +35,7 @@ program
   .option('--no-context-isolation', 'disable context isolation')
   .option('--webgl', 'prefer WebGL even on GPUs with known issues', false)
 
-  .option('--debug', 'set debug flag', !!process.env.TROPY_DEBUG)
+  .option('--verbose', 'set debug flag', !!process.env.TROPY_DEBUG)
   .option('--trace', 'set trace flag', !!process.env.TROPY_TRACE)
 
   .option('-p, --port <number>', 'set API listening port', type.int)
