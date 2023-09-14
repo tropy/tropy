@@ -3,7 +3,7 @@ import { Asset } from '../asset'
 import { exif } from './exif'
 import { xmp } from './xmp'
 import { sharp, init } from './sharp'
-import { warn } from '../common/log'
+import { debug, warn } from '../common/log'
 import { pick, restrict } from '../common/util'
 import { rgb } from '../css'
 import { IMAGE, MIME } from '../constants'
@@ -102,6 +102,7 @@ export class Image extends Asset {
     await super.open()
     await this.parse({ page, density, useLocalTimezone })
 
+    debug({ cache: sharp.cache() }, 'image opened')
     return this
   }
 
