@@ -1,16 +1,17 @@
-import fs from 'fs'
-import { dirname, extname, join, isAbsolute } from 'path'
-import { ImportCommand } from '../import'
-import { DuplicateError } from '../../common/error'
-import { normalize, eachItem } from '../../common/import'
-import { info, warn } from '../../common/log'
-import { Image } from '../../image'
-import { fail } from '../../dialog'
-import { fromHTML } from '../../editor/serialize'
-import * as act from '../../actions'
-import * as mod from '../../models'
-import { ITEM, NAV } from '../../constants'
-import win from '../../window'
+import fs from 'node:fs'
+import { dirname, extname, join, isAbsolute } from 'node:path'
+import { ImportCommand } from '../import.js'
+import { DuplicateError } from '../../common/error.js'
+import { normalize, eachItem } from '../../common/import.js'
+import { info, warn } from '../../common/log.js'
+import { linux } from '../../common/os.js'
+import { Image } from '../../image/index.js'
+import { fail } from '../../dialog.js'
+import { fromHTML } from '../../editor/serialize.js'
+import * as act from '../../actions/index.js'
+import * as mod from '../../models/index.js'
+import { ITEM, NAV } from '../../constants/index.js'
+import win from '../../window.js'
 
 import {
   all,
@@ -108,6 +109,16 @@ export class Import extends ImportCommand {
   *importFromImage(path) {
     try {
       yield this.progress()
+
+      // HACK avoid concurrently loading images to work around
+      // sharp/libvips memory-related crashes!
+      if (linux) {
+        let task = this.backlog.at(-1)
+        if (task?.isRunning()) {
+          console.log('blocking')
+          yield wait(task)
+        }
+      }
 
       let {
         basePath, store, density, db, templates, useLocalTimezone
