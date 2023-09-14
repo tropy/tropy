@@ -1,4 +1,4 @@
-import { render } from '../../../support/react'
+import { render, inWindowContext } from '../../../support/react'
 import { TableHead } from '../../../../src/components/item/table/head'
 
 describe('TableHead', () => {
@@ -23,8 +23,8 @@ describe('TableHead', () => {
         <TableHead
           columns={columns}
           colwidth={colwidth}
-          sort={sort}/>
-      ).element())
+          sort={sort}/>,
+      inWindowContext).element())
       .to.have.descendants('.metadata-head')
       .with.length(columns.length)
 
