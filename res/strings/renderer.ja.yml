@@ -4,6 +4,7 @@ ja:
     tags: タグ
     imports: 最新のインポート
     trash: 削除済みアイテム
+    unlisted: Unlisted Items
   toolbar:
     import: 写真をインポート
     items: |-
@@ -143,6 +144,7 @@ ja:
             14px: Medium
             15px: Large
             16px: Very Large
+        frameless: Use custom titlebar (requires restart)
       print:
         mode: プリント
         modes:

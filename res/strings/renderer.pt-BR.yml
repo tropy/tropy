@@ -4,6 +4,7 @@ pt-BR:
     tags: Etiquetas
     imports: Última Importação
     trash: Itens Apagados
+    unlisted: Unlisted Items
   toolbar:
     import: Importar Fotos
     items: >-
@@ -116,6 +117,7 @@ pt-BR:
             14px: Médio
             15px: Grande
             16px: Muito Grande
+        frameless: Use custom titlebar (requires restart)
       print:
         mode: Imprimir
         modes:

@@ -4,6 +4,7 @@ cn:
     tags: 标签
     imports: 最近导入
     trash: 删除文件
+    unlisted: Unlisted Items
   toolbar:
     import: 导入图片
     items: |-
@@ -139,6 +140,7 @@ cn:
             14px: 中
             15px: 大
             16px: 非常大
+        frameless: Use custom titlebar (requires restart)
       print:
         mode: 打印
         modes:

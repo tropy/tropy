@@ -392,8 +392,10 @@ it:
       - label: Copia collegamento foto
         command: app:copy-photo-link
       - label: Esporta foto...
-        command: app:extract-photo
+        command: app:copy-photo
       - label: Consolida foto
+        command: app:extract-photo
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
       - label: Ruota a sinistra
@@ -881,8 +883,10 @@ it:
       - label: Copia collegamento foto
         command: app:copy-photo-link
       - label: Esporta foto...
-        command: app:extract-photo
+        command: app:copy-photo
       - label: Consolida foto
+        command: app:extract-photo
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
       - label: Ruota a sinistra
@@ -1339,8 +1343,10 @@ it:
       - label: Copia collegamento foto
         command: app:copy-photo-link
       - label: Esporta foto...
-        command: app:extract-photo
+        command: app:copy-photo
       - label: Consolida foto
+        command: app:extract-photo
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
       - label: Ruota a sinistra

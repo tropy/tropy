@@ -4,6 +4,7 @@ uk:
     tags: Теґи
     imports: Останній імпорт
     trash: Видалені елементи
+    unlisted: Unlisted Items
   toolbar:
     import: Імпорт фотографій
     items: |-
@@ -144,6 +145,7 @@ uk:
             14px: Середній
             15px: Великий
             16px: Дуже великий
+        frameless: Use custom titlebar (requires restart)
       print:
         mode: Друк
         modes:

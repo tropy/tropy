@@ -392,8 +392,10 @@ pt-BR:
       - label: Copiar Link da Foto
         command: app:copy-photo-link
       - label: Exportar Foto ...
-        command: app:extract-photo
+        command: app:copy-photo
       - label: Consolidar Foto
+        command: app:extract-photo
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
       - label: Girar para a Esquerda
@@ -881,8 +883,10 @@ pt-BR:
       - label: Copiar Link da Foto
         command: app:copy-photo-link
       - label: Exportar Foto
-        command: app:extract-photo
+        command: app:copy-photo
       - label: Consolidar Foto
+        command: app:extract-photo
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
       - label: Girar para a Esquerda
@@ -1339,8 +1343,10 @@ pt-BR:
       - label: Copiar Link da Foto
         command: app:copy-photo-link
       - label: Exportar Foto
-        command: app:extract-photo
+        command: app:copy-photo
       - label: Consolidar Foto
+        command: app:extract-photo
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
       - label: Girar para a Esquerda

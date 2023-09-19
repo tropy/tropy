@@ -392,8 +392,10 @@ cn:
       - label: 复制图片链接
         command: app:copy-photo-link
       - label: 导出图片
-        command: app:extract-photo
+        command: app:copy-photo
       - label: 检查图片
+        command: app:extract-photo
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
       - label: 顺时针 90 度
@@ -881,8 +883,10 @@ cn:
       - label: 复制图片链接
         command: app:copy-photo-link
       - label: 导出图片
-        command: app:extract-photo
+        command: app:copy-photo
       - label: 检查图片
+        command: app:extract-photo
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
       - label: 顺时针 90 度
@@ -1339,8 +1343,10 @@ cn:
       - label: 复制图片链接
         command: app:copy-photo-link
       - label: 导出图片...
-        command: app:extract-photo
+        command: app:copy-photo
       - label: 检查图片
+        command: app:extract-photo
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
       - label: 顺时针 90 度

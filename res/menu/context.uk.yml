@@ -391,6 +391,8 @@ uk:
         command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
+      - label: Copy Photo to Clipboard
+        command: app:copy-photo
       - label: Export Photo…
         command: app:extract-photo
       - label: Consolidate Photo
@@ -880,6 +882,8 @@ uk:
         command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
+      - label: Copy Photo to Clipboard
+        command: app:copy-photo
       - label: Export Photo…
         command: app:extract-photo
       - label: Consolidate Photo
@@ -1338,6 +1342,8 @@ uk:
         command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
+      - label: Copy Photo to Clipboard
+        command: app:copy-photo
       - label: Export Photo…
         command: app:extract-photo
       - label: Consolidate Photo

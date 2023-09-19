@@ -4,6 +4,7 @@ it:
     tags: Tag
     imports: Ultima importazione
     trash: Elementi eliminati
+    unlisted: Elementi non elencati
   toolbar:
     import: Importa foto
     items: |-
@@ -145,6 +146,7 @@ it:
             14px: Medio
             15px: Grande
             16px: Molto grande
+        frameless: Utilizza la barra del titolo personalizzata (richiede il riavvio)
       print:
         mode: Stampa
         modes:
