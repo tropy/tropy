@@ -13,6 +13,21 @@
     -webkit-app-region: no-drag;
   }
 
+  @if $platform == win32 {
+    top: zoom(11px);
+    left: zoom(16px);
+
+    .app-icon {
+      width: 16px;
+      height: 16px;
+      background-image:
+        image-set(
+          icon-url("window/windows/16x16.png") 1x,
+          icon-url("window/windows/32x32.png") 2x
+        );
+    }
+  }
+
   @if $platform == linux {
     top: zoom(6px);
     column-gap: zoom(3px);
