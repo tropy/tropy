@@ -77,7 +77,7 @@ $tag-color-shades: ();
     (
       $key: (
         color-base: var(--#{$key}),
-        color-dark: shade(var(--#{$key}-dark), 20%)
+        color-dark: shade(var(--#{$key}), 20%)
       )
     )
   );
