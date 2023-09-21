@@ -39,6 +39,19 @@
     }
   }
 
+  @if $platform == win32 {
+    .panel-group-header {
+      .toolbar-left {
+        .item-mode &,
+        .item-mode-enter-active & {
+          .frameless & {
+            margin-left: zoom(48px + 16px); // 16px margin
+          }
+        }
+      }
+    }  
+  }
+
   @if $platform == linux {
     .panel-group-header {
       .toolbar-left {
