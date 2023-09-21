@@ -21,8 +21,21 @@ Happy hacking!
 [docs]: https://docs.tropy.org
 [forums]: https://forums.tropy.org
 
-Install from Source
--------------------
+Installation
+------------
+Visit [tropy.org][] or the [release page][]
+to download the latest version of Tropy.
+
+You can also install Tropy via [Homebrew][], [winget][], or the [AUR][].
+
+[release page](https://github.com/tropy/tropy/releases/latest)
+[Homebrew](https://brew.sh)
+[winget](https://winget.run)
+[AUR](https://aur.archlinux.org)
+
+
+Installation from Source
+------------------------
 Install the latest version of [Node.js][]
 (at least the version that ships with the current [Electron][] release)
 and all dependencies required to use [node-gyp][] on your platform.
