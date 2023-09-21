@@ -14,17 +14,63 @@
   }
 
   @if $platform == win32 {
-    top: zoom(11px);
-    left: zoom(16px);
+    top: 0;
+    left: 0;
+    padding-left: zoom(15px);
+    height: zoom(38px);
+    display: flex;
+    align-items: center;
 
     .app-icon {
-      width: 16px;
-      height: 16px;
+      width: zoom(18px);
+      height: zoom(18px);
+      margin-right: zoom(2px);
+      background-size: 100%;
       background-image:
         image-set(
-          icon-url("window/win32/16x16.png") 1x,
-          icon-url("window/win32/32x32.png") 2x
+          icon-url("window/win32/18x18.png") 1x,
+          icon-url("window/win32/36x36.png") 2x
         );
+    }
+
+    .menu {
+      width: zoom(26px);
+      height: zoom(26px);
+      background: no-repeat zoom(4px) zoom(4px) / zoom(16px) transparent;
+      border: 1px solid transparent;
+      border-radius: zoom(3px);
+      background-image: if(
+        $theme == light,
+        icon-url("window/win32/light/more.svg"),
+        icon-url("window/win32/dark/more.svg")
+      );
+
+      .ready & {
+        // Use ready class to prevent black border during reload
+        transition: border-color $input-btn-transition, box-shadow $input-btn-transition;
+      }
+
+      &:hover {
+        background-color: if($theme == light, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1));
+      }
+      
+      &:focus-visible {
+        @include input-btn-focus(":focus-visible");
+        background-color: $sidebar-bg; // Fix rendering glitch
+      }
+
+      &:active {
+        background-image: if(
+          $theme == light,
+          icon-url("window/win32/light/more-active.svg"),
+          icon-url("window/win32/dark/more-active.svg")
+        );
+        background-color: if(
+          $theme == light,
+          rgba(0, 0, 0, 0.1),
+          rgba(0, 0, 0, 0.3)
+        );
+      }
     }
   }
 

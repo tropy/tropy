@@ -41,6 +41,12 @@
     }
 
     .toolbar-right {
+      @if $platform == win32 {
+        .frameless & {
+          margin-right: zoom(120px + 24px);
+        }
+      }
+
       @if $platform == linux {
         .frameless & {
           flex: 1 1 0;

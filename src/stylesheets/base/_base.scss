@@ -27,6 +27,11 @@ html {
     &:has(.prefs) {
       border-top: 1px solid #e0e0e0;
     }
+
+    &.frameless {
+      // Windows needs 1px extra
+      border-top: 1px solid transparent !important;
+    }
   }
 
   @if $platform == linux {
