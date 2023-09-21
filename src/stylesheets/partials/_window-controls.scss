@@ -21,6 +21,11 @@
     display: flex;
     align-items: center;
 
+    #prefs &,
+    #about & {
+      display: none;
+    }
+
     .app-icon {
       width: zoom(18px);
       height: zoom(18px);
