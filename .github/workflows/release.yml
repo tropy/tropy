@@ -34,18 +34,18 @@ jobs:
       matrix:
         os:
           - ubuntu-20.04
-          - macos-11
+          - macos-12
           - windows-2019
         arch:
           - x64
         include:
           - os: ubuntu-20.04
             platform: linux
-          - os: macos-11
+          - os: macos-12
             platform: darwin
           - os: windows-2019
             platform: win32
-          - os: macos-12
+          - os: macos-13
             platform: darwin
             arch: arm64
           - os: windows-2019
