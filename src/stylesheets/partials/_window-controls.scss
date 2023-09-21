@@ -28,22 +28,17 @@
       background-size: 100%;
       background-image:
         image-set(
-          icon-url("window/win32/18x18.png") 1x,
-          icon-url("window/win32/36x36.png") 2x
+          icon-url("window/win32/#{$theme}/18x18.png") 1x,
+          icon-url("window/win32/#{$theme}/36x36.png") 2x
         );
     }
 
     .menu {
       width: zoom(26px);
       height: zoom(26px);
-      background: no-repeat zoom(4px) zoom(4px) / zoom(16px) transparent;
+      background: icon-url("window/win32/#{$theme}/more.svg") no-repeat zoom(4px) / zoom(16px);
       border: 1px solid transparent;
       border-radius: zoom(3px);
-      background-image: if(
-        $theme == light,
-        icon-url("window/win32/light/more.svg"),
-        icon-url("window/win32/dark/more.svg")
-      );
 
       .ready & {
         // Use ready class to prevent black border during reload
@@ -51,25 +46,17 @@
       }
 
       &:hover {
-        background-color: if($theme == light, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1));
+        background-color: rgba(0, 0, 0, if($theme == light, 0.05, 0.1));
       }
       
       &:focus-visible {
         @include input-btn-focus(":focus-visible");
-        background-color: $sidebar-bg; // Fix rendering glitch
+        background-color: $sidebar-bg; // Prevent rendering glitch
       }
 
       &:active {
-        background-image: if(
-          $theme == light,
-          icon-url("window/win32/light/more-active.svg"),
-          icon-url("window/win32/dark/more-active.svg")
-        );
-        background-color: if(
-          $theme == light,
-          rgba(0, 0, 0, 0.1),
-          rgba(0, 0, 0, 0.3)
-        );
+        background-image: icon-url("window/win32/#{$theme}/more-active.svg");
+        background-color: rgba(0, 0, 0, if($theme == light, 0.1, 0.3));
       }
     }
   }
