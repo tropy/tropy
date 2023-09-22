@@ -28,10 +28,10 @@ to download the latest version of Tropy.
 
 You can also install Tropy via [Homebrew][], [winget][], or the [AUR][].
 
-[release page](https://github.com/tropy/tropy/releases/latest)
-[Homebrew](https://brew.sh)
-[winget](https://winget.run)
-[AUR](https://aur.archlinux.org)
+[release page]: https://github.com/tropy/tropy/releases/latest
+[Homebrew]: https://brew.sh
+[winget]: https://winget.run
+[AUR]: https://aur.archlinux.org
 
 
 Installation from Source
