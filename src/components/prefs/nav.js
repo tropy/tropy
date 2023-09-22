@@ -43,7 +43,9 @@ export function NavItem({ name, icon, isDisabled }) {
         onClick={handleChange}
         tabIndex={-1}>
         <NavIcon id={icon}/>
-        <FormattedMessage id={`prefs.${name}.label`}/>
+        <div className="truncate">
+          <FormattedMessage id={`prefs.${name}.label`}/>
+        </div>
       </button>
     </li>
   )

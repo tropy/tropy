@@ -637,7 +637,7 @@ export class WindowManager extends EventEmitter {
       resizable: false
     },
     prefs: {
-      width: 600,
+      width: 800,
       height: 580,
       autoHideMenuBar: true,
       fullscreenable: false,
@@ -784,7 +784,7 @@ export class WindowManager extends EventEmitter {
 const getTrafficLightPosition = (type) => {
   switch (type) {
     case 'prefs':
-      return { x: 7, y: 6 }
+      return { x: 12, y: 11 }
     default:
       return { x: 12, y: 11 }
   }

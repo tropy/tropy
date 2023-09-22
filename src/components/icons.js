@@ -175,7 +175,7 @@ export const IconB = i('B', (
   </svg>
 ))
 
-export const IconBook16 = i('Book16', (
+export const IconBook = i('Book', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
       <path d="M14,0H4a.994.994,0,0,0-.716.306L1.305,2.284A.994.994,0,0,0,1,3V15a1,1,0,0,0,1,1H12a1,1,0,0,0,1-1V3a1,1,0,0,0-1-1H3L4,1H14V14a1,1,0,0,0,1-1V1A1,1,0,0,0,14,0ZM12,15H2V3H12Z"/>
@@ -263,6 +263,14 @@ export const IconCopy = i('Copy', (
   </svg>
 ))
 
+export const IconDocument = i('Document', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M7,6H5V5H7Zm5,2H5V9h7Zm0,3H5v1h7Zm3-5.707V16H2V0H9.707ZM10,5h3.293L10,1.707Zm4,1H9V1H3V15H14Z"/>
+    </g>
+  </svg>
+))
+
 export const IconDrop = i('Drop', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
@@ -302,6 +310,14 @@ export const IconFolder = i('Folder', (
     </g>
     <g className="block" fill="currentColor">
       <path d="M15,15H1c-0.552,0-1-0.448-1-1V7c0-0.552,0.448-1,1-1h14c0.552,0,1,0.448,1,1v7C16,14.552,15.552,15,15,15z M16,5V4c0-0.552-0.448-1-1-1H9L8.276,1.553C8.107,1.214,7.761,1,7.382,1H3.618C3.239,1,2.893,1.214,2.724,1.553L2,3H1C0.448,3,0,3.448,0,4v1H16z"/>
+    </g>
+  </svg>
+))
+
+export const IconGear = i('Gear', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M8.68,1l.139.7.121.6.594.164a5.717,5.717,0,0,1,1.3.536l.536.3.513-.342.589-.393.962.962-.393.589-.342.513.3.536a5.717,5.717,0,0,1,.536,1.3l.164.594.6.121.7.139V8.68l-.7.139-.6.121-.164.594a5.717,5.717,0,0,1-.536,1.3l-.3.536.342.513.393.589-.962.962-.589-.393-.513-.342-.536.3a5.717,5.717,0,0,1-1.3.536L8.94,13.7l-.121.6L8.68,15H7.32l-.139-.7-.121-.6-.594-.164A5.717,5.717,0,0,1,5.169,13l-.536-.3-.513.342-.589.393-.962-.962.393-.589.342-.513L3,10.831a5.717,5.717,0,0,1-.536-1.3L2.3,8.94l-.6-.121L1,8.68V7.32l.7-.139.6-.121.164-.594A5.717,5.717,0,0,1,3,5.169l.3-.536L2.962,4.12l-.393-.589.962-.962.589.393.513.342L5.169,3a5.717,5.717,0,0,1,1.3-.536L7.06,2.3l.121-.6L7.32,1H8.68M8,12A4,4,0,1,0,4,8a4,4,0,0,0,4,4M9.09,0H6.91a.5.5,0,0,0-.49.4L6.2,1.5a6.7,6.7,0,0,0-1.525.63l-.93-.62a.494.494,0,0,0-.277-.084.5.5,0,0,0-.354.146L1.572,3.114a.5.5,0,0,0-.062.631l.62.93A6.7,6.7,0,0,0,1.5,6.2L.4,6.42a.5.5,0,0,0-.4.49V9.09a.5.5,0,0,0,.4.49l1.1.22a6.7,6.7,0,0,0,.63,1.525l-.62.93a.5.5,0,0,0,.062.631l1.542,1.542a.5.5,0,0,0,.354.146.494.494,0,0,0,.277-.084l.93-.62A6.7,6.7,0,0,0,6.2,14.5l.22,1.1a.5.5,0,0,0,.49.4H9.09a.5.5,0,0,0,.49-.4l.22-1.1a6.7,6.7,0,0,0,1.525-.63l.93.62a.494.494,0,0,0,.277.084.5.5,0,0,0,.354-.146l1.542-1.542a.5.5,0,0,0,.062-.631l-.62-.93A6.7,6.7,0,0,0,14.5,9.8l1.1-.22a.5.5,0,0,0,.4-.49V6.91a.5.5,0,0,0-.4-.49L14.5,6.2a6.7,6.7,0,0,0-.63-1.525l.62-.93a.5.5,0,0,0-.062-.631L12.886,1.572a.5.5,0,0,0-.354-.146.494.494,0,0,0-.277.084l-.93.62A6.7,6.7,0,0,0,9.8,1.5L9.58.4A.5.5,0,0,0,9.09,0ZM8,11a3,3,0,1,1,3-3,3,3,0,0,1-3,3Z"/>
     </g>
   </svg>
 ))
@@ -510,6 +526,14 @@ export const IconPhoto = i('Photo', (
   </svg>
 ))
 
+export const IconPlugin = i('Plugin', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M14,4V1H9V4H7V1H2V4H0V15H16V4ZM10,2h3V4H10ZM3,2H6V4H3ZM15,14H1V5H15Z"/>
+    </g>
+  </svg>
+))
+
 export const IconPluginLinux = i('PluginLinux', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
@@ -517,7 +541,6 @@ export const IconPluginLinux = i('PluginLinux', (
     </g>
   </svg>
 ))
-
 
 export const IconPlus = i('Plus', (
   <svg width="16" height="16" viewBox="0 0 16 16">
@@ -771,72 +794,6 @@ export const IconItem = i('Item', (
 
 
 /* 32 x 32 */
-
-export const IconBook = i('Book', (
-  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-    <g className="line" fill="currentColor">
-      <path d="M28,0H8A2,2,0,0,0,6.583.59h0l-4,4h0A1.993,1.993,0,0,0,2,6V30a2,2,0,0,0,2,2H24a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2H4.584l3-3H28a1,1,0,0,1,1,1V27.722A1.992,1.992,0,0,0,30,26V2A2,2,0,0,0,28,0ZM25,6V30a1,1,0,0,1-1,1H4a1,1,0,0,1-1-1V6A1,1,0,0,1,4,5H24A1,1,0,0,1,25,6Z"/>
-    </g>
-    <g className="block" fill="currentColor">
-      <path d="M28,0H8A2,2,0,0,0,6.583.59h0l-4,4h0A1.993,1.993,0,0,0,2,6V30a2,2,0,0,0,2,2H24a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2H4.584l3-3H28a1,1,0,0,1,1,1V27.722A1.992,1.992,0,0,0,30,26V2A2,2,0,0,0,28,0Z"/>
-    </g>
-  </svg>
-))
-
-export const IconProject = i('Project', (
-  <svg width="32" height="32">
-    <g className="line" fill="currentColor">
-      <path d="M19,13h7V28H19V27h4V25h1v2h1V24H22v2H21V21h1v2h3V18H21V17h4V14H20v1h4v1H19ZM14,25H13v2H12V14h5v3H16V15H15v3h4v1H14V15H13v9h2v2h5V21H15v1h4v3H16V24h2V23H14V20h9v2h1V19H20V17H18V13H11V28h7V27H14ZM30,6.293V32H7V10H0V3H7V0H23.707ZM24,1.707V6h4.293ZM1,9H19V4H1ZM29,7H23V1H8V3H20v7H8V31H29Z"/>
-    </g>
-    <g className="block" fill="currentColor">
-      <path d="M19,4V9H1V4ZM24,.293V6h5.707ZM30,7V32H7V10H20V3H7V0H23V7ZM18,27H14V25H13v2H12V14h5v3H16V15H15v3h4v1H14V15H13v9h2v2h5V21H15v1h4v3H16V24h2V23H14V20h9v2h1V19H20V17H18V13H11V28h7Zm8-14H19v3h5V15H20V14h5v3H21v1h4v5H22V21H21v5h1V24h3v3H24V25H23v2H19v1h7Z"/>
-    </g>
-  </svg>
-))
-
-export const IconMazePrefs = i('MazePrefs', (
-  <svg width="32" height="32" viewBox="0 0 32 32">
-    <g className="line" fill="currentColor">
-      <path d="M27,5V27H17V26h6V23h1v3h2V21H21v3H20V17h1v3h5V12H20V11h6V6H18V8h7V9H17V5ZM9,23H8v3H6V6h8v5H12V8H11v4h6v2H9V8H8V21h3v3h7V17H11v1h6v5H12V21h3V20H9V15H23v3h1V14H18V11H15V5H5V27H15V26H9ZM29,2a1,1,0,0,1,1,1V29a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2H29m0-1H3A2,2,0,0,0,1,3V29a2,2,0,0,0,2,2H29a2,2,0,0,0,2-2V3a2,2,0,0,0-2-2Z"/>
-    </g>
-    <g className="block" fill="currentColor">
-      <path d="M29,1H3A2,2,0,0,0,1,3V29a2,2,0,0,0,2,2H29a2,2,0,0,0,2-2V3A2,2,0,0,0,29,1ZM15,27H5V5H15v6h3v3h6v4H23V15H9v5h6v1H12v2h5V18H11V17h7v7H11V21H8V8H9v6h8V12H11V8h1v3h2V6H6V26H8V23H9v3h6Zm12,0H17V26h6V23h1v3h2V21H21v3H20V17h1v3h5V12H20V11h6V6H18V8h7V9H17V5H27Z"/>
-    </g>
-  </svg>
-))
-
-export const IconPlugin = i('Plugin', (
-  <svg width="32" height="32" viewBox="0 0 32 32">
-    <g className="line" fill="currentColor">
-      <path d="M29,7V3a1,1,0,0,0-1-1H20a1,1,0,0,0-1,1V7H13V3a1,1,0,0,0-1-1H4A1,1,0,0,0,3,3V7H0V30H32V7ZM20,3h8V7H20ZM4,3h8V7H4ZM31,29H1V8H31Z"/>
-    </g>
-    <g className="block" fill="currentColor">
-      <path d="M19,6V3a1,1,0,0,1,1-1h8a1,1,0,0,1,1,1V6ZM0,7V30H32V7ZM13,6V3a1,1,0,0,0-1-1H4A1,1,0,0,0,3,3V6Z"/>
-    </g>
-  </svg>
-))
-
-export const IconTemplate = i('Template', (
-  <svg width="32" height="32">
-    <g className="line" fill="currentColor">
-      <path d="M21.707,0H2V32H30V8.293Zm6.586,8H22V1.707ZM29,31H3V1H21V9h8ZM8,27H24V24H8Zm1-2H23v1H9ZM8,21H24V18H8Zm1-2H23v1H9ZM8,15H24V12H8Zm1-2H23v1H9Zm9-7H8V9H18ZM17,8H9V7h8Z"/>
-    </g>
-    <g className="block" fill="currentColor">
-      <path d="M23,20H9V19H23Zm0,5H9v1H23ZM9,8h8V7H9ZM22,.293V8h7.707ZM23,13H9v1H23Zm7-4V32H2V0H21V9ZM8,9H18V6H8ZM24,24H8v3H24Zm0-6H8v3H24Zm0-6H8v3H24Z"/>
-    </g>
-  </svg>
-))
-
-export const IconTropy = i('Tropy', (
-  <svg width="32" height="32">
-    <g className="line" fill="currentColor">
-      <path d="M16,1A15,15,0,1,1,1,16,15.017,15.017,0,0,1,16,1m0-1A16,16,0,1,0,32,16,16,16,0,0,0,16,0Zm7.9,15,3.464-6H4.634L8.1,15H9.253L6.366,10H25.634l-2.309,4H13V28.366L19,24.9V18.747l-1,.577v5l-4,2.31V15Z"/>
-    </g>
-    <g className="block" fill="currentColor">
-      <path d="M16,0A16,16,0,1,0,32,16,16,16,0,0,0,16,0Zm7.9,15H14V26.634l4-2.31v-5l1-.577V24.9l-6,3.465V14H23.325l2.309-4H6.366l2.886,5H8.1L4.634,9H27.366Z"/>
-    </g>
-  </svg>
-))
 
 export const IconWarning = i('Warning', (
   <svg width="16" height="16" viewBox="0 0 16 16">
