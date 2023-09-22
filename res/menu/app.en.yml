@@ -149,6 +149,7 @@ en:
         - &center-window
           label: 'Move to Center'
           command: 'app:center-window'
+          accelerator: 'Alt+Shift+='
           window: '*'
         - type: 'separator'
         - &zoom-reset
