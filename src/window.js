@@ -429,7 +429,7 @@ export class Window extends EventEmitter {
         toggle(this.html, 'is-full-screen', false)
         break
       case 'menu':
-        toggle(this.html, 'window-control-menu-open', ...args)
+        toggle(this.html, 'window-controls-menu-open', ...args)
         break
     }
 
