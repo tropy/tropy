@@ -449,9 +449,14 @@ $editor-hr-border-color:  var(--shade-1);
 $line-number-color:       var(--shade-6);
 
 // Preferences
-$prefs-bg:                       var(--shade-4);
-$prefs-header-border:            var(--shade-1);
-$prefs-header-blurred-bg-darwin: var(--shade-2);
+$prefs-bg:                            var(--shade-4);
+$prefs-title-color:                   (var(--shade-9), null, null);
+$prefs-border:                        var(--shade-1);
+$prefs-pane-toggle-color:             var(--shade-8);
+$prefs-pane-toggle-active-color:      var(--shade-9);
+$prefs-pane-toggle-active-bg:         var(--shade-5);
+$prefs-pane-toggle-active-icon-color: var(--shade-8);
+$prefs-titlebar-blurred-bg:           (var(--shade-2), null, null);
 
 // Vocab
 $vocab-panel-bg:    tint(var(--shade-4), 2%);

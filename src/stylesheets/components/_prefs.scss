@@ -2,196 +2,66 @@
 // Preferences
 // --------------------------------------------------
 
-@mixin prefs-nav {
-  .prefs-nav {
-    ul {
-      display: flex;
-      justify-content: center;
-    }
-  }
-
-  .pane-toggle {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 0;
-    background: transparent;
-    font-size: 11px;
-    line-height: 22px;
-    padding: 7px $space-sm 0;
-    -webkit-font-smoothing: subpixel-antialiased;
-
-    &.active {
-      .line {
-        display: none;
-      }
-
-      .block {
-        display: block;
-      }
-    }
-  }
-}
-
 .prefs {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: $prefs-bg;
+  background-color: $prefs-bg;
 
-  // macOS and Windows
-  @if $platform != linux {
-    .prefs-header {
-      flex: 0 0 auto;
-      border-bottom: 1px solid $prefs-header-border;
-
-      .frameless & {
-        -webkit-app-region: drag;
-      }
-
-      .is-blurred & {
-        @if $platform == darwin {
-          background-color: $prefs-header-blurred-bg-darwin;
-
-          > * {
-            opacity: $toolbar-blurred-opacity-darwin;
-          }
-        }
-      }
+  .titlebar {
+    @if $platform == darwin {
+      justify-content: center;
+      align-items: center;
+      font-weight: 700;
+      color: os($prefs-title-color);
     }
 
-    .toolbar {
-      text-align: center;
-      padding: 1px 0;
-    }
-
-    @include prefs-nav;
-  }
-
-  // macOS
-  @if $platform == darwin {
-    .pane-toggle {
-      padding-top: 1px;
+    .is-blurred & {
+      @if $platform == darwin {
+        background-color: os($prefs-titlebar-blurred-bg);
+      }
     }
   }
 
-  // Linux
-  @if $platform == linux {
-    // Native window
-    html:not(.frameless) & {
-      @include prefs-nav
+  .prefs-view {
+    flex: 1 1 0;
+    display: flex;
+    border-top: 1px solid $prefs-border;
+  }
+
+  .prefs-header {
+    flex: 0 0 200px;
+    padding: ($space-lg - 2px) $default-padding-horizontal;
+    border-right: 1px solid $prefs-border;
+    min-width: 0;
+  }
+
+  .pane-toggle {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    color: $prefs-pane-toggle-color;
+    background-color: transparent;
+    padding: 0 $space-xs;
+    border-radius: $border-radius-small;
+
+    &.active {
+      color: $prefs-pane-toggle-active-color;
+      background-color: $prefs-pane-toggle-active-bg;
     }
 
-    // Frameless window
-    .frameless & {
-      .prefs-header {
-        flex: 0 0 auto;
-        border-bottom: 1px solid $prefs-header-border;
-        -webkit-app-region: drag;
+    .icon {
+      margin-right: $space-xs - 1px;
 
-        @include state(".frameless.is-blurred") {
-          filter: opacity(0.5);
-          transition: filter 0.2s ease-out;
-        }
-      }
-
-      .toolbar {
-        display: none;
-      }
-
-      .prefs-nav {
-        display: flex;
-        justify-content: center;
-        height: zoom(os($toolbar-frameless-height));
-
-        ul {
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-        }
-
-        li {
-          display: flex;
-        }
-      }
-
-      .pane-toggle {
-        flex: 1 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border: 0;
-        background: transparent;
-        font-size: zoom(11px);
-        line-height: zoom(22px);
-        padding: zoom(7px) zoom($space-sm) 0;
-        font-weight: 700;
-        border-radius: 0;
-        transition-property: outline-color, outline-width, outline-offset, background-color;
-        transition-duration: 0.2s;
-        transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        outline: 0 solid transparent;
-        outline-offset: zoom(4px);
-        color: if(
-          $theme == "light",
-          rgba(0, 0, 0, 0.8),
-          rgb(255, 255, 255)
-        );
-
-        &:hover {
-          background-color: if(
-            $theme == "light",
-            rgba(0, 0, 0, 0.056),
-            rgba(255, 255, 255, 0.07)
-          );
-        }
-
-        &.active {
-          background-color: if(
-            $theme == "light",
-            rgba(0, 0, 0, 0.08),
-            rgba(255, 255, 255, 0.1)
-          );
-
-          &:where(:hover) {
-            background-color: if(
-              $theme == "light",
-              rgba(0, 0, 0, 0.104),
-              rgba(255, 255, 255, 0.13)
-            );
-          }
-        }
-
-        &:active {
-          background-color: if(
-            $theme == "light",
-            rgba(0, 0, 0, 0.152),
-            rgba(255, 255, 255, 0.19)
-          );
-        }
-
-        &:focus-visible {
-          outline: zoom(2px) solid $input-btn-focus-color;
-          outline-offset: zoom(-2px);
-        }
-
-        .icon {
-          color: if(
-            $theme == "light",
-            rgba(0, 0, 0, 0.8),
-            rgb(255, 255, 255)
-          );
-
-          svg {
-            width: zoom($space-md);
-            height: zoom($space-md);
-          }
-        }
+      @include state(".pane-toggle.active") {
+        color: $prefs-pane-toggle-active-icon-color;
       }
     }
   }
 
   .prefs-body {
-    flex: 1 1 auto;
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
   }

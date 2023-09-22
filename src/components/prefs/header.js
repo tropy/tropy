@@ -1,23 +1,13 @@
-import { node, string } from 'prop-types'
-import { FormattedMessage } from 'react-intl'
-import { Titlebar } from '../toolbar.js'
+import { node } from 'prop-types'
 
-export function Header({ children, title }) {
+export function Header({ children }) {
   return (
     <header className="prefs-header">
-      <Titlebar isOptional>
-        <FormattedMessage id={title}/>
-      </Titlebar>
       {children}
     </header>
   )
 }
 
 Header.propTypes = {
-  children: node,
-  title: string.isRequired
-}
-
-Header.defaultProps = {
-  title: 'prefs.title'
+  children: node
 }

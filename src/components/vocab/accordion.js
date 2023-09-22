@@ -4,7 +4,7 @@ import { Accordion } from '../accordion'
 import { FormField, FormLink, FormText } from '../form'
 import { ResourceList } from '../resource'
 import { Button, ButtonGroup } from '../button'
-import { IconBook16, IconBookLock, IconTrash, IconExport } from '../icons'
+import { IconBook, IconBookLock, IconTrash, IconExport } from '../icons'
 import { arrayOf, func, object, shape, string } from 'prop-types'
 
 
@@ -15,7 +15,7 @@ export class VocabAccordion extends Accordion {
 
   get icon() {
     if (this.isProtected) return <IconBookLock/>
-    return <IconBook16/>
+    return <IconBook/>
   }
 
   handleDelete = () => {

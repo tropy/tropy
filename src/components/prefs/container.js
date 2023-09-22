@@ -12,6 +12,8 @@ import { useIpcEvent } from '../../hooks/use-ipc.js'
 import * as act from '../../actions/index.js'
 import { Button } from '../button.js'
 import { IconPlus } from '../icons.js'
+import { FormattedMessage } from 'react-intl'
+import { Titlebar } from '../toolbar.js'
 
 
 export function PrefsContainer() {
@@ -45,51 +47,53 @@ export function PrefsContainer() {
 
   return (
     <Prefs onContextMenu={handleContextMenu}>
-      <Header>
-        <Nav>
-          <NavItem name="app" icon="IconTropy"/>
-          <NavItem
-            name="project"
-            icon="IconMazePrefs"
-            isDisabled={!project?.id}/>
-          <NavItem name="template" icon="IconTemplate"/>
-          <NavItem name="vocab" icon="IconBook"/>
-          <NavItem name="plugins" icon="IconPlugin"/>
-        </Nav>
-      </Header>
-      <Body>
-        <Pane name="app">
-          <AppSettings/>
-        </Pane>
-        <Pane name="project" isDisabled={!project?.id}>
-          <ProjectSettings
-            project={project}
-            onChange={handleProjectChange}/>
-        </Pane>
-        <Pane name="template">
-          <TemplateEditor/>
-        </Pane>
-        <Pane name="vocab">
-          <VocabBrowser
-            onOpenLink={openLink}/>
-          <Footer>
-            <Button
-              icon={<IconPlus/>}
-              onClick={handleVocabImport}/>
-          </Footer>
-        </Pane>
-        <Pane name="plugins">
-          <PluginConfig
-            onOpenLink={openLink}
-            onUninstall={handlePluginUninstall}/>
-          <Footer>
-            <Button
-              isDefault
-              text="prefs.plugins.install"
-              onClick={handlePluginInstall}/>
-          </Footer>
-        </Pane>
-      </Body>
+      <Titlebar isOptional>
+        <FormattedMessage id={'prefs.title'}/>
+      </Titlebar>
+      <div className="prefs-view">
+        <Header>
+          <Nav>
+            <NavItem name="app" icon="IconGear"/>
+            <NavItem name="project" icon="IconMaze" isDisabled={!project?.id}/>
+            <NavItem name="template" icon="IconDocument"/>
+            <NavItem name="vocab" icon="IconBook"/>
+            <NavItem name="plugins" icon="IconPlugin"/>
+          </Nav>
+        </Header>
+        <Body>
+          <Pane name="app">
+            <AppSettings/>
+          </Pane>
+          <Pane name="project" isDisabled={!project?.id}>
+            <ProjectSettings
+              project={project}
+              onChange={handleProjectChange}/>
+          </Pane>
+          <Pane name="template">
+            <TemplateEditor/>
+          </Pane>
+          <Pane name="vocab">
+            <VocabBrowser
+              onOpenLink={openLink}/>
+            <Footer>
+              <Button
+                icon={<IconPlus/>}
+                onClick={handleVocabImport}/>
+            </Footer>
+          </Pane>
+          <Pane name="plugins">
+            <PluginConfig
+              onOpenLink={openLink}
+              onUninstall={handlePluginUninstall}/>
+            <Footer>
+              <Button
+                isDefault
+                text="prefs.plugins.install"
+                onClick={handlePluginInstall}/>
+            </Footer>
+          </Pane>
+        </Body>
+      </div>
     </Prefs>
   )
 }
