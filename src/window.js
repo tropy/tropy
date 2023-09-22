@@ -212,6 +212,9 @@ export class Window extends EventEmitter {
       .on('print', (_, data) => {
         this.emit('print', data)
       })
+      .on('menu', (_, state) => {
+        this.toggle('menu', state)
+      })
       .on('plugins-reload', async () => {
         this.plugins.clearModuleCache()
         await this.plugins.reload()
@@ -424,6 +427,9 @@ export class Window extends EventEmitter {
         break
       case 'leave-full-screen':
         toggle(this.html, 'is-full-screen', false)
+        break
+      case 'menu':
+        toggle(this.html, 'window-control-menu-open', ...args)
         break
     }
 
