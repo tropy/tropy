@@ -218,10 +218,6 @@ en:
           label: 'Software License'
           command: 'app:open-license'
         - type: 'separator'
-        - &donate
-          label: 'Donate to Tropy'
-          command: 'app:donate'
-        - type: 'separator'
         - &logs
           label: 'Show Log Files'
           command: 'app:open-logs'
