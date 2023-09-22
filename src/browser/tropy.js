@@ -961,10 +961,12 @@ export class Tropy extends EventEmitter {
     })
 
     this.wm.on('show-menu', (win, pos) => {
+      win.webContents.send('menu', true)
       this.menu.popup({
         window: win,
         x: pos?.x,
-        y: pos?.y
+        y: pos?.y,
+        callback() { win.webContents.send('menu', false) }
       })
     })
 
