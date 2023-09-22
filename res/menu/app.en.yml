@@ -334,7 +334,6 @@ en:
         - *forums
         - *license
         - type: 'separator'
-        - *donate
         - type: 'separator'
         - *logs
         - *plugins
