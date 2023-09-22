@@ -195,7 +195,7 @@
   > footer {
     flex: 0 0 auto;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     padding: $space-lg;
 
     .btn + .btn {
