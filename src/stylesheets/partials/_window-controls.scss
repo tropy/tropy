@@ -50,18 +50,18 @@
         transition: border-color $input-btn-transition, box-shadow $input-btn-transition;
       }
 
-      &:hover,
-      .window-controls-menu-open & {
+      &:hover {
         background-color: rgba(0, 0, 0, if($theme == light, 0.05, 0.1));
       }
       
-      
+
       &:focus-visible {
         @include input-btn-focus(":focus-visible");
         background-color: $sidebar-bg; // Prevent rendering glitch
       }
 
-      &:active {
+      &:active,
+      .window-controls-menu-open & {
         background-image: icon-url("window/win32/#{$theme}/more-active.svg");
         background-color: rgba(0, 0, 0, if($theme == light, 0.1, 0.3));
       }
