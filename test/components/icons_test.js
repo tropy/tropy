@@ -6,7 +6,7 @@ describe('IconLock', () => {
     expect(
       render(<IconLock/>, inWindowContext).element())
         .to.have.class('icon')
-        .and.class('icon-tropy')
+        .and.class('icon-lock')
         .and.have.descendant('svg')
   })
 })
