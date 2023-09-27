@@ -11,6 +11,15 @@
     @include form-shading-level(0);
   }
 
+  .titlebar {
+    .frameless & {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+    }
+  }
+
   figure {
     width: 112px;
     height: 96px;
@@ -20,17 +29,7 @@
         icon-url("project/tropy-icon-dark.svg") no-repeat 0 0,
         icon-url("project/tropy-icon-light.svg") no-repeat 0 0
       );
-    margin: $space-sm auto (28px - 12px); // 60px spacing after btn-xl
-
-    @if $platform == win32 {
-      margin-top: 49px;
-    }
-
-    @if $platform == linux {
-      html:not(.frameless) & {
-        margin-top: 49px;
-      }
-    }
+    margin: (12px + 38px) auto (28px - 12px); // 60px spacing after btn-xl
   }
 
   h1 {

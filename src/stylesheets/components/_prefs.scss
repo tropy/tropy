@@ -16,6 +16,12 @@
       color: os($prefs-title-color);
     }
 
+    @if $platform == win32 {
+      align-items: center;
+      height: zoom(os($toolbar-frameless-height));
+      padding-left: $default-padding-horizontal + $space-xs;
+    }
+
     .is-blurred & {
       @if $platform == darwin {
         background-color: os($prefs-titlebar-blurred-bg);
