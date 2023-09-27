@@ -16,12 +16,18 @@
     --zoom: 1;
   }
 
-  &.titlebar {
-    .frameless & {
+  &:where(.titlebar) {
+    :where(.frameless) & {
       font-size: zoom($font-size-base);
       -webkit-app-region: drag;
       height: zoom(os($toolbar-frameless-height));
       padding: 0 zoom($default-padding-horizontal);
+    }
+
+    @if $platform == win32 {
+      .frameless #project & { 
+        height: zoom($toolbar-height);
+      }
     }
 
     .frameless.is-blurred & {

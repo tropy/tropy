@@ -15,20 +15,19 @@
     }
   }
 
+  .titlebar {
+    .frameless & {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+    }
+  }
+
   .search {
     width: auto;
-    margin-top: 15px;
+    margin-top: 15px + 38px;
     margin-bottom: $space-md - 10px;
-
-    @if $platform == win32 {
-      margin-top: 52px;
-    }
-
-    @if $platform == linux {
-      html:not(.frameless) & {
-        margin-top: 52px;
-      }
-    }
 
     .is-blurred & {
       opacity: os($recent-projects-search-blurred-opacity);
