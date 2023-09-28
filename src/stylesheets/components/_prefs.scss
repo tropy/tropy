@@ -9,22 +9,36 @@
   background-color: $prefs-bg;
 
   .titlebar {
-    @if $platform == darwin {
-      justify-content: center;
-      align-items: center;
-      font-weight: 700;
-      color: os($prefs-title-color);
-    }
-
-    @if $platform == win32 {
-      align-items: center;
-      height: zoom(os($toolbar-frameless-height));
-      padding-left: $default-padding-horizontal + $space-xs;
-    }
+    height: zoom(os($toolbar-frameless-height));
+    color: os($prefs-title-color);
 
     .is-blurred & {
+      background-color: os($prefs-titlebar-blurred-bg);
+    }
+
+    .toolbar-center {
+      flex: 1 1 0;
+
       @if $platform == darwin {
-        background-color: os($prefs-titlebar-blurred-bg);
+        justify-content: center;
+        font-weight: 700;
+      }
+
+      @if $platform == win32 {
+        padding-left: $default-padding-horizontal + $space-xs;
+      }
+
+      @if $platform == linux {
+        justify-content: center;
+        font-size: zoom(14.667px);
+        font-weight: 700;
+      }
+
+      .is-blurred & {
+        @if $platform == linux {
+          filter: opacity(0.5);
+          transition: filter 0.2s ease-out;
+        }
       }
     }
   }

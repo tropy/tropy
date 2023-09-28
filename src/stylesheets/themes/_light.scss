@@ -447,7 +447,7 @@ $line-number-color:       var(--shade-5);
 
 // Preferences
 $prefs-bg:                            var(--shade-1);
-$prefs-title-color:                   (var(--shade-8), null, null);
+$prefs-title-color:                   (var(--shade-8), null, rgba(0, 0, 0, 0.8));
 $prefs-border:                        var(--shade-3);
 $prefs-pane-toggle-color:             var(--shade-8);
 $prefs-pane-toggle-active-color:      var(--shade-9);

@@ -13,7 +13,7 @@ import * as act from '../../actions/index.js'
 import { Button } from '../button.js'
 import { IconPlus } from '../icons.js'
 import { FormattedMessage } from 'react-intl'
-import { Titlebar } from '../toolbar.js'
+import { Titlebar, Toolbar } from '../toolbar.js'
 
 
 export function PrefsContainer() {
@@ -48,7 +48,9 @@ export function PrefsContainer() {
   return (
     <Prefs onContextMenu={handleContextMenu}>
       <Titlebar isOptional>
-        <FormattedMessage id={'prefs.title'}/>
+        <Toolbar.Center>
+          <FormattedMessage id={'prefs.title'}/>
+        </Toolbar.Center>
       </Titlebar>
       <div className="prefs-view">
         <Header>
