@@ -183,14 +183,6 @@ export const IconBook = i('Book', (
   </svg>
 ))
 
-export const IconBookLinux = i('BookLinux', (
-  <svg width="16" height="16" viewBox="0 0 16 16">
-    <g className="line" fill="currentColor">
-      <path d="M12,0H7A2.9625,2.9625,0,0,0,4.9061.8635L1.9491,3.8206A2.9834,2.9834,0,0,0,1,6v7a3,3,0,0,0,3,3H9a3,3,0,0,0,3-3V6A3,3,0,0,0,9,3H5.598l1-1H12V2a1.0011,1.0011,0,0,1,1,1v9.8163A2.9913,2.9913,0,0,0,15,10V3A3,3,0,0,0,12,0ZM10,6v7a1.0011,1.0011,0,0,1-1,1H4a1.0011,1.0011,0,0,1-1-1V6A1.0011,1.0011,0,0,1,4,5H9A1.0011,1.0011,0,0,1,10,6Z"/>
-    </g>
-  </svg>
-))
-
 export const IconBookLock = i('BookLock', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
@@ -433,15 +425,6 @@ export const IconMaze = i('Maze', (
   </svg>
 ))
 
-export const IconMazePrefsLinux = i('MazePrefsLinux', (
-  <svg width="16" height="16" viewBox="0 0 16 16">
-    <g className="line" fill="currentColor">
-      <polygon points="9 1 9 7 11 7 11 3 13 3 13 13 9 13 9 15 15 15 15 1 9 1"/>
-      <polygon points="3 11 11 11 11 9 7 9 7 5 5 5 5 9 3 9 3 3 7 3 7 1 1 1 1 15 7 15 7 13 3 13 3 11"/>
-    </g>
-  </svg>
-))
-
 export const IconMetadata = i('Metadata', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
@@ -530,14 +513,6 @@ export const IconPlugin = i('Plugin', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
       <path d="M14,4V1H9V4H7V1H2V4H0V15H16V4ZM10,2h3V4H10ZM3,2H6V4H3ZM15,14H1V5H15Z"/>
-    </g>
-  </svg>
-))
-
-export const IconPluginLinux = i('PluginLinux', (
-  <svg width="16" height="16" viewBox="0 0 16 16">
-    <g className="line" fill="currentColor">
-      <path d="M14,5v9H2V5H14m2-2H0V16H16V3ZM7,2A2,2,0,0,0,5,0H4A2,2,0,0,0,2,2H7ZM9,2h5a2,2,0,0,0-2-2H11A2,2,0,0,0,9,2Z"/>
     </g>
   </svg>
 ))
@@ -682,22 +657,6 @@ export const IconTag = i('Tag', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <circle className="border" fill="currentColor" cx="8" cy="8" r="6"/>
     <circle className="color" fill="currentColor" cx="8" cy="8" r="5"/>
-  </svg>
-))
-
-export const IconTemplateLinux = i('TemplateLinux', (
-  <svg width="16" height="16" viewBox="0 0 16 16">
-    <g className="line" fill="currentColor">
-      <path d="M5,1A3.0157,3.0157,0,0,0,2,4v9a3.0157,3.0157,0,0,0,3,3h6a3.0157,3.0157,0,0,0,3-3V5.5a1,1,0,0,0-.293-.707l-3.5-3.5A1,1,0,0,0,9.5,1ZM5,3H9V4.5A1.3258,1.3258,0,0,0,10.5,6H12v7a.9766.9766,0,0,1-1,1H5a.9766.9766,0,0,1-1-1V4A.9766.9766,0,0,1,5,3Zm6,9H5V11h6Zm0-2H5V9h6Zm0-2H5V7h6ZM8,6H5V5H8Z"/>
-    </g>
-  </svg>
-))
-
-export const IconTropyLinux = i('TropyLinux', (
-  <svg width="16" height="16" viewBox="0 0 16 16">
-    <g className="line" fill="currentColor">
-      <polygon points="5 15.625 5 5 12.364 5 13.114 3 2.688 3 3.888 7 1.8 7 0 1 16 1 13.75 7 7 7 7 12.739 9 11.989 9 8.862 11 8.112 11 13.375 5 15.625"/>
-    </g>
   </svg>
 ))
 
