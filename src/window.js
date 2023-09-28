@@ -11,6 +11,7 @@ import { StyleSheet } from './res.js'
 import debounce from 'lodash.debounce'
 import * as dialog from './dialog.js'
 import * as json from './common/json.js'
+import * as sharp from './image/sharp.js'
 import { WindowControls } from './window-controls.js'
 
 import {
@@ -44,6 +45,7 @@ export class Window extends EventEmitter {
   plugins = new Plugins(ARGS.plugins, {
     dialog,
     json,
+    sharp,
     window: this
   })
 
