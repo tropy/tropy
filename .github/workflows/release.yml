@@ -94,7 +94,7 @@ jobs:
           security default-keychain -s  "$KEYCHAIN"
 
           # Import signing certificate
-          echo -n "$SIGN_CERT" | base64 --decode --output "${RUNNER_TEMP}/cert.p12"
+          echo -n "$SIGN_CERT" | base64 --decode > "${RUNNER_TEMP}/cert.p12"
           security import "${RUNNER_TEMP}/cert.p12" -P "$SIGN_CERT_PASS" -T /usr/bin/codesign -k "$KEYCHAIN"
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASS" "$KEYCHAIN"
 
