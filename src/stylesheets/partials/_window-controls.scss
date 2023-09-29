@@ -65,6 +65,10 @@
         background-image: icon-url("window/win32/#{$theme}/more-active.svg");
         background-color: rgba(0, 0, 0, if($theme == light, 0.1, 0.3));
       }
+
+      .is-blurred & {
+        opacity: os($toolbar-blurred-opacity);
+      }
     }
   }
 

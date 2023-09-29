@@ -220,8 +220,8 @@ $icon-active-color: var(--shade-9);
 $icon-spin-color:   var(--primary);
 
 // Toolbar
-$toolbar-blurred-opacity-darwin:       0.5;
-$toolbar-blurred-bg-darwin:            var(--shade-2);
+$toolbar-blurred-opacity:   (0.5, 0.5, 0.5);
+$toolbar-blurred-bg-darwin:  var(--shade-2);
 
 // Project
 $no-project-bg:         var(--shade-4);

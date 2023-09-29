@@ -25,20 +25,13 @@
       }
 
       @if $platform == win32 {
-        padding-left: $default-padding-horizontal + $space-xs;
+        padding-left: $space-xs;
       }
 
       @if $platform == linux {
         justify-content: center;
         font-size: zoom(14.667px);
         font-weight: 700;
-      }
-
-      .is-blurred & {
-        @if $platform == linux {
-          filter: opacity(0.5);
-          transition: filter 0.2s ease-out;
-        }
       }
     }
   }
