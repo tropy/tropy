@@ -55,6 +55,15 @@ jobs:
             platform: win32
             arch: arm64
 
+          - os: windows-2019
+            platform: win32
+            arch: ia32
+            legacy: true
+          - os: windows-2019
+            platform: win32
+            arch: x64
+            legacy: true
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -64,6 +73,10 @@ jobs:
         with:
           node-version: 18
           cache: npm
+
+      - name: Downgrade Electron
+        if: matrix.legacy
+        run: npm install electron@v22
 
       - name: Install and build dependencies
         run: npm clean-install --no-progress
@@ -145,6 +158,12 @@ jobs:
           omitNameDuringUpdate: true
           prerelease: true
           token: ${{ github.token }}
+
+      - name: Rename legacy release assets
+        if: matrix.legacy
+        run: |
+          rename setup legacy dist/setup-*
+          rm dist/*.nupkg
 
       - name: Upload Windows release assets
         if: matrix.platform == 'win32'
