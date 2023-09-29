@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.tropy.Tropy</id>
+  <launchable type="desktop-id">org.tropy.Tropy.desktop</launchable>
+  <developer_name>Digital Scholar</developer_name>
+  <name>Tropy</name>
+  <summary>Explore your research photos</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0-or-later</project_license>
+  <description>
+    <p>
+      Take control of your research photos with Tropy,
+      a tool that shortens the path from finding archival sources to writing about them.
+      Spend more time using your research photos, and less time hunting for them.
+    </p>
+    <p>
+      Tropy is an independent, open-source project
+      designed and produced by an international team of historians and software developers.
+    </p>
+  </description>
+  <screenshots>
+    <screenshot>
+      <image>https://tropy.org/assets/images/metainfo/screenshot-1.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://tropy.org/assets/images/metainfo/screenshot-2.png</image>
+      <image>https://tropy.org/assets/images/metainfo/screenshot-2-dark.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://tropy.org/assets/images/metainfo/screenshot-3.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://tropy.org/assets/images/metainfo/screenshot-4.png</image>
+    </screenshot>
+  </screenshots>
+  <releases>
+    <release version="1.14.0" date="2023-06-06">
+      <url>https://github.com/tropy/tropy/releases/tag/v1.14.0</url>
+    </release>
+  </releases>
+  <categories>
+    <category>Graphics</category>
+    <category>Science</category>
+  </categories>
+  <url type="homepage">https://tropy.org</url>
+  <url type="help">https://docs.tropy.org</url>
+  <url type="contact">https://forums.tropy.org</url>
+  <url type="bugtracker">https://github.com/tropy/tropy/issues</url>
+  <url type="translate">https://app.transifex.com/cds/tropy</url>
+  <url type="vcs-browser">https://github.com/tropy/tropy</url>
+  <content_rating type="oars-1.1" />
+  <provides>
+    <binary>tropy</binary>
+    <id>tropy.desktop</id>
+    <mediatype>application/vnd.tropy.tpy</mediatype>
+    <mediatype>application/vnd.tropy.ttp</mediatype>
+  </provides>
+</component>
