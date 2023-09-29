@@ -3,7 +3,7 @@
   <mime-type type="application/vnd.tropy.tpy">
     <comment>Tropy Project Database</comment>
     <comment xml:lang="en">Tropy Project Database</comment>
-    <icon name="application-vnd.tropy.tpy"/>
+    <icon name="org.tropy.Tropy.tpy"/>
     <magic>
       <match type="string" offset="0" value="SQLite">
         <match type="string" offset="68" value="\xda\xed\xa1\x05"/>
@@ -15,7 +15,7 @@
   <mime-type type="application/vnd.tropy.ttp">
     <comment>Tropy Template</comment>
     <comment xml:lang="en">Tropy Template</comment>
-    <icon name="application-vnd.tropy.ttp"/>
+    <icon name="org.tropy.Tropy.ttp"/>
     <glob pattern="*.ttp"/>
     <sub-class-of type="application/json"/>
   </mime-type>

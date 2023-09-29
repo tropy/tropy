@@ -12,6 +12,7 @@ const { minimatch } = require('minimatch')
 const { basename, extname, join, relative } = require('path')
 
 const {
+  appId,
   ROOT,
   ICONS,
   author,
@@ -91,7 +92,7 @@ program
           let resources = join(dest, 'resources')
 
           say('create .desktop file')
-          await writeFile(`${dest}/${qualified.name}.desktop`, desktop())
+          await writeFile(`${dest}/${qualified.appId}.desktop`, desktop())
 
           say('make shared icons')
           copyIcons(`${resources}/icons`)
@@ -100,10 +101,15 @@ program
           await mkdir(`${resources}/mime/packages`, { recursive: true })
           await copyFile(
             `${ROOT}/res/mime/tropy.xml`,
-            `${resources}/mime/packages/tropy.xml`)
+            `${resources}/mime/packages/${appId}.xml`)
+
+          say('copy metainfo.xml')
+          await copyFile(
+            `${ROOT}/res/linux/org.tropy.Tropy.xml`,
+            `${dest}/${appId}.metainfo.xml`)
 
           say('copy INSTALL instructions')
-          await copyFile(`${ROOT}/res/INSTALL`, `${dest}/INSTALL`)
+          await copyFile(`${ROOT}/res/linux/INSTALL`, `${dest}/INSTALL`)
 
           await copyLicense(dest)
 
@@ -192,8 +198,8 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
       addLicense
     ],
     appVersion: version,
-    appBundleId: `org.tropy.${qualified.name}`,
-    helperBundleId: `org.tropy.${qualified.name}-helper`,
+    appBundleId: qualified.appId,
+    helperBundleId: `${qualified.appId}-helper`,
     appCategoryType: 'public.app-category.productivity',
     appCopyright:
       `Copyright (c) 2015-${new Date().getFullYear()} ` +
@@ -306,7 +312,7 @@ async function copyIcons(dst, theme = 'hicolor') {
     let target = join(dst, theme, variant, 'apps')
 
     let file = (variant === 'symbolic') ?
-      `${qualified.name}-symbolic${ext}` : `${qualified.name}${ext}`
+      `${qualified.appId}-symbolic${ext}` : `${qualified.appId}${ext}`
 
     await mkdir(target, { recursive: true })
     await copyFile(join(ICONS, channel, 'tropy', icon), join(target, file))
@@ -321,7 +327,7 @@ async function copyIcons(dst, theme = 'hicolor') {
       if ((/@/).test(variant)) continue
 
       let target = join(dst, theme, variant, 'mimetypes')
-      let file = `application-vnd.tropy.${type}${ext}`
+      let file = `${appId}.${type}${ext}`
 
       await mkdir(target, { recursive: true })
       await copyFile(join(ICONS, 'mime', type, icon), join(target, file))
@@ -330,7 +336,7 @@ async function copyIcons(dst, theme = 'hicolor') {
 }
 
 function desktop({
-  icon = exe,
+  icon = qualified.appId,
   mimetypes = [
     'application/vnd.tropy.tropy',
     'application/vnd.tropy.mtpy',
