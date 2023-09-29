@@ -6,8 +6,6 @@ import * as mod from '../models'
 import * as act from '../actions'
 import { expand } from '../common/fs'
 import { pick } from '../common/util'
-import { linux } from '../common/os.js'
-import { debug } from '../common/log.js'
 import { open, prompt } from '../dialog'
 import { Image } from '../image'
 import { IMAGE } from '../constants'
@@ -19,9 +17,6 @@ import { getTemplateValues, getTemplateProperties } from '../selectors'
 export class ImportCommand extends Command {
   static *consolidate(args = {}) {
     let { cache, image, photos, overwrite = true } = args
-
-    if (linux)
-      debug({ path: image.path }, '*consolidate')
 
     // Subtle: when importing, *consolidation is forked
     // in order not to block importing the next item.

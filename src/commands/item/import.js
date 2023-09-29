@@ -4,7 +4,6 @@ import { ImportCommand } from '../import.js'
 import { DuplicateError } from '../../common/error.js'
 import { normalize, eachItem } from '../../common/import.js'
 import { info, warn } from '../../common/log.js'
-import { linux } from '../../common/os.js'
 import { Image } from '../../image/index.js'
 import { fail } from '../../dialog.js'
 import { fromHTML } from '../../editor/serialize.js'
@@ -109,16 +108,6 @@ export class Import extends ImportCommand {
   *importFromImage(path) {
     try {
       yield this.progress()
-
-      // HACK avoid concurrently loading images to work around
-      // sharp/libvips memory-related crashes!
-      if (linux) {
-        let task = this.backlog.at(-1)
-        if (task?.isRunning()) {
-          console.log('blocking')
-          yield wait(task)
-        }
-      }
 
       let {
         basePath, store, density, db, templates, useLocalTimezone
