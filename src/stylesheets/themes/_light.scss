@@ -217,8 +217,7 @@ $icon-active-color: var(--shade-9);
 $icon-spin-color: var(--primary);
 
 // Toolbar
-$toolbar-blurred-opacity:   (0.5, 0.5, 0.5);
-$toolbar-blurred-bg-darwin: shade(var(--shade-1), 4%);
+$toolbar-blurred-opacity: (0.5, 0.5, 0.5);
 
 // Project
 $no-project-bg:         var(--shade-1);
@@ -402,7 +401,6 @@ $esper-overlay-bg:                       alpha(shade(var(--shade-1), 4%), 80%);
 $esper-toolbar-overlay-btn-hover-bg:     alpha(var(--shade-10), 5%);
 $esper-toolbar-overlay-btn-active-color: alpha(var(--shade-10), 60%);
 $esper-toolbar-overlay-btn-active-bg:    alpha(var(--shade-10), 11%);
-$esper-toolbar-blurred-bg-darwin:        null;
 $esper-toolbar-blurred-opacity-darwin:   0.3;
 $esper-overlay-icon-color:               alpha(var(--shade-10), 50%);
 $esper-checkbox-bg:                      $input-bg;
@@ -482,10 +480,9 @@ $flash-close-icon-color: var(--primary);
 $flash-shadow-color:     alpha(var(--primary), 30%);
 
 // Search
-$search-border-color:      var(--shade-2);
-$clear-search-color:       var(--shade-0);
-$search-disabled-bg:       var(--shade-1);
-$search-blurred-bg-darwin: transparent;
+$search-border-color: var(--shade-2);
+$clear-search-color:  var(--shade-0);
+$search-disabled-bg:  var(--shade-1);
 
 // Popup
 $popup-bg:           var(--shade-0);

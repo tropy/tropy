@@ -25,7 +25,7 @@
     }
 
     @if $platform == win32 {
-      .frameless #project & { 
+      .frameless #project & {
         height: zoom($toolbar-height);
       }
     }
@@ -33,14 +33,6 @@
     .frameless.is-blurred & {
       > * {
         opacity: os($toolbar-blurred-opacity);
-      }
-
-      @if $platform == darwin {
-        > * {
-          @if $theme == light {
-            mix-blend-mode: multiply;
-          }
-        }
       }
 
       @if $platform == linux {

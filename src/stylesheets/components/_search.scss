@@ -35,12 +35,6 @@
       background-color: $search-disabled-bg;
     }
 
-    .is-blurred & {
-      @if $platform == darwin {
-        background-color: $search-blurred-bg-darwin;
-      }
-    }
-
     .frameless & {
       height: zoom(os($search-frameless-height));
       padding-left: zoom(calc((os($search-frameless-height) - $space-md) / 2 + $space-md + $space-min));

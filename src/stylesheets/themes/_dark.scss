@@ -405,7 +405,6 @@ $esper-overlay-bg:                       alpha(var(--shade-1), 80%);
 $esper-toolbar-overlay-btn-hover-bg:     alpha(var(--shade-10), 7%);
 $esper-toolbar-overlay-btn-active-color: alpha(var(--shade-10), 64%);
 $esper-toolbar-overlay-btn-active-bg:    alpha(var(--shade-10), 14%);
-$esper-toolbar-blurred-bg-darwin:        var(--shade-2);
 $esper-toolbar-blurred-opacity-darwin:   0.3;
 $esper-overlay-icon-color:               alpha(var(--shade-10), 39%);
 $esper-checkbox-bg:                      var(--shade-5);
@@ -485,10 +484,9 @@ $flash-close-icon-color: tint(var(--primary), 14%);
 $flash-shadow-color:     alpha(var(--primary), 30%);
 
 // Search
-$search-border-color:      null;
-$clear-search-color:       var(--shade-4);
-$search-disabled-bg:       tint(var(--shade-3), 2%);
-$search-blurred-bg-darwin: $toolbar-blurred-bg-darwin;
+$search-border-color: null;
+$clear-search-color:  var(--shade-4);
+$search-disabled-bg:  tint(var(--shade-3), 2%);
 
 // Popup
 $popup-bg: var(--shade-3);

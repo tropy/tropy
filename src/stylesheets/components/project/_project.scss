@@ -101,14 +101,6 @@
     padding-right: 0;
   }
 
-  .toolbar {
-    .is-blurred & {
-      @if $platform == darwin {
-        background-color: $toolbar-blurred-bg-darwin;
-      }
-    }
-  }
-
   .toolbar-center {
     flex: 0 1 auto;
     min-width: 0; // Fix truncation
