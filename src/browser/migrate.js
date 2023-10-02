@@ -1,12 +1,14 @@
-import { join } from 'path'
-import fs from 'fs'
-import { info, warn } from '../common/log'
+import { join } from 'node:path'
+import fs from 'node:fs'
+import { rename } from 'node:fs/promises'
+import { info, warn } from '../common/log.js'
+import { win32 } from '../common/os.js'
 
 const createMigration = (name, v, up) => ({ name, v, up })
 
 const mv = async (oldPath, newPath, name = oldPath) => {
   try {
-    await fs.promises.rename(oldPath, newPath)
+    await rename(oldPath, newPath)
 
   } catch (e) {
     switch (e.code) {
@@ -38,6 +40,12 @@ export const MIGRATIONS = [
       if (fs.existsSync(oldCacheRoot)) {
         await mv(oldCacheRoot, tropy.cache.root, 'cache folder')
       }
+    }
+  }),
+
+  createMigration('win32-custom-titlebar', [1, 15], async (_, state) => {
+    if (win32) {
+      state.frameless = true
     }
   })
 ]
