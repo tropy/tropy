@@ -103,6 +103,8 @@ export class WindowManager extends EventEmitter {
 
       if (args.frameless && type !== 'print') {
         opts.frame = false
+      } else {
+        opts.frame = !args.frameless
       }
 
       opts.backgroundColor =
@@ -116,12 +118,9 @@ export class WindowManager extends EventEmitter {
           args.controls = await WindowManager.getButtonLayout()
           break
         case 'darwin':
-          if (!opts.frame) {
-            opts.frame = true
-            opts.title = ''
-            opts.titleBarStyle = opts.titleBarStyle || 'hidden'
-            opts.trafficLightPosition = getTrafficLightPosition(type)
-          }
+          opts.title = ''
+          opts.titleBarStyle = opts.titleBarStyle || 'hidden'
+          opts.trafficLightPosition = getTrafficLightPosition(type)
 
           if (opts.vibrancy && args.vibrancy) {
             opts.backgroundColor = '#00000000'
