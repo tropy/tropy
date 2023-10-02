@@ -126,6 +126,7 @@ es:
           window: '*'
         - label: Centrar
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Tamaño real
@@ -184,9 +185,6 @@ es:
           command: app:open-forums
         - label: Licencia
           command: app:open-license
-        - type: separator
-        - label: Donar a Tropy
-          command: app:donate
         - type: separator
         - label: Mostrar los logs
           command: app:open-logs
@@ -370,6 +368,7 @@ es:
         - type: separator
         - label: Centrar
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Poner en primer plano
@@ -419,8 +418,6 @@ es:
         - label: Licencia
           command: app:open-license
         - type: separator
-        - label: Donar a Tropy
-          command: app:donate
         - type: separator
         - label: Mostrar los logs
           command: app:open-logs
@@ -568,6 +565,7 @@ es:
           window: '*'
         - label: Centrar
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Tamaño real
@@ -626,9 +624,6 @@ es:
           command: app:open-forums
         - label: Licencia
           command: app:open-license
-        - type: separator
-        - label: Donar a Tropy
-          command: app:donate
         - type: separator
         - label: Mostrar los logs
           command: app:open-logs

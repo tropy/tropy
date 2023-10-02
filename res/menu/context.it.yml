@@ -391,11 +391,11 @@ it:
         command: app:open-path
       - label: Copia collegamento foto
         command: app:copy-photo-link
-      - label: Esporta foto...
+      - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: Consolida foto
+      - label: Esporta foto...
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: Consolida foto
         command: app:consolidate-photo
     photo-rotate:
       - label: Ruota a sinistra
@@ -882,11 +882,11 @@ it:
         command: app:open-path
       - label: Copia collegamento foto
         command: app:copy-photo-link
-      - label: Esporta foto...
+      - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: Consolida foto
+      - label: Esporta foto...
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: Consolida foto
         command: app:consolidate-photo
     photo-rotate:
       - label: Ruota a sinistra
@@ -1342,11 +1342,11 @@ it:
         command: app:open-path
       - label: Copia collegamento foto
         command: app:copy-photo-link
-      - label: Esporta foto...
+      - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: Consolida foto
+      - label: Esporta foto...
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: Consolida foto
         command: app:consolidate-photo
     photo-rotate:
       - label: Ruota a sinistra

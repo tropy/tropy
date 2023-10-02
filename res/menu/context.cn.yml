@@ -391,11 +391,11 @@ cn:
         command: app:open-path
       - label: 复制图片链接
         command: app:copy-photo-link
-      - label: 导出图片
+      - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: 检查图片
+      - label: 导出图片...
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: 检查图片
         command: app:consolidate-photo
     photo-rotate:
       - label: 顺时针 90 度
@@ -882,11 +882,11 @@ cn:
         command: app:open-path
       - label: 复制图片链接
         command: app:copy-photo-link
-      - label: 导出图片
+      - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: 检查图片
+      - label: 导出图片...
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: 检查图片
         command: app:consolidate-photo
     photo-rotate:
       - label: 顺时针 90 度
@@ -1342,11 +1342,11 @@ cn:
         command: app:open-path
       - label: 复制图片链接
         command: app:copy-photo-link
-      - label: 导出图片...
+      - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: 检查图片
+      - label: 导出图片...
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: 检查图片
         command: app:consolidate-photo
     photo-rotate:
       - label: 顺时针 90 度

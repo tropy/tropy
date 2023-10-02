@@ -391,11 +391,11 @@ de:
         command: app:open-path
       - label: Kopiere Link zu Foto
         command: app:copy-photo-link
-      - label: Foto exportieren …
+      - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: Foto konsolidieren
+      - label: Foto exportieren …
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: Foto konsolidieren
         command: app:consolidate-photo
     photo-rotate:
       - label: Linksdrehen
@@ -882,11 +882,11 @@ de:
         command: app:open-path
       - label: Kopiere Link zu Foto
         command: app:copy-photo-link
-      - label: Foto exportieren …
+      - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: Foto konsolidieren
+      - label: Foto exportieren …
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: Foto konsolidieren
         command: app:consolidate-photo
     photo-rotate:
       - label: Rechtsdrehen
@@ -1342,11 +1342,11 @@ de:
         command: app:open-path
       - label: Kopiere Link zu Foto
         command: app:copy-photo-link
-      - label: Foto exportieren …
+      - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: Foto konsolidieren
+      - label: Foto exportieren …
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: Foto konsolidieren
         command: app:consolidate-photo
     photo-rotate:
       - label: Rechtsdrehen

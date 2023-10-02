@@ -126,6 +126,7 @@ uk:
           window: '*'
         - label: Move to Center
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Actual Size
@@ -184,9 +185,6 @@ uk:
           command: app:open-forums
         - label: Ліцензія
           command: app:open-license
-        - type: separator
-        - label: Підтримати Tropy
-          command: app:donate
         - type: separator
         - label: Show Log Files
           command: app:open-logs
@@ -370,6 +368,7 @@ uk:
         - type: separator
         - label: Move to Center
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Bring All to Front
@@ -419,8 +418,6 @@ uk:
         - label: Ліцензія
           command: app:open-license
         - type: separator
-        - label: Підтримати Tropy
-          command: app:donate
         - type: separator
         - label: Show Log Files
           command: app:open-logs
@@ -568,6 +565,7 @@ uk:
           window: '*'
         - label: Move to Center
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Actual Size
@@ -626,9 +624,6 @@ uk:
           command: app:open-forums
         - label: Ліцензія
           command: app:open-license
-        - type: separator
-        - label: Підтримати Tropy
-          command: app:donate
         - type: separator
         - label: Show Log Files
           command: app:open-logs

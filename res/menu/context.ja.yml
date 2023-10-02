@@ -393,9 +393,9 @@ ja:
         command: app:copy-photo-link
       - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: 写真を整理
+      - label: Export Photo…
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: 写真を整理
         command: app:consolidate-photo
     photo-rotate:
       - label: Rotate Left
@@ -884,9 +884,9 @@ ja:
         command: app:copy-photo-link
       - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: 写真を整理
+      - label: Export Photo…
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: 写真を整理
         command: app:consolidate-photo
     photo-rotate:
       - label: Rotate Left
@@ -1344,9 +1344,9 @@ ja:
         command: app:copy-photo-link
       - label: Copy Photo to Clipboard
         command: app:copy-photo
-      - label: 写真を整理
+      - label: Export Photo…
         command: app:extract-photo
-      - label: Consolidate Photo
+      - label: 写真を整理
         command: app:consolidate-photo
     photo-rotate:
       - label: Rotate Left

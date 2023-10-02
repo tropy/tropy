@@ -126,6 +126,7 @@ cn:
           window: '*'
         - label: 移动到中心
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: 实际尺寸
@@ -184,9 +185,6 @@ cn:
           command: app:open-forums
         - label: 软件许可证
           command: app:open-license
-        - type: separator
-        - label: 捐赠给 Tropy
-          command: app:donate
         - type: separator
         - label: 显示日志文件
           command: app:open-logs
@@ -370,6 +368,7 @@ cn:
         - type: separator
         - label: 移动到中心
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: 置于顶层
@@ -419,8 +418,6 @@ cn:
         - label: 软件许可证
           command: app:open-license
         - type: separator
-        - label: 捐赠给 Tropy
-          command: app:donate
         - type: separator
         - label: 显示日志文件
           command: app:open-logs
@@ -568,6 +565,7 @@ cn:
           window: '*'
         - label: 移动到中心
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: 实际尺寸
@@ -627,9 +625,6 @@ cn:
         - label: 软件许可证
           command: app:open-license
         - type: separator
-        - label: 捐赠给 Tropy
-          command: app:donate
-        - type: separator
         - label: 显示日志文件
           command: app:open-logs
         - label: 显示插件文件夹
@@ -653,6 +648,6 @@ cn:
           enabled: false
           visible: false
         - type: separator
-        - label: 关于%name
+        - label: 关于 %name
           command: app:about
           window: '!prefs'

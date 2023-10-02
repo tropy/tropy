@@ -126,6 +126,7 @@ it:
           window: '*'
         - label: Sposta in centro
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Dimensione effettiva
@@ -184,9 +185,6 @@ it:
           command: app:open-forums
         - label: Licenza software
           command: app:open-license
-        - type: separator
-        - label: Donazione a Tropy
-          command: app:donate
         - type: separator
         - label: Mostra i file di log
           command: app:open-logs
@@ -370,6 +368,7 @@ it:
         - type: separator
         - label: Sposta in centro
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Porta tutto davanti
@@ -419,8 +418,6 @@ it:
         - label: Licenza software
           command: app:open-license
         - type: separator
-        - label: Donazione a Tropy
-          command: app:donate
         - type: separator
         - label: Mostra i file di log
           command: app:open-logs
@@ -568,6 +565,7 @@ it:
           window: '*'
         - label: Sposta in centro
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Dimensione effettiva
@@ -626,9 +624,6 @@ it:
           command: app:open-forums
         - label: Licenza software
           command: app:open-license
-        - type: separator
-        - label: Donazione a Tropy
-          command: app:donate
         - type: separator
         - label: Mostra i file di log
           command: app:open-logs

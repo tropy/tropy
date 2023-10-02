@@ -126,6 +126,7 @@ de:
           window: '*'
         - label: Zentrieren
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Echte Größe
@@ -184,9 +185,6 @@ de:
           command: app:open-forums
         - label: Softwarelizenz
           command: app:open-license
-        - type: separator
-        - label: An Tropy spenden
-          command: app:donate
         - type: separator
         - label: Logs anzeigen
           command: app:open-logs
@@ -370,6 +368,7 @@ de:
         - type: separator
         - label: Zentrieren
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Alle nach vorne bringen
@@ -419,8 +418,6 @@ de:
         - label: Softwarelizenz
           command: app:open-license
         - type: separator
-        - label: An Tropy spenden
-          command: app:donate
         - type: separator
         - label: Logs anzeigen
           command: app:open-logs
@@ -568,6 +565,7 @@ de:
           window: '*'
         - label: Zentrieren
           command: app:center-window
+          accelerator: Alt+Shift+=
           window: '*'
         - type: separator
         - label: Echte Größe
@@ -626,9 +624,6 @@ de:
           command: app:open-forums
         - label: Softwarelizenz
           command: app:open-license
-        - type: separator
-        - label: An Tropy spenden
-          command: app:donate
         - type: separator
         - label: Logs anzeigen
           command: app:open-logs
