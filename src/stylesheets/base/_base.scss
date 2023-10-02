@@ -25,7 +25,7 @@ html {
   @if $platform == win32 {
     &:has(#project),
     &:has(.prefs) {
-      border-top: 1px solid #e0e0e0;
+      border-top: 1px solid if($theme == light, #e0e0e0, #212121);
     }
 
     &.frameless {
