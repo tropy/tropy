@@ -1,1 +1,1 @@
-https://sqlite.org/2023/sqlite-autoconf-3420000.tar.gz
+https://sqlite.org/2023/sqlite-autoconf-3430100.tar.gz
