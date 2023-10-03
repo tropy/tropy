@@ -3,6 +3,8 @@
 
 const { check, error, say } = require('./util')('λ')
 const { join, relative } = require('path')
+const { createHash } = require('crypto')
+const { readFile, writeFile } = require('fs/promises')
 const { program } = require('commander')
 
 const ARCH =
@@ -39,6 +41,14 @@ const {
   version
 } = require('./metadata')
 
+
+async function integrity(path, algo = 'sha256') {
+  let hash = createHash(algo)
+  hash.update(await readFile(path))
+  let checksum = hash.digest('hex')
+  await writeFile(`${path}.integrity`, checksum, { encoding: 'utf-8' })
+  return checksum
+}
 
 program
   .name('tropy-pack')
@@ -81,8 +91,14 @@ program
 
       for (let type of args) {
         check(type in module.exports, `unknown package type: ${type}`)
-        let output = await module.exports[type](opts)
-        say(`saved "${relative(ROOT, output)}"`)
+        let assets = await module.exports[type](opts)
+
+        for (let asset of assets) {
+          let algo = (type === 'squirrel') ? 'sha1' : 'sha256'
+          let checksum = await integrity(asset, algo)
+          say(`saved "${relative(ROOT, asset)}"`)
+          say(`${algo}|${checksum}`)
+        }
       }
     } catch (e) {
       error(e)
@@ -100,7 +116,7 @@ module.exports = {
     rm('-f', output)
     exec(`tar cjf ${output} -C "${app}" .`)
 
-    return output
+    return [output]
   },
 
   AppImage({ app, arch, out, silent }) {
@@ -141,7 +157,7 @@ module.exports = {
 
     rm('-rf', AppDir)
 
-    return output
+    return [output]
   },
 
   ['7z']({ app, arch, out, platform, silent }) {
@@ -164,7 +180,7 @@ module.exports = {
     exec(`7z a ${output} ${input}`, { silent })
     cd('-')
 
-    return output
+    return [output]
   },
 
   dmg({ app, arch, out, silent }) {
@@ -228,7 +244,7 @@ module.exports = {
           if (failures.length)
             reject(new Error(`dmg failures: ${failures.join(', ')}`))
           else
-            resolve(output)
+            resolve([output])
         })
        .on('error', reject)
     })
@@ -259,16 +275,23 @@ module.exports = {
       noMsi: true
     })
 
-    if (arch !== 'x64') {
-      let n = join(out, qualified.name)
-      let v = version.replace(`${channel}.`, channel)
+    let n = join(out, qualified.name)
+    let v = version.replace(`${channel}.`, channel)
+    let nupkg
 
-      mv(`${n}-${v}-full.nupkg`, `${n}-${v}-${arch}-full.nupkg`)
+    if (arch === 'x64') {
+      nupkg = `${n}-${v}-full.nupkg`
+    } else {
+      nupkg = `${n}-${v}-${arch}-full.nupkg`
+      mv(`${n}-${v}-full.nupkg`, nupkg)
     }
 
     say(`squirrel release metadata:\n${cat(join(out, 'RELEASES'))}`)
 
-    return output
+    return [
+      join(output, `setup-tropy-${version}-${arch}.exe`),
+      join(output, nupkg)
+    ]
   }
 }
 

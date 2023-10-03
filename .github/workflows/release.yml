@@ -126,7 +126,8 @@ jobs:
         with:
           allowUpdates: true
           artifacts: >-
-            dist/*.bz2
+            dist/*.bz2,
+            dist/*.integrity
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
           prerelease: true
@@ -139,7 +140,8 @@ jobs:
           allowUpdates: true
           artifacts: >-
             dist/*.dmg,
-            dist/*.zip
+            dist/*.zip,
+            dist/*.integrity
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
           prerelease: true
@@ -152,7 +154,8 @@ jobs:
           allowUpdates: true
           artifacts: >-
             dist/*.exe,
-            dist/*.nupkg
+            dist/*.nupkg,
+            dist/*.integrity
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
           prerelease: true
