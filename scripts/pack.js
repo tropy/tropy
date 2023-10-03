@@ -72,7 +72,7 @@ program
       if (!args.length) {
         args = ({
           darwin: ['dmg', '7z'],
-          linux: ['bz2', 'AppImage'],
+          linux: ['bz2'],
           win32: ['squirrel']
         })[opts.platform]
       }

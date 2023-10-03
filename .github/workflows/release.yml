@@ -126,8 +126,7 @@ jobs:
         with:
           allowUpdates: true
           artifacts: >-
-            dist/*.bz2,
-            dist/*.AppImage
+            dist/*.bz2
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
           prerelease: true
