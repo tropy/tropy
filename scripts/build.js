@@ -198,8 +198,8 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
       addLicense
     ],
     appVersion: version,
-    appBundleId: qualified.appId,
-    helperBundleId: `${qualified.appId}-helper`,
+    appBundleId: qualified.appId.toLowerCase(),
+    helperBundleId: `${qualified.appId.toLowerCase()}-helper`,
     appCategoryType: 'public.app-category.productivity',
     appCopyright:
       `Copyright (c) 2015-${new Date().getFullYear()} ` +
