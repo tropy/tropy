@@ -290,7 +290,7 @@ module.exports = {
 
     return [
       join(out, setupExe),
-      join(out, nupkg)
+      nupkg
     ]
   }
 }
