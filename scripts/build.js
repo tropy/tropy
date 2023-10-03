@@ -105,7 +105,7 @@ program
 
           say('copy metainfo.xml')
           await copyFile(
-            `${ROOT}/res/linux/org.tropy.Tropy.xml`,
+            `${ROOT}/res/linux/org.tropy.Tropy.metainfo.xml`,
             `${dest}/${appId}.metainfo.xml`)
 
           say('copy INSTALL instructions')
