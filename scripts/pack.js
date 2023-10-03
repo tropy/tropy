@@ -252,7 +252,7 @@ module.exports = {
 
   async squirrel({ app, out, arch, cert, password }) {
     let { createWindowsInstaller } = require('electron-winstaller')
-    let output = `setup-${name}-${version}-${arch}.exe`
+    let setupExe = `setup-${name}-${version}-${arch}.exe`
 
     check(process.platform === 'win32', 'must be run on Windows')
     check(cert, 'missing certificate')
@@ -267,7 +267,7 @@ module.exports = {
       title: qualified.product,
       name: qualified.name,
       exe: `${qualified.name}.exe`,
-      setupExe: output,
+      setupExe,
       setupIcon: join(ICONS, channel, `${name}.ico`),
       iconUrl: join(ICONS, channel, `${name}.ico`),
       // remoteReleases: repository.url,
@@ -289,8 +289,8 @@ module.exports = {
     say(`squirrel release metadata:\n${cat(join(out, 'RELEASES'))}`)
 
     return [
-      join(output, `setup-tropy-${version}-${arch}.exe`),
-      join(output, nupkg)
+      join(out, setupExe),
+      join(out, nupkg)
     ]
   }
 }
