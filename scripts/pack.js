@@ -45,7 +45,7 @@ const {
 async function integrity(path, algo = 'sha256') {
   let hash = createHash(algo)
   hash.update(await readFile(path))
-  let checksum = hash.digest('hex')
+  let checksum = [algo, hash.digest('hex')].join('|')
   await writeFile(`${path}.integrity`, checksum, { encoding: 'utf-8' })
   return checksum
 }
@@ -96,8 +96,7 @@ program
         for (let asset of assets) {
           let algo = (type === 'squirrel') ? 'sha1' : 'sha256'
           let checksum = await integrity(asset, algo)
-          say(`saved "${relative(ROOT, asset)}"`)
-          say(`${algo}|${checksum}`)
+          say(`saved "${relative(ROOT, asset)}" [${checksum}]`)
         }
       }
     } catch (e) {
