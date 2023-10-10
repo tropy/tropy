@@ -37,7 +37,7 @@
     .toolbar-right {
       @if $platform == win32 {
         .frameless & {
-          margin-right: zoom(120px + 24px);
+          margin-right: zoom(136px + 24px);
         }
       }
 

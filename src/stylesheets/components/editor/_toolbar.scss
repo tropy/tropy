@@ -35,6 +35,17 @@
   }
 
   .toolbar-left {
+    @if $platform == win32 {
+      .frameless & {
+        @include variant(".side-by-side .editor") {
+          overflow: hidden;
+          padding: 0 zoom(2px); // Do not clip link target
+          margin: 0 zoom(-2px);
+          margin-right: zoom(136px + 24px);
+        }
+      }
+    }
+
     @if $platform == linux {
       .frameless & {
         @include variant(".side-by-side .editor") {
