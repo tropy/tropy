@@ -2,42 +2,23 @@
 // Item panel
 // --------------------------------------------------
 
-.item-panel {
-  box-shadow:
-    // We need to stitch two shadows for the closed panel state
-    0 (-$toolbar-height) 0 $panel-bg,
-    0 (-$panel-header-height) 0 $panel-bg;
-
-  .frameless & {
-    box-shadow:
-      0 zoom(-1 * 100px) 0 $panel-bg,
-      0 (-$panel-header-height) 0 $panel-bg;   
-  }
-
-  &.nested-tab-focus {
-    box-shadow:
-      0 (-$toolbar-height) 0 $panel-focus-bg,
-      0 (-$panel-header-height) 0 $panel-focus-bg;
-
-    .frameless & {
-      box-shadow:
-        0 zoom(-1 * 100px) 0 $panel-focus-bg,
-        0 (-$panel-header-height) 0 $panel-focus-bg;
+.item-panel-group {
+  .panel-group-header {
+    @include state(".item-panel-group:has(.item-panel:focus-visible)") {
+      background-color: $panel-focus-bg;
     }
-  }
 
-  .is-blurred .item-mode & {
-    @if $platform == darwin {
-      box-shadow:
-        0 (-$toolbar-height) 0 $panel-blurred-bg-darwin,
-        0 (-$panel-header-height) 0 $panel-blurred-bg-darwin;
+    .is-blurred .item-mode & {
+      @if $platform == darwin {
+        background-color: $panel-blurred-bg-darwin;
+      }
     }
   }
 
   .toolbar {
     transition: padding 0.1s ease;
 
-    @include state(".item-panel.closed") {
+    @include state(".closed .toolbar") {
       padding: 0;
     }
   }
