@@ -38,10 +38,18 @@
     }
 
     .stacked & {
-      top: $toolbar-height;
+      top: zoom($toolbar-height);
       right: 0;
       bottom: 0;
       width: $esper-panel-width;
+
+      .frameless & {
+        top: zoom(os($toolbar-frameless-height));
+
+        @if $platform == win32 {
+          top: zoom($toolbar-height);
+        }
+      }
     }
 
     .side-by-side & {
