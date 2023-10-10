@@ -19,6 +19,10 @@
       --zoom: inherit; // Always counterbalance frameless editor toolbar
       font-size: zoom($font-size-base);
       height: zoom(os($toolbar-frameless-height) + 1px);
+
+      @if $platform == win32 {
+        height: zoom($toolbar-height + 1px);
+      }
     }
 
     .side-by-side & {
@@ -41,7 +45,7 @@
           overflow: hidden;
           padding: 0 zoom(2px); // Do not clip link target
           margin: 0 zoom(-2px);
-          margin-right: zoom(136px + 24px);
+          margin-right: zoom(136px - 12px + 24px);
         }
       }
     }

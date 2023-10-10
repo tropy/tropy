@@ -52,15 +52,11 @@
     position: absolute;
     left: $default-padding-horizontal;
     right: $default-padding-horizontal;
-    height: $toolbar-height;
+    height: 100%;
     display: flex;
     justify-content: space-between;
     transform: translate(0, 100%); // translate3d clips box-shadow
     transition: transform $toolbar-context-transition;
-
-    .frameless & {
-      height: zoom(os($toolbar-frameless-height));
-    }
 
     &.default,
     &:has(.active) {
