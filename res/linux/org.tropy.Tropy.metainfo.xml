@@ -61,4 +61,9 @@
     <mediatype>application/vnd.tropy.tpy</mediatype>
     <mediatype>application/vnd.tropy.ttp</mediatype>
   </provides>
+  <requires>
+    <display_length>811</display_length>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </requires>
 </component>
