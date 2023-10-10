@@ -10,7 +10,7 @@
   overflow: hidden;
 
   :focus-visible & {
-    background-color: $tab-nested-focus-bg;
+    background-color: $tab-focus-visible-bg;
   }
 
   &.justified {
@@ -34,8 +34,8 @@
       position: relative;
 
       :focus-visible & {
-        background-color: $tab-nested-focus-selected-bg;
-        box-shadow: 0 0 0 $input-border-width $tab-nested-focus-selected-border-color;
+        background-color: $tab-focus-visible-selected-bg;
+        box-shadow: 0 0 0 $input-border-width $tab-focus-visible-selected-border-color;
       }
     }
 

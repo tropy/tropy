@@ -10,7 +10,7 @@
   .slider {
     .slider-handle {
       @include state(".photo-panel:focus-visible:not(:has(li.active))") {
-        background-color: $photo-panel-slider-handle-nested-focus-bg;
+        background-color: $photo-panel-slider-handle-focus-visible-bg;
       }
 
       .is-blurred .item-mode & {

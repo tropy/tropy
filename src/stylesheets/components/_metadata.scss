@@ -17,7 +17,7 @@
     border-bottom: 1px solid $panel-separator-color;
 
     :focus-visible & {
-      border-bottom-color: $panel-nested-focus-separator-color;
+      border-bottom-color: $panel-focus-visible-separator-color;
     }
   }
 
@@ -26,7 +26,7 @@
   }
 
   :focus-visible & {
-    color: $panel-nested-focus-heading-color;
+    color: $panel-focus-visible-heading-color;
   }
 }
 
@@ -64,8 +64,8 @@
     }
 
     :focus-visible & {
-      background-color: $template-select-nested-focus-bg;
-      border-color: $template-select-nested-focus-border;
+      background-color: $template-select-focus-visible-bg;
+      border-color: $template-select-focus-visible-border;
     }
 
     .is-blurred .item-mode & {

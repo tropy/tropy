@@ -39,8 +39,8 @@ $theme: "light";
   // Issue #800
   #{--slider-handle-border}:                          rgba(0 0 0 / 20%);
   #{--panel-focus-bg}:                                darken(#f6f6f6, 4%);
-  #{--tab-nested-focus-selected-border-color}:        darken(#ddd, 4%);
-  #{--item-panel-tab-blurred-selected-border-darwin}: var(--tab-nested-focus-selected-border-color);
+  #{--tab-focus-visible-selected-border-color}:        darken(#ddd, 4%);
+  #{--item-panel-tab-blurred-selected-border-darwin}: var(--tab-focus-visible-selected-border-color);
   #{--esper-shadow}:                                  rgba(0 0 0 / 10%);
 }
 
@@ -288,10 +288,10 @@ $panel-focus-bg:                     var(--panel-focus-bg);
 $panel-blurred-bg-darwin:            $panel-focus-bg;
 $panel-header-color:                 var(--shade-8);
 $panel-separator-color:              var(--shade-3);
-$panel-nested-focus-separator-color: shade(var(--shade-3), 4%);
+$panel-focus-visible-separator-color: shade(var(--shade-3), 4%);
 $panel-blurred-separator-color:      shade(var(--shade-3), 4%);
 $panel-heading-color:                var(--shade-5);
-$panel-nested-focus-heading-color:   shade(var(--shade-5), 4%);
+$panel-focus-visible-heading-color:   shade(var(--shade-5), 4%);
 
 // Item panel
 $item-panel-tab-blurred-bg-darwin:              var(--shade-3);
@@ -306,36 +306,36 @@ $tab-selected-bg:                        var(--shade-1);
 $tab-selected-border-color:              var(--shade-3);
 $tab-active-bg:                          var(--shade-3);
 $tab-active-border-color:                $tab-active-bg;
-$tab-nested-focus-bg:                    var(--shade-3);
-$tab-nested-focus-selected-bg:           shade(var(--shade-1), 4%);
-$tab-nested-focus-selected-border-color: var(--tab-nested-focus-selected-border-color);
+$tab-focus-visible-bg:                    var(--shade-3);
+$tab-focus-visible-selected-bg:           shade(var(--shade-1), 4%);
+$tab-focus-visible-selected-border-color: var(--tab-focus-visible-selected-border-color);
 
 // Metadata
 $label-color:                           var(--shade-6);
 $template-select-border:                var(--shade-3);
-$template-select-nested-focus-border:   shade(var(--shade-3), 4%);
-$template-select-blurred-border-darwin: $template-select-nested-focus-border;
+$template-select-focus-visible-border:   shade(var(--shade-3), 4%);
+$template-select-blurred-border-darwin: $template-select-focus-visible-border;
 $template-select-bg:                    var(--shade-1);
-$template-select-nested-focus-bg:       shade(var(--shade-1), 4%);
-$template-select-blurred-bg-darwin:     $template-select-nested-focus-bg;
+$template-select-focus-visible-bg:       shade(var(--shade-1), 4%);
+$template-select-blurred-bg-darwin:     $template-select-focus-visible-bg;
 
 // Tag list
 $tag-list-active-border:              shade(var(--shade-5), 10%);
 $add-tag-default-bg:                  $panel-bg;
 $add-tag-focus-bg:                    var(--shade-0);
-$add-tag-nested-focus-bg:             shade(var(--shade-1), 4%);
-$add-tag-blurred-bg-darwin:           $add-tag-nested-focus-bg;
+$add-tag-focus-visible-bg:             shade(var(--shade-1), 4%);
+$add-tag-blurred-bg-darwin:           $add-tag-focus-visible-bg;
 $add-tag-placeholder-color-default:   $text-color;
-$add-tag-nested-focus-border-color:   shade(var(--shade-3), 4%);
-$add-tag-blurred-border-color-darwin: $add-tag-nested-focus-border-color;
+$add-tag-focus-visible-border-color:   shade(var(--shade-3), 4%);
+$add-tag-blurred-border-color-darwin: $add-tag-focus-visible-border-color;
 $icon-tag-color:                      var(--shade-1);
-$icon-tag-nested-focus-color:         shade(var(--shade-1), 4%);
+$icon-tag-focus-visible-color:         shade(var(--shade-1), 4%);
 $icon-tag-border:                     var(--shade-5);
-$icon-tag-nested-focus-border:        shade(var(--shade-5), 4%);
+$icon-tag-focus-visible-border:        shade(var(--shade-5), 4%);
 $icon-tag-vibrancy-border:            alpha(var(--shade-10), 20%);
 
 // Photo panel
-$photo-panel-slider-handle-nested-focus-bg:   var(--shade-1);
+$photo-panel-slider-handle-focus-visible-bg:   var(--shade-1);
 $photo-panel-slider-handle-blurred-bg-darwin: var(--shade-1);
 
 // Note list
