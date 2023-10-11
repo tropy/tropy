@@ -65,7 +65,7 @@
     flex: 1 1 0;
     overflow-y: scroll;
     overscroll-behavior: contain;
-    padding: 19px $default-padding-horizontal 0; // todo
+    padding: 19px $default-spacing-x 0; // todo
     margin: auto;
     width: 100%;
     max-width: $esper-panel-max-size;
@@ -100,7 +100,7 @@
 
   .revert-btn-container {
     flex: 0 0 auto;
-    padding: 6px $default-padding-horizontal;
+    padding: 6px $default-spacing-x;
     margin: auto;
     width: 100%;
     max-width: $esper-panel-max-size;

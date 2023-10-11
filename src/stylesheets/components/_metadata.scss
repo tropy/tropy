@@ -6,10 +6,10 @@
   font-size: $font-size-small;
   color: $panel-heading-color;
   line-height: $metadata-line-height;
-  margin: calc($font-size-small / 2) $default-padding-horizontal 0;
+  margin: calc($font-size-small / 2) $default-spacing-x 0;
 
   .scrollbar-style-old-school & {
-    margin-right: calc($default-padding-horizontal - $scrollbar-size / 3);
+    margin-right: calc($default-spacing-x - $scrollbar-size / 3);
   }
 
   &.separator {
@@ -32,7 +32,7 @@
 
 .form-control {
   &.select {
-    width: calc(100% - 2 * #{$default-padding-horizontal});
+    width: calc(100% - 2 * #{$default-spacing-x});
     margin: auto;
   }
 
@@ -57,10 +57,10 @@
     .scrollbar-style-old-school & {
       width:
         calc(
-          100% - 2 * #{$default-padding-horizontal}
+          100% - 2 * #{$default-spacing-x}
           + #{$scrollbar-size} / 3
         );
-      margin-left: $default-padding-horizontal;
+      margin-left: $default-spacing-x;
     }
 
     :focus-visible & {
@@ -102,7 +102,7 @@
   label {
     flex: 0 0 $metadata-horizontal-offset;
     text-align: right;
-    padding-left: $default-padding-horizontal;
+    padding-left: $default-spacing-x;
     padding-right: calc($metadata-gutter / 2);
     color: $label-color;
     @include css-truncation;
@@ -117,7 +117,7 @@
     display: flex;
     align-items: center;
     padding-left: calc($metadata-gutter / 2);
-    padding-right: $default-padding-horizontal;
+    padding-right: $default-spacing-x;
     min-width: 0; // Fix truncation
     position: relative;
 
@@ -130,7 +130,7 @@
     }
 
     .scrollbar-style-old-school & {
-      padding-right: calc($default-padding-horizontal - $scrollbar-size / 3);
+      padding-right: calc($default-spacing-x - $scrollbar-size / 3);
     }
 
     @include variant(".clickable.static .value") {

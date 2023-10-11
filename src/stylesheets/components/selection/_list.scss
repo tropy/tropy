@@ -8,11 +8,11 @@
     display: flex;
     align-items: center;
     padding-left:
-      $default-padding-horizontal
+      $default-spacing-x
       + $space-md
       + $space-sm
       + $space-min;
-    padding-right: $default-padding-horizontal;
+    padding-right: $default-spacing-x;
     height: $row-height;
 
     &.active {

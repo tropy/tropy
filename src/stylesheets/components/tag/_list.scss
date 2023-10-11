@@ -28,7 +28,7 @@
       display: flex;
       align-items: center;
       height: $line-height-large;
-      padding: 0 $default-padding-horizontal 0 $list-tree-padding-left;
+      padding: 0 $default-spacing-x 0 $list-tree-padding-left;
 
       &.active {
         @extend %list-active;
@@ -119,7 +119,7 @@
       display: flex;
       align-items: center;
       height: $line-height-large;
-      padding: 0 $default-padding-horizontal;
+      padding: 0 $default-spacing-x;
 
       &.mixed {
         .editable:not(.active) {
@@ -171,7 +171,7 @@
 
 .add-tag-container {
   flex: 0 0 auto;
-  padding: calc($space-min + $space-min / 2) $default-padding-horizontal 2px;
+  padding: calc($space-min + $space-min / 2) $default-spacing-x 2px;
 
   .input-group {
     position: relative;

@@ -77,15 +77,15 @@
     .panel-body {
       padding:
         ($space-sm + 1px)
-        ($default-padding-horizontal - 2px)
+        ($default-spacing-x - 2px)
         $space-sm
-        $default-padding-horizontal;
+        $default-spacing-x;
 
       &::before {
         content: "";
         position: absolute;
-        left: $default-padding-horizontal;
-        right: $default-padding-horizontal;
+        left: $default-spacing-x;
+        right: $default-spacing-x;
         top: 0;
         height: 1px;
         background-color: $plugin-border-color;

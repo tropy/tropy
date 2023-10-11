@@ -7,7 +7,7 @@
   justify-content: space-between;
   height: zoom($toolbar-height);
   flex: 0 0 auto;
-  padding: 0 $default-padding-horizontal;
+  padding: 0 $default-spacing-x;
   overflow: hidden;
 
   // Do not counterbalance toolbars if they are not frameless titlebars
@@ -21,7 +21,7 @@
       font-size: zoom($font-size-base);
       -webkit-app-region: drag;
       height: zoom(os($toolbar-frameless-height));
-      padding: 0 zoom($default-padding-horizontal);
+      padding: 0 zoom($default-spacing-x);
     }
 
     @if $platform == win32 {
@@ -50,8 +50,8 @@
 
   .toolbar-context {
     position: absolute;
-    left: $default-padding-horizontal;
-    right: $default-padding-horizontal;
+    left: $default-spacing-x;
+    right: $default-spacing-x;
     height: 100%;
     display: flex;
     justify-content: space-between;

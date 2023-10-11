@@ -13,7 +13,7 @@
   }
 
   .note {
-    padding: $note-padding-top $default-padding-horizontal $note-padding-bottom;
+    padding: $note-padding-top $default-spacing-x $note-padding-bottom;
     position: relative;
     contain: content;
 
@@ -21,8 +21,8 @@
       content: " ";
       position: absolute;
       top: 0;
-      right: $default-padding-horizontal;
-      left: $default-padding-horizontal;
+      right: $default-spacing-x;
+      left: $default-spacing-x;
       height: 1px;
       background: $panel-separator-color;
 

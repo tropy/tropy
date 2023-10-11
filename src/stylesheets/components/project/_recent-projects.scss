@@ -99,7 +99,7 @@
   .project-file {
     display: flex;
     align-items: center;
-    gap: $default-padding-horizontal;
+    gap: $default-spacing-x;
     padding: ($space-sm + 1px) $space-sm $space-sm;
     border-radius: 5px;
     position: relative;

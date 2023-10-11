@@ -25,11 +25,11 @@
     .photo-container {
       display: flex;
       align-items: center;
-      padding: 0 $default-padding-horizontal;
+      padding: 0 $default-spacing-x;
       height: $row-height;
 
       @include state(".photo:not(.expandable)") {
-        padding-left: $default-padding-horizontal + $space-md + $space-min;
+        padding-left: $default-spacing-x + $space-md + $space-min;
       }
 
       @include state(".photo.active") {

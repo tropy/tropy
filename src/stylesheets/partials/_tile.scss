@@ -117,7 +117,7 @@
 .tile-expansion {
   grid-column-start: 1;
   background-color: $tile-expansion-bg;
-  margin: $space-sm (-$default-padding-horizontal); // Todo
+  margin: $space-sm (-$default-spacing-x); // Todo
   padding: $space-sm 0; // Todo
 
   .photo-panel.nested-tab-focus:not(:has(.panel-body .active)) &,

@@ -58,7 +58,7 @@
     min-width: var(--item-min-width);
 
     .scrollbar-style-old-school & {
-      width: calc(100% - #{$default-padding-horizontal});
+      width: calc(100% - #{$default-spacing-x});
       min-width: calc(var(--item-min-width) + #{$scrollbar-size});
     }
 
@@ -349,7 +349,7 @@
       }
 
       @include variant(".main-column:first-child .td-container") {
-        padding-left: $default-padding-horizontal;
+        padding-left: $default-spacing-x;
       }
     }
   }
