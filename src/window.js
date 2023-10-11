@@ -89,10 +89,8 @@ export class Window extends EventEmitter {
         if (ARGS.frameless) {
           toggle(this.html, 'frameless', true)
 
-          if (!darwin) {
-            this.controls = new WindowControls()
-            this.controls.mount(this)
-          }
+          this.controls = new WindowControls()
+          this.controls.mount(this)
         }
 
         resolve()
