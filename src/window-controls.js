@@ -2,12 +2,21 @@ import { darwin, linux, win32 } from './common/os.js'
 import { append, create, on, toggle } from './dom.js'
 import ARGS from './args.js'
 
+function isRightToLeft() {
+  return (
+    new Intl.Locale(ARGS.lang || ARGS.locale)
+  ).getTextInfo() === 'rtl'
+}
+
 export class WindowControls {
   constructor() {
     this.layout = new ButtonLayout()
 
     if (linux && ARGS.controls)
       this.layout.parse(ARGS.controls)
+
+    if (!linux && isRightToLeft())
+      this.layout.reverse()
   }
 
   mount(win) {
@@ -77,5 +86,9 @@ class ButtonLayout {
     this.placement = buttons === left ? 'left' : 'right'
     this.maximize = buttons.includes('maximize')
     this.minimize = buttons.includes('minimize')
+  }
+
+  reverse() {
+    this.placement = (this.placement === 'left') ? 'right' : 'left'
   }
 }
