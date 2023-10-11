@@ -39,6 +39,17 @@
   }
 
   .toolbar-left {
+    @if $platform == darwin {
+      @include variant(".side-by-side .editor") {
+        .window-controls-right:not(.is-full-screen) & {
+          overflow: hidden;
+          padding: 0 zoom(2px); // Do not clip link target
+          margin: 0 zoom(-2px);
+          margin-right: zoom(os($window-controls-width) + $space-sm);
+        }
+      }
+    }
+
     @if $platform == win32 {
       .frameless & {
         @include variant(".side-by-side .editor") {

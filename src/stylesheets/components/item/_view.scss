@@ -23,12 +23,9 @@
       .toolbar-left {
         .item-mode &,
         .item-mode-enter-active & {
-          $margin-left:
-            $window-controls-width
-            + $window-controls-offset-x
-            - $window-controls-margin;
-
-          margin-left: calc($margin-left / var(--zoom));
+          :where(.window-controls-left) & {
+            margin-left: zoom(os($window-controls-width));
+          }
         }
 
         .project-mode-enter-active &,
@@ -49,7 +46,7 @@
           }
         }
       }
-    }  
+    }
   }
 
   @if $platform == linux {

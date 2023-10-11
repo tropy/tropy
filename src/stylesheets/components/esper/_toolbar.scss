@@ -25,8 +25,8 @@
     }
 
     .toolbar-left {
-      @if $platform == linux {
-        .frameless & {
+      @include variant(".stacked .esper") {
+        .window-controls-right:not(.is-full-screen) & {
           flex: 1 1 auto;
           overflow: hidden;
         }
@@ -34,6 +34,16 @@
     }
 
     .toolbar-right {
+      @if $platform == darwin {
+        @include variant(".stacked .esper") {
+          .window-controls-right:not(.is-full-screen) & {
+            flex: 1 1 0;
+            overflow: hidden;
+            margin-right: zoom(os($window-controls-width) + $space-sm);
+          }
+        }
+      }
+
       @if $platform == win32 {
         .frameless & {
           margin-right: zoom(136px - 12px + 24px);
