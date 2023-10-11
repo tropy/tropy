@@ -1137,6 +1137,7 @@ export class Tropy extends EventEmitter {
       level: logger.level,
       locale: this.state.locale,
       log: this.log,
+      lang: this.getSystemLanguage(),
       uuid: this.state.uuid,
       update: this.updater.release,
       version,
@@ -1177,6 +1178,12 @@ export class Tropy extends EventEmitter {
 
   getLocale(locale) {
     return LOCALE[locale || app.getLocale()] || LOCALE.default
+  }
+
+  getSystemLanguage() {
+    return (
+      app.getPreferredSystemLanguages()?.[0] || app.getSystemLocale()
+    )
   }
 
   getHistory(win = BrowserWindow.getFocusedWindow()) {
