@@ -5,7 +5,7 @@ import ARGS from './args.js'
 function isRightToLeft() {
   return (
     new Intl.Locale(ARGS.lang || ARGS.locale)
-  ).getTextInfo() === 'rtl'
+  ).textInfo?.direction === 'rtl'
 }
 
 export class WindowControls {
