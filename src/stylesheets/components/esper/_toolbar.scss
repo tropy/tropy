@@ -52,28 +52,28 @@
 
       @if $platform == linux {
         .frameless & {
-          flex: 1 1 0;
-          overflow: hidden;
-
           @include variant(".stacked .esper") {
+            flex: 1 1 0;
+            overflow: hidden;
+
             @include variant(".frameless.window-controls-left") {
               margin-right: zoom(52px);
             }
 
             @include variant(".frameless.window-controls-right") {
-              margin-right: zoom(166px - 37px - 37px);
+              margin-right: zoom(os($window-controls-width) + $space-sm);
 
               @include variant(
                 ".frameless.window-controls-minimize",
                 ".frameless.window-controls-maximize"
               ) {
-                margin-right: zoom(166px - 37px);
+                margin-right: zoom(os($window-controls-width) + 37px + $space-sm);
               }
 
               @include variant(
                 ".frameless.window-controls-minimize.window-controls-maximize"
               ) {
-                margin-right: zoom(166px);
+                margin-right: zoom(os($window-controls-width) + 37px + 37px + $space-sm);
               }
             }
           }
