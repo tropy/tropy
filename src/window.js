@@ -312,6 +312,10 @@ export class Window extends EventEmitter {
       toggle(this.html, 'alt-key', event.altKey)
       toggle(this.html, 'meta-key', event.metaKey)
       toggle(this.html, 'ctrl-key', event.ctrlKey)
+
+      if (this.isFullScreen && event.altKey)
+        toggle(this.html, 'full-screen-menu')
+
     }, { passive: true, capture: true })
 
     let up = (event) => {
@@ -423,10 +427,10 @@ export class Window extends EventEmitter {
         toggle(this.html, 'inactive', false)
         break
       case 'enter-full-screen':
-        toggle(this.html, 'is-full-screen', true)
+        this.handleEnterFullScreen()
         break
       case 'leave-full-screen':
-        toggle(this.html, 'is-full-screen', false)
+        this.handleLeaveFullScreen()
         break
       case 'menu':
         toggle(this.html, 'window-controls-menu-open', ...args)
@@ -446,6 +450,18 @@ export class Window extends EventEmitter {
 
   fullscreen() {
     this.send('fullscreen')
+  }
+
+  handleEnterFullScreen() {
+    this.isFullScreen = true
+    toggle(this.html, 'is-full-screen', true)
+    toggle(this.html, 'full-screen-menu', false)
+  }
+
+  handleLeaveFullScreen() {
+    this.isFullScreen = false
+    toggle(this.html, 'is-full-screen', false)
+    toggle(this.html, 'full-screen-menu', false)
   }
 
   menu(event) {
