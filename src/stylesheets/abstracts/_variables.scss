@@ -10,8 +10,8 @@
 
 $sans-serif-fonts: (
   darwin: "system-ui",
-  linux: "system-ui",
-  win32: "'Segoe UI', sans-serif"
+  linux:  "system-ui",
+  win32:  "'Segoe UI', sans-serif"
 );
 
 $font-family-sans-serif: unquote(map-get($sans-serif-fonts, $platform));
@@ -24,7 +24,7 @@ $font-size-large: to-rem(16);
 // Heads up: Do not trust the computed value in the dev tools,
 // check the actual height of the rendered element.
 // Must result in an even value (20px) for proper alignment of editables.
-$line-height-base:     1.539;
+$line-height-base: 1.539;
 
 $line-height-computed: floor((const("FONTSIZE.BASE") * $line-height-base)) * 1px;
 $line-height-large:    const("LIST.HEIGHT") * 1px;
@@ -33,10 +33,10 @@ $link-hover-decoration: underline;
 
 $h1-font-size: 18px;
 
-$headings-font-family:    inherit;
-$headings-font-weight:    400;
-$headings-line-height:    1.1;
-$headings-color:          inherit;
+$headings-font-family: inherit;
+$headings-font-weight: 400;
+$headings-line-height: 1.1;
+$headings-color:       inherit;
 
 
 // Space sizes
@@ -84,7 +84,7 @@ $drag-preview-size: 64px;
 // Dimensions
 // --------------------------------------------------
 
-$toolbar-height: 38px;
+$toolbar-height:           38px;
 $toolbar-frameless-height: ($toolbar-height, 32px, 46px);
 
 
@@ -99,7 +99,7 @@ $search-width: 200px;
 
 $padding-base-vertical: 2px;
 
-$padding-base-horizontal: $space-xs;
+$padding-base-horizontal:  $space-xs;
 $padding-large-horizontal: $space-sm;
 
 $border-radius-small: 3px;
@@ -114,12 +114,12 @@ $row-height: $thumbnail-size + 6px;
 // Transitions
 // --------------------------------------------------
 
-$mode-transition: 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-$fade-duration: 0.25s;
-$fade-timing-function: ease-in-out;
-$fade-delay: 0s;
+$mode-transition:            0.8s cubic-bezier(0.23, 1, 0.32, 1);
+$fade-duration:              0.25s;
+$fade-timing-function:       ease-in-out;
+$fade-delay:                 0s;
 $collapse-height-transition: height 0.25s ease;
-$collapse-width-transition: width 0.25s ease;
+$collapse-width-transition:  width 0.25s ease;
 
 
 // Grid
@@ -144,26 +144,26 @@ $btn-disabled-opacity: 0.5;
 // Forms
 // --------------------------------------------------
 
-$input-height-base: $space-lg + 2 * $shim;
-$input-height-large: ($space-xl + $space-xs);
+$input-height-base:         $space-lg + 2 * $shim;
+$input-height-large:        ($space-xl + $space-xs);
 $input-border-radius-small: $border-radius-small;
-$checkbox-size: 14px;
-$input-border-width: const("INPUT.BORDER_WIDTH") * 1px;
+$checkbox-size:             14px;
+$input-border-width:        const("INPUT.BORDER_WIDTH") * 1px;
 
 
 // Z-index master list
 // --------------------------------------------------
 
-$zindex-resizable:         1000;
-$zindex-project:           1010;
-$zindex-item:              1020;
-$zindex-esper-header:      1030;
-$zindex-drop-target:       1040;
-$zindex-drag-layer:        1050;
-$zindex-flash:             1060;
-$zindex-popup:             1070;
-$zindex-cover:             1080;
-$zindex-window-controls:   1090;
+$zindex-resizable:       1000;
+$zindex-project:         1010;
+$zindex-item:            1020;
+$zindex-esper-header:    1030;
+$zindex-drop-target:     1040;
+$zindex-drag-layer:      1050;
+$zindex-flash:           1060;
+$zindex-popup:           1070;
+$zindex-cover:           1080;
+$zindex-window-controls: 1090;
 
 
 // Window controls
@@ -188,7 +188,7 @@ $list-tree-max-levels:                100;
 // --------------------------------------------------
 
 $item-table-header-height: $line-height-large;
-$column-transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+$column-transition:        0.3s cubic-bezier(0.23, 1, 0.32, 1);
 
 
 // Panel
@@ -206,34 +206,34 @@ $accordion-border-radius: $border-radius-small;
 // Tabs
 // --------------------------------------------------
 
-$tabs-height: const("PANEL.HEADER_HEIGHT") * 1px;
-$tabs-padding-horizontal: $space-md;
+$tabs-height:                     const("PANEL.HEADER_HEIGHT") * 1px;
+$tabs-padding-horizontal:         $space-md;
 $tabs-compact-padding-horizontal: $space-xs;
 
 
 // Metadata
 // --------------------------------------------------
 
-$metadata-line-height: $space-lg;
-$metadata-gutter: $space-sm;
+$metadata-line-height:       $space-lg;
+$metadata-gutter:            $space-sm;
 $metadata-horizontal-offset: 33%;
 
 
 // Note list
 // --------------------------------------------------
 
-$note-padding-top: 10px; // 16px
+$note-padding-top:    10px; // 16px
 $note-padding-bottom: 10px; // 16px
-$note-lines: 2;
+$note-lines:          2;
 
 
 // Editable
 // --------------------------------------------------
 
-$editable-border-width: 3px;
-$editable-padding-vertical: 2px;
+$editable-border-width:       3px;
+$editable-padding-vertical:   2px;
 $editable-padding-horizontal: 2px;
-$editable-border-radius: 3px;
+$editable-border-radius:      3px;
 
 
 // Resizable
@@ -313,17 +313,17 @@ $add-tag-transition:                0.3s ease;
 // Search
 // --------------------------------------------------
 
-$search-height: $input-height-base;
-$search-frameless-height: ($search-height, $search-height, 34px);
+$search-height:                  $input-height-base;
+$search-frameless-height:        ($search-height, $search-height, 34px);
 $search-frameless-border-radius: ($border-radius-small, $border-radius-small, $border-radius-base);
-$clear-button-size: 14px;
+$clear-button-size:              14px;
 
 
 // Popup
 // --------------------------------------------------
 
 $popup-focus-shadow-width: const("INPUT.FOCUS_SHADOW_WIDTH") * 1px;
-$popup-padding: const("POPUP.PADDING") * 1px;
+$popup-padding:            const("POPUP.PADDING") * 1px;
 
 
 // Option
@@ -335,10 +335,10 @@ $option-list-margin: const("OPTION.LIST_MARGIN") * 1px;
 // Print
 // --------------------------------------------------
 
-$print-page-margin: 17.5mm;
-$print-font-size: 7pt;
-$print-font-size-large: 10.5pt;
-$print-line-height: 1.5;
+$print-page-margin:       17.5mm;
+$print-font-size:         7pt;
+$print-font-size-large:   10.5pt;
+$print-line-height:       1.5;
 $print-line-height-large: 2;
 
 // Debug
