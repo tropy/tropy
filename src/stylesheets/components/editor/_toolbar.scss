@@ -51,12 +51,19 @@
     }
 
     @if $platform == win32 {
-      .frameless & {
-        @include variant(".side-by-side .editor") {
+      @include variant(".side-by-side .editor") {
+        .window-controls-left:not(.is-full-screen:not(.full-screen-menu)) & {
           overflow: hidden;
           padding: 0 zoom(2px); // Do not clip link target
           margin: 0 zoom(-2px);
-          margin-right: zoom(136px - 12px + 24px);
+          margin-right: zoom(48px + 24px);
+        }
+
+        .window-controls-right:not(.is-full-screen) & {
+          overflow: hidden;
+          padding: 0 zoom(2px); // Do not clip link target
+          margin: 0 zoom(-2px);
+          margin-right: zoom(os($window-controls-width) + $space-sm);
         }
       }
     }

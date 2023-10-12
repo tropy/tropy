@@ -45,8 +45,18 @@
       }
 
       @if $platform == win32 {
-        .frameless & {
-          margin-right: zoom(136px - 12px + 24px);
+        @include variant(".stacked .esper") {
+          .window-controls-left:not(.is-full-screen:not(.full-screen-menu)) & {
+            flex: 1 1 0;
+            overflow: hidden;
+            margin-right: zoom(48px + 24px);
+          }
+
+          .window-controls-right:not(.is-full-screen) & {
+            flex: 1 1 0;
+            overflow: hidden;
+            margin-right: zoom(os($window-controls-width) + $space-sm);
+          }
         }
       }
 

@@ -7,6 +7,10 @@
   z-index: $zindex-window-controls;
   display: flex;
 
+  .window-controls-left & {
+    direction: rtl;
+  }
+
   button {
     border: 0;
     padding: 0;
@@ -15,21 +19,22 @@
 
   @if $platform == win32 {
     top: 0;
-    left: 0;
-    padding-left: zoom(15px);
+    inset-inline-start: 0;
+    padding-inline-start: zoom(15px);
     height: zoom(38px);
     display: flex;
     align-items: center;
 
     #prefs &,
-    #about & {
+    #about &,
+    .is-full-screen:not(.full-screen-menu) & {
       display: none;
     }
 
     .app-icon {
       width: zoom(18px);
       height: zoom(18px);
-      margin-right: zoom(2px);
+      margin-inline-end: zoom(2px);
       background-size: 100%;
       background-image:
         image-set(

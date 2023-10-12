@@ -41,9 +41,19 @@
       .toolbar-left {
         .item-mode &,
         .item-mode-enter-active & {
-          .frameless & {
+          :where(.window-controls-left) & {
+            margin-left: zoom(os($window-controls-width) + $space-min); // 16px margin
+          }
+
+          :where(.window-controls-right) & {
             margin-left: zoom(48px + 16px); // 16px margin
           }
+        }
+
+        .project-mode-enter-active &,
+        .window-controls-left.is-full-screen &,
+        .window-controls-right.is-full-screen:not(.full-screen-menu) & {
+          margin-left: 0;
         }
       }
     }
