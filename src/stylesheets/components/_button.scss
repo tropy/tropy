@@ -2,7 +2,7 @@
 // Button
 // --------------------------------------------------
 
-.btn {
+:where(.btn) {
   font: {
     family: inherit;
     size: inherit;

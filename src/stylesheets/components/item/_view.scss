@@ -23,14 +23,9 @@
       .toolbar-left {
         .item-mode &,
         .item-mode-enter-active & {
-          :where(.window-controls-left) & {
+          .window-controls-left:not(.is-full-screen) & {
             margin-left: zoom(os($window-controls-width));
           }
-        }
-
-        .project-mode-enter-active &,
-        .is-full-screen & {
-          margin-left: 0;
         }
       }
     }
@@ -41,19 +36,13 @@
       .toolbar-left {
         .item-mode &,
         .item-mode-enter-active & {
-          :where(.window-controls-left) & {
+          .window-controls-left:not(.is-full-screen) & {
             margin-left: zoom(os($window-controls-width) + $space-min); // 16px margin
           }
 
-          :where(.window-controls-right) & {
+          .window-controls-right:not(.is-full-screen:not(.full-screen-menu)) & {
             margin-left: zoom(48px + 16px); // 16px margin
           }
-        }
-
-        .project-mode-enter-active &,
-        .window-controls-left.is-full-screen &,
-        .window-controls-right.is-full-screen:not(.full-screen-menu) & {
-          margin-left: 0;
         }
       }
     }
