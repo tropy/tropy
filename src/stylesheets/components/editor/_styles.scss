@@ -13,6 +13,10 @@
   }
 }
 
+.rtl {
+  direction: rtl;
+}
+
 .horizontal {
   writing-mode: horizontal-tb;
 }
@@ -42,9 +46,18 @@ body {
   padding-inline: calc((100% - $editor-size) / 2);
   color: $editor-placeholder-color;
   pointer-events: none;
+  direction: ltr;
+
+  .rtl & {
+    text-align: right;
+  }
 
   .numbers & {
     padding-inline: calc(((100% - #{$editor-size}) / 2) + #{$space-xxl + $space-md}) 10%;
+  }
+
+  .numbers.rtl & {
+    padding-inline: 10% calc(((100% - #{$editor-size}) / 2) + #{$space-xxl + $space-md});
   }
 
   .wrap & {
@@ -57,6 +70,10 @@ body {
   .numbers.wrap & {
     max-inline-size: $editor-max-size + $space-xxl + $space-md;
     padding-inline-start: $space-xxl + $space-md;
+  }
+
+  .numbers.wrap.rtl & {
+    padding-inline: 10% $space-xxl + $space-md;
   }
 
   .horizontal & {
@@ -127,7 +144,7 @@ body {
       }
 
       .horizontal & {
-        left: 10vw;
+        inset-inline-start: 10vw;
       }
 
       .vertical-rl & {
@@ -169,41 +186,24 @@ body {
   }
 
   blockquote {
-    .horizontal & {
-      padding-left: $blockquote-padding;
-      border-left: $blockquote-border solid $blockquote-border-color;
-    }
-
-    .vertical-rl & {
-      padding-top: $blockquote-padding;
-      border-top: $blockquote-border solid $blockquote-border-color;
-    }
+    padding-inline-start: $blockquote-padding;
+    border-inline-start: $blockquote-border solid $blockquote-border-color;
   }
 
   ul,
   ol {
-    .horizontal & {
-      padding-left: $editor-list-padding;
-    }
-
-    .vertical-rl & {
-      padding-top: $editor-list-padding;
-    }
+    padding-inline-start: $editor-list-padding;
   }
 
   ul {
     list-style: disc;
   }
 
-  ul ul,
-  ol ul {
+  :is(ul, ol) ul {
     list-style: circle;
   }
 
-  ul ul ul,
-  ol ul ul,
-  ul ol ul,
-  ol ol ul {
+  :is(ul, ol) :is(ul, ol) ul {
     list-style: square;
   }
 
@@ -222,10 +222,14 @@ body {
           content: counter(ol) ".";
           counter-increment: ol;
           position: absolute;
-          top: 0;
-          height: 49px;
+          inset-inline-start: 0;
+          height: $editor-list-padding;
           text-align: right;
           text-orientation: mixed;
+
+          @include variant(".vertical-rl.numbers") {
+            inset-inline-start: $space-xxl + $space-md;
+          }
         }
       }
     }
@@ -238,40 +242,25 @@ body {
     p {
       display: list-item;
 
-      @each $alignment in center, right {
-        &[style*="#{$alignment}"] {
-          list-style-position: inside;
-        }
+      &[style*="center"],
+      &[style*="end"] {
+        list-style-position: inside;
       }
     }
   }
 
   .line-break {
-    .numbers.horizontal & {
+    .numbers & {
       &::before {
-        margin-top: $editor-line-height-computed;
-      }
-    }
-
-    .numbers.vertical-rl & {
-      &::before {
-        margin-right: $editor-line-height-computed;
+        margin-block-start: $editor-line-height-computed;
       }
     }
   }
 
   hr {
     border: 0;
-
-    .horizontal & {
-      border-top: $editor-hr-border solid $editor-hr-border-color;
-      margin: calc($editor-line-height-computed / 2 - $editor-hr-border / 2) 0;
-    }
-
-    .vertical-rl & {
-      border-right: $editor-hr-border solid $editor-hr-border-color;
-      margin: 0 calc($editor-line-height-computed / 2 - $editor-hr-border / 2);
-    }
+    border-block-start: $editor-hr-border solid $editor-hr-border-color;
+    margin-block: calc($editor-line-height-computed / 2 - $editor-hr-border / 2);
   }
 
   sup,
@@ -282,14 +271,5 @@ body {
 
   &-selectednode {
     outline: $editor-outline-width solid $selected-node-color;
-
-    @at-root li#{&} {
-      outline: none;
-
-      &::after {
-        left: -$editor-list-padding - $editor-outline-width;
-        border: $editor-outline-width solid $selected-node-color;
-      }
-    }
   }
 }
