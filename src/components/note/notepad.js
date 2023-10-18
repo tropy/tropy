@@ -31,7 +31,7 @@ export const NotePad = forwardRef(({
     }
   }), [])
 
-  let { mode, numbers, wrap } = useSelector(({ notepad }) =>
+  let { direction, mode, numbers, wrap } = useSelector(({ notepad }) =>
     notepad[note?.id] || Editor.defaultProps
   )
 
@@ -53,9 +53,10 @@ export const NotePad = forwardRef(({
   let handleContextMenu = useEvent((event) => {
     onContextMenu(event, 'notepad', {
       id: isDisabled ? null : note?.id,
-      mode: mode,
-      numbers: numbers,
-      wrap: wrap
+      direction,
+      mode,
+      numbers,
+      wrap
     })
   })
 
@@ -81,6 +82,7 @@ export const NotePad = forwardRef(({
       <Editor
         ref={editor}
         state={note?.state}
+        direction={direction}
         keymap={keymap}
         mode={mode}
         numbers={numbers}

@@ -127,18 +127,26 @@ en:
       - label: 'Delete Note'
         command: 'app:delete-note'
     notepad: &notepad
+      - label: 'Direction'
+        id: 'direction'
+        condition: 'hasTargetId'
+        submenu:
+          - label: 'Left to Right'
+            type: checkbox
+            checked: false
+            direction: 'ltr'
+          - label: 'Right to Left'
+            type: checkbox
+            checked: false
+            direction: 'rtl'
       - label: 'Writing Mode'
         id: 'writing-mode'
         condition: 'hasTargetId'
         submenu:
-          - label: 'Horizontal (Left to Right)'
+          - label: 'Horizontal'
             type: checkbox
             checked: false
             mode: 'horizontal'
-          - label: 'Horizontal (Right to Left)'
-            type: checkbox
-            checked: false
-            mode: 'rtl'
           - label: 'Vertical (Right to Left)'
             type: checkbox
             checked: false

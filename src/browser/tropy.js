@@ -682,6 +682,8 @@ export class Tropy extends EventEmitter {
       }), win))
     this.on('app:writing-mode', (win, { id, mode }) =>
       this.dispatch(act.notepad.update({ [id]: { mode  } }), win))
+    this.on('app:direction', (win, { id, direction }) =>
+      this.dispatch(act.notepad.update({ [id]: { direction } }), win))
 
     this.on('app:settings-persist', (win, payload) =>
       this.dispatch(act.settings.persist(payload), win))
