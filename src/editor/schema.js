@@ -18,13 +18,16 @@ const align = (nodeSpec, tag) => ({
     ...nodeSpec.attrs,
     align: { default: 'left' }
   },
-  toDOM: (node) => ([
-    tag,
-    (node.attrs.align === 'left') ?  {} : {
-      style: `text-align: ${node.attrs.align}`
-    },
-    0
-  ])
+  toDOM: (node) => {
+    switch (node.attrs.align) {
+      case 'left':
+        return [tag, {}, 0]
+      case 'right':
+        return [tag, { style: 'text-align: end' }, 0]
+      default:
+        return [tag, { style: `text-align: ${node.attrs.align}` }, 0]
+    }
+  }
 })
 
 export const nodes = {
