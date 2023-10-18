@@ -15,6 +15,7 @@ import { isMeta } from '../../keymap.js'
 export const EditorView = forwardRef(({
   isDisabled,
   isReadOnly,
+  direction,
   mode,
   numbers,
   onBlur,
@@ -108,7 +109,7 @@ export const EditorView = forwardRef(({
   return (
     <Frame
       className="prosemirror"
-      innerClassName={cx(mode, { numbers, wrap })}
+      innerClassName={cx(mode, direction, { numbers, wrap })}
       onClick={handleClick}
       onContextMenu={onContextMenu}
       onLoad={handleLoad}
@@ -120,7 +121,8 @@ export const EditorView = forwardRef(({
 EditorView.propTypes = {
   isDisabled: bool,
   isReadOnly: bool,
-  mode: string,
+  direction: string.isRequired,
+  mode: string.isRequired,
   numbers: bool,
   // Subtle: event handlers are passed to PM on initialization
   // and they will not be updated. Use stable references!
@@ -134,7 +136,8 @@ EditorView.propTypes = {
   wrap: bool
 }
 
-EditorView.propTypes = {
+EditorView.defaultProps = {
+  direction: 'ltr',
   mode: 'horizontal',
   numbers: false,
   wrap: true

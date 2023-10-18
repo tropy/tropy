@@ -21,6 +21,7 @@ export const Editor = React.forwardRef(({
   hasTitlebar,
   isDisabled,
   isReadOnly,
+  direction,
   keymap,
   mode,
   numbers,
@@ -149,6 +150,7 @@ export const Editor = React.forwardRef(({
         state={state}
         isDisabled={isDisabled}
         isReadOnly={isReadOnly}
+        direction={direction}
         mode={mode}
         numbers={numbers}
         placeholder={placeholder}
@@ -166,6 +168,7 @@ Editor.propTypes = {
   hasTitlebar: bool,
   isDisabled: bool,
   isReadOnly: bool,
+  direction: string.isRequired,
   keymap: object.isRequired,
   mode: string.isRequired,
   numbers: bool,
@@ -180,8 +183,6 @@ Editor.propTypes = {
 }
 
 Editor.defaultProps = {
-  mode: 'horizontal',
-  numbers: false,
-  tabIndex: -1,
-  wrap: true
+  ...EditorView.defaultProps,
+  tabIndex: -1
 }

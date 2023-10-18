@@ -495,6 +495,17 @@ Menu.ItemCompiler = {
     item.checked = !!event.target.numbers
   },
 
+  'direction': (item, app, win, event) => {
+    item.submenu = item.submenu.map(li => ({
+      ...li,
+      checked: li.direction === event.target.direction,
+      click: createResponder('app:direction', app, win, {
+        id: event.target.id,
+        direction: li.direction
+      })
+    }))
+  },
+
   'writing-mode': (item, app, win, event) => {
     item.submenu = item.submenu.map(li => ({
       ...li,
