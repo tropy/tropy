@@ -44,8 +44,7 @@ body {
   pointer-events: none;
 
   .numbers & {
-    padding-inline-start: calc(((100% - #{$editor-size}) / 2) + #{$space-xxl + $space-md});
-    padding-inline-end: 10%;
+    padding-inline: calc(((100% - #{$editor-size}) / 2) + #{$space-xxl + $space-md}) 10%;
   }
 
   .wrap & {
@@ -77,8 +76,7 @@ body {
   white-space: nowrap;
 
   .numbers & {
-    padding-inline-start: calc(((100% - #{$editor-size}) / 2) + #{$space-xxl + $space-md});
-    padding-inline-end: 10%;
+    padding-inline: calc(((100% - #{$editor-size}) / 2) + #{$space-xxl + $space-md}) 10%;
   }
 
   .wrap & {
