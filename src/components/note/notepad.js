@@ -1,7 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { bool, func, number, object, shape, string } from 'prop-types'
-import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { Editor } from '../editor/index.js'
 import { toText } from '../../editor/serialize.js'
