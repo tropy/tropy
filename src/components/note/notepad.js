@@ -73,12 +73,7 @@ export const NotePad = forwardRef(({
 
 
   return (
-    <section className={cx('note-pad', mode, {
-      'disabled': isDisabled,
-      'read-only': isReadOnly,
-      'no-wrap': !wrap,
-      'numbers': numbers
-    })}>
+    <section className="note-pad">
       <Editor
         ref={editor}
         state={note?.state}
