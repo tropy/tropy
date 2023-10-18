@@ -131,10 +131,14 @@ en:
         id: 'writing-mode'
         condition: 'hasTargetId'
         submenu:
-          - label: 'Horizontal'
+          - label: 'Horizontal (Left to Right)'
             type: checkbox
             checked: false
             mode: 'horizontal'
+          - label: 'Horizontal (Right to Left)'
+            type: checkbox
+            checked: false
+            mode: 'rtl'
           - label: 'Vertical (Right to Left)'
             type: checkbox
             checked: false
