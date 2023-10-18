@@ -7,9 +7,6 @@
   // Do not use display: flex to stretch the table-head to the same width of the table-body (with horizontal overflow in item-table)
   // Flexbox plus contain: strict (layout) also breaks the header width after column resize/order
   position: relative;
-  height: 100%; // Prevent vertical scrollbar due to horizontal scrollbar
-  overflow-x: hidden;
-  overflow-y: hidden; // Prevent horizontal scrollbar due to column borders
   overscroll-behavior: contain;
   contain: strict;
 
@@ -37,8 +34,7 @@
   }
 
   > .scroll-container {
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow: auto hidden;
 
     &::-webkit-scrollbar {
       display: none;
