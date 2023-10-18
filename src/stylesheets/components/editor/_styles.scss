@@ -105,10 +105,6 @@ body {
     min-width: 100vw;
   }
 
-  .read-only & {
-    user-select: text;
-  }
-
   * {
     margin: 0;
   }
