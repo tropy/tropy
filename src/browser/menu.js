@@ -1,6 +1,7 @@
 import { basename } from 'node:path'
 import { Menu as M } from 'electron'
 import { Icon, Menu as MR } from './res.js'
+import { getLocale } from './locale.js'
 import { error, warn } from '../common/log.js'
 import { blank } from '../common/util.js'
 
@@ -22,7 +23,7 @@ export class Menu {
 
   async loadTemplate(name) {
     let { template } = await MR.openWithFallback(
-      this.app.defaultLocale,
+      getLocale(),
       this.app.state.locale,
       name)
 

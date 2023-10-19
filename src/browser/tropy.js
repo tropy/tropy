@@ -31,6 +31,7 @@ import { channel, product, version } from '../common/release.js'
 import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
 
+import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
 import { Strings } from './res.js'
 import { AppMenu, ContextMenu } from './menu.js'
 import { Storage } from './storage.js'
@@ -44,7 +45,7 @@ import * as act from './actions.js'
 import { setProjectFolderIcon } from './project.js'
 
 import {
-  FLASH, HISTORY, TAG, PROJECT, CONTEXT, LOCALE
+  FLASH, HISTORY, TAG, PROJECT, CONTEXT
 } from '../constants/index.js'
 
 const H = new WeakMap()
@@ -341,7 +342,7 @@ export class Tropy extends EventEmitter {
       this.menu.load(),
       this.ctx.load(),
       Strings
-        .openWithFallback(LOCALE.default, this.state.locale)
+        .openWithFallback(defaultLocale, this.state.locale)
         .then(strings => this.strings = strings)
     ])
   }
@@ -352,7 +353,7 @@ export class Tropy extends EventEmitter {
     else
       migrate(this, state, state.version)
 
-    state.locale = this.getLocale(state.locale)
+    state.locale = getLocale(state.locale)
     state.uuid = state.uuid || uuid()
     state.version = this.version
 
@@ -1139,7 +1140,7 @@ export class Tropy extends EventEmitter {
       level: logger.level,
       locale: this.state.locale,
       log: this.log,
-      lang: this.getSystemLanguage(),
+      rtl: isRightToLeft(),
       uuid: this.state.uuid,
       update: this.updater.release,
       version,
@@ -1176,16 +1177,6 @@ export class Tropy extends EventEmitter {
       return true
     }
     return false
-  }
-
-  getLocale(locale) {
-    return LOCALE[locale || app.getLocale()] || LOCALE.default
-  }
-
-  getSystemLanguage() {
-    return (
-      app.getPreferredSystemLanguages()?.[0] || app.getSystemLocale()
-    )
   }
 
   getHistory(win = BrowserWindow.getFocusedWindow()) {
@@ -1265,10 +1256,6 @@ export class Tropy extends EventEmitter {
       if (e.code !== 'ENOENT')
         warn({ stack: e.stack }, 'failed loading devtool extensions!')
     }
-  }
-
-  get defaultLocale() {
-    return this.getLocale()
   }
 
   get dict() {

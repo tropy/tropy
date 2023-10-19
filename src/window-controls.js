@@ -2,12 +2,6 @@ import { darwin, linux, win32 } from './common/os.js'
 import { append, create, on, toggle } from './dom.js'
 import ARGS from './args.js'
 
-function isRightToLeft() {
-  return (
-    new Intl.Locale(ARGS.lang || ARGS.locale)
-  ).textInfo?.direction === 'rtl'
-}
-
 export class WindowControls {
   constructor() {
     this.layout = new ButtonLayout()
@@ -15,7 +9,7 @@ export class WindowControls {
     if (linux && ARGS.controls)
       this.layout.parse(ARGS.controls)
 
-    if (!linux && isRightToLeft())
+    if (!linux && ARGS.rtl)
       this.layout.reverse()
   }
 
