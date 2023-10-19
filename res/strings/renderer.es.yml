@@ -4,7 +4,7 @@ es:
     tags: Etiquetas
     imports: Última importación
     trash: Objetos suprimidos
-    unlisted: Unlisted Items
+    unlisted: Objetos no alistados
   toolbar:
     import: Importar fotos
     items: |-
@@ -60,9 +60,10 @@ es:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
     text: >-
-      Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
-      historical teaching resources, digital exhibits, and open-source software.
-    trademark: The Tropy name is a registered trademark of {cds}.
+      Tropy es diseñado por el {c2dh} y el {rrchnm}, centros de investigación
+      que desarrollan recursos para la enseñanza de la historia, exposiciones
+      digitales, y software de código abierto.
+    trademark: El nombre Tropy es una marca registrada de {cds}.
     donate:
       title: Donar a Tropy
       url: https://tropy.org/donate
@@ -138,7 +139,7 @@ es:
             14px: Mediano
             15px: Grande
             16px: Muy grande
-        frameless: Use custom titlebar (requires restart)
+        frameless: Usar barra de títulos personalizada (requiere reinicio)
       print:
         mode: Imprimir
         modes:
@@ -146,7 +147,7 @@ es:
           photo: Una foto por página
           selection: Una selección por página
         photos: Incluir fotos
-        optimize: Optimize photo size and quality
+        optimize: Optimizar tamaño y calidad de la foto
         metadata: Incluir metadatos
         notes: Incluir notas
         onlyNotes: Incluir únicamente fotos con notas
@@ -230,15 +231,14 @@ es:
       name: Nombre
       id: Número de identificación
       path: Archivo
-      type: Project type
+      type: Tipo de proyecto
       convert:
-        confirm: Convert
-        hint: Convert this project into a Standard project.
-        detail: |-
-          {errors, plural,
-            =0 {All photos consolidated.}
-            one {1 photo not found; consolidation required.}
-            other {# photos not found; consolidation required.}}
+        confirm: Convertir
+        hint: Convertir este proyecto a un proyecto convencional
+        detail: >-
+          {errors, plural, =0 {Todas las fotos consolidadas.} one {1 foto no
+          encontrada; consolidación necesaria.} other {# fotos no encontradas;
+          consolidación necesaria.}}
       watch:
         folder: Carpeta monitoreada
         usePolling: Usando sondeo file stat
@@ -279,7 +279,7 @@ es:
       noInfo: Autor desconocido
       homepage: Más
   format:
-    ppi: Pixels per inch (ppi)
+    ppi: píxeles por pulgada (PPP)
   item:
     created: Creación
     modified: Modificado
@@ -376,11 +376,11 @@ es:
     notify:
       project:
         convert:
-          title: Conversion complete
+          title: Conversión completa
           message: >-
-            Your project was successfully converted and saved. Tropy will now
-            close the original project file and open the converted project in a
-            new window.
+            Tu proyecto fue convertido con éxito y guardado. Tropy cerrará el
+            archivo del proyecto original y abrir el proyecto convertido en una
+            nueva ventana.
           buttons:
             - OK
     error:
@@ -619,7 +619,7 @@ es:
       purge: Falla al remover la caché antigua.
     project:
       created: Falla en la creación de proyecto.
-      convert: Project conversion failed.
+      convert: Conversión de proyecto fallida.
     item:
       export: Falla en la exportación de objetos.
       merge: Falla en la fusión de objetos.

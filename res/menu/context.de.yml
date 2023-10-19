@@ -273,6 +273,18 @@ de:
       - label: Notiz löschen
         command: app:delete-note
     notepad:
+      - label: Schreibrichtung
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Rechtsläufig
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Linksläufig
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Eingabemodus
         id: writing-mode
         condition: hasTargetId
@@ -391,7 +403,7 @@ de:
         command: app:open-path
       - label: Kopiere Link zu Foto
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: Foto in Zwischenablage kopieren
         command: app:copy-photo
       - label: Foto exportieren …
         command: app:extract-photo
@@ -733,6 +745,18 @@ de:
       - label: Notiz löschen
         command: app:delete-note
     notepad:
+      - label: Schreibrichtung
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Rechtsläufig
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Linksläufig
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Eingabemodus
         id: writing-mode
         condition: hasTargetId
@@ -882,7 +906,7 @@ de:
         command: app:open-path
       - label: Kopiere Link zu Foto
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: Foto in Zwischenablage kopieren
         command: app:copy-photo
       - label: Foto exportieren …
         command: app:extract-photo
@@ -1193,6 +1217,18 @@ de:
       - label: Notiz löschen
         command: app:delete-note
     notepad:
+      - label: Schreibrichtung
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Rechtsläufig
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Linksläufig
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Eingabemodus
         id: writing-mode
         condition: hasTargetId
@@ -1342,7 +1378,7 @@ de:
         command: app:open-path
       - label: Kopiere Link zu Foto
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: Foto in Zwischenablage kopieren
         command: app:copy-photo
       - label: Foto exportieren …
         command: app:extract-photo

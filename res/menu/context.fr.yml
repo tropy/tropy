@@ -273,6 +273,18 @@ fr:
       - label: Supprimer la note
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Mode écriture
         id: writing-mode
         condition: hasTargetId
@@ -733,6 +745,18 @@ fr:
       - label: Supprimer la note
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Mode écriture
         id: writing-mode
         condition: hasTargetId
@@ -1193,6 +1217,18 @@ fr:
       - label: Supprimer la note
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Mode écriture
         id: writing-mode
         condition: hasTargetId

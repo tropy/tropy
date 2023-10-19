@@ -273,6 +273,18 @@ pt-BR:
       - label: Apagar Nota
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Modo de Escrita
         id: writing-mode
         condition: hasTargetId
@@ -291,7 +303,7 @@ pt-BR:
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: Quebra automática de Linhas
+      - label: Quebra Automática de Linhas
         id: line-wrap
         type: checkbox
         checked: true
@@ -733,6 +745,18 @@ pt-BR:
       - label: Apagar Nota
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Modo de Escrita
         id: writing-mode
         condition: hasTargetId
@@ -1193,6 +1217,18 @@ pt-BR:
       - label: Apagar Nota
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Modo de Escrita
         id: writing-mode
         condition: hasTargetId
@@ -1211,7 +1247,7 @@ pt-BR:
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: Quebra automática de Linhas
+      - label: Quebra Automática de Linhas
         id: line-wrap
         type: checkbox
         checked: true

@@ -273,6 +273,18 @@ es:
       - label: Suprimir nota
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Modo de escritura
         id: writing-mode
         condition: hasTargetId
@@ -391,7 +403,7 @@ es:
         command: app:open-path
       - label: Copiar enlace a la foto
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: Copiar foto al portapapeles
         command: app:copy-photo
       - label: Exportar foto ...
         command: app:extract-photo
@@ -733,6 +745,18 @@ es:
       - label: Suprimir nota
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Modo de escritura
         id: writing-mode
         condition: hasTargetId
@@ -882,7 +906,7 @@ es:
         command: app:open-path
       - label: Copiar enlace a la foto
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: Copiar foto al portapapeles
         command: app:copy-photo
       - label: Exportar foto ...
         command: app:extract-photo
@@ -1193,6 +1217,18 @@ es:
       - label: Suprimir nota
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: Modo de escritura
         id: writing-mode
         condition: hasTargetId
@@ -1342,7 +1378,7 @@ es:
         command: app:open-path
       - label: Copiar enlace a la foto
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: Copiar foto al portapapeles
         command: app:copy-photo
       - label: Exportar foto ...
         command: app:extract-photo

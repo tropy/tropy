@@ -4,7 +4,7 @@ de:
     tags: Tags
     imports: Zuletzt importiert
     trash: Gelöscht
-    unlisted: Unlisted Items
+    unlisted: Nicht eingeordnet
   toolbar:
     import: Fotos importieren
     items: |-
@@ -143,7 +143,7 @@ de:
             14px: Mittel
             15px: Groß
             16px: Sehr Groß
-        frameless: Use custom titlebar (requires restart)
+        frameless: Angepasste Titelleiste verwenden (Neustart notwendig)
       print:
         mode: Drucken
         modes:
@@ -151,7 +151,7 @@ de:
           photo: Ein Foto pro Seite
           selection: Ein Ausschnitt pro Seite
         photos: Inklusive Fotos
-        optimize: Optimize photo size and quality
+        optimize: Optimiere Bildgröße und -qualität
         metadata: Inklusive Metadaten
         notes: Inklusive Notizen
         onlyNotes: Nur Fotos mit Notizen
@@ -551,7 +551,7 @@ de:
         }
       load: Objekte laden …
       merge: Objekte zusammenführen …
-      print: Processing items …
+      print: Objekte werden verarbeitet …
       restore: Objekt wiederherstellen …
       save: Objekte speichern …
       tag:

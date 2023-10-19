@@ -273,6 +273,18 @@ ja:
       - label: ノートを削除
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: ライティングモード
         id: writing-mode
         condition: hasTargetId
@@ -733,6 +745,18 @@ ja:
       - label: ノートを削除
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: ライティングモード
         id: writing-mode
         condition: hasTargetId
@@ -1193,6 +1217,18 @@ ja:
       - label: ノートを削除
         command: app:delete-note
     notepad:
+      - label: Direction
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Left to Right
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Right to Left
+            type: checkbox
+            checked: false
+            direction: rtl
       - label: ライティングモード
         id: writing-mode
         condition: hasTargetId
@@ -1211,7 +1247,7 @@ ja:
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: 行を包む
+      - label: 行をまとめる
         id: line-wrap
         type: checkbox
         checked: true
