@@ -8,7 +8,7 @@ import { get } from './gsettings.js'
 import { papersize } from './papersize.js'
 import dialog from './dialog.js'
 import { debug, error, trace, warn } from '../common/log.js'
-import { darwin, linux } from '../common/os.js'
+import { darwin, linux, win32 } from '../common/os.js'
 import { channel } from '../common/release.js'
 import { Resource, Icon, View } from './res.js'
 import { SASS } from '../constants/index.js'
@@ -132,10 +132,7 @@ export class WindowManager extends EventEmitter {
         case 'win32':
           if (!opts.frame) {
             opts.titleBarStyle = 'hidden'
-            opts.titleBarOverlay = {
-              height: 33, // 32px
-              color: '#ffffff00'
-            }
+            opts.titleBarOverlay = getTitleBarOverlay()
           }
           opts.vibrancy = false
           break
@@ -344,6 +341,14 @@ export class WindowManager extends EventEmitter {
 
   handleScrollBarsChange = () => {
     this.broadcast('scrollbars', !WindowManager.hasOverlayScrollBars())
+  }
+
+  handleThemeChange = (frameless) => {
+    if (frameless && win32) {
+      this.each(win => {
+        win.setTitleBarOverlay(getTitleBarOverlay())
+      })
+    }
   }
 
   async handleShowDialog(win, { id, type, options }) {
@@ -795,6 +800,12 @@ const getTrafficLightPosition = (type) => {
       return { x: 12, y: 11 }
   }
 }
+
+const getTitleBarOverlay = () => ({
+  height: 33, // 32px
+  color: '#ffffff00',
+  symbolColor: nativeTheme.shouldUseDarkColors ? '#faf8f7' : '#303232'
+})
 
 const AQUA = { 1: 'blue', 6: 'graphite' }
 

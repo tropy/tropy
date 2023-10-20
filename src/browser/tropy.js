@@ -1169,6 +1169,7 @@ export class Tropy extends EventEmitter {
     })
 
     this.menu.handleThemeChange()
+    this.wm.handleThemeChange(this.state.frameless)
   }
 
   dispatch(action, win = BrowserWindow.getFocusedWindow()) {
