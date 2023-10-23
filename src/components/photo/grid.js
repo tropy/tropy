@@ -60,6 +60,12 @@ class PhotoGrid extends PhotoIterator {
       case 'rotateRight':
         this.handleRotate(90)
         break
+      case 'copyPhoto':
+        this.handleExtract(this.current, { target: ':clipboard:' })
+        break
+      case 'extract':
+        this.handleExtract(this.current)
+        break
       default:
         return
     }

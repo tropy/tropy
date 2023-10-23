@@ -132,6 +132,10 @@ export class PhotoIterator extends React.Component {
     onSort({ item, photos: order })
   }
 
+  handleExtract = ({ id, selection }, meta = {}) => {
+    this.props.onExtract({ id, selection }, meta)
+  }
+
   handleSelectPhoto = (photo, event) => {
     this.select(photo, { throttle: event?.repeat })
   }
@@ -230,6 +234,7 @@ export class PhotoIterator extends React.Component {
     onCreate: func.isRequired,
     onDelete: func.isRequired,
     onExpand: func.isRequired,
+    onExtract: func.isRequired,
     onTabFocus: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,

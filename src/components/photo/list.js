@@ -65,6 +65,12 @@ class PhotoList extends PhotoIterator {
       case 'delete':
         this.handleDelete(this.current)
         break
+      case 'copyPhoto':
+        this.handleExtract(this.current, { target: ':clipboard:' })
+        break
+      case 'extract':
+        this.handleExtract(this.current)
+        break
       default:
         return
     }

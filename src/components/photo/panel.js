@@ -51,6 +51,10 @@ const PhotoPanelContainer = connect(
         dispatch(act.photo.expand(...args))
       },
 
+      onExtract(...args) {
+        dispatch(act.photo.extract(...args))
+      },
+
       onItemPreview(...args) {
         dispatch(act.item.preview(...args))
       },
