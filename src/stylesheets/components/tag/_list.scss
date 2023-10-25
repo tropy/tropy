@@ -8,16 +8,16 @@
       .color {
         color: $icon-tag-color;
 
-        :focus-visible & {
-          color: $icon-tag-focus-visible-color;
+        .nested-tab-focus & {
+          color: $icon-tag-nested-focus-color;
         }
       }
 
       .border {
         color: $icon-tag-border;
 
-        :focus-visible & {
-          color: $icon-tag-focus-visible-border;
+        .nested-tab-focus & {
+          color: $icon-tag-nested-focus-border;
         }
       }
     }
@@ -210,9 +210,9 @@
       background: $add-tag-default-bg;
     }
 
-    :focus-visible & {
-      background: $add-tag-focus-visible-bg;
-      border-color: $add-tag-focus-visible-border-color;
+    .nested-tab-focus & {
+      background: $add-tag-nested-focus-bg;
+      border-color: $add-tag-nested-focus-border-color;
     }
 
     .is-blurred .item-mode & {

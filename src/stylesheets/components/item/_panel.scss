@@ -4,7 +4,7 @@
 
 .item-panel-group {
   .panel-group-header {
-    @include state(".item-panel-group:has(.item-panel:focus-visible)") {
+    @include state(".item-panel-group:has(.item-panel.nested-tab-focus)") {
       background-color: $panel-focus-bg;
     }
 

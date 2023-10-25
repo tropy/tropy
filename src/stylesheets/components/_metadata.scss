@@ -16,8 +16,8 @@
     margin-bottom: calc(($metadata-line-height - 10px) / 2); // 10px: Caps height
     border-bottom: 1px solid $panel-separator-color;
 
-    :focus-visible & {
-      border-bottom-color: $panel-focus-visible-separator-color;
+    .nested-tab-focus & {
+      border-bottom-color: $panel-nested-focus-separator-color;
     }
   }
 
@@ -25,8 +25,8 @@
     margin-top: 9px; // Visual spacing of following headings
   }
 
-  :focus-visible & {
-    color: $panel-focus-visible-heading-color;
+  .nested-tab-focus & {
+    color: $panel-nested-focus-heading-color;
   }
 }
 
@@ -63,9 +63,9 @@
       margin-left: $default-spacing-x;
     }
 
-    :focus-visible & {
-      background-color: $template-select-focus-visible-bg;
-      border-color: $template-select-focus-visible-border;
+    .nested-tab-focus & {
+      background-color: $template-select-nested-focus-bg;
+      border-color: $template-select-nested-focus-border;
     }
 
     .is-blurred .item-mode & {

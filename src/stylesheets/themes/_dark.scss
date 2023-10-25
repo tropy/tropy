@@ -292,10 +292,10 @@ $panel-focus-bg:                     var(--panel-focus-bg);
 $panel-blurred-bg-darwin:            var(--shade-2);
 $panel-header-color:                 var(--shade-8);
 $panel-separator-color:              var(--shade-1);
-$panel-focus-visible-separator-color: tint(var(--shade-1), 2%);
+$panel-nested-focus-separator-color: tint(var(--shade-1), 2%);
 $panel-blurred-separator-color:      shade(var(--shade-1), 4%);
 $panel-heading-color:                var(--shade-6);
-$panel-focus-visible-heading-color:   tint(var(--shade-6), 2%);
+$panel-nested-focus-heading-color:   tint(var(--shade-6), 2%);
 
 // Item panel
 $item-panel-tab-blurred-bg-darwin:              shade(var(--shade-2), 4%);
@@ -310,32 +310,32 @@ $tab-selected-bg:                        var(--shade-4);
 $tab-selected-border-color:              var(--shade-1);
 $tab-active-bg:                          var(--shade-1);
 $tab-active-border-color:                $tab-active-bg;
-$tab-focus-visible-bg:                    var(--shade-2);
-$tab-focus-visible-selected-bg:           tint(var(--shade-4), 2%);
-$tab-focus-visible-selected-border-color: var(--tab-focus-visible-selected-border-color);
+$tab-nested-focus-bg:                    var(--shade-2);
+$tab-nested-focus-selected-bg:           tint(var(--shade-4), 2%);
+$tab-nested-focus-selected-border-color: var(--tab-focus-visible-selected-border-color);
 
 // Metadata
 $label-color:                           var(--shade-7);
 $template-select-border:                var(--shade-1);
-$template-select-focus-visible-border:   tint(var(--shade-1), 2%);
+$template-select-nested-focus-border:   tint(var(--shade-1), 2%);
 $template-select-blurred-border-darwin: shade(var(--shade-1), 4%);
 $template-select-bg:                    var(--shade-4);
-$template-select-focus-visible-bg:       tint(var(--shade-4), 2%);
+$template-select-nested-focus-bg:       tint(var(--shade-4), 2%);
 $template-select-blurred-bg-darwin:     $panel-blurred-bg-darwin;
 
 // Tag list
 $tag-list-active-border:              tint(var(--shade-6), 5%);
 $add-tag-default-bg:                  $panel-bg;
 $add-tag-focus-bg:                    var(--shade-3);
-$add-tag-focus-visible-bg:             tint(var(--shade-4), 2%);
+$add-tag-nested-focus-bg:             tint(var(--shade-4), 2%);
 $add-tag-blurred-bg-darwin:           $panel-blurred-bg-darwin;
 $add-tag-placeholder-color-default:   $text-color;
-$add-tag-focus-visible-border-color:   tint(var(--shade-1), 2%);
+$add-tag-nested-focus-border-color:   tint(var(--shade-1), 2%);
 $add-tag-blurred-border-color-darwin: shade(var(--shade-1), 4%);
 $icon-tag-color:                      var(--shade-4);
-$icon-tag-focus-visible-color:         tint(var(--shade-4), 2%);
+$icon-tag-nested-focus-color:         tint(var(--shade-4), 2%);
 $icon-tag-border:                     var(--shade-6);
-$icon-tag-focus-visible-border:        tint(var(--shade-6), 2%);
+$icon-tag-nested-focus-border:        tint(var(--shade-6), 2%);
 $icon-tag-vibrancy-border:            alpha(var(--shade-10), 20%);
 
 // Photo panel

@@ -29,7 +29,7 @@
       @include state(
         ".note-panel:not(:has(.active)) .note-list .scroll-container:focus"
       ) {
-        background-color: $panel-focus-visible-separator-color;
+        background-color: $panel-nested-focus-separator-color;
       }
 
       .is-blurred .item-mode & {
