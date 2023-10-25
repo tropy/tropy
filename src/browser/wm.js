@@ -804,7 +804,7 @@ const getTrafficLightPosition = (type) => {
 const getTitleBarOverlay = () => ({
   height: 33, // 32px
   color: '#ffffff00',
-  symbolColor: nativeTheme.shouldUseDarkColors ? '#faf8f7' : '#303232'
+  symbolColor: nativeTheme.shouldUseDarkColors ? '#bbbbbb' : '#222222'
 })
 
 const AQUA = { 1: 'blue', 6: 'graphite' }
