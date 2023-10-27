@@ -42,6 +42,7 @@ $theme: "dark";
   #{--tab-focus-visible-selected-border-color}:        tint(#212121, 2%);
   #{--item-panel-tab-blurred-selected-border-darwin}: shade(#212121, 4%);
   #{--esper-shadow}:                                  alpha(#000, 80%);
+  #{--editable-border-color}:                         rgba(255 255 255 / 0.05);
 }
 
 
@@ -352,7 +353,7 @@ $note-list-blurred-bg:   shade(var(--shade-5), 4%);
 // Editable
 $editable-color:        $text-color;
 $editable-bg:           var(--shade-3);
-$editable-border-color: alpha(var(--shade-10), 5%);
+$editable-border-color: var(--editable-border-color);
 
 // Button
 $btn-default-color:             var(--shade-9);
