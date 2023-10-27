@@ -81,7 +81,7 @@ export class Editable extends React.PureComponent {
 
   renderContent() {
     return (
-      <div className="truncate" title={this.props.title}>
+      <div className="truncate" title={this.props.title} dir="auto">
         {this.content}
       </div>
     )

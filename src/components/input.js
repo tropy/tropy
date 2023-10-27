@@ -225,6 +225,7 @@ export class Input extends React.PureComponent {
           isDisabled={!this.props.resize}>
           <input
             className={this.props.className}
+            dir={this.props.dir}
             disabled={this.props.isDisabled}
             id={this.props.id}
             placeholder={this.props.placeholder}
@@ -263,6 +264,7 @@ export class Input extends React.PureComponent {
     autoselect: bool,
     completions: array.isRequired,
     className: string,
+    dir: string,
     id: string,
     isDisabled: bool,
     isReadOnly: bool,
@@ -285,6 +287,7 @@ export class Input extends React.PureComponent {
 
   static defaultProps = {
     completions: [],
+    dir: 'auto',
     match: Completions.defaultProps.match,
     tabIndex: -1,
     type: 'text',
