@@ -12,6 +12,10 @@
 
   .frameless & {
     padding-top: zoom(os($toolbar-frameless-height));
+
+    @if $platform == win32 {
+      padding-top: zoom($toolbar-height);
+    }
   }
 
   iframe {
