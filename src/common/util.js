@@ -560,6 +560,12 @@ export function shallow(a, b, props) {
   return true
 }
 
+export const BIDI_RTL = /[\p{sc=Hebrew}\p{sc=Arabic}]/u
+
+export function containsRTL(string) {
+  return BIDI_RTL.test(string)
+}
+
 export const URI = {
   namespace(uri) {
     return URI.split(uri)[0]

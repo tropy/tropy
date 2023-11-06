@@ -444,4 +444,22 @@ describe('util', () => {
         ])
       ).to.eventually.eql(['b', 'b', 'b']))
   })
+
+  describe('containsRTL', () => {
+    it('returns true for common RTL scripts', () => {
+      expect(util.containsRTL('א')).to.be.true
+      expect(util.containsRTL('گ')).to.be.true
+      expect(util.containsRTL('ا')).to.be.true
+    })
+
+    it('returns false by default', () => {
+      expect(util.containsRTL('')).to.be.false
+      expect(util.containsRTL(' ')).to.be.false
+      expect(util.containsRTL('1')).to.be.false
+      expect(util.containsRTL('2+2')).to.be.false
+      expect(util.containsRTL('abc')).to.be.false
+      expect(util.containsRTL('αβγ')).to.be.false
+      expect(util.containsRTL('字')).to.be.false
+    })
+  })
 })
