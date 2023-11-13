@@ -1,9 +1,10 @@
 import { call, put, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import * as mod from '../../models'
-import * as act from '../../actions'
-import { NOTE } from '../../constants'
-import { getNextNoteSelection, getNotesMap } from '../../selectors'
+import { Command } from '../command.js'
+import * as mod from '../../models/index.js'
+import * as act from '../../actions/index.js'
+import { NOTE } from '../../constants/index.js'
+import { getNextNoteSelection, getNotesMap } from '../../selectors/index.js'
+import { containsRTL } from '../../common/util.js'
 
 
 export class Create extends Command {
@@ -25,6 +26,11 @@ export class Create extends Command {
 
     yield put(act[type].notes.add({ id, notes: [note.id] }))
     yield put(act.note.select({ note: note.id, photo, selection }))
+
+    if (text && containsRTL(text))
+      yield put(act.notepad.update({
+        [note.id]: { direction: 'rtl' }
+      }))
 
     this.undo = act.note.delete([note.id])
     this.redo = act.note.restore([note.id])
