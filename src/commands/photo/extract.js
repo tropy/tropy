@@ -45,7 +45,7 @@ export class Extract extends Command {
           let png = yield call(toBuffer, 'png', buffer, { raw })
           clipboard.writeImage(nativeImage.createFromBuffer(png))
           break
-        case ':plugin:': {
+        } case ':plugin:': {
           let res = yield call(win.plugins.extract, plugin, { buffer, ...raw })
           if (res.note)
             yield put(act.note.create({
