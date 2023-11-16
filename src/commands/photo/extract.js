@@ -51,7 +51,7 @@ export class Extract extends Command {
         }
         case ':plugin:': {
           let res = yield call(win.plugins.extract, plugin, { buffer, ...raw })
-          if (res.note)
+          if (res?.note)
             yield put(act.note.create({
               text: res.note,
               photo: photo.id,
