@@ -107,6 +107,10 @@ export class Plugins extends EventEmitter {
     return this.exec({ id, action: 'export' }, ...args)
   }
 
+  extract = (id, ...args) => {
+    return this.exec({ id, action: 'extract' }, ...args)
+  }
+
   flush = async () => {
     if (this.changes != null) { // TODO check if the config is different!
       await this.save(this.changes)
