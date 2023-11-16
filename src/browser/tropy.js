@@ -573,11 +573,11 @@ export class Tropy extends EventEmitter {
       this.dispatch(act.photo.duplicate({
         item: target.item, photos: [target.id]
       }), win))
-    this.on('app:extract-photo', (win, { target }) =>
+    this.on('app:extract-photo', (win, { target, plugin }) =>
       this.dispatch(act.photo.extract({
         id: target.id,
         selection: target.selection
-      }), win))
+      }, { plugin }), win))
     this.on('app:copy-photo', (win, { target }) =>
       this.dispatch(act.photo.extract({
         id: target.id,
