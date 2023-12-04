@@ -1,0 +1,37 @@
+nl-NL:
+  dialog:
+    file:
+      project: Tropy-projecten
+      plugin: Tropy-plug-ins
+      pdf: Pdf-bestanden
+    crashed:
+      buttons:
+        - Venster sluiten
+        - Tropy herstarten
+        - Logboeken tonen
+      message: Tropy is gecrasht
+      detail: >
+        Tropy is gecrasht - onze excuses hiervoor. U kunt helpen die probleem op
+        te lossen door het te melden op https://github.com/tropy/tropy
+    unresponsive:
+      buttons:
+        - Venster sluiten
+        - Wachten
+      message: Tropy reageert niet
+      detail: |
+        Het Tropy-venster reageert niet. Wilt u het venster sluiten of wachten?
+    unhandled:
+      buttons:
+        - Negeren
+        - Foutmelding kopiëren
+        - Logboeken tonen
+      message: Onbehandelde foutmelding
+  window:
+    prefs:
+      title: Tropy-instellingen
+    wizard:
+      title: Welkom in Tropy
+    about:
+      title: Over Tropy
+    project:
+      readOnly: ' — Vergrendeld'

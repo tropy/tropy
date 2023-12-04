@@ -1,0 +1,1417 @@
+nl-NL:
+  linux:
+    history:
+      - id: undo
+        label: Ongedaan maken
+        command: app:undo
+        enabled: false
+        accelerator: CmdOrCtrl+Z
+      - id: redo
+        label: Opnieuw uitvoeren
+        command: app:redo
+        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
+    project:
+      - label: Projectnaam wĳzigen
+        command: app:rename-project
+        condition: '!isReadOnly'
+      - label: Projectbestand tonen…
+        command: app:show-project-file
+    lists:
+      - label: Nieuwe lijst
+        command: app:create-list
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+L
+    list:
+      - label: Lijstnaam wĳzigen
+        command: app:rename-list
+        condition: '!isReadOnly'
+      - label: Lijst verwijderen
+        command: app:delete-list
+        condition: '!isReadOnly'
+    tags:
+      - label: Nieuw label
+        command: app:create-tag
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Labels exporteren…
+        command: app:export-tags
+      - label: Standaard labelkleur
+        submenu:
+          - label: Geen
+            color:
+              - null
+              - tagColor
+              - app:save-default-tag-color
+          - label: Willekeurige kleur
+            color:
+              - random
+              - tagColor
+              - app:save-default-tag-color
+          - type: separator
+          - label: Rood
+            color:
+              - red
+              - tagColor
+              - app:save-default-tag-color
+          - label: Oranje
+            color:
+              - orange
+              - tagColor
+              - app:save-default-tag-color
+          - label: Geel
+            color:
+              - yellow
+              - tagColor
+              - app:save-default-tag-color
+          - label: Groen
+            color:
+              - green
+              - tagColor
+              - app:save-default-tag-color
+          - label: Blauw
+            color:
+              - blue
+              - tagColor
+              - app:save-default-tag-color
+          - label: Paars
+            color:
+              - purple
+              - tagColor
+              - app:save-default-tag-color
+          - label: Grijs
+            color:
+              - gray
+              - tagColor
+              - app:save-default-tag-color
+          - label: Bruin
+            color:
+              - brown
+              - color
+              - app:save-default-tag-color
+          - label: Abrikoos
+            color:
+              - apricot
+              - color
+              - app:save-default-tag-color
+          - label: Donkergroen
+            color:
+              - dark-green
+              - color
+              - app:save-default-tag-color
+          - label: Lichtblauw
+            color:
+              - light-blue
+              - color
+              - app:save-default-tag-color
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - app:save-default-tag-color
+    tag:
+      - label: Labelkleur
+        condition: '!isReadOnly'
+        submenu:
+          - label: Geen
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Rood
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Oranje
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Geel
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Groen
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Blauw
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Paars
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Grijs
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Bruin
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Abrikoos
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Donkergroen
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Lichtblauw
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+      - label: Labelnaam wĳzigen
+        command: app:rename-tag
+        condition: '!isReadOnly'
+      - label: Label wissen
+        command: app:delete-tag
+        condition: '!isReadOnly'
+    item-tag:
+      - label: Label van dit item wissen
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isSingleItem
+      - label: Label van deze items wissen
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isMultipleItems
+      - label: Labelkleur
+        condition: '!isReadOnly'
+        submenu:
+          - label: Geen
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Rood
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Oranje
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Geel
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Groen
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Blauw
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Paars
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Grijs
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Bruin
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Abrikoos
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Donkergroen
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Lichtblauw
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+    note:
+      - label: Label exporteren…
+        command: app:export-note
+      - label: Aantekening kopiëren
+        command: app:copy-note
+      - label: Aantekening verwijderen
+        command: app:delete-note
+    notepad:
+      - label: Richting
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Links-naar-rechts
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Rechts-naar-links
+            type: checkbox
+            checked: false
+            direction: rtl
+      - label: Schrijfrichting
+        id: writing-mode
+        condition: hasTargetId
+        submenu:
+          - label: Horizontaal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Verticaal (rechts-naar-links)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Regelnummers tonen
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: app:toggle-line-numbers
+        condition: hasTargetId
+      - label: Regels afbreken
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: app:toggle-line-wrap
+        condition: hasTargetId
+    items:
+      - label: Nieuw item
+        command: app:create-item
+        accelerator: CmdOrCtrl+Shift+N
+    item:
+      - label: Item opblazen
+        command: app:explode-item
+        condition: isMultiplePhotos
+      - label: Foto toevoegen…
+        command: app:create-item-photo
+      - label: Labels
+        id: tag
+        submenu:
+          - label: Geen
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Item verwijderen
+        command: app:delete-item
+    item-read-only:
+      - label: Item exporteren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Verticaal
+                command: app:print-pdf
+              - label: Horizontaal
+                command: app:print-pdf-landscape
+      - label: Itemaantekeningen exporteren…
+        command: app:export-notes
+      - label: Itemlink kopiëren
+        command: app:copy-item-link
+      - label: Itemaantekeningen kopiëren
+        command: app:copy-notes
+      - label: Item samenvoegen
+        command: app:consolidate-item
+    item-rotate:
+      - label: Naar links draaien
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
+      - label: Naar rechts draaien
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
+    item-bulk:
+      - label: Selectie samenvoegen
+        command: app:merge-item
+      - label: Selectie verwijderen
+        command: app:delete-item
+    item-bulk-read-only:
+      - label: Selectie exporteren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Verticaal
+                command: app:print-pdf
+              - label: Horizontaal
+                command: app:print-pdf-landscape
+      - label: Selectie exporteren…
+        command: app:export-notes
+      - label: Selectie kopiëren
+        command: app:copy-notes
+      - label: Selectie samenvoegen
+        command: app:consolidate-item
+    item-list:
+      - label: Item van lijst verwijderen
+        command: app:list-item-remove
+    item-bulk-list:
+      - label: Selectie van lijst verwijderen
+        command: app:list-item-remove
+    photo:
+      - label: Foto dupliceren
+        command: app:duplicate-photo
+      - label: Foto verplaatsen naar nieuw item
+        command: app:explode-photo
+      - label: Foto verwijderen
+        command: app:delete-photo
+      - label: Foto instellen als omslag
+        command: app:update-cover-image
+        enabled: false
+        visible: false
+    photo-read-only:
+      - label: Oorspronkelijk bestand tonen…
+        command: app:show-in-folder
+      - label: Openen in extern fotoprogramma…
+        command: app:open-path
+      - label: Fotolink kopiëren
+        command: app:copy-photo-link
+      - label: Foto kopiëren naar klembord
+        command: app:copy-photo
+      - label: Foto exporteren…
+        command: app:extract-photo
+      - label: Foto samenvoegen
+        command: app:consolidate-photo
+    photo-rotate:
+      - label: Naar links draaien
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
+      - label: Naar rechts draaien
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
+    selection:
+      - label: Selectie verwijderen
+        command: app:delete-selection
+    selection-read-only:
+      - label: Selectie exporteren…
+        command: app:extract-photo
+    selection-rotate:
+      - label: Naar links draaien
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
+      - label: Naar rechts draaien
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
+    item-deleted:
+      - label: Item herstellen
+        command: app:restore-item
+      - label: Item permanent verwijderen
+        command: app:destroy-item
+    item-bulk-deleted:
+      - label: Selectie herstellen
+        command: app:restore-item
+      - label: Selectie permanent verwijderen
+        command: app:destroy-item
+    item-view:
+      - label: Indeling
+        id: item-view-layout
+        submenu:
+          - label: Gestapeld
+            id: stacked
+            type: checkbox
+          - label: Zij-aan-zij
+            id: side-by-side
+            type: checkbox
+    metadata-list:
+      - label: Nieuw veld…
+        command: app:create-field
+    metadata-field:
+      - label: Veld verwijderen
+        command: app:delete-field
+        condition: isExtra
+    trash:
+      - label: Items permanent verwijderen
+        command: app:destroy-item
+        condition: '!isReadOnly'
+    dev:
+      - label: Herladen
+        command: win:reload
+        accelerator: CmdOrCtrl+R
+      - label: Stijlen herladen
+        command: win:refresh
+        accelerator: CmdOrCtrl+S
+      - type: separator
+      - label: Inspecteren
+        command: app:inspect
+        accelerator: CmdOrCtrl+D
+  darwin:
+    history:
+      - id: undo
+        label: Ongedaan maken
+        command: app:undo
+        enabled: false
+        accelerator: CmdOrCtrl+Z
+      - id: redo
+        label: Opnieuw uitvoeren
+        command: app:redo
+        enabled: false
+        accelerator: Shift+CmdOrCtrl+Z
+    project:
+      - label: Projectnaam wĳzigen
+        command: app:rename-project
+        condition: '!isReadOnly'
+      - label: Projectbestand tonen…
+        command: app:show-project-file
+    lists:
+      - label: Nieuwe lijst
+        command: app:create-list
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+L
+    list:
+      - label: Lijstnaam wĳzigen
+        command: app:rename-list
+        condition: '!isReadOnly'
+      - label: Lijst verwijderen
+        command: app:delete-list
+        condition: '!isReadOnly'
+    tags:
+      - label: Nieuw label
+        command: app:create-tag
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Labels exporteren…
+        command: app:export-tags
+      - label: Standaard labelkleur
+        submenu:
+          - label: Geen
+            color:
+              - null
+              - tagColor
+              - app:save-default-tag-color
+          - label: Willekeurige kleur
+            color:
+              - random
+              - tagColor
+              - app:save-default-tag-color
+          - type: separator
+          - label: Rood
+            color:
+              - red
+              - tagColor
+              - app:save-default-tag-color
+          - label: Oranje
+            color:
+              - orange
+              - tagColor
+              - app:save-default-tag-color
+          - label: Geel
+            color:
+              - yellow
+              - tagColor
+              - app:save-default-tag-color
+          - label: Groen
+            color:
+              - green
+              - tagColor
+              - app:save-default-tag-color
+          - label: Blauw
+            color:
+              - blue
+              - tagColor
+              - app:save-default-tag-color
+          - label: Paars
+            color:
+              - purple
+              - tagColor
+              - app:save-default-tag-color
+          - label: Grijs
+            color:
+              - gray
+              - tagColor
+              - app:save-default-tag-color
+          - label: Bruin
+            color:
+              - brown
+              - color
+              - app:save-default-tag-color
+          - label: Abrikoos
+            color:
+              - apricot
+              - color
+              - app:save-default-tag-color
+          - label: Donkergroen
+            color:
+              - dark-green
+              - color
+              - app:save-default-tag-color
+          - label: Lichtblauw
+            color:
+              - light-blue
+              - color
+              - app:save-default-tag-color
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - app:save-default-tag-color
+    tag:
+      - label: Labelkleur
+        condition: '!isReadOnly'
+        submenu:
+          - label: Geen
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Rood
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Oranje
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Geel
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Groen
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Blauw
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Paars
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Grijs
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Bruin
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Abrikoos
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Donkergroen
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Lichtblauw
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+      - label: Labelnaam wĳzigen
+        command: app:rename-tag
+        condition: '!isReadOnly'
+      - label: Label wissen
+        command: app:delete-tag
+        condition: '!isReadOnly'
+    item-tag:
+      - label: Label van dit item wissen
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isSingleItem
+      - label: Label van deze items wissen
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isMultipleItems
+      - label: Labelkleur
+        condition: '!isReadOnly'
+        submenu:
+          - label: Geen
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Rood
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Oranje
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Geel
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Groen
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Blauw
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Paars
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Grijs
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Bruin
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Abrikoos
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Donkergroen
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Lichtblauw
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+    note:
+      - label: Label exporteren…
+        command: app:export-note
+      - label: Aantekening kopiëren
+        command: app:copy-note
+      - label: Aantekening verwijderen
+        command: app:delete-note
+    notepad:
+      - label: Richting
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Links-naar-rechts
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Rechts-naar-links
+            type: checkbox
+            checked: false
+            direction: rtl
+      - label: Schrijfrichting
+        id: writing-mode
+        condition: hasTargetId
+        submenu:
+          - label: Horizontaal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Verticaal (rechts-naar-links)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Regelnummers tonen
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: app:toggle-line-numbers
+        condition: hasTargetId
+      - label: Regels afbreken
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: app:toggle-line-wrap
+        condition: hasTargetId
+    items:
+      - label: Nieuw item
+        command: app:create-item
+        accelerator: CmdOrCtrl+Shift+N
+    item:
+      - label: Item opblazen
+        command: app:explode-item
+        condition: isMultiplePhotos
+      - label: Foto toevoegen…
+        command: app:create-item-photo
+      - label: Labels
+        id: tag
+        submenu:
+          - label: Geen
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Item verwijderen
+        command: app:delete-item
+    item-read-only:
+      - label: Item exporteren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Verticaal
+                command: app:print-pdf
+              - label: Horizontaal
+                command: app:print-pdf-landscape
+      - label: Itemaantekingen exporteren…
+        command: app:export-notes
+      - label: Itemlink kopiëren
+        command: app:copy-item-link
+      - label: Itemaantekeningen kopiëren
+        command: app:copy-notes
+      - label: Item samenvoegen
+        command: app:consolidate-item
+    item-bulk:
+      - label: Selectie samenvoegen
+        command: app:merge-item
+      - label: Selectie verwijderen
+        command: app:delete-item
+    item-bulk-read-only:
+      - label: Selectie exporteren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Verticaal
+                command: app:print-pdf
+              - label: Horizontaal
+                command: app:print-pdf-landscape
+      - label: Selectie exporteren…
+        command: app:export-notes
+      - label: Selectie kopiëren
+        command: app:copy-notes
+      - label: Selectie samenvoegen
+        command: app:consolidate-item
+    item-list:
+      - label: Item van lijst verwijderen
+        command: app:list-item-remove
+    item-bulk-list:
+      - label: Selectie van lijst verwijderen
+        command: app:list-item-remove
+    item-deleted:
+      - label: Item herstellen
+        command: app:restore-item
+      - label: Item permanent verwijderen
+        command: app:destroy-item
+    item-bulk-deleted:
+      - label: Selectie herstellen
+        command: app:restore-item
+      - label: Selectie permanent verwijderen
+        command: app:destroy-item
+    item-view:
+      - label: Indeling
+        id: item-view-layout
+        submenu:
+          - label: Gestapeld
+            id: stacked
+            type: checkbox
+          - label: Zij-aan-zij
+            id: side-by-side
+            type: checkbox
+    item-rotate:
+      - label: Naar links draaien
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
+      - label: Naar rechts draaien
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
+    metadata-list:
+      - label: Nieuw veld…
+        command: app:create-field
+    metadata-field:
+      - label: Veld verwijderen
+        command: app:delete-field
+        condition: isExtra
+    trash:
+      - label: Items permanent verwijderen
+        command: app:destroy-item
+        condition: '!isReadOnly'
+    photo:
+      - label: Foto klonen
+        command: app:duplicate-photo
+      - label: Foto verplaatsen naar nieuw item
+        command: app:explode-photo
+      - label: Foto verwijderen
+        command: app:delete-photo
+      - label: Foto instellen als omslag
+        command: app:update-cover-image
+        enabled: false
+        visible: false
+    photo-read-only:
+      - label: Oorspronkelijk bestand tonen…
+        command: app:show-in-folder
+      - label: Openen in extern fotoprogramma…
+        command: app:open-path
+      - label: Fotolink kopiëren
+        command: app:copy-photo-link
+      - label: Foto kopiëren naar klembord
+        command: app:copy-photo
+      - label: Foto exporteren…
+        command: app:extract-photo
+      - label: Foto samenvoegen
+        command: app:consolidate-photo
+    photo-rotate:
+      - label: Naar links draaien
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
+      - label: Naar rechts draaien
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
+    selection:
+      - label: Selectie verwijderen
+        command: app:delete-selection
+    selection-read-only:
+      - label: Selectie exporteren…
+        command: app:extract-photo
+    selection-rotate:
+      - label: Naar links draaien
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
+      - label: Naar rechts draaien
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
+    dev:
+      - label: Herladen
+        command: win:reload
+        accelerator: CmdOrCtrl+R
+      - label: Stijlen herladen
+        command: win:refresh
+        accelerator: CmdOrCtrl+S
+      - type: separator
+      - label: Inspecteren
+        command: app:inspect
+        accelerator: CmdOrCtrl+D
+  win32:
+    history:
+      - id: undo
+        label: Ongedaan maken
+        command: app:undo
+        enabled: false
+        accelerator: CmdOrCtrl+Z
+      - id: redo
+        label: Opnieuw uitvoeren
+        command: app:redo
+        enabled: false
+        accelerator: Control+Y
+    project:
+      - label: Projectnaam wĳzigen
+        command: app:rename-project
+        condition: '!isReadOnly'
+      - label: Projectbestand tonen…
+        command: app:show-project-file
+    lists:
+      - label: Nieuwe lijst
+        command: app:create-list
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+L
+    list:
+      - label: Lijstnaam wĳzigen
+        command: app:rename-list
+        condition: '!isReadOnly'
+      - label: Lijst verwijderen
+        command: app:delete-list
+        condition: '!isReadOnly'
+    tags:
+      - label: Nieuw label
+        command: app:create-tag
+        condition: '!isReadOnly'
+        accelerator: CmdOrCtrl+Shift+A
+      - label: Labels exporteren…
+        command: app:export-tags
+      - label: Standaard labelkleur
+        submenu:
+          - label: Geen
+            color:
+              - null
+              - tagColor
+              - app:save-default-tag-color
+          - label: Willekeurige kleur
+            color:
+              - random
+              - tagColor
+              - app:save-default-tag-color
+          - type: separator
+          - label: Rood
+            color:
+              - red
+              - tagColor
+              - app:save-default-tag-color
+          - label: Oranje
+            color:
+              - orange
+              - tagColor
+              - app:save-default-tag-color
+          - label: Geel
+            color:
+              - yellow
+              - tagColor
+              - app:save-default-tag-color
+          - label: Groen
+            color:
+              - green
+              - tagColor
+              - app:save-default-tag-color
+          - label: Blauw
+            color:
+              - blue
+              - tagColor
+              - app:save-default-tag-color
+          - label: Paars
+            color:
+              - purple
+              - tagColor
+              - app:save-default-tag-color
+          - label: Grijs
+            color:
+              - gray
+              - tagColor
+              - app:save-default-tag-color
+          - label: Bruin
+            color:
+              - brown
+              - color
+              - app:save-default-tag-color
+          - label: Abrikoos
+            color:
+              - apricot
+              - color
+              - app:save-default-tag-color
+          - label: Donkergroen
+            color:
+              - dark-green
+              - color
+              - app:save-default-tag-color
+          - label: Lichtblauw
+            color:
+              - light-blue
+              - color
+              - app:save-default-tag-color
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - app:save-default-tag-color
+    tag:
+      - label: Labelkleur
+        condition: '!isReadOnly'
+        submenu:
+          - label: Geen
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Rood
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Oranje
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Geel
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Groen
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Blauw
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Paars
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Grijs
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Bruin
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Abrikoos
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Donkergroen
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Lichtblauw
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+      - label: Labelnaam wĳzigen
+        command: app:rename-tag
+        condition: '!isReadOnly'
+      - label: Label wissen
+        command: app:delete-tag
+        condition: '!isReadOnly'
+    item-tag:
+      - label: Label van dit item wissen
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isSingleItem
+      - label: Label van deze items wissen
+        command: app:delete-item-tag
+        enabled: false
+        visible: false
+        condition: isMultipleItems
+      - label: Labelkleur
+        condition: '!isReadOnly'
+        submenu:
+          - label: Geen
+            color:
+              - null
+              - color
+              - app:save-tag-color
+          - type: separator
+          - label: Rood
+            color:
+              - red
+              - color
+              - app:save-tag-color
+          - label: Oranje
+            color:
+              - orange
+              - color
+              - app:save-tag-color
+          - label: Geel
+            color:
+              - yellow
+              - color
+              - app:save-tag-color
+          - label: Groen
+            color:
+              - green
+              - color
+              - app:save-tag-color
+          - label: Blauw
+            color:
+              - blue
+              - color
+              - app:save-tag-color
+          - label: Paars
+            color:
+              - purple
+              - color
+              - app:save-tag-color
+          - label: Grijs
+            color:
+              - gray
+              - color
+              - app:save-tag-color
+          - label: Bruin
+            color:
+              - brown
+              - color
+              - app:save-tag-color
+          - label: Abrikoos
+            color:
+              - apricot
+              - color
+              - app:save-tag-color
+          - label: Donkergroen
+            color:
+              - dark-green
+              - color
+              - app:save-tag-color
+          - label: Lichtblauw
+            color:
+              - light-blue
+              - color
+              - app:save-tag-color
+          - label: Lavendel
+            color:
+              - lavender
+              - color
+              - app:save-tag-color
+    note:
+      - label: Label exporteren…
+        command: app:export-note
+      - label: Aantekening kopiëren
+        command: app:copy-note
+      - label: Aantekening verwijderen
+        command: app:delete-note
+    notepad:
+      - label: Richting
+        id: direction
+        condition: hasTargetId
+        submenu:
+          - label: Links-naar-rechts
+            type: checkbox
+            checked: false
+            direction: ltr
+          - label: Rechts-naar-links
+            type: checkbox
+            checked: false
+            direction: rtl
+      - label: Schrijfrichting
+        id: writing-mode
+        condition: hasTargetId
+        submenu:
+          - label: Horizontaal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Verticaal (rechts-naar-links)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Regelnummers tonen
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: app:toggle-line-numbers
+        condition: hasTargetId
+      - label: Regels afbreken
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: app:toggle-line-wrap
+        condition: hasTargetId
+    items:
+      - label: Nieuw item
+        command: app:create-item
+        accelerator: CmdOrCtrl+Shift+N
+    item:
+      - label: Item opblazen
+        command: app:explode-item
+        condition: isMultiplePhotos
+      - label: Foto toevoegen…
+        command: app:create-item-photo
+      - label: Labels
+        id: tag
+        submenu:
+          - label: Geen
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Item verwijderen
+        command: app:delete-item
+    item-read-only:
+      - label: Item exporteren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Verticaal
+                command: app:print-pdf
+              - label: Horizontaal
+                command: app:print-pdf-landscape
+      - label: Itemaantekingen exporteren…
+        command: app:export-notes
+      - label: Itemlink kopiëren
+        command: app:copy-item-link
+      - label: Itemaantekeningen kopiëren
+        command: app:copy-notes
+      - label: Item samenvoegen
+        command: app:consolidate-item
+    item-bulk:
+      - label: Selectie samenvoegen
+        command: app:merge-item
+      - label: Selectie verwijderen
+        command: app:delete-item
+    item-bulk-read-only:
+      - label: Selectie exporteren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: app:export-item
+          - label: PDF
+            submenu:
+              - label: Verticaal
+                command: app:print-pdf
+              - label: Horizontaal
+                command: app:print-pdf-landscape
+      - label: Selectie exporteren…
+        command: app:export-notes
+      - label: Selectie kopiëren
+        command: app:copy-notes
+      - label: Selectie samenvoegen
+        command: app:consolidate-item
+    item-list:
+      - label: Item van lijst verwijderen
+        command: app:list-item-remove
+    item-bulk-list:
+      - label: Selectie van lijst verwijderen
+        command: app:list-item-remove
+    item-deleted:
+      - label: Item herstellen
+        command: app:restore-item
+      - label: Item permanent verwijderen
+        command: app:destroy-item
+    item-bulk-deleted:
+      - label: Selectie herstellen
+        command: app:restore-item
+      - label: Selectie permanent verwijderen
+        command: app:destroy-item
+    item-view:
+      - label: Indeling
+        id: item-view-layout
+        submenu:
+          - label: Gestapeld
+            id: stacked
+            type: checkbox
+          - label: Zij-aan-zij
+            id: side-by-side
+            type: checkbox
+    item-rotate:
+      - label: Naar links draaien
+        command: app:rotate-item-left
+        accelerator: CmdOrCtrl+[
+      - label: Naar rechts draaien
+        command: app:rotate-item-right
+        accelerator: CmdOrCtrl+]
+    metadata-list:
+      - label: Nieuw veld…
+        command: app:create-field
+    metadata-field:
+      - label: Veld verwijderen
+        command: app:delete-field
+        condition: isExtra
+    trash:
+      - label: Items permanent verwijderen
+        command: app:destroy-item
+        condition: '!isReadOnly'
+    photo:
+      - label: Foto klonen
+        command: app:duplicate-photo
+      - label: Foto verplaatsen naar nieuw item
+        command: app:explode-photo
+      - label: Foto verwijderen
+        command: app:delete-photo
+      - label: Foto instellen als omslag
+        command: app:update-cover-image
+        enabled: false
+        visible: false
+    photo-read-only:
+      - label: Oorspronkelijk bestand tonen…
+        command: app:show-in-folder
+      - label: Openen in extern fotoprogramma…
+        command: app:open-path
+      - label: Fotolink kopiëren
+        command: app:copy-photo-link
+      - label: Foto kopiëren naar klembord
+        command: app:copy-photo
+      - label: Foto exporteren…
+        command: app:extract-photo
+      - label: Foto samenvoegen
+        command: app:consolidate-photo
+    photo-rotate:
+      - label: Naar links draaien
+        command: app:rotate-photo-left
+        accelerator: CmdOrCtrl+[
+      - label: Naar rechts draaien
+        command: app:rotate-photo-right
+        accelerator: CmdOrCtrl+]
+    selection:
+      - label: Selectie verwijderen
+        command: app:delete-selection
+    selection-read-only:
+      - label: Selectie exporteren…
+        command: app:extract-photo
+    selection-rotate:
+      - label: Naar links draaien
+        command: app:rotate-selection-left
+        accelerator: CmdOrCtrl+[
+      - label: Naar rechts draaien
+        command: app:rotate-selection-right
+        accelerator: CmdOrCtrl+]
+    dev:
+      - label: Herladen
+        command: win:reload
+        accelerator: CmdOrCtrl+R
+      - label: Stijlen herladen
+        command: win:refresh
+        accelerator: CmdOrCtrl+S
+      - type: separator
+      - label: Inspecteren
+        command: app:inspect
+        accelerator: CmdOrCtrl+D

@@ -1,0 +1,653 @@
+nl-NL:
+  linux:
+    - label: '&Bestand'
+      id: file
+      submenu:
+        - label: Nieuw
+          submenu:
+            - label: Project
+              command: app:create-project
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Item
+              command: app:create-item
+              accelerator: CmdOrCtrl+Shift+N
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Lijst
+              command: app:create-list
+              accelerator: CmdOrCtrl+Shift+L
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Label
+              command: app:create-tag
+              accelerator: CmdOrCtrl+Shift+A
+              window: project
+              condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Openen…
+          accelerator: CmdOrCtrl+O
+          command: app:open-dialog
+        - label: Openen in nieuw venster…
+          accelerator: Shift+CmdOrCtrl+O
+          command: app:open-new-dialog
+        - label: Recente projecten
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: Lijst wissen
+              command: app:clear-recent-projects
+        - type: separator
+        - label: Importeren
+          id: import
+          window: project
+          condition: '!isProjectReadOnly'
+          submenu:
+            - label: Foto's…
+              command: app:import
+              accelerator: CmdOrCtrl+Shift+I
+            - label: Map…
+              command: app:import-directory
+        - label: Exporteren
+          id: export
+          window: project
+          submenu:
+            - label: JSON-LD
+              command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Verticaal
+                  command: app:print-pdf
+                - label: Horizontaal
+                  command: app:print-pdf-landscape
+        - type: separator
+        - label: Fotoverzameling consolideren
+          command: app:consolidate-photo-library
+          window: project
+          condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Afdrukken
+          command: app:print
+          accelerator: CmdOrCtrl+P
+          window: project
+        - type: separator
+        - label: Project sluiten
+          command: app:close-project
+          window: project
+          condition: isProjectOpen
+        - type: separator
+        - label: Venster sluiten
+          accelerator: Ctrl+W
+          role: close
+          window: '*'
+        - label: '%name afsluiten'
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: B&ewerken
+      submenu:
+        - id: undo
+          label: '&Ongedaan maken'
+          accelerator: CmdOrCtrl+Z
+          command: app:undo
+          enabled: false
+        - id: redo
+          label: Opnieuw uitvoe&ren
+          accelerator: Shift+CmdOrCtrl+Z
+          command: app:redo
+          enabled: false
+        - type: separator
+        - label: Kn&ippen
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: '&Kopiëren'
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: '&Plakken'
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: Plakmethode
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
+        - label: Alles selecteren
+          role: selectAll
+        - type: separator
+        - label: Instellingen…
+          accelerator: Shift+Control+S
+          command: app:open-preferences
+    - label: Bee&ld
+      submenu:
+        - label: He&rladen
+          accelerator: CmdOrCtrl+R
+          command: win:reload
+          window: '*'
+        - type: separator
+        - label: '&Menubalk tonen/verbergen'
+          command: app:toggle-menu-bar
+          window: '*'
+        - label: Centreren
+          command: app:center-window
+          accelerator: Alt+Shift+=
+          window: '*'
+        - type: separator
+        - label: Ware grootte
+          command: app:zoom-reset
+          accelerator: CmdOrCtrl+0
+        - label: Inzoomen
+          command: app:zoom-in
+          accelerator: CmdOrCtrl+Plus
+        - label: Uitzoomen
+          command: app:zoom-out
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: Scherm&vullende weergave aan/uit
+          role: togglefullscreen
+          window: '*'
+        - type: separator
+        - label: Sluiten
+          accelerator: Ctrl+W
+          role: close
+          window: '*'
+    - label: Ontwikkelaar
+      id: dev
+      submenu:
+        - label: '&Stijlen herladen'
+          command: win:refresh
+        - label: On&twikkelaargereedschap tonen/verbergen
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - type: separator
+        - label: Ontologiedatabank herstellen
+          command: app:reset-ontology-db
+        - label: Projectcaches optimaliseren
+          command: app:optimize-cache
+        - label: Projectdatabank optimaliseren
+          command: app:optimize-project
+        - label: Projectdatabank opnieuw indexeren
+          command: app:reindex-project
+        - type: separator
+        - label: Thema
+          id: theme
+          submenu:
+            - label: Licht
+              id: light
+              type: checkbox
+            - label: Donker
+              id: dark
+              type: checkbox
+            - label: Systeeminstellingen volgen
+              id: system
+              type: checkbox
+    - label: Hulp
+      submenu:
+        - label: Handleiding
+          command: app:open-docs
+        - label: Ondersteuningsforum
+          command: app:open-forums
+        - label: Softwarelicentie
+          command: app:open-license
+        - type: separator
+        - label: Logboeken tonen
+          command: app:open-logs
+        - label: Plug-insmap openen
+          command: app:open-plugins-folder
+        - label: Gebruikersgegevensmap openen
+          command: app:open-user-data
+        - label: Cachemap openen
+          command: app:open-cache-folder
+        - type: separator
+        - id: updater-check
+          label: Controleren op updates…
+          command: app:check-for-updates
+          enabled: false
+        - id: updater-is-checking
+          label: Bezig met ophalen van updates…
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Updates installeren…
+          command: app:install-updates
+          enabled: false
+          visible: false
+        - type: separator
+        - label: Over %name
+          command: app:about
+          window: '!prefs'
+  darwin:
+    - label: '%name'
+      submenu:
+        - label: Over %name
+          command: app:about
+          window: '!prefs'
+        - type: separator
+        - label: Instellingen…
+          accelerator: Command+,
+          command: app:open-preferences
+        - type: separator
+        - label: '%name verbergen'
+          accelerator: Command+H
+          role: hide
+        - label: Andere vensters verbergen
+          accelerator: Command+Shift+H
+          role: hideothers
+        - label: Alles tonen
+          role: unhide
+        - type: separator
+        - label: '%name afsluiten'
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: Bestand
+      submenu:
+        - label: Nieuw
+          submenu:
+            - label: Project
+              command: app:create-project
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Item
+              command: app:create-item
+              accelerator: CmdOrCtrl+Shift+N
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Lijst
+              command: app:create-list
+              accelerator: CmdOrCtrl+Shift+L
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Label
+              command: app:create-tag
+              accelerator: CmdOrCtrl+Shift+A
+              window: project
+              condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Openen…
+          accelerator: CmdOrCtrl+O
+          command: app:open-dialog
+        - label: Openen in nieuw venster…
+          accelerator: Shift+CmdOrCtrl+O
+          command: app:open-new-dialog
+        - label: Recente projecten
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: Lijst wissen
+              command: app:clear-recent-projects
+        - type: separator
+        - label: Importeren
+          id: import
+          window: project
+          condition: '!isProjectReadOnly'
+          submenu:
+            - label: Foto's…
+              command: app:import
+              accelerator: CmdOrCtrl+Shift+I
+            - label: Map…
+              command: app:import-directory
+        - label: Fotoverzameling consolideren
+          command: app:consolidate-photo-library
+          window: project
+          condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Exporteren
+          id: export
+          window: project
+          submenu:
+            - label: JSON-LD
+              command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Verticaal
+                  command: app:print-pdf
+                - label: Horizontaal
+                  command: app:print-pdf-landscape
+        - label: Afdrukken
+          command: app:print
+          accelerator: CmdOrCtrl+P
+          window: project
+        - type: separator
+        - label: Project sluiten
+          command: app:close-project
+          window: project
+          condition: isProjectOpen
+    - label: Bewerken
+      submenu:
+        - id: undo
+          label: '&Ongedaan maken'
+          accelerator: CmdOrCtrl+Z
+          command: app:undo
+          enabled: false
+        - id: redo
+          label: Opnieuw uitvoe&ren
+          accelerator: Shift+CmdOrCtrl+Z
+          command: app:redo
+          enabled: false
+        - type: separator
+        - label: Kn&ippen
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: '&Kopiëren'
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: '&Plakken'
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: Plakmethode
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
+        - label: Alles selecteren
+          role: selectAll
+    - label: Beeld
+      submenu:
+        - label: He&rladen
+          accelerator: CmdOrCtrl+R
+          command: win:reload
+          window: '*'
+        - type: separator
+        - label: Ware grootte
+          command: app:zoom-reset
+          accelerator: CmdOrCtrl+0
+        - label: Inzoomen
+          command: app:zoom-in
+          accelerator: CmdOrCtrl+Plus
+        - label: Uitzoomen
+          command: app:zoom-out
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: Scherm&vullende weergave aan/uit
+          role: togglefullscreen
+          window: '*'
+    - label: Venster
+      role: window
+      submenu:
+        - label: Minimaliseren
+          accelerator: Cmd+M
+          role: minimize
+          window: '*'
+        - label: Zoomen
+          accelerator: Ctrl+Cmd+Z
+          role: zoom
+        - type: separator
+        - label: Centreren
+          command: app:center-window
+          accelerator: Alt+Shift+=
+          window: '*'
+        - type: separator
+        - label: Alles op voorgrond
+          role: front
+        - type: separator
+        - label: Sluiten
+          accelerator: Cmd+W
+          role: close
+          window: '*'
+    - label: Ontwikkelaar
+      id: dev
+      submenu:
+        - label: '&Stijlen herladen'
+          command: win:refresh
+        - label: On&twikkelaargereedschap tonen/verbergen
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - type: separator
+        - label: Ontologiedatabank herstellen
+          command: app:reset-ontology-db
+        - label: Projectcaches optimaliseren
+          command: app:optimize-cache
+        - label: Projectdatabank optimaliseren
+          command: app:optimize-project
+        - label: Projectdatabank opnieuw indexeren
+          command: app:reindex-project
+        - type: separator
+        - label: Thema
+          id: theme
+          submenu:
+            - label: Licht
+              id: light
+              type: checkbox
+            - label: Donker
+              id: dark
+              type: checkbox
+            - label: Systeeminstellingen volgen
+              id: system
+              type: checkbox
+    - label: Hulp
+      role: help
+      submenu:
+        - label: Handleiding
+          command: app:open-docs
+        - label: Ondersteuningsforum
+          command: app:open-forums
+        - label: Softwarelicentie
+          command: app:open-license
+        - type: separator
+        - type: separator
+        - label: Logboeken tonen
+          command: app:open-logs
+        - label: Plug-insmap tonen
+          command: app:open-plugins-folder
+        - label: Gebruikersgegevensmap openen
+          command: app:open-user-data
+        - label: Cachemap openen
+          command: app:open-cache-folder
+        - type: separator
+        - id: updater-check
+          label: Controleren op updates…
+          command: app:check-for-updates
+          enabled: false
+        - id: updater-is-checking
+          label: Bezig met ophalen van updates…
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Updates installeren…
+          command: app:install-updates
+          enabled: false
+          visible: false
+  win32:
+    - label: '&Bestand'
+      id: file
+      submenu:
+        - label: Nieuw
+          submenu:
+            - label: Project
+              command: app:create-project
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Item
+              command: app:create-item
+              accelerator: CmdOrCtrl+Shift+N
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Lijst
+              command: app:create-list
+              accelerator: CmdOrCtrl+Shift+L
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Label
+              command: app:create-tag
+              accelerator: CmdOrCtrl+Shift+A
+              window: project
+              condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Openen…
+          accelerator: CmdOrCtrl+O
+          command: app:open-dialog
+        - label: Openen in nieuw venster…
+          accelerator: Shift+CmdOrCtrl+O
+          command: app:open-new-dialog
+        - label: Recente projecten
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: Lijst wissen
+              command: app:clear-recent-projects
+        - type: separator
+        - label: Importeren
+          id: import
+          window: project
+          condition: '!isProjectReadOnly'
+          submenu:
+            - label: Foto's…
+              command: app:import
+              accelerator: CmdOrCtrl+Shift+I
+            - label: Map…
+              command: app:import-directory
+        - label: Exporteren
+          id: export
+          window: project
+          submenu:
+            - label: JSON-LD
+              command: app:export-item
+            - label: PDF
+              submenu:
+                - label: Verticaal
+                  command: app:print-pdf
+                - label: Horizontaal
+                  command: app:print-pdf-landscape
+        - type: separator
+        - label: Fotoverzameling consolideren
+          command: app:consolidate-photo-library
+          window: project
+          condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Afdrukken
+          command: app:print
+          accelerator: CmdOrCtrl+P
+          window: project
+        - type: separator
+        - label: Project sluiten
+          command: app:close-project
+          window: project
+          condition: isProjectOpen
+        - type: separator
+        - label: Venster sluiten
+          accelerator: Ctrl+W
+          role: close
+          window: '*'
+        - label: '%name afsluiten'
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: B&ewerken
+      submenu:
+        - id: undo
+          label: '&Ongedaan maken'
+          accelerator: CmdOrCtrl+Z
+          command: app:undo
+          enabled: false
+        - id: redo
+          label: Opnieuw uitvoe&ren
+          accelerator: Control+Y
+          command: app:redo
+          enabled: false
+        - type: separator
+        - label: Kn&ippen
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: '&Kopiëren'
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: '&Plakken'
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: Plakmethode
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
+        - label: Instellingen…
+          accelerator: Shift+Control+S
+          command: app:open-preferences
+    - label: Bee&ld
+      submenu:
+        - label: He&rladen
+          accelerator: CmdOrCtrl+R
+          command: win:reload
+          window: '*'
+        - type: separator
+        - label: '&Menubalk tonen/verbergen'
+          command: app:toggle-menu-bar
+          window: '*'
+        - label: Verplaatsen naar midden
+          command: app:center-window
+          accelerator: Alt+Shift+=
+          window: '*'
+        - type: separator
+        - label: Ware grootte
+          command: app:zoom-reset
+          accelerator: CmdOrCtrl+0
+        - label: Inzoomen
+          command: app:zoom-in
+          accelerator: CmdOrCtrl+Plus
+        - label: Uitzoomen
+          command: app:zoom-out
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: Scherm&vullende weergave aan/uit
+          role: togglefullscreen
+          window: '*'
+        - type: separator
+        - label: Sluiten
+          accelerator: Ctrl+W
+          role: close
+          window: '*'
+    - label: Ontwikkelaar
+      id: dev
+      submenu:
+        - label: '&Stijlen herladen'
+          command: win:refresh
+        - label: On&twikkelaargereedschap tonen/verbergen
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - type: separator
+        - label: Ontologiedatabank herstellen
+          command: app:reset-ontology-db
+        - label: Projectcaches optimaliseren
+          command: app:optimize-cache
+        - label: Projectdatabank optimaliseren
+          command: app:optimize-project
+        - label: Projectdatabank opnieuw indexeren
+          command: app:reindex-project
+        - type: separator
+        - label: Thema
+          id: theme
+          submenu:
+            - label: Licht
+              id: light
+              type: checkbox
+            - label: Donker
+              id: dark
+              type: checkbox
+            - label: Systeeminstellingen volgen
+              id: system
+              type: checkbox
+    - label: Hulp
+      submenu:
+        - label: Handleiding
+          command: app:open-docs
+        - label: Ondersteuningsforum
+          command: app:open-forums
+        - label: Softwarelicentie
+          command: app:open-license
+        - type: separator
+        - label: Logboeken tonen
+          command: app:open-logs
+        - label: Plug-insmap tonen
+          command: app:open-plugins-folder
+        - label: Gebruikersgegevensmap openen
+          command: app:open-user-data
+        - label: Cachemap openen
+          command: app:open-cache-folder
+        - type: separator
+        - id: updater-check
+          label: Controleren op updates…
+          command: app:check-for-updates
+          enabled: false
+        - id: updater-is-checking
+          label: Bezig met ophalen van updates…
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Updates installeren…
+          command: app:install-updates
+          enabled: false
+          visible: false
+        - type: separator
+        - label: Over %name
+          command: app:about
+          window: '!prefs'
