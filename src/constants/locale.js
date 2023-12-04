@@ -7,6 +7,7 @@ export default {
   'fr': 'fr',
   'it': 'it',
   'ja': 'ja',
+  'nl-NL': 'nl-NL',
   'pt': 'pt',
   'pt-BR': 'pt-BR',
   'uk': 'uk',

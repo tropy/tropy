@@ -36,6 +36,7 @@ LocaleSettings.defaultProps = {
     'fr',
     'it',
     'ja',
+    'nl-NL',
     'pt',
     'pt-BR',
     'uk'
