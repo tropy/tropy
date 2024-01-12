@@ -7,7 +7,7 @@ const {
   copyFile, mkdir, readdir, readFile, unlink, writeFile
 } = require('fs').promises
 const { program } = require('commander')
-const packager = require('electron-packager')
+const { packager } = require('@electron/packager')
 const { minimatch } = require('minimatch')
 const { basename, extname, join, relative } = require('path')
 
