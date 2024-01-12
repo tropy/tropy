@@ -4,7 +4,7 @@ ja:
     tags: タグ
     imports: 最新のインポート
     trash: 削除済みアイテム
-    unlisted: Unlisted Items
+    unlisted: リスト化されていないアイテム
   toolbar:
     import: 写真をインポート
     items: |-
@@ -63,14 +63,12 @@ ja:
       title: Digital Scholar
       url: https://digitalscholar.org
     c2dh:
-      title: Luxembourg Centre for Contemporary and Digital History
+      title: ルクセンブルク現代史およびデジタルヒストリーセンター
       url: https://www.c2dh.uni.lu
-    text: >-
-      Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
-      historical teaching resources, digital exhibits, and open-source software.
-    trademark: The Tropy name is a registered trademark of {cds}.
+    text: Tropyは、歴史教育リソースやデジタル展示、オープンソースソフトウェアの開発ラボである{c2dh}および{rrchnm}によって作成されています。
+    trademark: Tropyは{cds}の登録商標です。
     donate:
-      title: Donate to Tropy
+      title: Tropyへ寄付する
       url: https://tropy.org/donate
     release:
       title: リリースノート
@@ -84,48 +82,47 @@ ja:
   project:
     empty: まずは写真をTropyにドロップしてください
     file:
-      open: Open project {path}
-      missing: Find missing project {path}
-      remove: Remove project from list
+      open: '{path}のプロジェクトを開く'
+      missing: '{path}のプロジェクトを探す'
+      remove: リストからプロジェクトを削除する
     recent:
       search:
-        placeholder: Filter projects
-        blank: No matching projects
+        placeholder: プロジェクトをフィルタリングする
+        blank: マッチするプロジェクトが見当たりません
     corrupted: >-
-      Your project file may be damaged and manual steps necessary to fix it.
-      Please consult the user manual for further assistance.
+      プロジェクトファイルが破損している可能性があり、修復するには手動の手順が必要です。
+      さらに詳しいサポートが必要な場合は、ユーザーマニュアルを参照してください。
     readOnly: >-
-      Your project file is locked and cannot be modified. To unlock, change the
-      file permissions and open the project again.
+      プロジェクトファイルがロックされており、変更できませんでした。ロックを解除するには、ファイルの書き込み権限を変更し、改めてプロジェクトを開いてください。
     new:
       title: 新規プロジェクトを作成
-      name: Enter a name for the project
+      name: プロジェクト名を入力
       type:
-        label: Choose the project type
+        label: プロジェクトタイプを選択
         option:
-          tpy: Advanced
-          managed: Standard
+          tpy: アドバンスト
+          managed: スタンダード
         hint:
-          tpy: Links to photos at their original location.
-          managed: Copies photos to project folder on import.
-      create: Create Project
+          tpy: 元の場所にある写真とリンクする
+          managed: インポート時にプロジェクトフォルダに写真をコピーする
+      create: プロジェクトを作成
       eyeCatcher: 新規
     stats:
       photos: |-
         {photos, plural,
-          =0 {No photos}
-          one {1 photo}
-          other {# photos}}
+        =0 {写真がありません}
+        one {1つの写真}
+        other {# 件の写真}}
       items: |-
         {items, plural,
-          =0 {No items}
-          one {1 item}
-          other {# items}}
+        =0 {アイテムがありません}
+        one {1つのアイテム}
+        other {# 件のアイテム}}
       notes: |-
         {notes, plural,
-          =0 {No notes}
-          one {1 note}
-          other {# notes}}
+        =0 {ノートがありません}
+        one {1つのノート}
+        other {# 件のノート}}
   prefs:
     title: Tropy設定
     app:
@@ -137,26 +134,26 @@ ja:
           dark: ダーク
           system: システム環境の設定を引き継ぐ
         font:
-          size: Font size
+          size: フォントサイズ
           sizes:
-            12px: Very Small
-            13px: Small (Default)
-            14px: Medium
-            15px: Large
-            16px: Very Large
-        frameless: Use custom titlebar (requires restart)
+            12px: 極小
+            13px: 小（デフォルト）
+            14px: 中
+            15px: 大
+            16px: 極大
+        frameless: カスタムタイトルバーを利用（再起動が必要です）
       print:
-        mode: プリント
+        mode: 印刷
         modes:
-          item: One Item per Page
-          photo: One Photo per Page
-          selection: One Selection per Page
-        photos: Include photos
-        optimize: Optimize photo size and quality
-        metadata: Include metadata
-        notes: Include notes
-        onlyNotes: Include only photos with notes
-        overflow: Allow content to take up more than one page
+          item: 1ページにつき1つのアイテム
+          photo: 1ページにつき1つの写真
+          selection: 1ページにつき1つのセレクション
+        photos: 写真を含める
+        optimize: 写真サイズと画質を最適化
+        metadata: メタデータを含める
+        notes: ノートを含める
+        onlyNotes: ノートのある写真だけ含める
+        overflow: コンテンツが複数ページに表示されることを許可する
       locale:
         locale: ローカル
         locales:
@@ -167,10 +164,10 @@ ja:
           fr: Français
           it: Italiano
           ja: 日本語
-          nl-NL: Nederlands
+          nl-NL: オランダ語
           pt: Português
-          pt-BR: Português brasileiro
-          uk: Украї́нська мо́ва
+          pt-BR: ブラジル・ポルトガル語
+          uk: ウクライナ語
       templates:
         label: デフォルトテンプレート
         item: アイテム
@@ -188,20 +185,20 @@ ja:
           import: 写真の重複を認める
           prompt: 毎回確認する
       density:
-        label: Default density (ppi)
-        title: Used for PDF, SVG and other scalable formats
+        label: デフォルトの解像度（ppi）
+        title: PDF、SVG、その他のスケーラブルなフォーマットに使用
       export:
         label: エクスポート
         note:
           format:
-            html: Notes as HTML
-            markdown: Notes as Markdown
+            html: HTML形式のノート
+            markdown: マークダウン形式のノート
           copy:
-            label: Copy notes as
+            label: 形式を選択してノートをコピー
             option:
-              text: Plain text
-              markdown: Markdown
-              html: HTML source code
+              text: プレーンテキスト
+              markdown: マークダウン
+              html: HTMLソースコード
       ui:
         label: インターフェース
         option:
@@ -213,41 +210,42 @@ ja:
         option:
           fit: 写真をウインドウサイズで表示
           fill: 写真を全画面表示
-          zoom: Zoom photos to actual size
+          zoom: 写真を実サイズで表示
       layout:
         label: アイテムレイアウト表示
         option:
           stacked: 上下に配置
           side-by-side: 左右に配置
       completions:
-        label: Autocomplete
+        label: オートコンプリート
         option:
-          datatype: By datatype only
-          property-datatype: By datatype and property
+          datatype: データ型のみ
+          property-datatype: データ型とプロパティによって
     project:
       label: プロジェクト
       base:
-        label: Link photos
+        label: 写真をリンク
         option:
           'null': Using absolute paths
-          project: Relative to the project file
-          home: Relative to your home directory
-      store: Managed folder
+          project: プロジェクトファイルとの相対関係
+          home: ホームディレクトリとの相対関係
+          <None>: 絶対パスを利用
+      store: 管理フォルダ
       name: 名前
       id: ID
       path: ファイル
-      type: Project type
+      type: プロジェクトタイプ
       convert:
-        confirm: Convert
-        hint: Convert this project into a Standard project.
+        confirm: 変換
+        hint: このプロジェクトをスタンダードプロジェクトに変換する
         detail: |-
           {errors, plural,
-            =0 {All photos consolidated.}
-            one {1 photo not found; consolidation required.}
-            other {# photos not found; consolidation required.}}
+          =0 {すべての写真が反映済みです。}
+          one {1件の写真が見つかりませんでした。反映が必要です。}
+          other {# 件の写真が見つかりませんでした。反映が必要です。}}
       watch:
-        folder: Watch folder
-        usePolling: Using file stat polling
+        folder: ウォッチフォルダ
+        usePolling: ファイル状態を確認中
     template:
       label: テンプレート
       new: 新規テンプレート
@@ -289,7 +287,7 @@ ja:
       noInfo: 作者不明
       homepage: More
   format:
-    ppi: Pixels per inch (ppi)
+    ppi: 1インチあたりのピクセル数（ppi）
   item:
     created: 登録日
     modified: 更新日
@@ -297,12 +295,12 @@ ja:
   photo:
     file: ファイル
     size: サイズ
-    density: Density
+    density: 密度
     type: タイプ
     created: 登録日
     modified: 更新日
-    consolidate: 写真を整理
-    error: Photo not found
+    consolidate: オリジナル写真の修整結果を反映する
+    error: 写真が見つかりません
   selection:
     size: サイズ
     created: 登録日
@@ -345,8 +343,8 @@ ja:
     column:
       placeholder: 検索
     file:
-      browse: Browse
-      clear: Clear
+      browse: ブラウズ
+      clear: クリア
   template:
     id: URI
     name: 名前
@@ -386,11 +384,9 @@ ja:
     notify:
       project:
         convert:
-          title: Conversion complete
+          title: 変換完了
           message: >-
-            Your project was successfully converted and saved. Tropy will now
-            close the original project file and open the converted project in a
-            new window.
+            プロジェクトは正常に変換され、保存されました。Tropyはこれから元のプロジェクトファイルを閉じ、変換後のプロジェクトを新しいウィンドウで開きます。
           buttons:
             - OK
     error:
@@ -408,9 +404,7 @@ ja:
             - 削除
       photo:
         consolidate:
-          message: >-
-            Do you want Tropy to automatically check and resolve further missing
-            photos at this location?
+          message: 見つからない写真を自動的にチェックし、解決しますか？
           buttons:
             - いいえ
             - はい
@@ -428,14 +422,12 @@ ja:
             - 削除
       template:
         import:
-          message: >-
-            A template with this id already exists in your ontology database. Do
-            you want to overwrite the existing template?
+          message: このIDを持つテンプレートが既にオントロジーデータベースに存在しています。既存のテンプレートを上書きしますか？
           buttons:
-            - Cancel
-            - Overwrite
+            - キャンセル
+            - 上書きする
         imported:
-          message: Template successfully imported.
+          message: テンプレートのインポートが正常に完了しました。
           buttons:
             - OK
     filter:
@@ -543,12 +535,12 @@ ja:
       implode: アイテムを復元しています
       import: |-
         {hasProgressBar, select,
-          true {Importing item {progress, number} of {total, number} …}
-          other {Importing items …}
+        true {{total, number}件中{progress, number}件のアイテムをインポートしています...}
+        other {アイテムをインポートしています…}
         }
       load: アイテムをロード中
       merge: アイテムを統合中
-      print: Processing items …
+      print: アイテムの処理を実行中
       restore: アイテムを復元中
       save: アイテムを保存中
       tag:
@@ -570,26 +562,26 @@ ja:
     photo:
       consolidate: |-
         {hasProgressBar, select,
-          true {Consolidating photo {progress, number} of {total, number} …}
-          other {Consolidating photos …}
+        true {{total, number}件中{progress, number}件の写真を統合しています…}
+        other {写真を統合しています…}
         }
       create: |-
         {hasProgressBar, select,
-          true {Importing photo {progress, number} of {total, number} …}
-          other {Importing photos …}
+        true {{total, number}件中{progress, number}件の写真をインポートしています...}
+        other {写真をインポートしています…}
         }
       delete: 写真を削除中
       duplicate: |-
         {hasProgressBar, select,
-          true {Duplicating photo {progress, number} of {total, number} …}
-          other {Duplicating photos …}
+        true {{total, number}件中{progress, number}件の写真を複製しています...}
+        other {写真を複製しています…}
         }
       load: 写真をロード中
       move: 写真を移動中
       order: 写真をソート中
       save: 写真を保存中
       restore: 写真を復元中
-      extract: Extracting photo …
+      extract: 写真を抽出しています...
     note:
       create: ノートを作成中
       delete: ノートを削除中
@@ -597,14 +589,14 @@ ja:
       order: ノートをソート中
       restore: ノートを復元中
     selection:
-      create: Creating photo selection …
+      create: フォト・セレクションを作成しています...
       load: フォト・セレクションをロード中
-      extract: Extracting selection …
+      extract: セレクションを抽出しています...
     api:
       photo:
-        extract: Extracting photo …
+        extract: 写真を抽出しています...
       selection:
-        extract: Extracting selection …
+        extract: セレクションを抽出しています...
   editor:
     commands:
       bold: 太字
@@ -621,7 +613,7 @@ ja:
         button: リンクを挿入
         target: リンクターゲット
         title: リンクタイトル
-      unlink: Remove link
+      unlink: リンクを削除
       left: 左揃え
       center: 中央揃え
       right: 右揃え
@@ -633,7 +625,7 @@ ja:
       purge: 古いプロジェクトのキャッシュの削除に失敗しました
     project:
       created: プロジェクトの作成に失敗しました
-      convert: Project conversion failed.
+      convert: プロジェクトの変換に失敗しました
     item:
       export: アイテムのエクスポートに失敗しました
       merge: アイテムの統合に失敗しました
@@ -651,19 +643,19 @@ ja:
       item:
         add: リストへのアイテム追加に失敗しました
     photo:
-      consolidate: 写真の統合に失敗しました
+      consolidate: オリジナル写真の修整結果の反映に失敗しました
       create: 写真のインポートに失敗しました
       save: 写真の保存に失敗しました
-      extract: Failed to export photo.
+      extract: 写真のエクスポートに失敗しました
       template:
         change: 写真テンプレートの変更に失敗しました
     selection:
       create: フォト・セレクションの作成に失敗しました
-      extract: Failed to export selection.
+      extract: セレクションのエクスポートに失敗しました
       template:
         change: 選択テンプレートの変更に失敗しました
     ontology:
-      migrate: Failed to upgrade your ontology database.
+      migrate: オントロジーデータベースのアップグレードに失敗しました
       import: 語彙のインポートに失敗しました
       vocab:
         save: 語彙の保存に失敗しました。プレフィックスは一意のものにしてください。
@@ -675,7 +667,7 @@ ja:
     tag:
       create: タグの作成に失敗しました。タグ名は一意のものにしてください。
     db:
-      SQLITE_CANTOPEN: Cannot find or open database file.
+      SQLITE_CANTOPEN: データベースファイルが見つからない、またはファイルを開くことができませんでした
   flash:
     update:
       ready:

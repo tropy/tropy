@@ -43,10 +43,10 @@ ja:
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Photos…
+            - label: 写真をインポートする
               command: app:import
               accelerator: CmdOrCtrl+Shift+I
-            - label: Folder…
+            - label: フォルダをインポートする
               command: app:import-directory
         - label: エクスポート
           id: export
@@ -56,17 +56,17 @@ ja:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: 縦向き
                   command: app:print-pdf
-                - label: Landscape
+                - label: 横向き
                   command: app:print-pdf-landscape
         - type: separator
-        - label: 写真ライブラリを統合
+        - label: 写真ライブラリの修整結果を反映
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
-        - label: プリント
+        - label: 印刷
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
@@ -76,7 +76,7 @@ ja:
           window: project
           condition: isProjectOpen
         - type: separator
-        - label: Close Window
+        - label: ウィンドウを閉じる
           accelerator: Ctrl+W
           role: close
           window: '*'
@@ -105,7 +105,7 @@ ja:
         - label: 貼り付け
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: 貼り付け先の書式に合わせてペーストする
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: 全選択
@@ -129,7 +129,7 @@ ja:
           accelerator: Alt+Shift+=
           window: '*'
         - type: separator
-        - label: Actual Size
+        - label: 実サイズ
           command: app:zoom-reset
           accelerator: CmdOrCtrl+0
         - label: ズームイン
@@ -160,9 +160,9 @@ ja:
           command: app:reset-ontology-db
         - label: プロジェクトのキャッシュを最適化
           command: app:optimize-cache
-        - label: Optimize Project Database
+        - label: プロジェクトのデータベースを最適化
           command: app:optimize-project
-        - label: Reindex Project Database
+        - label: プロジェクトのデータベースを再インデックス化
           command: app:reindex-project
         - type: separator
         - label: テーマ
@@ -190,9 +190,9 @@ ja:
           command: app:open-logs
         - label: プラグインフォルダを開く
           command: app:open-plugins-folder
-        - label: ユーザーデータフォルダーを開く
+        - label: ユーザーデータフォルダを開く
           command: app:open-user-data
-        - label: Show Cache Folder
+        - label: キャッシュフォルダを開く
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
@@ -277,12 +277,12 @@ ja:
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Photos…
+            - label: 写真...
               command: app:import
               accelerator: CmdOrCtrl+Shift+I
-            - label: Folder…
+            - label: フォルダ...
               command: app:import-directory
-        - label: 写真ライブラリを統合
+        - label: 写真ライブラリの修整結果を反映
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
@@ -295,11 +295,11 @@ ja:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: 縦方向
                   command: app:print-pdf
-                - label: Landscape
+                - label: 横向き
                   command: app:print-pdf-landscape
-        - label: プリント
+        - label: 印刷
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
@@ -330,7 +330,7 @@ ja:
         - label: 貼り付ける
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: ペーストしてスタイルを合わせる
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: 全選択
@@ -342,7 +342,7 @@ ja:
           command: win:reload
           window: '*'
         - type: separator
-        - label: Actual Size
+        - label: 実サイズ
           command: app:zoom-reset
           accelerator: CmdOrCtrl+0
         - label: ズームイン
@@ -391,9 +391,9 @@ ja:
           command: app:reset-ontology-db
         - label: プロジェクトのキャッシュを最適化
           command: app:optimize-cache
-        - label: Optimize Project Database
+        - label: プロジェクトのデータベースを最適化
           command: app:optimize-project
-        - label: Reindex Project Database
+        - label: プロジェクトのデータベースを再インデックス化
           command: app:reindex-project
         - type: separator
         - label: テーマ
@@ -425,7 +425,7 @@ ja:
           command: app:open-plugins-folder
         - label: ユーザーデータフォルダーを開く
           command: app:open-user-data
-        - label: Show Cache Folder
+        - label: キャッシュフォルダーを開く
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
@@ -485,10 +485,10 @@ ja:
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Photos…
+            - label: 写真...
               command: app:import
               accelerator: CmdOrCtrl+Shift+I
-            - label: Folder…
+            - label: フォルダ...
               command: app:import-directory
         - label: エクスポート
           id: export
@@ -498,17 +498,17 @@ ja:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Portrait
+                - label: 縦方向
                   command: app:print-pdf
-                - label: Landscape
+                - label: 横向き
                   command: app:print-pdf-landscape
         - type: separator
-        - label: 写真ライブラリを統合
+        - label: 写真ライブラリの修整結果を反映
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
-        - label: プリント
+        - label: 印刷
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
@@ -518,7 +518,7 @@ ja:
           window: project
           condition: isProjectOpen
         - type: separator
-        - label: Close Window
+        - label: ウィンドウを閉じる
           accelerator: Ctrl+W
           role: close
           window: '*'
@@ -547,7 +547,7 @@ ja:
         - label: 貼り付ける
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: ペーストしてスタイルを合わせる
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: 設定
@@ -568,7 +568,7 @@ ja:
           accelerator: Alt+Shift+=
           window: '*'
         - type: separator
-        - label: Actual Size
+        - label: 実サイズ
           command: app:zoom-reset
           accelerator: CmdOrCtrl+0
         - label: ズームイン
@@ -599,9 +599,9 @@ ja:
           command: app:reset-ontology-db
         - label: プロジェクトのキャッシュを最適化
           command: app:optimize-cache
-        - label: Optimize Project Database
+        - label: プロジェクトのデータベースを最適化
           command: app:optimize-project
-        - label: Reindex Project Database
+        - label: プロジェクトのデータベースを再インデックス化
           command: app:reindex-project
         - type: separator
         - label: テーマ
@@ -631,7 +631,7 @@ ja:
           command: app:open-plugins-folder
         - label: ユーザーデータフォルダーを開く
           command: app:open-user-data
-        - label: Show Cache Folder
+        - label: キャッシュフォルダーを開く
           command: app:open-cache-folder
         - type: separator
         - id: updater-check

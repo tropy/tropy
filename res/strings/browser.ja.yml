@@ -3,34 +3,35 @@ ja:
     file:
       project: Tropyプロジェクト
       plugin: プラグイン
-      pdf: PDF files
+      pdf: PDFファイル
     crashed:
       buttons:
         - Close Window
         - Restart Tropy
         - Show Logs
       message: Tropyがクラッシュしました
-      detail: |
-        この問題を https://github.com/tropy/tropy で報告してください
+      detail: >
+        残念ながらこのTropyウィンドウはクラッシュしました。この問題を https://github.com/tropy/tropy
+        で報告してください。
     unresponsive:
       buttons:
-        - 閉じる
-        - 待っておく
+        - ウィンドウを閉じる
+        - 応答を待つ
       message: Tropyが応答していません
       detail: |
         Tropyが応答していません。強制終了しますか？応答を待ちますか？
     unhandled:
       buttons:
-        - Dismiss
-        - Copy Error
-        - Show Logs
-      message: Unhandled Error
+        - キャンセル
+        - エラーをコピー
+        - ログを表示
+      message: 未処理のエラー
   window:
     prefs:
-      title: Tropy設定
+      title: Tropyの設定
     wizard:
       title: Tropyへようこそ
     about:
       title: Tropyについて
     project:
-      readOnly: ' — Locked'
+      readOnly: — ロックされました

@@ -61,7 +61,7 @@ nl-NL:
                 - label: Horizontaal
                   command: app:print-pdf-landscape
         - type: separator
-        - label: Fotoverzameling consolideren
+        - label: Fotoverzameling samenvoegen
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
@@ -174,7 +174,7 @@ nl-NL:
             - label: Donker
               id: dark
               type: checkbox
-            - label: Systeeminstellingen volgen
+            - label: Systeeminstellingen gebruiken
               id: system
               type: checkbox
     - label: Hulp
@@ -282,7 +282,7 @@ nl-NL:
               accelerator: CmdOrCtrl+Shift+I
             - label: Map…
               command: app:import-directory
-        - label: Fotoverzameling consolideren
+        - label: Fotoverzameling samenvoegen
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
@@ -405,7 +405,7 @@ nl-NL:
             - label: Donker
               id: dark
               type: checkbox
-            - label: Systeeminstellingen volgen
+            - label: Systeeminstellingen gebruiken
               id: system
               type: checkbox
     - label: Hulp
@@ -503,7 +503,7 @@ nl-NL:
                 - label: Horizontaal
                   command: app:print-pdf-landscape
         - type: separator
-        - label: Fotoverzameling consolideren
+        - label: Fotoverzameling samenvoegen
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
@@ -613,7 +613,7 @@ nl-NL:
             - label: Donker
               id: dark
               type: checkbox
-            - label: Systeeminstellingen volgen
+            - label: Systeeminstellingen gebruiken
               id: system
               type: checkbox
     - label: Hulp

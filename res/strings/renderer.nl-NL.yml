@@ -92,73 +92,73 @@ nl-NL:
         placeholder: Projecten filteren
         blank: Er zijn geen overeenkomsten
     corrupted: >-
-      Your project file may be damaged and manual steps necessary to fix it.
-      Please consult the user manual for further assistance.
+      Uw projectbestand is mogelijk beschadigd en dient handmatig te worden
+      gerepareerd. Raadpleeg de handleiding voor informatie hieromtrent.
     readOnly: >-
-      Your project file is locked and cannot be modified. To unlock, change the
-      file permissions and open the project again.
+      Uw projectbestand is vergrendeld en kan daarom niet worden bewerkt. Pas de
+      bestandsrechten aan en open het project opnieuw.
     new:
-      title: Create a new project
-      name: Enter a name for the project
+      title: Project aanmaken
+      name: Geef het project een naam
       type:
-        label: Choose the project type
+        label: Kies het soort project
         option:
-          tpy: Advanced
-          managed: Standard
+          tpy: Geavanceerd
+          managed: Standaard
         hint:
-          tpy: Links to photos at their original location.
-          managed: Copies photos to project folder on import.
-      create: Create Project
+          tpy: Koppelt foto's aan hun oorspronkelijke locatie.
+          managed: Kopieert foto's naar de projectmap na het importeren ervan.
+      create: Project aanmaken
       eyeCatcher: Nieuw
     stats:
       photos: |-
-        {photos, plural,
-          =0 {No photos}
-          one {1 photo}
-          other {# photos}}
+        {count, plural,
+        =0 {Geen foto's}
+        one {1 foto}
+        other {# foto's}}
       items: |-
-        {items, plural,
-          =0 {No items}
-          one {1 item}
-          other {# items}}
+        {count, plural,
+        =0 {Geen items}
+        one {1 item}
+        other {# items}}
       notes: |-
-        {notes, plural,
-          =0 {No notes}
-          one {1 note}
-          other {# notes}}
+        {count, plural,
+        =0 {Geen aantekeningen}
+        one {1 aantekening}
+        other {# aantekeningen}}
   prefs:
     title: Tropy-instellingen
     app:
-      label: Settings
+      label: Instellingen
       style:
         theme: Thema
         themes:
           light: Licht
           dark: Donker
-          system: Systeeminstellingen volgen
+          system: Systeeminstellingen gebruiken
         font:
-          size: Font size
+          size: Tekstgrootte
           sizes:
-            12px: Very Small
-            13px: Small (Default)
-            14px: Medium
-            15px: Large
-            16px: Very Large
-        frameless: Use custom titlebar (requires restart)
+            12px: Erg klein
+            13px: Klein (standaard)
+            14px: Normaal
+            15px: Groot
+            16px: Erg groot
+        frameless: Aangepaste titelbalk gebruiken (herstart vereist)
       print:
         mode: Afdrukken
         modes:
-          item: One Item per Page
-          photo: One Photo per Page
-          selection: One Selection per Page
-        photos: Include photos
-        optimize: Optimize photo size and quality
-        metadata: Include metadata
-        notes: Include notes
-        onlyNotes: Include only photos with notes
-        overflow: Allow content to take up more than one page
+          item: Eén item per pagina
+          photo: Eén foto per pagina
+          selection: Eén selectie per pagina
+        photos: Inclusief foto's
+        optimize: Fotokwaliteit en -afmetingen optimaliseren
+        metadata: Inclusief metagegevens
+        notes: Inclusief aantekeningen
+        onlyNotes: Alleen foto's met aantekeningen
+        overflow: Inhoud verdelen over meer dan één pagina
       locale:
-        locale: Locale
+        locale: Taal
         locales:
           cn: 中文
           de: Deutsch
@@ -172,229 +172,229 @@ nl-NL:
           pt-BR: Português brasileiro
           uk: Украї́нська мо́ва
       templates:
-        label: Default templates
+        label: Standaardsjablonen
         item: Item
         photo: Foto
         selection: Selectie
       title:
-        label: Import file name as
-        force: Overwrite embedded photo metadata
-      debug: Enable Developer Mode
-      localtime: Assume Exif timestamps use local timezone
+        label: Bestandsnaam importeren al
+        force: Ingesloten metagegevens overschrijven
+      debug: Ontwikkelaarsmodus inschakelen
+      localtime: Exif-tijdstempels baseren op lokale tijdzone
       dup:
-        label: During import
+        label: Tijdens importeren
         option:
-          skip: Skip duplicate photos
-          import: Accept duplicate photos
-          prompt: Ask me every time
+          skip: Duplicaten overslaan
+          import: Duplicaten niet overslaan
+          prompt: Altijd vragen
       density:
-        label: Default density (ppi)
-        title: Used for PDF, SVG and other scalable formats
+        label: Standaard dichtheid (in ppi)
+        title: Dit is van toepassing op pdf-, svg- en andere schaalbare formaten
       export:
         label: Exporteren
         note:
           format:
-            html: Notes as HTML
-            markdown: Notes as Markdown
+            html: Aantekeningen in html
+            markdown: Aantekeningen in Markdown
           copy:
-            label: Copy notes as
+            label: Aantekeningen kopiëren als
             option:
-              text: Plain text
+              text: Platte tekst
               markdown: Markdown
-              html: HTML source code
+              html: Html-broncode
       ui:
-        label: Interface
+        label: Vormgeving
         option:
-          invertScroll: Invert direction when scrolling in photos
-          invertZoom: Invert direction when zooming in photos
-          overlayToolbars: Automatically hide and show toolbars
+          invertScroll: Richting omkeren tijdens bladeren door foto's
+          invertZoom: Richting omkeren tijdens zoomen van foto's
+          overlayToolbars: Werkbalken automatisch tonen/verbergen
       zoomMode:
-        label: By default
+        label: Standaard
         option:
-          fit: Zoom photos to fit
-          fill: Zoom photos to fill
-          zoom: Zoom photos to actual size
+          fit: Foto's inpassen
+          fill: Foto's aanpassen aan schermafmetingen
+          zoom: Foto's op ware grootte tonen
       layout:
-        label: Item View layout
+        label: Itemweergave-indelingen
         option:
           stacked: Gestapeld
           side-by-side: Zij-aan-zij
       completions:
-        label: Autocomplete
+        label: Automatisch aanvullen
         option:
-          datatype: By datatype only
-          property-datatype: By datatype and property
+          datatype: Alleen op gegevenstype
+          property-datatype: Op gegevenstype en eigenschap
     project:
       label: Project
       base:
-        label: Link photos
+        label: Foto's koppelen
         option:
           'null': Using absolute paths
-          project: Relative to the project file
-          home: Relative to your home directory
-      store: Managed folder
+          project: Afhankelijk van projectbestand
+          home: Afhankelijk van persoonlijke map
+          <None>: Met behulp van directe locaties
+      store: Beheerde map
       name: Naam
-      id: ID
+      id: Id
       path: Bestand
-      type: Project type
+      type: Soort project
       convert:
-        confirm: Convert
-        hint: Convert this project into a Standard project.
+        confirm: Converteren
+        hint: Converteer dit project naar een standaardproject.
         detail: |-
           {errors, plural,
-            =0 {All photos consolidated.}
-            one {1 photo not found; consolidation required.}
-            other {# photos not found; consolidation required.}}
+          =0 {Alle foto's zijn samengevoegd.}
+          one {1 foto is niet aangetroffen - samenvoegen is vereist.}
+          other {# foto's zijn niet aangetroffen - samenvoegen is vereist.}}
       watch:
-        folder: Watch folder
-        usePolling: Using file stat polling
+        folder: Map bijhouden
+        usePolling: Bestandsstatistieken bijhouden
     template:
-      label: Templates
-      new: New Template …
-      create: Create
+      label: Sjablonen
+      new: Nieuw sjabloon…
+      create: Maken
       select: Sjabloon
       tools:
         new: Nieuw
-        copy: Duplicate
-        delete: Delete
+        copy: Klonen
+        delete: Verwijderen
         import: Importeren
         export: Exporteren
     vocab:
-      label: Vocabularies
+      label: Woordenboeken
       export: Exporteren
       classes: |-
         {count, plural,
-          =0 {No Classes}
-          one {# Class}
-          other {# Classes}
+        =0 {Geen classificaties}
+        one {# classificatie}
+        other {# classificaties}
         }
       datatypes: |-
         {count, plural,
-          =0 {No Datatypes} one {# Datatype}
-          other {# Datatypes}
+        =0 {Geen gegevenssoorten} one {# gegevenssoort}
+        other {# gegevenssoorten}
         }
       properties: |-
         {count, plural,
-          =0 {No Properties}
-          one {# Property}
-          other {# Properties}
+        =0 {Geen eigenschappen}
+        one {# eigenschap}
+        other {# eigenschappen}
         }
     plugins:
-      label: Plugins
-      settings: Settings
-      enable: Enable
-      disable: Disable
-      install: Install Plugin
-      uninstall: Uninstall
-      noInfo: Unknown author
-      homepage: More
+      label: Plug-ins
+      settings: Instellingen
+      enable: Inschakelen
+      disable: Uitschakelen
+      install: Plug-in installeren
+      uninstall: Verwijderen
+      noInfo: Onbekende maker
+      homepage: Meer
   format:
-    ppi: Pixels per inch (ppi)
+    ppi: Aantal pixels per inch (ppi)
   item:
-    created: Date Added
-    modified: Modified
+    created: Toegevoegd op
+    modified: Bewerkt op
     template: Sjabloon
   photo:
     file: Bestand
-    size: Size
-    density: Density
+    size: Afmetingen
+    density: Dichtheid
     type: Type
-    created: Date Added
-    modified: Modified
+    created: Toegevoegd op
+    modified: Bewerkt op
     consolidate: Foto samenvoegen
-    error: Photo not found
+    error: De foto is niet aangetroffen
   selection:
-    size: Size
-    created: Date Added
-    modified: Modified
+    size: Afmetingen
+    created: Toegevoegd op
+    modified: Bewerkt op
   esper:
     tool:
-      pan: Pan Tool
-      select: Selection Tool
-      rotate: Rotate
-      mirror: Mirror
-      edit: Edit Photo
+      pan: Meetrekgereedschap
+      select: Selectiegereedschap
+      rotate: Draaien
+      mirror: Spiegelen
+      edit: Foto bewerken
     mode:
-      fill: Fill
-      fit: Fit
+      fill: Opvullen
+      fit: Inpassen
       zoom: Zoomen
     panel:
-      negative: Invert colors
-      revert: Revert to Original
+      negative: Kleuren omkeren
+      revert: Origineel herstellen
       brightness:
-        label: Brightness
-        value: '{value, number}'
+        label: Helderheid
+        value: '{waarde, getal}'
       contrast:
         label: Contrast
-        value: '{value, number}'
+        value: '{waarde, getal}'
       hue:
-        label: Hue
-        value: '{value, number}°'
+        label: Tint
+        value: '{waarde, getal}°'
       saturation:
-        label: Saturation
-        value: '{value, number}'
+        label: Verzadiging
+        value: '{waarde, getal}'
       sharpen:
-        label: Sharpen
-        value: '{value, number}'
+        label: Scherper maken
+        value: '{waarde, getal}'
   notepad:
-    placeholder: Add your notes here …
+    placeholder: Voeg uw aantekeningen toe…
   completions:
-    empty: No options available
-    noMatches: No matches found
+    empty: Er zijn geen opties beschikbaar
+    noMatches: Er zijn geen overeenkomsten
   select:
     column:
       placeholder: Zoeken
     file:
-      browse: Browse
-      clear: Clear
+      browse: Bladeren
+      clear: Wissen
   template:
-    id: URI
+    id: Uri
     name: Naam
     type: Type
-    creator: Creator
-    description: Description
+    creator: Maker
+    description: Beschrijving
     types:
-      https://tropy.org/v1/tropy#Item: Item Template
-      https://tropy.org/v1/tropy#Photo: Photo Template
-      https://tropy.org/v1/tropy#Selection: Selection Template
+      https://tropy.org/v1/tropy#Item: Itemsjabloon
+      https://tropy.org/v1/tropy#Photo: Fotosjabloon
+      https://tropy.org/v1/tropy#Selection: Selectiesjabloon
     field:
       property: Eigenschap
       label: Label
       datatype: Gegevenssoort
-      isRequired: Is mandatory field
+      isRequired: Vereist veld
       hint: Tip
-      value: Default Value
-      isConstant: Is read-only
+      value: Standaardwaarde
+      isConstant: Alleen-lezen
   vocab:
-    id: URI
-    prefix: Prefix
+    id: Uri
+    prefix: Voorvoegsel
     title: Naam
-    description: Description
-    properties: Properties
-    seeAlso: See Also
+    description: Beschrijving
+    properties: Eigenschappen
+    seeAlso: Zie ook
   property:
-    select: Select a Property …
+    select: Kies een eigenschap…
   datatype:
-    select: Select a Datatype …
+    select: Kies een gegevenssoort…
   resource:
-    select: Select a Resource …
-    id: URI
+    select: Kies een bron…
+    id: Uri
     label: Label
-    description: Description
-    comment: Comment
+    description: Beschrijving
+    comment: Opmerking
   dialog:
     notify:
       project:
         convert:
-          title: Conversion complete
+          title: De conversie is voltooid
           message: >-
-            Your project was successfully converted and saved. Tropy will now
-            close the original project file and open the converted project in a
-            new window.
+            Uw project is geconverteerd en opgeslagen. Het oorspronkelijke
+            project wordt gesloten en het geconverteerde geopend.
           buttons:
-            - OK
+            - Oké
     error:
-      title: Error
+      title: Foutmelding
       buttons:
         - Negeren
         - Foutmelding kopiëren
@@ -403,296 +403,322 @@ nl-NL:
       item:
         destroy:
           message: >-
-            Are your sure you want to permanently delete items? This action
-            cannot be undone.
+            Weet u zeker dat u deze items permanent wilt verwijderen? Deze actie
+            is onomkeerbaar.
           buttons:
-            - Cancel
-            - Delete
+            - Annuleren
+            - Verwijderen
       photo:
         consolidate:
           message: >-
-            Do you want Tropy to automatically check and resolve further missing
-            photos at this location?
+            Wilt u dat Tropy automatisch zoekt naar ontbrekende foto's in deze
+            locatie en ze toevoegt?
           buttons:
-            - 'No'
-            - 'Yes'
+            - Nee
+            - Ja
       dup:
         detail: >-
-          This photo already exists in your project. Are you sure you want to
-          import it again?
-        checkboxLabel: Remember this choice
+          Deze foto is al opgenomen in uw project. Weet u zeker dat u de foto
+          opnieuw wilt importeren?
+        checkboxLabel: Keuze onthouden
         buttons:
-          - Skip
-          - Import Anyway
+          - Overslaan
+          - Opnieuw importeren
       plugin:
         uninstall:
           detail: >-
-            Are you sure you want to delete the plugin? This will permanently
-            remove the plugin and its configuration.
+            Weet u zeker dat u deze plug-in wilt verwijderen? Hierdoor worden
+            ook de instellingen ervan gewist.
           buttons:
-            - Cancel
-            - Delete
+            - Annuleren
+            - Verwijderen
       template:
         import:
           message: >-
-            A template with this id already exists in your ontology database. Do
-            you want to overwrite the existing template?
+            Er is al een sjabloon met deze id in uw ontologiedatabank. Wilt u
+            het reeds aanwezige sjabloon overschrijven?
           buttons:
-            - Cancel
-            - Overwrite
+            - Annuleren
+            - Overschrijven
         imported:
-          message: Template successfully imported.
+          message: Het sjabloon is geïmporteerd.
           buttons:
-            - OK
+            - Oké
     filter:
-      csv: CSV
-      templates: Tropy Templates
-      images: Images
-      items: Tropy Items
+      csv: Csv
+      templates: Tropy-sjablonen
+      images: Afbeeldingen
+      items: Tropy-items
       notes: Aantekeningen
       projects: Tropy-projecten
-      rdf: RDF Vocabularies
+      rdf: Rdf-woordenboeken
       jsonld: JSON-LD
   action:
     project:
-      save: Save Project
+      save: Project opslaan
     list:
-      create: Create List
+      create: Lijst samenstellen
       delete: Lijst verwijderen
       item:
-        add: Add Items To List
-        merge: Merge Items
+        add: Items toevoegen aan lijst
+        merge: Items samenvoegen
         remove: Item van lijst verwijderen
-        restore: Add Item To List
-      order: Sort List
-      restore: Restore List
-      save: Save List
+        restore: Item toevoegen aan lijst
+      order: Lijst sorteren
+      restore: Lijst herstellen
+      save: Lijst opslaan
     item:
-      create: Create Items
-      delete: Delete Items
+      create: Items maken
+      delete: Items verwijderen
       explode: Item opblazen
-      implode: Merge Items
-      merge: Merge Items
-      split: Split Items
-      import: Import Items
-      restore: Restore Items
-      save: Save Item
+      implode: Items samenvoegen
+      merge: Items samenvoegen
+      split: Items opsplitsen
+      import: Items importeren
+      restore: Items herstellen
+      save: Item opslaan
       tag:
         create: Label
         toggle: Label
-        clear: Clear Tags
+        clear: Labels wissen
     metadata:
-      save: Save Metadata
+      save: Metagegevens opslaan
     ontology:
-      import: Import Vocabularies
+      import: Woordenboeken importeren
       vocab:
-        save: Save Vocabulary
+        save: Woordenboek opslaan
       label:
-        save: Save Label
+        save: Label opslaan
       template:
-        import: Import Template
+        import: Sjabloon importeren
     photo:
-      create: Import Photo
+      create: Foto importeren
       delete: Foto verwijderen
       duplicate: Foto klonen
-      move: Moving Photo
-      order: Sort Photos
-      restore: Restore Photo
-      save: Save Photo
+      move: Foto verplaatsen
+      order: Foto's sorteren
+      restore: Foto herstellen
+      save: Foto opslaan
     note:
-      create: Create Note
+      create: Aantekening maken
       delete: Aantekening verwijderen
-      order: Sort Notes
-      restore: Restore Note
-      save: Save Note
+      order: Aantekeningen sorteren
+      restore: Aantekening herstellen
+      save: Aantekening opslaan
     tag:
-      create: Create Tag
+      create: Label maken
       delete: Label wissen
-      restore: Create Tag
-      save: Save Tag
+      restore: Label maken
+      save: Label opslaan
     selection:
-      create: Create Selection
+      create: Selectie maken
       delete: Selectie verwijderen
-      restore: Create Selection
-      save: Save Selection
-      order: Sort Selections
+      restore: Selectie maken
+      save: Selectie opslaan
+      order: Selecties sorteren
   activity:
     cache:
-      prune: Optimizing project cache …
-      purge: Purging old caches …
+      prune: Bezig met optimaliseren van projectcache…
+      purge: Bezig met opruimen van oude caches…
     project:
-      save: Saving …
+      save: Bezig met opslaan…
     list:
-      create: Creating list …
-      delete: Deleting list …
+      create: Bezig met samenstellen…
+      delete: Bezig met verwijderen…
       item:
-        add: Adding items to list …
-        merge: Merging items …
-        remove: Removing items from list …
-        restore: Restoring items to list …
-      load: Loading lists …
-      order: Sorting list …
-      restore: Restoring list …
-      save: Saving list …
+        add: Bezig met toevoegen…
+        merge: Bezig met samenvoegen…
+        remove: Bezig met verwijderen…
+        restore: Bezig met herstellen…
+      load: Bezig met laden…
+      order: Bezig met sorteren…
+      restore: Bezig met herstellen…
+      save: Bezig met opslaan…
     tag:
-      create: Creating tag …
-      delete: Deleting tag …
-      load: Loading tags …
-      restore: Restoring tag …
-      save: Saving tag …
+      create: Bezig met maken…
+      delete: Bezig met verwijderen…
+      load: Bezig met laden…
+      restore: Bezig met herstellen…
+      save: Bezig met opslaan…
     item:
-      create: Creating item …
-      delete: Deleting item …
-      destroy: Deleting items permanently …
-      explode: Exploding item …
-      export: Exporting item …
-      implode: Restoring item …
-      import: |-
+      create: Bezig met maken…
+      delete: Bezig met verwijderen…
+      destroy: Bezig met permanent verwijderen…
+      explode: Bezig met vernietigen…
+      export: Bezig met exporteren…
+      implode: Bezig met herstellen…
+      import: >-
         {hasProgressBar, select,
-          true {Importing item {progress, number} of {total, number} …}
-          other {Importing items …}
+
+        true {Bezig met importeren van item {progress, number} van {total,
+        number}…}
+
+        other {Bezig met importeren van items…}
+
         }
-      load: Loading items …
-      merge: Merging item …
-      print: Processing items …
-      restore: Restoring item …
-      save: Saving items …
+      load: Bezig met laden…
+      merge: Bezig met samenvoegen…
+      print: Bezig met verwerken…
+      restore: Bezig met herstellen…
+      save: Bezig met opslaan…
       tag:
-        create: Tagging item
-        toggle: Tagging item …
-        clear: Clearing item tags …
+        create: Item labelen
+        toggle: Bezig met labelen…
+        clear: Bezig met opruimen…
     metadata:
-      load: Loading metadata …
-      save: Saving metadata …
+      load: Bezig met laden…
+      save: Bezig met opslaan…
     ontology:
-      load: Loading ontology …
-      import: Importing vocabularies …
+      load: Bezig met laden…
+      import: Bezig met importeren…
       vocab:
-        save: Saving vocabulary …
+        save: Bezig met opslaan…
       label:
-        save: Saving label …
+        save: Bezig met opslaan…
       template:
-        import: Importing templates …
+        import: Bezig met importeren…
     photo:
-      consolidate: |-
+      consolidate: >-
         {hasProgressBar, select,
-          true {Consolidating photo {progress, number} of {total, number} …}
-          other {Consolidating photos …}
+
+        true {Bezig met samenvoegen van foto {progress, number} van {total,
+        number}…}
+
+        other {Bezig met samenvoegen…}
+
         }
-      create: |-
+      create: >-
         {hasProgressBar, select,
-          true {Importing photo {progress, number} of {total, number} …}
-          other {Importing photos …}
+
+        true {Bezig met importeren van foto {progress, number} van {total,
+        number}…}
+
+        other {Bezig met importeren…}
+
         }
-      delete: Deleting photo …
-      duplicate: |-
+      delete: Bezig met verwijderen…
+      duplicate: >-
         {hasProgressBar, select,
-          true {Duplicating photo {progress, number} of {total, number} …}
-          other {Duplicating photos …}
+
+        true {Bezig met dupliceren van foto {progress, number} van {total,
+        number}…}
+
+        other {Bezig met dupliceren…}
+
         }
-      load: Loading photos …
-      move: Moving photos …
-      order: Sorting photos …
-      save: Saving photo …
-      restore: Restoring photos …
-      extract: Extracting photo …
+      load: Bezig met laden…
+      move: Bezig met verplaatsen…
+      order: Bezig met sorteren…
+      save: Bezig met opslaan…
+      restore: Bezig met herstellen…
+      extract: Bezig met extraheren…
     note:
-      create: Creating note …
-      delete: Deleting note …
-      load: Loading notes …
-      order: Sorting notes …
-      restore: Restoring notes …
+      create: Bezig met maken…
+      delete: Bezig met verwijderen…
+      load: Bezig met laden…
+      order: Bezig met sorteren…
+      restore: Bezig met herstellen…
     selection:
-      create: Creating photo selection …
-      load: Loading photo selections …
-      extract: Extracting selection …
+      create: Bezig met samenstellen van selectie…
+      load: Bezig met laden van selecties…
+      extract: Bezig met extraheren…
     api:
       photo:
-        extract: Extracting photo …
+        extract: Bezig met extraheren…
       selection:
-        extract: Extracting selection …
+        extract: Bezig met extraheren…
   editor:
     commands:
-      bold: Bold
-      italic: Italic
-      underline: Underline
-      overline: Overline
-      strikethrough: Strikethrough
+      bold: Vetgedrukt
+      italic: Cursief
+      underline: Onderstrepen
+      overline: Bovenstrepen
+      strikethrough: Doorhalen
       subscript: Subscript
       superscript: Superscript
-      blockquote: Insert Blockquote
-      ol: Insert Numbered List
-      ul: Insert Bulleted List
+      blockquote: Blokcitaat invoegen
+      ol: Genummerde lijst invoegen
+      ul: Opsommingslijst invoegen
       link:
         button: Link
-        target: Link target
-        title: Link title
-      unlink: Remove link
-      left: Align Left
-      center: Center
-      right: Align Right
-      sinkListItem: Sink list item
-      liftListItem: Lift list item
+        target: Linkdoel
+        title: Linknaam
+      unlink: Link verwijderen
+      left: Links uitlijnen
+      center: Centreren
+      right: Rechts uitlijnen
+      sinkListItem: Lijstitem omlaag
+      liftListItem: Lijstitem omhoog
   error:
     cache:
-      prune: Failed to optimize project cache.
-      purge: Failed to remove old project caches.
+      prune: De projectcache kan niet worden geoptimaliseerd.
+      purge: De oude projectcaches kunnen niet worden gewist.
     project:
-      created: Project creation failed.
-      convert: Project conversion failed.
+      created: Het project kan niet worden aangemaakt.
+      convert: Het project kan niet worden geconverteerd.
     item:
-      export: Failed to export items.
-      merge: Failed to merge items.
-      import: Failed to import item.
+      export: De items kunnen niet worden geëxporteerd.
+      merge: De items kunnen niet worden samengevoegd.
+      import: Het item kan niet worden geïmporteerd.
       tag:
-        save: Failed to save tag.
-        create: Failed to tag item. Tags must be unique per item.
+        save: Het label kan niet worden toegekend.
+        create: >-
+          Het item kan niet worden gelabeld: labels dienen per item te
+          verschillen.
       template:
-        change: Failed to change item template.
+        change: Het itemsjabloon kan niet worden gewijzigd.
     list:
-      load: Failed to load lists.
-      create: Failed to create list. List names must be unique.
-      move: Failed to move list. List names must be unique per level.
-      save: Failed to save list.
+      load: De lijsten kunnen niet worden geladen.
+      create: >-
+        De lijst kan niet worden samengesteld: lijstnamen dienen van elkaar te
+        verschillen.
+      move: >-
+        De lijst kan niet worden verplaatst: lijstnamen dienen van elkaar te
+        verschillen.
+      save: De lijst kan niet worden opgeslagen.
       item:
-        add: Failed to add item(s) to list.
+        add: Een of meerdere items kunnen niet worden toegevoegd.
     photo:
-      consolidate: Failed to consolidate photos.
-      create: Failed to import photo.
-      save: Failed to save photo.
-      extract: Failed to export photo.
+      consolidate: De foto's kunnen niet worden samengevoegd.
+      create: De foto kan niet worden geïmporteerd.
+      save: De foto kan niet worden opgeslagen.
+      extract: De foto kan niet worden geëxporteerd.
       template:
-        change: Failed to change photo template.
+        change: Het fotosjabloon kan niet worden gewijzigd.
     selection:
-      create: Failed to create photo selection.
-      extract: Failed to export selection.
+      create: De fotoselectie kan niet worden samengesteld.
+      extract: De selectie kan niet worden geëxporteerd.
       template:
-        change: Failed to change selection template.
+        change: Het selectiesjabloon kan niet worden gewijzigd.
     ontology:
-      migrate: Failed to upgrade your ontology database.
-      import: Failed to import vocabulary.
+      migrate: De ontologiedatabank kan niet worden bijgewerkt.
+      import: Het woordenboek kan niet worden geïmporteerd.
       vocab:
-        save: Failed to save vocabulary. Prefix must be unique.
+        save: >-
+          Het woordenboek kan niet worden opgeslagen: het voorvoegsel dient
+          uniek te zijn.
       template:
-        import: Failed to import template.
+        import: Het sjabloon kan niet worden geïmporteerd
         field:
-          add: Failed to add field to template.
-          remove: Failed to remove field from template.
+          add: Het veld kan niet worden toegevoegd.
+          remove: Het veld kan niet worden verwijderd.
     tag:
-      create: Failed to create tag. Tag names must be unique.
+      create: >-
+        Het label kan niet worden toegekend: labelnamen dienen van elkaar te
+        verschillen.
     db:
-      SQLITE_CANTOPEN: Cannot find or open database file.
+      SQLITE_CANTOPEN: Het databankbestand is niet aangetroffen of beschadigd.
   flash:
     update:
       ready:
         message: >-
-          Tropy {version} is ready to be installed. Do you want to install and
-          restart now?
-        confirm: Restart Now
+          Tropy {version} kan worden geïnstalleerd. Wilt u Tropy opnieuw starten
+          om de update te installeren?
+        confirm: Nu opnieuw starten
   plugin:
     name: Naam
-    plugin: Plugin
-    options: Options
+    plugin: Plug-in
+    options: Opties
     hooks:
       export: Exporteren
       import: Importeren

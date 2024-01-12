@@ -34,16 +34,16 @@ ja:
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Export Tags …
+      - label: タグをエクスポート
         command: app:export-tags
-      - label: Default Tag Color
+      - label: デフォルトのタグカラーの設定
         submenu:
           - label: 指定なし
             color:
               - null
               - tagColor
               - app:save-default-tag-color
-          - label: Random Color
+          - label: ランダムカラー
             color:
               - random
               - tagColor
@@ -79,12 +79,12 @@ ja:
               - purple
               - tagColor
               - app:save-default-tag-color
-          - label: 灰色
+          - label: グレー
             color:
               - gray
               - tagColor
               - app:save-default-tag-color
-          - label: 茶色
+          - label: ブラウン
             color:
               - brown
               - color
@@ -99,7 +99,7 @@ ja:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: 水色
+          - label: ライトブルー
             color:
               - light-blue
               - color
@@ -149,12 +149,12 @@ ja:
               - purple
               - color
               - app:save-tag-color
-          - label: 灰色
+          - label: グレー
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: 茶色
+          - label: ブラウン
             color:
               - brown
               - color
@@ -235,12 +235,12 @@ ja:
               - purple
               - color
               - app:save-tag-color
-          - label: 灰色
+          - label: グレー
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: 茶色
+          - label: ブラウン
             color:
               - brown
               - color
@@ -268,20 +268,20 @@ ja:
     note:
       - label: ノートを削除
         command: app:export-note
-      - label: Copy Note
+      - label: ノートをコピー
         command: app:copy-note
       - label: ノートを削除
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: 書字方向
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: 左から右へ
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: 右から左へ
             type: checkbox
             checked: false
             direction: rtl
@@ -337,23 +337,23 @@ ja:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 縦方向
                 command: app:print-pdf
-              - label: Landscape
+              - label: 横向き
                 command: app:print-pdf-landscape
-      - label: Export Item Notes …
+      - label: アイテムノートをエクスポート
         command: app:export-notes
-      - label: Copy Item Link
+      - label: アイテムリンクをコピー
         command: app:copy-item-link
-      - label: Copy Item Notes
+      - label: アイテムノートをコピー
         command: app:copy-notes
-      - label: Consolidate Item
+      - label: アイテムを反映する
         command: app:consolidate-item
     item-rotate:
-      - label: Rotate Left
+      - label: 左に回転する
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: Rotate Right
+      - label: 右に回転する
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-bulk:
@@ -369,15 +369,15 @@ ja:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 縦方向
                 command: app:print-pdf
-              - label: Landscape
+              - label: 横向き
                 command: app:print-pdf-landscape
-      - label: Export Selected Item Notes …
+      - label: 選択したアイテムノートをエクスポート
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: 選択したアイテムノートをコピー
         command: app:copy-notes
-      - label: Consolidate Selected Items
+      - label: 選択したアイテムを反映する
         command: app:consolidate-item
     item-list:
       - label: リストからアイテムを削除
@@ -397,36 +397,36 @@ ja:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: 元のファイルを開く
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: 外部ビューワを開く
         command: app:open-path
-      - label: Copy Photo Link
+      - label: 写真リンクをコピー
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: 写真をクリップボードにコピー
         command: app:copy-photo
-      - label: Export Photo…
+      - label: 写真をエクスポート
         command: app:extract-photo
-      - label: 写真を整理
+      - label: オリジナル写真の修整結果を反映する
         command: app:consolidate-photo
     photo-rotate:
-      - label: Rotate Left
+      - label: 左に回転する
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: Rotate Right
+      - label: 右に回転する
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
       - label: 選択を削除
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: 選択をエクスポート
         command: app:extract-photo
     selection-rotate:
-      - label: Rotate Left
+      - label: 左に回転する
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: Rotate Right
+      - label: 右に回転する
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     item-deleted:
@@ -506,16 +506,16 @@ ja:
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Export Tags …
+      - label: タグをエクスポートする
         command: app:export-tags
-      - label: Default Tag Color
+      - label: デフォルトのタグカラーの設定
         submenu:
           - label: 指定なし
             color:
               - null
               - tagColor
               - app:save-default-tag-color
-          - label: Random Color
+          - label: ランダムカラー
             color:
               - random
               - tagColor
@@ -740,20 +740,20 @@ ja:
     note:
       - label: ノートを削除
         command: app:export-note
-      - label: Copy Note
+      - label: ノートをコピー
         command: app:copy-note
       - label: ノートを削除
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: 書字方向
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: 左から右へ
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: 右から左へ
             type: checkbox
             checked: false
             direction: rtl
@@ -809,17 +809,17 @@ ja:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 縦方向
                 command: app:print-pdf
-              - label: Landscape
+              - label: 横向き
                 command: app:print-pdf-landscape
-      - label: Export Item Notes …
+      - label: アイテムノートをエクスポート
         command: app:export-notes
-      - label: Copy Item Link
+      - label: アイテムリンクをコピー
         command: app:copy-item-link
-      - label: Copy Item Notes
+      - label: アイテムノートをコピー
         command: app:copy-notes
-      - label: Consolidate Item
+      - label: アイテムを反映する
         command: app:consolidate-item
     item-bulk:
       - label: 選択したアイテムを統合
@@ -834,15 +834,15 @@ ja:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 縦方向
                 command: app:print-pdf
-              - label: Landscape
+              - label: 横向き
                 command: app:print-pdf-landscape
-      - label: Export Selected Item Notes …
+      - label: 選択したアイテムノートをエクスポート
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: 選択したアイテムノートをコピー
         command: app:copy-notes
-      - label: Consolidate Selected Items
+      - label: 選択したアイテムを反映する
         command: app:consolidate-item
     item-list:
       - label: リストからアイテムを削除
@@ -871,10 +871,10 @@ ja:
             id: side-by-side
             type: checkbox
     item-rotate:
-      - label: Rotate Left
+      - label: 左に回転する
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: Rotate Right
+      - label: 右に回転する
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     metadata-list:
@@ -900,36 +900,36 @@ ja:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: 元のファイルを開く
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: 外部ビューワを開く
         command: app:open-path
-      - label: Copy Photo Link
+      - label: 写真リンクをコピー
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: 写真をクリップボードにコピー
         command: app:copy-photo
-      - label: Export Photo…
+      - label: 写真をエクスポート
         command: app:extract-photo
-      - label: 写真を整理
+      - label: オリジナル写真の修整結果を反映する
         command: app:consolidate-photo
     photo-rotate:
-      - label: Rotate Left
+      - label: 左に回転する
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: Rotate Right
+      - label: 右に回転する
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
       - label: 選択を削除
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: 選択をエクスポート
         command: app:extract-photo
     selection-rotate:
-      - label: Rotate Left
+      - label: 左に回転する
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: Rotate Right
+      - label: 右に回転する
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     dev:
@@ -978,16 +978,16 @@ ja:
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Export Tags …
+      - label: タグをエクスポートする
         command: app:export-tags
-      - label: Default Tag Color
+      - label: デフォルトのタグカラーの設定
         submenu:
           - label: 指定なし
             color:
               - null
               - tagColor
               - app:save-default-tag-color
-          - label: Random Color
+          - label: ランダムカラー
             color:
               - random
               - tagColor
@@ -1140,7 +1140,7 @@ ja:
         enabled: false
         visible: false
         condition: isMultipleItems
-      - label: タグの色
+      - label: タグカラー
         condition: '!isReadOnly'
         submenu:
           - label: 指定なし
@@ -1179,12 +1179,12 @@ ja:
               - purple
               - color
               - app:save-tag-color
-          - label: 灰色
+          - label: グレー
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: 茶色
+          - label: ブラウン
             color:
               - brown
               - color
@@ -1212,20 +1212,20 @@ ja:
     note:
       - label: ノートを削除
         command: app:export-note
-      - label: Copy Note
+      - label: ノートをコピー
         command: app:copy-note
       - label: ノートを削除
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: 書字方向
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: 左から右へ
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: 右から左へ
             type: checkbox
             checked: false
             direction: rtl
@@ -1281,17 +1281,17 @@ ja:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 縦方向
                 command: app:print-pdf
-              - label: Landscape
+              - label: 横向き
                 command: app:print-pdf-landscape
-      - label: Export Item Notes …
+      - label: アイテムノートをエクスポート
         command: app:export-notes
-      - label: Copy Item Link
+      - label: アイテムリンクをコピー
         command: app:copy-item-link
-      - label: Copy Item Notes
+      - label: アイテムノートをコピー
         command: app:copy-notes
-      - label: Consolidate Item
+      - label: アイテムを反映する
         command: app:consolidate-item
     item-bulk:
       - label: 選択したアイテムを統合
@@ -1306,15 +1306,15 @@ ja:
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Portrait
+              - label: 縦方向
                 command: app:print-pdf
-              - label: Landscape
+              - label: 横向き
                 command: app:print-pdf-landscape
-      - label: Export Selected Item Notes …
+      - label: 選択したアイテムノートをエクスポート
         command: app:export-notes
-      - label: Copy Selected Item Notes
+      - label: 選択したアイテムノートをコピー
         command: app:copy-notes
-      - label: Consolidate Selected Items
+      - label: 選択したアイテムを反映する
         command: app:consolidate-item
     item-list:
       - label: リストからアイテムを削除
@@ -1343,10 +1343,10 @@ ja:
             id: side-by-side
             type: checkbox
     item-rotate:
-      - label: Rotate Left
+      - label: 左に回転する
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: Rotate Right
+      - label: 右に回転する
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     metadata-list:
@@ -1372,36 +1372,36 @@ ja:
         enabled: false
         visible: false
     photo-read-only:
-      - label: Show Original File…
+      - label: 元のファイルを開く
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: 外部ビューワを開く
         command: app:open-path
-      - label: Copy Photo Link
+      - label: 写真リンクをコピー
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: 写真をクリップボードにコピー
         command: app:copy-photo
-      - label: Export Photo…
+      - label: 写真をエクスポート
         command: app:extract-photo
-      - label: 写真を整理
+      - label: オリジナル写真の修整結果を反映する
         command: app:consolidate-photo
     photo-rotate:
-      - label: Rotate Left
+      - label: 左に回転する
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: Rotate Right
+      - label: 右に回転する
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
       - label: 選択を削除
         command: app:delete-selection
     selection-read-only:
-      - label: Export Selection …
+      - label: 選択をエクスポート
         command: app:extract-photo
     selection-rotate:
-      - label: Rotate Left
+      - label: 左に回転する
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: Rotate Right
+      - label: 右に回転する
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     dev:
