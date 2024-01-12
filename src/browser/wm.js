@@ -120,7 +120,7 @@ export class WindowManager extends EventEmitter {
         case 'darwin':
           opts.title = ''
           opts.titleBarStyle = opts.titleBarStyle || 'hidden'
-          opts.trafficLightPosition = getTrafficLightPosition(type)
+          opts.trafficLightPosition = getWindowButtonPosition(type)
 
           if (opts.vibrancy && args.vibrancy) {
             opts.backgroundColor = '#00000000'
@@ -792,7 +792,7 @@ export class WindowManager extends EventEmitter {
 }
 
 
-const getTrafficLightPosition = (type) => {
+const getWindowButtonPosition = (type) => {
   switch (type) {
     case 'prefs':
       return { x: 12, y: 11 }
