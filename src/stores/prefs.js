@@ -1,9 +1,8 @@
 import { ipcRenderer as ipc } from 'electron'
-import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
-import thunk from 'redux-thunk'
+import { configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
-import { fatal } from '../common/log'
-import { seq, debounce, throttle, log } from '../middleware'
+import { fatal } from '../common/log.js'
+import { seq, debounce, throttle, log } from '../middleware/index.js'
 
 import {
   context,
@@ -16,10 +15,10 @@ import {
   prefs,
   project,
   settings
-} from '../reducers'
+} from '../reducers/index.js'
 
 
-export function create(init = {}) {
+export const create = () => {
   let saga = createSagaMiddleware({
     onError(e) {
       fatal({ stack: e.stack }, 'unhandled error in saga middleware')
@@ -27,32 +26,28 @@ export function create(init = {}) {
     }
   })
 
-  let reducer = combineReducers({
-    context,
-    edit,
-    flash,
-    history,
-    intl,
-    keymap,
-    ontology,
-    prefs,
-    project,
-    settings
+  let store = configureStore({
+    reducer: {
+      context,
+      edit,
+      flash,
+      history,
+      intl,
+      keymap,
+      ontology,
+      prefs,
+      project,
+      settings
+    },
+    middleware: (getDefaultMiddleWare) =>([
+      ...getDefaultMiddleWare(),
+      debounce,
+      throttle,
+      seq,
+      log,
+      saga
+    ])
   })
 
-  let middleware = applyMiddleware(
-    debounce,
-    throttle,
-    thunk,
-    seq,
-    log,
-    saga
-  )
-
-  let composeWithDevTools =
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-
-  return {
-    ...createStore(reducer, init, composeWithDevTools(middleware)), saga
-  }
+  return { ...store, saga }
 }

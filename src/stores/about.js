@@ -1,21 +1,10 @@
-import {
-  applyMiddleware,
-  createStore,
-  combineReducers
-} from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
+import { flash, intl } from '../reducers/index.js'
 
-import thunk from 'redux-thunk'
-import { flash, intl } from '../reducers'
-
-export function create(init = {}) {
-  let reducer = combineReducers({
-    flash,
-    intl
+export const create = () =>
+  configureStore({
+    reducer: {
+      flash,
+      intl
+    }
   })
-
-  let middleware = applyMiddleware(
-    thunk
-  )
-
-  return createStore(reducer, init, middleware)
-}
