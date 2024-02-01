@@ -10,6 +10,7 @@ const { program } = require('commander')
 const { packager } = require('@electron/packager')
 const { minimatch } = require('minimatch')
 const { basename, extname, join, relative } = require('path')
+const { homedir } = require('node:os')
 
 const {
   appId,
@@ -291,7 +292,9 @@ function mergeMacSigningOptions(opts, args) {
 
     } else if (args.apiKey) {
       opts.osxNotarize = {
-        appleApiKey: args.apiKey,
+        appleApiKeyId: args.apiKey,
+        appleApiKey:
+          join(homedir(), '.private_keys', `AuthKey_${args.apiKey}.p8`),
         appleApiIssuer: args.apiKeyIssuer
       }
 
