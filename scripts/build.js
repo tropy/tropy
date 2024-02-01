@@ -278,27 +278,26 @@ function mergeMacSigningOptions(opts, args) {
       'keychain': args.keychain
     }
 
-    if (args.user || args.apiKey) {
-      if (args.user) {
-        opts.osxNotarize = {
-          appleId: args.user,
-          appleIdPassword: args.password,
-          ascProvider: 'CorporationforDigitalScholarship'
-        }
+    say('will attempt code-signing')
+
+    if (args.user) {
+      opts.osxNotarize = {
+        appleId: args.user,
+        appleIdPassword: args.password,
+        ascProvider: 'CorporationforDigitalScholarship'
       }
 
-      if (args.apiKey) {
-        opts.osxNotarize = {
-          appleApiKey: args.apiKey,
-          appleApiIssuer: args.apiKeyIssuer
-        }
+      say('will attempt app-notarization using password')
+
+    } else if (args.apiKey) {
+      opts.osxNotarize = {
+        appleApiKey: args.apiKey,
+        appleApiIssuer: args.apiKeyIssuer
       }
 
-      say('will attempt code-signing and app-notarization')
-
-    } else {
-      say('will attempt code-signing')
+      say('will attempt app-notarization using api key')
     }
+
   } else {
     say('skipped code-signing')
   }
