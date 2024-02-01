@@ -65,6 +65,10 @@ jobs:
           node-version: 18
           cache: npm
 
+      - name: Workaround node-gyp issue 2915
+        if: matrix.platform == 'darwin'
+        run: python3 -m pip install setuptools
+
       - name: Install and build dependencies
         run: npm clean-install --no-progress
 
