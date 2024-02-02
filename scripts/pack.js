@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const { check, error, say } = require('./util')('λ')
+const { bail, check, say } = require('./util')('λ')
 const { join, relative } = require('path')
 const { createHash } = require('crypto')
 const { readFile, writeFile } = require('fs/promises')
@@ -100,8 +100,8 @@ program
         }
       }
     } catch (e) {
-      error(e)
       console.error(e.stack)
+      bail(e)
     }
   })
 
