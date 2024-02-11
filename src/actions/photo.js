@@ -129,10 +129,25 @@ export default {
   },
 
   select(payload, meta) {
-    return {
-      type: PHOTO.SELECT,
-      payload,
-      meta: { log: 'trace', ...meta }
+    return (dispatch, getState) => {
+      let { item, photo, selection, note } = payload
+
+      if (note == null) {
+        note = (selection != null) ?
+          getState().selections[selection].notes[0] :
+          getState().photos[photo].notes[0]
+      }
+
+      dispatch({
+        type: PHOTO.SELECT,
+        payload: {
+          photo,
+          selection,
+          note,
+          item
+        },
+        meta: { log: 'trace', ...meta }
+      })
     }
   },
 

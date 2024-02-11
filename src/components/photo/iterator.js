@@ -71,7 +71,6 @@ export class PhotoIterator extends React.Component {
     this.props.onSelect({
       photo: photo.id,
       item: photo.item,
-      note: photo.notes[0],
       selection: photo.selection
     }, { throttle })
   }
@@ -83,8 +82,7 @@ export class PhotoIterator extends React.Component {
       if (this.isSelected(photo)) {
         this.props.onSelect({
           photo: photo.id,
-          item: photo.item,
-          note: photo.notes[0]
+          item: photo.item
         })
       }
       return true

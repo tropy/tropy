@@ -24,8 +24,7 @@ export class SelectionIterator extends React.Component {
       this.props.onSelect({
         id: this.props.photo.id,
         item: this.props.photo.item,
-        selection: selection.id,
-        notes: selection.notes
+        selection: selection.id
       })
     }
   }
