@@ -1,18 +1,18 @@
 import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { string } from 'prop-types'
-import { shell } from 'electron'
-import { product, version } from '../common/release'
-import { Titlebar } from './toolbar'
+import { useIpcEvent } from '../hooks/use-ipc.js'
+import { product, version } from '../common/release.js'
+import { Titlebar } from './toolbar.js'
 
 const Link = ({ id, ...opts }) => {
   let intl = useIntl()
-
   let url = intl.formatMessage({ id: `${id}.url` }, opts)
   let title = intl.formatMessage({ id: `${id}.title` }, opts)
+  let handleClick = useIpcEvent(null, ['shell', 'open', url])
 
   return (
-    <a onClick={() => shell.openExternal(url)}>{title}</a>
+    <a onClick={handleClick}>{title}</a>
   )
 }
 

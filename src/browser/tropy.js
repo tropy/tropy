@@ -8,7 +8,6 @@ import { v1 as uuid } from 'uuid'
 import {
   app,
   clipboard,
-  shell,
   ipcMain as ipc,
   nativeTheme,
   BrowserWindow,
@@ -39,6 +38,7 @@ import { Updater } from './updater.js'
 import dialog from './dialog.js'
 import { Server as ApiServer } from './api.js'
 import { WindowManager } from './wm.js'
+import * as shell from './shell.js'
 import { addIdleObserver } from './idle.js'
 import { migrate } from './migrate.js'
 import * as act from './actions.js'
@@ -101,9 +101,11 @@ export class Tropy extends EventEmitter {
     this.wm.start()
     await this.api.start()
     // await this.loadDevToolExtensions()
+    shell.start()
   }
 
   stop() {
+    shell.stop()
     this.api.stop()
     this.updater.stop()
     this.plugins.stop()
@@ -468,25 +470,19 @@ export class Tropy extends EventEmitter {
 
     this.on('app:show-project-file', () => {
       if (this.state.recent.length > 0) {
-        shell.showItemInFolder(this.state.recent[0])
+        shell.show(this.state.recent[0])
       }
     })
 
     this.on('app:center-window', () =>
       this.wm.center())
 
-    this.on('app:show-in-folder', (_, { target }) => {
-      if (target.protocol !== 'file')
-        shell.openExternal(`${target.protocol}://${target.path}`)
-      else
-        shell.showItemInFolder(target.path)
+    this.on('app:show-in-folder', async (_, { target }) => {
+      await shell.show(target)
     })
 
-    this.on('app:open-path', (_, { target }) => {
-      if (target.protocol !== 'file')
-        shell.openExternal(`${target.protocol}://${target.path}`)
-      else
-        shell.openPath(target.path)
+    this.on('app:open-path', async (_, { target }) => {
+      await shell.open(target)
     })
 
     this.on('app:create-item', () =>
@@ -773,39 +769,39 @@ export class Tropy extends EventEmitter {
     })
 
     this.on('app:open-license', () => {
-      shell.openExternal('https://tropy.org/license')
+      shell.open('https://tropy.org/license')
     })
 
     this.on('app:donate', () => {
-      shell.openExternal('https://tropy.org/donate')
+      shell.open('https://tropy.org/donate')
     })
 
     this.on('app:search-issues', () => {
-      shell.openExternal('https://github.com/tropy/tropy/issues')
+      shell.open('https://github.com/tropy/tropy/issues')
     })
 
     this.on('app:open-docs', () => {
-      shell.openExternal('https://docs.tropy.org')
+      shell.open('https://docs.tropy.org')
     })
 
     this.on('app:open-forums', () => {
-      shell.openExternal('https://forums.tropy.org')
+      shell.open('https://forums.tropy.org')
     })
 
     this.on('app:open-logs', () => {
-      shell.showItemInFolder(this.log)
+      shell.show(this.log)
     })
 
     this.on('app:open-user-data', () => {
-      shell.showItemInFolder(join(this.opts.data, 'state.json'))
+      shell.show(join(this.opts.data, 'state.json'))
     })
 
     this.on('app:open-plugins-folder', () => {
-      shell.showItemInFolder(this.plugins.configFile)
+      shell.show(this.plugins.configFile)
     })
 
     this.on('app:open-cache-folder', () => {
-      shell.openPath(this.cache.root)
+      shell.show(this.cache.root)
     })
 
     this.on('app:install-plugin', (win) => {
@@ -1021,7 +1017,7 @@ export class Tropy extends EventEmitter {
               app.quit()
               break
             case 2:
-              shell.openPath(this.log)
+              shell.show(this.log)
               break
           }
         })
@@ -1121,7 +1117,7 @@ export class Tropy extends EventEmitter {
             clipboard.write({ text: crashReport(e) })
             break
           case 2:
-            shell.openPath(this.log)
+            shell.show(this.log)
             break
         }
       })

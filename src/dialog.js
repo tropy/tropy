@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 import { extname, dirname } from 'node:path'
-import { ipcRenderer as ipc, shell, clipboard } from 'electron'
+import { ipcRenderer as ipc, clipboard } from 'electron'
 import ARGS from './args.js'
 import { counter, get } from './common/util.js'
 import { crashReport, warn } from './common/log.js'
@@ -72,7 +72,7 @@ function fail(e, code = e.code, detail) {
         clipboard.write({ text: crashReport(e, message) })
         break
       case 2:
-        shell.openPath(ARGS.log)
+        ipc.send('shell', 'show', ARGS.log)
         break
     }
   })

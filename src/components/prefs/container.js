@@ -8,7 +8,7 @@ import { Pane, Footer } from './pane.js'
 import { AppSettings } from '../settings/app.js'
 import { ProjectSettings } from '../project/settings.js'
 import { PluginConfig } from '../plugin/config.js'
-import { useIpcEvent } from '../../hooks/use-ipc.js'
+import { useIpcEvent, useIpcSend } from '../../hooks/use-ipc.js'
 import * as act from '../../actions/index.js'
 import { Button } from '../button.js'
 import { IconPlus } from '../icons.js'
@@ -41,9 +41,7 @@ export function PrefsContainer() {
     dispatch(act.context.show(event))
   }, [dispatch])
 
-  let openLink = useCallback((...args) => {
-    dispatch(act.shell.openLink(...args))
-  }, [dispatch])
+  let handleOpenLink = useIpcSend(['shell', 'open'])
 
   return (
     <Prefs onContextMenu={handleContextMenu}>
@@ -76,7 +74,7 @@ export function PrefsContainer() {
           </Pane>
           <Pane name="vocab">
             <VocabBrowser
-              onOpenLink={openLink}/>
+              onOpenLink={handleOpenLink}/>
             <Footer>
               <Button
                 icon={<IconPlus/>}
@@ -85,7 +83,7 @@ export function PrefsContainer() {
           </Pane>
           <Pane name="plugins">
             <PluginConfig
-              onOpenLink={openLink}
+              onOpenLink={handleOpenLink}
               onUninstall={handlePluginUninstall}/>
             <Footer>
               <Button

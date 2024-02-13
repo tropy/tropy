@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { bool, number, object } from 'prop-types'
 import { IMAGE } from '../../constants/index.js'
 import { useEvent } from '../../hooks/use-event.js'
+import { useIpcEvent } from '../../hooks/use-ipc.js'
 import { MetadataField } from '../metadata/field.js'
 import { bytes, datetime, number as num } from '../../format.js'
 import * as act from '../../actions/index.js'
@@ -28,10 +29,7 @@ export const PhotoInfo = React.memo(({
     bytes(photo.size)
   ].join(', ')
 
-  let openPhotoInFolder = useEvent(() => {
-    dispatch(act.shell.open(photo))
-  })
-
+  let showPhotoInFolder = useIpcEvent(null, ['shell', 'show', photo])
   let stopEditing = useEvent(() => setEditing(null))
 
   let handleChange = useEvent((data) => {
@@ -50,7 +48,7 @@ export const PhotoInfo = React.memo(({
         label={intl.formatMessage({ id: 'photo.file' })}
         text={photo.filename || basename(photo.path)}
         title={url}
-        onClick={openPhotoInFolder}/>
+        onClick={showPhotoInFolder}/>
 
       {photo.density &&
         <MetadataField

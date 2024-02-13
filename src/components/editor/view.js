@@ -7,7 +7,7 @@ import cx from 'classnames'
 import { Frame } from '../frame.js'
 import { isBlank, nodeViews } from '../../editor/index.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { useOpenExternal } from '../../hooks/use-open-external.js'
+import { useIpcSend } from '../../hooks/use-ipc.js'
 import { create, isLink } from '../../dom.js'
 import { isMeta } from '../../keymap.js'
 
@@ -29,7 +29,7 @@ export const EditorView = forwardRef(({
 }, ref) => {
   let [view, setView] = useState()
   let intl = useIntl()
-  let openExternal = useOpenExternal()
+  let open = useIpcSend(['shell', 'open'])
 
   let p = useMemo(() => (
     create('div', { class: 'placeholder' })
@@ -46,7 +46,7 @@ export const EditorView = forwardRef(({
 
     if (link && isMeta(event)) {
       event.preventDefault()
-      openExternal(link.href)
+      open(link.href)
     }
   })
 
