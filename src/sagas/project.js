@@ -8,7 +8,6 @@ import { history } from './history.js'
 import { search } from './search.js'
 import { ontology } from './ontology.js'
 import { exec, commands } from './cmd.js'
-import { shell } from './shell.js'
 import { fail } from '../dialog.js'
 import * as mod from '../models/index.js'
 import * as act from '../actions/index.js'
@@ -182,7 +181,6 @@ export function *main() {
       fork(ontology, { max: 1 }),
       fork(ipc),
       fork(history),
-      fork(shell),
       fork(storage),
       fork(consolidator),
       fork(watch)

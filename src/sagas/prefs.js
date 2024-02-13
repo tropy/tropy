@@ -5,7 +5,6 @@ import { ontology } from './ontology'
 import { open } from './project'
 import { history } from './history'
 import { ipc } from './ipc'
-import { shell } from './shell'
 import { persist, restore } from './storage'
 import { close } from '../slices/prefs.js'
 
@@ -18,8 +17,7 @@ export function *main() {
     var aux = yield all([
       fork(ontology, { max: 2 }),
       fork(history),
-      fork(ipc),
-      fork(shell)
+      fork(ipc)
     ])
 
     aux.START = Date.now()
