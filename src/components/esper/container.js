@@ -8,9 +8,10 @@ import { EsperPanel } from './panel'
 import { EsperPhotoError } from './error'
 import { pick, restrict } from '../../common/util'
 import { Cache } from '../../common/cache'
-import { isHorizontal, rotate, round } from '../../common/math'
+import { contains, isHorizontal, rotate, round } from '../../common/math'
 import { addOrientation, subOrientation } from '../../common/iiif'
 import { match } from '../../keymap'
+import { bounds, on, off } from  '../../dom.js'
 
 import {
   arrayOf, bool, func, number, object, shape, string
@@ -61,6 +62,7 @@ export class EsperContainer extends React.Component {
     isTextureReady: false,
     isCompact: false,
     isVisible: false,
+    over: false,
     quicktool: null,
 
     // Derived from props; constrained by photo/selection and resize
@@ -202,6 +204,9 @@ export class EsperContainer extends React.Component {
 
     this.#RO.observe(this.view.current)
     this.#IO.observe(this.view.current)
+
+    if (this.props.hasOverlayToolbar)
+      this.startMouseTracking()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -236,9 +241,58 @@ export class EsperContainer extends React.Component {
         }
       }
     }
+
+    if (this.props.hasOverlayToolbar !== prevProps.hasOverlayToolbar) {
+      if (this.props.hasOverlayToolbar)
+        this.startMouseTracking()
+      else
+        this.stopMouseTracking()
+    }
   }
 
+  // Workaround, see #843
+  // When using overlay toolbars we need to work around
+  // an issue upstream where no mouse events are reported
+  // over app draggable areas. Because of this the toolbar
+  // will disappear if you move the cursor over it.
+  // As workaround, we say the mouse has left Esper when
+  // we detect a mouse movement over the window but outside
+  // Esper.
+
+  startMouseTracking() {
+    on(this.container.current, 'mousemove', this.handleMouseEnter)
+  }
+
+  stopMouseTracking() {
+    off(this.container.current, 'mousemove', this.handleMouseEnter)
+    off(window, 'mousemove', this.handleMouseLeave)
+    this.handleMouseLeave.cancel()
+  }
+
+  handleMouseEnter = () => {
+    this.setState({ over: true })
+    off(this.container.current, 'mousemove', this.handleMouseEnter)
+    on(window, 'mousemove', this.handleMouseLeave)
+  }
+
+  handleMouseLeave = throttle((event) => {
+    let isOutside = !contains(bounds(this.container.current), {
+      x: event.clientX,
+      y: event.clientY
+    })
+
+    if (isOutside) {
+      this.setState({ over: false })
+      off(window, 'mousemove', this.handleMouseLeave)
+      this.handleMouseLeave.cancel()
+
+      on(this.container.current, 'mousemove', this.handleMouseEnter)
+    }
+  }, 200)
+
   componentWillUnmount() {
+    this.stopMouseTracking()
+
     this.#IO.disconnect()
     this.#RO.disconnect()
 
@@ -675,6 +729,7 @@ export class EsperContainer extends React.Component {
     return (
       <section
         className={cx('esper', this.tool, {
+          'mouseover': this.state.over,
           'compact': this.state.isCompact,
           'disabled': isDisabled,
           'read-only': this.props.isReadOnly,

@@ -139,7 +139,7 @@
         backdrop-filter: blur($esper-blur-radius);
       }
 
-      @include state(".esper:hover") {
+      @include state(".esper.mouseover") {
         transform: translate3d(0, 0, 0);
         transition: transform $esper-toolbar-transition-in-hover;
       }

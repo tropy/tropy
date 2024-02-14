@@ -46,3 +46,9 @@ export function translate(a, { top = 0, bottom = 0, left = 0, right = 0 }) {
 export function rotate(deg, by) {
   return (360 + ((deg + by) % 360)) % 360
 }
+
+export function contains(rect, p) {
+  return !(
+    p.x < rect.left || p.x > rect.right || p.y < rect.top || p.y > rect.bottom
+  )
+}
