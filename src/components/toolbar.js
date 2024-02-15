@@ -1,15 +1,16 @@
-import { forwardRef } from 'react'
+import { forwardRef, useRef } from 'react'
 import { bool, func, node, string } from 'prop-types'
 import cx from 'classnames'
 import { useWindow } from '../hooks/use-window.js'
 import { useEvent } from '../hooks/use-event.js'
-import { has } from '../dom.js'
+import { has, reflow } from '../dom.js'
 
 export const Toolbar = forwardRef((props, ref) => (
   <div
     ref={ref}
     className={cx('toolbar', 'tb-target', props.className)}
-    onDoubleClick={props.onDoubleClick}>
+    onDoubleClick={props.onDoubleClick}
+    onTransitionEnd={props.onTransitionEnd}>
     {props.children}
   </div>
 ))
@@ -17,7 +18,8 @@ export const Toolbar = forwardRef((props, ref) => (
 Toolbar.propTypes = {
   children: node,
   className: string,
-  onDoubleClick: func
+  onDoubleClick: func,
+  onTransitionEnd: func
 }
 
 Toolbar.Context = forwardRef((props, ref) => (
@@ -81,10 +83,18 @@ ToolGroup.propTypes = {
 
 export const Titlebar = ({ children, isOptional }) => {
   let win = useWindow()
+  let ref = useRef()
 
   let handleDoubleClick = useEvent((event) => {
     if (win.args.frameless && has(event.target, 'tb-target'))
       win.send('titlebar-action', 'double-click')
+  })
+
+  // Hack: Electron sometimes fails to update the app-region
+  // after transitions (e.g., when hide/showing a titlebar).
+  let handleTransitionEnd = useEvent((event) => {
+    if (win.args.frameless && event.target === ref.current)
+      reflow(event.target)
   })
 
   let handleMouseDown = useEvent((event) => {
@@ -100,9 +110,11 @@ export const Titlebar = ({ children, isOptional }) => {
 
   return (
     <Toolbar
+      ref={ref}
       className="titlebar"
       onMouseDown={handleMouseDown}
-      onDoubleClick={handleDoubleClick}>
+      onDoubleClick={handleDoubleClick}
+      onTransitionEnd={handleTransitionEnd}>
       {children}
     </Toolbar>
   )
