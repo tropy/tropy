@@ -260,35 +260,36 @@ export class EsperContainer extends React.Component {
   // Esper.
 
   startMouseTracking() {
+    this.stopMouseTracking()
     on(this.container.current, 'mousemove', this.handleMouseEnter)
   }
 
   stopMouseTracking() {
     off(this.container.current, 'mousemove', this.handleMouseEnter)
-    off(window, 'mousemove', this.handleMouseLeave)
-    this.handleMouseLeave.cancel()
+    off(document, 'mouseover', this.handleMouseLeave)
   }
 
   handleMouseEnter = () => {
+    console.log('enter')
     this.setState({ over: true })
     off(this.container.current, 'mousemove', this.handleMouseEnter)
-    on(window, 'mousemove', this.handleMouseLeave)
+    on(document, 'mouseover', this.handleMouseLeave)
   }
 
-  handleMouseLeave = throttle((event) => {
+  handleMouseLeave = (event) => {
+    console.log('x')
     let isOutside = !contains(bounds(this.container.current), {
       x: event.clientX,
       y: event.clientY
     })
 
     if (isOutside) {
+      console.log('leave')
       this.setState({ over: false })
-      off(window, 'mousemove', this.handleMouseLeave)
-      this.handleMouseLeave.cancel()
-
+      off(document, 'mouseover', this.handleMouseLeave)
       on(this.container.current, 'mousemove', this.handleMouseEnter)
     }
-  }, 200)
+  }
 
   componentWillUnmount() {
     this.stopMouseTracking()
