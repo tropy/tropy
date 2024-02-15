@@ -165,7 +165,7 @@ export function reflow(node) {
 export function repaint(node) {
   node.style.visibility = 'hidden'
   node.offsetHeight
-  node.style.visibility = ''
+  node.style.removeProperty('visibility')
 }
 
 
