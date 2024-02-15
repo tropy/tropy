@@ -162,6 +162,13 @@ export function reflow(node) {
   node.scrollTop
 }
 
+export function repaint(node) {
+  node.style.visibility = 'hidden'
+  node.offsetHeight
+  node.style.visibility = ''
+}
+
+
 export function isInput(node) {
   return node.isContentEditable ||
     node.tagName === 'INPUT' || node.tagName === 'TEXTAREA' || node.tagName === 'SELECT'

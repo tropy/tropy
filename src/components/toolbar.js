@@ -3,7 +3,7 @@ import { bool, func, node, string } from 'prop-types'
 import cx from 'classnames'
 import { useWindow } from '../hooks/use-window.js'
 import { useEvent } from '../hooks/use-event.js'
-import { has, reflow } from '../dom.js'
+import { has, repaint } from '../dom.js'
 
 export const Toolbar = forwardRef((props, ref) => (
   <div
@@ -94,7 +94,7 @@ export const Titlebar = ({ children, isOptional }) => {
   // after transitions (e.g., when hide/showing a titlebar).
   let handleTransitionEnd = useEvent((event) => {
     if (win.args.frameless && event.target === ref.current)
-      reflow(event.target)
+      repaint(event.target)
   })
 
   let handleMouseDown = useEvent((event) => {
