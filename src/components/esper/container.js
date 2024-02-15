@@ -270,21 +270,18 @@ export class EsperContainer extends React.Component {
   }
 
   handleMouseEnter = () => {
-    console.log('enter')
     this.setState({ over: true })
     off(this.container.current, 'mousemove', this.handleMouseEnter)
     on(document, 'mouseover', this.handleMouseLeave)
   }
 
   handleMouseLeave = (event) => {
-    console.log('x')
     let isOutside = !contains(bounds(this.container.current), {
       x: event.clientX,
       y: event.clientY
     })
 
     if (isOutside) {
-      console.log('leave')
       this.setState({ over: false })
       off(document, 'mouseover', this.handleMouseLeave)
       on(this.container.current, 'mousemove', this.handleMouseEnter)
