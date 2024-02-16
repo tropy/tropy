@@ -9,6 +9,7 @@ import { warn, info } from '../../common/log.js'
 import Esper from '../../esper/index.js'
 import { fail, save } from '../../dialog.js'
 import { toBuffer, toFile } from '../../image/index.js'
+import { dc, dcterms } from '../../ontology/ns.js'
 
 
 export class Extract extends Command {
@@ -18,15 +19,14 @@ export class Extract extends Command {
       let { meta, payload } = this.action
       var { target } = meta
 
-      let [photo, selection] = yield select(state => ([
+      let [photo, selection, filename] = yield select(state => ([
         state.photos[payload.id],
-        state.selections[payload.selection]
+        state.selections[payload.selection],
+        getSuggestedFilename(state, payload)
       ]))
 
       if (!target)
-        target = yield call(save.image, {
-          filename: getFilenameFor(photo, selection)
-        })
+        target = yield call(save.image, { filename })
       if (!target)
         return
 
@@ -64,23 +64,47 @@ export class Extract extends Command {
   }
 }
 
-function getFilenameFor({ filename, mimetype }, selection) {
-  let base = basename(filename, extname(filename))
-  let suffix = ''
+function getSuggestedFilename(state, props) {
+  let photo = state.photos[props.id]
+  let selection = state.selections[props.selection]
+
+  let name = getTitle(state.metadata[photo.id]) ||
+    basename(photo.filename, extname(photo.filename))
 
   if (selection) {
     let { x, y, width, height } = selection
-    suffix = `-${x}_${y}-${width}x${height}`
+    let title = getTitle(state.metadata[selection.id])
+
+    if (title) {
+      name += ` - ${title}`
+    } else {
+      name += ` ${x}-${y} ${width}x${height}`
+    }
   }
 
-  switch (mimetype) {
-    case MIME.JPEG:
-    case MIME.PDF:
+  switch (photo.mimetype) {
+    case MIME.AVIF:
+      return `${name}.avif`
+    case MIME.HEIC:
+    case MIME.HEIF:
+    case MIME.PNG:
+    case MIME.SVG:
+      return `${name}.png`
+    case MIME.GIF:
+      return `${name}.gif`
     case MIME.TIFF:
-      return `${base}${suffix}.jpg`
+      return `${name}.tiff`
+    case MIME.JP2:
+    case MIME.J2K:
+    case MIME.JPX:
+      return `${name}.jpg`
     default:
-      return `${base}${suffix}.png`
+      return `${name}.jpg`
   }
+}
+
+function getTitle(metadata) {
+  return (metadata?.[dcterms.title] || metadata?.[dc.title])?.text
 }
 
 Extract.register(PHOTO.EXTRACT)
