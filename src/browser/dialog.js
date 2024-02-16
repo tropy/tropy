@@ -1,4 +1,4 @@
-import { dirname } from 'node:path'
+import { join, dirname } from 'node:path'
 import { dialog } from 'electron'
 
 let defaultPath
@@ -35,7 +35,8 @@ const Dialog = {
       case 'save':
         return dialog
           .showSaveDialog(win, {
-            defaultPath,
+            defaultPath:
+              join(opts.defaultPath || defaultPath, opts.filename || ''),
             properties: ['createDirectory'],
             ...opts
           })

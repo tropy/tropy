@@ -1,7 +1,8 @@
+import { basename, extname } from 'node:path'
 import { clipboard, nativeImage } from 'electron'
 import { Command } from '../command'
 import { call, select } from 'redux-saga/effects'
-import { PHOTO } from '../../constants/index.js'
+import { PHOTO, MIME } from '../../constants/index.js'
 import { Cache } from '../../common/cache.js'
 import { addOrientation } from '../../common/iiif.js'
 import { warn, info } from '../../common/log.js'
@@ -17,15 +18,17 @@ export class Extract extends Command {
       let { meta, payload } = this.action
       var { target } = meta
 
-      if (!target)
-        target = yield call(save.image)
-      if (!target)
-        return
-
       let [photo, selection] = yield select(state => ([
         state.photos[payload.id],
         state.selections[payload.selection]
       ]))
+
+      if (!target)
+        target = yield call(save.image, {
+          filename: getFilenameFor(photo, selection)
+        })
+      if (!target)
+        return
 
       var image = selection || photo
       let src = Cache.url(cache.root, 'full', photo)
@@ -58,6 +61,25 @@ export class Extract extends Command {
       }, `failed to extract image #${image?.id} to ${target}`)
       fail(e, this.action.type)
     }
+  }
+}
+
+function getFilenameFor({ filename, mimetype }, selection) {
+  let base = basename(filename, extname(filename))
+  let suffix = ''
+
+  if (selection) {
+    let { x, y, width, height } = selection
+    suffix = `-${x}_${y}-${width}x${height}`
+  }
+
+  switch (mimetype) {
+    case MIME.JPEG:
+    case MIME.PDF:
+    case MIME.TIFF:
+      return `${base}${suffix}.jpg`
+    default:
+      return `${base}${suffix}.png`
   }
 }
 
