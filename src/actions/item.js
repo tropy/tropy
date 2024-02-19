@@ -160,7 +160,7 @@ export default {
     return {
       type: ITEM.OPEN,
       payload,
-      meta: { ...meta }
+      meta: { cmd: 'project', ...meta }
     }
   },
 

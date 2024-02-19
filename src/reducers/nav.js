@@ -101,22 +101,16 @@ export function nav(state = init, { type, payload, meta, error }) {
       }
 
     case ITEM.OPEN: {
-      let { id, photos, selection } = payload
-      let photo = photos ?
-        (photos.includes(state.photo) ? state.photo : photos[0]) : null
-
-      let note = (state.items[0] === id) ? state.note : null
-
-      return {
+      let { id, photo, selection, note } = payload
+      return (!meta.done || error) ? state : {
         ...state,
         mode: NAV.MODE.ITEM,
+        items: select(state.items, [id], 'replace'),
         photo,
         selection,
-        note,
-        items: select(state.items, [id], 'replace')
+        note
       }
     }
-
     case EDIT.START:
       if (state.mode === NAV.MODE.PROJECT) return state
       if (!payload.tag && !payload.list) return state
