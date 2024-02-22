@@ -867,10 +867,9 @@ export class Tropy extends EventEmitter {
       this.emit('app:reload-menu')
     })
 
-    app.on('gpu-process-crashed', (_, killed) => {
-      if (!killed) {
-        warn('GPU process crashed unexpectedly')
-      }
+    app.on('child-process-gone', (_, details) => {
+      if (details?.reason !== 'clean-exit')
+        warn({ details }, `child process gone: ${details?.reason}`)
     })
 
     nativeTheme.on('updated', async () => {
