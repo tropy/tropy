@@ -11,11 +11,11 @@
   .popup-open & {
     overflow-y: hidden;
 
-    @include variant(".popup-open.scrollbar-style-old-school") {
+    .scrollbar-style-old-school :is(&) {
       overflow-y: scroll;
     }
 
-    @include variant(".popup-open #popup-root") {
+    #popup-root :is(&) {
       overflow-y: scroll;
     }
   }

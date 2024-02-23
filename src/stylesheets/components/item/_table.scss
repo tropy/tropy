@@ -58,7 +58,7 @@
       min-width: calc(var(--item-min-width) + #{$scrollbar-size});
     }
 
-    @include state(".item-table.dragging-column") {
+    .item-table.dragging-column :is(&) {
       overflow: visible;
     }
 
@@ -155,7 +155,7 @@
         align-items: center;
         padding: 0 $space-min 0 ($space-min + 1px);
 
-        @include variant(".metadata-head:first-child") {
+        .metadata-head:first-child :is(&) {
           padding-left: $space-xs;
         }
       }
@@ -165,7 +165,7 @@
         flex: 1 1 auto;
         padding-right: $space-min;
 
-        @include variant(".metadata-head[class*='integer']") {
+        .metadata-head[class*='integer'] :is(&) {
           padding-left: $space-min;
           padding-right: 0;
         }
@@ -175,14 +175,14 @@
         color: inherit;
         margin: 0 -4px 0 -5px;
 
-        @include state(".metadata-head.descending") {
+        .metadata-head.descending :is(&) {
           transform: scaleY(-1);
         }
 
-        @include variant(".metadata-head[class*='integer']") {
+        .metadata-head[class*="integer"] :is(&) {
           order: -1;
 
-          @include variant(".label:empty + .icon") {
+          .label:empty + :is(&) {
             order: initial;
           }
         }
@@ -223,13 +223,13 @@
   .runway {
     min-width: var(--item-min-width);
 
-    @include state(".item-table.dragging-column") {
+    .item-table.dragging-column :is(&) {
       contain: none; // Needed for dragging lines of first item
     }
   }
 
   .viewport {
-    @include state(".item-table.dragging-column") {
+    .item-table.dragging-column :is(&) {
       contain: none; // Needed for dragging lines
     }
   }
@@ -242,10 +242,10 @@
 
     &.active {
       background: $items-active-bg;
-    }
 
-    @include state(".scroll-container:focus .item.active") {
-      background: $items-focus-bg;
+      .scroll-container:focus :is(&) {
+        background: $items-focus-bg;
+      }
     }
 
     &.over {
@@ -254,7 +254,7 @@
 
     &:first-child,
     &:last-child {
-      @include state(".item-table.dragging-column") {
+      .item-table.dragging-column :is(&) {
         contain: none; // Needed for dragging lines
       }
     }
@@ -263,17 +263,17 @@
       display: flex;
       align-items: center;
 
-      @include state(".item.active") {
+      .item.active :is(&) {
         color: $items-active-color;
-      }
 
-      @include state(".scroll-container:focus .item.active") {
-        color: $items-focus-color;
+        .scroll-container:focus :is(&) {
+          color: $items-focus-color;
 
-        .icon-circle,
-        .icon-crescent-circle {
-          .border {
-            color: $colors-focus-border-table;
+          .icon-circle,
+          .icon-crescent-circle {
+            .border {
+              color: $colors-focus-border-table;
+            }
           }
         }
       }
@@ -298,7 +298,7 @@
           box-shadow: 1px 0 $item-table-column-border-color;
         }
 
-        @include variant(".item:first-child") {
+        .item:first-child :is(&) {
           &::before,
           &::after {
             top: -$space-min;
@@ -306,7 +306,7 @@
           }
         }
 
-        @include variant(".item:last-child") {
+        .item:last-child :is(&) {
           $shadows: ();
 
           @for $i from 0 through 133 {
@@ -339,12 +339,12 @@
       padding: 0 $space-xs 0 ($space-xs + 1px);
       transition: opacity $column-transition;
 
-      @include state(".item .dragging") { // Differentiate from body.dragging
+      .item .dragging :is(&) { // Differentiate from body.dragging
         opacity: 0.5;
         transition: none;
       }
 
-      @include variant(".main-column:first-child .td-container") {
+      .main-column:first-child .td-container :is(&) {
         padding-left: $default-spacing-x;
       }
     }

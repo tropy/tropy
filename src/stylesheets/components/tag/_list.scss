@@ -63,7 +63,7 @@
               .border {
                 color: $icon-tag-vibrancy-border;
 
-                @include state(".tag.active:focus .icon-tag") {
+                .tag.active:focus :is(&) {
                   color: $list-focus-color;
                 }
               }
@@ -81,7 +81,7 @@
           }
         }
 
-        @include state(".tag.active") {
+        .tag.active :is(&) {
           &:not([class*="color"]) {
             .color {
               color: $list-active-bg;
@@ -93,7 +93,7 @@
           }
         }
 
-        @include state(".tag.active:focus") {
+        .tag.active:focus :is(&) {
           &:not([class*="color"]) {
             .color {
               color: $list-focus-bg;
@@ -161,7 +161,7 @@
         margin-left: $space-min - $shim;
         display: none;
 
-        @include state("li:focus") {
+        li:focus :is(&) {
           display: block;
         }
       }
@@ -188,17 +188,16 @@
       mix-blend-mode: if($theme == "light", multiply, lighten); // Prevent placeholder text from covering the text cursor.
       z-index: 4;
       white-space: nowrap;
-
       transition:
         left $add-tag-transition,
         transform $add-tag-transition,
         color $add-tag-transition;
+    }
 
-      @include state(".input-group:focus-within") {
-        left: $padding-base-horizontal;
-        transform: translateX(0);
-        color: $input-color-placeholder;
-      }
+    &:focus-within::before {
+      left: $padding-base-horizontal;
+      transform: translateX(0);
+      color: $input-color-placeholder;
     }
   }
 

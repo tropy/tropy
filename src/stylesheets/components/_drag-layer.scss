@@ -19,7 +19,7 @@
   .drag-preview-container {
     opacity: $drag-preview-opacity;
 
-    @include variant(".drag-preview.list") {
+    .drag-preview.list :is(&) {
       display: flex;
       align-items: center;
       height: $line-height-large;
@@ -29,7 +29,7 @@
       }
     }
 
-    @include variant(".drag-preview.metadata-field") {
+    .drag-preview.metadata-field :is(&) {
       display: flex;
       align-items: center;
       line-height: $metadata-line-height;

@@ -73,7 +73,7 @@
       margin-right: $space-xs;
     }
 
-    @include variant(".name + .icon") {
+    .name + :is(&) {
       margin-left: $space-xs;
     }
 
@@ -117,7 +117,7 @@
         padding-right: $default-spacing-x;
         position: relative;
 
-        @include state("li.active") {
+        li.active :is(&) {
           @extend %list-active;
 
           .vibrancy:not(.is-blurred) & {
@@ -129,7 +129,7 @@
             background-color: os($sidebar-blurred-list-active-bg);
           }
 
-          @include state(".sidebar :focus") {
+          .sidebar :focus :is(&) {
             @extend %list-focus;
 
             .vibrancy & {
@@ -149,10 +149,10 @@
           .vibrancy:not(.is-blurred) & {
             color: $sidebar-vibrancy-icon-color;
 
-            @include state("li.active") {
+            li.active :is(&) {
               color: $sidebar-vibrancy-icon-selected-color;
 
-              @include state(".sidebar :focus") {
+              .sidebar :focus :is(&) {
                 color: $list-focus-color;
               }
             }
@@ -167,13 +167,13 @@
           margin-right: 0;
           transform: rotate(90deg);
 
-          @include state("li.expanded") {
+          li.expanded :is(&) {
             transform: scaleY(-1);
           }
         }
 
         .icon-folder {
-          @include state("li.holding:not(.active)") {
+          li.holding:not(.active) :is(&) {
             position: relative;
 
             svg {
@@ -210,7 +210,7 @@
                 background-color: $icon-color;
                 border: 0;
 
-                @include state(".alt-key.vibrancy") {
+                .alt-key.vibrancy :is(&) {
                   background-color: $sidebar-vibrancy-icon-color;
                 }
               }

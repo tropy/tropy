@@ -7,7 +7,7 @@
     @include form-shading-level(2);
     border-left: 3px solid $plugin-indicator;
 
-    @include variant(".panel-group .panel") { // Needed for specificity
+    .accordion :is(&) {
       margin-bottom: $space-sm;
     }
 
@@ -170,7 +170,7 @@
     }
 
     &.active {
-      @include state(".plugins .accordion:focus-visible") {
+      .accordion:focus-visible :is(&) {
         @include form-shading-level(3);
 
         &.disabled {

@@ -12,7 +12,7 @@
     background-color: $vocab-panel-bg;
 
     &.active {
-      @include state(".vocab :focus-visible") {
+      .vocab :focus-visible :is(&) {
         @include form-shading-level(3);
       }
     }
@@ -43,14 +43,6 @@
 
     &:last-child {
       margin-bottom: 0;
-    }
-
-    fieldset {
-      @include form-shading-level(3);
-
-      @include state(".vocab .focus-visible .panel.active") {
-        @include form-shading-level(4);
-      }
     }
   }
 

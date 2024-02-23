@@ -53,12 +53,12 @@
       opacity: $slider-overlay-track-opacity;
       background-color: $slider-overlay-track-bg;
 
-      @include state(".slider:focus") {
+      .slider:focus :is(&) {
         opacity: $slider-overlay-track-focus-opacity;
         background-color: $slider-overlay-track-focus-bg;
       }
 
-      @include state(".slider.disabled") {
+      .slider.disabled :is(&) {
         opacity: $slider-overlay-track-disabled-opacity;
         background-color: $slider-overlay-track-disabled-bg;
       }
@@ -75,25 +75,25 @@
     margin-left: zoom(calc($slider-handle-size * -1 / 2));
     position: absolute;
 
-    @include variant(".slider.origin") {
+    .slider.origin :is(&) {
       border-radius: 0;
       border-left: 0;
       border-right: 0;
       margin-left: 0;
     }
 
-    @include state(".slider:focus") {
+    .slider:focus :is(&) {
       background-color: $slider-focus-bg;
     }
 
-    @include state(".slider.disabled") {
+    .slider.disabled :is(&) {
       opacity: $slider-range-disabled-opacity;
     }
 
     .overlay-mode & {
       background-color: $slider-overlay-range-bg;
 
-      @include state(".slider:focus") {
+      .slider:focus :is(&) {
         background-color: $slider-overlay-focus-bg;
       }
     }
@@ -111,12 +111,12 @@
     top: zoom(calc(-1 * ($slider-handle-size / 2 + 1px - $slider-track-height / 2)));
     margin-left: zoom(calc(-1 * ($slider-handle-size / 2 + 1px)));
 
-    @include state(".slider:focus") {
+    .slider:focus :is(&) {
       background-color: $slider-focus-bg;
       border-color: transparent;
     }
 
-    @include state(".slider.disabled") {
+    .slider.disabled :is(&) {
       background-color: $slider-handle-disabled-bg;
     }
 
@@ -124,7 +124,7 @@
       background-color: $slider-overlay-handle-bg;
       border-color: $slider-overlay-handle-border;
 
-      @include state(".slider:focus") {
+      .slider:focus :is(&) {
         background-color: $slider-overlay-focus-bg;
       }
     }
@@ -148,7 +148,8 @@
       color: $slider-overlay-value-color;
     }
 
-    @include state(".slider:hover", ".slider-handle:active .slider-value") {
+    .slider:hover :is(&),
+    .slider-handle:active :is(&) {
       opacity: 1;
     }
   }

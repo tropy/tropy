@@ -40,7 +40,7 @@
 
   .toolbar-left {
     @if $platform == darwin {
-      @include variant(".side-by-side .editor") {
+      .side-by-side :is(&) {
         .window-controls-right:not(.is-full-screen) & {
           overflow: hidden;
           padding: 0 zoom(2px); // Do not clip link target
@@ -51,7 +51,7 @@
     }
 
     @if $platform == win32 {
-      @include variant(".side-by-side .editor") {
+      .side-by-side :is(&) {
         .window-controls-left:not(.is-full-screen:not(.full-screen-menu)) & {
           overflow: hidden;
           padding: 0 zoom(2px); // Do not clip link target
@@ -70,28 +70,24 @@
 
     @if $platform == linux {
       .frameless & {
-        @include variant(".side-by-side .editor") {
+        .side-by-side :is(&) {
           overflow: hidden;
           padding: 0 zoom(2px); // Do not clip link target
           margin: 0 zoom(-2px);
 
-          @include variant(".frameless.window-controls-left") {
+          .window-controls-left :is(&) {
             margin-right: zoom(52px);
           }
 
-          @include variant(".frameless.window-controls-right") {
+          .window-controls-right :is(&) {
             margin-right: zoom(os($window-controls-width) + $space-sm);
 
-            @include variant(
-              ".frameless.window-controls-minimize",
-              ".frameless.window-controls-maximize"
-            ) {
+            .window-controls-minimize :is(&),
+            .window-controls-maximize :is(&) {
               margin-right: zoom(os($window-controls-width) + 37px + $space-sm);
             }
 
-            @include variant(
-              ".frameless.window-controls-minimize.window-controls-maximize"
-            ) {
+            .window-controls-minimize.window-controls-maximize :is(&) {
               margin-right: zoom(os($window-controls-width) + 37px + 37px + $space-sm);
             }
           }
@@ -101,7 +97,7 @@
   }
 
   .toolbar-context {
-    @include state(".editor.is-blurred") {
+    .editor.is-blurred :is(&) {
       opacity: 0.6;
 
       &.link {
@@ -109,7 +105,7 @@
       }
     }
 
-    @include state(".is-blurred .editor") {
+    .is-blurred & {
       @if $platform == darwin {
         opacity: $editor-toolbar-blurred-opacity-darwin;
       }

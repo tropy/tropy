@@ -3,6 +3,12 @@
 // --------------------------------------------------
 
 .scrollbar-style-old-school {
+  --scrollbar-color: #{$scrollbar-color};
+
+  .overlay-mode {
+    --scrollbar-color: #{$scrollbar-overlay-color};
+  }
+
   ::-webkit {
     &-scrollbar {
       width: $scrollbar-size;
@@ -13,7 +19,7 @@
       }
 
       &-thumb {
-        background-color: $scrollbar-color;
+        background-color: var(--scrollbar-color);
         border-radius: 6px;
         border: $space-min solid $scrollbar-bg;
         background-clip: content-box;
@@ -22,10 +28,6 @@
 
         &:active {
           border-width: calc($space-min / 2);
-        }
-
-        @include variant(".scrollbar-style-old-school .overlay-mode") {
-          background-color: $scrollbar-overlay-color;
         }
       }
 

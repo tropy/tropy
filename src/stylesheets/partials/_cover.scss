@@ -67,13 +67,15 @@
 }
 
 .project .cover {
+  --content: "";
   display: none;
 
-  @include state(".project.opening") {
+  .project.opening :is(&) {
     display: flex;
   }
 
-  @include state(".project.closing") {
+  .project.closing :is(&) {
+    --content: none;
     display: flex;
     opacity: 0.6;
 
@@ -96,11 +98,7 @@
   }
 
   &::before {
-    content: "";
+    content: var(--content);
     top: max(calc(50% + 101px), calc(66.67% - $space-lg / 2));
-
-    @include state(".project.closing") {
-      content: none;
-    }
   }
 }

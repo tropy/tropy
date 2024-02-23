@@ -116,12 +116,13 @@
     }
 
     .icon {
-      @include state(".btn-icon:active", ".btn-icon.active") {
+      .btn-icon:active :is(&),
+      .btn-icon.active :is(&) {
         color: $btn-icon-active-color;
       }
 
       svg {
-        @include variant(":where(.frameless) :where(.titlebar).toolbar") {
+        :where(.frameless) :where(.titlebar) :is(&) {
           width: zoom($space-md);
           height: zoom($space-md);
         }

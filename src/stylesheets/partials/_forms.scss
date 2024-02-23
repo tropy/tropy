@@ -125,7 +125,7 @@ fieldset {
   .truncate {
     flex: 1 1 auto;
 
-    @include state(".file-select.disabled") {
+    .file-select.disabled :is(&) {
       opacity: 0.5;
     }
   }

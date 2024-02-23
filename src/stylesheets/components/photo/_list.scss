@@ -28,15 +28,15 @@
       padding: 0 $default-spacing-x;
       height: $row-height;
 
-      @include state(".photo:not(.expandable)") {
+      .photo:not(.expandable) :is(&) {
         padding-left: $default-spacing-x + $space-md + $space-min;
       }
 
-      @include state(".photo.active") {
+      .photo.active :is(&) {
         @extend %list-active;
         contain: strict;
 
-        @include state(".photo-list .scroll-container:focus") {
+        .photo-list .scroll-container:focus :is(&) {
           @extend %list-focus;
         }
       }
@@ -51,7 +51,7 @@
           .icon {
             transform: rotate(90deg);
 
-            @include state(".photo.expanded") {
+            .photo.expanded :is(&) {
               transform: scaleY(-1);
             }
           }

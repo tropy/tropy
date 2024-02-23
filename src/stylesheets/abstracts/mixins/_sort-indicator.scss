@@ -72,7 +72,7 @@
   }
 
   &:last-child {
-    @include state($parent) {
+    #{$parent} :is(&) {
       &::after {
         content: "";
       }

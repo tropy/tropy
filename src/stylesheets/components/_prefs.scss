@@ -70,7 +70,7 @@
     .icon {
       margin-right: $space-xs - 1px;
 
-      @include state(".pane-toggle.active") {
+      .pane-toggle.active :is(&) {
         color: $prefs-pane-toggle-active-icon-color;
       }
     }
@@ -95,7 +95,7 @@
       padding-right: ($space-lg - $scrollbar-size);
     }
 
-    @include variant(".app .scroll-container") {
+    .app :is(&) {
       padding-bottom: $space-lg;
     }
   }

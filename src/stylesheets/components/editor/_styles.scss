@@ -218,18 +218,20 @@ body {
       list-style: none;
 
       li {
+        --inset-inline-start: 0;
+
+        .vertical-rl.numbers :is(&) {
+          --inset-inline-start: #{$space-xxl + $space-md};
+        }
+
         &::before {
           content: counter(ol) ".";
           counter-increment: ol;
           position: absolute;
-          inset-inline-start: 0;
+          inset-inline-start: var(--inset-inline-start);
           height: $editor-list-padding;
           text-align: right;
           text-orientation: mixed;
-
-          @include variant(".vertical-rl.numbers") {
-            inset-inline-start: $space-xxl + $space-md;
-          }
         }
       }
     }

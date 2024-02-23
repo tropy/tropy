@@ -17,7 +17,7 @@
   }
 
   .input-group {
-    @include state(".editing .input-group") {
+    .editing :is(&) {
       transform: translateY(-30px);
     }
   }
@@ -30,7 +30,7 @@
     margin-top: $space-min;
     flex: 0 0 calc(100% - 27px);
 
-    @include state(".editing .btn-convert") {
+    .editing :is(&) {
       transform: translateY(-30px);
     }
   }

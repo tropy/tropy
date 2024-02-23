@@ -18,7 +18,7 @@
     &.active {
       @extend %list-active;
 
-      @include state(".scroll-container:focus .selection-list") {
+      .scroll-container:focus & {
         @extend %list-focus;
       }
     }

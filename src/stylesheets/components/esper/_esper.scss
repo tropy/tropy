@@ -23,25 +23,24 @@
     .slider-handle {
       background-color: $esper-slider-handle-bg;
 
-      @include state(".disabled .slider-handle") {
+      .slider:focus :is(&) {
+        background-color: $slider-focus-bg;
+        border-color: transparent;
+      }
+
+      .slider.disabled :is(&) {
         background-color: $esper-slider-handle-disabled-bg;
+      }
+    }
+
+    .slider-range {
+      .slider:focus :is(&) {
+        background-color: $slider-focus-bg;
       }
     }
 
     .slider-value {
       color: $esper-slider-value-color;
-    }
-
-    // State mixin does not work here
-    .slider:focus {
-      .slider-handle {
-        background-color: $slider-focus-bg;
-        border-color: transparent;
-      }
-
-      .slider-range {
-        background-color: $slider-focus-bg;
-      }
     }
 
     .btn-default {
@@ -69,7 +68,7 @@
     z-index: $zindex-esper-header;
     height: $toolbar-height;
 
-    @include state(".esper.overlay-mode") {
+    .esper.overlay-mode :is(&) {
       position: absolute;
       left: 0;
       top: 0;
@@ -101,7 +100,7 @@
     max-height: 100%;
     position: relative;
 
-    @include state(".esper.texture-missing") {
+    .esper.texture-missing :is(&) {
       visibility: hidden;
     }
 

@@ -56,14 +56,12 @@
     margin: -4px;
     position: relative;
 
-    @include state(".tile.active") {
+    .tile.active :is(&) {
       border: 3px solid $tile-active-color;
 
-      @include state(
-        ".scroll-container:focus .tile.item",
-        ".scroll-container:focus .tile.photo",
-        ".selection-grid:focus .tile.selection"
-      ) {
+      .scroll-container:focus .tile.item :is(&),
+      .scroll-container:focus .tile.photo :is(&),
+      .selection-grid:focus .tile.selection :is(&) {
         border-color: $tile-focus-color;
       }
     }

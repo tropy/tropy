@@ -62,7 +62,7 @@
       .icon {
         color: $icon-color;
 
-        @include state(".btn-icon:hover") {
+        .btn-icon:hover :is(&) {
           color: $input-color;
         }
       }
@@ -104,8 +104,10 @@
     border-radius: 5px;
     position: relative;
     cursor: pointer;
+    content: "";
 
     &:hover {
+      --content: none;
       background-color: $recent-project-hover-bg;
       padding-bottom: ($space-sm + 1px);
       margin-bottom: -1px;
@@ -117,18 +119,18 @@
       }
     }
 
+    &:first-child {
+      --content: none;
+    }
+
     &::before {
-      content: "";
+      content: var(--content);
       position: absolute;
       top: 0;
       right: $space-sm;
       left: $space-sm;
       height: 1px;
       background-color: $recent-project-border;
-
-      @include state(".project-file:hover", ".project-file:first-child") {
-        content: none;
-      }
 
       .is-blurred & {
         background-color: os($recent-project-blurred-border);
@@ -149,7 +151,7 @@
         margin-bottom: -2px;
         margin-left: -2px;
 
-        @include state(".project-file:hover") {
+        .project-file:hover :is(&) {
           color: $maze-hover-color;
         }
       }
@@ -217,12 +219,12 @@
       margin-right: 3px;
       cursor: pointer;
 
-      @include state(".project-file:hover") {
+      .project-file:hover :is(&) {
         display: inline-flex;
       }
 
       .icon {
-        @include state(".btn-icon:hover") {
+        .btn-icon:hover :is(&) {
           color: $recent-projects-color;
         }
       }

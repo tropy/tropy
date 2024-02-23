@@ -25,7 +25,7 @@
     }
 
     .toolbar-left {
-      @include variant(".stacked .esper") {
+      .stacked & {
         .window-controls-right:not(.is-full-screen) & {
           flex: 1 1 auto;
           overflow: hidden;
@@ -35,7 +35,7 @@
 
     .toolbar-right {
       @if $platform == darwin {
-        @include variant(".stacked .esper") {
+        .stacked & {
           .window-controls-right:not(.is-full-screen) & {
             flex: 1 1 0;
             overflow: hidden;
@@ -45,7 +45,7 @@
       }
 
       @if $platform == win32 {
-        @include variant(".stacked .esper") {
+        .stacked & {
           .window-controls-left:not(.is-full-screen:not(.full-screen-menu)) & {
             flex: 1 1 0;
             overflow: hidden;
@@ -62,27 +62,23 @@
 
       @if $platform == linux {
         .frameless & {
-          @include variant(".stacked .esper") {
+          .stacked & {
             flex: 1 1 0;
             overflow: hidden;
 
-            @include variant(".frameless.window-controls-left") {
+            .window-controls-left :is(&) {
               margin-right: zoom(52px);
             }
 
-            @include variant(".frameless.window-controls-right") {
+            .window-controls-right :is(&) {
               margin-right: zoom(os($window-controls-width) + $space-sm);
 
-              @include variant(
-                ".frameless.window-controls-minimize",
-                ".frameless.window-controls-maximize"
-              ) {
+              .window-controls-minimize :is(&),
+              .frameless.window-controls-maximize :is(&) {
                 margin-right: zoom(os($window-controls-width) + 37px + $space-sm);
               }
 
-              @include variant(
-                ".frameless.window-controls-minimize.window-controls-maximize"
-              ) {
+              .window-controls-minimize.window-controls-maximize :is(&) {
                 margin-right: zoom(os($window-controls-width) + 37px + 37px + $space-sm);
               }
             }
@@ -129,7 +125,7 @@
       height: $toolbar-height;
     }
 
-    @include variant(".esper.overlay-mode") {
+    .esper.overlay-mode :is(&) {
       transform: translate3d(0, -100%, 0);
       transition: transform $esper-toolbar-transition-out;
       background-color: $esper-bg;
@@ -139,12 +135,13 @@
         backdrop-filter: blur($esper-blur-radius);
       }
 
-      @include state(".esper.mouseover") {
+      .esper.mouseover :is(&) {
         transform: translate3d(0, 0, 0);
         transition: transform $esper-toolbar-transition-in-hover;
       }
 
-      @include state(".esper:focus-visible", ".esper.panel-visible") {
+      .esper:focus-visible :is(&),
+      .esper.panel-visible :is(&) {
         transform: translate3d(0, 0, 0);
         transition: transform $esper-toolbar-transition-in-focus;
       }

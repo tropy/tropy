@@ -4,7 +4,7 @@
 
 .item-panel-group {
   .panel-group-header {
-    @include state(".item-panel-group:has(.item-panel.nested-tab-focus)") {
+    .item-panel-group:has(.item-panel.nested-tab-focus) :is(&) {
       background-color: $panel-focus-bg;
     }
 
@@ -18,7 +18,7 @@
   .toolbar {
     transition: padding 0.1s ease;
 
-    @include state(".closed .toolbar") {
+    .item-panel.closed :is(&) {
       padding: 0;
     }
   }

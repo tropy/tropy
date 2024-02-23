@@ -26,12 +26,6 @@
       height: 1px;
       background: $panel-separator-color;
 
-      @include state(
-        ".note-panel:not(:has(.active)) .note-list .scroll-container:focus"
-      ) {
-        background-color: $panel-nested-focus-separator-color;
-      }
-
       .is-blurred .item-mode & {
         background-color: $panel-blurred-separator-color;
       }
@@ -47,7 +41,7 @@
       color: $note-list-active-color;
       background: $note-list-active-bg;
 
-      @include state(".note-list .scroll-container:focus") {
+      .note-list .scroll-container:focus :is(&) {
         color: $note-list-focus-color;
         background: $note-list-focus-bg;
       }
@@ -64,7 +58,7 @@
         border-top: 1px solid $note-list-active-bg;
         padding-top: ($note-padding-top - 1px);
 
-        @include state(".note-list .scroll-container:focus") {
+        .note-list .scroll-container:focus :is(&) {
           border-top-color: $note-list-focus-bg;
         }
 
@@ -88,7 +82,7 @@
         visibility: hidden;
       }
 
-      @include state(".note:not(.active)") {
+      .note:not(.active) :is(&) {
         transition: visibility 0s linear 1s;
       }
     }

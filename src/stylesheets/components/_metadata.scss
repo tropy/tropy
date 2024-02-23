@@ -107,7 +107,7 @@
     color: $label-color;
     @include css-truncation;
 
-    @include variant(".extra label") {
+    .extra :is(&) {
       font-style: italic;
     }
   }
@@ -125,7 +125,7 @@
       @extend %drop-target;
     }
 
-    @include variant(".over .value") {
+    .over :is(&) {
       @extend %drop-target;
     }
 
@@ -133,11 +133,11 @@
       padding-right: calc($default-spacing-x - $scrollbar-size / 3);
     }
 
-    @include variant(".clickable.static .value") {
+    .clickable.static :is(&) {
       cursor: pointer;
     }
 
-    @include variant(".static .value") {
+    .static :is(&) {
       cursor: not-allowed;
     }
   }

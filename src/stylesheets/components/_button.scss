@@ -94,7 +94,8 @@
   padding: $btn-icon-padding;
 
   .icon {
-    @include state(".btn-icon:active", ".btn-icon.active") {
+    .btn-icon:active :is(&),
+    .btn-icon.active :is(&) {
       color: $icon-active-color;
     }
   }

@@ -20,10 +20,8 @@
   .panel {
     margin-bottom: $space-min;
 
-    @include variant(
-      ".panel-group > .panel:last-child",
-      ".resizable:last-child .panel"
-    ) {
+    .panel-group > :is(&):last-child,
+    .resizable:last-child :is(&) {
       margin-bottom: 0;
     }
   }

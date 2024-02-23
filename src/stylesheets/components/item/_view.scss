@@ -56,16 +56,12 @@
           .frameless.window-controls-left & {
             margin-left: calc((109px - 37px - 37px) / var(--zoom));
 
-            @include variant(
-              ".frameless.window-controls-minimize",
-              ".frameless.window-controls-maximize"
-            ) {
+            .window-controls-minimize :is(&),
+            .window-controls-maximize :is(&) {
               margin-left: calc((109px - 37px) / var(--zoom));
             }
 
-            @include variant(
-              ".frameless.window-controls-minimize.window-controls-maximize"
-            ) {
+            .window-controls-minimize.window-controls-maximize :is(&) {
               margin-left: calc(109px / var(--zoom));
             }
           }

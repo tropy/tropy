@@ -9,7 +9,7 @@
 
   .slider {
     .slider-handle {
-      @include state(".photo-panel:focus-visible:not(:has(li.active))") {
+      .photo-panel:focus-visible:not(:has(li.active)) :is(&) {
         background-color: $photo-panel-slider-handle-focus-visible-bg;
       }
 
