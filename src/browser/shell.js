@@ -7,7 +7,7 @@ export async function open(target) {
 
   if (protocol === 'file') {
     let err = await shell.openPath(path)
-    error(`failed to open ${path}: ${err}`)
+    if (err) error(`failed to open ${path}: ${err}`)
   } else {
     await shell.openExternal(`${protocol}://${path}`)
   }
@@ -31,11 +31,14 @@ function parse(target) {
     path = target.path
   } else {
     [protocol, path] = String(target).split('://', 2)
-  }
-  protocol = protocol || 'file'
 
-  if (protocol === 'file')
-    path = fileURLToPath(target)
+    if (path == null) {
+      protocol = 'file'
+      path = target
+    } else if (protocol === 'file') {
+      path = fileURLToPath(target)
+    }
+  }
 
   return { path, protocol }
 }
