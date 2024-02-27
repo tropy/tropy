@@ -1,4 +1,4 @@
-import { URL } from 'node:url'
+import { URL, fileURLToPath } from 'node:url'
 import { ipcMain, shell } from 'electron'
 import { error } from '../common/log.js'
 
@@ -7,7 +7,7 @@ export async function open(target) {
 
   if (protocol === 'file') {
     let err = await shell.openPath(path)
-    if (err) throw new Error(`failed to open ${path}: ${err}`)
+    error(`failed to open ${path}: ${err}`)
   } else {
     await shell.openExternal(`${protocol}://${path}`)
   }
@@ -33,6 +33,9 @@ function parse(target) {
     [protocol, path] = String(target).split('://', 2)
   }
   protocol = protocol || 'file'
+
+  if (protocol === 'file')
+    path = fileURLToPath(target)
 
   return { path, protocol }
 }
