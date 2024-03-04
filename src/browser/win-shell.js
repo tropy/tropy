@@ -41,7 +41,7 @@ export class ShellOption {
   static forApplication(exe, icon, types = []) {
     let key = `\\Software\\Classes\\Applications\\${basename(exe)}`
     let parts = [
-      { key: 'shell\\open\\command', value: `"${exe}" "%1"` }
+      { key: 'shell\\open\\command', value: `'"${exe}" "%1"'` }
     ]
 
     if (icon) {
