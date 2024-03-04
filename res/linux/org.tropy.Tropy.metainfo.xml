@@ -18,6 +18,10 @@
       designed and produced by an international team of historians and software developers.
     </p>
   </description>
+  <branding>
+    <color type="primary" scheme_preference="light">#4e7dce</color><!-- 60% light, 40% dark -->
+    <color type="primary" scheme_preference="dark">#395bac</color>
+  </branding>
   <screenshots>
     <screenshot>
       <image>https://tropy.org/assets/images/metainfo/screenshot-1.png</image>
