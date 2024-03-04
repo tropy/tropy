@@ -155,7 +155,7 @@
     "sqlite3": "^5.0.6",
     "transducers.js": "^0.3.2",
     "uuid": "^9.0.0",
-    "winreg": "^1.2.4",
+    "winreg": "=1.2.4",
     "write-file-atomic": "^5.0.0"
   }
 }
