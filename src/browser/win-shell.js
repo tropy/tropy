@@ -114,7 +114,7 @@ function exec(reg, cmd, ...args) {
     reg[cmd](...args, (e, ...res) => {
       if (e != null)
         reject(new Error(
-          `Windows Registry error: ${cmd} "${args}": ${e.message}`
+          `Windows Registry error: ${cmd} ${reg.path} [${args.join(', ')}]: ${e.message}`
         ))
       else
         resolve(...res)
