@@ -273,15 +273,15 @@ it:
       - label: Elimina la nota
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: Direzione
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: Da sinistra a destra
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: Da destra a sinistra
             type: checkbox
             checked: false
             direction: rtl
@@ -403,7 +403,7 @@ it:
         command: app:open-path
       - label: Copia collegamento foto
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: Copia foto negli appunti
         command: app:copy-photo
       - label: Esporta foto...
         command: app:extract-photo
@@ -745,15 +745,15 @@ it:
       - label: Elimina la nota
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: Direzione
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: Da sinistra a destra
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: Da destra a sinistra
             type: checkbox
             checked: false
             direction: rtl
@@ -906,7 +906,7 @@ it:
         command: app:open-path
       - label: Copia collegamento foto
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: Copia foto negli appunti
         command: app:copy-photo
       - label: Esporta foto...
         command: app:extract-photo
@@ -1217,15 +1217,15 @@ it:
       - label: Elimina la nota
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: Direzione
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: Da sinistra a destra
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: Da destra a sinistra
             type: checkbox
             checked: false
             direction: rtl
@@ -1378,7 +1378,7 @@ it:
         command: app:open-path
       - label: Copia collegamento foto
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
+      - label: Copia foto negli appunti
         command: app:copy-photo
       - label: Esporta foto...
         command: app:extract-photo
