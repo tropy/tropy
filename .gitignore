@@ -14,3 +14,4 @@ scripts/stats.mjs
 _book
 .github/styles/*
 !.github/styles/Vocab/tropy
+vendor/code-sign-tool
