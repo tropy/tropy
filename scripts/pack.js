@@ -6,6 +6,7 @@ const { join, relative } = require('path')
 const { createHash } = require('crypto')
 const { readFile, writeFile } = require('fs/promises')
 const { program } = require('commander')
+const { getCodeSignHook } = require('./win-sign.js')
 
 const ARCH =
   process.env.npm_config_target_arch ||
@@ -59,13 +60,21 @@ program
   .option('--out <dir>', 'set the output directory', join(ROOT, 'dist'))
   .option('-s, --silent', 'silence packer output', false)
   .option(
-    '-c, --cert <id>',
-    'set sigining certificate',
-    process.env.SIGN_CERT)
+    '-c, --cred <id>',
+    'set sigining credential id',
+    process.env.SIGN_CRED)
+  .option(
+    '-u, --user <name>',
+    'set sigining username',
+    process.env.SIGN_USER)
   .option(
     '-p, --password <password>',
     'set signing password',
     process.env.SIGN_PASS)
+  .option(
+    '--totp <totp secret>',
+    'set signing TOTP secret',
+    process.env.SIGN_TOTP)
 
   .action(async (args) => {
     try {
@@ -249,20 +258,29 @@ module.exports = {
     })
   },
 
-  async squirrel({ app, out, arch, cert, password }) {
+  async squirrel({ app, out, arch, cred, user, password, totp }) {
     let { createWindowsInstaller } = require('electron-winstaller')
     let setupExe = `setup-${name}-${version}-${arch}.exe`
+    let windowsSign
 
-    check(process.platform === 'win32', 'must be run on Windows')
-    check(cert, 'missing certificate')
-    check(password, 'missing password')
-    check(test('-f', cert), `certificate not found: ${cert}`)
+    if (true || cred) {
+      check(cred, 'missing credential id')
+      check(user, 'missing sigining user name')
+      check(password, 'missing signing password')
+      check(totp, 'missing signing TOTP secret')
+
+      windowsSign = {
+        hookFunction: await getCodeSignHook({ cred, user, password, totp })
+      }
+    } else {
+      say('skipping code signing')
+    }
+
 
     await createWindowsInstaller({
       appDirectory: app,
       outputDirectory: out,
       authors: author,
-      signWithParams: `/fd SHA256 /f ${cert} /p "${password}"`,
       title: qualified.product,
       name: qualified.name,
       exe: `${qualified.name}.exe`,
@@ -271,7 +289,8 @@ module.exports = {
       iconUrl: join(ICONS, channel, `${name}.ico`),
       // remoteReleases: repository.url,
       noDelta: true,
-      noMsi: true
+      noMsi: true,
+      windowsSign
     })
 
     let n = join(out, qualified.name)
