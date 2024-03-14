@@ -6,7 +6,6 @@ const { join, relative } = require('path')
 const { createHash } = require('crypto')
 const { readFile, writeFile } = require('fs/promises')
 const { program } = require('commander')
-const { getCodeSignHook } = require('./win-sign.js')
 
 const ARCH =
   process.env.npm_config_target_arch ||
@@ -59,22 +58,7 @@ program
   .option('--app <dir>', 'set the app directory')
   .option('--out <dir>', 'set the output directory', join(ROOT, 'dist'))
   .option('-s, --silent', 'silence packer output', false)
-  .option(
-    '-c, --cred <id>',
-    'set sigining credential id',
-    process.env.SIGN_CRED)
-  .option(
-    '-u, --user <name>',
-    'set sigining username',
-    process.env.SIGN_USER)
-  .option(
-    '-p, --password <password>',
-    'set signing password',
-    process.env.SIGN_PASS)
-  .option(
-    '--totp <totp secret>',
-    'set signing TOTP secret',
-    process.env.SIGN_TOTP)
+  .option('--sign', 'sign windows build', true)
 
   .action(async (args) => {
     try {
@@ -258,24 +242,21 @@ module.exports = {
     })
   },
 
-  async squirrel({ app, out, arch, cred, user, password, totp }) {
+  async squirrel({ app, out, arch, sign }) {
     let { createWindowsInstaller } = require('electron-winstaller')
     let setupExe = `setup-${name}-${version}-${arch}.exe`
     let windowsSign
 
-    if (true || cred) {
-      check(cred, 'missing credential id')
-      check(user, 'missing sigining user name')
-      check(password, 'missing signing password')
-      check(totp, 'missing signing TOTP secret')
+    if (sign) {
+      check(env.SIGN_CRED, 'missing credential id')
+      check(env.SIGN_USER, 'missing sigining user name')
+      check(env.SIGN_PASS, 'missing signing password')
+      check(env.SIGN_TOTP, 'missing signing TOTP secret')
 
       windowsSign = {
-        hookFunction: await getCodeSignHook({ cred, user, password, totp })
+        hookModulePath: join('win-sign.mjs')
       }
-    } else {
-      say('skipping code signing')
     }
-
 
     await createWindowsInstaller({
       appDirectory: app,
