@@ -7,7 +7,7 @@ export function getLocale(locale) {
 
 export function getSystemLanguage() {
   return (
-    app.getPreferredSystemLanguages()?.[0] || app.getSystemLocale()
+    app.getPreferredSystemLanguages()?.[0] || 'en'
   )
 }
 
