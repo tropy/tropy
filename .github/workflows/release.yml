@@ -100,14 +100,6 @@ jobs:
           NOTARY_KEY: ${{ secrets.APPLE_API_KEY }}
           NOTARY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
 
-      - name: Setup Windows signing certificate
-        if: matrix.platform == 'win32'
-        run: |
-          echo -n "$SIGN_CERT_BASE64" | base64 --decode > "${RUNNER_TEMP}/cert.p12"
-        shell: bash
-        env:
-          SIGN_CERT_BASE64: ${{ secrets.WIN_CERT }}
-
       - name: Create production build
         run: npm run build
         env:
@@ -121,8 +113,10 @@ jobs:
         run: npm run pack
         env:
           npm_config_arch: ${{ matrix.arch }}
-          SIGN_CERT: ${{ runner.temp }}\\cert.p12
-          SIGN_PASS: ${{ secrets.WIN_CERT_PASS }}
+          SIGN_CRED: ${{ secrets.WIN_SIGN_CRED }}
+          SIGN_TOTP: ${{ secrets.WIN_SIGN_TOTP }}
+          SIGN_USER: ${{ secrets.WIN_SIGN_USER }}
+          SIGN_PASS: ${{ secrets.WIN_SIGN_PASS }}
 
       - name: Upload Linux release assets
         if: matrix.platform == 'linux'
