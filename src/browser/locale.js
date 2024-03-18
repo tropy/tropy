@@ -6,14 +6,17 @@ export function getLocale(locale) {
 }
 
 export function getSystemLanguage() {
-  console.log(app.getPreferredSystemLanguages())
   return (
-    app.getPreferredSystemLanguages()?.[0] || 'en'
+    app.getPreferredSystemLanguages()?.[0] || defaultLocale
   )
 }
 
 export function isRightToLeft(lang = getSystemLanguage()) {
-  return (new Intl.Locale(lang)).textInfo?.direction === 'rtl'
+  try {
+    return (new Intl.Locale(lang)).textInfo?.direction === 'rtl'
+  } catch {
+    return false
+  }
 }
 
 export const defaultLocale = LOCALE.default
