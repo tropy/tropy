@@ -111,15 +111,15 @@ describe('Tropy', () => {
       tropy.wm.open.restore()
     })
 
-    it('focus window if project already open', () => {
-      tropy.showProjectWindow(project.path, null)
+    it('focus window if project already open', async () => {
+      await tropy.showProjectWindow(project.path, null)
 
       expect(win.show).to.have.been.called
       expect(tropy.wm.open).not.to.have.been.called
     })
 
-    it('new window if not already open', () => {
-      tropy.showProjectWindow('other.tpy', null)
+    it('new window if not already open', async () => {
+      await tropy.showProjectWindow('other.tpy', null)
 
       expect(win.show).not.to.have.been.called
       expect(tropy.wm.open).to.have.been.calledOnce
@@ -130,8 +130,8 @@ describe('Tropy', () => {
       expect(call.args[1]).to.have.property('file', 'other.tpy')
     })
 
-    it('open in existing window if given', () => {
-      tropy.showProjectWindow('other.tpy', win)
+    it('open in existing window if given', async () => {
+      await tropy.showProjectWindow('other.tpy', win)
 
       expect(tropy.wm.open).not.to.have.been.called
 
