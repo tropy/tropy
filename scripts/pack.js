@@ -248,13 +248,13 @@ module.exports = {
     let windowsSign
 
     if (sign) {
-      check(env.SIGN_CRED, 'missing credential id')
-      check(env.SIGN_USER, 'missing sigining user name')
-      check(env.SIGN_PASS, 'missing signing password')
-      check(env.SIGN_TOTP, 'missing signing TOTP secret')
+      check(process.env.SIGN_CRED, 'missing credential id')
+      check(process.env.SIGN_USER, 'missing sigining user name')
+      check(process.env.SIGN_PASS, 'missing signing password')
+      check(process.env.SIGN_TOTP, 'missing signing TOTP secret')
 
       windowsSign = {
-        hookModulePath: join('win-sign.mjs')
+        hookModulePath: join(ROOT, 'vendor', 'sign-win32.js')
       }
     }
 
