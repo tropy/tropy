@@ -15,7 +15,8 @@ CREATE VIRTUAL TABLE fts_transcriptions USING fts5(
   id UNINDEXED,
   text,
   content = 'transcriptions',
-  content_rowid = 'transcription_id'
+  content_rowid = 'transcription_id',
+  tokenize = 'unicode61'
 );
 
 CREATE TRIGGER transcriptions_ai_fts
