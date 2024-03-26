@@ -10,9 +10,30 @@ CREATE TABLE transcriptions (
 );
 
 
-CREATE VIRTUAL TABLE fts_transactions USING fts5(
+CREATE VIRTUAL TABLE fts_transcriptions USING fts5(
   id UNINDEXED,
   text,
   content = 'transcriptions',
   content_rowid = 'transcription_id'
 );
+
+CREATE TRIGGER transcriptions_ai_fts
+  AFTER INSERT ON transcriptions
+  BEGIN
+    INSERT INTO fts_transcriptions (rowid, id, text)
+      VALUES (NEW.transcription_id, NEW.id, NEW.text);
+  END;
+CREATE TRIGGER transcriptions_au_fts
+  AFTER UPDATE OF text ON transcriptions
+  BEGIN
+    INSERT INTO fts_transcriptions (fts_transcriptions, rowid, id, text)
+      VALUES ('delete', OLD.transcription_id, OLD.id, OLD.text);
+    INSERT INTO fts_transcriptions (rowid, id, text)
+      VALUES (NEW.transcription_id, NEW.id, NEW.text);
+  END;
+CREATE TRIGGER transcriptions_ad_fts
+  AFTER DELETE ON transcriptions
+  BEGIN
+    INSERT INTO fts_transcriptions (fts_transcriptions, rowid, id, text)
+      VALUES ('delete', OLD.transcription_id, OLD.id, OLD.text);
+  END;
