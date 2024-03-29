@@ -4,7 +4,8 @@ CREATE TABLE transcriptions (
   text              TEXT,
   config            TEXT,
   data              TEXT,
-  status            TEXT,
+  status            NUMERIC NOT NULL DEFAULT 0,
+  deleted           NUMERIC,
   created           NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified          NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
