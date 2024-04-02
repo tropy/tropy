@@ -113,6 +113,8 @@ export class Command {
   }
 
   static register(type, Cmd = this) {
+    if (typeof type === 'function') type = type.type
+
     assert(type, 'missing action type')
     assert(Cmd.prototype instanceof Command || Cmd === Command)
 
