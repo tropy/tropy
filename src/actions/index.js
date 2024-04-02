@@ -2,6 +2,7 @@ export * as notepad from '../slices/notepad.js'
 export * as prefs from '../slices/prefs.js'
 export * as projectFiles from '../slices/project-files.js'
 export * as storage from '../slices/storage.js'
+export * as transcriptions from '../slices/transcriptions.js'
 
 export { default as activity } from './activity'
 export { default as api } from './api'
