@@ -10,5 +10,6 @@ import './project'
 import './selection'
 import './subject'
 import './tag'
+import './transcription'
 
 export * from './command'
