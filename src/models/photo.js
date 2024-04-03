@@ -7,47 +7,46 @@ import { normalize } from '../common/os.js'
 import { blank, empty, pick, pMap } from '../common/util.js'
 import { props } from '../common/export.js'
 
-const skel = (id, selections = [], notes = []) => ({
-  id, selections, notes
+const skel = (id, selections = [], notes = [], transcriptions = []) => ({
+  id, selections, notes, transcriptions
 })
 
 async function load(db, ids, { basePath } = {}) {
-  const photos = {}
-  if (ids != null) ids = ids.join(',')
+  let photos = {}
 
   await Promise.all([
-    db.each(`
-      SELECT
-          id,
-          item_id AS item,
-          template,
-          strftime("%Y-%m-%dT%H:%M:%f", created, "localtime") AS created,
-          strftime("%Y-%m-%dT%H:%M:%f", modified, "localtime") AS modified,
-          angle,
-          color,
-          density,
-          mirror,
-          negative,
-          brightness,
-          contrast,
-          hue,
-          saturation,
-          sharpen,
-          width,
-          height,
-          path,
-          filename,
-          page,
-          size,
-          protocol,
-          mimetype,
-          checksum,
-          orientation
-        FROM subjects
-          JOIN images USING (id)
-          JOIN photos USING (id)${
-        ids != null ? ` WHERE id IN (${ids})` : ''
-      }`,
+    db.each(
+      ...select(
+          'id',
+          'item_id AS item',
+          'template',
+          'strftime("%Y-%m-%dT%H:%M:%f", created, "localtime") AS created',
+          'strftime("%Y-%m-%dT%H:%M:%f", modified, "localtime") AS modified',
+          'angle',
+          'color',
+          'density',
+          'mirror',
+          'negative',
+          'brightness',
+          'contrast',
+          'hue',
+          'saturation',
+          'sharpen',
+          'width',
+          'height',
+          'path',
+          'filename',
+          'page',
+          'size',
+          'protocol',
+          'mimetype',
+          'checksum',
+          'orientation')
+        .from('subjects')
+        .join('images', { using: 'id' })
+        .join('photos', { using: 'id' })
+        .where({ id: ids }),
+
       ({ id, created, modified, mirror, negative, path, ...data }) => {
         data.created = new Date(created)
         data.modified = new Date(modified)
@@ -63,27 +62,47 @@ async function load(db, ids, { basePath } = {}) {
       }
     ),
 
-    db.each(`
-      SELECT id AS selection, photo_id AS id
-        FROM selections
-          LEFT OUTER JOIN trash USING (id)
-        WHERE ${ids != null ? `photo_id IN (${ids}) AND` : ''}
-          deleted IS NULL
-        ORDER BY photo_id, position`,
-      ({ selection, id }) => {
-        if (id in photos) photos[id].selections.push(selection)
-        else photos[id] = skel(id, [selection])
+    db.each(
+      ...select('id', 'photo_id')
+        .from('selections')
+        .outer.join('trash', { using: 'id' })
+        .where({ photo_id: ids, deleted: null })
+        .order('photo_id')
+        .order('position'),
+      ({ id: sid, photo_id: id }) => {
+        if (id in photos)
+          photos[id].selections.push(sid)
+        else
+          photos[id] = skel(id, [sid])
       }
     ),
 
-    db.each(`
-      SELECT id, note_id AS note
-        FROM notes JOIN photos using (id)
-        WHERE ${ids != null ? `id IN (${ids}) AND` : ''} deleted IS NULL
-        ORDER BY id, created`,
-      ({ id, note }) => {
-        if (id in photos) photos[id].notes.push(note)
-        else photos[id] = skel(id, [], [note])
+    db.each(
+      ...select('id', 'note_id')
+        .from('notes')
+        .join('photos', { using: 'id' })
+        .where({ id: ids, deleted: null })
+        .order('id')
+        .order('created'),
+      ({ id, note_id: nid }) => {
+        if (id in photos)
+          photos[id].notes.push(nid)
+        else
+          photos[id] = skel(id, [], [nid])
+      }
+    ),
+
+    db.each(
+      ...select('id', 'transcription_id')
+        .from('transcriptions')
+        .join('photos', { using: 'id' })
+        .where({ id: ids, deleted: null })
+        .order('created'),
+      ({ id, transcription_id: tid }) => {
+        if (id in photos)
+          photos[id].transcriptions.push(tid)
+        else
+          photos[id] = skel(id, [], [], [tid])
       }
     )
   ])
