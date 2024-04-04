@@ -1,6 +1,6 @@
 import { empty, list, pick } from '../common/util.js'
 import { props } from '../common/export.js'
-import { into } from '../common/query.js'
+import { into, select } from '../common/query.js'
 import metadata from './metadata.js'
 import subject from './subject.js'
 
@@ -8,51 +8,70 @@ async function load(db, ids) {
   let selections = {}
 
   await Promise.all([
-    db.each(`
-      SELECT
-          id,
-          photo_id AS photo,
-          x,
-          y,
-          width,
-          height,
-          angle,
-          mirror,
-          negative,
-          brightness,
-          contrast,
-          hue,
-          saturation,
-          sharpen,
-          template,
-          strftime("%Y-%m-%dT%H:%M:%f", created, "localtime") AS created,
-          strftime("%Y-%m-%dT%H:%M:%f", modified, "localtime") AS modified
-        FROM subjects
-          JOIN images USING (id)
-          JOIN selections USING (id)${
-      (ids != null) ? ` WHERE id IN (${list(ids)})` : ''
-    }`,
-    ({ id, created, modified, mirror, negative, ...data }) => {
-      data.created = new Date(created)
-      data.modified = new Date(modified)
-      data.mirror = !!mirror
-      data.negative = !!negative
+    db.each(
+      ...select(
+          'id',
+          'photo_id AS photo',
+          'x',
+          'y',
+          'width',
+          'height',
+          'angle',
+          'mirror',
+          'negative',
+          'brightness',
+          'contrast',
+          'hue',
+          'saturation',
+          'sharpen',
+          'template',
+          'strftime("%Y-%m-%dT%H:%M:%f", created, "localtime") AS created',
+          'strftime("%Y-%m-%dT%H:%M:%f", modified, "localtime") AS modified')
+        .from('subjects')
+        .join('images', { using: 'id' })
+        .join('selections', { using: 'id' })
+        .where({ id: ids }),
+      ({ id, created, modified, mirror, negative, ...data }) => {
+        data.created = new Date(created)
+        data.modified = new Date(modified)
+        data.mirror = !!mirror
+        data.negative = !!negative
 
-      if (id in selections) Object.assign(selections[id], data)
-      else selections[id] = Object.assign({ id, notes: [] }, data)
-    }),
+        if (id in selections)
+          Object.assign(selections[id], data)
+        else
+          selections[id] = Object.assign({
+            id,
+            notes: [],
+            transcriptions: []
+          }, data)
+      }),
 
-    db.each(`
-      SELECT id, note_id AS note
-        FROM notes JOIN selections USING (id)
-        WHERE ${(ids != null) ? `id IN (${list(ids)}) AND` : ''}
-          deleted IS NULL
-        ORDER BY id, created`,
-      ({ id, note }) => {
-        if (id in selections) selections[id].notes.push(note)
-        else selections[id] = { id, notes: [note] }
-      }
-    )
+    db.each(
+      ...select('id', 'note_id')
+        .from('notes')
+        .join('selections', { using: 'id' })
+        .where({ id: ids, deleted: null })
+        .order(['created', 'id']),
+      ({ id, note_id: nid }) => {
+        if (id in selections)
+          selections[id].notes.push(nid)
+        else
+          selections[id] = { id, notes: [nid], transcriptions: [] }
+      }),
+
+    db.each(
+      ...select('id', 'transcription_id')
+        .from('transcriptions')
+        .join('selections', { using: 'id' })
+        .where({ id: ids, deleted: null })
+        .order(['created', 'id']),
+      ({ id, transcription_id: tid }) => {
+        if (id in selections)
+          selections[id].transcriptions.push(tid)
+        else
+          selections[id] = { id, notes: [], transcriptions: [tid] }
+      })
   ])
 
   return selections

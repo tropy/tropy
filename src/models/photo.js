@@ -82,8 +82,7 @@ async function load(db, ids, { basePath } = {}) {
         .from('notes')
         .join('photos', { using: 'id' })
         .where({ id: ids, deleted: null })
-        .order('id')
-        .order('created'),
+        .order(['id', 'created']),
       ({ id, note_id: nid }) => {
         if (id in photos)
           photos[id].notes.push(nid)
@@ -97,7 +96,7 @@ async function load(db, ids, { basePath } = {}) {
         .from('transcriptions')
         .join('photos', { using: 'id' })
         .where({ id: ids, deleted: null })
-        .order('created'),
+        .order(['created', 'id']),
       ({ id, transcription_id: tid }) => {
         if (id in photos)
           photos[id].transcriptions.push(tid)
