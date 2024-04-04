@@ -37,6 +37,12 @@ describe('Query Builder', () => {
           .order('a', 'DESC')
           .query
       ).to.match(/SELECT a, b FROM cd ORDER BY b, a DESC/)
+
+      expect(
+        select('a')
+          .from('b')
+          .order(['a DESC', 'c'])
+      ).to.match(/SELECT a FROM b ORDER BY a DESC, c/)
     })
 
     it('null', () => {

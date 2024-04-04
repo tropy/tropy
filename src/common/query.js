@@ -239,8 +239,13 @@ export class Select extends ConditionalQuery {
     }
   }
 
-  order(by, dir) {
-    this.ord = [...this.ord, `${by}${dir ? ` ${dir}` : ''}`]
+  order(arg1, dir) {
+    if (!Array.isArray(arg1))
+      arg1 = [arg1]
+
+    for (let by of arg1)
+      this.ord = [...this.ord, `${by}${dir ? ` ${dir}` : ''}`]
+
     return this
   }
 
