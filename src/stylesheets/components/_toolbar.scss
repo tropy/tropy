@@ -18,7 +18,7 @@
 
   &:where(.titlebar) {
     :where(.frameless) & {
-      font-size: zoom($font-size-base);
+      font-size: zoom(os($toolbar-font-size));
       -webkit-app-region: drag;
       height: zoom(os($toolbar-frameless-height));
       padding: 0 zoom($default-spacing-x);
