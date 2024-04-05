@@ -39,7 +39,7 @@
   }
 
   .is-blurred & {
-    border-top-color: os($activity-blurred-border-color);
+    border-top-color: $activity-blurred-border-color;
   }
 
   .activity-container {
@@ -64,7 +64,7 @@
     margin-right: auto;
 
     .is-blurred & {
-      opacity: os($sidebar-blurred-name-opacity);
+      opacity: $sidebar-blurred-name-opacity;
     }
   }
 
@@ -81,11 +81,11 @@
 
     .is-blurred & {
       &::-webkit-progress-bar {
-        background-color: os($activity-blurred-progress-bar-bg);
+        background-color: $activity-blurred-progress-bar-bg;
       }
 
       &::-webkit-progress-value {
-        background-color: os($activity-blurred-progress-val-bg);
+        background-color: $activity-blurred-progress-val-bg;
       }
     }
   }
@@ -109,7 +109,7 @@
     }
 
     .is-blurred & {
-      opacity: os($sidebar-blurred-icon-opacity);
+      opacity: $sidebar-blurred-icon-opacity;
     }
 
     .icon {

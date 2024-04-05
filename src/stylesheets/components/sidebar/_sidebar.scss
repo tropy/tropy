@@ -48,7 +48,7 @@
     }
 
     .is-blurred & {
-      color: os($sidebar-blurred-headings-color);
+      color: $sidebar-blurred-headings-color;
     }
   }
 
@@ -98,7 +98,7 @@
     min-width: 0; // Fix truncation
 
     .is-blurred & {
-      opacity: os($sidebar-blurred-name-opacity);
+      opacity: $sidebar-blurred-name-opacity;
     }
   }
 
@@ -126,7 +126,7 @@
           }
 
           .is-blurred & {
-            background-color: os($sidebar-blurred-list-active-bg);
+            background-color: $sidebar-blurred-list-active-bg;
           }
 
           .sidebar :focus :is(&) {
@@ -159,7 +159,7 @@
           }
 
           .is-blurred & {
-            opacity: os($sidebar-blurred-icon-opacity);
+            opacity: $sidebar-blurred-icon-opacity;
           }
         }
 

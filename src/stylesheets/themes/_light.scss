@@ -228,18 +228,18 @@ $project-heading-color: var(--shade-8);
 $item-count-color:      var(--shade-5);
 
 // Recent projects
-$recent-projects-view-blurred-opacity:   (null, null, 0.4);
+$recent-projects-view-blurred-opacity:   os(null, null, 0.4);
 $recent-projects-color:                  var(--shade-8);
-$recent-projects-blurred-opacity:        (0.76, null, null);
-$recent-projects-search-blurred-opacity: (0.8, null, null);
+$recent-projects-blurred-opacity:        os(0.76, null, null);
+$recent-projects-search-blurred-opacity: os(0.8, null, null);
 $recent-project-hover-bg:                var(--shade-2);
 $recent-project-border:                  var(--shade-3);
-$recent-project-blurred-border:          (shade(var(--shade-3), 4%), null, null);
+$recent-project-blurred-border:          os(shade(var(--shade-3), 4%), null, null);
 $maze-color:                             var(--shade-5);
 $maze-hover-color:                       shade(var(--shade-5), 4%);
-$maze-blurred-opacity:                   (0.8, null, null);
+$maze-blurred-opacity:                   os(0.8, null, null);
 $recent-project-stats-color:             var(--shade-6);
-$recent-project-stats-blurred-color:     (shade(var(--shade-6), 4%), null, null);
+$recent-project-stats-blurred-color:     os(shade(var(--shade-6), 4%), null, null);
 
 // New project
 $new-project-form-text-color: var(--shade-6);
@@ -251,11 +251,11 @@ $sidebar-vibrancy-color:                  alpha(var(--shade-10), 70%);
 $sidebar-vibrancy-list-active-color:      alpha(var(--shade-10), 83%);
 $sidebar-vibrancy-list-active-bg:         alpha(var(--shade-10), 10%);
 $sidebar-vibrancy-list-focus-bg:          var(--primary-vibrancy);
-$sidebar-blurred-list-active-bg:          (shade(var(--shade-3), 4%), null, null);
+$sidebar-blurred-list-active-bg:          os(shade(var(--shade-3), 4%), null, null);
 $sidebar-text-color:                      var(--shade-8);
 $sidebar-headings-color:                  var(--shade-6);
 $sidebar-vibrancy-headings-color:         alpha(var(--shade-10), 46%);
-$sidebar-blurred-headings-color:          (shade(var(--shade-6), 4%), null, null);
+$sidebar-blurred-headings-color:          os(shade(var(--shade-6), 4%), null, null);
 $sidebar-vibrancy-icon-color:             alpha(var(--shade-10), 46%);
 $sidebar-vibrancy-icon-selected-color:    alpha(var(--shade-10), 59%);
 $sidebar-blurred-icon-opacity:            (0.33, null, null);
@@ -263,12 +263,12 @@ $sidebar-blurred-name-opacity:            (0.76, null, null);
 $sidebar-blurred-tag-opacity-darwin:      0.31;
 $activity-border-color:                   var(--shade-3);
 $activity-vibrancy-border-color:          alpha(var(--shade-10), 10%);
-$activity-blurred-border-color:           (shade(var(--shade-3), 4%), null, null);
+$activity-blurred-border-color:           os(shade(var(--shade-3), 4%), null, null);
 $activity-vibrancy-progress-bar-bg:       alpha(var(--shade-10), 10%);
 $activity-vibrancy-progress-cancel-bg:    alpha(var(--shade-10), 25%);
 $activity-vibrancy-progress-val-bg:       null;
-$activity-blurred-progress-bar-bg:        (shade(var(--shade-3), 4%), null, null);
-$activity-blurred-progress-val-bg:        (shade(var(--shade-5), 4%), null, null);
+$activity-blurred-progress-bar-bg:        os(shade(var(--shade-3), 4%), null, null);
+$activity-blurred-progress-val-bg:        os(shade(var(--shade-5), 4%), null, null);
 
 // Items
 $item-table-header-color:        var(--shade-8);
@@ -446,13 +446,13 @@ $line-number-color:       var(--shade-5);
 
 // Preferences
 $prefs-bg:                            var(--shade-1);
-$prefs-title-color:                   (var(--shade-8), null, rgba(0, 0, 0, 0.8));
+$prefs-title-color:                   os(var(--shade-8), null, rgba(0, 0, 0, 0.8));
 $prefs-border:                        var(--shade-3);
 $prefs-pane-toggle-color:             var(--shade-8);
 $prefs-pane-toggle-active-color:      var(--shade-9);
 $prefs-pane-toggle-active-bg:         var(--shade-3);
 $prefs-pane-toggle-active-icon-color: var(--shade-7);
-$prefs-titlebar-blurred-bg:           (shade(var(--shade-1), 4%), null, null);
+$prefs-titlebar-blurred-bg:           os(shade(var(--shade-1), 4%), null, null);
 
 // Vocab
 $vocab-panel-bg:    shade(var(--shade-1), 4%);

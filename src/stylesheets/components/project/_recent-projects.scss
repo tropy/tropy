@@ -11,7 +11,7 @@
 
   > * {
     .is-blurred & {
-      opacity: os($recent-projects-view-blurred-opacity);
+      opacity: $recent-projects-view-blurred-opacity;
     }
   }
 
@@ -30,7 +30,7 @@
     margin-bottom: $space-md - 10px;
 
     .is-blurred & {
-      opacity: os($recent-projects-search-blurred-opacity);
+      opacity: $recent-projects-search-blurred-opacity;
     }
 
     .icon-search {
@@ -80,7 +80,7 @@
     padding: 0 40px 85px;
 
     .is-blurred & {
-      opacity: os($recent-projects-search-blurred-opacity);
+      opacity: $recent-projects-search-blurred-opacity;
     }
   }
 
@@ -133,7 +133,7 @@
       background-color: $recent-project-border;
 
       .is-blurred & {
-        background-color: os($recent-project-blurred-border);
+        background-color: $recent-project-blurred-border;
       }
     }
 
@@ -141,7 +141,7 @@
       flex: 0 0 auto;
 
       .is-blurred & {
-        opacity: os($maze-blurred-opacity);
+        opacity: $maze-blurred-opacity;
       }
 
       svg {
@@ -166,7 +166,7 @@
       }
 
       .is-blurred & {
-        opacity: os($recent-projects-blurred-opacity);
+        opacity: $recent-projects-blurred-opacity;
       }
 
       .icon {
@@ -194,7 +194,7 @@
       }
 
       .is-blurred & {
-        color: os($recent-project-stats-blurred-color);
+        color: $recent-project-stats-blurred-color;
       }
 
       li {

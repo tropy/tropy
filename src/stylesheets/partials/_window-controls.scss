@@ -72,7 +72,7 @@
       }
 
       .is-blurred & {
-        opacity: os($toolbar-blurred-opacity);
+        opacity: $toolbar-blurred-opacity;
       }
     }
   }

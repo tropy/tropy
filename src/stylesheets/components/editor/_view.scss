@@ -11,7 +11,7 @@
   min-height: 0; // Fix vh unit in ProseMirror
 
   .frameless & {
-    padding-top: zoom(os($toolbar-frameless-height));
+    padding-top: zoom($toolbar-frameless-height);
 
     @if $platform == win32 {
       padding-top: zoom($toolbar-height);

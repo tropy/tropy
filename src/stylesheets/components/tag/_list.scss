@@ -38,7 +38,7 @@
         }
 
         .is-blurred & {
-          background-color: os($sidebar-blurred-list-active-bg);
+          background-color: $sidebar-blurred-list-active-bg;
         }
 
         &:focus {

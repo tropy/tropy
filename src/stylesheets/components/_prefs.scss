@@ -9,11 +9,11 @@
   background-color: $prefs-bg;
 
   .titlebar {
-    height: zoom(os($toolbar-frameless-height));
-    color: os($prefs-title-color);
+    height: zoom($toolbar-frameless-height);
+    color: $prefs-title-color;
 
     .is-blurred & {
-      background-color: os($prefs-titlebar-blurred-bg);
+      background-color: $prefs-titlebar-blurred-bg;
     }
 
     .toolbar-center {

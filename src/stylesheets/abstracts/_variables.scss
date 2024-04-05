@@ -85,7 +85,7 @@ $drag-preview-size: 64px;
 // --------------------------------------------------
 
 $toolbar-height:           38px;
-$toolbar-frameless-height: ($toolbar-height, 32px, 46px);
+$toolbar-frameless-height: os($toolbar-height, 32px, 46px);
 
 
 // Default Dimensions
@@ -169,7 +169,7 @@ $zindex-window-controls: 1090;
 // Window controls
 // --------------------------------------------------
 
-$window-controls-width: (65px, 136px, 80px);
+$window-controls-width: os(65px, 136px, 80px);
 
 
 // Sidebar
@@ -302,7 +302,7 @@ $editor-padding:              48px;
 // --------------------------------------------------
 
 $toolbar-context-transition: 0.24s ease;
-$toolbar-font-size: ($font-size-base, 1rem, 1rem);
+$toolbar-font-size: os($font-size-base, 1rem, 1rem);
 
 
 // Tag list
@@ -315,8 +315,8 @@ $add-tag-transition:                0.3s ease;
 // --------------------------------------------------
 
 $search-height:                  $input-height-base;
-$search-frameless-height:        ($search-height, $search-height, 34px);
-$search-frameless-border-radius: ($border-radius-small, $border-radius-small, $border-radius-base);
+$search-frameless-height:        os($search-height, $search-height, 34px);
+$search-frameless-border-radius: os($border-radius-small, $border-radius-small, $border-radius-base);
 $clear-button-size:              14px;
 
 

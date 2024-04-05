@@ -18,7 +18,7 @@
     .frameless & {
       --zoom: inherit; // Always counterbalance frameless editor toolbar
       font-size: zoom($font-size-base);
-      height: zoom(os($toolbar-frameless-height) + 1px);
+      height: zoom($toolbar-frameless-height + 1px);
 
       @if $platform == win32 {
         height: zoom($toolbar-height + 1px);
@@ -45,7 +45,7 @@
           overflow: hidden;
           padding: 0 zoom(2px); // Do not clip link target
           margin: 0 zoom(-2px);
-          margin-right: zoom(os($window-controls-width) + $space-sm);
+          margin-right: zoom($window-controls-width + $space-sm);
         }
       }
     }
@@ -63,7 +63,7 @@
           overflow: hidden;
           padding: 0 zoom(2px); // Do not clip link target
           margin: 0 zoom(-2px);
-          margin-right: zoom(os($window-controls-width) + $space-sm);
+          margin-right: zoom($window-controls-width + $space-sm);
         }
       }
     }
@@ -80,15 +80,15 @@
           }
 
           .window-controls-right :is(&) {
-            margin-right: zoom(os($window-controls-width) + $space-sm);
+            margin-right: zoom($window-controls-width + $space-sm);
 
             .window-controls-minimize :is(&),
             .window-controls-maximize :is(&) {
-              margin-right: zoom(os($window-controls-width) + 37px + $space-sm);
+              margin-right: zoom($window-controls-width + 37px + $space-sm);
             }
 
             .window-controls-minimize.window-controls-maximize :is(&) {
-              margin-right: zoom(os($window-controls-width) + 37px + 37px + $space-sm);
+              margin-right: zoom($window-controls-width + 37px + 37px + $space-sm);
             }
           }
         }

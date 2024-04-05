@@ -44,7 +44,7 @@
       width: $esper-panel-width;
 
       .frameless & {
-        top: zoom(os($toolbar-frameless-height));
+        top: zoom($toolbar-frameless-height);
 
         @if $platform == win32 {
           top: zoom($toolbar-height);

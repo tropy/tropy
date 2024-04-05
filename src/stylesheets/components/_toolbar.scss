@@ -18,9 +18,9 @@
 
   &:where(.titlebar) {
     :where(.frameless) & {
-      font-size: zoom(os($toolbar-font-size));
+      font-size: zoom($toolbar-font-size);
       -webkit-app-region: drag;
-      height: zoom(os($toolbar-frameless-height));
+      height: zoom($toolbar-frameless-height);
       padding: 0 zoom($default-spacing-x);
     }
 
@@ -32,7 +32,7 @@
 
     .frameless.is-blurred & {
       > * {
-        opacity: os($toolbar-blurred-opacity);
+        opacity: $toolbar-blurred-opacity;
       }
 
       @if $platform == linux {

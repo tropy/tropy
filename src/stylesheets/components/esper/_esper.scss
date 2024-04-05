@@ -76,7 +76,7 @@
     }
 
     .frameless & {
-      height: zoom(os($toolbar-frameless-height));
+      height: zoom($toolbar-frameless-height);
 
       @if $platform == win32 {
         height: zoom($toolbar-height);

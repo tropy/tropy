@@ -24,7 +24,7 @@
         .item-mode &,
         .item-mode-enter-active & {
           .window-controls-left:not(.is-full-screen) & {
-            margin-left: zoom(os($window-controls-width));
+            margin-left: zoom($window-controls-width);
           }
         }
       }
@@ -37,7 +37,7 @@
         .item-mode &,
         .item-mode-enter-active & {
           .window-controls-left:not(.is-full-screen) & {
-            margin-left: zoom(os($window-controls-width) + $space-min); // 16px margin
+            margin-left: zoom($window-controls-width + $space-min); // 16px margin
           }
 
           .window-controls-right:not(.is-full-screen:not(.full-screen-menu)) & {

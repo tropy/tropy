@@ -4,14 +4,14 @@
 // OS helper
 // --------------------------------------------------
 
-@function os($variable) {
+@function os($darwin, $win32, $linux) {
   @if $platform == darwin {
-    @return nth($variable, 1);
+    @return $darwin;
 
   } @else if $platform == win32 {
-    @return nth($variable, 2);
+    @return $win32;
 
   } @else {
-    @return nth($variable, 3);
+    @return $linux;
   }
 }
