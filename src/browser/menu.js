@@ -242,14 +242,12 @@ export class ContextMenu extends Menu {
 
   scopes.selection = [
     'photo-read-only',
-    'selection-read-only',
     'selection',
     'selection-rotate']
   scopes.selection.position = 9
 
   scopes['selection-read-only'] = [
-    'photo-read-only',
-    'selection-read-only']
+    'photo-read-only']
   scopes['selection-read-only'].position = 5
 
   scopes.note = ['note']
@@ -429,6 +427,24 @@ Menu.ItemCompiler = {
         ...plugins.map(({ id, name }) => ({
           label: name,
           click: createResponder('app:export-item', app, win, {
+            target: event?.target,
+            plugin: id
+          })
+        }))
+      ]
+    }
+  },
+
+  'extract': (item, app, win, event) => {
+    let plugins = app.plugins.available('extract')
+
+    if (plugins.length > 0) {
+      item.submenu = [
+        ...item.submenu,
+        { type: 'separator' },
+        ...plugins.map(({ id, name }) => ({
+          label: name,
+          click: createResponder('app:extract-photo', app, win, {
             target: event?.target,
             plugin: id
           })
