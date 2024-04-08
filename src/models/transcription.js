@@ -25,6 +25,7 @@ export async function load(db, id) {
   }
 
   await db.each(...query, ({
+    id: parent,
     transcription_id,
     config,
     created,
@@ -36,6 +37,7 @@ export async function load(db, id) {
       transcriptions[transcription_id] = {
         ...props,
         id: transcription_id,
+        parent,
         config: json(config),
         created: new Date(created),
         data: json(data),
