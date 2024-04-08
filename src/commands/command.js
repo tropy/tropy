@@ -1,7 +1,8 @@
 import assert from 'assert'
 import { cancel, put } from 'redux-saga/effects'
-import { activity } from '../actions'
-import { pick } from '../common/util'
+import activity from '../actions/activity.js'
+import { pick } from '../common/util.js'
+import { parallel } from '../sagas/util.js'
 
 export const Registry = new Map()
 
@@ -73,6 +74,28 @@ export class Command {
       return this
     }
   };
+
+  *parallel(items, proc) {
+    yield this.progress({ total: items.length })
+
+    let { meta } = this.action
+    let self = this
+
+    let errors = []
+    let concurrency = meta.concurrency || Infinity
+
+    yield parallel(items, function* (item) {
+      try {
+        yield self.progress()
+        yield proc(item)
+      } catch (e) {
+        errors.push(e)
+      }
+    }, { concurrency })
+
+    if (errors.length > 0)
+      throw new AggregateError(errors, 'too many errors')
+  }
 
   *progress({ total, progress = 1 } = {}) {
     if (total !== undefined)
