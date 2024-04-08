@@ -14,6 +14,7 @@ export default {
   ROTATE: 'photo.rotate',
   SAVE: 'photo.save',
   SELECT: 'photo.select',
+  TRANSCRIBE: 'photo.transcribe',
   UPDATE: 'photo.update',
 
   BULK: {

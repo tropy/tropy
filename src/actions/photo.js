@@ -86,6 +86,18 @@ export default {
     }
   },
 
+  transcribe(payload, meta) {
+    return {
+      type: PHOTO.TRANSCRIBE,
+      payload,
+      meta: {
+        cmd: 'project',
+        ...meta,
+        concurrency: 1
+      }
+    }
+  },
+
   update,
 
   restore(payload, meta) {
