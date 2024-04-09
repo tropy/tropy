@@ -1,6 +1,27 @@
 import { warn } from '../common/log.js'
-import { select, update } from '../common/query.js'
-import { json } from '../common/util.js'
+import { into, select, update } from '../common/query.js'
+import { json, stringify } from '../common/util.js'
+
+
+export async function create(db, { id: parent, config = {}, text, data }) {
+  if (data) {
+    // TODO convert data to text
+  }
+
+  let status = (text) ? 1 : 0
+
+  let { id } = await db.run(
+    ...into('transcriptions')
+      .insert({
+        id: parent,
+        config: stringify(config),
+        data: stringify(data),
+        text,
+        status
+      }))
+
+  return (await load(db, [id]))[id]
+}
 
 export async function load(db, id) {
   let transcriptions = {}
