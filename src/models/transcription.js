@@ -3,11 +3,7 @@ import { into, select, update } from '../common/query.js'
 import { json, stringify } from '../common/util.js'
 
 
-export async function create(db, { id: parent, config = {}, text, data }) {
-  if (data) {
-    // TODO convert data to text
-  }
-
+export async function create(db, { parent, config = {}, text, data }) {
   let status = (text) ? 1 : 0
 
   let { id } = await db.run(
