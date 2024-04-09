@@ -17,6 +17,11 @@ const transcriptions = createSlice({
         Object.assign(state, payload)
     }),
 
+    remove: cmdReducer((state, { payload, meta, error }) => {
+      if (meta.done && !error)
+        for (let id of payload) delete state[id]
+    }),
+
     restore: cmdReducer((state, { payload, meta, error }) => {
       if (meta.done && !error)
         Object.assign(state, payload)
