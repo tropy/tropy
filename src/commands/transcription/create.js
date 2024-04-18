@@ -14,7 +14,7 @@ export class Create extends Command {
 
     // TODO sync/convert data and text if given
 
-    let tr = yield call(db.transaction, tx =>
+    let transcription = yield call(db.transaction, tx =>
       create(tx, {
         config,
         data,
@@ -22,12 +22,12 @@ export class Create extends Command {
         text
       }))
 
-    // TODO add transcription in photo/selection reducer!
+    let { id, parent } = transcription
 
-    this.undo = slice.remove([tr.id])
-    this.redo = slice.restore([tr.id])
+    this.undo = slice.remove([id])
+    this.redo = slice.restore([{ id, parent, idx: -1 }])
 
-    return { [tr.id]: tr }
+    return { [id]: transcription }
   }
 }
 
