@@ -1,5 +1,6 @@
 import { METADATA, SELECTION, PROJECT } from '../constants'
 import { bulk, insert, nested, replace, touch } from './util'
+import * as tr from '../slices/transcriptions.js'
 
 // eslint-disable-next-line complexity
 export function selections(state = {}, { type, payload, error, meta }) {
@@ -28,6 +29,13 @@ export function selections(state = {}, { type, payload, error, meta }) {
       return nested.add('notes', state, payload, meta)
     case SELECTION.NOTE.REMOVE:
       return nested.remove('notes', state, payload, meta)
+
+    case tr.create.type:
+      return tr.nested.create(state, { payload, meta, error })
+    case tr.remove.type:
+      return tr.nested.remove(state, { payload, meta, error })
+    case tr.restore.type:
+      return tr.nested.restore(state, { payload, meta, error })
 
     case SELECTION.BULK.UPDATE:
       return bulk.update(state, payload, meta)

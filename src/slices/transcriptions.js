@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createNextState, createSlice } from '@reduxjs/toolkit'
 import { cmdReducer } from './util.js'
 
 
@@ -29,10 +29,43 @@ const transcriptions = createSlice({
   }
 })
 
+export const nested = {
+  create(state, { payload, meta, error }) {
+    return (!meta.done || error) ?
+      state : createNextState(state, draft => {
+        for (let tr of Object.values(payload)) {
+          draft[tr.parent]?.transcriptions.push(tr.id)
+        }
+        return draft
+      })
+  },
+
+  remove(state, { payload, meta, error }) {
+    return (!meta.done || error) ?
+      state : createNextState(state, draft => {
+        for (let tr of payload) {
+          if (tr.idx >= 0 && tr.parent in draft)
+            draft[tr.parent].transcriptions.splice(tr.idx, 1)
+        }
+        return draft
+      })
+  },
+
+  restore(state, { payload, meta, error }) {
+    return (!meta.done || error) ?
+      state : createNextState(state, draft => {
+        for (let tr of payload) {
+          draft[tr.parent]?.transcriptions.splice(tr.idx, 0, tr.id)
+        }
+        return draft
+      })
+  }
+}
 
 export const {
   create,
   load,
+  remove,
   restore
 } = transcriptions.actions
 
