@@ -256,6 +256,12 @@ en:
             command: 'app:extract-photo'
           - label: 'To Clipboard'
             command: 'app:copy-photo'
+      - label: 'Transcribe Photo'
+        id: 'transcribe'
+        submenu: &transcribe-submenu
+          - label: 'Tropy / Transkribus'
+            command: 'app:transcribe-photo'
+            enabled: false
       - label: 'Consolidate Photo'
         command: 'app:consolidate-photo'
     photo-rotate: &photo-rotate
