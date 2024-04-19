@@ -453,6 +453,27 @@ Menu.ItemCompiler = {
     }
   },
 
+  'transcribe': (item, app, win, event) => {
+    let plugins = app.plugins.available('transcribe')
+
+    // let builtin = item.submenu[0]
+    // builtin.enabled = isAccountLinked
+
+    if (plugins.length > 0) {
+      item.submenu = [
+        ...item.submenu,
+        { type: 'separator' },
+        ...plugins.map(({ id, name }) => ({
+          label: name,
+          click: createResponder('app:transcribe-photo', app, win, {
+            target: event?.target,
+            plugin: id
+          })
+        }))
+      ]
+    }
+  },
+
   'import': (item, app, win) => {
     let plugins = app.plugins.available('import')
 
