@@ -7,9 +7,14 @@ export class Create extends Command {
   *exec() {
     let { db } = this.options
     let { config, data, text, photo, selection } = this.action.payload
+    let { plugin } = this.action.meta
 
     if (photo == null) {
       ({ photo, selection } = yield select(state => state.nav))
+    }
+
+    if (config == null) {
+      config = { plugin }
     }
 
     // TODO sync/convert data and text if given

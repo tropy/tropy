@@ -1,5 +1,6 @@
 export * as notepad from '../slices/notepad.js'
 export * as storage from '../slices/storage.js'
+export * as transcriptions from '../slices/transcriptions.js'
 
 export { default as activity } from '../actions/activity'
 export { default as api } from '../actions/api'
