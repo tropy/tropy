@@ -31,6 +31,7 @@ import {
   settings,
   sidebar,
   tags,
+  transcriptions,
   ui
 } from '../reducers/index.js'
 
@@ -70,6 +71,7 @@ export const create = () => {
       settings,
       sidebar,
       tags,
+      transcriptions,
       ui
     },
     middleware: (getDefaultMiddleWare) =>([
