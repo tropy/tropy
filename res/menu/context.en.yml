@@ -259,7 +259,7 @@ en:
       - label: 'Transcribe Photo'
         id: 'transcribe'
         submenu: &transcribe-submenu
-          - label: 'Tropy / Transkribus'
+          - label: 'With Tropy'
             command: 'app:transcribe-photo'
             enabled: false
       - label: 'Consolidate Photo'
