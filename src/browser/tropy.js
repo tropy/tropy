@@ -1272,7 +1272,7 @@ export class Tropy extends EventEmitter {
   }
 
   get dev() {
-    return channel === 'dev' || process.env.NODE_ENV === 'development'
+    return channel === 'alpha' || process.env.NODE_ENV === 'development'
   }
 
   get debug() {

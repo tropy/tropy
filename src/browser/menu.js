@@ -4,6 +4,7 @@ import { Icon, Menu as MR } from './res.js'
 import { getLocale } from './locale.js'
 import { error, warn } from '../common/log.js'
 import { blank } from '../common/util.js'
+import { channel } from '../common/release.js'
 
 const SEPARATOR = { type: 'separator' }
 
@@ -456,8 +457,8 @@ Menu.ItemCompiler = {
   'transcribe': (item, app, win, event) => {
     let plugins = app.plugins.available('transcribe')
 
-    // let builtin = item.submenu[0]
-    // builtin.enabled = isAccountLinked
+    let builtin = item.submenu[0]
+    builtin.enabled = channel !== 'latest'
 
     if (plugins.length > 0) {
       item.submenu = [
