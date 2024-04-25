@@ -45,10 +45,6 @@ jobs:
       - name: Install and build dependencies
         run: npm clean-install --no-progress
 
-      - name: Workaround node-gyp issue 2915
-        if: matrix.os == 'macos-latest'
-        run: python3 -m pip install setuptools
-
       - name: Rebuild native dependencies
         run: node scripts/rebuild --force --arch ${{ matrix.arch }}
 
