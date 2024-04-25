@@ -49,8 +49,8 @@ jobs:
         run: npm clean-install --no-progress
 
       - name: Workaround node-gyp issue 2915
-        if: matrix.friendlyName == 'macOS'
-        run: brew install python-setuptools
+        if: matrix.os == 'macos-13'
+        run: python3 -m pip install setuptools
 
       - name: Rebuild native dependencies
         run: node scripts/rebuild --force --arch ${{ matrix.arch }}
