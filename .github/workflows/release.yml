@@ -41,11 +41,11 @@ jobs:
         include:
           - os: ubuntu-20.04
             platform: linux
-          - os: macos-12
+          - os: macos-13
             platform: darwin
           - os: windows-2019
             platform: win32
-          - os: macos-13
+          - os: macos-latest
             platform: darwin
             arch: arm64
           - os: windows-2019
@@ -62,7 +62,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
 
       - name: Workaround node-gyp issue 2915
