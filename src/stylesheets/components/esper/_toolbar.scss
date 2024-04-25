@@ -61,8 +61,8 @@
       }
 
       @if $platform == linux {
-        .frameless & {
-          .stacked & {
+        .stacked & {
+          .frameless & {
             flex: 1 1 0;
             overflow: hidden;
 
