@@ -34,7 +34,6 @@ jobs:
       matrix:
         os:
           - ubuntu-20.04
-          - macos-12
           - windows-2019
         arch:
           - x64
@@ -66,8 +65,11 @@ jobs:
           cache: npm
 
       - name: Workaround node-gyp issue 2915
-        if: matrix.platform == 'darwin'
+        if: matrix.os == 'macos-13'
         run: python3 -m pip install setuptools
+      - name: Workaround node-gyp issue 2915
+        if: matrix.os == 'macos-latest'
+        run: brew install python-setuptools
 
       - name: Install and build dependencies
         run: npm clean-install --no-progress

@@ -51,6 +51,9 @@ jobs:
       - name: Workaround node-gyp issue 2915
         if: matrix.os == 'macos-13'
         run: python3 -m pip install setuptools
+      - name: Workaround node-gyp issue 2915
+        if: matrix.os == 'macos-latest'
+        run: brew install python-setuptools
 
       - name: Rebuild native dependencies
         run: node scripts/rebuild --force --arch ${{ matrix.arch }}
