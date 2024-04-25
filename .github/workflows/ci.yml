@@ -27,8 +27,11 @@ jobs:
         include:
           - os: ubuntu-latest
             friendlyName: Linux
+          - os: macos-13
+            friendlyName: macOS (x64)
           - os: macos-latest
-            friendlyName: macOS
+            friendlyName: macOS (arm64)
+            arch: arm64
           - os: windows-latest
             friendlyName: Windows
 
