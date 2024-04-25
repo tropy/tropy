@@ -20,7 +20,6 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-latest
           - windows-latest
         arch:
           - x64
@@ -28,10 +27,11 @@ jobs:
           - os: ubuntu-latest
             friendlyName: Linux
           - os: macos-13
-            friendlyName: macOS (x64)
+            arch: x64
+            friendlyName: macOS
           - os: macos-latest
-            friendlyName: macOS (arm64)
             arch: arm64
+            friendlyName: macOS
           - os: windows-latest
             friendlyName: Windows
 
@@ -42,14 +42,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
 
       - name: Install and build dependencies
         run: npm clean-install --no-progress
 
       - name: Workaround node-gyp issue 2915
-        if: matrix.os == 'macos-latest'
+        if: matrix.friendlyName == 'macOS'
         run: brew install python-setuptools
 
       - name: Rebuild native dependencies
