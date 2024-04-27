@@ -86,7 +86,7 @@ export async function save(db, {
     config = stringify(config)
 
   let query = update('transcriptions').where({
-    id,
+    transcription_id: id,
     config,
     data,
     text,
