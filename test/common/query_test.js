@@ -112,6 +112,13 @@ describe('Query Builder', () => {
           .query
       ).to.eql('UPDATE project SET base = NULL'))
 
+    it('undefined', () =>
+      expect(
+        update('project')
+          .set({ base: undefined, name: 'X' })
+          .query
+      ).to.eql('UPDATE project SET name = $new_name'))
+
     it('set strings', () =>
       expect(
         update('project')
