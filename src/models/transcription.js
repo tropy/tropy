@@ -12,7 +12,7 @@ export async function create(db, { parent, config = {}, text, data }) {
       .insert({
         id: parent,
         config: stringify(config),
-        data: stringify(data),
+        data,
         text,
         status
       }))
@@ -58,7 +58,7 @@ export async function load(db, id) {
         parent,
         config: json(config),
         created: new Date(created),
-        data: json(data),
+        data,
         deleted: false,
         modified: new Date(modified)
       }
