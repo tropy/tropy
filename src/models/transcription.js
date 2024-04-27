@@ -1,3 +1,4 @@
+import assert from 'node:assert'
 import { warn } from '../common/log.js'
 import { into, select, update } from '../common/query.js'
 import { json, stringify } from '../common/util.js'
@@ -69,6 +70,31 @@ export async function load(db, id) {
   })
 
   return transcriptions
+}
+
+export async function save(db, {
+  id,
+  config,
+  data,
+  text,
+  status,
+  modified = new Date
+}) {
+  assert(id != null, 'missing id')
+
+  if (config !== undefined)
+    config = stringify(config)
+
+  let query = update('transcriptions').where({
+    id,
+    config,
+    data,
+    text,
+    status,
+    modified: modified.toISOString()
+  })
+
+  await db.run(...query)
 }
 
 export async function remove(db, id) {
