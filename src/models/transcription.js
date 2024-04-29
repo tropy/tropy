@@ -112,10 +112,10 @@ export async function restore(db, id) {
   return load(db, id)
 }
 
-export async function prune(db) {
+export async function prune(db, since = '-1 week') {
   return db.run(`
     DELETE FROM transcriptions
     WHERE deleted is NOT NULL OR (
-      status < 0 AND modified < datetime("now", "-1 week")
+      status < 0 AND datetime(modified) < datetime('now', '${since}')
     )`)
 }
