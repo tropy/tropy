@@ -255,6 +255,9 @@ export function createDragHandler({
 }
 
 export function parse(string, type = 'text/html') {
+  if (string == null)
+    return null
+
   let p = new DOMParser()
   let doc = p.parseFromString(string, type)
 
@@ -266,7 +269,10 @@ export function parse(string, type = 'text/html') {
 }
 
 export function serialize(node) {
-  return (new XMLSerializer).serializeToString(node)
+  if (node == null)
+    return null
+  else
+    return (new XMLSerializer).serializeToString(node)
 }
 
 export function viewport() {
