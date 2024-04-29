@@ -28,7 +28,8 @@ const transcriptions = createSlice({
     }),
 
     update: (state, { payload }) => {
-      Object.assign(state, payload)
+      let { id, ...props } = payload
+      Object.assign(state[id], props)
     }
   }
 })
