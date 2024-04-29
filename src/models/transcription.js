@@ -2,17 +2,21 @@ import assert from 'node:assert'
 import { warn } from '../common/log.js'
 import { into, select, update } from '../common/query.js'
 import { json, stringify } from '../common/util.js'
+import { serialize } from '../dom.js'
 
 
 export async function create(db, { parent, config = {}, text, data }) {
   let status = (text) ? 1 : 0
+
+  if (data instanceof Node)
+    data = serialize(data)
 
   let { id } = await db.run(
     ...into('transcriptions')
       .insert({
         id: parent,
         config: stringify(config),
-        data,
+        data: serialize(data),
         text,
         status
       }))
@@ -84,6 +88,8 @@ export async function save(db, {
 
   if (config !== undefined)
     config = stringify(config)
+  if (data instanceof Node)
+    data = serialize(data)
 
   let query = update('transcriptions').set({
     config,
