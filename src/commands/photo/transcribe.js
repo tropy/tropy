@@ -46,7 +46,12 @@ export class Transcribe extends Command {
         // Otherwise upload to transcription service and set process id
 
       } else {
-        next = yield call(win.plugins.transcribe, draft, { buffer, ...raw })
+        next = yield call(
+          win.plugins.transcribe,
+          config.plugin,
+          draft,
+          { buffer, ...raw }
+        )
       }
     } catch (e) {
       warn({
