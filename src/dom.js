@@ -265,6 +265,10 @@ export function parse(string, type = 'text/html') {
   return doc
 }
 
+export function serialize(node) {
+  return (new XMLSerializer).serializeToString(node)
+}
+
 export function viewport() {
   return {
     width: document.documentElement.clientWidth,
