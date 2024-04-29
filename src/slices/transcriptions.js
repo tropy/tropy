@@ -70,7 +70,8 @@ export const {
   create,
   load,
   remove,
-  restore
+  restore,
+  update
 } = transcriptions.actions
 
 export default transcriptions.reducer
