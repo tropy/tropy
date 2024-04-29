@@ -85,14 +85,13 @@ export async function save(db, {
   if (config !== undefined)
     config = stringify(config)
 
-  let query = update('transcriptions').where({
-    transcription_id: id,
+  let query = update('transcriptions').set({
     config,
     data,
     text,
     status,
     modified: modified.toISOString()
-  })
+  }).where({ transcription_id: id })
 
   await db.run(...query)
 }
