@@ -87,7 +87,7 @@ export class Command {
     yield parallel(items, function* (item) {
       try {
         yield self.progress()
-        yield proc(item)
+        yield proc(item, self)
       } catch (e) {
         errors.push(e)
       }
