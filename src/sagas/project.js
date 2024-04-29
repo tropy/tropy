@@ -15,6 +15,7 @@ import { autosave } from './note.js'
 import { persist, restore, storage } from './storage.js'
 import { watch } from './watch.js'
 import { handleDatabaseErrors } from './db.js'
+import { transcribe } from './transcriptions.js'
 import ARGS, { update } from '../args.js'
 import { open as openProject } from '../common/project.js'
 import { Migrations } from '../res.js'
@@ -105,6 +106,7 @@ export function *open(opts, action) {
 function *setup({ db, project }) {
   try {
     yield every(has('search'), search, db)
+    yield fork(transcribe)
 
     yield all([
       call(restore, 'nav', project.id),
