@@ -2,6 +2,7 @@ export default {
   201: {
     id: 201,
     notes: [],
+    transcriptions: [],
     photo: 101,
     x: 674,
     y: 669,
@@ -22,6 +23,7 @@ export default {
   202: {
     id: 202,
     notes: [],
+    transcriptions: [403],
     photo: 101,
     x: 1600,
     y: 583,

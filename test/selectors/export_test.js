@@ -34,6 +34,7 @@ describe('Export Selectors', () => {
       'lists',
       'metadata',
       'notes',
+      'transcriptions',
       'ontology',
       'photos',
       'selections',
