@@ -1,7 +1,7 @@
 import { ctx, props } from '../common/export'
 import { xsd } from '../ontology'
 import { version } from '../common/release'
-import { blank, URI, get, pick } from '../common/util'
+import { compact, blank, URI, get, pick } from '../common/util'
 import { serialize } from '../editor/serialize'
 
 const RESERVED = Object.fromEntries(props.all.map(prop => ([prop, true])))
@@ -65,6 +65,14 @@ const exportPhoto = (context, photo, state) => {
       exportNote(state.notes[id], state.settings?.export?.note))
   }
 
+  if (photo.transcriptions.length > 0) {
+    output.transcription = compact(photo.transcriptions.map(id =>
+      exportTranscription(
+        state.transcriptions[id],
+        state.settings?.export?.transcription
+      )))
+  }
+
   if (photo.selections.length > 0) {
     output.selection = photo.selections.map(id =>
       exportSelection(context, state.selections[id], state))
@@ -87,6 +95,14 @@ const exportSelection = (context, selection, state) => {
       exportNote(state.notes[id], state.settings?.export?.note))
   }
 
+  if (selection.transcriptions.length > 0) {
+    output.transcription = compact(selection.transcriptions.map(id =>
+      exportTranscription(
+        state.transcriptions[id],
+        state.settings?.export?.transcription
+      )))
+  }
+
   return output
 }
 
@@ -94,6 +110,13 @@ const exportNote = (note, opts) => ({
   '@type': 'Note',
   ...serialize(note, opts)
 })
+
+const exportTranscription = (transcription) => (
+  (transcription.status < 1) ? null : {
+    '@type': 'Transcription',
+    'text': transcription.text,
+    'alto': transcription.data
+  })
 
 const addMetadata = (context, into, data, ontology = {}) => {
   for (let prop in data) {
