@@ -18,6 +18,7 @@ PRAGMA application_id = -621960955;
 PRAGMA user_version = 2112312400;
 
 -- Load sqlite3 .dump
+          defensive off
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE vocabularies (
@@ -757,6 +758,9 @@ INSERT INTO properties VALUES('http://www.w3.org/2003/12/exif/ns#xPComment','htt
 INSERT INTO properties VALUES('http://www.w3.org/2003/12/exif/ns#xPKeywords','http://www.w3.org/2003/12/exif/ns#',NULL,NULL,NULL,NULL,'Keywords tag used by Windows');
 INSERT INTO properties VALUES('http://www.w3.org/2003/12/exif/ns#xPSubject','http://www.w3.org/2003/12/exif/ns#',NULL,NULL,NULL,NULL,'Subject tag used by Windows');
 INSERT INTO properties VALUES('http://www.w3.org/2003/12/exif/ns#xPTitle','http://www.w3.org/2003/12/exif/ns#',NULL,NULL,NULL,NULL,'Title tag used by Windows');
+INSERT INTO properties VALUES('https://tropy.org/v1/tropy#transcription','https://tropy.org/v1/tropy#',NULL,NULL,NULL,NULL,'The transcription.');
+INSERT INTO properties VALUES('https://tropy.org/v1/tropy#alto','https://tropy.org/v1/tropy#',NULL,NULL,NULL,NULL,'The transcription in ALTO XML.');
+INSERT INTO properties VALUES('https://tropy.org/v1/tropy#version','https://tropy.org/v1/tropy#',NULL,NULL,NULL,NULL,'A Tropy version string.');
 CREATE TABLE classes (
   class_id        TEXT NOT NULL PRIMARY KEY,
   vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
@@ -1030,6 +1034,7 @@ INSERT INTO classes VALUES('http://id.loc.gov/ontologies/bibframe/AdminMetadata'
 INSERT INTO classes VALUES('http://id.loc.gov/ontologies/bibframe/DescriptionConventions','http://id.loc.gov/ontologies/bibframe/',NULL,'Rules used for the descriptive content of the resource description.',NULL);
 INSERT INTO classes VALUES('http://id.loc.gov/ontologies/bibframe/GenerationProcess','http://id.loc.gov/ontologies/bibframe/',NULL,'Indication of the program or process used to generate the description by application of a particular transformation.',NULL);
 INSERT INTO classes VALUES('http://id.loc.gov/ontologies/bibframe/DescriptionAuthentication','http://id.loc.gov/ontologies/bibframe/',NULL,'Indication of specific types of reviews that have been carried out on the description information.',NULL);
+INSERT INTO classes VALUES('https://tropy.org/v1/tropy#Transcription','https://tropy.org/v1/tropy#',NULL,NULL,'A transcription of printed or handwritten text in a photo.');
 CREATE TABLE datatypes (
   datatype_id     TEXT NOT NULL PRIMARY KEY,
   vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
@@ -3149,6 +3154,8 @@ INSERT INTO labels VALUES('https://tropy.org/v1/tropy#Template','it','Modello');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#Template','ja','テンプレート');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#Template','pt','Modelo');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#Template','pt-BR','Modelo');
+INSERT INTO labels VALUES('https://tropy.org/v1/tropy#Transcription','de','Transkription');
+INSERT INTO labels VALUES('https://tropy.org/v1/tropy#Transcription','en','Transcription');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#angle','en','Angle');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#box','de','Karton');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#box','en','Box');
@@ -3304,6 +3311,7 @@ INSERT INTO labels VALUES('https://tropy.org/v1/tropy#template-type','ja','タ�
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#template-type','pt','Tipo');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#template-type','pt-BR','Tipo');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#text','en','Text');
+INSERT INTO labels VALUES('https://tropy.org/v1/tropy#transcription','en','Transcription');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#width','en','Width');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#x','en','X');
 INSERT INTO labels VALUES('https://tropy.org/v1/tropy#y','en','Y');
@@ -3414,36 +3422,37 @@ CREATE TABLE migrations (
   number      INTEGER  NOT NULL PRIMARY KEY,
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
-INSERT INTO migrations VALUES(1705231122,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1705231144,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1708281429,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1710212032,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1710241005,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1710241031,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1710241557,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1710272322,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1712071218,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1802091124,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1802121029,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1802121134,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1902151236,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1902151256,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1902202156,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1902202219,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1903011734,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1903021759,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1908091209,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1908171112,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1908171113,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1909102030,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(1912052116,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(2101190917,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(2207140945,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(2207141045,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(2301161217,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(2302031600,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(2304131520,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(2304171147,'2023-07-06 11:41:32');
-INSERT INTO migrations VALUES(2307061337,'2023-07-06 11:41:32');
+INSERT INTO migrations VALUES(1705231122,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1705231144,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1708281429,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1710212032,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1710241005,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1710241031,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1710241557,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1710272322,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1712071218,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1802091124,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1802121029,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1802121134,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1902151236,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1902151256,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1902202156,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1902202219,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1903011734,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1903021759,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1908091209,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1908171112,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1908171113,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1909102030,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(1912052116,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(2101190917,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(2207140945,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(2207141045,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(2301161217,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(2302031600,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(2304131520,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(2304171147,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(2307061337,'2024-04-30 10:11:41');
+INSERT INTO migrations VALUES(2404301200,'2024-04-30 10:11:41');
 COMMIT;
 PRAGMA foreign_keys=ON;
