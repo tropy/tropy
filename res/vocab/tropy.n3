@@ -51,6 +51,12 @@ tropy:Note a rdfs:Class ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A note."@en .
 
+tropy:Transcription a rdfs:Class ;
+  rdfs:subClassOf rdfs:Resource ;
+  rdfs:label "Transcription"@en , "Transkription"@de ;
+  rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:comment "A transcription of printed or handwritten text in a photo."@en .
+
 tropy:Template a rdfs:Class ;
   rdfs:subClassOf rdfs:Resource ;
   rdfs:label "Template"@en , "Vorlage"@de ;
@@ -142,14 +148,27 @@ tropy:note a rdf:Property ;
 tropy:text a rdf:Property ;
 	rdfs:label "Text"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
-  rdfs:domain tropy:Note ;
-	rdfs:comment "The note's plain text content."@en .
+  rdfs:domain tropy:Note, tropy:Transcription ;
+	rdfs:comment "The note's or transcription's plain text content."@en .
 
 tropy:html a rdf:Property ;
 	rdfs:label "Text"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:domain tropy:Note ;
 	rdfs:comment "The note's rich-text content in HTML."@en .
+
+tropy:transcription a rdf:Property ;
+	rdfs:label "Transcription"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+  rdfs:range tropy:Transcription ;
+	rdfs:comment "The transcription."@en .
+
+tropy:alto a rdf:Property ;
+	rdfs:label "ALTO"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Transcription ;
+	rdfs:comment "The transcription in ALTO XML."@en .
 
 tropy:checksum a rdf:Property ;
 	rdfs:label "Checksum"@en ;
