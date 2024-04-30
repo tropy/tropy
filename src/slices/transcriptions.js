@@ -12,6 +12,12 @@ const transcriptions = createSlice({
         Object.assign(state, payload)
     }),
 
+    insert(state, { payload }) {
+      for (let tr of payload) {
+        state[tr.id] = tr
+      }
+    },
+
     load: cmdReducer((state, { payload, meta, error }) => {
       if (meta.done && !error)
         Object.assign(state, payload)
@@ -27,7 +33,7 @@ const transcriptions = createSlice({
         Object.assign(state, payload)
     }),
 
-    update: (state, { payload }) => {
+    update(state, { payload }) {
       let { id, ...props } = payload
       Object.assign(state[id], props)
     }
@@ -69,6 +75,7 @@ export const nested = {
 
 export const {
   create,
+  insert,
   load,
   remove,
   restore,
