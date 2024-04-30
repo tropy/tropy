@@ -96,6 +96,7 @@ const getPhoto = (data) => ({
   notes: flatten(data[tropy.note]).map(getNote),
   selections: flatten(data[tropy.selection]).map(getSelection),
   template: get(data, [tropy.template, 0, '@id']),
+  transcriptions: flatten(data[tropy.transcription]).map(getTranscription),
   type: get(data, ['@type', 0])
 })
 
@@ -105,12 +106,18 @@ const getSelection = (data) => ({
   notes: flatten(data[tropy.note]).map(getNote),
   type: get(data, ['@type', 0]),
   template: get(data, [tropy.template, 0, '@id']),
+  transcriptions: flatten(data[tropy.transcription]).map(getTranscription),
   ...getProps(data, 'selection')
 })
 
 const getNote = (data) => ({
   language: get(data, [tropy.html, 0, '@language']),
   html: get(data, [tropy.html, 0, '@value'])
+})
+
+const getTranscription = (data) => ({
+  text: get(data, [tropy.text, 0, '@value']),
+  alto: get(data, [tropy.alto, 0, '@value'])
 })
 
 export function *eachItem(graph) {

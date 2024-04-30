@@ -199,6 +199,7 @@ export class Import extends ImportCommand {
       let photos = []
       let selections = []
       let notes = []
+      let transcriptions = []
       let tags
 
       yield this.progress()
@@ -242,6 +243,12 @@ export class Import extends ImportCommand {
           })
 
           await importNotes(tx, obj.photos[i].notes, photo, notes)
+          await importTranscriptions(
+            tx,
+            obj.photos[i].transcriptions,
+            photo,
+            transcriptions
+          )
 
           for (let s of obj.photos[i].selections) {
             let selection = await mod.selection.create(tx, {
@@ -251,6 +258,12 @@ export class Import extends ImportCommand {
             })
 
             await importNotes(tx, s.notes, selection, notes)
+            await importTranscriptions(
+              tx,
+              s.transcriptions,
+              selection,
+              transcriptions
+            )
 
             photo.selections.push(selection.id)
             selections.push(selection)
@@ -266,6 +279,7 @@ export class Import extends ImportCommand {
 
       yield all([
         put(act.note.insert(notes)),
+        put(act.transcriptions.insert(transcriptions)),
         put(act.selection.insert(selections)),
         put(act.photo.insert(photos)),
         put(act.item.insert(item)),
@@ -334,3 +348,18 @@ const importNotes = async (db, notes, parent, result = []) => {
   }
   return result
 }
+
+const importTranscriptions =
+  async (db, transcriptions, parent, result = []) => {
+    for (let { text, alto } of transcriptions) {
+      let transcription = await mod.transcription.create(db, {
+        parent: parent.id,
+        data: alto,
+        text
+      })
+
+      parent.transcriptions.push(transcription.id)
+      result.push(transcription)
+    }
+    return result
+  }
