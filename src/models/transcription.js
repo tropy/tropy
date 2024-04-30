@@ -16,7 +16,7 @@ export async function create(db, { parent, config = {}, text, data }) {
       .insert({
         id: parent,
         config: stringify(config),
-        data: serialize(data),
+        data,
         text,
         status
       }))
