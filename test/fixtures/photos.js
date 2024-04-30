@@ -8,6 +8,10 @@ export default {
     notes: [
       301
     ],
+    transcriptions: [
+      401,
+      402
+    ],
     item: 1,
     template: 'https://tropy.org/v1/templates/photo',
     angle: 0,
