@@ -172,7 +172,7 @@ img {
   font-size: inherit;
   font-weight: 400;
   padding-bottom: calc($print-font-size / 4 + 0.5pt);
-  margin: 0 0 calc($print-font-size / 2) 0;
+  margin: 0 0 calc($print-font-size / 2);
   position: relative;
 
   // Hairline hack
