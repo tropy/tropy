@@ -132,7 +132,7 @@ export default {
     return (dispatch, getState) => {
       let { item, photo, selection, note } = payload
 
-      if (note == null) {
+      if (note == null && photo != null) {
         note = (selection != null) ?
           getState().selections[selection].notes[0] :
           getState().photos[photo].notes[0]
