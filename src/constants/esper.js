@@ -17,6 +17,11 @@ export default {
     ZOOM_OUT: 'zoomOut'
   },
 
+  OVERLAY: {
+    NONE: 0,
+    TEXT: 2
+  },
+
   COLOR: {
     mask: {
       line: [0xffffff, 1],

@@ -112,6 +112,7 @@ class Item extends React.PureComponent {
             selection={this.props.selection}
             selections={this.props.selections}
             tool={this.props.esper.tool}
+            overlay={this.props.esper.overlay}
             onContextMenu={this.handleContextMenu}
             onChange={this.handleEsperChange}
             onPhotoConsolidate={this.props.onPhotoConsolidate}

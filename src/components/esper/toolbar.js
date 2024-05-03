@@ -22,6 +22,7 @@ import {
 import { ESPER, SASS } from '../../constants'
 
 const {
+  OVERLAY,
   TOOL,
   MODE
 } = ESPER
@@ -77,11 +78,23 @@ export class EsperToolbar extends React.PureComponent {
     this.props.onToolChange(TOOL.SELECT)
   }
 
+  toggleOverlay = () => {
+    this.props.onOverlayChange(
+      this.props.overlay === OVERLAY.NONE ? OVERLAY.TEXT : OVERLAY.NONE
+    )
+  }
+
   render() {
     return (
       <Titlebar>
         <Toolbar.Left>
           <ToolGroup>
+            <Button
+              noFocus
+              text="T"
+              isActive={this.props.overlay > OVERLAY.NONE}
+              isDisabled={this.props.isDisabled}
+              onClick={this.toggleOverlay}/>
             <Button
               noFocus
               icon={<IconArrow/>}
@@ -175,6 +188,7 @@ export class EsperToolbar extends React.PureComponent {
     mode: string.isRequired,
     mirror: bool,
     resolution: number.isRequired,
+    overlay: number.isRequired,
     tool: string.isRequired,
     zoom: number.isRequired,
     zoomPrecision: number.isRequired,
@@ -183,6 +197,7 @@ export class EsperToolbar extends React.PureComponent {
     maxZoom: number.isRequired,
     onMirrorChange: func.isRequired,
     onModeChange: func.isRequired,
+    onOverlayChange: func.isRequired,
     onPanelChange: func.isRequired,
     onToolChange: func.isRequired,
     onRotationChange: func.isRequired,
@@ -194,6 +209,7 @@ export class EsperToolbar extends React.PureComponent {
   static defaultProps = {
     mode: MODE.ZOOM,
     resolution: 1,
+    overlay: OVERLAY.TEXT,
     tool: TOOL.ARROW,
     zoom: 1,
     zoomPrecision: ZOOM_SLIDER_PRECISION,
