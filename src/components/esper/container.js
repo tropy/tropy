@@ -5,6 +5,7 @@ import throttle from 'lodash.throttle'
 import Esper from '../../esper'
 import { EsperToolbar } from './toolbar'
 import { EsperPanel } from './panel'
+import { EsperOverlay } from './overlay.js'
 import { EsperPhotoError } from './error'
 import { pick, restrict } from '../../common/util'
 import { Cache } from '../../common/cache'
@@ -345,6 +346,12 @@ export class EsperContainer extends React.Component {
   handlePanelChange = (panel = !this.props.isPanelVisible) => {
     this.props.onChange({
       esper: { panel }
+    })
+  }
+
+  handleOverlayChange = (overlay) => {
+    this.props.onChange({
+      esper: { overlay }
     })
   }
 
@@ -724,6 +731,11 @@ export class EsperContainer extends React.Component {
   render() {
     let { isDisabled } = this
 
+    let transcriptions =
+      (this.props.selection || this.props.photo)?.transcriptions
+    let isOverlayVisible =
+      this.props.overlay > 0 && transcriptions?.length > 0
+
     return (
       <section
         className={cx('esper', this.tool, {
@@ -755,9 +767,11 @@ export class EsperContainer extends React.Component {
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}
+            overlay={this.props.overlay}
             onMirrorChange={this.handleMirrorChange}
             onModeChange={this.handleModeChange}
             onPanelChange={this.handlePanelChange}
+            onOverlayChange={this.handleOverlayChange}
             onToolChange={this.handleToolChange}
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
@@ -767,6 +781,11 @@ export class EsperContainer extends React.Component {
           {
             this.state.isTextureMissing &&
               <EsperPhotoError onConsolidate={this.handlePhotoConsolidate}/>
+          }
+          {
+            isOverlayVisible && (
+              <EsperOverlay transcriptions={transcriptions}/>
+            )
           }
           <EsperPanel
             brightness={this.state.brightness}
@@ -804,6 +823,7 @@ export class EsperContainer extends React.Component {
     onSelectionCreate: func.isRequired,
     photo: object,
     tabIndex: number.isRequired,
+    overlay: number.isRequired,
     tool: string.isRequired,
     selection: object,
     selections: arrayOf(shape({
@@ -822,6 +842,7 @@ export class EsperContainer extends React.Component {
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
     tabIndex: TABS.Esper,
+    overlay: 0,
     tool: TOOL.ARROW,
     zoom: 1
   }
