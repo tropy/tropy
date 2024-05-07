@@ -69,7 +69,7 @@ export class Plugins extends EventEmitter {
   }
 
   async create(config = this.config) {
-    this.instances = {}
+    this.instances = Object.create({})
     let loadcount = 0
 
     for (let i = 0; i < config.length; ++i) {
@@ -168,6 +168,7 @@ export class Plugins extends EventEmitter {
 
   async reload(autosave = false) {
     try {
+      await this.unload()
       this.reset()
       this.config = await load(this.configFile)
     } catch (e) {
@@ -180,6 +181,16 @@ export class Plugins extends EventEmitter {
     this.spec = await this.scan()
     info(`plugins scanned: ${Object.keys(this.spec).length}`)
     return this
+  }
+
+  unload = async () => {
+    for (let plugin of Object.values(this.instances)) {
+      try {
+        await plugin.unload?.()
+      } catch (e) {
+        warn({ stack: e.stack }, `failed to unload plugin: ${e.message}`)
+      }
+    }
   }
 
   async import(name) {
@@ -206,8 +217,8 @@ export class Plugins extends EventEmitter {
   reset() {
     this.changes = null
     this.config = []
-    this.spec = {}
-    this.instances = {}
+    this.spec = Object.create({})
+    this.instances = Object.create({})
   }
 
   save(config = this.config) {

@@ -68,6 +68,7 @@ export class Window extends EventEmitter {
 
       new Promise((resolve) => {
         this.unloaders.push(this.plugins.flush)
+        this.unloaders.push(this.plugins.unload)
 
         this.handleUnload()
         this.handleTabFocus()
