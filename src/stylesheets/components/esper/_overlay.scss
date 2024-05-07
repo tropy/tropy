@@ -1,0 +1,25 @@
+//
+// Esper panel
+// --------------------------------------------------
+
+.esper-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: $esper-bg;
+  color: $text-color;
+  font-family: $font-family-base;
+  font-size: $editor-font-size;
+  line-height: $editor-line-height;
+  padding-inline: min(10vw, 48px);
+
+  pre {
+    user-select: text;
+    cursor: text;
+  }
+
+  @if $platform == darwin {
+    -webkit-font-smoothing: antialiased; // Lighter font rendering
+  }
+}
