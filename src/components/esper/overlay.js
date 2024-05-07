@@ -17,7 +17,9 @@ export const EsperOverlay = ({ transcriptions }) => {
 
   return (
     <div className="esper-overlay">
-      {tr.status === 0 ? 'Pending...' : tr.text}
+      <pre>
+        {tr.status === 0 ? 'Pending...' : tr.text}
+      </pre>
     </div>
   )
 }
