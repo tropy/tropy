@@ -210,6 +210,13 @@ en:
       - label: 'Rotate Right'
         command: 'app:rotate-item-right'
         accelerator: 'CmdOrCtrl+]'
+    item-transcribe: &item-transcribe
+      - label: 'Transcribe Selected Items'
+        id: 'item-transcribe'
+        submenu: &item-transcribe-submenu
+          - label: 'With Tropy'
+            command: 'app:transcribe-item'
+            enabled: false
     item-bulk: &item-bulk
       - label: 'Merge Selected Items'
         command: 'app:merge-item'
@@ -347,6 +354,7 @@ en:
     item-bulk-deleted: *item-bulk-deleted
     item-view: *item-view
     item-rotate: *item-rotate
+    item-transcribe: *item-transcribe
     metadata-list: *metadata-list
     metadata-field: *metadata-field
     trash: *trash
@@ -381,6 +389,7 @@ en:
     item-bulk-deleted: *item-bulk-deleted
     item-view: *item-view
     item-rotate: *item-rotate
+    item-transcribe: *item-transcribe
     metadata-list: *metadata-list
     metadata-field: *metadata-field
     trash: *trash

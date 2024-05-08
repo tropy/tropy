@@ -4,7 +4,6 @@ import { Icon, Menu as MR } from './res.js'
 import { getLocale } from './locale.js'
 import { error, warn } from '../common/log.js'
 import { blank } from '../common/util.js'
-import { channel } from '../common/release.js'
 
 const SEPARATOR = { type: 'separator' }
 
@@ -219,6 +218,7 @@ export class ContextMenu extends Menu {
     ...scopes.items,
     'item',
     'item-read-only',
+    'item-transcribe',
     'item-rotate']
   scopes.item.position = 2
 
@@ -267,6 +267,7 @@ export class ContextMenu extends Menu {
     ...scopes.items,
     'item-bulk-read-only',
     'item-bulk',
+    'item-transcribe',
     'item-rotate']
   scopes['item-bulk'].position = 2
 
@@ -279,6 +280,7 @@ export class ContextMenu extends Menu {
     'item-list',
     'item',
     'item-read-only',
+    'item-transcribe',
     'item-rotate']
   scopes['item-list'].position = 2
 
@@ -287,6 +289,7 @@ export class ContextMenu extends Menu {
     'item-bulk-list',
     'item-bulk-read-only',
     'item-bulk',
+    'item-transcribe',
     'item-rotate']
   scopes['item-bulk-list'].position = 2
 
@@ -454,26 +457,8 @@ Menu.ItemCompiler = {
     }
   },
 
-  'transcribe': (item, app, win, event) => {
-    let plugins = app.plugins.available('transcribe')
-
-    let builtin = item.submenu[0]
-    builtin.enabled = false // channel !== 'latest'
-
-    if (plugins.length > 0) {
-      item.submenu = [
-        ...item.submenu,
-        { type: 'separator' },
-        ...plugins.map(({ id, name }) => ({
-          label: name,
-          click: createResponder('app:transcribe-photo', app, win, {
-            target: event?.target,
-            plugin: id
-          })
-        }))
-      ]
-    }
-  },
+  'transcribe': compileTranscriptionMenu,
+  'item-transcribe': compileTranscriptionMenu,
 
   'import': (item, app, win) => {
     let plugins = app.plugins.available('import')
@@ -612,6 +597,28 @@ Menu.ItemConditions = {
 
   isProjectOpen({ app, win }) {
     return app.getProject(win) != null
+  }
+}
+
+function compileTranscriptionMenu(item, app, win, event) {
+  let plugins = app.plugins.available('transcribe')
+
+  let builtin = item.submenu[0]
+  let command = builtin.command
+  builtin.enabled = false // channel !== 'latest'
+
+  if (plugins.length > 0) {
+    item.submenu = [
+      ...item.submenu,
+      { type: 'separator' },
+      ...plugins.map(({ id, name }) => ({
+        label: name,
+        click: createResponder(command, app, win, {
+          target: event?.target,
+          plugin: id
+        })
+      }))
+    ]
   }
 }
 
