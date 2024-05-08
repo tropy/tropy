@@ -18,6 +18,12 @@ const skel = (id, lists = [], photos = [], tags = []) => ({
 
 const SEARCH = `
   SELECT item_id AS id
+    FROM fts_transcriptions t
+      LEFT OUTER JOIN selections USING (id)
+      LEFT OUTER JOIN photos p ON (p.id = t.id OR p.id = photo_id)
+    WHERE fts_transcriptions MATCH $query
+  UNION
+  SELECT item_id AS id
     FROM fts_notes n
       LEFT OUTER JOIN selections USING (id)
       LEFT OUTER JOIN photos p ON (p.id = n.id OR p.id = photo_id)
