@@ -40,18 +40,19 @@ jobs:
         include:
           - os: ubuntu-20.04
             platform: linux
-          - os: macos-13
-            platform: darwin
           - os: windows-2019
             platform: win32
-          - os: macos-latest
-            platform: darwin
-            arch: arm64
           - os: windows-2019
             platform: win32
             arch: ia32
           - os: windows-latest
             platform: win32
+            arch: arm64
+          - os: macos-13
+            platform: darwin
+            arch: x64
+          - os: macos-latest
+            platform: darwin
             arch: arm64
 
     steps:
