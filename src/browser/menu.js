@@ -458,7 +458,7 @@ Menu.ItemCompiler = {
     let plugins = app.plugins.available('transcribe')
 
     let builtin = item.submenu[0]
-    builtin.enabled = channel !== 'latest'
+    builtin.enabled = false // channel !== 'latest'
 
     if (plugins.length > 0) {
       item.submenu = [
