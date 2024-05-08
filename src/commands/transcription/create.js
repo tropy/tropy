@@ -19,20 +19,21 @@ export class Create extends Command {
 
     // TODO sync/convert data and text if given
 
-    let transcription = yield call(db.transaction, tx =>
-      create(tx, {
-        config,
-        data,
-        parent: selection || photo,
-        text
-      }))
+    let parents = Array.isArray(photo) ?
+      photo : [selection || photo]
 
-    let { id, parent } = transcription
+    let transcriptions = yield call(db.transaction, async tx =>
+      Promise.all(parents.map(parent =>
+        create(tx, { config, data, parent, text }))))
 
-    this.undo = slice.remove([id])
-    this.redo = slice.restore([{ id, parent, idx: -1 }])
+    this.undo = slice.remove(
+      transcriptions.map(tr => tr.id))
 
-    return { [id]: transcription }
+    this.redo = slice.restore(
+      transcriptions.map(({ id, parent }) =>
+        ({ id, parent, idx: -1 })))
+
+    return transcriptions.reduce((acc, tr) => (acc[tr.id] = tr, acc), {})
   }
 }
 

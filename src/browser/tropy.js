@@ -588,6 +588,10 @@ export class Tropy extends EventEmitter {
         photo: target.id,
         selection: target.selection
       }, { plugin }), win))
+    this.on('app:transcribe-item', (win, { target, plugin }) =>
+      this.dispatch(act.transcriptions.create({
+        photo: target.photos
+      }, { plugin }), win))
     this.on('app:consolidate-photo-library', () =>
       this.dispatch(act.photo.consolidate(), this.wm.current()))
 
