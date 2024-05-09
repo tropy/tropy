@@ -18,7 +18,6 @@ PRAGMA application_id = -621960955;
 PRAGMA user_version = 2112312400;
 
 -- Load sqlite3 .dump
-          defensive off
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE vocabularies (
