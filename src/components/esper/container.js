@@ -163,6 +163,9 @@ export class EsperContainer extends React.Component {
     let image = this.props.selection || this.props.photo
     let nextImage = nextProps.selection || nextProps.photo
 
+    if (this.props.transcription !== nextProps.transcription)
+      return true
+
     if (nextImage == null || nextImage === image)
       return false
 
@@ -731,10 +734,8 @@ export class EsperContainer extends React.Component {
   render() {
     let { isDisabled } = this
 
-    let transcriptions =
-      (this.props.selection || this.props.photo)?.transcriptions
     let isOverlayVisible =
-      this.props.overlay > 0 && transcriptions?.length > 0
+      this.props.overlay > 0 && this.props.transcription != null
 
     return (
       <section
@@ -784,7 +785,7 @@ export class EsperContainer extends React.Component {
           }
           {
             isOverlayVisible && (
-              <EsperOverlay transcriptions={transcriptions}/>
+              <EsperOverlay transcription={this.props.transcription}/>
             )
           }
           <EsperPanel
@@ -833,6 +834,7 @@ export class EsperContainer extends React.Component {
       x: number.isRequired,
       y: number.isRequired
     })).isRequired,
+    transcription: object,
     x: number,
     y: number,
     zoom: number.isRequired

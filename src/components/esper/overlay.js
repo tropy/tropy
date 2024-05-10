@@ -1,29 +1,25 @@
-import { useSelector } from 'react-redux'
-import { arrayOf, number } from 'prop-types'
+import { object } from 'prop-types'
 
-export const EsperOverlay = ({ transcriptions }) => {
-  let id = transcriptions.at(-1)
-  let tr = useSelector(state => state.transcriptions[id])
-
-  if (tr == null)
+export const EsperOverlay = ({ transcription }) => {
+  if (transcription == null)
     return null
 
-  if (tr.status < 0)
+  if (transcription.status < 0)
     return (
       <div className="esper-overlay">
-        {tr.config?.error || 'Error'}
+        {transcription.config?.error || 'Error'}
       </div>
     )
 
   return (
     <div className="esper-overlay">
       <pre>
-        {tr.status === 0 ? 'Pending...' : tr.text}
+        {transcription.status === 0 ? 'Pending...' : transcription.text}
       </pre>
     </div>
   )
 }
 
 EsperOverlay.propTypes = {
-  transcriptions: arrayOf(number).isRequired
+  transcription: object
 }
