@@ -4,7 +4,7 @@ import { join } from 'node:path'
 
 export function mkdtmp() {
   let dir = fs.mkdtempSync(join(tmpdir(), 'tropy-test-'))
-  after(() => fs.promises.rm(dir, { recursive: true }))
+  after(() => fs.promises.rm(dir, { recursive: true, maxRetries: 3 }))
   return dir
 }
 
