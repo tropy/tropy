@@ -13,6 +13,7 @@ describe('models.ontology', () => {
 
       let { vocab } = await db.get('SELECT count(*) as vocab FROM vocabularies')
       expect(vocab).to.be.greaterThan(10)
+      await db.close()
     })
   })
 })
