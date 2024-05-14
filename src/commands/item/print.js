@@ -23,8 +23,7 @@ async function prepForPrinting(photo, _, {
     let src = Cache.url(cache.root, 'full', photo)
     let [img, { width, height }] = await loadImage(src, photo)
 
-    // TODO check for duplicates before prep?
-    let path = join(tmp, `${photo.checksum}.jpg`)
+    let path = join(tmp, `${photo.checksum}_${photo.page}.jpg`)
 
     if (prefs.optimize && maxSize) {
       img.resize({
