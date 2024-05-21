@@ -7,6 +7,7 @@ import { arrayOf, bool, func, number, string } from 'prop-types'
 import throttle from 'lodash.throttle'
 
 import {
+  IconTranscription,
   IconArrow,
   IconSelection,
   IconRotate,
@@ -91,10 +92,12 @@ export class EsperToolbar extends React.PureComponent {
           <ToolGroup>
             <Button
               noFocus
-              text="T"
+              icon={<IconTranscription/>}
               isActive={this.props.overlay > OVERLAY.NONE}
               isDisabled={this.props.isDisabled}
               onClick={this.toggleOverlay}/>
+          </ToolGroup>
+          <ToolGroup>
             <Button
               noFocus
               icon={<IconArrow/>}

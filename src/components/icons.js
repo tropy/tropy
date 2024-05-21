@@ -668,6 +668,14 @@ export const IconTick = i('Tick', (
   </svg>
 ))
 
+export const IconTranscription = i('Transcription', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M9,11h2v1H6V11H8V4H5V6H4V3h9V6H12V4H9ZM2,1H5V0H1V4H2ZM12,0V1h3V4h1V0Zm3,14H12v1h4V11H15ZM2,11H1v4H5V14H2Z"/>
+    </g>
+  </svg>
+))
+
 export const IconTrash = i('Trash', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
