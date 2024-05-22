@@ -5,22 +5,9 @@ import { Button } from '../button'
 import { Slider } from '../slider'
 import { arrayOf, bool, func, number, string } from 'prop-types'
 import throttle from 'lodash.throttle'
-
-import {
-  IconTranscription,
-  IconArrow,
-  IconSelection,
-  IconRotate,
-  IconHand,
-  IconSliders,
-  IconMirror,
-  IconMinusCircle,
-  IconPlusCircle,
-  IconFit,
-  IconFill
-} from '../icons'
-
+import { Icon } from '../icons'
 import { ESPER, SASS } from '../../constants'
+
 
 const {
   OVERLAY,
@@ -92,7 +79,7 @@ export class EsperToolbar extends React.PureComponent {
           <ToolGroup>
             <Button
               noFocus
-              icon={<IconTranscription/>}
+              icon={<Icon name="TranscriptionLarge"/>}
               isActive={this.props.overlay > OVERLAY.NONE}
               isDisabled={this.props.isDisabled}
               onClick={this.toggleOverlay}/>
@@ -100,13 +87,13 @@ export class EsperToolbar extends React.PureComponent {
           <ToolGroup>
             <Button
               noFocus
-              icon={<IconArrow/>}
+              icon={<Icon name="Arrow"/>}
               isActive={this.isToolActive(TOOL.ARROW)}
               isDisabled={this.props.isDisabled}
               onClick={this.setArrowTool}/>
             <Button
               noFocus
-              icon={<IconSelection/>}
+              icon={<Icon name="Selection"/>}
               title="esper.tool.select"
               isActive={this.isToolActive(TOOL.SELECT)}
               isDisabled={
@@ -117,13 +104,13 @@ export class EsperToolbar extends React.PureComponent {
           <ToolGroup>
             <Button
               noFocus
-              icon={<IconRotate/>}
+              icon={<Icon name="Rotate"/>}
               title="esper.tool.rotate"
               isDisabled={this.props.isReadOnly}
               onClick={this.handleRotate}/>
             <Button
               noFocus
-              icon={<IconMirror/>}
+              icon={<Icon name="Mirror"/>}
               title="esper.tool.mirror"
               isActive={this.props.mirror}
               isDisabled={this.props.isReadOnly}
@@ -132,21 +119,21 @@ export class EsperToolbar extends React.PureComponent {
           <ToolGroup>
             <Button
               noFocus
-              icon={<IconHand/>}
+              icon={<Icon name="Hand"/>}
               title="esper.tool.pan"
               isActive={this.isToolActive(TOOL.PAN)}
               isDisabled={this.props.isDisabled}
               onClick={this.setPanTool}/>
             <Button
               noFocus
-              icon={<IconFill/>}
+              icon={<Icon name="Fill"/>}
               title="esper.mode.fill"
               isActive={this.isZoomToFill}
               isDisabled={this.props.isDisabled}
               onClick={this.setZoomToFill}/>
             <Button
               noFocus
-              icon={<IconFit/>}
+              icon={<Icon name="Fit"/>}
               title="esper.mode.fit"
               isActive={this.isZoomToFit}
               isDisabled={this.props.isDisabled}
@@ -163,8 +150,8 @@ export class EsperToolbar extends React.PureComponent {
               showCurrentValue
               stopOnMouseLeave={this.context.args.frameless}
               steps={this.props.zoomSteps}
-              minIcon={<IconMinusCircle/>}
-              maxIcon={<IconPlusCircle/>}
+              minIcon={<Icon name="MinusCircle"/>}
+              maxIcon={<Icon name="PlusCircle"/>}
               onChange={this.handleZoomChange}/>
           </ToolGroup>
         </Toolbar.Left>
@@ -172,7 +159,7 @@ export class EsperToolbar extends React.PureComponent {
           <ToolGroup>
             <Button
               noFocus
-              icon={<IconSliders/>}
+              icon={<Icon name="Sliders"/>}
               title="esper.tool.edit"
               isActive={this.props.isPanelVisible}
               isDisabled={this.props.isDisabled}
