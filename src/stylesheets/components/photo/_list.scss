@@ -97,4 +97,10 @@
     min-width: 0; // Fix truncation
     display: flex;
   }
+
+  .icon {
+    &.pending {
+      opacity: 0.5;
+    }
+  }
 }

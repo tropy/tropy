@@ -671,7 +671,23 @@ export const IconTick = i('Tick', (
 export const IconTranscription = i('Transcription', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
-      <path d="M9,11h2v1H6V11H8V4H5V6H4V3h9V6H12V4H9ZM2,1H5V0H1V4H2ZM12,0V1h3V4h1V0Zm3,14H12v1h4V11H15ZM2,11H1v4H5V14H2Z"/>
+      <path d="M9,11h2v1H6V11H8V5H6V7H5V4h7V7H11V5H9Zm5-9a1,1,0,0,1,1,1V13a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2H14m0-1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V3a2,2,0,0,0-2-2Z"/>
+    </g>
+  </svg>
+))
+
+export const IconTranscriptionFailed = i('TranscriptionFailed', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M14,2a1,1,0,0,1,1,1V13a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2H14m0-1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V3a2,2,0,0,0-2-2ZM9.348,8l2.576-2.576a.6.6,0,0,0-.848-.848L8.5,7.152,5.924,4.576a.6.6,0,0,0-.848.848L7.652,8,5.076,10.576a.6.6,0,1,0,.848.848L8.5,8.848l2.576,2.576a.6.6,0,0,0,.848-.848Z"/>
+    </g>
+  </svg>
+))
+
+export const IconTranscriptionLarge = i('TranscriptionLarge', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M9,11h2v1H6V11H8V4H5V6H4V3h9V6H12V4H9ZM14,1a1,1,0,0,1,1,1V13a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V2A1,1,0,0,1,3,1H14m0-1H3A2,2,0,0,0,1,2V13a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V2a2,2,0,0,0-2-2Z"/>
     </g>
   </svg>
 ))

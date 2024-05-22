@@ -8,7 +8,7 @@ import { TYPE } from '../../constants'
 import cx from 'classnames'
 import { testFocusChange } from '../../dom'
 import { bool, func, object, string } from 'prop-types'
-import { IconSelection, IconChevron9, IconWarning } from '../icons'
+import { Icon } from '../icons'
 import { Button } from '../button'
 
 
@@ -106,7 +106,7 @@ class PhotoListItem extends PhotoIterable {
     return this.props.isExpandable && (
       <Button
         noFocus
-        icon={<IconChevron9/>}
+        icon={<Icon name="Chevron9"/>}
         className="disclosure"
         onClick={this.handleTwistyButtonClick}/>
     )
@@ -146,10 +146,12 @@ class PhotoListItem extends PhotoIterable {
           <div className="icon-container">
             {photo.broken &&
               <Button
-                icon={<IconWarning/>}
+                icon={<Icon name="Warning"/>}
                 title="photo.consolidate"
                 onClick={this.handleConsolidate}/>}
-            {isExpandable && <IconSelection/>}
+            {isExpandable && <Icon name="Selection"/>}
+            <Icon name="Transcription" className="pending"/>
+            <Icon name="TranscriptionFailed"/>
           </div>
         </div>
         {this.renderSelectionList()}
