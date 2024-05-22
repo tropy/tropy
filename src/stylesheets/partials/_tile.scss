@@ -22,8 +22,8 @@
         --height: var(--y) * var(--size) * 1px;
         width: calc(var(--width));
         height: calc(var(--height));
-        min-width: 24px;
-        min-height: 22px;
+        min-width: 28px;
+        min-height: 18px;
       }
 
       .thumbnail {
@@ -32,8 +32,8 @@
           img {
             --width: var(--y) * var(--size) * 1px;
             --height: var(--x) * var(--size) * 1px + 1px;
-            min-width: 22px;
-            min-height: 24px;
+            min-width: 18px;
+            min-height: 28px;
           }
         }
       }
@@ -76,17 +76,25 @@
   }
 
   .btn-icon {
-    position: absolute;
-    right: 6px;
-    bottom: 5px;
     padding: 0;
 
     &.warning {
-      inset: 5px auto auto 6px;
+      position: absolute;
+      inset: 3px auto auto 3px;
+    }
+  }
+
+  .icon-container {
+    position: absolute;
+    bottom: 4px - 1px;
+    right: 4px;
+
+    >*:not(:first-child) {
+      margin-left: 1px;
     }
 
-    .icon {
-      color: $tile-selection-icon-color;
+    .pending {
+      opacity: 0.5;
     }
   }
 

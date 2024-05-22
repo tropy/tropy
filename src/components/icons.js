@@ -132,6 +132,28 @@ export const IconPlusSmall = i('PlusSmall', (
   </svg>
 ))
 
+export const IconSelectionOverlay = i('SelectionOverlay', (
+  <svg width="12" height="12" viewBox="0 0 12 12">
+    <rect x="1" width="11" height="11" fill="#5c93e5" opacity="0.5"/>
+    <rect x="1" width="11" height="11" fill="#fff" opacity="0.5"/>
+    <path d="M11,1v9H2V1h9m1-1H1V11H12V0Z" fill="#5c93e5"/>
+  </svg>
+))
+
+export const IconTranscriptionOverlay = i('TranscriptionOverlay', (
+  <svg width="12" height="12" viewBox="0 0 12 12">
+    <path d="M1,0V11H12V0Z" opacity="0.5"/>
+    <path d="M2,1v9h9V1ZM9,5H8V4H7V7H8V8H5V7H6V4H5V5H4V3H9Z" fill="#fff"/>
+  </svg>
+))
+
+export const IconTranscriptionFailedOverlay = i('TranscriptionFailedOverlay', (
+  <svg width="12" height="12" viewBox="0 0 12 12">
+    <path d="M1,0V11H12V0Z" opacity="0.5"/>
+    <path d="M2,1v9h9V1ZM8.924,7.076a.6.6,0,1,1-.848.848L6.5,6.349,4.924,7.924a.6.6,0,0,1-.848-.848L5.651,5.5,4.076,3.924a.6.6,0,0,1,.848-.848L6.5,4.651,8.076,3.076a.6.6,0,0,1,.848.848L7.349,5.5Z" fill="#fff"/>
+  </svg>
+))
+
 export const IconWarningSm = i('WarningSm', (
   <svg width="12" height="12">
     <g className="line" fill="currentColor">
@@ -587,13 +609,6 @@ export const IconSelection = i('Selection', (
     <g className="line" fill="currentColor">
       <path d="M0,1H4V2H1V4H0ZM1,6H0v4H1Zm0,6H0v3H4V14H1Zm14,2H12v1h4V12H15Zm0-4h1V6H15ZM12,1V2h3V4h1V1ZM6,2h4V1H6ZM6,15h4V14H6Z"/>
     </g>
-  </svg>
-))
-
-export const IconSelectionOverlay = i('SelectionOverlay', (
-  <svg width="16" height="16" viewBox="0 0 16 16">
-    <path d="M4,1V2H1V4H0V1ZM1,6H0v4H1Zm0,6H0v3H4V14H1Zm14,2H12v1h4V12H15Zm0-4h1V6H15ZM12,1V2h3V4h1V1ZM6,2h4V1H6ZM6,15h4V14H6Z" fill="#fff"/>
-    <path d="M4,2V3H2V4H1V2ZM2,6H1v4H2Zm0,6H1v2H4V13H2Zm4,2h4V13H6Zm8-1H12v1h3V12H14Zm0-3h1V6H14ZM12,2V3h2V4h1V2ZM6,3h4V2H6Z" opacity="0.5"/>
   </svg>
 ))
 

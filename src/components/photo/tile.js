@@ -2,7 +2,7 @@ import React from 'react'
 import { PhotoIterable } from './iterable'
 import { createClickHandler } from '../util'
 import cx from 'classnames'
-import { IconSelectionOverlay, IconWarningOverlay } from '../icons'
+import { Icon } from '../icons'
 import { Button } from '../button'
 import { bool, number } from 'prop-types'
 
@@ -44,14 +44,18 @@ class PhotoTile extends PhotoIterable {
           })}
           {this.props.photo.broken &&
             <Button
-              icon={<IconWarningOverlay/>}
+              icon={<Icon name="WarningOverlay"/>}
               className="warning"
               title="photo.consolidate"
               onClick={this.handleConsolidate}/>}
-          {this.props.isExpandable &&
-            <Button
-              icon={<IconSelectionOverlay/>}
-              onClick={this.handleExpansionToggle}/>}
+          <div className="icon-container">
+            {this.props.isExpandable &&
+              <Button
+                icon={<Icon name="SelectionOverlay"/>}
+                onClick={this.handleExpansionToggle}/>}
+            <Icon name="TranscriptionOverlay" className="pending"/>
+            <Icon name="TranscriptionFailedOverlay"/>
+          </div>
         </div>
         {this.props.isExpanded && <div className="pointer"/>}
       </li>
