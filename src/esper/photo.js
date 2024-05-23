@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import { AdjustmentFilter } from '@pixi/filter-adjustment'
 import { SharpenFilter } from './filter/index.js'
 import { SelectionLayer, SelectionOverlay } from './selection.js'
+import { TextLayer } from './text.js'
 import { constrain, getDevicePixelRatio } from './util.js'
 import { deg, isHorizontal } from '../common/math.js'
 import { ESPER } from '../constants/index.js'
@@ -40,6 +41,9 @@ export class Photo extends Container {
     this.current = {}
 
     this.handleResolutionChange(resolution)
+
+    this.text = new TextLayer()
+    this.addChild(this.text)
 
     this.selections = new SelectionLayer()
     this.addChild(this.selections)
@@ -232,12 +236,17 @@ export class Photo extends Container {
     this.#width = width
     this.#height = height
 
+    this.text.sync(props, state)
     this.selections.sync(props, state)
     this.overlay.sync(props, state)
     this.tool = state.quicktool || props.tool
   }
 
   update(dragState) {
+    if (this.text.visible) {
+      this.text.update(dragState)
+    }
+
     if (this.selections.visible) {
       this.selections.update(dragState)
     }
