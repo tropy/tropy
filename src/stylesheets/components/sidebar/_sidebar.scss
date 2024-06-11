@@ -117,7 +117,7 @@
         padding-right: $default-spacing-x;
         position: relative;
 
-        li.active :is(&) {
+        li.active > :is(&) {
           @extend %list-active;
 
           .vibrancy:not(.is-blurred) & {
@@ -173,7 +173,7 @@
         }
 
         .icon-folder {
-          li.holding:not(.active) :is(&) {
+          li.holding:not(.active) > .list-node-container :is(&) {
             position: relative;
 
             svg {
