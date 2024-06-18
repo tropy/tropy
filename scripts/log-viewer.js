@@ -6,7 +6,7 @@ const fs = require('fs')
 const pump = require('pump')
 const split = require('split2')
 const { Transform } = require('stream')
-const chalk = require('chalk')
+const { inspect, styleText } = require('node:util')
 const ms = require('ms')
 
 const CWD = new RegExp(process.cwd() + '.')
@@ -19,11 +19,11 @@ const end = log =>
 
 const body = log => {
   if (log.action)
-    return `${log.action} ${chalk.gray(meta(log))}`
+    return `${log.action} ${styleText('gray', meta(log))}`
   if (log.url)
     return shorten(log.url, 65) + (
       (log.status && log.ms) ?
-        ' ' + chalk.gray(`${log.status} Δ${ms(log.ms)}`) : ''
+        ' ' + styleText('gray', `${log.status} Δ${ms(log.ms)}`) : ''
     )
   else
     return log.msg || log.message || '??'
@@ -35,7 +35,7 @@ const shorten = (s, maxLength) =>
 
 const error = ({ stack, code }) =>
   stack ?
-    '\n' + chalk.gray(
+    '\n' + styleText('gray',
       stack
         .split('\n')
         .map(line => line.replace(CWD, ''))
@@ -72,7 +72,7 @@ const COLOR = [
 
 const colorize = (level, text) => {
   let color = COLOR[(level / 10) - 1]
-  return (color in chalk) ? chalk[color](text) : text
+  return (color in inspect.colors) ? styleText(color, text) : text
 }
 
 const pretty = input => {
@@ -94,7 +94,7 @@ const pretty = input => {
 const seq = (function (prev, pad = 8) {
   return (now) => {
     try {
-      return chalk.gray(
+      return styleText('gray',
         (prev > 0 ? `+${ms(now - prev)}` : '').padStart(pad, ' ')
       )
     } finally {

@@ -1,6 +1,6 @@
 'use strict'
 
-const chalk = require('chalk')
+const { styleText } = require('node:util')
 const ms = require('ms')
 
 const COLOR = {
@@ -12,12 +12,12 @@ const COLOR = {
 }
 
 const colorize = (level, text) =>
-  chalk[COLOR[level] || 'gray'](text || level)
+  styleText[COLOR[level] || 'gray'](text || level)
 
 const seq = (function * (prev = Date.now(), padding = 8) {
   while (true) {
     let now = Date.now()
-    yield chalk.gray((`+${ms(now - prev)}`).padStart(padding, ' '))
+    yield styleText('gray', (`+${ms(now - prev)}`).padStart(padding, ' '))
     prev = now
   }
 })()
