@@ -12,7 +12,7 @@ const COLOR = {
 }
 
 const colorize = (level, text) =>
-  styleText(COLOR[level] || 'gray')(text || level)
+  styleText(COLOR[level] || 'gray', text || level)
 
 const seq = (function * (prev = Date.now(), padding = 8) {
   while (true) {
