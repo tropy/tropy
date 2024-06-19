@@ -94,9 +94,11 @@ export default [
         exportConditions: ['node'],
         preferBuiltins: true
       }),
-      babel({
-        exclude: 'node_modules/**',
-        babelHelpers: 'bundled'
+      replace({
+        preventAssignment: true,
+        values: {
+          __filename: 'import.meta.filename'
+        }
       }),
       json(),
       commonjs({
