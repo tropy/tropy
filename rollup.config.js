@@ -82,7 +82,7 @@ export default [
       sourcemap: false
     },
     treeshake: 'safest',
-    preserveEntrySignatures: 'strict',
+    preserveEntrySignatures: 'allow-extension',
     plugins: [
       alias({
         entries: {
@@ -134,7 +134,7 @@ export default [
       sourcemap: true
     },
     treeshake: 'safest',
-    preserveEntrySignatures: 'strict',
+    preserveEntrySignatures: 'allow-extension',
     plugins: [
       emit({
         entries: {
