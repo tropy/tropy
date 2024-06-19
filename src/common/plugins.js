@@ -199,7 +199,7 @@ export class Plugins extends EventEmitter {
     try {
       let mod = join(this.root, name)
 
-      res = require(mod)
+      res = (await import(mod)).default
       res.source = 'local'
 
     } catch (e) {
@@ -207,7 +207,7 @@ export class Plugins extends EventEmitter {
         throw e
 
       let mod = join(this.root, 'node_modules', name)
-      res = require(mod)
+      res = (await import(mod)).default
       res.source = 'npm'
     }
 
@@ -232,7 +232,7 @@ export class Plugins extends EventEmitter {
 
     for (let name of plugins) {
       try {
-        let pkg = await this.import(join(name, 'package.json'))
+        let pkg = await load(join(this.root, name, 'package.json'))
 
         spec[name] = {
           name,
