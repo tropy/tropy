@@ -75,7 +75,9 @@ export default [
     ],
     output: {
       dir: 'lib/browser',
-      format: 'cjs',
+      entryFileNames: '[name].mjs',
+      chunkFileNames: '[name]-[hash].mjs',
+      format: 'es',
       generatedCode: 'es2015',
       sourcemap: false
     },
