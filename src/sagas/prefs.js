@@ -8,11 +8,10 @@ import { ipc } from './ipc'
 import { persist, restore } from './storage'
 import { close } from '../slices/prefs.js'
 
-export function *main() {
-  // Delayed import with command registation side-effect!
-  yield import('../commands/ontology')
-  yield import('../commands/project')
+import '../commands/ontology.js'
+import '../commands/project.js'
 
+export function *main() {
   try {
     var aux = yield all([
       fork(ontology, { max: 2 }),
