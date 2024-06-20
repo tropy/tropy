@@ -128,8 +128,9 @@ export default [
     },
     output: {
       dir: 'lib',
-      format: 'cjs',
-      dynamicImportInCjs: false,
+      entryFileNames: '[name].mjs',
+      chunkFileNames: '[name]-[hash].mjs',
+      format: 'es',
       generatedCode: 'es2015',
       sourcemap: true
     },
@@ -151,7 +152,8 @@ export default [
       natives({
         copyTo: 'lib/node/lib',
         destDir: './node/lib',
-        target_arch: arch
+        target_arch: arch,
+        targetEsm: true
       }),
       {
         buildEnd() {
@@ -208,13 +210,12 @@ export default [
       json(),
       reactDnd(),
       babel({
-        exclude: 'node_modules/**',
+        include: 'src/{components,views}/**',
         babelHelpers: 'bundled'
       }),
       commonjs({
         ignoreGlobal: true,
-        ignoreTryCatch,
-        requireReturnsDefault: 'preferred' // TODO
+        ignoreTryCatch
       }),
       license({
         thirdParty: {
