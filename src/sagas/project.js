@@ -21,6 +21,8 @@ import { open as openProject } from '../common/project.js'
 import { Migrations } from '../res.js'
 import { Storage } from '../storage.js'
 
+import '../commands/index.js'
+
 import {
   all,
   fork,
@@ -173,9 +175,6 @@ function *teardown({ db, project, store }) {
 
 
 export function *main() {
-  // Delayed import with command registation side-effect!
-  yield import('../commands')
-
   let task
   let aux
   let crash
