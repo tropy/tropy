@@ -82,7 +82,7 @@ export class ImportCommand extends Command {
     })
 
     return [...json, ...images, ...urls]
-  }
+  };
 
   *openImage(path) {
     let settings = yield select(state => state.settings)
