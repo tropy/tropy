@@ -43,12 +43,14 @@ export class WindowManager extends EventEmitter {
       show: false,
       webPreferences: {
         contextIsolation: true,
+        nodeIntegration: false,
+        sandbox: false,
+        preload: join(Resource.base, 'lib/bootstrap.mjs'),
+
         defaultEncoding: 'UTF-8',
         enableRemoteModule: false,
-        nodeIntegration: true,
-        preload: join(Resource.base, 'lib/bootstrap.js'),
         experimentalFeatures: false,
-
+        scrollBounce: true,
         spellcheck: false,
         v8CacheOptions: 'bypassHeatCheck',
         ...defaults
