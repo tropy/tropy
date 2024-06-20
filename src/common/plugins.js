@@ -199,7 +199,7 @@ export class Plugins extends EventEmitter {
     try {
       let mod = join(this.root, name)
 
-      res = (await import(mod)).default
+      res = await import(mod)
       res.source = 'local'
 
     } catch (e) {
@@ -207,7 +207,7 @@ export class Plugins extends EventEmitter {
         throw e
 
       let mod = join(this.root, 'node_modules', name)
-      res = (await import(mod)).default
+      res = await import(mod)
       res.source = 'npm'
     }
 
