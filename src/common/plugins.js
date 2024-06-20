@@ -203,7 +203,7 @@ export class Plugins extends EventEmitter {
       res.source = 'local'
 
     } catch (e) {
-      if (e.code !== 'MODULE_NOT_FOUND')
+      if (e.code !== 'ERR_MODULE_NOT_FOUND')
         throw e
 
       let mod = join(this.root, 'node_modules', name)
@@ -232,7 +232,16 @@ export class Plugins extends EventEmitter {
 
     for (let name of plugins) {
       try {
-        let pkg = await load(join(this.root, name, 'package.json'))
+        let pkg
+
+        try {
+          pkg = await load(join(this.root, name, 'package.json'))
+        } catch (e) {
+          if (e.code !== 'ENOENT')
+            throw e
+          pkg = await load(
+            join(this.root, 'node_modules', name, 'package.json'))
+        }
 
         spec[name] = {
           name,
