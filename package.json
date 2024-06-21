@@ -18,7 +18,8 @@
     "node": ">=20",
     "npm": ">=10"
   },
-  "main": "lib/browser/main.mjs",
+  "main": "lib/browser/main.js",
+  "type": "module",
   "scripts": {
     "clean": "shx rm -rf coverage doc dist lib .nyc_output npm-debug.log",
     "prerollup": "shx rm -rf lib",
