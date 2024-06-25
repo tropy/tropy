@@ -749,14 +749,15 @@ export class WindowManager extends EventEmitter {
   }
 
   static async shouldReduceTransparency() {
-    try {
-      // TODO re-enable vibrancy effect when sidebar scrolling
-      // performance fixed (or new tag widget has landed)
-      return true || darwin &&
-        await read('com.apple.universalaccess', 'reduceTransparency')
-    } catch (e) {
-      warn({ stack: e.stack }, 'failed to check macOS defaults')
-    }
+    // TODO re-enable vibrancy effect when sidebar scrolling
+    // performance fixed (or new tag widget has landed)
+    return true
+    //try {
+    //  return darwin &&
+    //    await read('com.apple.universalaccess', 'reduceTransparency')
+    //} catch (e) {
+    //  warn({ stack: e.stack }, 'failed to check macOS defaults')
+    //}
   }
 
   static preferReducedMotion() {
