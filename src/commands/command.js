@@ -70,9 +70,9 @@ export class Command {
 
       this.done = Date.now()
       Object.freeze(this)
-
-      return this
     }
+
+    return this
   };
 
   *parallel(items, proc) {
