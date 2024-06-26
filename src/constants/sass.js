@@ -1,4 +1,4 @@
-import { times } from '../common/util'
+import { times } from '../common/util.js'
 
 const ACTIVITY = {
   HEIGHT: 43
