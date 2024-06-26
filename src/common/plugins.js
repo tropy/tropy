@@ -43,10 +43,6 @@ export class Plugins extends EventEmitter {
   getContext(plugin) {
     return {
       logger: logger.child({ plugin }),
-      require(mod) {
-        warn(`plugin ${plugin} requires ${mod} via context: update required!`)
-        return require(mod)
-      },
       ...this.context
     }
   }
@@ -58,14 +54,6 @@ export class Plugins extends EventEmitter {
       }
       return acc
     }, [])
-  }
-
-  // Subtle: CommonJS is still used natively. We need to address
-  // this if we switch to ESM!
-  clearModuleCache(root = this.root) {
-    for (let mod in require.cache) {
-      if (mod.startsWith(root)) delete require.cache[mod]
-    }
   }
 
   async create(config = this.config) {
@@ -288,7 +276,6 @@ export class Plugins extends EventEmitter {
       }
       await shell.trashItem(dir)
 
-      this.clearModuleCache(dir)
       if (prune) {
         this.config = this.config.filter(c => c.plugin !== plugin)
         this.spec = omit(this.spec, [plugin])

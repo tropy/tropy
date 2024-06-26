@@ -58,7 +58,6 @@ export default [
   {
     files: [
       'scripts/*.js',
-      'src/common/plugins.js',
       'test/**/*.cjs'
     ],
     languageOptions: {
