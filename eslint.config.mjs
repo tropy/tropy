@@ -81,6 +81,7 @@ export default [
     files: [
       '{src,test}/*.js',
       '{src,test}/!(browser)/**/*.js',
+      'res/workers/*.js'
     ],
     languageOptions: {
       globals: {
