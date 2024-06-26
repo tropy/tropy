@@ -23,7 +23,7 @@
   "scripts": {
     "clean": "shx rm -rf coverage doc dist lib .nyc_output npm-debug.log",
     "prerollup": "shx rm -rf lib",
-    "rollup": "rollup -c --bundleConfigAsCjs",
+    "rollup": "rollup -c",
     "db": "node scripts/db",
     "prebuild": "npm run clean && npm run rollup",
     "build": "node scripts/build",
