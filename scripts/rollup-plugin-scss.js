@@ -1,9 +1,9 @@
-import fs from 'fs'
-import { basename, dirname, extname, resolve } from 'path'
-import { promisify } from 'util'
-import sass from 'sass'
-import SASS from '../src/constants/sass'
-import { get } from '../src/common/util'
+import fs from 'node:fs'
+import { basename, dirname, extname, resolve } from 'node:path'
+import { promisify } from 'node:util'
+import * as sass from 'sass'
+import SASS from '../src/constants/sass.js'
+import { get } from '../src/common/util.js'
 
 const render = promisify(sass.render)
 

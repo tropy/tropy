@@ -1,4 +1,5 @@
 import { join, resolve } from 'node:path'
+import { readFileSync } from 'node:fs'
 import process from 'node:process'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
@@ -10,7 +11,6 @@ import license from 'rollup-plugin-license'
 import natives from 'rollup-plugin-natives'
 import replace from '@rollup/plugin-replace'
 import nodeResolve from '@rollup/plugin-node-resolve'
-import sharp from 'sharp/package.json'
 
 // import visualize from 'rollup-plugin-visualizer'
 
@@ -18,6 +18,10 @@ import scss from './scripts/rollup-plugin-scss.js'
 import emit from './scripts/rollup-plugin-emit.js'
 import reactDnd from './scripts/rollup-plugin-react-dnd.js'
 import sharpRequire from './scripts/rollup-plugin-sharp.js'
+
+const sharp = JSON.parse(
+  readFileSync('node_modules/sharp/package.json', { encoding: 'utf-8' })
+)
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
 
