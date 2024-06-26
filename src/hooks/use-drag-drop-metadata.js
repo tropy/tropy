@@ -38,7 +38,7 @@ export function useDragDropMetadata({
 
   let canDrop = useEvent((item) => (
     !(isDisabled || isReadOnly) &&
-      (id === item.id && property !== item.property)
+    (id === item.id && property !== item.property)
   ))
 
   let [collectedProps, drop] = useDrop(() => ({

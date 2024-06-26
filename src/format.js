@@ -31,6 +31,7 @@ export function bytes(value) {
   if (!Number.isFinite(value))
     return null
 
+  /* eslint-disable @stylistic/indent */
   let mag = Math.abs(value)
   let unit = (mag >= size.TB) ?
       'TB' : (mag >= size.GB) ?
@@ -39,7 +40,7 @@ export function bytes(value) {
       'kB' : 'bytes'
 
   return `${number(value / size[unit])} ${unit}`
-}
+} /* eslint-enable @stylistic/indent */
 
 export function ppi(value) {
   return blank(value) ? value : `${number(value)} ppi`
@@ -62,7 +63,7 @@ export function auto(value, type) {
 
 function fmtNumber(value, locale = ARGS.locale) {
   if (!(locale in fmtNumber)) {
-    fmtNumber[locale] =  new Intl.NumberFormat(locale, {
+    fmtNumber[locale] = new Intl.NumberFormat(locale, {
       maximumFractionDigits: 2
     })
   }

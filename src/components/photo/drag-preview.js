@@ -2,7 +2,7 @@ import cx from 'classnames'
 import { number, object } from 'prop-types'
 import { Thumbnail } from './thumbnail.js'
 
-export const PhotoDragPreview = ({ item, size  }) => {
+export const PhotoDragPreview = ({ item, size }) => {
   let count = 1
   let photo = item
 

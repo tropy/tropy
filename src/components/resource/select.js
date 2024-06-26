@@ -62,15 +62,17 @@ ResourceSelect.defaultProps = {
 
 export const Label = ({ resource, matchData }) => (
   <span className="truncate">
-    {resource.label ?
+    {resource.label ? (
       <Highlight
         text={resource.label}
-        matchData={matchData && matchData.label}/> :
+        matchData={matchData && matchData.label}/>
+    ) : (
       <Highlight
         text={
           titlecase(resource.name || String(resource).split(/(#|\/)/).pop())
         }
-        matchData={matchData && matchData.name}/>}
+        matchData={matchData && matchData.name}/>
+    )}
   </span>
 )
 
@@ -86,17 +88,17 @@ Label.propTypes = {
 export const Id = ({ resource, matchData }) => (
   <span className="mute truncate">
     {(!resource.prefix || !resource.name) ?
-      (resource.id || String(resource)) : (
-        <>
-          <Highlight
-            text={resource.prefix}
-            matchData={matchData && matchData.prefix}/>
-          {':'}
-          <Highlight
-            text={resource.name}
-            matchData={matchData && matchData.name}/>
-        </>
-      )}
+        (resource.id || String(resource)) : (
+          <>
+            <Highlight
+              text={resource.prefix}
+              matchData={matchData && matchData.prefix}/>
+            :
+            <Highlight
+              text={resource.name}
+              matchData={matchData && matchData.name}/>
+          </>
+        )}
   </span>
 )
 

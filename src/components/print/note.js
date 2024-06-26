@@ -23,16 +23,18 @@ Note.propTypes = {
 export const NoteList = ({ notes, heading }) =>
   notes.length === 0 ? null : (
     <div className="note-list">
-      {heading &&
+      {heading && (
         <h5 className="notes-heading">
           <FormattedMessage id={heading}/>
-        </h5>}
-      {notes.map((note, idx) =>
+        </h5>
+      )}
+      {notes.map((note, idx) => (
         <Note
           key={note.id}
           idx={idx + 1}
           numbers={note.numbers}
-          __html={note.html}/>)}
+          __html={note.html}/>
+      ))}
     </div>
   )
 

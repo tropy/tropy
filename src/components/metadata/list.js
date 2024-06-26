@@ -76,7 +76,7 @@ export class MetadataList extends React.PureComponent {
   }
 
   handleChange = (data, hasChanged, hasBeenForced) => {
-    if (hasChanged || hasBeenForced && this.isBulk) {
+    if (hasChanged || (hasBeenForced && this.isBulk)) {
       this.props.onChange({ id: this.props.fields.id, data })
     }
     this.props.onEditCancel()
@@ -122,8 +122,9 @@ export class MetadataList extends React.PureComponent {
     this.head = null
     return (
       <ol className="metadata-fields">
-        {this.props.fields.map(({ property, value, type, ...props }) =>
-          <MetadataField {...props}
+        {this.props.fields.map(({ property, value, type, ...props }) => (
+          <MetadataField
+            {...props}
             key={property.id}
             id={this.props.fields.id}
             isDisabled={this.props.isDisabled}
@@ -137,14 +138,16 @@ export class MetadataList extends React.PureComponent {
             onEdit={this.edit}
             onEditCancel={this.props.onEditCancel}
             onKeyDown={this.handleKeyDown}/>
+        )
         )}
-        {this.hasNewMetadataField &&
+        {this.hasNewMetadataField && (
           <li>
             <FieldSelect
               value={this.props.fields.map(f => f.property.id)}
               onCancel={this.props.onEditCancel}
               onInsert={this.handleCreate}/>
-          </li>}
+          </li>
+        )}
       </ol>
     )
   }

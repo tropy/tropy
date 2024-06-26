@@ -50,7 +50,7 @@ export const PhotoInfo = React.memo(({
         title={url}
         onClick={showPhotoInFolder}/>
 
-      {photo.density &&
+      {photo.density && (
         <MetadataField
           hint={intl.formatMessage({ id: 'format.ppi' })}
           isActive={editing === 'density'}
@@ -64,7 +64,8 @@ export const PhotoInfo = React.memo(({
           type="ppi"
           onCancel={stopEditing}
           onChange={handleChange}
-          onEdit={setEditing}/>}
+          onEdit={setEditing}/>
+      )}
 
       <MetadataField
         label={intl.formatMessage({ id: 'photo.size' })}

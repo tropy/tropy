@@ -62,8 +62,8 @@ export class Completions extends React.Component {
 
     let active = (state.options === options) ?
       state.active :
-      (!query.length && !props.isSelectionHidden) ?
-        props.selection.at(-1) : null
+        (!query.length && !props.isSelectionHidden) ?
+          props.selection.at(-1) : null
 
     if (!active && !props.isAdvisory && options.length > 0) {
       active = options[0].id
@@ -125,8 +125,8 @@ export class Completions extends React.Component {
     let height = this.getOptionsHeight() + PADDING + BORDER_WIDTH
 
     let [anchor, clip] = (bnd.bottom + height <= viewport().height) ?
-      ['top', translate(bnd, { bottom: -MARGIN })] :
-      ['bottom', translate(bnd, { top: MARGIN })]
+        ['top', translate(bnd, { bottom: -MARGIN })] :
+        ['bottom', translate(bnd, { top: MARGIN })]
 
     return {
       anchor,

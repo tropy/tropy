@@ -51,8 +51,8 @@ class Item extends React.PureComponent {
 
   getResizableProps(layout = this.props.settings.layout) {
     return layout === LAYOUT.SIDE_BY_SIDE ?
-      { edge: 'right', margin: ESPER.MIN_WIDTH, min: ESPER.MIN_WIDTH } :
-      { edge: 'bottom', margin: ESPER.MIN_HEIGHT, min: ESPER.MIN_HEIGHT }
+        { edge: 'right', margin: ESPER.MIN_WIDTH, min: ESPER.MIN_WIDTH } :
+        { edge: 'bottom', margin: ESPER.MIN_HEIGHT, min: ESPER.MIN_HEIGHT }
   }
 
   handleContextMenu = (event, scope = 'item-view', opts = {}) => {
@@ -98,7 +98,8 @@ class Item extends React.PureComponent {
           isRelative
           value={this.size}
           onChange={this.handleEsperResize}>
-          <EsperContainer {...this.props.view}
+          <EsperContainer
+            {...this.props.view}
             cache={this.props.cache}
             mode={this.props.view.mode || this.props.settings.zoomMode}
             hasOverlayToolbar={this.hasOverlayToolbars}
@@ -163,32 +164,32 @@ class Item extends React.PureComponent {
 }
 
 export const ItemContainer = connect(
-    state => ({
-      cache: selectCachePrefix(state),
-      esper: state.ui.esper,
-      view: getEsperViewState(state),
-      keymap: state.keymap,
-      selection: getActiveSelection(state),
-      selections: getPhotoSelections(state),
-      settings: state.settings
-    }),
+  state => ({
+    cache: selectCachePrefix(state),
+    esper: state.ui.esper,
+    view: getEsperViewState(state),
+    keymap: state.keymap,
+    selection: getActiveSelection(state),
+    selections: getPhotoSelections(state),
+    settings: state.settings
+  }),
 
-    dispatch => ({
-      onSelectionCreate(...args) {
-        dispatch(act.selection.create(...args))
-      },
+  dispatch => ({
+    onSelectionCreate(...args) {
+      dispatch(act.selection.create(...args))
+    },
 
-      onSelectionSave(...args) {
-        dispatch(act.selection.save(...args))
-      },
+    onSelectionSave(...args) {
+      dispatch(act.selection.save(...args))
+    },
 
-      onEsperChange(...args) {
-        dispatch(act.esper.update(...args))
-      },
+    onEsperChange(...args) {
+      dispatch(act.esper.update(...args))
+    },
 
-      onPhotoError(...args) {
-        dispatch(act.photo.error(...args))
-      }
+    onPhotoError(...args) {
+      dispatch(act.photo.error(...args))
+    }
 
-    }), null, { forwardRef: true }
-  )(Item)
+  }), null, { forwardRef: true }
+)(Item)

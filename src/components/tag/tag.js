@@ -78,8 +78,8 @@ export const Tag = React.memo(({
     if (event.button > 0) return
 
     let mod = isSelected ?
-      (isMeta(event) ? 'remove' : 'clear') :
-      (isMeta(event) ? 'merge' : 'replace')
+        (isMeta(event) ? 'remove' : 'clear') :
+        (isMeta(event) ? 'merge' : 'replace')
 
     onSelect(tag.id, { mod })
 

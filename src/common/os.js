@@ -15,5 +15,5 @@ export const mkdtmp = (name = 'tropy') =>
   mkdtemp(join(os.tmpdir(), name))
 
 export const normalize = win32 ?
-  (path) => path :
-  (path) => path.replace(/\\/g, '/')
+    (path) => path :
+    (path) => path.replace(/\\/g, '/')

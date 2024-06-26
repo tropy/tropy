@@ -10,7 +10,7 @@ export const appId = 'org.tropy.Tropy'
 
 export const channel = (isLatest) ?
   'latest' :
-  (v.prerelease[0] === 'beta' ? 'beta' : 'alpha')
+    (v.prerelease[0] === 'beta' ? 'beta' : 'alpha')
 
 export const qualified = {
   appId: (isLatest) ? appId : `${appId}-${titlecase(channel)}`,

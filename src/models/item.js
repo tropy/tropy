@@ -111,7 +111,7 @@ mod.item = {
           deleted ${trash ? 'NOT' : 'IS'} NULL
         ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
         ORDER BY ${order} ${dir}, id ${dir}`,
-      params)
+    params)
   },
 
   async find(db, { ids, ...options }) {
@@ -128,7 +128,7 @@ mod.item = {
           id IN (${lst(ids)}) AND deleted IS NULL
           ${params.$query ? `AND id IN (${SEARCH})` : ''}
         ORDER BY ${order} ${dir}, id ${dir}`,
-      params)
+    params)
   },
 
   async trash(db, options) {
@@ -145,7 +145,7 @@ mod.item = {
           ${params.$query ? `id IN (${SEARCH}) AND` : ''}
           reason = 'user'
         ORDER BY ${order} ${dir}, id ${dir}`,
-      params)
+    params)
   },
 
   async list(db, list, options) {
@@ -167,7 +167,7 @@ mod.item = {
           trash.deleted IS NULL
         ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
         ORDER BY ${order} ${dir}, id ${dir}`,
-      params)
+    params)
   },
 
   async unlisted(db, options) {
@@ -189,7 +189,7 @@ mod.item = {
           trash.deleted IS NULL
         ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
         ORDER BY ${order} ${dir}, id ${dir}`,
-      params)
+    params)
   },
 
   async load(db, ids) {
@@ -209,14 +209,14 @@ mod.item = {
             LEFT OUTER JOIN trash USING (id)${
           (ids != null) ? ` WHERE id IN (${ids})` : ''
         }`,
-        ({ id, created, modified, deleted, ...data }) => {
-          data.created = new Date(created)
-          data.modified = new Date(modified)
-          data.deleted = !!deleted
+      ({ id, created, modified, deleted, ...data }) => {
+        data.created = new Date(created)
+        data.modified = new Date(modified)
+        data.deleted = !!deleted
 
-          if (id in items) Object.assign(items[id], data)
-          else items[id] = Object.assign(skel(id), data)
-        }
+        if (id in items) Object.assign(items[id], data)
+        else items[id] = Object.assign(skel(id), data)
+      }
       ),
 
       db.each(`
@@ -224,10 +224,10 @@ mod.item = {
           FROM taggings${
           (ids != null) ? ` WHERE id IN (${ids})` : ''
         }`,
-        ({ id, tag }) => {
-          if (id in items) items[id].tags.push(tag)
-          else items[id] = skel(id, [], [], [tag])
-        }
+      ({ id, tag }) => {
+        if (id in items) items[id].tags.push(tag)
+        else items[id] = skel(id, [], [], [tag])
+      }
       ),
 
       db.each(`
@@ -237,10 +237,10 @@ mod.item = {
           WHERE ${(ids != null) ? `item_id IN (${ids}) AND` : ''}
             deleted IS NULL
           ORDER BY item_id, position`,
-        ({ id, photo }) => {
-          if (id in items) items[id].photos.push(photo)
-          else items[id] = skel(id, [], [photo])
-        }
+      ({ id, photo }) => {
+        if (id in items) items[id].photos.push(photo)
+        else items[id] = skel(id, [], [photo])
+      }
       ),
 
       db.each(`
@@ -248,10 +248,10 @@ mod.item = {
           FROM list_items${
           (ids != null) ? ` WHERE id IN (${ids})` : ''
         }`,
-        ({ id, list }) => {
-          if (id in items) items[id].lists.push(list)
-          else items[id] = skel(id, [list])
-        }
+      ({ id, list }) => {
+        if (id in items) items[id].lists.push(list)
+        else items[id] = skel(id, [list])
+      }
       )
     ])
 

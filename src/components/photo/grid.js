@@ -101,7 +101,7 @@ class PhotoGrid extends PhotoIterator {
       photo={photo}
       selections={pluck(this.props.selections, photo.selections)}
       size={this.props.size}/>
-    )
+  )
 
   render() {
     let tileSize = Math.round(this.props.size * SASS.TILE.FACTOR)
@@ -124,13 +124,14 @@ class PhotoGrid extends PhotoIterator {
           onKeyDown={this.handleKeyDown}
           onSelect={this.handleSelectPhoto}
           onTabFocus={this.props.onTabFocus}>
-          {(photo, index, { isExpanded }) =>
+          {(photo, index, { isExpanded }) => (
             <PhotoTile
               {...this.getIterableProps(photo)}
               key={photo.id}
               photo={photo}
               isExpanded={isExpanded}
-              isLast={index >= this.props.photos.length - 1}/>}
+              isLast={index >= this.props.photos.length - 1}/>
+          )}
         </Scroll>
       </div>
     )

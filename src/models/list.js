@@ -82,7 +82,7 @@ export default {
           ${order.map((_, idx) => (`WHEN ? THEN ${idx + 1}`)).join(' ')}
           END
         WHERE parent_list_id = ?`,
-        ...order, parent)
+      ...order, parent)
     }
   },
 
@@ -101,7 +101,7 @@ export default {
       items = remove(items, ...dupes.map(toId))
 
       let res = (items.length === 0) ?
-        { changes: restores.length } :
+          { changes: restores.length } :
         await db.run(`
           INSERT INTO list_items (list_id, id) VALUES ${
               items.map(it => `(${id}, ${it})`).join(',')

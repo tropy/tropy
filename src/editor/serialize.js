@@ -61,7 +61,7 @@ export function serialize(note, {
 
 const toValue = (value, localize, language) => (
   (localize && language) ?
-    { '@value': value, '@language': language } :
+      { '@value': value, '@language': language } :
     value
 )
 

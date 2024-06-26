@@ -195,9 +195,10 @@ class TemplateEditor extends React.PureComponent {
             name="description"
             value={this.state.description}
             isDisabled={this.state.isProtected}
-            tabIndex={0} onChange={this.handleTemplateUpdate}
+            tabIndex={0}
+            onChange={this.handleTemplateUpdate}
             size={9}/>
-          {isPristine &&
+          {isPristine && (
             <FormElement className="flex-row justify-content-end">
               <button
                 className="btn btn-primary min-width"
@@ -207,7 +208,8 @@ class TemplateEditor extends React.PureComponent {
                 onClick={this.handleTemplateCreate}>
                 <FormattedMessage id="prefs.template.create"/>
               </button>
-            </FormElement>}
+            </FormElement>
+          )}
         </header>
         <TemplateFieldList
           template={this.state.id}

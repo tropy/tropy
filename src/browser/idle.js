@@ -3,8 +3,8 @@ import electron from 'electron'
 import { warn } from '../common/log'
 
 const byTime = (a, b) =>
-	(a.time < b.time) ? -1 : (a.time > b.time) ? 1 :
-		(a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0
+  (a.time < b.time) ? -1 : (a.time > b.time) ? 1 :
+      (a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0
 
 
 export class IOQ {

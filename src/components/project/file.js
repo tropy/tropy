@@ -1,5 +1,5 @@
 import React from 'react'
-import { arrayOf,  func, number, object, shape, string } from 'prop-types'
+import { arrayOf, func, number, object, shape, string } from 'prop-types'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
 import { Button } from '../button.js'
@@ -14,7 +14,7 @@ export const ProjectFileList = ({
   onSelect
 }) => (
   <ol className="project-files">
-    {files.map(({ name, path, ...stats }) =>
+    {files.map(({ name, path, ...stats }) => (
       <ProjectFile
         key={path}
         name={name}
@@ -23,6 +23,7 @@ export const ProjectFileList = ({
         onRemove={onRemove}
         path={path}
         stats={stats}/>
+    )
     )}
   </ol>
 )

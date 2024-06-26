@@ -69,7 +69,7 @@ export class PluginConfig extends React.Component {
   handleEnable = (name) => {
     let k = 0
     let config = this.state.config.map(cfg =>
-        (cfg.plugin !== name) ? cfg : (++k, omit(cfg, ['disabled'])))
+      (cfg.plugin !== name) ? cfg : (++k, omit(cfg, ['disabled'])))
 
     if (k === 0) return this.handleInsert(name)
     this.setState({ config }, this.persist)

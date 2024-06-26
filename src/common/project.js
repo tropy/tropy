@@ -396,7 +396,7 @@ export function getProjectType(path) {
 
 const isManaged = (dbFile) =>
   basename(dbFile) === MANAGED_DB_NAME &&
-    getProjectType(dirname(dbFile)) === MANAGED
+  getProjectType(dirname(dbFile)) === MANAGED
 
 const TPY = 'tpy'
 const MANAGED = 'managed'

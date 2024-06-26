@@ -79,23 +79,25 @@ PhotoInfo.propTypes = {
 export const MetadataContainer = ({ item, photo, notes }) => (
   <div className="metadata-container">
     <div className="col">
-      {item &&
+      {item && (
         <>
           <MetadataSection
             title="print.item"
             fields={item.data}
             tags={item.tags}/>
           <ItemInfo item={item}/>
-        </>}
+        </>
+      )}
     </div>
     <div className="col">
-      {photo &&
+      {photo && (
         <>
           <MetadataSection
             title="print.photo"
             fields={photo.data}/>
           <PhotoInfo photo={photo}/>
-        </>}
+        </>
+      )}
       {notes}
     </div>
   </div>
@@ -113,18 +115,20 @@ export const MetadataSection = ({ fields, title, tags }) => (
       <FormattedMessage id={title}/>
     </h5>
     <ol className="metadata-fields">
-      {fields.map(f =>
+      {fields.map(f => (
         <MetadataField
           key={f.property.id}
           isExtra={f.isExtra}
           label={f.label || f.property.label}
           text={f.value.text}
-          type={f.value.type || f.type}/>)}
-      {tags && tags.length > 0 &&
+          type={f.value.type || f.type}/>
+      ))}
+      {tags && tags.length > 0 && (
         <MetadataField
           label={<FormattedMessage id="print.tags"/>}
           text={tags.join(', ')}
-          type={TYPE.TEXT}/>}
+          type={TYPE.TEXT}/>
+      )}
     </ol>
   </section>
 )

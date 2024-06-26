@@ -146,12 +146,12 @@ export const ProjectView = ({
               onSearch={handleSearch}
               onZoomChange={handleZoomChange}/>
           </header>
-          {isBlank ?
+          {isBlank ? (
             <NoItems
               ref={drop}
               isOver={canDrop}
-              isReadOnly={isReadOnly}/> :
-
+              isReadOnly={isReadOnly}/>
+          ) : (
             <ItemIterator
               ref={iterator}
               hasScrollbars={scrollbars}
@@ -189,7 +189,8 @@ export const ProjectView = ({
               photos={photos}
               sort={sort}
               tags={tags}
-              templates={templates}/>}
+              templates={templates}/>
+          )}
         </section>
       </div>
     </div>

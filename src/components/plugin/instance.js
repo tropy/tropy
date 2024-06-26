@@ -39,12 +39,13 @@ export class PluginInstance extends React.PureComponent {
             value={this.props.config.name}
             tabIndex={0}
             onChange={this.handleNameChange}/>
-          {this.props.specs.map((spec) =>
+          {this.props.specs.map((spec) => (
             <PluginOption
               key={spec.field}
               spec={spec}
               value={get(this.props.config.options, spec.field, spec.default)}
-              onChange={this.handleOptionsChange}/>)}
+              onChange={this.handleOptionsChange}/>
+          ))}
         </fieldset>
         <ButtonGroup>
           <Button

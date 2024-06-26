@@ -47,7 +47,8 @@ export class PopupSelect extends React.Component {
         onClickOutside={this.props.onClose}
         onResize={this.props.onClose}
         style={{ left, top, width, height }}>
-        <ResourceSelect {...props}
+        <ResourceSelect
+          {...props}
           canClearByBackspace={false}
           hideClearButton
           isRequired

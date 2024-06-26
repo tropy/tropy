@@ -264,7 +264,7 @@ export class PanelGroup extends React.Component {
 
 
   grow(slot, by) {
-    return (slot.isClosed || by <= 0) ?  slot : {
+    return (slot.isClosed || by <= 0) ? slot : {
       ...slot,
       height: slot.height + by
     }

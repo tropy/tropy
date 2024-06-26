@@ -42,17 +42,19 @@ class PhotoTile extends PhotoIterable {
             onClick: this.handleClick,
             onContextMenu: this.handleContextMenu
           })}
-          {this.props.photo.broken &&
+          {this.props.photo.broken && (
             <Button
               icon={<Icon name="WarningOverlay"/>}
               className="warning"
               title="photo.consolidate"
-              onClick={this.handleConsolidate}/>}
+              onClick={this.handleConsolidate}/>
+          )}
           <div className="icon-container">
-            {this.props.isExpandable &&
+            {this.props.isExpandable && (
               <Button
                 icon={<Icon name="SelectionOverlay"/>}
-                onClick={this.handleExpansionToggle}/>}
+                onClick={this.handleExpansionToggle}/>
+            )}
             <Icon name="TranscriptionOverlay" className="pending"/>
             <Icon name="TranscriptionFailedOverlay"/>
           </div>
@@ -67,6 +69,7 @@ class PhotoTile extends PhotoIterable {
     isLast: bool,
     size: number
   }
+
   static defaultProps = {
     ...PhotoIterable.defaultProps,
     size: 512

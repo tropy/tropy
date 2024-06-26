@@ -51,10 +51,11 @@ export const SearchField = React.memo(({
         onCancel={handleCancel}
         onChange={handleChange}
         onCommit={handleChange.flush}/>
-      {!blank(query) && clearIcon &&
+      {!blank(query) && clearIcon && (
         <Button
           icon={clearIcon}
-          onClick={handleCancel}/>}
+          onClick={handleCancel}/>
+      )}
     </div>
   )
 })

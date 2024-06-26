@@ -2,7 +2,7 @@ import ARGS from '../args'
 import { FLASH } from '../constants'
 
 const init = (ARGS.update && ARGS.update.id) ?
-  [ARGS.update] : []
+    [ARGS.update] : []
 
 export function flash(state = init, { type, payload }) {
   switch (type) {

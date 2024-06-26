@@ -191,7 +191,7 @@ export class Tropy extends EventEmitter {
       }
 
       let bounds = this.wm.has('project') ?
-        {} : this.state.win.bounds
+          {} : this.state.win.bounds
 
       // TODO fixed size if no file (and small size if no recent)
       let fixedSize
@@ -687,7 +687,7 @@ export class Tropy extends EventEmitter {
         [target.id]: { numbers: !target.numbers }
       }), win))
     this.on('app:writing-mode', (win, { id, mode }) =>
-      this.dispatch(act.notepad.update({ [id]: { mode  } }), win))
+      this.dispatch(act.notepad.update({ [id]: { mode } }), win))
     this.on('app:direction', (win, { id, direction }) =>
       this.dispatch(act.notepad.update({ [id]: { direction } }), win))
 
@@ -833,7 +833,7 @@ export class Tropy extends EventEmitter {
           message: 'Cannot reset ontology db while in use!'
         })
       else
-          await fs.promises.unlink(join(this.opts.data, 'ontology.db'))
+        await fs.promises.unlink(join(this.opts.data, 'ontology.db'))
     })
 
     this.on('app:open-dialog', () => {
@@ -951,7 +951,7 @@ export class Tropy extends EventEmitter {
       let win = BrowserWindow.fromWebContents(event.sender)
       this.setProject(null, win)
 
-      if (win ===  this.wm.current())
+      if (win === this.wm.current())
         this.menu.handleWindowChange(win)
     })
 

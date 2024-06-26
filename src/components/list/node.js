@@ -39,8 +39,7 @@ const NewListNode = (props) => (
           value={props.name}
           onCancel={props.onCancel}
           onChange={(name) =>
-            props.onSave({ parent: props.parent, name })
-          }/>
+            props.onSave({ parent: props.parent, name })}/>
       </div>
     </div>
   </li>
@@ -88,15 +87,15 @@ class ListNode extends React.PureComponent {
 
   get direction() {
     let { props, state } = this
-    return (!this.isOver || state.offset == null) ?  null :
-      (state.offset < 1) ? 'before' :
-      (props.isLast && !props.isExpanded && state.depth < props.depth) ?
-        ['after', `depth-${props.depth - this.getDropDepth()}`] : 'after'
+    return (!this.isOver || state.offset == null) ? null :
+        (state.offset < 1) ? 'before' :
+            (props.isLast && !props.isExpanded && state.depth < props.depth) ?
+                ['after', `depth-${props.depth - this.getDropDepth()}`] : 'after'
   }
 
   get icon() {
     return (this.props.depth > 0 && this.isHalloween) ?
-      <IconGhost/> : <IconFolder/>
+        <IconGhost/> : <IconFolder/>
   }
 
   get isOver() {
@@ -147,7 +146,7 @@ class ListNode extends React.PureComponent {
     let { offset } = this.state
     let { list, isExpanded, isLast, position } = this.props
 
-    if (offset == null || offset === 1 && isExpanded) {
+    if (offset == null || (offset === 1 && isExpanded)) {
       return {
         parent: list.id,
         idx: 0
@@ -237,11 +236,12 @@ class ListNode extends React.PureComponent {
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
-        {this.props.isExpandable &&
+        {this.props.isExpandable && (
           <Button
             icon={<IconTriangle/>}
             noFocus
-            onClick={this.handleExpandButtonClick}/>}
+            onClick={this.handleExpandButtonClick}/>
+        )}
         <div className="icon-truncate">{this.icon}</div>
         <div className="name">
           <Editable
@@ -262,12 +262,14 @@ class ListNode extends React.PureComponent {
       <li className={cx(...this.classes)}>
         {this.renderNodeContainer()}
         <Collapse in={this.props.isExpanded}>
-          <ListTree {...this.props}
+          <ListTree
+            {...this.props}
             depth={1 + this.props.depth}
             minDropDepth={this.props.isLast ?
-                this.props.minDropDepth : this.props.depth}
+              this.props.minDropDepth : this.props.depth}
             isDraggingParent={
-              this.props.isDraggingParent || this.props.isDragging}
+              this.props.isDraggingParent || this.props.isDragging
+            }
             parent={this.props.list}/>
         </Collapse>
       </li>
@@ -415,8 +417,8 @@ const ListNodeContainer =
   DragSource(DND.LIST, DragSourceSpec, DragSourceCollect)(
     DropTarget([
       DND.LIST, DND.ITEMS, DND.FILE, DND.URL],
-        DropTargetSpec,
-        DropTargetCollect)(ListNode))
+    DropTargetSpec,
+    DropTargetCollect)(ListNode))
 
 export {
   ListNodeContainer as ListNode,

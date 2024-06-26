@@ -43,12 +43,12 @@ export function attrs(node, attributes) {
 
 export function html(node, value) {
   return (arguments.length > 1) ?
-    (node.innerHTML = value) : node.innerHTML.trim()
+      (node.innerHTML = value) : node.innerHTML.trim()
 }
 
 export function text(node, value) {
   return (arguments.length > 1) ?
-    (node.textContent = value) : node.textContent.trim()
+      (node.textContent = value) : node.textContent.trim()
 }
 
 export function css(textContent) {

@@ -63,7 +63,7 @@ export class TagList extends React.PureComponent {
   render() {
     return (
       <ol className="tag-list">
-        {this.props.tags.map(tag =>
+        {this.props.tags.map(tag => (
           <Tag
             key={tag.id}
             tag={tag}
@@ -77,13 +77,15 @@ export class TagList extends React.PureComponent {
             onFocusClick={this.props.onCommit}
             onKeyDown={this.handleKeyDown}
             onSelect={this.props.onSelect}
-            onContextMenu={this.handleContextMenu}/>)}
-        {this.hasNewTag &&
+            onContextMenu={this.handleContextMenu}/>
+        ))}
+        {this.hasNewTag && (
           <NewTag
             color={this.color}
             onCreate={this.props.onCreate}
             onCancel={this.props.onEditCancel}
-            name={this.props.edit.name}/>}
+            name={this.props.edit.name}/>
+        )}
       </ol>
     )
   }

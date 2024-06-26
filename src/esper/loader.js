@@ -42,7 +42,7 @@ export class Loader extends EventEmitter {
   }
 
   load(url) {
-    if  (this.#pending.has(url)) {
+    if (this.#pending.has(url)) {
       return this.#pending.get(url).promise
     }
 
@@ -71,7 +71,7 @@ export class Loader extends EventEmitter {
       let bitmap = await this.load(url)
       let source = new ImageBitmapResource(bitmap)
 
-      texture =  new Texture(new BaseTexture(source))
+      texture = new Texture(new BaseTexture(source))
       this.addToCache(texture, url)
     }
 

@@ -36,12 +36,12 @@ export const getItemTags = memo(
     const counts = {}
 
     return seq(items, compose(
-        map(item => item.tags),
-        cat,
-        map(id => ((counts[id] = (counts[id] || 0) + 1), tags[id])),
-        keep(),
-        filter(tag => counts[tag.id] === 1)
-      ))
+      map(item => item.tags),
+      cat,
+      map(id => ((counts[id] = (counts[id] || 0) + 1), tags[id])),
+      keep(),
+      filter(tag => counts[tag.id] === 1)
+    ))
       .map(tag => ({
         ...tag,
         count: counts[tag.id],

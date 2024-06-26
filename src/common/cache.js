@@ -115,7 +115,7 @@ export class Cache {
   }
 
   static url(root, variant, { id, path, ...photo }) {
-    if  (root == null || id == null || variant == null)
+    if (root == null || id == null || variant == null)
       return null
 
     if (Cache.isCacheVariant(variant, photo)) {
@@ -133,10 +133,10 @@ export class Cache {
 
   static isCacheVariant(variant, photo) {
     return (
-      (photo.page > 0) ||             // Multi-page
-      (variant !== 'full') ||         // Thumbnail
-      (photo.protocol !== 'file') ||  // Remote
-      !IMAGE.WEB[photo.mimetype]      // Not supported natively
+      (photo.page > 0) ||            // Multi-page
+      (variant !== 'full') ||        // Thumbnail
+      (photo.protocol !== 'file') || // Remote
+      !IMAGE.WEB[photo.mimetype]     // Not supported natively
     )
   }
 }

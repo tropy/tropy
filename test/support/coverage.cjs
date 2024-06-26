@@ -1,4 +1,5 @@
 'use strict'
+/* global window, __coverage__ */
 
 const process = require('node:process')
 const { basename, resolve, join } = require('node:path')

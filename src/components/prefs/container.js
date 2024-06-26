@@ -47,7 +47,7 @@ export function PrefsContainer() {
     <Prefs onContextMenu={handleContextMenu}>
       <Titlebar isOptional>
         <Toolbar.Center>
-          <FormattedMessage id={'prefs.title'}/>
+          <FormattedMessage id="prefs.title"/>
         </Toolbar.Center>
       </Titlebar>
       <div className="prefs-view">

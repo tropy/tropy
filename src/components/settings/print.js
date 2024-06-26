@@ -4,7 +4,7 @@ import { FormElement, FormSelect, Toggle } from '../form.js'
 import { useEvent } from '../../hooks/use-event.js'
 
 
-const ModeOptions = ({ children,  config, onChange }) => {
+const ModeOptions = ({ children, config, onChange }) => {
   return Object.entries(children).map(([name, isEnabled]) => (
     <Toggle
       key={name}

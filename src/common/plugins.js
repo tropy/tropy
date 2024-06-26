@@ -326,9 +326,9 @@ const homepage = pkg => {
   if (typeof pkg.repository !== 'string') return null
   if (pkg.repository.startsWith('http')) return pkg.repository
   return pkg.repository
-      .replace(/^github:/, 'https://github.com/')
-      .replace(/^gitlab:/, 'https://gitlab.com/')
-      .replace(/^bitbucket:/, 'https://bitbucket.org/')
+    .replace(/^github:/, 'https://github.com/')
+    .replace(/^gitlab:/, 'https://gitlab.com/')
+    .replace(/^bitbucket:/, 'https://bitbucket.org/')
 }
 
 const icon = (pkg, name, root) => {

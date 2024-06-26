@@ -36,7 +36,7 @@ class LinkContext extends React.PureComponent {
         ref={this.container}
         isActive={this.props.isActive}>
         <Toolbar.Left className="form-inline">
-          {this.props.isActive &&
+          {this.props.isActive && (
             <Input
               ref={this.input}
               className="form-control link-target"
@@ -47,7 +47,7 @@ class LinkContext extends React.PureComponent {
               onBlur={this.props.onBlur}
               onCancel={this.props.onCancel}
               onCommit={this.handleTargetChange}/>
-          }
+          )}
         </Toolbar.Left>
       </Toolbar.Context>
     )

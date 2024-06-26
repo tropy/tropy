@@ -23,7 +23,7 @@ export class Create extends Command {
 
     let idx = (meta.idx != null) ?
       meta.idx :
-      [photo.selections.length]
+        [photo.selections.length]
 
     let data = getTemplateValues(template)
 

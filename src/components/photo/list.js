@@ -98,8 +98,9 @@ class PhotoList extends PhotoIterator {
           onKeyDown={this.handleKeyDown}
           onSelect={this.handleSelectPhoto}
           onTabFocus={this.props.onTabFocus}>
-          {(photo, index, { isExpanded }) =>
-            <PhotoListItem {...this.getIterableProps(photo)}
+          {(photo, index, { isExpanded }) => (
+            <PhotoListItem
+              {...this.getIterableProps(photo)}
               key={photo.id}
               photo={photo}
               data={data}
@@ -111,7 +112,8 @@ class PhotoList extends PhotoIterator {
               onChange={onChange}
               onEdit={this.edit}
               onEditCancel={this.handleEditCancel}
-              onSelectionSort={this.props.onSelectionSort}/>}
+              onSelectionSort={this.props.onSelectionSort}/>
+          )}
         </Scroll>
       </div>
     )

@@ -7,12 +7,13 @@ export class ResourceList extends React.PureComponent {
   render() {
     return (
       <ul className="resource-list">
-        {this.props.resources.map(resource =>
+        {this.props.resources.map(resource => (
           <ResourceListItem
             key={resource.id}
             resource={resource}
             onOpenLink={this.props.onOpenLink}
-            onSave={this.props.onSave}/>)}
+            onSave={this.props.onSave}/>
+        ))}
       </ul>
     )
   }

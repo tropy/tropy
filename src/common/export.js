@@ -16,7 +16,7 @@ export const ctx = {
       },
 
       ...ctx.photo
-      //...ctx.selection
+      // ...ctx.selection
     }
   },
 

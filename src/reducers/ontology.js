@@ -92,12 +92,12 @@ function template(state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.LOAD:
       return (meta.done && !error) ?
-        { ...payload?.template } : state
+          { ...payload?.template } : state
     case TEMPLATE.CREATE:
     case TEMPLATE.IMPORT:
     case TEMPLATE.LOAD:
       return (meta.done && !error) ?
-        { ...state, ...payload } : state
+          { ...state, ...payload } : state
     case TEMPLATE.SAVE:
       return (meta.done && !error) ?
         update(state, payload) :

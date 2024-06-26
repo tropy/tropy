@@ -63,8 +63,9 @@ export class PhotoIterator extends React.Component {
   }
 
   select = (photo, { throttle } = {}) => {
-    if (photo == null ||
-      this.isSelected(photo) && this.isActive(photo.selection)) {
+    if (photo == null || (
+      this.isSelected(photo) && this.isActive(photo.selection)
+    )) {
       return
     }
 
@@ -115,8 +116,8 @@ export class PhotoIterator extends React.Component {
   handleDelete = ({ id, item, selection }) => {
     if (!this.props.isDisabled) {
       this.props.onDelete(selection != null ?
-        { photo: id, selections: [selection] } :
-        { item, photos: [id] }
+          { photo: id, selections: [selection] } :
+          { item, photos: [id] }
       )
     }
   }
@@ -197,10 +198,10 @@ export class PhotoIterator extends React.Component {
 
   static asDropTarget() {
     return DropTarget(
-        [DND.PHOTO, DND.FILE, DND.URL],
-        DropTargetSpec,
-        DropTargetCollect
-      )(this)
+      [DND.PHOTO, DND.FILE, DND.URL],
+      DropTargetSpec,
+      DropTargetCollect
+    )(this)
   }
 
   static propTypes = {
@@ -263,7 +264,7 @@ const DropTargetSpec = {
       case DND.PHOTO: {
         let to = photos.at(-1).id
 
-        if (item.id !== to)  {
+        if (item.id !== to) {
           return {
             id: item.id,
             to,

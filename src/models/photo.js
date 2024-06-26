@@ -17,31 +17,31 @@ async function load(db, ids, { basePath } = {}) {
   await Promise.all([
     db.each(
       ...select(
-          'id',
-          'item_id AS item',
-          'template',
-          'strftime("%Y-%m-%dT%H:%M:%f", created, "localtime") AS created',
-          'strftime("%Y-%m-%dT%H:%M:%f", modified, "localtime") AS modified',
-          'angle',
-          'color',
-          'density',
-          'mirror',
-          'negative',
-          'brightness',
-          'contrast',
-          'hue',
-          'saturation',
-          'sharpen',
-          'width',
-          'height',
-          'path',
-          'filename',
-          'page',
-          'size',
-          'protocol',
-          'mimetype',
-          'checksum',
-          'orientation')
+        'id',
+        'item_id AS item',
+        'template',
+        'strftime("%Y-%m-%dT%H:%M:%f", created, "localtime") AS created',
+        'strftime("%Y-%m-%dT%H:%M:%f", modified, "localtime") AS modified',
+        'angle',
+        'color',
+        'density',
+        'mirror',
+        'negative',
+        'brightness',
+        'contrast',
+        'hue',
+        'saturation',
+        'sharpen',
+        'width',
+        'height',
+        'path',
+        'filename',
+        'page',
+        'size',
+        'protocol',
+        'mimetype',
+        'checksum',
+        'orientation')
         .from('subjects')
         .join('images', { using: 'id' })
         .join('photos', { using: 'id' })
@@ -176,7 +176,7 @@ export default {
   async move(db, { ids, item }) {
     return db.run(`
       UPDATE photos SET item_id = ?  WHERE id in (${ids.join(',')})`,
-      item)
+    item)
   },
 
   async order(db, item, photos, offset = 0) {
@@ -188,7 +188,7 @@ export default {
               (`WHEN ? THEN ${offset + idx + 1}`)).join(' ')}
             END
           WHERE item_id = ?`,
-        ...photos, item)
+      ...photos, item)
     }
   },
 
@@ -201,7 +201,7 @@ export default {
               (`WHEN ? THEN ${offset + idx + 1}`)).join(' ')}
             END
           WHERE id IN (${photos.join(',')})`,
-        item, ...photos)
+      item, ...photos)
     }
   },
 
@@ -214,7 +214,7 @@ export default {
               (`WHEN ? THEN ${idx + 1}`)).join(' ')}
             END
           WHERE id IN (${photos.join(',')})`,
-        id, ...photos), { concurrency })
+      id, ...photos), { concurrency })
   },
 
   async delete(db, ids) {
@@ -244,13 +244,13 @@ export default {
       ...select('id', 'path')
         .from('photos')
         .where({ protocol: 'file' }),
-        ({ id, path }) => {
-          let oldPath = oldBase ? resolve(oldBase, normalize(path)) : path
-          let newPath = base ? relative(base, oldPath) : oldPath
-          if (newPath !== path) {
-            delta.push({ id, path: newPath })
-          }
-        })
+      ({ id, path }) => {
+        let oldPath = oldBase ? resolve(oldBase, normalize(path)) : path
+        let newPath = base ? relative(base, oldPath) : oldPath
+        if (newPath !== path) {
+          delta.push({ id, path: newPath })
+        }
+      })
 
     await pMap(delta, ({ id, path }) => db.run(
       ...update('photos').set({ path }).where({ id })

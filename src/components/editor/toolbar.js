@@ -81,7 +81,7 @@ export class EditorToolbar extends React.PureComponent {
                 title="editor.commands.strikethrough"
                 onMouseDown={this.handleCommand('strikethrough')}/>
               <EditorButton
-                icon={'IconQ'}
+                icon="IconQ"
                 isDisabled={isDisabled}
                 title="editor.commands.blockquote"
                 onMouseDown={this.handleCommand('blockquote')}/>

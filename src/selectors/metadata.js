@@ -66,8 +66,8 @@ export const getVisibleMetadata = memo(
 
 const getProperty = (id, props, compact) =>
   (!(id in props)) ?
-    { id } : (!compact) ?
-      props[id] : { id, label: props[id].label }
+      { id } : (!compact) ?
+        props[id] : { id, label: props[id].label }
 
 export const getMetadataFields = memo(
   (_, { data }) => data,
@@ -94,7 +94,7 @@ export const getMetadataFields = memo(
           placeholder: f.hint,
           property: getProperty(f.property, props, compact),
           type: f.datatype,
-          value: data != null && data[f.property] || {}
+          value: (data != null && data[f.property]) || {}
         })
       }
     }
@@ -164,8 +164,8 @@ const isCompletable = (value, datatype, maxLength = 100) => (
 
 const makeCompletionFilter = (prop, datatype, byProp) =>
   byProp ?
-    ([id, v]) => id === prop && isCompletable(v, datatype) :
-    ([id, v]) => id !== 'id' && isCompletable(v, datatype)
+      ([id, v]) => id === prop && isCompletable(v, datatype) :
+      ([id, v]) => id !== 'id' && isCompletable(v, datatype)
 
 export const getMetadataCompletions = memo(
   getMetadata,

@@ -51,11 +51,13 @@ export class TabNav extends React.PureComponent {
         <ul className={cx('nav', 'tabs', {
           justified: this.props.justified
         })}>
-          {this.props.tabs.map(tab =>
-            <Tab {...tab}
+          {this.props.tabs.map(tab => (
+            <Tab
+              {...tab}
               key={tab.name}
               isActive={this.props.active === tab.name}
-              onActivate={this.activate}/>)}
+              onActivate={this.activate}/>
+          ))}
         </ul>
       </nav>
     )

@@ -101,15 +101,15 @@ const ontology = {
           created,
           see_also,
           protected) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [
-            id,
-            prefix,
-            title,
-            description,
-            comment,
-            created,
-            seeAlso,
-            !!isProtected
-          ]
+        id,
+        prefix,
+        title,
+        description,
+        comment,
+        created,
+        seeAlso,
+        !!isProtected
+      ]
       )
     },
 
@@ -168,9 +168,9 @@ const ontology = {
             JOIN vocabularies v USING (vocabulary_id)
             LEFT JOIN labels ON (property_id = id AND language = ?)
           WHERE ${cond.join(' AND ')}`, [ARGS.locale],
-        (data) => {
-          props[data.id] = data
-        }
+      (data) => {
+        props[data.id] = data
+      }
       )
 
       return props
@@ -186,16 +186,16 @@ const ontology = {
           parent,
           description,
           comment) VALUES (?, ?, ?, ?, ?, ?, ?)`, stmt =>
-            Promise.all(properties.map(p => stmt.run([
-              p.id,
-              p.vocabulary,
-              p.domain,
-              p.range,
-              p.parent,
-              p.description,
-              p.comment
-            ])
-          ))
+        Promise.all(properties.map(p => stmt.run([
+          p.id,
+          p.vocabulary,
+          p.domain,
+          p.range,
+          p.parent,
+          p.description,
+          p.comment
+        ])
+        ))
       )
     }
   },
@@ -220,9 +220,9 @@ const ontology = {
             JOIN vocabularies v USING (vocabulary_id)
             LEFT JOIN labels ON (class_id = id AND language = ?)
           WHERE ${cond.join(' AND ')}`, [ARGS.locale],
-        (data) => {
-          classes[data.id] = data
-        }
+      (data) => {
+        classes[data.id] = data
+      }
       )
 
       return classes
@@ -236,14 +236,14 @@ const ontology = {
           parent,
           description,
           comment) VALUES (?, ?, ?, ?, ?)`, stmt =>
-            Promise.all(classes.map(c => stmt.run([
-              c.id,
-              c.vocabulary,
-              c.parent,
-              c.description,
-              c.comment
-            ])
-          ))
+        Promise.all(classes.map(c => stmt.run([
+          c.id,
+          c.vocabulary,
+          c.parent,
+          c.description,
+          c.comment
+        ])
+        ))
       )
     }
   },
@@ -268,9 +268,9 @@ const ontology = {
             JOIN vocabularies v USING (vocabulary_id)
             LEFT OUTER JOIN labels ON (datatype_id = id AND language = ?)
           WHERE ${cond.join(' AND ')}`, [ARGS.locale],
-        (data) => {
-          types[data.id] = data
-        }
+      (data) => {
+        types[data.id] = data
+      }
       )
 
       return types
@@ -283,13 +283,13 @@ const ontology = {
           vocabulary_id,
           description,
           comment) VALUES (?, ?, ?, ?)`, stmt =>
-            Promise.all(types.map(dt => stmt.run([
-              dt.id,
-              dt.vocabulary,
-              dt.description,
-              dt.comment
-            ])
-          ))
+        Promise.all(types.map(dt => stmt.run([
+          dt.id,
+          dt.vocabulary,
+          dt.description,
+          dt.comment
+        ])
+        ))
       )
     }
   },
@@ -299,12 +299,12 @@ const ontology = {
       return db.prepare(`
         REPLACE INTO labels (id, language, label)
           VALUES (?, ?, ?)`, stmt =>
-            Promise.all(labels.map(lbl => stmt.run([
-              lbl.id,
-              lbl.language || ARGS.locale,
-              lbl.label
-            ])
-          ))
+        Promise.all(labels.map(lbl => stmt.run([
+          lbl.id,
+          lbl.language || ARGS.locale,
+          lbl.label
+        ])
+        ))
       )
     },
 
@@ -366,13 +366,13 @@ const ontology = {
                 ON (f.field_id = l.field_id AND language = ?)
             ${cons == null ? '' : `WHERE ${cons}`}
             ORDER BY position, f.field_id`, ARGS.locale,
-          ({ tpl, isRequired, isConstant, ...data }) => {
-            temps[tpl].fields.push({
-              ...data,
-              isConstant: !!isConstant,
-              isRequired: !!isRequired
-            })
+        ({ tpl, isRequired, isConstant, ...data }) => {
+          temps[tpl].fields.push({
+            ...data,
+            isConstant: !!isConstant,
+            isRequired: !!isRequired
           })
+        })
       ])
 
       return temps
@@ -405,15 +405,15 @@ const ontology = {
             description,
             protected)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [
-            id,
-            type,
-            name,
-            version,
-            created,
-            created,
-            creator,
-            description,
-            !!isProtected]
+        id,
+        type,
+        name,
+        version,
+        created,
+        created,
+        creator,
+        description,
+        !!isProtected]
       )
     },
 
@@ -475,25 +475,25 @@ const ontology = {
               $isConstant,
               $position
             )`, stmt =>
-            Promise.all(fields.map((f, idx) => stmt.run({
-              $id: f.id,
-              $template: id,
-              $property: f.property,
-              $datatype: f.datatype || TYPE.TEXT,
-              $isRequired: !!f.isRequired,
-              $hint: f.hint,
-              $value: f.value,
-              $isConstant: !!f.isConstant,
-              $position: (f.position != null) ? f.position : idx
-            })
+          Promise.all(fields.map((f, idx) => stmt.run({
+            $id: f.id,
+            $template: id,
+            $property: f.property,
+            $datatype: f.datatype || TYPE.TEXT,
+            $isRequired: !!f.isRequired,
+            $hint: f.hint,
+            $value: f.value,
+            $isConstant: !!f.isConstant,
+            $position: (f.position != null) ? f.position : idx
+          })
           ))
         ).then(res =>
           db.prepare(`
             INSERT INTO field_labels (field_id, language, label)
               VALUES (?,?,?)`, addLabel =>
-                Promise.all(res.map((f, idx) => blank(fields[idx].label) ?
-                  null :
-                  addLabel.run([f.id, ARGS.locale, fields[idx].label])))
+            Promise.all(res.map((f, idx) => blank(fields[idx].label) ?
+              null :
+              addLabel.run([f.id, ARGS.locale, fields[idx].label])))
           ).then(() => res)
         )
       },
@@ -529,7 +529,7 @@ const ontology = {
               ${order.map((_, idx) => (`WHEN ? THEN ${idx + 1}`)).join(' ')}
               END
             WHERE template_id = ?`,
-          ...order, id)
+        ...order, id)
       },
 
       label: {

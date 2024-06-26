@@ -172,7 +172,7 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
     case 'win32':
       icon = join(ICONS, channel, `${name}.ico`)
       extraResource.push(icon)
-      //extraResource.push(join(ICONS, 'mime', 'mtpy.ico'))
+      // extraResource.push(join(ICONS, 'mime', 'mtpy.ico'))
       extraResource.push(join(ICONS, 'mime', 'tpy.ico'))
       extraResource.push(join(ICONS, 'mime', 'ttp.ico'))
       extraResource.push(join(ICONS, 'mime', 'folder.ico'))

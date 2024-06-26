@@ -28,7 +28,7 @@ const IUD = /^\s*(insert|update|delete)/i
 }
 
 export class Database extends EventEmitter {
-  static async open(path, { isReadOnly, ...opts } = {})  {
+  static async open(path, { isReadOnly, ...opts } = {}) {
     let ro = (isReadOnly || !(await canWrite(path)))
     return new Database(path, ro ? 'r' : 'w', opts)
   }
@@ -234,8 +234,8 @@ export class Database extends EventEmitter {
    */
   migration = (fn) =>
     this.seq(conn =>
-      nofk(conn, conn =>
-        exclusiveTransaction(conn, async tx => {
+      nofk(conn, c =>
+        exclusiveTransaction(c, async tx => {
           await fn(tx)
           await tx.check()
         })

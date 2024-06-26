@@ -30,25 +30,25 @@ const getPhotoExpanded = (
 
 const getItemExpanded =
   (item, photos, selections, metadata, notes, notepad, tags, ontology) => (
-  (item == null) ? null : {
-    ...item,
-    data: getMetadataFields(null, {
-      compact: true,
-      data: metadata[item.id],
-      props: ontology.props,
-      template: ontology.template[item.template]
-    }),
-    photos: item.photos.map(id =>
-      getPhotoExpanded(
-        photos[id],
-        selections,
-        metadata,
-        notes,
-        notepad,
-        ontology)),
-    tags: item.tags.map(t => tags[t].name)
-  }
-)
+    (item == null) ? null : {
+      ...item,
+      data: getMetadataFields(null, {
+        compact: true,
+        data: metadata[item.id],
+        props: ontology.props,
+        template: ontology.template[item.template]
+      }),
+      photos: item.photos.map(id =>
+        getPhotoExpanded(
+          photos[id],
+          selections,
+          metadata,
+          notes,
+          notepad,
+          ontology)),
+      tags: item.tags.map(t => tags[t].name)
+    }
+  )
 
 export const getPrintableItems = memo(
   ({ nav, qr }) => (nav.items.length > 0 ? nav.items : qr.items),
@@ -61,13 +61,13 @@ export const getPrintableItems = memo(
   ({ tags }) => tags,
   ({ ontology }) => ontology,
   (ids, items, photos, selections, metadata, notes, notepad, tags, ontology) =>
-  ids.map(id =>
-    getItemExpanded(items[id],
-      photos,
-      selections,
-      metadata,
-      notes,
-      notepad,
-      tags,
-      ontology))
+    ids.map(id =>
+      getItemExpanded(items[id],
+        photos,
+        selections,
+        metadata,
+        notes,
+        notepad,
+        tags,
+        ontology))
 )

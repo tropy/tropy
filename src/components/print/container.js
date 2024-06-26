@@ -53,7 +53,7 @@ export class PrintContainer extends React.Component {
 
   render() {
     return (
-      this.state.items.map(item =>
+      this.state.items.map(item => (
         <Item
           key={item.id}
           item={item}
@@ -62,7 +62,8 @@ export class PrintContainer extends React.Component {
           hasPhotos={this.state.hasPhotos}
           hasMetadata={this.state.hasMetadata}
           hasNotes={this.state.hasNotes}
-          hasOnlyNotes={this.state.hasOnlyNotes}/>)
+          hasOnlyNotes={this.state.hasOnlyNotes}/>
+      ))
     )
   }
 

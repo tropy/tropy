@@ -171,7 +171,7 @@ export const ToggleButtonGroup = ({
   value
 }) => (
   <ButtonGroup>
-    {options.map(option =>
+    {options.map(option => (
       <ToggleButton
         isChecked={option === value}
         key={`${option}`}
@@ -180,7 +180,8 @@ export const ToggleButtonGroup = ({
         size={size}
         text={`${id || name}.option.${option}`}
         tabIndex={tabIndex}
-        value={option}/>)}
+        value={option}/>
+    ))}
   </ButtonGroup>
 )
 

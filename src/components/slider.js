@@ -223,7 +223,8 @@ export class Slider extends React.PureComponent {
   renderCurrentValue() {
     return this.props.showCurrentValue && (
       <div className="slider-value">
-        {round(this.props.value * this.props.resolution)}&thinsp;%
+        {round(this.props.value * this.props.resolution)}
+&thinsp;%
       </div>
     )
   }

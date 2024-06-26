@@ -18,7 +18,8 @@ export const TemplateSelect = React.forwardRef(({
     selectTemplatesByType(state, { type }))
 
   return (
-    <ResourceSelect {...props}
+    <ResourceSelect
+      {...props}
       className={cx('template-select', { mixed: isMixed })}
       options={options}
       ref={ref}/>

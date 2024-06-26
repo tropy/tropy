@@ -113,20 +113,23 @@ class TableRow extends ItemIterable {
         onClick={this.handleClick}
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>
-        {this.props.hasPositionColumn &&
-          <TableCell {...props}
+        {this.props.hasPositionColumn && (
+          <TableCell
+            {...props}
             isReadOnly
             id={NAV.COLUMN.POSITION.id}
             type={NAV.COLUMN.POSITION.type}
-            value={this.props.position}/>}
-        {this.props.columns.map((column, idx) =>
+            value={this.props.position}/>
+        )}
+        {this.props.columns.map((column, idx) => (
           <TableCell
             key={column.id}
             {...props}
             {...this.getColumnProps(column, idx)}
             getNextColumn={this.getNextColumn}
             getPrevColumn={this.getPrevColumn}
-            onChange={this.handleChange}/>)}
+            onChange={this.handleChange}/>
+        ))}
       </div>
     )
   }

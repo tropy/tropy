@@ -24,7 +24,7 @@ export class Prune extends Command {
     let stale = []
 
     assert(state.photos != null && state.selections != null,
-     'cannot prune project cache without state')
+      'cannot prune project cache without state')
 
     info(`pruning cache ${cache.name}`)
     let files = yield call(cache.list)

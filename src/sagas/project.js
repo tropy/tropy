@@ -33,8 +33,8 @@ import {
   race
 } from 'redux-saga/effects'
 
-const has = (condition) => (({ error, meta }) =>
-  (!error && meta && (!meta.cmd || meta.done) && meta[condition]))
+const has = (condition) => ({ error, meta }) =>
+  (!error && meta && (!meta.cmd || meta.done) && meta[condition])
 
 const dbErrorActions = {
   SQLITE_READONLY: () => (

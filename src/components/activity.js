@@ -29,16 +29,17 @@ export const Activity = ({
               id={`activity.${type}`}
               values={{ progress, total, hasProgressBar }}/>
           </div>
-          {hasCancelButton &&
+          {hasCancelButton && (
             <Button
               icon={<IconXSmall/>}
-              onClick={() => onCancel(id)}/>}
+              onClick={() => onCancel(id)}/>
+          )}
         </div>
-        {hasProgressBar &&
+        {hasProgressBar && (
           <div className="flex-row center">
             <progress value={progress} max={total}/>
           </div>
-        }
+        )}
       </div>
     </div>
   )
@@ -72,7 +73,7 @@ export class ActivityPane extends React.PureComponent {
     if (this.hasPendingActivities) {
       this.timeout = setTimeout(() =>
         this.forceUpdate(),
-        this.props.delay / 2)
+      this.props.delay / 2)
     }
   }
 
@@ -84,7 +85,7 @@ export class ActivityPane extends React.PureComponent {
   getBusyActivities(now = Date.now(), delay = this.props.delay) {
     return this.props.activities.filter(activity => (
       !activity.done &&
-        (now - activity.init) > delay))
+      (now - activity.init) > delay))
   }
 
   render() {
@@ -99,7 +100,7 @@ export class ActivityPane extends React.PureComponent {
       <div
         className={cx('activity-pane', { busy })}
         style={{ height }}>
-        {activities.map(({ id, cancel, type, progress, total }) =>
+        {activities.map(({ id, cancel, type, progress, total }) => (
           <Activity
             key={id}
             id={id}
@@ -107,7 +108,8 @@ export class ActivityPane extends React.PureComponent {
             progress={progress}
             total={total}
             canCancel={cancel}
-            onCancel={this.props.onCancel}/>)}
+            onCancel={this.props.onCancel}/>
+        ))}
       </div>
     )
   }

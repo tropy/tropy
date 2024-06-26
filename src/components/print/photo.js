@@ -39,7 +39,7 @@ export const Photo = ({
       'notes': hasNotes,
       'text-only': !hasPhotos
     })}>
-      {hasPhotos &&
+      {hasPhotos && (
         <div className="photo-container">
           <img
             className={photo.print ? null : `iiif rot-${rotation.format('x')}`}
@@ -48,15 +48,17 @@ export const Photo = ({
             src={photo.print || Cache.url(cache, 'full', photo)}
             style={ratio}/>
         </div>
-      }
-      {(hasMetadata || (hasNotes && !canOverflow)) &&
+      )}
+      {(hasMetadata || (hasNotes && !canOverflow)) && (
         <MetadataContainer
           item={hasMetadata ? item : null}
           photo={hasMetadata ? photo : null}
-          notes={hasNotes && !canOverflow &&
+          notes={hasNotes && !canOverflow && (
             <NoteList
               notes={photo.notes}
-              heading="print.notes"/>}/>}
+              heading="print.notes"/>
+          )}/>
+      )}
       {hasNotes && canOverflow &&
         <NoteList notes={photo.notes}/>}
     </div>

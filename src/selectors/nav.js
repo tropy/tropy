@@ -8,7 +8,7 @@ import {
 } from './ontology'
 
 const DEFAULT_SORT = { column: dc.title, asc: true }
-const DEFAULT_LIST_SORT =  { column: 'added', asc: true }
+const DEFAULT_LIST_SORT = { column: 'added', asc: true }
 
 const SPECIAL_COLUMNS = [
   NAV.COLUMN.CREATED,
@@ -35,7 +35,7 @@ export const getColumns = memo(
   getSpecialColumns,
   (cols, props, vocab, spc) =>
     cols.map(col => col.id in spc ?
-      ({ ...spc[col.id], ...col }) :
+        ({ ...spc[col.id], ...col }) :
       merge(col, expand(props[col.id] || { id: col.id }, vocab)))
 )
 
@@ -75,5 +75,5 @@ export const getSortColumn = memo(
   ({ nav }) => nav.list || 0,
   (sort, list) => ((list in sort) ?
     sort[list] :
-    (list > 0) ? DEFAULT_LIST_SORT : DEFAULT_SORT)
+      (list > 0) ? DEFAULT_LIST_SORT : DEFAULT_SORT)
 )

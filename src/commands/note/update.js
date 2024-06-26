@@ -6,8 +6,8 @@ import actions from '../../actions/note.js'
 
 const wasPreviouslyCreated = (id, past) =>
   past?.undo.type === NOTE.DELETE &&
-    past.undo.payload?.[0] === id &&
-    past.undo.payload.length === 1
+  past.undo.payload?.[0] === id &&
+  past.undo.payload.length === 1
 
 class Update extends Command {
   *exec() {

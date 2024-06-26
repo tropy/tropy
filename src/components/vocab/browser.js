@@ -35,7 +35,7 @@ export const VocabBrowser = ({ onOpenLink }) => {
     <AccordionGroup
       className="form-horizontal"
       tabIndex={0}>
-      {vocabs.map(vocab =>
+      {vocabs.map(vocab => (
         <VocabAccordion
           key={vocab.id}
           id={vocab.id}
@@ -45,7 +45,8 @@ export const VocabBrowser = ({ onOpenLink }) => {
           onExport={handleExport}
           onOpenLink={onOpenLink}
           onPropsSave={handlePropsSave}
-          onSave={handleSave}/>)}
+          onSave={handleSave}/>
+      ))}
     </AccordionGroup>
   )
 }

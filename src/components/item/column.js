@@ -5,7 +5,8 @@ import { IconTick } from '../icons'
 import { bool, object, oneOfType } from 'prop-types'
 
 export const ColumnContextMenu = (props) => (
-  <PopupSelect {...props}
+  <PopupSelect
+    {...props}
     placeholder="select.column.placeholder"
     toText={toColumn}
     {...props}/>

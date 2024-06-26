@@ -124,12 +124,14 @@ class SelectionGrid extends SelectionIterator {
         tabIndex={TABS.SelectionGrid}
         onBlur={this.props.onBlur}
         onKeyDown={this.handleKeyDown}>
-        {this.map(({ selection, ...props }) =>
-          <SelectionTile {...props}
+        {this.map(({ selection, ...props }) => (
+          <SelectionTile
+            {...props}
             key={selection.id}
             isSelected={false}
             onContextMenu={this.props.onContextMenu}
-            selection={selection}/>)}
+            selection={selection}/>
+        ))}
       </ul>
     )
   }

@@ -42,7 +42,7 @@ describe('shell', () => {
   })
 
   describe('show', () => {
-    it('calls showItemInFolder for local paths', async  () => {
+    it('calls showItemInFolder for local paths', async () => {
       await show(desktop)
       expect(shell.openExternal).not.to.have.been.called
       expect(shell.showItemInFolder).to.have.been.calledWith(desktop)

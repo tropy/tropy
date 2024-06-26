@@ -63,8 +63,8 @@ export class FileSelect extends React.PureComponent {
     let { defaultPath, filters, type } = this.props
 
     let properties = (type === 'file') ?
-      ['openFile'] :
-      ['openDirectory']
+        ['openFile'] :
+        ['openDirectory']
 
     if (this.props.showHiddenFiles)
       properties.push('showHiddenFiles')
@@ -107,12 +107,12 @@ export class FileSelect extends React.PureComponent {
         </div>
         <div className="input-group-append">
           {!this.props.isRequired && (
-          <Button
-            isDefault
-            isDisabled={isBlank || this.props.isDisabled}
-            noFocus
-            onClick={this.clear}
-            text="select.file.clear"/>
+            <Button
+              isDefault
+              isDisabled={isBlank || this.props.isDisabled}
+              noFocus
+              onClick={this.clear}
+              text="select.file.clear"/>
           )}
           <Button
             isDefault

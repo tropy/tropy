@@ -10,7 +10,7 @@ export class Accordion extends React.Component {
 
   componentDidUpdate({ isActive: wasActive, isOpen: wasOpen }) {
     const { isActive, isOpen } = this.props
-    if (isActive && (!wasActive || isOpen && !wasOpen)) {
+    if (isActive && (!wasActive || (isOpen && !wasOpen))) {
       if (!visible(this.container.current)) {
         this.container.current.scrollIntoView({ block: 'start' })
       }

@@ -39,7 +39,7 @@ export const create = () => {
       project,
       settings
     },
-    middleware: (getDefaultMiddleWare) =>([
+    middleware: (getDefaultMiddleWare) => ([
       ...getDefaultMiddleWare(),
       debounce,
       throttle,

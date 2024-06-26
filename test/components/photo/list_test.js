@@ -114,7 +114,7 @@ describe('PhotoList', () => {
         list.container.scrollTop = 270
         expect(list.getOffset(state)).to.eql(210)
 
-        state.maxOffset =  600
+        state.maxOffset = 600
 
         expect(list.getOffset(state)).to.eql(240)
         list.container.scrollTop = 300

@@ -23,7 +23,7 @@ export const PhotoToolbar = (props) => (
     </Toolbar.Left>
     <Toolbar.Right>
       {
-        props.hasCreateButton &&
+        props.hasCreateButton && (
           <ToolGroup>
             <Button
               icon={<IconPlusSmall/>}
@@ -32,6 +32,7 @@ export const PhotoToolbar = (props) => (
               title="panel.photo.create"
               onClick={props.onCreate}/>
           </ToolGroup>
+        )
       }
       <ToolGroup>
         <Slider

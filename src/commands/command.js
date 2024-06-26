@@ -20,7 +20,7 @@ export class Command {
 
   get duration() {
     return this.done ?
-      (this.done - this.init - this.#adjtime) : 0
+        (this.done - this.init - this.#adjtime) : 0
   }
 
   get id() {

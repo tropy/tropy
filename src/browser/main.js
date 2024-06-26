@@ -103,7 +103,7 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
       info({ argv, cwd }, 'second-instance')
 
       await tropy.open(
-         ...parse(argv.slice(1)).args.map(arg => argToURL(arg, cwd))
+        ...parse(argv.slice(1)).args.map(arg => argToURL(arg, cwd))
       )
     })
 

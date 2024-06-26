@@ -14,8 +14,9 @@ class SelectionList extends SelectionIterator {
   render() {
     return this.connect(
       <ul className={cx('selection-list', { over: this.props.isOver })}>
-        {this.map(({ selection, ...props }) =>
-          <SelectionListItem {...props}
+        {this.map(({ selection, ...props }) => (
+          <SelectionListItem
+            {...props}
             key={selection.id}
             data={this.props.data}
             isEditing={this.isEditing(selection.id)}
@@ -24,7 +25,8 @@ class SelectionList extends SelectionIterator {
             onChange={this.props.onChange}
             onContextMenu={this.props.onContextMenu}
             onEdit={this.props.onEdit}
-            onEditCancel={this.props.onEditCancel}/>)}
+            onEditCancel={this.props.onEditCancel}/>
+        ))}
       </ul>
     )
   }

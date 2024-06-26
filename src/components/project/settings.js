@@ -74,7 +74,7 @@ export const ProjectSettings = React.memo(({
         onConvert={handleProjectConvert}/>
       <hr/>
 
-      {!project.isManaged &&
+      {!project.isManaged && (
         <>
           <FormToggleGroup
             id="prefs.project.base"
@@ -86,7 +86,8 @@ export const ProjectSettings = React.memo(({
             tabIndex={0}
             onChange={onChange}/>
           <hr/>
-        </>}
+        </>
+      )}
 
       <FormField
         id="prefs.project.watch.folder"

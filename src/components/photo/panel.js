@@ -24,54 +24,54 @@ class PhotoPanel extends React.PureComponent {
 }
 
 const PhotoPanelContainer = connect(
-    state => ({
-      current: state.nav.photo,
-      edit: state.edit,
-      data: state.metadata,
-      expandedPhotos: getExpandedPhotos(state),
-      keymap: state.keymap,
-      selection: state.nav.selection,
-      selections: state.selections
-    }),
+  state => ({
+    current: state.nav.photo,
+    edit: state.edit,
+    data: state.metadata,
+    expandedPhotos: getExpandedPhotos(state),
+    keymap: state.keymap,
+    selection: state.nav.selection,
+    selections: state.selections
+  }),
 
-    dispatch => ({
-      onContract(...args) {
-        dispatch(act.photo.contract(...args))
-      },
+  dispatch => ({
+    onContract(...args) {
+      dispatch(act.photo.contract(...args))
+    },
 
-      onDelete(payload) {
-        if (payload.selections == null) {
-          dispatch(act.photo.delete(payload))
-        } else {
-          dispatch(act.selection.delete(payload))
-        }
-      },
-
-      onExpand(...args) {
-        dispatch(act.photo.expand(...args))
-      },
-
-      onExtract(...args) {
-        dispatch(act.photo.extract(...args))
-      },
-
-      onItemPreview(...args) {
-        dispatch(act.item.preview(...args))
-      },
-
-      onRotate(...args) {
-        dispatch(act.photo.rotate(...args))
-      },
-
-      onSelectionSort(...args) {
-        dispatch(act.selection.order(...args))
-      },
-
-      onSort(...args) {
-        dispatch(act.photo.order(...args))
+    onDelete(payload) {
+      if (payload.selections == null) {
+        dispatch(act.photo.delete(payload))
+      } else {
+        dispatch(act.selection.delete(payload))
       }
-    })
-  )(PhotoPanel)
+    },
+
+    onExpand(...args) {
+      dispatch(act.photo.expand(...args))
+    },
+
+    onExtract(...args) {
+      dispatch(act.photo.extract(...args))
+    },
+
+    onItemPreview(...args) {
+      dispatch(act.item.preview(...args))
+    },
+
+    onRotate(...args) {
+      dispatch(act.photo.rotate(...args))
+    },
+
+    onSelectionSort(...args) {
+      dispatch(act.selection.order(...args))
+    },
+
+    onSort(...args) {
+      dispatch(act.photo.order(...args))
+    }
+  })
+)(PhotoPanel)
 
 export {
   PhotoPanelContainer as PhotoPanel

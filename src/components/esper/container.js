@@ -12,7 +12,7 @@ import { Cache } from '../../common/cache'
 import { contains, isHorizontal, rotate, round } from '../../common/math'
 import { addOrientation, subOrientation } from '../../common/iiif'
 import { match } from '../../keymap'
-import { bounds, on, off } from  '../../dom.js'
+import { bounds, on, off } from '../../dom.js'
 
 import {
   arrayOf, bool, func, number, object, shape, string
@@ -26,16 +26,16 @@ const {
 } = ESPER
 
 const {
-    MAX_ZOOM,
-    MIN_WIDTH,
-    MIN_HEIGHT,
-    MIN_ZOOM,
-    PAN_DURATION,
-    PAN_STEP_SIZE,
-    ROTATE_DURATION,
-    ZOOM_DURATION,
-    ZOOM_STEP_SIZE,
-    ZOOM_PRECISION
+  MAX_ZOOM,
+  MIN_WIDTH,
+  MIN_HEIGHT,
+  MIN_ZOOM,
+  PAN_DURATION,
+  PAN_STEP_SIZE,
+  ROTATE_DURATION,
+  ZOOM_DURATION,
+  ZOOM_STEP_SIZE,
+  ZOOM_PRECISION
 } = SASS.ESPER
 
 
@@ -141,7 +141,7 @@ export class EsperContainer extends React.Component {
 
     if (this.didImageChange(nextProps, nextState)) {
       let state = EsperContainer.getDerivedImageStateFromProps(nextProps)
-      let duration = !this.state.isVisible ? 0 : undefined //-> default
+      let duration = !this.state.isVisible ? 0 : undefined // -> default
 
       this.esper.sync({
         ...nextProps,
@@ -461,7 +461,7 @@ export class EsperContainer extends React.Component {
   }
 
   handleModeChange = (mode) => {
-    let { minZoom, mirror, zoom, zoomToFill  } = this.state
+    let { minZoom, mirror, zoom, zoomToFill } = this.state
 
     switch (mode) {
       case MODE.FILL:
@@ -780,7 +780,7 @@ export class EsperContainer extends React.Component {
           <div className="esper-view" ref={this.view}/>
           {
             this.state.isTextureMissing &&
-              <EsperPhotoError onConsolidate={this.handlePhotoConsolidate}/>
+            <EsperPhotoError onConsolidate={this.handlePhotoConsolidate}/>
           }
           {
             isOverlayVisible && (

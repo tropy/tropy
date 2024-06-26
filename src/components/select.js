@@ -22,11 +22,12 @@ class Value extends React.Component {
     return (
       <div className="value">
         {this.props.label}
-        {this.props.hasClearButton &&
+        {this.props.hasClearButton && (
           <Button
             className="clear"
             icon={<IconXSmall/>}
-            onMouseDown={this.handleClearButtonClick}/>}
+            onMouseDown={this.handleClearButtonClick}/>
+        )}
       </div>
     )
   }
@@ -58,7 +59,7 @@ export class Select extends React.Component {
   }
 
   componentDidUpdate(_, state) {
-    if (this.state.isInvalid  !== state.Invalid) {
+    if (this.state.isInvalid !== state.Invalid) {
       this.props.onValidate(!this.state.isInvalid)
     }
   }
@@ -262,13 +263,14 @@ export class Select extends React.Component {
 
     return (
       <div className="values">
-        {this.state.values.map(value =>
+        {this.state.values.map(value => (
           <Value
             hasClearButton={this.state.isMulti && this.state.canClearValue}
             key={value.id || value}
             label={(this.props.toValue || this.props.toText)(value)}
             onClear={this.clear}
-            value={value}/>)}
+            value={value}/>
+        ))}
       </div>
     )
   }
@@ -427,7 +429,7 @@ const getDerivedState = memoize((value, options, isRequired, toId) => {
   }
 
   return {
-    canClearValue: !isBlank && (!isRequired || isMulti && values.length > 1),
+    canClearValue: !isBlank && (!isRequired || (isMulti && values.length > 1)),
     isBlank,
     isInvalid,
     isMulti,

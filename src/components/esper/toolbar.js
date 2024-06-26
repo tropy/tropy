@@ -98,7 +98,8 @@ export class EsperToolbar extends React.PureComponent {
               isActive={this.isToolActive(TOOL.SELECT)}
               isDisabled={
                 this.props.isSelectionActive ||
-                this.props.isReadOnly}
+                this.props.isReadOnly
+              }
               onClick={this.setSelectTool}/>
           </ToolGroup>
           <ToolGroup>

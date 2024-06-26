@@ -238,7 +238,7 @@ module.exports = {
           else
             resolve([output])
         })
-       .on('error', reject)
+        .on('error', reject)
     })
   },
 

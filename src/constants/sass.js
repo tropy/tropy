@@ -231,7 +231,7 @@ const LIST = {
   PADDING: 16
 }
 
-export default  {
+export default {
   ACTIVITY,
   BODY,
   COLUMN,

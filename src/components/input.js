@@ -12,7 +12,7 @@ export class Input extends React.PureComponent {
   completions = React.createRef()
   input = React.createRef()
 
-  state =  {
+  state = {
     hasFocus: false,
     key: this.props.value,
     query: '',
@@ -242,7 +242,7 @@ export class Input extends React.PureComponent {
             onFocus={this.handleFocus}
             onKeyDown={this.handleKeyDown}/>
         </AutoResizer>
-        {this.hasCompletions &&
+        {this.hasCompletions && (
           <Completions
             className={this.completionsClassName}
             completions={this.props.completions}
@@ -254,7 +254,8 @@ export class Input extends React.PureComponent {
             onSelect={this.handleCompletion}
             parent={this.input.current}
             query={this.state.query}
-            ref={this.completions}/>}
+            ref={this.completions}/>
+        )}
       </div>
     )
   }

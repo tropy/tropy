@@ -29,7 +29,7 @@ export const Range = ({
       isScrolling
     }))
 
-  // Invariant: in Grid there must be at most one expanded item!
+    // Invariant: in Grid there must be at most one expanded item!
     if (isExpanded && !expansion && renderExpansionRow) {
       expansion = {
         at: getNextRowOffset(i, columns),

@@ -73,10 +73,10 @@ describe('Query Builder', () => {
     it('join', () => {
       expect(
         select('a')
-        .from('b')
-        .join('c', { using: 'a' })
-        .outer.join('d')
-        .query
+          .from('b')
+          .join('c', { using: 'a' })
+          .outer.join('d')
+          .query
       ).to.eql('SELECT a FROM b JOIN c USING (a) LEFT OUTER JOIN d')
 
       let q = select('*').from('a').join('b', { on: { x: 23 } })

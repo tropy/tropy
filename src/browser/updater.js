@@ -7,7 +7,7 @@ import { error, info } from '../common/log'
 const MIN = 1000 * 60
 
 export class Updater extends EventEmitter {
-  constructor({ enable = true,  interval = 90 * MIN } = {}) {
+  constructor({ enable = true, interval = 90 * MIN } = {}) {
     super()
 
     this.isSupported = !linux && enable
@@ -90,7 +90,7 @@ export class Updater extends EventEmitter {
     error({ stack: e.stack }, 'failed to fetch update')
   }
 
-  onCheckingForUpdate = () =>{
+  onCheckingForUpdate = () => {
     info('checking for updates...')
     this.lastCheck = new Date()
     this.isChecking = true

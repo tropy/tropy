@@ -14,7 +14,7 @@ async function insert(db, { id, property, value, language = 'NULL' }) {
 
 async function update(db, { id, data, timestamp }, replace = false) {
   let properties = Object.keys(data)
-      .filter(p => (p !== 'id' && p !== 'pending'))
+    .filter(p => (p !== 'id' && p !== 'pending'))
 
   await remove(db, {
     id,
@@ -58,10 +58,10 @@ export default {
           JOIN metadata_values USING (value_id)${
         (ids != null) ? ` WHERE id IN (${list(ids)}) ` : ''
       } ORDER BY id, metadata.created ASC`,
-      ({ id, property, type, text }) => {
-        if (id in data) data[id][property] = { type, text }
-        else data[id] = { id, [property]: { type, text } }
-      }
+    ({ id, property, type, text }) => {
+      if (id in data) data[id][property] = { type, text }
+      else data[id] = { id, [property]: { type, text } }
+    }
     )
 
     return data

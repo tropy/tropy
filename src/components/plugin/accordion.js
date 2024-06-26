@@ -28,7 +28,7 @@ export class PluginAccordion extends Accordion {
     }
   }
 
-  handleUninstall = (event) =>  {
+  handleUninstall = (event) => {
     event.stopPropagation()
     this.props.onUninstall(this.props.spec.name)
   }
@@ -112,11 +112,12 @@ export class PluginAccordion extends Accordion {
                 text={`prefs.plugins.${this.hasInstances ? 'disable' :
                   'enable'}`}
                 onClick={this.handlePluginToggle}/>
-              {this.isLocalPlugin &&
+              {this.isLocalPlugin && (
                 <Button
                   isDefault
                   text="prefs.plugins.uninstall"
-                  onClick={this.handleUninstall}/>}
+                  onClick={this.handleUninstall}/>
+              )}
             </ButtonGroup>
           </div>
         </div>
@@ -127,14 +128,15 @@ export class PluginAccordion extends Accordion {
   renderBody() {
     return super.renderBody(
       <ul>
-        {this.props.instances.map((config, idx) =>
+        {this.props.instances.map((config, idx) => (
           <PluginInstance
             key={idx}
             config={config}
             specs={this.props.spec.options}
             onChange={this.props.onChange}
             onInsert={this.props.onInsert}
-            onRemove={this.props.onRemove}/>)}
+            onRemove={this.props.onRemove}/>
+        ))}
       </ul>
     )
   }

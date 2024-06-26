@@ -25,11 +25,11 @@ import {
 } from './util.js'
 
 const {
-    FADE_DURATION,
-    SYNC_DURATION,
-    ZOOM_PINCH_BOOST,
-    ZOOM_WHEEL_FACTOR,
-    ZOOM_MODIFIER
+  FADE_DURATION,
+  SYNC_DURATION,
+  ZOOM_PINCH_BOOST,
+  ZOOM_WHEEL_FACTOR,
+  ZOOM_MODIFIER
 } = SASS.ESPER
 
 const LARGE_TEXTURE = 3500 * 3500
@@ -198,12 +198,12 @@ export default class Esper extends EventEmitter {
   clearTextureCache = debounce((current, keep = 0) => {
     let keys = Object.keys(PIXI.utils.TextureCache)
 
-    if  (keep) {
+    if (keep) {
       keys = keys.slice(0, -keep)
     }
 
     for (let key of keys) {
-      if  (key !== current)
+      if (key !== current)
         PIXI.utils.TextureCache[key].destroy(true)
     }
   }, 1000)

@@ -13,7 +13,7 @@ import {
 } from './util'
 
 
-//eslint-disable-next-line complexity
+// eslint-disable-next-line complexity
 function itemsReducer(state = {}, { type, payload, meta, error }) {
   switch (type) {
     case PROJECT.OPEN:

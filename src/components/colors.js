@@ -5,8 +5,8 @@ const ccx = (color) => color && `color-${color}`
 
 export const Circle = ({ color, isCrescent }) =>
   isCrescent ?
-    <IconCrescentCircle className={ccx(color)}/> :
-    <IconCircle className={ccx(color)}/>
+      <IconCrescentCircle className={ccx(color)}/> :
+      <IconCircle className={ccx(color)}/>
 
 Circle.propTypes = {
   color: string.isRequired,
@@ -16,11 +16,12 @@ Circle.propTypes = {
 export const Colors = ({ className, colors }) => (
   (!colors.length) ? null : (
     <div className={className}>
-      {colors.map((color, idx) =>
+      {colors.map((color, idx) => (
         <Circle
           key={color}
           color={color}
-          isCrescent={idx > 0}/>)}
+          isCrescent={idx > 0}/>
+      ))}
     </div>
   ))
 

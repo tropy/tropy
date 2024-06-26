@@ -631,12 +631,12 @@ export class WindowManager extends EventEmitter {
   *values(type = Object.keys(this.windows)) {
     for (let t of array(type)) {
       if (t in this.windows)
-        yield* this.windows[t].values()
+        yield * this.windows[t].values()
     }
   }
 
   *[Symbol.iterator]() {
-    yield* this.values()
+    yield * this.values()
   }
 
   static defaults = {
@@ -752,12 +752,12 @@ export class WindowManager extends EventEmitter {
     // TODO re-enable vibrancy effect when sidebar scrolling
     // performance fixed (or new tag widget has landed)
     return true
-    //try {
+    // try {
     //  return darwin &&
     //    await read('com.apple.universalaccess', 'reduceTransparency')
-    //} catch (e) {
+    // } catch (e) {
     //  warn({ stack: e.stack }, 'failed to check macOS defaults')
-    //}
+    // }
   }
 
   static preferReducedMotion() {

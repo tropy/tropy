@@ -49,7 +49,7 @@ export class Create extends ImportCommand {
 
     for (let file of files) {
       try {
-        yield* this.importFromFile(file)
+        yield * this.importFromFile(file)
 
       } catch (e) {
         warn({ stack: e.stack }, `failed to import "${file}"`)
@@ -80,7 +80,7 @@ export class Create extends ImportCommand {
         useLocalTimezone: prefs.localtime
       })
 
-      yield* this.handleDuplicate(image)
+      yield * this.handleDuplicate(image)
 
       let data = this.getImageMetadata('photo', image, template, prefs)
       let ids = []

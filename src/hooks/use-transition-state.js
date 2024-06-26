@@ -18,7 +18,7 @@ export function useTransitionState(prop, timeout = 1000, toString) {
     next: prop
   })
 
-  let handleTransitionEnd = useMemo(() => (
+  let handleTransitionEnd = useMemo(() =>
     () => {
       setState(({ next }) => ({
         current: next,
@@ -26,7 +26,7 @@ export function useTransitionState(prop, timeout = 1000, toString) {
         next
       }))
     }
-  ), [])
+  , [])
 
   if (state.next !== prop) {
     setState({ ...state, next: prop })

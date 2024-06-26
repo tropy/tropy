@@ -157,7 +157,7 @@ export function nav(state = init, { type, payload, meta, error }) {
     case ITEM.PHOTO.REMOVE:
       return isSelected(state.items, payload.id) &&
         payload.photos.includes(state.photo) ?
-        { ...state, photo: null, selection: null, note: null } : state
+          { ...state, photo: null, selection: null, note: null } : state
 
     case PHOTO.SELECTION.REMOVE: {
       let { id, selections } = payload

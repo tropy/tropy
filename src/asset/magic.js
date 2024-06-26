@@ -63,7 +63,7 @@ const isTIFF = (buffer) =>
 
 const isWebP = (buffer) =>
   check(buffer, [0x52, 0x49, 0x46, 0x46]) &&
-    check(buffer, [0x57, 0x45, 0x42, 0x50], 8)
+  check(buffer, [0x57, 0x45, 0x42, 0x50], 8)
 
 const isSVG = (buffer) =>
   !isBinary(buffer) && isSVGString(buffer.toString())

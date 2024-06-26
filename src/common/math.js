@@ -4,8 +4,8 @@ export function isClockwise(deg1, deg2) {
   let b = deg2 % 360
 
   return (a < b) ?
-    (b - a) <= 180 :
-    (a - b) >= 180
+      (b - a) <= 180 :
+      (a - b) >= 180
 }
 
 // eslint-disable-next-line no-shadow

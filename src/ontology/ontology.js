@@ -30,7 +30,7 @@ export class Ontology extends Resource {
 
   static async open(input, expand = true) {
     const [path, name] = expand ?
-      [Ontology.expand(input), input] : [input, basename(input, extname(input))]
+        [Ontology.expand(input), input] : [input, basename(input, extname(input))]
 
     return new Ontology(await Ontology.parse(createReadStream(path)), name)
   }
@@ -171,7 +171,7 @@ export class Ontology extends Resource {
   getData(subject, into = {}) {
     return this.store.getQuads(subject).reduce((o, { predicate, object }) =>
       ((o[predicate.id] = [...(o[predicate.id] || []), literal(object)]), o),
-      into)
+    into)
   }
 
 }

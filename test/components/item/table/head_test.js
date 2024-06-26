@@ -24,7 +24,7 @@ describe('TableHead', () => {
           columns={columns}
           colwidth={colwidth}
           sort={sort}/>,
-      inWindowContext).element())
+        inWindowContext).element())
       .to.have.descendants('.metadata-head')
       .with.length(columns.length)
 

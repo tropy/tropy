@@ -157,10 +157,10 @@ export class ImportCommand extends Command {
   }
 
   *handleDuplicate(image) {
-    const handler = yield* this.getDuplicateHandler()
+    const handler = yield * this.getDuplicateHandler()
     if (handler === 'import') return
 
-    if (yield* this.isDuplicate(image)) {
+    if (yield * this.isDuplicate(image)) {
       switch (handler) {
         case 'prompt': {
           this.isInteractive = true
@@ -169,7 +169,7 @@ export class ImportCommand extends Command {
           })
 
           if (isChecked) {
-            yield* this.setDuplicateHandler(ok ? 'import' : 'skip')
+            yield * this.setDuplicateHandler(ok ? 'import' : 'skip')
           }
 
           if (ok) break

@@ -13,10 +13,10 @@ export const getRedo = ({ history }) =>
   history.past?.[0]?.redo
 
 export const getHistory = memo([past, future],
-  (past, future) => ({
-    past: past.length,
-    undo: past?.[0]?.redo?.type,
-    future: future.length,
-    redo: future?.[0]?.redo?.type
+  (p, f) => ({
+    past: p.length,
+    undo: p[0]?.redo?.type,
+    future: f.length,
+    redo: f[0]?.redo?.type
   })
 )

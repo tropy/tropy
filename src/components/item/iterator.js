@@ -65,9 +65,9 @@ export class ItemIterator extends React.Component {
 
   getSelectedPhotos({ items, selection } = this.props) {
     return seq(selection, compose(
-        map(id => get(items, [indexOf(items, id), 'photos'])),
-        keep(),
-        cat))
+      map(id => get(items, [indexOf(items, id), 'photos'])),
+      keep(),
+      cat))
   }
 
   isSelected({ id }) {

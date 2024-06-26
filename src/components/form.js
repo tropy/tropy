@@ -84,12 +84,13 @@ export class FormElement extends React.PureComponent {
     return (
       <FormGroup
         isCompact={this.props.isCompact}>
-        {hasLabel &&
+        {hasLabel && (
           <Label
             id={this.props.id}
             size={offset}
             title={this.props.title}
-            value={this.props.label}/>}
+            value={this.props.label}/>
+        )}
         <div className={
           cx(`col-${this.props.size}`,
             this.props.className,
@@ -268,8 +269,8 @@ export const Toggle = ({
   isChecked ??= value === true
 
   let handleChange = useEvent(() => {
-    let inverse =  (typeof value === 'boolean' || value === undefined) ?
-      !value :
+    let inverse = (typeof value === 'boolean' || value === undefined) ?
+        !value :
       isChecked ? null : value
 
     onChange(set({}, name, inverse), true)
@@ -315,9 +316,11 @@ Toggle.defaultProps = {
 
 export const FormToggle = ({ isCompact, size, ...props }) => (
   <FormGroup isCompact={isCompact}>
-    <Toggle {...props} className={
-      cx(props.type, `col-${size}`, `col-offset-${SASS.GRID.SIZE - size}`)
-    }/>
+    <Toggle
+      {...props}
+      className={
+        cx(props.type, `col-${size}`, `col-offset-${SASS.GRID.SIZE - size}`)
+      }/>
   </FormGroup>
 )
 
@@ -346,7 +349,7 @@ export const FormToggleGroup = ({
     id={`${id}.label`}
     size={size}
     isCompact={isCompact}>
-    {options.map(option =>
+    {options.map(option => (
       <Toggle
         id={`${id}.option.${option}`}
         isChecked={option === value}
@@ -355,7 +358,8 @@ export const FormToggleGroup = ({
         onChange={onChange}
         tabIndex={tabIndex}
         type="radio"
-        value={option}/>)}
+        value={option}/>
+    ))}
   </FormElement>
 )
 

@@ -153,7 +153,7 @@ export class ContextMenu extends Menu {
   }
 
   show({ scope, event }, win) {
-    return new Promise((resolve, reject) =>  {
+    return new Promise((resolve, reject) => {
       try {
         let settings = [
           ...ContextMenu.scopes[scope]

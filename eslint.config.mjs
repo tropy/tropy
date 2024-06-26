@@ -17,6 +17,7 @@ Object.assign(style.rules, {
   '@stylistic/jsx-tag-spacing': 0,
   '@stylistic/max-statements-per-line': 0,
   '@stylistic/multiline-ternary': 0,
+  '@stylistic/no-multi-spaces': [2, { ignoreEOLComments: true }],
   '@stylistic/new-parens': 0,
   '@stylistic/quotes': [1, 'single', { avoidEscape: true }],
   '@stylistic/no-multiple-empty-lines': [1, { max: 4 }],

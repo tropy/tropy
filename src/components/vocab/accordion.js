@@ -42,10 +42,11 @@ export class VocabAccordion extends Accordion {
             icon={<IconExport/>}
             title="prefs.vocab.export"
             onClick={this.handleExport}/>
-          {!this.props.vocab.isProtected &&
+          {!this.props.vocab.isProtected && (
             <Button
               icon={<IconTrash/>}
-              onClick={this.handleDelete}/>}
+              onClick={this.handleDelete}/>
+          )}
         </ButtonGroup>
       </div>
     )

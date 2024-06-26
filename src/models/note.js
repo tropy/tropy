@@ -25,20 +25,20 @@ async function load(db, ids) {
       WHERE ${conditions.join(' AND ')}
       ORDER BY created ASC`,
 
-    ({ note: id, created, modified, state, ...data }) => {
-      try {
-        notes[id] = {
-          ...data,
-          id,
-          modified: new Date(modified),
-          created: new Date(created),
-          state: json(state),
-          deleted: false
-        }
-      } catch (e) {
-        warn({ stack: e.stack }, `failed parsing note ${id}`)
+  ({ note: id, created, modified, state, ...data }) => {
+    try {
+      notes[id] = {
+        ...data,
+        id,
+        modified: new Date(modified),
+        created: new Date(created),
+        state: json(state),
+        deleted: false
       }
+    } catch (e) {
+      warn({ stack: e.stack }, `failed parsing note ${id}`)
     }
+  }
   )
 
   return notes

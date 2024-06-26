@@ -18,8 +18,7 @@ export function ItemDragPreview({ item, size }) {
         tags={tags}
         size={size}/>
       {count > 1 &&
-        <div className="badge">{count}</div>
-      }
+        <div className="badge">{count}</div>}
     </div>
   )
 }

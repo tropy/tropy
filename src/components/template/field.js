@@ -135,12 +135,13 @@ export const TemplateField = ({
 
       </fieldset>
       {isDisabled ?
-        <div className="btn-group"/> :
-        <PlusMinusControls
-          canAdd={!isTransient}
-          canRemove={!(isTransient || isSingle)}
-          onAdd={() => onInsert(field, position + 1)}
-          onRemove={() => onRemove(field)}/>}
+          <div className="btn-group"/> : (
+            <PlusMinusControls
+              canAdd={!isTransient}
+              canRemove={!(isTransient || isSingle)}
+              onAdd={() => onInsert(field, position + 1)}
+              onRemove={() => onRemove(field)}/>
+          )}
     </li>
   )
 }

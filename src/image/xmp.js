@@ -31,9 +31,9 @@ export function xmp(buffer) {
 
         for (let node of desc.children) {
           let values = Array
-              .from(node.childElementCount > 0 ? $$('li', node) : [node])
-              .map(value)
-              .filter(v => !blank(v))
+            .from(node.childElementCount > 0 ? $$('li', node) : [node])
+            .map(value)
+            .filter(v => !blank(v))
 
           if (blank(values)) continue
 

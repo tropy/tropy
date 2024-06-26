@@ -6,7 +6,7 @@ import * as mod from '../../models'
 import * as act from '../../actions'
 import { PHOTO } from '../../constants'
 import { Image } from '../../image'
-import {  warn } from '../../common/log'
+import { warn } from '../../common/log'
 import { blank, pluck, splice } from '../../common/util'
 
 

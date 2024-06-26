@@ -44,15 +44,17 @@ export const ProjectContainer = ({
         enter={isWindowResizeAnimated}
         exit={false}
         timeout={timeout}>
-        {project.path ?
+        {project.path ? (
           <Project
             ref={drop}
             project={project}
-            isOver={isOver}/> :
+            isOver={isOver}/>
+        ) : (
           <NoProject
             ref={drop}
             isOver={isOver}
-            onProjectOpen={handleProjectOpen}/>}
+            onProjectOpen={handleProjectOpen}/>
+        )}
       </Fade>
     </SwitchTransition>
   )

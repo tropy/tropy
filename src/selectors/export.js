@@ -1,10 +1,10 @@
-import { ctx, props } from '../common/export'
+import { ctx, props as properties } from '../common/export'
 import { xsd } from '../ontology'
 import { version } from '../common/release'
 import { compact, blank, URI, get, pick } from '../common/util'
 import { serialize } from '../editor/serialize'
 
-const RESERVED = Object.fromEntries(props.all.map(prop => ([prop, true])))
+const RESERVED = Object.fromEntries(properties.all.map(prop => ([prop, true])))
 
 export const getExportItemIds = ({ nav, qr }, { id } = {}) =>
   (id?.length > 0) ? id : (nav.items.length > 0 ? nav.items : qr.items)
@@ -54,8 +54,8 @@ const exportItem = (context, item, state) => {
 const exportPhoto = (context, photo, state) => {
   let output = {
     '@type': 'Photo',
-    ...pick(photo, props.photo),
-    ...pick(photo, props.image)
+    ...pick(photo, properties.photo),
+    ...pick(photo, properties.image)
   }
 
   addMetadata(context, output, state.metadata[photo.id], state.ontology)
@@ -84,8 +84,8 @@ const exportPhoto = (context, photo, state) => {
 const exportSelection = (context, selection, state) => {
   let output = {
     '@type': 'Selection',
-    ...pick(selection, props.selection),
-    ...pick(selection, props.image)
+    ...pick(selection, properties.selection),
+    ...pick(selection, properties.image)
   }
 
   addMetadata(context, output, state.metadata[selection.id], state.ontology)
@@ -178,4 +178,4 @@ const toValue = ({ type, text }, context = {}) => {
 const toContext = (prop, type) =>
   (type === xsd.string || type === xsd.integer) ?
     prop :
-    { '@id': prop, '@type': type }
+      { '@id': prop, '@type': type }

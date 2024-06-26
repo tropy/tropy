@@ -10,23 +10,23 @@ async function load(db, ids) {
   await Promise.all([
     db.each(
       ...select(
-          'id',
-          'photo_id AS photo',
-          'x',
-          'y',
-          'width',
-          'height',
-          'angle',
-          'mirror',
-          'negative',
-          'brightness',
-          'contrast',
-          'hue',
-          'saturation',
-          'sharpen',
-          'template',
-          'strftime("%Y-%m-%dT%H:%M:%f", created, "localtime") AS created',
-          'strftime("%Y-%m-%dT%H:%M:%f", modified, "localtime") AS modified')
+        'id',
+        'photo_id AS photo',
+        'x',
+        'y',
+        'width',
+        'height',
+        'angle',
+        'mirror',
+        'negative',
+        'brightness',
+        'contrast',
+        'hue',
+        'saturation',
+        'sharpen',
+        'template',
+        'strftime("%Y-%m-%dT%H:%M:%f", created, "localtime") AS created',
+        'strftime("%Y-%m-%dT%H:%M:%f", modified, "localtime") AS modified')
         .from('subjects')
         .join('images', { using: 'id' })
         .join('selections', { using: 'id' })
@@ -82,14 +82,14 @@ export default {
   load,
 
   async create(db, {
-      template,
+    template,
       photo,
       x,
       y,
       position,
       data,
       ...image
-    }) {
+  }) {
     const { id } = await subject.create(db, { template })
 
     await db.run(
@@ -119,7 +119,7 @@ export default {
               (`WHEN ? THEN ${offset + idx + 1}`)).join(' ')}
             END
           WHERE photo_id = ?`,
-        ...selections, photo)
+      ...selections, photo)
     }
   },
 

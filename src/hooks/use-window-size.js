@@ -10,10 +10,10 @@ export function useWindowSize(width, height) {
     win.setFixedSize(true, { width, height })
   }, [win, width, height])
 
-  useEffect(() => (
+  useEffect(() =>
     () => {
       // Delaying because we want this to fire after unmount!
       win?.setFixedSize(false, { timeout })
     }
-  ), [win, timeout])
+  , [win, timeout])
 }

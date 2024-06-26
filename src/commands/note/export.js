@@ -64,7 +64,7 @@ function mapNotes(notes, format, opts) {
     case 'json':
       return JSON.stringify(
         notes.map(n => ({ '@type': 'Note', ...serialize(n, opts) })
-      ), null, 2)
+        ), null, 2)
 
     case 'html':
       return notes.map(n => toHTML(n.state.doc)).join('\n')

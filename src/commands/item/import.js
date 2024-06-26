@@ -39,7 +39,7 @@ export class Import extends ImportCommand {
     this.result = []
     this.backlog = []
 
-    yield* this.configure()
+    yield * this.configure()
 
     yield this.progress({ progress: 0 })
     yield put(act.nav.update({ mode: NAV.MODE.PROJECT, query: '' }))
@@ -52,7 +52,7 @@ export class Import extends ImportCommand {
     }
 
     if (payload.data) {
-      yield* this.importFromJSON(payload.data)
+      yield * this.importFromJSON(payload.data)
 
     } else {
       let files = yield call(this.getFilesToImport)
@@ -69,10 +69,10 @@ export class Import extends ImportCommand {
         try {
           if ((/json(ld)?$/i).test(extname(file))) {
             let text = yield call(readFile, file, 'utf-8')
-            yield* this.importFromJSON(JSON.parse(text), dirname(file))
+            yield * this.importFromJSON(JSON.parse(text), dirname(file))
 
           } else
-            yield* this.importFromImage(file)
+            yield * this.importFromImage(file)
 
         } catch (e) {
           warn({ stack: e.stack }, `failed to import "${file}"`)
@@ -123,8 +123,8 @@ export class Import extends ImportCommand {
         useLocalTimezone
       })
 
-      yield* this.handleDuplicate(image)
-      let data = yield* this.getMetadata(image, templates)
+      yield * this.handleDuplicate(image)
+      let data = yield * this.getMetadata(image, templates)
       yield call(store.add, image)
 
       yield call(db.transaction, async tx => {
@@ -187,7 +187,7 @@ export class Import extends ImportCommand {
       yield this.progress({ total: graph.length - 1 })
 
     for (let item of eachItem(graph)) {
-      yield* this.importJSONItem(item, rel)
+      yield * this.importJSONItem(item, rel)
     }
   }
 
@@ -205,7 +205,7 @@ export class Import extends ImportCommand {
       yield this.progress()
 
       if (obj.tags.length) {
-        tags = yield* this.findOrCreateTags(obj.tags)
+        tags = yield * this.findOrCreateTags(obj.tags)
       }
 
       yield call(db.transaction, async tx => {

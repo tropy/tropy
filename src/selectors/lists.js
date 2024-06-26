@@ -5,7 +5,7 @@ function *flatten(children, lists, expand) {
   for (let id of children) {
     yield id
     if (expand[id]) {
-      yield* flatten(lists[id].children, lists, expand)
+      yield * flatten(lists[id].children, lists, expand)
     }
   }
 }

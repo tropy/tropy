@@ -74,7 +74,7 @@ export const create = () => {
       transcriptions,
       ui
     },
-    middleware: (getDefaultMiddleWare) =>([
+    middleware: (getDefaultMiddleWare) => ([
       ...getDefaultMiddleWare(),
       debounce,
       throttle,

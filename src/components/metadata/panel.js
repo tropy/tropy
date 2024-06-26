@@ -134,7 +134,7 @@ class MetadataPanel extends React.PureComponent {
     if (!this.props.isDisabled) {
       let id = (data.type === 'item') ?
         this.props.items.map(it => it.id) :
-        [this.props?.[data.type]?.id]
+          [this.props?.[data.type]?.id]
 
       let context = data.property ?
         'metadata-field' : 'metadata-list'
@@ -257,29 +257,29 @@ class MetadataPanel extends React.PureComponent {
 }
 
 const MetadataPanelContainer = connect(
-    (state) => ({
-      edit: state.edit.field,
-      fields: {
-        item: getItemFields(state),
-        photo: getPhotoFields(state),
-        selection: getSelectionFields(state)
-      },
-      items: getSelectedItems(state),
-      photo: getSelectedPhoto(state),
-      selection: getActiveSelection(state),
-      template: getSelectedItemTemplate(state)
-    }),
+  (state) => ({
+    edit: state.edit.field,
+    fields: {
+      item: getItemFields(state),
+      photo: getPhotoFields(state),
+      selection: getSelectionFields(state)
+    },
+    items: getSelectedItems(state),
+    photo: getSelectedPhoto(state),
+    selection: getActiveSelection(state),
+    template: getSelectedItemTemplate(state)
+  }),
 
-    (dispatch) => ({
-      onMetadataAdd(...args) {
-        dispatch(act.metadata.add(...args))
-      },
+  (dispatch) => ({
+    onMetadataAdd(...args) {
+      dispatch(act.metadata.add(...args))
+    },
 
-      onTemplateChange(type, ...args) {
-        dispatch(act[type].template.change(...args))
-      }
-    }), null, { forwardRef: true }
-  )(MetadataPanel)
+    onTemplateChange(type, ...args) {
+      dispatch(act[type].template.change(...args))
+    }
+  }), null, { forwardRef: true }
+)(MetadataPanel)
 
 export {
   MetadataPanelContainer as MetadataPanel

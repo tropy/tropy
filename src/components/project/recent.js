@@ -56,14 +56,14 @@ export const RecentProjects = ({
         <div className="placeholder">
           <FormattedMessage id="project.recent.search.blank"/>
         </div>
-        ) : (
-          <nav>
-            <ProjectFileList
-              files={projects}
-              onConsolidate={handleConsolidate}
-              onRemove={handleProjectRemove}
-              onSelect={onSelect}/>
-          </nav>
+      ) : (
+        <nav>
+          <ProjectFileList
+            files={projects}
+            onConsolidate={handleConsolidate}
+            onRemove={handleProjectRemove}
+            onSelect={onSelect}/>
+        </nav>
       )}
     </div>
   )

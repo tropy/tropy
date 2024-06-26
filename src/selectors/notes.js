@@ -55,21 +55,21 @@ export const getNextNoteSelection = memo(
 
 
 export const getNotesMap = (state, props) =>
-  props.notes.reduce((map, noteId) => {
+  props.notes.reduce((nmap, noteId) => {
     let { photo, selection } = state.notes[noteId]
 
     let id = (selection != null) ? selection : photo
     let type = (selection != null) ? 'selection' : 'photo'
 
-    if (map.has(id))
-      map.get(id).notes.push(noteId)
+    if (nmap.has(id))
+      nmap.get(id).notes.push(noteId)
     else
-      map.set(id, {
+      nmap.set(id, {
         id,
         type,
         notes: [noteId]
       })
 
-    return map
+    return nmap
 
   }, new Map)

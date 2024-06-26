@@ -4,7 +4,7 @@ import { cat, compose, filter, into, map } from 'transducers.js'
 import { blank, get, homogenize } from '../common/util'
 import { expand, tropy } from '../ontology'
 import { ITEM, PHOTO, SELECTION } from '../constants'
-import { value }  from '../value'
+import { value } from '../value'
 
 const getResourceList =
   (res, vocab) =>

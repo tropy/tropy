@@ -61,7 +61,7 @@ program
           let { en } = load(join(STRINGS, `${type}.en.yml`))
           let data = load(join(home, file))[locale]
 
-          save({ [locale]: merge(en, data) }, type,  locale, STRINGS)
+          save({ [locale]: merge(en, data) }, type, locale, STRINGS)
           rm(join(home, file))
         }
       }

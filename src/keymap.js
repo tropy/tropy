@@ -37,7 +37,7 @@ export function compile(data) {
 
 
 export function parse(input) {
-  return Array.isArray(input) ?  input.map(p) : [p(input)]
+  return Array.isArray(input) ? input.map(p) : [p(input)]
 }
 
 function p(string) {
@@ -53,10 +53,10 @@ function p(string) {
       case (ALT.test(mod)):
         alt = true
         break
-      case (CTRL.test(mod) || !darwin && MOD.test(mod)):
+      case (CTRL.test(mod) || (!darwin && MOD.test(mod))):
         ctrl = true
         break
-      case (META.test(mod) || darwin && MOD.test(mod)):
+      case (META.test(mod) || (darwin && MOD.test(mod))):
         meta = true
         break
       case (SHIFT.test(mod)):

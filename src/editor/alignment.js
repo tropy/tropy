@@ -1,5 +1,5 @@
 import { splitListItem } from 'prosemirror-schema-list'
-import { splitBlockKeepMarks }  from 'prosemirror-commands'
+import { splitBlockKeepMarks } from 'prosemirror-commands'
 
 const align = (direction) =>
   (state, dispatch) => {
@@ -28,7 +28,7 @@ const align = (direction) =>
 // (based on `align` attribute value of the preceding node).
 // Supports both lists and regular markup.
 // nodeOffset is how far ahead from the current position to insert the alignment attributes.
-const keepAlignment = (state, dispatch, nodeOffset) => (tr => {
+const keepAlignment = (state, dispatch, nodeOffset) => tr => {
   const cursor = state.selection.$cursor || state.selection.$from
   const { pos, parentOffset } = cursor
   const prev = state.doc.resolve(pos - parentOffset)
@@ -41,7 +41,7 @@ const keepAlignment = (state, dispatch, nodeOffset) => (tr => {
     tr.ensureMarks(prevMarks)
   }
   dispatch(tr)
-})
+}
 
 const splitListItemKeepAlignment = (listItemType) => {
   const splitCmd = splitListItem(listItemType)

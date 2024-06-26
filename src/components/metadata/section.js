@@ -14,13 +14,14 @@ export const MetadataSection = (props) => {
           id={props.title}
           values={{ count: props.count }}/>
       </h5>
-      {props.template &&
+      {props.template && (
         <TemplateSelect
           isDisabled={props.isDisabled}
           isMixed={props.isMixed}
           isRequired
           value={props.template}
-          onChange={props.onTemplateChange}/>}
+          onChange={props.onTemplateChange}/>
+      )}
       {props.children}
     </section>
   )

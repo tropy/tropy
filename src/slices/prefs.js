@@ -21,7 +21,7 @@ const prefs = createSlice({
 
 export const close = createAction('prefs/close')
 
-export const  {
+export const {
   restore,
   update
 } = prefs.actions

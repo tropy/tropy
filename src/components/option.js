@@ -110,14 +110,15 @@ export class OptionList extends React.Component {
           onSelect={this.props.onActivate}
           items={this.props.values}
           itemHeight={this.props.rowHeight}>
-          {(option) =>
+          {(option) => (
             <Option
               key={option.id}
               isActive={this.isActive(option)}
               isSelected={this.isSelected(option)}
               onClick={this.props.onSelect}
               onHover={this.handleHover}
-              option={option}/>}
+              option={option}/>
+          )}
         </Scroll>
       </div>
     )

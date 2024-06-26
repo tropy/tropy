@@ -30,14 +30,15 @@ export class TableHead extends React.PureComponent {
       <div
         className="table-head"
         onContextMenu={this.props.onContextMenu}>
-        {this.props.hasPositionColumn &&
+        {this.props.hasPositionColumn && (
           <TableHeadCell
             {...NAV.COLUMN.POSITION}
             isActive={this.isActive(NAV.COLUMN.POSITION)}
             isAscending={this.isAscending}
             isFixedColumn
-            onClick={this.props.onSort}/>}
-        {this.props.columns.map((col, idx) =>
+            onClick={this.props.onSort}/>
+        )}
+        {this.props.columns.map((col, idx) => (
           <TableHeadCell
             key={col.id}
             id={col.id}
@@ -55,7 +56,8 @@ export class TableHead extends React.PureComponent {
             onOrderReset={this.props.onOrderReset}
             onOrderStart={this.props.onOrderStart}
             onOrderStop={this.props.onOrderStop}
-            onResize={this.props.onResize}/>)}
+            onResize={this.props.onResize}/>
+        ))}
       </div>
     )
   }

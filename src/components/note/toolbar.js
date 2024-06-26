@@ -22,14 +22,15 @@ export const NoteToolbar = ({
       </h4>
     </Toolbar.Left>
     <Toolbar.Right>
-      {hasCreateButton &&
+      {hasCreateButton && (
         <ToolGroup>
           <Button
             icon={<IconPlusSmall/>}
             isDisabled={isDisabled}
             title="panel.note.create"
             onClick={onCreate}/>
-        </ToolGroup>}
+        </ToolGroup>
+      )}
     </Toolbar.Right>
   </Toolbar>
 )

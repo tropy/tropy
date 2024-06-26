@@ -14,8 +14,7 @@ export const FieldDragPreview = ({ item }) => (
       {item.isMixed && <span>+</span>}
     </div>
     {item.id.length > 1 &&
-      <div className="badge">{item.id.length}</div>
-    }
+      <div className="badge">{item.id.length}</div>}
   </div>
 )
 

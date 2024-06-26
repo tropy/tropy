@@ -45,8 +45,8 @@ export class Rotation {
 
   mode({ width, height }, h = this.isHorizontal) {
     return (width < height) ?
-      (h ? 'portrait' : 'landscape') :
-      (h ? 'landscape' : 'portrait')
+        (h ? 'portrait' : 'landscape') :
+        (h ? 'landscape' : 'portrait')
   }
 
   ratio({ width, height }) {

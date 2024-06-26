@@ -228,8 +228,8 @@ export function adjacent(array, item) {
 
   switch (i) {
     case -1: return []
-    case  0: return n ? [undefined, array[1]] : []
-    case  n: return [array[n - 1]]
+    case 0: return n ? [undefined, array[1]] : []
+    case n: return [array[n - 1]]
     default:
       return [array[i - 1], array[i + 1]]
   }
@@ -384,7 +384,7 @@ export function copy(obj, into = {}) {
 }
 
 export function map(src, fn, into = {}) {
-  //if (typeof fn !== 'function') fn = () => fn
+  // if (typeof fn !== 'function') fn = () => fn
 
   for (let prop in src) {
     if (own(src, prop)) {
@@ -442,7 +442,7 @@ export function downcase(string) {
 
 export function camelcase(str) {
   return str.replace(
-      /(?:^\w|\p{Lu}|\b\w|\s+)/ug,
+    /(?:^\w|\p{Lu}|\b\w|\s+)/ug,
     (match, index) => {
       if (+match === 0) return ''
       return index === 0 ? match.toLowerCase() : match.toUpperCase()
