@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { Resource, Icon, Strings } from './browser/res.js'
+import { Resource, Icon, Strings } from './main/res.js'
 import ARGS from './args.js'
 
 Object.defineProperty(Resource, 'base', {

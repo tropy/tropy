@@ -1,5 +1,5 @@
-import { join } from 'path'
-import config from '../rollup.config'
+import { join } from 'node:path'
+import config from '../rollup.config.js'
 import license from 'rollup-plugin-license'
 
 const addLicensePlugin = (opts, type) => (
@@ -16,6 +16,6 @@ const addLicensePlugin = (opts, type) => (
 )
 
 export default [
-  addLicensePlugin(config[0], 'browser'),
+  addLicensePlugin(config[0], 'main'),
   addLicensePlugin(config[1], 'renderer')
 ]

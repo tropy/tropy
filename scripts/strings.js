@@ -51,7 +51,7 @@ program
 
       } else {
         m = file.match(
-          /^for_use_tropy_(renderer|browser)_(\w{2}(-\w{2})?).yml$/)
+          /^for_use_tropy_(renderer|main)_(\w{2}(-\w{2})?).yml$/)
 
         if (m != null) {
           let type = m[1]
@@ -78,7 +78,7 @@ program
     ['de', 'fr', 'es', 'pt', 'pt_BR', 'ja', 'nl_NL', 'it', 'uk', 'zh_CN'])
   .option('-r, --res <slugs...>',
     'set the resources to fetch',
-    ['app-menu', 'context-menu', 'browser', 'renderer'])
+    ['app-menu', 'context-menu', 'main', 'renderer'])
   .action(async (dir, opts) => {
     let home = dir || HOME
 

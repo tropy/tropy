@@ -14,7 +14,7 @@ if (process.type === 'renderer') {
   })
 
 } else {
-  let { Resource } = require('../../src/browser/res.js')
+  let { Resource } = require('../../src/main/res.js')
 
   Object.defineProperty(Resource, 'base', {
     get() { return resolve(__dirname, '../..') }

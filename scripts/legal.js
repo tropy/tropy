@@ -43,7 +43,7 @@ const loadDependencies = async ({ dependencies } = {}) => {
   } else {
     dependencies = [
       join(__dirname, 'licenses.json'),
-      resolve('lib/licenses.browser.json'),
+      resolve('lib/licenses.main.json'),
       resolve('lib/licenses.renderer.json'),
       resolve('lib/licenses.libvips.json')
     ]

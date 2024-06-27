@@ -54,7 +54,7 @@ const IGNORE_WARNINGS = {
 function onwarn(warning, warn) {
   let ok = IGNORE_WARNINGS[warning.code]
 
-  if (ok === true || typeof ok === 'function' && ok(warning))
+  if (ok === true || (typeof ok === 'function' && ok(warning)))
     return
   else
     warn(warning)
@@ -75,10 +75,10 @@ if (process.platform !== 'darwin') {
 export default [
   {
     input: [
-      'src/browser/main.js'
+      'src/main/index.js'
     ],
     output: {
-      dir: 'lib/browser',
+      dir: 'lib/main',
       format: 'es',
       generatedCode: 'es2015',
       sourcemap: false
@@ -111,7 +111,7 @@ export default [
         thirdParty: {
           includePrivate: true,
           output: {
-            file: 'lib/licenses.browser.json',
+            file: 'lib/licenses.main.json',
             template: JSON.stringify
           }
         }

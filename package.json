@@ -18,7 +18,7 @@
     "node": ">=20",
     "npm": ">=10"
   },
-  "main": "lib/browser/main.js",
+  "main": "lib/main/index.js",
   "type": "module",
   "scripts": {
     "clean": "shx rm -rf coverage doc dist lib .nyc_output npm-debug.log",
@@ -42,8 +42,8 @@
     "coverage": "env COVERAGE=true npm run -s test",
     "postcoverage": "nyc report -r text-summary -r html -r lcov",
     "test": "npm run -s test:main && npm run -s test:renderer",
-    "test:main": "electron-mocha \"test/{browser,common}/**/*_test.js\"",
-    "test:renderer": "electron-mocha --renderer \"test/{,!(browser)/**}/*_test.js\"",
+    "test:main": "electron-mocha \"test/{main,common}/**/*_test.js\"",
+    "test:renderer": "electron-mocha --renderer \"test/{,!(main)/**}/*_test.js\"",
     "preversion": "npm run lint && npm test",
     "version": "node scripts/version.js && git add res/linux"
   },
