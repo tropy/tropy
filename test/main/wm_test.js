@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 import { join } from 'node:path'
 import { app, BrowserWindow } from 'electron'
-import { WindowManager } from '../../src/browser/wm.js'
-import { View } from '../../src/browser/res.js'
+import { WindowManager } from '../../src/main/wm.js'
+import { View } from '../../src/main/res.js'
 import { Plugins } from '../../src/common/plugins.js'
 
 

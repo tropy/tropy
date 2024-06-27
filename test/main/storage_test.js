@@ -1,15 +1,15 @@
-import { unlink as rm } from 'fs'
+import { rm } from 'node:fs/promises'
 import { app } from 'electron'
-import { Storage } from '../../src/browser/storage'
+import { Storage } from '../../src/main/storage.js'
 
 describe('Storage', () => {
   describe('given a storage folder', () => {
     const folder = new Storage(app.getPath('userData'))
 
     describe('#save', () => {
-      after(done => {
-        rm(folder.expand('test-a.json'), done)
-      })
+      after(() => (
+        rm(folder.expand('test-a.json'))
+      ))
 
       it('saves object with given name', () => (
         expect(folder.save('test-a.json', { name: 'a' }))
@@ -18,9 +18,9 @@ describe('Storage', () => {
     })
 
     describe('#save.sync', () => {
-      after(done => {
-        rm(folder.expand('test-c.json'), done)
-      })
+      after(() => (
+        rm(folder.expand('test-c.json'))
+      ))
 
       it('saves object with given name', () => {
         expect(() =>
@@ -34,9 +34,9 @@ describe('Storage', () => {
         folder.save('test-b.json', { name: 'b' })
       ))
 
-      after(done => {
-        rm(folder.expand('test-b.json'), done)
-      })
+      after(() => (
+        rm(folder.expand('test-b.json'))
+      ))
 
       it('opens and parses the given file', () => (
         expect(folder.load('test-b.json'))
