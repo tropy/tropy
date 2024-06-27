@@ -79,7 +79,7 @@ export default [
   {
     files: [
       '{src,test}/*.js',
-      '{src,test}/!(browser)/**/*.js',
+      '{src,test}/!(main)/**/*.js',
       'res/workers/*.js'
     ],
     languageOptions: {

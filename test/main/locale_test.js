@@ -1,4 +1,4 @@
-import { isRightToLeft } from '../../src/browser/locale.js'
+import { isRightToLeft } from '../../src/main/locale.js'
 
 describe('locale', () => {
   describe('isRightToLeft', () => {
