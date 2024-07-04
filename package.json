@@ -19,11 +19,10 @@
     "npm": ">=10"
   },
   "main": "lib/main/index.js",
-  "type": "module",
   "scripts": {
     "clean": "shx rm -rf coverage doc dist lib .nyc_output npm-debug.log",
     "prerollup": "shx rm -rf lib",
-    "rollup": "rollup -c",
+    "rollup": "rollup -c --bundleConfigAsCjs",
     "db": "node scripts/db",
     "prebuild": "npm run clean && npm run rollup",
     "build": "node scripts/build",
