@@ -1,11 +1,11 @@
-'use strict'
+import { readFile, writeFile } from 'node:fs/promises'
+import { join, relative, resolve } from 'node:path'
+import process from 'node:process'
+import { fileURLToPath } from 'node:url'
+import { program } from 'commander'
+import { bail, say, setLogSymbol, warn } from './util.js'
 
-const { bail, say, warn } = require('./util')('§')
-const { join, relative, resolve } = require('path')
-const { readFile, writeFile } = require('fs/promises')
-const { program } = require('commander')
-
-/* eslint-disable max-len */
+setLogSymbol('§')
 
 program
   .name('tropy-legal')
@@ -24,7 +24,7 @@ program
   })
 
 
-const compileThirdPartyNotices = (deps, { format }) => {
+export const compileThirdPartyNotices = (deps, { format }) => {
   switch (format) {
     case 'json':
       return JSON.stringify(deps, 0, 2)
@@ -37,12 +37,12 @@ const compileThirdPartyNotices = (deps, { format }) => {
   }
 }
 
-const loadDependencies = async ({ dependencies } = {}) => {
+export const loadDependencies = async ({ dependencies } = {}) => {
   if (dependencies) {
     dependencies = dependencies.map(dep => resolve(dep))
   } else {
     dependencies = [
-      join(__dirname, 'licenses.json'),
+      join(import.meta.dirname, 'licenses.json'),
       resolve('lib/licenses.main.json'),
       resolve('lib/licenses.renderer.json'),
       resolve('lib/licenses.libvips.json')
@@ -150,11 +150,6 @@ const htmlEscape = (str) =>
     .replace(/'/g, '&39;')
     .replace(/`/g, '&96;')
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   program.parseAsync(process.argv)
-} else {
-  module.exports = {
-    compileThirdPartyNotices,
-    loadDependencies
-  }
 }

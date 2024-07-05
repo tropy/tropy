@@ -1,5 +1,7 @@
 import { join } from 'node:path'
 import fs from 'node:fs'
+import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 import { say, setLogSymbol, ROOT } from './util.js'
 import { program } from 'commander'
 import { family } from 'detect-libc'
@@ -288,4 +290,6 @@ function setMacSDKRoot() {
     exec('xcrun -sdk macosx --show-sdk-path', { silent: true }).trim()
 }
 
-program.parseAsync(process.argv)
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  program.parseAsync(process.argv)
+}
