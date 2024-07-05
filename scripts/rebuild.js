@@ -1,22 +1,24 @@
-'use strict'
+import { join } from 'node:path'
+import fs from 'node:fs'
+import { say, setLogSymbol, ROOT } from './util.js'
+import { program } from 'commander'
+import { family } from 'detect-libc'
+import shelljs from 'shelljs'
 
-const { say } = require('./util')('Δ')
-const { join } = require('path')
-const fs = require('fs')
-const { program } = require('commander')
-const { cat, cd, env, exec, sed, test } = require('shelljs')
-const { family } = require('detect-libc')
+setLogSymbol('Δ')
 
-const { ROOT } = require('./metadata')
+const { cat, cd, env, exec, sed, test } = shelljs
 const ARCH = process.env.npm_config_target_arch || process.arch
 
-function v(module) {
-  return require(`${module}/package.json`).version
-}
+const ELECTRON_VERSION = JSON.parse(
+  fs.readFileSync('node_modules/electron/package.json', {
+    encoding: 'utf-8'
+  })
+).version
 
 function downloadHeaders({
   arch = ARCH,
-  target = v('electron'),
+  target = ELECTRON_VERSION,
   url = 'https://electronjs.org/headers',
   silent
 }) {
@@ -34,7 +36,7 @@ class Rebuilder {
   constructor({
     name,
     arch = ARCH,
-    target = v('electron'),
+    target = ELECTRON_VERSION,
     libc,
     silent,
     steps = [...Rebuilder.Steps[name]]
@@ -286,6 +288,4 @@ function setMacSDKRoot() {
     exec('xcrun -sdk macosx --show-sdk-path', { silent: true }).trim()
 }
 
-if (require.main === module) {
-  program.parseAsync(process.argv)
-}
+program.parseAsync(process.argv)

@@ -1,7 +1,14 @@
-'use strict'
+import { join } from 'node:path'
+import { styleText } from 'node:util'
+import ms from 'ms'
 
-const { styleText } = require('node:util')
-const ms = require('ms')
+export const ROOT = join(import.meta.dirname, '..')
+export const ICONS = join(ROOT, 'res', 'icons')
+
+export let logSymbol = null
+export const setLogSymbol = (ls) => {
+  logSymbol = ls
+}
 
 const COLOR = {
   warn: 'yellow',
@@ -27,43 +34,30 @@ const format = (msg, level, prefix) =>
     `${seq.next().value} ${colorize(level, prefix)} ${msg}` :
     `  ${msg}`
 
-const log = (...args) =>
+export const say = (...args) =>
   print('log', ...args)
 
-const error = (...args) =>
+export const error = (...args) =>
   print('error', ...args)
 
-const warn = (...args) =>
+export const warn = (...args) =>
   print('warn', ...args)
 
-const check = (predicate, prefix, msg = 'assertion failed', ...args) => {
-  if (!predicate) bail(prefix, msg, ...args)
+export const check = (predicate, msg = 'assertion failed', ...args) => {
+  if (!predicate) bail(msg, ...args)
 }
 
-const bail = (...args) => {
+export const bail = (...args) => {
   error(...args)
   process.exit(1)
 }
 
-const print = (level = 'log', pre, msg, ...args) => {
-  console[level](format(msg, level, pre), ...args)
+const print = (level = 'log', msg, ...args) => {
+  console[level](format(msg, level, logSymbol), ...args)
 }
 
-const red = (pre, msg, ...args) =>
-  console.log(format(msg, 'red', pre), ...args)
+export const red = (msg, ...args) =>
+  console.log(format(msg, 'red', logSymbol), ...args)
 
-const green = (pre, msg, ...args) =>
-  console.log(format(msg, 'green', pre), ...args)
-
-module.exports = (name) => ({
-  bail,
-  check(predicate, ...args) {
-    check(predicate, name, ...args)
-  },
-
-  say(...args) { log(name, ...args) },
-  warn(...args) { warn(name, ...args) },
-  error(...args) { error(name, ...args) },
-  red(...args) { red(name, ...args) },
-  green(...args) { green(name, ...args) }
-})
+export const green = (msg, ...args) =>
+  console.log(format(msg, 'green', logSymbol), ...args)
