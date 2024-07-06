@@ -153,5 +153,5 @@ const htmlEscape = (str) =>
     .replace(/`/g, '&96;')
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  program.parseAsync(process.argv)
+  await program.parseAsync(process.argv)
 }
