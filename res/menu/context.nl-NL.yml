@@ -356,6 +356,13 @@ nl-NL:
       - label: Naar rechts draaien
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
+    item-transcribe:
+      - label: Transcribe Selected Items
+        id: item-transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-item
+            enabled: false
     item-bulk:
       - label: Selectie samenvoegen
         command: app:merge-item
@@ -403,10 +410,19 @@ nl-NL:
         command: app:open-path
       - label: Fotolink kopiëren
         command: app:copy-photo-link
-      - label: Foto kopiëren naar klembord
-        command: app:copy-photo
-      - label: Foto exporteren…
-        command: app:extract-photo
+      - label: Export Photo
+        id: extract
+        submenu:
+          - label: To File
+            command: app:extract-photo
+          - label: To Clipboard
+            command: app:copy-photo
+      - label: Transcribe Photo
+        id: transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-photo
+            enabled: false
       - label: Foto samenvoegen
         command: app:consolidate-photo
     photo-rotate:
@@ -419,9 +435,6 @@ nl-NL:
     selection:
       - label: Selectie verwijderen
         command: app:delete-selection
-    selection-read-only:
-      - label: Selectie exporteren…
-        command: app:extract-photo
     selection-rotate:
       - label: Naar links draaien
         command: app:rotate-selection-left
@@ -877,6 +890,13 @@ nl-NL:
       - label: Naar rechts draaien
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
+    item-transcribe:
+      - label: Transcribe Selected Items
+        id: item-transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-item
+            enabled: false
     metadata-list:
       - label: Nieuw veld…
         command: app:create-field
@@ -906,10 +926,19 @@ nl-NL:
         command: app:open-path
       - label: Fotolink kopiëren
         command: app:copy-photo-link
-      - label: Foto kopiëren naar klembord
-        command: app:copy-photo
-      - label: Foto exporteren…
-        command: app:extract-photo
+      - label: Export Photo
+        id: extract
+        submenu:
+          - label: To File
+            command: app:extract-photo
+          - label: To Clipboard
+            command: app:copy-photo
+      - label: Transcribe Photo
+        id: transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-photo
+            enabled: false
       - label: Foto samenvoegen
         command: app:consolidate-photo
     photo-rotate:
@@ -922,9 +951,6 @@ nl-NL:
     selection:
       - label: Selectie verwijderen
         command: app:delete-selection
-    selection-read-only:
-      - label: Selectie exporteren…
-        command: app:extract-photo
     selection-rotate:
       - label: Naar links draaien
         command: app:rotate-selection-left
@@ -1349,6 +1375,13 @@ nl-NL:
       - label: Naar rechts draaien
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
+    item-transcribe:
+      - label: Transcribe Selected Items
+        id: item-transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-item
+            enabled: false
     metadata-list:
       - label: Nieuw veld…
         command: app:create-field
@@ -1378,10 +1411,19 @@ nl-NL:
         command: app:open-path
       - label: Fotolink kopiëren
         command: app:copy-photo-link
-      - label: Foto kopiëren naar klembord
-        command: app:copy-photo
-      - label: Foto exporteren…
-        command: app:extract-photo
+      - label: Export Photo
+        id: extract
+        submenu:
+          - label: To File
+            command: app:extract-photo
+          - label: To Clipboard
+            command: app:copy-photo
+      - label: Transcribe Photo
+        id: transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-photo
+            enabled: false
       - label: Foto samenvoegen
         command: app:consolidate-photo
     photo-rotate:
@@ -1394,9 +1436,6 @@ nl-NL:
     selection:
       - label: Selectie verwijderen
         command: app:delete-selection
-    selection-read-only:
-      - label: Selectie exporteren…
-        command: app:extract-photo
     selection-rotate:
       - label: Naar links draaien
         command: app:rotate-selection-left

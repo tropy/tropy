@@ -571,6 +571,11 @@ es:
       duplicate: >-
         {hasProgressBar, select, true {Duplicando foto {progress, number} de
         {total, number} …} other {Duplicando fotos …}}
+      transcribe: |-
+        {hasProgressBar, select,
+          true {Transcribing photo {progress, number} of {total, number} …}
+          other {Transcribing photos …}
+        }
       load: Cargando fotos …
       move: Moviendo fotos …
       order: Ordenando fotos …
@@ -681,3 +686,4 @@ es:
     hooks:
       export: Exportar
       import: Importar
+      transcribe: OCR

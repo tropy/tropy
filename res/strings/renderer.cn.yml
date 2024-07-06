@@ -577,6 +577,11 @@ cn:
           true {Duplicating photo {progress, number} of {total, number} …}
           other {Duplicating photos …}
         }
+      transcribe: |-
+        {hasProgressBar, select,
+          true {Transcribing photo {progress, number} of {total, number} …}
+          other {Transcribing photos …}
+        }
       load: 正在加载图片...
       move: 正在移动图片...
       order: 正在排序图片...
@@ -681,3 +686,4 @@ cn:
     hooks:
       export: 导出
       import: 导入
+      transcribe: OCR

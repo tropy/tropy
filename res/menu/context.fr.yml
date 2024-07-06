@@ -356,6 +356,13 @@ fr:
       - label: Tourner à droite
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
+    item-transcribe:
+      - label: Transcribe Selected Items
+        id: item-transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-item
+            enabled: false
     item-bulk:
       - label: Fusionner les objets sélectionnés
         command: app:merge-item
@@ -403,10 +410,19 @@ fr:
         command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
-        command: app:copy-photo
-      - label: Exporter la photo…
-        command: app:extract-photo
+      - label: Export Photo
+        id: extract
+        submenu:
+          - label: To File
+            command: app:extract-photo
+          - label: To Clipboard
+            command: app:copy-photo
+      - label: Transcribe Photo
+        id: transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-photo
+            enabled: false
       - label: Regrouper les photos
         command: app:consolidate-photo
     photo-rotate:
@@ -419,9 +435,6 @@ fr:
     selection:
       - label: Supprimer la sélection
         command: app:delete-selection
-    selection-read-only:
-      - label: Exporter la sélection …
-        command: app:extract-photo
     selection-rotate:
       - label: Tourner à gauche
         command: app:rotate-selection-left
@@ -877,6 +890,13 @@ fr:
       - label: Tourner à droite
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
+    item-transcribe:
+      - label: Transcribe Selected Items
+        id: item-transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-item
+            enabled: false
     metadata-list:
       - label: Nouveau champ…
         command: app:create-field
@@ -906,10 +926,19 @@ fr:
         command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
-        command: app:copy-photo
-      - label: Exporter la photo…
-        command: app:extract-photo
+      - label: Export Photo
+        id: extract
+        submenu:
+          - label: To File
+            command: app:extract-photo
+          - label: To Clipboard
+            command: app:copy-photo
+      - label: Transcribe Photo
+        id: transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-photo
+            enabled: false
       - label: Regrouper les photos
         command: app:consolidate-photo
     photo-rotate:
@@ -922,9 +951,6 @@ fr:
     selection:
       - label: Supprimer la sélection
         command: app:delete-selection
-    selection-read-only:
-      - label: Exporter la sélection …
-        command: app:extract-photo
     selection-rotate:
       - label: Tourner à gauche
         command: app:rotate-selection-left
@@ -1349,6 +1375,13 @@ fr:
       - label: Tourner à droite
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
+    item-transcribe:
+      - label: Transcribe Selected Items
+        id: item-transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-item
+            enabled: false
     metadata-list:
       - label: Nouveau champ…
         command: app:create-field
@@ -1378,10 +1411,19 @@ fr:
         command: app:open-path
       - label: Copy Photo Link
         command: app:copy-photo-link
-      - label: Copy Photo to Clipboard
-        command: app:copy-photo
-      - label: Exporter la photo…
-        command: app:extract-photo
+      - label: Export Photo
+        id: extract
+        submenu:
+          - label: To File
+            command: app:extract-photo
+          - label: To Clipboard
+            command: app:copy-photo
+      - label: Transcribe Photo
+        id: transcribe
+        submenu:
+          - label: With Tropy
+            command: app:transcribe-photo
+            enabled: false
       - label: Regrouper les photos
         command: app:consolidate-photo
     photo-rotate:
@@ -1394,9 +1436,6 @@ fr:
     selection:
       - label: Supprimer la sélection
         command: app:delete-selection
-    selection-read-only:
-      - label: Exporter la sélection …
-        command: app:extract-photo
     selection-rotate:
       - label: Tourner à gauche
         command: app:rotate-selection-left

@@ -591,6 +591,11 @@ uk:
           true {Duplicating photo {progress, number} of {total, number} …}
           other {Duplicating photos …}
         }
+      transcribe: |-
+        {hasProgressBar, select,
+          true {Transcribing photo {progress, number} of {total, number} …}
+          other {Transcribing photos …}
+        }
       load: Loading photos …
       move: Moving photos …
       order: Sorting photos …
@@ -697,3 +702,4 @@ uk:
     hooks:
       export: Експорт
       import: Імпорт
+      transcribe: OCR

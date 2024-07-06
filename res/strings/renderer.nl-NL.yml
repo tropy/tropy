@@ -606,6 +606,11 @@ nl-NL:
         other {Bezig met dupliceren…}
 
         }
+      transcribe: |-
+        {hasProgressBar, select,
+          true {Transcribing photo {progress, number} of {total, number} …}
+          other {Transcribing photos …}
+        }
       load: Bezig met laden…
       move: Bezig met verplaatsen…
       order: Bezig met sorteren…
@@ -722,3 +727,4 @@ nl-NL:
     hooks:
       export: Exporteren
       import: Importeren
+      transcribe: OCR

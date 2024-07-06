@@ -592,6 +592,11 @@ fr:
         true {Duplication de {progress, number} photos sur {total, number}…}
         other {Duplication des photos…}
         }
+      transcribe: |-
+        {hasProgressBar, select,
+          true {Transcribing photo {progress, number} of {total, number} …}
+          other {Transcribing photos …}
+        }
       load: Chargement des photos…
       move: Déplacement des photos…
       order: Tri des photos en cours…
@@ -702,3 +707,4 @@ fr:
     hooks:
       export: Exporter
       import: Importer
+      transcribe: OCR

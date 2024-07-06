@@ -576,6 +576,11 @@ ja:
         true {{total, number}件中{progress, number}件の写真を複製しています...}
         other {写真を複製しています…}
         }
+      transcribe: |-
+        {hasProgressBar, select,
+          true {Transcribing photo {progress, number} of {total, number} …}
+          other {Transcribing photos …}
+        }
       load: 写真をロード中
       move: 写真を移動中
       order: 写真をソート中
@@ -680,3 +685,4 @@ ja:
     hooks:
       export: エクスポート
       import: インポート
+      transcribe: OCR
