@@ -1,7 +1,14 @@
 import { arch, platform } from 'node:process'
 import parse from 'semver/functions/parse.js'
-import { author, version, name, productName } from '../../package.json'
+import pkg from '../../package.json' with { type: 'json' }
 import { titlecase } from './util.js'
+
+const {
+  author,
+  version,
+  name,
+  productName
+} = pkg
 
 const v = parse(version)
 const isLatest = !(v?.prerelease.length > 0)
