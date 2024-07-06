@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { join } from 'node:path'
 import fs from 'node:fs'
 import process from 'node:process'
