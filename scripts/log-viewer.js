@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 
-'use strict'
-
-const fs = require('fs')
-const pump = require('pump')
-const split = require('split2')
-const { Transform } = require('stream')
-const { inspect, styleText } = require('node:util')
-const ms = require('ms')
+import fs from 'node:fs'
+import process from 'node:process'
+import { Transform } from 'node:stream'
+import { inspect, styleText } from 'node:util'
+import pump from 'pump'
+import split from 'split2'
+import ms from 'ms'
 
 const CWD = new RegExp(process.cwd() + '.')
 
