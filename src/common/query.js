@@ -1,4 +1,4 @@
-import { copy, pluck } from './util'
+import { copy, pluck } from './util.js'
 
 const { assign, entries } = Object
 const { isArray } = Array
