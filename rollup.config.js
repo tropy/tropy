@@ -16,7 +16,6 @@ import nodeResolve from '@rollup/plugin-node-resolve'
 
 import scss from './scripts/rollup-plugin-scss.js'
 import emit from './scripts/rollup-plugin-emit.js'
-import createFile from './scripts/rollup-plugin-create-file.js'
 import reactDnd from './scripts/rollup-plugin-react-dnd.js'
 import sharpRequire from './scripts/rollup-plugin-sharp.js'
 
@@ -139,14 +138,6 @@ export default [
     treeshake: 'safest',
     preserveEntrySignatures: 'allow-extension',
     plugins: [
-      createFile({
-        fileName: 'package.json',
-        source: JSON.stringify({
-          name: 'tropy',
-          private: true,
-          type: 'module'
-        })
-      }),
       emit({
         entries: {
           'views/about': 'src/views/about.js',
