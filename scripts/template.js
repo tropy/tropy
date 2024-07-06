@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
-'use strict'
+import { say, setLogSymbol, warn } from './util.js'
+import fs from 'node:fs'
+import { join } from 'node:path'
+import { program } from 'commander'
 
-const { say, warn } = require('./util')('τ')
-const fs = require('fs')
-const { join } = require('path')
+setLogSymbol('τ')
 
-const HOME = join(__dirname, '..')
+const HOME = join(import.meta.dirname, '..')
 const PLATFORMS = ['linux', 'darwin', 'win32']
 const THEMES = ['light', 'dark']
 
@@ -55,8 +56,8 @@ const html = name => (
 const script = () => (
 `'use strict'
 
-const React = require('react')
-const { render } = require('react-dom')
+import React from 'react'
+import { createRoot } from 'react-dom/client'
 `)
 
 const stylesheet = (platform, theme) => (
@@ -65,51 +66,48 @@ $theme: "${theme}";
 `)
 
 
-if (require.main === module) {
-  const { program } = require('commander')
 
-  program
-    .command('new <names>')
-    .description('create new window template')
-    .action(names => {
-      for (let name of names.split(',')) {
-        create(join(HOME, 'res', 'views', `${name}.html`), html(name))
-        create(join(HOME, 'src', 'views', `${name}.js`), script(name))
+program
+  .command('new <names>')
+  .description('create new window template')
+  .action(names => {
+    for (let name of names.split(',')) {
+      create(join(HOME, 'res', 'views', `${name}.html`), html(name))
+      create(join(HOME, 'src', 'views', `${name}.js`), script(name))
 
-        for (let platform of PLATFORMS) {
-          for (let theme of THEMES) {
-            create(
-              join(
-                HOME,
-                'src',
-                'stylesheets',
-                platform,
-                `${name}-${theme}.scss`),
-              stylesheet(platform, theme))
-          }
+      for (let platform of PLATFORMS) {
+        for (let theme of THEMES) {
+          create(
+            join(
+              HOME,
+              'src',
+              'stylesheets',
+              platform,
+              `${name}-${theme}.scss`),
+            stylesheet(platform, theme))
         }
       }
-    })
-  program
-    .command('rm <names>')
-    .description('delete window template')
-    .action(names => {
-      for (let name of names.split(',')) {
-        rm(join(HOME, 'res', 'views', `${name}.html`))
-        rm(join(HOME, 'src', 'views', `${name}.js`))
+    }
+  })
+program
+  .command('rm <names>')
+  .description('delete window template')
+  .action(names => {
+    for (let name of names.split(',')) {
+      rm(join(HOME, 'res', 'views', `${name}.html`))
+      rm(join(HOME, 'src', 'views', `${name}.js`))
 
-        for (let platform of PLATFORMS) {
-          for (let theme of THEMES) {
-            rm(
-              join(HOME,
-                'src',
-                'stylesheets',
-                platform,
-                `${name}-${theme}.scss`))
-          }
+      for (let platform of PLATFORMS) {
+        for (let theme of THEMES) {
+          rm(
+            join(HOME,
+              'src',
+              'stylesheets',
+              platform,
+              `${name}-${theme}.scss`))
         }
       }
-    })
+    }
+  })
 
-  program.parse(process.argv)
-}
+program.parse(process.argv)
