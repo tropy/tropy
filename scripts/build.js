@@ -1,28 +1,35 @@
 #!/usr/bin/env node
-'use strict'
 
-const { say, error } = require('./util')('Σ')
-const legal = require('./legal')
-const {
-  copyFile, mkdir, readdir, readFile, unlink, writeFile
-} = require('fs').promises
-const { program } = require('commander')
-const { packager } = require('@electron/packager')
-const { minimatch } = require('minimatch')
-const { basename, extname, join, relative } = require('path')
-const { homedir } = require('node:os')
+import {
+  copyFile,
+  mkdir,
+  readdir,
+  readFile,
+  unlink,
+  writeFile
+} from 'node:fs/promises'
 
-const {
+import { homedir } from 'node:os'
+import { basename, extname, join, relative } from 'node:path'
+import process from 'node:process'
+import { fileURLToPath } from 'node:url'
+import { program } from 'commander'
+import { packager } from '@electron/packager'
+import { minimatch } from 'minimatch'
+import { ROOT, ICONS, error, say, setLogSymbol } from './util.js'
+import * as legal from './legal.js'
+
+import {
   appId,
-  ROOT,
-  ICONS,
   author,
   channel,
   exe,
   name,
   version,
   qualified
-} = require('./metadata')
+} from '../src/common/release.js'
+
+setLogSymbol('Σ')
 
 const ARCH =
   process.env.npm_config_target_arch ||
@@ -130,7 +137,7 @@ program
   })
 
 
-function configure({ arch, platform, out = join(ROOT, 'dist') }) {
+export function configure({ arch, platform, out = join(ROOT, 'dist') }) {
   // NB: the patterns must include (sub-)directories!
   const INCLUDE = [
     '/db{,/{migrate,schema}{,/**/*}}',
@@ -224,7 +231,7 @@ function configure({ arch, platform, out = join(ROOT, 'dist') }) {
 }
 
 
-async function addExtraMetadata(buildPath, v, platform, arch, done) {
+async function addExtraMetadata(buildPath, v, platform, arch) {
   say('tagging package.json for release')
   let pkg = JSON.parse(await readFile(join(buildPath, 'package.json')))
 
@@ -240,11 +247,9 @@ async function addExtraMetadata(buildPath, v, platform, arch, done) {
   }
 
   await writeFile(join(buildPath, 'package.json'), JSON.stringify(pkg, null, 2))
-
-  done()
 }
 
-async function addLicense(buildPath, v, platform, arch, done) {
+async function addLicense(buildPath, v, platform, arch) {
   say('compiling LICENSE and third-party notices')
 
   await copyFile(
@@ -254,8 +259,6 @@ async function addLicense(buildPath, v, platform, arch, done) {
   let deps = await legal.loadDependencies()
   let licenses = legal.compileThirdPartyNotices(deps, { format: 'txt' })
   await writeFile(join(buildPath, 'LICENSE.third-party.txt'), licenses)
-
-  done()
 }
 
 async function copyLicense(dest) {
@@ -337,7 +340,7 @@ async function copyIcons(dst, theme = 'hicolor') {
   }
 }
 
-function desktop({
+export function desktop({
   icon = qualified.appId,
   mimetypes = [
     'application/vnd.tropy.tropy',
@@ -359,11 +362,6 @@ MimeType=${mimetypes.join(';')};
 Categories=Graphics;Viewer;Science;`
 }
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   program.parseAsync(process.argv)
-}
-
-module.exports = {
-  configure,
-  desktop
 }

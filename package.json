@@ -26,7 +26,7 @@
     "rollup": "rollup -c",
     "db": "node scripts/db",
     "prebuild": "npm run clean && npm run rollup",
-    "build": "node scripts/build",
+    "build": "node scripts/build --disable-warning=ExperimentalWarning",
     "pack": "node scripts/pack --silent",
     "devtools": "electron scripts/devtools --data tmp",
     "legal": "node scripts/legal",
