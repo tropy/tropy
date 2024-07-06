@@ -1,4 +1,4 @@
-import { MIME } from '../constants'
+import MIME from '../constants/mime.js'
 
 export function magic(buffer, ext = '') {
   if (buffer != null) {
