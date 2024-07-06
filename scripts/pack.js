@@ -1,11 +1,24 @@
 #!/usr/bin/env node
-'use strict'
 
-const { bail, check, say } = require('./util')('λ')
-const { join, relative } = require('path')
-const { createHash } = require('crypto')
-const { readFile, writeFile } = require('fs/promises')
-const { program } = require('commander')
+import { ROOT, ICONS, bail, check, say, setLogSymbol } from './util.js'
+import { join, relative } from 'node:path'
+import { createHash } from 'node:crypto'
+import { readFile, writeFile } from 'node:fs/promises'
+import process from 'node:process'
+import { fileURLToPath } from 'node:url'
+import { program } from 'commander'
+import shelljs from 'shelljs'
+
+import {
+  author,
+  channel,
+  qualified,
+  name,
+  product,
+  version
+} from '../src/common/release.js'
+
+setLogSymbol('λ')
 
 const ARCH =
   process.env.npm_config_target_arch ||
@@ -28,19 +41,7 @@ const {
   rm,
   test,
   which
-} = require('shelljs')
-
-const {
-  ROOT,
-  ICONS,
-  author,
-  channel,
-  qualified,
-  name,
-  product,
-  version
-} = require('./metadata')
-
+} = shelljs
 
 async function integrity(path, algo = 'sha256') {
   let hash = createHash(algo)
@@ -83,8 +84,8 @@ program
       say(`packing for ${opts.platform} ${opts.arch}`)
 
       for (let type of args) {
-        check(type in module.exports, `unknown package type: ${type}`)
-        let assets = await module.exports[type](opts)
+        check(type in exports, `unknown package type: ${type}`)
+        let assets = await exports[type](opts)
 
         for (let asset of assets) {
           let algo = (type === 'squirrel') ? 'sha1' : 'sha256'
@@ -99,7 +100,7 @@ program
   })
 
 
-module.exports = {
+const exports = {
 
   bz2({ app, arch, out }) {
     let output = join(out, `${name}-${version}-${arch}.tar.bz2`)
@@ -175,9 +176,9 @@ module.exports = {
     return [output]
   },
 
-  dmg({ app, arch, out, silent }) {
+  async dmg({ app, arch, out, silent }) {
     check(process.platform === 'darwin', 'must be run on macOS')
-    let appdmg = require('appdmg')
+    let appdmg = (await import('appdmg')).default
 
     let output = join(
       out,
@@ -294,6 +295,6 @@ module.exports = {
   }
 }
 
-if (require.main === module) {
-  program.parseAsync(process.argv)
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  await program.parseAsync(process.argv)
 }
