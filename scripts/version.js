@@ -1,6 +1,6 @@
-const process = require('node:process')
-const semver = require('semver')
-const shx = require('shelljs')
+import process from 'node:process'
+import semver from 'semver'
+import shx from 'shelljs'
 
 const VERSION = process.env.npm_package_version
 
