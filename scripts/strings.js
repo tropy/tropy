@@ -1,19 +1,22 @@
 #!/usr/bin/env node
-'use strict'
 
-const { bail, say, warn } = require('./util')('μ')
-const { join } = require('path')
-const yaml = require('js-yaml')
-const { program } = require('commander')
+import {
+  readdirSync as ls,
+  readFileSync as read,
+  writeFileSync as write,
+  unlinkSync as rm
+} from 'node:fs'
 
-const {
-  readdirSync: ls,
-  readFileSync: read,
-  writeFileSync: write,
-  unlinkSync: rm
-} = require('fs')
+import { join } from 'node:path'
+import process from 'node:process'
+import yaml from 'js-yaml'
+import { program } from 'commander'
 
-const HOME = join(__dirname, '..')
+import { bail, error, say, setLogSymbol, warn } from './util.js'
+
+setLogSymbol('μ')
+
+const HOME = join(import.meta.dirname, '..')
 const MENU = join(HOME, 'res', 'menu')
 const STRINGS = join(HOME, 'res', 'strings')
 
@@ -86,7 +89,7 @@ program
       bail('missing Transifex API token')
     }
 
-    let { transifexApi: tx } = loadTransifexApi()
+    let { transifexApi: tx } = await import('@transifex/api')
     tx.setup({ auth: opts.token })
 
     let cds = await tx.Organization.get({ slug: 'cds' })
@@ -97,40 +100,38 @@ program
       let language = await tx.Language.get({ code })
 
       for (let slug of opts.res) {
-        let resource = await tx.Resource.get({ project, slug })
-        let url = await tx.ResourceTranslationsAsyncDownload.download({
-          resource,
-          language
-        })
+        try {
+          if (slug === 'main') continue
 
-        let res = await fetch(url)
+          let resource = await tx.Resource.get({ project, slug })
+          let url = await tx.ResourceTranslationsAsyncDownload.download({
+            resource,
+            language
+          })
 
-        if (res.status !== 200) {
-          warn(`failed to fetch ${slug} ${code}: ${res.statusText}`)
-          continue
+          let res = await fetch(url)
+
+          if (res.status !== 200) {
+            warn(`failed to fetch ${slug} ${code}: ${res.statusText}`)
+            continue
+          }
+
+          let tag = code
+            .replace('zh_CN', 'cn')
+            .replace('_', '-')
+
+          let data = (await res.text()).replace(code, tag)
+          write(join(home, `for_use_tropy_${slug}_${tag}.yml`), data)
+
+          say(`fetched ${code} ${slug}`)
+        } catch (e) {
+          error(`failed fetching ${code} ${slug}: ${e.message}`)
         }
-
-        let tag = code
-          .replace('zh_CN', 'cn')
-          .replace('_', '-')
-
-        let data = (await res.text()).replace(code, tag)
-        write(join(home, `for_use_tropy_${slug}_${tag}.yml`), data)
-
-        say(`fetched ${code} ${slug}`)
       }
     }
   })
 
 
-
-const loadTransifexApi = () => {
-  try {
-    return require('@transifex/api')
-  } catch {
-    bail('missing @transifex/api')
-  }
-}
 
 const load = (file) =>
   yaml.load(read(file))
@@ -169,11 +170,19 @@ const extract = (menu, prefix = null, into = {}) => {
 }
 
 const set = (src, path, value) => {
-  let parts = path.split('.')
-  let obj = src
-  let i = 0
-  while (i < parts.length - 1) obj = obj[parts[i++]]
-  obj[parts[i]] = value
+  try {
+    let parts = path.split('.')
+    let obj = src
+    let i = 0
+
+    while (i < parts.length - 1)
+      obj = obj[parts[i++]]
+
+    obj[parts[i]] = value
+
+  } catch (e) {
+    error(`failed to set ${path} ${value}: ${e.message}`)
+  }
 }
 
 const translate = (menu, labels) => {
@@ -209,6 +218,4 @@ const merge = (a, b, into = {}) => {
   return into
 }
 
-if (require.main === module) {
-  program.parseAsync(process.argv)
-}
+await program.parseAsync(process.argv)
