@@ -1,4 +1,4 @@
-import MIME from './mime'
+import MIME from './mime.js'
 
 const SUPPORTED = {
   [MIME.AVIF]: true,
