@@ -57,21 +57,11 @@ export default [
 
   {
     files: [
-      'scripts/*.js',
       'test/**/*.cjs'
     ],
     languageOptions: {
       globals: {
         ...globals.node
-      }
-    }
-  },
-  {
-    files: ['scripts/db.js'],
-    languageOptions: {
-      globals: {
-        ...globals.shelljs,
-        target: false
       }
     }
   },
