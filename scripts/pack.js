@@ -118,7 +118,7 @@ const exports = {
     let output = join(out, `${product}-${version}-x86_64.AppImage`)
     let AIK = 'https://github.com/AppImage/AppImageKit/releases/download/continuous'
     let AppDir = join(out, `${product}-${version}.AppDir`)
-    let appimagetool = join(__dirname, 'appimagetool')
+    let appimagetool = join(import.meta.dirname, 'appimagetool')
 
     if (!test('-f', appimagetool)) {
       check(which('curl'), 'missing dependency: curl')
@@ -244,7 +244,7 @@ const exports = {
   },
 
   async squirrel({ app, out, arch, sign }) {
-    let { createWindowsInstaller } = require('electron-winstaller')
+    let { createWindowsInstaller } = await import('electron-winstaller')
     let setupExe = `setup-${name}-${version}-${arch}.exe`
     let windowsSign
 

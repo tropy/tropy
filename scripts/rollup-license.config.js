@@ -7,7 +7,7 @@ const addLicensePlugin = (opts, type) => (
     thirdParty: {
       includePrivate: true,
       output: {
-        file: join(__dirname, `licenses.${type}.json`),
+        file: join(import.meta.dirname, `licenses.${type}.json`),
         template: JSON.stringify
       }
     }
