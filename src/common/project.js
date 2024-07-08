@@ -1,4 +1,3 @@
-import { shell } from 'electron'
 import assert from 'node:assert'
 import { existsSync } from 'node:fs'
 import { chmod, cp, stat, mkdir } from 'node:fs/promises'
@@ -78,7 +77,7 @@ async function checkProjectPath(path, overwrite = false) {
       throw new Error(`project file exists: "${path}"`)
 
     warn(`trashing old project previously at "${path}"`)
-    await shell.trashItem(path)
+    await moveToTrash(path)
   }
 }
 
@@ -479,4 +478,11 @@ export async function endProjectAccess(db, id, prune = false) {
         )`
     )
   }
+}
+
+// NB delaying the electron import here on purpose
+// so that we can load the utilities from Node.js scripts
+async function moveToTrash(path) {
+  const { shell } = await import('electron')
+  await shell.trashItem(path)
 }
