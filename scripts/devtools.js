@@ -1,67 +1,73 @@
-'use strict'
+import { join, resolve } from 'node:path'
+import { unlink } from 'node:fs/promises'
+import { app, net, session } from 'electron'
+import { program } from 'commander'
+import unzip from 'unzip-crx-3'
+import { check, error, say, setLogSymbol } from './util.js'
 
-const { join, resolve } = require('path')
-const { unlink } = require('fs/promises')
-const { app, net, session } = require('electron')
-const { check, error, say } = require('./util')('δ')
-const { argv } = require('yargs')
-const unzip = require('unzip-crx-3')
-
-const {
-  existsSync: exists,
-  mkdirSync: mkdir,
-  readFileSync: read,
+import {
+  existsSync as exists,
+  mkdirSync as mkdir,
+  readFileSync as read,
   createWriteStream
-} = require('fs')
+} from 'node:fs'
+
+setLogSymbol('δ')
 
 const REACT_DEVTOOLS = 'fmkadmapgofadopljbjfkapdkoienihi'
 const REDUX_DEVTOOLS = 'lmhkpmbekcpmknklioeibfkpmmfibljd'
 
-let data
+program
+  .name('tropy-devtools')
+  .option('-D, --data <string>', 'path to user data', 'tmp')
 
-if (argv.data) {
-  check(exists(argv.data),
-    `user data directory not found: ${argv.data}`)
+setUserData()
 
-  data = argv.data
+program
+  .command('download')
+  .action(async (opts) => {
+    await download(REACT_DEVTOOLS)
+    await download(REDUX_DEVTOOLS)
+  })
+
+program
+  .command('install')
+  .action(async (opts) => {
+    await install(await download(REACT_DEVTOOLS))
+    await install(await download(REDUX_DEVTOOLS))
+    list()
+  })
+
+program
+  .command('list')
+  .action(async (opts) => {
+    list()
+  })
+
+app
+  .whenReady()
+  .then(() => program.parseAsync())
+  .then(() => app.exit(0))
+
+
+function setUserData() {
+  program.parse()
+  let { data } = program.opts()
+  check(exists(data),
+    `user data directory not found: ${data}`)
+
   app.setPath('userData', resolve(data, 'electron'))
-} else {
-  data = app.getPath('userData')
 }
 
-app.once('ready', async () => {
-  try {
-    switch (argv._[0]) {
-      case 'download':
-        await download(REACT_DEVTOOLS)
-        await download(REDUX_DEVTOOLS)
-        break
-      case undefined:
-      case 'i':
-      case 'install':
-        // install({ name: 'devtron', path: require('devtron').path })
-        await install(await download(REACT_DEVTOOLS))
-        await install(await download(REDUX_DEVTOOLS))
+function list() {
+  session
+    .defaultSession
+    .getAllExtensions()
+    .forEach(e => say(`${e.name} ${e.version}`))
+}
 
-        session
-          .defaultSession
-          .getAllExtensions()
-          .forEach(e => say(`${e.name} ${e.version}`))
-
-        break
-      default:
-        throw new Error(`unknown command: "${argv[0]}"`)
-    }
-  } catch (e) {
-    error(e.message)
-    console.log(e.stack)
-  }
-
-  app.exit(0)
-})
-
-const download = async (id) => {
-  let root = resolve(data, 'extensions')
+async function download(id) {
+  let root = resolve(app.getPath('userData'), 'extensions')
   let path = join(root, id)
   let url = CRX(id)
   let crx = `${path}.crx`
@@ -95,7 +101,7 @@ const save = (url, to) =>
       .end()
   })
 
-const install = ({ name, path }) => {
+function install({ name, path }) {
   say(`installing ${name}...`)
   return session.defaultSession.loadExtension(path, { allowFileAccess: true })
 }
