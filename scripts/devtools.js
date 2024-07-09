@@ -3,7 +3,7 @@ import { unlink } from 'node:fs/promises'
 import { app, net, session } from 'electron'
 import { program } from 'commander'
 import unzip from 'unzip-crx-3'
-import { check, error, say, setLogSymbol } from './util.js'
+import { check, say, setLogSymbol } from './util.js'
 
 import {
   existsSync as exists,
@@ -25,14 +25,14 @@ setUserData()
 
 program
   .command('download')
-  .action(async (opts) => {
+  .action(async () => {
     await download(REACT_DEVTOOLS)
     await download(REDUX_DEVTOOLS)
   })
 
 program
   .command('install')
-  .action(async (opts) => {
+  .action(async () => {
     await install(await download(REACT_DEVTOOLS))
     await install(await download(REDUX_DEVTOOLS))
     list()
@@ -40,7 +40,7 @@ program
 
 program
   .command('list')
-  .action(async (opts) => {
+  .action(async () => {
     list()
   })
 
