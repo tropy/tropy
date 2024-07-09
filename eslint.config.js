@@ -31,6 +31,10 @@ export default [
 
   {
     ignores: [
+      // Enable once import contraints are supported
+      'scripts/db.js',
+      'src/common/release.js',
+
       'lib/*',
       'tmp/*'
     ]
