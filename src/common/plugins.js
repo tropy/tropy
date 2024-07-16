@@ -182,24 +182,12 @@ export class Plugins extends EventEmitter {
   }
 
   async import(name) {
-    let res
+    let spec = this.spec[name]
 
-    try {
-      let mod = join(this.root, name)
+    if (!spec)
+      throw Error(`plugin ${name} not found`)
 
-      res = await import(mod)
-      res.source = 'local'
-
-    } catch (e) {
-      if (e.code !== 'ERR_MODULE_NOT_FOUND')
-        throw e
-
-      let mod = join(this.root, 'node_modules', name)
-      res = await import(mod)
-      res.source = 'npm'
-    }
-
-    return res
+    return await import(spec.main)
   }
 
   reset() {
@@ -221,18 +209,21 @@ export class Plugins extends EventEmitter {
     for (let name of plugins) {
       try {
         let pkg
+        let path
 
         try {
-          pkg = await load(join(this.root, name, 'package.json'))
+          path = join(this.root, name)
+          pkg = await load(join(path, 'package.json'))
         } catch (e) {
           if (e.code !== 'ENOENT')
             throw e
-          pkg = await load(
-            join(this.root, 'node_modules', name, 'package.json'))
+          path = join(this.root, 'node_modules', name)
+          pkg = await load(join(path, 'package.json'))
         }
 
         spec[name] = {
           name,
+          main: join(path, pkg.main),
           description: pkg.description,
           version: pkg.version,
           options: pkg.options,
