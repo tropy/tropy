@@ -217,7 +217,6 @@ export class Window extends EventEmitter {
         this.toggle('menu', state)
       })
       .on('plugins-reload', async () => {
-        this.plugins.clearModuleCache()
         await this.plugins.reload()
         await this.plugins.create()
       })
