@@ -1,6 +1,6 @@
-import { exec } from '../common/spawn'
-import { read } from './mac-defaults'
-import { warn } from '../common/log'
+import { exec } from '../common/spawn.js'
+import { read } from './mac-defaults.js'
+import { warn } from '../common/log.js'
 
 const DARWIN_PAPER = {
   'iso-a3': 'A3',

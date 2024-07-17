@@ -1,5 +1,5 @@
-import { METADATA, EDIT } from '../constants'
-import { array } from '../common/util'
+import { METADATA, EDIT } from '../constants/index.js'
+import { array } from '../common/util.js'
 
 export default {
   new(payload, meta = {}) {

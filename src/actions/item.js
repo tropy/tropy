@@ -1,5 +1,5 @@
-import { ITEM } from '../constants'
-import { array, get } from '../common/util'
+import { ITEM } from '../constants/index.js'
+import { array, get } from '../common/util.js'
 
 export default {
   create(payload, meta) {

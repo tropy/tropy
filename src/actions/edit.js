@@ -1,4 +1,4 @@
-import { EDIT } from '../constants'
+import { EDIT } from '../constants/index.js'
 
 export default {
   cancel(payload, meta) {

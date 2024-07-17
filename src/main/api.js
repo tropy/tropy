@@ -1,4 +1,4 @@
-import { info, logger } from '../common/log'
+import { info, logger } from '../common/log.js'
 
 export class Server {
   constructor(app) {

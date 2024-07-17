@@ -1,5 +1,5 @@
-import { PHOTO } from '../constants'
-import { array } from '../common/util'
+import { PHOTO } from '../constants/index.js'
+import { array } from '../common/util.js'
 
 function update(payload, meta = {}) {
   return {

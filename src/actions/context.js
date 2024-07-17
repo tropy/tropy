@@ -1,4 +1,4 @@
-import { CONTEXT } from '../constants'
+import { CONTEXT } from '../constants/index.js'
 
 export default {
   show(event, scope = 'default', target, meta) {

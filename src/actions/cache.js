@@ -1,4 +1,4 @@
-import { CACHE } from '../constants'
+import { CACHE } from '../constants/index.js'
 
 export default {
   prune(payload, meta = {}) {

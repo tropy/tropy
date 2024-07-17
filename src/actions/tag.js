@@ -1,5 +1,5 @@
-import { TAG, EDIT } from '../constants'
-import { array } from '../common/util'
+import { TAG, EDIT } from '../constants/index.js'
+import { array } from '../common/util.js'
 
 export default {
   new(payload, meta) {
