@@ -1,5 +1,5 @@
-import { ONTOLOGY } from '../constants'
-import { array } from '../common/util'
+import { ONTOLOGY } from '../constants/index.js'
+import { array } from '../common/util.js'
 
 const { PROPS, CLASS, VOCAB, TEMPLATE, LABEL, TYPE } = ONTOLOGY
 

@@ -1,5 +1,5 @@
-import { SELECTION } from '../constants'
-import { array } from '../common/util'
+import { SELECTION } from '../constants/index.js'
+import { array } from '../common/util.js'
 
 export default {
   create(payload, meta) {

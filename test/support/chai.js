@@ -1,4 +1,4 @@
-import { string } from './matchers'
+import { string } from './matchers.js'
 import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'

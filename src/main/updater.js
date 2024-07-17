@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events'
 import { app, autoUpdater } from 'electron'
-import { feed } from '../common/release'
-import { linux, win32 } from '../common/os'
-import { error, info } from '../common/log'
+import { feed } from '../common/release.js'
+import { linux, win32 } from '../common/os.js'
+import { error, info } from '../common/log.js'
 
 const MIN = 1000 * 60
 

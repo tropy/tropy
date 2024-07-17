@@ -1,6 +1,6 @@
 import assert from 'assert'
 import electron from 'electron'
-import { warn } from '../common/log'
+import { warn } from '../common/log.js'
 
 const byTime = (a, b) =>
   (a.time < b.time) ? -1 : (a.time > b.time) ? 1 :

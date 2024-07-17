@@ -1,4 +1,4 @@
-import { PROJECT } from '../constants'
+import { PROJECT } from '../constants/index.js'
 
 
 export default {

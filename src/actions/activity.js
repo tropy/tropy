@@ -1,5 +1,5 @@
-import { ACTIVITY } from '../constants'
-import { pick } from '../common/util'
+import { ACTIVITY } from '../constants/index.js'
+import { pick } from '../common/util.js'
 
 export default {
   cancel(id, meta) {

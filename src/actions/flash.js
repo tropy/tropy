@@ -1,4 +1,4 @@
-import { FLASH } from '../constants'
+import { FLASH } from '../constants/index.js'
 
 export default {
   show(payload, meta = {}) {

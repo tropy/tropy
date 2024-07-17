@@ -1,4 +1,4 @@
-import { SETTINGS } from '../constants'
+import { SETTINGS } from '../constants/index.js'
 
 export default {
   close(payload, meta = {}) {

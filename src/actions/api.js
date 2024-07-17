@@ -1,5 +1,5 @@
-import { API, ITEM, METADATA, TAG } from '../constants'
-import { array } from '../common/util'
+import { API, ITEM, METADATA, TAG } from '../constants/index.js'
+import { array } from '../common/util.js'
 
 export default {
   import({ files, ...payload }, meta) {
