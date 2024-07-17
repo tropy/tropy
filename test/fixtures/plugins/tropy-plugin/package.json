@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Minimal Tropy plugin",
   "main": "index.js",
+  "type": "module",
   "hooks": {
     "export": false,
     "sum": true
