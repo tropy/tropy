@@ -70,7 +70,7 @@
     "chai-dom": "^1.8.2",
     "detect-libc": "^2.0.1",
     "electron": "^31.0.1",
-    "electron-mocha": "^12.0.0",
+    "electron-mocha": "^13.0.0",
     "electron-winstaller": "^5.0.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.3",
