@@ -1,4 +1,4 @@
-import * as css from '../src/css'
+import * as css from '../src/css.js'
 
 describe('css', () => {
   describe('cursor', () => {

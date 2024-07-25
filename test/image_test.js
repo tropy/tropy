@@ -1,4 +1,4 @@
-import { Image } from '../src/image'
+import { Image } from '../src/image/index.js'
 
 describe('Image', () => {
   describe('given an image', () => {

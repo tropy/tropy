@@ -1,7 +1,7 @@
-import { debug, warn } from '../common/log'
+import { debug, warn } from '../common/log.js'
 import parse from '@inukshuk/exif'
-import { blank } from '../common/util'
-import { text, date } from '../value'
+import { blank } from '../common/util.js'
+import { text, date } from '../value.js'
 
 const DEFAULTS = {
   strict: false,
