@@ -1,8 +1,8 @@
-import { $, $$, parse } from '../dom'
-import { debug, warn } from '../common/log'
-import { blank } from '../common/util'
-import { text, date } from '../value'
-import { xml } from '../ontology'
+import { $, $$, parse } from '../dom.js'
+import { debug, warn } from '../common/log.js'
+import { blank } from '../common/util.js'
+import { text, date } from '../value.js'
+import { xml } from '../ontology/ns.js'
 
 const DATES = /(^d|D)ate(\b|[A-Z])/
 

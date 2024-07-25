@@ -1,4 +1,4 @@
-import * as dom from '../src/dom'
+import * as dom from '../src/dom.js'
 
 describe('dom', () => {
   describe('.css', () => {

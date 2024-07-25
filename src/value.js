@@ -1,4 +1,4 @@
-import { TYPE } from './constants'
+import { TYPE } from './constants/index.js'
 
 export function date(input) {
   return { text: input, type: TYPE.DATE }

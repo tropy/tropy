@@ -1,13 +1,13 @@
 import { rdjpgcom } from 'rdjpgcom'
-import { Asset } from '../asset'
-import { exif } from './exif'
-import { xmp } from './xmp'
-import { sharp, init } from './sharp'
-import { debug, warn } from '../common/log'
-import { pick, restrict } from '../common/util'
-import { rgb } from '../css'
-import { IMAGE, MIME } from '../constants'
-import { exif as exifns } from '../ontology'
+import { Asset } from '../asset/index.js'
+import { exif } from './exif.js'
+import { xmp } from './xmp.js'
+import { sharp, init } from './sharp.js'
+import { debug, warn } from '../common/log.js'
+import { pick, restrict } from '../common/util.js'
+import { rgb } from '../css.js'
+import { IMAGE, MIME } from '../constants/index.js'
+import { exif as exifns } from '../ontology/ns.js'
 
 const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
 

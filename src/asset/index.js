@@ -1,3 +1,3 @@
-export * from './asset'
-export * from './magic'
-export * from './store'
+export * from './asset.js'
+export * from './magic.js'
+export * from './store.js'
