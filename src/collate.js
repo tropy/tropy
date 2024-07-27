@@ -1,4 +1,4 @@
-import ARGS from './args'
+import ARGS from './args.js'
 
 function sort(locale = ARGS.locale) {
   if (!(locale in sort)) {

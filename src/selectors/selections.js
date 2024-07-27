@@ -1,7 +1,7 @@
 import { createSelector as memo } from 'reselect'
 import { seq, compose, cat, map, keep } from 'transducers.js'
-import { getVisiblePhotos } from './photos'
-import { pluck } from '../common/util'
+import { getVisiblePhotos } from './photos.js'
+import { pluck } from '../common/util.js'
 
 const NOTHING = []
 const getSelections = ({ selections }) => selections

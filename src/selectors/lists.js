@@ -1,5 +1,5 @@
 import { createSelector as memo } from 'reselect'
-import { get } from '../common/util'
+import { get } from '../common/util.js'
 
 function *flatten(children, lists, expand) {
   for (let id of children) {

@@ -1,4 +1,4 @@
-import { blank } from '../common/util'
+import { blank } from '../common/util.js'
 
 const strip = (id, vocab) =>
   blank(vocab) ?
