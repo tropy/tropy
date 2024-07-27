@@ -1,4 +1,4 @@
-import { ITEM, PROJECT, LIST, METADATA } from '../constants'
+import { ITEM, PROJECT, LIST, METADATA } from '../constants/index.js'
 import { into, map } from 'transducers.js'
 
 import {
@@ -10,7 +10,7 @@ import {
   nested,
   bulk,
   touch
-} from './util'
+} from './util.js'
 
 
 // eslint-disable-next-line complexity

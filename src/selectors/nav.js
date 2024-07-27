@@ -1,11 +1,11 @@
 import { createSelector as memo } from 'reselect'
-import { NAV, TYPE } from '../constants'
-import { dc, expand } from '../ontology'
+import { NAV, TYPE } from '../constants/index.js'
+import { dc, expand } from '../ontology/index.js'
 
 import {
   getItemTemplateProperties,
   getPropertyList
-} from './ontology'
+} from './ontology.js'
 
 const DEFAULT_SORT = { column: dc.title, asc: true }
 const DEFAULT_LIST_SORT = { column: 'added', asc: true }

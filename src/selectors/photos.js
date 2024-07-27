@@ -1,7 +1,7 @@
 import { createSelector as memo } from 'reselect'
 import { seq, compose, filter, into, map, cat, keep } from 'transducers.js'
-import { getSelectedItems } from './items'
-import { blank, pluck } from '../common/util'
+import { getSelectedItems } from './items.js'
+import { blank, pluck } from '../common/util.js'
 
 
 const withErrors = ([, photo]) =>

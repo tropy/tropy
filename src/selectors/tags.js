@@ -1,7 +1,7 @@
 import { createSelector as memo } from 'reselect'
-import { getSelectedItems } from './items'
+import { getSelectedItems } from './items.js'
 import { seq, compose, filter, map, cat, keep } from 'transducers.js'
-import { by, equals } from '../collate'
+import { by, equals } from '../collate.js'
 
 const byName = by('name')
 const getTags = ({ tags }) => tags

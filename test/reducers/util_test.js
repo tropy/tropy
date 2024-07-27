@@ -1,4 +1,4 @@
-import { nested } from '../../src/reducers/util'
+import { nested } from '../../src/reducers/util.js'
 describe('Reducer Helpers', () => {
 
   describe('nested', () => {

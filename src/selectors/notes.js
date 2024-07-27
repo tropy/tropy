@@ -1,7 +1,7 @@
 import { createSelector as memo } from 'reselect'
 import { seq, compose, cat, map, keep } from 'transducers.js'
-import { getVisiblePhotos } from './photos'
-import { getVisibleSelections } from './selections'
+import { getVisiblePhotos } from './photos.js'
+import { getVisibleSelections } from './selections.js'
 
 const getNotes = ({ notes }) => notes
 const getSelectedNoteId = ({ nav }) => nav.note

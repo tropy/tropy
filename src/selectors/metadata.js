@@ -1,8 +1,8 @@
 import { createSelector as memo } from 'reselect'
-import { pluck } from './util'
-import { own } from '../common/util'
-import { equal } from '../value'
-import { compare } from '../collate'
+import { pluck } from './util.js'
+import { own } from '../common/util.js'
+import { equal } from '../value.js'
+import { compare } from '../collate.js'
 
 import {
   cat,
@@ -19,7 +19,7 @@ import {
   getActiveItemTemplate,
   getActivePhotoTemplate,
   getActiveSelectionTemplate
-} from './ontology'
+} from './ontology.js'
 
 const EMPTY = []
 

@@ -1,4 +1,4 @@
-import { fromHTML } from '../../src/editor/serialize'
+import { fromHTML } from '../../src/editor/serialize.js'
 
 describe('editor serialize utils', () => {
   describe('fromHTML', () => {

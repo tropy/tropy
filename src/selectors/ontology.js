@@ -1,10 +1,10 @@
 import { createSelector as memo } from 'reselect'
-import { by } from '../collate'
+import { by } from '../collate.js'
 import { cat, compose, filter, into, map } from 'transducers.js'
-import { blank, get, homogenize } from '../common/util'
-import { expand, tropy } from '../ontology'
-import { ITEM, PHOTO, SELECTION } from '../constants'
-import { value } from '../value'
+import { blank, get, homogenize } from '../common/util.js'
+import { expand, tropy } from '../ontology/index.js'
+import { ITEM, PHOTO, SELECTION } from '../constants/index.js'
+import { value } from '../value.js'
 
 const getResourceList =
   (res, vocab) =>

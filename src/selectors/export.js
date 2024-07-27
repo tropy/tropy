@@ -1,8 +1,8 @@
-import { ctx, props as properties } from '../common/export'
-import { xsd } from '../ontology'
-import { version } from '../common/release'
-import { compact, blank, URI, get, pick } from '../common/util'
-import { serialize } from '../editor/serialize'
+import { ctx, props as properties } from '../common/export.js'
+import { xsd } from '../ontology/ns.js'
+import { version } from '../common/release.js'
+import { compact, blank, URI, get, pick } from '../common/util.js'
+import { serialize } from '../editor/serialize.js'
 
 const RESERVED = Object.fromEntries(properties.all.map(prop => ([prop, true])))
 

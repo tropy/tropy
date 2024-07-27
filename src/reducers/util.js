@@ -1,4 +1,4 @@
-import { array, omit, splice } from '../common/util'
+import { array, omit, splice } from '../common/util.js'
 import { into, map } from 'transducers.js'
 
 export function load(state, payload, meta, error) {

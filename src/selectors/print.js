@@ -1,6 +1,6 @@
 import { createSelector as memo } from 'reselect'
-import { getMetadataFields } from './metadata'
-import { serialize } from '../editor'
+import { getMetadataFields } from './metadata.js'
+import { serialize } from '../editor/serialize.js'
 
 const getPhotoExpanded = (
   photo,

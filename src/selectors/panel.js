@@ -1,6 +1,6 @@
 import { createSelector as memo } from 'reselect'
 import { seq, compose, map, keep } from 'transducers.js'
-import { getVisiblePhotos } from './photos'
+import { getVisiblePhotos } from './photos.js'
 
 const rev = (a, b) => a < b ? 1 : b < a ? -1 : 0
 

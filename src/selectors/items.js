@@ -1,6 +1,6 @@
 import { createSelector as memo } from 'reselect'
-import { pluck } from './util'
-import { BLANK } from '../common/util'
+import { pluck } from './util.js'
+import { BLANK } from '../common/util.js'
 
 export const getItems = ({ items }) => items
 

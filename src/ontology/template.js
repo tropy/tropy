@@ -1,9 +1,8 @@
-import fs from 'fs'
-import { identify, pick } from '../common/util'
-import { ONTOLOGY, TYPE } from '../constants'
-import { tropy } from './ns'
+import { readFile as read, writeFile as write } from 'node:fs/promises'
+import { identify, pick } from '../common/util.js'
+import { ONTOLOGY, TYPE } from '../constants/index.js'
+import { tropy } from './ns.js'
 
-const { readFile: read, writeFile: write } = fs.promises
 
 
 export class Template {
