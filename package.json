@@ -43,7 +43,7 @@
     "postcoverage": "nyc report -r text-summary -r html -r lcov",
     "test": "npm run -s test:main && npm run -s test:renderer",
     "test:main": "electron-mocha \"test/{main,common}/**/*_test.js\"",
-    "test:renderer": "electron-mocha --renderer \"test/{,!(main)/**}/*_test.js\"",
+    "test:renderer": "electron-mocha --renderer \"test/{,!(main|components)/**}/*_test.js\"",
     "preversion": "npm run lint && npm test",
     "version": "node scripts/version.js && git add res/linux"
   },
