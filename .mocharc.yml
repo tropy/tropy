@@ -1,14 +1,12 @@
 color: true
 recursive: true
 reporter: dot
-requireMain:
-  - "test/support/main.cjs"
 require:
-  - "test/support/babel-register.js"
+  # - "test/support/babel-register.js"
   # - "test/support/coverage.cjs"
   - "test/support/mode.js"
   - "test/support/args.js"
   - "test/support/log.js"
   - "test/support/chai.js"
-  - "test/support/fixtures.cjs"
+  - "test/support/fixtures.js"
 slow: 250
