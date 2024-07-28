@@ -1,7 +1,7 @@
-import assert from 'assert'
-import { json, stringify } from '../common/util'
-import { into, update } from '../common/query'
-import { warn } from '../common/log'
+import assert from 'node:assert'
+import { json, stringify } from '../common/util.js'
+import { into, update } from '../common/query.js'
+import { warn } from '../common/log.js'
 
 async function load(db, ids) {
   let notes = {}

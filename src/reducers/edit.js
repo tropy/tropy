@@ -1,4 +1,4 @@
-import { EDIT, PROJECT, TAG } from '../constants'
+import { EDIT, PROJECT, TAG } from '../constants/index.js'
 
 export function edit(state = {}, { type, payload, meta }) {
   switch (type) {

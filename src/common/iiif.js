@@ -1,7 +1,7 @@
-import { URL } from 'url'
-import { rotate, round, isHorizontal } from './math'
-import { Cache } from './cache'
-import { pick } from './util'
+import { URL } from 'node:url'
+import { rotate, round, isHorizontal } from './math.js'
+import { Cache } from './cache.js'
+import { pick } from './util.js'
 
 export class Rotation {
   constructor(input = {}) {

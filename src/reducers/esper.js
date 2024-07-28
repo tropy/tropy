@@ -1,5 +1,5 @@
-import { merge } from '../common/util'
-import { ESPER } from '../constants'
+import { merge } from '../common/util.js'
+import { ESPER } from '../constants/index.js'
 
 const init = {
   view: {}

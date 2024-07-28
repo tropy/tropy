@@ -1,4 +1,4 @@
-import { IMPORTS, ITEM } from '../constants'
+import { IMPORTS, ITEM } from '../constants/index.js'
 
 const THRESHOLD = 1000 * 60 * 2
 

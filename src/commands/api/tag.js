@@ -1,8 +1,8 @@
 import { select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { API } from '../../constants'
-import { pluck } from '../../common/util'
-import { findTag, getAllTags } from '../../selectors'
+import { Command } from '../command.js'
+import { API } from '../../constants/index.js'
+import { pluck } from '../../common/util.js'
+import { findTag, getAllTags } from '../../selectors/index.js'
 
 
 export class TagShow extends Command {

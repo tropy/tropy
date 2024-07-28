@@ -1,5 +1,5 @@
-import ARGS from '../args'
-import { INTL } from '../constants'
+import ARGS from '../args.js'
+import { INTL } from '../constants/index.js'
 
 export function intl(state = {
   locale: ARGS.locale,

@@ -1,4 +1,4 @@
-import { SIDEBAR } from '../constants'
+import { SIDEBAR } from '../constants/index.js'
 
 export default {
   restore(payload = {}, meta = {}) {

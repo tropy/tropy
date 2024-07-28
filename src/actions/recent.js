@@ -1,4 +1,4 @@
-import { RECENT } from '../constants'
+import { RECENT } from '../constants/index.js'
 
 export default {
   restore(payload, meta = {}) {

@@ -1,4 +1,4 @@
-import { PREFS } from '../constants'
+import { PREFS } from '../constants/index.js'
 
 export default {
   close(payload, meta = {}) {

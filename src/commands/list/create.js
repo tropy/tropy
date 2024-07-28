@@ -1,9 +1,9 @@
 import { call, put, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { LIST } from '../../constants'
-import { splice } from '../../common/util'
-import act from '../../actions/list'
-import mod from '../../models/list'
+import { Command } from '../command.js'
+import { LIST } from '../../constants/index.js'
+import { splice } from '../../common/util.js'
+import act from '../../actions/list.js'
+import mod from '../../models/list.js'
 
 
 export class Create extends Command {

@@ -1,10 +1,10 @@
-import { array, blank, list as lst, uniq } from '../common/util'
-import { select } from '../common/query'
-import { NAV } from '../constants'
+import { array, blank, list as lst, uniq } from '../common/util.js'
+import { select } from '../common/query.js'
+import { NAV } from '../constants/index.js'
 
-import modMetadata from './metadata'
-import modPhoto from './photo'
-import modSubject from './subject'
+import modMetadata from './metadata.js'
+import modPhoto from './photo.js'
+import modSubject from './subject.js'
 
 const mod = {
   metadata: modMetadata,

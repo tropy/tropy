@@ -1,9 +1,9 @@
 import { all, call, put, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { ITEM } from '../../constants'
-import { pluck } from '../../common/util'
-import * as act from '../../actions'
-import * as mod from '../../models'
+import { Command } from '../command.js'
+import { ITEM } from '../../constants/index.js'
+import { pluck } from '../../common/util.js'
+import * as act from '../../actions/index.js'
+import * as mod from '../../models/index.js'
 
 
 export class Merge extends Command {

@@ -1,4 +1,4 @@
-import { CONTEXT } from '../constants'
+import { CONTEXT } from '../constants/index.js'
 
 export function context(state = {}, { type, payload }) {
   switch (type) {

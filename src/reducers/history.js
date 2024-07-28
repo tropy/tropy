@@ -1,4 +1,4 @@
-import { HISTORY } from '../constants'
+import { HISTORY } from '../constants/index.js'
 
 
 function canMerge(a, b) {

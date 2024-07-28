@@ -1,5 +1,5 @@
-import { PROJECT, RECENT } from '../constants'
-import { merge } from '../common/util'
+import { PROJECT, RECENT } from '../constants/index.js'
+import { merge } from '../common/util.js'
 
 const INIT = {}
 

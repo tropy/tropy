@@ -1,5 +1,5 @@
-import { API, NOTE, PROJECT } from '../constants'
-import { insert } from './util'
+import { API, NOTE, PROJECT } from '../constants/index.js'
+import { insert } from './util.js'
 
 const init = {}
 

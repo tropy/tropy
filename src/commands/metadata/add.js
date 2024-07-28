@@ -1,10 +1,10 @@
 import { call, put, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { pick } from '../../common/util'
-import { text } from '../../value'
-import mod from '../../models/metadata'
-import * as act from '../../actions'
-import { METADATA } from '../../constants'
+import { Command } from '../command.js'
+import { pick } from '../../common/util.js'
+import { text } from '../../value.js'
+import mod from '../../models/metadata.js'
+import * as act from '../../actions/index.js'
+import { METADATA } from '../../constants/index.js'
 
 
 export class Add extends Command {

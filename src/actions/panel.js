@@ -1,4 +1,4 @@
-import { PANEL } from '../constants'
+import { PANEL } from '../constants/index.js'
 
 export default {
   restore(payload = {}, meta = {}) {

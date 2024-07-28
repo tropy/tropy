@@ -1,10 +1,10 @@
 import { call, put, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { pick } from '../../common/util'
-import mod from '../../models/metadata'
-import act from '../../actions/metadata'
-import { getSortColumn } from '../../selectors'
-import { METADATA, TYPE } from '../../constants'
+import { Command } from '../command.js'
+import { pick } from '../../common/util.js'
+import mod from '../../models/metadata.js'
+import act from '../../actions/metadata.js'
+import { getSortColumn } from '../../selectors/index.js'
+import { METADATA, TYPE } from '../../constants/index.js'
 
 
 export class Save extends Command {

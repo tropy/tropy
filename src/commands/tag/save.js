@@ -1,9 +1,9 @@
 import { call, put, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { TAG } from '../../constants'
-import { pick } from '../../common/util'
-import mod from '../../models/tag'
-import act from '../../actions/tag'
+import { Command } from '../command.js'
+import { TAG } from '../../constants/index.js'
+import { pick } from '../../common/util.js'
+import mod from '../../models/tag.js'
+import act from '../../actions/tag.js'
 
 
 export class Save extends Command {

@@ -1,5 +1,5 @@
-import { PANEL, ITEM, PHOTO, NOTE } from '../constants'
-import { merge, omit } from '../common/util'
+import { PANEL, ITEM, PHOTO, NOTE } from '../constants/index.js'
+import { merge, omit } from '../common/util.js'
 
 const INIT = {
   expand: {}

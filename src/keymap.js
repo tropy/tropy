@@ -1,4 +1,4 @@
-import { darwin } from './common/os'
+import { darwin } from './common/os.js'
 
 const ALT = /^a(lt)?$/i
 const CTRL = /^c(trl|ontrol)?$/i

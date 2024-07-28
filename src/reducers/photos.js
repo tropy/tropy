@@ -1,5 +1,5 @@
-import { METADATA, PHOTO, PROJECT } from '../constants'
-import { bulk, insert, load, nested, touch, update } from './util'
+import { METADATA, PHOTO, PROJECT } from '../constants/index.js'
+import { bulk, insert, load, nested, touch, update } from './util.js'
 import * as tr from '../slices/transcriptions.js'
 
 

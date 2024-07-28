@@ -1,5 +1,5 @@
-import { render, inWindowContext } from '../../support/react'
-import { PhotoList } from '#internal/components/photo/list'
+import { render, inWindowContext } from '../../support/react.js'
+import { PhotoList } from '#internal/components/photo/list.js'
 
 const PHOTO = {
   1: { id: 1, selections: [] },

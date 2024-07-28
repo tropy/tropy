@@ -1,5 +1,5 @@
-import { HISTORY } from '../constants'
-import { omit } from '../common/util'
+import { HISTORY } from '../constants/index.js'
+import { omit } from '../common/util.js'
 
 export default {
   undo(payload, meta) {

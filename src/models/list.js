@@ -1,6 +1,6 @@
-import { LIST } from '../constants'
-import { into, select, update } from '../common/query'
-import { pick, remove, toId } from '../common/util'
+import { LIST } from '../constants/index.js'
+import { into, select, update } from '../common/query.js'
+import { pick, remove, toId } from '../common/util.js'
 
 async function itemsRestore(db, id, items) {
   return db.run(

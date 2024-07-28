@@ -1,4 +1,4 @@
-import { IDLE } from '../constants'
+import { IDLE } from '../constants/index.js'
 
 export default {
   active(payload, meta = {}) {

@@ -1,13 +1,13 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { all, call, put, select } from 'redux-saga/effects'
-import { ImportCommand } from '../import'
-import { fail } from '../../dialog'
-import * as mod from '../../models'
-import * as act from '../../actions'
-import { PHOTO } from '../../constants'
-import { Image } from '../../image'
-import { warn } from '../../common/log'
-import { blank, pluck, splice } from '../../common/util'
+import { ImportCommand } from '../import.js'
+import { fail } from '../../dialog.js'
+import * as mod from '../../models/index.js'
+import * as act from '../../actions/index.js'
+import { PHOTO } from '../../constants/index.js'
+import { Image } from '../../image/image.js'
+import { warn } from '../../common/log.js'
+import { blank, pluck, splice } from '../../common/util.js'
 
 
 export class Duplicate extends ImportCommand {

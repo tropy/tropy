@@ -1,11 +1,11 @@
 import { call, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { API } from '../../constants'
-import { Cache } from '../../common/cache'
-import { Rotation } from '../../common/iiif'
-import { pluck } from '../../common/util'
-import Esper from '../../esper'
-import { toBuffer } from '../../image'
+import { Command } from '../command.js'
+import { API } from '../../constants/index.js'
+import { Cache } from '../../common/cache.js'
+import { Rotation } from '../../common/iiif.js'
+import { pluck } from '../../common/util.js'
+import Esper from '../../esper/index.js'
+import { toBuffer } from '../../image/sharp.js'
 
 
 export class PhotoExtract extends Command {

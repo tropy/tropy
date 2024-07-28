@@ -1,5 +1,5 @@
-import { ESPER, UI, SASS } from '../constants'
-import { merge } from '../common/util'
+import { ESPER, UI, SASS } from '../constants/index.js'
+import { merge } from '../common/util.js'
 
 const INIT = {
   esper: {

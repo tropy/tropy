@@ -1,11 +1,11 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { call, put, select } from 'redux-saga/effects'
-import { empty, get, pick } from '../common/util'
-import { Command } from './command'
-import { getTemplateDefaultValues } from '../selectors'
-import * as mod from '../models'
-import * as act from '../actions'
-import { ITEM, PHOTO, SELECTION } from '../constants'
+import { empty, get, pick } from '../common/util.js'
+import { Command } from './command.js'
+import { getTemplateDefaultValues } from '../selectors/index.js'
+import * as mod from '../models/index.js'
+import * as act from '../actions/index.js'
+import { ITEM, PHOTO, SELECTION } from '../constants/index.js'
 
 
 export class Save extends Command {
