@@ -3,8 +3,8 @@ import { existsSync } from 'node:fs'
 import { isAbsolute, join } from 'node:path'
 import { mkprojtmp } from '../support/project.js'
 import { mkdtmp, mktmp } from '../support/tmp.js'
-import { convert, create, load, open, pstat } from '../../src/common/project.js'
-import { delay } from '../../src/common/util.js'
+import { convert, create, load, open, pstat } from '#internal/common/project.js'
+import { delay } from '#internal/common/util.js'
 
 describe('common/project', () => {
 

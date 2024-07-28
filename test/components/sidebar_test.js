@@ -1,5 +1,5 @@
 import { render } from '../support/react'
-import { Sidebar, SidebarBody } from '../../src/components/sidebar'
+import { Sidebar, SidebarBody } from '#internal/components/sidebar'
 
 describe('Sidebar', () => {
   it('renders sidebar element', () => {

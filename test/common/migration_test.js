@@ -1,4 +1,4 @@
-import { Migration } from '../../src/common/migration.js'
+import { Migration } from '#internal/common/migration.js'
 
 describe('Migration', () => {
   describe('constructor', () => {

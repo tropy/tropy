@@ -1,4 +1,4 @@
-import { getListSubTree } from '../../src/selectors/lists.js'
+import { getListSubTree } from '#internal/selectors/lists.js'
 
 describe('List Selectors', () => {
   const lists = {

@@ -1,5 +1,5 @@
 import { Menu } from 'electron'
-import { AppMenu } from '../../src/main/menu.js'
+import { AppMenu } from '#internal/main/menu.js'
 
 describe('AppMenu', () => {
   let menu

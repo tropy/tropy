@@ -1,6 +1,6 @@
 import { rm } from 'node:fs/promises'
 import { app } from 'electron'
-import { Storage } from '../../src/main/storage.js'
+import { Storage } from '#internal/main/storage.js'
 
 describe('Storage', () => {
   describe('given a storage folder', () => {

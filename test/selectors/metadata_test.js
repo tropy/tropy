@@ -1,5 +1,5 @@
-import { getItemMetadata } from '../../src/selectors/index.js'
-import { text } from '../../src/value.js'
+import { getItemMetadata } from '#internal/selectors/index.js'
+import { text } from '#internal/value.js'
 
 describe('Metadata Selectors', () => {
   const metadata = {

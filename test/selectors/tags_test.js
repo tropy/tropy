@@ -1,4 +1,4 @@
-import { getItemTags } from '../../src/selectors/index.js'
+import { getItemTags } from '#internal/selectors/index.js'
 
 describe('Tag Selectors', () => {
   const tags = {

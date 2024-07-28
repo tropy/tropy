@@ -1,6 +1,6 @@
 import { rm } from 'node:fs/promises'
 import { mktmp } from './tmp.js'
-import { create } from '../../src/common/project.js'
+import { create } from '#internal/common/project.js'
 
 // Returns a reference to a temporary project with the given file name.
 //

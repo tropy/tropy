@@ -1,5 +1,5 @@
 import { render } from '../support/react'
-import { Toolbar } from '../../src/components/toolbar'
+import { Toolbar } from '#internal/components/toolbar'
 
 describe('Toolbar', () => {
   it('renders toolbar element', () => {

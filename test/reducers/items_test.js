@@ -1,5 +1,5 @@
-import { LIST } from '../../src/constants/index.js'
-import { items as itemsReducer } from '../../src/reducers/items.js'
+import { LIST } from '#internal/constants/index.js'
+import { items as itemsReducer } from '#internal/reducers/items.js'
 
 describe('Items Reducer', () => {
   let state

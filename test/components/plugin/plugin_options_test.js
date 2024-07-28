@@ -1,5 +1,5 @@
 import { render, inWindowContext } from '../../support/react'
-import { PluginOption } from '../../../src/components/plugin/option'
+import { PluginOption } from '#internal/components/plugin/option'
 
 describe('PluginOption', () => {
   const labelText = 'this should be in label'

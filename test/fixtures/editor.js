@@ -1,6 +1,6 @@
 import { EditorState } from 'prosemirror-state'
 import { doc, p } from 'prosemirror-test-builder'
-import { schema } from '../../src/editor/schema.js'
+import { schema } from '#internal/editor/schema.js'
 
 const url = 'http://www.example.com'
 const offset = 39

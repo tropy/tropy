@@ -1,4 +1,4 @@
-import { DisposableResource, using } from '../../src/common/disposable.js'
+import { DisposableResource, using } from '#internal/common/disposable.js'
 
 describe('.using', () => {
 

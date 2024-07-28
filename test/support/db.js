@@ -1,6 +1,6 @@
 import { rm } from 'node:fs/promises'
 import { mktmp } from './tmp.js'
-import { Database } from '../../src/common/db.js'
+import { Database } from '#internal/common/db.js'
 
 // Creates a temporary database.
 //

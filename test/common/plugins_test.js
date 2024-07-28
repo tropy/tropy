@@ -1,4 +1,4 @@
-import { Plugins } from '../../src/common/plugins.js'
+import { Plugins } from '#internal/common/plugins.js'
 
 describe('Plugins', () => {
   let plugins

@@ -1,4 +1,4 @@
-import { Shader } from '../src/res.js'
+import { Shader } from '#internal/res.js'
 
 describe('Shader', () => {
   it('loads shaders synchronously', () => {

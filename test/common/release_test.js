@@ -1,5 +1,5 @@
 import process from 'node:process'
-import * as release from '../../src/common/release.js'
+import * as release from '#internal/common/release.js'
 
 describe('release', () => {
   describe('channel', () => {

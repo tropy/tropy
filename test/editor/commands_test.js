@@ -1,5 +1,5 @@
 import { TextSelection } from 'prosemirror-state'
-import { markExtend } from '../../src/editor/selections.js'
+import { markExtend } from '#internal/editor/selections.js'
 
 function selectedText(s) {
   return s.doc.cut(

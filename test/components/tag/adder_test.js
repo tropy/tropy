@@ -1,4 +1,4 @@
-import { TagAdder } from '../../../src/components/tag/adder'
+import { TagAdder } from '#internal/components/tag/adder'
 
 describe('Tag autocomplete', () => {
   const matchFn = TagAdder.defaultProps.match

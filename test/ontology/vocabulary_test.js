@@ -1,5 +1,5 @@
 import N3 from 'n3'
-import { toN3 } from '../../src/ontology/vocabulary.js'
+import { toN3 } from '#internal/ontology/vocabulary.js'
 
 describe('Export Vocabularies', () => {
   describe('toN3()', () => {

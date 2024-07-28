@@ -1,5 +1,5 @@
-import * as format from '../src/format.js'
-import { TYPE } from '../src/constants/index.js'
+import * as format from '#internal/format.js'
+import { TYPE } from '#internal/constants/index.js'
 
 describe('format', () => {
   describe('number()', () => {

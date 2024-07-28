@@ -1,5 +1,5 @@
 import { EventEmitter } from 'node:events'
-import * as util from '../../src/common/util.js'
+import * as util from '#internal/common/util.js'
 
 describe('util', () => {
 

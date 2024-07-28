@@ -8,11 +8,11 @@ import { Provider } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 import { DndProvider } from 'react-dnd'
 import { TestBackend } from 'react-dnd-test-backend'
-import ARGS from '../../src/args.js'
-import win, { createWindowInstance } from '../../src/window.js'
-import { WindowContext } from '../../src/components/window.js'
-import { Strings } from '../../src/res.js'
-import * as reducer from '../../src/reducers/index.js'
+import ARGS from '#internal/args.js'
+import win, { createWindowInstance } from '#internal/window.js'
+import { WindowContext } from '#internal/components/window.js'
+import { Strings } from '#internal/res.js'
+import * as reducer from '#internal/reducers/index.js'
 
 chai.use(dom)
 
