@@ -1,5 +1,5 @@
-import { render, inWindowContext } from '../../support/react'
-import { ListTree } from '#internal/components/list/tree'
+import { render, inWindowContext } from '../../support/react.js'
+import { ListTree } from '#internal/components/list/tree.js'
 
 describe('ListTree', () => {
   it('renders no list nodes by default', () => {

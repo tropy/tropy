@@ -1,4 +1,4 @@
-import { counter } from '../common/util'
+import { counter } from '../common/util.js'
 
 export function seq() {
   let q = counter()

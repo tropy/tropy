@@ -1,5 +1,5 @@
-import { omit } from '../common/util'
-import { ACTIVITY } from '../constants'
+import { omit } from '../common/util.js'
+import { ACTIVITY } from '../constants/index.js'
 
 export function activities(state = {}, { type, payload, meta = {} }) {
   const { cmd, rel, done } = meta

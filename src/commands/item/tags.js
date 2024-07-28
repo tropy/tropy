@@ -1,10 +1,10 @@
 import { call, put, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { ITEM } from '../../constants'
-import { remove } from '../../common/util'
-import * as act from '../../actions'
-import * as mod from '../../models'
-import { findTagIds } from '../../selectors'
+import { Command } from '../command.js'
+import { ITEM } from '../../constants/index.js'
+import { remove } from '../../common/util.js'
+import * as act from '../../actions/index.js'
+import * as mod from '../../models/index.js'
+import { findTagIds } from '../../selectors/index.js'
 
 
 export class AddTags extends Command {

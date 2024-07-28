@@ -1,8 +1,8 @@
-import assert from 'assert'
-import subject from './subject'
-import { props } from '../common/export'
-import { select, update } from '../common/query'
-import { empty, pick } from '../common/util'
+import assert from 'node:assert'
+import subject from './subject.js'
+import { props } from '../common/export.js'
+import { select, update } from '../common/query.js'
+import { empty, pick } from '../common/util.js'
 
 export default {
   async rotate(db, { id, by }) {

@@ -1,5 +1,5 @@
-import { list, pick } from '../common/util'
-import { into, select, update } from '../common/query'
+import { list, pick } from '../common/util.js'
+import { into, select, update } from '../common/query.js'
 
 const COLUMNS = [
   'name',

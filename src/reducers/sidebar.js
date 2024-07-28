@@ -1,5 +1,5 @@
-import { LIST, SIDEBAR } from '../constants'
-import { merge } from '../common/util'
+import { LIST, SIDEBAR } from '../constants/index.js'
+import { merge } from '../common/util.js'
 
 const init = {
   expand: { 0: true }

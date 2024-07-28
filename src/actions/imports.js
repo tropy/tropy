@@ -1,4 +1,4 @@
-import { IMPORTS } from '../constants'
+import { IMPORTS } from '../constants/index.js'
 
 export default {
   restore(payload, meta) {

@@ -1,4 +1,4 @@
-import { ESPER } from '../constants'
+import { ESPER } from '../constants/index.js'
 
 export default {
   restore(payload = {}, meta = {}) {

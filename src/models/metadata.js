@@ -1,6 +1,6 @@
-import { array, blank, list, quote } from '../common/util'
-import { touch } from './subject'
-import { save } from './value'
+import { array, blank, list, quote } from '../common/util.js'
+import { touch } from './subject.js'
+import { save } from './value.js'
 
 async function insert(db, { id, property, value, language = 'NULL' }) {
   return db.run(`

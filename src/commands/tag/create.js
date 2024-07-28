@@ -1,11 +1,11 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { call, put, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { TAG, SASS } from '../../constants'
-import { sample } from '../../common/util'
-import { findTag } from '../../selectors'
-import * as mod from '../../models'
-import * as act from '../../actions'
+import { Command } from '../command.js'
+import { TAG, SASS } from '../../constants/index.js'
+import { sample } from '../../common/util.js'
+import { findTag } from '../../selectors/index.js'
+import * as mod from '../../models/index.js'
+import * as act from '../../actions/index.js'
 
 
 export class Create extends Command {

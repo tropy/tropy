@@ -1,8 +1,8 @@
-import ARGS from '../args'
-import { SETTINGS, ITEM, PHOTO, SELECTION, ESPER } from '../constants'
-import { darwin } from '../common/os'
-import { merge } from '../common/util'
-import { dc } from '../ontology'
+import ARGS from '../args.js'
+import { SETTINGS, ITEM, PHOTO, SELECTION, ESPER } from '../constants/index.js'
+import { darwin } from '../common/os.js'
+import { merge } from '../common/util.js'
+import { dc } from '../ontology/ns.js'
 
 const defaults = {
   completions: 'datatype',

@@ -1,14 +1,14 @@
-import fs from 'fs'
-import { extname } from 'path'
+import fs from 'node:fs'
+import { extname } from 'node:path'
 import { call, select } from 'redux-saga/effects'
 import { clipboard } from 'electron'
-import { serialize, toHTML, toMarkdown } from '../../editor/serialize'
-import { Command } from '../command'
-import { fail, save } from '../../dialog'
-import { warn } from '../../common/log'
-import { pluck } from '../../common/util'
-import { getVisibleNotes } from '../../selectors'
-import { NOTE } from '../../constants'
+import { serialize, toHTML, toMarkdown } from '../../editor/serialize.js'
+import { Command } from '../command.js'
+import { fail, save } from '../../dialog.js'
+import { warn } from '../../common/log.js'
+import { pluck } from '../../common/util.js'
+import { getVisibleNotes } from '../../selectors/index.js'
+import { NOTE } from '../../constants/index.js'
 
 
 export class Export extends Command {

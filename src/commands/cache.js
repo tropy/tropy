@@ -1,12 +1,12 @@
-import assert from 'assert'
-import fs from 'fs'
+import assert from 'node:assert'
+import fs from 'node:fs'
 import { call, select } from 'redux-saga/effects'
-import ARGS from '../args'
-import { Command } from './command'
-import { CACHE } from '../constants'
-import { Cache } from '../common/cache'
-import { get } from '../common/util'
-import { debug, info, warn } from '../common/log'
+import ARGS from '../args.js'
+import { Command } from './command.js'
+import { CACHE } from '../constants/index.js'
+import { Cache } from '../common/cache.js'
+import { get } from '../common/util.js'
+import { debug, info, warn } from '../common/log.js'
 
 const UUID = /^[0-9a-f]{8}(-[0-9a-f]+){4}$/i
 

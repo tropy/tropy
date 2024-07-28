@@ -1,5 +1,5 @@
-import { TAG, PROJECT } from '../constants'
-import { insert, load, remove, update } from './util'
+import { TAG, PROJECT } from '../constants/index.js'
+import { insert, load, remove, update } from './util.js'
 
 export function tags(state = {}, { type, payload, error, meta }) {
   switch (type) {

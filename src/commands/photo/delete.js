@@ -1,9 +1,9 @@
-import { Command } from '../command'
+import { Command } from '../command.js'
 import { call, put, select } from 'redux-saga/effects'
-import { PHOTO } from '../../constants'
-import { get, splice } from '../../common/util'
-import * as act from '../../actions'
-import * as mod from '../../models'
+import { PHOTO } from '../../constants/index.js'
+import { get, splice } from '../../common/util.js'
+import * as act from '../../actions/index.js'
+import * as mod from '../../models/index.js'
 
 
 export class Delete extends Command {

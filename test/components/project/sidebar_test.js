@@ -1,5 +1,5 @@
-import { render, inWindowContext } from '../../support/react'
-import { ProjectSidebar as WrappedSidebar } from '#internal/components/project/sidebar'
+import { render, inWindowContext } from '../../support/react.js'
+import { ProjectSidebar as WrappedSidebar } from '#internal/components/project/sidebar.js'
 
 describe('ProjectSidebar', () => {
   const ProjectSidebar = WrappedSidebar.WrappedComponent

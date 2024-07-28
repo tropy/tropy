@@ -1,5 +1,5 @@
-import ARGS from '../args'
-import { FLASH } from '../constants'
+import ARGS from '../args.js'
+import { FLASH } from '../constants/index.js'
 
 const init = (ARGS.update && ARGS.update.id) ?
     [ARGS.update] : []

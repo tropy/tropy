@@ -1,4 +1,4 @@
-import { KEYMAP } from '../constants'
+import { KEYMAP } from '../constants/index.js'
 
 export function keymap(state = {}, { type, payload }) {
   switch (type) {

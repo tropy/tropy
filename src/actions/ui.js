@@ -1,4 +1,4 @@
-import { UI } from '../constants'
+import { UI } from '../constants/index.js'
 
 export default {
   restore(payload, meta) {

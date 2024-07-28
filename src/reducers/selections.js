@@ -1,5 +1,5 @@
-import { METADATA, SELECTION, PROJECT } from '../constants'
-import { bulk, insert, nested, replace, touch } from './util'
+import { METADATA, SELECTION, PROJECT } from '../constants/index.js'
+import { bulk, insert, nested, replace, touch } from './util.js'
 import * as tr from '../slices/transcriptions.js'
 
 // eslint-disable-next-line complexity

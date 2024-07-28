@@ -1,5 +1,5 @@
-import { render } from '../support/react'
-import { PanelGroup } from '#internal/components/panel'
+import { render } from '../support/react.js'
+import { PanelGroup } from '#internal/components/panel.js'
 
 describe('PanelGroup', () => {
   it('renders panel-group structure', () => {

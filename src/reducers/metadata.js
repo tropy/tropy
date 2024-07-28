@@ -4,7 +4,7 @@ import {
   PHOTO,
   PROJECT,
   SELECTION
-} from '../constants'
+} from '../constants/index.js'
 
 import {
   bulk,
@@ -14,7 +14,7 @@ import {
   replace,
   insert,
   update
-} from './util'
+} from './util.js'
 
 
 // eslint-disable-next-line complexity

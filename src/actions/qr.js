@@ -1,4 +1,4 @@
-import { QR } from '../constants'
+import { QR } from '../constants/index.js'
 
 export default {
   update(payload = {}, meta) {

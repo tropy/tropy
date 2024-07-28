@@ -1,6 +1,6 @@
-import { isSelected, select } from '../selection'
-import { merge, insert, omit, splice } from '../common/util'
-import { dc } from '../ontology'
+import { isSelected, select } from '../selection.js'
+import { merge, insert, omit, splice } from '../common/util.js'
+import { dc } from '../ontology/ns.js'
 
 import {
   EDIT,
