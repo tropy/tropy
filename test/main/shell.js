@@ -1,6 +1,6 @@
 import { platform } from 'node:process'
 import { shell } from 'electron'
-import { open, show } from '../../src/main/shell.js'
+import { open, show } from '#internal/main/shell.js'
 
 describe('shell', () => {
   let desktop = platform === 'win32' ?

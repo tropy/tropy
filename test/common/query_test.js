@@ -1,4 +1,4 @@
-import { deleteFrom, select, update, into } from '../../src/common/query.js'
+import { deleteFrom, select, update, into } from '#internal/common/query.js'
 
 describe('Query Builder', () => {
   describe('Select', () => {

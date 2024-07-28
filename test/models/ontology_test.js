@@ -1,7 +1,7 @@
 import { join } from 'node:path'
-import { Database } from '../../src/common/db.js'
+import { Database } from '#internal/common/db.js'
 import { mkdtmp } from '../support/tmp.js'
-import mod from '../../src/models/ontology.js'
+import mod from '#internal/models/ontology.js'
 
 describe('models.ontology', () => {
   let tmp = mkdtmp()

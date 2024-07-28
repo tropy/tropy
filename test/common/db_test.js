@@ -1,8 +1,8 @@
 import { unlink } from 'node:fs/promises'
 import { mktmp } from '../support/tmp.js'
-import { pMap, times } from '../../src/common/util.js'
-import { Database, Connection, Statement } from '../../src/common/db.js'
-import { using } from '../../src/common/disposable.js'
+import { pMap, times } from '#internal/common/util.js'
+import { Database, Connection, Statement } from '#internal/common/db.js'
+import { using } from '#internal/common/disposable.js'
 
 function failure() { throw new Error() }
 

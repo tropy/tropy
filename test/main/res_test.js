@@ -1,4 +1,4 @@
-import { Resource, Menu, Strings } from '../../src/main/res.js'
+import { Resource, Menu, Strings } from '#internal/main/res.js'
 
 describe('Resource', () => {
   it('is a constructor', () => expect(Resource).to.be.a('function'))

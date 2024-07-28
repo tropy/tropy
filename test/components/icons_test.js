@@ -1,5 +1,5 @@
 import { render, inWindowContext } from '../support/react'
-import { IconLock } from '../../src/components/icons'
+import { IconLock } from '#internal/components/icons'
 
 describe('IconLock', () => {
   it('renders the lock icon SVG', () => {

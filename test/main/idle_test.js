@@ -1,4 +1,4 @@
-import * as idleService from '../../src/main/idle.js'
+import * as idleService from '#internal/main/idle.js'
 
 describe('idle', () => {
   const ioq = idleService.IOQ.global

@@ -2,13 +2,13 @@ import { resolve } from 'node:path'
 import process from 'node:process'
 
 if (process.type === 'browser') {
-  let { Resource } = await import('../../src/main/res.js')
+  let { Resource } = await import('#internal/main/res.js')
 
   Object.defineProperty(Resource, 'base', {
     get() { return resolve(import.meta.dirname, '../..') }
   })
 } else {
-  let args = await import('../../src/args.js')
+  let args = await import('#internal/args.js')
 
   args.update({
     app: resolve(import.meta.dirname, '../..'),

@@ -1,5 +1,5 @@
 import process from 'node:process'
-import { parse } from '../../src/main/args.js'
+import { parse } from '#internal/main/args.js'
 
 describe('args', () => {
   describe('--env', () => {

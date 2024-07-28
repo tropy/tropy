@@ -1,9 +1,9 @@
 import fs from 'node:fs'
 import { join } from 'node:path'
 import { app, BrowserWindow } from 'electron'
-import { WindowManager } from '../../src/main/wm.js'
-import { View } from '../../src/main/res.js'
-import { Plugins } from '../../src/common/plugins.js'
+import { WindowManager } from '#internal/main/wm.js'
+import { View } from '#internal/main/res.js'
+import { Plugins } from '#internal/common/plugins.js'
 
 
 describe('WindowManager', () => {

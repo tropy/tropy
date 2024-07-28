@@ -1,4 +1,4 @@
-import { round } from '../../src/common/math.js'
+import { round } from '#internal/common/math.js'
 
 describe('math', () => {
 

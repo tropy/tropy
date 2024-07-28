@@ -1,8 +1,8 @@
 import { app } from 'electron'
 import { EventEmitter } from 'node:events'
-import { Tropy } from '../../src/main/tropy.js'
-import * as args from '../../src/main/args.js'
-import { qualified } from '../../src/common/release.js'
+import { Tropy } from '#internal/main/tropy.js'
+import * as args from '#internal/main/args.js'
+import { qualified } from '#internal/common/release.js'
 
 describe('main process', () => {
   const tropy = Tropy.instance
@@ -41,7 +41,7 @@ describe('main process', () => {
 
   describe('when required', () => {
     before(
-      () => import('../../src/main/index.js')
+      () => import('#internal/main/index.js')
     )
 
     it.skip('parses cli arguments', () => {

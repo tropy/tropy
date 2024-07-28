@@ -1,6 +1,6 @@
 import { app } from 'electron'
 import { URL } from 'node:url'
-import { Tropy } from '../../src/main/tropy.js'
+import { Tropy } from '#internal/main/tropy.js'
 
 const fakeWindow = () => ({
   show: sinon.spy(),

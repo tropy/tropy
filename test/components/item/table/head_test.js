@@ -1,5 +1,5 @@
 import { render, inWindowContext } from '../../../support/react'
-import { TableHead } from '../../../../src/components/item/table/head'
+import { TableHead } from '#internal/components/item/table/head'
 
 describe('TableHead', () => {
 

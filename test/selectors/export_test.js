@@ -1,6 +1,6 @@
-import { version } from '../../src/common/release.js'
-import { pick } from '../../src/common/util.js'
-import { getExportItemIds, getExportItems } from '../../src/selectors/export.js'
+import { version } from '#internal/common/release.js'
+import { pick } from '#internal/common/util.js'
+import { getExportItemIds, getExportItems } from '#internal/selectors/export.js'
 
 describe('Export Selectors', () => {
   describe('getExportItemIds', () => {

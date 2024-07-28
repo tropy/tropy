@@ -1,3 +1,3 @@
-import { createLogger } from '../../src/common/log.js'
+import { createLogger } from '#internal/common/log.js'
 
 createLogger()
