@@ -1,16 +1,17 @@
-'use strict'
 /* global window, __coverage__ */
 
-const process = require('node:process')
-const { basename, resolve, join } = require('node:path')
-const { writeFileSync: write } = require('node:fs')
+import process from 'node:process'
+import { basename, resolve, join } from 'node:path'
+import { writeFileSync as write } from 'node:fs'
 
-const root = resolve(__dirname, '..', '..')
+const root = resolve(import.meta.dirname, '..', '..')
 const tmpd = resolve(root, '.nyc_output')
 
 function report() {
   if (typeof __coverage__ !== 'undefined') {
     write(join(tmpd, getCoverageFile()), JSON.stringify(__coverage__))
+  } else {
+    console.log('no coverage data found')
   }
 }
 
