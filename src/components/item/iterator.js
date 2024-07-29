@@ -1,15 +1,10 @@
 import React from 'react'
-import { match, isMeta as meta } from '../../keymap'
-import { indexOf } from '../../common/collection'
-import { blank, get } from '../../common/util'
-import { on, off } from '../../dom'
+import { match, isMeta as meta } from '../../keymap.js'
+import { indexOf } from '../../common/collection.js'
+import { blank, get } from '../../common/util.js'
+import { on, off } from '../../dom.js'
 import { seq, compose, map, cat, keep } from 'transducers.js'
-import { TABS } from '../../constants'
-
-
-import {
-  arrayOf, shape, bool, func, number, object, string
-} from 'prop-types'
+import { TABS } from '../../constants/index.js'
 
 
 export class ItemIterator extends React.Component {
@@ -282,44 +277,5 @@ export class ItemIterator extends React.Component {
       onItemOpen: this.props.onItemOpen,
       onSelect: this.select
     }
-  }
-
-  static propTypes = {
-    items: arrayOf(shape({
-      id: number.isRequired
-    })).isRequired,
-
-    sort: shape({
-      asc: bool,
-      column: string.isRequired
-    }).isRequired,
-
-    isDisabled: bool,
-    isOver: bool,
-    isReadOnly: bool,
-    isTrashSelected: bool,
-
-    selection: arrayOf(number).isRequired,
-    keymap: object.isRequired,
-    list: number,
-    size: number.isRequired,
-    photos: object.isRequired,
-    tags: object.isRequired,
-
-    connectDropTarget: func.isRequired,
-    onContextMenu: func.isRequired,
-    onItemDelete: func.isRequired,
-    onItemExport: func.isRequired,
-    onItemMerge: func.isRequired,
-    onItemOpen: func.isRequired,
-    onItemPreview: func.isRequired,
-    onPhotoMove: func.isRequired,
-    onPhotoRotate: func.isRequired,
-    onSelect: func.isRequired,
-    onSort: func.isRequired
-  }
-
-  static getPropKeys() {
-    return Object.keys(this.propTypes || this.DecoratedComponent.propTypes)
   }
 }

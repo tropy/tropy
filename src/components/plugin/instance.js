@@ -1,14 +1,9 @@
 import React from 'react'
-import { PluginOption } from './option'
-import { FormField } from '../form'
-import { get, set } from '../../common/util'
-import { IconPlusCircle, IconMinusCircle } from '../icons'
-import { Button, ButtonGroup } from '../button'
-
-import {
-  arrayOf, bool, func, number, object, oneOfType, shape, string
-} from 'prop-types'
-
+import { PluginOption } from './option.js'
+import { FormField } from '../form.js'
+import { get, set } from '../../common/util.js'
+import { IconPlusCircle, IconMinusCircle } from '../icons.js'
+import { Button, ButtonGroup } from '../button.js'
 
 export class PluginInstance extends React.PureComponent {
   handleInsert = () => {
@@ -57,21 +52,6 @@ export class PluginInstance extends React.PureComponent {
         </ButtonGroup>
       </li>
     )
-  }
-
-  static propTypes = {
-    config: shape({
-      plugin: string.isRequired,
-      name: string,
-      options: object
-    }).isRequired,
-    onRemove: func.isRequired,
-    onInsert: func.isRequired,
-    onChange: func.isRequired,
-    specs: arrayOf(shape({
-      field: string.isRequired,
-      default: oneOfType([string, bool, number])
-    })).isRequired
   }
 
   static defaultProps = {

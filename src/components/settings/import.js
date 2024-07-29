@@ -1,4 +1,3 @@
-import { func, object } from 'prop-types'
 import { TitleSettings } from './title.js'
 import { FormField, FormToggle, FormToggleGroup } from '../form.js'
 import { IMAGE } from '../../constants/index.js'
@@ -37,9 +36,4 @@ export function ImportSettings({ config, onChange }) {
         value={config.density}/>
     </>
   )
-}
-
-ImportSettings.propTypes = {
-  config: object.isRequired,
-  onChange: func.isRequired
 }

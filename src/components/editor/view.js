@@ -1,6 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
-import { bool, func, instanceOf, string } from 'prop-types'
 import { EditorState } from 'prosemirror-state'
 import { EditorView as ProseMirror } from 'prosemirror-view'
 import cx from 'classnames'
@@ -117,24 +116,6 @@ export const EditorView = forwardRef(({
       styleSheet="editor"/>
   )
 })
-
-EditorView.propTypes = {
-  isDisabled: bool,
-  isReadOnly: bool,
-  direction: string.isRequired,
-  mode: string.isRequired,
-  numbers: bool,
-  // Subtle: event handlers are passed to PM on initialization
-  // and they will not be updated. Use stable references!
-  onBlur: func,
-  onChange: func.isRequired,
-  onContextMenu: func,
-  onFocus: func,
-  onKeyDown: func.isRequired,
-  placeholder: string,
-  state: instanceOf(EditorState),
-  wrap: bool
-}
 
 EditorView.defaultProps = {
   direction: 'ltr',

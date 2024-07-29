@@ -2,7 +2,6 @@ import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AccordionGroup } from '../accordion.js'
 import { VocabAccordion } from './accordion.js'
-import { func } from 'prop-types'
 import { getVocabs } from '../../selectors/index.js'
 import * as act from '../../actions/index.js'
 
@@ -49,8 +48,4 @@ export const VocabBrowser = ({ onOpenLink }) => {
       ))}
     </AccordionGroup>
   )
-}
-
-VocabBrowser.propTypes = {
-  onOpenLink: func
 }

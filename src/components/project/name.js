@@ -1,5 +1,4 @@
 import cx from 'classnames'
-import { bool, func, string } from 'prop-types'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { IconMaze, IconWarningSm, IconLock } from '../icons.js'
 import { Editable } from '../editable.js'
@@ -36,17 +35,4 @@ export function ProjectName(props) {
       </div>
     </li>
   )
-}
-
-
-ProjectName.propTypes = {
-  isCorrupted: bool,
-  isEditing: bool,
-  isReadOnly: bool,
-  isSelected: bool,
-  name: string.isRequired,
-  onChange: func.isRequired,
-  onClick: func.isRequired,
-  onDrop: func.isRequired,
-  onEditCancel: func.isRequired
 }

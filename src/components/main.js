@@ -1,10 +1,9 @@
 import React from 'react'
 import { Provider, connect } from 'react-redux'
 import { IntlProvider as ReactIntlProvider } from 'react-intl'
-import { element, object } from 'prop-types'
-import { DndProvider, ElectronBackend } from './dnd'
-import { Flash } from './flash'
-import { WindowContext } from './window'
+import { DndProvider, ElectronBackend } from './dnd.js'
+import { Flash } from './flash.js'
+import { WindowContext } from './window.js'
 
 const IntlProvider = connect(
   ({ intl }) => ({ ...intl, key: intl.locale })
@@ -30,11 +29,5 @@ export class Main extends React.Component {
         </DndProvider>
       </WindowContext.Provider>
     )
-  }
-
-  static propTypes = {
-    children: element.isRequired,
-    store: object.isRequired,
-    window: object.isRequired
   }
 }

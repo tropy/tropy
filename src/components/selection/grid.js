@@ -1,12 +1,11 @@
 import React from 'react'
-import { SelectionIterator } from './iterator'
-import { SelectionTile } from './tile'
+import { SelectionIterator } from './iterator.js'
+import { SelectionTile } from './tile.js'
 import cx from 'classnames'
-import { func, number, object } from 'prop-types'
-import { match } from '../../keymap'
-import { on, off } from '../../dom'
-import { indexOf, sanitize } from '../../common/collection'
-import { TABS } from '../../constants'
+import { match } from '../../keymap.js'
+import { on, off } from '../../dom.js'
+import { indexOf, sanitize } from '../../common/collection.js'
+import { TABS } from '../../constants/index.js'
 
 
 class SelectionGrid extends SelectionIterator {
@@ -134,15 +133,6 @@ class SelectionGrid extends SelectionIterator {
         ))}
       </ul>
     )
-  }
-
-  static propTypes = {
-    ...SelectionIterator.propTypes,
-    cols: number.isRequired,
-    size: number.isRequired,
-    keymap: object.isRequired,
-    onBlur: func.isRequired,
-    onTabFocus: func.isRequired
   }
 }
 

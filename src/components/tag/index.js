@@ -1,3 +1,3 @@
-export * from './list'
-export * from './panel'
-export * from './tag'
+export * from './list.js'
+export * from './panel.js'
+export * from './tag.js'

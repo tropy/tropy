@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { func, string } from 'prop-types'
 import { useEvent } from '../hooks/use-event.js'
 import { useTheme } from '../hooks/use-theme.js'
 import { on, off, stylesheet, toggle } from '../dom.js'
@@ -101,17 +100,6 @@ export function Frame({
       sandbox="allow-same-origin"
       srcDoc={srcDoc}/>
   )
-}
-
-Frame.propTypes = {
-  className: string,
-  innerClassName: string,
-  onClick: func,
-  onContextMenu: func,
-  onLoad: func,
-  onUnload: func,
-  srcDoc: string.isRequired,
-  styleSheet: string
 }
 
 Frame.defaultProps = {

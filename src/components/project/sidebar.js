@@ -1,29 +1,25 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { Titlebar } from '../toolbar'
-import { ActivityPane } from '../activity'
-import { Resizable } from '../resizable'
-import { ListLeafNode, ListTree, TrashListNode } from '../list'
-import { TagList } from '../tag'
-import { Sidebar, SidebarBody } from '../sidebar'
-import { ProjectName } from './name'
-import { TABS, LIST, SASS } from '../../constants'
-import { has } from '../../common/util'
-import { match } from '../../keymap'
-import { testFocusChange } from '../../dom'
-import * as act from '../../actions'
-
-import {
-  bool, shape, string, object, arrayOf, func, number
-} from 'prop-types'
+import { Titlebar } from '../toolbar.js'
+import { ActivityPane } from '../activity.js'
+import { Resizable } from '../resizable.js'
+import { ListLeafNode, ListTree, TrashListNode } from '../list/index.js'
+import { TagList } from '../tag/index.js'
+import { Sidebar, SidebarBody } from '../sidebar.js'
+import { ProjectName } from './name.js'
+import { TABS, LIST, SASS } from '../../constants/index.js'
+import { has } from '../../common/util.js'
+import { match } from '../../keymap.js'
+import { testFocusChange } from '../../dom.js'
+import * as act from '../../actions/index.js'
 
 import {
   getActivities,
   getAllTags,
   getListHold,
   getListSubTree
-} from '../../selectors'
+} from '../../selectors/index.js'
 
 
 class ProjectSidebar extends React.PureComponent {
@@ -340,52 +336,6 @@ class ProjectSidebar extends React.PureComponent {
     )
   }
 
-  static propTypes = {
-    activities: arrayOf(object).isRequired,
-    edit: object.isRequired,
-    expand: object.isRequired,
-    hasLastImport: bool.isRequired,
-    hold: object.isRequired,
-    isDisabled: bool,
-    isLastImportSelected: bool,
-    isTrashSelected: bool,
-    keymap: object.isRequired,
-    list: number,
-    lists: object.isRequired,
-    listwalk: arrayOf(number).isRequired,
-    project: shape({
-      file: string,
-      name: string,
-      items: number
-    }).isRequired,
-    root: number.isRequired,
-    tagColor: string,
-    tagSelection: arrayOf(number).isRequired,
-    tags: arrayOf(object).isRequired,
-    width: number.isRequired,
-    onActivityCancel: func.isRequired,
-    onContextMenu: func.isRequired,
-    onEdit: func.isRequired,
-    onEditCancel: func.isRequired,
-    onItemDelete: func.isRequired,
-    onItemImport: func.isRequired,
-    onItemTagAdd: func.isRequired,
-    onListCollapse: func.isRequired,
-    onListEdit: func.isRequired,
-    onListExpand: func.isRequired,
-    onListItemsAdd: func.isRequired,
-    onListMove: func.isRequired,
-    onListSave: func.isRequired,
-    onProjectEdit: func.isRequired,
-    onProjectSave: func.isRequired,
-    onResize: func.isRequired,
-    onSelect: func.isRequired,
-    onTagCreate: func.isRequired,
-    onTagDelete: func.isRequired,
-    onTagSave: func.isRequired,
-    onTagSelect: func.isRequired
-  }
-
   static defaultProps = {
     activities: [],
     edit: {},
@@ -393,8 +343,6 @@ class ProjectSidebar extends React.PureComponent {
     root: LIST.ROOT,
     tags: []
   }
-
-  static props = Object.keys(ProjectSidebar.propTypes)
 }
 
 

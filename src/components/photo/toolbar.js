@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl'
 import { Slider } from '../slider'
 import { Button } from '../button'
 import { Toolbar, ToolGroup } from '../toolbar'
-import { number, bool, func } from 'prop-types'
 import { SASS } from '../../constants'
 
 import {
@@ -48,17 +47,6 @@ export const PhotoToolbar = (props) => (
     </Toolbar.Right>
   </Toolbar>
 )
-
-PhotoToolbar.propTypes = {
-  hasCreateButton: bool,
-  isClosed: bool,
-  isDisabled: bool,
-  maxZoom: number.isRequired,
-  onCreate: func.isRequired,
-  onZoomChange: func.isRequired,
-  photos: number.isRequired,
-  zoom: number.isRequired
-}
 
 PhotoToolbar.defaultProps = {
   maxZoom: SASS.PHOTO.ZOOM.length - 1,

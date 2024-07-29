@@ -4,8 +4,6 @@ import { createClickHandler } from '../util'
 import cx from 'classnames'
 import { Icon } from '../icons'
 import { Button } from '../button'
-import { bool, number } from 'prop-types'
-
 
 class PhotoTile extends PhotoIterable {
   get classes() {
@@ -62,12 +60,6 @@ class PhotoTile extends PhotoIterable {
         {this.props.isExpanded && <div className="pointer"/>}
       </li>
     )
-  }
-
-  static propTypes = {
-    ...PhotoIterable.propTypes,
-    isLast: bool,
-    size: number
   }
 
   static defaultProps = {

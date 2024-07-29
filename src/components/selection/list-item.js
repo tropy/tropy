@@ -1,11 +1,10 @@
 import React from 'react'
-import { SelectionIterable } from './iterable'
-import { Editable } from '../editable'
+import { SelectionIterable } from './iterable.js'
+import { Editable } from '../editable.js'
 import { injectIntl } from 'react-intl'
-import { createClickHandler } from '../util'
-import { testFocusChange } from '../../dom'
+import { createClickHandler } from '../util.js'
+import { testFocusChange } from '../../dom.js'
 import cx from 'classnames'
-import { bool, func, object, string } from 'prop-types'
 
 
 class SelectionListItem extends SelectionIterable {
@@ -87,17 +86,6 @@ class SelectionListItem extends SelectionIterable {
         </div>
       </li>
     )
-  }
-
-  static propTypes = {
-    ...SelectionIterable.propTypes,
-    intl: object.isRequired,
-    title: string.isRequired,
-    data: object.isRequired,
-    isEditing: bool.isRequired,
-    onChange: func.isRequired,
-    onEdit: func.isRequired,
-    onEditCancel: func.isRequired
   }
 }
 

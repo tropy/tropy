@@ -2,23 +2,18 @@ import React from 'react'
 import cx from 'classnames'
 import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
-import Esper from '../../esper'
-import { EsperToolbar } from './toolbar'
-import { EsperPanel } from './panel'
+import Esper from '../../esper/index.js'
+import { EsperToolbar } from './toolbar.js'
+import { EsperPanel } from './panel.js'
 import { EsperOverlay } from './overlay.js'
-import { EsperPhotoError } from './error'
-import { pick, restrict } from '../../common/util'
-import { Cache } from '../../common/cache'
-import { contains, isHorizontal, rotate, round } from '../../common/math'
-import { addOrientation, subOrientation } from '../../common/iiif'
-import { match } from '../../keymap'
+import { EsperPhotoError } from './error.js'
+import { pick, restrict } from '../../common/util.js'
+import { Cache } from '../../common/cache.js'
+import { contains, isHorizontal, rotate, round } from '../../common/math.js'
+import { addOrientation, subOrientation } from '../../common/iiif.js'
+import { match } from '../../keymap.js'
 import { bounds, on, off } from '../../dom.js'
-
-import {
-  arrayOf, bool, func, number, object, shape, string
-} from 'prop-types'
-
-import { ESPER, SASS, TABS } from '../../constants'
+import { ESPER, SASS, TABS } from '../../constants/index.js'
 
 const {
   TOOL,
@@ -803,41 +798,6 @@ export class EsperContainer extends React.Component {
     )
   }
 
-  static propTypes = {
-    cache: string.isRequired,
-    hasOverlayToolbar: bool,
-    invertScroll: bool.isRequired,
-    invertZoom: bool.isRequired,
-    isDisabled: bool,
-    isReadOnly: bool,
-    isPanelVisible: bool.isRequired,
-    keymap: object.isRequired,
-    maxZoom: number.isRequired,
-    minZoom: number.isRequired,
-    mode: string.isRequired,
-    onContextMenu: func.isRequired,
-    onChange: func.isRequired,
-    onPhotoConsolidate: func.isRequired,
-    onPhotoError: func.isRequired,
-    onSelect: func.isRequired,
-    onSelectionCreate: func.isRequired,
-    photo: object,
-    tabIndex: number.isRequired,
-    overlay: number.isRequired,
-    tool: string.isRequired,
-    selection: object,
-    selections: arrayOf(shape({
-      id: number.isRequired,
-      height: number.isRequired,
-      width: number.isRequired,
-      x: number.isRequired,
-      y: number.isRequired
-    })).isRequired,
-    x: number,
-    y: number,
-    zoom: number.isRequired
-  }
-
   static defaultProps = {
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
@@ -903,5 +863,3 @@ const getZoomToFit =
     round(
       Math.min(minZoom, Math.min(width / w, height / h)),
       ZOOM_PRECISION)
-
-

@@ -1,6 +1,5 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { arrayOf, func, object, string } from 'prop-types'
 import { Accordion } from '../accordion.js'
 import { Button, ButtonGroup } from '../button.js'
 import { PluginInstance } from './instance.js'
@@ -139,18 +138,5 @@ export class PluginAccordion extends Accordion {
         ))}
       </ul>
     )
-  }
-
-  static propTypes = {
-    ...Accordion.propTypes,
-    defaultIcon: string.required,
-    instances: arrayOf(object).isRequired,
-    spec: object.isRequired,
-    onChange: func.isRequired,
-    onDisable: func.isRequired,
-    onEnable: func.isRequired,
-    onInsert: func.isRequired,
-    onRemove: func.isRequired,
-    onUninstall: func.isRequired
   }
 }

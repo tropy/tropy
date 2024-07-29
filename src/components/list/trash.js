@@ -1,7 +1,6 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import cx from 'classnames'
-import { bool, func } from 'prop-types'
 import { IconTrash } from '../icons.js'
 import { DND, useDrop } from '../dnd.js'
 
@@ -47,10 +46,3 @@ export const TrashListNode = React.memo(({
     </li>
   )
 })
-
-TrashListNode.propTypes = {
-  isSelected: bool,
-  onClick: func.isRequired,
-  onContextMenu: func.isRequired,
-  onDropItems: func.isRequired
-}

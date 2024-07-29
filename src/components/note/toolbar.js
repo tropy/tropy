@@ -3,8 +3,6 @@ import { FormattedMessage } from 'react-intl'
 import { Toolbar, ToolGroup } from '../toolbar'
 import { IconNote, IconPlusSmall } from '../icons'
 import { Button } from '../button'
-import { bool, func, number } from 'prop-types'
-
 
 export const NoteToolbar = ({
   hasCreateButton,
@@ -34,10 +32,3 @@ export const NoteToolbar = ({
     </Toolbar.Right>
   </Toolbar>
 )
-
-NoteToolbar.propTypes = {
-  hasCreateButton: bool,
-  isDisabled: bool,
-  notes: number.isRequired,
-  onCreate: func.isRequired
-}

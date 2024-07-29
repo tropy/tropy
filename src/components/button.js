@@ -4,25 +4,9 @@ import cx from 'classnames'
 import { Toggle } from './form.js'
 import * as icons from './icons.js'
 
-import {
-  arrayOf,
-  bool,
-  element,
-  func,
-  node,
-  number,
-  object,
-  oneOf,
-  string
-} from 'prop-types'
-
 export const ButtonGroup = ({ children }) => (
   <div className="btn-group">{children}</div>
 )
-
-ButtonGroup.propTypes = {
-  children: node
-}
 
 export const Button = React.memo(({
   className,
@@ -96,27 +80,6 @@ export const Button = React.memo(({
     text && intl.formatMessage({ id: text }))
 })
 
-Button.propTypes = {
-  className: string,
-  icon: element,
-  intl: object.isRequired,
-  isActive: bool,
-  isBlock: bool,
-  isDefault: bool,
-  isDisabled: bool,
-  isPrimary: bool,
-  noFocus: bool,
-  size: oneOf(['sm', 'md', 'lg']),
-  title: string,
-  text: string,
-  tabIndex: number,
-  type: string.isRequired,
-  onBlur: func,
-  onFocus: func,
-  onClick: func,
-  onMouseDown: func
-}
-
 Button.defaultProps = {
   noFocus: false,
   size: 'md',
@@ -146,17 +109,6 @@ export const ToggleButton = ({
     value={value}/>
 )
 
-ToggleButton.propTypes = {
-  isChecked: bool,
-  isDisabled: bool,
-  name: string.isRequired,
-  onChange: func.isRequired,
-  size: oneOf(['sm', 'md', 'lg']),
-  text: string,
-  tabIndex: number,
-  value: string
-}
-
 ToggleButton.defaultProps = {
   size: 'md'
 }
@@ -185,16 +137,6 @@ export const ToggleButtonGroup = ({
   </ButtonGroup>
 )
 
-ToggleButtonGroup.propTypes = {
-  id: string,
-  name: string.isRequired,
-  onChange: func.isRequired,
-  size: oneOf(['sm', 'md', 'lg']),
-  options: arrayOf(string).isRequired,
-  tabIndex: number,
-  value: string
-}
-
 ToggleButtonGroup.defaultProps = {
   size: 'md'
 }
@@ -216,10 +158,3 @@ export const PlusMinusControls = ({
       onClick={onRemove}/>
   </ButtonGroup>
 )
-
-PlusMinusControls.propTypes = {
-  canAdd: bool,
-  canRemove: bool,
-  onAdd: func,
-  onRemove: func
-}

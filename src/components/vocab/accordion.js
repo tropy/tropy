@@ -5,7 +5,6 @@ import { FormField, FormLink, FormText } from '../form'
 import { ResourceList } from '../resource'
 import { Button, ButtonGroup } from '../button'
 import { IconBook, IconBookLock, IconTrash, IconExport } from '../icons'
-import { arrayOf, func, object, shape, string } from 'prop-types'
 
 
 export class VocabAccordion extends Accordion {
@@ -115,24 +114,5 @@ export class VocabAccordion extends Accordion {
           onSave={this.props.onPropsSave}/>
       </div>
     )
-  }
-
-  static propTypes = {
-    ...Accordion.propTypes,
-    vocab: shape({
-      id: string.isRequired,
-      prefix: string,
-      title: string,
-      description: string,
-      seeAlso: string,
-      classes: arrayOf(object).isRequired,
-      properties: arrayOf(object).isRequired
-    }).isRequired,
-    onClassSave: func.isRequired,
-    onDelete: func.isRequired,
-    onExport: func.isRequired,
-    onOpenLink: func.isRequired,
-    onPropsSave: func.isRequired,
-    onSave: func.isRequired
   }
 }

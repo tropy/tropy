@@ -1,13 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { MetadataList } from './list'
-import { MetadataSection } from './section'
-import { PhotoInfo } from '../photo/info'
-import { ItemInfo } from '../item/info'
-import { SelectionInfo } from '../selection/info'
-import * as act from '../../actions'
-import { shapes } from '../util'
-import { arrayOf, bool, func, object, shape } from 'prop-types'
+import { MetadataList } from './list.js'
+import { MetadataSection } from './section.js'
+import { PhotoInfo } from '../photo/info.js'
+import { ItemInfo } from '../item/info.js'
+import { SelectionInfo } from '../selection/info.js'
+import * as act from '../../actions/index.js'
 
 import {
   getActiveSelection,
@@ -17,7 +15,7 @@ import {
   getSelectedItems,
   getSelectedPhoto,
   getSelectionFields
-} from '../../selectors'
+} from '../../selectors/index.js'
 
 
 class MetadataPanel extends React.PureComponent {
@@ -223,7 +221,6 @@ class MetadataPanel extends React.PureComponent {
     )
   }
 
-
   render() {
     return (
       <div className="scroll-container">
@@ -232,27 +229,6 @@ class MetadataPanel extends React.PureComponent {
         {this.renderSelectionFields()}
       </div>
     )
-  }
-
-
-  static propTypes = {
-    edit: object,
-    fields: shape({
-      item: arrayOf(shapes.field).isRequired,
-      photo: arrayOf(shapes.field).isRequired,
-      selection: arrayOf(shapes.field).isRequired
-    }).isRequired,
-    isDisabled: bool,
-    items: arrayOf(shapes.subject),
-    photo: shapes.subject,
-    selection: shapes.subject,
-    template: shapes.template,
-    onContextMenu: func.isRequired,
-    onEdit: func,
-    onEditCancel: func,
-    onMetadataAdd: func.isRequired,
-    onMetadataSave: func.isRequired,
-    onTemplateChange: func.isRequired
   }
 }
 

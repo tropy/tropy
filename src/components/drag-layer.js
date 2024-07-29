@@ -5,9 +5,6 @@ import { ItemDragPreview } from './item/drag-preview.js'
 import { PhotoDragPreview } from './photo/drag-preview.js'
 import { ListDragPreview } from './list/drag-preview.js'
 import { FieldDragPreview } from './metadata/drag-preview.js'
-import { shapes } from './util.js'
-import { bool, element } from 'prop-types'
-
 
 export function DragPreviewPositioner({
   children,
@@ -39,15 +36,6 @@ export function DragPreviewPositioner({
     </div>
   )
 }
-
-DragPreviewPositioner.propTypes = {
-  children: element.isRequired,
-  cursor: shapes.point.isRequired,
-  isRelative: bool,
-  origin: shapes.point.isRequired,
-  position: shapes.point.isRequired
-}
-
 
 const dragPreview = {
   [DND.ITEMS]: ItemDragPreview,

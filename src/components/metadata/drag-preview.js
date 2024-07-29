@@ -1,12 +1,3 @@
-import {
-  arrayOf,
-  bool,
-  number,
-  oneOfType,
-  shape,
-  string
-} from 'prop-types'
-
 export const FieldDragPreview = ({ item }) => (
   <div className="metadata-field drag-preview">
     <div className="drag-preview-container">
@@ -17,11 +8,3 @@ export const FieldDragPreview = ({ item }) => (
       <div className="badge">{item.id.length}</div>}
   </div>
 )
-
-FieldDragPreview.propTypes = {
-  item: shape({
-    id: oneOfType([number, arrayOf(number)]).isRequired,
-    isMixed: bool,
-    value: string
-  }).isRequired
-}

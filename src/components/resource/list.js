@@ -1,7 +1,5 @@
 import React from 'react'
 import { ResourceListItem } from './list-item'
-import { array, func } from 'prop-types'
-
 
 export class ResourceList extends React.PureComponent {
   render() {
@@ -16,11 +14,5 @@ export class ResourceList extends React.PureComponent {
         ))}
       </ul>
     )
-  }
-
-  static propTypes = {
-    resources: array.isRequired,
-    onOpenLink: func.isRequired,
-    onSave: func.isRequired
   }
 }

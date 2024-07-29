@@ -1,17 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { TagList } from './list'
-import { TagAdder } from './adder'
-import { toId } from '../../common/util'
-import { arrayOf, bool, func, number, object, shape, string } from 'prop-types'
-import * as act from '../../actions'
+import { TagList } from './list.js'
+import { TagAdder } from './adder.js'
+import { toId } from '../../common/util.js'
+import * as act from '../../actions/index.js'
 
 import {
   getAllTags,
   getItemTags,
   getSelectedItems,
   getTagCompletions
-} from '../../selectors'
+} from '../../selectors/index.js'
 
 
 class TagPanel extends React.PureComponent {
@@ -89,27 +88,6 @@ class TagPanel extends React.PureComponent {
           onCreate={this.handleTagCreate}/>
       </>
     )
-  }
-
-  static propTypes = {
-    allTags: arrayOf(object).isRequired,
-    completions: arrayOf(string).isRequired,
-    edit: object,
-    isDisabled: bool,
-    items: arrayOf(object).isRequired,
-    keymap: object.isRequired,
-    tags: arrayOf(shape({
-      id: number.isRequired,
-      name: string.isRequired
-    })).isRequired,
-
-    onBlur: func,
-    onTabFocus: func,
-    onCancel: func,
-    onContextMenu: func.isRequired,
-    onItemTagAdd: func.isRequired,
-    onItemTagRemove: func.isRequired,
-    onTagCreate: func.isRequired
   }
 }
 

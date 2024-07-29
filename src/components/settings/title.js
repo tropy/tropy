@@ -1,4 +1,3 @@
-import { func, object } from 'prop-types'
 import { FormElement, FormToggle } from '../form.js'
 import { PropertySelect } from '../resource/select.js'
 import { IconItemSmall, IconPhoto } from '../icons.js'
@@ -44,9 +43,4 @@ export function TitleSettings({ config, onChange }) {
         onChange={handleChange}/>
     </>
   )
-}
-
-TitleSettings.propTypes = {
-  config: object.isRequired,
-  onChange: func.isRequired
 }

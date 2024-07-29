@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import cx from 'classnames'
-import { bool, func, number, shape, string } from 'prop-types'
 import { useClickHandler } from '../../hooks/use-click-handler.js'
 import { useEvent } from '../../hooks/use-event.js'
 
@@ -50,15 +49,4 @@ export const NoteListItem = ({
       </div>
     </li>
   )
-}
-
-NoteListItem.propTypes = {
-  isSelected: bool,
-  note: shape({
-    id: number.isRequired,
-    text: string.isRequired
-  }).isRequired,
-  onContextMenu: func.isRequired,
-  onOpen: func.isRequired,
-  onSelect: func.isRequired
 }

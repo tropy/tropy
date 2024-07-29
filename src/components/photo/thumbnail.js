@@ -1,6 +1,5 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { bool, func, number, string } from 'prop-types'
 import { Image } from '../image.js'
 import { selectCachePrefix } from '../../selectors/project.js'
 import { Cache } from '../../common/cache.js'
@@ -48,26 +47,20 @@ export function Thumbnail(props) {
   )
 }
 
-Thumbnail.propTypes = {
-  angle: number,
-  broken: bool,
-  color: string,
-  consolidated: number,
-  height: number,
-  id: number,
-  mimetype: string,
-  mirror: bool,
-  orientation: number,
-  size: number.isRequired,
-  width: number,
-  onClick: func,
-  onContextMenu: func,
-  onDoubleClick: func,
-  onMouseDown: func
-}
+Thumbnail.keys = [
+  'angle',
+  'broken',
+  'color',
+  'consolidated',
+  'height',
+  'id',
+  'mimetype',
+  'mirror',
+  'orientation',
+  'size',
+  'width'
+]
 
 Thumbnail.defaultProps = {
   size: SASS.ICON.SIZE
 }
-
-Thumbnail.keys = Object.keys(Thumbnail.propTypes)

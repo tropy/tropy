@@ -2,9 +2,7 @@ import React from 'react'
 import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
 import { Button } from '../button'
 import { LinkContext } from './link'
-import { bool, func, object, string } from 'prop-types'
 import * as icons from '../icons'
-
 
 export class EditorToolbar extends React.PureComponent {
   state = {
@@ -167,22 +165,11 @@ export class EditorToolbar extends React.PureComponent {
     )
   }
 
-  static propTypes = {
-    align: object.isRequired,
-    isDisabled: bool,
-    isReadOnly: bool,
-    isTitlebar: bool,
-    link: object,
-    marks: object.isRequired,
-    onCommand: func.isRequired
-  }
-
   static defaultProps = {
     align: {},
     marks: {}
   }
 }
-
 
 const EditorButton = ({ icon, ...props }) => {
   let Icon = icons[icon]
@@ -190,8 +177,4 @@ const EditorButton = ({ icon, ...props }) => {
   return (
     <Button {...props} noFocus icon={<Icon/>}/>
   )
-}
-
-EditorButton.propTypes = {
-  icon: string.isRequired
 }

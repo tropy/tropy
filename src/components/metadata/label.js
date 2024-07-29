@@ -1,6 +1,5 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { element, string } from 'prop-types'
 import { URI, pluck } from '../../common/util.js'
 
 export const MetadataLabel = React.memo(({ children, hint, id }) => {
@@ -14,9 +13,3 @@ export const MetadataLabel = React.memo(({ children, hint, id }) => {
     </label>
   )
 })
-
-MetadataLabel.propTypes = {
-  children: element,
-  hint: string,
-  id: string.isRequired
-}

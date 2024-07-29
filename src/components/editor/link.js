@@ -1,5 +1,4 @@
 import React from 'react'
-import { bool, func, object, string } from 'prop-types'
 import { injectIntl } from 'react-intl'
 import { Toolbar } from '../toolbar'
 import { Input } from '../input'
@@ -53,22 +52,11 @@ class LinkContext extends React.PureComponent {
     )
   }
 
-  static propTypes = {
-    href: string.isRequired,
-    intl: object.isRequired,
-    isActive: bool,
-    isReadOnly: bool,
-    onBlur: func.isRequired,
-    onCancel: func.isRequired,
-    onCommit: func.isRequired
-  }
-
   static defaultProps = {
     href: '',
     onBlur: () => true // cancel on blur!
   }
 }
-
 
 const LinkContextContainer = injectIntl(LinkContext)
 

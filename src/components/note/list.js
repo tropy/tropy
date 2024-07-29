@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import { arrayOf, bool, func, number, shape } from 'prop-types'
 import { Scroll } from '../scroll/index.js'
 import { NoteListItem } from './list-item.js'
 import { TABS, SASS } from '../../constants/index.js'
@@ -64,22 +63,6 @@ export const NoteList = ({
       </Scroll>
     </div>
   )
-}
-
-NoteList.propTypes = {
-  isReadOnly: bool,
-  notes: arrayOf(shape({
-    id: number.isRequired
-  })).isRequired,
-  onContextMenu: func.isRequired,
-  onRemove: func.isRequired,
-  onOpen: func.isRequired,
-  onSelect: func.isRequired,
-  rowHeight: number.isRequired,
-  selection: shape({
-    id: number
-  }),
-  tabIndex: number
 }
 
 NoteList.defaultProps = {

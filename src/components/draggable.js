@@ -1,5 +1,4 @@
 import React from 'react'
-import { func, bool, string, number, object, node } from 'prop-types'
 import cx from 'classnames'
 import { createDragHandler } from '../dom.js'
 import { noop } from '../common/util.js'
@@ -83,20 +82,6 @@ export class Draggable extends React.PureComponent {
         {this.props.children}
       </div>
     )
-  }
-
-  static propTypes = {
-    children: node,
-    className: string,
-    delay: number.isRequired,
-    isDisabled: bool,
-    style: object,
-    tabIndex: number,
-    onClick: func.isRequired,
-    onDrag: func.isRequired,
-    onDragStart: func.isRequired,
-    onDragStop: func.isRequired,
-    stopOnMouseLeave: bool
   }
 
   static defaultProps = {

@@ -1,10 +1,8 @@
 import React from 'react'
-import { Scroll } from './scroll'
-import { SASS } from '../constants'
-import { blank } from '../common/util'
+import { Scroll } from './scroll/scroll.js'
+import { SASS } from '../constants/index.js'
+import { blank } from '../common/util.js'
 import cx from 'classnames'
-import { arrayOf, bool, func, node, number, shape, string } from 'prop-types'
-
 
 export class Option extends React.PureComponent {
   get classes() {
@@ -35,17 +33,6 @@ export class Option extends React.PureComponent {
         {this.props.option.text}
       </li>
     )
-  }
-
-  static propTypes = {
-    isActive: bool,
-    isSelected: bool,
-    onClick: func.isRequired,
-    onHover: func.isRequired,
-    option: shape({
-      id: string.isRequired,
-      text: node.isRequired
-    }).isRequired
   }
 }
 
@@ -122,19 +109,6 @@ export class OptionList extends React.Component {
         </Scroll>
       </div>
     )
-  }
-
-  static propTypes = {
-    active: string,
-    onActivate: func.isRequired,
-    onSelect: func.isRequired,
-    rowHeight: number.isRequired,
-    restrict: string,
-    selection: arrayOf(string).isRequired,
-    values: arrayOf(shape({
-      id: string.isRequired,
-      text: node.isRequired
-    })).isRequired
   }
 
   static defaultProps = {

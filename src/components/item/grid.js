@@ -1,9 +1,9 @@
 import React from 'react'
-import { ItemIterator } from './iterator'
-import { ItemTile } from './tile'
-import { Scroll } from '../scroll'
+import { ItemIterator } from './iterator.js'
+import { ItemTile } from './tile.js'
+import { Scroll } from '../scroll/index.js'
 import cx from 'classnames'
-import { SASS } from '../../constants'
+import { SASS } from '../../constants/index.js'
 
 
 export class ItemGrid extends ItemIterator {
@@ -43,7 +43,5 @@ export class ItemGrid extends ItemIterator {
     )
   }
 
-  static propTypes = {
-    ...ItemIterator.propTypes
-  }
+
 }

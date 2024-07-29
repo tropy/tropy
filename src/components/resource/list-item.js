@@ -1,7 +1,5 @@
 import React from 'react'
 import { FormField, FormLink, FormText } from '../form'
-import { func, object } from 'prop-types'
-
 
 export class ResourceListItem extends React.PureComponent {
   handleChange = (data) => {
@@ -44,11 +42,5 @@ export class ResourceListItem extends React.PureComponent {
         </fieldset>
       </li>
     )
-  }
-
-  static propTypes = {
-    resource: object.isRequired,
-    onOpenLink: func.isRequired,
-    onSave: func.isRequired
   }
 }

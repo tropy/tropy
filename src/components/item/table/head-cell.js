@@ -1,11 +1,10 @@
 import React from 'react'
-import { Draggable } from '../../draggable'
-import { Resizable } from '../../resizable'
+import { Draggable } from '../../draggable.js'
+import { Resizable } from '../../resizable.js'
 import cx from 'classnames'
-import { IconChevron7 } from '../../icons'
-import { TYPE } from '../../../constants'
-import { bool, func, number, string } from 'prop-types'
-import { blank, noop } from '../../../common/util'
+import { IconChevron7 } from '../../icons.js'
+import { TYPE } from '../../../constants/index.js'
+import { blank, noop } from '../../../common/util.js'
 
 const MIN_WIDTH = 40
 
@@ -88,28 +87,6 @@ export class TableHeadCell extends React.PureComponent {
         </Draggable>
       </Resizable>
     )
-  }
-
-  static propTypes = {
-    isActive: bool,
-    isAscending: bool.isRequired,
-    isDragging: bool,
-    isFixedColumn: bool,
-    isMoving: bool,
-    isOver: bool,
-    label: string.isRequired,
-    maxWidth: number,
-    minWidth: number.isRequired,
-    position: number,
-    type: string.isRequired,
-    id: string.isRequired,
-    width: number.isRequired,
-    onClick: func.isRequired,
-    onOrder: func,
-    onOrderReset: func,
-    onOrderStart: func.isRequired,
-    onOrderStop: func,
-    onResize: func
   }
 
   static defaultProps = {

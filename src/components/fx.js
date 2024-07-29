@@ -1,8 +1,6 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { element, number, oneOf } from 'prop-types'
 import { on, bounds } from '../dom.js'
-
 
 export const onTransitionEnd = (node, done) => {
   on(node, 'transitionend', event => {
@@ -78,12 +76,6 @@ export class Collapse extends React.Component {
         </div>
       </CSSTransition>
     )
-  }
-
-  static propTypes = {
-    children: element.isRequired,
-    dimension: oneOf(['height', 'width']),
-    value: number
   }
 
   static defaultProps = {

@@ -1,5 +1,4 @@
 import { useSelector } from 'react-redux'
-import { arrayOf, number } from 'prop-types'
 
 export const EsperOverlay = ({ transcriptions }) => {
   let id = transcriptions.at(-1)
@@ -22,8 +21,4 @@ export const EsperOverlay = ({ transcriptions }) => {
       </pre>
     </div>
   )
-}
-
-EsperOverlay.propTypes = {
-  transcriptions: arrayOf(number).isRequired
 }

@@ -1,10 +1,9 @@
 import React from 'react'
-import { WindowContext } from '../window'
-import { func } from 'prop-types'
-import { AccordionGroup } from '../accordion'
-import { PluginAccordion } from './accordion'
+import { WindowContext } from '../window.js'
+import { AccordionGroup } from '../accordion.js'
+import { PluginAccordion } from './accordion.js'
 import debounce from 'lodash.debounce'
-import { insert, omit, splice } from '../../common/util'
+import { insert, omit, splice } from '../../common/util.js'
 
 
 export class PluginConfig extends React.Component {
@@ -101,11 +100,6 @@ export class PluginConfig extends React.Component {
         ))}
       </AccordionGroup>
     )
-  }
-
-  static propTypes = {
-    onUninstall: func.isRequired,
-    onOpenLink: func.isRequired
   }
 
   static contextType = WindowContext

@@ -8,22 +8,11 @@ import { FileSelect } from './file.js'
 import { Select } from './select.js'
 import { SASS } from '../constants/index.js'
 
-import {
-  arrayOf, bool, func, node, number, oneOf, oneOfType, string
-} from 'prop-types'
-
-
 export const Form = ({ children, className }) => (
   <form className={cx('form-horizontal', className)}>
     {children}
   </form>
 )
-
-Form.propTypes = {
-  children: node,
-  className: string
-}
-
 
 export const FormGroup = ({ children, className, isCompact }) => (
   <div className={cx('form-group', className, {
@@ -32,13 +21,6 @@ export const FormGroup = ({ children, className, isCompact }) => (
     {children}
   </div>
 )
-
-FormGroup.propTypes = {
-  children: node,
-  className: string,
-  isCompact: bool
-}
-
 
 export const Label = React.memo(({ className, id, size, title, value }) => {
   let intl = useIntl()
@@ -52,14 +34,6 @@ export const Label = React.memo(({ className, id, size, title, value }) => {
     </label>
   )
 })
-
-Label.propTypes = {
-  className: string,
-  id: string.isRequired,
-  size: number,
-  title: string,
-  value: string
-}
 
 export const Description = (props = {}) => {
   return (
@@ -102,17 +76,6 @@ export class FormElement extends React.PureComponent {
         </div>
       </FormGroup>
     )
-  }
-
-  static propTypes = {
-    children: node,
-    className: string,
-    description: string,
-    id: string,
-    title: string,
-    label: string,
-    isCompact: bool,
-    size: number.isRequired
   }
 
   static defaultProps = {
@@ -177,28 +140,6 @@ export class FormField extends React.PureComponent {
     )
   }
 
-  static propTypes = {
-    description: string,
-    id: string.isRequired,
-    isCompact: bool,
-    isDisabled: bool,
-    isReadOnly: bool,
-    isRequired: bool,
-    label: string,
-    max: number,
-    min: number,
-    name: string.isRequired,
-    placeholder: string,
-    size: number.isRequired,
-    tabIndex: number,
-    type: string.isRequired,
-    title: string,
-    value: string,
-    onBlur: func,
-    onChange: func,
-    onInputChange: func
-  }
-
   static defaultProps = {
     isReadOnly: false,
     size: 8,
@@ -229,22 +170,6 @@ export const FormSelect = (props) => {
         value={props.value}/>
     </FormElement>
   )
-}
-
-FormSelect.propTypes = {
-  id: string.isRequired,
-  isCompact: bool,
-  isDisabled: bool,
-  isInputHidden: bool,
-  isRequired: bool,
-  isSelectionHidden: bool,
-  name: string.isRequired,
-  options: arrayOf(string).isRequired,
-  placeholder: node,
-  size: number.isRequired,
-  tabIndex: number,
-  value: string.isRequired,
-  onChange: func.isRequired
 }
 
 FormSelect.defaultProps = {
@@ -294,21 +219,6 @@ export const Toggle = ({
   )
 }
 
-Toggle.propTypes = {
-  className: string,
-  id: string.isRequired,
-  isChecked: bool,
-  isDisabled: bool,
-  name: string.isRequired,
-  tabIndex: number,
-  label: string,
-  type: oneOf(['checkbox', 'radio']).isRequired,
-  value: oneOfType([bool, string]),
-  onBlur: func,
-  onFocus: func,
-  onChange: func.isRequired
-}
-
 Toggle.defaultProps = {
   type: 'checkbox'
 }
@@ -323,12 +233,6 @@ export const FormToggle = ({ isCompact, size, ...props }) => (
       }/>
   </FormGroup>
 )
-
-FormToggle.propTypes = {
-  ...Toggle.propTypes,
-  size: number.isRequired,
-  isCompact: bool
-}
 
 FormToggle.defaultProps = {
   size: 8,
@@ -363,18 +267,6 @@ export const FormToggleGroup = ({
   </FormElement>
 )
 
-FormToggleGroup.propTypes = {
-  id: string.isRequired,
-  isCompact: bool,
-  isDisabled: bool,
-  name: string.isRequired,
-  options: arrayOf(string).isRequired,
-  size: number.isRequired,
-  tabIndex: number,
-  value: string,
-  onChange: func.isRequired
-}
-
 FormToggleGroup.defaultProps = {
   size: 8
 }
@@ -395,14 +287,6 @@ export class FormText extends React.PureComponent {
         </div>
       </FormElement>
     )
-  }
-
-  static propTypes = {
-    id: string.isRequired,
-    isCompact: bool,
-    isOptional: bool,
-    size: number.isRequired,
-    value: string
   }
 
   static defaultProps = {
@@ -435,15 +319,6 @@ export class FormLink extends React.PureComponent {
         </div>
       </FormElement>
     )
-  }
-
-  static propTypes = {
-    id: string.isRequired,
-    isCompact: bool,
-    isOptional: bool,
-    size: number.isRequired,
-    value: string,
-    onClick: func.isRequired
   }
 
   static defaultProps = {

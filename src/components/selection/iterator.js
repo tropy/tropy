@@ -1,7 +1,6 @@
 import React from 'react'
-import { DND, DropTarget } from '../dnd'
-import { arrayOf, bool, func, number, shape } from 'prop-types'
-import { adjacent, move } from '../../common/util'
+import { DND, DropTarget } from '../dnd.js'
+import { adjacent, move } from '../../common/util.js'
 
 
 export class SelectionIterator extends React.Component {
@@ -67,26 +66,6 @@ export class SelectionIterator extends React.Component {
         onSelect: this.select
       })
     })
-  }
-
-  static propTypes = {
-    active: number,
-    dropTarget: func,
-    isDisabled: bool.isRequired,
-    isItemOpen: bool,
-    isOver: bool,
-    cols: number,
-    photo: shape({
-      id: number.isRequired
-    }).isRequired,
-    selections: arrayOf(shape({
-      id: number.isRequired
-    })).isRequired,
-    onContextMenu: func.isRequired,
-    onError: func.isRequired,
-    onItemOpen: func.isRequired,
-    onSelect: func.isRequired,
-    onSort: func.isRequired
   }
 
   static asDropTarget() {

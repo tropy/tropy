@@ -1,5 +1,4 @@
 import { IconFolder } from '../icons.js'
-import { number, shape, string } from 'prop-types'
 
 export const ListDragPreview = ({ item }) => (
   <div
@@ -15,10 +14,3 @@ export const ListDragPreview = ({ item }) => (
     </div>
   </div>
 )
-
-ListDragPreview.propTypes = {
-  item: shape({
-    name: string.isRequired,
-    padding: number.isRequired
-  }).isRequired
-}

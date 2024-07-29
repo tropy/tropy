@@ -1,15 +1,11 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Select } from '../select'
-import { Highlight } from '../completions'
+import { Select } from '../select.js'
+import { Highlight } from '../completions.js'
 import { useIntl } from 'react-intl'
-import * as collate from '../../collate'
-import { titlecase } from '../../common/util'
+import * as collate from '../../collate.js'
+import { titlecase } from '../../common/util.js'
 import { getDatatypeList, getPropertyList } from '../../selectors/index.js'
-
-import {
-  bool, func, number, object, oneOfType, shape, string
-} from 'prop-types'
 
 export const DataTypeSelect = React.forwardRef((props, ref) => {
   let options = useSelector(getDatatypeList)
@@ -35,14 +31,6 @@ export const ResourceSelect = React.forwardRef((props, ref) => {
     <Select ref={ref} {...props} placeholder={placeholder}/>
   )
 })
-
-ResourceSelect.propTypes = {
-  className: string.isRequired,
-  match: func.isRequired,
-  placeholder: string,
-  tabIndex: number.isRequired,
-  toText: func.isRequired
-}
 
 ResourceSelect.defaultProps = {
   ...Select.defaultProps,
@@ -76,14 +64,6 @@ export const Label = ({ resource, matchData }) => (
   </span>
 )
 
-Label.propTypes = {
-  resource: oneOfType([string, shape({
-    name: string,
-    label: string
-  })]).isRequired,
-  matchData: oneOfType([bool, object])
-}
-
 
 export const Id = ({ resource, matchData }) => (
   <span className="mute truncate">
@@ -102,14 +82,6 @@ export const Id = ({ resource, matchData }) => (
   </span>
 )
 
-Id.propTypes = {
-  resource: oneOfType([string, shape({
-    id: string.isRequired,
-    name: string,
-    prefix: string
-  })]).isRequired,
-  matchData: oneOfType([bool, object])
-}
 
 function match(res, query, prefix) {
   if (prefix != null) {

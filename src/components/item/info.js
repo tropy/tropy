@@ -1,6 +1,5 @@
 import React from 'react'
 import { useIntl } from 'react-intl'
-import { object } from 'prop-types'
 import { MetadataField } from '../metadata/field.js'
 import { datetime } from '../../format.js'
 
@@ -18,7 +17,3 @@ export const ItemInfo = React.memo(({ item }) => {
     </ol>
   )
 })
-
-ItemInfo.propTypes = {
-  item: object.isRequired
-}

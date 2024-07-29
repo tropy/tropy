@@ -1,11 +1,11 @@
-import { join } from 'path'
+import { join } from 'node:path'
 import React from 'react'
-import ARGS from '../../args'
-import { Item } from './item'
-import { WindowContext } from '../window'
-import { delay, noop } from '../../common/util'
-import { loadImage } from '../../dom'
-import { debug } from '../../common/log'
+import ARGS from '../../args.js'
+import { Item } from './item.js'
+import { WindowContext } from '../window.js'
+import { delay, noop } from '../../common/util.js'
+import { loadImage } from '../../dom.js'
+import { debug } from '../../common/log.js'
 
 
 export class PrintContainer extends React.Component {

@@ -1,6 +1,5 @@
 import { basename } from 'node:path'
 import React from 'react'
-import { arrayOf, bool, object, node, string } from 'prop-types'
 import { useIntl, FormattedMessage } from 'react-intl'
 import cx from 'classnames'
 import { auto, bytes, number } from '../../format.js'
@@ -13,13 +12,6 @@ export const MetadataField = ({ isExtra, label, text, type }) => (
     <div className="value">{auto(text, type)}</div>
   </li>
 )
-
-MetadataField.propTypes = {
-  isExtra: bool,
-  label: node.isRequired,
-  text: string,
-  type: string.isRequired
-}
 
 MetadataField.defaultProps = {
   type: TYPE.TEXT
@@ -39,10 +31,6 @@ export const ItemInfo = ({ item }) => {
         type={TYPE.DATE}/>
     </ol>
   )
-}
-
-ItemInfo.propTypes = {
-  item: object.isRequired
 }
 
 export const PhotoInfo = ({ photo }) => {
@@ -72,10 +60,6 @@ export const PhotoInfo = ({ photo }) => {
   )
 }
 
-PhotoInfo.propTypes = {
-  photo: object.isRequired
-}
-
 export const MetadataContainer = ({ item, photo, notes }) => (
   <div className="metadata-container">
     <div className="col">
@@ -103,12 +87,6 @@ export const MetadataContainer = ({ item, photo, notes }) => (
   </div>
 )
 
-MetadataContainer.propTypes = {
-  item: object,
-  photo: object,
-  notes: node
-}
-
 export const MetadataSection = ({ fields, title, tags }) => (
   <section>
     <h5 className="metadata-heading">
@@ -132,9 +110,3 @@ export const MetadataSection = ({ fields, title, tags }) => (
     </ol>
   </section>
 )
-
-MetadataSection.propTypes = {
-  fields: arrayOf(object),
-  tags: arrayOf(string),
-  title: string.isRequired
-}

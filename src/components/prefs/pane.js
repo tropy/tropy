@@ -1,6 +1,5 @@
 import React, { Children } from 'react'
 import { useSelector } from 'react-redux'
-import { bool, node, string } from 'prop-types'
 import cx from 'classnames'
 import { ScrollContainer } from '../scroll/container.js'
 
@@ -22,18 +21,8 @@ export const Pane = ({ isDisabled, children, name }) => {
   )
 }
 
-Pane.propTypes = {
-  isDisabled: bool,
-  children: node,
-  name: string.isRequired
-}
-
 export const Footer = ({ children }) => (
   <footer>
     {children}
   </footer>
 )
-
-Footer.propTypes = {
-  children: node
-}

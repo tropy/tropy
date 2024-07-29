@@ -1,15 +1,10 @@
 import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
-import { ItemPanelGroup } from './panel'
-import { ItemContainer } from './container'
-import { Resizable } from '../resizable'
-import { SASS } from '../../constants'
-
-import {
-  arrayOf, bool, func, object, number, shape
-} from 'prop-types'
-
+import { ItemPanelGroup } from './panel.js'
+import { ItemContainer } from './container.js'
+import { Resizable } from '../resizable.js'
+import { SASS } from '../../constants/index.js'
 import { useActions } from '../../hooks/use-action.js'
 
 import {
@@ -140,35 +135,4 @@ export const ItemView = ({
         onUiUpdate={handleUiUpdate}/>
     </section>
   )
-}
-
-ItemView.propTypes = {
-  items: arrayOf(
-    shape({
-      id: number.isRequired,
-      tags: arrayOf(number),
-      deleted: bool
-    })
-  ),
-
-  keymap: object.isRequired,
-  offset: number.isRequired,
-  panel: object,
-  activeSelection: number,
-  note: object,
-  photo: object,
-  isItemMode: bool.isRequired,
-  isProjectClosing: bool,
-  isReadOnly: bool,
-
-  onContextMenu: func.isRequired,
-  onItemOpen: func.isRequired,
-  onNoteDelete: func.isRequired,
-  onNoteSave: func.isRequired,
-  onNoteSelect: func.isRequired,
-  onPhotoConsolidate: func.isRequired,
-  onPhotoCreate: func.isRequired,
-  onPhotoSave: func.isRequired,
-  onPanelResize: func.isRequired,
-  onPanelDragStop: func.isRequired
 }

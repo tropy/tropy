@@ -1,9 +1,7 @@
 import React from 'react'
-import { TableHeadCell } from './head-cell'
-import { titlecase } from '../../../common/util'
-import { NAV } from '../../../constants'
-import { arrayOf, bool, func, number, shape, string } from 'prop-types'
-
+import { TableHeadCell } from './head-cell.js'
+import { titlecase } from '../../../common/util.js'
+import { NAV } from '../../../constants/index.js'
 
 export class TableHead extends React.PureComponent {
   get isAscending() {
@@ -60,32 +58,6 @@ export class TableHead extends React.PureComponent {
         ))}
       </div>
     )
-  }
-
-  static propTypes = {
-    columns: arrayOf(shape({
-      id: string.isRequired,
-      label: string,
-      name: string,
-      width: number.isRequired
-    })).isRequired,
-    colwidth: arrayOf(number).isRequired,
-    drag: number,
-    hasPositionColumn: bool,
-    sort: shape({
-      asc: bool.isRequired,
-      column: string.isRequired
-    }).isRequired,
-    drop: number,
-    minWidth: number.isRequired,
-    minWidthMain: number.isRequired,
-    onContextMenu: func,
-    onOrder: func.isRequired,
-    onOrderReset: func.isRequired,
-    onOrderStart: func.isRequired,
-    onOrderStop: func.isRequired,
-    onResize: func.isRequired,
-    onSort: func.isRequired
   }
 
   static defaultProps = {

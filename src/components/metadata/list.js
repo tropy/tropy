@@ -1,5 +1,4 @@
 import React from 'react'
-import { arrayOf, bool, func, object, shape, string } from 'prop-types'
 import { MetadataField } from './field.js'
 import { FieldSelect } from './select.js'
 import { shallow } from '../../common/util.js'
@@ -150,24 +149,5 @@ export class MetadataList extends React.PureComponent {
         )}
       </ol>
     )
-  }
-
-  static propTypes = {
-    isDisabled: bool,
-    edit: object,
-    fields: arrayOf(shape({
-      isExtra: bool.isRequired,
-      isRequired: bool,
-      label: string,
-      property: object.isRequired,
-      value: object
-    })).isRequired,
-    onAfter: func.isRequired,
-    onBefore: func.isRequired,
-    onEdit: func,
-    onEditCancel: func,
-    onContextMenu: func,
-    onChange: func.isRequired,
-    onCreate: func
   }
 }

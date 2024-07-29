@@ -1,4 +1,3 @@
-import { func, object } from 'prop-types'
 import { FormElement } from '../form.js'
 import { TemplateSelect } from '../template/select.js'
 import { IconItemSmall, IconPhoto, IconSelection } from '../icons.js'
@@ -46,9 +45,4 @@ export function TemplateSettings({ config, onChange }) {
         onChange={handleTemplateChange}/>
     </FormElement>
   )
-}
-
-TemplateSettings.propTypes = {
-  config: object.isRequired,
-  onChange: func.isRequired
 }

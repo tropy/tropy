@@ -1,5 +1,4 @@
 import React, { useRef } from 'react'
-import { array, bool, func, number, object } from 'prop-types'
 import cx from 'classnames'
 import { DataTypeSelect, PropertySelect } from '../resource/select.js'
 import { PlusMinusControls } from '../button.js'
@@ -144,21 +143,4 @@ export const TemplateField = ({
           )}
     </li>
   )
-}
-
-TemplateField.propTypes = {
-  field: object.isRequired,
-  isDisabled: bool,
-  isTransient: bool,
-  isSingle: bool,
-  position: number.isRequired,
-  datatypes: array.isRequired,
-  properties: array.isRequired,
-  onInsert: func.isRequired,
-  onRemove: func.isRequired,
-  onSave: func.isRequired,
-  onSort: func.isRequired,
-  onSortPreview: func.isRequired,
-  onSortReset: func.isRequired,
-  onSortStart: func.isRequired
 }

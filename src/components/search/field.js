@@ -1,6 +1,5 @@
 import React, { useRef } from 'react'
 import { useIntl } from 'react-intl'
-import { bool, func, node, number, string } from 'prop-types'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDebounce } from '../../hooks/use-debounce.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
@@ -59,16 +58,6 @@ export const SearchField = React.memo(({
     </div>
   )
 })
-
-SearchField.propTypes = {
-  clearIcon: node,
-  focus: string,
-  isDisabled: bool,
-  onSearch: func.isRequired,
-  placeholder: string.isRequired,
-  query: string.isRequired,
-  tabIndex: number
-}
 
 SearchField.defaultProps = {
   placeholder: 'toolbar.search.placeholder',

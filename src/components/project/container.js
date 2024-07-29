@@ -1,5 +1,4 @@
 import React from 'react'
-import { bool } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDropProjectFiles } from '../../hooks/use-drop-project-files.js'
 import { useEvent } from '../../hooks/use-event.js'
@@ -60,7 +59,6 @@ export const ProjectContainer = ({
   )
 }
 
-ProjectContainer.propTypes = {
-  isWindowResizeAnimated: bool,
+ProjectContainer.defaultProps = {
   timeout: 300
 }

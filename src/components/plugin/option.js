@@ -1,7 +1,6 @@
 import React from 'react'
-import { bool, func, shape, string, object } from 'prop-types'
 import { FormElement, FormField, FormToggle } from '../form.js'
-import { TemplateSelect } from '../template'
+import { TemplateSelect } from '../template/select.js'
 import { PropertySelect } from '../resource/select.js'
 import { get } from '../../common/util.js'
 
@@ -77,18 +76,5 @@ export class PluginOption extends React.PureComponent {
             type={this.props.spec.type}/>
         )
     }
-  }
-
-  static propTypes = {
-    onChange: func.isRequired,
-    templates: object.isRequired,
-    properties: object.isRequired,
-    spec: shape({
-      field: string.isRequired,
-      hint: string,
-      label: string.isRequired,
-      required: bool
-    }).isRequired,
-    value: string
   }
 }

@@ -1,5 +1,4 @@
 import React from 'react'
-import { array, bool, func, number, oneOfType, string } from 'prop-types'
 import cx from 'classnames'
 import { Input } from './input.js'
 import { noop } from '../common/util.js'
@@ -120,30 +119,6 @@ export class Editable extends React.PureComponent {
           this.renderContent()}
       </div>
     )
-  }
-
-  static propTypes = {
-    autofocus: bool,
-    autoselect: bool,
-    completions: array,
-    display: string,
-    isActive: bool,
-    isDisabled: bool,
-    isReadOnly: bool,
-    isRequired: bool,
-    max: oneOfType([string, number]),
-    min: oneOfType([string, number]),
-    placeholder: string,
-    resize: bool,
-    tabIndex: number,
-    title: string,
-    type: string,
-    value: oneOfType([string, number]),
-    onBlur: func,
-    onCancel: func,
-    onChange: func,
-    onFocus: func,
-    onKeyDown: func
   }
 
   static defaultProps = {

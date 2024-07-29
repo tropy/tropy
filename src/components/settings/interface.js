@@ -1,4 +1,3 @@
-import { arrayOf, func, object, string } from 'prop-types'
 import { FormElement, FormToggleGroup, Toggle } from '../form.js'
 import { ESPER, ITEM } from '../../constants/index.js'
 
@@ -52,14 +51,6 @@ export function InterfaceSettings({
         onChange={onChange}/>
     </>
   )
-}
-
-InterfaceSettings.propTypes = {
-  completions: arrayOf(string).isRequired,
-  config: object.isRequired,
-  layouts: arrayOf(string).isRequired,
-  onChange: func.isRequired,
-  zoomModes: arrayOf(string).isRequired
 }
 
 InterfaceSettings.defaultProps = {

@@ -1,11 +1,7 @@
 import React from 'react'
-import { noop } from '../common/util'
-import { AutoResizer } from './auto-resizer'
-import { Completions } from './completions'
-
-import {
-  array, bool, func, number, oneOf, oneOfType, string
-} from 'prop-types'
+import { noop } from '../common/util.js'
+import { AutoResizer } from './auto-resizer.js'
+import { Completions } from './completions.js'
 
 
 export class Input extends React.PureComponent {
@@ -258,32 +254,6 @@ export class Input extends React.PureComponent {
         )}
       </div>
     )
-  }
-
-  static propTypes = {
-    autofocus: bool,
-    autoselect: bool,
-    completions: array.isRequired,
-    className: string,
-    dir: string,
-    id: string,
-    isDisabled: bool,
-    isReadOnly: bool,
-    isRequired: bool,
-    match: func.isRequired,
-    max: number,
-    min: number,
-    placeholder: string,
-    resize: bool,
-    tabIndex: number,
-    type: oneOf(['text', 'number']).isRequired,
-    value: oneOfType([string, number]).isRequired,
-    onBlur: func.isRequired,
-    onCancel: func.isRequired,
-    onChange: func.isRequired,
-    onCommit: func.isRequired,
-    onFocus: func.isRequired,
-    onKeyDown: func
   }
 
   static defaultProps = {

@@ -1,22 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Resizable } from '../resizable'
-import { EsperContainer } from '../esper'
+import { Resizable } from '../resizable.js'
+import { EsperContainer } from '../esper/container.js'
 import { NotePad } from '../note/index.js'
-import * as act from '../../actions'
+import * as act from '../../actions/index.js'
 import cx from 'classnames'
-import { SASS, ITEM } from '../../constants'
+import { SASS, ITEM } from '../../constants/index.js'
 
-import {
-  arrayOf, bool, func, number, object, shape, string
-} from 'prop-types'
 
 import {
   selectCachePrefix,
   getEsperViewState,
   getActiveSelection,
   getPhotoSelections
-} from '../../selectors'
+} from '../../selectors/index.js'
 
 const { LAYOUT } = ITEM
 const { ESPER } = SASS
@@ -131,35 +128,6 @@ class Item extends React.PureComponent {
           onContextMenu={this.handleContextMenu}/>
       </div>
     )
-  }
-
-  static propTypes = {
-    cache: string.isRequired,
-    esper: shape({
-      height: number.isRequired,
-      width: number.isRequired,
-      panel: bool.isRequired,
-      tool: string.isRequired
-    }).isRequired,
-    view: object.isRequired,
-    isDisabled: bool,
-    isReadOnly: bool,
-    keymap: object.isRequired,
-    note: object,
-    photo: object,
-    selection: object,
-    selections: arrayOf(object).isRequired,
-    settings: object.isRequired,
-    onContextMenu: func.isRequired,
-    onEsperChange: func.isRequired,
-    onPhotoConsolidate: func.isRequired,
-    onPhotoCreate: func.isRequired,
-    onPhotoError: func.isRequired,
-    onPhotoSave: func.isRequired,
-    onPhotoSelect: func.isRequired,
-    onSelectionCreate: func.isRequired,
-    onSelectionSave: func.isRequired,
-    onUiUpdate: func.isRequired
   }
 }
 

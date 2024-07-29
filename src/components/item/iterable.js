@@ -3,8 +3,6 @@ import { compose, map, filter, into } from 'transducers.js'
 import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd'
 import { isMeta } from '../../keymap'
 import { pure } from '../util'
-import { bool, func, number, object, shape, arrayOf } from 'prop-types'
-
 
 export class ItemIterable extends React.PureComponent {
   componentDidMount() {
@@ -143,35 +141,5 @@ export class ItemIterable extends React.PureComponent {
     )(DropTarget(
       [DND.ITEMS, DND.PHOTO], this.DropTargetSpec, this.DropTargetCollect
     )(this)))
-  }
-
-
-  static propTypes = {
-    isDragging: bool,
-    isOver: bool,
-    isSelected: bool,
-    isReadOnly: bool,
-    isVertical: bool,
-    canDrop: bool,
-    photos: object.isRequired,
-    tags: object.isRequired,
-
-    item: shape({
-      id: number.isRequired,
-      deleted: bool,
-      photos: arrayOf(number)
-    }).isRequired,
-
-    ds: func.isRequired,
-    dt: func.isRequired,
-    dp: func.isRequired,
-
-    getSelection: func.isRequired,
-
-    onContextMenu: func.isRequired,
-    onDropItems: func.isRequired,
-    onDropPhotos: func.isRequired,
-    onItemOpen: func.isRequired,
-    onSelect: func.isRequired
   }
 }

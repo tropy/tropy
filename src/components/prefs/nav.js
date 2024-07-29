@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { bool, node, string } from 'prop-types'
 import cx from 'classnames'
 import { update } from '../../slices/prefs.js'
 import { Icon } from '../icons.js'
@@ -16,11 +15,6 @@ export function Nav({ children }) {
     </nav>
   )
 }
-
-Nav.propTypes = {
-  children: node
-}
-
 
 export function NavItem({ name, icon, isDisabled }) {
   let dispatch = useDispatch()
@@ -47,10 +41,4 @@ export function NavItem({ name, icon, isDisabled }) {
       </button>
     </li>
   )
-}
-
-NavItem.propTypes = {
-  icon: string.isRequired,
-  isDisabled: bool,
-  name: string.isRequired
 }

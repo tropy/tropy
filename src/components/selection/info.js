@@ -1,6 +1,5 @@
 import React from 'react'
 import { useIntl } from 'react-intl'
-import { object } from 'prop-types'
 import { MetadataField } from '../metadata/field.js'
 import { datetime, number } from '../../format.js'
 
@@ -21,7 +20,3 @@ export const SelectionInfo = React.memo(({ selection }) => {
     </ol>
   )
 })
-
-SelectionInfo.propTypes = {
-  selection: object.isRequired
-}

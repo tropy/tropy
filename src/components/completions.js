@@ -1,17 +1,13 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Popup } from './popup'
-import { OptionList } from './option'
-import { translate } from '../common/math'
-import { bounds, viewport } from '../dom'
-import * as collate from '../collate'
+import { Popup } from './popup.js'
+import { OptionList } from './option.js'
+import { translate } from '../common/math.js'
+import { bounds, viewport } from '../dom.js'
+import * as collate from '../collate.js'
 import cx from 'classnames'
 import memoize from 'memoize-one'
-import { SASS } from '../constants'
-
-import {
-  array, arrayOf, bool, func, instanceOf, number, oneOfType, string
-} from 'prop-types'
+import { SASS } from '../constants/index.js'
 
 const {
   INPUT: { BORDER_WIDTH, FOCUS_SHADOW_WIDTH },
@@ -29,15 +25,6 @@ export const Highlight = ({ text, matchData }) => (
     </>
   )
 )
-
-Highlight.propTypes = {
-  text: string.isRequired,
-  matchData: oneOfType([
-    arrayOf(number),
-    bool
-  ])
-}
-
 
 export class Completions extends React.Component {
   optionsList = React.createRef()
@@ -264,28 +251,6 @@ export class Completions extends React.Component {
         {content}
       </Popup>
     )
-  }
-
-  static propTypes = {
-    className: string,
-    completions: array.isRequired,
-    fadeIn: bool,
-    isAdvisory: bool,
-    isExactMatchHidden: bool,
-    isSelectionHidden: bool,
-    isVisibleWhenBlank: bool,
-    match: func.isRequired,
-    maxRows: number.isRequired,
-    minQueryLength: number.isRequired,
-    onClickOutside: func,
-    onResize: func,
-    onSelect: func.isRequired,
-    parent: instanceOf(HTMLElement),
-    popup: bool,
-    query: string.isRequired,
-    selection: array.isRequired,
-    toId: func.isRequired,
-    toText: func.isRequired
   }
 
   static defaultProps = {

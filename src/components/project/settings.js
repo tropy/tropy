@@ -1,6 +1,5 @@
 import React from 'react'
 import { ipcRenderer as ipc } from 'electron'
-import { arrayOf, func, object, string } from 'prop-types'
 import { Form, FormField, FormToggle, FormToggleGroup } from '../form.js'
 import { ProjectTypeField } from './type-field.js'
 import { notify } from '../../dialog.js'
@@ -106,12 +105,6 @@ export const ProjectSettings = React.memo(({
     </Form>
   )
 })
-
-ProjectSettings.propTypes = {
-  project: object.isRequired,
-  baseOptions: arrayOf(string).isRequired,
-  onChange: func.isRequired
-}
 
 ProjectSettings.defaultProps = {
   baseOptions: BASES

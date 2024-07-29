@@ -1,6 +1,5 @@
 import React, { useCallback, useRef } from 'react'
 import cx from 'classnames'
-import { shape, number, string, bool, func } from 'prop-types'
 import { Editable } from '../editable.js'
 import { IconPlusCircles } from '../icons.js'
 import { TagColor } from '../colors.js'
@@ -24,13 +23,6 @@ export const NewTag = ({ color, name, onCreate, onCancel }) => (
     </div>
   </li>
 )
-
-NewTag.propTypes = {
-  color: string,
-  name: string.isRequired,
-  onCreate: func.isRequired,
-  onCancel: func.isRequired
-}
 
 NewTag.defaultProps = {
   name: ''
@@ -124,26 +116,6 @@ export const Tag = React.memo(({
     </li>
   )
 })
-
-Tag.propTypes = {
-  hasFocusIcon: bool,
-  isEditing: bool,
-  isReadOnly: bool,
-  isSelected: bool,
-  tag: shape({
-    id: number,
-    name: string.isRequired,
-    color: string
-  }).isRequired,
-
-  onChange: func.isRequired,
-  onContextMenu: func,
-  onDropItems: func,
-  onEditCancel: func,
-  onFocusClick: func,
-  onKeyDown: func,
-  onSelect: func
-}
 
 Tag.defaultProps = {
   onChange: noop

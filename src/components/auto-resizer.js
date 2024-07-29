@@ -1,6 +1,3 @@
-import React from 'react'
-import { bool, element, number, oneOfType, string } from 'prop-types'
-
 export const AutoResizer = ({ children, content, isDisabled }) =>
   isDisabled ? children : (
     <div className="auto-resizer">
@@ -8,9 +5,3 @@ export const AutoResizer = ({ children, content, isDisabled }) =>
       {children}
     </div>
   )
-
-AutoResizer.propTypes = {
-  children: element.isRequired,
-  content: oneOfType([string, number]),
-  isDisabled: bool
-}

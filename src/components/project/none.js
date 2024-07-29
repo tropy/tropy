@@ -1,5 +1,4 @@
 import React from 'react'
-import { bool, func, number } from 'prop-types'
 import cx from 'classnames'
 import { useArgs } from '../../hooks/use-args.js'
 import { useWindowSize } from '../../hooks/use-window-size.js'
@@ -26,13 +25,6 @@ export const NoProject = React.forwardRef(({
     </div>
   )
 })
-
-NoProject.propTypes = {
-  isOver: bool,
-  onProjectOpen: func,
-  height: number.isRequired,
-  width: number.isRequired
-}
 
 NoProject.defaultProps = {
   height: 580,

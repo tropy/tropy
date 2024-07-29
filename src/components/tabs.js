@@ -1,6 +1,5 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { arrayOf, bool, node, func, shape, string } from 'prop-types'
 import cx from 'classnames'
 
 
@@ -25,15 +24,6 @@ export class Tab extends React.PureComponent {
         <FormattedMessage id={this.props.label}/>
       </li>
     )
-  }
-
-  static propTypes = {
-    icon: node,
-    isActive: bool,
-    isDisabled: bool,
-    label: string.isRequired,
-    name: string.isRequired,
-    onActivate: func.isRequired
   }
 }
 
@@ -62,16 +52,6 @@ export class TabNav extends React.PureComponent {
       </nav>
     )
   }
-
-  static propTypes = {
-    justified: bool,
-    active: string,
-    onChange: func.isRequired,
-    tabs: arrayOf(shape({
-      label: string.isRequired,
-      name: string.isRequired
-    }))
-  }
 }
 
 export const TabPane = ({ active, children, className, ...props }) => (
@@ -79,10 +59,3 @@ export const TabPane = ({ active, children, className, ...props }) => (
     {children(active, props)}
   </div>
 )
-
-
-TabPane.propTypes = {
-  active: string,
-  children: func.isRequired,
-  className: string
-}

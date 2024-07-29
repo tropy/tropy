@@ -1,5 +1,4 @@
 import { forwardRef, useRef } from 'react'
-import { bool, func, node, string } from 'prop-types'
 import cx from 'classnames'
 import { useWindow } from '../hooks/use-window.js'
 import { useEvent } from '../hooks/use-event.js'
@@ -15,13 +14,6 @@ export const Toolbar = forwardRef((props, ref) => (
   </div>
 ))
 
-Toolbar.propTypes = {
-  children: node,
-  className: string,
-  onDoubleClick: func,
-  onTransitionEnd: func
-}
-
 Toolbar.Context = forwardRef((props, ref) => (
   <div
     ref={ref}
@@ -32,12 +24,6 @@ Toolbar.Context = forwardRef((props, ref) => (
   </div>
 ))
 
-Toolbar.Context.propTypes = {
-  children: node,
-  className: string,
-  isActive: bool
-}
-
 
 Toolbar.Left = ({ children, className }) => (
   <div className={cx('toolbar-left', 'tb-target', className)}>
@@ -45,21 +31,11 @@ Toolbar.Left = ({ children, className }) => (
   </div>
 )
 
-Toolbar.Left.propTypes = {
-  children: node,
-  className: string
-}
-
 Toolbar.Center = ({ children, className }) => (
   <div className={cx('toolbar-center', 'tb-target', className)}>
     {children}
   </div>
 )
-
-Toolbar.Center.propTypes = {
-  children: node,
-  className: string
-}
 
 Toolbar.Right = ({ children, className }) => (
   <div className={cx('toolbar-right', 'tb-target', className)}>
@@ -67,18 +43,9 @@ Toolbar.Right = ({ children, className }) => (
   </div>
 )
 
-Toolbar.Right.propTypes = {
-  children: node,
-  className: string
-}
-
 
 export const ToolGroup = ({ children }) =>
   <div className="tool-group">{children}</div>
-
-ToolGroup.propTypes = {
-  children: node
-}
 
 
 export const Titlebar = ({ children, isOptional }) => {
@@ -118,9 +85,4 @@ export const Titlebar = ({ children, isOptional }) => {
       {children}
     </Toolbar>
   )
-}
-
-Titlebar.propTypes = {
-  children: node,
-  isOptional: bool
 }
