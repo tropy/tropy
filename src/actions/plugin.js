@@ -1,4 +1,4 @@
-import { prompt } from '../dialog'
+import { prompt } from '../dialog.js'
 
 export default {
   uninstall({ plugins, name }, meta = {}) {
