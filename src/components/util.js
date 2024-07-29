@@ -1,6 +1,4 @@
 import React from 'react'
-import { diff } from '../common/util.js'
-
 
 export function pure(WrappedComponent) {
   return class extends React.PureComponent {

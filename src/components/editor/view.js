@@ -1,6 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
-import { EditorState } from 'prosemirror-state'
 import { EditorView as ProseMirror } from 'prosemirror-view'
 import cx from 'classnames'
 import { Frame } from '../frame.js'
