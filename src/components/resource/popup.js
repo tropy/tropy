@@ -1,8 +1,8 @@
 import React from 'react'
-import { ResourceSelect } from './select'
-import { Popup } from '../popup'
-import { SASS } from '../../constants'
-import { viewport } from '../../dom'
+import { ResourceSelect } from './select.js'
+import { Popup } from '../popup.js'
+import { SASS } from '../../constants/index.js'
+import { viewport } from '../../dom.js'
 
 const { OPTION, PANEL } = SASS
 

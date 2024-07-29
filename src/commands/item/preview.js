@@ -1,8 +1,8 @@
 import { select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { ITEM } from '../../constants'
-import win from '../../window'
-import { darwin } from '../../common/os'
+import { Command } from '../command.js'
+import { ITEM } from '../../constants/index.js'
+import win from '../../window.js'
+import { darwin } from '../../common/os.js'
 
 
 export class Preview extends Command {

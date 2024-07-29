@@ -1,13 +1,13 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Slider } from '../slider'
-import { Button } from '../button'
-import { Toolbar, ToolGroup } from '../toolbar'
-import { SASS } from '../../constants'
+import { Slider } from '../slider.js'
+import { Button } from '../button.js'
+import { Toolbar, ToolGroup } from '../toolbar.js'
+import { SASS } from '../../constants/index.js'
 
 import {
   IconPhoto, IconPlusSmall, IconListSmall, IconGridSmall
-} from '../icons'
+} from '../icons.js'
 
 
 export const PhotoToolbar = (props) => (

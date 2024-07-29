@@ -1,6 +1,6 @@
 import { basename, extname } from 'node:path'
 import { call, put, select } from 'redux-saga/effects'
-import { DuplicateError } from '../common/error'
+import { DuplicateError } from '../common/error.js'
 import { Command } from './command.js'
 import * as mod from '../models/index.js'
 import * as act from '../actions/index.js'

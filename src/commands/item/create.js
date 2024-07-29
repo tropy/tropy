@@ -1,14 +1,14 @@
 import { call, put, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { ITEM } from '../../constants'
-import { prompt } from '../../dialog'
-import * as act from '../../actions'
-import * as mod from '../../models'
+import { Command } from '../command.js'
+import { ITEM } from '../../constants/index.js'
+import { prompt } from '../../dialog.js'
+import * as act from '../../actions/index.js'
+import * as mod from '../../models/index.js'
 
 import {
   getItemTemplate,
   getTemplateValues
-} from '../../selectors'
+} from '../../selectors/index.js'
 
 
 export class Create extends Command {

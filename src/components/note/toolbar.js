@@ -1,8 +1,8 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Toolbar, ToolGroup } from '../toolbar'
-import { IconNote, IconPlusSmall } from '../icons'
-import { Button } from '../button'
+import { Toolbar, ToolGroup } from '../toolbar.js'
+import { IconNote, IconPlusSmall } from '../icons.js'
+import { Button } from '../button.js'
 
 export const NoteToolbar = ({
   hasCreateButton,

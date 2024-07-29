@@ -1,7 +1,7 @@
 import React from 'react'
-import { Id, Label } from '../resource/select'
-import { PopupSelect } from '../resource/popup'
-import { IconTick } from '../icons'
+import { Id, Label } from '../resource/select.js'
+import { PopupSelect } from '../resource/popup.js'
+import { IconTick } from '../icons.js'
 
 export const ColumnContextMenu = (props) => (
   <PopupSelect

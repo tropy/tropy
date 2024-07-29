@@ -1,11 +1,11 @@
 import React from 'react'
-import { WindowContext } from '../window'
+import { WindowContext } from '../window.js'
 import { FormattedMessage } from 'react-intl'
-import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
-import { Slider } from '../slider'
-import { SearchField } from '../search'
-import { Button } from '../button'
-import { IconPlus, IconList, IconGrid, IconXSmall } from '../icons'
+import { Titlebar, Toolbar, ToolGroup } from '../toolbar.js'
+import { Slider } from '../slider.js'
+import { SearchField } from '../search/field.js'
+import { Button } from '../button.js'
+import { IconPlus, IconList, IconGrid, IconXSmall } from '../icons.js'
 
 
 export class ProjectToolbar extends React.PureComponent {

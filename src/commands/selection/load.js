@@ -1,7 +1,7 @@
 import { call } from 'redux-saga/effects'
-import { Command } from '../command'
-import { SELECTION } from '../../constants'
-import mod from '../../models/selection'
+import { Command } from '../command.js'
+import { SELECTION } from '../../constants/index.js'
+import mod from '../../models/selection.js'
 
 export class Load extends Command {
   *exec() {

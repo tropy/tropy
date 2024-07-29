@@ -1,3 +1,3 @@
-export * from './container'
-export * from './item'
-export * from './photo'
+export * from './container.js'
+export * from './item.js'
+export * from './photo.js'

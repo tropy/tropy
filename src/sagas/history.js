@@ -1,7 +1,7 @@
 import { put, select, takeEvery as every } from 'redux-saga/effects'
-import { warn } from '../common/log'
-import { getUndo, getRedo } from '../selectors'
-import { HISTORY } from '../constants'
+import { warn } from '../common/log.js'
+import { getUndo, getRedo } from '../selectors/index.js'
+import { HISTORY } from '../constants/index.js'
 
 function *undo() {
   try {

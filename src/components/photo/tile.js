@@ -1,9 +1,9 @@
 import React from 'react'
-import { PhotoIterable } from './iterable'
-import { createClickHandler } from '../util'
+import { PhotoIterable } from './iterable.js'
+import { createClickHandler } from '../util.js'
 import cx from 'classnames'
-import { Icon } from '../icons'
-import { Button } from '../button'
+import { Icon } from '../icons.js'
+import { Button } from '../button.js'
 
 class PhotoTile extends PhotoIterable {
   get classes() {

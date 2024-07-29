@@ -1,6 +1,6 @@
 import { basename, extname } from 'node:path'
 import { clipboard, nativeImage } from 'electron'
-import { Command } from '../command'
+import { Command } from '../command.js'
 import { call, put, select } from 'redux-saga/effects'
 import { PHOTO, MIME } from '../../constants/index.js'
 import { Cache } from '../../common/cache.js'

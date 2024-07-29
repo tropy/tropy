@@ -1,10 +1,10 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Accordion } from '../accordion'
-import { FormField, FormLink, FormText } from '../form'
-import { ResourceList } from '../resource'
-import { Button, ButtonGroup } from '../button'
-import { IconBook, IconBookLock, IconTrash, IconExport } from '../icons'
+import { Accordion } from '../accordion.js'
+import { FormField, FormLink, FormText } from '../form.js'
+import { ResourceList } from '../resource/list.js'
+import { Button, ButtonGroup } from '../button.js'
+import { IconBook, IconBookLock, IconTrash, IconExport } from '../icons.js'
 
 
 export class VocabAccordion extends Accordion {

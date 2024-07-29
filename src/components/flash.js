@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import * as act from '../actions'
-import { IconXLarge } from './icons'
-import { Button } from './button'
+import * as act from '../actions/index.js'
+import { IconXLarge } from './icons.js'
+import { Button } from './button.js'
 
 
 class FlashMessage extends React.PureComponent {

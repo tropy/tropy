@@ -1,13 +1,13 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import ARGS from '../args'
-import { create } from '../stores/prefs'
-import { Main } from '../components/main'
+import ARGS from '../args.js'
+import { create } from '../stores/prefs.js'
+import { Main } from '../components/main.js'
 import { PrefsContainer } from '../components/prefs/container.js'
-import { main } from '../sagas/prefs'
-import win from '../window'
-import { intl, prefs, project, history, settings } from '../actions'
-import * as dialog from '../dialog'
+import { main } from '../sagas/prefs.js'
+import win from '../window.js'
+import { intl, prefs, project, history, settings } from '../actions/index.js'
+import * as dialog from '../dialog.js'
 
 export const store = create()
 export const tasks = store.saga.run(main)
