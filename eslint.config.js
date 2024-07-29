@@ -123,6 +123,7 @@ export default [
       'react/display-name': 0,
       'react/jsx-key': 2,
       'react/no-deprecated': 1,
+      'react/prop-types': 0,
       'react/react-in-jsx-scope': 0
     }
   }

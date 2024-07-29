@@ -39,7 +39,6 @@ let store = configureStore({
 })
 
 export const inWindowContext = {
-  // eslint-disable-next-line react/prop-types
   wrapper({ children }) {
     return (
       <WindowContext.Provider value={win || createWindowInstance(ARGS)}>
