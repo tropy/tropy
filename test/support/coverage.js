@@ -1,4 +1,4 @@
-/* global window, __coverage__ */
+/* global __coverage__ */
 
 import process from 'node:process'
 import { basename, resolve, join } from 'node:path'
