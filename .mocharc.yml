@@ -3,7 +3,7 @@ recursive: true
 reporter: dot
 require:
   # - "test/support/babel-register.js"
-  # - "test/support/coverage.js"
+  - "test/support/coverage.js"
   - "test/support/mode.js"
   - "test/support/args.js"
   - "test/support/log.js"
