@@ -1,8 +1,8 @@
 import React from 'react'
-import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
-import { Button } from '../button'
-import { LinkContext } from './link'
-import * as icons from '../icons'
+import { Titlebar, Toolbar, ToolGroup } from '../toolbar.js'
+import { Button } from '../button.js'
+import { LinkContext } from './link.js'
+import * as icons from '../icons.js'
 
 export class EditorToolbar extends React.PureComponent {
   state = {

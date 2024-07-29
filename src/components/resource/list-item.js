@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormField, FormLink, FormText } from '../form'
+import { FormField, FormLink, FormText } from '../form.js'
 
 export class ResourceListItem extends React.PureComponent {
   handleChange = (data) => {

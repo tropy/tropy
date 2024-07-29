@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl'
-import { Button } from '../button'
-import { IconWarningLarge } from '../icons'
+import { Button } from '../button.js'
+import { IconWarningLarge } from '../icons.js'
 
 export const EsperPhotoError = (props) => (
   <div className="esper-error">

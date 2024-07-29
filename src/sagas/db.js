@@ -1,7 +1,7 @@
 import { eventChannel } from 'redux-saga'
 import { call, put, take } from 'redux-saga/effects'
-import { debug, warn } from '../common/log'
-import { fail } from '../dialog'
+import { debug, warn } from '../common/log.js'
+import { fail } from '../dialog.js'
 
 
 export function ErrorChannel(db) {

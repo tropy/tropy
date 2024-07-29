@@ -1,8 +1,8 @@
 import { call, put, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { SELECTION } from '../../constants'
-import mod from '../../models/selection'
-import * as act from '../../actions'
+import { Command } from '../command.js'
+import { SELECTION } from '../../constants/index.js'
+import mod from '../../models/selection.js'
+import * as act from '../../actions/index.js'
 
 export class Order extends Command {
   *exec() {

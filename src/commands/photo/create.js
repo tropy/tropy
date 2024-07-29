@@ -1,12 +1,12 @@
-import { ImportCommand } from '../import'
-import { fail } from '../../dialog'
-import * as mod from '../../models'
-import * as act from '../../actions'
-import { PHOTO } from '../../constants'
-import { DuplicateError } from '../../common/error'
-import { info, warn } from '../../common/log'
-import { getPhotoTemplate } from '../../selectors'
-import { Image } from '../../image'
+import { ImportCommand } from '../import.js'
+import { fail } from '../../dialog.js'
+import * as mod from '../../models/index.js'
+import * as act from '../../actions/index.js'
+import { PHOTO } from '../../constants/index.js'
+import { DuplicateError } from '../../common/error.js'
+import { info, warn } from '../../common/log.js'
+import { getPhotoTemplate } from '../../selectors/index.js'
+import { Image } from '../../image/image.js'
 
 import {
   all,

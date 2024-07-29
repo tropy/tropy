@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { PhotoGrid } from './grid'
-import { PhotoList } from './list'
-import { SASS } from '../../constants'
-import * as act from '../../actions'
-import { getExpandedPhotos } from '../../selectors'
+import { PhotoGrid } from './grid.js'
+import { PhotoList } from './list.js'
+import { SASS } from '../../constants/index.js'
+import * as act from '../../actions/index.js'
+import { getExpandedPhotos } from '../../selectors/index.js'
 
 
 class PhotoPanel extends React.PureComponent {

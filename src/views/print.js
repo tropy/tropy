@@ -1,11 +1,11 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import ARGS from '../args'
-import { create } from '../stores/about'
-import { Main } from '../components/main'
-import { PrintContainer } from '../components/print'
-import { intl } from '../actions'
-import win from '../window'
+import ARGS from '../args.js'
+import { create } from '../stores/print.js'
+import { Main } from '../components/main.js'
+import { PrintContainer } from '../components/print/container.js'
+import { intl } from '../actions/index.js'
+import win from '../window.js'
 
 export const store = create()
 const { locale } = ARGS

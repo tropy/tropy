@@ -1,7 +1,7 @@
 import { call } from 'redux-saga/effects'
-import { Command } from '../command'
-import mod from '../../models/metadata'
-import { METADATA } from '../../constants'
+import { Command } from '../command.js'
+import mod from '../../models/metadata.js'
+import { METADATA } from '../../constants/index.js'
 
 
 export class Load extends Command {

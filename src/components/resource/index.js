@@ -1,2 +1,2 @@
-export * from './list'
-export * from './select'
+export * from './list.js'
+export * from './select.js'

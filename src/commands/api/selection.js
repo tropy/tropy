@@ -1,6 +1,6 @@
 import { select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { API } from '../../constants'
+import { Command } from '../command.js'
+import { API } from '../../constants/index.js'
 
 export class SelectionShow extends Command {
   *exec() {

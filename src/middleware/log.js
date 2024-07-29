@@ -1,4 +1,4 @@
-import { logger } from '../common/log'
+import { logger } from '../common/log.js'
 
 export function log() {
   return next => action => {

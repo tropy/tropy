@@ -1,8 +1,8 @@
 import React from 'react'
 import { compose, map, filter, into } from 'transducers.js'
-import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd'
-import { isMeta } from '../../keymap'
-import { pure } from '../util'
+import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd.js'
+import { isMeta } from '../../keymap.js'
+import { pure } from '../util.js'
 
 export class ItemIterable extends React.PureComponent {
   componentDidMount() {

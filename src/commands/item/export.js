@@ -1,12 +1,12 @@
 import fs from 'fs'
 import { clipboard } from 'electron'
 import { call, select } from 'redux-saga/effects'
-import { Command } from '../command'
-import { ITEM } from '../../constants'
-import { warn } from '../../common/log'
-import { fail, save } from '../../dialog'
-import win from '../../window'
-import { getExportItems } from '../../selectors'
+import { Command } from '../command.js'
+import { ITEM } from '../../constants/index.js'
+import { warn } from '../../common/log.js'
+import { fail, save } from '../../dialog.js'
+import win from '../../window.js'
+import { getExportItems } from '../../selectors/index.js'
 
 const write = fs.promises.writeFile
 

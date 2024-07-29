@@ -1,7 +1,7 @@
 import { cancel, delay, fork, put, select, take } from 'redux-saga/effects'
-import { getPhotosWithErrors } from '../selectors'
-import * as act from '../actions'
-import { warn } from '../common/log'
+import { getPhotosWithErrors } from '../selectors/index.js'
+import * as act from '../actions/index.js'
+import { warn } from '../common/log.js'
 
 const needsConsolidation = ({ meta }) =>
   !!meta.consolidate

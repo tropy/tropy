@@ -1,8 +1,8 @@
-import { warn } from '../common/log'
 import { call, put, select } from 'redux-saga/effects'
-import { getSortColumn } from '../selectors'
-import * as mod from '../models'
-import * as act from '../actions'
+import { warn } from '../common/log.js'
+import { getSortColumn } from '../selectors/index.js'
+import * as mod from '../models/index.js'
+import * as act from '../actions/index.js'
 
 export function *search(db) {
   try {

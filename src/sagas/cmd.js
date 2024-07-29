@@ -1,10 +1,10 @@
 import { call, put, race, take } from 'redux-saga/effects'
-import ARGS from '../args'
-import { info, trace, warn } from '../common/log'
-import { Command } from '../commands/command'
-import { fail } from '../dialog'
-import { activity, history } from '../actions'
-import { ACTIVITY } from '../constants'
+import ARGS from '../args.js'
+import { info, trace, warn } from '../common/log.js'
+import { Command } from '../commands/command.js'
+import { fail } from '../dialog.js'
+import { activity, history } from '../actions/index.js'
+import { ACTIVITY } from '../constants/index.js'
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 

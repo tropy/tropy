@@ -1,8 +1,8 @@
 import React from 'react'
 import { injectIntl } from 'react-intl'
-import { Toolbar } from '../toolbar'
-import { Input } from '../input'
-import { ensure } from '../../dom'
+import { Toolbar } from '../toolbar.js'
+import { Input } from '../input.js'
+import { ensure } from '../../dom.js'
 
 class LinkContext extends React.PureComponent {
   input = React.createRef()

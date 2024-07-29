@@ -1,10 +1,10 @@
 import * as cmd from 'prosemirror-commands'
 import { undo, redo } from 'prosemirror-history'
-import { list } from './list'
+import { list } from './list.js'
 import { undoInputRule } from 'prosemirror-inputrules'
 import { TextSelection } from 'prosemirror-state'
-import { markExtend } from './selections'
-import { alignment } from './alignment'
+import { markExtend } from './selections.js'
+import { alignment } from './alignment.js'
 
 
 const expandAndRemoveMark = (markType) =>

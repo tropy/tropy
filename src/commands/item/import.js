@@ -26,7 +26,7 @@ import {
   getItemTemplate,
   getPhotoTemplate,
   getSelectionTemplate
-} from '../../selectors'
+} from '../../selectors/index.js'
 
 const { readFile } = fs.promises
 

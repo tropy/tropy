@@ -1,8 +1,8 @@
 import React from 'react'
-import { TemplateSelect } from './select'
-import { ButtonGroup, Button } from '../button'
-import { FormElement } from '../form'
-import { IconCopy, IconTrash, IconImport, IconExport } from '../icons'
+import { TemplateSelect } from './select.js'
+import { ButtonGroup, Button } from '../button.js'
+import { FormElement } from '../form.js'
+import { IconCopy, IconTrash, IconImport, IconExport } from '../icons.js'
 
 
 export class TemplateToolbar extends React.PureComponent {

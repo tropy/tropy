@@ -1,5 +1,5 @@
 import React from 'react'
-import { ResourceListItem } from './list-item'
+import { ResourceListItem } from './list-item.js'
 
 export class ResourceList extends React.PureComponent {
   render() {
