@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useIntl } from 'react-intl'
-import { bool, func, string } from 'prop-types'
 import { FormField, FormElement } from '../form.js'
 import { Button } from '../button.js'
 import { IconPencil } from '../icons'
@@ -62,10 +61,4 @@ export const ProjectTypeField = ({
       </div>
     </FormElement>
   )
-}
-
-ProjectTypeField.propTypes = {
-  isDisabled: bool,
-  onConvert: func,
-  value: string.isRequired
 }

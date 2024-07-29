@@ -1,6 +1,5 @@
 import { forwardRef } from 'react'
 import { useSelector } from 'react-redux'
-import { bool, func, number, oneOfType, string } from 'prop-types'
 import cx from 'classnames'
 import { Editable } from '../editable.js'
 import { useDropText } from '../../hooks/use-drop-text.js'
@@ -59,15 +58,3 @@ export const MetadataValue = forwardRef(({
     </div>
   )
 })
-
-MetadataValue.propTypes = {
-  ...Editable.propTypes,
-  isEditing: bool,
-  isReadOnly: bool,
-  isRequired: bool,
-  onChange: func,
-  onClick: func,
-  property: string,
-  text: oneOfType([string, number]),
-  type: string
-}

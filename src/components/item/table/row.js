@@ -1,11 +1,9 @@
 import React from 'react'
-import { ItemIterable } from '../iterable'
-import { TableCell } from './cell'
-import { get, pick } from '../../../common/util'
-import { NAV, TYPE } from '../../../constants'
+import { ItemIterable } from '../iterable.js'
+import { TableCell } from './cell.js'
+import { get, pick } from '../../../common/util.js'
+import { NAV, TYPE } from '../../../constants/index.js'
 import cx from 'classnames'
-import { arrayOf, bool, number, object } from 'prop-types'
-
 
 class TableRow extends ItemIterable {
   isDragging(idx) {
@@ -132,18 +130,6 @@ class TableRow extends ItemIterable {
         ))}
       </div>
     )
-  }
-
-  static propTypes = {
-    ...ItemIterable.propTypes,
-    columns: arrayOf(object).isRequired,
-    data: object.isRequired,
-    drag: number,
-    drop: number,
-    edit: object,
-    hasPositionColumn: bool,
-    position: number.isRequired,
-    template: object
   }
 
   static defaultProps = {

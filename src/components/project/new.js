@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { arrayOf, func, string } from 'prop-types'
 import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar } from '../toolbar.js'
 import { Button, ToggleButtonGroup } from '../button.js'
@@ -81,11 +80,6 @@ export const NewProject = ({
       </form>
     </div>
   )
-}
-
-NewProject.propTypes = {
-  accept: arrayOf(string),
-  onCreated: func
 }
 
 NewProject.defaultProps = {

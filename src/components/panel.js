@@ -1,16 +1,14 @@
 import React from 'react'
-import { only } from './util'
-import { Resizable } from './resizable'
-import { createClickHandler } from './util'
+import { Resizable } from './resizable.js'
+import { createClickHandler } from './util.js'
 import cx from 'classnames'
-import { bounds, off, on } from '../dom'
-import { restrict } from '../common/util'
-import { SASS } from '../constants'
-import { remap } from '../common/util'
-import { round } from '../common/math'
+import { bounds, off, on } from '../dom.js'
+import { restrict } from '../common/util.js'
+import { SASS } from '../constants/index.js'
+import { remap } from '../common/util.js'
+import { round } from '../common/math.js'
 import throttle from 'lodash.throttle'
 import memoize from 'memoize-one'
-import { arrayOf, bool, func, node, number, string, shape } from 'prop-types'
 
 const { MIN_HEIGHT, CLOSED_HEIGHT } = SASS.PANEL
 
@@ -108,17 +106,6 @@ export class Panel extends React.PureComponent {
       </section>
     )
   }
-
-  static propTypes = {
-    className: string,
-    children: node,
-    id: number,
-    isClosed: bool,
-    canToggle: bool,
-    tabIndex: number,
-    onKeyDown: func,
-    onToggle: func
-  }
 }
 
 export const PanelBody = (props) => (
@@ -126,11 +113,6 @@ export const PanelBody = (props) => (
     {props.children}
   </div>
 )
-
-PanelBody.propTypes = {
-  children: node,
-  className: string
-}
 
 
 export const PanelHeader = (props) => (
@@ -141,13 +123,6 @@ export const PanelHeader = (props) => (
     {props.children}
   </header>
 )
-
-PanelHeader.propTypes = {
-  children: node,
-  onClick: func,
-  onDoubleClick: func
-}
-
 
 export class PanelGroup extends React.Component {
   container = React.createRef()
@@ -403,18 +378,6 @@ export class PanelGroup extends React.Component {
         </div>
       </div>
     )
-  }
-
-
-  static propTypes = {
-    children: only(Panel),
-    className: string,
-    header: node,
-    slots: arrayOf(shape({
-      height: number.isRequired,
-      isClosed: bool
-    })).isRequired,
-    onResize: func.isRequired
   }
 }
 

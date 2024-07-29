@@ -1,19 +1,15 @@
 import React from 'react'
-import { Toolbar } from '../toolbar'
-import { ItemToolbar } from './toolbar'
-import { TabNav, TabPane } from '../tabs'
-import { NoteList, NoteToolbar } from '../note'
-import { PanelGroup, Panel } from '../panel'
-import { PhotoPanel, PhotoToolbar } from '../photo'
-import { MetadataPanel } from '../metadata'
-import { TagPanel } from '../tag'
-import { IconMetadata, IconHangtag } from '../icons'
-import { on, off, isInput } from '../../dom'
-import { TABS, UI } from '../../constants'
-
-import {
-  array, bool, func, number, object, shape, string
-} from 'prop-types'
+import { Toolbar } from '../toolbar.js'
+import { ItemToolbar } from './toolbar.js'
+import { TabNav, TabPane } from '../tabs.js'
+import { NoteList, NoteToolbar } from '../note/index.js'
+import { PanelGroup, Panel } from '../panel.js'
+import { PhotoPanel, PhotoToolbar } from '../photo/index.js'
+import { MetadataPanel } from '../metadata/index.js'
+import { TagPanel } from '../tag/index.js'
+import { IconMetadata, IconHangtag } from '../icons.js'
+import { on, off, isInput } from '../../dom.js'
+import { TABS, UI } from '../../constants/index.js'
 
 
 export class ItemPanelGroup extends React.PureComponent {
@@ -218,39 +214,6 @@ export class ItemPanelGroup extends React.PureComponent {
     )
   }
 
-  static propTypes = {
-    isDisabled: bool,
-    isReadOnly: bool,
-    isItemMode: bool.isRequired,
-    items: array.isRequired,
-    keymap: object.isRequired,
-    note: object,
-    notes: array.isRequired,
-    panel: shape({
-      slots: array.isRequired,
-      tab: string.isRequired,
-      zoom: number.isRequired
-    }).isRequired,
-    photo: shape({
-      id: number.isRequired
-    }),
-    photos: array.isRequired,
-    tabs: array,
-    onContextMenu: func.isRequired,
-    onEdit: func.isRequired,
-    onEditCancel: func,
-    onItemOpen: func.isRequired,
-    onMetadataSave: func.isRequired,
-    onNoteCreate: func.isRequired,
-    onNoteDelete: func.isRequired,
-    onNoteSelect: func.isRequired,
-    onPhotoConsolidate: func.isRequired,
-    onPhotoCreate: func.isRequired,
-    onPhotoSave: func.isRequired,
-    onPhotoSelect: func.isRequired,
-    onUiUpdate: func.isRequired
-  }
-
   static defaultProps = {
     tabs: [
       {
@@ -265,6 +228,4 @@ export class ItemPanelGroup extends React.PureComponent {
       }
     ]
   }
-
-  static props = Object.keys(ItemPanelGroup.propTypes)
 }

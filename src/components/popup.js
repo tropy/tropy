@@ -1,6 +1,5 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
-import { bool, func, node, number, oneOf, shape, string } from 'prop-types'
 import { $, append, element, has, on, off, toggle, remove } from '../dom.js'
 import { noop } from '../common/util.js'
 import cx from 'classnames'
@@ -99,28 +98,6 @@ export class Popup extends React.Component {
         {this.props.children}
       </div>
     ), this.dom)
-  }
-
-  static propTypes = {
-    anchor: oneOf(['top', 'right', 'bottom', 'left', 'float']),
-    clip: shape({
-      top: number.isRequired,
-      bottom: number.isRequired,
-      left: number.isRequired,
-      right: number.isRequired
-    }),
-    autofocus: bool,
-    fadeIn: bool,
-    children: node.isRequired,
-    className: string,
-    onClickOutside: func.isRequired,
-    onResize: func.isRequired,
-    style: shape({
-      top: number,
-      left: number,
-      width: number,
-      height: number
-    })
   }
 
   static defaultProps = {

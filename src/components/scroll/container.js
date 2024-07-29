@@ -1,9 +1,8 @@
 import React from 'react'
-import { element, func, number, object, oneOfType, string } from 'prop-types'
 import cx from 'classnames'
 import throttle from 'lodash.throttle'
 import debounce from 'lodash.debounce'
-import { on, off } from '../../dom'
+import { on, off } from '../../dom.js'
 
 export class ScrollContainer extends React.Component {
   container = React.createRef()
@@ -138,20 +137,5 @@ export class ScrollContainer extends React.Component {
         {this.props.children}
       </div>
     )
-  }
-
-  static propTypes = {
-    children: element,
-    className: oneOfType([object, string]),
-    onBlur: func,
-    onClick: func,
-    onKeyDown: func,
-    onResize: func,
-    onScroll: func,
-    onScrollStart: func,
-    onScrollStop: func,
-    onTabFocus: func,
-    sync: object,
-    tabIndex: number
   }
 }

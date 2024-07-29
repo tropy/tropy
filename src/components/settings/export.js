@@ -1,4 +1,3 @@
-import { arrayOf, func, object, string } from 'prop-types'
 import { FormElement, FormToggleGroup, Toggle } from '../form.js'
 import { useEvent } from '../../hooks/use-event.js'
 
@@ -36,12 +35,6 @@ export function ExportSettings({ config, noteFormats, onChange }) {
         onChange={handleNoteChange}/>
     </>
   )
-}
-
-ExportSettings.propTypes = {
-  config: object.isRequired,
-  noteFormats: arrayOf(string).isRequired,
-  onChange: func.isRequired
 }
 
 ExportSettings.defaultProps = {

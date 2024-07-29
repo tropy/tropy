@@ -1,11 +1,10 @@
 import React from 'react'
-import { isFunction } from 'util'
-import { IconSpin, IconXSmall } from './icons'
+import { isFunction } from 'node:util'
+import { IconSpin, IconXSmall } from './icons.js'
 import { FormattedMessage } from 'react-intl'
 import cx from 'classnames'
-import { SASS } from '../constants'
-import { arrayOf, bool, shape, string, number, func } from 'prop-types'
-import { Button } from './button'
+import { SASS } from '../constants/index.js'
+import { Button } from './button.js'
 
 
 export const Activity = ({
@@ -43,15 +42,6 @@ export const Activity = ({
       </div>
     </div>
   )
-}
-
-Activity.propTypes = {
-  canCancel: bool,
-  type: string.isRequired,
-  id: number.isRequired,
-  progress: number,
-  total: number,
-  onCancel: func
 }
 
 
@@ -116,20 +106,6 @@ export class ActivityPane extends React.PureComponent {
 
   static getHeight(count) {
     return count ? count * SASS.ACTIVITY.HEIGHT : 0
-  }
-
-  static propTypes = {
-    activities: arrayOf(shape({
-      id: number.isRequired,
-      cancel: bool,
-      type: string.isRequired,
-      init: number.isRequired,
-      progress: number,
-      total: number
-    })).isRequired,
-
-    delay: number.isRequired,
-    onCancel: func.isRequired
   }
 
   static defaultProps = {

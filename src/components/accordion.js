@@ -1,9 +1,6 @@
 import React from 'react'
-import { only } from './util'
 import cx from 'classnames'
-import { visible } from '../dom'
-import { bool, func, node, number, oneOfType, string } from 'prop-types'
-
+import { visible } from '../dom.js'
 
 export class Accordion extends React.Component {
   container = React.createRef()
@@ -69,15 +66,7 @@ export class Accordion extends React.Component {
     )
   }
 
-  static propTypes = {
-    canToggle: bool,
-    children: node,
-    className: string,
-    id: oneOfType([number, string]).isRequired,
-    isActive: bool,
-    isOpen: bool,
-    onToggle: func
-  }
+
 
   static defaultProps = {
     canToggle: true
@@ -207,12 +196,5 @@ export class AccordionGroup extends React.Component {
           }))}
       </div>
     )
-  }
-
-  static propTypes = {
-    autoclose: bool,
-    children: only(Accordion),
-    className: string,
-    tabIndex: number
   }
 }

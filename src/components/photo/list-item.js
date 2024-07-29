@@ -1,15 +1,14 @@
 import React from 'react'
-import { Editable } from '../editable'
-import { createClickHandler } from '../util'
-import { PhotoIterable } from './iterable'
-import { SelectionList } from '../selection'
-import { pluck } from '../../common/util'
-import { TYPE } from '../../constants'
+import { Editable } from '../editable.js'
+import { createClickHandler } from '../util.js'
+import { PhotoIterable } from './iterable.js'
+import { SelectionList } from '../selection/index.js'
+import { pluck } from '../../common/util.js'
+import { TYPE } from '../../constants/index.js'
 import cx from 'classnames'
-import { testFocusChange } from '../../dom'
-import { bool, func, object, string } from 'prop-types'
-import { Icon } from '../icons'
-import { Button } from '../button'
+import { testFocusChange } from '../../dom.js'
+import { Icon } from '../icons.js'
+import { Button } from '../button.js'
 
 
 class PhotoListItem extends PhotoIterable {
@@ -158,20 +157,6 @@ class PhotoListItem extends PhotoIterable {
         {this.renderSelectionList()}
       </li>
     )
-  }
-
-  static propTypes = {
-    ...PhotoIterable.propTypes,
-    data: object.isRequired,
-    edit: object.isRequired,
-    isEditing: bool.isRequired,
-    isExpanded: bool.isRequired,
-    selections: object.isRequired,
-    title: string.isRequired,
-    onChange: func.isRequired,
-    onEdit: func.isRequired,
-    onEditCancel: func.isRequired,
-    onSelectionSort: func.isRequired
   }
 }
 

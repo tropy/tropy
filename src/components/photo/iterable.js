@@ -1,5 +1,4 @@
 import React from 'react'
-import { arrayOf, bool, func, number, object, shape } from 'prop-types'
 import { Thumbnail } from './thumbnail.js'
 import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd.js'
 import { bounds } from '../../dom.js'
@@ -173,37 +172,6 @@ export class PhotoIterable extends React.PureComponent {
     )(DropTarget(
       DND.PHOTO, this.DropTargetSpec, this.DropTargetCollect
     )(this)))
-  }
-
-
-  static propTypes = {
-    isDisabled: bool,
-    isDragging: bool,
-    isExpandable: bool,
-    isExpanded: bool,
-    isItemOpen: bool,
-    isOver: bool,
-    isSelected: bool,
-    isSortable: bool,
-    isVertical: bool,
-    photo: shape({
-      id: number.isRequired,
-      selections: arrayOf(number),
-      data: object
-    }).isRequired,
-    selection: number,
-    size: number.isRequired,
-    connectDragSource: func.isRequired,
-    connectDropTarget: func.isRequired,
-    connectDragPreview: func.isRequired,
-    getAdjacent: func.isRequired,
-    onConsolidate: func.isRequired,
-    onContextMenu: func.isRequired,
-    onContract: func.isRequired,
-    onDropPhoto: func.isRequired,
-    onExpand: func.isRequired,
-    onItemOpen: func.isRequired,
-    onSelect: func.isRequired
   }
 
   static defaultProps = {

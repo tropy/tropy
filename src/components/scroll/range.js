@@ -1,6 +1,5 @@
 import React from 'react'
-import { array, bool, func, number, object } from 'prop-types'
-import { ExpansionRow } from './expansion'
+import { ExpansionRow } from './expansion.js'
 
 const getNextRowOffset = (index, columns) =>
   index + (columns - (index % columns))
@@ -46,17 +45,6 @@ export const Range = ({
     output.splice(expansion.at, 0, expansion.row)
 
   return output
-}
-
-Range.propTypes = {
-  columns: number.isRequired,
-  expandedItems: object.isRequired,
-  from: number.isRequired,
-  isScrolling: bool,
-  items: array.isRequired,
-  to: number.isRequired,
-  renderExpansionRow: func,
-  renderItem: func.isRequired
 }
 
 Range.defaultProps = {

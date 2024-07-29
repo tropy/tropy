@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { arrayOf, string } from 'prop-types'
 import { darwin } from '../../common/os.js'
 import { FormToggle, FormSelect } from '../form.js'
 import { useIpcEvent } from '../../hooks/use-ipc.js'
@@ -51,11 +50,6 @@ export function StyleSettings({ themes, fontSizes }) {
       )}
     </>
   )
-}
-
-StyleSettings.propTypes = {
-  fontSizes: arrayOf(string).isRequired,
-  themes: arrayOf(string).isRequired
 }
 
 StyleSettings.defaultProps = {

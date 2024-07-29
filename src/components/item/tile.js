@@ -1,5 +1,4 @@
 import React from 'react'
-import { bool, number } from 'prop-types'
 import { ItemIterable } from './iterable'
 import { CoverImage } from './cover-image'
 import cx from 'classnames'
@@ -24,12 +23,6 @@ class ItemTile extends ItemIterable {
         </div>
       </li>
     )
-  }
-
-  static propTypes = {
-    ...ItemIterable.propTypes,
-    isLast: bool,
-    size: number.isRequired
   }
 
   static defaultProps = {

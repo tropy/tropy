@@ -2,7 +2,6 @@ import React from 'react'
 import { Id, Label } from '../resource/select'
 import { PopupSelect } from '../resource/popup'
 import { IconTick } from '../icons'
-import { bool, object, oneOfType } from 'prop-types'
 
 export const ColumnContextMenu = (props) => (
   <PopupSelect
@@ -22,9 +21,3 @@ const Column = ({ column, isSelected, matchData }) => (
     <Id resource={column} matchData={matchData}/>
   </>
 )
-
-Column.propTypes = {
-  column: object.isRequired,
-  isSelected: bool,
-  matchData: oneOfType([bool, object])
-}

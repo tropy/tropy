@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
-import { arrayOf, func, string } from 'prop-types'
 import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar } from '../toolbar.js'
 import { SearchField } from '../search/field.js'
@@ -67,9 +66,4 @@ export const RecentProjects = ({
       )}
     </div>
   )
-}
-
-RecentProjects.propTypes = {
-  files: arrayOf(string).isRequired,
-  onSelect: func
 }

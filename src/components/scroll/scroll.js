@@ -1,12 +1,11 @@
 import React from 'react'
-import { array, bool, func, number, object, oneOf, string } from 'prop-types'
-import { Range } from './range'
-import { Runway } from './runway'
-import { ScrollContainer } from './container'
-import { getExpandedRows, getExpandedRowsAbove } from './expansion'
-import { Viewport } from './viewport'
-import { restrict } from '../../common/util'
-import { indexOf, sanitize } from '../../common/collection'
+import { Range } from './range.js'
+import { Runway } from './runway.js'
+import { ScrollContainer } from './container.js'
+import { getExpandedRows, getExpandedRowsAbove } from './expansion.js'
+import { Viewport } from './viewport.js'
+import { restrict } from '../../common/util.js'
+import { indexOf, sanitize } from '../../common/collection.js'
 import memoize from 'memoize-one'
 
 
@@ -470,28 +469,6 @@ export class Scroll extends React.Component {
         </Runway>
       </ScrollContainer>
     )
-  }
-
-  static propTypes = {
-    autoselect: bool,
-    children: func.isRequired,
-    cursor: number,
-    expandedItems: object.isRequired,
-    expansionPadding: number.isRequired,
-    expansionCursor: number,
-    items: array.isRequired,
-    itemWidth: number,
-    itemHeight: number.isRequired,
-    onClick: func,
-    onKeyDown: func,
-    onTabFocus: func,
-    onSelect: func,
-    overscan: number.isRequired,
-    renderExpansionRow: func,
-    restrict: oneOf(['bounds', 'wrap', 'none']).isRequired,
-    sync: object,
-    tabIndex: number,
-    tag: string
   }
 
   static defaultProps = {

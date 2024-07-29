@@ -1,12 +1,12 @@
 import React from 'react'
-import { PhotoIterator } from './iterator'
-import { PhotoTile } from './tile'
-import { SelectionGrid } from '../selection/grid'
-import { Scroll } from '../scroll'
-import { pluck } from '../../common/util'
+import { PhotoIterator } from './iterator.js'
+import { PhotoTile } from './tile.js'
+import { SelectionGrid } from '../selection/grid.js'
+import { Scroll } from '../scroll/scroll.js'
+import { pluck } from '../../common/util.js'
 import cx from 'classnames'
-import { match } from '../../keymap'
-import { SASS } from '../../constants'
+import { match } from '../../keymap.js'
+import { SASS } from '../../constants/index.js'
 
 
 class PhotoGrid extends PhotoIterator {
@@ -135,11 +135,6 @@ class PhotoGrid extends PhotoIterator {
         </Scroll>
       </div>
     )
-  }
-
-
-  static propTypes = {
-    ...PhotoIterator.propTypes
   }
 }
 

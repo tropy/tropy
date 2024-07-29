@@ -1,7 +1,6 @@
 import React from 'react'
-import { ListNode, NewListNode } from './node'
-import { Fade } from '../fx'
-import { arrayOf, bool, func, number, object, shape } from 'prop-types'
+import { ListNode, NewListNode } from './node.js'
+import { Fade } from '../fx.js'
 
 
 export class ListTree extends React.Component {
@@ -51,24 +50,6 @@ export class ListTree extends React.Component {
         </Fade>
       </ol>
     )
-  }
-
-  static propTypes = {
-    depth: number.isRequired,
-    edit: object,
-    expand: object.isRequired,
-    hold: object.isRequired,
-    isDraggingParent: bool,
-    isExpanded: bool,
-    lists: object.isRequired,
-    minDropDepth: number.isRequired,
-    parent: shape({
-      id: number.isRequired,
-      children: arrayOf(number).isRequired
-    }).isRequired,
-    selection: number,
-    onEditCancel: func.isRequired,
-    onSave: func.isRequired
   }
 
   static defaultProps = {

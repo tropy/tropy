@@ -1,12 +1,11 @@
 import React from 'react'
-import { Scroll } from '../scroll'
-import { object, func } from 'prop-types'
-import { PhotoListItem } from './list-item'
-import { PhotoIterator } from './iterator'
-import { SASS } from '../../constants'
-import { dc } from '../../ontology'
+import { Scroll } from '../scroll/index.js'
+import { PhotoListItem } from './list-item.js'
+import { PhotoIterator } from './iterator.js'
+import { SASS } from '../../constants/index.js'
+import { dc } from '../../ontology/ns.js'
 import cx from 'classnames'
-import { match } from '../../keymap'
+import { match } from '../../keymap.js'
 
 
 class PhotoList extends PhotoIterator {
@@ -117,15 +116,6 @@ class PhotoList extends PhotoIterator {
         </Scroll>
       </div>
     )
-  }
-
-  static propTypes = {
-    ...PhotoIterator.propTypes,
-    edit: object.isRequired,
-    data: object.isRequired,
-    onChange: func.isRequired,
-    onEdit: func.isRequired,
-    onEditCancel: func.isRequired
   }
 
   static defaultProps = {

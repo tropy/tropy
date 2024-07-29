@@ -1,11 +1,10 @@
 import React from 'react'
-import { Slider } from '../slider'
-import { Button } from '../button'
-import { bool, element, func, number, string } from 'prop-types'
+import { Slider } from '../slider.js'
+import { Button } from '../button.js'
 import { FormattedMessage } from 'react-intl'
-import { FormToggle } from '../form'
-import { shallow } from '../../common/util'
-import { TABS } from '../../constants'
+import { FormToggle } from '../form.js'
+import { shallow } from '../../common/util.js'
+import { TABS } from '../../constants/index.js'
 
 import {
   IconSun,
@@ -13,7 +12,7 @@ import {
   IconHue,
   IconDrop,
   IconSharpen
-} from '../icons'
+} from '../icons.js'
 
 
 export class ColorSlider extends React.PureComponent {
@@ -58,17 +57,7 @@ export class ColorSlider extends React.PureComponent {
     )
   }
 
-  static propTypes = {
-    icon: element.isRequired,
-    isDisabled: bool,
-    max: number.isRequired,
-    min: number.isRequired,
-    tabIndex: number,
-    type: string.isRequired,
-    onChange: func.isRequired,
-    origin: number,
-    value: number.isRequired
-  }
+
 
   static defaultProps = {
     max: 100,
@@ -145,19 +134,6 @@ export const EsperPanel = (props) => {
       </div>
     </div>
   )
-}
-
-EsperPanel.propTypes = {
-  brightness: number.isRequired,
-  contrast: number.isRequired,
-  hue: number.isRequired,
-  negative: bool.isRequired,
-  saturation: number.isRequired,
-  sharpen: number.isRequired,
-  isDisabled: bool,
-  isVisible: bool,
-  onChange: func.isRequired,
-  onRevert: func.isRequired
 }
 
 // Subtle: these are used to set EsperContainer's state!

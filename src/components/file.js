@@ -1,13 +1,8 @@
 import React from 'react'
-import { blank, noop } from '../common/util'
-import { Button } from './button'
-import { open, save } from '../dialog'
+import { blank, noop } from '../common/util.js'
+import { Button } from './button.js'
+import { open, save } from '../dialog.js'
 import cx from 'classnames'
-
-import {
-  bool, func, number, object, oneOf, string, arrayOf
-} from 'prop-types'
-
 
 
 export class FileSelect extends React.PureComponent {
@@ -123,26 +118,6 @@ export class FileSelect extends React.PureComponent {
         </div>
       </div>
     )
-  }
-
-  static propTypes = {
-    className: string,
-    createFile: bool,
-    defaultPath: string,
-    filters: arrayOf(object),
-    id: string,
-    isDisabled: bool,
-    isRequired: bool,
-    onBlur: func,
-    onChange: func.isRequired,
-    onCommit: func.isRequired,
-    onFocus: func,
-    onKeyDown: func,
-    placeholder: string,
-    showHiddenFiles: bool,
-    tabIndex: number,
-    type: oneOf(['file', 'directory']).isRequired,
-    value: string
   }
 
   static defaultProps = {

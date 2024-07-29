@@ -1,10 +1,9 @@
 import React from 'react'
-import { func, node, bool, number, oneOf, string } from 'prop-types'
-import { Draggable } from './draggable'
+import { Draggable } from './draggable.js'
 import cx from 'classnames'
-import { bounds } from '../dom'
-import { capitalize, noop, restrict } from '../common/util'
-import { round } from '../common/math'
+import { bounds } from '../dom.js'
+import { capitalize, noop, restrict } from '../common/util.js'
+import { round } from '../common/math.js'
 
 const DIR = {
   top: 'row', right: 'col', bottom: 'row', left: 'col'
@@ -191,26 +190,6 @@ export class Resizable extends React.Component {
       ref: this.container,
       style: this.style
     }, this.props.children, this.renderHandle())
-  }
-
-  static propTypes = {
-    children: node,
-    className: string,
-    edge: oneOf(Object.keys(DIM)).isRequired,
-    id: number,
-    isBuffered: bool,
-    isDisabled: bool,
-    isRelative: bool,
-    value: number.isRequired,
-    min: number.isRequired,
-    max: number,
-    margin: number,
-    node: string.isRequired,
-    onChange: func.isRequired,
-    onResize: func.isRequired,
-    onDrag: func,
-    onDragStart: func,
-    onDragStop: func
   }
 
   static defaultProps = {

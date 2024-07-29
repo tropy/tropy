@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { bool, number } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import { useDerivedState } from '../../hooks/use-derived-state.js'
@@ -109,12 +108,6 @@ export const Project = React.forwardRef(({
     </div>
   )
 })
-
-Project.propTypes = {
-  isOver: bool,
-  project: bool,
-  timeout: number
-}
 
 Project.defaultProps = {
   timeout: 3000

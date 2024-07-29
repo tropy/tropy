@@ -1,17 +1,12 @@
 import React from 'react'
-import { Button } from './button'
-import { Draggable } from './draggable'
-import { bounds, borders } from '../dom'
-import { restrict } from '../common/util'
-import { round } from '../common/math'
+import { Button } from './button.js'
+import { Draggable } from './draggable.js'
+import { bounds, borders } from '../dom.js'
+import { restrict } from '../common/util.js'
+import { round } from '../common/math.js'
 import cx from 'classnames'
 import throttle from 'lodash.throttle'
-import { KeyMap } from '../keymap'
-
-import {
-  arrayOf, bool, element, func, instanceOf, number, oneOf
-} from 'prop-types'
-
+import { KeyMap } from '../keymap.js'
 
 export class Slider extends React.PureComponent {
 
@@ -267,28 +262,6 @@ export class Slider extends React.PureComponent {
         {this.renderMaxButton()}
       </div>
     )
-  }
-
-  static propTypes = {
-    isDisabled: bool,
-    keymap: instanceOf(KeyMap).isRequired,
-    max: number.isRequired,
-    maxIcon: element,
-    min: number.isRequired,
-    minIcon: element,
-    origin: number,
-    precision: number.isRequired,
-    resolution: number.isRequired,
-    showCurrentValue: bool.isRequired,
-    size: oneOf(['sm', 'md', 'lg']).isRequired,
-    steps: arrayOf(number).isRequired,
-    stopOnMouseLeave: bool,
-    tabIndex: number,
-    value: number.isRequired,
-    zoom: number.isRequired,
-    onBlur: func,
-    onChange: func.isRequired,
-    onFocus: func
   }
 
   static defaultProps = {

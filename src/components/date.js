@@ -1,4 +1,3 @@
-import { number } from 'prop-types'
 import { FormattedDate, FormattedRelativeTime } from 'react-intl'
 
 export const RelativeDate = ({ origin, threshold, value }) => {
@@ -44,12 +43,6 @@ export const RelativeDate = ({ origin, threshold, value }) => {
       updateIntervalInSeconds={updateIntervalInSeconds}
       value={delta}/>
   )
-}
-
-RelativeDate.propTypes = {
-  origin: number,
-  threshold: number,
-  value: number.isRequired
 }
 
 RelativeDate.defaultProps = {

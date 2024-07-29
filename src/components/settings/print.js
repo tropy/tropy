@@ -1,5 +1,4 @@
 import React from 'react'
-import { arrayOf, func, object, string } from 'prop-types'
 import { FormElement, FormSelect, Toggle } from '../form.js'
 import { useEvent } from '../../hooks/use-event.js'
 
@@ -14,12 +13,6 @@ const ModeOptions = ({ children, config, onChange }) => {
       value={config[name]}
       onChange={onChange}/>
   ))
-}
-
-ModeOptions.propTypes = {
-  config: object.isRequired,
-  children: object.isRequired,
-  onChange: func.isRequired
 }
 
 
@@ -54,12 +47,6 @@ export function PrintSettings({ config, modes, onChange }) {
       </FormElement>
     </>
   )
-}
-
-PrintSettings.propTypes = {
-  config: object.isRequired,
-  modes: arrayOf(string).isRequired,
-  onChange: func.isRequired
 }
 
 PrintSettings.defaultProps = {

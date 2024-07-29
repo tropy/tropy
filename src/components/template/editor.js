@@ -1,14 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { TemplateFieldList } from './field-list'
-import { TemplateToolbar } from './toolbar'
+import { TemplateFieldList } from './field-list.js'
+import { TemplateToolbar } from './toolbar.js'
 import { FormattedMessage } from 'react-intl'
-import { Form, FormField, FormElement, FormSelect } from '../form'
-import { tropy, Template } from '../../ontology'
-import { arrayOf, func, object, string } from 'prop-types'
-import { ontology } from '../../actions'
-import { TYPE } from '../../constants'
-import { insert, move, remove } from '../../common/util'
+import { Form, FormField, FormElement, FormSelect } from '../form.js'
+import { tropy, Template } from '../../ontology/index.js'
+import { ontology } from '../../actions/index.js'
+import { TYPE } from '../../constants/index.js'
+import { insert, move, remove } from '../../common/util.js'
 
 
 class TemplateEditor extends React.PureComponent {
@@ -224,20 +223,6 @@ class TemplateEditor extends React.PureComponent {
           onSortStart={this.handleSortStart}/>
       </Form>
     )
-  }
-
-  static propTypes = {
-    templates: object.isRequired,
-    types: arrayOf(string).isRequired,
-    onCreate: func.isRequired,
-    onDelete: func.isRequired,
-    onExport: func.isRequired,
-    onFieldAdd: func.isRequired,
-    onFieldOrder: func.isRequired,
-    onFieldRemove: func.isRequired,
-    onFieldSave: func.isRequired,
-    onImport: func.isRequired,
-    onSave: func.isRequired
   }
 
   static defaultProps = {

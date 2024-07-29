@@ -1,19 +1,9 @@
 import React from 'react'
-import { MetadataContainer } from './metadata'
-import { NoteList } from './note'
+import { MetadataContainer } from './metadata.js'
+import { NoteList } from './note.js'
 import cx from 'classnames'
-import { Rotation, addOrientation } from '../../common/iiif'
-import { Cache } from '../../common/cache'
-
-import {
-  arrayOf,
-  bool,
-  number,
-  object,
-  shape,
-  string
-} from 'prop-types'
-
+import { Rotation, addOrientation } from '../../common/iiif.js'
+import { Cache } from '../../common/cache.js'
 
 export const Photo = ({
   canOverflow,
@@ -63,22 +53,4 @@ export const Photo = ({
         <NoteList notes={photo.notes}/>}
     </div>
   )
-}
-
-Photo.propTypes = {
-  canOverflow: bool,
-  hasPhotos: bool,
-  hasMetadata: bool,
-  hasNotes: bool,
-  item: object,
-  cache: string,
-  photo: shape({
-    angle: number.isRequired,
-    data: arrayOf(object).isRequired,
-    height: number.isRequired,
-    mirror: bool.isRequired,
-    orientation: number.isRequired,
-    path: string.isRequired,
-    width: number.isRequired
-  })
 }

@@ -1,4 +1,3 @@
-import { func, string } from 'prop-types'
 import { IconPhoto } from './icons.js'
 
 export function Image({ onError, src, rotation }) {
@@ -14,12 +13,6 @@ export function Image({ onError, src, rotation }) {
           onError={onError}/>
       </div>
     )
-}
-
-Image.propTypes = {
-  onError: func,
-  rotation: string.isRequired,
-  src: string
 }
 
 Image.defaultProps = {

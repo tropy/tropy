@@ -1,19 +1,18 @@
 import React from 'react'
-import { arrayOf, bool, func, number, object, shape } from 'prop-types'
-import { Scroll, ScrollContainer } from '../../scroll'
-import { ItemIterator } from '../iterator'
-import { TableRow } from './row'
-import { TableHead } from './head'
-import { ColumnContextMenu } from '../column'
+import { Scroll, ScrollContainer } from '../../scroll/index.js'
+import { ItemIterator } from '../iterator.js'
+import { TableRow } from './row.js'
+import { TableHead } from './head.js'
+import { ColumnContextMenu } from '../column.js'
 import cx from 'classnames'
-import { noop } from '../../../common/util'
-import { bounds, ensure } from '../../../dom'
-import { restrict, shallow, splice, warp } from '../../../common/util'
+import { noop } from '../../../common/util.js'
+import { bounds, ensure } from '../../../dom.js'
+import { restrict, shallow, splice, warp } from '../../../common/util.js'
 
 import {
   NAV,
   SASS
-} from '../../../constants'
+} from '../../../constants/index.js'
 
 const { COLUMN, ROW } = SASS
 const any = (src) => { for (let key in src) return key }
@@ -339,28 +338,6 @@ export class ItemTable extends ItemIterator {
         {this.renderColumnContextMenu()}
       </div>
     )
-  }
-
-  static propTypes = {
-    ...ItemIterator.propTypes,
-    columns: shape({
-      active: arrayOf(object).isRequired,
-      all: arrayOf(object).isRequired,
-      common: arrayOf(object).isRequired
-    }).isRequired,
-    edit: object,
-    data: object.isRequired,
-    hasScrollbars: bool,
-    minColWidth: number.isRequired,
-    minMainColWidth: number.isRequired,
-    templates: object.isRequired,
-    onColumnInsert: func.isRequired,
-    onColumnOrder: func.isRequired,
-    onColumnRemove: func.isRequired,
-    onColumnResize: func.isRequired,
-    onEdit: func.isRequired,
-    onEditCancel: func.isRequired,
-    onMetadataSave: func.isRequired
   }
 
   static defaultProps = {

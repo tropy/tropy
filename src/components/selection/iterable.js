@@ -1,10 +1,9 @@
 import React from 'react'
-import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd'
-import { Thumbnail } from '../photo/thumbnail'
-import { bool, func, number, shape } from 'prop-types'
-import { bounds } from '../../dom'
-import { pick } from '../../common/util'
-import { pure } from '../util'
+import { DND, DragSource, DropTarget, getEmptyImage } from '../dnd.js'
+import { Thumbnail } from '../photo/thumbnail.js'
+import { bounds } from '../../dom.js'
+import { pick } from '../../common/util.js'
+import { pure } from '../util.js'
 
 
 export class SelectionIterable extends React.PureComponent {
@@ -81,35 +80,6 @@ export class SelectionIterable extends React.PureComponent {
         orientation={this.props.photo.orientation}
         size={this.props.size}/>
     )
-  }
-
-  static propTypes = {
-    dragPreview: func,
-    dragSource: func,
-    dropTarget: func,
-    getAdjacent: func.isRequired,
-    isActive: bool.isRequired,
-    isDisabled: bool.isRequired,
-    isDragging: bool,
-    isLast: bool.isRequired,
-    isItemOpen: bool,
-    isOver: bool,
-    isSortable: bool.isRequired,
-    isVertical: bool.isRequired,
-    photo: shape({
-      id: number.isRequired,
-      orientation: number.isRequired
-    }).isRequired,
-    selection: shape({
-      id: number.isRequired,
-      angle: number,
-      mirror: bool
-    }).isRequired,
-    size: number.isRequired,
-    onContextMenu: func.isRequired,
-    onDropSelection: func.isRequired,
-    onItemOpen: func.isRequired,
-    onSelect: func.isRequired
   }
 
   static defaultProps = {

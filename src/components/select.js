@@ -1,14 +1,10 @@
 import React from 'react'
-import { Completions } from './completions'
-import { IconXSmall } from './icons'
-import { Button } from './button'
-import { blank, noop } from '../common/util'
+import { Completions } from './completions.js'
+import { IconXSmall } from './icons.js'
+import { Button } from './button.js'
+import { blank, noop } from '../common/util.js'
 import cx from 'classnames'
 import memoize from 'memoize-one'
-import {
-  array, arrayOf, bool, func, object, oneOfType, node, number, string
-} from 'prop-types'
-
 
 class Value extends React.Component {
   handleClearButtonClick = (event) => {
@@ -30,13 +26,6 @@ class Value extends React.Component {
         )}
       </div>
     )
-  }
-
-  static propTypes = {
-    hasClearButton: bool,
-    label: node.isRequired,
-    onClear: func.isRequired,
-    value: oneOfType([string, object]).isRequired
   }
 }
 
@@ -348,43 +337,6 @@ export class Select extends React.Component {
         {this.renderCompletions()}
       </div>
     )
-  }
-
-  static propTypes = {
-    autofocus: bool,
-    canClearByBackspace: bool,
-    className: string,
-    hideClearButton: bool,
-    icon: node,
-    id: string,
-    isDisabled: bool,
-    isInputHidden: bool,
-    isRequired: bool,
-    isStatic: bool,
-    isSelectionHidden: bool,
-    isValueHidden: bool,
-    name: string,
-    match: func,
-    maxRows: number,
-    minFilterOptions: number.isRequired,
-    options: array.isRequired,
-    onBlur: func.isRequired,
-    onChange: func.isRequired,
-    onClear: func.isRequired,
-    onClose: func.isRequired,
-    onFocus: func.isRequired,
-    onInsert: func.isRequired,
-    onOpen: func.isRequired,
-    onKeyDown: func.isRequired,
-    onRemove: func.isRequired,
-    onResize: func,
-    onValidate: func.isRequired,
-    placeholder: node,
-    tabIndex: number,
-    toId: func.isRequired,
-    toText: func.isRequired,
-    toValue: func,
-    value: oneOfType([string, arrayOf(string)])
   }
 
   static defaultProps = {

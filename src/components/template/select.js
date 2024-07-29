@@ -1,11 +1,9 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { bool, func, node, number, oneOf, string } from 'prop-types'
 import cx from 'classnames'
 import { ResourceSelect } from '../resource/select.js'
 import { Select } from '../select.js'
 import { match } from '../../collate.js'
-import { tropy } from '../../ontology/ns.js'
 import { selectTemplatesByType } from '../../selectors/ontology.js'
 
 
@@ -25,15 +23,6 @@ export const TemplateSelect = React.forwardRef(({
       ref={ref}/>
   )
 })
-
-TemplateSelect.propTypes = {
-  icon: node,
-  isMixed: bool,
-  match: func.isRequired,
-  placeholder: string,
-  tabIndex: number.isRequired,
-  type: oneOf([tropy.Item, tropy.Photo, tropy.Selection])
-}
 
 TemplateSelect.defaultProps = {
   ...Select.defaultProps,

@@ -1,9 +1,8 @@
 import React from 'react'
-import { NewTag, Tag } from './tag'
-import { get, noop, pick, sample } from '../../common/util'
-import { SASS } from '../../constants'
-import { match } from '../../keymap'
-import { arrayOf, bool, number, string, shape, object, func } from 'prop-types'
+import { NewTag, Tag } from './tag.js'
+import { get, noop, pick, sample } from '../../common/util.js'
+import { SASS } from '../../constants/index.js'
+import { match } from '../../keymap.js'
 
 
 export class TagList extends React.PureComponent {
@@ -88,28 +87,6 @@ export class TagList extends React.PureComponent {
         )}
       </ol>
     )
-  }
-
-  static propTypes = {
-    color: string,
-    colors: arrayOf(string).isRequired,
-    edit: object,
-    hasFocusIcon: bool,
-    isReadOnly: bool,
-    keymap: object.isRequired,
-    selection: arrayOf(number).isRequired,
-    tags: arrayOf(shape({
-      id: number.isRequired,
-      name: string.isRequired
-    })).isRequired,
-    onCommit: func.isRequired,
-    onContextMenu: func.isRequired,
-    onCreate: func,
-    onDropItems: func,
-    onEditCancel: func,
-    onRemove: func.isRequired,
-    onSave: func,
-    onSelect: func.isRequired
   }
 
   static defaultProps = {

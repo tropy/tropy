@@ -1,12 +1,12 @@
 import React from 'react'
-import { Button } from '../button'
-import { Editable } from '../editable'
-import { Collapse } from '../fx'
-import { IconFolder, IconGhost, IconTriangle } from '../icons'
-import { bounds } from '../../dom'
-import { ListTree } from './tree'
+import { Button } from '../button.js'
+import { Editable } from '../editable.js'
+import { Collapse } from '../fx.js'
+import { IconFolder, IconGhost, IconTriangle } from '../icons.js'
+import { bounds } from '../../dom.js'
+import { ListTree } from './tree.js'
 import cx from 'classnames'
-import { noop, restrict } from '../../common/util'
+import { noop, restrict } from '../../common/util.js'
 
 import {
   DND,
@@ -15,13 +15,9 @@ import {
   getEmptyImage,
   getDroppedFiles,
   hasPhotoFiles
-} from '../dnd'
+} from '../dnd.js'
 
-import {
-  arrayOf, bool, func, number, object, shape, string
-} from 'prop-types'
-
-import { LIST, SASS } from '../../constants'
+import { LIST, SASS } from '../../constants/index.js'
 const { INDENT, PADDING } = SASS.LIST
 
 
@@ -44,13 +40,6 @@ const NewListNode = (props) => (
     </div>
   </li>
 )
-
-NewListNode.propTypes = {
-  parent: number.isRequired,
-  name: string.isRequired,
-  onCancel: func.isRequired,
-  onSave: func.isRequired
-}
 
 NewListNode.defaultProps = {
   name: '',
@@ -274,44 +263,6 @@ class ListNode extends React.PureComponent {
         </Collapse>
       </li>
     )
-  }
-
-  static propTypes = {
-    canDrop: bool,
-    depth: number.isRequired,
-    expand: object.isRequired,
-    isDragging: bool,
-    isDraggingParent: bool,
-    isEditing: bool,
-    isExpandable: bool,
-    isExpanded: bool,
-    isHalloween: bool,
-    isHolding: bool,
-    isLast: bool,
-    isOver: bool,
-    isReadOnly: bool,
-    isSelected: bool,
-    list: shape({
-      id: number.isRequired,
-      parent: number.isRequired,
-      name: string.isRequired,
-      children: arrayOf(number).isRequired
-    }).isRequired,
-    lists: object.isRequired,
-    minDropDepth: number.isRequired,
-    position: number.isRequired,
-    selection: number,
-
-    connectDragSource: func.isRequired,
-    connectDragPreview: func.isRequired,
-    connectDropTarget: func.isRequired,
-    onClick: func.isRequired,
-    onContextMenu: func.isRequired,
-    onCollapse: func.isRequired,
-    onEditCancel: func,
-    onExpand: func.isRequired,
-    onMove: func.isRequired,
-    onSave: func.isRequired
   }
 
   static defaultProps = {

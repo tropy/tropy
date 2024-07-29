@@ -1,6 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { bool, func, number, object, shape, string } from 'prop-types'
 import { useEvent } from '../../hooks/use-event.js'
 import { Editor } from '../editor/index.js'
 import { toText } from '../../editor/serialize.js'
@@ -92,20 +91,6 @@ export const NotePad = forwardRef(({
     </section>
   )
 })
-
-NotePad.propTypes = {
-  hasTitlebar: bool,
-  isDisabled: bool,
-  isReadOnly: bool,
-  keymap: object.isRequired,
-  note: shape({
-    id: number,
-    state: object,
-    text: string
-  }),
-  tabIndex: number.isRequired,
-  onContextMenu: func.isRequired
-}
 
 NotePad.defaultProps = {
   tabIndex: TABS.NotePad

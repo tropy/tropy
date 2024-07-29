@@ -3,7 +3,6 @@ import { ResourceSelect } from './select'
 import { Popup } from '../popup'
 import { SASS } from '../../constants'
 import { viewport } from '../../dom'
-import { arrayOf, func, number, object, oneOfType, string } from 'prop-types'
 
 const { OPTION, PANEL } = SASS
 
@@ -57,18 +56,6 @@ export class PopupSelect extends React.Component {
           onResize={this.handleResize}/>
       </Popup>
     )
-  }
-
-  static propTypes = {
-    left: number.isRequired,
-    maxRows: number.isRequired,
-    onClose: func,
-    onInsert: func,
-    onRemove: func,
-    options: arrayOf(object).isRequired,
-    top: number.isRequired,
-    value: oneOfType([string, arrayOf(string)]),
-    width: number
   }
 
   static defaultProps = {

@@ -1,6 +1,5 @@
 import React from 'react'
 import { TemplateField } from './field'
-import { arrayOf, number, shape, string } from 'prop-types'
 
 export const TemplateFieldList = ({ fields, template, ...props }) => {
   if (template == null) return
@@ -19,11 +18,4 @@ export const TemplateFieldList = ({ fields, template, ...props }) => {
       ))}
     </ul>
   )
-}
-
-TemplateFieldList.propTypes = {
-  fields: arrayOf(shape({
-    id: number.isRequired
-  })).isRequired,
-  template: string.isRequired
 }

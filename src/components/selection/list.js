@@ -1,9 +1,8 @@
 import React from 'react'
-import { SelectionIterator } from './iterator'
-import { SelectionListItem } from './list-item'
+import { SelectionIterator } from './iterator.js'
+import { SelectionListItem } from './list-item.js'
 import cx from 'classnames'
-import { func, number, object } from 'prop-types'
-import { dc } from '../../ontology'
+import { dc } from '../../ontology/ns.js'
 
 
 class SelectionList extends SelectionIterator {
@@ -29,15 +28,6 @@ class SelectionList extends SelectionIterator {
         ))}
       </ul>
     )
-  }
-
-  static propTypes = {
-    ...SelectionIterator.propTypes,
-    edit: number,
-    data: object.isRequired,
-    onChange: func.isRequired,
-    onEdit: func.isRequired,
-    onEditCancel: func.isRequired
   }
 }
 

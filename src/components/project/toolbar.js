@@ -1,7 +1,6 @@
 import React from 'react'
 import { WindowContext } from '../window'
 import { FormattedMessage } from 'react-intl'
-import { bool, func, number, string } from 'prop-types'
 import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
 import { Slider } from '../slider'
 import { SearchField } from '../search'
@@ -53,16 +52,4 @@ export class ProjectToolbar extends React.PureComponent {
   }
 
   static contextType = WindowContext
-
-  static propTypes = {
-    count: number.isRequired,
-    isDisabled: bool,
-    isReadOnly: bool,
-    maxZoom: number.isRequired,
-    query: string.isRequired,
-    zoom: number.isRequired,
-    onItemCreate: func.isRequired,
-    onSearch: func.isRequired,
-    onZoomChange: func.isRequired
-  }
 }

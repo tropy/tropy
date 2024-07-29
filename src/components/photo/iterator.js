@@ -1,10 +1,8 @@
 import React from 'react'
-import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd'
-import { adjacent, move, noop } from '../../common/util'
-import { on, off } from '../../dom'
-import { TABS } from '../../constants'
-import { arrayOf, bool, func, number, object, shape } from 'prop-types'
-
+import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd.js'
+import { adjacent, move, noop } from '../../common/util.js'
+import { on, off } from '../../dom.js'
+import { TABS } from '../../constants/index.js'
 
 export class PhotoIterator extends React.Component {
   container = React.createRef()
@@ -204,52 +202,9 @@ export class PhotoIterator extends React.Component {
     )(this)
   }
 
-  static propTypes = {
-    photos: arrayOf(
-      shape({
-        id: number.isRequired
-      })
-    ).isRequired,
-
-    current: number,
-    expandedPhotos: object.isRequired,
-    keymap: object.isRequired,
-    selection: number,
-    selections: object.isRequired,
-    size: number.isRequired,
-
-    canCreate: bool,
-    isItemOpen: bool,
-    isDisabled: bool,
-    isOver: bool,
-    isOverFile: bool,
-
-    connectDropTarget: func.isRequired,
-
-    onBlur: func.isRequired,
-    onConsolidate: func.isRequired,
-    onContract: func.isRequired,
-    onContextMenu: func.isRequired,
-    onCreate: func.isRequired,
-    onDelete: func.isRequired,
-    onExpand: func.isRequired,
-    onExtract: func.isRequired,
-    onTabFocus: func.isRequired,
-    onItemOpen: func.isRequired,
-    onItemPreview: func.isRequired,
-    onRotate: func.isRequired,
-    onSelect: func.isRequired,
-    onSort: func.isRequired,
-    onSelectionSort: func.isRequired
-  }
-
   static defaultProps = {
     expanded: [],
     onBlur: noop
-  }
-
-  static getPropKeys() {
-    return Object.keys(this.propTypes || this.DecoratedComponent.propTypes)
   }
 }
 

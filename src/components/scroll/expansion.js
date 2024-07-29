@@ -1,6 +1,5 @@
 import React from 'react'
-import { indexOf } from '../../common/collection'
-import { func, number, object, string } from 'prop-types'
+import { indexOf } from '../../common/collection.js'
 
 export const ExpansionRow = ({ item, columns, tag, renderExpansionRow }) =>
   React.createElement(tag, {
@@ -8,13 +7,6 @@ export const ExpansionRow = ({ item, columns, tag, renderExpansionRow }) =>
     className: 'tile-expansion',
     style: { gridColumnEnd: columns + 1 }
   }, renderExpansionRow(item, columns))
-
-ExpansionRow.propTypes = {
-  renderExpansionRow: func.isRequired,
-  columns: number.isRequired,
-  item: object.isRequired,
-  tag: string.isRequired
-}
 
 ExpansionRow.defaultProps = {
   tag: 'li'

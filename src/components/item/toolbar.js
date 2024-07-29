@@ -1,5 +1,4 @@
 import React from 'react'
-import { bool } from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar, Toolbar, ToolGroup } from '../toolbar.js'
@@ -29,8 +28,4 @@ export const ItemToolbar = ({ isItemMode }) => {
       </Toolbar.Left>
     </Titlebar>
   )
-}
-
-ItemToolbar.propTypes = {
-  isItemMode: bool
 }

@@ -1,4 +1,3 @@
-import { arrayOf, string } from 'prop-types'
 import { FormSelect } from '../form.js'
 import { useIpcEvent } from '../../hooks/use-ipc.js'
 import { useWindowArgs } from '../../hooks/use-window.js'
@@ -21,10 +20,6 @@ export function LocaleSettings({ options }) {
       tabIndex={0}
       onChange={handleLocaleChange}/>
   )
-}
-
-LocaleSettings.propTypes = {
-  options: arrayOf(string).isRequired
 }
 
 LocaleSettings.defaultProps = {

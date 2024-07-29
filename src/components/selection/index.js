@@ -1,3 +1,3 @@
-export * from './grid'
-export * from './info'
-export * from './list'
+export * from './grid.js'
+export * from './info.js'
+export * from './list.js'

@@ -1,5 +1,4 @@
 import React from 'react'
-import { arrayOf, func, number, object, shape, string } from 'prop-types'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
 import { Button } from '../button.js'
@@ -27,16 +26,6 @@ export const ProjectFileList = ({
     )}
   </ol>
 )
-
-ProjectFileList.propTypes = {
-  files: arrayOf(shape({
-    name: string.isRequired,
-    path: string.isRequired
-  })).isRequired,
-  onConsolidate: func,
-  onRemove: func,
-  onSelect: func
-}
 
 export const ProjectFile = ({
   name,
@@ -87,16 +76,6 @@ export const ProjectFile = ({
   )
 }
 
-ProjectFile.propTypes = {
-  name: string.isRequired,
-  onClick: func,
-  onConsolidate: func,
-  path: string.isRequired,
-  stats: object,
-  onRemove: func
-}
-
-
 export const ProjectFileStats = ({ lastModified, ...values }) =>
   (lastModified != null) && (
     <ul className="stats">
@@ -114,10 +93,3 @@ export const ProjectFileStats = ({ lastModified, ...values }) =>
       </li>
     </ul>
   )
-
-ProjectFileStats.propTypes = {
-  items: number,
-  lastModified: number,
-  notes: number,
-  photos: number
-}

@@ -1,20 +1,8 @@
 import React from 'react'
 import { useIntl } from 'react-intl'
-import { Input } from '../input'
-import { blank, noop } from '../../common/util'
-import { match } from '../../collate'
-
-import {
-  arrayOf,
-  bool,
-  func,
-  instanceOf,
-  node,
-  number,
-  oneOfType,
-  shape,
-  string
-} from 'prop-types'
+import { Input } from '../input.js'
+import { blank, noop } from '../../common/util.js'
+import { match } from '../../collate.js'
 
 const TagAdderContainer = ({ children, count }) => {
   let intl = useIntl()
@@ -27,11 +15,6 @@ const TagAdderContainer = ({ children, count }) => {
       {children}
     </div>
   )
-}
-
-TagAdderContainer.propTypes = {
-  children: node,
-  count: number
 }
 
 export class TagAdder extends React.PureComponent {
@@ -99,23 +82,6 @@ export class TagAdder extends React.PureComponent {
           onCommit={this.handleChange}/>
       </TagAdderContainer>
     )
-  }
-
-  static propTypes = {
-    count: number.isRequired,
-    completions: arrayOf(string).isRequired,
-    isDisabled: bool,
-    match: func.isRequired,
-    tags: arrayOf(shape({
-      id: number.isRequired,
-      name: string.isRequired
-    })),
-    separator: oneOfType([string, instanceOf(RegExp)]),
-    onAdd: func.isRequired,
-    onBlur: func.isRequired,
-    onCancel: func.isRequired,
-    onFocus: func.isRequired,
-    onCreate: func.isRequired
   }
 
   static defaultProps = {

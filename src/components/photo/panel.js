@@ -4,7 +4,6 @@ import { PhotoGrid } from './grid'
 import { PhotoList } from './list'
 import { SASS } from '../../constants'
 import * as act from '../../actions'
-import { number } from 'prop-types'
 import { getExpandedPhotos } from '../../selectors'
 
 
@@ -16,10 +15,6 @@ class PhotoPanel extends React.PureComponent {
     return (
       <PhotoIterator {...props} size={SASS.PHOTO.ZOOM[zoom]}/>
     )
-  }
-
-  static propTypes = {
-    zoom: number
   }
 }
 

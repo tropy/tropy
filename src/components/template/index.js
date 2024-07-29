@@ -1,2 +1,2 @@
-export * from './editor'
-export * from './select'
+export * from './editor.js'
+export * from './select.js'

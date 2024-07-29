@@ -1,12 +1,11 @@
 import React from 'react'
-import { WindowContext } from '../window'
-import { Titlebar, Toolbar, ToolGroup } from '../toolbar'
-import { Button } from '../button'
-import { Slider } from '../slider'
-import { arrayOf, bool, func, number, string } from 'prop-types'
+import { WindowContext } from '../window.js'
+import { Titlebar, Toolbar, ToolGroup } from '../toolbar.js'
+import { Button } from '../button.js'
+import { Slider } from '../slider.js'
 import throttle from 'lodash.throttle'
-import { Icon } from '../icons'
-import { ESPER, SASS } from '../../constants'
+import { Icon } from '../icons.js'
+import { ESPER, SASS } from '../../constants/index.js'
 
 
 const {
@@ -169,30 +168,6 @@ export class EsperToolbar extends React.PureComponent {
         </Toolbar.Right>
       </Titlebar>
     )
-  }
-
-  static propTypes = {
-    isDisabled: bool,
-    isReadOnly: bool,
-    isSelectionActive: bool,
-    isPanelVisible: bool,
-    mode: string.isRequired,
-    mirror: bool,
-    resolution: number.isRequired,
-    overlay: number.isRequired,
-    tool: string.isRequired,
-    zoom: number.isRequired,
-    zoomPrecision: number.isRequired,
-    zoomSteps: arrayOf(number).isRequired,
-    minZoom: number.isRequired,
-    maxZoom: number.isRequired,
-    onMirrorChange: func.isRequired,
-    onModeChange: func.isRequired,
-    onOverlayChange: func.isRequired,
-    onPanelChange: func.isRequired,
-    onToolChange: func.isRequired,
-    onRotationChange: func.isRequired,
-    onZoomChange: func.isRequired
   }
 
   static contextType = WindowContext

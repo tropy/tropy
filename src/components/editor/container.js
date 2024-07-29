@@ -7,7 +7,6 @@ import React, {
 } from 'react'
 
 import cx from 'classnames'
-import { func, bool, object, number, string } from 'prop-types'
 import { EditorToolbar } from './toolbar.js'
 import { EditorView } from './view.js'
 import { useEvent } from '../../hooks/use-event.js'
@@ -163,24 +162,6 @@ export const Editor = React.forwardRef(({
     </div>
   )
 })
-
-Editor.propTypes = {
-  hasTitlebar: bool,
-  isDisabled: bool,
-  isReadOnly: bool,
-  direction: string.isRequired,
-  keymap: object.isRequired,
-  mode: string.isRequired,
-  numbers: bool,
-  onBlur: func.isRequired,
-  onChange: func.isRequired,
-  onCreate: func,
-  onContextMenu: func,
-  placeholder: string,
-  state: object,
-  tabIndex: number.isRequired,
-  wrap: bool
-}
 
 Editor.defaultProps = {
   ...EditorView.defaultProps,

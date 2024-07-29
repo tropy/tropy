@@ -1,6 +1,5 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { arrayOf, bool, func, number, string, oneOfType } from 'prop-types'
 import { useDragDropMetadata } from '../../hooks/use-drag-drop-metadata.js'
 import { useEvent } from '../../hooks/use-event.js'
 import cx from 'classnames'
@@ -111,22 +110,3 @@ export const MetadataField = React.memo(({
     </li>
   )
 })
-
-MetadataField.propTypes = {
-  ...MetadataValue.propTypes,
-  hint: string,
-  id: arrayOf(number),
-  isDisabled: bool,
-  isExtra: bool,
-  isMixed: bool,
-  isReadOnly: bool,
-  label: string,
-  onChange: func,
-  onClick: func,
-  onCopy: func,
-  onEdit: func,
-  onEditCancel: func,
-  property: string,
-  text: oneOfType([string, number]),
-  type: string
-}

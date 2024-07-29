@@ -1,6 +1,5 @@
 import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { string } from 'prop-types'
 import { useIpcEvent } from '../hooks/use-ipc.js'
 import { product, version } from '../common/release.js'
 import { Titlebar } from './toolbar.js'
@@ -14,10 +13,6 @@ const Link = ({ id, ...opts }) => {
   return (
     <a onClick={handleClick}>{title}</a>
   )
-}
-
-Link.propTypes = {
-  id: string.isRequired
 }
 
 export const About = () => (

@@ -1,5 +1,4 @@
 import React from 'react'
-import { element, string } from 'prop-types'
 import cx from 'classnames'
 import { useIntl } from 'react-intl'
 import { lispcase } from '../common/util.js'
@@ -8,12 +7,6 @@ const icons = Object.create({})
 
 export function Icon(props) {
   return React.createElement(icons[props.name], props)
-}
-
-Icon.propTypes = {
-  name: string.isRequired,
-  className: string,
-  title: string
 }
 
 export function IconContainer({ children, className, name, title }) {
@@ -31,14 +24,6 @@ export function IconContainer({ children, className, name, title }) {
   )
 }
 
-IconContainer.propTypes = {
-  children: element.isRequired,
-  className: string,
-  name: string.isRequired,
-  title: string
-}
-
-
 function i(name, svg) {
   let IconComponent = React.memo(({ className, title }) => (
     <IconContainer
@@ -48,11 +33,6 @@ function i(name, svg) {
       {svg}
     </IconContainer>
   ))
-
-  IconComponent.propTypes = {
-    className: string,
-    title: string
-  }
 
   IconComponent.displayName = `Icon${name}`
 

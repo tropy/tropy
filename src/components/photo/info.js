@@ -2,7 +2,6 @@ import { basename } from 'node:path'
 import React, { useState } from 'react'
 import { useIntl } from 'react-intl'
 import { useDispatch } from 'react-redux'
-import { bool, number, object } from 'prop-types'
 import { IMAGE } from '../../constants/index.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useIpcEvent } from '../../hooks/use-ipc.js'
@@ -79,13 +78,6 @@ export const PhotoInfo = React.memo(({
     </ol>
   )
 })
-
-PhotoInfo.propTypes = {
-  isDisabled: bool,
-  photo: object.isRequired,
-  maxDensity: number.isRequired,
-  minDensity: number.isRequired
-}
 
 PhotoInfo.defaultProps = {
   maxDensity: IMAGE.MAX_DENSITY,

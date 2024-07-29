@@ -9,11 +9,6 @@ import { isMeta } from '../../../keymap.js'
 import { auto } from '../../../format.js'
 import { noop } from '../../../common/util.js'
 
-import {
-  arrayOf, bool, func, instanceOf, number, object, oneOfType, shape, string
-} from 'prop-types'
-
-
 export class TableCell extends React.PureComponent {
   get classes() {
     return ['metadata', this.props.type, {
@@ -130,36 +125,6 @@ export class TableCell extends React.PureComponent {
         </div>
       </div>
     )
-  }
-
-  static propTypes = {
-    display: string,
-    id: string.isRequired,
-    isDisabled: bool,
-    isDragging: bool,
-    isEditing: bool,
-    isMainColumn: bool,
-    isMoving: bool,
-    isReadOnly: bool,
-    isSelected: bool,
-    item: shape({
-      id: number.isRequired,
-      cover: number,
-      photos: arrayOf(number)
-    }).isRequired,
-    photos: object,
-    position: number.isRequired,
-    size: number,
-    tags: object,
-    title: string,
-    type: string,
-    value: oneOfType([string, number, instanceOf(Date)]),
-    getSelection: func.isRequired,
-    getNextColumn: func.isRequired,
-    getPrevColumn: func.isRequired,
-    onCancel: func.isRequired,
-    onChange: func.isRequired,
-    onEdit: func.isRequired
   }
 
   static defaultProps = {

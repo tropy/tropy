@@ -2,7 +2,6 @@ import React from 'react'
 import { TemplateSelect } from './select'
 import { ButtonGroup, Button } from '../button'
 import { FormElement } from '../form'
-import { bool, func, string } from 'prop-types'
 import { IconCopy, IconTrash, IconImport, IconExport } from '../icons'
 
 
@@ -50,16 +49,5 @@ export class TemplateToolbar extends React.PureComponent {
         </div>
       </FormElement>
     )
-  }
-
-  static propTypes = {
-    selected: string,
-    isPristine: bool,
-    isProtected: bool,
-    onChange: func.isRequired,
-    onCopy: func.isRequired,
-    onDelete: func.isRequired,
-    onExport: func.isRequired,
-    onImport: func.isRequired
   }
 }
