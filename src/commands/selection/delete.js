@@ -1,8 +1,8 @@
 import { call, put, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { SELECTION } from '../../constants/index.js'
-import { get, splice } from '../../common/util/index.js'
-import mod from '../../models/selectionjs'
+import { get, splice } from '../../common/util.js'
+import mod from '../../models/selection.js'
 import * as act from '../../actions/index.js'
 
 
