@@ -1,12 +1,12 @@
 import { string } from './matchers.js'
-import chai from 'chai'
+import { expect, use } from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 import chaiAsPromised from 'chai-as-promised'
 
-chai.use(sinonChai)
-chai.use(chaiAsPromised)
-chai.use(string)
+use(sinonChai)
+use(chaiAsPromised)
+use(string)
 
-global.expect = chai.expect
+global.expect = expect
 global.sinon = sinon
