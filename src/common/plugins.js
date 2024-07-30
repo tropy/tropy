@@ -1,6 +1,7 @@
 import { EventEmitter } from 'node:events'
 import fs from 'node:fs'
 import { basename, join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import electron, { shell } from 'electron'
 import debounce from 'lodash.debounce'
 import { link } from './fs.js'
@@ -223,7 +224,7 @@ export class Plugins extends EventEmitter {
 
         spec[name] = {
           name,
-          main: join(path, pkg.main),
+          main: pathToFileURL(join(path, pkg.main)),
           description: pkg.description,
           version: pkg.version,
           options: pkg.options,
