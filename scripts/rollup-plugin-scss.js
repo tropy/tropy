@@ -1,49 +1,47 @@
 import fs from 'node:fs'
 import { basename, dirname, extname, resolve } from 'node:path'
-import { promisify } from 'node:util'
+import { fileURLToPath } from 'node:url'
 import * as sass from 'sass'
+import { OrderedMap } from 'immutable'
 import SASS from '../src/constants/sass.js'
 import { get } from '../src/common/util.js'
 
-const render = promisify(sass.render)
-
 const toSass = (value, unit) => {
   if (typeof value === 'number') {
-    return new sass.types.Number(value, unit)
+    return new sass.SassNumber(value, unit)
   }
 
   if (typeof value === 'string') {
-    return new sass.types.String(value)
+    return new sass.SassString(value)
   }
 
   if (value != null && typeof value === 'object') {
     if (Array.isArray(value)) {
-      return value.reduce((list, val, i) => (
-        list.setValue(i, toSass(val, unit)), list
-      ), new sass.types.List(value.length))
+      return new sass.SassList(value.map(val => toSass(val, unit)))
     }
 
     let entries = Object.entries(value)
-    return entries.reduce((map, [key, val], i) => {
-      map.setKey(i, new sass.types.String(key))
-      map.setValue(i, toSass(val))
-      return map
-    }, new sass.types.Map(entries.length))
+    return new sass.SassMap(entries.reduce((map, [key, val]) => (
+      map.set(new sass.SassString(key), toSass(val))
+    ), new OrderedMap()))
   }
 
-  return sass.types.Null.NULL
+  return sass.sassNull
 }
 
 export const functions = {
-  'const($name, $unit:"")'(name, unit) {
-    return toSass(get(SASS, name.getValue()), unit.getValue())
+  'const($name, $unit:"")'(args) {
+    let name = args[0].assertString('name')
+    let unit = args[1].assertString('unit')
+
+    return toSass(get(SASS, name.text), unit.text)
   }
 }
 
 export default function ({
   entries,
   extension = '.scss',
-  outputStyle = 'compressed',
+  style = 'compressed',
   platform,
   themes = ['light', 'dark'],
   skipThemes
@@ -72,12 +70,11 @@ export default function ({
       if (extname(id) !== extension)
         return null
 
-      let includePaths = [
+      let loadPaths = [
         dirname(id),
         resolve('node_modules')
       ]
 
-      let sourceMapRoot = resolve()
       let outFiles = []
 
       if (skipThemes === true || skipThemes?.(id)) {
@@ -95,20 +92,20 @@ export default function ({
       }
 
       for (let [outFile, data] of outFiles) {
-        let { css, map, stats } = await render({
-          data,
+        let { css, sourceMap, loadedUrls } = sass.compileString(data, {
           functions,
-          includePaths,
-          outFile,
-          outputStyle,
+          loadPaths,
+          style,
+          silenceDeprecations: [
+            'mixed-decls'
+          ],
           sourceMap: true,
-          sourceMapContents: true,
-          sourceMapRoot
+          sourceMapIncludeSources: true
         })
 
-        if (this.meta.watchMode && stats.includedFiles) {
-          for (let file of stats.includedFiles) {
-            this.addWatchFile(file)
+        if (this.meta.watchMode && loadedUrls) {
+          for (let url of loadedUrls) {
+            this.addWatchFile(fileURLToPath(url))
           }
         }
 
@@ -118,11 +115,11 @@ export default function ({
           source: css.toString()
         })
 
-        if (map) {
+        if (sourceMap) {
           this.emitFile({
             type: 'asset',
             fileName: `${outFile}.map`,
-            source: map.toString()
+            source: sourceMap.toString()
           })
         }
       }
