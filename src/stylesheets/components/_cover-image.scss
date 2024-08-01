@@ -98,15 +98,15 @@
       .cover-image {
         .thumbnail,
         .thumbnail img {
-          min-width: #{round($size * 0.375)}px;
-          min-height: #{round($size * 0.375)}px;
+          min-width: round($size * 0.375);
+          min-height: round($size * 0.375);
         }
 
         .thumbnail {
           [class*="90"],
           [class*="270"] {
             img {
-              min-height: round($size * 0.375) * 1px + 0.5px;
+              min-height: round($size * 0.375) + 0.5px;
             }
           }
         }
