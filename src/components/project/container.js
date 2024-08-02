@@ -10,7 +10,7 @@ import * as act from '../../actions/index.js'
 
 export const ProjectContainer = ({
   isWindowResizeAnimated,
-  timeout
+  timeout = 300
 }) => {
   let dispatch = useDispatch()
 
@@ -57,8 +57,4 @@ export const ProjectContainer = ({
       </Fade>
     </SwitchTransition>
   )
-}
-
-ProjectContainer.defaultProps = {
-  timeout: 300
 }
