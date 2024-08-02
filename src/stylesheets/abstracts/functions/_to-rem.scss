@@ -3,5 +3,5 @@
 // --------------------------------------------------
 
 @function to-rem($length) {
-  @return calc($length / calc(const("FONTSIZE.BASE", "px") / 1px) * 1rem);
+  @return calc($length / const("FONTSIZE.BASE") * 1rem);
 }
