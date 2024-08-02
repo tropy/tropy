@@ -65,7 +65,7 @@ $thumbnail-size:          $space-lg;
 $tile-thumbnail-sizes:    const("ITEM.ZOOM", "px");
 $tile-thumbnail-size-min: const("ICON.SIZE", "px");
 $tile-thumbnail-size-max: const("ICON.MAX", "px");
-$tile-factor:             calc(const("TILE.FACTOR", "px") / 1px);
+$tile-factor:             const("TILE.FACTOR");
 $pointer-height:          10px;
 
 
