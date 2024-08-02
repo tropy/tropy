@@ -75,7 +75,19 @@ export const create = () => {
       ui
     },
     middleware: (getDefaultMiddleWare) => ([
-      ...getDefaultMiddleWare(),
+      ...getDefaultMiddleWare({
+        serializableCheck: {
+          ignoredActions: [
+            'keymap.update'
+          ],
+          ignoredActionPaths: [
+            /^keymap\./, /\.(created|modified)$/
+          ],
+          ignoredPaths: [
+            /^keymap\./, /\.(created|modified)$/
+          ]
+        }
+      }),
       debounce,
       throttle,
       seq,
