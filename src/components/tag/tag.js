@@ -9,7 +9,12 @@ import { hasFocus } from '../../dom.js'
 import { DND, useDrop } from '../dnd.js'
 
 
-export const NewTag = ({ color, name, onCreate, onCancel }) => (
+export const NewTag = ({
+  color,
+  name = '',
+  onCreate,
+  onCancel
+}) => (
   <li className="tag" tabIndex={-1}>
     <TagColor color={color}/>
     <div className="name">
@@ -24,10 +29,6 @@ export const NewTag = ({ color, name, onCreate, onCancel }) => (
   </li>
 )
 
-NewTag.defaultProps = {
-  name: ''
-}
-
 
 export const Tag = React.memo(({
   hasFocusIcon,
@@ -35,7 +36,7 @@ export const Tag = React.memo(({
   isSelected,
   isReadOnly,
   tag,
-  onChange,
+  onChange = noop,
   onContextMenu,
   onDropItems,
   onEditCancel,
@@ -116,7 +117,3 @@ export const Tag = React.memo(({
     </li>
   )
 })
-
-Tag.defaultProps = {
-  onChange: noop
-}

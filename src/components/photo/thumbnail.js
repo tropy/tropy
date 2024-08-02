@@ -10,11 +10,15 @@ import act from '../../actions/photo.js'
 const variant = (size) =>
   size > SASS.ICON.SIZE ? SASS.ICON.MAX : SASS.ICON.SIZE
 
-export function Thumbnail(props) {
+
+export function Thumbnail({
+  size = SASS.ICON.SIZE,
+  ...props
+}) {
   let dispatch = useDispatch()
   let cache = useSelector(selectCachePrefix)
 
-  let src = Cache.url(cache, variant(props.size), props)
+  let src = Cache.url(cache, variant(size), props)
   let rot = Rotation.fromExifOrientation(props.orientation).add(props)
   let [x, y] = rot.ratio(props)
   let rotation = rot.format('x')
@@ -60,7 +64,3 @@ Thumbnail.keys = [
   'size',
   'width'
 ]
-
-Thumbnail.defaultProps = {
-  size: SASS.ICON.SIZE
-}

@@ -10,11 +10,12 @@ import { bytes, datetime, number as num } from '../../format.js'
 import * as act from '../../actions/index.js'
 import { map } from '../../common/util.js'
 
+
 export const PhotoInfo = React.memo(({
   photo,
   isDisabled,
-  maxDensity,
-  minDensity
+  maxDensity = IMAGE.MAX_DENSITY,
+  minDensity = IMAGE.MIN_DENSITY
 }) => {
   let dispatch = useDispatch()
   let intl = useIntl()
@@ -78,8 +79,3 @@ export const PhotoInfo = React.memo(({
     </ol>
   )
 })
-
-PhotoInfo.defaultProps = {
-  maxDensity: IMAGE.MAX_DENSITY,
-  minDensity: IMAGE.MIN_DENSITY
-}

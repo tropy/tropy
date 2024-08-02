@@ -3,7 +3,12 @@ import cx from 'classnames'
 import { Icon } from '../icons.js'
 import { FormattedMessage } from 'react-intl'
 
-export const ListLeafNode = ({ icon, name, isSelected, onClick }) => (
+export const ListLeafNode = ({
+  icon = 'Folder',
+  name,
+  isSelected,
+  onClick
+}) => (
   <li
     className={cx({ active: isSelected })}
     onClick={isSelected ? null : onClick}>
@@ -17,7 +22,3 @@ export const ListLeafNode = ({ icon, name, isSelected, onClick }) => (
     </div>
   </li>
 )
-
-ListLeafNode.defaultProps = {
-  icon: 'Folder'
-}

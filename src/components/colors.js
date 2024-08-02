@@ -7,7 +7,7 @@ export const Circle = ({ color, isCrescent }) =>
       <IconCrescentCircle className={ccx(color)}/> :
       <IconCircle className={ccx(color)}/>
 
-export const Colors = ({ className, colors }) => (
+export const Colors = ({ className = 'colors', colors }) => (
   (!colors.length) ? null : (
     <div className={className}>
       {colors.map((color, idx) => (
@@ -18,10 +18,6 @@ export const Colors = ({ className, colors }) => (
       ))}
     </div>
   ))
-
-Colors.defaultProps = {
-  className: 'colors'
-}
 
 export const TagColor = ({ color }) => (
   <IconTag className={ccx(color)}/>

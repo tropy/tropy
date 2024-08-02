@@ -20,18 +20,18 @@ export const Editor = React.forwardRef(({
   hasTitlebar,
   isDisabled,
   isReadOnly,
-  direction,
+  direction = 'ltr',
   keymap,
-  mode,
-  numbers,
+  mode = 'horizontal',
+  numbers = false,
   onBlur,
   onChange,
   onContextMenu,
   onCreate,
   placeholder,
   state: srcState,
-  tabIndex,
-  wrap
+  tabIndex = 1,
+  wrap = true
 }, ref) => {
   let container = useRef()
   let toolbar = useRef()
@@ -162,8 +162,3 @@ export const Editor = React.forwardRef(({
     </div>
   )
 })
-
-Editor.defaultProps = {
-  ...EditorView.defaultProps,
-  tabIndex: -1
-}

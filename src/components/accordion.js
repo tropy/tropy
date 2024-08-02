@@ -66,8 +66,6 @@ export class Accordion extends React.Component {
     )
   }
 
-
-
   static defaultProps = {
     canToggle: true
   }

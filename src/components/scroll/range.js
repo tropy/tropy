@@ -5,10 +5,10 @@ const getNextRowOffset = (index, columns) =>
   index + (columns - (index % columns))
 
 export const Range = ({
-  columns,
+  columns = 1,
   isScrolling,
   items,
-  expandedItems,
+  expandedItems = {},
   from,
   to,
   renderExpansionRow,
@@ -45,9 +45,4 @@ export const Range = ({
     output.splice(expansion.at, 0, expansion.row)
 
   return output
-}
-
-Range.defaultProps = {
-  columns: 1,
-  expandedItems: {}
 }

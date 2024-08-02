@@ -5,6 +5,7 @@ import { TABS, SASS } from '../../constants/index.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 
+
 export const NoteList = ({
   isReadOnly,
   notes,
@@ -12,9 +13,9 @@ export const NoteList = ({
   onRemove,
   onOpen,
   onSelect,
-  rowHeight,
+  rowHeight = SASS.NOTE.ROW_HEIGHT,
   selection,
-  tabIndex
+  tabIndex = TABS.NoteList
 }) => {
   let scroll = useRef()
 
@@ -63,9 +64,4 @@ export const NoteList = ({
       </Scroll>
     </div>
   )
-}
-
-NoteList.defaultProps = {
-  rowHeight: SASS.NOTE.ROW_HEIGHT,
-  tabIndex: TABS.NoteList
 }

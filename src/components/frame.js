@@ -7,12 +7,12 @@ import { StyleSheet } from '../res.js'
 
 export function Frame({
   className,
-  innerClassName,
+  innerClassName = '',
   onClick,
   onContextMenu,
   onLoad,
   onUnload,
-  srcDoc,
+  srcDoc = '<!DOCTYPE html><html><head></head><body></body></html>',
   styleSheet
 }) {
   let frame = useRef()
@@ -100,9 +100,4 @@ export function Frame({
       sandbox="allow-same-origin"
       srcDoc={srcDoc}/>
   )
-}
-
-Frame.defaultProps = {
-  innerClassName: '',
-  srcDoc: '<!DOCTYPE html><html><head></head><body></body></html>'
 }

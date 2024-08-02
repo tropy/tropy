@@ -1,6 +1,6 @@
 import { IconPhoto } from './icons.js'
 
-export function Image({ onError, src, rotation }) {
+export function Image({ onError, src, rotation = '0' }) {
   if (!src)
     return <IconPhoto/>
   else
@@ -13,8 +13,4 @@ export function Image({ onError, src, rotation }) {
           onError={onError}/>
       </div>
     )
-}
-
-Image.defaultProps = {
-  rotation: '0'
 }

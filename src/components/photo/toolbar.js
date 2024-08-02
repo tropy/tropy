@@ -10,45 +10,49 @@ import {
 } from '../icons.js'
 
 
-export const PhotoToolbar = (props) => (
+export const PhotoToolbar = ({
+  hasCreateButton,
+  isClosed,
+  isDisabled,
+  maxZoom = SASS.PHOTO.ZOOM.length - 1,
+  onCreate,
+  onZoomChange,
+  photos,
+  zoom = 0
+}) => (
   <Toolbar>
     <Toolbar.Left>
       <IconPhoto/>
       <h4>
         <FormattedMessage
           id="panel.photo.title"
-          values={{ count: props.photos }}/>
+          values={{ count: photos }}/>
       </h4>
     </Toolbar.Left>
     <Toolbar.Right>
       {
-        props.hasCreateButton && (
+        hasCreateButton && (
           <ToolGroup>
             <Button
               icon={<IconPlusSmall/>}
               size="sm"
-              isDisabled={props.isDisabled}
+              isDisabled={isDisabled}
               title="panel.photo.create"
-              onClick={props.onCreate}/>
+              onClick={onCreate}/>
           </ToolGroup>
         )
       }
       <ToolGroup>
         <Slider
-          value={props.zoom}
-          max={props.maxZoom}
+          value={zoom}
+          max={maxZoom}
           size="sm"
           minIcon={<IconListSmall/>}
           maxIcon={<IconGridSmall/>}
-          isDisabled={props.isClosed || props.photos === 0}
+          isDisabled={isClosed || photos === 0}
           tabIndex={-1}
-          onChange={props.onZoomChange}/>
+          onChange={onZoomChange}/>
       </ToolGroup>
     </Toolbar.Right>
   </Toolbar>
 )
-
-PhotoToolbar.defaultProps = {
-  maxZoom: SASS.PHOTO.ZOOM.length - 1,
-  photos: 0
-}

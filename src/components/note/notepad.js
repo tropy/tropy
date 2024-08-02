@@ -29,8 +29,13 @@ export const NotePad = forwardRef(({
     }
   }), [])
 
-  let { direction, mode, numbers, wrap } = useSelector(({ notepad }) =>
-    notepad[note?.id] || Editor.defaultProps
+  let {
+    direction = 'ltr',
+    mode = 'horizontal',
+    numbers = false,
+    wrap = true
+  } = useSelector(({ notepad }) =>
+    notepad[note?.id] || {}
   )
 
   let handleCreate = useEvent((state) => {

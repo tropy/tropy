@@ -57,8 +57,6 @@ export class ColorSlider extends React.PureComponent {
     )
   }
 
-
-
   static defaultProps = {
     max: 100,
     min: -100,

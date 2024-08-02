@@ -1,6 +1,11 @@
 import React from 'react'
 
-export const Viewport = ({ children, columns, offset, tag }) =>
+export const Viewport = ({
+  children,
+  columns,
+  offset = 0,
+  tag = 'ul'
+}) =>
   React.createElement(tag, {
     className: 'viewport',
     style: {
@@ -8,8 +13,3 @@ export const Viewport = ({ children, columns, offset, tag }) =>
       transform: `translate3d(0,${offset}px,0)`
     }
   }, children)
-
-Viewport.defaultProps = {
-  offset: 0,
-  tag: 'ul'
-}

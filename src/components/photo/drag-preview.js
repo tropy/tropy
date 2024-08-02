@@ -1,7 +1,10 @@
 import cx from 'classnames'
 import { Thumbnail } from './thumbnail.js'
 
-export const PhotoDragPreview = ({ item, size }) => {
+export const PhotoDragPreview = ({
+  item,
+  size = 64
+}) => {
   let count = 1
   let photo = item
 
@@ -15,8 +18,4 @@ export const PhotoDragPreview = ({ item, size }) => {
       {count > 1 && <div className="badge">{count}</div>}
     </div>
   )
-}
-
-PhotoDragPreview.defaultProps = {
-  size: 64
 }

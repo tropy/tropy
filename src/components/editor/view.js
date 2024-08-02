@@ -13,9 +13,9 @@ import { isMeta } from '../../keymap.js'
 export const EditorView = forwardRef(({
   isDisabled,
   isReadOnly,
-  direction,
-  mode,
-  numbers,
+  direction = 'ltr',
+  mode = 'horizontal',
+  numbers = false,
   onBlur,
   onChange,
   onContextMenu,
@@ -23,7 +23,7 @@ export const EditorView = forwardRef(({
   onKeyDown,
   placeholder,
   state,
-  wrap
+  wrap = true
 }, ref) => {
   let [view, setView] = useState()
   let intl = useIntl()
@@ -115,10 +115,3 @@ export const EditorView = forwardRef(({
       styleSheet="editor"/>
   )
 })
-
-EditorView.defaultProps = {
-  direction: 'ltr',
-  mode: 'horizontal',
-  numbers: false,
-  wrap: true
-}

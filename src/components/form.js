@@ -147,13 +147,16 @@ export class FormField extends React.PureComponent {
   }
 }
 
-export const FormSelect = (props) => {
+export const FormSelect = ({
+  size = 8,
+  ...props
+}) => {
   const intl = useIntl()
 
   return (
     <FormElement
       id={props.id}
-      size={props.size}
+      size={size}
       isCompact={props.isCompact}>
       <Select
         id={props.id}
@@ -172,10 +175,6 @@ export const FormSelect = (props) => {
   )
 }
 
-FormSelect.defaultProps = {
-  size: 8
-}
-
 export const Toggle = ({
   className,
   id,
@@ -188,7 +187,7 @@ export const Toggle = ({
   onFocus,
   tabIndex,
   title,
-  type,
+  type = 'checkbox',
   value
 }) => {
   isChecked ??= value === true
@@ -219,25 +218,22 @@ export const Toggle = ({
   )
 }
 
-Toggle.defaultProps = {
-  type: 'checkbox'
-}
 
-
-export const FormToggle = ({ isCompact, size, ...props }) => (
+export const FormToggle = ({
+  isCompact,
+  size = 8,
+  type = 'checkbox',
+  ...props
+}) => (
   <FormGroup isCompact={isCompact}>
     <Toggle
       {...props}
+      type={type}
       className={
         cx(props.type, `col-${size}`, `col-offset-${SASS.GRID.SIZE - size}`)
       }/>
   </FormGroup>
 )
-
-FormToggle.defaultProps = {
-  size: 8,
-  type: 'checkbox'
-}
 
 export const FormToggleGroup = ({
   id,
@@ -245,7 +241,7 @@ export const FormToggleGroup = ({
   name,
   onChange,
   options,
-  size,
+  size = 8,
   tabIndex,
   value
 }) => (
@@ -266,10 +262,6 @@ export const FormToggleGroup = ({
     ))}
   </FormElement>
 )
-
-FormToggleGroup.defaultProps = {
-  size: 8
-}
 
 export class FormText extends React.PureComponent {
   get isVisible() {
