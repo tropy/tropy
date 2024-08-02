@@ -1,5 +1,5 @@
 import fs from 'node:fs'
-import { basename, dirname, extname, resolve } from 'node:path'
+import { basename, extname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as sass from 'sass'
 import { OrderedMap } from 'immutable'
