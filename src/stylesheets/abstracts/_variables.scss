@@ -18,7 +18,7 @@ $font-family-sans-serif: unquote(map-get($sans-serif-fonts, $platform));
 $font-family-base:       $font-family-sans-serif;
 
 $font-size-small: to-rem(12);
-$font-size-base:  to-rem(calc(const("FONTSIZE.BASE", "px") / 1px));
+$font-size-base:  to-rem(const("FONTSIZE.BASE"));
 $font-size-large: to-rem(16);
 
 // Heads up: Do not trust the computed value in the dev tools,
@@ -62,9 +62,9 @@ $thumbnail-size:          $space-lg;
 // Tile
 // --------------------------------------------------
 
-$tile-thumbnail-sizes:    const("ITEM.ZOOM", "px");
-$tile-thumbnail-size-min: const("ICON.SIZE", "px");
-$tile-thumbnail-size-max: const("ICON.MAX", "px");
+$tile-thumbnail-sizes:    const("ITEM.ZOOM");
+$tile-thumbnail-size-min: const("ICON.SIZE");
+$tile-thumbnail-size-max: const("ICON.MAX");
 $tile-factor:             const("TILE.FACTOR");
 $pointer-height:          10px;
 
