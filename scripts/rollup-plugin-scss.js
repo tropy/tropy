@@ -30,11 +30,13 @@ const toSass = (value, unit) => {
 }
 
 export const functions = {
-  'const($name, $unit:"")'(args) {
-    let name = args[0].assertString('name')
-    let unit = args[1].assertString('unit')
+  'const($name, $unit:null)'(args) {
+    let name = args[0].assertString('name').text
+    let unit = args[1].equals(sass.sassNull) ?
+      null :
+      args[1].assertString('unit').text
 
-    return toSass(get(SASS, name.text), unit.text)
+    return toSass(get(SASS, name), unit)
   }
 }
 
