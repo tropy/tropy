@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import { basename, dirname, extname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as sass from 'sass'
 import { OrderedMap } from 'immutable'
 import SASS from '../src/constants/sass.js'
@@ -71,7 +71,6 @@ export default function ({
         return null
 
       let loadPaths = [
-        dirname(id),
         resolve('node_modules')
       ]
 
@@ -93,6 +92,7 @@ export default function ({
 
       for (let [outFile, data] of outFiles) {
         let { css, sourceMap, loadedUrls } = sass.compileString(data, {
+          url: pathToFileURL(id),
           functions,
           loadPaths,
           style,
@@ -100,7 +100,7 @@ export default function ({
             'mixed-decls'
           ],
           sourceMap: true,
-          sourceMapIncludeSources: true
+          sourceMapIncludeSources: false
         })
 
         if (this.meta.watchMode && loadedUrls) {
@@ -109,19 +109,22 @@ export default function ({
           }
         }
 
+        if (sourceMap) {
+          let fileName = `${outFile}.map`
+          css += `\n/*# sourceMappingURL=${basename(fileName)} */`
+
+          this.emitFile({
+            type: 'asset',
+            fileName,
+            source: JSON.stringify(sourceMap)
+          })
+        }
+
         this.emitFile({
           type: 'asset',
           fileName: outFile,
-          source: css.toString()
+          source: css
         })
-
-        if (sourceMap) {
-          this.emitFile({
-            type: 'asset',
-            fileName: `${outFile}.map`,
-            source: sourceMap.toString()
-          })
-        }
       }
 
       return ''
