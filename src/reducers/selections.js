@@ -2,11 +2,13 @@ import { METADATA, SELECTION, PROJECT } from '../constants/index.js'
 import { bulk, insert, nested, replace, touch } from './util.js'
 import * as tr from '../slices/transcriptions.js'
 
+const init = {}
+
 // eslint-disable-next-line complexity
-export function selections(state = {}, { type, payload, error, meta }) {
+export function selections(state = init, { type, payload, error, meta }) {
   switch (type) {
     case PROJECT.OPEN:
-      return {}
+      return init
 
     case SELECTION.LOAD:
       return (error || !meta.done) ? state : replace(state, payload)

@@ -22,11 +22,12 @@ export const RecentProjects = ({
     dispatch(reload(files))
   }, [files, dispatch])
 
-  let projects = useSelector(state =>
+  let projectFiles = useSelector(state => state.projectFiles)
+  let projects =
     files
-      .map(path => state.projectFiles[path])
-      .filter(file =>
-        file && (!query || match(file.name, query, /\b\p{Alpha}/gu))))
+      .map(path => projectFiles[path])
+      .filter(file => file &&
+        (!query || match(file.name, query, /\b\p{Alpha}/gu)))
 
   let handleConsolidate = useEvent(path => {
     dispatch(consolidate(path))
