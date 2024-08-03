@@ -1,7 +1,11 @@
 import { FormElement, FormToggleGroup, Toggle } from '../form.js'
 import { useEvent } from '../../hooks/use-event.js'
 
-export function ExportSettings({ config, noteFormats, onChange }) {
+export function ExportSettings({
+  config,
+  noteFormats = ['text', 'markdown', 'html'],
+  onChange
+}) {
   let handleNoteFormatChange = useEvent((format) => {
     onChange({ export: { note: { format } } })
   })
@@ -35,8 +39,4 @@ export function ExportSettings({ config, noteFormats, onChange }) {
         onChange={handleNoteChange}/>
     </>
   )
-}
-
-ExportSettings.defaultProps = {
-  noteFormats: ['text', 'markdown', 'html']
 }

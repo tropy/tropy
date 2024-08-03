@@ -10,7 +10,7 @@ import { create } from '../../slices/project-files.js'
 
 
 export const NewProject = ({
-  accept,
+  accept = TYPES,
   onCreated
 }) => {
   let dispatch = useDispatch()
@@ -80,8 +80,4 @@ export const NewProject = ({
       </form>
     </div>
   )
-}
-
-NewProject.defaultProps = {
-  accept: TYPES
 }

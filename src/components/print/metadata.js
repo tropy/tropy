@@ -5,17 +5,17 @@ import cx from 'classnames'
 import { auto, bytes, number } from '../../format.js'
 import { TYPE } from '../../constants/index.js'
 
-
-export const MetadataField = ({ isExtra, label, text, type }) => (
+export const MetadataField = ({
+  isExtra,
+  label,
+  text,
+  type = TYPE.TEXT
+}) => (
   <li className={cx('metadata-field', { extra: isExtra })}>
     <label>{label}</label>
     <div className="value">{auto(text, type)}</div>
   </li>
 )
-
-MetadataField.defaultProps = {
-  type: TYPE.TEXT
-}
 
 export const ItemInfo = ({ item }) => {
   let intl = useIntl()

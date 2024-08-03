@@ -1,8 +1,9 @@
 import { FormSelect } from '../form.js'
 import { useIpcEvent } from '../../hooks/use-ipc.js'
 import { useWindowArgs } from '../../hooks/use-window.js'
+import { supportedLanguages } from '../../constants/locale.js'
 
-export function LocaleSettings({ options }) {
+export function LocaleSettings({ options = supportedLanguages }) {
   let { locale } = useWindowArgs()
 
   let handleLocaleChange = useIpcEvent(event => (
@@ -20,20 +21,4 @@ export function LocaleSettings({ options }) {
       tabIndex={0}
       onChange={handleLocaleChange}/>
   )
-}
-
-LocaleSettings.defaultProps = {
-  options: [
-    'cn',
-    'de',
-    'en',
-    'es',
-    'fr',
-    'it',
-    'ja',
-    'nl-NL',
-    'pt',
-    'pt-BR',
-    'uk'
-  ]
 }

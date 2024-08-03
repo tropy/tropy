@@ -1,4 +1,4 @@
-export default {
+const LOCALE = {
   'cn': 'cn',
   'zh': 'cn',
   'de': 'de',
@@ -10,7 +10,10 @@ export default {
   'nl-NL': 'nl-NL',
   'pt': 'pt',
   'pt-BR': 'pt-BR',
-  'uk': 'uk',
-
-  'default': 'en'
+  'uk': 'uk'
 }
+
+export const supportedLanguages = Object.keys(LOCALE).sort()
+
+LOCALE.default = 'en'
+export default LOCALE

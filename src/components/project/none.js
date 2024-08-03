@@ -8,8 +8,8 @@ import { RecentProjects } from './recent.js'
 export const NoProject = React.forwardRef(({
   isOver,
   onProjectOpen,
-  height,
-  width
+  height = 580,
+  width = 440
 }, ref) => {
   let recent = useArgs('recent')
 
@@ -25,8 +25,3 @@ export const NoProject = React.forwardRef(({
     </div>
   )
 })
-
-NoProject.defaultProps = {
-  height: 580,
-  width: 440
-}

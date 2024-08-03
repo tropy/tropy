@@ -12,7 +12,7 @@ import { useWindow } from '../../hooks/use-window.js'
 
 
 export const ProjectSettings = React.memo(({
-  baseOptions,
+  baseOptions = BASES,
   project,
   onChange
 }) => {
@@ -105,7 +105,3 @@ export const ProjectSettings = React.memo(({
     </Form>
   )
 })
-
-ProjectSettings.defaultProps = {
-  baseOptions: BASES
-}

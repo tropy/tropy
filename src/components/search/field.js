@@ -9,15 +9,14 @@ import { Input } from '../input.js'
 import { TABS } from '../../constants/index.js'
 import { blank } from '../../common/util.js'
 
-
 export const SearchField = React.memo(({
   clearIcon,
   focus,
   isDisabled,
   onSearch,
-  placeholder,
+  placeholder = 'toolbar.search.placeholder',
   query,
-  tabIndex
+  tabIndex = TABS.SearchField
 }) => {
   let intl = useIntl()
   let input = useRef()
@@ -58,8 +57,3 @@ export const SearchField = React.memo(({
     </div>
   )
 })
-
-SearchField.defaultProps = {
-  placeholder: 'toolbar.search.placeholder',
-  tabIndex: TABS.SearchField
-}

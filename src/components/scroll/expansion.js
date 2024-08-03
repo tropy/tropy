@@ -1,16 +1,18 @@
 import React from 'react'
 import { indexOf } from '../../common/collection.js'
 
-export const ExpansionRow = ({ item, columns, tag, renderExpansionRow }) =>
+export const ExpansionRow = ({
+  item,
+  columns,
+  tag = 'li',
+  renderExpansionRow
+}) =>
   React.createElement(tag, {
     key: `expansion-${item.id}`,
     className: 'tile-expansion',
     style: { gridColumnEnd: columns + 1 }
   }, renderExpansionRow(item, columns))
 
-ExpansionRow.defaultProps = {
-  tag: 'li'
-}
 
 export const getExpandedRowsAbove = (rows, { index, position }) => {
   let numRowsAbove = 0

@@ -4,7 +4,10 @@ import { FormToggle, FormSelect } from '../form.js'
 import { useIpcEvent } from '../../hooks/use-ipc.js'
 import { useWindowArgs } from '../../hooks/use-window.js'
 
-export function StyleSettings({ themes, fontSizes }) {
+export function StyleSettings({
+  fontSizes = ['12px', '13px', '14px', '15px', '16px'],
+  themes = ['light', 'dark', 'system']
+}) {
   let { frameless, fontSize, theme } = useWindowArgs()
   let [localFrameless, setLocalFrameless] = useState(frameless)
 
@@ -50,9 +53,4 @@ export function StyleSettings({ themes, fontSizes }) {
       )}
     </>
   )
-}
-
-StyleSettings.defaultProps = {
-  fontSizes: ['12px', '13px', '14px', '15px', '16px'],
-  themes: ['light', 'dark', 'system']
 }

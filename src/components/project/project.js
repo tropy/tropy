@@ -24,7 +24,7 @@ export const ProjectClosed = () =>
 export const Project = React.forwardRef(({
   isOver,
   project,
-  timeout
+  timeout = 3000
 }, drop) => {
 
   let dispatch = useDispatch()
@@ -108,7 +108,3 @@ export const Project = React.forwardRef(({
     </div>
   )
 })
-
-Project.defaultProps = {
-  timeout: 3000
-}

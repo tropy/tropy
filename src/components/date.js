@@ -1,6 +1,11 @@
 import { FormattedDate, FormattedRelativeTime } from 'react-intl'
 
-export const RelativeDate = ({ origin, threshold, value }) => {
+
+export const RelativeDate = ({
+  origin,
+  threshold = 86400 * 2,
+  value
+}) => {
   let delta = Math.round((value - (origin ?? Date.now())) / 1000)
   let seconds = Math.abs(delta)
 
@@ -43,8 +48,4 @@ export const RelativeDate = ({ origin, threshold, value }) => {
       updateIntervalInSeconds={updateIntervalInSeconds}
       value={delta}/>
   )
-}
-
-RelativeDate.defaultProps = {
-  threshold: 86400 * 2
 }

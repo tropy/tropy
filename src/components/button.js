@@ -16,16 +16,16 @@ export const Button = React.memo(({
   isDefault,
   isDisabled,
   isPrimary,
-  noFocus,
+  noFocus = false,
   onBlur,
   onClick,
   onFocus,
   onMouseDown,
-  size,
-  tabIndex,
+  size = 'md',
+  tabIndex = -1,
   text,
   title,
-  type
+  type = 'button'
 }) => {
 
   let container = React.useRef()
@@ -80,19 +80,12 @@ export const Button = React.memo(({
     text && intl.formatMessage({ id: text }))
 })
 
-Button.defaultProps = {
-  noFocus: false,
-  size: 'md',
-  tabIndex: -1,
-  type: 'button'
-}
-
 export const ToggleButton = ({
   isChecked,
   isDisabled,
   name,
   onChange,
-  size,
+  size = 'md',
   text,
   tabIndex,
   value
@@ -109,15 +102,11 @@ export const ToggleButton = ({
     value={value}/>
 )
 
-ToggleButton.defaultProps = {
-  size: 'md'
-}
-
 export const ToggleButtonGroup = ({
   id,
   name,
   onChange,
-  size,
+  size = 'md',
   options,
   tabIndex,
   value
@@ -136,10 +125,6 @@ export const ToggleButtonGroup = ({
     ))}
   </ButtonGroup>
 )
-
-ToggleButtonGroup.defaultProps = {
-  size: 'md'
-}
 
 export const PlusMinusControls = ({
   canAdd,

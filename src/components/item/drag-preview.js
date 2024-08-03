@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import { CoverImage } from './cover-image.js'
 
-export function ItemDragPreview({ item, size }) {
+export function ItemDragPreview({ item, size = 64 }) {
   let items = item.items
   let count = items.length
 
@@ -20,8 +20,4 @@ export function ItemDragPreview({ item, size }) {
         <div className="badge">{count}</div>}
     </div>
   )
-}
-
-ItemDragPreview.defaultProps = {
-  size: 64
 }

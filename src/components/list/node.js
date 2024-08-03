@@ -21,7 +21,12 @@ import { LIST, SASS } from '../../constants/index.js'
 const { INDENT, PADDING } = SASS.LIST
 
 
-const NewListNode = (props) => (
+const NewListNode = ({
+  name = '',
+  onCancel,
+  onSave,
+  parent = LIST.ROOT
+}) => (
   <li className="list-node">
     <div className="list new-list list-node-container">
       <div className="icon-truncate">
@@ -32,20 +37,14 @@ const NewListNode = (props) => (
           isActive
           isRequired
           resize
-          value={props.name}
-          onCancel={props.onCancel}
-          onChange={(name) =>
-            props.onSave({ parent: props.parent, name })}/>
+          value={name}
+          onCancel={onCancel}
+          onChange={(newName) =>
+            onSave({ parent, name: newName })}/>
       </div>
     </div>
   </li>
 )
-
-NewListNode.defaultProps = {
-  name: '',
-  parent: LIST.ROOT
-}
-
 
 class ListNode extends React.PureComponent {
   state = {

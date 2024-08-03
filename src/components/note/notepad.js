@@ -14,7 +14,7 @@ export const NotePad = forwardRef(({
   keymap,
   note,
   onContextMenu,
-  tabIndex
+  tabIndex = TABS.NotePad
 }, ref) => {
 
   let dispatch = useDispatch()
@@ -94,7 +94,3 @@ export const NotePad = forwardRef(({
     </section>
   )
 })
-
-NotePad.defaultProps = {
-  tabIndex: TABS.NotePad
-}

@@ -2,11 +2,11 @@ import { FormElement, FormToggleGroup, Toggle } from '../form.js'
 import { ESPER, ITEM } from '../../constants/index.js'
 
 export function InterfaceSettings({
+  completions = ['datatype', 'property-datatype'],
   config,
-  layouts,
+  layouts = [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
   onChange,
-  zoomModes,
-  completions
+  zoomModes = [ESPER.MODE.FIT, ESPER.MODE.FILL, ESPER.MODE.ZOOM]
 }) {
   return (
     <>
@@ -51,10 +51,4 @@ export function InterfaceSettings({
         onChange={onChange}/>
     </>
   )
-}
-
-InterfaceSettings.defaultProps = {
-  completions: ['datatype', 'property-datatype'],
-  layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
-  zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL, ESPER.MODE.ZOOM]
 }
