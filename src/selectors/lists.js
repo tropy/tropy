@@ -11,10 +11,10 @@ function *flatten(children, lists, expand) {
 }
 
 export const getListSubTree = memo(
-  ({ lists }, { root }) => get(lists, [root, 'children'], []),
+  ({ lists }, { root }) => get(lists, [root, 'children']),
   ({ lists }) => lists,
   ({ sidebar }) => sidebar.expand,
   (children, lists, expand) => [
-    ...flatten(children, lists, expand)
+    ...flatten(children || [], lists, expand)
   ]
 )
