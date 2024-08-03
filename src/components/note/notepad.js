@@ -34,9 +34,7 @@ export const NotePad = forwardRef(({
     mode = 'horizontal',
     numbers = false,
     wrap = true
-  } = useSelector(({ notepad }) =>
-    notepad[note?.id] || {}
-  )
+  } = useSelector(({ notepad }) => notepad[note?.id]) || {}
 
   let handleCreate = useEvent((state) => {
     dispatch(actions.create({

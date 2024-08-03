@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { URI, pluck } from '../../common/util.js'
 
 export const MetadataLabel = React.memo(({ children, hint, id }) => {
-  let property = useSelector(state => state.ontology.props[id] || { id })
+  let property = useSelector(state => state.ontology.props[id]) || { id }
   let title = hint ||
     pluck(property, ['id', 'description', 'comment']).join('\n\n')
 
