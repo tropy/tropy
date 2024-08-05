@@ -132,7 +132,7 @@
     "lodash.throttle": "^4.1.1",
     "memoize-one": "^6.0.0",
     "n3": "^1.8.0",
-    "nanoid": "^3.3.4",
+    "nanoid": "^5.0.7",
     "pino": "^9.0.0",
     "pixi.js-legacy": "^7.2.3",
     "prop-types": "^15.7.2",
