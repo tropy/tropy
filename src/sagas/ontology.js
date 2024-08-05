@@ -2,6 +2,7 @@ import { join } from 'node:path'
 import { call, fork, take } from 'redux-saga/effects'
 import ARGS from '../args.js'
 import { debug, warn } from '../common/log.js'
+import { Database } from '../common/db.js'
 import { exec, commands } from './cmd.js'
 import { fail } from '../dialog.js'
 import mod from '../models/ontology.js'
@@ -12,7 +13,6 @@ export function *ontology({
   ...opts
 } = {}) {
   try {
-    let { Database } = yield import('../common/db')
     var db = new Database(file, 'w+', opts)
 
     if (yield call(db.empty)) {
