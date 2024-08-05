@@ -15,15 +15,19 @@ const FlashMessage = ({
       <FormattedMessage id={`flash.${id}.message`} values={values}/>
     </span>
 
-    <button className="btn btn-primary" onClick={() => {
-      onHide({ id, confirm: true })
-    }}>
+    <button
+      className="btn btn-primary"
+      onClick={() => {
+        onHide({ id, confirm: true })
+      }}>
       <FormattedMessage id={`flash.${id}.confirm`}/>
     </button>
 
-    <Button icon={<IconXLarge/>} onClick={() => {
-      onHide({ id, dismiss: true })
-    }}/>
+    <Button
+      icon={<IconXLarge/>}
+      onClick={() => {
+        onHide({ id, dismiss: true })
+      }}/>
   </li>
 )
 
@@ -34,19 +38,20 @@ export const Flash = () => {
 
   let onHide = useCallback((...args) => {
     dispatch(flash.hide(...args))
-  })
+  }, [dispatch])
 
   if (!(messages?.length > 0))
     return null
 
   return (
     <ul className="flash">
-      {messages.map(({ id, values }) =>
+      {messages.map(({ id, values }) => (
         <FlashMessage
           key={id}
           id={id}
           values={values}
-          onHide={onHide}/>)}
+          onHide={onHide}/>
+      ))}
     </ul>
   )
 }
