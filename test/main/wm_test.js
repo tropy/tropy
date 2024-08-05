@@ -26,19 +26,13 @@ describe('WindowManager', () => {
     // TODO open project window with and without project file
 
     for (let type of ['about', 'prefs', 'print', 'project']) {
-      describe.skip(`open('${type}')`, function () {
+      describe(`open('${type}')`, function () {
         // Integration tests with on-the-fly code instrumentation take some time!
         this.timeout(process.env.CI ? 40000 : 20000)
 
         let win
 
         before(async () => {
-          if (process.env.COVERAGE) {
-            sinon
-              .stub(View, 'expand')
-              .callsFake(name => F.views(`${name}.html`).path)
-          }
-
           win = await wm.open(type, {
             plugins: plugins.root,
             log: join(app.getPath('userData'), `wm-test-${type}.log`),
@@ -47,10 +41,6 @@ describe('WindowManager', () => {
         })
 
         after(() => {
-          if (process.env.COVERAGE) {
-            View.expand.restore()
-          }
-
           win = null
         })
 

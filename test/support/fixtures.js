@@ -57,12 +57,6 @@ global.F = {
     }
   },
 
-  views(...args) {
-    return {
-      path: join(ROOT, 'views', ...args)
-    }
-  },
-
   get preload() {
     return join(import.meta.dirname, 'bootstrap.mjs')
   }
