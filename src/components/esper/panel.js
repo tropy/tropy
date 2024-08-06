@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import { FormToggle } from '../form.js'
 import { shallow } from '../../common/util.js'
 import { TABS } from '../../constants/index.js'
+import { FILTERS } from '../../esper/photo.js'
 
 import {
   IconSun,
@@ -66,7 +67,7 @@ export class ColorSlider extends React.PureComponent {
 
 
 export const EsperPanel = (props) => {
-  let isDefault = shallow(EsperPanel.defaultProps, props)
+  let isDefault = shallow(FILTERS, props)
 
   return (
     <div className="esper-panel">
@@ -132,14 +133,4 @@ export const EsperPanel = (props) => {
       </div>
     </div>
   )
-}
-
-// Subtle: these are used to set EsperContainer's state!
-EsperPanel.defaultProps = {
-  brightness: 0,
-  contrast: 0,
-  hue: 0,
-  negative: false,
-  saturation: 0,
-  sharpen: 0
 }

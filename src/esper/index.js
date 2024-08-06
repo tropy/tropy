@@ -7,7 +7,7 @@ import { append, createDragHandler, on, off } from '../dom.js'
 import { debug, error, info, warn } from '../common/log.js'
 import { isClockwise, isHorizontal, deg, rad } from '../common/math.js'
 import { delay, restrict } from '../common/util.js'
-import { Photo } from './photo.js'
+import { Photo, FILTERS } from './photo.js'
 import { Selection } from './selection.js'
 import { Loader } from './loader.js'
 import { ESPER, SASS } from '../constants/index.js'
@@ -39,6 +39,10 @@ PIXI.settings.STRICT_TEXTURE_CACHE = true
 
 PIXI.Ticker.shared.autoStart = false
 PIXI.Ticker.shared.stop()
+
+export {
+  FILTERS
+}
 
 export default class Esper extends EventEmitter {
   static #INSTANCE = null

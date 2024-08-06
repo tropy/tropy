@@ -2,7 +2,7 @@ import React from 'react'
 import cx from 'classnames'
 import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
-import Esper from '../../esper/index.js'
+import Esper, { FILTERS } from '../../esper/index.js'
 import { EsperToolbar } from './toolbar.js'
 import { EsperPanel } from './panel.js'
 import { EsperOverlay } from './overlay.js'
@@ -172,7 +172,7 @@ export class EsperContainer extends React.Component {
         return true
     }
 
-    for (let prop in EsperPanel.defaultProps) {
+    for (let prop in FILTERS) {
       if (nextImage[prop] !== image[prop] &&
         nextImage[prop] !== nextState[prop]) {
         return true
@@ -355,7 +355,7 @@ export class EsperContainer extends React.Component {
 
     let state = {
       ...this.state,
-      ...EsperPanel.defaultProps
+      ...FILTERS
     }
 
     this.esper.filter(state)
@@ -695,7 +695,7 @@ export class EsperContainer extends React.Component {
       if (this.state.id != null) {
         var data = {
           ...subOrientation(this.state, this.props.photo),
-          ...pick(this.state, Object.keys(EsperPanel.defaultProps))
+          ...pick(this.state, Object.keys(FILTERS))
         }
 
         this.props.onChange({
@@ -810,7 +810,7 @@ export class EsperContainer extends React.Component {
   static defaultImageProps = {
     angle: 0,
     mirror: false,
-    ...EsperPanel.defaultProps
+    ...FILTERS
   }
 }
 

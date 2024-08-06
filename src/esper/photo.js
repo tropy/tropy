@@ -12,6 +12,14 @@ const NEGATIVE = [
   -1, 0, 0, 1, 0, 0, -1, 0, 1, 0, 0, 0, -1, 1, 0, 0, 0, 0, 1, 0
 ]
 
+export const FILTERS = {
+  brightness: 0,
+  contrast: 0,
+  hue: 0,
+  negative: false,
+  saturation: 0,
+  sharpen: 0
+}
 
 export class Photo extends Container {
   #width
