@@ -6,7 +6,7 @@ import { lispcase } from '../common/util.js'
 const icons = Object.create({})
 
 export function Icon({ name, ...props }) {
-  return React.createElement(icons[name] ?? icons[`Icon${name}`], props)
+  return React.createElement(icons[name], props)
 }
 
 export function IconContainer({ children, className, name, title }) {
