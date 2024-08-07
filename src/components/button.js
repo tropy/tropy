@@ -4,8 +4,16 @@ import cx from 'classnames'
 import { Toggle } from './form.js'
 import * as icons from './icons.js'
 
-export const ButtonGroup = ({ children }) => (
-  <div className="btn-group">{children}</div>
+export const ButtonGroup = ({ className, children }) => (
+  <div className={cx('btn-group', className)}>
+    {children}
+  </div>
+)
+
+export const ButtonContainer = ({ className, children }) => (
+  <div className={cx('btn-container', className)}>
+    {children}
+  </div>
 )
 
 export const Button = React.memo(({
