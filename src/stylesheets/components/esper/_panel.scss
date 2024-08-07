@@ -61,7 +61,7 @@
     }
   }
 
-  .adjustments {
+  .filter-controls {
     flex: 1 1 0;
     overflow-y: scroll;
     overscroll-behavior: contain;
@@ -71,7 +71,7 @@
     max-width: $esper-panel-max-size;
   }
 
-  .adjustment {
+  .filter-control {
     .flex-row {
       margin-bottom: -3px;
     }
@@ -98,7 +98,7 @@
     }
   }
 
-  .revert-btn-container {
+  .revert.btn-container {
     flex: 0 0 auto;
     padding: 6px $default-spacing-x;
     margin: auto;
