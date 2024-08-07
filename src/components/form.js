@@ -230,7 +230,7 @@ export const FormToggle = ({
       {...props}
       type={type}
       className={
-        cx(props.type, `col-${size}`, `col-offset-${SASS.GRID.SIZE - size}`)
+        cx(type, `col-${size}`, `col-offset-${SASS.GRID.SIZE - size}`)
       }/>
   </FormGroup>
 )
