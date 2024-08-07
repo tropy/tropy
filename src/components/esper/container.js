@@ -351,17 +351,8 @@ export class EsperContainer extends React.Component {
   }
 
   handleRevertToOriginal = () => {
-    if (this.props.isReadOnly) return
-
-    let state = {
-      ...this.state,
-      ...FILTERS
-    }
-
-    this.esper.filter(state)
-    this.setState(state)
+    this.handleFilterChange(FILTERS)
     this.focus()
-    this.handleImageChange()
   }
 
   handleRotationChange = throttle((by) => {
