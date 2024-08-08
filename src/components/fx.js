@@ -1,22 +1,39 @@
 import React from 'react'
+import { useEvent } from '../hooks/use-event.js'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { on, bounds } from '../dom.js'
+import { on, off, bounds } from '../dom.js'
 
 export const onTransitionEnd = (node, done) => {
-  on(node, 'transitionend', event => {
-    if (event.target === node) done()
-  }, false)
+  let handleTransitionEnd = (event) => {
+    if (event.target === node) {
+      done()
+      off(node, 'transitionend', handleTransitionEnd, false)
+    }
+  }
+  on(node, 'transitionend', handleTransitionEnd, false)
 }
 
-export const Fade = (props) => (
-  <CSSTransition
-    addEndListener={onTransitionEnd}
-    classNames="fade"
-    mountOnEnter={false}
-    timeout={1000}
-    unmountOnExit
-    {...props}/>
-)
+export const Fade = (props) => {
+  let addEndListener = useEvent((node, done) => {
+    if (props.nodeRef) {
+      done = node
+      node = props.nodeRef.current
+    }
+    if (node) {
+      onTransitionEnd(node, done)
+    }
+  })
+
+  return (
+    <CSSTransition
+      addEndListener={addEndListener}
+      classNames="fade"
+      mountOnEnter={false}
+      timeout={1000}
+      unmountOnExit
+      {...props}/>
+  )
+}
 
 export {
   SwitchTransition
