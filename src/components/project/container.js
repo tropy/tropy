@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDropProjectFiles } from '../../hooks/use-drop-project-files.js'
 import { useEvent } from '../../hooks/use-event.js'
@@ -35,17 +35,19 @@ export const ProjectContainer = ({
   })
 
   let [{ isOver }, drop] = useDropProjectFiles({ onDrop })
+  let nodeRef = useRef(null)
 
   return (
     <SwitchTransition>
       <Fade
         key={project.path ? 'project' : 'no-project'}
+        nodeRef={nodeRef}
         enter={isWindowResizeAnimated}
         exit={false}
         timeout={timeout}>
         {project.path ? (
           <Project
-            ref={drop}
+            ref={drop(nodeRef)}
             project={project}
             isOver={isOver}/>
         ) : (

@@ -25,18 +25,16 @@ export const Project = React.forwardRef(({
   isOver,
   project,
   timeout = 3000
-}, drop) => {
+}, ref) => {
 
   let dispatch = useDispatch()
 
   let nav = useSelector(state => state.nav)
-  let [mode, container] = useTransitionState(nav.mode, timeout, modeToString)
+  let mode = useTransitionState(ref, nav.mode, timeout, modeToString)
 
   let isItemMode = !!(
     (mode.current === MODE.ITEM) ^ mode.isChanging
   )
-
-  drop?.(container)
 
   let keymap = useSelector(state => state.keymap.global)
   useGlobalKeys(keymap)
@@ -70,16 +68,16 @@ export const Project = React.forwardRef(({
   // with the component's fade transition classes
   // which are overwritten by changing the className prop!
   useEffect(() => {
-    container.current?.classList.toggle('closing', !!project.isClosing)
-    container.current?.classList.toggle('opening', project.id == null)
-  }, [project.id, project.isClosing, container])
+    ref?.current?.classList.toggle('closing', !!project.isClosing)
+    ref?.current?.classList.toggle('opening', project.id == null)
+  }, [project.id, project.isClosing, ref])
 
   if (project.closed)
     return <ProjectClosed/>
 
   return (
     <div
-      ref={container}
+      ref={ref}
       className={cx('project', mode.className, {
         over: isOver
       })}
