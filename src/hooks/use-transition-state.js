@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
 import { ensure, reflow } from '../dom.js'
 
@@ -49,7 +49,7 @@ export function useTransitionState(node, prop, timeout = 1000, toString) {
         handleTransitionEnd()
       }
     }
-  }, [willChange, handleTransitionEnd, timeout])
+  }, [willChange, handleTransitionEnd, timeout, node])
 
   return {
     ...state,
