@@ -21,13 +21,13 @@ import { LIST, SASS } from '../../constants/index.js'
 const { INDENT, PADDING } = SASS.LIST
 
 
-const NewListNode = ({
+const NewListNode = React.forwardRef(({
   name = '',
   onCancel,
   onSave,
   parent = LIST.ROOT
-}) => (
-  <li className="list-node">
+}, ref) => (
+  <li className="list-node" ref={ref}>
     <div className="list new-list list-node-container">
       <div className="icon-truncate">
         <IconFolder/>
@@ -44,7 +44,7 @@ const NewListNode = ({
       </div>
     </div>
   </li>
-)
+))
 
 class ListNode extends React.PureComponent {
   state = {

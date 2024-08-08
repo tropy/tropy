@@ -16,7 +16,7 @@ export const ButtonContainer = ({ className, children }) => (
   </div>
 )
 
-export const Button = React.memo(({
+export const Button = React.memo(React.forwardRef(({
   className,
   icon,
   isActive,
@@ -34,9 +34,8 @@ export const Button = React.memo(({
   text,
   title,
   type = 'button'
-}) => {
+}, ref) => {
 
-  let container = React.useRef()
   let intl = useIntl()
 
   let attr = {
@@ -51,7 +50,7 @@ export const Button = React.memo(({
 
     onBlur,
     onFocus,
-    ref: container,
+    ref,
     title: title && intl.formatMessage({ id: title })
   }
 
@@ -86,7 +85,7 @@ export const Button = React.memo(({
     attr,
     icon,
     text && intl.formatMessage({ id: text }))
-})
+}))
 
 export const ToggleButton = ({
   isChecked,
