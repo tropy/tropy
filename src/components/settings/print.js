@@ -16,7 +16,11 @@ const ModeOptions = ({ children, config, onChange }) => {
 }
 
 
-export function PrintSettings({ config, modes, onChange }) {
+export function PrintSettings({
+  config,
+  modes = ['item', 'photo', 'selection'],
+  onChange
+}) {
   let handleChange = useEvent((print) => {
     onChange({ print })
   })
@@ -47,8 +51,4 @@ export function PrintSettings({ config, modes, onChange }) {
       </FormElement>
     </>
   )
-}
-
-PrintSettings.defaultProps = {
-  modes: ['item', 'photo', 'selection']
 }
