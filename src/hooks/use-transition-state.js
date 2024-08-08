@@ -3,15 +3,12 @@ import cx from 'classnames'
 import { ensure, reflow } from '../dom.js'
 
 // This can be used for complex transitions of a prop change.
-// Returns an array with the `state` and `ref` objects.
+// Returns the `state` and object.
 // Set `ref` and `state.className` on the DOM element that will transition.
 // Use `timeout` to set the fallback timeout.
-// Use `toString` parameter to customize
-// how prop values are mapped in `state.className`.
+// Use `toString` parameter to customize how prop values are mapped in `state.className`.
 
-export function useTransitionState(prop, timeout = 1000, toString) {
-  let node = useRef()
-
+export function useTransitionState(node, prop, timeout = 1000, toString) {
   let [state, setState] = useState({
     current: prop,
     isChanging: false,
@@ -54,11 +51,11 @@ export function useTransitionState(prop, timeout = 1000, toString) {
     }
   }, [willChange, handleTransitionEnd, timeout])
 
-  return [{
+  return {
     ...state,
     className,
     willChange
-  }, node]
+  }
 }
 
 const getClassNames = (state, toString) => {
