@@ -7,7 +7,7 @@ import { EsperHeader } from './header.js'
 import { EsperToolbar } from './toolbar.js'
 import { EsperPanel } from './panel.js'
 import { EsperOverlay } from './overlay.js'
-import { EsperError } from './error.js'
+import { EsperView } from './view.js'
 import { pick, restrict } from '../../common/util.js'
 import { Cache } from '../../common/cache.js'
 import { contains, isHorizontal, rotate, round } from '../../common/math.js'
@@ -758,12 +758,10 @@ export class EsperContainer extends React.Component {
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
         </EsperHeader>
-        <div className="esper-view-container">
-          <div className="esper-view" ref={this.view}/>
-          {
-            this.state.isTextureMissing &&
-            <EsperError photoId={this.props.photo.id}/>
-          }
+        <EsperView
+          ref={this.view}
+          isTextureMissing={this.state.isTextureMissing}
+          photoId={this.props.photo?.id}>
           {
             isOverlayVisible && (
               <EsperOverlay transcriptions={transcriptions}/>
@@ -780,7 +778,7 @@ export class EsperContainer extends React.Component {
             isVisible={this.props.isPanelVisible}
             onChange={this.handleFilterChange}
             onRevert={this.handleRevertToOriginal}/>
-        </div>
+        </EsperView>
       </section>
     )
   }
