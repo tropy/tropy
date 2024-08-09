@@ -3,6 +3,7 @@ import cx from 'classnames'
 import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
 import Esper, { FILTERS } from '../../esper/index.js'
+import { EsperHeader } from './header.js'
 import { EsperToolbar } from './toolbar.js'
 import { EsperPanel } from './panel.js'
 import { EsperOverlay } from './overlay.js'
@@ -740,7 +741,8 @@ export class EsperContainer extends React.Component {
         onMouseMove={this.handleMouseMove}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
-        <header className="esper-header">
+
+        <EsperHeader>
           <EsperToolbar
             isDisabled={isDisabled}
             isReadOnly={isDisabled || this.props.isReadOnly}
@@ -761,7 +763,7 @@ export class EsperContainer extends React.Component {
             onToolChange={this.handleToolChange}
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
-        </header>
+        </EsperHeader>
         <div className="esper-view-container">
           <div className="esper-view" ref={this.view}/>
           {
