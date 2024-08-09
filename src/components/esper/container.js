@@ -7,7 +7,7 @@ import { EsperHeader } from './header.js'
 import { EsperToolbar } from './toolbar.js'
 import { EsperPanel } from './panel.js'
 import { EsperOverlay } from './overlay.js'
-import { EsperPhotoError } from './error.js'
+import { EsperError } from './error.js'
 import { pick, restrict } from '../../common/util.js'
 import { Cache } from '../../common/cache.js'
 import { contains, isHorizontal, rotate, round } from '../../common/math.js'
@@ -300,7 +300,7 @@ export class EsperContainer extends React.Component {
   get isDisabled() {
     return this.props.isDisabled ||
       !this.state.isVisible ||
-      this.state.isTextureMissing ||
+      this.state.isTextureMissing || /* TODO should be read-only */
       this.props.photo?.pending === true
   }
 
@@ -636,12 +636,6 @@ export class EsperContainer extends React.Component {
     })
   }
 
-  handlePhotoConsolidate = () => {
-    this.props.onPhotoConsolidate([this.props.photo.id], {
-      force: true, prompt: true
-    })
-  }
-
   handleSlideIn = () => {
     if (!this.state.isVisible) {
       this.setState({ isVisible: true })
@@ -768,7 +762,7 @@ export class EsperContainer extends React.Component {
           <div className="esper-view" ref={this.view}/>
           {
             this.state.isTextureMissing &&
-            <EsperPhotoError onConsolidate={this.handlePhotoConsolidate}/>
+            <EsperError photoId={this.props.photo.id}/>
           }
           {
             isOverlayVisible && (
