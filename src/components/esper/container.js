@@ -3,6 +3,7 @@ import cx from 'classnames'
 import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
 import Esper, { FILTERS } from '../../esper/index.js'
+import { EsperError } from './error.js'
 import { EsperHeader } from './header.js'
 import { EsperToolbar } from './toolbar.js'
 import { EsperPanel } from './panel.js'
@@ -758,15 +759,13 @@ export class EsperContainer extends React.Component {
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
         </EsperHeader>
-        <EsperView
-          ref={this.view}
-          isTextureMissing={this.state.isTextureMissing}
-          photoId={this.props.photo?.id}>
-          {
-            isOverlayVisible && (
-              <EsperOverlay transcriptions={transcriptions}/>
-            )
-          }
+        <EsperView ref={this.view}>
+          {this.state.isTextureMissing &&
+            <EsperError photoId={this.props.photo?.id}/>}
+
+          {isOverlayVisible &&
+            <EsperOverlay transcriptions={transcriptions}/>}
+
           <EsperPanel
             brightness={this.state.brightness}
             contrast={this.state.contrast}
