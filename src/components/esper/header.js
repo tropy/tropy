@@ -1,7 +1,10 @@
 import React from 'react'
+import { Titlebar } from '../toolbar.js'
 
 export const EsperHeader = ({ children }) => (
   <header className="esper-header">
-    {children}
+    <Titlebar>
+      {children}
+    </Titlebar>
   </header>
 )
