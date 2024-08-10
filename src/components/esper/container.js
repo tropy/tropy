@@ -2,10 +2,11 @@ import React from 'react'
 import cx from 'classnames'
 import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
+import { Toolbar } from '../toolbar.js'
 import Esper, { FILTERS } from '../../esper/index.js'
 import { EsperError } from './error.js'
 import { EsperHeader } from './header.js'
-import { EsperToolbar } from './toolbar.js'
+import * as ToolGroup from './tools.js'
 import { EsperPanel } from './panel.js'
 import { EsperOverlay } from './overlay.js'
 import { EsperView } from './view.js'
@@ -340,16 +341,12 @@ export class EsperContainer extends React.Component {
     }
   }
 
-  handlePanelChange = (panel = !this.props.isPanelVisible) => {
-    this.props.onChange({
-      esper: { panel }
-    })
+  handleChange = (esper) => {
+    this.props.onChange({ esper })
   }
 
-  handleOverlayChange = (overlay) => {
-    this.props.onChange({
-      esper: { overlay }
-    })
+  handlePanelChange = (panel = !this.props.isPanelVisible) => {
+    this.handleChange({ panel })
   }
 
   handleRevertToOriginal = () => {
@@ -448,7 +445,7 @@ export class EsperContainer extends React.Component {
     this.handleImageChange()
   }
 
-  handleModeChange = (mode) => {
+  handleModeChange = ({ mode }) => {
     let { minZoom, mirror, zoom, zoomToFill } = this.state
 
     switch (mode) {
@@ -469,7 +466,7 @@ export class EsperContainer extends React.Component {
   }
 
   handleToolChange = (tool) => {
-    this.props.onChange({ esper: { tool } })
+    this.handleChange({ tool })
   }
 
   handleFilterChange = (opts) => {
@@ -524,10 +521,10 @@ export class EsperContainer extends React.Component {
           this.handleZoomOut()
           break
         case 'zoomToFit':
-          this.handleModeChange(MODE.FIT)
+          this.handleModeChange({ mode: MODE.FIT })
           break
         case 'zoomToFill':
-          this.handleModeChange(MODE.FILL)
+          this.handleModeChange({ mode: MODE.FILL })
           break
         case 'rotateLeft':
           if (this.props.isReadOnly) return
@@ -738,27 +735,42 @@ export class EsperContainer extends React.Component {
         onKeyUp={this.handleKeyUp}>
 
         <EsperHeader>
-          <EsperToolbar
-            isDisabled={isDisabled}
-            isReadOnly={isDisabled || this.props.isReadOnly}
-            isSelectionActive={this.isSelectionActive}
-            isPanelVisible={this.props.isPanelVisible}
-            mode={this.props.mode}
-            mirror={this.state.mirror}
-            tool={this.tool}
-            resolution={this.state.dppx}
-            zoom={this.state.zoom}
-            minZoom={this.state.minZoom}
-            maxZoom={this.props.maxZoom}
-            overlay={this.props.overlay}
-            onMirrorChange={this.handleMirrorChange}
-            onModeChange={this.handleModeChange}
-            onPanelChange={this.handlePanelChange}
-            onOverlayChange={this.handleOverlayChange}
-            onToolChange={this.handleToolChange}
-            onRotationChange={this.handleRotationChange}
-            onZoomChange={this.handleZoomChange}/>
+          <Toolbar.Left>
+            <ToolGroup.Tool
+              current={this.tool}
+              isDisabled={isDisabled}
+              isReadOnly={this.props.isReadOnly}
+              isSelectionActive={this.isSelectionActive}
+              onChange={this.handleChange}/>
+            <ToolGroup.Rotation
+              isDisabled={isDisabled || this.props.isReadOnly}
+              mirror={this.state.mirror}
+              onMirrorChange={this.handleMirrorChange}
+              onRotationChange={this.handleRotationChange}/>
+            <ToolGroup.Mode
+              current={this.props.mode}
+              isDisabled={isDisabled}
+              onChange={this.handleModeChange}/>
+            <ToolGroup.Zoom
+              current={this.state.zoom}
+              isDisabled={isDisabled}
+              max={this.props.maxZoom}
+              min={this.state.minZoom}
+              onChange={this.handleZoomChange}
+              resolution={this.state.dppx}/>
+          </Toolbar.Left>
+          <Toolbar.Right>
+            <ToolGroup.Overlay
+              current={this.props.overlay}
+              isDisabled={isDisabled}
+              onChange={this.handleChange}/>
+            <ToolGroup.Panel
+              current={this.props.isPanelVisible}
+              isDisabled={isDisabled}
+              onChange={this.handleChange}/>
+          </Toolbar.Right>
         </EsperHeader>
+
         <EsperView ref={this.view}>
           {this.state.isTextureMissing &&
             <EsperError photoId={this.props.photo?.id}/>}
