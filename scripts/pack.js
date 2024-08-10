@@ -255,7 +255,7 @@ const exports = {
       check(process.env.SIGN_TOTP, 'missing signing TOTP secret')
 
       windowsSign = {
-        hookModulePath: join(ROOT, 'vendor', 'sign-win32.js')
+        hookModulePath: join(ROOT, 'vendor', 'sign-win32.cjs')
       }
     }
 
