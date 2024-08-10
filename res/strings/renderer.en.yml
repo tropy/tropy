@@ -319,6 +319,9 @@ en:
       fill: Fill
       fit: Fit
       zoom: Zoom
+    overlay:
+      full: Show full text overlay
+      split: Show split-view text overlay
     panel:
       negative: Invert colors
       revert: Revert to Original
