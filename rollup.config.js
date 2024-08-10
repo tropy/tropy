@@ -204,6 +204,12 @@ export default [
           manual: 'follow'
         }
       }),
+      replace({
+        preventAssignment: true,
+        values: {
+          __dirname: 'import.meta.dirname',
+        }
+      }),
       nodeResolve({
         exportConditions: ['node'],
         preferBuiltins: true
@@ -215,6 +221,7 @@ export default [
         babelHelpers: 'bundled'
       }),
       commonjs({
+        requireReturnsDefault: 'auto',
         ignoreGlobal: true,
         ignoreTryCatch
       }),
