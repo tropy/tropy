@@ -1,18 +1,19 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useEvent } from './use-event.js'
 import debounce from 'lodash.debounce'
+import throttle from 'lodash.throttle'
 
-export function useDebounce(fn, { wait = 250 } = {}) {
+function useLodash(method, fn, { wait = 250 } = {}) {
   let ref = useRef()
   let callback = useEvent(fn)
 
   useEffect(() => {
-    ref.current = debounce(callback, wait)
+    ref.current = method(callback, wait)
 
     return () => {
       ref.current?.flush()
     }
-  }, [callback, wait])
+  }, [method, callback, wait])
 
   return useMemo(() => Object.assign(
     (...args) => ref.current?.(...args),
@@ -21,4 +22,12 @@ export function useDebounce(fn, { wait = 250 } = {}) {
       cancel: () => ref.current?.cancel()
     }
   ), [])
+}
+
+export function useDebounce(fn, opts) {
+  return useLodash(debounce, fn, opts)
+}
+
+export function useThrottle(fn, opts) {
+  return useLodash(throttle, fn, opts)
 }
