@@ -1,5 +1,6 @@
 import { join, resolve } from 'node:path'
 import { readFileSync } from 'node:fs'
+import { builtinModules } from 'node:module'
 import process from 'node:process'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
@@ -60,15 +61,15 @@ function onwarn(warning, warn) {
     warn(warning)
 }
 
-let ignoreTryCatch = false
+function ignoreTryCatch(id) {
+  if (id === 'fsevents')
+    return (process.platform === 'darwin') ? false : 'remove'
 
-if (process.platform !== 'darwin') {
-  ignoreTryCatch = (id) => {
-    if (id === 'fsevents')
-      return 'remove'
+  if (builtinModules.includes(id))
+    return true
 
-    return false
-  }
+  console.warn(`Removing try/catch require of: ${id}`)
+  return 'remove'
 }
 
 
