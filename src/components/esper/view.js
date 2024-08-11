@@ -9,7 +9,7 @@ export const EsperView = React.forwardRef(({
 
   useImperativeHandle(ref, () => (
     Esper.instance
-  ), [Esper.instance])
+  ), [])
 
   let observe = useResizeObserver(onResize)
 
@@ -20,7 +20,7 @@ export const EsperView = React.forwardRef(({
       Esper.instance.destroy()
     }
     observe(node)
-  }, [])
+  }, [observe])
 
   return (
     <div className="esper-view-container">
