@@ -3,7 +3,7 @@ import cx from 'classnames'
 import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
 import { Toolbar } from '../toolbar.js'
-import EsperMachine, { FILTERS } from '../../esper/index.js'
+import { FILTERS, getDevicePixelRatio } from '../../esper/index.js'
 import { EsperError } from './error.js'
 import { EsperHeader } from './header.js'
 import * as ToolGroup from './tools.js'
@@ -52,7 +52,7 @@ export class Esper extends React.Component {
   view = React.createRef()
 
   state = {
-    dppx: EsperMachine.devicePixelRatio,
+    dppx: getDevicePixelRatio(),
     isTextureMissing: false,
     isTextureReady: false,
     isCompact: false,
@@ -816,7 +816,7 @@ const getActiveTool = ({ selection, tool }, { quicktool }) => {
 }
 
 const getZoomBounds = (props, state, screen = {}) => {
-  let minZoom = props.minZoom / EsperMachine.devicePixelRatio
+  let minZoom = props.minZoom / getDevicePixelRatio()
   let zoom = state.zoom
   let zoomToFill = minZoom
   let image = props.selection || state

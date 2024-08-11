@@ -41,7 +41,8 @@ PIXI.Ticker.shared.autoStart = false
 PIXI.Ticker.shared.stop()
 
 export {
-  FILTERS
+  FILTERS,
+  getDevicePixelRatio
 }
 
 export default class Esper extends EventEmitter {
