@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Resizable } from '../resizable.js'
-import { EsperContainer } from '../esper/container.js'
+import { Esper } from '../esper/index.js'
 import { NotePad } from '../note/index.js'
 import * as act from '../../actions/index.js'
 import cx from 'classnames'
@@ -95,7 +95,7 @@ class Item extends React.PureComponent {
           isRelative
           value={this.size}
           onChange={this.handleEsperResize}>
-          <EsperContainer
+          <Esper
             {...this.props.view}
             cache={this.props.cache}
             mode={this.props.view.mode || this.props.settings.zoomMode}

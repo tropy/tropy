@@ -3,7 +3,7 @@ import cx from 'classnames'
 import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
 import { Toolbar } from '../toolbar.js'
-import Esper, { FILTERS } from '../../esper/index.js'
+import EsperMachine, { FILTERS } from '../../esper/index.js'
 import { EsperError } from './error.js'
 import { EsperHeader } from './header.js'
 import * as ToolGroup from './tools.js'
@@ -37,7 +37,7 @@ const {
 } = SASS.ESPER
 
 
-export class EsperContainer extends React.Component {
+export class Esper extends React.Component {
 
   #IO = new IntersectionObserver(([el]) => {
     if (el.intersectionRatio > 0)
@@ -56,7 +56,7 @@ export class EsperContainer extends React.Component {
   view = React.createRef()
 
   state = {
-    dppx: Esper.devicePixelRatio,
+    dppx: EsperMachine.devicePixelRatio,
     isTextureMissing: false,
     isTextureReady: false,
     isCompact: false,
@@ -65,14 +65,14 @@ export class EsperContainer extends React.Component {
     quicktool: null,
 
     // Derived from props; constrained by photo/selection and resize
-    minZoom: EsperContainer.defaultProps.minZoom,
-    zoom: EsperContainer.defaultProps.zoom,
-    zoomToFill: EsperContainer.defaultProps.minZoom,
+    minZoom: MIN_ZOOM,
+    zoom: 1,
+    zoomToFill: MIN_ZOOM,
 
     // Derived from photo/selection
     width: 0,
     height: 0,
-    ...EsperContainer.defaultImageProps
+    ...Esper.defaultImageProps
   }
 
   static getDerivedStateFromProps(props, prevState) {
@@ -93,16 +93,16 @@ export class EsperContainer extends React.Component {
         id,
         src,
         zoom: props.zoom || prevState.zoom,
-        ...EsperContainer.getDerivedImageStateFromProps(props)
+        ...Esper.getDerivedImageStateFromProps(props)
       }
   }
 
   static getDerivedImageStateFromProps({ photo, selection }) {
     let image = selection || photo
-    let state = { ...EsperContainer.defaultImageProps }
+    let state = { ...Esper.defaultImageProps }
 
     if (image != null) {
-      for (let prop in EsperContainer.defaultImageProps) {
+      for (let prop in Esper.defaultImageProps) {
         state[prop] = image[prop]
       }
 
@@ -138,7 +138,7 @@ export class EsperContainer extends React.Component {
       return true // view going to sync anyway!
 
     if (this.didImageChange(nextProps, nextState)) {
-      let state = EsperContainer.getDerivedImageStateFromProps(nextProps)
+      let state = Esper.getDerivedImageStateFromProps(nextProps)
       let duration = !this.state.isVisible ? 0 : undefined // -> default
 
       this.esper.sync({
@@ -187,7 +187,7 @@ export class EsperContainer extends React.Component {
 
   componentDidMount() {
     this.esper =
-      Esper.instance
+      EsperMachine.instance
         .on('change', this.handleViewChange)
         .on('photo.error', this.handlePhotoError)
         .on('dppx-change', this.handleDevicePixelRatioChange)
@@ -484,7 +484,7 @@ export class EsperContainer extends React.Component {
       selection: selection.id,
       note: selection.notes[0]
     })
-    this.handleToolChange(EsperContainer.defaultProps.tool)
+    this.handleToolChange(TOOL.ARROW)
   }
 
   handleSelectionCreate = (selection) => {
@@ -816,13 +816,13 @@ const getActiveTool = ({ selection, tool }, { quicktool }) => {
   tool = quicktool || tool
 
   if (selection && tool === TOOL.SELECT)
-    return EsperContainer.defaultProps.tool
+    return TOOL.ARROW
   else
     return tool
 }
 
 const getZoomBounds = (props, state, screen = {}) => {
-  let minZoom = props.minZoom / Esper.devicePixelRatio
+  let minZoom = props.minZoom / EsperMachine.devicePixelRatio
   let zoom = state.zoom
   let zoomToFill = minZoom
   let image = props.selection || state
