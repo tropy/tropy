@@ -84,7 +84,7 @@ export const create = () => {
             /^keymap\./, /\.(created|modified)$/
           ],
           ignoredPaths: [
-            /^keymap\./, /\.(created|modified)$/
+            /^keymap\./, /\.(created|modified)$/, 'project.closed'
           ]
         }
       }),
