@@ -18,8 +18,9 @@ export default {
   },
 
   OVERLAY: {
-    NONE: 0,
-    TEXT: 2
+    NONE: false,
+    SPLIT: 'split',
+    FULL: 'full'
   },
 
   COLOR: {

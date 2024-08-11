@@ -709,11 +709,12 @@ export class EsperContainer extends React.Component {
 
   render() {
     let { isDisabled } = this
+    let { overlay } = this.props
 
     let transcriptions =
       (this.props.selection || this.props.photo)?.transcriptions
     let isOverlayVisible =
-      this.props.overlay > 0 && transcriptions?.length > 0
+      overlay && transcriptions?.length > 0
 
     return (
       <section
@@ -724,7 +725,8 @@ export class EsperContainer extends React.Component {
           'read-only': this.props.isReadOnly,
           'texture-missing': this.state.isTextureMissing,
           'overlay-mode': this.props.hasOverlayToolbar,
-          'panel-visible': this.props.isPanelVisible
+          'panel-visible': this.props.isPanelVisible,
+          [`text-overlay-${overlay}`]: isOverlayVisible
         })}
         ref={this.container}
         tabIndex={this.tabIndex}
@@ -761,7 +763,7 @@ export class EsperContainer extends React.Component {
           </Toolbar.Left>
           <Toolbar.Right>
             <ToolGroup.Overlay
-              current={this.props.overlay}
+              current={overlay}
               isDisabled={isDisabled}
               onChange={this.handleChange}/>
             <ToolGroup.Panel
@@ -798,7 +800,6 @@ export class EsperContainer extends React.Component {
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
     tabIndex: TABS.Esper,
-    overlay: 0,
     tool: TOOL.ARROW,
     zoom: 1
   }
