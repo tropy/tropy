@@ -46,10 +46,6 @@ export class Esper extends React.Component {
       this.handleSlideOut()
   }, { threshold: [0] })
 
-  #RO = new ResizeObserver(([el]) => {
-    this.handleResize(el.contentRect)
-  })
-
   #lastImageChangeData
 
   container = React.createRef()
@@ -186,8 +182,9 @@ export class Esper extends React.Component {
   }
 
   componentDidMount() {
+    // WIP we assume that the view reference never changes!
     this.esper =
-      EsperMachine.instance
+      this.view.current
         .on('change', this.handleViewChange)
         .on('photo.error', this.handlePhotoError)
         .on('dppx-change', this.handleDevicePixelRatioChange)
@@ -199,10 +196,8 @@ export class Esper extends React.Component {
         .on('wheel.pan', this.handleWheelPan)
         .on('zoom-in', this.handleZoomIn)
         .on('zoom-out', this.handleZoomOut)
-        .mount(this.view.current)
 
-    this.#RO.observe(this.view.current)
-    this.#IO.observe(this.view.current)
+    this.#IO.observe(this.container.current)
 
     if (this.props.hasOverlayToolbar)
       this.startMouseTracking()
@@ -291,12 +286,9 @@ export class Esper extends React.Component {
     this.stopMouseTracking()
 
     this.#IO.disconnect()
-    this.#RO.disconnect()
 
     this.handleImageChange.flush()
     this.handleViewChange.flush()
-
-    this.esper.destroy()
   }
 
   get isDisabled() {
@@ -773,7 +765,9 @@ export class Esper extends React.Component {
           </Toolbar.Right>
         </EsperHeader>
 
-        <EsperView ref={this.view}>
+        <EsperView
+          ref={this.view}
+          onResize={this.handleResize}>
           {this.state.isTextureMissing &&
             <EsperError photoId={this.props.photo?.id}/>}
 
