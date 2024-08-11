@@ -4,6 +4,7 @@ import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
 import { Toolbar } from '../toolbar.js'
 import { FILTERS, getDevicePixelRatio } from '../../esper/index.js'
+import { EsperContainer } from './container.js'
 import { EsperError } from './error.js'
 import { EsperHeader } from './header.js'
 import * as ToolGroup from './tools.js'
@@ -16,7 +17,7 @@ import { contains, isHorizontal, rotate, round } from '../../common/math.js'
 import { addOrientation, subOrientation } from '../../common/iiif.js'
 import { match } from '../../keymap.js'
 import { bounds, on, off } from '../../dom.js'
-import { ESPER, SASS, TABS } from '../../constants/index.js'
+import { ESPER, SASS } from '../../constants/index.js'
 
 const {
   TOOL,
@@ -304,10 +305,6 @@ export class Esper extends React.Component {
 
   get screen() {
     return this.esper?.app.screen
-  }
-
-  get tabIndex() {
-    return this.isDisabled ? -1 : this.props.tabIndex
   }
 
   get tool() {
@@ -709,8 +706,8 @@ export class Esper extends React.Component {
       overlay && transcriptions?.length > 0
 
     return (
-      <section
-        className={cx('esper', this.tool, {
+      <EsperContainer
+        className={cx(this.tool, {
           'mouseover': this.state.over,
           'compact': this.state.isCompact,
           'disabled': isDisabled,
@@ -721,7 +718,7 @@ export class Esper extends React.Component {
           [`text-overlay-${overlay}`]: isOverlayVisible
         })}
         ref={this.container}
-        tabIndex={this.tabIndex}
+        isDisabled={isDisabled}
         onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
         onMouseMove={this.handleMouseMove}
@@ -786,14 +783,13 @@ export class Esper extends React.Component {
             onChange={this.handleFilterChange}
             onRevert={this.handleRevertToOriginal}/>
         </EsperView>
-      </section>
+      </EsperContainer>
     )
   }
 
   static defaultProps = {
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
-    tabIndex: TABS.Esper,
     tool: TOOL.ARROW,
     zoom: 1
   }
