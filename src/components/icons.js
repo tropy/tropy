@@ -687,6 +687,14 @@ export const IconTranscriptionLarge = i('TranscriptionLarge', (
   </svg>
 ))
 
+export const IconTranscriptionSplitView = i('TranscriptionSplitView', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M6,8v2H7V9H8v3H7v1h3V12H9V9h1v1h1V8Zm8-8H3A2,2,0,0,0,1,2V13a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V2A2,2,0,0,0,14,0Zm1,13a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V7H15Zm0-7H2V2A1,1,0,0,1,3,1H14a1,1,0,0,1,1,1Z"/>
+    </g>
+ </svg>
+))
+
 export const IconTrash = i('Trash', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">

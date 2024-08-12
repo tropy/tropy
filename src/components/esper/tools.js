@@ -147,7 +147,7 @@ export const Overlay = ({
     <ToolButton
       current={current}
       defaultValue={ESPER.OVERLAY.NONE}
-      icon="IconTranscriptionOverlay"
+      icon="IconTranscriptionSplitView"
       isDisabled={isDisabled}
       name="overlay"
       onChange={onChange}
