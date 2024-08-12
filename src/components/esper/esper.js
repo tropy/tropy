@@ -13,10 +13,9 @@ import { EsperOverlay } from './overlay.js'
 import { EsperView } from './view.js'
 import { pick, restrict } from '../../common/util.js'
 import { Cache } from '../../common/cache.js'
-import { contains, isHorizontal, rotate, round } from '../../common/math.js'
+import { isHorizontal, rotate, round } from '../../common/math.js'
 import { addOrientation, subOrientation } from '../../common/iiif.js'
 import { match } from '../../keymap.js'
-import { bounds, on, off } from '../../dom.js'
 import { ESPER, SASS } from '../../constants/index.js'
 
 const {
@@ -39,13 +38,6 @@ const {
 
 
 export class Esper extends React.Component {
-
-  #IO = new IntersectionObserver(([el]) => {
-    if (el.intersectionRatio > 0)
-      this.handleSlideIn()
-    else
-      this.handleSlideOut()
-  }, { threshold: [0] })
 
   #lastImageChangeData
 
@@ -197,11 +189,6 @@ export class Esper extends React.Component {
         .on('wheel.pan', this.handleWheelPan)
         .on('zoom-in', this.handleZoomIn)
         .on('zoom-out', this.handleZoomOut)
-
-    this.#IO.observe(this.container.current)
-
-    if (this.props.hasOverlayToolbar)
-      this.startMouseTracking()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -236,58 +223,9 @@ export class Esper extends React.Component {
         }
       }
     }
-
-    if (this.props.hasOverlayToolbar !== prevProps.hasOverlayToolbar) {
-      if (this.props.hasOverlayToolbar)
-        this.startMouseTracking()
-      else
-        this.stopMouseTracking()
-    }
-  }
-
-  // Workaround, see #843
-  // When using overlay toolbars we need to work around
-  // an issue upstream where no mouse events are reported
-  // over app draggable areas. Because of this the toolbar
-  // will disappear if you move the cursor over it.
-  // As workaround, we say the mouse has left Esper when
-  // we detect a mouse movement over the window but outside
-  // Esper.
-
-  startMouseTracking() {
-    this.stopMouseTracking()
-    on(this.container.current, 'mousemove', this.handleMouseEnter)
-  }
-
-  stopMouseTracking() {
-    off(this.container.current, 'mousemove', this.handleMouseEnter)
-    off(document, 'mouseover', this.handleMouseLeave)
-  }
-
-  handleMouseEnter = () => {
-    this.setState({ over: true })
-    off(this.container.current, 'mousemove', this.handleMouseEnter)
-    on(document, 'mouseover', this.handleMouseLeave)
-  }
-
-  handleMouseLeave = (event) => {
-    let isOutside = !contains(bounds(this.container.current), {
-      x: event.clientX,
-      y: event.clientY
-    })
-
-    if (isOutside) {
-      this.setState({ over: false })
-      off(document, 'mouseover', this.handleMouseLeave)
-      on(this.container.current, 'mousemove', this.handleMouseEnter)
-    }
   }
 
   componentWillUnmount() {
-    this.stopMouseTracking()
-
-    this.#IO.disconnect()
-
     this.handleImageChange.flush()
     this.handleViewChange.flush()
   }
@@ -708,17 +646,17 @@ export class Esper extends React.Component {
     return (
       <EsperContainer
         className={cx(this.tool, {
-          'mouseover': this.state.over,
           'compact': this.state.isCompact,
-          'disabled': isDisabled,
           'read-only': this.props.isReadOnly,
           'texture-missing': this.state.isTextureMissing,
-          'overlay-mode': this.props.hasOverlayToolbar,
           'panel-visible': this.props.isPanelVisible,
           [`text-overlay-${overlay}`]: isOverlayVisible
         })}
         ref={this.container}
         isDisabled={isDisabled}
+        hasOverlayToolbar={this.props.hasOverlayToolbar}
+        onEnter={this.handleSlideIn}
+        onLeave={this.handleSlideOut}
         onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
         onMouseMove={this.handleMouseMove}
