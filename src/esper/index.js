@@ -3,7 +3,14 @@ import * as PIXI from 'pixi.js-legacy'
 import TWEEN from '@tweenjs/tween.js'
 import debounce from 'lodash.debounce'
 import ARGS from '../args.js'
-import { append, createDragHandler, on, off } from '../dom.js'
+import {
+  append,
+  createDragHandler,
+  on,
+  off,
+  onDevicePixelRatioChange,
+  getDevicePixelRatio
+} from '../dom.js'
 import { debug, error, info, warn } from '../common/log.js'
 import { isClockwise, isHorizontal, deg, rad } from '../common/math.js'
 import { delay, restrict } from '../common/util.js'
@@ -18,7 +25,6 @@ import {
   constrain,
   coords,
   equal,
-  getDevicePixelRatio,
   isDoubleClickSupported,
   normalizeRectangle,
   setScaleMode
@@ -41,8 +47,7 @@ PIXI.Ticker.shared.autoStart = false
 PIXI.Ticker.shared.stop()
 
 export {
-  FILTERS,
-  getDevicePixelRatio
+  FILTERS
 }
 
 export default class Esper extends EventEmitter {
@@ -56,11 +61,6 @@ export default class Esper extends EventEmitter {
     return Esper.#INSTANCE
   }
 
-  static get devicePixelRatio() {
-    return getDevicePixelRatio()
-  }
-
-  #rmq = matchMedia('(max-resolution: 1dppx)')
   #lastClickTime = 0
 
   constructor(opts) {
@@ -78,7 +78,7 @@ export default class Esper extends EventEmitter {
       backgroundAlpha: 0,
       forceCanvas: !ARGS.webgl,
       powerPreference: 'low-power',
-      resolution: Esper.devicePixelRatio,
+      resolution: getDevicePixelRatio(),
       roundPixels: false,
       sharedLoader: true,
       sharedTicker: true,
@@ -94,7 +94,7 @@ export default class Esper extends EventEmitter {
 
     this.loader = new Loader()
 
-    this.#rmq.addListener(this.handleDevicePixelRatioChange)
+    this.offDPXChange = onDevicePixelRatioChange(this.handleResolutionChange)
     this.on('change', this.handleResolutionChange)
 
     on(this.app.view, 'wheel', this.handleWheel, { passive: true })
@@ -124,7 +124,8 @@ export default class Esper extends EventEmitter {
 
     off(this.app.view, 'wheel', this.handleWheel, { passive: true })
 
-    this.#rmq.removeListener(this.handleDevicePixelRatioChange)
+    this.offDPXChange()
+    this.offDPXChange = null
 
     this.loader.destroy()
     this.app.destroy(true, true)
@@ -440,13 +441,8 @@ export default class Esper extends EventEmitter {
     return this.photo?.y ?? 0
   }
 
-  handleDevicePixelRatioChange = () => {
-    this.emit('dppx-change', Esper.devicePixelRatio)
-    this.handleResolutionChange()
-  }
-
   handleResolutionChange = debounce(() => {
-    let resolution = Esper.devicePixelRatio
+    let resolution = getDevicePixelRatio()
 
     // On low-res screens, we render at 2x resolution
     // when zooming out to improve quality. See #218

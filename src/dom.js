@@ -307,3 +307,23 @@ export function load(node, message = 'Load Error') {
     node.onerror = () => reject(new Error(message))
   })
 }
+
+
+export function getDevicePixelRatio() {
+  return Math.floor(devicePixelRatio) || 1
+}
+
+const RMQ = matchMedia('(max-resolution: 1dppx)')
+
+export function onDevicePixelRatioChange(callback) {
+  let handler = () => {
+    callback(getDevicePixelRatio())
+  }
+
+  RMQ.addListener(handler)
+  setTimeout(handler)
+
+  return () => {
+    RMQ.removeListener(handler)
+  }
+}

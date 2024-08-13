@@ -6,10 +6,6 @@ import { ESPER, SASS } from '../constants/index.js'
 
 const { CURSOR, ZOOM_LINEAR_MAX } = SASS.ESPER
 
-export function getDevicePixelRatio() {
-  return Math.floor(devicePixelRatio) || 1
-}
-
 export function constrain(pos, { left, top, bottom, right }) {
   pos.x = (restrict(pos.x, left, right))
   pos.y = (restrict(pos.y, top, bottom))
