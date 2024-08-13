@@ -249,10 +249,6 @@ export class Esper extends React.Component {
     return getActiveTool(this.props, this.state)
   }
 
-  get hasFocus() {
-    return document.activeElement === this.container.current
-  }
-
   focus() {
     this.container.current.focus()
   }
@@ -542,12 +538,6 @@ export class Esper extends React.Component {
     }
   }
 
-  handleMouseDown = () => {
-    if (!this.hasFocus && !this.props.isReadOnly) {
-      this.focus()
-    }
-  }
-
   handleMouseMove = () => {
     this.esper.resume()
   }
@@ -658,7 +648,6 @@ export class Esper extends React.Component {
         onEnter={this.handleSlideIn}
         onLeave={this.handleSlideOut}
         onContextMenu={this.handleContextMenu}
-        onMouseDown={this.handleMouseDown}
         onMouseMove={this.handleMouseMove}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
