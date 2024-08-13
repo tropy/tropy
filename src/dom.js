@@ -321,7 +321,6 @@ export function onDevicePixelRatioChange(callback) {
   }
 
   RMQ.addListener(handler)
-  setTimeout(handler)
 
   return () => {
     RMQ.removeListener(handler)
