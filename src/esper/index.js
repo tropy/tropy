@@ -8,8 +8,8 @@ import {
   createDragHandler,
   on,
   off,
-  onDevicePixelRatioChange,
-  getDevicePixelRatio
+  onResolutionChange,
+  getResolution
 } from '../dom.js'
 import { debug, error, info, warn } from '../common/log.js'
 import { isClockwise, isHorizontal, deg, rad } from '../common/math.js'
@@ -78,7 +78,7 @@ export default class Esper extends EventEmitter {
       backgroundAlpha: 0,
       forceCanvas: !ARGS.webgl,
       powerPreference: 'low-power',
-      resolution: getDevicePixelRatio(),
+      resolution: getResolution(),
       roundPixels: false,
       sharedLoader: true,
       sharedTicker: true,
@@ -94,7 +94,7 @@ export default class Esper extends EventEmitter {
 
     this.loader = new Loader()
 
-    this.offDPXChange = onDevicePixelRatioChange(this.handleResolutionChange)
+    this.removeResolutionListener = onResolutionChange(this.handleResolutionChange)
     this.on('change', this.handleResolutionChange)
 
     on(this.app.view, 'wheel', this.handleWheel, { passive: true })
@@ -124,8 +124,8 @@ export default class Esper extends EventEmitter {
 
     off(this.app.view, 'wheel', this.handleWheel, { passive: true })
 
-    this.offDPXChange()
-    this.offDPXChange = null
+    this.removeResolutionListener()
+    this.removeResolutionListener = null
 
     this.loader.destroy()
     this.app.destroy(true, true)
@@ -442,7 +442,7 @@ export default class Esper extends EventEmitter {
   }
 
   handleResolutionChange = debounce(() => {
-    let resolution = getDevicePixelRatio()
+    let resolution = getResolution()
 
     // On low-res screens, we render at 2x resolution
     // when zooming out to improve quality. See #218

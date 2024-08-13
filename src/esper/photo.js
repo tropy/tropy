@@ -3,7 +3,7 @@ import { AdjustmentFilter } from '@pixi/filter-adjustment'
 import { SharpenFilter } from './filter/index.js'
 import { SelectionLayer, SelectionOverlay } from './selection.js'
 import { constrain } from './util.js'
-import { getDevicePixelRatio } from '../dom.js'
+import { getResolution } from '../dom.js'
 import { deg, isHorizontal } from '../common/math.js'
 import { ESPER } from '../constants/index.js'
 
@@ -154,7 +154,7 @@ export class Photo extends Container {
     this.#pivot = null
   }
 
-  handleResolutionChange(resolution = getDevicePixelRatio()) {
+  handleResolutionChange(resolution = getResolution()) {
     this.#resolution = resolution
 
     for (let filter of this.bg.filters) {

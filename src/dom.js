@@ -309,15 +309,15 @@ export function load(node, message = 'Load Error') {
 }
 
 
-export function getDevicePixelRatio() {
+export function getResolution() {
   return Math.floor(devicePixelRatio) || 1
 }
 
 const RMQ = matchMedia('(max-resolution: 1dppx)')
 
-export function onDevicePixelRatioChange(callback) {
+export function onResolutionChange(callback) {
   let handler = () => {
-    callback(getDevicePixelRatio())
+    callback(getResolution())
   }
 
   RMQ.addListener(handler)
