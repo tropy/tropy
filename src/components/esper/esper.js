@@ -331,7 +331,7 @@ export class Esper extends React.Component {
     zoom = restrict(
       round(zoom, ZOOM_PRECISION),
       this.state.minZoom,
-      this.props.maxZoom)
+      MAX_ZOOM)
 
     this.setState({ zoom })
 
@@ -667,7 +667,7 @@ export class Esper extends React.Component {
             <ToolGroup.Zoom
               current={this.state.zoom}
               isDisabled={isDisabled}
-              max={this.props.maxZoom}
+              max={MAX_ZOOM}
               min={this.state.minZoom}
               onChange={this.handleZoomChange}/>
           </Toolbar.Left>
@@ -709,8 +709,6 @@ export class Esper extends React.Component {
   }
 
   static defaultProps = {
-    maxZoom: MAX_ZOOM,
-    minZoom: MIN_ZOOM,
     tool: TOOL.ARROW,
     zoom: 1
   }
@@ -733,7 +731,7 @@ const getActiveTool = ({ selection, tool }, { quicktool }) => {
 }
 
 const getZoomBounds = (props, state, screen = {}) => {
-  let minZoom = props.minZoom / getResolution()
+  let minZoom = MIN_ZOOM / getResolution()
   let zoom = state.zoom
   let zoomToFill = minZoom
   let image = props.selection || state
@@ -746,7 +744,7 @@ const getZoomBounds = (props, state, screen = {}) => {
     }
 
     minZoom = getZoomToFit(screen, width, height, minZoom)
-    zoomToFill = getZoomToFill(screen, width, props.maxZoom)
+    zoomToFill = getZoomToFill(screen, width)
 
     switch (props.mode) {
       case MODE.FILL:
@@ -763,8 +761,8 @@ const getZoomBounds = (props, state, screen = {}) => {
   return { minZoom, zoom, zoomToFill }
 }
 
-const getZoomToFill = ({ width = MIN_WIDTH }, w, maxZoom) =>
-  round(Math.min(maxZoom, width / w), ZOOM_PRECISION)
+const getZoomToFill = ({ width = MIN_WIDTH }, w) =>
+  round(Math.min(MAX_ZOOM, width / w), ZOOM_PRECISION)
 
 const getZoomToFit =
   ({ width = MIN_WIDTH, height = MIN_HEIGHT }, w, h, minZoom) =>
