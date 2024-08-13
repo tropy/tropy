@@ -16,7 +16,7 @@ import { Cache } from '../../common/cache.js'
 import { isHorizontal, rotate, round } from '../../common/math.js'
 import { addOrientation, subOrientation } from '../../common/iiif.js'
 import { match } from '../../keymap.js'
-import { getDevicePixelRatio } from '../../dom.js'
+import { getResolution } from '../../dom.js'
 import { ESPER, SASS } from '../../constants/index.js'
 
 const {
@@ -46,7 +46,6 @@ export class Esper extends React.Component {
   view = React.createRef()
 
   state = {
-    dppx: getDevicePixelRatio(),
     isTextureMissing: false,
     isTextureReady: false,
     isCompact: false,
@@ -181,7 +180,6 @@ export class Esper extends React.Component {
       this.view.current
         .on('change', this.handleViewChange)
         .on('photo.error', this.handlePhotoError)
-        .on('dppx-change', this.handleDevicePixelRatioChange)
         .on('resolution-change', this.handleResolutionChange)
         .on('selection-activate', this.handleSelectionActivate)
         .on('selection-create', this.handleSelectionCreate)
@@ -582,10 +580,6 @@ export class Esper extends React.Component {
     this.setState(next)
   }, 50)
 
-  handleDevicePixelRatioChange = (dppx) => {
-    this.setState({ dppx })
-  }
-
   handleResolutionChange = () => {
     this.setState({
       ...getZoomBounds(this.props, this.state, this.screen)
@@ -675,8 +669,7 @@ export class Esper extends React.Component {
               isDisabled={isDisabled}
               max={this.props.maxZoom}
               min={this.state.minZoom}
-              onChange={this.handleZoomChange}
-              resolution={this.state.dppx}/>
+              onChange={this.handleZoomChange}/>
           </Toolbar.Left>
           <Toolbar.Right>
             <ToolGroup.Overlay
@@ -740,7 +733,7 @@ const getActiveTool = ({ selection, tool }, { quicktool }) => {
 }
 
 const getZoomBounds = (props, state, screen = {}) => {
-  let minZoom = props.minZoom / getDevicePixelRatio()
+  let minZoom = props.minZoom / getResolution()
   let zoom = state.zoom
   let zoomToFill = minZoom
   let image = props.selection || state

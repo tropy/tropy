@@ -1,6 +1,7 @@
 import React from 'react'
 import { useArgs } from '../../hooks/use-args.js'
 import { useEvent } from '../../hooks/use-event.js'
+import { useResolution } from '../../hooks/use-resolution.js'
 import { useThrottle } from '../../hooks/use-debounce.js'
 import { ToolGroup } from '../toolbar.js'
 import { Button } from '../button.js'
@@ -101,10 +102,10 @@ export const Zoom = ({
   min,
   onChange,
   precision = 1000,
-  resolution = 1,
   steps = [0.5, 1, 2, 3]
 }) => {
   let isWindowFrameless = useArgs('frameless')
+  let resolution = useResolution()
 
   let handleChange = useThrottle((zoom, reason) => {
     onChange({ zoom }, reason === 'button')
