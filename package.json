@@ -113,7 +113,7 @@
     "@babel/cli": "^7.24.8",
     "@babel/plugin-syntax-import-assertions": "^7.17.12",
     "@inukshuk/exif": "^2.0.0",
-    "@koa/router": "^12.0.1",
+    "@koa/router": "^13.0.0",
     "@pixi/filter-adjustment": "^5.1.1",
     "@reduxjs/toolkit": "^2.0.1",
     "@tweenjs/tween.js": "^23.1.1",
