@@ -48,7 +48,6 @@ export class Esper extends React.Component {
   state = {
     isTextureMissing: false,
     isTextureReady: false,
-    isCompact: false,
     isVisible: false,
     over: false,
     quicktool: null,
@@ -575,8 +574,6 @@ export class Esper extends React.Component {
       mirror: this.state.mirror
     })
 
-    next.isCompact = width < 240 || height < 240
-
     this.setState(next)
   }, 50)
 
@@ -631,7 +628,6 @@ export class Esper extends React.Component {
     return (
       <EsperContainer
         className={cx(this.tool, {
-          'compact': this.state.isCompact,
           'read-only': this.props.isReadOnly,
           'texture-missing': this.state.isTextureMissing,
           'panel-visible': this.props.isPanelVisible,
