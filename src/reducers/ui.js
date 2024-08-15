@@ -6,6 +6,7 @@ const INIT = {
     height: 50,
     width: 50,
     overlay: ESPER.OVERLAY.NONE,
+    split: 50,
     tool: ESPER.TOOL.PAN,
     panel: false
   },

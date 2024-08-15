@@ -685,8 +685,11 @@ export class Esper extends React.Component {
           {this.state.isTextureMissing &&
             <EsperError photoId={this.props.photo?.id}/>}
 
-          {isOverlayVisible &&
-            <EsperOverlay transcriptions={transcriptions}/>}
+          {isOverlayVisible && (
+            <EsperOverlay
+              mode={overlay}
+              transcriptions={transcriptions}/>
+          )}
 
           <EsperPanel
             brightness={this.state.brightness}
