@@ -72,7 +72,6 @@ export const ItemView = ({
     handleNoteDelete,
     handleNoteSelect,
     handlePhotoCreate,
-    handlePhotoConsolidate,
     handlePhotoSave,
     handlePhotoSelect,
     handleUiUpdate
@@ -81,7 +80,7 @@ export const ItemView = ({
     'item.open',
     'metadata.save',
     'note.delete', 'note.select',
-    'photo.create', 'photo.consolidate', 'photo.save', 'photo.select',
+    'photo.create', 'photo.save', 'photo.select',
     'ui.update'
   ])
   // ------------------------------------------------------------
@@ -112,7 +111,6 @@ export const ItemView = ({
           onNoteDelete={handleNoteDelete}
           onNoteSelect={handleNoteSelect}
           onMetadataSave={handleMetadataSave}
-          onPhotoConsolidate={handlePhotoConsolidate}
           onPhotoCreate={handlePhotoCreate}
           onPhotoSave={handlePhotoSave}
           onPhotoSelect={handlePhotoSelect}
@@ -128,7 +126,6 @@ export const ItemView = ({
         isDisabled={!isItemMode || isProjectClosing}
         isReadOnly={isReadOnly}
         onContextMenu={onContextMenu}
-        onPhotoConsolidate={handlePhotoConsolidate}
         onPhotoCreate={handlePhotoCreate}
         onPhotoSave={handlePhotoSave}
         onPhotoSelect={handlePhotoSelect}

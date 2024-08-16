@@ -34,6 +34,10 @@ const PhotoPanelContainer = connect(
       dispatch(act.photo.contract(...args))
     },
 
+    onConsolidate(...args) {
+      dispatch(act.photo.consolidate(...args))
+    },
+
     onDelete(payload) {
       if (payload.selections == null) {
         dispatch(act.photo.delete(payload))

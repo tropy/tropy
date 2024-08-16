@@ -189,7 +189,6 @@ export class ItemPanelGroup extends React.PureComponent {
             onEditCancel={this.props.onEditCancel}
             onItemOpen={this.props.onItemOpen}
             onChange={this.props.onMetadataSave}
-            onConsolidate={this.props.onPhotoConsolidate}
             onContextMenu={this.props.onContextMenu}
             onCreate={this.handlePhotoCreate}
             onSelect={this.props.onPhotoSelect}/>
