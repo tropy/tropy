@@ -3,15 +3,20 @@
 // --------------------------------------------------
 
 .esper-overlay {
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
   color: $text-color;
   background-color: $esper-bg;
   font-family: $font-family-base;
   font-size: $editor-font-size;
   line-height: $editor-line-height;
+
+  &.full {
+    position: absolute;
+    inset: $toolbar-frameless-height 0 0 0;
+    z-index: $zindex-esper-header;
+  }
 
   .toolbar {
     flex: 0 0 auto;
@@ -23,6 +28,10 @@
 
       @if $platform == win32 {
         height: zoom($toolbar-height);
+      }
+
+      .full :is(&) {
+        -webkit-app-region: drag;
       }
     }
   }
