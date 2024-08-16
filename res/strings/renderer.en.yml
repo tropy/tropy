@@ -646,6 +646,9 @@ en:
       right: Align Right
       sinkListItem: Sink list item
       liftListItem: Lift list item
+  transcription:
+    error: Transcription Error
+    pending: Transcription pending…
   error:
     cache:
       prune: Failed to optimize project cache.
