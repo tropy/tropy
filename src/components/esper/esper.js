@@ -44,7 +44,7 @@ export class Esper extends React.Component {
   #lastImageChangeData
 
   container = React.createRef()
-  view = React.createRef()
+  esper = React.createRef()
 
   state = {
     isTextureMissing: false,
@@ -130,10 +130,10 @@ export class Esper extends React.Component {
       let state = Esper.getDerivedImageStateFromProps(nextProps)
       let duration = !this.state.isVisible ? 0 : undefined // -> default
 
-      this.esper.sync({
+      this.esper.current.sync({
         ...nextProps,
-        x: this.esper.x,
-        y: this.esper.y
+        x: this.esper.current.x,
+        y: this.esper.current.y
       }, { ...nextState, ...state }, duration)
 
       this.setState(state)
@@ -174,22 +174,6 @@ export class Esper extends React.Component {
     return false
   }
 
-  componentDidMount() {
-    // WIP we assume that the view reference never changes!
-    this.esper =
-      this.view.current
-        .on('change', this.handleViewChange)
-        .on('photo-error', this.handlePhotoError)
-        .on('resolution-change', this.handleResolutionChange)
-        .on('selection-activate', this.handleSelectionActivate)
-        .on('selection-create', this.handleSelectionCreate)
-        .on('texture-change', this.handleTextureChange)
-        .on('wheel-zoom', this.handleWheelZoom)
-        .on('wheel-pan', this.handleWheelPan)
-        .on('zoom-in', this.handleZoomIn)
-        .on('zoom-out', this.handleZoomOut)
-  }
-
   componentDidUpdate(prevProps, prevState) {
     let shouldViewReset = this.state.src !== prevState.src
     let shouldViewSync = this.state.id !== prevState.id
@@ -200,15 +184,15 @@ export class Esper extends React.Component {
       let state = { ...this.state, ...next }
 
       if (this.state.isVisible) {
-        shouldViewReset = shouldViewReset || !this.esper.photo
+        shouldViewReset = shouldViewReset || !this.esper.current.photo
 
         if (shouldViewReset)
-          this.esper.reset(this.props, state, hasBecomeVisible ? 850 : 0)
+          this.esper.current.reset(this.props, state, hasBecomeVisible ? 850 : 0)
         else
-          this.esper.sync(this.props, state)
+          this.esper.current.sync(this.props, state)
 
       } else {
-        this.esper.clear()
+        this.esper.current.clear()
       }
 
       this.setState(next)
@@ -218,7 +202,7 @@ export class Esper extends React.Component {
         if (this.props.selections !== prevProps.selections ||
           this.tool !== getActiveTool(prevProps, prevState)
         ) {
-          this.esper.photo?.sync(this.props, this.state)
+          this.esper.current.photo?.sync(this.props, this.state)
         }
       }
     }
@@ -241,7 +225,7 @@ export class Esper extends React.Component {
   }
 
   get screen() {
-    return this.esper?.app.screen
+    return this.esper.current.app.screen
   }
 
   get tool() {
@@ -254,9 +238,9 @@ export class Esper extends React.Component {
 
   pan({ x = 0, y = 0 }, animate) {
     if (this.props.mode !== MODE.FIT) {
-      this.esper.move({
-        x: Math.floor(this.esper.x + x),
-        y: Math.floor(this.esper.y + y)
+      this.esper.current.move({
+        x: Math.floor(this.esper.current.x + x),
+        y: Math.floor(this.esper.current.y + y)
       }, {
         duration: animate ? PAN_DURATION : 0
       })
@@ -286,7 +270,7 @@ export class Esper extends React.Component {
 
     Object.assign(state, getZoomBounds(this.props, state, this.screen))
 
-    this.esper.rotate(state, {
+    this.esper.current.rotate(state, {
       duration: ROTATE_DURATION,
       clockwise: by > 0,
       fixate: this.props.mode === MODE.ZOOM
@@ -335,7 +319,7 @@ export class Esper extends React.Component {
 
     this.setState({ zoom })
 
-    this.esper.scale({
+    this.esper.current.scale({
       zoom,
       mirror: this.state.mirror
     }, {
@@ -354,14 +338,14 @@ export class Esper extends React.Component {
   handleMirrorChange = () => {
     if (this.props.isReadOnly) return
 
-    this.esper.flip()
+    this.esper.current.flip()
 
     // Subtle: when flipping rotated photos, the angle will
     // change by 180 degrees, so we extract both mirror and
     // angle after the fact.
     this.setState({
-      angle: this.esper.photo.angle,
-      mirror: this.esper.photo.mirror
+      angle: this.esper.current.photo.angle,
+      mirror: this.esper.current.photo.mirror
     })
 
     this.handleImageChange()
@@ -380,7 +364,7 @@ export class Esper extends React.Component {
     }
 
     this.setState({ zoom })
-    this.esper.scale({ zoom, mirror }, { duration: ZOOM_DURATION })
+    this.esper.current.scale({ zoom, mirror }, { duration: ZOOM_DURATION })
 
     this.props.onChange({
       view: { [this.state.id]: { mode } }
@@ -394,7 +378,7 @@ export class Esper extends React.Component {
   handleFilterChange = (opts) => {
     if (this.props.isReadOnly) return
 
-    this.esper.filter({ ...this.state, ...opts })
+    this.esper.current.filter({ ...this.state, ...opts })
     this.setState(opts)
     this.handleImageChange()
   }
@@ -538,7 +522,7 @@ export class Esper extends React.Component {
   }
 
   handleMouseMove = () => {
-    this.esper.resume()
+    this.esper.current.resume()
   }
 
   handlePhotoError = (photo, isTextureMissing) => {
@@ -553,22 +537,22 @@ export class Esper extends React.Component {
   handleSlideIn = () => {
     if (!this.state.isVisible) {
       this.setState({ isVisible: true })
-      requestIdleCallback(this.esper.resume)
+      requestIdleCallback(this.esper.current.resume)
     }
   }
 
   handleSlideOut = () => {
     if (this.state.isVisible) {
       this.setState({ isVisible: false })
-      this.esper.stop()
-      this.esper.stop.flush()
+      this.esper.current.stop()
+      this.esper.current.stop.flush()
     }
   }
 
   handleResize = throttle(({ width, height }) => {
     let next = getZoomBounds(this.props, this.state, { width, height })
 
-    this.esper.resize({
+    this.esper.current.resize({
       width,
       height,
       zoom: next.zoom,
@@ -608,8 +592,8 @@ export class Esper extends React.Component {
     this.props.onChange({
       view: {
         [this.state.id]: {
-          x: Math.round(this.esper.x),
-          y: Math.round(this.esper.y),
+          x: Math.round(this.esper.current.x),
+          y: Math.round(this.esper.current.y),
           zoom: this.state.zoom
         }
       }
@@ -677,10 +661,20 @@ export class Esper extends React.Component {
               onChange={this.handleChange}/>
           </Toolbar.Right>
         </EsperHeader>
-
         <EsperView
-          ref={this.view}
-          onResize={this.handleResize}>
+          ref={this.esper}
+          onChange={this.handleViewChange}
+          onPhotoError={this.handlePhotoError}
+          onResize={this.handleResize}
+          onResolutionChange={this.handleResolutionChange}
+          onSelectionActivate={this.handleSelectionActivate}
+          onSelectionCreate={this.handleSelectionCreate}
+          onTextureChange={this.handleTextureChange}
+          onWheelPan={this.handleWheelPan}
+          onWheelZoom={this.handleWheelZoom}
+          onZoomIn={this.handleZoomIn}
+          onZoomOut={this.handleZoomOut}>
+
           {this.state.isTextureMissing &&
             <EsperError photoId={this.props.photo?.id}/>}
 
