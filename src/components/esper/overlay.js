@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
+import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { Resizable } from '../resizable.js'
 import { ESPER } from '../../constants/index.js'
@@ -13,7 +14,7 @@ export const EsperOverlay = ({ children, mode }) => {
   })
 
   let overlay = (
-    <div className="esper-overlay">
+    <div className={cx('esper-overlay', mode)}>
       {children}
     </div>
   )
