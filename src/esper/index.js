@@ -250,12 +250,12 @@ export default class Esper extends EventEmitter {
         this.clearTextureCache(state.src, 5)
 
         if (state.width !== texture.width || state.height !== texture.height)
-          this.emit('photo.error', props.photo, false)
+          this.emit('photo-error', props.photo, false)
 
 
       } catch (e) {
         warn({ stack: e.stack }, `esper: failed loading ${state.src}`)
-        this.emit('photo.error', props.photo, true)
+        this.emit('photo-error', props.photo, true)
       }
 
       this.app.stage.addChildAt(this.photo, 0)
@@ -831,14 +831,14 @@ export default class Esper extends EventEmitter {
 
       if (pinch) dy = Math.round(dy * ZOOM_PINCH_BOOST)
 
-      this.emit('wheel.zoom', {
+      this.emit('wheel-zoom', {
         x,
         y,
         by: dy * modifier
       })
 
     } else {
-      this.emit('wheel.pan', {
+      this.emit('wheel-pan', {
         x: Math.floor(dx),
         y: Math.floor(dy)
       })

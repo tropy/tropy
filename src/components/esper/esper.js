@@ -179,13 +179,13 @@ export class Esper extends React.Component {
     this.esper =
       this.view.current
         .on('change', this.handleViewChange)
-        .on('photo.error', this.handlePhotoError)
+        .on('photo-error', this.handlePhotoError)
         .on('resolution-change', this.handleResolutionChange)
         .on('selection-activate', this.handleSelectionActivate)
         .on('selection-create', this.handleSelectionCreate)
         .on('texture-change', this.handleTextureChange)
-        .on('wheel.zoom', this.handleWheelZoom)
-        .on('wheel.pan', this.handleWheelPan)
+        .on('wheel-zoom', this.handleWheelZoom)
+        .on('wheel-pan', this.handleWheelPan)
         .on('zoom-in', this.handleZoomIn)
         .on('zoom-out', this.handleZoomOut)
   }
