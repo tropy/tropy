@@ -9,7 +9,8 @@ import {
   on,
   off,
   onResolutionChange,
-  getResolution
+  getResolution,
+  remove
 } from '../dom.js'
 import { debug, error, info, warn } from '../common/log.js'
 import { isClockwise, isHorizontal, deg, rad } from '../common/math.js'
@@ -139,6 +140,11 @@ export default class Esper extends EventEmitter {
   mount(element) {
     append(this.app.view, element)
     return this
+  }
+
+  unmount() {
+    this.halt()
+    remove(this.app.view)
   }
 
   extract = async (src, props) => {
