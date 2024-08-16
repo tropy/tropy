@@ -3,17 +3,36 @@
 // --------------------------------------------------
 
 .esper-overlay {
-  position: absolute;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-  padding-block: min(10cqh, #{$editor-padding});
-  padding-inline: 10%;
   color: $text-color;
   background-color: $esper-bg;
   font-family: $font-family-base;
   font-size: $editor-font-size;
   line-height: $editor-line-height;
-  overflow: auto;
+
+  .toolbar {
+    flex: 0 0 auto;
+    height: $toolbar-height;
+    box-shadow: 0 1px 0 $esper-shadow;
+
+    .frameless & {
+      height: zoom($toolbar-frameless-height);
+
+      @if $platform == win32 {
+        height: zoom($toolbar-height);
+      }
+    }
+  }
+
+  .transcription {
+    flex: 1 1 0;
+    padding-block: min(10cqh, #{$editor-padding});
+    padding-inline: 10%;
+    overflow: auto;
+  }
 
   pre {
     user-select: text;

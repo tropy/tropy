@@ -4,7 +4,6 @@
 
 .esper {
   flex: 1 1 0;
-  background: $esper-bg;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -88,6 +87,7 @@
     container-type: size;
     flex: 1 1 0;
     display: flex;
+    background-color: $esper-bg;
     position: relative;
 
     .side-by-side & {
@@ -122,5 +122,9 @@
           default;
       }
     }
+  }
+
+  .resizable {
+    margin-top: $space-min;
   }
 }

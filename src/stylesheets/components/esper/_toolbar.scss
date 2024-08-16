@@ -2,18 +2,14 @@
 // Esper toolbar
 // --------------------------------------------------
 
-.esper {
+.esper-header {
   .toolbar {
     position: absolute; // Let the toolbar overflow the header
     width: 100%;
     padding-top: 0;
     margin: 0;
     box-shadow: 0 1px 0 $esper-shadow;
-    background: $esper-toolbar-solid-bg;
-
-    .frameless & {
-      background: transparent;
-    }
+    background: $esper-bg;
 
     .toolbar-left,
     .toolbar-right {
