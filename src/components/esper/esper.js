@@ -11,6 +11,7 @@ import * as ToolGroup from './tools.js'
 import { EsperPanel } from './panel.js'
 import { EsperOverlay } from './overlay.js'
 import { EsperView } from './view.js'
+import { Transcription } from '../transcription/transcription.js'
 import { pick, restrict } from '../../common/util.js'
 import { Cache } from '../../common/cache.js'
 import { isHorizontal, rotate, round } from '../../common/math.js'
@@ -618,12 +619,10 @@ export class Esper extends React.Component {
 
   render() {
     let { isDisabled } = this
-    let { overlay } = this.props
+    let { overlay, transcription } = this.props
 
-    let transcriptions =
-      (this.props.selection || this.props.photo)?.transcriptions
     let isOverlayVisible =
-      overlay && transcriptions?.length > 0
+      overlay && transcription != null
 
     return (
       <EsperContainer
@@ -685,12 +684,6 @@ export class Esper extends React.Component {
           {this.state.isTextureMissing &&
             <EsperError photoId={this.props.photo?.id}/>}
 
-          {isOverlayVisible && (
-            <EsperOverlay
-              mode={overlay}
-              transcriptions={transcriptions}/>
-          )}
-
           <EsperPanel
             brightness={this.state.brightness}
             contrast={this.state.contrast}
@@ -703,6 +696,17 @@ export class Esper extends React.Component {
             onChange={this.handleFilterChange}
             onRevert={this.handleRevertToOriginal}/>
         </EsperView>
+
+        {isOverlayVisible && (
+          <EsperOverlay mode={overlay}>
+            <Toolbar/>
+            <Transcription
+              config={transcription.config}
+              status={transcription.status}
+              text={transcription.text}/>
+          </EsperOverlay>
+        )}
+
       </EsperContainer>
     )
   }

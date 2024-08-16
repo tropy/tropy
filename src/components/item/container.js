@@ -12,7 +12,8 @@ import {
   selectCachePrefix,
   getEsperViewState,
   getActiveSelection,
-  getPhotoSelections
+  getPhotoSelections,
+  getActiveTranscription
 } from '../../selectors/index.js'
 
 const { LAYOUT } = ITEM
@@ -110,6 +111,7 @@ class Item extends React.PureComponent {
             selection={this.props.selection}
             selections={this.props.selections}
             tool={this.props.esper.tool}
+            transcription={this.props.transcription}
             overlay={this.props.esper.overlay}
             onContextMenu={this.handleContextMenu}
             onChange={this.handleEsperChange}
@@ -138,7 +140,8 @@ export const ItemContainer = connect(
     keymap: state.keymap,
     selection: getActiveSelection(state),
     selections: getPhotoSelections(state),
-    settings: state.settings
+    settings: state.settings,
+    transcription: getActiveTranscription(state)
   }),
 
   dispatch => ({

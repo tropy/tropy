@@ -4,38 +4,17 @@ import { Resizable } from '../resizable.js'
 import { ESPER } from '../../constants/index.js'
 import ui from '../../actions/ui.js'
 
-
-const Transcription = ({ status, config, text }) => (
-  (status < 0) ? (
-    <span className="error">{config?.error || 'Error'}</span>
-  ) : (
-    <pre>
-      {status === 0 ? 'Pending...' : text}
-    </pre>
-  )
-)
-
-export const EsperOverlay = ({ mode, transcriptions }) => {
+export const EsperOverlay = ({ children, mode }) => {
   let dispatch = useDispatch()
-  let id = transcriptions.at(-1)
-  let tr = useSelector(state => state.transcriptions[id])
-
   let height = useSelector(state => state.ui.esper.split)
 
   let handleResize = useEvent((split) => {
     dispatch(ui.update({ esper: { split } }))
   })
 
-
-  if (tr == null)
-    return null
-
   let overlay = (
     <div className="esper-overlay">
-      <Transcription
-        config={tr.config}
-        status={tr.status}
-        text={tr.text}/>
+      {children}
     </div>
   )
 
