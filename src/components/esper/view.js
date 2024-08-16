@@ -1,4 +1,4 @@
-import React, { useCallback, useImperativeHandle } from 'react'
+import React, { useCallback, useEffect, useImperativeHandle } from 'react'
 import Esper from '../../esper/index.js'
 import { useResizeObserver } from '../../hooks/use-resize-observer.js'
 
@@ -7,24 +7,28 @@ export const EsperView = React.forwardRef(({
   onResize
 }, ref) => {
 
+  let handleResize = useResizeObserver(onResize)
+
+  let onMount = useCallback((node) => {
+    if (node) {
+      Esper.instance.mount(node)
+    } else {
+      Esper.instance.unmount()
+    }
+    handleResize(node)
+  }, [handleResize])
+
   useImperativeHandle(ref, () => (
     Esper.instance
   ), [])
 
-  let observe = useResizeObserver(onResize)
-
-  let mount = useCallback((node) => {
-    if (node) {
-      Esper.instance.mount(node)
-    } else {
-      Esper.instance.destroy()
-    }
-    observe(node)
-  }, [observe])
+  useEffect(() => (
+    Esper.instance.destroy
+  ), [])
 
   return (
     <div className="esper-view-container">
-      <div ref={mount} className="esper-view"/>
+      <div ref={onMount} className="esper-view"/>
       {children}
     </div>
   )

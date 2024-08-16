@@ -120,7 +120,7 @@ export default class Esper extends EventEmitter {
       this.drag.stop()
   }
 
-  destroy() {
+  destroy = () => {
     this.halt()
 
     off(this.app.view, 'wheel', this.handleWheel, { passive: true })
