@@ -427,6 +427,14 @@ export const IconMaze = i('Maze', (
   </svg>
 ))
 
+export const IconMerge = i('Merge', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M15,5v6H1V5H15m1-1H0v8H16V4Z"/>
+    </g>
+  </svg>
+))
+
 export const IconMetadata = i('Metadata', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
@@ -624,6 +632,14 @@ export const IconSpin = i('Spin', (
   </svg>
 ))
 
+export const IconSplit = i('Split', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="none" stroke="currentColor">
+      <path d="M6,5v6H1V5H6M7,4H0v8H7V4Zm8,1v6H10V5h5m1-1H9v8h7V4Z"/>
+    </g>
+  </svg>
+))
+
 export const IconSub = i('Sub', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
@@ -691,6 +707,14 @@ export const IconTranscriptionSplitView = i('TranscriptionSplitView', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
       <path d="M6,8v2H7V9H8v3H7v1h3V12H9V9h1v1h1V8Zm8-8H3A2,2,0,0,0,1,2V13a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V2A2,2,0,0,0,14,0Zm1,13a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V7H15Zm0-7H2V2A1,1,0,0,1,3,1H14a1,1,0,0,1,1,1Z"/>
+    </g>
+  </svg>
+))
+
+export const IconTranscriptionVersions = i('TranscriptionVersions', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M16,2V3H8V2ZM14,5H8V6h6ZM8,11h8V10H8Zm0,3h6V13H8ZM1,1V3H2V2H3V6H2V7H5V6H4V2H5V3H6V1ZM1,9v2H2V10H3v4H2v1H5V14H4V10H5v1H6V9Z"/>
     </g>
   </svg>
 ))
