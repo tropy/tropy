@@ -696,6 +696,7 @@ export class Esper extends React.Component {
             <Toolbar/>
             <Transcription
               config={transcription.config}
+              data={transcription.data}
               status={transcription.status}
               text={transcription.text}/>
           </EsperOverlay>

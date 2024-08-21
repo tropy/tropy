@@ -1,5 +1,6 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
+import { AltoDocument } from './alto.js'
 
 export const Transcription = ({
   config,
@@ -25,7 +26,9 @@ export const Transcription = ({
     )
 
   } else if (data) {
-    // TODO Alto
+    content = (
+      <AltoDocument data={data}/>
+    )
 
   } else {
     content = (
