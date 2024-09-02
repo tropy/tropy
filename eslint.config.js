@@ -22,8 +22,10 @@ Object.assign(style.rules, {
   '@stylistic/quotes': [1, 'single', { avoidEscape: true }],
   '@stylistic/no-multiple-empty-lines': [1, { max: 4 }],
   '@stylistic/operator-linebreak': 0,
-  '@stylistic/padded-blocks': 0,
+  '@stylistic/padded-blocks': 0
 })
+
+style.rules['@stylistic/indent'][0] = 'warn'
 
 export default [
   js.configs.recommended,
