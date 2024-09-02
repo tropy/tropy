@@ -1,3 +1,5 @@
+import { webUtils } from 'electron'
+
 import {
   DndProvider,
   useDragLayer,
@@ -52,7 +54,7 @@ const hasPhotoFiles = (item) =>
 
 
 const getDroppedFiles = (item) => {
-  let files = item.files?.map(f => f.path)
+  let files = item.files?.map(webUtils.getPathForFile)
   let urls = item.urls
 
   if (!blank(files) || !blank(urls))

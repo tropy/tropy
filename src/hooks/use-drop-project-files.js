@@ -1,3 +1,4 @@
+import { webUtils } from 'electron'
 import { useDrop } from 'react-dnd'
 import { NativeTypes } from 'react-dnd-html5-backend'
 import { hasProjectFiles } from '../components/dnd.js'
@@ -20,10 +21,12 @@ export function useDropProjectFiles({ onDrop }) {
       let templates = []
 
       for (let file of item.files) {
-        if (isProjectFile(file.path))
-          projects.push(file.path)
-        else if (file.path.endsWith('.ttp'))
-          templates.push(file.path)
+        let path = webUtils.getPathForFile(file)
+
+        if (isProjectFile(path))
+          projects.push(path)
+        else if (path.endsWith('.ttp'))
+          templates.push(path)
       }
 
       if (projects.length || templates.length) {
