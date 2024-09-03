@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react'
 import cx from 'classnames'
-import { Document } from 'alto.js'
 
 export const AltoDocument = ({ data }) => {
   let blocks = useMemo(() => (
-    [...Document.parse(data).blocks()]
+    [...data.blocks()]
   ), [data])
 
 

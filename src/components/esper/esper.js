@@ -19,6 +19,8 @@ import { addOrientation, subOrientation } from '../../common/iiif.js'
 import { match } from '../../keymap.js'
 import { getResolution } from '../../dom.js'
 import { ESPER, SASS } from '../../constants/index.js'
+import memoize from 'memoize-one'
+import { Document } from 'alto.js'
 
 const {
   TOOL,
@@ -246,6 +248,10 @@ export class Esper extends React.Component {
       })
     }
   }
+
+  getAltoDocument = memoize((data) => (
+    Document.parse(data)
+  ))
 
   handleChange = (esper) => {
     this.props.onChange({ esper })
@@ -608,6 +614,8 @@ export class Esper extends React.Component {
     let isOverlayVisible =
       overlay && transcription != null
 
+    let alto = this.getAltoDocument(transcription?.data)
+
     return (
       <EsperContainer
         className={cx(this.tool, {
@@ -698,7 +706,7 @@ export class Esper extends React.Component {
             <Toolbar/>
             <Transcription
               config={transcription.config}
-              data={transcription.data}
+              data={alto}
               status={transcription.status}
               text={transcription.text}/>
           </EsperOverlay>
