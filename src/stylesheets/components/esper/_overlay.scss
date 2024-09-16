@@ -35,17 +35,4 @@
       }
     }
   }
-
-  .transcription {
-    flex: 1 1 0;
-    padding-block: min(10cqh, #{$editor-padding});
-    padding-inline: 10%;
-    overflow: auto;
-  }
-
-  pre {
-    user-select: text;
-    cursor: text;
-    margin: 0;
-  }
 }

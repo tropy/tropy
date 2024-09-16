@@ -1,0 +1,26 @@
+//
+// Transcription
+// --------------------------------------------------
+
+.alto-document {
+  font-family: $font-family-monospace;
+  line-height: normal;
+  padding-block: min(10cqh, #{$editor-padding});
+  padding-inline: 10%;
+
+  .text-line {
+    display: flex;
+    margin-bottom: 2px;
+  }
+
+  span {
+    background-color: #ddd;
+    padding: 2px;
+    border: 3px solid #ddd;
+    border-radius: 3px;
+  }
+
+  span + span {
+    margin-left: 2px;
+  }
+}

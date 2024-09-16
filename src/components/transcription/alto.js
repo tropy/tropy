@@ -18,7 +18,7 @@ export const AltoDocument = ({ data }) => {
 }
 
 export const TextBlock = ({ lines }) => (
-  <div>
+  <div className="text-block">
     {lines.map((line, index) => (
       <Line key={index} strings={Array.from(line.strings())}/>
     ))}
@@ -26,7 +26,7 @@ export const TextBlock = ({ lines }) => (
 )
 
 export const Line = ({ strings }) => (
-  <div>
+  <div className="text-line">
     {strings.map((string, index) => (
       <String key={index} value={string.CONTENT}/>
     ))}
