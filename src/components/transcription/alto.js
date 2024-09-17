@@ -34,7 +34,7 @@ export const Line = ({ strings }) => (
 )
 
 export const String = ({ isSelected = false, value }) => (
-  <span className={cx({ selected: isSelected })}>
+  <span className={cx('string', { selected: isSelected })}>
     {value}
   </span>
 )
