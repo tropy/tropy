@@ -36,13 +36,6 @@ $theme: "dark";
   --shade-8:  #999; // Softened text, active icon
   --shade-9:  #bbb; // Text color
   --shade-10: #fff; // White
-
-  // Issue #800
-  #{--panel-focus-bg}:                                tint(#333, 2%);
-  #{--tab-focus-visible-selected-border-color}:       tint(#212121, 2%);
-  #{--item-panel-tab-blurred-selected-border-darwin}: shade(#212121, 4%);
-  #{--esper-shadow}:                                  alpha(#000, 80%);
-  #{--editable-border-color}:                         rgba(255 255 255 / 0.05);
 }
 
 
@@ -288,7 +281,7 @@ $items-active-bg:                var(--shade-5);
 
 // Panel
 $panel-bg:                           var(--shade-4);
-$panel-focus-bg:                     var(--panel-focus-bg);
+$panel-focus-bg:                     tint(var(shade-4), 2%);
 $panel-blurred-bg-darwin:            var(--shade-2);
 $panel-header-color:                 var(--shade-8);
 $panel-separator-color:              var(--shade-1);
@@ -300,7 +293,7 @@ $panel-nested-focus-heading-color:   tint(var(--shade-6), 2%);
 // Item panel
 $item-panel-tab-blurred-bg-darwin:              shade(var(--shade-2), 4%);
 $item-panel-tab-blurred-selected-bg-darwin:     $panel-blurred-bg-darwin;
-$item-panel-tab-blurred-selected-border-darwin: var(--item-panel-tab-blurred-selected-border-darwin);
+$item-panel-tab-blurred-selected-border-darwin: shade(var(--shade-1), 4%);
 
 // Tabs
 $tab-color:                              tint(var(--shade-7), 2%);
@@ -312,7 +305,7 @@ $tab-active-bg:                          var(--shade-1);
 $tab-active-border-color:                $tab-active-bg;
 $tab-nested-focus-bg:                    var(--shade-2);
 $tab-nested-focus-selected-bg:           tint(var(--shade-4), 2%);
-$tab-nested-focus-selected-border-color: var(--tab-focus-visible-selected-border-color);
+$tab-nested-focus-selected-border-color: tint(var(--shade-1), 2%);
 
 // Metadata
 $label-color:                           var(--shade-7);
@@ -352,7 +345,7 @@ $note-list-blurred-bg:   shade(var(--shade-5), 4%);
 // Editable
 $editable-color:        $text-color;
 $editable-bg:           var(--shade-3);
-$editable-border-color: var(--editable-border-color);
+$editable-border-color: alpha(var(--shade-10), 5%);
 
 // Button
 $btn-default-color:             var(--shade-9);
@@ -394,7 +387,7 @@ $slider-overlay-focus-bg:               var(--primary-overlay);
 // Esper
 $esper-bg:                               var(--shade-1);
 $esper-overlay-color:                    alpha(var(--shade-10), 69%);
-$esper-shadow:                           var(--esper-shadow);
+$esper-shadow:                           alpha(var(--shade-0), 80%);
 $esper-btn-icon-hover-bg:                var(--shade-3);
 $esper-btn-icon-active-bg:               var(--shade-5);
 $esper-slider-handle-bg:                 $slider-handle-bg;

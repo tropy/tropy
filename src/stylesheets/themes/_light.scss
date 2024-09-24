@@ -35,14 +35,6 @@ $theme: "light";
   --shade-8:  #444;    // Softended text
   --shade-9:  #222;    // Text color, icon active state
   --shade-10: #000;    // Black
-
-  // Issue #800
-  #{--slider-handle-border}:                          rgba(0 0 0 / 20%);
-  #{--panel-focus-bg}:                                shade(#f6f6f6, 4%);
-  #{--tab-focus-visible-selected-border-color}:       shade(#ddd, 4%);
-  #{--item-panel-tab-blurred-selected-border-darwin}: var(--tab-focus-visible-selected-border-color);
-  #{--esper-shadow}:                                  rgba(0 0 0 / 10%);
-  #{--editable-border-color}:                         rgba(0 0 0 / 10%);
 }
 
 
@@ -284,7 +276,7 @@ $items-active-bg:                var(--shade-3);
 
 // Panel
 $panel-bg:                           var(--shade-1);
-$panel-focus-bg:                     var(--panel-focus-bg);
+$panel-focus-bg:                     shade(var(--shade-1), 4%);
 $panel-blurred-bg-darwin:            $panel-focus-bg;
 $panel-header-color:                 var(--shade-8);
 $panel-separator-color:              var(--shade-3);
@@ -296,7 +288,7 @@ $panel-nested-focus-heading-color:   shade(var(--shade-5), 4%);
 // Item panel
 $item-panel-tab-blurred-bg-darwin:              var(--shade-3);
 $item-panel-tab-blurred-selected-bg-darwin:     $panel-blurred-bg-darwin;
-$item-panel-tab-blurred-selected-border-darwin: var(--item-panel-tab-blurred-selected-border-darwin);
+$item-panel-tab-blurred-selected-border-darwin: shade(var(--shade-3), 4%);
 
 // Tabs
 $tab-color:                              var(--shade-7);
@@ -308,7 +300,7 @@ $tab-active-bg:                          var(--shade-3);
 $tab-active-border-color:                $tab-active-bg;
 $tab-nested-focus-bg:                    var(--shade-3);
 $tab-nested-focus-selected-bg:           shade(var(--shade-1), 4%);
-$tab-nested-focus-selected-border-color: var(--tab-focus-visible-selected-border-color);
+$tab-nested-focus-selected-border-color: shade(var(--shade-3), 4%);
 
 // Metadata
 $label-color:                           var(--shade-6);
@@ -348,7 +340,7 @@ $note-list-blurred-bg:   null;
 // Editable
 $editable-color:        $text-color;
 $editable-bg:           var(--shade-0);
-$editable-border-color: var(--editable-border-color);
+$editable-border-color: alpha(var(--shade-10), 10%);
 
 // Button
 $btn-default-color:             var(--shade-9);
@@ -379,7 +371,7 @@ $slider-range-disabled-opacity:         $disabled-opacity;
 $slider-overlay-range-bg:               var(--shade-10);
 $slider-handle-bg:                      var(--shade-0);
 $slider-overlay-handle-bg:              var(--shade-10);
-$slider-handle-border:                  var(--slider-handle-border);
+$slider-handle-border:                  alpha(var(--shade-10), 20%);
 $slider-overlay-handle-border:          transparent;
 $slider-handle-disabled-bg:             shade(var(--shade-1), 4%);
 $slider-value-color:                    var(--shade-6);
@@ -390,7 +382,7 @@ $slider-overlay-focus-bg:               var(--primary-overlay);
 // Esper
 $esper-bg:                               shade(var(--shade-1), 4%);
 $esper-overlay-color:                    alpha(var(--shade-10), 86%);
-$esper-shadow:                           var(--esper-shadow);
+$esper-shadow:                           alpha(var(shade-10), 10%);
 $esper-btn-icon-hover-bg:                shade(var(--shade-1), 9%);
 $esper-btn-icon-active-bg:               shade(var(--shade-1), 14%);
 $esper-slider-handle-bg:                 var(--shade-1);
