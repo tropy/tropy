@@ -38,8 +38,8 @@ $theme: "light";
 
   // Issue #800
   #{--slider-handle-border}:                          rgba(0 0 0 / 20%);
-  #{--panel-focus-bg}:                                darken(#f6f6f6, 4%);
-  #{--tab-focus-visible-selected-border-color}:        darken(#ddd, 4%);
+  #{--panel-focus-bg}:                                shade(#f6f6f6, 4%);
+  #{--tab-focus-visible-selected-border-color}:       shade(#ddd, 4%);
   #{--item-panel-tab-blurred-selected-border-darwin}: var(--tab-focus-visible-selected-border-color);
   #{--esper-shadow}:                                  rgba(0 0 0 / 10%);
   #{--editable-border-color}:                         rgba(0 0 0 / 10%);

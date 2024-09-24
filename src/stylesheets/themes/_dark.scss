@@ -39,7 +39,7 @@ $theme: "dark";
 
   // Issue #800
   #{--panel-focus-bg}:                                tint(#333, 2%);
-  #{--tab-focus-visible-selected-border-color}:        tint(#212121, 2%);
+  #{--tab-focus-visible-selected-border-color}:       tint(#212121, 2%);
   #{--item-panel-tab-blurred-selected-border-darwin}: shade(#212121, 4%);
   #{--esper-shadow}:                                  alpha(#000, 80%);
   #{--editable-border-color}:                         rgba(255 255 255 / 0.05);
