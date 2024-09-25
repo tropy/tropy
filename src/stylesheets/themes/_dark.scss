@@ -281,7 +281,7 @@ $items-active-bg:                var(--shade-5);
 
 // Panel
 $panel-bg:                           var(--shade-4);
-$panel-focus-bg:                     tint(var(shade-4), 2%);
+$panel-focus-bg:                     tint(var(--shade-4), 2%);
 $panel-blurred-bg-darwin:            var(--shade-2);
 $panel-header-color:                 var(--shade-8);
 $panel-separator-color:              var(--shade-1);

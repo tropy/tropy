@@ -382,7 +382,7 @@ $slider-overlay-focus-bg:               var(--primary-overlay);
 // Esper
 $esper-bg:                               shade(var(--shade-1), 4%);
 $esper-overlay-color:                    alpha(var(--shade-10), 86%);
-$esper-shadow:                           alpha(var(shade-10), 10%);
+$esper-shadow:                           alpha(var(--shade-10), 10%);
 $esper-btn-icon-hover-bg:                shade(var(--shade-1), 9%);
 $esper-btn-icon-active-bg:               shade(var(--shade-1), 14%);
 $esper-slider-handle-bg:                 var(--shade-1);
