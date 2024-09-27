@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import { AdjustmentFilter } from '@pixi/filter-adjustment'
 import { SharpenFilter } from './filter/index.js'
 import { SelectionLayer, SelectionOverlay } from './selection.js'
+import { TextLayer } from './text.js'
 import { constrain } from './util.js'
 import { getResolution } from '../dom.js'
 import { deg, isHorizontal } from '../common/math.js'
@@ -55,6 +56,9 @@ export class Photo extends Container {
 
     this.overlay = new SelectionOverlay()
     this.addChild(this.overlay)
+
+    this.text = new TextLayer()
+    this.addChild(this.text)
   }
 
   get adjust() {
@@ -244,6 +248,7 @@ export class Photo extends Container {
     this.selections.sync(props, state)
     this.overlay.sync(props, state)
     this.tool = state.quicktool || props.tool
+    this.text.sync(state.alto)
   }
 
   update(dragState) {
@@ -253,6 +258,10 @@ export class Photo extends Container {
 
     if (this.overlay.visible) {
       this.overlay.update()
+    }
+
+    if (this.text.visible) {
+      this.text.update(dragState)
     }
   }
 }
