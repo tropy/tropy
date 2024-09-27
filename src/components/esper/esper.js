@@ -184,7 +184,11 @@ export class Esper extends React.Component {
 
     if (shouldViewReset || shouldViewSync || hasBecomeVisible) {
       let next = getZoomBounds(this.props, this.state, this.screen)
-      let state = { ...this.state, ...next }
+      let state = {
+        ...this.state,
+        ...next,
+        alto: this.getAltoDocument()
+      }
 
       if (this.state.isVisible) {
         shouldViewReset = shouldViewReset || !this.esper.current.photo
