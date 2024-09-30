@@ -626,70 +626,72 @@ export class Esper extends React.Component {
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
 
-        <EsperHeader>
-          <Toolbar.Left>
-            <ToolGroup.Tool
-              current={this.tool}
-              isDisabled={isDisabled}
-              isReadOnly={this.props.isReadOnly}
-              isSelectionActive={this.isSelectionActive}
-              onChange={this.handleChange}/>
-            <ToolGroup.Rotation
+        <div className="esper-container">
+          <EsperHeader>
+            <Toolbar.Left>
+              <ToolGroup.Overlay
+                current={overlay}
+                isDisabled={isDisabled}
+                onChange={this.handleChange}/>
+              <ToolGroup.Tool
+                current={this.tool}
+                isDisabled={isDisabled}
+                isReadOnly={this.props.isReadOnly}
+                isSelectionActive={this.isSelectionActive}
+                onChange={this.handleChange}/>
+              <ToolGroup.Rotation
+                isDisabled={isDisabled || this.props.isReadOnly}
+                mirror={this.state.mirror}
+                onMirrorChange={this.handleMirrorChange}
+                onRotationChange={this.handleRotationChange}/>
+              <ToolGroup.Mode
+                current={this.props.mode}
+                isDisabled={isDisabled}
+                onChange={this.handleModeChange}/>
+              <ToolGroup.Zoom
+                current={this.state.zoom}
+                isDisabled={isDisabled}
+                max={MAX_ZOOM}
+                min={this.state.minZoom}
+                onChange={this.handleZoomChange}/>
+            </Toolbar.Left>
+            <Toolbar.Right>
+              <ToolGroup.Panel
+                current={this.props.isPanelVisible}
+                isDisabled={isDisabled}
+                onChange={this.handleChange}/>
+            </Toolbar.Right>
+          </EsperHeader>
+          <EsperView
+            ref={this.esper}
+            onChange={this.handleViewChange}
+            onPhotoError={this.handlePhotoError}
+            onResize={this.handleResize}
+            onResolutionChange={this.handleResolutionChange}
+            onSelectionActivate={this.handleSelectionActivate}
+            onSelectionCreate={this.handleSelectionCreate}
+            onTextureChange={this.handleTextureChange}
+            onWheelPan={this.handleWheelPan}
+            onWheelZoom={this.handleWheelZoom}
+            onZoomIn={this.handleZoomIn}
+            onZoomOut={this.handleZoomOut}>
+
+            {this.state.isTextureMissing &&
+              <EsperError photoId={this.props.photo?.id}/>}
+
+            <EsperPanel
+              brightness={this.state.brightness}
+              contrast={this.state.contrast}
+              hue={this.state.hue}
+              negative={this.state.negative}
+              saturation={this.state.saturation}
+              sharpen={this.state.sharpen}
               isDisabled={isDisabled || this.props.isReadOnly}
-              mirror={this.state.mirror}
-              onMirrorChange={this.handleMirrorChange}
-              onRotationChange={this.handleRotationChange}/>
-            <ToolGroup.Mode
-              current={this.props.mode}
-              isDisabled={isDisabled}
-              onChange={this.handleModeChange}/>
-            <ToolGroup.Zoom
-              current={this.state.zoom}
-              isDisabled={isDisabled}
-              max={MAX_ZOOM}
-              min={this.state.minZoom}
-              onChange={this.handleZoomChange}/>
-          </Toolbar.Left>
-          <Toolbar.Right>
-            <ToolGroup.Overlay
-              current={overlay}
-              isDisabled={isDisabled}
-              onChange={this.handleChange}/>
-            <ToolGroup.Panel
-              current={this.props.isPanelVisible}
-              isDisabled={isDisabled}
-              onChange={this.handleChange}/>
-          </Toolbar.Right>
-        </EsperHeader>
-        <EsperView
-          ref={this.esper}
-          onChange={this.handleViewChange}
-          onPhotoError={this.handlePhotoError}
-          onResize={this.handleResize}
-          onResolutionChange={this.handleResolutionChange}
-          onSelectionActivate={this.handleSelectionActivate}
-          onSelectionCreate={this.handleSelectionCreate}
-          onTextureChange={this.handleTextureChange}
-          onWheelPan={this.handleWheelPan}
-          onWheelZoom={this.handleWheelZoom}
-          onZoomIn={this.handleZoomIn}
-          onZoomOut={this.handleZoomOut}>
-
-          {this.state.isTextureMissing &&
-            <EsperError photoId={this.props.photo?.id}/>}
-
-          <EsperPanel
-            brightness={this.state.brightness}
-            contrast={this.state.contrast}
-            hue={this.state.hue}
-            negative={this.state.negative}
-            saturation={this.state.saturation}
-            sharpen={this.state.sharpen}
-            isDisabled={isDisabled || this.props.isReadOnly}
-            isVisible={this.props.isPanelVisible}
-            onChange={this.handleFilterChange}
-            onRevert={this.handleRevertToOriginal}/>
-        </EsperView>
+              isVisible={this.props.isPanelVisible}
+              onChange={this.handleFilterChange}
+              onRevert={this.handleRevertToOriginal}/>
+          </EsperView>
+        </div>
 
         {isOverlayVisible && (
           <EsperOverlay mode={overlay}>
