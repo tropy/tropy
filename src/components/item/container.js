@@ -104,6 +104,7 @@ class Item extends React.PureComponent {
             invertScroll={this.props.settings.invertScroll}
             invertZoom={this.props.settings.invertZoom}
             isDisabled={this.props.isDisabled || !this.props.photo}
+            isMaximized={this.props.esper.isMaximized}
             isReadOnly={this.props.isDisabled || this.props.isReadOnly}
             isPanelVisible={this.props.esper.panel}
             keymap={this.props.keymap.Esper}

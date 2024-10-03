@@ -130,14 +130,24 @@ export const Zoom = ({
   )
 }
 
-export const Overlay = ({
-  current,
+export const Layout = ({
   isDisabled,
-  onChange
+  isMaximized,
+  onChange,
+  overlay
 }) => (
   <ToolGroup>
     <ToolButton
-      current={current}
+      current={isMaximized}
+      defaultValue={true}
+      icon="IconNote"
+      isDisabled={isDisabled}
+      name="isMaximized"
+      onChange={onChange}
+      title="esper.maximize"
+      value={false}/>
+    <ToolButton
+      current={overlay}
       defaultValue={ESPER.OVERLAY.NONE}
       icon="IconTranscriptionLarge"
       isDisabled={isDisabled}
@@ -146,7 +156,7 @@ export const Overlay = ({
       title="esper.overlay.full"
       value={ESPER.OVERLAY.FULL}/>
     <ToolButton
-      current={current}
+      current={overlay}
       defaultValue={ESPER.OVERLAY.NONE}
       icon="IconTranscriptionSplitView"
       isDisabled={isDisabled}
