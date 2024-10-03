@@ -2,8 +2,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { Resizable } from '../resizable.js'
-import { ESPER, ITEM } from '../../constants/index.js'
+import { ESPER, ITEM, SASS } from '../../constants/index.js'
 import ui from '../../actions/ui.js'
+
+const { MIN_WIDTH, MIN_HEIGHT } = SASS.ESPER
 
 export const EsperOverlay = ({ children, mode }) => {
   let dispatch = useDispatch()
@@ -23,9 +25,14 @@ export const EsperOverlay = ({ children, mode }) => {
   if (mode === ESPER.OVERLAY.FULL)
     return overlay
 
+  let [edge, min] = (layout === ITEM.LAYOUT.SIDE_BY_SIDE) ?
+      ['left', MIN_WIDTH] : ['top', MIN_HEIGHT]
+
   return (
     <Resizable
-      edge={layout === ITEM.LAYOUT.SIDE_BY_SIDE ? 'left' : 'top'}
+      edge={edge}
+      margin={min}
+      min={min}
       isRelative
       isBuffered
       onChange={handleResize}
