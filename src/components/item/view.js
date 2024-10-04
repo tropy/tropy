@@ -126,7 +126,6 @@ export const ItemView = ({
         isDisabled={!isItemMode || isProjectClosing}
         isReadOnly={isReadOnly}
         onContextMenu={onContextMenu}
-        onPhotoCreate={handlePhotoCreate}
         onPhotoSave={handlePhotoSave}
         onPhotoSelect={handlePhotoSelect}
         onUiUpdate={handleUiUpdate}/>
