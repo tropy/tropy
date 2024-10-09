@@ -185,16 +185,20 @@ export class Resizable extends React.Component {
   }
 
   render() {
-    return React.createElement(this.props.node, {
-      className: cx(this.classes),
-      ref: this.container,
-      style: this.style
-    }, this.props.children, this.renderHandle())
+    if (this.props.skip)
+      return this.props.children
+    else
+      return React.createElement(this.props.node, {
+        className: cx(this.classes),
+        ref: this.container,
+        style: this.style
+      }, this.props.children, this.renderHandle())
   }
 
   static defaultProps = {
     min: 0,
     node: 'div',
+    skip: false,
     onChange: noop,
     onResize: noop
   }
