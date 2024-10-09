@@ -121,14 +121,16 @@ class Item extends React.PureComponent {
             onSelect={this.props.onPhotoSelect}
             onSelectionCreate={this.props.onSelectionCreate}/>
         </Resizable>
-        <NotePad
-          ref={this.notepad}
-          note={this.props.note}
-          hasTitlebar={this.hasSideBySideLayout}
-          isDisabled={this.props.isDisabled || !this.props.photo}
-          isReadOnly={this.props.isDisabled || this.props.isReadOnly}
-          keymap={this.props.keymap.NotePad}
-          onContextMenu={this.handleContextMenu}/>
+        {!this.props.esper.isMaximized && (
+          <NotePad
+            ref={this.notepad}
+            note={this.props.note}
+            hasTitlebar={this.hasSideBySideLayout}
+            isDisabled={this.props.isDisabled || !this.props.photo}
+            isReadOnly={this.props.isDisabled || this.props.isReadOnly}
+            keymap={this.props.keymap.NotePad}
+            onContextMenu={this.handleContextMenu}/>
+        )}
       </div>
     )
   }
