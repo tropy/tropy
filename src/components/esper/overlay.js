@@ -16,15 +16,6 @@ export const EsperOverlay = ({ children, mode }) => {
     dispatch(ui.update({ esper: { split } }))
   })
 
-  let overlay = (
-    <div className={cx('esper-overlay', mode)}>
-      {children}
-    </div>
-  )
-
-  if (mode === ESPER.OVERLAY.FULL)
-    return overlay
-
   let [edge, min] = (layout === ITEM.LAYOUT.SIDE_BY_SIDE) ?
       ['left', MIN_WIDTH] : ['top', MIN_HEIGHT]
 
@@ -36,8 +27,11 @@ export const EsperOverlay = ({ children, mode }) => {
       isRelative
       isBuffered
       onChange={handleResize}
+      skip={mode === ESPER.OVERLAY.FULL}
       value={height}>
-      {overlay}
+      <div className={cx('esper-overlay', mode)}>
+        {children}
+      </div>
     </Resizable>
   )
 }
