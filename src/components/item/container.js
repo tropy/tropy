@@ -94,6 +94,7 @@ class Item extends React.PureComponent {
           {...this.getResizableProps()}
           isBuffered
           isRelative
+          skip={this.props.esper.isMaximized}
           value={this.size}
           onChange={this.handleEsperResize}>
           <Esper
