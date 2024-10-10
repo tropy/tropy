@@ -82,7 +82,11 @@ class Item extends React.PureComponent {
   }
 
   focusNotePad = () => {
-    this.notepad.current.focus()
+    if (this.props.esper.isMaximized) {
+      this.props.onUiUpdate({ esper: { isMaximized: false } })
+      setTimeout(() => { this.notepad.current?.focus() }, 250)
+    }
+    this.notepad.current?.focus()
   }
 
   render() {
