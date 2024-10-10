@@ -322,7 +322,7 @@ en:
     overlay:
       full: Show full text overlay
       split: Show split-view text overlay
-    maximize: Hide notes
+    maximize: Toggle notes
     panel:
       negative: Invert colors
       revert: Revert to Original
