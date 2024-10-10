@@ -28,13 +28,7 @@ export const EsperView = React.forwardRef(({
     handleResize(node)
   }, [handleResize])
 
-  useImperativeHandle(ref, () => (
-    Esper.instance
-  ), [])
-
-  useEffect(() => (
-    Esper.instance.destroy
-  ), [])
+  useImperativeHandle(ref, () => (Esper.instance), [])
 
   useEffect(() => {
     Esper.instance
