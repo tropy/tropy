@@ -107,7 +107,7 @@ export const selectTemplatesByType = memo(
   (_, props) => props.type,
   (templates, type) =>
     Object.values(templates)
-      .filter((t => type == null || t.type === type))
+      .filter(t => type == null || t.type === type)
       .sort(by('name', 'id')))
 
 export const getTemplateList = memo(
