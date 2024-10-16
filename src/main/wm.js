@@ -3,7 +3,6 @@ import { EventEmitter } from 'node:events'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { URL } from 'node:url'
-// import { read } from './mac-defaults.js'
 import { get } from './gsettings.js'
 import { papersize } from './papersize.js'
 import dialog from './dialog.js'
@@ -388,7 +387,9 @@ export class WindowManager extends EventEmitter {
       contrast: nativeTheme.shouldUseHighContrastColors,
       dark: nativeTheme.shouldUseDarkColors,
       scrollbars: !WindowManager.hasOverlayScrollBars(),
-      vibrancy: !(await WindowManager.shouldReduceTransparency()),
+      // TODO re-enable vibrancy effect when sidebar scrolling
+      // performance fixed (or new tag widget has landed)
+      vibrancy: false, // !nativeTheme.prefersReducedTransparency,
       motion: !WindowManager.preferReducedMotion(),
       ...args
     }
@@ -748,18 +749,6 @@ export class WindowManager extends EventEmitter {
     await writeFile(path, data)
 
     return path
-  }
-
-  static async shouldReduceTransparency() {
-    // TODO re-enable vibrancy effect when sidebar scrolling
-    // performance fixed (or new tag widget has landed)
-    return true
-    // try {
-    //  return darwin &&
-    //    await read('com.apple.universalaccess', 'reduceTransparency')
-    // } catch (e) {
-    //  warn({ stack: e.stack }, 'failed to check macOS defaults')
-    // }
   }
 
   static preferReducedMotion() {
