@@ -21,6 +21,7 @@ const defaults = {
   },
   layout: ITEM.LAYOUT.STACKED,
   localtime: true,
+  maximize: 'none',
   tagColor: null,
   templates: {
     item: ITEM.TEMPLATE.DEFAULT,

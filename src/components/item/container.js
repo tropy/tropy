@@ -56,6 +56,7 @@ class Item extends React.PureComponent {
   handleContextMenu = (event, scope = 'item-view', opts = {}) => {
     this.props.onContextMenu(event, scope, {
       layout: this.props.settings.layout,
+      maximize: this.props.settings.maximize,
       ...opts
     })
   }

@@ -308,6 +308,19 @@ en:
         - label: 'Side by side'
           id: 'side-by-side'
           type: checkbox
+      - label: 'Maximize View'
+        id: 'maximize-view'
+        submenu:
+        - label: Image
+          id: 'esper'
+          type: checkbox
+        - label: Notepad
+          type: checkbox
+          id: 'notepad'
+        - type: separator
+        - label: None
+          id: none
+          type: checkbox
     metadata-list: &metadata-list
       - label: 'New Field …'
         command: 'app:create-field'

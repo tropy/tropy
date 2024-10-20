@@ -551,6 +551,16 @@ Menu.ItemCompiler = {
     }))
   },
 
+  'maximize-view': (item, app, win, event) => {
+    item.submenu = item.submenu.map(li => ({
+      ...li,
+      checked: li.id === event.target.maximize,
+      click: createResponder('app:settings-persist', app, win, {
+        maximize: li.id
+      })
+    }))
+  },
+
   'condition': (item, app, win, event) => {
     let { condition, visible } = item
     let negate = false
