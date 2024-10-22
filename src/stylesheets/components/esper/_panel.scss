@@ -5,8 +5,6 @@
 .esper-panel {
   display: flex;
   flex-direction: column;
-  margin-right: -$esper-panel-width - 1px; // Also hide box-shadow
-  margin-bottom: -$esper-panel-height - 1px;
   max-width: 100%;
   max-height: 100%;
   background: $esper-bg;
@@ -14,19 +12,28 @@
 
   .stacked & {
     flex: 0 0 $esper-panel-width;
-    box-shadow: -1px 0 0 $esper-shadow;
-    transition: margin-right 0.3s ease;
+    box-shadow: none; // Hide box-shadow
+    margin-right: -$esper-panel-width;
+    transition: box-shadow 0s linear 0.3s, margin-right 0.3s ease;
+
+    .panel-visible :is(&) {
+      box-shadow: -1px 0 0 $esper-shadow;
+      margin-right: 0;
+      transition: box-shadow 0s linear, margin-right 0.3s ease;
+    }
   }
 
   .side-by-side & {
     flex: 0 0 $esper-panel-height;
-    box-shadow: 0 -1px 0 $esper-shadow;
-    transition: margin-bottom 0.3s ease;
-  }
+    box-shadow: none; // Hide box-shadow
+    margin-bottom: -$esper-panel-height - 10px;
+    transition: box-shadow 0s linear 0.3s, margin-bottom 0.3s ease;
 
-  .panel-visible & {
-    margin-right: 0;
-    margin-bottom: 0;
+    .panel-visible :is(&) {
+      box-shadow: 0 -1px 0 $esper-shadow;
+      margin-bottom: 0;
+      transition: box-shadow 0s linear, margin-bottom 0.3s ease;
+    }
   }
 
   .overlay-mode & {
