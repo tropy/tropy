@@ -3,6 +3,7 @@ import cx from 'classnames'
 import { useWindow } from '../hooks/use-window.js'
 import { useEvent } from '../hooks/use-event.js'
 import { has, repaint } from '../dom.js'
+import { Button } from './button.js'
 
 export const Toolbar = forwardRef((props, ref) => (
   <div
@@ -84,5 +85,38 @@ export const Titlebar = ({ children, isOptional }) => {
       onTransitionEnd={handleTransitionEnd}>
       {children}
     </Toolbar>
+  )
+}
+
+export const ToolButton = ({
+  activeIcon,
+  current,
+  defaultValue,
+  name = 'tool',
+  icon,
+  onChange,
+  value,
+  ...props
+}) => {
+  let isActive = current === value
+  icon = (isActive && activeIcon) || icon
+
+  let handleChange = useEvent(() => {
+    if (!isActive) {
+      onChange({ [name]: value })
+    } else {
+      if (defaultValue != null) {
+        onChange({ [name]: defaultValue })
+      }
+    }
+  })
+
+  return (
+    <Button
+      {...props}
+      icon={icon}
+      isActive={isActive}
+      noFocus
+      onClick={handleChange}/>
   )
 }

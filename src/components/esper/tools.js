@@ -3,7 +3,7 @@ import { useArgs } from '../../hooks/use-args.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useResolution } from '../../hooks/use-resolution.js'
 import { useThrottle } from '../../hooks/use-debounce.js'
-import { ToolGroup } from '../toolbar.js'
+import { ToolButton, ToolGroup } from '../toolbar.js'
 import { Button } from '../button.js'
 import { Slider } from '../slider.js'
 import { ESPER } from '../../constants/index.js'
@@ -138,14 +138,15 @@ export const Layout = ({
 }) => (
   <ToolGroup>
     <ToolButton
+      activeIcon="IconMinimize"
       current={isMaximized}
-      defaultValue={true}
-      icon="IconNote"
+      defaultValue="none"
+      icon="IconMaximize"
       isDisabled={isDisabled}
-      name="isMaximized"
+      name="maximize"
       onChange={onChange}
       title="esper.maximize"
-      value={false}/>
+      value="esper"/>
     <ToolButton
       current={overlay}
       defaultValue={ESPER.OVERLAY.NONE}
@@ -184,32 +185,3 @@ export const Panel = ({
       value={true}/>
   </ToolGroup>
 )
-
-const ToolButton = ({
-  current,
-  defaultValue,
-  name = 'tool',
-  onChange,
-  value,
-  ...props
-}) => {
-  let isActive = current === value
-
-  let handleChange = useEvent(() => {
-    if (!isActive) {
-      onChange({ [name]: value })
-    } else {
-      if (defaultValue != null) {
-        onChange({ [name]: defaultValue })
-      }
-    }
-  })
-
-  return (
-    <Button
-      {...props}
-      isActive={isActive}
-      noFocus
-      onClick={handleChange}/>
-  )
-}
