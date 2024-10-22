@@ -102,6 +102,31 @@
     .side-by-side & {
       flex-direction: column;
     }
+
+    .text-overlay-split :is(&) {
+      &::after {
+        content: "";
+        position: absolute;
+        background-color: $esper-shadow;
+        bottom: 0;
+      }
+
+      .stacked :is(&) {
+        &::after {
+          height: 1px;
+          left: 0;
+          right: 0;
+        }
+      }
+
+      .side-by-side :is(&) {
+        &::after {
+          width: 1px;
+          top: 1px;
+          right: 0;
+        }
+      }
+    }
   }
 
   .esper-view {
@@ -130,16 +155,6 @@
           map-get($val, "x") map-get($val, "y"),
           default;
       }
-    }
-  }
-
-  .resizable {
-    .stacked & {
-      margin-top: $space-min;
-    }
-
-    .side-by-side & {
-      margin-left: $space-min;
     }
   }
 }

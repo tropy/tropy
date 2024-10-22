@@ -11,6 +11,12 @@
     box-shadow: 0 1px 0 $esper-shadow;
     background: $esper-bg;
 
+    .text-overlay-split & {
+      .side-by-side & {
+        border-right: 1px solid $esper-shadow;
+      }
+    }
+
     .toolbar-left,
     .toolbar-right {
       .is-blurred & {
