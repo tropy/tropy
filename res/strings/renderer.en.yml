@@ -308,6 +308,9 @@ en:
     size: Size
     created: Date Added
     modified: Modified
+  settings:
+    maximize: Maximize this view
+    unmaximize: Restore previous view size
   esper:
     tool:
       pan: Pan Tool
@@ -322,7 +325,6 @@ en:
     overlay:
       full: Show full text overlay
       split: Show split-view text overlay
-    maximize: Toggle notes
     panel:
       negative: Invert colors
       revert: Revert to Original
