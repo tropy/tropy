@@ -82,9 +82,13 @@ class Item extends React.PureComponent {
     })
   }
 
+  handleMaximize = (value) => {
+    console.log('todo')
+  }
+
   focusNotePad = () => {
-    if (this.props.esper.isMaximized) {
-      this.props.onUiUpdate({ esper: { isMaximized: false } })
+    if (this.props.settings.maximize === 'esper') {
+      this.handleMaximize('none')
       setTimeout(() => { this.notepad.current?.focus() }, 250)
     }
     this.notepad.current?.focus()
@@ -95,38 +99,41 @@ class Item extends React.PureComponent {
       <div
         className={cx('item-container', this.props.settings.layout)}
         onContextMenu={this.handleContextMenu}>
-        <Resizable
-          {...this.getResizableProps()}
-          isBuffered
-          isRelative
-          skip={this.props.esper.isMaximized}
-          value={this.size}
-          onChange={this.handleEsperResize}>
-          <Esper
-            {...this.props.view}
-            cache={this.props.cache}
-            mode={this.props.view.mode || this.props.settings.zoomMode}
-            hasOverlayToolbar={this.hasOverlayToolbars}
-            invertScroll={this.props.settings.invertScroll}
-            invertZoom={this.props.settings.invertZoom}
-            isDisabled={this.props.isDisabled || !this.props.photo}
-            isMaximized={this.props.esper.isMaximized}
-            isReadOnly={this.props.isDisabled || this.props.isReadOnly}
-            isPanelVisible={this.props.esper.panel}
-            keymap={this.props.keymap.Esper}
-            photo={this.props.photo}
-            selection={this.props.selection}
-            selections={this.props.selections}
-            tool={this.props.esper.tool}
-            transcription={this.props.transcription}
-            overlay={this.props.esper.overlay}
-            onContextMenu={this.handleContextMenu}
-            onChange={this.handleEsperChange}
-            onPhotoError={this.props.onPhotoError}
-            onSelect={this.props.onPhotoSelect}
-            onSelectionCreate={this.props.onSelectionCreate}/>
-        </Resizable>
-        {!this.props.esper.isMaximized && (
+        {this.props.settings.maximize !== 'notepad' && (
+          <Resizable
+            {...this.getResizableProps()}
+            isBuffered
+            isRelative
+            skip={this.props.settings.maximize === 'esper'}
+            value={this.size}
+            onChange={this.handleEsperResize}>
+            <Esper
+              {...this.props.view}
+              cache={this.props.cache}
+              mode={this.props.view.mode || this.props.settings.zoomMode}
+              hasOverlayToolbar={this.hasOverlayToolbars}
+              hasSideBySideLayout={this.hasSideBySideLayout}
+              invertScroll={this.props.settings.invertScroll}
+              invertZoom={this.props.settings.invertZoom}
+              isDisabled={this.props.isDisabled || !this.props.photo}
+              isReadOnly={this.props.isDisabled || this.props.isReadOnly}
+              isPanelVisible={this.props.esper.panel}
+              keymap={this.props.keymap.Esper}
+              photo={this.props.photo}
+              selection={this.props.selection}
+              selections={this.props.selections}
+              tool={this.props.esper.tool}
+              transcription={this.props.transcription}
+              overlay={this.props.esper.overlay}
+              onContextMenu={this.handleContextMenu}
+              onChange={this.handleEsperChange}
+              onMaximize={this.handleMaximize}
+              onPhotoError={this.props.onPhotoError}
+              onSelect={this.props.onPhotoSelect}
+              onSelectionCreate={this.props.onSelectionCreate}/>
+          </Resizable>
+        )}
+        {this.props.settings.maximize !== 'esper' && (
           <NotePad
             ref={this.notepad}
             note={this.props.note}
