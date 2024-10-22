@@ -1,9 +1,11 @@
+@use "sass:string";
+
 //
 // Asset URLs
 // --------------------------------------------------
 
 @function asset-url($type, $path) {
-  @return url(unquote("../../res/#{$type}/#{$path}"));
+  @return url(string.unquote("../../res/#{$type}/#{$path}"));
 }
 
 @function icon-url($path) {

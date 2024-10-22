@@ -2,9 +2,8 @@
 // Mixins
 // --------------------------------------------------
 
-@import
-  "mixins/utilities",
-  "mixins/input-btn",
-  "mixins/type",
-  "mixins/sort-indicator",
-  "mixins/transitions";
+@forward "mixins/utilities";
+@forward "mixins/input-btn";
+@forward "mixins/type";
+@forward "mixins/sort-indicator";
+@forward "mixins/transitions";

@@ -1,3 +1,7 @@
+@use "sass:list";
+@use "sass:map";
+@use "../../abstracts/config" as *;
+
 //
 // Item table
 // --------------------------------------------------
@@ -311,7 +315,7 @@
 
           @for $i from 0 through 133 {
             $shadow: var(--x) ($row-height * $i) $item-table-column-border-color;
-            $shadows: append($shadows, $shadow, comma);
+            $shadows: list.append($shadows, $shadow, comma);
           }
 
           &::before {
@@ -364,11 +368,11 @@
         @each $key, $val in $tag-color-shades {
           &.#{$key} {
             .color {
-              color: map-get($val, "color-base");
+              color: map.get($val, "color-base");
             }
 
             .border {
-              color: map-get($val, "color-dark");
+              color: map.get($val, "color-dark");
             }
           }
         }
@@ -377,7 +381,7 @@
           &.#{$key} {
             .color,
             .border {
-              color: map-get($val, "color-dark");
+              color: map.get($val, "color-dark");
             }
           }
         }

@@ -1,13 +1,20 @@
+@use "sass:list";
+@use "../../themes/light" as *;
+@use "../functions" as *;
+@use "../variables" as *;
+
 //
 // Sort indicator
 // --------------------------------------------------
 
-@mixin sort-indicator($type, $parent: "#{nth(str-parse(#{&}, " "), 1)}.over") {
-  &::before,
-  &::after {
-    position: absolute;
-    outline: 1px solid $sort-indicator;
-    z-index: 1;
+@mixin sort-indicator(
+  $type,
+  $parent: "#{list.nth(str-parse(#{&}, " "), 1)}.over") {
+    &::before,
+    &::after {
+      position: absolute;
+      outline: 1px solid $sort-indicator;
+      z-index: 1;
   }
 
   &.before {

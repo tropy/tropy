@@ -4,36 +4,19 @@
 // About window
 // --------------------------------------------------
 
-$platform: "linux";
-$theme: "light";
-
-@import "../abstracts/functions";
-@import "../themes/light";
-
-
-// Abstracts
-// --------------------------------------------------
-
-@import
-  "../abstracts/variables",
-  "../abstracts/mixins",
-  "../abstracts/placeholders";
-
 
 // Scaffolding
 // --------------------------------------------------
 
-@import
-  "../base/reset",
-  "../base/base",
-  "../base/type";
+@use "../base/reset" as *;
+@use "../base/base" as *;
+@use "../base/type" as *;
 
 
 // Components
 // --------------------------------------------------
 
-@import
-  "../components/toolbar",
-  "../components/flash",
-  "../components/button",
-  "../components/about";
+@use "../components/toolbar" as *;
+@use "../components/flash" as *;
+@use "../components/button" as *;
+@use "../components/about" as *;

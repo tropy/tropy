@@ -4,110 +4,93 @@
 // Project window
 // --------------------------------------------------
 
-$platform: "linux";
-$theme: "light";
-
-@import "../abstracts/functions";
-@import "../themes/light";
-
-
-// Abstracts
-// --------------------------------------------------
-
-@import
-  "../abstracts/variables",
-  "../abstracts/mixins",
-  "../abstracts/placeholders";
 
 // Scaffolding
 // --------------------------------------------------
 
-@import
-  "../base/reset",
-  "../base/base",
-  "../base/type",
-  "../base/utilities";
+@use "../base/reset" as *;
+@use "../base/base" as *;
+@use "../base/type" as *;
+@use "../base/utilities" as *;
 
 
 // Partials
 // --------------------------------------------------
 
-@import
-  "../partials/forms",
-  "../partials/input-group",
-  "../partials/badge",
-  "../partials/tile",
-  "../partials/debug",
-  "../partials/tab-pane",
-  "../partials/scrollbar",
-  "../partials/flex",
-  "../partials/orientation",
-  "../partials/transitions";
+@use "../partials/forms" as *;
+@use "../partials/input-group" as *;
+@use "../partials/badge" as *;
+@use "../partials/tile" as *;
+@use "../partials/debug" as *;
+@use "../partials/tab-pane" as *;
+@use "../partials/scrollbar" as *;
+@use "../partials/flex" as *;
+@use "../partials/orientation" as *;
+@use "../partials/transitions" as *;
 
 // Components
 // --------------------------------------------------
 
-@import
-  "../components/scroll",
-  "../components/activity",
-  "../components/toolbar",
-  "../components/panel-group",
-  "../components/panel",
-  "../components/icons",
-  "../components/search",
-  "../components/button",
-  "../components/button-group",
-  "../components/tabs",
-  "../components/metadata",
-  "../components/editable",
-  "../components/resizable",
-  "../components/slider",
-  "../components/drag-layer",
-  "../components/thumbnail",
-  "../components/cover-image",
-  "../components/progress-bar",
-  "../components/auto-resizer",
-  "../components/flash",
-  "../components/option",
-  "../components/select",
+@use "../components/scroll" as *;
+@use "../components/activity" as *;
+@use "../components/toolbar" as *;
+@use "../components/panel-group" as *;
+@use "../components/panel" as *;
+@use "../components/icons" as *;
+@use "../components/search" as *;
+@use "../components/button" as *;
+@use "../components/button-group" as *;
+@use "../components/tabs" as *;
+@use "../components/metadata" as *;
+@use "../components/editable" as *;
+@use "../components/resizable" as *;
+@use "../components/slider" as *;
+@use "../components/drag-layer" as *;
+@use "../components/thumbnail" as *;
+@use "../components/cover-image" as *;
+@use "../components/progress-bar" as *;
+@use "../components/auto-resizer" as *;
+@use "../components/flash" as *;
+@use "../components/option" as *;
+@use "../components/select" as *;
 
-  "../components/project/project",
-  "../components/project/recent-projects",
-  "../components/project/new-project",
+@use "../components/project/project" as *;
+@use "../components/project/recent-projects" as *;
+@use "../components/project/new-project" as *;
 
-  "../components/sidebar/sidebar",
-  "../components/sidebar/sort-indicator",
+@use "../components/sidebar/sidebar" as *;
+@use "../components/sidebar/sort-indicator" as *;
 
-  "../components/item/view",
-  "../components/item/table",
-  "../components/item/grid",
-  "../components/item/panel-group",
-  "../components/item/panel",
+@use "../components/item/view" as *;
+@use "../components/item/table" as *;
+@use "../components/item/grid" as *;
+@use "../components/item/panel-group" as *;
+@use "../components/item/panel" as *;
 
-  "../components/tag/list",
-  "../components/tag/colors",
+@use "../components/tag/list" as *;
+@use "../components/tag/colors" as *;
 
-  "../components/photo/list",
-  "../components/photo/grid",
-  "../components/photo/panel",
+@use "../components/photo/list" as *;
+@use "../components/photo/grid" as *;
+@use "../components/photo/panel" as *;
 
-  "../components/selection/list",
-  "../components/selection/grid",
+@use "../components/selection/list" as *;
+@use "../components/selection/grid" as *;
 
-  "../components/note/panel",
-  "../components/note/list",
-  "../components/note/pad",
+@use "../components/note/panel" as *;
+@use "../components/note/list" as *;
+@use "../components/note/pad" as *;
 
-  "../components/esper/esper",
-  "../components/esper/toolbar",
-  "../components/esper/panel",
-  "../components/esper/overlay",
-  "../components/esper/error",
+@use "../components/esper/esper" as *;
+@use "../components/esper/toolbar" as *;
+@use "../components/esper/panel" as *;
+@use "../components/esper/overlay" as *;
+@use "../components/esper/error" as *;
 
-  "../components/transcription/transcription",
-  "../components/transcription/alto-document",
+@use "../components/transcription/transcription" as *;
+@use "../components/transcription/alto-document" as *;
 
-  "../components/editor/view",
-  "../components/editor/toolbar",
+@use "../components/editor/view" as *;
+@use "../components/editor/toolbar" as *;
 
-  "../components/popup";
+@use "../components/popup" as *;

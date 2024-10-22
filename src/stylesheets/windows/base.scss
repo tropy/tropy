@@ -4,25 +4,9 @@
 // Window Base
 // --------------------------------------------------
 
-$platform: "linux";
-$theme: "light";
-
-@import "../abstracts/functions";
-@import "../themes/light";
-
-
-// Abstracts
-// --------------------------------------------------
-
-@import
-  "../abstracts/variables",
-  "../abstracts/mixins",
-  "../abstracts/placeholders";
-
 
 // Partials
 // --------------------------------------------------
 
-@import
-  "../partials/cover",
-  "../partials/window-controls";
+@use "../partials/cover" as *;
+@use "../partials/window-controls" as *;

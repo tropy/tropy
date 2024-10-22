@@ -2,11 +2,10 @@
 // Functions
 // --------------------------------------------------
 
-@import
-  "functions/asset-urls",
-  "functions/to-rem",
-  "functions/strings",
-  "functions/strip-unit",
-  "functions/os",
-  "functions/colors",
-  "functions/zoom";
+@forward "functions/asset-urls";
+@forward "functions/to-rem";
+@forward "functions/strings";
+@forward "functions/strip-unit";
+@forward "functions/os";
+@forward "functions/colors";
+@forward "functions/zoom";

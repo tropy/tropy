@@ -4,30 +4,14 @@
 // Editor
 // --------------------------------------------------
 
-$platform: "linux";
-$theme: "light";
-
-@import "../abstracts/functions";
-@import "../themes/light";
-
-
-// Abstracts
-// --------------------------------------------------
-
-@import
-  "../abstracts/variables",
-  "../abstracts/mixins";
-
 
 // Partials
 // --------------------------------------------------
 
-@import
-  "../partials/scrollbar";
+@use "../partials/scrollbar" as *;
 
 
 // Components
 // --------------------------------------------------
 
-@import
-  "../components/editor/styles";
+@use "../components/editor/styles" as *;

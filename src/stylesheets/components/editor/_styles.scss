@@ -1,9 +1,10 @@
+@use "../../abstracts/config" as *;
+@use "prosemirror-view/style/prosemirror" as *;
+@use "prosemirror-gapcursor/style/gapcursor" as *;
+
 //
 // Editor styles
 // --------------------------------------------------
-
-@import "prosemirror-view/style/prosemirror";
-@import "prosemirror-gapcursor/style/gapcursor";
 
 * {
   box-sizing: border-box;

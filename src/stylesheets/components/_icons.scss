@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "../abstracts/config" as *;
+
 //
 // Icons
 // --------------------------------------------------
@@ -48,11 +51,11 @@
     @each $key, $val in $tag-color-shades {
       &.#{$key} {
         .color {
-          color: map-get($val, "color-base");
+          color: map.get($val, "color-base");
         }
 
         .border {
-          color: map-get($val, "color-dark");
+          color: map.get($val, "color-dark");
         }
       }
     }
@@ -61,7 +64,7 @@
       &.#{$key} {
         .color,
         .border {
-          color: map-get($val, "color-dark");
+          color: map.get($val, "color-dark");
         }
       }
     }

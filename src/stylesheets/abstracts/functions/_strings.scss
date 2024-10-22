@@ -1,16 +1,20 @@
+@use "sass:string";
+@use "sass:selector";
+@use "sass:list";
+
 //
 // String functions
 // --------------------------------------------------
 
 @function str-parse($string, $token) {
-  $i: str-index($string, $token);
+  $i: string.index($string, $token);
 
   @if $i {
-    $first-part: str-slice($string, 1, ($i - 1));
-    $string: str-parse(str-slice($string, ($i + str-length($token))), $token);
+    $first-part: string.slice($string, 1, ($i - 1));
+    $string: str-parse(string.slice($string, ($i + string.length($token))), $token);
 
-    @return join(simple-selectors($first-part), $string);
+    @return list.join(selector.simple-selectors($first-part), $string);
   }
 
-  @return simple-selectors($string);
+  @return selector.simple-selectors($string);
 }

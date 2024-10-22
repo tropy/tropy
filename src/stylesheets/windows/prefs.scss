@@ -4,62 +4,44 @@
 // Preferences window
 // --------------------------------------------------
 
-$platform: "linux";
-$theme: "light";
-
-@import "../abstracts/functions";
-@import "../themes/light";
-
-
-// Abstracts
-// --------------------------------------------------
-
-@import
-  "../abstracts/variables",
-  "../abstracts/mixins",
-  "../abstracts/placeholders";
-
 
 // Scaffolding
 // --------------------------------------------------
 
-@import
-  "../base/reset",
-  "../base/base",
-  "../base/type",
-  "../base/utilities";
+@use "../base/reset" as *;
+@use "../base/base" as *;
+@use "../base/type" as *;
+@use "../base/utilities" as *;
 
 
 // Partials
 // --------------------------------------------------
 
-@import
-  "../partials/scrollbar",
-  "../partials/grid",
-  "../partials/flex",
-  "../partials/forms",
-  "../partials/input-group",
-  "../partials/badge";
+@use "../partials/scrollbar" as *;
+@use "../partials/grid" as *;
+@use "../partials/flex" as *;
+@use "../partials/forms" as *;
+@use "../partials/input-group" as *;
+@use "../partials/badge" as *;
 
 
 // Components
 // --------------------------------------------------
 
-@import
-  "../components/scroll",
-  "../components/icons",
-  "../components/button",
-  "../components/button-group",
-  "../components/prefs",
-  "../components/template-editor",
-  "../components/vocab",
-  "../components/plugins",
-  "../components/panel-group",
-  "../components/panel",
-  "../components/accordion",
-  "../components/flash",
-  "../components/option",
-  "../components/select",
-  "../components/popup",
-  "../components/project/pane",
-  "../components/toolbar";
+@use "../components/scroll" as *;
+@use "../components/icons" as *;
+@use "../components/button" as *;
+@use "../components/button-group" as *;
+@use "../components/prefs" as *;
+@use "../components/template-editor" as *;
+@use "../components/vocab" as *;
+@use "../components/plugins" as *;
+@use "../components/panel-group" as *;
+@use "../components/panel" as *;
+@use "../components/accordion" as *;
+@use "../components/flash" as *;
+@use "../components/option" as *;
+@use "../components/select" as *;
+@use "../components/popup" as *;
+@use "../components/project/pane" as *;
+@use "../components/toolbar" as *;

@@ -4,27 +4,14 @@
 // Print window
 // --------------------------------------------------
 
-$platform: "linux";
-$theme: "light";
-
-
-// Abstracts
-// --------------------------------------------------
-
-@import
-  "../abstracts/functions",
-  "../abstracts/variables",
-  "../abstracts/mixins";
 
 // Components
 // --------------------------------------------------
 
-@import
-  "../components/print/print",
-  "../components/print/note-styles";
+@use "../components/print/print" as *;
+@use "../components/print/note-styles" as *;
 
 // Partials
 // --------------------------------------------------
 
-@import
-  "../partials/orientation";
+@use "../partials/orientation" as *;

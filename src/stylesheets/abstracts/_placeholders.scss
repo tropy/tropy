@@ -2,7 +2,6 @@
 // Placeholders
 // --------------------------------------------------
 
-@import
-  "placeholders/drop-target",
-  "placeholders/list-states",
-  "placeholders/mixed-indicator";
+@forward "placeholders/drop-target";
+@forward "placeholders/list-states";
+@forward "placeholders/mixed-indicator";
