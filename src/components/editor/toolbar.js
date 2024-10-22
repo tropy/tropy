@@ -1,5 +1,6 @@
 import React from 'react'
 import { Titlebar, Toolbar, ToolGroup } from '../toolbar.js'
+import { MaximizeButton } from '../settings/maximize.js'
 import { Button } from '../button.js'
 import { LinkContext } from './link.js'
 import * as icons from '../icons.js'
@@ -154,6 +155,13 @@ export class EditorToolbar extends React.PureComponent {
                 onMouseDown={this.handleUnlinkButtonClick}/>
             </ToolGroup>
           </Toolbar.Left>
+          <Toolbar.Right>
+            <ToolGroup>
+              <MaximizeButton
+                isDisabled={this.props.isDisabled}
+                name="notepad"/>
+            </ToolGroup>
+          </Toolbar.Right>
         </Toolbar.Context>
         <LinkContext
           href={link?.href}
