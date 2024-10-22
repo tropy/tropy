@@ -24,7 +24,8 @@ import { Document } from 'alto.js'
 
 const {
   TOOL,
-  MODE
+  MODE,
+  OVERLAY
 } = ESPER
 
 const {
@@ -609,10 +610,12 @@ export class Esper extends React.Component {
 
   render() {
     let { isDisabled } = this
-    let { overlay, transcription } = this.props
+    let { hasSideBySideLayout, overlay, transcription } = this.props
 
     let isOverlayVisible =
       overlay && transcription != null
+    let isVerticalSplit = this.props.hasSideBySideLayout &&
+      overlay === OVERLAY.SPLIT
 
     let alto = this.getAltoDocument(transcription?.data)
 
@@ -637,10 +640,6 @@ export class Esper extends React.Component {
         <div className="esper-container">
           <EsperHeader>
             <Toolbar.Left>
-              <ToolGroup.Layout
-                overlay={overlay}
-                isDisabled={isDisabled}
-                onChange={this.handleChange}/>
               <ToolGroup.Tool
                 current={this.tool}
                 isDisabled={isDisabled}
@@ -664,8 +663,10 @@ export class Esper extends React.Component {
                 onChange={this.handleZoomChange}/>
             </Toolbar.Left>
             <Toolbar.Right>
-              <ToolGroup.Panel
-                current={this.props.isPanelVisible}
+              <ToolGroup.Layout
+                hasSideBySideLayout={hasSideBySideLayout}
+                overlay={overlay}
+                panel={this.props.isPanelVisible}
                 isDisabled={isDisabled}
                 onChange={this.handleChange}/>
             </Toolbar.Right>
@@ -703,7 +704,16 @@ export class Esper extends React.Component {
 
         {isOverlayVisible && (
           <EsperOverlay mode={overlay}>
-            <Toolbar/>
+            <Toolbar>
+              {isVerticalSplit && (
+                <Toolbar.Right>
+                  <ToolGroup.Layout
+                    overlay={overlay}
+                    isDisabled={isDisabled}
+                    onChange={this.handleChange}/>
+                </Toolbar.Right>
+              )}
+            </Toolbar>
             <Transcription
               config={transcription.config}
               data={alto}

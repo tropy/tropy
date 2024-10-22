@@ -132,34 +132,53 @@ export const Zoom = ({
 }
 
 export const Layout = ({
+  hasSideBySideLayout = false,
   isDisabled,
   onChange,
-  overlay
-}) => (
-  <ToolGroup>
-    <MaximizeButton
-      isDisabled={isDisabled}
-      name="esper"/>
-    <ToolButton
-      current={overlay}
-      defaultValue={ESPER.OVERLAY.NONE}
-      icon="IconTranscriptionLarge"
-      isDisabled={isDisabled}
-      name="overlay"
-      onChange={onChange}
-      title="esper.overlay.full"
-      value={ESPER.OVERLAY.FULL}/>
-    <ToolButton
-      current={overlay}
-      defaultValue={ESPER.OVERLAY.NONE}
-      icon="IconTranscriptionSplitView"
-      isDisabled={isDisabled}
-      name="overlay"
-      onChange={onChange}
-      title="esper.overlay.split"
-      value={ESPER.OVERLAY.SPLIT}/>
-  </ToolGroup>
-)
+  overlay,
+  panel
+}) => {
+  if (hasSideBySideLayout &&
+    overlay === ESPER.OVERLAY.SPLIT) {
+    return (
+      <Panel
+        current={panel}
+        isDisabled={isDisabled}
+        onChange={onChange}/>
+    )
+  }
+
+  return (
+    <ToolGroup>
+      <ToolButton
+        current={overlay}
+        defaultValue={ESPER.OVERLAY.NONE}
+        icon="IconTranscriptionLarge"
+        isDisabled={isDisabled}
+        name="overlay"
+        onChange={onChange}
+        title="esper.overlay.full"
+        value={ESPER.OVERLAY.FULL}/>
+      <ToolButton
+        current={overlay}
+        defaultValue={ESPER.OVERLAY.NONE}
+        icon="IconTranscriptionSplitView"
+        isDisabled={isDisabled}
+        name="overlay"
+        onChange={onChange}
+        title="esper.overlay.split"
+        value={ESPER.OVERLAY.SPLIT}/>
+      {panel != null && (
+        <PanelButton
+          current={panel}
+          isDisabled={isDisabled}
+          onChange={onChange}/>)}
+      <MaximizeButton
+        isDisabled={isDisabled}
+        name="esper"/>
+    </ToolGroup>
+  )
+}
 
 export const Panel = ({
   current,
@@ -167,14 +186,25 @@ export const Panel = ({
   onChange
 }) => (
   <ToolGroup>
-    <ToolButton
+    <PanelButton
       current={current}
-      defaultValue={false}
-      icon="IconSliders"
       isDisabled={isDisabled}
-      name="panel"
-      onChange={onChange}
-      title="esper.tool.edit"
-      value={true}/>
+      onChange={onChange}/>
   </ToolGroup>
+)
+
+const PanelButton = ({
+  current,
+  isDisabled,
+  onChange
+}) => (
+  <ToolButton
+    current={current}
+    defaultValue={false}
+    icon="IconSliders"
+    isDisabled={isDisabled}
+    name="panel"
+    onChange={onChange}
+    title="esper.tool.edit"
+    value={true}/>
 )
