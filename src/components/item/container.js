@@ -82,14 +82,10 @@ class Item extends React.PureComponent {
     })
   }
 
-  handleMaximize = (value) => {
-    console.log('todo')
-  }
-
   focusNotePad = () => {
     if (this.props.settings.maximize === 'esper') {
-      this.handleMaximize('none')
-      setTimeout(() => { this.notepad.current?.focus() }, 250)
+      // TODO this.handleMaximize('none')
+      // setTimeout(() => { this.notepad.current?.focus() }, 250)
     }
     this.notepad.current?.focus()
   }

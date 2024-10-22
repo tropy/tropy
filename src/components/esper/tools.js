@@ -172,7 +172,8 @@ export const Layout = ({
         <PanelButton
           current={panel}
           isDisabled={isDisabled}
-          onChange={onChange}/>)}
+          onChange={onChange}/>
+      )}
       <MaximizeButton
         isDisabled={isDisabled}
         name="esper"/>
