@@ -4,6 +4,7 @@ import { useEvent } from '../../hooks/use-event.js'
 import { useResolution } from '../../hooks/use-resolution.js'
 import { useThrottle } from '../../hooks/use-debounce.js'
 import { ToolButton, ToolGroup } from '../toolbar.js'
+import { MaximizeButton } from '../settings/maximize.js'
 import { Button } from '../button.js'
 import { Slider } from '../slider.js'
 import { ESPER } from '../../constants/index.js'
@@ -132,21 +133,13 @@ export const Zoom = ({
 
 export const Layout = ({
   isDisabled,
-  isMaximized,
   onChange,
   overlay
 }) => (
   <ToolGroup>
-    <ToolButton
-      activeIcon="IconMinimize"
-      current={isMaximized}
-      defaultValue="none"
-      icon="IconMaximize"
+    <MaximizeButton
       isDisabled={isDisabled}
-      name="maximize"
-      onChange={onChange}
-      title="esper.maximize"
-      value="esper"/>
+      name="esper"/>
     <ToolButton
       current={overlay}
       defaultValue={ESPER.OVERLAY.NONE}

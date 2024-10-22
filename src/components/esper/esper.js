@@ -609,7 +609,7 @@ export class Esper extends React.Component {
 
   render() {
     let { isDisabled } = this
-    let { overlay, isMaximized, transcription } = this.props
+    let { overlay, transcription } = this.props
 
     let isOverlayVisible =
       overlay && transcription != null
@@ -639,7 +639,6 @@ export class Esper extends React.Component {
             <Toolbar.Left>
               <ToolGroup.Layout
                 overlay={overlay}
-                isMaximized={isMaximized}
                 isDisabled={isDisabled}
                 onChange={this.handleChange}/>
               <ToolGroup.Tool
