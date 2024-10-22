@@ -89,17 +89,14 @@ export const Titlebar = ({ children, isOptional }) => {
 }
 
 export const ToolButton = ({
-  activeIcon,
   current,
   defaultValue,
   name = 'tool',
-  icon,
   onChange,
   value,
   ...props
 }) => {
   let isActive = current === value
-  icon = (isActive && activeIcon) || icon
 
   let handleChange = useEvent(() => {
     if (!isActive) {
@@ -114,7 +111,6 @@ export const ToolButton = ({
   return (
     <Button
       {...props}
-      icon={icon}
       isActive={isActive}
       noFocus
       onClick={handleChange}/>

@@ -17,6 +17,7 @@ export const ButtonContainer = ({ className, children }) => (
 )
 
 export const Button = React.memo(React.forwardRef(({
+  activeIcon,
   className,
   icon,
   isActive,
@@ -40,7 +41,7 @@ export const Button = React.memo(React.forwardRef(({
 
   let attr = {
     className: cx('btn', className, `btn-${size}`, {
-      'active': isActive,
+      'active': isActive && activeIcon == null,
       'btn-block': isBlock,
       'btn-default': isDefault,
       'btn-icon': icon != null,
@@ -76,6 +77,9 @@ export const Button = React.memo(React.forwardRef(({
       attr.tabIndex = tabIndex
     }
   }
+
+  if (isActive)
+    icon = activeIcon || icon
 
   if (typeof icon === 'string')
     icon = React.createElement(icons[icon])
