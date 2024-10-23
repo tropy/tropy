@@ -1,4 +1,4 @@
-@forward "../themes/light";
+@forward "../themes/tropy";
 
-$platform: "linux";
-$theme: "light";
+$platform: platform();
+$theme: theme();
