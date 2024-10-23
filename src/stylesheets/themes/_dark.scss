@@ -1,5 +1,8 @@
 // stylelint-disable
 
+@use "sass:map";
+@use "../abstracts/functions/colors" as *;
+
 
 // Dark theme
 // --------------------------------------------------
@@ -64,7 +67,7 @@ $tag-colors: (
 $tag-color-shades: ();
 
 @each $key, $val in $tag-colors {
-  $tag-color-shades: map-merge(
+  $tag-color-shades: map.merge(
     $tag-color-shades,
     (
       $key: (
