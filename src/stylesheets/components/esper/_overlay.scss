@@ -29,10 +29,6 @@
       @if $platform == win32 {
         height: zoom($toolbar-height);
       }
-
-      .full :is(&) {
-        -webkit-app-region: drag;
-      }
     }
   }
 }
