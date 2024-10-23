@@ -132,21 +132,45 @@ export const Zoom = ({
 }
 
 export const Layout = ({
-  hasSideBySideLayout = false,
+  isAltLayout = false,
   isDisabled,
   onChange,
   overlay,
-  panel
+  panel,
+  versions
 }) => {
-  if (hasSideBySideLayout &&
-    overlay === ESPER.OVERLAY.SPLIT) {
-    return (
-      <Panel
+  let altButtons = []
+
+  if (panel != null)
+    altButtons.push(
+      <ToolButton
         current={panel}
+        defaultValue={false}
+        icon="IconSliders"
         isDisabled={isDisabled}
-        onChange={onChange}/>
+        name="panel"
+        onChange={onChange}
+        title="esper.tool.edit"
+        value={true}/>
     )
-  }
+
+  if (versions != null)
+    altButtons.push(
+      <ToolButton
+        current={versions}
+        defaultValue={false}
+        icon="IconSliders"
+        isDisabled
+        name="versions"
+        onChange={onChange}
+        title="esper.tool.versions"
+        value={true}/>
+    )
+
+  if (isAltLayout)
+    return (
+      <ToolGroup>{altButtons}</ToolGroup>
+    )
 
   return (
     <ToolGroup>
@@ -168,44 +192,10 @@ export const Layout = ({
         onChange={onChange}
         title="esper.overlay.split"
         value={ESPER.OVERLAY.SPLIT}/>
-      {panel != null && (
-        <PanelButton
-          current={panel}
-          isDisabled={isDisabled}
-          onChange={onChange}/>
-      )}
+      {altButtons}
       <MaximizeButton
         isDisabled={isDisabled}
         name="esper"/>
     </ToolGroup>
   )
 }
-
-export const Panel = ({
-  current,
-  isDisabled,
-  onChange
-}) => (
-  <ToolGroup>
-    <PanelButton
-      current={current}
-      isDisabled={isDisabled}
-      onChange={onChange}/>
-  </ToolGroup>
-)
-
-const PanelButton = ({
-  current,
-  isDisabled,
-  onChange
-}) => (
-  <ToolButton
-    current={current}
-    defaultValue={false}
-    icon="IconSliders"
-    isDisabled={isDisabled}
-    name="panel"
-    onChange={onChange}
-    title="esper.tool.edit"
-    value={true}/>
-)
