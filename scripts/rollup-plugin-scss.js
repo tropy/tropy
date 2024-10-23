@@ -45,9 +45,7 @@ export default function ({
   extension = '.scss',
   style = 'compressed',
   platform,
-  themes = ['light', 'dark'],
-  skipThemes
-
+  themes = ['light', 'dark']
 } = {}) {
   return {
     name: 'sass',
@@ -78,24 +76,18 @@ export default function ({
 
       let outFiles = []
 
-      if (skipThemes === true || skipThemes?.(id)) {
-        let data = code.replace('"linux"', `"${platform}"`)
-        outFiles.push([`${basename(id, extension)}.css`, data])
-
-      } else {
-        for (let theme of themes) {
-          let data = code
-            .replace('"linux"', `"${platform}"`)
-            .replace('"../themes/light"', `"../themes/${theme}"`)
-
-          outFiles.push([`${basename(id, extension)}-${theme}.css`, data])
-        }
+      for (let theme of themes) {
+        outFiles.push([`${basename(id, extension)}-${theme}.css`, code, theme])
       }
 
-      for (let [outFile, data] of outFiles) {
+      for (let [outFile, data, theme] of outFiles) {
         let { css, sourceMap, loadedUrls } = sass.compileString(data, {
           url: pathToFileURL(id),
-          functions,
+          functions: {
+            ...functions,
+            'platform()': () => toSass(platform),
+            'theme()': () => toSass(theme)
+          },
           loadPaths,
           style,
           silenceDeprecations: [
