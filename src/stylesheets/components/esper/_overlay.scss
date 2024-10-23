@@ -14,7 +14,7 @@
 
   &.full {
     position: absolute;
-    inset: $toolbar-frameless-height 0 0 0;
+    inset: 0;
     z-index: $zindex-esper-header;
   }
 
