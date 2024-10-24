@@ -1,13 +1,20 @@
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { Resizable } from '../resizable.js'
+import { Titlebar, Toolbar } from '../toolbar.js'
 import { ESPER, ITEM, SASS } from '../../constants/index.js'
 import ui from '../../actions/ui.js'
 
 const { MIN_WIDTH, MIN_HEIGHT } = SASS.ESPER
 
-export const EsperOverlay = ({ children, mode }) => {
+export const EsperOverlay = ({
+  children,
+  hasTitlebar,
+  mode,
+  toolbar
+}) => {
   let dispatch = useDispatch()
   let height = useSelector(state => state.ui.esper.split)
   let layout = useSelector(state => state.settings.layout)
@@ -30,6 +37,7 @@ export const EsperOverlay = ({ children, mode }) => {
       skip={mode === ESPER.OVERLAY.FULL}
       value={height}>
       <div className={cx('esper-overlay', mode)}>
+        {React.createElement(hasTitlebar ? Titlebar : Toolbar, {}, toolbar)}
         {children}
       </div>
     </Resizable>

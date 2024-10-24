@@ -702,8 +702,10 @@ export class Esper extends React.Component {
         </div>
 
         {isOverlayVisible && (
-          <EsperOverlay mode={overlay}>
-            <Toolbar>
+          <EsperOverlay
+            mode={overlay}
+            hasTitlebar={hasSideBySideLayout || !isOverlaySplit}
+            toolbar={(
               <Toolbar.Right>
                 <ToolGroup.Layout
                   isAltLayout={!hasSideBySideLayout && isOverlaySplit}
@@ -712,7 +714,7 @@ export class Esper extends React.Component {
                   onChange={this.handleChange}
                   versions={false}/>
               </Toolbar.Right>
-            </Toolbar>
+            )}>
             <Transcription
               config={transcription.config}
               data={alto}
