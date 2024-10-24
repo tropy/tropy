@@ -91,26 +91,32 @@ class Item extends React.PureComponent {
   }
 
   render() {
+    let { settings } = this.props
+
     return (
       <div
-        className={cx('item-container', this.props.settings.layout)}
+        className={cx(
+          'item-container',
+          settings.layout,
+          `.${settings.maximize}-maximized`
+        )}
         onContextMenu={this.handleContextMenu}>
-        {this.props.settings.maximize !== 'notepad' && (
+        {settings.maximize !== 'notepad' && (
           <Resizable
             {...this.getResizableProps()}
             isBuffered
             isRelative
-            skip={this.props.settings.maximize === 'esper'}
+            skip={settings.maximize === 'esper'}
             value={this.size}
             onChange={this.handleEsperResize}>
             <Esper
               {...this.props.view}
               cache={this.props.cache}
-              mode={this.props.view.mode || this.props.settings.zoomMode}
+              mode={this.props.view.mode || settings.zoomMode}
               hasOverlayToolbar={this.hasOverlayToolbars}
               hasSideBySideLayout={this.hasSideBySideLayout}
-              invertScroll={this.props.settings.invertScroll}
-              invertZoom={this.props.settings.invertZoom}
+              invertScroll={settings.invertScroll}
+              invertZoom={settings.invertZoom}
               isDisabled={this.props.isDisabled || !this.props.photo}
               isReadOnly={this.props.isDisabled || this.props.isReadOnly}
               isPanelVisible={this.props.esper.panel}
@@ -129,7 +135,7 @@ class Item extends React.PureComponent {
               onSelectionCreate={this.props.onSelectionCreate}/>
           </Resizable>
         )}
-        {this.props.settings.maximize !== 'esper' && (
+        {settings.maximize !== 'esper' && (
           <NotePad
             ref={this.notepad}
             note={this.props.note}
