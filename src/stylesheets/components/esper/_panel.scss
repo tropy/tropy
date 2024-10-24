@@ -7,7 +7,9 @@
 .esper-panel {
   display: flex;
   flex-direction: column;
-  max-width: 100%;
+  margin-right: -$esper-panel-width; // Permanently set two negative margins to avoid transition glitch after layout switch
+  margin-bottom: -$esper-panel-height;
+  max-width: 100%; // Keep panel size stable
   max-height: 100%;
   background: $esper-bg;
   position: relative; // Must be over esper-view for a clean transition in solid mode
@@ -15,12 +17,12 @@
   .stacked & {
     flex: 0 0 $esper-panel-width;
     box-shadow: none; // Hide box-shadow
-    margin-right: -$esper-panel-width;
     transition: box-shadow 0s linear 0.3s, margin-right 0.3s ease;
 
     .panel-visible :is(&) {
       box-shadow: -1px 0 0 $esper-shadow;
       margin-right: 0;
+      margin-bottom: 0;
       transition: box-shadow 0s linear, margin-right 0.3s ease;
     }
   }
@@ -28,11 +30,11 @@
   .side-by-side & {
     flex: 0 0 $esper-panel-height;
     box-shadow: none; // Hide box-shadow
-    margin-bottom: -$esper-panel-height - 10px;
     transition: box-shadow 0s linear 0.3s, margin-bottom 0.3s ease;
 
     .panel-visible :is(&) {
       box-shadow: 0 -1px 0 $esper-shadow;
+      margin-right: 0;
       margin-bottom: 0;
       transition: box-shadow 0s linear, margin-bottom 0.3s ease;
     }
