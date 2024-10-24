@@ -139,7 +139,7 @@ class Item extends React.PureComponent {
           <NotePad
             ref={this.notepad}
             note={this.props.note}
-            hasTitlebar={this.hasSideBySideLayout}
+            hasTitlebar={this.hasSideBySideLayout || settings.maximize === 'notepad'}
             isDisabled={this.props.isDisabled || !this.props.photo}
             isReadOnly={this.props.isDisabled || this.props.isReadOnly}
             keymap={this.props.keymap.NotePad}
