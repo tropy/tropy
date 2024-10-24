@@ -98,7 +98,7 @@ class Item extends React.PureComponent {
         className={cx(
           'item-container',
           settings.layout,
-          `.${settings.maximize}-maximized`
+          `${settings.maximize}-maximized`
         )}
         onContextMenu={this.handleContextMenu}>
         {settings.maximize !== 'notepad' && (
