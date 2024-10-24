@@ -37,7 +37,8 @@
 
     .toolbar-right {
       @if $platform == darwin {
-        .stacked & {
+        .stacked &,
+        .side-by-side.esper-maximized .esper:not([class*="overlay"]) & {
           .window-controls-right:not(.is-full-screen) & {
             flex: 1 1 0;
             overflow: hidden;
@@ -47,7 +48,8 @@
       }
 
       @if $platform == win32 {
-        .stacked & {
+        .stacked &,
+        .side-by-side.esper-maximized .esper:not([class*="overlay"]) & {
           .window-controls-left:not(.is-full-screen:not(.full-screen-menu)) & {
             flex: 1 1 0;
             overflow: hidden;
@@ -63,7 +65,8 @@
       }
 
       @if $platform == linux {
-        .stacked & {
+        .stacked &,
+        .side-by-side.esper-maximized .esper:not([class*="overlay"]) & {
           .frameless & {
             flex: 1 1 0;
             overflow: hidden;

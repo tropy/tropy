@@ -30,5 +30,62 @@
         height: zoom($toolbar-height);
       }
     }
+
+    .toolbar-right {
+      @if $platform == darwin {
+        .stacked .text-overlay-full &,
+        .side-by-side.esper-maximized & {
+          .window-controls-right:not(.is-full-screen) & {
+            flex: 1 1 0;
+            overflow: hidden;
+            margin-right: zoom($window-controls-width + $space-sm);
+          }
+        }
+      }
+
+      @if $platform == win32 {
+        .stacked .text-overlay-full &,
+        .side-by-side.esper-maximized & {
+          .window-controls-left:not(.is-full-screen:not(.full-screen-menu)) & {
+            flex: 1 1 0;
+            overflow: hidden;
+            margin-right: zoom(48px + 24px);
+          }
+
+          .window-controls-right:not(.is-full-screen) & {
+            flex: 1 1 0;
+            overflow: hidden;
+            margin-right: zoom($window-controls-width + $space-sm);
+          }
+        }
+      }
+
+      @if $platform == linux {
+        .stacked .text-overlay-full &,
+        .side-by-side.esper-maximized & {
+          .frameless & {
+            flex: 1 1 0;
+            overflow: hidden;
+
+            .window-controls-left :is(&) {
+              margin-right: zoom(52px);
+            }
+
+            .window-controls-right :is(&) {
+              margin-right: zoom($window-controls-width + $space-sm);
+
+              .window-controls-minimize :is(&),
+              .frameless.window-controls-maximize :is(&) {
+                margin-right: zoom($window-controls-width + 37px + $space-sm);
+              }
+
+              .window-controls-minimize.window-controls-maximize :is(&) {
+                margin-right: zoom($window-controls-width + 37px + 37px + $space-sm);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
