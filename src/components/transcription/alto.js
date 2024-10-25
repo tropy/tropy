@@ -1,16 +1,21 @@
 import React, { useMemo } from 'react'
 import cx from 'classnames'
 
-export const AltoDocument = ({ data }) => {
+export const AltoDocument = ({
+  data,
+  outline = 'none'
+}) => {
   let blocks = useMemo(() => (
     [...data.blocks()]
   ), [data])
 
 
   return (
-    <section className="alto-document">
+    <section className="cx('alto-document', `outline-${outline}`)">
       {blocks.map((block, index) => (
-        <TextBlock key={index} lines={Array.from(block.lines())}/>
+        <TextBlock
+          key={index}
+          lines={Array.from(block.lines())}/>
       ))}
     </section>
   )
