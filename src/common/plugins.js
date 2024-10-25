@@ -302,7 +302,7 @@ export class Plugins extends EventEmitter {
 const deps = async pkg => {
   try {
     return Object.keys((await load(pkg)).dependencies)
-  } catch (_) {
+  } catch {
     return []
   }
 }

@@ -16,7 +16,7 @@ export function datetime(value, options = DTF) {
 
     return edtfFormat(date, ARGS.locale, options)
 
-  } catch (error) {
+  } catch {
     return value
   }
 }

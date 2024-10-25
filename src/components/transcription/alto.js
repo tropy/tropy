@@ -3,7 +3,7 @@ import cx from 'classnames'
 
 export const AltoDocument = ({
   data,
-  outline = 'none'
+  outline = 'none' // eslint-disable-line no-unused-vars
 }) => {
   let blocks = useMemo(() => (
     [...data.blocks()]

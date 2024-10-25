@@ -80,7 +80,7 @@ const pretty = input => {
   if (typeof input === 'string') {
     try {
       log = JSON.parse(input)
-    } catch (error) {
+    } catch {
       return input
     }
   } else if (isObject(input)) {
