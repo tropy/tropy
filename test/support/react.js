@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import React from 'react'
-import { use } from 'chai'
+import * as chai from 'chai'
 import chaiDom from 'chai-dom'
 import { render as testRender, queries } from '@testing-library/react'
 import { configureStore } from '@reduxjs/toolkit'
@@ -14,7 +14,7 @@ import { WindowContext } from '#internal/components/window.js'
 import { Strings } from '#internal/res.js'
 import * as reducer from '#internal/reducers/index.js'
 
-use(chaiDom)
+chai.use(chaiDom)
 
 const helpers = {
   $(node, ...args) {
