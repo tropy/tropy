@@ -144,6 +144,7 @@ export const Layout = ({
   if (panel != null)
     altButtons.push(
       <ToolButton
+        key="panel"
         current={panel}
         defaultValue={false}
         icon="IconSliders"
@@ -157,6 +158,7 @@ export const Layout = ({
   if (versions != null)
     altButtons.push(
       <ToolButton
+        key="versions"
         current={versions}
         defaultValue={false}
         icon="IconSliders"
