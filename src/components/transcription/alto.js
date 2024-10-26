@@ -44,11 +44,11 @@ export const Alto = React.memo(({
                   onMouseDown={handleDragStart}
                   onMouseEnter={handleMouseEnter}
                   value={string}/>
-              ))}
+              )).toArray()}
             </Line>
-          ))}
+          )).toArray()}
         </TextBlock>
-      ))}
+      )).toArray()}
     </section>
   )
 })
