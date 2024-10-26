@@ -325,6 +325,7 @@ en:
     overlay:
       full: Show full text overlay
       split: Show split-view text overlay
+      versions: Toggle transcription version history
     panel:
       negative: Invert colors
       revert: Revert to Original

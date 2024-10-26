@@ -163,7 +163,7 @@ export const Layout = ({
         isDisabled
         name="versions"
         onChange={onChange}
-        title="esper.tool.versions"
+        title="esper.overlay.versions"
         value={true}/>
     )
 
