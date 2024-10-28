@@ -26,4 +26,13 @@
       margin-left: 2px;
     }
   }
+
+  // Debugging
+  .outline-all,
+  .outline-string,
+  .outline-line,
+  .outline-text-block,
+  .outline-line {
+    outline: 3px solid if($theme == light, #222, #bbb);
+  }
 }
