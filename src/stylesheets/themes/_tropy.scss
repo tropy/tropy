@@ -2,6 +2,7 @@
 
 @use "sass:map";
 @use "../abstracts/functions/colors" as *;
+@use "../abstracts/functions/scheme" as *;
 
 
 // Light theme
@@ -407,6 +408,11 @@ $esper-btn-default-bg:                   $esper-bg;
 $esper-btn-default-border:               shade(var(--shade-2), 10%);
 $esper-btn-default-active-bg:            shade(var(--shade-1), 8%);
 $esper-error-color:                      var(--shade-8);
+
+// Transcription
+$string-selected-bg:          scheme(alpha(var(--shade-10), 10%), var(--shade-5));
+$string-selected-focus-color: scheme(var(--shade-0),              var(--primary-light));
+$string-selected-focus-bg:    scheme(var(--primary),              var(--primary));
 
 // Drag preview
 $drag-preview-opacity:           0.6;
