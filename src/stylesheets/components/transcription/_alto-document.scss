@@ -40,8 +40,7 @@
   .outline-all,
   .outline-string,
   .outline-line,
-  .outline-text-block,
-  .outline-line {
+  .outline-text-block {
     outline: 3px solid if($theme == light, #222, #bbb);
   }
 }
