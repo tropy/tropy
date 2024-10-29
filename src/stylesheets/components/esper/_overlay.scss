@@ -8,11 +8,7 @@
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
-  color: $text-color;
   background-color: $esper-bg;
-  font-family: $font-family-base;
-  font-size: $editor-font-size;
-  line-height: $editor-line-height;
 
   &.full {
     position: absolute;
