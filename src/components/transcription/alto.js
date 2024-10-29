@@ -3,32 +3,26 @@ import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDragHandler } from '../../hooks/use-drag-handler.js'
 
-function expand(a, b) {
-  if (!a) return b
-  if (!b) return a
-  // todo
-  return a
-}
-
 export const Alto = React.memo(({
   document,
   outline = 'none'
 }) => {
   let anchor = useRef()
-  let [selection, setSelection] = useState()
+  let [selection, setSelection] = useState(document.range())
 
   let handleDragStart = useDragHandler({
     onDragStart(event, string) {
-      anchor.current = string.bounds()
+      anchor.current = string
+      setSelection(document.range(anchor.current))
     },
-    onDragEnd() {
+    onDragStop() {
       anchor.current = null
-      setSelection(null)
     }
   })
 
   let handleMouseEnter = useEvent((string) => {
-    setSelection(expand(anchor.current, string.bounds()))
+    if (anchor.current != null)
+      setSelection(document.range(anchor.current, string))
   })
 
   return (
@@ -40,7 +34,7 @@ export const Alto = React.memo(({
               {line.strings().map((string, sidx) => (
                 <String
                   key={sidx}
-                  isSelected={selection && string.intersects(selection)}
+                  isSelected={selection.get(string)}
                   onMouseDown={handleDragStart}
                   onMouseEnter={handleMouseEnter}
                   value={string}/>
