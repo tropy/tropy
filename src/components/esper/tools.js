@@ -161,7 +161,7 @@ export const Layout = ({
         key="versions"
         current={versions}
         defaultValue={false}
-        icon="IconSliders"
+        icon="IconTranscriptionVersions"
         isDisabled
         name="versions"
         onChange={onChange}
