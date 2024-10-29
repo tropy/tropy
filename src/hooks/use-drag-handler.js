@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useEvent } from './use-event.js'
 import { on, off, toggle } from '../dom.js'
 
@@ -7,6 +8,8 @@ export function useDragHandler({
   onDragStop,
   stopOnMouseLeave = true
 }) {
+  let isDragging = useRef(false)
+
   let handleKeyDown = useEvent((event) => {
     switch (event.key) {
       case 'Escape':
@@ -40,10 +43,13 @@ export function useDragHandler({
     onDragStop?.(event, wasCancelled)
 
     toggle(document.documentElement, 'dragging', false)
+    isDragging.current = false
   })
 
   return useEvent((event, ...args) => {
-    handleDragStop()
+    if (isDragging.current)
+      handleDragStop()
+    isDragging.current = true
 
     // Handle only clicks with the left/primary button!
     if (event.button !== 0)
