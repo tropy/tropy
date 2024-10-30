@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDragHandler } from '../../hooks/use-drag-handler.js'
+import { isMeta } from '../../keymap.js'
 
 
 export const Alto = React.memo(({
@@ -15,7 +16,7 @@ export const Alto = React.memo(({
     onClick(event, string) {
       if (event.shiftKey) {
         setSelection(document.range(string, anchor.current, selection))
-      } else if (event.ctrlKey || event.metaKey) {
+      } else if (isMeta(event)) {
         selection.set(string, !selection.get(string))
         setSelection(new Map(selection))
       } else {
