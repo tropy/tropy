@@ -10,16 +10,23 @@
   font-size: $editor-font-size;
   line-height: normal;
   padding-block: min(10cqh, #{$editor-padding});
-  padding-inline: 10%;
   height: fit-content;
   min-height: 100cqh;
+  outline: 3px solid if($theme == light, #222, #bbb); // Debugging
+  min-width: 0;
 
   .text-line {
     display: flex;
     margin-bottom: 2px;
   }
 
+  .start-line {
+    flex: 0 0 10%;
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
   .string {
+    flex: 0 0 auto;
     padding: calc(1ch / 6 + 0.25ch);
     border-radius: 3px;
 
@@ -35,6 +42,11 @@
     & + .string {
       margin-left: 2px;
     }
+  }
+
+  .end-line {
+    flex: 1 0 10%;
+    background-color: rgba(0, 0, 0, 0.04);
   }
 
   // Debugging

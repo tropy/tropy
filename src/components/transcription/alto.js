@@ -69,7 +69,9 @@ export const TextBlock = ({ children }) => (
 
 export const Line = ({ children }) => (
   <div className="text-line">
+    <div className="start-line" />
     {children}
+    <div className="end-line" />
   </div>
 )
 
@@ -79,10 +81,10 @@ export const String = ({
   onMouseEnter,
   value
 }) => (
-  <span
+  <div
     className={cx('string', { selected: isSelected })}
     onMouseDown={(event) => { onMouseDown(event, value) }}
     onMouseEnter={() => { onMouseEnter(value) }}>
     {value.CONTENT}
-  </span>
+  </div>
 )
