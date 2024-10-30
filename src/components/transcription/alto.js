@@ -10,7 +10,10 @@ export const Alto = React.memo(({
   let anchor = useRef()
   let [selection, setSelection] = useState(document.range())
 
-  let handleDragStart = useDragHandler({
+  let handleMouseDown = useDragHandler({
+    onClick(event, string) {
+      setSelection(document.range(string))
+    },
     onDragStart(event, string) {
       anchor.current = string
       setSelection(document.range(anchor.current))
@@ -35,7 +38,7 @@ export const Alto = React.memo(({
                 <String
                   key={sidx}
                   isSelected={selection.get(string)}
-                  onMouseDown={handleDragStart}
+                  onMouseDown={handleMouseDown}
                   onMouseEnter={handleMouseEnter}
                   value={string}/>
               )).toArray()}
