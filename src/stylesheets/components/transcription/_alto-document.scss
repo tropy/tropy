@@ -10,10 +10,8 @@
   font-size: $editor-font-size;
   line-height: normal;
   padding-block: min(10cqh, #{$editor-padding});
-  height: fit-content;
-  min-height: 100cqh;
-  outline: 3px solid if($theme == light, #222, #bbb); // Debugging
-  min-width: 0;
+  height: fit-content; // Stretch container
+  min-height: 100cqh; // Stretch container
 
   .text-line {
     display: flex;
@@ -21,8 +19,9 @@
   }
 
   .start-line {
-    flex: 0 0 10%;
+    flex: 0 0 auto;
     background-color: rgba(0, 0, 0, 0.04);
+    width: 10cqw; // Stretch container
   }
 
   .string {
@@ -45,7 +44,8 @@
   }
 
   .end-line {
-    flex: 1 0 10%;
+    flex: 1 0 auto;
+    width: 10cqw; // Stretch container
     background-color: rgba(0, 0, 0, 0.04);
   }
 
