@@ -13,10 +13,14 @@ export const Alto = React.memo(({
 
   let [handleMouseDown, status] = useDragHandler({
     onClick(event, string) {
-      if (event.shiftKey)
+      if (event.shiftKey) {
         setSelection(document.range(string, anchor.current, selection))
-      else
+      } else if (event.ctrlKey || event.metaKey) {
+        selection.set(string, !selection.get(string))
+        setSelection(new Map(selection))
+      } else {
         setSelection(document.range(string))
+      }
 
       anchor.current = string
     },
