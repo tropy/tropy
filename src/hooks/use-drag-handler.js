@@ -84,7 +84,7 @@ export function useDragHandler({
       handleDragStart(event)
   })
 
-  return useEvent((event, ...args) => {
+  let handleMouseDown = useEvent((event, ...args) => {
     if (status.current?.isDragging)
       handleDragStop()
     if (status.current?.isPending) {
@@ -101,4 +101,6 @@ export function useDragHandler({
     on(document, 'mousemove', handleClickOrDragStart, { capture: true })
     on(document, 'mouseup', handleClickOrDragStart, { capture: true })
   })
+
+  return [handleMouseDown, status]
 }
