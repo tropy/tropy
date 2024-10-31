@@ -26,8 +26,8 @@ export const Alto = React.memo(({
       anchor.current = string
     },
     onDragStart(event, string) {
+      setSelection(document.range(string))
       anchor.current = string
-      setSelection(document.range(anchor.current))
     },
     onDragStop() {
       anchor.current = null
@@ -44,10 +44,15 @@ export const Alto = React.memo(({
       {document.blocks().map((block, bidx) => (
         <TextBlock key={bidx}>
           {block.lines().map((line, lidx) => (
-            <Line key={lidx}>
+            <Line
+              key={lidx}
+              isDragging={status.current?.isDragging}
+              onMouseEnter={handleMouseEnter}
+              value={line}>
               {line.strings().map((string, sidx) => (
                 <String
                   key={sidx}
+                  isDragging={status.current?.isDragging}
                   isSelected={selection?.get(string)}
                   onMouseDown={handleMouseDown}
                   onMouseEnter={handleMouseEnter}
@@ -67,15 +72,25 @@ export const TextBlock = ({ children }) => (
   </div>
 )
 
-export const Line = ({ children }) => (
+export const Line = ({
+  children,
+  isDragging = false,
+  value,
+  onMouseEnter
+}) => (
   <div className="text-line">
-    <div className="start-line" />
+    <div
+      className="start-line"
+      onMouseEnter={isDragging ? (() => { onMouseEnter(value.first()) }) : null}/>
     {children}
-    <div className="end-line" />
+    <div
+      className="end-line"
+      onMouseEnter={isDragging ? (() => { onMouseEnter(value.last()) }) : null}/>
   </div>
 )
 
 export const String = ({
+  isDragging = false,
   isSelected = false,
   onMouseDown,
   onMouseEnter,
@@ -84,7 +99,7 @@ export const String = ({
   <div
     className={cx('string', { selected: isSelected })}
     onMouseDown={(event) => { onMouseDown(event, value) }}
-    onMouseEnter={() => { onMouseEnter(value) }}>
+    onMouseEnter={isDragging ? (() => { onMouseEnter(value) }) : null}>
     {value.CONTENT}
   </div>
 )
