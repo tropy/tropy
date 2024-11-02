@@ -81,11 +81,15 @@ export const Line = ({
   <div className="text-line">
     <div
       className="start-line"
-      onMouseEnter={isDragging ? (() => { onMouseEnter(value.first()) }) : null}/>
+      onMouseEnter={isDragging ? () => {
+        onMouseEnter(value.previous()?.last() || value.first())
+      } : null}/>
     {children}
     <div
       className="end-line"
-      onMouseEnter={isDragging ? (() => { onMouseEnter(value.last()) }) : null}/>
+      onMouseEnter={isDragging ? () => {
+        onMouseEnter(value.last())
+      } : null}/>
   </div>
 )
 
@@ -99,7 +103,7 @@ export const String = ({
   <div
     className={cx('string', { selected: isSelected })}
     onMouseDown={(event) => { onMouseDown(event, value) }}
-    onMouseEnter={isDragging ? (() => { onMouseEnter(value) }) : null}>
+    onMouseEnter={isDragging ? () => { onMouseEnter(value) } : null}>
     {value.CONTENT}
   </div>
 )
