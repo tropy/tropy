@@ -326,3 +326,14 @@ export function onResolutionChange(callback) {
     RMQ.removeListener(handler)
   }
 }
+
+export function distance(e1, e2) {
+  let x = e2.clientX - e1.clientX
+  let y = e2.clientY - e1.clientY
+
+  return {
+    x,
+    y,
+    total: Math.abs(x) + Math.abs(y)
+  }
+}
