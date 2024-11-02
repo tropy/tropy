@@ -41,7 +41,6 @@ function i(name, svg) {
 }
 
 
-/* eslint-disable max-len */
 
 
 export const IconCircle = i('Circle', (

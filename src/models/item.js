@@ -207,8 +207,8 @@ mod.item = {
           FROM subjects
             JOIN items USING (id)
             LEFT OUTER JOIN trash USING (id)${
-          (ids != null) ? ` WHERE id IN (${ids})` : ''
-        }`,
+              (ids != null) ? ` WHERE id IN (${ids})` : ''
+            }`,
       ({ id, created, modified, deleted, ...data }) => {
         data.created = new Date(created)
         data.modified = new Date(modified)
@@ -222,8 +222,8 @@ mod.item = {
       db.each(`
         SELECT id, tag_id AS tag
           FROM taggings${
-          (ids != null) ? ` WHERE id IN (${ids})` : ''
-        }`,
+            (ids != null) ? ` WHERE id IN (${ids})` : ''
+          }`,
       ({ id, tag }) => {
         if (id in items) items[id].tags.push(tag)
         else items[id] = skel(id, [], [], [tag])
@@ -246,8 +246,8 @@ mod.item = {
       db.each(`
         SELECT id, list_id AS list
           FROM list_items${
-          (ids != null) ? ` WHERE id IN (${ids})` : ''
-        }`,
+            (ids != null) ? ` WHERE id IN (${ids})` : ''
+          }`,
       ({ id, list }) => {
         if (id in items) items[id].lists.push(list)
         else items[id] = skel(id, [list])

@@ -56,8 +56,8 @@ export default {
         FROM subjects
           JOIN metadata USING (id)
           JOIN metadata_values USING (value_id)${
-        (ids != null) ? ` WHERE id IN (${list(ids)}) ` : ''
-      } ORDER BY id, metadata.created ASC`,
+            (ids != null) ? ` WHERE id IN (${list(ids)}) ` : ''
+          } ORDER BY id, metadata.created ASC`,
     ({ id, property, type, text }) => {
       if (id in data) data[id][property] = { type, text }
       else data[id] = { id, [property]: { type, text } }

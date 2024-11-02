@@ -25,9 +25,9 @@ const create = (path, content) => {
   }
 }
 
-/* eslint-disable max-len */
+
 const html = name => (
-`<!DOCTYPE html>
+  `<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="Content-Security-Policy" content="${[
@@ -51,17 +51,17 @@ const html = name => (
 </body>
 </html>
 `)
-/* eslint-enable max-len */
+
 
 const script = () => (
-`'use strict'
+  `'use strict'
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 `)
 
 const stylesheet = (platform, theme) => (
-`$platform: "${platform}";
+  `$platform: "${platform}";
 $theme: "${theme}";
 `)
 

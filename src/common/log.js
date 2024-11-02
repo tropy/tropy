@@ -23,6 +23,7 @@ function logRotate(file, suffix = '.1') {
   }
 }
 
+// eslint-disable-next-line complexity
 export function createLogger({
   dest = 2,
   level,

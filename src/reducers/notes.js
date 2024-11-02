@@ -3,6 +3,7 @@ import { insert } from './util.js'
 
 const init = {}
 
+// eslint-disable-next-line complexity
 export function notes(state = init, { type, payload, error, meta }) {
   switch (type) {
     case PROJECT.OPEN:

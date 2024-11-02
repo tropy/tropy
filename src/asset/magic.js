@@ -1,5 +1,6 @@
 import MIME from '../constants/mime.js'
 
+// eslint-disable-next-line complexity
 export function magic(buffer, ext = '') {
   if (buffer != null) {
     if (isJPEG(buffer))
@@ -73,7 +74,7 @@ const check = (buffer, bytes, offset = 0) =>
   buffer.slice(offset, offset + bytes.length).compare(Buffer.from(bytes)) === 0
 
 const SVG = {
-// eslint-disable-next-line max-len
+
   HEAD: /^\s*(?:<\?xml[^>]*>\s*)?(?:<!doctype svg[^>]*\s*(?:<![^>]*>)*[^>]*>\s*)?<svg[^>]*>/i,
   COMMENTS: /<!--([\s\S]*?)-->/g
 }

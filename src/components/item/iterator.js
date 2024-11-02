@@ -145,7 +145,7 @@ export class ItemIterator extends React.Component {
     this.props.onItemOpen(this.current)
   }
 
-  // eslint-disable-next-line complexity
+
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case 'open':

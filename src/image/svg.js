@@ -2,7 +2,7 @@ import { nativeImage } from 'electron'
 import { loadImage } from '../dom.js'
 import { MIME } from '../constants/index.js'
 
-// eslint-disable-next-line max-len
+
 const SVG = /^\s*(?:<\?xml[^>]*>\s*)?(?:<!doctype svg[^>]*\s*(?:<![^>]*>)*[^>]*>\s*)?<svg[^>]*>/i
 const COMMENTS = /<!--([\s\S]*?)-->/g
 

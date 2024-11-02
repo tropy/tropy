@@ -2,7 +2,7 @@ import { PROJECT, ITEM } from '../constants/index.js'
 
 const init = { name: '' }
 
-// eslint-disable-next-line complexity
+
 export function project(state = init, { type, payload, meta, error }) {
   switch (type) {
     case PROJECT.RELOAD:

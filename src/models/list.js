@@ -104,8 +104,8 @@ export default {
           { changes: restores.length } :
         await db.run(`
           INSERT INTO list_items (list_id, id) VALUES ${
-              items.map(it => `(${id}, ${it})`).join(',')
-            }`)
+            items.map(it => `(${id}, ${it})`).join(',')
+          }`)
 
       return {
         ...res,

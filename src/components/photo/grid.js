@@ -35,7 +35,7 @@ class PhotoGrid extends PhotoIterator {
     return false
   }
 
-  // eslint-disable-next-line complexity
+
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case 'open':

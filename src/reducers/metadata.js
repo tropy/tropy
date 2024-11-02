@@ -17,7 +17,7 @@ import {
 } from './util.js'
 
 
-// eslint-disable-next-line complexity
+
 export function metadata(state = {}, { type, payload, meta, error }) {
   switch (type) {
     case PROJECT.OPENED:

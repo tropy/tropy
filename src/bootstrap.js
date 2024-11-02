@@ -65,7 +65,7 @@ const ARGS = parse()
     if (!window.__REACT_DEVTOOLS_GLOBAL_HOOK__)
       window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = { isDisabled: true }
 
-    // eslint-disable-next-line
+
     window.eval = () => {
       throw new Error('use of eval() is prohibited')
     }
