@@ -1,15 +1,14 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useEvent } from './use-event.js'
 import { on, off, toggle } from '../dom.js'
 
 export function useDragHandler({
-  onClick,
   onDrag,
   onDragStart,
   onDragStop,
   stopOnMouseLeave = true
 }) {
-  let status = useRef(null)
+  let isDragging = useRef(false)
 
   let handleKeyDown = useEvent((event) => {
     switch (event.key) {
@@ -44,11 +43,22 @@ export function useDragHandler({
     onDragStop?.(event, wasCancelled)
 
     toggle(document.documentElement, 'dragging', false)
-    status.current = null
+    isDragging.current = false
   })
 
-  let handleDragStart = useEvent((event) => {
-    status.current.isDragging = true
+  useEffect(() => () => {
+    if (isDragging.current) handleDragStop()
+  }, [handleDragStop])
+
+  return useEvent((event, ...args) => {
+    // Handle only clicks with the left/primary button!
+    if (event.button !== 0)
+      return
+
+    if (isDragging.current)
+      handleDragStop()
+
+    isDragging.current = true
     toggle(document.documentElement, 'dragging', true)
 
     on(document, 'mousemove', handleDrag)
@@ -64,43 +74,6 @@ export function useDragHandler({
     // case we handle it here!
     on(document.body, 'keydown', handleKeyDown)
 
-    onDragStart?.(event, ...status.current.args)
+    onDragStart?.(event, ...args)
   })
-
-  let handleClick = useEvent((event) => {
-    onClick?.(event, ...status.current.args)
-    status.current = null
-  })
-
-  let handleClickOrDragStart = useEvent((event) => {
-    off(document, 'mousemove', handleClickOrDragStart, { capture: true })
-    off(document, 'mouseup', handleClickOrDragStart, { capture: true })
-
-    status.current.isPending = false
-
-    if (event.type === 'mouseup')
-      handleClick(event)
-    else
-      handleDragStart(event)
-  })
-
-  let handleMouseDown = useEvent((event, ...args) => {
-    if (status.current?.isDragging)
-      handleDragStop()
-    if (status.current?.isPending) {
-      off(document, 'mousemove', handleClickOrDragStart, { capture: true })
-      off(document, 'mouseup', handleClickOrDragStart, { capture: true })
-    }
-
-    // Handle only clicks with the left/primary button!
-    if (event.button !== 0)
-      return
-
-    status.current = { isPending: true, args }
-
-    on(document, 'mousemove', handleClickOrDragStart, { capture: true })
-    on(document, 'mouseup', handleClickOrDragStart, { capture: true })
-  })
-
-  return [handleMouseDown, status]
 }

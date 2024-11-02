@@ -3,40 +3,70 @@ import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDragHandler } from '../../hooks/use-drag-handler.js'
 import { isMeta } from '../../keymap.js'
-
+import { distance } from '../../dom.js'
 
 export const Alto = React.memo(({
   document,
   outline = 'none'
 }) => {
-  let anchor = useRef(null)
+  let cursor = useRef(null)
+  let status = useRef(null)
+
+  let [isDragging, setDragging] = useState(false)
   let [selection, setSelection] = useState(document.range())
 
-  let [handleMouseDown, status] = useDragHandler({
-    onClick(event, string) {
+  let handleMouseDown = useDragHandler({
+    onDragStart(event, string) {
+      setDragging(false)
+
+      status.current = {
+        clientX: event.clientX,
+        clientY: event.clientY
+      }
+
       if (event.shiftKey) {
-        setSelection(document.range(string, anchor.current, selection))
+        status.current.modifier = 'add'
+        setSelection(document.range(string, cursor.current, selection))
       } else if (isMeta(event)) {
-        selection.set(string, !selection.get(string))
+        let isSelected = selection.get(string)
+        status.current.modifier = isSelected ? 'remove' : 'add'
+        selection.set(string, !isSelected)
         setSelection(new Map(selection))
       } else {
         setSelection(document.range(string))
       }
 
-      anchor.current = string
+      cursor.current = string
     },
-    onDragStart(event, string) {
-      setSelection(document.range(string))
-      anchor.current = string
+    onDrag(event) {
+      if (!isDragging) {
+        if (distance(status.current, event).total > 20)
+          setDragging(true)
+      }
     },
     onDragStop() {
-      anchor.current = null
+      status.current = null
+      setDragging(false)
     }
   })
 
-  let handleMouseEnter = useEvent((string) => {
-    if (status.current?.isDragging)
-      setSelection(document.range(anchor.current, string))
+  let handleMouseEnter = useEvent((event, string) => {
+    if (!string || !isDragging)
+      return
+
+    switch (status.current.modifier) {
+      case 'add':
+        setSelection(document.range(cursor.current, string, selection))
+        break
+      case 'remove':
+        for (let [s, remove] of document.range(cursor.current, string)) {
+          if (remove) selection.set(s, false)
+        }
+        setSelection(new Map(selection))
+        break
+      default:
+        setSelection(document.range(cursor.current, string))
+    }
   })
 
   return (
@@ -46,16 +76,14 @@ export const Alto = React.memo(({
           {block.lines().map((line, lidx) => (
             <Line
               key={lidx}
-              isDragging={status.current?.isDragging}
-              onMouseEnter={handleMouseEnter}
+              onMouseEnter={isDragging ? handleMouseEnter : null}
               value={line}>
               {line.strings().map((string, sidx) => (
                 <String
                   key={sidx}
-                  isDragging={status.current?.isDragging}
                   isSelected={selection?.get(string)}
                   onMouseDown={handleMouseDown}
-                  onMouseEnter={handleMouseEnter}
+                  onMouseEnter={isDragging ? handleMouseEnter : null}
                   value={string}/>
               )).toArray()}
             </Line>
@@ -74,27 +102,25 @@ export const TextBlock = ({ children }) => (
 
 export const Line = ({
   children,
-  isDragging = false,
   value,
   onMouseEnter
 }) => (
   <div className="text-line">
     <div
       className="start-line"
-      onMouseEnter={isDragging ? () => {
-        onMouseEnter(value.previous()?.last() || value.first())
-      } : null}/>
+      onMouseEnter={(event) => {
+        onMouseEnter?.(event, value.previous()?.last() || value.first())
+      }}/>
     {children}
     <div
       className="end-line"
-      onMouseEnter={isDragging ? () => {
-        onMouseEnter(value.last())
-      } : null}/>
+      onMouseEnter={(event) => {
+        onMouseEnter?.(event, value.last())
+      }}/>
   </div>
 )
 
 export const String = ({
-  isDragging = false,
   isSelected = false,
   onMouseDown,
   onMouseEnter,
@@ -103,7 +129,7 @@ export const String = ({
   <div
     className={cx('string', { selected: isSelected })}
     onMouseDown={(event) => { onMouseDown(event, value) }}
-    onMouseEnter={isDragging ? () => { onMouseEnter(value) } : null}>
+    onMouseEnter={(event) => { onMouseEnter?.(event, value) }}>
     {value.CONTENT}
   </div>
 )
