@@ -10,18 +10,22 @@ const isClickOutside = (
   classes = ['alto-document', 'start-line', 'end-line']
 ) => classes.some((name) => has(node, name))
 
+const flip = (a, b) =>
+  a.entries().reduce((m, [k, v]) =>
+    v ? m.set(k, !m.get(k)) : m, new Map(b))
+
 export const Alto = React.memo(({
   document,
   outline = 'none'
 }) => {
   let cursor = useRef(null)
-  let status = useRef(null)
+  let drag = useRef(null)
 
   let [isDragging, setDragging] = useState(false)
   let [selection, setSelection] = useState(new Map)
 
   let handleClick = useEvent((event) => {
-    if (!status.current && isClickOutside(event.target)) {
+    if (!drag.current && isClickOutside(event.target)) {
       cursor.current = null
       setSelection(new Map)
     }
@@ -31,23 +35,24 @@ export const Alto = React.memo(({
     onDragStart(event, string, isOutside) {
       setDragging(false)
 
-      status.current = {
+      drag.current = {
         clientX: event.clientX,
-        clientY: event.clientY
+        clientY: event.clientY,
       }
 
       if (event.shiftKey) {
-        status.current.modifier = 'add'
+        drag.current.modifier = 'add'
+        drag.current.selection = document.range(string, cursor.current, selection)
 
         if (!isOutside)
-          setSelection(document.range(string, cursor.current, selection))
+          setSelection(drag.current.selection)
 
       } else if (isMeta(event)) {
-        let isSelected = selection.get(string)
-        status.current.modifier = isSelected ? 'remove' : 'add'
+        drag.current.modifier = 'flip'
+        drag.current.selection = selection
 
         if (!isOutside)
-          setSelection((new Map(selection)).set(string, !isSelected))
+          setSelection((new Map(selection)).set(string, !selection.get(string)))
 
       } else {
         if (!isOutside)
@@ -58,12 +63,12 @@ export const Alto = React.memo(({
     },
     onDrag(event) {
       if (!isDragging) {
-        if (distance(status.current, event).total > 20)
+        if (distance(drag.current, event).total > 20)
           setDragging(true)
       }
     },
     onDragStop() {
-      status.current = null
+      drag.current = null
       setDragging(false)
     }
   })
@@ -72,15 +77,21 @@ export const Alto = React.memo(({
     if (!string || !isDragging)
       return
 
-    switch (status.current.modifier) {
+    switch (drag.current.modifier) {
       case 'add':
-        setSelection(document.range(cursor.current, string, selection))
+        setSelection(
+          document.range(
+            cursor.current,
+            string,
+            drag.current.selection
+          ))
         break
-      case 'remove':
-        for (let [s, remove] of document.range(cursor.current, string)) {
-          if (remove) selection.set(s, false)
-        }
-        setSelection(new Map(selection))
+      case 'flip':
+        setSelection(
+          flip(
+            document.range(cursor.current, string),
+            drag.current.selection
+          ))
         break
       default:
         setSelection(document.range(cursor.current, string))
