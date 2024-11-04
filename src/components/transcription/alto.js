@@ -3,7 +3,12 @@ import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDragHandler } from '../../hooks/use-drag-handler.js'
 import { isMeta } from '../../keymap.js'
-import { distance } from '../../dom.js'
+import { distance, has } from '../../dom.js'
+
+const isClickOutside = (
+  node,
+  classes = ['alto-document', 'start-line', 'end-line']
+) => classes.some((name) => has(node, name))
 
 export const Alto = React.memo(({
   document,
@@ -13,7 +18,14 @@ export const Alto = React.memo(({
   let status = useRef(null)
 
   let [isDragging, setDragging] = useState(false)
-  let [selection, setSelection] = useState(document.range())
+  let [selection, setSelection] = useState(new Map)
+
+  let handleClick = useEvent((event) => {
+    if (!status.current && isClickOutside(event.target)) {
+      cursor.current = null
+      setSelection(new Map)
+    }
+  })
 
   let handleMouseDown = useDragHandler({
     onDragStart(event, string, isOutside) {
@@ -26,6 +38,7 @@ export const Alto = React.memo(({
 
       if (event.shiftKey) {
         status.current.modifier = 'add'
+
         if (!isOutside)
           setSelection(document.range(string, cursor.current, selection))
 
@@ -75,7 +88,9 @@ export const Alto = React.memo(({
   })
 
   return (
-    <section className={cx('alto-document', `outline-${outline}`)}>
+    <section
+      className={cx('alto-document', `outline-${outline}`)}
+      onClick={handleClick}>
       {document.blocks().map((block, bidx) => (
         <TextBlock key={bidx}>
           {block.lines().map((line, lidx) => (
