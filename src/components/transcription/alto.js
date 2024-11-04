@@ -16,7 +16,7 @@ export const Alto = React.memo(({
   let [selection, setSelection] = useState(document.range())
 
   let handleMouseDown = useDragHandler({
-    onDragStart(event, string) {
+    onDragStart(event, string, isOutside) {
       setDragging(false)
 
       status.current = {
@@ -26,14 +26,19 @@ export const Alto = React.memo(({
 
       if (event.shiftKey) {
         status.current.modifier = 'add'
-        setSelection(document.range(string, cursor.current, selection))
+        if (!isOutside)
+          setSelection(document.range(string, cursor.current, selection))
+
       } else if (isMeta(event)) {
         let isSelected = selection.get(string)
         status.current.modifier = isSelected ? 'remove' : 'add'
-        selection.set(string, !isSelected)
-        setSelection(new Map(selection))
+
+        if (!isOutside)
+          setSelection((new Map(selection)).set(string, !isSelected))
+
       } else {
-        setSelection(document.range(string))
+        if (!isOutside)
+          setSelection(document.range(string))
       }
 
       cursor.current = string
@@ -76,6 +81,7 @@ export const Alto = React.memo(({
           {block.lines().map((line, lidx) => (
             <Line
               key={lidx}
+              onMouseDown={handleMouseDown}
               onMouseEnter={isDragging ? handleMouseEnter : null}
               value={line}>
               {line.strings().map((string, sidx) => (
@@ -103,17 +109,24 @@ export const TextBlock = ({ children }) => (
 export const Line = ({
   children,
   value,
+  onMouseDown,
   onMouseEnter
 }) => (
   <div className="text-line">
     <div
       className="start-line"
+      onMouseDown={(event) => {
+        onMouseDown(event, value.first(), true)
+      }}
       onMouseEnter={(event) => {
         onMouseEnter?.(event, value.previous()?.last() || value.first())
       }}/>
     {children}
     <div
       className="end-line"
+      onMouseDown={(event) => {
+        onMouseDown(event, value.last(), true)
+      }}
       onMouseEnter={(event) => {
         onMouseEnter?.(event, value.last())
       }}/>
