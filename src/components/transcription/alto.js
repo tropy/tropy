@@ -3,7 +3,7 @@ import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDragHandler } from '../../hooks/use-drag-handler.js'
 import { isMeta } from '../../keymap.js'
-import { distance, has } from '../../dom.js'
+import { bounds, has } from '../../dom.js'
 
 const isClickOutside = (
   node,
@@ -13,6 +13,7 @@ const isClickOutside = (
 const flip = (a, b) =>
   a.entries().reduce((m, [k, v]) =>
     v ? m.set(k, !m.get(k)) : m, new Map(b))
+
 
 export const Alto = React.memo(({
   document,
@@ -32,40 +33,44 @@ export const Alto = React.memo(({
   })
 
   let handleMouseDown = useDragHandler({
-    onDragStart(event, string, isOutside) {
+    onDragStart(event, target) {
       setDragging(false)
 
       drag.current = {
-        clientX: event.clientX,
-        clientY: event.clientY,
+        origin: bounds(event.target),
+        target
       }
 
-      if (event.shiftKey) {
-        drag.current.modifier = 'add'
-        drag.current.selection = document.range(string, cursor.current, selection)
-
-        if (!isOutside)
-          setSelection(drag.current.selection)
-
-      } else if (isMeta(event)) {
-        drag.current.modifier = 'flip'
+      if (Array.isArray(target)) {
         drag.current.selection = selection
 
-        if (!isOutside)
-          setSelection((new Map(selection)).set(string, !selection.get(string)))
-
+        if (event.shiftKey) {
+          drag.current.modifier = 'add'
+        } else if (isMeta(event)) {
+          drag.current.modifier = 'flip'
+        }
       } else {
-        if (!isOutside)
-          setSelection(document.range(string))
-      }
+        if (event.shiftKey) {
+          drag.current.modifier = 'add'
+          drag.current.selection = document.range(target, cursor.current, selection)
+          setSelection(drag.current.selection)
 
-      cursor.current = string
-    },
-    onDrag(event) {
-      if (!isDragging) {
-        if (distance(drag.current, event).total > 20)
-          setDragging(true)
+        } else if (isMeta(event)) {
+          drag.current.modifier = 'flip'
+          drag.current.selection = selection
+          setSelection(
+            (new Map(selection)).set(target, !selection.get(target)))
+
+        } else {
+          setSelection(document.range(target))
+        }
+
+        cursor.current = target
       }
+    },
+    onDrag() {
+      if (!isDragging)
+        setDragging(true)
     },
     onDragStop() {
       drag.current = null
@@ -73,9 +78,40 @@ export const Alto = React.memo(({
     }
   })
 
-  let handleMouseEnter = useEvent((event, string) => {
-    if (!string || !isDragging)
+  let handleMouseEnterLine = useEvent((event, strings) => {
+    if (!drag.current)
       return
+
+    let { origin, target } = drag.current
+
+    if (Array.isArray(target)) {
+      if (strings[0] === target[0] && strings[1] === target[1])
+        return
+    } else {
+      if (strings.includes(target))
+        return
+    }
+
+    let isForward = event.clientY > origin.bottom ||
+      (event.clientY >= origin.top && event.clientX >= origin.left)
+
+    let string = strings[isForward ? 0 : 1]
+    if (string)
+      handleMouseEnter(event, string)
+  })
+
+  let handleMouseEnter = useEvent((event, string) => {
+    if (!string || !drag.current)
+      return
+
+    let { target, origin } = drag.current
+
+    if (Array.isArray(target)) {
+      let isForward = event.clientY > origin.bottom ||
+        (event.clientY >= origin.top && event.clientX >= origin.left)
+
+      cursor.current = target[isForward ? 1 : 0]
+    }
 
     switch (drag.current.modifier) {
       case 'add':
@@ -108,7 +144,7 @@ export const Alto = React.memo(({
             <Line
               key={lidx}
               onMouseDown={handleMouseDown}
-              onMouseEnter={isDragging ? handleMouseEnter : null}
+              onMouseEnter={isDragging ? handleMouseEnterLine : null}
               value={line}>
               {line.strings().map((string, sidx) => (
                 <String
@@ -132,6 +168,16 @@ export const TextBlock = ({ children }) => (
   </div>
 )
 
+const lhs = (line) => ([
+  line.previous()?.last(),
+  line.first()
+])
+
+const rhs = (line) => ([
+  line.last(),
+  line.next()?.first(),
+])
+
 export const Line = ({
   children,
   value,
@@ -141,21 +187,13 @@ export const Line = ({
   <div className="text-line">
     <div
       className="start-line"
-      onMouseDown={(event) => {
-        onMouseDown(event, value.first(), true)
-      }}
-      onMouseEnter={(event) => {
-        onMouseEnter?.(event, value.previous()?.last() || value.first())
-      }}/>
+      onMouseDown={(event) => { onMouseDown(event, lhs(value)) }}
+      onMouseEnter={(event) => { onMouseEnter?.(event, lhs(value)) }}/>
     {children}
     <div
       className="end-line"
-      onMouseDown={(event) => {
-        onMouseDown(event, value.last(), true)
-      }}
-      onMouseEnter={(event) => {
-        onMouseEnter?.(event, value.last())
-      }}/>
+      onMouseDown={(event) => { onMouseDown(event, rhs(value)) }}
+      onMouseEnter={(event) => { onMouseEnter?.(event, rhs(value)) }}/>
   </div>
 )
 
