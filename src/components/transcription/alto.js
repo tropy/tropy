@@ -37,13 +37,13 @@ export const Alto = React.memo(({
       setDragging(false)
 
       drag.current = {
+        cursor: cursor.current,
         origin: bounds(event.target),
+        selection,
         target
       }
 
       if (Array.isArray(target)) {
-        drag.current.selection = selection
-
         if (event.shiftKey) {
           drag.current.modifier = 'add'
         } else if (isMeta(event)) {
@@ -52,12 +52,10 @@ export const Alto = React.memo(({
       } else {
         if (event.shiftKey) {
           drag.current.modifier = 'add'
-          drag.current.selection = document.range(target, cursor.current, selection)
-          setSelection(drag.current.selection)
+          setSelection(document.range(target, cursor.current, selection))
 
         } else if (isMeta(event)) {
           drag.current.modifier = 'flip'
-          drag.current.selection = selection
           setSelection(
             (new Map(selection)).set(target, !selection.get(target)))
 
@@ -72,7 +70,10 @@ export const Alto = React.memo(({
       if (!isDragging)
         setDragging(true)
     },
-    onDragStop() {
+    onDragStop(event, wasCancelled) {
+      if (wasCancelled)
+        setSelection(drag.current.selection)
+
       drag.current = null
       setDragging(false)
     }
@@ -117,7 +118,7 @@ export const Alto = React.memo(({
       case 'add':
         setSelection(
           document.range(
-            cursor.current,
+            drag.current.cursor,
             string,
             drag.current.selection
           ))
