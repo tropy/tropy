@@ -53,9 +53,13 @@ export const Alto = React.memo(({
       current.origin = bounds(event.target)
       current.target = target
 
+      let prevModifier = current.modifier
       current.modifier = event.shiftKey ? 'SHIFT' : isMeta(event) ? 'FLIP' : null
 
-      if (current.modifier !== 'SHIFT') {
+      if (current.modifier === 'SHIFT') {
+        if (prevModifier !== 'SHIFT')
+          current.selection = null
+      } else {
         current.selection = selection
       }
 
