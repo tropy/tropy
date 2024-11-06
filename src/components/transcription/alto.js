@@ -14,10 +14,14 @@ const flip = (a, b) =>
   a.entries().reduce((m, [k, v]) =>
     v ? m.set(k, !m.get(k)) : m, new Map(b))
 
+const merge = (a, b) =>
+  a.entries().reduce((m, [k, v]) =>
+    v ? m.set(k, true) : m, new Map(b))
+
 const select = (document, string, { cursor, selection, modifier }) => {
   switch (modifier) {
     case 'SHIFT':
-      return document.range(string, cursor, selection)
+      return merge(document.range(string, cursor), selection)
     case 'FLIP':
       return flip(document.range(string, cursor), selection)
     default:
@@ -55,7 +59,6 @@ export const Alto = React.memo(({
       if (current.modifier !== 'SHIFT' || current.modifier !== prevModifier) {
         current.selection = selection
       }
-
 
       if (Array.isArray(target))
         return
