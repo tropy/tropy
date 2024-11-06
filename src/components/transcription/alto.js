@@ -14,75 +14,73 @@ const flip = (a, b) =>
   a.entries().reduce((m, [k, v]) =>
     v ? m.set(k, !m.get(k)) : m, new Map(b))
 
+const select = (document, string, { cursor, selection, modifier }) => {
+  switch (modifier) {
+    case 'SHIFT':
+      return document.range(string, cursor, selection)
+    case 'FLIP':
+      return flip(document.range(string, cursor), selection)
+    default:
+      return document.range(string, cursor)
+  }
+}
 
 export const Alto = React.memo(({
   document,
   outline = 'none'
 }) => {
-  let cursor = useRef(null)
-  let drag = useRef(null)
+  let drag = useRef({})
 
   let [isDragging, setDragging] = useState(false)
   let [selection, setSelection] = useState(new Map)
 
-  let handleClick = useEvent((event) => {
-    if (!drag.current && isClickOutside(event.target)) {
-      cursor.current = null
+  let handleClickOutside = useEvent((event) => {
+    if (!isDragging && isClickOutside(event.target)) {
       setSelection(new Map)
+      drag.current = {}
     }
   })
 
   let handleMouseDown = useDragHandler({
     onDragStart(event, target) {
       setDragging(false)
+      let { current } = drag
 
-      drag.current = {
-        cursor: cursor.current,
-        origin: bounds(event.target),
-        selection,
-        target
+      current.origin = bounds(event.target)
+      current.target = target
+
+      let prevModifier = current.modifier
+      current.modifier = event.shiftKey ? 'SHIFT' : isMeta(event) ? 'FLIP' : null
+
+      if (current.modifier !== 'SHIFT' || current.modifier !== prevModifier) {
+        current.selection = selection
       }
 
-      if (Array.isArray(target)) {
-        if (event.shiftKey) {
-          drag.current.modifier = 'add'
-        } else if (isMeta(event)) {
-          drag.current.modifier = 'flip'
-        }
-      } else {
-        if (event.shiftKey) {
-          drag.current.modifier = 'add'
-          setSelection(document.range(target, cursor.current, selection))
 
-        } else if (isMeta(event)) {
-          drag.current.modifier = 'flip'
-          setSelection(
-            (new Map(selection)).set(target, !selection.get(target)))
+      if (Array.isArray(target))
+        return
 
-        } else {
-          setSelection(document.range(target))
-        }
-
-        cursor.current = target
+      if (current.modifier !== 'SHIFT') {
+        current.cursor = target
       }
+
+      setSelection(select(document, target, current))
     },
     onDrag() {
       if (!isDragging)
         setDragging(true)
     },
     onDragStop(event, wasCancelled) {
-      if (wasCancelled)
-        setSelection(drag.current.selection)
+      if (isDragging && wasCancelled) {
+        setSelection(drag.current.selection || new Map)
+        drag.current = {}
+      }
 
-      drag.current = null
       setDragging(false)
     }
   })
 
   let handleMouseEnterLine = useEvent((event, strings) => {
-    if (!drag.current)
-      return
-
     let { origin, target } = drag.current
 
     if (Array.isArray(target)) {
@@ -102,43 +100,25 @@ export const Alto = React.memo(({
   })
 
   let handleMouseEnter = useEvent((event, string) => {
-    if (!string || !drag.current)
+    if (!string)
       return
 
-    let { target, origin } = drag.current
+    let { current } = drag
 
-    if (Array.isArray(target)) {
-      let isForward = event.clientY > origin.bottom ||
-        (event.clientY >= origin.top && event.clientX >= origin.left)
+    if (Array.isArray(current.target)) {
+      let isForward = event.clientY > current.origin.bottom ||
+        (event.clientY >= current.origin.top && event.clientX >= current.origin.left)
 
-      cursor.current = target[isForward ? 1 : 0]
+      current.cursor = current.target[isForward ? 1 : 0]
     }
 
-    switch (drag.current.modifier) {
-      case 'add':
-        setSelection(
-          document.range(
-            drag.current.cursor,
-            string,
-            drag.current.selection
-          ))
-        break
-      case 'flip':
-        setSelection(
-          flip(
-            document.range(cursor.current, string),
-            drag.current.selection
-          ))
-        break
-      default:
-        setSelection(document.range(cursor.current, string))
-    }
+    setSelection(select(document, string, current))
   })
 
   return (
     <section
       className={cx('alto-document', `outline-${outline}`)}
-      onClick={handleClick}>
+      onClick={handleClickOutside}>
       {document.blocks().map((block, bidx) => (
         <TextBlock key={bidx}>
           {block.lines().map((line, lidx) => (
