@@ -15,18 +15,19 @@
 
   .text-line {
     display: flex;
-    margin-bottom: 2px;
   }
 
   .start-line {
     flex: 0 0 auto;
-    width: 10cqw; // Stretch container
+    width: calc(100px - 0.45ch); // Stretch container
   }
 
   .string {
     flex: 0 0 auto;
+    background-clip: padding-box;
     padding: calc(1ch / 6 + 0.25ch);
-    border-radius: 3px;
+    border: 1px solid transparent;
+    border-radius: 4px;
 
     &.selected {
       background-color: $string-selected-bg;
@@ -36,15 +37,11 @@
         background-color: $string-selected-focus-bg;
       }
     }
-
-    & + .string {
-      margin-left: 2px;
-    }
   }
 
   .end-line {
     flex: 1 0 auto;
-    width: 10cqw; // Stretch container
+    width: calc(10cqw - 0.45ch); // Stretch container
   }
 
   // Debugging
