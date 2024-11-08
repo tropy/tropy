@@ -1,6 +1,4 @@
-'use strict'
-
-const loadImageBitmap = async (url) => {
+const loadImageBitmap = async (url, alphaMode) => {
   let response = await fetch(url)
 
   if (!response.ok) {
@@ -8,7 +6,9 @@ const loadImageBitmap = async (url) => {
   }
 
   let blob = await response.blob()
-  let image = await createImageBitmap(blob)
+  let image = alphaMode === 'premultiplied-alpha' ?
+    await createImageBitmap(blob, { premultiplyAlpha: 'none' }) :
+    await createImageBitmap(blob)
 
   postMessage({
     payload: image,
