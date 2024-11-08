@@ -206,7 +206,12 @@ export class Photo extends Container {
   }
 
   destroy() {
-    super.destroy({ children: true })
+    super.destroy({
+      children: true,
+      texture: true,
+      textureSource: true,
+      context: true
+    })
   }
 
   hue(value = 0) {
