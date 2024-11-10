@@ -1,38 +1,57 @@
-import { Filter } from 'pixi.js'
+import { Filter, GlProgram } from 'pixi.js'
+import { vertex } from 'pixi-filters'
 import { restrict } from '../../common/util.js'
 import { Shader } from '../../res.js'
 
 
 export class SharpenFilter extends Filter {
   constructor(intensity = 0, width = 200, height = 200) {
-    super(undefined, Shader.load('sharpen.frag'))
-    this.uniforms.size = new Float32Array(2)
+    super({
+      glProgram: GlProgram.from({
+        fragment: Shader.load('sharpen.frag'),
+        vertex,
+        name: 'sharpen-filter'
+      }),
+      resources: {
+        sharpen: {
+          size: {
+            value: new Float32Array(2),
+            type: 'vec2<f32>'
+          },
+          intensity: {
+            value: 0.0,
+            type: 'f32'
+          }
+        }
+      }
+    })
+
     this.intensity = intensity
     this.width = width
     this.height = height
   }
 
   get intensity() {
-    return this.uniforms.intensity
+    return this.resources.sharpen.uniforms.intensity
   }
 
   set intensity(intensity) {
-    this.uniforms.intensity = restrict(intensity / 100, 0, 10)
+    this.resources.sharpen.uniforms.intensity = restrict(intensity / 100, 0, 10)
   }
 
   get width() {
-    return 1 / this.uniforms.size[0]
+    return 1 / this.resources.sharpen.uniforms.size[0]
   }
 
   set width(value) {
-    this.uniforms.size[0] = 1 / value
+    this.resources.sharpen.uniforms.size[0] = 1 / value
   }
 
   get height() {
-    return 1 / this.uniforms.size[1]
+    return 1 / this.resources.sharpen.uniforms.size[1]
   }
 
   set height(value) {
-    this.uniforms.size[1] = 1 / value
+    this.resources.sharpen.uniforms.size[1] = 1 / value
   }
 }

@@ -1,7 +1,7 @@
 precision mediump float;
 varying mediump vec2 vTextureCoord;
 
-uniform sampler2D uSampler;
+uniform sampler2D uTexture;
 uniform vec2 size;
 uniform float intensity;
 
@@ -10,11 +10,11 @@ float lm(vec4 px) {
 }
 
 float lm(vec2 pos) {
-  return lm(texture2D(uSampler, pos));
+  return lm(texture(uTexture, pos));
 }
 
 void main(void) {
-  vec4 color = texture2D(uSampler, vTextureCoord);
+  vec4 color = texture(uTexture, vTextureCoord);
 
   float c22 = lm(color);
 
