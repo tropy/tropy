@@ -1,5 +1,5 @@
-import * as PIXI from 'pixi.js'
-import { AdjustmentFilter } from '@pixi/filter-adjustment'
+import { Container, ColorMatrixFilter, Sprite, Rectangle } from 'pixi.js'
+import { AdjustmentFilter } from 'pixi-filters'
 import { SharpenFilter } from './filter/index.js'
 import { SelectionLayer, SelectionOverlay } from './selection.js'
 import { constrain } from './util.js'
@@ -7,7 +7,6 @@ import { getResolution } from '../dom.js'
 import { deg, isHorizontal } from '../common/math.js'
 import { ESPER } from '../constants/index.js'
 
-const { Container, ColorMatrixFilter, Sprite, Rectangle } = PIXI
 
 const NEGATIVE = [
   -1, 0, 0, 1, 0, 0, -1, 0, 1, 0, 0, 0, -1, 1, 0, 0, 0, 0, 1, 0
