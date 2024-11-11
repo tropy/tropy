@@ -178,9 +178,10 @@ export default class Esper extends EventEmitter {
       })
 
       renderer.render(photo, { clear: false, renderTexture })
+      let { pixels } = renderer.extract.pixels(renderTexture)
 
       return {
-        buffer: Buffer.from(renderer.extract.pixels(renderTexture)),
+        buffer: Buffer.from(pixels),
         channels: 4,
         premultiplied: true,
         width,
@@ -189,7 +190,7 @@ export default class Esper extends EventEmitter {
 
 
     } finally {
-      renderTexture?.destroy()
+      renderTexture?.destroy(true)
     }
   }
 
