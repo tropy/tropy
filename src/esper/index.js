@@ -1,8 +1,7 @@
 import { EventEmitter } from 'node:events'
-import * as PIXI from 'pixi.js-legacy'
+import { Application, RenderTexture, Ticker } from 'pixi.js'
 import TWEEN from '@tweenjs/tween.js'
 import debounce from 'lodash.debounce'
-import ARGS from '../args.js'
 import {
   append,
   createDragHandler,
@@ -41,11 +40,8 @@ const {
 
 const LARGE_TEXTURE = 3500 * 3500
 
-PIXI.settings.RETINA_PREFIX = /@2x!/
-PIXI.settings.STRICT_TEXTURE_CACHE = true
-
-PIXI.Ticker.shared.autoStart = false
-PIXI.Ticker.shared.stop()
+Ticker.shared.autoStart = false
+Ticker.shared.stop()
 
 export {
   FILTERS
@@ -63,8 +59,9 @@ export default class Esper extends EventEmitter {
   }
 
   #lastClickTime = 0
+  #isInitialized = false
 
-  constructor(opts) {
+  constructor() {
     super()
 
     this.tweens = [
@@ -72,17 +69,24 @@ export default class Esper extends EventEmitter {
       new TWEEN.Group()
     ]
 
-    this.app = new PIXI.Application({
+    this.app = new Application()
+  }
+
+  async init (opts) {
+    if (this.#isInitialized)
+      return this
+
+    await this.app.init({
+      autoStart: false,
+      sharedTicker: true,
+      preference: 'webgl',
+
       antialias: false,
       autoDensity: true,
-      autoStart: false,
       backgroundAlpha: 0,
-      forceCanvas: !ARGS.webgl,
       powerPreference: 'low-power',
       resolution: getResolution(),
       roundPixels: false,
-      sharedLoader: true,
-      sharedTicker: true,
       ...opts
     })
 
@@ -92,21 +96,20 @@ export default class Esper extends EventEmitter {
         ESPER.TOOL[name])
 
     this.app.ticker.add(this.update)
-
     this.loader = new Loader()
 
     this.removeResolutionListener = onResolutionChange(this.handleResolutionChange)
     this.on('change', this.handleResolutionChange)
 
-    on(this.app.view, 'wheel', this.handleWheel, { passive: true })
-
-    let mode = (this.app.renderer instanceof PIXI.CanvasRenderer) ?
-      'canvas' : 'webgl'
+    on(this.app.canvas, 'wheel', this.handleWheel, { passive: true })
 
     info({
-      mode,
+      renderer: this.app.renderer.name,
       resolution: this.resolution
-    }, `Esper.instance created with ${mode} renderer`)
+    }, `Esper.instance initialized with ${this.app.renderer.name} renderer`)
+
+    this.#isInitialized = true
+    return this
   }
 
   halt() {
@@ -123,12 +126,11 @@ export default class Esper extends EventEmitter {
   destroy = () => {
     this.halt()
 
-    off(this.app.view, 'wheel', this.handleWheel, { passive: true })
+    off(this.app.canvas, 'wheel', this.handleWheel, { passive: true })
 
     this.removeResolutionListener()
     this.removeResolutionListener = null
 
-    this.loader.destroy()
     this.app.destroy(true, true)
     this.removeAllListeners()
 
@@ -138,13 +140,13 @@ export default class Esper extends EventEmitter {
   }
 
   mount(element) {
-    append(this.app.view, element)
+    append(this.app.canvas, element)
     return this
   }
 
   unmount() {
     this.halt()
-    remove(this.app.view)
+    remove(this.app.canvas)
   }
 
   extract = async (src, props) => {
@@ -169,7 +171,7 @@ export default class Esper extends EventEmitter {
 
       photo.position.set(width / 2, height / 2)
 
-      var renderTexture = PIXI.RenderTexture.create({
+      var renderTexture = RenderTexture.create({
         width,
         height,
         resolution: 1
@@ -191,7 +193,7 @@ export default class Esper extends EventEmitter {
     }
   }
 
-  clear(duration = 0, gc = true) {
+  clear(duration = 0) {
     if (duration)
       this.fadeOut(this.photo, duration)
     else
@@ -201,27 +203,10 @@ export default class Esper extends EventEmitter {
     this.emit('texture-change', false)
 
     this.render()
-
-    if (gc) {
-      PIXI.utils.destroyTextureCache()
-    }
   }
 
-  clearTextureCache = debounce((current, keep = 0) => {
-    let keys = Object.keys(PIXI.utils.TextureCache)
-
-    if (keep) {
-      keys = keys.slice(0, -keep)
-    }
-
-    for (let key of keys) {
-      if (key !== current)
-        PIXI.utils.TextureCache[key].destroy(true)
-    }
-  }, 1000)
-
   async reset(props, state, duration = 0) {
-    this.clear(FADE_DURATION, false)
+    this.clear(FADE_DURATION)
 
     if (state.src != null) {
       // Subtle: avoid race conditions because of async loading!
@@ -246,8 +231,6 @@ export default class Esper extends EventEmitter {
 
         this.photo.eventMode = 'static'
         this.photo.addEventListener('mousedown', this.handleMouseDown)
-
-        this.clearTextureCache(state.src, 5)
 
         if (state.width !== texture.width || state.height !== texture.height)
           this.emit('photo-error', props.photo, false)
@@ -391,7 +374,7 @@ export default class Esper extends EventEmitter {
 
   start() {
     this.stop.cancel()
-    PIXI.Ticker.system.stop()
+    Ticker.system.stop()
     this.app.start()
     this.app.ticker.start()
   }
@@ -399,7 +382,7 @@ export default class Esper extends EventEmitter {
   stop = debounce(() => {
     this.app.stop()
     this.app.ticker.stop()
-    PIXI.Ticker.system.stop()
+    Ticker.system.stop()
   }, 5000)
 
   update = () => {
