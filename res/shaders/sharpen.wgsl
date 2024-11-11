@@ -27,16 +27,16 @@ fn mainFragment(
 
 	let c22: f32 = lm(color);
 
-	let c11: f32 = lm(uv - sharpenUniforms.size);
-	let c12: f32 = lm(vec2<f32>(uv.x, uv.y - size.y));
-	let c13: f32 = lm(vec2<f32>(uv.x + size.x, uv.y - size.y));
-	let c21: f32 = lm(vec2<f32>(uv.x - size.x, uv.y));
-	let c23: f32 = lm(vec2<f32>(uv.x + size.x, uv.y));
-	let c31: f32 = lm(vec2<f32>(uv.x - size.x, uv.y + size.y));
-	let c32: f32 = lm(vec2<f32>(uv.x, uv.y + size.y));
-	let c33: f32 = lm(uv + size);
+	let c11: f32 = lm2(uv - sharpenUniforms.size);
+	let c12: f32 = lm2(vec2<f32>(uv.x, uv.y - sharpenUniforms.size.y));
+	let c13: f32 = lm2(vec2<f32>(uv.x + sharpenUniforms.size.x, uv.y - sharpenUniforms.size.y));
+	let c21: f32 = lm2(vec2<f32>(uv.x - sharpenUniforms.size.x, uv.y));
+	let c23: f32 = lm2(vec2<f32>(uv.x + sharpenUniforms.size.x, uv.y));
+	let c31: f32 = lm2(vec2<f32>(uv.x - sharpenUniforms.size.x, uv.y + sharpenUniforms.size.y));
+	let c32: f32 = lm2(vec2<f32>(uv.x, uv.y + sharpenUniforms.size.y));
+	let c33: f32 = lm2(uv + sharpenUniforms.size);
 
-	let finalColor: vec4<f32> = color + color * sharpenUniforms.intensity * (
+	var finalColor: vec4<f32> = color + color * sharpenUniforms.intensity * (
     8. * c22 - c21 - c23 - c12 - c32 - c11 - c13 - c31 - c33
   );
 
@@ -48,6 +48,6 @@ fn lm(px: vec4<f32>) -> f32 {
 	return (px.r + px.g + px.b) / 3.;
 } 
 
-fn lm(pos: vec2<f32>) -> f32 {
+fn lm2(pos: vec2<f32>) -> f32 {
   return lm(textureSample(uTexture, uSampler, pos));
 } 
