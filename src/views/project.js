@@ -8,6 +8,7 @@ import { main } from '../sagas/project.js'
 import win from '../window.js'
 import { idle, intl, project, history, keymap, settings } from '../actions/index.js'
 import * as dialog from '../dialog.js'
+import Esper from '../esper/index.js'
 
 export const store = create()
 export const tasks = store.saga.run(main)
@@ -15,6 +16,7 @@ export const tasks = store.saga.run(main)
 const { locale, file } = ARGS
 
 Promise.all([
+  Esper.instance.init(),
   store.dispatch(intl.load({ locale })),
   store.dispatch(keymap.load({ locale }))
 ])
