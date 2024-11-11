@@ -165,38 +165,38 @@ const ESPER = {
     arrow: {
       default: 'arrow',
       active: 'arrow',
-      x: '1',
-      y: '1'
+      x: 1,
+      y: 1
     },
     move: {
       default: 'arrow',
       active: 'arrow',
-      x: '1',
-      y: '1'
+      x: 1,
+      y: 1
     },
     pan: {
       default: 'grab',
       active: 'grabbing',
-      x: '9',
-      y: '9'
+      x: 9,
+      y: 9
     },
     selection: {
       default: 'crosshairs',
       active: 'crosshairs',
-      x: '7',
-      y: '7'
+      x: 7,
+      y: 7
     },
     zoomIn: {
       default: 'zoom-in',
       active: 'zoom-in',
-      x: '8',
-      y: '8'
+      x: 8,
+      y: 8
     },
     zoomOut: {
       default: 'zoom-out',
       active: 'zoom-out',
-      x: '8',
-      y: '8'
+      x: 8,
+      y: 8
     }
   }
 }
