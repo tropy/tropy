@@ -72,7 +72,7 @@ export default class Esper extends EventEmitter {
     this.app = new Application()
   }
 
-  async init (opts) {
+  async init(opts) {
     if (this.#isInitialized)
       return this
 
