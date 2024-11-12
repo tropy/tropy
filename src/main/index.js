@@ -70,13 +70,14 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
     app.setAsDefaultProtocolClient('tropy')
   }
 
-  if (opts.webgl) {
-    app.commandLine.appendSwitch('ignore-gpu-blacklist')
+  if (opts.disableHardwareAcceleration)
+    app.disableHardwareAcceleration()
 
-    if (linux) {
-      app.commandLine.appendSwitch('enable-gpu-rasterization')
-      app.commandLine.appendSwitch('enable-zero-copy')
-    }
+  app.commandLine.appendSwitch('ignore-gpu-blacklist')
+
+  if (linux) {
+    app.commandLine.appendSwitch('enable-gpu-rasterization')
+    app.commandLine.appendSwitch('enable-zero-copy')
   }
 
   if (opts.scale) {
