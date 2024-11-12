@@ -18,6 +18,7 @@ import { Photo, FILTERS } from './photo.js'
 import { Selection } from './selection.js'
 import { Loader } from './loader.js'
 import { ESPER, SASS } from '../constants/index.js'
+import ARGS from '../args.js'
 
 import {
   addCursorStyle,
@@ -79,8 +80,7 @@ export default class Esper extends EventEmitter {
     await this.app.init({
       autoStart: false,
       sharedTicker: true,
-      preference: 'webgl',
-
+      preference: ARGS.rendererPreference || 'webgl',
       antialias: false,
       autoDensity: true,
       backgroundAlpha: 0,

@@ -61,9 +61,9 @@ export class Tropy extends EventEmitter {
     port: 2019,
     theme: 'system',
     recent: [],
-    updater: true,
-    webgl: true,
+    rendererPreference: null,
     win: {},
+    updater: true,
     zoom: 1.0
   }
 
@@ -1148,7 +1148,8 @@ export class Tropy extends EventEmitter {
       uuid: this.state.uuid,
       update: this.updater.release,
       version,
-      webgl: this.state.webgl,
+      rendererPreference:
+        this.opts.rendererPreference || this.state.rendererPreference,
       zoom: this.state.zoom
     }
   }

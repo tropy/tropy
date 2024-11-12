@@ -33,7 +33,15 @@ program
 
   .option('--no-auto-updates', 'disable automatic updates')
   .option('--no-context-isolation', 'disable context isolation')
-  .option('--webgl', 'prefer WebGL even on GPUs with known issues', false)
+
+  .option('-R, --renderer-preference <type>',
+    'set the preferred render api')
+
+  .option(
+    '--disable-hardware-acceleration',
+    'disable hardware acceleration',
+    !!process.env.TROPY_DISABLE_HARDWARE_ACCELERATION
+  )
 
   .option('--verbose', 'set debug flag', !!process.env.TROPY_DEBUG)
   .option('--trace', 'set trace flag', !!process.env.TROPY_TRACE)
