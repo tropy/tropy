@@ -187,7 +187,7 @@ export class Esper extends React.Component {
       let state = {
         ...this.state,
         ...next,
-        alto: this.getAltoDocument()
+        alto: this.getAltoDocument(this.props.transcription?.data)
       }
 
       if (this.state.isVisible) {
