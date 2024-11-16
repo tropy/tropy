@@ -56,8 +56,8 @@ export class Photo extends Container {
     this.overlay = new SelectionOverlay()
     this.addChild(this.overlay)
 
-    this.text = new TextLayer()
-    this.addChild(this.text)
+    this.textLayer = new TextLayer()
+    this.addChild(this.textLayer)
   }
 
   get adjust() {
@@ -252,7 +252,7 @@ export class Photo extends Container {
     this.selections.sync(props, state)
     this.overlay.sync(props, state)
     this.tool = state.quicktool || props.tool
-    this.text.sync(state.alto)
+    this.textLayer.sync(props, state)
   }
 
   update(dragState) {
@@ -264,8 +264,8 @@ export class Photo extends Container {
       this.overlay.update()
     }
 
-    if (this.text.visible) {
-      this.text.update(dragState)
+    if (this.textLayer.visible) {
+      this.textLayer.update(dragState)
     }
   }
 }
