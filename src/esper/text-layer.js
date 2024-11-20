@@ -53,7 +53,7 @@ export class TextLayer extends Container {
 export class TextBox extends Graphics {
   constructor(node, selection) {
     super()
-    this.blendMode = 'color'
+    this.blendMode = 'multiply'
     this.setFillStyle(ESPER.COLOR.textLayer.fill)
     this.sync(node, selection)
   }
