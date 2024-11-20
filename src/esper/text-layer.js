@@ -7,21 +7,17 @@ import { normalizeRectangle } from './util.js'
 export class TextLayer extends Container {
   constructor() {
     super()
-    this.liveSelection = new TextSelection()
-    this.addChild(this.liveSelection)
-
     this.filters = [new AlphaFilter({
-      alpha: 0.25,
+      alpha: ESPER.COLOR.textLayer.fill.alpha,
       blendMode: 'multiply'
     })]
   }
 
   clear() {
-    if (this.children.length > 1) {
-      for (let block of this.removeChildren(1)) {
+    if (this.children.length)
+      for (let block of this.removeChildren()) {
         block.destroy()
       }
-    }
   }
 
   destroy() {
@@ -44,7 +40,7 @@ export class TextLayer extends Container {
     }
   }
 
-  update({ selection } = {}) {
+  update({ selection } = BLANK) {
     let scale = 1 / this.parent.scale.y
 
     if (selection)
@@ -56,24 +52,8 @@ export class TextLayer extends Container {
   }
 }
 
-export class TextSelection extends Graphics {
-  update(scale = 1, { x, y, width, height } = {}) {
-    this.clear()
-
-    if (!width || !height) return
-
-    this
-      .rect(x, y, width, height)
-      .fill({ color: 0x000000, alpha: 0.5 })
-      .stroke({ width: scale, color: 0xffffff, alpha: 1 })
-  }
-}
-
 
 export class TextBox extends Graphics {
-  fillStyle = { color: 0x00ffff, alpha: 1 }
-  strokeStyle = ({ color: 0xffffff, alpha: 1 })
-
   constructor(node) {
     super()
     this.sync(node)
@@ -85,7 +65,6 @@ export class TextBox extends Graphics {
 
   sync(node) {
     this.data = normalizeRectangle(node.bounds())
-
   }
 
   update() {
@@ -99,6 +78,6 @@ export class TextBox extends Graphics {
 
     this
       .rect(x, y, width, height)
-      .fill(this.fillStyle)
+      .fill(ESPER.COLOR.textLayer.fill.color)
   }
 }

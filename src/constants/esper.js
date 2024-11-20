@@ -28,6 +28,9 @@ export default {
       line: { color: 0xffffff, alpha: 1 },
       fill: { color: 0x000000, alpha: 0.4 }
     },
+    textLayer: {
+      fill: { color: 0x00ffff, alpha: 0.25 }
+    },
     selection: {
       default: {
         line: { color: 0x5c93e5, alpha: 1 },
