@@ -1,4 +1,4 @@
-import { Container, Graphics, Rectangle } from 'pixi.js'
+import { AlphaFilter, Container, Graphics, Rectangle } from 'pixi.js'
 import { BLANK } from '../common/util.js'
 import { ESPER } from '../constants/index.js'
 import { normalizeRectangle } from './util.js'
@@ -9,6 +9,11 @@ export class TextLayer extends Container {
     super()
     this.liveSelection = new TextSelection()
     this.addChild(this.liveSelection)
+
+    this.filters = [new AlphaFilter({
+      alpha: 0.25,
+      blendMode: 'multiply'
+    })]
   }
 
   clear() {
@@ -66,7 +71,7 @@ export class TextSelection extends Graphics {
 
 
 export class TextBox extends Graphics {
-  fillStyle = { color: 0x000000, alpha: 0.125 }
+  fillStyle = { color: 0x00ffff, alpha: 1 }
   strokeStyle = ({ color: 0xffffff, alpha: 1 })
 
   constructor(node) {
@@ -83,7 +88,7 @@ export class TextBox extends Graphics {
 
   }
 
-  update(scale) {
+  update() {
     let { x, y, width, height } = this.data
 
     this.clear()
@@ -95,6 +100,5 @@ export class TextBox extends Graphics {
     this
       .rect(x, y, width, height)
       .fill(this.fillStyle)
-      .stroke({ width: scale, ...this.strokeStyle })
   }
 }
