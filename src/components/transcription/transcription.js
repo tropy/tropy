@@ -5,6 +5,8 @@ import { Alto } from './alto.js'
 export const Transcription = ({
   config,
   data,
+  onSelect,
+  selection,
   status = 0,
   text
 }) => {
@@ -27,7 +29,10 @@ export const Transcription = ({
 
   } else if (data) {
     content = (
-      <Alto document={data}/>
+      <Alto
+        document={data}
+        onSelect={onSelect}
+        selection={selection}/>
     )
 
   } else {
