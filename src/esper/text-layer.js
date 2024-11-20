@@ -1,7 +1,7 @@
 import { Container, Graphics } from 'pixi.js'
 import { BLANK } from '../common/util.js'
 import { ESPER } from '../constants/index.js'
-import { normalizeRectangle } from './util.js'
+import { move, normalizeRectangle } from './util.js'
 
 
 export class TextLayer extends Container {
@@ -66,8 +66,7 @@ export class TextBox extends Graphics {
     this.data = normalizeRectangle(node.bounds())
 
     if (offset) {
-      this.data.x += offset.x
-      this.data.y += offset.y
+      move(this.data, offset)
     }
   }
 
