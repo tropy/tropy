@@ -14,7 +14,8 @@ export const EsperView = React.forwardRef(({
   onWheelPan,
   onWheelZoom,
   onZoomIn,
-  onZoomOut
+  onZoomOut,
+  textSelection
 }, ref) => {
 
   let handleResize = useResizeObserver(onResize)
@@ -29,6 +30,9 @@ export const EsperView = React.forwardRef(({
   }, [handleResize])
 
   useImperativeHandle(ref, () => (Esper.instance), [])
+
+  // link text selection
+  Esper.instance.textSelection = textSelection
 
   useEffect(() => {
     Esper.instance

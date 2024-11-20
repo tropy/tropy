@@ -20,16 +20,27 @@ export class TextLayer extends Container {
     super.destroy({ children: true })
   }
 
+  isVisible(document, tool) {
+    return document != null && (
+      tool === ESPER.TOOL.ARROW || tool === ESPER.TOOL.PAN
+    )
+  }
+
+  getEventModeFor(tool) {
+    return tool === ESPER.TOOL.ARROW ? 'static' : 'none'
+  }
+
   sync(props, state) {
     console.log('TextLayer#sync')
 
-    // this.visible
-    // this.eventMode
-
+    let tool = state.quicktool || props.tool
     let document = state.text
     let offset = props.selection
 
     this.clear()
+
+    this.visible = this.isVisible(document, tool)
+    this.eventMode = this.getEventModeFor(tool)
 
     if (document) {
       for (let string of document.strings()) {
@@ -38,14 +49,12 @@ export class TextLayer extends Container {
     }
   }
 
-  update({ selection } = BLANK) {
-    let scale = 1 / this.parent.scale.y
-
+  update({ selection } = BLANK, textSelection) {
     if (selection)
       selection = normalizeRectangle(selection)
 
     for (let child of this.children) {
-      child.update(scale, selection)
+      child.update(textSelection)
     }
   }
 }
@@ -53,8 +62,9 @@ export class TextLayer extends Container {
 
 export class TextBox extends Graphics {
   constructor(node, offset) {
-    super()
-    this.blendMode = 'multiply'
+    super({
+      blendMode: 'multiply' // TODO doesn't work
+    })
     this.setFillStyle(ESPER.COLOR.textLayer.fill)
     this.sync(node, offset)
   }
@@ -64,6 +74,7 @@ export class TextBox extends Graphics {
   }
 
   sync(node, offset) {
+    this.node = node
     this.data = normalizeRectangle(node.bounds())
 
     if (offset) {
@@ -71,14 +82,15 @@ export class TextBox extends Graphics {
     }
   }
 
-  update() {
+  update(selection) {
+    this.clear()
+
     let { x, y, width, height } = this.data
 
-    this.clear()
-    if (!width || !height) return
+    if (!width || !height || !selection?.get(this.node))
+      return
 
     // hover
-    // selected
     // rotation
 
     this
