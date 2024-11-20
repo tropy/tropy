@@ -70,6 +70,8 @@ export class TextBox extends Graphics {
   }
 
   destroy() {
+    this.node = null
+    this.data = null
     super.destroy(true)
   }
 
