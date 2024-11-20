@@ -255,7 +255,7 @@ export class Photo extends Container {
     this.textLayer.sync(props, state)
   }
 
-  update(dragState) {
+  update(dragState, textSelection) {
     if (this.selections.visible) {
       this.selections.update(dragState)
     }
@@ -265,7 +265,7 @@ export class Photo extends Container {
     }
 
     if (this.textLayer.visible) {
-      this.textLayer.update(dragState)
+      this.textLayer.update(dragState, textSelection)
     }
   }
 }
