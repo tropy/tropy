@@ -58,6 +58,13 @@ export function addCursorStyle(styles, name, cursor = CURSOR[name]) {
   styles[`${name}-active`] = css.cursor(svg(cursor.active), cursor)
 }
 
+export function move(pos, { x = 0, y = 0 } = {}) {
+  pos.x += x
+  pos.y += y
+
+  return pos
+}
+
 export function normalizeRectangle({
   x = 0, y = 0, width = 0, height = 0
 }, round = false) {
