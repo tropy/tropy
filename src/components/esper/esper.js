@@ -55,6 +55,7 @@ export class Esper extends React.Component {
     isVisible: false,
     over: false,
     quicktool: null,
+    textSelection: new Map,
 
     // Derived from props; constrained by photo/selection and resize
     minZoom: MIN_ZOOM,
@@ -257,6 +258,10 @@ export class Esper extends React.Component {
   getAltoDocument = memoize((data) => (
     Document.parse(data)
   ))
+
+  handleTextSelection = (textSelection) => {
+    this.setState({ textSelection })
+  }
 
   handleChange = (esper) => {
     this.props.onChange({ esper })
@@ -722,6 +727,8 @@ export class Esper extends React.Component {
             <Transcription
               config={transcription.config}
               data={alto}
+              onSelect={this.handleTextSelection}
+              selection={this.state.textSelection}
               status={transcription.status}
               text={transcription.text}/>
           </EsperOverlay>
