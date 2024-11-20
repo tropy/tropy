@@ -23,16 +23,17 @@ export class TextLayer extends Container {
   sync(props, state) {
     console.log('TextLayer#sync')
 
-
     // this.visible
     // this.eventMode
 
-    let document = state.alto
+    let document = state.text
+    let offset = props.selection
+
     this.clear()
 
     if (document) {
       for (let string of document.strings()) {
-        this.addChild(new TextBox(string, props.selection))
+        this.addChild(new TextBox(string, offset))
       }
     }
   }
@@ -51,11 +52,11 @@ export class TextLayer extends Container {
 
 
 export class TextBox extends Graphics {
-  constructor(node, selection) {
+  constructor(node, offset) {
     super()
     this.blendMode = 'multiply'
     this.setFillStyle(ESPER.COLOR.textLayer.fill)
-    this.sync(node, selection)
+    this.sync(node, offset)
   }
 
   destroy() {
@@ -78,6 +79,7 @@ export class TextBox extends Graphics {
 
     // hover
     // selected
+    // rotation
 
     this
       .rect(x, y, width, height)

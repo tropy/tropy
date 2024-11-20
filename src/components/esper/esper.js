@@ -41,6 +41,10 @@ const {
   ZOOM_PRECISION
 } = SASS.ESPER
 
+const parseAltoDocument = memoize((data) => (
+  Document.parse(data)
+))
+
 
 export class Esper extends React.Component {
 
@@ -55,7 +59,6 @@ export class Esper extends React.Component {
     isVisible: false,
     over: false,
     quicktool: null,
-    textSelection: new Map,
 
     // Derived from props; constrained by photo/selection and resize
     minZoom: MIN_ZOOM,
@@ -71,17 +74,21 @@ export class Esper extends React.Component {
   static getDerivedStateFromProps(props, prevState) {
     let id
     let src
+    let text = parseAltoDocument(props.transcription?.data)
 
     if (props.photo && !props.photo.pending) {
       id = props.selection?.id ?? props.photo.id
       src = Cache.url(props.cache, 'full', props.photo)
     }
 
-    if (id === prevState.id && src === prevState.src)
+
+    if (id === prevState.id && src === prevState.src && text === prevState.text)
       return null
     else
       return {
         ...prevState,
+        text,
+        textSelection: new Map,
         quicktool: null,
         id,
         src,
@@ -129,6 +136,8 @@ export class Esper extends React.Component {
       return true // view going to reset anyway!
     if (this.state.id !== nextState.id)
       return true // view going to sync anyway!
+    if (this.props.transcription !== nextProps.transcription)
+      return true
 
     if (this.didImageChange(nextProps, nextState)) {
       let state = Esper.getDerivedImageStateFromProps(nextProps)
@@ -187,8 +196,7 @@ export class Esper extends React.Component {
       let next = getZoomBounds(this.props, this.state, this.screen)
       let state = {
         ...this.state,
-        ...next,
-        alto: this.getAltoDocument(this.props.transcription?.data)
+        ...next
       }
 
       if (this.state.isVisible) {
@@ -208,7 +216,8 @@ export class Esper extends React.Component {
     } else {
       if (this.state.isVisible) {
         if (this.props.selections !== prevProps.selections ||
-          this.tool !== getActiveTool(prevProps, prevState)
+          this.tool !== getActiveTool(prevProps, prevState) ||
+          this.state.text !== prevState.text
         ) {
           this.esper.current.photo?.sync(this.props, this.state)
         }
@@ -254,10 +263,6 @@ export class Esper extends React.Component {
       })
     }
   }
-
-  getAltoDocument = memoize((data) => (
-    Document.parse(data)
-  ))
 
   handleTextSelection = (textSelection) => {
     this.setState({ textSelection })
@@ -625,8 +630,6 @@ export class Esper extends React.Component {
       overlay && transcription != null
     let isOverlaySplit = overlay === OVERLAY.SPLIT
 
-    let alto = this.getAltoDocument(transcription?.data)
-
     return (
       <EsperContainer
         className={cx(this.tool, {
@@ -726,7 +729,7 @@ export class Esper extends React.Component {
             )}>
             <Transcription
               config={transcription.config}
-              data={alto}
+              data={this.state.text}
               onSelect={this.handleTextSelection}
               selection={this.state.textSelection}
               status={transcription.status}
