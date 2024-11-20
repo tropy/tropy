@@ -27,6 +27,7 @@ export class TextLayer extends Container {
   sync(props, state) {
     console.log('TextLayer#sync')
 
+
     // this.visible
     // this.eventMode
 
@@ -35,7 +36,7 @@ export class TextLayer extends Container {
 
     if (document) {
       for (let string of document.strings()) {
-        this.addChild(new TextBox(string))
+        this.addChild(new TextBox(string, props.selection))
       }
     }
   }
@@ -54,17 +55,22 @@ export class TextLayer extends Container {
 
 
 export class TextBox extends Graphics {
-  constructor(node) {
+  constructor(node, selection) {
     super()
-    this.sync(node)
+    this.sync(node, selection)
   }
 
   destroy() {
     super.destroy(true)
   }
 
-  sync(node) {
+  sync(node, offset) {
     this.data = normalizeRectangle(node.bounds())
+
+    if (offset) {
+      this.data.x += offset.x
+      this.data.y += offset.y
+    }
   }
 
   update() {
