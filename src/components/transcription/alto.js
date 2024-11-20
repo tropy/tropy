@@ -31,16 +31,17 @@ const select = (document, string, { cursor, selection, modifier }) => {
 
 export const Alto = React.memo(({
   document,
-  outline = 'none'
+  onSelect,
+  outline = 'none',
+  selection
 }) => {
   let drag = useRef({})
 
   let [isDragging, setDragging] = useState(false)
-  let [selection, setSelection] = useState(new Map)
 
   let handleClickOutside = useEvent((event) => {
     if (!isDragging && isClickOutside(event.target)) {
-      setSelection(new Map)
+      onSelect(new Map)
       drag.current = {}
     }
   })
@@ -70,7 +71,7 @@ export const Alto = React.memo(({
         current.cursor = target
       }
 
-      setSelection(select(document, target, current))
+      onSelect(select(document, target, current))
     },
     onDrag() {
       if (!isDragging)
@@ -78,7 +79,7 @@ export const Alto = React.memo(({
     },
     onDragStop(event, wasCancelled) {
       if (isDragging && wasCancelled) {
-        setSelection(drag.current.selection || new Map)
+        onSelect(drag.current.selection || new Map)
         drag.current = {}
       }
 
@@ -118,7 +119,7 @@ export const Alto = React.memo(({
       current.cursor = current.target[isForward ? 1 : 0]
     }
 
-    setSelection(select(document, string, current))
+    onSelect(select(document, string, current))
   })
 
   return (
