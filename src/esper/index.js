@@ -393,7 +393,7 @@ export default class Esper extends EventEmitter {
       for (let tween of this.tweens)
         tween.update(now)
 
-      this.photo?.update(this.drag.current)
+      this.photo?.update(this.drag.current, this.textSelection)
 
     } catch (e) {
       this.halt()

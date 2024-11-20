@@ -684,6 +684,7 @@ export class Esper extends React.Component {
           </EsperHeader>
           <EsperView
             ref={this.esper}
+            textSelection={this.state.textSelection}
             onChange={this.handleViewChange}
             onPhotoError={this.handlePhotoError}
             onResize={this.handleResize}
