@@ -1,4 +1,4 @@
-import { AlphaFilter, Container, Graphics, Rectangle } from 'pixi.js'
+import { Container, Graphics } from 'pixi.js'
 import { BLANK } from '../common/util.js'
 import { ESPER } from '../constants/index.js'
 import { normalizeRectangle } from './util.js'
@@ -7,10 +7,6 @@ import { normalizeRectangle } from './util.js'
 export class TextLayer extends Container {
   constructor() {
     super()
-    this.filters = [new AlphaFilter({
-      alpha: ESPER.COLOR.textLayer.fill.alpha,
-      blendMode: 'multiply'
-    })]
   }
 
   clear() {
@@ -57,6 +53,8 @@ export class TextLayer extends Container {
 export class TextBox extends Graphics {
   constructor(node, selection) {
     super()
+    this.blendMode = 'color'
+    this.setFillStyle(ESPER.COLOR.textLayer.fill)
     this.sync(node, selection)
   }
 
@@ -84,6 +82,6 @@ export class TextBox extends Graphics {
 
     this
       .rect(x, y, width, height)
-      .fill(ESPER.COLOR.textLayer.fill.color)
+      .fill()
   }
 }
