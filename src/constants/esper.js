@@ -29,7 +29,7 @@ export default {
       fill: { color: 0x000000, alpha: 0.4 }
     },
     textLayer: {
-      fill: { color: 0x00ffff, alpha: 0.25 }
+      fill: { color: 0x00ffff, alpha: 0.33 }
     },
     selection: {
       default: {
