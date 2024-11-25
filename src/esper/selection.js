@@ -11,7 +11,7 @@ export class SelectionLayer extends Container {
     this.visible = false
   }
 
-  update({ selection } = BLANK) {
+  update({ selection, tool } = BLANK) {
     if (!this.children.length) return
 
     const scale = 1 / this.parent.scale.y
@@ -24,7 +24,9 @@ export class SelectionLayer extends Container {
     if (selection)
       selection = normalizeRectangle(selection)
 
-    this.children[i].update(scale, selection, 'live')
+    if (tool === ESPER.TOOL.SELECT) {
+      this.children[i].update(scale, selection, 'live')
+    }
   }
 
   destroy() {
