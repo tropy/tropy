@@ -732,10 +732,10 @@ export default class Esper extends EventEmitter {
 
   handleDrag = () => {
     switch (this.drag.current?.tool) {
-      case ESPER.TOOL.ARROW:
       case ESPER.TOOL.PAN:
         this.handlePanMove()
         break
+      case ESPER.TOOL.ARROW:
       case ESPER.TOOL.SELECT:
         this.handleSelectMove()
         break
@@ -750,10 +750,10 @@ export default class Esper extends EventEmitter {
       if (wasCancelled) return
 
       switch (tool) {
-        case ESPER.TOOL.ARROW:
         case ESPER.TOOL.PAN:
           this.handlePanStop()
           break
+        case ESPER.TOOL.ARROW:
         case ESPER.TOOL.SELECT:
           this.handleSelectStop()
           break
@@ -793,10 +793,21 @@ export default class Esper extends EventEmitter {
   }
 
   handleSelectStop() {
-    let selection = normalizeRectangle(this.drag.current.selection, true)
-    if (!selection.width || !selection.height) return
+    let { selection, tool } = this.drag.current
 
-    this.emit('selection-create', selection)
+    selection = normalizeRectangle(selection, true)
+
+    if (!selection.width || !selection.height)
+      return
+
+    switch (tool) {
+      case ESPER.TOOL.ARROW:
+        console.log('finalize text selection')
+        break
+      case ESPER.TOOL.SELECT:
+        this.emit('selection-create', selection)
+        break
+    }
   }
 
   handleWheel = (event) => {
