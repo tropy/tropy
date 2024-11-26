@@ -44,6 +44,8 @@ en:
         - CmdOrCtrl+Shift+]
         - CmdOrCtrl+Alt+]
         - r
+      copy:
+        - CmdOrCtrl+c
     Sidebar: &Sidebar
       next: ArrowDown
       prev: ArrowUp

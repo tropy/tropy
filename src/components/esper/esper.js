@@ -2,6 +2,7 @@ import React from 'react'
 import cx from 'classnames'
 import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
+import { clipboard } from 'electron'
 import { Toolbar } from '../toolbar.js'
 import { FILTERS } from '../../esper/index.js'
 import { EsperContainer } from './container.js'
@@ -290,6 +291,10 @@ export class Esper extends React.Component {
     }
   }, 75)
 
+  copyTextSelection() {
+    clipboard.writeText(this.state.text?.toPlainText(this.state.textSelection))
+  }
+
   handleChange = (esper) => {
     this.props.onChange({ esper })
   }
@@ -457,12 +462,16 @@ export class Esper extends React.Component {
     })
   }
 
+  // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     if (this.state.quicktool != null) {
       this.handleQuickToolKeyDown(event)
 
     } else {
       switch (match(this.props.keymap, event)) {
+        case 'copy':
+          this.copyTextSelection()
+          break
         case 'zoomIn':
           this.handleZoomIn()
           break
