@@ -592,4 +592,13 @@ export const URI = {
   }
 }
 
+
+export const flipMap = (a, b) =>
+  a.entries().reduce((m, [k, v]) =>
+    v ? m.set(k, !m.get(k)) : m, new Map(b))
+
+export const mergeMap = (a, b) =>
+  a.entries().reduce((m, [k, v]) =>
+    v ? m.set(k, true) : m, new Map(b))
+
 export const BLANK = Object.freeze(Object.create(null))
