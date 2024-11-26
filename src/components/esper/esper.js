@@ -12,7 +12,7 @@ import { EsperPanel } from './panel.js'
 import { EsperOverlay } from './overlay.js'
 import { EsperView } from './view.js'
 import { Transcription } from '../transcription/transcription.js'
-import { pick, restrict } from '../../common/util.js'
+import { flipMap, mergeMap, pick, restrict } from '../../common/util.js'
 import { Cache } from '../../common/cache.js'
 import { isHorizontal, rotate, round } from '../../common/math.js'
 import { addOrientation, subOrientation } from '../../common/iiif.js'
@@ -264,9 +264,26 @@ export class Esper extends React.Component {
     }
   }
 
-  handleTextSelection = (textSelection) => {
+  setTextSelection = (textSelection) => {
     this.setState({ textSelection })
   }
+
+  handleTextSelection = throttle((rect, modifier) => {
+    if (this.state.text) {
+      let selection = this.state.text.select(rect)
+
+      switch (modifier) {
+        case 'SHIFT':
+          this.setTextSelection(mergeMap(selection, this.state.textSelection))
+          break
+        case 'META':
+          this.setTextSelection(flipMap(selection, this.state.textSelection))
+          break
+        default:
+          this.setTextSelection(selection)
+      }
+    }
+  }, 75)
 
   handleChange = (esper) => {
     this.props.onChange({ esper })
@@ -691,6 +708,7 @@ export class Esper extends React.Component {
             onResolutionChange={this.handleResolutionChange}
             onSelectionActivate={this.handleSelectionActivate}
             onSelectionCreate={this.handleSelectionCreate}
+            onSelectText={this.handleTextSelection}
             onTextureChange={this.handleTextureChange}
             onWheelPan={this.handleWheelPan}
             onWheelZoom={this.handleWheelZoom}
@@ -731,7 +749,7 @@ export class Esper extends React.Component {
             <Transcription
               config={transcription.config}
               data={this.state.text}
-              onSelect={this.handleTextSelection}
+              onSelect={this.setTextSelection}
               selection={this.state.textSelection}
               status={transcription.status}
               text={transcription.text}/>
