@@ -20,29 +20,20 @@ export class TextLayer extends Container {
     super.destroy({ children: true })
   }
 
-  isVisible(document, tool) {
-    return document != null && (
-      tool === ESPER.TOOL.ARROW || tool === ESPER.TOOL.PAN
-    )
-  }
-
-  getEventModeFor(tool) {
-    return tool === ESPER.TOOL.ARROW ? 'static' : 'none'
+  isVisible(document) {
+    return document != null
   }
 
   sync(props, state) {
-    console.log('TextLayer#sync')
-
     let tool = state.quicktool || props.tool
     let document = state.text
     let offset = props.selection
 
     this.clear()
-
     this.visible = this.isVisible(document, tool)
-    this.eventMode = this.getEventModeFor(tool)
 
     if (document) {
+      // TODO rotation
       for (let string of document.strings()) {
         this.addChild(new TextBox(string, offset))
       }
@@ -91,9 +82,6 @@ export class TextBox extends Graphics {
 
     if (!width || !height || !selection?.get(this.node))
       return
-
-    // hover
-    // rotation
 
     this
       .rect(x, y, width, height)

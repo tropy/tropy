@@ -19,6 +19,7 @@ import { Selection } from './selection.js'
 import { Loader } from './loader.js'
 import { ESPER, SASS } from '../constants/index.js'
 import ARGS from '../args.js'
+import { isMeta } from '../keymap.js'
 
 import {
   addCursorStyle,
@@ -708,6 +709,7 @@ export default class Esper extends EventEmitter {
     }
 
     let tool = this.photo?.tool
+    let modifier = event.shiftKey ? 'SHIFT' : isMeta(event) ? 'META' : null
 
     if (this.isDoubleClick(tool)) {
       let { x, y, shift } = coords(data.originalEvent)
@@ -719,6 +721,7 @@ export default class Esper extends EventEmitter {
     this.drag.start()
     this.drag.current = {
       data,
+      modifier,
       target,
       tool,
       origin: {
@@ -786,26 +789,29 @@ export default class Esper extends EventEmitter {
   }
 
   handleSelectMove() {
-    let { data, target, selection } = this.drag.current
+    let { data, modifier, target, selection, tool } = this.drag.current
     let { x, y } = data.getLocalPosition(target)
     selection.width = x - selection.x
     selection.height = y - selection.y
-  }
-
-  handleSelectStop() {
-    let { selection, tool } = this.drag.current
-
-    selection = normalizeRectangle(selection, true)
-
-    if (!selection.width || !selection.height)
-      return
 
     switch (tool) {
       case ESPER.TOOL.ARROW:
-        console.log('finalize text selection')
+        this.emit('select-text', selection, modifier)
+        break
+    }
+  }
+
+  handleSelectStop() {
+    let { modifier, selection, tool } = this.drag.current
+    selection = normalizeRectangle(selection, true)
+
+    switch (tool) {
+      case ESPER.TOOL.ARROW:
+        this.emit('select-text', selection, modifier)
         break
       case ESPER.TOOL.SELECT:
-        this.emit('selection-create', selection)
+        if (selection.width && selection.height)
+          this.emit('selection-create', selection)
         break
     }
   }
