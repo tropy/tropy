@@ -796,7 +796,7 @@ export default class Esper extends EventEmitter {
 
     switch (tool) {
       case ESPER.TOOL.ARROW:
-        this.emit('select-text', selection, modifier)
+        this.emit('select-text', normalizeRectangle(selection, true), modifier)
         break
     }
   }
