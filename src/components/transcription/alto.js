@@ -4,26 +4,19 @@ import { useEvent } from '../../hooks/use-event.js'
 import { useDragHandler } from '../../hooks/use-drag-handler.js'
 import { isMeta } from '../../keymap.js'
 import { bounds, has } from '../../dom.js'
+import { flipMap, mergeMap } from '../../common/util.js'
 
 const isClickOutside = (
   node,
   classes = ['alto-document', 'start-line', 'end-line']
 ) => classes.some((name) => has(node, name))
 
-const flip = (a, b) =>
-  a.entries().reduce((m, [k, v]) =>
-    v ? m.set(k, !m.get(k)) : m, new Map(b))
-
-const merge = (a, b) =>
-  a.entries().reduce((m, [k, v]) =>
-    v ? m.set(k, true) : m, new Map(b))
-
 const select = (document, string, { cursor, selection, modifier }) => {
   switch (modifier) {
     case 'SHIFT':
-      return merge(document.range(string, cursor), selection)
+      return mergeMap(document.range(string, cursor), selection)
     case 'FLIP':
-      return flip(document.range(string, cursor), selection)
+      return flipMap(document.range(string, cursor), selection)
     default:
       return document.range(string, cursor)
   }
