@@ -269,7 +269,7 @@ export class Esper extends React.Component {
     this.setState({ textSelection })
   }
 
-  handleTextSelection = throttle(({ x, y, width, height }, modifier) => {
+  handleTextSelection = throttle(({ x, y, width, height }, modifier, base) => {
     if (this.state.text) {
       if (this.props.selection) {
         x -= this.props.selection.x
@@ -280,10 +280,10 @@ export class Esper extends React.Component {
 
       switch (modifier) {
         case 'SHIFT':
-          textSelection = mergeMap(textSelection, this.state.textSelection)
+          textSelection = mergeMap(textSelection, base)
           break
         case 'META':
-          textSelection = flipMap(textSelection, this.state.textSelection)
+          textSelection = flipMap(textSelection, base)
           break
       }
 

@@ -723,6 +723,7 @@ export default class Esper extends EventEmitter {
       data,
       modifier,
       target,
+      textSelection: this.textSelection,
       tool,
       origin: {
         pos: { x: target.x, y: target.y },
@@ -789,25 +790,30 @@ export default class Esper extends EventEmitter {
   }
 
   handleSelectMove() {
-    let { data, modifier, target, selection, tool } = this.drag.current
+    let { data, modifier, target, selection, textSelection, tool } = this.drag.current
     let { x, y } = data.getLocalPosition(target)
+
     selection.width = x - selection.x
     selection.height = y - selection.y
 
     switch (tool) {
       case ESPER.TOOL.ARROW:
-        this.emit('select-text', normalizeRectangle(selection, true), modifier)
+        this.emit(
+          'select-text',
+          normalizeRectangle(selection, true),
+          modifier,
+          textSelection)
         break
     }
   }
 
   handleSelectStop() {
-    let { modifier, selection, tool } = this.drag.current
+    let { modifier, selection, textSelection, tool } = this.drag.current
     selection = normalizeRectangle(selection, true)
 
     switch (tool) {
       case ESPER.TOOL.ARROW:
-        this.emit('select-text', selection, modifier)
+        this.emit('select-text', selection, modifier, textSelection)
         break
       case ESPER.TOOL.SELECT:
         if (selection.width && selection.height)
