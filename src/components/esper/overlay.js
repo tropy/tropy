@@ -12,7 +12,9 @@ const { MIN_WIDTH, MIN_HEIGHT } = SASS.ESPER
 export const EsperOverlay = ({
   children,
   hasTitlebar,
+  isPanelVisible = false,
   mode,
+  panel,
   toolbar
 }) => {
   let dispatch = useDispatch()
@@ -36,9 +38,12 @@ export const EsperOverlay = ({
       onChange={handleResize}
       skip={mode === ESPER.OVERLAY.FULL}
       value={height}>
-      <div className={cx('esper-overlay', mode)}>
+      <div className={cx('esper-overlay', mode, { panel: isPanelVisible })}>
         {React.createElement(hasTitlebar ? Titlebar : Toolbar, {}, toolbar)}
         {children}
+        <div className="overlay-panel">
+          {panel}
+        </div>
       </div>
     </Resizable>
   )

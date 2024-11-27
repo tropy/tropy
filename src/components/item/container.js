@@ -127,6 +127,7 @@ class Item extends React.PureComponent {
               tool={this.props.esper.tool}
               transcription={this.props.transcription}
               overlay={this.props.esper.overlay}
+              overlayPanel={this.props.esper.overlayPanel}
               onContextMenu={this.handleContextMenu}
               onChange={this.handleEsperChange}
               onMaximize={this.handleMaximize}
