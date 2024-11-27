@@ -13,6 +13,7 @@ import { EsperPanel } from './panel.js'
 import { EsperOverlay } from './overlay.js'
 import { EsperView } from './view.js'
 import { Transcription } from '../transcription/transcription.js'
+import { TranscriptionPanel } from '../transcription/panel.js'
 import { flipMap, mergeMap, pick, restrict } from '../../common/util.js'
 import { Cache } from '../../common/cache.js'
 import { isHorizontal, rotate, round } from '../../common/math.js'
@@ -655,7 +656,7 @@ export class Esper extends React.Component {
 
   render() {
     let { isDisabled } = this
-    let { hasSideBySideLayout, overlay, transcription } = this.props
+    let { hasSideBySideLayout, overlay, overlayPanel, transcription } = this.props
 
     let isOverlayVisible =
       overlay && transcription != null
@@ -707,10 +708,10 @@ export class Esper extends React.Component {
             <Toolbar.Right>
               <ToolGroup.Layout
                 isAltLayout={hasSideBySideLayout && isOverlaySplit}
-                overlay={overlay}
-                panel={this.props.isPanelVisible}
                 isDisabled={isDisabled}
-                onChange={this.handleChange}/>
+                onChange={this.handleChange}
+                overlay={overlay}
+                panel={this.props.isPanelVisible}/>
             </Toolbar.Right>
           </EsperHeader>
           <EsperView
@@ -755,10 +756,16 @@ export class Esper extends React.Component {
                 <ToolGroup.Layout
                   isAltLayout={!hasSideBySideLayout && isOverlaySplit}
                   isDisabled={isDisabled}
-                  overlay={overlay}
                   onChange={this.handleChange}
-                  versions={false}/>
+                  overlay={overlay}
+                  overlayPanel={overlayPanel}/>
               </Toolbar.Right>
+            )}
+            isPanelVisible={overlayPanel}
+            panel={(
+              <TranscriptionPanel
+                isDisabled={isDisabled}
+                id={this.state.id}/>
             )}>
             <Transcription
               config={transcription.config}

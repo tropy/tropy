@@ -136,8 +136,8 @@ export const Layout = ({
   isDisabled,
   onChange,
   overlay,
-  panel,
-  versions
+  overlayPanel,
+  panel
 }) => {
   let altButtons = []
 
@@ -155,17 +155,17 @@ export const Layout = ({
         value={true}/>
     )
 
-  if (versions != null)
+  if (overlayPanel != null)
     altButtons.push(
       <ToolButton
-        key="versions"
-        current={versions}
+        key="overlayPanel"
+        current={overlayPanel}
         defaultValue={false}
         icon="IconTranscriptionVersions"
-        isDisabled
-        name="versions"
+        isDisabled={isDisabled}
+        name="overlayPanel"
         onChange={onChange}
-        title="esper.overlay.versions"
+        title="esper.overlay.panel"
         value={true}/>
     )
 
