@@ -764,6 +764,7 @@ export class Esper extends React.Component {
             isPanelVisible={overlayPanel}
             panel={(
               <TranscriptionPanel
+                active={transcription.id}
                 isDisabled={isDisabled}
                 id={this.state.id}/>
             )}>
