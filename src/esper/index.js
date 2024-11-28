@@ -178,7 +178,12 @@ export default class Esper extends EventEmitter {
         resolution: 1
       })
 
-      renderer.render(photo, { clear: false, renderTexture })
+      renderer.render({
+        container: photo,
+        clear: false,
+        target: renderTexture
+      })
+
       let { pixels } = renderer.extract.pixels(renderTexture)
 
       return {
