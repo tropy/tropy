@@ -1,11 +1,13 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { TranscriptionMetadata } from './metadata.js'
 import { getTranscriptions } from '../../selectors/index.js'
+import { activate } from '../../slices/transcriptions.js'
 
 export const TranscriptionPanel = ({
   active,
   id,
 }) => {
+  let dispatch = useDispatch()
   let transcriptions = useSelector(state => getTranscriptions(state, { id }))
 
   return (
@@ -15,7 +17,8 @@ export const TranscriptionPanel = ({
           <li key={tr.id}>
             <TranscriptionMetadata
               created={tr.created}
-              isActive={tr.id === active}/>
+              isActive={tr.id === active}
+              onClick={() => dispatch(activate(tr.id))}/>
           </li>
         ))}
       </ol>
