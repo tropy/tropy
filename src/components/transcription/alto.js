@@ -71,12 +71,16 @@ export const Alto = React.memo(({
         setDragging(true)
     },
     onDragStop(event, wasCancelled) {
-      if (isDragging && wasCancelled) {
-        onSelect(drag.current.selection || new Map)
-        drag.current = {}
-      }
+      if (isDragging) {
+        if (wasCancelled) {
+          onSelect(drag.current.selection || new Map)
+          drag.current = {}
+        }
 
-      setDragging(false)
+        // Stop potential click outside handling!
+        event?.stopPropagation()
+        setDragging(false)
+      }
     }
   })
 
@@ -118,7 +122,7 @@ export const Alto = React.memo(({
   return (
     <section
       className={cx('alto-document', `outline-${outline}`)}
-      onClick={handleClickOutside}>
+      onMouseUp={handleClickOutside}>
       {document.blocks().map((block, bidx) => (
         <TextBlock key={bidx}>
           {block.lines().map((line, lidx) => (
