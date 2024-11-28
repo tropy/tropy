@@ -21,7 +21,7 @@ export async function create(db, { parent, config = {}, text, data }) {
         status
       }))
 
-  return (await load(db, [id]))[id]
+  return (await load(db, id))[id]
 }
 
 export async function load(db, id) {
@@ -123,4 +123,13 @@ export async function prune(db, since = '-1 week') {
     WHERE deleted is NOT NULL OR (
       status < 0 AND datetime(modified) < datetime('now', '${since}')
     )`)
+}
+
+export async function touch(db, id) {
+  await db.run(
+    ...update('transcriptions')
+      .set({ modified: Date.now() })
+      .where({ transcription_id: id }))
+
+  return await load(db, id)
 }

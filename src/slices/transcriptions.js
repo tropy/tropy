@@ -7,6 +7,11 @@ const transcriptions = createSlice({
   initialState: {},
 
   reducers: {
+    activate: cmdReducer((state, { payload, meta, error }) => {
+      if (meta.done && !error)
+        Object.assign(state, payload)
+    }),
+
     create: cmdReducer((state, { payload, meta, error }) => {
       if (meta.done && !error)
         Object.assign(state, payload)
@@ -74,6 +79,7 @@ export const nested = {
 }
 
 export const {
+  activate,
   create,
   insert,
   load,
