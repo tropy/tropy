@@ -36,14 +36,13 @@ export async function load(db, id) {
     'status',
     'created',
     'modified'
-  )
-
-  query.from('transcriptions')
-  query.order('modified', 'asc')
-  query.where({ deleted: null })
+  ).from('transcriptions')
 
   if (id) {
     query.where({ transcription_id: id })
+  } else {
+    query.order('modified', 'asc')
+    query.where({ deleted: null })
   }
 
   await db.each(...query, ({
