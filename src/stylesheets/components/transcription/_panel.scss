@@ -1,0 +1,21 @@
+@use "../../abstracts/config" as *;
+
+//
+// Transcription panel
+// --------------------------------------------------
+
+.transcription-panel {
+  display: none;
+  position: absolute;
+  top: zoom($toolbar-height);
+  right: 0;
+  bottom: 0;
+  width: $esper-panel-width;
+  background: $esper-overlay-bg;
+  backdrop-filter: blur($esper-blur-radius);
+  box-shadow: -1px 0 0 $esper-shadow;
+
+  .transcription-panel-visible & {
+    display: block;
+  }
+}

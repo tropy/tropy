@@ -89,6 +89,8 @@
 
 @use "../components/transcription/transcription" as *;
 @use "../components/transcription/alto-document" as *;
+@use "../components/transcription/panel" as *;
+@use "../components/transcription/versions" as *;
 
 @use "../components/editor/view" as *;
 @use "../components/editor/toolbar" as *;
