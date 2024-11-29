@@ -20,6 +20,8 @@
     flex: 0 0 auto;
     height: $toolbar-height;
     box-shadow: 0 1px 0 $esper-shadow;
+    position: relative;
+    z-index: 1;
 
     .frameless & {
       height: zoom($toolbar-frameless-height);

@@ -1,0 +1,16 @@
+@use "../../abstracts/config" as *;
+
+//
+// Transcription versions
+// --------------------------------------------------
+
+.transcription-versions {
+  .transcription-metadata {
+    padding: 0 $default-spacing-x;
+
+    &.active {
+      color: #fff;
+      background-color: var(--primary);
+    }
+  }
+}
