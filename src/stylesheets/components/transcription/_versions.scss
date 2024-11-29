@@ -9,8 +9,12 @@
     padding: 0 $default-spacing-x;
 
     &.active {
-      color: #fff;
-      background-color: var(--primary);
+      background-color: #ddd;
+
+      .esper:focus-within & {
+        color: #fff;
+        background-color: var(--primary);
+      }
     }
   }
 }
