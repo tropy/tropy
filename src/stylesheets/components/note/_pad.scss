@@ -10,7 +10,7 @@
   flex-direction: column;
   contain: strict;
 
-  .side-by-side & {
+  .side-by-side:not(.notepad-maximized) & {
     padding-left: $space-min;
   }
 }
