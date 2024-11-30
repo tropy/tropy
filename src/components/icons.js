@@ -729,7 +729,7 @@ export const IconTranscriptionSplitView = i('TranscriptionSplitView', (
 export const IconTranscriptionVersions = i('TranscriptionVersions', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
-      <path d="M16,2V3H8V2ZM14,5H8V6h6ZM8,11h8V10H8Zm0,3h6V13H8ZM1,1V3H2V2H3V6H2V7H5V6H4V2H5V3H6V1ZM1,9v2H2V10H3v4H2v1H5V14H4V10H5v1H6V9Z"/>
+      <path d="M16,3H7v-1h9v1ZM14,5h-7v1h7v-1ZM16,10H7v1h9v-1ZM14,13h-7v1h7v-1ZM0,1v2h1v-1h1v4h-1v1h3v-1h-1V2h1v1h1V1H0ZM0,9v2h1v-1h1v4h-1v1h3v-1h-1v-4h1v1h1v-2H0Z"/>
     </g>
   </svg>
 ))
