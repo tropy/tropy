@@ -6,7 +6,7 @@
 
 .transcription-versions {
   .transcription-metadata {
-    padding: 0 $default-spacing-x;
+    padding: $transcription-metadata-padding-y $default-spacing-x;
 
     &.active {
       background-color: #ddd;
