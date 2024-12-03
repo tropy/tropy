@@ -32,7 +32,7 @@
     &.selected {
       background-color: $string-selected-bg;
 
-      .esper:focus-within & {
+      .transcription:focus & {
         color: $string-selected-focus-color;
         background-color: $string-selected-focus-bg;
       }
