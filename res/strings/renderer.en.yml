@@ -653,6 +653,12 @@ en:
   transcription:
     error: Transcription Error
     pending: Transcription pending…
+    title: >-
+      {name, select,
+        true {{name}}
+        other {Transcription}
+      }
+
   error:
     cache:
       prune: Failed to optimize project cache.

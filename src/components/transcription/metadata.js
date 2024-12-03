@@ -1,10 +1,11 @@
-import { FormattedDate, FormattedTime } from 'react-intl'
+import { FormattedDate, FormattedMessage } from 'react-intl'
 import cn from 'classnames'
 
 
 export const TranscriptionMetadata = ({
   isActive,
   created,
+  name,
   onClick
 }) => {
 
@@ -14,8 +15,13 @@ export const TranscriptionMetadata = ({
         active: isActive
       })}
       onClick={onClick}>
-      <FormattedDate value={created}/>
-      <FormattedTime value={created}/>
+      <FormattedMessage
+        id="transcription.title"
+        values={{ name }}/>
+      <FormattedDate
+        dateStyle="medium"
+        timeStyle="short"
+        value={created}/>
     </div>
   )
 }
