@@ -11,7 +11,7 @@
     &.active {
       background-color: #ddd;
 
-      .esper:focus-within & {
+      &:focus {
         color: #fff;
         background-color: var(--primary);
       }
