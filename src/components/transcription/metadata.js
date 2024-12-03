@@ -14,7 +14,8 @@ export const TranscriptionMetadata = ({
       className={cn('transcription-metadata', {
         active: isActive
       })}
-      onClick={onClick}>
+      onClick={onClick}
+      tabIndex="-1">
       <FormattedMessage
         id="transcription.title"
         values={{ name }}/>
