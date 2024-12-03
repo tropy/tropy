@@ -20,11 +20,12 @@ export const TranscriptionMetadata = ({
         id="transcription.title"
         tagName="div"
         values={{ name }}/>
-      <FormattedDate
-        dateStyle="medium"
-        timeStyle="short"
-        tagName="div"
-        value={created}/>
+      <div>
+        <FormattedDate
+          dateStyle="medium"
+          timeStyle="short"
+          value={created}/>
+      </div>
     </div>
   )
 }
