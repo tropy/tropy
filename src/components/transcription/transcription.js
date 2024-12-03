@@ -42,7 +42,9 @@ export const Transcription = ({
   }
 
   return (
-    <div className="transcription">
+    <div
+      className="transcription"
+      tabIndex="-1">
       {content}
     </div>
   )
