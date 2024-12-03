@@ -18,10 +18,12 @@ export const TranscriptionMetadata = ({
       tabIndex="-1">
       <FormattedMessage
         id="transcription.title"
+        tagName="div"
         values={{ name }}/>
       <FormattedDate
         dateStyle="medium"
         timeStyle="short"
+        tagName="div"
         value={created}/>
     </div>
   )
