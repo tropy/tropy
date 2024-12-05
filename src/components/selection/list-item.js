@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl'
 import { createClickHandler } from '../util.js'
 import { testFocusChange } from '../../dom.js'
 import cx from 'classnames'
+import { TranscriptionIcon } from '../transcription/icon.js'
 
 
 class SelectionListItem extends SelectionIterable {
@@ -83,6 +84,9 @@ class SelectionListItem extends SelectionIterable {
             isDisabled={this.props.isDisabled}
             onCancel={this.props.onEditCancel}
             onChange={this.handleChange}/>
+        </div>
+        <div className="icon-container">
+          <TranscriptionIcon id={this.props.selection.transcriptions?.at(-1)}/>
         </div>
       </li>
     )
