@@ -9,6 +9,7 @@ import cx from 'classnames'
 import { testFocusChange } from '../../dom.js'
 import { Icon } from '../icons.js'
 import { Button } from '../button.js'
+import { TranscriptionIcon } from '../transcription/icon.js'
 
 
 class PhotoListItem extends PhotoIterable {
@@ -150,8 +151,7 @@ class PhotoListItem extends PhotoIterable {
                 onClick={this.handleConsolidate}/>
             )}
             {isExpandable && <Icon name="Selection"/>}
-            <Icon name="Transcription" className="pending"/>
-            <Icon name="TranscriptionFailed"/>
+            <TranscriptionIcon id={this.props.photo.transcriptions?.at(-1)}/>
           </div>
         </div>
         {this.renderSelectionList()}
