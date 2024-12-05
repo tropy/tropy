@@ -1,17 +1,17 @@
-import { memo } from 'react'
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Icon } from '../icons.js'
 
-export const TranscriptionIcon = memo(({
+export const TranscriptionIcon = ({
   id
 }) => {
-  let transcription = useSelector(state => state.transcriptions[id])
+  let status = useSelector(state =>
+    state.transcriptions[id]?.status)
 
-  if (transcription == null)
+  if (status == null)
     return null
 
-  if (transcription.status < 0)
+  if (status < 0)
     return (
       <Icon name="TranscriptionFailed"/>
     )
@@ -20,7 +20,7 @@ export const TranscriptionIcon = memo(({
     <Icon
       name="Transcription"
       className={cx({
-        pending: transcription.status === 0
+        pending: status === 0
       })}/>
   )
-})
+}
