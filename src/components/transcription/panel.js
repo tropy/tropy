@@ -12,12 +12,12 @@ export const TranscriptionPanel = ({
   let transcriptions = useSelector(state => getTranscriptions(state, { id }))
 
   return (
-    <div className="transcription-panel">
+    <div className="transcription-panel" tabIndex={-1}>
       <ol className="transcription-versions">
         {transcriptions.map(tr => (
           <li
             key={tr.id}
-            className={cx({ active: tr.id === active })}>
+            className={cx('version', { active: tr.id === active })}>
             <TranscriptionMetadata
               created={tr.created}
               onMouseDown={() => dispatch(activate(tr.id))}/>
