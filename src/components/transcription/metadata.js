@@ -9,8 +9,7 @@ export const TranscriptionMetadata = ({
   return (
     <div
       className="transcription-metadata"
-      onMouseDown={onMouseDown}
-      tabIndex="-1">
+      onMouseDown={onMouseDown}>
       <FormattedMessage
         id="transcription.title"
         tagName="div"
