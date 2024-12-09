@@ -410,9 +410,11 @@ $esper-btn-default-active-bg:            shade(var(--shade-1), 8%);
 $esper-error-color:                      var(--shade-8);
 
 // Transcription
-$string-selected-bg:          scheme(shade(var(--shade-1), 14%), var(--shade-5));
-$string-selected-focus-color: scheme(var(--shade-0),             var(--primary-light));
-$string-selected-focus-bg:    scheme(var(--primary),             var(--primary));
+$transcription-btn-icon-hover-bg:  scheme(null,                       var(--shade-3));
+$transcription-btn-icon-active-bg: scheme(null,                       var(--shade-5));
+$string-selected-bg:               scheme(shade(var(--shade-1), 14%), var(--shade-5));
+$string-selected-focus-color:      scheme(var(--shade-0),             var(--primary-light));
+$string-selected-focus-bg:         scheme(var(--primary),             var(--primary));
 
 // Transcription versions
 $transcription-metadata-active-bg:       scheme(shade(var(--shade-1), 14%), var(--shade-5));
