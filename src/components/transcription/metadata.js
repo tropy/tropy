@@ -1,9 +1,6 @@
 import { FormattedDate, FormattedMessage } from 'react-intl'
-import cn from 'classnames'
-
 
 export const TranscriptionMetadata = ({
-  isActive,
   created,
   name,
   onMouseDown
@@ -11,9 +8,7 @@ export const TranscriptionMetadata = ({
 
   return (
     <div
-      className={cn('transcription-metadata', {
-        active: isActive
-      })}
+      className="transcription-metadata"
       onMouseDown={onMouseDown}
       tabIndex="-1">
       <FormattedMessage
