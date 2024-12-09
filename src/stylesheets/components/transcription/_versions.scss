@@ -5,7 +5,7 @@
 // --------------------------------------------------
 
 .transcription-versions {
-  .transcription-metadata {
+  .version {
     padding: $transcription-metadata-padding-y $default-spacing-x;
     position: relative;
 
@@ -19,7 +19,7 @@
       background-color: $transcription-metadata-separator-color;
     }
 
-    li:first-child :is(&) {
+    &:first-child {
       &::before {
         content: none;
       }
@@ -32,25 +32,23 @@
         content: none;
       }
 
-      &:focus {
+      .transcription-panel:focus & {
         color: $transcription-metadata-focus-color;
         background-color: $transcription-metadata-focus-bg;
       }
-    }
-  }
 
-  li {
-    &:has(.active) + li .transcription-metadata {
-      border-top: 1px solid $transcription-metadata-active-bg;
-      padding-top: $transcription-metadata-padding-y - 1px;
+      & + .version {
+        border-top: 1px solid $transcription-metadata-active-bg;
+        padding-top: $transcription-metadata-padding-y - 1px;
 
-      &::before {
-        content: none;
+        .transcription-panel:focus & {
+          border-top-color: $transcription-metadata-focus-bg;
+        }
+
+        &::before {
+          content: none;
+        }
       }
-    }
-
-    &:has(:focus) + li .transcription-metadata {
-      border-top-color: $transcription-metadata-focus-bg;
     }
   }
 }
