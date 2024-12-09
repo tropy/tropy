@@ -87,6 +87,7 @@
 @use "../components/esper/overlay" as *;
 @use "../components/esper/error" as *;
 
+@use "../components/transcription/toolbar" as *;
 @use "../components/transcription/transcription" as *;
 @use "../components/transcription/alto-document" as *;
 @use "../components/transcription/panel" as *;
