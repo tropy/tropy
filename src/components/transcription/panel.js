@@ -18,7 +18,7 @@ export const TranscriptionPanel = ({
             <TranscriptionMetadata
               created={tr.created}
               isActive={tr.id === active}
-              onClick={() => dispatch(activate(tr.id))}/>
+              onMouseDown={() => dispatch(activate(tr.id))}/>
           </li>
         ))}
       </ol>
