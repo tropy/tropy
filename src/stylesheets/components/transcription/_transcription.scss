@@ -4,7 +4,12 @@
 
 .transcription {
   container-type: size;
-  flex: 1 1 0;
+  grid-column: 1 / 2;
   display: flex;
   overflow: auto;
+
+  .side-by-side .text-overlay-split &,
+  .side-by-side:not(.esper-maximized) .text-overlay-full & {
+    grid-column: 1 / -1;
+  }
 }
