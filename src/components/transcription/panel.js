@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { TranscriptionMetadata } from './metadata.js'
 import { getTranscriptions } from '../../selectors/index.js'
 import { activate } from '../../slices/transcriptions.js'
+import cx from 'classnames'
 
 export const TranscriptionPanel = ({
   active,
@@ -14,10 +15,11 @@ export const TranscriptionPanel = ({
     <div className="transcription-panel">
       <ol className="transcription-versions">
         {transcriptions.map(tr => (
-          <li key={tr.id}>
+          <li
+            key={tr.id}
+            className={cx({ active: tr.id === active })}>
             <TranscriptionMetadata
               created={tr.created}
-              isActive={tr.id === active}
               onMouseDown={() => dispatch(activate(tr.id))}/>
           </li>
         ))}
