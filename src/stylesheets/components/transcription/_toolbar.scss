@@ -75,5 +75,15 @@
         }
       }
     }
+
+    .btn-icon {
+      &:hover {
+        background-color: $transcription-btn-icon-hover-bg;
+      }
+
+      &.active {
+        background-color: $transcription-btn-icon-active-bg;
+      }
+    }
   }
 }
