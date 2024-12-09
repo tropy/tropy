@@ -7,14 +7,50 @@
 .transcription-versions {
   .transcription-metadata {
     padding: $transcription-metadata-padding-y $default-spacing-x;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: $default-spacing-x;
+      right: $default-spacing-x;
+      height: 1px;
+      background-color: $transcription-metadata-separator-color;
+    }
+
+    li:first-child :is(&) {
+      &::before {
+        content: none;
+      }
+    }
 
     &.active {
       background-color: $transcription-metadata-active-bg;
+
+      &::before {
+        content: none;
+      }
 
       &:focus {
         color: $transcription-metadata-focus-color;
         background-color: $transcription-metadata-focus-bg;
       }
+    }
+  }
+
+  li {
+    &:has(.active) + li .transcription-metadata {
+      border-top: 1px solid $transcription-metadata-active-bg;
+      padding-top: $transcription-metadata-padding-y - 1px;
+
+      &::before {
+        content: none;
+      }
+    }
+
+    &:has(:focus) + li .transcription-metadata {
+      border-top-color: $transcription-metadata-focus-bg;
     }
   }
 }

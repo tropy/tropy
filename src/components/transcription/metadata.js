@@ -6,7 +6,7 @@ export const TranscriptionMetadata = ({
   isActive,
   created,
   name,
-  onClick
+  onMouseDown
 }) => {
 
   return (
@@ -14,7 +14,7 @@ export const TranscriptionMetadata = ({
       className={cn('transcription-metadata', {
         active: isActive
       })}
-      onClick={onClick}
+      onMouseDown={onMouseDown}
       tabIndex="-1">
       <FormattedMessage
         id="transcription.title"
