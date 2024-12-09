@@ -415,9 +415,10 @@ $string-selected-focus-color: scheme(var(--shade-0),             var(--primary-l
 $string-selected-focus-bg:    scheme(var(--primary),             var(--primary));
 
 // Transcription versions
-$transcription-metadata-active-bg:   scheme(shade(var(--shade-1), 14%), var(--shade-5));
-$transcription-metadata-focus-color: scheme(var(--shade-0),             var(--primary-light));
-$transcription-metadata-focus-bg:    scheme(var(--primary),             var(--primary));
+$transcription-metadata-active-bg:       scheme(shade(var(--shade-1), 14%), var(--shade-5));
+$transcription-metadata-focus-color:     scheme(var(--shade-0),             var(--primary-light));
+$transcription-metadata-focus-bg:        scheme(var(--primary),             var(--primary));
+$transcription-metadata-separator-color: scheme(shade(var(--shade-1), 14%), alpha(var(--shade-0), 80%));
 
 // Drag preview
 $drag-preview-opacity:           0.6;
