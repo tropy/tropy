@@ -9,11 +9,11 @@
     padding: $transcription-metadata-padding-y $default-spacing-x;
 
     &.active {
-      background-color: #ddd;
+      background-color: $transcription-metadata-active-bg;
 
       &:focus {
-        color: #fff;
-        background-color: var(--primary);
+        color: $transcription-metadata-focus-color;
+        background-color: $transcription-metadata-focus-bg;
       }
     }
   }
