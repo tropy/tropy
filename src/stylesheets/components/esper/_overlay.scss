@@ -6,9 +6,11 @@
 
 .esper-overlay {
   flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto 0;
+  grid-template-rows: $toolbar-height auto;
   background-color: $esper-bg;
+  transition: grid 0.3s ease;
 
   &.full {
     position: absolute;
@@ -16,9 +18,22 @@
     z-index: $zindex-esper-header;
   }
 
+  &.transcription-panel-visible {
+    grid-template-columns: auto $esper-panel-width;
+  }
+
+  .side-by-side .text-overlay-split &,
+  .side-by-side:not(.esper-maximized) .text-overlay-full & {
+    grid-template-columns: auto;
+    grid-template-rows: $toolbar-height auto 0;
+
+    &.transcription-panel-visible {
+      grid-template-rows: $toolbar-height auto $esper-panel-height;
+    }
+  }
+
   .toolbar {
-    flex: 0 0 auto;
-    height: $toolbar-height;
+    grid-column: 1 / -1;
     box-shadow: 0 1px 0 $esper-shadow;
     position: relative;
     z-index: 1;

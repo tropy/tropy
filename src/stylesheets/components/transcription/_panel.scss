@@ -5,17 +5,22 @@
 // --------------------------------------------------
 
 .transcription-panel {
-  display: none;
-  position: absolute;
-  top: zoom($toolbar-height);
-  right: 0;
-  bottom: 0;
+  grid-column: 2 / 3;
   width: $esper-panel-width;
-  background: $esper-overlay-bg;
-  backdrop-filter: blur($esper-blur-radius);
-  box-shadow: -1px 0 0 $esper-shadow;
+  transition: box-shadow 0s linear 0.3s;
 
   .transcription-panel-visible & {
-    display: block;
+    box-shadow: -1px 0 0 $esper-shadow;
+    transition: none;
+  }
+
+  .side-by-side .text-overlay-split &,
+  .side-by-side:not(.esper-maximized) .text-overlay-full & {
+    grid-column: 1 / -1;
+    width: auto;
+
+    .transcription-panel-visible :is(&) {
+      box-shadow: 0 -1px 0 $esper-shadow;
+    }
   }
 }
