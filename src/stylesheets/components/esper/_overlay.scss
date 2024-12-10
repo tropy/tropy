@@ -12,6 +12,14 @@
   background-color: $esper-bg;
   transition: grid 0.3s ease;
 
+  .frameless & {
+    grid-template-rows: zoom($toolbar-frameless-height) auto;
+
+    @if $platform == win32 {
+      grid-template-rows: zoom($toolbar-height) auto;
+    }
+  }
+
   &.full {
     position: absolute;
     inset: 0;
@@ -27,8 +35,24 @@
     grid-template-columns: auto;
     grid-template-rows: $toolbar-height auto 0;
 
+    .frameless & {
+      grid-template-rows: zoom($toolbar-frameless-height) auto 0;
+
+      @if $platform == win32 {
+        grid-template-rows: zoom($toolbar-height) auto 0;
+      }
+    }
+
     &.transcription-panel-visible {
       grid-template-rows: $toolbar-height auto $esper-panel-height;
+
+      .frameless & {
+        grid-template-rows: zoom($toolbar-frameless-height) auto $esper-panel-height;
+
+        @if $platform == win32 {
+          grid-template-rows: zoom($toolbar-height) auto $esper-panel-height;
+        }
+      }
     }
   }
 }
