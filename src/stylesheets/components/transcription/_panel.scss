@@ -8,6 +8,7 @@
   grid-column: 2 / 3;
   width: $esper-panel-width;
   transition: box-shadow 0s linear 0.3s;
+  overflow-y: auto;
 
   .transcription-panel-visible & {
     box-shadow: -1px 0 0 $esper-shadow;
