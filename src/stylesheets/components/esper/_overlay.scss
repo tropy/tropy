@@ -12,6 +12,7 @@
   grid-template-rows: var(--toolbar-size) auto;
   background-color: $esper-bg;
   transition: grid 0.3s ease;
+  overflow: hidden;
 
   .frameless & {
     --toolbar-size: #{$toolbar-frameless-height};
@@ -33,7 +34,10 @@
     grid-template-rows: var(--toolbar-size) auto 0;
 
     &.transcription-panel-visible {
-      grid-template-rows: var(--toolbar-size) auto $esper-panel-height;
+      grid-template-rows:
+        var(--toolbar-size)
+        auto
+        min($esper-panel-height, calc(100% - var(--toolbar-size)));
     }
   }
 }
