@@ -26,12 +26,6 @@
       padding: 0 zoom($default-spacing-x);
     }
 
-    @if $platform == win32 {
-      .frameless #project & {
-        height: zoom($toolbar-height);
-      }
-    }
-
     .frameless.is-blurred & {
       > * {
         opacity: $toolbar-blurred-opacity;
