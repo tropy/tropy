@@ -5,15 +5,16 @@
 // --------------------------------------------------
 
 .esper-overlay {
+  --toolbar-size: #{$toolbar-height};
   flex: 1 1 0;
   display: grid;
   grid-template-columns: auto 0;
-  grid-template-rows: $toolbar-height auto;
+  grid-template-rows: var(--toolbar-size) auto;
   background-color: $esper-bg;
   transition: grid 0.3s ease;
 
   .frameless & {
-    grid-template-rows: zoom($toolbar-frameless-height) auto;
+    --toolbar-size: #{$toolbar-frameless-height};
   }
 
   &.full {
@@ -29,18 +30,10 @@
   .side-by-side .text-overlay-split &,
   .side-by-side:not(.esper-maximized) .text-overlay-full & {
     grid-template-columns: auto;
-    grid-template-rows: $toolbar-height auto 0;
-
-    .frameless & {
-      grid-template-rows: zoom($toolbar-frameless-height) auto 0;
-    }
+    grid-template-rows: var(--toolbar-size) auto 0;
 
     &.transcription-panel-visible {
-      grid-template-rows: $toolbar-height auto $esper-panel-height;
-
-      .frameless & {
-        grid-template-rows: zoom($toolbar-frameless-height) auto $esper-panel-height;
-      }
+      grid-template-rows: var(--toolbar-size) auto $esper-panel-height;
     }
   }
 }
