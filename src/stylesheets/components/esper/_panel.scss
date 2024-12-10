@@ -47,10 +47,6 @@
 
     .frameless & {
       top: zoom($toolbar-frameless-height);
-
-      @if $platform == win32 {
-        top: zoom($toolbar-height);
-      }
     }
 
     .project:not([class*="enter"]) & {

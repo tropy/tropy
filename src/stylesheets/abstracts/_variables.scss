@@ -82,8 +82,9 @@ $drag-preview-size: 64px;
 // Dimensions
 // --------------------------------------------------
 
-$toolbar-height:           38px;
-$toolbar-frameless-height: os($toolbar-height, 32px, 46px);
+$toolbar-height:              38px;
+$toolbar-frameless-height-sm: os($toolbar-height, 32px, 46px); // For titlebars without icon buttons
+$toolbar-frameless-height:    os($toolbar-height, $toolbar-height, 46px);
 
 
 // Default Dimensions

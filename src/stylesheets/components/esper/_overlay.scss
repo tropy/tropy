@@ -14,10 +14,6 @@
 
   .frameless & {
     grid-template-rows: zoom($toolbar-frameless-height) auto;
-
-    @if $platform == win32 {
-      grid-template-rows: zoom($toolbar-height) auto;
-    }
   }
 
   &.full {
@@ -37,10 +33,6 @@
 
     .frameless & {
       grid-template-rows: zoom($toolbar-frameless-height) auto 0;
-
-      @if $platform == win32 {
-        grid-template-rows: zoom($toolbar-height) auto 0;
-      }
     }
 
     &.transcription-panel-visible {
@@ -48,10 +40,6 @@
 
       .frameless & {
         grid-template-rows: zoom($toolbar-frameless-height) auto $esper-panel-height;
-
-        @if $platform == win32 {
-          grid-template-rows: zoom($toolbar-height) auto $esper-panel-height;
-        }
       }
     }
   }
