@@ -102,7 +102,8 @@
     background-color: $esper-bg;
     position: relative;
 
-    .side-by-side & {
+    .side-by-side:not(.esper-maximized) &,
+    .side-by-side.esper-maximized .text-overlay-split :is(&) {
       flex-direction: column;
     }
 
