@@ -43,8 +43,7 @@ export const Transcription = ({
 
   return (
     <div
-      className="transcription"
-      tabIndex="-1">
+      className="transcription">
       {content}
     </div>
   )
