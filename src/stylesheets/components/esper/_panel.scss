@@ -5,6 +5,7 @@
 // --------------------------------------------------
 
 .esper-panel {
+  flex: 0 0 $esper-panel-width;
   display: flex;
   flex-direction: column;
   margin-right: -$esper-panel-width; // Permanently set two negative margins to avoid transition glitch after layout switch
@@ -13,21 +14,18 @@
   max-height: 100%;
   background: $esper-bg;
   position: relative; // Must be over esper-view for a clean transition in solid mode
+  box-shadow: none; // Hide box-shadow
+  transition: box-shadow 0s linear 0.3s, margin-right 0.3s ease;
 
-  .stacked & {
-    flex: 0 0 $esper-panel-width;
-    box-shadow: none; // Hide box-shadow
-    transition: box-shadow 0s linear 0.3s, margin-right 0.3s ease;
-
-    .panel-visible :is(&) {
-      box-shadow: -1px 0 0 $esper-shadow;
-      margin-right: 0;
-      margin-bottom: 0;
-      transition: box-shadow 0s linear, margin-right 0.3s ease;
-    }
+  .panel-visible :is(&) {
+    box-shadow: -1px 0 0 $esper-shadow;
+    margin-right: 0;
+    margin-bottom: 0;
+    transition: box-shadow 0s linear, margin-right 0.3s ease;
   }
 
-  .side-by-side & {
+  .side-by-side:not(.esper-maximized) &,
+  .side-by-side.esper-maximized .text-overlay-split & {
     flex: 0 0 $esper-panel-height;
     box-shadow: none; // Hide box-shadow
     transition: box-shadow 0s linear 0.3s, margin-bottom 0.3s ease;
@@ -42,33 +40,22 @@
 
   .overlay-mode & {
     position: absolute;
+    top: zoom($toolbar-height);
+    right: 0;
+    bottom: 0;
+    width: $esper-panel-width;
+
+    .frameless & {
+      top: zoom($toolbar-frameless-height);
+
+      @if $platform == win32 {
+        top: zoom($toolbar-height);
+      }
+    }
 
     .project:not([class*="enter"]) & {
       background: $esper-overlay-bg;
       backdrop-filter: blur($esper-blur-radius);
-    }
-
-    .stacked & {
-      top: zoom($toolbar-height);
-      right: 0;
-      bottom: 0;
-      width: $esper-panel-width;
-
-      .frameless & {
-        top: zoom($toolbar-frameless-height);
-
-        @if $platform == win32 {
-          top: zoom($toolbar-height);
-        }
-      }
-    }
-
-    .side-by-side & {
-      right: 0;
-      bottom: 0;
-      left: 0;
-      height: $esper-panel-height;
-      box-shadow: none;
     }
   }
 
