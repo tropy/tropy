@@ -1,6 +1,8 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Alto } from './alto.js'
+import { Icon } from '../icons.js'
+
 
 export const Transcription = ({
   config,
@@ -22,9 +24,10 @@ export const Transcription = ({
 
   } else if (status === 0) {
     content = (
-      <span className="pending">
-        <FormattedMessage id="transcription.pending"/>
-      </span>
+      <div className="pending">
+        <Icon name="TranscriptionExtraLarge"/>
+        <FormattedMessage id="transcription.pending" tagName="p"/>
+      </div>
     )
 
   } else if (data) {

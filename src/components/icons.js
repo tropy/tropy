@@ -844,6 +844,12 @@ export const IconWarningLarge = i('WarningLarge', (
   </svg>
 ))
 
+export const IconTranscriptionExtraLarge = i('TranscriptionExtraLarge', (
+  <svg width="80" height="80">
+    <path className="line" fill="currentColor" d="M65,10c2.757,0,5,2.243,5,5v50c0,2.757-2.243,5-5,5H15c-2.757,0-5-2.243-5-5V15c0-2.757,2.243-5,5-5h50M65,5H15c-5.523,0-10,4.477-10,10v50c0,5.523,4.477,10,10,10h50c5.523,0,10-4.477,10-10V15c0-5.523-4.477-10-10-10h0ZM22,20v10h3.5l.8-4.8,1.2-1.2h9.5v31l-1.2,1.2-4.8.8v3h18v-3l-4.8-.8-1.2-1.2v-31h9.5l1.2,1.2.8,4.8h3.5v-10H22Z"/>
+  </svg>
+))
+
 
 /* 144 x 144 */
 
