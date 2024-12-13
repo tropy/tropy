@@ -51,12 +51,7 @@ export const NewProject = ({
             type="text"
             value={name}/>
         </FormElement>
-        <h2 style={{ width: 'fit-content' }}>
-          <FormattedMessage id="project.new.type.label"/>
-          <p className="eye-catcher">
-            <FormattedMessage id="project.new.eyeCatcher"/>
-          </p>
-        </h2>
+        <h2><FormattedMessage id="project.new.type.label"/></h2>
         <FormGroup>
           <ToggleButtonGroup
             id="project.new.type"
