@@ -838,7 +838,7 @@ export const IconWarningOverlay = i('WarningOverlay', (
 
 /* 80 x 80 */
 
-export const IconWarningLarge = i('WarningLarge', (
+export const IconWarningExtraLarge = i('WarningExtraLarge', (
   <svg width="80" height="80">
     <path className="line" fill="currentColor" d="M40,10.625,71.667,70H8.333L39.976,10.628a.074.074,0,0,1,.024,0h0m0-5a4.947,4.947,0,0,0-4.412,2.647L3.922,67.647A5,5,0,0,0,8.333,75H71.667a5,5,0,0,0,4.411-7.353L44.412,8.272A4.947,4.947,0,0,0,40,5.625ZM40,56.5a3.75,3.75,0,1,0,3.75,3.75A3.75,3.75,0,0,0,40,56.5Zm3.75-25.25a3.75,3.75,0,0,0-7.5,0c0,.095.021.183.028.276l-.028,0L37.5,49.192l.022,0a2.487,2.487,0,0,0,4.962,0h.012L43.74,31.528h-.018C43.729,31.434,43.75,31.345,43.75,31.25Z"/>
   </svg>
@@ -847,6 +847,12 @@ export const IconWarningLarge = i('WarningLarge', (
 export const IconTranscriptionExtraLarge = i('TranscriptionExtraLarge', (
   <svg width="80" height="80">
     <path className="line" fill="currentColor" d="M65,10c2.757,0,5,2.243,5,5v50c0,2.757-2.243,5-5,5H15c-2.757,0-5-2.243-5-5V15c0-2.757,2.243-5,5-5h50M65,5H15c-5.523,0-10,4.477-10,10v50c0,5.523,4.477,10,10,10h50c5.523,0,10-4.477,10-10V15c0-5.523-4.477-10-10-10h0ZM22,20v10h3.5l.8-4.8,1.2-1.2h9.5v31l-1.2,1.2-4.8.8v3h18v-3l-4.8-.8-1.2-1.2v-31h9.5l1.2,1.2.8,4.8h3.5v-10H22Z"/>
+  </svg>
+))
+
+export const IconTranscriptionFailedExtraLarge = i('TranscriptionFailedExtraLarge', (
+  <svg width="80" height="80">
+    <path className="line" fill="currentColor" d="M65,10c2.757,0,5,2.243,5,5v50c0,2.757-2.243,5-5,5H15c-2.757,0-5-2.243-5-5V15c0-2.757,2.243-5,5-5h50M65,5H15c-5.523,0-10,4.477-10,10v50c0,5.523,4.477,10,10,10h50c5.523,0,10-4.477,10-10V15c0-5.523-4.477-10-10-10h0ZM59.621,24.621l-4.242-4.242-15.379,15.379-15.379-15.379-4.242,4.242,15.379,15.379-15.379,15.379,4.242,4.242,15.379-15.379,15.379,15.379,4.242-4.242-15.379-15.379,15.379-15.379Z"/>
   </svg>
 ))
 

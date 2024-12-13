@@ -651,7 +651,7 @@ en:
       sinkListItem: Sink list item
       liftListItem: Lift list item
   transcription:
-    error: Transcription Error
+    error: Transcription failed
     pending: Transcription pending…
     title: >-
       {name, select,
