@@ -21,6 +21,7 @@ export const Transcription = ({
         <Icon name="TranscriptionFailedExtraLarge"/>
         <FormattedMessage id="transcription.error" tagName="p"/>
         <Button isDefault text="Try Again" />
+        {config?.error}
       </div>
     )
 
