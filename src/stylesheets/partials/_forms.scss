@@ -201,49 +201,6 @@ fieldset {
         }
       }
     }
-
-    .overlay-mode & {
-      background: $input-overlay-bg;
-      border-color: transparent;
-
-      &:active {
-        background: $checkbox-overlay-checked-bg;
-      }
-
-      &:focus-visible {
-        border-color: $input-overlay-focus-color;
-        box-shadow: 0 0 0 2px $input-overlay-focus-color;
-      }
-
-      &[disabled] {
-        background: $input-overlay-bg-readonly;
-        border-color: $checkbox-overlay-disabled-border;
-      }
-
-      &:checked {
-        background: $checkbox-overlay-checked-bg;
-
-        &:active {
-          background: $checkbox-overlay-checked-active-bg;
-          border-color: transparent;
-        }
-
-        &:focus-visible {
-          border-color: $input-overlay-focus-color;
-          box-shadow: 0 0 0 2px $input-overlay-focus-color;
-        }
-
-        &[disabled] {
-          background: $input-overlay-bg-readonly;
-          border-color: $checkbox-overlay-disabled-border;
-
-          &::before,
-          &::after {
-            background: $checkbox-overlay-checked-bg;
-          }
-        }
-      }
-    }
   }
 }
 
