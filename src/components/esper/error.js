@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Button } from '../button.js'
-import { IconWarningLarge } from '../icons.js'
+import { Icon } from '../icons.js'
 import photo from '../../actions/photo.js'
 
 export const EsperError = ({
@@ -12,7 +12,7 @@ export const EsperError = ({
 
   return (
     <div className="esper-error">
-      <IconWarningLarge/>
+      <Icon name="WarningExtraLarge"/>
       <p><FormattedMessage id="photo.error"/></p>
       <Button
         isDefault

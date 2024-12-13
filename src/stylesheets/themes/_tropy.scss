@@ -412,7 +412,7 @@ $esper-error-color:                      var(--shade-8);
 // Transcription
 $transcription-btn-icon-hover-bg:  scheme(null,                       var(--shade-3));
 $transcription-btn-icon-active-bg: scheme(null,                       var(--shade-5));
-$transcription-pending-color:      scheme(var(--shade-8),             var(--shade-8));
+$transcription-state-color:        scheme(var(--shade-8),             var(--shade-8));
 $string-selected-bg:               scheme(shade(var(--shade-1), 14%), var(--shade-5));
 $string-selected-focus-color:      scheme(var(--shade-0),             var(--primary-light));
 $string-selected-focus-bg:         scheme(var(--primary),             var(--primary));

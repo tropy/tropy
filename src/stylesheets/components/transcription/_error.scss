@@ -1,0 +1,45 @@
+@use "../../abstracts/config" as *;
+
+//
+// Transcription error
+// --------------------------------------------------
+
+.transcription {
+  .error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    @container (width < 240px) {
+      display: none;
+    }
+
+    .icon {
+      opacity: 0.5;
+
+      @container (height < 240px) {
+        display: none;
+      }
+    }
+
+    p {
+      font-size: 18px;
+      color: $transcription-state-color;
+      opacity: 0.5;
+      margin: (20px - 12px) 0 ($line-height-large - 4px);
+
+      @container (height < 240px) {
+        margin: (-1px - 8px) 0 0;
+      }
+    }
+
+    .btn {
+      @container (height < 240px) {
+        display: none;
+      }
+    }
+  }
+}
