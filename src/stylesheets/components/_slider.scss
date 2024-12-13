@@ -50,21 +50,6 @@
     &:only-child {
       margin: 0;
     }
-
-    .overlay-mode & {
-      opacity: $slider-overlay-track-opacity;
-      background-color: $slider-overlay-track-bg;
-
-      .slider:focus :is(&) {
-        opacity: $slider-overlay-track-focus-opacity;
-        background-color: $slider-overlay-track-focus-bg;
-      }
-
-      .slider.disabled :is(&) {
-        opacity: $slider-overlay-track-disabled-opacity;
-        background-color: $slider-overlay-track-disabled-bg;
-      }
-    }
   }
 
   .slider-range {
@@ -91,14 +76,6 @@
     .slider.disabled :is(&) {
       opacity: $slider-range-disabled-opacity;
     }
-
-    .overlay-mode & {
-      background-color: $slider-overlay-range-bg;
-
-      .slider:focus :is(&) {
-        background-color: $slider-overlay-focus-bg;
-      }
-    }
   }
 
   .slider-handle {
@@ -121,15 +98,6 @@
     .slider.disabled :is(&) {
       background-color: $slider-handle-disabled-bg;
     }
-
-    .overlay-mode & {
-      background-color: $slider-overlay-handle-bg;
-      border-color: $slider-overlay-handle-border;
-
-      .slider:focus :is(&) {
-        background-color: $slider-overlay-focus-bg;
-      }
-    }
   }
 
   .slider-value {
@@ -145,10 +113,6 @@
     opacity: 0;
     transition: opacity $slider-value-transition;
     -webkit-app-region: no-drag;
-
-    .overlay-mode & {
-      color: $slider-overlay-value-color;
-    }
 
     .slider:hover :is(&),
     .slider-handle:active :is(&) {

@@ -5,12 +5,6 @@
 // --------------------------------------------------
 
 .scrollbar-style-old-school {
-  --scrollbar-color: #{$scrollbar-color};
-
-  .overlay-mode {
-    --scrollbar-color: #{$scrollbar-overlay-color};
-  }
-
   ::-webkit {
     &-scrollbar {
       width: $scrollbar-size;
@@ -21,7 +15,7 @@
       }
 
       &-thumb {
-        background-color: var(--scrollbar-color);
+        background-color: $scrollbar-color;
         border-radius: 6px;
         border: $space-min solid $scrollbar-bg;
         background-clip: content-box;

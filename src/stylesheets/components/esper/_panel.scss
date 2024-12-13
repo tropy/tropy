@@ -63,6 +63,12 @@
     margin: auto;
     width: 100%;
     max-width: $esper-panel-max-size;
+
+    .scrollbar-style-old-school .overlay-mode & {
+      &::-webkit-scrollbar-thumb {
+        background-color: $scrollbar-overlay-color;
+      }
+    }
   }
 
   .filter-control {
