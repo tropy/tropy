@@ -1,8 +1,8 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Alto } from './alto.js'
+import { TranscriptionError } from './error.js'
 import { Icon } from '../icons.js'
-import { Button } from '../button.js'
 
 
 export const Transcription = ({
@@ -17,12 +17,7 @@ export const Transcription = ({
 
   if (status < 0) {
     content = (
-      <div className="error">
-        <Icon name="TranscriptionFailedExtraLarge"/>
-        <FormattedMessage id="transcription.error" tagName="p"/>
-        <Button isDefault text="Try Again" />
-        {config?.error}
-      </div>
+      <TranscriptionError config={config}/>
     )
 
   } else if (status === 0) {
@@ -48,8 +43,7 @@ export const Transcription = ({
   }
 
   return (
-    <div
-      className="transcription">
+    <div className="transcription">
       {content}
     </div>
   )

@@ -13,6 +13,8 @@ export class Create extends Command {
       ({ photo, selection } = yield select(state => state.nav))
     }
 
+    // TODO sanitize config if given (e.g. after retry)
+
     if (config == null) {
       config = { plugin }
     }

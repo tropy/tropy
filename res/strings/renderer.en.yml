@@ -651,6 +651,7 @@ en:
       liftListItem: Lift list item
   transcription:
     error: Transcription failed
+    retry: Try Again
     pending: Transcription pending…
     title: >-
       {name, select,
