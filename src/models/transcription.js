@@ -5,7 +5,14 @@ import { json, stringify } from '../common/util.js'
 import { serialize } from '../dom.js'
 
 
-export async function create(db, { parent, config = {}, text, data }) {
+export async function create(db, {
+  parent,
+  config = {},
+  text,
+  data,
+  angle = 0,
+  mirror = false
+}) {
   let status = (text) ? 1 : 0
 
   if (data instanceof Node)
@@ -18,6 +25,8 @@ export async function create(db, { parent, config = {}, text, data }) {
         config: stringify(config),
         data,
         text,
+        angle,
+        mirror,
         status
       }))
 
@@ -34,6 +43,8 @@ export async function load(db, id) {
     'text',
     'data',
     'status',
+    'angle',
+    'mirror',
     'created',
     'modified'
   ).from('transcriptions')
@@ -80,6 +91,8 @@ export async function save(db, {
   config,
   data,
   text,
+  angle,
+  mirror,
   status,
   modified = new Date
 }) {
@@ -94,6 +107,8 @@ export async function save(db, {
     config,
     data,
     text,
+    angle,
+    mirror,
     status,
     modified: modified.toISOString()
   }).where({ transcription_id: id })
