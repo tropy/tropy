@@ -29,14 +29,16 @@ export class Transcribe extends Command {
     let image = selection || photo
     let src = Cache.url(cache.root, 'full', photo)
 
-    let state = { config, data, text }
+    let rotation = addOrientation(image, photo)
+    let state = { config, data, text, ...rotation }
     let draft = createDraft(state)
     let next
 
     try {
+
       let { buffer, ...raw } = yield call(Esper.instance.extract, src, {
         ...image,
-        ...addOrientation(image, photo)
+        ...rotation
       })
 
       if (!config.plugin) {
