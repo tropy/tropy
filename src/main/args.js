@@ -19,6 +19,8 @@ program
   // TODO remove when squirrel is not used anymore!
   .allowUnknownOption()
 
+  .allowExcessArguments()
+
   .option('--data <path>', 'set data directory', type.path)
   .option('--cache <path>', 'set cache directory', type.path)
   .option('--logs <path>', 'set log directory', type.path)

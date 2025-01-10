@@ -119,7 +119,7 @@
     "alto.js": "inukshuk/alto.js.git#main",
     "chokidar": "^4.0.0",
     "classnames": "^2.2.6",
-    "commander": "^12.0.0",
+    "commander": "^13.0.0",
     "cross-zip": "^4.0.0",
     "edtf": "^4.4.0",
     "generic-pool": "^3.7.1",
