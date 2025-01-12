@@ -104,7 +104,7 @@ const project = {
         language,
         photo: photo ? Number(photo) : null,
         selection: selection ? Number(selection) : null,
-        html: request.body.html
+        html
       }))
 
       ctx.body = {
@@ -122,13 +122,15 @@ const project = {
           'format unknown')
 
       let { payload } = await rsvp('project', act.note.show({
-        id: params.note,
+        id: params.id,
         format: query.format
       }))
 
       if (payload != null) {
         if (query.format === 'html')
           ctx.type = 'text/html'
+        if (query.format === 'text' || query.format === 'plain')
+          ctx.type = 'text/plain'
         if (query.format === 'markdown' || query.format === 'md')
           ctx.type = 'text/markdown'
 
@@ -239,8 +241,8 @@ const project = {
 
       let { payload } = await rsvp('project',
         request.body.tag ?
-          act.tag.remove({ id: params.id, tags: request.body.tag }) :
-          act.tag.clear({ id: params.id }))
+            act.tag.remove({ id: params.id, tags: request.body.tag }) :
+            act.tag.clear({ id: params.id }))
 
       ctx.body = payload
     },
