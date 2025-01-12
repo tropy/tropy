@@ -142,6 +142,60 @@ const project = {
     }
   },
 
+  transcriptions: {
+    async create(ctx) {
+      let { assert, request, rsvp } = ctx
+      let { data, text, angle, mirror, photo, selection } = request.body
+
+      assert.ok(data || text, 400,
+        'missing data or text parameter')
+      assert.ok(photo || selection, 400,
+        'missing photo or selection parameter')
+
+      let { payload } = await rsvp('project', act.transcriptions.create({
+        data,
+        text,
+        angle,
+        mirror,
+        photo: photo ? Number(photo) : null,
+        selection: selection ? Number(selection) : null
+      }))
+
+      ctx.body = {
+        id: Object.values(payload).map(tr => tr.id)
+      }
+    },
+
+    async show(ctx) {
+      let { assert, params, query, rsvp } = ctx
+
+      if (query.format)
+        assert(
+          (/^(json|html|plain|text|xml|alto)$/).test(query.format),
+          400,
+          'format unknown')
+
+      let { payload } = await rsvp('project', act.transcription.show({
+        id: params.id,
+        format: query.format
+      }))
+
+      if (payload != null) {
+        if (query.format === 'html')
+          ctx.type = 'text/html'
+        if (query.format === 'text' || query.format === 'plain')
+          ctx.type = 'text/plain'
+        if (query.format === 'alto' || query.format === 'xml')
+          ctx.type = 'application/xml'
+
+        ctx.body = payload
+
+      } else {
+        ctx.status = 404
+      }
+    }
+  },
+
   photos: {
     async find(ctx) {
       let { params, rsvp } = ctx
@@ -308,6 +362,9 @@ export function create({ dispatch, log, rsvp, version }) {
 
     .get('/project/notes/:id', project.notes.show)
     .post('/project/notes', project.notes.create)
+
+    .get('/project/transcriptions/:id', project.transcriptions.show)
+    .post('/project/transcriptions', project.transcriptions.create)
 
     .get('/project/photos/:id', project.photos.show)
     .get('/project/photos/:id/raw', project.photos.raw)
