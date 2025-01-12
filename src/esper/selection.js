@@ -138,7 +138,7 @@ export class SelectionOverlay extends Container {
   constructor() {
     super()
 
-    this.cacheAsBitmap = false
+    this.cacheAsTexture = false
     this.visible = false
 
     this.addChild(new Graphics(), new Graphics())
