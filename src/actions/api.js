@@ -97,6 +97,31 @@ export default {
     }
   },
 
+  transcription: {
+    create(payload, meta) {
+      return {
+        type: API.TRANSCRIPTION.CREATE,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    },
+
+    show(payload, meta) {
+      return {
+        type: API.TRANSCRIPTION.SHOW,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    }
+  },
+
+
   photo: {
     extract(payload, meta) {
       return {

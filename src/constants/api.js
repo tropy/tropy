@@ -10,6 +10,11 @@ export default {
     SHOW: 'api.photo.show'
   },
 
+  TRANSCRIPTION: {
+    CREATE: 'api.transcription.create',
+    SHOW: 'api.transcription.show'
+  },
+
   SELECTION: {
     SHOW: 'api.selection.show'
   },
