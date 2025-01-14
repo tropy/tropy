@@ -26,16 +26,21 @@ jobs:
         include:
           - os: ubuntu-latest
             friendlyName: Linux
+            platform: linux
           - os: ubuntu-22.04
-            friendlyName: Linux (Ubuntu 22)
+            friendlyName: Linux LTS
+            platform: linux
           - os: macos-13
             arch: x64
             friendlyName: macOS
+            platform: darwin
           - os: macos-latest
             arch: arm64
             friendlyName: macOS
+            platform: darwin
           - os: windows-latest
             friendlyName: Windows
+            platform: win32
 
     steps:
       - name: Checkout repository
@@ -69,16 +74,16 @@ jobs:
           npm_config_arch: ${{ matrix.arch }}
 
       - name: Run main/renderer tests
-        if: matrix.os != 'ubuntu-latest'
+        if: matrix.platform != 'linux'
         run: npm test
         shell: bash
 
       - name: Run main/renderer tests with coverage report
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.platform == 'linux'
         run: xvfb-run --auto-servernum --server-num=1 npm run coverage
 
       - name: Send coverage report to Coveralls
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.platform == 'linux'
         continue-on-error: true
         uses: coverallsapp/github-action@v2
         with:
