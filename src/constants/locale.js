@@ -10,10 +10,12 @@ const LOCALE = {
   'nl-NL': 'nl-NL',
   'pt': 'pt',
   'pt-BR': 'pt-BR',
+  'ru': 'ru',
   'uk': 'uk'
 }
 
-export const supportedLanguages = Object.keys(LOCALE).sort()
+export const supportedLanguages =
+  Object.keys(LOCALE).sort().filter(lang => lang !== 'zh')
 
 LOCALE.default = 'en'
 export default LOCALE
