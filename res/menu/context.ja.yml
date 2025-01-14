@@ -462,6 +462,19 @@ ja:
           - label: 左右に配置
             id: side-by-side
             type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
+            type: checkbox
     metadata-list:
       - label: 新規フィールド
         command: app:create-field
@@ -882,6 +895,19 @@ ja:
             type: checkbox
           - label: 左右に配置
             id: side-by-side
+            type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
             type: checkbox
     item-rotate:
       - label: 左に回転する
@@ -1367,6 +1393,19 @@ ja:
             type: checkbox
           - label: 左右に配置
             id: side-by-side
+            type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
             type: checkbox
     item-rotate:
       - label: 左に回転する

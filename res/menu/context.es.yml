@@ -462,6 +462,19 @@ es:
           - label: Lado a lado
             id: side-by-side
             type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
+            type: checkbox
     metadata-list:
       - label: Nuevo campo …
         command: app:create-field
@@ -882,6 +895,19 @@ es:
             type: checkbox
           - label: Lado a lado
             id: side-by-side
+            type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
             type: checkbox
     item-rotate:
       - label: Rotar a la izquierda
@@ -1367,6 +1393,19 @@ es:
             type: checkbox
           - label: Lado a lado
             id: side-by-side
+            type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
             type: checkbox
     item-rotate:
       - label: Rotar a la izquierda

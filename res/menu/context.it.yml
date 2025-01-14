@@ -357,10 +357,10 @@ it:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Trascrivi gli elementi selezionati
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Con Tropy
             command: app:transcribe-item
             enabled: false
     item-bulk:
@@ -413,14 +413,14 @@ it:
       - label: Esporta foto
         id: extract
         submenu:
-          - label: To File
+          - label: Archivio
             command: app:extract-photo
-          - label: To Clipboard
+          - label: Negli appunti
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Trascrivi foto
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Con Tropy
             command: app:transcribe-photo
             enabled: false
       - label: Consolida foto
@@ -461,6 +461,19 @@ it:
             type: checkbox
           - label: Fianco a fianco
             id: side-by-side
+            type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
             type: checkbox
     metadata-list:
       - label: Nuovo campo...
@@ -883,6 +896,19 @@ it:
           - label: Fianco a fianco
             id: side-by-side
             type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
+            type: checkbox
     item-rotate:
       - label: Ruota a sinistra
         command: app:rotate-item-left
@@ -891,10 +917,10 @@ it:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Trascrivi gli elementi selezionati
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Con Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
@@ -929,14 +955,14 @@ it:
       - label: Esporta foto
         id: extract
         submenu:
-          - label: To File
+          - label: Archivio
             command: app:extract-photo
-          - label: To Clipboard
+          - label: Negli appunti
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Trascrivi foto
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Con Tropy
             command: app:transcribe-photo
             enabled: false
       - label: Consolida foto
@@ -1368,6 +1394,19 @@ it:
           - label: Fianco a fianco
             id: side-by-side
             type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
+            type: checkbox
     item-rotate:
       - label: Ruota a sinistra
         command: app:rotate-item-left
@@ -1376,10 +1415,10 @@ it:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Trascrivi gli elementi selezionati
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Con Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
@@ -1414,14 +1453,14 @@ it:
       - label: Esporta foto
         id: extract
         submenu:
-          - label: To File
+          - label: Archivio
             command: app:extract-photo
-          - label: To Clipboard
+          - label: Negli appunti
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Trascrivi foto
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Con Tropy
             command: app:transcribe-photo
             enabled: false
       - label: Consolida foto

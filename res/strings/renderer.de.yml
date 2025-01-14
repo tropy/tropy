@@ -169,6 +169,7 @@ de:
           nl-NL: Nederlands
           pt: Português
           pt-BR: Português brasileiro
+          ru: русский
           uk: Украї́нська мо́ва
       templates:
         label: Standardvorlagen
@@ -307,6 +308,9 @@ de:
     size: Größe
     created: Hinzugefügt
     modified: Bearbeitet
+  settings:
+    maximize: Maximize this view
+    unmaximize: Restore previous view size
   esper:
     tool:
       pan: Verschieben
@@ -318,6 +322,10 @@ de:
       fill: Füllen
       fit: Einpassen
       zoom: Zoom
+    overlay:
+      full: Show full text overlay
+      split: Show split-view text overlay
+      versions: Toggle transcription version history
     panel:
       negative: Farben invertieren
       revert: Originalzustand
@@ -636,6 +644,9 @@ de:
       right: Rechts
       sinkListItem: Eine Ebene tiefer
       liftListItem: Eine Ebene höher
+  transcription:
+    error: Transcription Error
+    pending: Transcription pending…
   error:
     cache:
       prune: Fehler beim Optimieren des Projekt-Caches.

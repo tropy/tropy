@@ -165,6 +165,7 @@ es:
           nl-NL: Nederlands
           pt: Português
           pt-BR: Português brasileiro
+          ru: русский
           uk: Украї́нська мо́ва
       templates:
         label: Plantillas por defecto
@@ -298,6 +299,9 @@ es:
     size: Tamaño
     created: Creación
     modified: Modificado
+  settings:
+    maximize: Maximize this view
+    unmaximize: Restore previous view size
   esper:
     tool:
       pan: Herramienta de panorama
@@ -309,6 +313,10 @@ es:
       fill: Llenar por altura
       fit: Llenar por anchura
       zoom: Zoom
+    overlay:
+      full: Show full text overlay
+      split: Show split-view text overlay
+      versions: Toggle transcription version history
     panel:
       negative: Invertir colores
       revert: Revertir al original
@@ -619,6 +627,9 @@ es:
       right: Alinear a la derecha
       sinkListItem: Descender elemento
       liftListItem: Elevar elemento
+  transcription:
+    error: Transcription Error
+    pending: Transcription pending…
   error:
     cache:
       prune: Falla al optimizar la cache memoria del proyecto.

@@ -1,0 +1,723 @@
+ru:
+  sidebar:
+    lists: Списки
+    tags: Теги
+    imports: Последний импорт
+    trash: Удалённые элементы
+    unlisted: Элементы, не включенные в список
+  toolbar:
+    import: Импорт фото
+    items: |-
+      {count, plural,
+      =0 {в этом представлении нет элементов}
+      one {1 элемент в этом представлении}
+      other {# элементов в этом представлении}}
+    search:
+      placeholder: Поиск
+  panel:
+    metadata:
+      tab: Метаданные
+      photo: Фото
+      item: |-
+        {count, plural,
+        =0 {}
+        one {элемент}
+        other {# элементов}}
+      selection: Выбор
+      dropdown:
+        placeholder: Добавить новое поле …
+    tags:
+      tab: Теги
+      add: |-
+        {count, plural,
+        =0 {Добавить тег}
+        one {Добавить тег к 1 элементу}
+        other {Добавить тег к # элементам}}
+    photo:
+      title: |-
+        {count, plural,
+        =0 {Нет фото}
+        one {1 фото}
+        other {# фото}}
+      create: Добавить фото
+      selection: Выбор
+    note:
+      title: |-
+        {count, plural,
+        =0 {Нет примечаний}
+        one {1 примечание}
+        other {# примечаний}}
+      create: Добавить примечание
+  print:
+    item: Элемент
+    photo: Фото
+    notes: Примечания
+    note: Примечание {idx, number}
+    tags: Теги
+  about:
+    version: Версия {version}
+    rrchnm:
+      title: Центр истории и новых медиа имени Роя Розенцвейга
+      url: https://rrchnm.org
+    cds:
+      title: Цифровой учёный
+      url: https://digitalscholar.org
+    c2dh:
+      title: Люксембургский центр современной и цифровой истории
+      url: https://www.c2dh.uni.lu
+    text: >-
+      Tropy разработан {c2dh} и {rchnm}, лабораториями, которые разрабатывают
+      исторические учебные материалы, цифровые экспонаты и программное
+      обеспечение с открытым исходным кодом.
+    trademark: Название Tropy является зарегистрированной торговой маркой компании {cds}.
+    donate:
+      title: Пожертвуйте в пользу Tropy
+      url: https://tropy.org/donate
+    release:
+      title: Примечания к выпуску
+      url: https://github.com/tropy/tropy/releases/tag/v{version}
+    license:
+      title: Информация о лицензировании
+      url: https://tropy.org/license
+    credits:
+      title: Признательность
+      url: https://tropy.org/credits
+  project:
+    empty: Добавьте свои фотографии в Tropy, чтобы начать работу
+    file:
+      open: Открыть проект {путь}
+      missing: Найти недостающий проект {путь}
+      remove: Удалить проект из списка
+    recent:
+      search:
+        placeholder: Фильтр проектов
+        blank: Нет подходящих проектов
+    corrupted: >-
+      Файл проекта поврежден, для его исправления необходимо выполнить действия
+      вручную. Пожалуйста, обратитесь за помощью к руководству пользователя.
+    readOnly: >-
+      Ваш файл проекта заблокирован и не может быть изменен. Чтобы
+      разблокировать, измените права доступа к файлу и снова откройте проект.
+    new:
+      title: Создать новый проект
+      name: Введите имя нового проекта
+      type:
+        label: Выберите тип проекта
+        option:
+          tpy: Передовой
+          managed: Стандартный
+        hint:
+          tpy: Ссылки на фото в их первоначальном расположении.
+          managed: Копировать фото в папку проекта при импорте.
+      create: Создать проект
+      eyeCatcher: Новый
+    stats:
+      photos: |-
+        {photos, plural,
+        =0 {нет фото}
+        one {1 фото}
+        other {# фото}}
+      items: |-
+        {items, plural,
+        =0 {нет элементов}
+        one {1 элемент}
+        other {# элементов}}
+      notes: |-
+        {notes, plural,
+        =0 {нет примечаний}
+        one {1 примечание}
+        other {# примечаний}}
+  prefs:
+    title: Настройки Tropy
+    app:
+      label: Настройки
+      style:
+        theme: Тема
+        themes:
+          light: Светлая
+          dark: Тёмная
+          system: Системная
+        font:
+          size: Размер шрифта
+          sizes:
+            12px: Очень маленький
+            13px: Маленький (по умолчанию)
+            14px: Средний
+            15px: Большой
+            16px: Очень большой
+        frameless: Использовать собственный заголовок (требуется перезагрузка)
+      print:
+        mode: Печать
+        modes:
+          item: Один элемент на странице
+          photo: Одно фото на странице
+          selection: Один выбор на странице
+        photos: Включать фото
+        optimize: Оптимизировать размер и качество фотографий
+        metadata: Включать метаданные
+        notes: Включать примечания
+        onlyNotes: Включать только фото с примечаниям
+        overflow: Разрешить размещению контента на нескольких страницах
+      locale:
+        locale: Локаль
+        locales:
+          cn: 中文 - китайский
+          de: Deutsch - немецкий
+          en: English -английский
+          es: Español - испанский
+          fr: Français - французский
+          it: Italiano - итальянский
+          ja: 日本語 - японский
+          nl-NL: Nederlands - голландский
+          pt: Português - португальский
+          pt-BR: Português brasileiro - португальский Бразилия
+          ru: русский
+          uk: Украї́нська мо́ва - украинский
+      templates:
+        label: Шаблоны по умолчанию
+        item: Элемент
+        photo: Фото
+        selection: Выбор
+      title:
+        label: Импортировать имя файла как
+        force: Перезаписать встроенные метаданные фото
+      debug: Включить режим разработки
+      localtime: Предположить, что временные метки Exif используют местный часовой пояс
+      dup:
+        label: Во время импорта
+        option:
+          skip: Пропускать дубликаты фото
+          import: Принимать дубликаты фото
+          prompt: Спрашивать каждый раз
+      density:
+        label: Плотность по умолчанию (ppi)
+        title: Используется для PDF, SVG и других масштабируемых форматов
+      export:
+        label: Экспорт
+        note:
+          format:
+            html: Примечания в формате HTML
+            markdown: Примечания в формате Markdown
+          copy:
+            label: Копировать примечания как
+            option:
+              text: Обычный текст
+              markdown: формат Markdown
+              html: Исходный код HTML
+      ui:
+        label: Интерфейс
+        option:
+          invertScroll: Изменить направление прокрутки при просмотре фото
+          invertZoom: Инвертировать направление при масштабировании фото
+          overlayToolbars: Автоматическое скрытие панелей инструментов
+      zoomMode:
+        label: По умолчанию
+        option:
+          fit: Масштабировать фото для соответствия
+          fill: Масштабировать фото для заполнения
+          zoom: Фото в реальном размере
+      layout:
+        label: Макет представления элемента
+        option:
+          stacked: Сложенный
+          side-by-side: Бок о бок
+      completions:
+        label: Автозаполнение
+        option:
+          datatype: Только по типу данных
+          property-datatype: По типу данных и свойству
+    project:
+      label: Проект
+      base:
+        label: Фото по ссылке
+        option:
+          'null': Using absolute paths
+          project: Относительно файла проекта
+          home: Относительно вашего домашнего каталога
+          <None>: Использовать абсолютные пути
+      store: Управляемая папка
+      name: Имя
+      id: Идентификатор
+      path: Файл
+      type: Тип проекта
+      convert:
+        confirm: Конвертация
+        hint: Преобразуйте этот проект в стандартный.
+        detail: |-
+          {errors, plural,
+          =0 {все фото объединены.}
+          one {1 фото не найдено; требуется объединение.}
+          other {# фото не найдены; требуется объединение.}}
+      watch:
+        folder: Папка просмотра
+        usePolling: Использование опроса статистики файлов
+    template:
+      label: Шаблоны
+      new: Новый шаблон …
+      create: Создать
+      select: Шаблон
+      tools:
+        new: Новый
+        copy: Дублировать
+        delete: Удалить
+        import: Импорт
+        export: Экспорт
+    vocab:
+      label: Словари
+      export: Экспорт
+      classes: |-
+        {count, plural,
+        =0 {нет классов}
+        one {# класс}
+        other {# классов}
+        }
+      datatypes: |-
+        {count, plural,
+        =0 {нет типа данных} one {# тип данных}
+        other {# типов данных}
+        }
+      properties: |-
+        {count, plural,
+        =0 {нет свойств}
+        one {# свойство}
+        other {# свойств}
+        }
+    plugins:
+      label: Плагины
+      settings: Настройки
+      enable: Включить
+      disable: Отключить
+      install: Установить плагин
+      uninstall: Удалить
+      noInfo: Неизвестный автор
+      homepage: Больше
+  format:
+    ppi: Пикселей на дюйм (ppi)
+  item:
+    created: Дата добавления
+    modified: Изменён
+    template: Шаблон
+  photo:
+    file: Файл
+    size: Размер
+    density: Плотность
+    type: Тип
+    created: Дата добавления
+    modified: Изменён
+    consolidate: Объединить фото
+    error: Фото не найдены
+  selection:
+    size: Размер
+    created: Дата добавления
+    modified: Изменён
+  settings:
+    maximize: Увеличить вид до максимума
+    unmaximize: Восстановить предыдущий размер изображения
+  esper:
+    tool:
+      pan: Инструмент Панорама
+      select: Выбор инструмента
+      rotate: Вращать
+      mirror: Отразить
+      edit: Редактировать фото
+    mode:
+      fill: Заполнить
+      fit: Подогнать
+      zoom: Масштаб
+    overlay:
+      full: Показать полнотекстовое наложение
+      split: Показывать наложение текста с разделённым просмотром
+      versions: Переключение истории версий транскрипции
+    panel:
+      negative: Инвертировать цвета
+      revert: Вернуться к исходному состоянию
+      brightness:
+        label: Яркость
+        value: '{значение, число}'
+      contrast:
+        label: Контрастность
+        value: '{значение, число}'
+      hue:
+        label: Оттенок
+        value: '{значение, число}°'
+      saturation:
+        label: Насыщенность
+        value: '{значение, число}'
+      sharpen:
+        label: Резкость
+        value: '{значение, число}'
+  notepad:
+    placeholder: Добавляйте свои примечания сюда …
+  completions:
+    empty: Нет доступных опций
+    noMatches: Совпадений не найдено
+  select:
+    column:
+      placeholder: Поиск
+    file:
+      browse: Просмотр
+      clear: Очистить
+  template:
+    id: URI-идентификатор
+    name: Имя
+    type: Тип
+    creator: Создатель
+    description: Описание
+    types:
+      https://tropy.org/v1/tropy#Item: Шаблон элемента
+      https://tropy.org/v1/tropy#Photo: Шаблон фото
+      https://tropy.org/v1/tropy#Selection: Шаблон выбора
+    field:
+      property: Свойство
+      label: Метка
+      datatype: Тип данных
+      isRequired: Поле обязательное для заполнения
+      hint: Подсказка
+      value: Значение по умолчанию
+      isConstant: Только для чтения
+  vocab:
+    id: URI-идентификатор
+    prefix: Префикс
+    title: Имя
+    description: Описание
+    properties: Свойства
+    seeAlso: Смотрите также
+  property:
+    select: Выбрать свойства ...
+  datatype:
+    select: Выберать тип данных …
+  resource:
+    select: Выберать ресурс …
+    id: URI-идентификатор
+    label: Метка
+    description: Описание
+    comment: Комментарий
+  dialog:
+    notify:
+      project:
+        convert:
+          title: Преобразование завершено
+          message: >-
+            Ваш проект был успешно преобразован и сохранен. Теперь Tropy закроет
+            исходный файл проекта и откроет преобразованный проект в новом
+            окне.Ваш проект был успешно преобразован и сохранен. Теперь Tropy
+            закроет исходный файл проекта и откроет преобразованный проект в
+            новом окне.
+          buttons:
+            - Ок
+    error:
+      title: Ошибка
+      buttons:
+        - Отклонить
+        - Ошибка копирования
+        - Посмотреть журнал
+    prompt:
+      item:
+        destroy:
+          message: >-
+            Вы уверены, что хотите удалить элементы окончательно? Это действие
+            невозможно отменить.
+          buttons:
+            - Отменить
+            - Удалить
+      photo:
+        consolidate:
+          message: >-
+            Хотите, чтобы Tropy автоматически проверял и принимал решение о
+            недостающих фото в этом месте?
+          buttons:
+            - Да
+            - Нет
+      dup:
+        detail: >-
+          Это фото уже существует в вашем проекте. Вы уверены, что хотите
+          импортировать его еще раз?
+        checkboxLabel: Запомнить этот выбор
+        buttons:
+          - Пропустить
+          - Импортировать в любом случае
+      plugin:
+        uninstall:
+          detail: >-
+            Вы уверены, что хотите удалить плагин? Это приведет к необратимому
+            удалению плагина и его конфигурации.
+          buttons:
+            - Отменить
+            - Удалить
+      template:
+        import:
+          message: >-
+            Шаблон с этим идентификатором уже существует в вашей базе данных
+            онтологий. Вы хотите перезаписать существующий шаблон?
+          buttons:
+            - Отменить
+            - Перезаписать
+        imported:
+          message: Шаблон успешно импортирован.
+          buttons:
+            - Ок
+    filter:
+      csv: CSV формат
+      templates: Tropy шаблоны
+      images: Изображения
+      items: Tropy элементы
+      notes: Примечания
+      projects: Проекты Tropy
+      rdf: Словари RDF
+      jsonld: формат JSON-LD
+  action:
+    project:
+      save: Сохранить проект
+    list:
+      create: Создать список
+      delete: Удалить список
+      item:
+        add: Добавить элементы в список
+        merge: Объединить элементы
+        remove: Удалить элемент из списка
+        restore: Добавить элемент в список
+      order: Сортировать список
+      restore: Восстановить список
+      save: Сохранить список
+    item:
+      create: Создать элементы
+      delete: Удалить элементы
+      explode: Взорвать элемент
+      implode: Объединить элементы
+      merge: Объединить элементы
+      split: Разделить элементы
+      import: Импорт элементов
+      restore: Восстановить элементы
+      save: Сохранить элемент
+      tag:
+        create: Тег
+        toggle: Тег
+        clear: Очистить теги
+    metadata:
+      save: Сохранить метаданные
+    ontology:
+      import: Импорт словарей
+      vocab:
+        save: Сохранить словарь
+      label:
+        save: Сохранить метку
+      template:
+        import: Импорт шаблона
+    photo:
+      create: Импорт фото
+      delete: Удалить фото
+      duplicate: Дубликат фото
+      move: Движущееся фото
+      order: Сортировать фото
+      restore: Восстановить фото
+      save: Сохранить фото
+    note:
+      create: Создать примечание
+      delete: Удалить заметку
+      order: Сортировать примечания
+      restore: Восстановить примечание
+      save: Сохранить примечание
+    tag:
+      create: Создать тег
+      delete: Удалить тег
+      restore: Создать тег
+      save: Сохранить тег
+    selection:
+      create: Создать выделение
+      delete: Удалить выбор
+      restore: Создать выделение
+      save: Сохранить выделение
+      order: Сортировка выделений
+  activity:
+    cache:
+      prune: Оптимизация кэша проекта …
+      purge: Очистка старых кэшей …
+    project:
+      save: Сохранение…
+    list:
+      create: Создание списка …
+      delete: Удаление списка …
+      item:
+        add: Добавление элементов в список …
+        merge: Объединение элементов …
+        remove: Удаление элементов из списка …
+        restore: Восстановление элементов в списке …
+      load: Загрузка списков …
+      order: Сортировка списка...
+      restore: Восстановление списка …
+      save: Сохранение списка…
+    tag:
+      create: Создание тега …
+      delete: Удаление тега …
+      load: Загрузка тегов …
+      restore: Восстановление тега …
+      save: Сохранение тега ...
+    item:
+      create: Создание элемента …
+      delete: Удаление элемента …
+      destroy: Постоянное удаление элементов …
+      explode: Взрывающийся элемент …
+      export: Экспорт элемента …
+      implode: Восстановление элемента ...
+      import: |-
+        {hasProgressBar, select,
+        true {импорт элемента {progress, number} из {total, number} …}
+        other {Импорт элементов …}
+        }
+      load: Загрузка предметов …
+      merge: Объединение элемента ...
+      print: Обрабатываются элементы …
+      restore: Восстановление элемента ...
+      save: Сохранение элементов …
+      tag:
+        create: Создание тега элемента
+        toggle: Создание тега элемента ...
+        clear: Очистка тегов элементов …
+    metadata:
+      load: Загрузка метаданных …
+      save: Сохранение метаданных …
+    ontology:
+      load: Загрузка онтологии …
+      import: Импорт словарей …
+      vocab:
+        save: Сохранение словаря …
+      label:
+        save: Сохранение метки ...
+      template:
+        import: Импорт шаблонов …
+    photo:
+      consolidate: |-
+        {hasProgressBar, select,
+        true {Объединение фото {progress, number} из {total, number} …}
+        other {Объединение фото …}
+        }
+      create: |-
+        {hasProgressBar, select,
+        true {Импорт фото {progress, number} of {total, number} …}
+        other {Импорт фото …}
+        }
+      delete: Удаление фото …
+      duplicate: |-
+        {hasProgressBar, select,
+        true {Дублирование фото {progress, number} из {total, number} …}
+        other {Дублирование фото …}
+        }
+      transcribe: |-
+        {hasProgressBar, select,
+        true {Расшифровка фото {progress, number} of {total, number} …}
+        other {Расшифровка фото …}
+        }
+      load: Загрузка фото …
+      move: Движущиеся фото …
+      order: Сортировка фото …
+      save: Сохранение фото …
+      restore: Восстановление фото …
+      extract: Извлечение фото …
+    note:
+      create: Создание примечания ...
+      delete: Удаление примечания ...
+      load: Загрузка примечания ...
+      order: Сортировка примечания ...
+      restore: Восстановление примечания ...
+    selection:
+      create: Создание подборки фото …
+      load: Загрузка выбранных фото …
+      extract: Извлечение выбора …
+    api:
+      photo:
+        extract: Извлечение фото …
+      selection:
+        extract: Извлечение выбора …
+  editor:
+    commands:
+      bold: Жирный
+      italic: Курсивный
+      underline: Подчёркивание
+      overline: Надчёркивание
+      strikethrough: Зачеркнуто
+      subscript: Нижний индекс
+      superscript: Верхний индекс
+      blockquote: Вставить цитату
+      ol: Вставить нумерованный список
+      ul: Вставить маркированный список
+      link:
+        button: Ссылка
+        target: Назначение ссылки
+        title: Название ссылки
+      unlink: Удалить ссылку
+      left: Выровнять по левому краю
+      center: В центр
+      right: Выровнять по правому краю
+      sinkListItem: Опустить список элементов
+      liftListItem: Поднятие списка элементов
+  transcription:
+    error: Ошибка транскрипции
+    pending: Транскрипция ожидается…
+  error:
+    cache:
+      prune: Не удалось оптимизировать кэш проекта.
+      purge: Не удалось удалить старые кэши проектов.
+    project:
+      created: Не удалось создать проект.
+      convert: Не удалось преобразовать проект.
+    item:
+      export: Не удалось экспортировать элементы.
+      merge: Не удалось импортировать элемент.
+      import: Не удалось импортировать элемент.
+      tag:
+        save: Не удалось сохранить тег.
+        create: >-
+          Не удалось пометить элемент. Теги должны быть уникальными для каждого
+          элемента.
+      template:
+        change: Не удалось изменить шаблон элемента.
+    list:
+      load: Не удалось загрузить списки.
+      create: Не удалось создать список. Имена списков должны быть уникальными.
+      move: >-
+        Не удалось переместить список. Имена списков должны быть уникальными для
+        каждого уровня.
+      save: Не удалось сохранить список.
+      item:
+        add: Не удалось добавить элемент(ы) в список.
+    photo:
+      consolidate: Не удалось объединить фото.
+      create: Не удалось импортировать фото.
+      save: Не удалось сохранить фото.
+      extract: Не удалось экспортировать фото.
+      template:
+        change: Не удалось изменить шаблон фото.
+    selection:
+      create: Не удалось создать подборку фото.
+      extract: Не удалось экспортировать выбранный параметр.
+      template:
+        change: Не удалось изменить шаблон выбора.
+    ontology:
+      migrate: Не удалось обновить вашу базу данных онтологий.
+      import: Не удалось импортировать словарь.
+      vocab:
+        save: Не удалось сохранить словарь. Префикс должен быть уникальным.
+      template:
+        import: Не удалось импортировать шаблон.
+        field:
+          add: Не удалось добавить поле в шаблон.
+          remove: Не удалось удалить поле из шаблона.
+    tag:
+      create: Не удалось создать тег. Имена тегов должны быть уникальными.
+    db:
+      SQLITE_CANTOPEN: Не удается найти или открыть файл базы данных.
+  flash:
+    update:
+      ready:
+        message: >-
+          Tropy {версия} готова к установке. Вы хотите установить и
+          перезапустить программу прямо сейчас?
+        confirm: Перезапустить прямо сейчас
+  plugin:
+    name: Имя
+    plugin: Плагин
+    options: Параметры
+    hooks:
+      export: Экспорт
+      import: Импорт
+      transcribe: OCR распознавание текста

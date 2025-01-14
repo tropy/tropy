@@ -1,465 +1,465 @@
-nl-NL:
+ru:
   linux:
     history:
       - id: undo
-        label: Ongedaan maken
+        label: Отменить
         command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
-        label: Opnieuw uitvoeren
+        label: Повторить
         command: app:redo
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
-      - label: Projectnaam wĳzigen
+      - label: Переименовать проект
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: Projectbestand tonen…
+      - label: Показать файл проекта…
         command: app:show-project-file
     lists:
-      - label: Nieuwe lijst
+      - label: Новый список
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
-      - label: Lijstnaam wĳzigen
+      - label: Переименовать список
         command: app:rename-list
         condition: '!isReadOnly'
-      - label: Lijst verwijderen
+      - label: Удалить список
         command: app:delete-list
         condition: '!isReadOnly'
     tags:
-      - label: Nieuw label
+      - label: Новый тег
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Labels exporteren…
+      - label: Экспорт Тегов …
         command: app:export-tags
-      - label: Standaard labelkleur
+      - label: Цвет тега по умолчанию
         submenu:
-          - label: Geen
+          - label: Не выбран
             color:
               - null
               - tagColor
               - app:save-default-tag-color
-          - label: Willekeurige kleur
+          - label: Случайный цвет
             color:
               - random
               - tagColor
               - app:save-default-tag-color
           - type: separator
-          - label: Rood
+          - label: Красный
             color:
               - red
               - tagColor
               - app:save-default-tag-color
-          - label: Oranje
+          - label: Оранжевый
             color:
               - orange
               - tagColor
               - app:save-default-tag-color
-          - label: Geel
+          - label: Жёлтый
             color:
               - yellow
               - tagColor
               - app:save-default-tag-color
-          - label: Groen
+          - label: Зелёный
             color:
               - green
               - tagColor
               - app:save-default-tag-color
-          - label: Blauw
+          - label: Синий
             color:
               - blue
               - tagColor
               - app:save-default-tag-color
-          - label: Paars
+          - label: Фиолетовый
             color:
               - purple
               - tagColor
               - app:save-default-tag-color
-          - label: Grijs
+          - label: Серый
             color:
               - gray
               - tagColor
               - app:save-default-tag-color
-          - label: Bruin
+          - label: Коричневый
             color:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Abrikoos
+          - label: Абрикосовый
             color:
               - apricot
               - color
               - app:save-default-tag-color
-          - label: Donkergroen
+          - label: Тёмно-зелёный
             color:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Lichtblauw
+          - label: Голубой
             color:
               - light-blue
               - color
               - app:save-default-tag-color
-          - label: Lavendel
+          - label: Лавандовый
             color:
               - lavender
               - color
               - app:save-default-tag-color
     tag:
-      - label: Labelkleur
+      - label: Цвет тэга
         condition: '!isReadOnly'
         submenu:
-          - label: Geen
+          - label: Не выбран
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Rood
+          - label: Красный
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Oranje
+          - label: Оранжевый
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Geel
+          - label: Жёлтый
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Groen
+          - label: Зелёный
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Blauw
+          - label: Синий
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Paars
+          - label: Фиолетовый
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Grijs
+          - label: Серый
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Bruin
+          - label: Коричневый
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Abrikoos
+          - label: Абрикосовый
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Donkergroen
+          - label: Тёмно-зелёный
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Lichtblauw
+          - label: Голубой
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavendel
+          - label: Лавандовый
             color:
               - lavender
               - color
               - app:save-tag-color
-      - label: Labelnaam wĳzigen
+      - label: Переименовать тег
         command: app:rename-tag
         condition: '!isReadOnly'
-      - label: Label wissen
+      - label: Удалить тег
         command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
-      - label: Label van dit item wissen
+      - label: Удалить тег с этого элемента
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: Label van deze items wissen
+      - label: Удалить теги с этих элементов
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
-      - label: Labelkleur
+      - label: Цвет тэга
         condition: '!isReadOnly'
         submenu:
-          - label: Geen
+          - label: Не выбран
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Rood
+          - label: Красный
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Oranje
+          - label: Оранжевый
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Geel
+          - label: Жёлтый
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Groen
+          - label: Зелёный
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Blauw
+          - label: Синий
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Paars
+          - label: Фиолетовый
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Grijs
+          - label: Серый
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Bruin
+          - label: Коричневый
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Abrikoos
+          - label: Абрикосовый
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Donkergroen
+          - label: Тёмно-зелёный
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Lichtblauw
+          - label: Голубой
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavendel
+          - label: Лавандовый
             color:
               - lavender
               - color
               - app:save-tag-color
     note:
-      - label: Label exporteren…
+      - label: Заметка об экспорте …
         command: app:export-note
-      - label: Aantekening kopiëren
+      - label: Копировать заметку
         command: app:copy-note
-      - label: Aantekening verwijderen
+      - label: Удалить заметку
         command: app:delete-note
     notepad:
-      - label: Richting
+      - label: Направление
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Links-naar-rechts
+          - label: Слева направо
             type: checkbox
             checked: false
             direction: ltr
-          - label: Rechts-naar-links
+          - label: Справа налево
             type: checkbox
             checked: false
             direction: rtl
-      - label: Schrijfrichting
+      - label: Режим записи
         id: writing-mode
         condition: hasTargetId
         submenu:
-          - label: Horizontaal
+          - label: Горизонтально
             type: checkbox
             checked: false
             mode: horizontal
-          - label: Verticaal (rechts-naar-links)
+          - label: Вертикально (справа налево)
             type: checkbox
             checked: false
             mode: vertical-rl
-      - label: Regelnummers tonen
+      - label: Показывать номера строк
         id: line-numbers
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: Regels afbreken
+      - label: Линии переноса
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
         condition: hasTargetId
     items:
-      - label: Nieuw item
+      - label: Новый элемент
         command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
-      - label: Item opblazen
+      - label: Взорвать элемент
         command: app:explode-item
         condition: isMultiplePhotos
-      - label: Foto toevoegen…
+      - label: Добавить фото …
         command: app:create-item-photo
-      - label: Labels
+      - label: Теги
         id: tag
         submenu:
-          - label: Geen
+          - label: Не выбран
             type: checkbox
             checked: true
             enabled: false
           - type: separator
-      - label: Item verwijderen
+      - label: Удалить элемент
         command: app:delete-item
     item-read-only:
-      - label: Item exporteren
+      - label: Экспорт элемента
         id: export
         submenu:
-          - label: JSON-LD
+          - label: формат JSON-LD
             command: app:export-item
-          - label: PDF
+          - label: документ PDF
             submenu:
-              - label: Verticaal
+              - label: Портрет
                 command: app:print-pdf
-              - label: Horizontaal
+              - label: Ландшафт
                 command: app:print-pdf-landscape
-      - label: Itemaantekeningen exporteren…
+      - label: Экспортировать примечания к элементу…
         command: app:export-notes
-      - label: Itemlink kopiëren
+      - label: Скопировать ссылку на элемент
         command: app:copy-item-link
-      - label: Itemaantekeningen kopiëren
+      - label: Скопировать примечания к элементу
         command: app:copy-notes
-      - label: Item samenvoegen
+      - label: Объединить элемент
         command: app:consolidate-item
     item-rotate:
-      - label: Naar links draaien
+      - label: Повернуть влево
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: Naar rechts draaien
+      - label: Повернуть вправо
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Selectie transcriberen
+      - label: Переписать выбранные элементы
         id: item-transcribe
         submenu:
-          - label: Met Tropy
+          - label: С Tropy
             command: app:transcribe-item
             enabled: false
     item-bulk:
-      - label: Selectie samenvoegen
+      - label: Объединить выбранные элементы
         command: app:merge-item
-      - label: Selectie verwijderen
+      - label: Удалить выбранные элементы
         command: app:delete-item
     item-bulk-read-only:
-      - label: Selectie exporteren
+      - label: Экспорт выбранных элементов
         id: export
         submenu:
-          - label: JSON-LD
+          - label: формат JSON-LD
             command: app:export-item
-          - label: PDF
+          - label: документ PDF
             submenu:
-              - label: Verticaal
+              - label: Портрет
                 command: app:print-pdf
-              - label: Horizontaal
+              - label: Ландшафт
                 command: app:print-pdf-landscape
-      - label: Selectie exporteren…
+      - label: Экспорт выбранных примечаний к элементу...
         command: app:export-notes
-      - label: Selectie kopiëren
+      - label: Копировать выбранные примечания к элементу
         command: app:copy-notes
-      - label: Selectie samenvoegen
+      - label: Объединить выбранные элементы
         command: app:consolidate-item
     item-list:
-      - label: Item van lijst verwijderen
+      - label: Удалить элемент из списка
         command: app:list-item-remove
     item-bulk-list:
-      - label: Selectie van lijst verwijderen
+      - label: Удалить выбранные элементы из списка
         command: app:list-item-remove
     photo:
-      - label: Foto dupliceren
+      - label: Дубликат фото
         command: app:duplicate-photo
-      - label: Foto verplaatsen naar nieuw item
+      - label: Переместить фото в новый элемент
         command: app:explode-photo
-      - label: Foto verwijderen
+      - label: Удалить фото
         command: app:delete-photo
-      - label: Foto instellen als omslag
+      - label: Использовать фото для обложки
         command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
-      - label: Oorspronkelijk bestand tonen…
+      - label: Показать исходный файл…
         command: app:show-in-folder
-      - label: Openen in extern fotoprogramma…
+      - label: Открыть во внешнем средстве просмотра…
         command: app:open-path
-      - label: Fotolink kopiëren
+      - label: Скопировать ссылку на фото
         command: app:copy-photo-link
-      - label: Foto exporteren
+      - label: Экспортировать фото
         id: extract
         submenu:
-          - label: Naar bestand
+          - label: В файл
             command: app:extract-photo
-          - label: Naar klembord
+          - label: В буфер обмена
             command: app:copy-photo
-      - label: Foto transcriberen
+      - label: Расшифровка фото
         id: transcribe
         submenu:
-          - label: Met Tropy
+          - label: С Tropy
             command: app:transcribe-photo
             enabled: false
-      - label: Foto samenvoegen
+      - label: Объединить фото
         command: app:consolidate-photo
     photo-rotate:
-      - label: Naar links draaien
+      - label: Повернуть влево
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: Naar rechts draaien
+      - label: Повернуть вправо
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
-      - label: Selectie verwijderen
+      - label: Удалить выбор
         command: app:delete-selection
     selection-rotate:
-      - label: Naar links draaien
+      - label: Повернуть влево
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: Naar rechts draaien
+      - label: Повернуть вправо
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     item-deleted:
-      - label: Item herstellen
+      - label: Восстановить элемент
         command: app:restore-item
-      - label: Item permanent verwijderen
+      - label: Удалить элемент навсегда
         command: app:destroy-item
     item-bulk-deleted:
-      - label: Selectie herstellen
+      - label: Восстановить выбранные элементы
         command: app:restore-item
-      - label: Selectie permanent verwijderen
+      - label: Безвозвратно удалить выбранные элементы
         command: app:destroy-item
     item-view:
-      - label: Indeling
+      - label: Просмотр макета
         id: item-view-layout
         submenu:
-          - label: Gestapeld
+          - label: Сложенный
             id: stacked
             type: checkbox
-          - label: Zij-aan-zij
+          - label: Бок о бок
             id: side-by-side
             type: checkbox
       - label: Maximize View
@@ -476,424 +476,424 @@ nl-NL:
             id: none
             type: checkbox
     metadata-list:
-      - label: Nieuw veld…
+      - label: Новое поле...
         command: app:create-field
     metadata-field:
-      - label: Veld verwijderen
+      - label: Удалить поле
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: Items permanent verwijderen
+      - label: Безвозвратно удалить элементы
         command: app:destroy-item
         condition: '!isReadOnly'
     dev:
-      - label: Herladen
+      - label: Перезагрузить
         command: win:reload
         accelerator: CmdOrCtrl+R
-      - label: Stijlen herladen
+      - label: Перезагрузить​ стили
         command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
-      - label: Inspecteren
+      - label: Проверить
         command: app:inspect
         accelerator: CmdOrCtrl+D
   darwin:
     history:
       - id: undo
-        label: Ongedaan maken
+        label: Отменить
         command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
-        label: Opnieuw uitvoeren
+        label: Повторить
         command: app:redo
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
-      - label: Projectnaam wĳzigen
+      - label: Переименовать проект
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: Projectbestand tonen…
+      - label: Показать файл проекта…
         command: app:show-project-file
     lists:
-      - label: Nieuwe lijst
+      - label: Новый список
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
-      - label: Lijstnaam wĳzigen
+      - label: Переименовать список
         command: app:rename-list
         condition: '!isReadOnly'
-      - label: Lijst verwijderen
+      - label: Удалить список
         command: app:delete-list
         condition: '!isReadOnly'
     tags:
-      - label: Nieuw label
+      - label: Новый тег
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Labels exporteren…
+      - label: Экспорт Тегов …
         command: app:export-tags
-      - label: Standaard labelkleur
+      - label: Цвет тега по умолчанию
         submenu:
-          - label: Geen
+          - label: Не выбран
             color:
               - null
               - tagColor
               - app:save-default-tag-color
-          - label: Willekeurige kleur
+          - label: Случайный цвет
             color:
               - random
               - tagColor
               - app:save-default-tag-color
           - type: separator
-          - label: Rood
+          - label: Красный
             color:
               - red
               - tagColor
               - app:save-default-tag-color
-          - label: Oranje
+          - label: Оранжевый
             color:
               - orange
               - tagColor
               - app:save-default-tag-color
-          - label: Geel
+          - label: Жёлтый
             color:
               - yellow
               - tagColor
               - app:save-default-tag-color
-          - label: Groen
+          - label: Зелёный
             color:
               - green
               - tagColor
               - app:save-default-tag-color
-          - label: Blauw
+          - label: Синий
             color:
               - blue
               - tagColor
               - app:save-default-tag-color
-          - label: Paars
+          - label: Фиолетовый
             color:
               - purple
               - tagColor
               - app:save-default-tag-color
-          - label: Grijs
+          - label: Серый
             color:
               - gray
               - tagColor
               - app:save-default-tag-color
-          - label: Bruin
+          - label: Коричневый
             color:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Abrikoos
+          - label: Абрикосовый
             color:
               - apricot
               - color
               - app:save-default-tag-color
-          - label: Donkergroen
+          - label: Тёмно-зелёный
             color:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Lichtblauw
+          - label: Голубой
             color:
               - light-blue
               - color
               - app:save-default-tag-color
-          - label: Lavendel
+          - label: Лавандовый
             color:
               - lavender
               - color
               - app:save-default-tag-color
     tag:
-      - label: Labelkleur
+      - label: Цвет тэга
         condition: '!isReadOnly'
         submenu:
-          - label: Geen
+          - label: Не выбран
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Rood
+          - label: Красный
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Oranje
+          - label: Оранжевый
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Geel
+          - label: Жёлтый
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Groen
+          - label: Зелёный
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Blauw
+          - label: Синий
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Paars
+          - label: Фиолетовый
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Grijs
+          - label: Серый
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Bruin
+          - label: Коричневый
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Abrikoos
+          - label: Абрикосовый
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Donkergroen
+          - label: Тёмно-зелёный
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Lichtblauw
+          - label: Голубой
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavendel
+          - label: Лавандовый
             color:
               - lavender
               - color
               - app:save-tag-color
-      - label: Labelnaam wĳzigen
+      - label: Переименовать тег
         command: app:rename-tag
         condition: '!isReadOnly'
-      - label: Label wissen
+      - label: Удалить тег
         command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
-      - label: Label van dit item wissen
+      - label: Удалить тег с этого элемента
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: Label van deze items wissen
+      - label: Удалить теги с этих элементов
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
-      - label: Labelkleur
+      - label: Цвет тэга
         condition: '!isReadOnly'
         submenu:
-          - label: Geen
+          - label: Не выбран
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Rood
+          - label: Красный
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Oranje
+          - label: Оранжевый
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Geel
+          - label: Жёлтый
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Groen
+          - label: Зелёный
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Blauw
+          - label: Синий
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Paars
+          - label: Фиолетовый
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Grijs
+          - label: Серый
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Bruin
+          - label: Коричневый
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Abrikoos
+          - label: Абрикосовый
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Donkergroen
+          - label: Тёмно-зелёный
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Lichtblauw
+          - label: Голубой
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavendel
+          - label: Лавандовый
             color:
               - lavender
               - color
               - app:save-tag-color
     note:
-      - label: Label exporteren…
+      - label: Примечание об экспорте …
         command: app:export-note
-      - label: Aantekening kopiëren
+      - label: Копировать заметку
         command: app:copy-note
-      - label: Aantekening verwijderen
+      - label: Удалить заметку
         command: app:delete-note
     notepad:
-      - label: Richting
+      - label: Указания
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Links-naar-rechts
+          - label: Слева направо
             type: checkbox
             checked: false
             direction: ltr
-          - label: Rechts-naar-links
+          - label: Справа налево
             type: checkbox
             checked: false
             direction: rtl
-      - label: Schrijfrichting
+      - label: Режим записи
         id: writing-mode
         condition: hasTargetId
         submenu:
-          - label: Horizontaal
+          - label: Горизонтально
             type: checkbox
             checked: false
             mode: horizontal
-          - label: Verticaal (rechts-naar-links)
+          - label: Вертикально (справа налево)
             type: checkbox
             checked: false
             mode: vertical-rl
-      - label: Regelnummers tonen
+      - label: Показывать номера строк
         id: line-numbers
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: Regels afbreken
+      - label: Линии переноса
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
         condition: hasTargetId
     items:
-      - label: Nieuw item
+      - label: Новый элемент
         command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
-      - label: Item opblazen
+      - label: Взорвать элемент
         command: app:explode-item
         condition: isMultiplePhotos
-      - label: Foto toevoegen…
+      - label: Добавить фото …
         command: app:create-item-photo
-      - label: Labels
+      - label: Теги
         id: tag
         submenu:
-          - label: Geen
+          - label: Не выбран
             type: checkbox
             checked: true
             enabled: false
           - type: separator
-      - label: Item verwijderen
+      - label: Удалить элемент
         command: app:delete-item
     item-read-only:
-      - label: Item exporteren
+      - label: Экспорт элемента
         id: export
         submenu:
-          - label: JSON-LD
+          - label: формат JSON-LD
             command: app:export-item
-          - label: PDF
+          - label: документ PDF
             submenu:
-              - label: Verticaal
+              - label: Портрет
                 command: app:print-pdf
-              - label: Horizontaal
+              - label: Ландшафт
                 command: app:print-pdf-landscape
-      - label: Itemaantekingen exporteren…
+      - label: Экспортировать примечания к элементу…
         command: app:export-notes
-      - label: Itemlink kopiëren
+      - label: Скопировать ссылку на элемент
         command: app:copy-item-link
-      - label: Itemaantekeningen kopiëren
+      - label: Копировать примечания к элементу
         command: app:copy-notes
-      - label: Item samenvoegen
+      - label: Объединить элемент
         command: app:consolidate-item
     item-bulk:
-      - label: Selectie samenvoegen
+      - label: Объединить выбранные элементы
         command: app:merge-item
-      - label: Selectie verwijderen
+      - label: Удалить выбранные элементы
         command: app:delete-item
     item-bulk-read-only:
-      - label: Selectie exporteren
+      - label: Экспорт выбранных элементов
         id: export
         submenu:
-          - label: JSON-LD
+          - label: формат JSON-LD
             command: app:export-item
-          - label: PDF
+          - label: документ PDF
             submenu:
-              - label: Verticaal
+              - label: Портрет
                 command: app:print-pdf
-              - label: Horizontaal
+              - label: Ландшафт
                 command: app:print-pdf-landscape
-      - label: Selectie exporteren…
+      - label: Экспорт выбранных примечаний к элементам...
         command: app:export-notes
-      - label: Selectie kopiëren
+      - label: Копировать выбранные примечания к элементу
         command: app:copy-notes
-      - label: Selectie samenvoegen
+      - label: Объединить выбранные элементы
         command: app:consolidate-item
     item-list:
-      - label: Item van lijst verwijderen
+      - label: Удалить элемент из списка
         command: app:list-item-remove
     item-bulk-list:
-      - label: Selectie van lijst verwijderen
+      - label: Удалить выбранные элементы из списка
         command: app:list-item-remove
     item-deleted:
-      - label: Item herstellen
+      - label: Восстановить элемент
         command: app:restore-item
-      - label: Item permanent verwijderen
+      - label: Удалить элемент навсегда
         command: app:destroy-item
     item-bulk-deleted:
-      - label: Selectie herstellen
+      - label: Восстановить выбранные элементы
         command: app:restore-item
-      - label: Selectie permanent verwijderen
+      - label: Безвозвратно удалить выбранные элементы
         command: app:destroy-item
     item-view:
-      - label: Indeling
+      - label: Просмотр макета
         id: item-view-layout
         submenu:
-          - label: Gestapeld
+          - label: Сложенный
             id: stacked
             type: checkbox
-          - label: Zij-aan-zij
+          - label: Бок о бок
             id: side-by-side
             type: checkbox
       - label: Maximize View
@@ -910,488 +910,488 @@ nl-NL:
             id: none
             type: checkbox
     item-rotate:
-      - label: Naar links draaien
+      - label: Повернуть влево
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: Naar rechts draaien
+      - label: Повернуть вправо
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Selectie transcriberen
+      - label: Переписать выбранные элементы
         id: item-transcribe
         submenu:
-          - label: Met Tropy
+          - label: С Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
-      - label: Nieuw veld…
+      - label: Новое поле...
         command: app:create-field
     metadata-field:
-      - label: Veld verwijderen
+      - label: Удалить поле
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: Items permanent verwijderen
+      - label: Безвозвратно удалить элементы
         command: app:destroy-item
         condition: '!isReadOnly'
     photo:
-      - label: Foto klonen
+      - label: Дубликат фото
         command: app:duplicate-photo
-      - label: Foto verplaatsen naar nieuw item
+      - label: Переместить фото в новый элемент
         command: app:explode-photo
-      - label: Foto verwijderen
+      - label: Удалить фото
         command: app:delete-photo
-      - label: Foto instellen als omslag
+      - label: Использовать фото для обложки
         command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
-      - label: Oorspronkelijk bestand tonen…
+      - label: Показать исходный файл…
         command: app:show-in-folder
-      - label: Openen in extern fotoprogramma…
+      - label: Открыть во внешнем средстве просмотра…
         command: app:open-path
-      - label: Fotolink kopiëren
+      - label: Скопировать ссылку на фото
         command: app:copy-photo-link
-      - label: Foto exporteren
+      - label: Экспортировать фото
         id: extract
         submenu:
-          - label: Naar bestand
+          - label: В файл
             command: app:extract-photo
-          - label: Naar klembord
+          - label: В буфер обмена
             command: app:copy-photo
-      - label: Foto transcriberen
+      - label: Расшифровка фото
         id: transcribe
         submenu:
-          - label: Met Tropy
+          - label: С Tropy
             command: app:transcribe-photo
             enabled: false
-      - label: Foto samenvoegen
+      - label: Объединить фото
         command: app:consolidate-photo
     photo-rotate:
-      - label: Naar links draaien
+      - label: Повернуть влево
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: Naar rechts draaien
+      - label: Повернуть вправо
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
-      - label: Selectie verwijderen
+      - label: Удалить выбор
         command: app:delete-selection
     selection-rotate:
-      - label: Naar links draaien
+      - label: Повернуть влево
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: Naar rechts draaien
+      - label: Повернуть вправо
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     dev:
-      - label: Herladen
+      - label: Перезагрузить
         command: win:reload
         accelerator: CmdOrCtrl+R
-      - label: Stijlen herladen
+      - label: Перезагрузить​ стили
         command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
-      - label: Inspecteren
+      - label: Проверить
         command: app:inspect
         accelerator: CmdOrCtrl+D
   win32:
     history:
       - id: undo
-        label: Ongedaan maken
+        label: Отменить
         command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
-        label: Opnieuw uitvoeren
+        label: Повторить
         command: app:redo
         enabled: false
         accelerator: Control+Y
     project:
-      - label: Projectnaam wĳzigen
+      - label: Переименовать проект
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: Projectbestand tonen…
+      - label: Показать файл проекта…
         command: app:show-project-file
     lists:
-      - label: Nieuwe lijst
+      - label: Новый список
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
-      - label: Lijstnaam wĳzigen
+      - label: Переименовать список
         command: app:rename-list
         condition: '!isReadOnly'
-      - label: Lijst verwijderen
+      - label: Удалить список
         command: app:delete-list
         condition: '!isReadOnly'
     tags:
-      - label: Nieuw label
+      - label: Новый тег
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Labels exporteren…
+      - label: Экспорт Тегов …
         command: app:export-tags
-      - label: Standaard labelkleur
+      - label: Цвет тега по умолчанию
         submenu:
-          - label: Geen
+          - label: Не выбран
             color:
               - null
               - tagColor
               - app:save-default-tag-color
-          - label: Willekeurige kleur
+          - label: Случайный цвет
             color:
               - random
               - tagColor
               - app:save-default-tag-color
           - type: separator
-          - label: Rood
+          - label: Красный
             color:
               - red
               - tagColor
               - app:save-default-tag-color
-          - label: Oranje
+          - label: Оранжевый
             color:
               - orange
               - tagColor
               - app:save-default-tag-color
-          - label: Geel
+          - label: Жёлтый
             color:
               - yellow
               - tagColor
               - app:save-default-tag-color
-          - label: Groen
+          - label: Зелёный
             color:
               - green
               - tagColor
               - app:save-default-tag-color
-          - label: Blauw
+          - label: Синий
             color:
               - blue
               - tagColor
               - app:save-default-tag-color
-          - label: Paars
+          - label: Фиолетовый
             color:
               - purple
               - tagColor
               - app:save-default-tag-color
-          - label: Grijs
+          - label: Серый
             color:
               - gray
               - tagColor
               - app:save-default-tag-color
-          - label: Bruin
+          - label: Коричневый
             color:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Abrikoos
+          - label: Абрикосовый
             color:
               - apricot
               - color
               - app:save-default-tag-color
-          - label: Donkergroen
+          - label: Тёмно-зелёный
             color:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Lichtblauw
+          - label: Голубой
             color:
               - light-blue
               - color
               - app:save-default-tag-color
-          - label: Lavendel
+          - label: Лавандовый
             color:
               - lavender
               - color
               - app:save-default-tag-color
     tag:
-      - label: Labelkleur
+      - label: Цвет тэга
         condition: '!isReadOnly'
         submenu:
-          - label: Geen
+          - label: Не выбран
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Rood
+          - label: Красный
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Oranje
+          - label: Оранжевый
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Geel
+          - label: Жёлтый
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Groen
+          - label: Зелёный
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Blauw
+          - label: Синий
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Paars
+          - label: Фиолетовый
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Grijs
+          - label: Серый
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Bruin
+          - label: Коричневый
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Abrikoos
+          - label: Абрикосовый
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Donkergroen
+          - label: Тёмно-зелёный
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Lichtblauw
+          - label: Голубой
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavendel
+          - label: Лавандовый
             color:
               - lavender
               - color
               - app:save-tag-color
-      - label: Labelnaam wĳzigen
+      - label: Переименовать тег
         command: app:rename-tag
         condition: '!isReadOnly'
-      - label: Label wissen
+      - label: Удалить тег
         command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
-      - label: Label van dit item wissen
+      - label: Удалить тег с этого элемента
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: Label van deze items wissen
+      - label: Удалить теги с этих элементов
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
-      - label: Labelkleur
+      - label: Цвет тэга
         condition: '!isReadOnly'
         submenu:
-          - label: Geen
+          - label: Не выбран
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Rood
+          - label: Красный
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Oranje
+          - label: Оранжевый
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Geel
+          - label: Жёлтый
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Groen
+          - label: Зелёный
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Blauw
+          - label: Синий
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Paars
+          - label: Фиолетовый
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Grijs
+          - label: Серый
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Bruin
+          - label: Коричневый
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Abrikoos
+          - label: Абрикосовый
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Donkergroen
+          - label: Тёмно-зелёный
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Lichtblauw
+          - label: Голубой
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavendel
+          - label: Лавандовый
             color:
               - lavender
               - color
               - app:save-tag-color
     note:
-      - label: Label exporteren…
+      - label: Примечание об экспорте …
         command: app:export-note
-      - label: Aantekening kopiëren
+      - label: Копировать заметку
         command: app:copy-note
-      - label: Aantekening verwijderen
+      - label: Удалить заметку
         command: app:delete-note
     notepad:
-      - label: Richting
+      - label: Указания
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Links-naar-rechts
+          - label: Слева направо
             type: checkbox
             checked: false
             direction: ltr
-          - label: Rechts-naar-links
+          - label: Справа налево
             type: checkbox
             checked: false
             direction: rtl
-      - label: Schrijfrichting
+      - label: Режим записи
         id: writing-mode
         condition: hasTargetId
         submenu:
-          - label: Horizontaal
+          - label: Горизонтально
             type: checkbox
             checked: false
             mode: horizontal
-          - label: Verticaal (rechts-naar-links)
+          - label: Вертикально (справа налево)
             type: checkbox
             checked: false
             mode: vertical-rl
-      - label: Regelnummers tonen
+      - label: Показывать номера строк
         id: line-numbers
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: Regels afbreken
+      - label: Линии переноса
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
         condition: hasTargetId
     items:
-      - label: Nieuw item
+      - label: Новый элемент
         command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
-      - label: Item opblazen
+      - label: Взорвать элемент
         command: app:explode-item
         condition: isMultiplePhotos
-      - label: Foto toevoegen…
+      - label: Добавить фото …
         command: app:create-item-photo
-      - label: Labels
+      - label: Теги
         id: tag
         submenu:
-          - label: Geen
+          - label: Не выбран
             type: checkbox
             checked: true
             enabled: false
           - type: separator
-      - label: Item verwijderen
+      - label: Удалить элемент
         command: app:delete-item
     item-read-only:
-      - label: Item exporteren
+      - label: Экспорт элемента
         id: export
         submenu:
-          - label: JSON-LD
+          - label: формат JSON-LD
             command: app:export-item
-          - label: PDF
+          - label: документ PDF
             submenu:
-              - label: Verticaal
+              - label: Портрет
                 command: app:print-pdf
-              - label: Horizontaal
+              - label: Ландшафт
                 command: app:print-pdf-landscape
-      - label: Itemaantekingen exporteren…
+      - label: Экспортировать примечания к элементу…
         command: app:export-notes
-      - label: Itemlink kopiëren
+      - label: Скопировать ссылку на элемент
         command: app:copy-item-link
-      - label: Itemaantekeningen kopiëren
+      - label: Копировать примечания к элементу
         command: app:copy-notes
-      - label: Item samenvoegen
+      - label: Объединить элемент
         command: app:consolidate-item
     item-bulk:
-      - label: Selectie samenvoegen
+      - label: Объединить выбранные элементы
         command: app:merge-item
-      - label: Selectie verwijderen
+      - label: Удалить выбранные элементы
         command: app:delete-item
     item-bulk-read-only:
-      - label: Selectie exporteren
+      - label: Экспорт выбранных элементов
         id: export
         submenu:
-          - label: JSON-LD
+          - label: формат JSON-LD
             command: app:export-item
-          - label: PDF
+          - label: документ PDF
             submenu:
-              - label: Verticaal
+              - label: Портрет
                 command: app:print-pdf
-              - label: Horizontaal
+              - label: Ландшафт
                 command: app:print-pdf-landscape
-      - label: Selectie exporteren…
+      - label: Экспорт выбранных примечаний к элементам...
         command: app:export-notes
-      - label: Selectie kopiëren
+      - label: Копировать выбранные примечания к элементу
         command: app:copy-notes
-      - label: Selectie samenvoegen
+      - label: Объединить выбранные элементы
         command: app:consolidate-item
     item-list:
-      - label: Item van lijst verwijderen
+      - label: Удалить элемент из списка
         command: app:list-item-remove
     item-bulk-list:
-      - label: Selectie van lijst verwijderen
+      - label: Удалить выбранные элементы из списка
         command: app:list-item-remove
     item-deleted:
-      - label: Item herstellen
+      - label: Восстановить элемент
         command: app:restore-item
-      - label: Item permanent verwijderen
+      - label: Удалить элемент навсегда
         command: app:destroy-item
     item-bulk-deleted:
-      - label: Selectie herstellen
+      - label: Восстановить выбранные элементы
         command: app:restore-item
-      - label: Selectie permanent verwijderen
+      - label: Безвозвратно удалить выбранные элементы
         command: app:destroy-item
     item-view:
-      - label: Indeling
+      - label: Просмотр макета
         id: item-view-layout
         submenu:
-          - label: Gestapeld
+          - label: Сложенный
             id: stacked
             type: checkbox
-          - label: Zij-aan-zij
+          - label: Бок о бок
             id: side-by-side
             type: checkbox
       - label: Maximize View
@@ -1408,88 +1408,88 @@ nl-NL:
             id: none
             type: checkbox
     item-rotate:
-      - label: Naar links draaien
+      - label: Повернуть влево
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: Naar rechts draaien
+      - label: Повернуть вправо
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Selectie transcriberen
+      - label: Переписать выбранные элементы
         id: item-transcribe
         submenu:
-          - label: Met Tropy
+          - label: С Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
-      - label: Nieuw veld…
+      - label: Новое поле...
         command: app:create-field
     metadata-field:
-      - label: Veld verwijderen
+      - label: Удалить поле
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: Items permanent verwijderen
+      - label: Безвозвратно удалить элементы
         command: app:destroy-item
         condition: '!isReadOnly'
     photo:
-      - label: Foto klonen
+      - label: Дубликат фото
         command: app:duplicate-photo
-      - label: Foto verplaatsen naar nieuw item
+      - label: Переместить фото в новый элемент
         command: app:explode-photo
-      - label: Foto verwijderen
+      - label: Удалить фото
         command: app:delete-photo
-      - label: Foto instellen als omslag
+      - label: Использовать фото для обложки
         command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
-      - label: Oorspronkelijk bestand tonen…
+      - label: Показать исходный файл…
         command: app:show-in-folder
-      - label: Openen in extern fotoprogramma…
+      - label: Открыть во внешнем средстве просмотра…
         command: app:open-path
-      - label: Fotolink kopiëren
+      - label: Скопировать ссылку на фото
         command: app:copy-photo-link
-      - label: Foto exporteren
+      - label: Экспортировать фото
         id: extract
         submenu:
-          - label: Naar bestand
+          - label: В файл
             command: app:extract-photo
-          - label: Naar klembord
+          - label: В буфер обмена
             command: app:copy-photo
-      - label: Foto transcriberen
+      - label: Расшифровка фото
         id: transcribe
         submenu:
-          - label: Met Tropy
+          - label: С Tropy
             command: app:transcribe-photo
             enabled: false
-      - label: Foto samenvoegen
+      - label: Объединить фото
         command: app:consolidate-photo
     photo-rotate:
-      - label: Naar links draaien
+      - label: Повернуть влево
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: Naar rechts draaien
+      - label: Повернуть вправо
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
-      - label: Selectie verwijderen
+      - label: Удалить выбор
         command: app:delete-selection
     selection-rotate:
-      - label: Naar links draaien
+      - label: Повернуть влево
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: Naar rechts draaien
+      - label: Повернуть вправо
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     dev:
-      - label: Herladen
+      - label: Перезагрузить
         command: win:reload
         accelerator: CmdOrCtrl+R
-      - label: Stijlen herladen
+      - label: Перезагрузить​ стили
         command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
-      - label: Inspecteren
+      - label: Проверить
         command: app:inspect
         accelerator: CmdOrCtrl+D

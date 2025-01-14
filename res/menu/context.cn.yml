@@ -273,15 +273,15 @@ cn:
       - label: 删除笔记
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: 方向
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: 从左到右
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: 从右到左
             type: checkbox
             checked: false
             direction: rtl
@@ -357,10 +357,10 @@ cn:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: 转录所选项目
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: 使用 Tropy
             command: app:transcribe-item
             enabled: false
     item-bulk:
@@ -410,17 +410,17 @@ cn:
         command: app:open-path
       - label: 复制图片链接
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: 导出图片
         id: extract
         submenu:
-          - label: To File
+          - label: 到文件
             command: app:extract-photo
-          - label: To Clipboard
+          - label: 到剪贴板
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: 转录图片
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: 使用 Tropy
             command: app:transcribe-photo
             enabled: false
       - label: 检查图片
@@ -461,6 +461,19 @@ cn:
             type: checkbox
           - label: 左右
             id: side-by-side
+            type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
             type: checkbox
     metadata-list:
       - label: 新建字段…
@@ -758,15 +771,15 @@ cn:
       - label: 删除笔记
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: 方向
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: 从左到右
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: 从右到左
             type: checkbox
             checked: false
             direction: rtl
@@ -883,6 +896,19 @@ cn:
           - label: 左右
             id: side-by-side
             type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
+            type: checkbox
     item-rotate:
       - label: 顺时针 90 度
         command: app:rotate-item-left
@@ -891,10 +917,10 @@ cn:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: 转录所选项目
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: 使用 Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
@@ -926,17 +952,17 @@ cn:
         command: app:open-path
       - label: 复制图片链接
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: 导出图片
         id: extract
         submenu:
-          - label: To File
+          - label: 到文件
             command: app:extract-photo
-          - label: To Clipboard
+          - label: 到剪贴板
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: 转录图片
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: 使用 Tropy
             command: app:transcribe-photo
             enabled: false
       - label: 检查图片
@@ -1243,15 +1269,15 @@ cn:
       - label: 删除笔记
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: 方向
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: 从左到右
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: 从右到左
             type: checkbox
             checked: false
             direction: rtl
@@ -1368,6 +1394,19 @@ cn:
           - label: 左右
             id: side-by-side
             type: checkbox
+      - label: Maximize View
+        id: maximize-view
+        submenu:
+          - label: Image
+            id: esper
+            type: checkbox
+          - label: Notepad
+            type: checkbox
+            id: notepad
+          - type: separator
+          - label: None
+            id: none
+            type: checkbox
     item-rotate:
       - label: 顺时针 90 度
         command: app:rotate-item-left
@@ -1376,10 +1415,10 @@ cn:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: 转录所选项目
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: 使用 Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
@@ -1411,17 +1450,17 @@ cn:
         command: app:open-path
       - label: 复制图片链接
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: 导出图片
         id: extract
         submenu:
-          - label: To File
+          - label: 到文件
             command: app:extract-photo
-          - label: To Clipboard
+          - label: 到剪贴板
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: 转录图片
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: 使用 Tropy
             command: app:transcribe-photo
             enabled: false
       - label: 检查图片

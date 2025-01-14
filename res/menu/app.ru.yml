@@ -1,0 +1,653 @@
+ru:
+  linux:
+    - label: '&Файл'
+      id: file
+      submenu:
+        - label: Новый
+          submenu:
+            - label: Проект
+              command: app:create-project
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Элемент
+              command: app:create-item
+              accelerator: CmdOrCtrl+Shift+N
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Список
+              command: app:create-list
+              accelerator: CmdOrCtrl+Shift+L
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Тег
+              command: app:create-tag
+              accelerator: CmdOrCtrl+Shift+A
+              window: project
+              condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Открыть...
+          accelerator: CmdOrCtrl+O
+          command: app:open-dialog
+        - label: Открыть  в новом окне...
+          accelerator: Shift+CmdOrCtrl+O
+          command: app:open-new-dialog
+        - label: Недавние проекты
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: Очистить список
+              command: app:clear-recent-projects
+        - type: separator
+        - label: Импорт
+          id: import
+          window: project
+          condition: '!isProjectReadOnly'
+          submenu:
+            - label: Фотографии...
+              command: app:import
+              accelerator: CmdOrCtrl+Shift+I
+            - label: Папки...
+              command: app:import-directory
+        - label: Экспорт
+          id: export
+          window: project
+          submenu:
+            - label: формат JSON-LD
+              command: app:export-item
+            - label: документ PDF
+              submenu:
+                - label: Портрет
+                  command: app:print-pdf
+                - label: Ландшафт
+                  command: app:print-pdf-landscape
+        - type: separator
+        - label: Объединить библиотеку фото
+          command: app:consolidate-photo-library
+          window: project
+          condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Печать
+          command: app:print
+          accelerator: CmdOrCtrl+P
+          window: project
+        - type: separator
+        - label: Закрыть проект
+          command: app:close-project
+          window: project
+          condition: isProjectOpen
+        - type: separator
+        - label: Закрыть окно
+          accelerator: Ctrl+W
+          role: close
+          window: '*'
+        - label: Выйти  %name
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: '&Редактировать'
+      submenu:
+        - id: undo
+          label: '&Отменить'
+          accelerator: CmdOrCtrl+Z
+          command: app:undo
+          enabled: false
+        - id: redo
+          label: '&Повторить'
+          accelerator: Shift+CmdOrCtrl+Z
+          command: app:redo
+          enabled: false
+        - type: separator
+        - label: Обреза&ть
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: '&Копировать'
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: '&Вставить'
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: Вставить и сопоставить стиль
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
+        - label: Выбрать все
+          role: selectAll
+        - type: separator
+        - label: Настройки...
+          accelerator: Shift+Control+S
+          command: app:open-preferences
+    - label: '&Просмотр'
+      submenu:
+        - label: '&Перезагрузить'
+          accelerator: CmdOrCtrl+R
+          command: win:reload
+          window: '*'
+        - type: separator
+        - label: Переключить &панель меню
+          command: app:toggle-menu-bar
+          window: '*'
+        - label: Переместить в центр
+          command: app:center-window
+          accelerator: Alt+Shift+=
+          window: '*'
+        - type: separator
+        - label: Фактический размер
+          command: app:zoom-reset
+          accelerator: CmdOrCtrl+0
+        - label: Приблизить
+          command: app:zoom-in
+          accelerator: CmdOrCtrl+Plus
+        - label: Отдалить
+          command: app:zoom-out
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: Перейти в &полный экран
+          role: togglefullscreen
+          window: '*'
+        - type: separator
+        - label: Закрыть
+          accelerator: Ctrl+W
+          role: close
+          window: '*'
+    - label: Разработчик
+      id: dev
+      submenu:
+        - label: Перезагрузка &стилей
+          command: win:refresh
+        - label: Переключить &инструменты разработки
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - type: separator
+        - label: Сбросить базу данных онтологий
+          command: app:reset-ontology-db
+        - label: Оптимизировать кэширование проектов
+          command: app:optimize-cache
+        - label: Оптимизировать базы данных проекта
+          command: app:optimize-project
+        - label: 'Реиндексировать базу данных проекта '
+          command: app:reindex-project
+        - type: separator
+        - label: Тема
+          id: theme
+          submenu:
+            - label: Светлая
+              id: light
+              type: checkbox
+            - label: Тёмная
+              id: dark
+              type: checkbox
+            - label: Системная
+              id: system
+              type: checkbox
+    - label: Помощь
+      submenu:
+        - label: Руководство пользователя
+          command: app:open-docs
+        - label: Форумы поддержки
+          command: app:open-forums
+        - label: Лицензия ПО
+          command: app:open-license
+        - type: separator
+        - label: Показать файлы журналов
+          command: app:open-logs
+        - label: Показать папку плагинов
+          command: app:open-plugins-folder
+        - label: Показать папку с пользовательскими данными
+          command: app:open-user-data
+        - label: Показать папку кэша
+          command: app:open-cache-folder
+        - type: separator
+        - id: updater-check
+          label: Проверить наличие обновлений…
+          command: app:check-for-updates
+          enabled: false
+        - id: updater-is-checking
+          label: Получение последних обновлений…
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Установка обновлений…
+          command: app:install-updates
+          enabled: false
+          visible: false
+        - type: separator
+        - label: О %name
+          command: app:about
+          window: '!prefs'
+  darwin:
+    - label: '%name'
+      submenu:
+        - label: О %name
+          command: app:about
+          window: '!prefs'
+        - type: separator
+        - label: Настройки...
+          accelerator: Command+,
+          command: app:open-preferences
+        - type: separator
+        - label: Скрыть %name
+          accelerator: Command+H
+          role: hide
+        - label: Скрыть остальные
+          accelerator: Command+Shift+H
+          role: hideothers
+        - label: Показать все
+          role: unhide
+        - type: separator
+        - label: Выйти  %name
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: Файл
+      submenu:
+        - label: Новый
+          submenu:
+            - label: Проект
+              command: app:create-project
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Элемент
+              command: app:create-item
+              accelerator: CmdOrCtrl+Shift+N
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Список
+              command: app:create-list
+              accelerator: CmdOrCtrl+Shift+L
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Тег
+              command: app:create-tag
+              accelerator: CmdOrCtrl+Shift+A
+              window: project
+              condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Открыть...
+          accelerator: CmdOrCtrl+O
+          command: app:open-dialog
+        - label: Открыть  в новом окне...
+          accelerator: Shift+CmdOrCtrl+O
+          command: app:open-new-dialog
+        - label: Недавние проекты
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: Очистить список
+              command: app:clear-recent-projects
+        - type: separator
+        - label: Импорт
+          id: import
+          window: project
+          condition: '!isProjectReadOnly'
+          submenu:
+            - label: Фотографии...
+              command: app:import
+              accelerator: CmdOrCtrl+Shift+I
+            - label: Папки...
+              command: app:import-directory
+        - label: Объединить библиотеку фото
+          command: app:consolidate-photo-library
+          window: project
+          condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Экспорт
+          id: export
+          window: project
+          submenu:
+            - label: формат JSON-LD
+              command: app:export-item
+            - label: документ PDF
+              submenu:
+                - label: Портрет
+                  command: app:print-pdf
+                - label: Ландшафт
+                  command: app:print-pdf-landscape
+        - label: Печать
+          command: app:print
+          accelerator: CmdOrCtrl+P
+          window: project
+        - type: separator
+        - label: Закрыть проект
+          command: app:close-project
+          window: project
+          condition: isProjectOpen
+    - label: Редактировать
+      submenu:
+        - id: undo
+          label: '&Отменить'
+          accelerator: CmdOrCtrl+Z
+          command: app:undo
+          enabled: false
+        - id: redo
+          label: '&Повторить'
+          accelerator: Shift+CmdOrCtrl+Z
+          command: app:redo
+          enabled: false
+        - type: separator
+        - label: Обреза&ть
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: '&Копировать'
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: '&Вставить'
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: Вставить и сопоставить стиль
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
+        - label: Выбрать все
+          role: selectAll
+    - label: Просмотр
+      submenu:
+        - label: '&Перезагрузить'
+          accelerator: CmdOrCtrl+R
+          command: win:reload
+          window: '*'
+        - type: separator
+        - label: Фактический размер
+          command: app:zoom-reset
+          accelerator: CmdOrCtrl+0
+        - label: Приблизить
+          command: app:zoom-in
+          accelerator: CmdOrCtrl+Plus
+        - label: Отдалить
+          command: app:zoom-out
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: Перейти в &полный экран
+          role: togglefullscreen
+          window: '*'
+    - label: Окно
+      role: window
+      submenu:
+        - label: Минимизировать
+          accelerator: Cmd+M
+          role: minimize
+          window: '*'
+        - label: Масштаб
+          accelerator: Ctrl+Cmd+Z
+          role: zoom
+        - type: separator
+        - label: Переместить в центр
+          command: app:center-window
+          accelerator: Alt+Shift+=
+          window: '*'
+        - type: separator
+        - label: Вывести все на первый план
+          role: front
+        - type: separator
+        - label: Закрыть
+          accelerator: Cmd+W
+          role: close
+          window: '*'
+    - label: Разработчик
+      id: dev
+      submenu:
+        - label: Перезагрузка &стилей
+          command: win:refresh
+        - label: перключить &инструменты разработки
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - type: separator
+        - label: Сбросить базу данных онтологий
+          command: app:reset-ontology-db
+        - label: Оптимизировать кэширование проектов
+          command: app:optimize-cache
+        - label: Оптимизировать базы данных проекта
+          command: app:optimize-project
+        - label: 'Реиндексировать базу данных проекта '
+          command: app:reindex-project
+        - type: separator
+        - label: Тема
+          id: theme
+          submenu:
+            - label: Светлая
+              id: light
+              type: checkbox
+            - label: Тёмная
+              id: dark
+              type: checkbox
+            - label: Системная
+              id: system
+              type: checkbox
+    - label: Помощь
+      role: help
+      submenu:
+        - label: Руководство пользователя
+          command: app:open-docs
+        - label: Форумы поддержки
+          command: app:open-forums
+        - label: Лицензия ПО
+          command: app:open-license
+        - type: separator
+        - type: separator
+        - label: Показать файлы журналов
+          command: app:open-logs
+        - label: Показать папку плагинов
+          command: app:open-plugins-folder
+        - label: Показать папку с пользовательскими данными
+          command: app:open-user-data
+        - label: Показать папку кэша
+          command: app:open-cache-folder
+        - type: separator
+        - id: updater-check
+          label: Проверить наличие обновлений…
+          command: app:check-for-updates
+          enabled: false
+        - id: updater-is-checking
+          label: Получение последних обновлений…
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Установка обновлений…
+          command: app:install-updates
+          enabled: false
+          visible: false
+  win32:
+    - label: '&Файл'
+      id: file
+      submenu:
+        - label: Новый
+          submenu:
+            - label: Проект
+              command: app:create-project
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Элемент
+              command: app:create-item
+              accelerator: CmdOrCtrl+Shift+N
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Список
+              command: app:create-list
+              accelerator: CmdOrCtrl+Shift+L
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Тег
+              command: app:create-tag
+              accelerator: CmdOrCtrl+Shift+A
+              window: project
+              condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Открыть...
+          accelerator: CmdOrCtrl+O
+          command: app:open-dialog
+        - label: Открыть  в новом окне...
+          accelerator: Shift+CmdOrCtrl+O
+          command: app:open-new-dialog
+        - label: Недавние проекты
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: Очистить список
+              command: app:clear-recent-projects
+        - type: separator
+        - label: Импорт
+          id: import
+          window: project
+          condition: '!isProjectReadOnly'
+          submenu:
+            - label: Фотографии...
+              command: app:import
+              accelerator: CmdOrCtrl+Shift+I
+            - label: Папки...
+              command: app:import-directory
+        - label: Экспорт
+          id: export
+          window: project
+          submenu:
+            - label: формат JSON-LD
+              command: app:export-item
+            - label: документ PDF
+              submenu:
+                - label: Портрет
+                  command: app:print-pdf
+                - label: Ландшафт
+                  command: app:print-pdf-landscape
+        - type: separator
+        - label: Объединить библиотеку фото
+          command: app:consolidate-photo-library
+          window: project
+          condition: '!isProjectReadOnly'
+        - type: separator
+        - label: Печать
+          command: app:print
+          accelerator: CmdOrCtrl+P
+          window: project
+        - type: separator
+        - label: Закрыть проект
+          command: app:close-project
+          window: project
+          condition: isProjectOpen
+        - type: separator
+        - label: Закрыть окно
+          accelerator: Ctrl+W
+          role: close
+          window: '*'
+        - label: Выйти  %name
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: '&Редактировать'
+      submenu:
+        - id: undo
+          label: '&Отменить'
+          accelerator: CmdOrCtrl+Z
+          command: app:undo
+          enabled: false
+        - id: redo
+          label: '&Повторить'
+          accelerator: Control+Y
+          command: app:redo
+          enabled: false
+        - type: separator
+        - label: Обреза&ть
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: '&Копировать'
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: '&Вставить'
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: Вставить и сопоставить стиль
+          accelerator: Alt+CmdOrCtrl+V
+          role: pasteAndMatchStyle
+        - label: Настройки...
+          accelerator: Shift+Control+S
+          command: app:open-preferences
+    - label: '&Просмотр'
+      submenu:
+        - label: '&Перезагрузить'
+          accelerator: CmdOrCtrl+R
+          command: win:reload
+          window: '*'
+        - type: separator
+        - label: Переключить &панель меню
+          command: app:toggle-menu-bar
+          window: '*'
+        - label: Переместить в центр
+          command: app:center-window
+          accelerator: Alt+Shift+=
+          window: '*'
+        - type: separator
+        - label: Фактический размер
+          command: app:zoom-reset
+          accelerator: CmdOrCtrl+0
+        - label: Приблизить
+          command: app:zoom-in
+          accelerator: CmdOrCtrl+Plus
+        - label: Отдалить
+          command: app:zoom-out
+          accelerator: CmdOrCtrl+-
+        - type: separator
+        - label: Перейти в &полный экран
+          role: togglefullscreen
+          window: '*'
+        - type: separator
+        - label: Закрыть
+          accelerator: Ctrl+W
+          role: close
+          window: '*'
+    - label: Разработчик
+      id: dev
+      submenu:
+        - label: Перезагрузка &стилей
+          command: win:refresh
+        - label: перключить &инструменты разработки
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - type: separator
+        - label: Сбросить базу данных онтологий
+          command: app:reset-ontology-db
+        - label: Оптимизировать кэширование проектов
+          command: app:optimize-cache
+        - label: Оптимизировать базы данных проекта
+          command: app:optimize-project
+        - label: 'Реиндексировать базу данных проекта '
+          command: app:reindex-project
+        - type: separator
+        - label: Тема
+          id: theme
+          submenu:
+            - label: Светлая
+              id: light
+              type: checkbox
+            - label: Тёмная
+              id: dark
+              type: checkbox
+            - label: Системная
+              id: system
+              type: checkbox
+    - label: Помощь
+      submenu:
+        - label: Руководство пользователя
+          command: app:open-docs
+        - label: Форумы поддержки
+          command: app:open-forums
+        - label: Лицензия ПО
+          command: app:open-license
+        - type: separator
+        - label: Показать файлы журналов
+          command: app:open-logs
+        - label: Показать папку плагинов
+          command: app:open-plugins-folder
+        - label: Показать папку с пользовательскими данными
+          command: app:open-user-data
+        - label: Показать папку кэша
+          command: app:open-cache-folder
+        - type: separator
+        - id: updater-check
+          label: Проверить наличие обновлений…
+          command: app:check-for-updates
+          enabled: false
+        - id: updater-is-checking
+          label: Получение последних обновлений…
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Установка обновлений…
+          command: app:install-updates
+          enabled: false
+          visible: false
+        - type: separator
+        - label: О %name
+          command: app:about
+          window: '!prefs'

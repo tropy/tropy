@@ -167,6 +167,7 @@ ja:
           nl-NL: オランダ語
           pt: Português
           pt-BR: ブラジル・ポルトガル語
+          ru: русский
           uk: ウクライナ語
       templates:
         label: デフォルトテンプレート
@@ -305,6 +306,9 @@ ja:
     size: サイズ
     created: 登録日
     modified: 更新日
+  settings:
+    maximize: Maximize this view
+    unmaximize: Restore previous view size
   esper:
     tool:
       pan: パンツール
@@ -316,6 +320,10 @@ ja:
       fill: 領域の幅に合わせる
       fit: 全体を表示する
       zoom: ズーム
+    overlay:
+      full: Show full text overlay
+      split: Show split-view text overlay
+      versions: Toggle transcription version history
     panel:
       negative: 色を反転する
       revert: 最初の状態に戻す
@@ -624,6 +632,9 @@ ja:
       right: 右揃え
       sinkListItem: インデントを増やす
       liftListItem: インデントを減らす
+  transcription:
+    error: Transcription Error
+    pending: Transcription pending…
   error:
     cache:
       prune: プロジェクトのキャッシュの最適化に失敗しました

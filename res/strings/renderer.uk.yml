@@ -171,6 +171,7 @@ uk:
           nl-NL: Nederlands
           pt: Português
           pt-BR: Português brasileiro
+          ru: русский
           uk: Українська
       templates:
         label: Default templates
@@ -308,6 +309,9 @@ uk:
     size: Size
     created: Date Added
     modified: Modified
+  settings:
+    maximize: Maximize this view
+    unmaximize: Restore previous view size
   esper:
     tool:
       pan: Перемістити
@@ -319,6 +323,10 @@ uk:
       fill: По ширині
       fit: Fit
       zoom: Масштаб
+    overlay:
+      full: Show full text overlay
+      split: Show split-view text overlay
+      versions: Toggle transcription version history
     panel:
       negative: Інвертувати кольори
       revert: Скинути до оригіналу
@@ -639,6 +647,9 @@ uk:
       right: Align Right
       sinkListItem: Sink list item
       liftListItem: Lift list item
+  transcription:
+    error: Transcription Error
+    pending: Transcription pending…
   error:
     cache:
       prune: Не вдалося оптимізувати кеш проєкту.

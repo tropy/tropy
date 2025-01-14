@@ -143,6 +143,7 @@ pt-BR:
           nl-NL: Nederlands
           pt: Português
           pt-BR: Português brasileiro
+          ru: русский
           uk: Украї́нська мо́ва
       templates:
         label: Modelos padrão
@@ -271,6 +272,9 @@ pt-BR:
     size: Dimensão
     created: Data de adição
     modified: Modificado
+  settings:
+    maximize: Maximize this view
+    unmaximize: Restore previous view size
   esper:
     tool:
       pan: Ferramenta de Deslizamento
@@ -282,6 +286,10 @@ pt-BR:
       fill: Preencher
       fit: Ajustar
       zoom: Zoom
+    overlay:
+      full: Show full text overlay
+      split: Show split-view text overlay
+      versions: Toggle transcription version history
     panel:
       negative: Inverter cores
       revert: Reverter para Original
@@ -594,6 +602,9 @@ pt-BR:
       right: Alinhar à Direita
       sinkListItem: Deslocar item da lista para baixo
       liftListItem: Deslocar item da lista para cima
+  transcription:
+    error: Transcription Error
+    pending: Transcription pending…
   error:
     cache:
       prune: Falha ao otimizar cache do projeto.

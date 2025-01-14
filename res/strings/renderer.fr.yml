@@ -171,6 +171,7 @@ fr:
           nl-NL: Nederlands
           pt: Português
           pt-BR: Português brasileiro
+          ru: русский
           uk: Украї́нська мо́ва
       templates:
         label: Modèles de saisie par défaut
@@ -309,6 +310,9 @@ fr:
     size: Taille
     created: Création
     modified: Modifié
+  settings:
+    maximize: Maximize this view
+    unmaximize: Restore previous view size
   esper:
     tool:
       pan: Outil panoramique
@@ -320,6 +324,10 @@ fr:
       fill: Pleine largeur
       fit: Pleine hauteur
       zoom: Zoom
+    overlay:
+      full: Show full text overlay
+      split: Show split-view text overlay
+      versions: Toggle transcription version history
     panel:
       negative: Inverser les couleurs
       revert: Réinitialiser les ajustements
@@ -640,6 +648,9 @@ fr:
       right: Aligner à droite
       sinkListItem: Augmenter le retrait
       liftListItem: Réduire le retrait
+  transcription:
+    error: Transcription Error
+    pending: Transcription pending…
   error:
     cache:
       prune: Échec de l'optimisation du cache du projet

@@ -170,6 +170,7 @@ nl-NL:
           nl-NL: Nederlands
           pt: Português
           pt-BR: Português brasileiro
+          ru: русский
           uk: Украї́нська мо́ва
       templates:
         label: Standaardsjablonen
@@ -308,6 +309,9 @@ nl-NL:
     size: Afmetingen
     created: Toegevoegd op
     modified: Bewerkt op
+  settings:
+    maximize: Weergave maximaliseren
+    unmaximize: Vorige weergave herstellen
   esper:
     tool:
       pan: Meetrekgereedschap
@@ -319,6 +323,10 @@ nl-NL:
       fill: Opvullen
       fit: Inpassen
       zoom: Zoomen
+    overlay:
+      full: Volledige tekstlaag tonen
+      split: Gesplitste tekstlaag tonen
+      versions: Transcriptie-versiegeschiedenis tonen/verbergen
     panel:
       negative: Kleuren omkeren
       revert: Origineel herstellen
@@ -606,10 +614,14 @@ nl-NL:
         other {Bezig met dupliceren…}
 
         }
-      transcribe: |-
+      transcribe: >-
         {hasProgressBar, select,
-          true {Transcribing photo {progress, number} of {total, number} …}
-          other {Transcribing photos …}
+
+        true {Bezig met transcriberen van foto {progress, number} van {total,
+        number}…}
+
+        other {Bezig met transcriberen…}
+
         }
       load: Bezig met laden…
       move: Bezig met verplaatsen…
@@ -654,6 +666,9 @@ nl-NL:
       right: Rechts uitlijnen
       sinkListItem: Lijstitem omlaag
       liftListItem: Lijstitem omhoog
+  transcription:
+    error: Transcriptiefout
+    pending: Bezig met verwerken van transcriptie…
   error:
     cache:
       prune: De projectcache kan niet worden geoptimaliseerd.
@@ -727,4 +742,4 @@ nl-NL:
     hooks:
       export: Exporteren
       import: Importeren
-      transcribe: OCR
+      transcribe: Ocr

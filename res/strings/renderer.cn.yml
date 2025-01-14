@@ -4,7 +4,7 @@ cn:
     tags: 标签
     imports: 最近导入
     trash: 删除文件
-    unlisted: Unlisted Items
+    unlisted: 非列表项目
   toolbar:
     import: 导入图片
     items: |-
@@ -20,9 +20,9 @@ cn:
       photo: 图片
       item: |-
         {count, plural,
-          =0 {}
-          one {Item}
-          other {# Items}}
+        =0 {}
+        one {Item}
+        other {# 个项目}}
       selection: 选择
       dropdown:
         placeholder: 添加新字段…
@@ -65,10 +65,8 @@ cn:
     c2dh:
       title: 卢森堡当代和数字历史中心
       url: https://www.c2dh.uni.lu
-    text: >-
-      Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
-      historical teaching resources, digital exhibits, and open-source software.
-    trademark: The Tropy name is a registered trademark of {cds}.
+    text: Tropy 由 {c2dh} 和 {rrchnm} 设计，这两个实验室负责开发历史教学资源、数字展品和开源软件。
+    trademark: Tropy 名称是 {cds} 的注册商标。
     donate:
       title: 捐赠给 Tropy
       url: https://tropy.org/donate
@@ -109,19 +107,19 @@ cn:
     stats:
       photos: |-
         {photos, plural,
-          =0 {No photos}
-          one {1 photo}
-          other {# photos}}
+        =0 {无照片}
+        one {1 张照片}
+        other {# 张照片}}
       items: |-
         {items, plural,
-          =0 {No items}
-          one {1 item}
-          other {# items}}
+        =0 {无项目}
+        one {1 个项目}
+        other {# 个项目}}
       notes: |-
         {notes, plural,
-          =0 {No notes}
-          one {1 note}
-          other {# notes}}
+        =0 {无笔记}
+        one {1 个笔记}
+        other {# 个笔记}}
   prefs:
     title: Tropy 首选项
     app:
@@ -140,7 +138,7 @@ cn:
             14px: 中
             15px: 大
             16px: 非常大
-        frameless: Use custom titlebar (requires restart)
+        frameless: 使用自定义标题栏（需要重新启动）
       print:
         mode: 打印
         modes:
@@ -148,7 +146,7 @@ cn:
           photo: 每页一张图片
           selection: 选中的文件打印成一页
         photos: 包含图片
-        optimize: Optimize photo size and quality
+        optimize: 优化照片尺寸和质量
         metadata: 包含元数据
         notes: 包含笔记
         onlyNotes: 仅包含带有注释的照片
@@ -163,10 +161,11 @@ cn:
           fr: Français
           it: Italiano
           ja: 日本語
-          nl-NL: Nederlands
+          nl-NL: 荷兰语
           pt: Português
-          pt-BR: Português brasileiro
-          uk: Украї́нська мо́ва
+          pt-BR: 巴西葡萄牙语
+          ru: русский
+          uk: 乌克兰语
       templates:
         label: 默认模板
         item: 项目
@@ -233,15 +232,15 @@ cn:
       name: 名称
       id: ID
       path: 文件
-      type: Project type
+      type: 项目类型
       convert:
-        confirm: Convert
-        hint: Convert this project into a Standard project.
+        confirm: 转换
+        hint: 转换该项目为标准项目。
         detail: |-
           {errors, plural,
-            =0 {All photos consolidated.}
-            one {1 photo not found; consolidation required.}
-            other {# photos not found; consolidation required.}}
+          =0 {所有照片已合并。}
+          one {未找到 1 张照片；需要合并。}
+          other {未找到 # 张照片；需要合并。}}
       watch:
         folder: 监视文件夹
         usePolling: 使用文件统计
@@ -261,20 +260,20 @@ cn:
       export: 导出
       classes: |-
         {count, plural,
-          =0 {No Classes}
-          one {# Class}
-          other {# Classes}
+        =0 {无课程}
+        one {# 课程}
+        other {# 课程}
         }
       datatypes: |-
         {count, plural,
-          =0 {No Datatypes} one {# Datatype}
-          other {# Datatypes}
+        =0 {无 Datatypes} one {# Datatype}
+        other {# Datatypes}
         }
       properties: |-
         {count, plural,
-          =0 {No Properties}
-          one {# Property}
-          other {# Properties}
+        =0 {无属性}
+        one {# 属性}
+        other {# 属性}
         }
     plugins:
       label: 插件
@@ -286,7 +285,7 @@ cn:
       noInfo: 未知作者
       homepage: 更多
   format:
-    ppi: Pixels per inch (ppi)
+    ppi: 每英寸像素（ppi）
   item:
     created: 添加日期
     modified: 已修改
@@ -304,6 +303,9 @@ cn:
     size: 大小
     created: 添加日期
     modified: 已修改
+  settings:
+    maximize: 最大化视图
+    unmaximize: 恢复之前的视图大小
   esper:
     tool:
       pan: 平移工具
@@ -315,6 +317,10 @@ cn:
       fill: 填充
       fit: 适合
       zoom: 缩放
+    overlay:
+      full: 显示全文覆盖
+      split: 显示分屏视图文本叠加
+      versions: 切换转录版本历史记录
     panel:
       negative: 反色
       revert: 复原照片
@@ -383,11 +389,8 @@ cn:
     notify:
       project:
         convert:
-          title: Conversion complete
-          message: >-
-            Your project was successfully converted and saved. Tropy will now
-            close the original project file and open the converted project in a
-            new window.
+          title: 转换完成
+          message: 您的项目已成功转换并保存。现在，Tropy 将关闭原始项目文件，并在新窗口中打开转换后的项目。
           buttons:
             - 确定
     error:
@@ -536,8 +539,8 @@ cn:
       implode: 正在恢复...
       import: |-
         {hasProgressBar, select,
-          true {Importing item {progress, number} of {total, number} …}
-          other {Importing items …}
+        true {导入项目 {progress, number} of {total, number} …}
+        other {正在导入项目 …}
         }
       load: 加载文件中...
       merge: 正在合并图组...
@@ -563,24 +566,24 @@ cn:
     photo:
       consolidate: |-
         {hasProgressBar, select,
-          true {Consolidating photo {progress, number} of {total, number} …}
-          other {Consolidating photos …}
+        true {合并照片 {progress, number} of {total, number} …}
+        other {正在合并照片 …}
         }
       create: |-
         {hasProgressBar, select,
-          true {Importing photo {progress, number} of {total, number} …}
-          other {Importing photos …}
+        true {导入照片 {progress, number} of {total, number} …}
+        other {正在导入照片 …}
         }
       delete: 删除图片中...
       duplicate: |-
         {hasProgressBar, select,
-          true {Duplicating photo {progress, number} of {total, number} …}
-          other {Duplicating photos …}
+        true {复制照片 {progress, number} of {total, number} …}
+        other {正在复制照片 …}
         }
       transcribe: |-
         {hasProgressBar, select,
-          true {Transcribing photo {progress, number} of {total, number} …}
-          other {Transcribing photos …}
+        true {转录照片 {progress, number} of {total, number} …}
+        other {正在转录照片 …}
         }
       load: 正在加载图片...
       move: 正在移动图片...
@@ -625,13 +628,16 @@ cn:
       right: 右对齐
       sinkListItem: 缩进
       liftListItem: 撤销缩进
+  transcription:
+    error: 转录错误
+    pending: 正在转录…
   error:
     cache:
       prune: 优化缓存失败。
       purge: 未能删除旧的缓存。
     project:
       created: 库创建失败。
-      convert: Project conversion failed.
+      convert: 项目转换失败。
     item:
       export: 无法导出文件。
       merge: 无法合并图组。

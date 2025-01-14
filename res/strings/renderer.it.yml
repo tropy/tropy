@@ -172,6 +172,7 @@ it:
           nl-NL: Olandese
           pt: Português
           pt-BR: portoghese brasiliano
+          ru: русский
           uk: lingua ucraina
       templates:
         label: Modelli predefiniti
@@ -310,6 +311,9 @@ it:
     size: Dimensione
     created: Data di aggiunta
     modified: Modificato
+  settings:
+    maximize: Maximize this view
+    unmaximize: Restore previous view size
   esper:
     tool:
       pan: Strumento per spostarsi
@@ -321,6 +325,10 @@ it:
       fill: Riempi
       fit: Costringi
       zoom: Ingrandisci
+    overlay:
+      full: Mostra sovrapposizione testo completo
+      split: Mostra sovrapposizione testo a vista divisa
+      versions: Toggle transcription version history
     panel:
       negative: Inverti i colori
       revert: Ripristina l'originale
@@ -644,6 +652,9 @@ it:
       right: Allinea a destra
       sinkListItem: Abbassa di livello elemento della lista
       liftListItem: Alza di livello elemento della lista
+  transcription:
+    error: Errore di trascrizione
+    pending: Trascrizione in attesa…
   error:
     cache:
       prune: Ottimizzazione della cache di progetto non riuscita.
