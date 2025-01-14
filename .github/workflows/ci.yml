@@ -28,7 +28,8 @@ jobs:
             friendlyName: Linux
             platform: linux
           - os: ubuntu-22.04
-            friendlyName: Linux LTS
+            arch: x64
+            friendlyName: Linux (LTS)
             platform: linux
           - os: macos-13
             arch: x64
