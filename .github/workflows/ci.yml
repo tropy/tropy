@@ -26,6 +26,8 @@ jobs:
         include:
           - os: ubuntu-latest
             friendlyName: Linux
+          - os: ubuntu-22.04
+            friendlyName: Linux (Ubuntu 22)
           - os: macos-13
             arch: x64
             friendlyName: macOS
