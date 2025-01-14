@@ -33,12 +33,12 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-20.04
+          - ubuntu-22.04
           - windows-2019
         arch:
           - x64
         include:
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             platform: linux
           - os: windows-2019
             platform: win32
