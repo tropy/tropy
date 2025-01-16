@@ -46,7 +46,7 @@
     "postcoverage": "nyc report -r text-summary -r html -r lcov",
     "pretest": "babel src -d internal && babel test -d mocha",
     "test": "npm run -s test:main && npm run -s test:renderer",
-    "test:main": "electron-mocha \"test/{main,common}/**/*_test.js\"",
+    "test:main": "electron-mocha --no-sandbox \"test/{main,common}/**/*_test.js\"",
     "test:renderer": "electron-mocha --renderer --no-sandbox \"mocha/{,!(main)/**}/*_test.js\"",
     "posttest": "shx rm -rf internal mocha",
     "preversion": "npm run lint && npm test",
