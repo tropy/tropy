@@ -358,6 +358,7 @@ Version=1.0
 Terminal=false
 Type=Application
 Name=${qualified.product}
+Comment=Research photo management
 Exec=${exe} %U
 Icon=${icon}
 MimeType=${mimetypes.join(';')};
