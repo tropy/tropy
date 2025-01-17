@@ -136,13 +136,13 @@ const exports = {
     mv(`${AppDir}/resources/icons`, `${AppDir}/usr/share/icons`)
     mv(`${AppDir}/resources/mime`, `${AppDir}/usr/share/mime`)
 
-    let png = `usr/share/icons/hicolor/512x512/apps/${qualified.name}.png`
-    let svg = `usr/share/icons/hicolor/scalable/apps/${qualified.name}.svg`
+    let png = `usr/share/icons/hicolor/512x512/apps/${qualified.appId}.png`
+    let svg = `usr/share/icons/hicolor/scalable/apps/${qualified.appId}.svg`
 
     cd(AppDir)
     ln('-s', qualified.name, 'AppRun')
     ln('-s', png, '.DirIcon')
-    ln('-s', svg, `${qualified.name}.svg`)
+    ln('-s', svg, `${qualified.appId}.svg`)
     cd('-')
 
     exec(`"${appimagetool}" -n -v ${AppDir} ${output}`, { silent })
