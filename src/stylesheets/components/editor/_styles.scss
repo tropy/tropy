@@ -88,7 +88,7 @@ body {
 
 .ProseMirror { /* stylelint-disable-line selector-class-pattern */
   flex: 1 1 auto;
-  word-break: break-word; // For vertical writing mode (break-word or break-all?)
+  overflow-wrap: break-word;
   counter-reset: line-numbers;
   padding-inline: calc((100% - $editor-size) / 2);
   white-space: nowrap;

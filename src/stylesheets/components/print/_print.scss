@@ -1,3 +1,4 @@
+// stylelint-disable at-rule-descriptor-no-unknown
 @use "../../abstracts/config" as *;
 
 //
@@ -233,7 +234,7 @@ label {
 .note {
   flex: 0 0 67%;
   padding-left: calc($print-page-margin / 16);
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .note-list {

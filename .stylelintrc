@@ -9,6 +9,7 @@ rules:
   function-no-unknown: null
   selector-pseudo-element-no-unknown: [true, { ignorePseudoElements: ["-webkit"] }]
   no-descending-specificity: null
+  at-rule-prelude-no-invalid: null
 
   # stylelint-config-standard
   at-rule-empty-line-before: [null, { except: first-nested }]
