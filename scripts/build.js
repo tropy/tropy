@@ -362,7 +362,7 @@ Comment=Research photo management
 Exec=${exe} %U
 Icon=${icon}
 MimeType=${mimetypes.join(';')};
-Categories=Graphics;Viewer;Science;`
+Categories=Graphics;Viewer;Photography;OCR;`
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
