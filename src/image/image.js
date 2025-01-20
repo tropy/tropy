@@ -13,9 +13,15 @@ const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
 
 export class Image extends Asset {
   get orientation() {
-    return Orientation(
-      this.meta?.[this.page]?.exif?.[exifns.orientation]?.text || 1
-    )
+    switch (this.mimetype) {
+      case MIME.HEIC:
+      case MIME.HEIF:
+        return 1
+      default:
+        return Orientation(
+          this.meta?.[this.page]?.exif?.[exifns.orientation]?.text || 1
+        )
+    }
   }
 
   get channels() {
