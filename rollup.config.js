@@ -65,7 +65,7 @@ function ignoreTryCatch(id) {
   if (id === 'fsevents')
     return (process.platform === 'darwin') ? false : 'remove'
 
-  if (builtinModules.includes(id))
+  if (id.startsWith('node:') || builtinModules.includes(id))
     return true
 
   console.warn(`Removing try/catch require of: ${id}`)
