@@ -1,5 +1,5 @@
 import { call, select } from 'redux-saga/effects'
-import { Document } from 'alto.js'
+import { Document } from 'alto-xml'
 import { Command } from '../command.js'
 import { create } from '../../models/transcription.js'
 import * as slice from '../../slices/transcriptions.js'

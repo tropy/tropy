@@ -1,6 +1,6 @@
 import { call, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
-import { Document } from 'alto.js'
+import { Document } from 'alto-xml'
 import { API } from '../../constants/index.js'
 
 import { create } from '../../models/transcription.js'

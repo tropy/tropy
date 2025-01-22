@@ -116,7 +116,7 @@
     "@koa/router": "^13.0.0",
     "@reduxjs/toolkit": "^2.0.1",
     "@tweenjs/tween.js": "^23.1.1",
-    "alto.js": "inukshuk/alto.js.git#main",
+    "alto-xml": "^1.0.1",
     "chokidar": "^4.0.0",
     "classnames": "^2.2.6",
     "commander": "^13.0.0",

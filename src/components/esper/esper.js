@@ -20,7 +20,7 @@ import { match } from '../../keymap.js'
 import { getResolution } from '../../dom.js'
 import { ESPER, SASS } from '../../constants/index.js'
 import memoize from 'memoize-one'
-import { Document } from 'alto.js'
+import { Document } from 'alto-xml'
 
 const {
   TOOL,
