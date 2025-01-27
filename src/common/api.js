@@ -44,12 +44,14 @@ const extract = (type) =>
 const project = {
   async import(ctx) {
     let { assert, request, rsvp } = ctx
+    let { file, list, data } = request.body
 
-    assert.ok(request.body.file, 400, 'missing file parameter')
+    assert.ok(file || data, 400, 'missing file/data parameter')
 
     let { payload } = await rsvp('project', act.import({
-      files: request.body.file,
-      list: request.body.list
+      data,
+      files: file,
+      list
     }))
 
     ctx.body = payload
