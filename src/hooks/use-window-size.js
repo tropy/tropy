@@ -14,6 +14,6 @@ export function useWindowSize(width, height) {
     () => {
       // Delaying because we want this to fire after unmount!
       win?.setFixedSize(false, { timeout })
-    }
-  , [win, timeout])
+    },
+  [win, timeout])
 }

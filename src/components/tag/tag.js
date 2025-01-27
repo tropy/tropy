@@ -112,8 +112,7 @@ export const Tag = React.memo(({
           onCancel={onEditCancel}
           onChange={handleChange}/>
       </div>
-      {hasFocusIcon && !isEditing && tag.mixed &&
-        <IconPlusCircles/>}
+      {hasFocusIcon && !isEditing && tag.mixed && <IconPlusCircles/>}
     </li>
   )
 })

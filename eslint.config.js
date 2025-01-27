@@ -26,6 +26,7 @@ Object.assign(style.rules, {
 })
 
 style.rules['@stylistic/indent'][0] = 'warn'
+style.rules['@stylistic/indent-binary-ops'][0] = 'warn'
 
 export default [
   js.configs.recommended,

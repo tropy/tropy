@@ -22,8 +22,7 @@ export function useTransitionState(node, prop, timeout = 1000, toString) {
         isChanging: false,
         next
       }))
-    }
-  , [])
+    }, [])
 
   if (state.next !== prop) {
     setState({ ...state, next: prop })
