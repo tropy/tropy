@@ -46,6 +46,10 @@ const project = {
     let { assert, request, rsvp } = ctx
     let { file, list, data } = request.body
 
+    if (data) {
+      data = JSON.parse(data)
+    }
+
     assert.ok(file || data, 400, 'missing file/data parameter')
 
     let { payload } = await rsvp('project', act.import({
