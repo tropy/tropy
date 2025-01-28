@@ -34,7 +34,6 @@ program
   .command('import [dir]')
   .description('import all matching YML files')
   .action(dir => {
-    console.log('ho')
     let home = dir || HOME
 
     for (let file of ls(home)) {
