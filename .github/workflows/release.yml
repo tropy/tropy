@@ -72,6 +72,12 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: brew install python-setuptools
 
+      - name: Fix AppImage on Ubuntu 22
+        if: matrix.os == 'ubuntu-22.04'
+        run: sudo apt install libfuse2
+        # if: matrix.os == 'ubuntu-24.04'
+        # run: sudo apt install libfuse2t64
+
       - name: Install and build dependencies
         run: npm clean-install --no-progress
 
