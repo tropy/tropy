@@ -13,12 +13,11 @@ const type = {
 
 program
   .name(exe)
-  .arguments('[args]')
+  .argument('[args]')
   .version(version)
 
   // TODO remove when squirrel is not used anymore!
   .allowUnknownOption()
-
   .allowExcessArguments()
 
   .option('--data <path>', 'set data directory', type.path)
