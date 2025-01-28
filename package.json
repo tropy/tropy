@@ -30,7 +30,7 @@
     "db": "node scripts/db.js",
     "prebuild": "npm run clean && npm run rollup",
     "build": "node --disable-warning=ExperimentalWarning scripts/build.js",
-    "pack": "node --disable-warning=ExperimentalWarning scripts/pack.js --silent",
+    "pack": "node --disable-warning=ExperimentalWarning scripts/pack.js",
     "devtools": "electron scripts/devtools.js --data tmp",
     "legal": "node scripts/legal.js",
     "lint": "npm run -s lint:js && npm run -s lint:css",
