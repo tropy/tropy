@@ -46,8 +46,17 @@ const project = {
     let { assert, request, rsvp } = ctx
     let { file, list, data } = request.body
 
+    assert(
+      request.type === 'application/x-www-form-urlencoded',
+      400,
+      'content-type not supported')
+
     if (data) {
-      data = JSON.parse(data)
+      try {
+        data = JSON.parse(data)
+      } catch {
+        ctx.throw(400, 'invalid JSON data parameter')
+      }
     }
 
     assert.ok(file || data, 400, 'missing file/data parameter')
