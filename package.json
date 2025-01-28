@@ -40,7 +40,7 @@
     "log:tail": "tail -q -F tmp/log/tropy.log 2> /dev/null | node scripts/log-viewer.js",
     "log:tail:win": "tail -q -F tmp/log/tropy.log 2> NUL | node scripts/log-viewer.js",
     "start": "electron --app . --env development --data tmp --cache tmp/cache --logs tmp/log",
-    "rebuild": "node scripts/rebuild.js -s",
+    "rebuild": "node scripts/rebuild.js",
     "precoverage": "shx rm -rf coverage .nyc_output && mkdir .nyc_output",
     "coverage": "env COVERAGE=true npm run -s test",
     "postcoverage": "nyc report -r text-summary -r html -r lcov",
