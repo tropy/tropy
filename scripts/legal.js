@@ -11,6 +11,7 @@ setLogSymbol('§')
 
 program
   .name('tropy-legal')
+  .allowUnknownOption()
   .option('-d, --dependencies <files...>', 'dependencies (JSON)')
   .option('-o, --out <directory>', 'output directory')
   .option('-n, --name <basename>', 'output file name', 'third-party-notices')

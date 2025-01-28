@@ -45,6 +45,7 @@ const ELECTRON = join(ROOT, 'node_modules', 'electron', 'dist')
 
 program
   .name('tropy-build')
+  .allowUnknownOption()
   .option('--platform <name>', 'set target platform', PLATFORM)
   .option('--arch <name>', 'set target arch', ARCH)
   .option('--no-asar', 'skip asar creation')

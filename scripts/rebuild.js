@@ -234,7 +234,8 @@ class Rebuilder {
 
 program
   .name('tropy-rebuild')
-  .arguments('[modules...]')
+  .argument('[modules...]')
+  .allowUnknownOption()
   .option('--arch <name>', 'set target arch', ARCH)
   .option('-f, --force', 'force rebuild', false)
   .option('-s, --silent', 'silence rebuilder output', false)

@@ -53,7 +53,8 @@ async function integrity(path, algo = 'sha256') {
 
 program
   .name('tropy-pack')
-  .arguments('[targets...]')
+  .argument('[targets...]')
+  .allowUnknownOption()
   .option('--platform <name>', 'set target platform', PLATFORM)
   .option('--arch <name>', 'set target arch', ARCH)
   .option('--app <dir>', 'set the app directory')
