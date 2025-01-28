@@ -250,6 +250,7 @@ program
 
     opts.libc = await family() || 'unknown'
 
+    console.log(args, opts)
     let tasks = args.map(name => new Rebuilder({ name, ...opts }))
 
     // Ensure we're using the latest SDK when cross-compiling!
