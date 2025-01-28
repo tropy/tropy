@@ -19,3 +19,19 @@ export const getActiveTranscription = (state, props) => {
 
   return transcriptions?.sort(byModifiedDate).at(-1)
 }
+
+export const getItemTranscriptions = (state, props) => {
+  let transcriptions = []
+
+  for (let pid of state.items[props.id].photos) {
+    let tr = getActiveTranscription(state, { id: pid })
+    if (tr) transcriptions.push(tr)
+
+    for (let sid of state.photos[pid].selections) {
+      tr = getActiveTranscription(state, { id: sid })
+      if (tr) transcriptions.push(tr)
+    }
+  }
+
+  return transcriptions
+}

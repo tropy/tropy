@@ -181,6 +181,40 @@ const project = {
       }
     },
 
+    async find(ctx) {
+      let { assert, params, query, rsvp } = ctx
+
+      if (query.format)
+        assert(
+          (/^(json|html|plain|text)$/).test(query.format),
+          400,
+          'format unknown')
+
+      if (query.separator)
+        assert(
+          (/^[*_=-]+$/).test(query.separator),
+          400,
+          'bad separator')
+
+      let { payload } = await rsvp('project', act.transcription.find({
+        id: params.id,
+        format: query.format,
+        separator: query.separator
+      }))
+
+      if (payload != null) {
+        if (query.format === 'html')
+          ctx.type = 'text/html'
+        if (query.format === 'text' || query.format === 'plain')
+          ctx.type = 'text/plain'
+
+        ctx.body = payload
+
+      } else {
+        ctx.status = 404
+      }
+    },
+
     async show(ctx) {
       let { assert, params, query, rsvp } = ctx
 
@@ -362,6 +396,7 @@ export function create({ dispatch, log, rsvp, version }) {
     .get('/project/items/:id', project.items.show)
     .get('/project/items/:id/photos', project.photos.find)
     .get('/project/items/:id/tags', project.tags.find)
+    .get('/project/items/:id/transcriptions', project.transcriptions.find)
     .post('/project/items/:id/tags', project.tags.add)
     .delete('/project/items/:id/tags', project.tags.remove)
 

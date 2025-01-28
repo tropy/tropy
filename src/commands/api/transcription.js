@@ -3,6 +3,7 @@ import { Command } from '../command.js'
 import { Document } from 'alto-xml'
 import { API } from '../../constants/index.js'
 
+import { getItemTranscriptions } from '../../selectors/transcriptions.js'
 import { create } from '../../models/transcription.js'
 import * as slice from '../../slices/transcriptions.js'
 
@@ -40,6 +41,26 @@ export class TranscriptionCreate extends Command {
 
 TranscriptionCreate.register(API.TRANSCRIPTION.CREATE)
 
+
+export class TranscriptionFind extends Command {
+  *exec() {
+    let { id, format, separator = '\n' } = this.action.payload
+
+    let transcriptions = yield select(state =>
+      getItemTranscriptions(state, { id }))
+
+    switch (format) {
+      case 'plain':
+      case 'text':
+      case 'html':
+        return transcriptions.map(t => t.text).join(separator + '\n')
+      default:
+        return transcriptions
+    }
+  }
+}
+
+TranscriptionFind.register(API.TRANSCRIPTION.FIND)
 
 export class TranscriptionShow extends Command {
   *exec() {

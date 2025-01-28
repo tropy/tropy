@@ -109,6 +109,17 @@ export default {
       }
     },
 
+    find(payload, meta) {
+      return {
+        type: API.TRANSCRIPTION.FIND,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    },
+
     show(payload, meta) {
       return {
         type: API.TRANSCRIPTION.SHOW,
