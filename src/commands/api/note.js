@@ -4,6 +4,7 @@ import { API } from '../../constants/index.js'
 import { fromHTML, serialize } from '../../editor/serialize.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
+import { pick } from '../../common/util.js'
 
 
 export class NoteCreate extends Command {
@@ -54,7 +55,15 @@ export class NoteShow extends Command {
           localize: false
         }).markdown
       default:
-        return note
+        return pick(note, [
+          'id',
+          'photo',
+          'selection',
+          'text',
+          'language',
+          'created',
+          'modified'
+        ])
     }
   }
 }

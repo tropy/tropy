@@ -32,30 +32,30 @@ export function serialize(note, {
   localize = true
 } = {}) {
   return (note == null) ? null :
-    Object
-      .entries(format)
-      .reduce((acc, [fmt, include]) => {
-        if (include) {
-          switch (fmt) {
-            case 'text':
-              acc.text = toValue(note.text, localize, note.language)
-              break
-            case 'html':
-              acc.html = toValue(
-                toHTML(note.state.doc),
-                localize,
-                note.language)
-              break
-            case 'markdown':
-              acc.markdown = toValue(
-                toMarkdown(note.state.doc),
-                localize,
-                note.language)
-              break
+      Object
+        .entries(format)
+        .reduce((acc, [fmt, include]) => {
+          if (include) {
+            switch (fmt) {
+              case 'text':
+                acc.text = toValue(note.text, localize, note.language)
+                break
+              case 'html':
+                acc.html = toValue(
+                  toHTML(note.state.doc),
+                  localize,
+                  note.language)
+                break
+              case 'markdown':
+                acc.markdown = toValue(
+                  toMarkdown(note.state.doc),
+                  localize,
+                  note.language)
+                break
+            }
           }
-        }
-        return acc
-      }, {})
+          return acc
+        }, {})
 }
 
 
