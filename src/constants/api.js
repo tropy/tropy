@@ -29,6 +29,10 @@ export default {
     SHOW: 'api.metadata.show'
   },
 
+  LIST: {
+    SHOW: 'api.list.show'
+  },
+
   TAG: {
     FIND: 'api.tag.find',
     SHOW: 'api.tag.show'

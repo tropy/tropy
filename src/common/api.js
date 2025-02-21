@@ -367,6 +367,22 @@ const project = {
     show: show('tag')
   },
 
+  lists: {
+    async show(ctx) {
+      let { params, query, rsvp } = ctx
+
+      let { payload } = await rsvp('project', act.list.show({
+        id: params.id ?? 0,
+        expand: query.expand != null && query.expand !== 'false'
+      }))
+
+      if (payload != null)
+        ctx.body = payload
+      else
+        ctx.status = 404
+    },
+  },
+
   selections: {
     extract: extract('selection'),
     show: show('selection')
@@ -400,7 +416,8 @@ export function create({ dispatch, log, rsvp, version }) {
     .post('/project/items/:id/tags', project.tags.add)
     .delete('/project/items/:id/tags', project.tags.remove)
 
-    .get('/project/list/:id/items', project.items.find)
+    .get('/project/lists/:id/items', project.items.find)
+    .get('/project/lists/:id?', project.lists.show)
 
     .post('/project/tags', project.tags.create)
     .delete('/project/tags', project.tags.delete)

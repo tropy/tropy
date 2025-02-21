@@ -168,6 +168,19 @@ export default {
     }
   },
 
+  list: {
+    show(payload, meta) {
+      return {
+        type: API.LIST.SHOW,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    }
+  },
+
   tag: {
     create({ items, ...payload }, meta) {
       return {
