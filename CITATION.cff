@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+title: Tropy
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - name: Tropy Team
+    website: 'https://tropy.org/credits'
+  - name: Centre for Contemporary and Digital History (C2DH)
+    country: LU
+    website: 'https://www.uni.lu/c2dh-en/'
+  - name: Roy Rosenzweig Center for History and New Media (RRCHNM)
+    website: 'https://rrchnm.org/'
+    country: US
+url: 'https://tropy.org'
+abstract: >-
+  Tropy is an open-source software developed collaboratively
+  by the Roy Rosenzweig Center for History and New Media
+  (RRCHNM) at George Mason University, the Centre for
+  Contemporary and Digital History (C2DH) at the University
+  of Luxembourg, and Digital Scholar. It helps researchers
+  organize and describe their archival research materials.
+  Tropy provides a user-friendly interface for managing
+  images and metadata, allowing users to annotate, tag, and
+  structure their research photo collections effectively.
+license: AGPL-3.0-or-later
+version: 1.16.2
+date-released: '2024-03-05'
