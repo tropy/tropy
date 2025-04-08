@@ -15,6 +15,8 @@ Object.assign(style.rules, {
   '@stylistic/arrow-parens': 0,
   '@stylistic/jsx-closing-bracket-location': 0,
   '@stylistic/jsx-tag-spacing': 0,
+  '@stylistic/generator-star-spacing': 0,
+  '@stylistic/yield-star-spacing': 0,
   '@stylistic/max-statements-per-line': 0,
   '@stylistic/multiline-ternary': 0,
   '@stylistic/no-multi-spaces': [2, { ignoreEOLComments: true }],
