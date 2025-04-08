@@ -36,15 +36,21 @@ export class Asset {
   }
 
   get date() {
-    return this.fs?.ctime || this.fs?.mtime || new Date()
+    return this.birthtime || this.mtime || new Date()
   }
 
   get ext() {
     return extname(this.basename)
   }
 
+  get birthtime() {
+    return this.fs?.birthtime ||
+      this.fs?.birthtimeMs ? new Date(this.fs.birthtimeMs) : null
+  }
+
   get mtime() {
-    return this.fs?.mtime
+    return this.fs?.mtime ||
+      this.fs?.mtimeMs ? new Date(this.fs.mtimeMs) : null
   }
 
   get name() {
@@ -99,7 +105,8 @@ export class Asset {
 
       // fastCheck may return early without opening the asset!
       if (fastCheck && mtime && !this.isRemote) {
-        if (mtime === (await stat(this.path)).mtime)
+        let { mtimeMs } = await stat(this.path)
+        if (Math.abs(mtimeMs - mtime) < 1)
           return this
       }
 

@@ -277,7 +277,7 @@ const project = {
 
             if (stats && stats.isFile()) {
               ctx.length = stats.size
-              ctx.lastModified = stats.mtime
+              ctx.lastModified = new Date(stats.mtimeMs)
               ctx.type = mimetype
               ctx.attachment(basename(path))
               ctx.body = fs.createReadStream(path)

@@ -34,7 +34,7 @@ describe('Image', () => {
     it('computes file stats', () => {
       expect(image)
         .to.have.property('fs')
-        .that.contains.keys(['size', 'ctime'])
+        .that.contains.keys(['size', 'birthtimeMs'])
     })
   })
 })

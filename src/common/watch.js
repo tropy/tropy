@@ -28,7 +28,7 @@ export class Watcher extends EventEmitter {
 
     if (since != null) {
       this.#watcher.on('add', async (file, stats) => {
-        if (stats.ctime > since) {
+        if (stats.ctimeMs > since) {
           // macOS apps like Preview always update ctime. We do not
           // import duplicate files, but also checking kMDItemDateAdded
           // here, saves as from importing and then skipping over the
