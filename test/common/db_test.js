@@ -30,16 +30,15 @@ describe('Database', () => {
     })
 
     describe('#acquire()', () => {
-      it('returns a disposable connection', async () => {
-        await using(db.acquire(), c => {
+      it('returns a disposable connection', async () =>
+        using(db.acquire(), c => {
           expect(db.pool.acquire).to.have.been.called
           expect(db.pool.release).not.to.have.been.called
 
           expect(c).to.be.instanceof(Connection)
-        })
-
-        expect(db.pool.release).to.have.been.called
-      })
+        }).then(() => {
+          expect(db.pool.release).to.have.been.called
+        }))
 
       it('draws from the connection pool', () =>
         using(db.acquire(), c1 => {
