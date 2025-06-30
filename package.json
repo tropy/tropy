@@ -73,7 +73,7 @@
     "chai-as-promised": "^8.0.0",
     "chai-dom": "^1.8.2",
     "detect-libc": "^2.0.1",
-    "electron": "^36.2.0",
+    "electron": "^37.1.0",
     "electron-mocha": "^13.0.0",
     "electron-winstaller": "^5.0.0",
     "eslint": "^9.13.0",
