@@ -34,15 +34,15 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          - windows-2019
+          - windows-2022
         arch:
           - x64
         include:
           - os: ubuntu-22.04
             platform: linux
-          - os: windows-2019
+          - os: windows-2022
             platform: win32
-          - os: windows-2019
+          - os: windows-2022
             platform: win32
             arch: ia32
           - os: windows-latest
