@@ -28,7 +28,7 @@ export class PhotoExtract extends Command {
     if (photo == null) return
 
     var image = selection || photo
-    let src = Cache.url(cache, 'full', photo)
+    let src = Cache.url(cache.root, 'full', photo)
 
     let { buffer, ...raw } = yield call(Esper.instance.extract, src, {
       ...image,
