@@ -105,6 +105,14 @@ describe('Query Builder', () => {
           .query
       ).to.eql('UPDATE project SET name = $new_name'))
 
+    it('returning', () =>
+      expect(
+        update('project')
+          .set({ name: 'Tropy' })
+          .returning('id')
+          .query
+      ).to.eql('UPDATE project SET name = $new_name RETURNING id'))
+
     it('null', () =>
       expect(
         update('project')
@@ -168,12 +176,23 @@ describe('Query Builder', () => {
       ]).to.eql([
         'INSERT INTO photos (id, mimetype) VALUES (?,?)', [23, 'image/jpeg']
       ]))
+
+    it('returning', () =>
+      expect([
+        ...into('photos').insert({ id: 23 }).returning('id')
+      ]).to.eql([
+        'INSERT INTO photos (id) VALUES (?) RETURNING id', [23]
+      ]))
   })
 
   describe('Delete', () => {
     it('simple', () =>
       expect(deleteFrom('subjects').query)
         .to.eql('DELETE FROM subjects'))
+
+    it('returning', () =>
+      expect(deleteFrom('subjects').returning({ id: 'x' }).query)
+        .to.eql('DELETE FROM subjects RETURNING x AS id'))
 
     it('list params', () =>
       expect([

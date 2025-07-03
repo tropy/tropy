@@ -1,4 +1,4 @@
-import { copy, pluck } from './util.js'
+import { compact, copy, pluck } from './util.js'
 
 const { assign, entries } = Object
 const { isArray } = Array
@@ -26,6 +26,29 @@ export class Query {
   toString() {
     return this.query
   }
+
+  returning(...columns) {
+    for (let cols of columns) {
+      if (typeof cols === 'string') {
+        this.ret = { ...this.ret, [cols]: cols }
+        continue
+      }
+
+      this.ret = { ...this.ret, ...cols }
+    }
+
+    return this
+  }
+
+  get RETURNING() {
+    return this.ret == null ? null : (
+      `RETURNING ${
+        entries(this.ret)
+          .map(([a, n]) => (n === a) ? n : `${n} AS ${a}`)
+          .join(', ')
+      }`
+    )
+  }
 }
 
 export class Insert extends Query {
@@ -50,7 +73,7 @@ export class Insert extends Query {
   }
 
   get query() {
-    return [this.INSERT, this.VALUES].join(' ')
+    return compact([this.INSERT, this.VALUES, this.RETURNING]).join(' ')
   }
 
   get INSERT() {
@@ -345,7 +368,7 @@ export class Update extends ConditionalQuery {
   }
 
   get query() {
-    return pluck(this, ['UPDATE', 'SET', 'WHERE']).join(' ')
+    return compact(pluck(this, ['UPDATE', 'SET', 'WHERE', 'RETURNING'])).join(' ')
   }
 
   get UPDATE() {
@@ -364,7 +387,7 @@ export class Delete extends ConditionalQuery {
   }
 
   get query() {
-    return pluck(this, ['DELETE', 'WHERE']).join(' ')
+    return compact(pluck(this, ['DELETE', 'WHERE', 'RETURNING'])).join(' ')
   }
 
   get DELETE() {
