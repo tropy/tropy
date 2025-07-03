@@ -76,11 +76,13 @@ export default {
     await db.run(...query)
   },
 
-  delete(db, id) {
-    return db.run(
+  async delete(db, id) {
+    let deleted = await db.all(
       ...update('notes')
         .set('deleted = datetime("now")')
-        .where({ note_id: id }))
+        .where({ note_id: id })
+        .returning('note_id'))
+    return deleted.map(n => n.note_id)
   },
 
   async restore(db, id) {

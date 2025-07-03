@@ -1,4 +1,4 @@
-import { API, ITEM, METADATA, TAG } from '../constants/index.js'
+import { API, ITEM, METADATA, NOTE, TAG } from '../constants/index.js'
 import { array } from '../common/util.js'
 
 export default {
@@ -56,6 +56,7 @@ export default {
         },
         meta: {
           cmd: 'project',
+          history: 'add',
           ...meta
         }
       }
@@ -80,6 +81,19 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          history: 'add',
+          ...meta
+        }
+      }
+    },
+
+    delete(payload, meta) {
+      return {
+        type: NOTE.DELETE,
+        payload,
+        meta: {
+          cmd: 'project',
+          history: 'add',
           ...meta
         }
       }
@@ -104,6 +118,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          history: 'add',
           ...meta
         }
       }

@@ -127,6 +127,23 @@ const project = {
       }
     },
 
+    async delete(ctx) {
+      let { assert, params, rsvp } = ctx
+
+      let id = Number(params.id)
+      assert.ok(id > 0, 400, 'bad id')
+
+      let { payload } = await rsvp('project', act.note.delete([
+        id
+      ]))
+
+      if (payload.length > 0) {
+        ctx.status = 200
+      } else {
+        ctx.status = 404
+      }
+    },
+
     async show(ctx) {
       let { assert, params, query, rsvp } = ctx
 
@@ -429,6 +446,7 @@ export function create({ dispatch, log, rsvp, version }) {
 
     .get('/project/notes/:id', project.notes.show)
     .post('/project/notes', project.notes.create)
+    .delete('/project/notes/:id', project.notes.delete)
 
     .get('/project/transcriptions/:id', project.transcriptions.show)
     .post('/project/transcriptions', project.transcriptions.create)
