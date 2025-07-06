@@ -85,7 +85,7 @@ describe('Tropy', () => {
           expect(tropy.dispatch.args[0][0])
             .to.have.a.nested.property('payload.id', 41)
           expect(tropy.dispatch.args[0][0])
-            .to.have.a.nested.property('payload.photo').eql([3])
+            .to.have.a.nested.property('payload.photo').eql(3)
         })
     })
   })
