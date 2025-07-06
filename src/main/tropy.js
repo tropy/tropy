@@ -1100,7 +1100,7 @@ export class Tropy extends EventEmitter {
 
           this.dispatch(act.item.open({
             id: parseInt(id, 10),
-            photos: [parseInt(photo, 10)]
+            photo: parseInt(photo, 10)
           }), win)
         }
         break
