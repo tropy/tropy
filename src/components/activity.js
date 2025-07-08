@@ -1,5 +1,4 @@
 import React from 'react'
-import { isFunction } from 'node:util'
 import { IconSpin, IconXSmall } from './icons.js'
 import { FormattedMessage } from 'react-intl'
 import cx from 'classnames'
@@ -16,7 +15,7 @@ export const Activity = ({
   onCancel
 }) => {
   let hasProgressBar = (progress > 0)
-  let hasCancelButton = canCancel && isFunction(onCancel)
+  let hasCancelButton = canCancel && typeof onCancel === 'function'
 
   return (
     <div className={cx('activity', { type })}>
