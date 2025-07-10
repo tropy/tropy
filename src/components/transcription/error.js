@@ -13,7 +13,7 @@ export const TranscriptionError = ({ config }) => {
       <FormattedMessage id="transcription.error" tagName="p"/>
       <Button
         isDefault
-        onClick={() => dispatch(create(config))}
+        onClick={() => dispatch(create({ config }))}
         text="transcription.retry" />
     </div>
   )
