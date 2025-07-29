@@ -104,9 +104,9 @@ export class Tropy extends EventEmitter {
     shell.start()
   }
 
-  stop() {
+  async stop() {
     shell.stop()
-    this.api.stop()
+    await this.api.stop()
     this.updater.stop()
     this.plugins.stop()
     this.persist()
@@ -736,6 +736,16 @@ export class Tropy extends EventEmitter {
       this.emit('app:reload-menu')
     })
 
+    this.on('app:toggle-api', async () => {
+      info('toggling dev api...')
+      await this.api.stop()
+      this.state.api = !this.state.api
+      await this.api.start()
+      this.wm.broadcast('api', this.state.api)
+      this.emit('app:reload-menu')
+    })
+
+
     this.on('app:check-for-updates', () => {
       this.updater.check()
     })
@@ -1133,6 +1143,7 @@ export class Tropy extends EventEmitter {
 
   get hash() {
     return {
+      api: this.state.api,
       data: this.opts.data,
       debug: this.debug,
       dev: this.dev,

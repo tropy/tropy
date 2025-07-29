@@ -192,6 +192,9 @@ export class Window extends EventEmitter {
       .on('debug', (_, debug) => {
         this.setArgs({ debug })
       })
+      .on('api', (_, api) => {
+        this.setArgs({ api })
+      })
       .on('scrollbars', (_, scrollbars) => {
         this.setArgs({ scrollbars })
         this.setScrollBarStyle(scrollbars)
