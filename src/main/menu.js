@@ -265,8 +265,8 @@ export class ContextMenu extends Menu {
 
   scopes['item-bulk'] = [
     ...scopes.items,
-    'item-bulk-read-only',
     'item-bulk',
+    'item-bulk-read-only',
     'item-transcribe',
     'item-rotate']
   scopes['item-bulk'].position = 2
