@@ -90,9 +90,6 @@ export default function ({
           },
           loadPaths,
           style,
-          silenceDeprecations: [
-            'mixed-decls'
-          ],
           sourceMap: true,
           sourceMapIncludeSources: false
         })
