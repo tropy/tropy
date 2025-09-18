@@ -253,6 +253,6 @@ fieldset {
 :not(.checkbox) > [type="checkbox"],
 :not(.radio) > [type="radio"] {
   position: absolute;
-  clip: rect(0 0 0 0);
+  clip-path: rect(0 0 0 0);
   pointer-events: none;
 }
