@@ -76,7 +76,7 @@
 
   blockquote {
     padding-left: $blockquote-padding;
-    border-left: $blockquote-border solid rgb(0, 0, 0 / 0.1); // Use opacity instead of #e6e6e6 to ensure 100K black for entire note text
+    border-left: $blockquote-border solid rgba(0, 0, 0, 0.1); // Use opacity instead of #e6e6e6 to ensure 100K black for entire note text
   }
 
   ul,
