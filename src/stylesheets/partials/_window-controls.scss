@@ -114,24 +114,24 @@
         transition: background-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         background-color: if(
           $theme == "light",
-          rgba(0, 0, 0, 0.08),
-          rgba(255, 255, 255, 0.1)
+          rgb(0, 0, 0, 0.08),
+          rgb(255, 255, 255, 0.1)
         );
       }
 
       &:hover::before {
         background-color: if(
           $theme == "light",
-          rgba(0, 0, 0, 0.12),
-          rgba(255, 255, 255, 0.15)
+          rgb(0, 0, 0, 0.12),
+          rgb(255, 255, 255, 0.15)
         );
       }
 
       &:active::before {
         background-color: if(
           $theme == "light",
-          rgba(0, 0, 0, 0.24),
-          rgba(255, 255, 255, 0.3)
+          rgb(0, 0, 0, 0.24),
+          rgb(255, 255, 255, 0.3)
         );
       }
     }
@@ -165,8 +165,8 @@
       &:hover {
         background-color: if(
           $theme == "light",
-          rgba(0, 0, 0, 0.056),
-          rgba(255, 255, 255, 0.07)
+          rgb(0, 0, 0, 0.056),
+          rgb(255, 255, 255, 0.07)
         );
       }
 
@@ -174,8 +174,8 @@
       .window-controls-menu-open & {
         background-color: if(
           $theme == "light",
-          rgba(0, 0, 0, 0.128),
-          rgba(255, 255, 255, 0.16)
+          rgb(0, 0, 0, 0.128),
+          rgb(255, 255, 255, 0.16)
         );
       }
 
