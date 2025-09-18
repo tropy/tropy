@@ -434,7 +434,7 @@ export function create({ dispatch, log, rsvp, version }) {
     .delete('/project/items/:id/tags', project.tags.remove)
 
     .get('/project/lists/:id/items', project.items.find)
-    .get('/project/lists/:id?', project.lists.show)
+    .get('/project/lists{/:id}', project.lists.show)
 
     .post('/project/tags', project.tags.create)
     .delete('/project/tags', project.tags.delete)
