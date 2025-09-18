@@ -20,7 +20,6 @@ rules:
   property-no-vendor-prefix: null
   value-no-vendor-prefix: null
   keyframes-name-pattern: null
-  color-function-notation: "legacy"
   import-notation: "string"
 
   # stylelint-config-recommended-scss
