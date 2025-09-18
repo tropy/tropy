@@ -9,7 +9,7 @@ import {
   writeFile
 } from 'node:fs/promises'
 
-import { homedir } from 'node:os'
+import { homedir, release } from 'node:os'
 import { basename, extname, join, relative } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
@@ -42,6 +42,8 @@ const PLATFORM =
 
 const ELECTRON = join(ROOT, 'node_modules', 'electron', 'dist')
 
+const MACOS26 = process.platform === 'darwin' &&
+  Number(release().split('.', 1)) >= 26
 
 program
   .name('tropy-build')
@@ -171,7 +173,15 @@ export function configure({ arch, platform, out = join(ROOT, 'dist') }) {
       executableName = qualified.name
       break
     case 'darwin':
-      icon = join(ROOT, 'res', 'icons', channel, `${name}.icns`)
+
+      if (MACOS26) {
+        icon = [
+          join(ROOT, 'res', 'icons', channel, `${name}.icns`),
+          join(ROOT, 'res', 'icons', channel, `${name}.icon`)
+        ]
+      } else {
+        icon = join(ROOT, 'res', 'icons', channel, `${name}.icns`)
+      }
       extraResource.push(icon)
       extraResource.push(join(ICONS, 'mime', 'mtpy.icns'))
       extraResource.push(join(ICONS, 'mime', 'tpy.icns'))

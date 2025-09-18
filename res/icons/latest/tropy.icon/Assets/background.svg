@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" data-name="Ebene_1" xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="b" data-name="Unbenannter Verlauf 11" x1="512" y1="-1405.515" x2="512" y2="2419.805" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#68c1e8"/>
+      <stop offset=".5" stop-color="#5c93e5"/>
+      <stop offset="1" stop-color="#395bac"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="1024" height="1024" fill="url(#b)"/>
+</svg>
