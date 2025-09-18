@@ -383,7 +383,10 @@ export class Tropy extends EventEmitter {
         return
       }
 
-      var win = await this.wm.open('print', this.hash)
+      var win = await this.wm.open('print', {
+        ...this.hash,
+        frameless: false
+      })
 
       await Promise.race([
         once(win, 'ready', 'react:ready'),
