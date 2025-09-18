@@ -30,7 +30,7 @@ body {
 
 .container {
   display: flex;
-  page-break-after: always;
+  break-after: page;
   height: 100vh;
   overflow: hidden;
 
