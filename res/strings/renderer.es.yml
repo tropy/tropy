@@ -104,7 +104,6 @@ es:
           tpy: Vincula con fotos en su ubicación original
           managed: Copia fotos a la carpeta del proyecto al importar.
       create: Crear proyecto
-      eyeCatcher: Nuevo
     stats:
       photos: |-
         {photos, plural,
@@ -176,6 +175,7 @@ es:
         label: Utilizar el nombre del archivo como
         force: Sobreescribir los metadatos de foto incorporados
       debug: Activar el modo de desarrollo
+      api: Enable Developer API
       localtime: Suponer que la marca de hora de las fotos usa la hora local
       dup:
         label: Durante la importación
@@ -316,7 +316,7 @@ es:
     overlay:
       full: Show full text overlay
       split: Show split-view text overlay
-      versions: Toggle transcription version history
+      panel: Toggle transcription version history
     panel:
       negative: Invertir colores
       revert: Revertir al original
@@ -628,8 +628,14 @@ es:
       sinkListItem: Descender elemento
       liftListItem: Elevar elemento
   transcription:
-    error: Transcription Error
+    error: Transcription failed
+    retry: Try Again
     pending: Transcription pending…
+    title: |-
+      {name, select,
+        true {{name}}
+        other {Transcription}
+      }
   error:
     cache:
       prune: Falla al optimizar la cache memoria del proyecto.

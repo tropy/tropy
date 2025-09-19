@@ -111,7 +111,6 @@ it:
           tpy: Collegamenti alle foto nella loro posizione originale.
           managed: Copia le foto nella cartella del progetto durante l'importazione.
       create: Crea progetto
-      eyeCatcher: Nuovo
     stats:
       photos: |-
         {photos, plural,
@@ -183,6 +182,7 @@ it:
         label: Importa nome di file come
         force: Sovrascrivi i metatadata inclusi nella foto
       debug: Abilita la modalità sviluppatore
+      api: Enable Developer API
       localtime: >-
         Considera che data e ora inclusi nei dati EXIF usano il fuso orario
         locale
@@ -328,7 +328,7 @@ it:
     overlay:
       full: Mostra sovrapposizione testo completo
       split: Mostra sovrapposizione testo a vista divisa
-      versions: Toggle transcription version history
+      panel: Toggle transcription version history
     panel:
       negative: Inverti i colori
       revert: Ripristina l'originale
@@ -653,8 +653,14 @@ it:
       sinkListItem: Abbassa di livello elemento della lista
       liftListItem: Alza di livello elemento della lista
   transcription:
-    error: Errore di trascrizione
+    error: Transcription failed
+    retry: Try Again
     pending: Trascrizione in attesa…
+    title: |-
+      {name, select,
+        true {{name}}
+        other {Transcription}
+      }
   error:
     cache:
       prune: Ottimizzazione della cache di progetto non riuscita.

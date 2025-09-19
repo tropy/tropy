@@ -106,7 +106,6 @@ ja:
           tpy: 元の場所にある写真とリンクする
           managed: インポート時にプロジェクトフォルダに写真をコピーする
       create: プロジェクトを作成
-      eyeCatcher: 新規
     stats:
       photos: |-
         {photos, plural,
@@ -178,6 +177,7 @@ ja:
         label: 写真のファイル名へ反映する
         force: 写真のメタデータに上書きする
       debug: デベロッパーモード
+      api: Enable Developer API
       localtime: メタデータにローカルタイムを設定する
       dup:
         label: インポート時に
@@ -323,7 +323,7 @@ ja:
     overlay:
       full: Show full text overlay
       split: Show split-view text overlay
-      versions: Toggle transcription version history
+      panel: Toggle transcription version history
     panel:
       negative: 色を反転する
       revert: 最初の状態に戻す
@@ -633,8 +633,14 @@ ja:
       sinkListItem: インデントを増やす
       liftListItem: インデントを減らす
   transcription:
-    error: Transcription Error
+    error: Transcription failed
+    retry: Try Again
     pending: Transcription pending…
+    title: |-
+      {name, select,
+        true {{name}}
+        other {Transcription}
+      }
   error:
     cache:
       prune: プロジェクトのキャッシュの最適化に失敗しました

@@ -4,7 +4,7 @@ pt-BR:
     tags: Etiquetas
     imports: Última Importação
     trash: Itens Apagados
-    unlisted: Unlisted Items
+    unlisted: Itens não listados
   toolbar:
     import: Importar Fotos
     items: >-
@@ -49,10 +49,8 @@ pt-BR:
     c2dh:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
-    text: >-
-      Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
-      historical teaching resources, digital exhibits, and open-source software.
-    trademark: The Tropy name is a registered trademark of {cds}.
+    text: "Tropy é mantido pelo {c2dh}\_ e pelo {rrchnm}, laboratórios que desenvolvem recursos para o ensino de história, exposições digitais e software de código aberto."
+    trademark: ' O nome Tropy é uma marca registrada de {cds}.'
     donate:
       title: Doações ao Tropy
       url: https://tropy.org/donate
@@ -94,7 +92,6 @@ pt-BR:
           tpy: Links para fotos em seu local original.
           managed: Copia fotos para a pasta do projeto na importação.
       create: Criar Projeto
-      eyeCatcher: Novo
     stats:
       photos: '{photos, plural, =0 {Nenhuma foto} one {1 foto} other {# fotos}}'
       items: '{items, plural, =0 {Nenhum item} one {1 item} other {# items}}'
@@ -117,7 +114,7 @@ pt-BR:
             14px: Médio
             15px: Grande
             16px: Muito Grande
-        frameless: Use custom titlebar (requires restart)
+        frameless: ' Usar barra de título personalizada (requer reinicialização)'
       print:
         mode: Imprimir
         modes:
@@ -125,7 +122,7 @@ pt-BR:
           photo: Uma Foto por Página
           selection: Uma Seleção por Página
         photos: Incluir fotos
-        optimize: Optimize photo size and quality
+        optimize: Otimizar tamanho e qualidade da foto
         metadata: Incluir metadados
         notes: Incluir notas
         onlyNotes: Incluir apenas fotos com notas.
@@ -140,11 +137,11 @@ pt-BR:
           fr: Français
           it: Italiano
           ja: 日本語
-          nl-NL: Nederlands
+          nl-NL: Holandês
           pt: Português
           pt-BR: Português brasileiro
-          ru: русский
-          uk: Украї́нська мо́ва
+          ru: Russo
+          uk: Ucraniano
       templates:
         label: Modelos padrão
         item: Item
@@ -154,6 +151,7 @@ pt-BR:
         label: Importar nome do arquivo como
         force: Substituir metadados incluídos na foto
       debug: Ativar Modo Desenvolvedor
+      api: Enable Developer API
       localtime: Presumir que os timestamps Exif utilizam fuso horário local
       dup:
         label: Durante importação
@@ -211,15 +209,17 @@ pt-BR:
       name: Nome
       id: ID
       path: Arquivo
-      type: Project type
+      type: Tipo de projeto
       convert:
-        confirm: Convert
-        hint: Convert this project into a Standard project.
+        confirm: Converter
+        hint: Converter este projeto em tipo Padrão
         detail: |-
           {errors, plural,
-            =0 {All photos consolidated.}
-            one {1 photo not found; consolidation required.}
-            other {# photos not found; consolidation required.}}
+          =0 {Todas as fotos consolidadas.}
+
+          one {1 foto não encontrada; consolidação necessária.}
+
+          other {# fotos não encontradas; consolidação necessária.}}
       watch:
         folder: Pasta Monitorada
         usePolling: Usando pesquisa de estatísticas de arquivo
@@ -254,7 +254,7 @@ pt-BR:
       noInfo: Autor desconhecido
       homepage: Mais
   format:
-    ppi: Pixels per inch (ppi)
+    ppi: Pixels por polegada (ppi)
   item:
     created: Data de adição
     modified: Modificado
@@ -273,8 +273,8 @@ pt-BR:
     created: Data de adição
     modified: Modificado
   settings:
-    maximize: Maximize this view
-    unmaximize: Restore previous view size
+    maximize: ' Maximizar esta visualização'
+    unmaximize: Restaurar visualização anterior
   esper:
     tool:
       pan: Ferramenta de Deslizamento
@@ -287,9 +287,9 @@ pt-BR:
       fit: Ajustar
       zoom: Zoom
     overlay:
-      full: Show full text overlay
-      split: Show split-view text overlay
-      versions: Toggle transcription version history
+      full: ' Exibir sobreposição de texto completa'
+      split: ' Exibir sobreposição de texto em visão dividida'
+      panel: ' Ativar/desativar histórico de versões da transcrição'
     panel:
       negative: Inverter cores
       revert: Reverter para Original
@@ -358,11 +358,11 @@ pt-BR:
     notify:
       project:
         convert:
-          title: Conversion complete
+          title: Conversão concluída
           message: >-
-            Your project was successfully converted and saved. Tropy will now
-            close the original project file and open the converted project in a
-            new window.
+            Seu projeto foi convertido e salvo com sucesso. O Tropy fechará o
+            arquivo do projeto original e abrirá o projeto convertido em uma
+            nova janela.
           buttons:
             - OK
     error:
@@ -556,8 +556,8 @@ pt-BR:
         {total, number} …} other {Duplicando fotos …}}
       transcribe: |-
         {hasProgressBar, select,
-          true {Transcribing photo {progress, number} of {total, number} …}
-          other {Transcribing photos …}
+        true {Transcrevendo foto {progress, number} de {total, number} …}
+        other {Transcrevendo fotos …}
         }
       load: Carregando fotos...
       move: Movendo fotos...
@@ -603,15 +603,21 @@ pt-BR:
       sinkListItem: Deslocar item da lista para baixo
       liftListItem: Deslocar item da lista para cima
   transcription:
-    error: Transcription Error
-    pending: Transcription pending…
+    error: Falha na transcrição
+    retry: Tentar novamente
+    pending: Transcrição pendente...
+    title: |-
+      {name, select,
+      true {{name}}
+      other {Transcrição}
+      }
   error:
     cache:
       prune: Falha ao otimizar cache do projeto.
       purge: Falha ao remover caches de projeto antigos.
     project:
       created: Falha ao criar o projeto.
-      convert: Project conversion failed.
+      convert: Falha na conversão do projeto.
     item:
       export: Falha ao exportar itens.
       merge: Falha ao combinar itens.

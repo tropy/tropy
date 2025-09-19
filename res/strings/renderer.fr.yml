@@ -110,7 +110,6 @@ fr:
           tpy: Links to photos at their original location.
           managed: Copies photos to project folder on import.
       create: Create Project
-      eyeCatcher: Nouveau
     stats:
       photos: |-
         {photos, plural,
@@ -182,6 +181,7 @@ fr:
         label: Utiliser le nom de fichier comme
         force: Écraser les métadonnées de photo incorporées
       debug: Autoriser le mode développeur
+      api: Enable Developer API
       localtime: Présupposer que les métadonnées des images utilisent l'heure locale.
       dup:
         label: Durant l'import
@@ -327,7 +327,7 @@ fr:
     overlay:
       full: Show full text overlay
       split: Show split-view text overlay
-      versions: Toggle transcription version history
+      panel: Toggle transcription version history
     panel:
       negative: Inverser les couleurs
       revert: Réinitialiser les ajustements
@@ -649,8 +649,14 @@ fr:
       sinkListItem: Augmenter le retrait
       liftListItem: Réduire le retrait
   transcription:
-    error: Transcription Error
+    error: Transcription failed
+    retry: Try Again
     pending: Transcription pending…
+    title: |-
+      {name, select,
+        true {{name}}
+        other {Transcription}
+      }
   error:
     cache:
       prune: Échec de l'optimisation du cache du projet

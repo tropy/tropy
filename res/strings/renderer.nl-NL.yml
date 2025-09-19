@@ -109,7 +109,6 @@ nl-NL:
           tpy: Koppelt foto's aan hun oorspronkelijke locatie.
           managed: Kopieert foto's naar de projectmap na het importeren ervan.
       create: Project aanmaken
-      eyeCatcher: Nieuw
     stats:
       photos: |-
         {count, plural,
@@ -170,7 +169,7 @@ nl-NL:
           nl-NL: Nederlands
           pt: Português
           pt-BR: Português brasileiro
-          ru: русский
+          ru: Russisch
           uk: Украї́нська мо́ва
       templates:
         label: Standaardsjablonen
@@ -181,6 +180,7 @@ nl-NL:
         label: Bestandsnaam importeren al
         force: Ingesloten metagegevens overschrijven
       debug: Ontwikkelaarsmodus inschakelen
+      api: Ontwikkelaars-api inschakelen
       localtime: Exif-tijdstempels baseren op lokale tijdzone
       dup:
         label: Tijdens importeren
@@ -326,7 +326,7 @@ nl-NL:
     overlay:
       full: Volledige tekstlaag tonen
       split: Gesplitste tekstlaag tonen
-      versions: Transcriptie-versiegeschiedenis tonen/verbergen
+      panel: Transcriptie-versiegeschiedenis tonen/verbergen
     panel:
       negative: Kleuren omkeren
       revert: Origineel herstellen
@@ -667,8 +667,14 @@ nl-NL:
       sinkListItem: Lijstitem omlaag
       liftListItem: Lijstitem omhoog
   transcription:
-    error: Transcriptiefout
+    error: De transcriptie is mislukt
+    retry: Opnieuw proberen
     pending: Bezig met verwerken van transcriptie…
+    title: |-
+      {name, select,
+      true {{name}}
+      other {Transcription}
+      }
   error:
     cache:
       prune: De projectcache kan niet worden geoptimaliseerd.

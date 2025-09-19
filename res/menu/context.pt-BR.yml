@@ -273,15 +273,15 @@ pt-BR:
       - label: Apagar Nota
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: Direção
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: Esquerda para Direita
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: Direita para Esquerda
             type: checkbox
             checked: false
             direction: rtl
@@ -357,10 +357,10 @@ pt-BR:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Transcrever itens selecionados
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Com Tropy
             command: app:transcribe-item
             enabled: false
     item-bulk:
@@ -410,17 +410,17 @@ pt-BR:
         command: app:open-path
       - label: Copiar Link da Foto
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: Exportar foto
         id: extract
         submenu:
-          - label: To File
+          - label: Para arquivo
             command: app:extract-photo
-          - label: To Clipboard
+          - label: Para área de transferência
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Transcrever foto
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Com Tropy
             command: app:transcribe-photo
             enabled: false
       - label: Consolidar Foto
@@ -771,15 +771,15 @@ pt-BR:
       - label: Apagar Nota
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: Direção
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: Esquerda para Direita
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: Direita para Esquerda
             type: checkbox
             checked: false
             direction: rtl
@@ -917,10 +917,10 @@ pt-BR:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Transcrever itens selecionados
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Com Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
@@ -952,17 +952,17 @@ pt-BR:
         command: app:open-path
       - label: Copiar Link da Foto
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: Exportar foto
         id: extract
         submenu:
-          - label: To File
+          - label: Para arquivo
             command: app:extract-photo
-          - label: To Clipboard
+          - label: Para área de transferência
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Transcrever foto
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Com Tropy
             command: app:transcribe-photo
             enabled: false
       - label: Consolidar Foto
@@ -1269,15 +1269,15 @@ pt-BR:
       - label: Apagar Nota
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: Direção
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: Esquerda para Direita
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: Direita para Esquerda
             type: checkbox
             checked: false
             direction: rtl
@@ -1415,10 +1415,10 @@ pt-BR:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Transcrever itens selecionados
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Com Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
@@ -1450,17 +1450,17 @@ pt-BR:
         command: app:open-path
       - label: Copiar Link da Foto
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: Exportar foto
         id: extract
         submenu:
-          - label: To File
+          - label: Para arquivo
             command: app:extract-photo
-          - label: To Clipboard
+          - label: Para área de transferência
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Foto transcrita
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Com Tropy
             command: app:transcribe-photo
             enabled: false
       - label: Consolidar Foto

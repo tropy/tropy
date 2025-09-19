@@ -186,13 +186,13 @@ pt-BR:
         - label: Licença do Software
           command: app:open-license
         - type: separator
-        - label: Mostrar Arquivos de Registro
+        - label: Exibir arquivos de log
           command: app:open-logs
-        - label: Mostrar Pasta de Plugins
+        - label: Exibir Pasta de Plugins
           command: app:open-plugins-folder
-        - label: Mostrar Pasta de Dados do Usuário
+        - label: Exibir Pasta de Dados do Usuário
           command: app:open-user-data
-        - label: Mostrar Pasta de Cache
+        - label: Exibir Pasta de Cache
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
@@ -419,13 +419,13 @@ pt-BR:
           command: app:open-license
         - type: separator
         - type: separator
-        - label: Mostrar Arquivos de Registro
+        - label: Exibir arquivos de log
           command: app:open-logs
-        - label: Mostrar Pasta de Plugins
+        - label: Exibir Pasta de Plugins
           command: app:open-plugins-folder
-        - label: Mostrar Pasta de Dados do Usuário
+        - label: Exibir Pasta de Dados do Usuário
           command: app:open-user-data
-        - label: Mostrar Pasta de Cache
+        - label: Exibir Pasta de Cache
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
@@ -627,11 +627,11 @@ pt-BR:
         - type: separator
         - label: Mostrar Arquivos de Registro
           command: app:open-logs
-        - label: Mostrar Pasta de Plugins
+        - label: Exibir Pasta de Plugins
           command: app:open-plugins-folder
-        - label: Mostrar Pasta de Dados do Usuário
+        - label: Exibir Pasta de Dados do Usuário
           command: app:open-user-data
-        - label: Mostrar Pasta de Cache
+        - label: Exibir Pasta de Cache
           command: app:open-cache-folder
         - type: separator
         - id: updater-check

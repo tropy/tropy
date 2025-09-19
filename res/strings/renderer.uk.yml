@@ -110,7 +110,6 @@ uk:
           tpy: Посилання на оригінальні фотографії в місці їх збереження.
           managed: Фотографії копіюються в папку проекту під час імпорту.
       create: Створити проєкт
-      eyeCatcher: Новий
     stats:
       photos: |-
         {photos, plural,
@@ -182,6 +181,7 @@ uk:
         label: Import file name as
         force: Overwrite embedded photo metadata
       debug: Enable Developer Mode
+      api: Enable Developer API
       localtime: Assume Exif timestamps use local timezone
       dup:
         label: During import
@@ -326,7 +326,7 @@ uk:
     overlay:
       full: Show full text overlay
       split: Show split-view text overlay
-      versions: Toggle transcription version history
+      panel: Toggle transcription version history
     panel:
       negative: Інвертувати кольори
       revert: Скинути до оригіналу
@@ -648,8 +648,14 @@ uk:
       sinkListItem: Sink list item
       liftListItem: Lift list item
   transcription:
-    error: Transcription Error
+    error: Transcription failed
+    retry: Try Again
     pending: Transcription pending…
+    title: |-
+      {name, select,
+        true {{name}}
+        other {Transcription}
+      }
   error:
     cache:
       prune: Не вдалося оптимізувати кеш проєкту.

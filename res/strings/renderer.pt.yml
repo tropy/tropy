@@ -94,7 +94,6 @@ pt:
           tpy: Links to photos at their original location.
           managed: Copies photos to project folder on import.
       create: Create Project
-      eyeCatcher: Novo
     stats:
       photos: |-
         {photos, plural,
@@ -166,6 +165,7 @@ pt:
         label: Importar nome do ficheiro como
         force: Substituir metadados incluídos na foto
       debug: Ativar Modo Programador
+      api: Enable Developer API
       localtime: Presumir que os timestamps Exif utilizam fuso horário local
       dup:
         label: Durante importação
@@ -301,7 +301,7 @@ pt:
     overlay:
       full: Show full text overlay
       split: Show split-view text overlay
-      versions: Toggle transcription version history
+      panel: Toggle transcription version history
     panel:
       negative: Inverter cores
       revert: Reverter para Original
@@ -615,8 +615,14 @@ pt:
       sinkListItem: Descer item na lista
       liftListItem: Subir item na lista
   transcription:
-    error: Transcription Error
+    error: Transcription failed
+    retry: Try Again
     pending: Transcription pending…
+    title: |-
+      {name, select,
+        true {{name}}
+        other {Transcription}
+      }
   error:
     cache:
       prune: Falhou a otimização da cache do projeto.

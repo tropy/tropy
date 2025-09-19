@@ -103,7 +103,6 @@ cn:
           tpy: 链接到原始位置的照片。
           managed: 在导入时将照片复制到库文件夹中。
       create: 新建库
-      eyeCatcher: 新建
     stats:
       photos: |-
         {photos, plural,
@@ -175,6 +174,7 @@ cn:
         label: 导入文件命名为
         force: 覆盖嵌入的照片元数据
       debug: 启用开发者模式
+      api: Enable Developer API
       localtime: 假设 Exif 时间戳使用本地时区
       dup:
         label: 导入设置
@@ -320,7 +320,7 @@ cn:
     overlay:
       full: 显示全文覆盖
       split: 显示分屏视图文本叠加
-      versions: 切换转录版本历史记录
+      panel: 切换转录版本历史记录
     panel:
       negative: 反色
       revert: 复原照片
@@ -629,8 +629,14 @@ cn:
       sinkListItem: 缩进
       liftListItem: 撤销缩进
   transcription:
-    error: 转录错误
+    error: Transcription failed
+    retry: Try Again
     pending: 正在转录…
+    title: |-
+      {name, select,
+        true {{name}}
+        other {Transcription}
+      }
   error:
     cache:
       prune: 优化缓存失败。
