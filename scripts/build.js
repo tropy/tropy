@@ -10,6 +10,7 @@ import {
 } from 'node:fs/promises'
 
 import { homedir, release } from 'node:os'
+import semver from 'semver'
 import { basename, extname, join, relative } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
@@ -43,7 +44,7 @@ const PLATFORM =
 const ELECTRON = join(ROOT, 'node_modules', 'electron', 'dist')
 
 const MACOS26 = process.platform === 'darwin' &&
-  Number(release().split('.', 1)) >= 26
+  semver.gte('25.0.0', release())
 
 program
   .name('tropy-build')
