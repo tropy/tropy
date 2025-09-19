@@ -64,27 +64,27 @@ export class OptionList extends React.Component {
   }
 
   next(...args) {
-    this.scroll.current.select(this.scroll.current.next(...args))
+    return this.scroll.current.select(this.scroll.current.next(...args))
   }
 
   prev(...args) {
-    this.scroll.current.select(this.scroll.current.prev(...args))
+    return this.scroll.current.select(this.scroll.current.prev(...args))
   }
 
   first() {
-    this.scroll.current.select(this.scroll.current.first())
+    return this.scroll.current.select(this.scroll.current.first())
   }
 
   last() {
-    this.scroll.current.select(this.scroll.current.last())
+    return this.scroll.current.select(this.scroll.current.last())
   }
 
   pageUp() {
-    this.scroll.current.select(this.scroll.current.pageUp())
+    return this.scroll.current.select(this.scroll.current.pageUp())
   }
 
   pageDown() {
-    this.scroll.current.select(this.scroll.current.pageDown())
+    return this.scroll.current.select(this.scroll.current.pageDown())
   }
 
   render() {
