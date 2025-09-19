@@ -47,10 +47,11 @@ export class Completions extends React.Component {
       props.toId,
       props.toText)
 
-    let active = (state.options === options) ?
-      state.active :
-        (!query.length && !props.isSelectionHidden) ?
-          props.selection.at(-1) : null
+    let active = (state.options === options)
+      ? state.active
+      : (!query.length && !props.isSelectionHidden)
+          ? props.selection.at(-1)
+          : null
 
     if (!active && !props.isAdvisory && options.length > 0) {
       active = options[0].id

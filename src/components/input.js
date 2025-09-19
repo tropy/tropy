@@ -175,14 +175,14 @@ export class Input extends React.PureComponent {
 
     switch (event.key) {
       case 'ArrowDown':
-        opt = event.altKey ?
-          completions.last() :
-          completions.next()
+        opt = event.altKey
+          ? completions.last()
+          : completions.next()
         break
       case 'ArrowUp':
-        opt = event.altKey ?
-          completions.first() :
-          completions.prev()
+        opt = event.altKey
+          ? completions.first()
+          : completions.prev()
         break
       case 'Home':
         opt = completions.first()
