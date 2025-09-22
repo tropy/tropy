@@ -43,9 +43,6 @@ const PLATFORM =
 
 const ELECTRON = join(ROOT, 'node_modules', 'electron', 'dist')
 
-const MACOS26 = process.platform === 'darwin' &&
-  semver.gte('25.0.0', release())
-
 program
   .name('tropy-build')
   .allowUnknownOption()
@@ -174,19 +171,19 @@ export function configure({ arch, platform, out = join(ROOT, 'dist') }) {
       executableName = qualified.name
       break
     case 'darwin':
+      icon = join(ICONS, channel, `${name}.icns`)
 
-      if (MACOS26) {
-        icon = [
-          join(ROOT, 'res', 'icons', channel, `${name}.icns`),
-          join(ROOT, 'res', 'icons', channel, `${name}.icon`)
-        ]
-      } else {
-        icon = join(ROOT, 'res', 'icons', channel, `${name}.icns`)
-      }
       extraResource.push(icon)
       extraResource.push(join(ICONS, 'mime', 'mtpy.icns'))
       extraResource.push(join(ICONS, 'mime', 'tpy.icns'))
       extraResource.push(join(ICONS, 'mime', 'ttp.icns'))
+
+      // macOS 26 (Darwin v25.0.0) support new .icon format
+      if (semver.gte('25.0.0', release())) {
+        icon = [icon, join(ICONS, channel, `${name}.icon`)]
+      }
+      say(`icon set to ${icon}`)
+      say(`release ${release()}`)
       break
     case 'win32':
       icon = join(ICONS, channel, `${name}.ico`)
