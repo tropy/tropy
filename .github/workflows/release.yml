@@ -45,7 +45,7 @@ jobs:
           - os: windows-2022
             platform: win32
             arch: ia32
-          - os: windows-latest
+          - os: windows-2022
             platform: win32
             arch: arm64
           - os: macos-13
