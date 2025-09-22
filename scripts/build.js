@@ -182,7 +182,7 @@ export function configure({ arch, platform, out = join(ROOT, 'dist') }) {
       if (semver.gte(release(), '25.0.0')) {
         icon = [
           icon,
-          join(ROOT, 'darwin', `${name}${channel === 'latest' ? '' : '-dev'}.icon`)
+          join(ROOT, 'res', 'darwin', `${name}${channel === 'latest' ? '' : '-dev'}.icon`)
         ]
       }
       break
