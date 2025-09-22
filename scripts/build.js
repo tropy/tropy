@@ -180,9 +180,11 @@ export function configure({ arch, platform, out = join(ROOT, 'dist') }) {
 
       // macOS 26 (Darwin v25.0.0) support new .icon format
       if (semver.gte(release(), '25.0.0')) {
-        icon = [icon, join(ICONS, channel, `${name}.icon`)]
+        icon = [
+          icon,
+          join(ICONS, `${name}${channel === 'latest' ? '' : '-dev'}.icon`)
+        ]
       }
-      say(`set icon to ${icon}. release is ${release()}`)
       break
     case 'win32':
       icon = join(ICONS, channel, `${name}.ico`)
