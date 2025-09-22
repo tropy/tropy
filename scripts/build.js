@@ -182,6 +182,7 @@ export function configure({ arch, platform, out = join(ROOT, 'dist') }) {
       if (semver.gte(release(), '25.0.0')) {
         icon = [icon, join(ICONS, channel, `${name}.icon`)]
       }
+      say(`set icon to ${icon}. release is ${release()}`)
       break
     case 'win32':
       icon = join(ICONS, channel, `${name}.ico`)
