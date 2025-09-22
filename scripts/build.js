@@ -179,11 +179,9 @@ export function configure({ arch, platform, out = join(ROOT, 'dist') }) {
       extraResource.push(join(ICONS, 'mime', 'ttp.icns'))
 
       // macOS 26 (Darwin v25.0.0) support new .icon format
-      if (semver.gte('25.0.0', release())) {
+      if (semver.gte(release(), '25.0.0')) {
         icon = [icon, join(ICONS, channel, `${name}.icon`)]
       }
-      say(`icon set to ${icon}`)
-      say(`release ${release()}`)
       break
     case 'win32':
       icon = join(ICONS, channel, `${name}.ico`)
