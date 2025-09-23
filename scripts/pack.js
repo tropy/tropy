@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { ROOT, ICONS, bail, check, say, setLogSymbol } from './util.js'
-import { join, relative } from 'node:path'
+import { basename, dirname, join, relative } from 'node:path'
 import { createHash } from 'node:crypto'
 import { readFile, writeFile } from 'node:fs/promises'
 import process from 'node:process'
@@ -104,11 +104,14 @@ program
 const exports = {
 
   bz2({ app, arch, out }) {
-    let output = join(out, `${name}-${version}-${arch}.tar.bz2`)
     check(which('tar'), 'missing dependency: tar')
 
+    let nva = `${name}-${version}-${arch}`
+    let output = join(out, `${nva}.tar.bz2`)
+    let base = basename(app)
+
     rm('-f', output)
-    exec(`tar cjf ${output} -C "${app}" .`)
+    exec(`tar cjf ${output} -C "${dirname(app)}" -s "/^${base}/${nva}/" "${base}"`)
 
     return [output]
   },
