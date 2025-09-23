@@ -9,12 +9,10 @@ rules:
   function-no-unknown: null
   selector-pseudo-element-no-unknown: [true, { ignorePseudoElements: ["-webkit"] }]
   no-descending-specificity: null
-  at-rule-prelude-no-invalid: null
 
   # stylelint-config-standard
   at-rule-empty-line-before: [null, { except: first-nested }]
   declaration-empty-line-before: null
-  declaration-property-value-no-unknown: null
   alpha-value-notation: "number"
   selector-no-vendor-prefix: null
   property-no-vendor-prefix: null
