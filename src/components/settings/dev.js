@@ -18,12 +18,14 @@ export function DeveloperSettings() {
       <FormToggle
         id="prefs.app.debug"
         name="debug"
+        isCompact
         isDisabled={dev}
         value={debug}
         onChange={handleDebugChange}/>
       <FormToggle
         id="prefs.app.api"
         name="api"
+        isCompact
         value={api}
         onChange={handleApiChange}/>
     </>
