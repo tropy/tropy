@@ -1,4 +1,7 @@
+import { join } from 'node:path'
+import { existsSync as exists } from 'node:fs'
 import { useEffect, useRef, useState } from 'react'
+import { useArgs } from '../hooks/use-args.js'
 import { useEvent } from '../hooks/use-event.js'
 import { useTheme } from '../hooks/use-theme.js'
 import { on, off, stylesheet, toggle } from '../dom.js'
@@ -18,6 +21,7 @@ export function Frame({
   let frame = useRef()
   let [doc, setDoc] = useState()
   let { theme, scrollbars } = useTheme()
+  let userData = useArgs('data')
 
   let handleClick = useEvent((event) => {
     onClick?.(event)
@@ -72,12 +76,19 @@ export function Frame({
 
       if (styleSheet) {
         let href = StyleSheet.expand(styleSheet, theme)
-        nodes.push(stylesheet(href))
+
+        nodes.push(
+          stylesheet(href),
+          ...([
+            join(userData, `${styleSheet}.css`),
+            join(userData, `${styleSheet}-${theme}.css`)
+          ].filter(exists).map(stylesheet))
+        )
       }
 
       doc.head.replaceChildren(...nodes)
     }
-  }, [doc, styleSheet, theme])
+  }, [doc, userData, styleSheet, theme])
 
   useEffect(() => {
     if (doc != null) {
