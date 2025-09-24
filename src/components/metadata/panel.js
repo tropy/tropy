@@ -130,9 +130,9 @@ class MetadataPanel extends React.PureComponent {
 
   handleContextMenu(event, data = {}) {
     if (!this.props.isDisabled) {
-      let id = (data.type === 'item') ?
-        this.props.items.map(it => it.id) :
-          [this.props?.[data.type]?.id]
+      let id = (data.type === 'item')
+        ? this.props.items.map(it => it.id)
+        : [this.props?.[data.type]?.id]
 
       let context = data.property ?
         'metadata-field' : 'metadata-list'
