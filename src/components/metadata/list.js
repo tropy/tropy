@@ -22,9 +22,9 @@ export class MetadataList extends React.PureComponent {
 
   indexOf(id) {
     const { fields } = this.props
-    return (fields.idx != null) ?
-      fields.idx[id] :
-      fields.findIndex(f => f.property.id === id)
+    return (fields.idx != null)
+      ? fields.idx[id]
+      : fields.findIndex(f => f.property.id === id)
   }
 
   first() {
