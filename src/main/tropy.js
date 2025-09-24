@@ -400,7 +400,7 @@ export class Tropy extends EventEmitter {
 
       await Promise.race([
         once(win, 'print:ready'),
-        delay(60000)
+        delay(180_000)
       ])
 
       if (opts.pdf) {
