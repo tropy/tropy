@@ -1184,7 +1184,7 @@ export class Tropy extends EventEmitter {
     this.wm.broadcast('theme', theme, {
       dark: nativeTheme.shouldUseDarkColors,
       contrast: nativeTheme.shouldUseHighContrastColors,
-      vibrancy: !nativeTheme.prefersReducedTransparency
+      vibrancy: false // !nativeTheme.prefersReducedTransparency
     })
 
     this.menu.handleThemeChange()
