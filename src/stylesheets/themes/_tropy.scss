@@ -12,10 +12,10 @@
 // --------------------------------------------------
 
 :root {
-  --primary:          #5c93e5;             // Blue
-  --primary-overlay:  #1770e5;             // Blue Overlay
-  --primary-vibrancy: rgba(#1770e5 / 0.7); // Blue Vibrancy
-  --primary-light:    #cedef7;             // Blue Light
+  --primary:          #5c93e5;               // Blue
+  --primary-overlay:  #1770e5;               // Blue Overlay
+  --primary-vibrancy: #{rgba(#1770e5, 0.7)}; // Blue Vibrancy
+  --primary-light:    #cedef7;               // Blue Light
   --red:              #e62e2e;
   --green:            #39bf68;
 }
@@ -515,13 +515,13 @@ $donate-btn-color: $body-bg;
 // --------------------------------------------------
 
 :root {
-  --primary:          #395bac;            // Blue
-  --primary-overlay:  #4176f2;            // Blue Overlay
-  --primary-vibrancy: rgba(#4176f2, 0.7); // Blue Vibrancy, 2% brighter than Blue Dark on original bg
-  --primary-dark:     #171b2e;            // Blue Dark
-  --primary-light:    #cedef7;            // Blue Light
+  --primary:          #395bac;               // Blue
+  --primary-overlay:  #4176f2;               // Blue Overlay
+  --primary-vibrancy: #{rgba(#4176f2, 0.7)}; // Blue Vibrancy, 2% brighter than Blue Dark on original bg
+  --primary-dark:     #171b2e;               // Blue Dark
+  --primary-light:    #cedef7;               // Blue Light
   --red:              #e62e2e;
-  --green:            #328e52;            // 64% of the light theme green + 7% saturation
+  --green:            #328e52;               // 64% of the light theme green + 7% saturation
 }
 
 
