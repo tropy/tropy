@@ -38,26 +38,24 @@ const collect = transformer((data, [key, value]) => {
 
 const skipId = filter(kv => kv[0] !== 'id')
 
-const getMetadata = ({ metadata }) => metadata
+const collectMetadata = (metadata, ids) =>
+  seq(
+    transduce(
+      ids,
+      compose(map(id => metadata[id]), keep(), cat, skipId),
+      collect,
+      { id: ids }),
+    map(([key, value]) => {
+      if (key !== 'id') {
+        value.mixed = value.count !== ids.length
+      }
+      return [key, value]
+    }))
 
 export const getItemMetadata = memo(
-  getMetadata,
+  ({ metadata }) => metadata,
   ({ nav }) => (nav.items),
-
-  (metadata, items) =>
-    seq(
-      transduce(
-        items,
-        compose(map(id => metadata[id]), keep(), cat, skipId),
-        collect,
-        { id: items }),
-      map(([key, value]) => {
-        if (key !== 'id') {
-          value.mixed = value.count !== items.length
-        }
-
-        return [key, value]
-      }))
+  collectMetadata
 )
 
 export const getVisibleMetadata = memo(
@@ -128,15 +126,15 @@ export const getItemFields = memo(
 )
 
 const getPhotoMetadata = memo(
-  getMetadata,
+  ({ metadata }) => metadata,
   ({ nav }) => nav.photo,
-  (metadata, id) => metadata[id] || { id }
+  (metadata, id) => id ? collectMetadata(metadata, [id]) : null
 )
 
 const getSelectionMetadata = memo(
-  getMetadata,
+  ({ metadata }) => metadata,
   ({ nav }) => nav.selection,
-  (metadata, id) => metadata[id] || { id }
+  (metadata, id) => id ? collectMetadata(metadata, [id]) : null
 )
 
 export const getPhotoFields = memo(
@@ -168,7 +166,7 @@ const makeCompletionFilter = (prop, datatype, byProp) =>
       ([id, v]) => id !== 'id' && isCompletable(v, datatype)
 
 export const getMetadataCompletions = memo(
-  getMetadata,
+  ({ metadata }) => metadata,
   (_, { property }) => property,
   (_, { type }) => type,
   (_, { isDisabled }) => isDisabled,
