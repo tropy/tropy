@@ -37,7 +37,7 @@ import { Storage } from './storage.js'
 import { Updater } from './updater.js'
 import dialog from './dialog.js'
 import { Server as ApiServer } from './api.js'
-import { WindowManager } from './wm.js'
+import { WindowManager, getPath } from './wm.js'
 import * as shell from './shell.js'
 import { addIdleObserver } from './idle.js'
 import { migrate } from './migrate.js'
@@ -829,7 +829,7 @@ export class Tropy extends EventEmitter {
     this.on('app:install-plugin', (win) => {
       dialog
         .open(win, {
-          defaultPath: app.getPath('downloads'),
+          defaultPath: getPath('downloads', 'home'),
           filters: [{
             name: this.dict.dialog.file.plugin,
             extensions: Plugins.ext

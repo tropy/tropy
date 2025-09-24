@@ -380,8 +380,8 @@ export class WindowManager extends EventEmitter {
     let props = {
       app: Resource.base,
       env: process.env.NODE_ENV,
-      documents: app.getPath('documents'),
-      pictures: app.getPath('pictures'),
+      documents: getPath('documents', 'home'),
+      pictures: getPath('pictures', 'home'),
       theme: 'light',
       aqua: WindowManager.getAquaColorVariant(),
       contrast: nativeTheme.shouldUseHighContrastColors,
@@ -838,4 +838,15 @@ function setWindowState(win, event, setter = event, ...args) {
   let p = when(win, event, 2000)
   win[setter](...args)
   return p
+}
+
+export function getPath(name, fallback) {
+  try {
+    return app.getPath(name)
+  } catch (err) {
+    if (fallback) {
+      return getPath(name)
+    }
+    throw err
+  }
 }
