@@ -11,7 +11,7 @@
   border-radius: $border-radius-base;
   overflow: hidden;
 
-  .nested-tab-focus & {
+  :focus-visible & {
     background-color: $tab-nested-focus-bg;
   }
 
@@ -35,7 +35,7 @@
       box-shadow: 0 0 0 $input-border-width $tab-selected-border-color;
       position: relative;
 
-      .nested-tab-focus & {
+      :focus-visible & {
         background-color: $tab-nested-focus-selected-bg;
         box-shadow: 0 0 0 $input-border-width $tab-nested-focus-selected-border-color;
       }

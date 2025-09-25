@@ -6,7 +6,7 @@
 
 .item-panel-group {
   .panel-group-header {
-    .item-panel-group:has(.item-panel.nested-tab-focus) :is(&) {
+    .item-panel-group:has(.item-panel:focus-visible) :is(&) {
       background-color: $panel-focus-bg;
     }
 

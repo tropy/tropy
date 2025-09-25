@@ -18,7 +18,7 @@
     margin-bottom: calc(($metadata-line-height - 10px) / 2); // 10px: Caps height
     border-bottom: 1px solid $panel-separator-color;
 
-    .nested-tab-focus & {
+    :focus-visible & {
       border-bottom-color: $panel-nested-focus-separator-color;
     }
   }
@@ -27,7 +27,7 @@
     margin-top: 9px; // Visual spacing of following headings
   }
 
-  .nested-tab-focus & {
+  :focus-visible & {
     color: $panel-nested-focus-heading-color;
   }
 }
@@ -65,7 +65,7 @@
       margin-left: $default-spacing-x;
     }
 
-    .nested-tab-focus & {
+    :focus-visible & {
       background-color: $template-select-nested-focus-bg;
       border-color: $template-select-nested-focus-border;
     }
