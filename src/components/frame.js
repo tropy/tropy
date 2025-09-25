@@ -16,7 +16,8 @@ export function Frame({
   onLoad,
   onUnload,
   srcDoc = '<!DOCTYPE html><html><head></head><body></body></html>',
-  styleSheet
+  styleSheet,
+  tabIndex
 }) {
   let frame = useRef()
   let [doc, setDoc] = useState()
@@ -109,6 +110,7 @@ export function Frame({
       className={className}
       onLoad={handleLoad}
       sandbox="allow-same-origin"
-      srcDoc={srcDoc}/>
+      srcDoc={srcDoc}
+      tabIndex={tabIndex}/>
   )
 }
