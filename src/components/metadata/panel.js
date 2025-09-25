@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { MetadataList } from './list.js'
 import { MetadataSection } from './section.js'
+import { ScrollContainer } from '../scroll/container.js'
 import { PhotoInfo } from '../photo/info.js'
 import { ItemInfo } from '../item/info.js'
 import { SelectionInfo } from '../selection/info.js'
@@ -223,11 +224,11 @@ class MetadataPanel extends React.PureComponent {
 
   render() {
     return (
-      <div className="scroll-container">
+      <ScrollContainer>
         {this.renderItemFields()}
         {this.renderPhotoFields()}
         {this.renderSelectionFields()}
-      </div>
+      </ScrollContainer>
     )
   }
 }
