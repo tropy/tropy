@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useArgs } from '../hooks/use-args.js'
 import { useEvent } from '../hooks/use-event.js'
 import { useTheme } from '../hooks/use-theme.js'
+import { useWindow } from '../hooks/use-window.js'
 import { on, off, stylesheet, toggle } from '../dom.js'
 import { StyleSheet } from '../res.js'
 
@@ -19,6 +20,7 @@ export function Frame({
   styleSheet,
   tabIndex
 }) {
+  let win = useWindow()
   let frame = useRef()
   let [doc, setDoc] = useState()
   let { theme, scrollbars } = useTheme()
@@ -33,14 +35,20 @@ export function Frame({
   })
 
   let handleLoad = useEvent(() => {
-    let win = frame.current.contentWindow
     setDoc(frame.current.contentDocument)
-    on(win, 'unload', () => {
+    on(frame.current.contentWindow, 'unload', () => {
       setDoc(null)
     }, { once: true })
   })
 
   useEffect(() => {
+    let handleKeyDown = (event) => {
+      checkModKeys(event)
+      if (event.key === 'Tab' && !event.defaultPrevented) {
+        win.onTabKey()
+      }
+    }
+
     let checkModKeys = (event) => {
       toggle(doc.documentElement, 'ctrl-key', event.ctrlKey === true)
       toggle(doc.documentElement, 'meta-key', event.metaKey === true)
@@ -52,7 +60,7 @@ export function Frame({
       on(doc.body, 'click', handleClick)
       on(document, 'keydown', checkModKeys, { passive: true, capture: true })
       on(document, 'keyup', checkModKeys, { passive: true, capture: true })
-      on(doc, 'keydown', checkModKeys, { passive: true, capture: true })
+      on(doc, 'keydown', handleKeyDown, { passive: true, capture: true })
       on(doc, 'keyup', checkModKeys, { passive: true, capture: true })
       on(doc, 'blur', checkModKeys, { passive: true })
 
@@ -61,14 +69,14 @@ export function Frame({
         off(doc.body, 'click', handleClick)
         off(document, 'keydown', checkModKeys, { passive: true, capture: true })
         off(document, 'keyup', checkModKeys, { passive: true, capture: true })
-        off(doc, 'keydown', checkModKeys, { passive: true, capture: true })
+        off(doc, 'keydown', handleKeyDown, { passive: true, capture: true })
         off(doc, 'keyup', checkModKeys, { passive: true, capture: true })
         off(doc, 'blur', checkModKeys, { passive: true })
 
         onUnload?.()
       }
     }
-  }, [doc, handleClick, handleContextMenu, onLoad, onUnload])
+  }, [win, doc, handleClick, handleContextMenu, onLoad, onUnload])
 
 
   useEffect(() => {

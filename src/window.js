@@ -251,30 +251,35 @@ export class Window extends EventEmitter {
     })
   }
 
+  onTabKey = () => {
+    console.log('tab')
+    const onTabFocus = ({ target }) => {
+      try {
+        if (target != null) {
+          emit(target, 'tab:focus')
+        }
+      } finally {
+        clearTimeout(tm)
+        offTabFocus()
+      }
+    }
+
+    const offTabFocus = () => {
+      off(document.body, 'focusin', onTabFocus)
+    }
+
+    const tm = setTimeout(() => {
+      // Hit a tab 'gap' or focus moved into iframe!
+      offTabFocus()
+    }, 50)
+
+    on(document.body, 'focusin', onTabFocus)
+  }
+
   handleTabFocus() {
     on(document, 'keydown', event => {
       if (event.key === 'Tab' && !event.defaultPrevented) {
-        const onTabFocus = ({ target }) => {
-          try {
-            if (target != null) {
-              emit(target, 'tab:focus')
-            }
-          } finally {
-            clearTimeout(tm)
-            offTabFocus()
-          }
-        }
-
-        const offTabFocus = () => {
-          off(document.body, 'focusin', onTabFocus)
-        }
-
-        const tm = setTimeout(() => {
-          // Hit the tab 'gap'! Forward to first tab index?
-          offTabFocus()
-        }, 50)
-
-        on(document.body, 'focusin', onTabFocus)
+        this.onTabKey()
       }
     }, { passive: true })
   }
