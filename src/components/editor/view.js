@@ -23,6 +23,7 @@ export const EditorView = forwardRef(({
   onKeyDown,
   placeholder,
   state,
+  tabIndex,
   wrap = true
 }, ref) => {
   let [view, setView] = useState()
@@ -112,6 +113,7 @@ export const EditorView = forwardRef(({
       onContextMenu={onContextMenu}
       onLoad={handleLoad}
       onUnload={handleUnload}
-      styleSheet="editor"/>
+      styleSheet="editor"
+      tabIndex={tabIndex}/>
   )
 })

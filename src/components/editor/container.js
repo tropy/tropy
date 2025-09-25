@@ -132,7 +132,6 @@ export const Editor = React.forwardRef(({
     <div
       ref={container}
       className={cx('editor', { 'is-blurred': !hasViewFocus })}
-      tabIndex={isDisabled ? -1 : tabIndex}
       onContextMenu={onContextMenu}
       onFocus={handleContainerFocus}>
       <EditorToolbar
@@ -153,6 +152,7 @@ export const Editor = React.forwardRef(({
         mode={mode}
         numbers={numbers}
         placeholder={placeholder}
+        tabIndex={isDisabled ? -1 : tabIndex}
         wrap={wrap}
         onFocus={handleViewFocus}
         onBlur={handleViewBlur}
