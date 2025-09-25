@@ -252,7 +252,6 @@ export class Window extends EventEmitter {
   }
 
   onTabKey = () => {
-    console.log('tab')
     const onTabFocus = ({ target }) => {
       try {
         if (target != null) {
