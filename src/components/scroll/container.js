@@ -133,7 +133,7 @@ export class ScrollContainer extends React.Component {
         onBlur={this.props.onBlur}
         onClick={this.props.onClick && this.handleClick}
         onKeyDown={this.props.tabIndex && this.props.onKeyDown}
-        tabIndex={this.props.tabIndex}>
+        tabIndex={this.props.tabIndex ?? -1}>
         {this.props.children}
       </div>
     )
