@@ -14,8 +14,9 @@ export class TagList extends React.PureComponent {
   }
 
   get color() {
-    return (this.props.color === 'random') ?
-      sample(this.props.colors) : this.props.color
+    return (this.props.color === 'random')
+      ? sample(this.props.colors)
+      : this.props.color
   }
 
   isEditing(tag) {
