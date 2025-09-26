@@ -79,7 +79,6 @@ export class Plugins extends EventEmitter {
 
       } catch (e) {
         warn({ stack: e.stack }, `failed to create plugin ${plugin} "${name}"`)
-        console.log(e.stack)
       }
     }
 
