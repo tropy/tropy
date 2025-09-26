@@ -3,7 +3,8 @@ import cx from 'classnames'
 import { Icon } from '../icons.js'
 
 export const TranscriptionIcon = ({
-  id
+  id,
+  overlay = false
 }) => {
   let status = useSelector(state =>
     state.transcriptions[id]?.status)
@@ -13,12 +14,16 @@ export const TranscriptionIcon = ({
 
   if (status < 0)
     return (
-      <Icon name="TranscriptionFailed"/>
+      <Icon name={
+        `TranscriptionFailed${overlay ? 'Overlay' : ''}`
+      }/>
     )
 
   return (
     <Icon
-      name="Transcription"
+      name={
+        `Transcription${overlay ? 'Overlay' : ''}`
+      }
       className={cx({
         pending: status === 0
       })}/>
