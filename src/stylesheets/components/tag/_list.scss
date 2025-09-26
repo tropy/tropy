@@ -10,7 +10,7 @@
       .color {
         color: $icon-tag-color;
 
-        :focus-visible & {
+        .panel:focus-visible & {
           color: $icon-tag-nested-focus-color;
         }
       }
@@ -18,7 +18,7 @@
       .border {
         color: $icon-tag-border;
 
-        :focus-visible & {
+        .panel:focus-visible & {
           color: $icon-tag-nested-focus-border;
         }
       }
@@ -211,7 +211,7 @@
       background: $add-tag-default-bg;
     }
 
-    :focus-visible & {
+    .panel:focus-visible & {
       background: $add-tag-nested-focus-bg;
       border-color: $add-tag-nested-focus-border-color;
     }
