@@ -52,6 +52,7 @@ export class ItemPanelGroup extends React.PureComponent {
       case 'left':
       case 'right':
         this.toggleTabs()
+        this.panel.current?.focus()
         break
       default:
         return
