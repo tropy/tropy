@@ -93,6 +93,8 @@ export class MetadataList extends React.PureComponent {
 
       if (input.hasChanged)
         input.commit()
+      else
+        input.cancel()
 
       if (event.shiftKey)
         this.handlePrev()
