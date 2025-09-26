@@ -34,12 +34,6 @@ class TagPanel extends React.PureComponent {
     this.next()
   }
 
-  handleTabFocus = () => {
-    if (this.props.onTabFocus) {
-      this.props.onTabFocus()
-    }
-  }
-
   handleTagRemove = (tag) => {
     let id = this.getTaggedIds(tag)
     if (id.length > 0) {

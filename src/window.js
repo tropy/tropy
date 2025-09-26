@@ -71,7 +71,6 @@ export class Window extends EventEmitter {
         this.unloaders.push(this.plugins.unload)
 
         this.handleUnload()
-        this.handleTabFocus()
         this.handleIpcEvents()
         this.handleEditorCommands()
         this.handleModifierKeys()
@@ -249,38 +248,6 @@ export class Window extends EventEmitter {
           return delay(25).then(() => this.send(this.unloader))
         })
     })
-  }
-
-  onTabKey = () => {
-    const onTabFocus = ({ target }) => {
-      try {
-        if (target != null) {
-          emit(target, 'tab:focus')
-        }
-      } finally {
-        clearTimeout(tm)
-        offTabFocus()
-      }
-    }
-
-    const offTabFocus = () => {
-      off(document.body, 'focusin', onTabFocus)
-    }
-
-    const tm = setTimeout(() => {
-      // Hit a tab 'gap' or focus moved into iframe!
-      offTabFocus()
-    }, 50)
-
-    on(document.body, 'focusin', onTabFocus)
-  }
-
-  handleTabFocus() {
-    on(document, 'keydown', event => {
-      if (event.key === 'Tab' && !event.defaultPrevented) {
-        this.onTabKey()
-      }
-    }, { passive: true })
   }
 
   handleEditorCommands() {

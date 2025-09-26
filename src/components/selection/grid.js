@@ -3,21 +3,12 @@ import { SelectionIterator } from './iterator.js'
 import { SelectionTile } from './tile.js'
 import cx from 'classnames'
 import { match } from '../../keymap.js'
-import { on, off } from '../../dom.js'
 import { indexOf, sanitize } from '../../common/collection.js'
 import { TABS } from '../../constants/index.js'
 
 
 class SelectionGrid extends SelectionIterator {
   container = React.createRef()
-
-  componentDidMount() {
-    on(this.container.current, 'tab:focus', this.handleTabFocus)
-  }
-
-  componentWillUnmount() {
-    off(this.container.current, 'tab:focus', this.handleTabFocus)
-  }
 
   get style() {
     const { cols } = this.props
@@ -65,10 +56,6 @@ class SelectionGrid extends SelectionIterator {
         selection: selection.id
       })
     }
-  }
-
-  handleTabFocus = () => {
-    this.props.onTabFocus()
   }
 
   handleKeyDown = (event) => {

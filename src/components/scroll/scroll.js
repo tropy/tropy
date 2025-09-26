@@ -330,7 +330,7 @@ export class Scroll extends React.Component {
     let row = Math.floor(offset / itemHeight)
 
     let { numRowsAbove, expRowPosition } =
-        getExpandedRowsAbove(expandedRows, { position: row })
+      getExpandedRowsAbove(expandedRows, { position: row })
 
     if (expandedRows.length) {
       offset = (row - expRowPosition) * itemHeight
@@ -347,13 +347,11 @@ export class Scroll extends React.Component {
     })
   }
 
-  handleTabFocus = (event) => {
-    if (this.props.autoselect)
+  handleFocus = (event) => {
+    if (this.props.autoselect) {
       this.select(this.current)
-    else
-      this.scrollIntoView()
-
-    this.props.onTabFocus?.(event)
+    }
+    this.scrollIntoView()
   }
 
   scroll(...args) {
@@ -398,7 +396,7 @@ export class Scroll extends React.Component {
     let row = Math.floor(cursor / columns)
 
     let { numRowsAbove } =
-        getExpandedRowsAbove(expandedRows, { index: row })
+      getExpandedRowsAbove(expandedRows, { index: row })
 
     let offset = (row + numRowsAbove + expRowPosition) * itemHeight
 
@@ -449,7 +447,7 @@ export class Scroll extends React.Component {
         onScroll={this.handleScroll}
         onScrollStart={this.handleScrollStart}
         onScrollStop={this.handleScrollStop}
-        onTabFocus={this.handleTabFocus}
+        onFocus={this.handleFocus}
         tabIndex={this.tabIndex}>
         <Runway height={runway}>
           <Viewport

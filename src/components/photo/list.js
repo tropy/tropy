@@ -95,8 +95,7 @@ class PhotoList extends PhotoIterator {
           tabIndex={this.tabIndex}
           onBlur={onBlur}
           onKeyDown={this.handleKeyDown}
-          onSelect={this.handleSelectPhoto}
-          onTabFocus={this.props.onTabFocus}>
+          onSelect={this.handleSelectPhoto}>
           {(photo, index, { isExpanded }) => (
             <PhotoListItem
               {...this.getIterableProps(photo)}
