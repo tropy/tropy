@@ -19,7 +19,10 @@ export class Tab extends React.PureComponent {
 
   render() {
     return (
-      <li className={cx(this.classes)} onClick={this.handleClick}>
+      <li
+        className={cx(this.classes)}
+        onClick={this.handleClick}
+        tabIndex={-1}>
         {this.props.icon}
         <FormattedMessage id={this.props.label}/>
       </li>
