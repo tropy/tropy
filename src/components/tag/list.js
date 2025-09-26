@@ -1,5 +1,6 @@
 import React from 'react'
 import { NewTag, Tag } from './tag.js'
+import { ScrollContainer } from '../scroll/container.js'
 import { get, noop, pick, sample } from '../../common/util.js'
 import { SASS } from '../../constants/index.js'
 import { match } from '../../keymap.js'
@@ -62,31 +63,33 @@ export class TagList extends React.PureComponent {
 
   render() {
     return (
-      <ol className="tag-list">
-        {this.props.tags.map(tag => (
-          <Tag
-            key={tag.id}
-            tag={tag}
-            hasFocusIcon={this.props.hasFocusIcon}
-            isEditing={this.isEditing(tag)}
-            isReadOnly={this.props.isReadOnly}
-            isSelected={this.isSelected(tag)}
-            onChange={this.props.onSave}
-            onDropItems={this.props.onDropItems}
-            onEditCancel={this.props.onEditCancel}
-            onFocusClick={this.props.onCommit}
-            onKeyDown={this.handleKeyDown}
-            onSelect={this.props.onSelect}
-            onContextMenu={this.handleContextMenu}/>
-        ))}
-        {this.hasNewTag && (
-          <NewTag
-            color={this.color}
-            onCreate={this.props.onCreate}
-            onCancel={this.props.onEditCancel}
-            name={this.props.edit.name}/>
-        )}
-      </ol>
+      <ScrollContainer>
+        <ol className="tag-list">
+          {this.props.tags.map(tag => (
+            <Tag
+              key={tag.id}
+              tag={tag}
+              hasFocusIcon={this.props.hasFocusIcon}
+              isEditing={this.isEditing(tag)}
+              isReadOnly={this.props.isReadOnly}
+              isSelected={this.isSelected(tag)}
+              onChange={this.props.onSave}
+              onDropItems={this.props.onDropItems}
+              onEditCancel={this.props.onEditCancel}
+              onFocusClick={this.props.onCommit}
+              onKeyDown={this.handleKeyDown}
+              onSelect={this.props.onSelect}
+              onContextMenu={this.handleContextMenu}/>
+          ))}
+          {this.hasNewTag && (
+            <NewTag
+              color={this.color}
+              onCreate={this.props.onCreate}
+              onCancel={this.props.onEditCancel}
+              name={this.props.edit.name}/>
+          )}
+        </ol>
+      </ScrollContainer>
     )
   }
 
