@@ -3,6 +3,7 @@ import { PhotoIterable } from './iterable.js'
 import { createClickHandler } from '../util.js'
 import cx from 'classnames'
 import { Icon } from '../icons.js'
+import { TranscriptionIcon } from '../transcription/icon.js'
 import { Button } from '../button.js'
 
 class PhotoTile extends PhotoIterable {
@@ -53,8 +54,7 @@ class PhotoTile extends PhotoIterable {
                 icon={<Icon name="SelectionOverlay"/>}
                 onClick={this.handleExpansionToggle}/>
             )}
-            <Icon name="TranscriptionOverlay" className="pending"/>
-            <Icon name="TranscriptionFailedOverlay"/>
+            <TranscriptionIcon id={this.props.photo.transcriptions?.at(-1)}/>
           </div>
         </div>
         {this.props.isExpanded && <div className="pointer"/>}
