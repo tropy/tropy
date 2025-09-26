@@ -42,13 +42,6 @@ export function Frame({
   })
 
   useEffect(() => {
-    let handleKeyDown = (event) => {
-      checkModKeys(event)
-      if (event.key === 'Tab' && !event.defaultPrevented) {
-        win.onTabKey()
-      }
-    }
-
     let checkModKeys = (event) => {
       toggle(doc.documentElement, 'ctrl-key', event.ctrlKey === true)
       toggle(doc.documentElement, 'meta-key', event.metaKey === true)
@@ -60,7 +53,7 @@ export function Frame({
       on(doc.body, 'click', handleClick)
       on(document, 'keydown', checkModKeys, { passive: true, capture: true })
       on(document, 'keyup', checkModKeys, { passive: true, capture: true })
-      on(doc, 'keydown', handleKeyDown, { passive: true, capture: true })
+      on(doc, 'keydown', checkModKeys, { passive: true, capture: true })
       on(doc, 'keyup', checkModKeys, { passive: true, capture: true })
       on(doc, 'blur', checkModKeys, { passive: true })
 
@@ -69,7 +62,7 @@ export function Frame({
         off(doc.body, 'click', handleClick)
         off(document, 'keydown', checkModKeys, { passive: true, capture: true })
         off(document, 'keyup', checkModKeys, { passive: true, capture: true })
-        off(doc, 'keydown', handleKeyDown, { passive: true, capture: true })
+        off(doc, 'keydown', checkModKeys, { passive: true, capture: true })
         off(doc, 'keyup', checkModKeys, { passive: true, capture: true })
         off(doc, 'blur', checkModKeys, { passive: true })
 

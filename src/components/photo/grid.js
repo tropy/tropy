@@ -12,7 +12,6 @@ import { SASS } from '../../constants/index.js'
 class PhotoGrid extends PhotoIterator {
   get classes() {
     return ['photo-grid', super.classes, {
-      'nested-tab-focus': this.state.hasNestedTabFocus,
       'has-nested-active': this.props.selection != null
     }]
   }
@@ -75,14 +74,6 @@ class PhotoGrid extends PhotoIterator {
     event.nativeEvent.stopImmediatePropagation()
   }
 
-  handleNestedTabFocus = () => {
-    this.setState({ hasNestedTabFocus: true })
-  }
-
-  handleNestedBlur = () => {
-    this.setState({ hasNestedTabFocus: false })
-  }
-
   renderSelectionGrid = (photo, columns) => (
     <SelectionGrid
       active={this.props.selection}
@@ -90,8 +81,6 @@ class PhotoGrid extends PhotoIterator {
       data={this.props.data}
       isDisabled={this.props.isDisabled}
       keymap={this.props.keymap.SelectionGrid}
-      onBlur={this.handleNestedBlur}
-      onTabFocus={this.handleNestedTabFocus}
       onContextMenu={this.props.onContextMenu}
       onDelete={this.handleDelete}
       onItemOpen={this.handleItemOpen}
@@ -122,8 +111,7 @@ class PhotoGrid extends PhotoIterator {
           tabIndex={this.tabIndex}
           onBlur={this.props.onBlur}
           onKeyDown={this.handleKeyDown}
-          onSelect={this.handleSelectPhoto}
-          onTabFocus={this.props.onTabFocus}>
+          onSelect={this.handleSelectPhoto}>
           {(photo, index, { isExpanded }) => (
             <PhotoTile
               {...this.getIterableProps(photo)}

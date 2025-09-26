@@ -23,9 +23,6 @@ export class ScrollContainer extends React.Component {
 
     if (this.props.onScroll || this.props.sync)
       on(this.container.current, 'scroll', this.handleScroll)
-
-    if (this.props.onTabFocus)
-      on(this.container.current, 'tab:focus', this.handleTabFocus)
   }
 
   componentWillUnmount() {
@@ -33,9 +30,6 @@ export class ScrollContainer extends React.Component {
     this.#RO.disconnect()
 
     off(this.container.current, 'scroll', this.handleScroll)
-
-    off(this.container.current, 'tab:focus', this.handleTabFocus)
-
     this.handleScrollStop.cancel()
   }
 
@@ -119,10 +113,6 @@ export class ScrollContainer extends React.Component {
     this.props.onScrollStop?.()
   }, 150)
 
-  handleTabFocus = (event) => {
-    this.props.onTabFocus(event)
-  }
-
   render() {
     return (
       <div
@@ -132,6 +122,7 @@ export class ScrollContainer extends React.Component {
         })}
         onBlur={this.props.onBlur}
         onClick={this.props.onClick && this.handleClick}
+        onFocus={this.props.onFocus}
         onKeyDown={this.props.tabIndex && this.props.onKeyDown}
         tabIndex={this.props.tabIndex ?? -1}>
         {this.props.children}
