@@ -44,6 +44,7 @@ const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
     resolve('src/components/button.js'),
     resolve('src/components/list/tree.js'),
+    resolve('node_modules/edtf/src/date.js'),
     resolve('node_modules/n3/src/N3DataFactory.js'),
     resolve('node_modules/undici/lib/fetch/util.js')
   ].some(id => warning.ids.includes(id)),
