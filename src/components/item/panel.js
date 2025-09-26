@@ -65,7 +65,6 @@ export class ItemPanelGroup extends React.PureComponent {
 
   handleEditCancel = () => {
     this.props.onEditCancel()
-    this.panel.current.focus()
   }
 
   handleTagAddCancel = () => {
