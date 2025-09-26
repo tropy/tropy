@@ -61,9 +61,7 @@ export class Panel extends React.PureComponent {
   renderBody(body, classes) {
     return !this.props.isClosed && (
       <PanelBody className={cx(classes)}>
-        {React.cloneElement(body, {
-          onBlur: this.handleBlur
-        })}
+        {body}
       </PanelBody>
     )
   }
@@ -76,8 +74,6 @@ export class Panel extends React.PureComponent {
         className={cx(this.classes)}
         ref={this.container}
         tabIndex={this.props.tabIndex}
-        onBlur={this.handleBlur}
-        onClick={this.handleBlur}
         onKeyDown={this.props.onKeyDown}>
         {this.renderHeader(header)}
         {this.renderBody(body)}
