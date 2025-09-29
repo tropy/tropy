@@ -347,7 +347,7 @@ export class Scroll extends React.Component {
     })
   }
 
-  handleFocus = (event) => {
+  handleFocus = () => {
     if (this.props.autoselect) {
       this.select(this.current)
     }
