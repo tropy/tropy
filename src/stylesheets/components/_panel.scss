@@ -12,25 +12,8 @@
   position: relative;
   contain: content;
 
-  &:focus {
-    outline: 5px solid blue;
-    outline-offset: -5px;
-  }
-
   &:focus-visible {
     background-color: $panel-focus-bg;
-    outline: 5px solid red;
-    outline-offset: -5px;
-  }
-
-  .scroll-container:focus {
-    outline: 5px dashed blue;
-    outline-offset: -10px;
-  }
-
-  .scroll-container:focus-visible {
-    outline: 5px dashed red;
-    outline-offset: -10px;
   }
 
   .is-blurred .item-mode & {
