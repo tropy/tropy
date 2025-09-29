@@ -111,9 +111,6 @@
   }
 
   .panel & {
-    flex: 1 1 0;
-    overflow-y: scroll;
-    overscroll-behavior: contain;
     padding: $space-min 0 0;
     position: relative;
 
