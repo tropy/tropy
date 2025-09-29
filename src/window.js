@@ -22,7 +22,6 @@ import {
   isLiveInput,
   load,
   on,
-  off,
   toggle,
   stylesheet,
   remove
