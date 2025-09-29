@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { ScrollContainer } from '../scroll/container.js'
 import { TagList } from './list.js'
 import { TagAdder } from './adder.js'
 import { toId } from '../../common/util.js'
@@ -62,14 +63,16 @@ class TagPanel extends React.PureComponent {
   render() {
     return (
       <>
-        <TagList
-          keymap={this.props.keymap}
-          tags={this.props.tags}
-          hasFocusIcon
-          isReadOnly={this.props.isDisabled}
-          onCommit={this.handleTagAdd}
-          onContextMenu={this.handleContextMenu}
-          onRemove={this.handleTagRemove}/>
+        <ScrollContainer>
+          <TagList
+            keymap={this.props.keymap}
+            tags={this.props.tags}
+            hasFocusIcon
+            isReadOnly={this.props.isDisabled}
+            onCommit={this.handleTagAdd}
+            onContextMenu={this.handleContextMenu}
+            onRemove={this.handleTagRemove}/>
+        </ScrollContainer>
         <TagAdder
           ref={this.adder}
           isDisabled={this.props.isDisabled}
