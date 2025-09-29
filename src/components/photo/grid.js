@@ -10,15 +10,8 @@ import { SASS } from '../../constants/index.js'
 
 
 class PhotoGrid extends PhotoIterator {
-  get classes() {
-    return ['photo-grid', super.classes, {
-      'has-nested-active': this.props.selection != null
-    }]
-  }
-
   contract = (photo) => {
     if (this.isExpandable(photo) && this.isExpanded(photo)) {
-      this.handleNestedBlur()
       this.props.onContract(this.props.photos.map(p => p.id))
 
       if (this.isSelected(photo)) {
@@ -97,7 +90,7 @@ class PhotoGrid extends PhotoIterator {
 
     return this.connect(
       <div
-        className={cx(this.classes)}
+        className={cx('photo-grid', this.classes)}
         data-size={this.props.size}>
         <Scroll
           ref={this.container}
