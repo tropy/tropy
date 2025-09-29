@@ -16,7 +16,7 @@ export const FilterControls = ({
   saturation,
   sharpen
 }) => (
-  <ul className="filter-controls">
+  <ul className="filter-controls" tabIndex="-1">
     <RangeFilter
       icon="Sun"
       isDisabled={isDisabled}
