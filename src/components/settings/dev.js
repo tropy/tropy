@@ -3,7 +3,7 @@ import { useIpcEvent } from '../../hooks/use-ipc.js'
 import { useWindowArgs } from '../../hooks/use-window.js'
 
 export function DeveloperSettings() {
-  let { api, debug, dev } = useWindowArgs()
+  let { api, debug, dev, port } = useWindowArgs()
 
   let handleDebugChange = useIpcEvent(null, [
     'cmd', 'app:toggle-debug-flag'
@@ -28,6 +28,9 @@ export function DeveloperSettings() {
         isCompact
         value={api}
         onChange={handleApiChange}/>
+      {api && (
+        <a>{`http://localhost:${port}`}</a>
+      )}
     </>
   )
 }

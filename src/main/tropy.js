@@ -1152,6 +1152,7 @@ export class Tropy extends EventEmitter {
       dev: this.dev,
       cache: this.cache.root,
       plugins: this.plugins.root,
+      port: this.opts.port || this.state.port,
       fontSize: this.state.fontSize,
       frameless: this.state.frameless,
       theme: this.state.theme,
