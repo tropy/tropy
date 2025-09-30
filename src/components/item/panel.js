@@ -118,6 +118,7 @@ export class ItemPanelGroup extends React.PureComponent {
       isDisabled || isReadOnly || item == null || hasMultipleItems
     let isNotesDisabled = isPhotosDisabled || isReadOnly || photo == null
 
+
     return (
       <PanelGroup
         className="item-panel-group"
@@ -128,7 +129,9 @@ export class ItemPanelGroup extends React.PureComponent {
         <Panel
           className="item-panel"
           ref={this.panel}
-          tabIndex={TABS.ItemPanel}
+          tabIndex={
+            isDisabled || this.props.items.length === 0 ? -1 : TABS.ItemPanel
+          }
           onKeyDown={this.handleKeyDown}>
           <Toolbar>
             <Toolbar.Left>
