@@ -2,6 +2,7 @@ import { join } from 'node:path'
 import fs from 'node:fs'
 import { rename } from 'node:fs/promises'
 import { info, warn } from '../common/log.js'
+import { channel } from '../common/release.js'
 import { win32 } from '../common/os.js'
 
 const createMigration = (name, v, up) => ({ name, v, up })
@@ -46,6 +47,12 @@ export const MIGRATIONS = [
   createMigration('win32-custom-titlebar', [1, 15], async (_, state) => {
     if (win32) {
       state.frameless = true
+    }
+  }),
+
+  createMigration('api-default-port', [1, 17], async (tropy, state) => {
+    if (state.port === 2019 && channel !== 'latest') {
+      state.port = 2029
     }
   })
 ]

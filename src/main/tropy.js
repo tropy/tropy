@@ -58,7 +58,7 @@ export class Tropy extends EventEmitter {
     fontSize: '13px',
     frameless: true,
     debug: false,
-    port: 2019,
+    port: channel === 'latest' ? 2019 : 2029,
     theme: 'system',
     recent: [],
     rendererPreference: null,
