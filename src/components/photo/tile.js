@@ -54,7 +54,9 @@ class PhotoTile extends PhotoIterable {
                 icon={<Icon name="SelectionOverlay"/>}
                 onClick={this.handleExpansionToggle}/>
             )}
-            <TranscriptionIcon id={this.props.photo.transcriptions?.at(-1)}/>
+            <TranscriptionIcon
+              id={this.props.photo.transcriptions?.at(-1)}
+              overlay/>
           </div>
         </div>
         {this.props.isExpanded && <div className="pointer"/>}
