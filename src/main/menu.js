@@ -3,6 +3,7 @@ import { Menu as M } from 'electron'
 import { Icon, Menu as MR } from './res.js'
 import { getLocale } from './locale.js'
 import { error, warn } from '../common/log.js'
+import { channel } from '../common/release.js'
 import { blank } from '../common/util.js'
 
 const SEPARATOR = { type: 'separator' }
@@ -611,11 +612,17 @@ Menu.ItemConditions = {
 }
 
 function compileTranscriptionMenu(item, app, win, event) {
+  if (channel === 'latest') {
+    item.enabled = false
+    item.visible = false
+    return
+  }
+
   let plugins = app.plugins.available('transcribe')
 
   let builtin = item.submenu[0]
   let command = builtin.command
-  builtin.enabled = false // channel !== 'latest'
+  builtin.enabled = false
 
   if (plugins.length > 0) {
     item.submenu = [

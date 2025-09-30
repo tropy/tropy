@@ -4,6 +4,7 @@ import { useEvent } from '../../hooks/use-event.js'
 import { useResolution } from '../../hooks/use-resolution.js'
 import { useThrottle } from '../../hooks/use-debounce.js'
 import { ToolButton, ToolGroup } from '../toolbar.js'
+import { channel } from '../../common/release.js'
 import { MaximizeButton } from '../settings/maximize.js'
 import { Button } from '../button.js'
 import { Slider } from '../slider.js'
@@ -181,6 +182,7 @@ export const Layout = ({
         defaultValue={ESPER.OVERLAY.NONE}
         icon="IconTranscriptionLarge"
         isDisabled={isDisabled}
+        isHidden={channel === 'latest'}
         name="overlay"
         onChange={onChange}
         title="esper.overlay.full"
@@ -190,6 +192,7 @@ export const Layout = ({
         defaultValue={ESPER.OVERLAY.NONE}
         icon="IconTranscriptionSplitView"
         isDisabled={isDisabled}
+        isHidden={channel === 'latest'}
         name="overlay"
         onChange={onChange}
         title="esper.overlay.split"

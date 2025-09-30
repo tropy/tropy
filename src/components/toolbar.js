@@ -91,6 +91,7 @@ export const Titlebar = ({ children, isOptional }) => {
 export const ToolButton = ({
   current,
   defaultValue,
+  isHidden = false,
   name = 'tool',
   onChange,
   value,
@@ -107,6 +108,8 @@ export const ToolButton = ({
       }
     }
   })
+
+  if (isHidden) return null
 
   return (
     <Button
