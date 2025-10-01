@@ -115,6 +115,14 @@ fieldset {
   padding: 5px ($padding-base-horizontal + $input-border-width);
 }
 
+.form-description-inline {
+  span {
+    font-size: 11px;
+    line-height: 1;
+    user-select: all;
+  }
+}
+
 .form-link {
   overflow-wrap: anywhere;
 }
@@ -144,6 +152,19 @@ fieldset {
 
   &:where(:last-child) {
     padding-bottom: calc(($input-height-base - $line-height-computed) / 2);
+  }
+
+  &:has(.form-description-inline) {
+    flex-wrap: wrap;
+    padding-left: 24px;
+
+    [type] {
+      margin-left: -20px;
+    }
+
+    label {
+      margin-right: $space-min * 1.5;
+    }
   }
 
   [type] {

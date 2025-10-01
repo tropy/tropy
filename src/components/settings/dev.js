@@ -29,7 +29,9 @@ export function DeveloperSettings() {
         value={api}
         onChange={handleApiChange}>
         {api && (
-          <a>{`http://localhost:${port}`}</a>
+          <div className="form-description-inline">
+            <span>{`http://localhost:${port}`}</span>
+          </div>
         )}
       </FormToggle>
     </>
