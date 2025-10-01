@@ -176,6 +176,7 @@ export const FormSelect = ({
 }
 
 export const Toggle = ({
+  children,
   className,
   id,
   isChecked,
@@ -214,6 +215,7 @@ export const Toggle = ({
         type={type}
         value={`${value}`}/>
       <Label id={id} title={title} value={label}/>
+      {children}
     </div>
   )
 }

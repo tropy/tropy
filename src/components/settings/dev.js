@@ -27,10 +27,11 @@ export function DeveloperSettings() {
         name="api"
         isCompact
         value={api}
-        onChange={handleApiChange}/>
-      {api && (
-        <a>{`http://localhost:${port}`}</a>
-      )}
+        onChange={handleApiChange}>
+        {api && (
+          <a>{`http://localhost:${port}`}</a>
+        )}
+      </FormToggle>
     </>
   )
 }
