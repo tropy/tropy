@@ -741,10 +741,10 @@ export class Tropy extends EventEmitter {
 
     this.on('app:toggle-api', async () => {
       info('toggling dev api...')
+      this.state.api = !this.api.status
       await this.api.stop()
-      this.state.api = !this.state.api
       await this.api.start()
-      this.wm.broadcast('api', this.state.api)
+      this.wm.broadcast('api', this.api.status)
       this.emit('app:reload-menu')
     })
 
@@ -1146,13 +1146,13 @@ export class Tropy extends EventEmitter {
 
   get hash() {
     return {
-      api: this.state.api,
+      api: this.api.status,
       data: this.opts.data,
       debug: this.debug,
       dev: this.dev,
       cache: this.cache.root,
       plugins: this.plugins.root,
-      port: this.opts.port || this.state.port,
+      port: this.api.port,
       fontSize: this.state.fontSize,
       frameless: this.state.frameless,
       theme: this.state.theme,
