@@ -27,6 +27,13 @@ en:
         - Copy Error
         - Show Logs
       message: Unhandled Error
+    addrinuse:
+      message: Address in Use
+      detail: >
+        The Developer API failed to start because the requested port is already in use.
+        You can set the port via the command line or in the user data directory.
+      buttons:
+        - "OK"
   window:
     prefs:
       title: Tropy Preferences
