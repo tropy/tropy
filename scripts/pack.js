@@ -111,7 +111,7 @@ const exports = {
     let base = basename(app)
 
     rm('-f', output)
-    exec(`tar cjf ${output} -C "${dirname(app)}" -s "/^${base}/${nva}/" "${base}"`)
+    exec(`tar -c -j -f ${output} -C "${dirname(app)}" --transform="s/^${base}/${nva}/" "${base}"`)
 
     return [output]
   },
