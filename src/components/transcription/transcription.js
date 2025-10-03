@@ -11,6 +11,7 @@ export const Transcription = ({
   onSelect,
   selection,
   status = 0,
+  tabIndex = -1,
   text
 }) => {
   let content
@@ -43,7 +44,7 @@ export const Transcription = ({
   }
 
   return (
-    <div className="transcription">
+    <div className="transcription" tabIndex={tabIndex}>
       {content}
     </div>
   )
