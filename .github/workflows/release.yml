@@ -48,7 +48,7 @@ jobs:
           - os: windows-2022
             platform: win32
             arch: arm64
-          - os: macos-13
+          - os: macos-15-intel
             platform: darwin
             arch: x64
           - os: macos-26
@@ -66,10 +66,7 @@ jobs:
           cache: npm
 
       - name: Workaround node-gyp issue 2915
-        if: matrix.os == 'macos-13'
-        run: python3 -m pip install setuptools
-      - name: Workaround node-gyp issue 2915
-        if: matrix.platform == 'darwin' && matrix.os != 'macos-13'
+        if: matrix.platform == 'darwin'
         run: brew install python-setuptools
 
       - name: Fix AppImage on Ubuntu 22
