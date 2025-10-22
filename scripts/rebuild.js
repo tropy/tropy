@@ -11,7 +11,7 @@ import shelljs from 'shelljs'
 
 setLogSymbol('Δ')
 
-const { cat, cd, env, exec, sed, test } = shelljs
+const { cat, cd, cp, env, exec, sed, test } = shelljs
 const ARCH = process.env.npm_config_target_arch || process.arch
 
 const ELECTRON_VERSION = JSON.parse(
@@ -19,6 +19,9 @@ const ELECTRON_VERSION = JSON.parse(
     encoding: 'utf-8'
   })
 ).version
+
+const LIBVIPS_URL = 'https://github.com/tropy/sharp-libvips/releases/download'
+const LIBVIPS_VERSION = '8.17.2'
 
 function downloadHeaders({
   arch = ARCH,
@@ -33,6 +36,13 @@ function downloadHeaders({
   ].join(' ')}`, { silent })
 }
 
+async function download(url, file) {
+  let res = await fetch(url)
+  if (res.status !== 200)
+    throw new Error(`download failed: ${res.status} ${res.statusText}`)
+
+  await fs.promises.writeFile(file, Buffer.from(await res.arrayBuffer()))
+}
 
 class Rebuilder {
   #package = null
@@ -172,11 +182,7 @@ class Rebuilder {
 
         if (!test('-f', tar)) {
           say(`fetching SQLite version ${version} ...`)
-          let res = await fetch(url)
-          if (res.status !== 200)
-            throw new Error(`download failed: ${res.status} ${res.statusText}`)
-
-          await fs.promises.writeFile(tar, Buffer.from(await res.arrayBuffer()))
+          await download(url, tar)
         }
 
         sed('-i',
@@ -189,9 +195,7 @@ class Rebuilder {
         if (task.platform === 'darwin') {
           sed('-i',
             /"MACOSX_DEPLOYMENT_TARGET":\s*"[\d.]+",/,
-            `"MACOSX_DEPLOYMENT_TARGET": "${
-              task.arch === 'arm64' ? '11.0' : '10.13'
-            }",`,
+            '"MACOSX_DEPLOYMENT_TARGET": "11.0",',
             task.modulePath('binding.gyp'))
         }
       },
@@ -207,22 +211,48 @@ class Rebuilder {
     ],
 
     sharp: [
+      async (task) => {
+        await fs.promises.mkdir(task.vendorPath(), { recursive: true })
+
+        let dir = `sharp-libvips-${task.platform}-${task.arch}`
+        let tar = `${dir}.tar.gz`
+        let url = `${LIBVIPS_URL}/v${LIBVIPS_VERSION}/${tar}`
+
+        if (!test('-f', task.vendorPath(tar))) {
+          say('fetching sharp-libvips binaries ...')
+          await download(url, task.vendorPath(tar))
+        }
+
+        if (!test('-d', task.vendorPath('lib'))) {
+          say('unpacking sharp-libvips binaries ...')
+          exec(`tar -C ${task.vendorPath()} -x -z -f ${task.vendorPath(tar)}`)
+        }
+
+        say('replacing sharp-libvips lib and include ...')
+        cp('-r',
+          task.vendorPath('lib'),
+          join(ROOT, 'node_modules', '@img', dir, 'lib'))
+        cp('-r',
+          task.vendorPath('include'),
+          join(ROOT, 'node_modules', '@img', 'sharp-libvips-dev', 'include'))
+      },
+
       (task) => {
         if (task.platform === 'darwin') {
           sed('-i',
             /'MACOSX_DEPLOYMENT_TARGET':\s*'[\d.]+',/,
-            `'MACOSX_DEPLOYMENT_TARGET': '${
-              task.arch === 'arm64' ? '11.0' : '10.13'
-            }',`,
-            task.modulePath('binding.gyp'))
+            "'MACOSX_DEPLOYMENT_TARGET': '11.0',",
+            task.modulePath('src', 'binding.gyp'))
         }
       },
 
-      async (task) => {
-        await fs.promises.rm(task.modulePath('vendor'), {
-          force: true,
-          recursive: true
-        })
+      (task) => {
+        if (task.platform === 'win32') {
+          sed('-i',
+            "'<(sharp_libvips_lib_dir)/libvips-42.dll'",
+            "'<(sharp_libvips_lib_dir)/*.dll'",
+            task.modulePath('src', 'binding.gyp'))
+        }
       },
 
       async (task) => {
@@ -241,7 +271,7 @@ program
   .option('-s, --silent', 'silence rebuilder output', false)
   .option('-H, --skip-headers', 'skip headers download', false)
   .option('-p, --parallel', 'rebuild in parallel', false)
-  .option('--global-libvips', 'do not ignore global libvips', false)
+  .option('--global-libvips', 'use global libvips', false)
   .action(async (args) => {
     let opts = program.opts()
 
@@ -256,9 +286,10 @@ program
     if (process.platform === 'darwin' && opts.arch === 'arm64')
       setMacSDKRoot()
 
-    if (!opts.globalLibvips) {
+    if (opts.globalLibvips) {
+      env.SHARP_FORCE_GLOBAL_LIBVIPS = true
+    } else {
       env.SHARP_IGNORE_GLOBAL_LIBVIPS = true
-      env.npm_config_sharp_libvips_binary_host = 'https://github.com/tropy/sharp-libvips/releases/download'
     }
 
     if (!opts.skipHeaders) {
