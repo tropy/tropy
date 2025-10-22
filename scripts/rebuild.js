@@ -215,7 +215,7 @@ class Rebuilder {
         await fs.promises.mkdir(task.vendorPath(), { recursive: true })
 
         let dir = `sharp-libvips-${task.platform}-${task.arch}`
-        let tar = `${dir}.tar.gz`
+        let tar = `${dir}${task.arch === 'arm64' ? 'v8' : ''}.tar.gz`
         let url = `${LIBVIPS_URL}/v${LIBVIPS_VERSION}/${tar}`
 
         if (!test('-f', task.vendorPath(tar))) {
