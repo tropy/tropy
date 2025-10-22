@@ -6,7 +6,8 @@
 
 import MagicString from 'magic-string'
 
-const REQUIRE = '`../build/Release/sharp-${platformAndArch}.node`'
+const REQUIRE = 'sharp = require(path);'
+const PATHS = /const paths = \[[^\]]+\];/
 
 export default function sharpRequire({ platformId }) {
   let transformed = false
@@ -21,15 +22,27 @@ export default function sharpRequire({ platformId }) {
             `Could not find dynamic sharp require "${REQUIRE}"`
           )
         }
-        const REPLACEMENT = REQUIRE
-          .replaceAll('`', "'")
-          .replace('${platformAndArch}', platformId)
+
+        const path = `../src/build/Release/sharp-${platformId}.node`
+        const REPLACEMENT = REQUIRE.replace('path', `'${path}'`)
 
         const magicString = new MagicString(code)
         magicString.overwrite(
           requireStatementPos,
           requireStatementPos + REQUIRE.length,
           REPLACEMENT
+        )
+
+        const pathsMatch = PATHS.exec(code)
+
+        if (!pathsMatch) {
+          throw new Error('Could not find sharp require paths')
+        }
+
+        magicString.overwrite(
+          pathsMatch.index,
+          pathsMatch.index + pathsMatch[0].length,
+          `const paths = ['${path}'];`
         )
 
         return {

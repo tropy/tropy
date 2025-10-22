@@ -169,11 +169,11 @@ export default [
             src: 'node_modules/sharp/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
             dest: 'lib/node/lib'
           } : {
-            src: `node_modules/sharp/vendor/${sharp.config.libvips}/${platformId}/lib`,
-            dest: `lib/vendor/${sharp.config.libvips}/${platformId}`
+            src: `node_modules/@img/sharp-libvips-${platformId}/lib`,
+            dest: `lib/sharp-libvips-${platformId}/lib`
           },
           {
-            src: `node_modules/sharp/vendor/${sharp.config.libvips}/${platformId}/THIRD-PARTY-NOTICES.json`,
+            src: 'vendor/sharp/THIRD-PARTY-NOTICES.json',
             dest: 'lib',
             rename: 'licenses.libvips.json'
           }
