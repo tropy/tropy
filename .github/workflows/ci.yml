@@ -57,12 +57,15 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Setup python for node-gyp
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+          cache: pop
+        run: pip install setuptools
+
       - name: Install and build dependencies
         run: npm clean-install --no-progress
-
-      - name: Workaround node-gyp issue 2915
-        if: matrix.platform == 'darwin'
-        run: brew install python python-setuptools
 
       - name: Rebuild native dependencies
         run: npm run rebuild -- --force --arch ${{ matrix.arch }}
