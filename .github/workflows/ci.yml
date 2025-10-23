@@ -65,7 +65,7 @@ jobs:
         run: brew install python-setuptools
 
       - name: Rebuild native dependencies
-        run: node scripts/rebuild --force --arch ${{ matrix.arch }}
+        run: npm run rebuild -- --force --arch ${{ matrix.arch }}
 
       - name: Lint
         run: npm run lint
