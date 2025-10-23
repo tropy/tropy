@@ -35,9 +35,7 @@ const arch =
   process.env.npm_config_arch ||
   process.arch
 
-const platformId = (arch === 'arm64') ?
-  `${platform}-arm64v8` :
-  `${platform}-${arch}`
+const platformId = `${platform}-${arch}`
 
 
 const IGNORE_WARNINGS = {
@@ -173,7 +171,7 @@ export default [
             dest: 'lib/node/lib'
           } : {
             src: `node_modules/@img/sharp-libvips-${platformId}/lib`,
-            dest: `lib/sharp-libvips-${platformId}/lib`
+            dest: `lib/sharp-libvips-${platformId}`
           },
           {
             src: 'vendor/sharp/THIRD-PARTY-NOTICES.json',

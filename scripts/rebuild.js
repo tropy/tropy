@@ -85,6 +85,7 @@ class Rebuilder {
     switch (this.name) {
       case 'sharp':
         return !fs.existsSync(this.modulePath(
+          'src',
           'build',
           'Release',
           `sharp-${this.platform}-${this.arch}.node`))
@@ -214,9 +215,9 @@ class Rebuilder {
       async (task) => {
         await fs.promises.mkdir(task.vendorPath(), { recursive: true })
 
-        let dir = `sharp-libvips-${task.platform}-${task.arch}`
-        let tar = `${dir}${task.arch === 'arm64' ? 'v8' : ''}.tar.gz`
-        let url = `${LIBVIPS_URL}/v${LIBVIPS_VERSION}/${tar}`
+        let platformId = `${task.platform}-${task.arch}`
+        let tar = `sharp-libvips-${platformId}${task.arch === 'arm64' ? 'v8' : ''}.tar.gz`
+        let url = `${LIBVIPS_URL}/v${LIBVIPS_VERSION}-tropy/${tar}`
 
         if (!test('-f', task.vendorPath(tar))) {
           say('fetching sharp-libvips binaries ...')
@@ -231,10 +232,10 @@ class Rebuilder {
         say('replacing sharp-libvips lib and include ...')
         cp('-r',
           task.vendorPath('lib'),
-          join(ROOT, 'node_modules', '@img', dir, 'lib'))
+          join(ROOT, 'node_modules', '@img', `sharp-libvips-${platformId}`))
         cp('-r',
           task.vendorPath('include'),
-          join(ROOT, 'node_modules', '@img', 'sharp-libvips-dev', 'include'))
+          join(ROOT, 'node_modules', '@img', 'sharp-libvips-dev'))
       },
 
       (task) => {
