@@ -69,6 +69,9 @@ function ignoreTryCatch(id) {
   if (id.startsWith('node:') || builtinModules.includes(id))
     return true
 
+  if (id === '@img/sharp-wasm32/versions')
+    return 'remove'
+
   console.warn(`Removing try/catch require of: ${id}`)
   return 'remove'
 }
