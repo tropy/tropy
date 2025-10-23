@@ -43,7 +43,7 @@ jobs:
             arch: arm64
             friendlyName: macOS 26
             platform: darwin
-          - os: windows-latest
+          - os: windows-2022
             friendlyName: Windows
             platform: win32
 
