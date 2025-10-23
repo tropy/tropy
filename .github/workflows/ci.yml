@@ -61,7 +61,6 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: '3.x'
-          cache: pip
       - name: Install requirements for node-gyp
         run: pip install setuptools
 
