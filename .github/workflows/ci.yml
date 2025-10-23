@@ -57,11 +57,12 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Setup python for node-gyp
+      - name: Setup Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.x'
-          cache: pop
+          cache: pip
+      - name: Install requirements for node-gyp
         run: pip install setuptools
 
       - name: Install and build dependencies
