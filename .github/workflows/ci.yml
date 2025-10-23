@@ -62,7 +62,7 @@ jobs:
 
       - name: Workaround node-gyp issue 2915
         if: matrix.platform == 'darwin'
-        run: brew install python-setuptools
+        run: brew install python python-setuptools
 
       - name: Rebuild native dependencies
         run: npm run rebuild -- --force --arch ${{ matrix.arch }}
