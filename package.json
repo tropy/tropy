@@ -83,7 +83,7 @@
     "minimatch": "^10.0.1",
     "ms": "^2.1.3",
     "node-addon-api": "^8.5.0",
-    "node-gyp": "11.0.0",
+    "node-gyp": "^11.5.0",
     "nyc": "^17.0.0",
     "prosemirror-test-builder": "^1.0.3",
     "pump": "^3.0.0",
