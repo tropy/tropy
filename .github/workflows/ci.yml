@@ -20,7 +20,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - windows-latest
+          - windows-2022
         arch:
           - x64
         include:
