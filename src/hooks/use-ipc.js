@@ -15,5 +15,5 @@ export function useIpcEvent(fn, params = []) {
 export function useIpcSend(dependencies = []) {
   return useCallback((...args) => {
     ipcRenderer.send(...dependencies, ...args)
-  }, dependencies) // eslint-disable-line react-hooks/exhaustive-deps
+  }, dependencies)
 }

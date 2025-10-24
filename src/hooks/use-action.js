@@ -8,7 +8,7 @@ export function useActions(actions) {
 
   return useMemo(() => (
     actions.map(action => createHandler(dispatch, action))
-  ), [dispatch]) // eslint-disable-line react-hooks/exhaustive-deps
+  ), [dispatch])
 }
 
 export function useAction(dispatch, action) {
