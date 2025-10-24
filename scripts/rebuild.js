@@ -253,6 +253,10 @@ class Rebuilder {
             "'<(sharp_libvips_lib_dir)/libvips-42.dll'",
             "'<(sharp_libvips_lib_dir)/*.dll'",
             task.modulePath('src', 'binding.gyp'))
+          sed('-i',
+            "'libvips.lib'",
+            "'libvips.lib', 'libglib-2.0.lib', 'libgobject-2.0.lib'",
+            task.modulePath('src', 'binding.gyp'))
         }
       },
 
