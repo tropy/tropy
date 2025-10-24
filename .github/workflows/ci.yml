@@ -10,6 +10,9 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: ${{ matrix.friendlyName }} ${{ matrix.arch }}
@@ -56,7 +59,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
@@ -66,7 +68,6 @@ jobs:
 
       - name: Install and build dependencies
         run: npm clean-install --no-progress
-
       - name: Rebuild native dependencies
         run: npm run rebuild -- --force --arch ${{ matrix.arch }}
 
