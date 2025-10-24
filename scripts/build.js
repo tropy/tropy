@@ -231,7 +231,8 @@ export function configure({ arch, platform, out = join(ROOT, 'dist') }) {
     },
     asar: {
       unpack: `**/{${[
-        'lib/{node,vendor}/**/*',
+        'lib/node/**/*',
+        'lib/sharp-libvips-*/**/*',
         'res/{icons,keymaps,plugins,views}/**/*',
         'package.json',
         'LICENSE*'
