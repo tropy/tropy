@@ -213,29 +213,31 @@ class Rebuilder {
 
     sharp: [
       async (task) => {
-        await fs.promises.mkdir(task.vendorPath(), { recursive: true })
+        if (!env.SHARP_FORCE_GLOBAL_LIBVIPS) {
+          await fs.promises.mkdir(task.vendorPath(), { recursive: true })
 
-        let platformId = `${task.platform}-${task.arch}`
-        let tar = `sharp-libvips-${platformId}${task.arch === 'arm64' ? 'v8' : ''}.tar.gz`
-        let url = `${LIBVIPS_URL}/v${LIBVIPS_VERSION}-tropy/${tar}`
+          let platformId = `${task.platform}-${task.arch}`
+          let tar = `sharp-libvips-${platformId}${task.arch === 'arm64' ? 'v8' : ''}.tar.gz`
+          let url = `${LIBVIPS_URL}/v${LIBVIPS_VERSION}-tropy/${tar}`
 
-        if (!test('-f', task.vendorPath(tar))) {
-          say('fetching sharp-libvips binaries ...')
-          await download(url, task.vendorPath(tar))
+          if (!test('-f', task.vendorPath(tar))) {
+            say('fetching sharp-libvips binaries ...')
+            await download(url, task.vendorPath(tar))
+          }
+
+          if (!test('-d', task.vendorPath('lib'))) {
+            say('unpacking sharp-libvips binaries ...')
+            exec(`tar -C ${task.vendorPath()} -x -z -f ${task.vendorPath(tar)}`)
+          }
+
+          say('replacing sharp-libvips lib and include ...')
+          cp('-r',
+            task.vendorPath('lib'),
+            join(ROOT, 'node_modules', '@img', `sharp-libvips-${platformId}`))
+          cp('-r',
+            task.vendorPath('include'),
+            join(ROOT, 'node_modules', '@img', 'sharp-libvips-dev'))
         }
-
-        if (!test('-d', task.vendorPath('lib'))) {
-          say('unpacking sharp-libvips binaries ...')
-          exec(`tar -C ${task.vendorPath()} -x -z -f ${task.vendorPath(tar)}`)
-        }
-
-        say('replacing sharp-libvips lib and include ...')
-        cp('-r',
-          task.vendorPath('lib'),
-          join(ROOT, 'node_modules', '@img', `sharp-libvips-${platformId}`))
-        cp('-r',
-          task.vendorPath('include'),
-          join(ROOT, 'node_modules', '@img', 'sharp-libvips-dev'))
       },
 
       (task) => {
