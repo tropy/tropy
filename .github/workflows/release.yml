@@ -64,10 +64,12 @@ jobs:
         with:
           node-version: 22
           cache: npm
-
-      - name: Workaround node-gyp issue 2915
-        if: matrix.platform == 'darwin'
-        run: brew install python-setuptools
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - name: Install requirements for node-gyp
+        run: pip install setuptools
 
       - name: Fix AppImage on Ubuntu 22
         if: matrix.os == 'ubuntu-22.04'
@@ -77,9 +79,8 @@ jobs:
 
       - name: Install and build dependencies
         run: npm clean-install --no-progress
-
       - name: Rebuild native dependencies
-        run: node scripts/rebuild.js --force --arch ${{ matrix.arch }}
+        run: npm run rebuild -- --force --arch ${{ matrix.arch }}
 
       - name: Setup macOS keychain and signing certificates
         if: matrix.platform == 'darwin'
