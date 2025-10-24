@@ -406,7 +406,7 @@ const project = {
   }
 }
 
-export function create({ dispatch, log, rsvp, version }) {
+export function create({ current, dispatch, log, rsvp, version }) {
   let app = new Koa
   let api = new Router
 
@@ -418,6 +418,7 @@ export function create({ dispatch, log, rsvp, version }) {
     }, e.message)
   })
 
+  app.context.current = current
   app.context.dispatch = dispatch
   app.context.log = log
   app.context.rsvp = rsvp
@@ -460,6 +461,13 @@ export function create({ dispatch, log, rsvp, version }) {
 
     .get('/version', (ctx) => {
       ctx.body = { version }
+    })
+    .get('/', (ctx) => {
+      ctx.body = {
+        project: ctx.current(),
+        status: 'ok',
+        version
+      }
     })
 
   app

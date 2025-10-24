@@ -11,6 +11,10 @@ export class Server {
     this.app = app
   }
 
+  current = () => {
+    return this.app.state.recent[0]
+  }
+
   dispatch = (type, action) => {
     this.app.wm.current(type).webContents.send('dispatch', action)
   }
@@ -50,6 +54,7 @@ export class Server {
       let { create } = await import('../common/api.js')
 
       this.#api = create({
+        current: this.current,
         dispatch: this.dispatch,
         log: logger.child({ name: 'api' }),
         rsvp: this.rsvp,
