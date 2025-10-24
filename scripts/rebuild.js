@@ -264,7 +264,14 @@ class Rebuilder {
 
       async (task) => {
         await task.npmRebuild()
-      }
+      },
+
+      (task) => {
+        if (task.platform === 'win32') {
+          say('copy dlls ...')
+          cp(task.vendorPath('lib', '*.dll'), task.modulePath('src', 'build', 'Release'))
+        }
+      },
     ]
   }
 }
