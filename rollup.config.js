@@ -168,7 +168,7 @@ export default [
       copy({
         targets: [
           (platform === 'win32') ? {
-            src: 'node_modules/sharp/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
+            src: 'node_modules/sharp/src/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
             dest: 'lib/node/lib'
           } : {
             src: `node_modules/@img/sharp-libvips-${platformId}/lib`,
