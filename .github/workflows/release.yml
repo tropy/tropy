@@ -80,7 +80,7 @@ jobs:
       - name: Install and build dependencies
         run: npm clean-install --no-progress
       - name: Rebuild native dependencies
-        run: npm run rebuild -- --force --arch ${{ matrix.arch }}
+        run: node scripts/rebuild.js --force --arch ${{ matrix.arch }}
 
       - name: Setup macOS keychain and signing certificates
         if: matrix.platform == 'darwin'
