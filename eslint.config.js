@@ -125,6 +125,10 @@ export default [
     rules: {
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
+      'react-hooks/immutability': 1,
+      'react-hooks/refs': 1,
+      'react-hooks/set-state-in-effect': 1,
+      'react-hooks/use-memo': 1,
       'react/display-name': 0,
       'react/jsx-key': 2,
       'react/no-deprecated': 1,

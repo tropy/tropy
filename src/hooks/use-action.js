@@ -8,7 +8,7 @@ export function useActions(actions) {
 
   return useMemo(() => (
     actions.map(action => createHandler(dispatch, action))
-  ), [dispatch])
+  ), [dispatch, actions])
 }
 
 export function useAction(dispatch, action) {
