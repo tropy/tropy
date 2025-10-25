@@ -242,7 +242,7 @@ export function configure({ arch, platform, out = join(ROOT, 'dist') }) {
 }
 
 
-async function addExtraMetadata(buildPath, v, platform, arch, done) {
+async function addExtraMetadata({ buildPath, electronVersion, platform, arch }) {
   say('tagging package.json for release')
   let pkg = JSON.parse(await readFile(join(buildPath, 'package.json')))
 
@@ -252,16 +252,15 @@ async function addExtraMetadata(buildPath, v, platform, arch, done) {
   delete pkg.optionalDependencies
 
   pkg.build = {
-    electron: v,
+    electron: electronVersion,
     platform,
     arch
   }
 
   await writeFile(join(buildPath, 'package.json'), JSON.stringify(pkg, null, 2))
-  done()
 }
 
-async function addLicense(buildPath, v, platform, arch, done) {
+async function addLicense({ buildPath }) {
   say('compiling LICENSE and third-party notices')
 
   await copyFile(
@@ -271,7 +270,6 @@ async function addLicense(buildPath, v, platform, arch, done) {
   let deps = await legal.loadDependencies()
   let licenses = legal.compileThirdPartyNotices(deps, { format: 'txt' })
   await writeFile(join(buildPath, 'LICENSE.third-party.txt'), licenses)
-  done()
 }
 
 async function copyLicense(dest) {
