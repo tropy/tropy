@@ -252,11 +252,11 @@ class Rebuilder {
       (task) => {
         if (task.platform === 'win32') {
           sed('-i',
-            "'<(sharp_libvips_lib_dir)/libvips-42.dll'",
-            "'<(sharp_libvips_lib_dir)/*.dll'",
+            'libvips-42.dll',
+            '*.dll',
             task.modulePath('src', 'binding.gyp'))
           sed('-i',
-            "'libvips.lib'",
+            /'libvips.lib'$/,
             "'libvips.lib', 'libglib-2.0.lib', 'libgobject-2.0.lib'",
             task.modulePath('src', 'binding.gyp'))
         }
@@ -264,14 +264,7 @@ class Rebuilder {
 
       async (task) => {
         await task.npmRebuild()
-      },
-
-      (task) => {
-        if (task.platform === 'win32') {
-          say('copy dlls ...')
-          cp(task.vendorPath('lib', '*.dll'), task.modulePath('src', 'build', 'Release'))
-        }
-      },
+      }
     ]
   }
 }
