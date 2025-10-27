@@ -2,8 +2,8 @@ import { blank } from '../common/util.js'
 
 const strip = (id, vocab) =>
   blank(vocab) ?
-    id.split(/(#|\/)/).pop() :
-    id.slice(vocab.length)
+      id.split(/(#|\/)/).pop() :
+      id.slice(vocab.length)
 
 export const expand = (res, vocab) => ({
   ...res,

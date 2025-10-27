@@ -90,7 +90,7 @@ export class Asset {
   get url() {
     return this.isRemote ?
       `${this.protocol}://${this.path}` :
-      pathToFileURL(this.path)
+        pathToFileURL(this.path)
   }
 
   async check({

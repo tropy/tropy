@@ -24,7 +24,7 @@ export const PropertySelect = React.forwardRef((props, ref) => {
 export const ResourceSelect = React.forwardRef((props, ref) => {
   let intl = useIntl()
   let placeholder = (props.placeholder) ?
-    intl.formatMessage({ id: props.placeholder }) :
+      intl.formatMessage({ id: props.placeholder }) :
     null
 
   return (

@@ -19,7 +19,7 @@ export default {
     let error = result instanceof Error
     let payload = !error ?
       result :
-      pick(result, ['code', 'message', 'stack', 'type'])
+        pick(result, ['code', 'message', 'stack', 'type'])
 
     return {
       type: action.type,

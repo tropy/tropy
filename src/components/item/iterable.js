@@ -68,7 +68,7 @@ export class ItemIterable extends React.PureComponent {
   connect(element) {
     return (this.props.isReadOnly) ?
       element :
-      this.props.ds(this.props.dt(element))
+        this.props.ds(this.props.dt(element))
   }
 
 

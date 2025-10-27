@@ -36,7 +36,7 @@ export const getColumns = memo(
   (cols, props, vocab, spc) =>
     cols.map(col => col.id in spc ?
         ({ ...spc[col.id], ...col }) :
-      merge(col, expand(props[col.id] || { id: col.id }, vocab)))
+        merge(col, expand(props[col.id] || { id: col.id }, vocab)))
 )
 
 const getAllFreeColumns = memo(

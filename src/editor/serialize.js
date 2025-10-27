@@ -80,7 +80,7 @@ export function toHTML(doc) {
   try {
     let node = (doc instanceof Node) ?
       doc :
-      schema.nodeFromJSON(doc)
+        schema.nodeFromJSON(doc)
 
     let frag = serializer.serializeFragment(node)
 
@@ -98,7 +98,7 @@ export function toMarkdown(doc) {
   try {
     let node = (doc instanceof Node) ?
       doc :
-      schema.nodeFromJSON(doc)
+        schema.nodeFromJSON(doc)
 
     return defaultMarkdownSerializer.serialize(node)
 

@@ -717,7 +717,7 @@ export class WindowManager extends EventEmitter {
   static async getButtonLayout() {
     try {
       return !linux ? null :
-        await get('org.gnome.desktop.wm.preferences', 'button-layout')
+          await get('org.gnome.desktop.wm.preferences', 'button-layout')
     } catch (e) {
       warn({ stack: e.stack }, 'failed to get GNOME button-layout')
       return null

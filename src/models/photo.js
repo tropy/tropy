@@ -54,7 +54,7 @@ async function load(db, ids, { basePath } = {}) {
         data.negative = !!negative
         data.path = (
           (basePath && data.protocol === 'file') ?
-            resolve(basePath, normalize(path)) : path
+              resolve(basePath, normalize(path)) : path
         ).normalize()
 
         if (id in photos) Object.assign(photos[id], data)

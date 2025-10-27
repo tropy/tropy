@@ -40,8 +40,8 @@ export const getExpandedRows = (
   isGrid
 ) =>
   isGrid ?
-    getExpandedGridRows(columns, items, expandedItems) :
-    getExpandedListRows(items, expandedItems)
+      getExpandedGridRows(columns, items, expandedItems) :
+      getExpandedListRows(items, expandedItems)
 
 
 const getExpandedListRows = (items, expandedItems) => {

@@ -493,7 +493,7 @@ const ontology = {
               VALUES (?,?,?)`, addLabel =>
             Promise.all(res.map((f, idx) => blank(fields[idx].label) ?
               null :
-              addLabel.run([f.id, ARGS.locale, fields[idx].label])))
+                addLabel.run([f.id, ARGS.locale, fields[idx].label])))
           ).then(() => res)
         )
       },

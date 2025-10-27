@@ -345,7 +345,7 @@ export async function getAssets(db, { basePath }) {
   await db.each(assetInfo.query, asset => {
     asset.path = (
       (basePath && asset.protocol === 'file') ?
-        resolve(basePath, normalize(asset.path)) : asset.path
+          resolve(basePath, normalize(asset.path)) : asset.path
     ).normalize()
 
     assets.push(asset)
@@ -443,9 +443,9 @@ const projectStats =
   }).from('project').limit(1)
 
 const assetInfo =
-    select('id', 'protocol', 'path', 'checksum')
-      .from('photos')
-      .order('protocol, path')
+  select('id', 'protocol', 'path', 'checksum')
+    .from('photos')
+    .order('protocol, path')
 
 export async function beginProjectAccess(db, user) {
   if (user == null)

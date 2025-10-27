@@ -76,8 +76,8 @@ export class FileSelect extends React.PureComponent {
 
   showDialog(opts, { type, createFile } = this.props) {
     return (type === 'file' && createFile) ?
-      save(opts) :
-      open(opts).then(res => Array.isArray(res) ? res[0] : res)
+        save(opts) :
+        open(opts).then(res => Array.isArray(res) ? res[0] : res)
   }
 
   render() {

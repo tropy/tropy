@@ -62,12 +62,12 @@ export const getPhotosWithErrors = memo(
 export const getPhotosForConsolidation =
   ({ photos }, ids) =>
     blank(ids) ?
-      into([],
-        compose(
-          filter(notConsolidating),
-          map(toPhoto)
-        ), photos) :
-      seq(ids,
-        compose(
-          map(id => photos[id]),
-          filter(photo => !photo.consolidating)))
+        into([],
+          compose(
+            filter(notConsolidating),
+            map(toPhoto)
+          ), photos) :
+        seq(ids,
+          compose(
+            map(id => photos[id]),
+            filter(photo => !photo.consolidating)))

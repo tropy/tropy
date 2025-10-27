@@ -13,7 +13,7 @@ export const getAllTags = memo(
 
 export const findTag = ({ tags }, { id, name }) =>
   (name) ?
-    findByName(tags, name) :
+      findByName(tags, name) :
     tags[id] || findByName(tags, id)
 
 const findByName = (tags, name, idOnly = false) => {

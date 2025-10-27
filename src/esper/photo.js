@@ -105,8 +105,8 @@ export class Photo extends Container {
     let height = this.getHeight(zoom)
 
     return isHorizontal(deg(rotation)) ?
-      new Rectangle(0, 0, width, height) :
-      new Rectangle(0, 0, height, width)
+        new Rectangle(0, 0, width, height) :
+        new Rectangle(0, 0, height, width)
   }
 
   getPanLimits(screen, ...args) {

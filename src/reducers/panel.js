@@ -30,7 +30,7 @@ export function panel(state = INIT, { type, payload, meta, error }) {
     case NOTE.SELECT:
       return (payload?.selection == null) ?
         state :
-        expand(state, payload.photo)
+          expand(state, payload.photo)
     case ITEM.OPEN:
       return (!meta.done || error) ? state : expand(state, payload.photo)
     default:

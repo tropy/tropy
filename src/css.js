@@ -13,8 +13,8 @@ export function url(path) {
 
 export function cursor(path, { x = 1, y = 1, fallback = 'default' } = {}) {
   return `${Array.isArray(path) ?
-    imageSet(...path.map(Cursor.expand)) :
-    url(Cursor.expand(path))} ${x} ${y}, ${fallback}`
+      imageSet(...path.map(Cursor.expand)) :
+      url(Cursor.expand(path))} ${x} ${y}, ${fallback}`
 }
 
 export function rgb(r = 0, g = 0, b = 0, a = 1) {

@@ -18,7 +18,7 @@ export function imports(state = [], { type, payload, error, meta }) {
     case ITEM.IMPORT:
       return (!meta.done || error || !payload.length) ?
         state :
-        merge(state, payload)
+          merge(state, payload)
     default:
       return state
   }

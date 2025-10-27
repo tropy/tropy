@@ -179,8 +179,8 @@ export class Image extends Asset {
     this.stats[page] = {
       isOpaque,
       color: (dominant != null) ?
-        rgb(dominant.r, dominant.g, dominant.b) :
-        rgb(...channels.slice(0, 3).map(c => Math.round(c.mean)))
+          rgb(dominant.r, dominant.g, dominant.b) :
+          rgb(...channels.slice(0, 3).map(c => Math.round(c.mean)))
     }
   }
 

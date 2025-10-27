@@ -319,13 +319,13 @@ export class Import extends ImportCommand {
 
   get redo() {
     return (this.result && this.result.length > 0) ?
-      act.item.restore(this.result) :
+        act.item.restore(this.result) :
       null
   }
 
   get undo() {
     return (this.result && this.result.length > 0) ?
-      act.item.delete(this.result) :
+        act.item.delete(this.result) :
       null
   }
 }

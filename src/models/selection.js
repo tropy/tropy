@@ -83,12 +83,12 @@ export default {
 
   async create(db, {
     template,
-      photo,
-      x,
-      y,
-      position,
-      data,
-      ...image
+    photo,
+    x,
+    y,
+    position,
+    data,
+    ...image
   }) {
     const { id } = await subject.create(db, { template })
 

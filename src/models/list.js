@@ -102,7 +102,7 @@ export default {
 
       let res = (items.length === 0) ?
           { changes: restores.length } :
-        await db.run(`
+          await db.run(`
           INSERT INTO list_items (list_id, id) VALUES ${
             items.map(it => `(${id}, ${it})`).join(',')
           }`)

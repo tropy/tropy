@@ -44,6 +44,6 @@ export function merge(s, items) {
 
 export function isSelected(s, items) {
   return Array.isArray(items) ?
-    items.find(it => s.includes(it)) :
-    s.includes(items)
+      items.find(it => s.includes(it)) :
+      s.includes(items)
 }

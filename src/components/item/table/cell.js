@@ -78,8 +78,8 @@ export class TableCell extends React.PureComponent {
       if (input.hasChanged) input.commit(true)
 
       let next = event.shiftKey ?
-        this.props.getPrevColumn(this.props.position) :
-        this.props.getNextColumn(this.props.position)
+          this.props.getPrevColumn(this.props.position) :
+          this.props.getNextColumn(this.props.position)
 
       if (next != null) this.edit(next)
     }

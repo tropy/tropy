@@ -141,19 +141,19 @@ export class Create extends ImportCommand {
   get redo() {
     return !(this.result && this.result.length > 0) ?
       null :
-      act.photo.restore({
-        item: this.action.payload.item,
-        photos: this.result
-      }, { idx: this.options.idx })
+        act.photo.restore({
+          item: this.action.payload.item,
+          photos: this.result
+        }, { idx: this.options.idx })
   }
 
   get undo() {
     return !(this.result && this.result.length > 0) ?
       null :
-      act.photo.delete({
-        item: this.action.payload.item,
-        photos: this.result
-      })
+        act.photo.delete({
+          item: this.action.payload.item,
+          photos: this.result
+        })
   }
 }
 

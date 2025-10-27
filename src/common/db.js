@@ -172,8 +172,8 @@ export class Database extends EventEmitter {
   release(conn, destroy = false) {
     conn.parallelize()
     return destroy ?
-      this.pool.destroy(conn) :
-      this.pool.release(conn)
+        this.pool.destroy(conn) :
+        this.pool.release(conn)
   }
 
   emitAsync(name) {

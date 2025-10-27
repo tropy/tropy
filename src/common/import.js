@@ -30,11 +30,11 @@ export async function normalize(json) {
   return array(await expand(json)).flatMap(g =>
     (!g['@graph']) ?
       g :
-      g['@graph'].map(item =>
-        (tropy.template in item) ? item : {
-          [tropy.template]: g[tropy.template],
-          ...item
-        }))
+        g['@graph'].map(item =>
+          (tropy.template in item) ? item : {
+            [tropy.template]: g[tropy.template],
+            ...item
+          }))
 }
 
 const flatten = (node) =>

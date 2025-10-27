@@ -210,8 +210,8 @@ export class ItemIterator extends React.Component {
     to = (to == null) ? items.length - 1 : indexOf(items, to)
 
     return (from > to) ?
-      items.slice(to, from + 1).reverse() :
-      items.slice(from, to + 1)
+        items.slice(to, from + 1).reverse() :
+        items.slice(from, to + 1)
   }
 
   select = (item, { isMeta, isRange, throttle } = {}) => {
@@ -258,7 +258,7 @@ export class ItemIterator extends React.Component {
   connect(element) {
     return (this.isReadOnly) ?
       element :
-      this.props.connectDropTarget(element)
+        this.props.connectDropTarget(element)
   }
 
   getIterableProps(item, index) {

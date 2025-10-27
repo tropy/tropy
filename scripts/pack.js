@@ -160,8 +160,7 @@ const exports = {
   ['7z']({ app, arch, out, platform, silent }) {
     let output = join(out, `${name}-${version}-${
       (platform === 'darwin' && arch === 'x64') ?
-        platform :
-        [platform, arch].join('-')
+        platform : [platform, arch].join('-')
     }.zip`)
 
     let input = (platform === 'darwin') ?

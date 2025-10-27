@@ -10,13 +10,13 @@ function props(state = {}, { type, payload, error, meta }) {
     case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
       return (meta.done && !error && has(payload, 'props')) ?
-        replace(state, payload.props) :
+          replace(state, payload.props) :
         state
     case PROPS.LOAD:
       return load(state, payload, meta, error)
     case LABEL.SAVE:
       return (payload.type === 'props' && meta.done && !error) ?
-        update(state, { id: payload.id, label: payload.label }) :
+          update(state, { id: payload.id, label: payload.label }) :
         state
     default:
       return state
@@ -28,13 +28,13 @@ function klass(state = {}, { type, payload, error, meta }) {
     case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
       return (meta.done && !error && has(payload, 'class')) ?
-        replace(state, payload.class) :
+          replace(state, payload.class) :
         state
     case CLASS.LOAD:
       return load(state, payload, meta, error)
     case LABEL.SAVE:
       return (payload.type === 'class' && meta.done && !error) ?
-        update(state, { id: payload.id, label: payload.label }) :
+          update(state, { id: payload.id, label: payload.label }) :
         state
     default:
       return state
@@ -46,13 +46,13 @@ function datatype(state = {}, { type, payload, error, meta }) {
     case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
       return (meta.done && !error && has(payload, 'type')) ?
-        replace(state, payload.type) :
+          replace(state, payload.type) :
         state
     case TYPE.LOAD:
       return load(state, payload, meta, error)
     case LABEL.SAVE:
       return (payload.type === 'type' && meta.done && !error) ?
-        update(state, { id: payload.id, label: payload.label }) :
+          update(state, { id: payload.id, label: payload.label }) :
         state
     default:
       return state
@@ -66,21 +66,21 @@ function vocab(state = {}, { type, payload, error, meta }) {
     case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
       return (meta.done && !error && has(payload, 'vocab')) ?
-        replace(state, payload.vocab) :
+          replace(state, payload.vocab) :
         state
     case VOCAB.LOAD:
       return load(state, payload, meta, error)
     case VOCAB.DELETE:
       return (meta.done && !error) ?
-        remove(state, payload) :
+          remove(state, payload) :
         state
     case VOCAB.RESTORE:
       return (meta.done && !error) ?
-        merge(state, payload) :
+          merge(state, payload) :
         state
     case VOCAB.SAVE:
       return (meta.done && !error) ?
-        update(state, payload) :
+          update(state, payload) :
         state
     default:
       return state
@@ -100,19 +100,19 @@ function template(state = {}, { type, payload, error, meta }) {
           { ...state, ...payload } : state
     case TEMPLATE.SAVE:
       return (meta.done && !error) ?
-        update(state, payload) :
+          update(state, payload) :
         state
     case TEMPLATE.DELETE:
       return (meta.done && !error) ?
-        remove(state, payload) :
+          remove(state, payload) :
         state
     case TEMPLATE.FIELD.ADD:
       return (meta.done && !error) ?
-        nested.add('fields', state, payload, meta) :
+          nested.add('fields', state, payload, meta) :
         state
     case TEMPLATE.FIELD.REMOVE:
       return (meta.done && !error) ?
-        nested.remove('fields', state, payload, meta) :
+          nested.remove('fields', state, payload, meta) :
         state
     case TEMPLATE.FIELD.SAVE:
       if (meta.done && !error) {

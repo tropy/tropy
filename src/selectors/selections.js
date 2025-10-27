@@ -24,9 +24,7 @@ export const getPhotoSelections = memo(
   getSelections,
   (photoSelections, selections) =>
     (photoSelections != null) ?
-      pluck(selections, photoSelections) :
-      NOTHING
-
+        pluck(selections, photoSelections) : NOTHING
 )
 
 export const getVisibleSelections = memo(

@@ -115,8 +115,8 @@ export class Editable extends React.PureComponent {
     return (
       <div className={cx(this.classes)}>
         {this.isActive ?
-          this.renderInput() :
-          this.renderContent()}
+            this.renderInput() :
+            this.renderContent()}
       </div>
     )
   }

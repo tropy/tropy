@@ -7,8 +7,8 @@ const loadImageBitmap = async (url, alphaMode) => {
 
   let blob = await response.blob()
   let image = alphaMode === 'premultiplied-alpha' ?
-    await createImageBitmap(blob, { premultiplyAlpha: 'none' }) :
-    await createImageBitmap(blob)
+      await createImageBitmap(blob, { premultiplyAlpha: 'none' }) :
+      await createImageBitmap(blob)
 
   postMessage({
     payload: image,

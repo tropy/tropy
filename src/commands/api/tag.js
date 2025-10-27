@@ -24,7 +24,7 @@ export class TagFind extends Command {
       yield select(getAllTags) :
       yield select(state =>
         (id in state.items) ?
-          pluck(state.tags, state.items[id].tags) :
+            pluck(state.tags, state.items[id].tags) :
           null)
 
     if (tags == null)

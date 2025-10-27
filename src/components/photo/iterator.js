@@ -190,7 +190,7 @@ export class PhotoIterator extends React.Component {
   connect(element) {
     return this.props.isDisabled ?
       element :
-      this.props.connectDropTarget(element)
+        this.props.connectDropTarget(element)
   }
 
 

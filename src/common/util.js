@@ -329,16 +329,16 @@ export function any(src, ...props) {
 export function pick(src, props = [], into = {}, expand = false) {
   return (src == null) ?
     into :
-    props.reduce((res, key) => {
-      const value = src[key]
+      props.reduce((res, key) => {
+        const value = src[key]
 
-      if (expand || typeof value !== 'undefined' || own(src, key)) {
-        res[key] = value
-      }
+        if (expand || typeof value !== 'undefined' || own(src, key)) {
+          res[key] = value
+        }
 
-      return res
+        return res
 
-    }, into)
+      }, into)
 }
 
 export function omit(src, props = [], into = {}) {

@@ -38,10 +38,10 @@ export function markExtend(selection, markType) {
     return null
 
   let { from } = (markType.isInSet(selection.$from.marks())) ?
-    expand(selection.$from, markType) : selection
+      expand(selection.$from, markType) : selection
 
   let { to } = (markType.isInSet(selection.$to.marks())) ?
-    expand(selection.$to, markType) : selection
+      expand(selection.$to, markType) : selection
 
   return { from, to }
 }

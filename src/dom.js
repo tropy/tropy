@@ -11,8 +11,8 @@ export function $$(selectors, node = document) {
 }
 
 export const ready = (document.readyState !== 'loading') ?
-  Promise.resolve() :
-  when(document, 'DOMContentLoaded').then(() => {})
+    Promise.resolve() :
+    when(document, 'DOMContentLoaded').then(() => {})
 
 export function idle(timeout = 1000) {
   return new Promise(resolve => {
@@ -30,7 +30,7 @@ export function attr(node, name, value) {
   if (arguments.length === 2) return node.getAttribute(name)
 
   return (value == null) ?
-    node.removeAttribute(name) : node.setAttribute(name, value)
+      node.removeAttribute(name) : node.setAttribute(name, value)
 }
 
 export function attrs(node, attributes) {

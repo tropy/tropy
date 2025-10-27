@@ -7,8 +7,8 @@ const middleware = () => next => {
     const { meta } = action
 
     return (meta && meta.throttle) ?
-      tnxt(action) :
-      next(action)
+        tnxt(action) :
+        next(action)
   }
 }
 

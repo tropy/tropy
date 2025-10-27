@@ -25,8 +25,8 @@ export function xmp(buffer) {
         for (let attr of desc.attributes) {
           if (attr.namespaceURI !== xml.BASE)
             data[uri(attr)] = DATES.test(attr.localName) ?
-              date(attr.value) :
-              text(attr.value)
+                date(attr.value) :
+                text(attr.value)
         }
 
         for (let node of desc.children) {
