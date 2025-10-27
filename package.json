@@ -120,7 +120,7 @@
     "@inukshuk/exif": "^2.0.0",
     "@koa/router": "^14.0.0",
     "@reduxjs/toolkit": "^2.0.1",
-    "@tweenjs/tween.js": "^23.1.1",
+    "@tweenjs/tween.js": "^25.0.0",
     "alto-xml": "^1.0.1",
     "chokidar": "^4.0.0",
     "classnames": "^2.2.6",
