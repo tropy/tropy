@@ -1,5 +1,4 @@
 import { join, resolve } from 'node:path'
-import { readFileSync } from 'node:fs'
 import { builtinModules } from 'node:module'
 import process from 'node:process'
 import alias from '@rollup/plugin-alias'
@@ -20,10 +19,6 @@ import emit from './scripts/rollup-plugin-emit.js'
 import reactDnd from './scripts/rollup-plugin-react-dnd.js'
 import sharpRequire from './scripts/rollup-plugin-sharp.js'
 
-const sharp = JSON.parse(
-  readFileSync('node_modules/sharp/package.json', { encoding: 'utf-8' })
-)
-
 const NODE_ENV = process.env.NODE_ENV || 'production'
 
 const platform =
@@ -36,7 +31,24 @@ const arch =
   process.arch
 
 const platformId = `${platform}-${arch}`
+const libvips = [
+  {
+    src: 'vendor/sharp/THIRD-PARTY-NOTICES.json',
+    dest: 'lib',
+    rename: 'licenses.libvips.json'
+  }
+]
 
+if (!process.env.SHARP_FORCE_GLOBAL_LIBVIPS) {
+  libvips.push(
+    (platform === 'win32') ? {
+      src: 'node_modules/sharp/src/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
+      dest: 'lib/node/lib'
+    } : {
+      src: `node_modules/@img/sharp-libvips-${platformId}/lib`,
+      dest: `lib/sharp-libvips-${platformId}`
+    })
+}
 
 const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
@@ -166,20 +178,7 @@ export default [
         }
       },
       copy({
-        targets: [
-          (platform === 'win32') ? {
-            src: 'node_modules/sharp/src/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
-            dest: 'lib/node/lib'
-          } : {
-            src: `node_modules/@img/sharp-libvips-${platformId}/lib`,
-            dest: `lib/sharp-libvips-${platformId}`
-          },
-          {
-            src: 'vendor/sharp/THIRD-PARTY-NOTICES.json',
-            dest: 'lib',
-            rename: 'licenses.libvips.json'
-          }
-        ],
+        targets: libvips,
         copyOnce: true
       }),
       ignore([

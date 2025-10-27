@@ -278,7 +278,7 @@ program
   .option('-s, --silent', 'silence rebuilder output', false)
   .option('-H, --skip-headers', 'skip headers download', false)
   .option('-p, --parallel', 'rebuild in parallel', false)
-  .option('--global-libvips', 'use global libvips', false)
+  .option('--global-libvips', 'use global libvips', env.SHARP_FORCE_GLOBAL_LIBVIPS)
   .action(async (args) => {
     let opts = program.opts()
 
