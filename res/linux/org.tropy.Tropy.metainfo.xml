@@ -40,6 +40,9 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.17.0" date="2025-10-27">
+      <url>https://github.com/tropy/tropy/releases/tag/v1.17.0</url>
+    </release>
     <release version="1.16.2" date="2024-03-05">
       <url>https://github.com/tropy/tropy/releases/tag/v1.16.2</url>
     </release>
