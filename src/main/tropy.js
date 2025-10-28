@@ -393,6 +393,10 @@ export class Tropy extends EventEmitter {
         delay(2000)
       ])
 
+      if (process.env.TROPY_PRINT_DEBUG) {
+        win.show()
+      }
+
       sender.focus()
 
       info(`will print ${opts.items.length} item(s)`)
@@ -436,7 +440,9 @@ export class Tropy extends EventEmitter {
       }
 
     } finally {
-      win?.destroy()
+      if (!process.env.TROPY_PRINT_DEBUG) {
+        win?.destroy()
+      }
     }
   }
 
