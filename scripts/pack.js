@@ -270,7 +270,7 @@ const exports = {
       name: qualified.name,
       exe: `${qualified.name}.exe`,
       setupExe,
-      setupIcon: join(ICONS, channel, `${name}.ico`),
+      setupIcon: join(ROOT, 'res', 'win32', 'setup.ico'),
       iconUrl: join(ICONS, channel, `${name}.ico`),
       // remoteReleases: repository.url,
       noDelta: true,
