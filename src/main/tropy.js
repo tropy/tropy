@@ -396,6 +396,7 @@ export class Tropy extends EventEmitter {
       sender.focus()
 
       info(`will print ${opts.items.length} item(s)`)
+      debug({ opts }, 'sending print options...')
       win.send('print', opts)
 
       await Promise.race([

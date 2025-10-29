@@ -7,7 +7,7 @@ import { ITEM } from '../../constants/index.js'
 import { getPrintableItems } from '../../selectors/print.js'
 import { Cache } from '../../common/cache.js'
 import { addOrientation } from '../../common/iiif.js'
-import { info, warn } from '../../common/log.js'
+import { debug, info, warn } from '../../common/log.js'
 import { mkdtmp } from '../../common/os.js'
 import { pMap } from '../../common/util.js'
 import Esper from '../../esper/index.js'
@@ -84,6 +84,7 @@ export class Print extends Command {
       }
 
       if (items.length) {
+        debug({ items }, `prepared ${items.length} item(s) for printing`)
         yield call(ipc.invoke, 'print', {
           pdf,
           landscape,

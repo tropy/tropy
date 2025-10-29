@@ -45,7 +45,7 @@ export class PrintContainer extends React.Component {
     // delay here and hope for the best!
     await delay(500)
 
-    debug('images loaded for printing')
+    debug({ items: this.state.items }, 'images loaded for printing')
     requestIdleCallback(() => {
       this.context.send('print:ready')
     })
