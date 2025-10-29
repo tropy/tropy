@@ -76,11 +76,11 @@
   }
 
   .item-mode & {
-    display: none;
+    visibility: hidden; // Needs dimension for scroll into view calculation
   }
 
   .project-mode-enter & {
-    display: flex;
+    visibility: visible;
   }
 
   .project-mode-enter-active & {
