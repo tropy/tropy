@@ -5,7 +5,7 @@
   "private": true,
   "author": "The Tropy Developers and Contributors",
   "description": "Explore your research photos",
-  "license": "AGPL-3.0",
+  "license": "AGPL-3.0-or-later",
   "homepage": "https://tropy.org",
   "repository": {
     "type": "git",
