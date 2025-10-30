@@ -21,7 +21,8 @@ import {
   fatal,
   info,
   logger,
-  warn
+  warn,
+  trace
 } from '../common/log.js'
 
 import { darwin, linux } from '../common/os.js'
@@ -396,7 +397,7 @@ export class Tropy extends EventEmitter {
       sender.focus()
 
       info(`will print ${opts.items.length} item(s)`)
-      debug({ opts }, 'sending print options...')
+      trace({ opts }, 'sending print options...')
       win.send('print', opts)
 
       await Promise.race([

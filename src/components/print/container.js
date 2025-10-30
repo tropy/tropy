@@ -5,7 +5,7 @@ import { Item } from './item.js'
 import { WindowContext } from '../window.js'
 import { delay, noop } from '../../common/util.js'
 import { loadImage } from '../../dom.js'
-import { debug } from '../../common/log.js'
+import { debug, trace } from '../../common/log.js'
 
 
 export class PrintContainer extends React.Component {
@@ -34,7 +34,7 @@ export class PrintContainer extends React.Component {
   }
 
   handleItemsReceived = async () => {
-    await Promise.all(
+    let numLoaded = await Promise.all(
       this.state.items
         .flatMap(item => item.photos)
         .map(photo => loadImage(photo.path).catch(noop)))
@@ -43,9 +43,11 @@ export class PrintContainer extends React.Component {
     // the print dialog. Instead of using image.decode() on
     // every image instance we just estimate a reasonable
     // delay here and hope for the best!
-    await delay(500)
+    let timeout = Math.min(Math.max(250, numLoaded.length * 100), 2000)
+    trace({ items: this.state.items, timeout }, 'loading images for printing ...')
+    await delay(timeout)
 
-    debug({ items: this.state.items }, 'images loaded for printing')
+    debug('images loaded for printing')
     requestIdleCallback(() => {
       this.context.send('print:ready')
     })
