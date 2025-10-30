@@ -158,7 +158,7 @@ class MetadataPanel extends React.PureComponent {
           fields={this.props.fields.item}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
-          onEditCancel={this.props.onEditCancel}
+          onCancel={this.props.onCancel}
           onContextMenu={this.handleItemContextMenu}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterItemFields}
@@ -184,7 +184,7 @@ class MetadataPanel extends React.PureComponent {
           fields={this.props.fields.photo}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
-          onEditCancel={this.props.onEditCancel}
+          onCancel={this.props.onCancel}
           onContextMenu={this.handlePhotoContextMenu}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterPhotoFields}
@@ -211,7 +211,7 @@ class MetadataPanel extends React.PureComponent {
           fields={this.props.fields.selection}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
-          onEditCancel={this.props.onEditCancel}
+          onCancel={this.props.onCancel}
           onContextMenu={this.handleSelectionContextMenu}
           onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterSelectionFields}

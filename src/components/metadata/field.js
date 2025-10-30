@@ -17,11 +17,11 @@ export const MetadataField = React.memo(({
   isReadOnly,
   isMixed,
   label,
+  onCancel,
   onContextMenu,
   onChange,
   onClick,
   onEdit,
-  onEditCancel,
   property,
   text,
   type,
@@ -61,7 +61,7 @@ export const MetadataField = React.memo(({
 
   let handleCancel = useEvent((hasChanged, hasBeenForced) => {
     if (hasBeenForced)
-      onEditCancel()
+      onCancel()
     else
       handleChange(text, hasChanged)
   })

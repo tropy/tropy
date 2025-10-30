@@ -78,7 +78,7 @@ export class MetadataList extends React.PureComponent {
     if (hasChanged || (hasBeenForced && this.isBulk)) {
       this.props.onChange({ id: this.props.fields.id, data })
     }
-    this.props.onEditCancel()
+    this.props.onCancel()
   }
 
   handleCreate = (property) => {
@@ -134,10 +134,10 @@ export class MetadataList extends React.PureComponent {
             property={property.id}
             text={value.text}
             type={value.type || type}
+            onCancel={this.props.onCancel}
             onContextMenu={this.props.onContextMenu}
             onChange={this.handleChange}
             onEdit={this.edit}
-            onEditCancel={this.props.onEditCancel}
             onKeyDown={this.handleKeyDown}/>
         )
         )}
@@ -145,7 +145,7 @@ export class MetadataList extends React.PureComponent {
           <li>
             <FieldSelect
               value={this.props.fields.map(f => f.property.id)}
-              onCancel={this.props.onEditCancel}
+              onCancel={this.props.onCancel}
               onInsert={this.handleCreate}/>
           </li>
         )}

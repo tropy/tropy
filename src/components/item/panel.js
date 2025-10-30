@@ -63,10 +63,6 @@ export class ItemPanelGroup extends React.PureComponent {
     event.nativeEvent.stopImmediatePropagation()
   }
 
-  handleEditCancel = () => {
-    this.props.onEditCancel()
-  }
-
   handleTagAddCancel = () => {
     this.panel.current.focus()
   }
@@ -155,7 +151,7 @@ export class ItemPanelGroup extends React.PureComponent {
                       isDisabled={isDisabled || isReadOnly}
                       onContextMenu={this.props.onContextMenu}
                       onEdit={this.props.onEdit}
-                      onEditCancel={this.handleEditCancel}
+                      onCancel={this.props.onEditCancel}
                       onMetadataSave={this.props.onMetadataSave}
                       onPhotoSave={this.props.onPhotoSave}/>
                   )
