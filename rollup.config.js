@@ -31,13 +31,7 @@ const arch =
   process.arch
 
 const platformId = `${platform}-${arch}`
-const libvips = [
-  {
-    src: 'vendor/sharp/THIRD-PARTY-NOTICES.json',
-    dest: 'lib',
-    rename: 'licenses.libvips.json'
-  }
-]
+const libvips = []
 
 if (!process.env.SHARP_FORCE_GLOBAL_LIBVIPS) {
   libvips.push(
@@ -47,6 +41,11 @@ if (!process.env.SHARP_FORCE_GLOBAL_LIBVIPS) {
     } : {
       src: `node_modules/@img/sharp-libvips-${platformId}/lib`,
       dest: `lib/sharp-libvips-${platformId}`
+    },
+    {
+      src: 'vendor/sharp/THIRD-PARTY-NOTICES.json',
+      dest: 'lib',
+      rename: 'licenses.libvips.json'
     })
 }
 
