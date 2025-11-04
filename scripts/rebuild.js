@@ -203,7 +203,7 @@ class Rebuilder {
         if (task.platform === 'darwin') {
           sed('-i',
             /"MACOSX_DEPLOYMENT_TARGET":\s*"[\d.]+",/,
-            '"MACOSX_DEPLOYMENT_TARGET": "11.0",',
+            '"MACOSX_DEPLOYMENT_TARGET": "12.0",',
             task.modulePath('binding.gyp'))
         }
       },
@@ -251,7 +251,7 @@ class Rebuilder {
         if (task.platform === 'darwin') {
           sed('-i',
             /'MACOSX_DEPLOYMENT_TARGET':\s*'[\d.]+',/,
-            "'MACOSX_DEPLOYMENT_TARGET': '11.0',",
+            "'MACOSX_DEPLOYMENT_TARGET': '12.0',",
             task.modulePath('src', 'binding.gyp'))
         }
       },
