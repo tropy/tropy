@@ -26,8 +26,6 @@ jobs:
           - windows-2022
         arch:
           - x64
-        globalLibvips:
-          - false
         include:
           - os: ubuntu-latest
             friendlyName: Linux
@@ -55,8 +53,6 @@ jobs:
           - os: windows-2022
             friendlyName: Windows
             platform: win32
-    env:
-      SHARP_FORCE_GLOBAL_LIBVIPS: ${{ matrix.globalLibvips }}
 
     steps:
       - name: Checkout repository
@@ -78,6 +74,8 @@ jobs:
         run: npm clean-install --no-progress
       - name: Rebuild native dependencies
         run: node scripts/rebuild.js --force --arch ${{ matrix.arch }}
+        env:
+          SHARP_FORCE_GLOBAL_LIBVIPS: ${{ matrix.globalLibvips }}
 
       - name: Lint
         run: npm run lint
@@ -85,7 +83,8 @@ jobs:
       - name: Create production bundle
         run: npm run rollup
         env:
-          npm_config_arch: ${{ matrix.arch }}
+          NPM_CONFIG_ARCH: ${{ matrix.arch }}
+          SHARP_FORCE_GLOBAL_LIBVIPS: ${{ matrix.globalLibvips }}
 
       - name: Run main/renderer tests
         if: matrix.platform != 'linux'
