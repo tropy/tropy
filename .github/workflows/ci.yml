@@ -26,7 +26,8 @@ jobs:
           - windows-2022
         arch:
           - x64
-        globalLibvips: false
+        globalLibvips:
+          - false
         include:
           - os: ubuntu-latest
             friendlyName: Linux
