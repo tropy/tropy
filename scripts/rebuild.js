@@ -220,7 +220,9 @@ class Rebuilder {
 
     sharp: [
       async (task) => {
-        if (!env.SHARP_FORCE_GLOBAL_LIBVIPS) {
+        if (Boolean(env.SHARP_FORCE_GLOBAL_LIBVIPS) === true) {
+          say('using system libvips ...')
+        } else {
           await fs.promises.mkdir(task.vendorPath(), { recursive: true })
 
           let platformId = `${task.platform}-${task.arch}`
@@ -285,7 +287,7 @@ program
   .option('-s, --silent', 'silence rebuilder output', false)
   .option('-H, --skip-headers', 'skip headers download', false)
   .option('-p, --parallel', 'rebuild in parallel', false)
-  .option('--global-libvips', 'use global libvips', env.SHARP_FORCE_GLOBAL_LIBVIPS)
+  .option('--global-libvips', 'use global libvips', Boolean(env.SHARP_FORCE_GLOBAL_LIBVIPS))
   .action(async (args) => {
     let opts = program.opts()
 
@@ -302,7 +304,9 @@ program
 
     if (opts.globalLibvips) {
       env.SHARP_FORCE_GLOBAL_LIBVIPS = true
+      env.SHARP_IGNORE_GLOBAL_LIBVIPS = false
     } else {
+      env.SHARP_FORCE_GLOBAL_LIBVIPS = false
       env.SHARP_IGNORE_GLOBAL_LIBVIPS = true
     }
 

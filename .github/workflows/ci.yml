@@ -26,10 +26,15 @@ jobs:
           - windows-2022
         arch:
           - x64
+        globalLibvips: false
         include:
           - os: ubuntu-latest
             friendlyName: Linux
             platform: linux
+          - os: ubuntu-latest
+            friendlyName: Linux (system libvips)
+            platform: linux
+            globalLibvips: true
           - os: ubuntu-22.04
             arch: x64
             friendlyName: Linux (LTS)
@@ -49,6 +54,8 @@ jobs:
           - os: windows-2022
             friendlyName: Windows
             platform: win32
+    env:
+      SHARP_FORCE_GLOBAL_LIBVIPS: ${{ matrix.globalLibvips }}
 
     steps:
       - name: Checkout repository

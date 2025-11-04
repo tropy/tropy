@@ -33,7 +33,7 @@ const arch =
 const platformId = `${platform}-${arch}`
 const libvips = []
 
-if (!process.env.SHARP_FORCE_GLOBAL_LIBVIPS) {
+if (Boolean(process.env.SHARP_FORCE_GLOBAL_LIBVIPS) !== true) {
   libvips.push(
     (platform === 'win32') ? {
       src: 'node_modules/sharp/src/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
