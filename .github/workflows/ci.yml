@@ -26,7 +26,7 @@ jobs:
           - windows-2022
         arch:
           - x64
-        globalLibvips: false
+        globalLibvips: 'false'
         include:
           - os: ubuntu-latest
             friendlyName: Linux
@@ -34,7 +34,7 @@ jobs:
           - os: ubuntu-latest
             friendlyName: Linux (system libvips)
             platform: linux
-            globalLibvips: true
+            globalLibvips: 'true'
           - os: ubuntu-22.04
             arch: x64
             friendlyName: Linux (LTS)
