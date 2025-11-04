@@ -232,8 +232,8 @@ class Rebuilder {
             await download(url, task.vendorPath(tar))
           }
 
-          await fs.promises.rm(task.vendorPath('lib', { recursive: true }))
-          await fs.promises.rm(task.vendorPath('include', { recursive: true }))
+          await fs.promises.rm(task.vendorPath('lib'), { recursive: true })
+          await fs.promises.rm(task.vendorPath('include'), { recursive: true })
           say('unpacking sharp-libvips binaries ...')
           exec(`tar -C ${task.vendorPath()} -x -z -f ${task.vendorPath(tar)}`)
 
