@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import fs from 'node:fs'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import { coerce } from 'semver'
 import { say, setLogSymbol, ROOT } from './util.js'
 import { program } from 'commander'
 import { family } from 'detect-libc'
@@ -20,8 +21,14 @@ const ELECTRON_VERSION = JSON.parse(
   })
 ).version
 
+const LIBVIPS_VERSION = coerce(JSON.parse(
+  fs.readFileSync('node_modules/sharp/package.json', {
+    encoding: 'utf-8'
+  })
+).config.version).toString()
+
 const LIBVIPS_URL = 'https://github.com/tropy/sharp-libvips/releases/download'
-const LIBVIPS_VERSION = '8.17.2'
+const SHARP_LIB = join(ROOT, 'node_modules', '@img')
 
 function downloadHeaders({
   arch = ARCH,
@@ -225,18 +232,18 @@ class Rebuilder {
             await download(url, task.vendorPath(tar))
           }
 
-          if (!test('-d', task.vendorPath('lib'))) {
-            say('unpacking sharp-libvips binaries ...')
-            exec(`tar -C ${task.vendorPath()} -x -z -f ${task.vendorPath(tar)}`)
-          }
+          await fs.promises.rm(task.vendorPath('lib', { recursive: true }))
+          await fs.promises.rm(task.vendorPath('include', { recursive: true }))
+          say('unpacking sharp-libvips binaries ...')
+          exec(`tar -C ${task.vendorPath()} -x -z -f ${task.vendorPath(tar)}`)
 
           say('replacing sharp-libvips lib and include ...')
           cp('-r',
             task.vendorPath('lib'),
-            join(ROOT, 'node_modules', '@img', `sharp-libvips-${platformId}`))
+            join(SHARP_LIB, `sharp-libvips-${platformId}`))
           cp('-r',
             task.vendorPath('include'),
-            join(ROOT, 'node_modules', '@img', 'sharp-libvips-dev'))
+            join(SHARP_LIB, 'sharp-libvips-dev'))
         }
       },
 
