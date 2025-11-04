@@ -16,16 +16,16 @@ const { cat, cd, cp, env, exec, sed, test } = shelljs
 const ARCH = process.env.npm_config_target_arch || process.arch
 
 const ELECTRON_VERSION = JSON.parse(
-  fs.readFileSync('node_modules/electron/package.json', {
+  fs.readFileSync(join(ROOT, 'node_modules/electron/package.json'), {
     encoding: 'utf-8'
   })
 ).version
 
 const LIBVIPS_VERSION = coerce(JSON.parse(
-  fs.readFileSync('node_modules/sharp/package.json', {
+  fs.readFileSync(join(ROOT, 'node_modules/sharp/package.json'), {
     encoding: 'utf-8'
   })
-).config.version).toString()
+).config.libvips).toString()
 
 const LIBVIPS_URL = 'https://github.com/tropy/sharp-libvips/releases/download'
 const SHARP_LIB = join(ROOT, 'node_modules', '@img')
