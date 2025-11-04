@@ -21,40 +21,36 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-2022
-        arch:
-          - x64
-        globalLibvips:
-          - false
         include:
           - os: ubuntu-latest
+            arch: x64
+            platform: linux
             friendlyName: Linux
-            platform: linux
           - os: ubuntu-latest
-            friendlyName: Linux (libvips)
+            arch: x64
             platform: linux
-            globalLibvips: true
+            globalLibvips: 'true'
+            friendlyName: Linux (libvips)
           - os: ubuntu-22.04
             arch: x64
-            friendlyName: Linux (LTS)
             platform: linux
+            friendlyName: Linux (LTS)
           - os: macos-15-intel
             arch: x64
-            friendlyName: macOS
             platform: darwin
+            friendlyName: macOS
           - os: macos-latest
             arch: arm64
-            friendlyName: macOS
             platform: darwin
+            friendlyName: macOS
           - os: macos-26
             arch: arm64
-            friendlyName: macOS 26
             platform: darwin
+            friendlyName: macOS 26
           - os: windows-2022
-            friendlyName: Windows
+            arch: x64
             platform: win32
+            friendlyName: Windows
 
     steps:
       - name: Checkout repository
