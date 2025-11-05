@@ -57,9 +57,8 @@ export function parse(argv = process.argv.slice(1)) {
     opts: program.opts(),
     args: program.args
       // TODO remove with allowUnknownOption!
-      .filter(arg => !arg.startsWith('-'))
-      .map(arg => argToURL(arg))
-
+      .filter(arg => !(arg.startsWith('-') || arg.trim().length === 0))
+      .map(arg => argToURL(arg.trim()))
   }
 }
 
