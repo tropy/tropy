@@ -2,7 +2,9 @@
 <component type="desktop-application">
   <id>org.tropy.Tropy</id>
   <launchable type="desktop-id">org.tropy.Tropy.desktop</launchable>
-  <developer_name>Digital Scholar</developer_name>
+  <developer id="org.digitalscholar">
+    <name>Digital Scholar</name>
+  </developer>
   <name>Tropy</name>
   <summary>Explore your research photos</summary>
   <metadata_license>CC0-1.0</metadata_license>
@@ -23,20 +25,25 @@
     <color type="primary" scheme_preference="dark">#395bac</color>
   </branding>
   <screenshots>
-    <screenshot>
-      <image>https://tropy.org/assets/images/metainfo/screenshot-1.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://tropy.org/assets/images/metainfo/screenshot-2.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://tropy.org/assets/images/metainfo/screenshot-2-dark.png</image>
+    <screenshot type="default">
+      <image>https://tropy.org/assets/images/metainfo/screenshot-4.png</image>
+      <caption>Item view (light theme, custom titlebar)</caption>
     </screenshot>
     <screenshot>
       <image>https://tropy.org/assets/images/metainfo/screenshot-3.png</image>
+      <caption>Project grid view (light theme, custom titlebar)</caption>
     </screenshot>
-    <screenshot type="default">
-      <image>https://tropy.org/assets/images/metainfo/screenshot-4.png</image>
+    <screenshot>
+      <image>https://tropy.org/assets/images/metainfo/screenshot-2-dark.png</image>
+      <caption>Project table view (dark theme, custom titlebar)</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://tropy.org/assets/images/metainfo/screenshot-2.png</image>
+      <caption>Project table view (light theme, custom titlebar)</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://tropy.org/assets/images/metainfo/screenshot-1.png</image>
+      <caption>Project grid view (light theme, custom titlebar)</caption>
     </screenshot>
   </screenshots>
   <releases>
@@ -86,8 +93,8 @@
     <mediatype>application/vnd.tropy.ttp</mediatype>
   </provides>
   <requires>
-    <display_length>811</display_length>
     <control>keyboard</control>
     <control>pointing</control>
+    <display_length compare="ge">811</display_length>
   </requires>
 </component>
