@@ -164,6 +164,7 @@ class Rebuilder {
         await task.exec(`npx node-gyp rebuild ${[
           `--target=${task.target}`,
           `--arch=${task.arch}`,
+          `--target-arch=${task.arch}`,
           task.verbose ? '--verbose' : ''
         ].join(' ')}`)
       }
@@ -286,8 +287,10 @@ async function rebuild(task, force) {
   if (force || task.stale) {
     env.npm_package_config_node_gyp_target = task.target
     env.npm_package_config_node_gyp_arch = task.arch
+    env.npm_package_config_node_gyp_target_arch = task.arch
     env.npm_config_node_gyp_target = task.target
     env.npm_config_node_gyp_arch = task.arch
+    env.npm_config_node_gyp_target_arch = task.arch
 
     if (task.verbose) {
       env.npm_package_config_node_gyp_loglevel = 'verbose'

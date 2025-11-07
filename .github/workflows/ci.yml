@@ -89,7 +89,7 @@ jobs:
           echo "SHARP_FORCE_GLOBAL_LIBVIPS=true" >> $GITHUB_ENV
 
       - name: Rebuild native modules
-        run: node scripts/rebuild.js --force --arch ${{ matrix.arch }}
+        run: node scripts/rebuild.js --force --verbose --arch ${{ matrix.arch }}
 
       - name: Create production bundle
         run: npm run rollup
