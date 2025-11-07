@@ -68,6 +68,17 @@ jobs:
       - name: Install requirements for node-gyp
         run: pip install setuptools
 
+      - name: Install libvips
+        if: matrix.platform == 'linux' && matrix.globalLibvips == 'true'
+        env:
+          VERSION_VIPS: '8.17.3'
+        run: |
+          mkdir vendor/vips
+          curl -sL --retry 3 https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.xz | tar xJC vendor/vips --strip-components=1
+          cd vendor/vips
+          meson setup build
+          meson install -C build
+
       - name: Install and build dependencies
         run: npm clean-install --no-progress
       - name: Rebuild native dependencies
@@ -94,7 +105,7 @@ jobs:
         run: xvfb-run --auto-servernum --server-num=1 npm run coverage
 
       - name: Send coverage report to Coveralls
-        if: matrix.platform == 'linux'
+        if: matrix.platform == 'linux' && matrix.globalLibvips != 'true'
         continue-on-error: true
         uses: coverallsapp/github-action@v2
         with:
