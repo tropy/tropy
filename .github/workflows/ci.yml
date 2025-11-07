@@ -6,15 +6,15 @@ on:
     branches: [main]
 
 concurrency:
-  group: ci-${{github.ref}}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 permissions:
   contents: read
 
 jobs:
   build:
-    name: ${{runner.os}} ${{matrix.arch}} ${{matrix.tag}}
-    runs-on: ${{matrix.image}}
+    name: ${{ runner.os }} ${{ matrix.arch }} ${{ matrix.tag }}
+    runs-on: ${{ matrix.image }}
 
     strategy:
       fail-fast: false
@@ -45,7 +45,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 22
-          architecture: ${{matrix.nodejs_arch || matrix.arch}}
+          architecture: ${{ matrix.nodejs_arch || matrix.arch }}
           cache: npm
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -84,12 +84,12 @@ jobs:
           echo "SHARP_FORCE_GLOBAL_LIBVIPS=true" >> $GITHUB_ENV
 
       - name: Rebuild native modules
-        run: node scripts/rebuild.js --force --arch ${{matrix.arch}}
+        run: node scripts/rebuild.js --force --arch ${{ matrix.arch }}
 
       - name: Create production bundle
         run: npm run rollup
         env:
-          npm_package_config_node_gyp_arch: ${{matrix.arch}}
+          npm_package_config_node_gyp_arch: ${{ matrix.arch }}
 
       - name: Run main/renderer tests
         if: runner.os != 'Linux'
@@ -104,4 +104,4 @@ jobs:
         continue-on-error: true
         uses: coverallsapp/github-action@v2
         with:
-          github-token: ${{github.token}}
+          github-token: ${{ github.token }}
