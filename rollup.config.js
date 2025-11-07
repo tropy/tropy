@@ -21,13 +21,9 @@ import sharpRequire from './scripts/rollup-plugin-sharp.js'
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
 
-const platform =
-  process.env.npm_config_target_platform ||
-  process.env.npm_config_platform ||
-  process.platform
+const { platform } = process
 const arch =
-  process.env.npm_config_target_arch ||
-  process.env.npm_config_arch ||
+  process.env.npm_package_config_node_gyp_arch ||
   process.arch
 
 const platformId = `${platform}-${arch}`
