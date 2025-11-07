@@ -82,7 +82,8 @@ jobs:
           curl -sL --retry 3 https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.xz | tar xJC vendor/vips --strip-components=1
           cd vendor/vips
           meson setup build
-          meson install -C build
+          meson compile -C build
+          sudo meson install -C build
 
       - name: Install and build dependencies
         run: npm clean-install --no-progress
