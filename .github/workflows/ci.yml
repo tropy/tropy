@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   build:
-    name: ${{ runner.os }} ${{ matrix.arch }} ${{ matrix.tag }}
+    name: ${{ matrix.image }} ${{ matrix.arch }} ${{ matrix.tag }}
     runs-on: ${{ matrix.image }}
 
     strategy:
