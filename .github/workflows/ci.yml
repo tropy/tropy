@@ -38,7 +38,7 @@ jobs:
             arch: x64
           - image: windows-2022
             arch: ia32
-            nodejs_arch: x64 # x86
+            nodejs_arch: x86
           - image: windows-11-arm
             arch: arm64
 
@@ -60,7 +60,9 @@ jobs:
         run: pip install setuptools
 
       - name: Install NPM modules
-        run: npm clean-install --no-progress
+        run: npm clean-install --no-progress --ignore-scripts
+      - name: Install Electron
+        run: node node_modules/electron/install.js
 
       - name: Lint JavaScript and Scss
         run: npm run lint
