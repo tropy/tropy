@@ -1,22 +1,20 @@
 name: ci
-
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{github.ref}}
   cancel-in-progress: true
-
 permissions:
   contents: read
 
 jobs:
   build:
-    name: ${{ runner.os }} ${{ matrix.arch }}
-    runs-on: ${{ matrix.image }}
+    name: ${{runner.os}} ${{matrix.arch}} ${{matrix.tag}}
+    runs-on: ${{matrix.image}}
 
     strategy:
       fail-fast: false
@@ -26,9 +24,10 @@ jobs:
             arch: x64
           - image: ubuntu-latest
             arch: x64
-            globalLibvips: 'true'
+            tag: 'libvips'
           - image: ubuntu-22.04
             arch: x64
+            tag: 'LTS'
           - image: macos-15-intel
             arch: x64
           - image: macos-latest
@@ -46,59 +45,63 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 22
+          architecture: ${{matrix.nodejs_arch || matrix.arch}}
           cache: npm
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.x'
-      - name: Install requirements for node-gyp
+      - name: Install node-gyp dependencies
         run: pip install setuptools
 
-      - name: Install dependencies
+      - name: Install NPM modules
         run: npm clean-install --no-progress
 
+      - name: Lint JavaScript and Scss
+        run: npm run lint
+
       - name: Install system libvips
-        if: runner.os == 'Linux' && matrix.globalLibvips == 'true'
+        if: runner.os == 'Linux' && matrix.tag == 'libvips'
         run: |
+          # Install libvips dependencies
           sudo apt-get update
           sudo apt-get install jq meson pkg-config \
             libarchive-dev libcgif-dev libexif-dev libheif-dev libheif-plugin-aomenc \
             libimagequant-dev libjpeg-dev libjxl-dev liblcms2-dev libopenjp2-7-dev libpango1.0-dev \
             libpng-dev libpoppler-glib-dev librsvg2-dev libtiff5-dev libwebp-dev
+          # Fetch required libvips
           mkdir vendor/vips
-          export VERSION_VIPS=$(jq .config.libvips node_modules/sharp/package.json | tr -d "><=")
-          curl -sL --retry 3 https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.xz | tar xJC vendor/vips --strip-components=1
+          VV=$(jq .config.libvips node_modules/sharp/package.json | tr -d "><=")
+          curl -sL --retry 3 \
+            https://github.com/libvips/libvips/releases/download/v${VV}/vips-${VV}.tar.xz \
+            | tar xJC vendor/vips --strip-components=1
+          # Build and install libvips
           cd vendor/vips
           meson setup build
           meson compile -C build
           sudo meson install -C build
+          # Set env variable
+          echo "SHARP_FORCE_GLOBAL_LIBVIPS=true" >> $GITHUB_ENV
 
-      - name: Rebuild native dependencies
-        run: node scripts/rebuild.js --force --arch ${{ matrix.arch }}
-        env:
-          SHARP_FORCE_GLOBAL_LIBVIPS: ${{ matrix.globalLibvips }}
-
-      - name: Lint
-        run: npm run lint
+      - name: Rebuild native modules
+        run: node scripts/rebuild.js --force --arch ${{matrix.arch}}
 
       - name: Create production bundle
         run: npm run rollup
         env:
-          NPM_CONFIG_ARCH: ${{ matrix.arch }}
-          SHARP_FORCE_GLOBAL_LIBVIPS: ${{ matrix.globalLibvips }}
+          npm_package_config_node_gyp_arch: ${{matrix.arch}}
 
       - name: Run main/renderer tests
         if: runner.os != 'Linux'
         run: npm test
-        shell: bash
 
-      - name: Run main/renderer tests with coverage report
+      - name: Run main/renderer tests and collect code coverage
         if: runner.os == 'Linux'
         run: xvfb-run --auto-servernum --server-num=1 npm run coverage
 
       - name: Send coverage report to Coveralls
-        if: runner.os == 'Linux' && matrix.globalLibvips != 'true'
+        if: runner.os == 'Linux' && !matrix.tag
         continue-on-error: true
         uses: coverallsapp/github-action@v2
         with:
-          github-token: ${{ github.token }}
+          github-token: ${{github.token}}
