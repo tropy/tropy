@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   build:
-    name: ${{ matrix.friendlyName }} ${{ matrix.arch }}
+    name: ${{ runner.os }} ${{ matrix.arch }}
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -25,12 +25,10 @@ jobs:
           - os: ubuntu-latest
             arch: x64
             platform: linux
-            friendlyName: Linux
           - os: ubuntu-latest
             arch: x64
             platform: linux
             globalLibvips: 'true'
-            friendlyName: Linux (libvips)
           - os: ubuntu-22.04
             arch: x64
             platform: linux
@@ -38,19 +36,15 @@ jobs:
           - os: macos-15-intel
             arch: x64
             platform: darwin
-            friendlyName: macOS
           - os: macos-latest
             arch: arm64
             platform: darwin
-            friendlyName: macOS
           - os: macos-26
             arch: arm64
             platform: darwin
-            friendlyName: macOS 26
           - os: windows-2022
             arch: x64
             platform: win32
-            friendlyName: Windows
 
     steps:
       - name: Checkout repository
@@ -68,7 +62,10 @@ jobs:
       - name: Install requirements for node-gyp
         run: pip install setuptools
 
-      - name: Install libvips
+      - name: Install dependencies
+        run: npm clean-install --no-progress
+
+      - name: Install system libvips
         if: matrix.platform == 'linux' && matrix.globalLibvips == 'true'
         run: |
           sudo apt-get update
@@ -84,8 +81,6 @@ jobs:
           meson compile -C build
           sudo meson install -C build
 
-      - name: Install and build dependencies
-        run: npm clean-install --no-progress
       - name: Rebuild native dependencies
         run: node scripts/rebuild.js --force --arch ${{ matrix.arch }}
         env:
