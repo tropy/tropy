@@ -12,7 +12,7 @@ import shelljs from 'shelljs'
 
 setLogSymbol('Δ')
 
-const { cat, cd, cp, env, exec, sed, test } = shelljs
+const { cat, cp, env, exec, sed, test } = shelljs
 const ARCH = process.env.npm_config_target_arch || process.arch
 
 const ELECTRON_VERSION = JSON.parse(
@@ -60,6 +60,7 @@ class Rebuilder {
     target = ELECTRON_VERSION,
     libc,
     silent,
+    verbose,
     steps = [...Rebuilder.Steps[name]]
   }) {
     this.name = name
@@ -68,6 +69,7 @@ class Rebuilder {
     this.target = target
     this.libc = libc
     this.silent = silent
+    this.verbose = verbose
     this.steps = steps
   }
 
@@ -107,77 +109,20 @@ class Rebuilder {
     }
   }
 
-  async exec(cmd) {
-    try {
-      var cwd = process.cwd()
-      cd(this.modulePath())
-
-      await this.runCommand(cmd)
-
-    } finally {
-      cd(cwd)
-    }
-  }
-
-  async runCommand(cmd) {
+  async exec(cmd, options = {}) {
     await new Promise((resolve, reject) => {
-      exec(cmd, { silent: this.silent }, (code, stdout, stderr) => {
+      exec(`npm explore ${this.name} -- ${cmd}`, {
+        silent: this.silent,
+        ...options
+      }, (code, stdout, stderr) => {
         if (code !== 0) {
           if (!this.silent)
             console.error(stderr)
-
-          reject(new Error(`${this.name} failed to run: ${cmd}`))
-
+          reject(new Error(`${this.name} failed to run "${cmd}"`))
         } else {
           resolve({ code, stdout, stderr })
         }
       })
-    })
-  }
-
-  async nodeGypRebuild() {
-    await this.exec(`npx node-gyp rebuild ${[
-      ...this.buildArgs(),
-      ...this.buildArgsFromBinaryField()
-    ].join(' ')}`)
-  }
-
-  async npmRebuild() {
-    await this.runCommand(
-      `npm rebuild ${this.name} ${this.buildArgs().join(' ')}`
-    )
-  }
-
-  buildArgs() {
-    return [
-      `--arch=${this.arch}`,
-      `--target=${this.target}`,
-      '--runtime=electron',
-      '--build-from-source',
-      this.silent ? '--silent' : '--verbose',
-      `--target_platform=${this.platform}`,
-      `--target_arch=${this.arch}`
-    ]
-  }
-
-  buildArgsFromBinaryField() {
-    let { binary = {} } = this.package
-
-    return Object.entries((binary)).map(([key, value]) => {
-      if (key === 'napi_versions')
-        return
-
-      if (key === 'module_path')
-        value = this.modulePath(value)
-
-      value = value
-        .replace('{version}', this.package.version)
-        .replace('{napi_build_version}', () => binary.napi_versions.at(-1))
-        .replace('{platform}', this.platform)
-        .replace('{arch}', this.arch)
-        .replace('{libc}', this.libc)
-
-      return `--${key}=${value}`
     })
   }
 
@@ -214,7 +159,11 @@ class Rebuilder {
       },
 
       async (task) => {
-        await task.nodeGypRebuild()
+        // Uses node-gyp 8.x which doesn't yet pick up the env variables
+        await task.exec(`npx node-gyp rebuild ${[
+          `--target=${task.target}`,
+          `--arch=${task.arch}`,
+        ].join(' ')}`)
       }
     ],
 
@@ -276,7 +225,7 @@ class Rebuilder {
       },
 
       async (task) => {
-        await task.npmRebuild()
+        await task.exec('npm run build')
       }
     ]
   }
@@ -289,6 +238,7 @@ program
   .option('--arch <name>', 'set target arch', ARCH)
   .option('-f, --force', 'force rebuild', false)
   .option('-s, --silent', 'silence rebuilder output', false)
+  .option('-v, --verbose', 'passed to node-gyp', false)
   .option('-H, --skip-headers', 'skip headers download', false)
   .option('-p, --parallel', 'rebuild in parallel', false)
   .option('--global-libvips', 'use global libvips', env.SHARP_FORCE_GLOBAL_LIBVIPS === 'true')
@@ -332,6 +282,13 @@ program
 
 async function rebuild(task, force) {
   if (force || task.stale) {
+    env.npm_package_config_node_gyp_target = task.target
+    env.npm_package_config_node_gyp_arch = task.arch
+
+    if (task.verbose) {
+      env.npm_package_config_node_gyp_verbose = task.verbose
+    }
+
     for (let i = 0; i < task.steps.length; ++i) {
       say(`${task.name} rebuilding #${i + 1}...`)
       await task.steps[i](task)
