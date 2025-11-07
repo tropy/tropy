@@ -288,7 +288,7 @@ async function rebuild(task, force) {
     env.npm_package_config_node_gyp_target = task.target
     env.npm_package_config_node_gyp_arch = task.arch
     env.npm_package_config_node_gyp_target_arch = task.arch
-    env.npm_config_arch = task.target // used by sharp!
+    env.npm_config_arch = task.arch // used by sharp!
     env.npm_config_node_gyp_target = task.target
     env.npm_config_node_gyp_arch = task.arch
     env.npm_config_node_gyp_target_arch = task.arch
