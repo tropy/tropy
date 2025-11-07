@@ -16,35 +16,27 @@ permissions:
 jobs:
   build:
     name: ${{ runner.os }} ${{ matrix.arch }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.image }}
 
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - image: ubuntu-latest
             arch: x64
-            platform: linux
-          - os: ubuntu-latest
+          - image: ubuntu-latest
             arch: x64
-            platform: linux
             globalLibvips: 'true'
-          - os: ubuntu-22.04
+          - image: ubuntu-22.04
             arch: x64
-            platform: linux
-            friendlyName: Linux (LTS)
-          - os: macos-15-intel
+          - image: macos-15-intel
             arch: x64
-            platform: darwin
-          - os: macos-latest
+          - image: macos-latest
             arch: arm64
-            platform: darwin
-          - os: macos-26
+          - image: macos-26
             arch: arm64
-            platform: darwin
-          - os: windows-2022
+          - image: windows-2022
             arch: x64
-            platform: win32
 
     steps:
       - name: Checkout repository
@@ -66,7 +58,7 @@ jobs:
         run: npm clean-install --no-progress
 
       - name: Install system libvips
-        if: matrix.platform == 'linux' && matrix.globalLibvips == 'true'
+        if: runner.os == 'Linux' && matrix.globalLibvips == 'true'
         run: |
           sudo apt-get update
           sudo apt-get install jq meson pkg-config \
@@ -96,16 +88,16 @@ jobs:
           SHARP_FORCE_GLOBAL_LIBVIPS: ${{ matrix.globalLibvips }}
 
       - name: Run main/renderer tests
-        if: matrix.platform != 'linux'
+        if: runner.os != 'Linux'
         run: npm test
         shell: bash
 
       - name: Run main/renderer tests with coverage report
-        if: matrix.platform == 'linux'
+        if: runner.os == 'Linux'
         run: xvfb-run --auto-servernum --server-num=1 npm run coverage
 
       - name: Send coverage report to Coveralls
-        if: matrix.platform == 'linux' && matrix.globalLibvips != 'true'
+        if: runner.os == 'Linux' && matrix.globalLibvips != 'true'
         continue-on-error: true
         uses: coverallsapp/github-action@v2
         with:
