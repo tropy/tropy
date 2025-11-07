@@ -308,9 +308,9 @@ program
 
     if (opts.globalLibvips) {
       env.SHARP_FORCE_GLOBAL_LIBVIPS = 'true'
-      env.SHARP_IGNORE_GLOBAL_LIBVIPS = 'false'
+      delete env.SHARP_IGNORE_GLOBAL_LIBVIPS
     } else {
-      env.SHARP_FORCE_GLOBAL_LIBVIPS = 'false'
+      delete env.SHARP_FORCE_GLOBAL_LIBVIPS
       env.SHARP_IGNORE_GLOBAL_LIBVIPS = 'true'
     }
 
