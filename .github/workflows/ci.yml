@@ -76,10 +76,9 @@ jobs:
             libpng-dev libpoppler-glib-dev librsvg2-dev libtiff5-dev libwebp-dev
           # Fetch required libvips
           mkdir vendor/vips
-          echo $(jq .config.libvips node_modules/sharp/package.json | tr -d "><='\"")
-          VV=$(jq .config.libvips node_modules/sharp/package.json | tr -d "><='\"") echo "https://github.com/libvips/libvips/releases/download/v${VV}/vips-${VV}.tar.xz"
-          VV=$(jq .config.libvips node_modules/sharp/package.json | tr -d "><='\"") curl -LI https://github.com/libvips/libvips/releases/download/v${VV}/vips-${VV}.tar.xz
-          VV=$(jq .config.libvips node_modules/sharp/package.json | tr -d "><='\"") curl -sL --retry 3 https://github.com/libvips/libvips/releases/download/v${VV}/vips-${VV}.tar.xz | tar xJC vendor/vips --strip-components=1
+          export VV=$(jq .config.libvips node_modules/sharp/package.json | tr -d "><='\"")
+          curl -sL --retry 3 https://github.com/libvips/libvips/releases/download/v${VV}/vips-${VV}.tar.xz \
+            | tar xJC vendor/vips --strip-components=1
           # Build and install libvips
           cd vendor/vips
           meson setup build
