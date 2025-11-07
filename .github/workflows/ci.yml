@@ -70,15 +70,14 @@ jobs:
 
       - name: Install libvips
         if: matrix.platform == 'linux' && matrix.globalLibvips == 'true'
-        env:
-          VERSION_VIPS: '8.17.3'
         run: |
           sudo apt-get update
-          sudo apt-get install meson pkg-config \
+          sudo apt-get install jq meson pkg-config \
             libarchive-dev libcgif-dev libexif-dev libheif-dev libheif-plugin-aomenc \
             libimagequant-dev libjpeg-dev libjxl-dev liblcms2-dev libopenjp2-7-dev libpango1.0-dev \
             libpng-dev libpoppler-glib-dev librsvg2-dev libtiff5-dev libwebp-dev
           mkdir vendor/vips
+          export VERSION_VIPS=$(jq .config.libvips node_modules/sharp/package.json | tr -d "><=")
           curl -sL --retry 3 https://github.com/libvips/libvips/releases/download/v${VERSION_VIPS}/vips-${VERSION_VIPS}.tar.xz | tar xJC vendor/vips --strip-components=1
           cd vendor/vips
           meson setup build
