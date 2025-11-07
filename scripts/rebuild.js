@@ -250,6 +250,10 @@ class Rebuilder {
       },
 
       (task) => {
+        sed('-i', /sed s\\\/-/, 'sed s/-', task.modulePath('src', 'binding.gyp'))
+      },
+
+      (task) => {
         if (task.platform === 'darwin') {
           sed('-i',
             /'MACOSX_DEPLOYMENT_TARGET':\s*'[\d.]+',/,
