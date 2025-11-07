@@ -37,6 +37,7 @@ function downloadHeaders({
   silent
 }) {
   exec(`npx node-gyp install ${[
+    '--ensure',
     `--dist-url=${url}`,
     `--arch=${arch}`,
     `--target=${target}`
@@ -163,6 +164,7 @@ class Rebuilder {
         await task.exec(`npx node-gyp rebuild ${[
           `--target=${task.target}`,
           `--arch=${task.arch}`,
+          task.verbose ? '--verbose' : ''
         ].join(' ')}`)
       }
     ],
@@ -284,9 +286,12 @@ async function rebuild(task, force) {
   if (force || task.stale) {
     env.npm_package_config_node_gyp_target = task.target
     env.npm_package_config_node_gyp_arch = task.arch
+    env.npm_config_node_gyp_target = task.target
+    env.npm_config_node_gyp_arch = task.arch
 
     if (task.verbose) {
-      env.npm_package_config_node_gyp_verbose = task.verbose
+      env.npm_package_config_node_gyp_loglevel = 'verbose'
+      env.npm_config_node_gyp_loglevel = 'verbose'
     }
 
     for (let i = 0; i < task.steps.length; ++i) {
