@@ -36,6 +36,11 @@ jobs:
             arch: arm64
           - image: windows-2022
             arch: x64
+          - image: windows-2022
+            arch: ia32
+            nodejs_arch: x86
+          - image: windows-11-arm
+            arch: arm64
 
     steps:
       - name: Checkout repository
