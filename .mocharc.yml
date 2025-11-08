@@ -1,6 +1,8 @@
 color: true
 recursive: true
 reporter: dot
+requireMain:
+  - "test/support/main.js"
 require:
   # - "test/support/babel-register.js"
   - "test/support/coverage.js"
