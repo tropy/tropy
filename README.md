@@ -25,7 +25,7 @@ to download the latest version of Tropy.
 
 You can also install Tropy via [Homebrew][], [winget][], or the [AUR][].
 
-For Linux users, we recommended to install Tropy with [Flatpak[]].
+For Linux users, we recommended to install Tropy with [Flatpak][].
 
 [![Get Tropy on Flathub](https://flathub.org/api/badge?locale=en)](https://flathub.org/en/apps/org.tropy.Tropy)
 
