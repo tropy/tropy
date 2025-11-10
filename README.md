@@ -25,10 +25,15 @@ to download the latest version of Tropy.
 
 You can also install Tropy via [Homebrew][], [winget][], or the [AUR][].
 
+For Linux users, we recommended to install Tropy with [Flatpak[]].
+
+[![Get Tropy on Flathub](https://flathub.org/api/badge?locale=en)](https://flathub.org/en/apps/org.tropy.Tropy)
+
 [release page]: https://github.com/tropy/tropy/releases/latest
 [Homebrew]: https://brew.sh
 [winget]: https://winget.run
 [AUR]: https://aur.archlinux.org
+[Flatpak]: https://flathub.org/en/apps/org.tropy.Tropy
 
 
 Installation from Source
@@ -40,7 +45,10 @@ and all dependencies required to use [node-gyp][] on your platform.
 Clone this [repository][] and install Tropy's dependencies:
 
     $ npm install
-    $ npm run rebuild -- --force
+    $ node scripts/rebuild.js --force
+
+On Linux, use the `--global-libvips` flag when rebuiliding
+to link against the system's libvips.
 
 To test that everything works, run:
 
