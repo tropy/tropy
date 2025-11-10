@@ -59,6 +59,7 @@ program
   .option('--arch <name>', 'set target arch', ARCH)
   .option('--app <dir>', 'set the app directory')
   .option('--out <dir>', 'set the output directory', join(ROOT, 'dist'))
+  .option('--tag <name>', 'set release tag name', process.env.npm_config_tag)
   .option('-s, --silent', 'silence packer output', false)
   .option('--sign', 'sign windows build', true)
 
@@ -103,23 +104,23 @@ program
 
 const exports = {
 
-  bz2({ app, arch, out }) {
+  bz2({ app, arch, out, tag }) {
     check(which('tar'), 'missing dependency: tar')
 
-    let nva = `${name}-${version}-${arch}`
-    let output = join(out, `${nva}.tar.bz2`)
+    let nva = [name, version, arch]
+    let output = join(out, `${[...nva, tag].filter(x => x).join('-')}.tar.bz2`)
     let base = basename(app)
 
     rm('-f', output)
-    exec(`tar -c -j -f ${output} -C "${dirname(app)}" --transform="s/^${base}/${nva}/" "${base}"`)
+    exec(`tar -c -j -f ${output} -C "${dirname(app)}" --transform="s/^${base}/${nva.join('-')}/" "${base}"`)
 
     return [output]
   },
 
-  AppImage({ app, arch, out, silent }) {
+  AppImage({ app, arch, out, silent, tag }) {
     check(arch === 'x64', 'must build for x64')
 
-    let output = join(out, `${product}-${version}-x86_64.AppImage`)
+    let output = join(out, `${[product, version, tag].filter(x => x).join('-')}-x86_64.AppImage`)
     let AIK = 'https://github.com/AppImage/AppImageKit/releases/download/continuous'
     let AppDir = join(out, `${product}-${version}.AppDir`)
     let appimagetool = join(import.meta.dirname, 'appimagetool')
