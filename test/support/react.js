@@ -38,13 +38,25 @@ let store = configureStore({
   reducer
 })
 
+function onIntlError(error) {
+  switch (error.code) {
+    case 'MISSING_TRANSLATION':
+      break
+    default:
+      console.error(error.code, error.message)
+  }
+}
+
 export const inWindowContext = {
   wrapper({ children }) {
     return (
       <WindowContext.Provider value={win || createWindowInstance(ARGS)}>
         <DndProvider backend={TestBackend}>
           <Provider store={store}>
-            <IntlProvider locale="en" messages={messages}>
+            <IntlProvider
+              locale="en"
+              messages={messages}
+              onError={onIntlError}>
               {children}
             </IntlProvider>
           </Provider>
