@@ -1,8 +1,32 @@
 Installation Instructions
 =========================
+Flatpak
+-------
+The recommended way to install Tropy is via Flatpak:
+
+    flatpak install flathub org.tropy.Tropy
+
+Arch Linux
+----------
+On Arch linux you can install `tropy` or `tropy-bin` from AUR.
+
+AppImage
+--------
+Since v1.17.2 we provide two versions of the AppImage release:
+the regular version is linked against a bundled libvips build
+and the 'shared' version is linked against the system libvips.
+To use the latter, a compatible version of libvips is required.
+
+Tarball
+-------
 The Tropy Linux tarball is a binary release.
 You can move this directory to any suitable location such as `/opt/tropy`,
 and start the `tropy` binary there.
+
+Since v1.17.2 we provide two versions of the tarball:
+the regular version is linked against a bundled libvips build
+and the 'shared' version is linked against the system libvips.
+To use the latter, a compatible version of libvips is required.
 
 In the following instructions, change `/opt/tropy` to your preferred location.
 
