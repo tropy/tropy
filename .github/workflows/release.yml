@@ -69,6 +69,7 @@ jobs:
       - name: Fix AppImage on Ubuntu 22.04
         if: matrix.image == 'ubuntu-22.04'
         run: sudo apt install libfuse2
+      - name: Fix AppImage on Ubuntu 24.04
         if: matrix.image == 'ubuntu-24.04'
         run: sudo apt install libfuse2t64
 
