@@ -66,7 +66,17 @@ This will create a dev-build of Tropy in the `dist` folder.
 
 Tropy Development
 -----------------
-Start Tropy in dev-mode by running `npm start`.
+Use the following commands for Tropy development:
+
+     # Compile the production bundle (optionally in --watch mode)
+     $ npm run rollup -- --watch
+
+     # Run bundle in dev mode
+     $ npm start
+
+     # View or tail the log file
+     $ npm run log:view
+     $ npm run log:tail
 
 Plugin Development
 ------------------
