@@ -24,37 +24,31 @@ jobs:
           token: ${{ github.token }}
 
   build:
-    name: Build ${{ matrix.platform }}-${{ matrix.arch }}
     needs: create-release
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.image }} ${{ matrix.arch }} ${{ matrix.tag }}
+    runs-on: ${{ matrix.image }}
     environment: release
 
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-22.04
-          - windows-2022
-        arch:
-          - x64
         include:
-          - os: ubuntu-22.04
-            platform: linux
+          - image: ubuntu-22.04
+            arch: x64
+          - image: ubuntu-24.04
+            arch: x64
+            tag: 'shared'
           - os: windows-2022
-            platform: win32
+            arch: x64
           - os: windows-2022
-            platform: win32
             arch: ia32
-          - os: windows-2022
-            platform: win32
+            nodejs_arch: x64
+          - os: windows-11-arm
             arch: arm64
           - os: macos-15-intel
-            platform: darwin
             arch: x64
           - os: macos-26
-            platform: darwin
             arch: arm64
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -63,6 +57,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 22
+          architecture: ${{ matrix.nodejs_arch || matrix.arch }}
           cache: npm
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -71,19 +66,42 @@ jobs:
       - name: Install requirements for node-gyp
         run: pip install setuptools
 
-      - name: Fix AppImage on Ubuntu 22
-        if: matrix.os == 'ubuntu-22.04'
+      - name: Fix AppImage on Ubuntu 22.04
+        if: matrix.image == 'ubuntu-22.04'
         run: sudo apt install libfuse2
-        # if: matrix.os == 'ubuntu-24.04'
-        # run: sudo apt install libfuse2t64
+        if: matrix.image == 'ubuntu-24.04'
+        run: sudo apt install libfuse2t64
 
-      - name: Install and build dependencies
+      - name: Install NPM modules
         run: npm clean-install --no-progress
-      - name: Rebuild native dependencies
-        run: node scripts/rebuild.js --force --arch ${{ matrix.arch }}
+
+      - name: Install system libvips
+        if: runner.os == 'Linux' && matrix.tag == 'shared'
+        run: |
+          # Install libvips dependencies
+          sudo apt-get update
+          sudo apt-get install meson pkg-config \
+            libarchive-dev libcgif-dev libexif-dev libheif-dev libheif-plugin-aomenc \
+            libimagequant-dev libjpeg-dev libjxl-dev liblcms2-dev libopenjp2-7-dev libpango1.0-dev \
+            libpng-dev libpoppler-glib-dev librsvg2-dev libtiff5-dev libwebp-dev
+          # Fetch required libvips
+          mkdir vendor/vips
+          export VV=$(jq .config.libvips node_modules/sharp/package.json | tr -d "><='\"")
+          curl -sL --retry 3 https://github.com/libvips/libvips/releases/download/v${VV}/vips-${VV}.tar.xz \
+            | tar xJC vendor/vips --strip-components=1
+          # Build and install libvips
+          cd vendor/vips
+          meson setup build
+          meson compile -C build
+          sudo meson install -C build
+          # Set env variable
+          echo "SHARP_FORCE_GLOBAL_LIBVIPS=true" >> $GITHUB_ENV
+
+      - name: Rebuild native modules
+        run: node scripts/rebuild.js --force --verbose --arch ${{ matrix.arch }}
 
       - name: Setup macOS keychain and signing certificates
-        if: matrix.platform == 'darwin'
+        if: runner.os == 'macOS'
         run: |
           # Create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASS" "$KEYCHAIN"
@@ -120,13 +138,14 @@ jobs:
         run: npm run pack
         env:
           npm_config_arch: ${{ matrix.arch }}
+          npm_config_tag: ${{ matrix.tag }}
           SIGN_CRED: ${{ secrets.WIN_SIGN_CRED }}
           SIGN_TOTP: ${{ secrets.WIN_SIGN_TOTP }}
           SIGN_USER: ${{ secrets.WIN_SIGN_USER }}
           SIGN_PASS: ${{ secrets.WIN_SIGN_PASS }}
 
       - name: Upload Linux release assets
-        if: matrix.platform == 'linux'
+        if: runner.os == 'Linux'
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
@@ -140,7 +159,7 @@ jobs:
           token: ${{ github.token }}
 
       - name: Upload macOS release assets
-        if: matrix.platform == 'darwin'
+        if: runner.os == 'macOS'
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
@@ -154,7 +173,7 @@ jobs:
           token: ${{ github.token }}
 
       - name: Upload Windows release assets
-        if: matrix.platform == 'win32'
+        if: runner.os == 'Windows'
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
