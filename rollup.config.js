@@ -23,6 +23,7 @@ const NODE_ENV = process.env.NODE_ENV || 'production'
 
 const { platform } = process
 const arch =
+  process.env.npm_config_arch ||
   process.env.npm_package_config_node_gyp_arch ||
   process.arch
 
