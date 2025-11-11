@@ -109,7 +109,7 @@ fieldset {
 }
 
 .form-description {
-  font-size: 11px;
+  font-size: to-rem(11);
   line-height: 16px;
   margin: 0;
   padding: 5px ($padding-base-horizontal + $input-border-width);
@@ -117,7 +117,7 @@ fieldset {
 
 .form-description-inline {
   span {
-    font-size: 11px;
+    font-size: to-rem(11);
     line-height: 1;
     user-select: all;
   }
