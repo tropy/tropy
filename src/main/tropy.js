@@ -389,6 +389,9 @@ export class Tropy extends EventEmitter {
         frameless: false
       })
 
+      if (process.env.TROPY_PRINT_DEBUG)
+        win.show()
+
       await Promise.race([
         once(win, 'ready', 'react:ready'),
         delay(2000)
@@ -438,7 +441,8 @@ export class Tropy extends EventEmitter {
       }
 
     } finally {
-      win?.destroy()
+      if (!process.env.TROPY_PRINT_DEBUG)
+        win?.destroy()
     }
   }
 
