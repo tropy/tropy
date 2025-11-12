@@ -1100,7 +1100,7 @@ export class Tropy extends EventEmitter {
 
           await Promise.race([
             once(this, 'project:opened'),
-            delay(1500)
+            delay(5000)
           ])
         }
 
