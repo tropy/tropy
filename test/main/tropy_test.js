@@ -64,29 +64,51 @@ describe('Tropy', () => {
     })
 
     describe('project', () => {
-      beforeEach(() => {
-        sinon.stub(tropy.wm, 'current')
-        sinon.stub(tropy, 'openMostRecentProject').callsFake(fakeWindow)
-        sinon.stub(tropy, 'dispatch')
-      })
-
-      it('tropy://project shows the project window', async () => {
-        await tropy.handleProtocolRequest(new URL('tropy://project'))
-
-        expect(tropy.openMostRecentProject).to.have.been.calledOnce
-        expect(tropy.dispatch).not.to.have.been.called
-      })
-
-      it('tropy://project/current/items/41/3 opens item 41 in current project ',
-        async () => {
-          await tropy.handleProtocolRequest(new URL('tropy://project/current/items/41/3'))
-
-          expect(tropy.dispatch).to.have.been.calledOnce
-          expect(tropy.dispatch.args[0][0])
-            .to.have.a.nested.property('payload.id', 41)
-          expect(tropy.dispatch.args[0][0])
-            .to.have.a.nested.property('payload.photo').eql(3)
+      describe('with open window', () => {
+        beforeEach(() => {
+          sinon.stub(tropy.wm, 'current').callsFake(fakeWindow)
+          sinon.stub(tropy, 'openMostRecentProject')
+          sinon.stub(tropy, 'dispatch')
         })
+
+        it('tropy://project shows the project window', async () => {
+          await tropy.handleProtocolRequest(new URL('tropy://project'))
+
+          expect(tropy.wm.current).to.have.been.calledOnce
+          expect(tropy.openMostRecentProject).not.to.have.been.called
+          expect(tropy.dispatch).not.to.have.been.called
+        })
+
+        it('tropy://project/current/items/41/3 opens item 41 in current project ',
+          async () => {
+            await tropy.handleProtocolRequest(new URL('tropy://project/current/items/41/3'))
+
+            expect(tropy.dispatch).to.have.been.calledOnce
+            expect(tropy.dispatch.args[0][0])
+              .to.have.a.nested.property('payload.id', 41)
+            expect(tropy.dispatch.args[0][0])
+              .to.have.a.nested.property('payload.photo').eql(3)
+          })
+      })
+
+      describe('without open window', () => {
+        beforeEach(() => {
+          sinon.stub(tropy.wm, 'current')
+          sinon.stub(tropy, 'openMostRecentProject').callsFake(() => {
+            setTimeout(() => { tropy.emit('project:opened') }, 250)
+            return fakeWindow()
+          })
+          sinon.stub(tropy, 'dispatch')
+        })
+
+        it('tropy://project shows the project window', async () => {
+          await tropy.handleProtocolRequest(new URL('tropy://project'))
+
+          expect(tropy.wm.current).to.have.been.calledOnce
+          expect(tropy.openMostRecentProject).to.have.been.calledOnce
+          expect(tropy.dispatch).not.to.have.been.called
+        })
+      })
     })
   })
 
