@@ -272,6 +272,7 @@ const exports = {
       exe: `${qualified.name}.exe`,
       setupExe,
       setupIcon: join(ROOT, 'res', 'win32', 'setup.ico'),
+      loadingGif: join(ROOT, 'res', 'win32', 'install-spinner.gif'),
       iconUrl: join(ICONS, channel, `${name}.ico`),
       // remoteReleases: repository.url,
       noDelta: true,
