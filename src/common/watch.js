@@ -20,7 +20,6 @@ export class Watcher extends EventEmitter {
 
     info({
       module: 'watch',
-      opts,
       path,
       since
     }, `start watching ${dirname(path)}`)
@@ -36,7 +35,6 @@ export class Watcher extends EventEmitter {
 
     if (since != null) {
       this.#watcher.on('add', async (file, stats) => {
-        debug({ module: 'watch', stats }, `watcher "add" ${file}`)
         if (stats.ctimeMs > since) {
           // macOS apps like Preview always update ctime.
           // Duplicate files will not be imported,

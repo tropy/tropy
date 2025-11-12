@@ -1,4 +1,4 @@
-import { join } from 'node:path'
+import { extname } from 'node:path'
 import { eventChannel } from 'redux-saga'
 import { call, put, select, take, takeEvery } from 'redux-saga/effects'
 import * as act from '../actions/index.js'
@@ -6,6 +6,11 @@ import { Watcher } from '../common/watch.js'
 import { debug, info, warn } from '../common/log.js'
 import { IMAGE, PROJECT } from '../constants/index.js'
 import { Storage } from '../storage.js'
+
+const ignored = (path, stats) =>
+  stats?.isFile() && !IMAGE.EXT.includes(
+    extname(path).slice(1).toLowerCase()
+  )
 
 function addedFilesChannel(watcher) {
   return eventChannel(emitter => {
@@ -43,14 +48,10 @@ function *updateProjectWatchFolder(watcher) {
   if (folder) {
     debug(`update project watch folder: ${folder}`)
 
-    let path = join(folder, `*.{${
-      IMAGE.EXT.map(ext => `${ext},${ext.toUpperCase()}`).join(',')
-    }}`)
-
-    if (watcher.isWatching(path))
-      yield call([watcher, watcher.watch], path, { usePolling })
+    if (watcher.isWatching(folder))
+      yield call([watcher, watcher.watch], folder, { usePolling, ignored })
     else
-      yield call([watcher, watcher.watch], path, { usePolling, since })
+      yield call([watcher, watcher.watch], folder, { usePolling, ignored, since })
 
   } else {
     if (watcher.isWatching()) {
