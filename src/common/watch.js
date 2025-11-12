@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events'
 import { dirname } from 'node:path'
 import chokidar from 'chokidar'
-import { info, warn } from './log.js'
+import { debug, info, warn } from './log.js'
 import { darwin } from './os.js'
 import { execFile } from './spawn.js'
 
@@ -18,28 +18,45 @@ export class Watcher extends EventEmitter {
 
     if (!path) return
 
-    info({ path, since }, `start watching ${dirname(path)}`)
+    info({
+      module: 'watch',
+      opts,
+      path,
+      since
+    }, `start watching ${dirname(path)}`)
 
     this.#watcher = chokidar.watch(path, {
       ...opts,
-      ignoreInitial: (since == null)
+      awaitWriteFinish: true,
+      alwaysStat: true,
+      ignoreInitial: (since == null),
+      followSymLinks: false
     })
     this.#path = path
 
     if (since != null) {
       this.#watcher.on('add', async (file, stats) => {
+        debug({ module: 'watch', stats }, `watcher "add" ${file}`)
         if (stats.ctimeMs > since) {
-          // macOS apps like Preview always update ctime. We do not
-          // import duplicate files, but also checking kMDItemDateAdded
-          // here, saves as from importing and then skipping over the
-          // same files every time.
+          // macOS apps like Preview always update ctime.
+          // Duplicate files will not be imported,
+          // but additionally checking kMDItemDateAdded here,
+          // saves us from evaluating same files every time.
           if (!darwin || (await mdItemDateAdded(file)) > since)
             this.emit('add', file, stats)
         }
       })
     }
 
+    this.#watcher.on('error', (e) => {
+      warn({
+        module: 'watch',
+        stack: e.stack
+      }, `watcher "error" ${e.message}`)
+    })
+
     this.#watcher.on('ready', () => {
+      debug({ module: 'watch' }, 'watcher "ready"')
       this.#watcher.removeAllListeners('add')
       this.#watcher.on('add', (...args) => this.emit('add', ...args))
     })
@@ -65,7 +82,7 @@ async function mdItemDateAdded(file) {
     return Date.parse(value)
 
   } catch (e) {
-    warn({ stack: e.stack }, `mdls failed for ${file}`)
+    warn({ module: 'watch', stack: e.stack }, `mdls failed for ${file}`)
   }
 
 }
