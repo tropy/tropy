@@ -367,7 +367,7 @@ export default class Esper extends EventEmitter {
     }
 
     this.emit('change')
-    this.resume()
+    this.render()
   }
 
   render = () => {
