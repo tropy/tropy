@@ -32,8 +32,10 @@ export const EsperView = React.forwardRef(({
 
   useImperativeHandle(ref, () => (Esper.instance), [])
 
-  // link text selection
-  Esper.instance.textSelection = textSelection
+  useEffect(() => {
+    // link text selection
+    Esper.instance.textSelection = textSelection
+  }, [textSelection])
 
   useEffect(() => {
     Esper.instance
