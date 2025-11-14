@@ -390,7 +390,7 @@ export default class Esper extends EventEmitter {
     this.app.stop()
     this.app.ticker.stop()
     Ticker.system.stop()
-  }, 5000)
+  }, 3000)
 
   update = () => {
     try {
