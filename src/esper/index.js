@@ -97,6 +97,7 @@ export default class Esper extends EventEmitter {
         ESPER.TOOL[name])
 
     this.app.ticker.add(this.update)
+    this.app.ticker.maxFPS = 60
     this.loader = new Loader()
 
     this.removeResolutionListener = onResolutionChange(this.handleResolutionChange)
