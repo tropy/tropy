@@ -1,5 +1,6 @@
 export * from './create.js'
 export * from './export.js'
 export * from './load.js'
+export * from './open.js'
 export * from './save.js'
 export * from './update.js'

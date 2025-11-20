@@ -41,6 +41,18 @@ export default {
     }
   },
 
+  open(payload = {}, meta) {
+    return {
+      type: NOTE.OPEN,
+      payload: payload,
+      meta: {
+        cmd: 'project',
+        ...meta
+      }
+    }
+  },
+
+
   load(payload, meta) {
     return {
       type: NOTE.LOAD,
