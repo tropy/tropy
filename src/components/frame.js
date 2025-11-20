@@ -101,7 +101,7 @@ export function Frame({
   useEffect(() => {
     if (doc != null) {
       if (doc.body.className !== innerClassName)
-        doc.body.className = innerClassName
+        doc.body.setAttribute('class', innerClassName)
     }
   }, [doc, innerClassName])
 
