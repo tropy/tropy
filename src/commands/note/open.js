@@ -22,11 +22,18 @@ export class Open extends Command {
 
     assert(photo || selection, 'cannot open note without active photo/selection')
 
-    let isProjectMode = yield select(state => state.nav.mode === 'project')
+    let delay = 25
+    let [isProjectMode, isMinimized] = yield select(state => ([
+      state.nav.mode === 'project',
+      state.settings.maximize === 'esper'
+    ]))
+
+    if (isProjectMode) delay += 800
+    if (isMinimized) delay += 100
 
     setTimeout(() => {
       emit(document, 'global:note-open')
-    }, isProjectMode ? 825 : 25)
+    }, delay)
 
     return {
       item,
