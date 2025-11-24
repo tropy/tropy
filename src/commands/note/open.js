@@ -3,6 +3,7 @@ import { select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { NOTE } from '../../constants/index.js'
 import { getNoteParent } from '../../selectors/index.js'
+import { emit } from '../../dom.js'
 
 export class Open extends Command {
   *exec() {
@@ -20,6 +21,12 @@ export class Open extends Command {
     }
 
     assert(photo || selection, 'cannot open note without active photo/selection')
+
+    let isProjectMode = yield select(state => state.nav.mode === 'project')
+
+    setTimeout(() => {
+      emit(document, 'global:note-open')
+    }, isProjectMode ? 825 : 25)
 
     return {
       item,

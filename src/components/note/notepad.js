@@ -1,13 +1,13 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
+import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { Editor } from '../editor/index.js'
 import { toText } from '../../editor/serialize.js'
 import TABS from '../../constants/tabs.js'
 import actions from '../../actions/note.js'
 
-
-export const NotePad = forwardRef(({
+export const NotePad = ({
   hasTitlebar,
   isDisabled,
   isReadOnly,
@@ -15,19 +15,16 @@ export const NotePad = forwardRef(({
   note,
   onContextMenu,
   tabIndex = TABS.NotePad
-}, ref) => {
-
+}) => {
   let dispatch = useDispatch()
   let editor = useRef()
 
   isReadOnly = isReadOnly || isDisabled
   let isBlank = note?.id && !note.text
 
-  useImperativeHandle(ref, () => ({
-    focus() {
-      editor.current.focus()
-    }
-  }), [])
+  useGlobalEvent('note-open', () => {
+    editor.current.focus()
+  })
 
   let {
     direction = 'ltr',
@@ -93,4 +90,4 @@ export const NotePad = forwardRef(({
         onCreate={handleCreate}/>
     </section>
   )
-})
+}
