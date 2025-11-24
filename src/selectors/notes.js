@@ -10,6 +10,18 @@ export const getSelectedNote = memo(
   getNotes, getSelectedNoteId, (notes, id) => notes[id]
 )
 
+export const getNoteParent = ({ notes, photos, selections }, { id }) => {
+  let { photo, selection } = notes[id]
+
+  if (photo == null) {
+    photo = selections[selection].photo
+  }
+
+  let { item } = photos[photo]
+
+  return { item, photo, selection }
+}
+
 export const getVisibleNotes = memo(
   getNotes,
   getVisiblePhotos,
