@@ -347,11 +347,16 @@ export class Scroll extends React.Component {
     })
   }
 
-  handleFocus = () => {
-    if (this.props.autoselect) {
-      this.select(this.current)
+  handleFocus = (event) => {
+    // The :focus-visible state survives scrolling items out of view
+    // therefore we also test for relatedTarget which is typically
+    // missing when the window was blurred.
+    if (event?.target?.matches(':focus-visible') && event?.relatedTarget != null) {
+      if (this.props.autoselect) {
+        this.select(this.current)
+      }
+      this.scrollIntoView()
     }
-    this.scrollIntoView()
   }
 
   scroll(...args) {
