@@ -111,6 +111,17 @@ export function nav(state = init, { type, payload, meta, error }) {
         note
       }
     }
+    case NOTE.OPEN: {
+      let { item, photo, selection, note } = payload
+      return (!meta.done || error) ? state : {
+        ...state,
+        mode: NAV.MODE.ITEM,
+        items: select(state.items, [item], 'replace'),
+        photo,
+        selection,
+        note
+      }
+    }
     case EDIT.START:
       if (state.mode === NAV.MODE.PROJECT) return state
       if (!payload.tag && !payload.list) return state

@@ -1,5 +1,5 @@
 import ARGS from '../args.js'
-import { SETTINGS, ITEM, PHOTO, SELECTION, ESPER } from '../constants/index.js'
+import { SETTINGS, ITEM, PHOTO, SELECTION, ESPER, NOTE } from '../constants/index.js'
 import { darwin } from '../common/os.js'
 import { merge } from '../common/util.js'
 import { dc } from '../ontology/ns.js'
@@ -49,7 +49,7 @@ const defaults = {
   zoomMode: ESPER.MODE.FIT
 }
 
-export function settings(state = defaults, { type, payload }) {
+export function settings(state = defaults, { type, payload, done, error }) {
   switch (type) {
     case SETTINGS.RESTORE:
       return {
@@ -60,6 +60,11 @@ export function settings(state = defaults, { type, payload }) {
       }
     case SETTINGS.UPDATE:
       return merge(state, payload)
+    case NOTE.OPEN:
+      return (!done || error || state.maximize !== 'esper') ? state : {
+        ...state,
+        maximize: 'none'
+      }
     default:
       return state
   }
