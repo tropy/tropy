@@ -124,7 +124,7 @@ export const Editor = React.forwardRef(({
 
   useImperativeHandle(ref, () => ({
     focus() {
-      view.current.dom.focus()
+      view.current.dom?.focus()
     }
   }), [])
 
