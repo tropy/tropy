@@ -131,7 +131,7 @@
     "globals": "^16.0.0",
     "install": "^0.13.0",
     "js-yaml": "^4.0.0",
-    "jsonld": "^8.1.0",
+    "jsonld": "^9.0.0",
     "koa": "^3.0.0",
     "koa-bodyparser": "^4.3.0",
     "lodash.debounce": "^4.0.7",

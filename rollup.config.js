@@ -179,7 +179,6 @@ export default [
       }),
       ignore([
         '@mapbox/node-pre-gyp',
-        'rdf-canonize-native'
       ], { commonjsBugFix: true }),
       alias({
         entries: {
