@@ -25,6 +25,11 @@ en:
               accelerator: 'CmdOrCtrl+Shift+A'
               window: 'project'
               condition: '!isProjectReadOnly'
+            - label: 'Note'
+              command: 'app:open-note'
+              accelerator: 'CmdOrCtrl+Shift+T'
+              window: 'project'
+              condition: '!isProjectReadOnly'
         - type: 'separator'
         - &open
           label: 'Open…'

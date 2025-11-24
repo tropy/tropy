@@ -625,7 +625,7 @@ export class Tropy extends EventEmitter {
         photo: target.id, selections: [target.selection]
       }), win))
 
-    this.on('app:create-list', (win, { target = {} } = {}) =>
+    this.on('app:note-open', (win, { target = {} } = {}) =>
       this.dispatch(act.list.new({ parent: target.id }), win))
 
     this.on('app:rename-list', (win, { target }) =>
@@ -655,6 +655,9 @@ export class Tropy extends EventEmitter {
       }), win))
     this.on('app:delete-tag', (win, { target }) =>
       this.dispatch(act.tag.delete(target.id), win))
+
+    this.on('app:open-note', (win) =>
+      this.dispatch(act.note.open(), win))
 
     this.on('app:delete-note', (win, { target }) =>
       this.dispatch(act.note.delete(target.notes), win))
