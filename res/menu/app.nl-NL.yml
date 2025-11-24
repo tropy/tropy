@@ -23,6 +23,11 @@ nl-NL:
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
+            - label: Opmerking
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Openen…
           accelerator: CmdOrCtrl+O
@@ -257,6 +262,11 @@ nl-NL:
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
+            - label: Opmerking
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Openen…
           accelerator: CmdOrCtrl+O
@@ -463,6 +473,11 @@ nl-NL:
             - label: Label
               command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Opmerking
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
               window: project
               condition: '!isProjectReadOnly'
         - type: separator

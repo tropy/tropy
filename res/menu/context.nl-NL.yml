@@ -462,17 +462,17 @@ nl-NL:
           - label: Zij-aan-zij
             id: side-by-side
             type: checkbox
-      - label: Maximize View
+      - label: Weergave maximaliseren
         id: maximize-view
         submenu:
-          - label: Image
+          - label: Afbeelding
             id: esper
             type: checkbox
-          - label: Notepad
+          - label: Kladblok
             type: checkbox
             id: notepad
           - type: separator
-          - label: None
+          - label: Geen
             id: none
             type: checkbox
     metadata-list:
@@ -896,17 +896,17 @@ nl-NL:
           - label: Zij-aan-zij
             id: side-by-side
             type: checkbox
-      - label: Maximize View
+      - label: Weergave maximaliseren
         id: maximize-view
         submenu:
-          - label: Image
+          - label: Afbeelding
             id: esper
             type: checkbox
-          - label: Notepad
+          - label: Kladblok
             type: checkbox
             id: notepad
           - type: separator
-          - label: None
+          - label: Geen
             id: none
             type: checkbox
     item-rotate:
@@ -1394,17 +1394,17 @@ nl-NL:
           - label: Zij-aan-zij
             id: side-by-side
             type: checkbox
-      - label: Maximize View
+      - label: Weergave maximaliseren
         id: maximize-view
         submenu:
-          - label: Image
+          - label: Afbeelding
             id: esper
             type: checkbox
-          - label: Notepad
+          - label: Kladblok
             type: checkbox
             id: notepad
           - type: separator
-          - label: None
+          - label: Geen
             id: none
             type: checkbox
     item-rotate:

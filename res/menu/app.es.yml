@@ -23,6 +23,11 @@ es:
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
+            - label: Nota
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Abrir…
           accelerator: CmdOrCtrl+O
@@ -257,6 +262,11 @@ es:
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
+            - label: Nota
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Abrir…
           accelerator: CmdOrCtrl+O
@@ -463,6 +473,11 @@ es:
             - label: Etiqueta
               command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Nota
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
               window: project
               condition: '!isProjectReadOnly'
         - type: separator

@@ -23,6 +23,11 @@ ja:
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
+            - label: ノート
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: 開く
           accelerator: CmdOrCtrl+O
@@ -257,6 +262,11 @@ ja:
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
+            - label: ノート
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: 開く
           accelerator: CmdOrCtrl+O
@@ -463,6 +473,11 @@ ja:
             - label: タグ
               command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: ノート
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
               window: project
               condition: '!isProjectReadOnly'
         - type: separator

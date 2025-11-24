@@ -23,6 +23,11 @@ de:
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
+            - label: Notiz
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Öffnen …
           accelerator: CmdOrCtrl+O
@@ -257,6 +262,11 @@ de:
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
+            - label: Notiz
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Öffnen …
           accelerator: CmdOrCtrl+O
@@ -463,6 +473,11 @@ de:
             - label: Tag
               command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Notiz
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
               window: project
               condition: '!isProjectReadOnly'
         - type: separator

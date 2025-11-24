@@ -23,6 +23,11 @@ ru:
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
+            - label: Примечание
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Открыть...
           accelerator: CmdOrCtrl+O
@@ -257,6 +262,11 @@ ru:
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
+            - label: Примечание
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
+              window: project
+              condition: '!isProjectReadOnly'
         - type: separator
         - label: Открыть...
           accelerator: CmdOrCtrl+O
@@ -463,6 +473,11 @@ ru:
             - label: Тег
               command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
+              window: project
+              condition: '!isProjectReadOnly'
+            - label: Примечание
+              command: app:open-note
+              accelerator: CmdOrCtrl+Shift+T
               window: project
               condition: '!isProjectReadOnly'
         - type: separator

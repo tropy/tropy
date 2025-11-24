@@ -472,7 +472,7 @@ es:
             type: checkbox
             id: notepad
           - type: separator
-          - label: None
+          - label: Ninguno
             id: none
             type: checkbox
     metadata-list:
@@ -906,7 +906,7 @@ es:
             type: checkbox
             id: notepad
           - type: separator
-          - label: None
+          - label: Ninguno
             id: none
             type: checkbox
     item-rotate:
@@ -1404,7 +1404,7 @@ es:
             type: checkbox
             id: notepad
           - type: separator
-          - label: None
+          - label: Ninguno
             id: none
             type: checkbox
     item-rotate:
