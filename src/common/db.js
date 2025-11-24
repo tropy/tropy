@@ -81,6 +81,7 @@ export class Database extends EventEmitter {
     let version = await this.version()
     let migrations = await Migration.since(version, ...args)
 
+    info(`db version: ${version}`)
     for (let migration of migrations) {
       await migration.up(this)
     }
