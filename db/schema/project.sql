@@ -5,10 +5,10 @@
 -- then regenerate this schema file.
 --
 -- To create a new empty migration, run:
---   node scripts/db migration -- project [name] [sql|js]
+--   node scripts/db migrate --domain project
 --
 -- To re-generate this file, run:
---   node scripts/db migrate
+--   node scripts/db migrate --domain project
 --
 
 PRAGMA encoding = 'UTF-8';
@@ -18,6 +18,8 @@ PRAGMA application_id = -621960955;
 PRAGMA user_version = 2112312400;
 
 -- Load sqlite3 .dump
+          defensive off
+/* WARNING: Script requires that SQLITE_DBCONFIG_DEFENSIVE be disabled */
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE project (
@@ -202,31 +204,58 @@ CREATE TABLE migrations (
   number      INTEGER  NOT NULL PRIMARY KEY,
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
-INSERT INTO migrations VALUES(1603291819,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1604191233,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1610181540,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1707240933,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1708121306,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1710032150,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1710041250,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1710041315,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1801231006,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1801241335,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1803301510,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1810082056,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1811081017,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1902062123,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1904161246,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1906131635,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1910041503,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(1910311746,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(2005271953,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(2011121230,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(2103121202,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(2103171215,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(2103301553,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(2207140945,'2023-02-03 14:57:40');
-INSERT INTO migrations VALUES(2302021456,'2023-02-03 14:57:40');
+INSERT INTO migrations VALUES(1603291819,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1604191233,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1610181540,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1707240933,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1708121306,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1710032150,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1710041250,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1710041315,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1801231006,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1801241335,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1803301510,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1810082056,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1811081017,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1902062123,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1904161246,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1906131635,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1910041503,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(1910311746,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(2005271953,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(2011121230,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(2103121202,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(2103171215,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(2103301553,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(2207140945,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(2302021456,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(2403201717,'2025-11-24 18:10:00');
+INSERT INTO migrations VALUES(2412161647,'2025-11-24 18:10:00');
+CREATE TABLE transcriptions (
+  transcription_id  INTEGER PRIMARY KEY,
+  id                INTEGER NOT NULL REFERENCES images ON DELETE CASCADE,
+  text              TEXT,
+  config            TEXT,
+  data              TEXT,
+  status            NUMERIC NOT NULL DEFAULT 0,
+  deleted           NUMERIC,
+  created           NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified          NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP
+, angle INTEGER NOT NULL DEFAULT 0, mirror BOOLEAN NOT NULL DEFAULT 0);
+INSERT INTO sqlite_schema(type,name,tbl_name,rootpage,sql)VALUES('table','fts_transcriptions','fts_transcriptions',0,'CREATE VIRTUAL TABLE fts_transcriptions USING fts5(
+  id UNINDEXED,
+  text,
+  content = ''transcriptions'',
+  content_rowid = ''transcription_id'',
+  tokenize = ''unicode61''
+)');
+CREATE TABLE IF NOT EXISTS 'fts_transcriptions_data'(id INTEGER PRIMARY KEY, block BLOB);
+INSERT INTO fts_transcriptions_data VALUES(1,X'');
+INSERT INTO fts_transcriptions_data VALUES(10,X'00000000000000');
+CREATE TABLE IF NOT EXISTS 'fts_transcriptions_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'fts_transcriptions_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE IF NOT EXISTS 'fts_transcriptions_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+INSERT INTO fts_transcriptions_config VALUES('version',4);
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN
@@ -302,10 +331,6 @@ CREATE TRIGGER metadata_values_ad_fts
     INSERT INTO fts_metadata (fts_metadata, rowid, datatype, text)
       VALUES ('delete', OLD.value_id, OLD.datatype, OLD.text);
   END;
-CREATE INDEX idx_photos_checksum ON photos (checksum);
-CREATE INDEX idx_metadata_value_id ON metadata (value_id);
-CREATE INDEX idx_trash_reason_deleted ON trash (reason, deleted);
-CREATE INDEX idx_metadata_property ON metadata (property);
 CREATE TRIGGER delete_photos_prune_images
   AFTER DELETE ON photos
   BEGIN
@@ -344,6 +369,30 @@ CREATE TRIGGER delete_photos_store
     INSERT INTO deleted_photos (path, checksum)
       VALUES (OLD.path, OLD.checksum);
   END;
+CREATE TRIGGER transcriptions_ai_fts
+  AFTER INSERT ON transcriptions
+  BEGIN
+    INSERT INTO fts_transcriptions (rowid, id, text)
+      VALUES (NEW.transcription_id, NEW.id, NEW.text);
+  END;
+CREATE TRIGGER transcriptions_au_fts
+  AFTER UPDATE OF text ON transcriptions
+  BEGIN
+    INSERT INTO fts_transcriptions (fts_transcriptions, rowid, id, text)
+      VALUES ('delete', OLD.transcription_id, OLD.id, OLD.text);
+    INSERT INTO fts_transcriptions (rowid, id, text)
+      VALUES (NEW.transcription_id, NEW.id, NEW.text);
+  END;
+CREATE TRIGGER transcriptions_ad_fts
+  AFTER DELETE ON transcriptions
+  BEGIN
+    INSERT INTO fts_transcriptions (fts_transcriptions, rowid, id, text)
+      VALUES ('delete', OLD.transcription_id, OLD.id, OLD.text);
+  END;
+CREATE INDEX idx_photos_checksum ON photos (checksum);
+CREATE INDEX idx_metadata_value_id ON metadata (value_id);
+CREATE INDEX idx_trash_reason_deleted ON trash (reason, deleted);
+CREATE INDEX idx_metadata_property ON metadata (property);
 PRAGMA writable_schema=RESET;
 COMMIT;
 PRAGMA foreign_keys=ON;
