@@ -49,7 +49,7 @@ const defaults = {
   zoomMode: ESPER.MODE.FIT
 }
 
-export function settings(state = defaults, { type, payload, done, error }) {
+export function settings(state = defaults, { type, payload, meta, error }) {
   switch (type) {
     case SETTINGS.RESTORE:
       return {
@@ -61,7 +61,7 @@ export function settings(state = defaults, { type, payload, done, error }) {
     case SETTINGS.UPDATE:
       return merge(state, payload)
     case NOTE.OPEN:
-      return (!done || error || state.maximize !== 'esper') ? state : {
+      return (!meta.done || error || state.maximize !== 'esper') ? state : {
         ...state,
         maximize: 'none'
       }
