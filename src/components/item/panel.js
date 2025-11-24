@@ -196,8 +196,7 @@ export class ItemPanelGroup extends React.PureComponent {
           <NoteToolbar
             hasCreateButton
             isDisabled={isNotesDisabled}
-            notes={this.props.notes.length}
-            onCreate={this.props.onNoteCreate}/>
+            notes={this.props.notes.length}/>
           <NoteList
             isReadOnly={isReadOnly}
             notes={this.props.notes}

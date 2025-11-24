@@ -1,6 +1,5 @@
-import { useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useEvent } from '../../hooks/use-event.js'
 import { ItemPanelGroup } from './panel.js'
 import { ItemContainer } from './container.js'
 import { Resizable } from '../resizable.js'
@@ -26,33 +25,11 @@ export const ItemView = ({
   onPanelResize,
   panel
 }) => {
-
-  let itemContainer = useRef()
-
   let style = useMemo(() => ({
     transform: `translate3d(${
       isItemMode ? 0 : `calc(100% - ${offset}px)`
     }, 0, 0)`
   }), [isItemMode, offset])
-
-  let handleNoteCreate = useEvent(() => {
-    let delay = 50
-
-    if (!isItemMode) {
-      delay += 800
-      handleItemOpen({
-        id: items[0].id,
-        photos: [photo.id],
-        selection: activeSelection
-      })
-    }
-
-    if (note) {
-      handleNoteSelect()
-    }
-
-    setTimeout(itemContainer.current.focusNotePad, delay)
-  })
 
   // TODO these should be moved!
   // ------------------------------------------------------------
@@ -62,7 +39,6 @@ export const ItemView = ({
   let photos = useSelector(getVisiblePhotos)
   let notes = useSelector(getVisibleNotes)
   let keymap = useSelector(state => state.keymap)
-  let activeSelection = useSelector(state => state.nav.selection)
 
   let [
     handleEdit,
@@ -107,7 +83,6 @@ export const ItemView = ({
           onEdit={handleEdit}
           onEditCancel={handleEditCancel}
           onItemOpen={handleItemOpen}
-          onNoteCreate={handleNoteCreate}
           onNoteDelete={handleNoteDelete}
           onNoteSelect={handleNoteSelect}
           onMetadataSave={handleMetadataSave}
@@ -120,7 +95,6 @@ export const ItemView = ({
           photos={photos}/>
       </Resizable>
       <ItemContainer
-        ref={itemContainer}
         note={note}
         photo={photo}
         isDisabled={!isItemMode || isProjectClosing}

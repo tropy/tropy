@@ -20,8 +20,6 @@ const { LAYOUT } = ITEM
 const { ESPER } = SASS
 
 class Item extends React.PureComponent {
-  notepad = React.createRef()
-
   get dimension() {
     return (this.props.settings.layout === LAYOUT.SIDE_BY_SIDE) ?
       'width' : 'height'
@@ -82,14 +80,6 @@ class Item extends React.PureComponent {
     })
   }
 
-  focusNotePad = () => {
-    if (this.props.settings.maximize === 'esper') {
-      // TODO this.handleMaximize('none')
-      // setTimeout(() => { this.notepad.current?.focus() }, 250)
-    }
-    this.notepad.current?.focus()
-  }
-
   render() {
     let { settings } = this.props
 
@@ -138,7 +128,6 @@ class Item extends React.PureComponent {
         )}
         {settings.maximize !== 'esper' && (
           <NotePad
-            ref={this.notepad}
             note={this.props.note}
             hasTitlebar={this.hasSideBySideLayout || settings.maximize === 'notepad'}
             isDisabled={this.props.isDisabled || !this.props.photo}
