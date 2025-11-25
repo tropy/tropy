@@ -11,6 +11,8 @@ export const onTransitionEnd = (node, done) => {
     }
   }
   on(node, 'transitionend', handleTransitionEnd, false)
+  // TODO not clear if we should add a timeout fallback
+  // to remove the listener in case the event does not fire.
 }
 
 export function useEndListener(nodeRef) {
