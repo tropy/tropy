@@ -252,6 +252,7 @@ class ListNode extends React.PureComponent {
         <Collapse in={this.props.isExpanded}>
           <ListTree
             {...this.props}
+            isExpanded
             depth={1 + this.props.depth}
             minDropDepth={this.props.isLast ?
               this.props.minDropDepth : this.props.depth}
