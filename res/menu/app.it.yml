@@ -25,7 +25,7 @@ it:
               condition: '!isProjectReadOnly'
             - label: Nota
               command: app:open-note
-              accelerator: CmdOrCtrl+Shift+T
+              accelerator: CmdOrCtrl+N
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
@@ -264,7 +264,7 @@ it:
               condition: '!isProjectReadOnly'
             - label: Nota
               command: app:open-note
-              accelerator: CmdOrCtrl+Shift+T
+              accelerator: CmdOrCtrl+N
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
@@ -477,7 +477,7 @@ it:
               condition: '!isProjectReadOnly'
             - label: Nota
               command: app:open-note
-              accelerator: CmdOrCtrl+Shift+T
+              accelerator: CmdOrCtrl+N
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
