@@ -170,7 +170,7 @@
           margin-right: 0;
           transform: rotate(90deg);
 
-          li.expanded :is(&) {
+          li.expanded > .list-node-container :is(&) {
             transform: scaleY(-1);
           }
         }
