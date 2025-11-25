@@ -625,7 +625,7 @@ export class Tropy extends EventEmitter {
         photo: target.id, selections: [target.selection]
       }), win))
 
-    this.on('app:note-open', (win, { target = {} } = {}) =>
+    this.on('app:create-list', (win, { target = {} } = {}) =>
       this.dispatch(act.list.new({ parent: target.id }), win))
 
     this.on('app:rename-list', (win, { target }) =>
