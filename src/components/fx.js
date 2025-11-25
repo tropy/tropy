@@ -1,4 +1,4 @@
-import React from 'react'
+import { useCallback, useRef } from 'react'
 import { useEvent } from '../hooks/use-event.js'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { on, off, bounds } from '../dom.js'
@@ -13,19 +13,22 @@ export const onTransitionEnd = (node, done) => {
   on(node, 'transitionend', handleTransitionEnd, false)
 }
 
-export const Fade = (props) => {
-  let addEndListener = useEvent((node, done) => {
-    if (props.nodeRef) {
-      done = node
-      node = props.nodeRef.current
-    }
-    if (node) {
-      onTransitionEnd(node, done)
-    }
+export function useEndListener(nodeRef) {
+  return useEvent((done) => {
+    if (nodeRef.current)
+      onTransitionEnd(nodeRef.current, done)
   })
+}
+
+export const Fade = ({
+  nodeRef,
+  ...props
+}) => {
+  let addEndListener = useEndListener(nodeRef)
 
   return (
     <CSSTransition
+      nodeRef={nodeRef}
       addEndListener={addEndListener}
       classNames="fade"
       mountOnEnter={false}
@@ -39,63 +42,62 @@ export {
   SwitchTransition
 }
 
-export class Collapse extends React.Component {
-  getValue(node) {
-    return this.props.value ?
-      this.props.value :
-      bounds(node.firstElementChild || node)[this.props.dimension]
-  }
+export const Collapse = ({
+  children,
+  dimension = 'height',
+  value,
+  ...props
+}) => {
+  let nodeRef = useRef(null)
 
-  willCollapse = (node) => {
-    node.style[this.props.dimension] = `${this.getValue(node)}px`
-  }
+  let addEndListener = useEndListener(nodeRef)
 
-  collapse = (node) => {
-    node.style[this.props.dimension] = '0px'
-  }
+  let getValue = useCallback(() => (value ??
+    bounds(nodeRef.current.firstElementChild || nodeRef.current)[dimension]
+  ), [value, dimension])
 
-  didCollapse = (node) => {
-    node.style[this.props.dimension] = null
-  }
+  let willCollapse = useCallback(() => {
+    nodeRef.current.style[dimension] = `${getValue()}px`
+  }, [dimension, getValue])
 
-  willExpand = (node) => {
-    node.style[this.props.dimension] = '0px'
-  }
+  let collapse = useCallback(() => {
+    nodeRef.current.style[dimension] = '0px'
+  }, [dimension])
 
-  expand = (node) => {
-    node.style[this.props.dimension] = `${this.getValue(node)}px`
-  }
+  let didCollapse = useCallback(() => {
+    nodeRef.current.style[dimension] = null
+  }, [dimension])
 
-  didExpand = (node) => {
-    node.style[this.props.dimension] = null
-  }
+  let willExpand = useCallback(() => {
+    nodeRef.current.style[dimension] = '0px'
+  }, [dimension])
 
-  render() {
-    // eslint-disable-next-line no-unused-vars
-    let { children, dimension, value, ...props } = this.props
+  let expand = useCallback(() => {
+    nodeRef.current.style[dimension] = `${getValue()}px`
+  }, [dimension, getValue])
 
-    return (
-      <CSSTransition
-        addEndListener={onTransitionEnd}
-        classNames="collapse"
-        mountOnEnter={false}
-        timeout={1000}
-        unmountOnExit
-        onEnter={this.willExpand}
-        onEntering={this.expand}
-        onEntered={this.didExpand}
-        onExit={this.willCollapse}
-        onExiting={this.collapse}
-        onExited={this.didCollapse}
-        {...props}>
-        <div className={`collapse-${dimension}`}>
-          {children}
-        </div>
-      </CSSTransition>
-    )
-  }
+  let didExpand = useCallback(() => {
+    nodeRef.current.style[dimension] = null
+  }, [dimension])
 
-  static defaultProps = {
-    dimension: 'height'
-  }
+  return (
+    <CSSTransition
+      nodeRef={nodeRef}
+      addEndListener={addEndListener}
+      classNames="collapse"
+      mountOnEnter={false}
+      timeout={1000}
+      unmountOnExit
+      onEnter={willExpand}
+      onEntering={expand}
+      onEntered={didExpand}
+      onExit={willCollapse}
+      onExiting={collapse}
+      onExited={didCollapse}
+      {...props}>
+      <div ref={nodeRef} className={`collapse-${dimension}`}>
+        {children}
+      </div>
+    </CSSTransition>
+  )
 }
