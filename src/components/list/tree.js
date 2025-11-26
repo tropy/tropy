@@ -14,7 +14,7 @@ export const ListTree = ({
 }) => {
   return (
     <ol className="list-tree">
-      {props.isExpanded && props.parent.children.map((id, idx, all) => {
+      {props.parent.children.map((id, idx, all) => {
         if (id in lists) {
           let list = lists[id]
           let newListNode = hasNewListNode(props.edit, id)
