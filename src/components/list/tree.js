@@ -1,11 +1,9 @@
 import React from 'react'
 import { ListNode, NewListNode } from './node.js'
-import { Fade } from '../fx.js'
+import { Collapse } from '../fx.js'
 
 
 export class ListTree extends React.Component {
-  newListNode = React.createRef(null)
-
   hasNewListNode(parent = this.props.parent.id) {
     let { edit } = this.props
     return edit && edit.id == null && edit.parent === parent
@@ -44,13 +42,12 @@ export class ListTree extends React.Component {
       <ol className="list-tree" ref={this.setContainer}>
         {this.mapChildren((key, props) =>
           <ListNode key={key} {...props}/>)}
-        <Fade nodeRef={this.newListNode} in={this.hasNewListNode()} exit={false}>
+        <Collapse in={this.hasNewListNode()} className="list-node" tagName="li">
           <NewListNode
-            ref={this.newListNode}
             parent={this.props.edit?.parent}
             onCancel={this.props.onEditCancel}
             onSave={this.props.onSave}/>
-        </Fade>
+        </Collapse>
       </ol>
     )
   }

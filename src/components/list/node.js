@@ -21,30 +21,28 @@ import { LIST, SASS } from '../../constants/index.js'
 const { INDENT, PADDING } = SASS.LIST
 
 
-const NewListNode = React.forwardRef(({
+const NewListNode = ({
   name = '',
   onCancel,
   onSave,
   parent = LIST.ROOT
-}, ref) => (
-  <li className="list-node" ref={ref}>
-    <div className="list new-list list-node-container">
-      <div className="icon-truncate">
-        <IconFolder/>
-      </div>
-      <div className="name">
-        <Editable
-          isActive
-          isRequired
-          resize
-          value={name}
-          onCancel={onCancel}
-          onChange={(newName) =>
-            onSave({ parent, name: newName })}/>
-      </div>
+}) => (
+  <div className="list new-list list-node-container">
+    <div className="icon-truncate">
+      <IconFolder/>
     </div>
-  </li>
-))
+    <div className="name">
+      <Editable
+        isActive
+        isRequired
+        resize
+        value={name}
+        onCancel={onCancel}
+        onChange={(newName) =>
+          onSave({ parent, name: newName })}/>
+    </div>
+  </div>
+)
 
 class ListNode extends React.PureComponent {
   state = {
