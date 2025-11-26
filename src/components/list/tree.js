@@ -10,11 +10,12 @@ export const ListTree = ({
   hold = {},
   lists = {},
   minDropDepth = 0,
+  parent,
   ...props
 }) => {
   return (
     <ol className="list-tree">
-      {props.parent.children.map((id, idx, all) => {
+      {parent.children.map((id, idx, all) => {
         if (id in lists) {
           let list = lists[id]
           let newListNode = hasNewListNode(props.edit, id)
@@ -44,7 +45,7 @@ export const ListTree = ({
       <Collapse
         tagName="li"
         className="list-node"
-        in={hasNewListNode(props.edit, props.parent.id)}>
+        in={hasNewListNode(props.edit, parent.id)}>
         <NewListNode
           parent={props.edit?.parent}
           onCancel={props.onEditCancel}
