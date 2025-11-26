@@ -1,129 +1,87 @@
-import React from 'react'
+import { memo, useRef } from 'react'
 import cx from 'classnames'
+import { useEvent } from '../hooks/use-event.js'
 import { Input } from './input.js'
-import { noop } from '../common/util.js'
 
+function restore(focus) {
+  focus.current?.focus()
+  focus.current = null
+}
 
-export class Editable extends React.PureComponent {
-  input = React.createRef()
+export const Editable = memo(({
+  autofocus = true,
+  autoselect = true,
+  display,
+  isActive,
+  isDisabled,
+  onBlur,
+  onCancel,
+  onChange,
+  onFocus,
+  title,
+  value,
+  ...props
+}) => {
+  let input = useRef(null)
+  let focus = useRef(null)
 
-  componentWillUnmount() {
-    this.prevFocus = null
-  }
-
-  get classes() {
-    return ['editable', {
-      active: this.isActive,
-      disabled: this.props.isDisabled
-    }]
-  }
-
-  get content() {
-    return this.props.display || this.props.value
-  }
-
-  get isActive() {
-    return this.props.isActive &&
-      !this.props.isDisabled &&
-      this.props.onChange != null
-  }
-
-  focus = () => {
-    this.input.current?.focus()
-  }
-
-  handleBlur = (event) => {
+  let handleBlur = useEvent((event) => {
     try {
-      if (this.props.onBlur) {
-        return this.props.onBlur(event)
-      }
+      return onBlur?.(event)
     } finally {
-      this.restorePrevFocus()
+      restore(focus)
     }
-  }
+  })
 
-  handleFocus = (event) => {
-    this.prevFocus = event.relatedTarget
-    if (this.props.onFocus) {
-      return this.props.onFocus(event)
-    }
-  }
+  let handleFocus = useEvent((event) => {
+    focus.current = event.relatedTarget
+    return onFocus?.(event)
+  })
 
-  handleCancel = (...args) => {
+  let handleCancel = useEvent((...args) => {
     try {
-      if (this.props.onCancel) {
-        return this.props.onCancel(...args)
-      }
+      return onCancel?.(...args)
     } finally {
-      this.restorePrevFocus()
+      restore(focus)
     }
-  }
+  })
 
-  handleCommit = (value, { hasChanged, hasBeenForced }) => {
+  let handleCommit = useEvent((next, { hasChanged, hasBeenForced }) => {
     try {
       if (hasChanged || hasBeenForced) {
-        this.props.onChange(value, hasChanged, hasBeenForced)
+        onChange?.(next, hasChanged, hasBeenForced)
       } else {
-        this.props.onCancel(false, hasChanged)
+        onCancel?.(false, hasChanged)
       }
     } finally {
-      this.restorePrevFocus()
+      restore(focus)
     }
-  }
+  })
 
-  restorePrevFocus() {
-    if (this.prevFocus != null) {
-      this.prevFocus.focus()
-      this.prevFocus = null
-    }
-  }
+  isActive = isActive && !isDisabled && onChange != null
 
-  renderContent() {
-    return (
-      <div className="truncate" title={this.props.title} dir="auto">
-        {this.content}
-      </div>
-    )
-  }
-
-  renderInput() {
-    return (
-      <Input
-        ref={this.input}
-        autofocus={this.props.autofocus}
-        autoselect={this.props.autoselect}
-        className="editable-control"
-        completions={this.props.completions}
-        isRequired={this.props.isRequired}
-        isReadOnly={this.props.isReadOnly}
-        placeholder={this.props.placeholder}
-        tabIndex={this.props.tabIndex}
-        type={this.props.type}
-        max={this.props.max}
-        min={this.props.min}
-        resize={this.props.resize}
-        value={this.props.value || ''}
-        onBlur={this.handleBlur}
-        onCancel={this.handleCancel}
-        onCommit={this.handleCommit}
-        onFocus={this.handleFocus}
-        onKeyDown={this.props.onKeyDown}/>
-    )
-  }
-
-  render() {
-    return (
-      <div className={cx(this.classes)}>
-        {this.isActive ?
-            this.renderInput() :
-            this.renderContent()}
-      </div>
-    )
-  }
-
-  static defaultProps = {
-    autofocus: true,
-    autoselect: true,
-    onCancel: noop
-  }
-}
+  return (
+    <div className={cx('editable', {
+      active: isActive,
+      disabled: isDisabled
+    })}>
+      {isActive ? (
+        <Input
+          {...props}
+          ref={input}
+          autofocus={autofocus}
+          autoselect={autoselect}
+          className="editable-control"
+          onBlur={handleBlur}
+          onCancel={handleCancel}
+          onCommit={handleCommit}
+          onFocus={handleFocus}
+          value={value || ''}/>
+      ) : (
+        <div className="truncate" title={title} dir="auto">
+          {display || value}
+        </div>
+      )}
+    </div>
+  )
+})
