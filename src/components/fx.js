@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { createElement, useCallback, useRef } from 'react'
 import { useEvent } from '../hooks/use-event.js'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { on, off, bounds } from '../dom.js'
@@ -47,6 +47,7 @@ export {
 export const Collapse = ({
   children,
   dimension = 'height',
+  tagName = 'div',
   value,
   ...props
 }) => {
@@ -97,9 +98,10 @@ export const Collapse = ({
       onExiting={collapse}
       onExited={didCollapse}
       {...props}>
-      <div ref={nodeRef} className={`collapse-${dimension}`}>
-        {children}
-      </div>
+      {createElement(tagName, {
+        ref: nodeRef,
+        className: `collapse-${dimension}`
+      }, children)}
     </CSSTransition>
   )
 }
