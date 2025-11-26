@@ -49,6 +49,9 @@ export const Collapse = ({
   children,
   className,
   dimension = 'height',
+  onChange,
+  onCollapse,
+  onExpand,
   tagName = 'div',
   value,
   ...props
@@ -71,7 +74,9 @@ export const Collapse = ({
 
   let didCollapse = useCallback(() => {
     nodeRef.current.style[dimension] = null
-  }, [dimension])
+    onCollapse?.()
+    onChange?.()
+  }, [dimension, onChange, onCollapse])
 
   let willExpand = useCallback(() => {
     nodeRef.current.style[dimension] = '0px'
@@ -83,23 +88,25 @@ export const Collapse = ({
 
   let didExpand = useCallback(() => {
     nodeRef.current.style[dimension] = null
-  }, [dimension])
+    onExpand?.()
+    onChange?.()
+  }, [dimension, onChange, onExpand])
 
   return (
     <CSSTransition
-      nodeRef={nodeRef}
+      timeout={1000}
+      {...props}
       addEndListener={addEndListener}
       classNames="collapse"
       mountOnEnter={false}
-      timeout={1000}
-      unmountOnExit
+      nodeRef={nodeRef}
       onEnter={willExpand}
-      onEntering={expand}
       onEntered={didExpand}
+      onEntering={expand}
       onExit={willCollapse}
-      onExiting={collapse}
       onExited={didCollapse}
-      {...props}>
+      onExiting={collapse}
+      unmountOnExit>
       {createElement(tagName, {
         ref: nodeRef,
         className: cx(`collapse-${dimension}`, className),
