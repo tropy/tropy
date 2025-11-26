@@ -17,7 +17,6 @@ import * as act from '../../actions/index.js'
 import {
   getActivities,
   getAllTags,
-  getListHold,
   getListSubTree
 } from '../../selectors/index.js'
 
@@ -269,7 +268,6 @@ class ProjectSidebar extends React.PureComponent {
                     lists={this.props.lists}
                     edit={this.props.edit.list}
                     expand={this.props.expand}
-                    hold={this.props.hold}
                     isExpanded
                     isReadOnly={this.props.project.isReadOnly}
                     selection={this.props.list}
@@ -352,7 +350,6 @@ const ProjectSidebarContainer = connect(
     edit: state.edit,
     expand: state.sidebar.expand,
     hasLastImport: state.imports.length > 0,
-    hold: getListHold(state),
     isLastImportSelected: state.nav.imports,
     isTrashSelected: state.nav.trash,
     keymap: state.keymap,

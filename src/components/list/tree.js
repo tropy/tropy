@@ -1,5 +1,7 @@
+import { useSelector } from 'react-redux'
 import { ListNode, NewListNode } from './node.js'
 import { Collapse } from '../fx.js'
+import { getListHoldIndex } from '../../selectors/index.js'
 
 const hasNewListNode = (edit, parent) =>
   edit && edit.id == null && edit.parent === parent
@@ -7,12 +9,13 @@ const hasNewListNode = (edit, parent) =>
 export const ListTree = ({
   depth = 0,
   expand = {},
-  hold = {},
   lists = {},
   minDropDepth = 0,
   parent,
   ...props
 }) => {
+  let holdIndex = useSelector(getListHoldIndex)
+
   return (
     <ol className="list-tree">
       {parent.children.map((id, idx, all) => {
@@ -28,7 +31,6 @@ export const ListTree = ({
               key={id}
               list={list}
               lists={lists}
-              hold={hold}
               depth={depth}
               minDropDepth={minDropDepth}
               expand={expand}
@@ -36,7 +38,7 @@ export const ListTree = ({
               isExpandable={isExpandable}
               isExpanded={isExpandable && isExpanded}
               isEditing={props.edit?.id === id}
-              isHolding={hold[id]}
+              isHolding={holdIndex[id]}
               isLast={idx === all.length - 1}
               position={idx}/>
           )

@@ -12,11 +12,11 @@ export const getVisibleItems = memo(
   ({ items }) => items, ({ qr }) => (qr.items), pluck
 )
 
-export const getListHold = memo(
+export const getListHoldIndex = memo(
   getSelectedItems,
-  (items) => items.reduce((hold, item) => {
-    for (let list of item.lists) hold[list] = true
-    return hold
+  (items) => items.reduce((holdIndex, item) => {
+    for (let list of item.lists) holdIndex[list] = true
+    return holdIndex
   }, {})
 )
 
