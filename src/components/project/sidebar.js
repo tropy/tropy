@@ -267,8 +267,6 @@ class ProjectSidebar extends React.PureComponent {
                     parent={root}
                     lists={this.props.lists}
                     edit={this.props.edit.list}
-                    expand={this.props.expand}
-                    isExpanded
                     isReadOnly={this.props.project.isReadOnly}
                     selection={this.props.list}
                     onContextMenu={this.handleContextMenu}
@@ -348,7 +346,6 @@ const ProjectSidebarContainer = connect(
   (state, { root }) => ({
     activities: getActivities(state),
     edit: state.edit,
-    expand: state.sidebar.expand,
     hasLastImport: state.imports.length > 0,
     isLastImportSelected: state.nav.imports,
     isTrashSelected: state.nav.trash,

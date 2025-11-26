@@ -8,13 +8,13 @@ const hasNewListNode = (edit, parent) =>
 
 export const ListTree = ({
   depth = 0,
-  expand = {},
   lists = {},
   minDropDepth = 0,
   parent,
   ...props
 }) => {
   let holdIndex = useSelector(getListHoldIndex)
+  let expanded = useSelector(state => state.sidebar.expand)
 
   return (
     <ol className="list-tree">
@@ -23,7 +23,7 @@ export const ListTree = ({
           let list = lists[id]
           let newListNode = hasNewListNode(props.edit, id)
           let isExpandable = newListNode || list.children.length > 0
-          let isExpanded = newListNode || expand[id]
+          let isExpanded = newListNode || expanded[id]
 
           return (
             <ListNode
@@ -33,7 +33,6 @@ export const ListTree = ({
               lists={lists}
               depth={depth}
               minDropDepth={minDropDepth}
-              expand={expand}
               isSelected={props.selection === id}
               isExpandable={isExpandable}
               isExpanded={isExpandable && isExpanded}
