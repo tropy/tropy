@@ -47,6 +47,9 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.17.2" date="2025-11-27">
+      <url>https://github.com/tropy/tropy/releases/tag/v1.17.2</url>
+    </release>
     <release version="1.17.1" date="2025-10-30">
       <url>https://github.com/tropy/tropy/releases/tag/v1.17.1</url>
     </release>
