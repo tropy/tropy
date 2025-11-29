@@ -1,4 +1,5 @@
 import cx from 'classnames'
+import { useEvent } from '../../hooks/use-event'
 import { Button } from '../button.js'
 import { Icon } from '../icons.js'
 
@@ -6,25 +7,34 @@ export const NodeContainer = ({
   children,
   className,
   icon = 'Folder',
-  isExpandable = false,
   onContextMenu,
   onClick,
-  onExpand,
+  onExpandButtonClick,
   ref
 }) => {
+  let handleExpandButtonClick = useEvent(event => {
+    event.stopPropagation()
+    onExpandButtonClick()
+  })
+
   return (
     <div
       ref={ref}
       className={cx('node-container', className)}
       onContextMenu={onContextMenu}
       onClick={onClick}>
-      {isExpandable && (
-        <Button icon="IconTriangle" noFocus onClick={onExpand}/>
+      {onExpandButtonClick != null && (
+        <Button
+          icon="IconTriangle"
+          noFocus
+          onClick={handleExpandButtonClick}/>
       )}
       <div className="icon-truncate">
         <Icon name={icon}/>
       </div>
-      {children}
+      <div className="name">
+        {children}
+      </div>
     </div>
   )
 }
