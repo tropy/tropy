@@ -19,28 +19,36 @@ export const ListTree = ({
   return (
     <ol className="list-tree">
       {parent.children.map((id, idx, all) => {
-        if (!(id in lists)) return null
+        if (id in lists) {
+          let list = lists[id]
+          let newListNode = hasNewListNode(props.edit, id)
+          let isExpandable = newListNode || list.children.length > 0
+          let isExpanded = newListNode || expanded[id]
+          let isLast = idx === all.length - 1
 
-        let list = lists[id]
-        let newListNode = hasNewListNode(props.edit, id)
-        let isExpandable = newListNode || list.children.length > 0
-        let isExpanded = newListNode || expanded[id]
-
-        return (
-          <ListNode
-            {...props}
-            key={id}
-            list={list}
-            lists={lists}
-            depth={depth}
-            minDropDepth={minDropDepth}
-            isSelected={props.selection === id}
-            isExpandable={isExpandable}
-            isExpanded={isExpandable && isExpanded}
-            isEditing={props.edit?.id === id}
-            isHolding={holdIndex[id]}
-            isLast={idx === all.length - 1}
-            position={idx}/>)
+          return (
+            <ListNode
+              key={id}
+              list={list}
+              lists={lists} // TODO
+              depth={depth}
+              isSelected={props.selection === id}
+              isExpandable={isExpandable}
+              isExpanded={isExpandable && isExpanded}
+              isEditing={props.edit?.id === id}
+              isHolding={holdIndex[id]}
+              isLast={isLast}
+              position={idx}>
+              <ListTree
+                {...props}
+                depth={1 + depth}
+                minDropDepth={isLast ? minDropDepth : depth}
+                isDraggingParent={false} // TODO {isDraggingParent || isDragging}
+                lists={lists}
+                parent={list}/>
+            </ListNode>
+          )
+        }
       })}
       <Collapse
         tagName="li"

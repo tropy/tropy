@@ -49,7 +49,6 @@ const HALLOWEEN = (d => d.getMonth() === 9 && d.getDate() === 31)(new Date)
 
 export const ListNode = memo(({
   depth = 0,
-  minDropDepth = 0,
   onCollapse,
   onContextMenu,
   onEditCancel,
@@ -65,6 +64,7 @@ export const ListNode = memo(({
   isReadOnly,
   isSelected,
   list,
+  children,
   ...props
 }) => {
   let [random] = useState(Math.random)
@@ -157,12 +157,7 @@ export const ListNode = memo(({
         </div>
       </div>
       <Collapse in={isExpanded}>
-        <ListTree
-          {...props}
-          depth={1 + depth}
-          minDropDepth={isLast ? minDropDepth : depth}
-          isDraggingParent={isDraggingParent || isDragging}
-          parent={list}/>
+        {children}
       </Collapse>
     </li>
   )
