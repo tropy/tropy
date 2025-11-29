@@ -24,22 +24,29 @@ export const ListTree = ({
           let newListNode = hasNewListNode(props.edit, id)
           let isExpandable = newListNode || list.children.length > 0
           let isExpanded = newListNode || expanded[id]
+          let isLast = idx === all.length - 1
 
           return (
             <ListNode
-              {...props}
               key={id}
               list={list}
-              lists={lists}
+              lists={lists} // TODO
               depth={depth}
-              minDropDepth={minDropDepth}
               isSelected={props.selection === id}
               isExpandable={isExpandable}
               isExpanded={isExpandable && isExpanded}
               isEditing={props.edit?.id === id}
               isHolding={holdIndex[id]}
-              isLast={idx === all.length - 1}
-              position={idx}/>
+              isLast={isLast}
+              position={idx}>
+              <ListTree
+                {...props}
+                depth={1 + depth}
+                minDropDepth={isLast ? minDropDepth : depth}
+                isDraggingParent={false} // TODO {isDraggingParent || isDragging}
+                lists={lists}
+                parent={list}/>
+            </ListNode>
           )
         }
       })}
