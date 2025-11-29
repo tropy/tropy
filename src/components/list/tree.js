@@ -28,6 +28,7 @@ export const ListTree = ({
 
           return (
             <ListNode
+              {...props}
               key={id}
               list={list}
               lists={lists} // TODO

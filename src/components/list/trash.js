@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import cx from 'classnames'
-import { IconTrash } from '../icons.js'
+import { NodeContainer } from '../tree/node-container.js'
 import { DND, useDrop } from '../dnd.js'
 
 
@@ -35,14 +35,11 @@ export const TrashListNode = React.memo(({
       onContextMenu={(event) => {
         onContextMenu(event, 'trash', {})
       }}>
-      <div className="list-node-container">
-        <IconTrash/>
-        <div className="name">
-          <div className="truncate">
-            <FormattedMessage id="sidebar.trash"/>
-          </div>
+      <NodeContainer icon="Trash">
+        <div className="truncate">
+          <FormattedMessage id="sidebar.trash"/>
         </div>
-      </div>
+      </NodeContainer>
     </li>
   )
 })

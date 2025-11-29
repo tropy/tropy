@@ -5,7 +5,7 @@
 // Sidebar sort indicator
 // --------------------------------------------------
 
-.list-node-container {
+.node-container {
   &.before,
   &.after {
     z-index: 1;
@@ -38,7 +38,7 @@
   $sel: if(sass($i == 1): "ol"; else: selector.nest($sel, "ol"));
 
   #{$sel} {
-    .list-node-container {
+    .node-container {
       &.before,
       &.after {
         &::before,
@@ -59,7 +59,7 @@
     }
 
     .expanded {
-      > .list-node-container {
+      > .node-container {
         &.after {
           &::after {
             @if ($i == 1) {
@@ -75,7 +75,7 @@
     }
   }
 
-  .list-node-container {
+  .node-container {
     &.after {
       &.depth-#{$i} {
         &::after {

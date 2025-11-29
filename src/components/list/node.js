@@ -1,5 +1,6 @@
 import { memo, useMemo, useState } from 'react'
 import { useEvent } from '../../hooks/use-event.js'
+import { NodeContainer } from '../tree/node-container.js'
 import { Button } from '../button.js'
 import { Editable } from '../editable.js'
 import { Collapse } from '../fx.js'
@@ -28,21 +29,15 @@ export const NewListNode = ({
   onSave,
   parent = LIST.ROOT
 }) => (
-  <div className="list new-list list-node-container">
-    <div className="icon-truncate">
-      <IconFolder/>
-    </div>
-    <div className="name">
-      <Editable
-        isActive
-        isRequired
-        resize
-        value={name}
-        onCancel={onCancel}
-        onChange={(newName) =>
-          onSave({ parent, name: newName })}/>
-    </div>
-  </div>
+  <NodeContainer className="list new-list">
+    <Editable
+      isActive
+      isRequired
+      resize
+      value={name}
+      onCancel={onCancel}
+      onChange={(newName) => onSave({ parent, name: newName })}/>
+  </NodeContainer>
 )
 
 const mdd = (month, day, d = new Date) =>
@@ -85,7 +80,7 @@ export const ListNode = memo(({
     }
   })
 
-  // TODO move to tree
+  // TODO move to action or reducer
   let isChildNodeSelected = useEvent(() => {
     if (!props.selection || isSelected)
       return false
@@ -94,13 +89,10 @@ export const ListNode = memo(({
     return p === list.id
   })
 
-  // TODO move to tree
   let handleExpandButtonClick = useEvent((event) => {
-    event.stopPropagation() // move to node-container
-
     if (isExpanded) {
       onCollapse(list.id, {
-        select: isChildNodeSelected()
+        select: isChildNodeSelected() // move to action or reducer
       })
     } else {
       onExpand(list.id)
@@ -131,33 +123,23 @@ export const ListNode = memo(({
       expanded: isExpanded,
       holding: isHolding
     })}>
-      <div
-        className={cx('list-node-container', direction, {
+      <NodeContainer
+        className={[direction, {
           over: isOver && canDrop
-        })}
+        }]}
         ref={dnd}
         onContextMenu={handleContextMenu}
-        onClick={handleClick}>
-        {isExpandable && (
-          <Button
-            icon="IconTriangle"
-            noFocus
-            onClick={handleExpandButtonClick}/>
-        )}
-        <div className="icon-truncate">
-          <Icon name={icon}/>
-        </div>
-        <div className="name">
-          <Editable
-            isActive={isEditing}
-            isDisabled={isReadOnly || isDragging}
-            isRequired
-            resize
-            value={list.name}
-            onCancel={onEditCancel}
-            onChange={handleChange}/>
-        </div>
-      </div>
+        onClick={handleClick}
+        onExpandButtonClick={handleExpandButtonClick}>
+        <Editable
+          isActive={isEditing}
+          isDisabled={isReadOnly || isDragging}
+          isRequired
+          resize
+          value={list.name}
+          onCancel={onEditCancel}
+          onChange={handleChange}/>
+      </NodeContainer>
       <Collapse in={isExpanded}>
         {children}
       </Collapse>

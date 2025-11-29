@@ -114,7 +114,7 @@
         @extend %drop-target; // project-name & tag
       }
 
-      > .list-node-container {
+      > .node-container {
         display: flex;
         align-items: center;
         height: $line-height-large;
@@ -171,13 +171,13 @@
           margin-right: 0;
           transform: rotate(90deg);
 
-          li.expanded > .list-node-container :is(&) {
+          li.expanded > .node-container :is(&) {
             transform: scaleY(-1);
           }
         }
 
         .icon-folder {
-          li.holding:not(.active) > .list-node-container :is(&) {
+          li.holding:not(.active) > .node-container :is(&) {
             position: relative;
 
             svg {
@@ -229,7 +229,7 @@
     $sel: if(sass($i == 1): "ol"; else: selector.nest($sel, "ol"));
 
     #{$sel} {
-      .list-node-container {
+      .node-container {
         padding-left:
           $list-tree-padding-left
           + $list-tree-indent
