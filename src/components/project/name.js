@@ -16,7 +16,7 @@ export function ProjectName(props) {
         'over': isOver && canDrop
       })}
       onClick={props.onClick}>
-      <div className="list-node-container">
+      <div className="node-container">
         <IconMaze/>
         <div className="name">
           <Editable
