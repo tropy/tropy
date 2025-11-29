@@ -45,7 +45,8 @@ export const NewListNode = ({
   </div>
 )
 
-const HALLOWEEN = (d => d.getMonth() === 9 && d.getDate() === 31)(new Date)
+const mdd = (month, day, d = new Date) =>
+  d.getMonth() === month - 1 && d.getDate() === day
 
 export const ListNode = memo(({
   depth = 0,
@@ -67,13 +68,14 @@ export const ListNode = memo(({
   children,
   ...props
 }) => {
+  let [halloween] = useState(mdd(10, 31))
   let [random] = useState(Math.random)
 
   let icon = useMemo(() => (
-    (HALLOWEEN && depth && Math.round(random * depth) > (depth * 0.666))
+    (halloween && depth && Math.round(random * depth) > (depth * 0.666))
       ? 'Ghost'
       : 'Folder'
-  ), [random, depth])
+  ), [halloween, random, depth])
 
   let [direction, isDragging, isOver, canDrop, dnd] = [] // useDragDropLists(minDropDepth, isReadOnly)
 
