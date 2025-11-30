@@ -23,7 +23,7 @@ export const NodeContainer = ({
       className={cx('node-container', className)}
       onContextMenu={onContextMenu}
       onClick={onClick}>
-      {onExpandButtonClick != null && (
+      {onExpandButtonClick && (
         <Button
           icon="IconTriangle"
           noFocus
