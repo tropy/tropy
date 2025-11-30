@@ -82,20 +82,9 @@ export const ListNode = memo(({
     }
   })
 
-  // TODO move to action or reducer
-  let isChildNodeSelected = useEvent(() => {
-    if (!props.selection || isSelected)
-      return false
-    let p = props.lists[props.selection].parent
-    while (p && p !== list.id) p = props.lists[p].parent
-    return p === list.id
-  })
-
-  let handleExpandButtonClick = useEvent((event) => {
+  let handleExpandButtonClick = useEvent(() => {
     if (isExpanded) {
-      onCollapse(list.id, {
-        select: isChildNodeSelected() // move to action or reducer
-      })
+      onCollapse(list.id)
     } else {
       onExpand(list.id)
     }
