@@ -36,8 +36,10 @@ export const TrashListNode = React.memo(({
         onContextMenu(event, 'trash', {})
       }}>
       <NodeContainer icon="Trash">
-        <div className="truncate">
-          <FormattedMessage id="sidebar.trash"/>
+        <div className="name">
+          <div className="truncate">
+            <FormattedMessage id="sidebar.trash"/>
+          </div>
         </div>
       </NodeContainer>
     </li>

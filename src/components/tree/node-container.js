@@ -32,9 +32,7 @@ export const NodeContainer = ({
       <div className="icon-truncate">
         <Icon name={icon}/>
       </div>
-      <div className="name">
-        {children}
-      </div>
+      {children}
     </div>
   )
 }

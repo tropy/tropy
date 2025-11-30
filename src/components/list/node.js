@@ -30,13 +30,15 @@ export const NewListNode = ({
   parent = LIST.ROOT
 }) => (
   <NodeContainer className="list new-list">
-    <Editable
-      isActive
-      isRequired
-      resize
-      value={name}
-      onCancel={onCancel}
-      onChange={(newName) => onSave({ parent, name: newName })}/>
+    <div className="name">
+      <Editable
+        isActive
+        isRequired
+        resize
+        value={name}
+        onCancel={onCancel}
+        onChange={(newName) => onSave({ parent, name: newName })}/>
+    </div>
   </NodeContainer>
 )
 
@@ -131,14 +133,16 @@ export const ListNode = memo(({
         onContextMenu={handleContextMenu}
         onClick={handleClick}
         onExpandButtonClick={handleExpandButtonClick}>
-        <Editable
-          isActive={isEditing}
-          isDisabled={isReadOnly || isDragging}
-          isRequired
-          resize
-          value={list.name}
-          onCancel={onEditCancel}
-          onChange={handleChange}/>
+        <div className="name">
+          <Editable
+            isActive={isEditing}
+            isDisabled={isReadOnly || isDragging}
+            isRequired
+            resize
+            value={list.name}
+            onCancel={onEditCancel}
+            onChange={handleChange}/>
+        </div>
       </NodeContainer>
       <Collapse in={isExpanded}>
         {children}
