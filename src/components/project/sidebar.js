@@ -176,10 +176,10 @@ class ProjectSidebar extends React.PureComponent {
     this.props.onItemDelete(items.map(it => it.id))
   }
 
-  handleListClick = (list) => {
-    if (!this.handleListSelect(list.id)) {
+  handleListClick = (id) => {
+    if (!this.handleListSelect(id)) {
       if (!this.hasFocusChanged()) {
-        this.props.onEdit({ list: { id: list.id } })
+        this.props.onEdit({ list: { id } })
       }
     }
   }
