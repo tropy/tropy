@@ -1,6 +1,7 @@
 import cx from 'classnames'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
-import { IconMaze, IconWarningSm, IconLock } from '../icons.js'
+import { NodeContainer } from '../tree/node-container.js'
+import { Icon } from '../icons.js'
 import { Editable } from '../editable.js'
 
 
@@ -16,8 +17,7 @@ export function ProjectName(props) {
         'over': isOver && canDrop
       })}
       onClick={props.onClick}>
-      <div className="node-container">
-        <IconMaze/>
+      <NodeContainer icon="Maze">
         <div className="name">
           <Editable
             value={props.name}
@@ -29,10 +29,10 @@ export function ProjectName(props) {
             onChange={props.onChange}/>
         </div>
         {props.isCorrupted &&
-          <IconWarningSm title="project.corrupted"/>}
+          <Icon name="WarningSm" title="project.corrupted"/>}
         {props.isReadOnly &&
-          <IconLock title="project.readOnly"/>}
-      </div>
+          <Icon name="Lock" title="project.readOnly"/>}
+      </NodeContainer>
     </li>
   )
 }

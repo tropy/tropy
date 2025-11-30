@@ -13,8 +13,10 @@ export const ListLeafNode = ({
     className={cx({ active: isSelected })}
     onClick={isSelected ? null : onClick}>
     <NodeContainer icon={icon}>
-      <div className="truncate">
-        <FormattedMessage id={name}/>
+      <div className="name">
+        <div className="truncate">
+          <FormattedMessage id={name}/>
+        </div>
       </div>
     </NodeContainer>
   </li>
