@@ -1,6 +1,17 @@
 import { LIST, EDIT } from '../constants/index.js'
 import { array } from '../common/util.js'
 
+const isChildNodeSelected = (root, selected, nodes) => {
+  if (selected == null || selected === root)
+    return false
+
+  let parent = nodes[selected]?.parent
+  while (parent != null && parent !== root)
+    parent = nodes[parent]?.parent
+
+  return parent === root
+}
+
 export default {
   new(payload = {}, meta = {}) {
     return {
@@ -68,11 +79,18 @@ export default {
     return { type: LIST.UPDATE, payload, meta }
   },
 
-  collapse(payload, meta = {}) {
-    return {
-      type: LIST.COLLAPSE,
-      payload,
-      meta
+  collapse(id, meta = {}) {
+    return (dispatch, getState) => {
+      let { nav, lists } = getState()
+
+      // Set hint for nav reducer.
+      meta.select = isChildNodeSelected(id, nav.list, lists)
+
+      dispatch({
+        type: LIST.COLLAPSE,
+        payload: id,
+        meta
+      })
     }
   },
 
