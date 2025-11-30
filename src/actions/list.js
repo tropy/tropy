@@ -37,7 +37,7 @@ export default {
 
   save(payload, meta) {
     return {
-      type: ('id' in payload) ? LIST.SAVE : LIST.CREATE,
+      type: (payload.id != null) ? LIST.SAVE : LIST.CREATE,
       payload,
       meta: { cmd: 'project', history: 'add', ...meta }
     }

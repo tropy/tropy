@@ -1,6 +1,6 @@
 import { memo, useMemo, useState } from 'react'
 import { useEvent } from '../../hooks/use-event.js'
-import { NodeContainer } from '../tree/node-container.js'
+import { Node } from '../tree/node.js'
 import { Button } from '../button.js'
 import { Editable } from '../editable.js'
 import { Collapse } from '../fx.js'
@@ -23,23 +23,8 @@ import { LIST, SASS } from '../../constants/index.js'
 const { INDENT, PADDING } = SASS.LIST
 
 
-export const NewListNode = ({
-  name = '',
-  onCancel,
-  onSave,
-  parent = LIST.ROOT
-}) => (
-  <NodeContainer className="list new-list">
-    <div className="name">
-      <Editable
-        isActive
-        isRequired
-        resize
-        value={name}
-        onCancel={onCancel}
-        onChange={(newName) => onSave({ parent, name: newName })}/>
-    </div>
-  </NodeContainer>
+export const NewListNode = (props) => (
+  <Node className="list new-list" {...props}/>
 )
 
 const mdd = (month, day, d = new Date) =>
@@ -76,30 +61,11 @@ export const ListNode = memo(({
 
   let [direction, isDragging, isOver, canDrop, dnd] = [] // useDragDropLists(minDropDepth, isReadOnly)
 
-  let handleClick = useEvent(() => {
-    if (!isEditing) {
-      onClick(list)
-    }
-  })
-
-  let handleExpandButtonClick = useEvent(() => {
-    if (isExpanded) {
-      onCollapse(list.id)
-    } else {
-      onExpand(list.id)
-    }
-  })
-
-  let handleChange = useEvent((name) => {
-    onSave({ id: list.id, name })
-  })
-
   let handleContextMenu = useEvent((event) => {
     if (!isEditing) {
       if (!isSelected) {
         onClick(list)
       }
-
       onContextMenu(event, 'list', {
         id: list.id
       })
@@ -114,25 +80,22 @@ export const ListNode = memo(({
       expanded: isExpanded,
       holding: isHolding
     })}>
-      <NodeContainer
+      <Node
         className={[direction, {
           over: isOver && canDrop
         }]}
         ref={dnd}
+        icon={icon}
+        id={list.id}
+        isDisabled={isReadOnly || isDragging}
+        isEditing={isEditing}
+        name={list.name}
+        onCancel={onEditCancel}
+        onClick={onClick}
+        onCollapse={onCollapse}
         onContextMenu={handleContextMenu}
-        onClick={handleClick}
-        onExpandButtonClick={handleExpandButtonClick}>
-        <div className="name">
-          <Editable
-            isActive={isEditing}
-            isDisabled={isReadOnly || isDragging}
-            isRequired
-            resize
-            value={list.name}
-            onCancel={onEditCancel}
-            onChange={handleChange}/>
-        </div>
-      </NodeContainer>
+        onExpand={onExpand}
+        onSave={onSave}/>
       <Collapse in={isExpanded}>
         {children}
       </Collapse>
