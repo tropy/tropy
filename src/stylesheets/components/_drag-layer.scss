@@ -21,7 +21,7 @@
   .drag-preview-container {
     opacity: $drag-preview-opacity;
 
-    .drag-preview.list :is(&) {
+    .drag-preview.node :is(&) {
       display: flex;
       align-items: center;
       height: $line-height-large;
