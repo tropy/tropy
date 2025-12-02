@@ -3,7 +3,7 @@ import { DND, useDragLayer } from './dnd.js'
 import { useDropEffect } from '../hooks/use-drop-effect.js'
 import { ItemDragPreview } from './item/drag-preview.js'
 import { PhotoDragPreview } from './photo/drag-preview.js'
-import { ListDragPreview } from './list/drag-preview.js'
+import { NodeDragPreview } from './tree/node-drag-preview.js'
 import { FieldDragPreview } from './metadata/drag-preview.js'
 
 export function DragPreviewPositioner({
@@ -41,7 +41,7 @@ const dragPreview = {
   [DND.ITEMS]: ItemDragPreview,
   [DND.PHOTO]: PhotoDragPreview,
   [DND.SELECTION]: PhotoDragPreview,
-  [DND.LIST]: ListDragPreview,
+  [DND.NODE]: NodeDragPreview,
   [DND.FIELD]: FieldDragPreview
 }
 

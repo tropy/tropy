@@ -1,13 +1,13 @@
-import { IconFolder } from '../icons.js'
+import { Icon } from '../icons.js'
 
-export const ListDragPreview = ({ item }) => (
+export const NodeDragPreview = ({ item }) => (
   <div
-    className="list drag-preview"
+    className="node drag-preview"
     style={{
       paddingLeft: item.padding
     }}>
     <div className="drag-preview-container">
-      <IconFolder/>
+      <Icon name={item.icon}/>
       <div className="name">
         {item.name}
       </div>
