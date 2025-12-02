@@ -28,6 +28,7 @@ const DND = {
   FIELD: 'field',
   ITEMS: 'items',
   LIST: 'list',
+  NODE: 'node',
   PHOTO: 'photo',
   SELECTION: 'selection',
   TEMPLATE: {
