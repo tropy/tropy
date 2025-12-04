@@ -313,6 +313,14 @@ export class Window extends EventEmitter {
     on(window, 'dragend', () => {
       this.state.isDragging = false
     }, { passive: true, capture: true })
+    on(window, 'dragenter', () => {
+      this.toggle('focus')
+    }, { passive: true, capture: true })
+    on(window, 'dragleave', () => {
+      if (!(this.state.isDragging || document.hasFocus())) {
+        this.toggle('blur')
+      }
+    }, { passive: true, capture: true })
   }
 
   handleMouseButtons() {
