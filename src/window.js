@@ -49,6 +49,11 @@ export class Window extends EventEmitter {
 
   unloaders = []
 
+  state = {
+    isDragging: false
+  }
+
+
   constructor () {
     if (instance) {
       throw Error('window singleton instance already exists')
@@ -68,6 +73,7 @@ export class Window extends EventEmitter {
         this.handleIpcEvents()
         this.handleEditorCommands()
         this.handleModifierKeys()
+        this.handleDragEvents()
         this.handleMouseButtons()
         this.handleUncaughtExceptions()
 
@@ -289,6 +295,15 @@ export class Window extends EventEmitter {
     on(window, 'blur', up, { passive: true })
   }
 
+  handleDragEvents () {
+    on(window, 'dragstart', () => {
+      this.state.isDragging = true
+    }, { passive: true, capture: true })
+    on(window, 'dragend', () => {
+      this.state.isDragging = false
+    }, { passive: true, capture: true })
+  }
+
   handleMouseButtons () {
     on(document, 'mousedown', event => {
       if (!event.defaultPrevented) {
@@ -356,7 +371,7 @@ export class Window extends EventEmitter {
         toggle(this.html, 'is-blurred', false)
         break
       case 'blur':
-        toggle(this.html, 'is-blurred', true)
+        toggle(this.html, 'is-blurred', !this.state.isDragging)
         break
       case 'maximize':
         toggle(this.html, 'is-maximized', true)
