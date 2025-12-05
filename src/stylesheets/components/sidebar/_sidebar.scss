@@ -14,10 +14,6 @@
   display: flex;
   flex-direction: column;
 
-  @if $platform == linux {
-    transition: background 0s linear 0.1s;
-  }
-
   .vibrancy:not(.is-blurred) & {
     background: transparent;
     color: $sidebar-vibrancy-color;
