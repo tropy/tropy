@@ -1,28 +1,20 @@
-import { memo, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
+import { useDropItems } from '../../hooks/use-drag-drop-items.js'
+import { useDragDropNode } from '../../hooks/use-drag-drop-node.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { Node } from '../tree/node.js'
-import { Button } from '../button.js'
-import { Editable } from '../editable.js'
 import { Collapse } from '../fx.js'
 import { IconFolder, Icon } from '../icons.js'
 import { bounds } from '../../dom.js'
-import { ListTree } from './tree.js'
 import cx from 'classnames'
 import { noop, restrict } from '../../common/util.js'
-
-import {
-  DND,
-  DragSource,
-  DropTarget,
-  getEmptyImage,
-  getDroppedFiles,
-  hasPhotoFiles
-} from '../dnd.js'
 
 import { LIST, SASS } from '../../constants/index.js'
 const { INDENT, PADDING } = SASS.LIST
 
 
+// TODO remove
 export const NewListNode = (props) => (
   <Node className="list new-list" {...props}/>
 )
@@ -31,25 +23,32 @@ const mdd = (month, day, d = new Date) =>
   d.getMonth() === month - 1 && d.getDate() === day
 
 export const ListNode = memo(({
+  children,
   depth = 0,
-  onCollapse,
-  onContextMenu,
-  onEditCancel,
-  onExpand,
-  onSave,
-  onClick,
+  isDraggingParent,
   isEditing,
   isExpandable,
   isExpanded,
-  isDraggingParent,
   isHolding,
-  isLast,
+  isLastChild,
   isReadOnly,
   isSelected,
   list,
-  children,
-  ...props
+  minDropDepth,
+  onClick,
+  onCollapse,
+  onContextMenu,
+  onDrop,
+  onDropFiles,
+  onDropItems,
+  onDropOutside,
+  onEditCancel,
+  onExpand,
+  onSave,
+  position
 }) => {
+  let node = useRef(null)
+
   let [halloween] = useState(mdd(10, 31))
   let [random] = useState(Math.random)
 
@@ -59,7 +58,42 @@ export const ListNode = memo(({
       : 'Folder'
   ), [halloween, random, depth])
 
-  let [direction, isDragging, isOver, canDrop, dnd] = [] // useDragDropLists(minDropDepth, isReadOnly)
+  let handleDropItems = useEvent((items) => {
+    onDropItems({ list: list.id, items })
+  })
+
+  let handleDropFiles = useEvent((files) => {
+    onDropFiles({ list: list.id, ...files })
+  })
+
+  let [{ canDrop, direction, isDragging, isOver }, dnd] = useDragDropNode(node, {
+    depth,
+    icon,
+    indent: INDENT,
+    isDraggingParent,
+    isExpanded,
+    isLastChild,
+    isReadOnly,
+    minDropDepth,
+    node: list,
+    onDrop,
+    onDropOutside,
+    padding: PADDING,
+    position
+  })
+
+  let [di, dropItems] = useDropItems({
+    isReadOnly,
+    onDrop: handleDropItems
+  })
+
+  let [df, dropFiles] = useDropPhotoFiles({
+    isReadOnly,
+    onDrop: handleDropFiles
+  })
+
+  canDrop = canDrop || df.canDrop || di.canDrop
+  isOver = isOver || df.isOver || di.isOver
 
   let handleContextMenu = useEvent((event) => {
     if (!isEditing) {
@@ -84,7 +118,7 @@ export const ListNode = memo(({
         className={[direction, {
           over: isOver && canDrop
         }]}
-        ref={dnd}
+        ref={dropItems(dropFiles(dnd))}
         icon={icon}
         id={list.id}
         isDisabled={isReadOnly || isDragging}
@@ -92,12 +126,12 @@ export const ListNode = memo(({
         name={list.name}
         onCancel={onEditCancel}
         onClick={onClick}
-        onCollapse={onCollapse}
+        onCollapse={isExpandable ? onCollapse : null}
         onContextMenu={handleContextMenu}
-        onExpand={onExpand}
+        onExpand={isExpandable ? onExpand : null}
         onSave={onSave}/>
       <Collapse in={isExpanded}>
-        {children}
+        {children(isDragging)}
       </Collapse>
     </li>
   )
@@ -108,10 +142,6 @@ export const ListNode = memo(({
 //   state = {
 //     depth: null,
 //     offset: null
-//   }
-
-//   componentDidMount() {
-//     this.props.connectDragPreview(getEmptyImage())
 //   }
 
 //   get direction() {
@@ -212,18 +242,6 @@ export const ListNode = memo(({
 //   }
 
 
-
-
-
-//   }
-
-//   static defaultProps = {
-//     depth: 0,
-//     onClick: noop,
-//     position: 0,
-//     isHalloween: ((d) => d.getMonth() === 9 && d.getDate() === 31)(new Date())
-//   }
-// }
 
 // const DragSourceSpec = {
 //   beginDrag({ list, depth, position }) {
