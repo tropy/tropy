@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux'
+import { useEvent } from '../../hooks/use-event.js'
 import { ListNode, NewListNode } from './node.js'
 import { Collapse } from '../fx.js'
 import { getListHoldIndex } from '../../selectors/index.js'
@@ -8,13 +9,47 @@ const hasNewListNode = (edit, parent) =>
 
 export const ListTree = ({
   depth = 0,
+  isDraggingParent = false,
   lists = {},
   minDropDepth = 0,
   parent,
   ...props
 }) => {
+
+  // TODO move recursion to Tree component so these hooks only exist once at the root!
+
   let holdIndex = useSelector(getListHoldIndex)
   let expanded = useSelector(state => state.sidebar.expand)
+
+  let handleDrop = useEvent((...args) => {
+    console.log('drop')
+    props.onMove(...args) // TODO dispatch
+  })
+
+  let handleDropOutside = useEvent((drop) => {
+    console.log('drop outside')
+    // TODO move to action? and dispatch
+    let target = lists[drop.parent]
+    let prev
+
+    for (let dd = drop.depth; dd > 0 && target.parent != null; --dd) {
+      prev = target.id
+      target = lists[target.parent]
+      if (target.children.at(-1) !== prev) break
+    }
+
+    let idx = (prev == null)
+      ? target.children.length
+      : target.children.indexOf(prev) + 1
+
+    let pos = target.children.indexOf(drop.id)
+    if (pos >= 0 && pos < idx) idx--
+
+    props.onMove({
+      id: drop.id,
+      parent: target.id
+    }, { idx })
+  })
 
   return (
     <ol className="list-tree">
@@ -24,29 +59,42 @@ export const ListTree = ({
           let newListNode = hasNewListNode(props.edit, id)
           let isExpandable = newListNode || list.children.length > 0
           let isExpanded = newListNode || expanded[id]
-          let isLast = idx === all.length - 1
+          let isLastChild = idx === all.length - 1
 
           return (
             <ListNode
-              {...props}
               key={id}
-              list={list}
-              lists={lists} // TODO
               depth={depth}
-              isSelected={props.selection === id}
+              isDraggingParent={isDraggingParent}
+              isEditing={props.edit?.id === id}
               isExpandable={isExpandable}
               isExpanded={isExpandable && isExpanded}
-              isEditing={props.edit?.id === id}
               isHolding={holdIndex[id]}
-              isLast={isLast}
+              isLastChild={isLastChild}
+              isReadOnly={props.isReadOnly}
+              isSelected={props.selection === id}
+              list={list}
+              minDropDepth={minDropDepth}
+              onClick={props.onClick}
+              onCollapse={props.onCollapse}
+              onContextMenu={props.onContext}
+              onDrop={handleDrop}
+              onDropFiles={props.onDropFiles}
+              onDropItems={props.onDropItems}
+              onDropOutside={handleDropOutside}
+              onEditCancel={props.onEditCancel}
+              onExpand={props.onExpand}
+              onSave={props.onSave}
               position={idx}>
-              <ListTree
-                {...props}
-                depth={1 + depth}
-                minDropDepth={isLast ? minDropDepth : depth}
-                isDraggingParent={false} // TODO {isDraggingParent || isDragging}
-                lists={lists}
-                parent={list}/>
+              {(isDragging) => (
+                <ListTree
+                  {...props}
+                  depth={1 + depth}
+                  minDropDepth={isLastChild ? minDropDepth : depth}
+                  isDraggingParent={isDraggingParent || isDragging}
+                  lists={lists}
+                  parent={list}/>
+              )}
             </ListNode>
           )
         }
