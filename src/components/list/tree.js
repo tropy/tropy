@@ -22,12 +22,10 @@ export const ListTree = ({
   let expanded = useSelector(state => state.sidebar.expand)
 
   let handleDrop = useEvent((...args) => {
-    console.log('drop')
     props.onMove(...args) // TODO dispatch
   })
 
   let handleDropOutside = useEvent((drop) => {
-    console.log('drop outside')
     // TODO move to action? and dispatch
     let target = lists[drop.parent]
     let prev
