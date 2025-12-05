@@ -57,7 +57,6 @@ export function useDragDropNode(dom, {
 
       // Drop outside/after last node
       if (isLastChild && offset === 1 && dropDepth < depth) {
-        console.log('drop outside expanded node')
         return onDropOutside({
           id: item.id,
           parent: node.id,
