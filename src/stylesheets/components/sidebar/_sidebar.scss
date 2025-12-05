@@ -14,6 +14,10 @@
   display: flex;
   flex-direction: column;
 
+  @if $platform == linux {
+    transition: background 0s linear 0.1s;
+  }
+
   .vibrancy:not(.is-blurred) & {
     background: transparent;
     color: $sidebar-vibrancy-color;
@@ -53,6 +57,10 @@
 
     .is-blurred & {
       color: $sidebar-blurred-headings-color;
+
+      @if $platform == linux {
+        transition: color 0s linear 0.1s;
+      }
     }
   }
 
@@ -101,6 +109,10 @@
     display: flex;
     min-width: 0; // Fix truncation
 
+    @if $platform == linux {
+      transition: opacity 0s linear 0.1s;
+    }
+
     .is-blurred & {
       opacity: $sidebar-blurred-name-opacity;
     }
@@ -123,6 +135,10 @@
 
         li.active > :is(&) {
           @extend %list-active;
+
+          @if $platform == linux {
+            transition: background-color 0s linear 0.1s;
+          }
 
           .vibrancy:not(.is-blurred) & {
             color: $sidebar-vibrancy-list-active-color;
@@ -149,6 +165,10 @@
 
         .icon {
           flex: 0 0 auto;
+
+          @if $platform == linux {
+            transition: opacity 0s linear 0.1s;
+          }
 
           .vibrancy:not(.is-blurred) & {
             color: $sidebar-vibrancy-icon-color;
