@@ -391,13 +391,18 @@ export class Window extends EventEmitter {
     ])
   }
 
+  handleBlur = debounce(() => {
+    toggle(this.html, 'is-blurred', !this.state.isDragging)
+  }, linux ? 250 : 0)
+
   toggle(state, ...args) {
     switch (state) {
       case 'focus':
+        this.handleBlur.cancel()
         toggle(this.html, 'is-blurred', false)
         break
       case 'blur':
-        toggle(this.html, 'is-blurred', !this.state.isDragging)
+        this.handleBlur()
         break
       case 'maximize':
         toggle(this.html, 'is-maximized', true)
