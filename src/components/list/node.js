@@ -27,7 +27,6 @@ export const ListNode = memo(({
   depth = 0,
   isDraggingParent,
   isEditing,
-  isExpandable,
   isExpanded,
   isHolding,
   isLastChild,
@@ -110,7 +109,6 @@ export const ListNode = memo(({
     <li className={cx('list-node', {
       active: isSelected,
       dragging: isDragging,
-      expandable: isExpandable,
       expanded: isExpanded,
       holding: isHolding
     })}>
@@ -126,9 +124,9 @@ export const ListNode = memo(({
         name={list.name}
         onCancel={onEditCancel}
         onClick={onClick}
-        onCollapse={isExpandable ? onCollapse : null}
+        onCollapse={onCollapse}
         onContextMenu={handleContextMenu}
-        onExpand={isExpandable ? onExpand : null}
+        onExpand={onExpand}
         onSave={onSave}/>
       <Collapse in={isExpanded}>
         {children(isDragging)}
