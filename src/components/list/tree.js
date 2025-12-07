@@ -65,7 +65,6 @@ export const ListTree = ({
               depth={depth}
               isDraggingParent={isDraggingParent}
               isEditing={props.edit?.id === id}
-              isExpandable={isExpandable}
               isExpanded={isExpandable && isExpanded}
               isHolding={holdIndex[id]}
               isLastChild={isLastChild}
