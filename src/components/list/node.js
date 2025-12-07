@@ -65,7 +65,7 @@ export const ListNode = memo(({
     onDropFiles({ list: list.id, ...files })
   })
 
-  let [{ canDrop, direction, isDragging, isOver }, dnd] = useDragDropNode(node, {
+  let [{ canDrop, dropIndicator, isDragging, isOver }, dnd] = useDragDropNode(node, {
     depth,
     icon,
     indent: INDENT,
@@ -113,7 +113,7 @@ export const ListNode = memo(({
       holding: isHolding
     })}>
       <Node
-        className={[direction, {
+        className={[dropIndicator, {
           over: isOver && canDrop
         }]}
         ref={dropItems(dropFiles(dnd))}

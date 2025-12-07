@@ -4,7 +4,7 @@ import { DND, getEmptyImage, useDrag, useDrop } from '../components/dnd.js'
 import { bounds } from '../dom.js'
 import { restrict } from '../common/util.js'
 
-const getDirection = (current, {
+const getDropIndicator = (current, {
   depth,
   isExpanded,
   isLastChild,
@@ -39,7 +39,7 @@ export function useDragDropNode(dom, {
   position = 0
 }) {
   let dragging = useRef({ offset: null, depth: null })
-  let [direction, setDirection] = useState(null)
+  let [indicator, setDropIndicator] = useState(null)
 
   let handleDrop = useEvent((item) => {
     try {
@@ -73,7 +73,7 @@ export function useDragDropNode(dom, {
         parent: node.parent
       }, { idx })
     } finally {
-      setDirection(null)
+      setDropIndicator(null)
       dragging.current.depth = null
       dragging.current.offset = null
     }
@@ -89,7 +89,7 @@ export function useDragDropNode(dom, {
       offset: (offset < 0.33) ? 0 : (offset > 0.67) ? 1 : null
     })
 
-    setDirection(getDirection(dragging.current, {
+    setDropIndicator(getDropIndicator(dragging.current, {
       depth,
       isExpanded,
       isLastChild,
@@ -141,7 +141,7 @@ export function useDragDropNode(dom, {
 
   return [{
     canDrop,
-    direction: isOver ? direction : null,
+    dropIndicator: isOver ? indicator : null,
     isDragging,
     isOver
   }, drag(drop(dom))]
