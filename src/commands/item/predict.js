@@ -180,7 +180,7 @@ export class Predict extends Command {
           })
 
           for (let [key, value] of Object.entries(taggings)) {
-            yield put(act.item.tags.create({ id: [key], tags: value }))
+            yield put(act.item.tags.create({ id: [key], tags: uniq(value) }))
           }
         }
       }
