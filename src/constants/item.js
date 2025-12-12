@@ -1,4 +1,6 @@
 export default {
+  TRAIN: 'item.train',
+  PREDICT: 'item.predict',
   CREATE: 'item.create',
   DELETE: 'item.delete',
   DESTROY: 'item.destroy',

@@ -511,6 +511,11 @@ export class Tropy extends EventEmitter {
     this.on('app:merge-item', (win, { target }) =>
       this.dispatch(act.item.merge(target.id), win))
 
+    this.on('app:train-items', (win, { target }) =>
+      this.dispatch(act.item.train(target?.id), win))
+    this.on('app:predict-items', (win, { target }) =>
+      this.dispatch(act.item.predict(target?.id), win))
+
     this.on('app:explode-item', (win, { target }) =>
       this.dispatch(act.item.explode({ id: target.id }), win))
 

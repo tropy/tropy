@@ -168,6 +168,10 @@ en:
         command: 'app:create-item'
         accelerator: 'CmdOrCtrl+Shift+N'
     item: &item
+      - label: 'Train Items'
+        command: 'app:train-items'
+      - label: 'Predict Item'
+        command: 'app:predict-items'
       - label: 'Explode Item'
         command: 'app:explode-item'
         condition: 'isMultiplePhotos'
@@ -218,6 +222,10 @@ en:
             command: 'app:transcribe-item'
             enabled: false
     item-bulk: &item-bulk
+      - label: 'Train Items'
+        command: 'app:train-items'
+      - label: 'Predict Items'
+        command: 'app:predict-items'
       - label: 'Merge Selected Items'
         command: 'app:merge-item'
       - label: 'Delete Selected Items'

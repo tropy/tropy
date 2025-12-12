@@ -2,6 +2,28 @@ import { ITEM } from '../constants/index.js'
 import { array, get } from '../common/util.js'
 
 export default {
+  train(payload, meta) {
+    return {
+      type: ITEM.TRAIN,
+      payload: array(payload),
+      meta: {
+        cmd: 'project',
+        ...meta
+      }
+    }
+  },
+
+  predict(payload, meta) {
+    return {
+      type: ITEM.PREDICT,
+      payload: array(payload),
+      meta: {
+        cmd: 'project',
+        ...meta
+      }
+    }
+  },
+
   create(payload, meta) {
     return {
       type: ITEM.CREATE,
