@@ -118,7 +118,7 @@
     "@babel/cli": "^7.24.8",
     "@babel/plugin-syntax-import-assertions": "^7.17.12",
     "@inukshuk/exif": "^2.0.0",
-    "@koa/router": "^14.0.0",
+    "@koa/router": "^15.1.0",
     "@reduxjs/toolkit": "^2.0.1",
     "@tweenjs/tween.js": "^25.0.0",
     "alto-xml": "^1.0.1",
