@@ -122,7 +122,7 @@
     "@reduxjs/toolkit": "^2.0.1",
     "@tweenjs/tween.js": "^25.0.0",
     "alto-xml": "^1.0.1",
-    "chokidar": "^4.0.0",
+    "chokidar": "^5.0.0",
     "classnames": "^2.2.6",
     "commander": "^14.0.0",
     "cross-zip": "^4.0.0",
