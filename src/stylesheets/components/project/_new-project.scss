@@ -25,12 +25,7 @@
   figure {
     width: 112px;
     height: 96px;
-    background:
-      if(
-        $theme == "dark",
-        icon-url("project/tropy-icon-dark.svg") no-repeat 0 0,
-        icon-url("project/tropy-icon-light.svg") no-repeat 0 0
-      );
+    background: icon-url("project/tropy-icon-#{$theme}.svg") no-repeat 0 0;
     margin: (12px + 38px) auto (28px - 12px); // 60px spacing after btn-xl
   }
 

@@ -35,7 +35,7 @@
 }
 
 @for $i from 1 through $list-tree-max-levels {
-  $sel: if($i == 1, "ol", selector.nest($sel, "ol"));
+  $sel: if(sass($i == 1): "ol"; else: selector.nest($sel, "ol"));
 
   #{$sel} {
     .list-node-container {

@@ -50,12 +50,7 @@
   &:not(.static) {
     background-repeat: no-repeat;
     background-position: right $space-min center;
-    background-image:
-      if(
-        $theme == "light",
-        icon-url("project/icon-chevron7-light-theme.svg"),
-        icon-url("project/icon-chevron7-dark-theme.svg")
-      );
+    background-image: icon-url("project/icon-chevron7-#{$theme}.svg");
     padding-right: $space-lg;
 
     @include input-btn-focus(".focus");

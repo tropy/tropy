@@ -26,12 +26,7 @@
     flex: 0 0 auto;
     width: 180px;
     height: 180px;
-    background:
-      if(
-        $theme == "dark",
-        icon-url("about/app-icon-dark.svg") no-repeat 0 0,
-        icon-url("about/app-icon-light.svg") no-repeat 0 0
-      );
+    background: icon-url("about/app-icon-#{$theme}.svg") no-repeat 0 0;
     margin-right: 40px;
   }
 

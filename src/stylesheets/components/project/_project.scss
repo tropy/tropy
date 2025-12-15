@@ -140,12 +140,7 @@
       height: 200px;
       margin-top: 11px;
       margin-bottom: 48px; // 60px
-      background:
-        if(
-          $theme == "dark",
-          image-url("project/no-items-dark.svg") no-repeat 0 0,
-          image-url("project/no-items-light.svg") no-repeat 0 0
-        );
+      background: image-url("project/no-items-#{$theme}.svg") no-repeat 0 0;
 
       @media (height <= 540px) {
         display: none;
