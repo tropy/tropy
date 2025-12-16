@@ -49,6 +49,6 @@
   .outline-string,
   .outline-line,
   .outline-text-block {
-    outline: 3px solid scheme(#222, #bbb);
+    outline: 3px solid --scheme(#222, #bbb);
   }
 }
