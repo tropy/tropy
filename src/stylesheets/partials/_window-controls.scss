@@ -58,7 +58,7 @@
       }
 
       &:hover {
-        background-color: rgb(0, 0, 0, scheme(0.05, 0.1));
+        background-color: rgb(0, 0, 0, --scheme(0.05, 0.1));
       }
 
 
@@ -70,7 +70,7 @@
       &:active,
       .window-controls-menu-open & {
         background-image: icon-url("window/win32/#{$theme}/more-active.svg");
-        background-color: rgb(0, 0, 0, scheme(0.1, 0.3));
+        background-color: rgb(0, 0, 0, --scheme(0.1, 0.3));
       }
 
       .is-blurred & {
@@ -112,15 +112,15 @@
         height: zoom(24px);
         border-radius: 50%;
         transition: background-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        background-color: scheme(rgb(0, 0, 0, 0.08), rgb(255, 255, 255, 0.1));
+        background-color: --scheme(rgb(0, 0, 0, 0.08), rgb(255, 255, 255, 0.1));
       }
 
       &:hover::before {
-        background-color: scheme(rgb(0, 0, 0, 0.12), rgb(255, 255, 255, 0.15));
+        background-color: --scheme(rgb(0, 0, 0, 0.12), rgb(255, 255, 255, 0.15));
       }
 
       &:active::before {
-        background-color: scheme(rgb(0, 0, 0, 0.24), rgb(255, 255, 255, 0.3));
+        background-color: --scheme(rgb(0, 0, 0, 0.24), rgb(255, 255, 255, 0.3));
       }
     }
 
@@ -151,12 +151,12 @@
       }
 
       &:hover {
-        background-color: scheme(rgb(0, 0, 0, 0.056), rgb(255, 255, 255, 0.07));
+        background-color: --scheme(rgb(0, 0, 0, 0.056), rgb(255, 255, 255, 0.07));
       }
 
       &:active,
       .window-controls-menu-open & {
-        background-color: scheme(rgb(0, 0, 0, 0.128), rgb(255, 255, 255, 0.16));
+        background-color: --scheme(rgb(0, 0, 0, 0.128), rgb(255, 255, 255, 0.16));
       }
 
       &:focus-visible {
