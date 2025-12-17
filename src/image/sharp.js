@@ -15,9 +15,12 @@ export async function init() {
 }
 
 export const defaults = {
-  failOn: 'none'
+  failOn: 'none',
   // limitInputPixels: false
   // unlimited: true
+  jp2: {
+    oneshot: true
+  }
 }
 
 export async function open(input, options = {}) {
