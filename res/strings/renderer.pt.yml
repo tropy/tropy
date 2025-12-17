@@ -4,7 +4,7 @@ pt:
     tags: Etiquetas
     imports: Última Importação
     trash: Itens Eliminados
-    unlisted: Unlisted Items
+    unlisted: Itens não listados
   toolbar:
     import: Importar Fotos
     items: >-
@@ -52,7 +52,7 @@ pt:
     text: >-
       Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
       historical teaching resources, digital exhibits, and open-source software.
-    trademark: The Tropy name is a registered trademark of {cds}.
+    trademark: O nome Tropy é uma marca registada de {cds}.
     donate:
       title: Donativos ao Tropy
       url: https://tropy.org/donate
@@ -68,32 +68,32 @@ pt:
   project:
     empty: Arraste para aqui as suas fotos para começar.
     file:
-      open: Open project {path}
-      missing: Find missing project {path}
-      remove: Remove project from list
+      open: Abrir Projeto {path}
+      missing: Localizar projeto perdido {path}
+      remove: Remover projeto da lista
     recent:
       search:
-        placeholder: Filter projects
-        blank: No matching projects
+        placeholder: Filtrar projetos
+        blank: Nenhum projeto correspondente
     corrupted: >-
       O seu ficheiro do projeto pode estar danificado e ser necessário
       corrigi-lo através de uma intervenção manual. Por favor, consulte o manual
       do utilizador para obter ajuda adicional.
     readOnly: >-
-      Your project file is locked and cannot be modified. To unlock, change the
-      file permissions and open the project again.
+      O ficheiro do seu projeto está bloqueado e não pode ser modificado. Para
+      desbloquear, altere as permissões do ficheiro e abra novamente o projeto.
     new:
       title: Criar novo projeto
-      name: Enter a name for the project
+      name: Insira um nome para o projeto
       type:
-        label: Choose the project type
+        label: Escolha o tipo do projeto
         option:
-          tpy: Advanced
+          tpy: Avançado
           managed: Standard
         hint:
           tpy: Links to photos at their original location.
           managed: Copies photos to project folder on import.
-      create: Create Project
+      create: Criar Projeto
     stats:
       photos: |-
         {photos, plural,
@@ -128,7 +128,7 @@ pt:
             14px: Médio
             15px: Grande
             16px: Muito Grande
-        frameless: Use custom titlebar (requires restart)
+        frameless: Usar barra de título personalizada (requer reinicialização)
       print:
         mode: Imprimir
         modes:
@@ -136,7 +136,7 @@ pt:
           photo: Uma Foto por Página
           selection: Uma Seleção por Página
         photos: Incluir fotos
-        optimize: Optimize photo size and quality
+        optimize: Otimizar tamanho e qualidade da foto
         metadata: Incluir metadados
         notes: Incluir notas
         onlyNotes: Incluir apenas fotos com notas.
@@ -148,13 +148,14 @@ pt:
           de: Deutsch
           en: English
           es: Español
+          fi-FI: Suomi
           fr: Français
           it: Italiano
           ja: 日本語
-          nl-NL: Nederlands
+          nl-NL: Holandês
           pt: Português
           pt-BR: Português brasileiro
-          ru: русский
+          ru: Russo
           uk: Украї́нська мо́ва
       templates:
         label: Modelos padrão
@@ -165,7 +166,7 @@ pt:
         label: Importar nome do ficheiro como
         force: Substituir metadados incluídos na foto
       debug: Ativar Modo Programador
-      api: Enable Developer API
+      api: Ativar Modo Programador
       localtime: Presumir que os timestamps Exif utilizam fuso horário local
       dup:
         label: Durante importação
@@ -183,7 +184,7 @@ pt:
             html: Notas como HTML
             markdown: Notas como Markdown
           copy:
-            label: Copy notes as
+            label: Copiar notas como
             option:
               text: Texto simples
               markdown: Markdown
@@ -223,9 +224,9 @@ pt:
       name: Nome
       id: ID
       path: Ficheiro
-      type: Project type
+      type: Tipo de projeto
       convert:
-        confirm: Convert
+        confirm: Converter
         hint: Convert this project into a Standard project.
         detail: |-
           {errors, plural,
@@ -266,7 +267,7 @@ pt:
       noInfo: Autor desconhecido
       homepage: Mais
   format:
-    ppi: Pixels per inch (ppi)
+    ppi: Pixels por polegada (ppi)
   item:
     created: Data da Introdução
     modified: Modificado
@@ -285,8 +286,8 @@ pt:
     created: Data da Introdução
     modified: Modificado
   settings:
-    maximize: Maximize this view
-    unmaximize: Restore previous view size
+    maximize: ' Maximizar esta Visualização'
+    unmaximize: Restaurar dimensão da visualização anterior
   esper:
     tool:
       pan: Ferramenta de Deslizamento
@@ -370,11 +371,11 @@ pt:
     notify:
       project:
         convert:
-          title: Conversion complete
+          title: Conversão concluída
           message: >-
-            Your project was successfully converted and saved. Tropy will now
-            close the original project file and open the converted project in a
-            new window.
+            O seu projeto foi convertido e guardado com sucesso. O Tropy irá
+            agora fechar o ficheiro do projeto original e abrir o projeto
+            convertido numa nova janela.
           buttons:
             - OK
     error:
@@ -422,8 +423,8 @@ pt:
             A template with this id already exists in your ontology database. Do
             you want to overwrite the existing template?
           buttons:
-            - Cancel
-            - Overwrite
+            - Cancelar
+            - Substituir
         imported:
           message: Modelo importado com sucesso.
           buttons:
@@ -536,7 +537,7 @@ pt:
         {total, number} …} other {Importando itens …}}
       load: Carregando itens...
       merge: Combinando item
-      print: Processing items …
+      print: Processando itens ...
       restore: Restaurando item...
       save: Gravando itens...
       tag:
@@ -576,7 +577,7 @@ pt:
       order: Ordenando fotos...
       save: Gravando foto...
       restore: Restaurando fotos...
-      extract: Extracting photo …
+      extract: Extraindo foto ...
     note:
       create: Criando nota...
       delete: Apagando nota...
@@ -586,12 +587,12 @@ pt:
     selection:
       create: Criando seleção na foto...
       load: Carregando seleções da foto...
-      extract: Extracting selection …
+      extract: Extraindo seleção ...
     api:
       photo:
-        extract: Extracting photo …
+        extract: Extraindo foto ...
       selection:
-        extract: Extracting selection …
+        extract: Extraindo seleção ...
   editor:
     commands:
       bold: Negrito
@@ -616,8 +617,8 @@ pt:
       liftListItem: Subir item na lista
   transcription:
     error: Transcription failed
-    retry: Try Again
-    pending: Transcription pending…
+    retry: Tentar Novamente
+    pending: Transcrição pendente...
     title: |-
       {name, select,
         true {{name}}
@@ -628,8 +629,8 @@ pt:
       prune: Falhou a otimização da cache do projeto.
       purge: Falhou a remoção das caches de projeto antigas.
     project:
-      created: Falhou a criação de projeto.
-      convert: Project conversion failed.
+      created: A criação do projeto falhou.
+      convert: A conversão do projeto falhou.
     item:
       export: Falhou a exportação de itens.
       merge: Falhou a combinação de itens.
@@ -652,7 +653,7 @@ pt:
       consolidate: Falhou a consolidação de fotos.
       create: Falhou a importação de foto.
       save: Falhou a gravação de foto.
-      extract: Failed to export photo.
+      extract: Falha ao exportar a foto.
       template:
         change: Falhou a alteração do modelo de foto.
     selection:

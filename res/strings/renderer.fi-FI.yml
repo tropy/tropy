@@ -1,24 +1,24 @@
-en:
+fi-FI:
   sidebar:
-    lists: Lists
-    tags: Tags
+    lists: Listat
+    tags: Tunnisteet
     imports: Last Import
-    trash: Deleted Items
-    unlisted: Unlisted Items
+    trash: Poistetut tietueet
+    unlisted: Listaamattomat tietueet
   toolbar:
     import: Import Photos
-    items: >-
+    items: |-
       {count, plural,
-        =0 {No items in this view}
-        one {1 item in this view}
-        other {# items in this view}}
+      =0 {Ei tietueita tässä näkymässä}
+      one {1 tietue tässä näkymässä}
+      other {# tietuetta tässä näkymässä}}
     search:
-      placeholder: Search
+      placeholder: Hae
   panel:
     metadata:
-      tab: Metadata
-      photo:  Photo
-      item: >-
+      tab: Metatiedot
+      photo: Kuva
+      item: |-
         {count, plural,
           =0 {}
           one {Item}
@@ -27,138 +27,137 @@ en:
       dropdown:
         placeholder: Add new field …
     tags:
-      tab: Tags
-      add: >-
+      tab: Tunnisteet
+      add: |-
         {count, plural,
           =0 {Add Tag}
           one {Add Tag to 1 Item}
           other {Add Tag to # Items}}
     photo:
-      title: >-
+      title: |-
         {count, plural,
-          =0 {No Photos}
-          one {1 Photo}
-          other {# Photos}}
+        =0 {Ei kuvia}
+        one {1 kuva}
+        other {# kuvaa}}
       create: Add Photos
       selection: Selection
     note:
-      title: >-
+      title: |-
         {count, plural,
-          =0 {No Notes}
-          one {1 Note}
-          other {# Notes}}
+        =0 {Ei muistiinpanoja}
+        one {1 muistiinpano}
+        other {# muistiinpanoa}}
       create: Add Note
   print:
-    item: Item
-    photo: Photo
-    notes: Notes
+    item: Tietue
+    photo: Kuva
+    notes: Muistiinpanot
     note: Note {idx, number}
-    tags: Tags
+    tags: Tunnisteet
   about:
-      version: Version {version}
-      rrchnm:
-        title: Roy Rosenzweig Center for History and New Media
-        url: https://rrchnm.org
-      cds:
-        title: Digital Scholar
-        url: https://digitalscholar.org
-      c2dh:
-        title: Luxembourg Centre for Contemporary and Digital History
-        url: https://www.c2dh.uni.lu
-      text: >-
-        Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
-        historical teaching resources, digital exhibits, and
-        open-source software.
-      trademark: The Tropy name is a registered trademark of {cds}.
-      donate:
-        title: Donate to Tropy
-        url: https://tropy.org/donate
-      release:
-        title: Release Notes
-        url: https://github.com/tropy/tropy/releases/tag/v{version}
-      license:
-        title: Licensing Information
-        url: https://tropy.org/license
-      credits:
-        title: Credits
-        url: https://tropy.org/credits
+    version: Versio {version}
+    rrchnm:
+      title: Roy Rosenzweig Center for History and New Media
+      url: https://rrchnm.org
+    cds:
+      title: Digital Scholar
+      url: https://digitalscholar.org
+    c2dh:
+      title: Luxembourg Centre for Contemporary and Digital History
+      url: https://www.c2dh.uni.lu
+    text: >-
+      Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
+      historical teaching resources, digital exhibits, and open-source software.
+    trademark: The Tropy name is a registered trademark of {cds}.
+    donate:
+      title: Lahjoita Tropylle
+      url: https://tropy.org/donate
+    release:
+      title: Julkaisutiedot
+      url: https://github.com/tropy/tropy/releases/tag/v{version}
+    license:
+      title: Lisensointitiedot
+      url: https://tropy.org/license
+    credits:
+      title: Credits
+      url: https://tropy.org/credits
   project:
-    empty: Drop your photos into Tropy to get started
+    empty: Pudota kuvat Tropyyn aloittaaksesi
     file:
-      open: Open project {path}
+      open: Avaa projekti {path}
       missing: Find missing project {path}
       remove: Remove project from list
     recent:
       search:
-        placeholder: Filter projects
+        placeholder: Suodata projekteja
         blank: No matching projects
     corrupted: >-
       Your project file may be damaged and manual steps necessary to fix it.
       Please consult the user manual for further assistance.
     readOnly: >-
-      Your project file is locked and cannot be modified.
-      To unlock, change the file permissions and open the project again.
+      Your project file is locked and cannot be modified. To unlock, change the
+      file permissions and open the project again.
     new:
-      title: Create a new project
-      name: Enter a name for the project
+      title: Luo uusi projekti
+      name: Kirjoita projektin nimi
       type:
-        label: Choose the project type
+        label: Valitse projektin tyyppi
         option:
-          tpy: Advanced
-          managed: Standard
+          tpy: Edistynyt
+          managed: Tavallinen
         hint:
-          tpy: Links to photos at their original location.
-          managed: Copies photos to project folder on import.
-      create: Create Project
+          tpy: Linkittää kuvien alkuperäiseen sijaintiin.
+          managed: Kopioi kuvat tuonnin yhteydessä projektikansioon.
+      create: Luo projekti
     stats:
-      photos: >-
+      photos: |-
         {photos, plural,
-          =0 {No photos}
-          one {1 photo}
-          other {# photos}}
-      items: >-
+        =0 {Ei kuvia}
+        one {1 kuva}
+        other {# kuvaa}}
+      items: |-
         {items, plural,
-          =0 {No items}
-          one {1 item}
-          other {# items}}
-      notes: >-
+        =0 {Ei tietueita}
+        one {1 tietue}
+        other {# tietuetta}}
+      notes: |-
         {notes, plural,
-          =0 {No notes}
-          one {1 note}
-          other {# notes}}
+        =0 {Ei muistiinpanoja}
+        one {1 muistiinpano}
+        other {# muistiinpanoa}}
   prefs:
-    title: Tropy Preferences
+    title: Tropyn asetukset
     app:
-      label: Settings
+      label: Asetukset
       style:
-        theme: Theme
+        theme: Teema
         themes:
-          light: Light
-          dark: Dark
-          system: Follow system preference
+          light: Vaalea
+          dark: Tumma
+          system: Seuraa järjestelmän asetusta
         font:
-          size: Font size
+          size: Fontin koko
           sizes:
-            12px: Very Small
-            13px: Small (Default)
-            14px: Medium
-            15px: Large
-            16px: Very Large
-        frameless: Use custom titlebar (requires restart)
+            12px: Erittäin pieni
+            13px: Pieni (oletus)
+            14px: Keskikoko
+            15px: Suuri
+            16px: Erittäin suuri
+        frameless: Käytä mukautettua otsikkopalkkia (vaatii uudelleenkäynnistyksen)
       print:
-        mode: Print
+        mode: Tulosta
         modes:
-          item: One Item per Page
-          photo: One Photo per Page
-          selection: One Selection per Page
-        photos: Include photos
+          item: Yksi tietue sivua kohden
+          photo: Yksi kuva sivua kohden
+          selection: Yksi valinta sivua kohden
+        photos: Sisällytä kuvat
         optimize: Optimize photo size and quality
-        metadata: Include metadata
-        notes: Include notes
-        onlyNotes: Include only photos with notes
+        metadata: Sisällytä metatiedot
+        notes: Sisällytä muistiinpanot
+        onlyNotes: Sisällytä vain kuvat, joissa on muistiinpanoja
         overflow: Allow content to take up more than one page
       locale:
-        locale: Locale
+        locale: Maa-asetusto
         locales:
           cn: 中文
           de: Deutsch
@@ -175,44 +174,44 @@ en:
           uk: Украї́нська мо́ва
       templates:
         label: Default templates
-        item: Item
-        photo: Photo
+        item: Tietue
+        photo: Kuva
         selection: Selection
       title:
         label: Import file name as
         force: Overwrite embedded photo metadata
-      debug: Enable Developer Mode
-      api: Enable Developer API
-      localtime: Assume Exif timestamps use local timezone
+      debug: Ota kehittäjätila käyttöön
+      api: Ota kehittäjä-API käyttöön
+      localtime: Oleta Exif-aikaleimojen käyttävän paikallista aikavyöhykettä
       dup:
-        label: During import
+        label: Tuonnin aikana
         option:
           skip: Skip duplicate photos
           import: Accept duplicate photos
-          prompt: Ask me every time
+          prompt: Kysy joka kerta
       density:
-        label: Default density (ppi)
+        label: Oletustiheys (ppi)
         title: Used for PDF, SVG and other scalable formats
       export:
-        label: Export
+        label: Vie
         note:
           format:
-            html: Notes as HTML
-            markdown: Notes as Markdown
+            html: Muistiinpanot HTML:nä
+            markdown: Muistiinpanot Markdownina
           copy:
-            label: Copy notes as
+            label: Kopioi muistiinpanot muodossa
             option:
-              text: Plain text
+              text: Raakateksti
               markdown: Markdown
-              html: HTML source code
+              html: HTML-lähdekoodi
       ui:
-        label: Interface
+        label: Käyttöliittymä
         option:
           invertScroll: Invert direction when scrolling in photos
           invertZoom: Invert direction when zooming in photos
           overlayToolbars: Automatically hide and show toolbars
       zoomMode:
-        label: By default
+        label: Oletusarvoisesti
         option:
           fit: Zoom photos to fit
           fill: Zoom photos to fill
@@ -223,319 +222,315 @@ en:
           stacked: Stacked
           side-by-side: Side by side
       completions:
-        label: Autocomplete
+        label: Täydennä automaattisesti
         option:
           datatype: By datatype only
           property-datatype: By datatype and property
     project:
-      label: Project
+      label: Projekti
       base:
         label: Link photos
         option:
-          null: Using absolute paths
+          'null': Using absolute paths
           project: Relative to the project file
           home: Relative to your home directory
       store: Managed folder
-      name: Name
+      name: Nimi
       id: ID
-      path: File
-      type: Project type
+      path: Tiedosto
+      type: Projektin tyyppi
       convert:
         confirm: Convert
-        hint: Convert this project into a Standard project.
-        detail: >-
+        hint: Muuntaa tämän projektin tavalliseksi projektiksi.
+        detail: |-
           {errors, plural,
             =0 {All photos consolidated.}
             one {1 photo not found; consolidation required.}
             other {# photos not found; consolidation required.}}
       watch:
-        folder: Watch folder
+        folder: Tarkkaile kansiota
         usePolling: Using file stat polling
     template:
-      label: Templates
-      new: New Template …
-      create: Create
-      select: Template
+      label: Mallipohjat
+      new: Uusi mallipohja…
+      create: Luo
+      select: Mallipohja
       tools:
-        new: New
+        new: Uusi
         copy: Duplicate
-        delete: Delete
-        import: Import
-        export: Export
+        delete: Poista
+        import: Tuo
+        export: Vie
     vocab:
-      label: Vocabularies
-      export: Export
-      classes: >-
+      label: Sanastot
+      export: Vie
+      classes: |-
         {count, plural,
           =0 {No Classes}
           one {# Class}
           other {# Classes}
         }
-      datatypes: >-
+      datatypes: |-
         {count, plural,
           =0 {No Datatypes} one {# Datatype}
           other {# Datatypes}
         }
-      properties: >-
+      properties: |-
         {count, plural,
           =0 {No Properties}
           one {# Property}
           other {# Properties}
         }
     plugins:
-      label: Plugins
-      settings: Settings
+      label: Lisäosat
+      settings: Asetukset
       enable: Enable
       disable: Disable
-      install: Install Plugin
-      uninstall: Uninstall
+      install: Asenna lisäosa
+      uninstall: Poista asennus
       noInfo: Unknown author
       homepage: More
   format:
     ppi: Pixels per inch (ppi)
   item:
-    created: Date Added
-    modified: Modified
-    template: Template
+    created: Lisäyspäivä
+    modified: Muokattu
+    template: Mallipohja
   photo:
-    file: File
-    size: Size
-    density: Density
-    type: Type
-    created: Date Added
-    modified: Modified
+    file: Tiedosto
+    size: Koko
+    density: Tiheys
+    type: Tyyppi
+    created: Lisäyspäivä
+    modified: Muokattu
     consolidate: Consolidate Photo
-    error: Photo not found
+    error: Kuvaa ei löytynyt
   selection:
-    size: Size
-    created: Date Added
-    modified: Modified
+    size: Koko
+    created: Lisäyspäivä
+    modified: Muokattu
   settings:
-    maximize: Maximize this view
-    unmaximize: Restore previous view size
+    maximize: Suurenna tämä näkymä
+    unmaximize: Palauta aiempi näkymän koko
   esper:
     tool:
       pan: Pan Tool
-      select: Selection Tool
-      rotate: Rotate
-      mirror: Mirror
-      edit: Edit Photo
+      select: Valintatyökalu
+      rotate: Kierrä
+      mirror: Peilaa
+      edit: Muokkaa kuvaa
     mode:
-      fill: Fill
-      fit: Fit
+      fill: Täytä
+      fit: Sovita
       zoom: Zoom
     overlay:
       full: Show full text overlay
       split: Show split-view text overlay
       panel: Toggle transcription version history
     panel:
-      negative: Invert colors
+      negative: Käänteiset värit
       revert: Revert to Original
       brightness:
-        label: Brightness
-        value: "{value, number}"
+        label: Kirkkaus
+        value: '{value, number}'
       contrast:
-        label: Contrast
-        value: "{value, number}"
+        label: Kontrasti
+        value: '{value, number}'
       hue:
         label: Hue
-        value: "{value, number}°"
+        value: '{value, number}°'
       saturation:
         label: Saturation
-        value: "{value, number}"
+        value: '{value, number}'
       sharpen:
         label: Sharpen
-        value: "{value, number}"
+        value: '{value, number}'
   notepad:
-    placeholder: Add your notes here …
+    placeholder: Lisää muistiinpanot tähän…
   completions:
     empty: No options available
     noMatches: No matches found
   select:
     column:
-      placeholder: Search
+      placeholder: Hae
     file:
-      browse: Browse
+      browse: Selaa
       clear: Clear
   template:
     id: URI
-    name: Name
-    type: Type
-    creator: Creator
-    description: Description
+    name: Nimi
+    type: Tyyppi
+    creator: Tekijä
+    description: Kuvaus
     types:
-      "https://tropy.org/v1/tropy#Item": Item Template
-      "https://tropy.org/v1/tropy#Photo": Photo Template
-      "https://tropy.org/v1/tropy#Selection": Selection Template
+      https://tropy.org/v1/tropy#Item: Item Template
+      https://tropy.org/v1/tropy#Photo: Photo Template
+      https://tropy.org/v1/tropy#Selection: Selection Template
     field:
-      property: Property
-      label: Label
-      datatype: Datatype
+      property: Ominaisuus
+      label: Nimike
+      datatype: Datatyyppi
       isRequired: Is mandatory field
-      hint: Hint
-      value: Default Value
+      hint: Vihje
+      value: Oletusarvo
       isConstant: Is read-only
-
   vocab:
     id: URI
     prefix: Prefix
-    title: Name
-    description: Description
-    properties: Properties
-    seeAlso: See Also
+    title: Nimi
+    description: Kuvaus
+    properties: Ominaisuudet
+    seeAlso: Katso myös
   property:
-    select: Select a Property …
+    select: Valitse ominaisuus…
   datatype:
-    select: Select a Datatype …
+    select: Valitse datatyyppi…
   resource:
-    select: Select a Resource …
+    select: Valitse resurssi…
     id: URI
-    label: Label
-    description: Description
-    comment: Comment
-
+    label: Nimike
+    description: Kuvaus
+    comment: Kommentti
   dialog:
     notify:
       project:
         convert:
           title: Conversion complete
           message: >-
-            Your project was successfully converted and saved.
-            Tropy will now close the original project file
-            and open the converted project in a new window.
+            Your project was successfully converted and saved. Tropy will now
+            close the original project file and open the converted project in a
+            new window.
           buttons:
-            - "OK"
+            - OK
     error:
-      title: Error
+      title: Virhe
       buttons:
-        - Dismiss
-        - Copy Error
-        - Show Logs
+        - Hylkää
+        - Kopioi virhe
+        - Näytä lokit
     prompt:
       item:
         destroy:
           message: >-
-            Are your sure you want to permanently delete items?
-            This action cannot be undone.
+            Are your sure you want to permanently delete items? This action
+            cannot be undone.
           buttons:
-            - Cancel
-            - Delete
+            - Peruuta
+            - Poista
       photo:
         consolidate:
           message: >-
-            Do you want Tropy to automatically check and resolve further
-            missing photos at this location?
+            Do you want Tropy to automatically check and resolve further missing
+            photos at this location?
           buttons:
-            - "No"
-            - "Yes"
+            - Ei
+            - Kyllä
       dup:
         detail: >-
-          This photo already exists in your project. Are you sure
-          you want to import it again?
-        checkboxLabel: Remember this choice
+          This photo already exists in your project. Are you sure you want to
+          import it again?
+        checkboxLabel: Muista valinta
         buttons:
           - Skip
           - Import Anyway
       plugin:
         uninstall:
           detail: >-
-            Are you sure you want to delete the plugin?
-            This will permanently remove the plugin and its configuration.
+            Haluatko varmasti poistaa lisäosan? Lisäosa ja sen asetukset
+            poistetaan pysyvästi.
           buttons:
-            - Cancel
-            - Delete
+            - Peruuta
+            - Poista
       template:
         import:
           message: >-
-            A template with this id already exists in your ontology database.
-            Do you want to overwrite the existing template?
+            A template with this id already exists in your ontology database. Do
+            you want to overwrite the existing template?
           buttons:
             - Cancel
             - Overwrite
         imported:
           message: Template successfully imported.
           buttons:
-            - "OK"
+            - OK
     filter:
       csv: CSV
-      templates: Tropy Templates
+      templates: Tropy-mallipohjat
       images: Images
-      items: Tropy Items
-      notes: Notes
-      projects: Tropy Projects
-      rdf: RDF Vocabularies
+      items: Tropy-tietueet
+      notes: Muistiinpanot
+      projects: Tropy-projektit
+      rdf: RDF-sanastot
       jsonld: JSON-LD
-
   action:
     project:
-      save: Save Project
+      save: Tallenna projekti
     list:
-      create: Create List
-      delete: Delete List
+      create: Luo lista
+      delete: Poista lista
       item:
         add: Add Items To List
-        merge: Merge Items
+        merge: Yhdistä tietueet
         remove: Remove Item From List
         restore: Add Item To List
       order: Sort List
       restore: Restore List
-      save: Save List
+      save: Tallenna lista
     item:
-      create: Create Items
-      delete: Delete Items
+      create: Luo tietueet
+      delete: Poista tietueet
       explode: Explode Item
-      implode: Merge Items
-      merge: Merge Items
+      implode: Yhdistä tietueet
+      merge: Yhdistä tietueet
       split: Split Items
       import: Import Items
       restore: Restore Items
       save: Save Item
       tag:
-        create: Tag
-        toggle: Tag
-        clear: Clear Tags
+        create: Tunniste
+        toggle: Tunniste
+        clear: Tyhjennä tunnisteet
     metadata:
-      save: Save Metadata
+      save: Tallenna metatiedot
     ontology:
-      import: Import Vocabularies
+      import: Tuo sanastoja
       vocab:
         save: Save Vocabulary
       label:
         save: Save Label
       template:
-        import: Import Template
+        import: Tuo mallipohja
     photo:
       create: Import Photo
-      delete: Delete Photo
+      delete: Poista kuva
       duplicate: Duplicate Photo
       move: Moving Photo
       order: Sort Photos
       restore: Restore Photo
       save: Save Photo
     note:
-      create: Create Note
-      delete: Delete Note
+      create: Luo muistiinpano
+      delete: Poista muistiinpano
       order: Sort Notes
       restore: Restore Note
       save: Save Note
     tag:
-      create: Create Tag
-      delete: Delete Tag
-      restore: Create Tag
-      save: Save Tag
+      create: Luo tunniste
+      delete: Poista tunniste
+      restore: Luo tunniste
+      save: Tallenna tunniste
     selection:
       create: Create Selection
-      delete: Delete Selection
+      delete: Poista valinta
       restore: Create Selection
       save: Save Selection
       order: Sort Selections
-
   activity:
     cache:
       prune: Optimizing project cache …
       purge: Purging old caches …
     project:
-      save: Saving …
+      save: Tallennetaan…
     list:
       create: Creating list …
       delete: Deleting list …
@@ -551,7 +546,7 @@ en:
     tag:
       create: Creating tag …
       delete: Deleting tag …
-      load: Loading tags …
+      load: Ladataan tunnisteita…
       restore: Restoring tag …
       save: Saving tag …
     item:
@@ -561,7 +556,7 @@ en:
       explode: Exploding item …
       export: Exporting item …
       implode: Restoring item …
-      import: >-
+      import: |-
         {hasProgressBar, select,
           true {Importing item {progress, number} of {total, number} …}
           other {Importing items …}
@@ -576,35 +571,35 @@ en:
         toggle: Tagging item …
         clear: Clearing item tags …
     metadata:
-      load: Loading metadata …
-      save: Saving metadata …
+      load: Ladataan metatietoja…
+      save: Tallennetaan metatietoja…
     ontology:
       load: Loading ontology …
-      import: Importing vocabularies …
+      import: Tuodaan sanastoja…
       vocab:
         save: Saving vocabulary …
       label:
         save: Saving label …
       template:
-        import: Importing templates …
+        import: Tuodaan mallipohjia …
     photo:
-      consolidate: >-
+      consolidate: |-
         {hasProgressBar, select,
           true {Consolidating photo {progress, number} of {total, number} …}
           other {Consolidating photos …}
         }
-      create: >-
+      create: |-
         {hasProgressBar, select,
           true {Importing photo {progress, number} of {total, number} …}
           other {Importing photos …}
         }
       delete: Deleting photo …
-      duplicate: >-
+      duplicate: |-
         {hasProgressBar, select,
           true {Duplicating photo {progress, number} of {total, number} …}
           other {Duplicating photos …}
         }
-      transcribe: >-
+      transcribe: |-
         {hasProgressBar, select,
           true {Transcribing photo {progress, number} of {total, number} …}
           other {Transcribing photos …}
@@ -632,36 +627,35 @@ en:
         extract: Extracting selection …
   editor:
     commands:
-      bold: Bold
-      italic: Italic
-      underline: Underline
+      bold: Lihavointi
+      italic: Kursivointi
+      underline: Alleviivaus
       overline: Overline
-      strikethrough: Strikethrough
+      strikethrough: Yliviivaus
       subscript: Subscript
       superscript: Superscript
       blockquote: Insert Blockquote
-      ol: Insert Numbered List
-      ul: Insert Bulleted List
+      ol: Lisää järjestetty lista
+      ul: Lisää järjestämätön lista
       link:
-        button: Link
-        target: Link target
+        button: Linkki
+        target: Linkin kohde
         title: Link title
-      unlink: Remove link
-      left: Align Left
-      center: Center
-      right: Align Right
+      unlink: Poista linkki
+      left: Tasaus vasemmalle
+      center: Tasaa keskelle
+      right: Tasaus oikealle
       sinkListItem: Sink list item
       liftListItem: Lift list item
   transcription:
     error: Transcription failed
-    retry: Try Again
+    retry: Yritä uudelleen
     pending: Transcription pending…
-    title: >-
+    title: |-
       {name, select,
         true {{name}}
         other {Transcription}
       }
-
   error:
     cache:
       prune: Failed to optimize project cache.
@@ -710,19 +704,19 @@ en:
     tag:
       create: Failed to create tag. Tag names must be unique.
     db:
-      SQLITE_CANTOPEN: Cannot find or open database file.
+      SQLITE_CANTOPEN: Tietokantatiedostoa ei löydy tai sitä ei voi avata.
   flash:
     update:
       ready:
         message: >-
-          Tropy {version} is ready to be installed.
-          Do you want to install and restart now?
-        confirm: Restart Now
+          Tropy {version} on valmis asennettavaksi. Haluatko asentaa sen nyt ja
+          käynnistää uudelleen?
+        confirm: Käynnistä uudelleen nyt
   plugin:
-    name: Name
-    plugin: Plugin
+    name: Nimi
+    plugin: Lisäosa
     options: Options
     hooks:
-      export: Export
-      import: Import
+      export: Vie
+      import: Tuo
       transcribe: OCR

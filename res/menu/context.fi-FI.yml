@@ -1,291 +1,291 @@
-pt:
+fi-FI:
   linux:
     history:
       - id: undo
-        label: Desfazer
+        label: Kumoa
         command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
-        label: Refazer
+        label: Tee uudelleen
         command: app:redo
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
-      - label: Renomear Projeto
+      - label: Nimeä projekti uudelleen
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: Mostrar Ficheiro do Projeto...
+      - label: Näytä projektitiedosto…
         command: app:show-project-file
     lists:
-      - label: Nova Lista
+      - label: Uusi lista
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
-      - label: Renomear Lista
+      - label: Nimeä lista uudelleen
         command: app:rename-list
         condition: '!isReadOnly'
-      - label: Apagar Lista
+      - label: Poista lista
         command: app:delete-list
         condition: '!isReadOnly'
     tags:
-      - label: Nova Etiqueta
+      - label: Uusi tunniste
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Exportar Etiquetas...
+      - label: Vie tunnisteet…
         command: app:export-tags
-      - label: Cor Padrão de Etiqueta
+      - label: Default Tag Color
         submenu:
-          - label: Nenhuma
+          - label: None
             color:
               - null
               - tagColor
               - app:save-default-tag-color
-          - label: Cor Aleatória
+          - label: Satunnainen väri
             color:
               - random
               - tagColor
               - app:save-default-tag-color
           - type: separator
-          - label: Vermelho
+          - label: Punainen
             color:
               - red
               - tagColor
               - app:save-default-tag-color
-          - label: Laranja
+          - label: Oranssi
             color:
               - orange
               - tagColor
               - app:save-default-tag-color
-          - label: Amarelo
+          - label: Keltainen
             color:
               - yellow
               - tagColor
               - app:save-default-tag-color
-          - label: Verde
+          - label: Vihreä
             color:
               - green
               - tagColor
               - app:save-default-tag-color
-          - label: Azul
+          - label: Sininen
             color:
               - blue
               - tagColor
               - app:save-default-tag-color
-          - label: Púrpura
+          - label: Purppura
             color:
               - purple
               - tagColor
               - app:save-default-tag-color
-          - label: Cinza
+          - label: Harmaa
             color:
               - gray
               - tagColor
               - app:save-default-tag-color
-          - label: Castanho
+          - label: Ruskea
             color:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Alperce
+          - label: Apricot
             color:
               - apricot
               - color
               - app:save-default-tag-color
-          - label: Verde Escuro
+          - label: Dark Green
             color:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Azul Claro
+          - label: Light Blue
             color:
               - light-blue
               - color
               - app:save-default-tag-color
-          - label: Lavanda
+          - label: Lavender
             color:
               - lavender
               - color
               - app:save-default-tag-color
     tag:
-      - label: Cor de Etiqueta
+      - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: Nenhuma
+          - label: None
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Vermelho
+          - label: Punainen
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Laranja
+          - label: Oranssi
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Amarelo
+          - label: Keltainen
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Verde
+          - label: Vihreä
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Azul
+          - label: Sininen
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Púrpura
+          - label: Purppura
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Cinza
+          - label: Harmaa
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Castanho
+          - label: Ruskea
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Alperce
+          - label: Apricot
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Verde Escuro
+          - label: Dark Green
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul Claro
+          - label: Light Blue
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavanda
+          - label: Lavender
             color:
               - lavender
               - color
               - app:save-tag-color
-      - label: Renomear Etiqueta
+      - label: Rename Tag
         command: app:rename-tag
         condition: '!isReadOnly'
-      - label: Apagar Etiqueta
+      - label: Poista tunniste
         command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
-      - label: Remover Etiqueta deste Item
+      - label: Remove Tag From This Item
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: Remover Etiqueta destes Itens
+      - label: Remove Tag From These Items
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
-      - label: Cor de Etiqueta
+      - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: Nenhuma
+          - label: None
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Vermelho
+          - label: Punainen
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Laranja
+          - label: Oranssi
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Amarelo
+          - label: Keltainen
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Verde
+          - label: Vihreä
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Azul
+          - label: Sininen
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Púrpura
+          - label: Purppura
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Cinza
+          - label: Harmaa
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Castanho
+          - label: Ruskea
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Alperce
+          - label: Apricot
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Verde Escuro
+          - label: Dark Green
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul Claro
+          - label: Light Blue
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavanda
+          - label: Lavender
             color:
               - lavender
               - color
               - app:save-tag-color
     note:
-      - label: Exportar Nota ...
+      - label: Vie muistiinpano…
         command: app:export-note
-      - label: Copiar Nota
+      - label: Kopioi muistiinpano
         command: app:copy-note
-      - label: Apagar Nota
+      - label: Poista muistiinpano
         command: app:delete-note
     notepad:
-      - label: Direção
+      - label: Direction
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Esquerda para Direita
+          - label: Left to Right
             type: checkbox
             checked: false
             direction: ltr
-          - label: Direita para Esquerda
+          - label: Right to Left
             type: checkbox
             checked: false
             direction: rtl
-      - label: Modo de Escrita
+      - label: Writing Mode
         id: writing-mode
         condition: hasTargetId
         submenu:
@@ -293,497 +293,497 @@ pt:
             type: checkbox
             checked: false
             mode: horizontal
-          - label: Vertical (Direita para Esquerda)
+          - label: Vertical (Right to Left)
             type: checkbox
             checked: false
             mode: vertical-rl
-      - label: Mostrar Números de Linha
+      - label: Näytä rivinumerot
         id: line-numbers
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: Quebra automática de Linhas
+      - label: Wrap Lines
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
         condition: hasTargetId
     items:
-      - label: Novo Item
+      - label: Uusi tietue
         command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
-      - label: Explodir Item
+      - label: Explode Item
         command: app:explode-item
         condition: isMultiplePhotos
-      - label: Adicionar Foto...
+      - label: Lisää kuva…
         command: app:create-item-photo
-      - label: Etiquetas
+      - label: Tunnisteet
         id: tag
         submenu:
-          - label: Nenhuma
+          - label: None
             type: checkbox
             checked: true
             enabled: false
           - type: separator
-      - label: Apagar Item
+      - label: Poista tietue
         command: app:delete-item
     item-read-only:
-      - label: Exportar Item
+      - label: Export Item
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Retrato
+              - label: Pystysuunta
                 command: app:print-pdf
-              - label: Paisagem
+              - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Exportar Notas do Item ...
+      - label: Export Item Notes …
         command: app:export-notes
-      - label: Copy Item Link
+      - label: Kopioi tietueen linkki
         command: app:copy-item-link
-      - label: Copiar Notas do Item
+      - label: Kopioi tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidar Item
+      - label: Consolidate Item
         command: app:consolidate-item
     item-rotate:
-      - label: Rodar para a Esquerda
+      - label: Kierrä vasemmalle
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: Rodar para a Direita
+      - label: Kierrä oikealle
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcrever Itens Selecionados
+      - label: Transcribe Selected Items
         id: item-transcribe
         submenu:
-          - label: Com Tropy
+          - label: With Tropy
             command: app:transcribe-item
             enabled: false
     item-bulk:
-      - label: Combinar Itens Selecionados
+      - label: Merge Selected Items
         command: app:merge-item
-      - label: Apagar Itens Selecionados
+      - label: Poista valitut tietueet
         command: app:delete-item
     item-bulk-read-only:
-      - label: Exportar Itens Selecionados
+      - label: Export Selected Items
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Retrato
+              - label: Pystysuunta
                 command: app:print-pdf
-              - label: Paisagem
+              - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Exportar Notas do Item Selecionado ...
+      - label: Export Selected Item Notes …
         command: app:export-notes
-      - label: Copiar Notas do Item Selecionado
+      - label: Kopioi valitut tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidar Itens Selecionados
+      - label: Consolidate Selected Items
         command: app:consolidate-item
     item-list:
-      - label: Remover Item da Lista
+      - label: Remove Item From List
         command: app:list-item-remove
     item-bulk-list:
-      - label: Remover Itens Selecionados da Lista
+      - label: Remove Selected Items From List
         command: app:list-item-remove
     photo:
-      - label: Duplicar Foto
+      - label: Duplicate Photo
         command: app:duplicate-photo
-      - label: Mover Foto para Novo Item
+      - label: Move Photo to New Item
         command: app:explode-photo
-      - label: Apagar Foto
+      - label: Poista kuva
         command: app:delete-photo
-      - label: Utilizar Foto como Imagem de Capa
+      - label: Käytä kuvaa kansikuvana
         command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
-      - label: Mostrar Ficheiro Original...
+      - label: Näytä alkuperäinen tiedosto…
         command: app:show-in-folder
       - label: Open in External Viewer…
         command: app:open-path
-      - label: Copy Photo Link
+      - label: Kopioi kuvan linkki
         command: app:copy-photo-link
-      - label: Exportar Foto
+      - label: Export Photo
         id: extract
         submenu:
-          - label: Para Ficheiro
+          - label: To File
             command: app:extract-photo
-          - label: Para Área de Transferência
+          - label: To Clipboard
             command: app:copy-photo
-      - label: Transcrever Foto
+      - label: Transcribe Photo
         id: transcribe
         submenu:
-          - label: Com Tropy
+          - label: With Tropy
             command: app:transcribe-photo
             enabled: false
-      - label: Consolidar Foto
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
-      - label: Rodar para a Esquerda
+      - label: Kierrä vasemmalle
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: Rodar para a Direita
+      - label: Kierrä oikealle
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
-      - label: Apagar Seleção
+      - label: Poista valinta
         command: app:delete-selection
     selection-rotate:
-      - label: Rodar para a Esquerda
+      - label: Kierrä vasemmalle
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: Rodar para a Direita
+      - label: Kierrä oikealle
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     item-deleted:
-      - label: Restaurar Item
+      - label: Restore Item
         command: app:restore-item
-      - label: Apagar Item Permanentemente
+      - label: Poista tietue pysyvästi
         command: app:destroy-item
     item-bulk-deleted:
-      - label: Restaurar Itens Selecionados
+      - label: Restore Selected Items
         command: app:restore-item
-      - label: Apagar Itens Selecionados Permanentemente
+      - label: Poista valitut tietueet pysyvästi
         command: app:destroy-item
     item-view:
-      - label: Ver Layout
+      - label: View Layout
         id: item-view-layout
         submenu:
-          - label: Empilhado
+          - label: Stacked
             id: stacked
             type: checkbox
-          - label: Lado a Lado
+          - label: Side by side
             id: side-by-side
             type: checkbox
-      - label: ' Maximizar Visualização'
+      - label: Suurenna näkymä
         id: maximize-view
         submenu:
-          - label: Imagem
+          - label: Image
             id: esper
             type: checkbox
-          - label: Bloco de Notas
+          - label: Notepad
             type: checkbox
             id: notepad
           - type: separator
-          - label: Nenhuma
+          - label: None
             id: none
             type: checkbox
     metadata-list:
-      - label: Novo Campo...
+      - label: New Field …
         command: app:create-field
     metadata-field:
-      - label: Remover Campo
+      - label: Remove Field
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: Apagar Itens Permanentemente
+      - label: Poista tietueet pysyvästi
         command: app:destroy-item
         condition: '!isReadOnly'
     dev:
-      - label: Recarregar
+      - label: Lataa uudelleen
         command: win:reload
         accelerator: CmdOrCtrl+R
-      - label: Recarregar Estilos
+      - label: Lataa tyylit uudelleen
         command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
-      - label: Inspecionar
+      - label: Tutki
         command: app:inspect
         accelerator: CmdOrCtrl+D
   darwin:
     history:
       - id: undo
-        label: Desfazer
+        label: Kumoa
         command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
-        label: Refazer
+        label: Tee uudelleen
         command: app:redo
         enabled: false
         accelerator: Shift+CmdOrCtrl+Z
     project:
-      - label: Renomear Projeto
+      - label: Nimeä projekti uudelleen
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: Mostrar Ficheiro do Projeto...
+      - label: Näytä projektitiedosto…
         command: app:show-project-file
     lists:
-      - label: Nova Lista
+      - label: Uusi lista
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
-      - label: Renomear Lista
+      - label: Nimeä lista uudelleen
         command: app:rename-list
         condition: '!isReadOnly'
-      - label: Apagar Lista
+      - label: Poista lista
         command: app:delete-list
         condition: '!isReadOnly'
     tags:
-      - label: Nova Etiqueta
+      - label: Uusi tunniste
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Exportar Etiquetas...
+      - label: Vie tunnisteet…
         command: app:export-tags
-      - label: Cor Padrão de Etiqueta
+      - label: Default Tag Color
         submenu:
-          - label: Nenhuma
+          - label: None
             color:
               - null
               - tagColor
               - app:save-default-tag-color
-          - label: Cor Aleatória
+          - label: Satunnainen väri
             color:
               - random
               - tagColor
               - app:save-default-tag-color
           - type: separator
-          - label: Vermelho
+          - label: Punainen
             color:
               - red
               - tagColor
               - app:save-default-tag-color
-          - label: Laranja
+          - label: Oranssi
             color:
               - orange
               - tagColor
               - app:save-default-tag-color
-          - label: Amarelo
+          - label: Keltainen
             color:
               - yellow
               - tagColor
               - app:save-default-tag-color
-          - label: Verde
+          - label: Vihreä
             color:
               - green
               - tagColor
               - app:save-default-tag-color
-          - label: Azul
+          - label: Sininen
             color:
               - blue
               - tagColor
               - app:save-default-tag-color
-          - label: Púrpura
+          - label: Purppura
             color:
               - purple
               - tagColor
               - app:save-default-tag-color
-          - label: Cinza
+          - label: Harmaa
             color:
               - gray
               - tagColor
               - app:save-default-tag-color
-          - label: Castanho
+          - label: Ruskea
             color:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Alperce
+          - label: Apricot
             color:
               - apricot
               - color
               - app:save-default-tag-color
-          - label: Verde Escuro
+          - label: Dark Green
             color:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Azul Claro
+          - label: Light Blue
             color:
               - light-blue
               - color
               - app:save-default-tag-color
-          - label: Lavanda
+          - label: Lavender
             color:
               - lavender
               - color
               - app:save-default-tag-color
     tag:
-      - label: Cor de Etiqueta
+      - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: Nenhuma
+          - label: None
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Vermelho
+          - label: Punainen
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Laranja
+          - label: Oranssi
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Amarelo
+          - label: Keltainen
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Verde
+          - label: Vihreä
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Azul
+          - label: Sininen
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Púrpura
+          - label: Purppura
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Cinza
+          - label: Harmaa
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Castanho
+          - label: Ruskea
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Alperce
+          - label: Apricot
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Verde Escuro
+          - label: Dark Green
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul Claro
+          - label: Light Blue
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavanda
+          - label: Lavender
             color:
               - lavender
               - color
               - app:save-tag-color
-      - label: Renomear Etiqueta
+      - label: Rename Tag
         command: app:rename-tag
         condition: '!isReadOnly'
-      - label: Apagar Etiqueta
+      - label: Poista tunniste
         command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
-      - label: Remover Etiqueta deste Item
+      - label: Remove Tag From This Item
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: Remover Etiqueta destes Itens
+      - label: Remove Tag From These Items
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
-      - label: Cor de Etiqueta
+      - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: Nenhuma
+          - label: None
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Vermelho
+          - label: Punainen
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Laranja
+          - label: Oranssi
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Amarelo
+          - label: Keltainen
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Verde
+          - label: Vihreä
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Azul
+          - label: Sininen
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Púrpura
+          - label: Purppura
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Cinza
+          - label: Harmaa
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Castanho
+          - label: Ruskea
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Alperce
+          - label: Apricot
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Verde Escuro
+          - label: Dark Green
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul Claro
+          - label: Light Blue
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavanda
+          - label: Lavender
             color:
               - lavender
               - color
               - app:save-tag-color
     note:
-      - label: Exportar Nota ...
+      - label: Vie muistiinpano…
         command: app:export-note
-      - label: Copiar Nota
+      - label: Kopioi muistiinpano
         command: app:copy-note
-      - label: Apagar Nota
+      - label: Poista muistiinpano
         command: app:delete-note
     notepad:
-      - label: Direção
+      - label: Direction
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Esquerda para Direita
+          - label: Left to Right
             type: checkbox
             checked: false
             direction: ltr
-          - label: Direita para Esquerda
+          - label: Right to Left
             type: checkbox
             checked: false
             direction: rtl
-      - label: Modo de Escrita
+      - label: Writing Mode
         id: writing-mode
         condition: hasTargetId
         submenu:
@@ -791,497 +791,497 @@ pt:
             type: checkbox
             checked: false
             mode: horizontal
-          - label: Vertical (Direita para Esquerda)
+          - label: Vertical (Right to Left)
             type: checkbox
             checked: false
             mode: vertical-rl
-      - label: Mostrar Números de Linha
+      - label: Näytä rivinumerot
         id: line-numbers
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: Quebra automática de Linhas
+      - label: Wrap Lines
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
         condition: hasTargetId
     items:
-      - label: Novo Item
+      - label: Uusi tietue
         command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
-      - label: Explodir Item
+      - label: Explode Item
         command: app:explode-item
         condition: isMultiplePhotos
-      - label: Adicionar Foto...
+      - label: Lisää kuva…
         command: app:create-item-photo
-      - label: Etiquetas
+      - label: Tunnisteet
         id: tag
         submenu:
-          - label: Nenhuma
+          - label: None
             type: checkbox
             checked: true
             enabled: false
           - type: separator
-      - label: Apagar Item
+      - label: Poista tietue
         command: app:delete-item
     item-read-only:
-      - label: Exportar Item
+      - label: Export Item
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Retrato
+              - label: Pystysuunta
                 command: app:print-pdf
-              - label: Paisagem
+              - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Exportar Notas do Item ...
+      - label: Export Item Notes …
         command: app:export-notes
-      - label: Copy Item Link
+      - label: Kopioi tietueen linkki
         command: app:copy-item-link
-      - label: Copiar Notas do Item
+      - label: Kopioi tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidar Item
+      - label: Consolidate Item
         command: app:consolidate-item
     item-bulk:
-      - label: Combinar Itens Selecionados
+      - label: Merge Selected Items
         command: app:merge-item
-      - label: Apagar Itens Selecionados
+      - label: Poista valitut tietueet
         command: app:delete-item
     item-bulk-read-only:
-      - label: Exportar Itens Selecionados
+      - label: Export Selected Items
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Retrato
+              - label: Pystysuunta
                 command: app:print-pdf
-              - label: Paisagem
+              - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Exportar Notas do Item Selecionado ...
+      - label: Export Selected Item Notes …
         command: app:export-notes
-      - label: Copiar Notas do Item Selecionado
+      - label: Kopioi valitut tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidar Itens Selecionados
+      - label: Consolidate Selected Items
         command: app:consolidate-item
     item-list:
-      - label: Remover Item da Lista
+      - label: Remove Item From List
         command: app:list-item-remove
     item-bulk-list:
-      - label: Remover Itens Selecionados da Lista
+      - label: Remove Selected Items From List
         command: app:list-item-remove
     item-deleted:
-      - label: Restaurar Item
+      - label: Restore Item
         command: app:restore-item
-      - label: Apagar Item Permanentemente
+      - label: Poista tietue pysyvästi
         command: app:destroy-item
     item-bulk-deleted:
-      - label: Restaurar Itens Selecionados
+      - label: Restore Selected Items
         command: app:restore-item
-      - label: Apagar Itens Selecionados Permanentemente
+      - label: Poista valitut tietueet pysyvästi
         command: app:destroy-item
     item-view:
-      - label: Ver Layout
+      - label: View Layout
         id: item-view-layout
         submenu:
-          - label: Empilhado
+          - label: Stacked
             id: stacked
             type: checkbox
-          - label: Lado a Lado
+          - label: Side by side
             id: side-by-side
             type: checkbox
-      - label: ' Maximizar Visualização'
+      - label: Suurenna näkymä
         id: maximize-view
         submenu:
-          - label: Imagem
+          - label: Image
             id: esper
             type: checkbox
-          - label: Bloco de Notas
+          - label: Notepad
             type: checkbox
             id: notepad
           - type: separator
-          - label: Nenhuma
+          - label: None
             id: none
             type: checkbox
     item-rotate:
-      - label: Rodar para a Esquerda
+      - label: Kierrä vasemmalle
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: Rodar para a Direita
+      - label: Kierrä oikealle
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcrever Itens Selecionados
+      - label: Transcribe Selected Items
         id: item-transcribe
         submenu:
-          - label: Com Tropy
+          - label: With Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
-      - label: Novo Campo...
+      - label: New Field …
         command: app:create-field
     metadata-field:
-      - label: Remover Campo
+      - label: Remove Field
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: Apagar Itens Permanentemente
+      - label: Poista tietueet pysyvästi
         command: app:destroy-item
         condition: '!isReadOnly'
     photo:
-      - label: Duplicar Foto
+      - label: Duplicate Photo
         command: app:duplicate-photo
-      - label: Mover Foto para Novo Item
+      - label: Move Photo to New Item
         command: app:explode-photo
-      - label: Apagar Foto
+      - label: Poista kuva
         command: app:delete-photo
-      - label: Utilizar Foto como Imagem de Capa
+      - label: Käytä kuvaa kansikuvana
         command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
-      - label: Mostrar Ficheiro Original...
+      - label: Näytä alkuperäinen tiedosto…
         command: app:show-in-folder
       - label: Open in External Viewer…
         command: app:open-path
-      - label: Copy Photo Link
+      - label: Kopioi kuvan linkki
         command: app:copy-photo-link
-      - label: Exportar Foto
+      - label: Export Photo
         id: extract
         submenu:
-          - label: Para ficheiro
+          - label: To File
             command: app:extract-photo
-          - label: Para Área de Transferência
+          - label: To Clipboard
             command: app:copy-photo
-      - label: Transcrever Foto
+      - label: Transcribe Photo
         id: transcribe
         submenu:
-          - label: Com Tropy
+          - label: With Tropy
             command: app:transcribe-photo
             enabled: false
-      - label: Consolidar Foto
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
-      - label: Rodar para a Esquerda
+      - label: Kierrä vasemmalle
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: Rodar para a Direita
+      - label: Kierrä oikealle
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
-      - label: Apagar Seleção
+      - label: Poista valinta
         command: app:delete-selection
     selection-rotate:
-      - label: Rodar para a Esquerda
+      - label: Kierrä vasemmalle
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: Rodar para a Direita
+      - label: Kierrä oikealle
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     dev:
-      - label: Recarregar
+      - label: Lataa uudelleen
         command: win:reload
         accelerator: CmdOrCtrl+R
-      - label: Recarregar Estilos
+      - label: Lataa tyylit uudelleen
         command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
-      - label: Inspecionar
+      - label: Tutki
         command: app:inspect
         accelerator: CmdOrCtrl+D
   win32:
     history:
       - id: undo
-        label: Desfazer
+        label: Kumoa
         command: app:undo
         enabled: false
         accelerator: CmdOrCtrl+Z
       - id: redo
-        label: Refazer
+        label: Tee uudelleen
         command: app:redo
         enabled: false
         accelerator: Control+Y
     project:
-      - label: Renomear Projeto
+      - label: Nimeä projekti uudelleen
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: Mostrar Ficheiro do Projeto...
+      - label: Näytä projektitiedosto…
         command: app:show-project-file
     lists:
-      - label: Nova Lista
+      - label: Uusi lista
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
     list:
-      - label: Renomear Lista
+      - label: Nimeä lista uudelleen
         command: app:rename-list
         condition: '!isReadOnly'
-      - label: Apagar Lista
+      - label: Poista lista
         command: app:delete-list
         condition: '!isReadOnly'
     tags:
-      - label: Nova Etiqueta
+      - label: Uusi tunniste
         command: app:create-tag
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+A
-      - label: Exportar Etiquetas...
+      - label: Vie tunnisteet…
         command: app:export-tags
-      - label: Cor Padrão de Etiqueta
+      - label: Default Tag Color
         submenu:
-          - label: Nenhuma
+          - label: None
             color:
               - null
               - tagColor
               - app:save-default-tag-color
-          - label: Cor Aleatória
+          - label: Satunnainen väri
             color:
               - random
               - tagColor
               - app:save-default-tag-color
           - type: separator
-          - label: Vermelho
+          - label: Punainen
             color:
               - red
               - tagColor
               - app:save-default-tag-color
-          - label: Laranja
+          - label: Oranssi
             color:
               - orange
               - tagColor
               - app:save-default-tag-color
-          - label: Amarelo
+          - label: Keltainen
             color:
               - yellow
               - tagColor
               - app:save-default-tag-color
-          - label: Verde
+          - label: Vihreä
             color:
               - green
               - tagColor
               - app:save-default-tag-color
-          - label: Azul
+          - label: Sininen
             color:
               - blue
               - tagColor
               - app:save-default-tag-color
-          - label: Púrpura
+          - label: Purppura
             color:
               - purple
               - tagColor
               - app:save-default-tag-color
-          - label: Cinza
+          - label: Harmaa
             color:
               - gray
               - tagColor
               - app:save-default-tag-color
-          - label: Castanho
+          - label: Ruskea
             color:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Alperce
+          - label: Apricot
             color:
               - apricot
               - color
               - app:save-default-tag-color
-          - label: Verde Escuro
+          - label: Dark Green
             color:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Azul Claro
+          - label: Light Blue
             color:
               - light-blue
               - color
               - app:save-default-tag-color
-          - label: Lavanda
+          - label: Lavender
             color:
               - lavender
               - color
               - app:save-default-tag-color
     tag:
-      - label: Cor de Etiqueta
+      - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: Nenhuma
+          - label: None
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Vermelho
+          - label: Punainen
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Laranja
+          - label: Oranssi
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Amarelo
+          - label: Keltainen
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Verde
+          - label: Vihreä
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Azul
+          - label: Sininen
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Púrpura
+          - label: Purppura
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Cinza
+          - label: Harmaa
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Castanho
+          - label: Ruskea
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Alperce
+          - label: Apricot
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Verde Escuro
+          - label: Dark Green
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul Claro
+          - label: Light Blue
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavanda
+          - label: Lavender
             color:
               - lavender
               - color
               - app:save-tag-color
-      - label: Renomear Etiqueta
+      - label: Rename Tag
         command: app:rename-tag
         condition: '!isReadOnly'
-      - label: Apagar Etiqueta
+      - label: Poista tunniste
         command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
-      - label: Remover Etiqueta deste Item
+      - label: Remove Tag From This Item
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: Remover Etiqueta destes Itens
+      - label: Remove Tag From These Items
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isMultipleItems
-      - label: Cor de Etiqueta
+      - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: Nenhuma
+          - label: None
             color:
               - null
               - color
               - app:save-tag-color
           - type: separator
-          - label: Vermelho
+          - label: Punainen
             color:
               - red
               - color
               - app:save-tag-color
-          - label: Laranja
+          - label: Oranssi
             color:
               - orange
               - color
               - app:save-tag-color
-          - label: Amarelo
+          - label: Keltainen
             color:
               - yellow
               - color
               - app:save-tag-color
-          - label: Verde
+          - label: Vihreä
             color:
               - green
               - color
               - app:save-tag-color
-          - label: Azul
+          - label: Sininen
             color:
               - blue
               - color
               - app:save-tag-color
-          - label: Púrpura
+          - label: Purppura
             color:
               - purple
               - color
               - app:save-tag-color
-          - label: Cinza
+          - label: Harmaa
             color:
               - gray
               - color
               - app:save-tag-color
-          - label: Castanho
+          - label: Ruskea
             color:
               - brown
               - color
               - app:save-tag-color
-          - label: Alperce
+          - label: Apricot
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Verde Escuro
+          - label: Dark Green
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Azul Claro
+          - label: Light Blue
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavanda
+          - label: Lavender
             color:
               - lavender
               - color
               - app:save-tag-color
     note:
-      - label: Exportar Nota ...
+      - label: Vie muistiinpano…
         command: app:export-note
-      - label: Copiar Nota
+      - label: Kopioi muistiinpano
         command: app:copy-note
-      - label: Apagar Nota
+      - label: Poista muistiinpano
         command: app:delete-note
     notepad:
-      - label: Direção
+      - label: Direction
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Esquerda para Direita
+          - label: Left to Right
             type: checkbox
             checked: false
             direction: ltr
-          - label: Direita para Esquerda
+          - label: Right to Left
             type: checkbox
             checked: false
             direction: rtl
-      - label: Modo de Escrita
+      - label: Writing Mode
         id: writing-mode
         condition: hasTargetId
         submenu:
@@ -1289,207 +1289,207 @@ pt:
             type: checkbox
             checked: false
             mode: horizontal
-          - label: Vertical (Direita para Esquerda)
+          - label: Vertical (Right to Left)
             type: checkbox
             checked: false
             mode: vertical-rl
-      - label: Mostrar Números de Linha
+      - label: Näytä rivinumerot
         id: line-numbers
         type: checkbox
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: Quebra automática de Linhas
+      - label: Wrap Lines
         id: line-wrap
         type: checkbox
         checked: true
         command: app:toggle-line-wrap
         condition: hasTargetId
     items:
-      - label: Novo Item
+      - label: Uusi tietue
         command: app:create-item
         accelerator: CmdOrCtrl+Shift+N
     item:
-      - label: Explodir Item
+      - label: Explode Item
         command: app:explode-item
         condition: isMultiplePhotos
-      - label: Adicionar Foto...
+      - label: Lisää kuva…
         command: app:create-item-photo
-      - label: Etiquetas
+      - label: Tunnisteet
         id: tag
         submenu:
-          - label: Nenhuma
+          - label: None
             type: checkbox
             checked: true
             enabled: false
           - type: separator
-      - label: Apagar Item
+      - label: Poista tietue
         command: app:delete-item
     item-read-only:
-      - label: Exportar Item
+      - label: Export Item
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Retrato
+              - label: Pystysuunta
                 command: app:print-pdf
-              - label: Paisagem
+              - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Exportar Notas do Item ...
+      - label: Export Item Notes …
         command: app:export-notes
-      - label: Copy Item Link
+      - label: Kopioi tietueen linkki
         command: app:copy-item-link
-      - label: Copiar Notas do Item
+      - label: Kopioi tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidar Item
+      - label: Consolidate Item
         command: app:consolidate-item
     item-bulk:
-      - label: Combinar Itens Selecionados
+      - label: Merge Selected Items
         command: app:merge-item
-      - label: Apagar Itens Selecionados
+      - label: Poista valitut tietueet
         command: app:delete-item
     item-bulk-read-only:
-      - label: Exportar Itens Selecionados
+      - label: Export Selected Items
         id: export
         submenu:
           - label: JSON-LD
             command: app:export-item
           - label: PDF
             submenu:
-              - label: Retrato
+              - label: Pystysuunta
                 command: app:print-pdf
-              - label: Paisagem
+              - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Exportar Notas do Item Selecionado ...
+      - label: Export Selected Item Notes …
         command: app:export-notes
-      - label: Copiar Notas do Item Selecionado
+      - label: Kopioi valitut tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidar Itens Selecionados
+      - label: Consolidate Selected Items
         command: app:consolidate-item
     item-list:
-      - label: Remover Item da Lista
+      - label: Remove Item From List
         command: app:list-item-remove
     item-bulk-list:
-      - label: Remover Itens Selecionados da Lista
+      - label: Remove Selected Items From List
         command: app:list-item-remove
     item-deleted:
-      - label: Restaurar Item
+      - label: Restore Item
         command: app:restore-item
-      - label: Apagar Item Permanentemente
+      - label: Poista tietue pysyvästi
         command: app:destroy-item
     item-bulk-deleted:
-      - label: Restaurar Itens Selecionados
+      - label: Restore Selected Items
         command: app:restore-item
-      - label: Apagar Itens Selecionados Permanentemente
+      - label: Poista valitut tietueet pysyvästi
         command: app:destroy-item
     item-view:
-      - label: Ver Layout
+      - label: View Layout
         id: item-view-layout
         submenu:
-          - label: Empilhado
+          - label: Stacked
             id: stacked
             type: checkbox
-          - label: Lado a Lado
+          - label: Side by side
             id: side-by-side
             type: checkbox
-      - label: ' Maximizar Visualização'
+      - label: Suurenna näkymä
         id: maximize-view
         submenu:
-          - label: Imagem
+          - label: Image
             id: esper
             type: checkbox
-          - label: Bloco de Notas
+          - label: Notepad
             type: checkbox
             id: notepad
           - type: separator
-          - label: Nenhuma
+          - label: None
             id: none
             type: checkbox
     item-rotate:
-      - label: Rodar para a Esquerda
+      - label: Kierrä vasemmalle
         command: app:rotate-item-left
         accelerator: CmdOrCtrl+[
-      - label: Rodar para a Direita
+      - label: Kierrä oikealle
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcrever Itens Selecionados
+      - label: Transcribe Selected Items
         id: item-transcribe
         submenu:
-          - label: Com Tropy
+          - label: With Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
-      - label: Novo Campo...
+      - label: New Field …
         command: app:create-field
     metadata-field:
-      - label: Remover Campo
+      - label: Remove Field
         command: app:delete-field
         condition: isExtra
     trash:
-      - label: Apagar Itens Permanentemente
+      - label: Poista tietueet pysyvästi
         command: app:destroy-item
         condition: '!isReadOnly'
     photo:
-      - label: Duplicar Foto
+      - label: Duplicate Photo
         command: app:duplicate-photo
-      - label: Mover Foto para Novo Item
+      - label: Move Photo to New Item
         command: app:explode-photo
-      - label: Apagar Foto
+      - label: Poista kuva
         command: app:delete-photo
-      - label: Utilizar Foto como Imagem de Capa
+      - label: Käytä kuvaa kansikuvana
         command: app:update-cover-image
         enabled: false
         visible: false
     photo-read-only:
-      - label: Mostrar Ficheiro Original...
+      - label: Näytä alkuperäinen tiedosto…
         command: app:show-in-folder
       - label: Open in External Viewer…
         command: app:open-path
-      - label: Copy Photo Link
+      - label: Kopioi kuvan linkki
         command: app:copy-photo-link
-      - label: Exportar Foto
+      - label: Export Photo
         id: extract
         submenu:
-          - label: Para ficheiro
+          - label: To File
             command: app:extract-photo
-          - label: Para Área de Transferência
+          - label: To Clipboard
             command: app:copy-photo
-      - label: Transcrever Foto
+      - label: Transcribe Photo
         id: transcribe
         submenu:
-          - label: Com Tropy
+          - label: With Tropy
             command: app:transcribe-photo
             enabled: false
-      - label: Consolidar Foto
+      - label: Consolidate Photo
         command: app:consolidate-photo
     photo-rotate:
-      - label: Rodar para a Esquerda
+      - label: Kierrä vasemmalle
         command: app:rotate-photo-left
         accelerator: CmdOrCtrl+[
-      - label: Rodar para a Direita
+      - label: Kierrä oikealle
         command: app:rotate-photo-right
         accelerator: CmdOrCtrl+]
     selection:
-      - label: Apagar Seleção
+      - label: Poista valinta
         command: app:delete-selection
     selection-rotate:
-      - label: Rodar para a Esquerda
+      - label: Kierrä vasemmalle
         command: app:rotate-selection-left
         accelerator: CmdOrCtrl+[
-      - label: Rodar para a Direita
+      - label: Kierrä oikealle
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     dev:
-      - label: Recarregar
+      - label: Lataa uudelleen
         command: win:reload
         accelerator: CmdOrCtrl+R
-      - label: Recarregar Estilos
+      - label: Lataa tyylit uudelleen
         command: win:refresh
         accelerator: CmdOrCtrl+S
       - type: separator
-      - label: Inspecionar
+      - label: Tutki
         command: app:inspect
         accelerator: CmdOrCtrl+D

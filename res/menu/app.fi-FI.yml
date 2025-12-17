@@ -1,14 +1,14 @@
-pt:
+fi-FI:
   linux:
-    - label: Ficheiro
+    - label: '&Tiedosto'
       id: file
       submenu:
-        - label: Novo
+        - label: Uusi
           submenu:
-            - label: Projeto
+            - label: Projekti
               command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
-            - label: Item
+            - label: Tietue
               command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
@@ -18,42 +18,42 @@ pt:
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
-            - label: Etiqueta
+            - label: Tunniste
               command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
-            - label: Nota
+            - label: Muistiinpano
               command: app:open-note
               accelerator: CmdOrCtrl+N
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
-        - label: Abrir...
+        - label: Avaa…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Abrir numa Nova Janela
+        - label: Avaa uudessa ikkunassa…
           accelerator: Shift+CmdOrCtrl+O
           command: app:open-new-dialog
-        - label: Projetos Recentes
+        - label: Viimeisimmät projektit
           id: recent
           enabled: false
           submenu:
             - type: separator
-            - label: Limpar Lista
+            - label: Tyhjennä lista
               command: app:clear-recent-projects
         - type: separator
-        - label: Importar
+        - label: Tuo
           id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Fotos…
+            - label: Kuvat…
               command: app:import
               accelerator: CmdOrCtrl+Shift+I
-            - label: Pasta…
+            - label: Kansio…
               command: app:import-directory
-        - label: Exportar
+        - label: Vie
           id: export
           window: project
           submenu:
@@ -61,193 +61,193 @@ pt:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Retrato
+                - label: Pystysuunta
                   command: app:print-pdf
-                - label: Paisagem
+                - label: Vaakasuunta
                   command: app:print-pdf-landscape
         - type: separator
-        - label: Consolidar Fototeca
+        - label: Consolidate Photo Library
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
-        - label: Imprimir
+        - label: Tulosta
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
-        - label: Fechar Projeto
+        - label: Sulje projekti
           command: app:close-project
           window: project
           condition: isProjectOpen
         - type: separator
-        - label: Fechar Janela
+        - label: Sulje ikkuna
           accelerator: Ctrl+W
           role: close
           window: '*'
-        - label: Sair do %name
+        - label: Quit %name
           accelerator: CmdOrCtrl+Q
           role: quit
-    - label: Editar
+    - label: '&Muokkaa'
       submenu:
         - id: undo
-          label: Desfazer
+          label: '&Kumoa'
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: Refazer
+          label: '&Tee uudelleen'
           accelerator: Shift+CmdOrCtrl+Z
           command: app:redo
           enabled: false
         - type: separator
-        - label: Cortar
+        - label: Lei&kkaa
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: Copiar
+        - label: '&Kopioi'
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: Colar
+        - label: '&Liitä'
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Colar e Combinar Estilo
+        - label: Paste and Match Style
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
-        - label: Selecionar Tudo
+        - label: Valitse kaikki
           role: selectAll
         - type: separator
-        - label: Preferências
+        - label: Asetukset…
           accelerator: Shift+Control+S
           command: app:open-preferences
-    - label: Ver
+    - label: '&Näytä'
       submenu:
-        - label: Recarregar
+        - label: '&Lataa uudelleen'
           accelerator: CmdOrCtrl+R
           command: win:reload
           window: '*'
         - type: separator
-        - label: Esconder Barra de Menu
+        - label: '&Valikkopalkki päällä/pois'
           command: app:toggle-menu-bar
           window: '*'
-        - label: Centrar
+        - label: Siirrä keskelle
           command: app:center-window
           accelerator: Alt+Shift+=
           window: '*'
         - type: separator
-        - label: Dimensão Real
+        - label: Todellinen koko
           command: app:zoom-reset
           accelerator: CmdOrCtrl+0
-        - label: Aumentar Zoom
+        - label: Lähennä
           command: app:zoom-in
           accelerator: CmdOrCtrl+Plus
-        - label: Diminuir Zoom
+        - label: Loitonna
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: Ecrã Completo
+        - label: Siirry &koko näyttöön
           role: togglefullscreen
           window: '*'
         - type: separator
-        - label: Fechar
+        - label: Sulje
           accelerator: Ctrl+W
           role: close
           window: '*'
-    - label: Desenvolvimento
+    - label: Kehittäjä
       id: dev
       submenu:
-        - label: Recarregar Estilos
+        - label: Reload &Styles
           command: win:refresh
-        - label: Ferramentas de Desenvolvimento
+        - label: '&Kehittäjätyökalut päällä/pois'
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Repor a Base de Dados Ontológica
+        - label: Reset Ontology Database
           command: app:reset-ontology-db
-        - label: Otimizar Caches do Projeto
+        - label: Optimize Project Caches
           command: app:optimize-cache
-        - label: Otimizar Base de Dados do Projeto
+        - label: Optimize Project Database
           command: app:optimize-project
-        - label: Reindexar Base de Dados do Projeto
+        - label: Reindex Project Database
           command: app:reindex-project
         - type: separator
-        - label: Tema
+        - label: Teema
           id: theme
           submenu:
-            - label: Claro
+            - label: Vaalea
               id: light
               type: checkbox
-            - label: Escuro
+            - label: Tumma
               id: dark
               type: checkbox
-            - label: Seguir preferências do sistema
+            - label: Seuraa järjestelmän asetusta
               id: system
               type: checkbox
-    - label: Ajuda
+    - label: Ohje
       submenu:
-        - label: Guia do Utilizador
+        - label: Käyttäjäohje
           command: app:open-docs
-        - label: Fóruns de Suporte
+        - label: Tukipalstat
           command: app:open-forums
-        - label: Licença do Software
+        - label: Ohjelmistolisenssi
           command: app:open-license
         - type: separator
-        - label: Mostrar Ficheiros de Registo
+        - label: Näytä lokitiedostot
           command: app:open-logs
-        - label: Mostrar Pasta de Plugins
+        - label: Näytä lisäosien kansio
           command: app:open-plugins-folder
-        - label: Mostrar Pasta de Dados do Utilizador
+        - label: Näytä käyttäjädatan kansio
           command: app:open-user-data
-        - label: Mostrar Pasta de Cache
+        - label: Näytä välimuistin kansio
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
-          label: Verificar Atualizações...
+          label: Tarkistetaan päivityksiä…
           command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
-          label: Buscar Últimas Atualizações
+          label: Noudetaan uusimpia päivityksiä…
           enabled: false
           visible: false
         - id: updater-install
-          label: Instalar Atualizações...
+          label: Asenna päivitykset…
           command: app:install-updates
           enabled: false
           visible: false
         - type: separator
-        - label: Sobre %name
+        - label: About %name
           command: app:about
           window: '!prefs'
   darwin:
     - label: '%name'
       submenu:
-        - label: Sobre %name
+        - label: About %name
           command: app:about
           window: '!prefs'
         - type: separator
-        - label: Preferências
+        - label: Asetukset…
           accelerator: Command+,
           command: app:open-preferences
         - type: separator
-        - label: Esconder %name
+        - label: Hide %name
           accelerator: Command+H
           role: hide
-        - label: Esconder Outros
+        - label: Piilota muut
           accelerator: Command+Shift+H
           role: hideothers
-        - label: Mostrar Tudo
+        - label: Näytä kaikki
           role: unhide
         - type: separator
-        - label: Sair do %name
+        - label: Quit %name
           accelerator: CmdOrCtrl+Q
           role: quit
-    - label: Ficheiro
+    - label: Tiedosto
       submenu:
-        - label: Novo
+        - label: Uusi
           submenu:
-            - label: Projeto
+            - label: Projekti
               command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
-            - label: Item
+            - label: Tietue
               command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
@@ -257,47 +257,47 @@ pt:
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
-            - label: Etiqueta
+            - label: Tunniste
               command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
-            - label: Nota
+            - label: Muistiinpano
               command: app:open-note
               accelerator: CmdOrCtrl+N
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
-        - label: Abrir...
+        - label: Avaa…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Abrir numa Nova Janela
+        - label: Avaa uudessa ikkunassa…
           accelerator: Shift+CmdOrCtrl+O
           command: app:open-new-dialog
-        - label: Projetos Recentes
+        - label: Viimeisimmät projektit
           id: recent
           enabled: false
           submenu:
             - type: separator
-            - label: Limpar Lista
+            - label: Tyhjennä lista
               command: app:clear-recent-projects
         - type: separator
-        - label: Importar
+        - label: Tuo
           id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Fotos…
+            - label: Kuvat…
               command: app:import
               accelerator: CmdOrCtrl+Shift+I
-            - label: Pasta…
+            - label: Kansio…
               command: app:import-directory
-        - label: Consolidar Fototeca
+        - label: Consolidate Photo Library
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
-        - label: Exportar
+        - label: Vie
           id: export
           window: project
           submenu:
@@ -305,70 +305,70 @@ pt:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Retrato
+                - label: Pystysuunta
                   command: app:print-pdf
-                - label: Paisagem
+                - label: Vaakasuunta
                   command: app:print-pdf-landscape
-        - label: Imprimir
+        - label: Tulosta
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
-        - label: Fechar Projeto
+        - label: Sulje projekti
           command: app:close-project
           window: project
           condition: isProjectOpen
-    - label: Editar
+    - label: Muokkaa
       submenu:
         - id: undo
-          label: Desfazer
+          label: '&Kumoa'
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: Refazer
+          label: '&Tee uudelleen'
           accelerator: Shift+CmdOrCtrl+Z
           command: app:redo
           enabled: false
         - type: separator
-        - label: Cortar
+        - label: Lei&kkaa
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: Copiar
+        - label: '&Kopioi'
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: Colar
+        - label: '&Liitä'
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Colar e Combinar Estilo
+        - label: Paste and Match Style
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
-        - label: Selecionar Tudo
+        - label: Valitse kaikki
           role: selectAll
-    - label: Ver
+    - label: View
       submenu:
-        - label: Recarregar
+        - label: '&Lataa uudelleen'
           accelerator: CmdOrCtrl+R
           command: win:reload
           window: '*'
         - type: separator
-        - label: Dimensão Real
+        - label: Todellinen koko
           command: app:zoom-reset
           accelerator: CmdOrCtrl+0
-        - label: Aumentar Zoom
+        - label: Lähennä
           command: app:zoom-in
           accelerator: CmdOrCtrl+Plus
-        - label: Diminuir Zoom
+        - label: Loitonna
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: Modo Ecrã Completo
+        - label: Siirry &koko näyttöön
           role: togglefullscreen
           window: '*'
-    - label: Janela
+    - label: Ikkuna
       role: window
       submenu:
-        - label: Minimizar
+        - label: Pienennä
           accelerator: Cmd+M
           role: minimize
           window: '*'
@@ -376,91 +376,91 @@ pt:
           accelerator: Ctrl+Cmd+Z
           role: zoom
         - type: separator
-        - label: Centrar
+        - label: Siirrä keskelle
           command: app:center-window
           accelerator: Alt+Shift+=
           window: '*'
         - type: separator
-        - label: Trazer Tudo para a Frente
+        - label: Tuo kaikki eteen
           role: front
         - type: separator
-        - label: Fechar
+        - label: Sulje
           accelerator: Cmd+W
           role: close
           window: '*'
-    - label: Desenvolvimento
+    - label: Kehittäjä
       id: dev
       submenu:
-        - label: Recarregar Estilos
+        - label: Reload &Styles
           command: win:refresh
-        - label: Ferramentas de Desenvolvimento
+        - label: '&Kehittäjätyökalut päällä/pois'
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Repor a Base de Dados Ontológica
+        - label: Reset Ontology Database
           command: app:reset-ontology-db
-        - label: Otimizar Caches do Projeto
+        - label: Optimize Project Caches
           command: app:optimize-cache
-        - label: Otimizar Base de Dados do Projeto
+        - label: Optimize Project Database
           command: app:optimize-project
-        - label: Reindexar Base de Dados do Projeto
+        - label: Reindex Project Database
           command: app:reindex-project
         - type: separator
-        - label: Tema
+        - label: Teema
           id: theme
           submenu:
-            - label: Claro
+            - label: Vaalea
               id: light
               type: checkbox
-            - label: Escuro
+            - label: Tumma
               id: dark
               type: checkbox
-            - label: Seguir preferências do sistema
+            - label: Seuraa järjestelmän asetusta
               id: system
               type: checkbox
-    - label: Ajuda
+    - label: Ohje
       role: help
       submenu:
-        - label: Guia do Utilizador
+        - label: Käyttäjäohje
           command: app:open-docs
-        - label: Fóruns de Suporte
+        - label: Tukipalstat
           command: app:open-forums
-        - label: Licença do Software
+        - label: Ohjelmistolisenssi
           command: app:open-license
         - type: separator
         - type: separator
-        - label: Mostrar Ficheiros de Registo
+        - label: Näytä lokitiedostot
           command: app:open-logs
-        - label: Mostrar Pasta de Plugins
+        - label: Näytä lisäosien kansio
           command: app:open-plugins-folder
-        - label: Mostrar Pasta de Dados do Utilizador
+        - label: Näytä käyttäjädatan kansio
           command: app:open-user-data
-        - label: Mostrar Pasta de Cache
+        - label: Näytä välimuistin kansio
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
-          label: Verificar Atualizações...
+          label: Tarkistetaan päivityksiä…
           command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
-          label: Buscar Últimas Atualizações
+          label: Noudetaan uusimpia päivityksiä…
           enabled: false
           visible: false
         - id: updater-install
-          label: Instalar Atualizações...
+          label: Asenna päivitykset…
           command: app:install-updates
           enabled: false
           visible: false
   win32:
-    - label: Ficheiro
+    - label: '&Tiedosto'
       id: file
       submenu:
-        - label: Novo
+        - label: Uusi
           submenu:
-            - label: Projeto
+            - label: Projekti
               command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
-            - label: Item
+            - label: Tietue
               command: app:create-item
               accelerator: CmdOrCtrl+Shift+N
               window: project
@@ -470,42 +470,42 @@ pt:
               accelerator: CmdOrCtrl+Shift+L
               window: project
               condition: '!isProjectReadOnly'
-            - label: Etiqueta
+            - label: Tunniste
               command: app:create-tag
               accelerator: CmdOrCtrl+Shift+A
               window: project
               condition: '!isProjectReadOnly'
-            - label: Nota
+            - label: Muistiinpano
               command: app:open-note
               accelerator: CmdOrCtrl+N
               window: project
               condition: '!isProjectReadOnly'
         - type: separator
-        - label: Abrir...
+        - label: Avaa…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Abrir numa Nova Janela
+        - label: Avaa uudessa ikkunassa…
           accelerator: Shift+CmdOrCtrl+O
           command: app:open-new-dialog
-        - label: Projetos Recentes
+        - label: Viimeisimmät projektit
           id: recent
           enabled: false
           submenu:
             - type: separator
-            - label: Limpar Lista
+            - label: Tyhjennä lista
               command: app:clear-recent-projects
         - type: separator
-        - label: Importar
+        - label: Tuo
           id: import
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: Fotos…
+            - label: Kuvat…
               command: app:import
               accelerator: CmdOrCtrl+Shift+I
-            - label: Pasta…
+            - label: Kansio…
               command: app:import-directory
-        - label: Exportar
+        - label: Vie
           id: export
           window: project
           submenu:
@@ -513,156 +513,156 @@ pt:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: Retrato
+                - label: Pystysuunta
                   command: app:print-pdf
-                - label: Paisagem
+                - label: Vaakasuunta
                   command: app:print-pdf-landscape
         - type: separator
-        - label: Consolidar Fototeca
+        - label: Consolidate Photo Library
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
         - type: separator
-        - label: Imprimir
+        - label: Tulosta
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
-        - label: Fechar Projeto
+        - label: Sulje projekti
           command: app:close-project
           window: project
           condition: isProjectOpen
         - type: separator
-        - label: Fechar Janela
+        - label: Sulje ikkuna
           accelerator: Ctrl+W
           role: close
           window: '*'
-        - label: Sair do %name
+        - label: Quit %name
           accelerator: CmdOrCtrl+Q
           role: quit
-    - label: Editar
+    - label: '&Muokkaa'
       submenu:
         - id: undo
-          label: Desfazer
+          label: '&Kumoa'
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: Refazer
+          label: '&Tee uudelleen'
           accelerator: Control+Y
           command: app:redo
           enabled: false
         - type: separator
-        - label: Cortar
+        - label: Lei&kkaa
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: Copiar
+        - label: '&Kopioi'
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: Colar
+        - label: '&Liitä'
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Colar e Combinar Estilo
+        - label: Paste and Match Style
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
-        - label: Preferências
+        - label: Asetukset…
           accelerator: Shift+Control+S
           command: app:open-preferences
-    - label: Ver
+    - label: '&Näytä'
       submenu:
-        - label: Recarregar
+        - label: '&Lataa uudelleen'
           accelerator: CmdOrCtrl+R
           command: win:reload
           window: '*'
         - type: separator
-        - label: Alternar Barra de Menu
+        - label: '&Valikkopalkki päällä/pois'
           command: app:toggle-menu-bar
           window: '*'
-        - label: Centrar
+        - label: Siirrä keskelle
           command: app:center-window
           accelerator: Alt+Shift+=
           window: '*'
         - type: separator
-        - label: Dimensão Real
+        - label: Todellinen koko
           command: app:zoom-reset
           accelerator: CmdOrCtrl+0
-        - label: Aumentar Zoom
+        - label: Lähennä
           command: app:zoom-in
           accelerator: CmdOrCtrl+Plus
-        - label: Diminuir Zoom
+        - label: Loitonna
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: Modo Ecrã Completo
+        - label: Siirry &koko näyttöön
           role: togglefullscreen
           window: '*'
         - type: separator
-        - label: Fechar
+        - label: Sulje
           accelerator: Ctrl+W
           role: close
           window: '*'
-    - label: Desenvolvimento
+    - label: Kehittäjä
       id: dev
       submenu:
-        - label: Recarregar Estilos
+        - label: Reload &Styles
           command: win:refresh
-        - label: Ferramentas de Desenvolvimento
+        - label: '&Kehittäjätyökalut päällä/pois'
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Repor a Base de Dados Ontológica
+        - label: Reset Ontology Database
           command: app:reset-ontology-db
-        - label: Otimizar Caches do Projeto
+        - label: Optimize Project Caches
           command: app:optimize-cache
-        - label: Otimizar Base de Dados do Projeto
+        - label: Optimize Project Database
           command: app:optimize-project
-        - label: Reindexar Base de Dados do Projeto
+        - label: Reindex Project Database
           command: app:reindex-project
         - type: separator
-        - label: Tema
+        - label: Teema
           id: theme
           submenu:
-            - label: Claro
+            - label: Vaalea
               id: light
               type: checkbox
-            - label: Escuro
+            - label: Tumma
               id: dark
               type: checkbox
-            - label: Seguir preferências do sistema
+            - label: Seuraa järjestelmän asetusta
               id: system
               type: checkbox
-    - label: Ajuda
+    - label: Ohje
       submenu:
-        - label: Guia do Utilizador
+        - label: Käyttäjäohje
           command: app:open-docs
-        - label: Fóruns de Suporte
+        - label: Tukipalstat
           command: app:open-forums
-        - label: Licença do Software
+        - label: Ohjelmistolisenssi
           command: app:open-license
         - type: separator
-        - label: Mostrar Ficheiros de Registo
+        - label: Näytä lokitiedostot
           command: app:open-logs
-        - label: Mostrar Pasta de Plugins
+        - label: Näytä lisäosien kansio
           command: app:open-plugins-folder
-        - label: Mostrar Pasta de Dados do Utilizador
+        - label: Näytä käyttäjädatan kansio
           command: app:open-user-data
-        - label: Mostrar Pasta de Cache
+        - label: Näytä välimuistin kansio
           command: app:open-cache-folder
         - type: separator
         - id: updater-check
-          label: Verificar Atualizações...
+          label: Tarkistetaan päivityksiä…
           command: app:check-for-updates
           enabled: false
         - id: updater-is-checking
-          label: Buscar Últimas Atualizações
+          label: Noudetaan uusimpia päivityksiä…
           enabled: false
           visible: false
         - id: updater-install
-          label: Instalar Atualizações...
+          label: Asenna päivitykset…
           command: app:install-updates
           enabled: false
           visible: false
         - type: separator
-        - label: Sobre %name
+        - label: About %name
           command: app:about
           window: '!prefs'
