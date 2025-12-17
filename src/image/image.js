@@ -2,7 +2,7 @@ import { rdjpgcom } from 'rdjpgcom'
 import { Asset } from '../asset/index.js'
 import { exif } from './exif.js'
 import { xmp } from './xmp.js'
-import { sharp, init } from './sharp.js'
+import { open, init, sharp } from './sharp.js'
 import { debug, warn } from '../common/log.js'
 import { pick, restrict } from '../common/util.js'
 import { rgb } from '../css.js'
@@ -79,7 +79,7 @@ export class Image extends Asset {
   }
 
   do(page = this.page) {
-    return sharp(this.buffer || this.path, {
+    return open(this.buffer || this.path, {
       page,
       density: this.density
     })
