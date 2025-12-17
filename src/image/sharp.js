@@ -1,6 +1,6 @@
 import { info } from '../common/log.js'
 
-export let sharp
+let sharp
 
 export async function init() {
   if (sharp == null) {
@@ -23,9 +23,13 @@ export const defaults = {
   }
 }
 
+export default function wrapper(input, options = {}) {
+  return sharp(input, { ...defaults, ...options })
+}
+
 export async function open(input, options = {}) {
   await init()
-  return sharp(input, { ...defaults, ...options })
+  return wrapper(input, options)
 }
 
 export async function toFile(file, ...args) {
