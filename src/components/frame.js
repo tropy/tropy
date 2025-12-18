@@ -23,7 +23,7 @@ export function Frame({
   let win = useWindow()
   let frame = useRef()
   let [doc, setDoc] = useState()
-  let { theme, scrollbars } = useTheme()
+  let { scrollbars } = useTheme()
   let userData = useArgs('data')
 
   let handleClick = useEvent((event) => {
@@ -77,20 +77,19 @@ export function Frame({
       let nodes = []
 
       if (styleSheet) {
-        let href = StyleSheet.expand(styleSheet, theme)
+        let href = StyleSheet.expand(styleSheet)
 
         nodes.push(
           stylesheet(href),
           ...([
             join(userData, `${styleSheet}.css`),
-            join(userData, `${styleSheet}-${theme}.css`)
           ].filter(exists).map(stylesheet))
         )
       }
 
       doc.head.replaceChildren(...nodes)
     }
-  }, [doc, userData, styleSheet, theme])
+  }, [doc, userData, styleSheet])
 
   useEffect(() => {
     if (doc != null) {
