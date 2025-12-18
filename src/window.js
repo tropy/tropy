@@ -133,19 +133,11 @@ export class Window extends EventEmitter {
     return document.documentElement
   }
 
-  get theme() {
-    return (ARGS.theme !== 'system') ?
-      ARGS.theme :
-      ARGS.dark ? 'dark' : 'light'
-  }
-
   get stylesheets() {
-    let { theme, type } = this
     return [
-      StyleSheet.expand(`base-${theme}`),
-      StyleSheet.expand(`${type}-${theme}`),
-      join(ARGS.data, 'style.css'),
-      join(ARGS.data, `style-${theme}.css`)
+      StyleSheet.expand('base'),
+      StyleSheet.expand(this.type),
+      join(ARGS.data, 'style.css')
     ]
   }
 
