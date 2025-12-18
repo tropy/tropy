@@ -65,11 +65,10 @@ if the menu or title bar don't use your GTK theme's dark variant,
 try starting Tropy with `env GTK_THEME=Adwaita:dark tropy` or your preferred theme.
 
 
-Custom Themes
-=============
+Custom Stylesheet
+=================
 You can adjust Tropy's user interface
-by placing files called `style-light.css` and `style-dark.css`
-into your user-data folder (or just `style.css` for adjusting all themes).
+by placing file called `style.css` into your user-data folder.
 
 
 Sandbox

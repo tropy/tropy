@@ -8,8 +8,6 @@ import { program } from 'commander'
 setLogSymbol('τ')
 
 const HOME = join(import.meta.dirname, '..')
-const PLATFORMS = ['linux', 'darwin', 'win32']
-const THEMES = ['light', 'dark']
 
 const rm = path => {
   fs.unlinkSync(path)
@@ -54,18 +52,9 @@ const html = name => (
 
 
 const script = () => (
-  `'use strict'
-
-import React from 'react'
+  `import React from 'react'
 import { createRoot } from 'react-dom/client'
 `)
-
-const stylesheet = (platform, theme) => (
-  `$platform: "${platform}";
-$theme: "${theme}";
-`)
-
-
 
 program
   .command('new <names>')
@@ -74,19 +63,7 @@ program
     for (let name of names.split(',')) {
       create(join(HOME, 'res', 'views', `${name}.html`), html(name))
       create(join(HOME, 'src', 'views', `${name}.js`), script(name))
-
-      for (let platform of PLATFORMS) {
-        for (let theme of THEMES) {
-          create(
-            join(
-              HOME,
-              'src',
-              'stylesheets',
-              platform,
-              `${name}-${theme}.scss`),
-            stylesheet(platform, theme))
-        }
-      }
+      create(join(HOME, 'src', 'stylesheets', 'windows', `${name}.scss`), '')
     }
   })
 program
@@ -96,17 +73,7 @@ program
     for (let name of names.split(',')) {
       rm(join(HOME, 'res', 'views', `${name}.html`))
       rm(join(HOME, 'src', 'views', `${name}.js`))
-
-      for (let platform of PLATFORMS) {
-        for (let theme of THEMES) {
-          rm(
-            join(HOME,
-              'src',
-              'stylesheets',
-              platform,
-              `${name}-${theme}.scss`))
-        }
-      }
+      rm(join(HOME, 'src', 'stylesheets', 'windows', `${name}.scss`))
     }
   })
 
