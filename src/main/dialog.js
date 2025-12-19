@@ -36,7 +36,7 @@ const Dialog = {
         return dialog
           .showSaveDialog(win, {
             defaultPath:
-              join(opts.defaultPath || defaultPath, opts.filename || ''),
+              join(opts.defaultPath || defaultPath || '', opts.filename || ''),
             properties: ['createDirectory'],
             ...opts
           })
