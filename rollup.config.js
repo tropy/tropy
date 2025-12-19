@@ -56,6 +56,8 @@ const IGNORE_WARNINGS = {
     resolve('node_modules/undici/lib/fetch/util.js')
   ].some(id => warning.ids.includes(id)),
 
+  UNUSED_EXTERNAL_IMPORT: true,
+
   THIS_IS_UNDEFINED: (warning) =>
     (/this && this\.__/).test(warning.frame)
 }
