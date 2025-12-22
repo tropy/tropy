@@ -40,7 +40,7 @@
     border-top-color: $activity-vibrancy-border-color;
   }
 
-  .is-blurred & {
+  .darwin.is-blurred & { // Safeguard
     border-top-color: $activity-blurred-border-color;
   }
 
@@ -81,7 +81,7 @@
       }
     }
 
-    .is-blurred & {
+    .darwin.is-blurred & { // Safeguard
       &::-webkit-progress-bar {
         background-color: $activity-blurred-progress-bar-bg;
       }

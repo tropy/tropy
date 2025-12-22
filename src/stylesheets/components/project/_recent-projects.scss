@@ -134,7 +134,7 @@
       height: 1px;
       background-color: $recent-project-border;
 
-      .is-blurred & {
+      .darwin.is-blurred & { // Safeguard
         background-color: $recent-project-blurred-border;
       }
     }
@@ -195,7 +195,7 @@
         margin-top: 0;
       }
 
-      .is-blurred & {
+      .darwin.is-blurred & { // Safeguard
         color: $recent-project-stats-blurred-color;
       }
 
