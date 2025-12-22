@@ -51,7 +51,7 @@
       color: $sidebar-vibrancy-headings-color;
     }
 
-    .is-blurred & {
+    .darwin.is-blurred & { // Safeguard
       color: $sidebar-blurred-headings-color;
     }
   }
@@ -129,7 +129,7 @@
             background-color: $sidebar-vibrancy-list-active-bg;
           }
 
-          .is-blurred & {
+          .darwin.is-blurred & { // Safeguard
             background-color: $sidebar-blurred-list-active-bg;
           }
 

@@ -40,17 +40,29 @@
       background-size: 100%;
       background-image:
         image-set(
-          icon-url("window/win32/#{$theme}/18x18.png") 1x,
-          icon-url("window/win32/#{$theme}/36x36.png") 2x
+          icon-url("window/win32/light/18x18.png") 1x,
+          icon-url("window/win32/light/36x36.png") 2x
         );
+
+      @media(prefers-color-scheme: dark) {
+        background-image:
+          image-set(
+            icon-url("window/win32/dark/18x18.png") 1x,
+            icon-url("window/win32/dark/36x36.png") 2x
+          );
+      }
     }
 
     .menu {
       width: zoom(26px);
       height: zoom(26px);
-      background: icon-url("window/win32/#{$theme}/more.svg") no-repeat zoom(4px) / zoom(16px);
+      background: icon-url("window/win32/light/more.svg") no-repeat zoom(4px) / zoom(16px);
       border: 1px solid transparent;
       border-radius: zoom(3px);
+
+      @media(prefers-color-scheme: dark) {
+        background: icon-url("window/win32/dark/more.svg") no-repeat zoom(4px) / zoom(16px);
+      }
 
       .ready & {
         // Use ready class to prevent black border during reload
@@ -69,8 +81,12 @@
 
       &:active,
       .window-controls-menu-open & {
-        background-image: icon-url("window/win32/#{$theme}/more-active.svg");
+        background-image: icon-url("window/win32/light/more-active.svg");
         background-color: rgb(0, 0, 0, --scheme(0.1, 0.3));
+
+        @media(prefers-color-scheme: dark) {
+          background-image: icon-url("window/win32/dark/more-active.svg");
+        }
       }
 
       .is-blurred & {
@@ -127,13 +143,17 @@
     .menu {
       min-width: zoom(34px);
       min-height: zoom(34px);
-      background-image: icon-url("window/linux/#{$theme}/menu.svg");
+      background-image: icon-url("window/linux/light/menu.svg");
       border-radius: zoom(6px);
       transition-property: background-color, outline-color, outline-width, outline-offset;
       transition-duration: 0.2s;
       transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
       outline: 0 solid transparent;
       outline-offset: zoom(4px);
+
+      @media(prefers-color-scheme: dark) {
+        background-image: icon-url("window/linux/dark/menu.svg");
+      }
 
       .window-controls-left & {
         position: fixed;
@@ -171,7 +191,11 @@
     }
 
     .minimize {
-      background-image: icon-url("window/linux/#{$theme}/minimize.svg");
+      background-image: icon-url("window/linux/light/minimize.svg");
+
+      @media(prefers-color-scheme: dark) {
+        background-image: icon-url("window/linux/dark/minimize.svg");
+      }
 
       .not-minimizable & {
         display: none;
@@ -179,10 +203,18 @@
     }
 
     .maximize {
-      background-image: icon-url("window/linux/#{$theme}/maximize.svg");
+      background-image: icon-url("window/linux/light/maximize.svg");
+
+      @media(prefers-color-scheme: dark) {
+        background-image: icon-url("window/linux/dark/maximize.svg");
+      }
 
       .is-maximized & {
-        background-image: icon-url("window/linux/#{$theme}/is-maximized.svg");
+        background-image: icon-url("window/linux/light/is-maximized.svg");
+
+        @media(prefers-color-scheme: dark) {
+          background-image: icon-url("window/linux/dark/is-maximized.svg");
+        }
       }
 
       .window-controls-left & {
@@ -196,7 +228,11 @@
     }
 
     .close {
-      background-image: icon-url("window/linux/#{$theme}/close.svg");
+      background-image: icon-url("window/linux/light/close.svg");
+
+      @media(prefers-color-scheme: dark) {
+        background-image: icon-url("window/linux/dark/close.svg");
+      }
 
       .is-full-screen & {
         display: none;
@@ -208,8 +244,12 @@
     }
 
     .fullscreen {
-      background-image: icon-url("window/linux/#{$theme}/exit-fullscreen.svg");
+      background-image: icon-url("window/linux/light/exit-fullscreen.svg");
       display: none;
+
+      @media(prefers-color-scheme: dark) {
+        background-image: icon-url("window/linux/dark/exit-fullscreen.svg");
+      }
 
       .is-full-screen & {
         display: flex;

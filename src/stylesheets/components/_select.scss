@@ -50,8 +50,12 @@
   &:not(.static) {
     background-repeat: no-repeat;
     background-position: right $space-min center;
-    background-image: icon-url("project/icon-chevron7-#{$theme}.svg");
+    background-image: icon-url("project/icon-chevron7-light.svg");
     padding-right: $space-lg;
+
+    @media (prefers-color-scheme: dark) {
+      background-image: icon-url("project/icon-chevron7-dark.svg");
+    }
 
     @include input-btn-focus(".focus");
 
