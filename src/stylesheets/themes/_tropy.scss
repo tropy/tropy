@@ -4,7 +4,7 @@
 @use "../abstracts/functions" as *;
 
 
-// Light theme
+// Tropy theme
 // --------------------------------------------------
 
 
@@ -425,18 +425,18 @@ $esper-btn-default-active-bg:            --scheme(shade(var(--light-1), 8%),    
 $esper-error-color:                      --scheme(var(--light-8),                        var(--dark-8));
 
 // Transcription
-$transcription-btn-icon-hover-bg:  --scheme(null,                       var(--light-3));
-$transcription-btn-icon-active-bg: --scheme(null,                       var(--light-5));
-$transcription-state-color:        --scheme(var(--light-8),             var(--light-8));
-$string-selected-bg:               --scheme(shade(var(--light-1), 14%), var(--light-5));
+$transcription-btn-icon-hover-bg:  --scheme(unset,                      var(--dark-3));
+$transcription-btn-icon-active-bg: --scheme(unset,                      var(--dark-5));
+$transcription-state-color:        --scheme(var(--light-8),             var(--dark-8));
+$string-selected-bg:               --scheme(shade(var(--light-1), 14%), var(--dark-5));
 $string-selected-focus-color:      --scheme(var(--light-0),             var(--primary-light));
 $string-selected-focus-bg:         --scheme(var(--primary),             var(--primary));
 
 // Transcription versions
-$transcription-metadata-active-bg:       --scheme(shade(var(--light-1), 14%), var(--light-5));
+$transcription-metadata-active-bg:       --scheme(shade(var(--light-1), 14%), var(--dark-5));
 $transcription-metadata-focus-color:     --scheme(var(--light-0),             var(--primary-light));
 $transcription-metadata-focus-bg:        --scheme(var(--primary),             var(--primary));
-$transcription-metadata-separator-color: --scheme(shade(var(--light-1), 14%), alpha(var(--light-0), 80%));
+$transcription-metadata-separator-color: --scheme(shade(var(--light-1), 14%), alpha(var(--dark-0), 80%));
 
 // Drag preview
 $drag-preview-opacity:           --scheme(0.6, 0.64);
