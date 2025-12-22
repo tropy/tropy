@@ -32,7 +32,7 @@
     padding-left: ($space-xs + $space-md);
     padding-right: 1px + $clear-button-size + $space-min;
 
-    @media(prefers-color-scheme: light) { // Safeguard
+    @media (prefers-color-scheme: light) { // Safeguard
       border-color: $search-border-color;
     }
 
