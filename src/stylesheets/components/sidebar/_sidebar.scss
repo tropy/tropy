@@ -162,7 +162,7 @@
             }
           }
 
-          .is-blurred & {
+          .darwin.is-blurred & {
             opacity: $sidebar-blurred-icon-opacity;
           }
         }

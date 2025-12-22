@@ -77,7 +77,9 @@
       }
 
       &::-webkit-progress-value {
-        background-color: $activity-vibrancy-progress-val-bg;
+        @media (prefers-color-scheme: dark) { // Safeguard
+          background-color: $activity-vibrancy-progress-val-bg;
+        }
       }
     }
 
@@ -110,7 +112,7 @@
       clip-path: path("M0,0V12H12V0ZM9.536,8.828l-.708.708L6,6.707,3.172,9.536l-.708-.708L5.293,6,2.464,3.172l.708-.708L6,5.293,8.828,2.464l.708.708L6.707,6Z");
     }
 
-    .is-blurred & {
+    .darwin.is-blurred & {
       opacity: $sidebar-blurred-icon-opacity;
     }
 

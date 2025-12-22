@@ -266,7 +266,7 @@ $sidebar-vibrancy-headings-color:      --scheme(alpha(var(--light-10), 46%),    
 $sidebar-blurred-headings-color:       --scheme(os(shade(var(--light-6), 4%), unset, unset), os(shade(var(--dark-7), 5%), unset, unset));
 $sidebar-vibrancy-icon-color:          --scheme(alpha(var(--light-10), 46%),                 alpha(var(--dark-10), 33%));
 $sidebar-vibrancy-icon-selected-color: --scheme(alpha(var(--light-10), 59%),                 alpha(var(--dark-10), 46%));
-$sidebar-blurred-icon-opacity:         --scheme(os(0.33, null, null),                        os(0.33, null, null));
+$sidebar-blurred-icon-opacity:         --scheme(os(0.33, unset, unset),                      os(0.33, unset, unset));
 $sidebar-blurred-name-opacity:         --scheme(os(0.76, unset, unset),                      os(0.55, unset, unset));
 $sidebar-blurred-tag-opacity-darwin:   --scheme(0.31,                                        0.34);
 $activity-border-color:                --scheme(var(--light-3),                              var(--dark-1));
@@ -274,7 +274,7 @@ $activity-vibrancy-border-color:       --scheme(alpha(var(--light-10), 10%),    
 $activity-blurred-border-color:        --scheme(os(shade(var(--light-3), 4%), unset, unset), os(shade(var(--dark-1), 4%), unset, unset));
 $activity-vibrancy-progress-bar-bg:    --scheme(alpha(var(--light-10), 10%),                 alpha(var(--dark-0), 20%));
 $activity-vibrancy-progress-cancel-bg: --scheme(alpha(var(--light-10), 25%),                 var(--primary-vibrancy));
-$activity-vibrancy-progress-val-bg:    --scheme(null,                                        alpha(var(--dark-10), 18%));
+$activity-vibrancy-progress-val-bg:    --scheme(unset,                                       alpha(var(--dark-10), 18%));
 $activity-blurred-progress-bar-bg:     --scheme(os(shade(var(--light-3), 4%), unset, unset), os(shade(var(--dark-2), 4%), unset, unset));
 $activity-blurred-progress-val-bg:     --scheme(os(shade(var(--light-5), 4%), unset, unset), os(shade(var(--dark-6), 4%), unset, unset));
 
