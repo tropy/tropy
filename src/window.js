@@ -82,6 +82,7 @@ export class Window extends EventEmitter {
           toggle(this.html, ARGS.aqua, true)
 
         this.setScrollBarStyle()
+        this.setVibrancyEffect()
         this.setZoomLevel()
         this.setFontSize()
 
@@ -95,7 +96,7 @@ export class Window extends EventEmitter {
         resolve()
       }),
 
-      this.style(false)
+      this.appendStyleSheets(false)
     ])
 
     this.send('init')
@@ -156,6 +157,10 @@ export class Window extends EventEmitter {
     toggle(this.html, 'scrollbar-style-old-school', scrollbars)
   }
 
+  setVibrancyEffect(vibrancy = ARGS.vibrancy) {
+    toggle(this.html, 'vibrancy', vibrancy)
+  }
+
   setZoomLevel(zoom = ARGS.zoom) {
     this.html.style.setProperty('--zoom', zoom)
   }
@@ -167,7 +172,7 @@ export class Window extends EventEmitter {
       })
       .on('theme', (_, theme, { dark, contrast, vibrancy } = ARGS) => {
         this.setArgs({ theme, dark, contrast, vibrancy })
-        this.style(true)
+        this.setVibrancyEffect(vibrancy)
       })
       .on('fontSize', (_, fontSize) => {
         this.setArgs({ fontSize })
@@ -188,14 +193,14 @@ export class Window extends EventEmitter {
       .on('scrollbars', (_, scrollbars) => {
         this.setArgs({ scrollbars })
         this.setScrollBarStyle(scrollbars)
-        this.style(true)
+        this.appendStyleSheets(true) // TODO still required?
       })
       .on('zoom', (_, zoom) => {
         this.setArgs({ zoom })
         this.setZoomLevel(zoom)
       })
       .on('refresh', () => {
-        this.style(true)
+        this.appendStyleSheets(true)
       })
       .on('reload', () => {
         this.reload()
@@ -335,7 +340,7 @@ export class Window extends EventEmitter {
     this.send('reload')
   }
 
-  async style(prune = false) {
+  async appendStyleSheets(prune = false) {
     if (prune) {
       for (let css of $$('head > link[rel="stylesheet"]'))
         remove(css)
@@ -352,8 +357,6 @@ export class Window extends EventEmitter {
         append(css, document.head)
       }
     }
-
-    toggle(this.html, 'vibrancy', ARGS.vibrancy)
 
     await Promise.race([
       Promise.all(loaded),
