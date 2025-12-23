@@ -141,7 +141,7 @@ export function useDragDropNode(dom, {
 
   return [{
     canDrop,
-    dropIndicator: isOver ? indicator : null,
+    dropIndicator: (canDrop && isOver) ? indicator : null,
     isDragging,
     isOver
   }, drag(drop(dom))]
