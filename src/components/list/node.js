@@ -1,16 +1,13 @@
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useMemo, useRef, useState } from 'react'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useDropItems } from '../../hooks/use-drag-drop-items.js'
 import { useDragDropNode } from '../../hooks/use-drag-drop-node.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { Node } from '../tree/node.js'
 import { Collapse } from '../fx.js'
-import { IconFolder, Icon } from '../icons.js'
-import { bounds } from '../../dom.js'
 import cx from 'classnames'
-import { noop, restrict } from '../../common/util.js'
 
-import { LIST, SASS } from '../../constants/index.js'
+import { SASS } from '../../constants/index.js'
 const { INDENT, PADDING } = SASS.LIST
 
 
