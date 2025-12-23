@@ -44,8 +44,7 @@ export default function ({
   entries,
   extension = '.scss',
   style = 'compressed',
-  platform,
-  themes = ['light', 'dark']
+  platform
 } = {}) {
   return {
     name: 'sass',
@@ -74,19 +73,16 @@ export default function ({
         resolve('node_modules')
       ]
 
-      let outFiles = []
+      let outFiles = [
+        [`${basename(id, extension)}.css`, code]
+      ]
 
-      for (let theme of themes) {
-        outFiles.push([`${basename(id, extension)}-${theme}.css`, code, theme])
-      }
-
-      for (let [outFile, data, theme] of outFiles) {
+      for (let [outFile, data] of outFiles) {
         let { css, sourceMap, loadedUrls } = sass.compileString(data, {
           url: pathToFileURL(id),
           functions: {
             ...functions,
-            'platform()': () => toSass(platform),
-            'theme()': () => toSass(theme)
+            'platform()': () => toSass(platform)
           },
           loadPaths,
           style,

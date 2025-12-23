@@ -49,7 +49,9 @@
       }
 
       .is-blurred .item-mode & {
-        background-color: $note-list-blurred-bg;
+        @media (prefers-color-scheme: dark) { // Safeguard
+          background-color: $note-list-blurred-bg;
+        }
       }
 
       &::before {
