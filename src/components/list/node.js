@@ -121,6 +121,7 @@ export const ListNode = memo(({
         id={list.id}
         isDisabled={isReadOnly || isDragging}
         isEditing={isEditing}
+        isExpanded={isExpanded}
         name={list.name}
         onCancel={onEditCancel}
         onClick={onClick}
