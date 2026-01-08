@@ -50,6 +50,7 @@ const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
     resolve('src/components/button.js'),
     resolve('src/components/list/tree.js'),
+    resolve('node_modules/@formatjs/ecma402-abstract/types/number.js'),
     resolve('node_modules/edtf/src/date.js'),
     resolve('node_modules/n3/src/N3DataFactory.js'),
     resolve('node_modules/semver/classes/range.js'),
