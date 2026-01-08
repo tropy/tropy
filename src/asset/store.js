@@ -82,13 +82,15 @@ export class Store {
 
       let path = this.getPathFor(asset)
       if (path !== asset.path)
-        throw new Error('asset path mismatch')
+        throw new Error('unexpected asset path')
 
       debug(`removing "${path}" from store...`)
       await rm(path, { force: true, maxRetries: 3 })
 
     } catch (e) {
-      warn({ stack: e.stack }, `failed removing ${asset.path}`)
+      warn({
+        stack: e.stack
+      }, `failed removing "${asset.path}" from store "${this.root}"`)
     }
   }
 
