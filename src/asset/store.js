@@ -74,13 +74,15 @@ export class Store {
 
   remove = async (asset) => {
     try {
-      if (!this.root) return
+      if (!this.root)
+        throw new Error('missing asset root')
 
       if (!(asset instanceof Asset))
         asset = new Asset(asset)
 
       let path = this.getPathFor(asset)
-      if (path !== asset.path) return
+      if (path !== asset.path)
+        throw new Error('asset path mismatch')
 
       debug(`removing "${path}" from store...`)
       await rm(path, { force: true, maxRetries: 3 })
