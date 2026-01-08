@@ -2,11 +2,11 @@ fi-FI:
   sidebar:
     lists: Listat
     tags: Tunnisteet
-    imports: Last Import
+    imports: Viimeisin tuonti
     trash: Poistetut tietueet
     unlisted: Listaamattomat tietueet
   toolbar:
-    import: Import Photos
+    import: Tuo kuvat
     items: |-
       {count, plural,
       =0 {Ei tietueita tässä näkymässä}
@@ -18,41 +18,35 @@ fi-FI:
     metadata:
       tab: Metatiedot
       photo: Kuva
-      item: |-
-        {count, plural,
-          =0 {}
-          one {Item}
-          other {# Items}}
-      selection: Selection
+      item: '{count, plural,  =0 {}  one {Tietue}  other {# tietuetta}}'
+      selection: Valinta
       dropdown:
-        placeholder: Add new field …
+        placeholder: Lisää uusi kenttä…
     tags:
       tab: Tunnisteet
-      add: |-
-        {count, plural,
-          =0 {Add Tag}
-          one {Add Tag to 1 Item}
-          other {Add Tag to # Items}}
+      add: >-
+        {count, plural,  =0 {Lisää tunniste}  one {Lisää tunniste 1 kohteeseen} 
+        other {Lisää tunniste # tunnisteeseen}}
     photo:
       title: |-
         {count, plural,
         =0 {Ei kuvia}
         one {1 kuva}
         other {# kuvaa}}
-      create: Add Photos
-      selection: Selection
+      create: Lisää kuvia
+      selection: Valinta
     note:
       title: |-
         {count, plural,
         =0 {Ei muistiinpanoja}
         one {1 muistiinpano}
         other {# muistiinpanoa}}
-      create: Add Note
+      create: Lisää muistiinpano
   print:
     item: Tietue
     photo: Kuva
     notes: Muistiinpanot
-    note: Note {idx, number}
+    note: Muistiinpano {idx, number}
     tags: Tunnisteet
   about:
     version: Versio {version}
@@ -66,9 +60,10 @@ fi-FI:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
     text: >-
-      Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
-      historical teaching resources, digital exhibits, and open-source software.
-    trademark: The Tropy name is a registered trademark of {cds}.
+      Tropyn ovat suunnittelleet {c2dh} ja {rrchnm} - laboratioriot, jotka
+      kehittävät historiallisia opetusresursseja, digitaalisia näyttelyitä ja
+      avoimen lähdekoodin ohjelmistoja.
+    trademark: Nimi Tropy on {cds}in rekisteröity tavaramerkki.
     donate:
       title: Lahjoita Tropylle
       url: https://tropy.org/donate
@@ -79,24 +74,24 @@ fi-FI:
       title: Lisensointitiedot
       url: https://tropy.org/license
     credits:
-      title: Credits
+      title: Tunnustukset
       url: https://tropy.org/credits
   project:
     empty: Pudota kuvat Tropyyn aloittaaksesi
     file:
       open: Avaa projekti {path}
-      missing: Find missing project {path}
-      remove: Remove project from list
+      missing: Löydä puuttuva projekti {path}
+      remove: Poista projekti listalta
     recent:
       search:
         placeholder: Suodata projekteja
-        blank: No matching projects
+        blank: Ei vastaavia projekteja
     corrupted: >-
-      Your project file may be damaged and manual steps necessary to fix it.
-      Please consult the user manual for further assistance.
+      Projektitiedosto saattaa olla vioittunut, ja sen korjaaminen saattaa
+      vaatia manuaalisia vaiheita. Lue lisätietoja käyttäjäohjeesta.
     readOnly: >-
-      Your project file is locked and cannot be modified. To unlock, change the
-      file permissions and open the project again.
+      Projektitiedosto on lukittu, eikä sitä voi muokata. Avaa se muuttamalla
+      tiedoston käyttöoikeuksia ja avaamalla projekti uudelleen.
     new:
       title: Luo uusi projekti
       name: Kirjoita projektin nimi
@@ -151,11 +146,11 @@ fi-FI:
           photo: Yksi kuva sivua kohden
           selection: Yksi valinta sivua kohden
         photos: Sisällytä kuvat
-        optimize: Optimize photo size and quality
+        optimize: Optimoi kuvan koko ja laatu
         metadata: Sisällytä metatiedot
         notes: Sisällytä muistiinpanot
         onlyNotes: Sisällytä vain kuvat, joissa on muistiinpanoja
-        overflow: Allow content to take up more than one page
+        overflow: Salli sisällön viedä enemmän kuin yksi sivu
       locale:
         locale: Maa-asetusto
         locales:
@@ -173,25 +168,25 @@ fi-FI:
           ru: русский
           uk: Украї́нська мо́ва
       templates:
-        label: Default templates
+        label: Oletusmallipohjat
         item: Tietue
         photo: Kuva
-        selection: Selection
+        selection: Valinta
       title:
-        label: Import file name as
-        force: Overwrite embedded photo metadata
+        label: Tuo tiedostonimi muodossa
+        force: Ylikirjoita kuvan upotetut metatiedot
       debug: Ota kehittäjätila käyttöön
       api: Ota kehittäjä-API käyttöön
       localtime: Oleta Exif-aikaleimojen käyttävän paikallista aikavyöhykettä
       dup:
         label: Tuonnin aikana
         option:
-          skip: Skip duplicate photos
-          import: Accept duplicate photos
+          skip: Ohita kuvien kaksoiskappaleet
+          import: Hyväksy kuvien kaksoiskappaleet
           prompt: Kysy joka kerta
       density:
         label: Oletustiheys (ppi)
-        title: Used for PDF, SVG and other scalable formats
+        title: Käytössä PDF:lle, SVG:lle ja muille skaalautuville muodoille
       export:
         label: Vie
         note:
@@ -199,7 +194,7 @@ fi-FI:
             html: Muistiinpanot HTML:nä
             markdown: Muistiinpanot Markdownina
           copy:
-            label: Kopioi muistiinpanot muodossa
+            label: Muistiinpanojen kopiointimuoto
             option:
               text: Raakateksti
               markdown: Markdown
@@ -207,40 +202,41 @@ fi-FI:
       ui:
         label: Käyttöliittymä
         option:
-          invertScroll: Invert direction when scrolling in photos
-          invertZoom: Invert direction when zooming in photos
-          overlayToolbars: Automatically hide and show toolbars
+          invertScroll: Käänteinen suunta kuvia vierittäessä
+          invertZoom: Käänteinen suunta kuvia lähentäessä
+          overlayToolbars: Piilota ja näytä työkalupalkit automaattisesti
       zoomMode:
         label: Oletusarvoisesti
         option:
-          fit: Zoom photos to fit
-          fill: Zoom photos to fill
-          zoom: Zoom photos to actual size
+          fit: Lähennä kuvat sovittaen
+          fill: Lähennä kuvat täyttäen
+          zoom: Lähennä kuvat todellisessa koossa
       layout:
-        label: Item View layout
+        label: Tietuenäkymän asettelu
         option:
-          stacked: Stacked
-          side-by-side: Side by side
+          stacked: Pinottu
+          side-by-side: Rinnakkain
       completions:
         label: Täydennä automaattisesti
         option:
-          datatype: By datatype only
-          property-datatype: By datatype and property
+          datatype: Vain datatyypin perusteella
+          property-datatype: Datatyypin ja ominaisuuden perusteella
     project:
       label: Projekti
       base:
-        label: Link photos
+        label: Linkitä kuvat
         option:
           'null': Using absolute paths
-          project: Relative to the project file
-          home: Relative to your home directory
-      store: Managed folder
+          project: Suhteellinen projektitiedostoon
+          home: Suhteellinen kotihakemistoon
+          <None>: Käyttäen absoluuttisia polkuja
+      store: Hallittu kansio
       name: Nimi
       id: ID
       path: Tiedosto
       type: Projektin tyyppi
       convert:
-        confirm: Convert
+        confirm: Muunna
         hint: Muuntaa tämän projektin tavalliseksi projektiksi.
         detail: |-
           {errors, plural,
@@ -249,7 +245,7 @@ fi-FI:
             other {# photos not found; consolidation required.}}
       watch:
         folder: Tarkkaile kansiota
-        usePolling: Using file stat polling
+        usePolling: Käyttäen tiedostojen stat-tilastokyselyä
     template:
       label: Mallipohjat
       new: Uusi mallipohja…
@@ -264,34 +260,24 @@ fi-FI:
     vocab:
       label: Sanastot
       export: Vie
-      classes: |-
-        {count, plural,
-          =0 {No Classes}
-          one {# Class}
-          other {# Classes}
-        }
-      datatypes: |-
-        {count, plural,
-          =0 {No Datatypes} one {# Datatype}
-          other {# Datatypes}
-        }
-      properties: |-
-        {count, plural,
-          =0 {No Properties}
-          one {# Property}
-          other {# Properties}
-        }
+      classes: '{count, plural,  =0 {Ei luokkia}  one {# luokka}  other {# luokkaa}}'
+      datatypes: >-
+        {count, plural,  =0 {Ei datatyyppejä} one {# datatyyppi}  other {#
+        datatyyppiä}}
+      properties: >-
+        {count, plural,  =0 {Ei ominaisuuksia}  one {# ominaisuus}  other {#
+        ominaisuutta}}
     plugins:
       label: Lisäosat
       settings: Asetukset
-      enable: Enable
-      disable: Disable
+      enable: Käytä
+      disable: Poista käytöstä
       install: Asenna lisäosa
       uninstall: Poista asennus
-      noInfo: Unknown author
+      noInfo: Tuntematon tekijä
       homepage: More
   format:
-    ppi: Pixels per inch (ppi)
+    ppi: Pikseleitä tuumaa kohti (ppi)
   item:
     created: Lisäyspäivä
     modified: Muokattu
@@ -303,7 +289,7 @@ fi-FI:
     type: Tyyppi
     created: Lisäyspäivä
     modified: Muokattu
-    consolidate: Consolidate Photo
+    consolidate: Konsolidoi kuva
     error: Kuvaa ei löytynyt
   selection:
     size: Koko
@@ -314,7 +300,7 @@ fi-FI:
     unmaximize: Palauta aiempi näkymän koko
   esper:
     tool:
-      pan: Pan Tool
+      pan: Panorointityökalu
       select: Valintatyökalu
       rotate: Kierrä
       mirror: Peilaa
@@ -329,7 +315,7 @@ fi-FI:
       panel: Toggle transcription version history
     panel:
       negative: Käänteiset värit
-      revert: Revert to Original
+      revert: Palauta alkuperäiseksi
       brightness:
         label: Kirkkaus
         value: '{value, number}'
@@ -337,25 +323,25 @@ fi-FI:
         label: Kontrasti
         value: '{value, number}'
       hue:
-        label: Hue
+        label: Sävy
         value: '{value, number}°'
       saturation:
-        label: Saturation
+        label: Kylläisyys
         value: '{value, number}'
       sharpen:
-        label: Sharpen
+        label: Terävöitys
         value: '{value, number}'
   notepad:
     placeholder: Lisää muistiinpanot tähän…
   completions:
-    empty: No options available
-    noMatches: No matches found
+    empty: Ei valintoja saatavilla
+    noMatches: Tuloksia ei löytynyt
   select:
     column:
       placeholder: Hae
     file:
       browse: Selaa
-      clear: Clear
+      clear: Tyhjennä
   template:
     id: URI
     name: Nimi
@@ -363,20 +349,20 @@ fi-FI:
     creator: Tekijä
     description: Kuvaus
     types:
-      https://tropy.org/v1/tropy#Item: Item Template
-      https://tropy.org/v1/tropy#Photo: Photo Template
-      https://tropy.org/v1/tropy#Selection: Selection Template
+      https://tropy.org/v1/tropy#Item: Tietueen mallipohja
+      https://tropy.org/v1/tropy#Photo: Kuvan mallipohja
+      https://tropy.org/v1/tropy#Selection: Valinnan mallipohja
     field:
       property: Ominaisuus
       label: Nimike
       datatype: Datatyyppi
-      isRequired: Is mandatory field
+      isRequired: On pakollinen kenttä
       hint: Vihje
       value: Oletusarvo
-      isConstant: Is read-only
+      isConstant: On vain luettavissa
   vocab:
     id: URI
-    prefix: Prefix
+    prefix: Etuliite
     title: Nimi
     description: Kuvaus
     properties: Ominaisuudet
@@ -395,11 +381,11 @@ fi-FI:
     notify:
       project:
         convert:
-          title: Conversion complete
+          title: Muunnos valmistui
           message: >-
-            Your project was successfully converted and saved. Tropy will now
-            close the original project file and open the converted project in a
-            new window.
+            Projekti muunnettiin ja tallennettiin onnistuneesti. Tropy sulkee
+            nyt alkuperäisen projektitiedoston, ja avaa muunnetun projektin
+            uuteen ikkunaan.
           buttons:
             - OK
     error:
@@ -411,9 +397,7 @@ fi-FI:
     prompt:
       item:
         destroy:
-          message: >-
-            Are your sure you want to permanently delete items? This action
-            cannot be undone.
+          message: Haluatko varmasti poistaa tietueet? Tätä ei voi perua.
           buttons:
             - Peruuta
             - Poista
@@ -427,12 +411,12 @@ fi-FI:
             - Kyllä
       dup:
         detail: >-
-          This photo already exists in your project. Are you sure you want to
-          import it again?
+          Tämä kuva on jo olemassa projektissa. Haluatko varmasti tuoda sen
+          uudelleen?
         checkboxLabel: Muista valinta
         buttons:
-          - Skip
-          - Import Anyway
+          - Ohita
+          - Tuo silti
       plugin:
         uninstall:
           detail: >-
@@ -444,13 +428,14 @@ fi-FI:
       template:
         import:
           message: >-
-            A template with this id already exists in your ontology database. Do
-            you want to overwrite the existing template?
+            Mallipohja samalla id-tunnistella on jo olemassa
+            ontologiatietokannassa. Haluatko ylikirjoittaa olemassa olevan
+            mallipohjan?
           buttons:
-            - Cancel
-            - Overwrite
+            - Peruuta
+            - Ylikirjoita
         imported:
-          message: Template successfully imported.
+          message: Mallipohja tuotu onnistuneesti.
           buttons:
             - OK
     filter:
@@ -469,12 +454,12 @@ fi-FI:
       create: Luo lista
       delete: Poista lista
       item:
-        add: Add Items To List
+        add: Lisää tietueet listaan
         merge: Yhdistä tietueet
-        remove: Remove Item From List
-        restore: Add Item To List
-      order: Sort List
-      restore: Restore List
+        remove: Poista tietue listalta
+        restore: Lisää tietue listaan
+      order: Järjestä lista
+      restore: Palauta lista
       save: Tallenna lista
     item:
       create: Luo tietueet
@@ -482,10 +467,10 @@ fi-FI:
       explode: Explode Item
       implode: Yhdistä tietueet
       merge: Yhdistä tietueet
-      split: Split Items
-      import: Import Items
-      restore: Restore Items
-      save: Save Item
+      split: Jaa tietueet
+      import: Tuo tietueet
+      restore: Palauta tietueet
+      save: Tallenna tietue
       tag:
         create: Tunniste
         toggle: Tunniste
@@ -495,91 +480,89 @@ fi-FI:
     ontology:
       import: Tuo sanastoja
       vocab:
-        save: Save Vocabulary
+        save: Tallenna sanasto
       label:
-        save: Save Label
+        save: Tallenna nimike
       template:
         import: Tuo mallipohja
     photo:
-      create: Import Photo
+      create: Tuo kuva
       delete: Poista kuva
-      duplicate: Duplicate Photo
-      move: Moving Photo
-      order: Sort Photos
-      restore: Restore Photo
-      save: Save Photo
+      duplicate: Kuvan kaksoiskappale
+      move: Siirretään kuva
+      order: Järjestä kuvat
+      restore: Palauta kuva
+      save: Tallenna kuva
     note:
       create: Luo muistiinpano
       delete: Poista muistiinpano
-      order: Sort Notes
-      restore: Restore Note
-      save: Save Note
+      order: Järjestä muistiinpanot
+      restore: Palauta muistiinpano
+      save: Tallenna muistiinpano
     tag:
       create: Luo tunniste
       delete: Poista tunniste
       restore: Luo tunniste
       save: Tallenna tunniste
     selection:
-      create: Create Selection
+      create: Luo valinta
       delete: Poista valinta
-      restore: Create Selection
-      save: Save Selection
-      order: Sort Selections
+      restore: Luo valinta
+      save: Tallenna valinta
+      order: Järjestä valinnat
   activity:
     cache:
-      prune: Optimizing project cache …
-      purge: Purging old caches …
+      prune: Optimoidaan projektin välimuistia…
+      purge: Puhdistetaan vanhoja välimuisteja…
     project:
       save: Tallennetaan…
     list:
-      create: Creating list …
-      delete: Deleting list …
+      create: Luodaan lista…
+      delete: Poistetaan lista…
       item:
-        add: Adding items to list …
-        merge: Merging items …
-        remove: Removing items from list …
-        restore: Restoring items to list …
-      load: Loading lists …
-      order: Sorting list …
-      restore: Restoring list …
-      save: Saving list …
+        add: Lisätään tietueita listaan…
+        merge: Yhdistetään tunnisteita…
+        remove: Poistetaan tietueita listalta…
+        restore: Palautetaan tietueita listaan…
+      load: Ladataan listoja…
+      order: Järjestetään lista…
+      restore: Palautetaan lista…
+      save: Tallenna lista…
     tag:
-      create: Creating tag …
-      delete: Deleting tag …
+      create: Luodaan tunnistetta…
+      delete: Poistetaan tunnistetta…
       load: Ladataan tunnisteita…
-      restore: Restoring tag …
-      save: Saving tag …
+      restore: Palautetaan tunnistetta…
+      save: Tallennetaan tunnistetta…
     item:
-      create: Creating item …
-      delete: Deleting item …
-      destroy: Deleting items permanently …
+      create: Luodaan tietuetta…
+      delete: Poistetaan tietuetta…
+      destroy: Poistetaan tietueet pysyvästi…
       explode: Exploding item …
-      export: Exporting item …
-      implode: Restoring item …
-      import: |-
-        {hasProgressBar, select,
-          true {Importing item {progress, number} of {total, number} …}
-          other {Importing items …}
-        }
-      load: Loading items …
-      merge: Merging item …
-      print: Processing items …
-      restore: Restoring item …
-      save: Saving items …
+      export: Viedään tietue…
+      implode: Palautetaan tietue…
+      import: >-
+        {hasProgressBar, select,  true {Tuodaan tietuetta {progress,
+        number}/{total, number} …}  other {Tuodaan tietueita…}}
+      load: Ladataan tietueita…
+      merge: Yhdistetään tietueita…
+      print: Käsitellään tietueita…
+      restore: Palautetaan tietue…
+      save: Tallennetaan tietueita…
       tag:
         create: Tagging item
         toggle: Tagging item …
-        clear: Clearing item tags …
+        clear: Tyhjennetään tietueen tunnisteita…
     metadata:
       load: Ladataan metatietoja…
       save: Tallennetaan metatietoja…
     ontology:
-      load: Loading ontology …
+      load: Ladataan ontologiaa…
       import: Tuodaan sanastoja…
       vocab:
-        save: Saving vocabulary …
+        save: Tallennetaan sanasto…
       label:
-        save: Saving label …
+        save: Tallennetaan nimike…
       template:
         import: Tuodaan mallipohjia …
     photo:
@@ -588,12 +571,10 @@ fi-FI:
           true {Consolidating photo {progress, number} of {total, number} …}
           other {Consolidating photos …}
         }
-      create: |-
-        {hasProgressBar, select,
-          true {Importing photo {progress, number} of {total, number} …}
-          other {Importing photos …}
-        }
-      delete: Deleting photo …
+      create: >-
+        {hasProgressBar, select,  true {Tuodaan kuvaa {progress, number}/{total,
+        number} …}  other {Tuodaan kuvia…}}
+      delete: Poistetaan kuva…
       duplicate: |-
         {hasProgressBar, select,
           true {Duplicating photo {progress, number} of {total, number} …}
@@ -604,43 +585,43 @@ fi-FI:
           true {Transcribing photo {progress, number} of {total, number} …}
           other {Transcribing photos …}
         }
-      load: Loading photos …
-      move: Moving photos …
-      order: Sorting photos …
-      save: Saving photo …
-      restore: Restoring photos …
-      extract: Extracting photo …
+      load: Ladataan kuvia…
+      move: Siirretään kuvia…
+      order: Järjestetään kuvia…
+      save: Tallennetaan kuva…
+      restore: Palautetaan kuvia…
+      extract: Puretaan kuva…
     note:
-      create: Creating note …
-      delete: Deleting note …
-      load: Loading notes …
-      order: Sorting notes …
-      restore: Restoring notes …
+      create: Luodaan muistiinpano…
+      delete: Poistetaan muistiinpano…
+      load: Ladataan muistiinpanoja…
+      order: Järjestetään muistiinpanoja…
+      restore: Palautetaan muistiinpanoja…
     selection:
-      create: Creating photo selection …
-      load: Loading photo selections …
-      extract: Extracting selection …
+      create: Luodaan kuvavalintaa…
+      load: Ladataan kuvavalintoja…
+      extract: Puretaan valintaa…
     api:
       photo:
-        extract: Extracting photo …
+        extract: Puretaan kuva…
       selection:
-        extract: Extracting selection …
+        extract: Puretaan valintaa…
   editor:
     commands:
       bold: Lihavointi
       italic: Kursivointi
       underline: Alleviivaus
-      overline: Overline
+      overline: Ylleviivaus
       strikethrough: Yliviivaus
-      subscript: Subscript
-      superscript: Superscript
-      blockquote: Insert Blockquote
+      subscript: Alaindeksi
+      superscript: Yläindeksi
+      blockquote: Lisää lohkolainaus
       ol: Lisää järjestetty lista
       ul: Lisää järjestämätön lista
       link:
         button: Linkki
         target: Linkin kohde
-        title: Link title
+        title: Linkin otsikko
       unlink: Poista linkki
       left: Tasaus vasemmalle
       center: Tasaa keskelle
@@ -648,9 +629,9 @@ fi-FI:
       sinkListItem: Sink list item
       liftListItem: Lift list item
   transcription:
-    error: Transcription failed
+    error: Litterointi epäonnistui
     retry: Yritä uudelleen
-    pending: Transcription pending…
+    pending: Litterointi odottaa…
     title: |-
       {name, select,
         true {{name}}
@@ -658,51 +639,59 @@ fi-FI:
       }
   error:
     cache:
-      prune: Failed to optimize project cache.
-      purge: Failed to remove old project caches.
+      prune: Projektin välimuistin optimointi epäonnistui.
+      purge: Projektin vanhojen välimuistien poistaminen epäonnistui.
     project:
-      created: Project creation failed.
-      convert: Project conversion failed.
+      created: Projektin luominen epäonnistui.
+      convert: Projektin muuntaminen epäonnistui.
     item:
-      export: Failed to export items.
-      merge: Failed to merge items.
-      import: Failed to import item.
+      export: Tietueiden vieminen epäonnistui.
+      merge: Tietueiden yhdistäminen epäonnistui.
+      import: Tietueen tuominen epäonnistui.
       tag:
-        save: Failed to save tag.
-        create: Failed to tag item. Tags must be unique per item.
+        save: Tunnisteen tallentaminen epäonnistui.
+        create: >-
+          Tunnisteen lisääminen tietueelle epäonnistui. Tunnisteiden tulee olla
+          yksilöllisiä tietuetta kohden.
       template:
-        change: Failed to change item template.
+        change: Tietueen mallipohjan muuttaminen epäonnistui.
     list:
-      load: Failed to load lists.
-      create: Failed to create list. List names must be unique.
-      move: Failed to move list. List names must be unique per level.
-      save: Failed to save list.
+      load: Listojen lataaminen epäonnistui.
+      create: Listan luominen epäonnistui. Listojen nimien tulee olla yksilöllisiä.
+      move: >-
+        Listan siirtäminen epäonnistui. Listojen nimien tulee olla yksilöllisiä
+        tasoa kohden.
+      save: Listan tallentaminen epäonnistui.
       item:
-        add: Failed to add item(s) to list.
+        add: Yhden tai usean tietueen lisääminen listaan epäonnistui.
     photo:
-      consolidate: Failed to consolidate photos.
-      create: Failed to import photo.
-      save: Failed to save photo.
-      extract: Failed to export photo.
+      consolidate: Kuvien konsolidointi epäonnistui.
+      create: Kuvan tuominen epäonnistui.
+      save: Kuvan tallentaminen epäonnistui.
+      extract: Kuvan vieminen epäonnistui.
       template:
-        change: Failed to change photo template.
+        change: Kuvan mallipohjan muuttaminen epäonnistui.
     selection:
-      create: Failed to create photo selection.
-      extract: Failed to export selection.
+      create: Kuvavalinnan luominen epäonnistui.
+      extract: Valinnan vieminen epäonnistui.
       template:
-        change: Failed to change selection template.
+        change: Valinnan mallipohjan muuttaminen epäonnistui.
     ontology:
-      migrate: Failed to upgrade your ontology database.
-      import: Failed to import vocabulary.
+      migrate: Ontologiatietokannan päivittäminen epäonnistui.
+      import: Sanaston tuominen epäonnistui.
       vocab:
-        save: Failed to save vocabulary. Prefix must be unique.
+        save: >-
+          Sanaston tallentaminen epäonnistui. Etuliitteen tulee olla
+          yksilöllinen.
       template:
-        import: Failed to import template.
+        import: Mallipohjan tuominen epäonnistui.
         field:
-          add: Failed to add field to template.
-          remove: Failed to remove field from template.
+          add: Kentän lisääminen mallipohjaan epäonnistui.
+          remove: Kentän poistaminen mallipohjasta epäonnistui.
     tag:
-      create: Failed to create tag. Tag names must be unique.
+      create: >-
+        Tunnisteen luominen epäonnistui. Tunnisteiden nimien tulee olla
+        yksilöllisiä.
     db:
       SQLITE_CANTOPEN: Tietokantatiedostoa ei löydy tai sitä ei voi avata.
   flash:
@@ -715,8 +704,8 @@ fi-FI:
   plugin:
     name: Nimi
     plugin: Lisäosa
-    options: Options
+    options: Valinnat
     hooks:
       export: Vie
       import: Tuo
-      transcribe: OCR
+      transcribe: Tekstintunnistus (OCR)

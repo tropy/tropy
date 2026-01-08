@@ -66,7 +66,7 @@ fi-FI:
                 - label: Vaakasuunta
                   command: app:print-pdf-landscape
         - type: separator
-        - label: Consolidate Photo Library
+        - label: Konsolidoi kuvakirjasto
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
@@ -85,7 +85,7 @@ fi-FI:
           accelerator: Ctrl+W
           role: close
           window: '*'
-        - label: Quit %name
+        - label: Lopeta %name
           accelerator: CmdOrCtrl+Q
           role: quit
     - label: '&Muokkaa'
@@ -110,7 +110,7 @@ fi-FI:
         - label: '&Liitä'
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Liitä ja vastaa tyyliä
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: Valitse kaikki
@@ -155,19 +155,19 @@ fi-FI:
     - label: Kehittäjä
       id: dev
       submenu:
-        - label: Reload &Styles
+        - label: Lataa &tyylit uudelleen
           command: win:refresh
         - label: '&Kehittäjätyökalut päällä/pois'
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Reset Ontology Database
+        - label: Nollaa ontologian tietokanta
           command: app:reset-ontology-db
-        - label: Optimize Project Caches
+        - label: Optimoi projektien välimuistit
           command: app:optimize-cache
-        - label: Optimize Project Database
+        - label: Optimoi projektien tietokanta
           command: app:optimize-project
-        - label: Reindex Project Database
+        - label: Indeksoi uudelleen projektien tietokanta
           command: app:reindex-project
         - type: separator
         - label: Teema
@@ -214,13 +214,13 @@ fi-FI:
           enabled: false
           visible: false
         - type: separator
-        - label: About %name
+        - label: Tietoja - %name
           command: app:about
           window: '!prefs'
   darwin:
     - label: '%name'
       submenu:
-        - label: About %name
+        - label: Tietoja - %name
           command: app:about
           window: '!prefs'
         - type: separator
@@ -228,7 +228,7 @@ fi-FI:
           accelerator: Command+,
           command: app:open-preferences
         - type: separator
-        - label: Hide %name
+        - label: Piilota %name
           accelerator: Command+H
           role: hide
         - label: Piilota muut
@@ -237,7 +237,7 @@ fi-FI:
         - label: Näytä kaikki
           role: unhide
         - type: separator
-        - label: Quit %name
+        - label: Lopeta %name
           accelerator: CmdOrCtrl+Q
           role: quit
     - label: Tiedosto
@@ -292,7 +292,7 @@ fi-FI:
               accelerator: CmdOrCtrl+Shift+I
             - label: Kansio…
               command: app:import-directory
-        - label: Consolidate Photo Library
+        - label: Konsolidoi kuvakirjasto
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
@@ -340,12 +340,12 @@ fi-FI:
         - label: '&Liitä'
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Liitä ja vastaa tyyliä
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: Valitse kaikki
           role: selectAll
-    - label: View
+    - label: Näytä
       submenu:
         - label: '&Lataa uudelleen'
           accelerator: CmdOrCtrl+R
@@ -391,19 +391,19 @@ fi-FI:
     - label: Kehittäjä
       id: dev
       submenu:
-        - label: Reload &Styles
+        - label: Lataa &tyylit uudelleen
           command: win:refresh
         - label: '&Kehittäjätyökalut päällä/pois'
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Reset Ontology Database
+        - label: Nollaa ontologian tietokanta
           command: app:reset-ontology-db
-        - label: Optimize Project Caches
+        - label: Optimoi projektien välimuistit
           command: app:optimize-cache
-        - label: Optimize Project Database
+        - label: Optimoi projektien tietokanta
           command: app:optimize-project
-        - label: Reindex Project Database
+        - label: Indeksoi uudelleen projektien tietokanta
           command: app:reindex-project
         - type: separator
         - label: Teema
@@ -518,7 +518,7 @@ fi-FI:
                 - label: Vaakasuunta
                   command: app:print-pdf-landscape
         - type: separator
-        - label: Consolidate Photo Library
+        - label: Konsolidoi kuvakirjasto
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
@@ -537,7 +537,7 @@ fi-FI:
           accelerator: Ctrl+W
           role: close
           window: '*'
-        - label: Quit %name
+        - label: Lopeta %name
           accelerator: CmdOrCtrl+Q
           role: quit
     - label: '&Muokkaa'
@@ -562,7 +562,7 @@ fi-FI:
         - label: '&Liitä'
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Paste and Match Style
+        - label: Liitä ja vastaa tyyliä
           accelerator: Alt+CmdOrCtrl+V
           role: pasteAndMatchStyle
         - label: Asetukset…
@@ -604,19 +604,19 @@ fi-FI:
     - label: Kehittäjä
       id: dev
       submenu:
-        - label: Reload &Styles
+        - label: Lataa &tyylit uudelleen
           command: win:refresh
         - label: '&Kehittäjätyökalut päällä/pois'
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Reset Ontology Database
+        - label: Nollaa ontologian tietokanta
           command: app:reset-ontology-db
-        - label: Optimize Project Caches
+        - label: Optimoi projektien välimuistit
           command: app:optimize-cache
-        - label: Optimize Project Database
+        - label: Optimoi projektien tietokanta
           command: app:optimize-project
-        - label: Reindex Project Database
+        - label: Indeksoi uudelleen projektien tietokanta
           command: app:reindex-project
         - type: separator
         - label: Teema
@@ -663,6 +663,6 @@ fi-FI:
           enabled: false
           visible: false
         - type: separator
-        - label: About %name
+        - label: Tietoja - %name
           command: app:about
           window: '!prefs'

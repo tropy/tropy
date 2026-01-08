@@ -357,10 +357,10 @@ de:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Ausgewählte Objekte transkribieren
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Mit Tropy
             command: app:transcribe-item
             enabled: false
     item-bulk:
@@ -410,17 +410,17 @@ de:
         command: app:open-path
       - label: Kopiere Link zu Foto
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: Foto exportieren
         id: extract
         submenu:
-          - label: To File
+          - label: Als Datei speichern
             command: app:extract-photo
-          - label: To Clipboard
+          - label: In die Zwischenablage
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Foto transkribieren
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Mit Tropy
             command: app:transcribe-photo
             enabled: false
       - label: Foto konsolidieren
@@ -462,13 +462,13 @@ de:
           - label: Nebeneinander
             id: side-by-side
             type: checkbox
-      - label: Maximize View
+      - label: Ansicht maximieren
         id: maximize-view
         submenu:
-          - label: Image
+          - label: Bild
             id: esper
             type: checkbox
-          - label: Notepad
+          - label: Notiz
             type: checkbox
             id: notepad
           - type: separator
@@ -896,13 +896,13 @@ de:
           - label: Nebeneinander
             id: side-by-side
             type: checkbox
-      - label: Maximize View
+      - label: Ansicht maximieren
         id: maximize-view
         submenu:
-          - label: Image
+          - label: Bild
             id: esper
             type: checkbox
-          - label: Notepad
+          - label: Notiz
             type: checkbox
             id: notepad
           - type: separator
@@ -917,10 +917,10 @@ de:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Ausgewählte Objekte transkribieren
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Mit Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
@@ -952,17 +952,17 @@ de:
         command: app:open-path
       - label: Kopiere Link zu Foto
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: Foto exportieren
         id: extract
         submenu:
-          - label: To File
+          - label: Als Datei speichern
             command: app:extract-photo
-          - label: To Clipboard
+          - label: In die Zwischenablage
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Foto transkribieren
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Mit Tropy
             command: app:transcribe-photo
             enabled: false
       - label: Foto konsolidieren
@@ -1394,13 +1394,13 @@ de:
           - label: Nebeneinander
             id: side-by-side
             type: checkbox
-      - label: Maximize View
+      - label: Ansicht maximieren
         id: maximize-view
         submenu:
-          - label: Image
+          - label: Bild
             id: esper
             type: checkbox
-          - label: Notepad
+          - label: Notiz
             type: checkbox
             id: notepad
           - type: separator
@@ -1415,10 +1415,10 @@ de:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Ausgewählte Objekte transkribieren
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Mit Tropy
             command: app:transcribe-item
             enabled: false
     metadata-list:
@@ -1450,17 +1450,17 @@ de:
         command: app:open-path
       - label: Kopiere Link zu Foto
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: Foto exportieren
         id: extract
         submenu:
-          - label: To File
+          - label: Als Datei speichern
             command: app:extract-photo
-          - label: To Clipboard
+          - label: In die Zwischenablage
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Foto transkribieren
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Mit Tropy
             command: app:transcribe-photo
             enabled: false
       - label: Foto konsolidieren

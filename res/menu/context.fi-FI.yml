@@ -36,9 +36,9 @@ fi-FI:
         accelerator: CmdOrCtrl+Shift+A
       - label: Vie tunnisteet…
         command: app:export-tags
-      - label: Default Tag Color
+      - label: Tunnisteen oletusväri
         submenu:
-          - label: None
+          - label: Ei mitään
             color:
               - null
               - tagColor
@@ -89,22 +89,22 @@ fi-FI:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Apricot
+          - label: Aprikoosi
             color:
               - apricot
               - color
               - app:save-default-tag-color
-          - label: Dark Green
+          - label: Tummanvihreä
             color:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Light Blue
+          - label: Vaaleansininen
             color:
               - light-blue
               - color
               - app:save-default-tag-color
-          - label: Lavender
+          - label: Laventeli
             color:
               - lavender
               - color
@@ -113,7 +113,7 @@ fi-FI:
       - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: None
+          - label: Ei mitään
             color:
               - null
               - color
@@ -159,39 +159,39 @@ fi-FI:
               - brown
               - color
               - app:save-tag-color
-          - label: Apricot
+          - label: Aprikoosi
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Dark Green
+          - label: Tummanvihreä
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Light Blue
+          - label: Vaaleansininen
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavender
+          - label: Laventeli
             color:
               - lavender
               - color
               - app:save-tag-color
-      - label: Rename Tag
+      - label: Nimeä tunniste uudelleen
         command: app:rename-tag
         condition: '!isReadOnly'
       - label: Poista tunniste
         command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
-      - label: Remove Tag From This Item
+      - label: Poista tunniste tästä tietueesta
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: Remove Tag From These Items
+      - label: Poista tunniste näistä tietueista
         command: app:delete-item-tag
         enabled: false
         visible: false
@@ -199,7 +199,7 @@ fi-FI:
       - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: None
+          - label: Ei mitään
             color:
               - null
               - color
@@ -245,22 +245,22 @@ fi-FI:
               - brown
               - color
               - app:save-tag-color
-          - label: Apricot
+          - label: Aprikoosi
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Dark Green
+          - label: Tummanvihreä
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Light Blue
+          - label: Vaaleansininen
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavender
+          - label: Laventeli
             color:
               - lavender
               - color
@@ -273,27 +273,27 @@ fi-FI:
       - label: Poista muistiinpano
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: Suunta
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: Vasemmalta oikealle
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: Oikealta vasemmalle
             type: checkbox
             checked: false
             direction: rtl
-      - label: Writing Mode
+      - label: Kirjoitustila
         id: writing-mode
         condition: hasTargetId
         submenu:
-          - label: Horizontal
+          - label: Vaaka
             type: checkbox
             checked: false
             mode: horizontal
-          - label: Vertical (Right to Left)
+          - label: Pysty (oikealta vasemmalle)
             type: checkbox
             checked: false
             mode: vertical-rl
@@ -303,7 +303,7 @@ fi-FI:
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: Wrap Lines
+      - label: Jaa teksti riveille
         id: line-wrap
         type: checkbox
         checked: true
@@ -322,7 +322,7 @@ fi-FI:
       - label: Tunnisteet
         id: tag
         submenu:
-          - label: None
+          - label: Ei mitään
             type: checkbox
             checked: true
             enabled: false
@@ -330,7 +330,7 @@ fi-FI:
       - label: Poista tietue
         command: app:delete-item
     item-read-only:
-      - label: Export Item
+      - label: Vie tietue
         id: export
         submenu:
           - label: JSON-LD
@@ -341,13 +341,13 @@ fi-FI:
                 command: app:print-pdf
               - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Export Item Notes …
+      - label: Vie tietueen muistiinpanot…
         command: app:export-notes
       - label: Kopioi tietueen linkki
         command: app:copy-item-link
       - label: Kopioi tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidate Item
+      - label: Konsolidoi tietue
         command: app:consolidate-item
     item-rotate:
       - label: Kierrä vasemmalle
@@ -357,19 +357,19 @@ fi-FI:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Litteroi valitut tietueet
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Tropylla
             command: app:transcribe-item
             enabled: false
     item-bulk:
-      - label: Merge Selected Items
+      - label: Yhdistä valitut tietueet
         command: app:merge-item
       - label: Poista valitut tietueet
         command: app:delete-item
     item-bulk-read-only:
-      - label: Export Selected Items
+      - label: Vie valitut tietueet
         id: export
         submenu:
           - label: JSON-LD
@@ -380,22 +380,22 @@ fi-FI:
                 command: app:print-pdf
               - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Export Selected Item Notes …
+      - label: Vie valitut tietueen muistiinpanot…
         command: app:export-notes
       - label: Kopioi valitut tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidate Selected Items
+      - label: Konsolidoi valitut tietueet
         command: app:consolidate-item
     item-list:
-      - label: Remove Item From List
+      - label: Poista tietue listalta
         command: app:list-item-remove
     item-bulk-list:
-      - label: Remove Selected Items From List
+      - label: Poista valitut tietueet listalta
         command: app:list-item-remove
     photo:
-      - label: Duplicate Photo
+      - label: Kuvan kaksoiskappale
         command: app:duplicate-photo
-      - label: Move Photo to New Item
+      - label: Siirrä kuva uuteen tietueeseen
         command: app:explode-photo
       - label: Poista kuva
         command: app:delete-photo
@@ -406,24 +406,24 @@ fi-FI:
     photo-read-only:
       - label: Näytä alkuperäinen tiedosto…
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: Avaa erillisessä katselimessa…
         command: app:open-path
       - label: Kopioi kuvan linkki
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: Vie kuva
         id: extract
         submenu:
-          - label: To File
+          - label: Tiedostoon
             command: app:extract-photo
-          - label: To Clipboard
+          - label: Leikepöydälle
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Litteroi kuva
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Tropylla
             command: app:transcribe-photo
             enabled: false
-      - label: Consolidate Photo
+      - label: Konsolidoi kuva
         command: app:consolidate-photo
     photo-rotate:
       - label: Kierrä vasemmalle
@@ -443,23 +443,23 @@ fi-FI:
         command: app:rotate-selection-right
         accelerator: CmdOrCtrl+]
     item-deleted:
-      - label: Restore Item
+      - label: Palauta tietue
         command: app:restore-item
       - label: Poista tietue pysyvästi
         command: app:destroy-item
     item-bulk-deleted:
-      - label: Restore Selected Items
+      - label: Palauta valitut tietueet
         command: app:restore-item
       - label: Poista valitut tietueet pysyvästi
         command: app:destroy-item
     item-view:
-      - label: View Layout
+      - label: Näkymän asettelu
         id: item-view-layout
         submenu:
-          - label: Stacked
+          - label: Pinottu
             id: stacked
             type: checkbox
-          - label: Side by side
+          - label: Rinnakkain
             id: side-by-side
             type: checkbox
       - label: Suurenna näkymä
@@ -472,14 +472,14 @@ fi-FI:
             type: checkbox
             id: notepad
           - type: separator
-          - label: None
+          - label: Ei mitään
             id: none
             type: checkbox
     metadata-list:
-      - label: New Field …
+      - label: Uusi kenttä…
         command: app:create-field
     metadata-field:
-      - label: Remove Field
+      - label: Poista kenttä
         command: app:delete-field
         condition: isExtra
     trash:
@@ -534,9 +534,9 @@ fi-FI:
         accelerator: CmdOrCtrl+Shift+A
       - label: Vie tunnisteet…
         command: app:export-tags
-      - label: Default Tag Color
+      - label: Tunnisteen oletusväri
         submenu:
-          - label: None
+          - label: Ei mitään
             color:
               - null
               - tagColor
@@ -587,22 +587,22 @@ fi-FI:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Apricot
+          - label: Aprikoosi
             color:
               - apricot
               - color
               - app:save-default-tag-color
-          - label: Dark Green
+          - label: Tummanvihreä
             color:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Light Blue
+          - label: Vaaleansininen
             color:
               - light-blue
               - color
               - app:save-default-tag-color
-          - label: Lavender
+          - label: Laventeli
             color:
               - lavender
               - color
@@ -611,7 +611,7 @@ fi-FI:
       - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: None
+          - label: Ei mitään
             color:
               - null
               - color
@@ -657,39 +657,39 @@ fi-FI:
               - brown
               - color
               - app:save-tag-color
-          - label: Apricot
+          - label: Aprikoosi
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Dark Green
+          - label: Tummanvihreä
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Light Blue
+          - label: Vaaleansininen
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavender
+          - label: Laventeli
             color:
               - lavender
               - color
               - app:save-tag-color
-      - label: Rename Tag
+      - label: Nimeä tunniste uudelleen
         command: app:rename-tag
         condition: '!isReadOnly'
       - label: Poista tunniste
         command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
-      - label: Remove Tag From This Item
+      - label: Poista tunniste tästä tietueesta
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: Remove Tag From These Items
+      - label: Poista tunniste näistä tietueista
         command: app:delete-item-tag
         enabled: false
         visible: false
@@ -697,7 +697,7 @@ fi-FI:
       - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: None
+          - label: Ei mitään
             color:
               - null
               - color
@@ -743,22 +743,22 @@ fi-FI:
               - brown
               - color
               - app:save-tag-color
-          - label: Apricot
+          - label: Aprikoosi
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Dark Green
+          - label: Tummanvihreä
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Light Blue
+          - label: Vaaleansininen
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavender
+          - label: Laventeli
             color:
               - lavender
               - color
@@ -771,27 +771,27 @@ fi-FI:
       - label: Poista muistiinpano
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: Suunta
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: Vasemmalta oikealle
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: Oikealta vasemmalle
             type: checkbox
             checked: false
             direction: rtl
-      - label: Writing Mode
+      - label: Kirjoitustila
         id: writing-mode
         condition: hasTargetId
         submenu:
-          - label: Horizontal
+          - label: Vaaka
             type: checkbox
             checked: false
             mode: horizontal
-          - label: Vertical (Right to Left)
+          - label: Pysty (oikealta vasemmalle)
             type: checkbox
             checked: false
             mode: vertical-rl
@@ -801,7 +801,7 @@ fi-FI:
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: Wrap Lines
+      - label: Jaa teksti riveille
         id: line-wrap
         type: checkbox
         checked: true
@@ -820,7 +820,7 @@ fi-FI:
       - label: Tunnisteet
         id: tag
         submenu:
-          - label: None
+          - label: Ei mitään
             type: checkbox
             checked: true
             enabled: false
@@ -828,7 +828,7 @@ fi-FI:
       - label: Poista tietue
         command: app:delete-item
     item-read-only:
-      - label: Export Item
+      - label: Vie tietue
         id: export
         submenu:
           - label: JSON-LD
@@ -839,21 +839,21 @@ fi-FI:
                 command: app:print-pdf
               - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Export Item Notes …
+      - label: Vie tietueen muistiinpanot…
         command: app:export-notes
       - label: Kopioi tietueen linkki
         command: app:copy-item-link
       - label: Kopioi tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidate Item
+      - label: Konsolidoi tietue
         command: app:consolidate-item
     item-bulk:
-      - label: Merge Selected Items
+      - label: Yhdistä valitut tietueet
         command: app:merge-item
       - label: Poista valitut tietueet
         command: app:delete-item
     item-bulk-read-only:
-      - label: Export Selected Items
+      - label: Vie valitut tietueet
         id: export
         submenu:
           - label: JSON-LD
@@ -864,36 +864,36 @@ fi-FI:
                 command: app:print-pdf
               - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Export Selected Item Notes …
+      - label: Vie valitut tietueen muistiinpanot…
         command: app:export-notes
       - label: Kopioi valitut tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidate Selected Items
+      - label: Konsolidoi valitut tietueet
         command: app:consolidate-item
     item-list:
-      - label: Remove Item From List
+      - label: Poista tietue listalta
         command: app:list-item-remove
     item-bulk-list:
-      - label: Remove Selected Items From List
+      - label: Poista valitut tietueet listalta
         command: app:list-item-remove
     item-deleted:
-      - label: Restore Item
+      - label: Palauta tietue
         command: app:restore-item
       - label: Poista tietue pysyvästi
         command: app:destroy-item
     item-bulk-deleted:
-      - label: Restore Selected Items
+      - label: Palauta valitut tietueet
         command: app:restore-item
       - label: Poista valitut tietueet pysyvästi
         command: app:destroy-item
     item-view:
-      - label: View Layout
+      - label: Näkymän asettelu
         id: item-view-layout
         submenu:
-          - label: Stacked
+          - label: Pinottu
             id: stacked
             type: checkbox
-          - label: Side by side
+          - label: Rinnakkain
             id: side-by-side
             type: checkbox
       - label: Suurenna näkymä
@@ -906,7 +906,7 @@ fi-FI:
             type: checkbox
             id: notepad
           - type: separator
-          - label: None
+          - label: Ei mitään
             id: none
             type: checkbox
     item-rotate:
@@ -917,17 +917,17 @@ fi-FI:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Litteroi valitut tietueet
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Tropylla
             command: app:transcribe-item
             enabled: false
     metadata-list:
-      - label: New Field …
+      - label: Uusi kenttä…
         command: app:create-field
     metadata-field:
-      - label: Remove Field
+      - label: Poista kenttä
         command: app:delete-field
         condition: isExtra
     trash:
@@ -935,9 +935,9 @@ fi-FI:
         command: app:destroy-item
         condition: '!isReadOnly'
     photo:
-      - label: Duplicate Photo
+      - label: Kuvan kaksoiskappale
         command: app:duplicate-photo
-      - label: Move Photo to New Item
+      - label: Siirrä kuva uuteen tietueeseen
         command: app:explode-photo
       - label: Poista kuva
         command: app:delete-photo
@@ -948,24 +948,24 @@ fi-FI:
     photo-read-only:
       - label: Näytä alkuperäinen tiedosto…
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: Avaa erillisessä katselimessa…
         command: app:open-path
       - label: Kopioi kuvan linkki
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: Vie kuva
         id: extract
         submenu:
-          - label: To File
+          - label: Tiedostoon
             command: app:extract-photo
-          - label: To Clipboard
+          - label: Leikepöydälle
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Litteroi kuva
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Tropylla
             command: app:transcribe-photo
             enabled: false
-      - label: Consolidate Photo
+      - label: Konsolidoi kuva
         command: app:consolidate-photo
     photo-rotate:
       - label: Kierrä vasemmalle
@@ -1032,9 +1032,9 @@ fi-FI:
         accelerator: CmdOrCtrl+Shift+A
       - label: Vie tunnisteet…
         command: app:export-tags
-      - label: Default Tag Color
+      - label: Tunnisteen oletusväri
         submenu:
-          - label: None
+          - label: Ei mitään
             color:
               - null
               - tagColor
@@ -1085,22 +1085,22 @@ fi-FI:
               - brown
               - color
               - app:save-default-tag-color
-          - label: Apricot
+          - label: Aprikoosi
             color:
               - apricot
               - color
               - app:save-default-tag-color
-          - label: Dark Green
+          - label: Tummanvihreä
             color:
               - dark-green
               - color
               - app:save-default-tag-color
-          - label: Light Blue
+          - label: Vaaleansininen
             color:
               - light-blue
               - color
               - app:save-default-tag-color
-          - label: Lavender
+          - label: Laventeli
             color:
               - lavender
               - color
@@ -1109,7 +1109,7 @@ fi-FI:
       - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: None
+          - label: Ei mitään
             color:
               - null
               - color
@@ -1155,39 +1155,39 @@ fi-FI:
               - brown
               - color
               - app:save-tag-color
-          - label: Apricot
+          - label: Aprikoosi
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Dark Green
+          - label: Tummanvihreä
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Light Blue
+          - label: Vaaleansininen
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavender
+          - label: Laventeli
             color:
               - lavender
               - color
               - app:save-tag-color
-      - label: Rename Tag
+      - label: Nimeä tunniste uudelleen
         command: app:rename-tag
         condition: '!isReadOnly'
       - label: Poista tunniste
         command: app:delete-tag
         condition: '!isReadOnly'
     item-tag:
-      - label: Remove Tag From This Item
+      - label: Poista tunniste tästä tietueesta
         command: app:delete-item-tag
         enabled: false
         visible: false
         condition: isSingleItem
-      - label: Remove Tag From These Items
+      - label: Poista tunniste näistä tietueista
         command: app:delete-item-tag
         enabled: false
         visible: false
@@ -1195,7 +1195,7 @@ fi-FI:
       - label: Tunnisteen väri
         condition: '!isReadOnly'
         submenu:
-          - label: None
+          - label: Ei mitään
             color:
               - null
               - color
@@ -1241,22 +1241,22 @@ fi-FI:
               - brown
               - color
               - app:save-tag-color
-          - label: Apricot
+          - label: Aprikoosi
             color:
               - apricot
               - color
               - app:save-tag-color
-          - label: Dark Green
+          - label: Tummanvihreä
             color:
               - dark-green
               - color
               - app:save-tag-color
-          - label: Light Blue
+          - label: Vaaleansininen
             color:
               - light-blue
               - color
               - app:save-tag-color
-          - label: Lavender
+          - label: Laventeli
             color:
               - lavender
               - color
@@ -1269,27 +1269,27 @@ fi-FI:
       - label: Poista muistiinpano
         command: app:delete-note
     notepad:
-      - label: Direction
+      - label: Suunta
         id: direction
         condition: hasTargetId
         submenu:
-          - label: Left to Right
+          - label: Vasemmalta oikealle
             type: checkbox
             checked: false
             direction: ltr
-          - label: Right to Left
+          - label: Oikealta vasemmalle
             type: checkbox
             checked: false
             direction: rtl
-      - label: Writing Mode
+      - label: Kirjoitustila
         id: writing-mode
         condition: hasTargetId
         submenu:
-          - label: Horizontal
+          - label: Vaaka
             type: checkbox
             checked: false
             mode: horizontal
-          - label: Vertical (Right to Left)
+          - label: Pysty (oikealta vasemmalle)
             type: checkbox
             checked: false
             mode: vertical-rl
@@ -1299,7 +1299,7 @@ fi-FI:
         checked: true
         command: app:toggle-line-numbers
         condition: hasTargetId
-      - label: Wrap Lines
+      - label: Jaa teksti riveille
         id: line-wrap
         type: checkbox
         checked: true
@@ -1318,7 +1318,7 @@ fi-FI:
       - label: Tunnisteet
         id: tag
         submenu:
-          - label: None
+          - label: Ei mitään
             type: checkbox
             checked: true
             enabled: false
@@ -1326,7 +1326,7 @@ fi-FI:
       - label: Poista tietue
         command: app:delete-item
     item-read-only:
-      - label: Export Item
+      - label: Vie tietue
         id: export
         submenu:
           - label: JSON-LD
@@ -1337,21 +1337,21 @@ fi-FI:
                 command: app:print-pdf
               - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Export Item Notes …
+      - label: Vie tietueen muistiinpanot…
         command: app:export-notes
       - label: Kopioi tietueen linkki
         command: app:copy-item-link
       - label: Kopioi tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidate Item
+      - label: Konsolidoi tietue
         command: app:consolidate-item
     item-bulk:
-      - label: Merge Selected Items
+      - label: Yhdistä valitut tietueet
         command: app:merge-item
       - label: Poista valitut tietueet
         command: app:delete-item
     item-bulk-read-only:
-      - label: Export Selected Items
+      - label: Vie valitut tietueet
         id: export
         submenu:
           - label: JSON-LD
@@ -1362,36 +1362,36 @@ fi-FI:
                 command: app:print-pdf
               - label: Vaakasuunta
                 command: app:print-pdf-landscape
-      - label: Export Selected Item Notes …
+      - label: Vie valitut tietueen muistiinpanot…
         command: app:export-notes
       - label: Kopioi valitut tietueen muistiinpanot
         command: app:copy-notes
-      - label: Consolidate Selected Items
+      - label: Konsolidoi valitut tietueet
         command: app:consolidate-item
     item-list:
-      - label: Remove Item From List
+      - label: Poista tietue listalta
         command: app:list-item-remove
     item-bulk-list:
-      - label: Remove Selected Items From List
+      - label: Poista valitut tietueet listalta
         command: app:list-item-remove
     item-deleted:
-      - label: Restore Item
+      - label: Palauta tietue
         command: app:restore-item
       - label: Poista tietue pysyvästi
         command: app:destroy-item
     item-bulk-deleted:
-      - label: Restore Selected Items
+      - label: Palauta valitut tietueet
         command: app:restore-item
       - label: Poista valitut tietueet pysyvästi
         command: app:destroy-item
     item-view:
-      - label: View Layout
+      - label: Näkymän asettelu
         id: item-view-layout
         submenu:
-          - label: Stacked
+          - label: Pinottu
             id: stacked
             type: checkbox
-          - label: Side by side
+          - label: Rinnakkain
             id: side-by-side
             type: checkbox
       - label: Suurenna näkymä
@@ -1404,7 +1404,7 @@ fi-FI:
             type: checkbox
             id: notepad
           - type: separator
-          - label: None
+          - label: Ei mitään
             id: none
             type: checkbox
     item-rotate:
@@ -1415,17 +1415,17 @@ fi-FI:
         command: app:rotate-item-right
         accelerator: CmdOrCtrl+]
     item-transcribe:
-      - label: Transcribe Selected Items
+      - label: Litteroi valitut tietueet
         id: item-transcribe
         submenu:
-          - label: With Tropy
+          - label: Tropylla
             command: app:transcribe-item
             enabled: false
     metadata-list:
-      - label: New Field …
+      - label: Uusi kenttä…
         command: app:create-field
     metadata-field:
-      - label: Remove Field
+      - label: Poista kenttä
         command: app:delete-field
         condition: isExtra
     trash:
@@ -1433,9 +1433,9 @@ fi-FI:
         command: app:destroy-item
         condition: '!isReadOnly'
     photo:
-      - label: Duplicate Photo
+      - label: Kuvan kaksoiskappale
         command: app:duplicate-photo
-      - label: Move Photo to New Item
+      - label: Siirrä kuva uuteen tietueeseen
         command: app:explode-photo
       - label: Poista kuva
         command: app:delete-photo
@@ -1446,24 +1446,24 @@ fi-FI:
     photo-read-only:
       - label: Näytä alkuperäinen tiedosto…
         command: app:show-in-folder
-      - label: Open in External Viewer…
+      - label: Avaa erillisessä katselimessa…
         command: app:open-path
       - label: Kopioi kuvan linkki
         command: app:copy-photo-link
-      - label: Export Photo
+      - label: Vie kuva
         id: extract
         submenu:
-          - label: To File
+          - label: Tiedostoon
             command: app:extract-photo
-          - label: To Clipboard
+          - label: Leikepöydälle
             command: app:copy-photo
-      - label: Transcribe Photo
+      - label: Litteroi kuva
         id: transcribe
         submenu:
-          - label: With Tropy
+          - label: Tropylla
             command: app:transcribe-photo
             enabled: false
-      - label: Consolidate Photo
+      - label: Konsolidoi kuva
         command: app:consolidate-photo
     photo-rotate:
       - label: Kierrä vasemmalle
