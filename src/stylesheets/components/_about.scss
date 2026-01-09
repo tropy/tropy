@@ -26,8 +26,12 @@
     flex: 0 0 auto;
     width: 180px;
     height: 180px;
-    background: icon-url("about/app-icon-#{$theme}.svg") no-repeat 0 0;
+    background: icon-url("about/app-icon-light.svg") no-repeat 0 0;
     margin-right: 40px;
+
+    @media (prefers-color-scheme: dark) {
+      background: icon-url("about/app-icon-dark.svg") no-repeat 0 0;
+    }
   }
 
   h1 {
@@ -59,26 +63,6 @@
     margin-bottom: 19px;
     cursor: text;
     user-select: text;
-  }
-
-  .donate {
-    display: none;
-
-    a {
-      display: inline-block;
-      background-color: $donate-btn-bg;
-      color: $donate-btn-color;
-      padding: 0 $space-min;
-      border-radius: $border-radius-small;
-
-      @if $platform == darwin {
-        -webkit-font-smoothing: initial;
-      }
-
-      &:hover {
-        text-decoration: none;
-      }
-    }
   }
 
   .links {

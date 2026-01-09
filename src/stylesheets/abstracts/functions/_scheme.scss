@@ -1,16 +1,10 @@
-// stylelint-disable block-closing-brace-empty-line-before
-
-@use "../constants" as *;
-
 //
 // Scheme helper
 // --------------------------------------------------
 
-@function scheme($light, $dark) {
-  @if $theme == light {
-    @return $light;
-
-  } @else {
-    @return $dark;
-  }
+@function --scheme(--light, --dark) {
+  result: if(
+    media(prefers-color-scheme: light): var(--light);
+    else: var(--dark);
+  );
 }
