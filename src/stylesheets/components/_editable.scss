@@ -7,6 +7,10 @@
 .editable {
   flex: 1 1 auto;
   min-width: 0; // Fix truncation
+
+  &.active {
+    line-height: normal;
+  }
 }
 
 .editable-control {
@@ -22,7 +26,7 @@
     calc(
       100% + #{2 * ($editable-border-width + $editable-padding-horizontal)}
     );
-  line-height: normal;
+  line-height: round(up, 1lh, 2px);
   padding: $editable-padding-vertical $editable-padding-horizontal;
   border: $editable-border-width solid $editable-border-color;
   color: $editable-color;
