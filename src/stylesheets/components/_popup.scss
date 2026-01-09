@@ -24,7 +24,7 @@ $popup-focus-animations: (
 }
 
 #popup-root {
-  position: absolute;
+  position: fixed; // Account for optional border on html
   left: 0;
   top: 0;
   z-index: $zindex-popup;
