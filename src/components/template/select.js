@@ -1,33 +1,31 @@
-import React from 'react'
+import { useIntl } from 'react-intl'
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
-import { ResourceSelect } from '../resource/select.js'
 import { Select } from '../select.js'
-import { match } from '../../collate.js'
+import * as collate from '../../collate.js'
 import { selectTemplatesByType } from '../../selectors/ontology.js'
 
-
-export const TemplateSelect = React.forwardRef(({
+export const TemplateSelect = ({
   isMixed,
+  tabIndex = -1,
   type,
+  match = (tpl, query) => (collate.match(tpl.name, query, /\b\w/g)),
   ...props
-}, ref) => {
+}) => {
+  let intl = useIntl()
+  let placeholder = (props.placeholder) ?
+      intl.formatMessage({ id: props.placeholder }) : null
+
   let options = useSelector(state =>
     selectTemplatesByType(state, { type }))
 
   return (
-    <ResourceSelect
+    <Select
       {...props}
       className={cx('template-select', { mixed: isMixed })}
-      options={options}
-      ref={ref}/>
+      match={match}
+      placeholder={placeholder}
+      tabIndex={tabIndex}
+      options={options}/>
   )
-})
-
-TemplateSelect.defaultProps = {
-  ...Select.defaultProps,
-  match: (tpl, query) => (
-    match(tpl.name, query, /\b\w/g)
-  ),
-  tabIndex: -1
 }
