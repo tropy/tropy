@@ -75,22 +75,23 @@ export class Store {
   remove = async (asset) => {
     try {
       if (!this.root)
-        throw new Error('missing asset root')
+        throw new Error('missing store root')
 
       if (!(asset instanceof Asset))
         asset = new Asset(asset)
 
       let path = this.getPathFor(asset)
       if (path !== asset.path)
-        throw new Error('unexpected asset path')
+        throw new Error('unexpected asset :qpath')
 
       debug(`removing "${path}" from store...`)
       await rm(path, { force: true, maxRetries: 3 })
 
     } catch (e) {
       warn({
-        stack: e.stack
-      }, `failed removing "${asset.path}" from store "${this.root}"`)
+        stack: e.stack,
+        store: this.root
+      }, `failed removing "${asset.path}" from store`)
     }
   }
 
