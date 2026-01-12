@@ -1,4 +1,3 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
 import { Select } from '../select.js'
 import { Highlight } from '../completions.js'
@@ -7,46 +6,41 @@ import * as collate from '../../collate.js'
 import { titlecase } from '../../common/util.js'
 import { getDatatypeList, getPropertyList } from '../../selectors/index.js'
 
-export const DataTypeSelect = React.forwardRef((props, ref) => {
+export const DataTypeSelect = (props) => {
   let options = useSelector(getDatatypeList)
   return (
-    <ResourceSelect ref={ref} {...props} options={options}/>
-  )
-})
-
-export const PropertySelect = React.forwardRef((props, ref) => {
-  let options = useSelector(getPropertyList)
-  return (
-    <ResourceSelect ref={ref} {...props} options={options}/>
-  )
-})
-
-export const ResourceSelect = React.forwardRef((props, ref) => {
-  let intl = useIntl()
-  let placeholder = (props.placeholder) ?
-      intl.formatMessage({ id: props.placeholder }) :
-    null
-
-  return (
-    <Select ref={ref} {...props} placeholder={placeholder}/>
-  )
-})
-
-ResourceSelect.defaultProps = {
-  ...Select.defaultProps,
-  className: 'resource-select',
-  match: (res, query) => (
-    match(res, ...query.split(':', 2).reverse())
-  ),
-  tabIndex: -1,
-  toText: (value, { matchData } = {}) => (
-    <>
-      <Label resource={value} matchData={matchData}/>
-      <Id resource={value} matchData={matchData}/>
-    </>
+    <ResourceSelect {...props} options={options}/>
   )
 }
 
+export const PropertySelect = (props) => {
+  let options = useSelector(getPropertyList)
+  return (
+    <ResourceSelect {...props} options={options}/>
+  )
+}
+
+export const ResourceSelect = ({
+  className = 'resource-select',
+  match = matchResource,
+  tabIndex = -1,
+  toText = renderResource,
+  ...props
+}) => {
+  let intl = useIntl()
+  let placeholder = (props.placeholder) ?
+      intl.formatMessage({ id: props.placeholder }) : null
+
+  return (
+    <Select
+      {...props}
+      className={className}
+      match={match}
+      placeholder={placeholder}
+      tabIndex={tabIndex}
+      toText={toText}/>
+  )
+}
 
 export const Label = ({ resource, matchData }) => (
   <span className="truncate">
@@ -63,7 +57,6 @@ export const Label = ({ resource, matchData }) => (
     )}
   </span>
 )
-
 
 export const Id = ({ resource, matchData }) => (
   <span className="mute truncate">
@@ -82,8 +75,18 @@ export const Id = ({ resource, matchData }) => (
   </span>
 )
 
+function renderResource(value, { matchData } = {}) {
+  return (
+    <>
+      <Label resource={value} matchData={matchData}/>
+      <Id resource={value} matchData={matchData}/>
+    </>
+  )
+}
 
-function match(res, query, prefix) {
+function matchResource(res, q) {
+  let [query, prefix] = q.split(':', 2).reverse()
+
   if (prefix != null) {
     return res.prefix &&
       res.prefix.toLowerCase() === prefix &&
