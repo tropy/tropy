@@ -82,7 +82,7 @@ export class Store {
 
       let path = this.getPathFor(asset)
       if (path !== asset.path)
-        throw new Error('unexpected asset :qpath')
+        throw new Error('unexpected asset path')
 
       debug(`removing "${path}" from store...`)
       await rm(path, { force: true, maxRetries: 3 })
