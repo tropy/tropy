@@ -95,16 +95,13 @@ export class Store {
     }
   }
 
-  prune = async (db) => {
+  prune = async (db, { basePath }) => {
     if (this.root) {
-      for (let asset of (await mod.orphaned(db))) {
+      for (let asset of (await mod.orphaned(db, basePath))) {
         await this.remove({ protocol: 'file', ...asset })
       }
     }
 
-    // NB this removes all deleted photos. In case some files
-    // failed to be removed above, they will stay permanently
-    // in the store folder.
     await mod.purge(db)
   }
 
