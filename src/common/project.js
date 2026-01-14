@@ -332,7 +332,7 @@ export async function list(db, { basePath }) {
     ...select('id', 'path', 'protocol').from('photos'),
     ({ id, path, protocol }) => {
       path = (protocol === 'file')
-        ? resolve(basePath, normalize(path))
+        ? (basePath ? resolve(basePath, normalize(path)) : normalize(path))
         : `${protocol}://${path}`
       assets.set(path, id)
     })
