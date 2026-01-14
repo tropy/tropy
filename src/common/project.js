@@ -321,6 +321,25 @@ export async function load(db) {
   return project
 }
 
+/**
+  * Returns a mapping of all asset URLs to ids in the project.
+  * For local assets the file path is returned, resolved using `basePath`.
+  */
+export async function list(db, { basePath }) {
+  let assets = new Map
+
+  await db.each(
+    ...select('id', 'path', 'protocol').from('photos'),
+    ({ id, path, protocol }) => {
+      path = (protocol === 'file')
+        ? resolve(basePath, normalize(path))
+        : `${protocol}://${path}`
+      assets.set(path, id)
+    })
+
+  return assets
+}
+
 export async function save(db, { id, ...props }, basePath) {
   if (basePath && props.store)
     props.store = relative(basePath, props.store)
