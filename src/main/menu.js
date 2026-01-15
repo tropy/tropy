@@ -606,6 +606,11 @@ Menu.ItemConditions = {
     return project == null || project.isReadOnly
   },
 
+  isProjectManaged({ app, win }) {
+    let project = app.getProject(win)
+    return project?.isManaged
+  },
+
   isProjectOpen({ app, win }) {
     return app.getProject(win) != null
   }
