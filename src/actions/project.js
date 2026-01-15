@@ -47,6 +47,18 @@ export default {
     }
   },
 
+  prune(payload = {}, meta = {}) {
+    return {
+      type: PROJECT.PRUNE,
+      payload,
+      meta: {
+        cmd: 'project',
+        prompt: true,
+        ...meta
+      }
+    }
+  },
+
   reindex(payload = {}, meta = {}) {
     return {
       type: PROJECT.REINDEX,

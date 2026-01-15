@@ -1,11 +1,17 @@
+import assert from 'node:assert/strict'
+import { rm } from 'node:fs/promises'
+import { dirname, relative } from 'node:path'
 import { call, put, select } from 'redux-saga/effects'
 import { Command } from './command.js'
 import { PROJECT } from '../constants/index.js'
-import { pick } from '../common/util.js'
+import { prompt } from '../dialog.js'
+import { ls } from '../common/fs.js'
+import { debug, info, warn } from '../common/log.js'
+import { pick, pMap } from '../common/util.js'
 import * as act from '../actions/index.js'
 import { Storage } from '../storage.js'
 import photo from '../models/photo.js'
-import { load, optimize, reindex, resolveBasePath, save } from '../common/project.js'
+import { list, load, optimize, reindex, resolveBasePath, save } from '../common/project.js'
 
 
 export class Optimize extends Command {
@@ -18,6 +24,69 @@ export class Optimize extends Command {
 
 Optimize.register(PROJECT.OPTIMIZE)
 
+
+export class Prune extends Command {
+  *exec() {
+    let { db } = this.options
+    let { meta } = this.action
+
+    let { project } = yield select()
+    if (!project.isManaged)
+      return 0
+
+    let managed = yield call(list, db, project)
+    let orphans = yield call(ls, project.store, {
+      filter: (_, path) => !managed.has(path),
+      recursive: false
+    })
+
+    if (orphans.length > 0) {
+      if (meta.prompt) {
+        let { cancel } = yield call(this.confirm, orphans, project.store)
+        if (cancel) {
+          info(`found ${orphans.length} orphaned file(s) in project store`)
+          return 0
+        }
+      }
+
+      info({
+        orphans,
+        store: project.store
+      }, `removing ${orphans.length} orphaned file(s) from project store`)
+      yield call(pMap, orphans, this.remove, { concurrency: 5 }, project.store)
+      return orphans.length
+    } else {
+      info('no orphaned files found in project store')
+      return 0
+    }
+  }
+
+  confirm = async (orphans, store) => {
+    try {
+      this.suspend()
+      return prompt(PROJECT.PRUNE, {
+        detail: orphans.map(path => relative(store, path)).join('\n')
+      })
+    } finally {
+      this.resume()
+    }
+  }
+
+  remove = async (path, _, store) => {
+    try {
+      assert(store, 'missing asset folder')
+      assert.equal(dirname(path), store, 'may only remove files in asset folder')
+      debug(`removing orphaned file "${relative(store, path)}" from store`)
+      await rm(path, { force: true, maxRetries: 3 })
+    } catch (e) {
+      warn({
+        stack: e.stack
+      }, `failed removing "${path}" from store`)
+    }
+  }
+}
+
+Prune.register(PROJECT.PRUNE)
 
 export class Reindex extends Command {
   *exec() {
