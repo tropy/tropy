@@ -467,6 +467,9 @@ export class Tropy extends EventEmitter {
     this.on('app:optimize-project', () =>
       this.dispatch(act.project.optimize(), this.wm.current()))
 
+    this.on('app:prune-project', () =>
+      this.dispatch(act.project.prune(), this.wm.current()))
+
     this.on('app:import', () =>
       this.import())
     this.on('app:import-directory', () =>
