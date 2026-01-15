@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { rm } from 'node:fs/promises'
-import { dirname, relative } from 'node:path'
+import { dirname, join, relative } from 'node:path'
 import { call, put, select } from 'redux-saga/effects'
 import { Command } from './command.js'
 import { PROJECT } from '../constants/index.js'
@@ -35,8 +35,10 @@ export class Prune extends Command {
       return 0
 
     let managed = yield call(list, db, project)
+    debug(`found ${managed.size} file(s) managed by project`)
+
     let orphans = yield call(ls, project.store, {
-      filter: (_, path) => !managed.has(path),
+      filter: (entry) => !managed.has(join(project.store, entry.name)),
       recursive: false
     })
 
