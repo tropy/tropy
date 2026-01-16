@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { rm } from 'node:fs/promises'
-import { dirname, join, relative } from 'node:path'
+import { basename, dirname, join } from 'node:path'
 import { call, put, select } from 'redux-saga/effects'
 import { Command } from './command.js'
 import { PROJECT } from '../constants/index.js'
@@ -43,19 +43,21 @@ export class Prune extends Command {
     })
 
     if (orphans.length > 0) {
+      let files = orphans.map(file => basename(file))
+      info({
+        files,
+        store: project.store
+      }, `found ${files.length} orphaned file(s) in project store`)
+
       if (meta.prompt) {
-        let { cancel } = yield call(this.confirm, orphans, project.store)
+        let { cancel } = yield call(this.confirm, files)
         if (cancel) {
-          info(`found ${orphans.length} orphaned file(s) in project store`)
           return 0
         }
       }
 
-      info({
-        orphans,
-        store: project.store
-      }, `removing ${orphans.length} orphaned file(s) from project store`)
       yield call(pMap, orphans, this.remove, { concurrency: 5 }, project.store)
+      info(`removed ${orphans.length} orphaned file(s) from project store`)
       return orphans.length
     } else {
       info('no orphaned files found in project store')
@@ -63,11 +65,13 @@ export class Prune extends Command {
     }
   }
 
-  confirm = async (orphans, store) => {
+  confirm = async (files) => {
+    let count = files.length
     try {
       this.suspend()
       return prompt(PROJECT.PRUNE, {
-        detail: orphans.map(path => relative(store, path)).join('\n')
+        detail: files.slice(0, 100).join(count < 10 ? '\n' : ', '),
+        values: { count }
       })
     } finally {
       this.resume()
@@ -78,7 +82,7 @@ export class Prune extends Command {
     try {
       assert(store, 'missing asset folder')
       assert.equal(dirname(path), store, 'may only remove files in asset folder')
-      debug(`removing orphaned file "${relative(store, path)}" from store`)
+      debug(`removing orphaned file "${basename(path)}" from store`)
       await rm(path, { force: true, maxRetries: 3 })
     } catch (e) {
       warn({
