@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 import { extname, dirname } from 'node:path'
 import { ipcRenderer as ipc, clipboard } from 'electron'
+import { IntlMessageFormat } from 'intl-messageformat'
 import ARGS from './args.js'
 import { counter, get } from './common/util.js'
 import { crashReport, warn } from './common/log.js'
@@ -14,6 +15,10 @@ let STORE
 
 function t(...args) {
   return get(STORE.getState(), ['intl', 'messages', ...args])
+}
+
+function f(message, ...opts) {
+  return new IntlMessageFormat(message, ARGS.locale).format(...opts)
 }
 
 function start(store) {
@@ -45,6 +50,10 @@ function onClosed(_, { id, payload, error }) {
 function show(type, options = {}) {
   return new Promise((resolve, reject) => {
     let id = seq.next().value
+    if (options.message) {
+      options.message = f(options.message, options.values)
+      options.values = null
+    }
     ipc.send('wm', 'dialog', { id, type, options })
     pending[id] = { resolve, reject }
   })
