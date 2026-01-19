@@ -73,7 +73,6 @@ class PhotoGrid extends PhotoIterator {
       cols={columns}
       data={this.props.data}
       isDisabled={this.props.isDisabled}
-      keymap={this.props.keymap.SelectionGrid}
       onContextMenu={this.props.onContextMenu}
       onDelete={this.handleDelete}
       onItemOpen={this.handleItemOpen}

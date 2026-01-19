@@ -1,45 +1,93 @@
-import React from 'react'
-import { SelectionIterable } from './iterable.js'
+import { memo, useEffect, useRef } from 'react'
 import cx from 'classnames'
-import { createClickHandler } from '../util.js'
+import { Thumbnail } from '../photo/thumbnail.js'
+import { useClickHandler } from '../../hooks/use-click-handler.js'
+import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
+import { useEvent } from '../../hooks/use-event.js'
+import { pick } from '../../common/util.js'
 
 
-class SelectionTile extends SelectionIterable {
-  get classes() {
-    return {
-      ...super.classes,
-      tile: true
-    }
-  }
+export const SelectionTile = memo(({
+  getAdjacent,
+  isActive,
+  isDisabled,
+  isLast,
+  isSortable,
+  photo,
+  selection,
+  size = 48,
+  onContextMenu,
+  onDropSelection,
+  onItemOpen,
+  onSelect
+}) => {
+  let container = useRef()
 
-  handleClick = createClickHandler({
-    onClick: this.select,
-    onDoubleClick: this.open
+  let { isDragging, isOver, offset, drag, drop } = useDragDropSelection({
+    container,
+    photo,
+    selection,
+    isVertical: false,
+    canDrag: !isDisabled,
+    getAdjacent,
+    onDropSelection
   })
 
+  useEffect(() => {
+    if (isActive) {
+      container.current?.scrollIntoViewIfNeeded()
+    }
+  }, [isActive])
 
-  render() {
-    return this.connect(
-      <li
-        className={cx(this.classes)}
-        ref={this.container}
-        onContextMenu={this.handleContextMenu}
-        onClick={this.handleClick}>
-        <div className="tile-state">
-          {this.renderThumbnail()}
-        </div>
-      </li>
-    )
-  }
+  let select = useEvent(() => {
+    onSelect(selection)
+  })
 
-  static defaultProps = {
-    ...SelectionIterable.defaultProps,
-    size: 512
-  }
-}
+  let open = useEvent(() => {
+    onItemOpen(selection)
+  })
 
-const SelectionTileContainer = SelectionTile.withDragAndDrop()
+  let handleClick = useClickHandler({
+    onClick: select,
+    onDoubleClick: open
+  })
 
-export {
-  SelectionTileContainer as SelectionTile
-}
+  let handleContextMenu = useEvent((event) => {
+    select()
+    onContextMenu(
+      event,
+      isDisabled ? 'selection-read-only' : 'selection',
+      pick(photo, ['id', 'item', 'path', 'protocol'], {
+        selection: selection.id
+      }))
+  })
+
+  let direction = offset ? 'after' : 'before'
+
+  return (
+    <li
+      ref={drag(drop(container))}
+      className={cx({
+        'active': isActive,
+        'dragging': isDragging,
+        'drop-target': isSortable,
+        'last': isLast,
+        'over': isOver,
+        'selection': true,
+        'tile': true,
+        [direction]: isOver && offset != null
+      })}
+      onContextMenu={handleContextMenu}
+      onClick={handleClick}>
+      <div className="tile-state">
+        <Thumbnail
+          {...pick(selection, Thumbnail.keys)}
+          consolidated={photo.consolidated}
+          color={photo.color}
+          mimetype={photo.mimetype}
+          orientation={photo.orientation}
+          size={size}/>
+      </div>
+    </li>
+  )
+})
