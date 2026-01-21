@@ -50,7 +50,7 @@
     "test:renderer": "electron-mocha --no-sandbox --renderer \"mocha/{,!(main)/**}/*_test.js\"",
     "posttest": "shx rm -rf internal mocha",
     "preversion": "npm run lint && npm test",
-    "version": "node scripts/version.js && git add res/linux"
+    "version": "node scripts/version.js && git add res/linux CITATION.cff"
   },
   "devDependencies": {
     "@babel/core": "^7.12.13",
