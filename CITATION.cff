@@ -22,5 +22,5 @@ abstract: >-
   allowing users to annotate, tag,
   and structure their research photo collections effectively.
 license: AGPL-3.0-or-later
-version: 1.17.2
-date-released: '2025-11-27'
+version: 1.17.3
+date-released: '2026-01-21'
