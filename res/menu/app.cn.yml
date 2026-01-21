@@ -167,6 +167,9 @@ cn:
           command: app:optimize-cache
         - label: 优化数据库
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: 重新索引项目数据库
           command: app:reindex-project
         - type: separator
@@ -403,6 +406,9 @@ cn:
           command: app:optimize-cache
         - label: 优化数据库
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: 重新索引项目数据库
           command: app:reindex-project
         - type: separator
@@ -616,6 +622,9 @@ cn:
           command: app:optimize-cache
         - label: 优化项目数据库
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: 重新索引项目数据库
           command: app:reindex-project
         - type: separator

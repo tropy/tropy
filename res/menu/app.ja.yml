@@ -167,6 +167,9 @@ ja:
           command: app:optimize-cache
         - label: プロジェクトのデータベースを最適化
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: プロジェクトのデータベースを再インデックス化
           command: app:reindex-project
         - type: separator
@@ -403,6 +406,9 @@ ja:
           command: app:optimize-cache
         - label: プロジェクトのデータベースを最適化
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: プロジェクトのデータベースを再インデックス化
           command: app:reindex-project
         - type: separator
@@ -616,6 +622,9 @@ ja:
           command: app:optimize-cache
         - label: プロジェクトのデータベースを最適化
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: プロジェクトのデータベースを再インデックス化
           command: app:reindex-project
         - type: separator

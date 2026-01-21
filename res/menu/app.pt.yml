@@ -167,6 +167,9 @@ pt:
           command: app:optimize-cache
         - label: Otimizar Base de Dados do Projeto
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: Reindexar Base de Dados do Projeto
           command: app:reindex-project
         - type: separator
@@ -403,6 +406,9 @@ pt:
           command: app:optimize-cache
         - label: Otimizar Base de Dados do Projeto
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: Reindexar Base de Dados do Projeto
           command: app:reindex-project
         - type: separator
@@ -616,6 +622,9 @@ pt:
           command: app:optimize-cache
         - label: Otimizar Base de Dados do Projeto
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: Reindexar Base de Dados do Projeto
           command: app:reindex-project
         - type: separator

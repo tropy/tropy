@@ -167,6 +167,9 @@ nl-NL:
           command: app:optimize-cache
         - label: Projectdatabank optimaliseren
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: Projectdatabank opnieuw indexeren
           command: app:reindex-project
         - type: separator
@@ -403,6 +406,9 @@ nl-NL:
           command: app:optimize-cache
         - label: Projectdatabank optimaliseren
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: Projectdatabank opnieuw indexeren
           command: app:reindex-project
         - type: separator
@@ -616,6 +622,9 @@ nl-NL:
           command: app:optimize-cache
         - label: Projectdatabank optimaliseren
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: Projectdatabank opnieuw indexeren
           command: app:reindex-project
         - type: separator

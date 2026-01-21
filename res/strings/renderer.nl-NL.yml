@@ -425,6 +425,17 @@ nl-NL:
           buttons:
             - Nee
             - Ja
+      project:
+        prune:
+          message: >-
+            {count, plural,
+              one {One orphaned file was found.}
+              other {{count} orphaned files were found.}}
+            See the log file for the full list. Do you want to delete all
+            orphaned files now? This action cannot be undone.
+          buttons:
+            - Annuleren
+            - Verwijderen
       dup:
         detail: >-
           Deze foto is al opgenomen in uw project. Weet u zeker dat u de foto

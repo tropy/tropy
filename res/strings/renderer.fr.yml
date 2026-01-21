@@ -4,7 +4,7 @@ fr:
     tags: Tags
     imports: Dernière importation
     trash: Objets supprimés
-    unlisted: Unlisted Items
+    unlisted: Objets non listés
   toolbar:
     import: Importer des photos
     items: |-
@@ -66,11 +66,12 @@ fr:
       title: Luxembourg Centre for Contemporary and Digital History
       url: https://www.c2dh.uni.lu
     text: >-
-      Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
-      historical teaching resources, digital exhibits, and open-source software.
-    trademark: The Tropy name is a registered trademark of {cds}.
+      Tropy est conçu par le {c2dh} et le {rrchnm}, des laboratoires qui créent
+      des ressources pour l'enseignement de l'histoire, des expositions
+      numériques, et des logiciels libres et open-source.
+    trademark: Tropy est une marque déposée de la {cds}.
     donate:
-      title: Donate to Tropy
+      title: Donner à Tropy
       url: https://tropy.org/donate
     release:
       title: Notes de version
@@ -84,13 +85,13 @@ fr:
   project:
     empty: Pour commencer, faire glisser vos photos dans Tropy
     file:
-      open: Open project {path}
+      open: Ouvrir le projet {path}
       missing: Find missing project {path}
-      remove: Remove project from list
+      remove: Retirer le projet de la liste
     recent:
       search:
-        placeholder: Filter projects
-        blank: No matching projects
+        placeholder: Filtrer les projets
+        blank: Aucun projet correspondant
     corrupted: >-
       Votre fichier de projet peut être endommagé. Quelques interventions
       manuelles sont peut-être nécessaires pour le réparer. Veuillez consulter
@@ -100,22 +101,22 @@ fr:
       déverrouiller, changez les droits du fichier et ouvrez-le à nouveau.
     new:
       title: Créer un nouveau projet
-      name: Enter a name for the project
+      name: Saisir un nom pour le projet
       type:
-        label: Choose the project type
+        label: Choisir le type de projet
         option:
-          tpy: Advanced
+          tpy: Avancé
           managed: Standard
         hint:
-          tpy: Links to photos at their original location.
-          managed: Copies photos to project folder on import.
-      create: Create Project
+          tpy: Pointer vers les photos à leur emplacement original.
+          managed: Copie les photos dans le dossier du projet lors de l'import.
+      create: Créer un projet
     stats:
       photos: |-
-        {photos, plural,
-          =0 {No photos}
-          one {1 photo}
-          other {# photos}}
+        {count, plural,
+        =0 {Pas de photo}
+        one {1 photo}
+        other {# photos}}
       items: |-
         {items, plural,
           =0 {No items}
@@ -427,6 +428,17 @@ fr:
           buttons:
             - Non
             - Oui
+      project:
+        prune:
+          message: >-
+            {count, plural,
+              one {One orphaned file was found.}
+              other {{count} orphaned files were found.}}
+            See the log file for the full list. Do you want to delete all
+            orphaned files now? This action cannot be undone.
+          buttons:
+            - Annuler
+            - Supprimer
       dup:
         detail: >-
           Cette photo existe déjà dans votre projet. Voulez-vous vraiment

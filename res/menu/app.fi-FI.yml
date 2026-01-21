@@ -167,6 +167,9 @@ fi-FI:
           command: app:optimize-cache
         - label: Optimoi projektien tietokanta
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: Indeksoi uudelleen projektien tietokanta
           command: app:reindex-project
         - type: separator
@@ -403,6 +406,9 @@ fi-FI:
           command: app:optimize-cache
         - label: Optimoi projektien tietokanta
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: Indeksoi uudelleen projektien tietokanta
           command: app:reindex-project
         - type: separator
@@ -616,6 +622,9 @@ fi-FI:
           command: app:optimize-cache
         - label: Optimoi projektien tietokanta
           command: app:optimize-project
+        - label: Optimize Asset Folder
+          command: app:prune-project
+          condition: isProjectManaged
         - label: Indeksoi uudelleen projektien tietokanta
           command: app:reindex-project
         - type: separator

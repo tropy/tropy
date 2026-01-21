@@ -425,6 +425,21 @@ de:
           buttons:
             - Nein
             - Ja"
+      project:
+        prune:
+          message: >-
+            {count, plural,
+
+            one {Eine verwaiste Datei gefunden.}
+
+            other {{count} verwaiste Dateien gefunden}}
+
+            Eine vollständige Liste aller Dateien wurde ins Log geschrieben.
+            Alle verwaisten Dateien jetzt löschen? Dies kann nicht rückgängig
+            gemacht werden.
+          buttons:
+            - Abbrechen
+            - Löschen
       dup:
         detail: Dieses Foto ist bereits im Projekt vorhanden. Nochmals importieren?
         checkboxLabel: Auswahl merken

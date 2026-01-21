@@ -413,6 +413,17 @@ cn:
           buttons:
             - 否
             - 是
+      project:
+        prune:
+          message: >-
+            {count, plural,
+              one {One orphaned file was found.}
+              other {{count} orphaned files were found.}}
+            See the log file for the full list. Do you want to delete all
+            orphaned files now? This action cannot be undone.
+          buttons:
+            - 取消
+            - 删除
       dup:
         detail: 此照片已存在于您的项目中。您确定要重新导入它吗?
         checkboxLabel: 记住这个选择

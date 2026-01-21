@@ -426,6 +426,17 @@ ru:
           buttons:
             - Нет
             - Да
+      project:
+        prune:
+          message: >-
+            {count, plural,
+              one {One orphaned file was found.}
+              other {{count} orphaned files were found.}}
+            See the log file for the full list. Do you want to delete all
+            orphaned files now? This action cannot be undone.
+          buttons:
+            - Отменить
+            - Удалить
       dup:
         detail: >-
           Это фото уже существует в вашем проекте. Вы уверены, что хотите

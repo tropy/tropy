@@ -417,6 +417,17 @@ ja:
           buttons:
             - いいえ
             - はい
+      project:
+        prune:
+          message: >-
+            {count, plural,
+              one {One orphaned file was found.}
+              other {{count} orphaned files were found.}}
+            See the log file for the full list. Do you want to delete all
+            orphaned files now? This action cannot be undone.
+          buttons:
+            - キャンセル
+            - 削除
       dup:
         detail: この写真はすでにプロジェクトにあります。再度インポートしますか？
         checkboxLabel: この選択を記憶する
