@@ -6,6 +6,7 @@ import { dc } from '../ontology/ns.js'
 
 const defaults = {
   completions: 'datatype',
+  deleteTrash: 'close',
   dup: 'prompt',
   density: 72,
   export: {

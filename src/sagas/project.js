@@ -30,6 +30,7 @@ import {
   call,
   delay,
   put,
+  select,
   take,
   takeEvery as every,
   race
@@ -159,7 +160,21 @@ function *teardown({ db, project, store }) {
 
   if (db.hasBeenModified) {
     debug('pruning db...')
-    yield call(mod.item.prune, db)
+    // Determine prune timing based on deleteTrash setting for managed projects
+    // For advanced projects, always use 1 month delay
+    let pruneSince = '-1 month'
+    if (project.isManaged) {
+      let { deleteTrash } = yield select(state => state.settings)
+      // close = delete immediately, daily/weekly/monthly = delete after time period
+      const deleteTrashMap = {
+        'close': false,
+        'daily': '-1 day',
+        'weekly': '-1 week',
+        'monthly': '-1 month'
+      }
+      pruneSince = deleteTrashMap[deleteTrash] ?? false
+    }
+    yield call(mod.item.prune, db, pruneSince)
     yield call(mod.list.prune, db)
     yield call(mod.value.prune, db)
     yield call(mod.photo.prune, db)

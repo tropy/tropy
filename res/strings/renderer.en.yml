@@ -190,6 +190,13 @@ en:
           skip: Skip duplicate photos
           import: Accept duplicate photos
           prompt: Ask me every time
+      deleteTrash:
+        label: Delete trashed items
+        option:
+          close: When closing the project
+          daily: After 1 day
+          weekly: After 1 week
+          monthly: After 1 month
       density:
         label: Default density (ppi)
         title: Used for PDF, SVG and other scalable formats

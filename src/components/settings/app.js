@@ -10,6 +10,7 @@ import { ImportSettings } from './import.js'
 import { LocaleSettings } from './locale.js'
 import { StyleSettings } from './style.js'
 import { TemplateSettings } from './template.js'
+import { TrashSettings } from './trash.js'
 import act from '../../actions/settings.js'
 
 
@@ -28,6 +29,10 @@ export function AppSettings() {
         onChange={handleSettingsUpdate}/>
       <hr/>
       <ImportSettings
+        config={settings}
+        onChange={handleSettingsUpdate}/>
+      <hr/>
+      <TrashSettings
         config={settings}
         onChange={handleSettingsUpdate}/>
       <hr/>
