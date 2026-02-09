@@ -4,6 +4,7 @@ import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useActions } from '../../hooks/use-action.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { usePasteEvent } from '../../hooks/use-paste-event.js'
+import { usePasteImageEvent } from '../../hooks/use-paste-image-event.js'
 import { useTheme } from '../../hooks/use-theme.js'
 
 import { ItemGrid, ItemTable, NoItems } from '../item/index.js'
@@ -75,6 +76,11 @@ export const ProjectView = ({
 
   usePasteEvent('application/json', (data) => {
     handleItemImport({ data })
+  })
+
+  usePasteImageEvent((data) => {
+    // Only allow clipboard image paste in standard (managed) projects
+    if (!isReadOnly && project.isManaged) handleItemImport(data)
   })
 
   let [{ canDrop }, drop] = useDropPhotoFiles({
