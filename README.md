@@ -47,7 +47,7 @@ Clone this [repository][] and install Tropy's dependencies:
     $ npm install
     $ node scripts/rebuild.js --force
 
-On Linux, use the `--global-libvips` flag when rebuiliding
+On Linux, use the `--global-libvips` flag when rebuilding
 to link against the system's libvips.
 
 To test that everything works, run:
