@@ -1,7 +1,7 @@
 import { ctx, props as properties } from '../common/export.js'
 import { xsd } from '../ontology/ns.js'
 import { version } from '../common/release.js'
-import { compact, blank, URI, get, pick } from '../common/util.js'
+import { compact, blank, URI, get, pick, list } from '../common/util.js'
 import { serialize } from '../editor/serialize.js'
 
 const RESERVED = Object.fromEntries(properties.all.map(prop => ([prop, true])))
@@ -16,11 +16,41 @@ export const getExportItems = (state, props = {}) => {
   let graph = ids.map(id =>
     exportItem(context, state.items[id], state))
 
+  // console.log(graph)
+
   return {
     '@context': context,
     '@graph': graph,
     version
   }
+}
+
+const buildNestedPath = (listId, state) => {
+  // store all list IDs as the path is traversed
+  const listIds = []
+
+  // start with item's current list
+  let currentList = state.lists[listId]
+
+  // iterate until we reach the top-level list (excludes root)
+  while (currentList.id) {
+    // add current list ID
+    listIds.push(currentList.id)
+
+    // get the ID of current list's parent list
+    let parentListId = currentList.parent
+
+    // assign parent list as current list to continue traversing
+    currentList = state.lists[parentListId]
+  }
+
+  // reverse the path from top-level parent to child
+  listIds.reverse()
+
+  // map all list IDs from path to their respective names
+  return listIds
+    .map(id => get(state, ['lists', id, 'name']))
+    .filter(x => !blank(x))
 }
 
 const exportItem = (context, item, state) => {
@@ -32,9 +62,13 @@ const exportItem = (context, item, state) => {
   addMetadata(context, output, state.metadata[item.id], state.ontology)
 
   if (item.lists.length > 0) {
-    output.list = item.lists
-      .map(id => get(state, ['lists', id, 'name']))
-      .filter(x => !blank(x))
+    output.list = []
+
+    // for each list that the item belongs to, build out the nested path
+    item.lists.forEach(listId => {
+      let nestedPath = buildNestedPath(listId, state)
+      output.list.push(nestedPath)
+    })
   }
 
   if (item.tags.length > 0) {
