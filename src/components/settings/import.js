@@ -17,7 +17,13 @@ export function ImportSettings({ config, onChange }) {
       <FormToggle
         id="prefs.app.localtime"
         name="localtime"
+        isCompact
         value={config.localtime}
+        onChange={onChange}/>
+      <FormToggle
+        id="prefs.app.createLists"
+        name="createLists"
+        value={config.createLists}
         onChange={onChange}/>
       <TitleSettings
         config={config.title}
