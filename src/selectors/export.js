@@ -1,7 +1,7 @@
 import { ctx, props as properties } from '../common/export.js'
 import { xsd } from '../ontology/ns.js'
 import { version } from '../common/release.js'
-import { compact, blank, URI, get, pick, list } from '../common/util.js'
+import { compact, blank, URI, get, pick } from '../common/util.js'
 import { serialize } from '../editor/serialize.js'
 
 const RESERVED = Object.fromEntries(properties.all.map(prop => ([prop, true])))
@@ -15,8 +15,6 @@ export const getExportItems = (state, props = {}) => {
 
   let graph = ids.map(id =>
     exportItem(context, state.items[id], state))
-
-  // console.log(graph)
 
   return {
     '@context': context,
