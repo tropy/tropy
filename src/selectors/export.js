@@ -33,7 +33,7 @@ const exportItem = (context, item, state) => {
 
   if (item.lists.length > 0) {
     output.list = item.lists
-      .map(id => get(state, ['lists', id, 'name']))
+      .map(id => exportList(id, state))
       .filter(x => !blank(x))
   }
 
@@ -49,6 +49,16 @@ const exportItem = (context, item, state) => {
   }
 
   return output
+}
+
+const exportList = (list, state) => {
+  let output = []
+  while (list > 0) {
+    const { name, parent } = get(state, ['lists', list])
+    output.unshift(name.replace(/[/\\]/g, '\\$&'))
+    list = parent
+  }
+  return output.join('/')
 }
 
 const exportPhoto = (context, photo, state) => {
