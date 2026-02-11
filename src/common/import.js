@@ -125,7 +125,7 @@ export function *eachItem(graph) {
     yield ({
       data: getMetadata(data, 'item'),
       id: get(data, ['@id', 0]),
-      // lists: (data[tropy.list] || []).map(literal),
+      lists: (data[tropy.list] || []).map(n => toListPath(n['@value'])),
       photos: flatten(data[tropy.photo]).map(getPhoto),
       tags: (data[tropy.tag] || []).map(n => n['@value']),
       template: get(data, [tropy.template, 0, '@id']),
@@ -134,6 +134,9 @@ export function *eachItem(graph) {
 
   }
 }
+
+const toListPath = (value) =>
+  value.split(/(?<!\\)\//).map(s => s.replace(/\\([/\\])/g, '$1'))
 
 const props = {
   item: [
