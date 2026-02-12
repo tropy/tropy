@@ -1,7 +1,7 @@
 export default {
   1: {
     id: 1,
-    lists: [1],
+    lists: [1, 3],
     photos: [101],
     tags: [3, 8],
     template: 'https://tropy.org/v1/templates/generic',
