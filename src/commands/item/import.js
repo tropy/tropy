@@ -9,7 +9,7 @@ import { fail } from '../../dialog.js'
 import { fromHTML } from '../../editor/serialize.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
-import { ITEM, NAV } from '../../constants/index.js'
+import { ITEM, LIST, NAV } from '../../constants/index.js'
 import win from '../../window.js'
 
 import {
@@ -22,6 +22,7 @@ import {
 } from 'redux-saga/effects'
 
 import {
+  findList,
   findTag,
   getItemTemplate,
   getPhotoTemplate,
@@ -38,6 +39,7 @@ export class Import extends ImportCommand {
     // undo after cancelled (partial) import!
     this.result = []
     this.backlog = []
+    this.newLists = []
 
     yield * this.configure()
 
@@ -100,7 +102,8 @@ export class Import extends ImportCommand {
         photo: getPhotoTemplate(state),
         selection: getSelectionTemplate(state)
       },
-      useLocalTimezone: state.settings.timezone
+      useLocalTimezone: state.settings.timezone,
+      createLists: state.settings.createLists,
     })))
   }
 
@@ -113,7 +116,7 @@ export class Import extends ImportCommand {
         basePath, store, density, db, templates, useLocalTimezone
       } = this.options
 
-      let { list } = this.action.payload
+      let { list: activeList } = this.action.payload
       let item
       let photos = []
 
@@ -139,9 +142,9 @@ export class Import extends ImportCommand {
               data: data.photo
             })
 
-          if (list) {
-            await mod.list.items.add(tx, list, [item.id])
-            item.lists.push(list)
+          if (activeList) {
+            await mod.list.items.add(tx, activeList, [item.id])
+            item.lists.push(activeList)
           }
 
           item.photos.push(photo.id)
@@ -193,20 +196,25 @@ export class Import extends ImportCommand {
 
   *importJSONItem(obj, rel) {
     try {
-      let { db, basePath, templates } = this.options
-      let { list } = this.action.payload
+      let { db, basePath, templates, createLists } = this.options
+      let { list: activeList } = this.action.payload
       let item
       let photos = []
       let selections = []
       let notes = []
       let transcriptions = []
       let tags
+      let newLists = []
 
       yield this.progress()
 
       if (obj.tags.length) {
         tags = yield * this.findOrCreateTags(obj.tags)
       }
+
+      let lists = createLists
+        ? { ...(yield select(state => state.lists)) }
+        : null
 
       yield call(db.transaction, async tx => {
         item = await mod.item.create(
@@ -221,9 +229,11 @@ export class Import extends ImportCommand {
           item.tags = [...tags]
         }
 
-        if (list) {
-          await mod.list.items.add(tx, list, [item.id])
-          item.lists.push(list)
+        await importLists(tx, obj.lists, item, lists, newLists)
+
+        if (activeList && !item.lists.includes(activeList)) {
+          await mod.list.items.add(tx, activeList, [item.id])
+          item.lists.push(activeList)
         }
 
         for (let i = 0; i < obj.photos.length; ++i) {
@@ -276,8 +286,11 @@ export class Import extends ImportCommand {
       })
 
       this.result.push(item.id)
+      this.newLists.push(...newLists)
 
       yield all([
+        ...newLists.map(({ list, idx }) =>
+          put(act.list.insert(list, { idx }))),
         put(act.note.insert(notes)),
         put(act.transcriptions.insert(transcriptions)),
         put(act.selection.insert(selections)),
@@ -318,14 +331,14 @@ export class Import extends ImportCommand {
   }
 
   get redo() {
-    return (this.result && this.result.length > 0) ?
-        act.item.restore(this.result) :
+    return (this.result?.length > 0) ?
+        act.item.restore(this.result, { lists: this.newLists }) :
       null
   }
 
   get undo() {
-    return (this.result && this.result.length > 0) ?
-        act.item.delete(this.result) :
+    return (this.result?.length > 0) ?
+        act.item.delete(this.result, { lists: this.newLists }) :
       null
   }
 }
@@ -363,3 +376,45 @@ const importTranscriptions =
     }
     return result
   }
+
+const importLists = async (tx, paths, item, lists, result = []) => {
+  if (!lists || paths.length === 0)
+    return result
+
+  let leafIds = new Set()
+
+  for (let path of paths) {
+    path = Array.isArray(path) ? path : [path]
+    let parent = LIST.ROOT
+
+    for (let name of path) {
+      let existing = findList(lists, name, parent)
+
+      if (!existing) {
+        let idx = lists[parent]?.children?.length || 0
+        existing = await mod.list.create(tx, {
+          name, parent, position: 1
+        })
+        lists[existing.id] = existing
+        if (lists[parent])
+          lists[parent] = {
+            ...lists[parent],
+            children: [...lists[parent].children, existing.id]
+          }
+        result.push({ list: existing, idx })
+      }
+
+      parent = existing.id
+    }
+
+    if (parent > 0)
+      leafIds.add(parent)
+  }
+
+  for (let listId of leafIds) {
+    await mod.list.items.add(tx, listId, [item.id])
+    item.lists.push(listId)
+  }
+
+  return result
+}
