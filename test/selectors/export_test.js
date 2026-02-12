@@ -71,8 +71,8 @@ describe('Export Selectors', () => {
         expect(item.tag).to.eql(F.items[1].tags.map(id => F.tags[id].name))
       })
 
-      it('includes list names', () => {
-        expect(item.list).to.eql(F.items[1].lists.map(id => F.lists[id].name))
+      it('includes list paths', () => {
+        expect(item.list).to.eql(['A list apart', 'A list apart/A\\/B'])
       })
 
       it('includes photos', () => {
