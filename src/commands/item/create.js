@@ -38,6 +38,7 @@ export class Delete extends Command {
   *exec() {
     let { db } = this.options
     let items = this.action.payload
+    let { lists } = this.action.meta
 
     yield call(mod.item.delete, db, items)
 
@@ -45,7 +46,14 @@ export class Delete extends Command {
       search: true
     }))
 
-    this.undo = act.item.restore(items)
+    if (lists?.length) {
+      for (let { list } of lists.toReversed()) {
+        yield call(mod.list.remove, db, list.id)
+        yield put(act.list.remove(list.id))
+      }
+    }
+
+    this.undo = act.item.restore(items, { lists })
 
     return items
   }
@@ -96,13 +104,21 @@ export class Restore extends Command {
   *exec() {
     let { db } = this.options
     let items = this.action.payload
+    let { lists } = this.action.meta
 
     yield call(mod.item.restore, db, items)
     yield put(act.item.bulk.update([items, { deleted: false }], {
       search: true
     }))
 
-    this.undo = act.item.delete(items)
+    if (lists?.length) {
+      for (let { list, idx } of lists) {
+        yield call(mod.list.restore, db, list.id, list.parent)
+        yield put(act.list.insert(list, { idx }))
+      }
+    }
+
+    this.undo = act.item.delete(items, { lists })
 
     return items
   }
