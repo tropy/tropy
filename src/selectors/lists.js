@@ -10,6 +10,16 @@ function *flatten(children, lists, expand) {
   }
 }
 
+export const findList = (lists, name, parent) => {
+  let parentList = lists[parent]
+  if (!parentList) return null
+  for (let id of parentList.children) {
+    if (lists[id]?.name === name)
+      return lists[id]
+  }
+  return null
+}
+
 export const getListSubTree = memo(
   ({ lists }, { root }) => get(lists, [root, 'children']),
   ({ lists }) => lists,
