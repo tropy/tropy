@@ -137,7 +137,7 @@ export const addOrientation = (image, photo = image) => {
   // Otherwise use image state, but adjust aspect ratio if necessary.
   let { angle, mirror } = image
 
-  if (!rot.isHorizontal) {
+  if (!rot.isHorizontal && image === photo) {
     width = photo.height
     height = photo.width
   }
