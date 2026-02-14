@@ -77,7 +77,6 @@ export class SelectionIterable extends React.PureComponent {
         consolidated={this.props.photo.consolidated}
         color={this.props.photo.color}
         mimetype={this.props.photo.mimetype}
-        orientation={this.props.photo.orientation}
         size={this.props.size}/>
     )
   }

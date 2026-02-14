@@ -78,8 +78,9 @@ export class Image extends Asset {
     return !(this.page < this.numPages)
   }
 
-  do(page = this.page) {
+  do(page = this.page, autoOrient = false) {
     return sharp(this.buffer || this.path, {
+      autoOrient,
       page,
       density: this.density
     })
@@ -185,9 +186,9 @@ export class Image extends Asset {
   }
 
   resize = async (size, selection, { page = this.page } = {}) => {
-    let image = this.do(page)
+    let image = this.do(page, !!selection)
 
-    if (selection != null) {
+    if (selection) {
       image = image.extract({
         left: selection.x,
         top: selection.y,
