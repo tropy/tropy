@@ -2,7 +2,7 @@ import gt from 'semver/functions/gt.js'
 import * as ex from './export.js'
 import { expand } from './json.js'
 import { rdfs, tropy, xsd, dc, dcterms } from '../ontology/index.js'
-import { URI, any, array, map, morph, omit, get } from './util.js'
+import { URI, any, array, map, morph, omit, get, decodeListPath } from './util.js'
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
 export async function normalize(json) {
@@ -125,7 +125,7 @@ export function *eachItem(graph) {
     yield ({
       data: getMetadata(data, 'item'),
       id: get(data, ['@id', 0]),
-      lists: (data[tropy.list] || []).map(n => toListPath(n['@value'])),
+      lists: (data[tropy.list] || []).map(n => decodeListPath(n['@value'])),
       photos: flatten(data[tropy.photo]).map(getPhoto),
       tags: (data[tropy.tag] || []).map(n => n['@value']),
       template: get(data, [tropy.template, 0, '@id']),
@@ -134,9 +134,6 @@ export function *eachItem(graph) {
 
   }
 }
-
-const toListPath = (value) =>
-  value.split(/(?<!\\)\//).map(s => s.replace(/\\([/\\])/g, '$1'))
 
 const props = {
   item: [
