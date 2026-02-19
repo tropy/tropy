@@ -5,6 +5,7 @@ export default {
   CREATE: 'list.create',
   DELETE: 'list.delete',
   EXPAND: 'list.expand',
+  IMPORT: 'list.import',
   INSERT: 'list.insert',
   LOAD: 'list.load',
   MOVE: 'list.move',
