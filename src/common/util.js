@@ -592,6 +592,11 @@ export const URI = {
   }
 }
 
+export const decodeListPath = (path) =>
+  path.split(/(?<!\\)\//).map(s => s.replace(/\\([/\\])/g, '$1'))
+
+export const encodeListPath = (path) =>
+  path.replace(/[/\\]/g, '\\$&')
 
 export const flipMap = (a, b) =>
   a.entries().reduce((m, [k, v]) =>
