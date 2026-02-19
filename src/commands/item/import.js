@@ -9,7 +9,7 @@ import { fail } from '../../dialog.js'
 import { fromHTML } from '../../editor/serialize.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
-import { ITEM, LIST, NAV } from '../../constants/index.js'
+import { ITEM, NAV } from '../../constants/index.js'
 import win from '../../window.js'
 
 import {
@@ -22,12 +22,12 @@ import {
 } from 'redux-saga/effects'
 
 import {
-  findList,
   findTag,
   getItemTemplate,
   getPhotoTemplate,
   getSelectionTemplate
 } from '../../selectors/index.js'
+import { importPaths as importLists } from '../list/import.js'
 
 const { readFile } = fs.promises
 
@@ -229,7 +229,14 @@ export class Import extends ImportCommand {
           item.tags = [...tags]
         }
 
-        await importLists(tx, obj.lists, item, lists, newLists)
+        if (lists) {
+          let leafIds = await importLists(
+            tx, obj.lists, lists, newLists)
+          for (let listId of leafIds) {
+            await mod.list.items.add(tx, listId, [item.id])
+            item.lists.push(listId)
+          }
+        }
 
         if (activeList && !item.lists.includes(activeList)) {
           await mod.list.items.add(tx, activeList, [item.id])
@@ -377,44 +384,3 @@ const importTranscriptions =
     return result
   }
 
-const importLists = async (tx, paths, item, lists, result = []) => {
-  if (!lists || paths.length === 0)
-    return result
-
-  let leafIds = new Set()
-
-  for (let path of paths) {
-    path = Array.isArray(path) ? path : [path]
-    let parent = LIST.ROOT
-
-    for (let name of path) {
-      let existing = findList(lists, name, parent)
-
-      if (!existing) {
-        let idx = lists[parent]?.children?.length || 0
-        existing = await mod.list.create(tx, {
-          name, parent, position: 1
-        })
-        lists[existing.id] = existing
-        if (lists[parent])
-          lists[parent] = {
-            ...lists[parent],
-            children: [...lists[parent].children, existing.id]
-          }
-        result.push({ list: existing, idx })
-      }
-
-      parent = existing.id
-    }
-
-    if (parent > 0)
-      leafIds.add(parent)
-  }
-
-  for (let listId of leafIds) {
-    await mod.list.items.add(tx, listId, [item.id])
-    item.lists.push(listId)
-  }
-
-  return result
-}
