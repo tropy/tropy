@@ -1,5 +1,5 @@
 import { TitleSettings } from './title.js'
-import { FormField, FormToggle, FormToggleGroup } from '../form.js'
+import { FormField, FormToggle, FormToggleGroup, FormElement, Toggle } from '../form.js'
 import { IMAGE } from '../../constants/index.js'
 
 const DUP_OPTS = ['skip', 'import', 'prompt']
@@ -14,17 +14,18 @@ export function ImportSettings({ config, onChange }) {
         value={config.dup}
         options={DUP_OPTS}
         onChange={onChange}/>
-      <FormToggle
-        id="prefs.app.localtime"
-        name="localtime"
-        isCompact
-        value={config.localtime}
-        onChange={onChange}/>
-      <FormToggle
-        id="prefs.app.createLists"
-        name="createLists"
-        value={config.createLists}
-        onChange={onChange}/>
+      <FormElement>
+        <Toggle
+          id="prefs.app.localtime"
+          name="localtime"
+          value={config.localtime}
+          onChange={onChange}/>
+        <Toggle
+          id="prefs.app.createLists"
+          name="createLists"
+          value={config.createLists}
+          onChange={onChange}/>
+      </FormElement>
       <TitleSettings
         config={config.title}
         onChange={onChange}/>
