@@ -62,6 +62,7 @@ program
   .option('--tag <name>', 'set release tag name', process.env.npm_config_tag)
   .option('-s, --silent', 'silence packer output', false)
   .option('--sign', 'sign windows build', true)
+  .option('--no-sign', 'skip windows code signing')
 
   .action(async (args) => {
     try {
