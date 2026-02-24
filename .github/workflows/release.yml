@@ -4,6 +4,7 @@ on:
     tags:
       - v1.*
       - v2.*
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -11,6 +12,7 @@ permissions:
 jobs:
   create-release:
     name: Create Release
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Create GitHub Release
@@ -25,6 +27,7 @@ jobs:
 
   build:
     needs: create-release
+    if: ${{ always() && (needs.create-release.result == 'success' || needs.create-release.result == 'skipped') }}
     name: ${{ matrix.image }} ${{ matrix.arch }} ${{ matrix.tag }}
     runs-on: ${{ matrix.image }}
     environment: release
@@ -102,7 +105,7 @@ jobs:
         run: node scripts/rebuild.js --force --verbose --arch ${{ matrix.arch }}
 
       - name: Setup macOS keychain and signing certificates
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && github.event_name == 'push'
         run: |
           # Create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASS" "$KEYCHAIN"
@@ -136,7 +139,7 @@ jobs:
           NOTARY_KEY_ISSUER: ${{ secrets.APPLE_API_KEY_ISSUER }}
 
       - name: Create release assets
-        run: npm run pack
+        run: npm run pack${{ github.event_name != 'push' && ' -- --no-sign' || '' }}
         env:
           npm_config_arch: ${{ matrix.arch }}
           npm_config_tag: ${{ matrix.tag }}
@@ -146,7 +149,7 @@ jobs:
           SIGN_PASS: ${{ secrets.WIN_SIGN_PASS }}
 
       - name: Upload Linux release assets
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && github.event_name == 'push'
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
@@ -160,7 +163,7 @@ jobs:
           token: ${{ github.token }}
 
       - name: Upload macOS release assets
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && github.event_name == 'push'
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
@@ -174,7 +177,7 @@ jobs:
           token: ${{ github.token }}
 
       - name: Upload Windows release assets
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && github.event_name == 'push'
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
@@ -186,3 +189,11 @@ jobs:
           omitNameDuringUpdate: true
           prerelease: true
           token: ${{ github.token }}
+
+      - name: Upload Windows artifact
+        if: runner.os == 'Windows' && github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tropy-win32-${{ matrix.arch }}
+          path: dist/
+          retention-days: 7
