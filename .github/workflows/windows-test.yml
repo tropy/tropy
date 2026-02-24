@@ -48,7 +48,7 @@ jobs:
           npm_config_arch: ${{ matrix.arch }}
 
       - name: Create package
-        run: npm run pack
+        run: npm run pack -- --no-sign
         env:
           npm_config_arch: ${{ matrix.arch }}
 
