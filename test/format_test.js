@@ -54,6 +54,19 @@ describe('format', () => {
       expect(datetime('2019-02-23')).to.equal('Feb 23, 2019')
     })
 
+    it('shows time zone if given', () => {
+      expect(datetime('2019-02-23T11:09:00Z'))
+        .to.equal('Feb 23, 2019, 11:09:00 AM GMT')
+
+      expect(datetime('2019-02-23T11:09:00-03:00'))
+        .to.equal('Feb 23, 2019, 11:09:00 AM GMT-3')
+    })
+
+    it('shows no time zone if not given', () => {
+      expect(datetime('2019-02-23T11:09:00'))
+        .to.equal('Feb 23, 2019, 11:09:00 AM')
+    })
+
     it('converts invalid dates if possible', () => {
       expect(datetime('2019-02-29')).to.equal('Mar 1, 2019')
     })
