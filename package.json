@@ -15,7 +15,7 @@
     "url": "https://github.com/tropy/tropy/issues"
   },
   "engines": {
-    "node": ">=20",
+    "node": ">=24",
     "npm": ">=10"
   },
   "main": "lib/main/index.js",
@@ -29,8 +29,8 @@
     "rollup": "rollup -c",
     "db": "node scripts/db.js",
     "prebuild": "npm run clean && npm run rollup",
-    "build": "node --disable-warning=ExperimentalWarning scripts/build.js",
-    "pack": "node --disable-warning=ExperimentalWarning scripts/pack.js",
+    "build": "node scripts/build.js",
+    "pack": "node scripts/pack.js",
     "devtools": "electron scripts/devtools.js --data tmp",
     "legal": "node scripts/legal.js",
     "lint": "npm run -s lint:js && npm run -s lint:css",
@@ -77,7 +77,7 @@
     "chai-as-promised": "^8.0.0",
     "chai-dom": "^1.8.2",
     "detect-libc": "^2.0.1",
-    "electron": "^39.1.1",
+    "electron": "^41.0.0",
     "electron-mocha": "^13.0.0",
     "electron-winstaller": "^5.0.0",
     "eslint": "^9.13.0",
