@@ -449,6 +449,11 @@ export class WindowManager extends EventEmitter {
         .on('unresponsive', () => {
           warn(`${type}[${win.id}] has become unresponsive`)
           this.emit('unresponsive', type, win)
+
+          if (this.unloading.has(win)) {
+            warn(`${type}[${win.id}] unresponsive during unload, forcing destroy`)
+            win.destroy()
+          }
         })
 
       webContentsForward(win, [
