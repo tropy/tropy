@@ -488,7 +488,7 @@ ru:
         condition: '!isReadOnly'
     dev:
       - label: Перезагрузить
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Перезагрузить​ стили
         command: win:refresh
@@ -986,7 +986,7 @@ ru:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Перезагрузить
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Перезагрузить​ стили
         command: win:refresh
@@ -1484,7 +1484,7 @@ ru:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Перезагрузить
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Перезагрузить​ стили
         command: win:refresh

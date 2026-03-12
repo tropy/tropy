@@ -123,7 +123,7 @@ nl-NL:
       submenu:
         - label: He&rladen
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: '&Menubalk tonen/verbergen'
@@ -352,7 +352,7 @@ nl-NL:
       submenu:
         - label: He&rladen
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Ware grootte
@@ -578,7 +578,7 @@ nl-NL:
       submenu:
         - label: He&rladen
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: '&Menubalk tonen/verbergen'

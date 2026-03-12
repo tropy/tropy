@@ -123,7 +123,7 @@ fr:
       submenu:
         - label: Rafraîchir
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Cacher la barre de menu
@@ -352,7 +352,7 @@ fr:
       submenu:
         - label: Rafraîchir
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Taille Réelle
@@ -578,7 +578,7 @@ fr:
       submenu:
         - label: Rafraîchir
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Cacher la barre de menu

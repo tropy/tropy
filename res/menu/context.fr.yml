@@ -488,7 +488,7 @@ fr:
         condition: '!isReadOnly'
     dev:
       - label: Recharger
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Recharger les styles
         command: win:refresh
@@ -986,7 +986,7 @@ fr:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Recharger
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Recharger les styles
         command: win:refresh
@@ -1484,7 +1484,7 @@ fr:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Recharger
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Recharger les styles
         command: win:refresh

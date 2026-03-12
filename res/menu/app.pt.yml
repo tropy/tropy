@@ -123,7 +123,7 @@ pt:
       submenu:
         - label: Recarregar
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Esconder Barra de Menu
@@ -352,7 +352,7 @@ pt:
       submenu:
         - label: Recarregar
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Dimensão Real
@@ -578,7 +578,7 @@ pt:
       submenu:
         - label: Recarregar
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Alternar Barra de Menu

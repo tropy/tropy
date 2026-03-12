@@ -488,7 +488,7 @@ de:
         condition: '!isReadOnly'
     dev:
       - label: Neu laden
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Stile neu laden
         command: win:refresh
@@ -986,7 +986,7 @@ de:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Neu laden
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Stile neu laden
         command: win:refresh
@@ -1484,7 +1484,7 @@ de:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Neu laden
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Stile neu laden
         command: win:refresh

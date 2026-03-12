@@ -123,7 +123,7 @@ fi-FI:
       submenu:
         - label: '&Lataa uudelleen'
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: '&Valikkopalkki päällä/pois'
@@ -352,7 +352,7 @@ fi-FI:
       submenu:
         - label: '&Lataa uudelleen'
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Todellinen koko
@@ -578,7 +578,7 @@ fi-FI:
       submenu:
         - label: '&Lataa uudelleen'
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: '&Valikkopalkki päällä/pois'

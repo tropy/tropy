@@ -488,7 +488,7 @@ pt-BR:
         condition: '!isReadOnly'
     dev:
       - label: Recarregar
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Recarregar Estilos
         command: win:refresh
@@ -986,7 +986,7 @@ pt-BR:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Recarregar
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Recarregar Estilos
         command: win:refresh
@@ -1484,7 +1484,7 @@ pt-BR:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Recarregar
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Recarregar Estilos
         command: win:refresh

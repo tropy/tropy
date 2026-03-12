@@ -123,7 +123,7 @@ cn:
       submenu:
         - label: 重新加载
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: 隐藏菜单栏
@@ -352,7 +352,7 @@ cn:
       submenu:
         - label: 重新加载
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: 实际尺寸
@@ -578,7 +578,7 @@ cn:
       submenu:
         - label: 重新加载
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: 切换菜单栏

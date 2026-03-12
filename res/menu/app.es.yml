@@ -123,7 +123,7 @@ es:
       submenu:
         - label: Recargar
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Alternar la barra de menú
@@ -352,7 +352,7 @@ es:
       submenu:
         - label: Recargar
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Tamaño real
@@ -578,7 +578,7 @@ es:
       submenu:
         - label: Recargar
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Alternar la barra de menú

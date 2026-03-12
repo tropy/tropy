@@ -488,7 +488,7 @@ fi-FI:
         condition: '!isReadOnly'
     dev:
       - label: Lataa uudelleen
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Lataa tyylit uudelleen
         command: win:refresh
@@ -986,7 +986,7 @@ fi-FI:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Lataa uudelleen
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Lataa tyylit uudelleen
         command: win:refresh
@@ -1484,7 +1484,7 @@ fi-FI:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Lataa uudelleen
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Lataa tyylit uudelleen
         command: win:refresh

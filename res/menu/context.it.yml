@@ -488,7 +488,7 @@ it:
         condition: '!isReadOnly'
     dev:
       - label: Ricarica
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Ricarica gli stili
         command: win:refresh
@@ -986,7 +986,7 @@ it:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Ricarica
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Ricarica gli stili
         command: win:refresh
@@ -1484,7 +1484,7 @@ it:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Ricarica
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Ricarica gli stili
         command: win:refresh

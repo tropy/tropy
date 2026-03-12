@@ -123,7 +123,7 @@ it:
       submenu:
         - label: '&Ricarica'
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Mostra/nascondi barra dei &menu
@@ -352,7 +352,7 @@ it:
       submenu:
         - label: '&Ricarica'
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Dimensione effettiva
@@ -578,7 +578,7 @@ it:
       submenu:
         - label: '&Ricarica'
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Mostra/nascondi barra dei &menu

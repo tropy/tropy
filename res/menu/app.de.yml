@@ -123,7 +123,7 @@ de:
       submenu:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Menüleiste ausblenden
@@ -352,7 +352,7 @@ de:
       submenu:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Echte Größe
@@ -578,7 +578,7 @@ de:
       submenu:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: Menüleiste ausblenden

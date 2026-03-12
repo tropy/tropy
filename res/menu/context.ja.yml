@@ -488,7 +488,7 @@ ja:
         condition: '!isReadOnly'
     dev:
       - label: リロード
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: スタイルをリロード
         command: win:refresh
@@ -986,7 +986,7 @@ ja:
         accelerator: CmdOrCtrl+]
     dev:
       - label: リロード
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: スタイルをリロード
         command: win:refresh
@@ -1484,7 +1484,7 @@ ja:
         accelerator: CmdOrCtrl+]
     dev:
       - label: リロード
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: スタイルをリロード
         command: win:refresh

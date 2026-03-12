@@ -488,7 +488,7 @@ nl-NL:
         condition: '!isReadOnly'
     dev:
       - label: Herladen
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Stijlen herladen
         command: win:refresh
@@ -986,7 +986,7 @@ nl-NL:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Herladen
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Stijlen herladen
         command: win:refresh
@@ -1484,7 +1484,7 @@ nl-NL:
         accelerator: CmdOrCtrl+]
     dev:
       - label: Herladen
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: Stijlen herladen
         command: win:refresh

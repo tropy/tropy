@@ -123,7 +123,7 @@ ja:
       submenu:
         - label: リロード
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: メニューバーを隠す
@@ -352,7 +352,7 @@ ja:
       submenu:
         - label: リロード
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: 実サイズ
@@ -578,7 +578,7 @@ ja:
       submenu:
         - label: リロード
           accelerator: CmdOrCtrl+R
-          command: win:reload
+          command: app:reload
           window: '*'
         - type: separator
         - label: メニューバーを隠す

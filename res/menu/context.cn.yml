@@ -488,7 +488,7 @@ cn:
         condition: '!isReadOnly'
     dev:
       - label: 重新加载
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: 刷新样式
         command: win:refresh
@@ -986,7 +986,7 @@ cn:
         accelerator: CmdOrCtrl+]
     dev:
       - label: 重新加载
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: 重新加载样式
         command: win:refresh
@@ -1484,7 +1484,7 @@ cn:
         accelerator: CmdOrCtrl+]
     dev:
       - label: 重新加载
-        command: win:reload
+        command: app:reload
         accelerator: CmdOrCtrl+R
       - label: 重新加载样式
         command: win:refresh
