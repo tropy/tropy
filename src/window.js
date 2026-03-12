@@ -63,8 +63,8 @@ export class Window extends EventEmitter {
       this.plugins.reload().then(p => p.create()),
 
       new Promise((resolve) => {
-        this.unloaders.push(this.plugins.flush)
         this.unloaders.push(this.plugins.unload)
+        this.unloaders.push(this.plugins.flush)
 
         this.handleIpcEvents()
         this.handleEditorCommands()
@@ -225,10 +225,17 @@ export class Window extends EventEmitter {
     this.isUnloading = true
     this.toggle('unload')
 
-    await Promise.all(
-      this.unloaders.map(unload => unload()))
-
-    this.send('unloaded')
+    try {
+      for (let unload of this.unloaders) {
+        try {
+          await unload()
+        } catch (e) {
+          warn({ stack: e.stack }, `unloader failed: ${e.message}`)
+        }
+      }
+    } finally {
+      this.send('unloaded')
+    }
   }
 
   handleEditorCommands() {
