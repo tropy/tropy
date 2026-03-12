@@ -155,6 +155,16 @@ class Rebuilder {
       },
 
       (task) => {
+        // Filter out VERSION file during extraction to avoid
+        // clash with C++ <version> header on case-insensitive
+        // filesystems (macOS)
+        sed('-i',
+          /tar\.extract\(\{/,
+          'tar.extract({\n    filter(path) { return !path.endsWith("/VERSION") },',
+          task.modulePath('deps', 'extract.js'))
+      },
+
+      (task) => {
         sed('-i', /'SQLITE_ENABLE_FTS[34]',/, '',
           task.modulePath('deps', 'sqlite3.gyp'))
       },
