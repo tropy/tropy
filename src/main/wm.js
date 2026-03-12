@@ -474,6 +474,11 @@ export class WindowManager extends EventEmitter {
             }, `${type}[${win.id}] render-process crashed: ${details?.reason}`)
             this.emit('crashed', type, win)
           }
+
+          if (this.unloading.has(win)) {
+            warn(`${type}[${win.id}] crashed during unload, forcing destroy`)
+            win.destroy()
+          }
         })
 
       win
