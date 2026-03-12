@@ -60,6 +60,7 @@ export class WindowManager extends EventEmitter {
     this.types = new WeakMap()
     this.props = new WeakMap()
     this.pending = {}
+    this.unloading = new WeakMap()
     this.seq = counter()
   }
 
@@ -272,7 +273,7 @@ export class WindowManager extends EventEmitter {
         win.close()
         break
       case 'reload':
-        win.reload()
+        this.handleUnload(win, 'reload')
         break
       case 'show':
         win.show()
@@ -310,6 +311,9 @@ export class WindowManager extends EventEmitter {
       case 'fixed-size':
         this.setFixedSize(win, ...args)
         break
+      case 'unloaded':
+        this.handleUnloaded(win)
+        break
       case 'rsvp':
         this.handlePendingResponse(...args)
         break
@@ -321,6 +325,29 @@ export class WindowManager extends EventEmitter {
         break
       default:
         win.emit(type, ...args)
+    }
+  }
+
+  handleUnload(win, action) {
+    if (!this.unloading.has(win)) {
+      this.unloading.set(win, action)
+      debug(`will ${action} ${this.types.get(win)} window`)
+      win.webContents.send('unload')
+    }
+  }
+
+  handleUnloaded(win) {
+    let state = this.unloading.get(win)
+    let type = this.types.get(win)
+
+    if (state === 'close') {
+      debug(`${type} window unloaded, will close`)
+      this.unloading.set(win, 'done')
+      win.close()
+    } else if (state === 'reload') {
+      debug(`${type} window unloaded, will reload`)
+      this.unloading.delete(win)
+      win.reload()
     }
   }
 
@@ -437,7 +464,7 @@ export class WindowManager extends EventEmitter {
       win.webContents
         .on('devtools-reload-page', (event) => {
           event.preventDefault()
-          win.webContents.send('reload')
+          this.handleUnload(win, 'reload')
         })
         .on('will-navigate', handleWillNavigate)
         .on('render-process-gone', (_, details) => {
@@ -453,7 +480,13 @@ export class WindowManager extends EventEmitter {
         .on('show', () => {
           this.emit('show', type, win)
         })
-        .on('close', () => {
+        .on('close', (event) => {
+          if (this.unloading.get(win) === 'done') {
+            debug(`closing ${type} window`)
+          } else {
+            event.preventDefault()
+            this.handleUnload(win, 'close')
+          }
           this.emit('close', type, win)
         })
         .once('closed', () => {
@@ -600,6 +633,7 @@ export class WindowManager extends EventEmitter {
     this.windows[type] = remove(array(this.windows[type]), win)
     this.types.delete(win)
     this.props.delete(win)
+    this.unloading.delete(win)
   }
 
   zoom(factor) {

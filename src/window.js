@@ -48,10 +48,7 @@ export class Window extends EventEmitter {
     window: this
   })
 
-  unloader = 'close'
   unloaders = []
-  hasFinishedUnloading = false
-
 
   constructor() {
     if (instance) {
@@ -69,7 +66,6 @@ export class Window extends EventEmitter {
         this.unloaders.push(this.plugins.flush)
         this.unloaders.push(this.plugins.unload)
 
-        this.handleUnload()
         this.handleIpcEvents()
         this.handleEditorCommands()
         this.handleModifierKeys()
@@ -202,8 +198,8 @@ export class Window extends EventEmitter {
       .on('refresh', () => {
         this.appendStyleSheets(true)
       })
-      .on('reload', () => {
-        this.reload()
+      .on('unload', () => {
+        this.unload()
       })
       .on('idle', (_, state) => {
         this.emit('idle', state)
@@ -224,26 +220,15 @@ export class Window extends EventEmitter {
       })
   }
 
-  handleUnload() {
-    on(window, 'beforeunload', event => {
-      if (this.hasFinishedUnloading) return
-      event.returnValue = false
+  async unload() {
+    if (this.isUnloading) return
+    this.isUnloading = true
+    this.toggle('unload')
 
-      if (this.isUnloading) return
-      this.isUnloading = true
+    await Promise.all(
+      this.unloaders.map(unload => unload()))
 
-      this.toggle('unload')
-
-      Promise
-        .all(this.unloaders.map(unload => unload()))
-        .finally(() => {
-          this.hasFinishedUnloading = true
-
-          // Possibly related to electron#7977 closing the window
-          // a second time is unreliable if it happens to soon.
-          return delay(25).then(() => this.send(this.unloader))
-        })
-    })
+    this.send('unloaded')
   }
 
   handleEditorCommands() {
@@ -333,11 +318,6 @@ export class Window extends EventEmitter {
     on(window, 'securitypolicyviolation', (e) => {
       warn(`CSP violation for ${e.violatedDirective}: ${e.blockedURI}`)
     })
-  }
-
-  reload() {
-    this.unloader = 'reload'
-    this.send('reload')
   }
 
   async appendStyleSheets(prune = false) {
