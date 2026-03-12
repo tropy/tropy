@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import { once } from 'node:events'
 import { join } from 'node:path'
 import { app, BrowserWindow } from 'electron'
 import { WindowManager } from '#internal/main/wm.js'
@@ -65,5 +66,81 @@ describe('WindowManager', () => {
         })
       })
     }
+
+    describe('unload lifecycle', function () {
+      this.timeout(process.env.CI ? 40000 : 20000)
+
+      let openWindow = (type = 'about') =>
+        wm.open(type, {
+          plugins: plugins.root,
+          log: join(app.getPath('userData'), `wm-test-unload-${type}.log`),
+          data: app.getPath('userData')
+        })
+
+      it('cleans up unloading state after close', async () => {
+        let win = await openWindow()
+        await win.ready
+        expect(wm.unloading.has(win)).to.be.false
+
+        await wm.close('about')
+        expect(wm.has('about')).to.be.false
+        expect(win.isDestroyed()).to.be.true
+      })
+
+      it('handles concurrent close calls', async () => {
+        let win = await openWindow()
+        await win.ready
+
+        await Promise.all([
+          wm.close('about'),
+          wm.close('about')
+        ])
+
+        expect(wm.has('about')).to.be.false
+        expect(win.isDestroyed()).to.be.true
+      })
+
+      it('reloads and returns to idle state', async () => {
+        let win = await openWindow()
+        await win.ready
+
+        let loaded = once(win.webContents, 'did-finish-load')
+        wm.handleUnload(win, 'reload')
+        await loaded
+
+        expect(wm.has('about')).to.be.true
+        expect(wm.unloading.has(win)).to.be.false
+        expect(win.isDestroyed()).to.be.false
+
+        await wm.close('about')
+      })
+
+      it('can close after reload', async () => {
+        let win = await openWindow()
+        await win.ready
+
+        let loaded = once(win.webContents, 'did-finish-load')
+        wm.handleUnload(win, 'reload')
+        await loaded
+
+        await wm.close('about')
+        expect(wm.has('about')).to.be.false
+        expect(win.isDestroyed()).to.be.true
+      })
+
+      it('ignores close during unload', async () => {
+        let win = await openWindow()
+        await win.ready
+
+        // Start close, then try to close again immediately
+        let closed = once(win, 'closed')
+        win.close()
+        win.close()
+        await closed
+
+        expect(wm.has('about')).to.be.false
+        expect(win.isDestroyed()).to.be.true
+      })
+    })
   })
 })
