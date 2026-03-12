@@ -160,11 +160,10 @@ class Rebuilder {
       },
 
       async (task) => {
-        // Uses node-gyp 8.x which doesn't yet pick up the env variables
-        await task.exec(`npx node-gyp rebuild ${[
+        let nodeGyp = join(ROOT, 'node_modules', 'node-gyp', 'bin', 'node-gyp.js')
+        await task.exec(`node ${nodeGyp} rebuild ${[
           `--target=${task.target}`,
           `--arch=${task.arch}`,
-          `--target-arch=${task.arch}`,
           task.verbose ? '--verbose' : ''
         ].join(' ')}`)
       }
