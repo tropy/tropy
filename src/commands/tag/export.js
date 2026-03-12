@@ -1,8 +1,8 @@
 import { writeFile as write } from 'node:fs'
-import { clipboard } from 'electron'
 import { call, cps, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { TAG } from '../../constants/index.js'
+import { copy } from '../../clipboard.js'
 import { join } from '../../common/csv.js'
 import { save } from '../../dialog.js'
 import { getAllTags } from '../../selectors/index.js'
@@ -24,7 +24,7 @@ export class Export extends Command {
 
     switch (target) {
       case ':clipboard:':
-        yield call(clipboard.write, { text })
+        copy({ text })
         break
       default:
         yield cps(write, target, text)

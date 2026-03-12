@@ -24,7 +24,9 @@ import {
 import {
   app,
   BrowserWindow,
+  clipboard,
   ipcMain as ipc,
+  nativeImage,
   nativeTheme,
   systemPreferences as prefs
 } from 'electron'
@@ -311,6 +313,9 @@ export class WindowManager extends EventEmitter {
       case 'fixed-size':
         this.setFixedSize(win, ...args)
         break
+      case 'clipboard':
+        this.handleClipboard(...args)
+        break
       case 'unloaded':
         this.handleUnloaded(win)
         break
@@ -348,6 +353,17 @@ export class WindowManager extends EventEmitter {
       debug(`${type} window unloaded, will reload`)
       this.unloading.delete(win)
       win.reload()
+    }
+  }
+
+  handleClipboard(method, data) {
+    switch (method) {
+      case 'write':
+        if (data.image)
+          clipboard.writeImage(nativeImage.createFromBuffer(data.image))
+        else
+          clipboard.write(data)
+        break
     }
   }
 

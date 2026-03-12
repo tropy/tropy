@@ -1,7 +1,7 @@
 import fs from 'fs'
-import { clipboard } from 'electron'
 import { call, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
+import { copy } from '../../clipboard.js'
 import { ITEM } from '../../constants/index.js'
 import { warn } from '../../common/log.js'
 import { fail, save } from '../../dialog.js'
@@ -31,7 +31,7 @@ export class Export extends Command {
 
       switch (target) {
         case ':clipboard:':
-          clipboard.writeText(JSON.stringify(items, null, 2))
+          copy({ text: JSON.stringify(items, null, 2) })
           break
         case ':plugin:':
           yield call(win.plugins.export, plugin, items)

@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import { extname } from 'node:path'
 import { call, select } from 'redux-saga/effects'
-import { clipboard } from 'electron'
+import { copy } from '../../clipboard.js'
 import { serialize, toHTML, toMarkdown } from '../../editor/serialize.js'
 import { Command } from '../command.js'
 import { fail, save } from '../../dialog.js'
@@ -35,9 +35,9 @@ export class Export extends Command {
       switch (target) {
         case ':clipboard:':
           if (format === 'html')
-            clipboard.write({ html: data, text: data })
+            copy({ html: data, text: data })
           else
-            clipboard.write({
+            copy({
               html: mapNotes(notes, 'html', format, settings.export.note),
               text: data
             })

@@ -1,9 +1,10 @@
 import assert from 'node:assert'
 import { extname, dirname } from 'node:path'
-import { ipcRenderer as ipc, clipboard } from 'electron'
+import { ipcRenderer as ipc } from 'electron'
 import { IntlMessageFormat } from 'intl-messageformat'
 import ARGS from './args.js'
 import { counter, get } from './common/util.js'
+import { copy } from './clipboard.js'
 import { crashReport, warn } from './common/log.js'
 import { pext } from './common/project.js'
 import IMAGE from './constants/image.js'
@@ -78,7 +79,7 @@ function fail(e, code = e.code, detail) {
   }).then(({ response }) => {
     switch (response) {
       case 1:
-        clipboard.write({ text: crashReport(e, message) })
+        copy({ text: crashReport(e, message) })
         break
       case 2:
         ipc.send('shell', 'show', ARGS.log)

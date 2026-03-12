@@ -1,5 +1,5 @@
 import { basename, extname } from 'node:path'
-import { clipboard, nativeImage } from 'electron'
+import { copy } from '../../clipboard.js'
 import { Command } from '../command.js'
 import { call, put, select } from 'redux-saga/effects'
 import { PHOTO, MIME } from '../../constants/index.js'
@@ -46,7 +46,7 @@ export class Extract extends Command {
       switch (target) {
         case ':clipboard:': {
           let png = yield call(toBuffer, 'png', buffer, { raw })
-          clipboard.writeImage(nativeImage.createFromBuffer(png))
+          copy({ image: png })
           break
         }
         case ':plugin:': {

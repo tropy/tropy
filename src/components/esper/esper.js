@@ -2,7 +2,7 @@ import React from 'react'
 import cx from 'classnames'
 import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
-import { clipboard } from 'electron'
+import { copy } from '../../clipboard.js'
 import { Toolbar } from '../toolbar.js'
 import { FILTERS } from '../../esper/index.js'
 import { EsperContainer } from './container.js'
@@ -293,7 +293,7 @@ export class Esper extends React.Component {
   }, 75)
 
   copyTextSelection() {
-    clipboard.writeText(this.state.text?.toPlainText(this.state.textSelection))
+    copy({ text: this.state.text?.toPlainText(this.state.textSelection) })
   }
 
   handleChange = (esper) => {
