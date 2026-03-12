@@ -13,7 +13,7 @@ export function getSystemLanguage() {
 
 export function isRightToLeft(lang = getSystemLanguage()) {
   try {
-    return (new Intl.Locale(lang)).textInfo?.direction === 'rtl'
+    return new Intl.Locale(lang)?.getTextInfo().direction === 'rtl'
   } catch {
     return false
   }
