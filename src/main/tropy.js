@@ -776,6 +776,10 @@ export class Tropy extends EventEmitter {
       this.menu.reload()
     })
 
+    this.on('app:reload', (win) => {
+      this.wm.handleUnload(win, 'reload')
+    })
+
     this.on('app:undo', (win) => {
       if (this.getHistory(win)?.past) {
         this.dispatch({

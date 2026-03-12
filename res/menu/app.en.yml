@@ -145,7 +145,7 @@ en:
         - &reload
           label: '&Reload'
           accelerator: 'CmdOrCtrl+R'
-          command: 'win:reload'
+          command: 'app:reload'
           window: '*'
         - type: 'separator'
         - label: 'Toggle &Menu Bar'

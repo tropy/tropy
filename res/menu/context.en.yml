@@ -334,7 +334,7 @@ en:
         condition: '!isReadOnly'
     dev: &dev
       - label: 'Reload'
-        command: 'win:reload'
+        command: 'app:reload'
         accelerator: 'CmdOrCtrl+R'
       - label: 'Reload Styles'
         command: 'win:refresh'
