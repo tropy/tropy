@@ -1,7 +1,6 @@
 import { app } from 'electron'
 import { EventEmitter } from 'node:events'
 import { Tropy } from '#internal/main/tropy.js'
-import * as args from '#internal/main/args.js'
 import { qualified } from '#internal/common/release.js'
 
 describe('main process', () => {
@@ -14,7 +13,6 @@ describe('main process', () => {
   before(() => {
     process.argv = ['tropy', 'file.tpy']
     sinon.stub(process, 'on').returns(process)
-    // sinon.spy(args, 'parse')
     sinon.stub(app, 'setPath')
     sinon.stub(app, 'setAsDefaultProtocolClient')
     sinon.stub(app, 'requestSingleInstanceLock').returns(true)
@@ -32,7 +30,6 @@ describe('main process', () => {
     process.argv = argv
     process.env.NODE_ENV = env
     process.on.restore()
-    // args.parse.restore()
     app.on.restore()
     app.requestSingleInstanceLock.restore()
     app.setAsDefaultProtocolClient.restore()
@@ -43,10 +40,6 @@ describe('main process', () => {
     before(
       () => import('#internal/main/index.js')
     )
-
-    it.skip('parses cli arguments', () => {
-      expect(args.parse).to.have.been.calledOnce
-    })
 
     it('sets the app name', () => {
       expect(app.name).to.equal(qualified.product)
