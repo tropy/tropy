@@ -27,15 +27,23 @@ if (!opts.data) {
 setPath('userData', join(opts.data, 'electron'))
 
 if (!opts.cache) {
-  opts.cache = join(app.getPath('cache'), exe)
+  try {
+    opts.cache = join(app.getPath('cache'), exe)
 
-  if (opts.cache === opts.data)
+    if (opts.cache === opts.data)
+      opts.cache = join(opts.data, 'cache')
+  } catch {
     opts.cache = join(opts.data, 'cache')
+  }
 }
 setPath('userCache', opts.cache)
 
 if (!opts.logs) {
-  opts.logs = (darwin) ? app.getPath('logs') : join(opts.data, 'log')
+  try {
+    opts.logs = (darwin) ? app.getPath('logs') : join(opts.data, 'log')
+  } catch {
+    opts.logs = join(opts.data, 'log')
+  }
 }
 setPath('logs', opts.logs)
 
