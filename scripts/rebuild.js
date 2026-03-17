@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import fs from 'node:fs'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import envPaths from 'env-paths'
 import { coerce } from 'semver'
 import { say, setLogSymbol, ROOT } from './util.js'
 import { program } from 'commander'
@@ -44,6 +45,10 @@ function downloadHeaders({
   ].join(' ')}`, { silent })
 }
 
+function nodeGypCache(target) {
+  return join(envPaths('node-gyp', { suffix: '' }).cache, target)
+}
+
 async function download(url, file) {
   let res = await fetch(url)
   if (res.status !== 200)
@@ -82,6 +87,10 @@ class Rebuilder {
     return join(ROOT, 'vendor', this.name, ...args)
   }
 
+  nodeGypPath(...args) {
+    return join(ROOT, 'node_modules', 'node-gyp', ...args)
+  }
+
   get package() {
     if (!this.#package)
       this.#package = JSON.parse(
@@ -105,6 +114,9 @@ class Rebuilder {
           'binding',
           `napi-v6-${this.platform}-${this.libc}-${this.arch}`,
           'node_sqlite3.node'))
+      case 'better-sqlite3':
+        return !fs.existsSync(this.modulePath(
+          'build', 'Release', 'better_sqlite3.node'))
       default:
         return true
     }
@@ -127,8 +139,14 @@ class Rebuilder {
     })
   }
 
+  async nodeGypRebuild(args, options) {
+    await this.exec(`node ${
+      this.nodeGypPath('bin', 'node-gyp.js')
+    } rebuild ${args.join(' ')}`, options)
+  }
+
   static Steps = {
-    sqlite3: [
+    'sqlite3': [
       async (task) => {
         let url = cat(task.vendorPath('version.txt')).trim()
         let tar = task.modulePath('deps', url.split('/').pop())
@@ -170,16 +188,15 @@ class Rebuilder {
       },
 
       async (task) => {
-        let nodeGyp = join(ROOT, 'node_modules', 'node-gyp', 'bin', 'node-gyp.js')
-        await task.exec(`node ${nodeGyp} rebuild ${[
+        await task.nodeGypRebuild([
           `--target=${task.target}`,
           `--arch=${task.arch}`,
           task.verbose ? '--verbose' : ''
-        ].join(' ')}`)
+        ])
       }
     ],
 
-    sharp: [
+    'sharp': [
       async (task) => {
         if (env.SHARP_FORCE_GLOBAL_LIBVIPS === 'true') {
           say('using system libvips ...')
@@ -238,6 +255,46 @@ class Rebuilder {
 
       async (task) => {
         await task.exec('npm run build')
+      }
+    ],
+
+    'better-sqlite3': [
+      async (task) => {
+        let url = cat(task.vendorPath('../sqlite3/version.txt')).trim()
+        let version = (/-(\d+)\.tar\.gz/).exec(url)[1]
+        let tar = task.vendorPath('../sqlite3', url.split('/').pop())
+
+        if (!test('-f', tar)) {
+          say(`fetching SQLite version ${version} ...`)
+          await download(url, tar)
+        }
+
+        let prefix = `sqlite-autoconf-${version}`
+        let dest = task.modulePath('deps', 'sqlite3')
+        exec(`tar -xzf ${tar} -C ${dest} --strip-components=1 ${prefix}/sqlite3.c ${prefix}/sqlite3.h`)
+      },
+
+      async (task) => {
+        if (task.platform === 'darwin') {
+          sed('-i',
+            /'MACOSX_DEPLOYMENT_TARGET':\s*'[\d.]+',/,
+            "'MACOSX_DEPLOYMENT_TARGET': '12.0',",
+            task.modulePath('deps', 'common.gypi'))
+        }
+      },
+
+      (task) => {
+        sed('-i', /'SQLITE_ENABLE_FTS[34].*',/, '',
+          task.modulePath('deps', 'defines.gypi'))
+      },
+
+      async (task) => {
+        await task.nodeGypRebuild([
+          `--target=${task.target}`,
+          `--arch=${task.arch}`,
+          `--nodedir=${nodeGypCache(task.target)}`,
+          task.verbose ? '--verbose' : ''
+        ])
       }
     ]
   }
