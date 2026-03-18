@@ -1,15 +1,30 @@
+import fs from 'node:fs'
 import { call, put, select, all } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import * as mod from '../../models/index.js'
 import act from '../../actions/list.js'
 import { LIST } from '../../constants/index.js'
+import { parse } from '../../common/csv.js'
+import { open } from '../../dialog.js'
+import { decodeListPath } from '../../common/util.js'
 import { getListByName } from '../../selectors/index.js'
 
+const { readFile } = fs.promises
 
 export class Import extends Command {
   *exec() {
-    let { paths } = this.action.payload
+    let { paths } = this.action.payload || {}
     let { db } = this.options
+
+    if (!paths) {
+      this.isInteractive = true
+      let [file] = yield call(open.csv)
+      if (!file) return
+
+      let text = yield call(readFile, file, 'utf-8')
+      console.log(text)
+      paths = parse(text).map(decodeListPath)
+    }
     let lists = { ...(yield select(state => state.lists)) }
     let created = []
 

@@ -640,6 +640,9 @@ export class Tropy extends EventEmitter {
     this.on('app:export-lists', (win) =>
       this.dispatch(act.list.export(), win))
 
+    this.on('app:import-lists', (win) =>
+      this.dispatch(act.list.import(), win))
+
     this.on('app:create-tag', (win) =>
       this.dispatch(act.tag.new(), win))
 

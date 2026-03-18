@@ -196,6 +196,15 @@ open.templates = (opts) => open({
   ...opts
 })
 
+open.csv = (opts) => open({
+  filters: [{
+    name: t('dialog', 'filter', 'csv'),
+    extensions: ['csv']
+  }],
+  properties: ['openFile'],
+  ...opts
+})
+
 
 save.project = (type, name = 'Project', opts = {}) => save({
   filters: [{

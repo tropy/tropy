@@ -26,6 +26,8 @@ en:
         accelerator: 'CmdOrCtrl+Shift+L'
       - label: 'Export Lists …'
         command: 'app:export-lists'
+      - label: 'Import Lists …'
+        command: 'app:import-lists'
     list: &list
       - label: 'Rename List'
         command: 'app:rename-list'

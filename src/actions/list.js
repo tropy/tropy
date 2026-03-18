@@ -95,6 +95,17 @@ export default {
     }
   },
 
+  import(payload, meta = {}) {
+    return {
+      type: LIST.IMPORT,
+      payload,
+      meta: {
+        cmd: 'project',
+        ...meta
+      }
+    }
+  },
+
   items: {
     add({ id, items }, meta) {
       return {
