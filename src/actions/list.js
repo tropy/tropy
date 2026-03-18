@@ -84,6 +84,16 @@ export default {
     }
   },
 
+  export(payload, meta = {}) {
+    return {
+      type: LIST.EXPORT,
+      payload,
+      meta: {
+        cmd: 'project',
+        ...meta
+      }
+    }
+  },
 
   items: {
     add({ id, items }, meta) {

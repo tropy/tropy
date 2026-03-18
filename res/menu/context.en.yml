@@ -24,6 +24,8 @@ en:
         command: 'app:create-list'
         condition: '!isReadOnly'
         accelerator: 'CmdOrCtrl+Shift+L'
+      - label: 'Export Lists …'
+        command: 'app:export-lists'
     list: &list
       - label: 'Rename List'
         command: 'app:rename-list'

@@ -637,6 +637,9 @@ export class Tropy extends EventEmitter {
     this.on('app:delete-list', (win, { target }) =>
       this.dispatch(act.list.delete(target.id), win))
 
+    this.on('app:export-lists', (win) =>
+      this.dispatch(act.list.export(), win))
+
     this.on('app:create-tag', (win) =>
       this.dispatch(act.tag.new(), win))
 

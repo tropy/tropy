@@ -2,6 +2,15 @@ import { createSelector as memo } from 'reselect'
 import { get, encodeListPath } from '../common/util.js'
 import { LIST } from '../constants/index.js'
 
+const getLists = ({ lists }) => lists
+
+export const getAllLists = memo(
+  getLists,
+  (lists) => Object.values(lists)
+    .filter(l => l.id > 0)
+    .map(l => getListPath({ lists }, l))
+    .sort()
+)
 
 function *flatten(children, lists, expand) {
   for (let id of children) {
@@ -22,11 +31,10 @@ export const getListByName = ({ lists }, { name, parent = LIST.ROOT }) => {
   return null
 }
 
-export const getListPath = (state, { id }) => {
-  console.log(id)
+export const getListPath = ({ lists }, { id }) => {
   let output = []
   while (id > 0) {
-    const { name, parent } = get(state, ['lists', id])
+    const { name, parent } = lists[id]
     output.unshift(encodeListPath(name))
     id = parent
   }
