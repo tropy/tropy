@@ -1,5 +1,5 @@
 import { TitleSettings } from './title.js'
-import { FormField, FormToggle, FormToggleGroup, FormElement, Toggle } from '../form.js'
+import { FormField, FormToggleGroup, FormElement, Toggle } from '../form.js'
 import { IMAGE } from '../../constants/index.js'
 
 const DUP_OPTS = ['skip', 'import', 'prompt']
