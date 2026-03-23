@@ -22,8 +22,7 @@ export class Import extends Command {
       if (!file) return
 
       let text = yield call(readFile, file, 'utf-8')
-      console.log(text)
-      paths = parse(text).map(decodeListPath)
+      paths = parse(text, '\n').map(decodeListPath)
     }
     let lists = { ...(yield select(state => state.lists)) }
     let created = []

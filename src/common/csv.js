@@ -12,10 +12,6 @@ export function join(values, separator = ',') {
     .join(separator)
 }
 
-export function joinAsRows(values) {
-  return join(values, '\n')
-}
-
 export function parse(text, separator = ',') {
   return text
     .split(separator)
