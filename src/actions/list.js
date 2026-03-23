@@ -90,6 +90,7 @@ export default {
       payload,
       meta: {
         cmd: 'project',
+        prompt: true,
         ...meta
       }
     }
