@@ -2,15 +2,18 @@ import { createSelector as memo } from 'reselect'
 import { get, encodeListPath } from '../common/util.js'
 import { LIST } from '../constants/index.js'
 
-const getLists = ({ lists }) => lists
+export const getLists = ({ lists }, { id = LIST.ROOT, recursive = true } = {}) => {
+  const collect = (nodeId) => [
+    nodeId,
+    ...(recursive ? (lists[nodeId]?.children ?? []).flatMap(collect) : [])
+  ]
 
-export const getAllLists = memo(
-  getLists,
-  (lists) => Object.values(lists)
-    .filter(l => l.id > 0)
-    .map(l => getListPath({ lists }, l))
-    .sort()
-)
+  const ids = id === LIST.ROOT
+    ? Object.values(lists).filter(l => l.id > 0).map(l => l.id)
+    : collect(id)
+
+  return ids.map(nodeId => getListPath({ lists }, { id: nodeId })).sort()
+}
 
 function *flatten(children, lists, expand) {
   for (let id of children) {
