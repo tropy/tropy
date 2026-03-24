@@ -56,6 +56,10 @@ describe('csv', () => {
       expect(parse('"a"\n"b"', '\n')).to.eql(['a', 'b'])
     })
 
+    it('handles commas inside quoted values', () => {
+      expect(parse('"A,B","c"')).to.eql(['A,B', 'c'])
+    })
+
     it('filters out empty values', () => {
       expect(parse('"a",,"b"')).to.eql(['a', 'b'])
     })
