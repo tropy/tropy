@@ -13,8 +13,27 @@ export function join(values, separator = ',') {
 }
 
 export function parse(text, separator = ',') {
-  return text
-    .split(separator)
-    .filter(column => column.length > 0)
-    .map(decode)
+  let columns = []
+  let current = ''
+  let inQuotes = false
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]
+    if (ch === '"') {
+      if (inQuotes && text[i + 1] === '"') {
+        current += '"'
+        i++
+      } else {
+        inQuotes = !inQuotes
+      }
+    } else if (ch === separator && !inQuotes) {
+      columns.push(current)
+      current = ''
+    } else {
+      current += ch
+    }
+  }
+
+  columns.push(current)
+  return columns.filter(column => column.length > 0)
 }
