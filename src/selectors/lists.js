@@ -8,11 +8,9 @@ export const getLists = ({ lists }, { id = LIST.ROOT, recursive = true } = {}) =
     ...(recursive ? (lists[nodeId]?.children ?? []).flatMap(collect) : [])
   ]
 
-  const ids = id === LIST.ROOT
-    ? Object.values(lists).filter(l => l.id > 0).map(l => l.id)
-    : collect(id)
+  const ids = collect(id).filter(i => i !== LIST.ROOT)
 
-  return ids.map(nodeId => getListPath({ lists }, { id: nodeId })).sort()
+  return ids.map(nodeId => getListPath({ lists }, { id: nodeId }))
 }
 
 function *flatten(children, lists, expand) {
