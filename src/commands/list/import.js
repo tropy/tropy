@@ -21,8 +21,10 @@ export class Import extends Command {
       let [file] = yield call(open.csv)
       if (!file) return
 
-      let text = yield call(readFile, file, 'utf-8')
-      paths = parse(text, '\n').map(decodeListPath)
+      const text = yield call(readFile, file, 'utf-8')
+      let rows = text.split('\n')
+      // first column holds the list path
+      paths = rows.map(r => decodeListPath(parse(r)[0]))
     }
     let lists = { ...(yield select(state => state.lists)) }
     let created = []
@@ -52,7 +54,7 @@ export async function importPaths(tx, paths, lists, created = []) {
       if (!existing) {
         let idx = lists[parent]?.children?.length || 0
         existing = await mod.list.create(tx, {
-          name, parent, position: 1
+          name, parent, position: idx + 1
         })
         lists[existing.id] = existing
         if (lists[parent])
