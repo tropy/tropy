@@ -20,7 +20,7 @@ export class Export extends Command {
     if (!target) return
 
     let tags = yield select(getAllTags)
-    let text = join(tags.map(t => t.name), '\n')
+    let text = tags.map(t => join([t.name, t.color || ''])).join('\n')
 
     switch (target) {
       case ':clipboard:':
