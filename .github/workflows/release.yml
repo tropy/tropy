@@ -71,7 +71,9 @@ jobs:
         run: sudo apt install libfuse2t64
 
       - name: Install NPM modules
-        run: npm clean-install --no-progress
+        run: npm clean-install --no-progress --ignore-scripts
+      - name: Install Electron
+        run: node node_modules/electron/install.js
 
       - name: Install system libvips
         if: runner.os == 'Linux' && matrix.tag == 'shared'
