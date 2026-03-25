@@ -104,7 +104,7 @@
     "sinon": "^21.0.0",
     "sinon-chai": "^4.0.0",
     "split2": "^4.0.0",
-    "sqleton": "^2.0.0",
+    "sqleton": "^4.0.0",
     "stylelint": "^17.0.0",
     "stylelint-config-recommended-scss": "^17.0.0",
     "stylelint-config-standard": "^40.0.0",
