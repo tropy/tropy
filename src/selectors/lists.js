@@ -2,21 +2,28 @@ import { createSelector as memo } from 'reselect'
 import { get, encodeListPath } from '../common/util.js'
 import { LIST } from '../constants/index.js'
 
-export const getLists = ({ lists }, { id = LIST.ROOT, recursive = true } = {}) => {
-  const collect = (nodeId) => [
-    nodeId,
-    ...(recursive ? (lists[nodeId]?.children ?? []).flatMap(collect) : [])
-  ]
+export const getListTree = ({ lists }, {
+  id = LIST.ROOT,
+  recursive = true
+} = {}) => {
 
-  const ids = collect(id).filter(i => i !== LIST.ROOT)
+  let ids = (id === LIST.ROOT)
+    ? lists[id].children
+    : [id]
 
-  return ids.map(nodeId => getListPath({ lists }, { id: nodeId }))
+  return (recursive)
+    ? [...flatten(ids, lists, true)]
+    : ids
 }
+
+export const getListTreePaths = (state, props) =>
+  getListTree(state, props)
+    .map(id => getListPath(state, { id }))
 
 function *flatten(children, lists, expand) {
   for (let id of children) {
     yield id
-    if (expand[id]) {
+    if (expand === true || expand[id]) {
       yield * flatten(lists[id].children, lists, expand)
     }
   }
@@ -34,8 +41,8 @@ export const getListByName = ({ lists }, { name, parent = LIST.ROOT }) => {
 
 export const getListPath = ({ lists }, { id }) => {
   let output = []
-  while (id > 0) {
-    const { name, parent } = lists[id]
+  while (id && id !== LIST.ROOT) {
+    let { name, parent } = lists[id]
     output.unshift(encodeListPath(name))
     id = parent
   }
