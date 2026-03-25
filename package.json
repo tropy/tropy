@@ -21,7 +21,8 @@
   "main": "lib/main/index.js",
   "type": "module",
   "imports": {
-    "#internal/*.js": "./internal/*.js"
+    "#internal/*.js": "./internal/*.js",
+    "#tropy/*.js": "./src/*.js"
   },
   "scripts": {
     "clean": "shx rm -rf coverage doc dist lib .nyc_output npm-debug.log internal mocha",
@@ -49,8 +50,22 @@
     "test:main": "electron-mocha --no-sandbox \"test/{main,common}/**/*_test.js\"",
     "test:renderer": "electron-mocha --no-sandbox --renderer \"mocha/{,!(main)/**}/*_test.js\"",
     "posttest": "shx rm -rf internal mocha",
+    "test:spark": "spark",
     "preversion": "npm run lint && npm test",
     "version": "node scripts/version.js && git add res/linux CITATION.cff"
+  },
+  "spark": {
+    "ui": "bdd",
+    "reporters": ["sparks"],
+    "mainGlobPatterns": [
+      "spec/{common,main,reducers,selectors}/**/*.test.js"
+    ],
+    "rendererGlobPatterns": [
+      "spec/common/**/*.test.js"
+    ],
+    "preload": [
+      "spec/support/chai.js"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.12.13",
@@ -103,6 +118,7 @@
     "shx": "^0.4.0",
     "sinon": "^21.0.0",
     "sinon-chai": "^4.0.0",
+    "spark-chamber": "github:inukshuk/spark",
     "split2": "^4.0.0",
     "sqleton": "^4.0.0",
     "stylelint": "^17.0.0",
