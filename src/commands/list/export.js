@@ -5,7 +5,7 @@ import { LIST } from '../../constants/index.js'
 import { copy } from '../../clipboard.js'
 import { join } from '../../common/csv.js'
 import { save } from '../../dialog.js'
-import { getLists } from '../../selectors/index.js'
+import { getListTreePaths } from '../../selectors/index.js'
 
 
 export class Export extends Command {
@@ -15,7 +15,7 @@ export class Export extends Command {
 
     if (!target) {
       if (!meta.prompt) {
-        return yield select(getLists, payload)
+        return yield select(getListTreePaths, payload)
       }
 
       this.isInteractive = true
@@ -23,7 +23,7 @@ export class Export extends Command {
       if (!target) return
     }
 
-    let lists = yield select(getLists, payload)
+    let lists = yield select(getListTreePaths, payload)
     let text = join(lists, '\n')
 
     switch (target) {
