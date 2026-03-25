@@ -183,6 +183,7 @@ nl-NL:
       debug: Ontwikkelaarsmodus inschakelen
       api: Ontwikkelaars-api inschakelen
       localtime: Exif-tijdstempels baseren op lokale tijdzone
+      createLists: Recreate lists
       dup:
         label: Tijdens importeren
         option:

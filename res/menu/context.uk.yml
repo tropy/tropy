@@ -22,6 +22,10 @@ uk:
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
+      - label: Export Lists …
+        command: app:export-lists
+      - label: Import Lists …
+        command: app:import-lists
     list:
       - label: Rename List
         command: app:rename-list
@@ -520,6 +524,10 @@ uk:
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
+      - label: Export Lists …
+        command: app:export-lists
+      - label: Import Lists …
+        command: app:import-lists
     list:
       - label: Rename List
         command: app:rename-list
@@ -1018,6 +1026,10 @@ uk:
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
+      - label: Export Lists …
+        command: app:export-lists
+      - label: Import Lists …
+        command: app:import-lists
     list:
       - label: Rename List
         command: app:rename-list

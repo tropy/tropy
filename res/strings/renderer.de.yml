@@ -182,6 +182,7 @@ de:
       debug: Entwicklermodus aktivieren
       api: Entwickler API aktivieren
       localtime: 'Exif Datum und Zeit in lokale Zeitzone verschieben '
+      createLists: Recreate lists
       dup:
         label: Beim Importieren
         option:

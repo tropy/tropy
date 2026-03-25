@@ -178,6 +178,7 @@ es:
       debug: Activar el modo de desarrollo
       api: Enable Developer API
       localtime: Suponer que la marca de hora de las fotos usa la hora local
+      createLists: Recreate lists
       dup:
         label: Durante la importación
         option:

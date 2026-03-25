@@ -178,6 +178,7 @@ fi-FI:
       debug: Ota kehittäjätila käyttöön
       api: Ota kehittäjä-API käyttöön
       localtime: Oleta Exif-aikaleimojen käyttävän paikallista aikavyöhykettä
+      createLists: Recreate lists
       dup:
         label: Tuonnin aikana
         option:

@@ -177,6 +177,7 @@ cn:
       debug: 启用开发者模式
       api: Enable Developer API
       localtime: 假设 Exif 时间戳使用本地时区
+      createLists: Recreate lists
       dup:
         label: 导入设置
         option:

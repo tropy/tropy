@@ -187,6 +187,7 @@ it:
       localtime: >-
         Considera che data e ora inclusi nei dati EXIF usano il fuso orario
         locale
+      createLists: Recreate lists
       dup:
         label: Durante l'importazione
         option:

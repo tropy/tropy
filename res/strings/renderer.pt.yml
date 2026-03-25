@@ -168,6 +168,7 @@ pt:
       debug: Ativar Modo Programador
       api: Ativar Modo Programador
       localtime: Presumir que os timestamps Exif utilizam fuso horário local
+      createLists: Recreate lists
       dup:
         label: Durante importação
         option:

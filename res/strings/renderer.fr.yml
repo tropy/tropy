@@ -185,6 +185,7 @@ fr:
       debug: Autoriser le mode développeur
       api: Enable Developer API
       localtime: Présupposer que les métadonnées des images utilisent l'heure locale.
+      createLists: Recreate lists
       dup:
         label: Durant l'import
         option:

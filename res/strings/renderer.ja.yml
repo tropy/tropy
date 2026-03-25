@@ -180,6 +180,7 @@ ja:
       debug: デベロッパーモード
       api: Enable Developer API
       localtime: メタデータにローカルタイムを設定する
+      createLists: Recreate lists
       dup:
         label: インポート時に
         option:

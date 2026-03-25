@@ -184,6 +184,7 @@ ru:
       debug: Включить режим разработки
       api: Enable Developer API
       localtime: Предположить, что временные метки Exif используют местный часовой пояс
+      createLists: Recreate lists
       dup:
         label: Во время импорта
         option:

@@ -184,6 +184,7 @@ uk:
       debug: Enable Developer Mode
       api: Enable Developer API
       localtime: Assume Exif timestamps use local timezone
+      createLists: Recreate lists
       dup:
         label: During import
         option:
