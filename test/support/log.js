@@ -1,3 +1,3 @@
-import { createLogger } from '#internal/common/log.js'
+import { createLogger } from '#tropy/common/log.js'
 
 createLogger()

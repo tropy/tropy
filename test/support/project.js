@@ -1,30 +1,23 @@
 import { rm } from 'node:fs/promises'
+import { join } from 'node:path'
 import { mktmp } from './tmp.js'
-import { create } from '#internal/common/project.js'
+import { create } from '#tropy/common/project.js'
 
-// Returns a reference to a temporary project with the given file name.
-//
-// The project will be created in a before each hook.
-// The reference will be updated with the current `path` and `db` properties.
-//
-// The temporary directory will be removed by an after (all) hook.
-//
-// The project and associated directories will be removed by an after each hook.
+const fixtures = join(import.meta.dirname, '../fixtures')
+const appDir = join(fixtures, '../..')
+const schema = join(appDir, 'db/schema/project.sql')
 
 export function mkprojtmp(file, opts) {
   let project = { current: null }
   let path = mktmp(file)
 
   beforeEach(async () => {
-    let db = await create(path, F.schema('project').path, F.appDir, {
+    let db = await create(path, schema, appDir, {
       ...opts,
       autoclose: false
     })
 
-    project.current = {
-      db,
-      path
-    }
+    project.current = { db, path }
   })
 
   afterEach(async () => {
