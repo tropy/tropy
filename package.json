@@ -21,7 +21,6 @@
   "main": "lib/main/index.js",
   "type": "module",
   "imports": {
-    "#internal/*.js": "./internal/*.js",
     "#tropy/*.js": "./src/*.js"
   },
   "scripts": {
@@ -63,7 +62,7 @@
       "test/support/babel.cjs",
       "test/support/chai.js",
       "test/support/log.js",
-      "test/support/args.js"
+      "test/support/args.cjs"
     ]
   },
   "devDependencies": {
