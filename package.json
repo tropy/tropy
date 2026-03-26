@@ -51,6 +51,7 @@
     "test:renderer": "electron-mocha --no-sandbox --renderer \"mocha/{,!(main)/**}/*_test.js\"",
     "posttest": "shx rm -rf internal mocha",
     "test:spark": "spark --no-sandbox",
+    "coverage:spark": "c8 -o coverage --reporter=text --reporter=lcov --include='src/**' npm run test:spark",
     "preversion": "npm run lint && npm test",
     "version": "node scripts/version.js && git add res/linux CITATION.cff"
   },
@@ -98,6 +99,7 @@
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-istanbul": "^7.0.0",
     "better-sqlite3": "^12.8.0",
+    "c8": "^11.0.0",
     "chai": "^6.0.1",
     "chai-as-promised": "^8.0.0",
     "chai-dom": "^1.8.2",
