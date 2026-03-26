@@ -2,11 +2,8 @@ node_modules
 dist
 lib
 coverage
-.nyc_output
 doc
 tmp
-internal
-mocha
 npm-debug.log
 db/*.db
 *.tpy
