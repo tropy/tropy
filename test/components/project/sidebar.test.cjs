@@ -6,7 +6,9 @@ import lists from '../../fixtures/lists.js'
 describe('ProjectSidebar', () => {
   const ProjectSidebar = WrappedSidebar.WrappedComponent
 
-  // TODO fix window context args setup
+  // TODO CJS/ESM context identity mismatch — WindowContext from
+  // the CJS-transformed react.cjs is a different object than the
+  // one used by ESM components, so the Provider value doesn't reach them.
   it.skip('renders a sidebar with the project name', () => {
     const { element, getByText } = render(
       <ProjectSidebar
