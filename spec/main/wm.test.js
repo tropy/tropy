@@ -5,6 +5,8 @@ import { app, BrowserWindow } from 'electron'
 import { WindowManager } from '#tropy/main/wm.js'
 import { Plugins } from '#tropy/common/plugins.js'
 
+const fixtures = join(import.meta.dirname, '../fixtures')
+
 describe('WindowManager', () => {
   describe('instance', () => {
     let wm = new WindowManager()
@@ -13,7 +15,7 @@ describe('WindowManager', () => {
     before(() => plugins.init())
     before(() => wm.start())
     before(() => fs.promises.copyFile(
-      join(import.meta.dirname, '../../test/fixtures/db/ontology.db'),
+      join(fixtures, 'db/ontology.db'),
       join(app.getPath('userData'), 'ontology.db')))
 
     after(() => wm.stop(true))

@@ -61,7 +61,7 @@
       "spec/{common,main}/**/*.test.js"
     ],
     "rendererGlobPatterns": [
-      "spec/common/**/*.test.js"
+      "spec/{common,reducers,selectors}/**/*.test.js"
     ],
     "preload": [
       "spec/support/chai.js",
