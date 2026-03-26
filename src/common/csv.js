@@ -1,5 +1,7 @@
 export function encode(value, quote = /"/g) {
-  return `"${String(value).replace(quote, m => m + m)}"`
+  return (value == null)
+    ? ''
+    : `"${String(value).replace(quote, m => m + m)}"`
 }
 
 export function decode(value) {
