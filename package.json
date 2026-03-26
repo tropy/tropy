@@ -56,15 +56,19 @@
   },
   "spark": {
     "ui": "bdd",
-    "reporters": ["sparks"],
+    "reporters": [
+      "sparks"
+    ],
     "mainGlobPatterns": [
       "spec/{common,main}/**/*.test.js"
     ],
     "rendererGlobPatterns": [
       "spec/*.test.js",
-      "spec/{common,editor,models,ontology,reducers,selectors}/**/*.test.js"
+      "spec/components/**/*.test.{js,cjs}",
+      "spec/{common,editor,models,ontology,reducers,selectors}/**/*.test.{js,cjs}"
     ],
     "preload": [
+      "spec/support/babel.cjs",
       "spec/support/chai.js",
       "spec/support/log.js",
       "spec/support/args.js"
@@ -73,7 +77,9 @@
   "devDependencies": {
     "@babel/core": "^7.12.13",
     "@babel/plugin-syntax-import-attributes": "^7.24.7",
+    "@babel/plugin-transform-modules-commonjs": "^7.28.6",
     "@babel/preset-react": "^7.12.13",
+    "@babel/register": "^7.28.6",
     "@electron/notarize": "^3.0.1",
     "@electron/packager": "^19.0.1",
     "@eslint/js": "^9.5.0",
