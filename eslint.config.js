@@ -89,22 +89,19 @@ export default [
   },
 
   {
-    files: ['{test,spec}/**/*'],
+    files: ['test/**/*'],
     languageOptions: {
       globals: {
         ...globals.mocha,
-        ...globals.chai,
-        sinon: false,
-        F: false
+        ...globals.chai
       }
     }
   },
 
   {
     files: [
-      '{src,test}/{components,hooks,views}/**/*.js',
-      'test/support/dnd.js',
-      'test/support/react.js'
+      '{src,test}/{components,hooks,views}/**/*.{js,cjs}',
+      'test/support/react.cjs'
     ],
     plugins: {
       'react': react,

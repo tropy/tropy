@@ -61,18 +61,18 @@
       "sparks"
     ],
     "mainGlobPatterns": [
-      "spec/{common,main}/**/*.test.js"
+      "test/{common,main}/**/*.test.js"
     ],
     "rendererGlobPatterns": [
-      "spec/*.test.js",
-      "spec/components/**/*.test.{js,cjs}",
-      "spec/{common,editor,models,ontology,reducers,selectors}/**/*.test.{js,cjs}"
+      "test/*.test.js",
+      "test/components/**/*.test.{js,cjs}",
+      "test/{common,editor,models,ontology,reducers,selectors}/**/*.test.{js,cjs}"
     ],
     "preload": [
-      "spec/support/babel.cjs",
-      "spec/support/chai.js",
-      "spec/support/log.js",
-      "spec/support/args.js"
+      "test/support/babel.cjs",
+      "test/support/chai.js",
+      "test/support/log.js",
+      "test/support/args.js"
     ]
   },
   "devDependencies": {

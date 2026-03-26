@@ -1,19 +1,21 @@
 import { resolve } from 'node:path'
 import process from 'node:process'
 
-if (process.type === 'browser') {
-  let { Resource } = await import('#internal/main/res.js')
+const root = resolve(import.meta.dirname, '../..')
 
-  Object.defineProperty(Resource, 'base', {
-    get() { return resolve(import.meta.dirname, '../..') }
+if (process.type === 'browser') {
+  import('#tropy/main/res.js').then(({ Resource }) => {
+    Object.defineProperty(Resource, 'base', {
+      get() { return root }
+    })
   })
 } else {
-  let args = await import('#internal/args.js')
-
-  args.update({
-    app: resolve(import.meta.dirname, '../..'),
-    locale: 'en',
-    env: process.env.NODE_ENV || 'test',
-    debug: process.env.TROPY_DEBUG || process.env.DEBUG
+  import('#tropy/args.js').then((args) => {
+    args.update({
+      app: root,
+      locale: 'en',
+      env: process.env.NODE_ENV || 'test',
+      debug: process.env.TROPY_DEBUG || process.env.DEBUG
+    })
   })
 }
