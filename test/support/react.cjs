@@ -8,8 +8,7 @@ import { Provider } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 import { DndProvider } from 'react-dnd'
 import { TestBackend } from 'react-dnd-test-backend'
-import ARGS from '#tropy/args.js'
-import win, { createWindowInstance } from '#tropy/window.js'
+import WIN, { createWindowInstance } from '#tropy/window.js'
 import { WindowContext } from '#tropy/components/window.js'
 import { Strings } from '#tropy/res.js'
 import * as reducer from '#tropy/reducers/index.js'
@@ -29,6 +28,8 @@ const helpers = {
     return node.firstChild
   }
 }
+
+let win = WIN || createWindowInstance()
 
 let messages = new Strings(
   Strings.parse(fs.readFileSync(Strings.expand('renderer')))
@@ -50,7 +51,7 @@ function onIntlError(error) {
 export const inWindowContext = {
   wrapper({ children }) {
     return (
-      <WindowContext.Provider value={win || createWindowInstance(ARGS)}>
+      <WindowContext.Provider value={win}>
         <DndProvider backend={TestBackend}>
           <Provider store={store}>
             <IntlProvider
