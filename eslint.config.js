@@ -77,8 +77,8 @@ export default [
 
   {
     files: [
-      '{src,test}/*.js',
-      '{src,test}/!(main)/**/*.js',
+      '{src,test}/*.{cjs,js}',
+      '{src,test}/!(main)/**/*.{cjs,js}',
       'res/workers/*.js'
     ],
     languageOptions: {
