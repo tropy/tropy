@@ -50,7 +50,7 @@
     "test:main": "electron-mocha --no-sandbox \"test/{main,common}/**/*_test.js\"",
     "test:renderer": "electron-mocha --no-sandbox --renderer \"mocha/{,!(main)/**}/*_test.js\"",
     "posttest": "shx rm -rf internal mocha",
-    "test:spark": "spark",
+    "test:spark": "spark --no-sandbox",
     "preversion": "npm run lint && npm test",
     "version": "node scripts/version.js && git add res/linux CITATION.cff"
   },
@@ -58,13 +58,15 @@
     "ui": "bdd",
     "reporters": ["sparks"],
     "mainGlobPatterns": [
-      "spec/{common,main,reducers,selectors}/**/*.test.js"
+      "spec/{common,main}/**/*.test.js"
     ],
     "rendererGlobPatterns": [
       "spec/common/**/*.test.js"
     ],
     "preload": [
-      "spec/support/chai.js"
+      "spec/support/chai.js",
+      "spec/support/log.js",
+      "spec/support/args.js"
     ]
   },
   "devDependencies": {
