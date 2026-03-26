@@ -3,10 +3,10 @@ import { deleteFrom, select, update, into } from '#tropy/common/query.js'
 describe('Query Builder', () => {
   describe('Select', () => {
     it('empty', () =>
-      expect(select().SELECT).to.eql('SELECT *'))
+      expect(select().SELECT).to.equal('SELECT *'))
 
     it('simple', () =>
-      expect(select('a').SELECT).to.eql('SELECT a'))
+      expect(select('a').SELECT).to.equal('SELECT a'))
 
     it('multiple', () =>
       expect(select('a').select('b').query).to.match(/^SELECT a, b/))
@@ -35,7 +35,6 @@ describe('Query Builder', () => {
           .from('cd')
           .order('b')
           .order('a', 'DESC')
-          .query
       ).to.match(/SELECT a, b FROM cd ORDER BY b, a DESC/)
 
       expect(
@@ -49,24 +48,24 @@ describe('Query Builder', () => {
       let q = select()
 
       q.where({ a: null })
-      expect(q.WHERE).to.eql('WHERE a IS NULL')
+      expect(q.WHERE).to.equal('WHERE a IS NULL')
 
       q.not.where({ a: null })
-      expect(q.WHERE).to.eql('WHERE a IS NULL AND a IS NOT NULL')
+      expect(q.WHERE).to.equal('WHERE a IS NULL AND a IS NOT NULL')
     })
 
     it('lists', () => {
       expect(select().where({ a: [1, 2, 3] }).WHERE)
-        .to.eql('WHERE a IN (1, 2, 3)')
+        .to.equal('WHERE a IN (1, 2, 3)')
 
       expect(select().unless({ a: [1, 2, 3] }).WHERE)
-        .to.eql('WHERE a NOT IN (1, 2, 3)')
+        .to.equal('WHERE a NOT IN (1, 2, 3)')
     })
 
     it('params', () => {
       let q = select().where({ a: 1, b: null, c: 'foo' })
 
-      expect(q.WHERE).to.eql('WHERE a = $a AND b IS NULL AND c = $c')
+      expect(q.WHERE).to.equal('WHERE a = $a AND b IS NULL AND c = $c')
       expect(q.params).to.eql({ $a: 1, $c: 'foo' })
     })
 
@@ -77,10 +76,10 @@ describe('Query Builder', () => {
           .join('c', { using: 'a' })
           .outer.join('d')
           .query
-      ).to.eql('SELECT a FROM b JOIN c USING (a) LEFT OUTER JOIN d')
+      ).to.equal('SELECT a FROM b JOIN c USING (a) LEFT OUTER JOIN d')
 
       let q = select('*').from('a').join('b', { on: { x: 23 } })
-      expect(q.query).to.eql('SELECT * FROM a JOIN b ON (x = $x)')
+      expect(q.query).to.equal('SELECT * FROM a JOIN b ON (x = $x)')
       expect(q.params).to.have.property('$x', 23)
     })
 
@@ -91,7 +90,7 @@ describe('Query Builder', () => {
           .outer.join('trash', { using: 'id' })
           .where({ deleted: null })
           .query
-      ).to.eql(
+      ).to.equal(
         'SELECT COUNT (id) AS total FROM items LEFT OUTER JOIN trash USING (id) WHERE deleted IS NULL'
       )
     })
@@ -103,7 +102,7 @@ describe('Query Builder', () => {
         update('project')
           .set({ name: 'Tropy' })
           .query
-      ).to.eql('UPDATE project SET name = $new_name'))
+      ).to.equal('UPDATE project SET name = $new_name'))
 
     it('returning', () =>
       expect(
@@ -111,21 +110,21 @@ describe('Query Builder', () => {
           .set({ name: 'Tropy' })
           .returning('id')
           .query
-      ).to.eql('UPDATE project SET name = $new_name RETURNING id'))
+      ).to.equal('UPDATE project SET name = $new_name RETURNING id'))
 
     it('null', () =>
       expect(
         update('project')
           .set({ base: null })
           .query
-      ).to.eql('UPDATE project SET base = NULL'))
+      ).to.equal('UPDATE project SET base = NULL'))
 
     it('undefined', () =>
       expect(
         update('project')
           .set({ base: undefined, name: 'X' })
           .query
-      ).to.eql('UPDATE project SET name = $new_name'))
+      ).to.equal('UPDATE project SET name = $new_name'))
 
     it('set strings', () =>
       expect(
@@ -133,13 +132,13 @@ describe('Query Builder', () => {
           .set({ base: null })
           .set('modified = datetime("now")')
           .query
-      ).to.eql('UPDATE project SET base = NULL, modified = datetime("now")'))
+      ).to.equal('UPDATE project SET base = NULL, modified = datetime("now")'))
 
     it('conditional', () => {
       let q = update('project').set({ name: 'new' }).where({ name: 'old' })
 
       expect(q.query)
-        .to.eql('UPDATE project SET name = $new_name WHERE name = $name')
+        .to.equal('UPDATE project SET name = $new_name WHERE name = $name')
       expect(q.params)
         .to.eql({ $name: 'old', $new_name: 'new' })
     })
@@ -149,7 +148,7 @@ describe('Query Builder', () => {
         update('project')
           .set({ name: 'Tropy', base: 'project' })
           .query
-      ).to.eql('UPDATE project SET name = $new_name, base = $new_base'))
+      ).to.equal('UPDATE project SET name = $new_name, base = $new_base'))
 
     it('lists', () =>
       expect(
@@ -157,7 +156,7 @@ describe('Query Builder', () => {
           .set('mod = datetime("now")')
           .where({ id: [1, 2, 3] })
           .query
-      ).to.eql(
+      ).to.equal(
         'UPDATE list_items SET mod = datetime("now") WHERE id IN (1, 2, 3)'
       ))
 
@@ -166,7 +165,7 @@ describe('Query Builder', () => {
         update('project')
           .set({ name: 'Tropy' }, { filters: { name: x => `lower(${x})` } })
           .query
-      ).to.eql('UPDATE project SET name = lower($new_name)'))
+      ).to.equal('UPDATE project SET name = lower($new_name)'))
   })
 
   describe('Insert', () => {
@@ -188,11 +187,11 @@ describe('Query Builder', () => {
   describe('Delete', () => {
     it('simple', () =>
       expect(deleteFrom('subjects').query)
-        .to.eql('DELETE FROM subjects'))
+        .to.equal('DELETE FROM subjects'))
 
     it('returning', () =>
       expect(deleteFrom('subjects').returning({ id: 'x' }).query)
-        .to.eql('DELETE FROM subjects RETURNING x AS id'))
+        .to.equal('DELETE FROM subjects RETURNING x AS id'))
 
     it('list params', () =>
       expect([

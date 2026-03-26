@@ -89,7 +89,7 @@ export default [
   },
 
   {
-    files: ['test/**/*'],
+    files: ['{test,spec}/**/*'],
     languageOptions: {
       globals: {
         ...globals.mocha,

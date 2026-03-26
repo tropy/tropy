@@ -19,6 +19,11 @@ describe('csv', () => {
     it('converts non-string values to strings', () => {
       expect(encode(42)).to.equal('"42"')
     })
+
+    it('returns blank for null and undefined', () => {
+      expect(encode(null)).to.equal('')
+      expect(encode(undefined)).to.equal('')
+    })
   })
 
   describe('decode', () => {
@@ -41,19 +46,13 @@ describe('csv', () => {
     })
   })
 
-  describe('joinAsRows', () => {
-    it('joins values as newline-separated rows', () => {
-      expect(join(['a', 'b', 'c'], '\n')).to.equal('"a"\n"b"\n"c"')
-    })
-  })
-
   describe('parse', () => {
     it('splits comma-separated values by default', () => {
       expect(parse('"a","b","c"')).to.eql(['a', 'b', 'c'])
     })
 
     it('accepts a custom separator', () => {
-      expect(parse('"a"\n"b"', '\n')).to.eql(['a', 'b'])
+      expect(parse('"a":"b"', ':')).to.eql(['a', 'b'])
     })
 
     it('handles commas inside quoted values', () => {
@@ -63,22 +62,26 @@ describe('csv', () => {
     it('filters out empty values', () => {
       expect(parse('"a",,"b"')).to.eql(['a', 'b'])
     })
+
+    it('handles unquoted values', () => {
+      expect(parse('a,"b",c,"d"')).to.eql(['a', 'b', 'c', 'd'])
+    })
   })
 
   describe('round trip', () => {
-    it('joinAsRows -> parse preserves simple values', () => {
+    it('join -> parse preserves simple values', () => {
       let values = ['Photos', 'Documents', 'Archive']
-      expect(parse(join(values, '\n'), '\n')).to.eql(values)
+      expect(parse(join(values))).to.eql(values)
     })
 
-    it('joinAsRows -> parse preserves values with special characters', () => {
+    it('join -> parse preserves values with special characters', () => {
       let values = ['say "hello"', 'path/to/thing', 'a,b']
-      expect(parse(join(values, '\n'), '\n')).to.eql(values)
+      expect(parse(join(values))).to.eql(values)
     })
 
-    it('joinAsRows -> parse preserves list paths', () => {
+    it('join -> parse preserves list paths', () => {
       let values = ['Parent\\/Child', 'Root', 'A\\/B\\/C']
-      expect(parse(join(values, '\n'), '\n')).to.eql(values)
+      expect(parse(join(values))).to.eql(values)
     })
   })
 })
