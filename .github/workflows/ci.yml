@@ -61,9 +61,6 @@ jobs:
       - name: Install Electron
         run: node node_modules/electron/install.js
 
-      - name: Lint JavaScript and Scss
-        run: npm run lint
-
       - name: Install system libvips
         if: runner.os == 'Linux' && matrix.tag == 'libvips'
         run: |
@@ -94,13 +91,13 @@ jobs:
         env:
           npm_package_config_node_gyp_arch: ${{ matrix.arch }}
 
-      - name: Run main/renderer tests
+      - name: Run tests
         if: runner.os != 'Linux'
         run: npm test
 
-      - name: Run main/renderer tests and collect code coverage
+      - name: Run tests and collect code coverage
         if: runner.os == 'Linux'
-        run: xvfb-run --auto-servernum --server-num=1 npm run coverage
+        run: xvfb-run npm run coverage
 
       - name: Send coverage report to Coveralls
         if: runner.os == 'Linux' && !matrix.tag
@@ -108,3 +105,15 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ github.token }}
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 'latest'
+          cache: npm
+      - run: npm clean-install --no-progress --ignore-scripts
+      - run: npm run lint
+
