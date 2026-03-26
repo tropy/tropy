@@ -1,3 +1,1 @@
-import { expect } from 'chai'
-
-globalThis.expect = expect
+import 'chai/register-expect.js'

@@ -2,8 +2,7 @@ import assert from 'node:assert/strict'
 import { mock } from 'node:test'
 import { DisposableResource, using } from '#tropy/common/disposable.js'
 
-describe('.using', () => {
-
+describe('using()', () => {
   it('rejects unless called with a disposable resource', async () => {
     await assert.rejects(() => using())
     await assert.rejects(() => using({}, mock.fn()))

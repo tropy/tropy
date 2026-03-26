@@ -5,7 +5,7 @@ import * as util from '#tropy/common/util.js'
 
 describe('util', () => {
 
-  describe('.once', () => {
+  describe('once', () => {
     describe('given an event emitter', () => {
       const ee = new EventEmitter()
 
@@ -59,7 +59,7 @@ describe('util', () => {
     })
   })
 
-  describe('.flatten', () => {
+  describe('flatten', () => {
     it('flattens empty objects', () =>
       expect(util.flatten({})).to.eql({}))
 
@@ -69,7 +69,7 @@ describe('util', () => {
       ).to.eql({ 'foo.bar': 'baz' }))
   })
 
-  describe('.strftime', () => {
+  describe('strftime', () => {
     it('supports subset of stdlib strftime', () => {
       const date = new Date(2016, 8, 3, 23, 11, 5)
 
@@ -83,7 +83,7 @@ describe('util', () => {
     })
   })
 
-  describe('.pick', () => {
+  describe('pick', () => {
     it('picks the given properties', () =>
       expect(util.pick({ foo: 1, bar: 2 }, ['bar'])).to.eql({ bar: 2 }))
 
@@ -96,7 +96,7 @@ describe('util', () => {
     })
   })
 
-  describe('.omit', () => {
+  describe('omit', () => {
     it('picks the given properties', () =>
       expect(util.omit({ foo: 1, bar: 2 }, ['bar'])).to.eql({ foo: 1 }))
 
@@ -109,7 +109,7 @@ describe('util', () => {
     })
   })
 
-  describe('.move', () => {
+  describe('move', () => {
     describe('with offset 0', () => {
       it('moves a in front of b', () => {
         expect(util.move([1, 2, 3], 3, 2, 0)).to.eql([1, 3, 2])
@@ -145,7 +145,7 @@ describe('util', () => {
     })
   })
 
-  describe('.swap', () => {
+  describe('swap', () => {
     it('swaps the items at the given positions', () => {
       expect(util.swap([1, 2, 3], 0, 0)).to.eql([1, 2, 3])
       expect(util.swap([1, 2, 3], 1, 1)).to.eql([1, 2, 3])
@@ -160,7 +160,7 @@ describe('util', () => {
     })
   })
 
-  describe('.adjacent', () => {
+  describe('adjacent', () => {
     it('returns the two items adjacent to the given item', () => {
       expect(util.adjacent([])).to.eql([])
       expect(util.adjacent([], 1)).to.eql([])
@@ -174,7 +174,7 @@ describe('util', () => {
     })
   })
 
-  describe('.get', () => {
+  describe('get', () => {
     it('returns the value', () => {
       expect(util.get({}, '')).to.eql({})
       expect(util.get(null, '')).to.be.undefined
@@ -189,7 +189,7 @@ describe('util', () => {
     })
   })
 
-  describe('.set', () => {
+  describe('set', () => {
     it('on objects', () => {
       expect(util.set({}, 'foo', 1)).to.eql({ foo: 1 })
     })
@@ -212,7 +212,7 @@ describe('util', () => {
     })
   })
 
-  describe('.has', () => {
+  describe('has', () => {
     it('tests for existence', () => {
       expect(util.has({}, '')).to.be.true
       expect(util.has(null, '')).to.be.false
@@ -229,7 +229,7 @@ describe('util', () => {
     })
   })
 
-  describe('.merge', () => {
+  describe('merge', () => {
     it('returns a new object', () => {
       const a = {}
       const b = {}
@@ -260,7 +260,7 @@ describe('util', () => {
     })
   })
 
-  describe('.uniq', () => {
+  describe('uniq', () => {
     it('returns array of unique values', () => {
       expect(util.uniq([])).to.eql([])
       expect(util.uniq([1])).to.eql([1])
@@ -268,7 +268,7 @@ describe('util', () => {
     })
   })
 
-  describe('.mixed', () => {
+  describe('mixed', () => {
     it('returns true for mixed contents', () => {
       expect(util.mixed([])).to.be.false
       expect(util.mixed([1])).to.be.false
@@ -280,7 +280,7 @@ describe('util', () => {
     })
   })
 
-  describe('.remove', () => {
+  describe('remove', () => {
     it('returns new array', () => {
       const a = [1, 2, 3]
       expect(util.remove(a)).not.to.equal(a)
@@ -297,7 +297,7 @@ describe('util', () => {
     })
   })
 
-  describe('.shallow', () => {
+  describe('shallow', () => {
     it('returns true if params are shallowly equal', () => {
       const a = { a: 1, b: [], c: 'foo' }
       const b = { a: 1, b: a.b, c: 'foo' }
@@ -345,7 +345,7 @@ describe('util', () => {
     })
   })
 
-  describe('.camelcase', () => {
+  describe('camelcase', () => {
     it('converts strings to camelCase', () => {
       expect(util.camelcase('')).to.eql('')
       expect(util.camelcase('foo')).to.eql('foo')
@@ -356,7 +356,7 @@ describe('util', () => {
     })
   })
 
-  describe('.lispcase', () => {
+  describe('lispcase', () => {
     it('converts strings to lisp-case', () => {
       expect(util.lispcase('')).to.eql('')
       expect(util.lispcase('foo')).to.eql('foo')
@@ -370,7 +370,7 @@ describe('util', () => {
     })
   })
 
-  describe('.morph', () => {
+  describe('morph', () => {
     const upcase = (acc, prop, value) => {
       acc[prop.toUpperCase()] = value.toUpperCase()
     }
@@ -387,7 +387,7 @@ describe('util', () => {
     })
   })
 
-  describe('.pMap', () => {
+  describe('pMap', () => {
     it('accepts an empty list', async () => {
       let fn = mock.fn()
 
