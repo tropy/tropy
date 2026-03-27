@@ -63,7 +63,10 @@
       "test/support/chai.js",
       "test/support/log.js",
       "test/support/args.cjs"
-    ]
+    ],
+    "webPreferences": {
+      "webSecurity": false
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.12.13",

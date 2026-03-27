@@ -296,7 +296,11 @@ export function loadImage(src, decode = false) {
     else
       img.onload = () => resolve(img)
 
-    img.onerror = reject
+    img.onerror = (cause) =>
+      reject(new Error(`failed loading image ${src}`, {
+        cause
+      }))
+
     img.src = src
   })
 }
