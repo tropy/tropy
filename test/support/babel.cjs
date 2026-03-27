@@ -1,11 +1,16 @@
 // JSX compilation hook for renderer tests.
-// Uses pirates to hook into Module._compile for files that contain JSX.
+// Hooks into Module._extensions to transform matched files with Babel.
 if (process.type === 'renderer') {
-  let { addHook } = require('pirates')
+  let Module = require('node:module')
   let { transformSync } = require('@babel/core')
 
-  addHook((code, filename) => {
-    let result = transformSync(code, {
+  let match = (filename) =>
+    /[/\\]src[/\\](components|hooks|views)[/\\]/.test(filename) ||
+    /[/\\]test[/\\]components[/\\]/.test(filename) ||
+    /[/\\]test[/\\]support[/\\].*\.cjs$/.test(filename)
+
+  let transform = (code, filename) =>
+    transformSync(code, {
       filename,
       configFile: false,
       babelrc: false,
@@ -16,13 +21,22 @@ if (process.type === 'renderer') {
         ['@babel/plugin-transform-modules-commonjs']
       ],
       sourceMaps: 'inline'
-    })
-    return result.code
-  }, {
-    exts: ['.js', '.cjs'],
-    matcher: (filename) =>
-      /[/\\]src[/\\](components|hooks|views)[/\\]/.test(filename) ||
-      /[/\\]test[/\\]components[/\\]/.test(filename) ||
-      /[/\\]test[/\\]support[/\\].*\.cjs$/.test(filename)
-  })
+    }).code
+
+  let jsLoader = Module._extensions['.js']
+
+  for (let ext of ['.js', '.cjs']) {
+    let oldLoader = Module._extensions[ext] || jsLoader
+
+    Module._extensions[ext] = function (mod, filename) {
+      if (match(filename)) {
+        let compile = mod._compile
+        mod._compile = function (code) {
+          mod._compile = compile
+          return mod._compile(transform(code, filename), filename)
+        }
+      }
+      oldLoader(mod, filename)
+    }
+  }
 }
