@@ -44,7 +44,8 @@ and all dependencies required to use [node-gyp][] on your platform.
 
 Clone this [repository][] and install Tropy's dependencies:
 
-    $ npm install
+    $ npm install --ignore-scripts
+    $ npm rebuild electron
     $ node scripts/rebuild.js --force
 
 On Linux, use the `--global-libvips` flag when rebuilding
@@ -77,6 +78,16 @@ Use the following commands for Tropy development:
      # View or tail the log file
      $ npm run log:view
      $ npm run log:tail
+
+     # Run all tests
+     $ npm test
+
+     # Run individual tests in main/renderer process
+     $ npx spark test/common/db.test.js
+     $ npx spark --renderer test/common/db.test.js
+
+     # Collect test code coverage
+     $ npm run coverage
 
 Plugin Development
 ------------------
