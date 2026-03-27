@@ -21,7 +21,7 @@ if (process.type === 'renderer') {
   }, {
     exts: ['.js', '.cjs'],
     matcher: (filename) =>
-      /[/\\]src[/\\](components|views)[/\\]/.test(filename) ||
+      /[/\\]src[/\\](components|hooks|views)[/\\]/.test(filename) ||
       /[/\\]test[/\\]components[/\\]/.test(filename) ||
       /[/\\]test[/\\]support[/\\].*\.cjs$/.test(filename)
   })
