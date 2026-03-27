@@ -141,7 +141,7 @@ describe('dom', () => {
     })
   })
 
-  // TODO loadImage tests crash the renderer in spark
+  // skip: spark:// protocol cannot load file:// images
   describe.skip('loadImage', () => {
     it('resolves when the image has loaded', async () => {
       await dom.loadImage(join(images, 'PA140105.JPG'))
