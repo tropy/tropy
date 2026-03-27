@@ -1,5 +1,6 @@
 import { mock } from 'node:test'
 import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import * as dom from '#tropy/dom.js'
 
 const images = join(import.meta.dirname, 'fixtures/images')
@@ -141,17 +142,20 @@ describe('dom', () => {
     })
   })
 
-  // skip: spark:// protocol cannot load file:// images
-  describe.skip('loadImage', () => {
-    it('resolves when the image has loaded', async () => {
-      await dom.loadImage(join(images, 'PA140105.JPG'))
+  describe('loadImage', () => {
+    it('resolves when the image has loaded', {
+      timeout: 2000
+    }, async () => {
+      let img = await dom.loadImage(
+        pathToFileURL(join(images, 'PA140105.JPG')))
+      expect(img.width).to.equal(2048)
     })
 
-    it('rejects when the image fails to load', async () => {
-      try {
-        await dom.loadImage(join(images, '404.png'))
-        expect.fail('should have rejected')
-      } catch { /* expected */ }
+    it('rejects when the image fails to load', {
+      timeout: 2000
+    }, async (t) => {
+      await t.assert.rejects(
+        dom.loadImage(pathToFileURL(join(images, '404.png'))))
     })
   })
 })
