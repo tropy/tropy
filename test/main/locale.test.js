@@ -35,8 +35,10 @@ describe('locale', () => {
       expect(isRightToLeft('it')).to.be.false
     })
 
-    it('returns false for invalid locales', () => {
-      expect(isRightToLeft('not-a-locale-!!!')).to.be.false
+    it('is false for invalid locales', () => {
+      expect(isRightToLeft('not-a-locale')).to.be.false
+      expect(isRightToLeft('')).to.be.false
+      expect(isRightToLeft(null)).to.be.false
     })
   })
 
