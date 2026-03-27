@@ -55,8 +55,7 @@
     ],
     "rendererGlobPatterns": [
       "test/*.test.js",
-      "test/components/**/*.test.{js,cjs}",
-      "test/{common,editor,models,ontology,reducers,selectors}/**/*.test.{js,cjs}"
+      "test/!(main|support|fixtures)/**/*.test.{js,cjs}"
     ],
     "preload": [
       "test/support/babel.cjs",
