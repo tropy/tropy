@@ -12,6 +12,8 @@ export async function init() {
       simd: sharp.simd()
     }, 'sharp initialized')
   }
+
+  return sharp
 }
 
 export const defaults = {

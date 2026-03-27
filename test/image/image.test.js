@@ -1,10 +1,9 @@
 import { join } from 'node:path'
 import { Image } from '#tropy/image/index.js'
 
-const images = join(import.meta.dirname, 'fixtures/images')
+const images = join(import.meta.dirname, '../fixtures/images')
 
-// TODO sharp native module crashes in renderer
-describe.skip('Image', () => {
+describe('Image', () => {
   describe('given an image', () => {
     let image = new Image({ path: join(images, 'PA140105.JPG') })
 
