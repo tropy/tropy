@@ -1,4 +1,4 @@
-import { render } from '../support/react.cjs'
+import { render } from '../support/react.js'
 import { Toolbar } from '#tropy/components/toolbar.js'
 
 describe('Toolbar', () => {

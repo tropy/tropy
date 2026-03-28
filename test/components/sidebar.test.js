@@ -1,4 +1,4 @@
-import { render } from '../support/react.cjs'
+import { render } from '../support/react.js'
 import { Sidebar, SidebarBody } from '#tropy/components/sidebar.js'
 
 describe('Sidebar', () => {

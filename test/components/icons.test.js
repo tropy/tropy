@@ -1,4 +1,4 @@
-import { render, inWindowContext } from '../support/react.cjs'
+import { render, inWindowContext } from '../support/react.js'
 import { IconLock } from '#tropy/components/icons.js'
 
 describe('IconLock', () => {

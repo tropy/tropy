@@ -6,23 +6,12 @@ if (process.type === 'renderer') {
     !(/node_modules/.test(url)) && (
       /[/\\]src[/\\](components|hooks|views)[/\\]/.test(url) ||
       /[/\\]test[/\\]components[/\\]/.test(url) ||
-      /[/\\]test[/\\]support[/\\].*\.cjs$/.test(url)
+      /[/\\]test[/\\]support[/\\]react\.js$/.test(url)
     )
 
   let transform = (code, filename) =>
     transformSync(code, {
       filename,
-      configFile: false,
-      babelrc: false,
-      presets: [
-        ['@babel/preset-react', { runtime: 'automatic' }]
-      ],
-      plugins: [
-        ['@babel/plugin-transform-modules-commonjs']
-      ],
-      targets: {
-        node: '24.14'
-      },
       sourceMaps: 'inline'
     }).code
 
@@ -42,7 +31,6 @@ if (process.type === 'renderer') {
       if (match(url)) {
         return {
           ...result,
-          format: 'commonjs',
           source: transform(result.source, url)
         }
       } else {
