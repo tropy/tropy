@@ -1,4 +1,3 @@
-import React from 'react'
 import { TemplateField } from './field.js'
 
 export const TemplateFieldList = ({ fields, template, ...props }) => {

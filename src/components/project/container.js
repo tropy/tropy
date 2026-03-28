@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDropProjectFiles } from '../../hooks/use-drop-project-files.js'
 import { useEvent } from '../../hooks/use-event.js'

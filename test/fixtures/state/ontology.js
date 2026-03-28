@@ -43,7 +43,7 @@ export default {
       ]
     },
 
-    'class': {
+    class: {
       'https://tropy.org/v1/tropy#Item': {
         comment: 'A Tropy Item',
         id: 'https://tropy.org/v1/tropy#Item',
@@ -51,7 +51,7 @@ export default {
       }
     },
 
-    'props': {
+    props: {
       'http://purl.org/dc/elements/1.1/title': {
         id: 'http://purl.org/dc/elements/1.1/title',
         label: 'Title',
@@ -69,7 +69,7 @@ export default {
       }
     },
 
-    'type': {
+    type: {
       'https://tropy.org/v1/tropy#date': {
         id: 'https://tropy.org/v1/tropy#date',
         vocabulary: 'https://tropy.org/v1/tropy#'

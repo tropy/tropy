@@ -1,4 +1,3 @@
-import React from 'react'
 import { SelectionIterator } from './iterator.js'
 import { SelectionListItem } from './list-item.js'
 import cx from 'classnames'

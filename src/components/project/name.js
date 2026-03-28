@@ -11,9 +11,9 @@ export function ProjectName(props) {
     <li
       ref={drop}
       className={cx('project-name', {
-        'active': props.isSelected,
+        active: props.isSelected,
         'read-only': props.isReadOnly,
-        'over': isOver && canDrop
+        over: isOver && canDrop
       })}
       onClick={props.onClick}>
       <div className="list-node-container">

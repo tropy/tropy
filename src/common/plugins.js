@@ -275,7 +275,7 @@ export class Plugins extends EventEmitter {
       }
     } catch (e) {
       if (e.code !== 'ENOENT') {
-        warn({ stack: e.stack }, 'failed to uninstall plugin "${plugin}"')
+        warn({ stack: e.stack }, `failed to uninstall plugin "${plugin}"`)
       }
     }
     return this

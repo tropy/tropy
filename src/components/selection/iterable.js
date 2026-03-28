@@ -25,12 +25,12 @@ export class SelectionIterable extends React.PureComponent {
 
   get classes() {
     return {
-      'active': this.props.isActive,
-      'dragging': this.props.isDragging,
+      active: this.props.isActive,
+      dragging: this.props.isDragging,
       'drop-target': this.props.isSortable,
-      'last': this.props.isLast,
-      'over': this.props.isOver,
-      'selection': true,
+      last: this.props.isLast,
+      over: this.props.isOver,
+      selection: true,
       [this.direction]: this.props.isOver && this.state.offset != null
     }
   }

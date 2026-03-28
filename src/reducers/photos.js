@@ -3,7 +3,6 @@ import { bulk, insert, load, nested, touch, update } from './util.js'
 import * as tr from '../slices/transcriptions.js'
 
 
-// eslint-disable-next-line complexity
 export function photos(state = {}, { type, payload, error, meta }) {
   switch (type) {
     case PROJECT.OPEN:

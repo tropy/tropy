@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar, Toolbar, ToolGroup } from '../toolbar.js'

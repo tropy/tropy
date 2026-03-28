@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { ipcRenderer } from 'electron'
 import { useEvent } from './use-event.js'
 
@@ -12,8 +11,8 @@ export function useIpcEvent(fn, params = []) {
   })
 }
 
-export function useIpcSend(dependencies = []) {
-  return useCallback((...args) => {
-    ipcRenderer.send(...dependencies, ...args)
-  }, dependencies)
+export function useIpcSend(params = []) {
+  return useEvent((...args) => {
+    ipcRenderer.send(...params, ...args)
+  })
 }

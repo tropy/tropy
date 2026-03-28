@@ -1,4 +1,3 @@
-import React from 'react'
 import { PhotoIterable } from './iterable.js'
 import { createClickHandler } from '../util.js'
 import cx from 'classnames'

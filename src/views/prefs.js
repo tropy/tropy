@@ -1,4 +1,3 @@
-import React from 'react'
 import { createRoot } from 'react-dom/client'
 import ARGS from '../args.js'
 import { create } from '../stores/prefs.js'

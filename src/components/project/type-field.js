@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useIntl } from 'react-intl'
 import { FormField, FormElement } from '../form.js'
 import { Button } from '../button.js'

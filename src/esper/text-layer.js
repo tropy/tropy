@@ -5,10 +5,6 @@ import { move, normalizeRectangle } from './util.js'
 
 
 export class TextLayer extends Container {
-  constructor() {
-    super()
-  }
-
   clear() {
     if (this.children.length)
       for (let block of this.removeChildren()) {

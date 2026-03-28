@@ -1,4 +1,3 @@
-import React from 'react'
 import { DND, useDragLayer } from './dnd.js'
 import { useDropEffect } from '../hooks/use-drop-effect.js'
 import { ItemDragPreview } from './item/drag-preview.js'

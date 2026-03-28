@@ -21,7 +21,7 @@ export class PhotoIterator extends React.Component {
 
   get classes() {
     return {
-      'over': this.props.isOver,
+      over: this.props.isOver,
       'over-file': this.props.isOverFile
     }
   }
@@ -190,7 +190,7 @@ export class PhotoIterator extends React.Component {
   connect(element) {
     return this.props.isDisabled ?
       element :
-        this.props.connectDropTarget(element)
+      this.props.connectDropTarget(element)
   }
 
 

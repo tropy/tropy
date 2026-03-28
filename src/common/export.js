@@ -6,11 +6,11 @@ export const ctx = {
       '@version': 1.1,
       '@vocab': tropy.BASE,
 
-      'template': {
+      template: {
         '@type': '@id'
       },
 
-      'photo': {
+      photo: {
         '@id': tropy.photo,
         '@container': '@list'
       },

@@ -158,7 +158,7 @@ const exports = {
     return [output]
   },
 
-  ['7z']({ app, arch, out, platform, silent }) {
+  '7z'({ app, arch, out, platform, silent }) {
     let output = join(out, `${name}-${version}-${
       (platform === 'darwin' && arch === 'x64') ?
         platform : [platform, arch].join('-')
@@ -218,8 +218,8 @@ const exports = {
         target: output,
         basepath: ROOT,
         specification: {
-          'title': qualified.product,
-          'background': join('res', 'dmg', 'background.png'),
+          title: qualified.product,
+          background: join('res', 'dmg', 'background.png'),
           'icon-size': 92,
           window,
           contents

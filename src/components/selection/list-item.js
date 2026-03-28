@@ -1,4 +1,3 @@
-import React from 'react'
 import { SelectionIterable } from './iterable.js'
 import { Editable } from '../editable.js'
 import { injectIntl } from 'react-intl'

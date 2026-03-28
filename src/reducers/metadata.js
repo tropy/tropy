@@ -17,7 +17,6 @@ import {
 } from './util.js'
 
 
-
 export function metadata(state = {}, { type, payload, meta, error }) {
   switch (type) {
     case PROJECT.OPENED:
@@ -37,8 +36,8 @@ export function metadata(state = {}, { type, payload, meta, error }) {
       let { ids, data } = payload
 
       return (ids.length === 1) ?
-          update(state, { ...data, id: ids[0] }, meta) :
-          bulk.update(state, [ids, data], meta)
+        update(state, { ...data, id: ids[0] }, meta) :
+        bulk.update(state, [ids, data], meta)
     }
 
     case SELECTION.CREATE:

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Scroll } from '../scroll/index.js'
 import { PhotoListItem } from './list-item.js'
 import { PhotoIterator } from './iterator.js'

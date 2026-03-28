@@ -361,8 +361,8 @@ const project = {
 
       let { payload } = await rsvp('project',
         request.body.tag ?
-            act.tag.remove({ id: params.id, tags: request.body.tag }) :
-            act.tag.clear({ id: params.id }))
+          act.tag.remove({ id: params.id, tags: request.body.tag }) :
+          act.tag.clear({ id: params.id }))
 
       ctx.body = payload
     },

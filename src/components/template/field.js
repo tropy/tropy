@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import cx from 'classnames'
 import { DataTypeSelect, PropertySelect } from '../resource/select.js'
 import { PlusMinusControls } from '../button.js'

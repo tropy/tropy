@@ -1,4 +1,3 @@
-import React from 'react'
 import { Photo } from './photo.js'
 
 export const Item = ({ item, hasOnlyNotes, ...props }) => (

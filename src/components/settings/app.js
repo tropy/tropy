@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
 import { Form } from '../form.js'

@@ -65,9 +65,7 @@ const IGNORE_WARNINGS = {
 function onwarn(warning, warn) {
   let ok = IGNORE_WARNINGS[warning.code]
 
-  if (ok === true || (typeof ok === 'function' && ok(warning)))
-    return
-  else
+  if (!(ok === true || (typeof ok === 'function' && ok(warning))))
     warn(warning)
 }
 
@@ -102,7 +100,7 @@ export default [
     plugins: [
       alias({
         entries: {
-          'depd': join(process.cwd(), 'node_modules/depd'),
+          depd: join(process.cwd(), 'node_modules/depd'),
           'readable-stream': 'node:stream'
         }
       }),
@@ -194,7 +192,7 @@ export default [
         preventAssignment: true,
         values: {
           'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
-          '__dirname': 'import.meta.dirname'
+          __dirname: 'import.meta.dirname'
         }
       }),
       nodeResolve({

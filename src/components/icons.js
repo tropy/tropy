@@ -41,8 +41,6 @@ function i(name, svg) {
 }
 
 
-
-
 export const IconCircle = i('Circle', (
   <svg width="10" height="10">
     <circle className="border" fill="currentColor" cx="5" cy="5" r="5"/>

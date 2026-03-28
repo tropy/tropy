@@ -15,6 +15,7 @@ import {
 } from '../../../constants/index.js'
 
 const { COLUMN, ROW } = SASS
+// eslint-disable-next-line no-unreachable-loop
 const any = (src) => { for (let key in src) return key }
 
 export class ItemTable extends ItemIterator {
@@ -43,7 +44,7 @@ export class ItemTable extends ItemIterator {
   get classes() {
     return ['table-body', {
       'drop-target': !this.props.isReadOnly,
-      'over': this.props.isOver
+      over: this.props.isOver
     }]
   }
 

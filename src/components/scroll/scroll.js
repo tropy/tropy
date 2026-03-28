@@ -227,7 +227,7 @@ export class Scroll extends React.Component {
     }
   }
 
-  // eslint-disable-next-line complexity
+
   handleArrowKeys(event) {
     if (event.ctrlKey || event.metaKey)
       return

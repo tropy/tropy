@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'

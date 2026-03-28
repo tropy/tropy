@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { FormToggle } from '../form.js'
 import { Slider } from '../slider.js'

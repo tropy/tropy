@@ -26,10 +26,10 @@ export class PhotoIterable extends React.PureComponent {
   get classes() {
     return ['photo', {
       'drop-target': this.props.isSortable,
-      'over': this.props.isOver,
-      'dragging': this.props.isDragging,
-      'expanded': this.props.isExpanded,
-      'expandable': this.props.isExpandable,
+      over: this.props.isOver,
+      dragging: this.props.isDragging,
+      expanded: this.props.isExpanded,
+      expandable: this.props.isExpandable,
       [this.direction]: this.props.isOver && this.state.offset != null
     }]
   }

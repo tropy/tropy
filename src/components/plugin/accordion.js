@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Accordion } from '../accordion.js'
 import { Button, ButtonGroup } from '../button.js'

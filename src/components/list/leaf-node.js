@@ -1,4 +1,3 @@
-import React from 'react'
 import cx from 'classnames'
 import { Icon } from '../icons.js'
 import { FormattedMessage } from 'react-intl'

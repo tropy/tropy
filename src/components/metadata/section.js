@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { TemplateSelect } from '../template/select.js'
 import cx from 'classnames'

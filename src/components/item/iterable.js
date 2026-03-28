@@ -11,11 +11,11 @@ export class ItemIterable extends React.PureComponent {
 
   get classes() {
     return {
-      'item': true,
+      item: true,
       'drop-target': !this.props.isReadOnly,
-      'active': this.props.isSelected,
-      'over': this.props.isOver && this.props.canDrop,
-      'dragging': this.props.isDragging
+      active: this.props.isSelected,
+      over: this.props.isOver && this.props.canDrop,
+      dragging: this.props.isDragging
     }
   }
 
@@ -68,7 +68,7 @@ export class ItemIterable extends React.PureComponent {
   connect(element) {
     return (this.props.isReadOnly) ?
       element :
-        this.props.ds(this.props.dt(element))
+      this.props.ds(this.props.dt(element))
   }
 
 

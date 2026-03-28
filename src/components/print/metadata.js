@@ -1,5 +1,4 @@
 import { basename } from 'node:path'
-import React from 'react'
 import { useIntl, FormattedMessage } from 'react-intl'
 import cx from 'classnames'
 import { auto, bytes, number } from '../../format.js'

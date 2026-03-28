@@ -13,7 +13,6 @@ import {
 } from './util.js'
 
 
-// eslint-disable-next-line complexity
 function itemsReducer(state = {}, { type, payload, meta, error }) {
   switch (type) {
     case PROJECT.OPEN:
@@ -27,7 +26,7 @@ function itemsReducer(state = {}, { type, payload, meta, error }) {
     case ITEM.IMPLODE:
       return (!meta.done || error) ?
         state :
-          insert(state, payload)
+        insert(state, payload)
 
     case ITEM.INSERT:
       return insert(state, payload)
@@ -39,7 +38,7 @@ function itemsReducer(state = {}, { type, payload, meta, error }) {
     case ITEM.EXPLODE:
       return (!meta.done || error) ?
         state :
-          replace(state, payload)
+        replace(state, payload)
 
     case ITEM.BULK.UPDATE:
       return bulk.update(state, payload, meta)

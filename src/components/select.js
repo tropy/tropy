@@ -73,12 +73,12 @@ export class Select extends React.Component {
   get classes() {
     return ['select', this.props.className, {
       'can-clear': !this.props.hideClearButton && this.state.canClearValue,
-      'disabled': this.isDisabled,
-      'focus': this.state.hasFocus,
+      disabled: this.isDisabled,
+      focus: this.state.hasFocus,
       'has-icon': this.props.icon != null,
-      'invalid': !this.isDisabled && this.state.isInvalid,
-      'open': this.isOpen,
-      'static': this.props.isStatic,
+      invalid: !this.isDisabled && this.state.isInvalid,
+      open: this.isOpen,
+      static: this.props.isStatic,
       'form-control': !this.props.isStatic
     }]
   }
@@ -298,7 +298,7 @@ export class Select extends React.Component {
       return this.isOpen && (
         <Completions
           className={cx(this.props.className, {
-            'invalid': this.state.isInvalid,
+            invalid: this.state.isInvalid,
             'has-icon': this.props.icon != null
           })}
           completions={this.props.options}

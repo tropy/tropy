@@ -1,18 +1,18 @@
 const LOCALE = {
-  'cn': 'cn',
-  'zh': 'cn',
-  'de': 'de',
-  'en': 'en',
-  'es': 'es',
+  cn: 'cn',
+  zh: 'cn',
+  de: 'de',
+  en: 'en',
+  es: 'es',
   'fi-FI': 'fi-FI',
-  'fr': 'fr',
-  'it': 'it',
-  'ja': 'ja',
+  fr: 'fr',
+  it: 'it',
+  ja: 'ja',
   'nl-NL': 'nl-NL',
-  'pt': 'pt',
+  pt: 'pt',
   'pt-BR': 'pt-BR',
-  'ru': 'ru',
-  'uk': 'uk'
+  ru: 'ru',
+  uk: 'uk'
 }
 
 export const supportedLanguages =

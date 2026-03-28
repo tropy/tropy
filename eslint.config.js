@@ -1,66 +1,42 @@
-import js from '@eslint/js'
 import globals from 'globals'
-import react from 'eslint-plugin-react'
+import neostandard, { plugins } from 'neostandard'
 import reactHooks from 'eslint-plugin-react-hooks'
-import stylistic from '@stylistic/eslint-plugin'
-
-let style = stylistic.configs.customize({
-  arrowParens: false,
-  blockSpacing: true,
-  braceStyle: '1tbs',
-  commaDangle: 'only-multiline'
-})
-
-Object.assign(style.rules, {
-  '@stylistic/arrow-parens': 0,
-  '@stylistic/jsx-closing-bracket-location': 0,
-  '@stylistic/jsx-tag-spacing': 0,
-  '@stylistic/generator-star-spacing': 0,
-  '@stylistic/yield-star-spacing': 0,
-  '@stylistic/max-statements-per-line': 0,
-  '@stylistic/multiline-ternary': 0,
-  '@stylistic/no-multi-spaces': [2, { ignoreEOLComments: true }],
-  '@stylistic/new-parens': 0,
-  '@stylistic/quotes': [1, 'single', { avoidEscape: true }],
-  '@stylistic/no-multiple-empty-lines': [1, { max: 4 }],
-  '@stylistic/operator-linebreak': 0,
-  '@stylistic/padded-blocks': 0
-})
-
-style.rules['@stylistic/indent'][0] = 'warn'
-style.rules['@stylistic/indent-binary-ops'][0] = 'warn'
 
 export default [
-  js.configs.recommended,
-  style,
+  ...neostandard(),
 
   {
     ignores: [
-      // Enable once import contraints are supported
       'scripts/db.js',
-      'src/common/release.js',
-
-      'lib/*',
-      'tmp/*'
+      'src/common/release.js'
     ]
-  },
-
-  {
-    languageOptions: {
-      sourceType: 'module',
-      globals: {
-        ...globals.builtin,
-        ...globals.nodeBuiltin
-      }
-    }
   },
 
   {
     rules: {
       'eqeqeq': [2, 'smart'],
-      'max-depth': [1, 6],
-      'complexity': [1, 16],
-      'no-shadow': [2, { allow: ['error', 'resolve'] }],
+
+      'prefer-const': 0,
+      'curly': 0,
+      'camelcase': 0,
+      'no-return-assign': 0,
+      'no-var': 0,
+      'no-sequences': 0,
+      'no-void': 0,
+      'object-shorthand': 0,
+      'no-unused-expressions': 0,
+      'one-var': 0,
+      'yoda': 0,
+      '@stylistic/space-before-function-paren': 0,
+      '@stylistic/generator-star-spacing': 0,
+      '@stylistic/multiline-ternary': 0,
+      '@stylistic/quote-props': 0,
+      '@stylistic/new-parens': 0,
+      '@stylistic/object-curly-newline': 0,
+      '@stylistic/object-property-newline': 0,
+      '@stylistic/operator-linebreak': 0,
+      '@stylistic/padded-blocks': 0,
+      '@stylistic/no-multiple-empty-lines': [1, { max: 2 }],
     }
   },
 
@@ -94,7 +70,7 @@ export default [
       'test/support/react.js'
     ],
     plugins: {
-      'react': react,
+      'react': plugins.react,
       'react-hooks': reactHooks
     },
     settings: {
@@ -110,17 +86,15 @@ export default [
       }
     },
     rules: {
-      ...react.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
-      'react-hooks/immutability': 1,
-      'react-hooks/refs': 1,
-      'react-hooks/set-state-in-effect': 1,
-      'react-hooks/use-memo': 1,
+      ...plugins.react.configs.flat.recommended.rules,
+      ...plugins.react.configs.flat['jsx-runtime'].rules,
       'react/display-name': 0,
-      'react/jsx-key': 2,
-      'react/no-deprecated': 1,
       'react/prop-types': 0,
-      'react/react-in-jsx-scope': 0
+      ...reactHooks.configs.recommended.rules,
+      'react-hooks/immutability': 0,
+      'react-hooks/refs': 0,
+      'react-hooks/set-state-in-effect': 0,
+      'react-hooks/use-memo': 0,
     }
   }
 ]

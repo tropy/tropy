@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useActions } from '../../hooks/use-action.js'

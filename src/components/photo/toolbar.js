@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Slider } from '../slider.js'
 import { Button } from '../button.js'

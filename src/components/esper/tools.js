@@ -1,4 +1,3 @@
-import React from 'react'
 import { useArgs } from '../../hooks/use-args.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useResolution } from '../../hooks/use-resolution.js'

@@ -4,7 +4,7 @@ import * as tr from '../slices/transcriptions.js'
 
 const init = {}
 
-// eslint-disable-next-line complexity
+
 export function selections(state = init, { type, payload, error, meta }) {
   switch (type) {
     case PROJECT.OPEN:

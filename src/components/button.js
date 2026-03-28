@@ -41,12 +41,12 @@ export const Button = React.memo(React.forwardRef(({
 
   let attr = {
     className: cx('btn', className, `btn-${size}`, {
-      'active': isActive && activeIcon == null,
+      active: isActive && activeIcon == null,
       'btn-block': isBlock,
       'btn-default': isDefault,
       'btn-icon': icon != null,
       'btn-primary': isPrimary,
-      'disabled': isDisabled
+      disabled: isDisabled
     }),
 
     onBlur,

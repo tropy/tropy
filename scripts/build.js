@@ -284,13 +284,13 @@ function mergeMacSigningOptions(opts, args) {
     let entitlements = join(ROOT, 'res', 'darwin', 'entitlements.plist')
 
     opts.osxSign = {
-      'identity': args.cert,
-      'type': channel === 'alpha' ? 'development' : 'distribution',
-      'platform': args.platform,
+      identity: args.cert,
+      type: channel === 'alpha' ? 'development' : 'distribution',
+      platform: args.platform,
       'hardened-runtime': true,
-      'entitlements': entitlements,
+      entitlements: entitlements,
       'entitlements-inherit': entitlements,
-      'keychain': args.keychain
+      keychain: args.keychain
     }
 
     say('will attempt code-signing')

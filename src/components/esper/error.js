@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Button } from '../button.js'

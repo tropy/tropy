@@ -1,4 +1,3 @@
-import React from 'react'
 import { FilterControls } from './filter.js'
 import { Button, ButtonContainer } from '../button.js'
 import { shallow } from '../../common/util.js'
