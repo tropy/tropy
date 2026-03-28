@@ -1,7 +1,6 @@
 import { render, inWindowContext } from '../../support/react.js'
 import { ProjectSidebar as WrappedSidebar } from '#tropy/components/project/sidebar.js'
-import projects from '../../fixtures/projects.js'
-import lists from '../../fixtures/lists.js'
+const { projects, lists } = F.state
 
 describe('ProjectSidebar', () => {
   const ProjectSidebar = WrappedSidebar.WrappedComponent

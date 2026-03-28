@@ -81,6 +81,7 @@ export default [
     files: ['test/**/*'],
     languageOptions: {
       globals: {
+        F: false,
         ...globals.mocha,
         ...globals.chai
       }

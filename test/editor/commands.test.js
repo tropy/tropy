@@ -1,6 +1,7 @@
 import { TextSelection } from 'prosemirror-state'
 import { markExtend } from '#tropy/editor/selections.js'
-import editor from '../fixtures/editor.js'
+
+const { schema } = F.require('editor')
 
 function selectedText(s) {
   return s.doc.cut(
@@ -15,12 +16,12 @@ function select(s, from, to) {
 }
 
 function expand(s) {
-  let range = markExtend(s.selection, editor.schema.marks.link)
+  let range = markExtend(s.selection, schema.marks.link)
   return select(s, range.from, range.to)
 }
 
 describe('markExtend', () => {
-  let { state, offset, url, www } = editor
+  let { state, offset, url, www } = F.require('editor')
   let content = state.doc.toJSON().content
   let p = content[1]
 
