@@ -38,7 +38,7 @@
     "log:view": "cat tmp/log/tropy.log | node scripts/log-viewer",
     "log:tail": "tail -q -F tmp/log/tropy.log 2> /dev/null | node scripts/log-viewer.js",
     "log:tail:win": "tail -q -F tmp/log/tropy.log 2> NUL | node scripts/log-viewer.js",
-    "start": "electron . --env development --data tmp --cache tmp/cache --logs tmp/log",
+    "start": "electron --app . --env development --data tmp --cache tmp/cache --logs tmp/log",
     "rebuild": "node scripts/rebuild.js",
     "coverage": "c8 -o coverage --reporter=text --reporter=lcov --include='src/**' npm test",
     "test": "spark --no-sandbox",
