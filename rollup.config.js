@@ -54,7 +54,6 @@ const IGNORE_WARNINGS = {
     resolve('node_modules/edtf/src/date.js'),
     resolve('node_modules/n3/src/N3DataFactory.js'),
     resolve('node_modules/semver/classes/range.js'),
-    resolve('node_modules/undici/lib/fetch/util.js')
   ].some(id => warning.ids.includes(id)),
 
   UNUSED_EXTERNAL_IMPORT: true,
@@ -98,13 +97,13 @@ export default [
       generatedCode: 'es2015',
       sourcemap: false
     },
-    treeshake: 'safest',
+    treeshake: 'recommended',
     preserveEntrySignatures: 'allow-extension',
     plugins: [
       alias({
         entries: {
           'depd': join(process.cwd(), 'node_modules/depd'),
-          'readable-stream': 'stream'
+          'readable-stream': 'node:stream'
         }
       }),
       nodeResolve({
@@ -119,10 +118,11 @@ export default [
       }),
       json(),
       commonjs({
+        exclude: 'src/**',
         ignoreGlobal: true,
         ignoreTryCatch
       }),
-      license({
+      (NODE_ENV === 'production') && license({
         thirdParty: {
           includePrivate: true,
           output: {
@@ -150,7 +150,7 @@ export default [
       generatedCode: 'es2015',
       sourcemap: true
     },
-    treeshake: 'safest',
+    treeshake: 'recommended',
     preserveEntrySignatures: 'allow-extension',
     plugins: [
       emit({
@@ -172,6 +172,7 @@ export default [
         targetEsm: true
       }),
       {
+        name: 'cleanup-signal-exit',
         buildEnd() {
           delete process.__signal_exit_emitter__
         }
@@ -192,13 +193,8 @@ export default [
       replace({
         preventAssignment: true,
         values: {
-          'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
-        }
-      }),
-      replace({
-        preventAssignment: true,
-        values: {
-          __dirname: 'import.meta.dirname',
+          'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+          '__dirname': 'import.meta.dirname'
         }
       }),
       nodeResolve({
@@ -212,11 +208,12 @@ export default [
         babelHelpers: 'bundled'
       }),
       commonjs({
+        exclude: 'src/**',
         requireReturnsDefault: 'auto',
         ignoreGlobal: true,
         ignoreTryCatch
       }),
-      license({
+      (NODE_ENV === 'production') && license({
         thirdParty: {
           includePrivate: true,
           output: {
