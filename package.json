@@ -59,9 +59,9 @@
     ],
     "preload": [
       "test/support/babel.cjs",
-      "test/support/chai.js",
+      "test/support/args.js",
       "test/support/log.js",
-      "test/support/args.cjs"
+      "test/support/chai.js"
     ],
     "webPreferences": {
       "webSecurity": false
