@@ -58,7 +58,7 @@
       "test/!(main|support|fixtures)/**/*.test.{js,cjs}"
     ],
     "preload": [
-      "test/support/babel.cjs",
+      "test/support/babel.js",
       "test/support/args.js",
       "test/support/log.js",
       "test/support/chai.js"
