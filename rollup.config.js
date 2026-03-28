@@ -182,10 +182,10 @@ export default [
       }),
       ignore([
         '@mapbox/node-pre-gyp',
+        '@digitalbazaar/http-client',
       ], { commonjsBugFix: true }),
       alias({
         entries: {
-          'ky-universal': 'ky',
           'readable-stream': 'node:stream'
         }
       }),
@@ -193,16 +193,6 @@ export default [
         preventAssignment: true,
         values: {
           'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
-        }
-      }),
-      // PATCH jsonld documentLoader redirect handling
-      replace({
-        preventAssignment: true,
-        include: [
-          'node_modules/jsonld/lib/documentLoaders/node.js'
-        ],
-        values: {
-          manual: 'follow'
         }
       }),
       replace({
