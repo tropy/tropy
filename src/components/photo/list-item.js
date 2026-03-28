@@ -1,4 +1,3 @@
-import React from 'react'
 import { Editable } from '../editable.js'
 import { createClickHandler } from '../util.js'
 import { PhotoIterable } from './iterable.js'

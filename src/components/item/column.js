@@ -1,4 +1,3 @@
-import React from 'react'
 import { Id, Label } from '../resource/select.js'
 import { PopupSelect } from '../resource/popup.js'
 import { IconTick } from '../icons.js'

@@ -4,7 +4,6 @@ import { ONTOLOGY, TYPE } from '../constants/index.js'
 import { tropy } from './ns.js'
 
 
-
 export class Template {
   static defaults = {
     type: tropy.Item,
@@ -50,13 +49,13 @@ export class Template {
       '@context': ONTOLOGY.TEMPLATE.CONTEXT,
       '@id': data.id,
       '@type': tropy.Template,
-      'type': data.type,
-      'name': data.name,
-      'version': data.version,
-      'domain': data.domain,
-      'creator': data.creator,
-      'description': data.description,
-      'field': data.fields.map(Field.copy)
+      type: data.type,
+      name: data.name,
+      version: data.version,
+      domain: data.domain,
+      creator: data.creator,
+      description: data.description,
+      field: data.fields.map(Field.copy)
     }
   }
 

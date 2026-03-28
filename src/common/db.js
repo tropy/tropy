@@ -10,8 +10,8 @@ import { DisposableResource, using } from './disposable.js'
 
 
 const M = {
-  'r': sqlite.OPEN_READONLY,
-  'w': sqlite.OPEN_READWRITE,
+  r: sqlite.OPEN_READONLY,
+  w: sqlite.OPEN_READWRITE,
   'w+': sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE,
   'wx+': sqlite.OPEN_CREATE
 }
@@ -173,8 +173,8 @@ export class Database extends EventEmitter {
   release(conn, destroy = false) {
     conn.parallelize()
     return destroy ?
-        this.pool.destroy(conn) :
-        this.pool.release(conn)
+      this.pool.destroy(conn) :
+      this.pool.release(conn)
   }
 
   emitAsync(name) {

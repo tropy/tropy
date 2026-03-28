@@ -14,7 +14,7 @@ export const TemplateSelect = ({
 }) => {
   let intl = useIntl()
   let placeholder = (props.placeholder) ?
-      intl.formatMessage({ id: props.placeholder }) : null
+    intl.formatMessage({ id: props.placeholder }) : null
 
   let options = useSelector(state =>
     selectTemplatesByType(state, { type }))

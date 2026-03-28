@@ -1,5 +1,4 @@
 import fs from 'node:fs'
-import React from 'react'
 import { render as testRender, queries } from '@testing-library/react'
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'

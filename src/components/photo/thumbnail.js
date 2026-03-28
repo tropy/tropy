@@ -25,7 +25,7 @@ export function Thumbnail({
   let style = {
     '--x': x,
     '--y': y,
-    'backgroundColor': props.color
+    backgroundColor: props.color
   }
 
   let handleError = () => {

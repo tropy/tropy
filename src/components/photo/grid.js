@@ -1,4 +1,3 @@
-import React from 'react'
 import { PhotoIterator } from './iterator.js'
 import { PhotoTile } from './tile.js'
 import { SelectionGrid } from '../selection/grid.js'

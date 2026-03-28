@@ -27,7 +27,7 @@ export const getExportItems = (state, props = {}) => {
 const exportItem = (context, item, state) => {
   let output = {
     '@type': 'Item',
-    'template': item.template
+    template: item.template
   }
 
   addMetadata(context, output, state.metadata[item.id], state.ontology)
@@ -115,8 +115,8 @@ const exportNote = (note, opts) => ({
 const exportTranscription = (transcription) => (
   (transcription.status < 1) ? null : {
     '@type': 'Transcription',
-    'text': transcription.text,
-    'alto': transcription.data
+    text: transcription.text,
+    alto: transcription.data
   })
 
 const addMetadata = (context, into, data, ontology = {}) => {

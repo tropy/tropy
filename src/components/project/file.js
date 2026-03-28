@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
 import { Button } from '../button.js'

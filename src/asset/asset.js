@@ -31,8 +31,8 @@ export class Asset {
 
   get basename() {
     return this.isRemote ?
-        basename(decodeURIComponent((new URL(this.url)).pathname)) :
-        basename(this.path)
+      basename(decodeURIComponent((new URL(this.url)).pathname)) :
+      basename(this.path)
   }
 
   get date() {
@@ -71,8 +71,8 @@ export class Asset {
         this.protocol = m[1].toLowerCase()
 
         path = (this.protocol === 'file') ?
-            fileURLToPath(path) :
-            path.slice(m[0].length)
+          fileURLToPath(path) :
+          path.slice(m[0].length)
       }
     }
 
@@ -90,7 +90,7 @@ export class Asset {
   get url() {
     return this.isRemote ?
       `${this.protocol}://${this.path}` :
-        pathToFileURL(this.path)
+      pathToFileURL(this.path)
   }
 
   async check({

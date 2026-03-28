@@ -1,4 +1,3 @@
-import React from 'react'
 import { MetadataContainer } from './metadata.js'
 import { NoteList } from './note.js'
 import cx from 'classnames'
@@ -24,9 +23,9 @@ export const Photo = ({
 
   return (
     <div className={cx('photo', 'container', rotation.mode(photo), {
-      'overflow': canOverflow,
-      'metadata': hasMetadata,
-      'notes': hasNotes,
+      overflow: canOverflow,
+      metadata: hasMetadata,
+      notes: hasNotes,
       'text-only': !hasPhotos
     })}>
       {hasPhotos && (

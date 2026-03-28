@@ -327,7 +327,7 @@ export class ContextMenu extends Menu {
 
 
 Menu.ItemCompiler = {
-  'window': (item, app) => {
+  window: (item, app) => {
     if (!item.window)
       return
 
@@ -343,7 +343,7 @@ Menu.ItemCompiler = {
     item.visible = item.enabled
   },
 
-  'color': (item, app, win, event) => {
+  color: (item, app, win, event) => {
     let [col, ctx, cmd] = item.color
 
     item.type = 'checkbox'
@@ -355,7 +355,7 @@ Menu.ItemCompiler = {
       item.click = createResponder(cmd, app, win, event, col)
   },
 
-  'label': (item, app) => {
+  label: (item, app) => {
     item.label = item.label.replace(/%(\w+)/g, (_, prop) =>
       app[prop] || prop)
   },
@@ -363,7 +363,7 @@ Menu.ItemCompiler = {
   // Electron does not support removing menu items
   // dynamically (#527), therefore we currently populate
   // recent projects only in the translation loop.
-  'recent': (item, app) => {
+  recent: (item, app) => {
     if (app.state.recent.length) {
       item.enabled = true
 
@@ -391,11 +391,11 @@ Menu.ItemCompiler = {
     item.visible = app.updater.isUpdateReady
   },
 
-  'dev': (item, app) => {
+  dev: (item, app) => {
     item.visible = (app.dev || app.debug)
   },
 
-  'theme': (item, app, win) => {
+  theme: (item, app, win) => {
     item.submenu = item.submenu.map(theme => ({
       ...theme,
       checked: (theme.id === app.state.theme),
@@ -404,7 +404,7 @@ Menu.ItemCompiler = {
     }))
   },
 
-  'undo': (item, app, win) => {
+  undo: (item, app, win) => {
     if (app.getHistory(win)?.past > 0) {
       item.enabled = true
       // item.label = `${item.label} ${this.app.getHistory(win).undo}`
@@ -413,7 +413,7 @@ Menu.ItemCompiler = {
     }
   },
 
-  'redo': (item, app, win) => {
+  redo: (item, app, win) => {
     if (app.getHistory(win)?.future > 0) {
       item.enabled = true
       // item.label = `${item.label} ${this.app.getHistory(win).redo}`
@@ -422,7 +422,7 @@ Menu.ItemCompiler = {
     }
   },
 
-  'export': (item, app, win, event) => {
+  export: (item, app, win, event) => {
     let plugins = app.plugins.available('export')
 
     if (plugins.length > 0) {
@@ -440,7 +440,7 @@ Menu.ItemCompiler = {
     }
   },
 
-  'extract': (item, app, win, event) => {
+  extract: (item, app, win, event) => {
     let plugins = app.plugins.available('extract')
 
     if (plugins.length > 0) {
@@ -458,10 +458,10 @@ Menu.ItemCompiler = {
     }
   },
 
-  'transcribe': compileTranscriptionMenu,
+  transcribe: compileTranscriptionMenu,
   'item-transcribe': compileTranscriptionMenu,
 
-  'import': (item, app, win) => {
+  import: (item, app, win) => {
     let plugins = app.plugins.available('import')
 
     if (plugins.length > 0) {
@@ -478,7 +478,7 @@ Menu.ItemCompiler = {
     }
   },
 
-  'tag': (item, app, win, event) => {
+  tag: (item, app, win, event) => {
     let { target } = event
     let tags = app.getTags(win)
 
@@ -520,7 +520,7 @@ Menu.ItemCompiler = {
     item.checked = !!event.target.numbers
   },
 
-  'direction': (item, app, win, event) => {
+  direction: (item, app, win, event) => {
     item.submenu = item.submenu.map(li => ({
       ...li,
       checked: li.direction === event.target.direction,
@@ -562,7 +562,7 @@ Menu.ItemCompiler = {
     }))
   },
 
-  'condition': (item, app, win, event) => {
+  condition: (item, app, win, event) => {
     let { condition, visible } = item
     let negate = false
 

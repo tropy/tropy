@@ -58,7 +58,7 @@ export const getNextNoteSelection = memo(
 
     if (next.photo === cursor.photo && next.selection === cursor.selection)
       return next
-    if (prev.photo === cursor.photo && prev.selection === prev.selection)
+    if (prev.photo === cursor.photo && prev.selection === cursor.selection)
       return prev
 
     return next

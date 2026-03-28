@@ -1,4 +1,4 @@
-import React, { Children } from 'react'
+import { Children } from 'react'
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import { ScrollContainer } from '../scroll/container.js'

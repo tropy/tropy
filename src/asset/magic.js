@@ -1,6 +1,6 @@
 import MIME from '../constants/mime.js'
 
-// eslint-disable-next-line complexity
+
 export function magic(buffer, ext = '') {
   if (buffer != null) {
     if (isJPEG(buffer))

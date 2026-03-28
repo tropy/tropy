@@ -29,7 +29,7 @@ export const ResourceSelect = ({
 }) => {
   let intl = useIntl()
   let placeholder = (props.placeholder) ?
-      intl.formatMessage({ id: props.placeholder }) : null
+    intl.formatMessage({ id: props.placeholder }) : null
 
   return (
     <Select

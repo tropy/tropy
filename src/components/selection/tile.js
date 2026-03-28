@@ -1,4 +1,3 @@
-import React from 'react'
 import { SelectionIterable } from './iterable.js'
 import cx from 'classnames'
 import { createClickHandler } from '../util.js'

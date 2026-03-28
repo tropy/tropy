@@ -146,7 +146,7 @@ class Rebuilder {
   }
 
   static Steps = {
-    'sqlite3': [
+    sqlite3: [
       async (task) => {
         let url = cat(task.vendorPath('version.txt')).trim()
         let tar = task.modulePath('deps', url.split('/').pop())
@@ -196,7 +196,7 @@ class Rebuilder {
       }
     ],
 
-    'sharp': [
+    sharp: [
       async (task) => {
         if (env.SHARP_FORCE_GLOBAL_LIBVIPS === 'true') {
           say('using system libvips ...')

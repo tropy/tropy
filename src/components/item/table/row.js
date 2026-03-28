@@ -1,4 +1,3 @@
-import React from 'react'
 import { ItemIterable } from '../iterable.js'
 import { TableCell } from './cell.js'
 import { get, pick } from '../../../common/util.js'

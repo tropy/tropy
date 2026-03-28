@@ -339,13 +339,13 @@ export class Import extends ImportCommand {
 
   get redo() {
     return (this.result?.length > 0) ?
-        act.item.restore(this.result, { lists: this.newLists }) :
+      act.item.restore(this.result, { lists: this.newLists }) :
       null
   }
 
   get undo() {
     return (this.result?.length > 0) ?
-        act.item.delete(this.result, { lists: this.newLists }) :
+      act.item.delete(this.result, { lists: this.newLists }) :
       null
   }
 }

@@ -38,7 +38,7 @@ const error = ({ stack, code }) =>
       stack
         .split('\n')
         .map(line => line.replace(CWD, ''))
-        .join('\n')) : (code ? code : '')
+        .join('\n')) : (code || '')
 
 const meta = log =>
   log.meta.was ?

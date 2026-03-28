@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormElement, FormSelect, Toggle } from '../form.js'
 import { useEvent } from '../../hooks/use-event.js'
 

@@ -34,7 +34,7 @@ export const EsperContainer = React.forwardRef(({
     <section
       {...props}
       className={cx('esper', className, {
-        'disabled': isDisabled,
+        disabled: isDisabled,
         mouseover,
         'overlay-mode': hasOverlayToolbar
       })}

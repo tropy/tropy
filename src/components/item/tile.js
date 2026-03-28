@@ -1,4 +1,3 @@
-import React from 'react'
 import { ItemIterable } from './iterable.js'
 import { CoverImage } from './cover-image.js'
 import cx from 'classnames'

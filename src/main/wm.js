@@ -87,7 +87,7 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  // eslint-disable-next-line complexity
+
   async create(type, args = {}, opts) {
     let NOW = Date.now()
 
@@ -262,7 +262,7 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  // eslint-disable-next-line complexity
+
   handleIpcMessage = async (event, type, ...args) => {
     trace({ args }, `ipc.${type} received`)
     let win = BrowserWindow.fromWebContents(event.sender)
@@ -777,7 +777,7 @@ export class WindowManager extends EventEmitter {
   static async getButtonLayout() {
     try {
       return !linux ? null :
-          await get('org.gnome.desktop.wm.preferences', 'button-layout')
+        await get('org.gnome.desktop.wm.preferences', 'button-layout')
     } catch (e) {
       warn({ stack: e.stack }, 'failed to get GNOME button-layout')
       return null

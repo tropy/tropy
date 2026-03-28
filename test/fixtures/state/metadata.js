@@ -1,6 +1,6 @@
 export default {
   1: {
-    'id': 1,
+    id: 1,
     'http://purl.org/dc/elements/1.1/title': {
       type: 'http://www.w3.org/2001/XMLSchema#string',
       text: 'Item title'
@@ -19,7 +19,7 @@ export default {
     }
   },
   101: {
-    'id': 101,
+    id: 101,
     'http://purl.org/dc/terms/title': {
       type: 'http://www.w3.org/2001/XMLSchema#string',
       text: 'Photo title'
@@ -30,7 +30,7 @@ export default {
     }
   },
   201: {
-    'id': 201,
+    id: 201,
     'http://purl.org/dc/elements/1.1/title': {
       type: 'http://www.w3.org/2001/XMLSchema#string',
       text: 'Telemachos'

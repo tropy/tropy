@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Alto } from './alto.js'
 import { TranscriptionError } from './error.js'

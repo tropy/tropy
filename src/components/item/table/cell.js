@@ -12,9 +12,9 @@ import { noop } from '../../../common/util.js'
 export class TableCell extends React.PureComponent {
   get classes() {
     return ['metadata', this.props.type, {
-      'dragging': this.props.isDragging,
+      dragging: this.props.isDragging,
       'main-column': this.props.isMainColumn,
-      'moving': this.props.isMoving,
+      moving: this.props.isMoving,
       'read-only': this.props.isReadOnly
     }]
   }
@@ -78,8 +78,8 @@ export class TableCell extends React.PureComponent {
       if (input.hasChanged) input.commit(true)
 
       let next = event.shiftKey ?
-          this.props.getPrevColumn(this.props.position) :
-          this.props.getNextColumn(this.props.position)
+        this.props.getPrevColumn(this.props.position) :
+        this.props.getNextColumn(this.props.position)
 
       if (next != null) this.edit(next)
     }

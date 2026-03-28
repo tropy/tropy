@@ -463,7 +463,7 @@ export class Esper extends React.Component {
     })
   }
 
-  // eslint-disable-next-line complexity
+
   handleKeyDown = (event) => {
     if (this.state.quicktool != null) {
       this.handleQuickToolKeyDown(event)

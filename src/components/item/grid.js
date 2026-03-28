@@ -1,4 +1,3 @@
-import React from 'react'
 import { ItemIterator } from './iterator.js'
 import { ItemTile } from './tile.js'
 import { Scroll } from '../scroll/index.js'
@@ -23,7 +22,7 @@ export class ItemGrid extends ItemIterator {
       <div
         className={cx('item-grid', {
           'drop-target': !this.props.isReadOnly,
-          'over': this.props.isOver
+          over: this.props.isOver
         })}
         data-size={this.props.size}>
         <Scroll

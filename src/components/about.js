@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useIpcEvent } from '../hooks/use-ipc.js'
 import { product, version } from '../common/release.js'

@@ -364,7 +364,7 @@ export async function getAssets(db, { basePath }) {
   await db.each(assetInfo.query, asset => {
     asset.path = (
       (basePath && asset.protocol === 'file') ?
-          resolve(basePath, normalize(asset.path)) : asset.path
+        resolve(basePath, normalize(asset.path)) : asset.path
     ).normalize()
 
     assets.push(asset)

@@ -23,14 +23,13 @@ function logRotate(file, suffix = '.1') {
   }
 }
 
-// eslint-disable-next-line complexity
 export function createLogger({
   dest = 2,
   level,
   name = 'log',
   rotate = false,
-  debug = process.env.TROPY_DEBUG, // eslint-disable-line no-shadow
-  trace = process.env.TROPY_TRACE  // eslint-disable-line no-shadow
+  debug = process.env.TROPY_DEBUG,
+  trace = process.env.TROPY_TRACE
 } = {}) {
 
   if (!level && trace) level = 'trace'

@@ -131,7 +131,6 @@ program
   })
 
 
-
 const load = (file) =>
   yaml.load(read(file))
 

@@ -34,7 +34,7 @@ const init = {
   ]
 }
 
-// eslint-disable-next-line complexity
+
 export function nav(state = init, { type, payload, meta, error }) {
   switch (type) {
     case NAV.RESTORE:

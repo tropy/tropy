@@ -8,7 +8,7 @@ const DARWIN_PAPER = {
   'iso-a5': 'A5',
   'na-legal': 'Legal',
   'na-letter': 'Letter',
-  'tabloid': 'Tabloid'
+  tabloid: 'Tabloid'
 }
 
 export async function papersize() {

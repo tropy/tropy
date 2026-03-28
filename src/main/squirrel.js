@@ -118,7 +118,6 @@ async function clearAppRegistration() {
 }
 
 
-
 async function rm(path) {
   if (path) {
     return fs.promises.rm(path, { recursive: true, maxRetries: 3 })

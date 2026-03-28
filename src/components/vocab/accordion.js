@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Accordion } from '../accordion.js'
 import { FormField, FormLink, FormText } from '../form.js'
