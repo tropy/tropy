@@ -1,7 +1,5 @@
 import fs from 'node:fs'
 import React from 'react'
-import * as chai from 'chai'
-import chaiDom from 'chai-dom'
 import { render as testRender, queries } from '@testing-library/react'
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
@@ -12,8 +10,6 @@ import WIN, { createWindowInstance } from '#tropy/window.js'
 import { WindowContext } from '#tropy/components/window.js'
 import { Strings } from '#tropy/res.js'
 import * as reducer from '#tropy/reducers/index.js'
-
-chai.use(chaiDom)
 
 const helpers = {
   $(node, ...args) {
