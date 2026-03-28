@@ -1,9 +1,5 @@
 import { mock } from 'node:test'
-import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import * as dom from '#tropy/dom.js'
-
-const images = join(import.meta.dirname, 'fixtures/images')
 
 describe('dom', () => {
   describe('css', () => {
@@ -146,16 +142,17 @@ describe('dom', () => {
     it('resolves when the image has loaded', {
       timeout: 2000
     }, async () => {
-      let img = await dom.loadImage(
-        pathToFileURL(join(images, 'PA140105.JPG')))
-      expect(img.width).to.equal(2048)
+      expect(
+        await dom.loadImage(F.image.url('PA140105.JPG'))
+      ).to.have.property('width', 2048)
     })
 
     it('rejects when the image fails to load', {
       timeout: 2000
     }, async (t) => {
       await t.assert.rejects(
-        dom.loadImage(pathToFileURL(join(images, '404.png'))))
+        dom.loadImage(F.image.url('404.PNG'))
+      )
     })
   })
 })

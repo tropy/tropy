@@ -1,13 +1,13 @@
 import N3 from 'n3'
 import { toN3 } from '#tropy/ontology/vocabulary.js'
-import exportFixtures from '../fixtures/export.js'
 
 describe('Export Vocabularies', () => {
+  const { vocab, ontology } = F.require('export.js')
   describe('toN3', () => {
     let output
 
     before(async () => {
-      output = await toN3(exportFixtures.vocab, exportFixtures.ontology)
+      output = await toN3(vocab, ontology)
     })
 
     it('creates a string', () => {

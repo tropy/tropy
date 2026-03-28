@@ -1,11 +1,8 @@
-import { join } from 'node:path'
 import { Image } from '#tropy/image/index.js'
-
-const images = join(import.meta.dirname, '../fixtures/images')
 
 describe('Image', () => {
   describe('given an image', () => {
-    let image = new Image({ path: join(images, 'PA140105.JPG') })
+    let image = new Image({ path: F.image.path('PA140105.JPG') })
 
     before(() => image.open())
 

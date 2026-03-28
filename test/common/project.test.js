@@ -7,10 +7,6 @@ import { mkdtmp, mktmp } from '../support/tmp.js'
 import { convert, create, load, open, pstat } from '#tropy/common/project.js'
 import { delay } from '#tropy/common/util.js'
 
-const fixtures = join(import.meta.dirname, '../fixtures')
-const appDir = join(fixtures, '../..')
-const schema = join(appDir, 'db/schema/project.sql')
-
 describe('common/project', () => {
 
   describe('create', () => {
@@ -61,7 +57,7 @@ describe('common/project', () => {
 
     it('rejects unknown file extensions', async () => {
       await assert.rejects(
-        () => create('tropy.db', schema, appDir),
+        () => create('tropy.db', F.schema(), F.appDir),
         { message: /unknown project file extension/ })
     })
 
@@ -73,11 +69,11 @@ describe('common/project', () => {
       await mkdir(tpm)
 
       await assert.rejects(
-        () => create(tpy, schema, appDir),
+        () => create(tpy, F.schema(), F.appDir),
         { message: /project file exists/ })
 
       await assert.rejects(
-        () => create(tpm, schema, appDir),
+        () => create(tpm, F.schema(), F.appDir),
         { message: /project file exists/ })
     })
   })
@@ -174,7 +170,7 @@ describe('common/project', () => {
     let tpm = mktmp('b.tropy')
 
     it('converts *.tpy to *.tropy', async () => {
-      await convert(tpy.current.path, tpm, appDir)
+      await convert(tpy.current.path, tpm, F.appDir)
       let [db, project] = await open(tpm)
 
       expect(project.name).to.equal('Daedalus')

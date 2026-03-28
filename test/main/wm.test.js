@@ -1,11 +1,10 @@
 import fs from 'node:fs'
 import { once } from 'node:events'
 import { join } from 'node:path'
+import { env } from 'node:process'
 import { app, BrowserWindow } from 'electron'
 import { WindowManager } from '#tropy/main/wm.js'
 import { Plugins } from '#tropy/common/plugins.js'
-
-const fixtures = join(import.meta.dirname, '../fixtures')
 
 describe('WindowManager', () => {
   describe('instance', () => {
@@ -15,7 +14,7 @@ describe('WindowManager', () => {
     before(() => plugins.init())
     before(() => wm.start())
     before(() => fs.promises.copyFile(
-      join(fixtures, 'db/ontology.db'),
+      F.join('db/ontology.db'),
       join(app.getPath('userData'), 'ontology.db')))
 
     after(() => wm.stop(true))
@@ -25,7 +24,9 @@ describe('WindowManager', () => {
     })
 
     for (let type of ['about', 'prefs', 'print', 'project']) {
-      describe(`open('${type}')`, { timeout: 20000 }, () => {
+      describe(`open('${type}')`, {
+        timeout: env.CI ? 20000 : 2000
+      }, () => {
         let win
 
         before(async () => {
@@ -62,7 +63,9 @@ describe('WindowManager', () => {
       })
     }
 
-    describe('unload lifecycle', { timeout: 20000 }, () => {
+    describe('unload lifecycle', {
+      timeout: env.CI ? 20000 : 2000
+    }, () => {
       let openWindow = (type = 'about') =>
         wm.open(type, {
           plugins: plugins.root,

@@ -1,6 +1,6 @@
 import { render, inWindowContext } from '../../support/react.js'
 import { ListTree } from '#tropy/components/list/tree.js'
-import lists from '../../fixtures/lists.js'
+const { lists } = F.state
 
 describe('ListTree', () => {
   it('renders no list for empty parent', () => {

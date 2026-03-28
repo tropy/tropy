@@ -1,21 +1,7 @@
 import { version } from '#tropy/common/release.js'
-import { pick } from '#tropy/common/util.js'
 import { getExportItemIds, getExportItems } from '#tropy/selectors/export.js'
 
-import items from '../fixtures/items.js'
-import lists from '../fixtures/lists.js'
-import metadata from '../fixtures/metadata.js'
-import notes from '../fixtures/notes.js'
-import ontology from '../fixtures/ontology.js'
-import photos from '../fixtures/photos.js'
-import selections from '../fixtures/selections.js'
-import tags from '../fixtures/tags.js'
-import transcriptions from '../fixtures/transcriptions.js'
-
-const fixtures = {
-  items, lists, metadata, notes,
-  ontology, photos, selections, tags, transcriptions
-}
+const { state } = F
 
 describe('Export Selectors', () => {
   describe('getExportItemIds', () => {
@@ -44,17 +30,6 @@ describe('Export Selectors', () => {
   })
 
   describe('getExportItems', () => {
-    const state = pick(fixtures, [
-      'items',
-      'lists',
-      'metadata',
-      'notes',
-      'transcriptions',
-      'ontology',
-      'photos',
-      'selections',
-      'tags'])
-
     it('includes @context', () => {
       expect(getExportItems(state, { id: [1] }))
         .to.have.property('@context')
@@ -82,7 +57,8 @@ describe('Export Selectors', () => {
       })
 
       it('includes tag names', () => {
-        expect(item.tag).to.eql(items[1].tags.map(id => tags[id].name))
+        expect(item.tag).to.eql(
+          state.items[1].tags.map(id => state.tags[id].name))
       })
 
       it('includes list paths', () => {
@@ -90,33 +66,33 @@ describe('Export Selectors', () => {
       })
 
       it('includes photos', () => {
-        expect(item.photo).to.have.length(items[1].photos.length)
+        expect(item.photo).to.have.length(state.items[1].photos.length)
       })
 
       it('includes metadata', () => {
         expect(item.title).to.eql(
-          metadata[1]['http://purl.org/dc/elements/1.1/title'].text)
+          state.metadata[1]['http://purl.org/dc/elements/1.1/title'].text)
 
         expect(json['@context']).to.have.property(
           'title',
           'http://purl.org/dc/elements/1.1/title')
 
-        let photo = items[1].photos[0]
+        let photo = state.items[1].photos[0]
 
         expect(item.photo[0]).to.have.property(
           'dcterms:title',
-          metadata[photo]['http://purl.org/dc/terms/title'].text)
+          state.metadata[photo]['http://purl.org/dc/terms/title'].text)
 
         expect(json['@context'])
           .to.have.property('dcterms', 'http://purl.org/dc/terms/')
 
         expect(item.photo[0]).to.have.property(
           'http://example.org/title',
-          metadata[photo]['http://example.org/title'].text)
+          state.metadata[photo]['http://example.org/title'].text)
 
         expect(item).to.have.property(
           'http://example.org/contrast',
-          metadata[1]['http://example.org/contrast'].text)
+          state.metadata[1]['http://example.org/contrast'].text)
       })
     })
   })

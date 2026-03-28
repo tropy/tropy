@@ -1,13 +1,10 @@
-import { join } from 'node:path'
 import { Plugins } from '#tropy/common/plugins.js'
-
-const pluginsPath = join(import.meta.dirname, '../fixtures/plugins')
 
 describe('Plugins', () => {
   let plugins
 
   beforeEach(async () => {
-    plugins = new Plugins(pluginsPath)
+    plugins = new Plugins(F.join('plugins'))
     await plugins.init()
   })
 

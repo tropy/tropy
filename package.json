@@ -47,6 +47,7 @@
   },
   "spark": {
     "ui": "bdd",
+    "timeout": 2000,
     "reporters": [
       "sparks"
     ],
@@ -61,7 +62,8 @@
       "test/support/babel.js",
       "test/support/args.js",
       "test/support/log.js",
-      "test/support/chai.js"
+      "test/support/chai.js",
+      "test/support/fixtures.js"
     ],
     "webPreferences": {
       "webSecurity": false
