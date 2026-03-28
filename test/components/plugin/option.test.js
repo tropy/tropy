@@ -1,4 +1,4 @@
-import { render, inWindowContext } from '../../support/react.cjs'
+import { render, inWindowContext } from '../../support/react.js'
 import { PluginOption } from '#tropy/components/plugin/option.js'
 
 describe('PluginOption', () => {

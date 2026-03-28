@@ -5,11 +5,8 @@ export default function (api) {
     presets: [
       ['@babel/preset-react', { runtime: 'automatic' }]
     ],
-    plugins: [
-      ['@babel/plugin-syntax-import-attributes']
-    ],
     targets: {
-      node: '24.14'
+      electron: '41'
     }
   }
 }

@@ -1,5 +1,5 @@
 import { mock } from 'node:test'
-import { render } from '../support/react.cjs'
+import { render } from '../support/react.js'
 import { PanelGroup } from '#tropy/components/panel.js'
 
 describe('PanelGroup', () => {

@@ -1,4 +1,4 @@
-import { render, inWindowContext } from '../../support/react.cjs'
+import { render, inWindowContext } from '../../support/react.js'
 import { PhotoList } from '#tropy/components/photo/list.js'
 
 describe('PhotoList', () => {

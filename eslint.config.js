@@ -66,19 +66,8 @@ export default [
 
   {
     files: [
-      'test/**/*.cjs'
-    ],
-    languageOptions: {
-      globals: {
-        ...globals.node
-      }
-    }
-  },
-
-  {
-    files: [
-      '{src,test}/*.{cjs,js}',
-      '{src,test}/!(main)/**/*.{cjs,js}',
+      '{src,test}/*.js',
+      '{src,test}/!(main)/**/*.js',
       'res/workers/*.js'
     ],
     languageOptions: {
@@ -100,8 +89,8 @@ export default [
 
   {
     files: [
-      '{src,test}/{components,hooks,views}/**/*.{js,cjs}',
-      'test/support/react.cjs'
+      '{src,test}/{components,hooks,views}/**/*.js',
+      'test/support/react.js'
     ],
     plugins: {
       'react': react,

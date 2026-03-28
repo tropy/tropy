@@ -1,4 +1,4 @@
-import { render, inWindowContext } from '../../../support/react.cjs'
+import { render, inWindowContext } from '../../../support/react.js'
 import { TableHead } from '#tropy/components/item/table/head.js'
 
 describe('TableHead', () => {
