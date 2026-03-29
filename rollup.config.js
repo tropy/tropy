@@ -93,7 +93,7 @@ export default [
       dir: 'lib/main',
       format: 'es',
       generatedCode: 'es2015',
-      sourcemap: false
+      sourcemap: true
     },
     treeshake: 'recommended',
     preserveEntrySignatures: 'allow-extension',
