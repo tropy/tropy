@@ -66,7 +66,7 @@ const ARGS = parse()
       window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = { isDisabled: true }
 
 
-    window.eval = () => { // eslint-disable-line no-eval
+    window.eval = () => {
       throw new Error('use of eval() is prohibited')
     }
 
