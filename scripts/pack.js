@@ -77,9 +77,9 @@ program
 
       if (!args.length) {
         args = ({
-          darwin: ['dmg', '7z'],
-          linux: ['bz2', 'AppImage'],
-          win32: ['squirrel']
+          darwin: ['dmg', '7z', 'sourcemaps'],
+          linux: ['bz2', 'AppImage', 'sourcemaps'],
+          win32: ['squirrel', 'sourcemaps']
         })[opts.platform]
       }
 
@@ -103,6 +103,20 @@ program
 
 
 const exports = {
+
+  sourcemaps ({ arch, out, platform }) {
+    check(which('tar'), 'missing dependency: tar')
+
+    let output = join(out, `${name}-${version}-sourcemaps-${platform}-${arch}.tar.gz`)
+    let rename = (platform === 'darwin')
+      ? `-s '/^lib/${version}/'`
+      : `--transform='s/^lib/${version}/'`
+
+    rm('-f', output)
+    exec(`find lib -name "*.map" | tar -czf "${output}" ${rename} -T -`)
+
+    return [output]
+  },
 
   bz2 ({ app, arch, out, tag }) {
     check(which('tar'), 'missing dependency: tar')
