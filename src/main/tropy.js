@@ -1295,9 +1295,9 @@ export class Tropy extends EventEmitter {
           .defaultSession
           .loadExtension(join(extensions, id), { allowFileAccess: true })
       }
-    } catch (e) {
-      if (e.code !== 'ENOENT')
-        warn({ stack: e.stack }, 'failed loading devtool extensions!')
+    } catch (err) {
+      if (err.code !== 'ENOENT')
+        warn({ err }, 'failed loading devtool extensions!')
     }
   }
 

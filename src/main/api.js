@@ -78,7 +78,7 @@ export class Server {
       let server = createServer(callback)
 
       function onError (err) {
-        warn({ stack: err.stack }, `api.listen failed: ${err.message}`)
+        warn({ err }, 'api.listen failed')
         reject(err)
         server.off('error', onError)
         server.off('listening', onListening)

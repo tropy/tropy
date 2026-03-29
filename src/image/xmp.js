@@ -43,8 +43,8 @@ export function xmp (buffer) {
 
       return data
     }
-  } catch (e) {
-    warn({ stack: e.stack }, 'XMP extraction failed')
+  } catch (err) {
+    warn({ err }, 'XMP extraction failed')
   }
 }
 

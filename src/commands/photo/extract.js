@@ -70,11 +70,9 @@ export class Extract extends Command {
         size: buffer.length
       }
 
-    } catch (e) {
-      warn({
-        stack: e.stack
-      }, `failed to extract image #${image?.id} to ${target}`)
-      fail(e, this.action.type)
+    } catch (err) {
+      warn({ err }, `failed to extract image #${image?.id} to ${target}`)
+      fail(err, this.action.type)
     }
   }
 }

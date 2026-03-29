@@ -77,8 +77,8 @@ export class Plugins extends EventEmitter {
 
         loadcount++
 
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to create plugin ${plugin} "${name}"`)
+      } catch (err) {
+        warn({ err }, `failed to create plugin ${plugin} "${name}"`)
       }
     }
 
@@ -134,10 +134,8 @@ export class Plugins extends EventEmitter {
       await this.reload()
       this.emit('change')
       info(`installed plugin ${spec.name || plugin} ${spec.version}`)
-    } catch (e) {
-      warn({
-        stack: e.stack
-      }, `failed to install plugin ${spec?.name || plugin}`)
+    } catch (err) {
+      warn({ err }, `failed to install plugin ${spec?.name || plugin}`)
     }
     return this
   }
@@ -148,8 +146,8 @@ export class Plugins extends EventEmitter {
         ...(await deps(join(this.root, 'package.json'))),
         ...(await subdirs(this.root))
       ])
-    } catch (e) {
-      warn({ stack: e.stack }, `failed to list plugins: ${e.message}`)
+    } catch (err) {
+      warn({ err }, 'failed to list plugins')
       return []
     }
   }
@@ -159,9 +157,9 @@ export class Plugins extends EventEmitter {
       await this.unload()
       this.reset()
       this.config = await load(this.configFile)
-    } catch (e) {
-      if (e.code !== 'ENOENT') {
-        warn({ stack: e.stack }, 'failed to load plugin config')
+    } catch (err) {
+      if (err.code !== 'ENOENT') {
+        warn({ err }, 'failed to load plugin config')
       } else {
         if (autosave) await this.save()
       }
@@ -175,8 +173,8 @@ export class Plugins extends EventEmitter {
     for (let plugin of Object.values(this.instances)) {
       try {
         await plugin.unload?.()
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to unload plugin: ${e.message}`)
+      } catch (err) {
+        warn({ err }, 'failed to unload plugin')
       }
     }
   }
@@ -214,9 +212,9 @@ export class Plugins extends EventEmitter {
         try {
           path = join(this.root, name)
           pkg = await load(join(path, 'package.json'))
-        } catch (e) {
-          if (e.code !== 'ENOENT')
-            throw e
+        } catch (err) {
+          if (err.code !== 'ENOENT')
+            throw err
           path = join(this.root, 'node_modules', name)
           pkg = await load(join(path, 'package.json'))
         }
@@ -234,8 +232,8 @@ export class Plugins extends EventEmitter {
           repository: pkg.repository,
           homepage: homepage(pkg)
         }
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to scan '${name}' plugin`)
+      } catch (err) {
+        warn({ err }, `failed to scan '${name}' plugin`)
       }
     }
 
@@ -273,9 +271,9 @@ export class Plugins extends EventEmitter {
         this.save()
         this.emit('change')
       }
-    } catch (e) {
-      if (e.code !== 'ENOENT') {
-        warn({ stack: e.stack }, `failed to uninstall plugin "${plugin}"`)
+    } catch (err) {
+      if (err.code !== 'ENOENT') {
+        warn({ err }, `failed to uninstall plugin "${plugin}"`)
       }
     }
     return this
@@ -333,6 +331,6 @@ const linkReadme = (root) =>
     join(electron.app.getAppPath(), 'res', 'plugins', 'README.md'),
     join(root, 'README.md'),
     'file'
-  ).catch(e => {
-    warn({ stack: e.stack }, 'failed to link plugins readme')
+  ).catch(err => {
+    warn({ err }, 'failed to link plugins readme')
   })

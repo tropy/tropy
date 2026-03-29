@@ -131,9 +131,9 @@ program
 
       say(`saved as "./${relative(ROOT, dest)}"`)
 
-    } catch (e) {
-      error(e)
-      console.error(e.stack)
+    } catch (err) {
+      error(err)
+      console.error(err.stack)
     }
   })
 

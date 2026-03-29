@@ -20,9 +20,9 @@ export function *ontology ({
     } else {
       try {
         yield call(db.migrate, join(ARGS.app, 'db', 'migrate', 'ontology'))
-      } catch (e) {
-        warn({ stack: e.stack }, 'failed to migrate ontology database')
-        yield call(fail, e, 'ontology.migrate')
+      } catch (err) {
+        warn({ err }, 'failed to migrate ontology database')
+        yield call(fail, err, 'ontology.migrate')
       }
     }
 
@@ -33,8 +33,8 @@ export function *ontology ({
       yield fork(exec, { db }, action)
     }
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *ontology')
+  } catch (err) {
+    warn({ err }, 'unexpected error in *ontology')
 
   } finally {
     if (db) {

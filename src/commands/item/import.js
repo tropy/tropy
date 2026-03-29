@@ -76,11 +76,11 @@ export class Import extends ImportCommand {
           } else
             yield * this.importFromImage(file)
 
-        } catch (e) {
-          warn({ stack: e.stack }, `failed to import "${file}"`)
+        } catch (err) {
+          warn({ err }, `failed to import "${file}"`)
 
           if (++failures < maxFail) {
-            fail(e, this.action.type)
+            fail(err, this.action.type)
           }
         }
       }
@@ -175,11 +175,11 @@ export class Import extends ImportCommand {
           photos: item.photos
         }))
 
-    } catch (e) {
-      if (e instanceof DuplicateError)
+    } catch (err) {
+      if (err instanceof DuplicateError)
         info(`skipping duplicate "${path}"...`)
       else
-        throw e
+        throw err
     }
   }
 
@@ -310,8 +310,8 @@ export class Import extends ImportCommand {
         ]))
       ])
 
-    } catch (e) {
-      warn({ stack: e.stack }, 'skipping item due to import error')
+    } catch (err) {
+      warn({ err }, 'skipping item due to import error')
     }
   }
 

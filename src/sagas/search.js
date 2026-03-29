@@ -52,12 +52,12 @@ export function *search (db) {
 
     yield put(act.qr.update(result))
 
-  } catch (e) {
+  } catch (err) {
     warn({
+      err,
       list,
       query,
       tags: tags.length > 0,
-      stack: e.stack,
       trash
     }, '*search failed')
   }

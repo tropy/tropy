@@ -76,10 +76,8 @@ export async function load (db, id) {
         deleted: false,
         modified: new Date(modified)
       }
-    } catch (e) {
-      warn({
-        stack: e.stack
-      }, `failed parsing transcription#${transcription_id}`)
+    } catch (err) {
+      warn({ err }, `failed parsing transcription#${transcription_id}`)
     }
   })
 

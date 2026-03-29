@@ -18,8 +18,8 @@ export function *consolidate () {
       yield put(act.photo.consolidate(photos, { force: true }))
     }
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *consolidate')
+  } catch (err) {
+    warn({ err }, 'unexpected error in *consolidate')
   }
 }
 

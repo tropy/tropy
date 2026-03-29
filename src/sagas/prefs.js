@@ -36,8 +36,8 @@ export function *main () {
     yield take(close)
     yield cancel(project)
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *prefs.main')
+  } catch (err) {
+    warn({ err }, 'unexpected error in *prefs.main')
 
   } finally {
     yield all([

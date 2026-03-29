@@ -244,8 +244,8 @@ export default class Esper extends EventEmitter {
           if (state.width !== texture.width || state.height !== texture.height)
             this.emit('photo-error', props.photo, false)
         }
-      } catch (e) {
-        warn({ stack: e.stack }, `esper: failed loading ${state.src}`)
+      } catch (err) {
+        warn({ err }, `esper: failed loading ${state.src}`)
         this.emit('photo-error', props.photo, true)
       }
 
@@ -402,9 +402,9 @@ export default class Esper extends EventEmitter {
 
       this.photo?.update(this.drag.current, this.textSelection)
 
-    } catch (e) {
+    } catch (err) {
       this.halt()
-      error({ stack: e.stack }, 'esper: update cycle failed, halting!')
+      error({ err }, 'esper: update cycle failed, halting!')
     }
   }
 

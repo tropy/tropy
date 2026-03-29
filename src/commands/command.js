@@ -88,8 +88,8 @@ export class Command {
       try {
         yield self.progress()
         yield proc(item, self)
-      } catch (e) {
-        errors.push(e)
+      } catch (err) {
+        errors.push(err)
       }
     }, { concurrency })
 

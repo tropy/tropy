@@ -64,9 +64,9 @@ export async function create (path, schema, appDir, {
 
     return db
 
-  } catch (e) {
+  } catch (err) {
     await db?.close()
-    throw e
+    throw err
   }
 }
 
@@ -171,13 +171,13 @@ export async function convert (src, path, appDir, {
         } else {
           errors.push(asset.url)
           warn({
-            stack: asset.error?.stack,
+            err: asset.error,
             url: asset.url
           }, 'consolidation required')
         }
-      } catch (e) {
+      } catch (err) {
         errors.push(asset.url)
-        warn({ stack: e.stack, url: asset.url }, 'consolidation required')
+        warn({ err, url: asset.url }, 'consolidation required')
       }
 
       // Update all local paths regardless of error status,

@@ -113,9 +113,9 @@ export class Asset {
       await this.open(opts, ...args)
       this.hasChanged = checksum !== this.checksum
 
-    } catch (e) {
+    } catch (err) {
       this.hasChanged = true
-      this.error = e
+      this.error = err
     }
 
     return this
@@ -150,13 +150,13 @@ export class Asset {
 
       return this
 
-    } catch (e) {
+    } catch (err) {
       this.buffer = null
       this.checksum = null
       this.fs = null
       this.mimetype = null
 
-      throw e
+      throw err
     }
   }
 

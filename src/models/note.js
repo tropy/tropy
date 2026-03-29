@@ -35,8 +35,8 @@ async function load (db, ids) {
         state: json(state),
         deleted: false
       }
-    } catch (e) {
-      warn({ stack: e.stack }, `failed parsing note ${id}`)
+    } catch (err) {
+      warn({ err }, `failed parsing note ${id}`)
     }
   }
   )

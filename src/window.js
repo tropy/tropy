@@ -229,8 +229,8 @@ export class Window extends EventEmitter {
       for (let unload of this.unloaders) {
         try {
           await unload()
-        } catch (e) {
-          warn({ stack: e.stack }, `unloader failed: ${e.message}`)
+        } catch (err) {
+          warn({ err }, 'unloader failed')
         }
       }
     } finally {
@@ -308,8 +308,8 @@ export class Window extends EventEmitter {
   }
 
   handleUncaughtExceptions () {
-    let handleError = debounce(({ message, stack } = {}) => {
-      ipc.send('error', { message, stack })
+    let handleError = debounce(({ message, stack, code } = {}) => {
+      ipc.send('error', { message, stack, code })
     }, 250)
 
     on(window, 'error', (event) => {

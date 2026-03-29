@@ -15,8 +15,8 @@ const { args, opts } = parse()
 
 process.env.NODE_ENV = opts.env
 
-process.on('uncaughtException', error => { handleError(error) })
-process.on('unhandledRejection', reason => { handleError(reason) })
+process.on('uncaughtException', err => { handleError(err) })
+process.on('unhandledRejection', err => { handleError(err) })
 
 // Set app name and paths as soon as possible!
 app.name = qualified.product
@@ -200,8 +200,8 @@ function handleError (error, isFatal = false) {
 
   try {
     Tropy.instance.handleUncaughtException(error)
-  } catch (e) {
-    handleError(e, true)
+  } catch (err) {
+    handleError(err, true)
   }
 }
 

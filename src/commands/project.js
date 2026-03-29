@@ -84,10 +84,8 @@ export class Prune extends Command {
       assert.equal(dirname(path), store, 'may only remove files in asset folder')
       debug(`removing orphaned file "${basename(path)}" from store`)
       await rm(path, { force: true, maxRetries: 3 })
-    } catch (e) {
-      warn({
-        stack: e.stack
-      }, `failed removing "${path}" from store`)
+    } catch (err) {
+      warn({ err }, `failed removing "${path}" from store`)
     }
   }
 }

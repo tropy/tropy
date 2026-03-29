@@ -11,15 +11,15 @@ const mv = async (oldPath, newPath, name = oldPath) => {
   try {
     await rename(oldPath, newPath)
 
-  } catch (e) {
-    switch (e.code) {
+  } catch (err) {
+    switch (err.code) {
       case 'ENOTEMPTY':
       case 'ENOENT':
       case 'EPERM':
-        warn(`failed to move ${name}: ${e.code} ${e.message}`)
+        warn(`failed to move ${name}: ${err.code} ${err.message}`)
         break
       default:
-        throw e
+        throw err
     }
   }
 }
@@ -65,8 +65,8 @@ export async function migrate (tropy, state, version = tropy.version) {
         info(`migrate ${m.name}`)
         await m.up(tropy, state)
       }
-    } catch (e) {
-      warn({ stack: e.stack }, `migration ${m.name} failed`)
+    } catch (err) {
+      warn({ err }, `migration ${m.name} failed`)
     }
   }
 }

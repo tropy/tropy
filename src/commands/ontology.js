@@ -51,17 +51,17 @@ export class Import extends Command {
 
               vocabs.push(id)
 
-            } catch (e) {
-              warn({ stack: e.stack }, `failed to import "${id}"`)
-              fail(e, this.action.type)
+            } catch (err) {
+              warn({ err }, `failed to import "${id}"`)
+              fail(err, this.action.type)
             }
           }
         })
 
 
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to import "${file}"`)
-        fail(e, this.action.type)
+      } catch (err) {
+        warn({ err }, `failed to import "${file}"`)
+        fail(err, this.action.type)
       }
     }
 
@@ -278,9 +278,9 @@ export class TemplateImport extends Command {
           isProtected
         }, { ...meta, replace: true }))
 
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to import "${file}"`)
-        fail(e, this.action.type)
+      } catch (err) {
+        warn({ err }, `failed to import "${file}"`)
+        fail(err, this.action.type)
       }
     }
 
@@ -324,9 +324,9 @@ export class TemplateExport extends Command {
 
       yield call(Template.save, data, path)
 
-    } catch (e) {
-      warn({ stack: e.stack }, `failed to export template ${id} to ${path}`)
-      fail(e, this.action.type)
+    } catch (err) {
+      warn({ err }, `failed to export template ${id} to ${path}`)
+      fail(err, this.action.type)
     }
   }
 }
@@ -347,9 +347,9 @@ export class TemplateCreate extends Command {
         yield call(createTemplate, db, { ...payload[id], id }, meta)
         ids.push(id)
 
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to create template "${id}"`)
-        fail(e, this.action.type)
+      } catch (err) {
+        warn({ err }, `failed to create template "${id}"`)
+        fail(err, this.action.type)
       }
     }
 

@@ -27,11 +27,11 @@ self.onmessage = async (event) => {
       default:
         throw new Error(`unknown load request: ${event.data}`)
     }
-  } catch (e) {
+  } catch (err) {
     postMessage({
       error: true,
       type: 'error',
-      payload: e,
+      payload: err,
       meta: { url }
     })
   }

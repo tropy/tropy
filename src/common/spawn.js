@@ -31,7 +31,7 @@ export async function spawn (cmd, args) {
       child.stdin?.end()
     })
 
-  } catch (e) {
-    return Promise.reject(e)
+  } catch (err) {
+    return Promise.reject(err)
   }
 }

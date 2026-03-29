@@ -37,9 +37,13 @@ import {
 
 export const create = () => {
   let saga = createSagaMiddleware({
-    onError (e) {
-      fatal({ stack: e.stack }, 'unhandled error in saga middleware')
-      ipc.send('error', e)
+    onError (err) {
+      fatal({ err }, 'unhandled error in saga middleware')
+      ipc.send('error', {
+        message: err.message,
+        stack: err.stack,
+        code: err.code
+      })
     }
   })
 

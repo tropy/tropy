@@ -198,9 +198,9 @@ export class WindowManager extends EventEmitter {
 
       return win
 
-    } catch (e) {
+    } catch (err) {
       if (win != null) win.destroy()
-      throw e
+      throw err
     }
   }
 
@@ -376,10 +376,8 @@ export class WindowManager extends EventEmitter {
       else
         this.pending[id].resolve(action)
 
-    } catch (e) {
-      warn({
-        stack: e.stack
-      }, `failed to resolve pending message ${id}`)
+    } catch (err) {
+      warn({ err }, `failed to resolve pending message ${id}`)
     }
   }
 
@@ -523,9 +521,9 @@ export class WindowManager extends EventEmitter {
       this.windows[type] = [win, ...array(this.windows[type])]
       this.types.set(win, type)
 
-    } catch (e) {
+    } catch (err) {
       this.unref(type, win)
-      throw e
+      throw err
     }
   }
 
@@ -762,10 +760,8 @@ export class WindowManager extends EventEmitter {
           `org.gnome.desktop.wm.preferences.action-${trigger}-titlebar`
         )
       }
-    } catch (e) {
-      warn({
-        stack: e.stack
-      }, `failed to resolve titlebar action for ${trigger}`)
+    } catch (err) {
+      warn({ err }, `failed to resolve titlebar action for ${trigger}`)
     }
 
     if (trigger === 'double-click')
@@ -778,8 +774,8 @@ export class WindowManager extends EventEmitter {
     try {
       return !linux ? null :
         await get('org.gnome.desktop.wm.preferences', 'button-layout')
-    } catch (e) {
-      warn({ stack: e.stack }, 'failed to get GNOME button-layout')
+    } catch (err) {
+      warn({ err }, 'failed to get GNOME button-layout')
       return null
     }
   }
@@ -815,8 +811,8 @@ export class WindowManager extends EventEmitter {
     try {
       return prefs.getAnimationSettings().prefersReducedMotion
 
-    } catch (e) {
-      warn({ stack: e.stack }, 'failed to check reduced motion preference')
+    } catch (err) {
+      warn({ err }, 'failed to check reduced motion preference')
       return false
     }
   }
@@ -882,9 +878,9 @@ function handleWillNavigate (event, url) {
       warn(`win#${this.id} attempted to navigate to ${url}`)
       event.preventDefault()
     }
-  } catch (e) {
+  } catch (err) {
     event.preventDefault()
-    error(e)
+    error(err)
   }
 }
 

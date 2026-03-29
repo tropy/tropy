@@ -66,17 +66,17 @@ export async function link (src, dest, type = 'file') {
     try {
       await symlink(src, dest, type)
 
-    } catch (e) {
-      if (win32 && e.code === 'EPERM')
+    } catch (err) {
+      if (win32 && err.code === 'EPERM')
         await cp(src, dest, {
           force: false,
           recursive: type === 'dir'
         })
       else
-        throw e
+        throw err
     }
-  } catch (e) {
-    if (e.code !== 'EEXIST')
-      throw e
+  } catch (err) {
+    if (err.code !== 'EEXIST')
+      throw err
   }
 }

@@ -18,8 +18,8 @@ function logRotate (file, suffix = '.1') {
   try {
     copyFileSync(file, file + suffix)
     truncateSync(file)
-  } catch (e) {
-    if (e.code !== 'ENOENT') throw e
+  } catch (err) {
+    if (err.code !== 'ENOENT') throw err
   }
 }
 
@@ -87,16 +87,18 @@ export function trace (...args) {
   logger.trace(...args)
 }
 
-export function crashReport (e, msg) {
+export function crashReport (err, msg) {
   try {
     return JSON.stringify({
-      msg: msg || `unhandled error: ${e.message}`,
-      stack: e.stack,
+      msg: msg || `unhandled error: ${err.message}`,
+      stack: err.stack,
       system,
       time: Date.now(),
       version
     })
   } catch (_) {
-    return JSON.stringify({ stack: (e || _).stack })
+    return JSON.stringify({
+      stack: (err || _).stack
+    })
   }
 }

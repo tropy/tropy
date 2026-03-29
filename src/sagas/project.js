@@ -85,11 +85,11 @@ export function *open (opts, action) {
       if (!opts.skipFullSetup)
         yield call(teardown, { db, project, cache, store })
     }
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *project.open')
-    yield call(fail, e, action.payload)
+  } catch (err) {
+    warn({ err }, 'unexpected error in *project.open')
+    yield call(fail, err, action.payload)
 
-    var error = e
+    var error = err
 
     // Mark the task as cancelled.
     // Otherwise the task.isRunning() will return true even after completion!
@@ -138,9 +138,9 @@ function *setup ({ db, project }) {
     yield put(act.cache.prune())
     yield put(act.cache.purge())
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *project.setup')
-    yield call(fail, e, project.path)
+  } catch (err) {
+    warn({ err }, 'unexpected error in *project.setup')
+    yield call(fail, err, project.path)
 
   } finally {
     debug('*project.setup terminated')
@@ -233,9 +233,9 @@ export function *main () {
       }
     }
 
-  } catch (e) {
-    crash = e
-    warn({ stack: e.stack }, 'unexpected error in *main')
+  } catch (err) {
+    crash = err
+    warn({ err }, 'unexpected error in *main')
 
   } finally {
     yield all([
