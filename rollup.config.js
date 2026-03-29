@@ -202,7 +202,7 @@ export default [
       json(),
       reactDnd(),
       babel({
-        include: 'src/{components,views}/**',
+        include: 'src/{components,views,hooks}/**/*.js',
         babelHelpers: 'bundled'
       }),
       commonjs({

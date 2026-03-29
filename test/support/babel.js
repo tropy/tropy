@@ -1,13 +1,22 @@
 import { registerHooks } from 'node:module'
+import { fileURLToPath } from 'node:url'
+import { matchesGlob, relative } from 'node:path'
 import { transformSync } from '@babel/core'
 
 if (process.type === 'renderer') {
-  let match = (url) =>
-    !(/node_modules/.test(url)) && (
-      /[/\\]src[/\\](components|hooks|views)[/\\]/.test(url) ||
-      /[/\\]test[/\\]components[/\\]/.test(url) ||
-      /[/\\]test[/\\]support[/\\]react\.js$/.test(url)
-    )
+  let root = fileURLToPath(new URL('../..', import.meta.url))
+
+  let globs = [
+    'src/{components,views,hooks}/**/*.js',
+    'test/components/**/*.js',
+    'test/support/react.js'
+  ]
+
+  let match = (url) => {
+    if (!url.startsWith('file:')) return false
+    let path = relative(root, fileURLToPath(url))
+    return globs.some(glob => matchesGlob(path, glob))
+  }
 
   let transform = (code, filename) =>
     transformSync(code, {
