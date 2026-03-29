@@ -88,6 +88,7 @@
     "@rollup/plugin-replace": "^6.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@testing-library/react": "^16.0.0",
+    "babel-plugin-react-compiler": "^1.0.0",
     "better-sqlite3": "^12.8.0",
     "c8": "^11.0.0",
     "chai": "^6.0.1",
