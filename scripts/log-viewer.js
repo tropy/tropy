@@ -8,21 +8,21 @@ import pump from 'pump'
 import split from 'split2'
 import ms from 'ms'
 
-const CWD = new RegExp(process.cwd() + '.')
+const CWD = new RegExp(process.cwd() + '.', 'g')
 
 const format = log =>
-  `${header(log)} ${body(log)}${error(log)}${end(log)}`
+  `${header(log)} ${body(log)}${error(log)}${end(log)}`.replace(CWD, '')
 
 const end = log =>
   log.quit ? '\n\n' : '\n'
 
 const body = log => {
   if (log.action)
-    return `${log.action} ${styleText('gray', meta(log))}`
+    return `${log.action} ${styleText('dim', meta(log))}`
   if (log.url)
     return shorten(log.url, 65) + (
       (log.status && log.ms) ?
-        ' ' + styleText('gray', `${log.status} Δ${ms(log.ms)}`) : ''
+        ' ' + styleText('dim', `${log.status} Δ${ms(log.ms)}`) : ''
     )
   else
     return log.msg || log.message || '??'
@@ -32,14 +32,15 @@ const shorten = (s, maxLength) =>
   s.length > maxLength ?
     `${s.slice(0, maxLength - 2)} …` : s
 
+const INDENT = ' '.repeat(11)
+
 const error = ({ err, stack = err?.stack }) => {
   if (stack)
-    return `\n${styleText('gray',
+    return '\n' + styleText('dim',
       stack
         .split('\n')
-        .map(line => line.replace(CWD, ''))
+        .map(line => `${INDENT}${line}`)
         .join('\n'))
-    }`
   else
     return ''
 }
@@ -97,7 +98,7 @@ const pretty = input => {
 const seq = (function (prev, pad = 8) {
   return (now) => {
     try {
-      return styleText('gray',
+      return styleText('dim',
         (prev > 0 ? `+${ms(now - prev)}` : '').padStart(pad, ' ')
       )
     } finally {

@@ -19,12 +19,12 @@ const COLOR = {
 }
 
 const colorize = (level, text) =>
-  styleText(COLOR[level] || 'gray', text || level)
+  styleText(COLOR[level] || 'dim', text || level)
 
 const seq = (function * (prev = Date.now(), padding = 8) {
   while (true) {
     let now = Date.now()
-    yield styleText('gray', (`+${ms(now - prev)}`).padStart(padding, ' '))
+    yield styleText('dim', (`+${ms(now - prev)}`).padStart(padding, ' '))
     prev = now
   }
 })()
