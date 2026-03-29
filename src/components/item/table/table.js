@@ -15,7 +15,6 @@ import {
 } from '../../../constants/index.js'
 
 const { COLUMN, ROW } = SASS
-// eslint-disable-next-line no-unreachable-loop
 const any = (src) => { for (let key in src) return key }
 
 export class ItemTable extends ItemIterator {
