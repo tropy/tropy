@@ -5,7 +5,7 @@ let jsonld
 
 // Use custom document loader so we can cut the default implementation
 // from our production bundle.
-async function documentLoader(url) {
+async function documentLoader (url) {
   let res = await fetch(url, {
     headers: {
       Accept: 'application/ld+json, application/json'
@@ -21,24 +21,24 @@ async function documentLoader(url) {
   }
 }
 
-async function importModule() {
+async function importModule () {
   await import('jsonld').then(m => {
     jsonld = m.default
     jsonld.documentLoader = documentLoader
   })
 }
 
-async function proxyCompact(...args) {
+async function proxyCompact (...args) {
   if (!jsonld) await importModule()
   return jsonld.compact(...args)
 }
 
-async function proxyExpand(...args) {
+async function proxyExpand (...args) {
   if (!jsonld) await importModule()
   return jsonld.expand(...args)
 }
 
-async function proxyLoadDocument(...args) {
+async function proxyLoadDocument (...args) {
   if (!jsonld) await importModule()
   return jsonld.documentLoader(...args)
 }
@@ -49,13 +49,13 @@ export {
   proxyLoadDocument as documentLoader
 }
 
-export async function open(path, ...args) {
+export async function open (path, ...args) {
   // TODO handle remote URLs
   let string = await readFile(path, 'utf-8')
   return parse(string, ...args)
 }
 
-export async function parse(string, { context, expand } = {}) {
+export async function parse (string, { context, expand } = {}) {
   let data = JSON.parse(string)
 
   if (context)
@@ -66,7 +66,7 @@ export async function parse(string, { context, expand } = {}) {
     return data
 }
 
-export async function write(file, data, {
+export async function write (file, data, {
   context,
   expand,
   indent,

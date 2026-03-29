@@ -4,7 +4,7 @@ import { NativeTypes } from 'react-dnd-html5-backend'
 import { hasProjectFiles } from '../components/dnd.js'
 import { getProjectType } from '../common/project.js'
 
-function isProjectFile(path) {
+function isProjectFile (path) {
   try {
     return getProjectType(path) != null
   } catch {
@@ -12,11 +12,11 @@ function isProjectFile(path) {
   }
 }
 
-export function useDropProjectFiles({ onDrop }) {
+export function useDropProjectFiles ({ onDrop }) {
   return useDrop(() => ({
     accept: [NativeTypes.FILE],
 
-    drop(item) {
+    drop (item) {
       let projects = []
       let templates = []
 

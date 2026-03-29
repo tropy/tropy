@@ -2,7 +2,7 @@ import { LIST, EDIT } from '../constants/index.js'
 import { array } from '../common/util.js'
 
 export default {
-  new(payload = {}, meta = {}) {
+  new (payload = {}, meta = {}) {
     return {
       type: EDIT.START,
       payload: {
@@ -12,11 +12,11 @@ export default {
     }
   },
 
-  insert(payload, meta = {}) {
+  insert (payload, meta = {}) {
     return { type: LIST.INSERT, payload, meta }
   },
 
-  remove(payload, meta) {
+  remove (payload, meta) {
     return {
       type: LIST.REMOVE,
       payload,
@@ -24,7 +24,7 @@ export default {
     }
   },
 
-  save(payload, meta) {
+  save (payload, meta) {
     return {
       type: ('id' in payload) ? LIST.SAVE : LIST.CREATE,
       payload,
@@ -32,7 +32,7 @@ export default {
     }
   },
 
-  delete(payload, meta) {
+  delete (payload, meta) {
     return {
       type: LIST.DELETE,
       payload,
@@ -44,15 +44,15 @@ export default {
     }
   },
 
-  prune(payload, meta) {
+  prune (payload, meta) {
     return { type: LIST.PRUNE, payload, meta: { cmd: 'project', ...meta } }
   },
 
-  restore(payload, meta) {
+  restore (payload, meta) {
     return { type: LIST.RESTORE, payload, meta: { cmd: 'project', ...meta } }
   },
 
-  move(payload, meta) {
+  move (payload, meta) {
     return {
       type: LIST.MOVE,
       payload,
@@ -60,15 +60,15 @@ export default {
     }
   },
 
-  load(payload, meta) {
+  load (payload, meta) {
     return { type: LIST.LOAD, payload, meta: { cmd: 'project', ...meta } }
   },
 
-  update(payload, meta) {
+  update (payload, meta) {
     return { type: LIST.UPDATE, payload, meta }
   },
 
-  collapse(payload, meta = {}) {
+  collapse (payload, meta = {}) {
     return {
       type: LIST.COLLAPSE,
       payload,
@@ -76,7 +76,7 @@ export default {
     }
   },
 
-  expand(payload, meta = {}) {
+  expand (payload, meta = {}) {
     return {
       type: LIST.EXPAND,
       payload,
@@ -84,7 +84,7 @@ export default {
     }
   },
 
-  export(payload, meta = {}) {
+  export (payload, meta = {}) {
     return {
       type: LIST.EXPORT,
       payload,
@@ -96,7 +96,7 @@ export default {
     }
   },
 
-  import(payload, meta = {}) {
+  import (payload, meta = {}) {
     return {
       type: LIST.IMPORT,
       payload,
@@ -108,7 +108,7 @@ export default {
   },
 
   items: {
-    add({ id, items }, meta) {
+    add ({ id, items }, meta) {
       return {
         type: LIST.ITEM.ADD,
         payload: { id, items: array(items) },
@@ -116,7 +116,7 @@ export default {
       }
     },
 
-    remove({ id, items }, meta) {
+    remove ({ id, items }, meta) {
       return {
         type: LIST.ITEM.REMOVE,
         payload: { id, items: array(items) },
@@ -124,7 +124,7 @@ export default {
       }
     },
 
-    restore({ id, items }, meta) {
+    restore ({ id, items }, meta) {
       return {
         type: LIST.ITEM.RESTORE,
         payload: { id, items: array(items) },

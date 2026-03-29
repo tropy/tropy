@@ -4,7 +4,7 @@ import { IconItemSmall, IconPhoto } from '../icons.js'
 import { useEvent } from '../../hooks/use-event.js'
 
 
-export function TitleSettings({ config, onChange }) {
+export function TitleSettings ({ config, onChange }) {
   let handleChange = useEvent((values, hasChanged) => {
     if (hasChanged) {
       let [name, value] = Object.entries(values)[0]

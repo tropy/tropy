@@ -17,7 +17,7 @@ import { Store } from '../asset/store.js'
 /*
  * Creates a new Tropy project.
  */
-export async function create(path, schema, appDir, {
+export async function create (path, schema, appDir, {
   autoclose = true,
   name = 'Tropy',
   base = null,
@@ -71,7 +71,7 @@ export async function create(path, schema, appDir, {
 }
 
 // Ensures that a project path is available
-async function checkProjectPath(path, overwrite = false) {
+async function checkProjectPath (path, overwrite = false) {
   if (existsSync(path)) {
     if (!overwrite)
       throw new Error(`project file exists: "${path}"`)
@@ -82,7 +82,7 @@ async function checkProjectPath(path, overwrite = false) {
 }
 
 // Creates the folder structure for managed projects.
-async function makeProjectDir(path, store, appDir) {
+async function makeProjectDir (path, store, appDir) {
   await mkdir(path)
   await mkdir(join(path, store))
 
@@ -112,7 +112,7 @@ async function makeProjectDir(path, store, appDir) {
  * such as failure to write to the database file,
  * will be thrown.
  */
-export async function convert(src, path, appDir, {
+export async function convert (src, path, appDir, {
   concurrency = 4,
   overwrite = false
 } = {}) {
@@ -216,7 +216,7 @@ export async function convert(src, path, appDir, {
  *   and the access table pruned.
  *
  */
-export async function open(path, {
+export async function open (path, {
   migrate,
   pruneAccessTable = false,
   skipIntegrityCheck = false,
@@ -265,7 +265,7 @@ export async function open(path, {
 /*
  * Returns stats for a Tropy project file.
  */
-export async function pstat(path, modifiedSince) {
+export async function pstat (path, modifiedSince) {
   try {
     let type = getProjectType(path)
     let dbFile
@@ -301,7 +301,7 @@ export async function pstat(path, modifiedSince) {
 }
 
 
-export async function load(db) {
+export async function load (db) {
   let project = await db.get(projectInfo.query)
   assert(project?.id != null, 'invalid project info')
 
@@ -325,7 +325,7 @@ export async function load(db) {
   * Returns a mapping of all asset URLs to ids in the project.
   * For local assets the file path is returned, resolved using `basePath`.
   */
-export async function list(db, { basePath }) {
+export async function list (db, { basePath }) {
   let assets = new Map
 
   await db.each(
@@ -340,7 +340,7 @@ export async function list(db, { basePath }) {
   return assets
 }
 
-export async function save(db, { id, ...props }, basePath) {
+export async function save (db, { id, ...props }, basePath) {
   if (basePath && props.store)
     props.store = relative(basePath, props.store)
 
@@ -350,15 +350,15 @@ export async function save(db, { id, ...props }, basePath) {
     )
 }
 
-export async function lock(dbFile) {
+export async function lock (dbFile) {
   return chmod(dbFile, 0o444)
 }
 
-export async function unlock(dbFile) {
+export async function unlock (dbFile) {
   return chmod(dbFile, 0o666)
 }
 
-export async function getAssets(db, { basePath }) {
+export async function getAssets (db, { basePath }) {
   let assets = []
 
   await db.each(assetInfo.query, asset => {
@@ -373,13 +373,13 @@ export async function getAssets(db, { basePath }) {
   return assets
 }
 
-export async function optimize(db) {
+export async function optimize (db) {
   await db.exec("INSERT INTO fts_notes(fts_notes) VALUES ('optimize')")
   await db.exec("INSERT INTO fts_metadata(fts_metadata) VALUES ('optimize')")
   await db.exec('VACUUM')
 }
 
-export async function reindex(db) {
+export async function reindex (db) {
   await db.check()
   await db.exec('REINDEX')
   await db.exec("INSERT INTO fts_notes(fts_notes) VALUES ('rebuild')")
@@ -387,7 +387,7 @@ export async function reindex(db) {
 }
 
 
-export function resolveBasePath(db, base) {
+export function resolveBasePath (db, base) {
   switch (base) {
     case BASE.PROJECT:
       return dirname(db.path)
@@ -398,7 +398,7 @@ export function resolveBasePath(db, base) {
   }
 }
 
-export function getProjectType(path) {
+export function getProjectType (path) {
   switch (extname(path).toLowerCase()) {
     case '.tpy':
       return TPY
@@ -466,7 +466,7 @@ const assetInfo =
     .from('photos')
     .order('protocol, path')
 
-export async function beginProjectAccess(db, user) {
+export async function beginProjectAccess (db, user) {
   if (user == null)
     return null
 
@@ -481,7 +481,7 @@ export async function beginProjectAccess(db, user) {
   return id
 }
 
-export async function endProjectAccess(db, id, prune = false) {
+export async function endProjectAccess (db, id, prune = false) {
   await db.run(
     ...update('access')
       .set('closed = datetime("now")')
@@ -501,7 +501,7 @@ export async function endProjectAccess(db, id, prune = false) {
 
 // NB delaying the electron import here on purpose
 // so that we can load the utilities from Node.js scripts
-async function moveToTrash(path) {
+async function moveToTrash (path) {
   const { shell } = await import('electron')
   await shell.trashItem(path)
 }

@@ -15,7 +15,7 @@ import { getTemplateValues, getTemplateProperties } from '../selectors/index.js'
 
 
 export class ImportCommand extends Command {
-  static *consolidate(args = {}) {
+  static *consolidate (args = {}) {
     let { cache, image, photos, overwrite = true } = args
 
     // Subtle: when importing, *consolidation is forked
@@ -47,7 +47,7 @@ export class ImportCommand extends Command {
     }
   }
 
-  async promptForFilesToImport(type) {
+  async promptForFilesToImport (type) {
     try {
       this.suspend()
       switch (type) {
@@ -84,7 +84,7 @@ export class ImportCommand extends Command {
     return [...json, ...images, ...urls]
   };
 
-  *openImage(path) {
+  *openImage (path) {
     let settings = yield select(state => state.settings)
 
     return yield call(Image.open, {
@@ -94,7 +94,7 @@ export class ImportCommand extends Command {
     })
   }
 
-  *getMetadata(image, templates) {
+  *getMetadata (image, templates) {
     let data = {}
     let prefs = yield select(state => state.settings)
 
@@ -105,7 +105,7 @@ export class ImportCommand extends Command {
     return data
   }
 
-  getImageMetadata(type, image, template, prefs) {
+  getImageMetadata (type, image, template, prefs) {
     let props = getTemplateProperties(template)
     let data = {
       ...getTemplateValues(template),
@@ -135,13 +135,13 @@ export class ImportCommand extends Command {
     return data
   }
 
-  *isDuplicate(image) {
+  *isDuplicate (image) {
     return null != (yield call(mod.photo.find, this.options.db, {
       checksum: image.checksum
     }))
   }
 
-  *getDuplicateHandler() {
+  *getDuplicateHandler () {
     if (this.duplicateHandler == null) {
       this.duplicateHandler =
         this.action.meta.duplicate ||
@@ -151,12 +151,12 @@ export class ImportCommand extends Command {
     return this.duplicateHandler
   }
 
-  *setDuplicateHandler(handler) {
+  *setDuplicateHandler (handler) {
     this.duplicateHandler = handler
     yield put(act.settings.persist({ dup: handler }))
   }
 
-  *handleDuplicate(image) {
+  *handleDuplicate (image) {
     const handler = yield * this.getDuplicateHandler()
     if (handler === 'import') return
 

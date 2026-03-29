@@ -5,7 +5,7 @@ import { rdfs, tropy, xsd, dc, dcterms } from '../ontology/index.js'
 import { URI, any, array, map, morph, omit, get, decodeListPath } from './util.js'
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
-export async function normalize(json) {
+export async function normalize (json) {
   if (Array.isArray(json)) {
     if (!json[0]?.['@context']) {
       json = {
@@ -56,7 +56,7 @@ const toValue = (node, key) => {
   let type
 
   if (node['@id']) {
-    type = rdfs.Class,
+    type = rdfs.Class
     text = node['@id']
 
   } else {
@@ -120,7 +120,7 @@ const getTranscription = (data) => ({
   alto: get(data, [tropy.alto, 0, '@value'])
 })
 
-export function *eachItem(graph) {
+export function *eachItem (graph) {
   for (let data of graph) {
     yield ({
       data: getMetadata(data, 'item'),

@@ -11,13 +11,13 @@ import { debug, info, warn } from '../common/log.js'
 const UUID = /^[0-9a-f]{8}(-[0-9a-f]+){4}$/i
 
 export class Prune extends Command {
-  static check(file, state) {
+  static check (file, state) {
     let [id,, ext] = Cache.split(file)
     return ext !== Cache.extname() ||
       !((id in state.photos || (id in state.selections)))
   }
 
-  *exec() {
+  *exec () {
     let { cache } = this.options
 
     let state = yield select()
@@ -54,7 +54,7 @@ Prune.register(CACHE.PRUNE)
 
 
 export class Purge extends Command {
-  *exec() {
+  *exec () {
     let AGE = 3 // months
     let NOW = new Date()
 

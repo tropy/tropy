@@ -9,11 +9,11 @@ export class Watcher extends EventEmitter {
   #watcher = null
   #path = null
 
-  isWatching(path) {
+  isWatching (path) {
     return this.#watcher != null && (!path || path === this.#path)
   }
 
-  async watch(path, { since, ...opts } = {}) {
+  async watch (path, { since, ...opts } = {}) {
     await this.stop()
 
     if (!path) return
@@ -60,7 +60,7 @@ export class Watcher extends EventEmitter {
     })
   }
 
-  async stop() {
+  async stop () {
     await this.#watcher?.close()
     this.#watcher?.removeAllListeners()
     this.#watcher = null
@@ -68,7 +68,7 @@ export class Watcher extends EventEmitter {
   }
 }
 
-async function mdItemDateAdded(file) {
+async function mdItemDateAdded (file) {
   try {
     let { stdout } = await execFile('mdls', [
       '-name',

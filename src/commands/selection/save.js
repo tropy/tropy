@@ -7,7 +7,7 @@ import act from '../../actions/selection.js'
 
 
 export class Save extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
     let { id, data } = payload

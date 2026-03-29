@@ -20,12 +20,12 @@ const any = (src) => { for (let key in src) return key }
 export class ItemTable extends ItemIterator {
   headContainer = React.createRef()
 
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = this.getColumnState(props)
   }
 
-  componentDidUpdate() {
+  componentDidUpdate () {
     if (this.props.edit != null) {
       this.container.current?.scrollIntoView({
         id: Number(any(this.props.edit))
@@ -33,21 +33,21 @@ export class ItemTable extends ItemIterator {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps (props) {
     // super.UNSAFE_componentWillReceiveProps(props, ...args)
     if (!shallow(this.props, props, ['columns', 'list'])) {
       this.setState(this.getColumnState(props))
     }
   }
 
-  get classes() {
+  get classes () {
     return ['table-body', {
       'drop-target': !this.props.isReadOnly,
       over: this.props.isOver
     }]
   }
 
-  getColumnState(props = this.props) {
+  getColumnState (props = this.props) {
     let minWidth = 0
     let columns = props.columns.active
     let colwidth = columns.map((c, idx) => {
@@ -64,34 +64,34 @@ export class ItemTable extends ItemIterator {
     return { columns, colwidth, minWidth }
   }
 
-  getMaxColumnOffset(idx) {
+  getMaxColumnOffset (idx) {
     return this.state.minWidth - this.state.colwidth[idx]
   }
 
-  getMinColumnOffset() {
+  getMinColumnOffset () {
     return this.hasPositionColumn() ? NAV.COLUMN.POSITION.width : 0
   }
 
-  getColumnPadding(idx = 0) {
+  getColumnPadding (idx = 0) {
     return (idx === 0 && !this.hasPositionColumn()) ?
       COLUMN.PADDING + COLUMN.FIRST :
       COLUMN.PADDING
   }
 
-  getOffsetInTable(x, { offset = 0, min, max } = this.dragstate) {
+  getOffsetInTable (x, { offset = 0, min, max } = this.dragstate) {
     return restrict(
       x - offset - bounds(this.table).left + this.table.scrollLeft,
       min,
       max)
   }
 
-  getPosition(index) {
+  getPosition (index) {
     return (this.props.sort.asc) ?
       index + 1 :
       this.props.items.length - index
   }
 
-  getTemplateColumns() {
+  getTemplateColumns () {
     let gtc = this.hasPositionColumn() ?
       `${NAV.COLUMN.POSITION.width}px ` : ''
     for (let width of this.state.colwidth)
@@ -99,7 +99,7 @@ export class ItemTable extends ItemIterator {
     return gtc + 'auto'
   }
 
-  edit(item) {
+  edit (item) {
     if (!this.props.isReadOnly) {
       this.props.onEdit({
         column: { [item.id]: this.state.columns[0].id }
@@ -107,7 +107,7 @@ export class ItemTable extends ItemIterator {
     }
   }
 
-  hasPositionColumn(props = this.props) {
+  hasPositionColumn (props = this.props) {
     return !!props.list
   }
 
@@ -243,7 +243,7 @@ export class ItemTable extends ItemIterator {
     this.headContainer.current.scroll(null, event.target.scrollLeft)
   }
 
-  setColumnOffset(offset = 0, column = 'drag') {
+  setColumnOffset (offset = 0, column = 'drag') {
     this.table.style.setProperty(`--${column}-offset`, `${offset}px`)
   }
 
@@ -251,7 +251,7 @@ export class ItemTable extends ItemIterator {
     this.table = table
   }
 
-  renderTableBody() {
+  renderTableBody () {
     return this.connect(
       <div className={cx(this.classes)}>
         <Scroll
@@ -293,7 +293,7 @@ export class ItemTable extends ItemIterator {
     )
   }
 
-  renderColumnContextMenu() {
+  renderColumnContextMenu () {
     return this.state.columnContextMenu != null && (
       <ColumnContextMenu
         {...this.state.columnContextMenu}
@@ -303,7 +303,7 @@ export class ItemTable extends ItemIterator {
     )
   }
 
-  render() {
+  render () {
     return (
       <div
         ref={this.setTable}

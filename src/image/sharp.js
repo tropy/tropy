@@ -2,7 +2,7 @@ import { info } from '../common/log.js'
 
 let sharp
 
-export async function init() {
+export async function init () {
   if (sharp == null) {
     sharp = (await import('sharp')).default
 
@@ -25,21 +25,21 @@ export const defaults = {
   }
 }
 
-export default function wrapper(input, options = {}) {
+export default function wrapper (input, options = {}) {
   return sharp(input, { ...defaults, ...options })
 }
 
-export async function open(input, options = {}) {
+export async function open (input, options = {}) {
   await init()
   return wrapper(input, options)
 }
 
-export async function toFile(file, ...args) {
+export async function toFile (file, ...args) {
   let image = await open(...args)
   return image.toFile(file)
 }
 
-export async function toBuffer(format, ...args) {
+export async function toBuffer (format, ...args) {
   let image = await open(...args)
 
   if (format)

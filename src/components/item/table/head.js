@@ -4,24 +4,24 @@ import { titlecase } from '../../../common/util.js'
 import { NAV } from '../../../constants/index.js'
 
 export class TableHead extends React.PureComponent {
-  get isAscending() {
+  get isAscending () {
     return this.props.sort.asc
   }
 
-  isActive({ id }) {
+  isActive ({ id }) {
     return (id === this.props.sort.column)
   }
 
-  isDragging(idx) {
+  isDragging (idx) {
     return idx === this.props.drag
   }
 
-  isMoving(idx) {
+  isMoving (idx) {
     return (idx >= this.props.drop && idx < this.props.drag) ||
       (idx <= this.props.drop && idx > this.props.drag)
   }
 
-  render() {
+  render () {
     let isFixedColumn = 1 >= this.props.columns.length
 
     return (

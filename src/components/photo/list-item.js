@@ -12,19 +12,19 @@ import { TranscriptionIcon } from '../transcription/icon.js'
 
 
 class PhotoListItem extends PhotoIterable {
-  get classes() {
+  get classes () {
     return [...super.classes, { active: this.isActive }]
   }
 
-  get isDraggable() {
+  get isDraggable () {
     return !this.props.isEditing && super.isDraggable
   }
 
-  get selections() {
+  get selections () {
     return pluck(this.props.selections, this.props.photo.selections)
   }
 
-  get title() {
+  get title () {
     let { data, photo, title } = this.props
     return data?.[photo.id]?.[title]?.text
   }
@@ -79,7 +79,7 @@ class PhotoListItem extends PhotoIterable {
   }
 
 
-  renderSelectionList() {
+  renderSelectionList () {
     if (!this.props.isExpanded) return null
 
     return (
@@ -101,7 +101,7 @@ class PhotoListItem extends PhotoIterable {
     )
   }
 
-  renderTwistyButton() {
+  renderTwistyButton () {
     return this.props.isExpandable && (
       <Button
         noFocus
@@ -111,7 +111,7 @@ class PhotoListItem extends PhotoIterable {
     )
   }
 
-  render() {
+  render () {
     const {
       isDisabled,
       isEditing,

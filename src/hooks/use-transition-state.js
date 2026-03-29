@@ -8,7 +8,7 @@ import { ensure, reflow } from '../dom.js'
 // Use `timeout` to set the fallback timeout.
 // Use `toString` parameter to customize how prop values are mapped in `state.className`.
 
-export function useTransitionState(node, prop, timeout = 1000, toString) {
+export function useTransitionState (node, prop, timeout = 1000, toString) {
   let [state, setState] = useState({
     current: prop,
     isChanging: false,

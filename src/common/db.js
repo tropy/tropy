@@ -28,12 +28,12 @@ const IUD = /^\s*(insert|update|delete)/i
 }
 
 export class Database extends EventEmitter {
-  static async open(path, { isReadOnly, ...opts } = {}) {
+  static async open (path, { isReadOnly, ...opts } = {}) {
     let ro = (isReadOnly || !(await canWrite(path)))
     return new Database(path, ro ? 'r' : 'w', opts)
   }
 
-  static async create(path, script, ...args) {
+  static async create (path, script, ...args) {
     try {
       var db = new Database(path, 'w+', { max: 1 })
 
@@ -47,7 +47,7 @@ export class Database extends EventEmitter {
     }
   }
 
-  constructor(path = ':memory:', mode = 'w+', { journalMode, ...opts } = {}) {
+  constructor (path = ':memory:', mode = 'w+', { journalMode, ...opts } = {}) {
     debug({ path, mode }, 'init db')
     super({ captureRejections: true })
 
@@ -89,15 +89,15 @@ export class Database extends EventEmitter {
     return migrations
   }
 
-  get busy() {
+  get busy () {
     return this.pool.size - this.pool.available
   }
 
-  get isReadOnly() {
+  get isReadOnly () {
     return this.mode === 'r'
   }
 
-  create(mode = this.mode) {
+  create (mode = this.mode) {
     return new Promise((resolve, reject) => {
       info({ mode }, `open db ${this.path}`)
 
@@ -143,7 +143,7 @@ export class Database extends EventEmitter {
     })
   }
 
-  async destroy(conn) {
+  async destroy (conn) {
     try {
       debug({ path: this.path }, 'close db connection')
 
@@ -163,21 +163,21 @@ export class Database extends EventEmitter {
     }
   }
 
-  acquire(opts = {}) {
+  acquire (opts = {}) {
     return new DisposableResource(
       this.pool.acquire(),
       conn => this.release(conn, opts.destroy)
     )
   }
 
-  release(conn, destroy = false) {
+  release (conn, destroy = false) {
     conn.parallelize()
     return destroy ?
       this.pool.destroy(conn) :
       this.pool.release(conn)
   }
 
-  emitAsync(name) {
+  emitAsync (name) {
     return Promise.all(
       this.rawListeners(name).map(fn => fn())
     )
@@ -244,26 +244,26 @@ export class Database extends EventEmitter {
     )
 
 
-  prepare(...args) {
+  prepare (...args) {
     let fn = args.pop()
 
     return this.seq(conn =>
       using(Statement.disposable(conn, ...args), stmt => fn(stmt, conn)))
   }
 
-  all(...args) {
+  all (...args) {
     return this.seq(conn => conn.all(...args))
   }
 
-  each(...args) {
+  each (...args) {
     return this.seq(conn => conn.each(...args))
   }
 
-  get(...args) {
+  get (...args) {
     return this.seq(conn => conn.get(...args))
   }
 
-  run(...args) {
+  run (...args) {
     return this.seq(conn => conn.run(...args))
   }
 
@@ -272,25 +272,25 @@ export class Database extends EventEmitter {
     return this
   }
 
-  version(...args) {
+  version (...args) {
     return this.seq(conn => conn.version(...args))
   }
 
   check = (...args) =>
     this.seq(conn => conn.check(...args))
 
-  async read(path) {
+  async read (path) {
     return this.exec(String(await readFile(path)))
   }
 }
 
 
 export class Connection {
-  constructor(db) {
+  constructor (db) {
     this.db = db
   }
 
-  configure(pragma = Connection.defaults) {
+  configure (pragma = Connection.defaults) {
     return this.exec(
       Object
         .entries(pragma)
@@ -298,45 +298,45 @@ export class Connection {
         .join('\n'))
   }
 
-  optimize() {
+  optimize () {
     return this.exec('PRAGMA optimize;')
   }
 
-  async close() {
+  async close () {
     await this.db.closeAsync()
     this.db.removeAllListeners()
   }
 
-  parallelize(...args) {
+  parallelize (...args) {
     return this.db.parallelize(...args), this
   }
 
-  serialize(...args) {
+  serialize (...args) {
     return this.db.serialize(...args), this
   }
 
-  prepare(...args) {
+  prepare (...args) {
     const fn = args.pop()
     return using(Statement.disposable(this, ...args), stmt => fn(stmt, this))
   }
 
-  all(sql, ...params) {
+  all (sql, ...params) {
     return this.db.allAsync(sql, flatten(params))
   }
 
-  each(...args) {
+  each (...args) {
     return this.db.eachAsync(...args)
   }
 
-  get(sql, ...params) {
+  get (sql, ...params) {
     return this.db.getAsync(sql, flatten(params))
   }
 
-  run(sql, ...params) {
+  run (sql, ...params) {
     return this.db.runAsync(sql, flatten(params))
   }
 
-  async exec(sql) {
+  async exec (sql) {
     await this.db.execAsync(sql)
     return this
   }
@@ -349,7 +349,7 @@ export class Connection {
   // Until Tropy version 1.12 this number was stored
   // using the user_version PRAGMA, a signed 32-bit integer.
 
-  async version(version) {
+  async version (version) {
     if (version) {
       assert(typeof version === 'number' && version > 0,
         `not a valid version number: ${version}`)
@@ -379,15 +379,15 @@ export class Connection {
     }
   }
 
-  begin(mode = 'IMMEDIATE') {
+  begin (mode = 'IMMEDIATE') {
     return this.exec(`BEGIN ${mode} TRANSACTION`)
   }
 
-  commit() {
+  commit () {
     return this.exec('COMMIT TRANSACTION')
   }
 
-  async rollback(...errors) {
+  async rollback (...errors) {
     try {
       await this.exec('ROLLBACK TRANSACTION')
       return this
@@ -397,7 +397,7 @@ export class Connection {
     }
   }
 
-  async check(table, { maxIntErrors = 10 } = {}) {
+  async check (table, { maxIntErrors = 10 } = {}) {
     if (maxIntErrors > 0) {
       let result = await this.all(
         `PRAGMA integrity_check(${maxIntErrors})`
@@ -440,7 +440,7 @@ export class Connection {
 
 
 export class Statement {
-  static disposable(conn, sql, ...params) {
+  static disposable (conn, sql, ...params) {
     return new DisposableResource(
       conn.db.prepareAsync(sql, flatten(params))
         .then(stmt => new Statement(stmt)),
@@ -449,44 +449,44 @@ export class Statement {
     )
   }
 
-  constructor(stmt) {
+  constructor (stmt) {
     this.stmt = stmt
   }
 
-  async bind(...params) {
+  async bind (...params) {
     await this.stmt.bindAsync(flatten(params))
     return this
   }
 
-  async reset() {
+  async reset () {
     await this.stmt.resetAsync()
     return this
   }
 
-  async finalize() {
+  async finalize () {
     await this.stmt.finalizeAsync()
     return this
   }
 
-  run(...params) {
+  run (...params) {
     return this.stmt.runAsync(flatten(params))
   }
 
-  get(...params) {
+  get (...params) {
     return this.stmt.getAsync(flatten(params))
   }
 
-  all(...params) {
+  all (...params) {
     return this.stmt.allAsync(flatten(params))
   }
 
-  each(...args) {
+  each (...args) {
     return this.stmt.eachAsync(...args)
   }
 }
 
 
-async function nofk(conn, callback) {
+async function nofk (conn, callback) {
   await conn.configure({ foreign_keys: 'off' })
 
   try {
@@ -498,7 +498,7 @@ async function nofk(conn, callback) {
   }
 }
 
-async function transaction(conn, callback, mode = 'IMMEDIATE') {
+async function transaction (conn, callback, mode = 'IMMEDIATE') {
   await conn.begin(mode)
 
   try {
@@ -513,11 +513,11 @@ async function transaction(conn, callback, mode = 'IMMEDIATE') {
   }
 }
 
-async function exclusiveTransaction(conn, callback) {
+async function exclusiveTransaction (conn, callback) {
   return transaction(conn, callback, 'EXCLUSIVE')
 }
 
 
-function flatten(params) {
+function flatten (params) {
   return (params.length === 1) ? params[0] : params
 }

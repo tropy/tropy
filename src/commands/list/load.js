@@ -4,7 +4,7 @@ import { LIST } from '../../constants/index.js'
 import mod from '../../models/list.js'
 
 export class Load extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     return (yield call(mod.all, db))
   }

@@ -4,7 +4,7 @@ import { Cache } from './cache.js'
 import { pick } from './util.js'
 
 export class Rotation {
-  constructor(input = {}) {
+  constructor (input = {}) {
     if (typeof input === 'string') {
       this.parse(input)
     } else {
@@ -12,12 +12,12 @@ export class Rotation {
     }
   }
 
-  set({ angle = 0, mirror = false }) {
+  set ({ angle = 0, mirror = false }) {
     this.angle = angle
     this.mirror = mirror
   }
 
-  add({ angle, mirror = false }) {
+  add ({ angle, mirror = false }) {
     if (angle != null) {
       this.angle = rotate(this.angle, angle)
     }
@@ -29,27 +29,27 @@ export class Rotation {
     return this
   }
 
-  subtract({ angle = 0, mirror = false }) {
+  subtract ({ angle = 0, mirror = false }) {
     return this.add({ angle: -angle, mirror })
   }
 
-  parse(input = '') {
+  parse (input = '') {
     this.angle = parseFloat(input.slice(1))
     this.mirror = input.startsWith('!')
     return this
   }
 
-  format(symbol = '!') {
+  format (symbol = '!') {
     return `${this.mirror ? symbol : ''}${this.angle}`
   }
 
-  mode({ width, height }, h = this.isHorizontal) {
+  mode ({ width, height }, h = this.isHorizontal) {
     return (width < height) ?
         (h ? 'portrait' : 'landscape') :
         (h ? 'landscape' : 'portrait')
   }
 
-  ratio({ width, height }) {
+  ratio ({ width, height }) {
     if (!this.isHorizontal)
       [width, height] = [height, width]
 
@@ -61,11 +61,11 @@ export class Rotation {
       return [1, 1]
   }
 
-  get isHorizontal() {
+  get isHorizontal () {
     return isHorizontal(this.angle)
   }
 
-  get orientation() {
+  get orientation () {
     switch (this.angle) {
       case 0:
         return this.mirror ? 2 : 1
@@ -80,11 +80,11 @@ export class Rotation {
     }
   }
 
-  toJSON() {
+  toJSON () {
     return { angle: this.angle, mirror: this.mirror }
   }
 
-  static fromExifOrientation(orientation) {
+  static fromExifOrientation (orientation) {
     switch (orientation) {
       case 2:
         return new Rotation({ angle: 0, mirror: true })
@@ -105,13 +105,13 @@ export class Rotation {
     }
   }
 
-  static addExifOrientation(state, { orientation }) {
+  static addExifOrientation (state, { orientation }) {
     return Rotation
       .fromExifOrientation(orientation)
       .add(state)
   }
 
-  static subExifOrientation(state, { orientation }) {
+  static subExifOrientation (state, { orientation }) {
     return new Rotation(state)
       .subtract(Rotation.fromExifOrientation(orientation))
   }

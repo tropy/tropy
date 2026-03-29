@@ -7,7 +7,7 @@ const SVG = /^\s*(?:<\?xml[^>]*>\s*)?(?:<!doctype svg[^>]*\s*(?:<![^>]*>)*[^>]*>
 const COMMENTS = /<!--([\s\S]*?)-->/g
 
 
-export function createFromSVG(data) {
+export function createFromSVG (data) {
   return new Promise((resolve, reject) => {
     let svg = new Blob([data.toString('utf-8')], { type: MIME.SVG })
     let url = URL.createObjectURL(svg)
@@ -40,11 +40,11 @@ export function createFromSVG(data) {
   })
 }
 
-export function isSVG(buffer) {
+export function isSVG (buffer) {
   return !isBinary(buffer) && SVG.test(buffer.toString().replace(COMMENTS, ''))
 }
 
-function isBinary(buffer) {
+function isBinary (buffer) {
   for (let i = 0; i < 24; ++i) {
     if (buffer[i] === 65533 || buffer[i] <= 8) return true
   }

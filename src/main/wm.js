@@ -34,7 +34,7 @@ import {
 const { BODY, PANEL, ESPER } = SASS
 
 export class WindowManager extends EventEmitter {
-  constructor(defaults = {}) {
+  constructor (defaults = {}) {
     super()
 
     this.defaults = {
@@ -66,15 +66,15 @@ export class WindowManager extends EventEmitter {
     this.seq = counter()
   }
 
-  broadcast(...args) {
+  broadcast (...args) {
     this.each(win => win.webContents.send(...args))
   }
 
-  center() {
+  center () {
     this.each(win => win.center())
   }
 
-  configure(type, opts = {}) {
+  configure (type, opts = {}) {
     return {
       ...this.defaults,
       ...WindowManager.defaults[type],
@@ -88,7 +88,7 @@ export class WindowManager extends EventEmitter {
   }
 
 
-  async create(type, args = {}, opts) {
+  async create (type, args = {}, opts) {
     let NOW = Date.now()
 
     try {
@@ -204,7 +204,7 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  close(type, destroy = false) {
+  close (type, destroy = false) {
     return Promise.all(this.map(type, win =>
       new Promise((resolve) => {
         if (win.isDestroyed())
@@ -223,30 +223,30 @@ export class WindowManager extends EventEmitter {
     ))
   }
 
-  current(type = 'project') {
+  current (type = 'project') {
     return this.windows[type]?.[0]
   }
 
-  each(...args) {
+  each (...args) {
     return this.map(...args), this
   }
 
-  get empty() {
+  get empty () {
     for (let type in this.windows) {
       if (!blank(this.windows[type])) return false
     }
     return true
   }
 
-  first(type) {
+  first (type) {
     return this.values(type).next().value
   }
 
-  has(type) {
+  has (type) {
     return array(type).some(t => !blank(this.windows[t]))
   }
 
-  is(win, type) {
+  is (win, type) {
     return this.windows[type]?.includes(win)
   }
 
@@ -333,7 +333,7 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  handleUnload(win, action) {
+  handleUnload (win, action) {
     if (!this.unloading.has(win)) {
       this.unloading.set(win, action)
       debug(`will ${action} ${this.types.get(win)} window`)
@@ -341,7 +341,7 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  handleUnloaded(win) {
+  handleUnloaded (win) {
     let state = this.unloading.get(win)
     let type = this.types.get(win)
 
@@ -356,7 +356,7 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  handleClipboard(method, data) {
+  handleClipboard (method, data) {
     switch (method) {
       case 'write':
         if (data.image)
@@ -367,7 +367,7 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  handlePendingResponse(action) {
+  handlePendingResponse (action) {
     try {
       var id = action.meta.rsvp
 
@@ -395,7 +395,7 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  async handleShowDialog(win, { id, type, options }) {
+  async handleShowDialog (win, { id, type, options }) {
     dialog
       .show(type, win, options)
       .then(payload => {
@@ -410,7 +410,7 @@ export class WindowManager extends EventEmitter {
       })
   }
 
-  map(type, fn) {
+  map (type, fn) {
     if (typeof type === 'function') {
       fn = type
       type = undefined
@@ -419,7 +419,7 @@ export class WindowManager extends EventEmitter {
     return Array.from(this.values(type), fn)
   }
 
-  async open(type, args, opts = {}) {
+  async open (type, args, opts = {}) {
     let props = {
       app: Resource.base,
       env: process.env.NODE_ENV,
@@ -454,7 +454,7 @@ export class WindowManager extends EventEmitter {
     return win
   }
 
-  register(type, win) {
+  register (type, win) {
     try {
       win
         .on('app-command', handleAppCommand)
@@ -529,11 +529,11 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  send(type, ...args) {
+  send (type, ...args) {
     this.each(type, win => win.webContents.send(...args))
   }
 
-  rsvp(type, action) {
+  rsvp (type, action) {
     let id
 
     return new Promise((resolve, reject) => {
@@ -553,7 +553,7 @@ export class WindowManager extends EventEmitter {
     }).finally(() => { delete this.pending[id] })
   }
 
-  async enterFixedSize(win) {
+  async enterFixedSize (win) {
     if (!win.isNormal())
       await WindowManager.setNormal(win)
 
@@ -578,7 +578,7 @@ export class WindowManager extends EventEmitter {
     })
   }
 
-  leaveFixedSize(win, animate) {
+  leaveFixedSize (win, animate) {
     let type = this.types.get(win)
 
     let {
@@ -604,7 +604,7 @@ export class WindowManager extends EventEmitter {
     })
   }
 
-  async setFixedSize(win, fixedSize = false, {
+  async setFixedSize (win, fixedSize = false, {
     width,
     height,
     animate = true
@@ -631,11 +631,11 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  setTitle(type, title) {
+  setTitle (type, title) {
     this.each(type, win => win.setTitle(title))
   }
 
-  async show(type, args, opts) {
+  async show (type, args, opts) {
     let win = this.current(type)
     if (win) {
       win.show()
@@ -646,23 +646,23 @@ export class WindowManager extends EventEmitter {
     return win
   }
 
-  async start() {
+  async start () {
     ipc.on('wm', this.handleIpcMessage)
   }
 
-  async stop(destroy = false) {
+  async stop (destroy = false) {
     await this.close(undefined, destroy)
     ipc.removeListener('wm', this.handleIpcMessage)
   }
 
-  unref(type, win) {
+  unref (type, win) {
     this.windows[type] = remove(array(this.windows[type]), win)
     this.types.delete(win)
     this.props.delete(win)
     this.unloading.delete(win)
   }
 
-  zoom(factor) {
+  zoom (factor) {
     factor = restrict(factor, this.MIN_ZOOM, this.MAX_ZOOM)
 
     for (let win of this.values()) {
@@ -691,14 +691,14 @@ export class WindowManager extends EventEmitter {
     return factor
   }
 
-  *values(type = Object.keys(this.windows)) {
+  *values (type = Object.keys(this.windows)) {
     for (let t of array(type)) {
       if (t in this.windows)
         yield * this.windows[t].values()
     }
   }
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator] () {
     yield * this.values()
   }
 
@@ -737,18 +737,18 @@ export class WindowManager extends EventEmitter {
   MIN_ZOOM = 0.75
   MAX_ZOOM = 2
 
-  static getAquaColorVariant() {
+  static getAquaColorVariant () {
     return darwin && AQUA[
       prefs.getUserDefault('AppleAquaColorVariant', 'string')
     ]
   }
 
-  static hasOverlayScrollBars() {
+  static hasOverlayScrollBars () {
     return darwin &&
       prefs.getUserDefault('AppleShowScrollBars', 'string') === 'WhenScrolling'
   }
 
-  static async getTitlebarActionFor(trigger) {
+  static async getTitlebarActionFor (trigger) {
     try {
       if (darwin) {
         if (trigger === 'double-click')
@@ -774,7 +774,7 @@ export class WindowManager extends EventEmitter {
       return 'raise'
   }
 
-  static async getButtonLayout() {
+  static async getButtonLayout () {
     try {
       return !linux ? null :
         await get('org.gnome.desktop.wm.preferences', 'button-layout')
@@ -784,7 +784,7 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  static print(win, opts = {}) {
+  static print (win, opts = {}) {
     return new Promise((resolve, reject) => {
       win.webContents.print(opts, (success, reason) => {
         if (success)
@@ -795,7 +795,7 @@ export class WindowManager extends EventEmitter {
     })
   }
 
-  static async printToPDF(win, path, { pageSize, landscape = false } = {}) {
+  static async printToPDF (win, path, { pageSize, landscape = false } = {}) {
     assert(path?.length > 0, 'missing PDF output file')
 
     if (!pageSize)
@@ -811,7 +811,7 @@ export class WindowManager extends EventEmitter {
     return path
   }
 
-  static preferReducedMotion() {
+  static preferReducedMotion () {
     try {
       return prefs.getAnimationSettings().prefersReducedMotion
 
@@ -821,19 +821,19 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  static async leaveFullScreen(win) {
+  static async leaveFullScreen (win) {
     await setWindowState(win, 'leave-full-screen', 'setFullScreen', false)
   }
 
-  static async unmaximize(win) {
+  static async unmaximize (win) {
     await setWindowState(win, 'unmaximize')
   }
 
-  static async restore(win) {
+  static async restore (win) {
     await setWindowState(win, 'restore')
   }
 
-  static async setNormal(win) {
+  static async setNormal (win) {
     if (win.isMinimized())
       await WindowManager.restore(win)
     // Subtle: macOS reports isMaximized when in full-screen,
@@ -868,12 +868,12 @@ const APP_CMD = {
   'browser-forward': 'forward'
 }
 
-function handleAppCommand(_, name) {
+function handleAppCommand (_, name) {
   if (name in APP_CMD)
     this.webContents.send(`global:${APP_CMD[name]}`)
 }
 
-function handleWillNavigate(event, url) {
+function handleWillNavigate (event, url) {
   try {
     let current = new URL(this.getURL())
     let next = new URL(url)
@@ -888,19 +888,19 @@ function handleWillNavigate(event, url) {
   }
 }
 
-function webContentsForward(win, events) {
+function webContentsForward (win, events) {
   for (let type of events) {
     win.on(type, () => { win.webContents.send('win', type) })
   }
 }
 
-function setWindowState(win, event, setter = event, ...args) {
+function setWindowState (win, event, setter = event, ...args) {
   let p = when(win, event, 2000)
   win[setter](...args)
   return p
 }
 
-export function getPath(name, fallback) {
+export function getPath (name, fallback) {
   try {
     return app.getPath(name)
   } catch (err) {

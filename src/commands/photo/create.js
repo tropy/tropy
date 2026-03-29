@@ -19,7 +19,7 @@ import {
 
 
 export class Create extends ImportCommand {
-  configure(state) {
+  configure (state) {
     return Object.assign(this.options, {
       basePath: state.project.basePath,
       template: getPhotoTemplate(state),
@@ -29,7 +29,7 @@ export class Create extends ImportCommand {
     })
   }
 
-  *exec() {
+  *exec () {
     // Subtle: push photos to this.result early to support
     // undo after cancelled (partial) import!
     this.result = []
@@ -67,7 +67,7 @@ export class Create extends ImportCommand {
     return this.result
   }
 
-  *importFromFile(path) {
+  *importFromFile (path) {
     try {
       let progress = yield this.progress()
 
@@ -138,7 +138,7 @@ export class Create extends ImportCommand {
     }
   }
 
-  get redo() {
+  get redo () {
     return !(this.result && this.result.length > 0) ?
       null :
       act.photo.restore({
@@ -147,7 +147,7 @@ export class Create extends ImportCommand {
       }, { idx: this.options.idx })
   }
 
-  get undo() {
+  get undo () {
     return !(this.result && this.result.length > 0) ?
       null :
       act.photo.delete({

@@ -3,7 +3,7 @@ import { warn } from '../common/log.js'
 import { getUndo, getRedo } from '../selectors/index.js'
 import { HISTORY } from '../constants/index.js'
 
-function *undo() {
+function *undo () {
   try {
     let action = yield select(getUndo)
     if (action != null) yield put(action)
@@ -13,7 +13,7 @@ function *undo() {
   }
 }
 
-function *redo() {
+function *redo () {
   try {
     let action = yield select(getRedo)
     if (action != null) yield put(action)
@@ -23,7 +23,7 @@ function *redo() {
   }
 }
 
-export function *history() {
+export function *history () {
   yield every(HISTORY.UNDO, undo)
   yield every(HISTORY.REDO, redo)
 }

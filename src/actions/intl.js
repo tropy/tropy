@@ -1,7 +1,7 @@
 import { INTL } from '../constants/index.js'
 import { Strings } from '../res.js'
 
-function load({ locale }) {
+function load ({ locale }) {
   return async function (dispatch) {
     let strings = await Strings.openWithFallback('en', locale)
     let messages = {
@@ -15,7 +15,7 @@ function load({ locale }) {
   }
 }
 
-function update(payload, meta) {
+function update (payload, meta) {
   return {
     type: INTL.UPDATE,
     payload,

@@ -12,7 +12,7 @@ export class TemplateToolbar extends React.PureComponent {
     })
   }
 
-  render() {
+  render () {
     return (
       <FormElement
         id="prefs.template.select"

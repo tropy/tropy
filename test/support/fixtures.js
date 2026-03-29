@@ -10,28 +10,28 @@ globalThis.F = {
   appDir,
   dir: fixtures,
 
-  get state() {
+  get state () {
     return require(join(fixtures, 'state', 'index.js'))
   },
 
   image: {
-    path(name) {
+    path (name) {
       return join(fixtures, 'images', name)
     },
-    url(name) {
+    url (name) {
       return pathToFileURL(join(fixtures, 'images', name))
     }
   },
 
-  join(...args) {
+  join (...args) {
     return join(fixtures, ...args)
   },
 
-  require(name) {
+  require (name) {
     return require(join(fixtures, `${name}.js`))
   },
 
-  schema(name = 'project') {
+  schema (name = 'project') {
     return join(appDir, 'db', 'schema', `${name}.sql`)
   }
 }

@@ -31,23 +31,23 @@ export class PluginAccordion extends Accordion {
     this.props.onUninstall(this.props.spec.name)
   }
 
-  get classes() {
+  get classes () {
     return [super.classes, {
       disabled: !this.hasInstances
     }]
   }
 
-  get description() {
+  get description () {
     return (
       <p className="description">{this.props.spec.description}</p>
     )
   }
 
-  get hasInstances() {
+  get hasInstances () {
     return this.props.instances.length > 0
   }
 
-  get heading() {
+  get heading () {
     return (
       <h1 className="panel-heading">
         {`${this.props.spec.label || this.props.spec.name} `}
@@ -56,7 +56,7 @@ export class PluginAccordion extends Accordion {
     )
   }
 
-  get hooks() {
+  get hooks () {
     return (
       <ul className="hooks">
         {Object.entries(this.props.spec.hooks).map(hk => (
@@ -68,7 +68,7 @@ export class PluginAccordion extends Accordion {
     )
   }
 
-  get icon() {
+  get icon () {
     return (
       <img
         className="plugin-icon"
@@ -76,7 +76,7 @@ export class PluginAccordion extends Accordion {
     )
   }
 
-  get info() {
+  get info () {
     return (this.props.spec.homepage == null) ? <NoInfo/> : (
       <div className="info">
         <a onClick={this.handleHomepageClick}>
@@ -86,11 +86,11 @@ export class PluginAccordion extends Accordion {
     )
   }
 
-  get isLocalPlugin() {
+  get isLocalPlugin () {
     return this.props.spec.source === 'local'
   }
 
-  renderHeader() {
+  renderHeader () {
     return super.renderHeader(
       <div className="panel-header-container">
         {this.icon}
@@ -123,7 +123,7 @@ export class PluginAccordion extends Accordion {
     )
   }
 
-  renderBody() {
+  renderBody () {
     return super.renderBody(
       <ul>
         {this.props.instances.map((config, idx) => (

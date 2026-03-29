@@ -2,7 +2,7 @@ import { API, ITEM, METADATA, NOTE, TAG } from '../constants/index.js'
 import { array } from '../common/util.js'
 
 export default {
-  import({ files, ...payload }, meta) {
+  import ({ files, ...payload }, meta) {
     return {
       type: ITEM.IMPORT,
       payload: {
@@ -20,7 +20,7 @@ export default {
   },
 
   item: {
-    find({ tags, ...payload }, meta) {
+    find ({ tags, ...payload }, meta) {
       return {
         type: API.ITEM.FIND,
         payload: {
@@ -34,7 +34,7 @@ export default {
       }
     },
 
-    show(payload, meta) {
+    show (payload, meta) {
       return {
         type: API.ITEM.SHOW,
         payload,
@@ -47,7 +47,7 @@ export default {
   },
 
   metadata: {
-    save({ id, ...payload }, meta) {
+    save ({ id, ...payload }, meta) {
       return {
         type: METADATA.SAVE,
         payload: {
@@ -62,7 +62,7 @@ export default {
       }
     },
 
-    show(payload, meta) {
+    show (payload, meta) {
       return {
         type: API.METADATA.SHOW,
         payload,
@@ -75,7 +75,7 @@ export default {
   },
 
   note: {
-    create(payload, meta) {
+    create (payload, meta) {
       return {
         type: API.NOTE.CREATE,
         payload,
@@ -87,7 +87,7 @@ export default {
       }
     },
 
-    delete(payload, meta) {
+    delete (payload, meta) {
       return {
         type: NOTE.DELETE,
         payload,
@@ -99,7 +99,7 @@ export default {
       }
     },
 
-    show(payload, meta) {
+    show (payload, meta) {
       return {
         type: API.NOTE.SHOW,
         payload,
@@ -112,7 +112,7 @@ export default {
   },
 
   transcription: {
-    create(payload, meta) {
+    create (payload, meta) {
       return {
         type: API.TRANSCRIPTION.CREATE,
         payload,
@@ -124,7 +124,7 @@ export default {
       }
     },
 
-    find(payload, meta) {
+    find (payload, meta) {
       return {
         type: API.TRANSCRIPTION.FIND,
         payload,
@@ -135,7 +135,7 @@ export default {
       }
     },
 
-    show(payload, meta) {
+    show (payload, meta) {
       return {
         type: API.TRANSCRIPTION.SHOW,
         payload,
@@ -149,7 +149,7 @@ export default {
 
 
   photo: {
-    extract(payload, meta) {
+    extract (payload, meta) {
       return {
         type: API.PHOTO.EXTRACT,
         payload,
@@ -160,7 +160,7 @@ export default {
       }
     },
 
-    find(payload, meta) {
+    find (payload, meta) {
       return {
         type: API.PHOTO.FIND,
         payload,
@@ -171,7 +171,7 @@ export default {
       }
     },
 
-    show(payload, meta) {
+    show (payload, meta) {
       return {
         type: API.PHOTO.SHOW,
         payload,
@@ -184,7 +184,7 @@ export default {
   },
 
   list: {
-    show(payload, meta) {
+    show (payload, meta) {
       return {
         type: API.LIST.SHOW,
         payload,
@@ -197,7 +197,7 @@ export default {
   },
 
   tag: {
-    create({ items, ...payload }, meta) {
+    create ({ items, ...payload }, meta) {
       return {
         type: TAG.CREATE,
         payload: {
@@ -214,7 +214,7 @@ export default {
       }
     },
 
-    delete(payload, meta) {
+    delete (payload, meta) {
       return {
         type: TAG.DELETE,
         payload,
@@ -227,7 +227,7 @@ export default {
       }
     },
 
-    add({ id, tags }, meta) {
+    add ({ id, tags }, meta) {
       return {
         type: ITEM.TAG.CREATE,
         payload: {
@@ -244,7 +244,7 @@ export default {
       }
     },
 
-    clear({ id }, meta) {
+    clear ({ id }, meta) {
       return {
         type: ITEM.TAG.CLEAR,
         payload: id,
@@ -257,7 +257,7 @@ export default {
       }
     },
 
-    find(payload, meta) {
+    find (payload, meta) {
       return {
         type: API.TAG.FIND,
         payload,
@@ -268,7 +268,7 @@ export default {
       }
     },
 
-    remove({ id, tags }, meta) {
+    remove ({ id, tags }, meta) {
       return {
         type: ITEM.TAG.DELETE,
         payload: {
@@ -285,7 +285,7 @@ export default {
       }
     },
 
-    show(payload, meta) {
+    show (payload, meta) {
       return {
         type: API.TAG.SHOW,
         payload,
@@ -298,7 +298,7 @@ export default {
   },
 
   selection: {
-    show(payload, meta) {
+    show (payload, meta) {
       return {
         type: API.SELECTION.SHOW,
         payload,

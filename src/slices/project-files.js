@@ -101,7 +101,7 @@ const projectFiles = createSlice({
 
   reducers: {
     clear: {
-      reducer(state, { payload }) {
+      reducer (state, { payload }) {
         delete state[payload]
       },
       prepare: (path) => ({
@@ -110,12 +110,12 @@ const projectFiles = createSlice({
       })
     },
 
-    restore(state, { payload }) {
+    restore (state, { payload }) {
       Object.assign(state, payload)
     }
   },
 
-  extraReducers(builder) {
+  extraReducers (builder) {
     builder
       .addCase(reload.fulfilled, (state, { payload }) => {
         for (let file of payload) {

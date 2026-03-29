@@ -1,7 +1,7 @@
 import { CACHE } from '../constants/index.js'
 
 export default {
-  prune(payload, meta = {}) {
+  prune (payload, meta = {}) {
     return {
       type: CACHE.PRUNE,
       payload,
@@ -9,7 +9,7 @@ export default {
     }
   },
 
-  purge(payload, meta = {}) {
+  purge (payload, meta = {}) {
     return {
       type: CACHE.PURGE,
       payload,

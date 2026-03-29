@@ -1,7 +1,7 @@
 import ARGS from '../args.js'
 import { INTL } from '../constants/index.js'
 
-export function intl(state = {
+export function intl (state = {
   locale: ARGS.locale,
   defaultLocale: 'en'
 }, action) {

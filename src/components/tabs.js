@@ -4,7 +4,7 @@ import cx from 'classnames'
 
 
 export class Tab extends React.PureComponent {
-  get classes() {
+  get classes () {
     return ['tab', {
       active: this.props.isActive,
       disabled: this.props.isDisabled
@@ -17,7 +17,7 @@ export class Tab extends React.PureComponent {
     }
   }
 
-  render() {
+  render () {
     return (
       <li
         className={cx(this.classes)}
@@ -38,7 +38,7 @@ export class TabNav extends React.PureComponent {
     }
   }
 
-  render() {
+  render () {
     return (
       <nav>
         <ul className={cx('nav', 'tabs', {

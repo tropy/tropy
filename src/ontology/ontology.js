@@ -7,15 +7,15 @@ import { dc, dcterms, owl, rdf, rdfs, skos, vann } from './ns.js'
 
 
 export class Ontology extends Resource {
-  static get base() {
+  static get base () {
     return join(super.base, 'vocab')
   }
 
-  static get ext() {
+  static get ext () {
     return '.n3'
   }
 
-  static parse(is) {
+  static parse (is) {
     return new Promise((resolve, reject) => {
       const store = new N3.Store()
 
@@ -28,14 +28,14 @@ export class Ontology extends Resource {
     })
   }
 
-  static async open(input, expand = true) {
+  static async open (input, expand = true) {
     const [path, name] = expand ?
         [Ontology.expand(input), input] : [input, basename(input, extname(input))]
 
     return new Ontology(await Ontology.parse(createReadStream(path)), name)
   }
 
-  static expand(name) {
+  static expand (name) {
     return join(this.base, `${name}${this.ext}`)
   }
 
@@ -60,13 +60,13 @@ export class Ontology extends Resource {
   ]
 
 
-  constructor(store, name) {
+  constructor (store, name) {
     super()
     this.store = store
     this.name = name
   }
 
-  toJSON(locale = 'en') {
+  toJSON (locale = 'en') {
     let json = {}
     let seq = 0
 
@@ -127,7 +127,7 @@ export class Ontology extends Resource {
     return json
   }
 
-  getVocabulary(id, prefix, { title = id, locale = 'en' } = {}) {
+  getVocabulary (id, prefix, { title = id, locale = 'en' } = {}) {
     let data = this.getData(id)
 
     if (empty(data) && (/[#/]$/).test(id)) {
@@ -155,7 +155,7 @@ export class Ontology extends Resource {
     }
   }
 
-  getByType(...types) {
+  getByType (...types) {
     const ids = []
 
     this.store.forEach(({ subject, object }) => {
@@ -168,7 +168,7 @@ export class Ontology extends Resource {
     return ids
   }
 
-  getData(subject, into = {}) {
+  getData (subject, into = {}) {
     return this.store.getQuads(subject).reduce((o, { predicate, object }) =>
       ((o[predicate.id] = [...(o[predicate.id] || []), literal(object)]), o),
     into)
@@ -177,7 +177,7 @@ export class Ontology extends Resource {
 }
 
 
-export function info(data, locale = 'en') {
+export function info (data, locale = 'en') {
   return {
     comment: getValue(any(data, rdfs.comment), locale),
     description: getValue(
@@ -186,7 +186,7 @@ export function info(data, locale = 'en') {
   }
 }
 
-function getValue(data, locale = 'en') {
+function getValue (data, locale = 'en') {
   if (data == null || data.length === 0) {
     return null
   }
@@ -198,7 +198,7 @@ function getValue(data, locale = 'en') {
   return data[0]['@value']
 }
 
-export function literal(data) {
+export function literal (data) {
   return N3.Util.isLiteral(data) ? {
     '@value': data.value,
     '@type': data.datatype,
@@ -209,7 +209,7 @@ export function literal(data) {
   }
 }
 
-export function isDefinedBy(id, data) {
+export function isDefinedBy (id, data) {
   let ns = get(data, [rdfs.isDefinedBy, 0, '@id'])
   if (ns == null) return URI.namespace(id)
   ns = ns.id || ns

@@ -6,7 +6,7 @@ import cx from 'classnames'
 
 
 export class FileSelect extends React.PureComponent {
-  get tabIndex() {
+  get tabIndex () {
     return this.props.isDisabled ? null : this.props.tabIndex
   }
 
@@ -74,13 +74,13 @@ export class FileSelect extends React.PureComponent {
       this.handleChange(value)
   }
 
-  showDialog(opts, { type, createFile } = this.props) {
+  showDialog (opts, { type, createFile } = this.props) {
     return (type === 'file' && createFile) ?
       save(opts) :
       open(opts).then(res => Array.isArray(res) ? res[0] : res)
   }
 
-  render() {
+  render () {
     let isBlank = blank(this.props.value)
 
     return (

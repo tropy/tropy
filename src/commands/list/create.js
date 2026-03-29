@@ -7,7 +7,7 @@ import mod from '../../models/list.js'
 
 
 export class Create extends Command {
-  *exec() {
+  *exec () {
     let { payload } = this.action
     let { db } = this.options
     let { name, parent } = payload
@@ -30,7 +30,7 @@ Create.register(LIST.CREATE)
 
 
 export class Delete extends Command {
-  *exec() {
+  *exec () {
     let { payload: id } = this.action
     let { db } = this.options
     let { lists } = yield select()
@@ -58,7 +58,7 @@ Delete.register(LIST.DELETE)
 
 
 export class Restore extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { idx } = this.action.meta
     let list = this.action.payload

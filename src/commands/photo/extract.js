@@ -15,7 +15,7 @@ import win from '../../window.js'
 
 
 export class Extract extends Command {
-  *exec() {
+  *exec () {
     try {
       let { cache } = this.options
       let { meta, payload } = this.action
@@ -79,7 +79,7 @@ export class Extract extends Command {
   }
 }
 
-function getSuggestedFilename(state, props) {
+function getSuggestedFilename (state, props) {
   let photo = state.photos[props.id]
   let selection = state.selections[props.selection]
 
@@ -118,7 +118,7 @@ function getSuggestedFilename(state, props) {
   }
 }
 
-function getTitle(metadata) {
+function getTitle (metadata) {
   return (metadata?.[dcterms.title] || metadata?.[dc.title])?.text
 }
 

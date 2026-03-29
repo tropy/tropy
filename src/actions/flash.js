@@ -1,7 +1,7 @@
 import { FLASH } from '../constants/index.js'
 
 export default {
-  show(payload, meta = {}) {
+  show (payload, meta = {}) {
     return {
       type: FLASH.SHOW,
       payload,
@@ -9,7 +9,7 @@ export default {
     }
   },
 
-  hide(payload, meta = {}) {
+  hide (payload, meta = {}) {
     return {
       type: FLASH.HIDE,
       payload,

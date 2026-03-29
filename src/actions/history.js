@@ -2,7 +2,7 @@ import { HISTORY } from '../constants/index.js'
 import { omit } from '../common/util.js'
 
 export default {
-  undo(payload, meta) {
+  undo (payload, meta) {
     return (dispatch, getState) => {
       let { history } = getState()
       if (history.past.length > 0) {
@@ -18,7 +18,7 @@ export default {
     }
   },
 
-  redo(payload, meta) {
+  redo (payload, meta) {
     return (dispatch, getState) => {
       let { history } = getState()
       if (history.future.length > 0) {
@@ -34,7 +34,7 @@ export default {
     }
   },
 
-  tick({ undo, redo, mode = 'add' }, meta) {
+  tick ({ undo, redo, mode = 'add' }, meta) {
     undo.meta = omit(undo.meta, ['history'])
     redo.meta = omit(redo.meta, ['history'])
 
@@ -50,7 +50,7 @@ export default {
     }
   },
 
-  drop(payload, meta) {
+  drop (payload, meta) {
     return {
       type: HISTORY.DROP,
       payload,

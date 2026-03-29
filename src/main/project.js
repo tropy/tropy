@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url'
 import { spawn } from '../common/spawn.js'
 import { warn } from '../common/log.js'
 
-export async function setProjectFolderIcon(path) {
+export async function setProjectFolderIcon (path) {
   switch (platform) {
     case 'linux':
       await gioSetAttribute(path,
@@ -18,7 +18,7 @@ export async function setProjectFolderIcon(path) {
   }
 }
 
-async function gioSetAttribute(path, key, value) {
+async function gioSetAttribute (path, key, value) {
   try {
     try {
       await spawn('gio', ['set', path, key, value])
@@ -33,7 +33,7 @@ async function gioSetAttribute(path, key, value) {
   }
 }
 
-async function attrib(path, ...attrs) {
+async function attrib (path, ...attrs) {
   try {
     await spawn('attrib.exe', [path, ...attrs])
 

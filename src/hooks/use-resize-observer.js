@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 
-export function useResizeObserver(onResize) {
+export function useResizeObserver (onResize) {
   let ro = useRef(null)
   let size = useRef()
 

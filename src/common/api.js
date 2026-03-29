@@ -42,7 +42,7 @@ const extract = (type) =>
   }
 
 const project = {
-  async import(ctx) {
+  async import (ctx) {
     let { assert, request, rsvp } = ctx
     let { file, list, data } = request.body
 
@@ -71,7 +71,7 @@ const project = {
   },
 
   items: {
-    async find(ctx) {
+    async find (ctx) {
       let { params, query, rsvp } = ctx
       let { sort = 'item.created', reverse = false } = query
 
@@ -89,7 +89,7 @@ const project = {
   },
 
   data: {
-    async save(ctx) {
+    async save (ctx) {
       let { assert, params, request, rsvp } = ctx
 
       assert(request.is('json'), 400, 'missing json data')
@@ -106,7 +106,7 @@ const project = {
   },
 
   notes: {
-    async create(ctx) {
+    async create (ctx) {
       let { assert, request, rsvp } = ctx
       let { html, language, photo, selection } = request.body
 
@@ -127,7 +127,7 @@ const project = {
       }
     },
 
-    async delete(ctx) {
+    async delete (ctx) {
       let { assert, params, rsvp } = ctx
 
       let id = Number(params.id)
@@ -144,7 +144,7 @@ const project = {
       }
     },
 
-    async show(ctx) {
+    async show (ctx) {
       let { assert, params, query, rsvp } = ctx
 
       if (query.format)
@@ -175,7 +175,7 @@ const project = {
   },
 
   transcriptions: {
-    async create(ctx) {
+    async create (ctx) {
       let { assert, request, rsvp } = ctx
       let { data, text, angle, mirror, photo, selection } = request.body
 
@@ -198,7 +198,7 @@ const project = {
       }
     },
 
-    async find(ctx) {
+    async find (ctx) {
       let { assert, params, query, rsvp } = ctx
 
       if (query.format)
@@ -232,7 +232,7 @@ const project = {
       }
     },
 
-    async show(ctx) {
+    async show (ctx) {
       let { assert, params, query, rsvp } = ctx
 
       if (query.format)
@@ -263,7 +263,7 @@ const project = {
   },
 
   photos: {
-    async find(ctx) {
+    async find (ctx) {
       let { params, rsvp } = ctx
 
       let { payload } = await rsvp('project', act.photo.find({
@@ -276,7 +276,7 @@ const project = {
         ctx.status = 404
     },
 
-    async raw(ctx) {
+    async raw (ctx) {
       let { params, rsvp } = ctx
 
       let { payload } = await rsvp('project', act.photo.show({
@@ -319,7 +319,7 @@ const project = {
   },
 
   tags: {
-    async create(ctx) {
+    async create (ctx) {
       let { assert, request, rsvp } = ctx
 
       assert.ok(request.body.name, 400, 'missing name parameter')
@@ -333,7 +333,7 @@ const project = {
       ctx.body = payload
     },
 
-    async delete(ctx) {
+    async delete (ctx) {
       let { assert, request, rsvp } = ctx
 
       assert.ok(request.body.tag, 400, 'missing tag parameter')
@@ -343,7 +343,7 @@ const project = {
       ctx.body = payload
     },
 
-    async add(ctx) {
+    async add (ctx) {
       let { assert, params, request, rsvp } = ctx
 
       assert.ok(request.body.tag, 400, 'missing tag parameter')
@@ -356,7 +356,7 @@ const project = {
       ctx.body = payload
     },
 
-    async remove(ctx) {
+    async remove (ctx) {
       let { params, request, rsvp } = ctx
 
       let { payload } = await rsvp('project',
@@ -367,7 +367,7 @@ const project = {
       ctx.body = payload
     },
 
-    async find(ctx) {
+    async find (ctx) {
       let { params, query, rsvp } = ctx
 
       let { payload } = await rsvp('project', act.tag.find({
@@ -385,7 +385,7 @@ const project = {
   },
 
   lists: {
-    async show(ctx) {
+    async show (ctx) {
       let { params, query, rsvp } = ctx
 
       let { payload } = await rsvp('project', act.list.show({
@@ -406,7 +406,7 @@ const project = {
   }
 }
 
-export function create({ current, dispatch, log, rsvp, version }) {
+export function create ({ current, dispatch, log, rsvp, version }) {
   let app = new Koa
   let api = new Router
 

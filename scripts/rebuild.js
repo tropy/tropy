@@ -31,7 +31,7 @@ const LIBVIPS_VERSION = coerce(JSON.parse(
 const LIBVIPS_URL = 'https://github.com/tropy/sharp-libvips/releases/download'
 const SHARP_LIB = join(ROOT, 'node_modules', '@img')
 
-function downloadHeaders({
+function downloadHeaders ({
   arch = ARCH,
   target = ELECTRON_VERSION,
   url = 'https://electronjs.org/headers',
@@ -45,11 +45,11 @@ function downloadHeaders({
   ].join(' ')}`, { silent })
 }
 
-function nodeGypCache(target) {
+function nodeGypCache (target) {
   return join(envPaths('node-gyp', { suffix: '' }).cache, target)
 }
 
-async function download(url, file) {
+async function download (url, file) {
   let res = await fetch(url)
   if (res.status !== 200)
     throw new Error(`download failed: ${res.status} ${res.statusText}`)
@@ -60,7 +60,7 @@ async function download(url, file) {
 class Rebuilder {
   #package = null
 
-  constructor({
+  constructor ({
     name,
     arch = ARCH,
     target = ELECTRON_VERSION,
@@ -70,7 +70,7 @@ class Rebuilder {
     steps = [...Rebuilder.Steps[name]]
   }) {
     this.name = name
-    this.platform = process.platform,
+    this.platform = process.platform
     this.arch = arch
     this.target = target
     this.libc = libc
@@ -79,19 +79,19 @@ class Rebuilder {
     this.steps = steps
   }
 
-  modulePath(...args) {
+  modulePath (...args) {
     return join(ROOT, 'node_modules', this.name, ...args)
   }
 
-  vendorPath(...args) {
+  vendorPath (...args) {
     return join(ROOT, 'vendor', this.name, ...args)
   }
 
-  nodeGypPath(...args) {
+  nodeGypPath (...args) {
     return join(ROOT, 'node_modules', 'node-gyp', ...args)
   }
 
-  get package() {
+  get package () {
     if (!this.#package)
       this.#package = JSON.parse(
         fs.readFileSync(this.modulePath('package.json'))
@@ -100,7 +100,7 @@ class Rebuilder {
     return this.#package
   }
 
-  get stale() {
+  get stale () {
     switch (this.name) {
       case 'sharp':
         return !fs.existsSync(this.modulePath(
@@ -122,7 +122,7 @@ class Rebuilder {
     }
   }
 
-  async exec(cmd, options = {}) {
+  async exec (cmd, options = {}) {
     await new Promise((resolve, reject) => {
       exec(`npm explore ${this.name} -- ${cmd}`, {
         silent: this.silent,
@@ -139,7 +139,7 @@ class Rebuilder {
     })
   }
 
-  async nodeGypRebuild(args, options) {
+  async nodeGypRebuild (args, options) {
     await this.exec(`node ${
       this.nodeGypPath('bin', 'node-gyp.js')
     } rebuild ${args.join(' ')}`, options)
@@ -349,7 +349,7 @@ program
   })
 
 
-async function rebuild(task, force) {
+async function rebuild (task, force) {
   if (force || task.stale) {
     env.npm_package_config_node_gyp_target = task.target
     env.npm_package_config_node_gyp_arch = task.arch
@@ -373,7 +373,7 @@ async function rebuild(task, force) {
   }
 }
 
-function setMacSDKRoot() {
+function setMacSDKRoot () {
   env.SDKROOT =
     exec('xcrun -sdk macosx --show-sdk-path', { silent: true }).trim()
 }

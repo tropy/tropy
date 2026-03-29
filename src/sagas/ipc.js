@@ -14,7 +14,7 @@ import {
 } from 'redux-saga/effects'
 
 const filters = {
-  *[HISTORY.CHANGED]() {
+  *[HISTORY.CHANGED] () {
     let summary = yield select(getHistory)
     let messages = yield select(state => state.intl.messages)
 
@@ -29,16 +29,16 @@ const filters = {
     return summary
   },
 
-  *[TAG.CHANGED]() {
+  *[TAG.CHANGED] () {
     return yield select(getAllTags)
   },
 
-  *[PROJECT.UPDATE]() {
+  *[PROJECT.UPDATE] () {
     return yield select(state => state.project)
   }
 }
 
-function *forward({ type, payload, meta }) {
+function *forward ({ type, payload, meta }) {
   try {
     let name = meta.ipc === true ? type : meta.ipc
 
@@ -53,7 +53,7 @@ function *forward({ type, payload, meta }) {
   }
 }
 
-function *rsvp(action) {
+function *rsvp (action) {
   try {
     yield call([ipcRenderer, ipcRenderer.send], 'wm', 'rsvp', action)
 
@@ -62,7 +62,7 @@ function *rsvp(action) {
   }
 }
 
-function *receive() {
+function *receive () {
   let dispatches = yield call(channel, 'dispatch')
 
   while (true) {
@@ -71,7 +71,7 @@ function *receive() {
   }
 }
 
-function channel(name) {
+function channel (name) {
   return eventChannel(emitter => {
     const listener = (_, ...actions) => {
       try {
@@ -87,7 +87,7 @@ function channel(name) {
   })
 }
 
-export function *ipc() {
+export function *ipc () {
   yield every(({ error, meta }) => !error && meta && meta.ipc, forward)
   yield every(({ meta }) => meta && meta.rsvp && meta.done, rsvp)
 

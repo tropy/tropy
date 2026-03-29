@@ -32,7 +32,7 @@ import { importPaths as importLists } from '../list/import.js'
 const { readFile } = fs.promises
 
 export class Import extends ImportCommand {
-  *exec() {
+  *exec () {
     let { payload, meta } = this.action
 
     // Subtle: push items to this.result early to support
@@ -93,7 +93,7 @@ export class Import extends ImportCommand {
     return this.result
   }
 
-  *configure() {
+  *configure () {
     Object.assign(this.options, yield select(state => ({
       basePath: state.project.basePath,
       density: this.action.meta.density || state.settings.density,
@@ -108,7 +108,7 @@ export class Import extends ImportCommand {
   }
 
 
-  *importFromImage(path) {
+  *importFromImage (path) {
     try {
       yield this.progress()
 
@@ -183,7 +183,7 @@ export class Import extends ImportCommand {
     }
   }
 
-  *importFromJSON(data, rel) {
+  *importFromJSON (data, rel) {
     let graph = yield call(normalize, data)
 
     if (graph.length > 1)
@@ -194,7 +194,7 @@ export class Import extends ImportCommand {
     }
   }
 
-  *importJSONItem(obj, rel) {
+  *importJSONItem (obj, rel) {
     try {
       let { db, basePath, templates, createLists } = this.options
       let { list: activeList } = this.action.payload
@@ -315,7 +315,7 @@ export class Import extends ImportCommand {
     }
   }
 
-  *findOrCreateTags(names) {
+  *findOrCreateTags (names) {
     let tagIds = []
     let state = yield select()
     let { db } = this.options
@@ -337,13 +337,13 @@ export class Import extends ImportCommand {
     return tagIds
   }
 
-  get redo() {
+  get redo () {
     return (this.result?.length > 0) ?
       act.item.restore(this.result, { lists: this.newLists }) :
       null
   }
 
-  get undo() {
+  get undo () {
     return (this.result?.length > 0) ?
       act.item.delete(this.result, { lists: this.newLists }) :
       null

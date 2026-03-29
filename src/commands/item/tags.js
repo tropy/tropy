@@ -8,7 +8,7 @@ import { findTagIds } from '../../selectors/index.js'
 
 
 export class AddTags extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
     let { tags } = payload
@@ -45,7 +45,7 @@ AddTags.register(ITEM.TAG.CREATE)
 
 
 export class RemoveTags extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
     let { tags } = payload
@@ -78,7 +78,7 @@ RemoveTags.register(ITEM.TAG.DELETE)
 
 
 export class ClearTags extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let id = this.action.payload
 
@@ -95,7 +95,7 @@ ClearTags.register(ITEM.TAG.CLEAR)
 
 
 export class ToggleTags extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { id, tags } = this.action.payload
 

@@ -9,7 +9,7 @@ import * as slice from '../../slices/transcriptions.js'
 
 
 export class TranscriptionCreate extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { data, text, angle, mirror, photo, selection } = this.action.payload
 
@@ -43,7 +43,7 @@ TranscriptionCreate.register(API.TRANSCRIPTION.CREATE)
 
 
 export class TranscriptionFind extends Command {
-  *exec() {
+  *exec () {
     let { id, format, separator = '\n' } = this.action.payload
 
     let transcriptions = yield select(state =>
@@ -63,7 +63,7 @@ export class TranscriptionFind extends Command {
 TranscriptionFind.register(API.TRANSCRIPTION.FIND)
 
 export class TranscriptionShow extends Command {
-  *exec() {
+  *exec () {
     let { id, format } = this.action.payload
 
     let transcription = yield select(state => state.transcriptions[id])

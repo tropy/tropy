@@ -4,7 +4,7 @@ import { into, select } from '../common/query.js'
 import metadata from './metadata.js'
 import subject from './subject.js'
 
-async function load(db, ids) {
+async function load (db, ids) {
   let selections = {}
 
   await Promise.all([
@@ -81,7 +81,7 @@ async function load(db, ids) {
 export default {
   load,
 
-  async create(db, {
+  async create (db, {
     template,
     photo,
     x,
@@ -110,7 +110,7 @@ export default {
     return (await load(db, [id]))[id]
   },
 
-  async order(db, photo, selections, offset = 0) {
+  async order (db, photo, selections, offset = 0) {
     if (selections.length) {
       return db.run(`
         UPDATE selections
@@ -123,19 +123,19 @@ export default {
     }
   },
 
-  async delete(db, ...ids) {
+  async delete (db, ...ids) {
     return db.run(`
       INSERT INTO trash (id)
         VALUES ${ids.map(id => `(${id})`).join(',')}`)
   },
 
-  async restore(db, ...ids) {
+  async restore (db, ...ids) {
     return db.run(`
       DELETE FROM trash WHERE id IN (${list(ids)})`
     )
   },
 
-  async prune(db) {
+  async prune (db) {
     return db.run(`
       DELETE FROM subjects
         WHERE id IN (

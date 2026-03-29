@@ -5,7 +5,7 @@ import { PhotoDragPreview } from './photo/drag-preview.js'
 import { ListDragPreview } from './list/drag-preview.js'
 import { FieldDragPreview } from './metadata/drag-preview.js'
 
-export function DragPreviewPositioner({
+export function DragPreviewPositioner ({
   children,
   cursor,
   isRelative,
@@ -45,7 +45,7 @@ const dragPreview = {
 }
 
 
-export function DragLayer(props) {
+export function DragLayer (props) {
   let dropEffect = useDropEffect()
 
   let { cursor, isDragging, item, origin, position, type } =

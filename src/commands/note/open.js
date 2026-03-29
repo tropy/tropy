@@ -6,7 +6,7 @@ import { getNoteParent } from '../../selectors/index.js'
 import { emit } from '../../dom.js'
 
 export class Open extends Command {
-  *exec() {
+  *exec () {
     let { id = null, photo, selection } = this.action.payload
     let item
 

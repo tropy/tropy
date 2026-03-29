@@ -1,7 +1,7 @@
 export default function ({ entries, implicitlyLoadedAfterOneOf }) {
   return {
     name: 'emit',
-    buildStart() {
+    buildStart () {
       for (let name in entries) {
         this.emitFile({
           type: 'chunk',

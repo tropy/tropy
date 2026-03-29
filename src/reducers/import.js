@@ -2,7 +2,7 @@ import { IMPORTS, ITEM } from '../constants/index.js'
 
 const THRESHOLD = 1000 * 60 * 2
 
-function merge(state, items, time = Date.now()) {
+function merge (state, items, time = Date.now()) {
   let lastImportTime = state[0]?.time
 
   if ((time - lastImportTime) < THRESHOLD)
@@ -11,7 +11,7 @@ function merge(state, items, time = Date.now()) {
     return [{ time, items }]
 }
 
-export function imports(state = [], { type, payload, error, meta }) {
+export function imports (state = [], { type, payload, error, meta }) {
   switch (type) {
     case IMPORTS.RESTORE:
       return (payload != null) ? [...payload] : []

@@ -5,7 +5,7 @@ import * as mod from '../../models/index.js'
 
 
 export class Load extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 

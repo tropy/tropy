@@ -3,13 +3,13 @@
  */
 
 export class DisposableResource {
-  constructor(resource, dispose) {
+  constructor (resource, dispose) {
     this.promise = Promise.resolve(resource)
     this.dispose = dispose
   }
 }
 
-export async function using({ promise, dispose } = {}, callback) {
+export async function using ({ promise, dispose } = {}, callback) {
   if (!promise || typeof dispose !== 'function') {
     throw new Error('using() called without a disposable resource')
   }

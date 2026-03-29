@@ -9,7 +9,7 @@ import { fromHTML } from '../../editor/serialize.js'
 
 
 export class Create extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { state, text, photo, selection } = this.action.payload
 
@@ -50,7 +50,7 @@ Create.register(NOTE.CREATE)
 
 
 export class Delete extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 
@@ -83,7 +83,7 @@ Delete.register(NOTE.DELETE)
 
 
 export class Restore extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 

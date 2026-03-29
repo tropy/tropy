@@ -5,7 +5,7 @@ const init = {
   expand: { 0: true }
 }
 
-export function sidebar(state = init, { type, payload, meta }) {
+export function sidebar (state = init, { type, payload, meta }) {
   switch (type) {
     case SIDEBAR.RESTORE:
       return merge(init, payload)

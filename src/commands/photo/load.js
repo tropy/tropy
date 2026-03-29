@@ -4,7 +4,7 @@ import mod from '../../models/photo.js'
 import { PHOTO } from '../../constants/index.js'
 
 export class Load extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
     let { project } = yield select()

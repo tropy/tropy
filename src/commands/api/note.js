@@ -8,7 +8,7 @@ import { pick } from '../../common/util.js'
 
 
 export class NoteCreate extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { html, language, photo, selection } = this.action.payload
     let { state, text } = fromHTML(html)
@@ -34,7 +34,7 @@ NoteCreate.register(API.NOTE.CREATE)
 
 
 export class NoteShow extends Command {
-  *exec() {
+  *exec () {
     let { id, format } = this.action.payload
 
     let note = yield select(state => state.notes[id])

@@ -6,7 +6,7 @@ import { update } from '../../slices/prefs.js'
 import { Icon } from '../icons.js'
 
 
-export function Nav({ children }) {
+export function Nav ({ children }) {
   return (
     <nav className="prefs-nav">
       <ul>
@@ -16,7 +16,7 @@ export function Nav({ children }) {
   )
 }
 
-export function NavItem({ name, icon, isDisabled }) {
+export function NavItem ({ name, icon, isDisabled }) {
   let dispatch = useDispatch()
   let pane = useSelector(state => state.prefs.pane)
 

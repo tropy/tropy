@@ -22,42 +22,42 @@ import {
 
 
 class ProjectSidebar extends React.PureComponent {
-  get isEditing() {
+  get isEditing () {
     return has(this.props.edit, 'project')
   }
 
-  get hasActiveTags() {
+  get hasActiveTags () {
     return this.props.tagSelection.length > 0
   }
 
-  get hasSelection() {
+  get hasSelection () {
     return this.props.list != null ||
       this.props.isTrashSelected || (
       this.props.isLastImportSelected && this.props.hasLastImport
     )
   }
 
-  get tabIndex() {
+  get tabIndex () {
     return (this.props.isDisabled) ? null : TABS.ProjectSidebar
   }
 
-  getFirstList() {
+  getFirstList () {
     return this.props.listwalk[0]
   }
 
-  getLastList() {
+  getLastList () {
     return this.props.listwalk.at(-1)
   }
 
-  getNextList() {
+  getNextList () {
     return this.getListAt(1)
   }
 
-  getPrevList() {
+  getPrevList () {
     return this.getListAt(-1)
   }
 
-  getListAt(offset = 1) {
+  getListAt (offset = 1) {
     let list = this.props.list
     let walk = this.props.listwalk
 
@@ -67,15 +67,15 @@ class ProjectSidebar extends React.PureComponent {
     return walk[idx + offset]
   }
 
-  isListSelected(list) {
+  isListSelected (list) {
     return list > 0 && list === this.props.list
   }
 
-  isListEmpty() {
+  isListEmpty () {
     return this.props.listwalk.length === 0
   }
 
-  next() {
+  next () {
     switch (true) {
       case this.props.isTrashSelected:
         return
@@ -95,7 +95,7 @@ class ProjectSidebar extends React.PureComponent {
     }
   }
 
-  prev() {
+  prev () {
     switch (true) {
       case !this.hasSelection:
         return
@@ -115,19 +115,19 @@ class ProjectSidebar extends React.PureComponent {
     }
   }
 
-  collapse() {
+  collapse () {
     if (this.props.list != null) {
       this.props.onListCollapse(this.props.list)
     }
   }
 
-  expand() {
+  expand () {
     if (this.props.list != null) {
       this.props.onListExpand(this.props.list)
     }
   }
 
-  edit() {
+  edit () {
     if (this.props.project.isReadOnly)
       return
     if (!this.hasSelection)
@@ -136,7 +136,7 @@ class ProjectSidebar extends React.PureComponent {
       this.props.onListEdit(this.props.list)
   }
 
-  handleSelect() {
+  handleSelect () {
     this.props.onSelect({ list: null, trash: null }, { throttle: true })
   }
 
@@ -227,7 +227,7 @@ class ProjectSidebar extends React.PureComponent {
     })
   }
 
-  render() {
+  render () {
     let root = this.props.lists[this.props.root]
 
     return (
@@ -360,80 +360,80 @@ const ProjectSidebarContainer = connect(
   }),
 
   (dispatch) => ({
-    onActivityCancel(...args) {
+    onActivityCancel (...args) {
       dispatch(act.activity.cancel(...args))
     },
 
-    onEdit(...args) {
+    onEdit (...args) {
       dispatch(act.edit.start(...args))
     },
 
-    onEditCancel() {
+    onEditCancel () {
       dispatch(act.edit.cancel())
     },
 
-    onItemTagAdd(...args) {
+    onItemTagAdd (...args) {
       dispatch(act.item.tags.create(...args))
     },
 
-    onListCollapse(...args) {
+    onListCollapse (...args) {
       dispatch(act.list.collapse(...args))
     },
 
-    onListEdit(id) {
+    onListEdit (id) {
       dispatch(act.edit.start({ list: { id } }))
     },
 
-    onListExpand(...args) {
+    onListExpand (...args) {
       dispatch(act.list.expand(...args))
     },
 
-    onListItemsAdd({ list, items }) {
+    onListItemsAdd ({ list, items }) {
       dispatch(act.list.items.add({
         id: list, items: items.map(item => item.id)
       }))
     },
 
-    onListMove(...args) {
+    onListMove (...args) {
       dispatch(act.list.move(...args))
     },
 
-    onListSave(...args) {
+    onListSave (...args) {
       dispatch(act.list.save(...args))
       dispatch(act.edit.cancel())
     },
 
-    onProjectEdit() {
+    onProjectEdit () {
       dispatch(act.edit.start({ project: { name: true } }))
     },
 
-    onProjectSave(...args) {
+    onProjectSave (...args) {
       dispatch(act.project.save(...args))
     },
 
-    onResize(width) {
+    onResize (width) {
       dispatch(act.ui.update({
         sidebar: { width: Math.round(width) }
       }))
     },
 
-    onSelect(...args) {
+    onSelect (...args) {
       dispatch(act.nav.select(...args))
     },
 
-    onTagCreate(data) {
+    onTagCreate (data) {
       dispatch(act.tag.create(data))
     },
 
-    onTagDelete(tag) {
+    onTagDelete (tag) {
       dispatch(act.tag.delete(tag.id))
     },
 
-    onTagSave(data, id) {
+    onTagSave (data, id) {
       dispatch(act.tag.save({ ...data, id }))
     },
 
-    onTagSelect(...args) {
+    onTagSelect (...args) {
       dispatch(act.tag.select(...args))
     }
   })

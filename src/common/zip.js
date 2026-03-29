@@ -11,7 +11,7 @@ export const zip = promisify(crossZip.zip)
 // unzip.sync = crossZip.unzipSync
 // zip.sync = crossZip.zipSync
 
-export async function unzip(src, dst, { strip } = {}) {
+export async function unzip (src, dst, { strip } = {}) {
   if (!strip)
     return unzipAsync(src, dst)
 

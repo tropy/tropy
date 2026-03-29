@@ -7,7 +7,7 @@ import act from '../../actions/tag.js'
 
 
 export class Save extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 
@@ -20,7 +20,7 @@ export class Save extends Command {
     this.undo = act.save(this.original)
   }
 
-  *abort() {
+  *abort () {
     if (this.original) {
       yield put(act.update(this.original))
     }

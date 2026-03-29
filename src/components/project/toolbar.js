@@ -9,7 +9,7 @@ import { IconPlus, IconList, IconGrid, IconXSmall } from '../icons.js'
 
 
 export class ProjectToolbar extends React.PureComponent {
-  render() {
+  render () {
     return (
       <Titlebar>
         <Toolbar.Left>

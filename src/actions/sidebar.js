@@ -1,7 +1,7 @@
 import { SIDEBAR } from '../constants/index.js'
 
 export default {
-  restore(payload = {}, meta = {}) {
+  restore (payload = {}, meta = {}) {
     return {
       type: SIDEBAR.RESTORE,
       payload,
@@ -9,7 +9,7 @@ export default {
     }
   },
 
-  update(payload = {}, meta = {}) {
+  update (payload = {}, meta = {}) {
     return {
       type: SIDEBAR.UPDATE,
       payload,

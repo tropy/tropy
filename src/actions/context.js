@@ -1,7 +1,7 @@
 import { CONTEXT } from '../constants/index.js'
 
 export default {
-  show(event, scope = 'default', target, meta) {
+  show (event, scope = 'default', target, meta) {
     return {
       type: CONTEXT.SHOW,
       payload: {
@@ -16,7 +16,7 @@ export default {
     }
   },
 
-  clear(payload, meta) {
+  clear (payload, meta) {
     return {
       type: CONTEXT.CLEAR,
       payload,

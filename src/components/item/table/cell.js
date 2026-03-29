@@ -10,7 +10,7 @@ import { auto } from '../../../format.js'
 import { noop } from '../../../common/util.js'
 
 export class TableCell extends React.PureComponent {
-  get classes() {
+  get classes () {
     return ['metadata', this.props.type, {
       dragging: this.props.isDragging,
       'main-column': this.props.isMainColumn,
@@ -19,18 +19,18 @@ export class TableCell extends React.PureComponent {
     }]
   }
 
-  get canEdit() {
+  get canEdit () {
     return !(
       this.props.isReadOnly || this.props.isDisabled || this.props.isEditing
     )
   }
 
-  get display() {
+  get display () {
     return this.props.display ||
       auto(this.props.value, this.props.type)
   }
 
-  edit(property) {
+  edit (property) {
     this.props.onEdit({
       column: { [this.props.item.id]: property }
     })
@@ -85,7 +85,7 @@ export class TableCell extends React.PureComponent {
     }
   }
 
-  renderCoverImage() {
+  renderCoverImage () {
     return this.props.isMainColumn && (
       <div className="cover-image-container">
         <CoverImage
@@ -96,13 +96,13 @@ export class TableCell extends React.PureComponent {
     )
   }
 
-  renderTagColors() {
+  renderTagColors () {
     return this.props.isMainColumn && (
       <TagColors tags={this.props.item.tags}/>
     )
   }
 
-  render() {
+  render () {
     return (
       <div
         className={cx('td', this.classes)}

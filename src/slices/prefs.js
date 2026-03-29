@@ -9,11 +9,11 @@ const prefs = createSlice({
   initialState,
 
   reducers: {
-    restore(state, { payload }) {
+    restore (state, { payload }) {
       Object.assign(state, initialState, payload)
     },
 
-    update(state, { payload }) {
+    update (state, { payload }) {
       Object.assign(state, payload)
     }
   }

@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 
-export function useIntersectionObserver({
+export function useIntersectionObserver ({
   onChange,
   onEnter,
   onLeave

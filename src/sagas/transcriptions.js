@@ -3,7 +3,7 @@ import { create, load } from '../slices/transcriptions.js'
 import act from '../actions/photo.js'
 import { debug, warn } from '../common/log.js'
 
-export function *transcribe() {
+export function *transcribe () {
   try {
     while (true) {
       let { error, meta, payload } = yield take([create.type, load.type])

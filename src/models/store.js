@@ -3,7 +3,7 @@ import { normalize } from '../common/os.js'
 import { select } from '../common/query.js'
 
 export default {
-  async orphaned(db, basePath) {
+  async orphaned (db, basePath) {
     let photos = []
     await db.each(
       ...select()
@@ -21,7 +21,7 @@ export default {
     return photos
   },
 
-  async purge(db) {
+  async purge (db) {
     await db.run('DELETE FROM deleted_photos')
   }
 }

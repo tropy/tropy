@@ -1,20 +1,20 @@
-export function encode(value, quote = /"/g) {
+export function encode (value, quote = /"/g) {
   return (value == null)
     ? ''
     : `"${String(value).replace(quote, m => m + m)}"`
 }
 
-export function decode(value) {
+export function decode (value) {
   return value.replace(/^"|"$/g, '').replace(/""/g, '"')
 }
 
-export function join(values, separator = ',') {
+export function join (values, separator = ',') {
   return values
     .map(value => encode(value))
     .join(separator)
 }
 
-export function parse(text, separator = ',') {
+export function parse (text, separator = ',') {
   let columns = []
   let current = ''
   let inQuotes = false

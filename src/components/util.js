@@ -1,20 +1,20 @@
 import React from 'react'
 
-export function pure(WrappedComponent) {
+export function pure (WrappedComponent) {
   return class extends React.PureComponent {
     static displayName = `pure(${WrappedComponent.name})`
 
-    static get WrappedComponent() {
+    static get WrappedComponent () {
       return WrappedComponent
     }
 
-    render() {
+    render () {
       return React.createElement(WrappedComponent, this.props)
     }
   }
 }
 
-export function createClickHandler({
+export function createClickHandler ({
   onClick,
   onSingleClick,
   onDoubleClick
@@ -22,7 +22,7 @@ export function createClickHandler({
   let timeout
   let cancelled
 
-  return function handleClick(event) {
+  return function handleClick (event) {
     // Handle only clicks with the left/primary button!
     if (event.button) return
 

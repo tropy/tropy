@@ -4,7 +4,7 @@ import { ITEM } from '../../constants/index.js'
 
 
 export class Open extends Command {
-  *exec() {
+  *exec () {
     let { id, photo, selection, note } = this.action.payload
 
     let [item, nav] = yield select(state => ([

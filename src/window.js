@@ -34,7 +34,7 @@ const isCommand = darwin ?
 let instance
 export { instance as default }
 
-export function createWindowInstance() {
+export function createWindowInstance () {
   return new Window()
 }
 
@@ -50,7 +50,7 @@ export class Window extends EventEmitter {
 
   unloaders = []
 
-  constructor() {
+  constructor () {
     if (instance) {
       throw Error('window singleton instance already exists')
     }
@@ -58,7 +58,7 @@ export class Window extends EventEmitter {
     instance = this
   }
 
-  async init() {
+  async init () {
     await Promise.all([
       this.plugins.reload().then(p => p.create()),
 
@@ -99,38 +99,38 @@ export class Window extends EventEmitter {
     this.toggle('init')
   }
 
-  async load() {
+  async load () {
     let { store } = await import(`./views/${this.type}.js`)
     this.store = store
     this.send('ready')
     this.toggle('ready')
   }
 
-  close() {
+  close () {
     this.send('close')
   }
 
-  undo() {
+  undo () {
     this.send('undo')
   }
 
-  redo() {
+  redo () {
     this.send('redo')
   }
 
-  get args() {
+  get args () {
     return ARGS
   }
 
-  get body() {
+  get body () {
     return document.body
   }
 
-  get html() {
+  get html () {
     return document.documentElement
   }
 
-  get stylesheets() {
+  get stylesheets () {
     return [
       StyleSheet.expand('base'),
       StyleSheet.expand(this.type),
@@ -138,30 +138,30 @@ export class Window extends EventEmitter {
     ]
   }
 
-  setArgs(args) {
+  setArgs (args) {
     update(args)
     this.emit('settings.update', args)
   }
 
-  setFontSize(fontSize = ARGS.fontSize) {
+  setFontSize (fontSize = ARGS.fontSize) {
     if (this.type !== 'print') {
       this.html.style.fontSize = fontSize
     }
   }
 
-  setScrollBarStyle(scrollbars = ARGS.scrollbars) {
+  setScrollBarStyle (scrollbars = ARGS.scrollbars) {
     toggle(this.html, 'scrollbar-style-old-school', scrollbars)
   }
 
-  setVibrancyEffect(vibrancy = ARGS.vibrancy) {
+  setVibrancyEffect (vibrancy = ARGS.vibrancy) {
     toggle(this.html, 'vibrancy', vibrancy)
   }
 
-  setZoomLevel(zoom = ARGS.zoom) {
+  setZoomLevel (zoom = ARGS.zoom) {
     this.html.style.setProperty('--zoom', zoom)
   }
 
-  handleIpcEvents() {
+  handleIpcEvents () {
     ipc
       .on('win', (_, state) => {
         this.toggle(state)
@@ -220,7 +220,7 @@ export class Window extends EventEmitter {
       })
   }
 
-  async unload() {
+  async unload () {
     if (this.isUnloading) return
     this.isUnloading = true
     this.toggle('unload')
@@ -238,7 +238,7 @@ export class Window extends EventEmitter {
     }
   }
 
-  handleEditorCommands() {
+  handleEditorCommands () {
     on(document, 'keydown', event => {
       if (!isCommand(event)) return
       if (event.defaultPrevented) return
@@ -269,7 +269,7 @@ export class Window extends EventEmitter {
     })
   }
 
-  handleModifierKeys() {
+  handleModifierKeys () {
     on(document, 'keydown', event => {
       toggle(this.html, 'alt-key', event.altKey)
       toggle(this.html, 'meta-key', event.metaKey)
@@ -290,7 +290,7 @@ export class Window extends EventEmitter {
     on(window, 'blur', up, { passive: true })
   }
 
-  handleMouseButtons() {
+  handleMouseButtons () {
     on(document, 'mousedown', event => {
       if (!event.defaultPrevented) {
         switch (event.button) {
@@ -307,7 +307,7 @@ export class Window extends EventEmitter {
     }, { passive: true, capture: false })
   }
 
-  handleUncaughtExceptions() {
+  handleUncaughtExceptions () {
     let handleError = debounce(({ message, stack } = {}) => {
       ipc.send('error', { message, stack })
     }, 250)
@@ -327,7 +327,7 @@ export class Window extends EventEmitter {
     })
   }
 
-  async appendStyleSheets(prune = false) {
+  async appendStyleSheets (prune = false) {
     if (prune) {
       for (let css of $$('head > link[rel="stylesheet"]'))
         remove(css)
@@ -351,7 +351,7 @@ export class Window extends EventEmitter {
     ])
   }
 
-  toggle(state, ...args) {
+  toggle (state, ...args) {
     switch (state) {
       case 'focus':
         toggle(this.html, 'is-blurred', false)
@@ -395,31 +395,31 @@ export class Window extends EventEmitter {
     this.emit('toggle', state)
   }
 
-  maximize() {
+  maximize () {
     this.send('maximize')
   }
 
-  minimize() {
+  minimize () {
     this.send('minimize')
   }
 
-  fullscreen() {
+  fullscreen () {
     this.send('fullscreen')
   }
 
-  handleEnterFullScreen() {
+  handleEnterFullScreen () {
     this.isFullScreen = true
     toggle(this.html, 'is-full-screen', true)
     toggle(this.html, 'full-screen-menu', false)
   }
 
-  handleLeaveFullScreen() {
+  handleLeaveFullScreen () {
     this.isFullScreen = false
     toggle(this.html, 'is-full-screen', false)
     toggle(this.html, 'full-screen-menu', false)
   }
 
-  menu(event) {
+  menu (event) {
     let { left, right, bottom } = bounds(event.target)
     this.send('show-menu', {
       x: Math.round(ARGS.zoom * ((linux || !ARGS.rtl) ? left : right)),
@@ -427,7 +427,7 @@ export class Window extends EventEmitter {
     })
   }
 
-  setFixedSize(isFixed, { width, height, animate, timeout = 0 } = {}) {
+  setFixedSize (isFixed, { width, height, animate, timeout = 0 } = {}) {
     if (linux && ARGS.frameless)
       height += 46
 
@@ -441,15 +441,15 @@ export class Window extends EventEmitter {
     }, timeout)
   }
 
-  get isResizeAnimated() {
+  get isResizeAnimated () {
     return darwin && ARGS.motion
   }
 
-  preview(file) {
+  preview (file) {
     this.send('preview', file)
   }
 
-  send(type, ...params) {
+  send (type, ...params) {
     ipc.send('wm', type, ...params)
   }
 }

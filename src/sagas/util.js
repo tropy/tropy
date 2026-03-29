@@ -6,7 +6,7 @@ import { call, fork, join } from 'redux-saga/effects'
 // Subtle: currently this does no error handling and does not
 // return the effect results, so both should be done in the mapper!
 //
-export function* parallel(effects, mapper, { concurrency = Infinity }) {
+export function* parallel (effects, mapper, { concurrency = Infinity }) {
   assert(typeof mapper === 'function', 'mapper function required')
   assert(
     (Number.isSafeInteger(concurrency) || concurrency === Infinity) &&
@@ -16,7 +16,7 @@ export function* parallel(effects, mapper, { concurrency = Infinity }) {
   let iterator = effects[Symbol.iterator]()
   let workers = []
 
-  function *worker() {
+  function *worker () {
     while (true) {
       let { value, done } = iterator.next()
 

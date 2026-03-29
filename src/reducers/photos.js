@@ -3,7 +3,7 @@ import { bulk, insert, load, nested, touch, update } from './util.js'
 import * as tr from '../slices/transcriptions.js'
 
 
-export function photos(state = {}, { type, payload, error, meta }) {
+export function photos (state = {}, { type, payload, error, meta }) {
   switch (type) {
     case PROJECT.OPEN:
       return {}

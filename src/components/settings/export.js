@@ -1,7 +1,7 @@
 import { FormElement, FormToggleGroup, Toggle } from '../form.js'
 import { useEvent } from '../../hooks/use-event.js'
 
-export function ExportSettings({
+export function ExportSettings ({
   config,
   noteFormats = ['text', 'markdown', 'html'],
   onChange

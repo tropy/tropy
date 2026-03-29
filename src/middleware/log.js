@@ -1,6 +1,6 @@
 import { logger } from '../common/log.js'
 
-export function log() {
+export function log () {
   return next => action => {
     const { type, payload, meta, error } = action
 

@@ -19,11 +19,11 @@ const HTML_TYPES_REPLACEMENT = "matchesTypes: ['Html', 'matches-nothing']"
 const EXPOSE_ITEMS = 'return dataTransfer.items'
 const EXPOSE_ITEMS_REPLACEMENT = 'return Array.from(dataTransfer.items).map(({ kind, type }) => ({ kind, type }))'
 
-export default function reactDnd() {
+export default function reactDnd () {
   let transformed = false
   return {
     name: 'react-dnd-patch',
-    transform(code, id) {
+    transform (code, id) {
       if (id.endsWith('nativeTypesConfig.js')) {
         transformed = true
         let magicString = new MagicString(code)
@@ -55,7 +55,7 @@ export default function reactDnd() {
         }
       }
     },
-    buildEnd(error) {
+    buildEnd (error) {
       if (!(error || transformed)) {
         throw new Error(
           'Could not find "nativeTypesConfig.js", was the file renamed?'

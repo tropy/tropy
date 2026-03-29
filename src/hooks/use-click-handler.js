@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useEvent } from './use-event.js'
 
-export function useClickHandler({
+export function useClickHandler ({
   onClick,
   onSingleClick,
   onDoubleClick

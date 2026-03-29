@@ -2,7 +2,7 @@ import { URL, fileURLToPath } from 'node:url'
 import { ipcMain, shell } from 'electron'
 import { error } from '../common/log.js'
 
-export async function open(target) {
+export async function open (target) {
   let { path, protocol } = parse(target)
 
   if (protocol === 'file') {
@@ -13,7 +13,7 @@ export async function open(target) {
   }
 }
 
-export async function show(target) {
+export async function show (target) {
   let { path, protocol } = parse(target)
 
   if (protocol === 'file') {
@@ -23,7 +23,7 @@ export async function show(target) {
   }
 }
 
-function parse(target) {
+function parse (target) {
   let path, protocol
 
   if (!(target instanceof URL) && target.path) {
@@ -43,19 +43,19 @@ function parse(target) {
   return { path, protocol }
 }
 
-export async function trash(path) {
+export async function trash (path) {
   await shell.trashItem(path)
 }
 
-export function start() {
+export function start () {
   ipcMain.on('shell', handler)
 }
 
-export function stop() {
+export function stop () {
   ipcMain.removeListener('shell', handler)
 }
 
-async function handler(event, cmd, ...args) {
+async function handler (event, cmd, ...args) {
   switch (cmd) {
     case 'open':
       await open(...args)

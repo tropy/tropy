@@ -3,7 +3,7 @@ import { append, create, on, toggle } from './dom.js'
 import ARGS from './args.js'
 
 export class WindowControls {
-  constructor() {
+  constructor () {
     this.layout = new ButtonLayout()
 
     if (linux && ARGS.controls)
@@ -13,7 +13,7 @@ export class WindowControls {
       this.layout.reverse()
   }
 
-  mount(win) {
+  mount (win) {
     this.root = create('div', { class: 'window-controls' })
 
     // Add default controls only for Linux.
@@ -55,7 +55,7 @@ export class WindowControls {
   }
 }
 
-function Button(type, action, attrs = {}) {
+function Button (type, action, attrs = {}) {
   let button = create('button', {
     tabindex: '-1',
     class: type,
@@ -73,7 +73,7 @@ class ButtonLayout {
   minimize = true
 
   // Parses org.gnome.desktop.wm.preferences.button-layout
-  parse(string = ':close') {
+  parse (string = ':close') {
     let [left, right] = string.split(':').map(b => b.split(','))
     let buttons = left.includes('close') ? left : right
 
@@ -82,7 +82,7 @@ class ButtonLayout {
     this.minimize = buttons.includes('minimize')
   }
 
-  reverse() {
+  reverse () {
     this.placement = (this.placement === 'left') ? 'right' : 'left'
   }
 }

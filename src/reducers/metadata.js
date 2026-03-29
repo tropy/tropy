@@ -17,7 +17,7 @@ import {
 } from './util.js'
 
 
-export function metadata(state = {}, { type, payload, meta, error }) {
+export function metadata (state = {}, { type, payload, meta, error }) {
   switch (type) {
     case PROJECT.OPENED:
       return {}

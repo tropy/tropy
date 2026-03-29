@@ -8,11 +8,11 @@ import { match } from '../../keymap.js'
 
 
 class PhotoList extends PhotoIterator {
-  get classes() {
+  get classes () {
     return ['photo-list', super.classes]
   }
 
-  isEditing(photo) {
+  isEditing (photo) {
     return this.props.edit.photo === photo.id
   }
 
@@ -79,7 +79,7 @@ class PhotoList extends PhotoIterator {
   }
 
 
-  render() {
+  render () {
     const { data, edit, onBlur, onChange } = this.props
 
     return this.connect(

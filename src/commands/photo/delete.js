@@ -7,7 +7,7 @@ import * as mod from '../../models/index.js'
 
 
 export class Delete extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 
@@ -39,7 +39,7 @@ export class Delete extends Command {
     this.undo = act.photo.restore(payload, { idx })
   }
 
-  *select(item, photo) {
+  *select (item, photo) {
     if (photo != null) {
       var note = yield select(state =>
         get(state.photos, [photo, 'notes', 0], null))
@@ -57,7 +57,7 @@ Delete.register(PHOTO.DELETE)
 
 
 export class Restore extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { item, photos } = this.action.payload
 

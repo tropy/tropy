@@ -5,22 +5,22 @@ import { move, normalizeRectangle } from './util.js'
 
 
 export class TextLayer extends Container {
-  clear() {
+  clear () {
     if (this.children.length)
       for (let block of this.removeChildren()) {
         block.destroy()
       }
   }
 
-  destroy() {
+  destroy () {
     super.destroy({ children: true })
   }
 
-  isVisible(document) {
+  isVisible (document) {
     return document != null
   }
 
-  sync(props, state) {
+  sync (props, state) {
     let tool = state.quicktool || props.tool
     let document = state.text
     let offset = props.selection
@@ -36,7 +36,7 @@ export class TextLayer extends Container {
     }
   }
 
-  update({ selection } = BLANK, textSelection) {
+  update ({ selection } = BLANK, textSelection) {
     if (selection)
       selection = normalizeRectangle(selection)
 
@@ -48,7 +48,7 @@ export class TextLayer extends Container {
 
 
 export class TextBox extends Graphics {
-  constructor(node, offset) {
+  constructor (node, offset) {
     super({
       blendMode: 'multiply' // TODO doesn't work
     })
@@ -56,13 +56,13 @@ export class TextBox extends Graphics {
     this.sync(node, offset)
   }
 
-  destroy() {
+  destroy () {
     this.node = null
     this.data = null
     super.destroy(true)
   }
 
-  sync(node, offset) {
+  sync (node, offset) {
     this.node = node
     this.data = normalizeRectangle(node.bounds())
 
@@ -71,7 +71,7 @@ export class TextBox extends Graphics {
     }
   }
 
-  update(selection) {
+  update (selection) {
     this.clear()
 
     let { x, y, width, height } = this.data

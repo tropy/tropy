@@ -1,24 +1,24 @@
 import { debug } from './common/log.js'
 
 export class Storage {
-  static load(name, ...args) {
+  static load (name, ...args) {
     return new Storage(...args).load(name)
   }
 
-  static save(name, object, ...args) {
+  static save (name, object, ...args) {
     return new Storage(...args).save(name, object)
   }
 
-  constructor(namespace = 'tropy') {
+  constructor (namespace = 'tropy') {
     this.namespace = namespace
   }
 
-  load(name) {
+  load (name) {
     debug(`restoring ${this.expand(name)}`)
     return JSON.parse(localStorage.getItem(this.expand(name)))
   }
 
-  save(name, object) {
+  save (name, object) {
     if (object != null) {
       debug(`persisting ${this.expand(name)}`)
       localStorage.setItem(this.expand(name), JSON.stringify(object))
@@ -27,7 +27,7 @@ export class Storage {
     return this
   }
 
-  expand(name) {
+  expand (name) {
     return [name, this.namespace].join('@')
   }
 }

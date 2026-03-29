@@ -2,7 +2,7 @@ import { PREFS } from '../constants/index.js'
 
 const defaults = { pane: 'app' }
 
-export function prefs(state = defaults, { type, payload }) {
+export function prefs (state = defaults, { type, payload }) {
   switch (type) {
     case PREFS.RESTORE:
       return { ...defaults, ...payload }

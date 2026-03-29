@@ -1,31 +1,31 @@
 import { array, omit, splice } from '../common/util.js'
 import { into, map } from 'transducers.js'
 
-export function load(state, payload, meta, error) {
+export function load (state, payload, meta, error) {
   if (error) return state
   if (meta.done) return replace(state, payload)
   return pending(state, payload)
 }
 
-export function replace(state, payload) {
+export function replace (state, payload) {
   return { ...state, ...payload }
 }
 
-export function insert(state, payload) {
+export function insert (state, payload) {
   return update(state, payload, { replace: true })
 }
 
-export function remove(state, payload) {
+export function remove (state, payload) {
   return omit(state, payload)
 }
 
-export function merge(state, payload) {
+export function merge (state, payload) {
   return into({ ...state }, map(([id, data]) => ({
     [id]: { ...state[id], ...data }
   })), payload)
 }
 
-export function update(state, payload, meta = {}) {
+export function update (state, payload, meta = {}) {
   if (!Array.isArray(payload)) payload = [payload]
   for (let data of payload) {
     state = {
@@ -37,7 +37,7 @@ export function update(state, payload, meta = {}) {
   return state
 }
 
-export function touch(state, payload, meta, error) {
+export function touch (state, payload, meta, error) {
   if (!meta.done || error) return state
 
   let dirty = false
@@ -55,7 +55,7 @@ export function touch(state, payload, meta, error) {
 }
 
 export const nested = {
-  add(name, state = {}, payload, { idx } = {}) {
+  add (name, state = {}, payload, { idx } = {}) {
     if (Array.isArray(idx)) idx = idx[0]
 
     return into({ ...state }, map(id => ({
@@ -66,7 +66,7 @@ export const nested = {
     })), array(payload.id))
   },
 
-  remove(name, state = {}, payload) {
+  remove (name, state = {}, payload) {
     return into({ ...state }, map(id => ({
       [id]: {
         ...state[id],
@@ -78,7 +78,7 @@ export const nested = {
 }
 
 export const bulk = {
-  update(state, payload, meta = {}) {
+  update (state, payload, meta = {}) {
     if (!Array.isArray(payload)) return merge(state, payload)
     let [ids, data] = payload
 
@@ -87,7 +87,7 @@ export const bulk = {
     })), ids)
   },
 
-  remove(state, payload) {
+  remove (state, payload) {
     let [ids, props] = payload
 
     return into({ ...state },
@@ -95,7 +95,7 @@ export const bulk = {
   }
 }
 
-export function pending(state, payload) {
+export function pending (state, payload) {
   if (payload == null || payload.length === 0) return state
 
   return into(

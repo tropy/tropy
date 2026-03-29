@@ -3,7 +3,7 @@ import ARGS from './args.js'
 import { TYPE } from './constants/index.js'
 import { blank } from './common/util.js'
 
-export function datetime(value, options = DTF) {
+export function datetime (value, options = DTF) {
   try {
     if (blank(value))
       return value
@@ -21,11 +21,11 @@ export function datetime(value, options = DTF) {
   }
 }
 
-export function number(value) {
+export function number (value) {
   return fmtNumber(value)
 }
 
-export function bytes(value) {
+export function bytes (value) {
   if (typeof value === 'string')
     value = parseInt(value, 10)
   if (!Number.isFinite(value))
@@ -41,11 +41,11 @@ export function bytes(value) {
   return `${number(value / size[unit])} ${unit}`
 }
 
-export function ppi(value) {
+export function ppi (value) {
   return blank(value) ? value : `${number(value)} ppi`
 }
 
-export function auto(value, type) {
+export function auto (value, type) {
   switch (type) {
     case TYPE.DATE:
       return datetime(value)
@@ -60,7 +60,7 @@ export function auto(value, type) {
   }
 }
 
-function fmtNumber(value, locale = ARGS.locale) {
+function fmtNumber (value, locale = ARGS.locale) {
   if (!(locale in fmtNumber)) {
     fmtNumber[locale] = new Intl.NumberFormat(locale, {
       maximumFractionDigits: 2

@@ -4,7 +4,7 @@ import { array } from '../common/util.js'
 const { PROPS, CLASS, VOCAB, TEMPLATE, LABEL, TYPE } = ONTOLOGY
 
 export default {
-  import(payload = {}, meta) {
+  import (payload = {}, meta) {
     return {
       type: ONTOLOGY.IMPORT,
       payload,
@@ -12,7 +12,7 @@ export default {
     }
   },
 
-  load(payload = {}, meta) {
+  load (payload = {}, meta) {
     return {
       type: ONTOLOGY.LOAD,
       payload,
@@ -21,7 +21,7 @@ export default {
   },
 
   vocab: {
-    load(payload, meta = {}) {
+    load (payload, meta = {}) {
       return {
         type: VOCAB.LOAD,
         payload,
@@ -29,7 +29,7 @@ export default {
       }
     },
 
-    delete(payload, meta = {}) {
+    delete (payload, meta = {}) {
       return {
         type: VOCAB.DELETE,
         payload: array(payload),
@@ -37,7 +37,7 @@ export default {
       }
     },
 
-    export(payload, meta = {}) {
+    export (payload, meta = {}) {
       return {
         type: VOCAB.EXPORT,
         payload: array(payload),
@@ -45,7 +45,7 @@ export default {
       }
     },
 
-    restore(payload, meta = {}) {
+    restore (payload, meta = {}) {
       return {
         type: VOCAB.RESTORE,
         payload,
@@ -53,7 +53,7 @@ export default {
       }
     },
 
-    save(payload, meta = {}) {
+    save (payload, meta = {}) {
       return {
         type: VOCAB.SAVE,
         payload,
@@ -63,7 +63,7 @@ export default {
   },
 
   props: {
-    load(payload, meta = {}) {
+    load (payload, meta = {}) {
       return {
         type: PROPS.LOAD,
         payload,
@@ -71,7 +71,7 @@ export default {
       }
     },
 
-    save(payload, meta = {}) {
+    save (payload, meta = {}) {
       return {
         type: LABEL.SAVE,
         payload: { ...payload, type: 'props' },
@@ -81,7 +81,7 @@ export default {
   },
 
   class: {
-    load(payload, meta = {}) {
+    load (payload, meta = {}) {
       return {
         type: CLASS.LOAD,
         payload,
@@ -89,7 +89,7 @@ export default {
       }
     },
 
-    save(payload, meta = {}) {
+    save (payload, meta = {}) {
       return {
         type: LABEL.SAVE,
         payload: { ...payload, type: 'class' },
@@ -99,7 +99,7 @@ export default {
   },
 
   type: {
-    load(payload, meta = {}) {
+    load (payload, meta = {}) {
       return {
         type: TYPE.LOAD,
         payload,
@@ -107,7 +107,7 @@ export default {
       }
     },
 
-    save(payload, meta = {}) {
+    save (payload, meta = {}) {
       return {
         type: LABEL.SAVE,
         payload: { ...payload, type: 'type' },
@@ -117,7 +117,7 @@ export default {
   },
 
   template: {
-    create(payload, meta = {}) {
+    create (payload, meta = {}) {
       return {
         type: TEMPLATE.CREATE,
         payload,
@@ -125,7 +125,7 @@ export default {
       }
     },
 
-    import(payload = {}, meta = {}) {
+    import (payload = {}, meta = {}) {
       return {
         type: TEMPLATE.IMPORT,
         payload,
@@ -134,7 +134,7 @@ export default {
       }
     },
 
-    export(payload = {}, meta = {}) {
+    export (payload = {}, meta = {}) {
       return {
         type: TEMPLATE.EXPORT,
         payload,
@@ -143,7 +143,7 @@ export default {
       }
     },
 
-    delete(payload, meta = {}) {
+    delete (payload, meta = {}) {
       return {
         type: TEMPLATE.DELETE,
         payload,
@@ -151,7 +151,7 @@ export default {
       }
     },
 
-    save(payload, meta = {}) {
+    save (payload, meta = {}) {
       return {
         type: TEMPLATE.SAVE,
         payload,
@@ -159,7 +159,7 @@ export default {
       }
     },
 
-    load(payload, meta = {}) {
+    load (payload, meta = {}) {
       return {
         type: TEMPLATE.LOAD,
         payload,
@@ -168,7 +168,7 @@ export default {
     },
 
     field: {
-      add(payload, meta = {}) {
+      add (payload, meta = {}) {
         return {
           type: TEMPLATE.FIELD.ADD,
           payload,
@@ -176,7 +176,7 @@ export default {
         }
       },
 
-      remove(payload, meta = {}) {
+      remove (payload, meta = {}) {
         return {
           type: TEMPLATE.FIELD.REMOVE,
           payload,
@@ -184,7 +184,7 @@ export default {
         }
       },
 
-      save(payload, meta = {}) {
+      save (payload, meta = {}) {
         return {
           type: TEMPLATE.FIELD.SAVE,
           payload,
@@ -192,7 +192,7 @@ export default {
         }
       },
 
-      order(payload, meta = {}) {
+      order (payload, meta = {}) {
         return {
           type: TEMPLATE.FIELD.ORDER,
           payload,

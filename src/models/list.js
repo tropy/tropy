@@ -2,7 +2,7 @@ import { LIST } from '../constants/index.js'
 import { into, select, update } from '../common/query.js'
 import { pick, remove, toId } from '../common/util.js'
 
-async function itemsRestore(db, id, items) {
+async function itemsRestore (db, id, items) {
   return db.run(
     ...update('list_items')
       .set({ deleted: null })
@@ -11,7 +11,7 @@ async function itemsRestore(db, id, items) {
 
 
 export default {
-  async all(db) {
+  async all (db) {
     let lists = {}
 
     await db.each(
@@ -34,7 +34,7 @@ export default {
     return lists
   },
 
-  async create(db, { name, parent, position }) {
+  async create (db, { name, parent, position }) {
     let { id } = await db.run(
       ...into('lists')
         .insert({ name, parent_list_id: parent, position }))
@@ -42,21 +42,21 @@ export default {
     return { id, name, parent, children: [] }
   },
 
-  remove(db, id) {
+  remove (db, id) {
     return db.run(
       ...update('lists')
         .set({ parent_list_id: null })
         .where({ list_id: id }))
   },
 
-  restore(db, id, parent) {
+  restore (db, id, parent) {
     return db.run(
       ...update('lists')
         .set({ parent_list_id: parent })
         .where({ list_id: id }))
   },
 
-  prune(db) {
+  prune (db) {
     return db.seq(conn => Promise.all([
       conn.run(
         'DELETE FROM lists WHERE list_id != ? AND parent_list_id IS NULL',
@@ -66,7 +66,7 @@ export default {
     ]))
   },
 
-  save(db, { id, ...data }) {
+  save (db, { id, ...data }) {
     return db.run(
       ...update('lists')
         .set(pick(data, ['name', 'parent_list_id']))
@@ -74,7 +74,7 @@ export default {
         .where({ list_id: id }))
   },
 
-  order(db, parent, order) {
+  order (db, parent, order) {
     if (order.length) {
       return db.run(`
         UPDATE lists
@@ -87,7 +87,7 @@ export default {
   },
 
   items: {
-    async add(db, id, items) {
+    async add (db, id, items) {
       let dupes = await db.all(
         ...select('id', 'deleted')
           .from('list_items')
@@ -113,7 +113,7 @@ export default {
       }
     },
 
-    remove(db, id, items) {
+    remove (db, id, items) {
       return db.run(
         ...update('list_items')
           .set('deleted = datetime("now")')

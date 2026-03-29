@@ -9,7 +9,7 @@ import { on, off, stylesheet, toggle } from '../dom.js'
 import { StyleSheet } from '../res.js'
 
 
-export function Frame({
+export function Frame ({
   className,
   innerClassName = '',
   onClick,

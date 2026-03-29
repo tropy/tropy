@@ -6,9 +6,9 @@ import { Command } from 'commander'
 export const program = new Command()
 
 const type = {
-  path(value) { return resolve(value) },
-  float(value) { return parseFloat(value) },
-  int(value) { return parseInt(value, 10) }
+  path (value) { return resolve(value) },
+  float (value) { return parseFloat(value) },
+  int (value) { return parseInt(value, 10) }
 }
 
 program
@@ -50,7 +50,7 @@ program
   .option('-p, --port <number>', 'set API listening port', type.int)
 
 
-export function parse(argv = process.argv.slice(1)) {
+export function parse (argv = process.argv.slice(1)) {
   program.parse(argv, { from: 'user' })
 
   return {
@@ -62,7 +62,7 @@ export function parse(argv = process.argv.slice(1)) {
   }
 }
 
-export function argToURL(arg, cwd = process.cwd()) {
+export function argToURL (arg, cwd = process.cwd()) {
   // Subtle: only try to parse arguments as URLs for supported protocols,
   // otherwise win32 paths with drive letters may get interpreted as URLs.
   if (!(/^(tropy|file|https?):/i).test(arg))

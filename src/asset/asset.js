@@ -7,17 +7,17 @@ import { pick } from '../common/util.js'
 
 
 export class Asset {
-  static async open(props, ...args) {
+  static async open (props, ...args) {
     return (new this(props)).open(props, ...args)
   }
 
-  static async check(props, ...args) {
+  static async check (props, ...args) {
     return (new this(props)).check(props, ...args)
   }
 
   #path = null
 
-  constructor({ path, protocol, checksum, mimetype }) {
+  constructor ({ path, protocol, checksum, mimetype }) {
     // Set protocol first to avoid auto-dection!
     this.protocol = protocol
     this.path = path
@@ -29,39 +29,39 @@ export class Asset {
     this.mimetype = mimetype
   }
 
-  get basename() {
+  get basename () {
     return this.isRemote ?
       basename(decodeURIComponent((new URL(this.url)).pathname)) :
       basename(this.path)
   }
 
-  get date() {
+  get date () {
     return this.birthtime || this.mtime || new Date()
   }
 
-  get ext() {
+  get ext () {
     return extname(this.basename)
   }
 
-  get birthtime() {
+  get birthtime () {
     return this.fs?.birthtime ||
       this.fs?.birthtimeMs ? new Date(this.fs.birthtimeMs) : null
   }
 
-  get mtime() {
+  get mtime () {
     return this.fs?.mtime ||
       this.fs?.mtimeMs ? new Date(this.fs.mtimeMs) : null
   }
 
-  get name() {
+  get name () {
     return basename(this.basename, this.ext)
   }
 
-  get isRemote() {
+  get isRemote () {
     return this.protocol !== 'file'
   }
 
-  set path(path) {
+  set path (path) {
     if (this.protocol == null) {
       let m = path.match(/^([a-z]+):\/\//i)
 
@@ -79,21 +79,21 @@ export class Asset {
     this.#path = path
   }
 
-  get path() {
+  get path () {
     return this.#path
   }
 
-  get size() {
+  get size () {
     return this.fs?.size
   }
 
-  get url() {
+  get url () {
     return this.isRemote ?
       `${this.protocol}://${this.path}` :
       pathToFileURL(this.path)
   }
 
-  async check({
+  async check ({
     fastCheck = false,
     checksum = this.checksum,
     mtime,
@@ -121,7 +121,7 @@ export class Asset {
     return this
   }
 
-  async open() {
+  async open () {
     try {
       if (this.isRemote) {
         let res = await fetch(this.url, { redirect: 'follow' })
@@ -160,7 +160,7 @@ export class Asset {
     }
   }
 
-  toJSON() {
+  toJSON () {
     return pick(this, [
       'filename',
       'path',

@@ -8,7 +8,7 @@ const needsConsolidation = ({ meta }) =>
 
 const DELAY = 1000
 
-export function *consolidate() {
+export function *consolidate () {
   try {
     yield delay(DELAY)
 
@@ -23,7 +23,7 @@ export function *consolidate() {
   }
 }
 
-export function *consolidator() {
+export function *consolidator () {
   let task
 
   while (true) {

@@ -4,7 +4,7 @@ import { insert } from './util.js'
 const init = {}
 
 
-export function notes(state = init, { type, payload, error, meta }) {
+export function notes (state = init, { type, payload, error, meta }) {
   switch (type) {
     case PROJECT.OPEN:
       return { ...init }

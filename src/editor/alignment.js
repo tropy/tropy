@@ -53,7 +53,7 @@ const splitBlockKeepAlignment = (state, dispatch) =>
   splitBlockKeepMarks(state, dispatch && keepAlignment(state, dispatch, 1))
 
 
-export function alignment(schema) {
+export function alignment (schema) {
   return {
     left: align('left'),
     center: align('center'),

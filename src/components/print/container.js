@@ -13,11 +13,11 @@ export class PrintContainer extends React.Component {
     items: []
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.context.on('print', this.onPrint)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.context.removeListener('print', this.onPrint)
   }
 
@@ -53,7 +53,7 @@ export class PrintContainer extends React.Component {
     })
   }
 
-  render() {
+  render () {
     return (
       this.state.items.map(item => (
         <Item

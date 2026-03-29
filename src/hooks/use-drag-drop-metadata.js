@@ -5,7 +5,7 @@ import { auto } from '../format.js'
 import { blank } from '../common/util.js'
 
 
-export function useDragDropMetadata({
+export function useDragDropMetadata ({
   id,
   isDisabled,
   isMixed,
@@ -29,7 +29,7 @@ export function useDragDropMetadata({
     type: DND.FIELD,
     canDrag,
     item: makeDragItem,
-    end(item, monitor) {
+    end (item, monitor) {
       if (monitor.didDrop()) {
         onDragEnd(monitor.getDropResult())
       }

@@ -11,15 +11,15 @@ import { Strings } from '#tropy/res.js'
 import * as reducer from '#tropy/reducers/index.js'
 
 const helpers = {
-  $(node, ...args) {
+  $ (node, ...args) {
     return node.querySelector(...args)
   },
 
-  $$(node, ...args) {
+  $$ (node, ...args) {
     return node.querySelectorAll(...args)
   },
 
-  element(node) {
+  element (node) {
     return node.firstChild
   }
 }
@@ -34,7 +34,7 @@ let store = configureStore({
   reducer
 })
 
-function onIntlError(error) {
+function onIntlError (error) {
   switch (error.code) {
     case 'MISSING_TRANSLATION':
       break
@@ -44,7 +44,7 @@ function onIntlError(error) {
 }
 
 export const inWindowContext = {
-  wrapper({ children }) {
+  wrapper ({ children }) {
     return (
       <WindowContext.Provider value={win}>
         <DndProvider backend={TestBackend}>

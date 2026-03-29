@@ -18,7 +18,7 @@ import { fail, open, prompt, save } from '../dialog.js'
 const { VOCAB, PROPS, CLASS, LABEL, TEMPLATE } = ONTOLOGY
 
 export class Import extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { files, isProtected } = this.action.payload
 
@@ -85,7 +85,7 @@ Import.register(ONTOLOGY.IMPORT)
 
 
 export class Load extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
 
     const [vocab, klass, type, props, template] = yield all([
@@ -104,7 +104,7 @@ Load.register(ONTOLOGY.LOAD)
 
 
 export class VocabLoad extends Command {
-  *exec() {
+  *exec () {
     return yield call(mod.ontology.vocab.load, this.options.db)
   }
 }
@@ -113,7 +113,7 @@ VocabLoad.register(VOCAB.LOAD)
 
 
 export class VocabExport extends Command {
-  *exec() {
+  *exec () {
     let { payload } = this.action
     let [vocab, ontology] = yield select(state => [
       pluck(state.ontology.vocab, payload),
@@ -136,7 +136,7 @@ VocabExport.register(VOCAB.EXPORT)
 
 
 export class VocabSave extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { payload } = this.action
 
@@ -156,7 +156,7 @@ VocabSave.register(VOCAB.SAVE)
 
 
 export class VocabDelete extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { payload } = this.action
 
@@ -174,7 +174,7 @@ VocabDelete.register(VOCAB.DELETE)
 
 
 export class VocabRestore extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { payload } = this.action
 
@@ -191,7 +191,7 @@ VocabRestore.register(VOCAB.RESTORE)
 
 
 export class PropsLoad extends Command {
-  *exec() {
+  *exec () {
     return yield call(mod.ontology.props.load, this.options.db)
   }
 }
@@ -200,7 +200,7 @@ PropsLoad.register(PROPS.LOAD)
 
 
 export class ClassLoad extends Command {
-  *exec() {
+  *exec () {
     return yield call(mod.ontology.class.load, this.options.db)
   }
 }
@@ -209,7 +209,7 @@ ClassLoad.register(CLASS.LOAD)
 
 
 export class LabelSave extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { payload } = this.action
 
@@ -231,7 +231,7 @@ LabelSave.register(LABEL.SAVE)
 
 
 export class TemplateImport extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
     let { files, isProtected } = payload
@@ -303,7 +303,7 @@ TemplateImport.register(TEMPLATE.IMPORT)
 
 
 export class TemplateExport extends Command {
-  *exec() {
+  *exec () {
     let { id, path } = this.action.payload
 
     try {
@@ -335,7 +335,7 @@ TemplateExport.register(TEMPLATE.EXPORT)
 
 
 export class TemplateCreate extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { payload, meta } = this.action
 
@@ -365,7 +365,7 @@ export class TemplateCreate extends Command {
 TemplateCreate.register(TEMPLATE.CREATE)
 
 
-async function createTemplate(db, data, meta) {
+async function createTemplate (db, data, meta) {
   assert(data.id != null, 'missing template id')
   assert(data.name != null, 'missing template name')
   assert(data.type != null, 'missing template type')
@@ -387,7 +387,7 @@ async function createTemplate(db, data, meta) {
 
 
 export class TemplateSave extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { payload } = this.action
 
@@ -405,7 +405,7 @@ TemplateSave.register(TEMPLATE.SAVE)
 
 
 export class TemplateDelete extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { payload } = this.action
 
@@ -423,7 +423,7 @@ TemplateDelete.register(TEMPLATE.DELETE)
 
 
 export class TemplateFieldAdd extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { id, field } = this.action.payload
     const { idx } = this.action.meta
@@ -445,7 +445,7 @@ TemplateFieldAdd.register(TEMPLATE.FIELD.ADD)
 
 
 export class TemplateFieldRemove extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { id, field } = this.action.payload
 
@@ -467,7 +467,7 @@ TemplateFieldRemove.register(TEMPLATE.FIELD.REMOVE)
 
 
 export class TemplateFieldSave extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { payload } = this.action
     const { id, field } = payload
@@ -495,7 +495,7 @@ TemplateFieldSave.register(TEMPLATE.FIELD.SAVE)
 
 
 export class TemplateFieldOrder extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { id, fields } = this.action.payload
 

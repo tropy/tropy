@@ -1,6 +1,6 @@
 import { blank } from '../common/util.js'
 
-export function pluck(data, ids) {
+export function pluck (data, ids) {
   let idx = {}
   let res = []
 

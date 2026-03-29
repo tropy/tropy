@@ -8,7 +8,7 @@ if (process.type === 'browser') {
   let { Resource } = require('#tropy/main/res.js')
 
   Object.defineProperty(Resource, 'base', {
-    get() { return root }
+    get () { return root }
   })
 } else {
   let { update } = require('#tropy/args.js')

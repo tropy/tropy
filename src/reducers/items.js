@@ -13,7 +13,7 @@ import {
 } from './util.js'
 
 
-function itemsReducer(state = {}, { type, payload, meta, error }) {
+function itemsReducer (state = {}, { type, payload, meta, error }) {
   switch (type) {
     case PROJECT.OPEN:
       return {}

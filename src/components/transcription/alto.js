@@ -40,7 +40,7 @@ export const Alto = React.memo(({
   })
 
   let handleMouseDown = useDragHandler({
-    onDragStart(event, target) {
+    onDragStart (event, target) {
       setDragging(false)
       let { current } = drag
 
@@ -66,11 +66,11 @@ export const Alto = React.memo(({
 
       onSelect(select(document, target, current))
     },
-    onDrag() {
+    onDrag () {
       if (!isDragging)
         setDragging(true)
     },
-    onDragStop(event, wasCancelled) {
+    onDragStop (event, wasCancelled) {
       if (isDragging) {
         if (wasCancelled) {
           onSelect(drag.current.selection || new Map)

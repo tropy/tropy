@@ -8,7 +8,7 @@ import { METADATA } from '../../constants/index.js'
 
 
 export class Add extends Command {
-  *exec() {
+  *exec () {
     let { payload } = this.action
     let { id, property, value } = payload
 
@@ -28,7 +28,7 @@ Add.register(METADATA.ADD)
 
 
 export class Delete extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
     let { id, property } = payload

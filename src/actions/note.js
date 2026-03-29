@@ -3,7 +3,7 @@ import { warn } from '../common/log.js'
 import { get } from '../common/util.js'
 
 export default {
-  create(payload, meta) {
+  create (payload, meta) {
     return {
       type: NOTE.CREATE,
       payload: payload,
@@ -11,7 +11,7 @@ export default {
     }
   },
 
-  export(payload, meta = {}) {
+  export (payload, meta = {}) {
     return {
       type: NOTE.EXPORT,
       payload,
@@ -22,7 +22,7 @@ export default {
     }
   },
 
-  insert(payload, meta = {}) {
+  insert (payload, meta = {}) {
     return {
       type: NOTE.INSERT,
       payload,
@@ -30,7 +30,7 @@ export default {
     }
   },
 
-  save(payload, meta) {
+  save (payload, meta) {
     return {
       type: NOTE.SAVE,
       payload: payload,
@@ -41,7 +41,7 @@ export default {
     }
   },
 
-  open(payload = {}, meta) {
+  open (payload = {}, meta) {
     return {
       type: NOTE.OPEN,
       payload: payload,
@@ -53,7 +53,7 @@ export default {
   },
 
 
-  load(payload, meta) {
+  load (payload, meta) {
     return {
       type: NOTE.LOAD,
       payload,
@@ -61,7 +61,7 @@ export default {
     }
   },
 
-  select(payload, meta) {
+  select (payload, meta) {
     if (payload == null)
       return {
         type: NOTE.SELECT,
@@ -94,7 +94,7 @@ export default {
     }
   },
 
-  update(payload, meta) {
+  update (payload, meta) {
     return {
       type: NOTE.UPDATE,
       payload,
@@ -107,7 +107,7 @@ export default {
     }
   },
 
-  delete(payload, meta) {
+  delete (payload, meta) {
     return {
       type: NOTE.DELETE,
       payload,
@@ -115,7 +115,7 @@ export default {
     }
   },
 
-  restore(payload, meta) {
+  restore (payload, meta) {
     return {
       type: NOTE.RESTORE,
       payload,

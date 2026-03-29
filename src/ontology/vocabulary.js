@@ -13,7 +13,7 @@ const PREFIXES = {
   dc: dc.BASE
 }
 
-function addEach(out, ids, type, state) {
+function addEach (out, ids, type, state) {
   if (blank(ids)) return
 
   for (let id of ids) {
@@ -46,7 +46,7 @@ function addEach(out, ids, type, state) {
   }
 }
 
-export function toN3(vocab, ontology, prefixes = {}) {
+export function toN3 (vocab, ontology, prefixes = {}) {
   return new Promise((resolve, reject) => {
     if (vocab.prefix) {
       prefixes[vocab.prefix] = vocab.id

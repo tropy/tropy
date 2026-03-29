@@ -6,7 +6,7 @@ import { darwin } from '../../common/os.js'
 
 
 export class Preview extends Command {
-  *exec() {
+  *exec () {
     if (!darwin) return
 
     let { photos } = this.action.payload

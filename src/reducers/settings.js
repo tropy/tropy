@@ -50,7 +50,7 @@ const defaults = {
   zoomMode: ESPER.MODE.FIT
 }
 
-export function settings(state = defaults, { type, payload, meta, error }) {
+export function settings (state = defaults, { type, payload, meta, error }) {
   switch (type) {
     case SETTINGS.RESTORE:
       return {

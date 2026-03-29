@@ -1,6 +1,6 @@
 import { IconPhoto } from './icons.js'
 
-export function Image({ onError, src, rotation = '0' }) {
+export function Image ({ onError, src, rotation = '0' }) {
   if (!src)
     return <IconPhoto/>
   else

@@ -57,7 +57,7 @@ export const MIGRATIONS = [
   })
 ]
 
-export async function migrate(tropy, state, version = tropy.version) {
+export async function migrate (tropy, state, version = tropy.version) {
   let [major, minor] = version.split('.')
   for (let m of MIGRATIONS) {
     try {

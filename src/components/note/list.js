@@ -34,10 +34,10 @@ export const NoteList = ({
   })
 
   let handleKeyDown = useKeyMap('NoteList', {
-    open() {
+    open () {
       onOpen(scroll.current.current)
     },
-    remove() {
+    remove () {
       handleRemove(scroll.current.current)
     }
   })

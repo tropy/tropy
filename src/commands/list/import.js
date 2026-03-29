@@ -12,7 +12,7 @@ import { getListByName } from '../../selectors/index.js'
 const { readFile } = fs.promises
 
 export class Import extends Command {
-  *exec() {
+  *exec () {
     let { paths } = this.action.payload || {}
     let { db } = this.options
 
@@ -41,7 +41,7 @@ export class Import extends Command {
 
 Import.register(LIST.IMPORT)
 
-export async function importPaths(tx, paths, lists, created = []) {
+export async function importPaths (tx, paths, lists, created = []) {
   let leafIds = new Set()
 
   for (let path of paths) {

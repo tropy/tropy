@@ -43,7 +43,7 @@ const {
   which
 } = shelljs
 
-async function integrity(path, algo = 'sha256') {
+async function integrity (path, algo = 'sha256') {
   let hash = createHash(algo)
   hash.update(await readFile(path))
   let checksum = [algo, hash.digest('hex')].join('|')
@@ -104,7 +104,7 @@ program
 
 const exports = {
 
-  bz2({ app, arch, out, tag }) {
+  bz2 ({ app, arch, out, tag }) {
     check(which('tar'), 'missing dependency: tar')
 
     let nva = [name, version, arch]
@@ -117,7 +117,7 @@ const exports = {
     return [output]
   },
 
-  AppImage({ app, arch, out, silent, tag }) {
+  AppImage ({ app, arch, out, silent, tag }) {
     check(arch === 'x64', 'must build for x64')
 
     let output = join(out, `${[product, version, tag].filter(x => x).join('-')}-x86_64.AppImage`)
@@ -158,7 +158,7 @@ const exports = {
     return [output]
   },
 
-  '7z'({ app, arch, out, platform, silent }) {
+  '7z' ({ app, arch, out, platform, silent }) {
     let output = join(out, `${name}-${version}-${
       (platform === 'darwin' && arch === 'x64') ?
         platform : [platform, arch].join('-')
@@ -180,7 +180,7 @@ const exports = {
     return [output]
   },
 
-  async dmg({ app, arch, out, silent }) {
+  async dmg ({ app, arch, out, silent }) {
     check(process.platform === 'darwin', 'must be run on macOS')
     let appdmg = (await import('appdmg')).default
 
@@ -247,7 +247,7 @@ const exports = {
     })
   },
 
-  async squirrel({ app, out, arch, sign }) {
+  async squirrel ({ app, out, arch, sign }) {
     let { createWindowsInstaller } = await import('electron-winstaller')
     let setupExe = `setup-${name}-${version}-${arch}.exe`
     let windowsSign

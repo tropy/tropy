@@ -17,7 +17,7 @@ export class ScrollContainer extends React.Component {
     isScrolling: false
   }
 
-  componentDidMount() {
+  componentDidMount () {
     if (this.props.onResize)
       this.#RO.observe(this.container.current)
 
@@ -25,7 +25,7 @@ export class ScrollContainer extends React.Component {
       on(this.container.current, 'scroll', this.handleScroll)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.#RO.unobserve(this.container.current)
     this.#RO.disconnect()
 
@@ -33,7 +33,7 @@ export class ScrollContainer extends React.Component {
     this.handleScrollStop.cancel()
   }
 
-  get bounds() {
+  get bounds () {
     let { clientWidth, clientHeight } = this.container.current
 
     return {
@@ -42,30 +42,30 @@ export class ScrollContainer extends React.Component {
     }
   }
 
-  get isScrolling() {
+  get isScrolling () {
     return this.state.isScrolling
   }
 
-  get scrollTop() {
+  get scrollTop () {
     return this.container.current.scrollTop
   }
 
-  get scrollLeft() {
+  get scrollLeft () {
     return this.container.current.scrollLeft
   }
 
-  focus() {
+  focus () {
     this.container.current.focus()
   }
 
-  scroll(y, x) {
+  scroll (y, x) {
     if (y != null)
       this.container.current.scrollTop = y
     if (x != null)
       this.container.current.scrollLeft = x
   }
 
-  sync(y, x) {
+  sync (y, x) {
     if (y != null && y !== this.container.current.scrollTop) {
       this.#didSync = true
       this.container.current.scrollTop = y
@@ -76,7 +76,7 @@ export class ScrollContainer extends React.Component {
     }
   }
 
-  scrollBy(y, x) {
+  scrollBy (y, x) {
     this.scroll(
       y != null ? this.scrollTop + y : null,
       x != null ? this.scrollLeft + x : null
@@ -113,7 +113,7 @@ export class ScrollContainer extends React.Component {
     this.props.onScrollStop?.()
   }, 150)
 
-  render() {
+  render () {
     return (
       <div
         ref={this.container}

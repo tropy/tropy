@@ -3,7 +3,7 @@ import cx from 'classnames'
 import { useEvent } from '../hooks/use-event.js'
 import { Input } from './input.js'
 
-function restore(focus) {
+function restore (focus) {
   focus.current?.focus()
   focus.current = null
 }

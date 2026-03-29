@@ -3,7 +3,7 @@ import { PROJECT, ITEM } from '../constants/index.js'
 const init = { name: '' }
 
 
-export function project(state = init, { type, payload, meta, error }) {
+export function project (state = init, { type, payload, meta, error }) {
   switch (type) {
     case PROJECT.RELOAD:
       return (!error && meta.done) ? { ...payload } : state

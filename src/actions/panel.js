@@ -1,7 +1,7 @@
 import { PANEL } from '../constants/index.js'
 
 export default {
-  restore(payload = {}, meta = {}) {
+  restore (payload = {}, meta = {}) {
     return {
       type: PANEL.RESTORE,
       payload,
@@ -9,7 +9,7 @@ export default {
     }
   },
 
-  update(payload = {}, meta = {}) {
+  update (payload = {}, meta = {}) {
     return {
       type: PANEL.UPDATE,
       payload,

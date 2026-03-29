@@ -4,7 +4,7 @@ import { IconMaze, IconWarningSm, IconLock } from '../icons.js'
 import { Editable } from '../editable.js'
 
 
-export function ProjectName(props) {
+export function ProjectName (props) {
   let [{ canDrop, isOver }, drop] = useDropPhotoFiles(props)
 
   return (

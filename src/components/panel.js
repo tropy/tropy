@@ -16,13 +16,13 @@ const { MIN_HEIGHT, CLOSED_HEIGHT } = SASS.PANEL
 export class Panel extends React.PureComponent {
   container = React.createRef()
 
-  get classes() {
+  get classes () {
     return ['panel', this.props.className, {
       closed: this.props.isClosed
     }]
   }
 
-  focus() {
+  focus () {
     this.container.current.focus()
   }
 
@@ -46,7 +46,7 @@ export class Panel extends React.PureComponent {
     }
   })
 
-  renderHeader(header) {
+  renderHeader (header) {
     return (
       <PanelHeader
         onClick={this.props.canToggle ? this.handleClick : undefined}>
@@ -58,7 +58,7 @@ export class Panel extends React.PureComponent {
     )
   }
 
-  renderBody(body, classes) {
+  renderBody (body, classes) {
     return !this.props.isClosed && (
       <PanelBody className={cx(classes)}>
         {body}
@@ -66,7 +66,7 @@ export class Panel extends React.PureComponent {
     )
   }
 
-  render() {
+  render () {
     let [header, body] = React.Children.toArray(this.props.children)
 
     return (
@@ -103,7 +103,7 @@ export class PanelGroup extends React.Component {
 
   state = { slots: [], height: 0 }
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps (props, state) {
     if (props.slots !== state.prevPropSlots) {
       return {
         ...getLayout(props.slots, state.height),
@@ -114,20 +114,20 @@ export class PanelGroup extends React.Component {
     return null
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.ro = new ResizeObserver(([e]) => {
       this.handleResize(e.contentRect.height)
     })
     this.ro.observe(this.container.current)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.ro.unobserve(this.container.current)
     this.ro.disconnect()
     this.ro = null
   }
 
-  getShrinkMapper(by) {
+  getShrinkMapper (by) {
     return (original) => {
       let slot
 
@@ -140,7 +140,7 @@ export class PanelGroup extends React.Component {
     }
   }
 
-  getGrowMapper(by) {
+  getGrowMapper (by) {
     return (original) => {
       let slot
 
@@ -158,7 +158,7 @@ export class PanelGroup extends React.Component {
     this.update(height)
   }, 15)
 
-  update(height) {
+  update (height) {
     this.setState(getLayout(this.props.slots, height))
   }
 
@@ -212,14 +212,14 @@ export class PanelGroup extends React.Component {
   }
 
 
-  grow(slot, by) {
+  grow (slot, by) {
     return (slot.isClosed || by <= 0) ? slot : {
       ...slot,
       height: slot.height + by
     }
   }
 
-  shrink(slot, by) {
+  shrink (slot, by) {
     if (slot.isClosed || by <= 0 || slot.height <= MIN_HEIGHT) {
       return slot
     }
@@ -229,7 +229,7 @@ export class PanelGroup extends React.Component {
     return { ...slot, height }
   }
 
-  resize(delta, at, position) {
+  resize (delta, at, position) {
     let pivot, head, tail
     let { slots } = this.state
 
@@ -257,7 +257,7 @@ export class PanelGroup extends React.Component {
     return [...head, pivot, ...tail]
   }
 
-  open(at) {
+  open (at) {
     const { top, bottom } = bounds(this.container.current)
     const { slots } = this.state
 
@@ -279,7 +279,7 @@ export class PanelGroup extends React.Component {
     ]
   }
 
-  close(at) {
+  close (at) {
     const { slots } = this.state
 
     const pivot = { ...slots[at], isClosed: true }
@@ -296,7 +296,7 @@ export class PanelGroup extends React.Component {
     ]
   }
 
-  commit(slots = this.state.slots) {
+  commit (slots = this.state.slots) {
     const cc = slots.filter(slot => slot.isClosed).length
     const scale = this.state.height - cc * CLOSED_HEIGHT
 
@@ -341,7 +341,7 @@ export class PanelGroup extends React.Component {
     )
   }
 
-  render() {
+  render () {
     return (
       <div className={cx('panel-group', this.props.className)}>
         <header className="panel-group-header">
@@ -412,7 +412,7 @@ const getLayout = memoize((panels, height) => {
   return { height, slots, canClosePanel: numOpen > 1 }
 })
 
-function fixLayout(slots, surplus) {
+function fixLayout (slots, surplus) {
   for (let i = 0; i < slots.length; ++i) {
     if (!slots[i].isClosed) {
       slots[i].height += surplus

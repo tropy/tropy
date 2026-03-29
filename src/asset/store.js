@@ -8,11 +8,11 @@ import mod from '../models/store.js'
 export class Store {
   #root
 
-  constructor(root) {
+  constructor (root) {
     this.root = root
   }
 
-  set root(root) {
+  set root (root) {
     this.#root = null
 
     if (root) {
@@ -26,11 +26,11 @@ export class Store {
 
   }
 
-  get root() {
+  get root () {
     return this.#root
   }
 
-  get name() {
+  get name () {
     return (this.root) ? basename(this.root) : null
   }
 
@@ -105,7 +105,7 @@ export class Store {
     await mod.purge(db)
   }
 
-  getPathFor(asset) {
+  getPathFor (asset) {
     return join(this.root, `${asset.checksum}${asset.ext.toLowerCase()}`)
   }
 }

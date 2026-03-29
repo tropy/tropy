@@ -11,7 +11,7 @@ const skel = (id, selections = [], notes = [], transcriptions = []) => ({
   id, selections, notes, transcriptions
 })
 
-async function load(db, ids, { basePath } = {}) {
+async function load (db, ids, { basePath } = {}) {
   let photos = {}
 
   await Promise.all([
@@ -110,7 +110,7 @@ async function load(db, ids, { basePath } = {}) {
 }
 
 export default {
-  async create(db, { basePath, template }, { item, image, data, position }) {
+  async create (db, { basePath, template }, { item, image, data, position }) {
     let { protocol = 'file', path, ...meta } = image
     let { id } = await subject.create(db, { template })
 
@@ -139,7 +139,7 @@ export default {
     return (await load(db, [id], { basePath }))[id]
   },
 
-  async save(db, { id, timestamp, ...data }, { basePath } = {}) {
+  async save (db, { id, timestamp, ...data }, { basePath } = {}) {
     let photo = pick(data, props.photo)
     let image = pick(data, ['width', 'height'])
 
@@ -162,7 +162,7 @@ export default {
   },
 
   load,
-  find(db, { checksum }) {
+  find (db, { checksum }) {
     return db.get(`
       SELECT p.id, item_id AS item
         FROM photos p
@@ -173,13 +173,13 @@ export default {
           AND ti.deleted IS NULL`, checksum)
   },
 
-  async move(db, { ids, item }) {
+  async move (db, { ids, item }) {
     return db.run(`
       UPDATE photos SET item_id = ?  WHERE id in (${ids.join(',')})`,
     item)
   },
 
-  async order(db, item, photos, offset = 0) {
+  async order (db, item, photos, offset = 0) {
     if (!blank(photos)) {
       return db.run(`
         UPDATE photos
@@ -192,7 +192,7 @@ export default {
     }
   },
 
-  async merge(db, item, photos, offset = 0) {
+  async merge (db, item, photos, offset = 0) {
     if (!blank(photos)) {
       return db.run(`
         UPDATE photos
@@ -205,7 +205,7 @@ export default {
     }
   },
 
-  async split(db, item, items, concurrency = 4) {
+  async split (db, item, items, concurrency = 4) {
     return pMap(items, ({ id, photos }) =>
       db.run(`
         UPDATE photos
@@ -217,18 +217,18 @@ export default {
       id, ...photos), { concurrency })
   },
 
-  async delete(db, ids) {
+  async delete (db, ids) {
     return db.run(`
       INSERT INTO trash (id)
         VALUES ${ids.map(id => `(${id})`).join(',')}`)
   },
 
-  async restore(db, { ids }) {
+  async restore (db, { ids }) {
     return db.run(`
       DELETE FROM trash WHERE id IN (${ids.join(',')})`)
   },
 
-  async prune(db) {
+  async prune (db) {
     return db.run(`
       DELETE FROM subjects
         WHERE id IN (
@@ -237,7 +237,7 @@ export default {
     )
   },
 
-  async rebase(db, base, oldBase) {
+  async rebase (db, base, oldBase) {
     let delta = []
 
     await db.each(

@@ -20,7 +20,7 @@ const TagAdderContainer = ({ children, count }) => {
 export class TagAdder extends React.PureComponent {
   input = React.createRef()
 
-  focus() {
+  focus () {
     this.input.current.focus()
   }
 
@@ -55,7 +55,7 @@ export class TagAdder extends React.PureComponent {
     }
   }
 
-  handleAddTag(name) {
+  handleAddTag (name) {
     let query = name.trim().toLowerCase()
     let tag = this.props.tags.find(t => query === t.name.toLowerCase())
 
@@ -65,7 +65,7 @@ export class TagAdder extends React.PureComponent {
       this.props.onCreate({ name })
   }
 
-  render() {
+  render () {
     return (
       <TagAdderContainer count={this.props.count}>
         <Input

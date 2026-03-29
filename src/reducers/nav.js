@@ -35,7 +35,7 @@ const init = {
 }
 
 
-export function nav(state = init, { type, payload, meta, error }) {
+export function nav (state = init, { type, payload, meta, error }) {
   switch (type) {
     case NAV.RESTORE:
       return merge(init, omit(payload || {}, ['query', 'tags']))

@@ -24,7 +24,7 @@ export class PluginInstance extends React.PureComponent {
     this.props.onRemove(this.props.config)
   }
 
-  render() {
+  render () {
     return (
       <li className="plugin-instance">
         <fieldset>

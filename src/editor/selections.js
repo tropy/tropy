@@ -27,7 +27,7 @@ const expand = (pos, markType) => {
   return { from: startPos, to: endPos }
 }
 
-export function markExtend(selection, markType) {
+export function markExtend (selection, markType) {
   if (!selection || (selection.empty && !selection.$cursor))
     return null
 

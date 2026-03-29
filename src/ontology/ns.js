@@ -1,5 +1,5 @@
 const handler = {
-  get(obj, prop) {
+  get (obj, prop) {
     return (prop in obj) ?
       obj[prop] :
       `${obj.BASE}${prop}`

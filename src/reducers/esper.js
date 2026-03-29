@@ -5,7 +5,7 @@ const init = {
   view: {}
 }
 
-export function esper(state = init, { type, payload }) {
+export function esper (state = init, { type, payload }) {
   switch (type) {
     case ESPER.RESTORE:
       return merge(init, payload)

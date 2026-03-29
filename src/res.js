@@ -4,21 +4,21 @@ import { Resource, Icon, Strings } from './main/res.js'
 import ARGS from './args.js'
 
 Object.defineProperty(Resource, 'base', {
-  get() { return ARGS.app }
+  get () { return ARGS.app }
 })
 
 export { Resource, Icon, Strings }
 
 export class KeyMap extends Resource {
-  static get base() {
+  static get base () {
     return join(super.base, 'res/keymaps')
   }
 
-  static open(locale, ...args) {
+  static open (locale, ...args) {
     return super.open(locale, process.type, ...args)
   }
 
-  constructor(data, locale = 'en') {
+  constructor (data, locale = 'en') {
     super()
     this.map = data?.[locale]?.[process.platform] || {}
     this.locale = locale
@@ -26,23 +26,23 @@ export class KeyMap extends Resource {
 }
 
 export const Cursor = {
-  get base() {
+  get base () {
     return join(Resource.base, 'res/cursors')
   },
 
-  expand(name) {
+  expand (name) {
     return join(Cursor.base, name)
   }
 }
 
 export const Shader = {
-  get base() {
+  get base () {
     return join(Resource.base, 'res/shaders')
   },
 
   cache: Object.create({}),
 
-  load(name) {
+  load (name) {
     if (!(name in Shader.cache))
       Shader.cache[name] = readFileSync(join(Shader.base, name), 'utf-8')
 
@@ -51,45 +51,45 @@ export const Shader = {
 }
 
 export const Worker = {
-  get base() {
+  get base () {
     return join(Resource.base, 'res/workers')
   },
 
-  expand(name) {
+  expand (name) {
     return join(Worker.base, `${name}.js`)
   }
 }
 
 export const StyleSheet = {
-  get base() {
+  get base () {
     return join(Resource.base, 'lib/css')
   },
 
-  expand(name, theme) {
+  expand (name, theme) {
     return join(StyleSheet.base, `${name}${theme ? `-${theme}` : ''}.css`)
   }
 }
 
 export const Schema = {
-  get base() {
+  get base () {
     return join(Resource.base, 'db/schema')
   },
 
-  expand(name) {
+  expand (name) {
     return join(Schema.base, `${name}.sql`)
   }
 }
 
 export const Migrations = {
-  get base() {
+  get base () {
     return join(Resource.base, 'db/migrate')
   },
 
-  get project() {
+  get project () {
     return Migrations.expand('project')
   },
 
-  expand(name) {
+  expand (name) {
     return join(Migrations.base, name)
   }
 }

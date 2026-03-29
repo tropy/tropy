@@ -1,7 +1,7 @@
 import MIME from '../constants/mime.js'
 
 
-export function magic(buffer, ext = '') {
+export function magic (buffer, ext = '') {
   if (buffer != null) {
     if (isJPEG(buffer))
       return MIME.JPEG

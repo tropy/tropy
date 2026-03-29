@@ -6,11 +6,11 @@ import IMAGE from '../constants/image.js'
 
 
 export class Cache {
-  constructor(...args) {
+  constructor (...args) {
     this.root = join(...args)
   }
 
-  get name() {
+  get name () {
     return basename(this.root)
   }
 
@@ -84,37 +84,37 @@ export class Cache {
     }
   }
 
-  expand(...args) {
+  expand (...args) {
     return join(this.root, ...args)
   }
 
 
-  extname(...args) {
+  extname (...args) {
     return Cache.extname(...args)
   }
 
-  path(...args) {
+  path (...args) {
     return Cache.path(...args)
   }
 
-  url(...args) {
+  url (...args) {
     return Cache.url(this.root, ...args)
   }
 
-  static extname() {
+  static extname () {
     return '.webp'
   }
 
-  static path(id, variant, ext) {
+  static path (id, variant, ext) {
     return `${id}_${variant}${ext}`
   }
 
-  static split(path) {
+  static split (path) {
     let ext = extname(path)
     return [...basename(path, ext).split('_', 2), ext]
   }
 
-  static url(root, variant, { id, path, ...photo }) {
+  static url (root, variant, { id, path, ...photo }) {
     if (root == null || id == null || variant == null)
       return null
 
@@ -131,7 +131,7 @@ export class Cache {
     return url.toString()
   }
 
-  static isCacheVariant(variant, photo) {
+  static isCacheVariant (variant, photo) {
     return (
       (photo.page > 0) ||            // Multi-page
       (variant !== 'full') ||        // Thumbnail

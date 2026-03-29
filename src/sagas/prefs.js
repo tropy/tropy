@@ -11,7 +11,7 @@ import { close } from '../slices/prefs.js'
 import '../commands/ontology.js'
 import '../commands/project.js'
 
-export function *main() {
+export function *main () {
   try {
     var aux = yield all([
       fork(ontology, { max: 2 }),

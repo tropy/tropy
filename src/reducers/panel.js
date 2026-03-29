@@ -16,7 +16,7 @@ const expand = (state, photo) => ({
 })
 
 
-export function panel(state = INIT, { type, payload, meta, error }) {
+export function panel (state = INIT, { type, payload, meta, error }) {
   switch (type) {
     case PANEL.RESTORE:
       return merge(INIT, payload)

@@ -8,7 +8,7 @@ import { METADATA, TYPE } from '../../constants/index.js'
 
 
 export class Save extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
     let { ids, data } = payload
@@ -47,7 +47,7 @@ export class Save extends Command {
     return ids
   }
 
-  *abort() {
+  *abort () {
     if (this.original) {
       yield put(act.merge(this.original))
     }
@@ -58,7 +58,7 @@ Save.register(METADATA.SAVE)
 
 
 export class Restore extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
 
@@ -92,7 +92,7 @@ export class Restore extends Command {
     return ids
   }
 
-  *abort() {
+  *abort () {
     if (this.original) {
       yield put(act.merge(this.original))
     }

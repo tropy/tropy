@@ -5,7 +5,7 @@ import * as act from '../../actions/index.js'
 import { PHOTO } from '../../constants/index.js'
 
 export class Order extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { item, photos } = this.action.payload
 

@@ -45,19 +45,19 @@ export const Activity = ({
 
 
 export class ActivityPane extends React.PureComponent {
-  componentDidMount() {
+  componentDidMount () {
     this.resume()
   }
 
-  componentDidUpdate() {
+  componentDidUpdate () {
     this.resume()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.stop()
   }
 
-  resume() {
+  resume () {
     this.stop()
     if (this.hasPendingActivities) {
       this.timeout = setTimeout(() =>
@@ -66,18 +66,18 @@ export class ActivityPane extends React.PureComponent {
     }
   }
 
-  stop() {
+  stop () {
     clearTimeout(this.timeout)
     this.timeout = null
   }
 
-  getBusyActivities(now = Date.now(), delay = this.props.delay) {
+  getBusyActivities (now = Date.now(), delay = this.props.delay) {
     return this.props.activities.filter(activity => (
       !activity.done &&
       (now - activity.init) > delay))
   }
 
-  render() {
+  render () {
     let activities = this.getBusyActivities()
     let busy = activities.length > 0
     let height = ActivityPane.getHeight(activities.length)
@@ -103,7 +103,7 @@ export class ActivityPane extends React.PureComponent {
     )
   }
 
-  static getHeight(count) {
+  static getHeight (count) {
     return count ? count * SASS.ACTIVITY.HEIGHT : 0
   }
 

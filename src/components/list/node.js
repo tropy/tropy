@@ -50,18 +50,18 @@ class ListNode extends React.PureComponent {
     offset: null
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.isHalloween = props.isHalloween &&
       Math.round(Math.random() * props.depth) > (props.depth * 0.666)
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.connectDragPreview(getEmptyImage())
   }
 
-  get classes() {
+  get classes () {
     return ['list-node', {
       active: this.props.isSelected,
       dragging: this.props.isDragging,
@@ -71,7 +71,7 @@ class ListNode extends React.PureComponent {
     }]
   }
 
-  get direction() {
+  get direction () {
     let { props, state } = this
     return (!this.isOver || state.offset == null) ? null :
         (state.offset < 1) ? 'before' :
@@ -79,16 +79,16 @@ class ListNode extends React.PureComponent {
                 ['after', `depth-${props.depth - this.getDropDepth()}`] : 'after'
   }
 
-  get icon() {
+  get icon () {
     return (this.props.depth > 0 && this.isHalloween) ?
         <IconGhost/> : <IconFolder/>
   }
 
-  get isOver() {
+  get isOver () {
     return this.props.isOver && this.props.canDrop
   }
 
-  get isDragSource() {
+  get isDragSource () {
     return !(
       this.props.isReadOnly ||
       this.props.isEditing ||
@@ -96,7 +96,7 @@ class ListNode extends React.PureComponent {
     )
   }
 
-  get isDropTarget() {
+  get isDropTarget () {
     return !(
       this.props.isReadOnly ||
       this.props.isDragging ||
@@ -104,11 +104,11 @@ class ListNode extends React.PureComponent {
     )
   }
 
-  getDropDepth(depth = this.state.depth) {
+  getDropDepth (depth = this.state.depth) {
     return restrict(depth, this.props.minDropDepth, this.props.depth)
   }
 
-  getDropOutsidePosition(depth = 1, other) {
+  getDropOutsidePosition (depth = 1, other) {
     let { lists, list } = this.props
     let prev
 
@@ -128,7 +128,7 @@ class ListNode extends React.PureComponent {
     return { parent: list.id, idx }
   }
 
-  getDropPosition(other) {
+  getDropPosition (other) {
     let { offset } = this.state
     let { list, isExpanded, isLast, position } = this.props
 
@@ -152,7 +152,7 @@ class ListNode extends React.PureComponent {
     }
   }
 
-  isChildNodeSelected() {
+  isChildNodeSelected () {
     let { list, lists, selection, isSelected } = this.props
     if (!selection || isSelected) return false
     let p = lists[selection].parent
@@ -186,7 +186,7 @@ class ListNode extends React.PureComponent {
     this.container = container
   }
 
-  connect(element) {
+  connect (element) {
     if (this.isDragSource) {
       element = this.props.connectDragSource(element)
     }
@@ -213,7 +213,7 @@ class ListNode extends React.PureComponent {
     this.props.onExpand(this.props.list.id)
   }
 
-  renderNodeContainer() {
+  renderNodeContainer () {
     return this.connect(
       <div
         className={cx('list-node-container', this.direction, {
@@ -243,7 +243,7 @@ class ListNode extends React.PureComponent {
     )
   }
 
-  render() {
+  render () {
     return (
       <li className={cx(...this.classes)}>
         {this.renderNodeContainer()}
@@ -271,7 +271,7 @@ class ListNode extends React.PureComponent {
 }
 
 const DragSourceSpec = {
-  beginDrag({ list, depth, position }) {
+  beginDrag ({ list, depth, position }) {
     return {
       ...list,
       idx: position,
@@ -288,7 +288,7 @@ const DragSourceCollect = (connect, monitor) => ({
 })
 
 const DropTargetSpec = {
-  hover({ depth }, monitor, node) {
+  hover ({ depth }, monitor, node) {
     let type = monitor.getItemType()
 
     switch (type) {
@@ -310,7 +310,7 @@ const DropTargetSpec = {
     }
   },
 
-  canDrop(props, monitor) {
+  canDrop (props, monitor) {
     switch (monitor.getItemType()) {
       case DND.FILE:
         return hasPhotoFiles(monitor.getItem())
@@ -321,7 +321,7 @@ const DropTargetSpec = {
     }
   },
 
-  drop({ list, ...props }, monitor, node) {
+  drop ({ list, ...props }, monitor, node) {
     try {
       let type = monitor.getItemType()
       let item = monitor.getItem()

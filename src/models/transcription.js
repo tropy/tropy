@@ -5,7 +5,7 @@ import { json, stringify } from '../common/util.js'
 import { serialize } from '../dom.js'
 
 
-export async function create(db, {
+export async function create (db, {
   parent,
   config = {},
   text,
@@ -33,7 +33,7 @@ export async function create(db, {
   return (await load(db, id))[id]
 }
 
-export async function load(db, id) {
+export async function load (db, id) {
   let transcriptions = {}
 
   let query = select(
@@ -86,7 +86,7 @@ export async function load(db, id) {
   return transcriptions
 }
 
-export async function save(db, {
+export async function save (db, {
   id,
   config,
   data,
@@ -116,14 +116,14 @@ export async function save(db, {
   await db.run(...query)
 }
 
-export async function remove(db, id) {
+export async function remove (db, id) {
   return db.run(
     ...update('transcriptions')
       .set({ deleted: Date.now() })
       .where({ transcription_id: id }))
 }
 
-export async function restore(db, id) {
+export async function restore (db, id) {
   await db.run(
     ...update('transcriptions')
       .set({ deleted: false })
@@ -132,7 +132,7 @@ export async function restore(db, id) {
   return load(db, id)
 }
 
-export async function prune(db, since = '-1 week') {
+export async function prune (db, since = '-1 week') {
   return db.run(`
     DELETE FROM transcriptions
     WHERE deleted is NOT NULL OR (
@@ -140,7 +140,7 @@ export async function prune(db, since = '-1 week') {
     )`)
 }
 
-export async function touch(db, id) {
+export async function touch (db, id) {
   await db.run(
     ...update('transcriptions')
       .set({ modified: Date.now() })

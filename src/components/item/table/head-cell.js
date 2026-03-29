@@ -9,7 +9,7 @@ import { blank, noop } from '../../../common/util.js'
 const MIN_WIDTH = 40
 
 export class TableHeadCell extends React.PureComponent {
-  get classes() {
+  get classes () {
     return ['metadata-head', this.props.type, {
       blank: blank(this.props.label),
       dragging: this.props.isDragging,
@@ -18,11 +18,11 @@ export class TableHeadCell extends React.PureComponent {
     }]
   }
 
-  get direction() {
+  get direction () {
     return this.props.isAscending ? 'ascending' : 'descending'
   }
 
-  get isResizable() {
+  get isResizable () {
     return this.props.onResize != null && this.props.position != null
   }
 
@@ -63,7 +63,7 @@ export class TableHeadCell extends React.PureComponent {
     }, false)
   }
 
-  render() {
+  render () {
     return (
       <Resizable
         className={cx(this.classes)}

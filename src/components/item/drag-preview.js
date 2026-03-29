@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import { CoverImage } from './cover-image.js'
 
-export function ItemDragPreview({ item, size = 64 }) {
+export function ItemDragPreview ({ item, size = 64 }) {
   let items = item.items
   let count = items.length
 

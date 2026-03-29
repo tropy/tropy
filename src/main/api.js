@@ -7,7 +7,7 @@ export class Server {
   #pending
   #server
 
-  constructor(app) {
+  constructor (app) {
     this.app = app
   }
 
@@ -23,15 +23,15 @@ export class Server {
     this.app.wm.rsvp(type, action)
   )
 
-  get port() {
+  get port () {
     return this.app.opts.port || this.app.state.port
   }
 
-  get status() {
+  get status () {
     return this.#server != null
   }
 
-  async start() {
+  async start () {
     if (this.app.state.api || this.app.opts.port) {
       if (this.#server == null) {
         try {
@@ -46,7 +46,7 @@ export class Server {
     }
   }
 
-  async createServer() {
+  async createServer () {
     if (this.#server != null)
       throw new Error('api already started')
 
@@ -72,12 +72,12 @@ export class Server {
     }
   }
 
-  listen(port = this.port, callback = this.#api.callback()) {
+  listen (port = this.port, callback = this.#api.callback()) {
     return new Promise((resolve, reject) => {
       debug('api.listen creating http server ...')
       let server = createServer(callback)
 
-      function onError(err) {
+      function onError (err) {
         warn({ stack: err.stack }, `api.listen failed: ${err.message}`)
         reject(err)
         server.off('error', onError)
@@ -85,7 +85,7 @@ export class Server {
         clearTimeout(timeout)
       }
 
-      function onListening() {
+      function onListening () {
         info(`api.listen on port ${port}...`)
         resolve(server)
         server.off('error', onError)
@@ -108,7 +108,7 @@ export class Server {
     })
   }
 
-  async stop() {
+  async stop () {
     if (this.#server != null) {
       await this.close()
       this.#server = null
@@ -116,7 +116,7 @@ export class Server {
     }
   }
 
-  close(server = this.#server) {
+  close (server = this.#server) {
     return new Promise((resolve) => {
       info('api.stop closing connections...')
       server.close(resolve)

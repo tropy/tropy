@@ -27,7 +27,7 @@ const INIT = {
   zoom: 0
 }
 
-export function ui(state = INIT, { type, payload }) {
+export function ui (state = INIT, { type, payload }) {
   switch (type) {
     case UI.RESTORE:
       return merge(INIT, payload)

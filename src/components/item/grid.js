@@ -15,7 +15,7 @@ export class ItemGrid extends ItemIterator {
       isLast={index >= this.props.items.length - 1}/>
   )
 
-  render() {
+  render () {
     let tileSize = Math.round(this.props.size * SASS.TILE.FACTOR)
 
     return this.connect(

@@ -1,5 +1,5 @@
 
-export function isBlank(doc) {
+export function isBlank (doc) {
   if (doc == null)
     return true
   if (doc.childCount !== 1)
@@ -12,7 +12,7 @@ export function isBlank(doc) {
   return true
 }
 
-export function getMarks(state) {
+export function getMarks (state) {
   let { schema } = state
   let marks = {}
 
@@ -23,7 +23,7 @@ export function getMarks(state) {
   return marks
 }
 
-export function isMarkActive(mark, state) {
+export function isMarkActive (mark, state) {
   let { doc, selection, storedMarks } = state
 
   if (selection.empty)
@@ -32,7 +32,7 @@ export function isMarkActive(mark, state) {
     return doc.rangeHasMark(selection.from, selection.to, mark)
 }
 
-export function getAlignment(state) {
+export function getAlignment (state) {
   let { doc, selection } = state
   let align = { left: false, right: false, center: false }
 
@@ -48,7 +48,7 @@ export function getAlignment(state) {
   return align
 }
 
-export function getLink(state) {
+export function getLink (state) {
   let { schema, selection } = state
 
   if (selection.$cursor) {

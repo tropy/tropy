@@ -6,7 +6,7 @@ import { pMap, times } from '#tropy/common/util.js'
 import { Database, Connection, Statement } from '#tropy/common/db.js'
 import { using } from '#tropy/common/disposable.js'
 
-function failure() { throw new Error() }
+function failure () { throw new Error() }
 
 describe('Database', () => {
   describe('given a database file', () => {

@@ -30,7 +30,7 @@ const toSass = (value, unit) => {
 }
 
 export const functions = {
-  'const($name, $unit:null)'(args) {
+  'const($name, $unit:null)' (args) {
     let name = args[0].assertString('name').text
     let unit = args[1].equals(sass.sassNull) ?
       null :
@@ -49,10 +49,10 @@ export default function ({
   return {
     name: 'sass',
 
-    options() {
+    options () {
     },
 
-    async buildStart() {
+    async buildStart () {
       for (let entry of entries) {
         for (let file of await fs.promises.readdir(entry)) {
           if (extname(file) === extension)
@@ -65,7 +65,7 @@ export default function ({
       }
     },
 
-    async transform(code, id) {
+    async transform (code, id) {
       if (extname(id) !== extension)
         return null
 
@@ -117,7 +117,7 @@ export default function ({
       return ''
     },
 
-    generateBundle(options, bundle) {
+    generateBundle (options, bundle) {
       for (let file in bundle) {
         if (extname(file) === extension)
           delete bundle[file]

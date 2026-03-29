@@ -4,30 +4,30 @@ const { assign, entries } = Object
 const { isArray } = Array
 
 export class Query {
-  dup() {
+  dup () {
     return copy(this, new this.constructor())
   }
 
-  get hasParams() {
+  get hasParams () {
     return this.params != null && Reflect.ownKeys(this.params).length > 0
   }
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator] () {
     yield this.toString()
     if (this.hasParams) {
       yield this.params
     }
   }
 
-  get query() {
+  get query () {
     throw new Error('not implemented')
   }
 
-  toString() {
+  toString () {
     return this.query
   }
 
-  returning(...columns) {
+  returning (...columns) {
     for (let cols of columns) {
       if (typeof cols === 'string') {
         this.ret = { ...this.ret, [cols]: cols }
@@ -40,7 +40,7 @@ export class Query {
     return this
   }
 
-  get RETURNING() {
+  get RETURNING () {
     return this.ret == null ? null : (
       `RETURNING ${
         entries(this.ret)
@@ -52,19 +52,19 @@ export class Query {
 }
 
 export class Insert extends Query {
-  constructor(table) {
+  constructor (table) {
     super()
     this.table = table
     this.columns = []
     this.values = []
   }
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator] () {
     yield this.query
     yield this.values
   }
 
-  insert(input) {
+  insert (input) {
     for (let col in input) {
       this.columns.push(col)
       this.values.push(input[col])
@@ -72,32 +72,32 @@ export class Insert extends Query {
     return this
   }
 
-  get query() {
+  get query () {
     return compact([this.INSERT, this.VALUES, this.RETURNING]).join(' ')
   }
 
-  get INSERT() {
+  get INSERT () {
     return `INSERT INTO ${this.table} (${this.columns.join(', ')})`
   }
 
-  get VALUES() {
+  get VALUES () {
     return `VALUES (${this.values.map(() => '?').join(',')})`
   }
 }
 
 export class Union extends Query {
-  constructor(...args) {
+  constructor (...args) {
     super()
     this.params = {}
     this.set = []
     this.push(...args)
   }
 
-  get query() {
+  get query () {
     return this.set.join(' UNION ')
   }
 
-  push(...args) {
+  push (...args) {
     for (const { query, params } of args) {
       this.set.push(query)
       this.params = { ...this.params, ...params }
@@ -106,27 +106,27 @@ export class Union extends Query {
 }
 
 class ConditionalQuery extends Query {
-  constructor() {
+  constructor () {
     super()
     this.reset()
   }
 
-  reset() {
+  reset () {
     this.isNegated = false
     this.params = {}
     this.con = []
     return this
   }
 
-  get not() {
+  get not () {
     return (this.isNegated = true), this
   }
 
-  where(conditions) {
+  where (conditions) {
     return this.parse(conditions)
   }
 
-  parse(input, {
+  parse (input, {
     conditions = this.con,
     filters = {},
     forAssignment = false,
@@ -179,23 +179,23 @@ class ConditionalQuery extends Query {
     }
   }
 
-  unless(...args) {
+  unless (...args) {
     return this.not.where(...args)
   }
 
-  get WHERE() {
+  get WHERE () {
     return (this.con.length === 0) ?
       undefined : `WHERE ${this.con.join(' AND ')}`
   }
 }
 
 export class Select extends ConditionalQuery {
-  constructor(...args) {
+  constructor (...args) {
     super()
     this.select(...args)
   }
 
-  reset() {
+  reset () {
     super.reset()
     this.isDistinct = false
     this.isOuter = false
@@ -208,19 +208,19 @@ export class Select extends ConditionalQuery {
     return this
   }
 
-  get distinct() {
+  get distinct () {
     return (this.isDistinct = true), this
   }
 
-  get all() {
+  get all () {
     return (this.isDistinct = false), this
   }
 
-  get outer() {
+  get outer () {
     return (this.isOuter = true), this
   }
 
-  select(...columns) {
+  select (...columns) {
     for (let cols of columns) {
       if (typeof cols === 'string') {
         this.col = { ...this.col, [cols]: cols }
@@ -233,12 +233,12 @@ export class Select extends ConditionalQuery {
     return this
   }
 
-  from(...sources) {
+  from (...sources) {
     this.src = [...this.src, sources.join(', ')]
     return this
   }
 
-  join(other, { using, on } = {}) {
+  join (other, { using, on } = {}) {
     try {
       let JOIN = this.isOuter ? 'LEFT OUTER JOIN' : 'JOIN'
       let conditions = ''
@@ -262,7 +262,7 @@ export class Select extends ConditionalQuery {
     }
   }
 
-  order(arg1, dir) {
+  order (arg1, dir) {
     if (!Array.isArray(arg1))
       arg1 = [arg1]
 
@@ -272,26 +272,26 @@ export class Select extends ConditionalQuery {
     return this
   }
 
-  group(...by) {
+  group (...by) {
     this.grp = [...this.grp, ...by]
     return this
   }
 
-  having(input) {
+  having (input) {
     return this.parse(input, { conditions: this.hav })
   }
 
-  with(head, body) {
+  with (head, body) {
     this.cte = { head, body }
     return this
   }
 
-  limit(limit) {
+  limit (limit) {
     this.lmt = Number(limit)
     return this
   }
 
-  get query() {
+  get query () {
     return pluck(this, [
       'WITH',
       'SELECT',
@@ -304,12 +304,12 @@ export class Select extends ConditionalQuery {
     ]).join(' ')
   }
 
-  get WITH() {
+  get WITH () {
     return this.cte != null ?
       `WITH ${this.cte.head} AS (${this.cte.body})` : undefined
   }
 
-  get SELECT() {
+  get SELECT () {
     return (
       `SELECT${this.isDistinct ? ' DISTINCT' : ''} ${
         entries(this.col)
@@ -320,26 +320,26 @@ export class Select extends ConditionalQuery {
     )
   }
 
-  get FROM() {
+  get FROM () {
     return `FROM ${this.src.join(' ')}`
   }
 
-  get GROUP_BY() {
+  get GROUP_BY () {
     return (this.grp.length === 0) ?
       undefined : `GROUP BY ${this.grp.join(', ')}`
   }
 
-  get HAVING() {
+  get HAVING () {
     return (this.hav.length === 0) ?
       undefined : `HAVING ${this.hav.join(' AND ')}`
   }
 
-  get ORDER() {
+  get ORDER () {
     return (this.ord.length === 0) ?
       undefined : `ORDER BY ${this.ord.join(', ')}`
   }
 
-  get LIMIT() {
+  get LIMIT () {
     return (!this.lmt) ?
       undefined : `LIMIT ${this.lmt}`
   }
@@ -347,18 +347,18 @@ export class Select extends ConditionalQuery {
 
 
 export class Update extends ConditionalQuery {
-  constructor(src) {
+  constructor (src) {
     super()
     this.src = src
   }
 
-  reset() {
+  reset () {
     super.reset()
     this.asg = []
     return this
   }
 
-  set(assignments, opts = {}) {
+  set (assignments, opts = {}) {
     return this.parse(assignments, {
       forAssignment: true,
       conditions: this.asg,
@@ -367,50 +367,50 @@ export class Update extends ConditionalQuery {
     })
   }
 
-  get query() {
+  get query () {
     return compact(pluck(this, ['UPDATE', 'SET', 'WHERE', 'RETURNING'])).join(' ')
   }
 
-  get UPDATE() {
+  get UPDATE () {
     return `UPDATE ${this.src}`
   }
 
-  get SET() {
+  get SET () {
     return `SET ${this.asg.join(', ')}`
   }
 }
 
 export class Delete extends ConditionalQuery {
-  constructor(src) {
+  constructor (src) {
     super()
     this.src = src
   }
 
-  get query() {
+  get query () {
     return compact(pluck(this, ['DELETE', 'WHERE', 'RETURNING'])).join(' ')
   }
 
-  get DELETE() {
+  get DELETE () {
     return `DELETE FROM ${this.src}`
   }
 }
 
-export function into(...args) {
+export function into (...args) {
   return new Insert(...args)
 }
 
-export function select(...args) {
+export function select (...args) {
   return new Select(...args)
 }
 
-export function union(...args) {
+export function union (...args) {
   return new Union(...args)
 }
 
-export function update(...args) {
+export function update (...args) {
   return new Update(...args)
 }
 
-export function deleteFrom(...args) {
+export function deleteFrom (...args) {
   return new Delete(...args)
 }

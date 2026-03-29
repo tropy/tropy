@@ -6,7 +6,7 @@ export class ResourceListItem extends React.PureComponent {
     this.props.onSave({ id: this.props.resource.id, ...data })
   }
 
-  render() {
+  render () {
     const { resource, onOpenLink } = this.props
 
     return (

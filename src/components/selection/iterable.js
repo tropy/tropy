@@ -13,17 +13,17 @@ export class SelectionIterable extends React.PureComponent {
     offset: null
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.dragPreview(getEmptyImage())
   }
 
-  componentDidUpdate({ isActive }) {
+  componentDidUpdate ({ isActive }) {
     if (this.props.isActive && !isActive) {
       this.container.current.scrollIntoViewIfNeeded()
     }
   }
 
-  get classes() {
+  get classes () {
     return {
       active: this.props.isActive,
       dragging: this.props.isDragging,
@@ -35,11 +35,11 @@ export class SelectionIterable extends React.PureComponent {
     }
   }
 
-  get direction() {
+  get direction () {
     return this.state.offset ? 'after' : 'before'
   }
 
-  get isDraggable() {
+  get isDraggable () {
     return !this.props.isDisabled
   }
 
@@ -62,14 +62,14 @@ export class SelectionIterable extends React.PureComponent {
       }))
   }
 
-  connect(element) {
+  connect (element) {
     if (this.props.isSortable) element = this.props.dropTarget(element)
     if (this.isDraggable) element = this.props.dragSource(element)
 
     return element
   }
 
-  renderThumbnail(props) {
+  renderThumbnail (props) {
     return (
       <Thumbnail
         {...props}
@@ -85,7 +85,7 @@ export class SelectionIterable extends React.PureComponent {
     size: 48
   }
 
-  static withDragAndDrop() {
+  static withDragAndDrop () {
     return pure(
       DragSource(DND.SELECTION, DragSourceSpec, DragSourceCollect)(
         DropTarget(DND.SELECTION, DropTargetSpec, DropTargetCollect)(this)))
@@ -93,7 +93,7 @@ export class SelectionIterable extends React.PureComponent {
 }
 
 const DragSourceSpec = {
-  beginDrag({ photo, selection, getAdjacent }) {
+  beginDrag ({ photo, selection, getAdjacent }) {
     return {
       ...pick(selection, Thumbnail.keys),
       id: selection.id,
@@ -105,7 +105,7 @@ const DragSourceSpec = {
     }
   },
 
-  endDrag({ onDropSelection }, monitor) {
+  endDrag ({ onDropSelection }, monitor) {
     const result = monitor.didDrop() && monitor.getDropResult()
 
     if (!result) return
@@ -124,12 +124,12 @@ const DragSourceCollect = (connect, monitor) => ({
 
 
 const DropTargetSpec = {
-  canDrop({ photo }, monitor) {
+  canDrop ({ photo }, monitor) {
     const selection = monitor.getItem()
     return photo.id === selection.photo
   },
 
-  hover({ selection, isVertical }, monitor, component) {
+  hover ({ selection, isVertical }, monitor, component) {
     const { id, adj } = monitor.getItem()
     // TODO call bounds only on enter!
     const { top, left, width, height } = bounds(component.container.current)
@@ -150,7 +150,7 @@ const DropTargetSpec = {
     component.setState({ offset })
   },
 
-  drop({ selection }, monitor, component) {
+  drop ({ selection }, monitor, component) {
     try {
       return {
         id: monitor.getItem().id,

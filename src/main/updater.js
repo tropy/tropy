@@ -7,7 +7,7 @@ import { error, info } from '../common/log.js'
 const MIN = 1000 * 60
 
 export class Updater extends EventEmitter {
-  constructor({ enable = true, interval = 90 * MIN } = {}) {
+  constructor ({ enable = true, interval = 90 * MIN } = {}) {
     super()
 
     this.isSupported = !linux && enable
@@ -48,7 +48,7 @@ export class Updater extends EventEmitter {
     }
   }
 
-  start() {
+  start () {
     this.stop()
 
     if (this.isSupported) {
@@ -59,14 +59,14 @@ export class Updater extends EventEmitter {
     }
   }
 
-  stop() {
+  stop () {
     if (this.interval != null) {
       clearInterval(this.interval)
       this.interval = null
     }
   }
 
-  get canCheck() {
+  get canCheck () {
     return !this.isChecking && !this.isUpdateAvailable
   }
 
@@ -76,13 +76,13 @@ export class Updater extends EventEmitter {
     }
   }
 
-  install() {
+  install () {
     if (this.isUpdateReady) {
       autoUpdater.quitAndInstall()
     }
   }
 
-  onError(e) {
+  onError (e) {
     this.isChecking = false
     this.isUpdateAvailable = false
     this.isUpdateReady = false

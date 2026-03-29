@@ -2,7 +2,7 @@ import { rm } from 'node:fs/promises'
 import { mktmp } from './tmp.js'
 import { create } from '#tropy/common/project.js'
 
-export function mkprojtmp(file, opts) {
+export function mkprojtmp (file, opts) {
   let project = { current: null }
   let path = mktmp(file)
 

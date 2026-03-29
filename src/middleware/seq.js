@@ -1,6 +1,6 @@
 import { counter } from '../common/util.js'
 
-export function seq() {
+export function seq () {
   let q = counter()
 
   return next => action => {

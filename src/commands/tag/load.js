@@ -5,7 +5,7 @@ import mod from '../../models/tag.js'
 
 
 export class Load extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 

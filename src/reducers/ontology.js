@@ -5,7 +5,7 @@ import { has } from '../common/util.js'
 
 const { PROPS, CLASS, VOCAB, LABEL, TEMPLATE, TYPE } = ONTOLOGY
 
-function props(state = {}, { type, payload, error, meta }) {
+function props (state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
@@ -23,7 +23,7 @@ function props(state = {}, { type, payload, error, meta }) {
   }
 }
 
-function klass(state = {}, { type, payload, error, meta }) {
+function klass (state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
@@ -41,7 +41,7 @@ function klass(state = {}, { type, payload, error, meta }) {
   }
 }
 
-function datatype(state = {}, { type, payload, error, meta }) {
+function datatype (state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
@@ -60,7 +60,7 @@ function datatype(state = {}, { type, payload, error, meta }) {
 }
 
 
-function vocab(state = {}, { type, payload, error, meta }) {
+function vocab (state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
@@ -87,7 +87,7 @@ function vocab(state = {}, { type, payload, error, meta }) {
 }
 
 
-function template(state = {}, { type, payload, error, meta }) {
+function template (state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.LOAD:
       return (meta.done && !error) ?

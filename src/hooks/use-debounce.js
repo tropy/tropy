@@ -3,7 +3,7 @@ import { useEvent } from './use-event.js'
 import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
 
-function useLodash(method, fn, { wait = 250 } = {}) {
+function useLodash (method, fn, { wait = 250 } = {}) {
   let ref = useRef()
   let callback = useEvent(fn)
 
@@ -24,10 +24,10 @@ function useLodash(method, fn, { wait = 250 } = {}) {
   ), [])
 }
 
-export function useDebounce(fn, opts) {
+export function useDebounce (fn, opts) {
   return useLodash(debounce, fn, opts)
 }
 
-export function useThrottle(fn, opts) {
+export function useThrottle (fn, opts) {
   return useLodash(throttle, fn, opts)
 }

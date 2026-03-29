@@ -124,7 +124,7 @@ export const marks = {
 }
 
 export const nodeViews = {
-  link(mark) {
+  link (mark) {
     let dom = document.createElement('a')
 
     dom.href = mark.attrs.href

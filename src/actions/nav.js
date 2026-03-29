@@ -4,17 +4,17 @@ import { NAV, LIST } from '../constants/index.js'
 export const update = createAction(NAV.UPDATE)
 
 export const mode = {
-  item() {
+  item () {
     return update({ mode: NAV.MODE.ITEM })
   },
 
-  project() {
+  project () {
     return update({ mode: NAV.MODE.PROJECT })
   }
 }
 
 export default {
-  restore(payload, meta) {
+  restore (payload, meta) {
     return {
       type: NAV.RESTORE,
       payload,
@@ -24,7 +24,7 @@ export default {
 
   update,
 
-  search(payload, meta) {
+  search (payload, meta) {
     return {
       type: NAV.SEARCH,
       payload,
@@ -32,7 +32,7 @@ export default {
     }
   },
 
-  select(payload, meta) {
+  select (payload, meta) {
     return {
       type: NAV.SELECT,
       payload,
@@ -40,7 +40,7 @@ export default {
     }
   },
 
-  sort(payload, meta) {
+  sort (payload, meta) {
     return {
       type: NAV.SORT,
       payload: {
@@ -54,7 +54,7 @@ export default {
   mode,
 
   column: {
-    insert(payload, meta = {}) {
+    insert (payload, meta = {}) {
       return {
         type: NAV.COLUMN.INSERT,
         payload,
@@ -62,7 +62,7 @@ export default {
       }
     },
 
-    order(payload, meta = {}) {
+    order (payload, meta = {}) {
       return {
         type: NAV.COLUMN.ORDER,
         payload,
@@ -70,7 +70,7 @@ export default {
       }
     },
 
-    remove(payload, meta = {}) {
+    remove (payload, meta = {}) {
       return {
         type: NAV.COLUMN.REMOVE,
         payload,
@@ -78,7 +78,7 @@ export default {
       }
     },
 
-    resize(payload, meta = {}) {
+    resize (payload, meta = {}) {
       return {
         type: NAV.COLUMN.RESIZE,
         payload,

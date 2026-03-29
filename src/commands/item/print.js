@@ -13,7 +13,7 @@ import { pMap } from '../../common/util.js'
 import Esper from '../../esper/index.js'
 import { open } from '../../image/sharp.js'
 
-async function prepForPrinting(photo, _, {
+async function prepForPrinting (photo, _, {
   cache,
   prefs,
   tmp,
@@ -45,7 +45,7 @@ async function prepForPrinting(photo, _, {
   }
 }
 
-async function loadImage(src, image, photo = image) {
+async function loadImage (src, image, photo = image) {
   let { buffer, ...raw } = await Esper.instance.extract(src, {
     ...image,
     ...addOrientation(image, photo)
@@ -58,7 +58,7 @@ async function loadImage(src, image, photo = image) {
 }
 
 export class Print extends Command {
-  *exec() {
+  *exec () {
     try {
       let { cache } = this.options
       let { pdf, landscape } = this.action.meta

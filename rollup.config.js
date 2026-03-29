@@ -62,14 +62,14 @@ const IGNORE_WARNINGS = {
     (/this && this\.__/).test(warning.frame)
 }
 
-function onwarn(warning, warn) {
+function onwarn (warning, warn) {
   let ok = IGNORE_WARNINGS[warning.code]
 
   if (!(ok === true || (typeof ok === 'function' && ok(warning))))
     warn(warning)
 }
 
-function ignoreTryCatch(id) {
+function ignoreTryCatch (id) {
   if (id === 'fsevents')
     return (process.platform === 'darwin') ? false : 'remove'
 
@@ -171,7 +171,7 @@ export default [
       }),
       {
         name: 'cleanup-signal-exit',
-        buildEnd() {
+        buildEnd () {
           delete process.__signal_exit_emitter__
         }
       },
@@ -240,7 +240,7 @@ export default [
         platform
       })
     ],
-    onwarn(warning, warn) {
+    onwarn (warning, warn) {
       if (warning.code !== 'EMPTY_BUNDLE')
         warn(warning)
     }

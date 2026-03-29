@@ -1,5 +1,5 @@
 
-export async function save(db, { text, type }) {
+export async function save (db, { text, type }) {
   let v = await db.get(`
     SELECT value_id AS id
       FROM metadata_values
@@ -17,7 +17,7 @@ export async function save(db, { text, type }) {
 export default {
   save,
 
-  async prune(db) {
+  async prune (db) {
     return await db.run(`
       DELETE
         FROM metadata_values

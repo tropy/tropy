@@ -10,11 +10,11 @@ const IntlProvider = connect(
 )(ReactIntlProvider)
 
 export class Main extends React.Component {
-  componentDidMount() {
+  componentDidMount () {
     this.props.window.send('react:ready')
   }
 
-  render() {
+  render () {
     return (
       <WindowContext.Provider value={this.props.window}>
         <DndProvider backend={ElectronBackend}>

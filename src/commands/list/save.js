@@ -5,7 +5,7 @@ import act from '../../actions/list.js'
 import mod from '../../models/list.js'
 
 export class Save extends Command {
-  *exec() {
+  *exec () {
     let { payload } = this.action
     let { db } = this.options
 
@@ -17,7 +17,7 @@ export class Save extends Command {
     this.undo = act.save(this.original)
   }
 
-  *abort() {
+  *abort () {
     if (this.original) {
       yield put(act.update(this.original))
     }

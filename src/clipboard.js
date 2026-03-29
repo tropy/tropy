@@ -1,11 +1,11 @@
 import { ipcRenderer as ipc } from 'electron'
 import { warn } from './common/log.js'
 
-export function copy(data) {
+export function copy (data) {
   ipc.send('wm', 'clipboard', 'write', data)
 }
 
-export function getClipboardData(event, format = 'text/plain') {
+export function getClipboardData (event, format = 'text/plain') {
   let data
 
   try {

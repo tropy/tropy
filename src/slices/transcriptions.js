@@ -17,7 +17,7 @@ const transcriptions = createSlice({
         Object.assign(state, payload)
     }),
 
-    insert(state, { payload }) {
+    insert (state, { payload }) {
       for (let tr of payload) {
         state[tr.id] = tr
       }
@@ -38,7 +38,7 @@ const transcriptions = createSlice({
         Object.assign(state, payload)
     }),
 
-    update(state, { payload }) {
+    update (state, { payload }) {
       let { id, ...props } = payload
       Object.assign(state[id], props)
     }
@@ -46,7 +46,7 @@ const transcriptions = createSlice({
 })
 
 export const nested = {
-  create(state, { payload, meta, error }) {
+  create (state, { payload, meta, error }) {
     return (!meta.done || error) ?
       state : createNextState(state, draft => {
         for (let tr of Object.values(payload)) {
@@ -56,7 +56,7 @@ export const nested = {
       })
   },
 
-  remove(state, { payload, meta, error }) {
+  remove (state, { payload, meta, error }) {
     return (!meta.done || error) ?
       state : createNextState(state, draft => {
         for (let tr of payload) {
@@ -67,7 +67,7 @@ export const nested = {
       })
   },
 
-  restore(state, { payload, meta, error }) {
+  restore (state, { payload, meta, error }) {
     return (!meta.done || error) ?
       state : createNextState(state, draft => {
         for (let tr of payload) {

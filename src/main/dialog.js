@@ -4,33 +4,33 @@ import { dialog } from 'electron'
 let defaultPath
 
 const Dialog = {
-  get lastDefaultPath() {
+  get lastDefaultPath () {
     return defaultPath
   },
 
-  set lastDefaultPath(lastDefaultPath) {
+  set lastDefaultPath (lastDefaultPath) {
     defaultPath = lastDefaultPath
   },
 
-  alert(win, opts) {
+  alert (win, opts) {
     return Dialog.show('message-box', win, {
       type: 'error',
       ...opts
     })
   },
 
-  open(win, opts) {
+  open (win, opts) {
     return Dialog.show('file', win, {
       properties: ['openFile'],
       ...opts
     })
   },
 
-  save(win, opts) {
+  save (win, opts) {
     return Dialog.show('save', win, opts)
   },
 
-  show(type, win, opts) {
+  show (type, win, opts) {
     switch (type) {
       case 'save':
         return dialog
@@ -70,7 +70,7 @@ const Dialog = {
     }
   },
 
-  warn(win, opts) {
+  warn (win, opts) {
     return Dialog.show('message-box', win, {
       type: 'warning',
       ...opts

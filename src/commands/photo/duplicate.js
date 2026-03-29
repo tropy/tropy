@@ -11,7 +11,7 @@ import { blank, pluck, splice } from '../../common/util.js'
 
 
 export class Duplicate extends ImportCommand {
-  *exec() {
+  *exec () {
     let { cache, db } = this.options
     let { payload } = this.action
     let { item } = payload

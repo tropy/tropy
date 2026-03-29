@@ -188,12 +188,12 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
   }
 }
 
-function setPath(name, path) {
+function setPath (name, path) {
   mkdir(path, { recursive: true })
   app.setPath(name, path)
 }
 
-function handleError(error, isFatal = false) {
+function handleError (error, isFatal = false) {
   if (isFatal || !Tropy.instance?.ready) {
     return dialog.showErrorBox('Unhandled Error', error?.stack)
   }

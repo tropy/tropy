@@ -9,7 +9,7 @@ import { getListTreePaths } from '../../selectors/index.js'
 
 
 export class Export extends Command {
-  *exec() {
+  *exec () {
     let { meta, payload } = this.action
     let { target } = meta
 

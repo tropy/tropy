@@ -5,7 +5,7 @@ import { select, update } from '../common/query.js'
 import { empty, pick } from '../common/util.js'
 
 export default {
-  async rotate(db, { id, by }) {
+  async rotate (db, { id, by }) {
     by = Number(by)
 
     assert(id != null, 'missing image id')
@@ -25,7 +25,7 @@ export default {
     return images
   },
 
-  async save(db, { id, timestamp, ...data }) {
+  async save (db, { id, timestamp, ...data }) {
     let image = pick(data, props.image)
     if (empty(image)) return
 

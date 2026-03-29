@@ -23,7 +23,7 @@ const expandAndRemoveMark = (markType) =>
     return true
   }
 
-export function createCommands(schema) {
+export function createCommands (schema) {
   const align = alignment(schema)
   const marks = {}
 
@@ -53,7 +53,7 @@ export function createCommands(schema) {
       align.splitBlock
     ),
 
-    br(state, dispatch) {
+    br (state, dispatch) {
       if (dispatch) {
         dispatch(
           state
@@ -76,7 +76,7 @@ export function createCommands(schema) {
       cmd.joinForward
     ),
 
-    insertLink(state, dispatch, attrs) {
+    insertLink (state, dispatch, attrs) {
       let { selection, tr } = state
       let { $cursor } = selection
 
@@ -114,7 +114,7 @@ export function createCommands(schema) {
 
     removeLink: expandAndRemoveMark(schema.marks.link),
 
-    clearSelection() {
+    clearSelection () {
       const sel = getSelection()
       if (!sel.isCollapsed) sel.collapseToStart()
 

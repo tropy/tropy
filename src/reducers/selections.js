@@ -5,7 +5,7 @@ import * as tr from '../slices/transcriptions.js'
 const init = {}
 
 
-export function selections(state = init, { type, payload, error, meta }) {
+export function selections (state = init, { type, payload, error, meta }) {
   switch (type) {
     case PROJECT.OPEN:
       return init

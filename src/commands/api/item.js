@@ -6,7 +6,7 @@ import * as mod from '../../models/index.js'
 
 
 export class ItemFind extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { list, query, sort, tags } = this.action.payload
 
@@ -24,7 +24,7 @@ ItemFind.register(API.ITEM.FIND)
 
 
 export class ItemShow extends Command {
-  *exec() {
+  *exec () {
     let { id } = this.action.payload
     let item = yield select(state => state.items[id])
     return item

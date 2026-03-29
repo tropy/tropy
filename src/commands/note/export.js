@@ -12,7 +12,7 @@ import { NOTE } from '../../constants/index.js'
 
 
 export class Export extends Command {
-  *exec() {
+  *exec () {
     try {
       let id = this.action.payload
       var { target, format } = this.action.meta
@@ -59,7 +59,7 @@ export class Export extends Command {
 
 Export.register(NOTE.EXPORT)
 
-function mapNotes(notes, format, opts) {
+function mapNotes (notes, format, opts) {
   switch (format) {
     case 'json':
       return JSON.stringify(
@@ -77,7 +77,7 @@ function mapNotes(notes, format, opts) {
   }
 }
 
-function formatFor(target, opts) {
+function formatFor (target, opts) {
   if (target === ':clipboard:')
     return opts.copy
 

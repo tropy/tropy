@@ -6,7 +6,7 @@ import { findTag, getAllTags } from '../../selectors/index.js'
 
 
 export class TagShow extends Command {
-  *exec() {
+  *exec () {
     let { payload } = this.action
     let tag = yield select(state => findTag(state, payload))
     return tag
@@ -17,7 +17,7 @@ TagShow.register(API.TAG.SHOW)
 
 
 export class TagFind extends Command {
-  *exec() {
+  *exec () {
     let { id, reverse } = this.action.payload
 
     let tags = (id == null) ?

@@ -52,7 +52,7 @@ export {
 export default class Esper extends EventEmitter {
   static #INSTANCE = null
 
-  static get instance() {
+  static get instance () {
     if (!Esper.#INSTANCE) {
       Esper.#INSTANCE = new Esper()
     }
@@ -63,7 +63,7 @@ export default class Esper extends EventEmitter {
   #lastClickTime = 0
   #isInitialized = false
 
-  constructor() {
+  constructor () {
     super()
 
     this.tweens = [
@@ -74,7 +74,7 @@ export default class Esper extends EventEmitter {
     this.app = new Application()
   }
 
-  async init(opts) {
+  async init (opts) {
     if (this.#isInitialized)
       return this
 
@@ -114,7 +114,7 @@ export default class Esper extends EventEmitter {
     return this
   }
 
-  halt() {
+  halt () {
     for (let tweens of this.tweens)
       tweens.removeAll()
 
@@ -141,12 +141,12 @@ export default class Esper extends EventEmitter {
     }
   }
 
-  mount(element) {
+  mount (element) {
     append(this.app.canvas, element)
     return this
   }
 
-  unmount() {
+  unmount () {
     this.halt()
     remove(this.app.canvas)
   }
@@ -201,7 +201,7 @@ export default class Esper extends EventEmitter {
     }
   }
 
-  clear(duration = 0) {
+  clear (duration = 0) {
     if (duration)
       this.fadeOut(this.photo, duration)
     else
@@ -213,7 +213,7 @@ export default class Esper extends EventEmitter {
     this.render()
   }
 
-  async reset(props, state, duration = 0) {
+  async reset (props, state, duration = 0) {
     this.clear(FADE_DURATION)
 
     if (state.src != null) {
@@ -256,7 +256,7 @@ export default class Esper extends EventEmitter {
     }
   }
 
-  async loadTexture(url, duration = 0) {
+  async loadTexture (url, duration = 0) {
     let loadTime = Date.now()
     let texture = await this.loader.loadTexture(url)
 
@@ -286,7 +286,7 @@ export default class Esper extends EventEmitter {
     return texture
   }
 
-  sync(props, state, duration = SYNC_DURATION) {
+  sync (props, state, duration = SYNC_DURATION) {
     this.tweens[0].removeAll()
 
     let { photo } = this
@@ -347,7 +347,7 @@ export default class Esper extends EventEmitter {
     }
   }
 
-  resize({ width, height, zoom, mirror } = {}) {
+  resize ({ width, height, zoom, mirror } = {}) {
     width = Math.round(width ?? this.app.screen.width)
     height = Math.round(height ?? this.app.screen.height)
 
@@ -380,7 +380,7 @@ export default class Esper extends EventEmitter {
     this.stop()
   }
 
-  start() {
+  start () {
     this.stop.cancel()
     Ticker.system.stop()
     this.app.start()
@@ -408,11 +408,11 @@ export default class Esper extends EventEmitter {
     }
   }
 
-  get resolution() {
+  get resolution () {
     return this.app.renderer.resolution
   }
 
-  set resolution(resolution) {
+  set resolution (resolution) {
     let { renderer } = this.app
 
     if (resolution !== renderer.resolution) {
@@ -430,11 +430,11 @@ export default class Esper extends EventEmitter {
     }
   }
 
-  get x() {
+  get x () {
     return this.photo?.x ?? 0
   }
 
-  get y() {
+  get y () {
     return this.photo?.y ?? 0
   }
 
@@ -450,15 +450,15 @@ export default class Esper extends EventEmitter {
     this.resolution = resolution
   }, 500)
 
-  constrain(position = this.photo.position, ...args) {
+  constrain (position = this.photo.position, ...args) {
     return constrain(position, this.getPanLimits(...args))
   }
 
-  getPanLimits(...args) {
+  getPanLimits (...args) {
     return this.photo.getPanLimits(this.app.screen, ...args)
   }
 
-  getDefaultPosition({ x, y, mode }) {
+  getDefaultPosition ({ x, y, mode }) {
     switch (mode) {
       case ESPER.MODE.FIT:
         return center(this.app.screen)
@@ -478,7 +478,7 @@ export default class Esper extends EventEmitter {
   }
 
 
-  animate(thing, scope, { stop, complete, done, gid = 0 } = {}) {
+  animate (thing, scope, { stop, complete, done, gid = 0 } = {}) {
     let group = this.tweens[gid]
     let tween = new TWEEN.Tween(thing, group)
       .easing(TWEEN.Easing.Cubic.InOut)
@@ -505,7 +505,7 @@ export default class Esper extends EventEmitter {
     return tween
   }
 
-  fadeOut(thing, duration = FADE_DURATION) {
+  fadeOut (thing, duration = FADE_DURATION) {
     if (thing == null) return
     thing.eventMode = 'none'
     this
@@ -514,7 +514,7 @@ export default class Esper extends EventEmitter {
       .start()
   }
 
-  filter(next, { duration = 0, ...opts } = {}) {
+  filter (next, { duration = 0, ...opts } = {}) {
     if (duration > 0) {
       let { photo } = this
 
@@ -537,7 +537,7 @@ export default class Esper extends EventEmitter {
     }
   }
 
-  move({ x, y, zoom }, {
+  move ({ x, y, zoom }, {
     duration = 0,
     skipConstrain = false,
     ...opts
@@ -575,12 +575,12 @@ export default class Esper extends EventEmitter {
       .start()
   }
 
-  flip() {
+  flip () {
     this.photo.flip(center(this.app.screen))
     this.render()
   }
 
-  rotate({ angle, mirror, zoom }, {
+  rotate ({ angle, mirror, zoom }, {
     duration = 0,
     clockwise,
     fixate,
@@ -652,7 +652,7 @@ export default class Esper extends EventEmitter {
     }
   }
 
-  scale({ mirror, zoom }, { duration = 0, x, y, ...opts } = {}) {
+  scale ({ mirror, zoom }, { duration = 0, x, y, ...opts } = {}) {
     let { photo } = this
     let { scale, position, bg } = photo
     let { screen } = this.app
@@ -693,7 +693,7 @@ export default class Esper extends EventEmitter {
   }
 
 
-  isDoubleClick(tool, time = Date.now(), threshold = 350) {
+  isDoubleClick (tool, time = Date.now(), threshold = 350) {
     try {
       return isDoubleClickSupported(tool) &&
         (time - this.#lastClickTime) <= threshold
@@ -782,7 +782,7 @@ export default class Esper extends EventEmitter {
 
   drag = createDragHandler(this)
 
-  handlePanMove() {
+  handlePanMove () {
     let { data, limit, origin, target } = this.drag.current
     let { pos, mov } = origin
     let { top, right, bottom, left } = limit
@@ -791,11 +791,11 @@ export default class Esper extends EventEmitter {
     target.y = Math.floor(restrict(pos.y + (y - mov.y), top, bottom))
   }
 
-  handlePanStop() {
+  handlePanStop () {
     this.emit('change')
   }
 
-  handleSelectMove() {
+  handleSelectMove () {
     let { data, modifier, target, selection, textSelection, tool } = this.drag.current
     let { x, y } = data.getLocalPosition(target)
 
@@ -813,7 +813,7 @@ export default class Esper extends EventEmitter {
     }
   }
 
-  handleSelectStop() {
+  handleSelectStop () {
     let { modifier, selection, textSelection, tool } = this.drag.current
     selection = normalizeRectangle(selection, true)
 

@@ -5,7 +5,7 @@ import mod from '../../models/selection.js'
 import * as act from '../../actions/index.js'
 
 export class Order extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { photo, selections } = this.action.payload
 

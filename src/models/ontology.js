@@ -5,11 +5,11 @@ import { TYPE } from '../constants/index.js'
 import { blank, list, quote } from '../common/util.js'
 
 const ontology = {
-  create(db) {
+  create (db) {
     return db.read(join(ARGS.app, 'db', 'schema', 'ontology.sql'))
   },
 
-  clear(db) {
+  clear (db) {
     return db.exec(`
       DELETE FROM vocabularies;
       DELETE FROM templates;
@@ -17,7 +17,7 @@ const ontology = {
   },
 
   vocab: {
-    async load(db, ...args) {
+    async load (db, ...args) {
       const vocabs = {}
       const cond = ['deleted is NULL']
 
@@ -69,7 +69,7 @@ const ontology = {
       return vocabs
     },
 
-    async create(db, {
+    async create (db, {
       id,
       prefix,
       title,
@@ -113,7 +113,7 @@ const ontology = {
       )
     },
 
-    update(db, { id, prefix }) {
+    update (db, { id, prefix }) {
       if (prefix === '') prefix = null
 
       return db.run(`
@@ -123,7 +123,7 @@ const ontology = {
       )
     },
 
-    delete(db, id) {
+    delete (db, id) {
       return db.run(`
         UPDATE vocabularies
           SET deleted = datetime("now")
@@ -131,7 +131,7 @@ const ontology = {
       )
     },
 
-    restore(db, id) {
+    restore (db, id) {
       return db.run(`
         UPDATE vocabularies
           SET deleted = NULL
@@ -139,7 +139,7 @@ const ontology = {
       )
     },
 
-    prune(db) {
+    prune (db) {
       return db.run(`
         DELETE
           FROM vocabularies
@@ -149,7 +149,7 @@ const ontology = {
   },
 
   props: {
-    async load(db, ...args) {
+    async load (db, ...args) {
       const props = {}
       const cond = ['deleted is NULL']
 
@@ -176,7 +176,7 @@ const ontology = {
       return props
     },
 
-    create(db, ...properties) {
+    create (db, ...properties) {
       return db.prepare(`
         REPLACE INTO properties (
           property_id,
@@ -201,7 +201,7 @@ const ontology = {
   },
 
   class: {
-    async load(db, ...args) {
+    async load (db, ...args) {
       const classes = {}
       const cond = ['deleted is NULL']
 
@@ -228,7 +228,7 @@ const ontology = {
       return classes
     },
 
-    create(db, ...classes) {
+    create (db, ...classes) {
       return db.prepare(`
         REPLACE INTO classes (
           class_id,
@@ -249,7 +249,7 @@ const ontology = {
   },
 
   type: {
-    async load(db, ...args) {
+    async load (db, ...args) {
       const types = {}
       const cond = ['deleted is NULL']
 
@@ -276,7 +276,7 @@ const ontology = {
       return types
     },
 
-    create(db, ...types) {
+    create (db, ...types) {
       return db.prepare(`
         REPLACE INTO datatypes (
           datatype_id,
@@ -295,7 +295,7 @@ const ontology = {
   },
 
   label: {
-    save(db, ...labels) {
+    save (db, ...labels) {
       return db.prepare(`
         REPLACE INTO labels (id, language, label)
           VALUES (?, ?, ?)`, stmt =>
@@ -308,7 +308,7 @@ const ontology = {
       )
     },
 
-    prune(db) {
+    prune (db) {
       return db.run(`
         DELETE
           FROM labels
@@ -320,7 +320,7 @@ const ontology = {
   },
 
   template: {
-    async load(db, ...ids) {
+    async load (db, ...ids) {
       const temps = {}
       const cons = (ids.length > 0) ?
         `template_id IN (${list(ids, quote)})` : null
@@ -378,7 +378,7 @@ const ontology = {
       return temps
     },
 
-    async create(db, {
+    async create (db, {
       id,
       type,
       name,
@@ -417,21 +417,21 @@ const ontology = {
       )
     },
 
-    async stale(db, { id, date }) {
+    async stale (db, { id, date }) {
       return null == await db.get(`
         SELECT template_id AS id, created, protected  AS isProtected
           FROM TEMPLATES
           WHERE template_id = ? AND created >= date(?)`, id, date)
     },
 
-    delete(db, ...ids) {
+    delete (db, ...ids) {
       return db.run(`
         DELETE FROM templates
           WHERE template_id IN (${list(ids, quote)}) AND NOT protected`
       )
     },
 
-    save(db, { id, ...data }) {
+    save (db, { id, ...data }) {
       const assign = []
       const params = { $id: id }
 
@@ -450,7 +450,7 @@ const ontology = {
     },
 
     field: {
-      add(db, id, ...fields) {
+      add (db, id, ...fields) {
         const hasId = (fields[0].id != null)
 
         return db.prepare(`
@@ -498,13 +498,13 @@ const ontology = {
         )
       },
 
-      remove(db, id, ...fields) {
+      remove (db, id, ...fields) {
         return db.run(`
           DELETE FROM fields
             WHERE template_id = ? AND field_id IN (${list(fields)})`, id)
       },
 
-      save(db, { id, ...data }) {
+      save (db, { id, ...data }) {
         const assign = []
         const params = { $id: id }
 
@@ -522,7 +522,7 @@ const ontology = {
             WHERE field_id = $id`, params)
       },
 
-      order(db, id, order) {
+      order (db, id, order) {
         return db.run(`
           UPDATE fields
             SET position = CASE field_id
@@ -533,7 +533,7 @@ const ontology = {
       },
 
       label: {
-        save(db, { id, label }, language = ARGS.locale) {
+        save (db, { id, label }, language = ARGS.locale) {
           if (blank(label)) {
             return db.run(`
               DELETE FROM field_labels

@@ -12,7 +12,7 @@ const ignored = (path, stats) =>
     extname(path).slice(1).toLowerCase()
   )
 
-function addedFilesChannel(watcher) {
+function addedFilesChannel (watcher) {
   return eventChannel(emitter => {
     let forward = (path) => emitter(path)
 
@@ -24,7 +24,7 @@ function addedFilesChannel(watcher) {
   })
 }
 
-function *touchProjectWatchFolder() {
+function *touchProjectWatchFolder () {
   let { project } = yield select()
   let w = Storage.load('project.watch', project.id) || {}
 
@@ -36,7 +36,7 @@ function *touchProjectWatchFolder() {
   return w.since
 }
 
-function *updateProjectWatchFolder(watcher) {
+function *updateProjectWatchFolder (watcher) {
   let { project } = yield select()
 
   let {
@@ -61,7 +61,7 @@ function *updateProjectWatchFolder(watcher) {
   }
 }
 
-function *closeProject(watcher) {
+function *closeProject (watcher) {
   yield call([watcher, watcher.stop])
   yield call(touchProjectWatchFolder)
 }
@@ -71,7 +71,7 @@ const freshProject = ({ type, meta, error }) =>
     type === PROJECT.RELOAD && !error && meta.done
   )
 
-export function *watch() {
+export function *watch () {
   try {
     var watcher = new Watcher()
     var channel = yield call(addedFilesChannel, watcher)

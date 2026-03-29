@@ -7,11 +7,11 @@ import { IconBook, IconBookLock, IconTrash, IconExport } from '../icons.js'
 
 
 export class VocabAccordion extends Accordion {
-  get isProtected() {
+  get isProtected () {
     return this.props.vocab.isProtected
   }
 
-  get icon() {
+  get icon () {
     if (this.isProtected) return <IconBookLock/>
     return <IconBook/>
   }
@@ -28,7 +28,7 @@ export class VocabAccordion extends Accordion {
     this.props.onExport(this.props.vocab.id)
   }
 
-  renderHeader() {
+  renderHeader () {
     return super.renderHeader(
       <div className="flex-row center panel-header-container">
         {this.icon}
@@ -50,7 +50,7 @@ export class VocabAccordion extends Accordion {
     )
   }
 
-  renderBody() {
+  renderBody () {
     const { vocab } = this.props
 
     return super.renderBody(

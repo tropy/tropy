@@ -11,7 +11,7 @@ const START =
 
 const ARGS = parse()
 
-;(async function bootstrap() {
+;(async function bootstrap () {
   try {
     createLogger({
       dest: ARGS.log,

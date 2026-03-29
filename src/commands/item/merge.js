@@ -7,7 +7,7 @@ import * as mod from '../../models/index.js'
 
 
 export class Merge extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 
@@ -43,7 +43,7 @@ Merge.register(ITEM.MERGE)
 
 
 export class Split extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { item, items, data, lists, tags } = this.action.payload
     let photos = this.getPhotoData(items)
@@ -62,7 +62,7 @@ export class Split extends Command {
     return item
   }
 
-  getPhotoData(items) {
+  getPhotoData (items) {
     let photos = []
     for (let item of items) {
       for (let photo of item.photos) {

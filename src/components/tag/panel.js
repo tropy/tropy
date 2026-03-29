@@ -17,7 +17,7 @@ import {
 class TagPanel extends React.PureComponent {
   adder = React.createRef()
 
-  getTaggedIds(tag, invert = false) {
+  getTaggedIds (tag, invert = false) {
     return this.props.items.reduce((ids, item) => {
       if (item.tags.includes(tag.id) !== invert) {
         ids.push(item.id)
@@ -60,7 +60,7 @@ class TagPanel extends React.PureComponent {
     })
   }
 
-  render() {
+  render () {
     return (
       <>
         <ScrollContainer>
@@ -99,15 +99,15 @@ const TagPanelContainer = connect(
   }),
 
   (dispatch) => ({
-    onTagCreate(data) {
+    onTagCreate (data) {
       dispatch(act.tag.create(data))
     },
 
-    onItemTagAdd(...args) {
+    onItemTagAdd (...args) {
       dispatch(act.item.tags.create(...args))
     },
 
-    onItemTagRemove(...args) {
+    onItemTagRemove (...args) {
       dispatch(act.item.tags.delete(...args))
     }
   }), null, { forwardRef: true }

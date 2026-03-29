@@ -16,7 +16,7 @@ if (process.type === 'renderer') {
     }).code
 
   registerHooks({
-    load(url, context, nextLoad) {
+    load (url, context, nextLoad) {
       if (context.format === 'electron') {
         // Returning '' instead null to pass Node's hook validation!
         // Electron injects the source outside of the chain.

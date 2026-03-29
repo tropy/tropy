@@ -9,14 +9,14 @@ import { insert, omit, splice } from '../../common/util.js'
 export class PluginConfig extends React.Component {
   state = { config: [] }
 
-  componentDidMount() {
+  componentDidMount () {
     // Subtle: we assume `plugins` is a Singleton, therefore
     // it's safe to manage the listeners in mount/unmount!
     this.context.plugins.on('change', this.refresh)
     this.refresh()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.persist.flush()
     this.context.plugins.removeListener('change', this.refresh)
   }
@@ -74,11 +74,11 @@ export class PluginConfig extends React.Component {
     this.setState({ config }, this.persist)
   }
 
-  getPluginInstances(name) {
+  getPluginInstances (name) {
     return this.state.config.filter(c => c.plugin === name && !c.disabled)
   }
 
-  render() {
+  render () {
     return (
       <AccordionGroup
         autoclose

@@ -26,25 +26,25 @@ export class Scroll extends React.Component {
     expRowPosition: 0
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.handleResize(this.container.current.bounds)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     cancelAnimationFrame(this.#scrollCallback.current)
   }
 
-  componentDidUpdate({ cursor, itemHeight }) {
+  componentDidUpdate ({ cursor, itemHeight }) {
     if (cursor !== this.props.cursor ||
       itemHeight !== this.props.itemHeight)
       this.scrollIntoView()
   }
 
-  get tabIndex() {
+  get tabIndex () {
     return this.props.items.length === 0 ? null : this.props.tabIndex
   }
 
-  get cursor() {
+  get cursor () {
     let { cursor, items, expansionCursor, expandedItems } = this.props
 
     let index = indexOf(items, cursor)
@@ -60,11 +60,11 @@ export class Scroll extends React.Component {
     return [index, expRowPosition]
   }
 
-  get current() {
+  get current () {
     return this.next(0)
   }
 
-  next(k = 1) {
+  next (k = 1) {
     let [cursor, expRowPosition] = this.cursor
 
     if (cursor === -1)
@@ -102,15 +102,15 @@ export class Scroll extends React.Component {
     return item
   }
 
-  prev(k = 1) {
+  prev (k = 1) {
     return this.next(-k)
   }
 
-  first() {
+  first () {
     return this.props.items[0]
   }
 
-  last() {
+  last () {
     let { items, expandedItems } = this.props
     let { isGrid } = this.layout
     let item = items[items.length - 1]
@@ -125,7 +125,7 @@ export class Scroll extends React.Component {
     return item
   }
 
-  pageUp() {
+  pageUp () {
     let { items, itemHeight } = this.props
     let { columns } = this.layout
 
@@ -140,7 +140,7 @@ export class Scroll extends React.Component {
     return items[row * columns]
   }
 
-  pageDown() {
+  pageDown () {
     let { items, itemHeight } = this.props
     let { columns } = this.layout
 
@@ -156,12 +156,12 @@ export class Scroll extends React.Component {
     return items[row * columns]
   }
 
-  select(item, event) {
+  select (item, event) {
     this.props.onSelect?.(item, event)
     return item
   }
 
-  focus() {
+  focus () {
     this.container.current.focus()
   }
 
@@ -228,7 +228,7 @@ export class Scroll extends React.Component {
   }
 
 
-  handleArrowKeys(event) {
+  handleArrowKeys (event) {
     if (event.ctrlKey || event.metaKey)
       return
 
@@ -318,7 +318,7 @@ export class Scroll extends React.Component {
     this.handleScrollUpdate(this.container.current.scrollTop)
   }
 
-  handleScrollUpdate(top) {
+  handleScrollUpdate (top) {
     let { itemHeight, expansionPadding } = this.props
     let { expandedRows, maxOffset, pageOffset } = this.layout
 
@@ -359,27 +359,27 @@ export class Scroll extends React.Component {
     }
   }
 
-  scroll(...args) {
+  scroll (...args) {
     this.container.current.scroll(...args)
   }
 
-  scrollBy(...args) {
+  scrollBy (...args) {
     this.container.current.scrollBy(...args)
   }
 
-  scrollPageDown() {
+  scrollPageDown () {
     this.scrollBy(this.state.height)
   }
 
-  scrollPageUp() {
+  scrollPageUp () {
     this.scrollBy(-this.state.height)
   }
 
-  scrollToEnd() {
+  scrollToEnd () {
     this.scroll(this.layout.maxOffset)
   }
 
-  scrollIntoView(cursor = this.cursor, { force } = {}) {
+  scrollIntoView (cursor = this.cursor, { force } = {}) {
     let expRowPosition = 0
 
     if (Array.isArray(cursor)) {
@@ -421,11 +421,11 @@ export class Scroll extends React.Component {
     this.scroll(offset)
   }
 
-  sync(...args) {
+  sync (...args) {
     this.container.current.sync(...args)
   }
 
-  render() {
+  render () {
     this.layout = this.getComputedLayout(
       this.props.items,
       this.props.itemHeight,

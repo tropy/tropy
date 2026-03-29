@@ -2,7 +2,7 @@ import { PROJECT } from '../constants/index.js'
 
 
 export default {
-  opened(payload, meta) {
+  opened (payload, meta) {
     return {
       type: PROJECT.OPENED,
       error: (payload instanceof Error),
@@ -11,11 +11,11 @@ export default {
     }
   },
 
-  open(payload, meta) {
+  open (payload, meta) {
     return { type: PROJECT.OPEN, payload, meta }
   },
 
-  closed(payload, meta) {
+  closed (payload, meta) {
     return {
       type: PROJECT.CLOSED,
       payload,
@@ -27,7 +27,7 @@ export default {
     }
   },
 
-  close(payload, meta) {
+  close (payload, meta) {
     return {
       type: PROJECT.CLOSE,
       payload,
@@ -36,7 +36,7 @@ export default {
     }
   },
 
-  optimize(payload = {}, meta = {}) {
+  optimize (payload = {}, meta = {}) {
     return {
       type: PROJECT.OPTIMIZE,
       payload,
@@ -47,7 +47,7 @@ export default {
     }
   },
 
-  prune(payload = {}, meta = {}) {
+  prune (payload = {}, meta = {}) {
     return {
       type: PROJECT.PRUNE,
       payload,
@@ -59,7 +59,7 @@ export default {
     }
   },
 
-  reindex(payload = {}, meta = {}) {
+  reindex (payload = {}, meta = {}) {
     return {
       type: PROJECT.REINDEX,
       payload,
@@ -70,7 +70,7 @@ export default {
     }
   },
 
-  reload(payload = {}, meta = {}) {
+  reload (payload = {}, meta = {}) {
     return {
       type: PROJECT.RELOAD,
       payload,
@@ -81,7 +81,7 @@ export default {
     }
   },
 
-  save(payload, meta = {}) {
+  save (payload, meta = {}) {
     return {
       type: PROJECT.SAVE,
       payload,
@@ -93,7 +93,7 @@ export default {
     }
   },
 
-  update(payload, meta = {}) {
+  update (payload, meta = {}) {
     return {
       type: PROJECT.UPDATE,
       payload,

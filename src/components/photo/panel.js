@@ -8,7 +8,7 @@ import { getExpandedPhotos } from '../../selectors/index.js'
 
 
 class PhotoPanel extends React.PureComponent {
-  render() {
+  render () {
     let { zoom, ...props } = this.props
     let PhotoIterator = (zoom > 0) ? PhotoGrid : PhotoList
 
@@ -30,15 +30,15 @@ const PhotoPanelContainer = connect(
   }),
 
   dispatch => ({
-    onContract(...args) {
+    onContract (...args) {
       dispatch(act.photo.contract(...args))
     },
 
-    onConsolidate(...args) {
+    onConsolidate (...args) {
       dispatch(act.photo.consolidate(...args))
     },
 
-    onDelete(payload) {
+    onDelete (payload) {
       if (payload.selections == null) {
         dispatch(act.photo.delete(payload))
       } else {
@@ -46,27 +46,27 @@ const PhotoPanelContainer = connect(
       }
     },
 
-    onExpand(...args) {
+    onExpand (...args) {
       dispatch(act.photo.expand(...args))
     },
 
-    onExtract(...args) {
+    onExtract (...args) {
       dispatch(act.photo.extract(...args))
     },
 
-    onItemPreview(...args) {
+    onItemPreview (...args) {
       dispatch(act.item.preview(...args))
     },
 
-    onRotate(...args) {
+    onRotate (...args) {
       dispatch(act.photo.rotate(...args))
     },
 
-    onSelectionSort(...args) {
+    onSelectionSort (...args) {
       dispatch(act.selection.order(...args))
     },
 
-    onSort(...args) {
+    onSort (...args) {
       dispatch(act.photo.order(...args))
     }
   })

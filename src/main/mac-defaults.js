@@ -1,6 +1,6 @@
 import { execFile } from '../common/spawn.js'
 
-export async function defaults(method, domain, key) {
+export async function defaults (method, domain, key) {
   let { stdout } = await execFile('defaults', [method, domain, key], {
     encoding: 'utf-8'
   })
@@ -8,7 +8,7 @@ export async function defaults(method, domain, key) {
   return stdout.trim()
 }
 
-export async function read(domain, key, type = 'number') {
+export async function read (domain, key, type = 'number') {
   let value = await defaults('read', domain, key)
 
   switch (type) {

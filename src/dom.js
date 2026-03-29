@@ -2,11 +2,11 @@ import { blank, once as when } from './common/util.js'
 
 const everything = () => true
 
-export function $(selectors, node = document) {
+export function $ (selectors, node = document) {
   return node.querySelector(selectors)
 }
 
-export function $$(selectors, node = document) {
+export function $$ (selectors, node = document) {
   return node.querySelectorAll(selectors)
 }
 
@@ -14,7 +14,7 @@ export const ready = (document.readyState !== 'loading') ?
   Promise.resolve() :
   when(document, 'DOMContentLoaded').then(() => {})
 
-export function idle(timeout = 1000) {
+export function idle (timeout = 1000) {
   return new Promise(resolve => {
     requestIdleCallback(resolve, { timeout })
   })
@@ -22,18 +22,18 @@ export function idle(timeout = 1000) {
 
 export const element = document.createElement.bind(document)
 
-export function create(tag, attributes = {}) {
+export function create (tag, attributes = {}) {
   return attrs(element(tag), attributes)
 }
 
-export function attr(node, name, value) {
+export function attr (node, name, value) {
   if (arguments.length === 2) return node.getAttribute(name)
 
   return (value == null) ?
     node.removeAttribute(name) : node.setAttribute(name, value)
 }
 
-export function attrs(node, attributes) {
+export function attrs (node, attributes) {
   for (let name in attributes) {
     node.setAttribute(name, attributes[name])
   }
@@ -41,24 +41,24 @@ export function attrs(node, attributes) {
   return node
 }
 
-export function html(node, value) {
+export function html (node, value) {
   return (arguments.length > 1) ?
       (node.innerHTML = value) : node.innerHTML.trim()
 }
 
-export function text(node, value) {
+export function text (node, value) {
   return (arguments.length > 1) ?
       (node.textContent = value) : node.textContent.trim()
 }
 
-export function css(textContent) {
+export function css (textContent) {
   return Object.assign(element('style'), {
     type: 'text/css',
     textContent
   })
 }
 
-export function stylesheet(href) {
+export function stylesheet (href) {
   return Object.assign(element('link'), {
     rel: 'stylesheet',
     type: 'text/css',
@@ -66,27 +66,27 @@ export function stylesheet(href) {
   })
 }
 
-export function append(node, to) {
+export function append (node, to) {
   return to.appendChild(node)
 }
 
-export function remove(node) {
+export function remove (node) {
   return node.parentNode.removeChild(node)
 }
 
-export function on(node, ...args) {
+export function on (node, ...args) {
   return node.addEventListener(...args)
 }
 
-export function once(node, type, fn, capture = false) {
+export function once (node, type, fn, capture = false) {
   return node.addEventListener(type, fn, { capture, once: true })
 }
 
-export function off(node, ...args) {
+export function off (node, ...args) {
   return node.removeEventListener(...args)
 }
 
-export function ensure(node, type, fn, maxWait = 5000, match = everything) {
+export function ensure (node, type, fn, maxWait = 5000, match = everything) {
   const cancel = () => {
     clearTimeout(timeout)
     node.removeEventListener(type, check)
@@ -101,7 +101,7 @@ export function ensure(node, type, fn, maxWait = 5000, match = everything) {
   return cancel
 }
 
-export function emit(node, type, data = {}) {
+export function emit (node, type, data = {}) {
   if (data.detail != null) {
     return node.dispatchEvent(new CustomEvent(type, data))
   } else {
@@ -109,27 +109,27 @@ export function emit(node, type, data = {}) {
   }
 }
 
-export function classes(node, ...args) {
+export function classes (node, ...args) {
   return node.classList.add(...args)
 }
 
-export function toggle(node, ...args) {
+export function toggle (node, ...args) {
   return node.classList.toggle(...args)
 }
 
-export function has(node, name) {
+export function has (node, name) {
   return node.classList.contains(name)
 }
 
-export function bounds(node) {
+export function bounds (node) {
   return node.getBoundingClientRect()
 }
 
-export function style(node) {
+export function style (node) {
   return getComputedStyle(node)
 }
 
-export function borders(node) {
+export function borders (node) {
   let s = style(node)
 
   return {
@@ -140,11 +140,11 @@ export function borders(node) {
   }
 }
 
-export function hasFocus(node) {
+export function hasFocus (node) {
   return document.activeElement === node
 }
 
-export function testFocusChange() {
+export function testFocusChange () {
   let wasActiveElement = document.activeElement
   let t = setTimeout(() => { wasActiveElement = null }, 500)
 
@@ -158,27 +158,26 @@ export function testFocusChange() {
   }
 }
 
-export function reflow(node) {
-  node.scrollTop
+export function reflow (node) {
+  node.scrollTop // eslint-disable-line no-unused-expressions
 }
 
-export function repaint(node) {
+export function repaint (node) {
   node.style.visibility = 'hidden'
-  node.offsetHeight
+  node.offsetHeight // eslint-disable-line no-unused-expressions
   node.style.removeProperty('visibility')
 }
 
-
-export function isInput(node) {
+export function isInput (node) {
   return node.isContentEditable ||
     node.tagName === 'INPUT' || node.tagName === 'TEXTAREA' || node.tagName === 'SELECT'
 }
 
-export function isLiveInput(node) {
+export function isLiveInput (node) {
   return isInput(node) && !(node.disabled || node.readOnly)
 }
 
-export function isLink(node, recursive = true) {
+export function isLink (node, recursive = true) {
   if (node == null)
     return null
   if (node.tagName === 'A' && !blank(node.href))
@@ -189,12 +188,12 @@ export function isLink(node, recursive = true) {
     return isLink(node.parentNode, true)
 }
 
-export function createDragHandler({
+export function createDragHandler ({
   handleDrag,
   handleDragStop,
   stopOnMouseLeave
 }) {
-  function onKeyDown(event) {
+  function onKeyDown (event) {
     switch (event.key) {
       case 'Escape':
         event.stopPropagation()
@@ -203,7 +202,7 @@ export function createDragHandler({
     }
   }
 
-  function onDrag(event) {
+  function onDrag (event) {
     if (event.buttons === 0) {
       onDragStop(event)
     } else {
@@ -211,7 +210,7 @@ export function createDragHandler({
     }
   }
 
-  function onDragStart() {
+  function onDragStart () {
     toggle(document.documentElement, 'dragging', true)
 
     on(document, 'mousemove', onDrag)
@@ -228,7 +227,7 @@ export function createDragHandler({
     on(document.body, 'keydown', onKeyDown)
   }
 
-  function onDragStop(event) {
+  function onDragStop (event) {
     off(document, 'mousemove', onDrag)
     off(document, 'mouseup', onDragStop, { capture: true })
     off(window, 'blur', onDragStop)
@@ -254,7 +253,7 @@ export function createDragHandler({
   }
 }
 
-export function parse(string, type = 'text/html') {
+export function parse (string, type = 'text/html') {
   if (string == null)
     return null
 
@@ -268,26 +267,26 @@ export function parse(string, type = 'text/html') {
   return doc
 }
 
-export function serialize(node) {
+export function serialize (node) {
   if (node == null)
     return null
   else
     return (new XMLSerializer).serializeToString(node)
 }
 
-export function viewport() {
+export function viewport () {
   return {
     width: document.documentElement.clientWidth,
     height: document.documentElement.clientHeight
   }
 }
 
-export function visible(node) {
+export function visible (node) {
   let offset = node.offsetTop - node.offsetParent.scrollTop
   return offset > 0 && offset < node.offsetParent.offsetHeight
 }
 
-export function loadImage(src, decode = false) {
+export function loadImage (src, decode = false) {
   return new Promise((resolve, reject) => {
     let img = new Image()
 
@@ -305,7 +304,7 @@ export function loadImage(src, decode = false) {
   })
 }
 
-export function load(node, message = 'Load Error') {
+export function load (node, message = 'Load Error') {
   return new Promise((resolve, reject) => {
     node.onload = () => resolve(node)
     node.onerror = () => reject(new Error(message))
@@ -313,13 +312,13 @@ export function load(node, message = 'Load Error') {
 }
 
 
-export function getResolution() {
+export function getResolution () {
   return Math.floor(devicePixelRatio) || 1
 }
 
 const RMQ = matchMedia('(max-resolution: 1dppx)')
 
-export function onResolutionChange(callback) {
+export function onResolutionChange (callback) {
   let handler = () => {
     callback(getResolution())
   }
@@ -331,7 +330,7 @@ export function onResolutionChange(callback) {
   }
 }
 
-export function distance(e1, e2) {
+export function distance (e1, e2) {
   let x = e2.clientX - e1.clientX
   let y = e2.clientY - e1.clientY
 

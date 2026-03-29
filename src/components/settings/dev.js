@@ -2,7 +2,7 @@ import { FormToggle } from '../form.js'
 import { useIpcEvent } from '../../hooks/use-ipc.js'
 import { useWindowArgs } from '../../hooks/use-window.js'
 
-export function DeveloperSettings() {
+export function DeveloperSettings () {
   let { api, debug, dev, port } = useWindowArgs()
 
   let handleDebugChange = useIpcEvent(null, [

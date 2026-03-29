@@ -12,7 +12,7 @@ import {
 
 
 export class Create extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
 
     let template = yield select(getItemTemplate)
@@ -35,7 +35,7 @@ Create.register(ITEM.CREATE)
 
 
 export class Delete extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let items = this.action.payload
     let { lists } = this.action.meta
@@ -63,7 +63,7 @@ Delete.register(ITEM.DELETE)
 
 
 export class Destroy extends Command {
-  async confirm() {
+  async confirm () {
     try {
       this.suspend()
       return !(await prompt('item.destroy')).cancel
@@ -73,7 +73,7 @@ export class Destroy extends Command {
     }
   }
 
-  *exec() {
+  *exec () {
     let { db } = this.options
     let items = this.action.payload
 
@@ -101,7 +101,7 @@ Destroy.register(ITEM.DESTROY)
 
 
 export class Restore extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let items = this.action.payload
     let { lists } = this.action.meta

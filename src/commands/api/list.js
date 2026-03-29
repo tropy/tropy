@@ -2,7 +2,7 @@ import { select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { API } from '../../constants/index.js'
 
-function *flatten(children, lists, expand) {
+function *flatten (children, lists, expand) {
   for (let id of children) {
     let list = lists[id]
     yield list
@@ -13,7 +13,7 @@ function *flatten(children, lists, expand) {
 }
 
 export class ListShow extends Command {
-  *exec() {
+  *exec () {
     let { id, expand } = this.action.payload
     let lists = yield select(state => state.lists)
 

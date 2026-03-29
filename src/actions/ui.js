@@ -1,7 +1,7 @@
 import { UI } from '../constants/index.js'
 
 export default {
-  restore(payload, meta) {
+  restore (payload, meta) {
     // Remove pre 1.3 state
     if (payload != null) {
       delete payload.image
@@ -15,7 +15,7 @@ export default {
     }
   },
 
-  update(payload, meta) {
+  update (payload, meta) {
     return {
       type: UI.UPDATE,
       payload,

@@ -4,7 +4,7 @@ import { getSortColumn } from '../selectors/index.js'
 import * as mod from '../models/index.js'
 import * as act from '../actions/index.js'
 
-export function *search(db) {
+export function *search (db) {
   try {
     let { nav, imports, sort } = yield select(state => ({
       nav: state.nav,

@@ -5,12 +5,12 @@ import { tautology } from './util.js'
 import { win32 } from './os.js'
 
 
-export function canWrite(file) {
+export function canWrite (file) {
   return access(file, fs.constants.W_OK)
     .then(() => true, () => false)
 }
 
-export async function ls(path, {
+export async function ls (path, {
   filter = tautology,
   recursive = false
 } = {}) {
@@ -35,7 +35,7 @@ export async function ls(path, {
   return files
 }
 
-export async function expand(paths, {
+export async function expand (paths, {
   filter = tautology,
   recursive = false
 } = {}) {
@@ -61,7 +61,7 @@ export async function expand(paths, {
   return files
 }
 
-export async function link(src, dest, type = 'file') {
+export async function link (src, dest, type = 'file') {
   try {
     try {
       await symlink(src, dest, type)

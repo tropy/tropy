@@ -9,7 +9,7 @@ import * as act from '../../actions/index.js'
 
 
 export class Create extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
     let { items, ...data } = payload
@@ -53,7 +53,7 @@ Create.register(TAG.CREATE)
 
 
 export class Delete extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let id = this.action.payload
 

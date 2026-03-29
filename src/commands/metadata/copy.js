@@ -7,7 +7,7 @@ import { METADATA } from '../../constants/index.js'
 
 
 export class Copy extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
 
@@ -28,7 +28,7 @@ export class Copy extends Command {
     return payload
   }
 
-  *fetch() {
+  *fetch () {
     let { payload, meta } = this.action
     let { from, to } = payload
 
@@ -56,7 +56,7 @@ export class Copy extends Command {
     return data
   }
 
-  *abort() {
+  *abort () {
     if (this.original) {
       yield put(act.merge(this.original))
     }

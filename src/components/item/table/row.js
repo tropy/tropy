@@ -5,16 +5,16 @@ import { NAV, TYPE } from '../../../constants/index.js'
 import cx from 'classnames'
 
 class TableRow extends ItemIterable {
-  isDragging(idx) {
+  isDragging (idx) {
     return idx === this.props.drag
   }
 
-  isMoving(idx) {
+  isMoving (idx) {
     return (idx >= this.props.drop && idx < this.props.drag) ||
       (idx <= this.props.drop && idx > this.props.drag)
   }
 
-  isItemColumn(id) {
+  isItemColumn (id) {
     let idx = id.search(/^item\./)
     return -1 === idx ? false : id.slice(5)
   }
@@ -36,7 +36,7 @@ class TableRow extends ItemIterable {
     this.getNextColumn(at, -1)
   )
 
-  getColumnProps(column, idx) {
+  getColumnProps (column, idx) {
     let isMainColumn = (idx === 0)
     let isItemColumn = this.isItemColumn(column.id)
     let type, value
@@ -79,7 +79,7 @@ class TableRow extends ItemIterable {
     return props
   }
 
-  getTemplateFieldType(id) {
+  getTemplateFieldType (id) {
     let fields = get(this.props.template, ['fields'])
     if (fields == null) return null
     let field = fields.find(f => f.property === id)
@@ -99,7 +99,7 @@ class TableRow extends ItemIterable {
     })
   }
 
-  render() {
+  render () {
     let props = pick(this.props, CellProps)
 
     return this.connect(

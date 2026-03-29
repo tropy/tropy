@@ -16,7 +16,7 @@ export const onTransitionEnd = (node, done) => {
   // to remove the listener in case the event does not fire.
 }
 
-export function useEndListener(nodeRef) {
+export function useEndListener (nodeRef) {
   return useEvent((done) => {
     if (nodeRef.current)
       onTransitionEnd(nodeRef.current, done)

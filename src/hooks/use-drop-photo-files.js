@@ -2,11 +2,11 @@ import { useDrop } from 'react-dnd'
 import { NativeTypes } from 'react-dnd-html5-backend'
 import { getDroppedFiles, hasPhotoFiles } from '../components/dnd.js'
 
-export function useDropPhotoFiles({ onDrop, isReadOnly = false }) {
+export function useDropPhotoFiles ({ onDrop, isReadOnly = false }) {
   return useDrop(() => ({
     accept: [NativeTypes.FILE, NativeTypes.URL],
 
-    drop(item) {
+    drop (item) {
       let photos = getDroppedFiles(item)
 
       if (photos) {
@@ -15,7 +15,7 @@ export function useDropPhotoFiles({ onDrop, isReadOnly = false }) {
       }
     },
 
-    canDrop(item, monitor) {
+    canDrop (item, monitor) {
       if (isReadOnly)
         return false
 

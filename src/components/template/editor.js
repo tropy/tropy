@@ -13,7 +13,7 @@ import { insert, move, remove } from '../../common/util.js'
 class TemplateEditor extends React.PureComponent {
   state = Template.make()
 
-  componentDidUpdate(props) {
+  componentDidUpdate (props) {
     if (props.templates !== this.props.templates) {
       let template = this.props.templates[this.state.id]
       if (template != null)
@@ -21,11 +21,11 @@ class TemplateEditor extends React.PureComponent {
     }
   }
 
-  get isPristine() {
+  get isPristine () {
     return this.state.created == null
   }
 
-  get isValid() {
+  get isValid () {
     return this.state.id !== '' && this.state.name !== ''
   }
 
@@ -134,7 +134,7 @@ class TemplateEditor extends React.PureComponent {
     this.__fields = null
   }
 
-  render() {
+  render () {
     let { isPristine } = this
     return (
       <Form className="template-editor">
@@ -237,39 +237,39 @@ const TemplateEditorContainer = connect(
   }),
 
   dispatch => ({
-    onCreate(...args) {
+    onCreate (...args) {
       dispatch(ontology.template.create(...args))
     },
 
-    onDelete(...args) {
+    onDelete (...args) {
       dispatch(ontology.template.delete(...args))
     },
 
-    onExport(...args) {
+    onExport (...args) {
       dispatch(ontology.template.export(...args))
     },
 
-    onFieldAdd(...args) {
+    onFieldAdd (...args) {
       dispatch(ontology.template.field.add(...args))
     },
 
-    onFieldOrder(...args) {
+    onFieldOrder (...args) {
       dispatch(ontology.template.field.order(...args))
     },
 
-    onFieldRemove(...args) {
+    onFieldRemove (...args) {
       dispatch(ontology.template.field.remove(...args))
     },
 
-    onFieldSave(...args) {
+    onFieldSave (...args) {
       dispatch(ontology.template.field.save(...args))
     },
 
-    onImport() {
+    onImport () {
       dispatch(ontology.template.import({}, { prompt: true }))
     },
 
-    onSave(...args) {
+    onSave (...args) {
       dispatch(ontology.template.save(...args))
     }
   })

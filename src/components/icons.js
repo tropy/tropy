@@ -5,11 +5,11 @@ import { lispcase } from '../common/util.js'
 
 const icons = Object.create({})
 
-export function Icon({ name, ...props }) {
+export function Icon ({ name, ...props }) {
   return React.createElement(icons[name], props)
 }
 
-export function IconContainer({ children, className, name, title }) {
+export function IconContainer ({ children, className, name, title }) {
   let intl = useIntl()
 
   if (title)
@@ -24,7 +24,7 @@ export function IconContainer({ children, className, name, title }) {
   )
 }
 
-function i(name, svg) {
+function i (name, svg) {
   let IconComponent = React.memo(({ className, title }) => (
     <IconContainer
       className={className}

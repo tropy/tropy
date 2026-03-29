@@ -1,7 +1,7 @@
 import { FormElement, FormToggleGroup, Toggle } from '../form.js'
 import { ESPER, ITEM } from '../../constants/index.js'
 
-export function InterfaceSettings({
+export function InterfaceSettings ({
   completions = ['datatype', 'property-datatype'],
   config,
   layouts = [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],

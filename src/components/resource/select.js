@@ -75,7 +75,7 @@ export const Id = ({ resource, matchData }) => (
   </span>
 )
 
-function renderResource(value, { matchData } = {}) {
+function renderResource (value, { matchData } = {}) {
   return (
     <>
       <Label resource={value} matchData={matchData}/>
@@ -84,7 +84,7 @@ function renderResource(value, { matchData } = {}) {
   )
 }
 
-function matchResource(res, q) {
+function matchResource (res, q) {
   let [query, prefix] = q.split(':', 2).reverse()
 
   if (prefix != null) {
@@ -113,7 +113,7 @@ function matchResource(res, q) {
   return Object.assign(mdp, mdr)
 }
 
-function matchByNameAndLabel(res, query) {
+function matchByNameAndLabel (res, query) {
   let [first, ...rest] = query.split(' ')
   let mdn = m(res, first, 'name')
 
@@ -134,7 +134,7 @@ function matchByNameAndLabel(res, query) {
   return Object.assign(mdn, mdl)
 }
 
-function m(res, query, prop, at = /^\w/g) {
+function m (res, query, prop, at = /^\w/g) {
   let matchData = collate.match(String(res[prop]), query, at)
   return (matchData == null) ? null : { [prop]: matchData }
 }

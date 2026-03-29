@@ -29,7 +29,7 @@ export class Photo extends Container {
   #pivot
   #tool = ESPER.TOOL.ARROW
 
-  constructor({ x = 0, y = 0, width, height, resolution }) {
+  constructor ({ x = 0, y = 0, width, height, resolution }) {
     super()
 
     this.#width = width
@@ -60,44 +60,44 @@ export class Photo extends Container {
     this.addChild(this.textLayer)
   }
 
-  get adjust() {
+  get adjust () {
     return this.bg.filters[0]
   }
 
-  get angle() {
+  get angle () {
     return deg(this.rotation)
   }
 
-  get colors() {
+  get colors () {
     return this.bg.filters[2]
   }
 
-  get mirror() {
+  get mirror () {
     return this.scale.x < 0
   }
 
-  get tool() {
+  get tool () {
     return this.#tool
   }
 
-  get resolution() {
+  get resolution () {
     return this.#resolution
   }
 
-  set tool(tool) {
+  set tool (tool) {
     this.#tool = tool
     this.cursor = tool
   }
 
-  getWidth(zoom = this.scale.y) {
+  getWidth (zoom = this.scale.y) {
     return this.#width * zoom
   }
 
-  getHeight(zoom = this.scale.y) {
+  getHeight (zoom = this.scale.y) {
     return this.#height * zoom
   }
 
-  getBoundsProjection({
+  getBoundsProjection ({
     zoom = this.scale.y,
     rotation = this.rotation
   } = {}) {
@@ -109,7 +109,7 @@ export class Photo extends Container {
       new Rectangle(0, 0, height, width)
   }
 
-  getPanLimits(screen, ...args) {
+  getPanLimits (screen, ...args) {
     let { width, height } = this.getBoundsProjection(...args)
 
     let dx = Math.max(0, width - screen.width)
@@ -121,7 +121,7 @@ export class Photo extends Container {
   }
 
   // Mirror the image across the x-axis without changing position
-  flip(at, skipUpdate = true) {
+  flip (at, skipUpdate = true) {
     let origin = this.toLocal(at, null, null, skipUpdate)
 
     if (!isHorizontal(deg(this.rotation)))
@@ -138,7 +138,7 @@ export class Photo extends Container {
   // changes, release is expected to be called as soon as possible.
   // If multiple fixate() calls come in, the original pivot is the
   // one that will be restored on released!
-  fixate(at, isReleasePending = true, skipUpdate = true) {
+  fixate (at, isReleasePending = true, skipUpdate = true) {
     if (isReleasePending && this.#pivot == null) {
       this.#pivot = this.pivot.clone()
     }
@@ -148,7 +148,7 @@ export class Photo extends Container {
   }
 
   // Restores previous pivot without changing position
-  release(skipUpdate = true) {
+  release (skipUpdate = true) {
     if (this.#pivot == null) return
 
     this.toGlobal(this.#pivot, this.position, skipUpdate)
@@ -157,7 +157,7 @@ export class Photo extends Container {
     this.#pivot = null
   }
 
-  handleResolutionChange(resolution = getResolution()) {
+  handleResolutionChange (resolution = getResolution()) {
     this.#resolution = resolution
 
     for (let filter of this.bg.filters) {
@@ -165,7 +165,7 @@ export class Photo extends Container {
     }
   }
 
-  filter({
+  filter ({
     brightness = 0,
     contrast = 0,
     hue = 0,
@@ -187,7 +187,7 @@ export class Photo extends Container {
     this.current.sharpen = sharpen
   }
 
-  brightness(value = 0) {
+  brightness (value = 0) {
     if (value >= 0) {
       this.adjust.brightness = 1 + value / 100
       this.adjust.gamma = 1
@@ -199,16 +199,16 @@ export class Photo extends Container {
     return this
   }
 
-  contrast(value = 0) {
+  contrast (value = 0) {
     this.adjust.contrast = 1 + value / 100
     return this
   }
 
-  constrain(...args) {
+  constrain (...args) {
     constrain(this.position, this.getPanLimits(...args))
   }
 
-  destroy() {
+  destroy () {
     super.destroy({
       children: true,
       texture: true,
@@ -217,13 +217,13 @@ export class Photo extends Container {
     })
   }
 
-  hue(value = 0) {
+  hue (value = 0) {
     this.colors.hue((360 + value) % 360, false)
     return this
   }
 
   // Subtle: apply after hue, if you need both!
-  negative(negative = false) {
+  negative (negative = false) {
     if (negative) {
       // this.colors.negative()
       this.colors.matrix =
@@ -233,17 +233,17 @@ export class Photo extends Container {
     return this
   }
 
-  saturation(value = 0) {
+  saturation (value = 0) {
     this.adjust.saturation = 1 + value / 100
     return this
   }
 
-  sharpen(intensity = 0) {
+  sharpen (intensity = 0) {
     this.bg.filters[1].intensity = intensity
     return this
   }
 
-  sync(props, state = {}) {
+  sync (props, state = {}) {
     let { width, height } = props.selection || state
 
     this.#width = width
@@ -255,7 +255,7 @@ export class Photo extends Container {
     this.textLayer.sync(props, state)
   }
 
-  update(dragState, textSelection) {
+  update (dragState, textSelection) {
     if (this.selections.visible) {
       this.selections.update(dragState)
     }

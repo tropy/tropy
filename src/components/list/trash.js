@@ -15,7 +15,7 @@ export const TrashListNode = React.memo(({
   let [{ isOver }, drop] = useDrop({
     accept: [DND.ITEMS],
 
-    drop(item) {
+    drop (item) {
       onDropItems(item.items)
     },
 

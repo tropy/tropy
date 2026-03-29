@@ -14,7 +14,7 @@ import { blank } from '../../common/util.js'
 import { getPhotosForConsolidation } from '../../selectors/index.js'
 
 
-async function lookup(photo, paths = {}, checkFileSize) {
+async function lookup (photo, paths = {}, checkFileSize) {
   let { dir, base } = win32.parse(photo.path)
 
   for (let [from, to] of Object.entries(paths)) {
@@ -41,7 +41,7 @@ async function lookup(photo, paths = {}, checkFileSize) {
 }
 
 export class Consolidate extends ImportCommand {
-  *resolve(photo) {
+  *resolve (photo) {
     let { meta } = this.action
     let path = yield call(lookup, photo, meta.paths, true)
 
@@ -74,7 +74,7 @@ export class Consolidate extends ImportCommand {
     return path
   }
 
-  *exec() {
+  *exec () {
     let { payload, meta } = this.action
 
     let [project, photos, selections, settings] = yield select(state => [
@@ -127,7 +127,7 @@ export class Consolidate extends ImportCommand {
     return this.result
   }
 
-  *consolidate(photo, selections = {}) {
+  *consolidate (photo, selections = {}) {
     try {
       let { meta } = this.action
       let { cache, db, overwrite, useLocalTimezone, store } = this.options

@@ -5,7 +5,7 @@ import { blank } from '../common/util.js'
 import cx from 'classnames'
 
 export class Option extends React.PureComponent {
-  get classes() {
+  get classes () {
     return ['option', {
       active: this.props.isActive,
       selected: this.props.isSelected
@@ -24,7 +24,7 @@ export class Option extends React.PureComponent {
     this.props.onHover(event, this.props.isActive, this.props.option)
   }
 
-  render() {
+  render () {
     return (
       <li
         className={cx(this.classes)}
@@ -40,7 +40,7 @@ export class Option extends React.PureComponent {
 export class OptionList extends React.Component {
   scroll = React.createRef()
 
-  hasMoved({ clientX, clientY }) {
+  hasMoved ({ clientX, clientY }) {
     try {
       return (clientX !== this.lastX || clientY !== this.lastY)
     } finally {
@@ -49,11 +49,11 @@ export class OptionList extends React.Component {
     }
   }
 
-  isActive({ id }) {
+  isActive ({ id }) {
     return id === this.props.active && !blank(id)
   }
 
-  isSelected({ id }) {
+  isSelected ({ id }) {
     return this.props.selection.includes(id)
   }
 
@@ -63,31 +63,31 @@ export class OptionList extends React.Component {
     }
   }
 
-  next(...args) {
+  next (...args) {
     return this.scroll.current.select(this.scroll.current.next(...args))
   }
 
-  prev(...args) {
+  prev (...args) {
     return this.scroll.current.select(this.scroll.current.prev(...args))
   }
 
-  first() {
+  first () {
     return this.scroll.current.select(this.scroll.current.first())
   }
 
-  last() {
+  last () {
     return this.scroll.current.select(this.scroll.current.last())
   }
 
-  pageUp() {
+  pageUp () {
     return this.scroll.current.select(this.scroll.current.pageUp())
   }
 
-  pageDown() {
+  pageDown () {
     return this.scroll.current.select(this.scroll.current.pageDown())
   }
 
-  render() {
+  render () {
     return (
       <div className="option-list">
         <Scroll
@@ -116,7 +116,7 @@ export class OptionList extends React.Component {
     selection: []
   }
 
-  static getHeight(rows, {
+  static getHeight (rows, {
     maxRows = rows,
     rowHeight = SASS.OPTION.HEIGHT
   } = {}) {

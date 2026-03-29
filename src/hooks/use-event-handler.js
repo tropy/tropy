@@ -3,7 +3,7 @@ import { useEvent } from './use-event.js'
 import { on, off } from '../common/util.js'
 
 
-export function useEventHandler(
+export function useEventHandler (
   target,
   name,
   callback,

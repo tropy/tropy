@@ -1,4 +1,4 @@
-export function select(s, items, mod = 'replace') {
+export function select (s, items, mod = 'replace') {
   switch (mod) {
     case 'replace':
       return replace(s, items)
@@ -18,31 +18,31 @@ export function select(s, items, mod = 'replace') {
   }
 }
 
-export function clear() {
+export function clear () {
   return []
 }
 
-export function replace(_, items) {
+export function replace (_, items) {
   return [...items]
 }
 
-export function remove(s, items) {
+export function remove (s, items) {
   return s.filter(it => !items.includes(it))
 }
 
-export function subtract(s, [head, ...items]) {
+export function subtract (s, [head, ...items]) {
   return [...s.filter(it => it !== head && !items.includes(it)), head]
 }
 
-export function append(s, items) {
+export function append (s, items) {
   return [...s, ...items]
 }
 
-export function merge(s, items) {
+export function merge (s, items) {
   return [...remove(s, items), ...items]
 }
 
-export function isSelected(s, items) {
+export function isSelected (s, items) {
   return Array.isArray(items) ?
     items.find(it => s.includes(it)) :
     s.includes(items)

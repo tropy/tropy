@@ -4,7 +4,7 @@ import { FLASH } from '../constants/index.js'
 const init = (ARGS.update && ARGS.update.id) ?
     [ARGS.update] : []
 
-export function flash(state = init, { type, payload }) {
+export function flash (state = init, { type, payload }) {
   switch (type) {
     case FLASH.SHOW:
       return [payload, ...state]

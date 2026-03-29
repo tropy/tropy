@@ -16,7 +16,7 @@ import { FormattedMessage } from 'react-intl'
 import { Titlebar, Toolbar } from '../toolbar.js'
 
 
-export function PrefsContainer() {
+export function PrefsContainer () {
   let dispatch = useDispatch()
 
   let project = useSelector(state => state.project)

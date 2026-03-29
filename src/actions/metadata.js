@@ -2,7 +2,7 @@ import { METADATA, EDIT } from '../constants/index.js'
 import { array } from '../common/util.js'
 
 export default {
-  new(payload, meta = {}) {
+  new (payload, meta = {}) {
     return {
       type: EDIT.START,
       payload: {
@@ -12,7 +12,7 @@ export default {
     }
   },
 
-  add(payload, meta) {
+  add (payload, meta) {
     return {
       type: METADATA.ADD,
       payload,
@@ -20,7 +20,7 @@ export default {
     }
   },
 
-  copy({ id, ...payload }, meta) {
+  copy ({ id, ...payload }, meta) {
     return {
       type: METADATA.COPY,
       payload: { id: array(id), ...payload },
@@ -28,7 +28,7 @@ export default {
     }
   },
 
-  delete(payload, meta) {
+  delete (payload, meta) {
     return {
       type: METADATA.DELETE,
       payload,
@@ -36,7 +36,7 @@ export default {
     }
   },
 
-  insert(payload, meta = {}) {
+  insert (payload, meta = {}) {
     return {
       type: METADATA.INSERT,
       payload,
@@ -44,7 +44,7 @@ export default {
     }
   },
 
-  load(payload, meta) {
+  load (payload, meta) {
     return {
       type: METADATA.LOAD,
       payload,
@@ -52,7 +52,7 @@ export default {
     }
   },
 
-  merge(payload, meta) {
+  merge (payload, meta) {
     return {
       type: METADATA.MERGE,
       payload,
@@ -60,7 +60,7 @@ export default {
     }
   },
 
-  replace(payload, meta) {
+  replace (payload, meta) {
     return {
       type: METADATA.REPLACE,
       payload,
@@ -68,7 +68,7 @@ export default {
     }
   },
 
-  remove(payload, meta) {
+  remove (payload, meta) {
     return {
       type: METADATA.REMOVE,
       payload,
@@ -76,7 +76,7 @@ export default {
     }
   },
 
-  restore(payload, meta) {
+  restore (payload, meta) {
     return {
       type: METADATA.RESTORE,
       payload,
@@ -84,7 +84,7 @@ export default {
     }
   },
 
-  save({ id, ids, data }, meta) {
+  save ({ id, ids, data }, meta) {
     return {
       type: METADATA.SAVE,
       payload: { ids: array(ids || id), data },
@@ -92,7 +92,7 @@ export default {
     }
   },
 
-  update({ id, ids, data }, meta = {}) {
+  update ({ id, ids, data }, meta = {}) {
     return {
       type: METADATA.UPDATE,
       payload: { ids: array(ids || id), data },

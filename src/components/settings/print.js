@@ -15,7 +15,7 @@ const ModeOptions = ({ children, config, onChange }) => {
 }
 
 
-export function PrintSettings({
+export function PrintSettings ({
   config,
   modes = ['item', 'photo', 'selection'],
   onChange

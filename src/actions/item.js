@@ -2,7 +2,7 @@ import { ITEM } from '../constants/index.js'
 import { array, get } from '../common/util.js'
 
 export default {
-  create(payload, meta) {
+  create (payload, meta) {
     return {
       type: ITEM.CREATE,
       payload,
@@ -14,7 +14,7 @@ export default {
     }
   },
 
-  import(payload = {}, meta) {
+  import (payload = {}, meta) {
     return {
       type: ITEM.IMPORT,
       payload,
@@ -29,7 +29,7 @@ export default {
     }
   },
 
-  delete(payload, meta) {
+  delete (payload, meta) {
     return {
       type: ITEM.DELETE,
       payload: array(payload),
@@ -37,7 +37,7 @@ export default {
     }
   },
 
-  destroy(payload, meta) {
+  destroy (payload, meta) {
     return {
       type: ITEM.DESTROY,
       payload: array(payload),
@@ -45,7 +45,7 @@ export default {
     }
   },
 
-  merge(payload, meta) {
+  merge (payload, meta) {
     return {
       type: ITEM.MERGE,
       payload: array(payload),
@@ -53,7 +53,7 @@ export default {
     }
   },
 
-  split(payload, meta) {
+  split (payload, meta) {
     return {
       type: ITEM.SPLIT,
       payload,
@@ -61,7 +61,7 @@ export default {
     }
   },
 
-  explode(payload, meta) {
+  explode (payload, meta) {
     return {
       type: ITEM.EXPLODE,
       payload: payload,
@@ -69,7 +69,7 @@ export default {
     }
   },
 
-  export(payload, meta) {
+  export (payload, meta) {
     return {
       type: ITEM.EXPORT,
       payload: array(payload),
@@ -77,7 +77,7 @@ export default {
     }
   },
 
-  implode(payload, meta) {
+  implode (payload, meta) {
     return {
       type: ITEM.IMPLODE,
       payload,
@@ -85,7 +85,7 @@ export default {
     }
   },
 
-  insert(payload, meta) {
+  insert (payload, meta) {
     return {
       type: ITEM.INSERT,
       payload,
@@ -93,7 +93,7 @@ export default {
     }
   },
 
-  load(payload, meta) {
+  load (payload, meta) {
     return {
       type: ITEM.LOAD,
       payload,
@@ -101,7 +101,7 @@ export default {
     }
   },
 
-  remove(payload, meta) {
+  remove (payload, meta) {
     return {
       type: ITEM.REMOVE,
       payload,
@@ -109,7 +109,7 @@ export default {
     }
   },
 
-  restore(payload, meta) {
+  restore (payload, meta) {
     return {
       type: ITEM.RESTORE,
       payload: array(payload),
@@ -117,7 +117,7 @@ export default {
     }
   },
 
-  update(payload, meta) {
+  update (payload, meta) {
     return {
       type: ITEM.UPDATE,
       payload,
@@ -125,7 +125,7 @@ export default {
     }
   },
 
-  select(payload, meta = {}) {
+  select (payload, meta = {}) {
     return (dispatch, getState) => {
       let { items, photo, note } = payload
       let mod = meta.mod || 'replace'
@@ -156,7 +156,7 @@ export default {
     }
   },
 
-  open(payload, meta) {
+  open (payload, meta) {
     return {
       type: ITEM.OPEN,
       payload,
@@ -164,7 +164,7 @@ export default {
     }
   },
 
-  preview(payload, meta) {
+  preview (payload, meta) {
     return {
       type: ITEM.PREVIEW,
       payload,
@@ -172,7 +172,7 @@ export default {
     }
   },
 
-  print(payload, meta) {
+  print (payload, meta) {
     return {
       type: ITEM.PRINT,
       payload,
@@ -181,7 +181,7 @@ export default {
   },
 
   bulk: {
-    update(payload, meta) {
+    update (payload, meta) {
       return {
         type: ITEM.BULK.UPDATE,
         payload,
@@ -191,7 +191,7 @@ export default {
   },
 
   tags: {
-    toggle(payload, meta = {}) {
+    toggle (payload, meta = {}) {
       return {
         type: ITEM.TAG.TOGGLE,
         payload,
@@ -199,7 +199,7 @@ export default {
       }
     },
 
-    clear(payload, meta = {}) {
+    clear (payload, meta = {}) {
       return {
         type: ITEM.TAG.CLEAR,
         payload,
@@ -207,7 +207,7 @@ export default {
       }
     },
 
-    create(payload, meta) {
+    create (payload, meta) {
       return {
         type: ITEM.TAG.CREATE,
         payload,
@@ -215,7 +215,7 @@ export default {
       }
     },
 
-    insert(payload, meta) {
+    insert (payload, meta) {
       return {
         type: ITEM.TAG.INSERT,
         payload,
@@ -223,7 +223,7 @@ export default {
       }
     },
 
-    delete(payload, meta) {
+    delete (payload, meta) {
       return {
         type: ITEM.TAG.DELETE,
         payload,
@@ -231,7 +231,7 @@ export default {
       }
     },
 
-    remove(payload, meta) {
+    remove (payload, meta) {
       return {
         type: ITEM.TAG.REMOVE,
         payload,
@@ -241,7 +241,7 @@ export default {
   },
 
   photos: {
-    add(payload, meta) {
+    add (payload, meta) {
       return {
         type: ITEM.PHOTO.ADD,
         payload,
@@ -249,7 +249,7 @@ export default {
       }
     },
 
-    remove(payload, meta) {
+    remove (payload, meta) {
       return {
         type: ITEM.PHOTO.REMOVE,
         payload,
@@ -259,7 +259,7 @@ export default {
   },
 
   template: {
-    change({ id, template }, meta) {
+    change ({ id, template }, meta) {
       return {
         type: ITEM.TEMPLATE.CHANGE,
         payload: {

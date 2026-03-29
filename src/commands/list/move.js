@@ -7,7 +7,7 @@ import mod from '../../models/list.js'
 
 
 export class Move extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let list = this.action.payload
     let to = this.action.meta.idx

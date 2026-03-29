@@ -14,15 +14,15 @@ let seq
 let pending
 let STORE
 
-function t(...args) {
+function t (...args) {
   return get(STORE.getState(), ['intl', 'messages', ...args])
 }
 
-function f(message, ...opts) {
+function f (message, ...opts) {
   return new IntlMessageFormat(message, ARGS.locale).format(...opts)
 }
 
-function start(store) {
+function start (store) {
   assert(seq == null, 'already initialized')
 
   seq = counter()
@@ -32,13 +32,13 @@ function start(store) {
   ipc.on('dialog', onClosed)
 }
 
-function stop() {
+function stop () {
   ipc.removeListener('dialog', onClosed)
   seq = null
   pending = null
 }
 
-function onClosed(_, { id, payload, error }) {
+function onClosed (_, { id, payload, error }) {
   try {
     pending[id][error ? 'reject' : 'resolve'](payload)
   } catch (error) {
@@ -48,7 +48,7 @@ function onClosed(_, { id, payload, error }) {
   }
 }
 
-function show(type, options = {}) {
+function show (type, options = {}) {
   return new Promise((resolve, reject) => {
     let id = seq.next().value
     if (options.message) {
@@ -60,7 +60,7 @@ function show(type, options = {}) {
   })
 }
 
-function notify(id, opts) {
+function notify (id, opts) {
   return show('message-box', {
     type: 'info',
     ...t('dialog', 'notify', ...id.split('.')),
@@ -68,7 +68,7 @@ function notify(id, opts) {
   })
 }
 
-function fail(e, code = e.code, detail) {
+function fail (e, code = e.code, detail) {
   let message = t(`error.${code}`) || e.message
 
   return show('message-box', {
@@ -88,7 +88,7 @@ function fail(e, code = e.code, detail) {
   })
 }
 
-async function prompt(id, {
+async function prompt (id, {
   defaultId = 0,
   cancelId = 0,
   isChecked = false,
@@ -110,11 +110,11 @@ async function prompt(id, {
   }
 }
 
-function save(opts) {
+function save (opts) {
   return show('save', opts)
 }
 
-function open(opts) {
+function open (opts) {
   return show('file', opts)
 }
 

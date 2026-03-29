@@ -4,7 +4,7 @@ import cx from 'classnames'
 
 
 class ItemTile extends ItemIterable {
-  render() {
+  render () {
     return this.connect(
       <li
         ref={this.setContainer}

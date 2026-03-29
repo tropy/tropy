@@ -7,7 +7,7 @@ import { pick } from '../../common/util.js'
 
 
 export class Save extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
     let { id, data } = payload

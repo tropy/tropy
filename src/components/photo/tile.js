@@ -6,7 +6,7 @@ import { TranscriptionIcon } from '../transcription/icon.js'
 import { Button } from '../button.js'
 
 class PhotoTile extends PhotoIterable {
-  get classes() {
+  get classes () {
     return [...super.classes, 'tile', {
       active: this.props.isSelected,
       last: this.props.isLast
@@ -30,7 +30,7 @@ class PhotoTile extends PhotoIterable {
     }
   }
 
-  render() {
+  render () {
     return this.connect(
       <li
         className={cx(this.classes)}

@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useRef } from 'react'
 
 // Placeholder until React.useEvent is available!
 
-export function useEvent(callback) {
+export function useEvent (callback) {
   let ref = useRef()
 
   useLayoutEffect(() => {

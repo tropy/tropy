@@ -5,7 +5,7 @@ import { visible } from '../dom.js'
 export class Accordion extends React.Component {
   container = React.createRef()
 
-  componentDidUpdate({ isActive: wasActive, isOpen: wasOpen }) {
+  componentDidUpdate ({ isActive: wasActive, isOpen: wasOpen }) {
     const { isActive, isOpen } = this.props
     if (isActive && (!wasActive || (isOpen && !wasOpen))) {
       if (!visible(this.container.current)) {
@@ -14,7 +14,7 @@ export class Accordion extends React.Component {
     }
   }
 
-  get classes() {
+  get classes () {
     return ['panel', {
       active: this.props.isActive,
       closed: !this.props.isOpen
@@ -37,7 +37,7 @@ export class Accordion extends React.Component {
     }
   }
 
-  renderHeader(header) {
+  renderHeader (header) {
     return (
       <header
         className="panel-header"
@@ -47,13 +47,13 @@ export class Accordion extends React.Component {
     )
   }
 
-  renderBody(body) {
+  renderBody (body) {
     return this.props.isOpen && (
       <div className="panel-body">{body}</div>
     )
   }
 
-  render() {
+  render () {
     const [header, ...body] = React.Children.toArray(this.props.children)
 
     return (
@@ -78,19 +78,19 @@ export class AccordionGroup extends React.Component {
     open: []
   }
 
-  get classes() {
+  get classes () {
     return ['panel-group', 'accordion', this.props.className]
   }
 
-  isActive(id = this.state.active) {
+  isActive (id = this.state.active) {
     return id != null && id === this.state.active
   }
 
-  isOpen(id = this.state.open) {
+  isOpen (id = this.state.open) {
     return id != null && this.state.open.includes(id)
   }
 
-  getNext(k = 1) {
+  getNext (k = 1) {
     let accordions = React.Children.toArray(this.props.children)
     let { active } = this.state
 
@@ -103,19 +103,19 @@ export class AccordionGroup extends React.Component {
     return accordions[idx].props.id
   }
 
-  getPrev(k = 1) {
+  getPrev (k = 1) {
     return this.getNext(-k)
   }
 
-  next(k = 1) {
+  next (k = 1) {
     this.setState({ active: this.getNext(k) })
   }
 
-  prev(k = 1) {
+  prev (k = 1) {
     this.setState({ active: this.getPrev(k) })
   }
 
-  close(id = this.state.open) {
+  close (id = this.state.open) {
     if (this.isOpen(id)) {
       this.setState({
         active: id,
@@ -124,7 +124,7 @@ export class AccordionGroup extends React.Component {
     }
   }
 
-  open(id = this.state.active) {
+  open (id = this.state.active) {
     if (!this.isOpen(id)) {
       this.setState({
         active: id,
@@ -133,7 +133,7 @@ export class AccordionGroup extends React.Component {
     }
   }
 
-  toggle(id = this.state.active) {
+  toggle (id = this.state.active) {
     if (this.isOpen(id)) this.close(id)
     else this.open(id)
   }
@@ -178,7 +178,7 @@ export class AccordionGroup extends React.Component {
     else this.close(accordion.props.id)
   }
 
-  render() {
+  render () {
     return (
       <div
         className={cx(this.classes)}

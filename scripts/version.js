@@ -8,7 +8,7 @@ const METAINFO = 'res/linux/org.tropy.Tropy.metainfo.xml'
 const RELEASES = '  <releases>'
 const CITATION = 'CITATION.cff'
 
-function datestring(date = new Date) {
+function datestring (date = new Date) {
   return date.toISOString().slice(0, 10)
 }
 

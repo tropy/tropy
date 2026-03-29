@@ -4,7 +4,7 @@ import { IconItemSmall, IconPhoto, IconSelection } from '../icons.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { tropy } from '../../ontology/ns.js'
 
-export function TemplateSettings({ config, onChange }) {
+export function TemplateSettings ({ config, onChange }) {
   let handleTemplateChange = useEvent((values, hasChanged) => {
     if (hasChanged) {
       let [type, template] = Object.entries(values)[0]

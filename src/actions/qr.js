@@ -1,7 +1,7 @@
 import { QR } from '../constants/index.js'
 
 export default {
-  update(payload = {}, meta) {
+  update (payload = {}, meta) {
     return {
       type: QR.UPDATE,
       payload,

@@ -1,6 +1,6 @@
 import { EDIT, PROJECT, TAG } from '../constants/index.js'
 
-export function edit(state = {}, { type, payload, meta }) {
+export function edit (state = {}, { type, payload, meta }) {
   switch (type) {
     case EDIT.START:
       return { ...payload }

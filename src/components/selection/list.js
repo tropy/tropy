@@ -5,11 +5,11 @@ import { dc } from '../../ontology/ns.js'
 
 
 class SelectionList extends SelectionIterator {
-  isEditing(selection) {
+  isEditing (selection) {
     return this.props.edit === selection
   }
 
-  render() {
+  render () {
     return this.connect(
       <ul className={cx('selection-list', { over: this.props.isOver })}>
         {this.map(({ selection, ...props }) => (

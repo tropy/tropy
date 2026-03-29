@@ -1,7 +1,7 @@
 import { EDIT } from '../constants/index.js'
 
 export default {
-  cancel(payload, meta) {
+  cancel (payload, meta) {
     return {
       type: EDIT.CANCEL,
       payload,
@@ -9,7 +9,7 @@ export default {
     }
   },
 
-  start(payload, meta) {
+  start (payload, meta) {
     return {
       type: EDIT.START,
       payload,

@@ -1,11 +1,11 @@
 import { HISTORY } from '../constants/index.js'
 
 
-function canMerge(a, b) {
+function canMerge (a, b) {
   return a.type === b.type && a.payload.id === b.payload.id
 }
 
-export function history(state = { past: [], future: [] }, {
+export function history (state = { past: [], future: [] }, {
   type,
   payload,
   meta

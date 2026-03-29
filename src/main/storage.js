@@ -3,13 +3,13 @@ import fs from 'fs'
 import write from 'write-file-atomic'
 
 export class Storage {
-  constructor(path) {
+  constructor (path) {
     this.path = path
     this.save.sync = (name, object) =>
       write.sync(this.expand(name), JSON.stringify(object))
   }
 
-  async load(name, defaults) {
+  async load (name, defaults) {
     try {
       return {
         ...defaults,
@@ -22,11 +22,11 @@ export class Storage {
     }
   }
 
-  async save(name, object) {
+  async save (name, object) {
     return write(this.expand(name), JSON.stringify(object))
   }
 
-  expand(name) {
+  expand (name) {
     return join(this.path, name)
   }
 }

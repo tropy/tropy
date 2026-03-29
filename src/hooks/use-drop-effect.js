@@ -3,7 +3,7 @@ import throttle from 'lodash.throttle'
 import { on, off } from '../dom.js'
 
 
-export function useDropEffect() {
+export function useDropEffect () {
   let [dropEffect, setDropEffect] = useState('none')
 
   useEffect(() => {

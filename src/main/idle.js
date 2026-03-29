@@ -8,20 +8,20 @@ const byTime = (a, b) =>
 
 
 export class IOQ {
-  constructor({ precision } = {}) {
+  constructor ({ precision } = {}) {
     this.precision = precision || IOQ.PRECISION
     this.observers = []
   }
 
-  get isEmpty() {
+  get isEmpty () {
     return this.observers.length === 0
   }
 
-  getIdleTime() {
+  getIdleTime () {
     return electron.powerMonitor.getSystemIdleTime()
   }
 
-  add(observe, time) {
+  add (observe, time) {
     assert(time > this.precision, 'idle delay below precision')
     assert(typeof observe === 'function', 'missing idle observer')
 
@@ -30,19 +30,19 @@ export class IOQ {
     return this
   }
 
-  remove(observe, time) {
+  remove (observe, time) {
     let idx = this.observers.findIndex(o =>
       o.observe === observe && o.time === time)
     if (idx >= 0) this.observers.splice(idx, 1)
     return this
   }
 
-  clear() {
+  clear () {
     this.observers = []
     return this
   }
 
-  resume() {
+  resume () {
     if (this.pi == null) {
       let min = this.precision
       let cur
@@ -63,7 +63,7 @@ export class IOQ {
     return this
   }
 
-  pause() {
+  pause () {
     if (this.pi != null) {
       this.pi = void clearInterval(this.pi)
       this.activate()
@@ -71,7 +71,7 @@ export class IOQ {
     return this
   }
 
-  activate() {
+  activate () {
     for (let obs of this.observers) {
       try {
         if (obs.done) obs.observe(this, 'active', 0)
@@ -82,7 +82,7 @@ export class IOQ {
     }
   }
 
-  idle(time) {
+  idle (time) {
     for (let obs of this.observers) {
       try {
         if (time < obs.time) break
@@ -100,12 +100,12 @@ IOQ.PRECISION = 5
 IOQ.global = new IOQ()
 
 
-export function addIdleObserver(...args) {
+export function addIdleObserver (...args) {
   IOQ.global.add(...args)
   IOQ.global.resume()
 }
 
-export function removeIdleObserver(...args) {
+export function removeIdleObserver (...args) {
   IOQ.global.remove(...args)
   if (IOQ.global.isEmpty) IOQ.global.pause()
 }

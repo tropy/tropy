@@ -10,7 +10,7 @@ import { contains } from '../common/math.js'
 // As workaround, we detect mouse movement over the window but outside
 // of the element containing the titlebar.
 
-export function useMouseTracking() {
+export function useMouseTracking () {
   let ref = useRef()
   let [isOver, setState] = useState(false)
 

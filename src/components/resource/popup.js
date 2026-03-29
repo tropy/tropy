@@ -8,12 +8,12 @@ const { OPTION, PANEL } = SASS
 
 
 export class PopupSelect extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = PopupSelect.getInitialStateFromProps(props)
   }
 
-  static getInitialStateFromProps(props) {
+  static getInitialStateFromProps (props) {
     let { left, top, width } = props
     let bounds = viewport()
     let height = PopupSelect.getHeight(props.options.length, props)
@@ -24,7 +24,7 @@ export class PopupSelect extends React.Component {
     return { top, left, height }
   }
 
-  static getHeight(rows, { maxRows }) {
+  static getHeight (rows, { maxRows }) {
     return OPTION.HEIGHT * ((Math.min(rows || 1, maxRows)) + 1) +
       OPTION.LIST_MARGIN
   }
@@ -35,7 +35,7 @@ export class PopupSelect extends React.Component {
     })
   }
 
-  render() {
+  render () {
     let { width, ...props } = this.props
     let { left, top, height } = this.state
 

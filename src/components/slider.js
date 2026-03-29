@@ -19,35 +19,35 @@ export class Slider extends React.PureComponent {
 
   #dragState = null
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps (props, state) {
     let value = round(props.value, props.precision)
     return (value !== state.value) ? { value } : null
   }
 
-  get origin() {
+  get origin () {
     return (this.props.origin != null) ? this.props.origin : this.props.min
   }
 
-  get delta() {
+  get delta () {
     return this.props.max - this.props.min
   }
 
-  get isDisabled() {
+  get isDisabled () {
     return this.props.isDisabled || this.delta <= 0
   }
 
-  get classes() {
+  get classes () {
     return ['slider', `slider-${this.props.size}`, {
       disabled: this.isDisabled,
       origin: this.props.origin != null
     }]
   }
 
-  get tabIndex() {
+  get tabIndex () {
     return this.props.isDisabled ? null : this.props.tabIndex
   }
 
-  getNextStep() {
+  getNextStep () {
     let { max, steps } = this.props
     let { value } = this.props
 
@@ -61,7 +61,7 @@ export class Slider extends React.PureComponent {
     return Math.min(steps[i], max)
   }
 
-  getPrevStep() {
+  getPrevStep () {
     let { min, steps } = this.props
     let { value } = this.props
 
@@ -75,7 +75,7 @@ export class Slider extends React.PureComponent {
     return Math.max(steps[i], min)
   }
 
-  set(value, reason) {
+  set (value, reason) {
     value = restrict(value, this.props.min, this.props.max)
     this.setState({ value })
 
@@ -185,7 +185,7 @@ export class Slider extends React.PureComponent {
     }
   }
 
-  renderMinButton() {
+  renderMinButton () {
     let { min, minIcon, value } = this.props
 
     if (minIcon) {
@@ -200,7 +200,7 @@ export class Slider extends React.PureComponent {
     }
   }
 
-  renderMaxButton() {
+  renderMaxButton () {
     let { max, maxIcon, value } = this.props
 
     if (maxIcon) {
@@ -215,7 +215,7 @@ export class Slider extends React.PureComponent {
     }
   }
 
-  renderCurrentValue() {
+  renderCurrentValue () {
     return this.props.showCurrentValue && (
       <div className="slider-value">
         {round(this.props.value * this.props.resolution)}
@@ -224,7 +224,7 @@ export class Slider extends React.PureComponent {
     )
   }
 
-  render() {
+  render () {
     let { origin, delta, isDisabled } = this
 
     let abs = this.state.value - this.props.min

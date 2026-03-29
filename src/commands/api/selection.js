@@ -3,7 +3,7 @@ import { Command } from '../command.js'
 import { API } from '../../constants/index.js'
 
 export class SelectionShow extends Command {
-  *exec() {
+  *exec () {
     let { id } = this.action.payload
     let selection = yield select(state => state.selections[id])
     return selection

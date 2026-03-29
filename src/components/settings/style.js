@@ -4,7 +4,7 @@ import { FormToggle, FormSelect } from '../form.js'
 import { useIpcEvent } from '../../hooks/use-ipc.js'
 import { useWindowArgs } from '../../hooks/use-window.js'
 
-export function StyleSettings({
+export function StyleSettings ({
   fontSizes = ['12px', '13px', '14px', '15px', '16px'],
   themes = ['light', 'dark', 'system']
 }) {

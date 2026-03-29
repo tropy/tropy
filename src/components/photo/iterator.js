@@ -8,55 +8,55 @@ export class PhotoIterator extends React.Component {
   container = React.createRef()
   state = {}
 
-  componentDidMount() {
+  componentDidMount () {
     on(document, 'global:nextPhoto', this.handleNextPhoto)
     on(document, 'global:prevPhoto', this.handlePrevPhoto)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.props.onBlur()
     off(document, 'global:nextPhoto', this.handleNextPhoto)
     off(document, 'global:prevPhoto', this.handlePrevPhoto)
   }
 
-  get classes() {
+  get classes () {
     return {
       over: this.props.isOver,
       'over-file': this.props.isOverFile
     }
   }
 
-  get current() {
+  get current () {
     return this.container.current.current
   }
 
-  get isSortable() {
+  get isSortable () {
     return !this.props.isDisabled && this.props.photos?.length > 1
   }
 
-  get tabIndex() {
+  get tabIndex () {
     return this.props.photos.length > 0 ? TABS[this.constructor.name] : null
   }
 
-  isSelected(photo) {
+  isSelected (photo) {
     return this.props.current === photo.id
   }
 
-  isActive(selection) {
+  isActive (selection) {
     return this.props.selection === selection
   }
 
-  isExpandable(photo) {
+  isExpandable (photo) {
     return photo != null &&
       photo.selections != null && photo.selections.length > 0
   }
 
-  isExpanded(photo) {
+  isExpanded (photo) {
     return photo != null &&
       !!this.props.expandedPhotos[photo.id]
   }
 
-  get keymap() {
+  get keymap () {
     return this.props.keymap.PhotoIterator
   }
 
@@ -156,7 +156,7 @@ export class PhotoIterator extends React.Component {
     return adjacent(this.props.photos, photo).map(p => p?.id)
   }
 
-  getIterableProps(photo) {
+  getIterableProps (photo) {
     return {
       photo,
       selection: this.props.selection,
@@ -177,24 +177,24 @@ export class PhotoIterator extends React.Component {
     }
   }
 
-  preview({ id, item }) {
+  preview ({ id, item }) {
     this.props.onItemPreview({ id: item, photos: [id] })
   }
 
-  rotate(by, id, type = 'photo') {
+  rotate (by, id, type = 'photo') {
     if (!this.props.isDisabled && id != null) {
       this.props.onRotate({ id, by, type })
     }
   }
 
-  connect(element) {
+  connect (element) {
     return this.props.isDisabled ?
       element :
       this.props.connectDropTarget(element)
   }
 
 
-  static asDropTarget() {
+  static asDropTarget () {
     return DropTarget(
       [DND.PHOTO, DND.FILE, DND.URL],
       DropTargetSpec,
@@ -209,7 +209,7 @@ export class PhotoIterator extends React.Component {
 }
 
 const DropTargetSpec = {
-  drop({ photos, onCreate }, monitor) {
+  drop ({ photos, onCreate }, monitor) {
     if (monitor.didDrop())
       return
 
@@ -240,7 +240,7 @@ const DropTargetSpec = {
     }
   },
 
-  canDrop({ canCreate, photos }, monitor) {
+  canDrop ({ canCreate, photos }, monitor) {
     switch (monitor.getItemType()) {
       case DND.PHOTO:
         return photos.length > 1

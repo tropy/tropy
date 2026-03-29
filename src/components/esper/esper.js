@@ -73,7 +73,7 @@ export class Esper extends React.Component {
     ...Esper.defaultImageProps
   }
 
-  static getDerivedStateFromProps(props, prevState) {
+  static getDerivedStateFromProps (props, prevState) {
     let id
     let src
     let text = parseAltoDocument(props.transcription?.data)
@@ -99,7 +99,7 @@ export class Esper extends React.Component {
       }
   }
 
-  static getDerivedImageStateFromProps({ photo, selection }) {
+  static getDerivedImageStateFromProps ({ photo, selection }) {
     let image = selection || photo
     let state = { ...Esper.defaultImageProps }
 
@@ -133,7 +133,7 @@ export class Esper extends React.Component {
   // this here instead, so as not to pollute the state with
   // duplicates of all image props.
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate (nextProps, nextState) {
     if (this.state.src !== nextState.src)
       return true // view going to reset anyway!
     if (this.state.id !== nextState.id)
@@ -161,7 +161,7 @@ export class Esper extends React.Component {
   // Returns true if any of the image props changed and if the
   // new values are different from next state. The intent is that
   // this flags only changes which happened outside of Esper.
-  didImageChange(nextProps, nextState) {
+  didImageChange (nextProps, nextState) {
     let image = this.props.selection || this.props.photo
     let nextImage = nextProps.selection || nextProps.photo
 
@@ -189,7 +189,7 @@ export class Esper extends React.Component {
     return false
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState) {
     let shouldViewReset = this.state.src !== prevState.src
     let shouldViewSync = this.state.id !== prevState.id
     let hasBecomeVisible = this.state.isVisible && !prevState.isVisible
@@ -227,35 +227,35 @@ export class Esper extends React.Component {
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.handleImageChange.flush()
     this.handleViewChange.flush()
   }
 
-  get isDisabled() {
+  get isDisabled () {
     return this.props.isDisabled ||
       !this.state.isVisible ||
       this.state.isTextureMissing || /* TODO should be read-only */
       this.props.photo?.pending === true
   }
 
-  get isSelectionActive() {
+  get isSelectionActive () {
     return this.props.selection != null
   }
 
-  get screen() {
+  get screen () {
     return this.esper.current.app.screen
   }
 
-  get tool() {
+  get tool () {
     return getActiveTool(this.props, this.state)
   }
 
-  focus() {
+  focus () {
     this.container.current.focus()
   }
 
-  pan({ x = 0, y = 0 }, animate) {
+  pan ({ x = 0, y = 0 }, animate) {
     if (this.props.mode !== MODE.FIT) {
       this.esper.current.move({
         x: Math.floor(this.esper.current.x + x),
@@ -292,7 +292,7 @@ export class Esper extends React.Component {
     }
   }, 75)
 
-  copyTextSelection() {
+  copyTextSelection () {
     copy({ text: this.state.text?.toPlainText(this.state.textSelection) })
   }
 
@@ -527,7 +527,7 @@ export class Esper extends React.Component {
     }
   }
 
-  handleQuickToolKeyDown({ ctrlKey, metaKey, altKey }) {
+  handleQuickToolKeyDown ({ ctrlKey, metaKey, altKey }) {
     switch (this.state.quicktool) {
       case TOOL.PAN:
         if (ctrlKey || metaKey) {
@@ -548,7 +548,7 @@ export class Esper extends React.Component {
   // state without cmd/ctrl is just the space key, which will continue
   // to repeat as soon as cmd/ctrl are released, so the quicktool
   // will be initialized straight away on keydown.
-  handleQuickToolKeyUp({ key, ctrlKey, metaKey }) {
+  handleQuickToolKeyUp ({ key, ctrlKey, metaKey }) {
     switch (key) {
       case ' ':
       case 'Meta':
@@ -654,7 +654,7 @@ export class Esper extends React.Component {
   }, 650)
 
 
-  render() {
+  render () {
     let { isDisabled } = this
     let { hasSideBySideLayout, overlay, overlayPanel, transcription } = this.props
 

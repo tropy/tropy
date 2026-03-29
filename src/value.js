@@ -1,18 +1,18 @@
 import { TYPE } from './constants/index.js'
 
-export function date(input) {
+export function date (input) {
   return { text: input, type: TYPE.DATE }
 }
 
-export function text(input) {
+export function text (input) {
   return { text: input, type: TYPE.TEXT }
 }
 
-export function value(input, type) {
+export function value (input, type) {
   return { text: input, type: type || TYPE.TEXT }
 }
 
-export function equal(a, b) {
+export function equal (a, b) {
   if (a === b) return true
   if (a == null || b == null) return false
 

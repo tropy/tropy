@@ -9,7 +9,7 @@ import { getAllTags } from '../../selectors/index.js'
 
 
 export class Export extends Command {
-  *exec() {
+  *exec () {
     let { target } = this.action.meta
 
     if (!target) {

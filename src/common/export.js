@@ -1,7 +1,7 @@
 import { tropy } from '../ontology/ns.js'
 
 export const ctx = {
-  get item() {
+  get item () {
     return {
       '@version': 1.1,
       '@vocab': tropy.BASE,
@@ -20,11 +20,11 @@ export const ctx = {
     }
   },
 
-  get note() {
+  get note () {
     return {}
   },
 
-  get photo() {
+  get photo () {
     return {
       note: {
         '@id': tropy.note,
@@ -37,7 +37,7 @@ export const ctx = {
     }
   },
 
-  get selection() {
+  get selection () {
     return {
       note: {
         '@id': tropy.note,
@@ -88,7 +88,7 @@ export const props = {
   note: [
   ],
 
-  get all() {
+  get all () {
     return [
       ...props.item,
       ...props.image,

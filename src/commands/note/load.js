@@ -4,7 +4,7 @@ import mod from '../../models/note.js'
 import { NOTE } from '../../constants/index.js'
 
 export class Load extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 

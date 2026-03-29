@@ -5,7 +5,7 @@ import { create } from '../../models/transcription.js'
 import * as slice from '../../slices/transcriptions.js'
 
 export class Create extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { config, data, text, photo, selection } = this.action.payload
     let { plugin } = this.action.meta

@@ -12,7 +12,7 @@ import { exif as exifns } from '../ontology/ns.js'
 const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
 
 export class Image extends Asset {
-  get orientation() {
+  get orientation () {
     switch (this.mimetype) {
       case MIME.HEIC:
       case MIME.HEIF:
@@ -24,42 +24,42 @@ export class Image extends Asset {
     }
   }
 
-  get channels() {
+  get channels () {
     return this.meta?.[this.page]?.channels
   }
 
-  get space() {
+  get space () {
     return this.meta?.[this.page]?.space
   }
 
-  get color() {
+  get color () {
     return this.stats?.[this.page]?.color
   }
 
-  get hasAlpha() {
+  get hasAlpha () {
     return this.meta?.[this.page]?.hasAlpha
   }
 
-  get isOpaque() {
+  get isOpaque () {
     return !this.hasAlpha || (this.stats?.[this.page]?.isOpaque ?? true)
   }
 
-  get width() {
+  get width () {
     return this.meta?.[this.page]?.width ?? 0
   }
 
-  get height() {
+  get height () {
     return this.meta?.[this.page]?.height ?? 0
   }
 
-  get data() {
+  get data () {
     return {
       ...this.meta?.[this.page]?.exif,
       ...this.meta?.[this.page]?.xmp
     }
   }
 
-  get date() {
+  get date () {
     try {
       let xif = this.meta?.[this.page]?.exif
       let time = xif?.[exifns.dateTimeOriginal]?.text ||
@@ -74,11 +74,11 @@ export class Image extends Asset {
     }
   }
 
-  get done() {
+  get done () {
     return !(this.page < this.numPages)
   }
 
-  do(page = this.page, autoOrient = false) {
+  do (page = this.page, autoOrient = false) {
     return sharp(this.buffer || this.path, {
       autoOrient,
       page,
@@ -86,21 +86,21 @@ export class Image extends Asset {
     })
   }
 
-  *each(fn, ...args) {
+  *each (fn, ...args) {
     for (let page = 0; page < this.numPages; ++page) {
       yield fn(this.do(page), page, ...args)
     }
   }
 
-  next() {
+  next () {
     return ++this.page
   }
 
-  rewind() {
+  rewind () {
     this.page = 0
   }
 
-  async open({ page, density, useLocalTimezone } = {}) {
+  async open ({ page, density, useLocalTimezone } = {}) {
     this.meta = null
     this.stats = null
     this.page = 0
@@ -113,7 +113,7 @@ export class Image extends Asset {
     return this
   }
 
-  async parse({ page, density = 72, useLocalTimezone }) {
+  async parse ({ page, density = 72, useLocalTimezone }) {
     await init()
 
     if (!IMAGE.SUPPORTED[this.mimetype])
@@ -204,7 +204,7 @@ export class Image extends Asset {
     return image
   }
 
-  toJSON() {
+  toJSON () {
     return pick(this, [
       'page',
       'color',
@@ -215,7 +215,7 @@ export class Image extends Asset {
     ], super.toJSON())
   }
 
-  variants(isSelection = false) {
+  variants (isSelection = false) {
     let variants = [48, 512]
 
     if (!isSelection && (

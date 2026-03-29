@@ -5,11 +5,11 @@ import { isMeta } from '../../keymap.js'
 import { pure } from '../util.js'
 
 export class ItemIterable extends React.PureComponent {
-  componentDidMount() {
+  componentDidMount () {
     this.props.dp(getEmptyImage())
   }
 
-  get classes() {
+  get classes () {
     return {
       item: true,
       'drop-target': !this.props.isReadOnly,
@@ -65,7 +65,7 @@ export class ItemIterable extends React.PureComponent {
     this.container = container
   }
 
-  connect(element) {
+  connect (element) {
     return (this.props.isReadOnly) ?
       element :
       this.props.ds(this.props.dt(element))
@@ -73,7 +73,7 @@ export class ItemIterable extends React.PureComponent {
 
 
   static DragSourceSpec = {
-    beginDrag({ item, getSelection }) {
+    beginDrag ({ item, getSelection }) {
       return {
         items: into(
           [{ ...item }],
@@ -83,7 +83,7 @@ export class ItemIterable extends React.PureComponent {
       }
     },
 
-    canDrag({ item }) {
+    canDrag ({ item }) {
       return !item.deleted
     }
   }
@@ -96,7 +96,7 @@ export class ItemIterable extends React.PureComponent {
 
 
   static DropTargetSpec = {
-    drop({ item, onDropPhotos, onDropItems }, monitor) {
+    drop ({ item, onDropPhotos, onDropItems }, monitor) {
       switch (monitor.getItemType()) {
         case DND.PHOTO:
           return onDropPhotos({
@@ -109,7 +109,7 @@ export class ItemIterable extends React.PureComponent {
       }
     },
 
-    canDrop({ item }, monitor) {
+    canDrop ({ item }, monitor) {
       if (item.deleted) return false
 
       switch (monitor.getItemType()) {
@@ -135,7 +135,7 @@ export class ItemIterable extends React.PureComponent {
     canDrop: monitor.canDrop()
   })
 
-  static wrap() {
+  static wrap () {
     return pure(DragSource(
       DND.ITEMS, this.DragSourceSpec, this.DragSourceCollect
     )(DropTarget(

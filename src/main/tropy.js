@@ -68,7 +68,7 @@ export class Tropy extends EventEmitter {
     zoom: 1.0
   }
 
-  constructor(opts = {}) {
+  constructor (opts = {}) {
     super()
 
     if (Tropy.instance)
@@ -96,7 +96,7 @@ export class Tropy extends EventEmitter {
     })
   }
 
-  async start() {
+  async start () {
     await this.restore()
     this.listen()
     this.wm.start()
@@ -105,7 +105,7 @@ export class Tropy extends EventEmitter {
     shell.start()
   }
 
-  async stop() {
+  async stop () {
     shell.stop()
     await this.api.stop()
     this.updater.stop()
@@ -113,7 +113,7 @@ export class Tropy extends EventEmitter {
     this.persist()
   }
 
-  async open(...urls) {
+  async open (...urls) {
     for (let url of urls) {
       switch (url.protocol) {
         case 'file:':
@@ -134,7 +134,7 @@ export class Tropy extends EventEmitter {
       return this.openMostRecentProject()
   }
 
-  async openFile(...files) {
+  async openFile (...files) {
     for (let file of files) {
       switch (extname(file)) {
         case '.tpy':
@@ -152,7 +152,7 @@ export class Tropy extends EventEmitter {
     }
   }
 
-  async openMostRecentProject() {
+  async openMostRecentProject () {
     let recent = this.state.recent[0]
     if (fs.existsSync(recent))
       return this.showProjectWindow(recent)
@@ -160,7 +160,7 @@ export class Tropy extends EventEmitter {
     return this.showProjectWindow()
   }
 
-  async showOpenDialog(win = this.wm.current()) {
+  async showOpenDialog (win = this.wm.current()) {
     let files = await dialog.open(win, {
       filters: [{
         name: this.dict.dialog.file.project,
@@ -173,7 +173,7 @@ export class Tropy extends EventEmitter {
     }
   }
 
-  async showProjectWindow(file, win = this.wm.current()) {
+  async showProjectWindow (file, win = this.wm.current()) {
     if (win == null) {
 
       win = this.getProjectWindow(file)
@@ -224,7 +224,7 @@ export class Tropy extends EventEmitter {
     }
   }
 
-  hasOpenedProject(project, win) {
+  hasOpenedProject (project, win) {
     this.wm.close(['prefs'])
 
     if (project.path) {
@@ -259,7 +259,7 @@ export class Tropy extends EventEmitter {
     this.emit('project:opened', project)
   }
 
-  clearRecentProjects(projects) {
+  clearRecentProjects (projects) {
     if (projects)
       this.state.recent = this.state.recent.filter(f => !projects.includes(f))
     else
@@ -269,12 +269,12 @@ export class Tropy extends EventEmitter {
     this.emit('app:reload-menu')
   }
 
-  async import(...args) {
+  async import (...args) {
     if (this.getProject())
       return this.dispatch(act.item.import(...args), this.wm.current())
   }
 
-  async importTemplates(files) {
+  async importTemplates (files) {
     if (!this.wm.current())
       await this.showPreferencesWindow()
 
@@ -283,7 +283,7 @@ export class Tropy extends EventEmitter {
       this.wm.first(['prefs', 'project']))
   }
 
-  showContextMenu(options, win) {
+  showContextMenu (options, win) {
     this.ctx
       .show(options, win)
       .finally(() => {
@@ -291,7 +291,7 @@ export class Tropy extends EventEmitter {
       })
   }
 
-  showAboutWindow() {
+  showAboutWindow () {
     this.wm.show('about', this.hash, {
       title: this.dict.window.about.title,
       parent: this.wm.current(),
@@ -299,7 +299,7 @@ export class Tropy extends EventEmitter {
     })
   }
 
-  showPreferencesWindow() {
+  showPreferencesWindow () {
     let win = this.wm.current()
     let project = this.getProject(win)
 
@@ -318,7 +318,7 @@ export class Tropy extends EventEmitter {
     })
   }
 
-  async restore() {
+  async restore () {
     this.state = await this.migrate(
       await this.store.load('state.json', Tropy.defaults))
 
@@ -340,7 +340,7 @@ export class Tropy extends EventEmitter {
     info('app state restored')
   }
 
-  load() {
+  load () {
     return Promise.all([
       this.menu.load(),
       this.ctx.load(),
@@ -350,7 +350,7 @@ export class Tropy extends EventEmitter {
     ])
   }
 
-  migrate(state) {
+  migrate (state) {
     if (state.version == null)
       this.isFirstRun = true
     else
@@ -366,7 +366,7 @@ export class Tropy extends EventEmitter {
     return state
   }
 
-  persist() {
+  persist () {
     info('saving app state')
 
     if (this.state != null) {
@@ -377,7 +377,7 @@ export class Tropy extends EventEmitter {
     return this
   }
 
-  async print(opts, sender) {
+  async print (opts, sender) {
     try {
       if (!opts.items.length) {
         info('print aborted: no items submitted')
@@ -446,7 +446,7 @@ export class Tropy extends EventEmitter {
     }
   }
 
-  listen() {
+  listen () {
     this.on('app:about', () =>
       this.showAboutWindow())
 
@@ -1008,7 +1008,7 @@ export class Tropy extends EventEmitter {
         window: win,
         x: pos?.x,
         y: pos?.y,
-        callback() { win.webContents.send('menu', false) }
+        callback () { win.webContents.send('menu', false) }
       })
     })
 
@@ -1083,7 +1083,7 @@ export class Tropy extends EventEmitter {
     return this
   }
 
-  copyProtocolURL(project, { item, photo }) {
+  copyProtocolURL (project, { item, photo }) {
     let alias = 'current'
 
     clipboard.write({
@@ -1091,7 +1091,7 @@ export class Tropy extends EventEmitter {
     })
   }
 
-  async handleProtocolRequest(url) {
+  async handleProtocolRequest (url) {
     info(`opening url ${url}`)
 
     switch (url.host) {
@@ -1146,7 +1146,7 @@ export class Tropy extends EventEmitter {
     }
   }
 
-  handleUncaughtException(e, win = BrowserWindow.getFocusedWindow()) {
+  handleUncaughtException (e, win = BrowserWindow.getFocusedWindow()) {
     fatal(e)
 
     dialog
@@ -1166,7 +1166,7 @@ export class Tropy extends EventEmitter {
       })
   }
 
-  get hash() {
+  get hash () {
     return {
       api: this.api.status,
       data: this.opts.data,
@@ -1191,13 +1191,13 @@ export class Tropy extends EventEmitter {
     }
   }
 
-  updateWindowLocale() {
+  updateWindowLocale () {
     this.wm.setTitle('about', this.dict.window.about.title)
     this.wm.setTitle('prefs', this.dict.window.prefs.title)
     this.wm.broadcast('locale', this.state.locale)
   }
 
-  async setTheme(theme = this.state.theme) {
+  async setTheme (theme = this.state.theme) {
     info(`switch to "${theme}" theme`)
     this.state.theme = theme
 
@@ -1214,7 +1214,7 @@ export class Tropy extends EventEmitter {
     this.wm.handleThemeChange(this.state.frameless)
   }
 
-  dispatch(action, win = BrowserWindow.getFocusedWindow()) {
+  dispatch (action, win = BrowserWindow.getFocusedWindow()) {
     if (win != null) {
       win.webContents.send('dispatch', action)
       return true
@@ -1222,11 +1222,11 @@ export class Tropy extends EventEmitter {
     return false
   }
 
-  getHistory(win = BrowserWindow.getFocusedWindow()) {
+  getHistory (win = BrowserWindow.getFocusedWindow()) {
     return H.get(win)
   }
 
-  setHistory(history, win = BrowserWindow.getFocusedWindow()) {
+  setHistory (history, win = BrowserWindow.getFocusedWindow()) {
     if (history == null)
       H.delete(win)
     else
@@ -1236,7 +1236,7 @@ export class Tropy extends EventEmitter {
       this.menu.handleHistoryChange(history)
   }
 
-  findProject(file) {
+  findProject (file) {
     if (file == null)
       return this.getProject()
 
@@ -1248,7 +1248,7 @@ export class Tropy extends EventEmitter {
     return null
   }
 
-  getProjectWindow(path) {
+  getProjectWindow (path) {
     for (let win of this.wm.map('project')) {
       if (this.getProject(win)?.path === path) {
         return win
@@ -1256,11 +1256,11 @@ export class Tropy extends EventEmitter {
     }
   }
 
-  getProject(win = this.wm.current()) {
+  getProject (win = this.wm.current()) {
     return P.get(win)
   }
 
-  setProject(project, win = this.wm.current()) {
+  setProject (project, win = this.wm.current()) {
     if (project == null) {
       P.delete(win)
 
@@ -1278,15 +1278,15 @@ export class Tropy extends EventEmitter {
     }
   }
 
-  getTags(win = BrowserWindow.getFocusedWindow()) {
+  getTags (win = BrowserWindow.getFocusedWindow()) {
     return T.get(win) || []
   }
 
-  setTags(tags, win = BrowserWindow.getFocusedWindow()) {
+  setTags (tags, win = BrowserWindow.getFocusedWindow()) {
     return T.set(win, tags)
   }
 
-  async loadDevToolExtensions() {
+  async loadDevToolExtensions () {
     try {
       let extensions = join(this.opts.data, 'extensions')
 
@@ -1301,27 +1301,27 @@ export class Tropy extends EventEmitter {
     }
   }
 
-  get dict() {
+  get dict () {
     return this.strings.dict
   }
 
-  get log() {
+  get log () {
     return join(app.getPath('logs'), 'tropy.log')
   }
 
-  get name() {
+  get name () {
     return product
   }
 
-  get dev() {
+  get dev () {
     return channel === 'alpha' || process.env.NODE_ENV === 'development'
   }
 
-  get debug() {
+  get debug () {
     return this.opts.debug || this.state.debug
   }
 
-  get version() {
+  get version () {
     return version
   }
 }

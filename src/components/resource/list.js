@@ -2,7 +2,7 @@ import React from 'react'
 import { ResourceListItem } from './list-item.js'
 
 export class ResourceList extends React.PureComponent {
-  render() {
+  render () {
     return (
       <ul className="resource-list">
         {this.props.resources.map(resource => (

@@ -30,25 +30,25 @@ const subdirs = async root => (
 
 
 export class Plugins extends EventEmitter {
-  constructor(root, context = {}) {
+  constructor (root, context = {}) {
     super()
     this.context = context
     this.root = root
     this.reset()
   }
 
-  get configFile() {
+  get configFile () {
     return join(this.root, 'config.json')
   }
 
-  getContext(plugin) {
+  getContext (plugin) {
     return {
       logger: logger.child({ plugin }),
       ...this.context
     }
   }
 
-  available(action) {
+  available (action) {
     return this.config.reduce((acc, { plugin, name, disabled }, id) => {
       if (!disabled && this.supports(plugin, action)) {
         acc.push({ id: `${id}`, name: name || `${plugin} #${id}` })
@@ -57,7 +57,7 @@ export class Plugins extends EventEmitter {
     }, [])
   }
 
-  async create(config = this.config) {
+  async create (config = this.config) {
     this.instances = Object.create({})
     let loadcount = 0
 
@@ -115,7 +115,7 @@ export class Plugins extends EventEmitter {
     this.emit('change')
   }, 100)
 
-  async init(autosave = true) {
+  async init (autosave = true) {
     await mkdir(this.root, { recursive: true })
 
     if (process.env.NODE_ENV !== 'test' && process.type === 'browser')
@@ -124,7 +124,7 @@ export class Plugins extends EventEmitter {
     return this.reload(autosave)
   }
 
-  async install(input) {
+  async install (input) {
     try {
       var plugin = Plugins.basename(input)
       let dest = join(this.root, plugin)
@@ -142,7 +142,7 @@ export class Plugins extends EventEmitter {
     return this
   }
 
-  async list() {
+  async list () {
     try {
       return uniq([
         ...(await deps(join(this.root, 'package.json'))),
@@ -154,7 +154,7 @@ export class Plugins extends EventEmitter {
     }
   }
 
-  async reload(autosave = false) {
+  async reload (autosave = false) {
     try {
       await this.unload()
       this.reset()
@@ -181,7 +181,7 @@ export class Plugins extends EventEmitter {
     }
   }
 
-  async import(name) {
+  async import (name) {
     let spec = this.spec[name]
 
     if (!spec)
@@ -190,18 +190,18 @@ export class Plugins extends EventEmitter {
     return await import(spec.main)
   }
 
-  reset() {
+  reset () {
     this.changes = null
     this.config = []
     this.spec = Object.create({})
     this.instances = Object.create({})
   }
 
-  save(config = this.config) {
+  save (config = this.config) {
     return save(this.configFile, config)
   }
 
-  async scan(plugins) {
+  async scan (plugins) {
     if (!plugins) plugins = await this.list()
 
     let spec = {}
@@ -242,7 +242,7 @@ export class Plugins extends EventEmitter {
     return spec
   }
 
-  stop() {
+  stop () {
     this.removeAllListeners()
     if (this.cfw != null) {
       this.cfw.close()
@@ -251,15 +251,15 @@ export class Plugins extends EventEmitter {
     return this
   }
 
-  store(config) {
+  store (config) {
     this.changes = config
   }
 
-  supports(plugin, action) {
+  supports (plugin, action) {
     return !!get(this.spec, [plugin, 'hooks', action])
   }
 
-  async uninstall(plugin, { prune = true } = {}) {
+  async uninstall (plugin, { prune = true } = {}) {
     try {
       const dir = join(this.root, plugin)
       if (!((await stat(dir)).isDirectory())) {
@@ -281,7 +281,7 @@ export class Plugins extends EventEmitter {
     return this
   }
 
-  watch() {
+  watch () {
     if (this.cfw != null) this.cfw.close()
     this.cfw = fs.watch(this.root, (_, file) => {
       if (file === 'config.json') this.handleConfigFileChange()
@@ -291,7 +291,7 @@ export class Plugins extends EventEmitter {
 
   static ext = ['zip']
 
-  static basename(input) {
+  static basename (input) {
     return basename(input)
       .replace(/\.(zip)$/, '')
       .replace(/-\d+(\.\d+)*$/, '')

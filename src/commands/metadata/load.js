@@ -5,7 +5,7 @@ import { METADATA } from '../../constants/index.js'
 
 
 export class Load extends Command {
-  *exec() {
+  *exec () {
     const { db } = this.options
     const { payload } = this.action
     const data = yield call(mod.load, db, payload)

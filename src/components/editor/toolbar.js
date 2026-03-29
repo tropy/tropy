@@ -18,7 +18,7 @@ export class EditorToolbar extends React.PureComponent {
     this.setState({ context: 'link' })
   }
 
-  handleCommand(cmd) {
+  handleCommand (cmd) {
     return () => this.props.onCommand(cmd)
   }
 
@@ -35,7 +35,7 @@ export class EditorToolbar extends React.PureComponent {
     this.props.onCommand('removeLink')
   }
 
-  render() {
+  render () {
     let T = this.props.isTitlebar ? Titlebar : Toolbar
     let isDisabled = this.props.isDisabled || this.props.isReadOnly
 

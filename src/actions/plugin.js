@@ -1,7 +1,7 @@
 import { prompt } from '../dialog.js'
 
 export default {
-  uninstall({ plugins, name }, meta = {}) {
+  uninstall ({ plugins, name }, meta = {}) {
     return async () => {
       if (meta.prompt !== false) {
         let { cancel } = await prompt('plugin.uninstall', {

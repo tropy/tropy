@@ -10,14 +10,14 @@ const DEFAULTS = {
   interoperability: false
 }
 
-function toValue(value) {
+function toValue (value) {
   if (value instanceof Date) {
     return date(value)
   }
   return text(String(value))
 }
 
-export function exif(buffer, opts = {}) {
+export function exif (buffer, opts = {}) {
   if (!blank(buffer)) {
     try {
       let ifd = parse(buffer, { ...DEFAULTS, ...opts })

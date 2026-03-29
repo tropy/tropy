@@ -1,7 +1,7 @@
 import { PHOTO } from '../constants/index.js'
 import { array } from '../common/util.js'
 
-function update(payload, meta = {}) {
+function update (payload, meta = {}) {
   return {
     type: PHOTO.UPDATE,
     payload,
@@ -10,7 +10,7 @@ function update(payload, meta = {}) {
 }
 
 export default {
-  consolidate(payload, meta) {
+  consolidate (payload, meta) {
     return {
       type: PHOTO.CONSOLIDATE,
       payload: array(payload),
@@ -22,13 +22,13 @@ export default {
     }
   },
 
-  contract(payload, meta = {}) {
+  contract (payload, meta = {}) {
     return {
       type: PHOTO.CONTRACT, payload, meta
     }
   },
 
-  create(payload, meta) {
+  create (payload, meta) {
     return {
       type: PHOTO.CREATE,
       payload,
@@ -42,7 +42,7 @@ export default {
     }
   },
 
-  delete(payload, meta) {
+  delete (payload, meta) {
     return {
       type: PHOTO.DELETE,
       payload,
@@ -50,7 +50,7 @@ export default {
     }
   },
 
-  duplicate(payload, meta) {
+  duplicate (payload, meta) {
     return {
       type: PHOTO.DUPLICATE,
       payload,
@@ -58,7 +58,7 @@ export default {
     }
   },
 
-  error(payload, meta = {}) {
+  error (payload, meta = {}) {
     return (dispatch, getState) => {
       let id = payload
       let { selections } = getState()
@@ -72,13 +72,13 @@ export default {
     }
   },
 
-  expand(payload, meta = {}) {
+  expand (payload, meta = {}) {
     return {
       type: PHOTO.EXPAND, payload, meta
     }
   },
 
-  extract(payload, meta) {
+  extract (payload, meta) {
     return {
       type: PHOTO.EXTRACT,
       payload,
@@ -86,7 +86,7 @@ export default {
     }
   },
 
-  transcribe(payload, meta) {
+  transcribe (payload, meta) {
     return {
       type: PHOTO.TRANSCRIBE,
       payload,
@@ -100,7 +100,7 @@ export default {
 
   update,
 
-  restore(payload, meta) {
+  restore (payload, meta) {
     return {
       type: PHOTO.RESTORE,
       payload,
@@ -108,7 +108,7 @@ export default {
     }
   },
 
-  rotate(payload, meta) {
+  rotate (payload, meta) {
     return {
       type: PHOTO.ROTATE,
       payload,
@@ -116,7 +116,7 @@ export default {
     }
   },
 
-  save(payload, meta) {
+  save (payload, meta) {
     return {
       type: PHOTO.SAVE,
       payload,
@@ -124,7 +124,7 @@ export default {
     }
   },
 
-  load(payload, meta) {
+  load (payload, meta) {
     return {
       type: PHOTO.LOAD,
       payload,
@@ -132,7 +132,7 @@ export default {
     }
   },
 
-  insert(payload, meta) {
+  insert (payload, meta) {
     return {
       type: PHOTO.INSERT,
       payload,
@@ -140,7 +140,7 @@ export default {
     }
   },
 
-  select(payload, meta) {
+  select (payload, meta) {
     return (dispatch, getState) => {
       let { item, photo, selection, note } = payload
 
@@ -163,7 +163,7 @@ export default {
     }
   },
 
-  move(payload, meta) {
+  move (payload, meta) {
     return {
       type: PHOTO.MOVE,
       payload,
@@ -171,7 +171,7 @@ export default {
     }
   },
 
-  order(payload, meta) {
+  order (payload, meta) {
     return {
       type: PHOTO.ORDER,
       payload,
@@ -180,7 +180,7 @@ export default {
   },
 
   notes: {
-    add(payload, meta) {
+    add (payload, meta) {
       return {
         type: PHOTO.NOTE.ADD,
         payload,
@@ -188,7 +188,7 @@ export default {
       }
     },
 
-    remove(payload, meta) {
+    remove (payload, meta) {
       return {
         type: PHOTO.NOTE.REMOVE,
         payload,
@@ -198,7 +198,7 @@ export default {
   },
 
   selections: {
-    add(payload, meta) {
+    add (payload, meta) {
       return {
         type: PHOTO.SELECTION.ADD,
         payload,
@@ -206,7 +206,7 @@ export default {
       }
     },
 
-    remove(payload, meta) {
+    remove (payload, meta) {
       return {
         type: PHOTO.SELECTION.REMOVE,
         payload,
@@ -216,7 +216,7 @@ export default {
   },
 
   bulk: {
-    update(payload, meta) {
+    update (payload, meta) {
       return {
         type: PHOTO.BULK.UPDATE,
         payload,
@@ -226,7 +226,7 @@ export default {
   },
 
   template: {
-    change({ id, template }, meta) {
+    change ({ id, template }, meta) {
       return {
         type: PHOTO.TEMPLATE.CHANGE,
         payload: {

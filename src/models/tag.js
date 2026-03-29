@@ -8,7 +8,7 @@ const COLUMNS = [
   'modified'
 ]
 
-async function load(db, ids) {
+async function load (db, ids) {
   let tags = {}
   await db.each(
     ...select({ id: 'tag_id' }, ...COLUMNS)
@@ -23,7 +23,7 @@ async function load(db, ids) {
 export default {
   load,
 
-  async create(db, data) {
+  async create (db, data) {
     let { id } = await db.run(
       ...into('tags')
         .insert(pick(data, COLUMNS, { tag_id: data.id })))
@@ -31,7 +31,7 @@ export default {
     return (await load(db, [id]))[id]
   },
 
-  async save(db, { id, ...data }) {
+  async save (db, { id, ...data }) {
     return db.run(
       ...update('tags')
         .set(data)
@@ -39,12 +39,12 @@ export default {
         .where({ tag_id: id }))
   },
 
-  async delete(db, ids) {
+  async delete (db, ids) {
     return db.run(`
       DELETE FROM tags WHERE tag_id IN (${list(ids)})`)
   },
 
-  async items(db, id) {
+  async items (db, id) {
     let items = []
     await db.each(
       ...select('id')

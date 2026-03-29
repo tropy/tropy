@@ -6,7 +6,7 @@ import { get } from '../../common/util.js'
 
 
 export class PluginOption extends React.PureComponent {
-  get attrs() {
+  get attrs () {
     return {
       id: this.props.spec.field,
       label: this.props.spec.label,
@@ -20,7 +20,7 @@ export class PluginOption extends React.PureComponent {
     }
   }
 
-  get value() {
+  get value () {
     switch (this.props.spec.type) {
       case 'number':
         return Number(this.props.value).toString()
@@ -29,7 +29,7 @@ export class PluginOption extends React.PureComponent {
     }
   }
 
-  format(value) {
+  format (value) {
     switch (this.props.spec.type) {
       case 'number':
         return Number(value)
@@ -45,7 +45,7 @@ export class PluginOption extends React.PureComponent {
     this.props.onChange(this.props.spec.field, this.format(value))
   }
 
-  render() {
+  render () {
     switch (this.props.spec.type) {
       case 'bool':
       case 'boolean':

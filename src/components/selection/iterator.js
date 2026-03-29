@@ -4,11 +4,11 @@ import { adjacent, move } from '../../common/util.js'
 
 
 export class SelectionIterator extends React.Component {
-  get isSortable() {
+  get isSortable () {
     return !this.props.isDisabled && this.size > 1
   }
 
-  isActive(selection) {
+  isActive (selection) {
     return this.props.active === selection
   }
 
@@ -38,7 +38,7 @@ export class SelectionIterator extends React.Component {
     }
   }
 
-  connect(element) {
+  connect (element) {
     return this.isSortable ? this.props.dropTarget(element) : element
   }
 
@@ -46,7 +46,7 @@ export class SelectionIterator extends React.Component {
     return adjacent(this.props.selections, selection).map(s => s.id)
   }
 
-  map(fn) {
+  map (fn) {
     const { isSortable } = this
 
     return this.props.selections.map((selection, index) => {
@@ -68,19 +68,19 @@ export class SelectionIterator extends React.Component {
     })
   }
 
-  static asDropTarget() {
+  static asDropTarget () {
     return DropTarget(DND.SELECTION, DropTargetSpec, DropTargetCollect)(this)
   }
 }
 
 
 const DropTargetSpec = {
-  canDrop({ photo }, monitor) {
+  canDrop ({ photo }, monitor) {
     const selection = monitor.getItem()
     return photo.id === selection.photo
   },
 
-  drop({ photo }, monitor) {
+  drop ({ photo }, monitor) {
     if (monitor.didDrop()) return
 
     const { id } = monitor.getItem()

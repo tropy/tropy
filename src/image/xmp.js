@@ -6,7 +6,7 @@ import { xml } from '../ontology/ns.js'
 
 const DATES = /(^d|D)ate(\b|[A-Z])/
 
-export function xmp(buffer) {
+export function xmp (buffer) {
   try {
     if (!blank(buffer)) {
       let input = strip(buffer).toString('utf-8')
@@ -48,7 +48,7 @@ export function xmp(buffer) {
   }
 }
 
-function strip(buffer) {
+function strip (buffer) {
   if (buffer[0] !== 60) {
     let offset = buffer.indexOf(0)
     if (offset >= 0) {
@@ -58,11 +58,11 @@ function strip(buffer) {
   return buffer
 }
 
-function uri(node) {
+function uri (node) {
   return [node.namespaceURI, node.localName].join('')
 }
 
-function value(node) {
+function value (node) {
   // TODO parse attributes into object
   return node.textContent
 }

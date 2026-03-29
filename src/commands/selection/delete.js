@@ -7,7 +7,7 @@ import * as act from '../../actions/index.js'
 
 
 export class Delete extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 
@@ -42,7 +42,7 @@ export class Delete extends Command {
     this.undo = act.selection.restore(payload, { idx })
   }
 
-  *select(item, photo, selection) {
+  *select (item, photo, selection) {
     if (selection != null) {
       var note = yield select(state =>
         get(state.selections, [selection, 'notes', 0], null))
@@ -61,7 +61,7 @@ Delete.register(SELECTION.DELETE)
 
 
 export class Restore extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
     let { photo, selections } = payload

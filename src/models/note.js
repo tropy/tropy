@@ -3,7 +3,7 @@ import { json, stringify } from '../common/util.js'
 import { into, update } from '../common/query.js'
 import { warn } from '../common/log.js'
 
-async function load(db, ids) {
+async function load (db, ids) {
   let notes = {}
 
   let conditions = ['deleted IS NULL']
@@ -47,7 +47,7 @@ async function load(db, ids) {
 export default {
   load,
 
-  async create(db, { state, text, id: parent }) {
+  async create (db, { state, text, id: parent }) {
     let { id } = await db.run(...into('notes').insert({
       id: parent,
       state: stringify(state),
@@ -57,7 +57,7 @@ export default {
     return (await load(db, [id]))[id]
   },
 
-  async save(db, { id, state, text, modified = new Date }) {
+  async save (db, { id, state, text, modified = new Date }) {
     assert(id != null, 'missing id')
     assert(state != null, 'missing state')
 
@@ -76,7 +76,7 @@ export default {
     await db.run(...query)
   },
 
-  async delete(db, id) {
+  async delete (db, id) {
     let deleted = await db.all(
       ...update('notes')
         .set('deleted = datetime("now")')
@@ -85,7 +85,7 @@ export default {
     return deleted.map(n => n.note_id)
   },
 
-  async restore(db, id) {
+  async restore (db, id) {
     await db.run(
       ...update('notes')
         .set({ deleted: null })
@@ -94,7 +94,7 @@ export default {
     return load(db, id)
   },
 
-  prune(db) {
+  prune (db) {
     return db.run(`
       DELETE FROM notes WHERE deleted IS NOT NULL`
     )

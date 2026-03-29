@@ -7,14 +7,14 @@ const SHIFT = /^s(hift)$/i
 const MOD = /^mod|cmdorctrl$/i
 
 export class KeyMap {
-  constructor(specs = {}) {
+  constructor (specs = {}) {
     this.specs = {}
     for (let name in specs) {
       this.specs[name] = parse(specs[name])
     }
   }
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator] () {
     for (let name in this.specs) {
       for (let spec of this.specs[name]) {
         yield [name, spec]
@@ -22,12 +22,12 @@ export class KeyMap {
     }
   }
 
-  match(event) {
+  match (event) {
     return match(this, event)
   }
 }
 
-export function compile(data) {
+export function compile (data) {
   let map = {}
   for (let component in data) {
     map[component] = new KeyMap(data[component])
@@ -36,11 +36,11 @@ export function compile(data) {
 }
 
 
-export function parse(input) {
+export function parse (input) {
   return Array.isArray(input) ? input.map(p) : [p(input)]
 }
 
-function p(string) {
+function p (string) {
   let parts = string.split(/[+-](?!$)/)
   let key = parts.pop()
 
@@ -68,7 +68,7 @@ function p(string) {
   return { key, alt, ctrl, meta, shift }
 }
 
-export function match(map, event) {
+export function match (map, event) {
   for (let [name, spec] of map) {
     if (spec.key !== event.key) continue
     if (spec.alt !== event.altKey) continue
@@ -82,6 +82,6 @@ export function match(map, event) {
   return null
 }
 
-export function isMeta(event) {
+export function isMeta (event) {
   return (!darwin && event.ctrlKey) || (darwin && event.metaKey)
 }

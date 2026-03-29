@@ -8,7 +8,7 @@ class LinkContext extends React.PureComponent {
   input = React.createRef()
   container = React.createRef()
 
-  componentDidUpdate({ isActive: wasActive }) {
+  componentDidUpdate ({ isActive: wasActive }) {
     if (!wasActive && this.props.isActive) {
       ensure(
         this.container.current,
@@ -18,7 +18,7 @@ class LinkContext extends React.PureComponent {
     }
   }
 
-  getLabelFor(name) {
+  getLabelFor (name) {
     return this.props.intl.formatMessage({
       id: `editor.commands.link.${name}`
     })
@@ -28,7 +28,7 @@ class LinkContext extends React.PureComponent {
     this.props.onCommit({ href })
   }
 
-  render() {
+  render () {
     return (
       <Toolbar.Context
         className="link"

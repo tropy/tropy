@@ -13,17 +13,17 @@ export class PhotoIterable extends React.PureComponent {
     offset: null
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.connectDragPreview(getEmptyImage())
   }
 
-  componentDidUpdate(props) {
+  componentDidUpdate (props) {
     if (this.props.isSelected && !props.isSelected) {
       this.container.current.scrollIntoViewIfNeeded()
     }
   }
 
-  get classes() {
+  get classes () {
     return ['photo', {
       'drop-target': this.props.isSortable,
       over: this.props.isOver,
@@ -34,15 +34,15 @@ export class PhotoIterable extends React.PureComponent {
     }]
   }
 
-  get direction() {
+  get direction () {
     return this.state.offset ? 'after' : 'before'
   }
 
-  get isActive() {
+  get isActive () {
     return this.props.isSelected && this.props.selection == null
   }
 
-  get isDraggable() {
+  get isDraggable () {
     return !this.props.isDisabled
   }
 
@@ -52,11 +52,11 @@ export class PhotoIterable extends React.PureComponent {
     }
   }
 
-  contract() {
+  contract () {
     this.props.onContract(this.props.photo)
   }
 
-  expand() {
+  expand () {
     this.props.onExpand(this.props.photo)
   }
 
@@ -76,7 +76,7 @@ export class PhotoIterable extends React.PureComponent {
       pick(this.props.photo, ['id', 'item', 'path', 'protocol']))
   }
 
-  connect(element) {
+  connect (element) {
     if (this.props.isSortable)
       element = this.props.connectDropTarget(element)
     if (this.isDraggable)
@@ -84,7 +84,7 @@ export class PhotoIterable extends React.PureComponent {
     return element
   }
 
-  renderThumbnail(props) {
+  renderThumbnail (props) {
     return (
       <Thumbnail
         {...props}
@@ -95,7 +95,7 @@ export class PhotoIterable extends React.PureComponent {
 
 
   static DragSourceSpec = {
-    beginDrag({ photo, getAdjacent }) {
+    beginDrag ({ photo, getAdjacent }) {
       return {
         ...pick(photo, Thumbnail.keys),
         id: photo.id,
@@ -104,11 +104,11 @@ export class PhotoIterable extends React.PureComponent {
       }
     },
 
-    canDrag({ isDisabled }) {
+    canDrag ({ isDisabled }) {
       return !isDisabled
     },
 
-    endDrag({ onDropPhoto }, monitor) {
+    endDrag ({ onDropPhoto }, monitor) {
       const result = monitor.didDrop() && monitor.getDropResult()
 
       if (!result) return
@@ -127,7 +127,7 @@ export class PhotoIterable extends React.PureComponent {
 
 
   static DropTargetSpec = {
-    hover({ photo, isVertical }, monitor, component) {
+    hover ({ photo, isVertical }, monitor, component) {
       const { id, adj } = monitor.getItem()
       const { top, left, width, height } = bounds(component.container.current)
       const { x, y } = monitor.getClientOffset()
@@ -147,7 +147,7 @@ export class PhotoIterable extends React.PureComponent {
       component.setState({ offset })
     },
 
-    drop({ photo }, monitor, component) {
+    drop ({ photo }, monitor, component) {
       try {
         return {
           id: monitor.getItem().id,
@@ -166,7 +166,7 @@ export class PhotoIterable extends React.PureComponent {
     isOver: monitor.isOver()
   })
 
-  static wrap() {
+  static wrap () {
     return pure(DragSource(
       DND.PHOTO, this.DragSourceSpec, this.DragSourceCollect
     )(DropTarget(

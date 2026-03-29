@@ -55,7 +55,7 @@ const FTS_PATTERN = /[*+'"{(})^-]| (AND|OR|NOT) /
 const prefix = (query) =>
   (!FTS_PATTERN.test(query)) ? query + '*' : query
 
-function prep({ query, sort, tags }, params = {}) {
+function prep ({ query, sort, tags }, params = {}) {
   if (!(sort.column in ORDER)) {
     params.$sort = sort.column
   }
@@ -80,7 +80,7 @@ function prep({ query, sort, tags }, params = {}) {
   }
 }
 
-async function search(db, query, params) {
+async function search (db, query, params) {
   const items = []
   items.idx = {}
 
@@ -94,7 +94,7 @@ async function search(db, query, params) {
 
 
 mod.item = {
-  all(db, { trash, ...options }) {
+  all (db, { trash, ...options }) {
     let { dir, order, params } = prep(options)
     return search(db, `
       ${params.$sort ? SORT : ''}
@@ -114,7 +114,7 @@ mod.item = {
     params)
   },
 
-  async find(db, { ids, ...options }) {
+  async find (db, { ids, ...options }) {
     let { dir, order, params } = prep(options)
     return search(db, `
       ${params.$sort ? SORT : ''}
@@ -131,7 +131,7 @@ mod.item = {
     params)
   },
 
-  async trash(db, options) {
+  async trash (db, options) {
     let { dir, order, params } = prep(options)
     return search(db, `
       ${params.$sort ? SORT : ''}
@@ -148,7 +148,7 @@ mod.item = {
     params)
   },
 
-  async list(db, list, options) {
+  async list (db, list, options) {
     let { dir, order, params } = prep(options, { $list: list })
     return search(db, `
       ${params.$sort ? SORT : ''}
@@ -170,7 +170,7 @@ mod.item = {
     params)
   },
 
-  async unlisted(db, options) {
+  async unlisted (db, options) {
     let { dir, order, params } = prep(options)
     return search(db, `
       ${params.$sort ? SORT : ''}
@@ -192,7 +192,7 @@ mod.item = {
     params)
   },
 
-  async load(db, ids) {
+  async load (db, ids) {
     const items = {}
     if (ids != null) ids = ids.join(',')
 
@@ -258,7 +258,7 @@ mod.item = {
     return items
   },
 
-  async create(db, template, data) {
+  async create (db, template, data) {
     const { id } = await mod.subject.create(db, { template })
 
     await db.run(`
@@ -271,7 +271,7 @@ mod.item = {
     return (await mod.item.load(db, [id]))[id]
   },
 
-  async dup(db, source) {
+  async dup (db, source) {
     const { id } = await mod.subject.dup(db, source)
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
@@ -285,11 +285,11 @@ mod.item = {
     return (await mod.item.load(db, [id]))[id]
   },
 
-  update(db, id, data, timestamp = Date.now()) {
+  update (db, id, data, timestamp = Date.now()) {
     return mod.subject.update(db, { id, template: data.template, timestamp })
   },
 
-  async merge(db, item, items, metadata) {
+  async merge (db, item, items, metadata) {
     let photos = [], tags = [], lists = [], ids = []
 
     let data = { ...metadata[item.id] }
@@ -328,7 +328,7 @@ mod.item = {
     }
   },
 
-  split(db, id, items, data, lists, tags) {
+  split (db, id, items, data, lists, tags) {
     return Promise.all([
       mod.photo.split(db, id, items),
       mod.item.tags.remove(db, { id, tags }),
@@ -338,7 +338,7 @@ mod.item = {
     ])
   },
 
-  implode(db, { id, photos, items }) {
+  implode (db, { id, photos, items }) {
     return Promise.all([
       mod.photo.move(db, { ids: photos, item: id }),
       mod.photo.order(db, id, photos),
@@ -346,24 +346,24 @@ mod.item = {
     ])
   },
 
-  delete(db, ids, $reason = 'user') {
+  delete (db, ids, $reason = 'user') {
     return db.run(`
       INSERT INTO trash (id, reason)
         VALUES ${ids.map(id => `(${id}, $reason)`).join(',')}`, { $reason }
     )
   },
 
-  restore(db, ids) {
+  restore (db, ids) {
     return db.run(
       `DELETE FROM trash WHERE id IN (${ids.join(',')})`
     )
   },
 
-  destroy(db, ids) {
+  destroy (db, ids) {
     return mod.subject.destroy(db, ids)
   },
 
-  async prune(db, since = '-1 month') {
+  async prune (db, since = '-1 month') {
     let morituri = select('id').from('trash').join('items', { using: 'id' })
 
     if (since)
@@ -376,14 +376,14 @@ mod.item = {
   },
 
   tags: {
-    async add(db, { id, tag }) {
+    async add (db, { id, tag }) {
       return db.run(`
         INSERT INTO taggings (tag_id, id) VALUES ${
           id.map(i => `(${tag}, ${i})`).join(',')
         }`)
     },
 
-    async set(db, values) {
+    async set (db, values) {
       if (values.length) {
         return db.run(`
           INSERT INTO taggings (tag_id, id) VALUES ${
@@ -392,17 +392,17 @@ mod.item = {
       }
     },
 
-    async clear(db, id) {
+    async clear (db, id) {
       return db.run('DELETE FROM taggings WHERE id = ?', id)
     },
 
-    async remove(db, { id, tags }) {
+    async remove (db, { id, tags }) {
       return db.run(`
         DELETE FROM taggings
           WHERE id IN (${lst(array(id))}) AND tag_id IN (${lst(tags)})`)
     },
 
-    async copy(db, { source, target }) {
+    async copy (db, { source, target }) {
       return db.run(`
         INSERT INTO taggings (tag_id, id)
           SELECT tag_id, ${Number(target)} AS id
@@ -411,7 +411,7 @@ mod.item = {
   },
 
   lists: {
-    async merge(db, id, items, lists) {
+    async merge (db, id, items, lists) {
       return db.run(`
         INSERT INTO list_items (list_id, id, position, added)
           SELECT list_id, ${Number(id)} AS id, position, added
@@ -422,13 +422,13 @@ mod.item = {
             GROUP BY list_id`)
     },
 
-    async remove(db, id, lists) {
+    async remove (db, id, lists) {
       return db.run(`
         DELETE FROM list_items
           WHERE id = ? AND list_id IN (${lists.map(Number).join(',')})`, id)
     },
 
-    async copy(db, { source, target }) {
+    async copy (db, { source, target }) {
       return db.run(`
         INSERT INTO list_items (list_id, id, position, added)
           SELECT list_id, ${Number(target)} AS id, position, added

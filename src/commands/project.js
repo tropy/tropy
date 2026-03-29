@@ -15,7 +15,7 @@ import { list, load, optimize, reindex, resolveBasePath, save } from '../common/
 
 
 export class Optimize extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     yield call(db.clear)
     yield call(db.seq, conn => optimize(conn))
@@ -26,7 +26,7 @@ Optimize.register(PROJECT.OPTIMIZE)
 
 
 export class Prune extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { meta } = this.action
 
@@ -95,7 +95,7 @@ export class Prune extends Command {
 Prune.register(PROJECT.PRUNE)
 
 export class Reindex extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     yield call(db.clear)
     yield call(db.seq, conn => reindex(conn))
@@ -106,7 +106,7 @@ Reindex.register(PROJECT.REINDEX)
 
 
 export class Reload extends Command {
-  *exec() {
+  *exec () {
     let { db, store } = this.options
 
     let project = yield call(load, db)
@@ -123,7 +123,7 @@ Reload.register(PROJECT.RELOAD)
 
 
 export class Save extends Command {
-  *exec() {
+  *exec () {
     let { watch, ...payload } = this.action.payload
     let { db, id } = this.options
 
@@ -164,7 +164,7 @@ export class Save extends Command {
     this.undo = act.project.save(original)
   }
 
-  *abort() {
+  *abort () {
     if (this.original) {
       yield put(act.project.update(this.original))
     }

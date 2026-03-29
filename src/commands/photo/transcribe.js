@@ -12,7 +12,7 @@ import { save } from '../../models/transcription.js'
 
 
 export class Transcribe extends Command {
-  *exec() {
+  *exec () {
     let { payload } = this.action
 
     let transcriptions = yield select(state =>
@@ -82,7 +82,7 @@ export class Transcribe extends Command {
   }
 }
 
-function getTranscriptions(state, props) {
+function getTranscriptions (state, props) {
   return props.id.map(id => {
     let tr = state.transcriptions[id]
     let selection = state.selections[tr.parent]

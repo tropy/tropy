@@ -52,7 +52,7 @@ export const EditorView = forwardRef(({
   let handleLoad = useEvent((doc) => {
     setView(new ProseMirror(doc.body, {
       editable,
-      dispatchTransaction(tr) {
+      dispatchTransaction (tr) {
         let next = this.state.apply(tr)
 
         if (this.composing)
@@ -65,7 +65,7 @@ export const EditorView = forwardRef(({
       ),
       handleDOMEvents: {
         blur: onBlur,
-        compositionend(v, event) {
+        compositionend (v, event) {
           onChange(v.state, !!event.data)
         },
         focus: onFocus

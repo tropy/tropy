@@ -138,7 +138,7 @@ program
   })
 
 
-export function configure({ arch, platform, out = join(ROOT, 'dist') }) {
+export function configure ({ arch, platform, out = join(ROOT, 'dist') }) {
   // NB: the patterns must include (sub-)directories!
   const INCLUDE = [
     '/db{,/{migrate,schema}{,/**/*}}',
@@ -242,7 +242,7 @@ export function configure({ arch, platform, out = join(ROOT, 'dist') }) {
 }
 
 
-async function addExtraMetadata({ buildPath, electronVersion, platform, arch }) {
+async function addExtraMetadata ({ buildPath, electronVersion, platform, arch }) {
   say('tagging package.json for release')
   let pkg = JSON.parse(await readFile(join(buildPath, 'package.json')))
 
@@ -260,7 +260,7 @@ async function addExtraMetadata({ buildPath, electronVersion, platform, arch }) 
   await writeFile(join(buildPath, 'package.json'), JSON.stringify(pkg, null, 2))
 }
 
-async function addLicense({ buildPath }) {
+async function addLicense ({ buildPath }) {
   say('compiling LICENSE and third-party notices')
 
   await copyFile(
@@ -272,14 +272,14 @@ async function addLicense({ buildPath }) {
   await writeFile(join(buildPath, 'LICENSE.third-party.txt'), licenses)
 }
 
-async function copyLicense(dest) {
+async function copyLicense (dest) {
   say('copy LICENSE')
   await copyFile(`${ROOT}/LICENSE`, `${dest}/LICENSE`)
   await unlink(`${dest}/LICENSES.chromium.html`)
 }
 
 
-function mergeMacSigningOptions(opts, args) {
+function mergeMacSigningOptions (opts, args) {
   if (args.cert) {
     let entitlements = join(ROOT, 'res', 'darwin', 'entitlements.plist')
 
@@ -320,7 +320,7 @@ function mergeMacSigningOptions(opts, args) {
   }
 }
 
-async function copyIcons(dst, theme = 'hicolor') {
+async function copyIcons (dst, theme = 'hicolor') {
   let icons = await readdir(join(ICONS, channel, 'tropy'))
   for (let icon of icons) {
     let ext = extname(icon)
@@ -351,7 +351,7 @@ async function copyIcons(dst, theme = 'hicolor') {
   }
 }
 
-export function desktop({
+export function desktop ({
   icon = qualified.appId,
   mimetypes = [
     'application/vnd.tropy.tropy',

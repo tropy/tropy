@@ -8,7 +8,7 @@ export class Loader extends EventEmitter {
   #pending = new Map()
   #worker
 
-  constructor() {
+  constructor () {
     super()
     this.#worker = new Worker(WorkerResource.expand('loader'))
     this.#worker.onmessage = this.handleWorkerMessage
@@ -27,7 +27,7 @@ export class Loader extends EventEmitter {
     }
   }
 
-  destroy() {
+  destroy () {
     this.#worker.terminate()
     this.#worker = null
 
@@ -36,7 +36,7 @@ export class Loader extends EventEmitter {
     }
   }
 
-  load(url) {
+  load (url) {
     if (this.#pending.has(url)) {
       return this.#pending.get(url).promise
     }
@@ -59,7 +59,7 @@ export class Loader extends EventEmitter {
     return deferred.promise
   }
 
-  async loadTexture(url) {
+  async loadTexture (url) {
     let bitmap = await this.load(url)
     let source = new ImageSource({
       label: url,

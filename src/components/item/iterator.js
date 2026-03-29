@@ -11,34 +11,34 @@ export class ItemIterator extends React.Component {
   container = React.createRef()
   state = {}
 
-  componentDidMount() {
+  componentDidMount () {
     on(document, 'global:nextItem', this.handleNextItem)
     on(document, 'global:prevItem', this.handlePrevItem)
     on(document, 'global:forward', this.handleItemOpen)
     on(window, 'copy', this.handleCopy)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     off(document, 'global:nextItem', this.handleNextItem)
     off(document, 'global:prevItem', this.handlePrevItem)
     off(document, 'global:forward', this.handleItemOpen)
     off(window, 'copy', this.handleCopy)
   }
 
-  focus() {
+  focus () {
     this.container.current?.focus()
   }
 
-  get tabIndex() {
+  get tabIndex () {
     return this.props.isDisabled || !this.props.items.length ?
       null : TABS[this.constructor.name]
   }
 
-  get current() {
+  get current () {
     return this.container.current.current
   }
 
-  head() {
+  head () {
     return this.props.selection[this.props.selection.length - 1]
   }
 
@@ -46,38 +46,38 @@ export class ItemIterator extends React.Component {
   // for the first item before and after the current item. This
   // is because the worst case for weird/sparse selections is
   // not worth the price!
-  after() {
+  after () {
     let next = this.props.items[this.container.current.next()]
     return (next == null || this.isSelected(next)) ? null : next
   }
 
-  before() {
+  before () {
     let prev = this.props.items[this.container.current.prev()]
     return (prev == null || this.isSelected(prev)) ? null : prev
   }
 
   getSelection = () => this.props.selection
 
-  getSelectedPhotos({ items, selection } = this.props) {
+  getSelectedPhotos ({ items, selection } = this.props) {
     return seq(selection, compose(
       map(id => get(items, [indexOf(items, id), 'photos'])),
       keep(),
       cat))
   }
 
-  isSelected({ id }) {
+  isSelected ({ id }) {
     return this.props.selection.includes(id)
   }
 
-  isRangeSelected(items) {
+  isRangeSelected (items) {
     return items.every(id => this.props.selection.includes(id))
   }
 
-  get hasMultiSelection() {
+  get hasMultiSelection () {
     return this.props.selection.length > 1
   }
 
-  clearSelection() {
+  clearSelection () {
     this.props.onSelect({ items: [] })
   }
 
@@ -116,7 +116,7 @@ export class ItemIterator extends React.Component {
     this.props.onContextMenu(event, context.join('-'), target)
   }
 
-  handleItemDelete(items) {
+  handleItemDelete (items) {
     if (!(this.props.isReadOnly || blank(items))) {
       this.props.onItemDelete(items)
     }
@@ -129,13 +129,13 @@ export class ItemIterator extends React.Component {
     }
   }
 
-  handleItemCopy(items) {
+  handleItemCopy (items) {
     if (!blank(items)) {
       this.props.onItemExport(items, { target: ':clipboard:' })
     }
   }
 
-  handleItemMerge(items) {
+  handleItemMerge (items) {
     if (!(this.props.isReadOnly || blank(items))) {
       this.props.onItemMerge(items)
     }
@@ -203,7 +203,7 @@ export class ItemIterator extends React.Component {
     })
   }
 
-  range({ from = this.head(), to } = {}) {
+  range ({ from = this.head(), to } = {}) {
     let { items } = this.props
 
     from = (from == null) ? 0 : indexOf(items, from)
@@ -242,11 +242,11 @@ export class ItemIterator extends React.Component {
     this.props.onSelect({ items }, mod, { throttle })
   }
 
-  preview({ id, photos }) {
+  preview ({ id, photos }) {
     this.props.onItemPreview({ id, photos })
   }
 
-  rotate(by) {
+  rotate (by) {
     if (!this.props.isReadOnly && this.props.selection.length > 0) {
       this.props.onPhotoRotate({
         id: this.getSelectedPhotos(),
@@ -255,13 +255,13 @@ export class ItemIterator extends React.Component {
     }
   }
 
-  connect(element) {
+  connect (element) {
     return (this.isReadOnly) ?
       element :
       this.props.connectDropTarget(element)
   }
 
-  getIterableProps(item, index) {
+  getIterableProps (item, index) {
     return {
       item,
       index,

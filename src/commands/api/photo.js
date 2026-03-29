@@ -9,7 +9,7 @@ import { toBuffer } from '../../image/sharp.js'
 
 
 export class PhotoExtract extends Command {
-  *exec() {
+  *exec () {
     let { cache } = this.options
     let { payload } = this.action
 
@@ -49,7 +49,7 @@ PhotoExtract.register(API.PHOTO.EXTRACT)
 
 
 export class PhotoFind extends Command {
-  *exec() {
+  *exec () {
     let { item } = this.action.payload
     let { items, photos } = yield select()
 
@@ -64,7 +64,7 @@ PhotoFind.register(API.PHOTO.FIND)
 
 
 export class PhotoShow extends Command {
-  *exec() {
+  *exec () {
     let { id } = this.action.payload
     let photo = yield select(state => state.photos[id])
     return photo

@@ -6,7 +6,7 @@ import { noop } from '../common/util.js'
 const DRAG = { START: 1, ACTIVE: 2, NONE: 3 }
 
 export class Draggable extends React.PureComponent {
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.drag.stop()
   }
 
@@ -65,14 +65,14 @@ export class Draggable extends React.PureComponent {
     stopOnMouseLeave: this.props.stopOnMouseLeave
   })
 
-  clear() {
+  clear () {
     if (this.delay)
       clearTimeout(this.delay)
 
     this.delay = null
   }
 
-  render() {
+  render () {
     return (
       <div
         className={cx('draggable', this.props.className)}

@@ -5,14 +5,14 @@ import { info } from './log.js'
 
 export class Migration {
 
-  static async all(dir) {
+  static async all (dir) {
     return (await ls(dir))
       .filter(migration => (/^\d+[\w.-]*\.(js|sql)$/).test(migration))
       .map(migration => new Migration(join(dir, migration)))
       .sort((a, b) => a.number - b.number)
   }
 
-  static async since(number = 0, dir) {
+  static async since (number = 0, dir) {
     return (await Migration.all(dir)).filter(m => m.fresh(number))
   }
 
@@ -22,17 +22,17 @@ export class Migration {
   // using the YYMMDDHHMM format.
   #number = 0
 
-  constructor(path) {
+  constructor (path) {
     this.path = path
     this.type = extname(path).slice(1)
     this.number = basename(path).split('.', 2)[0]
   }
 
-  get number() {
+  get number () {
     return this.#number
   }
 
-  set number(value) {
+  set number (value) {
     if (typeof value === 'string')
       value = Number(value)
 
@@ -42,7 +42,7 @@ export class Migration {
     this.#number = value
   }
 
-  up(db) {
+  up (db) {
     info(`migrating ${basename(db.path)} to #${this.number}`)
 
     return db
@@ -59,7 +59,7 @@ export class Migration {
       })
   }
 
-  fresh(number) {
+  fresh (number) {
     return !number || this.number > number
   }
 }

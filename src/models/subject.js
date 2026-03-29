@@ -1,12 +1,12 @@
 import { blank } from '../common/util.js'
 import { deleteFrom, into, update } from '../common/query.js'
 
-export function touch(db, { id, timestamp = Date.now() }) {
+export function touch (db, { id, timestamp = Date.now() }) {
   return subject.update(db, { id, timestamp })
 }
 
 const subject = {
-  create(db, { template, timestamp = Date.now() }) {
+  create (db, { template, timestamp = Date.now() }) {
     return db.run(
       ...into('subjects').insert({
         template,
@@ -15,7 +15,7 @@ const subject = {
     )
   },
 
-  dup(db, id) {
+  dup (db, id) {
     return db.run(`
       INSERT INTO subjects (template)
         SELECT template FROM subjects WHERE id = ?`, id)
@@ -23,7 +23,7 @@ const subject = {
 
   touch,
 
-  update(db, { id, template, timestamp = Date.now() }) {
+  update (db, { id, template, timestamp = Date.now() }) {
     let query = update('subjects')
       .set({
         modified: new Date(timestamp).toISOString()
@@ -37,13 +37,13 @@ const subject = {
     return db.run(...query)
   },
 
-  destroy(db, id) {
+  destroy (db, id) {
     return db.run(
       ...deleteFrom('subjects').where({ id })
     )
   },
 
-  prune(db) {
+  prune (db) {
     return db.run(
       ...deleteFrom('subjects')
         .where('id IN (SELECT id FROM trash WHERE reason = "auto")')

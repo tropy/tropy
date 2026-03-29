@@ -6,24 +6,24 @@ import { match } from '../../keymap.js'
 
 
 export class TagList extends React.PureComponent {
-  get hasNewTag() {
+  get hasNewTag () {
     return !this.props.isReadOnly &&
       this.props.onCreate != null &&
       this.props.edit != null &&
       this.props.edit.id == null
   }
 
-  get color() {
+  get color () {
     return (this.props.color === 'random')
       ? sample(this.props.colors)
       : this.props.color
   }
 
-  isEditing(tag) {
+  isEditing (tag) {
     return get(this.props.edit, ['id']) === tag.id
   }
 
-  isSelected(tag) {
+  isSelected (tag) {
     return this.props.selection.includes(tag.id)
   }
 
@@ -60,7 +60,7 @@ export class TagList extends React.PureComponent {
     event.nativeEvent.stopImmediatePropagation()
   }
 
-  render() {
+  render () {
     return (
       <ol className="tag-list">
         {this.props.tags.map(tag => (

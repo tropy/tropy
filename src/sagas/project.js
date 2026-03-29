@@ -48,7 +48,7 @@ const dbErrorActions = {
 const FORCE_SHUTDOWN_DELAY = 120000
 
 
-export function *open(opts, action) {
+export function *open (opts, action) {
   try {
     var [db, project] = yield call(openProject, action.payload, {
       user: ARGS.uuid,
@@ -105,7 +105,7 @@ export function *open(opts, action) {
 }
 
 
-function *setup({ db, project }) {
+function *setup ({ db, project }) {
   try {
     yield every(has('search'), search, db)
     yield fork(transcribe)
@@ -147,7 +147,7 @@ function *setup({ db, project }) {
   }
 }
 
-function *teardown({ db, project, store }) {
+function *teardown ({ db, project, store }) {
   yield all([
     call(persist, 'nav', project.id),
     call(persist, 'notepad', project.id),
@@ -174,7 +174,7 @@ function *teardown({ db, project, store }) {
 }
 
 
-export function *main() {
+export function *main () {
   let task
   let aux
   let crash

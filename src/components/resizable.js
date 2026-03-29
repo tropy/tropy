@@ -29,18 +29,18 @@ export class Resizable extends React.Component {
     isResizing: false
   }
 
-  get classes() {
+  get classes () {
     return ['resizable', this.props.className, {
       disabled: this.props.isDisabled,
       resizing: this.state.isResizing
     }]
   }
 
-  get dimension() {
+  get dimension () {
     return DIM[this.props.edge]
   }
 
-  get value() {
+  get value () {
     if (this.props.isBuffered && this.state.isResizing)
       return this.state.value
 
@@ -59,19 +59,19 @@ export class Resizable extends React.Component {
     return restrict(value, min, this.props.max)
   }
 
-  get cssValue() {
+  get cssValue () {
     return `${this.value}${this.props.isRelative ? '%' : 'px'}`
   }
 
-  get cssMin() {
+  get cssMin () {
     return `${this.props.min}px`
   }
 
-  get cssMax() {
+  get cssMax () {
     return this.props.max ? `${this.props.max}px` : null
   }
 
-  get style() {
+  get style () {
     let { cssValue, cssMax, cssMin, dimension } = this
     return {
       [dimension]: cssValue,
@@ -80,11 +80,11 @@ export class Resizable extends React.Component {
     }
   }
 
-  get isInverse() {
+  get isInverse () {
     return this.props.edge === 'left' || this.props.edge === 'top'
   }
 
-  updateScaleMax() {
+  updateScaleMax () {
     let { edge, min, max, margin } = this.props
     let scale = 1
 
@@ -107,7 +107,7 @@ export class Resizable extends React.Component {
     }
   }
 
-  getNewValue(event) {
+  getNewValue (event) {
     let { edge, min, isRelative } = this.props
     let { isInverse, origin, scale, max } = this
 
@@ -171,7 +171,7 @@ export class Resizable extends React.Component {
 
   }
 
-  renderHandle() {
+  renderHandle () {
     return this.props.isDisabled ? null : (
       <Draggable
         onDragStart={this.handleDragStart}
@@ -184,7 +184,7 @@ export class Resizable extends React.Component {
     )
   }
 
-  render() {
+  render () {
     if (this.props.skip)
       return this.props.children
     else

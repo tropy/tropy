@@ -4,13 +4,13 @@ import actions from '../actions/note.js'
 import models from '../models/note.js'
 import NOTE from '../constants/note.js'
 
-function *save(ms, id, pending) {
+function *save (ms, id, pending) {
   yield delay(ms)
   yield put(actions.save({ id }))
   pending.delete(id)
 }
 
-function *flush(db, pending) {
+function *flush (db, pending) {
   let notes = yield select(state => state.notes)
 
   if (pending.size) {
@@ -35,7 +35,7 @@ function *flush(db, pending) {
   }
 }
 
-export function *autosave(db, ms = 5000) {
+export function *autosave (db, ms = 5000) {
   try {
     var pending = new Map
 

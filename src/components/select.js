@@ -14,7 +14,7 @@ class Value extends React.Component {
     }
   }
 
-  render() {
+  render () {
     return (
       <div className="value">
         {this.props.label}
@@ -41,19 +41,19 @@ export class Select extends React.Component {
     values: []
   }
 
-  componentDidMount() {
+  componentDidMount () {
     if (this.props.autofocus) {
       this.focus()
     }
   }
 
-  componentDidUpdate(_, state) {
+  componentDidUpdate (_, state) {
     if (this.state.isInvalid !== state.Invalid) {
       this.props.onValidate(!this.state.isInvalid)
     }
   }
 
-  static getDerivedStateFromProps({
+  static getDerivedStateFromProps ({
     isRequired,
     options,
     toId,
@@ -62,15 +62,15 @@ export class Select extends React.Component {
     return getDerivedState(value, options, isRequired, toId)
   }
 
-  get isOpen() {
+  get isOpen () {
     return this.state.isOpen || this.props.isStatic
   }
 
-  get isDisabled() {
+  get isDisabled () {
     return this.props.isDisabled || this.props.options.length === 0
   }
 
-  get classes() {
+  get classes () {
     return ['select', this.props.className, {
       'can-clear': !this.props.hideClearButton && this.state.canClearValue,
       disabled: this.isDisabled,
@@ -83,7 +83,7 @@ export class Select extends React.Component {
     }]
   }
 
-  get isInputHidden() {
+  get isInputHidden () {
     return this.props.isInputHidden ||
       this.props.options.length < this.props.minFilterOptions
   }
@@ -105,7 +105,7 @@ export class Select extends React.Component {
     this.props.onClose(event)
   }
 
-  commit() {
+  commit () {
     if (this.completions.current != null)
       return this.completions.current.select()
     if (this.state.isBlank)
@@ -118,7 +118,7 @@ export class Select extends React.Component {
     this.handleChange(value, false)
   }
 
-  delegate(cmd, ...args) {
+  delegate (cmd, ...args) {
     if (this.completions.current == null)
       this.open()
     else
@@ -129,7 +129,7 @@ export class Select extends React.Component {
     this.input.current?.focus()
   }
 
-  open() {
+  open () {
     if (!this.isDisabled) {
       this.shouldPopupFadeIn = !this.state.hasFocus
       this.setState({ isOpen: true })
@@ -235,7 +235,7 @@ export class Select extends React.Component {
     }
   }
 
-  renderContent() {
+  renderContent () {
     if (this.state.query.length > 0) {
       return null
     }
@@ -264,7 +264,7 @@ export class Select extends React.Component {
     )
   }
 
-  renderInput() {
+  renderInput () {
     let { isInputHidden } = this
     return (
       <input
@@ -284,7 +284,7 @@ export class Select extends React.Component {
     )
   }
 
-  renderClearButton() {
+  renderClearButton () {
     return !this.props.hideClearButton && this.state.canClearValue && (
       <Button
         className="global-clear"
@@ -293,7 +293,7 @@ export class Select extends React.Component {
     )
   }
 
-  renderCompletions() {
+  renderCompletions () {
     try {
       return this.isOpen && (
         <Completions
@@ -323,7 +323,7 @@ export class Select extends React.Component {
     }
   }
 
-  render() {
+  render () {
     return (
       <div
         className={cx(this.classes)}

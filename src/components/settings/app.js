@@ -12,7 +12,7 @@ import { TemplateSettings } from './template.js'
 import act from '../../actions/settings.js'
 
 
-export function AppSettings() {
+export function AppSettings () {
   let dispatch = useDispatch()
   let settings = useSelector(state => state.settings)
 

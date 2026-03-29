@@ -20,12 +20,12 @@ const { LAYOUT } = ITEM
 const { ESPER } = SASS
 
 class Item extends React.PureComponent {
-  get dimension() {
+  get dimension () {
     return (this.props.settings.layout === LAYOUT.SIDE_BY_SIDE) ?
       'width' : 'height'
   }
 
-  get size() {
+  get size () {
     switch (this.props.settings.layout) {
       case LAYOUT.STACKED:
         return this.props.esper.height
@@ -36,16 +36,16 @@ class Item extends React.PureComponent {
     }
   }
 
-  get hasSideBySideLayout() {
+  get hasSideBySideLayout () {
     return this.props.settings.layout === LAYOUT.SIDE_BY_SIDE
   }
 
-  get hasOverlayToolbars() {
+  get hasOverlayToolbars () {
     return this.props.settings.overlayToolbars &&
       this.props.settings.layout !== LAYOUT.SIDE_BY_SIDE
   }
 
-  getResizableProps(layout = this.props.settings.layout) {
+  getResizableProps (layout = this.props.settings.layout) {
     return layout === LAYOUT.SIDE_BY_SIDE ?
         { edge: 'right', margin: ESPER.MIN_WIDTH, min: ESPER.MIN_WIDTH } :
         { edge: 'bottom', margin: ESPER.MIN_HEIGHT, min: ESPER.MIN_HEIGHT }
@@ -80,7 +80,7 @@ class Item extends React.PureComponent {
     })
   }
 
-  render() {
+  render () {
     let { settings } = this.props
 
     return (
@@ -153,19 +153,19 @@ export const ItemContainer = connect(
   }),
 
   dispatch => ({
-    onSelectionCreate(...args) {
+    onSelectionCreate (...args) {
       dispatch(act.selection.create(...args))
     },
 
-    onSelectionSave(...args) {
+    onSelectionSave (...args) {
       dispatch(act.selection.save(...args))
     },
 
-    onEsperChange(...args) {
+    onEsperChange (...args) {
       dispatch(act.esper.update(...args))
     },
 
-    onPhotoError(...args) {
+    onPhotoError (...args) {
       dispatch(act.photo.error(...args))
     }
 

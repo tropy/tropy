@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useEvent } from './use-event.js'
 import { on, off, toggle } from '../dom.js'
 
-export function useDragHandler({
+export function useDragHandler ({
   onDrag,
   onDragStart,
   onDragStop,

@@ -11,11 +11,11 @@ import { ITEM, PHOTO, SELECTION } from '../constants/index.js'
 export class Save extends Command {
   type = 'item'
 
-  get isUndo() {
+  get isUndo () {
     return Array.isArray(this.action.payload)
   }
 
-  *getOriginals(ids, props) {
+  *getOriginals (ids, props) {
     let [subjects, metadata] = yield select(state => [
       state[`${this.type}s`],
       state.metadata
@@ -28,7 +28,7 @@ export class Save extends Command {
     ])
   }
 
-  *restore(originals) {
+  *restore (originals) {
     let { db } = this.options
     let { meta } = this.action
     let { type } = this
@@ -57,7 +57,7 @@ export class Save extends Command {
     return changes
   }
 
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
     let { type } = this

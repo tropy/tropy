@@ -8,17 +8,17 @@ import { TranscriptionIcon } from '../transcription/icon.js'
 
 
 class SelectionListItem extends SelectionIterable {
-  get isDraggable() {
+  get isDraggable () {
     return !this.props.isEditing && super.isDraggable
   }
 
-  get placeholder() {
+  get placeholder () {
     return this.props.intl.formatMessage({
       id: 'panel.photo.selection'
     })
   }
 
-  get title() {
+  get title () {
     const { data, selection, title } = this.props
     return data?.[selection.id]?.[title]?.text
   }
@@ -61,7 +61,7 @@ class SelectionListItem extends SelectionIterable {
     onEditCancel()
   }
 
-  render() {
+  render () {
     const { title } = this
 
     return this.connect(

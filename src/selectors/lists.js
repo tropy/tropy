@@ -20,7 +20,7 @@ export const getListTreePaths = (state, props) =>
   getListTree(state, props)
     .map(id => getListPath(state, { id }))
 
-function *flatten(children, lists, expand) {
+function *flatten (children, lists, expand) {
   for (let id of children) {
     yield id
     if (expand === true || expand[id]) {

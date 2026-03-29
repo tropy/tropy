@@ -1,10 +1,10 @@
 const ARGS = Object.create({})
 
 const proxy = new Proxy(ARGS, {
-  get(_, prop) {
+  get (_, prop) {
     return ARGS[prop]
   },
-  set(_, prop, value) {
+  set (_, prop, value) {
     if ((prop in ARGS))
       update({ [prop]: value })
     else
@@ -14,19 +14,19 @@ const proxy = new Proxy(ARGS, {
 
 export default proxy
 
-export function parse() {
+export function parse () {
   let hash = window.location.hash.slice(1)
   let args = JSON.parse(decodeURIComponent(hash))
   Object.assign(ARGS, args)
   return args
 }
 
-export function update(args) {
+export function update (args) {
   Object.assign(ARGS, args)
   window.location.hash = encodeURIComponent(JSON.stringify(ARGS))
   return proxy
 }
 
-export function clone() {
+export function clone () {
   return Object.fromEntries(Object.entries(ARGS))
 }

@@ -44,15 +44,15 @@ export const Description = (props = {}) => {
 }
 
 export class FormElement extends React.PureComponent {
-  get hasLabel() {
+  get hasLabel () {
     return this.props.label || this.props.id != null
   }
 
-  get offset() {
+  get offset () {
     return SASS.GRID.SIZE - this.props.size
   }
 
-  render() {
+  render () {
     const { hasLabel, offset } = this
 
     return (
@@ -87,7 +87,7 @@ export class FormElement extends React.PureComponent {
 export class FormField extends React.PureComponent {
   input = React.createRef()
 
-  get InputComponent() {
+  get InputComponent () {
     switch (this.props.type) {
       case 'file':
       case 'directory':
@@ -97,7 +97,7 @@ export class FormField extends React.PureComponent {
     }
   }
 
-  reset() {
+  reset () {
     if (this.input.current != null) {
       this.input.current.reset()
     }
@@ -117,7 +117,7 @@ export class FormField extends React.PureComponent {
     }
   }
 
-  render() {
+  render () {
     let { InputComponent } = this
 
     return (
@@ -266,11 +266,11 @@ export const FormToggleGroup = ({
 )
 
 export class FormText extends React.PureComponent {
-  get isVisible() {
+  get isVisible () {
     return this.props.value || !this.props.isOptional
   }
 
-  render() {
+  render () {
     return this.isVisible && (
       <FormElement
         id={this.props.id}
@@ -289,7 +289,7 @@ export class FormText extends React.PureComponent {
 }
 
 export class FormLink extends React.PureComponent {
-  get isVisible() {
+  get isVisible () {
     return this.props.value || !this.props.isOptional
   }
 
@@ -297,7 +297,7 @@ export class FormLink extends React.PureComponent {
     this.props.onClick(this.props.value)
   }
 
-  render() {
+  render () {
     return this.isVisible && (
       <FormElement
         id={this.props.id}

@@ -1,7 +1,7 @@
 import { TAG, PROJECT } from '../constants/index.js'
 import { insert, load, remove, update } from './util.js'
 
-export function tags(state = {}, { type, payload, error, meta }) {
+export function tags (state = {}, { type, payload, error, meta }) {
   switch (type) {
     case PROJECT.OPEN:
       return {}

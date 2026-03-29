@@ -3,7 +3,7 @@ import { useEvent } from '../../hooks/use-event.js'
 import { ResourceSelect } from '../resource/select.js'
 import { getPropertyList } from '../../selectors/ontology.js'
 
-export function FieldSelect({ value, onInsert, onCancel }) {
+export function FieldSelect ({ value, onInsert, onCancel }) {
   let options = useSelector(getPropertyList)
 
   let handleClose = useEvent(event => {

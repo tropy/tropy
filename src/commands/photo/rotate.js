@@ -5,7 +5,7 @@ import * as act from '../../actions/index.js'
 import { PHOTO } from '../../constants/index.js'
 
 export class Rotate extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { id, by, type = 'photo' } = this.action.payload
 

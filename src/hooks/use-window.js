@@ -3,11 +3,11 @@ import { WindowContext } from '../components/window.js'
 import { useEventHandler } from './use-event-handler.js'
 import { clone } from '../args.js'
 
-export function useWindow() {
+export function useWindow () {
   return useContext(WindowContext)
 }
 
-export function useWindowArgs() {
+export function useWindowArgs () {
   let win = useWindow()
   let [args, setArgs] = useState(clone)
 

@@ -5,7 +5,7 @@ import { ESPER, SASS } from '../constants/index.js'
 
 const { CURSOR, ZOOM_LINEAR_MAX } = SASS.ESPER
 
-export function constrain(pos, { left, top, bottom, right }) {
+export function constrain (pos, { left, top, bottom, right }) {
   pos.x = (restrict(pos.x, left, right))
   pos.y = (restrict(pos.y, top, bottom))
 
@@ -36,7 +36,7 @@ export const center = ({ x = 0, y = 0, width, height }) => ({
   y: Math.round(y + height / 2)
 })
 
-export function setScaleMode(texture, zoom) {
+export function setScaleMode (texture, zoom) {
   if (texture == null) return
 
   let { source } = texture
@@ -51,21 +51,21 @@ export function setScaleMode(texture, zoom) {
 const svg = (name) =>
   [`${name}@1x.svg`, `${name}@2x.svg`]
 
-export function addCursorStyle(styles, name, cursor = CURSOR[name]) {
+export function addCursorStyle (styles, name, cursor = CURSOR[name]) {
   if (cursor == null) return
 
   styles[name] = css.cursor(svg(cursor.default), cursor)
   styles[`${name}-active`] = css.cursor(svg(cursor.active), cursor)
 }
 
-export function move(pos, { x = 0, y = 0 } = {}) {
+export function move (pos, { x = 0, y = 0 } = {}) {
   pos.x += x
   pos.y += y
 
   return pos
 }
 
-export function normalizeRectangle({
+export function normalizeRectangle ({
   x = 0, y = 0, width = 0, height = 0
 }, round = false) {
 

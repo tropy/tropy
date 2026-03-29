@@ -2,7 +2,7 @@ import { SELECTION } from '../constants/index.js'
 import { array } from '../common/util.js'
 
 export default {
-  create(payload, meta) {
+  create (payload, meta) {
     return {
       type: SELECTION.CREATE,
       payload,
@@ -14,7 +14,7 @@ export default {
     }
   },
 
-  delete(payload, meta) {
+  delete (payload, meta) {
     return {
       type: SELECTION.DELETE,
       payload,
@@ -26,7 +26,7 @@ export default {
     }
   },
 
-  insert(payload, meta = {}) {
+  insert (payload, meta = {}) {
     return {
       type: SELECTION.INSERT,
       payload,
@@ -34,7 +34,7 @@ export default {
     }
   },
 
-  load(payload, meta) {
+  load (payload, meta) {
     return {
       type: SELECTION.LOAD,
       payload,
@@ -46,16 +46,16 @@ export default {
   },
 
   notes: {
-    add(payload, meta = {}) {
+    add (payload, meta = {}) {
       return { type: SELECTION.NOTE.ADD, payload, meta }
     },
 
-    remove(payload, meta = {}) {
+    remove (payload, meta = {}) {
       return { type: SELECTION.NOTE.REMOVE, payload, meta }
     }
   },
 
-  order(payload, meta) {
+  order (payload, meta) {
     return {
       type: SELECTION.ORDER,
       payload,
@@ -67,7 +67,7 @@ export default {
     }
   },
 
-  restore(payload, meta) {
+  restore (payload, meta) {
     return {
       type: SELECTION.RESTORE,
       payload,
@@ -79,7 +79,7 @@ export default {
     }
   },
 
-  save(payload, meta) {
+  save (payload, meta) {
     return {
       type: SELECTION.SAVE,
       payload,
@@ -88,7 +88,7 @@ export default {
   },
 
   bulk: {
-    update(payload, meta = {}) {
+    update (payload, meta = {}) {
       return {
         type: SELECTION.BULK.UPDATE,
         payload,
@@ -98,7 +98,7 @@ export default {
   },
 
   template: {
-    change({ id, template }, meta) {
+    change ({ id, template }, meta) {
       return {
         type: SELECTION.TEMPLATE.CHANGE,
         payload: {

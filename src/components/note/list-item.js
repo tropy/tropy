@@ -30,10 +30,10 @@ export const NoteListItem = ({
   })
 
   let handleMouseDown = useClickHandler({
-    onClick() {
+    onClick () {
       onSelect(note)
     },
-    onDoubleClick() {
+    onDoubleClick () {
       onOpen(note)
     }
   })

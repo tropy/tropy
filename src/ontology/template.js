@@ -15,11 +15,11 @@ export class Template {
     fields: []
   }
 
-  static identify() {
+  static identify () {
     return `https://tropy.org/v1/templates/id#${identify()}`
   }
 
-  static make(template = Template.defaults) {
+  static make (template = Template.defaults) {
     return {
       ...template,
       id: template.id || Template.identify(),
@@ -27,7 +27,7 @@ export class Template {
     }
   }
 
-  static copy(template, mapField = Field.copy) {
+  static copy (template, mapField = Field.copy) {
     return {
       ...pick(template, Template.keys),
       created: undefined,
@@ -36,15 +36,15 @@ export class Template {
     }
   }
 
-  static async open(path) {
+  static async open (path) {
     return JSON.parse(await read(path))
   }
 
-  static save(data, path, options = {}) {
+  static save (data, path, options = {}) {
     return write(path, JSON.stringify(Template.parse(data)), options)
   }
 
-  static parse(data) {
+  static parse (data) {
     return {
       '@context': ONTOLOGY.TEMPLATE.CONTEXT,
       '@id': data.id,
@@ -74,18 +74,18 @@ class Field {
     value: ''
   }
 
-  static identify() {
+  static identify () {
     return Field.counter--
   }
 
-  static make(field = Field.defaults) {
+  static make (field = Field.defaults) {
     return {
       id: field.id || Field.identify(),
       ...field
     }
   }
 
-  static copy(field) {
+  static copy (field) {
     return pick(field, Field.keys)
   }
 

@@ -33,7 +33,7 @@ const orderedListRule = (nodeType) =>
 const bulletListRule = (nodeType) =>
   wrappingInputRule(/^\s*([-+*])\s$/, nodeType)
 
-export function createPlugins(schema) {
+export function createPlugins (schema) {
   const rules = [
     enDash, enDashAuto, emDash, ellipsis, ...smartQuotes
   ]

@@ -10,7 +10,7 @@ export * from './state.js'
 export const commands = createCommands(schema)
 export const plugins = createPlugins(schema)
 
-export function toEditorState(state) {
+export function toEditorState (state) {
   if (state instanceof EditorState)
     return state
 

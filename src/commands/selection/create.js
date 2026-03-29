@@ -8,7 +8,7 @@ import { getSelectionTemplate, getTemplateValues } from '../../selectors/index.j
 
 
 export class Create extends Command {
-  *exec() {
+  *exec () {
     let { cache, db } = this.options
     let { payload, meta } = this.action
 

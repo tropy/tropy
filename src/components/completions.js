@@ -34,7 +34,7 @@ export class Completions extends React.Component {
     active: null
   }
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps (props, state) {
     let query = props.query.trim().toLowerCase()
 
     let options = Completions.filter(
@@ -96,7 +96,7 @@ export class Completions extends React.Component {
     }
   )
 
-  componentDidUpdate(_, state) {
+  componentDidUpdate (_, state) {
     if (state.options.length !== this.state.options.length) {
       if (this.props.onResize != null) {
         this.props.onResize({
@@ -106,7 +106,7 @@ export class Completions extends React.Component {
     }
   }
 
-  getPopupBounds() {
+  getPopupBounds () {
     if (this.props.parent == null) return
 
     let bnd = bounds(this.props.parent)
@@ -126,58 +126,58 @@ export class Completions extends React.Component {
     }
   }
 
-  getOptionsHeight(rows = this.state.options.length) {
+  getOptionsHeight (rows = this.state.options.length) {
     return OptionList.getHeight(rows || 1, { maxRows: this.props.maxRows })
   }
 
-  get isActive() {
+  get isActive () {
     return this.state.active != null
   }
 
-  get isBlank() {
+  get isBlank () {
     return this.state.options.length === 0
   }
 
-  get isEmpty() {
+  get isEmpty () {
     return this.props.completions.length === 0
   }
 
-  get isVisible() {
+  get isVisible () {
     return (this.props.isVisibleWhenBlank || !this.isBlank) &&
       this.props.minQueryLength <= this.props.query.length
   }
 
-  get active() {
+  get active () {
     let idx = this.state.options.idx[this.state.active]
     return (idx == null) ? null : this.state.options[idx]
   }
 
-  select() {
+  select () {
     let { active } = this
     if (active != null) this.props.onSelect(this.props.completions[active.idx])
   }
 
-  next(...args) {
+  next (...args) {
     return this.optionsList.current?.next(...args)
   }
 
-  prev(...args) {
+  prev (...args) {
     return this.optionsList.current?.prev(...args)
   }
 
-  first() {
+  first () {
     return this.optionsList.current?.first()
   }
 
-  last() {
+  last () {
     return this.optionsList.current?.last()
   }
 
-  pageUp() {
+  pageUp () {
     return this.optionsList.current?.pageUp()
   }
 
-  pageDown() {
+  pageDown () {
     return this.optionsList.current?.pageDown()
   }
 
@@ -194,7 +194,7 @@ export class Completions extends React.Component {
     this.forceUpdate()
   }
 
-  renderCompletions() {
+  renderCompletions () {
     if (this.isEmpty) return this.renderNoCompletions()
     if (this.isBlank) return this.renderNoMatches()
 
@@ -210,13 +210,13 @@ export class Completions extends React.Component {
     )
   }
 
-  renderNoCompletions() {
+  renderNoCompletions () {
     return (
       <FormattedMessage id="completions.empty"/>
     )
   }
 
-  renderNoMatches() {
+  renderNoMatches () {
     return (
       <div className="option no-matches">
         <FormattedMessage id="completions.noMatches"/>
@@ -224,7 +224,7 @@ export class Completions extends React.Component {
     )
   }
 
-  render() {
+  render () {
     if (!this.isVisible) return null
     const content = this.renderCompletions()
 
@@ -255,14 +255,14 @@ export class Completions extends React.Component {
   }
 
   static defaultProps = {
-    match(value, query) {
+    match (value, query) {
       return collate.match(value.name || String(value), query)
     },
     maxRows: 10,
     minQueryLength: 0,
     popup: true,
     selection: [],
-    toId(value) {
+    toId (value) {
       return (value.id || String(value))
     },
     toText: (value, { matchData } = {}) =>

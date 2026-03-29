@@ -1,7 +1,7 @@
 import { IDLE } from '../constants/index.js'
 
 export default {
-  active(payload, meta = {}) {
+  active (payload, meta = {}) {
     return {
       type: IDLE.ACTIVE,
       payload,
@@ -9,7 +9,7 @@ export default {
     }
   },
 
-  idle(payload, meta = {}) {
+  idle (payload, meta = {}) {
     return {
       type: IDLE.IDLE,
       payload,

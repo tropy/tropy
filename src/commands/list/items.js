@@ -6,7 +6,7 @@ import mod from '../../models/list.js'
 
 
 export class AddItems extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { id, items } = this.action.payload
 
@@ -24,7 +24,7 @@ AddItems.register(LIST.ITEM.ADD)
 
 
 export class RemoveItems extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { id, items } = this.action.payload
 
@@ -40,7 +40,7 @@ RemoveItems.register(LIST.ITEM.REMOVE)
 
 
 export class RestoreItems extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { id, items } = this.action.payload
 

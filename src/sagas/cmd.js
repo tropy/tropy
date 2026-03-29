@@ -12,13 +12,13 @@ const cancellation = (id) => ({ payload, type }) => (
   type === ACTIVITY.CANCEL && payload.id === id
 )
 
-export function commands(scope) {
+export function commands (scope) {
   return ({ error, meta }) => (
     !error && meta && !meta.done && meta.cmd === scope
   )
 }
 
-export function *exec(options, action) {
+export function *exec (options, action) {
   try {
     var cmd = Command.create(action, options)
 

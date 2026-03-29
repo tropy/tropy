@@ -9,7 +9,7 @@ import { blank } from '../common/util.js'
 const SEPARATOR = { type: 'separator' }
 
 export class Menu {
-  static eachItem(menu, fn) {
+  static eachItem (menu, fn) {
     if (menu != null) {
       for (let item of menu.items) {
         fn(item)
@@ -18,11 +18,11 @@ export class Menu {
     }
   }
 
-  constructor(app) {
+  constructor (app) {
     this.app = app
   }
 
-  async loadTemplate(name) {
+  async loadTemplate (name) {
     let { template } = await MR.openWithFallback(
       getLocale(),
       this.app.state.locale,
@@ -31,7 +31,7 @@ export class Menu {
     return template
   }
 
-  build(template, ...args) {
+  build (template, ...args) {
     return M.buildFromTemplate(
       template
         .map(item => this.compile(item, ...args))
@@ -41,7 +41,7 @@ export class Menu {
     )
   }
 
-  compile(item, win, event = {}) {
+  compile (item, win, event = {}) {
     item = { ...item }
     let { app } = this
 
@@ -78,29 +78,29 @@ export class Menu {
 }
 
 export class AppMenu extends Menu {
-  static get instance() {
+  static get instance () {
     return M.getApplicationMenu()
   }
 
-  static getItems(...args) {
+  static getItems (...args) {
     let { instance } = AppMenu
     return args.map(id => instance?.getMenuItemById(id))
   }
 
-  async load(name = 'app') {
+  async load (name = 'app') {
     this.template = await this.loadTemplate(name)
     this.update()
   }
 
-  reload() {
+  reload () {
     this.update()
   }
 
-  update() {
+  update () {
     M.setApplicationMenu(this.build(this.template))
   }
 
-  handleHistoryChange(history = this.app.getHistory()) {
+  handleHistoryChange (history = this.app.getHistory()) {
     let [undo, redo] = AppMenu.getItems('undo', 'redo')
 
     if (undo)
@@ -109,7 +109,7 @@ export class AppMenu extends Menu {
       redo.enabled = history?.future > 0
   }
 
-  handleThemeChange(theme = this.app.state.theme) {
+  handleThemeChange (theme = this.app.state.theme) {
     let [themes] = AppMenu.getItems('theme')
 
     Menu.eachItem(themes?.submenu, (item) => {
@@ -140,7 +140,7 @@ export class AppMenu extends Menu {
     this.handleHistoryChange()
   }
 
-  popup(opts) {
+  popup (opts) {
     AppMenu.instance.popup(opts)
   }
 }
@@ -149,11 +149,11 @@ export class AppMenu extends Menu {
 export class ContextMenu extends Menu {
   static scopes = {}
 
-  async load(name = 'context') {
+  async load (name = 'context') {
     this.templates = await this.loadTemplate(name)
   }
 
-  show({ scope, event }, win) {
+  show ({ scope, event }, win) {
     return new Promise((resolve, reject) => {
       try {
         let settings = [
@@ -585,38 +585,38 @@ Menu.ItemCompiler = {
 }
 
 Menu.ItemConditions = {
-  isMultiplePhotos({ event }) {
+  isMultiplePhotos ({ event }) {
     return event?.target?.photos?.length > 1
   },
 
-  isMultipleItems({ event }) {
+  isMultipleItems ({ event }) {
     return event?.target?.items?.length > 1
   },
 
-  hasTargetId({ event }) {
+  hasTargetId ({ event }) {
     return event?.target?.id != null
   },
 
-  isSingleItem(...args) {
+  isSingleItem (...args) {
     return !Menu.ItemConditions.isMultipleItems(...args)
   },
 
-  isProjectReadOnly({ app, win }) {
+  isProjectReadOnly ({ app, win }) {
     let project = app.getProject(win)
     return project == null || project.isReadOnly
   },
 
-  isProjectManaged({ app, win }) {
+  isProjectManaged ({ app, win }) {
     let project = app.getProject(win)
     return project?.isManaged
   },
 
-  isProjectOpen({ app, win }) {
+  isProjectOpen ({ app, win }) {
     return app.getProject(win) != null
   }
 }
 
-function compileTranscriptionMenu(item, app, win, event) {
+function compileTranscriptionMenu (item, app, win, event) {
   if (channel === 'latest') {
     item.enabled = false
     item.visible = false
@@ -644,7 +644,7 @@ function compileTranscriptionMenu(item, app, win, event) {
   }
 }
 
-function createResponder(cmd, app, win, ...params) {
+function createResponder (cmd, app, win, ...params) {
   let [prefix, action] = cmd.split(':', 2)
 
   switch (prefix) {

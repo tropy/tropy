@@ -8,7 +8,7 @@ import { fail } from '../dialog.js'
 import mod from '../models/ontology.js'
 import act from '../actions/ontology.js'
 
-export function *ontology({
+export function *ontology ({
   file = join(ARGS.data, 'ontology.db'),
   ...opts
 } = {}) {

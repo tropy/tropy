@@ -6,14 +6,14 @@ import cx from 'classnames'
 import throttle from 'lodash.throttle'
 
 export class Popup extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.root = $('#popup-root')
     this.dom = element('div')
     toggle(this.dom, 'popup-container', true)
   }
 
-  componentDidMount() {
+  componentDidMount () {
     on(window, 'resize', this.handleResize)
     this.clip()
     append(this.dom, this.root)
@@ -21,29 +21,29 @@ export class Popup extends React.Component {
     if (this.props.autofocus) this.focus()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     remove(this.dom)
     off(window, 'resize', this.handleResize)
     this.clip(null)
     toggle(document.documentElement, 'popup-open', false)
   }
 
-  get classes() {
+  get classes () {
     return ['popup', this.props.anchor, this.props.className, {
       'fade-in': this.props.fadeIn
     }]
   }
 
-  clip(path = this.getClipPath()) {
+  clip (path = this.getClipPath()) {
     this.root.style.clipPath = this.dom.style.clipPath = path
   }
 
-  focus() {
+  focus () {
     let e = $('[tabindex]', this.dom)
     if (e != null) e.focus()
   }
 
-  getClipPath({ clip } = this.props) {
+  getClipPath ({ clip } = this.props) {
     return (clip == null) ?
       null :
       `polygon(${[
@@ -78,17 +78,17 @@ export class Popup extends React.Component {
     }
   }
 
-  isOutside({ target }) {
+  isOutside ({ target }) {
     return target === this.dom
   }
 
-  isClickToScroll({ target }) {
+  isClickToScroll ({ target }) {
     return has(target, 'scroll-container')
   }
 
   handleResize = throttle(() => { this.props.onResize() }, 25)
 
-  render() {
+  render () {
     return createPortal((
       <div
         className={cx(this.classes)}

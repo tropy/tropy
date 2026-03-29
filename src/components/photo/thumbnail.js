@@ -10,7 +10,7 @@ const variant = (size) =>
   size > SASS.ICON.SIZE ? SASS.ICON.MAX : SASS.ICON.SIZE
 
 
-export function Thumbnail({
+export function Thumbnail ({
   size = SASS.ICON.SIZE,
   ...props
 }) {

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { get } from '../common/util.js'
 import * as act from '../actions/index.js'
 
-export function useActions(actions) {
+export function useActions (actions) {
   let dispatch = useDispatch()
 
   return useMemo(() => (
@@ -11,13 +11,13 @@ export function useActions(actions) {
   ), [dispatch, actions])
 }
 
-export function useAction(dispatch, action) {
+export function useAction (dispatch, action) {
   return useMemo(() => (
     createHandler(dispatch, action)
   ), [dispatch, action])
 }
 
-function createHandler(dispatch, action) {
+function createHandler (dispatch, action) {
   let fn = resolve(action)
 
   return (...args) => {
@@ -25,7 +25,7 @@ function createHandler(dispatch, action) {
   }
 }
 
-function resolve(action) {
+function resolve (action) {
   if (typeof action === 'function')
     return action
 

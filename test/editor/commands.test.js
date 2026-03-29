@@ -3,19 +3,19 @@ import { markExtend } from '#tropy/editor/selections.js'
 
 const { schema } = F.require('editor')
 
-function selectedText(s) {
+function selectedText (s) {
   return s.doc.cut(
     s.selection.from,
     s.selection.to).textContent
 }
 
-function select(s, from, to) {
+function select (s, from, to) {
   return s.apply(
     s.tr.setSelection(
       TextSelection.create(s.doc, from, to)))
 }
 
-function expand(s) {
+function expand (s) {
   let range = markExtend(s.selection, schema.marks.link)
   return select(s, range.from, range.to)
 }

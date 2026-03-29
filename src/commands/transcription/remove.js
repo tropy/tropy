@@ -4,7 +4,7 @@ import { remove, restore } from '../../models/transcription.js'
 import * as slice from '../../slices/transcriptions.js'
 
 
-function getTranscriptionsForRemoval(state, ids) {
+function getTranscriptionsForRemoval (state, ids) {
   return ids.map(id => {
     let tr = state.transcriptions[id]
     let parent = state.selections[tr.parent] || state.photos[tr.parent]
@@ -18,7 +18,7 @@ function getTranscriptionsForRemoval(state, ids) {
 }
 
 export class Remove extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 
@@ -39,7 +39,7 @@ Remove.register(slice.remove.type)
 
 
 export class Restore extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 

@@ -7,7 +7,7 @@ import { splice } from '../../common/util.js'
 
 
 export class Move extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { photos, item } = this.action.payload
 

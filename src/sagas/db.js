@@ -4,7 +4,7 @@ import { debug, warn } from '../common/log.js'
 import { fail } from '../dialog.js'
 
 
-export function ErrorChannel(db) {
+export function ErrorChannel (db) {
   return eventChannel(emitter => {
     let onError = (error) => emitter({ error })
     db.on('error', onError)
@@ -15,7 +15,7 @@ export function ErrorChannel(db) {
   })
 }
 
-export function *handleDatabaseErrors(db, actions = {}) {
+export function *handleDatabaseErrors (db, actions = {}) {
   try {
     var channel = yield call(ErrorChannel, db)
 

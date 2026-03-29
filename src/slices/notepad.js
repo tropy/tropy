@@ -5,11 +5,11 @@ const notepad = createSlice({
   initialState: {},
 
   reducers: {
-    restore(state, { payload }) {
+    restore (state, { payload }) {
       return Object.assign({}, payload)
     },
 
-    update(state, { payload }) {
+    update (state, { payload }) {
       for (let [id, data] of Object.entries(payload)) {
         state[id] = Object.assign(state[id] || {}, data)
       }

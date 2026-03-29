@@ -22,19 +22,19 @@ import {
 class MetadataPanel extends React.PureComponent {
   fields = [null, null, null]
 
-  get isEmpty() {
+  get isEmpty () {
     return this.props.items.length === 0
   }
 
-  get isBulk() {
+  get isBulk () {
     return this.props.items.length > 1
   }
 
-  get hasPhotoFields() {
+  get hasPhotoFields () {
     return this.props.photo != null && !this.props.photo.pending
   }
 
-  get hasSelectionFields() {
+  get hasSelectionFields () {
     return this.props.selection != null && !this.props.selection.pending
   }
 
@@ -129,7 +129,7 @@ class MetadataPanel extends React.PureComponent {
     this.handleContextMenu(event, { ...data, type: 'selection' })
   }
 
-  handleContextMenu(event, data = {}) {
+  handleContextMenu (event, data = {}) {
     if (!this.props.isDisabled) {
       let id = (data.type === 'item')
         ? this.props.items.map(it => it.id)
@@ -142,7 +142,7 @@ class MetadataPanel extends React.PureComponent {
     }
   }
 
-  renderItemFields() {
+  renderItemFields () {
     return !this.isEmpty && (
       <MetadataSection
         count={this.props.items.length}
@@ -170,7 +170,7 @@ class MetadataPanel extends React.PureComponent {
     )
   }
 
-  renderPhotoFields() {
+  renderPhotoFields () {
     return this.hasPhotoFields && (
       <MetadataSection
         isDisabled={this.props.isDisabled}
@@ -197,7 +197,7 @@ class MetadataPanel extends React.PureComponent {
     )
   }
 
-  renderSelectionFields() {
+  renderSelectionFields () {
     return this.hasSelectionFields && (
       <MetadataSection
         isDisabled={this.props.isDisabled}
@@ -222,7 +222,7 @@ class MetadataPanel extends React.PureComponent {
     )
   }
 
-  render() {
+  render () {
     return (
       <ScrollContainer>
         {this.renderItemFields()}
@@ -248,11 +248,11 @@ const MetadataPanelContainer = connect(
   }),
 
   (dispatch) => ({
-    onMetadataAdd(...args) {
+    onMetadataAdd (...args) {
       dispatch(act.metadata.add(...args))
     },
 
-    onTemplateChange(type, ...args) {
+    onTemplateChange (type, ...args) {
       dispatch(act[type].template.change(...args))
     }
   }), null, { forwardRef: true }

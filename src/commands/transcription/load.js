@@ -4,7 +4,7 @@ import { load } from '../../models/transcription.js'
 import * as slice from '../../slices/transcriptions.js'
 
 export class Load extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let id = this.action.payload
     return yield call(load, db, id)

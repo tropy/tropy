@@ -16,23 +16,23 @@ export class ItemPanelGroup extends React.PureComponent {
   panel = React.createRef()
   tab = React.createRef()
 
-  componentDidMount() {
+  componentDidMount () {
     on(document, 'global:nextTab', this.toggleTabs)
     on(document, 'global:prevTab', this.toggleTabs)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     off(document, 'global:nextTab', this.toggleTabs)
     off(document, 'global:prevTab', this.toggleTabs)
   }
 
-  get toolbar() {
+  get toolbar () {
     return (
       <ItemToolbar isItemMode={this.props.isItemMode}/>
     )
   }
 
-  get keymap() {
+  get keymap () {
     return this.props.keymap.ItemPanel
   }
 
@@ -105,7 +105,7 @@ export class ItemPanelGroup extends React.PureComponent {
     )
   }
 
-  render() {
+  render () {
     let { isDisabled, isReadOnly, photo, panel } = this.props
     let hasMultipleItems = this.props.items.length > 1
     let item = hasMultipleItems ? null : this.props.items[0]

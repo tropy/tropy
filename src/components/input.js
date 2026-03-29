@@ -15,7 +15,7 @@ export class Input extends React.PureComponent {
     value: this.props.value
   }
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps (props, state) {
     return (props.value === state.key) ? null : {
       key: props.value,
       query: '',
@@ -23,25 +23,25 @@ export class Input extends React.PureComponent {
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     if (this.props.autofocus)
       this.input.current.focus()
   }
 
-  get completionsClassName() {
+  get completionsClassName () {
     return this.props.className ?
       `${this.props.className}-completions` : null
   }
 
-  get isValid() {
+  get isValid () {
     return this.input.current.validity.valid
   }
 
-  get hasChanged() {
+  get hasChanged () {
     return this.state.value !== this.state.key
   }
 
-  get hasCompletions() {
+  get hasCompletions () {
     return this.state.hasFocus && this.props.completions.length > 0
   }
 
@@ -56,7 +56,7 @@ export class Input extends React.PureComponent {
     }
   }
 
-  commit({ isCompletion, hasBeenForced } = {}, event) {
+  commit ({ isCompletion, hasBeenForced } = {}, event) {
     // TODO allow blank values to be saved for now.
     if (this.isValid || (hasBeenForced && this.state.value === '')) {
       if (!this.hasBeenCommitted) {
@@ -89,7 +89,7 @@ export class Input extends React.PureComponent {
     }
   }
 
-  reset() {
+  reset () {
     this.hasBeenCancelled = false
     this.hasBeenCommitted = false
 
@@ -166,7 +166,7 @@ export class Input extends React.PureComponent {
     event.nativeEvent.stopImmediatePropagation()
   }
 
-  handleCompletionsKeyDown(event) {
+  handleCompletionsKeyDown (event) {
     let opt = null
     let completions = this.completions.current
 
@@ -213,7 +213,7 @@ export class Input extends React.PureComponent {
     return true
   }
 
-  render() {
+  render () {
     return (
       <div className="input-group">
         <AutoResizer

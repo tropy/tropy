@@ -2,7 +2,7 @@ import { LIST, PROJECT } from '../constants/index.js'
 import { omit, splice } from '../common/util.js'
 import { replace, update } from './util.js'
 
-export function lists(state = {}, { type, payload, error, meta }) {
+export function lists (state = {}, { type, payload, error, meta }) {
   switch (type) {
     case PROJECT.OPEN:
       return {}

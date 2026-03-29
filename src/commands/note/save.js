@@ -5,7 +5,7 @@ import NOTE from '../../constants/note.js'
 
 
 class Save extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { id } = this.action.payload
 

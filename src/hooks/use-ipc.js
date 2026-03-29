@@ -1,17 +1,17 @@
 import { ipcRenderer } from 'electron'
 import { useEvent } from './use-event.js'
 
-export function useIpc() {
+export function useIpc () {
   return ipcRenderer
 }
 
-export function useIpcEvent(fn, params = []) {
+export function useIpcEvent (fn, params = []) {
   return useEvent((...args) => {
     ipcRenderer.send(...params, fn?.(...args))
   })
 }
 
-export function useIpcSend(params = []) {
+export function useIpcSend (params = []) {
   return useEvent((...args) => {
     ipcRenderer.send(...params, ...args)
   })

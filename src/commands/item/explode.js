@@ -8,7 +8,7 @@ import * as mod from '../../models/index.js'
 
 
 export class Explode extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { payload } = this.action
 
@@ -84,7 +84,7 @@ Explode.register(ITEM.EXPLODE)
 
 
 export class Implode extends Command {
-  *exec() {
+  *exec () {
     let { db } = this.options
     let { item, items } = this.action.payload
     let { id, photos } = item

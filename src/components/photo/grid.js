@@ -84,7 +84,7 @@ class PhotoGrid extends PhotoIterator {
       size={this.props.size}/>
   )
 
-  render() {
+  render () {
     let tileSize = Math.round(this.props.size * SASS.TILE.FACTOR)
 
     return this.connect(

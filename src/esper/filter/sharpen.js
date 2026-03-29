@@ -5,7 +5,7 @@ import { Shader } from '../../res.js'
 
 
 export class SharpenFilter extends Filter {
-  constructor(intensity = 0, width = 200, height = 200) {
+  constructor (intensity = 0, width = 200, height = 200) {
     super({
       gpuProgram: GpuProgram.from({
         fragment: {
@@ -41,31 +41,31 @@ export class SharpenFilter extends Filter {
     this.height = height
   }
 
-  get uniforms() {
+  get uniforms () {
     return this.resources.sharpenUniforms.uniforms
   }
 
-  get intensity() {
+  get intensity () {
     return this.uniforms.intensity
   }
 
-  set intensity(intensity) {
+  set intensity (intensity) {
     this.uniforms.intensity = restrict(intensity / 100, 0, 10)
   }
 
-  get width() {
+  get width () {
     return 1 / this.uniforms.size[0]
   }
 
-  set width(value) {
+  set width (value) {
     this.uniforms.size[0] = 1 / value
   }
 
-  get height() {
+  get height () {
     return 1 / this.uniforms.size[1]
   }
 
-  set height(value) {
+  set height (value) {
     this.uniforms.size[1] = 1 / value
   }
 }

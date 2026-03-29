@@ -2,7 +2,7 @@ import { ACTIVITY } from '../constants/index.js'
 import { pick } from '../common/util.js'
 
 export default {
-  cancel(id, meta) {
+  cancel (id, meta) {
     return {
       type: ACTIVITY.CANCEL,
       payload: {
@@ -15,7 +15,7 @@ export default {
     }
   },
 
-  done(action, result, meta) {
+  done (action, result, meta) {
     let error = result instanceof Error
     let payload = !error ?
       result :
@@ -39,7 +39,7 @@ export default {
     }
   },
 
-  update(action, payload, meta) {
+  update (action, payload, meta) {
     return {
       type: ACTIVITY.UPDATE,
       payload,

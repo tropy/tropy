@@ -5,37 +5,37 @@ import { shallow } from '../../common/util.js'
 
 
 export class MetadataList extends React.PureComponent {
-  get isBulk() {
+  get isBulk () {
     return this.props.fields.id.length > 1
   }
 
-  get isEmpty() {
+  get isEmpty () {
     return this.props.fields.length === 0
   }
 
-  get hasNewMetadataField() {
+  get hasNewMetadataField () {
     return this.props.onCreate != null &&
       this.props.edit != null &&
       this.props.edit.property == null &&
       shallow(this.props.edit.id, this.props.fields.id)
   }
 
-  indexOf(id) {
+  indexOf (id) {
     const { fields } = this.props
     return (fields.idx != null)
       ? fields.idx[id]
       : fields.findIndex(f => f.property.id === id)
   }
 
-  first() {
+  first () {
     return this.props.fields[0]
   }
 
-  last() {
+  last () {
     return this.props.fields[this.props.fields.length - 1]
   }
 
-  next(offset = 1) {
+  next (offset = 1) {
     const { fields } = this.props
     if (!fields.length) return null
 
@@ -47,15 +47,15 @@ export class MetadataList extends React.PureComponent {
     return (idx >= 0 && idx < fields.length) ? fields[idx] : null
   }
 
-  prev(offset = 1) {
+  prev (offset = 1) {
     return this.next(-offset)
   }
 
-  current() {
+  current () {
     return this.next(0)
   }
 
-  isEditing(property) {
+  isEditing (property) {
     try {
       var isEditing = this.props.edit != null &&
         property === this.props.edit.property &&
@@ -119,7 +119,7 @@ export class MetadataList extends React.PureComponent {
       this.props.onBefore()
   }
 
-  render() {
+  render () {
     this.head = null
     return (
       <ol className="metadata-fields">

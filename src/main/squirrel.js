@@ -11,7 +11,7 @@ const updateDotExe = join(rootAppDir, 'Update.exe')
 const exeName = basename(process.execPath)
 
 
-export function handleSquirrelEvent(type, opts) {
+export function handleSquirrelEvent (type, opts) {
   switch (type) {
     case '--squirrel-install':
       return handleInstall()
@@ -33,17 +33,17 @@ export function handleSquirrelEvent(type, opts) {
   }
 }
 
-async function handleInstall() {
+async function handleInstall () {
   await createShortcut(['StartMenu', 'Desktop'])
   await registerApplication()
 }
 
-async function handleUpdated() {
+async function handleUpdated () {
   await updateShortcut()
   await registerApplication()
 }
 
-async function handleUninstall(opts = {}) {
+async function handleUninstall (opts = {}) {
   await removeShortcut()
   await clearAppRegistration()
   await rm(opts.logs)
@@ -51,7 +51,7 @@ async function handleUninstall(opts = {}) {
   await rm(opts.data)
 }
 
-function createShortcut(locations) {
+function createShortcut (locations) {
   return spawn(updateDotExe, [
     '--createShortcut',
     exeName,
@@ -60,7 +60,7 @@ function createShortcut(locations) {
   ])
 }
 
-function updateShortcut() {
+function updateShortcut () {
   let locations = ['StartMenu', 'Desktop']
   let home = homedir()
 
@@ -75,11 +75,11 @@ function updateShortcut() {
   return createShortcut(locations)
 }
 
-function removeShortcut() {
+function removeShortcut () {
   return spawn(updateDotExe, ['--removeShortcut', exeName])
 }
 
-async function registerApplication() {
+async function registerApplication () {
   let exe = process.execPath
   let res = join(appFolder, 'resources')
 
@@ -108,7 +108,7 @@ async function registerApplication() {
     .register()
 }
 
-async function clearAppRegistration() {
+async function clearAppRegistration () {
   let exe = process.execPath
 
   await ShellOption.forAppPath(exe).clear()
@@ -118,7 +118,7 @@ async function clearAppRegistration() {
 }
 
 
-async function rm(path) {
+async function rm (path) {
   if (path) {
     return fs.promises.rm(path, { recursive: true, maxRetries: 3 })
   }

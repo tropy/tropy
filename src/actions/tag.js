@@ -2,7 +2,7 @@ import { TAG, EDIT } from '../constants/index.js'
 import { array } from '../common/util.js'
 
 export default {
-  new(payload, meta) {
+  new (payload, meta) {
     return {
       type: EDIT.START,
       payload: {
@@ -12,7 +12,7 @@ export default {
     }
   },
 
-  create(payload, meta) {
+  create (payload, meta) {
     return {
       type: TAG.CREATE,
       payload,
@@ -25,7 +25,7 @@ export default {
     }
   },
 
-  edit(payload, meta) {
+  edit (payload, meta) {
     const context = (payload.items != null) ? 'tabTag' : 'tag'
 
     return {
@@ -37,7 +37,7 @@ export default {
     }
   },
 
-  export(payload, meta) {
+  export (payload, meta) {
     return {
       type: TAG.EXPORT,
       payload,
@@ -48,7 +48,7 @@ export default {
     }
   },
 
-  save(payload, meta) {
+  save (payload, meta) {
     return {
       type: TAG.SAVE,
       payload,
@@ -56,7 +56,7 @@ export default {
     }
   },
 
-  delete(payload, meta) {
+  delete (payload, meta) {
     return {
       type: TAG.DELETE,
       payload,
@@ -70,7 +70,7 @@ export default {
     }
   },
 
-  load(payload, meta) {
+  load (payload, meta) {
     return {
       type: TAG.LOAD,
       payload,
@@ -78,7 +78,7 @@ export default {
     }
   },
 
-  insert(payload, meta = {}) {
+  insert (payload, meta = {}) {
     return {
       type: TAG.INSERT,
       payload,
@@ -86,7 +86,7 @@ export default {
     }
   },
 
-  remove(payload, meta = {}) {
+  remove (payload, meta = {}) {
     return {
       type: TAG.REMOVE,
       payload: array(payload),
@@ -94,7 +94,7 @@ export default {
     }
   },
 
-  update(payload, meta) {
+  update (payload, meta) {
     return {
       type: TAG.UPDATE,
       payload,
@@ -102,7 +102,7 @@ export default {
     }
   },
 
-  select(payload, meta) {
+  select (payload, meta) {
     return {
       type: TAG.SELECT,
       payload,

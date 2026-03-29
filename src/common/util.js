@@ -1,23 +1,23 @@
 import { nanoid } from 'nanoid'
 
-export function on(emitter, ...args) {
+export function on (emitter, ...args) {
   (emitter.addEventListener || emitter.addListener).apply(emitter, args)
 }
 
-export function off(emitter, ...args) {
+export function off (emitter, ...args) {
   (emitter.removeEventListener || emitter.removeListener).apply(emitter, args)
 }
 
-export function once(emitter, ...events) {
+export function once (emitter, ...events) {
   return Promise.all(events.map(event =>
     new Promise((resolve, reject) => {
-      function success(...args) {
+      function success (...args) {
         off(emitter, event, success)
         off(emitter, 'error', failure)
         resolve(...args)
       }
 
-      function failure(reason) {
+      function failure (reason) {
         off(emitter, event, success)
         off(emitter, 'error', failure)
         reject(reason instanceof Error ? reason : new Error(reason))
@@ -29,28 +29,28 @@ export function once(emitter, ...events) {
   ))
 }
 
-export function when(emitter, event, timeout) {
+export function when (emitter, event, timeout) {
   return Promise.race([once(emitter, event), delay(timeout)])
 }
 
-export function empty(obj) {
+export function empty (obj) {
   return obj == null || Object.keys(obj).length === 0
 }
 
-export function times(n, fn = identity) {
+export function times (n, fn = identity) {
   for (var i = 0, res = []; i < n; ++i)
     res.push(fn(i))
 
   return res
 }
 
-export function *iteratorWithIndex(input) {
+export function *iteratorWithIndex (input) {
   let index = 0
   for (let item of input[Symbol.iterator]())
     yield [item, index++]
 }
 
-export async function pMap(
+export async function pMap (
   input,
   mapper,
   { concurrency = Infinity } = {},
@@ -91,13 +91,13 @@ pMap.worker = async function (it, mapper, result, errors, ...args) {
   }
 }
 
-function toArray(obj) {
+function toArray (obj) {
   return obj == null ? [] : Array.isArray(obj) ? [...obj] : [obj]
 }
 
 export { toArray as array }
 
-export function splice(array, at, count = 0, ...items) {
+export function splice (array, at, count = 0, ...items) {
   if (at == null) at = array.length
 
   return [
@@ -107,23 +107,23 @@ export function splice(array, at, count = 0, ...items) {
   ]
 }
 
-export function insert(array, at, ...items) {
+export function insert (array, at, ...items) {
   return splice(array, at, 0, ...items)
 }
 
-export function remove(array, ...items) {
+export function remove (array, ...items) {
   return array.filter(it => items.indexOf(it) < 0)
 }
 
-export function sample(array) {
+export function sample (array) {
   return array[Math.floor(Math.random() * array.length)]
 }
 
-export function sort(array, ...args) {
+export function sort (array, ...args) {
   return [...array].sort(...args)
 }
 
-export function uniq(array, into = [], memo = new Set()) {
+export function uniq (array, into = [], memo = new Set()) {
   for (let item of array) {
     if (!memo.has(item)) {
       memo.add(item)
@@ -134,20 +134,20 @@ export function uniq(array, into = [], memo = new Set()) {
   return into
 }
 
-export function homogenize(fn, memo = new Set()) {
+export function homogenize (fn, memo = new Set()) {
   let test = x => memo.has(x) ? false : !!memo.add(x)
   return fn(test, memo)
 }
 
-export function compact(array) {
+export function compact (array) {
   return array.filter(exist)
 }
 
-export function exist(obj) {
+export function exist (obj) {
   return obj != null
 }
 
-export function mixed(array) {
+export function mixed (array) {
   for (let i = 1; i < array.length; ++i) {
     if (array[i] !== array[i - 1]) return true
   }
@@ -155,7 +155,7 @@ export function mixed(array) {
   return false
 }
 
-export function reverse(array) {
+export function reverse (array) {
   const rev = []
 
   for (let i = array.length - 1; i >= 0; --i) {
@@ -165,7 +165,7 @@ export function reverse(array) {
   return rev
 }
 
-export function remap(array, fn) {
+export function remap (array, fn) {
   const res = new Array(array.length)
 
   for (let i = array.length - 1; i >= 0; --i) {
@@ -175,7 +175,7 @@ export function remap(array, fn) {
   return res
 }
 
-export function move(array, a, b, offset = 0) {
+export function move (array, a, b, offset = 0) {
   if (a === b) return array
 
   const res = []
@@ -201,13 +201,13 @@ export function move(array, a, b, offset = 0) {
   return res
 }
 
-export function warp(array, idx, at) {
+export function warp (array, idx, at) {
   at = restrict(at, 0, array.length - 1)
   if (idx === at || idx == null) return array
   return insert(splice(array, idx, 1), at, array[idx])
 }
 
-export function swap(array, from, to) {
+export function swap (array, from, to) {
   to = restrict(to, 0, array.length - 1)
 
   if (from === to || from == null) return array
@@ -222,7 +222,7 @@ export function swap(array, from, to) {
   ]
 }
 
-export function adjacent(array, item) {
+export function adjacent (array, item) {
   const i = array.indexOf(item)
   const n = array.length - 1
 
@@ -235,10 +235,10 @@ export function adjacent(array, item) {
   }
 }
 
-export function flatten(obj) {
+export function flatten (obj) {
   const res = {}
 
-  function reduce(cur, prop = '') {
+  function reduce (cur, prop = '') {
     if (Object(cur) !== cur) res[prop] = cur
     else for (let p in cur) reduce(cur[p], prop ? `${prop}.${p}` : p)
 
@@ -248,7 +248,7 @@ export function flatten(obj) {
   return reduce(obj)
 }
 
-export function get(src, path, value) {
+export function get (src, path, value) {
   if (src == null) return value
   if (!path || !path.length) return src
 
@@ -271,7 +271,7 @@ export function get(src, path, value) {
   return obj
 }
 
-export function set(src, path, value) {
+export function set (src, path, value) {
   if (typeof path === 'string') {
     return set(src, path.split('.'), value)
   }
@@ -286,7 +286,7 @@ export function set(src, path, value) {
   })
 }
 
-export function has(src, path) {
+export function has (src, path) {
   if (src == null) return false
   if (!path || !path.length) return true
 
@@ -302,11 +302,11 @@ export function has(src, path) {
   return true
 }
 
-export function own(obj, key) {
+export function own (obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key)
 }
 
-export function pluck(src, props = [], into = [], expand = false) {
+export function pluck (src, props = [], into = [], expand = false) {
   return props.reduce((res, key) => {
     const value = src[key]
 
@@ -319,14 +319,14 @@ export function pluck(src, props = [], into = [], expand = false) {
   }, into)
 }
 
-export function any(src, ...props) {
+export function any (src, ...props) {
   for (let prop of props) {
     if (own(src, prop)) return src[prop]
     if (typeof src[prop] !== 'undefined') return src[prop]
   }
 }
 
-export function pick(src, props = [], into = {}, expand = false) {
+export function pick (src, props = [], into = {}, expand = false) {
   return (src == null) ?
     into :
     props.reduce((res, key) => {
@@ -341,13 +341,13 @@ export function pick(src, props = [], into = {}, expand = false) {
     }, into)
 }
 
-export function omit(src, props = [], into = {}) {
+export function omit (src, props = [], into = {}) {
   return pick(src,
     // eslint-disable-next-line eqeqeq
     Object.keys(src).filter(key => !props.find(prop => prop == key)), into)
 }
 
-export function merge(a, b, into = {}) {
+export function merge (a, b, into = {}) {
   if (a !== into) Object.assign(into, a)
 
   for (let prop in b) {
@@ -379,11 +379,11 @@ export function merge(a, b, into = {}) {
   return into
 }
 
-export function copy(obj, into = {}) {
+export function copy (obj, into = {}) {
   return merge(into, obj, into)
 }
 
-export function map(src, fn, into = {}) {
+export function map (src, fn, into = {}) {
   // if (typeof fn !== 'function') fn = () => fn
 
   for (let prop in src) {
@@ -395,7 +395,7 @@ export function map(src, fn, into = {}) {
   return into
 }
 
-export function morph(src, fn, into = {}) {
+export function morph (src, fn, into = {}) {
   for (let prop in src) {
     if (own(src, prop)) {
       into = fn(into, prop, src[prop], src) || into
@@ -405,42 +405,42 @@ export function morph(src, fn, into = {}) {
   return into
 }
 
-export function noop() {}
+export function noop () {}
 
-export function identity(it) {
+export function identity (it) {
   return it
 }
 
-export function tautology() {
+export function tautology () {
   return true
 }
 
-export function delay(ms, ...args) {
+export function delay (ms, ...args) {
   return new Promise(resolve => setTimeout(resolve, ms, ...args))
 }
 
-export function *counter(k = 0) {
+export function *counter (k = 0) {
   while (true) {
     k = Number.isSafeInteger(k) ? ++k : -k
     yield k
   }
 }
 
-export function titlecase(string) {
+export function titlecase (string) {
   return string
     .replace(/\b\p{Ll}/ug, (m) => m.toUpperCase())
     .replace(/(\p{Ll})(\p{Lu})/ug, (m, p1, p2) => `${p1} ${p2}`)
 }
 
-export function capitalize(string) {
+export function capitalize (string) {
   return string.replace(/^\p{Ll}/u, (m) => m.toUpperCase())
 }
 
-export function downcase(string) {
+export function downcase (string) {
   return string.toLowerCase().replace(/\s+/g, '-')
 }
 
-export function camelcase(str) {
+export function camelcase (str) {
   return str.replace(
     /(?:^\w|\p{Lu}|\b\w|\s+)/ug,
     (match, index) => {
@@ -449,22 +449,22 @@ export function camelcase(str) {
     })
 }
 
-export function lispcase(str) {
+export function lispcase (str) {
   return str.split(/(\p{Lu}\p{Lu}+)|(\p{Lu}\p{Ll}+)|[\s-]+/u)
     .filter(s => !!s)
     .map(s => s.toLowerCase())
     .join('-')
 }
 
-export function quote(string) {
+export function quote (string) {
   return `"${string.replace(/\\"/, 'g')}"`
 }
 
-export function list(params, fn = Number, comma = ',') {
+export function list (params, fn = Number, comma = ',') {
   return params.map(fn).join(comma)
 }
 
-export function diff(a, b) {
+export function diff (a, b) {
   const delta = []
 
   for (let prop in b) {
@@ -478,7 +478,7 @@ export function diff(a, b) {
   return delta
 }
 
-export function strftime(format, date = new Date()) {
+export function strftime (format, date = new Date()) {
   return format.replace(/%([YymdHMS])/g, (match, code) => {
     switch (code) {
       case 'Y':
@@ -501,40 +501,40 @@ export function strftime(format, date = new Date()) {
   })
 }
 
-export function refine(context, method, refinement) {
+export function refine (context, method, refinement) {
   const original = context[method]
 
   context[method] = (...args) =>
     refinement.call(context, args, original.apply(context, args))
 }
 
-export function restrict(value, lower, upper) {
+export function restrict (value, lower, upper) {
   value = Math.max(value, (lower != null) ? lower : value)
   value = Math.min(value, (upper != null) ? upper : value)
   return value
 }
 
-export function stringify(obj) {
+export function stringify (obj) {
   return obj == null ? null : JSON.stringify(obj)
 }
 
-export function json(string) {
+export function json (string) {
   return (string == null || string === '') ? null : JSON.parse(string)
 }
 
-export function toId(obj) {
+export function toId (obj) {
   return obj.id
 }
 
-export function blank(string) {
+export function blank (string) {
   return string == null || string.length === 0
 }
 
-export function identify(length = 8) {
+export function identify (length = 8) {
   return nanoid(length)
 }
 
-export function shallow(a, b, props) {
+export function shallow (a, b, props) {
   if (a === b) return true
 
   if (typeof a !== 'object' || typeof b !== 'object' || !a || !b)
@@ -562,26 +562,26 @@ export function shallow(a, b, props) {
 
 export const BIDI_RTL = /[\p{sc=Hebrew}\p{sc=Arabic}]/u
 
-export function containsRTL(string) {
+export function containsRTL (string) {
   return BIDI_RTL.test(string)
 }
 
 export const URI = {
-  namespace(uri) {
+  namespace (uri) {
     return URI.split(uri)[0]
   },
 
-  getLabel(uri) {
+  getLabel (uri) {
     return titlecase(URI.split(uri)[1]) || uri
   },
 
-  split(uri) {
+  split (uri) {
     let ns = uri.split(/(#|\/)/)
     let nm = ns.pop()
     return [ns.join(''), nm]
   },
 
-  encode(url) {
+  encode (url) {
     return url.replace(/[#?&]/g, (m) => {
       switch (m) {
         case '#': return '%23'

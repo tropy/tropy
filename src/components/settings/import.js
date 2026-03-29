@@ -4,7 +4,7 @@ import { IMAGE } from '../../constants/index.js'
 
 const DUP_OPTS = ['skip', 'import', 'prompt']
 
-export function ImportSettings({ config, onChange }) {
+export function ImportSettings ({ config, onChange }) {
   return (
     <>
       <FormToggleGroup

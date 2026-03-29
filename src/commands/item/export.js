@@ -12,7 +12,7 @@ const write = fs.promises.writeFile
 
 
 export class Export extends Command {
-  *exec() {
+  *exec () {
     let { target, plugin } = this.action.meta
     let id = this.action.payload
 

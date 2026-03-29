@@ -27,7 +27,7 @@ Object.assign(defaultMarkdownSerializer.marks, {
   }
 })
 
-export function serialize(note, {
+export function serialize (note, {
   format = { text: true, html: true },
   localize = true
 } = {}) {
@@ -65,7 +65,7 @@ const toValue = (value, localize, language) => (
     value
 )
 
-export function fromHTML(html) {
+export function fromHTML (html) {
   let dom = (new window.DOMParser).parseFromString(html, 'text/html')
   let doc = parser.parse(dom)
   let text = doc.textBetween(0, doc.content.size, ' ', ' ')
@@ -76,7 +76,7 @@ export function fromHTML(html) {
   }
 }
 
-export function toHTML(doc) {
+export function toHTML (doc) {
   try {
     let node = (doc instanceof Node) ?
       doc :
@@ -94,7 +94,7 @@ export function toHTML(doc) {
   }
 }
 
-export function toMarkdown(doc) {
+export function toMarkdown (doc) {
   try {
     let node = (doc instanceof Node) ?
       doc :
@@ -108,7 +108,7 @@ export function toMarkdown(doc) {
   }
 }
 
-export function toText(doc) {
+export function toText (doc) {
   try {
     return doc.textBetween(0, doc.content.size, ' ', ' ')
 

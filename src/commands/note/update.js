@@ -10,7 +10,7 @@ const wasPreviouslyCreated = (id, past) =>
   past.undo.payload.length === 1
 
 class Update extends Command {
-  *exec() {
+  *exec () {
     let note = this.action.payload
 
     let [original, past] = yield select(({ notes, history }) => ([

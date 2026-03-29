@@ -10,7 +10,7 @@ import { TABS } from '../../constants/index.js'
 class SelectionGrid extends SelectionIterator {
   container = React.createRef()
 
-  get style() {
+  get style () {
     const { cols } = this.props
 
     return {
@@ -18,11 +18,11 @@ class SelectionGrid extends SelectionIterator {
     }
   }
 
-  get current() {
+  get current () {
     return this.next(0)
   }
 
-  next(offset = 1) {
+  next (offset = 1) {
     let { active, selections } = this.props
 
     if (active != null)
@@ -34,22 +34,22 @@ class SelectionGrid extends SelectionIterator {
       return this.first()
   }
 
-  prev(offset = 1) {
+  prev (offset = 1) {
     if (this.props.active != null)
       return this.next(-offset)
     else
       return this.last()
   }
 
-  first() {
+  first () {
     return this.props.selections[0]
   }
 
-  last() {
+  last () {
     return this.props.selections[this.props.selections.length - 1]
   }
 
-  delete(selection) {
+  delete (selection) {
     if (selection != null) {
       this.props.onDelete({
         id: this.props.photo.id,
@@ -101,7 +101,7 @@ class SelectionGrid extends SelectionIterator {
   }
 
 
-  render() {
+  render () {
     return this.connect(
       <ul
         ref={this.container}

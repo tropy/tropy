@@ -5,13 +5,13 @@ import { normalizeRectangle } from './util.js'
 
 
 export class SelectionLayer extends Container {
-  constructor() {
+  constructor () {
     super()
     this.on('mousemove', this.handleMouseMove)
     this.visible = false
   }
 
-  update({ selection, tool } = BLANK) {
+  update ({ selection, tool } = BLANK) {
     if (!this.children.length) return
 
     const scale = 1 / this.parent.scale.y
@@ -29,11 +29,11 @@ export class SelectionLayer extends Container {
     }
   }
 
-  destroy() {
+  destroy () {
     super.destroy({ children: true })
   }
 
-  handleMouseMove(event) {
+  handleMouseMove (event) {
     const { target } = event
 
     if (target instanceof Selection) {
@@ -45,17 +45,17 @@ export class SelectionLayer extends Container {
     }
   }
 
-  isVisible(selection, tool) {
+  isVisible (selection, tool) {
     return selection == null && (
       tool === ESPER.TOOL.ARROW || tool === ESPER.TOOL.SELECT
     )
   }
 
-  getEventModeFor(tool) {
+  getEventModeFor (tool) {
     return (tool === ESPER.TOOL.ARROW) ? 'static' : 'none'
   }
 
-  sync(props, state) {
+  sync (props, state) {
     let tool = state.quicktool || props.tool
 
     this.visible = this.isVisible(props.selection, tool)
@@ -87,26 +87,26 @@ export class SelectionLayer extends Container {
 
 
 export class Selection extends Graphics {
-  constructor() {
+  constructor () {
     super()
     this.data = BLANK
     this.eventMode = 'static'
   }
 
-  get isBlank() {
+  get isBlank () {
     return this.data === BLANK
   }
 
-  get isActive() {
+  get isActive () {
     return this === this.parent.active
   }
 
-  destroy() {
+  destroy () {
     this.data = null
     super.destroy(true)
   }
 
-  update(
+  update (
     scale = 1,
     { x, y, width, height } = this.data,
     state = this.isActive ? 'active' : 'default'
@@ -122,7 +122,7 @@ export class Selection extends Graphics {
       .stroke({ width: scale, ...colors.line })
   }
 
-  sync(data = BLANK) {
+  sync (data = BLANK) {
     this.data = data
 
     if (this.isBlank || this.parent.eventMode !== 'none') {
@@ -137,7 +137,7 @@ export class Selection extends Graphics {
 
 
 export class SelectionOverlay extends Container {
-  constructor() {
+  constructor () {
     super()
 
     this.cacheAsTexture = false
@@ -146,7 +146,7 @@ export class SelectionOverlay extends Container {
     this.addChild(new Graphics(), new Graphics())
   }
 
-  update() {
+  update () {
     this.children[1].clear()
     this.children[0].clear()
 
@@ -169,7 +169,7 @@ export class SelectionOverlay extends Container {
   }
 
 
-  sync({ selection }) {
+  sync ({ selection }) {
     this.active = selection
     this.children[0].clear()
     this.visible = (selection != null)

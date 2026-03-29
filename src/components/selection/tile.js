@@ -4,7 +4,7 @@ import { createClickHandler } from '../util.js'
 
 
 class SelectionTile extends SelectionIterable {
-  get classes() {
+  get classes () {
     return {
       ...super.classes,
       tile: true
@@ -17,7 +17,7 @@ class SelectionTile extends SelectionIterable {
   })
 
 
-  render() {
+  render () {
     return this.connect(
       <li
         className={cx(this.classes)}

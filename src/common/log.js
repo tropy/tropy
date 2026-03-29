@@ -10,11 +10,11 @@ const dateTimeFormat = new Intl.DateTimeFormat('en-GB', {
   timeStyle: 'short'
 })
 
-export function formatTime(ts) {
+export function formatTime (ts) {
   return dateTimeFormat.format(new Date(ts))
 }
 
-function logRotate(file, suffix = '.1') {
+function logRotate (file, suffix = '.1') {
   try {
     copyFileSync(file, file + suffix)
     truncateSync(file)
@@ -23,7 +23,7 @@ function logRotate(file, suffix = '.1') {
   }
 }
 
-export function createLogger({
+export function createLogger ({
   dest = 2,
   level,
   name = 'log',
@@ -63,31 +63,31 @@ export function createLogger({
   return logger
 }
 
-export function fatal(...args) {
+export function fatal (...args) {
   logger.fatal(...args)
 }
 
-export function error(...args) {
+export function error (...args) {
   logger.error(...args)
 }
 
-export function warn(...args) {
+export function warn (...args) {
   logger.warn(...args)
 }
 
-export function info(...args) {
+export function info (...args) {
   logger.info(...args)
 }
 
-export function debug(...args) {
+export function debug (...args) {
   logger.debug(...args)
 }
 
-export function trace(...args) {
+export function trace (...args) {
   logger.trace(...args)
 }
 
-export function crashReport(e, msg) {
+export function crashReport (e, msg) {
   try {
     return JSON.stringify({
       msg: msg || `unhandled error: ${e.message}`,

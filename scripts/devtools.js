@@ -50,7 +50,7 @@ app
   .then(() => app.exit(0))
 
 
-function setUserData() {
+function setUserData () {
   program.parse()
   let { data } = program.opts()
   check(exists(data),
@@ -59,14 +59,14 @@ function setUserData() {
   app.setPath('userData', resolve(data, 'electron'))
 }
 
-function list() {
+function list () {
   session
     .defaultSession
     .getAllExtensions()
     .forEach(e => say(`${e.name} ${e.version}`))
 }
 
-async function download(id) {
+async function download (id) {
   let root = resolve(app.getPath('userData'), 'extensions')
   let path = join(root, id)
   let url = CRX(id)
@@ -101,7 +101,7 @@ const save = (url, to) =>
       .end()
   })
 
-function install({ name, path }) {
+function install ({ name, path }) {
   say(`installing ${name}...`)
   return session.defaultSession.loadExtension(path, { allowFileAccess: true })
 }

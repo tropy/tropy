@@ -9,11 +9,11 @@ import MagicString from 'magic-string'
 const REQUIRE = 'sharp = require(path);'
 const PATHS = /const paths = \[[^\]]+\];/
 
-export default function sharpRequire({ platformId }) {
+export default function sharpRequire ({ platformId }) {
   let transformed = false
   return {
     name: 'sharp-require-patch',
-    transform(code, id) {
+    transform (code, id) {
       if ((/sharp[\\/]lib[\\/]sharp\.js$/).test(id)) {
         transformed = true
         const requireStatementPos = code.indexOf(REQUIRE)
@@ -51,7 +51,7 @@ export default function sharpRequire({ platformId }) {
         }
       }
     },
-    buildEnd(error) {
+    buildEnd (error) {
       if (!(error || transformed)) {
         throw new Error(
           'Could not find "sharp.js", was the file renamed?'

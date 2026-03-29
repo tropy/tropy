@@ -107,7 +107,7 @@ const isObject = input =>
 
 const transport = new Transform({
   objectMode: true,
-  transform(chunk, enc, cb) {
+  transform (chunk, enc, cb) {
     try {
       cb(null, pretty(chunk.toString()))
     } catch (e) {

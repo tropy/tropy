@@ -11,7 +11,7 @@ const DARWIN_PAPER = {
   tabloid: 'Tabloid'
 }
 
-export async function papersize() {
+export async function papersize () {
   try {
     switch (process.platform) {
       case 'linux':

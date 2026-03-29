@@ -13,25 +13,25 @@ export class Command {
   #total = 0
   #progress = 0
 
-  constructor(action, options = {}) {
+  constructor (action, options = {}) {
     this.action = action
     this.options = options
   }
 
-  get duration() {
+  get duration () {
     return this.done ?
         (this.done - this.init - this.#adjtime) : 0
   }
 
-  get id() {
+  get id () {
     return this.action.meta.seq
   }
 
-  get isReversible() {
+  get isReversible () {
     return !this.error && !!this.undo && !!this.action.meta.history
   }
 
-  get history() {
+  get history () {
     return {
       undo: this.undo,
       redo: this.redo || this.action,
@@ -39,15 +39,15 @@ export class Command {
     }
   }
 
-  get type() {
+  get type () {
     return this.action.type
   }
 
-  suspend() {
+  suspend () {
     this.#suspended = Date.now()
   }
 
-  resume() {
+  resume () {
     this.#adjtime += (Date.now() - this.#suspended)
   }
 
@@ -75,7 +75,7 @@ export class Command {
     return this
   };
 
-  *parallel(items, proc) {
+  *parallel (items, proc) {
     yield this.progress({ total: items.length })
 
     let { meta } = this.action
@@ -97,7 +97,7 @@ export class Command {
       throw new AggregateError(errors, 'too many errors')
   }
 
-  *progress({ total, progress = 1 } = {}) {
+  *progress ({ total, progress = 1 } = {}) {
     if (total !== undefined)
       this.#total += total
     else
@@ -111,13 +111,13 @@ export class Command {
     return this.#progress
   }
 
-  *abort() {
+  *abort () {
   }
 
-  *finally() {
+  *finally () {
   }
 
-  toJSON() {
+  toJSON () {
     return pick(this, [
       'action',
       'done',
@@ -127,15 +127,15 @@ export class Command {
     ])
   }
 
-  toString() {
+  toString () {
     return `${this.type}#${this.id}`
   }
 
-  static create(action, options) {
+  static create (action, options) {
     return new (Registry.get(action.type))(action, { ...options })
   }
 
-  static register(type, Cmd = this) {
+  static register (type, Cmd = this) {
     if (typeof type === 'function') type = type.type
 
     assert(type, 'missing action type')
