@@ -101,7 +101,13 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
       trace: opts.trace
     })
 
-    info({ args, opts, version }, `main.init ${version} ${system}`)
+    info({
+      args,
+      opts,
+      platform: process.platform,
+      arch: process.arch,
+      version
+    }, `main.init ${version} ${system}`)
 
     let tropy = new Tropy(opts)
 
