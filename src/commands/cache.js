@@ -37,8 +37,8 @@ export class Prune extends Command {
         yield call(fs.promises.unlink, cache.expand(file))
         stale.push(file)
 
-      } catch (e) {
-        warn({ stack: e.stack }, `prune: failed removing ${file}`)
+      } catch (err) {
+        warn({ err }, `prune: failed removing ${file}`)
       }
     }
 

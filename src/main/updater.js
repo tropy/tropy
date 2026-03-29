@@ -39,12 +39,10 @@ export class Updater extends EventEmitter {
         })
       })
 
-    } catch (e) {
+    } catch (err) {
       this.isSupported = false
 
-      error({
-        stack: e.stack
-      }, `failed to setup auto updater: ${e.message}`)
+      error({ err }, 'failed to setup auto updater')
     }
   }
 
@@ -82,12 +80,12 @@ export class Updater extends EventEmitter {
     }
   }
 
-  onError (e) {
+  onError (err) {
     this.isChecking = false
     this.isUpdateAvailable = false
     this.isUpdateReady = false
 
-    error({ stack: e.stack }, 'failed to fetch update')
+    error({ err }, 'failed to fetch update')
   }
 
   onCheckingForUpdate = () => {

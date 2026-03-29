@@ -67,13 +67,13 @@ export class Database extends EventEmitter {
     })
 
     this.pool
-      .on('factoryCreateError', (e) => {
-        warn({ stack: e.stack }, 'failed to create db connection')
+      .on('factoryCreateError', (err) => {
+        warn({ err }, 'failed to create db connection')
         // Reject the pending request instead of waiting for it to time out!
-        this.pool._waitingClientsQueue.dequeue()?.reject(e)
+        this.pool._waitingClientsQueue.dequeue()?.reject(err)
       })
-      .on('factoryDestroyError', (e) => {
-        this.emit('error', e)
+      .on('factoryDestroyError', (err) => {
+        this.emit('error', err)
       })
   }
 
@@ -156,10 +156,10 @@ export class Database extends EventEmitter {
       await conn.close()
       this.emit('destroy')
 
-    } catch (e) {
+    } catch (err) {
       // NB: generic-pool does not wait handle async destroy functions
       // so errors thrown here will likely end up as unhandled rejections.
-      warn({ path: this.path }, `failed to close db connection: ${e.message}`)
+      warn({ path: this.path }, `failed to close db connection: ${err.message}`)
     }
   }
 
@@ -191,8 +191,8 @@ export class Database extends EventEmitter {
       await this.pool.drain()
       await this.pool.clear()
 
-    } catch (e) {
-      warn({ stack: e.stack }, 'error while closing db pool')
+    } catch (err) {
+      warn({ err }, 'error while closing db pool')
 
     } finally {
       this.emit('close')
@@ -368,9 +368,9 @@ export class Connection {
 
         return number
 
-      } catch (e) {
+      } catch (err) {
         debug({
-          stack: e.stack
+          err
         }, 'failed to fetch migration number, falling back to user_version')
 
         let { user_version } = await this.get('PRAGMA user_version')
@@ -392,8 +392,8 @@ export class Connection {
       await this.exec('ROLLBACK TRANSACTION')
       return this
 
-    } catch (e) {
-      throw new AggregateError([e, ...errors])
+    } catch (err) {
+      throw new AggregateError([err, ...errors])
     }
   }
 
@@ -405,7 +405,9 @@ export class Connection {
 
       if (result.length !== 1 || result[0].integrity_check !== 'ok') {
         warn({
-          stack: result.map(f => `${f.integrity_check}`).join('\n')
+          err: {
+            stack: result.map(f => `${f.integrity_check}`).join('\n')
+          }
         }, 'integrity check failed!')
 
         throw new Error(`${result.length} integrity check(s) failed`)
@@ -418,9 +420,11 @@ export class Connection {
 
     if (violations.length > 0) {
       warn({
-        stack: violations
-          .map(v => `${v.table}[${v.rowid}] -> ${v.parent}#${v.fkid}`)
-          .join('\n')
+        err: {
+          stack: violations
+            .map(v => `${v.table}[${v.rowid}] -> ${v.parent}#${v.fkid}`)
+            .join('\n')
+        }
       }, 'foreign key check failed!')
 
       throw new Error(`${violations.length} foreign key check(s) failed`)
@@ -507,9 +511,9 @@ async function transaction (conn, callback, mode = 'IMMEDIATE') {
 
     return result
 
-  } catch (e) {
-    await conn.rollback(e)
-    throw e
+  } catch (err) {
+    await conn.rollback(err)
+    throw err
   }
 }
 

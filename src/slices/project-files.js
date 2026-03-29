@@ -26,9 +26,9 @@ export const create = createAsyncThunk(
 
       return { path }
 
-    } catch (e) {
-      error({ stack: e.stack }, `failed to create project ${name}`)
-      await fail(e, 'project.created')
+    } catch (err) {
+      error({ err }, `failed to create project ${name}`)
+      await fail(err, 'project.created')
     }
   })
 
@@ -48,8 +48,8 @@ export const reload = createAsyncThunk(
           result.push(stats)
         }
 
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to stat project file '${path}'`)
+      } catch (err) {
+        warn({ err }, `failed to stat project file '${path}'`)
 
         result.push({
           ...prevStats,
@@ -89,9 +89,9 @@ export const convert = createAsyncThunk(
 
       return { path, errors }
 
-    } catch (e) {
-      error({ stack: e.stack }, `failed to convert project ${src}`)
-      await fail(e, 'project.convert')
+    } catch (err) {
+      error({ err }, `failed to convert project ${src}`)
+      await fail(err, 'project.convert')
     }
   })
 

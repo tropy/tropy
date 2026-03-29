@@ -91,8 +91,8 @@ export function *watch () {
       yield call(touchProjectWatchFolder)
     }
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *watch')
+  } catch (err) {
+    warn({ err }, 'unexpected error in *watch')
 
   } finally {
     channel.close()

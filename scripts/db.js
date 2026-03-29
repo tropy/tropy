@@ -117,9 +117,9 @@ PRAGMA user_version = ${version};
       say(`migrated ${opts.domain} to #${version}`)
       say(`schema saved as ${relative(cwd, schema)}`)
 
-    } catch (e) {
-      say(`migration failed: ${e.message}`)
-      say(e.stack)
+    } catch (err) {
+      say(`migration failed: ${err.message}`)
+      say(err.stack)
     } finally {
       if (db) await db.close()
       shx.rm('-f', tmp)

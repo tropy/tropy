@@ -88,8 +88,8 @@ export function toHTML (doc) {
       .from(frag.children, el => el.outerHTML)
       .join('')
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'failed to convert doc to HTML')
+  } catch (err) {
+    warn({ err }, 'failed to convert doc to HTML')
     return ''
   }
 }
@@ -102,8 +102,8 @@ export function toMarkdown (doc) {
 
     return defaultMarkdownSerializer.serialize(node)
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'failed to convert doc to markdown')
+  } catch (err) {
+    warn({ err }, 'failed to convert doc to markdown')
     return ''
   }
 }
@@ -112,8 +112,8 @@ export function toText (doc) {
   try {
     return doc.textBetween(0, doc.content.size, ' ', ' ')
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'failed to convert doc to text')
+  } catch (err) {
+    warn({ err }, 'failed to convert doc to text')
     return ''
   }
 }

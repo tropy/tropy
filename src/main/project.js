@@ -22,14 +22,14 @@ async function gioSetAttribute (path, key, value) {
   try {
     try {
       await spawn('gio', ['set', path, key, value])
-    } catch (e) {
-      if (e.code === 'ENOENT')
+    } catch (err) {
+      if (err.code === 'ENOENT')
         await spawn('gvfs-set-attribute', [path, key, value])
       else
-        throw e
+        throw err
     }
-  } catch (e) {
-    warn({ stack: e.stack }, `gio: failed to set ${key} on ${path}`)
+  } catch (err) {
+    warn({ err }, `gio: failed to set ${key} on ${path}`)
   }
 }
 
@@ -37,7 +37,7 @@ async function attrib (path, ...attrs) {
   try {
     await spawn('attrib.exe', [path, ...attrs])
 
-  } catch (e) {
-    warn({ stack: e.stack }, `failed to set attrib ${attrs} on ${path}`)
+  } catch (err) {
+    warn({ err }, `failed to set attrib ${attrs} on ${path}`)
   }
 }

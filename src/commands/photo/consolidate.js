@@ -31,10 +31,10 @@ async function lookup (photo, paths = {}, checkFileSize) {
         } else {
           info({ path: candidate }, 'skipped consolidation candidate')
         }
-      } catch (e) {
-        if (e.code === 'ENOENT') return
-        if (e.code === 'ENAMETOOLONG') return
-        throw e
+      } catch (err) {
+        if (err.code === 'ENOENT') return
+        if (err.code === 'ENAMETOOLONG') return
+        throw err
       }
     }
   }
@@ -115,11 +115,11 @@ export class Consolidate extends ImportCommand {
         yield self.progress()
         yield self.consolidate(photo, selections)
 
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to consolidate photo ${photo.path}`)
+      } catch (err) {
+        warn({ err }, `failed to consolidate photo ${photo.path}`)
 
         if (++failures < maxFail) {
-          fail(e, self.action.type)
+          fail(err, self.action.type)
         }
       }
     }, { concurrency })
@@ -145,7 +145,7 @@ export class Consolidate extends ImportCommand {
       if (meta.force || image.hasChanged) {
         if (broken) {
           warn({
-            stack: image.error.stack
+            err: image.error
           }, `failed to open photo ${photo.path}`)
 
           let path = yield this.resolve(photo)
@@ -199,9 +199,9 @@ export class Consolidate extends ImportCommand {
         }
       }
 
-    } catch (e) {
+    } catch (err) {
       broken = true
-      throw e
+      throw err
 
     } finally {
       yield put(act.photo.update({

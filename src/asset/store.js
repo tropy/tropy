@@ -61,14 +61,14 @@ export class Store {
 
       return asset
 
-    } catch (e) {
-      if (e.code === 'EEXIST')
+    } catch (err) {
+      if (err.code === 'EEXIST')
         return asset
 
       asset.protocol = protocol
       asset.path = path
 
-      throw e
+      throw err
     }
   }
 
@@ -87,9 +87,9 @@ export class Store {
       debug(`removing "${path}" from store...`)
       await rm(path, { force: true, maxRetries: 3 })
 
-    } catch (e) {
+    } catch (err) {
       warn({
-        stack: e.stack,
+        err,
         store: this.root
       }, `failed removing "${asset.path}" from store`)
     }

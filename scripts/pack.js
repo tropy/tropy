@@ -95,9 +95,9 @@ program
           say(`saved "${relative(ROOT, asset)}" [${checksum}]`)
         }
       }
-    } catch (e) {
-      console.error(e.stack)
-      bail(e)
+    } catch (err) {
+      console.error(err.stack)
+      bail(err)
     }
   })
 

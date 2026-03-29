@@ -123,8 +123,8 @@ program
           write(join(home, `for_use_tropy_${slug}_${tag}.yml`), data)
 
           say(`fetched ${code} ${slug}`)
-        } catch (e) {
-          error(`failed fetching ${code} ${slug}: ${e.message}`)
+        } catch (err) {
+          error(`failed fetching ${code} ${slug}: ${err.message}`)
         }
       }
     }
@@ -178,8 +178,8 @@ const set = (src, path, value) => {
 
     obj[parts[i]] = value
 
-  } catch (e) {
-    error(`failed to set ${path} ${value}: ${e.message}`)
+  } catch (err) {
+    error(`failed to set ${path} ${value}: ${err.message}`)
   }
 }
 

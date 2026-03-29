@@ -51,11 +51,11 @@ export class Create extends ImportCommand {
       try {
         yield * this.importFromFile(file)
 
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to import "${file}"`)
+      } catch (err) {
+        warn({ err }, `failed to import "${file}"`)
 
         if (++failures < maxFail) {
-          fail(e, this.action.type)
+          fail(err, this.action.type)
         }
       }
     }
@@ -130,11 +130,11 @@ export class Create extends ImportCommand {
 
       this.result.push(...ids)
 
-    } catch (e) {
-      if (e instanceof DuplicateError)
+    } catch (err) {
+      if (err instanceof DuplicateError)
         info(`skipping duplicate "${path}"...`)
       else
-        throw e
+        throw err
     }
   }
 

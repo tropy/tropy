@@ -57,9 +57,9 @@ const ARGS = parse()
         // Ignore. Most likely we're not sandboxed.
       }
 
-    } catch (e) {
-      fatal(`${win.type}.init crashed: ${e.message}`)
-      ipc.send('error', e)
+    } catch (err) {
+      fatal(`${win.type}.init crashed: ${err.message}`)
+      ipc.send('error', { message: err.message, stack: err.stack, code: err.code })
     }
 
     if (!window.__REACT_DEVTOOLS_GLOBAL_HOOK__)
@@ -70,8 +70,8 @@ const ARGS = parse()
       throw new Error('use of eval() is prohibited')
     }
 
-  } catch (e) {
-    process.stderr.write(`Uncaught error in bootstrap\n${e.stack}\n`)
+  } catch (err) {
+    process.stderr.write(`Uncaught error in bootstrap\n${err.stack}\n`)
     process.crash()
   }
 }())

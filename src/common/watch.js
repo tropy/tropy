@@ -46,11 +46,11 @@ export class Watcher extends EventEmitter {
       })
     }
 
-    this.#watcher.on('error', (e) => {
+    this.#watcher.on('error', (err) => {
       warn({
         module: 'watch',
-        stack: e.stack
-      }, `watcher "error" ${e.message}`)
+        err
+      }, 'watcher "error"')
     })
 
     this.#watcher.on('ready', () => {
@@ -79,8 +79,8 @@ async function mdItemDateAdded (file) {
     let value = stdout.replace(/^\w+ = /, '').trim()
     return Date.parse(value)
 
-  } catch (e) {
-    warn({ module: 'watch', stack: e.stack }, `mdls failed for ${file}`)
+  } catch (err) {
+    warn({ module: 'watch', err }, `mdls failed for ${file}`)
   }
 
 }

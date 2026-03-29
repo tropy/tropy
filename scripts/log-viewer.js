@@ -32,13 +32,17 @@ const shorten = (s, maxLength) =>
   s.length > maxLength ?
     `${s.slice(0, maxLength - 2)} …` : s
 
-const error = ({ stack, code }) =>
-  stack ?
-    '\n' + styleText('gray',
+const error = ({ err, stack = err?.stack }) => {
+  if (stack)
+    return `\n${styleText('gray',
       stack
         .split('\n')
         .map(line => line.replace(CWD, ''))
-        .join('\n')) : (code || '')
+        .join('\n'))
+    }`
+  else
+    return ''
+}
 
 const meta = log =>
   log.meta.was ?
@@ -110,9 +114,9 @@ const transport = new Transform({
   transform (chunk, enc, cb) {
     try {
       cb(null, pretty(chunk.toString()))
-    } catch (e) {
-      console.error(e)
-      cb(e)
+    } catch (err) {
+      console.error(err)
+      cb(err)
     }
   }
 })

@@ -68,8 +68,8 @@ export class Image extends Asset {
       // Temporarily return as string until we add value types.
       return time || super.date.toISOString()
 
-    } catch (e) {
-      warn({ stack: e.stack }, 'failed to convert image date')
+    } catch (err) {
+      warn({ err }, 'failed to convert image date')
       return new Date().toISOString()
     }
   }
@@ -143,8 +143,8 @@ export class Image extends Asset {
         else
           this.description = com
 
-      } catch (e) {
-        warn({ stack: e.stack }, 'failed to extract jpg comments')
+      } catch (err) {
+        warn({ err }, 'failed to extract jpg comments')
       }
     }
 

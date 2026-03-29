@@ -79,8 +79,8 @@ export class Cache {
           debug(`skipping ${name} image variant for #${id}: already exists`)
         }
       }
-    } catch (e) {
-      warn({ stack: e.stack }, 'failed to create image variant')
+    } catch (err) {
+      warn({ err }, 'failed to create image variant')
     }
   }
 

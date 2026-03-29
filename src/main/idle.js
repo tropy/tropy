@@ -54,8 +54,8 @@ export class IOQ {
           if (cur < was) this.activate()
           if (cur >= min) this.idle(cur)
           was = Math.max(0, cur - min)
-        } catch (e) {
-          warn({ stack: e.stack }, 'failed to query idle time')
+        } catch (err) {
+          warn({ err }, 'failed to query idle time')
         }
       }, min * 1000)
     }
@@ -76,8 +76,8 @@ export class IOQ {
       try {
         if (obs.done) obs.observe(this, 'active', 0)
         obs.done = false
-      } catch (e) {
-        warn({ stack: e.stack }, 'unhandled error in idle observer')
+      } catch (err) {
+        warn({ err }, 'unhandled error in idle observer')
       }
     }
   }
@@ -89,8 +89,8 @@ export class IOQ {
         if (obs.done) continue
         obs.observe(this, 'idle', time)
         obs.done = true
-      } catch (e) {
-        warn({ stack: e.stack }, 'unhandled error in idle observer')
+      } catch (err) {
+        warn({ err }, 'unhandled error in idle observer')
       }
     }
   }

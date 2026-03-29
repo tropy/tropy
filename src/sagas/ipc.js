@@ -48,8 +48,8 @@ function *forward ({ type, payload, meta }) {
 
     yield call([ipcRenderer, ipcRenderer.send], name, data)
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *ipc:forward')
+  } catch (err) {
+    warn({ err }, 'unexpected error in *ipc:forward')
   }
 }
 
@@ -57,8 +57,8 @@ function *rsvp (action) {
   try {
     yield call([ipcRenderer, ipcRenderer.send], 'wm', 'rsvp', action)
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *ipc:rsvp')
+  } catch (err) {
+    warn({ err }, 'unexpected error in *ipc:rsvp')
   }
 }
 
@@ -76,8 +76,8 @@ function channel (name) {
     const listener = (_, ...actions) => {
       try {
         for (let action of actions) emitter(action)
-      } catch (e) {
-        warn({ stack: e.stack }, `unexpected error in channel "${name}"`)
+      } catch (err) {
+        warn({ err }, `unexpected error in channel "${name}"`)
       }
     }
 

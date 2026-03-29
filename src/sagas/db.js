@@ -20,25 +20,25 @@ export function *handleDatabaseErrors (db, actions = {}) {
     var channel = yield call(ErrorChannel, db)
 
     while (true) {
-      let { error } = yield take(channel)
+      let { error: err } = yield take(channel)
 
-      if (error.code in actions) {
-        yield put(actions[error.code](error))
+      if (err.code in actions) {
+        yield put(actions[err.code](err))
 
       } else {
-        warn({ stack: error.stack }, 'db error')
+        warn({ err }, 'db error')
 
         // Report the error but don't wait for the response to make
         // sure the default action is dispatched without delay!
-        fail(error, `db.${error.code}`, db.path).catch()
+        fail(err, `db.${err.code}`, db.path).catch()
 
         if (actions.default) {
-          yield put(actions.default(error))
+          yield put(actions.default(err))
         }
       }
     }
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *handleDatabaseErrors')
+  } catch (err) {
+    warn({ err }, 'unexpected error in *handleDatabaseErrors')
 
   } finally {
     channel.close()

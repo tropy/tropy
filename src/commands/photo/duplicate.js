@@ -58,9 +58,9 @@ export class Duplicate extends ImportCommand {
         photos.push(photo.id)
         yield call(cache.consolidate, photo.id, image)
 
-      } catch (e) {
-        warn({ stack: e.stack }, `failed to duplicate "${path}"`)
-        fail(e, this.action.type)
+      } catch (err) {
+        warn({ err }, `failed to duplicate "${path}"`)
+        fail(err, this.action.type)
       }
     }
 

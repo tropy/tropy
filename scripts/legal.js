@@ -70,9 +70,9 @@ export const loadDependencies = async ({ dependencies } = {}) => {
           dict[mod.name] = true
         }
       }
-    } catch (e) {
+    } catch (err) {
       warn(`failed loading dependencies from "${file}"`)
-      console.error(e.stack)
+      console.error(err.stack)
     }
   }
 

@@ -25,8 +25,8 @@ export async function papersize () {
       case 'win32':
         return 'A4'
     }
-  } catch (e) {
-    warn(`failed to fetch system default paper size: ${e.message}`)
+  } catch (err) {
+    warn(`failed to fetch system default paper size: ${err.message}`)
   }
 
   return 'A4'

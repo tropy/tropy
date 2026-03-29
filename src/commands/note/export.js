@@ -47,11 +47,9 @@ export class Export extends Command {
       }
 
 
-    } catch (e) {
-      warn({
-        stack: e.stack
-      }, `failed to export notes as ${format} to ${target}`)
-      fail(e, this.action.type)
+    } catch (err) {
+      warn({ err }, `failed to export notes as ${format} to ${target}`)
+      fail(err, this.action.type)
     }
   }
 

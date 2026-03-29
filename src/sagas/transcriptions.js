@@ -19,8 +19,8 @@ export function *transcribe () {
       if (pending.length)
         yield put(act.transcribe(pending))
     }
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *transcribe')
+  } catch (err) {
+    warn({ err }, 'unexpected error in *transcribe')
 
   } finally {
     debug('*transcribe terminated')

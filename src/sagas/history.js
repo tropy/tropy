@@ -8,8 +8,8 @@ function *undo () {
     let action = yield select(getUndo)
     if (action != null) yield put(action)
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *history:undo')
+  } catch (err) {
+    warn({ err }, 'unexpected error in *history:undo')
   }
 }
 
@@ -18,8 +18,8 @@ function *redo () {
     let action = yield select(getRedo)
     if (action != null) yield put(action)
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *history:redo')
+  } catch (err) {
+    warn({ err }, 'unexpected error in *history:redo')
   }
 }
 

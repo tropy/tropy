@@ -34,9 +34,9 @@ export function *exec (options, action) {
     if (cmd.duration > TOO_LONG)
       warn(`SLOW: ${cmd}`)
 
-  } catch (e) {
-    warn({ stack: e.stack }, `${action.type} failed in *exec`)
-    if (!cmd) cmd = { error: e }
+  } catch (err) {
+    warn({ err }, `${action.type} failed in *exec`)
+    if (!cmd) cmd = { error: err }
 
   } finally {
     if (cmd.cancelled && !cmd.error) {

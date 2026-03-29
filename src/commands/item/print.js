@@ -40,8 +40,8 @@ async function prepForPrinting (photo, _, {
 
     photo.print = path
 
-  } catch (e) {
-    warn({ stack: e.stack, photo }, 'failed to prepare photo for printing')
+  } catch (err) {
+    warn({ err, photo }, 'failed to prepare photo for printing')
   }
 }
 

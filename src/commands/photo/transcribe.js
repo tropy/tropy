@@ -55,16 +55,16 @@ export class Transcribe extends Command {
           { buffer, ...raw }
         )
       }
-    } catch (e) {
+    } catch (err) {
       warn({
+        err,
         image: src,
-        stack: e.stack,
         transcription: id
-      }, `transcription failed: ${e.message}`)
+      }, 'transcription failed')
 
       next = null
       status = -1
-      draft.config.error = e.stack
+      draft.config.error = err.stack
     }
 
     if (!next)

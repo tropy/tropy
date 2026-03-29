@@ -39,9 +39,9 @@ export class Export extends Command {
         default:
           yield call(write, target, JSON.stringify(items, null, 2))
       }
-    } catch (e) {
-      warn({ stack: e.stack }, `failed to export items to ${target}`)
-      fail(e, this.action.type)
+    } catch (err) {
+      warn({ err }, `failed to export items to ${target}`)
+      fail(err, this.action.type)
     }
   }
 }

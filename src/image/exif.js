@@ -23,14 +23,16 @@ export function exif (buffer, opts = {}) {
       let ifd = parse(buffer, { ...DEFAULTS, ...opts })
       if (ifd.errors) {
         debug({
-          stack: ifd.errors.map(e => [e.offset, e.message])
+          err: {
+            stack: ifd.errors.map(e => [e.offset, e.message])
+          }
         }, 'EXIF extraction errors')
       }
 
       return ifd.flatten(true, toValue)
 
-    } catch (e) {
-      warn({ stack: e.stack }, 'EXIF extraction failed')
+    } catch (err) {
+      warn({ err }, 'EXIF extraction failed')
     }
   }
 }

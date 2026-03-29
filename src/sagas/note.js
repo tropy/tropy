@@ -51,8 +51,8 @@ export function *autosave (db, ms = 5000) {
       pending.set(id, yield fork(save, ms, id, pending))
     }
 
-  } catch (e) {
-    warn({ stack: e.stack }, 'unexpected error in *note.autosave')
+  } catch (err) {
+    warn({ err }, 'unexpected error in *note.autosave')
 
   } finally {
     yield call(flush, db, pending)

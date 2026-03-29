@@ -181,12 +181,12 @@ export class ContextMenu extends Menu {
             resolve()
           }
         })
-      } catch (e) {
+      } catch (err) {
         error({
-          stack: e.stack,
+          err,
           scope
-        }, `failed to show context-menu: ${e.message}`)
-        reject(e)
+        }, 'failed to show context-menu')
+        reject(err)
       }
     })
   }

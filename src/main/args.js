@@ -71,9 +71,9 @@ export function argToURL (arg, cwd = process.cwd()) {
   try {
     return new URL(arg)
 
-  } catch (e) {
-    if (e.code !== 'ERR_INVALID_URL')
-      throw e
+  } catch (err) {
+    if (err.code !== 'ERR_INVALID_URL')
+      throw err
 
     return pathToFileURL(resolve(cwd, arg))
   }

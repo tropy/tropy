@@ -85,8 +85,8 @@ pMap.worker = async function (it, mapper, result, errors, ...args) {
       item = await Promise.resolve(item)
       result[index] = await mapper(item, index, ...args)
 
-    } catch (e) {
-      errors.push(e)
+    } catch (err) {
+      errors.push(err)
     }
   }
 }

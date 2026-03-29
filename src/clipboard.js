@@ -24,8 +24,8 @@ export function getClipboardData (event, format = 'text/plain') {
         throw new Error(`format unknown: ${format}`)
     }
 
-  } catch (e) {
-    warn({ stack: e.stack, data }, 'pasted unsupported data')
+  } catch (err) {
+    warn({ err, data }, 'pasted unsupported data')
   }
 
   return data

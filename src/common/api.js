@@ -411,11 +411,11 @@ export function create ({ current, dispatch, log, rsvp, version }) {
   let api = new Router
 
   app.silent = true
-  app.on('error', e => {
+  app.on('error', err => {
     log.error({
-      stack: e.stack,
-      status: e.status
-    }, e.message)
+      err,
+      status: err.status
+    }, err.message)
   })
 
   app.context.current = current
