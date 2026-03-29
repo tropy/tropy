@@ -42,7 +42,7 @@ export const NotePad = ({
 
   let handleChange = useEvent((state, hasDocChanged) => {
     dispatch(actions.update({
-      id: note.id,
+      id: note?.id,
       state,
       text: hasDocChanged ? toText(state.doc) : note.text
     }))
