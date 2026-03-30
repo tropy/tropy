@@ -113,6 +113,7 @@ export const EditorView = forwardRef(({
       onContextMenu={onContextMenu}
       onLoad={handleLoad}
       onUnload={handleUnload}
+      sandbox={false}
       styleSheet="editor"
       tabIndex={tabIndex}/>
   )

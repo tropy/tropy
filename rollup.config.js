@@ -195,6 +195,14 @@ export default [
           __dirname: 'import.meta.dirname'
         }
       }),
+      replace({
+        include: '**/prosemirror-view/**',
+        preventAssignment: false,
+        delimiters: ['', ''],
+        values: {
+          'cssChecked.has(view)': 'true'
+        }
+      }),
       nodeResolve({
         exportConditions: ['node'],
         preferBuiltins: true
