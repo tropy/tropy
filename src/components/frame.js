@@ -16,6 +16,7 @@ export function Frame ({
   onContextMenu,
   onLoad,
   onUnload,
+  sandbox = 'allow-same-origin',
   srcDoc = '<!DOCTYPE html><html><head></head><body></body></html>',
   styleSheet,
   tabIndex
@@ -109,7 +110,7 @@ export function Frame ({
       ref={frame}
       className={className}
       onLoad={handleLoad}
-      sandbox="allow-same-origin"
+      sandbox={sandbox}
       srcDoc={srcDoc}
       tabIndex={tabIndex}/>
   )
