@@ -16,6 +16,14 @@ export default [
   },
 
   {
+    files: ['**/*.js'],
+    languageOptions: {
+      sourceType: 'module',
+      globals: {
+        ...globals.builtin,
+        ...globals.nodeBuiltin
+      }
+    },
     plugins: {
       '@stylistic': stylistic
     },
@@ -68,16 +76,6 @@ export default [
   },
 
   {
-    languageOptions: {
-      sourceType: 'module',
-      globals: {
-        ...globals.builtin,
-        ...globals.nodeBuiltin
-      }
-    }
-  },
-
-  {
     files: [
       '{src,test}/*.js',
       '{src,test}/!(main)/**/*.js',
@@ -91,7 +89,7 @@ export default [
   },
 
   {
-    files: ['test/**/*'],
+    files: ['test/**/*.js'],
     languageOptions: {
       globals: {
         F: false,
@@ -136,5 +134,10 @@ export default [
       'react-hooks/set-state-in-effect': 0,
       'react-hooks/use-memo': 0,
     }
+  },
+  {
+    ignores: [
+      'coverage/', 'db/', 'dist/', 'lib/', 'tmp/', 'vendor/'
+    ]
   }
 ]

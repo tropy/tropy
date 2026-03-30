@@ -34,7 +34,7 @@
     "devtools": "electron scripts/devtools.js --data tmp",
     "legal": "node scripts/legal.js",
     "lint": "npm run -s lint:js && npm run -s lint:css",
-    "lint:js": "eslint src test scripts res/workers *.js",
+    "lint:js": "eslint",
     "lint:css": "stylelint 'src/stylesheets/**/*.scss'",
     "log:view": "cat tmp/log/tropy.log | node scripts/log-remap.js | node scripts/log-viewer.js",
     "log:tail": "tail -q -F tmp/log/tropy.log 2> /dev/null | node scripts/log-remap.js | node scripts/log-viewer.js",
