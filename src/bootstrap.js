@@ -11,6 +11,8 @@ const START =
 
 const ARGS = parse()
 
+window.ELECTRON_DISABLE_SECURITY_WARNINGS = !ARGS.debug
+
 ;(async function bootstrap () {
   try {
     createLogger({
