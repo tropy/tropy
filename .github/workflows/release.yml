@@ -152,7 +152,8 @@ jobs:
           SIGN_PASS: ${{ secrets.WIN_SIGN_PASS }}
 
       - name: Upload Linux release assets
-        if: runner.os == 'Linux'        uses: ncipollo/release-action@v1
+        if: runner.os == 'Linux'
+        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           artifacts: >-
