@@ -2,6 +2,7 @@ import { app, dialog, powerMonitor, session } from 'electron'
 import { join, resolve } from 'node:path'
 import { mkdirSync as mkdir } from 'node:fs'
 import { readdir } from 'node:fs/promises'
+import { enableCompileCache } from 'node:module'
 import { pathToFileURL } from 'node:url'
 import { darwin, linux, win32, system } from '../common/os.js'
 import { exe, qualified, version } from '../common/release.js'
@@ -9,6 +10,8 @@ import { parse, argToURL } from './args.js'
 import { createLogger, info, warn } from '../common/log.js'
 import { Tropy } from './tropy.js'
 import { handleSquirrelEvent } from './squirrel.js'
+
+enableCompileCache()
 
 const START = process.getCreationTime() || Date.now()
 const { args, opts } = parse()
