@@ -4,14 +4,12 @@ on:
     tags:
       - v1.*
       - v2.*
-  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   create-release:
-    if: github.event_name != 'workflow_dispatch'
     name: Create Release
     runs-on: ubuntu-latest
     steps:
@@ -26,7 +24,6 @@ jobs:
           token: ${{ github.token }}
 
   build:
-    if: always()
     needs: create-release
     name: ${{ matrix.image }} ${{ matrix.arch }} ${{ matrix.tag }}
     runs-on: ${{ matrix.image }}
@@ -104,7 +101,7 @@ jobs:
         run: node scripts/rebuild.js --force --verbose --arch ${{ matrix.arch }}
 
       - name: Setup macOS keychain and signing certificates
-        if: runner.os == 'macOS' && github.event_name != 'workflow_dispatch'
+        if: runner.os == 'macOS'
         run: |
           # Create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASS" "$KEYCHAIN"
@@ -145,7 +142,6 @@ jobs:
         run: npm run test:wdio
 
       - name: Create release assets
-        if: github.event_name != 'workflow_dispatch'
         run: npm run pack
         env:
           npm_config_arch: ${{ matrix.arch }}
@@ -156,8 +152,7 @@ jobs:
           SIGN_PASS: ${{ secrets.WIN_SIGN_PASS }}
 
       - name: Upload Linux release assets
-        if: runner.os == 'Linux' && github.event_name != 'workflow_dispatch'
-        uses: ncipollo/release-action@v1
+        if: runner.os == 'Linux'        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           artifacts: >-
@@ -171,8 +166,7 @@ jobs:
           token: ${{ github.token }}
 
       - name: Upload macOS release assets
-        if: runner.os == 'macOS' && github.event_name != 'workflow_dispatch'
-        uses: ncipollo/release-action@v1
+        if: runner.os == 'macOS'        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           artifacts: >-
@@ -186,8 +180,7 @@ jobs:
           token: ${{ github.token }}
 
       - name: Upload Windows release assets
-        if: runner.os == 'Windows' && github.event_name != 'workflow_dispatch'
-        uses: ncipollo/release-action@v1
+        if: runner.os == 'Windows'        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           artifacts: >-
