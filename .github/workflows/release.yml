@@ -167,7 +167,8 @@ jobs:
           token: ${{ github.token }}
 
       - name: Upload macOS release assets
-        if: runner.os == 'macOS'        uses: ncipollo/release-action@v1
+        if: runner.os == 'macOS'
+        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           artifacts: >-
@@ -181,7 +182,8 @@ jobs:
           token: ${{ github.token }}
 
       - name: Upload Windows release assets
-        if: runner.os == 'Windows'        uses: ncipollo/release-action@v1
+        if: runner.os == 'Windows'
+        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           artifacts: >-
