@@ -14,7 +14,6 @@ import shelljs from 'shelljs'
 setLogSymbol('Δ')
 
 const { cat, cp, env, exec, sed, test } = shelljs
-const ARCH = process.env.npm_config_target_arch || process.arch
 
 const ELECTRON_VERSION = JSON.parse(
   fs.readFileSync(join(ROOT, 'node_modules/electron/package.json'), {
@@ -32,7 +31,7 @@ const LIBVIPS_URL = 'https://github.com/tropy/sharp-libvips/releases/download'
 const SHARP_LIB = join(ROOT, 'node_modules', '@img')
 
 function downloadHeaders ({
-  arch = ARCH,
+  arch = process.arch,
   target = ELECTRON_VERSION,
   url = 'https://electronjs.org/headers',
   silent
@@ -62,7 +61,7 @@ class Rebuilder {
 
   constructor ({
     name,
-    arch = ARCH,
+    arch,
     target = ELECTRON_VERSION,
     libc,
     silent,
@@ -304,7 +303,7 @@ program
   .name('tropy-rebuild')
   .argument('[modules...]')
   .allowUnknownOption()
-  .option('--arch <name>', 'set target arch', ARCH)
+  .option('--arch <name>', 'set target arch', process.arch)
   .option('-f, --force', 'force rebuild', false)
   .option('-s, --silent', 'silence rebuilder output', false)
   .option('-v, --verbose', 'passed to node-gyp', false)

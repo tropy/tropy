@@ -89,7 +89,7 @@ jobs:
       - name: Create production bundle
         run: npm run rollup
         env:
-          npm_package_config_node_gyp_arch: ${{ matrix.arch }}
+          TROPY_TARGET_ARCH: ${{ matrix.arch }}
 
       - name: Run tests
         if: runner.os != 'Linux'

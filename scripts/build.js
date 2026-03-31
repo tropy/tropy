@@ -32,22 +32,13 @@ import {
 
 setLogSymbol('Σ')
 
-const ARCH =
-  process.env.npm_config_target_arch ||
-  process.env.npm_config_arch ||
-  process.arch
-const PLATFORM =
-  process.env.npm_config_target_platform ||
-  process.env.npm_config_platform ||
-  process.platform
-
 const ELECTRON = join(ROOT, 'node_modules', 'electron', 'dist')
 
 program
   .name('tropy-build')
   .allowUnknownOption()
-  .option('--platform <name>', 'set target platform', PLATFORM)
-  .option('--arch <name>', 'set target arch', ARCH)
+  .option('--platform <name>', 'set target platform', process.platform)
+  .option('--arch <name>', 'set target arch', process.arch)
   .option('--no-asar', 'skip asar creation')
 
 if (process.platform === 'darwin') {

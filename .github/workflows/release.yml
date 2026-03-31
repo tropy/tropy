@@ -127,9 +127,9 @@ jobs:
           NOTARY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
 
       - name: Create production build
-        run: npm run build
+        run: npm run build -- --arch ${{ matrix.arch }}
         env:
-          npm_config_arch: ${{ matrix.arch }}
+          TROPY_TARGET_ARCH: ${{ matrix.arch }}
           SIGN_CERT: ${{ secrets.MAC_CERT_ID }}
           SIGN_KEYCHAIN: ${{ secrets.KEYCHAIN }}
           NOTARY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
@@ -142,10 +142,9 @@ jobs:
           npm run wdio:test
 
       - name: Create release assets
-        run: npm run pack
+        run: npm run pack -- --arch ${{ matrix.arch }}
         env:
-          npm_config_arch: ${{ matrix.arch }}
-          npm_config_tag: ${{ matrix.tag }}
+          PACK_TAG: ${{ matrix.tag }}
           SIGN_CRED: ${{ secrets.WIN_SIGN_CRED }}
           SIGN_TOTP: ${{ secrets.WIN_SIGN_TOTP }}
           SIGN_USER: ${{ secrets.WIN_SIGN_USER }}

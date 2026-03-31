@@ -20,15 +20,6 @@ import {
 
 setLogSymbol('λ')
 
-const ARCH =
-  process.env.npm_config_target_arch ||
-  process.env.npm_config_arch ||
-  process.arch
-const PLATFORM =
-  process.env.npm_config_target_platform ||
-  process.env.npm_config_platform ||
-  process.platform
-
 const {
   exec,
   cat,
@@ -55,11 +46,11 @@ program
   .name('tropy-pack')
   .argument('[targets...]')
   .allowUnknownOption()
-  .option('--platform <name>', 'set target platform', PLATFORM)
-  .option('--arch <name>', 'set target arch', ARCH)
+  .option('--platform <name>', 'set target platform', process.platform)
+  .option('--arch <name>', 'set target arch', process.arch)
   .option('--app <dir>', 'set the app directory')
   .option('--out <dir>', 'set the output directory', join(ROOT, 'dist'))
-  .option('--tag <name>', 'set release tag name', process.env.npm_config_tag)
+  .option('--tag <name>', 'set release tag name', process.env.PACK_TAG)
   .option('-s, --silent', 'silence packer output', false)
   .option('--sign', 'sign windows build', true)
 
