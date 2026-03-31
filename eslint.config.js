@@ -8,14 +8,6 @@ export default [
   js.configs.recommended,
 
   {
-    // TODO remove in ESLint 10+ (parser will support it)
-    ignores: [
-      'scripts/db.js',
-      'src/common/release.js'
-    ]
-  },
-
-  {
     files: ['**/*.js'],
     languageOptions: {
       sourceType: 'module',
