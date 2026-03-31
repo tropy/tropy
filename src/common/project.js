@@ -1,8 +1,8 @@
 import assert from 'node:assert'
 import { existsSync } from 'node:fs'
-import { chmod, cp, stat, mkdir } from 'node:fs/promises'
+import { chmod, cp, stat, mkdir, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, join, resolve, relative } from 'node:path'
-import { randomUUID as uuid } from 'node:crypto'
+import { createHash, randomUUID as uuid } from 'node:crypto'
 import { Database } from './db.js'
 import { home, normalize } from './os.js'
 import { into, select, update } from './query.js'
@@ -372,6 +372,106 @@ export async function getAssets (db, { basePath }) {
 
   return assets
 }
+
+/*
+ * Creates an optimized copy of a managed project,
+ * converting assets to jpeg or png if they have transparency.
+ */
+export async function optimizeAssets (src, path, appDir, {
+  concurrency = 4,
+  overwrite = false
+} = {}) {
+  try {
+    assert(getProjectType(src) === MANAGED, 'source must be a managed project')
+    assert(getProjectType(path) === MANAGED, 'target must be a managed project')
+
+    await checkProjectPath(path, overwrite)
+    info(`optimizing project "${src}" to "${path}"`)
+
+    let srcDbFile = join(src, MANAGED_DB_NAME)
+    let dbFile = join(path, MANAGED_DB_NAME)
+    let store = new Store(join(path, MANAGED_STORE_NAME))
+
+    await makeProjectDir(path, store.name, appDir)
+    await cp(srcDbFile, dbFile, { force: false, errorOnExist: true })
+
+    var db = new Database(dbFile, 'w', {
+      max: 1,
+      journalMode: 'wal'
+    })
+
+    // Assign a new project ID
+    let project = await load(db)
+    let newId = uuid()
+
+    await db.run(
+      ...update('project')
+        .set({ project_id: newId })
+        .where({ project_id: project.id }))
+
+    let assets = await getAssets(db, { basePath: dirname(srcDbFile) })
+    let { open: openImage } = await import('../image/sharp.js')
+
+    info(`optimizing ${assets.length} asset(s)`)
+    await pMap(assets, async ({ id, ...props }) => {
+      let asset = new Asset(props)
+
+      try {
+        await asset.open()
+
+        let image = await openImage(asset.buffer)
+        let { hasAlpha } = await image.metadata()
+
+        let ext, mimetype, buffer
+        if (hasAlpha) {
+          ext = '.png'
+          mimetype = 'image/png'
+          buffer = await image.png().toBuffer()
+        } else {
+          ext = '.jpg'
+          mimetype = 'image/jpeg'
+          buffer = await image.jpeg({ quality: 100 }).toBuffer()
+        }
+
+        let checksum = createHash('md5').update(buffer).digest('hex')
+        let filename = `${checksum}${ext}`
+        let optimizedPath = join(store.root, filename)
+
+        await writeFile(optimizedPath, buffer, { flag: 'wx' }).catch(err => {
+          if (err.code !== 'EEXIST') throw err
+        })
+
+        await db.run(
+          ...update('photos')
+            .set({
+              path: relative(path, optimizedPath),
+              checksum,
+              mimetype
+            })
+            .where({ id }))
+
+      } catch (err) {
+        // Fall back to copying the original asset
+        warn({ err, url: asset.url }, 'failed to optimize, copying original')
+        await asset.check()
+
+        if (!asset.hasChanged) {
+          await store.add(asset)
+          await db.run(
+            ...update('photos')
+              .set({ path: relative(path, asset.path) })
+              .where({ id }))
+        }
+      }
+    }, { concurrency })
+
+    return { id: newId }
+
+  } finally {
+    await db?.close()
+  }
+}
+
 
 export async function optimize (db) {
   await db.exec("INSERT INTO fts_notes(fts_notes) VALUES ('optimize')")

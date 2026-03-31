@@ -249,6 +249,12 @@ en:
             =0 {All photos consolidated.}
             one {1 photo not found; consolidation required.}
             other {# photos not found; consolidation required.}}
+      optimize:
+        label: Optimize assets
+        confirm: Optimize
+        hint: >-
+          Create an optimized copy of this project,
+          converting all images to WebP format.
       watch:
         folder: Watch folder
         usePolling: Using file stat polling
@@ -404,6 +410,14 @@ en:
             Your project was successfully converted and saved.
             Tropy will now close the original project file
             and open the converted project in a new window.
+          buttons:
+            - "OK"
+        optimize:
+          title: Optimization complete
+          message: >-
+            Your optimized project copy has been saved.
+            Tropy will now open the optimized project
+            in a new window.
           buttons:
             - "OK"
     error:
@@ -682,6 +696,7 @@ en:
     project:
       created: Project creation failed.
       convert: Project conversion failed.
+      optimize: Project optimization failed.
     item:
       export: Failed to export items.
       merge: Failed to merge items.

@@ -8,7 +8,9 @@ import { Resource, Schema } from '../res.js'
 import {
   pstat,
   convert as convertProject,
-  create as createProject
+  create as createProject,
+  optimizeAssets,
+  TYPES
 } from '../common/project.js'
 
 
@@ -92,6 +94,25 @@ export const convert = createAsyncThunk(
     } catch (err) {
       error({ err }, `failed to convert project ${src}`)
       await fail(err, 'project.convert')
+    }
+  })
+
+export const optimize = createAsyncThunk(
+  'projectFiles/optimize',
+  async ({ src, name }) => {
+    try {
+      let path = await save.project(TYPES[0], name)
+
+      if (path)
+        await optimizeAssets(src, path, Resource.base, {
+          overwrite: true
+        })
+
+      return { path }
+
+    } catch (err) {
+      error({ err }, `failed to optimize project ${src}`)
+      await fail(err, 'project.optimize')
     }
   })
 
