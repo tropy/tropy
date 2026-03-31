@@ -34,6 +34,7 @@ export const config = {
     'wdio:electronServiceOptions': {
       appBinaryPath: getAppBinaryPath(),
       appArgs: [
+        '--no-sandbox',
         `--data=${DATA}`,
         `--logs=${join(DATA, 'log')}`,
         `--cache=${join(DATA, 'cache')}`
