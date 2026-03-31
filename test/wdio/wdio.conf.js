@@ -17,7 +17,7 @@ function getAppBinaryPath () {
     case 'darwin':
       return join(DIST, `${qualified.product}.app`, 'Contents', 'MacOS', qualified.product)
     case 'win32':
-      return join(DIST, `${qualified.product}.exe`)
+      return join(DIST, `${qualified.name}.exe`)
     case 'linux':
       return join(DIST, qualified.name)
   }
