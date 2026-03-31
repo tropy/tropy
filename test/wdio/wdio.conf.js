@@ -41,18 +41,9 @@ export const config = {
       ]
     },
     'goog:chromeOptions': {
-      args: [
-        `--user-data-dir=${join(DATA, 'electron')}`,
-        '--enable-logging',
-        '--v=1'
-      ]
-    },
-    'wdio:chromedriverOptions': {
-      args: ['--verbose']
+      args: [`--user-data-dir=${join(DATA, 'electron')}`]
     }
   }],
-
-  logLevel: 'debug',
 
   services: ['electron'],
   framework: 'mocha',

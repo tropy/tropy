@@ -43,9 +43,10 @@
     "rebuild": "node scripts/rebuild.js",
     "coverage": "c8 -o coverage --reporter=text --reporter=lcov --include='src/**' npm test",
     "test": "spark --no-sandbox",
-    "test:wdio": "npm --prefix test/wdio test",
     "preversion": "npm run lint && npm test",
-    "version": "node scripts/version.js && git add res/linux CITATION.cff"
+    "version": "node scripts/version.js && git add res/linux CITATION.cff",
+    "wdio:install": "npm --prefix test/wdio install",
+    "wdio:test": "npm --prefix test/wdio test"
   },
   "spark": {
     "ui": "bdd",

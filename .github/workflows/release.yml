@@ -135,12 +135,11 @@ jobs:
           NOTARY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           NOTARY_KEY_ISSUER: ${{ secrets.APPLE_API_KEY_ISSUER }}
 
-      - name: Install wdio dependencies
-        run: npm --prefix test/wdio clean-install --no-progress
-
-      - name: Run smoke tests
+      - name: Run integration tests
         continue-on-error: true
-        run: npm run test:wdio
+        run: |
+          npm --prefix test/wdio clean-install --no-progress
+          npm run wdio:test
 
       - name: Create release assets
         run: npm run pack
