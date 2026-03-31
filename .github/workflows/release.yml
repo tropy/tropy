@@ -94,6 +94,7 @@ jobs:
           meson setup build
           meson compile -C build
           sudo meson install -C build
+          sudo ldconfig
           # Set env variable
           echo "SHARP_FORCE_GLOBAL_LIBVIPS=true" >> $GITHUB_ENV
 
