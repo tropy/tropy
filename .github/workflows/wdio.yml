@@ -81,8 +81,18 @@ jobs:
         env:
           npm_config_arch: ${{ matrix.arch }}
 
+      - name: Check shared library dependencies
+        if: runner.os == 'Linux'
+        run: |
+          APP=$(find dist -maxdepth 2 -name 'tropy*' -type f -executable | head -1)
+          echo "Binary: $APP"
+          ldd "$APP" | grep -i "not found" || echo "All libraries resolved"
+          sudo ldconfig -p | grep -i vips || echo "No libvips in ldconfig"
+
       - name: Install wdio dependencies
         run: npm --prefix test/wdio clean-install --no-progress
 
       - name: Run smoke tests
         run: npm run test:wdio
+        env:
+          LD_LIBRARY_PATH: /usr/local/lib
