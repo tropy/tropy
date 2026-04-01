@@ -91,16 +91,23 @@ export const ProjectSettings = React.memo(({
         value={TYPES[project.isManaged ? 0 : 1]}
         onConvert={handleProjectConvert}/>
       {project.isManaged && (
-        <FormElement
-          id="prefs.project.optimize"
-          isCompact>
-          <Button
-            className="btn-default btn-block"
-            text="prefs.project.optimize.confirm"
-            tabIndex={0}
-            isDisabled={project.isReadOnly}
-            onClick={handleProjectOptimize}/>
-        </FormElement>
+        <>
+          <FormToggle
+            id="prefs.project.optimize.onImport"
+            name="optimize.onImport"
+            value={project.optimize?.onImport ?? true}
+            onChange={onChange}/>
+          <FormElement
+            id="prefs.project.optimize"
+            isCompact>
+            <Button
+              className="btn-default btn-block"
+              text="prefs.project.optimize.confirm"
+              tabIndex={0}
+              isDisabled={project.isReadOnly}
+              onClick={handleProjectOptimize}/>
+          </FormElement>
+        </>
       )}
       <hr/>
 
