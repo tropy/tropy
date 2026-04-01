@@ -101,6 +101,7 @@
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^17.0.0",
     "minimatch": "^10.0.1",
     "ms": "^2.1.3",
     "node-addon-api": "^8.5.0",
@@ -130,8 +131,6 @@
     "fsevents": "~2.3.2"
   },
   "dependencies": {
-    "@babel/cli": "^7.24.8",
-    "@babel/plugin-syntax-import-assertions": "^7.17.12",
     "@inukshuk/exif": "^2.0.0",
     "@koa/router": "^15.1.0",
     "@reduxjs/toolkit": "^2.0.1",
@@ -143,8 +142,6 @@
     "cross-zip": "^4.0.0",
     "edtf": "^4.10.0",
     "generic-pool": "^3.7.1",
-    "globals": "^17.0.0",
-    "install": "^0.13.0",
     "js-yaml": "^4.0.0",
     "jsonld": "^9.0.0",
     "koa": "^3.0.0",
