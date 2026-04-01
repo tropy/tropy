@@ -7,6 +7,8 @@ import { DuplicateError } from '../../common/error.js'
 import { info, warn } from '../../common/log.js'
 import { getPhotoTemplate } from '../../selectors/index.js'
 import { Image } from '../../image/image.js'
+import { optimizeImage } from '../../image/optimize.js'
+import { Asset } from '../../asset/asset.js'
 
 import {
   all,
@@ -24,6 +26,8 @@ export class Create extends ImportCommand {
       basePath: state.project.basePath,
       template: getPhotoTemplate(state),
       prefs: state.settings,
+      optimizeOnImport: state.project.isManaged &&
+        (state.project.optimize?.onImport ?? true),
       idx: this.action.meta?.idx ||
         [state.items[this.action.payload.item].photos.length]
     })
@@ -71,7 +75,10 @@ export class Create extends ImportCommand {
     try {
       let progress = yield this.progress()
 
-      let { basePath, cache, db, idx, prefs, store, template } = this.options
+      let {
+        basePath, cache, db, idx, prefs, store, template,
+        optimizeOnImport
+      } = this.options
       let { item } = this.action.payload
 
       let image = yield call([Image, Image.open], {
@@ -86,18 +93,64 @@ export class Create extends ImportCommand {
       let ids = []
       let photos = []
       let position = idx[0] + progress
+      let pageData = []
 
-      yield call(store.add, image)
+      if (optimizeOnImport) {
+        while (!image.done) {
+          let imageData = image.toJSON()
+          let result = yield call(optimizeImage,
+            image.buffer,
+            { page: image.page, mimetype: image.mimetype, density: prefs.density })
+
+          if (result != null) {
+            let optimized = new Asset({
+              path: `${result.checksum}${result.ext}`,
+              protocol: 'file',
+              checksum: result.checksum,
+              mimetype: result.mimetype
+            })
+
+            optimized.buffer = result.buffer
+            yield call(store.add, optimized)
+
+            pageData.push({
+              ...imageData,
+              path: optimized.path,
+              protocol: optimized.protocol,
+              checksum: result.checksum,
+              mimetype: result.mimetype,
+              page: 0
+            })
+          } else {
+            yield call(store.add, image)
+            pageData.push({
+              ...imageData,
+              path: image.path,
+              protocol: image.protocol
+            })
+          }
+
+          image.next()
+        }
+
+        image.rewind()
+      } else {
+        yield call(store.add, image)
+      }
 
       yield call(db.transaction, async tx => {
         let count = 0
 
         while (!image.done) {
+          let imageData = optimizeOnImport
+            ? pageData[image.page]
+            : image.toJSON()
+
           let photo = await mod.photo.create(tx,
             { basePath, template: template.id },
             {
               item,
-              image: image.toJSON(),
+              image: imageData,
               data,
               position: position + count++
             })
