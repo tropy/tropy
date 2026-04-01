@@ -109,6 +109,7 @@ export class Reload extends Command {
 
     let project = yield call(load, db)
     project.watch = Storage.load('project.watch', project.id) || {}
+    project.optimize = Storage.load('project.optimize', project.id) ?? { onImport: true }
 
     if (project.store !== store.root)
       yield call(store.init, project.store)
@@ -122,7 +123,7 @@ Reload.register(PROJECT.RELOAD)
 
 export class Save extends Command {
   *exec () {
-    let { watch, ...payload } = this.action.payload
+    let { watch, optimize, ...payload } = this.action.payload
     let { db, id } = this.options
 
     let { project } = yield select()
@@ -147,6 +148,12 @@ export class Save extends Command {
 
       Storage.save('project.watch', watch, id)
       changes.watch = watch
+    }
+
+    if (optimize) {
+      optimize = { ...project.optimize, ...optimize }
+      Storage.save('project.optimize', optimize, id)
+      changes.optimize = optimize
     }
 
     yield put(act.project.update(changes))
