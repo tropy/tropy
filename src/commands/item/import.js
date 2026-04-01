@@ -5,6 +5,8 @@ import { DuplicateError } from '../../common/error.js'
 import { normalize, eachItem } from '../../common/import.js'
 import { info, warn } from '../../common/log.js'
 import { Image } from '../../image/index.js'
+import { optimizeImage } from '../../image/optimize.js'
+import { Asset } from '../../asset/asset.js'
 import { fail } from '../../dialog.js'
 import { fromHTML } from '../../editor/serialize.js'
 import * as act from '../../actions/index.js'
@@ -104,6 +106,8 @@ export class Import extends ImportCommand {
       },
       useLocalTimezone: state.settings.timezone,
       createLists: state.settings.createLists,
+      optimizeOnImport: state.project.isManaged &&
+        (state.project.optimize?.onImport ?? true)
     })))
   }
 
@@ -113,7 +117,8 @@ export class Import extends ImportCommand {
       yield this.progress()
 
       let {
-        basePath, store, density, db, templates, useLocalTimezone
+        basePath, store, density, db, templates, useLocalTimezone,
+        optimizeOnImport
       } = this.options
 
       let { list: activeList } = this.action.payload
@@ -128,17 +133,65 @@ export class Import extends ImportCommand {
 
       yield * this.handleDuplicate(image)
       let data = yield * this.getMetadata(image, templates)
-      yield call(store.add, image)
+
+      let pageData = []
+
+      if (optimizeOnImport) {
+        while (!image.done) {
+          let imageData = image.toJSON()
+          let result = yield call(optimizeImage,
+            image.buffer,
+            { page: image.page, mimetype: image.mimetype, density })
+
+          if (result != null) {
+            let optimized = new Asset({
+              path: `${result.checksum}${result.ext}`,
+              protocol: 'file',
+              checksum: result.checksum,
+              mimetype: result.mimetype
+            })
+
+            optimized.buffer = result.buffer
+            yield call(store.add, optimized)
+
+            pageData.push({
+              ...imageData,
+              path: optimized.path,
+              protocol: optimized.protocol,
+              checksum: result.checksum,
+              mimetype: result.mimetype,
+              page: 0
+            })
+          } else {
+            yield call(store.add, image)
+            pageData.push({
+              ...imageData,
+              path: image.path,
+              protocol: image.protocol
+            })
+          }
+
+          image.next()
+        }
+
+        image.rewind()
+      } else {
+        yield call(store.add, image)
+      }
 
       yield call(db.transaction, async tx => {
         item = await mod.item.create(tx, templates.item.id, data.item)
 
         while (!image.done) {
+          let imageData = optimizeOnImport
+            ? pageData[image.page]
+            : image.toJSON()
+
           let photo = await mod.photo.create(tx,
             { basePath, template: templates.photo.id },
             {
               item: item.id,
-              image: image.toJSON(),
+              image: imageData,
               data: data.photo
             })
 
