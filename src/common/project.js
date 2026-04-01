@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { existsSync } from 'node:fs'
 import { chmod, cp, stat, mkdir, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, join, resolve, relative } from 'node:path'
-import { createHash, randomUUID as uuid } from 'node:crypto'
+import { randomUUID as uuid } from 'node:crypto'
 import { Database } from './db.js'
 import { home, normalize } from './os.js'
 import { into, select, update } from './query.js'
@@ -12,6 +12,7 @@ import { info, warn } from './log.js'
 
 import { Asset } from '../asset/asset.js'
 import { Store } from '../asset/store.js'
+import { optimizeImage } from '../image/optimize.js'
 
 
 /*
@@ -379,6 +380,7 @@ export async function getAssets (db, { basePath }) {
  */
 export async function optimizeAssets (src, path, appDir, {
   concurrency = 4,
+  density = 72,
   overwrite = false
 } = {}) {
   try {
@@ -410,7 +412,6 @@ export async function optimizeAssets (src, path, appDir, {
         .where({ project_id: project.id }))
 
     let assets = await getAssets(db, { basePath: dirname(srcDbFile) })
-    let { open: openImage } = await import('../image/sharp.js')
 
     info(`optimizing ${assets.length} asset(s)`)
     await pMap(assets, async ({ id, ...props }) => {
@@ -419,25 +420,25 @@ export async function optimizeAssets (src, path, appDir, {
       try {
         await asset.open()
 
-        let image = await openImage(asset.buffer)
-        let { hasAlpha } = await image.metadata()
+        let result = await optimizeImage(asset.buffer, {
+          page: props.page,
+          mimetype: asset.mimetype,
+          density
+        })
 
-        let ext, mimetype, buffer
-        if (hasAlpha) {
-          ext = '.png'
-          mimetype = 'image/png'
-          buffer = await image.png().toBuffer()
-        } else {
-          ext = '.jpg'
-          mimetype = 'image/jpeg'
-          buffer = await image.jpeg({ quality: 100 }).toBuffer()
+        if (result == null) {
+          await store.add(asset)
+          await db.run(
+            ...update('photos')
+              .set({ path: relative(path, asset.path) })
+              .where({ id }))
+          return
         }
 
-        let checksum = createHash('md5').update(buffer).digest('hex')
-        let filename = `${checksum}${ext}`
+        let filename = `${result.checksum}${result.ext}`
         let optimizedPath = join(store.root, filename)
 
-        await writeFile(optimizedPath, buffer, { flag: 'wx' }).catch(err => {
+        await writeFile(optimizedPath, result.buffer, { flag: 'wx' }).catch(err => {
           if (err.code !== 'EEXIST') throw err
         })
 
@@ -445,8 +446,9 @@ export async function optimizeAssets (src, path, appDir, {
           ...update('photos')
             .set({
               path: relative(path, optimizedPath),
-              checksum,
-              mimetype
+              checksum: result.checksum,
+              mimetype: result.mimetype,
+              page: 0
             })
             .where({ id }))
 
@@ -562,7 +564,7 @@ const projectStats =
   }).from('project').limit(1)
 
 const assetInfo =
-  select('id', 'protocol', 'path', 'checksum')
+  select('id', 'protocol', 'path', 'checksum', 'mimetype', 'page')
     .from('photos')
     .order('protocol, path')
 
