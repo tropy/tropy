@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import throttle from 'lodash.throttle'
+import { throttle } from '../common/util.js'
 import { on, off } from '../dom.js'
 
 

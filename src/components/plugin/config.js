@@ -2,8 +2,7 @@ import React from 'react'
 import { WindowContext } from '../window.js'
 import { AccordionGroup } from '../accordion.js'
 import { PluginAccordion } from './accordion.js'
-import debounce from 'lodash.debounce'
-import { insert, omit, splice } from '../../common/util.js'
+import { debounce, insert, omit, splice } from '../../common/util.js'
 
 
 export class PluginConfig extends React.Component {

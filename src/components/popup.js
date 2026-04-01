@@ -1,9 +1,8 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
 import { $, append, element, has, on, off, toggle, remove } from '../dom.js'
-import { noop } from '../common/util.js'
+import { noop, throttle } from '../common/util.js'
 import cx from 'classnames'
-import throttle from 'lodash.throttle'
 
 export class Popup extends React.Component {
   constructor (props) {

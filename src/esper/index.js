@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events'
 import { Application, RenderTexture, Ticker } from 'pixi.js'
 import TWEEN from '@tweenjs/tween.js'
-import debounce from 'lodash.debounce'
+import { debounce } from '../common/util.js'
 import {
   append,
   createDragHandler,

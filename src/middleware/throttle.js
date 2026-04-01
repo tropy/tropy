@@ -1,4 +1,4 @@
-import throttle from 'lodash.throttle'
+import { throttle } from '../common/util.js'
 
 const middleware = () => next => {
   const tnxt = throttle(next, 125)

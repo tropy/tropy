@@ -1,7 +1,6 @@
 import React from 'react'
 import cx from 'classnames'
-import debounce from 'lodash.debounce'
-import throttle from 'lodash.throttle'
+import { debounce, throttle } from '../../common/util.js'
 import { copy } from '../../clipboard.js'
 import { Toolbar } from '../toolbar.js'
 import { FILTERS } from '../../esper/index.js'

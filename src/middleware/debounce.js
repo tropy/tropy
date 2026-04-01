@@ -1,4 +1,4 @@
-import debounce from 'lodash.debounce'
+import { debounce } from '../common/util.js'
 
 const middleware = () => next => {
   const dnxt = debounce(next, 25)

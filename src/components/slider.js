@@ -2,10 +2,9 @@ import React from 'react'
 import { Button } from './button.js'
 import { Draggable } from './draggable.js'
 import { bounds, borders } from '../dom.js'
-import { restrict } from '../common/util.js'
+import { restrict, throttle } from '../common/util.js'
 import { round } from '../common/math.js'
 import cx from 'classnames'
-import throttle from 'lodash.throttle'
 import { KeyMap } from '../keymap.js'
 
 export class Slider extends React.PureComponent {

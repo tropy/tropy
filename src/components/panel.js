@@ -5,9 +5,8 @@ import cx from 'classnames'
 import { bounds } from '../dom.js'
 import { restrict } from '../common/util.js'
 import { SASS } from '../constants/index.js'
-import { remap } from '../common/util.js'
+import { remap, throttle } from '../common/util.js'
 import { round } from '../common/math.js'
-import throttle from 'lodash.throttle'
 import memoize from 'memoize-one'
 
 const { MIN_HEIGHT, CLOSED_HEIGHT } = SASS.PANEL

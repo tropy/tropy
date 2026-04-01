@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useEvent } from './use-event.js'
-import debounce from 'lodash.debounce'
-import throttle from 'lodash.throttle'
+import { debounce, throttle } from '../common/util.js'
 
 function useLodash (method, fn, { wait = 250 } = {}) {
   let ref = useRef()

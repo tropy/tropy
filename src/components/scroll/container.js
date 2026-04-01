@@ -1,7 +1,6 @@
 import React from 'react'
 import cx from 'classnames'
-import throttle from 'lodash.throttle'
-import debounce from 'lodash.debounce'
+import { debounce, throttle } from '../../common/util.js'
 import { on, off } from '../../dom.js'
 
 export class ScrollContainer extends React.Component {
