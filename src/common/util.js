@@ -606,4 +606,88 @@ export const mergeMap = (a, b) =>
   a.entries().reduce((m, [k, v]) =>
     v ? m.set(k, true) : m, new Map(b))
 
+export function debounce (fn, wait) {
+  let id, args, ctx
+
+  function invoke () {
+    try {
+      fn.apply(ctx, args)
+    } finally {
+      ctx = args = undefined
+    }
+  }
+
+  function debounced (...argv) {
+    args = argv
+    ctx = this
+    clearTimeout(id)
+    id = setTimeout(invoke, wait)
+  }
+
+  debounced.cancel = () => {
+    clearTimeout(id)
+    id = args = ctx = undefined
+  }
+
+  debounced.flush = () => {
+    if (id !== undefined) {
+      clearTimeout(id)
+      id = undefined
+      invoke()
+    }
+  }
+
+  return debounced
+}
+
+export function throttle (fn, wait) {
+  let id, args, ctx, lastInvokeTime
+
+  function invoke () {
+    try {
+      lastInvokeTime = Date.now()
+      fn.apply(ctx, args)
+    } finally {
+      args = ctx = undefined
+    }
+  }
+
+  function timerExpired () {
+    id = undefined
+    if (args) invoke()
+  }
+
+  function throttled (...argv) {
+    let now = Date.now()
+
+    args = argv
+    ctx = this
+
+    if (lastInvokeTime === undefined || now - lastInvokeTime >= wait) {
+      clearTimeout(id)
+      id = undefined
+      return invoke()
+    }
+
+    if (id === undefined) {
+      id = setTimeout(timerExpired, wait - (now - lastInvokeTime))
+    }
+  }
+
+  throttled.cancel = () => {
+    clearTimeout(id)
+    id = args = ctx = lastInvokeTime = undefined
+  }
+
+  throttled.flush = () => {
+    if (id !== undefined) {
+      clearTimeout(id)
+      id = undefined
+      if (args) invoke()
+    }
+  }
+
+  return throttled
+}
+
 export const BLANK = Object.freeze(Object.create(null))

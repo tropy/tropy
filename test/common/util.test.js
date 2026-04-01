@@ -474,4 +474,163 @@ describe('util', () => {
       expect(util.containsRTL('\u5B57')).to.be.false
     })
   })
+
+  describe('debounce', () => {
+    beforeEach(() => {
+      mock.timers.enable({ apis: ['setTimeout', 'Date'] })
+    })
+
+    afterEach(() => {
+      mock.timers.reset()
+    })
+
+    it('delays invocation until after wait', () => {
+      let fn = mock.fn()
+      let debounced = util.debounce(fn, 100)
+
+      debounced()
+      expect(fn.mock.callCount()).to.equal(0)
+
+      mock.timers.tick(99)
+      expect(fn.mock.callCount()).to.equal(0)
+
+      mock.timers.tick(1)
+      expect(fn.mock.callCount()).to.equal(1)
+    })
+
+    it('resets the timer on subsequent calls', () => {
+      let fn = mock.fn()
+      let debounced = util.debounce(fn, 100)
+
+      debounced()
+      mock.timers.tick(80)
+      debounced()
+      mock.timers.tick(80)
+      expect(fn.mock.callCount()).to.equal(0)
+
+      mock.timers.tick(20)
+      expect(fn.mock.callCount()).to.equal(1)
+    })
+
+    it('passes the latest arguments', () => {
+      let fn = mock.fn()
+      let debounced = util.debounce(fn, 50)
+
+      debounced('a')
+      debounced('b')
+      mock.timers.tick(50)
+
+      expect(fn.mock.calls[0].arguments).to.eql(['b'])
+    })
+
+    it('cancel prevents invocation', () => {
+      let fn = mock.fn()
+      let debounced = util.debounce(fn, 50)
+
+      debounced()
+      debounced.cancel()
+      mock.timers.tick(100)
+
+      expect(fn.mock.callCount()).to.equal(0)
+    })
+
+    it('flush triggers immediate invocation', () => {
+      let fn = mock.fn()
+      let debounced = util.debounce(fn, 100)
+
+      debounced('x')
+      debounced.flush()
+
+      expect(fn.mock.callCount()).to.equal(1)
+      expect(fn.mock.calls[0].arguments).to.eql(['x'])
+    })
+
+    it('flush is a no-op when no pending call', () => {
+      let fn = mock.fn()
+      let debounced = util.debounce(fn, 100)
+
+      debounced.flush()
+      expect(fn.mock.callCount()).to.equal(0)
+    })
+  })
+
+  describe('throttle', () => {
+    beforeEach(() => {
+      mock.timers.enable({ apis: ['setTimeout', 'Date'] })
+    })
+
+    afterEach(() => {
+      mock.timers.reset()
+    })
+
+    it('invokes immediately on first call (leading)', () => {
+      let fn = mock.fn()
+      let throttled = util.throttle(fn, 100)
+
+      throttled('a')
+      expect(fn.mock.callCount()).to.equal(1)
+      expect(fn.mock.calls[0].arguments).to.eql(['a'])
+    })
+
+    it('suppresses calls within the wait period', () => {
+      let fn = mock.fn()
+      let throttled = util.throttle(fn, 100)
+
+      throttled()
+      throttled()
+      throttled()
+      expect(fn.mock.callCount()).to.equal(1)
+    })
+
+    it('invokes trailing call after wait', () => {
+      let fn = mock.fn()
+      let throttled = util.throttle(fn, 100)
+
+      throttled('a')
+      throttled('b')
+      expect(fn.mock.callCount()).to.equal(1)
+
+      mock.timers.tick(100)
+      expect(fn.mock.callCount()).to.equal(2)
+      expect(fn.mock.calls[1].arguments).to.eql(['b'])
+    })
+
+    it('allows a new leading call after wait elapses', () => {
+      let fn = mock.fn()
+      let throttled = util.throttle(fn, 100)
+
+      throttled()
+      mock.timers.tick(100)
+
+      fn.mock.resetCalls()
+      mock.timers.tick(1)
+      throttled()
+      expect(fn.mock.callCount()).to.equal(1)
+    })
+
+    it('cancel prevents trailing invocation', () => {
+      let fn = mock.fn()
+      let throttled = util.throttle(fn, 100)
+
+      throttled('a')
+      throttled('b')
+      throttled.cancel()
+      mock.timers.tick(200)
+
+      expect(fn.mock.callCount()).to.equal(1)
+      expect(fn.mock.calls[0].arguments).to.eql(['a'])
+    })
+
+    it('flush triggers pending trailing call', () => {
+      let fn = mock.fn()
+      let throttled = util.throttle(fn, 100)
+
+      throttled('a')
+      throttled('b')
+      throttled.flush()
+
+      expect(fn.mock.callCount()).to.equal(2)
+      expect(fn.mock.calls[1].arguments).to.eql(['b'])
+    })
+  })
 })
