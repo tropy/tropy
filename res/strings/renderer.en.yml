@@ -255,6 +255,7 @@ en:
         hint: >-
           Create an optimized copy of this project,
           converting all images to WebP format.
+        onImport: Optimize photos on import
       watch:
         folder: Watch folder
         usePolling: Using file stat polling
