@@ -1,4 +1,5 @@
 import { memo, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDropOutside } from '../../hooks/use-drop-outside.js'
@@ -8,9 +9,6 @@ import { dc } from '../../ontology/ns.js'
 import cx from 'classnames'
 
 export const SelectionList = memo(({
-  active,
-  data,
-  edit,
   isDisabled,
   isItemOpen,
   onChange,
@@ -23,6 +21,9 @@ export const SelectionList = memo(({
   photo,
   selections
 }) => {
+  let active = useSelector(state => state.nav.selection)
+  let edit = useSelector(state => state.edit.selection)
+
   let container = useRef()
   let isSortable = !isDisabled && selections.length > 1
 
@@ -70,7 +71,6 @@ export const SelectionList = memo(({
       {selections.map((selection, index) => (
         <SelectionListItem
           key={selection.id}
-          data={data}
           getAdjacent={getAdjacent}
           isActive={active === selection.id}
           isDisabled={isDisabled}

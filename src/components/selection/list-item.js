@@ -1,4 +1,5 @@
 import { memo, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { useIntl } from 'react-intl'
 import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
 import { useClickHandler } from '../../hooks/use-click-handler.js'
@@ -11,7 +12,6 @@ import { testFocusChange } from '../../dom.js'
 import cx from 'classnames'
 
 export const SelectionListItem = memo(({
-  data,
   getAdjacent,
   isActive,
   isDisabled,
@@ -96,7 +96,8 @@ export const SelectionListItem = memo(({
       }))
   })
 
-  let titleText = data?.[selection.id]?.[title]?.text
+  let titleText = useSelector(state =>
+    state.metadata?.[selection.id]?.[title]?.text)
   let placeholder = intl.formatMessage({
     id: 'panel.photo.selection'
   })

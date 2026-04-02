@@ -1,4 +1,5 @@
 import { memo, useMemo, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDropOutside } from '../../hooks/use-drop-outside.js'
@@ -10,7 +11,6 @@ import { TABS } from '../../constants/index.js'
 import cx from 'classnames'
 
 export const SelectionGrid = memo(({
-  active,
   cols,
   isDisabled,
   onBlur,
@@ -24,6 +24,8 @@ export const SelectionGrid = memo(({
   selections,
   size
 }) => {
+  let active = useSelector(state => state.nav.selection)
+
   let container = useRef()
   let isSortable = !isDisabled && selections.length > 1
 

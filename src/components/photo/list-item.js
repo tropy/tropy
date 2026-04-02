@@ -84,9 +84,6 @@ class PhotoListItem extends PhotoIterable {
 
     return (
       <SelectionList
-        active={this.props.selection}
-        data={this.props.data}
-        edit={this.props.edit.selection}
         isDisabled={this.props.isDisabled}
         isItemOpen={this.props.isItemOpen}
         onChange={this.props.onChange}
