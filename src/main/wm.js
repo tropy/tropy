@@ -28,6 +28,7 @@ import {
   ipcMain as ipc,
   nativeImage,
   nativeTheme,
+  screen,
   systemPreferences as prefs
 } from 'electron'
 
@@ -151,8 +152,7 @@ export class WindowManager extends EventEmitter {
         opts.y = Math.floor((y + height / 2) - opts.height / 2)
       }
 
-      // TODO check position on display!
-      var win = new BrowserWindow(opts)
+      var win = new BrowserWindow(sanitizeWindowBounds(opts))
 
       if (opts.fixedSize) {
         this.setFixedSize(win, true, opts.fixedSize)
@@ -888,6 +888,24 @@ function webContentsForward (win, events) {
   for (let type of events) {
     win.on(type, () => { win.webContents.send('win', type) })
   }
+}
+
+export function sanitizeWindowBounds (opts = {}, display) {
+  display ??= (opts.x != null && opts.y != null)
+    ? screen.getDisplayMatching(opts)
+    : screen.getPrimaryDisplay()
+
+  let { x, y, width, height } = display.workArea
+
+  if (opts.width > width) opts.width = width
+  if (opts.height > height) opts.height = height
+
+  if (opts.x != null)
+    opts.x = restrict(opts.x, x, x + width - opts.width)
+  if (opts.y != null)
+    opts.y = restrict(opts.y, y, y + height - opts.height)
+
+  return opts
 }
 
 function setWindowState (win, event, setter = event, ...args) {
