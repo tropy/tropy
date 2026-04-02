@@ -68,9 +68,7 @@ class PhotoGrid extends PhotoIterator {
 
   renderSelectionGrid = (photo, columns) => (
     <SelectionGrid
-      active={this.props.selection}
       cols={columns}
-      data={this.props.data}
       isDisabled={this.props.isDisabled}
       onContextMenu={this.props.onContextMenu}
       onDelete={this.handleDelete}
