@@ -1,7 +1,7 @@
 import { Container, Graphics } from 'pixi.js'
 import { BLANK } from '../common/util.js'
 import { ESPER } from '../constants/index.js'
-import { move, normalizeRectangle } from './util.js'
+import { move, normalize } from './util.js'
 
 
 export class TextLayer extends Container {
@@ -38,7 +38,7 @@ export class TextLayer extends Container {
 
   update ({ selection } = BLANK, textSelection) {
     if (selection)
-      selection = normalizeRectangle(selection)
+      selection = normalize(selection)
 
     for (let child of this.children) {
       child.update(textSelection)
@@ -64,7 +64,7 @@ export class TextBox extends Graphics {
 
   sync (node, offset) {
     this.node = node
-    this.data = normalizeRectangle(node.bounds())
+    this.data = normalize(node.bounds())
 
     if (offset) {
       move(this.data, offset)

@@ -24,11 +24,12 @@ import { isMeta } from '../keymap.js'
 import {
   addCursorStyle,
   center,
+  clamp,
   constrain,
   coords,
   equal,
   isDoubleClickSupported,
-  normalizeRectangle,
+  normalize,
   setScaleMode
 } from './util.js'
 
@@ -736,7 +737,11 @@ export default class Esper extends EventEmitter {
         mov: data.getLocalPosition(target.parent)
       },
       selection: data.getLocalPosition(target),
-      limit: this.getPanLimits()
+      limit: this.getPanLimits(),
+      imageBounds: {
+        width: this.photo.getWidth(1),
+        height: this.photo.getHeight(1)
+      }
     }
   }
 
@@ -796,7 +801,7 @@ export default class Esper extends EventEmitter {
   }
 
   handleSelectMove () {
-    let { data, modifier, target, selection, textSelection, tool } = this.drag.current
+    let { data, imageBounds, modifier, target, selection, textSelection, tool } = this.drag.current
     let { x, y } = data.getLocalPosition(target)
 
     selection.width = x - selection.x
@@ -806,7 +811,7 @@ export default class Esper extends EventEmitter {
       case ESPER.TOOL.ARROW:
         this.emit(
           'select-text',
-          normalizeRectangle(selection, true),
+          clamp(normalize(selection, true), imageBounds),
           modifier,
           textSelection)
         break
@@ -814,8 +819,8 @@ export default class Esper extends EventEmitter {
   }
 
   handleSelectStop () {
-    let { modifier, selection, textSelection, tool } = this.drag.current
-    selection = normalizeRectangle(selection, true)
+    let { imageBounds, modifier, selection, textSelection, tool } = this.drag.current
+    selection = clamp(normalize(selection, true), imageBounds)
 
     switch (tool) {
       case ESPER.TOOL.ARROW:

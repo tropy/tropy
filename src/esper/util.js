@@ -65,7 +65,26 @@ export function move (pos, { x = 0, y = 0 } = {}) {
   return pos
 }
 
-export function normalizeRectangle ({
+export function clamp ({ x, y, width, height }, bounds) {
+  if (x < 0) {
+    width += x
+    x = 0
+  }
+  if (y < 0) {
+    height += y
+    y = 0
+  }
+  if (x + width > bounds.width) {
+    width = bounds.width - x
+  }
+  if (y + height > bounds.height) {
+    height = bounds.height - y
+  }
+
+  return { x, y, width, height }
+}
+
+export function normalize ({
   x = 0, y = 0, width = 0, height = 0
 }, round = false) {
 

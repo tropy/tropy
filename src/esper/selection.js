@@ -1,7 +1,7 @@
 import { Container, Graphics, Rectangle } from 'pixi.js'
 import { BLANK } from '../common/util.js'
 import { ESPER } from '../constants/index.js'
-import { normalizeRectangle } from './util.js'
+import { normalize } from './util.js'
 
 
 export class SelectionLayer extends Container {
@@ -22,7 +22,7 @@ export class SelectionLayer extends Container {
     }
 
     if (selection)
-      selection = normalizeRectangle(selection)
+      selection = normalize(selection)
 
     if (tool === ESPER.TOOL.SELECT) {
       this.children[i].update(scale, selection, 'live')
