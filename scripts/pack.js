@@ -9,6 +9,9 @@ import { fileURLToPath } from 'node:url'
 import { program } from 'commander'
 import shelljs from 'shelljs'
 
+import parse from 'semver/functions/parse.js'
+import pkg from '../package.json' with { type: 'json' }
+
 import {
   author,
   channel,
@@ -17,6 +20,8 @@ import {
   product,
   version
 } from '../src/common/release.js'
+
+const v = parse(version)
 
 setLogSymbol('λ')
 
@@ -70,7 +75,7 @@ program
         args = ({
           darwin: ['dmg', '7z', 'sourcemaps'],
           linux: ['bz2', 'AppImage', 'sourcemaps'],
-          win32: ['squirrel', 'sourcemaps']
+          win32: ['squirrel', 'msix', 'sourcemaps']
         })[opts.platform]
       }
 
@@ -302,6 +307,49 @@ const exports = {
       join(out, setupExe),
       nupkg
     ]
+  },
+
+  async msix ({ app, out, arch, sign }) {
+    let { packageMSIX } = await import('electron-windows-msix')
+
+    let packageVersion = `${v.major}.${v.minor}.${v.patch}.0`
+    let packageName = `${name}-${version}-${arch}.msix`
+
+    let windowsSignOptions
+    if (sign) {
+      check(process.env.SIGN_CRED, 'missing credential id')
+      check(process.env.SIGN_USER, 'missing signing user name')
+      check(process.env.SIGN_PASS, 'missing signing password')
+      check(process.env.SIGN_TOTP, 'missing signing TOTP secret')
+
+      windowsSignOptions = {
+        hookModulePath: join(ROOT, 'vendor', 'sign-win32.cjs')
+      }
+    }
+
+    let { msixPackage } = await packageMSIX({
+      appDir: app,
+      outputDir: out,
+      packageName,
+      sign: !!sign,
+      windowsSignOptions,
+      manifestVariables: {
+        publisher: process.env.MSIX_PUBLISHER || 'CN=Tropy',
+        publisherDisplayName: author,
+        packageIdentity: qualified.appId,
+        packageVersion,
+        packageDisplayName: qualified.product,
+        packageDescription: pkg.description,
+        appDisplayName: qualified.product,
+        appExecutable: `${qualified.name}.exe`,
+        targetArch: arch
+      },
+      packageAssets: join(ROOT, 'res', 'win32', 'msix', channel)
+    })
+
+    say(`msix package: ${msixPackage}`)
+
+    return [msixPackage]
   }
 }
 
