@@ -1,7 +1,7 @@
 import { Editable } from '../editable.js'
 import { createClickHandler } from '../util.js'
 import { PhotoIterable } from './iterable.js'
-import { SelectionList } from '../selection/index.js'
+import { SelectionList } from '../selection/list.js'
 import { pluck } from '../../common/util.js'
 import { TYPE } from '../../constants/index.js'
 import cx from 'classnames'

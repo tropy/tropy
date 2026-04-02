@@ -1,100 +1,142 @@
-import { SelectionIterable } from './iterable.js'
+import { memo, useEffect, useRef } from 'react'
+import { useIntl } from 'react-intl'
+import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
+import { useClickHandler } from '../../hooks/use-click-handler.js'
+import { useEvent } from '../../hooks/use-event.js'
 import { Editable } from '../editable.js'
-import { injectIntl } from 'react-intl'
-import { createClickHandler } from '../util.js'
+import { Thumbnail } from '../photo/thumbnail.js'
+import { TranscriptionIcon } from '../transcription/icon.js'
+import { pick } from '../../common/util.js'
 import { testFocusChange } from '../../dom.js'
 import cx from 'classnames'
-import { TranscriptionIcon } from '../transcription/icon.js'
 
+export const SelectionListItem = memo(({
+  data,
+  getAdjacent,
+  isActive,
+  isDisabled,
+  isEditing,
+  isItemOpen,
+  isLast,
+  isSortable,
+  onChange,
+  onContextMenu,
+  onDrop,
+  onEdit,
+  onEditCancel,
+  onItemOpen,
+  onSelect,
+  photo,
+  selection,
+  size = 48,
+  title
+}) => {
+  let container = useRef()
+  let hasFocusChanged = useRef()
+  let intl = useIntl()
 
-class SelectionListItem extends SelectionIterable {
-  get isDraggable () {
-    return !this.props.isEditing && super.isDraggable
-  }
-
-  get placeholder () {
-    return this.props.intl.formatMessage({
-      id: 'panel.photo.selection'
+  let [{ isDragging, isOver, direction }, dnd] =
+    useDragDropSelection(container, {
+      selection,
+      photo,
+      getAdjacent,
+      isDisabled,
+      isEditing,
+      isSortable,
+      onDrop
     })
-  }
 
-  get title () {
-    const { data, selection, title } = this.props
-    return data?.[selection.id]?.[title]?.text
-  }
+  useEffect(() => {
+    if (isActive)
+      container.current?.scrollIntoViewIfNeeded()
+  }, [isActive])
 
-  handleMouseDown = () => {
-    this.hasFocusChanged = testFocusChange()
-  }
+  let handleMouseDown = useEvent(() => {
+    hasFocusChanged.current = testFocusChange()
+  })
 
-  handleSingleClick = () => {
-    if (!(this.props.isDisabled || this.props.isDragging)) {
-      this.props.onEdit({ selection: this.props.selection.id })
-    }
-  }
-
-  handleClick = createClickHandler({
-    onClick: () => {
-      const { isActive } = this.props
-      this.select()
-      return !isActive || this.hasFocusChanged()
+  let handleClick = useClickHandler({
+    onClick() {
+      onSelect(selection)
+      return !isActive || hasFocusChanged.current?.()
     },
 
-    onSingleClick: this.handleSingleClick,
+    onSingleClick() {
+      if (!(isDisabled || isDragging)) {
+        onEdit({ selection: selection.id })
+      }
+    },
 
-    onDoubleClick: () => {
-      if (!this.props.isItemOpen) this.open()
-      else this.handleSingleClick()
+    onDoubleClick() {
+      if (!isItemOpen)
+        onItemOpen(selection)
+      else if (!(isDisabled || isDragging)) {
+        onEdit({ selection: selection.id })
+      }
     }
   })
 
-  handleChange = (text) => {
-    const { selection, title, onChange, onEditCancel } = this.props
-
+  let handleChange = useEvent((text) => {
     onChange({
       id: selection.id,
       data: {
         [title]: { text, type: 'text' }
       }
     })
-
     onEditCancel()
-  }
+  })
 
-  render () {
-    const { title } = this
+  let handleContextMenu = useEvent((event) => {
+    onSelect(selection)
+    onContextMenu(
+      event,
+      isDisabled ? 'selection-read-only' : 'selection',
+      pick(photo, ['id', 'item', 'path', 'protocol'], {
+        selection: selection.id
+      }))
+  })
 
-    return this.connect(
-      <li
-        className={cx(this.classes)}
-        ref={this.container}
-        onContextMenu={this.handleContextMenu}
-        onClick={this.handleClick}
-        onMouseDown={this.handleMouseDown}>
-        <div className="thumbnail-container">
-          {this.renderThumbnail()}
-        </div>
-        <div className="title">
-          <Editable
-            display={title || this.placeholder}
-            value={title}
-            resize
-            isActive={this.props.isEditing}
-            isDisabled={this.props.isDisabled}
-            onCancel={this.props.onEditCancel}
-            onChange={this.handleChange}/>
-        </div>
-        <div className="icon-container">
-          <TranscriptionIcon id={this.props.selection.transcriptions?.at(-1)}/>
-        </div>
-      </li>
-    )
-  }
-}
+  let titleText = data?.[selection.id]?.[title]?.text
+  let placeholder = intl.formatMessage({
+    id: 'panel.photo.selection'
+  })
 
-const SelectionListItemContainer =
-  injectIntl(SelectionListItem.withDragAndDrop())
-
-export {
-  SelectionListItemContainer as SelectionListItem
-}
+  return (
+    <li
+      ref={dnd}
+      className={cx({
+        active: isActive,
+        dragging: isDragging,
+        'drop-target': isSortable,
+        last: isLast,
+        over: isOver,
+        selection: true,
+        [direction]: direction
+      })}
+      onContextMenu={handleContextMenu}
+      onClick={handleClick}
+      onMouseDown={handleMouseDown}>
+      <div className="thumbnail-container">
+        <Thumbnail
+          {...pick(selection, Thumbnail.keys)}
+          consolidated={photo.consolidated}
+          color={photo.color}
+          mimetype={photo.mimetype}
+          size={size}/>
+      </div>
+      <div className="title">
+        <Editable
+          display={titleText || placeholder}
+          value={titleText}
+          resize
+          isActive={isEditing}
+          isDisabled={isDisabled}
+          onCancel={onEditCancel}
+          onChange={handleChange}/>
+      </div>
+      <div className="icon-container">
+        <TranscriptionIcon id={selection.transcriptions?.at(-1)}/>
+      </div>
+    </li>
+  )
+})
