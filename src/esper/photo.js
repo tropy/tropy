@@ -131,7 +131,7 @@ export class Photo extends Container {
     this.position.x += at.x - this.toGlobal(origin, null, false).x
 
     if (!skipUpdate && this.parent)
-      this.displayObjectUpdateTransform()
+      this.updateLocalTransform()
   }
 
   // Changes pivot without changing position. For temporary pivot

@@ -874,7 +874,7 @@ const setIntermediatePosition = (next, photo, screen) => {
 
   // Restore rotation and update transform
   photo.rotation = rotation
-  photo.displayObjectUpdateTransform()
+  photo.updateLocalTransform()
 
   // Adjust next position
   next.x = photo.x
