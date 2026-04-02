@@ -1,32 +1,33 @@
 import { useSelector } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
-import { ListNode, NewListNode } from './node.js'
-import { Collapse } from '../fx.js'
+import { ListNode } from './node.js'
+import { Tree } from '../tree/tree.js'
 import { getListHoldIndex } from '../../selectors/index.js'
 
-const hasNewListNode = (edit, parent) =>
-  edit && edit.id == null && edit.parent === parent
-
 export const ListTree = ({
-  depth = 0,
-  isDraggingParent = false,
   lists = {},
-  minDropDepth = 0,
   parent,
-  ...props
+  isReadOnly,
+  selection,
+  onClick,
+  onCollapse,
+  onContextMenu,
+  onDropFiles,
+  onDropItems,
+  onEditCancel,
+  onExpand,
+  onMove,
+  onSave
 }) => {
-
-  // TODO move recursion to Tree component so these hooks only exist once at the root!
-
+  let edit = useSelector(state => state.edit.list)
   let holdIndex = useSelector(getListHoldIndex)
   let expanded = useSelector(state => state.sidebar.expand)
 
   let handleDrop = useEvent((...args) => {
-    props.onMove(...args) // TODO dispatch
+    onMove(...args)
   })
 
   let handleDropOutside = useEvent((drop) => {
-    // TODO move to action? and dispatch
     let target = lists[drop.parent]
     let prev
 
@@ -43,68 +44,42 @@ export const ListTree = ({
     let pos = target.children.indexOf(drop.id)
     if (pos >= 0 && pos < idx) idx--
 
-    props.onMove({
+    onMove({
       id: drop.id,
       parent: target.id
     }, { idx })
   })
 
   return (
-    <ol className="list-tree">
-      {parent.children.map((id, idx, all) => {
-        if (id in lists) {
-          let list = lists[id]
-          let newListNode = hasNewListNode(props.edit, id)
-          let isExpandable = newListNode || list.children.length > 0
-          let isExpanded = newListNode || expanded[id]
-          let isLastChild = idx === all.length - 1
-
-          return (
-            <ListNode
-              key={id}
-              depth={depth}
-              isDraggingParent={isDraggingParent}
-              isEditing={props.edit?.id === id}
-              isExpanded={isExpandable && isExpanded}
-              isHolding={holdIndex[id]}
-              isLastChild={isLastChild}
-              isReadOnly={props.isReadOnly}
-              isSelected={props.selection === id}
-              list={list}
-              minDropDepth={minDropDepth}
-              onClick={props.onClick}
-              onCollapse={isExpandable ? props.onCollapse : null}
-              onContextMenu={props.onContextMenu}
-              onDrop={handleDrop}
-              onDropFiles={props.onDropFiles}
-              onDropItems={props.onDropItems}
-              onDropOutside={handleDropOutside}
-              onEditCancel={props.onEditCancel}
-              onExpand={isExpandable ? props.onExpand : null}
-              onSave={props.onSave}
-              position={idx}>
-              {(isDragging) => (
-                <ListTree
-                  {...props}
-                  depth={1 + depth}
-                  minDropDepth={isLastChild ? minDropDepth : depth}
-                  isDraggingParent={isDraggingParent || isDragging}
-                  lists={lists}
-                  parent={list}/>
-              )}
-            </ListNode>
-          )
-        }
-      })}
-      <Collapse
-        tagName="li"
-        className="list-node"
-        in={hasNewListNode(props.edit, parent.id)}>
-        <NewListNode
-          parent={props.edit?.parent}
-          onCancel={props.onEditCancel}
-          onSave={props.onSave}/>
-      </Collapse>
-    </ol>
+    <Tree
+      className="list-tree"
+      nodes={lists}
+      root={parent}
+      edit={edit}
+      expanded={expanded}
+      onCollapse={onCollapse}
+      onEditCancel={onEditCancel}
+      onExpand={onExpand}
+      onSave={onSave}>
+      {(list, treeProps, renderChildren) => (
+        <ListNode
+          key={list.id}
+          {...treeProps}
+          isHolding={holdIndex[list.id]}
+          isReadOnly={isReadOnly}
+          isSelected={selection === list.id}
+          list={list}
+          onClick={onClick}
+          onContextMenu={onContextMenu}
+          onDrop={handleDrop}
+          onDropFiles={onDropFiles}
+          onDropItems={onDropItems}
+          onDropOutside={handleDropOutside}
+          onEditCancel={onEditCancel}
+          onSave={onSave}>
+          {renderChildren}
+        </ListNode>
+      )}
+    </Tree>
   )
 }

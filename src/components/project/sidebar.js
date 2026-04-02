@@ -266,7 +266,6 @@ class ProjectSidebar extends React.PureComponent {
                   <ListTree
                     parent={root}
                     lists={this.props.lists}
-                    edit={this.props.edit.list}
                     isReadOnly={this.props.project.isReadOnly}
                     selection={this.props.list}
                     onContextMenu={this.handleContextMenu}

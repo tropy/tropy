@@ -1,5 +1,5 @@
 import cx from 'classnames'
-import { useEvent } from '../../hooks/use-event'
+import { useEvent } from '../../hooks/use-event.js'
 import { Button } from '../button.js'
 import { Icon } from '../icons.js'
 
