@@ -1,44 +1,82 @@
-import { SelectionIterable } from './iterable.js'
+import { memo, useEffect, useRef } from 'react'
+import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
+import { useClickHandler } from '../../hooks/use-click-handler.js'
+import { useEvent } from '../../hooks/use-event.js'
+import { Thumbnail } from '../photo/thumbnail.js'
+import { pick } from '../../common/util.js'
 import cx from 'classnames'
-import { createClickHandler } from '../util.js'
 
+export const SelectionTile = memo(({
+  getAdjacent,
+  isActive,
+  isDisabled,
+  isLast,
+  isSortable,
+  isVertical,
+  onContextMenu,
+  onDrop,
+  onItemOpen,
+  onSelect,
+  photo,
+  selection,
+  size = 512
+}) => {
+  let container = useRef()
 
-class SelectionTile extends SelectionIterable {
-  get classes () {
-    return {
-      ...super.classes,
-      tile: true
-    }
-  }
+  let [{ isDragging, isOver, direction }, dnd] =
+    useDragDropSelection(container, {
+      selection,
+      photo,
+      getAdjacent,
+      isDisabled,
+      isSortable,
+      isVertical,
+      onDrop
+    })
 
-  handleClick = createClickHandler({
-    onClick: this.select,
-    onDoubleClick: this.open
+  useEffect(() => {
+    if (isActive)
+      container.current?.scrollIntoViewIfNeeded()
+  }, [isActive])
+
+  let handleClick = useClickHandler({
+    onClick: () => onSelect(selection),
+    onDoubleClick: () => onItemOpen(selection)
   })
 
+  let handleContextMenu = useEvent((event) => {
+    onSelect(selection)
+    onContextMenu(
+      event,
+      isDisabled ? 'selection-read-only' : 'selection',
+      pick(photo, ['id', 'item', 'path', 'protocol'], {
+        selection: selection.id
+      }))
+  })
 
-  render () {
-    return this.connect(
-      <li
-        className={cx(this.classes)}
-        ref={this.container}
-        onContextMenu={this.handleContextMenu}
-        onClick={this.handleClick}>
-        <div className="tile-state">
-          {this.renderThumbnail()}
-        </div>
-      </li>
-    )
-  }
-
-  static defaultProps = {
-    ...SelectionIterable.defaultProps,
-    size: 512
-  }
-}
-
-const SelectionTileContainer = SelectionTile.withDragAndDrop()
-
-export {
-  SelectionTileContainer as SelectionTile
-}
+  return (
+    <li
+      ref={dnd}
+      className={cx({
+        active: isActive,
+        dragging: isDragging,
+        'drop-target': isSortable,
+        last: isLast,
+        over: isOver,
+        selection: true,
+        tile: true,
+        [direction]: direction
+      })}
+      onContextMenu={handleContextMenu}
+      onClick={handleClick}>
+      <div className="tile-state">
+        <Thumbnail
+          {...pick(selection, Thumbnail.keys)}
+          consolidated={photo.consolidated}
+          color={photo.color}
+          mimetype={photo.mimetype}
+          size={size}/>
+      </div>
+    </li>
+  )
+})
