@@ -23,7 +23,7 @@ const getDropIndicator = (current, {
     return 'after'
 }
 
-export function useDragDropNode(dom, {
+export function useDragDropNode (dom, {
   depth = 0,
   icon,
   indent = 0,
