@@ -56,18 +56,18 @@ export const SelectionListItem = memo(({
   })
 
   let handleClick = useClickHandler({
-    onClick() {
+    onClick () {
       onSelect(selection)
       return !isActive || hasFocusChanged.current?.()
     },
 
-    onSingleClick() {
+    onSingleClick () {
       if (!(isDisabled || isDragging)) {
         onEdit({ selection: selection.id })
       }
     },
 
-    onDoubleClick() {
+    onDoubleClick () {
       if (!isItemOpen)
         onItemOpen(selection)
       else if (!(isDisabled || isDragging)) {
