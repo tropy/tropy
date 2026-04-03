@@ -105,13 +105,12 @@ export const SelectionListItem = memo(({
   return (
     <li
       ref={dnd}
-      className={cx({
+      className={cx('selection', {
         active: isActive,
         dragging: isDragging,
         'drop-target': isSortable,
         last: isLast,
         over: isOver,
-        selection: true,
         [direction]: direction
       })}
       onContextMenu={handleContextMenu}
