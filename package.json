@@ -97,6 +97,7 @@
     "chai-dom": "^1.8.2",
     "detect-libc": "^2.0.1",
     "electron": "^41.0.2",
+    "electron-windows-msix": "2.0.4",
     "electron-winstaller": "^5.0.0",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.5",
