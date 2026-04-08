@@ -323,10 +323,10 @@ export function onResolutionChange (callback) {
     callback(getResolution())
   }
 
-  RMQ.addListener(handler)
+  RMQ.addEventListener('change', handler)
 
   return () => {
-    RMQ.removeListener(handler)
+    RMQ.removeEventListener('change', handler)
   }
 }
 
