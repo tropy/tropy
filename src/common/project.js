@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 import { existsSync } from 'node:fs'
-import { chmod, cp, stat, mkdir, writeFile } from 'node:fs/promises'
+import { chmod, cp, stat, mkdir } from 'node:fs/promises'
 import { basename, dirname, extname, join, resolve, relative } from 'node:path'
 import { randomUUID as uuid } from 'node:crypto'
 import { Database } from './db.js'
@@ -12,7 +12,7 @@ import { info, warn } from './log.js'
 
 import { Asset } from '../asset/asset.js'
 import { Store } from '../asset/store.js'
-import { optimizeImage } from '../image/optimize.js'
+import { Image } from '../image/image.js'
 
 
 /*
@@ -415,53 +415,39 @@ export async function optimizeAssets (src, path, appDir, {
 
     info(`optimizing ${assets.length} asset(s)`)
     await pMap(assets, async ({ id, ...props }) => {
-      let asset = new Asset(props)
+      let image = await Image.open({ ...props, density })
 
       try {
-        await asset.open()
+        let optimized = await image.optimize()
+        await store.add(image)
 
-        let result = await optimizeImage(asset.buffer, {
-          page: props.page,
-          mimetype: asset.mimetype,
-          density
-        })
-
-        if (result == null) {
-          await store.add(asset)
-          await db.run(
-            ...update('photos')
-              .set({ path: relative(path, asset.path) })
-              .where({ id }))
-          return
+        let updates = { path: relative(path, image.path) }
+        if (optimized) {
+          updates.checksum = image.checksum
+          updates.mimetype = image.mimetype
+          updates.page = 0
         }
 
-        let filename = `${result.checksum}${result.ext}`
-        let optimizedPath = join(store.root, filename)
-
-        await writeFile(optimizedPath, result.buffer, { flag: 'wx' }).catch(err => {
-          if (err.code !== 'EEXIST') throw err
-        })
-
         await db.run(
-          ...update('photos')
-            .set({
-              path: relative(path, optimizedPath),
-              checksum: result.checksum,
-              mimetype: result.mimetype,
-              page: 0
-            })
-            .where({ id }))
+          ...update('photos').set(updates).where({ id }))
 
       } catch (err) {
         // Fall back to copying the original asset
-        warn({ err, url: asset.url }, 'failed to optimize, copying original')
-        await asset.check()
+        warn({ err, url: image.url }, 'failed to optimize, copying original')
 
-        if (!asset.hasChanged) {
-          await store.add(asset)
+        if (image._original) {
+          image.buffer = image._original.buffer
+          image.path = image._original.path
+          image.protocol = image._original.protocol
+        }
+
+        await image.check()
+
+        if (!image.hasChanged) {
+          await store.add(image)
           await db.run(
             ...update('photos')
-              .set({ path: relative(path, asset.path) })
+              .set({ path: relative(path, image.path) })
               .where({ id }))
         }
       }
