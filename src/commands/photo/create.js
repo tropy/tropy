@@ -7,8 +7,6 @@ import { DuplicateError } from '../../common/error.js'
 import { info, warn } from '../../common/log.js'
 import { getPhotoTemplate } from '../../selectors/index.js'
 import { Image } from '../../image/image.js'
-import { optimizeImage } from '../../image/optimize.js'
-import { Asset } from '../../asset/asset.js'
 
 import {
   all,
@@ -97,39 +95,12 @@ export class Create extends ImportCommand {
 
       if (optimizeOnImport) {
         while (!image.done) {
-          let imageData = image.toJSON()
-          let result = yield call(optimizeImage,
-            image.buffer,
-            { page: image.page, mimetype: image.mimetype, density: prefs.density })
-
-          if (result != null) {
-            let optimized = new Asset({
-              path: `${result.checksum}${result.ext}`,
-              protocol: 'file',
-              checksum: result.checksum,
-              mimetype: result.mimetype
-            })
-
-            optimized.buffer = result.buffer
-            yield call(store.add, optimized)
-
-            pageData.push({
-              ...imageData,
-              path: optimized.path,
-              protocol: optimized.protocol,
-              checksum: result.checksum,
-              mimetype: result.mimetype,
-              page: 0
-            })
-          } else {
-            yield call(store.add, image)
-            pageData.push({
-              ...imageData,
-              path: image.path,
-              protocol: image.protocol
-            })
-          }
-
+          let optimized = yield call([image, image.optimize])
+          yield call(store.add, image)
+          pageData.push({
+            ...image.toJSON(),
+            ...(optimized ? { page: 0 } : {})
+          })
           image.next()
         }
 

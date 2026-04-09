@@ -1,10 +1,11 @@
+import { createHash } from 'node:crypto'
 import { rdjpgcom } from 'rdjpgcom'
 import { Asset } from '../asset/index.js'
 import { exif } from './exif.js'
 import { xmp } from './xmp.js'
 import sharp, { init } from './sharp.js'
 import { debug, warn } from '../common/log.js'
-import { pick, restrict } from '../common/util.js'
+import { pMap, pick, restrict } from '../common/util.js'
 import { rgb } from '../css.js'
 import { IMAGE, MIME } from '../constants/index.js'
 import { exif as exifns } from '../ontology/ns.js'
@@ -79,7 +80,7 @@ export class Image extends Asset {
   }
 
   do (page = this.page, autoOrient = false) {
-    return sharp(this.buffer || this.path, {
+    return sharp(this._original?.buffer || this.buffer || this.path, {
       autoOrient,
       page,
       density: this.density
@@ -98,6 +99,51 @@ export class Image extends Asset {
 
   rewind () {
     this.page = 0
+  }
+
+  async optimize () {
+    if (this._original) {
+      this.buffer = this._original.buffer
+      this.path = this._original.path
+      this.protocol = this._original.protocol
+      this.checksum = this._original.checksum
+      this.mimetype = this._original.mimetype
+    }
+
+    if (this.mimetype === MIME.JPG)
+      return false
+    if (this.mimetype === MIME.PNG && !this.isOpaque)
+      return false
+
+    if (!this._original) {
+      this._original = {
+        buffer: this.buffer,
+        path: this.path,
+        protocol: this.protocol,
+        checksum: this.checksum,
+        mimetype: this.mimetype
+      }
+    }
+
+    let outputBuffer, ext, mimetype
+
+    if (this.isOpaque) {
+      ext = '.jpg'
+      mimetype = MIME.JPG
+      outputBuffer = await this.do().jpeg({ quality: 100 }).toBuffer()
+    } else {
+      ext = '.png'
+      mimetype = MIME.PNG
+      outputBuffer = await this.do().png().toBuffer()
+    }
+
+    this.buffer = outputBuffer
+    this.checksum = createHash('md5').update(outputBuffer).digest('hex')
+    this.path = `${this.checksum}${ext}`
+    this.protocol = 'file'
+    this.mimetype = mimetype
+
+    return true
   }
 
   async open ({ page, density, useLocalTimezone } = {}) {
@@ -155,9 +201,10 @@ export class Image extends Asset {
       await this.analyze(this.do(), page, { timezone })
 
     } else {
-      await Promise.all([
-        ...this.each(this.analyze, { timezone })
-      ])
+      await pMap(
+        this.meta,
+        (_, page) => this.analyze(this.do(page), page, { timezone }),
+        { concurrency: 4 })
     }
   }
 
