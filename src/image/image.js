@@ -103,27 +103,15 @@ export class Image extends Asset {
 
   async optimize () {
     if (this._original) {
-      this.buffer = this._original.buffer
-      this.path = this._original.path
-      this.protocol = this._original.protocol
-      this.checksum = this._original.checksum
-      this.mimetype = this._original.mimetype
+      Object.assign(this, this._original)
+    } else {
+      this._original = { buffer: this.buffer, path: this.path, protocol: this.protocol, checksum: this.checksum, mimetype: this.mimetype }
     }
 
     if (this.mimetype === MIME.JPG)
       return false
     if (this.mimetype === MIME.PNG && !this.isOpaque)
       return false
-
-    if (!this._original) {
-      this._original = {
-        buffer: this.buffer,
-        path: this.path,
-        protocol: this.protocol,
-        checksum: this.checksum,
-        mimetype: this.mimetype
-      }
-    }
 
     let outputBuffer, ext, mimetype
 
